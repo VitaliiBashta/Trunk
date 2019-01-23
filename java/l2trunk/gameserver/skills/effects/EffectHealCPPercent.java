@@ -29,7 +29,7 @@ public class EffectHealCPPercent extends Effect {
             return;
 
         double cp = calc() * effected.getMaxCp() / 100.;
-        double newCp = cp * (!_ignoreCpEff ? effected.calcStat(Stats.CPHEAL_EFFECTIVNESS, 100., _effector, getSkill()) : 100.) / 100.;
+        double newCp = cp * (!_ignoreCpEff ? effected.calcStat(Stats.CPHEAL_EFFECTIVNESS, 100., effector, getSkill()) : 100.) / 100.;
         double addToCp = Math.max(0, Math.min(newCp, effected.calcStat(Stats.CP_LIMIT, null, null) * effected.getMaxCp() / 100. - effected.getCurrentCp()));
 
         effected.sendPacket(new SystemMessage2(SystemMsg.S1_CP_HAS_BEEN_RESTORED).addInteger((long) addToCp));

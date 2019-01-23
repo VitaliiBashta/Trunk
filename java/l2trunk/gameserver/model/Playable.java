@@ -79,16 +79,16 @@ public abstract class Playable extends Creature {
         }
 
         if (skill != null) {
-            if (skill.altUse()) {
+            if (skill.isAltUse) {
                 return false;
             }
-            if (skill.getTargetType() == SkillTargetType.TARGET_FEEDABLE_BEAST) {
+            if (skill.targetType == SkillTargetType.TARGET_FEEDABLE_BEAST) {
                 return false;
             }
-            if (skill.getTargetType() == SkillTargetType.TARGET_UNLOCKABLE) {
+            if (skill.targetType == SkillTargetType.TARGET_UNLOCKABLE) {
                 return false;
             }
-            if (skill.getTargetType() == SkillTargetType.TARGET_CHEST) {
+            if (skill.targetType == SkillTargetType.TARGET_CHEST) {
                 return false;
             }
         }
@@ -111,7 +111,7 @@ public abstract class Playable extends Creature {
         if (isInZone(ZoneType.SIEGE) && target.isInZone(ZoneType.SIEGE)) {
             return false;
         }
-        if ((skill == null) || skill.isOffensive()) {
+        if ((skill == null) || skill.isOffensive) {
             if (target.getKarma() > 0) {
                 return false;
             } else return target.isPlayable();
@@ -267,7 +267,7 @@ public abstract class Playable extends Creature {
 
         Player activeChar = getPlayer();
 
-        if ((isSummon() || isPet()) && skill.isOffensive() && target.isPlayer() && (target.getPlayer().equals(activeChar)) && (skill.getId() != Skill.SKILL_BETRAY)) {
+        if ((isSummon() || isPet()) && skill.isOffensive() && target.isPlayer() && (target.getPlayer().equals(activeChar)) && (skill.id != Skill.SKILL_BETRAY)) {
             getPlayer().sendMessage("Pet cannot hit its owner!");
             getPlayer().sendActionFailed();
             sendActionFailed();
@@ -286,7 +286,7 @@ public abstract class Playable extends Creature {
             return;
         }
 
-        if ((skill.getSkillType() == SkillType.DEBUFF) && target.isNpc() && target.isInvul() && !target.isMonster() && !target.isInCombat() && (target.getPvpFlag() == 0)) {
+        if ((skill.skillType == SkillType.DEBUFF) && target.isNpc() && target.isInvul() && !target.isMonster() && !target.isInCombat() && (target.getPvpFlag() == 0)) {
             getPlayer().sendPacket(Msg.INVALID_TARGET);
             return;
         }
@@ -352,8 +352,8 @@ public abstract class Playable extends Creature {
 
     @Override
     public int getMAtk(final Creature target, final Skill skill) {
-        if ((skill != null) && (skill.getMatak() > 0)) {
-            return skill.getMatak();
+        if ((skill != null) && (skill.mAttack > 0)) {
+            return skill.mAttack;
         }
         final double init = getActiveWeaponInstance() == null ? template.baseMAtk : 0;
         return (int) calcStat(Stats.MAGIC_ATTACK, init, target, skill);
@@ -477,7 +477,7 @@ public abstract class Playable extends Creature {
             return;
         }
 
-        if (useActionSkills && !skill.altUse() && !skill.getSkillType().equals(SkillType.BEAST_FEED)) {
+        if (useActionSkills && !skill.isAltUse && !skill.skillType.equals(SkillType.BEAST_FEED)) {
             for (Creature target : targets) {
                 if (target.isNpc()) {
                     if (skill.isOffensive()) {
@@ -489,7 +489,7 @@ public abstract class Playable extends Creature {
                             return;
                         }
                         if (!skill.isAI()) {
-                            int damage = skill.getEffectPoint() == 0 ? 1 : skill.getEffectPoint();
+                            int damage = skill.effectPoint == 0 ? 1 : skill.effectPoint;
                             CharacterAI ai = target.getAI();
                             ai.notifyEvent(CtrlEvent.EVT_ATTACKED, this, damage);
                         }
@@ -497,7 +497,7 @@ public abstract class Playable extends Creature {
                     target.getAI().notifySeeSpell(skill, this);
                 } else // исключать баффы питомца на владельца
                     if (target.isPlayable() && !target.equals(getPet()) && !((isSummon() || isPet()) && target.equals(player))) {
-                        int aggro = skill.getEffectPoint() == 0 ? Math.max(1, (int) skill.getPower()) : skill.getEffectPoint();
+                        int aggro = skill.effectPoint == 0 ? Math.max(1, (int) skill.getPower()) : skill.effectPoint;
 
                         World.getAroundNpc(target)
                                 .filter(Creature::isDead)
@@ -506,7 +506,7 @@ public abstract class Playable extends Creature {
                                         npc.getAI().notifySeeSpell(skill, this))
                                 .filter(npc -> npc.getAggroList().get(target) != null)
                                 .forEach(npc -> {
-                                    if (!skill.isHandler() && npc.paralizeOnAttack(player)) {
+                                    if (!skill.isItemHandler() && npc.paralizeOnAttack(player)) {
                                         if (Config.PARALIZE_ON_RAID_DIFF) {
                                             paralizeMe(npc);
                                         }
@@ -528,12 +528,8 @@ public abstract class Playable extends Creature {
         super.callSkill(skill, targets, useActionSkills);
     }
 
-    /**
-     * Оповещает других игроков о поднятии вещи
-     *
-     * @param item предмет который был поднят
-     */
-    public void broadcastPickUpMsg(ItemInstance item) {
+
+    protected void broadcastPickUpMsg(ItemInstance item) {
         Player player = getPlayer();
 
         if ((item == null) || (player == null) || player.isInvisible()) {

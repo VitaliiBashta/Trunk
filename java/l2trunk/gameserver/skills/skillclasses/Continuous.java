@@ -25,7 +25,7 @@ public final class Continuous extends Skill {
     @Override
     public boolean checkCondition(Creature activeChar, Creature target, boolean forceUse, boolean dontMove, boolean first) {
         // Player holding a cursed weapon can't be buffed and can't buff
-        if (getSkillType() == Skill.SkillType.BUFF && target != null) {
+        if (skillType == Skill.SkillType.BUFF && target != null) {
             if (target != activeChar)
                 if (target.isCursedWeaponEquipped() || activeChar.isCursedWeaponEquipped())
                     return false;
@@ -76,7 +76,7 @@ public final class Continuous extends Skill {
                             activeChar.sendPacket(SystemMsg.YOUR_LETHAL_STRIKE_WAS_SUCCESSFUL);
                         }
 
-                    getEffects(activeChar, t, getActivateRate() > 0, false, reflected);
+                    getEffects(activeChar, t, activateRate() > 0, false, reflected);
                 });
 
         if (isSSPossible())

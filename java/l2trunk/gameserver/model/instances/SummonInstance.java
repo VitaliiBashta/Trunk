@@ -37,7 +37,7 @@ public final class SummonInstance extends Summon {
         _itemConsumeIdInTime = consumeid;
         _itemConsumeCountInTime = consumecount;
         _consumeCountdown = _itemConsumeDelay = consumedelay;
-        _summonSkillId = skill.getDisplayId();
+        _summonSkillId = skill.displayId;
         _disappearTask = ThreadPoolManager.INSTANCE.schedule(new Lifetime(), CYCLE);
     }
 

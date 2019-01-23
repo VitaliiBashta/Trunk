@@ -49,7 +49,7 @@ public final class Spoil extends Skill {
                                     if (modifier > 8)
                                         rateOfSpoil = rateOfSpoil - rateOfSpoil * (modifier - 8) * 9 / 100;
 
-                                    rateOfSpoil = rateOfSpoil * getMagicLevel() / monsterLevel;
+                                    rateOfSpoil = rateOfSpoil * magicLevel / monsterLevel;
                                     if (rateOfSpoil < Config.MINIMUM_SPOIL_RATE)
                                         rateOfSpoil = Config.MINIMUM_SPOIL_RATE;
                                     else if (rateOfSpoil > 99.)
@@ -60,7 +60,7 @@ public final class Spoil extends Skill {
                                     success = Rnd.chance(rateOfSpoil);
 
                                 } else
-                                    success = Formulas.calcSkillSuccess(activeChar, t, this, getActivateRate());
+                                    success = Formulas.calcSkillSuccess(activeChar, t, this, activateRate());
                                 if (success && monster.setSpoiled(activeChar.getPlayer()))
                                     activeChar.sendPacket(SystemMsg.THE_SPOIL_CONDITION_HAS_BEEN_ACTIVATED);
                                 else
@@ -88,11 +88,11 @@ public final class Spoil extends Skill {
 
                     getEffects(activeChar, t);
 
-                    t.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, activeChar, Math.max(_effectPoint, 1));
+                    t.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, activeChar, Math.max(effectPoint, 1));
                 });
     }
 
     private boolean isSpoilUse(Creature target) {
-        return getLevel() != 1 || target.getLevel() <= 22 || getId() != 254;
+        return level != 1 || target.getLevel() <= 22 || id != 254;
     }
 }

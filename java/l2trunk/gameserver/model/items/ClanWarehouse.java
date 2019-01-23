@@ -27,9 +27,6 @@ public final class ClanWarehouse extends Warehouse {
         return destroyItemByObjectId(objectId, count, owner.toString(), log);
     }
 
-    public ItemInstance addItem(ItemInstance item, String log) {
-        return addItem(item, owner.toString(), log);
-    }
 
     public ItemInstance addItem(int itemId, long count, String log) {
         return addItem(itemId, count, owner.toString(), log);
@@ -41,10 +38,6 @@ public final class ClanWarehouse extends Warehouse {
 
     public ItemInstance removeItem(ItemInstance item, String log) {
         return removeItem(item, owner.toString(), log);
-    }
-
-    public ItemInstance removeItemByItemId(int itemId, long count, String log) {
-        return removeItemByItemId(itemId, count, owner.toString(), log);
     }
 
     public ItemInstance removeItemByObjectId(int objectId, long count, String log) {

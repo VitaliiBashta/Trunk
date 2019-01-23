@@ -33,7 +33,7 @@ public class RequestTargetCanceld extends L2GameClientPacket {
         if (_unselect == 0) {
             if (activeChar.isCastingNow()) {
                 Skill skill = activeChar.getCastingSkill();
-                activeChar.abortCast(skill != null && (skill.isHandler() || skill.getHitTime() > 1000), false);
+                activeChar.abortCast(skill != null && (skill.isItemHandler() || skill.hitTime > 1000), false);
             } else if (activeChar.getTarget() != null)
                 activeChar.setTarget(null);
         } else if (activeChar.getTarget() != null)

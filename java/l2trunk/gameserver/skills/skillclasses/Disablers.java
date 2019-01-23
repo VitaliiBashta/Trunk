@@ -33,7 +33,7 @@ public final class Disablers extends Skill {
                         realTarget.abortAttack(true, true);
                 }
 
-                getEffects(activeChar, target, getActivateRate() > 0, false, _staticTime, 1, reflected);
+                getEffects(activeChar, target, activateRate() > 0, false, _staticTime, 1, reflected);
             }
 
         if (isSSPossible())

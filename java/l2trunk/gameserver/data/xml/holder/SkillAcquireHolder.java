@@ -146,9 +146,9 @@ public final class SkillAcquireHolder {
                 boolean knownSkill = false;
                 for (Skill skill : skills) {
                     if (knownSkill) continue;
-                    if (skill.getId() == temp.getId()) {
+                    if (skill.id == temp.getId()) {
                         knownSkill = true;
-                        if (skill.getLevel() == temp.getLevel() - 1)
+                        if (skill.level == temp.getLevel() - 1)
                             skillLearnMap.put(temp.getId(), temp);
                     }
                 }
@@ -252,8 +252,8 @@ public final class SkillAcquireHolder {
 
     private static boolean isSkillPossible(Collection<SkillLearn> skills, Skill skill) {
         return skills.stream()
-                .filter(learn -> learn.getId() == skill.getId())
-                .anyMatch(learn -> learn.getLevel() <= skill.getLevel());
+                .filter(learn -> learn.getId() == skill.id)
+                .anyMatch(learn -> learn.getLevel() <= skill.level);
     }
 
     public static boolean isSkillPossible(Player player, Skill skill) {

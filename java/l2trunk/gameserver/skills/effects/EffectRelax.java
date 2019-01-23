@@ -19,7 +19,7 @@ public class EffectRelax extends Effect {
         if (player == null)
             return false;
         if (player.isMounted()) {
-            player.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addSkillName(_skill.getId(), _skill.getLevel()));
+            player.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addSkillName(skill.id, skill.level));
             return false;
         }
         return super.checkCondition();
@@ -59,7 +59,7 @@ public class EffectRelax extends Effect {
         double manaDam = calc();
         if (manaDam > effected.getCurrentMp())
             if (getSkill().isToggle()) {
-                player.sendPacket(SystemMsg.NOT_ENOUGH_MP, new SystemMessage2(SystemMsg.THE_EFFECT_OF_S1_HAS_BEEN_REMOVED).addSkillName(getSkill().getId(), getSkill().getDisplayLevel()));
+                player.sendPacket(SystemMsg.NOT_ENOUGH_MP, new SystemMessage2(SystemMsg.THE_EFFECT_OF_S1_HAS_BEEN_REMOVED).addSkillName(getSkill().id, getSkill().getDisplayLevel()));
                 return false;
             }
 

@@ -123,7 +123,7 @@ public final class CursedWeapon {
     private void giveSkill(Player player) {
         for (Skill s : getSkills()) {
             player.addSkill(s, false);
-            player._transformationSkills.put(s.getId(), s);
+            player._transformationSkills.put(s.id, s);
         }
         player.sendPacket(new SkillList(player));
     }

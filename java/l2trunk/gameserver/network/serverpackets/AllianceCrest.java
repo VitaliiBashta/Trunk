@@ -1,6 +1,6 @@
 package l2trunk.gameserver.network.serverpackets;
 
-public class AllianceCrest extends L2GameServerPacket {
+public final class AllianceCrest extends L2GameServerPacket {
     private final int _crestId;
     private final byte[] _data;
 

@@ -24,11 +24,11 @@ public final class DeleteHate extends Skill {
                 if (target.isRaid())
                     continue;
 
-                if (getActivateRate() > 0) {
+                if (activateRate() > 0) {
                     if (activeChar.isPlayer() && ((Player) activeChar).isGM())
-                        activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.skills.Formulas.Chance", (Player) activeChar).addString(getName()).addNumber(getActivateRate()));
+                        activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.skills.Formulas.Chance", (Player) activeChar).addString(name).addNumber(activateRate()));
 
-                    if (!Rnd.chance(getActivateRate()))
+                    if (!Rnd.chance(activateRate()))
                         return;
                 }
 

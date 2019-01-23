@@ -46,7 +46,7 @@ public final class RequestExMagicSkillUseGround extends L2GameClientPacket {
             if (activeChar.getTransformation() != 0 && !activeChar.getAllSkills().contains(skill))
                 return;
 
-            if (!activeChar.isInRange(loc, skill.getCastRange())) {
+            if (!activeChar.isInRange(loc, skill.castRange)) {
                 activeChar.sendPacket(SystemMsg.YOUR_TARGET_IS_OUT_OF_RANGE);
                 activeChar.sendActionFailed();
                 return;

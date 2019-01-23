@@ -120,7 +120,7 @@ public abstract class Boat extends Creature {
 
     public void oustPlayer(Player player, Location loc, boolean teleport) {
         synchronized (players) {
-            player._stablePoint = null;
+            player.stablePoint = null;
 
             player.setBoat(null);
             player.setInBoatPosition(null);

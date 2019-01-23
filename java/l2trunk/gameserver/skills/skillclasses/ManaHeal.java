@@ -35,8 +35,8 @@ public final class ManaHeal extends Skill {
 
             // Treatment differences leveled at RECHARGER. difference skill level and target level.
             // 1013 = id skill recharge. For servitors not verified decrease mana until left as is.
-            if (getMagicLevel() > 0 && activeChar != target) {
-                int diff = target.getLevel() - getMagicLevel();
+            if (magicLevel > 0 && activeChar != target) {
+                int diff = target.getLevel() - magicLevel;
                 if (diff > 5)
                     if (diff < 20)
                         newMp = newMp - (newMp * 0.103 * (diff - 5));
@@ -46,7 +46,7 @@ public final class ManaHeal extends Skill {
 
             if (newMp == 0) {
                 activeChar.sendPacket(new SystemMessage2(SystemMsg.S1_HAS_FAILED).addSkillName(id, getDisplayLevel()));
-                getEffects(activeChar, target, getActivateRate() > 0, false);
+                getEffects(activeChar, target, activateRate() > 0, false);
                 continue;
             }
 
@@ -59,7 +59,7 @@ public final class ManaHeal extends Skill {
                     target.sendPacket(new SystemMessage2(SystemMsg.S2_MP_HAS_BEEN_RESTORED_BY_C1).addString(activeChar.getName()).addInteger(Math.round(addToMp)));
                 else
                     activeChar.sendPacket(new SystemMessage2(SystemMsg.S1_MP_HAS_BEEN_RESTORED).addInteger(Math.round(addToMp)));
-            getEffects(activeChar, target, getActivateRate() > 0, false);
+            getEffects(activeChar, target, activateRate() > 0, false);
         }
 
         if (isSSPossible())

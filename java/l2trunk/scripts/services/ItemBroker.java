@@ -403,7 +403,7 @@ public final class ItemBroker extends Functions {
 //            return;
 //        }
 //
-//        TreeMap<Long, Item> allItems = tmpItems.get(template.getName());
+//        TreeMap<Long, Item> allItems = tmpItems.get(template.name());
 //        if (allItems == null) {
 //            show("Error - items with the same name found.", player, npc);
 //            return;

@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class StatTemplate {
-    protected List<FuncTemplate> funcTemplates = new ArrayList<>();
+    private List<FuncTemplate> funcTemplates = new ArrayList<>();
     private List<TriggerInfo> triggerList = new ArrayList<>();
 
     public List<TriggerInfo> getTriggerList() {
@@ -21,8 +21,6 @@ public class StatTemplate {
     }
 
     public void attachFunc(FuncTemplate f) {
-        if (funcTemplates.isEmpty())
-            funcTemplates = new ArrayList<>();
         funcTemplates.add(f);
     }
 

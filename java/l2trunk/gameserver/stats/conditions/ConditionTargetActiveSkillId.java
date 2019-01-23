@@ -15,6 +15,6 @@ public final class ConditionTargetActiveSkillId extends Condition {
     public boolean testImpl(Env env) {
         return env.target.getAllSkills().stream()
                 .filter(Objects::nonNull)
-                .anyMatch(sk -> sk.getId() == skillId);
+                .anyMatch(sk -> sk.id == skillId);
     }
 }

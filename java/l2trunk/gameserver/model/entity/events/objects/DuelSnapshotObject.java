@@ -57,7 +57,7 @@ public final class DuelSnapshotObject implements Serializable {
     }
 
     public void teleport() {
-        player._stablePoint = null;
+        player.stablePoint = null;
         if (player.isFrozen())
             player.stopFrozen();
 

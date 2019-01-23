@@ -10,7 +10,7 @@ import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
-public class RequestJoinAlly extends L2GameClientPacket {
+public final class RequestJoinAlly extends L2GameClientPacket {
     private int _objectId;
 
     @Override
@@ -92,6 +92,5 @@ public class RequestJoinAlly extends L2GameClientPacket {
         //leader of alliance request an alliance.
         target.sendPacket(new SystemMessage2(SystemMsg.S1_LEADER_S2_HAS_REQUESTED_AN_ALLIANCE).addString(activeChar.getAlliance().getAllyName()).addName(activeChar));
         target.sendPacket(new AskJoinAlliance(activeChar.getObjectId(), activeChar.getName(), activeChar.getAlliance().getAllyName()));
-        return;
     }
 }

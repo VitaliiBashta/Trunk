@@ -49,7 +49,7 @@ public final class SymbolInstance extends NpcInstance {
                         if (!skill.isAoE())
                             targets.add(target);
                         else
-                            targets.addAll(getAroundCharacters(skill.getSkillRadius(), 128)
+                            targets.addAll(getAroundCharacters(skill.skillRadius, 128)
                                     .filter(t -> skill.checkTarget(_owner, t, null, false, false) == null)
                                     .collect(Collectors.toList()));
                         targets.add(target);
@@ -122,7 +122,7 @@ public final class SymbolInstance extends NpcInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, String filename, Object... replace) {
+    public void showChatWindow(Player player, String filename) {
     }
 
     @Override

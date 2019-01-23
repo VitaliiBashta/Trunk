@@ -19,7 +19,7 @@ public final class BuffCharger extends Skill {
     public void useSkill(Creature activeChar, List<Creature> targets) {
         targets.forEach(target -> {
             int level = target.getEffectList().getEffectsBySkillId(this.target)
-                    .map(e -> e.getSkill().getLevel()).findFirst().orElse(0);
+                    .map(e -> e.getSkill().level).findFirst().orElse(0);
             Skill next = SkillTable.INSTANCE.getInfo(this.target, level + 1);
             if (next != null)
                 next.getEffects(activeChar, target);

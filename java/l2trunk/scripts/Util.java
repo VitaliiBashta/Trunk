@@ -584,11 +584,11 @@ public final class Util extends Functions {
 //            show(new CustomMessage("common.Disabled", player), player);
 //            return;
 //        }
-//        if (player.getLevel() > 19 || player.getClassId().getLevel() > 1) {
+//        if (player.level() > 19 || player.getClassId().level() > 1) {
 //            show("Your level is too high!", player);
 //            return;
 //        }
-//        if (player.getLevel() < 6) {
+//        if (player.level() < 6) {
 //            show("Your level is too low!", player);
 //            return;
 //        }
@@ -608,11 +608,11 @@ public final class Util extends Functions {
 //            show(new CustomMessage("common.Disabled", player), player);
 //            return;
 //        }
-//        if (player.getLevel() > 39 || player.getClassId().getLevel() > 2) {
+//        if (player.level() > 39 || player.getClassId().level() > 2) {
 //            show("Your level is too high!", player);
 //            return;
 //        }
-//        if (player.getLevel() < 20 || player.getClassId().getLevel() < 2) {
+//        if (player.level() < 20 || player.getClassId().level() < 2) {
 //            show("Your level is too low!", player);
 //            return;
 //        }

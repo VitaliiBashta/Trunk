@@ -36,7 +36,7 @@ public final class WareHouseWithdrawList extends L2GameServerPacket {
                 items = player.getClan().getWarehouse().getItems(clss);
                 break;
             default:
-                itemList = Collections.emptyList();
+                itemList = List.of();
                 return;
         }
         items.sort(ItemClassComparator.getInstance());

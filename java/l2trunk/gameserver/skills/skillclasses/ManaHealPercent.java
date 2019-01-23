@@ -24,7 +24,7 @@ public final class ManaHealPercent extends Skill {
                 if (target.isDead() || target.isHealBlocked())
                     continue;
 
-                getEffects(activeChar, target, getActivateRate() > 0, false);
+                getEffects(activeChar, target, activateRate() > 0, false);
 
                 double mp = power * target.getMaxMp() / 100.;
                 double newMp = mp * (!_ignoreMpEff ? target.calcStat(Stats.MANAHEAL_EFFECTIVNESS, 100., activeChar, this) : 100.) / 100.;

@@ -215,7 +215,7 @@ public final class MeleonAI extends Fighter {
     @Override
     public void onEvtSeeSpell(Skill skill, Creature caster) {
         MeleonInstance actor = getActor();
-        if (actor == null || skill.getId() != 2005)
+        if (actor == null || skill.id != 2005)
             return;
 
         if (actor.getNpcId() != Young_Watermelon && actor.getNpcId() != Young_Honey_Watermelon)

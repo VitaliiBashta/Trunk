@@ -13,13 +13,11 @@ import l2trunk.gameserver.utils.Location;
 import java.util.List;
 
 public final class Decoy extends Skill {
-    private final int npcId;
     private final int lifeTime;
 
     public Decoy(StatsSet set) {
         super(set);
 
-        npcId = set.getInteger("npcId", 0);
         lifeTime = set.getInteger("lifeTime", 1200) * 1000;
     }
 
@@ -29,7 +27,7 @@ public final class Decoy extends Skill {
         if (activeChar.isAlikeDead() || !activeChar.isPlayer() || activeChar != target) // only TARGET_SELF
             return false;
 
-        if (npcId <= 0)
+        if (npcId == 0)
             return false;
 
         if (activeChar.isInObserverMode())
@@ -49,7 +47,7 @@ public final class Decoy extends Skill {
     public void useSkill(Creature caster, List<Creature> targets) {
         Player activeChar = caster.getPlayer();
 
-        NpcTemplate DecoyTemplate = NpcHolder.getTemplate(getNpcId());
+        NpcTemplate DecoyTemplate = NpcHolder.getTemplate(npcId);
         DecoyInstance decoy = new DecoyInstance(IdFactory.getInstance().getNextId(), DecoyTemplate, activeChar, lifeTime);
 
         decoy.setCurrentHp(decoy.getMaxHp(), false);

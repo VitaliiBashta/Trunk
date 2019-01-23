@@ -391,7 +391,7 @@ public final class GameObjectTasks {
                 return;
             }
             List<Creature> targets = castingSkill.getTargets(character, castingTarget, forceUse);
-            character.broadcastPacket(new MagicSkillLaunched(character.getObjectId(), castingSkill.getDisplayId(), castingSkill.getDisplayLevel(), Collections.unmodifiableList(targets)));
+            character.broadcastPacket(new MagicSkillLaunched(character.getObjectId(), castingSkill.displayId, castingSkill.getDisplayLevel(), Collections.unmodifiableList(targets)));
         }
     }
 

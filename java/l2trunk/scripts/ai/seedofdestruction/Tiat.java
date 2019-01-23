@@ -68,7 +68,7 @@ public final class Tiat extends Fighter {
             ThreadPoolManager.INSTANCE.schedule(() -> {
                 getActor().setFullHpMp();
                 getActor().setInvul(false);
-            }, SkillTable.INSTANCE.getInfo(TIAT_TRANSFORMATION_SKILL).getHitTime());
+            }, SkillTable.INSTANCE.getInfo(TIAT_TRANSFORMATION_SKILL).hitTime);
         }
         if (System.currentTimeMillis() - _lastFactionNotifyTime > _minFactionNotifyInterval) {
             _lastFactionNotifyTime = System.currentTimeMillis();

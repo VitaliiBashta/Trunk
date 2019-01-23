@@ -16,7 +16,7 @@ public final class TeleportNpc extends Skill {
     public void useSkill(Creature activeChar, List<Creature> targets) {
         for (Creature target : targets)
             if (target != null && !target.isDead()) {
-                getEffects(activeChar, target, getActivateRate() > 0, false);
+                getEffects(activeChar, target, activateRate() > 0, false);
                 target.abortAttack(true, true);
                 target.abortCast(true, true);
                 target.stopMove();

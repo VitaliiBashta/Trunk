@@ -20,7 +20,7 @@ public final class EvasProtector extends DefaultAI {
         if (actor.getReflection() instanceof CrystalCaverns)
             refl = (CrystalCaverns) actor.getReflection();
         if (refl != null)
-            if (skill.getSkillType() == Skill.SkillType.HEAL)
+            if (skill.skillType == Skill.SkillType.HEAL)
                 refl.notifyProtectorHealed(actor);
         super.onEvtSeeSpell(skill, caster);
     }

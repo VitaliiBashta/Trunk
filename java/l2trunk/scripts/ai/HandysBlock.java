@@ -34,7 +34,7 @@ public final class HandysBlock extends DefaultAI {
             return;
 
         if (player.getTarget() == actor)
-            if (skill.getId() == 5852 || skill.getId() == 5853) {
+            if (skill.id == 5852 || skill.id == 5853) {
                 ArenaParticipantsHolder holder = HandysBlockCheckerManager.INSTANCE.getHolder(arena);
 
                 if (holder.getPlayerTeam(player) == 0 && !actor.isRed()) {

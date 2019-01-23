@@ -77,13 +77,13 @@ public abstract class Inventory extends ItemContainer {
     private static final Logger _log = LoggerFactory.getLogger(Inventory.class);
     final List<ItemInstance> paperdoll = Arrays.asList(new ItemInstance[PAPERDOLL_MAX]);
     final InventoryListenerList listeners = new InventoryListenerList();
-    private final int _ownerId;
+    private final int ownerId;
     private int _totalWeight;
     // used to quickly check for using of items of special type
     private long wearedMask;
 
     Inventory(int ownerId) {
-        _ownerId = ownerId;
+        this.ownerId = ownerId;
 
         addListener(StatsListener.getInstance());
     }
@@ -146,7 +146,7 @@ public abstract class Inventory extends ItemContainer {
     protected abstract ItemLocation getEquipLocation();
 
     int getOwnerId() {
-        return _ownerId;
+        return ownerId;
     }
 
     void onRestoreItem(ItemInstance item) {

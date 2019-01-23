@@ -130,7 +130,7 @@ public final class TeamMember {
         if (duel != null)
             duel.abortDuel(player);
 
-        _returnLoc = player._stablePoint == null ? player.getReflection().getReturnLoc() == null ? player.getLoc() : player.getReflection().getReturnLoc() : player._stablePoint;
+        _returnLoc = player.stablePoint == null ? player.getReflection().getReturnLoc() == null ? player.getLoc() : player.getReflection().getReturnLoc() : player.stablePoint;
 
         if (player.isDead())
             player.setPendingRevive(true);
@@ -149,7 +149,7 @@ public final class TeamMember {
 
         Location tele = Location.findPointToStay(instantZone.getTeleportCoords().get(_side - 1), 50, 50, ref.getGeoIndex());
 
-        player._stablePoint = _returnLoc;
+        player.stablePoint = _returnLoc;
         player.teleToLocation(tele, ref);
 
         if (_type == CompType.TEAM)
@@ -198,7 +198,7 @@ public final class TeamMember {
         player.sendPacket(new ExOlympiadMode(0));
         player.sendPacket(new ExOlympiadMatchEnd());
 
-        player._stablePoint = null;
+        player.stablePoint = null;
         player.teleToLocation(_returnLoc, ReflectionManager.DEFAULT);
 
     }
@@ -240,7 +240,7 @@ public final class TeamMember {
                 continue;
 
             Skill skill = player.getKnownSkill(sts.getId());
-            if (skill == null || skill.getLevel() != sts.getLevel())
+            if (skill == null || skill.level != sts.getLevel())
                 continue;
 
             if (skill.getReuseDelay(player) <= 15 * 60000L)
@@ -309,7 +309,7 @@ public final class TeamMember {
         player.getEffectList().getAllEffects()
                 .filter(e -> e.getEffectType() != EffectType.Cubic)
                 .filter(e -> !e.getSkill().isToggle())
-                .peek(e -> player.sendPacket(new SystemMessage(SystemMsg.THE_EFFECT_OF_S1_HAS_BEEN_REMOVED).addSkillName(e.getSkill().getId(), e.getSkill().getLevel())))
+                .peek(e -> player.sendPacket(new SystemMessage(SystemMsg.THE_EFFECT_OF_S1_HAS_BEEN_REMOVED).addSkillName(e.getSkill().id, e.getSkill().level)))
                 .forEach(Effect::exit);
 
 

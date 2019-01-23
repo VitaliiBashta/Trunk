@@ -36,7 +36,7 @@ public class HealPercent extends Skill {
                 if (target.isHealBlocked() && target != activeChar.getPet())
                     continue;
 
-                getEffects(activeChar, target, getActivateRate() > 0, false);
+                getEffects(activeChar, target, activateRate() > 0, false);
 
                 double hp = power * target.getMaxHp() / 100.;
                 double newHp = hp * (!_ignoreHpEff ? target.calcStat(Stats.HEAL_EFFECTIVNESS, 100., activeChar, this) : 100.) / 100.;

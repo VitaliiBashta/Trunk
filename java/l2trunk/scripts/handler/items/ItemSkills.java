@@ -38,7 +38,7 @@ public final class ItemSkills extends ScriptItemHandler implements ScriptFile {
                 continue;
 
             for (Skill skill : template.getAttachedSkills())
-                if (skill.isHandler())
+                if (skill.isItemHandler())
                     set.add(template.getItemId());
         }
         _itemIds = new ArrayList<>(set);

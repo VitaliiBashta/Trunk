@@ -37,7 +37,11 @@ public class GuardCaptionInstance extends FacilityManagerInstance {
                 return;
             }
 
-            showChatWindow(player, "residence2/fortress/fortress_garrison002.htm", "%facility_0%", fortress.getFacilityLevel(Fortress.REINFORCE), "%facility_2%", fortress.getFacilityLevel(Fortress.DOOR_UPGRADE), "%facility_3%", fortress.getFacilityLevel(Fortress.DWARVENS), "%facility_4%", fortress.getFacilityLevel(Fortress.SCOUT));
+            showChatWindow(player, "residence2/fortress/fortress_garrison002.htm",
+                    "%facility_0%", String.valueOf(fortress.getFacilityLevel(Fortress.REINFORCE)),
+                    "%facility_2%", String.valueOf(fortress.getFacilityLevel(Fortress.DOOR_UPGRADE))
+                    , "%facility_3%", String.valueOf(fortress.getFacilityLevel(Fortress.DWARVENS)),
+                    "%facility_4%", String.valueOf(fortress.getFacilityLevel(Fortress.SCOUT)));
         } else if (command.equalsIgnoreCase("defenceUp1") || command.equalsIgnoreCase("defenceUp2"))
             buyFacility(player, Fortress.REINFORCE, Integer.parseInt(command.substring(9, 10)), 100000);
         else if (command.equalsIgnoreCase("deployScouts"))

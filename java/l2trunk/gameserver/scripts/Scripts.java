@@ -77,12 +77,12 @@ public enum Scripts {
                     Integer id = toInt(method.getName().substring(13));
                     List<ScriptClassAndMethod> handlers = dialogAppends.computeIfAbsent(id, k -> new ArrayList<>());
                     handlers.add(new ScriptClassAndMethod(clazz.getName(), method.getName()));
-//                } else if (method.getName().contains("OnAction_")) {
-//                    String name = method.getName().substring(9);
-//                    onAction.put(name, new ScriptClassAndMethod(clazz.getSimpleName(), method.getName()));
-//                } else if (method.getName().contains("OnActionShift_")) {
-//                    String name = method.getName().substring(14);
-//                    onActionShift.put(name, new ScriptClassAndMethod(clazz.getName(), method.getName()));
+//                } else if (method.name().contains("OnAction_")) {
+//                    String name = method.name().substring(9);
+//                    onAction.put(name, new ScriptClassAndMethod(clazz.getSimpleName(), method.name()));
+//                } else if (method.name().contains("OnActionShift_")) {
+//                    String name = method.name().substring(14);
+//                    onActionShift.put(name, new ScriptClassAndMethod(clazz.name(), method.name()));
                 }
         } catch (NumberFormatException | SecurityException e) {
             LOG.error("Exception while adding Handlers ", e);

@@ -43,8 +43,8 @@ public final class OptionDataHolder {
                         continue;
 
                     // Chequeamos que el lvl de esta skill si ya fue agregado, sea mayor al anterior
-                    if (!options.containsKey(option.getSkills().get(0).getId()) || options.get(option.getSkills().get(0).getId()).getSkills().get(0).getLevel() < option.getSkills().get(0).getLevel())
-                        options.put(option.getSkills().get(0).getId(), option);
+                    if (!options.containsKey(option.getSkills().get(0).id) || options.get(option.getSkills().get(0).id).getSkills().get(0).level < option.getSkills().get(0).level)
+                        options.put(option.getSkills().get(0).id, option);
                 }
                 break;
             }
@@ -58,8 +58,8 @@ public final class OptionDataHolder {
                         continue;
 
                     // Chequeamos que el lvl de esta skill si ya fue agregado, sea mayor al anterior
-                    if (!options.containsKey(option.getSkills().get(0).getId()) || options.get(option.getSkills().get(0).getId()).getSkills().get(0).getLevel() < option.getSkills().get(0).getLevel())
-                        options.put(option.getSkills().get(0).getId(), option);
+                    if (!options.containsKey(option.getSkills().get(0).id) || options.get(option.getSkills().get(0).id).getSkills().get(0).level < option.getSkills().get(0).level)
+                        options.put(option.getSkills().get(0).id, option);
                 }
                 break;
             }
@@ -101,7 +101,7 @@ public final class OptionDataHolder {
             if (left.getSkills().isEmpty() || right.getSkills().isEmpty())
                 return 0;
 
-            return Integer.compare(left.getSkills().get(0).getId(), right.getSkills().get(0).getId());
+            return Integer.compare(left.getSkills().get(0).id, right.getSkills().get(0).id);
         }
     }
 

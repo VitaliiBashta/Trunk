@@ -217,7 +217,7 @@ public final class SquashAI extends Fighter {
     @Override
     public void onEvtSeeSpell(Skill skill, Creature caster) {
         SquashInstance actor = getActor();
-        if (actor == null || skill.getId() != 2005)
+        if (actor == null || skill.id != 2005)
             return;
 
         switch (_tryCount) {

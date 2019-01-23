@@ -42,8 +42,8 @@ public final class ItemHolder {
         return items.values();
     }
 
-    public static List<ItemTemplate> getItemsByNameContainingString(String name, boolean onlyDroppable) {
-        Collection<ItemTemplate> toChooseFrom = onlyDroppable ? getDroppableTemplates() : items.values();
+    public static List<ItemTemplate> getItemsByNameContainingString(String name) {
+        Collection<ItemTemplate> toChooseFrom =  getDroppableTemplates() ;
         List<ItemTemplate> templates = new ArrayList<>();
         for (ItemTemplate template : toChooseFrom)
             if (template != null && StringUtils.containsIgnoreCase(template.getName(), name))

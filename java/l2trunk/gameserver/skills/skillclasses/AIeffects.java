@@ -15,7 +15,7 @@ public final class AIeffects extends Skill {
     public void useSkill(Creature activeChar, List<Creature> targets) {
         for (Creature target : targets)
             if (target != null)
-                getEffects(activeChar, target, getActivateRate() > 0, false);
+                getEffects(activeChar, target, activateRate() > 0, false);
 
         if (isSSPossible())
             activeChar.unChargeShots(isMagic());

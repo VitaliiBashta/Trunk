@@ -27,7 +27,7 @@ public class RequestPledgeReorganizeMember extends L2GameClientPacket {
 
     @Override
     protected void runImpl() {
-        //_log.warn("Received RequestPledgeReorganizeMember("+_arg1+","+_arg2+","+_arg3+","+_arg4+") from player "+getClient().getActiveChar().getName());
+        //_log.warn("Received RequestPledgeReorganizeMember("+_arg1+","+_arg2+","+_arg3+","+_arg4+") from player "+getClient().getActiveChar().name());
 
         Player activeChar = getClient().getActiveChar();
         if (activeChar == null)

@@ -21,7 +21,7 @@ public final class SummonManaHealPercent extends Skill {
     public void useSkill(Creature activeChar, List<Creature> targets) {
         for (Creature target : targets)
             if (target != null) {
-                getEffects(activeChar, target, getActivateRate() > 0, false);
+                getEffects(activeChar, target, activateRate() > 0, false);
 
                 double mp = power * target.getMaxMp() / 100.;
                 double newMp = mp * (!_ignoreMpEff ? target.calcStat(Stats.MANAHEAL_EFFECTIVNESS, 100., activeChar, this) : 100.) / 100.;

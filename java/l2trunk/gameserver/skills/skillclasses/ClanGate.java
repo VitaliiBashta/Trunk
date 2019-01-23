@@ -4,7 +4,6 @@ import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Skill;
-import l2trunk.gameserver.model.pledge.Clan;
 import l2trunk.gameserver.network.serverpackets.SystemMessage;
 import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
@@ -44,6 +43,6 @@ public final class ClanGate extends Skill {
         Player player = (Player) activeChar;
         player.getClan().broadcastToOtherOnlineMembers(new SystemMessage2(SystemMsg.COURT_MAGICIAN__THE_PORTAL_HAS_BEEN_CREATED), player);
 
-        getEffects(activeChar, activeChar, getActivateRate() > 0, true);
+        getEffects(activeChar, activeChar, activateRate() > 0, true);
     }
 }

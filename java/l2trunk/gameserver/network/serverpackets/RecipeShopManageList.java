@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.List;
 
 
-public class RecipeShopManageList extends L2GameServerPacket {
+public final class RecipeShopManageList extends L2GameServerPacket {
     private final List<ManufactureItem> createList;
     private final Collection<Recipe> recipes;
     private final int sellerId;
@@ -43,10 +43,10 @@ public class RecipeShopManageList extends L2GameServerPacket {
             writeD(i++);
         }
         writeD(createList.size());
-        for (ManufactureItem mi : createList) {
+        createList.forEach(mi -> {
             writeD(mi.getRecipeId());
             writeD(0x00); //??
             writeQ(mi.getCost());
-        }
+        });
     }
 }

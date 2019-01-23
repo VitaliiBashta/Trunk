@@ -1,5 +1,6 @@
 package l2trunk.gameserver.model.reward;
 
+import l2trunk.commons.lang.Pair;
 import l2trunk.commons.lang.StringUtils;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.Config;
@@ -12,15 +13,16 @@ import l2trunk.gameserver.templates.item.ItemTemplate;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
-public class CalculateRewardChances {
+public final class CalculateRewardChances {
     private static final double CORRECT_CHANCE_TRIES = 10000.0;
     private static final Map<Integer, Integer[]> droplistsCountCache = new HashMap<>();
     private static final Map<String, String> correctedChances = new HashMap<>();
+
+    private CalculateRewardChances() {
+    }
 
     public static List<NpcTemplate> getNpcsContainingString(String name) {
         List<NpcTemplate> templates = new ArrayList<>();
@@ -68,24 +70,25 @@ public class CalculateRewardChances {
         return SpawnManager.INSTANCE.getSpawnedCountByNpc(template.getNpcId()) != 0;
     }
 
-    public static boolean isItemDroppable(int itemId) {
-        if (!droplistsCountCache.containsKey(itemId))
-            getDroplistsCountByItemId(itemId, true);
-
-        return droplistsCountCache.get(itemId)[0] > 0 || droplistsCountCache.get(itemId)[1] > 0;
-    }
-
     public static List<ItemTemplate> getDroppableItems() {
-        List<ItemTemplate> items = new ArrayList<>();
-        for (NpcTemplate template : NpcHolder.getAll())
-            if (templateExists(template)) {
-                for (Map.Entry<RewardType, RewardList> rewardEntry : template.getRewards().entrySet())
-                    for (RewardGroup group : rewardEntry.getValue())
-                        for (RewardData data : group.getItems())
-                            if (!items.contains(data.getItem()))
-                                items.add(data.getItem());
-            }
-        return items;
+        Set<ItemTemplate> items;
+        items = NpcHolder.getAll().stream()
+                .filter(CalculateRewardChances::templateExists)
+                .flatMap(template -> template.getRewards().values().stream())
+                .flatMap(Collection::stream)
+                .flatMap(group -> group.getItems().stream())
+                .map(RewardData::getItem)
+                .collect(Collectors.toSet());
+
+
+//        NpcHolder.getAll().stream()
+//                .filter(CalculateRewardChances::templateExists)
+//                .forEach(template -> template.getRewards().values()
+//                        .forEach(rewardEntry ->
+//                                rewardEntry.forEach(group ->
+//                                        group.getItems().forEach(data ->
+//                                                items.add(data.getItem())))));
+        return new ArrayList<>(items);
     }
 
     /**
@@ -93,50 +96,45 @@ public class CalculateRewardChances {
      */
     public static List<NpcTemplateDrops> getNpcsByDropOrSpoil(int itemId) {
         List<NpcTemplateDrops> templates = new ArrayList<>();
-        for (NpcTemplate template : NpcHolder.getAll()) {
-            if (template == null)
-                continue;
-            if (SpawnManager.INSTANCE.getSpawnedCountByNpc(template.getNpcId()) == 0)
-                continue;
-
-            boolean[] dropSpoil = templateContainsItemId(template, itemId);
-
-            if (dropSpoil[0])
-                templates.add(new NpcTemplateDrops(template, true));
-            if (dropSpoil[1])
-                templates.add(new NpcTemplateDrops(template, false));
-        }
+        NpcHolder.getAll().stream()
+                .filter(Objects::nonNull)
+                .filter(template -> SpawnManager.INSTANCE.getSpawnedCountByNpc(template.getNpcId()) > 0)
+                .forEach(template -> {
+                    Pair<Boolean, Boolean> dropSpoil = templateContainsItemId(template, itemId);
+                    if (dropSpoil.getKey())
+                        templates.add(new NpcTemplateDrops(template, true));
+                    if (dropSpoil.getValue())
+                        templates.add(new NpcTemplateDrops(template, false));
+                });
         return templates;
     }
 
-    private static boolean[] templateContainsItemId(NpcTemplate template, int itemId) {
-        boolean[] dropSpoil = {false, false};
+    private static Pair<Boolean, Boolean> templateContainsItemId(NpcTemplate template, int itemId) {
+        boolean drop = false;
+        boolean spoil = false;
         for (Map.Entry<RewardType, RewardList> rewardEntry : template.getRewards().entrySet()) {
             if (rewardListContainsItemId(rewardEntry.getValue(), itemId)) {
                 if (rewardEntry.getKey() == RewardType.SWEEP)
-                    dropSpoil[1] = true;
+                    spoil = true;
                 else
-                    dropSpoil[0] = true;
+                    drop = true;
             }
         }
-        return dropSpoil;
+        return new Pair<>(drop, spoil);
     }
 
     private static boolean rewardListContainsItemId(RewardList list, int itemId) {
-        for (RewardGroup group : list)
-            for (RewardData reward : group.getItems())
-                if (reward.getItemId() == itemId) {
-                    return true;
-                }
-        return false;
+        return list.stream()
+                .flatMap(group -> group.getItems().stream())
+                .anyMatch(reward -> reward.getItemId() == itemId);
+
     }
 
     private static boolean isDroppingAnything(NpcTemplate template) {
-        for (Map.Entry<RewardType, RewardList> rewardEntry : template.getRewards().entrySet())
-            for (RewardGroup group : rewardEntry.getValue())
-                if (!group.getItems().isEmpty())
-                    return true;
-        return false;
+        return template.getRewards().values().stream()
+                .flatMap(Collection::stream)
+                .anyMatch(g -> !g.getItems().isEmpty());
+
     }
 
     public static List<RewardData> getDrops(NpcTemplate template, boolean drop, boolean spoil) {
@@ -250,11 +248,11 @@ public class CalculateRewardChances {
         return finalValue;
     }
 
-    public static long[] getDropCounts(Player player, NpcTemplate npc, boolean dropNoSpoil, int itemId) {
+    public static Pair<Long, Long> getDropCounts(Player player, NpcTemplate npc, boolean dropNoSpoil, int itemId) {
         TypeGroupData info = getGroupAndData(npc, dropNoSpoil, itemId);
 
         if (info == null)
-            return new long[]{0L, 0L};
+            return new Pair<>(0L, 0L);
 
         double mod = Experience.penaltyModifier((long) NpcInstance.calculateLevelDiffForDrop(npc.level, player.getLevel(), false), 9.0);
         double baseRate = 1.0;
@@ -281,7 +279,7 @@ public class CalculateRewardChances {
         if (itemId == ItemTemplate.ITEM_ID_ADENA)
             minDrop *= (long) imult;
         long maxDrop = (long) ((double) info.data.getMaxDrop() * Math.ceil(imult));
-        return new long[]{minDrop, maxDrop};
+        return new Pair<>(minDrop, maxDrop);
     }
 
     private static TypeGroupData getGroupAndData(NpcTemplate npc, boolean dropNoSpoil, int itemId) {

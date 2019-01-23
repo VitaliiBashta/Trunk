@@ -149,7 +149,7 @@ public final class StakatoNest extends Fighter {
     @Override
     public void onEvtSeeSpell(Skill skill, Creature caster) {
         NpcInstance actor = getActor();
-        if (actor == null || !BIZARRE_COCOON.contains(actor.getNpcId()) || caster == null || skill.getId() != SKILL_GROWTH_ACCELERATOR) {
+        if (actor == null || !BIZARRE_COCOON.contains(actor.getNpcId()) || caster == null || skill.id != SKILL_GROWTH_ACCELERATOR) {
             super.onEvtSeeSpell(skill, caster);
             return;
         }

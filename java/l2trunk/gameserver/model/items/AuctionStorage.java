@@ -36,7 +36,7 @@ public class AuctionStorage extends ItemContainer {
         if (item.getCount() < 1)
             return null;
 
-        ItemInstance result = null;
+        ItemInstance result;
 
         writeLock();
         try {

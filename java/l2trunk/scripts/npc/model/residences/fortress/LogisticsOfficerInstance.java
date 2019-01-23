@@ -41,16 +41,19 @@ public final class LogisticsOfficerInstance extends FacilityManagerInstance {
                 return;
             }
 
-            showChatWindow(player, "residence2/fortress/fortress_supply_officer002.htm", "%guard_buff_level%", fortress.getFacilityLevel(Fortress.GUARD_BUFF));
+            showChatWindow(player, "residence2/fortress/fortress_supply_officer002.htm",
+                    "%guard_buff_level%", fortress.getFacilityLevel(Fortress.GUARD_BUFF)+"");
         } else if ("supplyInfo".equalsIgnoreCase(command)) {
             if (fortress.getContractState() != Fortress.CONTRACT_WITH_CASTLE) {
                 showChatWindow(player, "residence2/fortress/fortress_supply_officer005.htm");
                 return;
             }
 
-            showChatWindow(player, "residence2/fortress/fortress_supply_officer009.htm", "%supply_count%", fortress.getSupplyCount());
+            showChatWindow(player, "residence2/fortress/fortress_supply_officer009.htm",
+                    "%supply_count%", fortress.getSupplyCount()+"");
         } else if ("rewardInfo".equalsIgnoreCase(command)) {
-            showChatWindow(player, "residence2/fortress/fortress_supply_officer010.htm", "%blood_oaths%", fortress.getRewardCount());
+            showChatWindow(player, "residence2/fortress/fortress_supply_officer010.htm",
+                    "%blood_oaths%", fortress.getRewardCount()+"");
         } else if ("receiveSupply".equalsIgnoreCase(command)) {
             String filename;
             if (fortress.getSupplyCount() > 0) {

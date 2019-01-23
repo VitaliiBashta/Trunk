@@ -12,7 +12,6 @@ import l2trunk.gameserver.utils.Location;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ScheduledFuture;
 
 public final class Tears extends DefaultAI {
@@ -45,7 +44,7 @@ public final class Tears extends DefaultAI {
         if (System.currentTimeMillis() - _last_scale_time > 5000)
             _scale_count = 0;
 
-        if (skill.getId() == Water_Dragon_Scale) {
+        if (skill.id == Water_Dragon_Scale) {
             _scale_count++;
             _last_scale_time = System.currentTimeMillis();
         }

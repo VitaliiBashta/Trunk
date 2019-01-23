@@ -35,18 +35,18 @@ public class EffectDamOverTime extends Effect {
                     break;
             }
 
-        damage = _effector.calcStat(getSkill().isMagic() ? Stats.MAGIC_DAMAGE : Stats.PHYSICAL_DAMAGE, damage, effected, getSkill());
+        damage = effector.calcStat(getSkill().isMagic() ? Stats.MAGIC_DAMAGE : Stats.PHYSICAL_DAMAGE, damage, effected, getSkill());
 
         if (damage > effected.getCurrentHp() - 1 && !effected.isNpc()) {
-            if (!getSkill().isOffensive())
+            if (!getSkill().isOffensive)
                 effected.sendPacket(SystemMsg.NOT_ENOUGH_HP);
             return false;
         }
 
-        if (getSkill().getAbsorbPart() > 0)
-            _effector.setCurrentHp(getSkill().getAbsorbPart() * Math.min(effected.getCurrentHp(), damage) + _effector.getCurrentHp(), false);
+        if (getSkill().absorbPart > 0)
+            effector.setCurrentHp(getSkill().absorbPart * Math.min(effected.getCurrentHp(), damage) + effector.getCurrentHp(), false);
 
-        effected.reduceCurrentHp(damage, _effector, getSkill(), !effected.isNpc() && effected != _effector, effected != _effector, _effector.isNpc() || effected == _effector, false, false, true, false);
+        effected.reduceCurrentHp(damage, effector, getSkill(), !effected.isNpc() && effected != effector, effected != effector, effector.isNpc() || effected == effector, false, false, true, false);
 
         return true;
     }

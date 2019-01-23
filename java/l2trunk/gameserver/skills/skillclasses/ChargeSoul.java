@@ -13,7 +13,7 @@ public final class ChargeSoul extends Skill {
 
     public ChargeSoul(StatsSet set) {
         super(set);
-        numSouls = set.getInteger("numSouls", getLevel());
+        numSouls = set.getInteger("numSouls", level);
     }
 
     @Override
@@ -22,7 +22,7 @@ public final class ChargeSoul extends Skill {
             return;
 
         boolean ss = activeChar.getChargedSoulShot() && isSSPossible();
-        if (ss && getTargetType() != SkillTargetType.TARGET_SELF)
+        if (ss && targetType != SkillTargetType.TARGET_SELF)
             activeChar.unChargeShots(false);
 
         Creature realTarget;
@@ -50,7 +50,7 @@ public final class ChargeSoul extends Skill {
                 if (realTarget.isPlayable() || realTarget.isMonster())
                     activeChar.setConsumedSouls(activeChar.getConsumedSouls() + numSouls, null);
 
-                getEffects(activeChar, target, getActivateRate() > 0, false, reflected);
+                getEffects(activeChar, target, activateRate() > 0, false, reflected);
             }
 
         if (isSSPossible())

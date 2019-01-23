@@ -547,7 +547,7 @@ public final class PetBabyInstance extends PetInstance {
                     return null;
 
                 for (Skill buff : getBuffs()) {
-                    if (getCurrentMp() < buff.getMpConsume2())
+                    if (getCurrentMp() < buff.mpConsume2)
                         continue;
 
                     if (owner.getEffectList().getAllEffects().anyMatch(ef -> checkEffect(ef, buff)))
@@ -652,7 +652,7 @@ public final class PetBabyInstance extends PetInstance {
         @Override
         public void runImpl() {
             Skill skill = onActionTask();
-            actionTask = ThreadPoolManager.INSTANCE.schedule(new ActionTask(), skill == null ? 1000 : skill.getHitTime() * 333 / Math.max(getMAtkSpd(), 1) - 100);
+            actionTask = ThreadPoolManager.INSTANCE.schedule(new ActionTask(), skill == null ? 1000 : skill.hitTime * 333 / Math.max(getMAtkSpd(), 1) - 100);
         }
     }
 }

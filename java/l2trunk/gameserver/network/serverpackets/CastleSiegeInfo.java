@@ -34,7 +34,7 @@ import java.util.List;
  *
  * @reworked VISTALL
  */
-public class CastleSiegeInfo extends L2GameServerPacket {
+public final class CastleSiegeInfo extends L2GameServerPacket {
     private final int _id;
     private final int _ownerObjectId;
     private long _startTime;

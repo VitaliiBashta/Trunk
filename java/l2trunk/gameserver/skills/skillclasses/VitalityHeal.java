@@ -21,7 +21,7 @@ public final class VitalityHeal extends Skill {
             if (target.isPlayer()) {
                 target.getPlayer().addVitality(fullPoints / 100. * percent);
             }
-            getEffects(activeChar, target, getActivateRate() > 0, false);
+            getEffects(activeChar, target, activateRate() > 0, false);
         }
 
         if (isSSPossible())

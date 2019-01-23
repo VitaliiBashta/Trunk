@@ -6,7 +6,6 @@ import l2trunk.gameserver.Config;
 import l2trunk.gameserver.database.DatabaseFactory;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Skill;
-import l2trunk.gameserver.tables.SkillTable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +14,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.List;
 import java.util.stream.Collectors;
 
 public enum OfflineBuffersTable {
@@ -61,7 +59,7 @@ public enum OfflineBuffersTable {
                                     if (skill == null)
                                         continue;
 
-                                    buffer.getBuffs().put(skill.getId(), skill);
+                                    buffer.getBuffs().put(skill.id, skill);
                                 }
                             }
                         }
@@ -146,7 +144,7 @@ public enum OfflineBuffersTable {
             return "";
 
         return skills.stream()
-                .map(skill -> skill.getId() + "")
+                .map(skill -> skill.id + "")
                 .collect(Collectors.joining(","));
     }
 }

@@ -37,8 +37,8 @@ public class NegateStats extends Skill {
     public void useSkill(Creature activeChar, List<Creature> targets) {
         for (Creature target : targets)
             if (target != null) {
-                if (!negateOffensive && !Formulas.calcSkillSuccess(activeChar, target, this, getActivateRate())) {
-                    activeChar.sendPacket(new SystemMessage2(SystemMsg.C1_HAS_RESISTED_YOUR_S2).addString(target.getName()).addSkillName(getId(), getLevel()));
+                if (!negateOffensive && !Formulas.calcSkillSuccess(activeChar, target, this, activateRate())) {
+                    activeChar.sendPacket(new SystemMessage2(SystemMsg.C1_HAS_RESISTED_YOUR_S2).addString(target.getName()).addSkillName(id, level));
                     continue;
                 }
 
@@ -47,12 +47,12 @@ public class NegateStats extends Skill {
                     for (Effect e : target.getEffectList().getAllEffects().collect(Collectors.toList())) {
                         Skill skill = e.getSkill();
                         // Если у бафа выше уровень чем у скилла Cancel, то есть шанс, что этот баф не снимется
-                        if (!skill.isOffensive() && skill.getMagicLevel() > getMagicLevel() && Rnd.chance(skill.getMagicLevel() - getMagicLevel())) {
+                        if (!skill.isOffensive && skill.magicLevel > magicLevel && Rnd.chance(skill.magicLevel - magicLevel)) {
                             count++;
                             continue;
                         }
-                        if (skill.isOffensive() == negateOffensive && containsStat(e, stat) && skill.isCancelable()) {
-                            target.sendPacket(new SystemMessage2(SystemMsg.THE_EFFECT_OF_S1_HAS_BEEN_REMOVED).addSkillName(e.getSkill().getId(), e.getSkill().getDisplayLevel()));
+                        if (skill.isOffensive == negateOffensive && containsStat(e, stat) && skill.isCancelable()) {
+                            target.sendPacket(new SystemMessage2(SystemMsg.THE_EFFECT_OF_S1_HAS_BEEN_REMOVED).addSkillName(e.getSkill().id, e.getSkill().getDisplayLevel()));
                             e.exit();
                             count++;
                         }
@@ -60,7 +60,7 @@ public class NegateStats extends Skill {
                             break;
                     }
 
-                getEffects(activeChar, target, getActivateRate() > 0, false);
+                getEffects(activeChar, target, activateRate() > 0, false);
             }
 
         if (isSSPossible())

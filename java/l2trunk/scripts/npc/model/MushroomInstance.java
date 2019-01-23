@@ -95,7 +95,7 @@ public final class MushroomInstance extends MonsterInstance {
                 return;
 
             if (actor != null && actor.getNpcId() == FANTASY_MUSHROOM) {
-                actor.broadcastPacket(new MagicSkillUse(actor, skill.getId(), skill.getLevel()));
+                actor.broadcastPacket(new MagicSkillUse(actor, skill.id, skill.level));
                 actor.getAroundNpc(200, 300)
                         .filter(GameObject::isMonster)
                         .filter(npc -> npc.getNpcId() >= 22768)

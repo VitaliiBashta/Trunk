@@ -245,7 +245,7 @@ public final class Augmentation extends Functions {
             block = block.replace("{bypass}", new StringBuilder().append("bypass -h scripts_services.Augmentation:run put ").append(augm.getId()).append(" ").append(_filter.ordinal() + 1).toString());
             String name = "";
             if (skill != null) {
-                name = skill.getName().length() > 28 ? skill.getName().substring(0, 28) : skill.getName();
+                name = skill.name().length() > 28 ? skill.name().substring(0, 28) : skill.name();
             } else {
                 name = "+1 ";
                 switch (augm.getId()) {
@@ -267,7 +267,7 @@ public final class Augmentation extends Functions {
             }
 
             block = block.replace("{name}", name);
-            block = block.replace("{icon}", skill != null ? skill.getIcon() : "icon.skill5041");
+            block = block.replace("{icon}", skill != null ? skill.icon : "icon.skill5041");
             block = block.replace("{color}", lastColor ? "222222" : "333333");
             block = block.replace("{price}", new StringBuilder().append(Util.formatAdena(Config.SERVICES_AUGMENTATION_PRICE)).append(" ").append(Util.getItemName(Config.SERVICES_AUGMENTATION_ITEM)).toString());
             list = new StringBuilder().append(list).append(block).toString();

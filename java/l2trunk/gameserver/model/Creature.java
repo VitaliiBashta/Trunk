@@ -123,7 +123,7 @@ public abstract class Creature extends GameObject {
     private final Lock zonesWrite = zonesLock.writeLock();
     private final Lock statusListenersLock = new ReentrantLock();
     // Функция для дизактивации умений персонажа (если умение не активно, то он не дает статтов и имеет серую иконку).
-    private final Set<Integer> _unActiveSkills = new HashSet<>();
+    private final Set<Integer> unActiveSkills = new HashSet<>();
     private final AtomicBoolean isDead = new AtomicBoolean();
     private final AtomicBoolean isTeleporting = new AtomicBoolean();
     private final HardReference<? extends Creature> reference;
@@ -274,13 +274,13 @@ public abstract class Creature extends GameObject {
             }
 
             if (castingSkill != null) {
-                if (castingSkill.isUsingWhileCasting()) {
+                if (castingSkill.isUsingWhileCasting) {
                     Creature target = getAI().getAttackTarget();
                     if (target != null)
-                        target.getEffectList().stopEffect(castingSkill.getId());
+                        target.getEffectList().stopEffect(castingSkill.id);
                 }
 
-                removeSkillMastery(castingSkill.getId());
+                removeSkillMastery(castingSkill.id);
             }
 
             broadcastPacket(new MagicSkillCanceled(getObjectId())); // broadcast packet to stop animations client-side
@@ -306,7 +306,7 @@ public abstract class Creature extends GameObject {
 
         if (skill != null && skill.isMagic())
             value = target.calcStat(Stats.REFLECT_AND_BLOCK_MSKILL_DAMAGE_CHANCE, 0, this, skill);
-        else if (skill != null && skill.getCastRange() <= 200)
+        else if (skill != null && skill.castRange <= 200)
             value = target.calcStat(Stats.REFLECT_AND_BLOCK_PSKILL_DAMAGE_CHANCE, 0, this, skill);
         else if (skill == null && !bow)
             value = target.calcStat(Stats.REFLECT_AND_BLOCK_DAMAGE_CHANCE, 0, this, null);
@@ -320,7 +320,7 @@ public abstract class Creature extends GameObject {
         if (skill != null && skill.isMagic())
             value = target.calcStat(Stats.REFLECT_MSKILL_DAMAGE_PERCENT, 0, this, skill);
         else if (skill != null) {
-            if (skill.getCastRange() >= 0 && skill.getCastRange() <= 40)
+            if (skill.castRange >= 0 && skill.castRange <= 40)
                 value = target.calcStat(Stats.REFLECT_PSKILL_DAMAGE_PERCENT, 0, this, skill);
         } else if (!bow)
             value = target.calcStat(Stats.REFLECT_DAMAGE_PERCENT, 0, this, null);
@@ -450,13 +450,13 @@ public abstract class Creature extends GameObject {
         if (newSkill == null)
             return null;
 
-        Skill oldSkill = skills.get(newSkill.getId());
+        Skill oldSkill = skills.get(newSkill.id);
 
-        if (oldSkill != null && oldSkill.getLevel() == newSkill.getLevel())
+        if (oldSkill != null && oldSkill.level == newSkill.level)
             return newSkill;
 
         // Replace oldSkill by newSkill or Add the newSkill
-        skills.put(newSkill.getId(), newSkill);
+        skills.put(newSkill.id, newSkill);
 
         // FIX for /useskill re-use exploit
         if (oldSkill != null) {
@@ -531,11 +531,11 @@ public abstract class Creature extends GameObject {
     private void altOnMagicUseTimer(Creature aimingTarget, Skill skill) {
         if (isAlikeDead())
             return;
-        int magicId = skill.getDisplayId();
-        int level = Math.max(1, getSkillDisplayLevel(skill.getId()));
+        int magicId = skill.displayId;
+        int level = Math.max(1, getSkillDisplayLevel(skill.id));
         List<Creature> targets = skill.getTargets(this, aimingTarget, true);
         broadcastPacket(new MagicSkillLaunched(getObjectId(), magicId, level, Collections.unmodifiableList(targets)));
-        double mpConsume2 = skill.getMpConsume2();
+        double mpConsume2 = skill.mpConsume2;
         if (mpConsume2 > 0) {
             if (_currentMp < mpConsume2) {
                 sendPacket(SystemMsg.NOT_ENOUGH_MP);
@@ -561,7 +561,7 @@ public abstract class Creature extends GameObject {
         if (skill == null)
             return;
 
-        int magicId = skill.getId();
+        int magicId = skill.id;
         if (isUnActiveSkill(magicId))
             return;
         if (isSkillDisabled(skill)) {
@@ -576,52 +576,52 @@ public abstract class Creature extends GameObject {
 
         getListeners().onMagicUse(skill, target, true);
 
-        List<Integer> itemConsume = skill.getItemConsume();
+        List<Integer> itemConsume = skill.itemConsume;
 
         if (itemConsume.get(0) > 0)
             for (int i = 0; i < itemConsume.size(); i++)
                 if (!consumeItem(skill.getItemConsumeId().get(i), itemConsume.get(i))) {
-                    sendPacket(skill.isHandler() ? SystemMsg.INCORRECT_ITEM_COUNT : SystemMsg.THERE_ARE_NOT_ENOUGH_NECESSARY_ITEMS_TO_USE_THE_SKILL);
+                    sendPacket(skill.isItemHandler() ? SystemMsg.INCORRECT_ITEM_COUNT : SystemMsg.THERE_ARE_NOT_ENOUGH_NECESSARY_ITEMS_TO_USE_THE_SKILL);
                     return;
                 }
 
-        if (skill.getReferenceItemId() > 0)
-            if (!consumeItemMp(skill.getReferenceItemId(), skill.getReferenceItemMpConsume()))
+        if (skill.referenceItemId > 0)
+            if (!consumeItemMp(skill.referenceItemId, skill.getReferenceItemMpConsume()))
                 return;
 
-        if (skill.getSoulsConsume() > getConsumedSouls()) {
+        if (skill.soulsConsume > getConsumedSouls()) {
             sendPacket(SystemMsg.YOU_DO_NOT_HAVE_ENOUGH_SOULS);
             return;
         }
 
-        if (skill.getEnergyConsume() > getAgathionEnergy()) {
+        if (skill.energyConsume() > getAgathionEnergy()) {
             sendPacket(SystemMsg.THE_SKILL_HAS_BEEN_CANCELED_BECAUSE_YOU_HAVE_INSUFFICIENT_ENERGY);
             return;
         }
 
-        if (skill.getSoulsConsume() > 0)
-            setConsumedSouls(getConsumedSouls() - skill.getSoulsConsume(), null);
-        if (skill.getEnergyConsume() > 0)
-            setAgathionEnergy(getAgathionEnergy() - skill.getEnergyConsume());
+        if (skill.soulsConsume > 0)
+            setConsumedSouls(getConsumedSouls() - skill.soulsConsume, null);
+        if (skill.energyConsume() > 0)
+            setAgathionEnergy(getAgathionEnergy() - skill.energyConsume());
 
         int level = Math.max(1, getSkillDisplayLevel(magicId));
         Formulas.calcSkillMastery(skill, this);
         long reuseDelay = Formulas.calcSkillReuseDelay(this, skill);
         if (!skill.isToggle())
-            broadcastPacket(new MagicSkillUse(this, target, skill.getDisplayId(), level, skill.getHitTime(), reuseDelay));
+            broadcastPacket(new MagicSkillUse(this, target, skill.displayId, level, skill.hitTime, reuseDelay));
         // Не показывать сообщение для хербов и кубиков
         if (!skill.isHideUseMessage())
-            if (skill.getSkillType() == SkillType.PET_SUMMON)
+            if (skill.skillType == SkillType.PET_SUMMON)
                 sendPacket(new SystemMessage2(SystemMsg.SUMMONING_YOUR_PET));
-            else if (!skill.isHandler())
+            else if (!skill.isItemHandler())
                 sendPacket(new SystemMessage2(SystemMsg.YOU_USE_S1).addSkillName(magicId, level));
             else
                 sendPacket(new SystemMessage2(SystemMsg.YOU_USE_S1).addItemName(skill.getItemConsumeId().get(0)));
 
-        if (!skill.isHandler())
+        if (!skill.isItemHandler())
             disableSkill(skill, reuseDelay);
 
-        ThreadPoolManager.INSTANCE.schedule(new AltMagicUseTask(this, target, skill.getId()), skill.getHitTime());
+        ThreadPoolManager.INSTANCE.schedule(new AltMagicUseTask(this, target, skill.id), skill.hitTime);
     }
 
     public void sendReuseMessage(Skill skill) {
@@ -764,7 +764,7 @@ public abstract class Creature extends GameObject {
         Env env = new Env();
         env.character = this;
 
-        if ((skill != null) && (skill.getId() == 1557))
+        if ((skill != null) && (skill.id == 1557))
             env.target = getPlayer().getPet();
         else {
             env.target = target;
@@ -776,12 +776,12 @@ public abstract class Creature extends GameObject {
     }
 
     public final double calcStat(Stats stat, Creature target, Skill skill) {
-        if ((skill != null) && (skill.getId() == 1557)) {
+        if ((skill != null) && (skill.id == 1557)) {
             target = getPlayer().getPet();
         }
         Env env = new Env(this, target, skill);
         if (stat == null) {
-            _log.warn("FIX ME FAST(!) My name IS " + getName() + " and I'm a player?(" + isPlayer() + ") my target is " + target.getName() + " skill:" + skill.getName() + "");
+            _log.warn("FIX ME FAST(!) My name IS " + getName() + " and I'm a player?(" + isPlayer() + ") my target is " + target.getName() + " skill:" + skill.name + "");
             return 0;
         }
         env.value = stat.getInit();
@@ -809,7 +809,7 @@ public abstract class Creature extends GameObject {
 
     public void callSkill(Skill skill, List<Creature> targets, boolean useActionSkills) {
         try {
-            if (useActionSkills && !skill.isUsingWhileCasting())
+            if (useActionSkills && !skill.isUsingWhileCasting)
                 if (skill.isOffensive()) {
                     if (skill.isMagic())
                         useTriggers(getTarget(), TriggerType.OFFENSIVE_MAGICAL_SKILL_USE, null, skill, 0);
@@ -817,7 +817,7 @@ public abstract class Creature extends GameObject {
                         useTriggers(getTarget(), TriggerType.OFFENSIVE_PHYSICAL_SKILL_USE, null, skill, 0);
                 } else if (skill.isMagic()) // для АоЕ, пати/клан бафов и селфов триггер накладывается на кастера
                 {
-                    final boolean targetSelf = skill.isAoE() || skill.isNotTargetAoE() || skill.getTargetType() == Skill.SkillTargetType.TARGET_SELF;
+                    final boolean targetSelf = skill.isAoE() || skill.isNotTargetAoE() || skill.targetType == Skill.SkillTargetType.TARGET_SELF;
                     useTriggers(targetSelf ? this : getTarget(), TriggerType.SUPPORT_MAGICAL_SKILL_USE, null, skill, 0);
                 }
 
@@ -827,7 +827,7 @@ public abstract class Creature extends GameObject {
                 // Фильтруем неуязвимые цели
                 if (skill.isOffensive() && target.isInvul()) {
                     Player pcTarget = target.getPlayer();
-                    if ((!skill.isIgnoreInvul() || (pcTarget != null && pcTarget.isGM())) && !target.isArtefact()) {
+                    if ((!skill.isIgnoreInvul || (pcTarget != null && pcTarget.isGM())) && !target.isArtefact()) {
                         continue;
                     }
                 }
@@ -835,7 +835,7 @@ public abstract class Creature extends GameObject {
                 // Рассчитываем игрорируемые скилы из спец.эффекта
                 Effect ie = target.getEffectList().getEffectByType(EffectType.IgnoreSkill);
                 if (ie != null)
-                    if (ie.getTemplate().getParam().getIntegerList("skillId").contains(skill.getId())) {
+                    if (ie.getTemplate().getParam().getIntegerList("skillId").contains(skill.id)) {
                         continue;
                     }
 
@@ -848,16 +848,16 @@ public abstract class Creature extends GameObject {
                                 .forEach(qs -> qs.getQuest().notifySkillUse(npc, skill, qs));
                     }
 
-                if (skill.getNegateSkill() > 0)
+                if (skill.negateSkill > 0)
                     target.getEffectList().getAllEffects()
-                            .filter(e -> e.getSkill().getId() == skill.getNegateSkill())
+                            .filter(e -> e.getSkill().id == skill.negateSkill)
                             .filter(Effect::isCancelable)
-                            .filter(e -> (skill.getNegatePower() <= 0 || e.getSkill().getPower() <= skill.getNegatePower()))
+                            .filter(e -> (skill.negatePower <= 0 || e.getSkill().getPower() <= skill.negatePower))
                             .forEach(Effect::exit);
 
-                if (skill.getCancelTarget() > 0)
-                    if (Rnd.chance(skill.getCancelTarget()))
-                        if ((target.getCastingSkill() == null || !(target.getCastingSkill().getSkillType() == SkillType.TAKECASTLE || target.getCastingSkill().getSkillType() == SkillType.TAKEFORTRESS || target.getCastingSkill().getSkillType() == SkillType.TAKEFLAG)) && !target.isRaid()) {
+                if (skill.cancelTarget > 0)
+                    if (Rnd.chance(skill.cancelTarget))
+                        if ((target.getCastingSkill() == null || !(target.getCastingSkill().skillType == SkillType.TAKECASTLE || target.getCastingSkill().skillType == SkillType.TAKEFORTRESS || target.getCastingSkill().skillType == SkillType.TAKEFLAG)) && !target.isRaid()) {
                             target.abortAttack(true, true);
                             target.abortCast(true, true);
                             target.setTarget(null);
@@ -912,7 +912,7 @@ public abstract class Creature extends GameObject {
             }
 
             if (displayId == 0)
-                displayId = skill.getDisplayId();
+                displayId = skill.displayId;
             if (displayLevel == 0)
                 displayLevel = skill.getDisplayLevel();
 
@@ -932,13 +932,13 @@ public abstract class Creature extends GameObject {
     }
 
     public boolean checkReflectSkill(Creature attacker, Skill skill) {
-        if (!skill.isReflectable())
+        if (!skill.isReflectable)
             return false;
         // Does not reflect if there is invulnerable, or it may cancel
         if (isInvul() || attacker.isInvul() || !skill.isOffensive())
             return false;
         // Of the magical skills are reflected only damaging skills for CPs.
-        if (skill.isMagic() && skill.getSkillType() != SkillType.MDAM)
+        if (skill.isMagic() && skill.skillType != SkillType.MDAM)
             return false;
         if (Rnd.chance(calcStat(skill.isMagic() ? Stats.REFLECT_MAGIC_SKILL : Stats.REFLECT_PHYSIC_SKILL, 0, attacker, skill))) {
             sendPacket(new SystemMessage2(SystemMsg.YOU_COUNTERED_C1S_ATTACK).addName(attacker));
@@ -953,7 +953,7 @@ public abstract class Creature extends GameObject {
             return;
         if (isDamageBlocked() || attacker.isDamageBlocked()) // Не контратакуем, если есть неуязвимость, иначе она может отмениться
             return;
-        if (skill == null || skill.hasEffects() || skill.isMagic() || !skill.isOffensive() || skill.getCastRange() > 200)
+        if (skill == null || skill.hasEffects() || skill.isMagic() || !skill.isOffensive || skill.castRange > 200)
             return;
         if (Rnd.chance(calcStat(Stats.COUNTER_ATTACK, 0, attacker, skill))) {
             double damage = 1189. * getPAtk(attacker) / Math.max(attacker.getPDef(this), 1);
@@ -1212,20 +1212,20 @@ public abstract class Creature extends GameObject {
     public void doCast(Skill skill, Creature target, boolean forceUse) {
         if (skill == null)
             return;
-        List<Integer> itemConsume = skill.getItemConsume();
+        List<Integer> itemConsume = skill.itemConsume;
 
         if (itemConsume.get(0) > 0)
             for (int i = 0; i < itemConsume.size(); i++)
                 if (!consumeItem(skill.getItemConsumeId().get(i), itemConsume.get(i))) {
-                    sendPacket(skill.isHandler() ? SystemMsg.INCORRECT_ITEM_COUNT : SystemMsg.THERE_ARE_NOT_ENOUGH_NECESSARY_ITEMS_TO_USE_THE_SKILL);
+                    sendPacket(skill.isItemHandler() ? SystemMsg.INCORRECT_ITEM_COUNT : SystemMsg.THERE_ARE_NOT_ENOUGH_NECESSARY_ITEMS_TO_USE_THE_SKILL);
                     return;
                 }
 
-        if (skill.getReferenceItemId() > 0)
-            if (!consumeItemMp(skill.getReferenceItemId(), skill.getReferenceItemMpConsume()))
+        if (skill.referenceItemId > 0)
+            if (!consumeItemMp(skill.referenceItemId, skill.getReferenceItemMpConsume()))
                 return;
 
-        int magicId = skill.getId();
+        int magicId = skill.id;
 
         if (target == null)
             target = skill.getAimingTarget(this, getTarget());
@@ -1239,10 +1239,10 @@ public abstract class Creature extends GameObject {
 
         int level = Math.max(1, getSkillDisplayLevel(magicId));
 
-        int skillTime = skill.isSkillTimePermanent() ? skill.getHitTime() : Formulas.calcMAtkSpd(this, skill, skill.getHitTime());
-        int skillInterruptTime = skill.isMagic() ? Formulas.calcMAtkSpd(this, skill, skill.getSkillInterruptTime()) : 0;
+        int skillTime = skill.isSkillTimePermanent() ? skill.hitTime : Formulas.calcMAtkSpd(this, skill, skill.hitTime);
+        int skillInterruptTime = skill.isMagic() ? Formulas.calcMAtkSpd(this, skill, skill.skillInterruptTime) : 0;
 
-        int minCastTime = Math.min(BalancerConfig.SKILLS_CAST_TIME_MIN, skill.getHitTime());
+        int minCastTime = Math.min(BalancerConfig.SKILLS_CAST_TIME_MIN, skill.hitTime);
         if (skillTime < minCastTime) {
             skillTime = minCastTime;
             skillInterruptTime = 0;
@@ -1258,20 +1258,20 @@ public abstract class Creature extends GameObject {
         Formulas.calcSkillMastery(skill, this); // Calculate skill mastery for current cast
         long reuseDelay = Math.max(0, Formulas.calcSkillReuseDelay(this, skill));
 
-        broadcastPacket(new MagicSkillUse(this, target, skill.getDisplayId(), level, skillTime, reuseDelay));
+        broadcastPacket(new MagicSkillUse(this, target, skill.displayId, level, skillTime, reuseDelay));
 
-        if (!skill.isHandler())
+        if (!skill.isItemHandler())
             disableSkill(skill, reuseDelay);
 
         if (isPlayer())
-            if (skill.getSkillType() == SkillType.PET_SUMMON)
+            if (skill.skillType == SkillType.PET_SUMMON)
                 sendPacket(SystemMsg.SUMMONING_YOUR_PET);
-            else if (!skill.isHandler())
+            else if (!skill.isItemHandler())
                 sendPacket(new SystemMessage2(SystemMsg.YOU_USE_S1).addSkillName(magicId, level));
             else
                 sendPacket(new SystemMessage2(SystemMsg.YOU_USE_S1).addItemName(skill.getItemConsumeId().get(0)));
 
-        if (skill.getTargetType() == SkillTargetType.TARGET_HOLY)
+        if (skill.targetType == SkillTargetType.TARGET_HOLY)
             target.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, this, 1);
 
         switch (skill.getFlyType()) {
@@ -1290,7 +1290,7 @@ public abstract class Creature extends GameObject {
                 break;
         }
 
-        double mpConsume1 = skill.isUsingWhileCasting() ? skill.getMpConsume() : skill.getMpConsume1();
+        double mpConsume1 = skill.isUsingWhileCasting ? skill.getMpConsume() : skill.mpConsume1;
         if (mpConsume1 > 0) {
             if (_currentMp < mpConsume1) {
                 sendPacket(SystemMsg.NOT_ENOUGH_MP);
@@ -1308,21 +1308,21 @@ public abstract class Creature extends GameObject {
         _castInterruptTime = System.currentTimeMillis() + skillInterruptTime;
         setCastingTarget(target);
 
-        if (skill.isUsingWhileCasting())
+        if (skill.isUsingWhileCasting)
             callSkill(skill, skill.getTargets(this, target, forceUse), true);
 
         if (isPlayer())
             sendPacket(new SetupGauge(this, SetupGauge.BLUE, skillTime));
 
-        _scheduledCastCount = skill.getCastCount();
-        _scheduledCastInterval = skill.getCastCount() > 0 ? skillTime / _scheduledCastCount : skillTime;
+        _scheduledCastCount = skill.castCount;
+        _scheduledCastInterval = skill.castCount > 0 ? skillTime / _scheduledCastCount : skillTime;
 
         // Create a task MagicUseTask with Medium priority to launch the MagicSkill at the end of the casting time
         _skillLaunchedTask = ThreadPoolManager.INSTANCE.schedule(new MagicLaunchedTask(this, forceUse), skillInterruptTime);
-        _skillTask = ThreadPoolManager.INSTANCE.schedule(new MagicUseTask(this, forceUse), skill.getCastCount() > 0 ? skillTime / skill.getCastCount() : skillTime);
+        _skillTask = ThreadPoolManager.INSTANCE.schedule(new MagicUseTask(this, forceUse), skill.castCount > 0 ? skillTime / skill.castCount : skillTime);
 
         skillGeoCheckTask = null;
-        if ((skill.getCastRange() < 32767) && (skill.getSkillType() != SkillType.TAKECASTLE) && (skill.getSkillType() != SkillType.TAKEFORTRESS) && (_scheduledCastInterval > 600)) {
+        if ((skill.castRange < 32767) && (skill.skillType != SkillType.TAKECASTLE) && (skill.skillType != SkillType.TAKEFORTRESS) && (_scheduledCastInterval > 600)) {
             skillGeoCheckTask = ThreadPoolManager.INSTANCE.schedule(new MagicGeoCheckTask(this), (long) (_scheduledCastInterval * 0.5));
         }
     }
@@ -1390,8 +1390,8 @@ public abstract class Creature extends GameObject {
         }
 
         double radian = PositionUtils.convertHeadingToRadian(getHeading());
-        int x1 = -(int) (Math.sin(radian) * skill.getFlyRadius());
-        int y1 = (int) (Math.cos(radian) * skill.getFlyRadius());
+        int x1 = -(int) (Math.sin(radian) * skill.flyRadius);
+        int y1 = (int) (Math.cos(radian) * skill.flyRadius);
 
         if (isFlying())
             return GeoEngine.moveCheckInAir(getX(), getY(), getZ(), getX() + x1, getY() + y1, getZ(), getColRadius(), getGeoIndex());
@@ -1410,12 +1410,6 @@ public abstract class Creature extends GameObject {
             Player killerPlayer = killer.getPlayer();
             if (killerPlayer != null)
                 killerPlayer.getListeners().onKillIgnorePetOrSummon(this);
-
-            // Alexander - Add a new mob death to the stats
-            // if (isPlayer() && killer.isMonster())
-            // {
-            // getPlayer().addPlayerStats(Ranking.STAT_TOP_MOBS_DEATHS);
-            // }
 
             killer.getListeners().onKill(this);
 
@@ -1445,8 +1439,8 @@ public abstract class Creature extends GameObject {
             getEffectList().getAllEffects()
                     .forEach(e -> {
                         if (e.getEffectType() == EffectType.BlessNoblesse
-                                || e.getSkill().getId() == 1325
-                                || e.getSkill().getId() == Skill.SKILL_RAID_BLESSING)
+                                || e.getSkill().id == 1325
+                                || e.getSkill().id == Skill.SKILL_RAID_BLESSING)
                             e.exit();
                         else if (e.getEffectType() == EffectType.AgathionResurrect && !isPlayable()) {
                             if (isPlayer())
@@ -1456,7 +1450,7 @@ public abstract class Creature extends GameObject {
                     });
         } else {
             getEffectList().getAllEffects()
-                    .filter(e -> e.getEffectType() != EffectType.Transformation && !e.getSkill().isPreservedOnDeath())
+                    .filter(e -> e.getEffectType() != EffectType.Transformation && !e.getSkill().isPreservedOnDeath)
                     .forEach(Effect::exit);
         }
 
@@ -1626,13 +1620,13 @@ public abstract class Creature extends GameObject {
 
     public final int getMagicalAttackRange(Skill skill) {
         if (skill != null)
-            return (int) calcStat(Stats.MAGIC_ATTACK_RANGE, skill.getCastRange(), null, skill);
+            return (int) calcStat(Stats.MAGIC_ATTACK_RANGE, skill.castRange, null, skill);
         return getTemplate().baseAtkRange;
     }
 
     public int getMAtk(Creature target, Skill skill) {
-        if (skill != null && skill.getMatak() > 0)
-            return skill.getMatak();
+        if (skill != null && skill.mAttack > 0)
+            return skill.mAttack;
         return (int) calcStat(Stats.MAGIC_ATTACK, template.baseMAtk, target, skill);
     }
 
@@ -1743,7 +1737,7 @@ public abstract class Creature extends GameObject {
         Skill skill = skills.get(skillId);
         if (skill == null)
             return def;
-        return skill.getLevel();
+        return skill.level;
     }
 
     public int getSkillMastery(Integer skillId) {
@@ -2570,17 +2564,17 @@ public abstract class Creature extends GameObject {
     public void onMagicUseTimer(Creature aimingTarget, Skill skill, boolean forceUse) {
         _castInterruptTime = 0;
 
-        if (skill.isUsingWhileCasting()) {
-            aimingTarget.getEffectList().stopEffect(skill.getId());
+        if (skill.isUsingWhileCasting) {
+            aimingTarget.getEffectList().stopEffect(skill.id);
             onCastEndTime();
             return;
         }
 
-        if (!skill.isOffensive() && getAggressionTarget() != null)
+        if (!skill.isOffensive && getAggressionTarget() != null)
             forceUse = true;
 
         if (!skill.checkCondition(this, aimingTarget, forceUse, false, false)) {
-            if (skill.getSkillType() == SkillType.PET_SUMMON && isPlayer())
+            if (skill.skillType == SkillType.PET_SUMMON && isPlayer())
                 getPlayer().setPetControlItem(null);
             onCastEndTime();
             return;
@@ -2595,22 +2589,22 @@ public abstract class Creature extends GameObject {
 
         List<Creature> targets = skill.getTargets(this, aimingTarget, forceUse);
 
-        int vitalityConsume = skill.getVitConsume();
+        int vitalityConsume = skill.vitConsume;
         if ((vitalityConsume > 0) && (isPlayer())) {
             Player p = (Player) this;
             p.setVitality(Math.max(0.0D, p.getVitality() - vitalityConsume));
         }
 
-        int hpConsume = skill.getHpConsume();
+        int hpConsume = skill.hpConsume;
         if (hpConsume > 0)
             setCurrentHp(Math.max(0, _currentHp - hpConsume), false);
 
-        double mpConsume2 = skill.getMpConsume2();
+        double mpConsume2 = skill.mpConsume2;
         if (mpConsume2 > 0) {
             if (skill.isMusic()) {
                 double inc = mpConsume2 / 2;
                 double add = inc * getEffectList().getAllEffects()
-                        .filter(e -> e.getSkill().getId() != skill.getId())
+                        .filter(e -> e.getSkill().id != skill.id)
                         .filter(e -> e.getSkill().isMusic())
                         .filter(e -> e.getTimeLeft() > 30)
                         .count();
@@ -2634,10 +2628,10 @@ public abstract class Creature extends GameObject {
         if (skill.getNumCharges() > 0)
             setIncreasedForce(getIncreasedForce() - skill.getNumCharges());
 
-        if (skill.isSoulBoost())
+        if (skill.isSoulBoost)
             setConsumedSouls(getConsumedSouls() - Math.min(getConsumedSouls(), 5), null);
-        else if (skill.getSoulsConsume() > 0)
-            setConsumedSouls(getConsumedSouls() - skill.getSoulsConsume(), null);
+        else if (skill.soulsConsume > 0)
+            setConsumedSouls(getConsumedSouls() - skill.soulsConsume, null);
 
         switch (skill.getFlyType()) {
             case THROW_UP:
@@ -2659,7 +2653,7 @@ public abstract class Creature extends GameObject {
             return;
         }
 
-        int skillCoolTime = Formulas.calcMAtkSpd(this, skill, skill.getCoolTime());
+        int skillCoolTime = Formulas.calcMAtkSpd(this, skill, skill.coolTime);
         if (skillCoolTime > 0)
             ThreadPoolManager.INSTANCE.schedule(new CastEndTimeTask(this), skillCoolTime);
         else
@@ -2736,7 +2730,7 @@ public abstract class Creature extends GameObject {
         if (awake && isSleeping())
             getEffectList().stopEffects(EffectType.Sleep);
 
-        if (attacker != this || (skill != null && skill.isOffensive())) {
+        if (attacker != this || (skill != null && skill.isOffensive)) {
             if (meditated) {
                 Effect effect = getEffectList().getEffectByType(EffectType.Meditation);
                 if (effect != null)
@@ -2815,7 +2809,7 @@ public abstract class Creature extends GameObject {
     public Skill removeSkill(Skill skill) {
         if (skill == null)
             return null;
-        return removeSkill(skill.getId());
+        return removeSkill(skill.id);
     }
 
     public Skill removeSkill(int id) {
@@ -2826,7 +2820,7 @@ public abstract class Creature extends GameObject {
         if (oldSkill != null) {
             removeTriggers(oldSkill);
             removeStatsOwner(oldSkill);
-            if (Config.ALT_DELETE_SA_BUFFS && (oldSkill.isItemSkill() || oldSkill.isHandler() || oldSkill.getName().startsWith("Item Skill"))) {
+            if (Config.ALT_DELETE_SA_BUFFS && (oldSkill.isItemSkill() || oldSkill.isItemHandler() || oldSkill.name().startsWith("Item Skill"))) {
                 // Завершаем все эффекты, принадлежащие старому скиллу
                 getEffectList().getEffectsBySkill(oldSkill)
                         .forEach(Effect::exit);
@@ -3357,7 +3351,7 @@ public abstract class Creature extends GameObject {
     }
 
     public boolean isMuted(Skill skill) {
-        if (skill == null || skill.isNotAffectedByMute())
+        if (skill == null || skill.isNotAffectedByMute)
             return false;
         return muted.get() && skill.isMagic() || pmuted.get() && !skill.isMagic();
     }
@@ -3867,36 +3861,27 @@ public abstract class Creature extends GameObject {
     }
 
     public void addUnActiveSkill(Skill skill) {
-        if (skill == null || isUnActiveSkill(skill.getId()))
+        if (skill == null || isUnActiveSkill(skill.id))
             return;
 
         removeStatsOwner(skill);
         removeTriggers(skill);
 
-        _unActiveSkills.add(skill.getId());
+        unActiveSkills.add(skill.id);
     }
 
     public void removeUnActiveSkill(Skill skill) {
-        if (skill == null || !isUnActiveSkill(skill.getId()))
+        if (skill == null || !isUnActiveSkill(skill.id))
             return;
 
         addStatFuncs(skill.getStatFuncs());
         addTriggers(skill);
 
-        _unActiveSkills.remove(skill.getId());
+        unActiveSkills.remove(skill.id);
     }
 
     public boolean isUnActiveSkill(int id) {
-        return _unActiveSkills.contains(id);
-    }
-
-    public void removeInvisibleEffect() {
-        if (getEffectList() == null)
-            return;
-
-        Effect effect = getEffectList().getEffectByType(EffectType.Invisible);
-        if (effect != null)
-            effect.exit();
+        return unActiveSkills.contains(id);
     }
 
     public abstract int getLevel();

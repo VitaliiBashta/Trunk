@@ -45,7 +45,7 @@ public final class VillageMasterInstance extends NpcInstance {
         //TODO: В данной редакции смена лидера производится сразу же.
         // Надо подумать над реализацией смены кланлидера в запланированный день недели.
 
-		/*if (clan.getLevel() >= CastleSiegeManager.getSiegeClanMinLevel())
+		/*if (clan.level() >= CastleSiegeManager.getSiegeClanMinLevel())
 		{
 			if (clan.getLeader() != null)
 			{
@@ -369,7 +369,7 @@ public final class VillageMasterInstance extends NpcInstance {
                      * their most recently added sub-class choice.
                      */
 					/*for(L2SubClass<?> sub : playerClassList.values())
-						if (sub.isBase() && sub.getLevel() < Config.ALT_GAME_LEVEL_TO_GET_SUBCLASS)
+						if (sub.isBase() && sub.level() < Config.ALT_GAME_LEVEL_TO_GET_SUBCLASS)
 						{
 							player.sendMessage("You may not change to your subclass before you are level " + Config.ALT_GAME_LEVEL_TO_GET_SUBCLASS, "Вы не можете добавить еще сабкласс пока у вас уровень " + Config.ALT_GAME_LEVEL_TO_GET_SUBCLASS + " на Вашем предыдущем сабклассе.");
 							return;

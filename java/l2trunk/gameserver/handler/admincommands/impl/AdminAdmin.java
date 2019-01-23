@@ -384,7 +384,7 @@ public final class AdminAdmin implements IAdminCommandHandler {
         return false;
     }
 
-    private void GathTele(Player player, Player target, boolean checkConditions) {
+    private void gathTele(Player player, Player target) {
         player.sendMessage("You are teleporting to gath zone");
         player.teleToLocation(target.getX() + 50, target.getY() + 15, target.getZ());
     }
@@ -443,7 +443,7 @@ public final class AdminAdmin implements IAdminCommandHandler {
         }
 
         public void sayYes() {
-            GathTele(_player, _target, false);
+            gathTele(_player, _target);
         }
 
         public void sayNo() {

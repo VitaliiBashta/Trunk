@@ -1,9 +1,5 @@
 package l2trunk.gameserver.model.reward;
 
-/**
- * @author VISTALL
- * @date 16:20/14.12.2010
- */
 public enum RewardType {
     RATED_GROUPED,         //additional_make_multi_list
     NOT_RATED_NOT_GROUPED, // additional_make_list

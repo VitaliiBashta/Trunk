@@ -21,7 +21,7 @@ public class PcBangPointsAdd extends Skill {
                 Player player = target.getPlayer();
                 player.addPcBangPoints(points, false);
             }
-            getEffects(activeChar, target, getActivateRate() > 0, false);
+            getEffects(activeChar, target, activateRate() > 0, false);
         }
 
         if (isSSPossible())

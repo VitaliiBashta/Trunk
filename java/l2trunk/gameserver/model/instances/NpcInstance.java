@@ -125,7 +125,7 @@ public class NpcInstance extends Creature {
         _showBoard = getParameter(SHOW_BOARD, "");
 
         template.getSkills().values().stream()
-                .mapToInt(Skill::getId)
+                .mapToInt(skill ->skill.id)
                 .forEach(this::addSkill);
 
         setName(template.name);
@@ -186,9 +186,7 @@ public class NpcInstance extends Creature {
 
         final AcquireSkillList asl = new AcquireSkillList(t, skills.size());
 
-        for (SkillLearn s : skills) {
-            asl.addSkill(s.getId(), s.getLevel(), s.getLevel(), s.getCost(), 0);
-        }
+        skills.forEach(asl::addSkill);
 
         if (skills.size() == 0) {
             player.sendPacket(AcquireSkillDone.STATIC);
@@ -219,7 +217,7 @@ public class NpcInstance extends Creature {
         final AcquireSkillList asl = new AcquireSkillList(AcquireType.SUB_UNIT, learns.size());
 
         for (SkillLearn s : learns) {
-            asl.addSkill(s.getId(), s.getLevel(), s.getLevel(), s.getCost(), 1, Clan.SUBUNIT_KNIGHT4);
+            asl.addSkill(s, 1, Clan.SUBUNIT_KNIGHT4);
         }
 
         if (learns.size() == 0) {
@@ -332,7 +330,7 @@ public class NpcInstance extends Creature {
 //		if (killer != null && killer.isPlayable() && isMonster() && !isRaid())
 //		{
 //			// Only consider player with max 9 lvls of difference
-//			if (killer.getPlayer().getLevel() <= getLevel() + 9)
+//			if (killer.getPlayer().level() <= level() + 9)
 //				killer.getPlayer().addPlayerStats(Ranking.STAT_TOP_MOBS_KILLS);
 //		}
 
@@ -855,8 +853,7 @@ public class NpcInstance extends Creature {
             showBusyWindow(player);
         } else if (isHasChatWindow()) {
             boolean flag = false;
-            List<Quest> qlst = getTemplate().getEventQuests(QuestEventType.NPC_FIRST_TALK);
-            for (Quest element : qlst) {
+            for (Quest element : getTemplate().getEventQuests(QuestEventType.NPC_FIRST_TALK)) {
                 QuestState qs = player.getQuestState(element.getName());
                 if (((qs == null) || !qs.isCompleted()) && element.notifyFirstTalk(this, player)) {
                     flag = true;
@@ -901,8 +898,7 @@ public class NpcInstance extends Creature {
                 Quest q = QuestManager.getQuest(questName);
                 if (q != null) {
                     // check for start point
-                    List<Quest> qlst = getTemplate().getEventQuests(QuestEventType.QUEST_START);
-                    for (Quest element : qlst) {
+                    for (Quest element : getTemplate().getEventQuests(QuestEventType.QUEST_START)) {
                         if (element == q) {
                             qs = q.newQuestState(player, Quest.CREATED);
                             if (qs.getQuest().notifyTalk(this, qs)) {
@@ -1160,14 +1156,14 @@ public class NpcInstance extends Creature {
                     } else {
                         sb.append(" ").append((long) (tl.getPrice() * pricemod)).append(" @811;F;").append(tl.getName()).append("|").append(tl.getStringName());
                     }
-                    // sb.append(" ").append((long) (tl.getPrice() * pricemod)).append(" @811;F;").append(tl.getName()).append("|").append(HtmlUtils.htmlNpcString(tl.getName()));
+                    // sb.append(" ").append((long) (tl.getPrice() * pricemod)).append(" @811;F;").append(tl.name()).append("|").append(HtmlUtils.htmlNpcString(tl.name()));
                     if ((tl.getPrice() * pricemod) > 0) {
                         sb.append(" - ").append((long) (tl.getPrice() * pricemod)).append(" ").append(HtmlUtils.htmlItemName(ItemTemplate.ITEM_ID_ADENA));
                     }
                     sb.append("]<br1>\n");
                 } else {
                     if (Config.ALLOW_MULTILANG_GATEKEEPER) {
-                        if (player.getVar("tplangg").equals("ru")) {
+                        if ("ru".equals(player.getVar("tplangg"))) {
                             sb.append("[scripts_Util:QuestGatekeeper ").append(tl.getX()).append(" ").append(tl.getY()).append(" ").append(tl.getZ()).append(" ").append(tl.getPrice()).append(" ").append(tl.getItem().getItemId()).append(" @811;F;").append("|").append(tl.getStringNameLang()).append(" - ").append(tl.getPrice()).append(" ").append(HtmlUtils.htmlItemName(tl.getItem().getItemId())).append("]<br1>\n");
                         } else {
                             sb.append("[scripts_Util:QuestGatekeeper ").append(tl.getX()).append(" ").append(tl.getY()).append(" ").append(tl.getZ()).append(" ").append(tl.getPrice()).append(" ").append(tl.getItem().getItemId()).append(" @811;F;").append("|").append(tl.getStringName()).append(" - ").append(tl.getPrice()).append(" ").append(HtmlUtils.htmlItemName(tl.getItem().getItemId())).append("]<br1>\n");
@@ -1290,13 +1286,18 @@ public class NpcInstance extends Creature {
         player.sendPacket(packet);
     }
 
-    public void showChatWindow(Player player, String filename, Object... replace) {
+    public void showChatWindow(Player player, String filename, String... replace) {
         NpcHtmlMessage packet = new NpcHtmlMessage(player, this, filename, 0);
         if ((replace.length % 2) == 0) {
             for (int i = 0; i < replace.length; i += 2) {
                 packet.replace(String.valueOf(replace[i]), String.valueOf(replace[i + 1]));
             }
         }
+        player.sendPacket(packet);
+    }
+
+    public void showChatWindow(Player player, String filename) {
+        NpcHtmlMessage packet = new NpcHtmlMessage(player, this, filename, 0);
         player.sendPacket(packet);
     }
 
@@ -1404,7 +1405,7 @@ public class NpcInstance extends Creature {
 
             counts++;
 
-            asl.addSkill(s.getId(), s.getLevel(), s.getLevel(), s.getCost(), 0);
+            asl.addSkill(s);
         }
 
         if (counts == 0) {

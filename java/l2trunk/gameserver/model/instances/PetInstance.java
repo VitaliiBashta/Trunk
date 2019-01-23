@@ -31,7 +31,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.concurrent.Future;
 
 public class PetInstance extends Summon {
@@ -282,7 +281,7 @@ public class PetInstance extends Summon {
 
             if (item.isHerb()) {
                 item.getTemplate().getAttachedSkills().stream()
-                    .mapToInt(Skill::getId)
+                    .mapToInt(skill ->skill.id)
                     .forEach(skill ->
                         altUseSkill(skill, this));
                 item.deleteMe();

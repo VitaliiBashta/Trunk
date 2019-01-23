@@ -14,7 +14,7 @@ public final class Cfg extends Functions implements IVoicedCommandHandler {
 
     @Override
     public boolean useVoicedCommand(String command, Player activeChar, String args) {
-        String nextPage = CharacterControlPanel.getInstance().useCommand(activeChar, args, "-h user_control ");
+        String nextPage = CharacterControlPanel.INSTANCE.useCommand(activeChar, args, "-h user_control ");
 
         if (nextPage == null || nextPage.isEmpty())
             return true;
@@ -24,7 +24,7 @@ public final class Cfg extends Functions implements IVoicedCommandHandler {
         String dialog = HtmCache.INSTANCE.getNotNull(html, activeChar);
 
         String additionalText = args.split(" ").length > 1 ? args.split(" ")[1] : "";
-        dialog = CharacterControlPanel.getInstance().replacePage(dialog, activeChar, additionalText, "-h user_control ");
+        dialog = CharacterControlPanel.INSTANCE.replacePage(dialog, activeChar, additionalText, "-h user_control ");
 
         show(dialog, activeChar);
 

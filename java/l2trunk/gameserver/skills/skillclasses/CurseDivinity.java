@@ -2,7 +2,6 @@ package l2trunk.gameserver.skills.skillclasses;
 
 import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.model.Creature;
-import l2trunk.gameserver.model.Effect;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.stats.Formulas;
 
@@ -11,7 +10,6 @@ import java.util.List;
 public final class CurseDivinity extends Skill {
     public CurseDivinity(StatsSet set) {
         super(set);
-        power = set.getInteger("power", 1);
     }
 
     @Override
@@ -40,7 +38,7 @@ public final class CurseDivinity extends Skill {
                 }
 
 
-                getEffects(activeChar, target, getActivateRate() > 0, false, reflected);
+                getEffects(activeChar, target, activateRate() > 0, false, reflected);
             }
 
         if (isSuicideAttack())

@@ -808,7 +808,7 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
         Skill oldSkill = null;
         if (newSkill != null) {
             // Replace oldSkill by newSkill or Add the newSkill
-            oldSkill = skills.put(newSkill.getId(), newSkill);
+            oldSkill = skills.put(newSkill.id, newSkill);
 
             if (store) {
                 PreparedStatement statement;
@@ -817,15 +817,15 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
 
                     if (oldSkill != null) {
                         statement = con.prepareStatement("UPDATE clan_skills SET skill_level=? WHERE skill_id=? AND clan_id=?");
-                        statement.setInt(1, newSkill.getLevel());
-                        statement.setInt(2, oldSkill.getId());
+                        statement.setInt(1, newSkill.level);
+                        statement.setInt(2, oldSkill.id);
                         statement.setInt(3, getClanId());
                         statement.execute();
                     } else {
                         statement = con.prepareStatement("INSERT INTO clan_skills (clan_id,skill_id,skill_level) VALUES (?,?,?)");
                         statement.setInt(1, getClanId());
-                        statement.setInt(2, newSkill.getId());
-                        statement.setInt(3, newSkill.getLevel());
+                        statement.setInt(2, newSkill.id);
+                        statement.setInt(3, newSkill.level);
                         statement.execute();
                     }
                 } catch (SQLException e) {
@@ -833,7 +833,7 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
                 }
             }
 
-            PledgeSkillListAdd p = new PledgeSkillListAdd(newSkill.getId(), newSkill.getLevel());
+            PledgeSkillListAdd p = new PledgeSkillListAdd(newSkill.id, newSkill.level);
             PledgeSkillList p2 = new PledgeSkillList(this);
             for (UnitMember temp : this) {
                 if (temp.isOnline()) {
@@ -863,7 +863,7 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
             return;
 
         for (Skill skill : skills.values())
-            if (skill.getMinPledgeClass() <= player.getPledgeClass())
+            if (skill.minPledgeClass <= player.getPledgeClass())
                 player.removeUnActiveSkill(skill);
 
         final SubUnit subUnit = getSubUnit(player.getPledgeType());
@@ -874,8 +874,7 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
     /* ============================ clan subpledges stuff ============================ */
 
     public void disableSkills(Player player) {
-        for (Skill skill : skills.values())
-            player.addUnActiveSkill(skill);
+        skills.values().forEach(player::addUnActiveSkill);
 
         final SubUnit subUnit = getSubUnit(player.getPledgeType());
         if (subUnit != null)
@@ -883,7 +882,7 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
     }
 
     private void addSkill(Player player, Skill skill) {
-        if (skill.getMinPledgeClass() <= player.getPledgeClass()) {
+        if (skill.minPledgeClass <= player.getPledgeClass()) {
             player.addSkill(skill, false);
             if (_reputation < 0 || player.isInOlympiadMode())
                 player.addUnActiveSkill(skill);
@@ -1407,7 +1406,7 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
 
     public int getSkillLevel(int id, int def) {
         Skill skill = skills.get(id);
-        return skill == null ? def : skill.getLevel();
+        return skill == null ? def : skill.level;
     }
 
     public int getSkillLevel(int id) {

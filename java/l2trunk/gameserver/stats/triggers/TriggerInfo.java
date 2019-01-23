@@ -31,7 +31,7 @@ public final class TriggerInfo extends Skill.AddedSkill {
         Env env = new Env();
         env.character = actor;
         env.skill = owner;
-        if (owner != null && owner.getId() == Skill.SKILL_SERVITOR_SHARE)
+        if (owner != null && owner.id == Skill.SKILL_SERVITOR_SHARE)
             env.target = actor.getPlayer().getPet();
         else {
             env.target = target;

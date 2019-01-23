@@ -41,7 +41,7 @@ public final class Maguen extends Fighter {
 
     @Override
     public void onEvtSeeSpell(Skill skill, Creature caster) {
-        if (skill.getId() != 9060)
+        if (skill.id != 9060)
             return;
         NpcInstance actor = getActor();
         if (actor.isInZone(ZoneType.dummy)) {

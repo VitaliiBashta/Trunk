@@ -188,15 +188,15 @@ public final class SubUnit {
         Skill oldSkill = null;
         if (newSkill != null) {
             // Replace oldSkill by newSkill or Add the newSkill
-            oldSkill = _skills.put(newSkill.getId(), newSkill);
+            oldSkill = _skills.put(newSkill.id, newSkill);
 
             if (store) {
                 try (Connection con = DatabaseFactory.getInstance().getConnection()) {
                     PreparedStatement statement;
                     if (oldSkill != null) {
                         statement = con.prepareStatement("UPDATE clan_subpledges_skills SET skill_level=? WHERE skill_id=? AND clan_id=? AND type=?");
-                        statement.setInt(1, newSkill.getLevel());
-                        statement.setInt(2, oldSkill.getId());
+                        statement.setInt(1, newSkill.level);
+                        statement.setInt(2, oldSkill.id);
                         statement.setInt(3, _clan.getClanId());
                         statement.setInt(4, type);
                         statement.execute();
@@ -204,8 +204,8 @@ public final class SubUnit {
                         statement = con.prepareStatement("INSERT INTO clan_subpledges_skills (clan_id,type,skill_id,skill_level) VALUES (?,?,?,?)");
                         statement.setInt(1, _clan.getClanId());
                         statement.setInt(2, type);
-                        statement.setInt(3, newSkill.getId());
-                        statement.setInt(4, newSkill.getLevel());
+                        statement.setInt(3, newSkill.id);
+                        statement.setInt(4, newSkill.level);
                         statement.execute();
                     }
                 } catch (SQLException e) {
@@ -213,7 +213,7 @@ public final class SubUnit {
                 }
             }
 
-            ExSubPledgeSkillAdd packet = new ExSubPledgeSkillAdd(type, newSkill.getId(), newSkill.getLevel());
+            ExSubPledgeSkillAdd packet = new ExSubPledgeSkillAdd(type, newSkill.id, newSkill.level);
             for (UnitMember temp : _clan)
                 if (temp.isOnline()) {
                     Player player = temp.getPlayer();
@@ -234,7 +234,7 @@ public final class SubUnit {
 
     public void enableSkills(Player player) {
         for (Skill skill : _skills.values())
-            if (skill.getMinRank() <= player.getPledgeClass())
+            if (skill.minRank <= player.getPledgeClass())
                 player.removeUnActiveSkill(skill);
     }
 
@@ -244,7 +244,7 @@ public final class SubUnit {
     }
 
     private void addSkill(Player player, Skill skill) {
-        if (skill.getMinRank() <= player.getPledgeClass()) {
+        if (skill.minRank <= player.getPledgeClass()) {
             player.addSkill(skill, false);
             if (_clan.getReputationScore() < 0 || player.isInOlympiadMode())
                 player.addUnActiveSkill(skill);
@@ -311,7 +311,7 @@ public final class SubUnit {
 
                 Skill skill = SkillTable.INSTANCE.getInfo(id, level);
 
-                _skills.put(skill.getId(), skill);
+                _skills.put(skill.id, skill);
             }
         } catch (SQLException e) {
             LOG.error("Exception while restoring Sub Unit Skills", e);
@@ -320,7 +320,7 @@ public final class SubUnit {
 
     public int getSkillLevel(int id, int def) {
         Skill skill = _skills.get(id);
-        return skill == null ? def : skill.getLevel();
+        return skill == null ? def : skill.level;
     }
 
     public int getSkillLevel(int id) {

@@ -101,18 +101,4 @@ public final class ExProperties extends Properties {
         return defaultValue;
     }
 
-//    public List<Long> getProperty(String name, List<Long> defaultValue) {
-//        return getProperty(name, defaultValue, defaultDelimiter);
-//    }
-
-//    public List<Double> getProperty(String name, List<Double> defaultValue) {
-//        String value;
-//        if ((value = super.getProperty(name, null)) != null) {
-//            return  Arrays.stream(value.split(defaultDelimiter))
-//            .map(NumberUtils::toDouble)
-//            .collect(Collectors.toList());
-//        }
-//
-//        return defaultValue;
-//    }
 }

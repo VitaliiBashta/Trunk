@@ -64,7 +64,7 @@ public final class EffectFear extends Effect {
 
     @Override
     protected boolean onActionTime() {
-        final double angle = Math.toRadians(PositionUtils.calculateAngleFrom(_effector, effected));
+        final double angle = Math.toRadians(PositionUtils.calculateAngleFrom(effector, effected));
         final int oldX = effected.getX();
         final int oldY = effected.getY();
         final int x = oldX + (int) (FEAR_RANGE * Math.cos(angle));

@@ -10,23 +10,20 @@ import java.util.Collections;
 import java.util.List;
 
 
-/**
- * Reworked: VISTALL
- */
-public class PledgeSkillList extends L2GameServerPacket {
+public final class PledgeSkillList extends L2GameServerPacket {
     private final List<UnitSkillInfo> _unitSkills = new ArrayList<>();
-    private List<SkillInfo> _allSkills = Collections.emptyList();
+    private List<SkillInfo> _allSkills;
 
     public PledgeSkillList(Clan clan) {
         Collection<Skill> skills = clan.getSkills();
         _allSkills = new ArrayList<>(skills.size());
 
         for (Skill sk : skills)
-            _allSkills.add(new SkillInfo(sk.getId(), sk.getLevel()));
+            _allSkills.add(new SkillInfo(sk.id, sk.level));
 
         for (SubUnit subUnit : clan.getAllSubUnits()) {
             for (Skill sk : subUnit.getSkills())
-                _unitSkills.add(new UnitSkillInfo(subUnit.getType(), sk.getId(), sk.getLevel()));
+                _unitSkills.add(new UnitSkillInfo(subUnit.getType(), sk.id, sk.level));
         }
     }
 

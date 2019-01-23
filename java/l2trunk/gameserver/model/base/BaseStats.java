@@ -12,96 +12,76 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.NoSuchElementException;
+import java.util.ArrayList;
+import java.util.List;
+
+import static l2trunk.commons.lang.NumberUtils.toInt;
 
 public enum BaseStats {
-    STR {
-        @Override
-        public final int getStat(Creature actor) {
-            return actor == null ? 1 : actor.getSTR();
-        }
-
+    CON {
         @Override
         public final double calcBonus(Creature actor) {
-            return actor == null ? 1. : STRbonus[actor.getSTR()];
-        }
-
-        @Override
-        public final double calcChanceMod(Creature actor) {
-            return Math.min(2. - Math.sqrt(calcBonus(actor)), 1.); // не более 1
-        }
-    },
-    INT {
-        @Override
-        public final int getStat(Creature actor) {
-            return actor == null ? 1 : actor.getINT();
-        }
-
-        @Override
-        public final double calcBonus(Creature actor) {
-            return actor == null ? 1. : INTbonus[actor.getINT()];
+            return actor == null ? 1. : CONbonus.get(actor.getCON());
         }
     },
     DEX {
         @Override
-        public final int getStat(Creature actor) {
-            return actor == null ? 1 : actor.getDEX();
-        }
-
-        @Override
         public final double calcBonus(Creature actor) {
-            return actor == null ? 1. : DEXbonus[actor.getDEX()];
+            return actor == null ? 1. : DEXbonus.get(actor.getDEX());
         }
     },
-    WIT {
-        @Override
-        public final int getStat(Creature actor) {
-            return actor == null ? 1 : actor.getWIT();
-        }
-
+    INT {
         @Override
         public final double calcBonus(Creature actor) {
-            return actor == null ? 1. : WITbonus[actor.getWIT()];
-        }
-    },
-    CON {
-        @Override
-        public final int getStat(Creature actor) {
-            return actor == null ? 1 : actor.getCON();
-        }
-
-        @Override
-        public final double calcBonus(Creature actor) {
-            return actor == null ? 1. : CONbonus[actor.getCON()];
+            return actor == null ? 1. : INTbonus.get(actor.getINT());
         }
     },
     MEN {
         @Override
-        public final int getStat(Creature actor) {
-            return actor == null ? 1 : actor.getMEN();
+        public final double calcBonus(Creature actor) {
+            return actor == null ? 1. : MENbonus.get(actor.getMEN());
+        }
+    },
+    NONE,
+    STR {
+        @Override
+        public final double calcBonus(Creature actor) {
+            return actor == null ? 1. : STRbonus.get(actor.getSTR());
         }
 
         @Override
-        public final double calcBonus(Creature actor) {
-            return actor == null ? 1. : MENbonus[actor.getMEN()];
+        public final double calcChanceMod(Creature actor) {
+            return Math.min(2. - Math.sqrt(calcBonus(actor)), 1.);
         }
-    },
-    NONE;
-
-    private static final BaseStats[] VALUES = values();
+    }// не более 1
+    ,
+    WIT {
+        @Override
+        public final double calcBonus(Creature actor) {
+            return actor == null ? 1. : WITbonus.get(actor.getWIT());
+        }
+    };
 
     private static final Logger _log = LoggerFactory.getLogger(BaseStats.class);
 
     private static final int MAX_STAT_VALUE = 100;
 
-    private static final double[] STRbonus = new double[MAX_STAT_VALUE];
-    private static final double[] INTbonus = new double[MAX_STAT_VALUE];
-    private static final double[] DEXbonus = new double[MAX_STAT_VALUE];
-    private static final double[] WITbonus = new double[MAX_STAT_VALUE];
-    private static final double[] CONbonus = new double[MAX_STAT_VALUE];
-    private static final double[] MENbonus = new double[MAX_STAT_VALUE];
+    private static final List<Double> STRbonus = new ArrayList<>();
+    private static final List<Double> INTbonus = new ArrayList<>();
+    private static final List<Double> DEXbonus = new ArrayList<>();
+    private static final List<Double> WITbonus = new ArrayList<>();
+    private static final List<Double> CONbonus = new ArrayList<>();
+    private static final List<Double> MENbonus = new ArrayList<>();
 
     static {
+        for (int i = 0; i < MAX_STAT_VALUE; i++) {
+            STRbonus.add(0.);
+            INTbonus.add(0.);
+            DEXbonus.add(0.);
+            WITbonus.add(0.);
+            CONbonus.add(0.);
+            MENbonus.add(0.);
+        }
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setValidating(false);
         factory.setIgnoringComments(true);
@@ -114,84 +94,44 @@ public enum BaseStats {
             _log.error("Error while loading attribute_bonus!", e);
         }
 
-        int i;
-        double val;
-
         if (doc != null)
             for (Node z = doc.getFirstChild(); z != null; z = z.getNextSibling())
                 for (Node n = z.getFirstChild(); n != null; n = n.getNextSibling()) {
-                    if (n.getNodeName().equalsIgnoreCase("str_bonus"))
-                        for (Node d = n.getFirstChild(); d != null; d = d.getNextSibling()) {
-                            String node = d.getNodeName();
-                            if (node.equalsIgnoreCase("set")) {
-                                i = Integer.valueOf(d.getAttributes().getNamedItem("attribute").getNodeValue());
-                                val = Integer.valueOf(d.getAttributes().getNamedItem("val").getNodeValue());
-                                STRbonus[i] = (100 + val) / 100;
-                            }
+                    String nodeName = n.getNodeName().toLowerCase();
+                    switch (nodeName) {
+                        case "str_bonus":
+                            getAttributes(n, STRbonus);
+                            break;
+                        case "int_bonus":
+                            getAttributes(n, INTbonus);
+                            break;
+                        case "con_bonus":
+                            getAttributes(n, CONbonus);
+                            break;
+                        case "men_bonus":
+                            getAttributes(n, MENbonus);
+                            break;
+                        case "dex_bonus": {
+                            getAttributes(n, DEXbonus);
+                            break;
                         }
-                    if (n.getNodeName().equalsIgnoreCase("int_bonus"))
-                        for (Node d = n.getFirstChild(); d != null; d = d.getNextSibling()) {
-                            String node = d.getNodeName();
-                            if (node.equalsIgnoreCase("set")) {
-                                i = Integer.valueOf(d.getAttributes().getNamedItem("attribute").getNodeValue());
-                                val = Integer.valueOf(d.getAttributes().getNamedItem("val").getNodeValue());
-                                INTbonus[i] = (100 + val) / 100;
-                            }
-                        }
-                    if (n.getNodeName().equalsIgnoreCase("con_bonus"))
-                        for (Node d = n.getFirstChild(); d != null; d = d.getNextSibling()) {
-                            String node = d.getNodeName();
-                            if (node.equalsIgnoreCase("set")) {
-                                i = Integer.valueOf(d.getAttributes().getNamedItem("attribute").getNodeValue());
-                                val = Integer.valueOf(d.getAttributes().getNamedItem("val").getNodeValue());
-                                CONbonus[i] = (100 + val) / 100;
-                            }
-                        }
-                    if (n.getNodeName().equalsIgnoreCase("men_bonus"))
-                        for (Node d = n.getFirstChild(); d != null; d = d.getNextSibling()) {
-                            String node = d.getNodeName();
-                            if (node.equalsIgnoreCase("set")) {
-                                i = Integer.valueOf(d.getAttributes().getNamedItem("attribute").getNodeValue());
-                                val = Integer.valueOf(d.getAttributes().getNamedItem("val").getNodeValue());
-                                MENbonus[i] = (100 + val) / 100;
-                            }
-                        }
-                    if (n.getNodeName().equalsIgnoreCase("dex_bonus"))
-                        for (Node d = n.getFirstChild(); d != null; d = d.getNextSibling()) {
-                            String node = d.getNodeName();
-                            if (node.equalsIgnoreCase("set")) {
-                                i = Integer.valueOf(d.getAttributes().getNamedItem("attribute").getNodeValue());
-                                val = Integer.valueOf(d.getAttributes().getNamedItem("val").getNodeValue());
-                                DEXbonus[i] = (100 + val) / 100;
-                            }
-                        }
-                    if (n.getNodeName().equalsIgnoreCase("wit_bonus"))
-                        for (Node d = n.getFirstChild(); d != null; d = d.getNextSibling()) {
-                            String node = d.getNodeName();
-                            if (node.equalsIgnoreCase("set")) {
-                                i = Integer.valueOf(d.getAttributes().getNamedItem("attribute").getNodeValue());
-                                val = Integer.valueOf(d.getAttributes().getNamedItem("val").getNodeValue());
-                                WITbonus[i] = (100 + val) / 100;
-                            }
-                        }
+                        case "wit_bonus":
+                            getAttributes(n, WITbonus);
+                            break;
+                    }
                 }
     }
 
-    public static BaseStats valueOfXml(String name) {
-        name = name.intern();
-        for (BaseStats s : VALUES)
-            if (s.toString().equalsIgnoreCase(name)) {
-                if (s == NONE) // для упрощения
-                    return null;
-
-                return s;
+    private static void getAttributes(Node n, List<Double> statBonus) {
+        int i;
+        double val;
+        for (Node d = n.getFirstChild(); d != null; d = d.getNextSibling()) {
+            if (d.getNodeName().equals("set")) {
+                i = toInt(d.getAttributes().getNamedItem("attribute").getNodeValue());
+                val = toInt(d.getAttributes().getNamedItem("val").getNodeValue());
+                statBonus.set(i, (100 + val) / 100);
             }
-
-        throw new NoSuchElementException("Unknown name '" + name + "' for enum BaseStats");
-    }
-
-    public int getStat(Creature actor) {
-        return 1;
+        }
     }
 
     public double calcBonus(Creature actor) {

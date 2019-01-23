@@ -1,5 +1,6 @@
 package l2trunk.scripts.actions;
 
+import l2trunk.commons.lang.Pair;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.base.Experience;
@@ -90,10 +91,10 @@ public class RewardListInfo {
                     icon = "icon.etc_question_mark_i00";
                 tmp.append("<tr><td width=32><img src=").append(icon).append(" width=32 height=32></td><td width=238><font color=a47a3e>").append(HtmlUtils.htmlItemName(d.getItemId())).append("</font><br1>");
 
-                long[] counts = CalculateRewardChances.getDropCounts(player, template, type != RewardType.SWEEP,
+                Pair<Long, Long> counts = CalculateRewardChances.getDropCounts(player, template, type != RewardType.SWEEP,
                         d.getItemId());
                 String chance = CalculateRewardChances.getDropChance(player, template, type != RewardType.SWEEP, d.getItemId());
-                tmp.append("<font color=\"b09979\">[").append(counts[0]).append("...").append(counts[1]).append("]&nbsp;");
+                tmp.append("<font color=\"b09979\">[").append(counts.getKey()).append("...").append(counts.getValue()).append("]&nbsp;");
                 tmp.append(CommunityDropCalculator.formatDropChance(chance)).append("</font></td></tr>");
             }
             tmp.append("</table>");

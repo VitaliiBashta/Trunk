@@ -13,8 +13,8 @@ public final class EffectParalyze extends Effect {
     public boolean checkCondition() {
         if (effected.isParalyzeImmune())
             return false;
-        if (_effector.getPet() != null && effected == _effector.getPet()) {
-            _effector.getPlayer().sendPacket(new SystemMessage(SystemMessage.THAT_IS_THE_INCORRECT_TARGET));
+        if (effector.getPet() != null && effected == effector.getPet()) {
+            effector.getPlayer().sendPacket(new SystemMessage(SystemMessage.THAT_IS_THE_INCORRECT_TARGET));
             return false;
         }
 

@@ -1,12 +1,11 @@
 package l2trunk.gameserver.network.serverpackets;
 
-
 import l2trunk.gameserver.model.entity.residence.ClanHall;
 import l2trunk.gameserver.model.entity.residence.ResidenceFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class AgitDecoInfo extends L2GameServerPacket {
+public final class AgitDecoInfo extends L2GameServerPacket {
     private static final Logger _log = LoggerFactory.getLogger(AgitDecoInfo.class);
     private static final int[] _buff = {0, 1, 1, 1, 2, 2, 2, 2, 2, 0, 0, 1, 1, 1, 2, 2, 2, 2, 2};
     private static final int[] _itCr8 = {0, 1, 2, 2};

@@ -20,41 +20,13 @@ import l2trunk.gameserver.templates.npc.NpcTemplate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 public final class _350_EnhanceYourWeapon extends Quest {
-    private static class PlayerResult {
-        private final Player _player;
-        private SystemMsg _message;
-
-        PlayerResult(Player player) {
-            _player = player;
-        }
-
-        Player getPlayer() {
-            return _player;
-        }
-
-        SystemMsg getMessage() {
-            return _message;
-        }
-
-        void setMessage(SystemMsg message) {
-            _message = message;
-        }
-
-        void send() {
-            if (_message != null) {
-                _player.sendPacket(_message);
-                _message = null;
-            }
-        }
-    }
-
     private static final int RED_SOUL_CRYSTAL0_ID = 4629;
     private static final int GREEN_SOUL_CRYSTAL0_ID = 4640;
     private static final int BLUE_SOUL_CRYSTAL0_ID = 4651;
-
     private static final int Jurek = 30115;
     private static final int Gideon = 30194;
     private static final int Winonin = 30856;
@@ -118,20 +90,17 @@ public final class _350_EnhanceYourWeapon extends Quest {
         List<PlayerResult> list;
         Party party = player.getParty();
         if (party == null) {
-            list = new ArrayList<>(1);
-            list.add(new PlayerResult(player));
+            list = List.of(new PlayerResult(player));
         } else {
-            list = new ArrayList<>(party.size() + 1);
-            final PlayerResult pr = new PlayerResult(player);
-            list.add(pr); // index 0
-            list.add(pr); // DS: у убившего двойной шанс, из ai
-            for (Player m : party.getMembers())
-                if (m != player && m.isInRange(npc.getLoc(), Config.ALT_PARTY_DISTRIBUTION_RANGE))
-                    list.add(new PlayerResult(m));
+            list = party.getMembers().stream()
+                    .filter(m -> m.isInRange(npc.getLoc(), Config.ALT_PARTY_DISTRIBUTION_RANGE))
+                    .map(PlayerResult::new)
+                    .collect(Collectors.toList());
+            list.add(new PlayerResult(player)); // DS: у убившего двойной шанс, из ai
         }
 
-        for (AbsorbInfo info : npc.getTemplate().getAbsorbInfo())
-            calcAbsorb(list, (MonsterInstance) npc, info);
+        npc.getTemplate().getAbsorbInfo().forEach(info ->
+                calcAbsorb(list, (MonsterInstance) npc, info));
 
         list.forEach(PlayerResult::send);
 
@@ -232,6 +201,34 @@ public final class _350_EnhanceYourWeapon extends Quest {
                 target.setMessage(SystemMsg.THE_SOUL_CRYSTAL_SUCCEEDED_IN_ABSORBING_A_SOUL);
             } else
                 target.setMessage(SystemMsg.THE_SOUL_CRYSTAL_WAS_NOT_ABLE_TO_ABSORB_THE_SOUL);
+        }
+    }
+
+    private static class PlayerResult {
+        private final Player player;
+        private SystemMsg message;
+
+        PlayerResult(Player player) {
+            this.player = player;
+        }
+
+        Player getPlayer() {
+            return player;
+        }
+
+        SystemMsg getMessage() {
+            return message;
+        }
+
+        void setMessage(SystemMsg message) {
+            this.message = message;
+        }
+
+        void send() {
+            if (message != null) {
+                player.sendPacket(message);
+                message = null;
+            }
         }
     }
 }

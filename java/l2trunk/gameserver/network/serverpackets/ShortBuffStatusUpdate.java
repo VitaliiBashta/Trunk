@@ -29,7 +29,7 @@ public final class ShortBuffStatusUpdate extends L2GameServerPacket {
     private final int skillDuration;
 
     public ShortBuffStatusUpdate(Effect effect) {
-        skillId = effect.getSkill().getDisplayId();
+        skillId = effect.getSkill().displayId;
         skillLevel = effect.getSkill().getDisplayLevel();
         skillDuration = effect.getTimeLeft();
     }

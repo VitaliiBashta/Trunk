@@ -15,14 +15,10 @@ import java.util.List;
 import java.util.StringTokenizer;
 import java.util.stream.Collectors;
 
-public final class CharacterControlPanel {
-    private static CharacterControlPanel _instance;
+import static l2trunk.commons.lang.NumberUtils.toInt;
 
-    public static CharacterControlPanel getInstance() {
-        if (_instance == null)
-            _instance = new CharacterControlPanel();
-        return _instance;
-    }
+public enum  CharacterControlPanel {
+    INSTANCE;
 
     public String useCommand(Player activeChar, String text, String bypass) {
         // While some1 is currently writing secondary password
@@ -153,14 +149,12 @@ public final class CharacterControlPanel {
             }
         } else if (param[0].equals("delevel")) {
             if (param.length > 1 && NumberUtils.isNumber(param[1])) {
-                boolean success = CCPSmallCommands.decreaseLevel(activeChar, Integer.parseInt(param[1]));
+                boolean success = CCPSmallCommands.decreaseLevel(activeChar, toInt(param[1]));
                 if (success)
                     return null;
             }
-
             return "cfgDelevel.htm";
         }
-
         return "char.htm";
     }
 

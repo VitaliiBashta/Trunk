@@ -14,7 +14,7 @@ public final class CabaleBufferInstance extends NpcInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, String filename, Object... ar) {
+    public void showChatWindow(Player player, String filename) {
     }
 
     @Override

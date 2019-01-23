@@ -7,13 +7,11 @@ import java.util.List;
 
 public final class RewardList extends ArrayList<RewardGroup> {
     public static final int MAX_CHANCE = 1000000;
-    private final RewardType _type;
-    private final boolean _autoLoot;
+    private final RewardType type;
 
-    public RewardList(RewardType rewardType, boolean a) {
+    public RewardList(RewardType rewardType) {
         super(5);
-        _type = rewardType;
-        _autoLoot = a;
+        type = rewardType;
     }
 
     public List<RewardItem> roll(Player player) {
@@ -31,7 +29,7 @@ public final class RewardList extends ArrayList<RewardGroup> {
     public List<RewardItem> roll(Player player, double mod, boolean isRaid, boolean isSiegeGuard) {
         List<RewardItem> temp = new ArrayList<>(size());
         for (RewardGroup g : this) {
-            List<RewardItem> tdl = g.roll(_type, player, mod, isRaid, isSiegeGuard);
+            List<RewardItem> tdl = g.roll(type, player, mod, isRaid, isSiegeGuard);
             if (!tdl.isEmpty())
                 temp.addAll(tdl);
         }
@@ -40,7 +38,7 @@ public final class RewardList extends ArrayList<RewardGroup> {
 
     public boolean validate() {
         for (RewardGroup g : this) {
-            int chanceSum = 0; // сумма шансов группы
+            double chanceSum = 0; // сумма шансов группы
             for (RewardData d : g.getItems())
                 chanceSum += d.getChance();
             if (chanceSum <= MAX_CHANCE) // всё в порядке?
@@ -55,11 +53,7 @@ public final class RewardList extends ArrayList<RewardGroup> {
         return false;
     }
 
-    public boolean isAutoLoot() {
-        return _autoLoot;
-    }
-
     public RewardType getType() {
-        return _type;
+        return type;
     }
 }

@@ -243,7 +243,7 @@ public final class FindParty extends Functions implements IVoicedCommandHandler 
 
             int itemDistribution = partyLeader.getParty() == null ? 0 : partyLeader.getParty().getLootDistribution();
             //new Request(l2requestType.PARTY, partyLeader, target).setTimeout(10000L).set("itemDistribution", itemDistribution);
-            //target.sendPacket(new AskJoinParty(partyLeader.getName(), itemDistribution));
+            //target.sendPacket(new AskJoinParty(partyLeader.name(), itemDistribution));
             //partyLeader.sendPacket(new SystemMessage2(SystemMsg.C1_HAS_BEEN_INVITED_TO_THE_PARTY).addName(target));
             Party party = partyLeader.getParty();
             if (party == null)

@@ -784,7 +784,7 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
             builder.append("<tr>");
             builder.append("<td width=100><font name=hs12 color=\"f1b45d\">").append(index + 1).append(".</font></td>");
             builder.append("<td width=150><font name=hs12 color=\"FFFFFF\">").append(member.getName()).append("</font></td>");
-            //builder.append("<button action=\"bypass _clbbssinglemember_").append(member.getObjectId()).append("\" value=\"").append(member.getName()).append("\" width=150 height=25 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.button_df\">");
+            //builder.append("<button action=\"bypass _clbbssinglemember_").append(member.getObjectId()).append("\" value=\"").append(member.name()).append("\" width=150 height=25 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.button_df\">");
             builder.append("<td align=center width=100>").append(member.getPlayer() != null ? "<font name=hs12 color=6a9b54>True</font>" : "<font name=hs12 color=FF6666>False</font>").append("</td>");
             builder.append("<td align=center width=100>").append(member.isSubLeader() || member.isClanLeader() ? "<font name=hs12 color=6a9b54>True</font>" : "<font name=hs12 color=FF6666>False</font>").append("</td>");
             builder.append("<td align=center width=75><font name=hs12 color=\"BBFF44\">").append(getUnitName(member.getSubUnit().getType())).append("</font></td>");
@@ -904,15 +904,15 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
         for (Skill clanSkill : clan.getSkills()) {
             skills += "<tr><td width=30></td>";
             skills += "<td width=55><br>";
-            skills += "<img src=\"" + clanSkill.getIcon() + "\" height=30 width=30>";
+            skills += "<img src=\"" + clanSkill.icon + "\" height=30 width=30>";
             skills += "</td><td width=660><br><table width=660><tr><td><font name=\"hs12\" color=\"00BBFF\">";
-            skills += clanSkill.getName() + " - <font name=\"hs12\" color=\"FFFFFF\">Level " + clanSkill.getLevel() + " </font>";
+            skills += clanSkill.name() + " - <font name=\"hs12\" color=\"FFFFFF\">Level " + clanSkill.level + " </font>";
             skills += "</font></td></tr><tr><td>";
-            List<String> descriptions = CLAN_SKILL_DESCRIPTIONS.get(clanSkill.getId());
-            if (descriptions == null || descriptions.size() < clanSkill.getLevel() - 1) {
-                _log.warn("cannot find skill id:" + clanSkill.getId() + " in Clan Community Skills descriptions!");
+            List<String> descriptions = CLAN_SKILL_DESCRIPTIONS.get(clanSkill.id);
+            if (descriptions == null || descriptions.size() < clanSkill.level - 1) {
+                _log.warn("cannot find skill id:" + clanSkill.id + " in Clan Community Skills descriptions!");
             } else {
-                skills += "<font color=\"FFFF11\">" + descriptions.get(clanSkill.getLevel() - 1) + "</font>";
+                skills += "<font color=\"FFFF11\">" + descriptions.get(clanSkill.level - 1) + "</font>";
             }
             skills += "</td></tr></table></td></tr>";
         }

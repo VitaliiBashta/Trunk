@@ -21,7 +21,7 @@ public final class EffectLockInventory extends Effect {
     public void onStart() {
         super.onStart();
 
-        Player player = _effector.getPlayer();
+        Player player = effector.getPlayer();
 
         player.getInventory().lockItems(lockType, lockItems);
     }
@@ -30,7 +30,7 @@ public final class EffectLockInventory extends Effect {
     public void onExit() {
         super.onExit();
 
-        Player player = _effector.getPlayer();
+        Player player = effector.getPlayer();
 
         player.getInventory().unlock();
     }

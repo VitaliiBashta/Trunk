@@ -34,7 +34,7 @@ public final class EffectList {
             return DEBUFF_SLOT_TYPE;
         } else if (e.getSkill().isMusic()) {
             return MUSIC_SLOT_TYPE;
-        } else if (e.getSkill().isTrigger()) {
+        } else if (e.getSkill().isTrigger) {
             return TRIGGER_SLOT_TYPE;
         } else {
             return BUFF_SLOT_TYPE;
@@ -59,7 +59,7 @@ public final class EffectList {
      */
     public int getEffectsCountForSkill(int skill_id) {
         return (int) effects.stream()
-                .filter(e -> e.getSkill().getId() == skill_id)
+                .filter(e -> e.getSkill().id == skill_id)
                 .count();
     }
 
@@ -71,12 +71,12 @@ public final class EffectList {
 
     public Stream<Effect> getEffectsBySkill(Skill skill) {
         if (skill == null) return Stream.empty();
-        return getEffectsBySkillId(skill.getId());
+        return getEffectsBySkillId(skill.id);
     }
 
     public Stream<Effect> getEffectsBySkillId(Integer skillId) {
         return effects.stream()
-                .filter(e -> e.getSkill().getId() == skillId);
+                .filter(e -> e.getSkill().id == skillId);
     }
 
     Effect getEffectOfFishPot() {
@@ -87,7 +87,7 @@ public final class EffectList {
 
     public boolean containEffectFromSkills(List<Integer> skillIds) {
         return effects.stream()
-                .map(e -> e.getSkill().getId())
+                .map(e -> e.getSkill().id)
                 .anyMatch(skillIds::contains);
     }
 
@@ -104,7 +104,7 @@ public final class EffectList {
 
         Map<Integer, Effect> map = new LinkedHashMap<>();
 
-        effects.forEach(e -> map.put(e.getSkill().getId(), e)); // putIfAbsent
+        effects.forEach(e -> map.put(e.getSkill().id, e)); // putIfAbsent
 
         return new ArrayList<>(map.values());
     }
@@ -123,11 +123,11 @@ public final class EffectList {
                     return;
                 }
 
-                if (!skillIds.contains(e.getSkill().getId())) {
+                if (!skillIds.contains(e.getSkill().id)) {
                     int subType = getSlotType(e);
                     if (subType == slotType) {
                         size++;
-                        skillIds.add(e.getSkill().getId());
+                        skillIds.add(e.getSkill().id);
                     }
                 }
             }
@@ -156,7 +156,7 @@ public final class EffectList {
         effects.stream()
                 .filter(Effect::isInUse)
                 .filter(e -> getSlotType(e) == slotType)
-                .map(e -> e.getSkill().getId())
+                .map(e -> e.getSkill().id)
                 .findFirst().ifPresent(this::stopEffect);
     }
 
@@ -178,7 +178,7 @@ public final class EffectList {
                         continue;
                     }
 
-                    if (e.getStackType().equals(EffectTemplate.NO_STACK) && (e.getSkill().getId() == effect.getSkill().getId()) && (e.getEffectType() == effect.getEffectType())) {
+                    if (e.getStackType().equals(EffectTemplate.NO_STACK) && (e.getSkill().id == effect.getSkill().id) && (e.getEffectType() == effect.getEffectType())) {
                         // If the remaining duration of the effect of the old more than the duration of the new, the old reserve.
                         if (effect.getTimeLeft() > e.getTimeLeft()) {
                             e.exit();
@@ -200,7 +200,7 @@ public final class EffectList {
                         continue;
                     }
 
-                    if ((e.getSkill().getId() == effect.getSkill().getId()) && (e.getEffectType() != effect.getEffectType())) {
+                    if ((e.getSkill().id == effect.getSkill().id) && (e.getEffectType() != effect.getEffectType())) {
                         break;
                     }
 
@@ -277,13 +277,13 @@ public final class EffectList {
 
     public void stopEffect(int skillId) {
         effects.stream()
-                .filter(e -> e.getSkill().getId() == skillId)
+                .filter(e -> e.getSkill().id == skillId)
                 .forEach(Effect::exit);
     }
 
     public void stopEffect(Skill skill) {
         if (skill != null) {
-            stopEffect(skill.getId());
+            stopEffect(skill.id);
         }
     }
 
@@ -296,7 +296,7 @@ public final class EffectList {
     void stopAllSkillEffects(EffectType type) {
         effects.stream()
                 .filter(e -> e.getEffectType() == type)
-                .map(e -> e.getSkill().getId())
+                .map(e -> e.getSkill().id)
                 .forEach(this::stopEffect);
 
     }

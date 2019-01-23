@@ -46,8 +46,8 @@ public final class NegateEffects extends Skill {
     public void useSkill(Creature activeChar, List<Creature> targets) {
         for (Creature target : targets)
             if (target != null) {
-                if (!negateDebuffs && !Formulas.calcSkillSuccess(activeChar, target, this, getActivateRate())) {
-                    activeChar.sendPacket(new SystemMessage2(SystemMsg.C1_HAS_RESISTED_YOUR_S2).addString(target.getName()).addSkillName(getId(), getLevel()));
+                if (!negateDebuffs && !Formulas.calcSkillSuccess(activeChar, target, this, activateRate())) {
+                    activeChar.sendPacket(new SystemMessage2(SystemMsg.C1_HAS_RESISTED_YOUR_S2).addString(target.getName()).addSkillName(id, level));
                     continue;
                 }
 
@@ -59,7 +59,7 @@ public final class NegateEffects extends Skill {
                     for (Map.Entry<String, Integer> e : _negateStackType.entrySet())
                         negateEffectAtPower(target, e.getKey(), e.getValue());
 
-                getEffects(activeChar, target, getActivateRate() > 0, false);
+                getEffects(activeChar, target, activateRate() > 0, false);
             }
 
         if (isSSPossible())
@@ -71,7 +71,7 @@ public final class NegateEffects extends Skill {
             if (onlyPhysical && e.getSkill().isMagic() || !e.getSkill().isCancelable() || e.getSkill().isOffensive() && !negateDebuffs)
                 continue;
             // Если у бафа выше уровень чем у скилла Cancel, то есть шанс, что этот баф не снимется
-            if (!e.getSkill().isOffensive() && e.getSkill().getMagicLevel() > getMagicLevel() && Rnd.chance(e.getSkill().getMagicLevel() - getMagicLevel()))
+            if (!e.getSkill().isOffensive() && e.getSkill().magicLevel > magicLevel && Rnd.chance(e.getSkill().magicLevel - magicLevel))
                 continue;
             if (e.getEffectType() == type && e.getStackOrder() <= power)
                 e.exit();
@@ -84,7 +84,7 @@ public final class NegateEffects extends Skill {
             if (onlyPhysical && e.getSkill().isMagic() || !skill.isCancelable() || skill.isOffensive() && !negateDebuffs)
                 continue;
             // Если у бафа выше уровень чем у скилла Cancel, то есть шанс, что этот баф не снимется
-            if (!skill.isOffensive() && skill.getMagicLevel() > getMagicLevel() && Rnd.chance(skill.getMagicLevel() - getMagicLevel()))
+            if (!skill.isOffensive() && skill.magicLevel > magicLevel && Rnd.chance(skill.magicLevel - magicLevel))
                 continue;
             if (e.checkStackType(stackType) && e.getStackOrder() <= power)
                 e.exit();

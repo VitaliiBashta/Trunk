@@ -36,24 +36,24 @@ public class SkillTreeTable {
     }
 
     public static void checkSkill(Player player, Skill skill) {
-        SkillLearn learn = SkillAcquireHolder.getSkillLearn(player, skill.getId(), levelWithoutEnchant(skill), AcquireType.NORMAL);
+        SkillLearn learn = SkillAcquireHolder.getSkillLearn(player, skill.id, levelWithoutEnchant(skill), AcquireType.NORMAL);
         if (learn == null)
             return;
 
         if (learn.getMinLevel() > player.getLevel() + 5) // Official +9 (Alexander)
         {
-            player.removeSkill(skill.getId(), true);
+            player.removeSkill(skill.id, true);
 
             // если у нас низкий лвл для скила, то заточка обнуляется 100%
             // и ищем от большего к меньшему подходящий лвл для скила
-            for (int i = skill.getBaseLevel(); i != 0; i--) {
-                SkillLearn learn2 = SkillAcquireHolder.getSkillLearn(player, skill.getId(), i, AcquireType.NORMAL);
+            for (int i = skill.baseLevel; i != 0; i--) {
+                SkillLearn learn2 = SkillAcquireHolder.getSkillLearn(player, skill.id, i, AcquireType.NORMAL);
                 if (learn2 == null)
                     continue;
                 if (learn2.getMinLevel() > player.getLevel() + 6) // Official +10 (Alexander)
                     continue;
 
-                Skill newSkill = SkillTable.INSTANCE.getInfo(skill.getId(), i);
+                Skill newSkill = SkillTable.INSTANCE.getInfo(skill.id, i);
                 if (newSkill != null) {
                     player.addSkill(newSkill, true);
                     break;
@@ -63,7 +63,7 @@ public class SkillTreeTable {
     }
 
     private static int levelWithoutEnchant(Skill skill) {
-        return skill.getDisplayLevel() > 100 ? skill.getBaseLevel() : skill.getLevel();
+        return skill.getDisplayLevel() > 100 ? skill.baseLevel : skill.level;
     }
 
     public static List<EnchantSkillLearn> getFirstEnchantsForSkill(int skillid) {
@@ -81,12 +81,12 @@ public class SkillTreeTable {
     }
 
     public static int isEnchantable(Skill skill) {
-        List<EnchantSkillLearn> enchants = _enchant.get(skill.getId());
+        List<EnchantSkillLearn> enchants = _enchant.get(skill.id);
         if (enchants == null)
             return 0;
 
         for (EnchantSkillLearn e : enchants)
-            if (e.getBaseLevel() <= skill.getLevel())
+            if (e.getBaseLevel() <= skill.level)
                 return 1;
 
         return 0;

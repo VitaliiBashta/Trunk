@@ -8,7 +8,6 @@ import l2trunk.gameserver.network.serverpackets.components.ChatType;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.tables.SkillTable;
 
-import java.util.Collections;
 import java.util.List;
 
 import static l2trunk.commons.lang.NumberUtils.toInt;
@@ -22,7 +21,7 @@ public final class SkillUse extends Functions implements IVoicedCommandHandler {
 
         Skill skill = SkillTable.INSTANCE.getInfo(skills, activeChar.getSkillLevel(skills));
 
-        String sk = "/useskill " + skill.getName();
+        String sk = "/useskill " + skill.name();
         Say2 cs = new Say2(activeChar.getObjectId(), ChatType.ALL, activeChar.getName(), sk);
 
         activeChar.setMacroSkill(skill);

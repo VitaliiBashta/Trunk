@@ -36,7 +36,7 @@ public final class EffectSilentMove extends Effect {
         double manaDam = calc();
         if (manaDam > effected.getCurrentMp()) {
             effected.sendPacket(SystemMsg.NOT_ENOUGH_MP);
-            effected.sendPacket(new SystemMessage2(SystemMsg.THE_EFFECT_OF_S1_HAS_BEEN_REMOVED).addSkillName(getSkill().getId(), getSkill().getDisplayLevel()));
+            effected.sendPacket(new SystemMessage2(SystemMsg.THE_EFFECT_OF_S1_HAS_BEEN_REMOVED).addSkillName(getSkill().id, getSkill().getDisplayLevel()));
             return false;
         }
 

@@ -4,9 +4,6 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
-/**
- * @author pchayka
- */
 public final class NativeCorpseInstance extends NpcInstance {
     public NativeCorpseInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
@@ -17,11 +14,10 @@ public final class NativeCorpseInstance extends NpcInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, String filename, Object... replace) {
+    public void showChatWindow(Player player, String filename) {
     }
 
     @Override
     public void onRandomAnimation() {
-        return;
     }
 }

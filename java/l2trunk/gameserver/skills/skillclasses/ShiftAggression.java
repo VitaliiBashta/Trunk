@@ -25,7 +25,7 @@ public final class ShiftAggression extends Skill {
 
                 Player player = (Player) target;
 
-                World.getAroundNpc(activeChar, getSkillRadius(), getSkillRadius())
+                World.getAroundNpc(activeChar, skillRadius, skillRadius)
                         .filter(npc -> npc.getAggroList().get(activeChar) != null)
                         .forEach(npc -> {
                             npc.getAggroList().addDamageHate(player, 0, npc.getAggroList().get(activeChar).hate);

@@ -48,20 +48,10 @@ public enum  OfflineBufferManager {
     OfflineBufferManager() {
     }
 
-
-    /**
-     * @return Devuelve todas las stores de buffs
-     */
     public Map<Integer, BufferData> getBuffStores() {
         return _buffStores;
     }
 
-    /**
-     * Procesa el bypass para este sistema y muestra el html que corresponda
-     *
-     * @param player
-     * @param command
-     */
     public void processBypass(Player player, String command) {
         final StringTokenizer st = new StringTokenizer(command, " ");
         st.nextToken();
@@ -135,35 +125,35 @@ public enum  OfflineBufferManager {
                             continue;
 
                         // Only buffs
-                        if (skill.getSkillType() != SkillType.BUFF)
+                        if (skill.skillType != SkillType.BUFF)
                             continue;
 
                         // Not triggered and hero skills
-                        if (skill.isHeroic())
+                        if (skill.isHeroic)
                             continue;
 
                         // Not only self skills
-                        if (skill.getTargetType() == SkillTargetType.TARGET_SELF)
+                        if (skill.targetType == SkillTargetType.TARGET_SELF)
                             continue;
 
                         // Not pet skills
-                        if (skill.getTargetType() == SkillTargetType.TARGET_PET)
+                        if (skill.targetType == SkillTargetType.TARGET_PET)
                             continue;
 
                         // Avoid overlord skills when being a warcryer
-                        if (player.getClassId().equalsOrChildOf(ClassId.doomcryer) && skill.getTargetType() == SkillTargetType.TARGET_CLAN)
+                        if (player.getClassId().equalsOrChildOf(ClassId.doomcryer) && skill.targetType == SkillTargetType.TARGET_CLAN)
                             continue;
 
                         // Avoid warcryer skills when being a overlord
                         if (player.getClassId().equalsOrChildOf(ClassId.dominator)
-                                && (skill.getTargetType() == SkillTargetType.TARGET_PARTY || skill.getTargetType() == SkillTargetType.TARGET_ONE))
+                                && (skill.targetType == SkillTargetType.TARGET_PARTY || skill.targetType == SkillTargetType.TARGET_ONE))
                             continue;
 
                         // Forbidden skill list
-                        if (Config.BUFF_STORE_FORBIDDEN_SKILL_LIST.contains(skill.getId()))
+                        if (Config.BUFF_STORE_FORBIDDEN_SKILL_LIST.contains(skill.id))
                             continue;
 
-                        buffer.getBuffs().put(skill.getId(), skill);
+                        buffer.getBuffs().put(skill.id, skill);
                     }
 
                     // Case of empty buff list
@@ -342,7 +332,7 @@ public enum  OfflineBufferManager {
                         buffer.getBuffs().get(buffId).getEffects(player.getPet());
 
                     // Send message
-                    player.sendMessage("You have bought " + buffer.getBuffs().get(buffId).getName() + " from " + buffer.getOwner().getName());
+                    player.sendMessage("You have bought " + buffer.getBuffs().get(buffId).name + " from " + buffer.getOwner().getName());
 
                     // Send the buff list again after buffing, exactly where it was before
                     showStoreWindow(player, buffer, isPlayer, page);
@@ -394,25 +384,25 @@ public enum  OfflineBufferManager {
                 break;
 
             buff = it.next();
-            baseMaxLvl = SkillTable.INSTANCE.getBaseLevel(buff.getId());
+            baseMaxLvl = SkillTable.INSTANCE.getBaseLevel(buff.id);
 
             buffList.append("<tr>");
             buffList.append("<td fixwidth=300>");
             buffList.append("<table height=35 border=0 cellspacing=2 cellpadding=0 bgcolor=" + (changeColor ? "171612" : "23221e") + ">");
             buffList.append("<tr>");
             buffList.append("<td width=5></td>");
-            buffList.append("<td width=30 align=center background=" + buff.getIcon() + "><button value=\"\" action=\"bypass -h BuffStore purchasebuff " + buffer.getOwner().getObjectId() + " " + (isForPlayer ? "player" : "summon") + " " + buff.getId() + " " + currentPage + "\" width=32 height=32 back=L2UI_CT1.ItemWindow_DF_Frame_Down fore=L2UI_CT1.ItemWindow_DF_Frame></td>");
+            buffList.append("<td width=30 align=center background=" + buff.icon + "><button value=\"\" action=\"bypass -h BuffStore purchasebuff " + buffer.getOwner().getObjectId() + " " + (isForPlayer ? "player" : "summon") + " " + buff.id + " " + currentPage + "\" width=32 height=32 back=L2UI_CT1.ItemWindow_DF_Frame_Down fore=L2UI_CT1.ItemWindow_DF_Frame></td>");
             buffList.append("<td width=12></td>");
-            if (buff.getLevel() > baseMaxLvl) {
+            if (buff.level > baseMaxLvl) {
                 // Buffs encantados
-                enchantType = (buff.getLevel() - baseMaxLvl) / buff.getEnchantLevelCount();
-                enchantLvl = (buff.getLevel() - baseMaxLvl) % buff.getEnchantLevelCount();
+                enchantType = (buff.level - baseMaxLvl) / buff.getEnchantLevelCount();
+                enchantLvl = (buff.level - baseMaxLvl) % buff.getEnchantLevelCount();
                 enchantLvl = (enchantLvl == 0 ? buff.getEnchantLevelCount() : enchantLvl);
 
-                buffList.append("<td fixwidth=240>" + "<font name=__SYSTEMWORLDFONT color=C73232>" + buff.getName() + "<font>" + " - <font color=329231>Level</font> <font color=FFFFFF>" + baseMaxLvl + "</font>");
+                buffList.append("<td fixwidth=240>" + "<font name=__SYSTEMWORLDFONT color=C73232>" + buff.name() + "<font>" + " - <font color=329231>Level</font> <font color=FFFFFF>" + baseMaxLvl + "</font>");
                 buffList.append(" <br1> › <font color=F1C101 name=__SYSTEMWORLDFONT>Enchant: </font><font color=ffd969 name=CreditTextNormal>+" + enchantLvl + " " + (enchantType >= 3 ? "Power" : (enchantType >= 2 ? "Cost" : "Time")) + "</font></td>");
             } else {
-                buffList.append("<td fixwidth=240>" + "<font name=__SYSTEMWORLDFONT color=C73232>" + buff.getName() + "<font>" + " - <font color=329231>Level</font> <font color=FFFFFF>" + buff.getLevel() + "</font>");
+                buffList.append("<td fixwidth=240>" + "<font name=__SYSTEMWORLDFONT color=C73232>" + buff.name() + "<font>" + " - <font color=329231>Level</font> <font color=FFFFFF>" + buff.level + "</font>");
                 buffList.append(" <br1> › <font color=F1C101 name=__SYSTEMWORLDFONT>Enchant: </font><font color=FFFFFF name=CreditTextNormal> None</font></td>");
 
             }
@@ -473,7 +463,7 @@ public enum  OfflineBufferManager {
             _buffPrice = price;
             if (buffs != null) {
                 for (Skill buff : buffs) {
-                    _buffs.put(buff.getId(), buff);
+                    _buffs.put(buff.id, buff);
                 }
             }
         }

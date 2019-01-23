@@ -144,15 +144,15 @@ public enum EffectsDAO {
                     .filter(e -> !e.getSkill().isToggle())
                     .filter(e -> e.getEffectType() != EffectType.HealOverTime)
                     .filter(e -> e.getEffectType() != EffectType.CombatPointHealOverTime)
-                    .filter(e -> !(playable.isSummon() && e.getSkill().isOffensive()))// Summons should not store debuffs, only buffs
+                    .filter(e -> !(playable.isSummon() && e.getSkill().isOffensive))// Summons should not store debuffs, only buffs
                     .collect(Collectors.toList());
             for (Effect effect : allSavableEffects) {
 
                 if (effect.isSaveable()) {
                     sb = new StringBuilder("(");
                     sb.append(objectId).append(",");
-                    sb.append(effect.getSkill().getId()).append(",");
-                    sb.append(effect.getSkill().getLevel()).append(",");
+                    sb.append(effect.getSkill().id).append(",");
+                    sb.append(effect.getSkill().level).append(",");
                     sb.append(effect.getCount()).append(",");
                     sb.append(effect.getTime()).append(",");
                     sb.append(effect.getPeriod()).append(",");
@@ -163,8 +163,8 @@ public enum EffectsDAO {
                 while ((effect = effect.getNext()) != null && effect.isSaveable()) {
                     sb = new StringBuilder("(");
                     sb.append(objectId).append(",");
-                    sb.append(effect.getSkill().getId()).append(",");
-                    sb.append(effect.getSkill().getLevel()).append(",");
+                    sb.append(effect.getSkill().id).append(",");
+                    sb.append(effect.getSkill().level).append(",");
                     sb.append(effect.getCount()).append(",");
                     sb.append(effect.getTime()).append(",");
                     sb.append(effect.getPeriod()).append(",");

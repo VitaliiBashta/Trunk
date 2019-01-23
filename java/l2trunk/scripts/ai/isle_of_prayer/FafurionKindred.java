@@ -77,7 +77,7 @@ public final class FafurionKindred extends Fighter {
         if (actor.isDead() || skill == null)
             return;
         // Лечим
-        if (skill.getId() == Spirit_of_the_Lake)
+        if (skill.id == Spirit_of_the_Lake)
             actor.setCurrentHp(actor.getCurrentHp() + 3000, false);
         actor.getAggroList().remove(caster, true);
     }

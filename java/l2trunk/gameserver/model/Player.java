@@ -43,8 +43,8 @@ import l2trunk.gameserver.model.GameObjectTasks.*;
 import l2trunk.gameserver.model.Request.L2RequestType;
 import l2trunk.gameserver.model.Skill.AddedSkill;
 import l2trunk.gameserver.model.Zone.ZoneType;
-import l2trunk.gameserver.model.actor.instances.player.FriendList;
 import l2trunk.gameserver.model.actor.instances.player.*;
+import l2trunk.gameserver.model.actor.instances.player.FriendList;
 import l2trunk.gameserver.model.actor.listener.PlayerListenerList;
 import l2trunk.gameserver.model.actor.recorder.PlayerStatsChangeRecorder;
 import l2trunk.gameserver.model.base.*;
@@ -122,8 +122,8 @@ import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.sql.*;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -246,7 +246,7 @@ public final class Player extends Playable implements PlayerGroup {
     public boolean _autoCp;
     public boolean _autoHp;
     public boolean entering = true;
-    public Location _stablePoint = null;
+    public Location stablePoint = null;
     private boolean _gmVisible = false;
     private int _telemode = 0;
     /**
@@ -304,9 +304,9 @@ public final class Player extends Playable implements PlayerGroup {
     private String _sellStoreName;
     private List<TradeItem> sellList = List.of();
     private List<TradeItem> packageSellList = List.of();
-    private String _buyStoreName;
-    private List<TradeItem> _buyList = Collections.emptyList();
-    private List<TradeItem> _tradeList = Collections.emptyList();
+    private String buyStoreName;
+    private List<TradeItem> _buyList = List.of();
+    private List<TradeItem> _tradeList = List.of();
     private int _hennaSTR, _hennaINT, _hennaDEX, _hennaMEN, _hennaWIT, _hennaCON;
     private Party party;
     private Location _lastPartyPosition;
@@ -929,21 +929,8 @@ public final class Player extends Playable implements PlayerGroup {
         }
     }
 
-    private static void RestoreFightClub(Player player) {
-        String[] values = player.getVar("FightClubRate").split(";");
-        int id = toInt(values[0]);
-        int count = toInt(values[1]);
-        ItemFunctions.addItem(player, id, count, true, "RestoreFightClub");
-        player.unsetVar("FightClubRate");
-        player.unsetVar("isPvPevents");
-    }
-
     public boolean isFakePlayer() {
         return _isFakePlayer;
-    }
-
-    public void setFakePlayer() {
-        _isFakePlayer = true;
     }
 
     @Override
@@ -1006,7 +993,7 @@ public final class Player extends Playable implements PlayerGroup {
 
         super.doCast(skill, target, forceUse);
 
-        // if (getUseSeed() != 0 && skill.getSkillType() == SkillType.SOWING)
+        // if (getUseSeed() != 0 && skill.skillType() == SkillType.SOWING)
         // sendPacket(new ExUseSharedGroupItem(getUseSeed(), getUseSeed(), 5000, 5000));
     }
 
@@ -1032,11 +1019,11 @@ public final class Player extends Playable implements PlayerGroup {
         long minutes = (timeleft - (hours * 3600000)) / 60000;
         long seconds = (long) Math.ceil((timeleft - (hours * 3600000) - (minutes * 60000)) / 1000.);
         if (hours > 0) {
-            sendPacket(new SystemMessage(SystemMessage.THERE_ARE_S2_HOURS_S3_MINUTES_AND_S4_SECONDS_REMAINING_IN_S1S_REUSE_TIME).addSkillName(skill.getId(), skill.getDisplayLevel()).addNumber(hours).addNumber(minutes).addNumber(seconds));
+            sendPacket(new SystemMessage(SystemMessage.THERE_ARE_S2_HOURS_S3_MINUTES_AND_S4_SECONDS_REMAINING_IN_S1S_REUSE_TIME).addSkillName(skill.id, skill.getDisplayLevel()).addNumber(hours).addNumber(minutes).addNumber(seconds));
         } else if (minutes > 0) {
-            sendPacket(new SystemMessage(SystemMessage.THERE_ARE_S2_MINUTES_S3_SECONDS_REMAINING_IN_S1S_REUSE_TIME).addSkillName(skill.getId(), skill.getDisplayLevel()).addNumber(minutes).addNumber(seconds));
+            sendPacket(new SystemMessage(SystemMessage.THERE_ARE_S2_MINUTES_S3_SECONDS_REMAINING_IN_S1S_REUSE_TIME).addSkillName(skill.id, skill.getDisplayLevel()).addNumber(minutes).addNumber(seconds));
         } else {
-            sendPacket(new SystemMessage(SystemMessage.THERE_ARE_S2_SECONDS_REMAINING_IN_S1S_REUSE_TIME).addSkillName(skill.getId(), skill.getDisplayLevel()).addNumber(seconds));
+            sendPacket(new SystemMessage(SystemMessage.THERE_ARE_S2_SECONDS_REMAINING_IN_S1S_REUSE_TIME).addSkillName(skill.id, skill.getDisplayLevel()).addNumber(seconds));
         }
     }
 
@@ -1115,7 +1102,7 @@ public final class Player extends Playable implements PlayerGroup {
         getListeners().onExit();
 
         if (isFlying() && !checkLandingState()) {
-            _stablePoint = TeleportUtils.getRestartLocation(this, RestartType.TO_VILLAGE);
+            stablePoint = TeleportUtils.getRestartLocation(this, RestartType.TO_VILLAGE);
         }
 
         if (isCastingNow()) {
@@ -1157,8 +1144,8 @@ public final class Player extends Playable implements PlayerGroup {
             observerMode.set(OBSERVER_NONE);
         }
 
-        if (_stablePoint != null) {
-            teleToLocation(_stablePoint);
+        if (stablePoint != null) {
+            teleToLocation(stablePoint);
         }
 
         Summon pet = getPet();
@@ -1230,7 +1217,7 @@ public final class Player extends Playable implements PlayerGroup {
 
         if (ref != ReflectionManager.DEFAULT) {
             if (ref.getReturnLoc() != null) {
-                _stablePoint = ref.getReturnLoc();
+                stablePoint = ref.getReturnLoc();
             }
 
             ref.removeObject(this);
@@ -2293,10 +2280,10 @@ public final class Player extends Playable implements PlayerGroup {
                 if ((skill.getCost() == 0) && (skill.getItemId() == 0)) {
                     Skill sk = SkillTable.INSTANCE.getInfo(skill.getId(), skill.getLevel());
                     addSkill(sk, true);
-                    if ((getAllShortCuts().size() > 0) && (sk.getLevel() > 1)) {
+                    if ((getAllShortCuts().size() > 0) && (sk.level > 1)) {
                         for (ShortCut sc : getAllShortCuts()) {
-                            if ((sc.getId() == sk.getId()) && (sc.getType() == ShortCut.TYPE_SKILL)) {
-                                ShortCut newsc = new ShortCut(sc.getSlot(), sc.getPage(), sc.getType(), sc.getId(), sk.getLevel(), 1);
+                            if ((sc.getId() == sk.id) && (sc.getType() == ShortCut.TYPE_SKILL)) {
+                                ShortCut newsc = new ShortCut(sc.getSlot(), sc.getPage(), sc.getType(), sc.getId(), sk.level, 1);
                                 sendPacket(new ShortCutRegister(this, newsc));
                                 registerShortCut(newsc);
                             }
@@ -2970,7 +2957,7 @@ public final class Player extends Playable implements PlayerGroup {
             }
             List<Skill> skills = item.getTemplate().getAttachedSkills();
             skills.stream()
-                    .mapToInt(Skill::getId)
+                    .mapToInt(skill -> skill.id)
                     .forEach(skill -> {
                         altUseSkill(skill, this);
                         if ((getPet() != null) && getPet().isSummon() && !getPet().isDead()) {
@@ -3033,7 +3020,7 @@ public final class Player extends Playable implements PlayerGroup {
             // Herbs
             if (item.isHerb()) {
                 item.getTemplate().getAttachedSkills().stream()
-                        .mapToInt(Skill::getId)
+                        .mapToInt(skill -> skill.id)
                         .forEach(skill -> {
                             altUseSkill(skill, this);
                             if ((getPet() != null) && getPet().isSummon() && !getPet().isDead()) {
@@ -3325,7 +3312,7 @@ public final class Player extends Playable implements PlayerGroup {
     }
 
     private void addDamageOnOlympiad(Creature attacker, Skill skill, double damage, double hpcp) {
-        if ((this != attacker) && ((skill == null) || skill.isOffensive())) {
+        if ((this != attacker) && ((skill == null) || skill.isOffensive)) {
             olympiadGame.addDamage(this, Math.min(hpcp, damage));
         }
     }
@@ -3764,7 +3751,7 @@ public final class Player extends Playable implements PlayerGroup {
             if (siegeEvent != null) {
                 Optional<Effect> effects = getEffectList().getEffectsBySkillId(Skill.SKILL_BATTLEFIELD_DEATH_SYNDROME).findFirst();
                 if (effects.isPresent()) {
-                    int syndromeLvl = effects.get().getSkill().getLevel();
+                    int syndromeLvl = effects.get().getSkill().level;
                     if (syndromeLvl < 5) {
                         getEffectList().stopEffect(Skill.SKILL_BATTLEFIELD_DEATH_SYNDROME);
                         Skill skill = SkillTable.INSTANCE.getInfo(Skill.SKILL_BATTLEFIELD_DEATH_SYNDROME, syndromeLvl + 1);
@@ -3870,7 +3857,7 @@ public final class Player extends Playable implements PlayerGroup {
             Skill castingSkill = getCastingSkill();
             long animationEndTime = getAnimationEndTime();
             if ((castingSkill != null) && (castingTarget != null) && castingTarget.isCreature() && (getAnimationEndTime() > 0)) {
-                list.add(new MagicSkillUse(this, castingTarget, castingSkill.getId(), castingSkill.getLevel(), (int) (animationEndTime - System.currentTimeMillis()), 0));
+                list.add(new MagicSkillUse(this, castingTarget, castingSkill.id, castingSkill.level, (int) (animationEndTime - System.currentTimeMillis()), 0));
             }
         }
 
@@ -4084,11 +4071,11 @@ public final class Player extends Playable implements PlayerGroup {
     }
 
     public String getBuyStoreName() {
-        return _buyStoreName;
+        return buyStoreName;
     }
 
     public void setBuyStoreName(String name) {
-        _buyStoreName = Strings.stripToSingleLine(name);
+        buyStoreName = Strings.stripToSingleLine(name);
     }
 
     public List<TradeItem> getBuyList() {
@@ -4152,14 +4139,12 @@ public final class Player extends Playable implements PlayerGroup {
         if ((oldClan != null) && (clan == null)) {
             // Remove clan skills
             oldClan.getSkills().forEach(skill ->
-                    removeSkill(skill.getId(), false));
+                    removeSkill(skill.id, false));
 
             // Also remove subunit skills
-            oldClan.getAllSubUnits().forEach(su -> {
-                su.getSkills().stream()
-                        .mapToInt(Skill::getId)
-                        .forEach(sk -> removeSkill(sk, false));
-            });
+            oldClan.getAllSubUnits().forEach(su -> su.getSkills().stream()
+                    .mapToInt(skill -> skill.id)
+                    .forEach(sk -> removeSkill(sk, false)));
         }
 
         this.clan = clan;
@@ -4513,14 +4498,14 @@ public final class Player extends Playable implements PlayerGroup {
                 statement.setInt(1, getFace());
                 statement.setInt(2, getHairStyle());
                 statement.setInt(3, getHairColor());
-                if (_stablePoint == null) {
+                if (stablePoint == null) {
                     statement.setInt(4, getX());
                     statement.setInt(5, getY());
                     statement.setInt(6, getZ());
                 } else {
-                    statement.setInt(4, _stablePoint.x);
-                    statement.setInt(5, _stablePoint.y);
-                    statement.setInt(6, _stablePoint.z);
+                    statement.setInt(4, stablePoint.x);
+                    statement.setInt(5, stablePoint.y);
+                    statement.setInt(6, stablePoint.z);
                 }
                 statement.setInt(7, getKarma());
                 statement.setInt(8, getPvpKills());
@@ -4604,12 +4589,12 @@ public final class Player extends Playable implements PlayerGroup {
         }
 
         // Fix If the skill existed before, then we must transfer its reuse to the new level. Its a known exploit of enchant a skill to reset its reuse
-        if (getKnownSkill(newSkill.getId()) != null) {
-            disableSkillByNewLvl(SkillTable.INSTANCE.getInfo(newSkill.getId(), getKnownSkill(newSkill.getId()).getLevel()).hashCode(),
-                    SkillTable.INSTANCE.getInfo(newSkill.getId(), newSkill.getLevel()).hashCode());
+        if (getKnownSkill(newSkill.id) != null) {
+            disableSkillByNewLvl(SkillTable.INSTANCE.getInfo(newSkill.id, getKnownSkill(newSkill.id).level).hashCode(),
+                    SkillTable.INSTANCE.getInfo(newSkill.id, newSkill.level).hashCode());
         }
         // Add a skill to the L2Player skills and its Func objects to the calculator set of the L2Player
-        Skill oldSkill = super.addSkill(newSkill.getId(), newSkill.getLevel());
+        Skill oldSkill = super.addSkill(newSkill.id, newSkill.level);
 
         if (newSkill.equals(oldSkill)) {
             return oldSkill;
@@ -4638,7 +4623,7 @@ public final class Player extends Playable implements PlayerGroup {
             try (Connection con = DatabaseFactory.getInstance().getConnection();
                  PreparedStatement statement = con.prepareStatement("DELETE FROM character_skills WHERE skill_id=? AND char_obj_id=? AND class_index=?")) {
                 // Remove or update a L2Player skill from the character_skills table of the database
-                statement.setInt(1, oldSkill.getId());
+                statement.setInt(1, oldSkill.id);
                 statement.setInt(2, getObjectId());
                 statement.setInt(3, getActiveClassId());
                 statement.execute();
@@ -4661,8 +4646,8 @@ public final class Player extends Playable implements PlayerGroup {
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement("REPLACE INTO character_skills (char_obj_id,skill_id,skill_level,class_index) values(?,?,?,?)")) {
             statement.setInt(1, getObjectId());
-            statement.setInt(2, newSkill.getId());
-            statement.setInt(3, newSkill.getLevel());
+            statement.setInt(2, newSkill.id);
+            statement.setInt(3, newSkill.level);
             statement.setInt(4, getActiveClassId());
             statement.execute();
         } catch (SQLException e) {
@@ -4706,7 +4691,7 @@ public final class Player extends Playable implements PlayerGroup {
                         // if (ReturnSP == Integer.MAX_VALUE || ReturnSP < 0)
                         // ReturnSP = 0;
                         removeSkill(id, true);
-                        removeSkillFromShortCut(skill.getId());
+                        removeSkillFromShortCut(skill.id);
                         // if (ReturnSP > 0)
                         // setSp(getSp() + ReturnSP);
                         continue;
@@ -5909,6 +5894,10 @@ public final class Player extends Playable implements PlayerGroup {
         return hero;
     }
 
+    public void setHero(final boolean hero) {
+        this.hero = hero;
+    }
+
     public void setHero(Player player) {
         StatsSet hero = new StatsSet();
         hero.set(Olympiad.CLASS_ID, player.getBaseClassId());
@@ -5927,10 +5916,6 @@ public final class Player extends Playable implements PlayerGroup {
             player.broadcastPacket(new SocialAction(player.getObjectId(), 16));
         }
         player.broadcastUserInfo(true);
-    }
-
-    public void setHero(final boolean hero) {
-        this.hero = hero;
     }
 
     public int getPing() {
@@ -6752,7 +6737,7 @@ public final class Player extends Playable implements PlayerGroup {
         if (main != null) {
             main.setCp(getCurrentCp());
             // main.setExp(getExp());
-            // main.setLevel(getLevel());
+            // main.setLevel(level());
             // main.setSp(getSp());
             main.setHp(getCurrentHp());
             main.setMp(getCurrentMp());
@@ -6955,7 +6940,7 @@ public final class Player extends Playable implements PlayerGroup {
             final SubClass oldsub = activeClass;
             oldsub.setCp(getCurrentCp());
             // oldsub.setExp(getExp());
-            // oldsub.setLevel(getLevel());
+            // oldsub.setLevel(level());
             // oldsub.setSp(getSp());
             oldsub.setHp(getCurrentHp());
             oldsub.setMp(getCurrentMp());
@@ -7919,7 +7904,7 @@ public final class Player extends Playable implements PlayerGroup {
 
             if (!_transformationSkills.isEmpty()) {
                 for (Skill s : _transformationSkills.values()) {
-                    if (!s.isCommon() && !SkillAcquireHolder.isSkillPossible(this, s) && !s.isHeroic()) {
+                    if (!s.isCommon && !SkillAcquireHolder.isSkillPossible(this, s) && !s.isHeroic) {
                         super.removeSkill(s);
                     }
                 }
@@ -7958,7 +7943,7 @@ public final class Player extends Playable implements PlayerGroup {
             Skill _skill = SkillTable.INSTANCE.getInfo(_id, _level);
             if (_skill != null) {
                 super.removeSkill(_skill);
-                removeSkillFromShortCut(_skill.getId());
+                removeSkillFromShortCut(_skill.id);
             }
 
             if (!isCursedWeaponEquipped()) getEffectList().getAllEffects()
@@ -7967,13 +7952,13 @@ public final class Player extends Playable implements PlayerGroup {
                         if ((effect.getSkill() instanceof Transformation) && ((Transformation) effect.getSkill()).isDisguise) {
                             for (Skill s : getAllSkills())
                                 if ((s != null) && (s.isActive() || s.isToggle()))
-                                    _transformationSkills.put(s.getId(), s);
+                                    _transformationSkills.put(s.id, s);
                         } else for (AddedSkill s : effect.getSkill().getAddedSkills())
                             if (s.level == 0) {
                                 if (getSkillLevel(s.id) > 0)
                                     _transformationSkills.put(s.id, SkillTable.INSTANCE.getInfo(s.id, getSkillLevel(s.id)));
                             } else if (s.level == -2) {// XXX: wild heartburn for skills depending on the player's level
-                                int learnLevel = Math.max(effect.getSkill().getMagicLevel(), 40);
+                                int learnLevel = Math.max(effect.getSkill().magicLevel, 40);
                                 int maxLevel = SkillTable.INSTANCE.getBaseLevel(s.id);
                                 int curSkillLevel = 1;
                                 if (maxLevel > 3) curSkillLevel += getLevel() - learnLevel;
@@ -8037,7 +8022,7 @@ public final class Player extends Playable implements PlayerGroup {
         Map<Integer, Skill> tempSkills = new HashMap<>();
         for (Skill s : super.getAllSkills()) {
             if ((s != null) && !s.isActive() && !s.isToggle()) {
-                tempSkills.put(s.getId(), s);
+                tempSkills.put(s.id, s);
             }
         }
         tempSkills.putAll(_transformationSkills);
@@ -8716,12 +8701,12 @@ public final class Player extends Playable implements PlayerGroup {
         return _petControlItem;
     }
 
-    public void setPetControlItem(ItemInstance item) {
-        _petControlItem = item;
-    }
-
     private void setPetControlItem(int itemObjId) {
         setPetControlItem(getInventory().getItemByObjectId(itemObjId));
+    }
+
+    public void setPetControlItem(ItemInstance item) {
+        _petControlItem = item;
     }
 
     public boolean isActive() {
@@ -9231,19 +9216,19 @@ public final class Player extends Playable implements PlayerGroup {
     public void dispelBuffs() {
         getEffectList().getAllEffects()
                 .filter(e -> !e.getSkill().isOffensive())
-                .filter(e -> !e.getSkill().isNewbie())
+                .filter(e -> !e.getSkill().isNewbie)
                 .filter(Effect::isCancelable)
-                .filter(e -> !e.getSkill().isPreservedOnDeath())
-                .peek(e -> sendPacket(new SystemMessage(SystemMessage.THE_EFFECT_OF_S1_HAS_BEEN_REMOVED).addSkillName(e.getSkill().getId(), e.getSkill().getLevel())))
+                .filter(e -> !e.getSkill().isPreservedOnDeath)
+                .peek(e -> sendPacket(new SystemMessage(SystemMessage.THE_EFFECT_OF_S1_HAS_BEEN_REMOVED).addSkillName(e.getSkill().id, e.getSkill().level)))
                 .forEach(Effect::exit);
 
 
         if (getPet() != null) {
             getPet().getEffectList().getAllEffects()
                     .filter(e -> !e.getSkill().isOffensive())
-                    .filter(e -> !e.getSkill().isNewbie())
+                    .filter(e -> !e.getSkill().isNewbie)
                     .filter(Effect::isCancelable)
-                    .filter(e -> !e.getSkill().isPreservedOnDeath())
+                    .filter(e -> !e.getSkill().isPreservedOnDeath)
                     .forEach(Effect::exit);
         }
     }

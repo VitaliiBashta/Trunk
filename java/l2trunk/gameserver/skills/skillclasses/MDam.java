@@ -31,7 +31,7 @@ public final class MDam extends Skill {
                 if (damage >= 1)
                     realTarget.reduceCurrentHp(damage, activeChar, this, true, true, false, true, false, false, true);
 
-                getEffects(activeChar, target, getActivateRate() > 0, false, reflected);
+                getEffects(activeChar, target, activateRate() > 0, false, reflected);
             }
 
         if (isSuicideAttack())

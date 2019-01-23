@@ -115,7 +115,7 @@ abstract class DocumentBase {
                 attachEffect(n, template);
             } else if (template instanceof EffectTemplate)
                 if ("def".equalsIgnoreCase(nodeName))
-                    parseBeanSet(n, ((EffectTemplate) template).getParam(), ((Skill) ((EffectTemplate) template).getParam().getObject("object")).getLevel());
+                    parseBeanSet(n, ((EffectTemplate) template).getParam(), ((Skill) ((EffectTemplate) template).getParam().getObject("object")).level);
                 else {
                     Condition cond = parseCondition(n);
                     if (cond != null)

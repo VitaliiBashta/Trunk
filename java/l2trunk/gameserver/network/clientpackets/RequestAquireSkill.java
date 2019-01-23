@@ -42,7 +42,7 @@ public final class RequestAquireSkill extends L2GameClientPacket {
             if (!player.consumeItem(skillLearn.getItemId(), skillLearn.getItemCount()))
                 return;
 
-        player.sendPacket(new SystemMessage2(SystemMsg.YOU_HAVE_EARNED_S1_SKILL).addSkillName(skill.getId(), skill.getLevel()));
+        player.sendPacket(new SystemMessage2(SystemMsg.YOU_HAVE_EARNED_S1_SKILL).addSkillName(skill.id, skill.level));
 
         player.setSp(player.getSp() - skillLearn.getCost());
         player.addSkill(skill, true);
@@ -51,7 +51,7 @@ public final class RequestAquireSkill extends L2GameClientPacket {
 
         player.sendPacket(new SkillList(player));
 
-        RequestExEnchantSkill.updateSkillShortcuts(player, skill.getId(), skill.getLevel());
+        RequestExEnchantSkill.updateSkillShortcuts(player, skill.id, skill.level);
     }
 
     private static void learnClanSkill(Player player, SkillLearn skillLearn, NpcInstance trainer, Skill skill) {

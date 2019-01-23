@@ -30,7 +30,7 @@ public class RequestGetOnVehicle extends L2GameClientPacket {
         if (boat == null)
             return;
 
-        player._stablePoint = boat.getCurrentWay().getReturnLoc();
+        player.stablePoint = boat.getCurrentWay().getReturnLoc();
         boat.addPlayer(player, _loc);
     }
 }

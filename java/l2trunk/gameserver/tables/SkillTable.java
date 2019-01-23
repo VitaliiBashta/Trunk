@@ -5,7 +5,6 @@ import l2trunk.gameserver.skills.SkillsEngine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,7 +17,7 @@ public enum SkillTable {
     private Map<Integer, Integer> baseLevelsTable;
 
     public static int getSkillHashCode(Skill skill) {
-        return SkillTable.getSkillHashCode(skill.getId(), skill.getLevel());
+        return SkillTable.getSkillHashCode(skill.id, skill.level);
     }
 
     private static int getSkillHashCode(int skillId, int skillLevel) {
@@ -27,8 +26,8 @@ public enum SkillTable {
 
     public void load() {
         skills = SkillsEngine.INSTANCE.loadAllSkills();
-        int maxId = skills.values().stream().mapToInt(Skill::getId).max().orElse(0);
-        int maxLvl = skills.values().stream().mapToInt(Skill::getLevel).max().orElse(0);
+        int maxId = skills.values().stream().mapToInt(skill ->skill.id).max().orElse(0);
+        int maxLvl = skills.values().stream().mapToInt(skill -> skill.level).max().orElse(0);
         LOG.info("SkillsEngine: Loaded " + skills.values().size() + " skill templates from XML files. Max id: " + maxId + ", max level: " + maxLvl);
 
         makeLevelsTable();
@@ -58,15 +57,15 @@ public enum SkillTable {
         maxLevelsTable = new HashMap<>();
         baseLevelsTable = new HashMap<>();
         skills.values().forEach(s -> {
-            int skillId = s.getId();
-            int level = s.getLevel();
+            int skillId = s.id;
+            int level = s.level;
             int maxLevel = 0;
             if (maxLevelsTable.containsKey(skillId))
                 maxLevel = maxLevelsTable.get(skillId);
             if (level > maxLevel)
                 maxLevelsTable.put(skillId, level);
             if (baseLevelsTable.get(skillId) != null)
-                baseLevelsTable.put(skillId, s.getBaseLevel());
+                baseLevelsTable.put(skillId, s.baseLevel);
         });
     }
 }

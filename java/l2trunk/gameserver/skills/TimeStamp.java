@@ -20,8 +20,8 @@ public final class TimeStamp {
     }
 
     public TimeStamp(Skill skill, long endTime, long reuse) {
-        id = skill.getId();
-        level = skill.getLevel();
+        id = skill.id;
+        level = skill.level;
         this.reuse = reuse;
         this.endTime = endTime;
     }

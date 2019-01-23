@@ -195,8 +195,8 @@ public final class DocumentSkill extends DocumentBase {
             for (int i = 0; i < lastLvl; i++) {
                 currentSkill.currentLevel = i;
                 Skill current = currentSkill.currentSkills.get(i);
-                if (displayLevels.get(current.getLevel()) != null)
-                    current.setDisplayLevel(displayLevels.get(current.getLevel()));
+                if (displayLevels.get(current.level) != null)
+                    current.setDisplayLevel(displayLevels.get(current.level));
                 current.setEnchantLevelCount(eLevels);
 
                 for (n = first; n != null; n = n.getNextSibling()) {

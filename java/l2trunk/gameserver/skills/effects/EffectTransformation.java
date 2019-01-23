@@ -27,7 +27,7 @@ public final class EffectTransformation extends Effect {
     public void onStart() {
         super.onStart();
         Player player = (Player) effected;
-        player.setTransformationTemplate(getSkill().getNpcId());
+        player.setTransformationTemplate(getSkill().npcId);
         if (getSkill() instanceof Transformation)
             player.setTransformationName(((Transformation) getSkill()).transformationName);
 

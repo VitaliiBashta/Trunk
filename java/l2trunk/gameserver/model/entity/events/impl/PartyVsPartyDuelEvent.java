@@ -82,7 +82,7 @@ public final class PartyVsPartyDuelEvent extends DuelEvent {
             DuelSnapshotObject $member = team.get(i);
 
             $member.getPlayer().addEvent(this);
-            $member.getPlayer()._stablePoint = $member.getLoc();
+            $member.getPlayer().stablePoint = $member.getLoc();
             $member.getPlayer().teleToLocation(instantZone.getTeleportCoords().get(i), reflection);
         }
 
@@ -92,7 +92,7 @@ public final class PartyVsPartyDuelEvent extends DuelEvent {
             DuelSnapshotObject $member = team.get(i);
 
             $member.getPlayer().addEvent(this);
-            $member.getPlayer()._stablePoint = $member.getLoc();
+            $member.getPlayer().stablePoint = $member.getLoc();
             $member.getPlayer().teleToLocation(instantZone.getTeleportCoords().get(9 + i), reflection);
         }
     }

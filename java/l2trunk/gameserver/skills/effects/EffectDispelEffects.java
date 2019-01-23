@@ -13,7 +13,6 @@ import l2trunk.gameserver.stats.Env;
 import l2trunk.gameserver.stats.Stats;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -48,7 +47,7 @@ public final class EffectDispelEffects extends Effect {
     }
 
     public static boolean calcCancelSuccess(Creature activeChar, Creature target, Effect buff, Skill cancelSk, double dispelRate) {
-        final int cancelLvl = cancelSk.getMagicLevel();
+        final int cancelLvl = cancelSk.magicLevel;
         double rate = dispelRate;
         final double vuln = target.calcStat(Stats.CANCEL_RESIST, 0, activeChar, cancelSk);
 
@@ -57,7 +56,7 @@ public final class EffectDispelEffects extends Effect {
         rate = rate / resMod;
 
 
-        rate *= buff.getSkill().getMagicLevel() > 0 ? 1 + ((cancelLvl - buff.getSkill().getMagicLevel()) / 100.) : 1;
+        rate *= buff.getSkill().magicLevel > 0 ? 1 + ((cancelLvl - buff.getSkill().magicLevel) / 100.) : 1;
 
         if (rate > 99)
             rate = 99;
@@ -92,7 +91,7 @@ public final class EffectDispelEffects extends Effect {
             negated++;
 
             // We estimate the success of the cancel on this effect if currentCancelChance is not 100 it makes 100
-            if (calcEachChance && currentCancelChance < 100 && !calcCancelSuccess(_effector, effected, effect, getSkill(), currentCancelChance)) {
+            if (calcEachChance && currentCancelChance < 100 && !calcCancelSuccess(effector, effected, effect, getSkill(), currentCancelChance)) {
                 continue;
             }
 
@@ -102,7 +101,7 @@ public final class EffectDispelEffects extends Effect {
             }
 
             effect.exit();
-            effected.sendPacket(new SystemMessage2(SystemMsg.THE_EFFECT_OF_S1_HAS_BEEN_REMOVED).addSkillName(effect.getSkill().getId(), effect.getSkill().getLevel()));
+            effected.sendPacket(new SystemMessage2(SystemMsg.THE_EFFECT_OF_S1_HAS_BEEN_REMOVED).addSkillName(effect.getSkill().id, effect.getSkill().level));
             count++;
 
             // Alexander - For each buff we reduce the chances by 15%, starting from 100%

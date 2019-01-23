@@ -8,7 +8,6 @@ import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.TeleportLocation;
 import l2trunk.gameserver.model.base.ClassId;
 import l2trunk.gameserver.model.base.Element;
-import l2trunk.gameserver.model.instances.AllNpcInstances;
 import l2trunk.gameserver.model.reward.RewardData;
 import l2trunk.gameserver.model.reward.RewardGroup;
 import l2trunk.gameserver.model.reward.RewardList;
@@ -113,10 +112,10 @@ public enum NpcParser {
                         faction.addIgnoreNpcId(ignoreId);
                     }
                     template.setFaction(faction);
-                } else if (nodeName.equalsIgnoreCase("rewardlist")) {
+                } else if ("rewardlist".equalsIgnoreCase(nodeName)) {
                     RewardType type = RewardType.valueOf(secondElement.attributeValue("type"));
                     boolean autoLoot = secondElement.attributeValue("auto_loot") != null && Boolean.parseBoolean(secondElement.attributeValue("auto_loot"));
-                    RewardList list = new RewardList(type, autoLoot);
+                    RewardList list = new RewardList(type);
 
                     for (Iterator<org.dom4j.Element> nextIterator = secondElement.elementIterator(); nextIterator.hasNext(); ) {
                         final org.dom4j.Element nextElement = nextIterator.next();
@@ -135,7 +134,7 @@ public enum NpcParser {
                             }
 
                             list.add(group);
-                        } else if (nextName.equalsIgnoreCase("reward")) {
+                        } else if ("reward".equalsIgnoreCase(nextName)) {
                             if (type != RewardType.SWEEP && type != RewardType.NOT_RATED_NOT_GROUPED) {
                                 LOG.warn("Reward can't be without group(and not grouped): " + npcId + "; type: " + type);
                                 continue;
@@ -156,7 +155,7 @@ public enum NpcParser {
                             LOG.warn("Problems with rewardlist for npc: " + npcId + "; type: " + type);
 
                     template.putRewardList(type, list);
-                } else if (nodeName.equalsIgnoreCase("skills")) {
+                } else if ("skills".equalsIgnoreCase(nodeName)) {
                     for (Iterator<org.dom4j.Element> nextIterator = secondElement.elementIterator(); nextIterator.hasNext(); ) {
                         org.dom4j.Element nextElement = nextIterator.next();
                         int id = toInt(nextElement.attributeValue("id"));
@@ -203,7 +202,7 @@ public enum NpcParser {
 
                         template.addAbsorbInfo(new AbsorbInfo(skill, absorbType, chance, cursedChance, minLevel, maxLevel));
                     }
-                } else if (nodeName.equalsIgnoreCase("teleportlist")) {
+                } else if ("teleportlist".equalsIgnoreCase(nodeName)) {
                     for (Iterator<org.dom4j.Element> sublistIterator = secondElement.elementIterator(); sublistIterator.hasNext(); ) {
                         org.dom4j.Element subListElement = sublistIterator.next();
                         int id = toInt(subListElement.attributeValue("id"));

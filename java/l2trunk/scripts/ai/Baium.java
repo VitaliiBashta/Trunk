@@ -98,7 +98,7 @@ public final class Baium extends DefaultAI {
         // Использовать скилл если можно, иначе атаковать скилом baium_normal_attack
         if (r_skill == 0)
             r_skill = baium_normal_attack;
-        else if (SkillTable.INSTANCE.getInfo(r_skill).getTargetType() == Skill.SkillTargetType.TARGET_SELF)
+        else if (SkillTable.INSTANCE.getInfo(r_skill).targetType == Skill.SkillTargetType.TARGET_SELF)
             target = actor;
 
         // Добавить новое задание

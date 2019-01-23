@@ -64,7 +64,7 @@ public final class EffectDummy2 extends Effect {
     }
 
     protected boolean onActionTime() {
-        double angle = Math.toRadians(PositionUtils.calculateAngleFrom(this._effector, this.effected));
+        double angle = Math.toRadians(PositionUtils.calculateAngleFrom(this.effector, this.effected));
         int oldX = this.effected.getX();
         int oldY = this.effected.getY();
         int x = oldX + (int) (900.0D * Math.cos(angle));

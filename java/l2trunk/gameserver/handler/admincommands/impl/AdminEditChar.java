@@ -80,7 +80,7 @@ public final class AdminEditChar implements IAdminCommandHandler {
         replyMSG.append("<tr><td width=100><font color=0099FF>Name:</font></td><td>" + player.getName() + "</td></tr>");
         replyMSG.append("<tr><td width=100><font color=0099FF>Level:</font></td><td>" + player.getLevel() + "</td></tr>");
         replyMSG.append("<tr><td width=100><font color=0099FF>Class:</font></td><td>" + player.getTemplate().className + "</td></tr>");
-        //replyMSG.append("<tr><td width=100><font color=0099FF>Class Id:</font></td><td>" + player.getClassId().getId() + "</td></tr>");
+        //replyMSG.append("<tr><td width=100><font color=0099FF>Class Id:</font></td><td>" + player.getClassId().id() + "</td></tr>");
         replyMSG.append("<tr><td width=100><font color=0099FF>Clan|Level:</font></td><td>" + clanName + "</td></tr>");
         replyMSG.append("<tr><td width=100><font color=0099FF>Patk:</font></td><td>" + player.getPAtk(null) + "</td></tr>");
         replyMSG.append("<tr><td width=100><font color=0099FF>Matk:</font></td><td>" + player.getMAtk(null, null) + "</td></tr>");

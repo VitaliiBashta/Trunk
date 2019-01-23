@@ -19,7 +19,7 @@ public final class Heal extends Skill {
     public Heal(StatsSet set) {
         super(set);
         _ignoreHpEff = set.getBool("ignoreHpEff", false);
-        _staticPower = set.getBool("staticPower", isHandler());
+        _staticPower = set.getBool("staticPower", isItemHandler());
     }
 
     @Override
@@ -38,7 +38,7 @@ public final class Heal extends Skill {
             hp += 0.1 * power * Math.sqrt(activeChar.getMAtk(null, this) / 333.);
         }
 
-        int sps = isSSPossible() && (getHpConsume() == 0) ? activeChar.getChargedSpiritShot() : 0;
+        int sps = isSSPossible() && (hpConsume == 0) ? activeChar.getChargedSpiritShot() : 0;
 
         if (sps == 2) {
             hp *= 1.5;
@@ -46,8 +46,8 @@ public final class Heal extends Skill {
             hp *= 1.3;
         }
 
-        if ((activeChar.getSkillMastery(getId()) == 3) && !_staticPower) {
-            activeChar.removeSkillMastery(getId());
+        if ((activeChar.getSkillMastery(id) == 3) && !_staticPower) {
+            activeChar.removeSkillMastery(id);
             hp *= 3.;
         }
 
@@ -79,7 +79,7 @@ public final class Heal extends Skill {
                 if (addToHp > 0) {
                     target.setCurrentHp(addToHp + target.getCurrentHp(), false);
                 }
-                if (getId() == 4051) {
+                if (id == 4051) {
                     target.sendPacket(SystemMsg.REJUVENATING_HP);
                 } else if (target.isPlayer()) {
                     if (activeChar == target) {
@@ -101,7 +101,7 @@ public final class Heal extends Skill {
                         }
                     }
                 }
-                getEffects(activeChar, target, getActivateRate() > 0, false);
+                getEffects(activeChar, target, activateRate() > 0, false);
             }
         }
 

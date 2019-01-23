@@ -58,7 +58,7 @@ public final class AdminPanel implements IAdminCommandHandler {
 
             html.append("<tr>");
             html.append("<td width=230 align=left>");
-            html.append("<center><font color=878080>" + skill.getName() + "</font></center>");
+            html.append("<center><font color=878080>" + skill.name() + "</font></center>");
             html.append("</td>");
             html.append("<td width=70>");
             html.append("<center>");
@@ -256,8 +256,8 @@ public final class AdminPanel implements IAdminCommandHandler {
                 if (skill != null && target.getPlayer().getClan() != null) {
                     Clan clan = target.getPlayer().getClan();
                     clan.addSkill(skill, true);
-                    target.getPlayer().sendMessage("Admin add to your clan " + skill.getName() + " skill.");
-                    activeChar.sendMessage("You add " + skill.getName() + " skill to the clan " + clan.getName());
+                    target.getPlayer().sendMessage("Admin add to your clan " + skill.name() + " skill.");
+                    activeChar.sendMessage("You add " + skill.name() + " skill to the clan " + clan.getName());
                 }
                 clanSkillList(activeChar);
                 break;

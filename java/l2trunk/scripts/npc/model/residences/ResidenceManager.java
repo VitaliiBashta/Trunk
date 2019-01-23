@@ -240,11 +240,11 @@ public abstract class ResidenceManager extends MerchantInstance {
                 for (Object[] buff : allBuffs) {
                     Skill s = (Skill) buff[0];
                     support_list.append("<a action=\"bypass -h npc_%objectId%_support ");
-                    support_list.append(s.getId());
+                    support_list.append(s.id);
                     support_list.append(" ");
-                    support_list.append(s.getLevel());
+                    support_list.append(s.level);
                     support_list.append("\">");
-                    support_list.append(s.getName());
+                    support_list.append(s.name());
                     support_list.append(" Lv.");
                     support_list.append(s.getDisplayLevel());
                     support_list.append("</a><br1>");
@@ -352,7 +352,7 @@ public abstract class ResidenceManager extends MerchantInstance {
                     if (val.equals("allM") && buff[1] == ResidenceFunction.W || val.equals("allW") && buff[1] == ResidenceFunction.M)
                         continue;
                     Skill s = (Skill) buff[0];
-                    if (!useSkill(s.getId(), s.getLevel(), player))
+                    if (!useSkill(s.id, s.level, player))
                         break;
                 }
             else {

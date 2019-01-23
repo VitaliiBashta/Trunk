@@ -66,7 +66,7 @@ public final class StealBuff extends Skill {
             return false;
         if (e.getSkill().isPassive())
             return false;
-        if (e.getSkill().isOffensive())
+        if (e.getSkill().isOffensive)
             return false;
         if (e.getEffectType() == EffectType.Vitality || e.getEffectType() == EffectType.VitalityMaintenance)
             return false;
@@ -130,7 +130,7 @@ public final class StealBuff extends Skill {
                     timeLeft.add(effect.getTimeLeft());
                 }
                 effect.exit();
-                target.sendPacket(new SystemMessage2(SystemMsg.THE_EFFECT_OF_S1_HAS_BEEN_REMOVED).addSkillName(effect.getSkill().getId(), effect.getSkill().getLevel()));
+                target.sendPacket(new SystemMessage2(SystemMsg.THE_EFFECT_OF_S1_HAS_BEEN_REMOVED).addSkillName(effect.getSkill().id, effect.getSkill().level));
                 count++;
 
                 if (stealCount > 0 && count >= stealCount)
@@ -139,7 +139,7 @@ public final class StealBuff extends Skill {
             if (!oldEff.isEmpty()) {
                 ThreadPoolManager.INSTANCE.schedule(new GameObjectTasks.ReturnTask(target, oldEff, timeLeft), Config.ALT_AFTER_CANCEL_RETURN_SKILLS_TIME * 1000);
             }
-            getEffects(activeChar, target, getActivateRate() > 0, false);
+            getEffects(activeChar, target, activateRate() > 0, false);
         }
         if (isSSPossible()) {
             activeChar.unChargeShots(isMagic());

@@ -39,7 +39,7 @@ public final class AdminClientSupport implements IAdminCommandHandler {
                     return false;
                 }
                 target.getPlayer().addSkill(skill, true);
-                target.getPlayer().sendPacket(new SystemMessage2(SystemMsg.YOU_HAVE_EARNED_S1_SKILL).addSkillName(skill.getId(), skill.getLevel()));
+                target.getPlayer().sendPacket(new SystemMessage2(SystemMsg.YOU_HAVE_EARNED_S1_SKILL).addSkillName(skill.id, skill.level));
                 break;
             case admin_summon:
                 if (wordList.length != 3)

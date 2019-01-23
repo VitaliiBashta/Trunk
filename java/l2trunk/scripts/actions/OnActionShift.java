@@ -219,11 +219,11 @@ public final class OnActionShift extends Functions {
             dialog.append("<br>Active:<br>");
             for (Skill s : list)
                 if (s.isActive())
-                    dialog.append(s.getName()).append("<br1>");
+                    dialog.append(s.name()).append("<br1>");
             dialog.append("<br>Passive:<br>");
             for (Skill s : list)
                 if (!s.isActive())
-                    dialog.append(s.getName()).append("<br1>");
+                    dialog.append(s.name()).append("<br1>");
         }
 
         dialog.append("</body></html>");
@@ -240,7 +240,7 @@ public final class OnActionShift extends Functions {
         dialog.append(nameNpc(npc)).append("<br></font></center><br>");
 
         npc.getEffectList().getAllEffects().forEach(e ->
-                dialog.append(e.getSkill().getName()).append("<br1>"));
+                dialog.append(e.getSkill().name).append("<br1>"));
 
         dialog.append("<br><center><button value=\"");
         dialog.append("Refresh");

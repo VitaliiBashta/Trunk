@@ -1,20 +1,20 @@
 package l2trunk.gameserver.model.items;
 
-public class ManufactureItem {
-    private final int _recipeId;
-    private final long _cost;
+public final class ManufactureItem {
+    private final int recipeId;
+    private final long cost;
 
     public ManufactureItem(int recipeId, long cost) {
-        _recipeId = recipeId;
-        _cost = cost;
+        this.recipeId = recipeId;
+        this.cost = cost;
     }
 
     public int getRecipeId() {
-        return _recipeId;
+        return recipeId;
     }
 
     public long getCost() {
-        return _cost;
+        return cost;
     }
 
     @Override

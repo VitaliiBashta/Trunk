@@ -47,7 +47,7 @@ public final class ChainHeal extends Skill {
                 }
             }
 
-            getEffects(activeChar, target, getActivateRate() > 0, false);
+            getEffects(activeChar, target, activateRate() > 0, false);
 
             double hp = (healPercents.get(curTarget) * target.getMaxHp()) / 100.;
             int addToHp = (int) Math.max(0, Math.min(hp, ((target.calcStat(Stats.HP_LIMIT, null, null) * target.getMaxHp()) / 100) - target.getCurrentHp()));

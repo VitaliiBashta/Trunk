@@ -51,7 +51,7 @@ public final class FreyaEventAI extends DefaultAI {
 
         Player player = caster.getPlayer();
 
-        if (GIFT_SKILLS.contains(skill.getId())) {
+        if (GIFT_SKILLS.contains(skill.id)) {
             if (Rnd.chance(GIFT_CHANCE)) {
                 Functions.npcSay(actor, SAY_TEXT.get(0), player.getName());
                 Functions.addItem(player, FREYA_GIFT, 1, "FreyaEventAI");

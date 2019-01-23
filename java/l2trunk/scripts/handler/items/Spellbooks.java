@@ -94,7 +94,7 @@ public final class Spellbooks extends ScriptItemHandler implements ScriptFile {
             Skill skill = SkillTable.INSTANCE.getInfo(skillLearn.getId(), skillLearn.getLevel());
             if (skill == null)
                 continue;
-            player.sendPacket(new SystemMessage2(SystemMsg.YOU_HAVE_EARNED_S1_SKILL).addSkillName(skill.getId(), skill.getLevel()));
+            player.sendPacket(new SystemMessage2(SystemMsg.YOU_HAVE_EARNED_S1_SKILL).addSkillName(skill.id, skill.level));
 
             player.addSkill(skill, true);
         }

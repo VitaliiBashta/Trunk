@@ -48,7 +48,7 @@ public abstract class Summon extends Playable {
         super(objectId, template);
         _owner = owner;
         template.getSkills().values().stream()
-                .mapToInt(Skill::getId)
+                .mapToInt(skill ->skill.id)
                 .forEach(this::addSkill);
 
 

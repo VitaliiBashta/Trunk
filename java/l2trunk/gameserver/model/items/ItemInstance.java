@@ -908,7 +908,7 @@ public final class ItemInstance extends GameObject implements JdbcEntity {
         setReflection(ReflectionManager.DEFAULT);
     }
 
-    public ItemClass getItemClass() {
+    ItemClass getItemClass() {
         return template.getItemClass();
     }
 

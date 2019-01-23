@@ -156,13 +156,13 @@ public final class NpcTemplate extends CharTemplate {
 
     @SuppressWarnings("incomplete-switch")
     public void addSkill(Skill skill) {
-        skills.put(skill.getId(), skill);
+        skills.put(skill.id, skill);
 
         //TODO [G1ta0] перенести в AI
-        if (skill.isNotUsedByAI() || skill.getTargetType() == Skill.SkillTargetType.TARGET_NONE || skill.getSkillType() == Skill.SkillType.NOTDONE || !skill.isActive())
+        if (skill.isNotUsedByAI || skill.targetType == Skill.SkillTargetType.TARGET_NONE || skill.skillType == Skill.SkillType.NOTDONE || !skill.isActive())
             return;
 
-        switch (skill.getSkillType()) {
+        switch (skill.skillType) {
             case PDAM:
             case MANADAM:
             case MDAM:
@@ -317,12 +317,4 @@ public final class NpcTemplate extends CharTemplate {
         return _htmRoot;
     }
 
-    public enum ShotsType {
-        NONE,
-        SOUL,
-        SPIRIT,
-        BSPIRIT,
-        SOUL_SPIRIT,
-        SOUL_BSPIRIT
-    }
 }

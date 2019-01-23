@@ -74,7 +74,7 @@ public abstract class SysMsgContainer<T extends SysMsgContainer<T>> extends L2Ga
     }
 
     public T addSkillName(Skill skill) {
-        return addSkillName(skill.getDisplayId(), skill.getDisplayLevel());
+        return addSkillName(skill.displayId, skill.getDisplayLevel());
     }
 
     public T addSkillName(int id, int level) {

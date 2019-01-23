@@ -2,11 +2,11 @@ package l2trunk.gameserver.stats.conditions;
 
 import l2trunk.gameserver.stats.Env;
 
-public class ConditionUsingSkill extends Condition {
-    private final int _id;
+public final class ConditionUsingSkill extends Condition {
+    private final int id;
 
     public ConditionUsingSkill(int id) {
-        _id = id;
+        this.id = id;
     }
 
     @Override
@@ -14,6 +14,6 @@ public class ConditionUsingSkill extends Condition {
         if (env.skill == null)
             return false;
         else
-            return env.skill.getId() == _id;
+            return env.skill.id == id;
     }
 }

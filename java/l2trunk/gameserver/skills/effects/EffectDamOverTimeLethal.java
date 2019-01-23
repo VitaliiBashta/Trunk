@@ -19,9 +19,9 @@ public final class EffectDamOverTimeLethal extends Effect {
         if (getSkill().isOffensive())
             damage *= 2;
 
-        damage = _effector.calcStat(getSkill().isMagic() ? Stats.MAGIC_DAMAGE : Stats.PHYSICAL_DAMAGE, damage, effected, getSkill());
+        damage = effector.calcStat(getSkill().isMagic() ? Stats.MAGIC_DAMAGE : Stats.PHYSICAL_DAMAGE, damage, effected, getSkill());
 
-        effected.reduceCurrentHp(damage, _effector, getSkill(), !effected.isNpc() && effected != _effector, effected != _effector, _effector.isNpc() || effected == _effector, false, false, true, false);
+        effected.reduceCurrentHp(damage, effector, getSkill(), !effected.isNpc() && effected != effector, effected != effector, effector.isNpc() || effected == effector, false, false, true, false);
 
         return true;
     }

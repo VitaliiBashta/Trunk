@@ -19,7 +19,7 @@ public final class Ride extends Skill {
             return false;
 
         Player player = (Player) activeChar;
-        if (getNpcId() != 0) {
+        if (npcId != 0) {
             if (player.isInOlympiadMode()) {
                 player.sendPacket(SystemMsg.YOU_CANNOT_USE_THAT_ITEM_IN_A_GRAND_OLYMPIAD_MATCH);
                 return false;
@@ -28,7 +28,7 @@ public final class Ride extends Skill {
                 player.sendPacket(SystemMsg.YOU_CANNOT_BOARD_BECAUSE_YOU_DO_NOT_MEET_THE_REQUIREMENTS);
                 return false;
             }
-        } else if (getNpcId() == 0 && !player.isMounted())
+        } else if (npcId == 0 && !player.isMounted())
             return false;
 
         return super.checkCondition(activeChar, target, forceUse, dontMove, first);
@@ -40,6 +40,6 @@ public final class Ride extends Skill {
             return;
 
         Player activeChar = (Player) caster;
-        activeChar.setMount(getNpcId(), 0, 0);
+        activeChar.setMount(npcId, 0, 0);
     }
 }

@@ -3,7 +3,7 @@ package l2trunk.gameserver.network.clientpackets;
 import l2trunk.gameserver.cache.CrestCache;
 import l2trunk.gameserver.network.serverpackets.AllianceCrest;
 
-public class RequestAllyCrest extends L2GameClientPacket {
+public final class RequestAllyCrest extends L2GameClientPacket {
     // format: cd
 
     private int _crestId;

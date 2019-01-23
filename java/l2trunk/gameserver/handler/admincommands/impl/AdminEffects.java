@@ -55,7 +55,7 @@ public final class AdminEffects implements IAdminCommandHandler {
                 break;
             case admin_gmspeed:
                 val = toInt(wordList[1], 0);
-                int sh_level = activeChar.getEffectList().getEffectsBySkillId(7029).map(e -> e.getSkill().getLevel()).findFirst().orElse(0);
+                int sh_level = activeChar.getEffectList().getEffectsBySkillId(7029).map(e -> e.getSkill().level).findFirst().orElse(0);
 
                 if (val == 0) {
                     if (sh_level != 0) {

@@ -99,13 +99,13 @@ public final class EnterWorld extends L2GameClientPacket {
 
             }
 			/*
-			else if (player.getLevel() == 1 || Rnd.get(10) == 1)
+			else if (player.level() == 1 || Rnd.get(10) == 1)
 			{
-				player.processQuestEvent(q.getName(), "ProposePass", null, false);
+				player.processQuestEvent(q.name(), "ProposePass", null, false);
 			}
 			else
 			{
-				player.processQuestEvent(q.getName(), "UC", null, false);
+				player.processQuestEvent(q.name(), "UC", null, false);
 			}
 			*/
             player.processQuestEvent(q.getName(), "OpenClassMaster", null, false);
@@ -297,7 +297,7 @@ public final class EnterWorld extends L2GameClientPacket {
                 long animationEndTime = activeChar.getAnimationEndTime();
 
                 if (castingSkill != null && castingTarget != null && castingTarget.isCreature() && activeChar.getAnimationEndTime() > 0L)
-                    sendPacket(new MagicSkillUse(activeChar, castingTarget, castingSkill.getId(), castingSkill.getLevel(), (int) (animationEndTime - System.currentTimeMillis()), 0));
+                    sendPacket(new MagicSkillUse(activeChar, castingTarget, castingSkill.id, castingSkill.level, (int) (animationEndTime - System.currentTimeMillis()), 0));
             }
 
             if (activeChar.isInBoat())
@@ -436,7 +436,7 @@ public final class EnterWorld extends L2GameClientPacket {
 
             for (Effect e : activeChar.getEffectList().getAllFirstEffects()) {
                 if (e.getSkill().isToggle()) {
-                    sendPacket(new MagicSkillLaunched(activeChar.getObjectId(), e.getSkill().getId(), e.getSkill().getLevel(), activeChar));
+                    sendPacket(new MagicSkillLaunched(activeChar.getObjectId(), e.getSkill().id, e.getSkill().level, activeChar));
                 }
             }
 

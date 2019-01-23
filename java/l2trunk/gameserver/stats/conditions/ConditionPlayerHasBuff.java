@@ -22,7 +22,7 @@ public class ConditionPlayerHasBuff extends Condition {
         Effect effect = character.getEffectList().getEffectByType(_effectType);
         if (effect == null)
             return false;
-        if (_level == -1 || effect.getSkill().getLevel() >= _level)
+        if (_level == -1 || effect.getSkill().level >= _level)
             return true;
         return false;
     }

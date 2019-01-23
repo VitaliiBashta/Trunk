@@ -22,7 +22,7 @@ public final class Drain extends Skill {
     public void useSkill(Creature activeChar, List<Creature> targets) {
         int sps = isSSPossible() ? activeChar.getChargedSpiritShot() : 0;
         boolean ss = isSSPossible() && activeChar.getChargedSoulShot();
-        final boolean corpseSkill = targetType == SkillTargetType.TARGET_CORPSE;
+        final boolean corpseSkill = (targetType == SkillTargetType.TARGET_CORPSE);
 
         for (Creature target : targets)
             if (target != null) {
@@ -51,14 +51,14 @@ public final class Drain extends Skill {
 
                         // Нельзя восстанавливать HP из CP
                         if (damage > targetCP || !realTarget.isPlayer())
-                            hp = (damage - targetCP) * _absorbPart;
+                            hp = (damage - targetCP) * absorbPart;
 
                         realTarget.reduceCurrentHp(damage, activeChar, this, true, true, false, true, false, false, true);
                         if (!reflected)
                             realTarget.doCounterAttack(this, activeChar, false);
                     }
 
-                    if (absorbAbs == 0 && _absorbPart == 0)
+                    if (absorbAbs == 0 && absorbPart == 0)
                         continue;
 
                     hp += absorbAbs;
@@ -78,7 +78,7 @@ public final class Drain extends Skill {
                     }
                 }
 
-                getEffects(activeChar, target, getActivateRate() > 0, false, reflected);
+                getEffects(activeChar, target, activateRate() > 0, false, reflected);
             }
 
         if (isMagic() ? sps != 0 : ss)

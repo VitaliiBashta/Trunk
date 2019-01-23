@@ -296,10 +296,10 @@ public final class SchemeBufferInstance extends NpcInstance {
             if (row < 2 && schemeBuffs.size() > i) {
                 final Skill skill = SkillTable.INSTANCE.getInfo(schemeBuffs.get(i).skillId, schemeBuffs.get(i).skillLevel);
                 addedBuffs.append("<td width=34>");
-                addedBuffs.append("<table cellspacing=0 cellpadding=0 width=34 height=34 background=" + skill.getIcon() + ">");
+                addedBuffs.append("<table cellspacing=0 cellpadding=0 width=34 height=34 background=" + skill.icon + ">");
                 addedBuffs.append("<tr>");
                 addedBuffs.append("<td width=34>");
-                addedBuffs.append("<button action=\"bypass _bbsbufferbypass_remove_buff " + schemeId + "_" + skill.getId() + "_" + skill.getLevel() + " " + pageN + " x\" width=34 height=34 back=\"L2UI_CT1.ItemWindow_DF_Frame_Down\" fore=\"L2UI_CT1.ItemWindow_DF_Frame\"/>");
+                addedBuffs.append("<button action=\"bypass _bbsbufferbypass_remove_buff " + schemeId + "_" + skill.id + "_" + skill.level + " " + pageN + " x\" width=34 height=34 back=\"L2UI_CT1.ItemWindow_DF_Frame_Down\" fore=\"L2UI_CT1.ItemWindow_DF_Frame\"/>");
                 addedBuffs.append("</td>");
                 addedBuffs.append("</tr>");
                 addedBuffs.append("</table>");
@@ -307,10 +307,10 @@ public final class SchemeBufferInstance extends NpcInstance {
             } else if (row >= 2 && schemeDances.size() > i - ROW_SIZES[row - 1]) {
                 final Skill skill = SkillTable.INSTANCE.getInfo(schemeDances.get(i - ROW_SIZES[row - 1]).skillId, schemeDances.get(i - ROW_SIZES[row - 1]).skillLevel);
                 addedBuffs.append("<td width=34>");
-                addedBuffs.append("<table cellspacing=0 cellpadding=0 width=34 height=34 background=" + skill.getIcon() + ">");
+                addedBuffs.append("<table cellspacing=0 cellpadding=0 width=34 height=34 background=" + skill.icon + ">");
                 addedBuffs.append("<tr>");
                 addedBuffs.append("<td width=34>");
-                addedBuffs.append("<button action=\"bypass _bbsbufferbypass_remove_buff " + schemeId + "_" + skill.getId() + "_" + skill.getLevel() + " " + pageN + " x\" width=34 height=34 back=\"L2UI_CT1.ItemWindow_DF_Frame_Down\" fore=\"L2UI_CT1.ItemWindow_DF_Frame\"/>");
+                addedBuffs.append("<button action=\"bypass _bbsbufferbypass_remove_buff " + schemeId + "_" + skill.id + "_" + skill.level + " " + pageN + " x\" width=34 height=34 back=\"L2UI_CT1.ItemWindow_DF_Frame_Down\" fore=\"L2UI_CT1.ItemWindow_DF_Frame\"/>");
                 addedBuffs.append("</td>");
                 addedBuffs.append("</tr>");
                 addedBuffs.append("</table>");
@@ -399,7 +399,7 @@ public final class SchemeBufferInstance extends NpcInstance {
                 availableBuffs.append("<table cellspacing=2 cellpadding=2 width=140 height=40 bgcolor=000000>");
                 availableBuffs.append("<tr>");
                 availableBuffs.append("<td>");
-                availableBuffs.append("<table border=0 cellspacing=0 cellpadding=0 width=34 height=34 background=" + skill.getIcon() + ">");
+                availableBuffs.append("<table border=0 cellspacing=0 cellpadding=0 width=34 height=34 background=" + skill.icon + ">");
                 availableBuffs.append("<tr>");
                 availableBuffs.append("<td>");
                 availableBuffs.append("<table cellspacing=0 cellpadding=0 width=34 height=34 background=L2UI.item_click>");
@@ -408,7 +408,7 @@ public final class SchemeBufferInstance extends NpcInstance {
                 availableBuffs.append("<br>");
                 availableBuffs.append("</td>");
                 availableBuffs.append("<td height=34>");
-                availableBuffs.append("<button action=\"bypass _bbsbufferbypass_add_buff ").append(scheme).append("_").append(skill.getId()).append("_").append(skill.getLevel()).append(" ").append(currentPage).append(" ").append(TOTAL_BUFF).append("\" width=34 height=34 back=\"L2UI_CT1.ItemWindow_DF_Frame_Down\" fore=\"L2UI_CT1.ItemWindow_DF_Frame\">");
+                availableBuffs.append("<button action=\"bypass _bbsbufferbypass_add_buff ").append(scheme).append("_").append(skill.id).append("_").append(skill.level).append(" ").append(currentPage).append(" ").append(TOTAL_BUFF).append("\" width=34 height=34 back=\"L2UI_CT1.ItemWindow_DF_Frame_Down\" fore=\"L2UI_CT1.ItemWindow_DF_Frame\">");
                 availableBuffs.append("</td>");
                 availableBuffs.append("</tr>");
                 availableBuffs.append("</table>");
@@ -417,7 +417,7 @@ public final class SchemeBufferInstance extends NpcInstance {
                 availableBuffs.append("</table>");
                 availableBuffs.append("</td>");
                 availableBuffs.append("<td width=100 align=center>");
-                availableBuffs.append("<font name=CREDITTEXTSMALL>" + skill.getName() + "</font>");
+                availableBuffs.append("<font name=CREDITTEXTSMALL>" + skill.name() + "</font>");
                 availableBuffs.append("</td>");
                 availableBuffs.append("</tr>");
                 availableBuffs.append("</table>");
@@ -536,7 +536,7 @@ public final class SchemeBufferInstance extends NpcInstance {
                 continue;
 
             if (buff._buffType.equals(buffType)) {
-                String bName = SkillTable.INSTANCE.getInfo(buff._buffId, buff._buffLevel).getName();
+                String bName = SkillTable.INSTANCE.getInfo(buff._buffId, buff._buffLevel).name();
                 bName = bName.replace(" ", "+");
                 availableBuffs.add(bName + "_" + buff._buffId + "_" + buff._buffLevel);
             }
@@ -1789,7 +1789,7 @@ public final class SchemeBufferInstance extends NpcInstance {
             _buffLevel = buffLevel;
             _forClass = forClass;
             _canUse = canUse;
-            _buffName = SkillTable.INSTANCE.getInfo(buffId, buffLevel).getName();
+            _buffName = SkillTable.INSTANCE.getInfo(buffId, buffLevel).name();
         }
     }
 

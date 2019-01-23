@@ -4,43 +4,36 @@ import l2trunk.gameserver.model.SkillLearn;
 import l2trunk.gameserver.model.base.AcquireType;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-
-/**
- * Reworked: VISTALL
- */
-public class AcquireSkillInfo extends L2GameServerPacket {
-    private final SkillLearn _learn;
-    private final AcquireType _type;
-    private List<Require> _reqs = Collections.emptyList();
+public final class AcquireSkillInfo extends L2GameServerPacket {
+    private final SkillLearn learn;
+    private final AcquireType type;
+    private List<Require> reqs = List.of();
 
     public AcquireSkillInfo(AcquireType type, SkillLearn learn) {
-        _type = type;
-        _learn = learn;
-        if (_learn.getItemId() != 0) {
-            _reqs = new ArrayList<>(1);
-            _reqs.add(new Require(99, _learn.getItemId(), _learn.getItemCount(), 50));
-        }
+        this.type = type;
+        this.learn = learn;
+        if (this.learn.getItemId() != 0)
+            reqs = List.of(new Require(99, this.learn.getItemId(), this.learn.getItemCount(), 50));
     }
 
     @Override
     public void writeImpl() {
         writeC(0x91);
-        writeD(_learn.getId());
-        writeD(_learn.getLevel());
-        writeD(_learn.getCost()); // sp/rep
-        writeD(_type.ordinal());
+        writeD(learn.getId());
+        writeD(learn.getLevel());
+        writeD(learn.getCost()); // sp/rep
+        writeD(type.ordinal());
 
-        writeD(_reqs.size()); //requires size
+        writeD(reqs.size()); //requires size
 
-        for (Require temp : _reqs) {
-            writeD(temp.type);
-            writeD(temp.itemId);
-            writeQ(temp.count);
-            writeD(temp.unk);
-        }
+        reqs.forEach(r -> {
+            writeD(r.type);
+            writeD(r.itemId);
+            writeQ(r.count);
+            writeD(r.unk);
+        });
     }
 
     private static class Require {

@@ -37,12 +37,12 @@ public final class RequestMagicSkillUse extends L2GameClientPacket {
         }
 
         if (activeChar.getMacroSkill() != null) {
-            this.magicId = activeChar.getMacroSkill().getId();
+            this.magicId = activeChar.getMacroSkill().id;
         }
         Skill skill = SkillTable.INSTANCE.getInfo(this.magicId, activeChar.getSkillLevel(this.magicId));
 
         if (activeChar.isPendingOlyEnd()) {
-            if ((skill != null) && (skill.isOffensive())) {
+            if ((skill != null) && (skill.isOffensive)) {
                 activeChar.setMacroSkill(null);
                 activeChar.sendActionFailed();
                 return;
@@ -68,7 +68,7 @@ public final class RequestMagicSkillUse extends L2GameClientPacket {
 
             if ((skill.isToggle()) && (activeChar.getEffectList().getEffectsBySkill(skill) != null)) {
                 activeChar.setMacroSkill(null);
-                activeChar.getEffectList().stopEffect(skill.getId());
+                activeChar.getEffectList().stopEffect(skill.id);
                 activeChar.sendActionFailed();
                 return;
             }

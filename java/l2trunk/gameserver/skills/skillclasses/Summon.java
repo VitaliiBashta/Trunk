@@ -18,7 +18,6 @@ import l2trunk.gameserver.model.instances.TrapInstance;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.stats.Stats;
 import l2trunk.gameserver.stats.funcs.FuncAdd;
-import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.Location;
 
@@ -70,7 +69,7 @@ public final class Summon extends Skill {
                 }
                 break;
             case AGATHION:
-                if (player.getAgathionId() > 0 && _npcId != 0) {
+                if (player.getAgathionId() > 0 && npcId != 0) {
                     player.sendPacket(SystemMsg.AN_AGATHION_HAS_ALREADY_BEEN_SUMMONED);
                     return false;
                 }
@@ -85,14 +84,14 @@ public final class Summon extends Skill {
 
         switch (_summonType) {
             case AGATHION:
-                activeChar.setAgathion(getNpcId());
+                activeChar.setAgathion(npcId);
                 break;
             case TRAP:
-                int trapSkillId = getFirstAddedSkill().getId();
+                int trapSkillId = getFirstAddedSkill().id;
 
                 if (activeChar.getTrapsCount() >= 5)
                     activeChar.destroyFirstTrap();
-                TrapInstance trap = new TrapInstance(IdFactory.getInstance().getNextId(), NpcHolder.getTemplate(getNpcId()), activeChar, trapSkillId);
+                TrapInstance trap = new TrapInstance(IdFactory.getInstance().getNextId(), NpcHolder.getTemplate(npcId), activeChar, trapSkillId);
                 activeChar.addTrap(trap);
                 trap.spawnMe();
                 break;
@@ -116,7 +115,7 @@ public final class Summon extends Skill {
                 if (activeChar.getPet() != null || activeChar.isMounted())
                     return;
 
-                NpcTemplate summonTemplate = NpcHolder.getTemplate(getNpcId());
+                NpcTemplate summonTemplate = NpcHolder.getTemplate(npcId);
                 SummonInstance summon = new SummonInstance(IdFactory.getInstance().getNextId(), summonTemplate, activeChar, _lifeTime, _itemConsumeIdInTime, _itemConsumeCountInTime, _itemConsumeDelay, this);
                 activeChar.setPet(summon);
 
@@ -151,7 +150,7 @@ public final class Summon extends Skill {
                 if (activeChar.getPet() != null || activeChar.isMounted())
                     return;
 
-                NpcTemplate merchantTemplate = NpcHolder.getTemplate(getNpcId());
+                NpcTemplate merchantTemplate = NpcHolder.getTemplate(npcId);
                 MerchantInstance merchant = new MerchantInstance(IdFactory.getInstance().getNextId(), merchantTemplate);
 
                 merchant.setCurrentHp(merchant.getMaxHp(), false);

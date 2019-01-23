@@ -32,12 +32,12 @@ public class RequestExEnchantSkillInfo extends L2GameClientPacket {
 
             Skill skill = SkillTable.INSTANCE.getInfo(_skillId, SkillTreeTable.convertEnchantLevel(sl.getBaseLevel(), _skillLvl, sl.getMaxLevel()));
 
-            if (skill == null || skill.getId() != _skillId) {
+            if (skill == null || skill.id != _skillId) {
                 activeChar.sendMessage("This skill doesn't yet have enchant info in Datapack");
                 return;
             }
 
-            if (activeChar.getSkillLevel(_skillId) != skill.getLevel()) {
+            if (activeChar.getSkillLevel(_skillId) != skill.level) {
                 activeChar.sendMessage("Skill not found");
                 return;
             }

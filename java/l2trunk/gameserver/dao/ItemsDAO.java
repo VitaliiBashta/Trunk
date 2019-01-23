@@ -252,10 +252,6 @@ public enum ItemsDAO implements JdbcDAO<Integer, ItemInstance> {
             update(item);
     }
 
-    public void saveOrUpdate(Collection<ItemInstance> items) {
-        items.forEach(this::saveOrUpdate);
-    }
-
     @Override
     public void delete(ItemInstance item) {
         if (!item.getJdbcState().isDeletable())

@@ -453,14 +453,14 @@ public class PlayableAI extends CharacterAI {
 
         Creature target = getAttackTarget();
 
-        if ((_skill.getSkillType() == SkillType.CRAFT) || _skill.isToggle()) {
+        if ((_skill.skillType == SkillType.CRAFT) || _skill.isToggle()) {
             if (_skill.checkCondition(actor, target, _forceUse, _dontMove, true)) {
                 actor.doCast(_skill, target, _forceUse);
             }
             return;
         }
 
-        if ((target == null) || ((target.isDead() != _skill.getCorpse()) && !_skill.isNotTargetAoE())) {
+        if ((target == null) || ((target.isDead() != _skill.isCorpse) && !_skill.isNotTargetAoE())) {
             setIntention(AI_INTENTION_ACTIVE);
             actor.sendActionFailed();
             return;
@@ -493,8 +493,8 @@ public class PlayableAI extends CharacterAI {
             range = 10;
         }
 
-        boolean canSee = (_skill.getSkillType() == SkillType.TAKECASTLE) || (_skill.getSkillType() == SkillType.TAKEFORTRESS) || GeoEngine.canSeeTarget(actor, target, actor.isFlying());
-        boolean noRangeSkill = _skill.getCastRange() == 32767;
+        boolean canSee = (_skill.skillType == SkillType.TAKECASTLE) || (_skill.skillType == SkillType.TAKEFORTRESS) || GeoEngine.canSeeTarget(actor, target, actor.isFlying());
+        boolean noRangeSkill = _skill.castRange == 32767;
 
         if (!noRangeSkill && !canSee && ((range > 200) || (Math.abs(actor.getZ() - target.getZ()) > 200))) {
             actor.sendPacket(SystemMsg.CANNOT_SEE_TARGET);
@@ -578,8 +578,8 @@ public class PlayableAI extends CharacterAI {
              * 			break;
              * 		case AI_INTENTION_CAST:
              * 			L2Skill skill = actor.getCastingSkill();
-             * 				if (skill == null) skill = _skill;
-             * 				if (skill != null && !skill.isUsingWhileCasting()) switch(skill.getTargetType())
+             * 				if (skill == null) skill = skill;
+             * 				if (skill != null && !skill.isUsingWhileCasting()) switch(skill.targetType())
              * 				{
              * 					case TARGET_ONE:
              * 					case TARGET_AREA:
@@ -623,22 +623,22 @@ public class PlayableAI extends CharacterAI {
         // Если скилл альтернативного типа (например, бутылка на хп),
         // то он может использоваться во время каста других скиллов, или во время атаки, или на бегу.
         // Поэтому пропускаем дополнительные проверки.
-        if ((actor.isPlayer()) && (actor.getPlayer().getCastingSkill() != null) && (actor.getPlayer().getCastingSkill().getSkillType() == Skill.SkillType.TRANSFORMATION)) {
+        if ((actor.isPlayer()) && (actor.getPlayer().getCastingSkill() != null) && (actor.getPlayer().getCastingSkill().skillType == Skill.SkillType.TRANSFORMATION)) {
             clientActionFailed();
             return;
         }
-        if (skill.altUse() || skill.isToggle()) {
-            if ((skill.isToggle() || skill.isHandler()) && (actor.isOutOfControl() || actor.isStunned() || actor.isSleeping() || actor.isParalyzed() || actor.isAlikeDead())) {
+        if (skill.isAltUse || skill.isToggle()) {
+            if ((skill.isToggle() || skill.isItemHandler()) && (actor.isOutOfControl() || actor.isStunned() || actor.isSleeping() || actor.isParalyzed() || actor.isAlikeDead())) {
                 clientActionFailed();
             } else {
-                actor.altUseSkill(skill.getId(), target);
+                actor.altUseSkill(skill.id, target);
             }
             return;
         }
 
         // Если не можем кастовать, то использовать скилл позже
         if (actor.isActionsDisabled()) {
-            // if (!actor.isSkillDisabled(skill.getId()))
+            // if (!actor.isSkillDisabled(skill.id()))
             setNextAction(nextAction.CAST, skill, target, forceUse, dontMove);
             clientActionFailed();
             return;

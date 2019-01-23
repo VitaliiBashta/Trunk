@@ -138,7 +138,7 @@ public abstract class ItemTemplate extends StatTemplate {
     private final Grade _crystalType; // default to none-grade
     private final ItemClass _class;
     private final int _weight;
-    private final boolean _masterwork;
+    private final boolean masterwork;
     private final int masterworkConvert;
     private final int _durability;
     private final int _referencePrice;
@@ -155,7 +155,7 @@ public abstract class ItemTemplate extends StatTemplate {
     int _type1; // needed for item list (inventory)
     int _type2; // different lists for armor, weapon, etc
     int _bodyPart;
-    private List<Skill> _skills;
+    private List<Skill> skills = new ArrayList<>();
     private Map<Integer, AugmentationInfo> _augmentationInfos = new HashMap<>();//Containers.emptyIntObjectMap();
     private int _flags;
     private Skill _enchant4Skill = null; // skill that activates when item is enchanted +4 (for duals)
@@ -184,7 +184,7 @@ public abstract class ItemTemplate extends StatTemplate {
         _reuseDelay = set.getInteger("reuse_delay", 0);
         _reuseGroup = set.getInteger("delay_share_group", -_itemId);
         _agathionEnergy = set.getInteger("agathion_energy", 0);
-        _masterwork = set.getBool("masterwork", false);
+        masterwork = set.getBool("masterwork", false);
         masterworkConvert = set.getInteger("masterwork_convert", -1);
 
         for (ItemFlags f : ItemFlags.VALUES) {
@@ -193,9 +193,6 @@ public abstract class ItemTemplate extends StatTemplate {
                 activeFlag(f);
             }
         }
-
-        funcTemplates = Collections.emptyList();
-        _skills = new ArrayList<>();
     }
 
     /**
@@ -446,15 +443,15 @@ public abstract class ItemTemplate extends StatTemplate {
      * @param skill : L2Skill
      */
     public void attachSkill(Skill skill) {
-        _skills.add(skill);
+        skills.add(skill);
     }
 
     public List<Skill> getAttachedSkills() {
-        return _skills;
+        return skills;
     }
 
     public Skill getFirstSkill() {
-        return _skills.get(0);
+        return skills.get(0);
     }
 
     /**
@@ -489,10 +486,6 @@ public abstract class ItemTemplate extends StatTemplate {
 
     public boolean isCommonItem() {
         return _name.startsWith("Common Item - ");
-    }
-
-    public boolean isSealedItem() {
-        return _name.startsWith("Sealed");
     }
 
     public boolean isAltSeed() {
@@ -796,16 +789,12 @@ public abstract class ItemTemplate extends StatTemplate {
         return this._bodyPart == 256;
     }
 
-    public List<CapsuledItem> getCapsuledItems() {
-        return this._capsuledItems;
-    }
-
     public void addCapsuledItem(CapsuledItem ci) {
         this._capsuledItems.add(ci);
     }
 
     public boolean isMasterwork() {
-        return _masterwork;
+        return masterwork;
     }
 
     public int getMasterworkConvert() {
@@ -817,10 +806,6 @@ public abstract class ItemTemplate extends StatTemplate {
             _augmentationInfos = new HashMap<>();
         }
         _augmentationInfos.put(augmentationInfo.getMineralId(), augmentationInfo);
-    }
-
-    public Map<Integer, AugmentationInfo> getAugmentationInfos() {
-        return _augmentationInfos;
     }
 
     public enum ReuseType {
@@ -884,9 +869,6 @@ public abstract class ItemTemplate extends StatTemplate {
         MISC,
 
         EXTRACTABLE,
-        /**
-         * All other
-         */
         OTHER
     }
 
@@ -930,14 +912,6 @@ public abstract class ItemTemplate extends StatTemplate {
 
         public int getItemId() {
             return this.item_id;
-        }
-
-        public int getMinCount() {
-            return this.min_count;
-        }
-
-        public int getMaxCount() {
-            return this.max_count;
         }
 
         public double getChance() {

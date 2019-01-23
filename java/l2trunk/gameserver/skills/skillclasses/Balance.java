@@ -43,7 +43,7 @@ public final class Balance extends Skill {
                         // уменьшение HP, не ниже 1.01 для предотвращения "ложной смерти" на олимпе/дуэли
                         target.setCurrentHp(Math.max(1.01, hp), false);
 
-                    getEffects(activeChar, target, getActivateRate() > 0, false);
+                    getEffects(activeChar, target, activateRate() > 0, false);
                 });
 
         if (isSSPossible())

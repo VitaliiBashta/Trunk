@@ -21,12 +21,12 @@ public final class EffectDiscord extends Effect {
 
     @Override
     public boolean checkCondition() {
-        int skilldiff = effected.getLevel() - _skill.getMagicLevel();
-        int lvldiff = effected.getLevel() - _effector.getLevel();
+        int skilldiff = effected.getLevel() - skill.magicLevel;
+        int lvldiff = effected.getLevel() - effector.getLevel();
         if (skilldiff > 10 || skilldiff > 5 && Rnd.chance(30) || Rnd.chance(Math.abs(lvldiff) * 2))
             return false;
 
-        boolean multitargets = _skill.isAoE();
+        boolean multitargets = skill.isAoE();
 
         if (!effected.isMonster()) {
             if (!multitargets)

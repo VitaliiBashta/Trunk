@@ -1,6 +1,6 @@
 package l2trunk.commons.lang;
 
-public class Pair<K, V> {
+public final class Pair<K, V> {
     private K first;
     private V second;
 
