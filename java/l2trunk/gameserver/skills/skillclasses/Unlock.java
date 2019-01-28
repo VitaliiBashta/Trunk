@@ -28,6 +28,42 @@ public final class Unlock extends Skill {
 
         if (target instanceof ChestInstance && activeChar.isPlayer())
             return super.checkCondition(activeChar, target, forceUse, dontMove, first);
+        //Unlock Fix
+//		if (target instanceof ChestInstance && activeChar.isPlayer())
+//		{
+//			int charLevel = activeChar.level();
+//			int chestLevel = target.level();
+//
+//			try
+//			{
+//				int levelDiff = chestLevel - charLevel;
+//				
+//				if (chestLevel < 77)
+//				{
+//					if (levelDiff > 6 || levelDiff < -6) 
+//						return false;
+//				} 
+//				
+//				else if (chestLevel < 78)
+//				{
+//					if (levelDiff > 5 || levelDiff < -5) 
+//						return false;
+//				} 
+//				
+//				else
+//				{
+//					if (levelDiff > 3 || levelDiff < -3) 
+//						return false;
+//				}
+//			}
+//			catch (Exception e)
+//			{
+//				e.printStackTrace();
+//			}
+//			
+//			return super.checkCondition(activeChar, target, forceUse, dontMove, first);
+//		}
+//		//unlock end
 
         if (!target.isDoor() || _unlockPower == 0) {
             activeChar.sendPacket(SystemMsg.INVALID_TARGET);
@@ -52,7 +88,8 @@ public final class Unlock extends Skill {
             return false;
         }
 
-        if (_unlockPower - door.getLevel() * 100 < 0) {// Дверь слишком высокого уровня
+        if (_unlockPower - door.getLevel() * 100 < 0) // Дверь слишком высокого уровня
+        {
             activeChar.sendPacket(SystemMsg.THIS_DOOR_CANNOT_BE_UNLOCKED);
             return false;
         }
@@ -71,8 +108,9 @@ public final class Unlock extends Skill {
                     } else
                         activeChar.sendPacket(SystemMsg.YOU_HAVE_FAILED_TO_UNLOCK_THE_DOOR);
                 } else if (targ instanceof ChestInstance) {
-                    if (!targ.isDead())
-                        ((ChestInstance) targ).tryOpen((Player) activeChar, this);
+                    ChestInstance target = (ChestInstance) targ;
+                    if (!target.isDead())
+                        target.tryOpen((Player) activeChar, this);
                 }
             }
     }

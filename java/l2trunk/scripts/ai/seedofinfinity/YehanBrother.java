@@ -53,7 +53,7 @@ public final class YehanBrother extends Fighter {
     }
 
     private void removeInvul(NpcInstance npc) {
-        npc.getEffectList().getAllEffects()
+        npc.getEffectList().getAllEffects().stream()
                 .filter(e -> e.getSkill().id == 6371)
                 .forEach(Effect::exit);
     }

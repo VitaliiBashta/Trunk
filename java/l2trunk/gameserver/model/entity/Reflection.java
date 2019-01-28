@@ -743,7 +743,7 @@ public class Reflection {
 
     private class ReflectionListenerList extends ListenerList {
         void onCollapse() {
-            getListeners()
+            getListeners().stream()
                     .filter(l -> l instanceof OnReflectionCollapseListener)
                     .map(l -> (OnReflectionCollapseListener) l)
                     .forEach(l -> l.onReflectionCollapse(Reflection.this));

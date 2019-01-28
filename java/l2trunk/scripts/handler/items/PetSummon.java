@@ -23,7 +23,7 @@ public final class PetSummon extends ScriptItemHandler implements ScriptFile {
         Player player = (Player) playable;
 
         player.setPetControlItem(item);
-        player.getAI().Cast(wolvesNecklace, player, false, true);
+        player.getAI().cast(wolvesNecklace, player, false, true);
         return true;
     }
 

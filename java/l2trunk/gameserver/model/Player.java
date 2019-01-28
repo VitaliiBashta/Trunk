@@ -43,8 +43,8 @@ import l2trunk.gameserver.model.GameObjectTasks.*;
 import l2trunk.gameserver.model.Request.L2RequestType;
 import l2trunk.gameserver.model.Skill.AddedSkill;
 import l2trunk.gameserver.model.Zone.ZoneType;
-import l2trunk.gameserver.model.actor.instances.player.*;
 import l2trunk.gameserver.model.actor.instances.player.FriendList;
+import l2trunk.gameserver.model.actor.instances.player.*;
 import l2trunk.gameserver.model.actor.listener.PlayerListenerList;
 import l2trunk.gameserver.model.actor.recorder.PlayerStatsChangeRecorder;
 import l2trunk.gameserver.model.base.*;
@@ -96,6 +96,7 @@ import l2trunk.gameserver.skills.skillclasses.Charge;
 import l2trunk.gameserver.skills.skillclasses.Transformation;
 import l2trunk.gameserver.stats.Formulas;
 import l2trunk.gameserver.stats.Stats;
+import l2trunk.gameserver.stats.funcs.Func;
 import l2trunk.gameserver.stats.funcs.FuncClassesBalancer;
 import l2trunk.gameserver.stats.funcs.FuncTemplate;
 import l2trunk.gameserver.tables.ClanTable;
@@ -122,8 +123,8 @@ import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.sql.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -176,7 +177,7 @@ public final class Player extends Playable implements PlayerGroup {
     private static final Logger LOG = LoggerFactory.getLogger(Player.class);
     public final BookMarkList bookmarks = new BookMarkList(this, 0);
     public final AntiFlood antiFlood = new AntiFlood();
-    final Map<Integer, Skill> _transformationSkills = new HashMap<>();
+    final Map<Integer, Skill> transformationSkills = new HashMap<>();
     private final PcInventory inventory = new PcInventory(this);
     private final Warehouse _warehouse = new PcWarehouse(this);
     private final ItemContainer refund = new PcRefund(this);
@@ -246,23 +247,23 @@ public final class Player extends Playable implements PlayerGroup {
     public boolean _autoCp;
     public boolean _autoHp;
     public boolean entering = true;
-    public Location stablePoint = null;
+    public Location _stablePoint = null;
     private boolean _gmVisible = false;
     private int _telemode = 0;
     /**
      * ----------------- Hit Man System -------------------
      */
     private int _ordered;
-    private int _baseClass;
+    private int baseClass;
     private SubClass activeClass = null;
     /**
      * 0=White, 1=Purple, 2=PurpleBlink
      */
     private int _pvpFlag;
     private GameClient connection;
-    private String _login;
+    private String login;
     private int karma, _pkKills, pvpKills;
-    private int _face, _hairStyle, _hairColor;
+    private int face, _hairStyle, hairColor;
     private int _recomHave, recomLeftToday, fame;
     private int _recomLeft = 20;
     private int recomBonusTime = 3600;
@@ -304,9 +305,9 @@ public final class Player extends Playable implements PlayerGroup {
     private String _sellStoreName;
     private List<TradeItem> sellList = List.of();
     private List<TradeItem> packageSellList = List.of();
-    private String buyStoreName;
-    private List<TradeItem> _buyList = List.of();
-    private List<TradeItem> _tradeList = List.of();
+    private String _buyStoreName;
+    private List<TradeItem> _buyList = Collections.emptyList();
+    private List<TradeItem> _tradeList = Collections.emptyList();
     private int _hennaSTR, _hennaINT, _hennaDEX, _hennaMEN, _hennaWIT, _hennaCON;
     private Party party;
     private Location _lastPartyPosition;
@@ -316,7 +317,7 @@ public final class Player extends Playable implements PlayerGroup {
      * GM Stuff
      */
     private int _accessLevel;
-    private PlayerAccess _playerAccess = new PlayerAccess();
+    private PlayerAccess playerAccess = new PlayerAccess();
     private boolean _messageRefusal = false, _tradeRefusal = false, _partyinviteRefusal = false, _friendinviteRefusal = false, _blockAll = false;
     private boolean isPendingOlyEnd = false;
     private Skill _macroSkill = null;
@@ -378,7 +379,7 @@ public final class Player extends Playable implements PlayerGroup {
     private Future<?> _pcCafePointsTask;
     private int _zoneMask;
     private boolean _awaying = false;
-    private int _transformationId;
+    private int transformationId;
     private int _transformationTemplate;
     private String transformationName;
     private int _pcBangPoints;
@@ -390,7 +391,7 @@ public final class Player extends Playable implements PlayerGroup {
     private InvisibleType _invisibleType = InvisibleType.NONE;
 
     private List<String> bypasses = null, bypasses_bbs = null;
-    private Map<Integer, String> _postFriends = new HashMap<>();//Containers.emptyIntObjectMap();
+    private Map<Integer, String> postFriends = new HashMap<>();
     private boolean _notShowBuffAnim = false;
     private boolean _debug = false;
     private long _dropDisabled;
@@ -415,7 +416,7 @@ public final class Player extends Playable implements PlayerGroup {
     private boolean _partyMatchingVisible = true;
     private boolean _charmOfCourage = false;
     private int increasedForce = 0;
-    private int _consumedSouls = 0;
+    private int consumedSouls = 0;
     private long _lastFalling;
     private Location _lastClientPosition;
     private Location _lastServerPosition;
@@ -454,18 +455,30 @@ public final class Player extends Playable implements PlayerGroup {
     // Alexander - Used for catpcha system, sets when was the last time that this player did damage to a monster
     private long _lastMonsterDamageTime = 0;
 
+    private Map<Integer, Integer> inqusitionTransformation = Map.of(
+            97, 24001, // Cardinal
+            98, 24002, // Hierophant
+            100, 24003,// SwordMuse
+            105, 24004,// EvaSaint
+            107, 24005,// SpectralDancer
+            112, 24006,// ShillienSaint
+            115, 24007,// Dominator
+            116, 24008);// Doomcryer
+
+
     public Player(final int objectId, final PlayerTemplate template, final String accountName) {
         super(objectId, template);
 
-        _login = accountName;
+        login = accountName;
         _nameColor = 0xFFFFFF;
         _titlecolor = 0xFFFF77;
-        _baseClass = getClassId().getId();
+        baseClass = getClassId().getId();
         buffSchemes = new CopyOnWriteArrayList<>();
 
         for (Stats st : Stats.values())
             addStatFunc(FuncClassesBalancer.getInstance(st, this));
     }
+
 
     /**
      * Constructor<?> of L2Player (use L2Character constructor).<BR>
@@ -542,7 +555,6 @@ public final class Player extends Playable implements PlayerGroup {
     /**
      * Retrieve a L2Player from the characters table of the database and add it in _allObjects of the L2World
      *
-     * @param objectId
      * @return The L2Player loaded from the database
      */
     public static Player restore(final int objectId) {
@@ -566,16 +578,16 @@ public final class Player extends Playable implements PlayerGroup {
                 player.bookmarks.setCapacity(rset.getInt("bookmarks"));
                 player.bookmarks.restore(con);
                 player.friendList.restore(con);
-                player._postFriends = CharacterPostFriendDAO.select(player, con);
+                player.postFriends = CharacterPostFriendDAO.select(player, con);
                 CharacterGroupReuseDAO.select(player, con);
 
-                player._baseClass = classId;
-                player._login = rset.getString("account_name");
+                player.baseClass = classId;
+                player.login = rset.getString("account_name");
                 player.setName(rset.getString("char_name"));
 
-                player._face = rset.getInt("face");
+                player.face = rset.getInt("face");
                 player._hairStyle = rset.getInt("hairStyle");
-                player._hairColor = rset.getInt("hairColor");
+                player.hairColor = rset.getInt("hairColor");
                 player.setHeading(0);
 
                 player.setKarma(rset.getInt("karma"));
@@ -768,7 +780,7 @@ public final class Player extends Playable implements PlayerGroup {
                 }
 
                 try (PreparedStatement statement3 = con.prepareStatement("SELECT obj_Id, char_name FROM characters WHERE account_name=? AND obj_Id!=?")) {
-                    statement3.setString(1, player._login);
+                    statement3.setString(1, player.login);
                     statement3.setInt(2, objectId);
                     try (ResultSet rset3 = statement3.executeQuery()) {
                         while (rset3.next()) {
@@ -909,7 +921,7 @@ public final class Player extends Playable implements PlayerGroup {
                 return;
             }
 
-            int baseClassId = player._baseClass;
+            int baseClassId = player.baseClass;
             if (baseClassId == -1) {
                 LOG.error("Error! There is no base class for player: " + player);
                 return;
@@ -929,6 +941,15 @@ public final class Player extends Playable implements PlayerGroup {
         }
     }
 
+    private static void RestoreFightClub(Player player) {
+        String[] values = player.getVar("FightClubRate").split(";");
+        int id = toInt(values[0]);
+        int count = toInt(values[1]);
+        ItemFunctions.addItem(player, id, count, true, "RestoreFightClub");
+        player.unsetVar("FightClubRate");
+        player.unsetVar("isPvPevents");
+    }
+
     public boolean isFakePlayer() {
         return _isFakePlayer;
     }
@@ -940,7 +961,7 @@ public final class Player extends Playable implements PlayerGroup {
 
     public String getAccountName() {
         if (connection == null) {
-            return _login;
+            return login;
         }
         return connection.getLogin();
     }
@@ -969,13 +990,7 @@ public final class Player extends Playable implements PlayerGroup {
 
     public void changeSex() {
         setTransformation(251);
-
-        if (getSex() == 1) {
-            template = CharTemplateHolder.getTemplate(getClassId(), false);
-        } else {
-            template = CharTemplateHolder.getTemplate(getClassId(), true);
-        }
-
+        template = CharTemplateHolder.getTemplate(getClassId(), isMale());
         setTransformation(0);
         this.sendPacket(new UserInfo(this));
     }
@@ -983,18 +998,6 @@ public final class Player extends Playable implements PlayerGroup {
     @Override
     public PlayerAI getAI() {
         return (PlayerAI) super.getAI();
-    }
-
-    @Override
-    public void doCast(final Skill skill, final Creature target, boolean forceUse) {
-        if (skill == null) {
-            return;
-        }
-
-        super.doCast(skill, target, forceUse);
-
-        // if (getUseSeed() != 0 && skill.skillType() == SkillType.SOWING)
-        // sendPacket(new ExUseSharedGroupItem(getUseSeed(), getUseSeed(), 5000, 5000));
     }
 
     @Override
@@ -1032,24 +1035,24 @@ public final class Player extends Playable implements PlayerGroup {
         return activeClass == null ? 1 : activeClass.getLevel();
     }
 
-    public int getSex() {
-        return getTemplate().isMale ? 0 : 1;
+    public boolean isMale() {
+        return getTemplate().isMale;
     }
 
     public int getFace() {
-        return _face;
+        return face;
     }
 
     public void setFace(int face) {
-        _face = face;
+        this.face = face;
     }
 
     public int getHairColor() {
-        return _hairColor;
+        return hairColor;
     }
 
     public void setHairColor(int hairColor) {
-        _hairColor = hairColor;
+        this.hairColor = hairColor;
     }
 
     public int getHairStyle() {
@@ -1102,7 +1105,7 @@ public final class Player extends Playable implements PlayerGroup {
         getListeners().onExit();
 
         if (isFlying() && !checkLandingState()) {
-            stablePoint = TeleportUtils.getRestartLocation(this, RestartType.TO_VILLAGE);
+            _stablePoint = TeleportUtils.getRestartLocation(this, RestartType.TO_VILLAGE);
         }
 
         if (isCastingNow()) {
@@ -1144,8 +1147,8 @@ public final class Player extends Playable implements PlayerGroup {
             observerMode.set(OBSERVER_NONE);
         }
 
-        if (stablePoint != null) {
-            teleToLocation(stablePoint);
+        if (_stablePoint != null) {
+            teleToLocation(_stablePoint);
         }
 
         Summon pet = getPet();
@@ -1217,7 +1220,7 @@ public final class Player extends Playable implements PlayerGroup {
 
         if (ref != ReflectionManager.DEFAULT) {
             if (ref.getReturnLoc() != null) {
-                stablePoint = ref.getReturnLoc();
+                _stablePoint = ref.getReturnLoc();
             }
 
             ref.removeObject(this);
@@ -1300,8 +1303,8 @@ public final class Player extends Playable implements PlayerGroup {
                 .collect(Collectors.toList());
     }
 
-    public Stream<QuestState> getAllQuestsStates() {
-        return quests.values().stream();
+    public Collection<QuestState> getAllQuestsStates() {
+        return quests.values();
     }
 
     public Stream<QuestState> getQuestsForEvent(NpcInstance npc, QuestEventType event) {
@@ -1731,7 +1734,7 @@ public final class Player extends Playable implements PlayerGroup {
 
         boolean skillUpdate = false;
 
-        int level = (int) calcStat(Stats.GRADE_EXPERTISE_LEVEL, getLevel(), null, null);
+        int level = (int) calcStat(Stats.GRADE_EXPERTISE_LEVEL, getLevel());
         int i = EXPERTISE_LEVELS.stream()
                 .filter(l -> l > level)
                 .findFirst().orElse(0);
@@ -1941,7 +1944,7 @@ public final class Player extends Playable implements PlayerGroup {
             broadcastCharInfo();
         }
 
-        PlayerTemplate t = CharTemplateHolder.getTemplate(id, getSex() == 1);
+        PlayerTemplate t = CharTemplateHolder.getTemplate(id, !isMale() );
         if (t == null) {
             LOG.error("Missing template for classId: " + id);
             // do not throw error - only print error
@@ -2253,8 +2256,6 @@ public final class Player extends Playable implements PlayerGroup {
      * <p/>
      * <FONT COLOR=#FF0000><B> <U>Caution</U> : This method DOESN'T give other free skills (SP needed = 0)</B></FONT><BR>
      * <BR>
-     *
-     * @param send
      */
     private void rewardSkills(boolean send) {
         boolean update = false;
@@ -2957,7 +2958,7 @@ public final class Player extends Playable implements PlayerGroup {
             }
             List<Skill> skills = item.getTemplate().getAttachedSkills();
             skills.stream()
-                    .mapToInt(skill -> skill.id)
+                    .mapToInt(s -> s.id)
                     .forEach(skill -> {
                         altUseSkill(skill, this);
                         if ((getPet() != null) && getPet().isSummon() && !getPet().isDead()) {
@@ -4071,11 +4072,11 @@ public final class Player extends Playable implements PlayerGroup {
     }
 
     public String getBuyStoreName() {
-        return buyStoreName;
+        return _buyStoreName;
     }
 
     public void setBuyStoreName(String name) {
-        buyStoreName = Strings.stripToSingleLine(name);
+        _buyStoreName = Strings.stripToSingleLine(name);
     }
 
     public List<TradeItem> getBuyList() {
@@ -4143,7 +4144,7 @@ public final class Player extends Playable implements PlayerGroup {
 
             // Also remove subunit skills
             oldClan.getAllSubUnits().forEach(su -> su.getSkills().stream()
-                    .mapToInt(skill -> skill.id)
+                    .mapToInt(s -> s.id)
                     .forEach(sk -> removeSkill(sk, false)));
         }
 
@@ -4298,7 +4299,7 @@ public final class Player extends Playable implements PlayerGroup {
     }
 
     public boolean isGM() {
-        return _playerAccess != null && _playerAccess.IsGM;
+        return playerAccess != null && playerAccess.IsGM;
     }
 
     @Override
@@ -4311,17 +4312,13 @@ public final class Player extends Playable implements PlayerGroup {
     }
 
     public PlayerAccess getPlayerAccess() {
-        return _playerAccess;
+        return playerAccess;
     }
 
     public void setPlayerAccess(final PlayerAccess pa) {
-        if (pa != null) {
-            _playerAccess = pa;
-        } else {
-            _playerAccess = new PlayerAccess();
-        }
+        playerAccess = Objects.requireNonNullElseGet(pa, PlayerAccess::new);
 
-        setAccessLevel(isGM() || _playerAccess.Menu ? 100 : 0);
+        setAccessLevel(isGM() || playerAccess.Menu ? 100 : 0);
     }
 
     @Override
@@ -4344,6 +4341,11 @@ public final class Player extends Playable implements PlayerGroup {
             refreshExpertisePenalty();
         }
         super.updateStats();
+    }
+
+    @Override
+    public void addStatFunc(Func f) {
+        super.addStatFunc(f);
     }
 
     @Override
@@ -4498,14 +4500,14 @@ public final class Player extends Playable implements PlayerGroup {
                 statement.setInt(1, getFace());
                 statement.setInt(2, getHairStyle());
                 statement.setInt(3, getHairColor());
-                if (stablePoint == null) {
+                if (_stablePoint == null) {
                     statement.setInt(4, getX());
                     statement.setInt(5, getY());
                     statement.setInt(6, getZ());
                 } else {
-                    statement.setInt(4, stablePoint.x);
-                    statement.setInt(5, stablePoint.y);
-                    statement.setInt(6, stablePoint.z);
+                    statement.setInt(4, _stablePoint.x);
+                    statement.setInt(5, _stablePoint.y);
+                    statement.setInt(6, _stablePoint.z);
                 }
                 statement.setInt(7, getKarma());
                 statement.setInt(8, getPvpKills());
@@ -4752,10 +4754,10 @@ public final class Player extends Playable implements PlayerGroup {
                     if (timeStamp.hasNotPassed()) {
                         sb = new StringBuilder("(");
                         sb.append(getObjectId()).append(",");
-                        sb.append(timeStamp.getId()).append(",");
-                        sb.append(timeStamp.getLevel()).append(",");
+                        sb.append(timeStamp.id).append(",");
+                        sb.append(timeStamp.level).append(",");
                         sb.append(getActiveClassId()).append(",");
-                        sb.append(timeStamp.getEndTime()).append(",");
+                        sb.append(timeStamp.endTime()).append(",");
                         sb.append(timeStamp.getReuseBasic()).append(")");
                         b.write(sb.toString());
                     }
@@ -5894,10 +5896,6 @@ public final class Player extends Playable implements PlayerGroup {
         return hero;
     }
 
-    public void setHero(final boolean hero) {
-        this.hero = hero;
-    }
-
     public void setHero(Player player) {
         StatsSet hero = new StatsSet();
         hero.set(Olympiad.CLASS_ID, player.getBaseClassId());
@@ -5916,6 +5914,10 @@ public final class Player extends Playable implements PlayerGroup {
             player.broadcastPacket(new SocialAction(player.getObjectId(), 16));
         }
         player.broadcastUserInfo(true);
+    }
+
+    public void setHero(final boolean hero) {
+        this.hero = hero;
     }
 
     public int getPing() {
@@ -6427,7 +6429,7 @@ public final class Player extends Playable implements PlayerGroup {
      * If value doesn't exist, defaultValue is returned.
      */
     public List<String> getQuickVarList(String name) {
-        if (!quickVars.containsKey(name)) return List.of();
+        if (!quickVars.containsKey(name)) return new ArrayList<>();
         return (List<String>) quickVars.get(name);
     }
 
@@ -6480,7 +6482,7 @@ public final class Player extends Playable implements PlayerGroup {
         if (isDead()) {
             stopWaterTask();
         } else if (Config.ALLOW_WATER && (_taskWater == null)) {
-            int timeinwater = (int) (calcStat(Stats.BREATH, 86, null, null) * 1000L);
+            int timeinwater = (int) (calcStat(Stats.BREATH, 86) * 1000L);
             sendPacket(new SetupGauge(this, SetupGauge.CYAN, timeinwater));
             if ((getTransformation() > 0) && (getTransformationTemplate() > 0) && !isCursedWeaponEquipped()) {
                 setTransformation(0);
@@ -6633,11 +6635,11 @@ public final class Player extends Playable implements PlayerGroup {
     }
 
     public void setBaseClass(final int baseClass) {
-        _baseClass = baseClass;
+        this.baseClass = baseClass;
     }
 
     public int getBaseClassId() {
-        return _baseClass;
+        return baseClass;
     }
 
     public SubClass getActiveClass() {
@@ -7017,23 +7019,23 @@ public final class Player extends Playable implements PlayerGroup {
 
     @Override
     public int getInventoryLimit() {
-        return (int) calcStat(Stats.INVENTORY_LIMIT, 0.0, null, null);
+        return (int) calcStat(Stats.INVENTORY_LIMIT, 0.0);
     }
 
     public int getWarehouseLimit() {
-        return (int) calcStat(Stats.STORAGE_LIMIT, 0.0, null, null);
+        return (int) calcStat(Stats.STORAGE_LIMIT, 0.0);
     }
 
     public int getTradeLimit() {
-        return (int) calcStat(Stats.TRADE_LIMIT, 0.0, null, null);
+        return (int) calcStat(Stats.TRADE_LIMIT, 0.0);
     }
 
     public int getDwarvenRecipeLimit() {
-        return (int) calcStat(Stats.DWARVEN_RECIPE_LIMIT, 50.0, null, null) + Config.ALT_ADD_RECIPES;
+        return (int) calcStat(Stats.DWARVEN_RECIPE_LIMIT, 50.0) + Config.ALT_ADD_RECIPES;
     }
 
     public int getCommonRecipeLimit() {
-        return (int) calcStat(Stats.COMMON_RECIPE_LIMIT, 50.0, null, null) + Config.ALT_ADD_RECIPES;
+        return (int) calcStat(Stats.COMMON_RECIPE_LIMIT, 50.0) + Config.ALT_ADD_RECIPES;
     }
 
     public Element getAttackElement() {
@@ -7044,14 +7046,14 @@ public final class Player extends Playable implements PlayerGroup {
         if (element == Element.NONE) {
             return 0;
         }
-        return (int) calcStat(element.getAttack(), 0., null, null);
+        return (int) calcStat(element.getAttack(), 0.);
     }
 
     public int getDefence(Element element) {
         if (element == Element.NONE) {
             return 0;
         }
-        return (int) calcStat(element.getDefence(), 0., null, null);
+        return (int) calcStat(element.getDefence(), 0.);
     }
 
     public boolean getAndSetLastItemAuctionRequest() {
@@ -7249,12 +7251,12 @@ public final class Player extends Playable implements PlayerGroup {
 
     @Override
     public double getRateExp() {
-        return calcStat(Stats.EXP, (party == null ? 1. : party.rateExp), null, null);
+        return calcStat(Stats.EXP, (party == null ? 1. : party.rateExp));
     }
 
     @Override
     public double getRateSp() {
-        return calcStat(Stats.SP, (party == null ? 1. : party.rateSp), null, null);
+        return calcStat(Stats.SP, (party == null ? 1. : party.rateSp));
     }
 
     @Override
@@ -7345,12 +7347,12 @@ public final class Player extends Playable implements PlayerGroup {
 
     @Override
     public int getConsumedSouls() {
-        return _consumedSouls;
+        return consumedSouls;
     }
 
     @Override
     public void setConsumedSouls(int i, NpcInstance monster) {
-        if (i == _consumedSouls) {
+        if (i == consumedSouls) {
             return;
         }
 
@@ -7361,13 +7363,13 @@ public final class Player extends Playable implements PlayerGroup {
         }
 
         if (i <= 0) {
-            _consumedSouls = 0;
+            consumedSouls = 0;
             sendEtcStatusUpdate();
             return;
         }
 
-        if (_consumedSouls != i) {
-            int diff = i - _consumedSouls;
+        if (consumedSouls != i) {
+            int diff = i - consumedSouls;
             if (diff > 0) {
                 SystemMessage sm = new SystemMessage(SystemMessage.YOUR_SOUL_HAS_INCREASED_BY_S1_SO_IT_IS_NOW_AT_S2);
                 sm.addNumber(diff);
@@ -7379,7 +7381,7 @@ public final class Player extends Playable implements PlayerGroup {
             return;
         }
 
-        _consumedSouls = i;
+        consumedSouls = i;
         sendPacket(new EtcStatusUpdate(this));
     }
 
@@ -7392,7 +7394,7 @@ public final class Player extends Playable implements PlayerGroup {
             return;
         }
         _lastFalling = System.currentTimeMillis();
-        int damage = (int) calcStat(Stats.FALL, (getMaxHp() / 2000.) * height, null, null);
+        int damage = (int) calcStat(Stats.FALL, (getMaxHp() / 2000.) * height);
         if (damage > 0) {
             int curHp = (int) getCurrentHp();
             if ((curHp - damage) < 1) {
@@ -7870,31 +7872,31 @@ public final class Player extends Playable implements PlayerGroup {
 
     private void preparateToTransform(Skill transSkill) {
         if ((transSkill == null) || !transSkill.isBaseTransformation()) {
-            getEffectList().getAllEffects()
+            getEffectList().getAllEffects().stream()
                     .filter(e -> e.getSkill().isToggle())
                     .forEach(Effect::exit);
         }
     }
 
     public boolean isInFlyingTransform() {
-        return (_transformationId == 8) || (_transformationId == 9) || (_transformationId == 260);
+        return (transformationId == 8) || (transformationId == 9) || (transformationId == 260);
     }
 
     boolean isInMountTransform() {
-        return (_transformationId == 106) || (_transformationId == 109) || (_transformationId == 110) || (_transformationId == 20001);
+        return (transformationId == 106) || (transformationId == 109) || (transformationId == 110) || (transformationId == 20001);
     }
 
     public int getTransformation() {
-        return _transformationId;
+        return transformationId;
     }
 
     public void setTransformation(int transformationId) {
-        if ((transformationId == _transformationId) || ((_transformationId != 0) && (transformationId != 0))) {
+        if ((transformationId == this.transformationId) || ((this.transformationId != 0) && (transformationId != 0))) {
             return;
         }
 
         if (transformationId == 0) {
-            getEffectList().getAllEffects()
+            getEffectList().getAllEffects().stream()
                     .filter(Objects::nonNull)
                     .filter(effect -> effect.getEffectType() == EffectType.Transformation)
                     .filter(e -> e.calc() != 0)
@@ -7902,61 +7904,60 @@ public final class Player extends Playable implements PlayerGroup {
                     .map(Effect::getSkill)
                     .findFirst().ifPresent(this::preparateToTransform);
 
-            if (!_transformationSkills.isEmpty()) {
-                for (Skill s : _transformationSkills.values()) {
-                    if (!s.isCommon && !SkillAcquireHolder.isSkillPossible(this, s) && !s.isHeroic) {
+            if (!transformationSkills.isEmpty()) {
+                for (Skill s : transformationSkills.values()) {
+                    if (!s.common && !SkillAcquireHolder.isSkillPossible(this, s) && !s.isHeroic) {
                         super.removeSkill(s);
                     }
                 }
-                _transformationSkills.clear();
+                transformationSkills.clear();
             }
         } else {
-            int _id = 0;
-            int _level = 1;
-            switch (getBaseClassId()) {
+            int id = 0;
+            switch (baseClass) {
                 case 97:// Cardinal
-                    _id = 24001;
+                    id = 24001;
                     break;
                 case 98:// Hierophant
-                    _id = 24002;
+                    id = 24002;
                     break;
                 case 100:// SwordMuse
-                    _id = 24003;
+                    id = 24003;
                     break;
                 case 105:// EvaSaint
-                    _id = 24004;
+                    id = 24004;
                     break;
                 case 107:// SpectralDancer
-                    _id = 24005;
+                    id = 24005;
                     break;
                 case 112:// ShillienSaint
-                    _id = 24006;
+                    id = 24006;
                     break;
                 case 115:// Dominator
-                    _id = 24007;
+                    id = 24007;
                     break;
                 case 116:// Doomcryer
-                    _id = 24008;
+                    id = 24008;
                     break;
             }
 
-            Skill _skill = SkillTable.INSTANCE.getInfo(_id, _level);
-            if (_skill != null) {
-                super.removeSkill(_skill);
-                removeSkillFromShortCut(_skill.id);
+            Skill skill = SkillTable.INSTANCE.getInfo(id, 1);
+            if (skill != null) {
+                super.removeSkill(skill);
+                removeSkillFromShortCut(skill.id);
             }
 
-            if (!isCursedWeaponEquipped()) getEffectList().getAllEffects()
+            if (!isCursedWeaponEquipped()) getEffectList().getAllEffects().stream()
                     .filter(effect -> effect.getEffectType() == EffectType.Transformation)
                     .findFirst().ifPresent(effect -> {
                         if ((effect.getSkill() instanceof Transformation) && ((Transformation) effect.getSkill()).isDisguise) {
                             for (Skill s : getAllSkills())
                                 if ((s != null) && (s.isActive() || s.isToggle()))
-                                    _transformationSkills.put(s.id, s);
+                                    transformationSkills.put(s.id, s);
                         } else for (AddedSkill s : effect.getSkill().getAddedSkills())
                             if (s.level == 0) {
                                 if (getSkillLevel(s.id) > 0)
-                                    _transformationSkills.put(s.id, SkillTable.INSTANCE.getInfo(s.id, getSkillLevel(s.id)));
+                                    transformationSkills.put(s.id, SkillTable.INSTANCE.getInfo(s.id, getSkillLevel(s.id)));
                             } else if (s.level == -2) {// XXX: wild heartburn for skills depending on the player's level
                                 int learnLevel = Math.max(effect.getSkill().magicLevel, 40);
                                 int maxLevel = SkillTable.INSTANCE.getBaseLevel(s.id);
@@ -7964,8 +7965,8 @@ public final class Player extends Playable implements PlayerGroup {
                                 if (maxLevel > 3) curSkillLevel += getLevel() - learnLevel;
                                 else curSkillLevel += (getLevel() - learnLevel) / ((76 - learnLevel) / maxLevel);
                                 curSkillLevel = Math.min(Math.max(curSkillLevel, 1), maxLevel);
-                                _transformationSkills.put(s.id, SkillTable.INSTANCE.getInfo(s.id, curSkillLevel));
-                            } else _transformationSkills.put(s.id, s.getSkill());
+                                transformationSkills.put(s.id, SkillTable.INSTANCE.getInfo(s.id, curSkillLevel));
+                            } else transformationSkills.put(s.id, s.getSkill());
                         preparateToTransform(effect.getSkill());
 
                     });
@@ -7974,19 +7975,19 @@ public final class Player extends Playable implements PlayerGroup {
             }
 
             if (!isInOlympiadMode() && !isCursedWeaponEquipped() && hero && (getBaseClassId() == getActiveClassId())) {
-                _transformationSkills.put(395, SkillTable.INSTANCE.getInfo(395));
-                _transformationSkills.put(396, SkillTable.INSTANCE.getInfo(396));
-                _transformationSkills.put(1374, SkillTable.INSTANCE.getInfo(1374));
-                _transformationSkills.put(1375, SkillTable.INSTANCE.getInfo(1375));
-                _transformationSkills.put(1376, SkillTable.INSTANCE.getInfo(1376));
+                transformationSkills.put(395, SkillTable.INSTANCE.getInfo(395));
+                transformationSkills.put(396, SkillTable.INSTANCE.getInfo(396));
+                transformationSkills.put(1374, SkillTable.INSTANCE.getInfo(1374));
+                transformationSkills.put(1375, SkillTable.INSTANCE.getInfo(1375));
+                transformationSkills.put(1376, SkillTable.INSTANCE.getInfo(1376));
             }
 
-            for (Skill s : _transformationSkills.values()) {
+            for (Skill s : transformationSkills.values()) {
                 addSkill(s, false);
             }
         }
 
-        _transformationId = transformationId;
+        this.transformationId = transformationId;
 
         sendPacket(new ExBasicActionList(this));
         sendPacket(new SkillList(this));
@@ -8015,7 +8016,7 @@ public final class Player extends Playable implements PlayerGroup {
 
     @Override
     public final Collection<Skill> getAllSkills() {
-        if (_transformationId == 0) {
+        if (transformationId == 0) {
             return super.getAllSkills();
         }
 
@@ -8025,7 +8026,7 @@ public final class Player extends Playable implements PlayerGroup {
                 tempSkills.put(s.id, s);
             }
         }
-        tempSkills.putAll(_transformationSkills);
+        tempSkills.putAll(transformationSkills);
         return tempSkills.values();
     }
 
@@ -8679,14 +8680,14 @@ public final class Player extends Playable implements PlayerGroup {
     }
 
     public int getTalismanCount() {
-        return (int) calcStat(Stats.TALISMANS_LIMIT, 0, null, null);
+        return (int) calcStat(Stats.TALISMANS_LIMIT, 0);
     }
 
     public boolean getOpenCloak() {
         if (Config.ALT_OPEN_CLOAK_SLOT || isGM()) {
             return true;
         }
-        return (int) calcStat(Stats.CLOAK_SLOT, 0, null, null) > 0;
+        return (int) calcStat(Stats.CLOAK_SLOT, 0) > 0;
     }
 
     public final void disableDrop(int time) {
@@ -8701,12 +8702,12 @@ public final class Player extends Playable implements PlayerGroup {
         return _petControlItem;
     }
 
-    private void setPetControlItem(int itemObjId) {
-        setPetControlItem(getInventory().getItemByObjectId(itemObjId));
-    }
-
     public void setPetControlItem(ItemInstance item) {
         _petControlItem = item;
+    }
+
+    private void setPetControlItem(int itemObjId) {
+        setPetControlItem(getInventory().getItemByObjectId(itemObjId));
     }
 
     public boolean isActive() {
@@ -8954,7 +8955,7 @@ public final class Player extends Playable implements PlayerGroup {
         return friendList;
     }
 
-    public void setNotShowTraders(boolean notShowTraders) {
+    public void setNotShowTraders() {
     }
 
     public boolean isDebug() {
@@ -9099,7 +9100,7 @@ public final class Player extends Playable implements PlayerGroup {
     }
 
     public Map<Integer, String> getPostFriends() {
-        return _postFriends;
+        return postFriends;
     }
 
     public boolean isSharedGroupDisabled(int groupId) {
@@ -9214,8 +9215,8 @@ public final class Player extends Playable implements PlayerGroup {
     }
 
     public void dispelBuffs() {
-        getEffectList().getAllEffects()
-                .filter(e -> !e.getSkill().isOffensive())
+        getEffectList().getAllEffects().stream()
+                .filter(e -> !e.getSkill().isOffensive)
                 .filter(e -> !e.getSkill().isNewbie)
                 .filter(Effect::isCancelable)
                 .filter(e -> !e.getSkill().isPreservedOnDeath)
@@ -9224,8 +9225,8 @@ public final class Player extends Playable implements PlayerGroup {
 
 
         if (getPet() != null) {
-            getPet().getEffectList().getAllEffects()
-                    .filter(e -> !e.getSkill().isOffensive())
+            getPet().getEffectList().getAllEffects().stream()
+                    .filter(e -> !e.getSkill().isOffensive)
                     .filter(e -> !e.getSkill().isNewbie)
                     .filter(Effect::isCancelable)
                     .filter(e -> !e.getSkill().isPreservedOnDeath)
@@ -9615,7 +9616,7 @@ public final class Player extends Playable implements PlayerGroup {
 
         skillReuses.remove(oldSkillReuseHashCode);
 
-        if (timeStamp.getEndTime() <= 0 || timeStamp.getEndTime() < System.currentTimeMillis())
+        if (timeStamp.endTime() <= 0 || timeStamp.endTime() < System.currentTimeMillis())
             return;
 
         skillReuses.put(newSkillReuseHashCode, timeStamp);

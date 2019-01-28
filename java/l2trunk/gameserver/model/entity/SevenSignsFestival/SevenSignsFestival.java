@@ -348,7 +348,7 @@ public enum SevenSignsFestival {
     }
 
     /**
-     * Returns a stats set containing the highest score <b>this cycle</b> for the
+     * Returns a stats set containing the highest score <buffPrice>this cycle</buffPrice> for the
      * the specified cabal and associated festival ID.
      */
     public StatsSet getHighestScoreData(int oracle, int festivalId) {
@@ -402,7 +402,7 @@ public enum SevenSignsFestival {
 
     /**
      * Set the final score details for the last participants of the specified festival data.
-     * Returns <b>true</b> if the score is higher than that previously recorded <b>this cycle</b>.
+     * Returns <buffPrice>true</buffPrice> if the score is higher than that previously recorded <buffPrice>this cycle</buffPrice>.
      *
      * @return boolean isHighestScore
      */

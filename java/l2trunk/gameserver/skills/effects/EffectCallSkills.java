@@ -21,9 +21,9 @@ public final class EffectCallSkills extends Effect {
 
         for (int i = 0; i < skillIds.size(); i++) {
             Skill skill = SkillTable.INSTANCE.getInfo(skillIds.get(i), skillLevels.get(i));
-            skill.getTargets(getEffector(), getEffected(), false).forEach(cha ->
-                    getEffector().broadcastPacket(new MagicSkillUse(getEffector(), cha, skill)));
-            getEffector().callSkill(skill, skill.getTargets(getEffector(), getEffected(), false), false);
+            skill.getTargets(effector, effected, false).forEach(cha ->
+                    effector.broadcastPacket(new MagicSkillUse(effector, cha, skill)));
+            effector.callSkill(skill, skill.getTargets(effector, effected, false), false);
         }
     }
 

@@ -9,13 +9,12 @@ import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.stats.Formulas;
 import l2trunk.gameserver.stats.Stats;
-import l2trunk.gameserver.stats.funcs.FuncTemplate;
 
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class NegateStats extends Skill {
+public final class NegateStats extends Skill {
     private final List<Stats> negateStats;
     private final boolean negateOffensive;
     private final int negateCount;
@@ -37,14 +36,14 @@ public class NegateStats extends Skill {
     public void useSkill(Creature activeChar, List<Creature> targets) {
         for (Creature target : targets)
             if (target != null) {
-                if (!negateOffensive && !Formulas.calcSkillSuccess(activeChar, target, this, activateRate())) {
+                if (!negateOffensive && !Formulas.calcSkillSuccess(activeChar, target, this, getActivateRate())) {
                     activeChar.sendPacket(new SystemMessage2(SystemMsg.C1_HAS_RESISTED_YOUR_S2).addString(target.getName()).addSkillName(id, level));
                     continue;
                 }
 
                 int count = 0;
                 for (Stats stat : negateStats)
-                    for (Effect e : target.getEffectList().getAllEffects().collect(Collectors.toList())) {
+                    for (Effect e : target.getEffectList().getAllEffects()) {
                         Skill skill = e.getSkill();
                         // Если у бафа выше уровень чем у скилла Cancel, то есть шанс, что этот баф не снимется
                         if (!skill.isOffensive && skill.magicLevel > magicLevel && Rnd.chance(skill.magicLevel - magicLevel)) {
@@ -60,7 +59,7 @@ public class NegateStats extends Skill {
                             break;
                     }
 
-                getEffects(activeChar, target, activateRate() > 0, false);
+                getEffects(activeChar, target, getActivateRate() > 0, false);
             }
 
         if (isSSPossible())
@@ -68,13 +67,10 @@ public class NegateStats extends Skill {
     }
 
     private boolean containsStat(Effect e, Stats stat) {
-        for (FuncTemplate ft : e.getTemplate().getAttachedFuncs())
-            if (ft.stat == stat)
-                return true;
-        return false;
+        return e.getTemplate().getAttachedFuncs().stream()
+                .anyMatch(ft -> ft.stat == stat);
     }
 
-    @Override
     public boolean isOffensive() {
         return !negateOffensive;
     }

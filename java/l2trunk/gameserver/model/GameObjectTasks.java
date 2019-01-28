@@ -434,7 +434,7 @@ public final class GameObjectTasks {
     }
 
     /**
-     * Task of Checking Skill Cast Landing
+     * Task of Checking Skill cast Landing
      **/
     public static class MagicGeoCheckTask extends RunnableImpl {
         private final HardReference<? extends Creature> charRef;

@@ -303,20 +303,20 @@ public final class SkillAcquireHolder {
 
             NORMAL_SKILL_TREE.put(classId.getId(), temp);
 
-            ClassId secondparent = classId.getParent(1);
-            if (secondparent == classId.getParent(0))
+            ClassId secondparent = classId.getParent();
+            if (secondparent == classId.getParent())
                 secondparent = null;
 
-            classId = classId.getParent(0);
+            classId = classId.getParent();
 
             while (classId != null) {
                 List<SkillLearn> parentList = NORMAL_SKILL_TREE.get(classId.getId());
                 temp.addAll(parentList);
 
-                classId = classId.getParent(0);
+                classId = classId.getParent();
                 if (classId == null && secondparent != null) {
                     classId = secondparent;
-                    secondparent = secondparent.getParent(1);
+                    secondparent = secondparent.getParent();
                 }
             }
         }

@@ -1160,7 +1160,7 @@ public enum SevenSigns {
             if (SevenSigns.INSTANCE.getCurrentPeriod() == SevenSigns.PERIOD_SEAL_VALIDATION)
                 mode = SevenSigns.INSTANCE.getCabalHighestScore();
             int m = mode;
-            getListeners().filter(l -> l instanceof OnSSPeriodListener)
+            getListeners().stream().filter(l -> l instanceof OnSSPeriodListener)
                     .map(l -> (OnSSPeriodListener) l)
                     .forEach(l -> l.onPeriodChange(m));
         }

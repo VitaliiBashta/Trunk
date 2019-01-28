@@ -93,7 +93,7 @@ public final class PlayerAI extends PlayableAI {
         Player actor = getActor();
 
         FlagItemAttachment attachment = actor.getActiveWeaponFlagAttachment();
-        if (attachment != null && !attachment.canCast(actor, _skill)) {
+        if (attachment != null && !attachment.canCast(actor, skill)) {
             setIntention(AI_INTENTION_ACTIVE);
             actor.sendActionFailed();
             return;
@@ -160,10 +160,10 @@ public final class PlayerAI extends PlayableAI {
     }
 
     @Override
-    public void Cast(Skill skill, Creature target, boolean forceUse, boolean dontMove) {
+    public void cast(Skill skill, Creature target, boolean forceUse, boolean dontMove) {
         Player actor = getActor();
 
-        if (!skill.isAltUse && !skill.isToggle() && !(skill.skillType == SkillType.CRAFT && Config.ALLOW_TALK_WHILE_SITTING))
+        if (!skill.altUse() && !skill.isToggle() && !(skill.skillType == SkillType.CRAFT && Config.ALLOW_TALK_WHILE_SITTING))
             // Если в этот момент встаем, то использовать скилл когда встанем
             if (actor.getSittingTask()) {
                 setNextAction(nextAction.CAST, skill, target, forceUse, dontMove);
@@ -200,7 +200,7 @@ public final class PlayerAI extends PlayableAI {
         // setBlock the player for 10 minutes to summon a pet after the resurrection.
         //actor.setPetSummonBlockedTime(System.currentTimeMillis() + 600 * 1000);
 
-        super.Cast(skill, target, forceUse, dontMove);
+        super.cast(skill, target, forceUse, dontMove);
     }
 
     @Override

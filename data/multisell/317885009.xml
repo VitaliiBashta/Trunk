@@ -38,7 +38,7 @@
 		<production id="228" count="1" />
 	</item>
 
-	<!-- Kris b -->
+	<!-- Kris buffPrice -->
 	<item>
 		<ingredient id="9814" count="772" />
 		<ingredient id="9815" count="232" />
@@ -48,7 +48,7 @@
 		<production id="229" count="1" />
 	</item>
 
-	<!-- Demon's Dagger b -->
+	<!-- Demon's Dagger buffPrice -->
 	<item>
 		<ingredient id="9814" count="1236" />
 		<ingredient id="9815" count="372" />

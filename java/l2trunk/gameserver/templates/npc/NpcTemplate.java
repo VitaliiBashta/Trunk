@@ -43,14 +43,14 @@ public final class NpcTemplate extends CharTemplate {
     private Faction faction = Faction.NONE;
     private int race = 0;
     private Map<RewardType, RewardList> _rewards = Collections.emptyMap();
-    private List<MinionData> _minions = Collections.emptyList();
-    private List<AbsorbInfo> absorbInfo = Collections.emptyList();
+    private List<MinionData> minions = new ArrayList<>();
+    private List<AbsorbInfo> absorbInfo = new ArrayList<>();
     private List<ClassId> teachInfo = new ArrayList<>();
-    private List<Skill> _damageSkills = new ArrayList<>();
-    private List<Skill> _dotSkills = new ArrayList<>();
+    private List<Skill> damageSkills = new ArrayList<>();
+    private List<Skill> dotSkills = new ArrayList<>();
     private List<Skill> debuffSkills = new ArrayList<>();
-    private List<Skill> _buffSkills = new ArrayList<>();
-    private List<Skill> _stunSkills = new ArrayList<>();
+    private List<Skill> buffSkills = new ArrayList<>();
+    private List<Skill> stunSkills = new ArrayList<>();
     private List<Skill> healSkills = new ArrayList<>();
 //    private Constructor<? extends NpcInstance> constructor;
 
@@ -140,10 +140,7 @@ public final class NpcTemplate extends CharTemplate {
     }
 
     public void addMinion(MinionData minion) {
-        if (_minions.isEmpty())
-            _minions = new ArrayList<>(1);
-
-        _minions.add(minion);
+        minions.add(minion);
     }
 
     public Faction getFaction() {
@@ -174,20 +171,20 @@ public final class NpcTemplate extends CharTemplate {
                     for (EffectTemplate eff : skill.getEffectTemplates())
                         switch (eff.getEffectType()) {
                             case Stun:
-                                _stunSkills.add(skill);
+                                stunSkills.add(skill);
                                 added = true;
                                 break;
                             case DamOverTime:
                             case DamOverTimeLethal:
                             case ManaDamOverTime:
                             case LDManaDamOverTime:
-                                _dotSkills.add(skill);
+                                dotSkills.add(skill);
                                 added = true;
                                 break;
                         }
 
                 if (!added)
-                    _damageSkills.add(skill);
+                    damageSkills.add(skill);
 
                 break;
             }
@@ -195,7 +192,7 @@ public final class NpcTemplate extends CharTemplate {
             case MDOT:
             case POISON:
             case BLEED:
-                _dotSkills.add(skill);
+                dotSkills.add(skill);
                 break;
             case DEBUFF:
             case SLEEP:
@@ -207,10 +204,10 @@ public final class NpcTemplate extends CharTemplate {
                 debuffSkills.add(skill);
                 break;
             case BUFF:
-                _buffSkills.add(skill);
+                buffSkills.add(skill);
                 break;
             case STUN:
-                _stunSkills.add(skill);
+                stunSkills.add(skill);
                 break;
             case HEAL:
             case HEAL_PERCENT:
@@ -223,11 +220,11 @@ public final class NpcTemplate extends CharTemplate {
     }
 
     public List<Skill> getDamageSkills() {
-        return _damageSkills;
+        return damageSkills;
     }
 
     public List<Skill> getDotSkills() {
-        return _dotSkills;
+        return dotSkills;
     }
 
     public List<Skill> getDebuffSkills() {
@@ -235,11 +232,11 @@ public final class NpcTemplate extends CharTemplate {
     }
 
     public List<Skill> getBuffSkills() {
-        return _buffSkills;
+        return buffSkills;
     }
 
     public List<Skill> getStunSkills() {
-        return _stunSkills;
+        return stunSkills;
     }
 
     public List<Skill> getHealSkills() {
@@ -247,7 +244,7 @@ public final class NpcTemplate extends CharTemplate {
     }
 
     public List<MinionData> getMinionData() {
-        return _minions;
+        return minions;
     }
 
     public Map<Integer, Skill> getSkills() {

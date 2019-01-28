@@ -6,6 +6,7 @@ import l2trunk.gameserver.stats.triggers.TriggerInfo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class StatTemplate {
@@ -32,10 +33,11 @@ public class StatTemplate {
         return funcTemplates;
     }
 
-    public Stream<Func> getStatFuncs(Object owner) {
+    public List<Func> getStatFuncs(Object owner) {
         funcTemplates.forEach(a -> a.getFunc(owner));
 
         return funcTemplates.stream()
-                .map(ft -> ft.getFunc(owner));
+                .map(ft -> ft.getFunc(owner))
+                .collect(Collectors.toList());
     }
 }

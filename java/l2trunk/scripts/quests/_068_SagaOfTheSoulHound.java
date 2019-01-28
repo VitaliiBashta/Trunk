@@ -1,7 +1,6 @@
 package l2trunk.scripts.quests;
 
 import l2trunk.gameserver.model.Player;
-import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Location;
 
 import java.util.List;
@@ -43,11 +42,11 @@ public final class _068_SagaOfTheSoulHound extends SagasSuperclass {
 
     @Override
     protected int getClassId(Player player) {
-        return player.getSex() == 1 ? 133 : 132;
+        return player.isMale()  ? 133 : 132;
     }
 
     @Override
     protected int getPrevClass(Player player) {
-        return player.getSex() == 1 ? 129 : 128;
+        return player.isMale()  ? 129 : 128;
     }
 }

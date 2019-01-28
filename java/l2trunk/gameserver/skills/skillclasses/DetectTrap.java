@@ -20,7 +20,7 @@ public final class DetectTrap extends Skill {
         activeChar.getAroundCharacters(skillRadius, 300)
                 .filter(GameObject::isTrap)
                 .map(target -> (TrapInstance) target)
-                .filter(trap -> trap.getLevel() <= getPower())
+                .filter(trap -> trap.getLevel() <= power)
                 .forEach(trap -> {
                     trap.setDetected(true);
                     World.getAroundPlayers(trap)

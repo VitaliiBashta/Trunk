@@ -18,7 +18,7 @@ public final class Tears extends DefaultAI {
     private static final int Water_Dragon_Scale = 2369;
     private static final int Tears_Copy = 25535;
     private final int Invincible = 5420;
-    private final int Freezing = 5238;
+    private static final int Freezing = 5238;
     private final List<NpcInstance> spawns = new ArrayList<>();
     private ScheduledFuture<?> spawnTask;
     private ScheduledFuture<?> despawnTask;

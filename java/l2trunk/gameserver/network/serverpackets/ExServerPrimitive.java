@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  * A packet used to draw points and lines on client.<br/>
- * <b>Note:</b> Names in points and lines are bugged they will appear even when not looking at them.
+ * <buffPrice>Note:</buffPrice> Names in points and lines are bugged they will appear even when not looking at them.
  */
 public class ExServerPrimitive extends L2GameServerPacket {
     private final String _name;

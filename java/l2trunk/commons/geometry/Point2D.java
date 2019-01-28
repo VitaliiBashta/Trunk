@@ -1,7 +1,6 @@
 package l2trunk.commons.geometry;
 
 public class Point2D implements Cloneable {
-    public static final Point2D[] EMPTY_ARRAY = new Point2D[0];
     public int x;
     public int y;
 

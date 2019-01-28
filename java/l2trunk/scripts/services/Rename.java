@@ -387,7 +387,7 @@ public final class Rename extends Functions {
 
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement offline = con.prepareStatement("UPDATE characters SET sex = ? WHERE obj_Id = ?")) {
-            offline.setInt(1, player.getSex() == 1 ? 0 : 1);
+            offline.setInt(1, player.isMale()  ? 1 : 0);
             offline.setInt(2, player.getObjectId());
             offline.executeUpdate();
         } catch (SQLException e) {
@@ -401,7 +401,7 @@ public final class Rename extends Functions {
         player.setFace(0);
         removeItem(player, Config.SERVICES_CHANGE_SEX_ITEM, Config.SERVICES_CHANGE_SEX_PRICE, "Rename$changeSex");
         player.logout();
-        Log.add("Character " + player + " sex changed to " + (player.getSex() == 1 ? "male" : "female"), "renames");
+        Log.add("Character " + player + " sex changed to " + (player.isMale() ? "male" : "female"), "renames");
     }
 
     public void rename_clan_page() {

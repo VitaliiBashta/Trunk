@@ -51,7 +51,7 @@ public enum StatsLogger {
         final double elementMod;
 
         private SkillStat(Skill skill, Player attacker, Player defender, double base, double finalChance, double statMod, double mAtkMod, double deltaMod, double debuffMod, double resMod, double elementMod) {
-            skillName = skill.name();
+            skillName = skill.name;
             skillId = skill.id;
             attackerLevel = attacker.getLevel();
             defenderLevel = defender.getLevel();

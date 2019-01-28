@@ -61,7 +61,7 @@ public final class RequestPetUseItem extends L2GameClientPacket {
             for (Skill skill : skills) {
                 Creature aimingTarget = skill.getAimingTarget(pet, pet.getTarget());
                 if (skill.checkCondition(pet, aimingTarget, false, false, true))
-                    pet.getAI().Cast(skill, aimingTarget, false, false);
+                    pet.getAI().cast(skill, aimingTarget, false, false);
             }
             return;
         }

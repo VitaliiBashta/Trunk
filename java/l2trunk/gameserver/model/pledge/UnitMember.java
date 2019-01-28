@@ -14,29 +14,29 @@ public final class UnitMember {
     private static final Logger _log = LoggerFactory.getLogger(UnitMember.class);
     private final int objectId;
     private Player player;
-    private Clan _clan;
-    private String _name;
-    private String _title;
-    private int _level;
-    private int _classId;
-    private int _sex;
-    private int _pledgeType;
-    private int _powerGrade;
-    private int _apprentice;
+    private Clan clan;
+    private String name;
+    private String title;
+    private int level;
+    private int classId;
+    private int sex;
+    private int pledgeType;
+    private int powerGrade;
+    private int apprentice;
 
     private int leaderOf = Clan.SUBUNIT_NONE;
 
     public UnitMember(Clan clan, String name, String title, int level, int classId, int objectId, int pledgeType, int powerGrade, int apprentice, int sex, int leaderOf) {
-        _clan = clan;
+        this.clan = clan;
         this.objectId = objectId;
-        _name = name;
-        _title = title;
-        _level = level;
-        _classId = classId;
-        _pledgeType = pledgeType;
-        _powerGrade = powerGrade;
-        _apprentice = apprentice;
-        _sex = sex;
+        this.name = name;
+        this.title = title;
+        this.level = level;
+        this.classId = classId;
+        this.pledgeType = pledgeType;
+        this.powerGrade = powerGrade;
+        this.apprentice = apprentice;
+        this.sex = sex;
         this.leaderOf = leaderOf;
 
         if (powerGrade != 0) {
@@ -55,15 +55,15 @@ public final class UnitMember {
         if (player == null)
             return;
 
-        _clan = player.getClan();
-        _name = player.getName();
-        _title = player.getTitle();
-        _level = player.getLevel();
-        _classId = player.getClassId().getId();
-        _pledgeType = player.getPledgeType();
-        _powerGrade = player.getPowerGrade();
-        _apprentice = player.getApprentice();
-        _sex = player.getSex();
+        clan = player.getClan();
+        name = player.getName();
+        title = player.getTitle();
+        level = player.getLevel();
+        classId = player.getClassId().getId();
+        pledgeType = player.getPledgeType();
+        powerGrade = player.getPowerGrade();
+        apprentice = player.getApprentice();
+        sex = player.isMale()? 0:1;
     }
 
     public Player getPlayer() {
@@ -75,28 +75,23 @@ public final class UnitMember {
     }
 
     public Clan getClan() {
-        Player player = getPlayer();
-        return player == null ? _clan : player.getClan();
+        return player == null ? clan : player.getClan();
     }
 
     public int getClassId() {
-        Player player = getPlayer();
-        return player == null ? _classId : player.getClassId().getId();
+        return player == null ? classId : player.getClassId().getId();
     }
 
     public int getSex() {
-        Player player = getPlayer();
-        return player == null ? _sex : player.getSex();
+        return player == null ? sex : player.isMale()? 0:1;
     }
 
     public int getLevel() {
-        Player player = getPlayer();
-        return player == null ? _level : player.getLevel();
+        return player == null ? level : player.getLevel();
     }
 
     public String getName() {
-        Player player = getPlayer();
-        return player == null ? _name : player.getName();
+        return player == null ? name : player.getName();
     }
 
     public int getObjectId() {
@@ -104,13 +99,11 @@ public final class UnitMember {
     }
 
     public String getTitle() {
-        Player player = getPlayer();
-        return player == null ? _title : player.getTitle();
+        return player == null ? title : player.getTitle();
     }
 
     public void setTitle(String title) {
-        Player player = getPlayer();
-        _title = title;
+        this.title = title;
         if (player != null) {
             player.setTitle(title);
             player.broadcastPacket(new NickNameChanged(player));
@@ -127,17 +120,16 @@ public final class UnitMember {
     }
 
     public SubUnit getSubUnit() {
-        return _clan.getSubUnit(_pledgeType);
+        return clan.getSubUnit(pledgeType);
     }
 
     public int getPledgeType() {
-        Player player = getPlayer();
-        return player == null ? _pledgeType : player.getPledgeType();
+        return player == null ? pledgeType : player.getPledgeType();
     }
 
     public void setPledgeType(int pledgeType) {
         Player player = getPlayer();
-        _pledgeType = pledgeType;
+        this.pledgeType = pledgeType;
         if (player != null)
             player.setPledgeType(pledgeType);
         else
@@ -147,7 +139,7 @@ public final class UnitMember {
     private void updatePledgeType() {
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement("UPDATE characters SET pledge_type=? WHERE obj_Id=?")) {
-            statement.setInt(1, _pledgeType);
+            statement.setInt(1, pledgeType);
             statement.setInt(2, getObjectId());
             statement.execute();
         } catch (SQLException e) {
@@ -156,14 +148,12 @@ public final class UnitMember {
     }
 
     public int getPowerGrade() {
-        Player player = getPlayer();
-        return player == null ? _powerGrade : player.getPowerGrade();
+        return player == null ? powerGrade : player.getPowerGrade();
     }
 
     public void setPowerGrade(int newPowerGrade) {
-        Player player = getPlayer();
         int oldPowerGrade = getPowerGrade();
-        _powerGrade = newPowerGrade;
+        powerGrade = newPowerGrade;
         if (player != null)
             player.setPowerGrade(newPowerGrade);
         else
@@ -185,7 +175,7 @@ public final class UnitMember {
     private void updatePowerGrade() {
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement("UPDATE characters SET pledge_rank=? WHERE obj_Id=?")) {
-            statement.setInt(1, _powerGrade);
+            statement.setInt(1, powerGrade);
             statement.setInt(2, getObjectId());
             statement.execute();
         } catch (SQLException e) {
@@ -194,13 +184,11 @@ public final class UnitMember {
     }
 
     private int getApprentice() {
-        Player player = getPlayer();
-        return player == null ? _apprentice : player.getApprentice();
+        return player == null ? apprentice : player.getApprentice();
     }
 
     public void setApprentice(int apprentice) {
-        Player player = getPlayer();
-        _apprentice = apprentice;
+        this.apprentice = apprentice;
         if (player != null)
             player.setApprentice(apprentice);
         else
@@ -210,7 +198,7 @@ public final class UnitMember {
     private void updateApprentice() {
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement("UPDATE characters SET apprentice=? WHERE obj_Id=?")) {
-            statement.setInt(1, _apprentice);
+            statement.setInt(1, apprentice);
             statement.setInt(2, getObjectId());
             statement.execute();
         } catch (SQLException e) {

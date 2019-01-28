@@ -12,18 +12,17 @@ import l2trunk.gameserver.scripts.Events;
 import l2trunk.gameserver.templates.StaticObjectTemplate;
 import l2trunk.gameserver.utils.Location;
 
-import java.util.Collections;
 import java.util.List;
 
 public final class StaticObjectInstance extends GameObject {
     private final HardReference<StaticObjectInstance> reference;
-    private final StaticObjectTemplate _template;
+    private final StaticObjectTemplate template;
     private int _meshIndex;
 
     public StaticObjectInstance(int objectId, StaticObjectTemplate template) {
         super(objectId);
 
-        _template = template;
+        this.template = template;
         reference = new L2Reference<>(this);
     }
 
@@ -33,11 +32,11 @@ public final class StaticObjectInstance extends GameObject {
     }
 
     public int getUId() {
-        return _template.getUId();
+        return template.uid;
     }
 
     public int getType() {
-        return _template.getType();
+        return template.type;
     }
 
     @Override
@@ -60,18 +59,17 @@ public final class StaticObjectInstance extends GameObject {
             return;
         }
 
-        if (_template.getType() == 0) // Arena Board
+        if (template.type == 0) // Arena Board
             player.sendPacket(new NpcHtmlMessage(player, getUId(), "newspaper/arena.htm", 0));
-        else if (_template.getType() == 2) // Village map
-        {
-            player.sendPacket(new ShowTownMap(_template.getFilePath(), _template.getMapX(), _template.getMapY()));
+        else if (template.type == 2){ // Village map
+            player.sendPacket(new ShowTownMap(template.filePath, template.mapX, template.mapY));
             player.sendActionFailed();
         }
     }
 
     @Override
     public List<L2GameServerPacket> addPacketList(Player forPlayer, Creature dropper) {
-        return Collections.<L2GameServerPacket>singletonList(new StaticObject(this));
+        return List.of(new StaticObject(this));
     }
 
     @Override
@@ -86,8 +84,7 @@ public final class StaticObjectInstance extends GameObject {
     }
 
     @Override
-    public int getGeoZ(Location loc)   //FIXME [VISTALL] нужно ли?
-    {
+    public int getGeoZ(Location loc) {  //FIXME [VISTALL] нужно ли?
         return loc.z;
     }
 

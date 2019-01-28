@@ -12,16 +12,16 @@ public final class EffectBluff extends Effect {
 
     @Override
     public boolean checkCondition() {
-        if (getEffected().isNpc() && !getEffected().isMonster())
+        if (effected.isNpc() && !effected.isMonster())
             return false;
         return super.checkCondition();
     }
 
     @Override
     public void onStart() {
-        getEffected().broadcastPacket(new StartRotating(getEffected(), getEffected().getHeading(), 1, 65535));
-        getEffected().broadcastPacket(new FinishRotating(getEffected(), getEffector().getHeading(), 65535));
-        getEffected().setHeading(getEffector().getHeading());
+        effected.broadcastPacket(new StartRotating(effected, effected.getHeading(), 1, 65535));
+        effected.broadcastPacket(new FinishRotating(effected, effector.getHeading(), 65535));
+        effected.setHeading(effector.getHeading());
     }
 
     @Override

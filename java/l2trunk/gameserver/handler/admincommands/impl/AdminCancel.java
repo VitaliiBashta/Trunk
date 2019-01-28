@@ -20,7 +20,7 @@ public class AdminCancel implements IAdminCommandHandler {
                 break;
             case admin_cleanse:
                 Creature target = activeChar.getTarget() != null && activeChar.getTarget().isPlayable() ? (Creature) activeChar.getTarget() : activeChar;
-                target.getEffectList().getAllEffects()
+                target.getEffectList().getAllEffects().stream()
                         .filter(Effect::isOffensive)
                         .filter(Effect::isCancelable)
                         .forEach(Effect::exit);

@@ -67,8 +67,8 @@ public final class Dominion extends Residence {
         if (owner != null) {
             for (int dominionId : flags) {
                 Dominion dominion = ResidenceHolder.getResidence(Dominion.class, dominionId);
-                for (Skill skill : dominion.getSkills())
-                    owner.removeSkill(skill.id);
+                dominion.getSkills().forEach(skill ->
+                    owner.removeSkill(skill.id));
             }
         }
     }

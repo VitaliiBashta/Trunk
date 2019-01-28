@@ -1,6 +1,6 @@
 package l2trunk.gameserver.network.serverpackets;
 
-public class CharacterCreateSuccess extends L2GameServerPacket {
+public final class CharacterCreateSuccess extends L2GameServerPacket {
     public static final L2GameServerPacket STATIC = new CharacterCreateSuccess();
 
     @Override

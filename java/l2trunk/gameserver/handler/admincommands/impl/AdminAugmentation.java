@@ -187,9 +187,9 @@ public class AdminAugmentation implements IAdminCommandHandler {
 
         for (int i = Math.max((maxPage - _page < MAX_PAGES_PER_PAGE / 2 ? maxPage - MAX_PAGES_PER_PAGE : _page - MAX_PAGES_PER_PAGE / 2), 1); i <= maxPage; i++) {
             if (i == _page)
-                pagesHtm.append("<td background=L2UI_ct1.Button_DF_Calculator_Over><button action=\"\" value=\"" + i + "\" width=34 height=20 back=\"\" fore=\"\"></td>");
+                pagesHtm.append("<td background=L2UI_ct1.Button_DF_Calculator_Over><button action=\"\" value=\"").append(i).append("\" width=34 height=20 back=\"\" fore=\"\"></td>");
             else
-                pagesHtm.append("<td><button action=\"bypass -h admin_augmentation page " + i + "\" value=\"" + i + "\" width=34 height=20 back=L2UI_ct1.button_df fore=L2UI_ct1.button_df></td>");
+                pagesHtm.append("<td><button action=\"bypass -h admin_augmentation page ").append(i).append("\" value=\"").append(i).append("\" width=34 height=20 back=L2UI_ct1.button_df fore=L2UI_ct1.button_df></td>");
 
             count++;
             if (count >= MAX_PAGES_PER_PAGE)
@@ -214,14 +214,14 @@ public class AdminAugmentation implements IAdminCommandHandler {
 
             skill = (!augm.getTriggerList().isEmpty() ? augm.getTriggerList().get(0).getSkill() : (!augm.getSkills().isEmpty() ? augm.getSkills().get(0) : null));
 
-            augmentationsHtm.append("<table valign=top border=0 " + (lastColor ? "bgcolor=131210" : "") + ">");
+            augmentationsHtm.append("<table valign=top border=0 ").append(lastColor ? "bgcolor=131210" : "").append(">");
             augmentationsHtm.append("<tr>");
-            augmentationsHtm.append("<td valign=top align=center width=34 background=" + (skill != null ? skill.icon : "icon.skill5041") + "><button action=\"bypass -h admin_augmentation setaug " + augm.getId() + "\" width=32 height=32 back=\"L2UI_CT1.ItemWindow_DF_Frame_Down\" fore=\"L2UI_CT1.ItemWindow_DF_Frame\"></td>");
+            augmentationsHtm.append("<td valign=top align=center width=34 background=").append(skill != null ? skill.icon : "icon.skill5041").append("><button action=\"bypass -h admin_augmentation setaug ").append(augm.getId()).append("\" width=32 height=32 back=\"L2UI_CT1.ItemWindow_DF_Frame_Down\" fore=\"L2UI_CT1.ItemWindow_DF_Frame\"></td>");
             augmentationsHtm.append("<td width=8></td>");
             augmentationsHtm.append("<td width=220>");
             augmentationsHtm.append("<table cellspacing=-2 valign=top>");
             if (skill != null)
-                augmentationsHtm.append("<tr><td>" + (skill.name().length() > 28 ? skill.name().substring(0, 28) : skill.name()) + " <font color=a3a3a3>Lv</font> <font color=ae9978>" + skill.level + "</font> <font color=616161>(" + skill.id + ")</font></td></tr>");
+                augmentationsHtm.append("<tr><td>").append(skill.name.length() > 28 ? skill.name.substring(0, 28) : skill.name).append(" <font color=a3a3a3>Lv</font> <font color=ae9978>").append(skill.level).append("</font> <font color=616161>(").append(skill.id).append(")</font></td></tr>");
             else {
                 // Stats harcoded
                 augmentationsHtm.append("<tr><td width=100><font color=ae9978>+1</font> ");

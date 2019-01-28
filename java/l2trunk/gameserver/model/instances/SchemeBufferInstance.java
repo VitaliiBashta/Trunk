@@ -417,7 +417,7 @@ public final class SchemeBufferInstance extends NpcInstance {
                 availableBuffs.append("</table>");
                 availableBuffs.append("</td>");
                 availableBuffs.append("<td width=100 align=center>");
-                availableBuffs.append("<font name=CREDITTEXTSMALL>" + skill.name() + "</font>");
+                availableBuffs.append("<font name=CREDITTEXTSMALL>").append(skill.name).append("</font>");
                 availableBuffs.append("</td>");
                 availableBuffs.append("</tr>");
                 availableBuffs.append("</table>");
@@ -536,7 +536,7 @@ public final class SchemeBufferInstance extends NpcInstance {
                 continue;
 
             if (buff._buffType.equals(buffType)) {
-                String bName = SkillTable.INSTANCE.getInfo(buff._buffId, buff._buffLevel).name();
+                String bName = SkillTable.INSTANCE.getInfo(buff._buffId, buff._buffLevel).name;
                 bName = bName.replace(" ", "+");
                 availableBuffs.add(bName + "_" + buff._buffId + "_" + buff._buffLevel);
             }
@@ -1789,7 +1789,7 @@ public final class SchemeBufferInstance extends NpcInstance {
             _buffLevel = buffLevel;
             _forClass = forClass;
             _canUse = canUse;
-            _buffName = SkillTable.INSTANCE.getInfo(buffId, buffLevel).name();
+            _buffName = SkillTable.INSTANCE.getInfo(buffId, buffLevel).name;
         }
     }
 

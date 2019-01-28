@@ -113,7 +113,7 @@ public class AggroList {
             readLock.unlock();
         }
 
-        hated.sort(HateComparator.getInstance());
+        hated.sort(new HateComparator());
         if (hated.get(0).hate == 0)
             return Collections.emptyList();
 
@@ -132,7 +132,7 @@ public class AggroList {
         List<AggroInfo> hated = getAggroSortedInfos();
         if (hated == null) return null;
 
-        hated.sort(HateComparator.getInstance());
+        hated.sort(new HateComparator());
         if (hated.get(0).hate == 0)
             return null;
 
@@ -157,7 +157,7 @@ public class AggroList {
         hated = getAggroSortedInfos();
         if (hated == null) return null;
 
-        hated.sort(HateComparator.getInstance());
+        hated.sort(new HateComparator());
         if (hated.get(0).hate == 0)
             return null;
 
@@ -180,7 +180,7 @@ public class AggroList {
         if (randomHated.isEmpty())
             mostHated = null;
         else
-            mostHated = randomHated.get(Rnd.get(randomHated.size()));
+            mostHated = Rnd.get(randomHated);
 
         return mostHated;
     }
@@ -319,19 +319,9 @@ public class AggroList {
     }
 
     public static class HateComparator implements Comparator<DamageHate> {
-        private static final Comparator<DamageHate> instance = new HateComparator();
-
-        HateComparator() {
-        }
-
-        public static Comparator<DamageHate> getInstance() {
-            return instance;
-        }
-
         @Override
         public int compare(DamageHate o1, DamageHate o2) {
-            int diff = o2.hate - o1.hate;
-            return diff == 0 ? o2.damage - o1.damage : diff;
+            return o2.hate - o1.hate == 0 ? o2.damage - o1.damage : o2.hate - o1.hate;
         }
     }
 

@@ -31,7 +31,7 @@ public final class Charge extends Skill {
         Player player = (Player) activeChar;
 
         //Pebbles can juzat even if the charge is> 7, the rest only if the charge <skill level
-        if (getPower() <= 0 && id != 2165 && player.getIncreasedForce() >= charges) {
+        if (power <= 0 && id != 2165 && player.getIncreasedForce() >= charges) {
             activeChar.sendPacket(SystemMsg.YOUR_FORCE_HAS_REACHED_MAXIMUM_CAPACITY);
             return false;
         } else if (id == 2165)
@@ -56,7 +56,7 @@ public final class Charge extends Skill {
                     boolean reflected = t.checkReflectSkill(activeChar, this);
                     Creature realTarget = reflected ? activeChar : t;
 
-                    if (getPower() > 0) {// If == 0 then the skill "disabled"
+                    if (power > 0) {// If == 0 then the skill "disabled"
                         AttackInfo info = Formulas.calcPhysDam(activeChar, realTarget, this, false, false, ss, false);
 
                         if (info.lethal_dmg > 0)
@@ -67,7 +67,7 @@ public final class Charge extends Skill {
                             realTarget.doCounterAttack(this, activeChar, false);
                     }
 
-                    getEffects(activeChar, t, activateRate() > 0, false, reflected);
+                    getEffects(activeChar, t, getActivateRate() > 0, false, reflected);
                 });
 
         chargePlayer((Player) activeChar);

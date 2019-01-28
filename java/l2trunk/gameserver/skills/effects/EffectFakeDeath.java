@@ -18,7 +18,7 @@ public final class EffectFakeDeath extends Effect {
     public void onStart() {
         super.onStart();
 
-        Player player = (Player) getEffected();
+        Player player = (Player) effected;
         player.setFakeDeath(true);
         player.getAI().notifyEvent(CtrlEvent.EVT_FAKE_DEATH);
         player.broadcastPacket(new ChangeWaitType(player, 2));
@@ -31,7 +31,7 @@ public final class EffectFakeDeath extends Effect {
     public void onExit() {
         super.onExit();
 
-        Player player = (Player) getEffected();
+        Player player = (Player) effected;
         player.setNonAggroTime(System.currentTimeMillis() + 5000L);
         player.setFakeDeath(false);
         player.broadcastPacket(new ChangeWaitType(player, 3));
@@ -41,18 +41,18 @@ public final class EffectFakeDeath extends Effect {
 
     @Override
     public boolean onActionTime() {
-        if (getEffected().isDead())
+        if (effected.isDead())
             return false;
 
         double manaDam = calc();
 
-        if (manaDam > getEffected().getCurrentMp() && getSkill().isToggle()) {
-            getEffected().sendPacket(SystemMsg.NOT_ENOUGH_MP);
-            getEffected().sendPacket(new SystemMessage(SystemMessage.THE_EFFECT_OF_S1_HAS_BEEN_REMOVED).addSkillName(getSkill().id, getSkill().getDisplayLevel()));
+        if (manaDam > effected.getCurrentMp() && getSkill().isToggle()) {
+            effected.sendPacket(SystemMsg.NOT_ENOUGH_MP);
+            effected.sendPacket(new SystemMessage(SystemMessage.THE_EFFECT_OF_S1_HAS_BEEN_REMOVED).addSkillName(getSkill().id, getSkill().getDisplayLevel()));
             return false;
         }
 
-        getEffected().reduceCurrentMp(manaDam, null);
+        effected.reduceCurrentMp(manaDam, null);
         return true;
     }
 }

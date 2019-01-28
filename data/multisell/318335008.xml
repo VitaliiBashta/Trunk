@@ -58,7 +58,7 @@
 		<production id="401" count="1" />
 	</item>
 
-	<!-- Zubei's Leather Shirt b -->
+	<!-- Zubei's Leather Shirt buffPrice -->
 	<item>
 		<ingredient id="9814" count="160" />
 		<ingredient id="9815" count="48" />
@@ -67,7 +67,7 @@
 		<production id="2384" count="1" />
 	</item>
 
-	<!-- Zubei's Leather Gaiters b -->
+	<!-- Zubei's Leather Gaiters buffPrice -->
 	<item>
 		<ingredient id="9814" count="100" />
 		<ingredient id="9815" count="32" />
@@ -76,7 +76,7 @@
 		<production id="2388" count="1" />
 	</item>
 
-	<!-- Avadon Leather Armor b -->
+	<!-- Avadon Leather Armor buffPrice -->
 	<item>
 		<ingredient id="9814" count="236" />
 		<ingredient id="9815" count="72" />
@@ -85,7 +85,7 @@
 		<production id="2390" count="1" />
 	</item>
 
-	<!-- Blue Wolf Leather Armor b -->
+	<!-- Blue Wolf Leather Armor buffPrice -->
 	<item>
 		<ingredient id="9814" count="388" />
 		<ingredient id="9815" count="116" />
@@ -94,7 +94,7 @@
 		<production id="2391" count="1" />
 	</item>
 
-	<!-- Leather Armor of Doom b -->
+	<!-- Leather Armor of Doom buffPrice -->
 	<item>
 		<ingredient id="9814" count="388" />
 		<ingredient id="9815" count="116" />

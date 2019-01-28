@@ -17,7 +17,7 @@ public class SkillCoolTime extends L2GameServerPacket {
         for (TimeStamp stamp : list) {
             if (!stamp.hasNotPassed())
                 continue;
-            l2trunk.gameserver.model.Skill skill = player.getKnownSkill(stamp.getId());
+            l2trunk.gameserver.model.Skill skill = player.getKnownSkill(stamp.id());
             if (skill == null)
                 continue;
             Skill sk = new Skill();

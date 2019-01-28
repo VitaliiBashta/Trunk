@@ -125,7 +125,7 @@ public final class Resurrect extends Skill {
     public void useSkill(Creature activeChar, List<Creature> targets) {
         double percent = power;
 
-        if (percent < 100 && !isItemHandler()) {
+        if (percent < 100 && !isItemHandler) {
             double wit_bonus = power * (BaseStats.WIT.calcBonus(activeChar) - 1);
             percent += wit_bonus > 20 ? 20 : wit_bonus;
             if (percent > 90)
@@ -165,7 +165,7 @@ public final class Resurrect extends Skill {
                 } else
                     continue;
 
-                getEffects(activeChar, target, activateRate() > 0, false);
+                getEffects(activeChar, target, getActivateRate() > 0, false);
             }
         }
 

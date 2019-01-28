@@ -40,7 +40,7 @@ public final class TalkingGuard extends Guard {
             "{name}, You should start praying when you see me coming.. Although by then it will be too late."
     );
     // Phrases that can pronounce Guard, addressing them passing by male players
-    private static final List<String> _sayNormalTextM = List.of(
+    private static final List<String> SAY_NORMAL_TEXT_M = List.of(
             "{name}, Who goes there?",
             "{name}, Hello!",
             "{name}, Hi!",
@@ -57,7 +57,7 @@ public final class TalkingGuard extends Guard {
             "{name}, Vote for Server!"
     );
     // Phrases that can pronounce Guard, addressing them passing by female players
-    private static final List<String> _sayNormalTextF = List.of(
+    private static final List<String> SAY_NORMAL_TEXT_F = List.of(
             "{name}, Hello Beautiful!",
             "{name}, Wow.. Wait!! Theif!! {name} stole my Heart!!",
             "{name}, Walk away from me?? What too afraid to hangout with a real man?",
@@ -104,9 +104,9 @@ public final class TalkingGuard extends Guard {
                 return false;
             if (Rnd.chance(_sayNormalChance)) {
                 if (target.isPlayer() && target.getKarma() <= 0 && (_lastNormalSay + _sayNormalPeriod < System.currentTimeMillis()) && actor.isInRange(target, 250L)) {
-                    Functions.npcSay(actor, target.getPlayer().getSex() == 0
-                            ? Rnd.get(_sayNormalTextM).replace("{name}", target.getName())
-                            : Rnd.get(_sayNormalTextF).replace("{name}", target.getName()));
+                    Functions.npcSay(actor, target.getPlayer().isMale()
+                            ? Rnd.get(SAY_NORMAL_TEXT_M).replace("{name}", target.getName())
+                            : Rnd.get(SAY_NORMAL_TEXT_F).replace("{name}", target.getName()));
                     _lastNormalSay = System.currentTimeMillis();
                 }
             }
@@ -114,7 +114,7 @@ public final class TalkingGuard extends Guard {
                 return false;
             if (getIntention() != CtrlIntention.AI_INTENTION_ACTIVE)
                 return false;
-            if (_globalAggro < 0L)
+            if (globalAggro < 0L)
                 return false;
             AggroList.AggroInfo ai = actor.getAggroList().get(target);
             if (ai != null && ai.hate > 0) {

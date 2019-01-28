@@ -20,7 +20,7 @@ public final class DestroySummon extends Skill {
         for (Creature target : targets)
             if (target != null) {
 
-                if (activateRate() > 0 && !Formulas.calcSkillSuccess(activeChar, target, this, activateRate())) {
+                if (getActivateRate() > 0 && !Formulas.calcSkillSuccess(activeChar, target, this, getActivateRate())) {
                     activeChar.sendPacket(new SystemMessage2(SystemMsg.C1_HAS_RESISTED_YOUR_S2).addString(target.getName()).addSkillName(id, level));
                     continue;
                 }
@@ -28,7 +28,7 @@ public final class DestroySummon extends Skill {
                 if (target.isSummon()) {
                     ((Summon) target).saveEffects();
                     ((Summon) target).unSummon();
-                    getEffects(activeChar, target, activateRate() > 0, false);
+                    getEffects(activeChar, target, getActivateRate() > 0, false);
                 }
             }
 

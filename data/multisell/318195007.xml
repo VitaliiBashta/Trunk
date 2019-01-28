@@ -65,7 +65,7 @@
 		<production id="5286" count="1" />
 	</item>
 
-	<!-- Great Sword b -->
+	<!-- Great Sword buffPrice -->
 	<item>
 		<ingredient id="9814" count="772" />
 		<ingredient id="9815" count="232" />
@@ -75,7 +75,7 @@
 		<production id="78" count="1" />
 	</item>
 
-	<!-- Keshanberk b -->
+	<!-- Keshanberk buffPrice -->
 	<item>
 		<ingredient id="9814" count="772" />
 		<ingredient id="9815" count="232" />
@@ -85,7 +85,7 @@
 		<production id="142" count="1" />
 	</item>
 
-	<!-- Sword of Damascus b -->
+	<!-- Sword of Damascus buffPrice -->
 	<item>
 		<ingredient id="9814" count="1236" />
 		<ingredient id="9815" count="372" />
@@ -95,7 +95,7 @@
 		<production id="79" count="1" />
 	</item>
 
-	<!-- Guardian Sword b -->
+	<!-- Guardian Sword buffPrice -->
 	<item>
 		<ingredient id="9814" count="1236" />
 		<ingredient id="9815" count="372" />

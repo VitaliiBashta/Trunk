@@ -12,9 +12,7 @@ import java.util.List;
 
 public final class CCPCWHPrivilages {
     /**
-     * @param activeChar
-     * @param args
-     * @return
+
      * @args: allowwh/list nick
      */
     public static String clanMain(Player activeChar, String args) {
@@ -30,7 +28,7 @@ public final class CCPCWHPrivilages {
         if (args != null) {
             String[] param = args.split(" ");
             if (param.length > 0) {
-                if (param[0].equalsIgnoreCase("allowwh") && param.length > 1) {
+                if ("allowwh".equalsIgnoreCase(param[0]) && param.length > 1) {
                     UnitMember cm = activeChar.getClan().getAnyMember(param[1]);
                     if (cm != null && cm.getPlayer() != null) {
                         if (cm.getPlayer().getVarObject("canWhWithdraw") == null) {

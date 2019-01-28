@@ -20,7 +20,7 @@ public final class EffectFear extends Effect {
     @Override
     public boolean checkCondition() {
         if (effected.isFearImmune()) {
-            getEffector().sendPacket(SystemMsg.THAT_IS_AN_INCORRECT_TARGET);
+            effector.sendPacket(SystemMsg.THAT_IS_AN_INCORRECT_TARGET);
             return false;
         }
 
@@ -29,13 +29,13 @@ public final class EffectFear extends Effect {
         if (player != null) {
             SiegeEvent<?, ?> siegeEvent = player.getEvent(SiegeEvent.class);
             if (effected.isSummon() && siegeEvent != null && siegeEvent.containsSiegeSummon((SummonInstance) effected)) {
-                getEffector().sendPacket(SystemMsg.THAT_IS_AN_INCORRECT_TARGET);
+                effector.sendPacket(SystemMsg.THAT_IS_AN_INCORRECT_TARGET);
                 return false;
             }
         }
 
         if (effected.isInZonePeace()) {
-            getEffector().sendPacket(SystemMsg.YOU_MAY_NOT_ATTACK_IN_A_PEACEFUL_ZONE);
+            effector.sendPacket(SystemMsg.YOU_MAY_NOT_ATTACK_IN_A_PEACEFUL_ZONE);
             return false;
         }
 

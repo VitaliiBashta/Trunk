@@ -29,7 +29,7 @@ public final class Drain extends Skill {
                 boolean reflected = !corpseSkill && target.checkReflectSkill(activeChar, this);
                 Creature realTarget = reflected ? activeChar : target;
 
-                if (getPower() > 0 || absorbAbs > 0) {// Если == 0 значит скилл "отключен"
+                if (power > 0 || absorbAbs > 0) {// Если == 0 значит скилл "отключен"
                     if (realTarget.isDead() && !corpseSkill)
                         continue;
 

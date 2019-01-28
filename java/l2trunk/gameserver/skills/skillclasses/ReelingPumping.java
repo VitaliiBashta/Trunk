@@ -40,7 +40,7 @@ public final class ReelingPumping extends Skill {
         int SS = player.getChargedFishShot() ? 2 : 1;
         int pen = 0;
         double gradebonus = 1 + weaponItem.getCrystalType().ordinal() * 0.1;
-        int dmg = (int) (getPower() * gradebonus * SS);
+        int dmg = (int) (power * gradebonus * SS);
 
         if (player.getSkillLevel(1315) < level - 2) // 1315 - Fish Expertise
         {

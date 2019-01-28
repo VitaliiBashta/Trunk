@@ -28,7 +28,7 @@ public final class Ride extends Skill {
                 player.sendPacket(SystemMsg.YOU_CANNOT_BOARD_BECAUSE_YOU_DO_NOT_MEET_THE_REQUIREMENTS);
                 return false;
             }
-        } else if (npcId == 0 && !player.isMounted())
+        } else if (!player.isMounted())
             return false;
 
         return super.checkCondition(activeChar, target, forceUse, dontMove, first);

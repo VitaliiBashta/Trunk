@@ -9,7 +9,7 @@ import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
-public class RequestPledgeReorganizeMember extends L2GameClientPacket {
+public final class RequestPledgeReorganizeMember extends L2GameClientPacket {
     // format: (ch)dSdS
     private int _replace;
     private String _subjectName;

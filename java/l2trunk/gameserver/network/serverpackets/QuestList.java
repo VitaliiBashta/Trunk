@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 
 /**
- * format: h[dd]b
+ * format: h[dd]buffPrice
  */
 public final class QuestList extends L2GameServerPacket {
     private static final byte[] unk = new byte[128];
@@ -45,7 +45,7 @@ public final class QuestList extends L2GameServerPacket {
     private final Map<Integer, Integer> questlist;
 
     public QuestList(Player player) {
-        questlist = player.getAllQuestsStates()
+        questlist = player.getAllQuestsStates().stream()
                 .filter(quest -> quest.getQuest().isVisible())
                 .filter(QuestState::isStarted)
                 .collect(Collectors.toMap(k -> k.getQuest().getQuestIntId(), v -> v.getInt(QuestState.VAR_COND)));

@@ -50,10 +50,10 @@ public final class HandysBlock extends DefaultAI {
                 int random = Rnd.get(100);
                 // Bond
                 if (random > 69 && random <= 84)
-                    dropItem(actor, 13787, holder.getEvent(), player);
+                    dropItem(actor, 13787, holder.getEvent());
                     // Land Mine
                 else if (random > 84)
-                    dropItem(actor, 13788, holder.getEvent(), player);
+                    dropItem(actor, 13788, holder.getEvent());
             }
     }
 
@@ -71,7 +71,7 @@ public final class HandysBlock extends DefaultAI {
         eng.getHolder().broadCastPacketToTeam(secretPoints);
     }
 
-    private void dropItem(NpcInstance block, int id, BlockCheckerEngine eng, Player player) {
+    private void dropItem(NpcInstance block, int id, BlockCheckerEngine eng) {
         ItemInstance drop = ItemFunctions.createItem(id);
         drop.dropToTheGround(block, Location.findPointToStay(block, 50));
         eng.addNewDrop(drop);

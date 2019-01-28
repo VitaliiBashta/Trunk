@@ -29,7 +29,7 @@ public final class RequestDispel extends L2GameClientPacket {
             target = activeChar.getPet();
         }
 
-        target.getEffectList().getAllEffects()
+        target.getEffectList().getAllEffects().stream()
                 .filter(e -> e.getDisplayId() == id)
                 .filter(e -> e.getDisplayLevel() == level)
                 .filter(e -> !e.isOffensive())

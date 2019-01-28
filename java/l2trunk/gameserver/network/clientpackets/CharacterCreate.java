@@ -26,10 +26,10 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 
 public final class CharacterCreate extends L2GameClientPacket {
     private static final Logger LOG = LoggerFactory.getLogger(CharacterCreate.class);
-    private static final String[] ALLOWED_LETTERS = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "a", "s", "d", "f", "g", "h", "j", "k", "l", "z", "x", "c", "v", "b", "n", "m"};
     // cSdddddddddddd
     private String _name;
     private int _sex;
@@ -39,14 +39,8 @@ public final class CharacterCreate extends L2GameClientPacket {
     private int _face;
 
     public static boolean checkName(String name) {
-        char[] chars = name.toCharArray();
-        for (char c : chars) {
-            String letter = String.valueOf(c);
-            boolean foundLetter = false;
-            for (String allowed : ALLOWED_LETTERS)
-                if (letter.equalsIgnoreCase(allowed))
-                    foundLetter = true;
-            if (!foundLetter)
+        for (int i=0; i<name.length(); i++) {
+            if (!Character.isDigit(name.charAt(i)) && !Character.isLetter(name.charAt(i)))
                 return false;
         }
         return true;

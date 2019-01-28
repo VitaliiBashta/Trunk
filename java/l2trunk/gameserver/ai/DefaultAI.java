@@ -51,7 +51,7 @@ public class DefaultAI extends CharacterAI {
     protected long AI_TASK_ACTIVE_DELAY = Config.AI_TASK_ACTIVE_DELAY;
     protected int MAX_PURSUE_RANGE;
     protected ScheduledFuture<?> _aiTask;
-    protected ScheduledFuture<?> _madnessTask;
+    protected ScheduledFuture<?> madnessTask;
     /**
      * Показывает, есть ли задания
      */
@@ -59,7 +59,7 @@ public class DefaultAI extends CharacterAI {
     /**
      * The L2NpcInstance aggro counter
      */
-    protected long _globalAggro;
+    protected long globalAggro;
     protected int _pathfindFails;
     protected long _checkAggroTimestamp = 0;
     protected long _minFactionNotifyInterval;
@@ -156,7 +156,7 @@ public class DefaultAI extends CharacterAI {
             if (skill.getSameByStackType(target) != null) {
                 continue;
             }
-            if ((weight = skill.getPower()) <= 0) {
+            if ((weight = skill.power) <= 0) {
                 weight = 1;
             }
             rnd.add(skill, (int) weight);
@@ -181,7 +181,7 @@ public class DefaultAI extends CharacterAI {
         RndSelector<Skill> rnd = new RndSelector<>(skills.size());
         double weight;
         for (Skill skill : skills) {
-            if ((weight = Math.abs(skill.getPower() - hpReduced)) <= 0) {
+            if ((weight = Math.abs(skill.power - hpReduced)) <= 0) {
                 weight = 1;
             }
             rnd.add(skill, (int) weight);
@@ -1074,9 +1074,9 @@ public class DefaultAI extends CharacterAI {
             Creature randomHated = actor.getAggroList().getRandomHated();
             if (randomHated != null) {
                 setAttackTarget(randomHated);
-                if ((_madnessTask == null) && !actor.isConfused()) {
+                if ((madnessTask == null) && !actor.isConfused()) {
                     actor.startConfused();
-                    _madnessTask = ThreadPoolManager.INSTANCE.schedule(new MadnessTask(), 10000);
+                    madnessTask = ThreadPoolManager.INSTANCE.schedule(new MadnessTask(), 10000);
                 }
                 return randomHated;
             }
@@ -1154,7 +1154,7 @@ public class DefaultAI extends CharacterAI {
         addDesiredSkill(skillMap, target, distance, skillId, 1);
     }
 
-    protected void addDesiredSkill(Map<Skill, Integer> skillMap, Creature target, double distance, Skill skill) {
+    private void addDesiredSkill(Map<Skill, Integer> skillMap, Creature target, double distance, Skill skill) {
         if ((skill == null) || (target == null) || !canUseSkill(skill, target)) {
             return;
         }
@@ -1276,18 +1276,18 @@ public class DefaultAI extends CharacterAI {
     }
 
     public boolean isGlobalAggro() {
-        if (_globalAggro == 0) {
+        if (globalAggro == 0) {
             return true;
         }
-        if (_globalAggro <= System.currentTimeMillis()) {
-            _globalAggro = 0;
+        if (globalAggro <= System.currentTimeMillis()) {
+            globalAggro = 0;
             return true;
         }
         return false;
     }
 
     public void setGlobalAggro(long value) {
-        _globalAggro = value;
+        globalAggro = value;
     }
 
     @Override
@@ -1566,7 +1566,7 @@ public class DefaultAI extends CharacterAI {
             if (actor != null) {
                 actor.stopConfused();
             }
-            _madnessTask = null;
+            madnessTask = null;
         }
     }
 }

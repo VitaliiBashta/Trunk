@@ -3,8 +3,8 @@ package l2trunk.gameserver.skills;
 import l2trunk.gameserver.model.Skill;
 
 public final class TimeStamp {
-    private final int id;
-    private final int level;
+    public final int id;
+    public final int level;
     private final long reuse;
     private final long endTime;
 
@@ -36,7 +36,7 @@ public final class TimeStamp {
         return Math.max(endTime - System.currentTimeMillis(), 0);
     }
 
-    public long getEndTime() {
+    public long endTime() {
         return endTime;
     }
 
@@ -44,11 +44,8 @@ public final class TimeStamp {
         return System.currentTimeMillis() < endTime;
     }
 
-    public int getId() {
+    public int id() {
         return id;
     }
 
-    public int getLevel() {
-        return level;
-    }
 }

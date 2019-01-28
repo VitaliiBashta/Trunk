@@ -4,7 +4,7 @@ import l2trunk.gameserver.ai.CtrlEvent;
 import l2trunk.gameserver.model.Effect;
 import l2trunk.gameserver.stats.Env;
 
-public class EffectHate extends Effect {
+public final class EffectHate extends Effect {
     public EffectHate(Env env, EffectTemplate template) {
         super(env, template);
     }
@@ -17,8 +17,8 @@ public class EffectHate extends Effect {
         }
         // On players it makes attack the caster
         else if (effected.isPlayable() && effected.isMonster()) {
-            getEffected().abortAttack(true, false);
-            getEffected().getAI().setIntentionAttack(getEffector());
+            effected.abortAttack(true, false);
+            effected.getAI().setIntentionAttack(effector);
         }
     }
 

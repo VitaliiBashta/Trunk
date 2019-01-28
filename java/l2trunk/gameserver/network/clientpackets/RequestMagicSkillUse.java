@@ -93,7 +93,7 @@ public final class RequestMagicSkillUse extends L2GameClientPacket {
 //			{
 //				activeChar.broadcastPacket(new MoveToPawn(activeChar, target, (int) activeChar.getDistance(target)));
 //			}
-            activeChar.getAI().Cast(skill, target, ctrlPressed, shiftPressed);
+            activeChar.getAI().cast(skill, target, ctrlPressed, shiftPressed);
         } else {
             activeChar.setMacroSkill(null);
             activeChar.sendActionFailed();

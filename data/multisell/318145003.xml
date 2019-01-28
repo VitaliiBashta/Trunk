@@ -43,7 +43,7 @@
 		<production id="473" count="1" />
 	</item>
 
-	<!-- Tunic of Zubei b -->
+	<!-- Tunic of Zubei buffPrice -->
 	<item>
 		<ingredient id="9814" count="160" />
 		<ingredient id="9815" count="48" />
@@ -52,7 +52,7 @@
 		<production id="2397" count="1" />
 	</item>
 
-	<!-- Stockings of Zubei b -->
+	<!-- Stockings of Zubei buffPrice -->
 	<item>
 		<ingredient id="9814" count="100" />
 		<ingredient id="9815" count="32" />
@@ -61,7 +61,7 @@
 		<production id="2402" count="1" />
 	</item>
 
-	<!-- Avadon Robe b -->
+	<!-- Avadon Robe buffPrice -->
 	<item>
 		<ingredient id="9814" count="236" />
 		<ingredient id="9815" count="72" />
@@ -70,7 +70,7 @@
 		<production id="2406" count="1" />
 	</item>
 
-	<!-- Blue Wolf Tunic b -->
+	<!-- Blue Wolf Tunic buffPrice -->
 	<item>
 		<ingredient id="9814" count="264" />
 		<ingredient id="9815" count="80" />
@@ -79,7 +79,7 @@
 		<production id="2398" count="1" />
 	</item>
 
-	<!-- Blue Wolf Stockings b -->
+	<!-- Blue Wolf Stockings buffPrice -->
 	<item>
 		<ingredient id="9814" count="168" />
 		<ingredient id="9815" count="48" />
@@ -88,7 +88,7 @@
 		<production id="2403" count="1" />
 	</item>
 
-	<!-- Tunic of Doom b -->
+	<!-- Tunic of Doom buffPrice -->
 	<item>
 		<ingredient id="9814" count="264" />
 		<ingredient id="9815" count="80" />
@@ -97,7 +97,7 @@
 		<production id="2399" count="1" />
 	</item>
 
-	<!-- Stockings of Doom b -->
+	<!-- Stockings of Doom buffPrice -->
 	<item>
 		<ingredient id="9814" count="168" />
 		<ingredient id="9815" count="48" />

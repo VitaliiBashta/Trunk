@@ -50,7 +50,7 @@ public final class BlockCheckerEngine {
     // All blocks
     private final List<SimpleSpawner> _spawns = new CopyOnWriteArrayList<>();
     // List of dropped items in event (for later deletion)
-    private final List<ItemInstance> _drops = new ArrayList<>();
+    private final List<ItemInstance> drops = new ArrayList<>();
     private final OnExitPlayerListener _listener = new OnExitPlayerListener();
     // The object which holds all basic members info
     private HandysBlockCheckerManager.ArenaParticipantsHolder holder;
@@ -153,9 +153,7 @@ public final class BlockCheckerEngine {
 
     /**
      * Increases player points for his teams
-     *
-     * @param player
-     * @param team
+
      */
     public synchronized void increasePlayerPoints(Player player, int team) {
         if (player == null)
@@ -177,12 +175,10 @@ public final class BlockCheckerEngine {
     /**
      * Will add a new drop into the list of
      * dropped items
-     *
-     * @param item
      */
     public void addNewDrop(ItemInstance item) {
         if (item != null)
-            _drops.add(item);
+            drops.add(item);
     }
 
     /**
@@ -200,8 +196,8 @@ public final class BlockCheckerEngine {
      * the relation info
      */
     private void broadcastRelationChanged(Player plr) {
-        for (Player p : holder.getAllPlayers())
-            p.sendPacket(RelationChanged.update(plr, p, plr));
+        holder.getAllPlayers().forEach(p ->
+            p.sendPacket(RelationChanged.update(plr, p, plr)));
     }
 
     /**
@@ -475,7 +471,7 @@ public final class BlockCheckerEngine {
 
             _spawns.clear();
 
-            for (ItemInstance item : _drops) {
+            for (ItemInstance item : drops) {
                 // npe
                 if (item == null)
                     continue;
@@ -486,7 +482,7 @@ public final class BlockCheckerEngine {
 
                 item.deleteMe();
             }
-            _drops.clear();
+            drops.clear();
         }
 
         /**

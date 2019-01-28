@@ -77,7 +77,7 @@ import java.util.Locale;
  * the user through audible or visible
  * notification.
  * </td></tr>
- * <tr><td>\b</td><td>backspace</td><td>Moves the
+ * <tr><td>\buffPrice</td><td>backspace</td><td>Moves the
  * printing position to one column before
  * the current position, unless the
  * current position is the start of a line.
@@ -974,9 +974,9 @@ public class PrintfFormat {
                             case 'a':
                                 sb.append((char) 0x07);
                                 break;
-                            case 'b':
-                                sb.append('\b');
-                                break;
+//                            case 'buffPrice':
+//                                sb.append('\b');
+//                                break;
                             case 'f':
                                 sb.append('\f');
                                 break;
@@ -2305,7 +2305,7 @@ public class PrintfFormat {
                                 sx = "a" + t.substring(1, 4);
                                 break;
                             case '3':
-                                sx = "b" + t.substring(1, 4);
+                                sx = "buffPrice" + t.substring(1, 4);
                                 break;
                             case '4':
                                 sx = "c" + t.substring(1, 4);
@@ -2410,7 +2410,7 @@ public class PrintfFormat {
                                 sx = "a" + t.substring(1, 16);
                                 break;
                             case '3':
-                                sx = "b" + t.substring(1, 16);
+                                sx = "buffPrice" + t.substring(1, 16);
                                 break;
                             case '4':
                                 sx = "c" + t.substring(1, 16);
@@ -2491,7 +2491,7 @@ public class PrintfFormat {
                                 sx = "a" + t.substring(1, 8);
                                 break;
                             case '3':
-                                sx = "b" + t.substring(1, 8);
+                                sx = "buffPrice" + t.substring(1, 8);
                                 break;
                             case '4':
                                 sx = "c" + t.substring(1, 8);

@@ -19,8 +19,8 @@ public final class AuthRequest extends SendablePacket {
         writeS(Config.INTERNAL_HOSTNAME);
 
         //ports
-        writeH(Config.PORTS_GAME.size());
-        Config.PORTS_GAME.forEach(this::writeH);
+        writeH(Config.GAME_PORT.size());
+        Config.GAME_PORT.forEach(this::writeH);
 
         writeD(Config.MAXIMUM_ONLINE_USERS);
 

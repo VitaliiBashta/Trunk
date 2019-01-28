@@ -39,6 +39,7 @@ import org.slf4j.LoggerFactory;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 
 import static l2trunk.commons.lang.NumberUtils.toInt;
@@ -906,7 +907,7 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
             skills += "<td width=55><br>";
             skills += "<img src=\"" + clanSkill.icon + "\" height=30 width=30>";
             skills += "</td><td width=660><br><table width=660><tr><td><font name=\"hs12\" color=\"00BBFF\">";
-            skills += clanSkill.name() + " - <font name=\"hs12\" color=\"FFFFFF\">Level " + clanSkill.level + " </font>";
+            skills += clanSkill.name + " - <font name=\"hs12\" color=\"FFFFFF\">Level " + clanSkill.level + " </font>";
             skills += "</font></td></tr><tr><td>";
             List<String> descriptions = CLAN_SKILL_DESCRIPTIONS.get(clanSkill.id);
             if (descriptions == null || descriptions.size() < clanSkill.level - 1) {
@@ -1625,10 +1626,10 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
 
     private boolean manageClanJoinWindow(Player player, Clan clan, String text) {
         StringTokenizer st = new StringTokenizer(text, "|");
-        String[] answers = new String[8];
+        List<String> answers = new ArrayList<>(8);
         for (int i = 0; i < 8; i++) {
             String answer = st.nextToken();
-            answers[i] = answer;
+            answers.add(answer);
         }
         String comment = st.nextToken();
         return clan.addPetition(player.getObjectId(), answers, comment);
@@ -1686,7 +1687,7 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
                     member = new UnitMember(clan, rset.getString("char_name"), rset.getString("title"), rset.getInt("level"), rset.getInt("class_id"), memberId, type, rset.getInt("pledge_rank"), 0, rset.getInt("sex"), Clan.SUBUNIT_NONE);
                 }
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             _log.error("Error in managePlayerPetition:", e);
         }
 
@@ -1696,7 +1697,7 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
     private String[] getNotChosenClasses(Clan clan) {
         String[] splited = {"", ""};
 
-        ArrayList<Integer> classes = clan.getClassesNeeded();
+        List<Integer> classes = clan.getClassesNeeded();
 
         for (int i = 0; i < ALL_CLASSES.size(); i++) {
             if (!classes.contains(i + 88)) {

@@ -52,7 +52,7 @@ public final class EffectCubic extends Effect {
             double currentHp = Integer.MAX_VALUE;
             List<Player> members = player.getParty().getMembers().stream().filter(Objects::nonNull).collect(Collectors.toList());
             for (Player member : members) {
-                if (player.isInRange(member, info.getSkill().castRange) && !member.isCurrentHpFull() && !member.isDead() && member.getCurrentHp() < currentHp) {
+                if (player.isInRange(member, info.getSkill().castRange()) && !member.isCurrentHpFull() && !member.isDead() && member.getCurrentHp() < currentHp) {
                     currentHp = member.getCurrentHp();
                     target = member;
                 }
@@ -94,7 +94,7 @@ public final class EffectCubic extends Effect {
         player.broadcastPacket(new MagicSkillUse(player, target, skill.displayId, skill.getDisplayLevel(), skill.hitTime, 0));
         player.disableSkill(skill, delay * 1000L);
         ThreadPoolManager.INSTANCE.schedule(() -> {
-            final List<Creature> targets = List.of(aimTarget);
+            final List<Creature> targets = Collections.singletonList(aimTarget);
 
             player.broadcastPacket(new MagicSkillLaunched(player.getObjectId(), skill.displayId, skill.getDisplayLevel(), targets));
             player.callSkill(skill, targets, false);
@@ -104,7 +104,7 @@ public final class EffectCubic extends Effect {
                     if (Config.PARALIZE_ON_RAID_DIFF)
                         player.paralizeMe(aimTarget);
                 } else {
-                    int damage = skill.effectPoint != 0 ? skill.effectPoint : (int) skill.getPower();
+                    int damage = skill.effectPoint != 0 ? skill.effectPoint : (int) skill.power;
                     aimTarget.getAI().notifyEvent(CtrlEvent.EVT_ATTACKED, player, damage);
                 }
         }, skill.hitTime);
@@ -129,7 +129,7 @@ public final class EffectCubic extends Effect {
         ThreadPoolManager.INSTANCE.schedule(new RunnableImpl() {
             @Override
             public void runImpl() {
-                final List<Creature> targets = List.of(aimTarget);
+                final List<Creature> targets = Collections.singletonList(aimTarget);
                 player.broadcastPacket(new MagicSkillLaunched(player.getObjectId(), skill.displayId, skill.getDisplayLevel(), targets));
                 final boolean succ = Formulas.calcSkillSuccess(player, aimTarget, skill, info.getChance());
                 if (succ)
@@ -140,7 +140,7 @@ public final class EffectCubic extends Effect {
                         if (Config.PARALIZE_ON_RAID_DIFF)
                             player.paralizeMe(aimTarget);
                     } else {
-                        int damage = skill.effectPoint != 0 ? skill.effectPoint : (int) skill.getPower();
+                        int damage = skill.effectPoint != 0 ? skill.effectPoint : (int) skill.power;
                         aimTarget.getAI().notifyEvent(CtrlEvent.EVT_ATTACKED, player, damage);
                     }
             }
@@ -151,7 +151,7 @@ public final class EffectCubic extends Effect {
         if (!Rnd.chance(info.getChance()))
             return;
 
-        if (player.getEffectList().getAllEffects()
+        if (player.getEffectList().getAllEffects().stream()
                 .filter(Effect::isOffensive)
                 .filter(Effect::isCancelable)
                 .allMatch(e -> e.getTemplate().applyOnCaster))

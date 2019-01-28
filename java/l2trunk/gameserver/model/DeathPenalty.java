@@ -133,7 +133,7 @@ public class DeathPenalty {
     void checkCharmOfLuck() {
         Player player = getPlayer();
         if (player != null)
-            hasCharmOfLuck = player.getEffectList().getAllEffects()
+            hasCharmOfLuck = player.getEffectList().getAllEffects().stream()
                     .map(e -> e.getSkill().id)
                     .anyMatch(e -> e == _charmOfLuckSkillId || e == _fortuneOfNobleseSkillId);
         hasCharmOfLuck = false;

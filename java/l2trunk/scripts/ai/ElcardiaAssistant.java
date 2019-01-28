@@ -29,13 +29,13 @@ import java.util.concurrent.ScheduledFuture;
 
 public final class ElcardiaAssistant extends DefaultAI {
     private static final Logger LOG = LoggerFactory.getLogger(ElcardiaAssistant.class);
-    private final Skill vampRage = SkillTable.INSTANCE.getInfo(6727);
-    private final Skill holyResist = SkillTable.INSTANCE.getInfo(6729);
-    private final Skill blessBlood = SkillTable.INSTANCE.getInfo(6725);
-    private final Skill recharge = SkillTable.INSTANCE.getInfo(6728);
-    private final Skill heal = SkillTable.INSTANCE.getInfo(6724);
-    private boolean _thinking = false;
-    private ScheduledFuture<?> _followTask;
+    private static final int vampRage = 6727;
+    private static final int holyResist = 6729;
+    private static final int blessBlood = 6725;
+    private static final int recharge = 6728;
+    private static final int heal = 6724;
+    private boolean thinking = false;
+    private ScheduledFuture<?> followTask;
     private long _chatTimer;
 
     public ElcardiaAssistant(NpcInstance actor) {
@@ -71,10 +71,10 @@ public final class ElcardiaAssistant extends DefaultAI {
     @Override
     public void onEvtThink() {
         NpcInstance actor = getActor();
-        if (_thinking || actor.isActionsDisabled() || actor.isAfraid() || actor.isDead() || actor.isMovementDisabled())
+        if (thinking || actor.isActionsDisabled() || actor.isAfraid() || actor.isDead() || actor.isMovementDisabled())
             return;
 
-        _thinking = true;
+        thinking = true;
         try {
             if (!Config.BLOCK_ACTIVE_TASKS && (getIntention() == CtrlIntention.AI_INTENTION_ACTIVE || getIntention() == CtrlIntention.AI_INTENTION_IDLE))
                 thinkActive();
@@ -83,7 +83,7 @@ public final class ElcardiaAssistant extends DefaultAI {
         } catch (RuntimeException e) {
             LOG.error("Error while creating Task for ElcardiaAssistant", e);
         } finally {
-            _thinking = false;
+            thinking = false;
         }
     }
 
@@ -108,12 +108,12 @@ public final class ElcardiaAssistant extends DefaultAI {
         if (actor.isInRange(target, Config.FOLLOW_RANGE + 20))
             clientActionFailed();
 
-        if (_followTask != null) {
-            _followTask.cancel(false);
-            _followTask = null;
+        if (followTask != null) {
+            followTask.cancel(false);
+            followTask = null;
         }
 
-        _followTask = ThreadPoolManager.INSTANCE.schedule(new ThinkFollow(), 250L);
+        followTask = ThreadPoolManager.INSTANCE.schedule(new ThinkFollow(), 250L);
 
         // -----------------
         Reflection ref = actor.getReflection();
@@ -249,7 +249,7 @@ public final class ElcardiaAssistant extends DefaultAI {
                 Location loc = new Location(target.getX() + Rnd.get(-60, 60), target.getY() + Rnd.get(-60, 60), target.getZ());
                 actor.followToCharacter(loc, target, Config.FOLLOW_RANGE, false);
             }
-            _followTask = ThreadPoolManager.INSTANCE.schedule(this, 250L);
+            followTask = ThreadPoolManager.INSTANCE.schedule(this, 250L);
         }
     }
 }

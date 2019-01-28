@@ -125,7 +125,7 @@ public class NpcInstance extends Creature {
         _showBoard = getParameter(SHOW_BOARD, "");
 
         template.getSkills().values().stream()
-                .mapToInt(skill ->skill.id)
+                .mapToInt(s ->s.id)
                 .forEach(this::addSkill);
 
         setName(template.name);
@@ -186,7 +186,9 @@ public class NpcInstance extends Creature {
 
         final AcquireSkillList asl = new AcquireSkillList(t, skills.size());
 
-        skills.forEach(asl::addSkill);
+        for (SkillLearn s : skills) {
+            asl.addSkill(s.getId(), s.getLevel(), s.getLevel(), s.getCost(), 0);
+        }
 
         if (skills.size() == 0) {
             player.sendPacket(AcquireSkillDone.STATIC);
@@ -217,7 +219,7 @@ public class NpcInstance extends Creature {
         final AcquireSkillList asl = new AcquireSkillList(AcquireType.SUB_UNIT, learns.size());
 
         for (SkillLearn s : learns) {
-            asl.addSkill(s, 1, Clan.SUBUNIT_KNIGHT4);
+            asl.addSkill(s.getId(), s.getLevel(), s.getLevel(), s.getCost(), 1, Clan.SUBUNIT_KNIGHT4);
         }
 
         if (learns.size() == 0) {
@@ -539,11 +541,11 @@ public class NpcInstance extends Creature {
     }
 
     public long getExpReward() {
-        return (long) calcStat(Stats.EXP, getTemplate().rewardExp, null, null);
+        return (long) calcStat(Stats.EXP, getTemplate().rewardExp);
     }
 
     public long getSpReward() {
-        return (long) calcStat(Stats.SP, getTemplate().rewardSp, null, null);
+        return (long) calcStat(Stats.SP, getTemplate().rewardSp);
     }
 
     @Override
@@ -853,7 +855,8 @@ public class NpcInstance extends Creature {
             showBusyWindow(player);
         } else if (isHasChatWindow()) {
             boolean flag = false;
-            for (Quest element : getTemplate().getEventQuests(QuestEventType.NPC_FIRST_TALK)) {
+            List<Quest> qlst = getTemplate().getEventQuests(QuestEventType.NPC_FIRST_TALK);
+            for (Quest element : qlst) {
                 QuestState qs = player.getQuestState(element.getName());
                 if (((qs == null) || !qs.isCompleted()) && element.notifyFirstTalk(this, player)) {
                     flag = true;
@@ -870,7 +873,7 @@ public class NpcInstance extends Creature {
             return;
         }
 
-        int count = (int) player.getAllQuestsStates()
+        int count = (int) player.getAllQuestsStates().stream()
                 .filter(Objects::nonNull)
                 .filter(quest -> quest.getQuest().isVisible())
                 .filter(QuestState::isStarted)
@@ -898,7 +901,8 @@ public class NpcInstance extends Creature {
                 Quest q = QuestManager.getQuest(questName);
                 if (q != null) {
                     // check for start point
-                    for (Quest element : getTemplate().getEventQuests(QuestEventType.QUEST_START)) {
+                    List<Quest> qlst = getTemplate().getEventQuests(QuestEventType.QUEST_START);
+                    for (Quest element : qlst) {
                         if (element == q) {
                             qs = q.newQuestState(player, Quest.CREATED);
                             if (qs.getQuest().notifyTalk(this, qs)) {
@@ -1163,7 +1167,7 @@ public class NpcInstance extends Creature {
                     sb.append("]<br1>\n");
                 } else {
                     if (Config.ALLOW_MULTILANG_GATEKEEPER) {
-                        if ("ru".equals(player.getVar("tplangg"))) {
+                        if (player.getVar("tplangg").equals("ru")) {
                             sb.append("[scripts_Util:QuestGatekeeper ").append(tl.getX()).append(" ").append(tl.getY()).append(" ").append(tl.getZ()).append(" ").append(tl.getPrice()).append(" ").append(tl.getItem().getItemId()).append(" @811;F;").append("|").append(tl.getStringNameLang()).append(" - ").append(tl.getPrice()).append(" ").append(HtmlUtils.htmlItemName(tl.getItem().getItemId())).append("]<br1>\n");
                         } else {
                             sb.append("[scripts_Util:QuestGatekeeper ").append(tl.getX()).append(" ").append(tl.getY()).append(" ").append(tl.getZ()).append(" ").append(tl.getPrice()).append(" ").append(tl.getItem().getItemId()).append(" @811;F;").append("|").append(tl.getStringName()).append(" - ").append(tl.getPrice()).append(" ").append(HtmlUtils.htmlItemName(tl.getItem().getItemId())).append("]<br1>\n");
@@ -1286,18 +1290,13 @@ public class NpcInstance extends Creature {
         player.sendPacket(packet);
     }
 
-    public void showChatWindow(Player player, String filename, String... replace) {
+    public void showChatWindow(Player player, String filename, Object... replace) {
         NpcHtmlMessage packet = new NpcHtmlMessage(player, this, filename, 0);
         if ((replace.length % 2) == 0) {
             for (int i = 0; i < replace.length; i += 2) {
                 packet.replace(String.valueOf(replace[i]), String.valueOf(replace[i + 1]));
             }
         }
-        player.sendPacket(packet);
-    }
-
-    public void showChatWindow(Player player, String filename) {
-        NpcHtmlMessage packet = new NpcHtmlMessage(player, this, filename, 0);
         player.sendPacket(packet);
     }
 
@@ -1372,7 +1371,7 @@ public class NpcInstance extends Creature {
             return;
         }
 
-        if (!(getTemplate().canTeach(classId) || getTemplate().canTeach(classId.getParent(player.getSex())))) {
+        if (!(getTemplate().canTeach(classId) || getTemplate().canTeach(classId.getParent()))) {
             if (this instanceof WarehouseInstance) {
                 showChatWindow(player, "warehouse/" + getNpcId() + "-noteach.htm");
             } else if (this instanceof TrainerInstance) {
@@ -1405,7 +1404,7 @@ public class NpcInstance extends Creature {
 
             counts++;
 
-            asl.addSkill(s);
+            asl.addSkill(s.getId(), s.getLevel(), s.getLevel(), s.getCost(), 0);
         }
 
         if (counts == 0) {

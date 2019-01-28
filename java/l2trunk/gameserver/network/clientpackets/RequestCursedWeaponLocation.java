@@ -10,8 +10,7 @@ import l2trunk.gameserver.utils.Location;
 import java.util.ArrayList;
 import java.util.List;
 
-
-public class RequestCursedWeaponLocation extends L2GameClientPacket {
+public final class RequestCursedWeaponLocation extends L2GameClientPacket {
     @Override
     protected void readImpl() {
     }

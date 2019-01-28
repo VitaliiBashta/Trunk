@@ -182,60 +182,60 @@ public final class AdminAdmin implements IAdminCommandHandler {
                         return false;
                     }
                     Player pl = ob.getPlayer();
-                    List<String> _s = new ArrayList<>();
-                    _s.add("==========TARGET STATS:");
-                    _s.add("==Magic Resist: " + pl.calcStat(Stats.MAGIC_RESIST, null, null));
-                    _s.add("==Magic Power: " + pl.calcStat(Stats.MAGIC_POWER, 1, null, null));
-                    _s.add("==Skill Power: " + pl.calcStat(Stats.SKILL_POWER, 1, null, null));
-                    _s.add("==Cast Break Rate: " + pl.calcStat(Stats.CAST_INTERRUPT, 1, null, null));
+                    List<String> strings = new ArrayList<>();
+                    strings.add("==========TARGET STATS:");
+                    strings.add("==Magic Resist: " + pl.calcStat(Stats.MAGIC_RESIST, null, null));
+                    strings.add("==Magic Power: " + pl.calcStat(Stats.MAGIC_POWER, 1));
+                    strings.add("==Skill Power: " + pl.calcStat(Stats.SKILL_POWER, 1));
+                    strings.add("==cast Break Rate: " + pl.calcStat(Stats.CAST_INTERRUPT, 1));
 
-                    _s.add("==========Powers:");
-                    _s.add("==Bleed: " + pl.calcStat(Stats.BLEED_POWER, 1, null, null));
-                    _s.add("==Poison: " + pl.calcStat(Stats.POISON_POWER, 1, null, null));
-                    _s.add("==Stun: " + pl.calcStat(Stats.STUN_POWER, 1, null, null));
-                    _s.add("==Root: " + pl.calcStat(Stats.ROOT_POWER, 1, null, null));
-                    _s.add("==Mental: " + pl.calcStat(Stats.MENTAL_POWER, 1, null, null));
-                    _s.add("==Sleep: " + pl.calcStat(Stats.SLEEP_POWER, 1, null, null));
-                    _s.add("==Paralyze: " + pl.calcStat(Stats.PARALYZE_POWER, 1, null, null));
-                    _s.add("==Cancel: " + pl.calcStat(Stats.CANCEL_POWER, 1, null, null));
-                    _s.add("==Debuff: " + pl.calcStat(Stats.DEBUFF_POWER, 1, null, null));
+                    strings.add("==========Powers:");
+                    strings.add("==Bleed: " + pl.calcStat(Stats.BLEED_POWER, 1));
+                    strings.add("==Poison: " + pl.calcStat(Stats.POISON_POWER, 1));
+                    strings.add("==Stun: " + pl.calcStat(Stats.STUN_POWER, 1));
+                    strings.add("==Root: " + pl.calcStat(Stats.ROOT_POWER, 1));
+                    strings.add("==Mental: " + pl.calcStat(Stats.MENTAL_POWER, 1));
+                    strings.add("==Sleep: " + pl.calcStat(Stats.SLEEP_POWER, 1));
+                    strings.add("==Paralyze: " + pl.calcStat(Stats.PARALYZE_POWER, 1));
+                    strings.add("==Cancel: " + pl.calcStat(Stats.CANCEL_POWER, 1));
+                    strings.add("==Debuff: " + pl.calcStat(Stats.DEBUFF_POWER, 1));
 
-                    _s.add("==========PvP Stats:");
-                    _s.add("==Phys Attack Dmg: " + pl.calcStat(Stats.PVP_PHYS_DMG_BONUS, 1, null, null));
-                    _s.add("==Phys Skill Dmg: " + pl.calcStat(Stats.PVP_PHYS_SKILL_DMG_BONUS, 1, null, null));
-                    _s.add("==Magic Skill Dmg: " + pl.calcStat(Stats.PVP_MAGIC_SKILL_DMG_BONUS, 1, null, null));
-                    _s.add("==Phys Attack Def: " + pl.calcStat(Stats.PVP_PHYS_DEFENCE_BONUS, 1, null, null));
-                    _s.add("==Phys Skill Def: " + pl.calcStat(Stats.PVP_PHYS_SKILL_DEFENCE_BONUS, 1, null, null));
-                    _s.add("==Magic Skill Def: " + pl.calcStat(Stats.PVP_MAGIC_SKILL_DEFENCE_BONUS, 1, null, null));
+                    strings.add("==========PvP Stats:");
+                    strings.add("==Phys Attack Dmg: " + pl.calcStat(Stats.PVP_PHYS_DMG_BONUS, 1));
+                    strings.add("==Phys Skill Dmg: " + pl.calcStat(Stats.PVP_PHYS_SKILL_DMG_BONUS, 1));
+                    strings.add("==Magic Skill Dmg: " + pl.calcStat(Stats.PVP_MAGIC_SKILL_DMG_BONUS, 1));
+                    strings.add("==Phys Attack Def: " + pl.calcStat(Stats.PVP_PHYS_DEFENCE_BONUS, 1));
+                    strings.add("==Phys Skill Def: " + pl.calcStat(Stats.PVP_PHYS_SKILL_DEFENCE_BONUS, 1));
+                    strings.add("==Magic Skill Def: " + pl.calcStat(Stats.PVP_MAGIC_SKILL_DEFENCE_BONUS, 1));
 
-                    _s.add("==========Reflects:");
-                    _s.add("==Phys Dmg Chance: " + pl.calcStat(Stats.REFLECT_AND_BLOCK_DAMAGE_CHANCE, null, null));
-                    _s.add("==Phys Skill Dmg Chance: " + pl.calcStat(Stats.REFLECT_AND_BLOCK_PSKILL_DAMAGE_CHANCE, null, null));
-                    _s.add("==Magic Skill Dmg Chance: " + pl.calcStat(Stats.REFLECT_AND_BLOCK_MSKILL_DAMAGE_CHANCE, null, null));
-                    _s.add("==Counterattack: Phys Dmg Chance: " + pl.calcStat(Stats.REFLECT_DAMAGE_PERCENT, null, null));
-                    _s.add("==Counterattack: Phys Skill Dmg Chance: " + pl.calcStat(Stats.REFLECT_PSKILL_DAMAGE_PERCENT, null, null));
-                    _s.add("==Counterattack: Magic Skill Dmg Chance: " + pl.calcStat(Stats.REFLECT_MSKILL_DAMAGE_PERCENT, null, null));
+                    strings.add("==========Reflects:");
+                    strings.add("==Phys Dmg Chance: " + pl.calcStat(Stats.REFLECT_AND_BLOCK_DAMAGE_CHANCE, null, null));
+                    strings.add("==Phys Skill Dmg Chance: " + pl.calcStat(Stats.REFLECT_AND_BLOCK_PSKILL_DAMAGE_CHANCE, null, null));
+                    strings.add("==Magic Skill Dmg Chance: " + pl.calcStat(Stats.REFLECT_AND_BLOCK_MSKILL_DAMAGE_CHANCE, null, null));
+                    strings.add("==Counterattack: Phys Dmg Chance: " + pl.calcStat(Stats.REFLECT_DAMAGE_PERCENT, null, null));
+                    strings.add("==Counterattack: Phys Skill Dmg Chance: " + pl.calcStat(Stats.REFLECT_PSKILL_DAMAGE_PERCENT, null, null));
+                    strings.add("==Counterattack: Magic Skill Dmg Chance: " + pl.calcStat(Stats.REFLECT_MSKILL_DAMAGE_PERCENT, null, null));
 
-                    _s.add("==========MP Consume Rate:");
-                    _s.add("==Magic Skills: " + pl.calcStat(Stats.MP_MAGIC_SKILL_CONSUME, 1, null, null));
-                    _s.add("==Phys Skills: " + pl.calcStat(Stats.MP_PHYSICAL_SKILL_CONSUME, 1, null, null));
-                    _s.add("==Music: " + pl.calcStat(Stats.MP_DANCE_SKILL_CONSUME, 1, null, null));
+                    strings.add("==========MP Consume Rate:");
+                    strings.add("==Magic Skills: " + pl.calcStat(Stats.MP_MAGIC_SKILL_CONSUME, 1));
+                    strings.add("==Phys Skills: " + pl.calcStat(Stats.MP_PHYSICAL_SKILL_CONSUME, 1));
+                    strings.add("==Music: " + pl.calcStat(Stats.MP_DANCE_SKILL_CONSUME, 1));
 
-                    _s.add("==========Shield:");
-                    _s.add("==Shield Defence: " + pl.calcStat(Stats.SHIELD_DEFENCE, null, null));
-                    _s.add("==Shield Defence Rate: " + pl.calcStat(Stats.SHIELD_RATE, null, null));
-                    _s.add("==Shield Defence Angle: " + pl.calcStat(Stats.SHIELD_ANGLE, null, null));
+                    strings.add("==========Shield:");
+                    strings.add("==Shield Defence: " + pl.calcStat(Stats.SHIELD_DEFENCE, null, null));
+                    strings.add("==Shield Defence Rate: " + pl.calcStat(Stats.SHIELD_RATE, null, null));
+                    strings.add("==Shield Defence Angle: " + pl.calcStat(Stats.SHIELD_ANGLE, null, null));
 
-                    _s.add("==========Etc:");
-                    _s.add("==Fatal Blow Rate: " + pl.calcStat(Stats.FATALBLOW_RATE, null, null));
-                    _s.add("==Phys Skill Evasion Rate: " + pl.calcStat(Stats.PSKILL_EVASION, null, null));
-                    _s.add("==Counterattack Rate: " + pl.calcStat(Stats.COUNTER_ATTACK, null, null));
-                    _s.add("==Pole Attack Angle: " + pl.calcStat(Stats.POLE_ATTACK_ANGLE, null, null));
-                    _s.add("==Pole Target Count: " + pl.calcStat(Stats.POLE_TARGET_COUNT, 1, null, null));
-                    _s.add("==========DONE.");
+                    strings.add("==========Etc:");
+                    strings.add("==Fatal Blow Rate: " + pl.calcStat(Stats.FATALBLOW_RATE, null, null));
+                    strings.add("==Phys Skill Evasion Rate: " + pl.calcStat(Stats.PSKILL_EVASION, null, null));
+                    strings.add("==Counterattack Rate: " + pl.calcStat(Stats.COUNTER_ATTACK, null, null));
+                    strings.add("==Pole Attack Angle: " + pl.calcStat(Stats.POLE_ATTACK_ANGLE, null, null));
+                    strings.add("==Pole Target Count: " + pl.calcStat(Stats.POLE_TARGET_COUNT, 1));
+                    strings.add("==========DONE.");
 
-                    for (String s : _s)
-                        Functions.sendDebugMessage(activeChar, s);
+                    strings.forEach(s ->
+                        Functions.sendDebugMessage(activeChar, s));
                     break;
                 case admin_uievent:
                     if (wordList.length < 5) {

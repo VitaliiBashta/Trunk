@@ -28,20 +28,13 @@ public final class Kechi extends DefaultAI {
             new NpcLocation(GUARD2, 153945, 149224, -12151),
             new NpcLocation(GUARD3, 154374, 149399, -12152),
             new NpcLocation(GUARD3, 153796, 149646, -12159));
-    private final Skill KechiDoubleCutter; // Attack by crossing the sword. Power 2957.
-    private final Skill KechiAirBlade; // Strikes the enemy a blow in a distance using sword energy. Critical enabled. Power 1812
-    private final Skill Invincible; // Invincible against general attack and skill, buff/de-buff.
+    private static final int KechiDoubleCutter = 733; // Attack by crossing the sword. Power 2957.
+    private static final int KechiAirBlade = 734; // Strikes the enemy a blow in a distance using sword energy. Critical enabled. Power 1812
+    private static final int Invincible = 5418; // Invincible against general attack and skill, buff/de-buff.
     private int stage = 0;
 
     public Kechi(NpcInstance actor) {
         super(actor);
-
-        Map<Integer, Skill> skills = getActor().getTemplate().getSkills();
-
-        KechiDoubleCutter = skills.get(733);
-        KechiAirBlade = skills.get(734);
-
-        Invincible = skills.get(5418);
     }
 
     @Override

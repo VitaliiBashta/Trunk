@@ -812,7 +812,7 @@ public final class GamePacketHandler implements IPacketHandler<GameClient>, ICli
                                     break;
                                 case 0x1a:
                                     //	msg = new ?();
-                                    // format: (ch)b, b - array размером в 64 байта
+                                    // format: (ch)buffPrice, buffPrice - array размером в 64 байта
                                     break;
                                 case 0x1b:
                                     msg = new RequestDuelStart();

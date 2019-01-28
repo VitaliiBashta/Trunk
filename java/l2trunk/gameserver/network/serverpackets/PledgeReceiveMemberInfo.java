@@ -3,21 +3,21 @@ package l2trunk.gameserver.network.serverpackets;
 import l2trunk.gameserver.model.pledge.UnitMember;
 
 public class PledgeReceiveMemberInfo extends L2GameServerPacket {
-    private final UnitMember _member;
+    private final UnitMember member;
 
     public PledgeReceiveMemberInfo(UnitMember member) {
-        _member = member;
+        this.member = member;
     }
 
     @Override
     protected final void writeImpl() {
         writeEx(0x3e);
 
-        writeD(_member.getPledgeType());
-        writeS(_member.getName());
-        writeS(_member.getTitle());
-        writeD(_member.getPowerGrade());
-        writeS(_member.getSubUnit().getName());
-        writeS(_member.getRelatedName()); // apprentice/sponsor name if any
+        writeD(member.getPledgeType());
+        writeS(member.getName());
+        writeS(member.getTitle());
+        writeD(member.getPowerGrade());
+        writeS(member.getSubUnit().getName());
+        writeS(member.getRelatedName()); // apprentice/sponsor name if any
     }
 }

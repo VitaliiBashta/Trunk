@@ -6,20 +6,20 @@ import l2trunk.gameserver.network.serverpackets.AllianceCrest;
 public final class RequestAllyCrest extends L2GameClientPacket {
     // format: cd
 
-    private int _crestId;
+    private int crestId;
 
     @Override
     protected void readImpl() {
-        _crestId = readD();
+        crestId = readD();
     }
 
     @Override
     protected void runImpl() {
-        if (_crestId == 0)
+        if (crestId == 0)
             return;
-        byte[] data = CrestCache.getAllyCrest(_crestId);
+        byte[] data = CrestCache.getAllyCrest(crestId);
         if (data != null) {
-            AllianceCrest ac = new AllianceCrest(_crestId, data);
+            AllianceCrest ac = new AllianceCrest(crestId, data);
             sendPacket(ac);
         }
     }

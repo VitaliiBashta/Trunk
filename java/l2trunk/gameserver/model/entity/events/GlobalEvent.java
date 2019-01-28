@@ -486,7 +486,7 @@ public abstract class GlobalEvent {
     private class ListenerListImpl extends ListenerList {
 
         private synchronized Stream<OnStartStopListener> getStartStopListeners() {
-            return getListeners().filter(l -> l instanceof OnStartStopListener)
+            return getListeners().stream().filter(l -> l instanceof OnStartStopListener)
                     .map(l -> (OnStartStopListener) l);
         }
 

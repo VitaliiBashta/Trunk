@@ -30,7 +30,7 @@ public final class EffectList {
     private static int getSlotType(Effect e) {
         if (e.getSkill().isPassive() || e.getSkill().isToggle() || (e.getSkill() instanceof Transformation) || e.getStackType().equals(EffectTemplate.HP_RECOVER_CAST) || (e.getEffectType() == EffectType.Cubic)) {
             return NONE_SLOT_TYPE;
-        } else if (e.getSkill().isOffensive()) {
+        } else if (e.getSkill().isOffensive) {
             return DEBUFF_SLOT_TYPE;
         } else if (e.getSkill().isMusic()) {
             return MUSIC_SLOT_TYPE;
@@ -42,16 +42,16 @@ public final class EffectList {
     }
 
     public static boolean checkStackType(EffectTemplate ef1, EffectTemplate ef2) {
-        if (!ef1._stackType.equals(EffectTemplate.NO_STACK) && ef1._stackType.equalsIgnoreCase(ef2._stackType)) {
+        if (!ef1.stackType.equals(EffectTemplate.NO_STACK) && ef1.stackType.equalsIgnoreCase(ef2.stackType)) {
             return true;
         }
-        if (!ef1._stackType.equals(EffectTemplate.NO_STACK) && ef1._stackType.equalsIgnoreCase(ef2._stackType2)) {
+        if (!ef1.stackType.equals(EffectTemplate.NO_STACK) && ef1.stackType.equalsIgnoreCase(ef2.stackType2)) {
             return true;
         }
-        if (!ef1._stackType2.equals(EffectTemplate.NO_STACK) && ef1._stackType2.equalsIgnoreCase(ef2._stackType)) {
+        if (!ef1.stackType2.equals(EffectTemplate.NO_STACK) && ef1.stackType2.equalsIgnoreCase(ef2.stackType)) {
             return true;
         }
-        return !ef1._stackType2.equals(EffectTemplate.NO_STACK) && ef1._stackType2.equalsIgnoreCase(ef2._stackType2);
+        return !ef1.stackType2.equals(EffectTemplate.NO_STACK) && ef1.stackType2.equalsIgnoreCase(ef2.stackType2);
     }
 
     /**
@@ -91,8 +91,8 @@ public final class EffectList {
                 .anyMatch(skillIds::contains);
     }
 
-    public Stream<Effect> getAllEffects() {
-        return effects.stream();
+    public List<Effect> getAllEffects() {
+        return effects;
     }
 
     /**

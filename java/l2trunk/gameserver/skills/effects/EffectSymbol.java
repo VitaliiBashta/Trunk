@@ -19,7 +19,7 @@ import java.util.List;
 public final class EffectSymbol extends Effect {
     private static final Logger _log = LoggerFactory.getLogger(EffectSymbol.class);
 
-    private NpcInstance _symbol = null;
+    private NpcInstance symbol = null;
 
     public EffectSymbol(Env env, EffectTemplate template) {
         super(env, template);
@@ -38,8 +38,8 @@ public final class EffectSymbol extends Effect {
             return false;
         }
 
-        if (getEffector().isInZonePeace()) {
-            getEffector().sendMessage("You cannot do that in Peace Zone!");
+        if (effector.isInZonePeace()) {
+            effector.sendMessage("You cannot do that in Peace Zone!");
             return false;
         }
 
@@ -62,23 +62,23 @@ public final class EffectSymbol extends Effect {
 
         NpcTemplate template = NpcHolder.getTemplate(this.skill.symbolId);
         if (getTemplate()._count <= 1)
-            _symbol = new SymbolInstance(IdFactory.getInstance().getNextId(), template, effected, skill);
+            symbol = new SymbolInstance(IdFactory.getInstance().getNextId(), template, effected, skill);
         else
-            _symbol = new NpcInstance(IdFactory.getInstance().getNextId(), template);
+            symbol = new NpcInstance(IdFactory.getInstance().getNextId(), template);
 
-        _symbol.setLevel(effected.getLevel());
-        _symbol.setReflection(effected.getReflection());
-        _symbol.spawnMe(loc);
+        symbol.setLevel(effected.getLevel());
+        symbol.setReflection(effected.getReflection());
+        symbol.spawnMe(loc);
     }
 
     @Override
     public void onExit() {
         super.onExit();
 
-        if (_symbol != null && _symbol.isVisible())
-            _symbol.deleteMe();
+        if (symbol != null && symbol.isVisible())
+            symbol.deleteMe();
 
-        _symbol = null;
+        symbol = null;
     }
 
     @Override
@@ -86,9 +86,8 @@ public final class EffectSymbol extends Effect {
         if (getTemplate()._count <= 1)
             return false;
 
-        Creature effector = getEffector();
         Skill skill = getSkill().getFirstAddedSkill();
-        NpcInstance symbol = _symbol;
+//        NpcInstance symbol = this.symbol;
         double mpConsume = getSkill().getMpConsume();
 
         if (effector == null || skill == null || symbol == null)

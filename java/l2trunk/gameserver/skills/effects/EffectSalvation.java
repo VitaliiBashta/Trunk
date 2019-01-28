@@ -10,18 +10,18 @@ public final class EffectSalvation extends Effect {
 
     @Override
     public boolean checkCondition() {
-        return getEffected().isPlayer() && super.checkCondition();
+        return effected.isPlayer() && super.checkCondition();
     }
 
     @Override
     public void onStart() {
-        getEffected().setIsSalvation(true);
+        effected.setIsSalvation(true);
     }
 
     @Override
     public void onExit() {
         super.onExit();
-        getEffected().setIsSalvation(false);
+        effected.setIsSalvation(false);
     }
 
     @Override

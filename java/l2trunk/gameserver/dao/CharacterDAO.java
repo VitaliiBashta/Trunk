@@ -191,7 +191,7 @@ public final class CharacterDAO {
                 statement.setInt(4, player.getFace());
                 statement.setInt(5, player.getHairStyle());
                 statement.setInt(6, player.getHairColor());
-                statement.setInt(7, player.getSex());
+                statement.setInt(7, player.isMale()?1:0);
                 statement.setInt(8, player.getKarma());
                 statement.setInt(9, player.getPvpKills());
                 statement.setInt(10, player.getPkKills());

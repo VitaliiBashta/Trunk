@@ -30,13 +30,13 @@ public final class EffectDiscord extends Effect {
 
         if (!effected.isMonster()) {
             if (!multitargets)
-                getEffector().sendPacket(SystemMsg.THAT_IS_AN_INCORRECT_TARGET);
+                effector.sendPacket(SystemMsg.THAT_IS_AN_INCORRECT_TARGET);
             return false;
         }
 
         if (effected.isFearImmune() || effected.isRaid()) {
             if (!multitargets)
-                getEffector().sendPacket(SystemMsg.THAT_IS_AN_INCORRECT_TARGET);
+                effector.sendPacket(SystemMsg.THAT_IS_AN_INCORRECT_TARGET);
             return false;
         }
 
@@ -46,14 +46,14 @@ public final class EffectDiscord extends Effect {
             SiegeEvent<?, ?> siegeEvent = player.getEvent(SiegeEvent.class);
             if (effected.isSummon() && siegeEvent != null && siegeEvent.containsSiegeSummon((SummonInstance) effected)) {
                 if (!multitargets)
-                    getEffector().sendPacket(SystemMsg.THAT_IS_AN_INCORRECT_TARGET);
+                    effector.sendPacket(SystemMsg.THAT_IS_AN_INCORRECT_TARGET);
                 return false;
             }
         }
 
         if (effected.isInZonePeace()) {
             if (!multitargets)
-                getEffector().sendPacket(SystemMsg.YOU_MAY_NOT_ATTACK_IN_A_PEACEFUL_ZONE);
+                effector.sendPacket(SystemMsg.YOU_MAY_NOT_ATTACK_IN_A_PEACEFUL_ZONE);
             return false;
         }
 
@@ -86,7 +86,7 @@ public final class EffectDiscord extends Effect {
     protected boolean onActionTime() {
         List<Creature> targetList = effected.getAroundCharacters(900, 200)
                 .filter(GameObject::isNpc)
-                .filter(c -> c != getEffected())
+                .filter(c -> c != effected)
                 .collect(Collectors.toList());
 
         // if there is no target, exit function

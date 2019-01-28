@@ -155,14 +155,10 @@ public abstract class Residence implements JdbcEntity {
         }
     }
 
-    /**
-     * Removes the clan that owns the residence skills
-     */
     void removeSkills() {
         Clan owner = getOwner();
         if (owner != null) {
-            skills.forEach(skill ->
-                owner.removeSkill(skill.id));
+            skills.forEach(skill -> owner.removeSkill(skill.id));
         }
     }
 

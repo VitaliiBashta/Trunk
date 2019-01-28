@@ -17,15 +17,15 @@ public final class StaticObjectHolder {
     }
 
     public static void addTemplate(StaticObjectTemplate template) {
-        TEMPLATES.put(template.getUId(), template);
+        TEMPLATES.put(template.uid, template);
     }
 
     public static void spawnAll() {
         for (StaticObjectTemplate template : TEMPLATES.values())
-            if (template.isSpawn()) {
+            if (template.spawn) {
                 StaticObjectInstance obj = template.newInstance();
 
-                SPAWNED.put(template.getUId(), obj);
+                SPAWNED.put(template.uid, obj);
             }
         LOG.info("spawned: " + SPAWNED.size() + " static object(s).");
     }

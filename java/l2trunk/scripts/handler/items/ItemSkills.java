@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Set;
 
 public final class ItemSkills extends ScriptItemHandler implements ScriptFile {
-    private static List<Integer> _itemIds;
+    private static List<Integer> itemIds;
 
 
     @Override
@@ -38,10 +38,10 @@ public final class ItemSkills extends ScriptItemHandler implements ScriptFile {
                 continue;
 
             for (Skill skill : template.getAttachedSkills())
-                if (skill.isItemHandler())
+                if (skill.isItemHandler)
                     set.add(template.getItemId());
         }
-        _itemIds = new ArrayList<>(set);
+        itemIds = new ArrayList<>(set);
     }
 
     @Override
@@ -92,7 +92,7 @@ public final class ItemSkills extends ScriptItemHandler implements ScriptFile {
                 Skill skill = skills.get(i);
                 Creature aimingTarget = skill.getAimingTarget(player, player.getTarget());
                 if (skill.checkCondition(player, aimingTarget, ctrl, false, true))
-                    player.getAI().Cast(skill, aimingTarget, ctrl, false);
+                    player.getAI().cast(skill, aimingTarget, ctrl, false);
                 else if (i == 0)  //FIXME [VISTALL] всегда первый скил идет вместо конда?
                     return false;
             }
@@ -103,6 +103,6 @@ public final class ItemSkills extends ScriptItemHandler implements ScriptFile {
 
     @Override
     public List<Integer> getItemIds() {
-        return _itemIds;
+        return itemIds;
     }
 }

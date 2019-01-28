@@ -2,7 +2,6 @@ package l2trunk.commons.data.xml;
 
 import l2trunk.commons.crypt.CryptUtil;
 import l2trunk.commons.lang.FileUtils;
-import l2trunk.gameserver.Config;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
@@ -13,8 +12,6 @@ import org.xml.sax.InputSource;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,8 +39,8 @@ public enum ParserUtil {
 
     private List<Element> load(Path xmlDir, Path dtdFile) {
         if (Files.isRegularFile(xmlDir))
-            return Collections.singletonList(loadFile(xmlDir, dtdFile));
-        Collection<Path> files = FileUtils.getAllFiles(xmlDir, true, ".xml");
+            return List.of(loadFile(xmlDir, dtdFile));
+        List<Path> files = FileUtils.getAllFiles(xmlDir, true, ".xml");
         return files.stream()
                 .map(f -> loadFile(f, dtdFile))
                 .collect(Collectors.toList());

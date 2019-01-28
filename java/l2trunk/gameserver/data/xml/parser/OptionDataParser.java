@@ -1,6 +1,7 @@
 package l2trunk.gameserver.data.xml.parser;
 
 import l2trunk.commons.data.xml.ParserUtil;
+import l2trunk.commons.lang.NumberUtils;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.data.xml.holder.OptionDataHolder;
 import l2trunk.gameserver.model.Skill;
@@ -12,6 +13,8 @@ import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.util.Iterator;
+
+import static l2trunk.commons.lang.NumberUtils.toInt;
 
 public enum OptionDataParser /*extends StatParser<OptionDataHolder>*/ {
     INSTANCE;
@@ -26,7 +29,7 @@ public enum OptionDataParser /*extends StatParser<OptionDataHolder>*/ {
     protected void readData(Element rootElement) {
         for (Iterator<Element> itemIterator = rootElement.elementIterator(); itemIterator.hasNext(); ) {
             Element optionDataElement = itemIterator.next();
-            OptionDataTemplate template = new OptionDataTemplate(Integer.parseInt(optionDataElement.attributeValue("id")));
+            OptionDataTemplate template = new OptionDataTemplate(toInt(optionDataElement.attributeValue("id"),0));
             for (Iterator<Element> subIterator = optionDataElement.elementIterator(); subIterator.hasNext(); ) {
                 Element subElement = subIterator.next();
                 String subName = subElement.getName();

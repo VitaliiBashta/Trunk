@@ -17,9 +17,9 @@ import l2trunk.gameserver.taskmanager.EffectTaskManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Stream;
 
 public abstract class Effect extends RunnableImpl implements Comparable<Effect>, FuncOwner {
     protected static final Logger _log = LoggerFactory.getLogger(Effect.class);
@@ -35,27 +35,27 @@ public abstract class Effect extends RunnableImpl implements Comparable<Effect>,
     /**
      * Applies
      */
-    protected final Creature effector;
+    public final Creature effector;
     /**
      * One on whom the effect is applied
      */
-    protected final Creature effected;
+    public final Creature effected;
 
     protected final Skill skill;
     protected final EffectTemplate template;
-    private final int _displayId;
+    private final int displayId;
     private final int _displayLevel;
     // the value of an update
-    private final double _value;
+    private final double value;
     // the current state
     private final AtomicInteger _state;
     // counter
-    private int _count;
+    private int count;
     // period, milliseconds
-    private long _period;
+    private long period;
     private long _startTimeMillis;
-    private long _duration;
-    private boolean _inUse = false;
+    private long duration;
+    private boolean inUse = false;
     private Effect next = null;
     private boolean _active = false;
     private Future<?> _effectTask;
@@ -67,38 +67,38 @@ public abstract class Effect extends RunnableImpl implements Comparable<Effect>,
         effected = env.target;
 
         this.template = template;
-        _value = template._value;
-        _count = template.getCount();
-        _period = template.getPeriod();
+        value = template._value;
+        count = template.getCount();
+        period = template.getPeriod();
 
-        _duration = _period * _count;
+        duration = period * count;
 
-        _displayId = template._displayId != 0 ? template._displayId : skill.displayId;
-        _displayLevel = template._displayLevel != 0 ? template._displayLevel : skill.getDisplayLevel();
+        displayId = template.displayId != 0 ? template.displayId : skill.displayId;
+        _displayLevel = template.displayLevel != 0 ? template.displayLevel : skill.getDisplayLevel();
 
         _state = new AtomicInteger(STARTING);
     }
 
     public long getPeriod() {
-        return _period;
+        return period;
     }
 
     public void setPeriod(long time) {
-        _period = time;
-        _duration = _period * _count;
+        period = time;
+        duration = period * count;
     }
 
     public int getCount() {
-        return _count;
+        return count;
     }
 
     public void setCount(int count) {
-        _count = count;
-        _duration = _period * _count;
+        this.count = count;
+        duration = period * this.count;
     }
 
     public boolean isOneTime() {
-        return _period == 0;
+        return period == 0;
     }
 
     /**
@@ -121,7 +121,7 @@ public abstract class Effect extends RunnableImpl implements Comparable<Effect>,
      * Returns the length of the effect in milliseconds.
      */
     private long getDuration() {
-        return _duration;
+        return duration;
     }
 
     /**
@@ -139,11 +139,11 @@ public abstract class Effect extends RunnableImpl implements Comparable<Effect>,
     }
 
     public boolean isInUse() {
-        return _inUse;
+        return inUse;
     }
 
-    public void setInUse(boolean inUse) {
-        _inUse = inUse;
+    void setInUse(boolean inUse) {
+        this.inUse = inUse;
     }
 
     protected boolean isActive() {
@@ -162,39 +162,27 @@ public abstract class Effect extends RunnableImpl implements Comparable<Effect>,
     }
 
     public String getStackType() {
-        return getTemplate()._stackType;
+        return template.stackType;
     }
 
     public String getStackType2() {
-        return getTemplate()._stackType2;
+        return template.stackType2;
     }
 
     public boolean checkStackType(String param) {
-        return getStackType().equalsIgnoreCase(param) || getStackType2().equalsIgnoreCase(param);
-    }
-
-    public boolean checkStackType(Effect param) {
-        return checkStackType(param.getStackType()) || checkStackType(param.getStackType2());
+        return template.stackType.equalsIgnoreCase(param) || template.stackType2.equalsIgnoreCase(param);
     }
 
     public int getStackOrder() {
-        return getTemplate()._stackOrder;
+        return template.stackOrder;
     }
 
     public Skill getSkill() {
         return skill;
     }
 
-    public Creature getEffector() {
-        return effector;
-    }
-
-    public Creature getEffected() {
-        return effected;
-    }
-
     public double calc() {
-        return _value;
+        return value;
     }
 
     private boolean isEnded() {
@@ -225,20 +213,20 @@ public abstract class Effect extends RunnableImpl implements Comparable<Effect>,
      * Notify started
      */
     protected void onStart() {
-        getEffected().addStatFuncs(getStatFuncs());
-        getEffected().addTriggers(getTemplate());
+        effected.addStatFuncs(getStatFuncs());
+        effected.addTriggers(getTemplate());
         if (getTemplate()._abnormalEffect != AbnormalEffect.NULL)
-            getEffected().startAbnormalEffect(getTemplate()._abnormalEffect);
+            effected.startAbnormalEffect(getTemplate()._abnormalEffect);
         else if (getEffectType().getAbnormal() != null)
-            getEffected().startAbnormalEffect(getEffectType().getAbnormal());
+            effected.startAbnormalEffect(getEffectType().getAbnormal());
         if (getTemplate()._abnormalEffect2 != AbnormalEffect.NULL)
-            getEffected().startAbnormalEffect(getTemplate()._abnormalEffect2);
+            effected.startAbnormalEffect(getTemplate()._abnormalEffect2);
         if (getTemplate()._abnormalEffect3 != AbnormalEffect.NULL)
-            getEffected().startAbnormalEffect(getTemplate()._abnormalEffect3);
+            effected.startAbnormalEffect(getTemplate()._abnormalEffect3);
         if (template._cancelOnAction)
-            getEffected().addListener(_listener = new ActionDispelListener());
-        if (getEffected().isPlayer() && !getSkill().canUseTeleport)
-            getEffected().getPlayer().getPlayerAccess().UseTeleport = false;
+            effected.addListener(_listener = new ActionDispelListener());
+        if (effected.isPlayer() && !getSkill().canUseTeleport)
+            effected.getPlayer().getPlayerAccess().UseTeleport = false;
     }
 
     /**
@@ -250,23 +238,23 @@ public abstract class Effect extends RunnableImpl implements Comparable<Effect>,
      * Cancel the effect in the the abnormal effect map of the effected L2Character.<BR><BR>
      */
     protected void onExit() {
-        getEffected().removeStatsOwner(this);
-        getEffected().removeStatFuncs(getStatFuncs());
-        getEffected().removeTriggers(getTemplate());
+        effected.removeStatsOwner(this);
+        effected.removeStatFuncs(getStatFuncs());
+        effected.removeTriggers(getTemplate());
         if (getTemplate()._abnormalEffect != AbnormalEffect.NULL)
-            getEffected().stopAbnormalEffect(getTemplate()._abnormalEffect);
+            effected.stopAbnormalEffect(getTemplate()._abnormalEffect);
         else if (getEffectType().getAbnormal() != null)
-            getEffected().stopAbnormalEffect(getEffectType().getAbnormal());
+            effected.stopAbnormalEffect(getEffectType().getAbnormal());
         if (getTemplate()._abnormalEffect2 != AbnormalEffect.NULL)
-            getEffected().stopAbnormalEffect(getTemplate()._abnormalEffect2);
+            effected.stopAbnormalEffect(getTemplate()._abnormalEffect2);
         if (getTemplate()._abnormalEffect3 != AbnormalEffect.NULL)
-            getEffected().stopAbnormalEffect(getTemplate()._abnormalEffect3);
+            effected.stopAbnormalEffect(getTemplate()._abnormalEffect3);
         if (template._cancelOnAction)
-            getEffected().removeListener(_listener);
-        if (getEffected().isPlayer() && getStackType().equals(EffectTemplate.HP_RECOVER_CAST))
-            getEffected().sendPacket(new ShortBuffStatusUpdate());
-        if (getEffected().isPlayer() && !getSkill().canUseTeleport && !getEffected().getPlayer().getPlayerAccess().UseTeleport)
-            getEffected().getPlayer().getPlayerAccess().UseTeleport = true;
+            effected.removeListener(_listener);
+        if (effected.isPlayer() && getStackType().equals(EffectTemplate.HP_RECOVER_CAST))
+            effected.sendPacket(new ShortBuffStatusUpdate());
+        if (effected.isPlayer() && !getSkill().canUseTeleport && !effected.getPlayer().getPlayerAccess().UseTeleport)
+            effected.getPlayer().getPlayerAccess().UseTeleport = true;
     }
 
     private void stopEffectTask() {
@@ -277,7 +265,7 @@ public abstract class Effect extends RunnableImpl implements Comparable<Effect>,
     private void startEffectTask() {
         if (_effectTask == null) {
             _startTimeMillis = System.currentTimeMillis();
-            _effectTask = EffectTaskManager.getInstance().scheduleAtFixedRate(this, _period, _period);
+            _effectTask = EffectTaskManager.getInstance().scheduleAtFixedRate(this, period, period);
         }
     }
 
@@ -285,14 +273,13 @@ public abstract class Effect extends RunnableImpl implements Comparable<Effect>,
      * Adds a list of effects in the event of the success of start method is called
      */
     public final void schedule() {
-        Creature effected = getEffected();
         if (effected == null)
             return;
 
         if (!checkCondition())
             return;
 
-        getEffected().getEffectList().addEffect(this);
+        effected.getEffectList().addEffect(this);
     }
 
     /**
@@ -310,7 +297,7 @@ public abstract class Effect extends RunnableImpl implements Comparable<Effect>,
                     onExit();
                 }
             }
-            getEffected().getEffectList().removeEffect(this);
+            effected.getEffectList().removeEffect(this);
         }
     }
 
@@ -335,15 +322,15 @@ public abstract class Effect extends RunnableImpl implements Comparable<Effect>,
     public final void runImpl() {
         if (setState(STARTED, ACTING)) {
             // Display a message only for the first effect of the skill
-            if (!getSkill().isHideStartMessage() && getEffected().getEffectList().getEffectsCountForSkill(getSkill().id) == 1)
-                getEffected().sendPacket(new SystemMessage2(SystemMsg.S1S_EFFECT_CAN_BE_FELT).addSkillName(_displayId, _displayLevel));
+            if (!getSkill().hideStartMessage && effected.getEffectList().getEffectsCountForSkill(getSkill().id) == 1)
+                effected.sendPacket(new SystemMessage2(SystemMsg.S1S_EFFECT_CAN_BE_FELT).addSkillName(displayId, _displayLevel));
 
             return;
         }
 
         if (getState() == SUSPENDED) {
             if (isTimeLeft()) {
-                _count--;
+                count--;
                 if (isTimeLeft())
                     return;
             }
@@ -354,7 +341,7 @@ public abstract class Effect extends RunnableImpl implements Comparable<Effect>,
 
         if (getState() == ACTING)
             if (isTimeLeft()) {
-                _count--;
+                count--;
                 if ((!isActive() || onActionTime()) && isTimeLeft())
                     return;
             }
@@ -381,13 +368,13 @@ public abstract class Effect extends RunnableImpl implements Comparable<Effect>,
                     delayErrects.getEffects(effector, effected  );
                 }
             }
-            boolean msg = !isHidden() && getEffected().getEffectList().getEffectsCountForSkill(getSkill().id) == 1;
+            boolean msg = !isHidden() && effected.getEffectList().getEffectsCountForSkill(getSkill().id) == 1;
 
-            getEffected().getEffectList().removeEffect(this);
+            effected.getEffectList().removeEffect(this);
 
             // Display a message only for the last remaining effect of the skill
             if (msg)
-                getEffected().sendPacket(new SystemMessage2(SystemMsg.S1_HAS_WORN_OFF).addSkillName(_displayId, _displayLevel));
+                effected.sendPacket(new SystemMessage2(SystemMsg.S1_HAS_WORN_OFF).addSkillName(displayId, _displayLevel));
         }
     }
 
@@ -402,7 +389,7 @@ public abstract class Effect extends RunnableImpl implements Comparable<Effect>,
 
         // The effect is scheduled to start, remove
         if (setState(STARTING, FINISHED))
-            getEffected().getEffectList().removeEffect(this);
+            effected.getEffectList().removeEffect(this);
             // The effect of working in the "background", stop the task scheduler
         else if (setState(SUSPENDED, FINISHED))
             stopEffectTask();
@@ -415,27 +402,21 @@ public abstract class Effect extends RunnableImpl implements Comparable<Effect>,
                     onExit();
                 }
             }
-            getEffected().getEffectList().removeEffect(this);
+            effected.getEffectList().removeEffect(this);
         }
     }
 
     /**
      * Queued effect
-     *
-     * @param e
-     * @return true, if the effect is queued
      */
-    private boolean scheduleNext(Effect e) {
+    private void scheduleNext(Effect e) {
         if (e == null || e.isEnded())
-            return false;
+            return;
 
         Effect next = getNext();
         if (next != null && !next.maybeScheduleNext(e))
-            return false;
-
+            return;
         this.next = e;
-
-        return true;
     }
 
     public Effect getNext() {
@@ -478,7 +459,7 @@ public abstract class Effect extends RunnableImpl implements Comparable<Effect>,
         return true;
     }
 
-    protected Stream<Func> getStatFuncs() {
+    protected List<Func> getStatFuncs() {
         return getTemplate().getStatFuncs(this);
     }
 
@@ -486,14 +467,14 @@ public abstract class Effect extends RunnableImpl implements Comparable<Effect>,
         if (!isActive() || isHidden())
             return;
         int duration = skill.isToggle() ? AbnormalStatusUpdate.INFINITIVE_EFFECT : getTimeLeft();
-        mi.addEffect(_displayId, _displayLevel, duration);
+        mi.addEffect(displayId, _displayLevel, duration);
     }
 
     public void addPartySpelledIcon(PartySpelled ps) {
         if (!isActive() || isHidden())
             return;
         int duration = skill.isToggle() ? AbnormalStatusUpdate.INFINITIVE_EFFECT : getTimeLeft();
-        ps.addPartySpelledEffect(_displayId, _displayLevel, duration);
+        ps.addPartySpelledEffect(displayId, _displayLevel, duration);
     }
 
     public void addOlympiadSpelledIcon(Player player, ExOlympiadSpelledInfo os) {
@@ -501,7 +482,7 @@ public abstract class Effect extends RunnableImpl implements Comparable<Effect>,
             return;
         int duration = skill.isToggle() ? AbnormalStatusUpdate.INFINITIVE_EFFECT : getTimeLeft();
         os.addSpellRecivedPlayer(player);
-        os.addEffect(_displayId, _displayLevel, duration);
+        os.addEffect(displayId, _displayLevel, duration);
     }
 
     protected int getLevel() {
@@ -509,11 +490,11 @@ public abstract class Effect extends RunnableImpl implements Comparable<Effect>,
     }
 
     public EffectType getEffectType() {
-        return getTemplate()._effectType;
+        return getTemplate().effecttype;
     }
 
     protected boolean isHidden() {
-        return _displayId < 0;
+        return displayId < 0;
     }
 
     @Override
@@ -528,7 +509,7 @@ public abstract class Effect extends RunnableImpl implements Comparable<Effect>,
     }
 
     public int getDisplayId() {
-        return _displayId;
+        return displayId;
     }
 
     public int getDisplayLevel() {
@@ -541,7 +522,7 @@ public abstract class Effect extends RunnableImpl implements Comparable<Effect>,
 
     @Override
     public String toString() {
-        return "Skill: " + skill + ", state: " + getState() + ", inUse: " + _inUse + ", active : " + _active;
+        return "Skill: " + skill + ", state: " + getState() + ", inUse: " + inUse + ", active : " + _active;
     }
 
     @Override
@@ -555,7 +536,7 @@ public abstract class Effect extends RunnableImpl implements Comparable<Effect>,
     }
 
     public boolean isOffensive() {
-        return template.isOffensive(getSkill().isOffensive());
+        return template.isOffensive(getSkill().isOffensive);
     }
 
     private class ActionDispelListener implements OnAttackListener, OnMagicUseListener {

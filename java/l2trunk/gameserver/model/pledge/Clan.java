@@ -1,7 +1,6 @@
 package l2trunk.gameserver.model.pledge;
 
 import l2trunk.commons.collections.JoinedIterator;
-import l2trunk.commons.lang.StringUtils;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.cache.CrestCache;
 import l2trunk.gameserver.cache.Msg;
@@ -34,6 +33,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static l2trunk.commons.lang.NumberUtils.toInt;
 
 public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
     public static final int CP_CL_INVITE_CLAN = 2; // Join clan
@@ -82,14 +83,14 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
     private static final long EXPELLED_MEMBER_PENALTY = Config.CLAN_LEAVE_PENALTY * 60 * 60 * 1000L;
     private static final long LEAVED_ALLY_PENALTY = Config.ALLY_LEAVE_PENALTY * 60 * 60 * 1000L;
     private static final long DISSOLVED_ALLY_PENALTY = Config.DISSOLVED_ALLY_PENALTY * 60 * 60 * 1000L;
-    private final int _clanId;
+    private final int clanId;
     private final Map<Integer, Skill> skills = new TreeMap<>();
-    private final Map<Integer, RankPrivs> _privs = new TreeMap<>();
+    private final Map<Integer, RankPrivs> privs = new TreeMap<>();
     private final Map<Integer, SubUnit> subUnits = new TreeMap<>();
     private final List<Clan> _atWarWith = new ArrayList<>();
     private final List<Clan> _underAttackFrom = new ArrayList<>();
-    private final ArrayList<Integer> classesNeeded = new ArrayList<>();
-    private final ArrayList<SinglePetition> _petitions = new ArrayList<>();
+    private final List<Integer> classesNeeded = new ArrayList<>();
+    private final List<SinglePetition> petitions = new ArrayList<>();
     private int _allyId;
     private int level;
     private int _hasCastle;
@@ -102,7 +103,7 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
     private long _dissolvedAllyTime;
     private long _expelledMemberTime;
     private ClanAirShip airship;
-    private boolean _airshipLicense;
+    private boolean airshipLicense;
     private int airshipFuel;
     private ClanWarehouse warehouse;
     private int _whBonus = -1;
@@ -115,11 +116,9 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
 
     /**
      * The constructor is only used internally to restore a database
-     *
-     * @param clanId
      */
     public Clan(int clanId) {
-        _clanId = clanId;
+        this.clanId = clanId;
 
         // Synerge - Initialize the clan stats module
         // _stats = new ClanStats(this);
@@ -215,7 +214,7 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
     }
 
     public int getClanId() {
-        return _clanId;
+        return clanId;
     }
 
     public int getLeaderId() {
@@ -281,13 +280,10 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
     }
 
     public UnitMember getAnyMember(String name) {
-        for (SubUnit unit : getAllSubUnits()) {
-            UnitMember m = unit.getUnitMember(name);
-            if (m != null) {
-                return m;
-            }
-        }
-        return null;
+        return getAllSubUnits().stream()
+                .map(unit -> unit.getUnitMember(name))
+                .filter(Objects::nonNull)
+                .findFirst().orElse(null);
     }
 
     public int getAllSize() {
@@ -296,7 +292,7 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
 
     private String getUnitName() {
         if (!subUnits.containsKey(Clan.SUBUNIT_MAIN_CLAN)) {
-            return StringUtils.EMPTY;
+            return "";
         }
 
         return getSubUnit(Clan.SUBUNIT_MAIN_CLAN).getName();
@@ -314,7 +310,6 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
         if (unitType == SUBUNIT_NONE || !subUnits.containsKey(unitType)) {
             return 0;
         }
-
         return getSubUnit(unitType).getLeaderObjectId();
     }
 
@@ -511,14 +506,14 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
             // Synerge - Save all clan stats to the database
             // getStats().updateClanStatsToDB();
         } catch (SQLException e) {
-            _log.warn("error while updating clan '" + _clanId + "' data in db", e);
+            _log.warn("error while updating clan '" + clanId + "' data in db", e);
         }
     }
 
     public void store() {
         try (Connection con = DatabaseFactory.getInstance().getConnection()) {
             try (PreparedStatement statement = con.prepareStatement("INSERT INTO clan_data (clan_id,clan_level,hasCastle,hasFortress,hasHideout,ally_id,expelled_member,leaved_ally,dissolved_ally,airship) values (?,?,?,?,?,?,?,?,?,?)")) {
-                statement.setInt(1, _clanId);
+                statement.setInt(1, clanId);
                 statement.setInt(2, level);
                 statement.setInt(3, _hasCastle);
                 statement.setInt(4, _hasFortress);
@@ -537,7 +532,7 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
             SubUnit mainSubUnit = subUnits.get(SUBUNIT_MAIN_CLAN);
 
             try (PreparedStatement statement = con.prepareStatement("INSERT INTO clan_subpledges (clan_id, type, leader_id, name) VALUES (?,?,?,?)")) {
-                statement.setInt(1, _clanId);
+                statement.setInt(1, clanId);
                 statement.setInt(2, mainSubUnit.getType());
                 statement.setInt(3, mainSubUnit.getLeaderObjectId());
                 statement.setString(4, mainSubUnit.getName());
@@ -799,10 +794,6 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
 
     /**
      * used to add a new skill to the list, send a packet to all online clan members, update their stats and store it in db
-     *
-     * @param newSkill
-     * @param store
-     * @return
      */
     public Skill addSkill(Skill newSkill, boolean store) {
         Skill oldSkill = null;
@@ -1083,7 +1074,7 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
         if (subUnit == null)
             return;
 
-        UnitMember member = new UnitMember(this, player.getName(), player.getTitle(), player.getLevel(), player.getClassId().getId(), player.getObjectId(), pledgeType, player.getPowerGrade(), player.getApprentice(), player.getSex(), Clan.SUBUNIT_NONE);
+        UnitMember member = new UnitMember(this, player.getName(), player.getTitle(), player.getLevel(), player.getClassId().getId(), player.getObjectId(), pledgeType, player.getPowerGrade(), player.getApprentice(), player.isMale() ? 0 : 1, Clan.SUBUNIT_NONE);
         subUnit.addUnitMember(member);
 
         player.setPledgeType(pledgeType);
@@ -1134,10 +1125,10 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
             try (PreparedStatement statement = con.prepareStatement("SELECT * FROM clan_requiements where clan_id=" + getClanId());
                  ResultSet rset = statement.executeQuery()) {
                 while (rset.next()) {
-                    recruting = (rset.getInt("recruting") == 1 ? true : false);
+                    recruting = (rset.getInt("recruting") == 1);
                     for (String clas : rset.getString("classes").split(","))
                         if (clas.length() > 0)
-                            classesNeeded.add(Integer.parseInt(clas));
+                            classesNeeded.add(toInt(clas));
                     for (int i = 1; i <= 8; i++)
                         questions[(i - 1)] = rset.getString("question" + i);
                 }
@@ -1146,10 +1137,10 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
             try (PreparedStatement statement = con.prepareStatement("SELECT * FROM clan_petitions where clan_id=" + getClanId());
                  ResultSet rset = statement.executeQuery()) {
                 while (rset.next()) {
-                    String[] answers = new String[8];
+                    List<String> answers = new ArrayList<>();
                     for (int i = 1; i <= 8; i++)
-                        answers[(i - 1)] = rset.getString("answer" + i);
-                    _petitions.add(new SinglePetition(rset.getInt("sender_id"), answers, rset.getString("comment")));
+                        answers.add(rset.getString("answer" + i));
+                    petitions.add(new SinglePetition(rset.getInt("sender_id"), answers, rset.getString("comment")));
                 }
             }
         } catch (NumberFormatException | SQLException e) {
@@ -1160,7 +1151,7 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
     public void updateRecrutationData() {
         try (Connection con = DatabaseFactory.getInstance().getConnection()) {
             try (PreparedStatement statement = con.prepareStatement("INSERT INTO clan_requiements VALUES(" + getClanId() + ",0,'','','','','','','','','') ON DUPLICATE KEY UPDATE recruting=?,classes=?,question1=?,question2=?,question3=?,question4=?,question5=?,question6=?,question7=?,question8=?")) {
-                statement.setInt(1, (recruting == true ? 1 : 0));
+                statement.setInt(1, (recruting ? 1 : 0));
                 statement.setString(2, getClassesForData());
                 for (int i = 0; i < 8; i++)
                     statement.setString(i + 3, questions[i] == null ? "" : questions[i]);
@@ -1176,21 +1167,21 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
                     statement.setInt(1, petition.getSenderId());
                     statement.setInt(2, getClanId());
                     for (int i = 0; i < 8; i++)
-                        statement.setString(i + 3, petition.getAnswers()[i] == null ? "" : petition.getAnswers()[i]);
+                        statement.setString(i + 3, petition.getAnswers().get(i) == null ? "" : petition.getAnswers().get(i));
                     statement.setString(11, petition.getComment());
                     statement.execute();
                 }
             }
         } catch (SQLException e) {
-            _log.warn("Error while updating clan recruitment system on clan id '" + _clanId + "' in db", e);
+            _log.warn("Error while updating clan recruitment system on clan id '" + clanId + "' in db", e);
         }
     }
 
-    public synchronized boolean addPetition(int senderId, String[] answers, String comment) {
+    public synchronized boolean addPetition(int senderId, List<String> answers, String comment) {
         if (getPetition(senderId) != null)
             return false;
 
-        _petitions.add(new SinglePetition(senderId, answers, comment));
+        petitions.add(new SinglePetition(senderId, answers, comment));
         updateRecrutationData();
 
         if (World.getPlayer(getLeaderId()) != null)
@@ -1199,23 +1190,23 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
     }
 
     public SinglePetition getPetition(int senderId) {
-        return _petitions.stream().filter(petition -> petition.getSenderId() == senderId).findAny().orElse(null);
+        return petitions.stream().filter(petition -> petition.getSenderId() == senderId).findAny().orElse(null);
     }
 
-    public ArrayList<SinglePetition> getPetitions() {
-        return _petitions;
+    public List<SinglePetition> getPetitions() {
+        return petitions;
     }
 
     public synchronized void deletePetition(int senderId) {
-        SinglePetition petition = _petitions.stream().filter(p -> p.getSenderId() == senderId).findAny().orElse(null);
+        SinglePetition petition = petitions.stream().filter(p -> p.getSenderId() == senderId).findAny().orElse(null);
         if (petition != null) {
-            _petitions.remove(petition);
+            petitions.remove(petition);
             updateRecrutationData();
         }
     }
 
     public void deletePetition(SinglePetition petition) {
-        _petitions.remove(petition);
+        petitions.remove(petition);
         updateRecrutationData();
     }
 
@@ -1246,7 +1237,7 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
         return text.toString();
     }
 
-    public ArrayList<Integer> getClassesNeeded() {
+    public List<Integer> getClassesNeeded() {
         return classesNeeded;
     }
 
@@ -1274,7 +1265,7 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
                 // int party = rset.getInt("party"); - unused?
                 int privileges = rset.getInt("privilleges");
                 // noinspection ConstantConditions
-                RankPrivs p = _privs.get(rank);
+                RankPrivs p = privs.get(rank);
                 if (p != null)
                     p.setPrivs(privileges);
                 else
@@ -1289,7 +1280,7 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
 
     private void InitializePrivs() {
         for (int i = RANK_FIRST; i <= RANK_LAST; i++)
-            _privs.put(i, new RankPrivs(i, 0, CP_NOTHING));
+            privs.put(i, new RankPrivs(i, 0, CP_NOTHING));
     }
 
     public void updatePrivsForRank(int rank) {
@@ -1307,12 +1298,12 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
             Thread.dumpStack();
             return null;
         }
-        if (_privs.get(rank) == null) {
+        if (privs.get(rank) == null) {
             _log.warn("Request of rank before init: " + rank);
             Thread.dumpStack();
             setRankPrivs(rank, CP_NOTHING);
         }
-        return _privs.get(rank);
+        return privs.get(rank);
     }
 
     public int countMembersByRank(int rank) {
@@ -1330,10 +1321,10 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
             return;
         }
 
-        if (_privs.get(rank) != null)
-            _privs.get(rank).setPrivs(privs);
+        if (this.privs.get(rank) != null)
+            this.privs.get(rank).setPrivs(privs);
         else
-            _privs.put(rank, new RankPrivs(rank, countMembersByRank(rank), privs));
+            this.privs.put(rank, new RankPrivs(rank, countMembersByRank(rank), privs));
 
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement("REPLACE INTO clan_privs (clan_id,rank,privilleges) VALUES (?,?,?)")) {
@@ -1346,10 +1337,8 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
         }
     }
 
-    public final RankPrivs[] getAllRankPrivs() {
-        if (_privs == null)
-            return new RankPrivs[0];
-        return _privs.values().toArray(new RankPrivs[0]);
+    public final List<RankPrivs> getAllRankPrivs() {
+        return new ArrayList<>(privs.values());
     }
 
     public int getWhBonus() {
@@ -1363,11 +1352,11 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
     }
 
     public void setAirshipLicense(boolean val) {
-        _airshipLicense = val;
+        airshipLicense = val;
     }
 
     public boolean isHaveAirshipLicense() {
-        return _airshipLicense;
+        return airshipLicense;
     }
 
     public ClanAirShip getAirship() {
@@ -1469,26 +1458,26 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
 
 
     public class SinglePetition {
-        final int _sender;
-        final String[] _answers;
-        final String _comment;
+        final int sender;
+        final List<String> answers;
+        final String comment;
 
-        private SinglePetition(int sender, String[] answers, String comment) {
-            _sender = sender;
-            _answers = answers;
-            _comment = comment;
+        private SinglePetition(int sender, List<String> answers, String comment) {
+            this.sender = sender;
+            this.answers = answers;
+            this.comment = comment;
         }
 
         public int getSenderId() {
-            return _sender;
+            return sender;
         }
 
-        public String[] getAnswers() {
-            return _answers;
+        public List<String> getAnswers() {
+            return answers;
         }
 
         public String getComment() {
-            return _comment;
+            return comment;
         }
     }
 

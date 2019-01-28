@@ -232,10 +232,10 @@ public final class Hitman extends Functions implements ScriptFile, OnDeathListen
 
         CharListenerList.addGlobal(this);
 
-        for (String EVENT_HITMAN_ALLOWED_ITEM_LIST : Config.EVENT_HITMAN_ALLOWED_ITEM_LIST) {
-            final String itemName = ItemFunctions.createItem(Integer.parseInt(EVENT_HITMAN_ALLOWED_ITEM_LIST)).getTemplate().getName();
+        for (Integer EVENT_HITMAN_ALLOWED_ITEM_LIST : Config.EVENT_HITMAN_ALLOWED_ITEM_LIST) {
+            final String itemName = ItemFunctions.createItem(EVENT_HITMAN_ALLOWED_ITEM_LIST).getTemplate().getName();
             _itemsList.append(itemName).append(";");
-            allowedItems.put(itemName, Integer.parseInt(EVENT_HITMAN_ALLOWED_ITEM_LIST));
+            allowedItems.put(itemName, EVENT_HITMAN_ALLOWED_ITEM_LIST);
         }
         loadFromDatabase();
         _log.info("Loaded Event: Hitman");

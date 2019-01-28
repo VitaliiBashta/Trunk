@@ -13,7 +13,7 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.templates.item.ItemTemplate;
 
 /**
- * Format: cdb, b - array of (dd)
+ * Format: cdb, buffPrice - array of (dd)
  */
 public class SendWareHouseDepositList extends L2GameClientPacket {
     private static final long _WAREHOUSE_FEE = 30; //TODO [G1ta0] hardcode price

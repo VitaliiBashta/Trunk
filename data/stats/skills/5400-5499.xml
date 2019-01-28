@@ -57,7 +57,7 @@
 	</skill>
 	<skill id="5404" levels="1" name="Presentation - Balor 4">
 		<!--
-			Description: Balor - Instant Cast Skill
+			Description: Balor - Instant cast Skill
 		-->
 		<set name="icon" val="icon.skill0000" />
 		<set name="coolTime" val="500" />
@@ -92,7 +92,7 @@
 	</skill>
 	<skill id="5407" levels="1" name="Presentation - Crystalline Golem 1">
 		<!--
-			Description: Crystaline-Instant Cast Skill
+			Description: Crystaline-Instant cast Skill
 		-->
 		<set name="icon" val="icon.skill0000" />
 		<set name="magicLevel" val="85" />

@@ -188,27 +188,25 @@ public abstract class ResidenceManager extends MerchantInstance {
                 html.setFile("residence/teleport.htm");
                 List<TeleportLocation> locs = getResidence().getFunction(ResidenceFunction.TELEPORT).getTeleports();
                 StringBuilder teleport_list = new StringBuilder(100 * locs.size());
-                String price;
                 final String delimiter = HtmlUtils.htmlNpcString(1000308);
                 for (TeleportLocation loc : locs) {
-                    price = String.valueOf(loc.getPrice());
-                    teleport_list.append("<a action=\"bypass -h scripts_Util:Gatekeeper ");
-                    teleport_list.append(loc.getX());
-                    teleport_list.append(" ");
-                    teleport_list.append(loc.getY());
-                    teleport_list.append(" ");
-                    teleport_list.append(loc.getZ());
-                    teleport_list.append(" ");
-                    teleport_list.append(price);
-                    teleport_list.append("\" msg=\"811;F;");
-                    teleport_list.append(loc.getName());
-                    teleport_list.append("\">");
-                    teleport_list.append(HtmlUtils.htmlNpcString(loc.getName()));
-                    teleport_list.append(" - ");
-                    teleport_list.append(price);
-                    teleport_list.append(" ");
-                    teleport_list.append(delimiter);
-                    teleport_list.append("</a><br1>");
+                    teleport_list.append("<a action=\"bypass -h scripts_Util:Gatekeeper ")
+                            .append(loc.getX())
+                            .append(" ")
+                            .append(loc.getY())
+                            .append(" ")
+                            .append(loc.getZ())
+                            .append(" ")
+                            .append(loc.getPrice())
+                            .append("\" msg=\"811;F;")
+                            .append(loc.getName())
+                            .append("\">")
+                            .append(HtmlUtils.htmlNpcString(loc.getName()))
+                            .append(" - ")
+                            .append(loc.getPrice())
+                            .append(" ")
+                            .append(delimiter)
+                            .append("</a><br1>");
                 }
                 html.replace("%teleList%", teleport_list.toString());
                 sendHtmlMessage(player, html);
@@ -244,7 +242,7 @@ public abstract class ResidenceManager extends MerchantInstance {
                     support_list.append(" ");
                     support_list.append(s.level);
                     support_list.append("\">");
-                    support_list.append(s.name());
+                    support_list.append(s.name);
                     support_list.append(" Lv.");
                     support_list.append(s.getDisplayLevel());
                     support_list.append("</a><br1>");
@@ -274,13 +272,13 @@ public abstract class ResidenceManager extends MerchantInstance {
                     html.replace("%mp_regen%", "0%");
                 sendHtmlMessage(player, html);
             }
-        } else if (actualCommand.equalsIgnoreCase("manage")) {
+        } else if ("manage".equalsIgnoreCase(actualCommand)) {
             if (!isHaveRigths(player, getPrivSetFunctions())) {
                 player.sendPacket(SystemMsg.YOU_ARE_NOT_AUTHORIZED_TO_DO_THAT);
                 return;
             }
 
-            if (val.equalsIgnoreCase("recovery")) {
+            if ("recovery".equalsIgnoreCase(val)) {
                 if (st.countTokens() >= 1) {
                     val = st.nextToken();
                     boolean success = true;
@@ -296,15 +294,15 @@ public abstract class ResidenceManager extends MerchantInstance {
                         broadcastDecoInfo();
                 }
                 showManageRecovery(player);
-            } else if (val.equalsIgnoreCase("other")) {
+            } else if ("other".equalsIgnoreCase(val)) {
                 if (st.countTokens() >= 1) {
                     val = st.nextToken();
                     boolean success = true;
-                    if (val.equalsIgnoreCase("item"))
+                    if ("item".equalsIgnoreCase(val))
                         success = getResidence().updateFunctions(ResidenceFunction.ITEM_CREATE, Integer.valueOf(st.nextToken()));
-                    else if (val.equalsIgnoreCase("tele"))
+                    else if ("tele".equalsIgnoreCase(val))
                         success = getResidence().updateFunctions(ResidenceFunction.TELEPORT, Integer.valueOf(st.nextToken()));
-                    else if (val.equalsIgnoreCase("support"))
+                    else if ("support".equalsIgnoreCase(val))
                         success = getResidence().updateFunctions(ResidenceFunction.SUPPORT, Integer.valueOf(st.nextToken()));
                     if (!success)
                         player.sendPacket(SystemMsg.THERE_IS_NOT_ENOUGH_ADENA_IN_THE_CLAN_HALL_WAREHOUSE);

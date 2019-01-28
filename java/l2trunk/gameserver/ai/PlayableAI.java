@@ -17,7 +17,7 @@ import java.util.concurrent.ScheduledFuture;
 import static l2trunk.gameserver.ai.CtrlIntention.*;
 
 public class PlayableAI extends CharacterAI {
-    Skill _skill;
+    Skill skill;
     boolean _forceUse;
     private Object _intention_arg0 = null;
     private Object _intention_arg1 = null;
@@ -51,7 +51,7 @@ public class PlayableAI extends CharacterAI {
 
     @Override
     public void onIntentionCast(Skill skill, Creature target) {
-        _skill = skill;
+        this.skill = skill;
         super.onIntentionCast(skill, target);
     }
 
@@ -101,7 +101,7 @@ public class PlayableAI extends CharacterAI {
                 _dontMove = nextAction_arg3;
                 clearNextAction();
                 if (!skill.checkCondition(actor, target, _forceUse, _dontMove, true)) {
-                    if ((skill.getNextAction() == NextAction.ATTACK) && !actor.equals(target)) {
+                    if ((skill.nextAction == NextAction.ATTACK) && !actor.equals(target)) {
                         setNextAction(PlayableAI.nextAction.ATTACK, target, null, _forceUse, false);
                         return setNextIntention();
                     }
@@ -453,14 +453,14 @@ public class PlayableAI extends CharacterAI {
 
         Creature target = getAttackTarget();
 
-        if ((_skill.skillType == SkillType.CRAFT) || _skill.isToggle()) {
-            if (_skill.checkCondition(actor, target, _forceUse, _dontMove, true)) {
-                actor.doCast(_skill, target, _forceUse);
+        if ((skill.skillType == SkillType.CRAFT) || skill.isToggle()) {
+            if (skill.checkCondition(actor, target, _forceUse, _dontMove, true)) {
+                actor.doCast(skill, target, _forceUse);
             }
             return;
         }
 
-        if ((target == null) || ((target.isDead() != _skill.isCorpse) && !_skill.isNotTargetAoE())) {
+        if ((target == null) || ((target.isDead() != skill.isCorpse) && !skill.isNotTargetAoE())) {
             setIntention(AI_INTENTION_ACTIVE);
             actor.sendActionFailed();
             return;
@@ -468,7 +468,7 @@ public class PlayableAI extends CharacterAI {
 
         if (!checkRange) {
             // If the skill is the next step, assign this action after the expiry of skill
-            if ((_skill.getNextAction() == NextAction.ATTACK) && !actor.equals(target) && (!_forceUse)) {
+            if ((skill.nextAction == NextAction.ATTACK) && !actor.equals(target) && (!_forceUse)) {
                 setNextAction(nextAction.ATTACK, target, null, _forceUse, false);
             } else {
                 clearNextAction();
@@ -476,8 +476,8 @@ public class PlayableAI extends CharacterAI {
 
             clientStopMoving();
 
-            if (_skill.checkCondition(actor, target, _forceUse, _dontMove, true)) {
-                actor.doCast(_skill, target, _forceUse);
+            if (skill.checkCondition(actor, target, _forceUse, _dontMove, true)) {
+                actor.doCast(skill, target, _forceUse);
             } else {
                 setNextIntention();
                 if (getIntention() == CtrlIntention.AI_INTENTION_ATTACK) {
@@ -488,13 +488,13 @@ public class PlayableAI extends CharacterAI {
             return;
         }
 
-        int range = actor.getMagicalAttackRange(_skill);
+        int range = actor.getMagicalAttackRange(skill);
         if (range < 10) {
             range = 10;
         }
 
-        boolean canSee = (_skill.skillType == SkillType.TAKECASTLE) || (_skill.skillType == SkillType.TAKEFORTRESS) || GeoEngine.canSeeTarget(actor, target, actor.isFlying());
-        boolean noRangeSkill = _skill.castRange == 32767;
+        boolean canSee = (skill.skillType == SkillType.TAKECASTLE) || (skill.skillType == SkillType.TAKEFORTRESS) || GeoEngine.canSeeTarget(actor, target, actor.isFlying());
+        boolean noRangeSkill = skill.castRange == 32767;
 
         if (!noRangeSkill && !canSee && ((range > 200) || (Math.abs(actor.getZ() - target.getZ()) > 200))) {
             actor.sendPacket(SystemMsg.CANNOT_SEE_TARGET);
@@ -518,15 +518,15 @@ public class PlayableAI extends CharacterAI {
             }
 
             // If the skill is the next step, assign this action after the expiry of skill
-            if ((_skill.getNextAction() == NextAction.ATTACK) && !actor.equals(target) && (!_forceUse)) {
+            if ((skill.nextAction == NextAction.ATTACK) && !actor.equals(target) && (!_forceUse)) {
                 setNextAction(nextAction.ATTACK, target, null, _forceUse, false);
             } else {
                 clearNextAction();
             }
 
-            if (_skill.checkCondition(actor, target, _forceUse, _dontMove, true)) {
+            if (skill.checkCondition(actor, target, _forceUse, _dontMove, true)) {
                 clientStopMoving();
-                actor.doCast(_skill, target, _forceUse);
+                actor.doCast(skill, target, _forceUse);
             } else {
                 setNextIntention();
                 if (getIntention() == CtrlIntention.AI_INTENTION_ATTACK) {
@@ -617,7 +617,7 @@ public class PlayableAI extends CharacterAI {
     }
 
     @Override
-    public void Cast(Skill skill, Creature target, boolean forceUse, boolean dontMove) {
+    public void cast(Skill skill, Creature target, boolean forceUse, boolean dontMove) {
         Playable actor = getActor();
 
         // Если скилл альтернативного типа (например, бутылка на хп),
@@ -627,8 +627,8 @@ public class PlayableAI extends CharacterAI {
             clientActionFailed();
             return;
         }
-        if (skill.isAltUse || skill.isToggle()) {
-            if ((skill.isToggle() || skill.isItemHandler()) && (actor.isOutOfControl() || actor.isStunned() || actor.isSleeping() || actor.isParalyzed() || actor.isAlikeDead())) {
+        if (skill.altUse() || skill.isToggle()) {
+            if ((skill.isToggle() || skill.isItemHandler) && (actor.isOutOfControl() || actor.isStunned() || actor.isSleeping() || actor.isParalyzed() || actor.isAlikeDead())) {
                 clientActionFailed();
             } else {
                 actor.altUseSkill(skill.id, target);

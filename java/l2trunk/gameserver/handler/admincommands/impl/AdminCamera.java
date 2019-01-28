@@ -6,9 +6,9 @@ import l2trunk.gameserver.model.base.InvisibleType;
 import l2trunk.gameserver.network.serverpackets.CameraMode;
 import l2trunk.gameserver.network.serverpackets.SpecialCamera;
 
-public class AdminCamera implements IAdminCommandHandler {
+public final class AdminCamera implements IAdminCommandHandler {
     @Override
-    public boolean useAdminCommand(@SuppressWarnings("rawtypes") Enum comm, String[] wordList, String fullString, Player activeChar) {
+    public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
         Commands command = (Commands) comm;
 
         if (!activeChar.getPlayerAccess().Menu)

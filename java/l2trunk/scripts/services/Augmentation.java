@@ -209,7 +209,7 @@ public final class Augmentation extends Functions {
         adminReply.setFile("scripts/services/Augmentations/list.htm");
         String template = HtmCache.INSTANCE.getNotNull("scripts/services/Augmentations/template.htm", player);
         String block = "";
-        String list = "";
+        StringBuilder list = new StringBuilder();
         StringBuilder pagesHtm = new StringBuilder();
         int maxPage = (int) Math.ceil(augmentations.size() / 7.0D);
         _page = Math.min(_page, maxPage);
@@ -242,39 +242,39 @@ public final class Augmentation extends Functions {
                 continue;
             Skill skill = !augm.getSkills().isEmpty() ? augm.getSkills().get(0) : !augm.getTriggerList().isEmpty() ? augm.getTriggerList().get(0).getSkill() : null;
             block = template;
-            block = block.replace("{bypass}", new StringBuilder().append("bypass -h scripts_services.Augmentation:run put ").append(augm.getId()).append(" ").append(_filter.ordinal() + 1).toString());
-            String name = "";
+            block = block.replace("{bypass}", "bypass -h scripts_services.Augmentation:run put " + augm.getId() + " " + (_filter.ordinal() + 1));
+            String name;
             if (skill != null) {
-                name = skill.name().length() > 28 ? skill.name().substring(0, 28) : skill.name();
+                name = skill.name.length() > 28 ? skill.name.substring(0, 28) : skill.name;
             } else {
                 name = "+1 ";
                 switch (augm.getId()) {
                     case 16341:
-                        name = new StringBuilder().append(name).append("STR").toString();
+                        name = name + "STR";
                         break;
                     case 16342:
-                        name = new StringBuilder().append(name).append("CON").toString();
+                        name = name + "CON";
                         break;
                     case 16343:
-                        name = new StringBuilder().append(name).append("INT").toString();
+                        name = name + "INT";
                         break;
                     case 16344:
-                        name = new StringBuilder().append(name).append("MEN").toString();
+                        name = name + "MEN";
                         break;
                     default:
-                        name = new StringBuilder().append(name).append("(Id:").append(augm.getId()).append(")").toString();
+                        name = name + "(Id:" + augm.getId() + ")";
                 }
             }
 
             block = block.replace("{name}", name);
             block = block.replace("{icon}", skill != null ? skill.icon : "icon.skill5041");
             block = block.replace("{color}", lastColor ? "222222" : "333333");
-            block = block.replace("{price}", new StringBuilder().append(Util.formatAdena(Config.SERVICES_AUGMENTATION_PRICE)).append(" ").append(Util.getItemName(Config.SERVICES_AUGMENTATION_ITEM)).toString());
-            list = new StringBuilder().append(list).append(block).toString();
+            block = block.replace("{price}", Util.formatAdena(Config.SERVICES_AUGMENTATION_PRICE) + " " + Util.getItemName(Config.SERVICES_AUGMENTATION_ITEM));
+            list.append(block);
             lastColor = !lastColor;
         }
         adminReply.replace("%pages%", pagesHtm.toString());
-        adminReply.replace("%augs%", list);
+        adminReply.replace("%augs%", list.toString());
         player.sendPacket(adminReply);
     }
 

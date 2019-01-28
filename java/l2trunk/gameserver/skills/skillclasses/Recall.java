@@ -162,7 +162,7 @@ public final class Recall extends Skill {
                     activeChar.sendMessage(new CustomMessage("common.RecallInDuel", (Player) activeChar));
                     return;
                 }
-                if (isItemHandler()) {
+                if (isItemHandler) {
                     if (specialScrolls.containsKey(itemConsumeId.get(0))) {
                         pcTarget.teleToLocation(specialScrolls.get(itemConsumeId.get(0)));
                         return;

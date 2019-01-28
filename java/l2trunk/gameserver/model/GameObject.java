@@ -124,11 +124,6 @@ public abstract class GameObject extends EventOwner {
         return z;
     }
 
-    /**
-     * Возвращает позицию (x, y, z, heading)
-     *
-     * @return Location
-     */
     public Location getLoc() {
         return new Location(x, y, z, getHeading());
     }

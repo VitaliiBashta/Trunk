@@ -534,14 +534,14 @@ public final class EnterWorld extends L2GameClientPacket {
                     }
                     case (ItemTemplate.CRYSTAL_B): {
                         boolean bActive = false;
-                        ItemInstance shot = activeChar.getInventory().getItemByItemId(1465); // Soulshot b
+                        ItemInstance shot = activeChar.getInventory().getItemByItemId(1465); // Soulshot buffPrice
                         if (shot != null) {
                             activeChar.addAutoSoulShot(1465);
                             activeChar.sendPacket(new ExAutoSoulShot(shot.getItemId(), true));
                             activeChar.sendPacket(new SystemMessage2(SystemMsg.THE_AUTOMATIC_USE_OF_S1_HAS_BEEN_ACTIVATED).addString(shot.getName()));
                             bActive = true;
                         }
-                        shot = activeChar.getInventory().getItemByItemId(3950); // Blessed Spiritshot b
+                        shot = activeChar.getInventory().getItemByItemId(3950); // Blessed Spiritshot buffPrice
                         if (shot != null) {
                             activeChar.addAutoSoulShot(3950);
                             activeChar.sendPacket(new ExAutoSoulShot(shot.getItemId(), true));

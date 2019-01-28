@@ -30,8 +30,7 @@ public final class LethalShot extends Skill {
                 reflected = target.checkReflectSkill(activeChar, this);
                 realTarget = reflected ? activeChar : target;
 
-                if (getPower() > 0) // If == 0 means skill "disabled"
-                {
+                if (power > 0) { // If == 0 means skill "disabled"
                     AttackInfo info = Formulas.calcPhysDam(activeChar, realTarget, this, false, false, ss, false);
 
                     if (info.lethal_dmg > 0)

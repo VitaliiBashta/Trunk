@@ -5,7 +5,7 @@ import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.Log;
 
-public class CharMoveToLocation extends L2GameServerPacket {
+public final class CharMoveToLocation extends L2GameServerPacket {
     private final int _objectId;
     private final Location _current;
     private int _client_z_shift;

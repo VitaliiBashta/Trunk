@@ -31,27 +31,27 @@ public enum  CharacterControlPanel {
             return "char.htm";
 
             // Block unwanted buffs
-        else if (param[0].equalsIgnoreCase("grief")) {
+        else if ("grief".equalsIgnoreCase(param[0])) {
             CCPSmallCommands.setAntiGrief(activeChar);
         }
         // Block Experience
-        else if (param[0].equalsIgnoreCase("noe")) {
+        else if ("noe".equalsIgnoreCase(param[0])) {
             if (activeChar.getVar("NoExp") == null)
                 activeChar.setVar("NoExp", "1", -1);
             else
                 activeChar.unsetVar("NoExp");
         }
         // Auto Shoulshots
-        else if (param[0].equalsIgnoreCase("soulshot")) {
+        else if ("soulshot".equalsIgnoreCase(param[0])) {
             if (activeChar.getVar("soulshot") == null)
                 activeChar.setVar("soulshot", "1", -1);
             else
                 activeChar.unsetVar("soulshot");
         }
         // Show Online Players
-        else if (param[0].equalsIgnoreCase("online")) {
+        else if ("online".equalsIgnoreCase(param[0])) {
             activeChar.sendMessage(CCPSmallCommands.showOnlineCount());
-        } else if (param[0].equalsIgnoreCase("changeLog")) {
+        } else if ("changeLog".equalsIgnoreCase(param[0])) {
             Quest q = QuestManager.getQuest(QuestManager.TUTORIAL_QUEST_ID);
             if (q != null) {
                 QuestState st = activeChar.getQuestState(q.getName());
@@ -75,10 +75,10 @@ public enum  CharacterControlPanel {
                         .collect(Collectors.toList());
 
                 activeChar.sendPacket(pls);
-                activeChar.setNotShowTraders(true);
+                activeChar.setNotShowTraders();
                 activeChar.setVar(Player.NO_TRADERS_VAR, "1", -1);
             } else {
-                activeChar.setNotShowTraders(false);
+                activeChar.setNotShowTraders();
                 activeChar.unsetVar(Player.NO_TRADERS_VAR);
 
                 World.getAroundPlayers(activeChar)

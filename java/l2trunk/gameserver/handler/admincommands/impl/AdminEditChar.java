@@ -891,7 +891,7 @@ public final class AdminEditChar implements IAdminCommandHandler {
                 }
 
                 // Удаляем из возможных сабов их родителей, если таковые есть у чара
-                ClassId parent = ClassId.VALUES.get(availSub.ordinal()).getParent(player.getSex());
+                ClassId parent = ClassId.VALUES.get(availSub.ordinal()).getParent();
                 if (parent != null && parent.getId() == subClass.getClassId()) {
                     availSubs.remove(availSub);
                     continue;
@@ -899,7 +899,7 @@ public final class AdminEditChar implements IAdminCommandHandler {
 
                 // Удаляем из возможных сабов родителей текущих сабклассов, иначе если взять саб berserker
                 // и довести до 3ей профы - doombringer, игроку будет предложен berserker вновь (дежавю)
-                ClassId subParent = ClassId.VALUES.get(subClass.getClassId()).getParent(player.getSex());
+                ClassId subParent = ClassId.VALUES.get(subClass.getClassId()).getParent();
                 if (subParent != null && subParent.getId() == availSub.ordinal())
                     availSubs.remove(availSub);
             }
@@ -912,7 +912,7 @@ public final class AdminEditChar implements IAdminCommandHandler {
 
                 // Для Berserker(doombringer) и Arbalester(trickster) предлагаем Soulbreaker-а только своего пола
                 if (currClass == PlayerClass.Berserker || currClass == PlayerClass.Doombringer || currClass == PlayerClass.Arbalester || currClass == PlayerClass.Trickster)
-                    if (player.getSex() == 1 && availSub == PlayerClass.MaleSoulbreaker || player.getSex() == 0 && availSub == PlayerClass.FemaleSoulbreaker)
+                    if (player.isMale() && availSub == PlayerClass.MaleSoulbreaker || !player.isMale()  && availSub == PlayerClass.FemaleSoulbreaker)
                         availSubs.remove(availSub);
 
                 // Inspector доступен, только когда вкачаны 2 возможных первых саба камаэль(+ мейн класс):

@@ -27,7 +27,7 @@ public final class SkillList extends L2GameServerPacket {
         writeC(0x5f);
         writeD(skills.size());
 
-        skills.forEach(skill ->  {
+        skills.forEach(skill -> {
             writeD(skill.isActive() || skill.isToggle() ? 0 : 1); // deprecated? клиентом игнорируется
             writeD(skill.getDisplayLevel());
             writeD(skill.displayId);

@@ -2,7 +2,7 @@ package l2trunk.gameserver.network.serverpackets;
 
 import l2trunk.gameserver.model.Player;
 
-public class EtcStatusUpdate extends L2GameServerPacket {
+public final class EtcStatusUpdate extends L2GameServerPacket {
     /**
      * Packet for lvl 3 client buff line
      * <p>

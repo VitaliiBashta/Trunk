@@ -6,8 +6,8 @@ import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.stats.Env;
 
-public class EffectRelax extends Effect {
-    private boolean _isWereSitting;
+public final class EffectRelax extends Effect {
+    private boolean isWereSitting;
 
     public EffectRelax(Env env, EffectTemplate template) {
         super(env, template);
@@ -31,28 +31,28 @@ public class EffectRelax extends Effect {
         Player player = effected.getPlayer();
         if (player.isMoving)
             player.stopMove();
-        _isWereSitting = player.isSitting();
+        isWereSitting = player.isSitting();
         player.sitDown(null);
     }
 
     @Override
     public void onExit() {
         super.onExit();
-        if (!_isWereSitting)
+        if (!isWereSitting)
             effected.getPlayer().standUp();
     }
 
     @Override
     public boolean onActionTime() {
         Player player = effected.getPlayer();
-        if (player.isAlikeDead() || player == null)
+        if (player == null ||player.isAlikeDead())
             return false;
 
         if (!player.isSitting())
             return false;
 
         if (player.isCurrentHpFull() && getSkill().isToggle()) {
-            getEffected().sendPacket(SystemMsg.THAT_SKILL_HAS_BEEN_DEACTIVATED_AS_HP_WAS_FULLY_RECOVERED);
+            effected.sendPacket(SystemMsg.THAT_SKILL_HAS_BEEN_DEACTIVATED_AS_HP_WAS_FULLY_RECOVERED);
             return false;
         }
 

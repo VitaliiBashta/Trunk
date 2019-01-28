@@ -16,7 +16,7 @@ public final class EffectDamOverTimeLethal extends Effect {
 
         double damage = calc();
 
-        if (getSkill().isOffensive())
+        if (getSkill().isOffensive)
             damage *= 2;
 
         damage = effector.calcStat(getSkill().isMagic() ? Stats.MAGIC_DAMAGE : Stats.PHYSICAL_DAMAGE, damage, effected, getSkill());

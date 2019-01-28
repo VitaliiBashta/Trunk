@@ -28,7 +28,7 @@ public final class Spoil extends Skill {
             return;
 
         int ss = isSSPossible() ? (isMagic() ? activeChar.getChargedSpiritShot() : activeChar.getChargedSoulShot() ? 2 : 0) : 0;
-        if (ss > 0 && getPower() > 0)
+        if (ss > 0 && power > 0)
             activeChar.unChargeShots(false);
 
         targets.stream()
@@ -70,7 +70,7 @@ public final class Spoil extends Skill {
                             activeChar.sendPacket(new SystemMessage2(SystemMsg.S1_HAS_FAILED).addSkillName(id, getDisplayLevel()));
                     }
 
-                    if (getPower() > 0) {
+                    if (power > 0) {
                         double damage;
                         if (isMagic())
                             damage = Formulas.calcMagicDam(activeChar, t, this, ss);

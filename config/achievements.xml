@@ -202,11 +202,11 @@
 		<level id="4" name="Pirate" icon="icon.skill0419" need="500" fame="250"/>
 		<level id="5" name="Pirate" icon="icon.skill0419" need="1000" fame="300"/>
 	</achievement>
-	<achievement id="58" cat="5" type="timesMarried" desc="Get Married">
-		<level id="1" name="Meet your Love" icon="icon.mysterious_wedding_i00" need="1" fame="10">
-			<reward id="6407" count="1" name="Fire-Works"/>
-		</level>
-	</achievement>
+	<!--<achievement id="58" cat="5" type="timesMarried" desc="Get Married">-->
+		<!--<level id="1" name="Meet your Love" icon="icon.mysterious_wedding_i00" need="1" fame="10">-->
+			<!--<reward id="6407" count="1" name="Fire-Works"/>-->
+		<!--</level>-->
+	<!--</achievement>-->
 	<!--
 	<achievement id="59" cat="5" type="timesVoted" desc="Vote for the server %need% times.">
 		<level id="1" name="I love the Server" icon="icon.action051" need="1" fame="1000"/>

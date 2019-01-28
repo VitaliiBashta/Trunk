@@ -74,8 +74,8 @@ public final class CharacterGroupReuseDAO {
                     if (timeStamp.hasNotPassed()) {
                         String sb = "(" + player.getObjectId() + "," +
                                 group + "," +
-                                timeStamp.getId() + "," +
-                                timeStamp.getEndTime() + "," +
+                                timeStamp.id + "," +
+                                timeStamp.endTime() + "," +
                                 timeStamp.getReuseBasic() + ")";
                         b.write(sb);
                     }

@@ -14,13 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class SysMsgContainer<T extends SysMsgContainer<T>> extends L2GameServerPacket {
-    private SystemMsg _message;
-    private List<IArgument> _arguments;
+    private SystemMsg message;
+    private List<IArgument> arguments;
 
-    //@Deprecated
-    protected SysMsgContainer(int messageId) {
-        this(SystemMsg.valueOf(messageId));
-    }
 
     SysMsgContainer(String message) {
         this.addString(message);
@@ -30,17 +26,17 @@ public abstract class SysMsgContainer<T extends SysMsgContainer<T>> extends L2Ga
         if (message == null)
             throw new IllegalArgumentException("SystemMsg is null");
 
-        _message = message;
-        _arguments = new ArrayList<>(_message.size());
+        this.message = message;
+        arguments = new ArrayList<>(this.message.size());
     }
 
     void writeElements() {
-        if (_message.size() != _arguments.size())
-            throw new IllegalArgumentException("Wrong count of arguments: " + _message);
+        if (message.size() != arguments.size())
+            throw new IllegalArgumentException("Wrong count of arguments: " + message);
 
-        writeD(_message.getId());
-        writeD(_arguments.size());
-        for (IArgument argument : _arguments)
+        writeD(message.getId());
+        writeD(arguments.size());
+        for (IArgument argument : arguments)
             argument.write(this);
     }
 
@@ -135,7 +131,7 @@ public abstract class SysMsgContainer<T extends SysMsgContainer<T>> extends L2Ga
 
     @SuppressWarnings("unchecked")
     private T add(IArgument arg) {
-        _arguments.add(arg);
+        arguments.add(arg);
 
         return (T) this;
     }

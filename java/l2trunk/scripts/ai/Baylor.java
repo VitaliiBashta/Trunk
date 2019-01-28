@@ -126,7 +126,7 @@ public final class Baylor extends DefaultAI {
         addDesiredSkill(skills, target, distance, Stun3);
 
         int skill = selectTopSkill(skills);
-        if (skill != 0 && !SkillTable.INSTANCE.getInfo(skill).isOffensive())
+        if (skill != 0 && !SkillTable.INSTANCE.getInfo(skill).isOffensive)
             target = actor;
 
         return chooseTaskAndTargets(skill, target, distance);

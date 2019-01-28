@@ -102,20 +102,6 @@ public class CryptUtil {
     }
 
     @SuppressWarnings("resource")
-    public static InputStream decryptOnDemand(InputStream input) throws IOException {
-        InputStream output;
-        if ((byte) input.read() == 0) {
-            byte[] bytes = new byte[0];
-            output = new ByteArrayInputStream(bytes);
-            output = decrypt(input, output);
-        } else {
-            output = input;
-        }
-        output.reset();
-        return output;
-    }
-
-    @SuppressWarnings("resource")
     private static void decrypt(InputStream in, OutputStream out) {
         init();
         in = new CipherInputStream(in, _decCipher);

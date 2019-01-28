@@ -75,7 +75,7 @@ public final class SoulCrystals extends ScriptItemHandler implements ScriptFile 
         player._skillTask = ThreadPoolManager.INSTANCE.schedule(() -> {
             player.sendActionFailed();
             player.clearCastVars();
-            if (player.isDead() || player.isDead())
+            if (player.isDead())
                 return;
             target.addAbsorber(player);
         }, soulCrystal.hitTime);

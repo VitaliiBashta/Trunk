@@ -2,13 +2,12 @@ package l2trunk.commons.listener;
 
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
-import java.util.stream.Stream;
 
-public class ListenerList implements Listener{
+public class ListenerList implements Listener {
     private final Set<Listener> listeners = new CopyOnWriteArraySet<>();
 
-    public Stream<Set<Listener>> getListeners() {
-        return Stream.of(listeners);
+    public Set<Listener> getListeners() {
+        return listeners;
     }
 
     public boolean add(Listener listener) {

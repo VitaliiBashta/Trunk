@@ -32,7 +32,7 @@ public final class StealBuff extends Skill {
         final List<Effect> musicList = new ArrayList<>();
         final List<Effect> buffList = new ArrayList<>();
 
-        target.getEffectList().getAllEffects()
+        target.getEffectList().getAllEffects().stream()
                 .filter(StealBuff::canBeStolen)
                 .forEach(e -> {
                     if (e.getSkill().isMusic())

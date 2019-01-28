@@ -63,7 +63,7 @@ public class CustomMessage {
     }
 
     private CustomMessage addSkillName(Skill skill) {
-        _text = _text.replace("{" + mark + "}", skill.name());
+        _text = _text.replace("{" + mark + "}", skill.name);
         mark++;
         return this;
     }

@@ -87,7 +87,7 @@ public final class AdminSkill implements IAdminCommandHandler {
             case admin_people_having_effect:
                 int skillId = toInt(wordList[1]);
                 GameObjectsStorage.getAllPlayersStream().forEach(player ->
-                        player.getEffectList().getAllEffects()
+                        player.getEffectList().getAllEffects().stream()
                                 .filter(e -> e.getSkill().id == skillId)
                                 .forEach(e -> {
                                     activeChar.sendMessage("Player: " + player.getName() + " Level:" + e.getSkill().level);
@@ -231,7 +231,14 @@ public final class AdminSkill implements IAdminCommandHandler {
         replyMSG.append("<br><table width=270>");
         replyMSG.append("<tr><td width=80>Name:</td><td width=60>Level:</td><td width=40>Id:</td></tr>");
         for (Skill element : skills)
-            replyMSG.append("<tr><td width=80><a action=\"bypass -h admin_remove_skill ").append(element.id).append("\">").append(element.name()).append("</a></td><td width=60>").append(element.level).append("</td><td width=40>").append(element.id).append("</td></tr>");
+            replyMSG.append("<tr><td width=80><a action=\"bypass -h admin_remove_skill ")
+                    .append(element.id).append("\">")
+                    .append(element.name)
+                    .append("</a></td><td width=60>")
+                    .append(element.level)
+                    .append("</td><td width=40>")
+                    .append(element.id)
+                    .append("</td></tr>");
         replyMSG.append("</table>");
         replyMSG.append("<br><center><table>");
         replyMSG.append("Remove custom skill:");
@@ -323,7 +330,7 @@ public final class AdminSkill implements IAdminCommandHandler {
         replyMSG.append("<br>");
 
         player.getEffectList().getAllEffects().forEach(e ->
-                replyMSG.append(e.getSkill().name()).append(" ").append(e.getSkill().level).append(" - ").append(e.getSkill().isToggle() ? "Infinity" : (e.getTimeLeft() + " seconds")).append("<br1>"));
+                replyMSG.append(e.getSkill().name).append(" ").append(e.getSkill().level).append(" - ").append(e.getSkill().isToggle() ? "Infinity" : (e.getTimeLeft() + " seconds")).append("<br1>"));
         replyMSG.append("<br></body></html>");
 
         adminReply.setHtml(replyMSG.toString());
@@ -344,10 +351,8 @@ public final class AdminSkill implements IAdminCommandHandler {
             player.sendMessage("There is no point in doing it on your character.");
         else {
             Collection<Skill> skills = player.getAllSkills();
-            for (Skill element : activeChar.getAllSkills())
-                activeChar.removeSkill(element.id, true);
-            for (Skill element : skills)
-                activeChar.addSkill(element, true);
+            activeChar.getAllSkills().forEach(s ->                activeChar.removeSkill(s.id, true));
+            skills.forEach(s ->                activeChar.addSkill(s, true));
             activeChar.sendMessage("You now have all the skills of  " + player.getName() + ".");
         }
 
@@ -366,7 +371,7 @@ public final class AdminSkill implements IAdminCommandHandler {
 
         int counter = 0;
         for (Skill element : player.getAllSkills())
-            if ((!element.isCommon) && (!SkillAcquireHolder.isSkillPossible(player, element, AcquireType.NORMAL))) {
+            if ((!element.common) && (!SkillAcquireHolder.isSkillPossible(player, element, AcquireType.NORMAL))) {
                 player.removeSkill(element.id, true);
                 counter++;
             }
@@ -393,10 +398,10 @@ public final class AdminSkill implements IAdminCommandHandler {
             int level = toInt(wordList[2]);
             Skill skill = SkillTable.INSTANCE.getInfo(id, level);
             if (skill != null) {
-                player.sendMessage("Admin gave you the skill " + skill.name() + ".");
+                player.sendMessage("Admin gave you the skill " + skill.name + ".");
                 player.addSkill(skill, true);
                 player.sendPacket(new SkillList(player));
-                activeChar.sendMessage("You gave the skill " + skill.name() + " to " + player.getName() + ".");
+                activeChar.sendMessage("You gave the skill " + skill.name + " to " + player.getName() + ".");
             } else
                 activeChar.sendMessage("Error: there is no such skill.");
         }

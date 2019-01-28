@@ -56,7 +56,7 @@ public final class RequestExMagicSkillUseGround extends L2GameClientPacket {
 
             if (skill.checkCondition(activeChar, target, ctrlPressed, shiftPressed, true)) {
                 activeChar.setGroundSkillLoc(loc);
-                activeChar.getAI().Cast(skill, target, ctrlPressed, shiftPressed);
+                activeChar.getAI().cast(skill, target, ctrlPressed, shiftPressed);
             } else
                 activeChar.sendActionFailed();
         } else

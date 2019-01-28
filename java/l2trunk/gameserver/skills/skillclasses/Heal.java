@@ -13,13 +13,13 @@ import l2trunk.gameserver.stats.Stats;
 import java.util.List;
 
 public final class Heal extends Skill {
-    private final boolean _ignoreHpEff;
-    private final boolean _staticPower;
+    private final boolean ignoreHpEff;
+    private final boolean staticPower;
 
     public Heal(StatsSet set) {
         super(set);
-        _ignoreHpEff = set.getBool("ignoreHpEff", false);
-        _staticPower = set.getBool("staticPower", isItemHandler());
+        ignoreHpEff = set.getBool("ignoreHpEff", false);
+        staticPower = set.getBool("staticPower", isItemHandler);
     }
 
     @Override
@@ -34,7 +34,7 @@ public final class Heal extends Skill {
     public void useSkill(Creature activeChar, List<Creature> targets) {
         // Надо уточнить формулу.
         double hp = power;
-        if (!_staticPower) {
+        if (!staticPower) {
             hp += 0.1 * power * Math.sqrt(activeChar.getMAtk(null, this) / 333.);
         }
 
@@ -46,7 +46,7 @@ public final class Heal extends Skill {
             hp *= 1.3;
         }
 
-        if ((activeChar.getSkillMastery(id) == 3) && !_staticPower) {
+        if ((activeChar.getSkillMastery(id) == 3) && !staticPower) {
             activeChar.removeSkillMastery(id);
             hp *= 3.;
         }
@@ -67,10 +67,10 @@ public final class Heal extends Skill {
                 }
 
                 double addToHp = 0;
-                if (_staticPower) {
+                if (staticPower) {
                     addToHp = power;
                 } else {
-                    addToHp = (hp * (!_ignoreHpEff ? target.calcStat(Stats.HEAL_EFFECTIVNESS, 100., activeChar, this) : 100.)) / 100.;
+                    addToHp = (hp * (!ignoreHpEff ? target.calcStat(Stats.HEAL_EFFECTIVNESS, 100., activeChar, this) : 100.)) / 100.;
                     addToHp = activeChar.calcStat(Stats.HEAL_POWER, addToHp, target, this);
                 }
 
@@ -101,7 +101,7 @@ public final class Heal extends Skill {
                         }
                     }
                 }
-                getEffects(activeChar, target, activateRate() > 0, false);
+                getEffects(activeChar, target, getActivateRate() > 0, false);
             }
         }
 

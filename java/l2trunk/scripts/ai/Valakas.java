@@ -118,7 +118,7 @@ public final class Valakas extends Fighter {
                     actor.startConfused();
                     ThreadPoolManager.INSTANCE.schedule(() -> {
                         getActor().stopConfused();
-                        _madnessTask = null;
+                        madnessTask = null;
                     }, 20000L);
                 }
                 ValakasManager.broadcastScreenMessage(NpcString.VALAKAS_RANGED_ATTACKS_ENRAGED_TARGET_FREE);

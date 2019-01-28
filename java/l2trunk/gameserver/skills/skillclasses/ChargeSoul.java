@@ -36,7 +36,7 @@ public final class ChargeSoul extends Skill {
                 reflected = target != activeChar && target.checkReflectSkill(activeChar, this);
                 realTarget = reflected ? activeChar : target;
 
-                if (getPower() > 0) {// Если == 0 значит скилл "отключен"
+                if (power > 0) {// Если == 0 значит скилл "отключен"
                     AttackInfo info = Formulas.calcPhysDam(activeChar, realTarget, this, false, false, ss, false);
 
                     if (info.lethal_dmg > 0)

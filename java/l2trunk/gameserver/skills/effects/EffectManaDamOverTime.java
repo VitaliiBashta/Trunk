@@ -5,7 +5,7 @@ import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.stats.Env;
 
-public class EffectManaDamOverTime extends Effect {
+public final class EffectManaDamOverTime extends Effect {
     public EffectManaDamOverTime(Env env, EffectTemplate template) {
         super(env, template);
     }

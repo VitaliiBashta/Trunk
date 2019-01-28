@@ -40,7 +40,7 @@ public interface IXmlReader {
     /**
      * Parses a single XML file.<br>
      * If the file was successfully parsed, call parseDocument(Document, File)} for the parsed document.<br>
-     * <b>Validation is enforced.</b>
+     * <buffPrice>Validation is enforced.</buffPrice>
      *
      * @param f the XML file to parse.
      */

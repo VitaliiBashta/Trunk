@@ -15,16 +15,16 @@ public final class EffectVitalityDamOverTime extends Effect {
         if ((this.effected.isDead()) || (!this.effected.isPlayer())) {
             return false;
         }
-        Player _pEffected = (Player) this.effected;
+        Player pEffected = (Player) this.effected;
 
         double vitDam = calc();
-        if ((vitDam > _pEffected.getVitality()) && (getSkill().isToggle())) {
-            _pEffected.sendPacket(Msg.NOT_ENOUGH_MATERIALS);
-            _pEffected.sendPacket(new SystemMessage(SystemMessage.THE_EFFECT_OF_S1_HAS_BEEN_REMOVED).addSkillName(getSkill().id, getSkill().getDisplayLevel()));
+        if ((vitDam > pEffected.getVitality()) && (getSkill().isToggle())) {
+            pEffected.sendPacket(Msg.NOT_ENOUGH_MATERIALS);
+            pEffected.sendPacket(new SystemMessage(SystemMessage.THE_EFFECT_OF_S1_HAS_BEEN_REMOVED).addSkillName(getSkill().id, getSkill().getDisplayLevel()));
             return false;
         }
 
-        _pEffected.setVitality(Math.max(0.0D, _pEffected.getVitality() - vitDam));
+        pEffected.setVitality(Math.max(0.0D, pEffected.getVitality() - vitDam));
         return true;
     }
 }

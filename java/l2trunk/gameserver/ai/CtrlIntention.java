@@ -24,7 +24,7 @@ public enum CtrlIntention {
      */
     AI_INTENTION_ATTACK,
     /**
-     * Cast a spell, depending on the spell - may start or stop attacking
+     * cast a spell, depending on the spell - may start or stop attacking
      */
     AI_INTENTION_CAST,
     /**
