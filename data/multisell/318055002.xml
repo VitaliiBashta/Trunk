@@ -38,7 +38,7 @@
 		<production id="266" count="1" />
 	</item>
 
-	<!-- Arthro Nail b -->
+	<!-- Arthro Nail buffPrice -->
 	<item>
 		<ingredient id="9814" count="772" />
 		<ingredient id="9815" count="232" />
@@ -48,7 +48,7 @@
 		<production id="267" count="1" />
 	</item>
 
-	<!--  Bellion Cestus b -->
+	<!--  Bellion Cestus buffPrice -->
 	<item>
 		<ingredient id="9814" count="1236" />
 		<ingredient id="9815" count="372" />

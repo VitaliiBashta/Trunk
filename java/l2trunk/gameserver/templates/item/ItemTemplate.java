@@ -155,7 +155,7 @@ public abstract class ItemTemplate extends StatTemplate {
     int _type1; // needed for item list (inventory)
     int _type2; // different lists for armor, weapon, etc
     int _bodyPart;
-    private List<Skill> _skills;
+    private List<Skill> skills;
     private Map<Integer, AugmentationInfo> _augmentationInfos = new HashMap<>();//Containers.emptyIntObjectMap();
     private int _flags;
     private Skill _enchant4Skill = null; // skill that activates when item is enchanted +4 (for duals)
@@ -195,7 +195,7 @@ public abstract class ItemTemplate extends StatTemplate {
         }
 
         funcTemplates = Collections.emptyList();
-        _skills = new ArrayList<>();
+        skills = new ArrayList<>();
     }
 
     /**
@@ -446,15 +446,15 @@ public abstract class ItemTemplate extends StatTemplate {
      * @param skill : L2Skill
      */
     public void attachSkill(Skill skill) {
-        _skills.add(skill);
+        skills.add(skill);
     }
 
     public List<Skill> getAttachedSkills() {
-        return _skills;
+        return skills;
     }
 
     public Skill getFirstSkill() {
-        return _skills.get(0);
+        return skills.get(0);
     }
 
     /**

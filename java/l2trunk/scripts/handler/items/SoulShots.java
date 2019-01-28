@@ -86,8 +86,8 @@ public final class SoulShots extends ScriptItemHandler implements ScriptFile {
         }
 
         if (weaponItem.getItemType() == WeaponType.BOW || weaponItem.getItemType() == WeaponType.CROSSBOW) {
-            int newSS = (int) player.calcStat(Stats.SS_USE_BOW, soulShotConsumption, null, null);
-            if (newSS < soulShotConsumption && Rnd.chance(player.calcStat(Stats.SS_USE_BOW_CHANCE, soulShotConsumption, null, null)))
+            int newSS = (int) player.calcStat(Stats.SS_USE_BOW, soulShotConsumption);
+            if (newSS < soulShotConsumption && Rnd.chance(player.calcStat(Stats.SS_USE_BOW_CHANCE, soulShotConsumption)))
                 soulShotConsumption = newSS;
         }
 

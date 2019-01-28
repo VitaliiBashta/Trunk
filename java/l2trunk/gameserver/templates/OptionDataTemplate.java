@@ -6,23 +6,23 @@ import l2trunk.gameserver.stats.StatTemplate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OptionDataTemplate extends StatTemplate {
-    private final List<Skill> _skills = new ArrayList<>(0);
-    private final int _id;
+public final class OptionDataTemplate extends StatTemplate {
+    private final List<Skill> skills = new ArrayList<>(0);
+    private final int id;
 
     public OptionDataTemplate(int id) {
-        _id = id;
+        this.id = id;
     }
 
     public void addSkill(Skill skill) {
-        _skills.add(skill);
+        skills.add(skill);
     }
 
     public List<Skill> getSkills() {
-        return _skills;
+        return skills;
     }
 
     public int getId() {
-        return _id;
+        return id;
     }
 }

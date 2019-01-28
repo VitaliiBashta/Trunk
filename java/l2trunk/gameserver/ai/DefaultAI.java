@@ -51,7 +51,7 @@ public class DefaultAI extends CharacterAI {
     protected long AI_TASK_ACTIVE_DELAY = Config.AI_TASK_ACTIVE_DELAY;
     protected int MAX_PURSUE_RANGE;
     protected ScheduledFuture<?> _aiTask;
-    protected ScheduledFuture<?> _madnessTask;
+    protected ScheduledFuture<?> madnessTask;
     /**
      * Показывает, есть ли задания
      */
@@ -59,7 +59,7 @@ public class DefaultAI extends CharacterAI {
     /**
      * The L2NpcInstance aggro counter
      */
-    protected long _globalAggro;
+    protected long globalAggro;
     protected int _pathfindFails;
     protected long _checkAggroTimestamp = 0;
     protected long _minFactionNotifyInterval;
@@ -156,7 +156,7 @@ public class DefaultAI extends CharacterAI {
             if (skill.getSameByStackType(target) != null) {
                 continue;
             }
-            if ((weight = skill.getPower()) <= 0) {
+            if ((weight = skill.power) <= 0) {
                 weight = 1;
             }
             rnd.add(skill, (int) weight);
@@ -181,7 +181,7 @@ public class DefaultAI extends CharacterAI {
         RndSelector<Skill> rnd = new RndSelector<>(skills.size());
         double weight;
         for (Skill skill : skills) {
-            if ((weight = Math.abs(skill.getPower() - hpReduced)) <= 0) {
+            if ((weight = Math.abs(skill.power - hpReduced)) <= 0) {
                 weight = 1;
             }
             rnd.add(skill, (int) weight);
@@ -225,7 +225,7 @@ public class DefaultAI extends CharacterAI {
 
     protected void addTaskAttack(Creature target, int skillId, int skillLvl) {
         Task task = new Task();
-        task.type = SkillTable.INSTANCE.getInfo(skillId, skillLvl).isOffensive() ? TaskType.CAST : TaskType.BUFF;
+        task.type = SkillTable.INSTANCE.getInfo(skillId, skillLvl).isOffensive ? TaskType.CAST : TaskType.BUFF;
         task.target = target.getRef();
         task.skill = SkillTable.INSTANCE.getInfo(skillId, skillLvl);
 
@@ -762,11 +762,11 @@ public class DefaultAI extends CharacterAI {
             case CAST: {
                 Creature target = currentTask.target.get();
 
-                if (actor.isMuted(currentTask.skill) || actor.isSkillDisabled(currentTask.skill) || actor.isUnActiveSkill(currentTask.skill.getId())) {
+                if (actor.isMuted(currentTask.skill) || actor.isSkillDisabled(currentTask.skill) || actor.isUnActiveSkill(currentTask.skill.id)) {
                     return true;
                 }
 
-                boolean isAoE = currentTask.skill.getTargetType() == Skill.SkillTargetType.TARGET_AURA;
+                boolean isAoE = currentTask.skill.targetType == Skill.SkillTargetType.TARGET_AURA;
                 int castRange = currentTask.skill.getAOECastRange();
 
                 if (!checkTarget(target, MAX_PURSUE_RANGE + castRange)) {
@@ -798,7 +798,7 @@ public class DefaultAI extends CharacterAI {
             case BUFF: {
                 Creature target = currentTask.target.get();
 
-                if (actor.isMuted(currentTask.skill) || actor.isSkillDisabled(currentTask.skill) || actor.isUnActiveSkill(currentTask.skill.getId())) {
+                if (actor.isMuted(currentTask.skill) || actor.isSkillDisabled(currentTask.skill) || actor.isUnActiveSkill(currentTask.skill.id)) {
                     return true;
                 }
 
@@ -806,7 +806,7 @@ public class DefaultAI extends CharacterAI {
                     return true;
                 }
 
-                boolean isAoE = currentTask.skill.getTargetType() == Skill.SkillTargetType.TARGET_AURA;
+                boolean isAoE = currentTask.skill.targetType == Skill.SkillTargetType.TARGET_AURA;
                 int castRange = currentTask.skill.getAOECastRange();
 
                 if (actor.isMoving) {
@@ -1074,9 +1074,9 @@ public class DefaultAI extends CharacterAI {
             Creature randomHated = actor.getAggroList().getRandomHated();
             if (randomHated != null) {
                 setAttackTarget(randomHated);
-                if ((_madnessTask == null) && !actor.isConfused()) {
+                if ((madnessTask == null) && !actor.isConfused()) {
                     actor.startConfused();
-                    _madnessTask = ThreadPoolManager.INSTANCE.schedule(new MadnessTask(), 10000);
+                    madnessTask = ThreadPoolManager.INSTANCE.schedule(new MadnessTask(), 10000);
                 }
                 return randomHated;
             }
@@ -1105,11 +1105,11 @@ public class DefaultAI extends CharacterAI {
 
     protected boolean canUseSkill(Skill skill, Creature target, double distance) {
         NpcInstance actor = getActor();
-        if ((skill == null) || skill.isNotUsedByAI()) {
+        if ((skill == null) || skill.isNotUsedByAI) {
             return false;
         }
 
-        if ((skill.getTargetType() == Skill.SkillTargetType.TARGET_SELF) && (target != actor)) {
+        if ((skill.targetType == Skill.SkillTargetType.TARGET_SELF) && (target != actor)) {
             return false;
         }
 
@@ -1118,11 +1118,11 @@ public class DefaultAI extends CharacterAI {
             return false;
         }
 
-        if (actor.isSkillDisabled(skill) || actor.isMuted(skill) || actor.isUnActiveSkill(skill.getId())) {
+        if (actor.isSkillDisabled(skill) || actor.isMuted(skill) || actor.isUnActiveSkill(skill.id)) {
             return false;
         }
 
-        double mpConsume2 = skill.getMpConsume2();
+        double mpConsume2 = skill.mpConsume2;
         if (skill.isMagic()) {
             mpConsume2 = actor.calcStat(Stats.MP_MAGIC_SKILL_CONSUME, mpConsume2, target, skill);
         } else {
@@ -1132,7 +1132,7 @@ public class DefaultAI extends CharacterAI {
             return false;
         }
 
-        return target.getEffectList().getEffectsCountForSkill(skill.getId()) == 0;
+        return target.getEffectList().getEffectsCountForSkill(skill.id) == 0;
     }
 
     private boolean canUseSkill(Skill sk, Creature target) {
@@ -1154,7 +1154,7 @@ public class DefaultAI extends CharacterAI {
         addDesiredSkill(skillMap, target, distance, skillId, 1);
     }
 
-    protected void addDesiredSkill(Map<Skill, Integer> skillMap, Creature target, double distance, Skill skill) {
+    private void addDesiredSkill(Map<Skill, Integer> skillMap, Creature target, double distance, Skill skill) {
         if ((skill == null) || (target == null) || !canUseSkill(skill, target)) {
             return;
         }
@@ -1187,7 +1187,7 @@ public class DefaultAI extends CharacterAI {
             if (e.getValue() < topWeight) {
                 continue;
             }
-            skills[nWeight++] = e.getKey().getId();
+            skills[nWeight++] = e.getKey().id;
         }
         return skills[Rnd.get(nWeight)];
     }
@@ -1204,7 +1204,7 @@ public class DefaultAI extends CharacterAI {
             // Проверка цели, и смена если необходимо
             if (actor.isMovementDisabled() && (distance > (skill.getAOECastRange() + 60))) {
                 target = null;
-                if (skill.isOffensive()) {
+                if (skill.isOffensive) {
                     ArrayList<Creature> targets = new ArrayList<>();
                     for (Creature cha : actor.getAggroList().getHateList()) {
                         if (!checkTarget(cha, skill.getAOECastRange() + 60) || !canUseSkill(skill, cha)) {
@@ -1223,8 +1223,8 @@ public class DefaultAI extends CharacterAI {
             }
 
             // Добавить новое задание
-            if (skill.isOffensive()) {
-                addTaskCast(target, skill.getId());
+            if (skill.isOffensive) {
+                addTaskCast(target, skill.id);
             } else {
                 addTaskBuff(target, skill);
             }
@@ -1276,18 +1276,18 @@ public class DefaultAI extends CharacterAI {
     }
 
     public boolean isGlobalAggro() {
-        if (_globalAggro == 0) {
+        if (globalAggro == 0) {
             return true;
         }
-        if (_globalAggro <= System.currentTimeMillis()) {
-            _globalAggro = 0;
+        if (globalAggro <= System.currentTimeMillis()) {
+            globalAggro = 0;
             return true;
         }
         return false;
     }
 
     public void setGlobalAggro(long value) {
-        _globalAggro = value;
+        globalAggro = value;
     }
 
     @Override
@@ -1566,7 +1566,7 @@ public class DefaultAI extends CharacterAI {
             if (actor != null) {
                 actor.stopConfused();
             }
-            _madnessTask = null;
+            madnessTask = null;
         }
     }
 }

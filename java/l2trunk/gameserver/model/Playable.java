@@ -82,13 +82,13 @@ public abstract class Playable extends Creature {
             if (skill.altUse()) {
                 return false;
             }
-            if (skill.getTargetType() == SkillTargetType.TARGET_FEEDABLE_BEAST) {
+            if (skill.targetType == SkillTargetType.TARGET_FEEDABLE_BEAST) {
                 return false;
             }
-            if (skill.getTargetType() == SkillTargetType.TARGET_UNLOCKABLE) {
+            if (skill.targetType == SkillTargetType.TARGET_UNLOCKABLE) {
                 return false;
             }
-            if (skill.getTargetType() == SkillTargetType.TARGET_CHEST) {
+            if (skill.targetType == SkillTargetType.TARGET_CHEST) {
                 return false;
             }
         }
@@ -111,7 +111,7 @@ public abstract class Playable extends Creature {
         if (isInZone(ZoneType.SIEGE) && target.isInZone(ZoneType.SIEGE)) {
             return false;
         }
-        if ((skill == null) || skill.isOffensive()) {
+        if ((skill == null) || skill.isOffensive) {
             if (target.getKarma() > 0) {
                 return false;
             } else return target.isPlayable();
@@ -254,20 +254,20 @@ public abstract class Playable extends Creature {
     }
 
     private boolean isBetray() {
-        if (isSummon()) return getEffectList().getAllEffects()
+        if (isSummon()) return getEffectList().getAllEffects().stream()
                 .anyMatch(e -> e.getEffectType() == EffectType.Betray);
         return false;
     }
 
     @Override
-    public void doCast(final Skill skill, final Creature target, boolean forceUse) {
+    public final void doCast(final Skill skill, final Creature target, boolean forceUse) {
         if (skill == null) {
             return;
         }
 
         Player activeChar = getPlayer();
 
-        if ((isSummon() || isPet()) && skill.isOffensive() && target.isPlayer() && (target.getPlayer().equals(activeChar)) && (skill.getId() != Skill.SKILL_BETRAY)) {
+        if ((isSummon() || isPet()) && skill.isOffensive && target.isPlayer() && (target.getPlayer().equals(activeChar)) && (skill.id != Skill.SKILL_BETRAY)) {
             getPlayer().sendMessage("Pet cannot hit its owner!");
             getPlayer().sendActionFailed();
             sendActionFailed();
@@ -286,7 +286,7 @@ public abstract class Playable extends Creature {
             return;
         }
 
-        if ((skill.getSkillType() == SkillType.DEBUFF) && target.isNpc() && target.isInvul() && !target.isMonster() && !target.isInCombat() && (target.getPvpFlag() == 0)) {
+        if ((skill.skillType == SkillType.DEBUFF) && target.isNpc() && target.isInvul() && !target.isMonster() && !target.isInCombat() && (target.getPvpFlag() == 0)) {
             getPlayer().sendPacket(Msg.INVALID_TARGET);
             return;
         }
@@ -341,7 +341,7 @@ public abstract class Playable extends Creature {
 
     @Override
     public int getPAtkSpd() {
-        return Math.max((int) calcStat(Stats.POWER_ATTACK_SPEED, calcStat(Stats.ATK_BASE, template.basePAtkSpd, null, null), null, null), 1);
+        return Math.max((int) calcStat(Stats.POWER_ATTACK_SPEED, calcStat(Stats.ATK_BASE, template.basePAtkSpd)), 1);
     }
 
     @Override
@@ -352,8 +352,8 @@ public abstract class Playable extends Creature {
 
     @Override
     public int getMAtk(final Creature target, final Skill skill) {
-        if ((skill != null) && (skill.getMatak() > 0)) {
-            return skill.getMatak();
+        if ((skill != null) && (skill.matak > 0)) {
+            return skill.matak;
         }
         final double init = getActiveWeaponInstance() == null ? template.baseMAtk : 0;
         return (int) calcStat(Stats.MAGIC_ATTACK, init, target, skill);
@@ -418,7 +418,7 @@ public abstract class Playable extends Creature {
                 return false;
             if (player.isInOlympiadMode() && !player.isOlympiadCompStarted())
                 return false;
-            if (player.isInOlympiadMode() && player.isOlympiadCompStarted() && (player.getOlympiadSide() == pcAttacker.getOlympiadSide()) && !force)
+            if (player.isInOlympiadMode() && player.getOlympiadSide() == pcAttacker.getOlympiadSide() && !force)
                 return false;
 
             // TODO that for
@@ -455,7 +455,7 @@ public abstract class Playable extends Creature {
                 return true;
             if (witchCtrl && (player.getPvpFlag() > 0))
                 return true;
-            if (player.getPvpFlag() == 0 && pcAttacker.getLevel() - player.getLevel() > Config.ALT_LEVEL_DIFFERENCE_PROTECTION)
+            if (pcAttacker.getLevel() - player.getLevel() > Config.ALT_LEVEL_DIFFERENCE_PROTECTION)
                 return false;
 
             return force;
@@ -477,10 +477,10 @@ public abstract class Playable extends Creature {
             return;
         }
 
-        if (useActionSkills && !skill.altUse() && !skill.getSkillType().equals(SkillType.BEAST_FEED)) {
+        if (useActionSkills && !skill.altUse() && !skill.skillType.equals(SkillType.BEAST_FEED)) {
             for (Creature target : targets) {
                 if (target.isNpc()) {
-                    if (skill.isOffensive()) {
+                    if (skill.isOffensive) {
                         // mobs will hate on debuff
                         if (target.paralizeOnAttack(player)) {
                             if (Config.PARALIZE_ON_RAID_DIFF) {
@@ -489,7 +489,7 @@ public abstract class Playable extends Creature {
                             return;
                         }
                         if (!skill.isAI()) {
-                            int damage = skill.getEffectPoint() == 0 ? 1 : skill.getEffectPoint();
+                            int damage = skill.effectPoint == 0 ? 1 : skill.effectPoint;
                             CharacterAI ai = target.getAI();
                             ai.notifyEvent(CtrlEvent.EVT_ATTACKED, this, damage);
                         }
@@ -497,7 +497,7 @@ public abstract class Playable extends Creature {
                     target.getAI().notifySeeSpell(skill, this);
                 } else // исключать баффы питомца на владельца
                     if (target.isPlayable() && !target.equals(getPet()) && !((isSummon() || isPet()) && target.equals(player))) {
-                        int aggro = skill.getEffectPoint() == 0 ? Math.max(1, (int) skill.getPower()) : skill.getEffectPoint();
+                        int aggro = skill.effectPoint == 0 ? Math.max(1, (int) skill.power) : skill.effectPoint;
 
                         World.getAroundNpc(target)
                                 .filter(Creature::isDead)
@@ -506,7 +506,7 @@ public abstract class Playable extends Creature {
                                         npc.getAI().notifySeeSpell(skill, this))
                                 .filter(npc -> npc.getAggroList().get(target) != null)
                                 .forEach(npc -> {
-                                    if (!skill.isHandler() && npc.paralizeOnAttack(player)) {
+                                    if (!skill.isItemHandler && npc.paralizeOnAttack(player)) {
                                         if (Config.PARALIZE_ON_RAID_DIFF) {
                                             paralizeMe(npc);
                                         }
@@ -579,7 +579,7 @@ public abstract class Playable extends Creature {
             isPendingRevive = false;
 
             if (isSalvation() || isPlayer()) {
-                getEffectList().getAllEffects()
+                getEffectList().getAllEffects().stream()
                         .filter(e -> e.getEffectType() == EffectType.Salvation)
                         .findFirst().ifPresent(Effect::exit);
                 setCurrentHp(getMaxHp(), true);

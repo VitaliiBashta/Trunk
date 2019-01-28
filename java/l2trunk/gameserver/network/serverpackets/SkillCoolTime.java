@@ -17,12 +17,12 @@ public class SkillCoolTime extends L2GameServerPacket {
         for (TimeStamp stamp : list) {
             if (!stamp.hasNotPassed())
                 continue;
-            l2trunk.gameserver.model.Skill skill = player.getKnownSkill(stamp.getId());
+            l2trunk.gameserver.model.Skill skill = player.getKnownSkill(stamp.id());
             if (skill == null)
                 continue;
             Skill sk = new Skill();
-            sk.skillId = skill.getId();
-            sk.level = skill.getLevel();
+            sk.skillId = skill.id;
+            sk.level = skill.level;
             sk.reuseBase = (int) Math.round(stamp.getReuseBasic() / 1000.);
             sk.reuseCurrent = (int) Math.round(stamp.getReuseCurrent() / 1000.);
             _list.add(sk);

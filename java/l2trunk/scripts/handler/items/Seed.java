@@ -98,7 +98,7 @@ public final class Seed extends ScriptItemHandler implements ScriptFile {
 
         if (skill.checkCondition(player, target, false, false, true)) {
             player.setUseSeed(seedId);
-            player.getAI().Cast(skill, target);
+            player.getAI().cast(skill, target);
         }
         return true;
     }

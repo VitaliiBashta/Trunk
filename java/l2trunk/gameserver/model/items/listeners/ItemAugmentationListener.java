@@ -83,7 +83,7 @@ public final class ItemAugmentationListener implements OnEquipListener {
 
             for (Skill skill : template.getSkills()) {
                 sendList = true;
-                player.addSkill(skill.getId());
+                player.addSkill(skill.id);
                 if (player.isSkillDisabled(skill))
                     sendReuseList = true;
             }

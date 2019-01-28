@@ -38,7 +38,7 @@
 		<production id="286" count="1" />
 	</item>
 
-	<!-- Dark Elven Long Bow b -->
+	<!-- Dark Elven Long Bow buffPrice -->
 	<item>
 		<ingredient id="9814" count="772" />
 		<ingredient id="9815" count="232" />
@@ -48,7 +48,7 @@
 		<production id="284" count="1" />
 	</item>
 
-	<!-- Bow of Peril b -->
+	<!-- Bow of Peril buffPrice -->
 	<item>
 		<ingredient id="9814" count="1236" />
 		<ingredient id="9815" count="372" />

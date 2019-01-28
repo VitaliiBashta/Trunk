@@ -26,7 +26,7 @@ public final class CrestCache {
      */
     private static final Map<Integer, byte[]> _pledgeCrest = new HashMap<>();
     private static final Map<Integer, byte[]> _pledgeCrestLarge = new HashMap<>();
-    private static final Map<Integer, byte[]> _allyCrest = new HashMap<>();
+    private static final Map<Integer, byte[]> ALLY_CREST = new HashMap<>();
 
     public static void init() {
         load();
@@ -91,7 +91,7 @@ public final class CrestCache {
                     crestId = getCrestId(pledgeId, crest);
 
                     _allyCrestId.put(pledgeId, crestId);
-                    _allyCrest.put(crestId, crest);
+                    ALLY_CREST.put(crestId, crest);
                 }
             }
         } catch (SQLException e) {
@@ -109,7 +109,7 @@ public final class CrestCache {
     }
 
     public static byte[] getAllyCrest(int crestId) {
-        return _allyCrest.get(crestId);
+        return ALLY_CREST.get(crestId);
     }
 
     public static synchronized int getPledgeCrestId(int pledgeId) {
@@ -153,7 +153,7 @@ public final class CrestCache {
     }
 
     public static synchronized void removeAllyCrest(int pledgeId) {
-        _allyCrest.remove(_allyCrestId.remove(pledgeId));
+        ALLY_CREST.remove(_allyCrestId.remove(pledgeId));
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement("UPDATE ally_data SET crest=? WHERE ally_id=?")) {
             statement.setNull(1, Types.VARBINARY);
@@ -200,7 +200,7 @@ public final class CrestCache {
     public static synchronized int saveAllyCrest(int pledgeId, byte[] crest) {
         int crestId = getCrestId(pledgeId, crest);
         _allyCrestId.put(pledgeId, crestId);
-        _allyCrest.put(crestId, crest);
+        ALLY_CREST.put(crestId, crest);
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement("UPDATE ally_data SET crest=? WHERE ally_id=?")) {
             statement.setBytes(1, crest);

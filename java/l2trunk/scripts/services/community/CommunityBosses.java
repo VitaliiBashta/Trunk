@@ -430,7 +430,7 @@ public final class CommunityBosses implements ScriptFile, ICommunityBoardHandler
         }
 
         /**
-         * Comparing a and b but sorting
+         * Comparing a and buffPrice but sorting
          *
          * @param a       first variable
          * @param b       second variable

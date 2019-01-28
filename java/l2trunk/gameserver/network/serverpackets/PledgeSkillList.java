@@ -6,64 +6,60 @@ import l2trunk.gameserver.model.pledge.SubUnit;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 
-/**
- * Reworked: VISTALL
- */
-public class PledgeSkillList extends L2GameServerPacket {
-    private final List<UnitSkillInfo> _unitSkills = new ArrayList<>();
-    private List<SkillInfo> _allSkills = Collections.emptyList();
+public final class PledgeSkillList extends L2GameServerPacket {
+    private final List<UnitSkillInfo> unitSkills = new ArrayList<>();
+    private List<SkillInfo> allSkills;
 
     public PledgeSkillList(Clan clan) {
         Collection<Skill> skills = clan.getSkills();
-        _allSkills = new ArrayList<>(skills.size());
+        allSkills = new ArrayList<>(skills.size());
 
         for (Skill sk : skills)
-            _allSkills.add(new SkillInfo(sk.getId(), sk.getLevel()));
+            allSkills.add(new SkillInfo(sk.id, sk.level));
 
         for (SubUnit subUnit : clan.getAllSubUnits()) {
             for (Skill sk : subUnit.getSkills())
-                _unitSkills.add(new UnitSkillInfo(subUnit.getType(), sk.getId(), sk.getLevel()));
+                unitSkills.add(new UnitSkillInfo(subUnit.getType(), sk.id, sk.level));
         }
     }
 
     @Override
     protected final void writeImpl() {
         writeEx(0x3a);
-        writeD(_allSkills.size());
-        writeD(_unitSkills.size());
+        writeD(allSkills.size());
+        writeD(unitSkills.size());
 
-        for (SkillInfo info : _allSkills) {
-            writeD(info._id);
-            writeD(info._level);
-        }
+        allSkills.forEach(info -> {
+            writeD(info.id);
+            writeD(info.level);
+        });
 
-        for (UnitSkillInfo info : _unitSkills) {
-            writeD(info._type);
-            writeD(info._id);
-            writeD(info._level);
-        }
+        unitSkills.forEach(info -> {
+            writeD(info.type);
+            writeD(info.id);
+            writeD(info.level);
+        });
     }
 
-    static class SkillInfo {
-        final int _id;
-        final int _level;
+    private static class SkillInfo {
+        final int id;
+        final int level;
 
         SkillInfo(int id, int level) {
-            _id = id;
-            _level = level;
+            this.id = id;
+            this.level = level;
         }
     }
 
-    static class UnitSkillInfo extends SkillInfo {
-        private final int _type;
+    private static class UnitSkillInfo extends SkillInfo {
+        private final int type;
 
         UnitSkillInfo(int type, int id, int level) {
             super(id, level);
-            _type = type;
+            this.type = type;
         }
     }
 }

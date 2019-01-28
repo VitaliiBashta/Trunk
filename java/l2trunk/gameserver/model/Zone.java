@@ -618,13 +618,13 @@ public final class Zone {
 
     private class ZoneListenerList extends ListenerList {
         void onEnter(Creature actor) {
-            getListeners().filter(l -> l instanceof OnZoneEnterLeaveListener)
+            getListeners().stream().filter(l -> l instanceof OnZoneEnterLeaveListener)
                     .map(l -> (OnZoneEnterLeaveListener) l)
                     .forEach(l -> l.onZoneEnter(Zone.this, actor));
         }
 
         void onLeave(Creature actor) {
-            getListeners().filter(l -> l instanceof OnZoneEnterLeaveListener)
+            getListeners().stream().filter(l -> l instanceof OnZoneEnterLeaveListener)
                     .map(l -> (OnZoneEnterLeaveListener) l)
                     .forEach(l -> l.onZoneLeave(Zone.this, actor));
         }

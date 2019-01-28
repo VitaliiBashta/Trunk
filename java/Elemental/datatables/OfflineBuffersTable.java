@@ -6,7 +6,6 @@ import l2trunk.gameserver.Config;
 import l2trunk.gameserver.database.DatabaseFactory;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Skill;
-import l2trunk.gameserver.tables.SkillTable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +14,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.List;
 import java.util.stream.Collectors;
 
 public enum OfflineBuffersTable {
@@ -48,7 +46,7 @@ public enum OfflineBuffersTable {
                         player.getClan().getAnyMember(player.getObjectId()).setPlayerInstance(player, false);
 
                     // Create the buffer data
-                    final BufferData buffer = new BufferData(player, rs.getString("title"), rs.getInt("price"), null);
+                    final BufferData buffer = new BufferData(player, rs.getString("title"), rs.getInt("price"));
 
                     // Get all the buffs from the db
                     try (PreparedStatement stm_items = con.prepareStatement("SELECT * FROM character_offline_buffer_buffs WHERE charId = ?")) {
@@ -61,7 +59,7 @@ public enum OfflineBuffersTable {
                                     if (skill == null)
                                         continue;
 
-                                    buffer.getBuffs().put(skill.getId(), skill);
+                                    buffer.buffs.put(skill.id, skill);
                                 }
                             }
                         }
@@ -74,7 +72,7 @@ public enum OfflineBuffersTable {
                     player.sitDown(null);
 
                     player.setVisibleTitleColor(Config.BUFF_STORE_TITLE_COLOR);
-                    player.setVisibleTitle(buffer.getSaleTitle());
+                    player.setVisibleTitle(buffer.saleTitle);
                     player.setVisibleNameColor(Config.BUFF_STORE_OFFLINE_NAME_COLOR);
 
                     player.setPrivateStoreType(Player.STORE_PRIVATE_BUFF);
@@ -126,14 +124,14 @@ public enum OfflineBuffersTable {
             // Guardamos primero el offline buffer
             try (PreparedStatement st = con.prepareStatement("REPLACE INTO character_offline_buffers VALUES (?,?,?)")) {
                 st.setInt(1, trader.getObjectId());
-                st.setInt(2, buffer.getBuffPrice());
-                st.setString(3, buffer.getSaleTitle());
+                st.setInt(2, buffer.buffPrice);
+                st.setString(3, buffer.saleTitle);
                 st.executeUpdate();
             }
 
             try (PreparedStatement st = con.prepareStatement("REPLACE INTO character_offline_buffer_buffs VALUES (?,?)")) {
                 st.setInt(1, trader.getObjectId());
-                st.setString(2, joinAllSkillsToString(buffer.getBuffs().values()));
+                st.setString(2, joinAllSkillsToString(buffer.buffs.values()));
                 st.executeUpdate();
             }
         } catch (SQLException e) {
@@ -146,7 +144,7 @@ public enum OfflineBuffersTable {
             return "";
 
         return skills.stream()
-                .map(skill -> skill.getId() + "")
+                .map(s -> s.id + "")
                 .collect(Collectors.joining(","));
     }
 }

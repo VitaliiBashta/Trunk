@@ -19,10 +19,10 @@ public final class MagicSkillUse extends L2GameServerPacket {
         this(cha, skillId, 1, 0, 0);
     }
     public MagicSkillUse(Creature cha, Skill skill) {
-        this(cha, skill.getId(), skill.getHitTime(), 0);
+        this(cha, skill.id, skill.hitTime, 0);
     }
     public MagicSkillUse(Creature cha, Creature target, Skill skill) {
-        this(cha,target,skill.getId(),skill.getLevel());
+        this(cha,target,skill.id,skill.level);
     }
     public MagicSkillUse(Creature cha, Creature target, int skillId, int skillLevel) {
         this(cha, target, skillId, skillLevel, 0, 0);

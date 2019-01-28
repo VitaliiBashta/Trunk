@@ -172,7 +172,7 @@ public final class CharInfo extends L2GameServerPacket {
 
         _swimSpd = player.getSwimSpeed();
         _race = player.getBaseTemplate().race.ordinal();
-        _sex = player.getSex();
+        _sex = player.isMale() ? 1:0;
         base_class = player.getBaseClassId();
         pvp_flag = player.getPvpFlag();
         karma = player.getKarma();

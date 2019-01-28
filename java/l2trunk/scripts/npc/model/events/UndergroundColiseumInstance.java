@@ -164,7 +164,7 @@ public class UndergroundColiseumInstance extends NpcInstance {
              * {
              * filename = "Coliseum/"+ 7 + "htm";
              * html = new NpcHtmlMessage(player, this, filename, 7);
-             * html.replace("winner", UnderGroundColliseumManager.INSTANCE().getColiseumByLevelLimit(getMaxLevel()).getPreviusWinners().getLeader().getName());
+             * html.replace("winner", UnderGroundColliseumManager.INSTANCE().getColiseumByLevelLimit(getMaxLevel()).getPreviusWinners().getLeader().name());
              * }
              * else
              * {

@@ -16,12 +16,12 @@ public final class EffectRandomHate extends Effect {
 
     @Override
     public boolean checkCondition() {
-        return getEffected().isMonster() && Rnd.chance(template.chance(100));
+        return effected.isMonster() && Rnd.chance(template.chance(100));
     }
 
     @Override
     public void onStart() {
-        MonsterInstance monster = (MonsterInstance) getEffected();
+        MonsterInstance monster = (MonsterInstance) effected;
         Creature mostHated = monster.getAggroList().getMostHated();
         if (mostHated == null)
             return;

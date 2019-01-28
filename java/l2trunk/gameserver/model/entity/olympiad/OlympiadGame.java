@@ -251,7 +251,7 @@ public class OlympiadGame {
 
         Stream<Player> teamsPlayers = Stream.concat(winnerTeam.getPlayers(), looseTeam.getPlayers());
         teamsPlayers.forEach(player ->
-                player.getAllQuestsStates()
+                player.getAllQuestsStates().stream()
                         .filter(QuestState::isStarted)
                         .forEach(qs -> qs.getQuest().onOlympiadEnd(this, qs)));
 

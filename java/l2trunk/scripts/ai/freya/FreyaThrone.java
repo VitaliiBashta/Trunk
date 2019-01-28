@@ -42,7 +42,7 @@ public final class FreyaThrone extends Fighter {
         Creature topDamager = actor.getAggroList().getTopDamager();
         Creature randomHated = actor.getAggroList().getRandomHated();
         Creature mostHated = actor.getAggroList().getMostHated();
-        //Eternal Blizzard Cast
+        //Eternal Blizzard cast
         if (!actor.isCastingNow() && _eternalblizzardReuseTimer < System.currentTimeMillis()) {
             actor.doCast(Skill_EternalBlizzard, actor, true);
             Reflection r = getActor().getReflection();
@@ -51,7 +51,7 @@ public final class FreyaThrone extends Fighter {
             _eternalblizzardReuseTimer = System.currentTimeMillis() + _eternalblizzardReuseDelay * 1000L;
         }
 
-        // Ice Ball Cast
+        // Ice Ball cast
         // Шанс активации
         int _iceballChance = 60;
         if (!actor.isCastingNow() && !actor.isMoving && _iceballReuseTimer < System.currentTimeMillis() && Rnd.chance(_iceballChance)) {
@@ -62,7 +62,7 @@ public final class FreyaThrone extends Fighter {
             }
         }
 
-        // Summon Buff Cast
+        // Summon Buff cast
         int _summonChance = 70;
         if (!actor.isCastingNow() && summonReuseTimer < System.currentTimeMillis() && Rnd.chance(_summonChance)) {
             actor.doCast(Skill_SummonElemental, actor, true);

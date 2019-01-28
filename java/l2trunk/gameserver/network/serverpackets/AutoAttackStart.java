@@ -1,16 +1,16 @@
 package l2trunk.gameserver.network.serverpackets;
 
-public class AutoAttackStart extends L2GameServerPacket {
+public final class AutoAttackStart extends L2GameServerPacket {
     // dh
-    private final int _targetId;
+    private final int targetId;
 
     public AutoAttackStart(int targetId) {
-        _targetId = targetId;
+        this.targetId = targetId;
     }
 
     @Override
     protected final void writeImpl() {
         writeC(0x25);
-        writeD(_targetId);
+        writeD(targetId);
     }
 }

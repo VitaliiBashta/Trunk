@@ -18,31 +18,31 @@ import java.util.List;
 public final class CursedWeapon {
     private final String _name;
     private final int _itemId, _skillMaxLevel;
-    private final int _skillId;
+    private final int skillId;
     private String _transformationName;
     private int _dropRate, _disapearChance;
-    private int _durationMin, _durationMax, _durationLost;
+    private int durationMin, durationMax, _durationLost;
     private int _transformationId, _transformationTemplateId;
     private int _stageKills, _nbKills = 0, _playerKarma = 0, _playerPkKills = 0;
 
     private CursedWeaponState _state = CursedWeaponState.NONE;
-    private Location _loc = null;
-    private long _endTime = 0;
+    private Location loc = null;
+    private long endTime = 0;
     private int owner = 0;
-    private ItemInstance _item = null;
+    private ItemInstance item = null;
 
     public CursedWeapon(int itemId, int skillId, String name) {
         _name = name;
         _itemId = itemId;
-        _skillId = skillId;
-        _skillMaxLevel = SkillTable.INSTANCE.getMaxLevel(_skillId);
+        this.skillId = skillId;
+        _skillMaxLevel = SkillTable.INSTANCE.getMaxLevel(this.skillId);
     }
 
     public void initWeapon() {
         zeroOwner();
         setState(CursedWeaponState.NONE);
-        _endTime = 0;
-        _item = null;
+        endTime = 0;
+        item = null;
         _nbKills = 0;
     }
 
@@ -50,17 +50,17 @@ public final class CursedWeapon {
      * Выпадение оружия из монстра
      */
     public void create(NpcInstance attackable, Player killer) {
-        _item = ItemFunctions.createItem(_itemId);
-        if (_item != null) {
+        item = ItemFunctions.createItem(_itemId);
+        if (item != null) {
             zeroOwner();
             setState(CursedWeaponState.DROPPED);
 
-            if (_endTime == 0)
-                _endTime = System.currentTimeMillis() + getRndDuration() * 60000;
+            if (endTime == 0)
+                endTime = System.currentTimeMillis() + getRndDuration() * 60000;
 
-            _item.dropToTheGround(attackable, Location.findPointToStay(attackable, 100));
-            _loc = _item.getLoc();
-            _item.setTimeToDeleteAfterDrop(0);
+            item.dropToTheGround(attackable, Location.findPointToStay(attackable, 100));
+            loc = item.getLoc();
+            item.setTimeToDeleteAfterDrop(0);
 
             // RedSky and Earthquake
             L2GameServerPacket redSky = new ExRedSky(10);
@@ -95,12 +95,13 @@ public final class CursedWeapon {
         player.setTransformationName(null);
         player.validateLocation(0);
 
-        Skill skill = SkillTable.INSTANCE.getInfo(_skillId, player.getSkillLevel(_skillId));
+        Skill skill = SkillTable.INSTANCE.getInfo(skillId, player.getSkillLevel(skillId));
+        Player p = player;
         if (skill != null)
-            for (AddedSkill s : skill.getAddedSkills())
-                player.removeSkill(s.id);
+            skill.getAddedSkills().forEach(s ->
+                p.removeSkill(s.id));
 
-        player.removeSkill(_skillId);
+        player.removeSkill(skillId);
 
         player.abortAttack(true, false);
 
@@ -108,10 +109,10 @@ public final class CursedWeapon {
         setState(CursedWeaponState.DROPPED);
 
         oldItem.dropToTheGround(player, Location.findPointToStay(player, 100));
-        _loc = oldItem.getLoc();
+        loc = oldItem.getLoc();
 
         oldItem.setTimeToDeleteAfterDrop(0);
-        _item = oldItem;
+        item = oldItem;
 
         player.sendPacket(new SystemMessage2(SystemMsg.YOU_HAVE_DROPPED_S1).addItemName(oldItem.getItemId()));
         player.broadcastUserInfo(true);
@@ -123,7 +124,7 @@ public final class CursedWeapon {
     private void giveSkill(Player player) {
         for (Skill s : getSkills()) {
             player.addSkill(s, false);
-            player._transformationSkills.put(s.getId(), s);
+            player.transformationSkills.put(s.id, s);
         }
         player.sendPacket(new SkillList(player));
     }
@@ -133,7 +134,7 @@ public final class CursedWeapon {
         if (level > _skillMaxLevel)
             level = _skillMaxLevel;
 
-        Skill skill = SkillTable.INSTANCE.getInfo(_skillId, level);
+        Skill skill = SkillTable.INSTANCE.getInfo(skillId, level);
         List<Skill> ret = new ArrayList<>();
         ret.add(skill);
         for (AddedSkill s : skill.getAddedSkills())
@@ -152,11 +153,11 @@ public final class CursedWeapon {
         }
 
         if (getPlayerId() == 0) {
-            if (_loc == null || (_item = ItemFunctions.createItem(_itemId)) == null)
+            if (loc == null || (item = ItemFunctions.createItem(_itemId)) == null)
                 return false;
 
-            _item.dropMe(null, _loc);
-            _item.setTimeToDeleteAfterDrop(0);
+            item.dropMe(null, loc);
+            item.setTimeToDeleteAfterDrop(0);
 
             setState(CursedWeaponState.DROPPED);
         } else
@@ -178,13 +179,13 @@ public final class CursedWeapon {
         if (player.isMounted())
             player.setMount(0, 0, 0);
 
-        _item = item;
+        this.item = item;
 
         player.getInventory().setPaperdollItem(Inventory.PAPERDOLL_LHAND, null);
         player.getInventory().setPaperdollItem(Inventory.PAPERDOLL_RHAND, null);
-        player.getInventory().setPaperdollItem(Inventory.PAPERDOLL_RHAND, _item);
+        player.getInventory().setPaperdollItem(Inventory.PAPERDOLL_RHAND, this.item);
 
-        player.sendPacket(new SystemMessage2(SystemMsg.YOU_HAVE_EQUIPPED_YOUR_S1).addItemName(_item.getItemId()));
+        player.sendPacket(new SystemMessage2(SystemMsg.YOU_HAVE_EQUIPPED_YOUR_S1).addItemName(this.item.getItemId()));
 
         player.setTransformation(0);
         player.setCursedWeaponEquippedId(_itemId);
@@ -194,8 +195,8 @@ public final class CursedWeapon {
         player.setKarma(9999999);
         player.setPkKills(_nbKills);
 
-        if (_endTime == 0)
-            _endTime = System.currentTimeMillis() + getRndDuration() * 60000;
+        if (endTime == 0)
+            endTime = System.currentTimeMillis() + getRndDuration() * 60000;
 
         giveSkill(player);
 
@@ -214,7 +215,7 @@ public final class CursedWeapon {
         player.updateStats();
         if (_nbKills % _stageKills == 0 && _nbKills <= _stageKills * (_skillMaxLevel - 1))
             giveSkill(player);
-        _endTime -= _durationLost * 60000; // Reduce time-to-live
+        endTime -= _durationLost * 60000; // Reduce time-to-live
     }
 
     public void setDisapearChance(int disapearChance) {
@@ -222,11 +223,11 @@ public final class CursedWeapon {
     }
 
     public void setDurationMin(int duration) {
-        _durationMin = duration;
+        durationMin = duration;
     }
 
     public void setDurationMax(int duration) {
-        _durationMax = duration;
+        durationMax = duration;
     }
 
     public void setDurationLost(int durationLost) {
@@ -268,11 +269,11 @@ public final class CursedWeapon {
     }
 
     public long getEndTime() {
-        return _endTime;
+        return endTime;
     }
 
     public void setEndTime(long endTime) {
-        _endTime = endTime;
+        this.endTime = endTime;
     }
 
     public String getName() {
@@ -284,15 +285,15 @@ public final class CursedWeapon {
     }
 
     public ItemInstance getItem() {
-        return _item;
+        return item;
     }
 
     public void setItem(ItemInstance item) {
-        _item = item;
+        this.item = item;
     }
 
     public int getSkillId() {
-        return _skillId;
+        return skillId;
     }
 
     public int getDropRate() {
@@ -354,23 +355,18 @@ public final class CursedWeapon {
         _stageKills = stageKills;
     }
 
-    /**
-     * Возвращает позицию (x, y, z)
-     *
-     * @return Location
-     */
     public Location getLoc() {
-        return _loc;
+        return loc;
     }
 
     public void setLoc(Location loc) {
-        _loc = loc;
+        this.loc = loc;
     }
 
     public int getRndDuration() {
-        if (_durationMin > _durationMax)
-            _durationMax = 2 * _durationMin;
-        return Rnd.get(_durationMin, _durationMax);
+        if (durationMin > durationMax)
+            durationMax = 2 * durationMin;
+        return Rnd.get(durationMin, durationMax);
     }
 
     public boolean isActive() {
@@ -382,7 +378,7 @@ public final class CursedWeapon {
     }
 
     public long getTimeLeft() {
-        return _endTime - System.currentTimeMillis();
+        return endTime - System.currentTimeMillis();
     }
 
     public Location getWorldPosition() {
@@ -391,8 +387,8 @@ public final class CursedWeapon {
             if (player != null)
                 return player.getLoc();
         } else if (isDropped())
-            if (_item != null)
-                return _item.getLoc();
+            if (item != null)
+                return item.getLoc();
 
         return null;
     }

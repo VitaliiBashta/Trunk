@@ -11,7 +11,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.stream.Stream;
 
 public final class OlympiadNobleDAO {
 
@@ -40,7 +39,7 @@ public final class OlympiadNobleDAO {
 //                if (tempId < 88) // Если это не 3-я профа, то исправляем со 2-й на 3-ю.
                 int classId = ClassId.VALUES.stream()
                         .filter(id -> id.level() == 3)
-                        .filter(id -> id.getParent(0).getId() == tempId)
+                        .filter(id -> id.getParent().getId() == tempId)
                         .mapToInt(ClassId::getId).findFirst().orElse(tempId);
 
                 StatsSet statDat = new StatsSet();

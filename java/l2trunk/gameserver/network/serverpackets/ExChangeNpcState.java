@@ -1,18 +1,18 @@
 package l2trunk.gameserver.network.serverpackets;
 
-public class ExChangeNpcState extends L2GameServerPacket {
-    private final int _objId;
-    private final int _state;
+public final class ExChangeNpcState extends L2GameServerPacket {
+    private final int objId;
+    private final int state;
 
     public ExChangeNpcState(int objId, int state) {
-        _objId = objId;
-        _state = state;
+        this.objId = objId;
+        this.state = state;
     }
 
     @Override
     protected void writeImpl() {
         writeEx(0xBE);
-        writeD(_objId);
-        writeD(_state);
+        writeD(objId);
+        writeD(state);
     }
 }

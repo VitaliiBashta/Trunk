@@ -313,7 +313,7 @@ public final class SignsPriestInstance extends NpcInstance {
                         int ancientAdenaReward = SevenSigns.INSTANCE.getAncientAdenaReward(player, true);
 
                         if (ancientAdenaReward < 3) {
-                            showChatWindow(player, 9, "b", false);
+                            showChatWindow(player, 9, "buffPrice", false);
                             return;
                         }
 

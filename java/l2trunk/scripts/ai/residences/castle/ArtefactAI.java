@@ -53,7 +53,7 @@ public final class ArtefactAI extends CharacterAI {
                     .filter(npc -> Rnd.chance(20))
                     .forEach(npc -> npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker, 5000));
 
-            if (attacker.getCastingSkill() != null && attacker.getCastingSkill().getTargetType() == Skill.SkillTargetType.TARGET_HOLY)
+            if (attacker.getCastingSkill() != null && attacker.getCastingSkill().targetType == Skill.SkillTargetType.TARGET_HOLY)
                 ThreadPoolManager.INSTANCE.schedule(this, 10000);
         }
     }

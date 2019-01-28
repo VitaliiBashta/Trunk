@@ -56,7 +56,7 @@ public class AdminQuests implements IAdminCommandHandler {
     private static boolean ShowQuestList(Player targetChar, Player activeChar) {
         NpcHtmlMessage adminReply = new NpcHtmlMessage(5);
         StringBuilder replyMSG = new StringBuilder("<html><body><table width=260>");
-        targetChar.getAllQuestsStates()
+        targetChar.getAllQuestsStates().stream()
                 .filter(Objects::nonNull)
                 .filter(qs -> qs.getQuest().getQuestIntId() != 255)
                 .forEach(qs -> replyMSG.append(fmtListRow.sprintf(qs.getQuest().getQuestIntId(),

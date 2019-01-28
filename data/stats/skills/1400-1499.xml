@@ -2883,7 +2883,7 @@
 		<!--
 			Last modify:	15.05.2009
 
-			Description: Draws a magic urge from a party member. Instantly increases M. Atk,Cast Speed,and Magic critical rate.
+			Description: Draws a magic urge from a party member. Instantly increases M. Atk,cast Speed,and Magic critical rate.
 		-->
 		<table name="#Tab-mAtk">1.75 1.85 1.95</table>
 		<table name="#mCrit">3 6 9</table>

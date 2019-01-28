@@ -181,11 +181,8 @@ public final class EnchantSkillLearn {
 
     /*TODO: Вынести в ХМЛ, на оффе около 10 видов комбанаций цен.*/
 
-    /**
-     * @return Returns the spCost.
-     */
     public int[] getCost() {
-        return SkillTable.INSTANCE.getInfo(id, 1).isOffensive() ? _priceCombat[level % 100] : _priceBuff[level % 100];
+        return SkillTable.INSTANCE.getInfo(id, 1).isOffensive ? _priceCombat[level % 100] : _priceBuff[level % 100];
     }
 
     /**

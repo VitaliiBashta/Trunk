@@ -34,19 +34,19 @@ public final class ItemSkillsListener implements OnEquipListener {
 
         if (itemSkills != null && itemSkills.size() > 0)
             for (Skill itemSkill : itemSkills)
-                if (itemSkill.getId() >= 26046 && itemSkill.getId() <= 26048) {
-                    int level = player.getSkillLevel(itemSkill.getId());
+                if (itemSkill.id >= 26046 && itemSkill.id <= 26048) {
+                    int level = player.getSkillLevel(itemSkill.id);
                     int newlevel = level - 1;
                     if (newlevel > 0)
-                        player.addSkill(itemSkill.getId(), newlevel, false);
+                        player.addSkill(itemSkill.id, newlevel, false);
                     else
-                        player.removeSkill(itemSkill.getId());
+                        player.removeSkill(itemSkill.id);
                 } else {
-                    player.removeSkill(itemSkill.getId(), false);
+                    player.removeSkill(itemSkill.id, false);
                 }
 
         if (enchant4Skill != null)
-            player.removeSkill(enchant4Skill.getId(), false);
+            player.removeSkill(enchant4Skill.id, false);
 
         if (itemSkills.size() > 0 || enchant4Skill != null) {
             player.sendPacket(new SkillList(player));
@@ -75,18 +75,18 @@ public final class ItemSkillsListener implements OnEquipListener {
         boolean needSendInfo = false;
         if (itemSkills.size() > 0)
             for (Skill itemSkill : itemSkills)
-                if (itemSkill.getId() >= 26046 && itemSkill.getId() <= 26048) {
-                    int level = player.getSkillLevel(itemSkill.getId());
+                if (itemSkill.id >= 26046 && itemSkill.id <= 26048) {
+                    int level = player.getSkillLevel(itemSkill.id);
                     int newlevel = level;
                     if (level > 0) {
-                        if (SkillTable.INSTANCE.getInfo(itemSkill.getId(), level + 1) != null)
+                        if (SkillTable.INSTANCE.getInfo(itemSkill.id, level + 1) != null)
                             newlevel = level + 1;
                     } else
                         newlevel = 1;
                     if (newlevel != level) {
-                        player.addSkill(itemSkill.getId(), newlevel, false);
+                        player.addSkill(itemSkill.id, newlevel, false);
                     }
-                } else if (player.getSkillLevel(itemSkill.getId()) < itemSkill.getLevel()) {
+                } else if (player.getSkillLevel(itemSkill.id) < itemSkill.level) {
                     player.addSkill(itemSkill, false);
 
                     if (itemSkill.isActive()) {

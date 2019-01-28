@@ -242,7 +242,7 @@ public final class Fishing {
         // Проверка на Fisherman's Potion
         Effect effect = player.getEffectList().getEffectOfFishPot();
         if (effect != null)
-            skilllvl = (int) effect.getSkill().getPower();
+            skilllvl = (int) effect.getSkill().power;
         else
             skilllvl = player.getSkillLevel(1315);
 

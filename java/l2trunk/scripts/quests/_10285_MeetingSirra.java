@@ -15,17 +15,18 @@ import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.ReflectionUtils;
 
+import static l2trunk.scripts.quests._10283_RequestOfIceMerchant.JINIA;
+import static l2trunk.scripts.quests._10283_RequestOfIceMerchant.RAFFORTY;
+
 public final class _10285_MeetingSirra extends Quest {
-    private static final int Rafforty = 32020;
-    private static final int Jinia = 32760;
-    private static final int Jinia2 = 32781;
-    private static final int Kegor = 32761;
-    private static final int Sirra = 32762;
+     static final int JINIA_2 = 32781;
+     static final int KEGOR = 32761;
+     static final int SIRRA = 32762;
 
     public _10285_MeetingSirra() {
         super(false);
-        addStartNpc(Rafforty);
-        addTalkId(Jinia, Jinia2, Kegor, Sirra);
+        addStartNpc(RAFFORTY);
+        addTalkId(JINIA, JINIA_2, KEGOR, SIRRA);
     }
 
     @Override
@@ -45,9 +46,9 @@ public final class _10285_MeetingSirra extends Quest {
             st.setCond(4);
         else if ("sirraspawn".equalsIgnoreCase(event)) {
             st.setCond(5);
-            st.getPlayer().getReflection().addSpawnWithoutRespawn(Sirra, new Location(-23848, -8744, -5413, 49152), 0);
+            st.getPlayer().getReflection().addSpawnWithoutRespawn(SIRRA, new Location(-23848, -8744, -5413, 49152), 0);
             st.getPlayer().getAroundNpc(1000, 100)
-                    .filter(sirra -> sirra.getNpcId() == Sirra)
+                    .filter(sirra -> sirra.getNpcId() == SIRRA)
                     .forEach(sirra ->
                             Functions.npcSay(sirra, "You listen to it that you know about everything. But I can no longer listen to your philosophising!"));
             return null;
@@ -79,7 +80,7 @@ public final class _10285_MeetingSirra extends Quest {
         String htmltext = "noquest";
         int npcId = npc.getNpcId();
         int cond = st.getCond();
-        if (npcId == Rafforty) {
+        if (npcId == RAFFORTY) {
             if (cond == 0) {
                 QuestState qs = st.getPlayer().getQuestState(_10284_AcquisionOfDivineSword.class);
                 if (st.getPlayer().getLevel() >= 82 && qs != null && qs.isCompleted())
@@ -98,7 +99,7 @@ public final class _10285_MeetingSirra extends Quest {
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest(false);
             }
-        } else if (npcId == Jinia) {
+        } else if (npcId == JINIA) {
             if (cond == 2)
                 htmltext = "jinia_q10285_01.htm";
             else if (cond == 4)
@@ -107,13 +108,13 @@ public final class _10285_MeetingSirra extends Quest {
                 htmltext = "jinia_q10285_05.htm";
             else if (cond == 7)
                 htmltext = "jinia_q10285_10.htm";
-        } else if (npcId == Kegor) {
+        } else if (npcId == KEGOR) {
             if (cond == 3)
                 htmltext = "kegor_q10285_01.htm";
-        } else if (npcId == Sirra) {
+        } else if (npcId == SIRRA) {
             if (cond == 5)
                 htmltext = "sirra_q10285_01.htm";
-        } else if (npcId == Jinia2) {
+        } else if (npcId == JINIA_2) {
             if (cond == 7 || cond == 8) {
                 st.setCond(8);
                 htmltext = "jinia2_q10285_01.htm";

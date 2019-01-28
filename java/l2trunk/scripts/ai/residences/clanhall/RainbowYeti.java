@@ -48,7 +48,7 @@ public final class RainbowYeti extends CharacterAI {
 
         RainbowGourdInstance gourdInstance;
         RainbowGourdInstance gourdInstance2;
-        switch (skill.getId()) {
+        switch (skill.id) {
             case 2240: //nectar
                 // убить хп у своего Фрукта :D
                 if (Rnd.chance(90)) {

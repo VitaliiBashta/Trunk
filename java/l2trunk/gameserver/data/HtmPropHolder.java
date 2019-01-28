@@ -7,58 +7,25 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class HtmPropHolder {
+public final class HtmPropHolder {
     private static final Logger LOG = LoggerFactory.getLogger(HtmPropHolder.class);
+    private static final Map<String, Map<String, String>> lists = new ConcurrentHashMap<>();
 
-    private static final String[] HTM_FILE_ENDINGS = {".htm", ".html"};
-    private static final String USUAL_PROP_NAME_ADDON = ".prop";
-    private static final String STARTING_PATH = "data/html-en/";
-    private static final char LINE_SEPARATOR = '\n';
-    private static final String START_BOUNDARY = "{";
-    private static final String FINISH_BOUNDARY = "}";
-    private final Map<String, HtmPropList> lists;
-
-    private HtmPropHolder() {
-        this.lists = new ConcurrentHashMap<>();
+    public static Map<String, String> getList(String filePath) {
+        Map<String, String> list = lists.get("data/html-en/" + filePath);
+        if (list == null) list = loadFile("data/html-en/" + filePath);
+        return list;
     }
 
-    public static HtmPropList getList(String filePath) {
-        String additionalEnding = "";
-        for (int endingIndex = -1; endingIndex < HTM_FILE_ENDINGS.length; endingIndex++) {
-            if (endingIndex >= 0) {
-                additionalEnding = HTM_FILE_ENDINGS[endingIndex];
-            }
-            HtmPropList list = getInstance().justGetList("data/html-en/" + filePath + additionalEnding);
-            if (list == null) {
-                list = getInstance().loadFile("data/html-en/" + filePath + additionalEnding);
-            }
-            if (list != null) {
-                return list;
-            }
-        }
-        return null;
-    }
-
-    private static HtmPropHolder getInstance() {
-        return HtmPropHolderHolder.instance;
-    }
-
-    private HtmPropList justGetList(String filePath) {
-        return this.lists.get(filePath);
-    }
-
-    private HtmPropList loadFile(String filePath) {
+    private static Map<String, String> loadFile(String filePath) {
         Path path = Paths.get(filePath);
+        if (!Files.exists(path)) return null;
 
-        if (!Files.exists(path)) {
-            return null;
-        }
-        List<HtmProp> list = new ArrayList<>();
+        Map<String, String> list = new HashMap<>();
         try {
             String keyWord = "";
             boolean started = false;
@@ -76,8 +43,7 @@ public class HtmPropHolder {
 
                 } else if (started) {
                     if (lineTrim.contains("}")) {
-                        HtmProp prop = new HtmProp(keyWord, text.toString());
-                        list.add(prop);
+                        list.put(keyWord, text.toString());
 
                         keyWord = "";
                         text.setLength(0);
@@ -98,14 +64,9 @@ public class HtmPropHolder {
         }
 
         if (!list.isEmpty()) {
-            HtmPropList propList = new HtmPropList(list);
-            this.lists.put(filePath, propList);
-            return propList;
+            lists.put(filePath, list);
+            return list;
         }
         return null;
-    }
-
-    private static class HtmPropHolderHolder {
-        private static final HtmPropHolder instance = new HtmPropHolder();
     }
 }

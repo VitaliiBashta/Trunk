@@ -118,7 +118,7 @@ public final class Valakas extends Fighter {
                     actor.startConfused();
                     ThreadPoolManager.INSTANCE.schedule(() -> {
                         getActor().stopConfused();
-                        _madnessTask = null;
+                        madnessTask = null;
                     }, 20000L);
                 }
                 ValakasManager.broadcastScreenMessage(NpcString.VALAKAS_RANGED_ATTACKS_ENRAGED_TARGET_FREE);
@@ -177,7 +177,7 @@ public final class Valakas extends Fighter {
         }
 
         int r_skill = selectTopSkill(d_skill);
-        if (r_skill != 0 && !SkillTable.INSTANCE.getInfo(r_skill).isOffensive())
+        if (r_skill != 0 && !SkillTable.INSTANCE.getInfo(r_skill).isOffensive)
             target = actor;
 
         return chooseTaskAndTargets(r_skill, target, distance);

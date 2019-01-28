@@ -12,7 +12,7 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
 /**
  * packet type id 0x37
- * format:		cddb, b - array if (ddd)
+ * format:		cddb, buffPrice - array if (ddd)
  */
 public final class RequestSellItem extends L2GameClientPacket {
     private int _count;

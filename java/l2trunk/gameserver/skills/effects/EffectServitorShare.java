@@ -26,8 +26,8 @@ public final class EffectServitorShare extends Effect {
         super.onExit();
     }
 
-    public Stream<Func> getStatFuncs() {
-        return Stream.of((new Func(Stats.POWER_ATTACK, 64, this) {
+    public List<Func> getStatFuncs() {
+        return List.of((new Func(Stats.POWER_ATTACK, 64, this) {
                     public void calc(Env env) {
                         Player pc = env.character.getPlayer();
                         if (pc != null) {

@@ -30,7 +30,7 @@ public final class Ballista extends DefaultAI {
         super.onEvtSeeSpell(skill, caster);
 
         NpcInstance actor = getActor();
-        if (caster == null || skill.getId() != BALLISTA_BOMB_SKILL_ID)
+        if (caster == null || skill.id != BALLISTA_BOMB_SKILL_ID)
             return;
 
         Player player = caster.getPlayer();

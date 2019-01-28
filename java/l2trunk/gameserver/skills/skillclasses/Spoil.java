@@ -28,7 +28,7 @@ public final class Spoil extends Skill {
             return;
 
         int ss = isSSPossible() ? (isMagic() ? activeChar.getChargedSpiritShot() : activeChar.getChargedSoulShot() ? 2 : 0) : 0;
-        if (ss > 0 && getPower() > 0)
+        if (ss > 0 && power > 0)
             activeChar.unChargeShots(false);
 
         targets.stream()
@@ -49,7 +49,7 @@ public final class Spoil extends Skill {
                                     if (modifier > 8)
                                         rateOfSpoil = rateOfSpoil - rateOfSpoil * (modifier - 8) * 9 / 100;
 
-                                    rateOfSpoil = rateOfSpoil * getMagicLevel() / monsterLevel;
+                                    rateOfSpoil = rateOfSpoil * magicLevel / monsterLevel;
                                     if (rateOfSpoil < Config.MINIMUM_SPOIL_RATE)
                                         rateOfSpoil = Config.MINIMUM_SPOIL_RATE;
                                     else if (rateOfSpoil > 99.)
@@ -70,7 +70,7 @@ public final class Spoil extends Skill {
                             activeChar.sendPacket(new SystemMessage2(SystemMsg.S1_HAS_FAILED).addSkillName(id, getDisplayLevel()));
                     }
 
-                    if (getPower() > 0) {
+                    if (power > 0) {
                         double damage;
                         if (isMagic())
                             damage = Formulas.calcMagicDam(activeChar, t, this, ss);
@@ -88,11 +88,11 @@ public final class Spoil extends Skill {
 
                     getEffects(activeChar, t);
 
-                    t.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, activeChar, Math.max(_effectPoint, 1));
+                    t.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, activeChar, Math.max(effectPoint, 1));
                 });
     }
 
     private boolean isSpoilUse(Creature target) {
-        return getLevel() != 1 || target.getLevel() <= 22 || getId() != 254;
+        return level != 1 || target.getLevel() <= 22 || id != 254;
     }
 }

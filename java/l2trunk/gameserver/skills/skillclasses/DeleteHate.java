@@ -26,7 +26,7 @@ public final class DeleteHate extends Skill {
 
                 if (getActivateRate() > 0) {
                     if (activeChar.isPlayer() && ((Player) activeChar).isGM())
-                        activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.skills.Formulas.Chance", (Player) activeChar).addString(getName()).addNumber(getActivateRate()));
+                        activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.skills.Formulas.Chance", (Player) activeChar).addString(name).addNumber(getActivateRate()));
 
                     if (!Rnd.chance(getActivateRate()))
                         return;

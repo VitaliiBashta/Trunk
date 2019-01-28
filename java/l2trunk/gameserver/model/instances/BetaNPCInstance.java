@@ -27,7 +27,7 @@ public final class BetaNPCInstance extends NpcInstance {
         if (command.equalsIgnoreCase("change_sex")) {
             try (Connection con = DatabaseFactory.getInstance().getConnection();
                  PreparedStatement offline = con.prepareStatement("UPDATE characters SET sex = ? WHERE obj_Id = ?")) {
-                offline.setInt(1, player.getSex() == 1 ? 0 : 1);
+                offline.setInt(1, player.isMale() ? 1 : 0);
                 offline.setInt(2, player.getObjectId());
                 offline.executeUpdate();
             } catch (SQLException e) {
@@ -37,7 +37,7 @@ public final class BetaNPCInstance extends NpcInstance {
 
             player.changeSex();
             player.sendMessage("Your gender has been changed !!");
-            Log.add("Character " + player + "  changed sex to " + (player.getSex() == 1 ? "male" : "female"), "renames");
+            Log.add("Character " + player + "  changed sex to " + (player.isMale()  ? "male" : "female"), "renames");
         } else if (command.equalsIgnoreCase("add_clan_reputation")) {
             if (player.getClan() != null) {
                 player.getClan().incReputation(10000, false, "BetaNpc");

@@ -1,7 +1,6 @@
 package l2trunk.gameserver.skills.skillclasses;
 
 import l2trunk.commons.collections.StatsSet;
-import l2trunk.gameserver.Config;
 import l2trunk.gameserver.instancemanager.ReflectionManager;
 import l2trunk.gameserver.model.*;
 import l2trunk.gameserver.network.serverpackets.SystemMessage2;
@@ -30,20 +29,20 @@ public final class Transformation extends Skill {
         if (player == null || player.getActiveWeaponFlagAttachment() != null)
             return false;
 
-        if (player.getTransformation() != 0 && getId() != SKILL_TRANSFORM_DISPEL) {
+        if (player.getTransformation() != 0 && id != SKILL_TRANSFORM_DISPEL) {
             // Для всех скилов кроме Transform Dispel
             activeChar.sendPacket(SystemMsg.YOU_ALREADY_POLYMORPHED_AND_CANNOT_POLYMORPH_AGAIN);
             return false;
         }
 
         // Нельзя использовать летающую трансформу на территории Aden, или слишком высоко/низко, или при вызванном пете/саммоне, или в инстансе
-        if ((getId() == SKILL_FINAL_FLYING_FORM || getId() == SKILL_AURA_BIRD_FALCON || getId() == SKILL_AURA_BIRD_OWL) && (player.getX() > -166168 || player.getZ() <= 0 || player.getZ() >= 6000 || player.getPet() != null || player.getReflection() != ReflectionManager.DEFAULT)) {
+        if ((id == SKILL_FINAL_FLYING_FORM || id == SKILL_AURA_BIRD_FALCON || id == SKILL_AURA_BIRD_OWL) && (player.getX() > -166168 || player.getZ() <= 0 || player.getZ() >= 6000 || player.getPet() != null || player.getReflection() != ReflectionManager.DEFAULT)) {
             activeChar.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addSkillName(id, level));
             return false;
         }
 
         // Нельзя отменять летающую трансформу слишком высоко над землей
-        if (player.isInFlyingTransform() && getId() == SKILL_TRANSFORM_DISPEL && Math.abs(player.getZ() - player.getLoc().correctGeoZ().z) > 333) {
+        if (player.isInFlyingTransform() && id == SKILL_TRANSFORM_DISPEL && Math.abs(player.getZ() - player.getLoc().correctGeoZ().z) > 333) {
             activeChar.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addSkillName(id, level));
             return false;
         }
@@ -74,13 +73,13 @@ public final class Transformation extends Skill {
                 activeChar.sendPacket(SystemMsg.PETS_AND_SERVITORS_ARE_NOT_AVAILABLE_AT_THIS_TIME);
                 return false;
             }
-        } else if (player.getPet() != null && player.getPet().isPet() && getId() != SKILL_TRANSFORM_DISPEL && !isBaseTransformation()) {
+        } else if (player.getPet() != null && player.getPet().isPet() && id != SKILL_TRANSFORM_DISPEL && !isBaseTransformation()) {
             activeChar.sendPacket(SystemMsg.YOU_CANNOT_POLYMORPH_WHEN_YOU_HAVE_SUMMONED_A_SERVITORPET);
             return false;
         }
         // The ban on the use of a transform zone ant queen
         Zone QueenAntZone = ReflectionUtils.getZone("[queen_ant_epic]");
-        if (player.isInZone(QueenAntZone) && getId() != SKILL_TRANSFORM_DISPEL && !isBaseTransformation() && !isSummonerTransformation() && !isCursedTransformation()) {
+        if (player.isInZone(QueenAntZone) && id != SKILL_TRANSFORM_DISPEL && !isBaseTransformation() && !isSummonerTransformation() && !isCursedTransformation()) {
             player.sendMessage("It is forbidden to be in transformation.");
             return false;
         }

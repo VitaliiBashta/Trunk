@@ -154,7 +154,7 @@ public final class Call extends Skill {
                 .filter(Objects::nonNull)
                 .filter(target -> canBeSummoned(activeChar, target) == null)
                 .forEach(target -> {
-                    ((Player) target).summonCharacterRequest(activeChar, Location.findAroundPosition(activeChar, 100, 150), getId() == 1403 || getId() == 1404 ? 1 : 0);
+                    ((Player) target).summonCharacterRequest(activeChar, Location.findAroundPosition(activeChar, 100, 150), id == 1403 || id == 1404 ? 1 : 0);
 
                     getEffects(activeChar, target, getActivateRate() > 0, false);
                 });

@@ -76,14 +76,14 @@ public class AdminClanHall implements IAdminCommandHandler {
 			if (clanhall != null)
 			{
 				replyMSG.append("<tr><td>");
-				replyMSG.append("<a action=\"bypass -h admin_clanhall " + clanhall.getId() + "\">" + clanhall.getName() + "</a>");
+				replyMSG.append("<a action=\"bypass -h admin_clanhall " + clanhall.id() + "\">" + clanhall.name() + "</a>");
 				replyMSG.append("</td><td>" + clanhall.getLocation() + "</td><td>");
 
 				L2Clan owner = clanhall.getOwnerId() == 0 ? null : ClanTable.INSTANCE().getClan(clanhall.getOwnerId());
 				if (owner == null)
 					replyMSG.append("none");
 				else
-					replyMSG.append(owner.getName());
+					replyMSG.append(owner.name());
 
 				replyMSG.append("</td></tr>");
 			} */

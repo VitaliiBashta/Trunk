@@ -11,13 +11,13 @@ public final class EffectAgathionRes extends Effect {
     @Override
     public void onStart() {
         super.onStart();
-        getEffected().setIsBlessedByNoblesse(true);
+        effected.setIsBlessedByNoblesse(true);
     }
 
     @Override
     public void onExit() {
         super.onExit();
-        getEffected().setIsBlessedByNoblesse(false);
+        effected.setIsBlessedByNoblesse(false);
     }
 
     @Override

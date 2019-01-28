@@ -101,14 +101,11 @@ public final class Config {
     public static int EVENT_HITMAN_COST_ITEM_ID;
     public static int EVENT_HITMAN_COST_ITEM_COUNT;
     public static int EVENT_HITMAN_TASKS_PER_PAGE;
-    public static String[] EVENT_HITMAN_ALLOWED_ITEM_LIST;
+    public static List<Integer> EVENT_HITMAN_ALLOWED_ITEM_LIST;
     public static int HTM_CACHE_MODE;
     public static boolean LOG_SERVICES;
     public static boolean ALLOW_ADDONS_CONFIG;
-    /**
-     * GameServer ports
-     */
-    public static List<Integer> PORTS_GAME;
+    public static List<Integer> GAME_PORT;
     public static String DATABASE_DRIVER;
     public static int DATABASE_MAX_CONNECTIONS;
     public static int DATABASE_MAX_IDLE_TIMEOUT;
@@ -1169,7 +1166,7 @@ public final class Config {
         ACCEPT_ALTERNATE_ID = serverSettings.getProperty("AcceptAlternateID", true);
 
         GAMESERVER_HOSTNAME = serverSettings.getProperty("GameserverHostname");
-        PORTS_GAME = serverSettings.getProperty("GameserverPort", List.of(7777));
+        GAME_PORT = serverSettings.getProperty("GameserverPort", List.of(7777));
 
         EVERYBODY_HAS_ADMIN_RIGHTS = serverSettings.getProperty("EverybodyHasAdminRights", false);
 
@@ -1265,7 +1262,7 @@ public final class Config {
         EVENT_HITMAN_COST_ITEM_ID = eventHitmanSettings.getProperty("CostItemId", 57);
         EVENT_HITMAN_COST_ITEM_COUNT = eventHitmanSettings.getProperty("CostItemCount", 1000);
         EVENT_HITMAN_TASKS_PER_PAGE = eventHitmanSettings.getProperty("TasksPerPage", 7);
-        EVENT_HITMAN_ALLOWED_ITEM_LIST = eventHitmanSettings.getProperty("AllowedItems", new String[]{"4037", "57"});
+        EVENT_HITMAN_ALLOWED_ITEM_LIST = eventHitmanSettings.getProperty("AllowedItems", List.of(4037, 57));
     }
 
     private static void loadChatConfig() {

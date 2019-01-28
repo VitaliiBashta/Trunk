@@ -48,9 +48,8 @@ public abstract class Summon extends Playable {
         super(objectId, template);
         _owner = owner;
         template.getSkills().values().stream()
-                .mapToInt(Skill::getId)
+                .mapToInt(s->s.id)
                 .forEach(this::addSkill);
-
 
         setXYZ(owner.getX() + Rnd.get(-100, 100), owner.getY() + Rnd.get(-100, 100), owner.getZ());
     }
@@ -189,7 +188,7 @@ public abstract class Summon extends Playable {
     @Override
     public int getBuffLimit() {
         Player owner = getPlayer();
-        return (int) calcStat(Stats.BUFF_LIMIT, owner.getBuffLimit(), null, null);
+        return (int) calcStat(Stats.BUFF_LIMIT, owner.getBuffLimit());
     }
 
     public abstract int getCurrentFed();

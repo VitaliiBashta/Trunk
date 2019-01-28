@@ -87,10 +87,10 @@ public final class AdminSkill implements IAdminCommandHandler {
             case admin_people_having_effect:
                 int skillId = toInt(wordList[1]);
                 GameObjectsStorage.getAllPlayersStream().forEach(player ->
-                        player.getEffectList().getAllEffects()
-                                .filter(e -> e.getSkill().getId() == skillId)
+                        player.getEffectList().getAllEffects().stream()
+                                .filter(e -> e.getSkill().id == skillId)
                                 .forEach(e -> {
-                                    activeChar.sendMessage("Player: " + player.getName() + " Level:" + e.getSkill().getLevel());
+                                    activeChar.sendMessage("Player: " + player.getName() + " Level:" + e.getSkill().level);
                                     activeChar.sendMessage("Finished!");
                                 }));
                 break;
@@ -188,7 +188,7 @@ public final class AdminSkill implements IAdminCommandHandler {
                     unLearnable++;
                     continue;
                 }
-                if (player.getSkillLevel(sk.getId()) == -1)
+                if (player.getSkillLevel(sk.id) == -1)
                     skillCounter++;
                 player.addSkill(sk, true);
             }
@@ -231,7 +231,14 @@ public final class AdminSkill implements IAdminCommandHandler {
         replyMSG.append("<br><table width=270>");
         replyMSG.append("<tr><td width=80>Name:</td><td width=60>Level:</td><td width=40>Id:</td></tr>");
         for (Skill element : skills)
-            replyMSG.append("<tr><td width=80><a action=\"bypass -h admin_remove_skill ").append(element.getId()).append("\">").append(element.getName()).append("</a></td><td width=60>").append(element.getLevel()).append("</td><td width=40>").append(element.getId()).append("</td></tr>");
+            replyMSG.append("<tr><td width=80><a action=\"bypass -h admin_remove_skill ")
+                    .append(element.id).append("\">")
+                    .append(element.name)
+                    .append("</a></td><td width=60>")
+                    .append(element.level)
+                    .append("</td><td width=40>")
+                    .append(element.id)
+                    .append("</td></tr>");
         replyMSG.append("</table>");
         replyMSG.append("<br><center><table>");
         replyMSG.append("Remove custom skill:");
@@ -323,7 +330,7 @@ public final class AdminSkill implements IAdminCommandHandler {
         replyMSG.append("<br>");
 
         player.getEffectList().getAllEffects().forEach(e ->
-                replyMSG.append(e.getSkill().getName()).append(" ").append(e.getSkill().getLevel()).append(" - ").append(e.getSkill().isToggle() ? "Infinity" : (e.getTimeLeft() + " seconds")).append("<br1>"));
+                replyMSG.append(e.getSkill().name).append(" ").append(e.getSkill().level).append(" - ").append(e.getSkill().isToggle() ? "Infinity" : (e.getTimeLeft() + " seconds")).append("<br1>"));
         replyMSG.append("<br></body></html>");
 
         adminReply.setHtml(replyMSG.toString());
@@ -344,10 +351,8 @@ public final class AdminSkill implements IAdminCommandHandler {
             player.sendMessage("There is no point in doing it on your character.");
         else {
             Collection<Skill> skills = player.getAllSkills();
-            for (Skill element : activeChar.getAllSkills())
-                activeChar.removeSkill(element.getId(), true);
-            for (Skill element : skills)
-                activeChar.addSkill(element, true);
+            activeChar.getAllSkills().forEach(s ->                activeChar.removeSkill(s.id, true));
+            skills.forEach(s ->                activeChar.addSkill(s, true));
             activeChar.sendMessage("You now have all the skills of  " + player.getName() + ".");
         }
 
@@ -366,8 +371,8 @@ public final class AdminSkill implements IAdminCommandHandler {
 
         int counter = 0;
         for (Skill element : player.getAllSkills())
-            if ((!element.isCommon()) && (!SkillAcquireHolder.isSkillPossible(player, element, AcquireType.NORMAL))) {
-                player.removeSkill(element.getId(), true);
+            if ((!element.common) && (!SkillAcquireHolder.isSkillPossible(player, element, AcquireType.NORMAL))) {
+                player.removeSkill(element.id, true);
                 counter++;
             }
         player.checkSkills();
@@ -393,10 +398,10 @@ public final class AdminSkill implements IAdminCommandHandler {
             int level = toInt(wordList[2]);
             Skill skill = SkillTable.INSTANCE.getInfo(id, level);
             if (skill != null) {
-                player.sendMessage("Admin gave you the skill " + skill.getName() + ".");
+                player.sendMessage("Admin gave you the skill " + skill.name + ".");
                 player.addSkill(skill, true);
                 player.sendPacket(new SkillList(player));
-                activeChar.sendMessage("You gave the skill " + skill.getName() + " to " + player.getName() + ".");
+                activeChar.sendMessage("You gave the skill " + skill.name + " to " + player.getName() + ".");
             } else
                 activeChar.sendMessage("Error: there is no such skill.");
         }
@@ -419,10 +424,10 @@ public final class AdminSkill implements IAdminCommandHandler {
             int level = player.getSkillLevel(id);
             Skill skill = SkillTable.INSTANCE.getInfo(id, level);
             if (skill != null) {
-                player.sendMessage("Admin removed the skill " + skill.getName() + ".");
+                player.sendMessage("Admin removed the skill " + skill.name + ".");
                 player.removeSkill(id, true);
                 player.sendPacket(new SkillList(player));
-                activeChar.sendMessage("You removed the skill " + skill.getName() + " from " + player.getName() + ".");
+                activeChar.sendMessage("You removed the skill " + skill.name + " from " + player.getName() + ".");
             } else
                 activeChar.sendMessage("Error: there is no such skill.");
         }

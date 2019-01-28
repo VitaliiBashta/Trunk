@@ -35,8 +35,8 @@ public final class ManaHeal extends Skill {
 
             // Treatment differences leveled at RECHARGER. difference skill level and target level.
             // 1013 = id skill recharge. For servitors not verified decrease mana until left as is.
-            if (getMagicLevel() > 0 && activeChar != target) {
-                int diff = target.getLevel() - getMagicLevel();
+            if (magicLevel > 0 && activeChar != target) {
+                int diff = target.getLevel() - magicLevel;
                 if (diff > 5)
                     if (diff < 20)
                         newMp = newMp - (newMp * 0.103 * (diff - 5));

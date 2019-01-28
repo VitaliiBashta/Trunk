@@ -11,13 +11,13 @@ public final class EffectDebuffImmunity extends Effect {
     @Override
     public void onStart() {
         super.onStart();
-        getEffected().startDebuffImmunity();
+        effected.startDebuffImmunity();
     }
 
     @Override
     public void onExit() {
         super.onExit();
-        getEffected().stopDebuffImmunity();
+        effected.stopDebuffImmunity();
     }
 
     @Override

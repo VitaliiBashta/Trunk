@@ -127,7 +127,7 @@ public final class TamedBeastInstance extends FeedableBeastInstance {
         int delay = 0;
         for (Integer skill : _skills) {
             ThreadPoolManager.INSTANCE.schedule(new Buff(this, getPlayer(), skill), delay);
-            delay = delay + SkillTable.INSTANCE.getInfo(skill).getHitTime() + 500;
+            delay = delay + SkillTable.INSTANCE.getInfo(skill).hitTime + 500;
         }
     }
 

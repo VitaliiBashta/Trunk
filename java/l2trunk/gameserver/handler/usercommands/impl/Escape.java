@@ -55,7 +55,7 @@ public final class Escape implements IUserCommandHandler {
             skill = SkillTable.INSTANCE.getInfo(2099);
 
         if ( skill.checkCondition(activeChar, activeChar, false, false, true))
-            activeChar.getAI().Cast(skill, activeChar, false, true);
+            activeChar.getAI().cast(skill, activeChar, false, true);
 
         return true;
     }

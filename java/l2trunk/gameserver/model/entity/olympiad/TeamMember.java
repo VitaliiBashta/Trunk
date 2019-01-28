@@ -239,8 +239,8 @@ public final class TeamMember {
             if (sts == null)
                 continue;
 
-            Skill skill = player.getKnownSkill(sts.getId());
-            if (skill == null || skill.getLevel() != sts.getLevel())
+            Skill skill = player.getKnownSkill(sts.id());
+            if (skill == null || skill.level != sts.level)
                 continue;
 
             if (skill.getReuseDelay(player) <= 15 * 60000L)
@@ -306,10 +306,10 @@ public final class TeamMember {
         if (player.isCastingNow())
             player.abortCast(true, true);
 
-        player.getEffectList().getAllEffects()
+        player.getEffectList().getAllEffects().stream()
                 .filter(e -> e.getEffectType() != EffectType.Cubic)
                 .filter(e -> !e.getSkill().isToggle())
-                .peek(e -> player.sendPacket(new SystemMessage(SystemMsg.THE_EFFECT_OF_S1_HAS_BEEN_REMOVED).addSkillName(e.getSkill().getId(), e.getSkill().getLevel())))
+                .peek(e -> player.sendPacket(new SystemMessage(SystemMsg.THE_EFFECT_OF_S1_HAS_BEEN_REMOVED).addSkillName(e.getSkill().id, e.getSkill().level)))
                 .forEach(Effect::exit);
 
 

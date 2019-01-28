@@ -160,7 +160,7 @@ public final class _1202_CrystalCaverns extends Quest {
     @Override
     public String onSkillUse(NpcInstance npc, Skill skill, QuestState qs) {
         World world = worlds.get(qs.getPlayer().getReflectionId());
-        int skillId = skill.getId();
+        int skillId = skill.id;
         int npcId = npc.getNpcId();
         if (npcId == OG2 && (skillId == 1217 || skillId == 1218 || skillId == 1011 || skillId == 1015 || skillId == 1401 || skillId == 5146)) {
             if (!world.OracleTriggeredRoom1) {

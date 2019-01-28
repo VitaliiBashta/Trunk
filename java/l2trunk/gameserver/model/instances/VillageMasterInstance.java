@@ -22,7 +22,6 @@ import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.tables.ClanTable;
-import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.CertificationFunctions;
 import l2trunk.gameserver.utils.HtmlUtils;
@@ -36,7 +35,7 @@ import java.util.*;
 public final class VillageMasterInstance extends NpcInstance {
     private static final Logger LOG = LoggerFactory.getLogger(VillageMasterInstance.class);
 
-    public VillageMasterInstance(int objectId, NpcTemplate template) {
+    VillageMasterInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
     }
 
@@ -45,7 +44,7 @@ public final class VillageMasterInstance extends NpcInstance {
         //TODO: В данной редакции смена лидера производится сразу же.
         // Надо подумать над реализацией смены кланлидера в запланированный день недели.
 
-		/*if (clan.getLevel() >= CastleSiegeManager.getSiegeClanMinLevel())
+		/*if (clan.level() >= CastleSiegeManager.getSiegeClanMinLevel())
 		{
 			if (clan.getLeader() != null)
 			{
@@ -68,7 +67,7 @@ public final class VillageMasterInstance extends NpcInstance {
 
         PlayerClass currClass = PlayerClass.values()[charClassId];
 
-        /**
+        /*
          * If the race of your main class is Elf or Dark Elf, you may not getBonuses
          * each class as a subclass to the other class, and you may not getBonuses
          * Overlord and Warsmith class as a subclass.
@@ -85,7 +84,7 @@ public final class VillageMasterInstance extends NpcInstance {
          */
         Set<PlayerClass> availSubs = currClass.getAvailableSubclasses();
         if (availSubs == null)
-            return Collections.emptySet();
+            return Set.of();
 
         // Remove from the list sub maine class player
         availSubs.remove(currClass);
@@ -99,7 +98,7 @@ public final class VillageMasterInstance extends NpcInstance {
                 }
 
                 // Remove possible sub their parents, if they have chara
-                ClassId parent = ClassId.VALUES.get(availSub.ordinal()).getParent(player.getSex());
+                ClassId parent = ClassId.VALUES.get(availSub.ordinal()).getParent();
                 if (parent != null && parent.getId() == subClass.getClassId()) {
                     availSubs.remove(availSub);
                     continue;
@@ -107,7 +106,7 @@ public final class VillageMasterInstance extends NpcInstance {
 
                 // Remove possible sbb parents current subclass, or if you take a sub berserker
                 // And bring to a third Profiles - doombringer, the player will be offered a berserker again (deja vu)
-                ClassId subParent = ClassId.VALUES.get(subClass.getClassId()).getParent(player.getSex());
+                ClassId subParent = ClassId.VALUES.get(subClass.getClassId()).getParent();
                 if (subParent != null && subParent.getId() == availSub.ordinal())
                     availSubs.remove(availSub);
             }
@@ -120,7 +119,7 @@ public final class VillageMasterInstance extends NpcInstance {
 
                 // Для Berserker(doombringer) и Arbalester(trickster) предлагаем Soulbreaker-а только своего пола
                 if (currClass == PlayerClass.Berserker || currClass == PlayerClass.Doombringer || currClass == PlayerClass.Arbalester || currClass == PlayerClass.Trickster)
-                    if (player.getSex() == 1 && availSub == PlayerClass.MaleSoulbreaker || player.getSex() == 0 && availSub == PlayerClass.FemaleSoulbreaker)
+                    if (player.isMale() && availSub == PlayerClass.MaleSoulbreaker || !player.isMale() && availSub == PlayerClass.FemaleSoulbreaker)
                         availSubs.remove(availSub);
 
                 // Inspector доступен, только когда вкачаны 2 возможных первых саба камаэль(+ мейн класс)
@@ -192,18 +191,18 @@ public final class VillageMasterInstance extends NpcInstance {
             String val = command.substring(12);
             createClan(player, val);
         } else if (command.startsWith("create_academy") && command.length() > 15) {
-            String sub = command.substring(15, command.length());
+            String sub = command.substring(15);
             createSubPledge(player, sub, Clan.SUBUNIT_ACADEMY, 5, "");
         } else if (command.startsWith("create_royal") && command.length() > 15) {
-            String[] sub = command.substring(13, command.length()).split(" ", 2);
+            String[] sub = command.substring(13).split(" ", 2);
             if (sub.length == 2)
                 createSubPledge(player, sub[1], Clan.SUBUNIT_ROYAL1, 6, sub[0]);
         } else if (command.startsWith("create_knight") && command.length() > 16) {
-            String[] sub = command.substring(14, command.length()).split(" ", 2);
+            String[] sub = command.substring(14).split(" ", 2);
             if (sub.length == 2)
                 createSubPledge(player, sub[1], Clan.SUBUNIT_KNIGHT1, 7, sub[0]);
         } else if (command.startsWith("assign_subpl_leader") && command.length() > 22) {
-            String[] sub = command.substring(20, command.length()).split(" ", 2);
+            String[] sub = command.substring(20).split(" ", 2);
             if (sub.length == 2)
                 assignSubPledgeLeader(player, sub[1], sub[0]);
         } else if (command.startsWith("assign_new_clan_leader") && command.length() > 23) {
@@ -227,19 +226,19 @@ public final class VillageMasterInstance extends NpcInstance {
             else
                 command = "Link villagemaster/reflect_weapon_master_noticket.htm";
             super.onBypassFeedback(player, command);
-        } else if (command.equalsIgnoreCase("CertificationList")) {
+        } else if ("CertificationList".equalsIgnoreCase(command)) {
             CertificationFunctions.showCertificationList(this, player);
-        } else if (command.equalsIgnoreCase("GetCertification65")) {
+        } else if ("GetCertification65".equalsIgnoreCase(command)) {
             CertificationFunctions.getCertification65(this, player);
-        } else if (command.equalsIgnoreCase("GetCertification70")) {
+        } else if ("GetCertification70".equalsIgnoreCase(command)) {
             CertificationFunctions.getCertification70(this, player);
-        } else if (command.equalsIgnoreCase("GetCertification80")) {
+        } else if ("GetCertification80".equalsIgnoreCase(command)) {
             CertificationFunctions.getCertification80(this, player);
-        } else if (command.equalsIgnoreCase("GetCertification75List")) {
+        } else if ("GetCertification75List".equalsIgnoreCase(command)) {
             CertificationFunctions.getCertification75List(this, player);
-        } else if (command.equalsIgnoreCase("GetCertification75C")) {
+        } else if ("GetCertification75C".equalsIgnoreCase(command)) {
             CertificationFunctions.getCertification75(this, player, true);
-        } else if (command.equalsIgnoreCase("GetCertification75M")) {
+        } else if ("GetCertification75M".equalsIgnoreCase(command)) {
             CertificationFunctions.getCertification75(this, player, false);
         } else if (command.startsWith("Subclass")) {
             if (player.getPet() != null) {
@@ -287,7 +286,7 @@ public final class VillageMasterInstance extends NpcInstance {
             int intVal = 0;
 
             try {
-                for (String id : command.substring(9, command.length()).split(" ")) {
+                for (String id : command.substring(9).split(" ")) {
                     if (intVal == 0) {
                         intVal = Integer.parseInt(id);
                         continue;
@@ -369,7 +368,7 @@ public final class VillageMasterInstance extends NpcInstance {
                      * their most recently added sub-class choice.
                      */
 					/*for(L2SubClass<?> sub : playerClassList.values())
-						if (sub.isBase() && sub.getLevel() < Config.ALT_GAME_LEVEL_TO_GET_SUBCLASS)
+						if (sub.isBase() && sub.level() < Config.ALT_GAME_LEVEL_TO_GET_SUBCLASS)
 						{
 							player.sendMessage("You may not change to your subclass before you are level " + Config.ALT_GAME_LEVEL_TO_GET_SUBCLASS, "Вы не можете добавить еще сабкласс пока у вас уровень " + Config.ALT_GAME_LEVEL_TO_GET_SUBCLASS + " на Вашем предыдущем сабклассе.");
 							return;

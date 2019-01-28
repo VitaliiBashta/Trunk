@@ -494,16 +494,7 @@ public final class SchedulingPattern {
      * </p>
      */
     private interface ValueMatcher {
-
-        /**
-         * Validate the given integer value against a set of rules.
-         *
-         * @param value The value.
-         * @return true if the given value matches the rules of the ValueMatcher,
-         * false otherwise.
-         */
         boolean match(int value);
-
     }
 
     /**
@@ -778,21 +769,8 @@ public final class SchedulingPattern {
      * </p>
      */
     public class InvalidPatternException extends RuntimeException {
-
-        private static final long serialVersionUID = 1L;
-
-        /**
-         * Package-reserved construction.
-         */
-        InvalidPatternException() {
-        }
-
-        /**
-         * Package-reserved construction.
-         */
         InvalidPatternException(String message) {
             super(message);
         }
-
     }
 }

@@ -312,7 +312,7 @@ public final class _195_SevenSignsSecretRitualofthePriests extends Quest {
     }
 
     private void negateSpeedBuffs(Player p) {
-        p.getEffectList().getAllEffects()
+        p.getEffectList().getAllEffects().stream()
                 .filter(e -> e.getStackType().equals("SpeedUp"))
                 .filter(e -> !e.isOffensive())
                 .forEach(Effect::exit);

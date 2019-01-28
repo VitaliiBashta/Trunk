@@ -15,16 +15,16 @@ public final class EffectRemoveTarget extends Effect {
 
     @Override
     public void onStart() {
-        if ((getEffected().getAI() instanceof DefaultAI)) {
-            ((DefaultAI) getEffected().getAI()).setGlobalAggro(System.currentTimeMillis() + 3000L);
+        if ((effected.getAI() instanceof DefaultAI)) {
+            ((DefaultAI) effected.getAI()).setGlobalAggro(System.currentTimeMillis() + 3000L);
         }
-        getEffected().setTarget(null);
+        effected.setTarget(null);
         if (_doStopTarget) {
-            getEffected().stopMove();
+            effected.stopMove();
         }
-        getEffected().abortAttack(true, true);
-        getEffected().abortCast(true, true);
-        getEffected().getAI().setIntention(CtrlIntention.AI_INTENTION_ACTIVE);
+        effected.abortAttack(true, true);
+        effected.abortCast(true, true);
+        effected.getAI().setIntention(CtrlIntention.AI_INTENTION_ACTIVE);
     }
 
     @Override

@@ -4,7 +4,7 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.pledge.SubUnit;
 import l2trunk.gameserver.model.pledge.UnitMember;
 
-public class PledgeShowMemberListUpdate extends L2GameServerPacket {
+public final class PledgeShowMemberListUpdate extends L2GameServerPacket {
     private final String _name;
     private final int _lvl;
     private final int _classId;
@@ -18,7 +18,7 @@ public class PledgeShowMemberListUpdate extends L2GameServerPacket {
         _name = player.getName();
         _lvl = player.getLevel();
         _classId = player.getClassId().getId();
-        _sex = player.getSex();
+        _sex = player.isMale() ? 0 :1;
         _objectId = player.getObjectId();
         _isOnline = player.isOnline() ? 1 : 0;
         _pledgeType = player.getPledgeType();

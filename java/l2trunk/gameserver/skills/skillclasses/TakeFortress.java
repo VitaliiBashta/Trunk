@@ -33,7 +33,7 @@ public final class TakeFortress extends Skill {
         }
 
         if (first) {
-            if (!World.getAroundCharacters(flagPole, getSkillRadius() * 2, 100)
+            if (!World.getAroundCharacters(flagPole, skillRadius * 2, 100)
                     .filter(Creature::isCastingNow)
                     .filter(ch -> ch.getCastingSkill() == this)
                     .peek(ch ->
@@ -65,7 +65,7 @@ public final class TakeFortress extends Skill {
             return false;
         }
 
-        if (!player.isInRangeZ(target, getCastRange())) {
+        if (!player.isInRangeZ(target, castRange)) {
             player.sendPacket(SystemMsg.YOUR_TARGET_IS_OUT_OF_RANGE);
             return false;
         }

@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * format:		cddb, b - array of (dd)
+ * format:		cddb, buffPrice - array of (dd)
  */
 public final class RequestBuyItem extends L2GameClientPacket {
     private int _listId;

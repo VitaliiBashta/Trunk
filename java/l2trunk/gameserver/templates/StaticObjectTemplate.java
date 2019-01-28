@@ -6,74 +6,38 @@ import l2trunk.gameserver.model.instances.StaticObjectInstance;
 import l2trunk.gameserver.utils.Location;
 
 public final class StaticObjectTemplate {
-    private final int _uid;
-    private final int _type; // 0 - signs, 1 - throne, 2 - starter town map, 3 - airship control key
-    private final String _filePath;
-    private final int _mapX;
-    private final int _mapY;
-    private final String _name;
-    private final int _x;
-    private final int _y;
-    private final int _z;
-    private final boolean _spawn;
+    public final int uid;
+    public final int type; // 0 - signs, 1 - throne, 2 - starter town map, 3 - airship control key
+    public final String filePath;
+    public final int mapX;
+    public final int mapY;
+    private final String name;
+    private final int x;
+    private final int y;
+    private final int z;
+    public final boolean spawn;
 
     public StaticObjectTemplate(StatsSet set) {
-        _uid = set.getInteger("uid");
-        _type = set.getInteger("stype");
-        _mapX = set.getInteger("map_x");
-        _mapY = set.getInteger("map_y");
-        _filePath = set.getString("path");
-        _name = set.getString("name");
-        _x = set.getInteger("x");
-        _y = set.getInteger("y");
-        _z = set.getInteger("z");
-        _spawn = set.getBool("spawn");
-    }
-
-    public int getUId() {
-        return _uid;
-    }
-
-    public int getType() {
-        return _type;
-    }
-
-    public String getFilePath() {
-        return _filePath;
-    }
-
-    public int getMapX() {
-        return _mapX;
-    }
-
-    public int getMapY() {
-        return _mapY;
+        uid = set.getInteger("uid");
+        type = set.getInteger("stype");
+        mapX = set.getInteger("map_x");
+        mapY = set.getInteger("map_y");
+        filePath = set.getString("path");
+        name = set.getString("name");
+        x = set.getInteger("x");
+        y = set.getInteger("y");
+        z = set.getInteger("z");
+        spawn = set.getBool("spawn");
     }
 
     public String getName() {
-        return _name;
-    }
-
-    private int getX() {
-        return _x;
-    }
-
-    private int getY() {
-        return _y;
-    }
-
-    private int getZ() {
-        return _z;
-    }
-
-    public boolean isSpawn() {
-        return _spawn;
+        return name;
     }
 
     public StaticObjectInstance newInstance() {
         StaticObjectInstance instance = new StaticObjectInstance(IdFactory.getInstance().getNextId(), this);
 
-        instance.spawnMe(new Location(getX(), getY(), getZ()));
+        instance.spawnMe(new Location(x, y, z));
 
         return instance;
     }

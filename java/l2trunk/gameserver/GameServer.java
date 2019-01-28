@@ -58,14 +58,16 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public final class GameServer {
     public static final int AUTH_SERVER_PROTOCOL = 2;
     private static final Logger LOG = LoggerFactory.getLogger(GameServer.class);
     public static Date server_started;
     private static GameServer _instance;
-    private final SelectorThread<GameClient>[] _selectorThreads;
+    private final List<SelectorThread<GameClient>> _selectorThreads;
     private final GameServerListenerList _listeners;
     private final int _serverStarted;
 
@@ -217,25 +219,24 @@ public final class GameServer {
         printSection("");
         GamePacketHandler gph = new GamePacketHandler();
         InetAddress serverAddr = Config.GAMESERVER_HOSTNAME.equalsIgnoreCase("*") ? null : InetAddress.getByName(Config.GAMESERVER_HOSTNAME);
-        int arrayLen = Config.GAMEIPS.isEmpty() ? Config.PORTS_GAME.size() : Config.PORTS_GAME.size() + Config.GAMEIPS.size();
-        _selectorThreads = new SelectorThread[arrayLen];
-        for (int i = 0; i < Config.PORTS_GAME.size(); i++) {
+        _selectorThreads = new ArrayList<>();
+        for (int i = 0; i < Config.GAME_PORT.size(); i++) {
             try {
-                _selectorThreads[i] = new SelectorThread<>(Config.SELECTOR_CONFIG, gph, gph, gph, null);
-                _selectorThreads[i].openServerSocket(serverAddr, Config.PORTS_GAME.get(i));
-                _selectorThreads[i].start();
+                _selectorThreads.add( new SelectorThread<>(Config.SELECTOR_CONFIG, gph, gph, gph, null));
+                _selectorThreads.get(i).openServerSocket(serverAddr, Config.GAME_PORT.get(i));
+                _selectorThreads.get(i).start();
             } catch (IOException ioe) {
-                LOG.error("Cannot bind address: " + serverAddr + ":" + Config.PORTS_GAME.get(i), ioe);
+                LOG.error("Cannot bind address: " + serverAddr + ":" + Config.GAME_PORT.get(i), ioe);
             }
         }
         if (!Config.GAMEIPS.isEmpty()) // AdvIP support. server.ini ports are ignored and accepted only IPs and ports from advipsystem.ini
         {
-            int i = Config.PORTS_GAME.size(); // Start from the last spot.
+            int i = Config.GAME_PORT.size(); // Start from the last spot.
             for (AdvIP advip : Config.GAMEIPS) {
                 try {
-                    _selectorThreads[i] = new SelectorThread<>(Config.SELECTOR_CONFIG, gph, gph, gph, null);
-                    _selectorThreads[i].openServerSocket(InetAddress.getByName(advip.channelAdress), advip.channelPort);
-                    _selectorThreads[i++].start();
+                    _selectorThreads.add(new SelectorThread<>(Config.SELECTOR_CONFIG, gph, gph, gph, null));
+                    _selectorThreads.get(i).openServerSocket(InetAddress.getByName(advip.channelAdress), advip.channelPort);
+                    _selectorThreads.get(i++).start();
                     LOG.info("AdvIP: Channel " + advip.channelId + " is open on: " + advip.channelAdress + ":" + advip.channelPort);
                 } catch (IOException ioe) {
                     LOG.error("Cannot bind address: " + advip.channelAdress + ":" + advip.channelPort, ioe);
@@ -280,7 +281,7 @@ public final class GameServer {
     private static void checkFreePorts() {
         boolean binded = false;
         while (!binded) {
-            for (int PORT_GAME : Config.PORTS_GAME) {
+            for (int PORT_GAME : Config.GAME_PORT)
                 try {
                     ServerSocket ss;
                     if (Config.GAMESERVER_HOSTNAME.equalsIgnoreCase("*")) {
@@ -298,7 +299,6 @@ public final class GameServer {
                     } catch (InterruptedException ignored) {
                     }
                 }
-            }
         }
     }
 
@@ -308,7 +308,7 @@ public final class GameServer {
         new GameServer();
     }
 
-    public SelectorThread<GameClient>[] getSelectorThreads() {
+    public List<SelectorThread<GameClient>> getSelectorThreads() {
         return _selectorThreads;
     }
 
@@ -334,13 +334,13 @@ public final class GameServer {
 
     private class GameServerListenerList extends ListenerList {
         void onStart() {
-            getListeners().filter(listener -> listener instanceof OnStartListener)
+            getListeners().stream().filter(listener -> listener instanceof OnStartListener)
                     .map(listener -> (OnStartListener) listener)
                     .forEach(OnStartListener::onStart);
         }
 
         public void onShutdown() {
-            getListeners().filter(listener -> listener instanceof OnShutdownListener)
+            getListeners().stream().filter(listener -> listener instanceof OnShutdownListener)
                     .map(listener -> (OnShutdownListener) listener)
                     .forEach(OnShutdownListener::onShutdown);
         }

@@ -53,7 +53,7 @@ public class SafeMath {
             ret = mulAndCheck(b, a, msg, limit);
         else if (a < 0) {
             if (b < 0) {
-                // check for positive overflow with negative a, negative b
+                // check for positive overflow with negative a, negative buffPrice
                 if (a >= Long.MAX_VALUE / b)
                     ret = a * b;
                 else if (limit)
@@ -61,7 +61,7 @@ public class SafeMath {
                 else
                     throw new ArithmeticException(msg);
             } else if (b > 0) {
-                // check for negative overflow with negative a, positive b
+                // check for negative overflow with negative a, positive buffPrice
                 if (Long.MIN_VALUE / b <= a)
                     ret = a * b;
                 else if (limit)
@@ -71,7 +71,7 @@ public class SafeMath {
             } else
                 ret = 0;
         } else if (a > 0) {
-            // check for positive overflow with positive a, positive b
+            // check for positive overflow with positive a, positive buffPrice
             if (a <= Long.MAX_VALUE / b)
                 ret = a * b;
             else if (limit)

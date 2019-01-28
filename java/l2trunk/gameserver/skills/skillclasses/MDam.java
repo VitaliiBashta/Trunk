@@ -34,7 +34,7 @@ public final class MDam extends Skill {
                 getEffects(activeChar, target, getActivateRate() > 0, false, reflected);
             }
 
-        if (isSuicideAttack())
+        if (isSuicideAttack)
             activeChar.doDie(null);
         else if (isSSPossible())
             activeChar.unChargeShots(isMagic());

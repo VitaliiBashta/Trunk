@@ -19,7 +19,7 @@ public final class Charge extends Skill {
 
     public Charge(StatsSet set) {
         super(set);
-        charges = set.getInteger("charges", getLevel());
+        charges = set.getInteger("charges", level);
         fullCharge = set.getBool("fullCharge", false);
     }
 
@@ -31,10 +31,10 @@ public final class Charge extends Skill {
         Player player = (Player) activeChar;
 
         //Pebbles can juzat even if the charge is> 7, the rest only if the charge <skill level
-        if (getPower() <= 0 && getId() != 2165 && player.getIncreasedForce() >= charges) {
+        if (power <= 0 && id != 2165 && player.getIncreasedForce() >= charges) {
             activeChar.sendPacket(SystemMsg.YOUR_FORCE_HAS_REACHED_MAXIMUM_CAPACITY);
             return false;
-        } else if (getId() == 2165)
+        } else if (id == 2165)
             player.sendPacket(new MagicSkillUse(player, 2165));
 
         return super.checkCondition(activeChar, target, forceUse, dontMove, first);
@@ -46,7 +46,7 @@ public final class Charge extends Skill {
             return;
 
         boolean ss = activeChar.getChargedSoulShot() && isSSPossible();
-        if (ss && getTargetType() != SkillTargetType.TARGET_SELF)
+        if (ss && targetType != SkillTargetType.TARGET_SELF)
             activeChar.unChargeShots(false);
 
         targets.stream()
@@ -56,7 +56,7 @@ public final class Charge extends Skill {
                     boolean reflected = t.checkReflectSkill(activeChar, this);
                     Creature realTarget = reflected ? activeChar : t;
 
-                    if (getPower() > 0) {// If == 0 then the skill "disabled"
+                    if (power > 0) {// If == 0 then the skill "disabled"
                         AttackInfo info = Formulas.calcPhysDam(activeChar, realTarget, this, false, false, ss, false);
 
                         if (info.lethal_dmg > 0)

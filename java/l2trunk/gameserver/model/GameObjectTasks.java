@@ -391,7 +391,7 @@ public final class GameObjectTasks {
                 return;
             }
             List<Creature> targets = castingSkill.getTargets(character, castingTarget, forceUse);
-            character.broadcastPacket(new MagicSkillLaunched(character.getObjectId(), castingSkill.getDisplayId(), castingSkill.getDisplayLevel(), Collections.unmodifiableList(targets)));
+            character.broadcastPacket(new MagicSkillLaunched(character.getObjectId(), castingSkill.displayId, castingSkill.getDisplayLevel(), Collections.unmodifiableList(targets)));
         }
     }
 
@@ -434,7 +434,7 @@ public final class GameObjectTasks {
     }
 
     /**
-     * Task of Checking Skill Cast Landing
+     * Task of Checking Skill cast Landing
      **/
     public static class MagicGeoCheckTask extends RunnableImpl {
         private final HardReference<? extends Creature> charRef;

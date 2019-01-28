@@ -19,7 +19,7 @@ import java.util.List;
 public final class EffectSymbol extends Effect {
     private static final Logger _log = LoggerFactory.getLogger(EffectSymbol.class);
 
-    private NpcInstance _symbol = null;
+    private NpcInstance symbol = null;
 
     public EffectSymbol(Env env, EffectTemplate template) {
         super(env, template);
@@ -27,19 +27,19 @@ public final class EffectSymbol extends Effect {
 
     @Override
     public boolean checkCondition() {
-        if (getSkill().getTargetType() != Skill.SkillTargetType.TARGET_SELF) {
-            _log.error("Symbol skill with target != self, id = " + getSkill().getId());
+        if (getSkill().targetType != Skill.SkillTargetType.TARGET_SELF) {
+            _log.error("Symbol skill with target != self, id = " + getSkill().id);
             return false;
         }
 
         Skill skill = getSkill().getFirstAddedSkill();
         if (skill == null) {
-            _log.error("Not implemented symbol skill, id = " + getSkill().getId());
+            _log.error("Not implemented symbol skill, id = " + getSkill().id);
             return false;
         }
 
-        if (getEffector().isInZonePeace()) {
-            getEffector().sendMessage("You cannot do that in Peace Zone!");
+        if (effector.isInZonePeace()) {
+            effector.sendMessage("You cannot do that in Peace Zone!");
             return false;
         }
 
@@ -60,25 +60,25 @@ public final class EffectSymbol extends Effect {
             ((Player) effected).setGroundSkillLoc(null);
         }
 
-        NpcTemplate template = NpcHolder.getTemplate(_skill.getSymbolId());
+        NpcTemplate template = NpcHolder.getTemplate(this.skill.symbolId);
         if (getTemplate()._count <= 1)
-            _symbol = new SymbolInstance(IdFactory.getInstance().getNextId(), template, effected, skill);
+            symbol = new SymbolInstance(IdFactory.getInstance().getNextId(), template, effected, skill);
         else
-            _symbol = new NpcInstance(IdFactory.getInstance().getNextId(), template);
+            symbol = new NpcInstance(IdFactory.getInstance().getNextId(), template);
 
-        _symbol.setLevel(effected.getLevel());
-        _symbol.setReflection(effected.getReflection());
-        _symbol.spawnMe(loc);
+        symbol.setLevel(effected.getLevel());
+        symbol.setReflection(effected.getReflection());
+        symbol.spawnMe(loc);
     }
 
     @Override
     public void onExit() {
         super.onExit();
 
-        if (_symbol != null && _symbol.isVisible())
-            _symbol.deleteMe();
+        if (symbol != null && symbol.isVisible())
+            symbol.deleteMe();
 
-        _symbol = null;
+        symbol = null;
     }
 
     @Override
@@ -86,9 +86,8 @@ public final class EffectSymbol extends Effect {
         if (getTemplate()._count <= 1)
             return false;
 
-        Creature effector = getEffector();
         Skill skill = getSkill().getFirstAddedSkill();
-        NpcInstance symbol = _symbol;
+//        NpcInstance symbol = this.symbol;
         double mpConsume = getSkill().getMpConsume();
 
         if (effector == null || skill == null || symbol == null)
@@ -101,14 +100,14 @@ public final class EffectSymbol extends Effect {
 
         effector.reduceCurrentMp(mpConsume, effector);
 
-        World.getAroundCharacters(symbol, getSkill().getSkillRadius(), 200)
+        World.getAroundCharacters(symbol, getSkill().skillRadius, 200)
                 .filter(cha -> !cha.isDoor())
                 .filter(cha -> cha.getEffectList().getEffectsBySkill(skill) == null)
                 .filter(cha -> skill.checkTarget(effector, cha, cha, false, false) == null)
-                .filter(cha -> !skill.isOffensive() || !GeoEngine.canSeeTarget(symbol, cha, false))
+                .filter(cha -> !skill.isOffensive || !GeoEngine.canSeeTarget(symbol, cha, false))
                 .forEach(cha -> {
                     effector.callSkill(skill, List.of(cha), true);
-                    effector.broadcastPacket(new MagicSkillLaunched(symbol.getObjectId(), getSkill().getDisplayId(), getSkill().getDisplayLevel(), cha));
+                    effector.broadcastPacket(new MagicSkillLaunched(symbol.getObjectId(), getSkill().displayId, getSkill().getDisplayLevel(), cha));
                 });
 
         return true;

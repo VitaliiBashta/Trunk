@@ -29,13 +29,13 @@ public final class RequestDispel extends L2GameClientPacket {
             target = activeChar.getPet();
         }
 
-        target.getEffectList().getAllEffects()
+        target.getEffectList().getAllEffects().stream()
                 .filter(e -> e.getDisplayId() == id)
                 .filter(e -> e.getDisplayLevel() == level)
                 .filter(e -> !e.isOffensive())
                 .filter(e -> (!e.getSkill().isMusic() || Config.ALT_DISPEL_MUSIC))
-                .filter(e -> e.getSkill().isSelfDispellable())
-                .filter(e -> e.getSkill().getSkillType() != SkillType.TRANSFORMATION)
+                .filter(e -> e.getSkill().isSelfDispellable)
+                .filter(e -> e.getSkill().skillType != SkillType.TRANSFORMATION)
                 .filter(e -> e.getTemplate().getEffectType() != EffectType.Hourglass)
                 .findFirst().ifPresent(Effect::exit);
     }

@@ -26,9 +26,9 @@ public final class AccessoryListener implements OnEquipListener {
             int agathionId = player.getAgathionId();
             int transformNpcId = player.getTransformationTemplate();
             for (Skill skill : item.getTemplate().getAttachedSkills()) {
-                if (agathionId > 0 && skill.getNpcId() == agathionId)
+                if (agathionId > 0 && skill.npcId == agathionId)
                     player.setAgathion(0);
-                if (skill.getNpcId() == transformNpcId && skill.getSkillType() == SkillType.TRANSFORMATION)
+                if (skill.npcId == transformNpcId && skill.skillType == SkillType.TRANSFORMATION)
                     player.setTransformation(0);
             }
         }

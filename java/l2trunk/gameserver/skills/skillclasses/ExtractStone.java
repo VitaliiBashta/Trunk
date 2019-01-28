@@ -126,7 +126,7 @@ public final class ExtractStone extends Skill {
                 .filter(t -> getItemId(t.getNpcId()) != 0)
                 .forEach(t -> {
                     double rate = Config.RATE_QUESTS_DROP;
-                    long count = id == ExtractScrollSkill ? 1 : Math.min(10, Rnd.get((int) (getLevel() * rate + 1)));
+                    long count = id == ExtractScrollSkill ? 1 : Math.min(10, Rnd.get((int) (level * rate + 1)));
                     int itemId = getItemId(t.getNpcId());
 
                     if (count > 0) {

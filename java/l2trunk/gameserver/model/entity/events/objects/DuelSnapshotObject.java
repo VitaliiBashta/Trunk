@@ -15,11 +15,11 @@ import java.util.List;
 public final class DuelSnapshotObject implements Serializable {
     private final TeamType team;
     private final Player player;
-    private final List<Effect> _effects;
+    private final List<Effect> effects;
     private final Location returnLoc;
-    private final double _currentHp;
-    private final double _currentMp;
-    private final double _currentCp;
+    private final double currentHp;
+    private final double currentMp;
+    private final double currentCp;
 
     private boolean isDead;
 
@@ -28,17 +28,17 @@ public final class DuelSnapshotObject implements Serializable {
         this.team = team;
         returnLoc = player.getReflection().getReturnLoc() == null ? player.getLoc() : player.getReflection().getReturnLoc();
 
-        _currentCp = player.getCurrentCp();
-        _currentHp = player.getCurrentHp();
-        _currentMp = player.getCurrentMp();
+        currentCp = player.getCurrentCp();
+        currentHp = player.getCurrentHp();
+        currentMp = player.getCurrentMp();
 
-        _effects = new ArrayList<>();
+        effects = new ArrayList<>();
         player.getEffectList().getAllEffects().forEach(eff -> {
-            Effect effect = eff.getTemplate().getEffect(new Env(eff.getEffector(), eff.getEffected(), eff.getSkill()));
+            Effect effect = eff.getTemplate().getEffect(new Env(eff.effector, eff.effected, eff.getSkill()));
             effect.setCount(eff.getCount());
             effect.setPeriod(eff.getCount() == 1 ? eff.getPeriod() - eff.getTime() : eff.getPeriod());
 
-            _effects.add(effect);
+            effects.add(effect);
         });
     }
 
@@ -46,12 +46,12 @@ public final class DuelSnapshotObject implements Serializable {
         if (!abnormal) {
             if (!player.isInOlympiadMode()) {
                 player.getEffectList().stopAllEffects();
-                for (Effect e : _effects)
-                    player.getEffectList().addEffect(e);
+                effects.forEach(e ->
+                        player.getEffectList().addEffect(e));
 
 
-                player.setCurrentCp(_currentCp);
-                player.setCurrentHpMp(_currentHp, _currentMp);
+                player.setCurrentCp(currentCp);
+                player.setCurrentHpMp(currentHp, currentMp);
             }
         }
     }

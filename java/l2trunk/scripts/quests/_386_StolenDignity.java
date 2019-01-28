@@ -134,7 +134,7 @@ public final class _386_StolenDignity extends Quest {
                     8712,
                     10
             },
-            //Sirra's Blade Edge
+            //SIRRA's Blade Edge
             {
                     8713,
                     10
@@ -301,7 +301,7 @@ public final class _386_StolenDignity extends Quest {
                     8712,
                     4
             },
-            //Sirra's Blade Edge
+            //SIRRA's Blade Edge
             {
                     8713,
                     4

@@ -1,7 +1,7 @@
 package l2trunk.gameserver.network.serverpackets;
 
-public class CameraMode extends L2GameServerPacket {
-    private final int _mode;
+public final class CameraMode extends L2GameServerPacket {
+    private final int mode;
 
     /**
      * Forces client camera mode change
@@ -10,12 +10,12 @@ public class CameraMode extends L2GameServerPacket {
      *             1 - first person cam
      */
     public CameraMode(int mode) {
-        _mode = mode;
+        this.mode = mode;
     }
 
     @Override
     protected final void writeImpl() {
         writeC(0xf7);
-        writeD(_mode);
+        writeD(mode);
     }
 }

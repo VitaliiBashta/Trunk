@@ -333,7 +333,7 @@ public class AutoSpawnManager {
                 // Announce to all players that the spawn has taken place, with the nearest town location.
 				/*if (spawnInst.isBroadcasting() && npcInst != null)
 					Announcements.INSTANCE().announceByCustomMessage("l2trunk.gameserver.model.AutoSpawnHandler.spawnNPC", new String[] {
-							npcInst.getName(),
+							npcInst.name(),
 							nearestTown });*/
 
                 // If there is no despawn time, do not create a despawn task.

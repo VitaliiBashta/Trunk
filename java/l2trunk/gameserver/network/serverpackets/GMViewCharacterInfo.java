@@ -14,7 +14,7 @@ import java.util.List;
 public final class GMViewCharacterInfo extends L2GameServerPacket {
     private final Location _loc;
     private final List<List<Integer>> inv = new ArrayList<>();
-    private final int obj_id, _race, _sex, class_id, pvp_flag, karma, level, mount_type;
+    private final int obj_id, _race, sex, class_id, pvp_flag, karma, level, mount_type;
     private final int _str, _con, _dex, _int, _wit, _men, _sp;
     private final int curHp, maxHp, curMp, maxMp, curCp, maxCp, curLoad, maxLoad, rec_left, rec_have;
     private final int _patk, _patkspd, _pdef, evasion, accuracy, crit, _matk, _matkspd;
@@ -38,7 +38,7 @@ public final class GMViewCharacterInfo extends L2GameServerPacket {
         obj_id = cha.getObjectId();
         _name = cha.getName();
         _race = cha.getRace().ordinal();
-        _sex = cha.getSex();
+        sex = cha.isMale() ? 0: 1;
         class_id = cha.getClassId().getId();
         level = cha.getLevel();
         _exp = cha.getExp();
@@ -133,7 +133,7 @@ public final class GMViewCharacterInfo extends L2GameServerPacket {
         writeD(obj_id);
         writeS(_name);
         writeD(_race);
-        writeD(_sex);
+        writeD(sex);
         writeD(class_id);
         writeD(level);
         writeQ(_exp);

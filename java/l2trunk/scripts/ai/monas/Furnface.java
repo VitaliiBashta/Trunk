@@ -19,7 +19,7 @@ public final class Furnface extends DefaultAI {
     public void onEvtSeeSpell(Skill skill, Creature caster) {
         NpcInstance actor = getActor();
 
-        if (skill.getId() == 9059) {
+        if (skill.id == 9059) {
             actor.setNpcState(1);
             actor.setTargetable(false);
             actor.doCast(5144, caster, true);

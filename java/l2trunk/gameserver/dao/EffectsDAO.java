@@ -117,13 +117,12 @@ public enum EffectsDAO {
     }
 
     private int getId(Playable playable) {
-        int id = 0;
         if (playable.isPlayer()) {
-            id = ((Player) playable).getActiveClassId();
+            return  ((Player) playable).getActiveClassId();
         } else if (playable.isSummon()) {
-            id = ((SummonInstance) playable).getEffectIdentifier() + SUMMON_SKILL_OFFSET;
+            return ((SummonInstance) playable).getEffectIdentifier() + SUMMON_SKILL_OFFSET;
         }
-        return id;
+        return 0;
     }
 
     public void insert(Playable playable) {
@@ -139,20 +138,20 @@ public enum EffectsDAO {
             SqlBatch b = new SqlBatch("INSERT IGNORE INTO `character_effects_save` (`object_id`,`skill_id`,`skill_level`,`effect_count`,`effect_cur_time`,`duration`,`order`,`id`) VALUES");
 
             StringBuilder sb;
-            List<Effect> allSavableEffects = playable.getEffectList().getAllEffects()
+            List<Effect> allSavableEffects = playable.getEffectList().getAllEffects().stream()
                     .filter(Effect::isInUse)
                     .filter(e -> !e.getSkill().isToggle())
                     .filter(e -> e.getEffectType() != EffectType.HealOverTime)
                     .filter(e -> e.getEffectType() != EffectType.CombatPointHealOverTime)
-                    .filter(e -> !(playable.isSummon() && e.getSkill().isOffensive()))// Summons should not store debuffs, only buffs
+                    .filter(e -> !(playable.isSummon() && e.getSkill().isOffensive))// Summons should not store debuffs, only buffs
                     .collect(Collectors.toList());
             for (Effect effect : allSavableEffects) {
 
                 if (effect.isSaveable()) {
                     sb = new StringBuilder("(");
                     sb.append(objectId).append(",");
-                    sb.append(effect.getSkill().getId()).append(",");
-                    sb.append(effect.getSkill().getLevel()).append(",");
+                    sb.append(effect.getSkill().id).append(",");
+                    sb.append(effect.getSkill().level).append(",");
                     sb.append(effect.getCount()).append(",");
                     sb.append(effect.getTime()).append(",");
                     sb.append(effect.getPeriod()).append(",");
@@ -163,8 +162,8 @@ public enum EffectsDAO {
                 while ((effect = effect.getNext()) != null && effect.isSaveable()) {
                     sb = new StringBuilder("(");
                     sb.append(objectId).append(",");
-                    sb.append(effect.getSkill().getId()).append(",");
-                    sb.append(effect.getSkill().getLevel()).append(",");
+                    sb.append(effect.getSkill().id).append(",");
+                    sb.append(effect.getSkill().level).append(",");
                     sb.append(effect.getCount()).append(",");
                     sb.append(effect.getTime()).append(",");
                     sb.append(effect.getPeriod()).append(",");

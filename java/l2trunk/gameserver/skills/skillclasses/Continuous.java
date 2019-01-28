@@ -13,19 +13,15 @@ import java.util.List;
 import java.util.Objects;
 
 public final class Continuous extends Skill {
-    private final int _lethal1;
-    private final int _lethal2;
 
     public Continuous(StatsSet set) {
         super(set);
-        _lethal1 = set.getInteger("lethal1", 0);
-        _lethal2 = set.getInteger("lethal2", 0);
     }
 
     @Override
     public boolean checkCondition(Creature activeChar, Creature target, boolean forceUse, boolean dontMove, boolean first) {
         // Player holding a cursed weapon can't be buffed and can't buff
-        if (getSkillType() == Skill.SkillType.BUFF && target != null) {
+        if (skillType == Skill.SkillType.BUFF && target != null) {
             if (target != activeChar)
                 if (target.isCursedWeaponEquipped() || activeChar.isCursedWeaponEquipped())
                     return false;
@@ -54,8 +50,8 @@ public final class Continuous extends Skill {
                     Creature realTarget = reflected ? activeChar : t;
 
                     double mult = 0.01 * realTarget.calcStat(Stats.DEATH_VULNERABILITY, activeChar, this);
-                    double lethal1 = _lethal1 * mult;
-                    double lethal2 = _lethal2 * mult;
+                    double lethal1 = this.lethal1 * mult;
+                    double lethal2 = this.lethal2 * mult;
 
                     if (lethal1 > 0 && Rnd.chance(lethal1)) {
                         if (realTarget.isPlayer()) {

@@ -44,7 +44,7 @@ public final class FreyaStandHard extends Fighter {
         Creature topDamager = actor.getAggroList().getTopDamager();
         Creature randomHated = actor.getAggroList().getRandomHated();
         Creature mostHated = actor.getAggroList().getMostHated();
-        //Eternal Blizzard Cast
+        //Eternal Blizzard cast
         if (!actor.isCastingNow() && _eternalblizzardReuseTimer < System.currentTimeMillis()) {
             actor.doCast(Skill_EternalBlizzard, actor, true);
             Reflection r = getActor().getReflection();
@@ -55,7 +55,7 @@ public final class FreyaStandHard extends Fighter {
             _eternalblizzardReuseTimer = System.currentTimeMillis() + _eternalblizzardReuseDelay * 1000L;
         }
 
-        // Ice Ball Cast
+        // Ice Ball cast
         if (!actor.isCastingNow() && !actor.isMoving && _iceballReuseTimer < System.currentTimeMillis()) {
             if (topDamager != null && !topDamager.isDead() && topDamager.isInRangeZ(actor, 1000)) {
                 actor.doCast(Skill_IceBall, topDamager, true);
@@ -64,7 +64,7 @@ public final class FreyaStandHard extends Fighter {
             }
         }
 
-        // Summon Buff Cast
+        // Summon Buff cast
         if (!actor.isCastingNow() && _summonReuseTimer < System.currentTimeMillis()) {
             actor.doCast(Skill_SummonElemental, actor, true);
             getActor().getAroundNpc(800, 100)

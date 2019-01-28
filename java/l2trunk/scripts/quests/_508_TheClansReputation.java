@@ -142,7 +142,7 @@ public final class _508_TheClansReputation extends Quest {
                     if (count == 0)
                         htmltext = "30868-" + raid + "a.htm";
                     else if (count == 1) {
-                        htmltext = "30868-" + raid + "b.htm";
+                        htmltext = "30868-" + raid + "buffPrice.htm";
                         int increasedPoints = clan.incReputation(REWARDS_LIST[raid][2], true, "_508_TheClansReputation");
                         st.getPlayer().sendPacket(new SystemMessage(SystemMessage.YOU_HAVE_SUCCESSFULLY_COMPLETED_A_CLAN_QUEST_S1_POINTS_HAVE_BEEN_ADDED_TO_YOUR_CLAN_REPUTATION_SCORE).addNumber(increasedPoints));
                         st.takeItems(item, 1);

@@ -54,8 +54,8 @@ public final class EffectsComparator implements Comparator<Effect>, Serializable
             else
                 return -1;
 
-        boolean trigger1 = o1.getSkill().isTrigger();
-        boolean trigger2 = o2.getSkill().isTrigger();
+        boolean trigger1 = o1.getSkill().isTrigger;
+        boolean trigger2 = o2.getSkill().isTrigger;
 
         if (trigger1 && trigger2)
             return compareStartTime(o1, o2);

@@ -128,7 +128,7 @@ public final class DonateNPCInstance extends NpcInstance {
 
             try (Connection con = DatabaseFactory.getInstance().getConnection();
                  PreparedStatement offline = con.prepareStatement("UPDATE characters SET sex = ? WHERE obj_Id = ?")) {
-                offline.setInt(1, player.getSex() == 1 ? 0 : 1);
+                offline.setInt(1, player.isMale() ? 1 : 0);
                 offline.setInt(2, player.getObjectId());
                 offline.executeUpdate();
             } catch (SQLException e) {

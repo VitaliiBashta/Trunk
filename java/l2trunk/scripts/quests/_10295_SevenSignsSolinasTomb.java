@@ -11,7 +11,6 @@ import l2trunk.gameserver.network.serverpackets.EventTrigger;
 import l2trunk.gameserver.network.serverpackets.ExStartScenePlayer;
 import l2trunk.gameserver.utils.Location;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -264,8 +263,8 @@ public final class _10295_SevenSignsSolinasTomb extends Quest {
     private void removeInvincibility(Player player, int mobId) {
         player.getReflection().getNpcs()
                 .filter(n -> n.getNpcId() == mobId)
-                .forEach(n -> n.getEffectList().getAllEffects()
-                        .filter(e -> e.getSkill().getId() == 6371)
+                .forEach(n -> n.getEffectList().getAllEffects().stream()
+                        .filter(e -> e.getSkill().id == 6371)
                         .forEach(Effect::exit));
     }
 

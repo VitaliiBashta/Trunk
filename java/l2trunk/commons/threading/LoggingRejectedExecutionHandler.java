@@ -7,8 +7,7 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ThreadPoolExecutor;
 
-public final class LoggingRejectedExecutionHandler
-        implements RejectedExecutionHandler {
+public final class LoggingRejectedExecutionHandler        implements RejectedExecutionHandler {
     private static final Logger _log = LoggerFactory.getLogger(LoggingRejectedExecutionHandler.class);
 
     @Override

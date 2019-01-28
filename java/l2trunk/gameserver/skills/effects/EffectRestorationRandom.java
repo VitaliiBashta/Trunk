@@ -63,10 +63,10 @@ public class EffectRestorationRandom extends Effect {
         if (i < chances.length) {
             List<Item> itemList = items.get(i);
             for (Item item : itemList) {
-                ItemFunctions.addItem((Playable) getEffected(), item.itemId, item.count, true, "EffectRestorationRandom");
+                ItemFunctions.addItem((Playable) effected, item.itemId, item.count, true, "EffectRestorationRandom");
             }
         } else {
-            getEffected().sendPacket(SystemMsg.THERE_WAS_NOTHING_FOUND_INSIDE);
+            effected.sendPacket(SystemMsg.THERE_WAS_NOTHING_FOUND_INSIDE);
         }// иначе ничего не выдаем
     }
 

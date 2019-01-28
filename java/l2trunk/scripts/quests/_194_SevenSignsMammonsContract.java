@@ -215,7 +215,7 @@ public final class _194_SevenSignsMammonsContract extends Quest {
     }
 
     private void negateSpeedBuffs(Player p) {
-        p.getEffectList().getAllEffects()
+        p.getEffectList().getAllEffects().stream()
                 .filter(e -> e.getStackType().equalsIgnoreCase("SpeedUp"))
                 .filter(e -> !e.isOffensive())
                 .forEach(Effect::exit);

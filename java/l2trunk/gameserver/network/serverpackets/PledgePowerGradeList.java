@@ -2,20 +2,22 @@ package l2trunk.gameserver.network.serverpackets;
 
 import l2trunk.gameserver.model.pledge.RankPrivs;
 
-public class PledgePowerGradeList extends L2GameServerPacket {
-    private final RankPrivs[] _privs;
+import java.util.List;
 
-    public PledgePowerGradeList(RankPrivs[] privs) {
-        _privs = privs;
+public final class PledgePowerGradeList extends L2GameServerPacket {
+    private final List<RankPrivs> privs;
+
+    public PledgePowerGradeList(List<RankPrivs> privs) {
+        this.privs = privs;
     }
 
     @Override
     protected final void writeImpl() {
         writeEx(0x3c);
-        writeD(_privs.length);
-        for (RankPrivs element : _privs) {
+        writeD(privs.size());
+        privs.forEach(element -> {
             writeD(element.getRank());
             writeD(element.getParty());
-        }
+        });
     }
 }

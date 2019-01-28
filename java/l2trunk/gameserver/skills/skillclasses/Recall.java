@@ -74,7 +74,7 @@ public final class Recall extends Skill {
     @Override
     public boolean checkCondition(Creature activeChar, Creature target, boolean forceUse, boolean dontMove, boolean first) {
         // BSOE the clan hall / lock only works if you have one
-        if (getHitTime() == 200) {
+        if (hitTime == 200) {
             Player player = activeChar.getPlayer();
             if (clanhall) {
                 if (player.getClan() == null || player.getClan().getHasHideout() == 0) {
@@ -108,7 +108,7 @@ public final class Recall extends Skill {
                 return false;
             }
 
-            if (getTargetType() == SkillTargetType.TARGET_PARTY && activeChar.getReflection() != ReflectionManager.DEFAULT) {
+            if (targetType == SkillTargetType.TARGET_PARTY && activeChar.getReflection() != ReflectionManager.DEFAULT) {
                 activeChar.sendMessage("This skill cannot be used inside instanced zones!");
                 return false;
             }
@@ -150,7 +150,7 @@ public final class Recall extends Skill {
                     return;
                 }
                 if (pcTarget.isInObserverMode()) {
-                    activeChar.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addSkillName(getId(), getLevel()));
+                    activeChar.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addSkillName(id, level));
                     return;
                 }
 
@@ -162,7 +162,7 @@ public final class Recall extends Skill {
                     activeChar.sendMessage(new CustomMessage("common.RecallInDuel", (Player) activeChar));
                     return;
                 }
-                if (_isItemHandler) {
+                if (isItemHandler) {
                     if (specialScrolls.containsKey(itemConsumeId.get(0))) {
                         pcTarget.teleToLocation(specialScrolls.get(itemConsumeId.get(0)));
                         return;

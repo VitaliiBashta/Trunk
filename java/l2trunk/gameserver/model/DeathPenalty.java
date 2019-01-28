@@ -40,7 +40,7 @@ public class DeathPenalty {
 
     /*
      * Used only when saving DB if admin for some reasons disabled it in config after it was enabled.
-     * In if we will use getLevel() it will be reseted to 0
+     * In if we will use level() it will be reseted to 0
      */
     public int getLevelOnSaveDB() {
         if (_level > 15)
@@ -79,7 +79,7 @@ public class DeathPenalty {
     public void restore(Player player) {
         Skill remove = player.getKnownSkill(_skillId);
         if (remove != null)
-            player.removeSkill(remove.getId(), true);
+            player.removeSkill(remove.id, true);
 
         if (!Config.ALLOW_DEATH_PENALTY_C5)
             return;
@@ -100,7 +100,7 @@ public class DeathPenalty {
         if (getLevel() != 0) {
             Skill remove = player.getKnownSkill(_skillId);
             if (remove != null)
-                player.removeSkill(remove.getId(), true);
+                player.removeSkill(remove.id, true);
         }
 
         _level++;
@@ -133,8 +133,8 @@ public class DeathPenalty {
     void checkCharmOfLuck() {
         Player player = getPlayer();
         if (player != null)
-            hasCharmOfLuck = player.getEffectList().getAllEffects()
-                    .map(e -> e.getSkill().getId())
+            hasCharmOfLuck = player.getEffectList().getAllEffects().stream()
+                    .map(e -> e.getSkill().id)
                     .anyMatch(e -> e == _charmOfLuckSkillId || e == _fortuneOfNobleseSkillId);
         hasCharmOfLuck = false;
     }

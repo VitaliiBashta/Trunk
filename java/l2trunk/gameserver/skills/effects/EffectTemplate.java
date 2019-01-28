@@ -12,8 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 import java.util.Objects;
-import java.util.stream.Stream;
 
 public final class EffectTemplate extends StatTemplate {
     public static final String NO_STACK = "none";
@@ -21,12 +21,12 @@ public final class EffectTemplate extends StatTemplate {
     private static final Logger _log = LoggerFactory.getLogger(EffectTemplate.class);
     public final double _value;
     public final int _count;
-    public final EffectType _effectType;
-    public final String _stackType;
-    public final String _stackType2;
-    public final int _stackOrder;
-    public final int _displayId;
-    public final int _displayLevel;
+    public final EffectType effecttype;
+    public final String stackType;
+    public final String stackType2;
+    public final int stackOrder;
+    public final int displayId;
+    public final int displayLevel;
     public final boolean applyOnCaster;
     public final boolean _applyOnSummon;
     public final boolean _cancelOnAction;
@@ -39,7 +39,7 @@ public final class EffectTemplate extends StatTemplate {
     private final Boolean _isCancelable;
     private final Boolean _isOffensive;
     private final StatsSet param;
-    private final int _chance;
+    private final int chance;
     private Condition _attachCond;
 
     public EffectTemplate(StatsSet set) {
@@ -49,9 +49,9 @@ public final class EffectTemplate extends StatTemplate {
         _abnormalEffect = set.getEnum("abnormal", AbnormalEffect.class);
         _abnormalEffect2 = set.getEnum("abnormal2", AbnormalEffect.class);
         _abnormalEffect3 = set.getEnum("abnormal3", AbnormalEffect.class);
-        _stackType = set.getString("stackType", NO_STACK);
-        _stackType2 = set.getString("stackType2", NO_STACK);
-        _stackOrder = set.getInteger("stackOrder", _stackType.equals(NO_STACK) && _stackType2.equals(NO_STACK) ? 1 : 0);
+        stackType = set.getString("stackType", NO_STACK);
+        stackType2 = set.getString("stackType2", NO_STACK);
+        stackOrder = set.getInteger("stackOrder", stackType.equals(NO_STACK) && stackType2.equals(NO_STACK) ? 1 : 0);
         applyOnCaster = set.getBool("applyOnCaster", false);
         _applyOnSummon = set.getBool("applyOnSummon", true);
         _cancelOnAction = set.getBool("cancelOnAction", false);
@@ -59,10 +59,10 @@ public final class EffectTemplate extends StatTemplate {
         _isSaveable = set.isSet("isSaveable") ? set.getBool("isSaveable") : null;
         _isCancelable = set.isSet("isCancelable") ? set.getBool("isCancelable") : null;
         _isOffensive = set.isSet("isOffensive") ? set.getBool("isOffensive") : null;
-        _displayId = set.getInteger("displayId", 0);
-        _displayLevel = set.getInteger("displayLevel", 0);
-        _effectType = set.getEnum("name", EffectType.class);
-        _chance = set.getInteger("chance", Integer.MAX_VALUE);
+        displayId = set.getInteger("displayId", 0);
+        displayLevel = set.getInteger("displayLevel", 0);
+        effecttype = set.getEnum("name", EffectType.class);
+        chance = set.getInteger("chance", Integer.MAX_VALUE);
         param = set;
     }
 
@@ -70,7 +70,7 @@ public final class EffectTemplate extends StatTemplate {
         if (_attachCond != null && !_attachCond.test(env))
             return null;
         try {
-            return _effectType.makeEffect(env, this);
+            return effecttype.makeEffect(env, this);
         } catch (IllegalAccessException | IllegalArgumentException | InstantiationException | InvocationTargetException e) {
             _log.error("Error while getting Effect ", e);
         }
@@ -90,11 +90,11 @@ public final class EffectTemplate extends StatTemplate {
     }
 
     public EffectType getEffectType() {
-        return _effectType;
+        return effecttype;
     }
 
-    public Effect getSameByStackType(Stream<Effect> stream) {
-        return stream.filter(Objects::nonNull)
+    public Effect getSameByStackType(List<Effect> list) {
+        return list.stream().filter(Objects::nonNull)
                 .filter(ef -> EffectList.checkStackType(ef.getTemplate(), this))
                 .findFirst().orElse(null);
     }
@@ -104,7 +104,7 @@ public final class EffectTemplate extends StatTemplate {
     }
 
     public int chance(int val) {
-        return _chance == Integer.MAX_VALUE ? val : _chance;
+        return chance == Integer.MAX_VALUE ? val : chance;
     }
 
     public boolean isSaveable(boolean def) {

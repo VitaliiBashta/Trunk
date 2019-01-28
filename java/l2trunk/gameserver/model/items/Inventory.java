@@ -983,13 +983,13 @@ public abstract class Inventory extends ItemContainer {
 
     protected class InventoryListenerList extends ListenerList {
         void onEquip(int slot, ItemInstance item) {
-            getListeners().filter(l -> l instanceof OnEquipListener)
+            getListeners().stream().filter(l -> l instanceof OnEquipListener)
                     .map(l -> (OnEquipListener) l)
                     .forEach(l -> l.onEquip(slot, item, getActor()));
         }
 
         void onUnequip(int slot, ItemInstance item) {
-            getListeners().filter(l -> l instanceof OnEquipListener)
+            getListeners().stream().filter(l -> l instanceof OnEquipListener)
                     .map(l -> (OnEquipListener) l)
                     .forEach(l -> l.onUnequip(slot, item, getActor()));
         }

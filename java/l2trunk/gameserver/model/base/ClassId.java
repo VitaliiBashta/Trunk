@@ -261,7 +261,7 @@ public enum ClassId {
         return 1 + parent.level();
     }
 
-    public final ClassId getParent(int sex) {
+    public final ClassId getParent() {
         return parent;
     }
 

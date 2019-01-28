@@ -14,7 +14,7 @@ public final class Chimera extends Fighter {
 
     @Override
     public void onEvtSeeSpell(Skill skill, Creature caster) {
-        if (skill.getId() != 2359)
+        if (skill.id != 2359)
             return;
         NpcInstance actor = getActor();
         if (!actor.isDead() && actor.getCurrentHpPercents() > 10) // 10% ХП для использования бутылки

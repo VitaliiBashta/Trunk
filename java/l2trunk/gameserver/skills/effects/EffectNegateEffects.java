@@ -20,7 +20,7 @@ public final class EffectNegateEffects extends Effect {
 
     @Override
     public boolean onActionTime() {
-        effected.getEffectList().getAllEffects()
+        effected.getEffectList().getAllEffects().stream()
                 .filter(e -> !e.getStackType().equals(EffectTemplate.NO_STACK))
                 .filter(e -> (e.getStackType().equals(getStackType())
                         || e.getStackType().equals(getStackType2()))

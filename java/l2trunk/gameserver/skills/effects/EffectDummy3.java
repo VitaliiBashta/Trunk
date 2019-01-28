@@ -16,7 +16,7 @@ public final class EffectDummy3 extends Effect {
     }
 
     public void onStart() {
-        Player target = (Player) getEffected();
+        Player target = (Player) effected;
         if (target.getTransformation() == 303) {
             return;
         }

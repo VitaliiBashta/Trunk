@@ -20,21 +20,21 @@ public final class EffectDummy2 extends Effect {
 
     public boolean checkCondition() {
         if (this.effected.isFearImmune()) {
-            getEffector().sendPacket(SystemMsg.THAT_IS_AN_INCORRECT_TARGET);
+            effector.sendPacket(SystemMsg.THAT_IS_AN_INCORRECT_TARGET);
             return false;
         }
 
         Player player = this.effected.getPlayer();
         if (player != null) {
-            SiegeEvent siegeEvent = (SiegeEvent) player.getEvent(SiegeEvent.class);
+            SiegeEvent siegeEvent = player.getEvent(SiegeEvent.class);
             if ((this.effected.isSummon()) && (siegeEvent != null) && (siegeEvent.containsSiegeSummon((SummonInstance) this.effected))) {
-                getEffector().sendPacket(SystemMsg.THAT_IS_AN_INCORRECT_TARGET);
+                effector.sendPacket(SystemMsg.THAT_IS_AN_INCORRECT_TARGET);
                 return false;
             }
         }
 
         if (this.effected.isInZonePeace()) {
-            getEffector().sendPacket(Msg.YOU_MAY_NOT_ATTACK_IN_A_PEACEFUL_ZONE);
+            effector.sendPacket(Msg.YOU_MAY_NOT_ATTACK_IN_A_PEACEFUL_ZONE);
             return false;
         }
 
@@ -42,7 +42,7 @@ public final class EffectDummy2 extends Effect {
     }
 
     public void onStart() {
-        Player target = (Player) getEffected();
+        Player target = (Player) effected;
         if (target.getTransformation() == 303) {
             return;
         }
@@ -64,7 +64,7 @@ public final class EffectDummy2 extends Effect {
     }
 
     protected boolean onActionTime() {
-        double angle = Math.toRadians(PositionUtils.calculateAngleFrom(this._effector, this.effected));
+        double angle = Math.toRadians(PositionUtils.calculateAngleFrom(this.effector, this.effected));
         int oldX = this.effected.getX();
         int oldY = this.effected.getY();
         int x = oldX + (int) (900.0D * Math.cos(angle));

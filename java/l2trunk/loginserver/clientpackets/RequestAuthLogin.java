@@ -18,8 +18,8 @@ import javax.crypto.Cipher;
 
 
 /**
- * Format: b[128]ddddddhc
- * b[128]: the rsa encrypted setBlock with the login an password
+ * Format: buffPrice[128]ddddddhc
+ * buffPrice[128]: the rsa encrypted setBlock with the login an password
  */
 public class RequestAuthLogin extends L2LoginClientPacket {
     private final byte[] _raw = new byte[128];

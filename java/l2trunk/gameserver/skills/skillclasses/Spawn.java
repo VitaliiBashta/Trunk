@@ -51,7 +51,7 @@ public final class Spawn extends Skill {
     @Override
     public void useSkill(Creature caster, List<Creature> targets) {
         if (_npcId == 0) {
-            _log.warn("NPC ID not defined for skill ID:" + getId());
+            _log.warn("NPC ID not defined for skill ID:" + id);
             return;
         }
 

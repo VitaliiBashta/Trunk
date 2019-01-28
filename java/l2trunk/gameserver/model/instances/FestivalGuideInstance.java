@@ -113,7 +113,7 @@ public final class FestivalGuideInstance extends NpcInstance {
 
                     // Check if the player is in a formed party already.
                     if (playerParty == null || playerParty.size() < Config.FESTIVAL_MIN_PARTY_SIZE) {
-                        showChatWindow(player, 2, "b", false);
+                        showChatWindow(player, 2, "buffPrice", false);
                         return;
                     }
 
@@ -207,7 +207,7 @@ public final class FestivalGuideInstance extends NpcInstance {
                     Reflection r = getReflection();
                     if (r instanceof DarknessFestival)
                         if (((DarknessFestival) r).increaseChallenge())
-                            showChatWindow(player, 8, "b", false);
+                            showChatWindow(player, 8, "buffPrice", false);
                         else
                             showChatWindow(player, 8, "c", false);
 

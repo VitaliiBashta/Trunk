@@ -36,7 +36,7 @@ public final class EffectCubic extends Effect {
         if (target.isDoor() && !info.isCanAttackDoor())
             return false;
 
-        if (!attacker.isInRangeZ(target, info.getSkill().getCastRange()))
+        if (!attacker.isInRangeZ(target, info.getSkill().castRange))
             return false;
 
         return target.isAutoAttackable(attacker);
@@ -52,7 +52,7 @@ public final class EffectCubic extends Effect {
             double currentHp = Integer.MAX_VALUE;
             List<Player> members = player.getParty().getMembers().stream().filter(Objects::nonNull).collect(Collectors.toList());
             for (Player member : members) {
-                if (player.isInRange(member, info.getSkill().getCastRange()) && !member.isCurrentHpFull() && !member.isDead() && member.getCurrentHp() < currentHp) {
+                if (player.isInRange(member, info.getSkill().castRange()) && !member.isCurrentHpFull() && !member.isDead() && member.getCurrentHp() < currentHp) {
                     currentHp = member.getCurrentHp();
                     target = member;
                 }
@@ -68,13 +68,13 @@ public final class EffectCubic extends Effect {
             return;
 
         final Creature aimTarget = target;
-        player.broadcastPacket(new MagicSkillUse(player, aimTarget, skill.getId()));
+        player.broadcastPacket(new MagicSkillUse(player, aimTarget, skill.id));
         player.disableSkill(skill, delay * 1000L);
         ThreadPoolManager.INSTANCE.schedule(() -> {
             final List<Creature> targets = List.of(aimTarget);
-            player.broadcastPacket(new MagicSkillLaunched(player.getObjectId(), skill.getDisplayId(), skill.getDisplayLevel(), targets));
+            player.broadcastPacket(new MagicSkillLaunched(player.getObjectId(), skill.displayId, skill.getDisplayLevel(), targets));
             player.callSkill(skill, targets, false);
-        }, skill.getHitTime());
+        }, skill.hitTime);
     }
 
     private static void doAttack(final Player player, final CubicTemplate.SkillInfo info, final int delay) {
@@ -91,12 +91,12 @@ public final class EffectCubic extends Effect {
             return;
 
         final Creature aimTarget = target;
-        player.broadcastPacket(new MagicSkillUse(player, target, skill.getDisplayId(), skill.getDisplayLevel(), skill.getHitTime(), 0));
+        player.broadcastPacket(new MagicSkillUse(player, target, skill.displayId, skill.getDisplayLevel(), skill.hitTime, 0));
         player.disableSkill(skill, delay * 1000L);
         ThreadPoolManager.INSTANCE.schedule(() -> {
             final List<Creature> targets = Collections.singletonList(aimTarget);
 
-            player.broadcastPacket(new MagicSkillLaunched(player.getObjectId(), skill.getDisplayId(), skill.getDisplayLevel(), targets));
+            player.broadcastPacket(new MagicSkillLaunched(player.getObjectId(), skill.displayId, skill.getDisplayLevel(), targets));
             player.callSkill(skill, targets, false);
 
             if (aimTarget.isNpc())
@@ -104,10 +104,10 @@ public final class EffectCubic extends Effect {
                     if (Config.PARALIZE_ON_RAID_DIFF)
                         player.paralizeMe(aimTarget);
                 } else {
-                    int damage = skill.getEffectPoint() != 0 ? skill.getEffectPoint() : (int) skill.getPower();
+                    int damage = skill.effectPoint != 0 ? skill.effectPoint : (int) skill.power;
                     aimTarget.getAI().notifyEvent(CtrlEvent.EVT_ATTACKED, player, damage);
                 }
-        }, skill.getHitTime());
+        }, skill.hitTime);
     }
 
     private static void doDebuff(final Player player, final CubicTemplate.SkillInfo info, final int delay) {
@@ -124,13 +124,13 @@ public final class EffectCubic extends Effect {
             return;
 
         final Creature aimTarget = target;
-        player.broadcastPacket(new MagicSkillUse(player, target, skill.getDisplayId(), skill.getDisplayLevel(), skill.getHitTime(), 0));
+        player.broadcastPacket(new MagicSkillUse(player, target, skill.displayId, skill.getDisplayLevel(), skill.hitTime, 0));
         player.disableSkill(skill, delay * 1000L);
         ThreadPoolManager.INSTANCE.schedule(new RunnableImpl() {
             @Override
             public void runImpl() {
                 final List<Creature> targets = Collections.singletonList(aimTarget);
-                player.broadcastPacket(new MagicSkillLaunched(player.getObjectId(), skill.getDisplayId(), skill.getDisplayLevel(), targets));
+                player.broadcastPacket(new MagicSkillLaunched(player.getObjectId(), skill.displayId, skill.getDisplayLevel(), targets));
                 final boolean succ = Formulas.calcSkillSuccess(player, aimTarget, skill, info.getChance());
                 if (succ)
                     player.callSkill(skill, targets, false);
@@ -140,18 +140,18 @@ public final class EffectCubic extends Effect {
                         if (Config.PARALIZE_ON_RAID_DIFF)
                             player.paralizeMe(aimTarget);
                     } else {
-                        int damage = skill.getEffectPoint() != 0 ? skill.getEffectPoint() : (int) skill.getPower();
+                        int damage = skill.effectPoint != 0 ? skill.effectPoint : (int) skill.power;
                         aimTarget.getAI().notifyEvent(CtrlEvent.EVT_ATTACKED, player, damage);
                     }
             }
-        }, skill.getHitTime());
+        }, skill.hitTime);
     }
 
     private static void doCancel(final Player player, final CubicTemplate.SkillInfo info, final int delay) {
         if (!Rnd.chance(info.getChance()))
             return;
 
-        if (player.getEffectList().getAllEffects()
+        if (player.getEffectList().getAllEffects().stream()
                 .filter(Effect::isOffensive)
                 .filter(Effect::isCancelable)
                 .allMatch(e -> e.getTemplate().applyOnCaster))
@@ -159,13 +159,13 @@ public final class EffectCubic extends Effect {
 
         final Skill skill = info.getSkill();
 
-        player.broadcastPacket(new MagicSkillUse(player, skill.getDisplayId(), skill.getDisplayLevel(), skill.getHitTime()));
+        player.broadcastPacket(new MagicSkillUse(player, skill.displayId, skill.getDisplayLevel(), skill.hitTime));
         player.disableSkill(skill, delay * 1000L);
         ThreadPoolManager.INSTANCE.schedule(() -> {
             final List<Creature> targets = Collections.singletonList(player);
-            player.broadcastPacket(new MagicSkillLaunched(player.getObjectId(), skill.getDisplayId(), skill.getDisplayLevel(), targets));
+            player.broadcastPacket(new MagicSkillLaunched(player.getObjectId(), skill.displayId, skill.getDisplayLevel(), targets));
             player.callSkill(skill, targets, false);
-        }, skill.getHitTime());
+        }, skill.hitTime);
     }
 
     @Override

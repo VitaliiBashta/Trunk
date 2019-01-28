@@ -12,14 +12,13 @@ import l2trunk.gameserver.utils.Location;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ScheduledFuture;
 
 public final class Tears extends DefaultAI {
     private static final int Water_Dragon_Scale = 2369;
     private static final int Tears_Copy = 25535;
     private final int Invincible = 5420;
-    private final int Freezing = 5238;
+    private static final int Freezing = 5238;
     private final List<NpcInstance> spawns = new ArrayList<>();
     private ScheduledFuture<?> spawnTask;
     private ScheduledFuture<?> despawnTask;
@@ -45,7 +44,7 @@ public final class Tears extends DefaultAI {
         if (System.currentTimeMillis() - _last_scale_time > 5000)
             _scale_count = 0;
 
-        if (skill.getId() == Water_Dragon_Scale) {
+        if (skill.id == Water_Dragon_Scale) {
             _scale_count++;
             _last_scale_time = System.currentTimeMillis();
         }

@@ -46,7 +46,7 @@ public final class RequestExMagicSkillUseGround extends L2GameClientPacket {
             if (activeChar.getTransformation() != 0 && !activeChar.getAllSkills().contains(skill))
                 return;
 
-            if (!activeChar.isInRange(loc, skill.getCastRange())) {
+            if (!activeChar.isInRange(loc, skill.castRange)) {
                 activeChar.sendPacket(SystemMsg.YOUR_TARGET_IS_OUT_OF_RANGE);
                 activeChar.sendActionFailed();
                 return;
@@ -56,7 +56,7 @@ public final class RequestExMagicSkillUseGround extends L2GameClientPacket {
 
             if (skill.checkCondition(activeChar, target, ctrlPressed, shiftPressed, true)) {
                 activeChar.setGroundSkillLoc(loc);
-                activeChar.getAI().Cast(skill, target, ctrlPressed, shiftPressed);
+                activeChar.getAI().cast(skill, target, ctrlPressed, shiftPressed);
             } else
                 activeChar.sendActionFailed();
         } else

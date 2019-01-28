@@ -53,7 +53,7 @@ public final class Baylor extends DefaultAI {
         if (System.currentTimeMillis() - _last_claw_time > 5000)
             _claw_count = 0;
 
-        if (skill.getId() == Water_Dragon_Claw) {
+        if (skill.id == Water_Dragon_Claw) {
             _claw_count++;
             _last_claw_time = System.currentTimeMillis();
         }
@@ -126,7 +126,7 @@ public final class Baylor extends DefaultAI {
         addDesiredSkill(skills, target, distance, Stun3);
 
         int skill = selectTopSkill(skills);
-        if (skill != 0 && !SkillTable.INSTANCE.getInfo(skill).isOffensive())
+        if (skill != 0 && !SkillTable.INSTANCE.getInfo(skill).isOffensive)
             target = actor;
 
         return chooseTaskAndTargets(skill, target, distance);

@@ -538,7 +538,7 @@ public final class PetBabyInstance extends PetInstance {
 
                     if (skill != null && skill.checkCondition(PetBabyInstance.this, owner, false, !isFollowMode(), true)) {
                         setTarget(owner);
-                        getAI().Cast(skill, owner, false, !isFollowMode());
+                        getAI().cast(skill, owner, false, !isFollowMode());
                         return skill;
                     }
                 }
@@ -547,15 +547,15 @@ public final class PetBabyInstance extends PetInstance {
                     return null;
 
                 for (Skill buff : getBuffs()) {
-                    if (getCurrentMp() < buff.getMpConsume2())
+                    if (getCurrentMp() < buff.mpConsume2)
                         continue;
 
-                    if (owner.getEffectList().getAllEffects().anyMatch(ef -> checkEffect(ef, buff)))
+                    if (owner.getEffectList().getAllEffects().stream().anyMatch(ef -> checkEffect(ef, buff)))
                         continue;
 
                     if (buff.checkCondition(PetBabyInstance.this, owner, false, !isFollowMode(), true)) {
                         setTarget(owner);
-                        getAI().Cast(buff, owner, false, !isFollowMode());
+                        getAI().cast(buff, owner, false, !isFollowMode());
                         return buff;
                     }
                     return null;
@@ -574,7 +574,7 @@ public final class PetBabyInstance extends PetInstance {
     private boolean checkEffect(Effect ef, Skill skill) {
         if (ef == null || !ef.isInUse() || !EffectList.checkStackType(ef.getTemplate(), skill.getEffectTemplates().get(0))) // no such skill
             return false;
-        if (ef.getStackOrder() < skill.getEffectTemplates().get(0)._stackOrder) // old weaker
+        if (ef.getStackOrder() < skill.getEffectTemplates().get(0).stackOrder) // old weaker
             return false;
         if (ef.getTimeLeft() > 10) // old is not weaker and more ends - waiting
             return true;
@@ -652,7 +652,7 @@ public final class PetBabyInstance extends PetInstance {
         @Override
         public void runImpl() {
             Skill skill = onActionTask();
-            actionTask = ThreadPoolManager.INSTANCE.schedule(new ActionTask(), skill == null ? 1000 : skill.getHitTime() * 333 / Math.max(getMAtkSpd(), 1) - 100);
+            actionTask = ThreadPoolManager.INSTANCE.schedule(new ActionTask(), skill == null ? 1000 : skill.hitTime * 333 / Math.max(getMAtkSpd(), 1) - 100);
         }
     }
 }

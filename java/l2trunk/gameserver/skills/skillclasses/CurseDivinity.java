@@ -2,7 +2,6 @@ package l2trunk.gameserver.skills.skillclasses;
 
 import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.model.Creature;
-import l2trunk.gameserver.model.Effect;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.stats.Formulas;
 
@@ -11,7 +10,6 @@ import java.util.List;
 public final class CurseDivinity extends Skill {
     public CurseDivinity(StatsSet set) {
         super(set);
-        power = set.getInteger("power", 1);
     }
 
     @Override
@@ -32,7 +30,7 @@ public final class CurseDivinity extends Skill {
                 reflected = target.checkReflectSkill(activeChar, this);
                 realTarget = reflected ? activeChar : target;
 
-                int buffCount = (int) target.getEffectList().getAllEffects().count();
+                int buffCount = target.getEffectList().getAllEffects().size();
                 double damage = Formulas.calcMagicDam(activeChar, realTarget, this, sps);
                 if (damage >= 1) {
                     damage = damage + (power * 0.1 + power * 0.254 * buffCount);
@@ -43,7 +41,7 @@ public final class CurseDivinity extends Skill {
                 getEffects(activeChar, target, getActivateRate() > 0, false, reflected);
             }
 
-        if (isSuicideAttack())
+        if (isSuicideAttack)
             activeChar.doDie(null);
         else if (isSSPossible())
             activeChar.unChargeShots(isMagic());

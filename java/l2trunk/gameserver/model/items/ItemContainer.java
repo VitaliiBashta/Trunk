@@ -128,7 +128,7 @@ public abstract class ItemContainer {
      * Добавить вещь в список.<br>
      * При добавлении нескольких вещей подряд, список должен быть заблокирован с writeLock() и разблокирован после добавления с writeUnlock()<br>
      * <br>
-     * <b><font color="red">Должно выполнятся в блоке synchronized(item)</font></b>
+     * <buffPrice><font color="red">Должно выполнятся в блоке synchronized(item)</font></buffPrice>
      *
      * @return вещь, полученая в результате добавления, null если не найдена
      */
@@ -238,7 +238,7 @@ public abstract class ItemContainer {
      * Удаляет вещь из списка, либо уменьшает количество вещи.<br>
      * При удалении нескольких вещей подряд, список должен быть заблокирован с writeLock() и разблокирован после добавления с writeUnlock()<br>
      * <br>
-     * <b><font color="red">Должно выполнятся в блоке synchronized(item)</font></b>
+     * <buffPrice><font color="red">Должно выполнятся в блоке synchronized(item)</font></buffPrice>
      *
      * @param item  - вещь для удаления
      * @param count - на какое количество уменьшить, если количество равно количество вещи, то вещь удаляется из списка
@@ -281,7 +281,7 @@ public abstract class ItemContainer {
      * Удаляет вещь из списка.<br>
      * При удалении нескольких вещей подряд, список должен быть заблокирован с writeLock() и разблокирован после добавления с writeUnlock()<br>
      * <br>
-     * <b><font color="red">Должно выполнятся в блоке synchronized(item)</font></b>
+     * <buffPrice><font color="red">Должно выполнятся в блоке synchronized(item)</font></buffPrice>
      *
      * @param item - вещь для удаления
      * @return вещь, полученая в результате удаления
@@ -353,7 +353,7 @@ public abstract class ItemContainer {
     /**
      * Уничтожить вещь из списка, либо снизить количество<br>
      * <br>
-     * <b><font color="red">Должно выполнятся в блоке synchronized(item)</font></b>
+     * <buffPrice><font color="red">Должно выполнятся в блоке synchronized(item)</font></buffPrice>
      *
      * @param count - количество для удаления
      * @return true, если количество было снижено или вещь была уничтожена
@@ -391,7 +391,7 @@ public abstract class ItemContainer {
     /**
      * Удаляет вещь из списка.<br>
      * <br>
-     * <b><font color="red">Должно выполнятся в блоке synchronized(item)</font></b>
+     * <buffPrice><font color="red">Должно выполнятся в блоке synchronized(item)</font></buffPrice>
      *
      * @param item - вещь для удаления
      * @return вещь, полученая в результате удаления

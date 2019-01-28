@@ -10,7 +10,7 @@ public class RequestSetPledgeCrestLarge extends L2GameClientPacket {
     private byte[] _data;
 
     /**
-     * format: chd(b)
+     * format: chd(buffPrice)
      */
     @Override
     protected void readImpl() {

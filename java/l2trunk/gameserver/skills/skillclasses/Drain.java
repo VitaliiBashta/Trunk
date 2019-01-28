@@ -29,7 +29,7 @@ public final class Drain extends Skill {
                 boolean reflected = !corpseSkill && target.checkReflectSkill(activeChar, this);
                 Creature realTarget = reflected ? activeChar : target;
 
-                if (getPower() > 0 || absorbAbs > 0) {// Если == 0 значит скилл "отключен"
+                if (power > 0 || absorbAbs > 0) {// Если == 0 значит скилл "отключен"
                     if (realTarget.isDead() && !corpseSkill)
                         continue;
 
@@ -51,14 +51,14 @@ public final class Drain extends Skill {
 
                         // Нельзя восстанавливать HP из CP
                         if (damage > targetCP || !realTarget.isPlayer())
-                            hp = (damage - targetCP) * _absorbPart;
+                            hp = (damage - targetCP) * absorbPart;
 
                         realTarget.reduceCurrentHp(damage, activeChar, this, true, true, false, true, false, false, true);
                         if (!reflected)
                             realTarget.doCounterAttack(this, activeChar, false);
                     }
 
-                    if (absorbAbs == 0 && _absorbPart == 0)
+                    if (absorbAbs == 0 && absorbPart == 0)
                         continue;
 
                     hp += absorbAbs;

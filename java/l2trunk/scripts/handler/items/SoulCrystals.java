@@ -68,17 +68,17 @@ public final class SoulCrystals extends ScriptItemHandler implements ScriptFile 
         // Soul Crystal Casting section
         Skill soulCrystal = SkillTable.INSTANCE.getInfo(2096);
         player.broadcastPacket(new MagicSkillUse(player, soulCrystal));
-        player.sendPacket(new SetupGauge(player, SetupGauge.BLUE, soulCrystal.getHitTime()));
+        player.sendPacket(new SetupGauge(player, SetupGauge.BLUE, soulCrystal.hitTime));
         // End Soul Crystal Casting section
 
         // Continue execution later
         player._skillTask = ThreadPoolManager.INSTANCE.schedule(() -> {
             player.sendActionFailed();
             player.clearCastVars();
-            if (player.isDead() || player.isDead())
+            if (player.isDead())
                 return;
             target.addAbsorber(player);
-        }, soulCrystal.getHitTime());
+        }, soulCrystal.hitTime);
         return true;
     }
 

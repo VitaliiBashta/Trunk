@@ -2,7 +2,6 @@ package l2trunk.gameserver.model.entity.CCPHelpers.itemLogs;
 
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.data.HtmPropHolder;
-import l2trunk.gameserver.data.HtmPropList;
 import l2trunk.gameserver.data.htm.HtmCache;
 import l2trunk.gameserver.data.xml.holder.ItemHolder;
 import l2trunk.gameserver.model.Player;
@@ -10,12 +9,12 @@ import l2trunk.gameserver.network.serverpackets.ShowBoard;
 import l2trunk.gameserver.templates.item.ItemTemplate;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public final class CCPItemLogs {
-    public static final int FIRST_PAGE_INDEX = 0;
 
     private static int tableHeight = -100;
     private static int headerHeight = -100;
@@ -31,11 +30,11 @@ public final class CCPItemLogs {
             return;
         }
         if (tableHeight == -100) {
-            HtmPropList props = HtmPropHolder.getList(Config.BBS_HOME_DIR + "pages/itemLogs.prop.htm");
-            tableHeight = Integer.parseInt(props.getText("table_height"));
-            headerHeight = Integer.parseInt(props.getText("header_height"));
-            itemHeight = Integer.parseInt(props.getText("item_height"));
-            maxHeight = Integer.parseInt(props.getText("page_max_height"));
+            Map<String, String> props = HtmPropHolder.getList(Config.BBS_HOME_DIR + "pages/itemLogs.prop.htm");
+            tableHeight = Integer.parseInt(props.get("table_height"));
+            headerHeight = Integer.parseInt(props.get("header_height"));
+            itemHeight = Integer.parseInt(props.get("item_height"));
+            maxHeight = Integer.parseInt(props.get("page_max_height"));
         }
 
         String html = preparePage(player, pageIndex);
@@ -44,11 +43,11 @@ public final class CCPItemLogs {
 
     private static String preparePage(Player player, int pageIndex) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm");
-        HtmPropList props = HtmPropHolder.getList(Config.BBS_HOME_DIR + "pages/itemLogs.prop.htm");
+        Map<String, String> props = HtmPropHolder.getList(Config.BBS_HOME_DIR + "pages/itemLogs.prop.htm");
         String html = HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + "pages/itemLogs.htm", player);
 
-        List<ItemActionLog> wrongOrderAllLogs = ItemLogList.getInstance().getLogs(player);
-        List<ItemActionLog> allLogs = changeOrder(wrongOrderAllLogs);
+        List<ItemActionLog> allLogs = ItemLogList.getInstance().getLogs(player);
+        Collections.reverse(ItemLogList.getInstance().getLogs(player));
         int[] pageItemToStartFrom = getLogIndexToStartFrom(allLogs, pageIndex);
 
         StringBuilder tablesLeft = new StringBuilder();
@@ -90,14 +89,14 @@ public final class CCPItemLogs {
         }
         html = html.replace("%tablesLeft%", tablesLeft.length() > 0 ? tablesLeft : "<br>");
         html = html.replace("%tablesRight%", tablesRight.length() > 0 ? tablesRight : "<br>");
-        html = html.replace("%previousBtn%", pageIndex > 0 ? props.getText("PreviousBtn").replace("%page%", String.valueOf(pageIndex - 1)) : "<br>");
-        html = html.replace("%nextBtn%", (logCount < allLogs.size()) || (startingItemIndex > 0) ? props.getText("NextBtn").replace("%page%", String.valueOf(pageIndex + 1)) : "<br>");
+        html = html.replace("%previousBtn%", pageIndex > 0 ? props.get("PreviousBtn").replace("%page%", String.valueOf(pageIndex - 1)) : "<br>");
+        html = html.replace("%nextBtn%", (logCount < allLogs.size()) || (startingItemIndex > 0) ? props.get("NextBtn").replace("%page%", String.valueOf(pageIndex + 1)) : "<br>");
 
         return html;
     }
 
     private static String getLogsTable(Player player, ItemActionLog log, int heightReached, int startingItemIndex, int itemIndex, SimpleDateFormat dateFormat) {
-        HtmPropList props = HtmPropHolder.getList(new StringBuilder().append(Config.BBS_HOME_DIR).append("pages/itemLogs.prop.htm").toString());
+        Map<String, String> props = HtmPropHolder.getList(Config.BBS_HOME_DIR + "pages/itemLogs.prop.htm");
         String date = dateFormat.format(new Date(log.getTime()));
 
         int newHeight = heightReached;
@@ -106,10 +105,10 @@ public final class CCPItemLogs {
         }
 
         newHeight += tableHeight;
-        String table = props.getText("table");
+        String table = props.get("table");
 
         if (startingItemIndex == 0) {
-            String header = props.getText("header");
+            String header = props.get("header");
             header = header.replace("%actionType%", log.getActionType().getNiceName());
             table = table.replace("%header%", header);
             newHeight += headerHeight;
@@ -133,14 +132,14 @@ public final class CCPItemLogs {
                     }
 
                     ItemTemplate template = ItemHolder.getTemplate(item.getItemTemplateId());
-                    String itemText = props.getText("item");
-                    itemText = itemText.replace("%itemTableColor%", itemIndex % 2 == 0 ? props.getText("item_table_color_0") : props.getText("item_table_color_1"));
+                    String itemText = props.get("item");
+                    itemText = itemText.replace("%itemTableColor%", itemIndex % 2 == 0 ? props.get("item_table_color_0") : props.get("item_table_color_1"));
                     itemText = itemText.replace("%icon%", template.getIcon());
-                    String itemName = template.getName() + (item.getItemEnchantLevel() > 0 ? new StringBuilder().append(" + ").append(item.getItemEnchantLevel()).toString() : "") + (item.getItemCount() > 1L ? new StringBuilder().append(" x ").append(item.getItemCount()).toString() : "");
+                    String itemName = template.getName() + (item.getItemEnchantLevel() > 0 ? " + " + item.getItemEnchantLevel() : "") + (item.getItemCount() > 1L ? new StringBuilder().append(" x ").append(item.getItemCount()).toString() : "");
                     itemText = itemText.replace("%itemName%", itemName);
                     itemText = itemText.replace("%time%", date);
                     String receiverName = (item.getReceiverName() != null) && (!item.getReceiverName().isEmpty()) ? item.getReceiverName() : "Nobody";
-                    itemText = itemText.replace("%receiverColor%", receiverName.equals(player.getName()) ? props.getText("receiver_color_owner") : props.getText("receiver_color_alien"));
+                    itemText = itemText.replace("%receiverColor%", receiverName.equals(player.getName()) ? props.get("receiver_color_owner") : props.get("receiver_color_alien"));
                     itemText = itemText.replace("%receiverName%", receiverName);
 
                     itemsBuilder.append(itemText);
@@ -178,7 +177,7 @@ public final class CCPItemLogs {
 
             startingItem = itemHeightReached[0];
             heightReached = itemHeightReached[1];
-            if ((startingItem == -1) || (startingItem < 2147483647)) {
+            if ((startingItem < Integer.MAX_VALUE)) {
                 heightReached = 0;
 
                 if (startingItem < 0) {
@@ -197,7 +196,7 @@ public final class CCPItemLogs {
                     useRightSide = true;
                 }
                 logIndex--;
-            } else if (startingItem == 2147483647) {
+            } else {
                 startingItem = 0;
             }
         }
@@ -235,18 +234,8 @@ public final class CCPItemLogs {
         }
         return new int[]
                 {
-                        2147483647,
+                        Integer.MAX_VALUE,
                         newHeight
                 };
-    }
-
-    private static List<ItemActionLog> changeOrder(List<ItemActionLog> wrongOrderAllLogs) {
-        if (wrongOrderAllLogs.isEmpty()) {
-            return wrongOrderAllLogs;
-        }
-        List<ItemActionLog> logs = new ArrayList<>();
-        for (int i = wrongOrderAllLogs.size() - 1; i >= 0; i--)
-            logs.add(wrongOrderAllLogs.get(i));
-        return logs;
     }
 }

@@ -3,7 +3,7 @@ package l2trunk.gameserver.network.clientpackets;
 import l2trunk.gameserver.model.Player;
 
 public class RequestSaveInventoryOrder extends L2GameClientPacket {
-    // format: (ch)db, b - array of (dd)
+    // format: (ch)db, buffPrice - array of (dd)
     private int[][] _items;
 
     @Override

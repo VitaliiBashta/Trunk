@@ -1,33 +1,22 @@
 package l2trunk.gameserver.network.serverpackets;
 
-/**
- * sample
- * <p>
- * 7d
- * c1 b2 e0 4a
- * 00 00 00 00
- * <p>
- * <p>
- * format
- * cdd
- */
-public class AskJoinAlliance extends L2GameServerPacket {
-    private final String _requestorName;
-    private final String _requestorAllyName;
-    private final int _requestorId;
+public final class AskJoinAlliance extends L2GameServerPacket {
+    private final String requestorName;
+    private final String requestorAllyName;
+    private final int requestorId;
 
     public AskJoinAlliance(int requestorId, String requestorName, String requestorAllyName) {
-        _requestorName = requestorName;
-        _requestorAllyName = requestorAllyName;
-        _requestorId = requestorId;
+        this.requestorName = requestorName;
+        this.requestorAllyName = requestorAllyName;
+        this.requestorId = requestorId;
     }
 
     @Override
     protected final void writeImpl() {
         writeC(0xbb);
-        writeD(_requestorId);
-        writeS(_requestorName);
+        writeD(requestorId);
+        writeS(requestorName);
         writeS("");
-        writeS(_requestorAllyName);
+        writeS(requestorAllyName);
     }
 }

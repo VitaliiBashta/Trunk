@@ -197,14 +197,14 @@ public final class PcInventory extends Inventory {
             boolean needUnequipSkills = getActor().getWeaponsExpertisePenalty() > 0;
 
             if (item.getTemplate().getAttachedSkills().size() > 0) {
-                boolean has = getActor().getSkillLevel(item.getTemplate().getAttachedSkills().get(0).getId()) > 0;
+                boolean has = getActor().getSkillLevel(item.getTemplate().getAttachedSkills().get(0).id) > 0;
                 if (needUnequipSkills && has) {
                     ItemSkillsListener.getInstance().onUnequip(item.getEquipSlot(), item, getActor());
                 } else if (!needUnequipSkills && !has) {
                     ItemSkillsListener.getInstance().onEquip(item.getEquipSlot(), item, getActor());
                 }
             } else if (item.getTemplate().getEnchant4Skill() != null) {
-                boolean has = getActor().getSkillLevel(item.getTemplate().getEnchant4Skill().getId()) > 0;
+                boolean has = getActor().getSkillLevel(item.getTemplate().getEnchant4Skill().id) > 0;
                 if (needUnequipSkills && has) {
                     ItemSkillsListener.getInstance().onUnequip(item.getEquipSlot(), item, getActor());
                 } else if (!needUnequipSkills && !has) {

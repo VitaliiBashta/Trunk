@@ -20,7 +20,7 @@ public final class EffectNegateMusic extends Effect {
 
     @Override
     public boolean onActionTime() {
-        effected.getEffectList().getAllEffects()
+        effected.getEffectList().getAllEffects().stream()
                 .filter(e -> e.getSkill().isMusic())
                 .forEach(Effect::exit);
         return false;

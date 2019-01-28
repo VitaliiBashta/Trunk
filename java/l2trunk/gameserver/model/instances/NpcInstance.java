@@ -125,7 +125,7 @@ public class NpcInstance extends Creature {
         _showBoard = getParameter(SHOW_BOARD, "");
 
         template.getSkills().values().stream()
-                .mapToInt(Skill::getId)
+                .mapToInt(s ->s.id)
                 .forEach(this::addSkill);
 
         setName(template.name);
@@ -332,7 +332,7 @@ public class NpcInstance extends Creature {
 //		if (killer != null && killer.isPlayable() && isMonster() && !isRaid())
 //		{
 //			// Only consider player with max 9 lvls of difference
-//			if (killer.getPlayer().getLevel() <= getLevel() + 9)
+//			if (killer.getPlayer().level() <= level() + 9)
 //				killer.getPlayer().addPlayerStats(Ranking.STAT_TOP_MOBS_KILLS);
 //		}
 
@@ -541,11 +541,11 @@ public class NpcInstance extends Creature {
     }
 
     public long getExpReward() {
-        return (long) calcStat(Stats.EXP, getTemplate().rewardExp, null, null);
+        return (long) calcStat(Stats.EXP, getTemplate().rewardExp);
     }
 
     public long getSpReward() {
-        return (long) calcStat(Stats.SP, getTemplate().rewardSp, null, null);
+        return (long) calcStat(Stats.SP, getTemplate().rewardSp);
     }
 
     @Override
@@ -873,7 +873,7 @@ public class NpcInstance extends Creature {
             return;
         }
 
-        int count = (int) player.getAllQuestsStates()
+        int count = (int) player.getAllQuestsStates().stream()
                 .filter(Objects::nonNull)
                 .filter(quest -> quest.getQuest().isVisible())
                 .filter(QuestState::isStarted)
@@ -1160,7 +1160,7 @@ public class NpcInstance extends Creature {
                     } else {
                         sb.append(" ").append((long) (tl.getPrice() * pricemod)).append(" @811;F;").append(tl.getName()).append("|").append(tl.getStringName());
                     }
-                    // sb.append(" ").append((long) (tl.getPrice() * pricemod)).append(" @811;F;").append(tl.getName()).append("|").append(HtmlUtils.htmlNpcString(tl.getName()));
+                    // sb.append(" ").append((long) (tl.getPrice() * pricemod)).append(" @811;F;").append(tl.name()).append("|").append(HtmlUtils.htmlNpcString(tl.name()));
                     if ((tl.getPrice() * pricemod) > 0) {
                         sb.append(" - ").append((long) (tl.getPrice() * pricemod)).append(" ").append(HtmlUtils.htmlItemName(ItemTemplate.ITEM_ID_ADENA));
                     }
@@ -1371,7 +1371,7 @@ public class NpcInstance extends Creature {
             return;
         }
 
-        if (!(getTemplate().canTeach(classId) || getTemplate().canTeach(classId.getParent(player.getSex())))) {
+        if (!(getTemplate().canTeach(classId) || getTemplate().canTeach(classId.getParent()))) {
             if (this instanceof WarehouseInstance) {
                 showChatWindow(player, "warehouse/" + getNpcId() + "-noteach.htm");
             } else if (this instanceof TrainerInstance) {

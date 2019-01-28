@@ -247,7 +247,7 @@ public class MonsterInstance extends NpcInstance {
 
     @Override
     protected void onReduceCurrentHp(double damage, Creature attacker, Skill skill, boolean awake, boolean standUp, boolean directHp) {
-        if (skill != null && skill.isOverhit()) {
+        if (skill != null && skill.isOverhit) {
             // Calculate the over-hit damage
             // Ex: mob had 10 HP left, over-hit skill did 50 damage total, over-hit damage is 40
             double overhitDmg = (getCurrentHp() - damage) * -1;

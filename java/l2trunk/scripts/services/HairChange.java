@@ -29,7 +29,7 @@ public final class HairChange extends Functions {
         for (int i = 0; i < 7; i++) {
             String button = "<button action=\"bypass -h scripts_services.HairChange:ask " + i + "\" width=34 height=34 back=\"L2UI_CT1.ItemWindow_DF_Frame_Down\" fore=\"L2UI_CT1.ItemWindow_DF_Frame\"/>";
             String prohibited = "<img src=\"L2UI_CT1.ItemWindow_DF_SlotBox_Disable\" width=\"32\" height=\"32\">";
-            boolean result = player.getHairStyle() != i && (player.getSex() != 0 || Male[i] != 0);
+            boolean result = player.getHairStyle() != i && (player.isMale()  || Male[i] != 0);
 
             html.replace("%hair_" + (i + 1) + "%", result ? button : prohibited);
             html.replace("%color_" + (i + 1) + "%", result ? "99CC00" : "CC3333");

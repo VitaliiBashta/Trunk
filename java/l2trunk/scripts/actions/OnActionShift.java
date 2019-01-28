@@ -219,11 +219,11 @@ public final class OnActionShift extends Functions {
             dialog.append("<br>Active:<br>");
             for (Skill s : list)
                 if (s.isActive())
-                    dialog.append(s.getName()).append("<br1>");
+                    dialog.append(s.name).append("<br1>");
             dialog.append("<br>Passive:<br>");
             for (Skill s : list)
                 if (!s.isActive())
-                    dialog.append(s.getName()).append("<br1>");
+                    dialog.append(s.name).append("<br1>");
         }
 
         dialog.append("</body></html>");
@@ -240,7 +240,7 @@ public final class OnActionShift extends Functions {
         dialog.append(nameNpc(npc)).append("<br></font></center><br>");
 
         npc.getEffectList().getAllEffects().forEach(e ->
-                dialog.append(e.getSkill().getName()).append("<br1>"));
+                dialog.append(e.getSkill().name).append("<br1>"));
 
         dialog.append("<br><center><button value=\"");
         dialog.append("Refresh");
@@ -293,21 +293,21 @@ public final class OnActionShift extends Functions {
 
         boolean hasResist;
 
-        hasResist = addResist(dialog, "Fire", npc.calcStat(Stats.DEFENCE_FIRE, 0, null, null));
-        hasResist |= addResist(dialog, "Wind", npc.calcStat(Stats.DEFENCE_WIND, 0, null, null));
-        hasResist |= addResist(dialog, "Water", npc.calcStat(Stats.DEFENCE_WATER, 0, null, null));
-        hasResist |= addResist(dialog, "Earth", npc.calcStat(Stats.DEFENCE_EARTH, 0, null, null));
-        hasResist |= addResist(dialog, "Light", npc.calcStat(Stats.DEFENCE_HOLY, 0, null, null));
-        hasResist |= addResist(dialog, "Darkness", npc.calcStat(Stats.DEFENCE_UNHOLY, 0, null, null));
-        hasResist |= addResist(dialog, "Bleed", npc.calcStat(Stats.BLEED_RESIST, 0, null, null));
-        hasResist |= addResist(dialog, "Poison", npc.calcStat(Stats.POISON_RESIST, 0, null, null));
-        hasResist |= addResist(dialog, "Stun", npc.calcStat(Stats.STUN_RESIST, 0, null, null));
-        hasResist |= addResist(dialog, "Root", npc.calcStat(Stats.ROOT_RESIST, 0, null, null));
-        hasResist |= addResist(dialog, "Sleep", npc.calcStat(Stats.SLEEP_RESIST, 0, null, null));
-        hasResist |= addResist(dialog, "Paralyze", npc.calcStat(Stats.PARALYZE_RESIST, 0, null, null));
-        hasResist |= addResist(dialog, "Mental", npc.calcStat(Stats.MENTAL_RESIST, 0, null, null));
-        hasResist |= addResist(dialog, "Debuff", npc.calcStat(Stats.DEBUFF_RESIST, 0, null, null));
-        hasResist |= addResist(dialog, "Cancel", npc.calcStat(Stats.CANCEL_RESIST, 0, null, null));
+        hasResist = addResist(dialog, "Fire", npc.calcStat(Stats.DEFENCE_FIRE, 0));
+        hasResist |= addResist(dialog, "Wind", npc.calcStat(Stats.DEFENCE_WIND, 0));
+        hasResist |= addResist(dialog, "Water", npc.calcStat(Stats.DEFENCE_WATER, 0));
+        hasResist |= addResist(dialog, "Earth", npc.calcStat(Stats.DEFENCE_EARTH, 0));
+        hasResist |= addResist(dialog, "Light", npc.calcStat(Stats.DEFENCE_HOLY, 0));
+        hasResist |= addResist(dialog, "Darkness", npc.calcStat(Stats.DEFENCE_UNHOLY, 0));
+        hasResist |= addResist(dialog, "Bleed", npc.calcStat(Stats.BLEED_RESIST, 0));
+        hasResist |= addResist(dialog, "Poison", npc.calcStat(Stats.POISON_RESIST, 0));
+        hasResist |= addResist(dialog, "Stun", npc.calcStat(Stats.STUN_RESIST, 0));
+        hasResist |= addResist(dialog, "Root", npc.calcStat(Stats.ROOT_RESIST, 0));
+        hasResist |= addResist(dialog, "Sleep", npc.calcStat(Stats.SLEEP_RESIST, 0));
+        hasResist |= addResist(dialog, "Paralyze", npc.calcStat(Stats.PARALYZE_RESIST, 0));
+        hasResist |= addResist(dialog, "Mental", npc.calcStat(Stats.MENTAL_RESIST, 0));
+        hasResist |= addResist(dialog, "Debuff", npc.calcStat(Stats.DEBUFF_RESIST, 0));
+        hasResist |= addResist(dialog, "Cancel", npc.calcStat(Stats.CANCEL_RESIST, 0));
         hasResist |= addResist(dialog, "Sword", 100 - npc.calcStat(Stats.SWORD_WPN_VULNERABILITY, null, null));
         hasResist |= addResist(dialog, "Dual Sword", 100 - npc.calcStat(Stats.DUAL_WPN_VULNERABILITY, null, null));
         hasResist |= addResist(dialog, "Blunt", 100 - npc.calcStat(Stats.BLUNT_WPN_VULNERABILITY, null, null));
@@ -334,7 +334,7 @@ public final class OnActionShift extends Functions {
         else if (val == Double.NEGATIVE_INFINITY)
             dialog.append("MIN");
         else {
-            dialog.append(String.valueOf((int) val));
+            dialog.append((int) val);
             dialog.append("</td></tr>");
             return true;
         }
@@ -351,7 +351,7 @@ public final class OnActionShift extends Functions {
 
         StringBuilder dialog = new StringBuilder("<html><body><table width=\"80%\"><tr><td>Attacker</td><td>Damage</td><td>Hate</td></tr>");
 
-        Set<HateInfo> set = new TreeSet<>(HateComparator.getInstance());
+        Set<HateInfo> set = new TreeSet<>(new HateComparator());
         set.addAll(npc.getAggroList().getCharMap().values());
         for (HateInfo aggroInfo : set)
             dialog.append("<tr><td>" + aggroInfo.attacker.getName() + "</td><td>" + aggroInfo.damage + "</td><td>" + aggroInfo.hate + "</td></tr>");

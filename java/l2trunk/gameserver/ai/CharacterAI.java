@@ -142,11 +142,11 @@ public class CharacterAI extends AbstractAI {
         setIntentionAttack(target);
     }
 
-    public void Cast(Skill skill, Creature target) {
-        Cast(skill, target, false, false);
+    public void cast(Skill skill, Creature target) {
+        cast(skill, target, false, false);
     }
 
-    void Cast(Skill skill, Creature target, boolean forceUse, boolean dontMove) {
+    void cast(Skill skill, Creature target, boolean forceUse, boolean dontMove) {
         setIntentionAttack(target);
     }
 

@@ -24,7 +24,7 @@ public final class Aggression extends Skill {
 
     @Override
     public void useSkill(Creature activeChar, List<Creature> targets) {
-        int effect = _effectPoint;
+        int effect = effectPoint;
 
         if (isSSPossible() && (activeChar.getChargedSoulShot() || activeChar.getChargedSpiritShot() > 0))
             effect *= 2;

@@ -60,11 +60,11 @@ public final class Orfen extends Fighter {
             teleToLocation(attacker, Location.findFrontPosition(actor, attacker, 0, 50));
             Skill r_skill = Rnd.get(damSkills);
             if (canUseSkill(r_skill, attacker, -1))
-                addTaskAttack(attacker, r_skill.getId(), r_skill.getLevel());
+                addTaskAttack(attacker, r_skill.id, r_skill.level);
         } else if (paralyze.size() > 0 && Rnd.chance(20)) {
             Skill r_skill = paralyze.get(Rnd.get(paralyze.size()));
             if (canUseSkill(r_skill, attacker, -1))
-                addTaskAttack(attacker, r_skill.getId(), r_skill.getLevel());
+                addTaskAttack(attacker, r_skill.id, r_skill.level);
         }
     }
 
@@ -76,12 +76,12 @@ public final class Orfen extends Fighter {
             return;
 
         double distance = actor.getDistance(caster);
-        if (damSkills.size() > 0 && skill.getEffectPoint() > 0 && distance < 1000 && Rnd.chance(20)) {
+        if (damSkills.size() > 0 && skill.effectPoint > 0 && distance < 1000 && Rnd.chance(20)) {
             Functions.npcSay(actor, Rnd.get(MsgOnRecall).sprintf(caster.getName()));
             teleToLocation(caster, Location.findFrontPosition(actor, caster, 0, 50));
             Skill r_skill = Rnd.get(damSkills);
             if (canUseSkill(r_skill, caster, -1))
-                addTaskAttack(caster, r_skill.getId(), r_skill.getLevel());
+                addTaskAttack(caster, r_skill.id, r_skill.level);
         }
     }
 

@@ -16,8 +16,8 @@ public final class EffectCharge extends Effect {
     public void onStart() {
         super.onStart();
 
-        if (getEffected().isPlayer()) {
-            final Player player = (Player) getEffected();
+        if (effected.isPlayer()) {
+            final Player player = (Player) effected;
 
             if (player.getIncreasedForce() >= calc())
                 player.sendPacket(SystemMsg.YOUR_FORCE_HAS_REACHED_MAXIMUM_CAPACITY_);

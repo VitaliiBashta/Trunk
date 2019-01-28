@@ -37,7 +37,7 @@ public final class ManaDam extends Skill {
                 if (mDef < 1.)
                     mDef = 1.;
 
-                double damage = Math.sqrt(mAtk) * getPower() * (target.getMaxMp() / 97.) / mDef;
+                double damage = Math.sqrt(mAtk) * power * (target.getMaxMp() / 97.) / mDef;
 
                 boolean crit = Formulas.calcMCrit(activeChar.getMagicCriticalRate(target, this));
                 if (crit) {

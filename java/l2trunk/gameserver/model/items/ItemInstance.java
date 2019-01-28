@@ -479,7 +479,7 @@ public final class ItemInstance extends GameObject implements JdbcEntity {
      * for a particular player.
      *
      */
-    public Stream<Func> getStatFuncs() {
+    public List<Func> getStatFuncs() {
         List<Func> result = new ArrayList<>();
 
         List<Func> funcs = new ArrayList<>();
@@ -501,21 +501,13 @@ public final class ItemInstance extends GameObject implements JdbcEntity {
         if (!funcs.isEmpty())
             result = funcs;
 
-        return result.stream();
+        return result;
     }
 
-    /**
-     * Return true if item is hero-item
-     *
-     * @return boolean
-     */
     public boolean isHeroWeapon() {
         return template.isHeroWeapon();
     }
 
-    /**
-     * Return true if item can be destroyed
-     */
     public boolean canBeDestroyed(Player player) {
         if ((customFlags & FLAG_NO_DESTROY) == FLAG_NO_DESTROY)
             return false;

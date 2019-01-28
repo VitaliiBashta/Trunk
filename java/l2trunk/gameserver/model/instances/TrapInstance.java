@@ -192,10 +192,10 @@ public final class TrapInstance extends NpcInstance {
                     .findFirst().ifPresent(target -> {
                 if (trap.skill.checkTarget(owner, target, null, false, false) == null) {
                     List<Creature> targets;
-                    if (trap.skill.getTargetType() != SkillTargetType.TARGET_AREA)
+                    if (trap.skill.targetType != SkillTargetType.TARGET_AREA)
                         targets = List.of(target);
                     else
-                        targets = trap.getAroundCharacters(trap.skill.getSkillRadius(), 128)
+                        targets = trap.getAroundCharacters(trap.skill.skillRadius, 128)
                                 .filter(t -> trap.skill.checkTarget(owner, t, null, false, false) == null)
                                 .collect(Collectors.toList());
 

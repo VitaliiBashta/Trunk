@@ -21,7 +21,7 @@ public final class DeleteHateOfMe extends Skill {
         for (Creature target : targets)
             if (target != null) {
                 if (activeChar.isPlayer() && ((Player) activeChar).isGM())
-                    activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.skills.Formulas.Chance", (Player) activeChar).addString(getName()).addNumber(getActivateRate()));
+                    activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.skills.Formulas.Chance", (Player) activeChar).addString(name).addNumber(getActivateRate()));
 
                 if (target.isNpc() && Formulas.calcSkillSuccess(activeChar, target, this, getActivateRate())) {
                     NpcInstance npc = (NpcInstance) target;

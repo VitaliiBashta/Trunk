@@ -5,7 +5,7 @@ import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.stats.Env;
 
-public class EffectManaDamOverTime extends Effect {
+public final class EffectManaDamOverTime extends Effect {
     public EffectManaDamOverTime(Env env, EffectTemplate template) {
         super(env, template);
     }
@@ -18,7 +18,7 @@ public class EffectManaDamOverTime extends Effect {
         double manaDam = calc();
         if (manaDam > effected.getCurrentMp() && getSkill().isToggle()) {
             effected.sendPacket(SystemMsg.NOT_ENOUGH_MP);
-            effected.sendPacket(new SystemMessage2(SystemMsg.THE_EFFECT_OF_S1_HAS_BEEN_REMOVED).addSkillName(getSkill().getId(), getSkill().getDisplayLevel()));
+            effected.sendPacket(new SystemMessage2(SystemMsg.THE_EFFECT_OF_S1_HAS_BEEN_REMOVED).addSkillName(getSkill().id, getSkill().getDisplayLevel()));
             return false;
         }
 

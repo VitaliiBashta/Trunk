@@ -31,8 +31,8 @@ public final class Unlock extends Skill {
         //Unlock Fix
 //		if (target instanceof ChestInstance && activeChar.isPlayer())
 //		{
-//			int charLevel = activeChar.getLevel();
-//			int chestLevel = target.getLevel();
+//			int charLevel = activeChar.level();
+//			int chestLevel = target.level();
 //
 //			try
 //			{

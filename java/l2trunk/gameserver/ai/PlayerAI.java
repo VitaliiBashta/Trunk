@@ -93,7 +93,7 @@ public final class PlayerAI extends PlayableAI {
         Player actor = getActor();
 
         FlagItemAttachment attachment = actor.getActiveWeaponFlagAttachment();
-        if (attachment != null && !attachment.canCast(actor, _skill)) {
+        if (attachment != null && !attachment.canCast(actor, skill)) {
             setIntention(AI_INTENTION_ACTIVE);
             actor.sendActionFailed();
             return;
@@ -160,16 +160,16 @@ public final class PlayerAI extends PlayableAI {
     }
 
     @Override
-    public void Cast(Skill skill, Creature target, boolean forceUse, boolean dontMove) {
+    public void cast(Skill skill, Creature target, boolean forceUse, boolean dontMove) {
         Player actor = getActor();
 
-        if (!skill.altUse() && !skill.isToggle() && !(skill.getSkillType() == SkillType.CRAFT && Config.ALLOW_TALK_WHILE_SITTING))
+        if (!skill.altUse() && !skill.isToggle() && !(skill.skillType == SkillType.CRAFT && Config.ALLOW_TALK_WHILE_SITTING))
             // Если в этот момент встаем, то использовать скилл когда встанем
             if (actor.getSittingTask()) {
                 setNextAction(nextAction.CAST, skill, target, forceUse, dontMove);
                 clientActionFailed();
                 return;
-            } else if (skill.getSkillType() == SkillType.SUMMON) {
+            } else if (skill.skillType == SkillType.SUMMON) {
                 if (actor.getPrivateStoreType() != Player.STORE_PRIVATE_NONE) {
                     actor.sendPacket(SystemMsg.YOU_CANNOT_SUMMON_DURING_A_TRADE_OR_WHILE_USING_A_PRIVATE_STORE);
                     clientActionFailed();
@@ -188,7 +188,7 @@ public final class PlayerAI extends PlayableAI {
             }
             // char is sitting
             else if (actor.isSitting()) {
-                if (skill.getSkillType() == SkillType.TRANSFORMATION)
+                if (skill.skillType == SkillType.TRANSFORMATION)
                     actor.sendPacket(SystemMsg.YOU_CANNOT_TRANSFORM_WHILE_SITTING);
                 else
                     actor.sendPacket(SystemMsg.YOU_CANNOT_MOVE_WHILE_SITTING);
@@ -200,7 +200,7 @@ public final class PlayerAI extends PlayableAI {
         // setBlock the player for 10 minutes to summon a pet after the resurrection.
         //actor.setPetSummonBlockedTime(System.currentTimeMillis() + 600 * 1000);
 
-        super.Cast(skill, target, forceUse, dontMove);
+        super.cast(skill, target, forceUse, dontMove);
     }
 
     @Override

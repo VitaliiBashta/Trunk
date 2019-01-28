@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.instances.StaticObjectInstance;
 /**
  * format: d
  */
-public class ChairSit extends L2GameServerPacket {
+public final class ChairSit extends L2GameServerPacket {
     private final int _objectId;
     private final int _staticObjectId;
 

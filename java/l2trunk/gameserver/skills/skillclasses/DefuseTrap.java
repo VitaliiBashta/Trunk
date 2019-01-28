@@ -31,7 +31,7 @@ public final class DefuseTrap extends Skill {
                 .filter(Objects::nonNull)
                 .filter(GameObject::isTrap)
                 .map(trap -> (TrapInstance) trap)
-                .filter(trap -> trap.getLevel() <= getPower())
+                .filter(trap -> trap.getLevel() <= power)
                 .forEach(GameObject::deleteMe);
         if (isSSPossible()) {
             activeChar.unChargeShots(isMagic());

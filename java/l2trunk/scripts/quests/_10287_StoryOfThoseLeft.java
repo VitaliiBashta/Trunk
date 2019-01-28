@@ -5,22 +5,28 @@ import l2trunk.gameserver.model.entity.Reflection;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.ReflectionUtils;
 
 import java.util.StringTokenizer;
 
+import static l2trunk.scripts.quests._10283_RequestOfIceMerchant.JINIA;
+import static l2trunk.scripts.quests._10283_RequestOfIceMerchant.RAFFORTY;
+import static l2trunk.scripts.quests._10285_MeetingSirra.JINIA_2;
+import static l2trunk.scripts.quests._10285_MeetingSirra.KEGOR;
 
 public final class _10287_StoryOfThoseLeft extends Quest {
-    private static final int Rafforty = 32020;
-    private static final int Jinia = 32760;
-    private static final int Jinia2 = 32781;
-    private static final int Kegor = 32761;
 
     public _10287_StoryOfThoseLeft() {
         super(false);
-        addStartNpc(Rafforty);
-        addTalkId(Jinia, Jinia2, Kegor);
+        addStartNpc(RAFFORTY);
+        addTalkId(JINIA, JINIA_2, KEGOR);
+    }
+
+    static void enterInstance(Player player) {
+        Reflection r = player.getActiveReflection();
+        if (player.canReenterInstance(141))
+            if (r != null) player.teleToLocation(r.getTeleportLoc(), r);
+            else ReflectionUtils.enterReflection(player, 141);
     }
 
     @Override
@@ -32,7 +38,7 @@ public final class _10287_StoryOfThoseLeft extends Quest {
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("enterinstance")) {
             st.setCond(2);
-            enterInstance(st.getPlayer(), 141);
+            enterInstance(st.getPlayer());
             return null;
         } else if (event.equalsIgnoreCase("jinia_q10287_03.htm"))
             st.setCond(3);
@@ -79,7 +85,7 @@ public final class _10287_StoryOfThoseLeft extends Quest {
         String htmltext = "noquest";
         int npcId = npc.getNpcId();
         int cond = st.getCond();
-        if (npcId == Rafforty) {
+        if (npcId == RAFFORTY) {
             if (cond == 0) {
                 QuestState qs = st.getPlayer().getQuestState(_10286_ReunionWithSirra.class);
                 if (st.getPlayer().getLevel() >= 82 && qs != null && qs.isCompleted())
@@ -94,29 +100,19 @@ public final class _10287_StoryOfThoseLeft extends Quest {
                 htmltext = "rafforty_q10287_03.htm";
             else
                 htmltext = "rafforty_q10287_06.htm";
-        } else if (npcId == Jinia) {
+        } else if (npcId == JINIA) {
             if (cond == 2)
                 htmltext = "jinia_q10287_01.htm";
             else if (cond == 3)
                 htmltext = "jinia_q10287_04.htm";
             else if (cond == 4)
                 htmltext = "jinia_q10287_05.htm";
-        } else if (npcId == Kegor) {
+        } else if (npcId == KEGOR) {
             if (cond == 3)
                 htmltext = "kegor_q10287_01.htm";
             else if (cond == 2 || cond == 4)
                 htmltext = "kegor_q10287_04.htm";
         }
         return htmltext;
-    }
-
-    private void enterInstance(Player player, int izId) {
-        Reflection r = player.getActiveReflection();
-        if (r != null) {
-            if (player.canReenterInstance(izId))
-                player.teleToLocation(r.getTeleportLoc(), r);
-        } else if (player.canEnterInstance(izId)) {
-            ReflectionUtils.enterReflection(player, izId);
-        }
     }
 }

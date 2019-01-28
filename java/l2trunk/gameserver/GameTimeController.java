@@ -19,10 +19,10 @@ public enum GameTimeController {
     private final Logger _log = LoggerFactory.getLogger(GameTimeController.class);
     private final GameTimeListenerList listenerEngine = new GameTimeListenerList();
     private final Runnable _dayChangeNotify = new CheckSunState();
-    private long _gameStartTime;
+    private long gameStartTime;
 
     public void init() {
-        _gameStartTime = getDayStartTime();
+        gameStartTime = getDayStartTime();
 
         GameServer.getInstance().addListener(new OnStartListenerImpl());
 
@@ -45,14 +45,14 @@ public enum GameTimeController {
         long nightStart = 0;
         long dayStart = 60 * 60 * 1000;
 
-        while (_gameStartTime + nightStart < System.currentTimeMillis())
+        while (gameStartTime + nightStart < System.currentTimeMillis())
             nightStart += 4 * 60 * 60 * 1000;
 
-        while (_gameStartTime + dayStart < System.currentTimeMillis())
+        while (gameStartTime + dayStart < System.currentTimeMillis())
             dayStart += 4 * 60 * 60 * 1000;
 
-        dayStart -= System.currentTimeMillis() - _gameStartTime;
-        nightStart -= System.currentTimeMillis() - _gameStartTime;
+        dayStart -= System.currentTimeMillis() - gameStartTime;
+        nightStart -= System.currentTimeMillis() - gameStartTime;
 
         ThreadPoolManager.INSTANCE.scheduleAtFixedRate(_dayChangeNotify, nightStart, 4 * 60 * 60 * 1000L);
         ThreadPoolManager.INSTANCE.scheduleAtFixedRate(_dayChangeNotify, dayStart, 4 * 60 * 60 * 1000L);
@@ -93,7 +93,7 @@ public enum GameTimeController {
     }
 
     private int getGameTicks() {
-        return (int) ((System.currentTimeMillis() - _gameStartTime) / MILLIS_IN_TICK);
+        return (int) ((System.currentTimeMillis() - gameStartTime) / MILLIS_IN_TICK);
     }
 
     private GameTimeListenerList getListenerEngine() {
@@ -132,13 +132,13 @@ public enum GameTimeController {
 
     protected class GameTimeListenerList extends ListenerList {
         void onDay() {
-            getListeners().filter(l -> l instanceof OnDayNightChangeListener)
+            getListeners().stream().filter(l -> l instanceof OnDayNightChangeListener)
                     .map(l -> (OnDayNightChangeListener) l)
                     .forEach(OnDayNightChangeListener::onDay);
         }
 
         void onNight() {
-            getListeners().filter(l -> l instanceof OnDayNightChangeListener)
+            getListeners().stream().filter(l -> l instanceof OnDayNightChangeListener)
                     .map(l -> (OnDayNightChangeListener) l)
                     .forEach(OnDayNightChangeListener::onNight);
         }

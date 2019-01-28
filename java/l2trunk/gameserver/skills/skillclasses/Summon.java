@@ -18,7 +18,6 @@ import l2trunk.gameserver.model.instances.TrapInstance;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.stats.Stats;
 import l2trunk.gameserver.stats.funcs.FuncAdd;
-import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.Location;
 
@@ -27,21 +26,21 @@ import java.util.List;
 public final class Summon extends Skill {
     private final SummonType _summonType;
 
-    private final double _expPenalty;
-    private final int _itemConsumeIdInTime;
-    private final int _itemConsumeCountInTime;
-    private final int _itemConsumeDelay;
-    private final int _lifeTime;
+    private final double expPenalty;
+    private final int itemConsumeIdInTime;
+    private final int itemConsumeCountInTime;
+    private final int itemConsumeDelay;
+    private final int lifeTime;
 
     public Summon(StatsSet set) {
         super(set);
 
         _summonType = Enum.valueOf(SummonType.class, set.getString("summonType", "PET").toUpperCase());
-        _expPenalty = set.getDouble("expPenalty", 0.f);
-        _itemConsumeIdInTime = set.getInteger("itemConsumeIdInTime", 0);
-        _itemConsumeCountInTime = set.getInteger("itemConsumeCountInTime", 0);
-        _itemConsumeDelay = set.getInteger("itemConsumeDelay", 240) * 1000;
-        _lifeTime = set.getInteger("lifeTime", 1200) * 1000;
+        expPenalty = set.getDouble("expPenalty", 0.f);
+        itemConsumeIdInTime = set.getInteger("itemConsumeIdInTime", 0);
+        itemConsumeCountInTime = set.getInteger("itemConsumeCountInTime", 0);
+        itemConsumeDelay = set.getInteger("itemConsumeDelay", 240) * 1000;
+        lifeTime = set.getInteger("lifeTime", 1200) * 1000;
     }
 
     @Override
@@ -70,7 +69,7 @@ public final class Summon extends Skill {
                 }
                 break;
             case AGATHION:
-                if (player.getAgathionId() > 0 && _npcId != 0) {
+                if (player.getAgathionId() > 0 && npcId != 0) {
                     player.sendPacket(SystemMsg.AN_AGATHION_HAS_ALREADY_BEEN_SUMMONED);
                     return false;
                 }
@@ -85,14 +84,14 @@ public final class Summon extends Skill {
 
         switch (_summonType) {
             case AGATHION:
-                activeChar.setAgathion(getNpcId());
+                activeChar.setAgathion(npcId);
                 break;
             case TRAP:
-                int trapSkillId = getFirstAddedSkill().getId();
+                int trapSkillId = getFirstAddedSkill().id;
 
                 if (activeChar.getTrapsCount() >= 5)
                     activeChar.destroyFirstTrap();
-                TrapInstance trap = new TrapInstance(IdFactory.getInstance().getNextId(), NpcHolder.getTemplate(getNpcId()), activeChar, trapSkillId);
+                TrapInstance trap = new TrapInstance(IdFactory.getInstance().getNextId(), NpcHolder.getTemplate(npcId), activeChar, trapSkillId);
                 activeChar.addTrap(trap);
                 trap.spawnMe();
                 break;
@@ -116,12 +115,12 @@ public final class Summon extends Skill {
                 if (activeChar.getPet() != null || activeChar.isMounted())
                     return;
 
-                NpcTemplate summonTemplate = NpcHolder.getTemplate(getNpcId());
-                SummonInstance summon = new SummonInstance(IdFactory.getInstance().getNextId(), summonTemplate, activeChar, _lifeTime, _itemConsumeIdInTime, _itemConsumeCountInTime, _itemConsumeDelay, this);
+                NpcTemplate summonTemplate = NpcHolder.getTemplate(npcId);
+                SummonInstance summon = new SummonInstance(IdFactory.getInstance().getNextId(), summonTemplate, activeChar, lifeTime, itemConsumeIdInTime, itemConsumeCountInTime, itemConsumeDelay, this);
                 activeChar.setPet(summon);
 
                 summon.setTitle(activeChar.getName());
-                summon.setExpPenalty(_expPenalty);
+                summon.setExpPenalty(expPenalty);
                 summon.setExp(Experience.LEVEL[Math.min(summon.getLevel(), Experience.LEVEL.length - 1)]);
                 summon.setHeading(activeChar.getHeading());
                 summon.setReflection(activeChar.getReflection());
@@ -132,7 +131,7 @@ public final class Summon extends Skill {
                 if (summon.getSkillLevel(4140) > 0)
                     summon.altUseSkill(4140, summon.getSkillLevel(4140), activeChar);
 
-                if (summon.getName().equalsIgnoreCase("Shadow"))//FIXME [G1ta0] идиотский хардкод
+                if ("Shadow".equalsIgnoreCase(summon.getName()))//FIXME [G1ta0] идиотский хардкод
                     summon.addStatFunc(new FuncAdd(Stats.ABSORB_DAMAGE_PERCENT, 0x40, this, 15));
 
                 EffectsDAO.INSTANCE.restoreEffects(summon, true, summon.getMaxHp(), summon.getMaxCp(), summon.getMaxMp());
@@ -151,7 +150,7 @@ public final class Summon extends Skill {
                 if (activeChar.getPet() != null || activeChar.isMounted())
                     return;
 
-                NpcTemplate merchantTemplate = NpcHolder.getTemplate(getNpcId());
+                NpcTemplate merchantTemplate = NpcHolder.getTemplate(npcId);
                 MerchantInstance merchant = new MerchantInstance(IdFactory.getInstance().getNextId(), merchantTemplate);
 
                 merchant.setCurrentHp(merchant.getMaxHp(), false);
@@ -160,18 +159,13 @@ public final class Summon extends Skill {
                 merchant.setReflection(activeChar.getReflection());
                 merchant.spawnMe(activeChar.getLoc());
 
-                ThreadPoolManager.INSTANCE.schedule(new GameObjectTasks.DeleteTask(merchant), _lifeTime);
+                ThreadPoolManager.INSTANCE.schedule(new GameObjectTasks.DeleteTask(merchant), lifeTime);
                 break;
         }
 
 
         if (isSSPossible())
             caster.unChargeShots(isMagic());
-    }
-
-    @Override
-    public boolean isOffensive() {
-        return targetType == SkillTargetType.TARGET_CORPSE;
     }
 
     private enum SummonType {

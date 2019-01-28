@@ -488,7 +488,7 @@ public final class RequestActionUse extends L2GameClientPacket {
 
         Creature aimingTarget = skill.getAimingTarget(pet, activeChar.getTarget());
         if (skill.checkCondition(pet, aimingTarget, ctrlPressed, shiftPressed, true))
-            pet.getAI().Cast(skill, aimingTarget, ctrlPressed, shiftPressed);
+            pet.getAI().cast(skill, aimingTarget, ctrlPressed, shiftPressed);
         else
             activeChar.sendActionFailed();
     }
