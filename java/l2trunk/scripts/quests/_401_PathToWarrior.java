@@ -4,7 +4,6 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.items.Inventory;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _401_PathToWarrior extends Quest {
     private final int AURON = 30010;
@@ -50,7 +49,7 @@ public final class _401_PathToWarrior extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
         if (event.equalsIgnoreCase("401_1")) {
-            if (st.getPlayer().getClassId().getId() == 0x00) {
+            if (st.getPlayer().getClassId().id() == 0x00) {
                 if (st.getPlayer().getLevel() >= 18) {
                     if (st.getQuestItemsCount(MEDALLION_OF_WARRIOR_ID) > 0)
                         htmltext = "ein_q0401_04.htm";
@@ -58,7 +57,7 @@ public final class _401_PathToWarrior extends Quest {
                         htmltext = "ein_q0401_05.htm";
                 } else
                     htmltext = "ein_q0401_02.htm";
-            } else if (st.getPlayer().getClassId().getId() == 0x01)
+            } else if (st.getPlayer().getClassId().id() == 0x01)
                 htmltext = "ein_q0401_02a.htm";
             else
                 htmltext = "ein_q0401_03.htm";

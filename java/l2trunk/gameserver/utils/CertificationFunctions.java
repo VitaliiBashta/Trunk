@@ -141,7 +141,7 @@ public final class CertificationFunctions {
 
         Collection<SkillLearn> skillLearnList = SkillAcquireHolder.getAvailableSkills(null, AcquireType.CERTIFICATION);
         for (SkillLearn learn : skillLearnList) {
-            player.removeSkill(learn.getId(), true);
+            player.removeSkill(learn.id(), true);
         }
 
         player.getSubClasses().values().stream()

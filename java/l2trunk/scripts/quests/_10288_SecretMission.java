@@ -90,10 +90,10 @@ public final class _10288_SecretMission extends Quest {
 
     @Override
     public String onFirstTalk(NpcInstance npc, Player player) {
-        QuestState st = player.getQuestState(getClass());
+        QuestState st = player.getQuestState(this);
         if (st == null) {
             newQuestState(player, CREATED);
-            st = player.getQuestState(getClass());
+            st = player.getQuestState(this);
         }
         if (npc.getNpcId() == _aquilani) {
             if (st.getState() == COMPLETED)

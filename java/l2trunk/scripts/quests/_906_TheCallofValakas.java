@@ -24,8 +24,8 @@ public final class _906_TheCallofValakas extends Quest {
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("klein_q906_07.htm")) {
-            st.takeAllItems(LavasaurusAlphaFragment);
-            st.giveItems(21895, 1); // Scroll: Valakas Call
+            st.takeItems(LavasaurusAlphaFragment);
+            st.giveItems(21895); // Scroll: Valakas Call
             st.setState(COMPLETED);
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(this);
@@ -70,7 +70,7 @@ public final class _906_TheCallofValakas extends Quest {
         int cond = st.getCond();
         if (cond == 1) {
             if (npc.getNpcId() == ValakasMinion && Rnd.chance(40)) {
-                st.giveItems(LavasaurusAlphaFragment, 1);
+                st.giveItems(LavasaurusAlphaFragment);
                 st.setCond(2);
             }
         }

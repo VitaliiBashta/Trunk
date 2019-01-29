@@ -319,7 +319,7 @@ public final class _214_TrialOfScholar extends Quest {
         if (_state == CREATED) {
             if (npcId != Mirien)
                 return "noquest";
-            int class_id = st.getPlayer().getClassId().getId();
+            int class_id = st.getPlayer().getClassId().id();
             if (class_id != 0x0b && class_id != 0x1a && class_id != 0x27) {
                 st.exitCurrentQuest(true);
                 return "magister_mirien_q0214_01.htm";

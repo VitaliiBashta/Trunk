@@ -59,7 +59,7 @@ public final class WyvernManagerInstance extends NpcInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
         if (!validateCondition(player)) {
             NpcHtmlMessage html = new NpcHtmlMessage(player, this);
             html.setFile("wyvern/lord_only.htm");

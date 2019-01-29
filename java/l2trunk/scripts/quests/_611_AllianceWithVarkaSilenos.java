@@ -89,11 +89,11 @@ public class _611_AllianceWithVarkaSilenos extends Quest {
     }
 
     private static void takeAllMarks(QuestState st) {
-        st.takeItems(MARK_OF_VARKA_ALLIANCE1, -1);
-        st.takeItems(MARK_OF_VARKA_ALLIANCE2, -1);
-        st.takeItems(MARK_OF_VARKA_ALLIANCE3, -1);
-        st.takeItems(MARK_OF_VARKA_ALLIANCE4, -1);
-        st.takeItems(MARK_OF_VARKA_ALLIANCE5, -1);
+        st.takeItems(MARK_OF_VARKA_ALLIANCE1);
+        st.takeItems(MARK_OF_VARKA_ALLIANCE2);
+        st.takeItems(MARK_OF_VARKA_ALLIANCE3);
+        st.takeItems(MARK_OF_VARKA_ALLIANCE4);
+        st.takeItems(MARK_OF_VARKA_ALLIANCE5);
     }
 
     private static void checkMarks(QuestState st) {
@@ -158,27 +158,27 @@ public class _611_AllianceWithVarkaSilenos extends Quest {
         int cond = st.getCond();
 
         if (event.equalsIgnoreCase("herald_naran_q0611_12.htm") && cond == 1 && CheckNextLevel(st, 100, 0, 0, 0, true)) {
-            st.giveItems(MARK_OF_VARKA_ALLIANCE1, 1);
+            st.giveItems(MARK_OF_VARKA_ALLIANCE1);
             st.setCond(2);
             st.getPlayer().updateKetraVarka();
             st.playSound(SOUND_MIDDLE);
         } else if (event.equalsIgnoreCase("herald_naran_q0611_15.htm") && cond == 2 && CheckNextLevel(st, 200, 100, 0, 0, true)) {
-            st.giveItems(MARK_OF_VARKA_ALLIANCE2, 1);
+            st.giveItems(MARK_OF_VARKA_ALLIANCE2);
             st.setCond(3);
             st.getPlayer().updateKetraVarka();
             st.playSound(SOUND_MIDDLE);
         } else if (event.equalsIgnoreCase("herald_naran_q0611_18.htm") && cond == 3 && CheckNextLevel(st, 300, 200, 100, 0, true)) {
-            st.giveItems(MARK_OF_VARKA_ALLIANCE3, 1);
+            st.giveItems(MARK_OF_VARKA_ALLIANCE3);
             st.setCond(4);
             st.getPlayer().updateKetraVarka();
             st.playSound(SOUND_MIDDLE);
         } else if (event.equalsIgnoreCase("herald_naran_q0611_21.htm") && cond == 4 && CheckNextLevel(st, 300, 300, 200, TOTEM_OF_VALOR, true)) {
-            st.giveItems(MARK_OF_VARKA_ALLIANCE4, 1);
+            st.giveItems(MARK_OF_VARKA_ALLIANCE4);
             st.setCond(5);
             st.getPlayer().updateKetraVarka();
             st.playSound(SOUND_MIDDLE);
         } else if (event.equalsIgnoreCase("herald_naran_q0611_23.htm") && cond == 5 && CheckNextLevel(st, 400, 400, 200, TOTEM_OF_WISDOM, true)) {
-            st.giveItems(MARK_OF_VARKA_ALLIANCE5, 1);
+            st.giveItems(MARK_OF_VARKA_ALLIANCE5);
             st.setCond(6);
             st.getPlayer().updateKetraVarka();
             st.playSound(SOUND_MIDDLE);

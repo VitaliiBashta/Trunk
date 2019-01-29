@@ -61,7 +61,7 @@ public final class CareerManager implements ScriptFile, ICommunityBoardHandler {
 
         if (level >= 76 && jobLevel == 3 && Config.ALLOW_CLASS_MASTERS_LIST.contains(jobLevel)) {
             for (ClassId cid : ClassId.values()) {
-                if (cid.getId() != newClassId)
+                if (cid.id != newClassId)
                     continue;
 
                 if (cid == ClassId.inspector)
@@ -147,7 +147,7 @@ public final class CareerManager implements ScriptFile, ICommunityBoardHandler {
                     if (cid == ClassId.inspector)
                         continue;
                     if (cid.childOf(classId) && cid.level() == classId.level() + 1)
-                        html.append("<td><center><button value=\"").append(cid.name()).append("\" action=\"bypass _bbscareer;classmaster;change_class;").append(cid.getId()).append(";").append(Config.CLASS_MASTERS_PRICE_LIST[jobLevel]).append("\" width=150 height=25 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></center></td>");
+                        html.append("<td><center><button value=\"").append(cid.name()).append("\" action=\"bypass _bbscareer;classmaster;change_class;").append(cid.id()).append(";").append(Config.CLASS_MASTERS_PRICE_LIST[jobLevel]).append("\" width=150 height=25 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></center></td>");
 
                 }
                 html.append("</tr></table></center>");

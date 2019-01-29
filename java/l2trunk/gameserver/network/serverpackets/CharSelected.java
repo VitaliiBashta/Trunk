@@ -38,7 +38,7 @@ public class CharSelected extends L2GameServerPacket {
         clan_id = cha.getClanId();
         sex = cha.isMale()?1:0;
         race = cha.getRace().ordinal();
-        class_id = cha.getClassId().getId();
+        class_id = cha.getClassId().id();
         _loc = cha.getLoc();
         curHp = cha.getCurrentHp();
         curMp = cha.getCurrentMp();

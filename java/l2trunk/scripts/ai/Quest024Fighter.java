@@ -17,7 +17,6 @@ public final class Quest024Fighter extends Fighter {
     @Override
     public boolean thinkActive() {
         Quest q = QuestManager.getQuest(_024_InhabitantsOfTheForestOfTheDead.class);
-        if (q != null)
             World.getAroundPlayers(getActor(), 300, 200)
                     .map(player -> player.getQuestState(_024_InhabitantsOfTheForestOfTheDead.class))
                     .filter(Objects::nonNull)

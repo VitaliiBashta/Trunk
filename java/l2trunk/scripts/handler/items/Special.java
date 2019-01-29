@@ -420,9 +420,7 @@ public final class Special extends SimpleItemHandler implements ScriptFile {
         if (player.getLevel() >= 82 && qs == null) {
             useItem(player, 15537, 1);
             Functions.addItem(player, 15538, 1, "use15537");
-            Quest q = QuestManager.getQuest(464);
-            QuestState st = player.getQuestState(q.getClass());
-            st = q.newQuestState(player, Quest.CREATED);
+            QuestState st = QuestManager.getQuest(_464_Oath.class).newQuestState(player, Quest.CREATED);
             st.setState(Quest.STARTED);
             st.setCond(1);
         } else {

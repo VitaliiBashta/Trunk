@@ -10,6 +10,7 @@ import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.scripts.bosses.FourSepulchersManager;
 import l2trunk.scripts.bosses.FourSepulchersSpawn;
+import l2trunk.scripts.quests._620_FourGoblets;
 
 import java.util.concurrent.Future;
 
@@ -44,7 +45,7 @@ public final class SepulcherRaidInstance extends RaidBossInstance {
     }
 
     private void giveCup(Player player) {
-        String questId = FourSepulchersManager.QUEST_ID;
+        Class<_620_FourGoblets> questId = FourSepulchersManager.FOUR_GOBLETS;
         int cupId = 0;
         int oldBrooch = 7262;
 

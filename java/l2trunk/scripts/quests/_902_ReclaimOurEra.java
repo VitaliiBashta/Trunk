@@ -31,20 +31,23 @@ public final class _902_ReclaimOurEra extends Quest {
             st.setState(STARTED);
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("mathias_q902_05.htm")) {
+        } else if ("mathias_q902_05.htm".equalsIgnoreCase(event)) {
             st.setCond(2);
-        } else if (event.equalsIgnoreCase("mathias_q902_06.htm")) {
+        } else if ("mathias_q902_06.htm".equalsIgnoreCase(event)) {
             st.setCond(3);
-        } else if (event.equalsIgnoreCase("mathias_q902_07.htm")) {
+        } else if ("mathias_q902_07.htm".equalsIgnoreCase(event)) {
             st.setCond(4);
-        } else if (event.equalsIgnoreCase("mathias_q902_09.htm")) {
-            if (st.takeAllItems(ShatteredBones) > 0) {
-                st.giveItems(21750, 1);
+        } else if ("mathias_q902_09.htm".equalsIgnoreCase(event)) {
+            if (st.getQuestItemsCount(ShatteredBones) > 0) {
+                st.takeItems(ShatteredBones);
+                st.giveItems(21750);
                 st.giveItems(ADENA_ID, 134038);
-            } else if (st.takeAllItems(CannibalisticStakatoLeaderClaw) > 0) {
+            } else if (st.getQuestItemsCount(CannibalisticStakatoLeaderClaw) > 0) {
+                st.takeItems(CannibalisticStakatoLeaderClaw);
                 st.giveItems(21750, 3);
                 st.giveItems(ADENA_ID, 210119);
-            } else if (st.takeAllItems(AnaisScroll) > 0) {
+            } else if (st.getQuestItemsCount(AnaisScroll) > 0) {
+                st.takeItems(AnaisScroll);
                 st.giveItems(21750, 3);
                 st.giveItems(ADENA_ID, 348155);
             }

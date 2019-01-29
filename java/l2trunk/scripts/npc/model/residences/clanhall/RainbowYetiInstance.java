@@ -138,7 +138,7 @@ public final class RainbowYetiInstance extends NpcInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
         showChatWindow(player, "residence2/clanhall/watering_manager001.htm");
     }
 

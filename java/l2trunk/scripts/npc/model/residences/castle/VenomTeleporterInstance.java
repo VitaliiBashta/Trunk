@@ -25,7 +25,7 @@ public class VenomTeleporterInstance extends NpcInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
         showChatWindow(player, "residence2/castle/rune_massymore_teleporter001.htm");
     }
 }

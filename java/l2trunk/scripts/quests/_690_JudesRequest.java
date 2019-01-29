@@ -134,7 +134,7 @@ public final class _690_JudesRequest extends Quest {
             return null;
 
         if (player != null) {
-            QuestState sts = player.getQuestState(st.getQuest().getName());
+            QuestState sts = player.getQuestState(st.getQuest());
             if (sts != null && Rnd.chance(EVIL_WEAPON_CHANCE)) {
                 st.giveItems(EVIL_WEAPON, 1);
                 st.playSound(SOUND_ITEMGET);

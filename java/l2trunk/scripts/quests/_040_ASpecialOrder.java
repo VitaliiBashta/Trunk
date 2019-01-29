@@ -74,13 +74,13 @@ public final class _040_ASpecialOrder extends Quest {
             else if (cond == 2 || cond == 3 || cond == 5 || cond == 6)
                 htmltext = "Helvetia-whereismyfish.htm";
             else if (cond == 4) {
-                st.takeAllItems(FishChest);
-                st.giveItems(WondrousCubic, 1, false);
+                st.takeItems(FishChest);
+                st.giveItems(WondrousCubic);
                 st.exitCurrentQuest(false);
                 htmltext = "Helvetia-finish.htm";
             } else if (cond == 7) {
-                st.takeAllItems(SeedJar);
-                st.giveItems(WondrousCubic, 1, false);
+                st.takeItems(SeedJar);
+                st.giveItems(WondrousCubic);
                 st.exitCurrentQuest(false);
                 htmltext = "Helvetia-finish.htm";
             }

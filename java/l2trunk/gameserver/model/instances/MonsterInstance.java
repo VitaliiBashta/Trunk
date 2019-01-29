@@ -305,7 +305,7 @@ public class MonsterInstance extends NpcInstance {
                     if (isRaid() || quest.getParty() == Quest.PARTY_ALL) // если цель рейд или квест для всей пати награждаем всех участников
                     {
                         for (Player pl : players) {
-                            QuestState qs = pl.getQuestState(quest.getName());
+                            QuestState qs = pl.getQuestState(quest);
                             if (qs != null && !qs.isCompleted())
                                 quest.notifyKill(this, qs);
                         }
@@ -313,7 +313,7 @@ public class MonsterInstance extends NpcInstance {
                     } else { // иначе выбираем одного
                         List<Player> interested = new ArrayList<>(players.size());
                         for (Player pl : players) {
-                            QuestState qs = pl.getQuestState(quest.getName());
+                            QuestState qs = pl.getQuestState(quest);
                             if (qs != null && !qs.isCompleted()) // из тех, у кого взят квест
                                 interested.add(pl);
                         }
@@ -327,7 +327,7 @@ public class MonsterInstance extends NpcInstance {
                     }
 
                 if (toReward != null) {
-                    QuestState qs = toReward.getQuestState(quest.getName());
+                    QuestState qs = toReward.getQuestState(quest);
                     if (qs != null && !qs.isCompleted())
                         quest.notifyKill(this, qs);
                 }

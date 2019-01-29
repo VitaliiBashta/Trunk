@@ -179,100 +179,100 @@ public final class _234_FatesWhisper extends Quest {
         String htmltext = event;
         int oldweapon = 0;
         int newweapon = 0;
-        if (event.equalsIgnoreCase("31002-03.htm")) {
+        if ("31002-03.htm".equalsIgnoreCase(event)) {
             st.setCond(COND1);
             st.setState(STARTED);
-        } else if (event.equalsIgnoreCase("31002-05b.htm")) {
+        } else if ("31002-05b.htm".equalsIgnoreCase(event)) {
             st.takeItems(REIRIAS_SOUL_ORB, -1);
             st.setCond(COND2);
-        } else if (event.equalsIgnoreCase("31030-02.htm"))
-            st.giveItems(HALLATES_INFERNIUM_SCEPTER, 1, false);
+        } else if ("31030-02.htm".equalsIgnoreCase(event))
+            st.giveItems(HALLATES_INFERNIUM_SCEPTER);
         else if (event.equalsIgnoreCase("31028-02.htm"))
-            st.giveItems(KERNONS_INFERNIUM_SCEPTER, 1, false);
+            st.giveItems(KERNONS_INFERNIUM_SCEPTER);
         else if (event.equalsIgnoreCase("31029-02.htm"))
-            st.giveItems(GOLCONDAS_INFERNIUM_SCEPTER, 1, false);
-        else if (event.equalsIgnoreCase("31002-06a.htm")) {
-            st.takeItems(HALLATES_INFERNIUM_SCEPTER, -1);
-            st.takeItems(KERNONS_INFERNIUM_SCEPTER, -1);
-            st.takeItems(GOLCONDAS_INFERNIUM_SCEPTER, -1);
+            st.giveItems(GOLCONDAS_INFERNIUM_SCEPTER);
+        else if ("31002-06a.htm".equalsIgnoreCase(event)) {
+            st.takeItems(HALLATES_INFERNIUM_SCEPTER);
+            st.takeItems(KERNONS_INFERNIUM_SCEPTER);
+            st.takeItems(GOLCONDAS_INFERNIUM_SCEPTER);
             st.setCond(COND3);
-        } else if (event.equalsIgnoreCase("30182-01c.htm")) {
-            st.takeItems(INFERNIUM_VARNISH, -1);
-            st.giveItems(INFERNIUM_VARNISH, 1, false);
-        } else if (event.equalsIgnoreCase("31002-07a.htm"))
+        } else if ("30182-01c.htm".equalsIgnoreCase(event)) {
+            st.takeItems(INFERNIUM_VARNISH);
+            st.giveItems(INFERNIUM_VARNISH);
+        } else if ("31002-07a.htm".equalsIgnoreCase(event))
             st.setCond(COND4);
-        else if (event.equalsIgnoreCase("31002-08a.htm")) {
-            st.takeItems(REORINS_HAMMER, -1);
+        else if ("31002-08a.htm".equalsIgnoreCase(event)) {
+            st.takeItems(REORINS_HAMMER);
             st.setCond(COND5);
-        } else if (event.equalsIgnoreCase("30178-01a.htm"))
+        } else if ("30178-01a.htm".equalsIgnoreCase(event))
             st.setCond(COND6);
-        else if (event.equalsIgnoreCase("30833-01a.htm"))
+        else if ("30833-01a.htm".equalsIgnoreCase(event))
             return Config.ALT_ALLOW_SUBCLASS_WITHOUT_BAIUM ? "30833-01a.htm" : "30833-01n.htm";
-        else if (event.equalsIgnoreCase("30833-01b.htm")) {
+        else if ("30833-01b.htm".equalsIgnoreCase(event)) {
             st.setCond(COND7);
-            st.giveItems(PIPETTE_KNIFE, 1, false);
-        } else if (event.equalsIgnoreCase("30833-01c.htm")) {
+            st.giveItems(PIPETTE_KNIFE);
+        } else if ("30833-01c.htm".equalsIgnoreCase(event)) {
             st.setCond(COND8);
             st.giveItems(WhiteCloth, 30, false);
-        } else if (event.equalsIgnoreCase("Damaskus.htm"))
+        } else if ("Damaskus.htm".equalsIgnoreCase(event))
             oldweapon = Damaskus;
-        else if (event.equalsIgnoreCase("Samurai.htm"))
+        else if ("Samurai.htm".equalsIgnoreCase(event))
             oldweapon = Samurai;
-        else if (event.equalsIgnoreCase("BOP.htm"))
+        else if ("BOP.htm".equalsIgnoreCase(event))
             oldweapon = BOP;
-        else if (event.equalsIgnoreCase("Lance.htm"))
+        else if ("Lance.htm".equalsIgnoreCase(event))
             oldweapon = Lance;
-        else if (event.equalsIgnoreCase("Battle.htm"))
+        else if ("Battle.htm".equalsIgnoreCase(event))
             oldweapon = Battle;
-        else if (event.equalsIgnoreCase("Staff.htm"))
+        else if ("Staff.htm".equalsIgnoreCase(event))
             oldweapon = Staff;
-        else if (event.equalsIgnoreCase("Demons.htm"))
+        else if ("Demons.htm".equalsIgnoreCase(event))
             oldweapon = Demons;
-        else if (event.equalsIgnoreCase("Bellion.htm"))
+        else if ("Bellion.htm".equalsIgnoreCase(event))
             oldweapon = Bellion;
-        else if (event.equalsIgnoreCase("Glory.htm"))
+        else if ("Glory.htm".equalsIgnoreCase(event))
             oldweapon = Glory;
-        else if (event.equalsIgnoreCase("WizTear.htm"))
+        else if ("WizTear.htm".equalsIgnoreCase(event))
             oldweapon = WizTear;
-        else if (event.equalsIgnoreCase("GuardianSword.htm"))
+        else if ("GuardianSword.htm".equalsIgnoreCase(event))
             oldweapon = GuardianSword;
-        else if (event.equalsIgnoreCase("Tallum"))
+        else if ("Tallum".equalsIgnoreCase(event))
             newweapon = Tallum;
-        else if (event.equalsIgnoreCase("Infernal"))
+        else if ("Infernal".equalsIgnoreCase(event))
             newweapon = Infernal;
-        else if (event.equalsIgnoreCase("Carnage"))
+        else if ("Carnage".equalsIgnoreCase(event))
             newweapon = Carnage;
-        else if (event.equalsIgnoreCase("Halberd"))
+        else if ("Halberd".equalsIgnoreCase(event))
             newweapon = Halberd;
-        else if (event.equalsIgnoreCase("Elemental"))
+        else if ("Elemental".equalsIgnoreCase(event))
             newweapon = Elemental;
-        else if (event.equalsIgnoreCase("Dasparion"))
+        else if ("Dasparion".equalsIgnoreCase(event))
             newweapon = Dasparion;
-        else if (event.equalsIgnoreCase("Spiritual"))
+        else if ("Spiritual".equalsIgnoreCase(event))
             newweapon = Spiritual;
-        else if (event.equalsIgnoreCase("Bloody"))
+        else if ("Bloody".equalsIgnoreCase(event))
             newweapon = Bloody;
-        else if (event.equalsIgnoreCase("Blood"))
+        else if ("Blood".equalsIgnoreCase(event))
             newweapon = Blood;
-        else if (event.equalsIgnoreCase("Meteor"))
+        else if ("Meteor".equalsIgnoreCase(event))
             newweapon = Meteor;
-        else if (event.equalsIgnoreCase("Destroyer"))
+        else if ("Destroyer".equalsIgnoreCase(event))
             newweapon = Destroyer;
-        else if (event.equalsIgnoreCase("Keshanberk"))
+        else if ("Keshanberk".equalsIgnoreCase(event))
             newweapon = Keshanberk;
-        else if (event.equalsIgnoreCase("CABRIOCOFFER_Fail")) {
+        else if ("CABRIOCOFFER_Fail".equalsIgnoreCase(event)) {
             NpcInstance isQuest = GameObjectsStorage.getByNpcId(CABRIOCOFFER);
             if (isQuest != null)
                 isQuest.deleteMe();
-        } else if (event.equalsIgnoreCase("CHEST_HALLATE_Fail")) {
+        } else if ("CHEST_HALLATE_Fail".equalsIgnoreCase(event)) {
             NpcInstance isQuest = GameObjectsStorage.getByNpcId(CHEST_HALLATE);
             if (isQuest != null)
                 isQuest.deleteMe();
-        } else if (event.equalsIgnoreCase("CHEST_KERNON_Fail")) {
+        } else if ("CHEST_KERNON_Fail".equalsIgnoreCase(event)) {
             NpcInstance isQuest = GameObjectsStorage.getByNpcId(CHEST_KERNON);
             if (isQuest != null)
                 isQuest.deleteMe();
-        } else if (event.equalsIgnoreCase("CHEST_GOLKONDA_Fail")) {
+        } else if ("CHEST_GOLKONDA_Fail".equalsIgnoreCase(event)) {
             NpcInstance isQuest = GameObjectsStorage.getByNpcId(CHEST_GOLKONDA);
             if (isQuest != null)
                 isQuest.deleteMe();
@@ -296,8 +296,8 @@ public final class _234_FatesWhisper extends Quest {
                     break;
                 }
             if (st.getPlayer().getInventory().destroyItem(itemtotake, 1L, "_234_FatesWhisper")) {
-                st.giveItems(newweapon, 1, false);
-                st.giveItems(STAR_OF_DESTINY, 1, false);
+                st.giveItems(newweapon);
+                st.giveItems(STAR_OF_DESTINY);
                 st.unset("cond");
                 st.unset("oldweapon");
                 st.playSound(SOUND_FINISH);
@@ -341,7 +341,7 @@ public final class _234_FatesWhisper extends Quest {
             else if (cond == COND12)
                 htmltext = "a-grade.htm";
         } else if (npcId == CABRIOCOFFER && cond == COND1 && st.getQuestItemsCount(REIRIAS_SOUL_ORB) == 0) {
-            st.giveItems(REIRIAS_SOUL_ORB, 1, false);
+            st.giveItems(REIRIAS_SOUL_ORB);
             htmltext = "31027-01.htm";
         } else if (npcId == CHEST_HALLATE && cond == COND2 && st.getQuestItemsCount(HALLATES_INFERNIUM_SCEPTER) == 0)
             htmltext = "31030-01.htm";
@@ -352,7 +352,7 @@ public final class _234_FatesWhisper extends Quest {
         else if (npcId == CLIFF && cond == COND3 && st.getQuestItemsCount(INFERNIUM_VARNISH) == 0)
             htmltext = "30182-01.htm";
         else if (npcId == FERRIS && cond == COND4 && st.getQuestItemsCount(REORINS_HAMMER) == 0) {
-            st.giveItems(REORINS_HAMMER, 1, false);
+            st.giveItems(REORINS_HAMMER);
             htmltext = "30847-01.htm";
         } else if (npcId == ZENKIN && st.getQuestItemsCount(REORINS_MOLD) == 0 && cond == COND5)
             htmltext = "30178-01.htm";
@@ -361,22 +361,22 @@ public final class _234_FatesWhisper extends Quest {
                 htmltext = "30833-01.htm";
             else if ((cond == COND7 || cond == COND9) && st.getQuestItemsCount(RED_PIPETTE_KNIFE) == 1) {
                 st.setCond(COND10);
-                st.takeItems(RED_PIPETTE_KNIFE, -1);
-                st.giveItems(REORINS_MOLD, 1, false);
+                st.takeItems(RED_PIPETTE_KNIFE);
+                st.giveItems(REORINS_MOLD);
                 htmltext = "30833-03.htm";
             } else if (cond == COND9 || cond == COND8)
                 if (st.getQuestItemsCount(BLOODED_FABRIC) >= 30) {
                     st.setCond(COND10);
                     st.takeItems(BLOODED_FABRIC, 30);
-                    st.giveItems(REORINS_MOLD, 1, false);
+                    st.giveItems(REORINS_MOLD);
                     htmltext = "30833-03.htm";
                 } else if (st.getQuestItemsCount(BloodStainedCloth, BLOODED_FABRIC) >= 30) {
                     st.setCond(COND10);
                     long items1 = st.takeItems(BloodStainedCloth, -1);
                     if (items1 < 30)
                         st.takeItems(BLOODED_FABRIC, 30 - items1);
-                    st.takeAllItems(WhiteCloth);
-                    st.giveItems(REORINS_MOLD, 1, false);
+                    st.takeItems(WhiteCloth);
+                    st.giveItems(REORINS_MOLD);
                     htmltext = "30833-03.htm";
                 }
 
@@ -422,9 +422,9 @@ public final class _234_FatesWhisper extends Quest {
         if (cond == COND8 && (npcId == GUARDIAN_ANGEL || npcId == SEAL_ANGEL)) {
             long count = st.getQuestItemsCount(BloodStainedCloth);
             if (st.getQuestItemsCount(WhiteCloth) > 0 && count < 30 && Rnd.chance(33)) {
-                st.giveItems(BloodStainedCloth, 1);
+                st.giveItems(BloodStainedCloth);
                 if (count >= 29) {
-                    st.takeItems(WhiteCloth, -1);
+                    st.takeItems(WhiteCloth);
                     st.setCond(COND9);
                 } else
                     st.takeItems(WhiteCloth, 1);

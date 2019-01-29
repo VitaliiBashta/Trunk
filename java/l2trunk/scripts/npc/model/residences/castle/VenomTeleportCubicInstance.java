@@ -25,7 +25,7 @@ public final class VenomTeleportCubicInstance extends NpcInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
         showChatWindow(player, "residence2/castle/teleport_cube_benom001.htm");
     }
 }

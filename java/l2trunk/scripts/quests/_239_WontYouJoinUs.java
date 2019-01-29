@@ -30,7 +30,7 @@ public final class _239_WontYouJoinUs extends Quest {
             st.setState(STARTED);
         }
         if (event.equalsIgnoreCase("32643-07.htm")) {
-            st.takeAllItems(DestroyedMachinePiece);
+            st.takeItems(DestroyedMachinePiece);
             st.setCond(3);
         }
         return event;
@@ -59,8 +59,8 @@ public final class _239_WontYouJoinUs extends Quest {
             else if (cond == 3)
                 return "32643-08.htm";
             else if (cond == 4) {
-                st.takeAllItems(CertificateOfSupport);
-                st.takeAllItems(EnchantedGolemFragment);
+                st.takeItems(CertificateOfSupport);
+                st.takeItems(EnchantedGolemFragment);
                 st.giveItems(ADENA_ID, 283346);
                 st.addExpAndSp(1319736, 103553);
                 st.setState(COMPLETED);

@@ -55,13 +55,13 @@ public final class Spellbooks extends ScriptItemHandler implements ScriptFile {
         boolean alreadyHas = true;
         boolean good = true;
         for (SkillLearn learn : list) {
-            if (player.getSkillLevel(learn.getId()) != learn.getLevel()) {
+            if (player.getSkillLevel(learn.id()) != learn.level()) {
                 alreadyHas = false;
                 break;
             }
         }
         for (SkillLearn learn2 : list) {
-            if (item.getItemId() == 13728 && learn2.getItemId() != 13728) {
+            if (item.getItemId() == 13728 && learn2.itemId() != 13728) {
                 good = false;
                 break;
             }
@@ -91,7 +91,7 @@ public final class Spellbooks extends ScriptItemHandler implements ScriptFile {
             return false;
 
         for (SkillLearn skillLearn : list) {
-            Skill skill = SkillTable.INSTANCE.getInfo(skillLearn.getId(), skillLearn.getLevel());
+            Skill skill = SkillTable.INSTANCE.getInfo(skillLearn.id(), skillLearn.level());
             if (skill == null)
                 continue;
             player.sendPacket(new SystemMessage2(SystemMsg.YOU_HAVE_EARNED_S1_SKILL).addSkillName(skill.id, skill.level));

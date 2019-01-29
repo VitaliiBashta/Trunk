@@ -62,7 +62,7 @@ public final class ClassMasterInstance extends MerchantInstance {
                 if (cid == ClassId.inspector)
                     continue;
                 if (cid.childOf(classId) && cid.getLevel() == classId.getLevel() + 1)
-                    html.append("<a action=\"bypass -h npc_").append(getObjectId()).append("_change_class ").append(cid.getId()).append(" ").append(Config.CLASS_MASTERS_PRICE_LIST[jobLevel]).append("\">").append(HtmlUtils.htmlClassName(cid.getId())).append("</a><br>");
+                    html.append("<a action=\"bypass -h npc_").append(getObjectId()).append("_change_class ").append(cid.id()).append(" ").append(Config.CLASS_MASTERS_PRICE_LIST[jobLevel]).append("\">").append(HtmlUtils.htmlClassName(cid.id())).append("</a><br>");
             }
             player.sendPacket(new NpcHtmlMessage(player, this).setHtml(html.toString()));
         } else
@@ -87,7 +87,7 @@ public final class ClassMasterInstance extends MerchantInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
         NpcHtmlMessage msg = new NpcHtmlMessage(player, this);
         msg.setFile("custom/31860.htm");
         msg.replace("%classmaster%", makeMessage(player));

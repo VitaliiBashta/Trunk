@@ -32,8 +32,8 @@ public final class _905_RefinedDragonBlood extends Quest {
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if (event.startsWith("sepsoul_q905_08.htm")) {
-            st.takeAllItems(AntharasDragonsBlue);
-            st.takeAllItems(AntharasDragonsRed);
+            st.takeItems(AntharasDragonsBlue);
+            st.takeItems(AntharasDragonsRed);
 
             StringTokenizer tokenizer = new StringTokenizer(event);
             tokenizer.nextToken();

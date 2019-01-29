@@ -14,23 +14,23 @@ public final class _252_GoodSmell extends Quest {
     private static final int SelChef = 18908;
     private static final int SelMahumDiary = 15500;
     private static final int SelMahumCookbookPage = 15501;
-
+    private static final List<Integer> trainingNotes = List.of(SelMahumDiary, SelMahumCookbookPage);
     public _252_GoodSmell() {
         super(false);
         addStartNpc(GuardStan);
         addKillId(SelMahums);
         addKillId(SelChef);
-        addQuestItem(SelMahumDiary, SelMahumCookbookPage);
+        addQuestItem(trainingNotes);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("stan_q252_03.htm")) {
+        if ("stan_q252_03.htm".equalsIgnoreCase(event)) {
             st.setState(STARTED);
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("stan_q252_06.htm")) {
-            st.takeAllItems(SelMahumDiary, SelMahumCookbookPage);
+        } else if ("stan_q252_06.htm".equalsIgnoreCase(event)) {
+            st.takeItems(trainingNotes);
             st.setState(COMPLETED);
             st.giveItems(57, 147656);
             st.addExpAndSp(716238, 78324);

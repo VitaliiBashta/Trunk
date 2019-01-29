@@ -4,7 +4,6 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _066_CertifiedArbalester extends Quest {
     //NPC
@@ -290,7 +289,7 @@ public final class _066_CertifiedArbalester extends Quest {
                 htmltext = "32201-00.htm";
                 st.exitCurrentQuest(true);
             } else if (cond == 0)
-                if (st.getPlayer().getClassId().getId() == 0x7e) {
+                if (st.getPlayer().getClassId().id() == 0x7e) {
                     if (st.getPlayer().getLevel() >= 39) {
                         htmltext = "32201-03.htm";
                         st.setCond(1);

@@ -26,7 +26,7 @@ public final class CharTemplateHolder {
     }
 
     public static PlayerTemplate getTemplate(ClassId classId, boolean female) {
-        return getTemplate(classId.getId(), female);
+        return getTemplate(classId.id(), female);
     }
 
     public static PlayerTemplate getTemplate(int classId, boolean female) {

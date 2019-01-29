@@ -165,7 +165,7 @@ public final class _508_TheClansReputation extends Quest {
             return null;
         if (!st.getPlayer().equals(clan_leader) && clan_leader.getDistance(npc) > Config.ALT_PARTY_DISTRIBUTION_RANGE)
             return null;
-        QuestState qs = clan_leader.getQuestState(getName());
+        QuestState qs = clan_leader.getQuestState(this);
         if (qs == null || !qs.isStarted() || qs.getCond() != 1)
             return null;
 

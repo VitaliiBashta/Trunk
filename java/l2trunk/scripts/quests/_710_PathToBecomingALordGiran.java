@@ -97,13 +97,13 @@ public final class _710_PathToBecomingALordGiran extends Quest {
             else if (cond == 3 || cond == 4)
                 htmltext = "gesto_q710_04.htm";
             else if (cond == 5) {
-                st.takeAllItems(FreightChest);
+                st.takeItems(FreightChest);
                 st.setCond(7);
                 htmltext = "gesto_q710_05.htm";
             } else if (cond == 7)
                 htmltext = "gesto_q710_06.htm";
             else if (cond == 8) {
-                st.takeAllItems(GestoBox);
+                st.takeItems(GestoBox);
                 st.setCond(9);
                 htmltext = "gesto_q710_07.htm";
             } else if (cond == 9)

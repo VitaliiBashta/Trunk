@@ -136,7 +136,7 @@ public abstract class SagasSuperclass extends Quest {
             if (st != null) {
                 int[] qc = QuestClass[q - 67];
                 for (int c : qc)
-                    if (player.getClassId().getId() == c)
+                    if (player.getClassId().id == c)
                         return st;
             }
         }
@@ -287,12 +287,12 @@ public abstract class SagasSuperclass extends Quest {
         synchronized (Spawn_List) {
             for (Spawn spawn : Spawn_List)
                 if (spawn.charStoreId == charStoredId && spawn.npcStoreId == npcStoredId)
-                    return player.getQuestState(getName());
+                    return player.getQuestState(this);
 
             for (Spawn spawn : Spawn_List)
                 if (spawn.npcStoreId == npcStoredId) {
                     player = GameObjectsStorage.getAsPlayer(spawn.charStoreId);
-                    return player == null ? null : player.getQuestState(getName());
+                    return player == null ? null : player.getQuestState(this); //TODO не уверен ?
                 }
         }
 
@@ -326,10 +326,10 @@ public abstract class SagasSuperclass extends Quest {
         } else if (event.equalsIgnoreCase("0-2")) {
             if (player.getLevel() >= 76) {
                 htmltext = "0-07.htm";
-                st.takeItems(Items.get(10), -1);
+                st.takeItems(Items.get(10));
                 FinishQuest(st, player);
             } else {
-                st.takeItems(Items.get(10), -1);
+                st.takeItems(Items.get(10));
                 st.playSound(SOUND_MIDDLE);
                 st.setCond(20);
                 htmltext = "0-08.htm";
@@ -532,7 +532,7 @@ public abstract class SagasSuperclass extends Quest {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         Player player = st.getPlayer();
-        if (player.getClassId().getId() != getPrevClass(player)) {
+        if (player.getClassId().id() != getPrevClass(player)) {
             st.exitCurrentQuest(true);
             return htmltext;
         }
@@ -650,7 +650,7 @@ public abstract class SagasSuperclass extends Quest {
     @Override
     public String onFirstTalk(NpcInstance npc, Player player) {
         String htmltext = "";
-        QuestState st = player.getQuestState(getName());
+        QuestState st = player.getQuestState(this);
         if (st == null)
             return htmltext;
         int npcId = npc.getNpcId();

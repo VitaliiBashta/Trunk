@@ -3,7 +3,6 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _413_PathToShillienOracle extends Quest {
     //npc
@@ -68,16 +67,16 @@ public final class _413_PathToShillienOracle extends Quest {
             st.playSound(SOUND_ACCEPT);
             st.giveItems(SIDRAS_LETTER1_ID, 1);
         } else if (event.equalsIgnoreCase("413_1")) {
-            if (st.getPlayer().getLevel() >= 18 && st.getPlayer().getClassId().getId() == 0x26 && st.getQuestItemsCount(ORB_OF_ABYSS_ID) < 1)
+            if (st.getPlayer().getLevel() >= 18 && st.getPlayer().getClassId().id() == 0x26 && st.getQuestItemsCount(ORB_OF_ABYSS_ID) < 1)
                 htmltext = "master_sidra_q0413_05.htm";
-            else if (st.getPlayer().getClassId().getId() != 0x26) {
-                if (st.getPlayer().getClassId().getId() == 0x2a)
+            else if (st.getPlayer().getClassId().id() != 0x26) {
+                if (st.getPlayer().getClassId().id() == 0x2a)
                     htmltext = "master_sidra_q0413_02a.htm";
                 else
                     htmltext = "master_sidra_q0413_03.htm";
-            } else if (st.getPlayer().getLevel() < 18 && st.getPlayer().getClassId().getId() == 0x26)
+            } else if (st.getPlayer().getLevel() < 18 && st.getPlayer().getClassId().id() == 0x26)
                 htmltext = "master_sidra_q0413_02.htm";
-            else if (st.getPlayer().getLevel() >= 18 && st.getPlayer().getClassId().getId() == 0x26 && st.getQuestItemsCount(ORB_OF_ABYSS_ID) > 0)
+            else if (st.getPlayer().getLevel() >= 18 && st.getPlayer().getClassId().id() == 0x26 && st.getQuestItemsCount(ORB_OF_ABYSS_ID) > 0)
                 htmltext = "master_sidra_q0413_04.htm";
         } else if (event.equalsIgnoreCase("30377_1")) {
             htmltext = "magister_talbot_q0413_02.htm";

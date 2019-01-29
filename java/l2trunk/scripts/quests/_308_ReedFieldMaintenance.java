@@ -73,7 +73,8 @@ public final class _308_ReedFieldMaintenance extends Quest {
                     return "32646-00.htm";
                 return "32646-01.htm";
             } else if (cond == 1) {
-                long awaken = st.takeAllItems(AwakenMucrokianHide);
+                long awaken = st.getQuestItemsCount(AwakenMucrokianHide);
+                st.takeItems(AwakenMucrokianHide);
                 if (awaken > 0)
                     st.giveItems(MucrokianHide, awaken * 2);
 

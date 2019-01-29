@@ -46,7 +46,7 @@ public final class KamalokaGuardInstance extends NpcInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
         if (checkForDominionWard(player))
             return;
 

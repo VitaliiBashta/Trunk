@@ -48,7 +48,7 @@ public final class _1102_Nottingale extends Quest {
 
     @Override
     public String onFirstTalk(NpcInstance npc, Player player) {
-        QuestState qs = player.getQuestState(getClass());
+        QuestState qs = player.getQuestState(this);
         if (qs == null)
             newQuestState(player, STARTED);
         return "";

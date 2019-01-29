@@ -7,7 +7,6 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.items.Inventory;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _229_TestOfWitchcraft extends Quest {
     //NPC
@@ -355,11 +354,11 @@ public final class _229_TestOfWitchcraft extends Quest {
                 htmltext = "completed";
                 st.exitCurrentQuest(true);
             } else if (cond == 0) {
-                if (st.getPlayer().getClassId().getId() == 0x0b || st.getPlayer().getClassId().getId() == 0x04 || st.getPlayer().getClassId().getId() == 0x20)
+                if (st.getPlayer().getClassId().id() == 0x0b || st.getPlayer().getClassId().id() == 0x04 || st.getPlayer().getClassId().id() == 0x20)
                     if (st.getPlayer().getLevel() < 39) {
                         htmltext = "30630-02.htm";
                         st.exitCurrentQuest(true);
-                    } else if (st.getPlayer().getClassId().getId() == 0x0b)
+                    } else if (st.getPlayer().getClassId().id() == 0x0b)
                         htmltext = "30630-03.htm";
                     else
                         htmltext = "30630-05.htm";

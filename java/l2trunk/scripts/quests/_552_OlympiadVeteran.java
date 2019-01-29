@@ -45,9 +45,9 @@ public final class _552_OlympiadVeteran extends Quest {
                         return "olympiad_operator_q0552_04.htm";
                     else if (st.getQuestItemsCount(TEAM_CERTIFICATE) > 0 && st.getQuestItemsCount(CLASS_FREE_CERTIFICATE) > 0 && st.getQuestItemsCount(CLASS_CERTIFICATE) > 0) {
                         st.giveItems(OLYMPIAD_CHEST, 3);
-                        st.takeItems(TEAM_CERTIFICATE, -1);
-                        st.takeItems(CLASS_FREE_CERTIFICATE, -1);
-                        st.takeItems(CLASS_CERTIFICATE, -1);
+                        st.takeItems(TEAM_CERTIFICATE);
+                        st.takeItems(CLASS_FREE_CERTIFICATE);
+                        st.takeItems(CLASS_CERTIFICATE);
                         st.playSound(SOUND_FINISH);
                         st.exitCurrentQuest(this);
                         return "olympiad_operator_q0552_07.htm";
@@ -62,11 +62,11 @@ public final class _552_OlympiadVeteran extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("olympiad_operator_q0552_03.htm")) {
+        if ("olympiad_operator_q0552_03.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("olympiad_operator_q0552_07.htm")) {
+        } else if ("olympiad_operator_q0552_07.htm".equalsIgnoreCase(event)) {
             int count = 0;
             if (st.getQuestItemsCount(TEAM_CERTIFICATE) > 0)
                 count++;
@@ -76,9 +76,9 @@ public final class _552_OlympiadVeteran extends Quest {
                 count++;
             if (count > 0) {
                 st.giveItems(OLYMPIAD_CHEST, count);
-                st.takeItems(TEAM_CERTIFICATE, -1);
-                st.takeItems(CLASS_FREE_CERTIFICATE, -1);
-                st.takeItems(CLASS_CERTIFICATE, -1);
+                st.takeItems(TEAM_CERTIFICATE);
+                st.takeItems(CLASS_FREE_CERTIFICATE);
+                st.takeItems(CLASS_CERTIFICATE);
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest(this);
             }

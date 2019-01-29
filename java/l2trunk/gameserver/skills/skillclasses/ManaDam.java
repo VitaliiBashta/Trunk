@@ -48,7 +48,7 @@ public final class ManaDam extends Skill {
                 target.sendMessage(activeChar.getName() + " has stolen " + (int) (mpBefore - target.getCurrentMp()) + " MP from you!");
                 activeChar.sendMessage("You have stolen " + (int) (mpBefore - target.getCurrentMp()) + " MP from " + target.getName());
 
-                getEffects(activeChar, target, activateRate() > 0, false);
+                getEffects(activeChar, target, activateRate > 0, false);
             }
         }
 

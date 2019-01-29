@@ -31,6 +31,7 @@ import l2trunk.gameserver.network.serverpackets.components.IStaticPacket;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.templates.DoorTemplate;
 import l2trunk.gameserver.utils.Location;
+import l2trunk.scripts.quests._729_ProtectTheTerritoryCatapult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -217,7 +218,7 @@ public class DominionSiegeEvent extends SiegeEvent<Dominion, SiegeClanObject> {
             sakeQuestState.setState(Quest.STARTED);
             sakeQuestState.setCond(1);
 
-            Quest protectCatapultQuest = QuestManager.getQuest("_729_ProtectTheTerritoryCatapult");
+            Quest protectCatapultQuest = QuestManager.getQuest(_729_ProtectTheTerritoryCatapult.class);
             if (protectCatapultQuest == null)
                 return;
 
@@ -226,7 +227,7 @@ public class DominionSiegeEvent extends SiegeEvent<Dominion, SiegeClanObject> {
             questState.setStateAndNotSave(Quest.STARTED);
         } else {
             for (Quest q : _runnerEvent.getBreakQuests()) {
-                QuestState questState = player.getQuestState(q.getClass());
+                QuestState questState = player.getQuestState(q);
                 if (questState != null)
                     questState.abortQuest();
             }
@@ -547,7 +548,7 @@ public class DominionSiegeEvent extends SiegeEvent<Dominion, SiegeClanObject> {
                 if (q == null)
                     return;
 
-                QuestState questState = winner.getQuestState(q.getClass());
+                QuestState questState = winner.getQuestState(q);
                 if (questState == null) {
                     questState = q.newQuestState(winner, Quest.CREATED);
                     q.notifyKill(((Player) victim), questState);

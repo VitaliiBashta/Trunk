@@ -25,7 +25,7 @@ public final class SPHeal extends Skill {
             if (target != null) {
                 target.getPlayer().addExpAndSp(0, (long) power);
 
-                getEffects(activeChar, target, activateRate() > 0, false);
+                getEffects(activeChar, target, activateRate > 0, false);
             }
 
         if (isSSPossible())

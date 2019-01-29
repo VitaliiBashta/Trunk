@@ -221,9 +221,9 @@ public final class _330_AdeptOfTaste extends Quest {
                 if (all_ingredients_count < 5)
                     return "30469_04.htm";
 
-                st.takeAllItems(Ingredient_List);
-                st.takeAllItems(ingredients);
-                st.takeAllItems(spec_ingredients);
+                st.takeItems(Ingredient_List);
+                st.takeItems(ingredients);
+                st.takeItems(spec_ingredients);
                 if (spec_ingredients_count > 3)
                     spec_ingredients_count = 3;
 
@@ -242,10 +242,10 @@ public final class _330_AdeptOfTaste extends Quest {
                 if (Jonass_Steak_Dish_count == 0 && Miriens_Review_count > 0)
                     for (int i = Miriens_Reviews.size(); i > 0; i--)
                         if (st.getQuestItemsCount(Miriens_Reviews.get(i - 1)) > 0) {
-                            st.takeAllItems(Miriens_Reviews);
+                            st.takeItems(Miriens_Reviews);
                             st.giveItems(ADENA_ID, adena_rewards[i - 1]);
                             if (rewards.get(i - 1) > 0)
-                                st.giveItems(rewards.get(i - 1), 1);
+                                st.giveItems(rewards.get(i - 1));
                             st.playSound(SOUND_FINISH);
                             st.exitCurrentQuest(true);
                             return "30469_06t" + i + ".htm";
@@ -261,7 +261,7 @@ public final class _330_AdeptOfTaste extends Quest {
                     return "30461_04.htm";
                 for (int i = Jonass_Steak_Dishes.size(); i > 0; i--)
                     if (st.getQuestItemsCount(Jonass_Steak_Dishes.get(i - 1)) > 0) {
-                        st.takeAllItems(Jonass_Steak_Dishes);
+                        st.takeItems(Jonass_Steak_Dishes);
                         st.playSound(SOUND_MIDDLE);
                         st.giveItems(Miriens_Reviews.get(i - 1));
                         return "30461_02t" + i + ".htm";

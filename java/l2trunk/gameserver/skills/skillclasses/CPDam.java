@@ -36,7 +36,7 @@ public final class CPDam extends Skill {
 
                 realTarget.reduceCurrentHp(damage, activeChar, this, true, true, false, true, false, false, true);
 
-                getEffects(activeChar, target, activateRate() > 0, false, reflected);
+                getEffects(activeChar, target, activateRate > 0, false, reflected);
             }
     }
 }

@@ -43,8 +43,8 @@ public final class _711_PathToBecomingALordInnadril extends Quest {
                 break;
             case "neurath_q711_08.htm":
                 if (isLordAvailable(2, st)) {
-                    castleOwner.getQuestState(getClass()).set("confidant", String.valueOf(st.getPlayer().getObjectId()), true);
-                    castleOwner.getQuestState(getClass()).setCond(3);
+                    castleOwner.getQuestState(this).set("confidant", String.valueOf(st.getPlayer().getObjectId()), true);
+                    castleOwner.getQuestState(this).setCond(3);
                     st.setState(STARTED);
                 } else
                     htmltext = "neurath_q711_07a.htm";
@@ -52,7 +52,7 @@ public final class _711_PathToBecomingALordInnadril extends Quest {
                 break;
             case "heine_q711_03.htm":
                 if (isLordAvailable(3, st))
-                    castleOwner.getQuestState(getClass()).setCond(4);
+                    castleOwner.getQuestState(this).setCond(4);
                 else
                     htmltext = "heine_q711_00a.htm";
                 break;
@@ -112,12 +112,12 @@ public final class _711_PathToBecomingALordInnadril extends Quest {
         } else if (npcId == IasonHeine) {
             if (st.getState() == STARTED && cond == 0) {
                 if (isLordAvailable(3, st)) {
-                    if (Integer.parseInt(castleOwner.getQuestState(this.getClass()).get("confidant")) == st.getPlayer().getObjectId())
+                    if (Integer.parseInt(castleOwner.getQuestState(this).get("confidant")) == st.getPlayer().getObjectId())
                         htmltext = "heine_q711_01.htm";
                     else
                         htmltext = "heine_q711_00.htm";
                 } else if (isLordAvailable(4, st)) {
-                    if (Integer.parseInt(castleOwner.getQuestState(this.getClass()).get("confidant")) == st.getPlayer().getObjectId())
+                    if (Integer.parseInt(castleOwner.getQuestState(this).get("confidant")) == st.getPlayer().getObjectId())
                         htmltext = "heine_q711_03.htm";
                     else
                         htmltext = "heine_q711_00.htm";

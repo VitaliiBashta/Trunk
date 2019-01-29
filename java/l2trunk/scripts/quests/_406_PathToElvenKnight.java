@@ -108,7 +108,7 @@ public final class _406_PathToElvenKnight extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
         if (event.equalsIgnoreCase("master_sorius_q0406_05.htm")) {
-            if (st.getPlayer().getClassId().getId() == 0x12) {
+            if (st.getPlayer().getClassId().id() == 0x12) {
                 if (st.getQuestItemsCount(ElvenKnightBrooch) > 0) {
                     htmltext = "master_sorius_q0406_04.htm";
                     st.exitCurrentQuest(true);
@@ -116,7 +116,7 @@ public final class _406_PathToElvenKnight extends Quest {
                     htmltext = "master_sorius_q0406_03.htm";
                     st.exitCurrentQuest(true);
                 }
-            } else if (st.getPlayer().getClassId().getId() == 0x13) {
+            } else if (st.getPlayer().getClassId().id() == 0x13) {
                 htmltext = "master_sorius_q0406_02a.htm";
                 st.exitCurrentQuest(true);
             } else {

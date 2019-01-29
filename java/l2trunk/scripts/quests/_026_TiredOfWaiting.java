@@ -35,7 +35,7 @@ public final class _026_TiredOfWaiting extends Quest {
             qs.exitCurrentQuest(false);
         } else if (event.equalsIgnoreCase("WILL_OF_ANTHARAS")) {
             htmltext = "kitzka_q0026_04.htm";
-            qs.giveItems(WILL_OF_ANTHARAS, 1, false);
+            qs.giveItems(WILL_OF_ANTHARAS);
             qs.playSound(SOUND_FINISH);
             qs.exitCurrentQuest(false);
         } else if (event.equalsIgnoreCase("SEALED_BLOOD_CRYSTAL")) {

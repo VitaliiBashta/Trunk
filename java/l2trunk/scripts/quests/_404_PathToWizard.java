@@ -64,7 +64,7 @@ public final class _404_PathToWizard extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
         if (event.equalsIgnoreCase("1")) {
-            if (st.getPlayer().getClassId().getId() == 0x0a) {
+            if (st.getPlayer().getClassId().id() == 0x0a) {
                 if (st.getPlayer().getLevel() >= 18) {
                     if (st.getQuestItemsCount(BEAD_OF_SEASON_ID) > 0)
                         htmltext = "parina_q0404_03.htm";
@@ -76,7 +76,7 @@ public final class _404_PathToWizard extends Quest {
                     }
                 } else
                     htmltext = "parina_q0404_02.htm";
-            } else if (st.getPlayer().getClassId().getId() == 0x0b)
+            } else if (st.getPlayer().getClassId().id() == 0x0b)
                 htmltext = "parina_q0404_02a.htm";
             else
                 htmltext = "parina_q0404_01.htm";

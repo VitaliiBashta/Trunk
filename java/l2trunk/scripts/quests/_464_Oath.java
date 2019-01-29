@@ -63,8 +63,8 @@ public final class _464_Oath extends Quest {
                     htmltext = "sophia_q464_04h.htm";
                     break;
             }
-            st.takeAllItems(BookofSilence1);
-            st.giveItems(BookofSilence2, 1);
+            st.takeItems(BookofSilence1);
+            st.giveItems(BookofSilence2);
         } else if (event.equalsIgnoreCase("request_reward")) {
             switch (npc.getNpcId()) {
                 case Seresin:
@@ -94,7 +94,7 @@ public final class _464_Oath extends Quest {
             }
             st.giveItems(ADENA_ID, Rnd.get(45000, 90000));
             st.addExpAndSp(Rnd.get(15450, 1200000), Rnd.get(15000, 200000));
-            st.takeAllItems(BookofSilence2);
+            st.takeItems(BookofSilence2);
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(true);
         }

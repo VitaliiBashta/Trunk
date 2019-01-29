@@ -151,7 +151,7 @@ public final class _605_AllianceWithKetraOrcs extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("first-2.htm")) {
+        if ("first-2.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
@@ -161,32 +161,32 @@ public final class _605_AllianceWithKetraOrcs extends Quest {
         checkMarks(st);
         int cond = st.getCond();
 
-        if (event.equalsIgnoreCase("first-have-2.htm") && cond == 1 && CheckNextLevel(st, 100, 0, 0, 0, true)) {
-            st.giveItems(MARK_OF_KETRA_ALLIANCE1, 1);
+        if ("first-have-2.htm".equalsIgnoreCase(event) && cond == 1 && CheckNextLevel(st, 100, 0, 0, 0, true)) {
+            st.giveItems(MARK_OF_KETRA_ALLIANCE1);
             st.setCond(2);
             st.getPlayer().updateKetraVarka();
             st.playSound(SOUND_MIDDLE);
         } else if (event.equalsIgnoreCase("second-have-2.htm") && cond == 2 && CheckNextLevel(st, 200, 100, 0, 0, true)) {
-            st.giveItems(MARK_OF_KETRA_ALLIANCE2, 1);
+            st.giveItems(MARK_OF_KETRA_ALLIANCE2);
             st.setCond(3);
             st.getPlayer().updateKetraVarka();
             st.playSound(SOUND_MIDDLE);
         } else if (event.equalsIgnoreCase("third-have-2.htm") && cond == 3 && CheckNextLevel(st, 300, 200, 100, 0, true)) {
-            st.giveItems(MARK_OF_KETRA_ALLIANCE3, 1);
+            st.giveItems(MARK_OF_KETRA_ALLIANCE3);
             st.setCond(4);
             st.getPlayer().updateKetraVarka();
             st.playSound(SOUND_MIDDLE);
         } else if (event.equalsIgnoreCase("fourth-have-2.htm") && cond == 4 && CheckNextLevel(st, 300, 300, 200, TOTEM_OF_VALOR, true)) {
-            st.giveItems(MARK_OF_KETRA_ALLIANCE4, 1);
+            st.giveItems(MARK_OF_KETRA_ALLIANCE4);
             st.setCond(5);
             st.getPlayer().updateKetraVarka();
             st.playSound(SOUND_MIDDLE);
         } else if (event.equalsIgnoreCase("fifth-have-2.htm") && cond == 5 && CheckNextLevel(st, 400, 400, 200, TOTEM_OF_WISDOM, true)) {
-            st.giveItems(MARK_OF_KETRA_ALLIANCE5, 1);
+            st.giveItems(MARK_OF_KETRA_ALLIANCE5);
             st.setCond(6);
             st.getPlayer().updateKetraVarka();
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("quit-2.htm")) {
+        } else if ("quit-2.htm".equalsIgnoreCase(event)) {
             takeAllMarks(st);
             st.setCond(0);
             st.getPlayer().updateKetraVarka();

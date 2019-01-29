@@ -179,7 +179,7 @@ public enum InstantZoneEntryType {
 
         if (instancedZone.getRequiredQuestId() > 0) {
             Quest q = QuestManager.getQuest(instancedZone.getRequiredQuestId());
-            QuestState qs = player.getQuestState(q.getClass());
+            QuestState qs = player.getQuestState(q);
             if (qs == null || qs.getState() != Quest.STARTED)
                 return SystemMsg.C1S_QUEST_REQUIREMENT_IS_NOT_SUFFICIENT_AND_CANNOT_BE_ENTERED;
         }

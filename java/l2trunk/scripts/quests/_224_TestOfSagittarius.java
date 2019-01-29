@@ -5,7 +5,6 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.items.Inventory;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _224_TestOfSagittarius extends Quest {
     private static final int BERNARDS_INTRODUCTION_ID = 3294;
@@ -131,7 +130,7 @@ public final class _224_TestOfSagittarius extends Quest {
             st.set("id", "0");
         }
         if (npcId == 30702 && st.getCond() == 0) {
-            if (st.getPlayer().getClassId().getId() == 0x07 || st.getPlayer().getClassId().getId() == 0x16 || st.getPlayer().getClassId().getId() == 0x23) {
+            if (st.getPlayer().getClassId().id() == 0x07 || st.getPlayer().getClassId().id() == 0x16 || st.getPlayer().getClassId().id() == 0x23) {
                 if (st.getPlayer().getLevel() >= 39)
                     htmltext = "30702-03.htm";
                 else {

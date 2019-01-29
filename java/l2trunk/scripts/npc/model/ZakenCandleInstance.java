@@ -19,7 +19,7 @@ public final class ZakenCandleInstance extends NpcInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
         Reflection r = getReflection();
         if (r.isDefault() || used)
             return;

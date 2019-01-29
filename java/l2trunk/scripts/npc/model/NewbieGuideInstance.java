@@ -11,10 +11,10 @@ import l2trunk.gameserver.network.serverpackets.PlaySound;
 import l2trunk.gameserver.network.serverpackets.RadarControl;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
+import l2trunk.scripts.quests.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
 import java.util.List;
 
 public final class NewbieGuideInstance extends NpcInstance {
@@ -26,16 +26,16 @@ public final class NewbieGuideInstance extends NpcInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
         if (val == 0 && mainHelpers.contains(getNpcId()))
             if (player.getClassId().getLevel() == 1) {
                 if (player.getVar("NewGuidReward") == null) {
-                    QuestState qs = player.getQuestState("_999_T1Tutorial");
+                    QuestState qs = player.getQuestState(_999_T1Tutorial.class);
                     if (qs != null)
                         qs.unset("step");
 
                     player.setVar("NewGuidReward", "1", -1);
-                    boolean isMage = (player.getClassId().getRace() != Race.orc) && player.getClassId().isMage();
+                    boolean isMage = (player.getClassId().getRace() != Race.orc) && player.getClassId().isMage;
                     if (isMage) {
                         player.sendPacket(new PlaySound("tutorial_voice_027"));
                         Functions.addItem(player, 5790, 100, "NewbieGuideInstance"); // Spiritshot
@@ -50,12 +50,16 @@ public final class NewbieGuideInstance extends NpcInstance {
                         player.addExpAndSp(0, 50, 0, 0, true, false);
                 }
                 if (player.getLevel() < 6) // FIXME: если получить 6 левел во время квеста то награду не дадут
-                    if (player.isQuestCompleted("_001_LettersOfLove") || player.isQuestCompleted("_002_WhatWomenWant") || player.isQuestCompleted("_004_LongLivethePaagrioLord") || player.isQuestCompleted("_005_MinersFavor") || player.isQuestCompleted("_166_DarkMass") || player.isQuestCompleted("_174_SupplyCheck")) {
+                    if (player.isQuestCompleted(_001_LettersOfLove.class)
+                            || player.isQuestCompleted(_002_WhatWomenWant.class)
+                            || player.isQuestCompleted(_004_LongLivethePaagrioLord.class)
+                            || player.isQuestCompleted(_005_MinersFavor.class)
+                            || player.isQuestCompleted(_166_DarkMass.class)
+                            || player.isQuestCompleted(_174_SupplyCheck.class)) {
                         if (!player.getVarB("ng1")) {
                             String oldVar = player.getVar("ng1");
                             player.setVar("ng1", oldVar == null ? "1" : String.valueOf(Integer.parseInt(oldVar) + 1), -1);
                             player.addExpAndSp(Experience.LEVEL[6] - player.getExp(), 127, 0, 0, true, false);
-                            //FIXME [G1ta0] дать адены, только если первый чар на акке
                             player.addAdena(11567, "NewbieGuide");
                         }
                         player.sendPacket(new NpcHtmlMessage(player, this, "newbiehelper/q1-2.htm", val));
@@ -71,7 +75,6 @@ public final class NewbieGuideInstance extends NpcInstance {
                             player.setVar("ng2", oldVar == null ? "1" : String.valueOf(Integer.parseInt(oldVar) + 1), -1);
                             long addexp = Experience.LEVEL[10] - player.getExp();
                             player.addExpAndSp(addexp, addexp / 24, 0, 0, true, false);
-                            //FIXME [G1ta0] дать адены ?
                         }
                         player.sendPacket(new NpcHtmlMessage(player, this, "newbiehelper/q3-1.htm", val).replace("%tonpc%", getQuestNpc(3, player)));
                         return;
@@ -86,7 +89,6 @@ public final class NewbieGuideInstance extends NpcInstance {
                             player.setVar("ng3", oldVar == null ? "1" : String.valueOf(Integer.parseInt(oldVar) + 1), -1);
                             long addexp = Experience.LEVEL[15] - player.getExp();
                             player.addExpAndSp(addexp, addexp / 22, 0, 0, true, false);
-                            //FIXME [G1ta0] дать адены, только если первый чар на акке
                             player.addAdena(38180, "NewbieGuide");
                         }
                         player.sendPacket(new NpcHtmlMessage(player, this, "newbiehelper/q4-1.htm", val).replace("%tonpc%", getQuestNpc(4, player)));
@@ -102,7 +104,6 @@ public final class NewbieGuideInstance extends NpcInstance {
                             player.setVar("ng4", oldVar == null ? "1" : String.valueOf(Integer.parseInt(oldVar) + 1), -1);
                             long addexp = Experience.LEVEL[18] - player.getExp();
                             player.addExpAndSp(addexp, addexp / 5, 0, 0, true, false);
-                            //FIXME [G1ta0] дать адены, только если первый чар на акке
                             player.addAdena(10018, "NewbieGuide");
                         }
                         player.sendPacket(new NpcHtmlMessage(player, this, "newbiehelper/q4-2.htm", val));

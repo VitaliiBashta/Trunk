@@ -164,7 +164,7 @@ public final class CommunityPartyMatching extends Functions implements ScriptFil
 
     private boolean containsClass(ClassId[] group, int clazz) {
         for (ClassId classInGroup : group) {
-            if (clazz == classInGroup.getId())
+            if (clazz == classInGroup.id())
                 return true;
         }
         return false;
@@ -174,7 +174,7 @@ public final class CommunityPartyMatching extends Functions implements ScriptFil
 
         for (ClassId clazz : getNeededClasses(classSortType)) {
             for (SubClass sub : player.getSubClasses().values()) {
-                if (clazz.getId() == sub.getClassId())
+                if (clazz.id() == sub.getClassId())
                     return true;
             }
         }

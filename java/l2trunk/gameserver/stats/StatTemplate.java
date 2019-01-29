@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class StatTemplate {
-    private List<FuncTemplate> funcTemplates = new ArrayList<>();
+    protected List<FuncTemplate> funcTemplates = new ArrayList<>();
     private List<TriggerInfo> triggerList = new ArrayList<>();
 
     public List<TriggerInfo> getTriggerList() {

@@ -8,9 +8,12 @@ import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
 import l2trunk.gameserver.scripts.ScriptFile;
 
+import java.util.List;
+
 public final class _273_InvadersOfHolyland extends Quest {
     private final int BLACK_SOULSTONE = 1475;
     private final int RED_SOULSTONE = 1476;
+    private final List<Integer> stones = List.of(BLACK_SOULSTONE,RED_SOULSTONE);
 
     public _273_InvadersOfHolyland() {
         super(false);
@@ -19,8 +22,7 @@ public final class _273_InvadersOfHolyland extends Quest {
         addKillId(20311,
                 20312,
                 20313);
-        addQuestItem(BLACK_SOULSTONE,
-                RED_SOULSTONE);
+        addQuestItem(stones);
     }
 
     @Override
@@ -73,7 +75,7 @@ public final class _273_InvadersOfHolyland extends Quest {
                     htmltext = "atuba_chief_varkees_q0273_06.htm";
                     adena += st.getQuestItemsCount(RED_SOULSTONE) * 50;
                 }
-                st.takeAllItems(BLACK_SOULSTONE, RED_SOULSTONE);
+                st.takeItems(stones);
                 st.giveItems(ADENA_ID, adena);
 
                 if (st.getPlayer().getClassId().getLevel() == 1 && !st.getPlayer().getVarB("p1q2")) {
@@ -83,7 +85,7 @@ public final class _273_InvadersOfHolyland extends Quest {
                     if (qs != null && qs.getInt("Ex") != 10) {
                         st.showQuestionMark(26);
                         qs.set("Ex", "10");
-                        if (st.getPlayer().getClassId().isMage()) {
+                        if (st.getPlayer().getClassId().isMage) {
                             st.playTutorialVoice("tutorial_voice_027");
                             st.giveItems(5790, 3000);
                         } else {

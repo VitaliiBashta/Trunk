@@ -21,7 +21,7 @@ public class NewCharacterSuccess extends L2GameServerPacket {
 
         for (PlayerTemplate temp : _chars) {
             writeD(temp.race.ordinal());
-            writeD(temp.classId.getId());
+            writeD(temp.classId.id());
             writeD(0x46);
             writeD(temp.baseSTR);
             writeD(0x0a);

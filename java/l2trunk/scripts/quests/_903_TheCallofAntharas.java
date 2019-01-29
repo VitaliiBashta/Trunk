@@ -27,9 +27,9 @@ public final class _903_TheCallofAntharas extends Quest {
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("theodric_q903_06.htm")) {
-            st.takeAllItems(BehemothDragonLeather);
-            st.takeAllItems(TaraskDragonsLeatherFragment);
-            st.giveItems(21897, 1); // Scroll: Antharas Call
+            st.takeItems(BehemothDragonLeather);
+            st.takeItems(TaraskDragonsLeatherFragment);
+            st.giveItems(21897); // Scroll: Antharas Call
             st.setState(COMPLETED);
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(this);
@@ -77,11 +77,11 @@ public final class _903_TheCallofAntharas extends Quest {
             switch (npc.getNpcId()) {
                 case TaraskDragon:
                     if (st.getQuestItemsCount(TaraskDragonsLeatherFragment) < 1)
-                        st.giveItems(TaraskDragonsLeatherFragment, 1);
+                        st.giveItems(TaraskDragonsLeatherFragment);
                     break;
                 case BehemothDragon:
                     if (st.getQuestItemsCount(BehemothDragonLeather) < 1)
-                        st.giveItems(BehemothDragonLeather, 1);
+                        st.giveItems(BehemothDragonLeather);
                     break;
                 default:
                     break;

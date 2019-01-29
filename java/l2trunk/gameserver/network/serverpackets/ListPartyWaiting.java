@@ -50,7 +50,7 @@ public class ListPartyWaiting extends L2GameServerPacket {
             Collection<Player> players = room.getPlayers();
             writeD(players.size()); //members count
             for (Player player : players) {
-                writeD(player.getClassId().getId());
+                writeD(player.getClassId().id());
                 writeS(player.getName());
             }
         }

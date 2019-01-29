@@ -124,8 +124,8 @@ public final class _418_PathToArtisan extends Quest {
                 htmltext = "blacksmith_silvery_q0418_04.htm";
                 st.exitCurrentQuest(true);
             } else if (cond == 0) {
-                if (st.getPlayer().getClassId().getId() != 0x35) {
-                    if (st.getPlayer().getClassId().getId() == 0x38)
+                if (st.getPlayer().getClassId().id() != 0x35) {
+                    if (st.getPlayer().getClassId().id() == 0x38)
                         htmltext = "blacksmith_silvery_q0418_02a.htm";
                     else
                         htmltext = "blacksmith_silvery_q0418_02.htm";

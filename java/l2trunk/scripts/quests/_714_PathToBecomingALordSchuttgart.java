@@ -114,7 +114,7 @@ public final class _714_PathToBecomingALordSchuttgart extends Quest {
             else if (cond == 5)
                 htmltext = "yasheni_q714_03.htm";
             else if (cond == 6) {
-                st.takeAllItems(GolemShard);
+                st.takeItems(GolemShard);
                 st.setCond(7);
                 htmltext = "yasheni_q714_04.htm";
             }
@@ -126,7 +126,7 @@ public final class _714_PathToBecomingALordSchuttgart extends Quest {
     public String onKill(NpcInstance npc, QuestState st) {
         if (st.getCond() == 5) {
             if (st.getQuestItemsCount(GolemShard) < 300)
-                st.giveItems(GolemShard, 1);
+                st.giveItems(GolemShard);
             if (st.getQuestItemsCount(GolemShard) >= 300)
                 st.setCond(6);
         }

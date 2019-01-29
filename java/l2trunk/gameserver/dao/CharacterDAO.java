@@ -213,7 +213,7 @@ public final class CharacterDAO {
 
             try (PreparedStatement statement = con.prepareStatement("INSERT INTO character_subclasses (char_obj_id, class_id, exp, sp, curHp, curMp, curCp, maxHp, maxMp, maxCp, level, active, isBase, death_penalty, certification) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")) {
                 statement.setInt(1, player.getObjectId());
-                statement.setInt(2, player.getTemplate().classId.getId());
+                statement.setInt(2, player.getTemplate().classId.id());
                 statement.setInt(3, 0);
                 statement.setInt(4, 0);
                 statement.setDouble(5, player.getTemplate().baseHpMax + player.getTemplate().lvlHpAdd + player.getTemplate().lvlHpMod);

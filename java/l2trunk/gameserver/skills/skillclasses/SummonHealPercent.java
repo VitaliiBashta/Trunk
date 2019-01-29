@@ -21,7 +21,7 @@ public final class SummonHealPercent extends Skill {
     public void useSkill(Creature activeChar, List<Creature> targets) {
         for (Creature target : targets)
             if (target != null) {
-                getEffects(activeChar, target, activateRate() > 0, false);
+                getEffects(activeChar, target, activateRate > 0, false);
 
                 double hp = power * target.getMaxHp() / 100.;
                 double newHp = hp * (!_ignoreHpEff ? target.calcStat(Stats.HEAL_EFFECTIVNESS, 100., activeChar, this) : 100.) / 100.;

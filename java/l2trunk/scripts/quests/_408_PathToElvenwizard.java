@@ -63,8 +63,8 @@ public final class _408_PathToElvenwizard extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
         if (event.equalsIgnoreCase("1")) {
-            if (st.getPlayer().getClassId().getId() != 0x19) {
-                if (st.getPlayer().getClassId().getId() == 0x1a)
+            if (st.getPlayer().getClassId().id != 0x19) {
+                if (st.getPlayer().getClassId().id == 0x1a)
                     htmltext = "rogellia_q0408_02a.htm";
                 else
                     htmltext = "rogellia_q0408_03.htm";
@@ -76,7 +76,7 @@ public final class _408_PathToElvenwizard extends Quest {
                 st.setState(STARTED);
                 st.setCond(1);
                 st.playSound(SOUND_ACCEPT);
-                st.giveItems(FERTILITY_PERIDOT_ID, 1);
+                st.giveItems(FERTILITY_PERIDOT_ID);
                 htmltext = "rogellia_q0408_06.htm";
             }
         } else if (event.equalsIgnoreCase("408_1")) {

@@ -555,7 +555,7 @@ public final class SignsPriestInstance extends NpcInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
         int npcId = getTemplate().npcId;
 
         String filename = SevenSigns.SEVEN_SIGNS_HTML_PATH;

@@ -5,7 +5,6 @@ import l2trunk.gameserver.model.base.Race;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -209,7 +208,7 @@ public final class _233_TestOfWarspirit extends Quest {
                 st.exitCurrentQuest(true);
                 return "30510-01.htm";
             }
-            if (st.getPlayer().getClassId().getId() != 0x32) {
+            if (st.getPlayer().getClassId().id() != 0x32) {
                 st.exitCurrentQuest(true);
                 return "30510-02.htm";
             }

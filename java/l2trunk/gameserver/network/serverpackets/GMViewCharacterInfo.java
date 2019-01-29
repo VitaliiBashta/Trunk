@@ -39,7 +39,7 @@ public final class GMViewCharacterInfo extends L2GameServerPacket {
         _name = cha.getName();
         _race = cha.getRace().ordinal();
         sex = cha.isMale() ? 0: 1;
-        class_id = cha.getClassId().getId();
+        class_id = cha.getClassId().id();
         level = cha.getLevel();
         _exp = cha.getExp();
         _str = cha.getSTR();

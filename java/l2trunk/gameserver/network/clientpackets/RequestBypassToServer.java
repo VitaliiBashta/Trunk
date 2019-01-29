@@ -8,6 +8,7 @@ import l2trunk.gameserver.handler.voicecommands.IVoicedCommandHandler;
 import l2trunk.gameserver.handler.voicecommands.VoicedCommandHandler;
 import l2trunk.gameserver.instancemanager.BypassManager.DecodedBypass;
 import l2trunk.gameserver.instancemanager.OlympiadHistoryManager;
+import l2trunk.gameserver.instancemanager.QuestManager;
 import l2trunk.gameserver.model.*;
 import l2trunk.gameserver.model.entity.Hero;
 import l2trunk.gameserver.model.entity.olympiad.Olympiad;
@@ -228,7 +229,7 @@ public final class RequestBypassToServer extends L2GameClientPacket {
                 String p = bp.bypass.substring(6).trim();
                 int idx = p.indexOf(' ');
                 if (idx < 0)
-                    activeChar.processQuestEvent(p, "", npc);
+                    activeChar.processQuestEvent(QuestManager.getQuest(p), "", npc);
                 else
                     activeChar.processQuestEvent(p.substring(0, idx), p.substring(idx).trim(), npc);
             }

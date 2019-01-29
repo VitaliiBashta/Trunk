@@ -47,8 +47,8 @@ public final class _10290_LandDragonConqueror extends Quest {
             else if (cond == 2) {
                 if (st.getQuestItemsCount(MiracleNecklace) >= 1) {
                     htmltext = "theodric_q10290_07.htm";
-                    st.takeAllItems(MiracleNecklace);
-                    st.giveItems(8568, 1);
+                    st.takeItems(MiracleNecklace);
+                    st.giveItems(8568);
                     st.giveItems(ADENA_ID, 131236);
                     st.addExpAndSp(702557, 76334);
                     st.playSound(SOUND_FINISH);
@@ -67,8 +67,8 @@ public final class _10290_LandDragonConqueror extends Quest {
         int cond = st.getCond();
 
         if (cond == 1 && npcId == UltimateAntharas) {
-            st.takeAllItems(ShabbyNecklace);
-            st.giveItems(MiracleNecklace, 1);
+            st.takeItems(ShabbyNecklace);
+            st.giveItems(MiracleNecklace);
             st.setCond(2);
         }
         return null;

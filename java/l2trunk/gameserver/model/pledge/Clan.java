@@ -108,7 +108,7 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
     private ClanWarehouse warehouse;
     private int _whBonus = -1;
     private String notice = null;
-    private int _reputation = 0;
+    private int reputation = 0;
     private int _siegeKills = 0;
     // Recruitment
     private boolean recruting = false;
@@ -145,7 +145,7 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
                 clan.setHasFortress(clanData.getInt("hasFortress"));
                 clan.setHasHideout(clanData.getInt("hasHideout"));
                 clan.setAllyId(clanData.getInt("ally_id"));
-                clan._reputation = clanData.getInt("reputation_score");
+                clan.reputation = clanData.getInt("reputation_score");
                 clan.setExpelledMemberTime(clanData.getLong("expelled_member") * 1000L);
                 clan.setLeavedAllyTime(clanData.getLong("leaved_ally") * 1000L);
                 clan.setDissolvedAllyTime(clanData.getLong("dissolved_ally") * 1000L);
@@ -709,24 +709,24 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
     /* ============================ clan skills stuff ============================ */
 
     public int getReputationScore() {
-        return _reputation;
+        return reputation;
     }
 
     private void setReputationScore(int rep) {
-        if (_reputation >= 0 && rep < 0) {
+        if (reputation >= 0 && rep < 0) {
             broadcastToOnlineMembers(Msg.SINCE_THE_CLAN_REPUTATION_SCORE_HAS_DROPPED_TO_0_OR_LOWER_YOUR_CLAN_SKILLS_WILL_BE_DE_ACTIVATED);
             for (UnitMember member : this)
                 if (member.isOnline() && member.getPlayer() != null)
                     disableSkills(member.getPlayer());
-        } else if (_reputation < 0 && rep >= 0) {
+        } else if (reputation < 0 && rep >= 0) {
             broadcastToOnlineMembers(Msg.THE_CLAN_SKILL_WILL_BE_ACTIVATED_BECAUSE_THE_CLANS_REPUTATION_SCORE_HAS_REACHED_TO_0_OR_HIGHER);
             for (UnitMember member : this)
                 if (member.isOnline() && member.getPlayer() != null)
                     enableSkills(member.getPlayer());
         }
 
-        if (_reputation != rep) {
-            _reputation = rep;
+        if (reputation != rep) {
+            reputation = rep;
             broadcastToOnlineMembers(new PledgeShowInfoUpdate(this));
         }
 
@@ -740,8 +740,8 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
         if (rate && Math.abs(inc) <= Config.RATE_CLAN_REP_SCORE_MAX_AFFECTED)
             inc = (int) Math.round(inc * Config.RATE_CLAN_REP_SCORE);
 
-        setReputationScore(_reputation + inc);
-        Log.add(getName() + "|" + inc + "|" + _reputation + "|" + source, "clan_reputation");
+        setReputationScore(reputation + inc);
+        Log.add(getName() + "|" + inc + "|" + reputation + "|" + source, "clan_reputation");
 
         // Synerge - Add the new reputation to the stats
         // if (inc > 0)
@@ -754,7 +754,7 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
         if (level < 5)
             return 0;
 
-        setReputationScore(_reputation + inc);
+        setReputationScore(reputation + inc);
 
         // Synerge - Add the new reputation to the stats
         // if (inc > 0)
@@ -786,7 +786,7 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
     }
 
     public final Collection<Skill> getAllSkills() {
-        if (_reputation < 0)
+        if (reputation < 0)
             return List.of();
 
         return skills.values();
@@ -875,7 +875,7 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
     private void addSkill(Player player, Skill skill) {
         if (skill.minPledgeClass <= player.getPledgeClass()) {
             player.addSkill(skill, false);
-            if (_reputation < 0 || player.isInOlympiadMode())
+            if (reputation < 0 || player.isInOlympiadMode())
                 player.addUnActiveSkill(skill);
         }
     }
@@ -1074,7 +1074,7 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
         if (subUnit == null)
             return;
 
-        UnitMember member = new UnitMember(this, player.getName(), player.getTitle(), player.getLevel(), player.getClassId().getId(), player.getObjectId(), pledgeType, player.getPowerGrade(), player.getApprentice(), player.isMale() ? 0 : 1, Clan.SUBUNIT_NONE);
+        UnitMember member = new UnitMember(this, player.getName(), player.getTitle(), player.getLevel(), player.getClassId().id(), player.getObjectId(), pledgeType, player.getPowerGrade(), player.getApprentice(), player.isMale() ? 0 : 1, Clan.SUBUNIT_NONE);
         subUnit.addUnitMember(member);
 
         player.setPledgeType(pledgeType);

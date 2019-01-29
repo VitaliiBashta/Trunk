@@ -59,7 +59,7 @@ public abstract class DoormanInstance extends NpcInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
         String filename = null;
         int cond = getCond(player);
         switch (cond) {

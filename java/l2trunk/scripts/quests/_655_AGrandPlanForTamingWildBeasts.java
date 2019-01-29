@@ -18,7 +18,7 @@ public final class _655_AGrandPlanForTamingWildBeasts extends Quest {
     private final static int TRAINER_LICENSE = 8293;
 
     public _655_AGrandPlanForTamingWildBeasts() {
-        super(PARTY_NONE);
+        super(false);
 
         addStartNpc(MESSENGER);
         addTalkId(MESSENGER);

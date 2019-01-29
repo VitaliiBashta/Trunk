@@ -46,14 +46,14 @@ public final class _411_PathToAssassin extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
         if (event.equalsIgnoreCase("1")) {
-            if (st.getPlayer().getLevel() >= 18 && st.getPlayer().getClassId().getId() == 0x1f && st.getQuestItemsCount(IRON_HEART_ID) < 1) {
+            if (st.getPlayer().getLevel() >= 18 && st.getPlayer().getClassId().id == 0x1f && st.getQuestItemsCount(IRON_HEART_ID) < 1) {
                 st.setCond(1);
                 st.setState(STARTED);
                 st.playSound(SOUND_ACCEPT);
-                st.giveItems(SHILENS_CALL_ID, 1);
+                st.giveItems(SHILENS_CALL_ID);
                 htmltext = "triskel_q0411_05.htm";
-            } else if (st.getPlayer().getClassId().getId() != 0x1f) {
-                if (st.getPlayer().getClassId().getId() == 0x23)
+            } else if (st.getPlayer().getClassId().id != 0x1f) {
+                if (st.getPlayer().getClassId().id == 0x23)
                     htmltext = "triskel_q0411_02a.htm";
                 else {
                     htmltext = "triskel_q0411_02.htm";
@@ -66,13 +66,13 @@ public final class _411_PathToAssassin extends Quest {
                 htmltext = "triskel_q0411_04.htm";
         } else if (event.equalsIgnoreCase("30419_1")) {
             htmltext = "arkenia_q0411_05.htm";
-            st.takeItems(SHILENS_CALL_ID, -1);
+            st.takeItems(SHILENS_CALL_ID);
             st.giveItems(ARKENIAS_LETTER_ID, 1);
             st.setCond(2);
             st.playSound(SOUND_MIDDLE);
         } else if (event.equalsIgnoreCase("30382_1")) {
             htmltext = "guard_leikan_q0411_03.htm";
-            st.takeItems(ARKENIAS_LETTER_ID, -1);
+            st.takeItems(ARKENIAS_LETTER_ID);
             st.giveItems(LEIKANS_NOTE_ID, 1);
             st.setCond(3);
             st.playSound(SOUND_MIDDLE);
@@ -93,9 +93,9 @@ public final class _411_PathToAssassin extends Quest {
                     htmltext = "triskel_q0411_04.htm";
             } else if (cond == 7) {
                 htmltext = "triskel_q0411_06.htm";
-                st.takeItems(ARKENIA_RECOMMEND_ID, -1);
+                st.takeItems(ARKENIA_RECOMMEND_ID);
                 if (st.getPlayer().getClassId().getLevel() == 1) {
-                    st.giveItems(IRON_HEART_ID, 1);
+                    st.giveItems(IRON_HEART_ID);
                     if (!st.getPlayer().getVarB("prof1")) {
                         st.getPlayer().setVar("prof1", "1", -1);
                         st.addExpAndSp(228064, 16455);
@@ -126,9 +126,9 @@ public final class _411_PathToAssassin extends Quest {
                 htmltext = "arkenia_q0411_11.htm";
             else if (cond == 6 && st.getQuestItemsCount(SHILENS_TEARS_ID) > 0) {
                 htmltext = "arkenia_q0411_08.htm";
-                st.takeItems(SHILENS_TEARS_ID, -1);
-                st.takeItems(LEIKANS_KNIFE_ID, -1);
-                st.giveItems(ARKENIA_RECOMMEND_ID, 1);
+                st.takeItems(SHILENS_TEARS_ID);
+                st.takeItems(LEIKANS_KNIFE_ID);
+                st.giveItems(ARKENIA_RECOMMEND_ID);
                 st.setCond(7);
                 st.playSound(SOUND_MIDDLE);
             } else if (cond == 7)

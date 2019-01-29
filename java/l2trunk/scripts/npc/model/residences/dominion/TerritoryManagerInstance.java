@@ -37,35 +37,29 @@ public final class TerritoryManagerInstance extends NpcInstance {
         int npcId = getNpcId();
         int badgeId = 13676 + dominion.getId();
 
-        if (command.equalsIgnoreCase("buyspecial")) {
+        if ("buyspecial".equalsIgnoreCase(command)) {
             if (Functions.getItemCount(player, badgeId) < 1)
                 showChatWindow(player, 1);
             else
                 MultiSellHolder.INSTANCE.SeparateAndSend(npcId, player, 0);
-        } else if (command.equalsIgnoreCase("buyNobless")) {
+        } else if ("buyNobless".equalsIgnoreCase(command)) {
             if (player.isNoble()) {
                 showChatWindow(player, 9);
                 return;
             }
             if (player.consumeItem(badgeId, 100L)) {
-                Quest q = QuestManager.getQuest(_234_FatesWhisper.class);
-                QuestState qs = player.getQuestState(q.getClass());
-                if (qs != null)
-                    qs.exitCurrentQuest(true);
-                q.newQuestState(player, Quest.COMPLETED);
+                QuestState qs = player.getQuestState(_234_FatesWhisper.class);
+                if (qs != null) qs.exitCurrentQuest(true);
+                QuestManager.getQuest(_234_FatesWhisper.class).newQuestState(player, Quest.COMPLETED);
 
                 if (player.getRace() == Race.kamael) {
-                    q = QuestManager.getQuest(_236_SeedsOfChaos.class);
-                    qs = player.getQuestState(q.getClass());
-                    if (qs != null)
-                        qs.exitCurrentQuest(true);
-                    q.newQuestState(player, Quest.COMPLETED);
+                    qs = player.getQuestState(_236_SeedsOfChaos.class);
+                    if (qs != null) qs.exitCurrentQuest(true);
+                    QuestManager.getQuest(_236_SeedsOfChaos.class).newQuestState(player, Quest.COMPLETED);
                 } else {
-                    q = QuestManager.getQuest(_235_MimirsElixir.class);
-                    qs = player.getQuestState(q.getClass());
-                    if (qs != null)
-                        qs.exitCurrentQuest(true);
-                    q.newQuestState(player, Quest.COMPLETED);
+                    qs = player.getQuestState(_235_MimirsElixir.class);
+                    if (qs != null) qs.exitCurrentQuest(true);
+                    QuestManager.getQuest(_235_MimirsElixir.class).newQuestState(player, Quest.COMPLETED);
                 }
 
                 Olympiad.addNoble(player);
@@ -77,7 +71,7 @@ public final class TerritoryManagerInstance extends NpcInstance {
                 showChatWindow(player, 10);
             } else
                 player.sendPacket(SystemMsg.INCORRECT_ITEM_COUNT);
-        } else if (command.equalsIgnoreCase("calculate")) {
+        } else if ("calculate".equalsIgnoreCase(command)) {
             if (!player.isQuestContinuationPossible(true))
                 return;
             int[] rewards = siegeEvent.calculateReward(player);

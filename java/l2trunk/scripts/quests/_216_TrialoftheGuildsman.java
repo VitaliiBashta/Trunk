@@ -5,7 +5,6 @@ import l2trunk.gameserver.model.instances.MonsterInstance;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _216_TrialoftheGuildsman extends Quest {
     //NPC
@@ -279,7 +278,7 @@ public final class _216_TrialoftheGuildsman extends Quest {
             st.takeItems(ALLTRANS_RECOMMEND2, -1);
             st.giveItems(PINTERS_INSTRUCTIONS, 1);
 
-            if (st.getPlayer().getClassId().getId() == 0x38) {
+            if (st.getPlayer().getClassId().id() == 0x38) {
                 htmltext = "blacksmith_pinter_q0216_05.htm";
                 st.giveItems(RP_AMBER_BEAD, 1);
             }
@@ -300,7 +299,7 @@ public final class _216_TrialoftheGuildsman extends Quest {
                 htmltext = "completed";
                 st.exitCurrentQuest(true);
             } else if (cond == 0) {
-                if (st.getPlayer().getClassId().getId() == 0x36 || st.getPlayer().getClassId().getId() == 0x38) {
+                if (st.getPlayer().getClassId().id() == 0x36 || st.getPlayer().getClassId().id() == 0x38) {
                     if (st.getPlayer().getLevel() >= 35)
                         htmltext = "valkon_q0216_03.htm";
                     else {
@@ -405,14 +404,14 @@ public final class _216_TrialoftheGuildsman extends Quest {
         if (cond == 5 && (npcId == 20079 || npcId == 20080 || npcId == 20081))
             if (Rnd.chance(33) && st.getQuestItemsCount(ALLTRANS_INSTRUCTIONS) > 0 && st.getQuestItemsCount(PINTERS_INSTRUCTIONS) > 0) {
                 long count = st.getQuestItemsCount(AMBER_BEAD) + st.getQuestItemsCount(AMBER_LUMP) * 5;
-                if (count < 70 && st.getPlayer().getClassId().getId() == 0x36) {
+                if (count < 70 && st.getPlayer().getClassId().id() == 0x36) {
                     st.giveItems(AMBER_BEAD, 5);
                     if (st.getQuestItemsCount(AMBER_BEAD) == 70)
                         st.playSound(SOUND_MIDDLE);
                     else
                         st.playSound(SOUND_ITEMGET);
                 }
-                if (count < 70 && st.getPlayer().getClassId().getId() == 0x38) {
+                if (count < 70 && st.getPlayer().getClassId().id() == 0x38) {
                     st.giveItems(AMBER_LUMP, 5);
                     if (((MonsterInstance) npc).isSpoiled())
                         st.giveItems(AMBER_LUMP, 5);

@@ -51,16 +51,16 @@ public final class _254_LegendaryTales extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("gilmore_q254_05.htm")) {
+        if ("gilmore_q254_05.htm".equalsIgnoreCase(event)) {
             st.setState(STARTED);
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if (event.startsWith("gilmore_q254_09.htm")) {
-            st.takeAllItems(LargeBone);
+            st.takeItems(LargeBone);
             StringTokenizer tokenizer = new StringTokenizer(event);
             tokenizer.nextToken();
             int i = toInt(tokenizer.nextToken()) + 1;
-            st.giveItems(items.get(i), 1);
+            st.giveItems(items.get(i));
             st.playSound(SOUND_FINISH);
             st.setState(COMPLETED);
             st.exitCurrentQuest(false);

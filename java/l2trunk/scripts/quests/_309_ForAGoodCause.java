@@ -74,7 +74,8 @@ public final class _309_ForAGoodCause extends Quest {
                     return "32647-00.htm";
                 return "32647-01.htm";
             } else if (cond == 1) {
-                long fallen = st.takeAllItems(FallenMucrokianHide);
+                long fallen = st.getQuestItemsCount(FallenMucrokianHide);
+                st.takeItems(FallenMucrokianHide);
                 if (fallen > 0)
                     st.giveItems(MucrokianHide, fallen * 2);
 

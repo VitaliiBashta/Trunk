@@ -49,8 +49,8 @@ public final class _409_PathToOracle extends Quest {
         String htmltext = event;
         if (event.equalsIgnoreCase("1")) {
             if (event.equalsIgnoreCase("1"))
-                if (st.getPlayer().getClassId().getId() != 0x19) {
-                    if (st.getPlayer().getClassId().getId() == 0x1d)
+                if (st.getPlayer().getClassId().id() != 0x19) {
+                    if (st.getPlayer().getClassId().id() == 0x1d)
                         htmltext = "father_manuell_q0409_02a.htm";
                     else
                         htmltext = "father_manuell_q0409_02.htm";

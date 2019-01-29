@@ -4,7 +4,6 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _215_TrialOfPilgrim extends Quest {
     private static final int MARK_OF_PILGRIM_ID = 2721;
@@ -131,7 +130,7 @@ public final class _215_TrialOfPilgrim extends Quest {
             st.set("id", "0");
         }
         if (npcId == 30648 && st.getCond() == 0) {
-            if (st.getPlayer().getClassId().getId() == 0x0f || st.getPlayer().getClassId().getId() == 0x1d || st.getPlayer().getClassId().getId() == 0x2a || st.getPlayer().getClassId().getId() == 0x32) {
+            if (st.getPlayer().getClassId().id() == 0x0f || st.getPlayer().getClassId().id() == 0x1d || st.getPlayer().getClassId().id() == 0x2a || st.getPlayer().getClassId().id() == 0x32) {
                 if (st.getPlayer().getLevel() >= 35)
                     htmltext = "hermit_santiago_q0215_03.htm";
                 else {

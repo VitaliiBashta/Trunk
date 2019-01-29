@@ -168,7 +168,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
     private final boolean flyingTransformUsage;
     private final boolean isProvoke;
     private final boolean ignoreSkillMastery;
-    private final int activateRate;
+    public final int activateRate;
     private final List<Integer> affectLimit;
     private final int _condCharges;
     private final int delayedEffect;

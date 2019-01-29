@@ -78,7 +78,7 @@ public final class Drain extends Skill {
                     }
                 }
 
-                getEffects(activeChar, target, activateRate() > 0, false, reflected);
+                getEffects(activeChar, target, activateRate > 0, false, reflected);
             }
 
         if (isMagic() ? sps != 0 : ss)

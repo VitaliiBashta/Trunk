@@ -3,7 +3,8 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
+
+import java.util.List;
 
 public final class _10274_CollectingInTheAir extends Quest {
     private final static int Lekon = 32557;
@@ -13,6 +14,8 @@ public final class _10274_CollectingInTheAir extends Quest {
     private final static int ExtractedCoarseRedStarStone = 13858;
     private final static int ExtractedCoarseBlueStarStone = 13859;
     private final static int ExtractedCoarseGreenStarStone = 13860;
+    private static final List<Integer> stones = List.of(
+            ExtractedCoarseRedStarStone, ExtractedCoarseBlueStarStone, ExtractedCoarseGreenStarStone);
 
     public _10274_CollectingInTheAir() {
         super(false);
@@ -45,8 +48,8 @@ public final class _10274_CollectingInTheAir extends Quest {
                 htmltext = "32557-00.htm";
         } else if (st.getQuestItemsCount(ExtractedCoarseRedStarStone) + st.getQuestItemsCount(ExtractedCoarseBlueStarStone) + st.getQuestItemsCount(ExtractedCoarseGreenStarStone) >= 8) {
             htmltext = "32557-05.htm";
-            st.takeAllItems(ExtractedCoarseRedStarStone, ExtractedCoarseBlueStarStone, ExtractedCoarseGreenStarStone);
-            st.giveItems(ExpertTextStarStoneExtractionSkillLevel1, 1);
+            st.takeItems(stones);
+            st.giveItems(ExpertTextStarStoneExtractionSkillLevel1);
             st.addExpAndSp(25160, 2525);
             st.exitCurrentQuest(false);
             st.playSound(SOUND_FINISH);

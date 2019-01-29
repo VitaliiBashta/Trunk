@@ -1,15 +1,14 @@
 package l2trunk.gameserver.model.entity;
 
 import l2trunk.commons.lang.NumberUtils;
-import l2trunk.gameserver.instancemanager.QuestManager;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.World;
 import l2trunk.gameserver.model.entity.CCPHelpers.*;
 import l2trunk.gameserver.model.entity.CCPHelpers.itemLogs.CCPItemLogs;
-import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.DeleteObject;
 import l2trunk.gameserver.network.serverpackets.L2GameServerPacket;
+import l2trunk.scripts.quests._255_Tutorial;
 
 import java.util.List;
 import java.util.StringTokenizer;
@@ -17,7 +16,7 @@ import java.util.stream.Collectors;
 
 import static l2trunk.commons.lang.NumberUtils.toInt;
 
-public enum  CharacterControlPanel {
+public enum CharacterControlPanel {
     INSTANCE;
 
     public String useCommand(Player activeChar, String text, String bypass) {
@@ -52,13 +51,10 @@ public enum  CharacterControlPanel {
         else if ("online".equalsIgnoreCase(param[0])) {
             activeChar.sendMessage(CCPSmallCommands.showOnlineCount());
         } else if ("changeLog".equalsIgnoreCase(param[0])) {
-            Quest q = QuestManager.getQuest(QuestManager.TUTORIAL_QUEST_ID);
-            if (q != null) {
-                QuestState st = activeChar.getQuestState(q.getName());
-                if (st != null) {
-                    String change = ChangeLogManager.INSTANCE.getChangeLog(ChangeLogManager.INSTANCE.getLatestChangeId());
-                    st.showTutorialHTML(change);
-                }
+            QuestState st = activeChar.getQuestState(_255_Tutorial.class);
+            if (st != null) {
+                String change = ChangeLogManager.INSTANCE.getChangeLog(ChangeLogManager.INSTANCE.getLatestChangeId());
+                st.showTutorialHTML(change);
             }
         }
         // Item logs

@@ -43,7 +43,7 @@ public final class SepulcherNpcInstance extends NpcInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
         if (isDead()) {
             player.sendActionFailed();
             return;

@@ -111,7 +111,7 @@ public final class _511_AwlUnderFoot extends Quest {
                         Party party = st.getPlayer().getParty();
                         if (party != null)
                             party.getMembers().stream()
-                                    .map(member -> member.getQuestState(getClass()))
+                                    .map(member -> member.getQuestState(this))
                                     .filter(Objects::nonNull)
                                     .filter(QuestState::isStarted)
                                     .forEach(qs -> {

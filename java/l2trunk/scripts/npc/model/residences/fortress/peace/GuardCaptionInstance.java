@@ -10,6 +10,7 @@ import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.scripts.npc.model.residences.fortress.FacilityManagerInstance;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author VISTALL
@@ -38,10 +39,10 @@ public class GuardCaptionInstance extends FacilityManagerInstance {
             }
 
             showChatWindow(player, "residence2/fortress/fortress_garrison002.htm",
-                    "%facility_0%", String.valueOf(fortress.getFacilityLevel(Fortress.REINFORCE)),
+                    Map.of("%facility_0%", String.valueOf(fortress.getFacilityLevel(Fortress.REINFORCE)),
                     "%facility_2%", String.valueOf(fortress.getFacilityLevel(Fortress.DOOR_UPGRADE))
                     , "%facility_3%", String.valueOf(fortress.getFacilityLevel(Fortress.DWARVENS)),
-                    "%facility_4%", String.valueOf(fortress.getFacilityLevel(Fortress.SCOUT)));
+                    "%facility_4%", String.valueOf(fortress.getFacilityLevel(Fortress.SCOUT))));
         } else if (command.equalsIgnoreCase("defenceUp1") || command.equalsIgnoreCase("defenceUp2"))
             buyFacility(player, Fortress.REINFORCE, Integer.parseInt(command.substring(9, 10)), 100000);
         else if (command.equalsIgnoreCase("deployScouts"))
@@ -58,7 +59,7 @@ public class GuardCaptionInstance extends FacilityManagerInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
         showChatWindow(player, "residence2/fortress/fortress_garrison001.htm");
     }
 }

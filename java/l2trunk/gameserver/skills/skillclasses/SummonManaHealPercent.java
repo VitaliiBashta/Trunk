@@ -10,21 +10,21 @@ import l2trunk.gameserver.stats.Stats;
 import java.util.List;
 
 public final class SummonManaHealPercent extends Skill {
-    private final boolean _ignoreMpEff;
+    private final boolean ignoreMpEff;
 
     public SummonManaHealPercent(StatsSet set) {
         super(set);
-        _ignoreMpEff = set.getBool("ignoreMpEff", true);
+        ignoreMpEff = set.getBool("ignoreMpEff", true);
     }
 
     @Override
     public void useSkill(Creature activeChar, List<Creature> targets) {
         for (Creature target : targets)
             if (target != null) {
-                getEffects(activeChar, target, activateRate() > 0, false);
+                getEffects(activeChar, target, activateRate > 0, false);
 
                 double mp = power * target.getMaxMp() / 100.;
-                double newMp = mp * (!_ignoreMpEff ? target.calcStat(Stats.MANAHEAL_EFFECTIVNESS, 100., activeChar, this) : 100.) / 100.;
+                double newMp = mp * (!ignoreMpEff ? target.calcStat(Stats.MANAHEAL_EFFECTIVNESS, 100., activeChar, this) : 100.) / 100.;
                 double addToMp = Math.max(0, Math.min(newMp, target.calcStat(Stats.MP_LIMIT, null, null) * target.getMaxMp() / 100. - target.getCurrentMp()));
 
                 if (addToMp > 0)

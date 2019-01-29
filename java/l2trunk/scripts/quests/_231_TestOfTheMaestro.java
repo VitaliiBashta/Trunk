@@ -172,7 +172,7 @@ public final class _231_TestOfTheMaestro extends Quest {
                 htmltext = "completed";
                 st.exitCurrentQuest(true);
             } else if (cond == 0) {
-                if (st.getPlayer().getClassId().getId() == 0x38) {
+                if (st.getPlayer().getClassId().id() == 0x38) {
                     if (st.getPlayer().getLevel() >= 39)
                         htmltext = "30531-03.htm";
                     else {

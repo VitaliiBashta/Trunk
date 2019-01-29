@@ -52,10 +52,10 @@ public final class _410_PathToPalusKnight extends Quest {
             htmltext = "master_virgil_q0410_06.htm";
             st.giveItems(PALLUS_TALISMAN_ID, 1);
         } else if (event.equalsIgnoreCase("410_1")) {
-            if (st.getPlayer().getLevel() >= 18 && st.getPlayer().getClassId().getId() == 0x1f && st.getQuestItemsCount(GAZE_OF_ABYSS_ID) == 0)
+            if (st.getPlayer().getLevel() >= 18 && st.getPlayer().getClassId().id() == 0x1f && st.getQuestItemsCount(GAZE_OF_ABYSS_ID) == 0)
                 htmltext = "master_virgil_q0410_05.htm";
-            else if (st.getPlayer().getClassId().getId() != 0x1f) {
-                if (st.getPlayer().getClassId().getId() == 0x20)
+            else if (st.getPlayer().getClassId().id() != 0x1f) {
+                if (st.getPlayer().getClassId().id() == 0x20)
                     htmltext = "master_virgil_q0410_02a.htm";
                 else
                     htmltext = "master_virgil_q0410_03.htm";

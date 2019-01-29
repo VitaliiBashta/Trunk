@@ -48,12 +48,13 @@ public final class _639_GuardiansOfTheHolyGrail extends Quest {
                 st.exitCurrentQuest(true);
                 break;
             case "falsepriest_dominic_q0639_08.htm":
-                st.giveItems(ADENA_ID, st.takeAllItems(SCRIPTURES) * 1625, false);
+                st.giveItems(ADENA_ID, st.getQuestItemsCount(SCRIPTURES) * 1625, false);
+                st.takeItems(SCRIPTURES);
                 break;
             case "falsepriest_gremory_q0639_05.htm":
                 st.setCond(2);
                 st.playSound(SOUND_MIDDLE);
-                st.giveItems(WATER_BOTTLE, 1, false);
+                st.giveItems(WATER_BOTTLE);
                 break;
             case "holy_grail_q0639_02.htm":
                 st.setCond(3);
@@ -68,11 +69,11 @@ public final class _639_GuardiansOfTheHolyGrail extends Quest {
                 break;
             case "falsepriest_gremory_q0639_11.htm":
                 st.takeItems(SCRIPTURES, 4000);
-                st.giveItems(EWS, 1, false);
+                st.giveItems(EWS);
                 break;
             case "falsepriest_gremory_q0639_13.htm":
                 st.takeItems(SCRIPTURES, 400);
-                st.giveItems(EAS, 1, false);
+                st.giveItems(EAS);
                 break;
         }
         return event;

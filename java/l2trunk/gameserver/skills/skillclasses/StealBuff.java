@@ -139,7 +139,7 @@ public final class StealBuff extends Skill {
             if (!oldEff.isEmpty()) {
                 ThreadPoolManager.INSTANCE.schedule(new GameObjectTasks.ReturnTask(target, oldEff, timeLeft), Config.ALT_AFTER_CANCEL_RETURN_SKILLS_TIME * 1000);
             }
-            getEffects(activeChar, target, activateRate() > 0, false);
+            getEffects(activeChar, target, activateRate > 0, false);
         }
         if (isSSPossible()) {
             activeChar.unChargeShots(isMagic());

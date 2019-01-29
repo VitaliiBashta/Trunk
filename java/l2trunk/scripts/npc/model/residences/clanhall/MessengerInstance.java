@@ -24,7 +24,7 @@ public class MessengerInstance extends NpcInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
         ClanHall clanHall = getClanHall();
         ClanHallSiegeEvent siegeEvent = clanHall.getSiegeEvent();
         if (clanHall.getOwner() != null && clanHall.getOwner() == player.getClan())

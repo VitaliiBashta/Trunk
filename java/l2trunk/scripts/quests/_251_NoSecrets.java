@@ -12,13 +12,14 @@ public final class _251_NoSecrets extends Quest {
     private static final List<Integer> SelMahumRecruits = List.of(22780, 22782, 22784);
     private static final int SelMahumTrainingDiary = 15508;
     private static final int SelMahumTrainingTimetable = 15509;
+    private static final List<Integer> trainingNotes = List.of(SelMahumTrainingDiary, SelMahumTrainingTimetable);
 
     public _251_NoSecrets() {
         super(false);
         addStartNpc(GuardPinaps);
         addKillId(SelMahumTrainers);
         addKillId(SelMahumRecruits);
-        addQuestItem(SelMahumTrainingDiary, SelMahumTrainingTimetable);
+        addQuestItem(trainingNotes);
     }
 
     @Override
@@ -44,7 +45,7 @@ public final class _251_NoSecrets extends Quest {
             } else if (cond == 1)
                 htmltext = "pinaps_q251_04.htm";
             else if (cond == 2) {
-                st.takeAllItems(SelMahumTrainingDiary, SelMahumTrainingTimetable);
+                st.takeItems(trainingNotes);
                 htmltext = "pinaps_q251_05.htm";
                 st.setState(COMPLETED);
                 st.giveItems(57, 313355);

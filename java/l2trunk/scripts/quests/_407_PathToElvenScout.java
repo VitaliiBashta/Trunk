@@ -41,7 +41,7 @@ public final class _407_PathToElvenScout extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
         if (event.equalsIgnoreCase("1")) {
-            if (st.getPlayer().getClassId().getId() == 0x12) {
+            if (st.getPlayer().getClassId().id() == 0x12) {
                 if (st.getPlayer().getLevel() >= 18) {
                     if (st.getQuestItemsCount(REORIA_RECOMMENDATION_ID) > 0) {
                         htmltext = "master_reoria_q0407_04.htm";
@@ -57,7 +57,7 @@ public final class _407_PathToElvenScout extends Quest {
                     htmltext = "master_reoria_q0407_03.htm";
                     st.exitCurrentQuest(true);
                 }
-            } else if (st.getPlayer().getClassId().getId() == 0x16) {
+            } else if (st.getPlayer().getClassId().id() == 0x16) {
                 htmltext = "master_reoria_q0407_02a.htm";
                 st.exitCurrentQuest(true);
             } else {

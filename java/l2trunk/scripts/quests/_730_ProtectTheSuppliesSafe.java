@@ -7,7 +7,7 @@ import l2trunk.gameserver.model.quest.Quest;
 
 public final class _730_ProtectTheSuppliesSafe extends Quest {
     public _730_ProtectTheSuppliesSafe() {
-        super(PARTY_NONE);
+        super(false);
         DominionSiegeRunnerEvent runnerEvent = EventHolder.getEvent(EventType.MAIN_EVENT, 1);
         runnerEvent.addBreakQuest(this);
     }

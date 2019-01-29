@@ -27,7 +27,7 @@ public final class HandysBlockCheckerInstance extends NpcInstance {
     private static final int A_MANAGER_4 = 32524;
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
         if (player == null || !Config.ALT_ENABLE_BLOCK_CHECKER_EVENT)
             return;
         int npcId = getNpcId();

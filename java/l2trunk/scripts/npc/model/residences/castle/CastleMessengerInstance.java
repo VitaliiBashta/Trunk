@@ -6,13 +6,13 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.CastleSiegeInfo;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
-public class CastleMessengerInstance extends NpcInstance {
+public final class CastleMessengerInstance extends NpcInstance {
     public CastleMessengerInstance(int objectID, NpcTemplate template) {
         super(objectID, template);
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
         Castle castle = getCastle();
 
         if (player.isCastleLord(castle.getId())) {

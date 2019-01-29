@@ -58,7 +58,7 @@ public final class _501_ProofOfClanAlliance extends Quest {
     private static final int RETRY_PRICE = 10000;
 
     public _501_ProofOfClanAlliance() {
-        super(PARTY_NONE);
+        super(false);
 
         addStartNpc(SIR_KRISTOF_RODEMAI);
         addStartNpc(STATUE_OF_OFFERING);
@@ -81,7 +81,7 @@ public final class _501_ProofOfClanAlliance extends Quest {
         Clan clan = st.getPlayer().getClan();
         QuestState leader = null;
         if (clan != null && clan.getLeader() != null && clan.getLeader().getPlayer() != null)
-            leader = clan.getLeader().getPlayer().getQuestState(getName());
+            leader = clan.getLeader().getPlayer().getQuestState(this);
         return leader;
     }
 
@@ -127,8 +127,8 @@ public final class _501_ProofOfClanAlliance extends Quest {
             pleader.getEffectList().stopEffect(4082);
         }
         for (Player pl : st.getPlayer().getClan().getOnlineMembers(st.getPlayer().getClan().getLeaderId()))
-            if (pl != null && pl.getQuestState(getName()) != null)
-                pl.getQuestState(getName()).exitCurrentQuest(true);
+            if (pl != null && pl.getQuestState(this) != null)
+                pl.getQuestState(this).exitCurrentQuest(true);
     }
 
     @Override

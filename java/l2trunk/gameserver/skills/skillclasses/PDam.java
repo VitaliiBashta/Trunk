@@ -13,17 +13,17 @@ import l2trunk.gameserver.stats.Formulas.AttackInfo;
 import java.util.List;
 
 public final class PDam extends Skill {
-    private final boolean _onCrit;
-    private final boolean _directHp;
-    private final boolean _turner;
-    private final boolean _blow;
+    private final boolean onCrit;
+    private final boolean directHp;
+    private final boolean turner;
+    private final boolean blow;
 
     public PDam(StatsSet set) {
         super(set);
-        _onCrit = set.getBool("onCrit", false);
-        _directHp = set.getBool("directHp", false);
-        _turner = set.getBool("turner", false);
-        _blow = set.getBool("blow", false);
+        onCrit = set.getBool("onCrit", false);
+        directHp = set.getBool("directHp", false);
+        turner = set.getBool("turner", false);
+        blow = set.getBool("blow", false);
     }
 
     @Override
@@ -35,7 +35,7 @@ public final class PDam extends Skill {
 
         for (Creature target : targets)
             if (target != null && !target.isDead()) {
-                if (_turner && !target.isInvul()) {
+                if (turner && !target.isInvul()) {
                     target.broadcastPacket(new StartRotating(target, target.getHeading(), 1, 65535));
                     target.broadcastPacket(new FinishRotating(target, activeChar.getHeading(), 65535));
                     target.setHeading(activeChar.getHeading());
@@ -45,18 +45,18 @@ public final class PDam extends Skill {
                 reflected = target.checkReflectSkill(activeChar, this);
                 realTarget = reflected ? activeChar : target;
 
-                AttackInfo info = Formulas.calcPhysDam(activeChar, realTarget, this, false, _blow, ss, _onCrit);
+                AttackInfo info = Formulas.calcPhysDam(activeChar, realTarget, this, false, blow, ss, onCrit);
 
                 if (info.lethal_dmg > 0)
                     realTarget.reduceCurrentHp(info.lethal_dmg, activeChar, this, true, true, false, false, false, false, false);
 
                 if (!info.miss || info.damage >= 1)
-                    realTarget.reduceCurrentHp(info.damage, activeChar, this, true, true, info.lethal ? false : _directHp, true, false, false, power != 0);
+                    realTarget.reduceCurrentHp(info.damage, activeChar, this, true, true, info.lethal ? false : directHp, true, false, false, power != 0);
 
                 if (!reflected)
-                    realTarget.doCounterAttack(this, activeChar, _blow);
+                    realTarget.doCounterAttack(this, activeChar, blow);
 
-                getEffects(activeChar, target, activateRate() > 0, false, reflected);
+                getEffects(activeChar, target, activateRate > 0, false, reflected);
             }
 
         if (isSuicideAttack)

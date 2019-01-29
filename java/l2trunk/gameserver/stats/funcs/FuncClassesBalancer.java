@@ -25,7 +25,7 @@ public class FuncClassesBalancer extends Func {
 
     @Override
     public void calc(Env env) {
-        final ClassesStatsBalancerHolder balance = ClassesStatsBalancerParser.getInstance().getBalanceForClass(env.character.getPlayer().getClassId().getId(), stat);
+        final ClassesStatsBalancerHolder balance = ClassesStatsBalancerParser.getInstance().getBalanceForClass(env.character.getPlayer().getClassId().id(), stat);
         if (balance != null) {
             // Apply the stats!
             env.value += balance.getFixedValue();

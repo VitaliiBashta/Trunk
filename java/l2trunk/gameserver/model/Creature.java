@@ -18,7 +18,6 @@ import l2trunk.gameserver.ai.PlayableAI.nextAction;
 import l2trunk.gameserver.geodata.GeoEngine;
 import l2trunk.gameserver.geodata.GeoMove;
 import l2trunk.gameserver.instancemanager.DimensionalRiftManager;
-import l2trunk.gameserver.instancemanager.QuestManager;
 import l2trunk.gameserver.instancemanager.ReflectionManager;
 import l2trunk.gameserver.model.GameObjectTasks.*;
 import l2trunk.gameserver.model.Skill.SkillTargetType;
@@ -35,7 +34,6 @@ import l2trunk.gameserver.model.instances.MonsterInstance;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.model.pledge.Clan;
-import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestEventType;
 import l2trunk.gameserver.model.reference.L2Reference;
 import l2trunk.gameserver.network.serverpackets.*;
@@ -59,6 +57,7 @@ import l2trunk.gameserver.templates.item.WeaponTemplate.WeaponType;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.Log;
 import l2trunk.gameserver.utils.PositionUtils;
+import l2trunk.scripts.quests._255_Tutorial;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -146,9 +145,9 @@ public abstract class Creature extends GameObject {
 
     private long reuseDelay = 0L;
     private double currentCp = 0;
-    private double _currentHp = 1;
+    private double currentHp = 1;
     private boolean isAttackAborted;
-    private long _attackEndTime;
+    private long attackEndTime;
     private long _attackReuseEndTime;
     private Map<TriggerType, Set<TriggerInfo>> triggers = new ConcurrentHashMap<>();
     private volatile EffectList _effectList;
@@ -240,7 +239,7 @@ public abstract class Creature extends GameObject {
 
     public final void abortAttack(boolean force, boolean message) {
         if (isAttackingNow()) {
-            _attackEndTime = 0;
+            attackEndTime = 0;
             if (force)
                 isAttackAborted = true;
 
@@ -352,7 +351,7 @@ public abstract class Creature extends GameObject {
         if (absorb > 0 && !target.isDamageBlocked()) {
             limit = calcStat(Stats.HP_LIMIT, null, null) * getMaxHp() / 100.;
             if (getCurrentHp() < limit)
-                setCurrentHp(Math.min(_currentHp + damage * absorb * BalancerConfig.ALT_ABSORB_DAMAGE_MODIFIER / 100., limit), false);
+                setCurrentHp(Math.min(currentHp + damage * absorb * BalancerConfig.ALT_ABSORB_DAMAGE_MODIFIER / 100., limit), false);
         }
 
         absorb = poleMod * calcStat(Stats.ABSORB_DAMAGEMP_PERCENT, 0, target, null);
@@ -1010,7 +1009,7 @@ public abstract class Creature extends GameObject {
 
         // DS: adjusted by 1/100 of a second since the AI task is called with a small error
         // Especially on slower machines and is broken by autoattacks isAttackingNow () == true
-        _attackEndTime = sAtk + System.currentTimeMillis() - 10;
+        attackEndTime = sAtk + System.currentTimeMillis() - 10;
         isAttackAborted = false;
 
         Attack attack = new Attack(this, target, getChargedSoulShot(), ssGrade);
@@ -1428,7 +1427,7 @@ public abstract class Creature extends GameObject {
         stopAttackStanceTask();
         stopRegeneration();
 
-        _currentHp = 0;
+        currentHp = 0;
 
         // unsummon pet when player dies
         //if (isPlayer() && getPlayer().getPet() != null)
@@ -1557,7 +1556,7 @@ public abstract class Creature extends GameObject {
     }
 
     public final double getCurrentHp() {
-        return _currentHp;
+        return currentHp;
     }
 
     public final double getCurrentHpRatio() {
@@ -1826,7 +1825,7 @@ public abstract class Creature extends GameObject {
     }
 
     public final boolean isAttackingNow() {
-        return _attackEndTime > System.currentTimeMillis();
+        return attackEndTime > System.currentTimeMillis();
     }
 
     private boolean isBlessedByNoblesse() {
@@ -1850,7 +1849,7 @@ public abstract class Creature extends GameObject {
     }
 
     public boolean isDead() {
-        return _currentHp < 0.5 || isDead.get();
+        return currentHp < 0.5 || isDead.get();
     }
 
     @Override
@@ -2602,7 +2601,7 @@ public abstract class Creature extends GameObject {
 
         int hpConsume = skill.hpConsume;
         if (hpConsume > 0)
-            setCurrentHp(Math.max(0, _currentHp - hpConsume), false);
+            setCurrentHp(Math.max(0, currentHp - hpConsume), false);
 
         double mpConsume2 = skill.mpConsume2;
         if (mpConsume2 > 0) {
@@ -2904,27 +2903,27 @@ public abstract class Creature extends GameObject {
 
         newHp = Math.min(maxHp, Math.max(0, newHp));
 
-        if (_currentHp == newHp)
+        if (currentHp == newHp)
             return;
 
         if (newHp >= 0.5 && isDead() && !canRessurect)
             return;
 
-        double hpStart = _currentHp;
+        double hpStart = currentHp;
 
-        _currentHp = newHp;
+        currentHp = newHp;
 
         if (isDead.compareAndSet(true, false))
             onRevive();
 
-        checkHpMessages(hpStart, _currentHp);
+        checkHpMessages(hpStart, currentHp);
 
         if (sendInfo) {
             broadcastStatusUpdate();
             sendChanges();
         }
 
-        if (_currentHp < maxHp)
+        if (currentHp < maxHp)
             startRegeneration();
     }
 
@@ -2990,26 +2989,26 @@ public abstract class Creature extends GameObject {
         newHp = Math.min(maxHp, Math.max(0, newHp));
         newMp = Math.min(maxMp, Math.max(0, newMp));
 
-        if (_currentHp == newHp && _currentMp == newMp)
+        if (currentHp == newHp && _currentMp == newMp)
             return;
 
         if (newHp >= 0.5 && isDead() && !canRessurect)
             return;
 
-        double hpStart = _currentHp;
+        double hpStart = currentHp;
 
-        _currentHp = newHp;
+        currentHp = newHp;
         _currentMp = newMp;
 
         if (isDead.compareAndSet(true, false))
             onRevive();
 
-        checkHpMessages(hpStart, _currentHp);
+        checkHpMessages(hpStart, currentHp);
 
         broadcastStatusUpdate();
         sendChanges();
 
-        if (_currentHp < maxHp || _currentMp < maxMp)
+        if (currentHp < maxHp || _currentMp < maxMp)
             startRegeneration();
     }
 
@@ -3493,10 +3492,7 @@ public abstract class Creature extends GameObject {
             player.getListeners().onTeleport(new Location(x, y, z), r);
 
             // Alexander - Send a teleport event to the tutorial for the player
-            Quest q = QuestManager.getQuest(255);
-            if (q != null) {
-                player.processQuestEvent(q.getName(), "CE42", null);
-            }
+            player.processQuestEvent(_255_Tutorial.class, "CE42", null);
 
             decayMe();
 
@@ -3720,14 +3716,14 @@ public abstract class Creature extends GameObject {
         final int maxMp = getMaxMp();
         final int maxCp = isPlayer() ? getMaxCp() : 0;
 
-        if (_currentHp > maxHp)
+        if (currentHp > maxHp)
             setCurrentHp(maxHp, false);
         if (_currentMp > maxMp)
             setCurrentMp(maxMp, false);
         if (currentCp > maxCp)
             setCurrentCp(maxCp, false);
 
-        if (_currentHp < maxHp || _currentMp < maxMp || currentCp < maxCp)
+        if (currentHp < maxHp || _currentMp < maxMp || currentCp < maxCp)
             startRegeneration();
     }
 
@@ -4098,7 +4094,7 @@ public abstract class Creature extends GameObject {
             if (isAlikeDead() || getRegenTick() == 0L)
                 return;
 
-            double hpStart = _currentHp;
+            double hpStart = currentHp;
 
             int maxHp = getMaxHp();
             int maxMp = getMaxMp();
@@ -4109,7 +4105,7 @@ public abstract class Creature extends GameObject {
 
             regenLock.lock();
             try {
-                if (_currentHp < maxHp)
+                if (currentHp < maxHp)
                     addHp += Formulas.calcHpRegen(Creature.this);
 
                 if (_currentMp < maxMp)
@@ -4130,10 +4126,10 @@ public abstract class Creature extends GameObject {
                     addMp *= Config.RATE_RAID_REGEN;
                 }
 
-                _currentHp += Math.max(0, Math.min(addHp, calcStat(Stats.HP_LIMIT, null, null) * maxHp / 100. - _currentHp));
+                currentHp += Math.max(0, Math.min(addHp, calcStat(Stats.HP_LIMIT, null, null) * maxHp / 100. - currentHp));
                 _currentMp += Math.max(0, Math.min(addMp, calcStat(Stats.MP_LIMIT, null, null) * maxMp / 100. - _currentMp));
 
-                _currentHp = Math.min(maxHp, _currentHp);
+                currentHp = Math.min(maxHp, currentHp);
                 _currentMp = Math.min(maxMp, _currentMp);
 
                 if (isPlayer()) {
@@ -4142,7 +4138,7 @@ public abstract class Creature extends GameObject {
                 }
 
                 // отрегенились, останавливаем задачу
-                if (_currentHp == maxHp && _currentMp == maxMp && currentCp == maxCp)
+                if (currentHp == maxHp && _currentMp == maxMp && currentCp == maxCp)
                     stopRegeneration();
             } finally {
                 regenLock.unlock();
@@ -4151,7 +4147,7 @@ public abstract class Creature extends GameObject {
             broadcastStatusUpdate();
             sendChanges();
 
-            checkHpMessages(hpStart, _currentHp);
+            checkHpMessages(hpStart, currentHp);
         }
     }
 }

@@ -19,6 +19,7 @@ import l2trunk.gameserver.utils.TimeUtils;
 import l2trunk.scripts.quests._655_AGrandPlanForTamingWildBeasts;
 
 import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 /**
@@ -224,7 +225,7 @@ public class FarmMessengerInstance extends NpcInstance {
 
         SiegeClanObject siegeClan = siegeEvent.getSiegeClan(ClanHallTeamBattleEvent.ATTACKERS, clan);
         if (siegeEvent.isRegistrationOver()) {
-            showChatWindow(player, "quests/_655_AGrandPlanForTamingWildBeasts/farm_messenger_q0655_11.htm", "%siege_time%", TimeUtils.toSimpleFormat(clanHall.getSiegeDate()));
+            showChatWindow(player, "quests/_655_AGrandPlanForTamingWildBeasts/farm_messenger_q0655_11.htm", Map.of("%siege_time%", TimeUtils.toSimpleFormat(clanHall.getSiegeDate())));
             return false;
         }
 
@@ -260,10 +261,10 @@ public class FarmMessengerInstance extends NpcInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
         Clan clan = getClanHall().getOwner();
         if (clan != null)
-            showChatWindow(player, "residence2/clanhall/farm_messenger001.htm", "%owner_name%", clan.getName());
+            showChatWindow(player, "residence2/clanhall/farm_messenger001.htm", Map.of("%owner_name%", clan.getName()));
         else
             showChatWindow(player, "residence2/clanhall/farm_messenger002.htm");
     }

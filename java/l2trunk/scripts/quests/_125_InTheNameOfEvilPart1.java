@@ -93,8 +93,8 @@ public final class _125_InTheNameOfEvilPart1 extends Quest {
             else if (cond == 3)
                 htmltext = "32117-09.htm";
             else if (cond == 4) {
-                st.takeAllItems(DienBone);
-                st.takeAllItems(OrClaw);
+                st.takeItems(DienBone);
+                st.takeItems(OrClaw);
                 htmltext = "32117-1.htm";
             }
         } else if (npcId == UluKaimu) {

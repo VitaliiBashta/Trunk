@@ -59,7 +59,7 @@ public final class UnitMember {
         name = player.getName();
         title = player.getTitle();
         level = player.getLevel();
-        classId = player.getClassId().getId();
+        classId = player.getClassId().id();
         pledgeType = player.getPledgeType();
         powerGrade = player.getPowerGrade();
         apprentice = player.getApprentice();
@@ -79,7 +79,7 @@ public final class UnitMember {
     }
 
     public int getClassId() {
-        return player == null ? classId : player.getClassId().getId();
+        return player == null ? classId : player.getClassId().id();
     }
 
     public int getSex() {

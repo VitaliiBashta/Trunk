@@ -12,6 +12,8 @@ import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.SocialAction;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.Location;
+import l2trunk.scripts.quests._020_BringUpWithLove;
+import l2trunk.scripts.quests._655_AGrandPlanForTamingWildBeasts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -185,13 +187,13 @@ public class FeedableBeastInstance extends MonsterInstance {
             nextNpc.setRunning();
             nextNpc.setOwner(player);
 
-            QuestState st = player.getQuestState("_020_BringUpWithLove");
+            QuestState st = player.getQuestState(_020_BringUpWithLove.class);
             if (st != null && !st.isCompleted() && Rnd.chance(5) && st.getQuestItemsCount(7185) == 0) {
                 st.giveItems(7185, 1);
                 st.setCond(2);
             }
 
-            st = player.getQuestState("_655_AGrandPlanForTamingWildBeasts");
+            st = player.getQuestState(_655_AGrandPlanForTamingWildBeasts.class);
             if (st != null && !st.isCompleted() && st.getCond() == 1)
                 if (st.getQuestItemsCount(8084) < 10)
                     st.giveItems(8084, 1);

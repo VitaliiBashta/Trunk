@@ -4,7 +4,6 @@ import l2trunk.gameserver.model.GameObjectsStorage;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _225_TestOfTheSearcher extends Quest {
     //NPC
@@ -197,9 +196,9 @@ public final class _225_TestOfTheSearcher extends Quest {
                 htmltext = "completed";
                 st.exitCurrentQuest(true);
             } else if (cond == 0) {
-                if (st.getPlayer().getClassId().getId() == 0x07 || st.getPlayer().getClassId().getId() == 0x16 || st.getPlayer().getClassId().getId() == 0x23 || st.getPlayer().getClassId().getId() == 0x36) {
+                if (st.getPlayer().getClassId().id() == 0x07 || st.getPlayer().getClassId().id() == 0x16 || st.getPlayer().getClassId().id() == 0x23 || st.getPlayer().getClassId().id() == 0x36) {
                     if (st.getPlayer().getLevel() >= 39) {
-                        if (st.getPlayer().getClassId().getId() == 0x36)
+                        if (st.getPlayer().getClassId().id() == 0x36)
                             htmltext = "30690-04.htm";
                         else
                             htmltext = "30690-03.htm";

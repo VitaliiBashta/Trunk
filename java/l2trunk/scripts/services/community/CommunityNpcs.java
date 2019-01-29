@@ -263,7 +263,7 @@ public class CommunityNpcs implements ScriptFile, ICommunityBoardHandler {
         if (!canChangeClass(player))
             return;
 
-        if (player.getBaseClassId() == player.getClassId().getId()) {
+        if (player.getBaseClassId() == player.getClassId().id()) {
             sendFileToPlayer(player, "smallNpcs/subclassChanger_back.htm", true);
             return;
         }

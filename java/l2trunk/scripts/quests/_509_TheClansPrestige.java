@@ -142,7 +142,7 @@ public final class _509_TheClansPrestige extends Quest {
         if (clan_leader == null)
             return null;
         if (clan_leader.equals(st.getPlayer()) || clan_leader.getDistance(npc) <= 1600)
-            id = clan_leader.getQuestState(getName());
+            id = clan_leader.getQuestState(this);
         if (id == null)
             return null;
         if (st.getCond() == 1 && st.getState() == STARTED) {

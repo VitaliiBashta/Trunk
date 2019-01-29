@@ -166,8 +166,8 @@ public final class _416_PathToOrcShaman extends Quest {
                 htmltext = "seer_umos_q0416_04.htm";
                 st.exitCurrentQuest(true);
             } else if (cond == 0) {
-                if (st.getPlayer().getClassId().getId() != 0x31) {
-                    if (st.getPlayer().getClassId().getId() == 0x32)
+                if (st.getPlayer().getClassId().id() != 0x31) {
+                    if (st.getPlayer().getClassId().id() == 0x32)
                         htmltext = "tataru_zu_hestui_q0416_02a.htm";
                     else
                         htmltext = "tataru_zu_hestui_q0416_02.htm";

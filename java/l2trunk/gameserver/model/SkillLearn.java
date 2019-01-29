@@ -1,58 +1,58 @@
 package l2trunk.gameserver.model;
 
 public final class SkillLearn implements Comparable<SkillLearn> {
-    private final int _id;
-    private final int _level;
-    private final int _minLevel;
-    private final int _cost;
-    private final int _itemId;
-    private final long _itemCount;
-    private final boolean _clicked;
+    private final int id;
+    private final int level;
+    private final int minLevel;
+    public final int cost;
+    public final int itemId;
+    private final long itemCount;
+    private final boolean clicked;
 
     public SkillLearn(int id, int lvl, int minLvl, int cost, int itemId, long itemCount, boolean clicked) {
-        _id = id;
-        _level = lvl;
-        _minLevel = minLvl;
-        _cost = cost;
+        this.id = id;
+        level = lvl;
+        minLevel = minLvl;
+        this.cost = cost;
 
-        _itemId = itemId;
-        _itemCount = itemCount;
-        _clicked = clicked;
+        this.itemId = itemId;
+        this.itemCount = itemCount;
+        this.clicked = clicked;
     }
 
-    public int getId() {
-        return _id;
+    public int id() {
+        return id;
     }
 
-    public int getLevel() {
-        return _level;
+    public int level() {
+        return level;
     }
 
     public int getMinLevel() {
-        return _minLevel;
+        return minLevel;
     }
 
-    public int getCost() {
-        return _cost;
+    public int cost() {
+        return cost;
     }
 
-    public int getItemId() {
-        return _itemId;
+    public int itemId() {
+        return itemId;
     }
 
-    public long getItemCount() {
-        return _itemCount;
+    public long itemCount() {
+        return itemCount;
     }
 
     public boolean isClicked() {
-        return _clicked;
+        return clicked;
     }
 
     @Override
     public int compareTo(SkillLearn o) {
-        if (getId() == o.getId())
-            return getLevel() - o.getLevel();
+        if (id() == o.id())
+            return level() - o.level();
         else
-            return getId() - o.getId();
+            return id() - o.id();
     }
 }

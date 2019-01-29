@@ -128,7 +128,7 @@ public class RainbowMessengerInstance extends NpcInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
         ClanHall clanHall = getClanHall();
         Clan clan = clanHall.getOwner();
         NpcHtmlMessage msg = new NpcHtmlMessage(player, this);

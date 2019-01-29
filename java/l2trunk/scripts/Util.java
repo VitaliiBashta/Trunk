@@ -21,6 +21,7 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.WarehouseFunctions;
+import l2trunk.scripts.quests._255_Tutorial;
 
 import static l2trunk.commons.lang.NumberUtils.toInt;
 
@@ -207,7 +208,7 @@ public final class Util extends Functions {
 
         // Synerge - Extra parameter to close tutorial
         if (closeTutorial) {
-            final QuestState qs = player.getQuestState("_255_Tutorial");
+            final QuestState qs = player.getQuestState(_255_Tutorial.class);
             if (qs != null)
                 qs.closeTutorial();
         }
@@ -562,12 +563,12 @@ public final class Util extends Functions {
 //        if (crystal < 4411 || crystal > 4417)
 //            return;
 //
-//        if (getItemCount(player, score) == 0) {
+//        if (itemCount(player, score) == 0) {
 //            player.getLastNpc().onBypassFeedback(player, "Chat 1");
 //            return;
 //        }
 //
-//        if (getItemCount(player, 57) < 200) {
+//        if (itemCount(player, 57) < 200) {
 //            player.sendPacket(Msg.YOU_DO_NOT_HAVE_ENOUGH_ADENA);
 //            return;
 //        }

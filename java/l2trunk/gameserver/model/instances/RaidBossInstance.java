@@ -18,6 +18,7 @@ import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.SystemMessage;
 import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
+import l2trunk.scripts.quests._508_TheClansReputation;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -89,11 +90,10 @@ public class RaidBossInstance extends MonsterInstance {
                 player.updateRaidKills();
             }
 
-            Quest q = QuestManager.getQuest(508);
+            Quest q = QuestManager.getQuest(_508_TheClansReputation.class);
             if (q != null) {
-                String qn = q.getName();
-                if (player.getClan() != null && player.getClan().getLeader().isOnline() && player.getClan().getLeader().getPlayer().getQuestState(qn) != null) {
-                    QuestState st = player.getClan().getLeader().getPlayer().getQuestState(qn);
+                if (player.getClan() != null && player.getClan().getLeader().isOnline() && player.getClan().getLeader().getPlayer().getQuestState(q) != null) {
+                    QuestState st = player.getClan().getLeader().getPlayer().getQuestState(q);
                     st.getQuest().onKill(this, st);
                 }
             }

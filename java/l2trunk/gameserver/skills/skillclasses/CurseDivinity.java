@@ -38,7 +38,7 @@ public final class CurseDivinity extends Skill {
                 }
 
 
-                getEffects(activeChar, target, activateRate() > 0, false, reflected);
+                getEffects(activeChar, target, activateRate > 0, false, reflected);
             }
 
         if (isSuicideAttack)

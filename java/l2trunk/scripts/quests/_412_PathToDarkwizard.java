@@ -91,14 +91,14 @@ public final class _412_PathToDarkwizard extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
         if (event.equalsIgnoreCase("1")) {
-            if (st.getPlayer().getLevel() >= 18 && st.getPlayer().getClassId().getId() == 0x26 && st.getQuestItemsCount(JEWEL_OF_DARKNESS_ID) < 1) {
+            if (st.getPlayer().getLevel() >= 18 && st.getPlayer().getClassId().id() == 0x26 && st.getQuestItemsCount(JEWEL_OF_DARKNESS_ID) < 1) {
                 st.setCond(1);
                 st.setState(STARTED);
                 st.playSound(SOUND_ACCEPT);
                 st.giveItems(SEEDS_OF_DESPAIR_ID);
                 htmltext = "varika_q0412_05.htm";
-            } else if (st.getPlayer().getClassId().getId() != 0x26) {
-                if (st.getPlayer().getClassId().getId() == 0x27)
+            } else if (st.getPlayer().getClassId().id() != 0x26) {
+                if (st.getPlayer().getClassId().id() == 0x27)
                     htmltext = "varika_q0412_02a.htm";
                 else
                     htmltext = "varika_q0412_03.htm";

@@ -46,7 +46,7 @@ public final class ManaHeal extends Skill {
 
             if (newMp == 0) {
                 activeChar.sendPacket(new SystemMessage2(SystemMsg.S1_HAS_FAILED).addSkillName(id, getDisplayLevel()));
-                getEffects(activeChar, target, activateRate() > 0, false);
+                getEffects(activeChar, target, activateRate > 0, false);
                 continue;
             }
 
@@ -59,7 +59,7 @@ public final class ManaHeal extends Skill {
                     target.sendPacket(new SystemMessage2(SystemMsg.S2_MP_HAS_BEEN_RESTORED_BY_C1).addString(activeChar.getName()).addInteger(Math.round(addToMp)));
                 else
                     activeChar.sendPacket(new SystemMessage2(SystemMsg.S1_MP_HAS_BEEN_RESTORED).addInteger(Math.round(addToMp)));
-            getEffects(activeChar, target, activateRate() > 0, false);
+            getEffects(activeChar, target, activateRate > 0, false);
         }
 
         if (isSSPossible())

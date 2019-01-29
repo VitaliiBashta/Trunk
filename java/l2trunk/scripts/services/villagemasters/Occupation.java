@@ -63,7 +63,7 @@ public final class Occupation extends Functions {
             // All other Races must be out
             htmltext = "08.htm";
 
-        ((VillageMasterInstance) npc).showChatWindow(pl, "villagemaster/30031/" + htmltext);
+        npc.showChatWindow(pl, "villagemaster/30031/" + htmltext);
     }
 
     private void onTalk30037() {
@@ -92,7 +92,7 @@ public final class Occupation extends Functions {
         else
             htmltext = "33.htm";
 
-        ((VillageMasterInstance) npc).showChatWindow(pl, "villagemaster/30037/" + htmltext);
+        npc.showChatWindow(pl, "villagemaster/30037/" + htmltext);
     }
 
     public void onChange30037(String[] args) {
@@ -164,7 +164,7 @@ public final class Occupation extends Functions {
             }
         }
 
-        ((VillageMasterInstance) npc).showChatWindow(pl, "villagemaster/30037/" + htmltext);
+        npc.showChatWindow(pl, "villagemaster/30037/" + htmltext);
     }
 
     private void onTalk30066() {
@@ -195,7 +195,7 @@ public final class Occupation extends Functions {
         else
             htmltext = "40.htm";
 
-        ((VillageMasterInstance) npc).showChatWindow(pl, "villagemaster/30066/" + htmltext);
+        npc.showChatWindow(pl, "villagemaster/30066/" + htmltext);
     }
 
     public void onChange30066(String[] args) {
@@ -289,7 +289,7 @@ public final class Occupation extends Functions {
             }
         }
 
-        ((VillageMasterInstance) npc).showChatWindow(pl, "villagemaster/30066/" + htmltext);
+        npc.showChatWindow(pl, "villagemaster/30066/" + htmltext);
     }
 
     public void onTalk30511() {
@@ -314,7 +314,7 @@ public final class Occupation extends Functions {
         else
             htmltext = "11.htm";
 
-        ((VillageMasterInstance) npc).showChatWindow(pl, "villagemaster/30511/" + htmltext);
+        npc.showChatWindow(pl, "villagemaster/30511/" + htmltext);
     }
 
     public void onChange30511(String[] args) {
@@ -352,7 +352,7 @@ public final class Occupation extends Functions {
                 htmltext = "08.htm";
             }
 
-        ((VillageMasterInstance) npc).showChatWindow(pl, "villagemaster/30511/" + htmltext);
+        npc.showChatWindow(pl, "villagemaster/30511/" + htmltext);
     }
 
     public void onTalk30070() {
@@ -379,7 +379,7 @@ public final class Occupation extends Functions {
         else
             htmltext = "33.htm";
 
-        ((VillageMasterInstance) npc).showChatWindow(pl, "villagemaster/30070/" + htmltext);
+        npc.showChatWindow(pl, "villagemaster/30070/" + htmltext);
     }
 
     public void onChange30070(String[] args) {
@@ -452,7 +452,7 @@ public final class Occupation extends Functions {
             }
         }
 
-        ((VillageMasterInstance) npc).showChatWindow(pl, "villagemaster/30070/" + htmltext);
+        npc.showChatWindow(pl, "villagemaster/30070/" + htmltext);
     }
 
     public void onTalk30154() {
@@ -479,7 +479,7 @@ public final class Occupation extends Functions {
         else
             htmltext = "11.htm";
 
-        ((VillageMasterInstance) npc).showChatWindow(pl, "villagemaster/30154/" + htmltext);
+        npc.showChatWindow(pl, "villagemaster/30154/" + htmltext);
     }
 
     public void onTalk30358() {
@@ -506,7 +506,7 @@ public final class Occupation extends Functions {
         else
             htmltext = "11.htm";
 
-        ((VillageMasterInstance) npc).showChatWindow(pl, "villagemaster/30358/" + htmltext);
+        npc.showChatWindow(pl, "villagemaster/30358/" + htmltext);
     }
 
     public void onTalk30498() {
@@ -531,7 +531,7 @@ public final class Occupation extends Functions {
         else
             htmltext = "11.htm";
 
-        ((VillageMasterInstance) npc).showChatWindow(pl, "villagemaster/30498/" + htmltext);
+        npc.showChatWindow(pl, "villagemaster/30498/" + htmltext);
     }
 
     public void onChange30498(String[] args) {
@@ -565,7 +565,7 @@ public final class Occupation extends Functions {
             }
         }
 
-        ((VillageMasterInstance) npc).showChatWindow(pl, "villagemaster/30498/" + htmltext);
+        npc.showChatWindow(pl, "villagemaster/30498/" + htmltext);
     }
 
     public void onTalk30499() {
@@ -590,7 +590,7 @@ public final class Occupation extends Functions {
         else
             htmltext = "11.htm";
 
-        ((VillageMasterInstance) npc).showChatWindow(pl, "villagemaster/30499/" + htmltext);
+        npc.showChatWindow(pl, "villagemaster/30499/" + htmltext);
     }
 
     public void onChange30499(String[] args) {
@@ -624,7 +624,7 @@ public final class Occupation extends Functions {
             }
         }
 
-        ((VillageMasterInstance) npc).showChatWindow(pl, "villagemaster/30499/" + htmltext);
+        npc.showChatWindow(pl, "villagemaster/30499/" + htmltext);
     }
 
     public void onTalk30525() {
@@ -649,7 +649,7 @@ public final class Occupation extends Functions {
         else
             htmltext = "07.htm";
 
-        ((VillageMasterInstance) npc).showChatWindow(pl, "villagemaster/30525/" + htmltext);
+        npc.showChatWindow(pl, "villagemaster/30525/" + htmltext);
     }
 
     public void onTalk30520() {
@@ -674,7 +674,7 @@ public final class Occupation extends Functions {
         else
             htmltext = "07.htm";
 
-        ((VillageMasterInstance) npc).showChatWindow(pl, "villagemaster/30520/" + htmltext);
+        npc.showChatWindow(pl, "villagemaster/30520/" + htmltext);
     }
 
     public void onTalk30512() {
@@ -699,7 +699,7 @@ public final class Occupation extends Functions {
         else
             htmltext = "11.htm";
 
-        ((VillageMasterInstance) npc).showChatWindow(pl, "villagemaster/30512/" + htmltext);
+        npc.showChatWindow(pl, "villagemaster/30512/" + htmltext);
     }
 
     public void onChange30512(String[] args) {
@@ -737,7 +737,7 @@ public final class Occupation extends Functions {
                 htmltext = "08.htm";
             }
 
-        ((VillageMasterInstance) npc).showChatWindow(pl, "villagemaster/30512/" + htmltext);
+        npc.showChatWindow(pl, "villagemaster/30512/" + htmltext);
     }
 
     private void onTalk30565() {
@@ -764,7 +764,7 @@ public final class Occupation extends Functions {
         else
             htmltext = "11.htm";
 
-        ((VillageMasterInstance) npc).showChatWindow(pl, "villagemaster/30565/" + htmltext);
+        npc.showChatWindow(pl, "villagemaster/30565/" + htmltext);
     }
 
     public void onTalk30109() {
@@ -801,7 +801,7 @@ public final class Occupation extends Functions {
         else
             htmltext = "78.htm";
 
-        ((VillageMasterInstance) npc).showChatWindow(pl, "villagemaster/30109/" + htmltext);
+        npc.showChatWindow(pl, "villagemaster/30109/" + htmltext);
     }
 
     public void onChange30109(String[] args) {
@@ -991,7 +991,7 @@ public final class Occupation extends Functions {
                 htmltext = "75.htm";
             }
 
-        ((VillageMasterInstance) npc).showChatWindow(pl, "villagemaster/30109/" + htmltext);
+        npc.showChatWindow(pl, "villagemaster/30109/" + htmltext);
     }
 
     public void onTalk30115() {
@@ -1015,12 +1015,12 @@ public final class Occupation extends Functions {
             htmltext = "39.htm";
         else if (classId == ClassId.spellsinger || classId == ClassId.elementalSummoner)
             htmltext = "39.htm";
-        else if ((pl.getRace() == Race.elf || pl.getRace() == Race.human) && classId.isMage())
+        else if ((pl.getRace() == Race.elf || pl.getRace() == Race.human) && classId.isMage)
             htmltext = "38.htm";
         else
             htmltext = "40.htm";
 
-        ((VillageMasterInstance) npc).showChatWindow(pl, "villagemaster/30115/" + htmltext);
+        npc.showChatWindow(pl, "villagemaster/30115/" + htmltext);
     }
 
     public void onChange30115(String[] args) {
@@ -1125,7 +1125,7 @@ public final class Occupation extends Functions {
                 htmltext = "37.htm";
             }
 
-        ((VillageMasterInstance) npc).showChatWindow(pl, "villagemaster/30115/" + htmltext);
+        npc.showChatWindow(pl, "villagemaster/30115/" + htmltext);
     }
 
     public void onTalk30120() {
@@ -1147,12 +1147,12 @@ public final class Occupation extends Functions {
             htmltext = "05.htm";
         else if (classId == ClassId.elder || classId == ClassId.bishop || classId == ClassId.prophet)
             htmltext = "25.htm";
-        else if ((pl.getRace() == Race.human || pl.getRace() == Race.elf) && classId.isMage())
+        else if ((pl.getRace() == Race.human || pl.getRace() == Race.elf) && classId.isMage)
             htmltext = "24.htm";
         else
             htmltext = "26.htm";
 
-        ((VillageMasterInstance) npc).showChatWindow(pl, "villagemaster/30120/" + htmltext);
+        npc.showChatWindow(pl, "villagemaster/30120/" + htmltext);
     }
 
     public void onChange30120(String[] args) {
@@ -1224,7 +1224,7 @@ public final class Occupation extends Functions {
                 htmltext = "23.htm";
             }
 
-        ((VillageMasterInstance) npc).showChatWindow(pl, "villagemaster/30120/" + htmltext);
+        npc.showChatWindow(pl, "villagemaster/30120/" + htmltext);
     }
 
     public void onTalk30500() {
@@ -1251,7 +1251,7 @@ public final class Occupation extends Functions {
         else
             htmltext = "23.htm";
 
-        ((VillageMasterInstance) npc).showChatWindow(pl, "villagemaster/30500/" + htmltext);
+        npc.showChatWindow(pl, "villagemaster/30500/" + htmltext);
     }
 
     public void onChange30500(String[] args) {
@@ -1311,7 +1311,7 @@ public final class Occupation extends Functions {
             }
         }
 
-        ((VillageMasterInstance) npc).showChatWindow(pl, "villagemaster/30500/" + htmltext);
+        npc.showChatWindow(pl, "villagemaster/30500/" + htmltext);
     }
 
     public void onTalk30290() {
@@ -1338,7 +1338,7 @@ public final class Occupation extends Functions {
         else
             htmltext = "33.htm";
 
-        ((VillageMasterInstance) npc).showChatWindow(pl, "villagemaster/30290/" + htmltext);
+        npc.showChatWindow(pl, "villagemaster/30290/" + htmltext);
     }
 
     public void onChange30290(String[] args) {
@@ -1411,7 +1411,7 @@ public final class Occupation extends Functions {
             }
         }
 
-        ((VillageMasterInstance) npc).showChatWindow(pl, "villagemaster/30290/" + htmltext);
+        npc.showChatWindow(pl, "villagemaster/30290/" + htmltext);
     }
 
     public void onTalk30513() {
@@ -1440,7 +1440,7 @@ public final class Occupation extends Functions {
         else
             htmltext = "34.htm";
 
-        ((VillageMasterInstance) npc).showChatWindow(pl, "villagemaster/30513/" + htmltext);
+        npc.showChatWindow(pl, "villagemaster/30513/" + htmltext);
     }
 
     public void onChange30513(String[] args) {
@@ -1530,7 +1530,7 @@ public final class Occupation extends Functions {
                 htmltext = "31.htm";
             }
 
-        ((VillageMasterInstance) npc).showChatWindow(pl, "villagemaster/30513/" + htmltext);
+        npc.showChatWindow(pl, "villagemaster/30513/" + htmltext);
     }
 
     public void onTalk30474() {
@@ -1574,7 +1574,7 @@ public final class Occupation extends Functions {
         else
             htmltext = "56.htm";
 
-        ((VillageMasterInstance) npc).showChatWindow(pl, "villagemaster/30474/" + htmltext);
+        npc.showChatWindow(pl, "villagemaster/30474/" + htmltext);
     }
 
     public void onChange30474(String[] args) {
@@ -1718,7 +1718,7 @@ public final class Occupation extends Functions {
                 htmltext = "53.htm";
             }
 
-        ((VillageMasterInstance) npc).showChatWindow(pl, "villagemaster/30474/" + htmltext);
+        npc.showChatWindow(pl, "villagemaster/30474/" + htmltext);
     }
 
     public void onChange32145(String[] args) {
@@ -1745,7 +1745,7 @@ public final class Occupation extends Functions {
                 htmltext = "03.htm";
             }
 
-        ((VillageMasterInstance) npc).showChatWindow(pl, "villagemaster/32145/" + htmltext);
+        npc.showChatWindow(pl, "villagemaster/32145/" + htmltext);
     }
 
     public void onTalk32145() {
@@ -1766,7 +1766,7 @@ public final class Occupation extends Functions {
         else
             htmltext = "02.htm";
 
-        ((VillageMasterInstance) npc).showChatWindow(pl, "villagemaster/32145/" + htmltext);
+        npc.showChatWindow(pl, "villagemaster/32145/" + htmltext);
     }
 
     public void onChange32146(String[] args) {
@@ -1793,7 +1793,7 @@ public final class Occupation extends Functions {
                 htmltext = "03.htm";
             }
 
-        ((VillageMasterInstance) npc).showChatWindow(pl, "villagemaster/32146/" + htmltext);
+        npc.showChatWindow(pl, "villagemaster/32146/" + htmltext);
     }
 
     public void onTalk32146() {
@@ -1842,7 +1842,7 @@ public final class Occupation extends Functions {
 
     public void onTalk32157() {
         String prefix = "head_blacksmith_mokabred";
-        Player pl = (Player) getSelf();
+        Player pl = getSelf();
         NpcInstance npc = getNpc();
         if (pl == null || npc == null)
             return;
@@ -1869,7 +1869,7 @@ public final class Occupation extends Functions {
 
     public void onTalk32160() {
         String prefix = "grandmagister_devon";
-        Player pl = (Player) getSelf();
+        Player pl = getSelf();
         NpcInstance npc = getNpc();
         if (pl == null || npc == null)
             return;
@@ -1968,7 +1968,7 @@ public final class Occupation extends Functions {
 
     public void onTalk32158() {
         String prefix = "warehouse_chief_fisser";
-        Player pl = (Player) getSelf();
+        Player pl = getSelf();
         NpcInstance npc = getNpc();
         if (pl == null || npc == null)
             return;
@@ -1990,12 +1990,12 @@ public final class Occupation extends Functions {
         else
             htmltext = "005.htm";
 
-        ((VillageMasterInstance) npc).showChatWindow(pl, "villagemaster/32158/" + prefix + htmltext);
+        npc.showChatWindow(pl, "villagemaster/32158/" + prefix + htmltext);
     }
 
     public void onTalk32171() {
         String prefix = "warehouse_chief_hufran";
-        Player pl = (Player) getSelf();
+        Player pl = getSelf();
         NpcInstance npc = getNpc();
         if (pl == null || npc == null)
             return;
@@ -2017,7 +2017,7 @@ public final class Occupation extends Functions {
         else
             htmltext = "005.htm";
 
-        ((VillageMasterInstance) npc).showChatWindow(pl, "villagemaster/32171/" + prefix + htmltext);
+        npc.showChatWindow(pl, "villagemaster/32171/" + prefix + htmltext);
     }
 
     public void onTalk32213() {

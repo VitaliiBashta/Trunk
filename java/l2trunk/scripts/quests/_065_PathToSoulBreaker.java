@@ -165,7 +165,7 @@ public final class _065_PathToSoulBreaker extends Quest {
                 htmltext = "completed";
                 st.exitCurrentQuest(true);
             } else if (cond == 0)
-                if (st.getPlayer().getClassId().getId() == 0x7e || st.getPlayer().getClassId().getId() == 0x7d) {
+                if (st.getPlayer().getClassId().id() == 0x7e || st.getPlayer().getClassId().id() == 0x7d) {
                     if (st.getPlayer().getLevel() >= 39)
                         htmltext = "32213.htm";
                     else {

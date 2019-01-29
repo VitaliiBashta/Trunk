@@ -89,7 +89,7 @@ public class MainMachineInstance extends NpcInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
         NpcHtmlMessage message = new NpcHtmlMessage(player, this);
         if (_powerUnits != 0)
             message.setFile("residence2/fortress/fortress_mainpower002.htm");

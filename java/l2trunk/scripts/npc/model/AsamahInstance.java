@@ -38,7 +38,7 @@ public final class AsamahInstance extends NpcInstance {
 
             showChatWindow(player, "default/" + htmltext);
         } else if (command.equals("buyStones")) {
-            String htmltext = null;
+            String htmltext;
             QuestState ElrokianHuntersProof = player.getQuestState(_111_ElrokianHuntersProof.class);
 
             if (player.getLevel() >= 75 && ElrokianHuntersProof != null && ElrokianHuntersProof.isCompleted() && Functions.getItemCount(player, 57) > 1000000) {

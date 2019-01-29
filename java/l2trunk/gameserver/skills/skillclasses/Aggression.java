@@ -47,7 +47,7 @@ public final class Aggression extends Skill {
                     if (autoAttack)
                         target.getAI().Attack(activeChar, false, false);
                 }
-                getEffects(activeChar, target, activateRate() > 0, false);
+                getEffects(activeChar, target, activateRate > 0, false);
             }
 
         if (isSSPossible())

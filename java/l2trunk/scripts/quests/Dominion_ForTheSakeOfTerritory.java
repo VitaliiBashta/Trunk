@@ -151,7 +151,7 @@ public abstract class Dominion_ForTheSakeOfTerritory extends Quest {
             if (siegeEvent == null || siegeEvent.getId() != getDominionId())
                 return;
 
-            QuestState questState = player.getQuestState(Dominion_ForTheSakeOfTerritory.this.getClass());
+            QuestState questState = player.getQuestState(Dominion_ForTheSakeOfTerritory.this);
             if (player.getLevel() > 61 && questState == null) {
                 questState = newQuestState(player, Quest.CREATED);
                 questState.setState(Quest.STARTED);

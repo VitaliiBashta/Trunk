@@ -60,7 +60,7 @@ public final class Spoil extends Skill {
                                     success = Rnd.chance(rateOfSpoil);
 
                                 } else
-                                    success = Formulas.calcSkillSuccess(activeChar, t, this, activateRate());
+                                    success = Formulas.calcSkillSuccess(activeChar, t, this, activateRate);
                                 if (success && monster.setSpoiled(activeChar.getPlayer()))
                                     activeChar.sendPacket(SystemMsg.THE_SPOIL_CONDITION_HAS_BEEN_ACTIVATED);
                                 else

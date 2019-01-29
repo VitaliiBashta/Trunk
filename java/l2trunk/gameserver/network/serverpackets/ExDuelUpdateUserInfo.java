@@ -17,7 +17,7 @@ public class ExDuelUpdateUserInfo extends L2GameServerPacket {
     public ExDuelUpdateUserInfo(Player attacker) {
         _name = attacker.getName();
         obj_id = attacker.getObjectId();
-        class_id = attacker.getClassId().getId();
+        class_id = attacker.getClassId().id();
         level = attacker.getLevel();
         curHp = (int) attacker.getCurrentHp();
         maxHp = attacker.getMaxHp();

@@ -4,7 +4,9 @@ import l2trunk.gameserver.model.base.Race;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
+
+import java.util.List;
+
 
 public final class _222_TestOfDuelist extends Quest {
     //NPC
@@ -212,7 +214,7 @@ public final class _222_TestOfDuelist extends Quest {
             addKillId(aDROPLIST_COND[2]);
             addQuestItem(aDROPLIST_COND[4]);
         }
-        addQuestItem(OrderGludio, OrderDion, OrderGiran, OrderOren, OrderAden, FinalOrder);
+        addQuestItem(List.of(OrderGludio, OrderDion, OrderGiran, OrderOren, OrderAden, FinalOrder));
     }
 
     @Override
@@ -266,7 +268,7 @@ public final class _222_TestOfDuelist extends Quest {
                 htmltext = "completed";
                 st.exitCurrentQuest(true);
             } else if (cond == 0) {
-                if (st.getPlayer().getClassId().getId() == 0x01 || st.getPlayer().getClassId().getId() == 0x2f || st.getPlayer().getClassId().getId() == 0x13 || st.getPlayer().getClassId().getId() == 0x20) {
+                if (st.getPlayer().getClassId().id() == 0x01 || st.getPlayer().getClassId().id() == 0x2f || st.getPlayer().getClassId().id() == 0x13 || st.getPlayer().getClassId().id() == 0x20) {
                     if (st.getPlayer().getLevel() >= 39)
                         htmltext = "30623-03.htm";
                     else {

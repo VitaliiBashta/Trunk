@@ -11,6 +11,7 @@ import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * events/kerthang_manager004.htm  - не лидер пати, но в пати
@@ -43,9 +44,9 @@ public final class ColiseumManagerInstance extends ColiseumHelperInstance {
                 else if (party.getLeader() != player)
                     showChatWindow(player, "events/kerthang_manager004.htm");
                 else {
-                    for (Player $player : party) {
-                        if ($player.getLevel() < coliseumEvent.getMinLevel() || $player.getLevel() > coliseumEvent.getMaxLevel()) {
-                            showChatWindow(player, "events/kerthang_manager011.htm", "%name%", $player.getName());
+                    for (Player pl : party) {
+                        if (pl.getLevel() < coliseumEvent.getMinLevel() || pl.getLevel() > coliseumEvent.getMaxLevel()) {
+                            showChatWindow(player, "events/kerthang_manager011.htm", Map.of("%name%", pl.getName()));
                             return;
                         }
                     }
@@ -72,7 +73,7 @@ public final class ColiseumManagerInstance extends ColiseumHelperInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... ar) {
+    public void showChatWindow(Player player, int val) {
         showChatWindow(player, _startHtm);
     }
 }

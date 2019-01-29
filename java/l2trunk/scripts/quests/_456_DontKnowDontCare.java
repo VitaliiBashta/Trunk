@@ -73,9 +73,9 @@ public final class _456_DontKnowDontCare extends Quest {
             }
             return null;
         } else if (event.equalsIgnoreCase("sepsoul_q456_08.htm")) {
-            st.takeAllItems(DrakeLordsEssence);
-            st.takeAllItems(BehemothLeadersEssence);
-            st.takeAllItems(DragonBeastsEssence);
+            st.takeItems(DrakeLordsEssence);
+            st.takeItems(BehemothLeadersEssence);
+            st.takeItems(DragonBeastsEssence);
 
             if (Rnd.chance(2))
                 st.giveItems(Rnd.get(weapons));

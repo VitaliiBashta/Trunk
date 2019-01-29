@@ -850,7 +850,7 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
                 subIndex++;
             }
 
-            html = html.replace("%" + replacement + "%", ClassId.values()[sub.getClassId()].getName() + "(" + sub.getLevel() + ")");
+            html = html.replace("%" + replacement + "%", ClassId.values()[sub.getClassId()].name + "(" + sub.getLevel() + ")");
         }
         html = html.replace("%firstSub%", "");
         html = html.replace("%secondSub%", "");
@@ -886,9 +886,9 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
         int index = 0;
         for (int[] sub : data.subClassIdLvlBase) {
             if (sub[2] == 1)
-                html = html.replace("%mainClass%", ClassId.values()[sub[0]].getName() + "(" + sub[1] + ")");
+                html = html.replace("%mainClass%", ClassId.values()[sub[0]].name + "(" + sub[1] + ")");
             else
-                html = html.replace(otherSubs.get(index), ClassId.values()[sub[0]].getName() + "(" + sub[1] + ")");
+                html = html.replace(otherSubs.get(index), ClassId.values()[sub[0]].name + "(" + sub[1] + ")");
         }
         // In case player doesn't have all subclasses
         for (String sub : otherSubs)
@@ -950,7 +950,7 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
                 subIndex++;
             }
 
-            html = html.replace("%" + replacement + "%", ClassId.values()[sub.getClassId()].getName() + "(Level: " + sub.getLevel() + ")");
+            html = html.replace("%" + replacement + "%", ClassId.values()[sub.getClassId()].name + "(Level: " + sub.getLevel() + ")");
         }
         html = html.replace("%firstSub%", "");
         html = html.replace("%secondSub%", "");

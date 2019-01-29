@@ -95,7 +95,7 @@ public final class _403_PathToRogue extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
         if (event.equalsIgnoreCase("30379_2")) {
-            if (st.getPlayer().getClassId().getId() == 0x00) {
+            if (st.getPlayer().getClassId().id() == 0x00) {
                 if (st.getPlayer().getLevel() >= 18) {
                     if (st.getQuestItemsCount(BEZIQUES_RECOMMENDATION_ID) > 0)
                         htmltext = "captain_bezique_q0403_04.htm";
@@ -103,7 +103,7 @@ public final class _403_PathToRogue extends Quest {
                         htmltext = "captain_bezique_q0403_05.htm";
                 } else
                     htmltext = "captain_bezique_q0403_03.htm";
-            } else if (st.getPlayer().getClassId().getId() == 0x07)
+            } else if (st.getPlayer().getClassId().id() == 0x07)
                 htmltext = "captain_bezique_q0403_02a.htm";
             else
                 htmltext = "captain_bezique_q0403_02.htm";

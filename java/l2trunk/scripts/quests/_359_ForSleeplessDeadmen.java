@@ -76,7 +76,7 @@ public final class _359_ForSleeplessDeadmen extends Quest {
             //---------------
             st.exitCurrentQuest(true);
             st.playSound(SOUND_FINISH);
-        } else if (event.equalsIgnoreCase("30857-08.htm")) {
+        } else if ("30857-08.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             //Vibor nagradi
             int chance = Rnd.get(100);

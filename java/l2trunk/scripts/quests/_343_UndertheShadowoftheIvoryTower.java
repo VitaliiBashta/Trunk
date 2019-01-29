@@ -202,7 +202,7 @@ public final class _343_UndertheShadowoftheIvoryTower extends Quest {
         if (npcId == CEMA) {
             if (id != STARTED) {
                 for (int i : AllowClass)
-                    if (st.getPlayer().getClassId().getId() == i && st.getPlayer().getLevel() >= 40)
+                    if (st.getPlayer().getClassId().id() == i && st.getPlayer().getLevel() >= 40)
                         htmltext = "30834-01.htm";
                 if (!htmltext.equals("30834-01.htm")) {
                     htmltext = "30834-07.htm";

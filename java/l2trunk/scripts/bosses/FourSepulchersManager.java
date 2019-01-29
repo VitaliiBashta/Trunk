@@ -18,6 +18,7 @@ import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.ReflectionUtils;
 import l2trunk.scripts.bosses.FourSepulchersSpawn.GateKeeper;
 import l2trunk.scripts.npc.model.SepulcherNpcInstance;
+import l2trunk.scripts.quests._620_FourGoblets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,7 +29,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.stream.Stream;
 
 public class FourSepulchersManager extends Functions implements ScriptFile, OnDeathListener {
-    public static final String QUEST_ID = "_620_FourGoblets";
+    public static final Class<_620_FourGoblets> FOUR_GOBLETS = _620_FourGoblets.class;
     private static final Logger _log = LoggerFactory.getLogger(FourSepulchersManager.class);
     private static final List<Zone> ZONES = List.of(
             ReflectionUtils.getZone("[FourSepulchers1]"),
@@ -148,7 +149,7 @@ public class FourSepulchersManager extends Functions implements ScriptFile, OnDe
         }
 
         for (Player mem : player.getParty().getMembers()) {
-            QuestState qs = mem.getQuestState(QUEST_ID);
+            QuestState qs = mem.getQuestState(FOUR_GOBLETS);
             if (qs == null || !qs.isStarted() && !qs.isCompleted()) {
                 showHtmlFile(player, npcId + "-NS.htm", npc, mem);
                 return;

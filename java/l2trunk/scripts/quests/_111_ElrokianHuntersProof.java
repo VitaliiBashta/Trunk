@@ -5,45 +5,22 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.PlaySound;
-import l2trunk.gameserver.scripts.ScriptFile;
+
+import java.util.List;
 
 public final class _111_ElrokianHuntersProof extends Quest {
     private static final int Marquez = 32113;
     private static final int Asamah = 32115;
     private static final int Kirikachin = 32116;
 
-    private static final int[] Velociraptor = {
-            22196,
-            22197,
-            22198,
-            22218,
-            22223
-    };
-    private static final int[] Ornithomimus = {
-            22200,
-            22201,
-            22202,
-            22219,
-            22224,
-            22744,
-            22742
-    };
-    private static final int[] Deinonychus = {
-            22203,
-            22204,
-            22205,
-            22220,
-            22225,
-            22745,
-            22743
-    };
-    private static final int[] Pachycephalosaurus = {
-            22208,
-            22209,
-            22210,
-            22221,
-            22226
-    };
+    private static final List<Integer> Velociraptor = List.of(
+            22196, 22197, 22198, 22218, 22223);
+    private static final List<Integer> Ornithomimus = List.of(
+            22200, 22201, 22202, 22219, 22224, 22744, 22742);
+    private static final List<Integer> Deinonychus = List.of(
+            22203, 22204, 22205, 22220, 22225, 22745, 22743);
+    private static final List<Integer> Pachycephalosaurus = List.of(
+            22208, 22209, 22210, 22221, 22226);
 
     private static final int DiaryFragment = 8768;
     private static final int OrnithomimusClaw = 8770;
@@ -72,41 +49,41 @@ public final class _111_ElrokianHuntersProof extends Quest {
         int cond = st.getCond();
         Player player = st.getPlayer();
 
-        if (event.equalsIgnoreCase("marquez_q111_2.htm") && cond == 0) {
+        if ("marquez_q111_2.htm".equalsIgnoreCase(event) && cond == 0) {
             st.setCond(2);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("asamah_q111_2.htm")) {
+        } else if ("asamah_q111_2.htm".equalsIgnoreCase(event)) {
             st.setCond(3);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("marquez_q111_4.htm")) {
+        } else if ("marquez_q111_4.htm".equalsIgnoreCase(event)) {
             st.setCond(4);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("marquez_q111_6.htm")) {
+        } else if ("marquez_q111_6.htm".equalsIgnoreCase(event)) {
             st.setCond(6);
             st.takeItems(DiaryFragment, -1);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("kirikachin_q111_2.htm")) {
+        } else if ("kirikachin_q111_2.htm".equalsIgnoreCase(event)) {
             st.setCond(7);
             player.sendPacket(new PlaySound("EtcSound.elcroki_song_full"));
-        } else if (event.equalsIgnoreCase("kirikachin_q111_3.htm")) {
+        } else if ("kirikachin_q111_3.htm".equalsIgnoreCase(event)) {
             st.setCond(8);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("asamah_q111_4.htm")) {
+        } else if ("asamah_q111_4.htm".equalsIgnoreCase(event)) {
             st.setCond(9);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("asamah_q111_5.htm")) {
+        } else if ("asamah_q111_5.htm".equalsIgnoreCase(event)) {
             st.setCond(10);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("asamah_q111_7.htm")) {
+        } else if ("asamah_q111_7.htm".equalsIgnoreCase(event)) {
             st.takeItems(OrnithomimusClaw, -1);
             st.takeItems(DeinonychusBone, -1);
             st.takeItems(PachycephalosaurusSkin, -1);
             st.setCond(12);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("asamah_q111_8.htm")) {
+        } else if ("asamah_q111_8.htm".equalsIgnoreCase(event)) {
             st.giveItems(ADENA_ID, 1071691);
-            st.giveItems(ElrokianTrap, 1);
+            st.giveItems(ElrokianTrap);
             st.giveItems(TrapStone, 100);
             st.setState(COMPLETED);
             st.exitCurrentQuest(false);
@@ -148,33 +125,31 @@ public final class _111_ElrokianHuntersProof extends Quest {
         int id = npc.getNpcId();
         int cond = st.getCond();
         if (cond == 4) {
-            for (int i : Velociraptor)
-                if (id == i && st.getQuestItemsCount(DiaryFragment) < 50) {
-                    st.giveItems(DiaryFragment, 1, false);
-                    if (st.getQuestItemsCount(DiaryFragment) == 50) {
-                        st.playSound(SOUND_MIDDLE);
-                        st.setCond(5);
-                        return null;
-                    } else
-                        st.playSound(SOUND_ITEMGET);
-                }
+            if (Velociraptor.contains(id) && st.getQuestItemsCount(DiaryFragment) < 50) {
+                st.giveItems(DiaryFragment);
+                if (st.getQuestItemsCount(DiaryFragment) == 50) {
+                    st.playSound(SOUND_MIDDLE);
+                    st.setCond(5);
+                    return null;
+                } else
+                    st.playSound(SOUND_ITEMGET);
+            }
         } else if (cond == 10) {
-            for (int i : Ornithomimus)
-                if (id == i && st.getQuestItemsCount(OrnithomimusClaw) < 10) {
-                    st.giveItems(OrnithomimusClaw, 1, false);
-                    return null;
-                }
-            for (int i : Deinonychus)
-                if (id == i && st.getQuestItemsCount(DeinonychusBone) < 10) {
-                    st.giveItems(DeinonychusBone, 1, false);
-                    return null;
-                }
-            for (int i : Pachycephalosaurus)
-                if (id == i && st.getQuestItemsCount(PachycephalosaurusSkin) < 10) {
-                    st.giveItems(PachycephalosaurusSkin, 1, false);
-                    return null;
-                }
-            if (st.getQuestItemsCount(OrnithomimusClaw) >= 10 && st.getQuestItemsCount(DeinonychusBone) >= 10 && st.getQuestItemsCount(PachycephalosaurusSkin) >= 10) {
+            if (Ornithomimus.contains(id) && st.getQuestItemsCount(OrnithomimusClaw) < 10) {
+                st.giveItems(OrnithomimusClaw);
+                return null;
+            }
+            if (Deinonychus.contains(id) && st.getQuestItemsCount(DeinonychusBone) < 10) {
+                st.giveItems(DeinonychusBone);
+                return null;
+            }
+            if (Pachycephalosaurus.contains(id) && st.getQuestItemsCount(PachycephalosaurusSkin) < 10) {
+                st.giveItems(PachycephalosaurusSkin);
+                return null;
+            }
+            if (st.getQuestItemsCount(OrnithomimusClaw) >= 10
+                    && st.getQuestItemsCount(DeinonychusBone) >= 10
+                    && st.getQuestItemsCount(PachycephalosaurusSkin) >= 10) {
                 st.setCond(11);
                 st.playSound(SOUND_MIDDLE);
                 return null;

@@ -239,7 +239,7 @@ public final class NpcFriendInstance extends MerchantInstance {
         } else if (command.startsWith("Buy")) {
             int val = Integer.parseInt(command.substring(4));
             showShopWindow(player, val, false);
-        } else if (actualCommand.equalsIgnoreCase("Sell"))
+        } else if ("Sell".equalsIgnoreCase(actualCommand))
             showShopWindow(player);
         else if (command.startsWith("WithdrawP")) {
             int val = Integer.parseInt(command.substring(10));

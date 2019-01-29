@@ -3,9 +3,7 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public final class _369_CollectorOfJewels extends Quest {
@@ -21,8 +19,14 @@ public final class _369_CollectorOfJewels extends Quest {
     // Quest Items
     private static final int FLARE_SHARD = 5882;
     private static final int FREEZING_SHARD = 5883;
-
-    private final Map<Integer, int[]> DROPLIST = new HashMap<>();
+    private static final Map<Integer, Integer> freezingShards = Map.of(
+            Roxide, 85,
+            Rowin_Undine, 73,
+            Lakin_Undine, 60);
+    private static final Map<Integer, Integer> flareShards = Map.of(
+            Salamander_Rowin, 77,
+            Lakin_Salamander, 77,
+            Death_Fire, 85);
 
     public _369_CollectorOfJewels() {
         super(false);
@@ -35,40 +39,15 @@ public final class _369_CollectorOfJewels extends Quest {
         addKillId(Death_Fire);
         addQuestItem(FLARE_SHARD);
         addQuestItem(FREEZING_SHARD);
-
-        DROPLIST.put(Roxide, new int[]{
-                FREEZING_SHARD,
-                85
-        });
-        DROPLIST.put(Rowin_Undine, new int[]{
-                FREEZING_SHARD,
-                73
-        });
-        DROPLIST.put(Lakin_Undine, new int[]{
-                FREEZING_SHARD,
-                60
-        });
-        DROPLIST.put(Salamander_Rowin, new int[]{
-                FLARE_SHARD,
-                77
-        });
-        DROPLIST.put(Lakin_Salamander, new int[]{
-                FLARE_SHARD,
-                77
-        });
-        DROPLIST.put(Death_Fire, new int[]{
-                FLARE_SHARD,
-                85
-        });
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("30376-03.htm") && st.getState() == CREATED) {
+        if ("30376-03.htm".equalsIgnoreCase(event) && st.getState() == CREATED) {
             st.setState(STARTED);
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("30376-08.htm") && st.getState() == STARTED) {
+        } else if ("30376-08.htm".equalsIgnoreCase(event) && st.getState() == STARTED) {
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(true);
         }
@@ -107,8 +86,8 @@ public final class _369_CollectorOfJewels extends Quest {
                 return onTalk(npc, st);
             }
 
-            st.takeItems(FLARE_SHARD, -1);
-            st.takeItems(FREEZING_SHARD, -1);
+            st.takeItems(FLARE_SHARD);
+            st.takeItems(FREEZING_SHARD);
             if (cond == 2) {
                 htmltext = "30376-05.htm";
                 st.giveItems(ADENA_ID, 12500);
@@ -130,13 +109,24 @@ public final class _369_CollectorOfJewels extends Quest {
         int cond = qs.getCond();
         if (cond != 1 && cond != 3)
             return null;
-
-        int[] drop = DROPLIST.get(npc.getNpcId());
-        if (drop == null)
-            return null;
-
         int max_count = cond == 1 ? 50 : 200;
-        if (qs.getQuestItemsCount(drop[0]) < max_count && qs.rollAndGive(drop[0], 1, 1, max_count, drop[1]) && qs.getQuestItemsCount(FLARE_SHARD) >= max_count && qs.getQuestItemsCount(FREEZING_SHARD) >= max_count)
+        int chance;
+        if (freezingShards.containsKey(npc.getNpcId())) {
+            chance = freezingShards.get(npc.getNpcId());
+
+            if (qs.getQuestItemsCount(FREEZING_SHARD) < max_count)
+                qs.rollAndGive(FREEZING_SHARD, 1, 1, max_count, chance);
+
+        }
+        if (flareShards.containsKey(npc.getNpcId())) {
+            chance = flareShards.get(npc.getNpcId());
+            if (qs.getQuestItemsCount(FLARE_SHARD) < max_count)
+                qs.rollAndGive(FLARE_SHARD, 1, 1, max_count, chance);
+        }
+
+
+        if (qs.getQuestItemsCount(FLARE_SHARD) >= max_count
+                && qs.getQuestItemsCount(FREEZING_SHARD) >= max_count)
             qs.setCond(cond == 1 ? 2 : 4);
 
         return null;

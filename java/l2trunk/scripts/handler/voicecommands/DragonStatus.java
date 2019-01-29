@@ -24,7 +24,7 @@ public final class DragonStatus implements IVoicedCommandHandler, ScriptFile {
             player.sendMessage("LegendaryTales: innactive");
             return false;
         }
-        QuestState st = player.getQuestState(qs.getQuest().getName());
+        QuestState st = player.getQuestState(qs.getQuest());
         int var = st.getInt("RaidsKilled");
         _254_LegendaryTales.checkKilledRaids(player, var);
         return true;

@@ -84,7 +84,7 @@ public final class _10283_RequestOfIceMerchant extends Quest {
 
     @Override
     public String onFirstTalk(NpcInstance npc, Player player) {
-        QuestState st = player.getQuestState(getClass());
+        QuestState st = player.getQuestState(this);
         if (st == null)
             return null;
         if (npc.getNpcId() == JINIA && st.getCond() == 2)

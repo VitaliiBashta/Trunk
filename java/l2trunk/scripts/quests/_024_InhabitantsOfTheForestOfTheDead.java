@@ -29,7 +29,7 @@ public final class _024_InhabitantsOfTheForestOfTheDead extends Quest {
             21557, 21558, 21560, 21561, 21562, 21563, 21564, 21565, 21566, 21567);
 
     public _024_InhabitantsOfTheForestOfTheDead() {
-        super(PARTY_NONE);
+        super(false);
 
         addStartNpc(DORIAN);
 

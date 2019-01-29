@@ -68,7 +68,7 @@ public final class _188_SealRemoval extends Quest {
     public String onFirstTalk(NpcInstance npc, Player player) {
         QuestState qs1 = player.getQuestState(_186_ContractExecution.class);
         QuestState qs2 = player.getQuestState(_187_NikolasHeart.class);
-        if ((qs1 != null && qs1.isCompleted() || qs2 != null && qs2.isCompleted()) && player.getQuestState(getClass()) == null)
+        if ((qs1 != null && qs1.isCompleted() || qs2 != null && qs2.isCompleted()) && player.getQuestState(this) == null)
             newQuestState(player, STARTED);
         return "";
     }

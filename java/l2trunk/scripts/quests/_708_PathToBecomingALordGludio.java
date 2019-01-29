@@ -50,15 +50,15 @@ public final class _708_PathToBecomingALordGludio extends Quest {
                 break;
             case "sayres_q708_08.htm":
                 if (isLordAvailable(2, st)) {
-                    castleOwner.getQuestState(getClass()).set("confidant", String.valueOf(st.getPlayer().getObjectId()), true);
-                    castleOwner.getQuestState(getClass()).setCond(3);
+                    castleOwner.getQuestState(this).set("confidant", String.valueOf(st.getPlayer().getObjectId()), true);
+                    castleOwner.getQuestState(this).setCond(3);
                     st.setState(STARTED);
                 } else
                     htmltext = "sayres_q708_05a.htm";
                 break;
             case "pinter_q708_03.htm":
                 if (isLordAvailable(3, st)) {
-                    castleOwner.getQuestState(getClass()).setCond(4);
+                    castleOwner.getQuestState(this).setCond(4);
                 } else
                     htmltext = "pinter_q708_03a.htm";
                 break;
@@ -75,7 +75,7 @@ public final class _708_PathToBecomingALordGludio extends Quest {
                     st.takeItems(1865, 100);
                     st.takeItems(1869, 100);
                     st.takeItems(1879, 50);
-                    castleOwner.getQuestState(getClass()).setCond(9);
+                    castleOwner.getQuestState(this).setCond(9);
                 } else
                     htmltext = "pinter_q708_03a.htm";
                 break;
@@ -134,7 +134,7 @@ public final class _708_PathToBecomingALordGludio extends Quest {
 
         } else if (npcId == Pinter) {
             if (st.getState() == STARTED && cond == 0 && isLordAvailable(3, st)) {
-                if (Integer.parseInt(castleOwner.getQuestState(getClass()).get("confidant")) == st.getPlayer().getObjectId())
+                if (Integer.parseInt(castleOwner.getQuestState(this).get("confidant")) == st.getPlayer().getObjectId())
                     htmltext = "pinter_q708_01.htm";
             } else if (st.getState() == STARTED && cond == 0 && isLordAvailable(8, st)) {
                 if (st.getQuestItemsCount(1867) >= 100 && st.getQuestItemsCount(1865) >= 100 && st.getQuestItemsCount(1869) >= 100 && st.getQuestItemsCount(1879) >= 50)
@@ -175,7 +175,7 @@ public final class _708_PathToBecomingALordGludio extends Quest {
         Clan owner = castle.getOwner();
         Player castleOwner = castle.getOwner().getLeader().getPlayer();
         if (owner != null)
-            return castleOwner != null && castleOwner != st.getPlayer() && owner == st.getPlayer().getClan() && castleOwner.getQuestState(getClass()) != null && castleOwner.getQuestState(getClass()).getCond() == cond;
+            return castleOwner != null && castleOwner != st.getPlayer() && owner == st.getPlayer().getClan() && castleOwner.getQuestState(this) != null && castleOwner.getQuestState(this).getCond() == cond;
         return false;
     }
 }

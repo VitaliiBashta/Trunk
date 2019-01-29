@@ -39,11 +39,11 @@ public final class _005_MinersFavor extends Quest {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-            st.giveItems(BOLTERS_LIST, 1, false);
-            st.giveItems(BOLTERS_SMELLY_SOCKS, 1, false);
+            st.giveItems(BOLTERS_LIST);
+            st.giveItems(BOLTERS_SMELLY_SOCKS);
         } else if (event.equalsIgnoreCase("blacksmith_bronp_q0005_02.htm")) {
-            st.takeItems(BOLTERS_SMELLY_SOCKS, -1);
-            st.giveItems(MINERS_PICK, 1, false);
+            st.takeItems(BOLTERS_SMELLY_SOCKS);
+            st.giveItems(MINERS_PICK);
             if (st.getQuestItemsCount(BOLTERS_LIST) > 0 && st.getQuestItemsCount(MINING_BOOTS) + st.getQuestItemsCount(MINERS_PICK) + st.getQuestItemsCount(BOOMBOOM_POWDER) + st.getQuestItemsCount(REDSTONE_BEER) == 4) {
                 st.setCond(2);
                 st.playSound(SOUND_MIDDLE);

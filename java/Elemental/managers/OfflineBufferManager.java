@@ -64,7 +64,7 @@ public enum OfflineBufferManager {
                     }
 
                     // Check if the player can set a store
-                    if (!Config.BUFF_STORE_ALLOWED_CLASS_LIST.contains(player.getClassId().getId())) {
+                    if (!Config.BUFF_STORE_ALLOWED_CLASS_LIST.contains(player.getClassId().id())) {
                         player.sendMessage("Your profession is not allowed to set an Buff Store.");
                         break;
                     }

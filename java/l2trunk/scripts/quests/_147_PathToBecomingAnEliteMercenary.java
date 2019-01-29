@@ -62,8 +62,8 @@ public final class _147_PathToBecomingAnEliteMercenary extends Quest {
             htmlText = "gludio_merc_cap_q0147_08.htm";
         else if (cond == 4) {
             htmlText = "gludio_merc_cap_q0147_09.htm";
-            st.takeAllItems(13766);
-            st.giveItems(13767, 1);
+            st.takeItems(13766);
+            st.giveItems(13767);
             st.setState(COMPLETED);
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(false);

@@ -29,18 +29,18 @@ public final class _10273_GoodDayToFly extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         Player player = st.getPlayer();
 
-        if (event.equalsIgnoreCase("32557-06.htm")) {
+        if ("32557-06.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("32557-09.htm")) {
+        } else if ("32557-09.htm".equalsIgnoreCase(event)) {
             if (player.getTransformation() != 0) {
                 player.sendPacket(Msg.YOU_ALREADY_POLYMORPHED_AND_CANNOT_POLYMORPH_AGAIN);
                 return null;
             }
             st.set("transform", "1");
             SkillTable.INSTANCE.getInfo(5982).getEffects(player);
-        } else if (event.equalsIgnoreCase("32557-10.htm")) {
+        } else if ("32557-10.htm".equalsIgnoreCase(event)) {
             if (player.getTransformation() != 0) {
                 player.sendPacket(Msg.YOU_ALREADY_POLYMORPHED_AND_CANNOT_POLYMORPH_AGAIN);
                 return null;
@@ -75,11 +75,11 @@ public final class _10273_GoodDayToFly extends Quest {
         else if (st.getQuestItemsCount(Mark) >= 5) {
             htmltext = "32557-14.htm";
             if (transform == 1)
-                st.giveItems(13553, 1);
+                st.giveItems(13553);
             else if (transform == 2)
-                st.giveItems(13554, 1);
-            st.takeAllItems(Mark);
-            st.giveItems(13857, 1);
+                st.giveItems(13554);
+            st.takeItems(Mark);
+            st.giveItems(13857);
             st.addExpAndSp(25160, 2525);
             st.exitCurrentQuest(false);
             st.playSound(SOUND_FINISH);
@@ -99,7 +99,7 @@ public final class _10273_GoodDayToFly extends Quest {
         int cond = st.getCond();
         long count = st.getQuestItemsCount(Mark);
         if (cond == 1 && count < 5) {
-            st.giveItems(Mark, 1);
+            st.giveItems(Mark);
             if (count == 4) {
                 st.playSound(SOUND_MIDDLE);
                 st.setCond(2);

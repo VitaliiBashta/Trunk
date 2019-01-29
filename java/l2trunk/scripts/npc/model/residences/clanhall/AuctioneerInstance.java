@@ -647,7 +647,7 @@ public final class AuctioneerInstance extends NpcInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
         showChatWindow(player, "residence2/clanhall/auction_dealer001.htm");
     }
 

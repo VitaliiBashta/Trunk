@@ -80,48 +80,48 @@ public final class _128_PailakaSongofIceandFire extends Quest {
         int refId = player.getReflectionId();
         String htmltext = event;
 
-        if (event.equalsIgnoreCase("Enter")) {
+        if ("Enter".equalsIgnoreCase(event)) {
             enterInstance(player);
             return null;
-        } else if (event.equalsIgnoreCase("32497-04.htm")) {
+        } else if ("32497-04.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("32500-06.htm")) {
             st.setCond(2);
             st.playSound(SOUND_MIDDLE);
-            st.giveItems(SpritesSword, 1);
-            st.giveItems(TempleBookofSecrets1, 1);
+            st.giveItems(SpritesSword);
+            st.giveItems(TempleBookofSecrets1);
         } else if (event.equalsIgnoreCase("32507-03.htm")) {
             st.setCond(4);
             st.playSound(SOUND_MIDDLE);
-            st.takeItems(TempleBookofSecrets2, -1);
-            st.giveItems(TempleBookofSecrets3, 1);
+            st.takeItems(TempleBookofSecrets2);
+            st.giveItems(TempleBookofSecrets3);
             if (st.getQuestItemsCount(EssenceofWater) == 0)
                 htmltext = "32507-01.htm";
             else {
-                st.takeItems(SpritesSword, -1);
-                st.takeItems(EssenceofWater, -1);
-                st.giveItems(EnhancedSpritesSword, 1);
+                st.takeItems(SpritesSword);
+                st.takeItems(EssenceofWater);
+                st.giveItems(EnhancedSpritesSword);
             }
             addSpawnToInstance(PAPION, new Location(-53903, 181484, -4555, 30456), 0, refId);
         } else if (event.equalsIgnoreCase("32507-07.htm")) {
             st.setCond(7);
             st.playSound(SOUND_MIDDLE);
-            st.takeItems(TempleBookofSecrets5, -1);
-            st.giveItems(TempleBookofSecrets6, 1);
+            st.takeItems(TempleBookofSecrets5);
+            st.giveItems(TempleBookofSecrets6);
             if (st.getQuestItemsCount(EssenceofFire) == 0)
                 htmltext = "32507-04.htm";
             else {
-                st.takeItems(EnhancedSpritesSword, -1);
-                st.takeItems(EssenceofFire, -1);
-                st.giveItems(SwordofIceandFire, 1);
+                st.takeItems(EnhancedSpritesSword);
+                st.takeItems(EssenceofFire);
+                st.giveItems(SwordofIceandFire);
             }
             addSpawnToInstance(GARGOS, new Location(-61354, 183624, -4821, 63613), 0, refId);
-        } else if (event.equalsIgnoreCase("32510-02.htm")) {
-            st.giveItems(PailakaRing, 1);
-            st.giveItems(PailakaEarring, 1);
-            st.giveItems(ScrollofEscape, 1);
+        } else if ("32510-02.htm".equalsIgnoreCase(event)) {
+            st.giveItems(PailakaRing);
+            st.giveItems(PailakaEarring);
+            st.giveItems(ScrollofEscape);
             st.addExpAndSp(810000, 50000);
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(false);
@@ -165,7 +165,7 @@ public final class _128_PailakaSongofIceandFire extends Quest {
     @Override
     public String onFirstTalk(NpcInstance npc, Player player) {
         String htmltext = "noquest";
-        QuestState st = player.getQuestState(getName());
+        QuestState st = player.getQuestState(this);
         if (st == null || st.isCompleted())
             return htmltext;
         int npcId = npc.getNpcId();
@@ -206,19 +206,19 @@ public final class _128_PailakaSongofIceandFire extends Quest {
             st.playSound(SOUND_MIDDLE);
             addSpawnToInstance(KINSUS, new Location(-61404, 181351, -4815, 63953), 0, refId);
         } else if (npcId == KINSUS && cond == 5) {
-            st.takeItems(TempleBookofSecrets4, -1);
-            st.giveItems(EssenceofFire, 1);
-            st.giveItems(TempleBookofSecrets5, 1);
+            st.takeItems(TempleBookofSecrets4);
+            st.giveItems(EssenceofFire);
+            st.giveItems(TempleBookofSecrets5);
             st.setCond(6);
             st.playSound(SOUND_MIDDLE);
         } else if (npcId == GARGOS && cond == 7) {
-            st.takeItems(TempleBookofSecrets6, -1);
-            st.giveItems(TempleBookofSecrets7, 1);
+            st.takeItems(TempleBookofSecrets6);
+            st.giveItems(TempleBookofSecrets7);
             st.setCond(8);
             st.playSound(SOUND_MIDDLE);
             addSpawnToInstance(ADIANTUM, new Location(-53297, 185027, -4617, 1512), 0, refId);
         } else if (npcId == ADIANTUM && cond == 8) {
-            st.takeItems(TempleBookofSecrets7, -1);
+            st.takeItems(TempleBookofSecrets7);
             st.setCond(9);
             st.playSound(SOUND_MIDDLE);
             addSpawnToInstance(ADLER2, new Location(npc.getX(), npc.getY(), npc.getZ(), npc.getHeading()), 0, refId);

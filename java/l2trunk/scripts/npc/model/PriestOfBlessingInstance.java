@@ -58,7 +58,7 @@ public final class PriestOfBlessingInstance extends NpcInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
         if (val == 0) {
             Hourglass hg = getHourglass(player);
             NpcHtmlMessage html = new NpcHtmlMessage(player, this);

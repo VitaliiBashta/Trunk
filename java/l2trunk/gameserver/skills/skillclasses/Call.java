@@ -142,7 +142,7 @@ public final class Call extends Skill {
                     if (!target.equals(activeChar) && canBeSummoned(activeChar, target) == null && !target.isTerritoryFlagEquipped()) {
                         target.stopMove();
                         target.teleToLocation(Location.findPointToStay(activeChar, 100, 150), activeChar.getGeoIndex());
-                        getEffects(activeChar, target, activateRate() > 0, false);
+                        getEffects(activeChar, target, activateRate > 0, false);
                     }
 
             if (isSSPossible())
@@ -156,7 +156,7 @@ public final class Call extends Skill {
                 .forEach(target -> {
                     ((Player) target).summonCharacterRequest(activeChar, Location.findAroundPosition(activeChar, 100, 150), id == 1403 || id == 1404 ? 1 : 0);
 
-                    getEffects(activeChar, target, activateRate() > 0, false);
+                    getEffects(activeChar, target, activateRate > 0, false);
                 });
 
         if (isSSPossible())

@@ -156,9 +156,9 @@ public final class _503_PursuitClanAmbition extends Quest {
             Player leader = getLeader(st);
             if (leader != null) {
                 if (cond)
-                    return leader.getQuestState(getName()).getCond();
+                    return leader.getQuestState(this).getCond();
                 else
-                    return leader.getQuestState(getName()).getInt(var);
+                    return leader.getQuestState(this).getInt(var);
             }
         } catch (Exception e) {
             return -1;
@@ -205,7 +205,7 @@ public final class _503_PursuitClanAmbition extends Quest {
             return;
         Player leader = clan.getLeader().getPlayer();
         if (leader != null) {
-            leader.getQuestState(getName()).set("ImpGraveKeeper", value);
+            leader.getQuestState(this).set("ImpGraveKeeper", value);
         } else // для прямой записи в базу cond не корректируем, при загрузке сконвертится само.
         {
             int leaderId = st.getPlayer().getClan().getLeaderId();
@@ -240,7 +240,7 @@ public final class _503_PursuitClanAmbition extends Quest {
             return;
         if (player.getDistance(leader) > Config.ALT_PARTY_DISTRIBUTION_RANGE)
             return;
-        QuestState qs = leader.getQuestState(getClass());
+        QuestState qs = leader.getQuestState(this);
         if (qs == null)
             return;
         long count = qs.getQuestItemsCount(item);
@@ -271,7 +271,7 @@ public final class _503_PursuitClanAmbition extends Quest {
             for (Player player : members) {
                 if (player == null)
                     continue;
-                QuestState qs = player.getQuestState(getName());
+                QuestState qs = player.getQuestState(this);
                 if (qs != null)
                     qs.exitCurrentQuest(true);
             }

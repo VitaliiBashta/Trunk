@@ -100,7 +100,7 @@ public final class CommunityBoard implements ScriptFile, ICommunityBoardHandler 
                 html = html.replace("<?clan_count?>", String.valueOf(ClanTable.INSTANCE.getClans().size()));
                 html = html.replace("<?market_count?>", String.valueOf(CommunityBoardManager.getIntProperty("col_count")));
                 html = html.replace("<?player_name?>", String.valueOf(player.getName()));
-                html = html.replace("<?player_class?>", String.valueOf(Util.getFullClassName(player.getClassId().getId())));
+                html = html.replace("<?player_class?>", String.valueOf(Util.getFullClassName(player.getClassId().id())));
                 html = html.replace("<?player_level?>", String.valueOf(player.getLevel()));
                 html = html.replace("<?player_clan?>", String.valueOf(player.getClan() != null ? player.getClan().getName() : "<font color=\"FF0000\">No</font>"));
                 html = html.replace("<?player_noobless?>", String.valueOf(player.isNoble() ? "<font color=\"18FF00\">Yes</font>" : "<font color=\"FF0000\">No</font>"));

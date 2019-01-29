@@ -6,6 +6,8 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
+import java.util.Map;
+
 public final class BlackJudeInstance extends NpcInstance {
     public BlackJudeInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
@@ -19,7 +21,7 @@ public final class BlackJudeInstance extends NpcInstance {
         switch (command) {
             case "tryRemovePenalty":
                 if (player.getDeathPenalty().getLevel() > 0)
-                    showChatWindow(player, 2, "%price%", getPrice(player));
+                    showChatWindow(player, 2, Map.of("%price%", ""+getPrice(player)));
                 else
                     showChatWindow(player, 1);
                 break;

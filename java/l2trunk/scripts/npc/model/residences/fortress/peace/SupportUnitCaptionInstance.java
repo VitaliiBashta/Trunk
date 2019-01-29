@@ -35,7 +35,7 @@ public class SupportUnitCaptionInstance extends NpcInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
         player.sendActionFailed();
         String filename = "fortress/SupportUnitCaptain-no.htm";
 

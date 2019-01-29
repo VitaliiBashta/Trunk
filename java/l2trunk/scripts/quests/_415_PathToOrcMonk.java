@@ -3,7 +3,6 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _415_PathToOrcMonk extends Quest {
     //NPC
@@ -171,8 +170,8 @@ public final class _415_PathToOrcMonk extends Quest {
                 htmltext = "gantaki_zu_urutu_q0415_04.htm";
                 st.exitCurrentQuest(true);
             } else if (cond == 0) {
-                if (st.getPlayer().getClassId().getId() != 0x2c) {
-                    if (st.getPlayer().getClassId().getId() == 0x2f)
+                if (st.getPlayer().getClassId().id() != 0x2c) {
+                    if (st.getPlayer().getClassId().id() == 0x2f)
                         htmltext = "gantaki_zu_urutu_q0415_02a.htm";
                     else
                         htmltext = "gantaki_zu_urutu_q0415_02.htm";

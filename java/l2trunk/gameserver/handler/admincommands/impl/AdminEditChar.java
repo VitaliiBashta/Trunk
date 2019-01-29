@@ -668,7 +668,7 @@ public final class AdminEditChar implements IAdminCommandHandler {
         replyMSG.append("<tr><td width=40>Load:</td><td width=70>" + player.getCurrentLoad() + "</td><td width=70>" + player.getMaxLoad() + "</td><td width=70>Pvp Flag: " + player.getPvpFlag() + "</td></tr>");
         replyMSG.append("</table>");
         replyMSG.append("<br>");
-        replyMSG.append("<table width=290><tr><td><font name=\"hs12\" color=\"00FF00\">" + player.getName() + "</font> " + player.getClassId() + " and ClassID: " + player.getClassId().getId() + "</td></tr></table><br>");
+        replyMSG.append("<table width=290><tr><td><font name=\"hs12\" color=\"00FF00\">" + player.getName() + "</font> " + player.getClassId() + " and ClassID: " + player.getClassId().id() + "</td></tr></table><br>");
         replyMSG.append("<table width=290>");
         replyMSG.append("<tr><td>Note: Fill all values before saving!</td></tr>");
         replyMSG.append("</table><br>");
@@ -892,7 +892,7 @@ public final class AdminEditChar implements IAdminCommandHandler {
 
                 // Удаляем из возможных сабов их родителей, если таковые есть у чара
                 ClassId parent = ClassId.VALUES.get(availSub.ordinal()).getParent();
-                if (parent != null && parent.getId() == subClass.getClassId()) {
+                if (parent != null && parent.id() == subClass.getClassId()) {
                     availSubs.remove(availSub);
                     continue;
                 }
@@ -900,7 +900,7 @@ public final class AdminEditChar implements IAdminCommandHandler {
                 // Удаляем из возможных сабов родителей текущих сабклассов, иначе если взять саб berserker
                 // и довести до 3ей профы - doombringer, игроку будет предложен berserker вновь (дежавю)
                 ClassId subParent = ClassId.VALUES.get(subClass.getClassId()).getParent();
-                if (subParent != null && subParent.getId() == availSub.ordinal())
+                if (subParent != null && subParent.id() == availSub.ordinal())
                     availSubs.remove(availSub);
             }
 

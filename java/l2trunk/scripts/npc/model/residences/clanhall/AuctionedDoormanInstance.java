@@ -13,6 +13,7 @@ import l2trunk.gameserver.utils.HtmlUtils;
 import l2trunk.gameserver.utils.ReflectionUtils;
 
 import java.util.List;
+import java.util.Map;
 
 public final class AuctionedDoormanInstance extends NpcInstance {
     private final List<Integer> doors;
@@ -56,12 +57,12 @@ public final class AuctionedDoormanInstance extends NpcInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
         ClanHall clanHall = getClanHall();
         if (clanHall != null) {
             Clan playerClan = player.getClan();
             if (playerClan != null && playerClan.getHasHideout() == clanHall.getId())
-                showChatWindow(player, elite ? "residence2/clanhall/WyvernAgitJanitorHi.htm" : "residence2/clanhall/AgitJanitorHi.htm", "%owner%", playerClan.getName());
+                showChatWindow(player, elite ? "residence2/clanhall/WyvernAgitJanitorHi.htm" : "residence2/clanhall/AgitJanitorHi.htm", Map.of("%owner%", playerClan.getName()));
             else {
                 if (playerClan != null && playerClan.getCastle() > 0) {
                     Castle castle = ResidenceHolder.getResidence(playerClan.getCastle());

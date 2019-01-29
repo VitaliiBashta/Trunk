@@ -32,7 +32,7 @@ public final class SelfSacrifice extends Skill {
             if (target != null) {
                 if ((skillType != Skill.SkillType.BUFF) || (target == activeChar) || ((!target.isCursedWeaponEquipped()) && (!activeChar.isCursedWeaponEquipped()))) {
                     boolean reflected = target.checkReflectSkill(activeChar, this);
-                    getEffects(activeChar, target, activateRate() > 0, false, reflected);
+                    getEffects(activeChar, target, activateRate > 0, false, reflected);
                 }
             }
         }

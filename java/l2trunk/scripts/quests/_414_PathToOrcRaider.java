@@ -82,7 +82,7 @@ public final class _414_PathToOrcRaider extends Quest {
         String htmltext = "noquest";
         int npcId = npc.getNpcId();
         int cond = st.getCond();
-        int playerClassID = st.getPlayer().getClassId().getId();
+        int playerClassID = st.getPlayer().getClassId().id();
         int playerLvl = st.getPlayer().getLevel();
         if (npcId == KARUKIA) {
             if (cond < 1) {

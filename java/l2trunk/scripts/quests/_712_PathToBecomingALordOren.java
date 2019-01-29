@@ -47,13 +47,13 @@ public final class _712_PathToBecomingALordOren extends Quest {
                 break;
             case "marty_q712_02.htm":
                 if (isLordAvailable(3, st)) {
-                    castleOwner.getQuestState(getClass()).setCond(4);
+                    castleOwner.getQuestState(this).setCond(4);
                     st.setState(STARTED);
                 }
                 break;
             case "valleria_q712_02.htm":
                 if (isLordAvailable(4, st)) {
-                    castleOwner.getQuestState(getClass()).setCond(5);
+                    castleOwner.getQuestState(this).setCond(5);
                     st.exitCurrentQuest(true);
                 }
                 break;
@@ -147,7 +147,7 @@ public final class _712_PathToBecomingALordOren extends Quest {
         Clan owner = castle.getOwner();
         Player castleOwner = castle.getOwner().getLeader().getPlayer();
         if (owner != null)
-            return castleOwner != null && castleOwner != st.getPlayer() && owner == st.getPlayer().getClan() && castleOwner.getQuestState(getClass()) != null && castleOwner.getQuestState(getClass()).getCond() == cond;
+            return castleOwner != null && castleOwner != st.getPlayer() && owner == st.getPlayer().getClan() && castleOwner.getQuestState(this) != null && castleOwner.getQuestState(this).getCond() == cond;
         return false;
     }
 }

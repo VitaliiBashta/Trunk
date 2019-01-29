@@ -91,7 +91,7 @@ public final class _10284_AcquisionOfDivineSword extends Quest {
                 htmltext = "krun_q10284_01.htm";
         } else if (npcId == INJ_KEGOR) {
             if (cond == 4) {
-                st.takeAllItems(COLD_RESISTANCE_POTION);
+                st.takeItems(COLD_RESISTANCE_POTION);
                 st.setCond(5);
                 htmltext = "kegor_q10284_01.htm";
                 for (int i = 0; i < 4; i++) {

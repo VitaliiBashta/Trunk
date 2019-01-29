@@ -41,13 +41,13 @@ public final class _153_DeliverGoods extends Quest {
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
             if (st.getQuestItemsCount(DELIVERY_LIST) == 0)
-                st.giveItems(DELIVERY_LIST, 1);
+                st.giveItems(DELIVERY_LIST);
             if (st.getQuestItemsCount(HEAVY_WOOD_BOX) == 0)
-                st.giveItems(HEAVY_WOOD_BOX, 1);
+                st.giveItems(HEAVY_WOOD_BOX);
             if (st.getQuestItemsCount(CLOTH_BUNDLE) == 0)
-                st.giveItems(CLOTH_BUNDLE, 1);
+                st.giveItems(CLOTH_BUNDLE);
             if (st.getQuestItemsCount(CLAY_POT) == 0)
-                st.giveItems(CLAY_POT, 1);
+                st.giveItems(CLAY_POT);
             htmltext = "30041-04.htm";
         }
         return htmltext;
@@ -70,10 +70,10 @@ public final class _153_DeliverGoods extends Quest {
                 htmltext = "30041-05.htm";
             else if (cond == 1 && st.getQuestItemsCount(JACKSONS_RECEIPT) + st.getQuestItemsCount(SILVIAS_RECEIPT) + st.getQuestItemsCount(RANTS_RECEIPT) == 3) {
                 st.giveItems(RING_OF_KNOWLEDGE, 2);
-                st.takeItems(DELIVERY_LIST, -1);
-                st.takeItems(JACKSONS_RECEIPT, -1);
-                st.takeItems(SILVIAS_RECEIPT, -1);
-                st.takeItems(RANTS_RECEIPT, -1);
+                st.takeItems(DELIVERY_LIST);
+                st.takeItems(JACKSONS_RECEIPT);
+                st.takeItems(SILVIAS_RECEIPT);
+                st.takeItems(RANTS_RECEIPT);
                 st.addExpAndSp(600, 0);
                 st.playSound(SOUND_FINISH);
                 htmltext = "30041-06.htm";
@@ -83,7 +83,7 @@ public final class _153_DeliverGoods extends Quest {
             if (cond == 1 && st.getQuestItemsCount(HEAVY_WOOD_BOX) == 1) {
                 st.takeItems(HEAVY_WOOD_BOX, -1);
                 if (st.getQuestItemsCount(JACKSONS_RECEIPT) == 0)
-                    st.giveItems(JACKSONS_RECEIPT, 1);
+                    st.giveItems(JACKSONS_RECEIPT);
                 htmltext = "30002-01.htm";
             } else if (cond == 1 && st.getQuestItemsCount(JACKSONS_RECEIPT) > 0)
                 htmltext = "30002-02.htm";
@@ -91,8 +91,8 @@ public final class _153_DeliverGoods extends Quest {
             if (cond == 1 && st.getQuestItemsCount(CLOTH_BUNDLE) == 1) {
                 st.takeItems(CLOTH_BUNDLE, -1);
                 if (st.getQuestItemsCount(SILVIAS_RECEIPT) == 0) {
-                    st.giveItems(SILVIAS_RECEIPT, 1);
-                    if (st.getPlayer().getClassId().isMage())
+                    st.giveItems(SILVIAS_RECEIPT);
+                    if (st.getPlayer().getClassId().isMage)
                         st.giveItems(2509, 3);
                     else
                         st.giveItems(1835, 6);
@@ -102,9 +102,9 @@ public final class _153_DeliverGoods extends Quest {
                 htmltext = "30003-02.htm";
         } else if (npcId == 30054)
             if (cond == 1 && st.getQuestItemsCount(CLAY_POT) == 1) {
-                st.takeItems(CLAY_POT, -1);
+                st.takeItems(CLAY_POT);
                 if (st.getQuestItemsCount(RANTS_RECEIPT) == 0)
-                    st.giveItems(RANTS_RECEIPT, 1);
+                    st.giveItems(RANTS_RECEIPT);
                 htmltext = "30054-01.htm";
             } else if (cond == 1 && st.getQuestItemsCount(RANTS_RECEIPT) > 0)
                 htmltext = "30054-02.htm";

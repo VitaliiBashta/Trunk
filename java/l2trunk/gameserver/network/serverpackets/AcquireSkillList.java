@@ -56,10 +56,10 @@ public final class AcquireSkillList extends L2GameServerPacket {
         final int subUnit;
 
         SkillDescription(SkillLearn skill, int requirements, int subUnit) {
-            this.id = skill.getId();
-            this.nextLevel = skill.getLevel();
-            this.maxLevel = skill.getLevel();
-            this.cost = skill.getCost();
+            this.id = skill.id();
+            this.nextLevel = skill.level();
+            this.maxLevel = skill.level();
+            this.cost = skill.cost();
             this.requirements = requirements;
             this.subUnit = subUnit;
         }

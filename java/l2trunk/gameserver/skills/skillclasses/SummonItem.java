@@ -38,7 +38,7 @@ public final class SummonItem extends Skill {
                     long count = Rnd.get(minCount, maxCount);
 
                     ItemFunctions.addItem((Playable) activeChar, itemId, count, true, "SummonItem");
-                    getEffects(activeChar, target, activateRate() > 0, false);
+                    getEffects(activeChar, target, activateRate > 0, false);
                 });
     }
 }

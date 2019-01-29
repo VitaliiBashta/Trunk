@@ -9,17 +9,20 @@ import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
 import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.scripts.ScriptFile;
 
+import java.util.List;
+
 public final class _104_SpiritOfMirror extends Quest {
     private static final int GALLINS_OAK_WAND = 748;
     private static final int WAND_SPIRITBOUND1 = 1135;
     private static final int WAND_SPIRITBOUND2 = 1136;
     private static final int WAND_SPIRITBOUND3 = 1137;
+    private static final List<Integer> spirits = List.of(WAND_SPIRITBOUND1, WAND_SPIRITBOUND2, WAND_SPIRITBOUND3);
     private static final int WAND_OF_ADEPT = 747;
 
     private static final SystemMessage2 CACHE_SYSMSG_GALLINS_OAK_WAND = SystemMessage2.removeItems(GALLINS_OAK_WAND, 1);
 
     public _104_SpiritOfMirror() {
-        super(PARTY_NONE);
+        super(false);
         addStartNpc(30017);
         addTalkId(30041, 30043, 30045);
         addKillId(27003, 27004, 27005);
@@ -56,7 +59,7 @@ public final class _104_SpiritOfMirror extends Quest {
             else if (cond == 1 && st.getQuestItemsCount(GALLINS_OAK_WAND) >= 1 && (st.getQuestItemsCount(WAND_SPIRITBOUND1) == 0 || st.getQuestItemsCount(WAND_SPIRITBOUND2) == 0 || st.getQuestItemsCount(WAND_SPIRITBOUND3) == 0))
                 htmltext = "gallin_q0104_04.htm";
             else if (cond == 3 && st.getQuestItemsCount(WAND_SPIRITBOUND1) >= 1 && st.getQuestItemsCount(WAND_SPIRITBOUND2) >= 1 && st.getQuestItemsCount(WAND_SPIRITBOUND3) >= 1) {
-                st.takeAllItems(WAND_SPIRITBOUND1, WAND_SPIRITBOUND2, WAND_SPIRITBOUND3);
+                st.takeItems(spirits);
 
                 st.giveItems(WAND_OF_ADEPT, 1);
                 st.giveItems(ADENA_ID, 16866, false);
@@ -68,7 +71,7 @@ public final class _104_SpiritOfMirror extends Quest {
                     st.giveItems(1060, 100); // healing potion
                     for (int item = 4412; item <= 4417; item++)
                         st.giveItems(item, 10); // echo cry
-                    if (st.getPlayer().getClassId().isMage()) {
+                    if (st.getPlayer().getClassId().isMage) {
                         st.playTutorialVoice("tutorial_voice_027");
                         st.giveItems(5790, 3000); // newbie sps
                     } else {

@@ -130,7 +130,7 @@ public final class _371_ShriekOfGhosts extends Quest {
         Player player = qs.getRandomPartyMember(STARTED, Config.ALT_PARTY_DISTRIBUTION_RANGE);
         if (player == null)
             return null;
-        QuestState st = player.getQuestState(qs.getQuest().getName());
+        QuestState st = player.getQuestState(qs.getQuest());
 
         Integer _chance = common_chances.get(npc.getNpcId());
         if (_chance == null)

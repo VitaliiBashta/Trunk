@@ -21,6 +21,7 @@ import l2trunk.gameserver.templates.item.ItemTemplate;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
 import java.util.List;
+import java.util.Map;
 
 public final class SuspiciousMerchantInstance extends NpcInstance {
     public SuspiciousMerchantInstance(int objectID, NpcTemplate template) {
@@ -43,7 +44,7 @@ public final class SuspiciousMerchantInstance extends NpcInstance {
             }
 
             if (clan.getHasFortress() == fortress.getId()) {
-                showChatWindow(player, "residence2/fortress/fortress_ordery014.htm", "%clan_name%", clan.getName());
+                showChatWindow(player, "residence2/fortress/fortress_ordery014.htm", Map.of("%clan_name%", clan.getName()));
                 return;
             }
 
@@ -131,8 +132,8 @@ public final class SuspiciousMerchantInstance extends NpcInstance {
             siegeEvent.reCalcNextTime(false);
 
             player.sendPacket(new SystemMessage2(SystemMsg.YOUR_CLAN_HAS_BEEN_REGISTERED_TO_S1S_FORTRESS_BATTLE).addResidenceName(fortress));
-            showChatWindow(player, "residence2/fortress/fortress_ordery005.htm", "%clanList%", clanList);
-        } else if (command.equalsIgnoreCase("cancel")) {
+            showChatWindow(player, "residence2/fortress/fortress_ordery005.htm", Map.of("%clanList%", clanList));
+        } else if ("cancel".equalsIgnoreCase(command)) {
             Clan clan = player.getClan();
             if (clan == null || !player.hasPrivilege(Privilege.CS_FS_SIEGE_WAR)) {
                 showChatWindow(player, "residence2/fortress/fortress_ordery010.htm");
@@ -160,7 +161,7 @@ public final class SuspiciousMerchantInstance extends NpcInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
         NpcHtmlMessage html = new NpcHtmlMessage(player, this);
         Fortress fortress = getFortress();
         if (fortress.getOwner() != null) {

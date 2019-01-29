@@ -40,12 +40,12 @@ public final class _455_WingsofSand extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("sepsoul_q455_05.htm")) {
+        if ("sepsoul_q455_05.htm".equalsIgnoreCase(event)) {
             st.setState(STARTED);
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if (event.startsWith("sepsoul_q455_08.htm")) {
-            st.takeAllItems(LargeDragon);
+            st.takeItems(LargeDragon);
             StringTokenizer tokenizer = new StringTokenizer(event);
             tokenizer.nextToken();
             switch (Integer.parseInt(tokenizer.nextToken())) {
@@ -69,7 +69,7 @@ public final class _455_WingsofSand extends Quest {
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(this);
         } else if (event.startsWith("sepsoul_q455_11.htm")) {
-            st.takeAllItems(LargeDragon);
+            st.takeItems(LargeDragon);
             StringTokenizer tokenizer = new StringTokenizer(event);
             tokenizer.nextToken();
             switch (tokenizer.nextToken()) {

@@ -30,7 +30,7 @@ public final class _106_ForgottenTruth extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if (event.equals("tetrarch_thifiell_q0106_05.htm")) {
-            st.giveItems(ONYX_TALISMAN1, 1);
+            st.giveItems(ONYX_TALISMAN1);
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
@@ -74,7 +74,7 @@ public final class _106_ForgottenTruth extends Quest {
                     st.giveItems(1060, 100); // healing potion
                     for (int item = 4412; item <= 4417; item++)
                         st.giveItems(item, 10); // echo cry
-                    if (st.getPlayer().getClassId().isMage()) {
+                    if (st.getPlayer().getClassId().isMage) {
                         st.playTutorialVoice("tutorial_voice_027");
                         st.giveItems(5790, 3000); // newbie sps
                     } else {
@@ -96,10 +96,10 @@ public final class _106_ForgottenTruth extends Quest {
                 htmltext = "karta_q0106_02.htm";
             else if (cond == 3 && st.getQuestItemsCount(ANCIENT_SCROLL) > 0 && st.getQuestItemsCount(ANCIENT_CLAY_TABLET) > 0) {
                 htmltext = "karta_q0106_03.htm";
-                st.takeItems(ONYX_TALISMAN2, -1);
-                st.takeItems(ANCIENT_SCROLL, -1);
-                st.takeItems(ANCIENT_CLAY_TABLET, -1);
-                st.giveItems(KARTAS_TRANSLATION, 1);
+                st.takeItems(ONYX_TALISMAN2);
+                st.takeItems(ANCIENT_SCROLL);
+                st.takeItems(ANCIENT_CLAY_TABLET);
+                st.giveItems(KARTAS_TRANSLATION);
                 st.setCond(4);
             } else if (cond == 4 && st.getQuestItemsCount(KARTAS_TRANSLATION) > 0)
                 htmltext = "karta_q0106_04.htm";
@@ -112,10 +112,10 @@ public final class _106_ForgottenTruth extends Quest {
         if (npcId == 27070)
             if (st.getCond() == 2 && st.getQuestItemsCount(ONYX_TALISMAN2) > 0)
                 if (Rnd.chance(20) && st.getQuestItemsCount(ANCIENT_SCROLL) == 0) {
-                    st.giveItems(ANCIENT_SCROLL, 1);
+                    st.giveItems(ANCIENT_SCROLL);
                     st.playSound(SOUND_MIDDLE);
                 } else if (Rnd.chance(10) && st.getQuestItemsCount(ANCIENT_CLAY_TABLET) == 0) {
-                    st.giveItems(ANCIENT_CLAY_TABLET, 1);
+                    st.giveItems(ANCIENT_CLAY_TABLET);
                     st.playSound(SOUND_MIDDLE);
                 }
         if (st.getQuestItemsCount(ANCIENT_SCROLL) > 0 && st.getQuestItemsCount(ANCIENT_CLAY_TABLET) > 0)

@@ -41,7 +41,7 @@ public final class LethalShot extends Skill {
                         realTarget.doCounterAttack(this, activeChar, false);
                 }
 
-                getEffects(activeChar, target, activateRate() > 0, false, reflected);
+                getEffects(activeChar, target, activateRate > 0, false, reflected);
             }
     }
 }

@@ -105,17 +105,17 @@ public class MerchantInstance extends NpcInstance {
         StringTokenizer st = new StringTokenizer(command, " ");
         String actualCommand = st.nextToken(); // Get actual command
 
-        if (actualCommand.equalsIgnoreCase("Buy") || actualCommand.equalsIgnoreCase("Sell")) {
+        if ("Buy".equalsIgnoreCase(actualCommand) || "Sell".equalsIgnoreCase(actualCommand)) {
             int val = 0;
             if (st.countTokens() > 0)
                 val = toInt(st.nextToken());
             showShopWindow(player, val, true);
-        } else if (actualCommand.equalsIgnoreCase("Wear")) {
+        } else if ("Wear".equalsIgnoreCase(actualCommand)) {
             if (st.countTokens() < 1)
                 return;
             int val = toInt(st.nextToken());
             showWearWindow(player, val);
-        } else if (actualCommand.equalsIgnoreCase("Multisell")) {
+        } else if ("Multisell".equalsIgnoreCase(actualCommand)) {
             if (st.countTokens() < 1)
                 return;
             int val = toInt(st.nextToken());

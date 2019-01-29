@@ -90,7 +90,7 @@ public final class _646_SignsOfRevolt extends Quest {
         Player player = qs.getRandomPartyMember(STARTED, Config.ALT_PARTY_DISTRIBUTION_RANGE);
         if (player == null)
             return null;
-        QuestState st = player.getQuestState(qs.getQuest().getName());
+        QuestState st = player.getQuestState(qs.getQuest());
 
         long CURSED_DOLL_COUNT = st.getQuestItemsCount(CURSED_DOLL);
         if (CURSED_DOLL_COUNT < 180 && Rnd.chance(CURSED_DOLL_Chance)) {

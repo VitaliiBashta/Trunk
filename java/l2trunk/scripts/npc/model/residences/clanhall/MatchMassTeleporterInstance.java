@@ -21,7 +21,7 @@ public final class MatchMassTeleporterInstance extends NpcInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
         ClanHall clanHall = getClanHall();
         ClanHallTeamBattleEvent siegeEvent = clanHall.getSiegeEvent();
 

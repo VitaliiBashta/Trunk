@@ -3,7 +3,6 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _228_TestOfMagus extends Quest {
     //NPC
@@ -310,7 +309,7 @@ public final class _228_TestOfMagus extends Quest {
                 htmltext = "completed";
                 st.exitCurrentQuest(true);
             } else if (cond == 0) {
-                if (st.getPlayer().getClassId().getId() == 0x0b || st.getPlayer().getClassId().getId() == 0x1a || st.getPlayer().getClassId().getId() == 0x27) {
+                if (st.getPlayer().getClassId().id() == 0x0b || st.getPlayer().getClassId().id() == 0x1a || st.getPlayer().getClassId().id() == 0x27) {
                     if (st.getPlayer().getLevel() >= 39)
                         htmltext = "30629-03.htm";
                     else {

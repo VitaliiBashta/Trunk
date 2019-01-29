@@ -124,7 +124,7 @@ public final class _064_CertifiedBerserker extends Quest {
                 htmltext = "32207-00.htm";
                 st.exitCurrentQuest(true);
             } else if (cond == 0) {
-                if (st.getPlayer().getClassId().getId() == 0x7D) {
+                if (st.getPlayer().getClassId().id == 0x7D) {
                     if (st.getPlayer().getLevel() >= 39)
                         htmltext = "32207-01.htm";
                     else {

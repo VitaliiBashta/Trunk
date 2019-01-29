@@ -187,7 +187,7 @@ public class AdminReload implements IAdminCommandHandler {
 
     private void reloadQuestStates(Player p) {
         p.getAllQuestsStates().forEach(qs ->
-            p.removeQuestState(qs.getQuest().getName()));
+            p.removeQuestState(qs.getQuest().questId));
         try (Connection con = DatabaseFactory.getInstance().getConnection()) {
             Quest.restoreQuestStates(p, con);
         } catch (SQLException e) {

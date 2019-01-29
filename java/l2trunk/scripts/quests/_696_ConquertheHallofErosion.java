@@ -53,8 +53,8 @@ public final class _696_ConquertheHallofErosion extends Quest {
             } else if (cond == 1) {
                 if (st.getInt("cohemenesDone") != 0) {
                     if (st.getQuestItemsCount(MARK_OF_KEUCEREUS_STAGE_2) < 1) {
-                        st.takeAllItems(MARK_OF_KEUCEREUS_STAGE_1);
-                        st.giveItems(MARK_OF_KEUCEREUS_STAGE_2, 1);
+                        st.takeItems(MARK_OF_KEUCEREUS_STAGE_1);
+                        st.giveItems(MARK_OF_KEUCEREUS_STAGE_2);
                     }
                     htmltext = "tepios_q696_5.htm";
                     st.playSound(SOUND_FINISH);

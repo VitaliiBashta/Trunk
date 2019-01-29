@@ -49,23 +49,23 @@ public final class _299_GatherIngredientsforPie extends Quest {
         } else if (event.equalsIgnoreCase("emilly_q0299_0201.htm") && _state == STARTED) {
             if (st.getQuestItemsCount(Honey_Pouch) < 100)
                 return "emilly_q0299_0202.htm";
-            st.takeItems(Honey_Pouch, -1);
+            st.takeItems(Honey_Pouch);
             st.setCond(3);
         } else if (event.equalsIgnoreCase("lars_q0299_0301.htm") && _state == STARTED && cond == 3) {
-            st.giveItems(Avellan_Spice, 1);
+            st.giveItems(Avellan_Spice);
             st.setCond(4);
         } else if (event.equalsIgnoreCase("emilly_q0299_0401.htm") && _state == STARTED) {
             if (st.getQuestItemsCount(Avellan_Spice) < 1)
                 return "emilly_q0299_0402.htm";
-            st.takeItems(Avellan_Spice, -1);
+            st.takeItems(Avellan_Spice);
             st.setCond(5);
         } else if (event.equalsIgnoreCase("guard_bright_q0299_0501.htm") && _state == STARTED && cond == 5) {
-            st.giveItems(Fruit_Basket, 1);
+            st.giveItems(Fruit_Basket);
             st.setCond(6);
         } else if (event.equalsIgnoreCase("emilly_q0299_0601.htm") && _state == STARTED) {
             if (st.getQuestItemsCount(Fruit_Basket) < 1)
                 return "emilly_q0299_0602.htm";
-            st.takeItems(Fruit_Basket, -1);
+            st.takeItems(Fruit_Basket);
             if (Rnd.chance(Reward_Varnish_Chance))
                 st.giveItems(Varnish, 50, true);
             else

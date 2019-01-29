@@ -1,10 +1,9 @@
 package l2trunk.gameserver.network.clientpackets;
 
-import l2trunk.gameserver.instancemanager.QuestManager;
 import l2trunk.gameserver.model.Player;
-import l2trunk.gameserver.model.quest.Quest;
+import l2trunk.scripts.quests._255_Tutorial;
 
-public class RequestTutorialClientEvent extends L2GameClientPacket {
+public final class RequestTutorialClientEvent extends L2GameClientPacket {
     // format: cd
     private int event = 0;
 
@@ -21,9 +20,6 @@ public class RequestTutorialClientEvent extends L2GameClientPacket {
         Player player = getClient().getActiveChar();
         if (player == null)
             return;
-
-        Quest tutorial = QuestManager.getQuest(255);
-        if (tutorial != null)
-            player.processQuestEvent(tutorial.getName(), "CE" + event, null);
+        player.processQuestEvent(_255_Tutorial.class, "CE" + event, null);
     }
 }

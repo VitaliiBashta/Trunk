@@ -111,7 +111,7 @@ public final class _512_AwlUnderFoot extends Quest {
                         Party party = st.getPlayer().getParty();
                         if (party != null)
                             for (Player member : party.getMembers()) {
-                                QuestState qs = member.getQuestState(getClass());
+                                QuestState qs = member.getQuestState(this);
                                 if (qs != null && qs.isStarted()) {
                                     qs.giveItems(FragmentOfTheDungeonLeaderMark, RewardMarksCount / party.size());
                                     qs.playSound(SOUND_ITEMGET);

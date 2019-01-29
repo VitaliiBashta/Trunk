@@ -110,7 +110,7 @@ public final class Rename extends Functions {
         append += "<table>";
 
         for (SubClass s : player.getSubClasses().values())
-            if (!s.isBase() && s.getClassId() != ClassId.inspector.getId() && s.getClassId() != ClassId.judicator.getId())
+            if (!s.isBase() && s.getClassId() != ClassId.inspector.id() && s.getClassId() != ClassId.judicator.id())
                 append += "<tr><td><button value=\"" + new CustomMessage("scripts.services.Separate.Button", player).addString(ClassId.VALUES.get(s.getClassId()).toString()) + "\" action=\"bypass -h scripts_services.Rename:separate " + s.getClassId() + " $name\" width=200 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td></tr>";
 
         append += "</table>";

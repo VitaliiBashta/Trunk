@@ -30,21 +30,21 @@ public final class _156_MillenniumLove extends Quest {
         String htmltext = event;
         switch (event) {
             case "30368-06.htm":
-                st.giveItems(LILITHS_LETTER, 1);
+                st.giveItems(LILITHS_LETTER);
                 st.setCond(1);
                 st.setState(STARTED);
                 st.playSound(SOUND_ACCEPT);
                 break;
             case "156_1":
-                st.takeItems(LILITHS_LETTER, -1);
+                st.takeItems(LILITHS_LETTER);
                 if (st.getQuestItemsCount(THEONS_DIARY) == 0) {
-                    st.giveItems(THEONS_DIARY, 1);
+                    st.giveItems(THEONS_DIARY);
                     st.setCond(2);
                 }
                 htmltext = "30369-03.htm";
                 break;
             case "156_2":
-                st.takeItems(LILITHS_LETTER, -1);
+                st.takeItems(LILITHS_LETTER);
                 st.playSound(SOUND_FINISH);
                 htmltext = "30369-04.htm";
                 st.exitCurrentQuest(false);
@@ -70,10 +70,10 @@ public final class _156_MillenniumLove extends Quest {
                 htmltext = "30368-07.htm";
             else if (cond == 2 && st.getQuestItemsCount(THEONS_DIARY) == 1) {
                 st.takeItems(THEONS_DIARY, -1);
-                if (st.getPlayer().getClassId().isMage())
-                    st.giveItems(GR_COMP_PACKAGE_SPS, 1);
+                if (st.getPlayer().getClassId().isMage)
+                    st.giveItems(GR_COMP_PACKAGE_SPS);
                 else
-                    st.giveItems(GR_COMP_PACKAGE_SS, 1);
+                    st.giveItems(GR_COMP_PACKAGE_SS);
                 st.addExpAndSp(3000, 0);
                 st.playSound(SOUND_FINISH);
                 htmltext = "30368-08.htm";

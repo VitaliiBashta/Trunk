@@ -390,7 +390,7 @@ public final class Util {
     }
 
     public static String getFullClassName(int classId) {
-        return Stream.of(ClassId.values()).filter(e -> e.getId() == classId)
+        return Stream.of(ClassId.values()).filter(e -> e.id() == classId)
                 .map(ClassId::getName)
                 .findFirst().orElse("Unknown");
     }

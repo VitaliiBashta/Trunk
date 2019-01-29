@@ -50,7 +50,7 @@ public final class ChargeSoul extends Skill {
                 if (realTarget.isPlayable() || realTarget.isMonster())
                     activeChar.setConsumedSouls(activeChar.getConsumedSouls() + numSouls, null);
 
-                getEffects(activeChar, target, activateRate() > 0, false, reflected);
+                getEffects(activeChar, target, activateRate > 0, false, reflected);
             }
 
         if (isSSPossible())

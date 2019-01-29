@@ -35,7 +35,7 @@ public final class ControlUnitInstance extends NpcInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
         int cond = getCond(player);
         switch (cond) {
             case COND_CAN_OPEN:

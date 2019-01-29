@@ -7,16 +7,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * @author VISTALL
- * @date 14:50/26.02.2011
- */
+
 public class ExQuestNpcLogList extends L2GameServerPacket {
-    private final int _questId;
+    private final int questId;
     private List<int[]> _logList = Collections.emptyList();
 
     public ExQuestNpcLogList(QuestState state) {
-        _questId = state.getQuest().getQuestIntId();
+        questId = state.getQuest().questId;
         int cond = state.getCond();
         List<QuestNpcLogInfo> vars = state.getQuest().getNpcLogList(cond);
         if (vars == null)
@@ -34,7 +31,7 @@ public class ExQuestNpcLogList extends L2GameServerPacket {
     @Override
     protected void writeImpl() {
         writeEx(0xC5);
-        writeD(_questId);
+        writeD(questId);
         writeC(_logList.size());
         for (int[] values : _logList) {
             writeD(values[0]);

@@ -10,7 +10,6 @@ import l2trunk.gameserver.data.xml.holder.ResidenceHolder;
 import l2trunk.gameserver.instancemanager.CursedWeaponsManager;
 import l2trunk.gameserver.instancemanager.PetitionManager;
 import l2trunk.gameserver.instancemanager.PlayerMessageStack;
-import l2trunk.gameserver.instancemanager.QuestManager;
 import l2trunk.gameserver.listener.actor.player.OnAnswerListener;
 import l2trunk.gameserver.listener.actor.player.impl.ReviveAnswerListener;
 import l2trunk.gameserver.model.*;
@@ -26,10 +25,9 @@ import l2trunk.gameserver.model.mail.Mail;
 import l2trunk.gameserver.model.pledge.Clan;
 import l2trunk.gameserver.model.pledge.SubUnit;
 import l2trunk.gameserver.model.pledge.UnitMember;
-import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.network.GameClient;
-import l2trunk.gameserver.network.serverpackets.ConfirmDlg;
 import l2trunk.gameserver.network.serverpackets.*;
+import l2trunk.gameserver.network.serverpackets.ConfirmDlg;
 import l2trunk.gameserver.network.serverpackets.components.ChatType;
 import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 import l2trunk.gameserver.network.serverpackets.components.IStaticPacket;
@@ -37,6 +35,7 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.skills.AbnormalEffect;
 import l2trunk.gameserver.templates.item.ItemTemplate;
 import l2trunk.gameserver.utils.*;
+import l2trunk.scripts.quests._255_Tutorial;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -89,30 +88,17 @@ public final class EnterWorld extends L2GameClientPacket {
     }
 
     private static void loadTutorial(Player player) {
-        Quest q = QuestManager.getQuest(255);
-        if (q != null) {
-            if (CCPSecondaryPassword.hasPassword(player)) {
-                player.processQuestEvent(q.getName(), "CheckPass", null, false);
-
-            } else {
-                player.processQuestEvent(q.getName(), "ProposePass", null, false);
-
-            }
-			/*
-			else if (player.level() == 1 || Rnd.get(10) == 1)
-			{
-				player.processQuestEvent(q.name(), "ProposePass", null, false);
-			}
-			else
-			{
-				player.processQuestEvent(q.name(), "UC", null, false);
-			}
-			*/
-            player.processQuestEvent(q.getName(), "OpenClassMaster", null, false);
-            player.processQuestEvent(q.getName(), "ShowChangeLog", null, false);
-
+        if (CCPSecondaryPassword.hasPassword(player)) {
+            player.processQuestEvent(_255_Tutorial.class, "CheckPass", null, false);
+        } else {
+            player.processQuestEvent(_255_Tutorial.class, "ProposePass", null, false);
 
         }
+
+        player.processQuestEvent(_255_Tutorial.class, "OpenClassMaster", null, false);
+        player.processQuestEvent(_255_Tutorial.class, "ShowChangeLog", null, false);
+
+
     }
 
     @Override

@@ -92,7 +92,7 @@ public class PartySmallWindowAll extends L2GameServerPacket {
             curMp = (int) member.getCurrentMp();
             maxMp = member.getMaxMp();
             level = member.getLevel();
-            class_id = member.getClassId().getId();
+            class_id = member.getClassId().id();
             race_id = member.getRace().ordinal();
 
             Summon pet = member.getPet();

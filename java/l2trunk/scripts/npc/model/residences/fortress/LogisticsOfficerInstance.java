@@ -11,6 +11,7 @@ import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.Location;
 
 import java.util.List;
+import java.util.Map;
 
 
 public final class LogisticsOfficerInstance extends FacilityManagerInstance {
@@ -42,7 +43,7 @@ public final class LogisticsOfficerInstance extends FacilityManagerInstance {
             }
 
             showChatWindow(player, "residence2/fortress/fortress_supply_officer002.htm",
-                    "%guard_buff_level%", fortress.getFacilityLevel(Fortress.GUARD_BUFF)+"");
+                    Map.of("%guard_buff_level%", fortress.getFacilityLevel(Fortress.GUARD_BUFF)+""));
         } else if ("supplyInfo".equalsIgnoreCase(command)) {
             if (fortress.getContractState() != Fortress.CONTRACT_WITH_CASTLE) {
                 showChatWindow(player, "residence2/fortress/fortress_supply_officer005.htm");
@@ -50,10 +51,10 @@ public final class LogisticsOfficerInstance extends FacilityManagerInstance {
             }
 
             showChatWindow(player, "residence2/fortress/fortress_supply_officer009.htm",
-                    "%supply_count%", fortress.getSupplyCount()+"");
+                    Map.of("%supply_count%", fortress.getSupplyCount()+""));
         } else if ("rewardInfo".equalsIgnoreCase(command)) {
             showChatWindow(player, "residence2/fortress/fortress_supply_officer010.htm",
-                    "%blood_oaths%", fortress.getRewardCount()+"");
+                    Map.of("%blood_oaths%", fortress.getRewardCount()+""));
         } else if ("receiveSupply".equalsIgnoreCase(command)) {
             String filename;
             if (fortress.getSupplyCount() > 0) {
@@ -97,7 +98,7 @@ public final class LogisticsOfficerInstance extends FacilityManagerInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
         showChatWindow(player, "residence2/fortress/fortress_supply_officer001.htm");
     }
 }

@@ -50,13 +50,13 @@ public final class _716_PathToBecomingALordRune extends Quest {
                 st.setCond(3);
                 break;
             case "frederick_q716_08.htm":
-                castleOwner.getQuestState(this.getClass()).set("confidant", String.valueOf(st.getPlayer().getObjectId()), true);
-                castleOwner.getQuestState(this.getClass()).setCond(5);
+                castleOwner.getQuestState(this).set("confidant", String.valueOf(st.getPlayer().getObjectId()), true);
+                castleOwner.getQuestState(this).setCond(5);
                 st.setState(STARTED);
                 break;
             case "innocentin_q716_03.htm":
-                if (castleOwner != null && castleOwner != st.getPlayer() && castleOwner.getQuestState(this.getClass()) != null && castleOwner.getQuestState(this.getClass()).getCond() == 5)
-                    castleOwner.getQuestState(this.getClass()).setCond(6);
+                if (castleOwner != null && castleOwner != st.getPlayer() && castleOwner.getQuestState(this) != null && castleOwner.getQuestState(this).getCond() == 5)
+                    castleOwner.getQuestState(this).setCond(6);
                 break;
             case "agripel_q716_08.htm":
                 st.setCond(8);
@@ -86,7 +86,7 @@ public final class _716_PathToBecomingALordRune extends Quest {
                     }
                 }
                 // Лидер клана в игре, говорящий не лидер, у лидера взят квест и пройден до стадии назначения поверенного
-                else if (castleOwner != null && castleOwner.getQuestState(getClass()) != null && castleOwner.getQuestState(getClass()).getCond() == 4) {
+                else if (castleOwner != null && castleOwner.getQuestState(this) != null && castleOwner.getQuestState(this).getCond() == 4) {
                     if (castleOwner.isInRangeZ(npc, 200))
                         htmltext = "frederick_q716_07.htm";
                     else
@@ -138,8 +138,8 @@ public final class _716_PathToBecomingALordRune extends Quest {
                 htmltext = "agripel_q716_09.htm";
         } else if (npcId == Innocentin) {
             if (st.getState() == STARTED && st.getCond() == 0) {
-                if (castleOwner != null && castleOwner != st.getPlayer() && castleOwner.getQuestState(this.getClass()) != null && castleOwner.getQuestState(this.getClass()).getCond() == 5) {
-                    if (Integer.parseInt(castleOwner.getQuestState(this.getClass()).get("confidant")) == st.getPlayer().getObjectId())
+                if (castleOwner != null && castleOwner != st.getPlayer() && castleOwner.getQuestState(this) != null && castleOwner.getQuestState(this).getCond() == 5) {
+                    if (Integer.parseInt(castleOwner.getQuestState(this).get("confidant")) == st.getPlayer().getObjectId())
                         htmltext = "innocentin_q716_01.htm";
                     else
                         htmltext = "innocentin_q716_00.htm";
@@ -155,11 +155,11 @@ public final class _716_PathToBecomingALordRune extends Quest {
         Castle castle = ResidenceHolder.getResidence(RuneCastle);
         Player castleOwner = castle.getOwner().getLeader().getPlayer();
         if (st.getState() == STARTED && st.getCond() == 0) {
-            if (castleOwner != null && castleOwner != st.getPlayer() && castleOwner.getQuestState(this.getClass()) != null && castleOwner.getQuestState(this.getClass()).getCond() == 7) {
-                if (castleOwner.getQuestState(this.getClass()).get("paganCount") != null)
-                    castleOwner.getQuestState(this.getClass()).set("paganCount", String.valueOf(Integer.parseInt(castleOwner.getQuestState(this.getClass()).get("paganCount")) + 1), true);
+            if (castleOwner != null && castleOwner != st.getPlayer() && castleOwner.getQuestState(this) != null && castleOwner.getQuestState(this).getCond() == 7) {
+                if (castleOwner.getQuestState(this).get("paganCount") != null)
+                    castleOwner.getQuestState(this).set("paganCount", String.valueOf(Integer.parseInt(castleOwner.getQuestState(this).get("paganCount")) + 1), true);
                 else
-                    castleOwner.getQuestState(this.getClass()).set("paganCount", "1", true);
+                    castleOwner.getQuestState(this).set("paganCount", "1", true);
             }
         }
         return null;

@@ -46,8 +46,8 @@ public final class _10291_FireDragonDestroyer extends Quest {
             else if (cond == 2) {
                 if (st.getQuestItemsCount(ValorNecklace) >= 1) {
                     htmltext = "klein_q10291_07.htm";
-                    st.takeAllItems(ValorNecklace);
-                    st.giveItems(8567, 1);
+                    st.takeItems(ValorNecklace);
+                    st.giveItems(8567);
                     st.giveItems(ADENA_ID, 126549);
                     st.addExpAndSp(717291, 77397);
                     st.playSound(SOUND_FINISH);
@@ -66,8 +66,8 @@ public final class _10291_FireDragonDestroyer extends Quest {
         int cond = st.getCond();
 
         if (cond == 1 && npcId == Valakas) {
-            st.takeAllItems(PoorNecklace);
-            st.giveItems(ValorNecklace, 1);
+            st.takeItems(PoorNecklace);
+            st.giveItems(ValorNecklace);
             st.setCond(2);
         }
         return null;

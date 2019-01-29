@@ -130,7 +130,7 @@ public final class TeamMember {
         if (duel != null)
             duel.abortDuel(player);
 
-        _returnLoc = player._stablePoint == null ? player.getReflection().getReturnLoc() == null ? player.getLoc() : player.getReflection().getReturnLoc() : player._stablePoint;
+        _returnLoc = player.stablePoint == null ? player.getReflection().getReturnLoc() == null ? player.getLoc() : player.getReflection().getReturnLoc() : player.stablePoint;
 
         if (player.isDead())
             player.setPendingRevive(true);
@@ -149,7 +149,7 @@ public final class TeamMember {
 
         Location tele = Location.findPointToStay(instantZone.getTeleportCoords().get(_side - 1), 50, 50, ref.getGeoIndex());
 
-        player._stablePoint = _returnLoc;
+        player.stablePoint = _returnLoc;
         player.teleToLocation(tele, ref);
 
         if (_type == CompType.TEAM)
@@ -198,7 +198,7 @@ public final class TeamMember {
         player.sendPacket(new ExOlympiadMode(0));
         player.sendPacket(new ExOlympiadMatchEnd());
 
-        player._stablePoint = null;
+        player.stablePoint = null;
         player.teleToLocation(_returnLoc, ReflectionManager.DEFAULT);
 
     }

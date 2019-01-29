@@ -25,12 +25,12 @@ public final class _238_SuccessFailureOfBusiness extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("32641-03.htm")) {
+        if ("32641-03.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.setState(STARTED);
         }
-        if (event.equalsIgnoreCase("32641-06.htm")) {
-            st.takeAllItems(BrokenPieveOfMagicForce);
+        if ("32641-06.htm".equalsIgnoreCase(event)) {
+            st.takeItems(BrokenPieveOfMagicForce);
             st.setCond(3);
         }
         return event;
@@ -61,8 +61,8 @@ public final class _238_SuccessFailureOfBusiness extends Quest {
             else if (cond == 3)
                 htmltext = "32641-07.htm";
             else if (cond == 4) {
-                st.takeAllItems(VicinityOfTheFieldOfSilenceResearchCenter);
-                st.takeAllItems(GuardianSpiritFragment);
+                st.takeItems(VicinityOfTheFieldOfSilenceResearchCenter);
+                st.takeItems(GuardianSpiritFragment);
                 st.giveItems(ADENA_ID, 283346);
                 st.addExpAndSp(1319736, 103553);
                 st.setState(COMPLETED);

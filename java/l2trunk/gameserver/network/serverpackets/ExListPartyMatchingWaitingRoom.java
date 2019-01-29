@@ -57,7 +57,7 @@ public final class ExListPartyMatchingWaitingRoom extends L2GameServerPacket {
 
         PartyMatchingWaitingInfo(Player member) {
             name = member.getName();
-            classId = member.getClassId().getId();
+            classId = member.getClassId().id();
             level = member.getLevel();
             Reflection ref = member.getReflection();
             currentInstance = ref == null ? 0 : ref.getInstancedZoneId();

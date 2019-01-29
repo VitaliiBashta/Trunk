@@ -183,9 +183,9 @@ public enum ClassId {
     judicator(136, "Judicator", false, Race.kamael, inspector, 4, ClassType2.Enchanter);
 
     public static final List<ClassId> VALUES = List.of(values());
-    private final int id;
-    private final String name;
-    private final boolean isMage;
+    public final int id;
+    public final String name;
+    public final boolean isMage;
     private final Race race;
     private final ClassId parent;
     private final ClassType2 type2;
@@ -203,25 +203,12 @@ public enum ClassId {
         type2 = classType2;
     }
 
-    /**
-     * Return the Identifier of the Class.<BR><BR>
-     */
-    public final int getId() {
+    public final int id() {
         return id;
     }
 
-    /**
-     * Return the display name of the Class.<BR><BR>
-     */
     public final String getName() {
         return name;
-    }
-
-    /**
-     * Return True if the class is a mage class.<BR><BR>
-     */
-    public final boolean isMage() {
-        return isMage;
     }
 
     /**

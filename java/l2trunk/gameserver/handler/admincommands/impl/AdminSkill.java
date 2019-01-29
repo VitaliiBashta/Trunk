@@ -120,7 +120,7 @@ public final class AdminSkill implements IAdminCommandHandler {
         {
             Collection<SkillLearn> clanSkills = SkillAcquireHolder.getAvailableSkills(target, AcquireType.CLAN);
             for (SkillLearn sl : clanSkills) {
-                skill = SkillTable.INSTANCE.getInfo(sl.getId(), sl.getLevel());
+                skill = SkillTable.INSTANCE.getInfo(sl.id(), sl.level());
                 clan.addSkill(skill, true);
             }
         }
@@ -183,7 +183,7 @@ public final class AdminSkill implements IAdminCommandHandler {
         while (skills.size() > unLearnable) {
             unLearnable = 0;
             for (SkillLearn s : skills) {
-                Skill sk = SkillTable.INSTANCE.getInfo(s.getId(), s.getLevel());
+                Skill sk = SkillTable.INSTANCE.getInfo(s.id(), s.level());
                 if (sk == null || !sk.getCanLearn(player.getClassId())) {
                     unLearnable++;
                     continue;

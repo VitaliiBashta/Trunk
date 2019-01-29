@@ -4,7 +4,6 @@ import l2trunk.gameserver.model.GameObjectsStorage;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _220_TestimonyOfGlory extends Quest {
     //NPC
@@ -501,7 +500,7 @@ public final class _220_TestimonyOfGlory extends Quest {
                 htmltext = "completed";
                 st.exitCurrentQuest(true);
             } else if (cond == 0) {
-                if (st.getPlayer().getClassId().getId() == 45 || st.getPlayer().getClassId().getId() == 47 || st.getPlayer().getClassId().getId() == 50) {
+                if (st.getPlayer().getClassId().id() == 45 || st.getPlayer().getClassId().id() == 47 || st.getPlayer().getClassId().id() == 50) {
                     if (st.getPlayer().getLevel() >= 37)
                         htmltext = "30514-03.htm";
                     else {

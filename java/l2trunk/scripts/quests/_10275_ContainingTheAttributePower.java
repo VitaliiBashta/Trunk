@@ -10,6 +10,10 @@ import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.tables.SkillTable;
 
+import java.util.List;
+
+import static l2trunk.commons.lang.NumberUtils.toInt;
+
 public final class _10275_ContainingTheAttributePower extends Quest {
     private final static int Holly = 30839;
     private final static int Weber = 31307;
@@ -23,6 +27,8 @@ public final class _10275_ContainingTheAttributePower extends Quest {
     private final static int SoulPieceWater = 13861;
     private final static int SoulPieceAir = 13862;
 
+    private static final List<Integer> items = List.of(
+    0,10521,10522,10523,10524,10525,10526);
     public _10275_ContainingTheAttributePower() {
         super(false);
 
@@ -44,62 +50,48 @@ public final class _10275_ContainingTheAttributePower extends Quest {
 
         Player player = st.getPlayer();
 
-        if (event.equalsIgnoreCase("30839-02.htm") || event.equalsIgnoreCase("31307-02.htm")) {
+        if ("30839-02.htm".equalsIgnoreCase(event) || "31307-02.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("30839-05.htm")) {
+        } else if ("30839-05.htm".equalsIgnoreCase(event)) {
             st.setCond(2);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("31307-05.htm")) {
+        } else if ("31307-05.htm".equalsIgnoreCase(event)) {
             st.setCond(7);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("32325-03.htm")) {
+        } else if ("32325-03.htm".equalsIgnoreCase(event)) {
             st.setCond(3);
             st.giveItems(YinSword, 1, Element.FIRE, 10);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("32326-03.htm")) {
+        } else if ("32326-03.htm".equalsIgnoreCase(event)) {
             st.setCond(8);
             st.giveItems(YangSword, 1, Element.EARTH, 10);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("32325-06.htm")) {
+        } else if ("32325-06.htm".equalsIgnoreCase(event)) {
             if (st.getQuestItemsCount(YinSword) > 0) {
                 st.takeItems(YinSword, 1);
                 htmltext = "32325-07.htm";
             }
             st.giveItems(YinSword, 1, Element.FIRE, 10);
-        } else if (event.equalsIgnoreCase("32326-06.htm")) {
+        } else if ("32326-06.htm".equalsIgnoreCase(event)) {
             if (st.getQuestItemsCount(YangSword) > 0) {
                 st.takeItems(YangSword, 1);
                 htmltext = "32326-07.htm";
             }
             st.giveItems(YangSword, 1, Element.EARTH, 10);
-        } else if (event.equalsIgnoreCase("32325-09.htm")) {
+        } else if ("32325-09.htm".equalsIgnoreCase(event)) {
             st.setCond(5);
             SkillTable.INSTANCE.getInfo(2635).getEffects(player);
             st.giveItems(YinSword, 1, Element.FIRE, 10);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("32326-09.htm")) {
+        } else if ("32326-09.htm".equalsIgnoreCase(event)) {
             st.setCond(10);
             SkillTable.INSTANCE.getInfo(2636).getEffects(player);
             st.giveItems(YangSword, 1, Element.EARTH, 10);
             st.playSound(SOUND_MIDDLE);
         } else {
-            int item = 0;
-
-            if (event.equalsIgnoreCase("1"))
-                item = 10521;
-            else if (event.equalsIgnoreCase("2"))
-                item = 10522;
-            else if (event.equalsIgnoreCase("3"))
-                item = 10523;
-            else if (event.equalsIgnoreCase("4"))
-                item = 10524;
-            else if (event.equalsIgnoreCase("5"))
-                item = 10525;
-            else if (event.equalsIgnoreCase("6"))
-                item = 10526;
-
+            int item = items.get(toInt(event));
             if (item > 0) {
                 st.giveItems(item, 2, true);
                 st.addExpAndSp(202160, 20375);

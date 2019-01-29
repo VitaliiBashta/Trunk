@@ -54,8 +54,8 @@ public final class _461_RumbleInTheBase extends Quest{
                         htmltext = "stan_q461_04.htm";
                     else if (cond == 2) {
                         htmltext = "stan_q461_05.htm";
-                        st.takeAllItems(ShoesStringofSelMahum);
-                        st.takeAllItems(ShinySalmon);
+                        st.takeItems(ShoesStringofSelMahum);
+                        st.takeItems(ShinySalmon);
                         st.addExpAndSp(224784, 342528);
                         st.setState(COMPLETED);
                         st.playSound(SOUND_FINISH);

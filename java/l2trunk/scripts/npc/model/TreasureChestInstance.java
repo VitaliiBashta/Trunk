@@ -27,7 +27,7 @@ public final class TreasureChestInstance extends ChestInstance {
 
     private double calcChance(Player opener, Skill skill) {
 
-        double chance = skill.activateRate();
+        double chance = skill.activateRate;
         int npcLvl = getLevel();
         if (!isCommonTreasureChest()) {
             double levelmod = (double) skill.magicLevel - npcLvl;

@@ -4,9 +4,10 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public final class _279_TargetOfOpportunity extends Quest{
+import java.util.List;
+
+public final class _279_TargetOfOpportunity extends Quest {
     private static final int Jerian = 32302;
     private static final int CosmicScout = 22373;
     private static final int CosmicWatcher = 22374;
@@ -17,12 +18,14 @@ public final class _279_TargetOfOpportunity extends Quest{
     private static final int SealComponentsPart2 = 15518;
     private static final int SealComponentsPart3 = 15519;
     private static final int SealComponentsPart4 = 15520;
+    private static final List<Integer> components = List.of(
+            SealComponentsPart1, SealComponentsPart2, SealComponentsPart3, SealComponentsPart4);
 
     public _279_TargetOfOpportunity() {
         super(PARTY_ALL);
         addStartNpc(Jerian);
         addKillId(CosmicScout, CosmicWatcher, CosmicPriest, CosmicLord);
-        addQuestItem(SealComponentsPart1, SealComponentsPart2, SealComponentsPart3, SealComponentsPart4);
+        addQuestItem(components);
     }
 
     @Override
@@ -32,9 +35,9 @@ public final class _279_TargetOfOpportunity extends Quest{
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("jerian_q279_07.htm")) {
-            st.takeAllItems(SealComponentsPart1, SealComponentsPart2, SealComponentsPart3, SealComponentsPart4);
-            st.giveItems(15515, 1);
-            st.giveItems(15516, 1);
+            st.takeItems(components);
+            st.giveItems(15515);
+            st.giveItems(15516);
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(true);
         }
@@ -68,13 +71,13 @@ public final class _279_TargetOfOpportunity extends Quest{
         int cond = st.getCond();
         if (cond == 1) {
             if (npcId == CosmicScout && st.getQuestItemsCount(SealComponentsPart1) < 1 && Rnd.chance(15))
-                st.giveItems(SealComponentsPart1, 1);
+                st.giveItems(SealComponentsPart1);
             else if (npcId == CosmicWatcher && st.getQuestItemsCount(SealComponentsPart2) < 1 && Rnd.chance(15))
-                st.giveItems(SealComponentsPart2, 1);
+                st.giveItems(SealComponentsPart2);
             else if (npcId == CosmicPriest && st.getQuestItemsCount(SealComponentsPart3) < 1 && Rnd.chance(15))
-                st.giveItems(SealComponentsPart3, 1);
+                st.giveItems(SealComponentsPart3);
             else if (npcId == CosmicLord && st.getQuestItemsCount(SealComponentsPart4) < 1 && Rnd.chance(15))
-                st.giveItems(SealComponentsPart4, 1);
+                st.giveItems(SealComponentsPart4);
 
             if (st.getQuestItemsCount(SealComponentsPart1) >= 1 && st.getQuestItemsCount(SealComponentsPart2) >= 1 && st.getQuestItemsCount(SealComponentsPart3) >= 1 && st.getQuestItemsCount(SealComponentsPart4) >= 1)
                 st.setCond(2);

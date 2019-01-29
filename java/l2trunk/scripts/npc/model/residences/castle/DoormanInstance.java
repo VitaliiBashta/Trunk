@@ -57,7 +57,7 @@ public final class DoormanInstance extends l2trunk.scripts.npc.model.residences.
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
         String filename = null;
         int cond = getCond(player);
         switch (cond) {

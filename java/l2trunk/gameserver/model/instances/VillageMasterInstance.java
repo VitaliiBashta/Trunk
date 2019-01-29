@@ -27,10 +27,16 @@ import l2trunk.gameserver.utils.CertificationFunctions;
 import l2trunk.gameserver.utils.HtmlUtils;
 import l2trunk.gameserver.utils.SiegeUtils;
 import l2trunk.gameserver.utils.Util;
+import l2trunk.scripts.quests._234_FatesWhisper;
+import l2trunk.scripts.quests._235_MimirsElixir;
+import l2trunk.scripts.quests._236_SeedsOfChaos;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public final class VillageMasterInstance extends NpcInstance {
     private static final Logger LOG = LoggerFactory.getLogger(VillageMasterInstance.class);
@@ -99,7 +105,7 @@ public final class VillageMasterInstance extends NpcInstance {
 
                 // Remove possible sub their parents, if they have chara
                 ClassId parent = ClassId.VALUES.get(availSub.ordinal()).getParent();
-                if (parent != null && parent.getId() == subClass.getClassId()) {
+                if (parent != null && parent.id() == subClass.getClassId()) {
                     availSubs.remove(availSub);
                     continue;
                 }
@@ -107,7 +113,7 @@ public final class VillageMasterInstance extends NpcInstance {
                 // Remove possible sbb parents current subclass, or if you take a sub berserker
                 // And bring to a third Profiles - doombringer, the player will be offered a berserker again (deja vu)
                 ClassId subParent = ClassId.VALUES.get(subClass.getClassId()).getParent();
-                if (subParent != null && subParent.getId() == availSub.ordinal())
+                if (subParent != null && subParent.id() == availSub.ordinal())
                     availSubs.remove(availSub);
             }
 
@@ -158,14 +164,14 @@ public final class VillageMasterInstance extends NpcInstance {
          * If you do not have subs, then check for a subject.
          */
         if (!Config.ALT_GAME_SUBCLASS_WITHOUT_QUESTS && !playerClassList.isEmpty() && playerClassList.size() < 2 + Config.ALT_GAME_SUB_ADD)
-            if (player.isQuestCompleted("_234_FatesWhisper")) {
+            if (player.isQuestCompleted(_234_FatesWhisper.class)) {
                 if (player.getRace() == Race.kamael) {
-                    if (!player.isQuestCompleted("_236_SeedsOfChaos")) {
+                    if (!player.isQuestCompleted(_236_SeedsOfChaos.class)) {
                         player.sendMessage(new CustomMessage("l2trunk.gameserver.model.instances.L2VillageMasterInstance.QuestSeedsOfChaos", player));
                         return false;
                     }
                 } else {
-                    if (!player.isQuestCompleted("_235_MimirsElixir")) {
+                    if (!player.isQuestCompleted(_235_MimirsElixir.class)) {
                         player.sendMessage(new CustomMessage("l2trunk.gameserver.model.instances.L2VillageMasterInstance.QuestMimirsElixir", player));
                         return false;
                     }

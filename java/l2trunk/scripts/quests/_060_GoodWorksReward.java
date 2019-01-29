@@ -272,8 +272,8 @@ public final class _060_GoodWorksReward extends Quest {
             st.setCond(9);
             st.playSound(SOUND_MIDDLE);
         } else if (event.equalsIgnoreCase("31092-04.htm") && cond == 10) {
-            if (profs.containsKey(st.getPlayer().getClassId().getId()))
-                return Mammon_dialog.sprintf(profs.get(st.getPlayer().getClassId().getId()));
+            if (profs.containsKey(st.getPlayer().getClassId().id))
+                return Mammon_dialog.sprintf(profs.get(st.getPlayer().getClassId().id()));
         } else if (event.equalsIgnoreCase("31092-05.htm") && cond == 10) {
             st.giveItems(ADENA_ID, 3000000, false);
             st.playSound(SOUND_FINISH);

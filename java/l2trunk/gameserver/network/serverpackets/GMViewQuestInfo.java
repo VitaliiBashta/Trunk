@@ -27,11 +27,11 @@ public final class GMViewQuestInfo extends L2GameServerPacket {
         }
 
         writeH(quests.size());
-        for (Quest q : quests) {
-            writeD(q.getQuestIntId());
-            QuestState qs = _cha.getQuestState(q.getName());
+        quests.forEach(q -> {
+            writeD(q.questId);
+            QuestState qs = _cha.getQuestState(q);
             writeD(qs == null ? 0 : qs.getInt("cond"));
-        }
+        });
 
         writeH(0); //количество элементов типа: ddQd , как-то связано с предметами
     }

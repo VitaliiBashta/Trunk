@@ -62,7 +62,7 @@ public final class SumielInstance extends NpcInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
         if (val == 0) {
             String htmlpath = null;
             if (c_ai0 == null && i_quest2 == 0) {

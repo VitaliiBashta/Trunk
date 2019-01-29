@@ -28,7 +28,7 @@ public class CombatPointHeal extends Skill {
                 if (addToCp > 0)
                     target.setCurrentCp(addToCp + target.getCurrentCp());
                 target.sendPacket(new SystemMessage2(SystemMsg.S1_CP_HAS_BEEN_RESTORED).addInteger((long) addToCp));
-                getEffects(activeChar, target, activateRate() > 0, false);
+                getEffects(activeChar, target, activateRate > 0, false);
             }
         if (isSSPossible())
             activeChar.unChargeShots(isMagic());

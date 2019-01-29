@@ -49,7 +49,7 @@ public final class RignosInstance extends NpcInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
         if (ItemFunctions.getItemCount(player, RACE_STAMP) >= 4)
             showChatWindow(player, "race_start001a.htm");
         else if (player.getLevel() >= 78 && _raceTask == null)

@@ -23,7 +23,7 @@ public final class ItemAuctionBrokerInstance extends NpcInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, final int val, Object... arg) {
+    public void showChatWindow(Player player, final int val) {
         String filename = val == 0 ? "itemauction/itembroker.htm" : "itemauction/itembroker-" + val + ".htm";
         player.sendPacket(new NpcHtmlMessage(player, this, filename, val));
     }

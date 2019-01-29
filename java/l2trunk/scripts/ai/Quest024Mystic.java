@@ -17,12 +17,11 @@ public final class Quest024Mystic extends Mystic {
     @Override
     public boolean thinkActive() {
         Quest q = QuestManager.getQuest(_024_InhabitantsOfTheForestOfTheDead.class);
-        if (q != null)
-            World.getAroundPlayers(getActor(), 300, 200)
-                    .map(player -> player.getQuestState(_024_InhabitantsOfTheForestOfTheDead.class))
-                    .filter(Objects::nonNull)
-                    .filter(questState -> questState.getCond() == 3)
-                    .forEach(questState -> q.notifyEvent("seePlayer", questState, getActor()));
+        World.getAroundPlayers(getActor(), 300, 200)
+                .map(player -> player.getQuestState(_024_InhabitantsOfTheForestOfTheDead.class))
+                .filter(Objects::nonNull)
+                .filter(questState -> questState.getCond() == 3)
+                .forEach(questState -> q.notifyEvent("seePlayer", questState, getActor()));
 
         return super.thinkActive();
     }

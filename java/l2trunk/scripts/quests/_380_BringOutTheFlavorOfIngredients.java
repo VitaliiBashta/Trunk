@@ -99,9 +99,9 @@ public final class _380_BringOutTheFlavorOfIngredients extends Quest {
                 htmltext = "rollant_q0380_06.htm";
             else if (cond == 2 && st.getQuestItemsCount(Antidote) >= 2) {
                 st.takeItems(Antidote, 2);
-                st.takeItems(RitronsFruit, -1);
-                st.takeItems(MoonFaceFlower, -1);
-                st.takeItems(LeechFluids, -1);
+                st.takeItems(RitronsFruit);
+                st.takeItems(MoonFaceFlower);
+                st.takeItems(LeechFluids);
                 htmltext = "rollant_q0380_07.htm";
                 st.setCond(3);
                 st.setState(STARTED);
@@ -119,7 +119,7 @@ public final class _380_BringOutTheFlavorOfIngredients extends Quest {
                 st.setCond(6);
             }
             if (cond == 6) {
-                st.giveItems(RitronJelly, 1);
+                st.giveItems(RitronJelly);
                 if (Rnd.chance(RitronsDessertRecipeChance))
                     htmltext = "rollant_q0380_11.htm";
                 else {

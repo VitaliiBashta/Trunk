@@ -50,15 +50,15 @@ public final class _709_PathToBecomingALordDion extends Quest {
                 break;
             case "crosby_q709_06.htm":
                 if (isLordAvailable(2, st)) {
-                    castleOwner.getQuestState(getClass()).set("confidant", String.valueOf(st.getPlayer().getObjectId()), true);
-                    castleOwner.getQuestState(getClass()).setCond(3);
+                    castleOwner.getQuestState(this).set("confidant", String.valueOf(st.getPlayer().getObjectId()), true);
+                    castleOwner.getQuestState(this).setCond(3);
                     st.setState(STARTED);
                 } else
                     htmltext = "crosby_q709_05a.htm";
                 break;
             case "rouke_q709_03.htm":
                 if (isLordAvailable(3, st)) {
-                    castleOwner.getQuestState(getClass()).setCond(4);
+                    castleOwner.getQuestState(this).setCond(4);
                 } else
                     htmltext = "crosby_q709_05a.htm";
                 break;
@@ -70,8 +70,8 @@ public final class _709_PathToBecomingALordDion extends Quest {
                 break;
             case "rouke_q709_05.htm":
                 if (isLordAvailable(8, st)) {
-                    st.takeAllItems(MandragoraRoot);
-                    castleOwner.getQuestState(getClass()).setCond(9);
+                    st.takeItems(MandragoraRoot);
+                    castleOwner.getQuestState(this).setCond(9);
                 }
                 break;
             case "crosby_q709_10.htm":
@@ -128,7 +128,7 @@ public final class _709_PathToBecomingALordDion extends Quest {
 
         } else if (npcId == Rouke) {
             if (st.getState() == STARTED && cond == 0 && isLordAvailable(3, st)) {
-                if (Integer.parseInt(castleOwner.getQuestState(getClass()).get("confidant")) == st.getPlayer().getObjectId())
+                if (Integer.parseInt(castleOwner.getQuestState(this).get("confidant")) == st.getPlayer().getObjectId())
                     htmltext = "rouke_q709_01.htm";
             } else if (st.getState() == STARTED && cond == 0 && isLordAvailable(8, st)) {
                 if (st.getQuestItemsCount(MandragoraRoot) >= 100)
@@ -173,7 +173,7 @@ public final class _709_PathToBecomingALordDion extends Quest {
         Clan owner = castle.getOwner();
         Player castleOwner = castle.getOwner().getLeader().getPlayer();
         if (owner != null)
-            return castleOwner != null && castleOwner != st.getPlayer() && owner == st.getPlayer().getClan() && castleOwner.getQuestState(getClass()) != null && castleOwner.getQuestState(getClass()).getCond() == cond;
+            return castleOwner != null && castleOwner != st.getPlayer() && owner == st.getPlayer().getClan() && castleOwner.getQuestState(this) != null && castleOwner.getQuestState(this).getCond() == cond;
         return false;
     }
 

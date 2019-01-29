@@ -212,7 +212,7 @@ public final class _232_TestOfLord extends Quest {
                 st.exitCurrentQuest(true);
                 return "30565-01.htm";
             }
-            if (st.getPlayer().getClassId().getId() != 0x32) {
+            if (st.getPlayer().getClassId().id() != 0x32) {
                 st.exitCurrentQuest(true);
                 return "30565-02.htm";
             }

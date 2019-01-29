@@ -118,7 +118,7 @@ public final class _179_IntoTheLargeCavern extends Quest implements OnDeathListe
             return;
 
         Player player = killer.getPlayer();
-        QuestState st = player.getQuestState(this.getClass());
+        QuestState st = player.getQuestState(this);
         if (st == null)
             return;
         NpcInstance npc = (NpcInstance) cha;

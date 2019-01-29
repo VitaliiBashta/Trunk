@@ -6,7 +6,6 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
 import l2trunk.gameserver.scripts.Functions;
 
-import java.util.Collections;
 import java.util.List;
 
 public final class BuffStoreVoiced extends Functions implements IVoicedCommandHandler {
@@ -16,7 +15,7 @@ public final class BuffStoreVoiced extends Functions implements IVoicedCommandHa
     public boolean useVoicedCommand(String command, Player activeChar, String params) {
         try {
             // Check if the player can set a store
-            if (!Config.BUFF_STORE_ALLOWED_CLASS_LIST.contains(activeChar.getClassId().getId())) {
+            if (!Config.BUFF_STORE_ALLOWED_CLASS_LIST.contains(activeChar.getClassId().id())) {
                 activeChar.sendMessage("Your profession is not allowed to set an Buff Store");
                 return false;
             }

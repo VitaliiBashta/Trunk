@@ -192,7 +192,7 @@ public final class UserInfo extends L2GameServerPacket {
         rec_left = player.getRecomLeft(); //c2 recommendations remaining
         rec_have = player.getRecomHave(); //c2 recommendations received
         InventoryLimit = player.getInventoryLimit();
-        class_id = player.getClassId().getId();
+        class_id = player.getClassId().id();
         maxCp = player.getMaxCp();
         curCp = (int) player.getCurrentCp();
         _team = player.getTeam();

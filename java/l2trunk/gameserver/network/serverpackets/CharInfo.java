@@ -196,7 +196,7 @@ public final class CharInfo extends L2GameServerPacket {
         _abnormalEffect = player.getAbnormalEffect();
         _abnormalEffect2 = player.getAbnormalEffect2();
         rec_have = player.isGM() ? 0 : player.getRecomHave();
-        class_id = player.getClassId().getId();
+        class_id = player.getClassId().id();
         _team = player.getTeam();
 
         _noble = player.isNoble() ? 1 : 0; // 0x01: symbol on char menu ctrl+I

@@ -72,7 +72,7 @@ public final class Continuous extends Skill {
                             activeChar.sendPacket(SystemMsg.YOUR_LETHAL_STRIKE_WAS_SUCCESSFUL);
                         }
 
-                    getEffects(activeChar, t, activateRate() > 0, false, reflected);
+                    getEffects(activeChar, t, activateRate > 0, false, reflected);
                 });
 
         if (isSSPossible())

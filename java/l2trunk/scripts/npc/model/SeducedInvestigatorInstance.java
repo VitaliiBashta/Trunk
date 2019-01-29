@@ -13,7 +13,7 @@ public final class SeducedInvestigatorInstance extends MonsterInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
         player.sendPacket(new NpcHtmlMessage(player, this, "common/seducedinvestigator.htm", val));
     }
 

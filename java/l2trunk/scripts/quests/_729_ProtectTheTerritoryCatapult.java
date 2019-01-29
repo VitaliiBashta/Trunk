@@ -7,7 +7,7 @@ import l2trunk.gameserver.model.quest.Quest;
 
 public final class _729_ProtectTheTerritoryCatapult extends Quest {
     public _729_ProtectTheTerritoryCatapult() {
-        super(PARTY_NONE);
+        super(false);
         DominionSiegeRunnerEvent runnerEvent = EventHolder.getEvent(EventType.MAIN_EVENT, 1);
         runnerEvent.addBreakQuest(this);
     }

@@ -207,7 +207,7 @@ public final class _255_Tutorial extends Quest implements OnPlayerEnterListener 
                     html.append("<tr><td align=center><button value=\"")
                             .append(name)
                             .append("\" action=\"bypass -h ChangeTo;")
-                            .append(cid.getId()).append(';')
+                            .append(cid.id()).append(';')
                             .append(Config.CLASS_MASTERS_PRICE_LIST[jobLevel])
                             .append("\" width=200 height=32 back=\"L2UI_CT1.OlympiadWnd_DF_HeroConfirm_Down\" fore=\"L2UI_CT1.OlympiadWnd_DF_HeroConfirm\"></td></tr>");
                 }

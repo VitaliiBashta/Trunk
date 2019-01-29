@@ -55,24 +55,24 @@ public final class _114_ResurrectionOfAnOldManager extends Quest {
         String htmltext = event;
         int choice;
 
-        if (event.equalsIgnoreCase("head_blacksmith_newyear_q0114_02.htm")) {
+        if ("head_blacksmith_newyear_q0114_02.htm".equalsIgnoreCase(event)) {
             st.setCond(22);
-            st.takeItems(LETTER, 1);
-            st.giveItems(STARSTONE2, 1);
+            st.takeItems(LETTER);
+            st.giveItems(STARSTONE2);
             st.playSound(SOUND_MIDDLE);
         }
-        if (event.equalsIgnoreCase("collecter_yumi_q0114_04.htm")) {
+        if ("collecter_yumi_q0114_04.htm".equalsIgnoreCase(event)) {
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
             st.setCond(1);
             st.set("talk", "0");
-        } else if (event.equalsIgnoreCase("collecter_yumi_q0114_08.htm"))
+        } else if ("collecter_yumi_q0114_08.htm".equalsIgnoreCase(event))
             st.set("talk", "1");
-        else if (event.equalsIgnoreCase("collecter_yumi_q0114_09.htm")) {
+        else if ("collecter_yumi_q0114_09.htm".equalsIgnoreCase(event)) {
             st.setCond(2);
             st.playSound(SOUND_MIDDLE);
             st.set("talk", "0");
-        } else if (event.equalsIgnoreCase("collecter_yumi_q0114_12.htm")) {
+        } else if ("collecter_yumi_q0114_12.htm".equalsIgnoreCase(event)) {
             choice = st.getInt("choice");
             if (choice == 1)
                 htmltext = "collecter_yumi_q0114_12.htm";
@@ -80,100 +80,100 @@ public final class _114_ResurrectionOfAnOldManager extends Quest {
                 htmltext = "collecter_yumi_q0114_13.htm";
             else if (choice == 3)
                 htmltext = "collecter_yumi_q0114_14.htm";
-        } else if (event.equalsIgnoreCase("collecter_yumi_q0114_15.htm"))
+        } else if ("collecter_yumi_q0114_15.htm".equalsIgnoreCase(event))
             st.set("talk", "1");
-        else if (event.equalsIgnoreCase("collecter_yumi_q0114_23.htm"))
+        else if ("collecter_yumi_q0114_23.htm".equalsIgnoreCase(event))
             st.set("talk", "2");
-        else if (event.equalsIgnoreCase("collecter_yumi_q0114_26.htm")) {
+        else if ("collecter_yumi_q0114_26.htm".equalsIgnoreCase(event)) {
             st.setCond(6);
             st.playSound(SOUND_MIDDLE);
             st.set("talk", "0");
         } else if (event.equalsIgnoreCase("collecter_yumi_q0114_31.htm")) {
             st.setCond(17);
             st.playSound(SOUND_MIDDLE);
-            st.giveItems(DETECTOR, 1);
+            st.giveItems(DETECTOR);
         } else if (event.equalsIgnoreCase("collecter_yumi_q0114_34.htm")) {
             st.takeItems(DETECTOR2, 1);
             st.set("talk", "1");
-        } else if (event.equalsIgnoreCase("collecter_yumi_q0114_38.htm")) {
+        } else if ("collecter_yumi_q0114_38.htm".equalsIgnoreCase(event)) {
             choice = st.getInt("choice");
             if (choice > 1)
                 htmltext = "collecter_yumi_q0114_37.htm";
-        } else if (event.equalsIgnoreCase("collecter_yumi_q0114_40.htm")) {
+        } else if ("collecter_yumi_q0114_40.htm".equalsIgnoreCase(event)) {
             st.setCond(21);
-            st.giveItems(LETTER, 1);
+            st.giveItems(LETTER);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("collecter_yumi_q0114_39.htm")) {
+        } else if ("collecter_yumi_q0114_39.htm".equalsIgnoreCase(event)) {
             st.setCond(20);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("pavel_atlanta_q0114_03.htm")) {
+        } else if ("pavel_atlanta_q0114_03.htm".equalsIgnoreCase(event)) {
             st.setCond(19);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("pavel_atlanta_q0114_07.htm")) {
+        } else if ("pavel_atlanta_q0114_07.htm".equalsIgnoreCase(event)) {
             st.playSound(SOUND_FINISH);
             st.addExpAndSp(1846611, 144270);
             st.exitCurrentQuest(false);
-        } else if (event.equalsIgnoreCase("chaos_secretary_wendy_q0114_01.htm")) {
+        } else if ("chaos_secretary_wendy_q0114_01.htm".equalsIgnoreCase(event)) {
             if (st.getInt("talk") + st.getInt("talk1") == 2)
                 htmltext = "chaos_secretary_wendy_q0114_05.htm";
             else if (st.getInt("talk") + st.getInt("talk1") + st.getInt("talk2") == 6)
                 htmltext = "chaos_secretary_wendy_q0114_06a.htm";
-        } else if (event.equalsIgnoreCase("chaos_secretary_wendy_q0114_02.htm")) {
+        } else if ("chaos_secretary_wendy_q0114_02.htm".equalsIgnoreCase(event)) {
             if (st.getInt("talk") == 0)
                 st.set("talk", "1");
-        } else if (event.equalsIgnoreCase("chaos_secretary_wendy_q0114_03.htm")) {
+        } else if ("chaos_secretary_wendy_q0114_03.htm".equalsIgnoreCase(event)) {
             if (st.getInt("talk1") == 0)
                 st.set("talk1", "1");
-        } else if (event.equalsIgnoreCase("chaos_secretary_wendy_q0114_06.htm")) {
+        } else if ("chaos_secretary_wendy_q0114_06.htm".equalsIgnoreCase(event)) {
             st.setCond(3);
             st.playSound(SOUND_MIDDLE);
             st.set("talk", "0");
             st.set("choice", "1");
             st.unset("talk1");
-        } else if (event.equalsIgnoreCase("chaos_secretary_wendy_q0114_07.htm")) {
+        } else if ("chaos_secretary_wendy_q0114_07.htm".equalsIgnoreCase(event)) {
             st.setCond(4);
             st.playSound(SOUND_MIDDLE);
             st.set("talk", "0");
             st.set("choice", "2");
             st.unset("talk1");
-        } else if (event.equalsIgnoreCase("chaos_secretary_wendy_q0114_09.htm")) {
+        } else if ("chaos_secretary_wendy_q0114_09.htm".equalsIgnoreCase(event)) {
             st.setCond(5);
             st.playSound(SOUND_MIDDLE);
             st.set("talk", "0");
             st.set("choice", "3");
             st.unset("talk1");
-        } else if (event.equalsIgnoreCase("chaos_secretary_wendy_q0114_14ab.htm")) {
+        } else if ("chaos_secretary_wendy_q0114_14ab.htm".equalsIgnoreCase(event)) {
             st.setCond(7);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("chaos_secretary_wendy_q0114_14b.htm")) {
+        } else if ("chaos_secretary_wendy_q0114_14b.htm".equalsIgnoreCase(event)) {
             st.setCond(10);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("chaos_secretary_wendy_q0114_12c.htm")) {
+        } else if ("chaos_secretary_wendy_q0114_12c.htm".equalsIgnoreCase(event)) {
             if (st.getInt("talk") == 0)
                 st.set("talk", "1");
-        } else if (event.equalsIgnoreCase("chaos_secretary_wendy_q0114_15b.htm")) {
+        } else if ("chaos_secretary_wendy_q0114_15b.htm".equalsIgnoreCase(event)) {
             if (GUARDIAN_SPAWN == null || !st.getPlayer().knowsObject(GUARDIAN_SPAWN) || !GUARDIAN_SPAWN.isVisible()) {
                 GUARDIAN_SPAWN = st.addSpawn(GUARDIAN, 96977, -110625, -3280, 900000);
                 Functions.npcSay(GUARDIAN_SPAWN, "You, " + st.getPlayer().getName() + ", you attacked Wendy. Prepare to die!");
                 GUARDIAN_SPAWN.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, st.getPlayer(), 999);
             } else
                 htmltext = "chaos_secretary_wendy_q0114_17b.htm";
-        } else if (event.equalsIgnoreCase("chaos_secretary_wendy_q0114_20b.htm")) {
+        } else if ("chaos_secretary_wendy_q0114_20b.htm".equalsIgnoreCase(event)) {
             st.setCond(12);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("chaos_secretary_wendy_q0114_17c.htm"))
+        } else if ("chaos_secretary_wendy_q0114_17c.htm".equalsIgnoreCase(event))
             st.set("talk", "2");
-        else if (event.equalsIgnoreCase("chaos_secretary_wendy_q0114_20c.htm")) {
+        else if ("chaos_secretary_wendy_q0114_20c.htm".equalsIgnoreCase(event)) {
             st.setCond(13);
             st.playSound(SOUND_MIDDLE);
             st.set("talk", "0");
-        } else if (event.equalsIgnoreCase("chaos_secretary_wendy_q0114_23c.htm")) {
+        } else if ("chaos_secretary_wendy_q0114_23c.htm".equalsIgnoreCase(event)) {
             st.setCond(15);
             st.playSound(SOUND_MIDDLE);
             st.takeItems(STARSTONE, 1);
-        } else if (event.equalsIgnoreCase("chaos_secretary_wendy_q0114_16a.htm"))
+        } else if ("chaos_secretary_wendy_q0114_16a.htm".equalsIgnoreCase(event))
             st.set("talk", "2");
-        else if (event.equalsIgnoreCase("chaos_secretary_wendy_q0114_20a.htm")) {
+        else if ("chaos_secretary_wendy_q0114_20a.htm".equalsIgnoreCase(event)) {
             if (st.getCond() == 7) {
                 st.setCond(8);
                 st.set("talk", "0");
@@ -183,18 +183,18 @@ public final class _114_ResurrectionOfAnOldManager extends Quest {
                 st.playSound(SOUND_MIDDLE);
                 htmltext = "chaos_secretary_wendy_q0114_21a.htm";
             }
-        } else if (event.equalsIgnoreCase("chaos_secretary_wendy_q0114_21a.htm")) {
+        } else if ("chaos_secretary_wendy_q0114_21a.htm".equalsIgnoreCase(event)) {
             st.setCond(9);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("chaos_secretary_wendy_q0114_29c.htm")) {
-            st.giveItems(STARSTONE2, 1);
+        } else if ("chaos_secretary_wendy_q0114_29c.htm".equalsIgnoreCase(event)) {
+            st.giveItems(STARSTONE2);
             st.takeItems(ADENA_ID, 3000);
             st.setCond(26);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("chaos_box2_q0114_01r.htm")) {
+        } else if ("chaos_box2_q0114_01r.htm".equalsIgnoreCase(event)) {
             st.playSound(SOUND_ARMOR_WOOD_3);
             st.set("talk", "1");
-        } else if (event.equalsIgnoreCase("chaos_box2_q0114_03.htm")) {
+        } else if ("chaos_box2_q0114_03.htm".equalsIgnoreCase(event)) {
             st.setCond(14);
             st.giveItems(STARSTONE, 1);
             st.playSound(SOUND_MIDDLE);
@@ -205,7 +205,7 @@ public final class _114_ResurrectionOfAnOldManager extends Quest {
 
     @Override
     public String onFirstTalk(NpcInstance npc, Player player) {
-        QuestState st = player.getQuestState(getName());
+        QuestState st = player.getQuestState(this);
         if (st == null || st.isCompleted())
             return "";
         int npcId = npc.getNpcId();

@@ -115,7 +115,7 @@ public class WarehouseInstance extends NpcInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
         player.sendActionFailed();
         String filename = "castle/warehouse/castlewarehouse-no.htm";
 

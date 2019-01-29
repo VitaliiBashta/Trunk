@@ -82,50 +82,50 @@ public final class _10295_SevenSignsSolinasTomb extends Quest {
             return null;
         } else if ("use_staff".equalsIgnoreCase(event)) {
             if (st.getQuestItemsCount(StaffofBlessing) > 0) {
-                st.takeAllItems(StaffofBlessing);
+                st.takeItems(StaffofBlessing);
                 removeInvincibility(player, 18953);
                 return null;
             } else
                 htmltext = "powerful_q10295_0.htm";
         } else if ("use_book".equalsIgnoreCase(event)) {
             if (st.getQuestItemsCount(ScrollofAbstinence) > 0) {
-                st.takeAllItems(ScrollofAbstinence);
+                st.takeItems(ScrollofAbstinence);
                 removeInvincibility(player, 18954);
                 return null;
             } else
                 htmltext = "powerful_q10295_0.htm";
         } else if ("use_sword".equalsIgnoreCase(event)) {
             if (st.getQuestItemsCount(SwordofHolySpirit) > 0) {
-                st.takeAllItems(SwordofHolySpirit);
+                st.takeItems(SwordofHolySpirit);
                 removeInvincibility(player, 18955);
                 return null;
             } else
                 htmltext = "powerful_q10295_0.htm";
         } else if ("use_shield".equalsIgnoreCase(event)) {
             if (st.getQuestItemsCount(ShieldofSacrifice) > 0) {
-                st.takeAllItems(ShieldofSacrifice);
+                st.takeItems(ShieldofSacrifice);
                 removeInvincibility(player, 18952);
                 return null;
             } else
                 htmltext = "powerful_q10295_0.htm";
         } else if ("altarstaff_q10295_2.htm".equalsIgnoreCase(event)) {
             if (st.getQuestItemsCount(StaffofBlessing) == 0)
-                st.giveItems(StaffofBlessing, 1);
+                st.giveItems(StaffofBlessing);
             else
                 htmltext = "atlar_q10295_0.htm";
         } else if ("altarbook_q10295_2.htm".equalsIgnoreCase(event)) {
             if (st.getQuestItemsCount(ScrollofAbstinence) == 0)
-                st.giveItems(ScrollofAbstinence, 1);
+                st.giveItems(ScrollofAbstinence);
             else
                 htmltext = "atlar_q10295_0.htm";
         } else if (event.equalsIgnoreCase("altarsword_q10295_2.htm")) {
             if (st.getQuestItemsCount(SwordofHolySpirit) == 0)
-                st.giveItems(SwordofHolySpirit, 1);
+                st.giveItems(SwordofHolySpirit);
             else
                 htmltext = "atlar_q10295_0.htm";
         } else if (event.equalsIgnoreCase("altarshield_q10295_2.htm")) {
             if (st.getQuestItemsCount(ShieldofSacrifice) == 0)
-                st.giveItems(ShieldofSacrifice, 1);
+                st.giveItems(ShieldofSacrifice);
             else
                 htmltext = "atlar_q10295_0.htm";
         } else if ("teleport_solina".equalsIgnoreCase(event)) {

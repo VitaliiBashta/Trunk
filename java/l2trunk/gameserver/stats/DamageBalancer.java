@@ -16,115 +16,115 @@ public class DamageBalancer {
 
         boolean isInOlympiad = attacker.isInOlympiadMode();
         if (target != null) {
-            if (BalancerConfig.DuelistDamageMapOly.containsKey(target.getClassId().getId())) {
-                switch (attacker.getClassId().getId()) {
+            if (BalancerConfig.DuelistDamageMapOly.containsKey(target.getClassId().id())) {
+                switch (attacker.getClassId().id()) {
                     case 88:
-                        output_damage *= isInOlympiad ? BalancerConfig.DuelistDamageMapOly.get(target.getClassId().getId()) : BalancerConfig.DuelistDamageMap.get(target.getClassId().getId());
+                        output_damage *= isInOlympiad ? BalancerConfig.DuelistDamageMapOly.get(target.getClassId().id()) : BalancerConfig.DuelistDamageMap.get(target.getClassId().id());
                         break;
                     case 89:
-                        output_damage *= isInOlympiad ? BalancerConfig.DreadnoughtDamageMapOly.get(target.getClassId().getId()) : BalancerConfig.DreadnoughtDamageMap.get(target.getClassId().getId());
+                        output_damage *= isInOlympiad ? BalancerConfig.DreadnoughtDamageMapOly.get(target.getClassId().id()) : BalancerConfig.DreadnoughtDamageMap.get(target.getClassId().id());
                         break;
                     case 90:
-                        output_damage *= isInOlympiad ? BalancerConfig.PheonixKnightDamageMapOly.get(target.getClassId().getId()) : BalancerConfig.PheonixKnightDamageMap.get(target.getClassId().getId());
+                        output_damage *= isInOlympiad ? BalancerConfig.PheonixKnightDamageMapOly.get(target.getClassId().id()) : BalancerConfig.PheonixKnightDamageMap.get(target.getClassId().id());
                         break;
                     case 91:
-                        output_damage *= isInOlympiad ? BalancerConfig.HellKnightDamageMap.get(target.getClassId().getId()) : BalancerConfig.HellKnightDamageMapOly.get(target.getClassId().getId());
+                        output_damage *= isInOlympiad ? BalancerConfig.HellKnightDamageMap.get(target.getClassId().id()) : BalancerConfig.HellKnightDamageMapOly.get(target.getClassId().id());
                         break;
                     case 92:
-                        output_damage *= isInOlympiad ? BalancerConfig.SagittariusDamageMapOly.get(target.getClassId().getId()) : BalancerConfig.SagittariusDamageMap.get(target.getClassId().getId());
+                        output_damage *= isInOlympiad ? BalancerConfig.SagittariusDamageMapOly.get(target.getClassId().id()) : BalancerConfig.SagittariusDamageMap.get(target.getClassId().id());
                         break;
                     case 93:
-                        output_damage *= isInOlympiad ? BalancerConfig.AdventurerDamageMapOly.get(target.getClassId().getId()) : BalancerConfig.AdventurerDamageMap.get(target.getClassId().getId());
+                        output_damage *= isInOlympiad ? BalancerConfig.AdventurerDamageMapOly.get(target.getClassId().id()) : BalancerConfig.AdventurerDamageMap.get(target.getClassId().id());
                         break;
                     case 94:
-                        output_damage *= isInOlympiad ? BalancerConfig.ArchmageDamageMapOly.get(target.getClassId().getId()) : BalancerConfig.ArchmageDamageMap.get(target.getClassId().getId());
+                        output_damage *= isInOlympiad ? BalancerConfig.ArchmageDamageMapOly.get(target.getClassId().id()) : BalancerConfig.ArchmageDamageMap.get(target.getClassId().id());
                         break;
                     case 95:
-                        output_damage *= isInOlympiad ? BalancerConfig.SoultakerDamageMapOly.get(target.getClassId().getId()) : BalancerConfig.SoultakerDamageMap.get(target.getClassId().getId());
+                        output_damage *= isInOlympiad ? BalancerConfig.SoultakerDamageMapOly.get(target.getClassId().id()) : BalancerConfig.SoultakerDamageMap.get(target.getClassId().id());
                         break;
                     case 96:
-                        output_damage *= isInOlympiad ? BalancerConfig.ArcanalordDamageMapOly.get(target.getClassId().getId()) : BalancerConfig.ArcanalordDamageMap.get(target.getClassId().getId());
+                        output_damage *= isInOlympiad ? BalancerConfig.ArcanalordDamageMapOly.get(target.getClassId().id()) : BalancerConfig.ArcanalordDamageMap.get(target.getClassId().id());
                         break;
                     case 97:
-                        output_damage *= isInOlympiad ? BalancerConfig.CardinalDamageMapOly.get(target.getClassId().getId()) : BalancerConfig.CardinalDamageMap.get(target.getClassId().getId());
+                        output_damage *= isInOlympiad ? BalancerConfig.CardinalDamageMapOly.get(target.getClassId().id()) : BalancerConfig.CardinalDamageMap.get(target.getClassId().id());
                         break;
                     case 98:
-                        output_damage *= isInOlympiad ? BalancerConfig.HierophantDamageMapOly.get(target.getClassId().getId()) : BalancerConfig.HierophantDamageMap.get(target.getClassId().getId());
+                        output_damage *= isInOlympiad ? BalancerConfig.HierophantDamageMapOly.get(target.getClassId().id()) : BalancerConfig.HierophantDamageMap.get(target.getClassId().id());
                         break;
                     case 99:
-                        output_damage *= isInOlympiad ? BalancerConfig.EvatemplarDamageMapOly.get(target.getClassId().getId()) : BalancerConfig.EvatemplarDamageMap.get(target.getClassId().getId());
+                        output_damage *= isInOlympiad ? BalancerConfig.EvatemplarDamageMapOly.get(target.getClassId().id()) : BalancerConfig.EvatemplarDamageMap.get(target.getClassId().id());
                         break;
                     case 100:
-                        output_damage *= isInOlympiad ? BalancerConfig.SwordmuseDamageMapOly.get(target.getClassId().getId()) : BalancerConfig.SwordmuseDamageMap.get(target.getClassId().getId());
+                        output_damage *= isInOlympiad ? BalancerConfig.SwordmuseDamageMapOly.get(target.getClassId().id()) : BalancerConfig.SwordmuseDamageMap.get(target.getClassId().id());
                         break;
                     case 101:
-                        output_damage *= isInOlympiad ? BalancerConfig.WindriderDamageMapOly.get(target.getClassId().getId()) : BalancerConfig.WindriderDamageMap.get(target.getClassId().getId());
+                        output_damage *= isInOlympiad ? BalancerConfig.WindriderDamageMapOly.get(target.getClassId().id()) : BalancerConfig.WindriderDamageMap.get(target.getClassId().id());
                         break;
                     case 102:
-                        output_damage *= isInOlympiad ? BalancerConfig.MoonlightDamageMapOly.get(target.getClassId().getId()) : BalancerConfig.MoonlightDamageMap.get(target.getClassId().getId());
+                        output_damage *= isInOlympiad ? BalancerConfig.MoonlightDamageMapOly.get(target.getClassId().id()) : BalancerConfig.MoonlightDamageMap.get(target.getClassId().id());
                         break;
                     case 103:
-                        output_damage *= isInOlympiad ? BalancerConfig.MysticmuseDamageMapOly.get(target.getClassId().getId()) : BalancerConfig.MysticmuseDamageMap.get(target.getClassId().getId());
+                        output_damage *= isInOlympiad ? BalancerConfig.MysticmuseDamageMapOly.get(target.getClassId().id()) : BalancerConfig.MysticmuseDamageMap.get(target.getClassId().id());
                         break;
                     case 104:
-                        output_damage *= isInOlympiad ? BalancerConfig.ElementalMasterDamageMapOly.get(target.getClassId().getId()) : BalancerConfig.ElementalMasterDamageMap.get(target.getClassId().getId());
+                        output_damage *= isInOlympiad ? BalancerConfig.ElementalMasterDamageMapOly.get(target.getClassId().id()) : BalancerConfig.ElementalMasterDamageMap.get(target.getClassId().id());
                         break;
                     case 105:
-                        output_damage *= isInOlympiad ? BalancerConfig.EvasaintMasterDamageMapOly.get(target.getClassId().getId()) : BalancerConfig.EvasaintMasterDamageMap.get(target.getClassId().getId());
+                        output_damage *= isInOlympiad ? BalancerConfig.EvasaintMasterDamageMapOly.get(target.getClassId().id()) : BalancerConfig.EvasaintMasterDamageMap.get(target.getClassId().id());
                         break;
                     case 106:
-                        output_damage *= isInOlympiad ? BalancerConfig.ShillienTemplarDamageMapOly.get(target.getClassId().getId()) : BalancerConfig.ShillienTemplarDamageMap.get(target.getClassId().getId());
+                        output_damage *= isInOlympiad ? BalancerConfig.ShillienTemplarDamageMapOly.get(target.getClassId().id()) : BalancerConfig.ShillienTemplarDamageMap.get(target.getClassId().id());
                         break;
                     case 107:
-                        output_damage *= isInOlympiad ? BalancerConfig.SpectralDancerDamageMapOly.get(target.getClassId().getId()) : BalancerConfig.SpectralDancerDamageMap.get(target.getClassId().getId());
+                        output_damage *= isInOlympiad ? BalancerConfig.SpectralDancerDamageMapOly.get(target.getClassId().id()) : BalancerConfig.SpectralDancerDamageMap.get(target.getClassId().id());
                         break;
                     case 108:
-                        output_damage *= isInOlympiad ? BalancerConfig.GhostHunterDamageMapOly.get(target.getClassId().getId()) : BalancerConfig.GhostHunterDamageMap.get(target.getClassId().getId());
+                        output_damage *= isInOlympiad ? BalancerConfig.GhostHunterDamageMapOly.get(target.getClassId().id()) : BalancerConfig.GhostHunterDamageMap.get(target.getClassId().id());
                         break;
                     case 109:
-                        output_damage *= isInOlympiad ? BalancerConfig.GhostSentinelDamageMapOly.get(target.getClassId().getId()) : BalancerConfig.GhostSentinelDamageMap.get(target.getClassId().getId());
+                        output_damage *= isInOlympiad ? BalancerConfig.GhostSentinelDamageMapOly.get(target.getClassId().id()) : BalancerConfig.GhostSentinelDamageMap.get(target.getClassId().id());
                         break;
                     case 110:
-                        output_damage *= isInOlympiad ? BalancerConfig.StormscreamerDamageMapOly.get(target.getClassId().getId()) : BalancerConfig.StormscreamerDamageMap.get(target.getClassId().getId());
+                        output_damage *= isInOlympiad ? BalancerConfig.StormscreamerDamageMapOly.get(target.getClassId().id()) : BalancerConfig.StormscreamerDamageMap.get(target.getClassId().id());
                         break;
                     case 111:
-                        output_damage *= isInOlympiad ? BalancerConfig.SpectralMasterDamageMapOly.get(target.getClassId().getId()) : BalancerConfig.SpectralMasterDamageMap.get(target.getClassId().getId());
+                        output_damage *= isInOlympiad ? BalancerConfig.SpectralMasterDamageMapOly.get(target.getClassId().id()) : BalancerConfig.SpectralMasterDamageMap.get(target.getClassId().id());
                         break;
                     case 112:
-                        output_damage *= isInOlympiad ? BalancerConfig.ShillenSaintDamageMapOly.get(target.getClassId().getId()) : BalancerConfig.ShillenSaintDamageMap.get(target.getClassId().getId());
+                        output_damage *= isInOlympiad ? BalancerConfig.ShillenSaintDamageMapOly.get(target.getClassId().id()) : BalancerConfig.ShillenSaintDamageMap.get(target.getClassId().id());
                         break;
                     case 113:
-                        output_damage *= isInOlympiad ? BalancerConfig.TitanDamageMapOly.get(target.getClassId().getId()) : BalancerConfig.TitanDamageMap.get(target.getClassId().getId());
+                        output_damage *= isInOlympiad ? BalancerConfig.TitanDamageMapOly.get(target.getClassId().id()) : BalancerConfig.TitanDamageMap.get(target.getClassId().id());
                         break;
                     case 114:
-                        output_damage *= isInOlympiad ? BalancerConfig.GrandKhauatariDamageMapOly.get(target.getClassId().getId()) : BalancerConfig.GrandKhauatariDamageMap.get(target.getClassId().getId());
+                        output_damage *= isInOlympiad ? BalancerConfig.GrandKhauatariDamageMapOly.get(target.getClassId().id()) : BalancerConfig.GrandKhauatariDamageMap.get(target.getClassId().id());
                         break;
                     case 115:
-                        output_damage *= isInOlympiad ? BalancerConfig.DominatorDamageMapOly.get(target.getClassId().getId()) : BalancerConfig.DominatorDamageMap.get(target.getClassId().getId());
+                        output_damage *= isInOlympiad ? BalancerConfig.DominatorDamageMapOly.get(target.getClassId().id()) : BalancerConfig.DominatorDamageMap.get(target.getClassId().id());
                         break;
                     case 116:
-                        output_damage *= isInOlympiad ? BalancerConfig.DoomcryerDamageMapOly.get(target.getClassId().getId()) : BalancerConfig.DoomcryerDamageMap.get(target.getClassId().getId());
+                        output_damage *= isInOlympiad ? BalancerConfig.DoomcryerDamageMapOly.get(target.getClassId().id()) : BalancerConfig.DoomcryerDamageMap.get(target.getClassId().id());
                         break;
                     case 117:
-                        output_damage *= isInOlympiad ? BalancerConfig.FortuneSeekerDamageMapOly.get(target.getClassId().getId()) : BalancerConfig.FortuneSeekerDamageMap.get(target.getClassId().getId());
+                        output_damage *= isInOlympiad ? BalancerConfig.FortuneSeekerDamageMapOly.get(target.getClassId().id()) : BalancerConfig.FortuneSeekerDamageMap.get(target.getClassId().id());
                         break;
                     case 118:
-                        output_damage *= isInOlympiad ? BalancerConfig.MaestroDamageMapOly.get(target.getClassId().getId()) : BalancerConfig.MaestroDamageMap.get(target.getClassId().getId());
+                        output_damage *= isInOlympiad ? BalancerConfig.MaestroDamageMapOly.get(target.getClassId().id()) : BalancerConfig.MaestroDamageMap.get(target.getClassId().id());
                         break;
                     case 131:
-                        output_damage *= isInOlympiad ? BalancerConfig.DoombringerDamageMapOly.get(target.getClassId().getId()) : BalancerConfig.DoombringerDamageMap.get(target.getClassId().getId());
+                        output_damage *= isInOlympiad ? BalancerConfig.DoombringerDamageMapOly.get(target.getClassId().id()) : BalancerConfig.DoombringerDamageMap.get(target.getClassId().id());
                         break;
                     case 132:
-                        output_damage *= isInOlympiad ? BalancerConfig.MaleSoulhoundDamageMapOly.get(target.getClassId().getId()) : BalancerConfig.MaleSoulhoundDamageMap.get(target.getClassId().getId());
+                        output_damage *= isInOlympiad ? BalancerConfig.MaleSoulhoundDamageMapOly.get(target.getClassId().id()) : BalancerConfig.MaleSoulhoundDamageMap.get(target.getClassId().id());
                         break;
                     case 133:
-                        output_damage *= isInOlympiad ? BalancerConfig.FemaleSoulhoundDamageMapOly.get(target.getClassId().getId()) : BalancerConfig.FemaleSoulhoundDamageMap.get(target.getClassId().getId());
+                        output_damage *= isInOlympiad ? BalancerConfig.FemaleSoulhoundDamageMapOly.get(target.getClassId().id()) : BalancerConfig.FemaleSoulhoundDamageMap.get(target.getClassId().id());
                         break;
                     case 134:
-                        output_damage *= isInOlympiad ? BalancerConfig.TricksterDamageMapOly.get(target.getClassId().getId()) : BalancerConfig.TricksterDamageMap.get(target.getClassId().getId());
+                        output_damage *= isInOlympiad ? BalancerConfig.TricksterDamageMapOly.get(target.getClassId().id()) : BalancerConfig.TricksterDamageMap.get(target.getClassId().id());
                         break;
                     case 136:
-                        output_damage *= isInOlympiad ? BalancerConfig.JudicatorDamageMapOly.get(target.getClassId().getId()) : BalancerConfig.JudicatorDamageMap.get(target.getClassId().getId());
+                        output_damage *= isInOlympiad ? BalancerConfig.JudicatorDamageMapOly.get(target.getClassId().id()) : BalancerConfig.JudicatorDamageMap.get(target.getClassId().id());
                         break;
                 }
             }
@@ -151,7 +151,7 @@ public class DamageBalancer {
                 output_damage = 1;
         }
 
-        switch (attacker.getClassId().getId()) {
+        switch (attacker.getClassId().id()) {
             case 88:
                 if (output_damage > BalancerConfig.DUELIST_DAMAGE_LIMIT)
                     output_damage = BalancerConfig.DUELIST_DAMAGE_LIMIT;
@@ -404,8 +404,8 @@ public class DamageBalancer {
 
         System.out.println("	Attacker: " + attacker.getName());
         System.out.println("	Target: " + target.getName());
-        System.out.println("	Class attacker: " + Util.getFullClassName(attacker.getClassId().getId()));
-        System.out.println("	Class Target: " + Util.getFullClassName(target.getClassId().getId()));
+        System.out.println("	Class attacker: " + Util.getFullClassName(attacker.getClassId().id()));
+        System.out.println("	Class Target: " + Util.getFullClassName(target.getClassId().id()));
         System.out.println("	Damage incoming: " + IncomingDamage);
         System.out.println("	Damageoutcoming: " + outcomingDamage);
         System.out.println("	Damagerate: " + damagerate);

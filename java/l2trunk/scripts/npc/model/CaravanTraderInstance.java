@@ -13,7 +13,9 @@ import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.ReflectionUtils;
 import l2trunk.gameserver.utils.Util;
+import l2trunk.scripts.quests._132_MatrasCuriosity;
 
+import java.util.Map;
 import java.util.StringTokenizer;
 
 public final class CaravanTraderInstance extends NpcInstance {
@@ -258,7 +260,7 @@ public final class CaravanTraderInstance extends NpcInstance {
             }
         } else if (command.startsWith("tully_entrance")) // Deltuva
         {
-            if (player.isQuestCompleted("_132_MatrasCuriosity")) {
+            if (player.isQuestCompleted(_132_MatrasCuriosity.class)) {
                 player.teleToLocation(new Location(17947, 283205, -9696));
             } else {
                 showDialog(player, getHtmlPath(getNpcId(), 1, player));
@@ -284,7 +286,7 @@ public final class CaravanTraderInstance extends NpcInstance {
             }
 
             if (player.getParty().getMembers().stream()
-                    .filter(member -> !isInRange(member, 500) || !member.isQuestCompleted("_132_MatrasCuriosity"))
+                    .filter(member -> !isInRange(member, 500) || !member.isQuestCompleted(_132_MatrasCuriosity.class))
                     .peek(member -> showDialog(player, getHtmlPath(getNpcId(), 1, player)))
                     .findFirst().isPresent())
                 return;
@@ -305,7 +307,7 @@ public final class CaravanTraderInstance extends NpcInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
         String htmlpath = null;
         switch (getNpcId()) {
             case 32356: // Jude

@@ -81,19 +81,19 @@ public final class _102_SeaofSporesFever extends Quest {
             else if (cond == 4 && st.getQuestItemsCount(COBS_MEDICINE1) == 1) {
                 st.setCond(5);
                 st.takeItems(COBS_MEDICINE1, 1);
-                st.giveItems(ALBERRYUS_LIST, 1);
+                st.giveItems(ALBERRYUS_LIST);
                 htmltext = "alberryus_q0102_04.htm";
             } else if (cond == 5)
                 htmltext = "alberryus_q0102_05.htm";
             else if (cond == 6 && st.getQuestItemsCount(ALBERRYUS_LIST) == 1) {
                 st.takeItems(ALBERRYUS_LIST, 1);
-                st.giveItems(ADENA_ID, 6331, false);
+                st.giveItems(ADENA_ID, 6331);
                 st.getPlayer().addExpAndSp(30202, 1339);
 
-                if (st.getPlayer().getClassId().isMage())
-                    st.giveItems(STAFF_OF_SENTINEL, 1);
+                if (st.getPlayer().getClassId().isMage)
+                    st.giveItems(STAFF_OF_SENTINEL);
                 else
-                    st.giveItems(SWORD_OF_SENTINEL, 1);
+                    st.giveItems(SWORD_OF_SENTINEL);
 
                 if (st.getPlayer().getClassId().getLevel() == 1 && !st.getPlayer().getVarB("p1q3")) {
                     st.getPlayer().setVar("p1q3", "1", -1); // flag for helper
@@ -101,7 +101,7 @@ public final class _102_SeaofSporesFever extends Quest {
                     st.giveItems(1060, 100); // healing potion
                     for (int item = 4412; item <= 4417; item++)
                         st.giveItems(item, 10); // echo cry
-                    if (st.getPlayer().getClassId().isMage()) {
+                    if (st.getPlayer().getClassId().isMage) {
                         st.playTutorialVoice("tutorial_voice_027");
                         st.giveItems(5790, 3000); // newbie sps
                     } else {
@@ -117,7 +117,7 @@ public final class _102_SeaofSporesFever extends Quest {
         } else if (npcId == 30156) {
             if (cond == 1 && st.getQuestItemsCount(ALBERRYUS_LETTER) == 1) {
                 st.takeItems(ALBERRYUS_LETTER, 1);
-                st.giveItems(EVERGREEN_AMULET, 1);
+                st.giveItems(EVERGREEN_AMULET);
                 st.setCond(2);
                 htmltext = "cob_q0102_03.htm";
             } else if (cond == 2 && st.getQuestItemsCount(EVERGREEN_AMULET) > 0 && st.getQuestItemsCount(DRYAD_TEARS) < 10)
@@ -127,11 +127,11 @@ public final class _102_SeaofSporesFever extends Quest {
             else if (cond == 3 && st.getQuestItemsCount(EVERGREEN_AMULET) > 0 && st.getQuestItemsCount(DRYAD_TEARS) >= 10) {
                 st.takeItems(EVERGREEN_AMULET, 1);
                 st.takeItems(DRYAD_TEARS, -1);
-                st.giveItems(COBS_MEDICINE1, 1);
-                st.giveItems(COBS_MEDICINE2, 1);
-                st.giveItems(COBS_MEDICINE3, 1);
-                st.giveItems(COBS_MEDICINE4, 1);
-                st.giveItems(COBS_MEDICINE5, 1);
+                st.giveItems(COBS_MEDICINE1);
+                st.giveItems(COBS_MEDICINE2);
+                st.giveItems(COBS_MEDICINE3);
+                st.giveItems(COBS_MEDICINE4);
+                st.giveItems(COBS_MEDICINE5);
                 st.setCond(4);
                 htmltext = "cob_q0102_05.htm";
             } else if (cond == 4)
@@ -161,7 +161,7 @@ public final class _102_SeaofSporesFever extends Quest {
         int npcId = npc.getNpcId();
         if ((npcId == 20013 || npcId == 20019) && Rnd.chance(33))
             if (st.getQuestItemsCount(EVERGREEN_AMULET) > 0 && st.getQuestItemsCount(DRYAD_TEARS) < 10) {
-                st.giveItems(DRYAD_TEARS, 1);
+                st.giveItems(DRYAD_TEARS);
                 if (st.getQuestItemsCount(DRYAD_TEARS) == 10) {
                     st.setCond(3);
                     st.playSound(SOUND_MIDDLE);

@@ -5,7 +5,6 @@ import l2trunk.gameserver.model.instances.MonsterInstance;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _417_PathToScavenger extends Quest {
     // ITEMS
@@ -83,20 +82,20 @@ public final class _417_PathToScavenger extends Quest {
         int cond = st.getCond();
         if (event.equals("1")) {
             st.set("id", "0");
-            if (st.getPlayer().getLevel() >= 18 && st.getPlayer().getClassId().getId() == 0x35 && st.getQuestItemsCount(RING_OF_RAVEN) == 0) {
+            if (st.getPlayer().getLevel() >= 18 && st.getPlayer().getClassId().id() == 0x35 && st.getQuestItemsCount(RING_OF_RAVEN) == 0) {
                 st.setCond(1);
                 st.setState(STARTED);
                 st.playSound(SOUND_ACCEPT);
                 st.giveItems(PIPIS_LETTER, 1);
                 htmltext = "collector_pipi_q0417_05.htm";
-            } else if (st.getPlayer().getClassId().getId() != 0x35) {
-                if (st.getPlayer().getClassId().getId() == 0x36)
+            } else if (st.getPlayer().getClassId().id() != 0x35) {
+                if (st.getPlayer().getClassId().id() == 0x36)
                     htmltext = "collector_pipi_q0417_02a.htm";
                 else
                     htmltext = "collector_pipi_q0417_08.htm";
-            } else if (st.getPlayer().getLevel() < 18 && st.getPlayer().getClassId().getId() == 0x35)
+            } else if (st.getPlayer().getLevel() < 18 && st.getPlayer().getClassId().id() == 0x35)
                 htmltext = "collector_pipi_q0417_02.htm";
-            else if (st.getPlayer().getLevel() >= 18 && st.getPlayer().getClassId().getId() == 0x35 && st.getQuestItemsCount(RING_OF_RAVEN) == 1)
+            else if (st.getPlayer().getLevel() >= 18 && st.getPlayer().getClassId().id() == 0x35 && st.getQuestItemsCount(RING_OF_RAVEN) == 1)
                 htmltext = "collector_pipi_q0417_04.htm";
         } else if (event.equals("30519_1")) {
             if (st.getQuestItemsCount(PIPIS_LETTER) > 0) {

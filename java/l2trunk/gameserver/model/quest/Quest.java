@@ -66,7 +66,7 @@ public class Quest {
     private static final Logger _log = LoggerFactory.getLogger(Quest.class);
     private final String name;
     private final int party;
-    private final int questId;
+    public final int questId;
     //карта с приостановленными квестовыми таймерами для каждого игрока
     private final Map<Integer, Map<String, QuestTimer>> pausedQuestTimers = new ConcurrentHashMap<>();
     private Set<Integer> questItems = new HashSet<>();
@@ -113,7 +113,7 @@ public class Quest {
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement("REPLACE INTO character_quests (char_id,name,var,value) VALUES (?,?,?,?)")) {
             statement.setInt(1, qs.getPlayer().getObjectId());
-            statement.setString(2, qs.getQuest().getName());
+            statement.setString(2, qs.getQuest().name);
             statement.setString(3, var);
             statement.setString(4, value);
             statement.executeUpdate();
@@ -131,7 +131,7 @@ public class Quest {
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement("DELETE FROM character_quests WHERE char_id=? AND name=?")) {
             statement.setInt(1, qs.getPlayer().getObjectId());
-            statement.setString(2, qs.getQuest().getName());
+            statement.setString(2, qs.getQuest().name);
             statement.executeUpdate();
         } catch (SQLException e) {
             _log.error("could not delete char quest", e);
@@ -148,7 +148,7 @@ public class Quest {
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement("DELETE FROM character_quests WHERE char_id=? AND name=? AND var=?")) {
             statement.setInt(1, qs.getPlayer().getObjectId());
-            statement.setString(2, qs.getQuest().getName());
+            statement.setString(2, qs.getQuest().name);
             statement.setString(3, var);
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -173,7 +173,7 @@ public class Quest {
                     String questId = rset.getString("name");
                     String state = rset.getString("value");
 
-                    if (state.equalsIgnoreCase("Start")) // невзятый квест
+                    if ("Start".equalsIgnoreCase(state)) // невзятый квест
                     {
                         invalidQuestData.setInt(1, player.getObjectId());
                         invalidQuestData.setString(2, questId);
@@ -205,7 +205,7 @@ public class Quest {
                     String var = rset.getString("var");
                     String value = rset.getString("value");
                     // Get the QuestState saved in the loop before
-                    QuestState qs = player.getQuestState(questId);
+                    QuestState qs = player.getQuestState(QuestManager.getQuest(questId));
                     if (qs == null)
                         continue;
                     // затычка на пропущенный первый конд
@@ -264,8 +264,14 @@ public class Quest {
 
     }
 
-    protected void addQuestItem(Integer... ids) {
-        addQuestItem(List.of(ids));
+    protected void addQuestItem(Integer id) {
+        addQuestItem(List.of(id));
+    }
+
+    protected void addQuestItem(Integer id, Integer... ids) {
+        List<Integer> items = new ArrayList<>(List.of(ids));
+        items.add(id);
+        addQuestItem(items);
     }
 
     protected void addQuestItem(List<Integer> ids) {
@@ -441,54 +447,29 @@ public class Quest {
         if (!isVisible())
             return null;
 
-        QuestState qs = player.getQuestState(getName());
+        QuestState qs = player.getQuestState(this);
         int state = 2;
         if (qs == null || qs.isCreated() && qs.isNowAvailable())
             state = 1;
         else if (qs.isCompleted() || !qs.isNowAvailable())
             state = 3;
 
-        int fStringId = getQuestIntId();
+        int fStringId = questId;
         if (fStringId >= 10000)
             fStringId -= 5000;
         fStringId = fStringId * 100 + state;
         return HtmlUtils.htmlNpcString(fStringId);
     }
 
-    /**
-     * Return name of the quest
-     *
-     * @return String
-     */
+
     public String getName() {
         return name;
     }
 
-    /**
-     * Return ID of the quest
-     *
-     * @return int
-     */
-    public int getQuestIntId() {
-        return questId;
-    }
-
-    /**
-     * Return party state of quest
-     *
-     * @return String
-     */
     public int getParty() {
         return party;
     }
 
-    /**
-     * Add a new QuestState to the database and return it.
-     *
-     * @param player
-     * @param state
-     * @return QuestState : QuestState created
-     */
     public QuestState newQuestState(Player player, int state) {
         QuestState qs = new QuestState(this, player, state);
         Quest.updateQuestInDb(qs);
@@ -500,7 +481,7 @@ public class Quest {
     }
 
     public void notifyAttack(NpcInstance npc, QuestState qs) {
-        String res = null;
+        String res;
         try {
             res = onAttack(npc, qs);
         } catch (RuntimeException e) {
@@ -511,7 +492,7 @@ public class Quest {
     }
 
     public void notifyDeath(Creature killer, Creature victim, QuestState qs) {
-        String res = null;
+        String res;
         try {
             res = onDeath(killer, victim, qs);
         } catch (RuntimeException e) {
@@ -558,7 +539,7 @@ public class Quest {
      * Override the default NPC dialogs when a quest defines this for the given NPC
      */
     public final boolean notifyFirstTalk(NpcInstance npc, Player player) {
-        String res = null;
+        String res;
         try {
             res = onFirstTalk(npc, player);
         } catch (RuntimeException e) {
@@ -570,7 +551,7 @@ public class Quest {
     }
 
     public boolean notifyTalk(NpcInstance npc, QuestState qs) {
-        String res = null;
+        String res;
         try {
             res = onTalk(npc, qs);
         } catch (RuntimeException e) {
@@ -581,7 +562,7 @@ public class Quest {
     }
 
     public boolean notifySkillUse(NpcInstance npc, Skill skill, QuestState qs) {
-        String res = null;
+        String res;
         try {
             res = onSkillUse(npc, skill, qs);
         } catch (RuntimeException e) {
@@ -667,7 +648,7 @@ public class Quest {
             return;
 
         GameObject target = player.getTarget();
-        NpcHtmlMessage npcReply = showQuestInfo ? new ExNpcQuestHtmlMessage(target == null ? 5 : target.getObjectId(), getQuestIntId()) : new NpcHtmlMessage(target == null ? 5 : target.getObjectId());
+        NpcHtmlMessage npcReply = showQuestInfo ? new ExNpcQuestHtmlMessage(target == null ? 5 : target.getObjectId(), questId) : new NpcHtmlMessage(target == null ? 5 : target.getObjectId());
         npcReply.setFile("quests/" + getClass().getSimpleName() + "/" + fileName);
 
         if (arg.length % 2 == 0)
@@ -719,7 +700,7 @@ public class Quest {
         else if (res.endsWith(".htm"))
             showHtmlFile(player, res, showQuestInfo);
         else {
-            NpcHtmlMessage npcReply = showQuestInfo ? new ExNpcQuestHtmlMessage(npc == null ? 5 : npc.getObjectId(), getQuestIntId()) : new NpcHtmlMessage(npc == null ? 5 : npc.getObjectId());
+            NpcHtmlMessage npcReply = showQuestInfo ? new ExNpcQuestHtmlMessage(npc == null ? 5 : npc.getObjectId(), questId) : new NpcHtmlMessage(npc == null ? 5 : npc.getObjectId());
             npcReply.setHtml(res);
             player.sendPacket(npcReply);
         }
@@ -728,13 +709,10 @@ public class Quest {
 
     // Проверяем, показывать ли информацию о квесте в диалоге.
     private boolean showQuestInfo(Player player) {
-        QuestState qs = player.getQuestState(getName());
+        QuestState qs = player.getQuestState(this);
         if (qs != null && qs.getState() != CREATED)
             return false;
-        if (!isVisible())
-            return false;
-
-        return true;
+        return isVisible();
     }
 
     // Останавливаем и сохраняем таймеры (при выходе из игры)
@@ -785,6 +763,19 @@ public class Quest {
 
     public boolean isVisible() {
         return true;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Quest)) return false;
+        Quest quest = (Quest) o;
+        return questId == quest.questId;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(questId);
     }
 
     public class DeSpawnScheduleTimerTask extends RunnableImpl {

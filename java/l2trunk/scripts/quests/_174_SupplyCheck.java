@@ -67,17 +67,17 @@ public final class _174_SupplyCheck extends Quest {
             } else if (cond == 3)
                 htmltext = "zerstorer_morsell_q0174_07.htm";
             else if (cond == 4) {
-                if (st.getPlayer().getClassId().isMage() && !st.getPlayer().getClassId().equalsOrChildOf(ClassId.orcMage)) {
-                    st.giveItems(LeatherTunic, 1);
-                    st.giveItems(LeatherStockings, 1);
+                if (st.getPlayer().getClassId().isMage && !st.getPlayer().getClassId().equalsOrChildOf(ClassId.orcMage)) {
+                    st.giveItems(LeatherTunic);
+                    st.giveItems(LeatherStockings);
                 } else {
-                    st.giveItems(WoodenBreastplate, 1);
-                    st.giveItems(WoodenGaiters, 1);
+                    st.giveItems(WoodenBreastplate);
+                    st.giveItems(WoodenGaiters);
                 }
-                st.giveItems(WoodenHelmet, 1);
-                st.giveItems(LeatherShoes, 1);
-                st.giveItems(Gloves, 1);
-                st.giveItems(ADENA_ID, 2466, true);
+                st.giveItems(WoodenHelmet);
+                st.giveItems(LeatherShoes);
+                st.giveItems(Gloves);
+                st.giveItems(ADENA_ID, 2466);
                 st.getPlayer().addExpAndSp(5672, 446);
                 if (st.getPlayer().getClassId().getLevel() == 1 && !st.getPlayer().getVarB("ng1"))
                     st.getPlayer().sendPacket(new ExShowScreenMessage("  Delivery duty complete.\nGo find the Newbie Guide."));
@@ -129,7 +129,7 @@ public final class _174_SupplyCheck extends Quest {
         } else if (npcId == Benis)
             if (cond == 1) {
                 st.setCond(2);
-                st.giveItems(WarehouseManifest, 1);
+                st.giveItems(WarehouseManifest);
                 htmltext = "warehouse_keeper_benis_q0174_01.htm";
             } else
                 htmltext = "warehouse_keeper_benis_q0174_02.htm";
@@ -139,7 +139,7 @@ public final class _174_SupplyCheck extends Quest {
                 htmltext = "subelder_casca_q0174_01.htm";
             else if (cond == 3) {
                 st.setCond(4);
-                st.giveItems(GroceryStoreManifest, 1);
+                st.giveItems(GroceryStoreManifest);
                 htmltext = "trader_neagel_q0174_02.htm";
             } else
                 htmltext = "trader_neagel_q0174_03.htm";

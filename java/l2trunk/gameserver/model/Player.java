@@ -43,8 +43,8 @@ import l2trunk.gameserver.model.GameObjectTasks.*;
 import l2trunk.gameserver.model.Request.L2RequestType;
 import l2trunk.gameserver.model.Skill.AddedSkill;
 import l2trunk.gameserver.model.Zone.ZoneType;
-import l2trunk.gameserver.model.actor.instances.player.FriendList;
 import l2trunk.gameserver.model.actor.instances.player.*;
+import l2trunk.gameserver.model.actor.instances.player.FriendList;
 import l2trunk.gameserver.model.actor.listener.PlayerListenerList;
 import l2trunk.gameserver.model.actor.recorder.PlayerStatsChangeRecorder;
 import l2trunk.gameserver.model.base.*;
@@ -118,13 +118,16 @@ import l2trunk.gameserver.templates.item.WeaponTemplate;
 import l2trunk.gameserver.templates.item.WeaponTemplate.WeaponType;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.*;
+import l2trunk.scripts.quests._255_Tutorial;
+import l2trunk.scripts.quests._350_EnhanceYourWeapon;
+import l2trunk.scripts.quests._422_RepentYourSins;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.sql.*;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -193,10 +196,8 @@ public final class Player extends Playable implements PlayerGroup {
      * Premium Items
      */
     private final Map<Integer, PremiumItem> premiumItems = new TreeMap<>();
-    /**
-     * The table containing all Quests began by the L2Player
-     */
-    private final Map<String, QuestState> quests = new ConcurrentHashMap<>();
+
+    private final Map<Integer, QuestState> quests = new ConcurrentHashMap<>();
     /**
      * The list containing all shortCuts of this L2Player
      */
@@ -208,7 +209,7 @@ public final class Player extends Playable implements PlayerGroup {
     /**
      * hennas
      */
-    private final Henna[] _henna = new Henna[3];
+    private final Henna[] henna = new Henna[3];
     private final AtomicBoolean _isLogout = new AtomicBoolean();
     private final Set<Integer> activeSoulShots = new CopyOnWriteArraySet<>();
     private final AtomicInteger observerMode = new AtomicInteger(0);
@@ -247,7 +248,7 @@ public final class Player extends Playable implements PlayerGroup {
     public boolean _autoCp;
     public boolean _autoHp;
     public boolean entering = true;
-    public Location _stablePoint = null;
+    public Location stablePoint = null;
     private boolean _gmVisible = false;
     private int _telemode = 0;
     /**
@@ -365,8 +366,8 @@ public final class Player extends Playable implements PlayerGroup {
     /**
      * ally with ketra or varka related wars
      */
-    private int _varka = 0;
-    private int _ketra = 0;
+    private int varka = 0;
+    private int ketra = 0;
     private int _ram = 0;
     private byte[] _keyBindings = new byte[0];
     private int _cursedWeaponEquippedId = 0;
@@ -472,7 +473,7 @@ public final class Player extends Playable implements PlayerGroup {
         login = accountName;
         _nameColor = 0xFFFFFF;
         _titlecolor = 0xFFFF77;
-        baseClass = getClassId().getId();
+        baseClass = getClassId().id();
         buffSchemes = new CopyOnWriteArrayList<>();
 
         for (Stats st : Stats.values())
@@ -1036,7 +1037,7 @@ public final class Player extends Playable implements PlayerGroup {
     }
 
     public boolean isMale() {
-        return getTemplate().isMale;
+        return ((PlayerTemplate) template).isMale;
     }
 
     public int getFace() {
@@ -1105,7 +1106,7 @@ public final class Player extends Playable implements PlayerGroup {
         getListeners().onExit();
 
         if (isFlying() && !checkLandingState()) {
-            _stablePoint = TeleportUtils.getRestartLocation(this, RestartType.TO_VILLAGE);
+            stablePoint = TeleportUtils.getRestartLocation(this, RestartType.TO_VILLAGE);
         }
 
         if (isCastingNow()) {
@@ -1147,8 +1148,8 @@ public final class Player extends Playable implements PlayerGroup {
             observerMode.set(OBSERVER_NONE);
         }
 
-        if (_stablePoint != null) {
-            teleToLocation(_stablePoint);
+        if (stablePoint != null) {
+            teleToLocation(stablePoint);
         }
 
         Summon pet = getPet();
@@ -1220,7 +1221,7 @@ public final class Player extends Playable implements PlayerGroup {
 
         if (ref != ReflectionManager.DEFAULT) {
             if (ref.getReturnLoc() != null) {
-                _stablePoint = ref.getReturnLoc();
+                stablePoint = ref.getReturnLoc();
             }
 
             ref.removeObject(this);
@@ -1270,30 +1271,26 @@ public final class Player extends Playable implements PlayerGroup {
         }
     }
 
-    public synchronized QuestState getQuestState(String questName) {
-        return quests.get(questName);
+
+    public synchronized QuestState getQuestState(Quest quest) {
+        return quests.get(quest.questId);
     }
 
     public QuestState getQuestState(Class<?> quest) {
-        return getQuestState(quest.getSimpleName());
+        return getQuestState(QuestManager.getQuest(quest));
     }
 
-    public boolean isQuestCompleted(String quest) {
-        QuestState q = getQuestState(quest);
-        return (q != null) && q.isCompleted();
-    }
-
-    public boolean isQuestCompleted(Class<?> quest) {
-        QuestState q = getQuestState(quest);
+    public boolean isQuestCompleted(Class<?> questClass) {
+        QuestState q = getQuestState(questClass);
         return (q != null) && q.isCompleted();
     }
 
     public void setQuestState(QuestState qs) {
-        quests.put(qs.getQuest().getName(), qs);
+        quests.put(qs.getQuest().questId, qs);
     }
 
-    public void removeQuestState(String quest) {
-        quests.remove(quest);
+    public void removeQuestState(Integer questId) {
+        quests.remove(questId);
     }
 
     public List<Quest> getAllActiveQuests() {
@@ -1309,25 +1306,27 @@ public final class Player extends Playable implements PlayerGroup {
 
     public Stream<QuestState> getQuestsForEvent(NpcInstance npc, QuestEventType event) {
         return npc.getTemplate().getEventQuests(event).stream()
-                .map(quest -> getQuestState(quest.getName()))
+                .map(this::getQuestState)
                 .filter(Objects::nonNull)
                 .filter(qs -> !qs.isCompleted());
     }
 
 
     public void processQuestEvent(String quest, String event, NpcInstance npc, boolean... sendPacket) {
+        Quest q = QuestManager.getQuest(quest);
+        processQuestEvent(q, event, npc, sendPacket);
+    }
+
+    public void processQuestEvent(Class<? extends Quest> questClass, String event, NpcInstance npc, boolean... sendPacket) {
+        processQuestEvent(QuestManager.getQuest(questClass), event, npc, sendPacket);
+    }
+
+    public void processQuestEvent(Quest quest, String event, NpcInstance npc, boolean... sendPacket) {
         if (event == null) {
             event = "";
         }
         QuestState qs = getQuestState(quest);
-        if (qs == null) {
-            Quest q = QuestManager.getQuest(quest);
-            if (q == null) {
-                LOG.warn("Quest " + quest + " not found!");
-                return;
-            }
-            qs = q.newQuestState(this, Quest.CREATED);
-        }
+        if (qs == null) qs = quest.newQuestState(this, Quest.CREATED);
         if ((qs == null) || qs.isCompleted()) {
             return;
         }
@@ -1944,7 +1943,7 @@ public final class Player extends Playable implements PlayerGroup {
             broadcastCharInfo();
         }
 
-        PlayerTemplate t = CharTemplateHolder.getTemplate(id, !isMale() );
+        PlayerTemplate t = CharTemplateHolder.getTemplate(id, !isMale());
         if (t == null) {
             LOG.error("Missing template for classId: " + id);
             // do not throw error - only print error
@@ -2211,10 +2210,8 @@ public final class Player extends Playable implements PlayerGroup {
 
         // Alexander - Custom tutorial event for the first exp got and then in lvl 6
         if (addToExp > 0 && (oldExp < 100 || (activeClass.getLevel() >= 6 && activeClass.getLevel() <= 10))) {
-            Quest q = QuestManager.getQuest(255);
-            if (q != null) {
-                processQuestEvent(q.getName(), "CE41", null);
-            }
+            processQuestEvent(_255_Tutorial.class, "CE41", null);
+
         }
 
         int level = activeClass.getLevel();
@@ -2227,9 +2224,9 @@ public final class Player extends Playable implements PlayerGroup {
         }
         // Custom Level Up Soul Crystals
         if (Config.AUTO_SOUL_CRYSTAL_QUEST) {
-            Quest q = QuestManager.getQuest(350);
-            if (level >= 45 && q != null && getQuestState(q.getName()) == null)
-                processQuestEvent(q.getName(), "30115-04.htm", null, false);
+            Quest q = QuestManager.getQuest(_350_EnhanceYourWeapon.class);
+            if (level >= 45 && getQuestState(_350_EnhanceYourWeapon.class) == null)
+                processQuestEvent(q, "30115-04.htm", null, false);
         }
 
         if ((pet != null) && pet.isPet() && PetDataTable.isVitaminPet(pet.getNpcId())) {
@@ -2265,7 +2262,7 @@ public final class Player extends Playable implements PlayerGroup {
             while (skills.size() > unLearnable) {
                 unLearnable = 0;
                 for (SkillLearn s : skills) {
-                    Skill sk = SkillTable.INSTANCE.getInfo(s.getId(), s.getLevel());
+                    Skill sk = SkillTable.INSTANCE.getInfo(s.id(), s.level());
                     if ((sk == null) || !sk.getCanLearn(getClassId()) || (!Config.AUTO_LEARN_FORGOTTEN_SKILLS && s.isClicked())) {
                         unLearnable++;
                         continue;
@@ -2278,8 +2275,8 @@ public final class Player extends Playable implements PlayerGroup {
         } else {
             // Skills gives subscription-free does not need to be studied
             for (SkillLearn skill : SkillAcquireHolder.getAvailableSkills(this, AcquireType.NORMAL)) {
-                if ((skill.getCost() == 0) && (skill.getItemId() == 0)) {
-                    Skill sk = SkillTable.INSTANCE.getInfo(skill.getId(), skill.getLevel());
+                if ((skill.cost() == 0) && (skill.itemId() == 0)) {
+                    Skill sk = SkillTable.INSTANCE.getInfo(skill.id(), skill.level());
                     addSkill(sk, true);
                     if ((getAllShortCuts().size() > 0) && (sk.level > 1)) {
                         for (ShortCut sc : getAllShortCuts()) {
@@ -3056,10 +3053,7 @@ public final class Player extends Playable implements PlayerGroup {
         }
 
         if ((item.getItemId() == ItemTemplate.ITEM_ID_ADENA) || (item.getItemId() == 6353)) {
-            Quest q = QuestManager.getQuest(255);
-            if (q != null) {
-                processQuestEvent(q.getName(), "CE" + item.getItemId(), null);
-            }
+            processQuestEvent(_255_Tutorial.class, "CE" + item.getItemId(), null);
         }
 
         sendPacket(SystemMessage2.obtainItems(item));
@@ -3662,12 +3656,7 @@ public final class Player extends Playable implements PlayerGroup {
             setCharmOfCourage(false);
         }
 
-        if (getLevel() < 6) {
-            Quest q = QuestManager.getQuest(255);
-            if (q != null) {
-                processQuestEvent(q.getName(), "CE30", null);
-            }
-        }
+        if (getLevel() < 6) processQuestEvent(_255_Tutorial.class, "CE30", null);
 
         if (isInOlympiadMode() && (killer.isPlayable() && killer.getPlayer().isInOlympiadMode())) {
             LOG.warn("Player: " + getName() + " DIED in olympiad from: " + killer.getName());
@@ -3901,11 +3890,8 @@ public final class Player extends Playable implements PlayerGroup {
             setFullHpMp();
             setCurrentCp(getMaxCp());
 
-            Quest q = QuestManager.getQuest(255);
-            if (q != null) {
-                processQuestEvent(q.getName(), "CE40", null);
-                processQuestEvent(q.getName(), "OpenClassMaster", null);
-            }
+            processQuestEvent(_255_Tutorial.class, "CE40", null);
+            processQuestEvent(_255_Tutorial.class, "OpenClassMaster", null);
         } else if (levels < 0) {
             if (Config.ALT_REMOVE_SKILLS_ON_DELEVEL) {
                 checkSkills();
@@ -4500,14 +4486,14 @@ public final class Player extends Playable implements PlayerGroup {
                 statement.setInt(1, getFace());
                 statement.setInt(2, getHairStyle());
                 statement.setInt(3, getHairColor());
-                if (_stablePoint == null) {
+                if (stablePoint == null) {
                     statement.setInt(4, getX());
                     statement.setInt(5, getY());
                     statement.setInt(6, getZ());
                 } else {
-                    statement.setInt(4, _stablePoint.x);
-                    statement.setInt(5, _stablePoint.y);
-                    statement.setInt(6, _stablePoint.z);
+                    statement.setInt(4, stablePoint.x);
+                    statement.setInt(5, stablePoint.y);
+                    statement.setInt(6, stablePoint.z);
                 }
                 statement.setInt(7, getKarma());
                 statement.setInt(8, getPvpKills());
@@ -4800,7 +4786,7 @@ public final class Player extends Playable implements PlayerGroup {
     }
 
     /**
-     * Retrieve from the database all Henna of this L2Player, add them to _henna and calculate stats of the L2Player.<BR>
+     * Retrieve from the database all Henna of this L2Player, add them to henna and calculate stats of the L2Player.<BR>
      * <BR>
      */
     private void restoreHenna() {
@@ -4811,7 +4797,7 @@ public final class Player extends Playable implements PlayerGroup {
 
             try (ResultSet rset = statement.executeQuery()) {
                 for (int i = 0; i < 3; i++) {
-                    _henna[i] = null;
+                    henna[i] = null;
                 }
 
                 while (rset.next()) {
@@ -4825,7 +4811,7 @@ public final class Player extends Playable implements PlayerGroup {
                     if (symbol_id != 0) {
                         final Henna tpl = HennaHolder.getHenna(symbol_id);
                         if (tpl != null) {
-                            _henna[slot - 1] = tpl;
+                            henna[slot - 1] = tpl;
                         }
                     }
                 }
@@ -4842,7 +4828,7 @@ public final class Player extends Playable implements PlayerGroup {
     public int getHennaEmptySlots() {
         int totalSlots = 1 + getClassId().level();
         for (int i = 0; i < 3; i++) {
-            if (_henna[i] != null) {
+            if (henna[i] != null) {
                 totalSlots--;
             }
         }
@@ -4869,14 +4855,14 @@ public final class Player extends Playable implements PlayerGroup {
 
         slot--;
 
-        if (_henna[slot] == null) {
+        if (henna[slot] == null) {
             return false;
         }
 
-        final Henna henna = _henna[slot];
+        final Henna henna = this.henna[slot];
         final int dyeID = henna.getDyeId();
 
-        _henna[slot] = null;
+        this.henna[slot] = null;
 
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement("DELETE FROM character_hennas where char_obj_id=? and slot=? and class_index=?")) {
@@ -4904,20 +4890,17 @@ public final class Player extends Playable implements PlayerGroup {
 
     /**
      * Add a Henna to the L2Player, save update in the character_hennas table of the database and send Server->Client HennaInfo/UserInfo packet to this L2Player.<BR>
-     *
-     * @param henna
-     * @return
      */
-    public boolean addHenna(Henna henna) {
+    public void addHenna(Henna henna) {
         if (getHennaEmptySlots() == 0) {
             sendPacket(SystemMsg.NO_SLOT_EXISTS_TO_DRAW_THE_SYMBOL);
-            return false;
+            return;
         }
 
         // int slot = 0;
         for (int i = 0; i < 3; i++) {
-            if (_henna[i] == null) {
-                _henna[i] = henna;
+            if (this.henna[i] == null) {
+                this.henna[i] = henna;
 
                 // Calculate Henna modifiers of this L2Player
                 recalcHennaStats();
@@ -4936,11 +4919,10 @@ public final class Player extends Playable implements PlayerGroup {
                 sendPacket(new HennaInfo(this));
                 sendUserInfo(true);
 
-                return true;
+                return;
             }
         }
 
-        return false;
     }
 
     /**
@@ -4955,7 +4937,7 @@ public final class Player extends Playable implements PlayerGroup {
         _hennaDEX = 0;
 
         for (int i = 0; i < 3; i++) {
-            Henna henna = _henna[i];
+            Henna henna = this.henna[i];
             if (henna == null) {
                 continue;
             }
@@ -4991,16 +4973,11 @@ public final class Player extends Playable implements PlayerGroup {
         }
     }
 
-    /**
-     * @param slot
-     * @return the Henna of this L2Player corresponding to the selected slot.<BR>
-     * <BR>
-     */
     public Henna getHenna(final int slot) {
         if ((slot < 1) || (slot > 3)) {
             return null;
         }
-        return _henna[slot - 1];
+        return henna[slot - 1];
     }
 
     public int getHennaStatINT() {
@@ -5983,37 +5960,37 @@ public final class Player extends Playable implements PlayerGroup {
     /* varka silenos and ketra orc quests related functions */
     public void updateKetraVarka() {
         if (ItemFunctions.getItemCount(this, 7215) > 0) {
-            _ketra = 5;
+            ketra = 5;
         } else if (ItemFunctions.getItemCount(this, 7214) > 0) {
-            _ketra = 4;
+            ketra = 4;
         } else if (ItemFunctions.getItemCount(this, 7213) > 0) {
-            _ketra = 3;
+            ketra = 3;
         } else if (ItemFunctions.getItemCount(this, 7212) > 0) {
-            _ketra = 2;
+            ketra = 2;
         } else if (ItemFunctions.getItemCount(this, 7211) > 0) {
-            _ketra = 1;
+            ketra = 1;
         } else if (ItemFunctions.getItemCount(this, 7225) > 0) {
-            _varka = 5;
+            varka = 5;
         } else if (ItemFunctions.getItemCount(this, 7224) > 0) {
-            _varka = 4;
+            varka = 4;
         } else if (ItemFunctions.getItemCount(this, 7223) > 0) {
-            _varka = 3;
+            varka = 3;
         } else if (ItemFunctions.getItemCount(this, 7222) > 0) {
-            _varka = 2;
+            varka = 2;
         } else if (ItemFunctions.getItemCount(this, 7221) > 0) {
-            _varka = 1;
+            varka = 1;
         } else {
-            _varka = 0;
-            _ketra = 0;
+            varka = 0;
+            ketra = 0;
         }
     }
 
     public int getVarka() {
-        return _varka;
+        return varka;
     }
 
     public int getKetra() {
-        return _ketra;
+        return ketra;
     }
 
     public void updateRam() {
@@ -6830,7 +6807,7 @@ public final class Player extends Playable implements PlayerGroup {
         Collection<SkillLearn> skills = SkillAcquireHolder.getAvailableSkills(this, AcquireType.NORMAL);
         while (skills.size() > unLearnable) {
             for (final SkillLearn s : skills) {
-                final Skill sk = SkillTable.INSTANCE.getInfo(s.getId(), s.getLevel());
+                final Skill sk = SkillTable.INSTANCE.getInfo(s.id(), s.level());
                 if ((sk == null) || !sk.getCanLearn(newId)) {
                     if (countUnlearnable) {
                         unLearnable++;
@@ -6927,15 +6904,8 @@ public final class Player extends Playable implements PlayerGroup {
             EffectsDAO.INSTANCE.insert(this);
             storeDisableSkills();
 
-            if (QuestManager.getQuest(422) != null) {
-                String qn = QuestManager.getQuest(422).getName();
-                if (qn != null) {
-                    QuestState qs = getQuestState(qn);
-                    if (qs != null) {
-                        qs.exitCurrentQuest(true);
-                    }
-                }
-            }
+            QuestState qs = getQuestState(_422_RepentYourSins.class);
+            if (qs != null) qs.exitCurrentQuest(true);
         }
 
         if (store) {
@@ -6979,7 +6949,7 @@ public final class Player extends Playable implements PlayerGroup {
         inventory.validateItems();
 
         for (int i = 0; i < 3; i++) {
-            _henna[i] = null;
+            henna[i] = null;
         }
 
         restoreHenna();

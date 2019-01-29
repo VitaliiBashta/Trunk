@@ -7,9 +7,6 @@ import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.scripts.quests._10288_SecretMission;
 
-/**
- * @author pchayka
- */
 public class PriestAquilaniInstance extends NpcInstance {
 
     public PriestAquilaniInstance(int objectId, NpcTemplate template) {
@@ -17,14 +14,10 @@ public class PriestAquilaniInstance extends NpcInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
-        if (player.getQuestState(_10288_SecretMission.class) != null && player.getQuestState(_10288_SecretMission.class).isCompleted()) {
+    public void showChatWindow(Player player, int val) {
+        if (player.getQuestState(_10288_SecretMission.class) != null && player.getQuestState(_10288_SecretMission.class).isCompleted())
             player.sendPacket(new NpcHtmlMessage(player, this, "default/32780-1.htm", val));
-            return;
-        } else {
-            player.sendPacket(new NpcHtmlMessage(player, this, "default/32780.htm", val));
-            return;
-        }
+        else player.sendPacket(new NpcHtmlMessage(player, this, "default/32780.htm", val));
     }
 
     @Override

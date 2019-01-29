@@ -66,7 +66,7 @@ public final class PowerControlUnitInstance extends NpcInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
         NpcHtmlMessage message = new NpcHtmlMessage(player, this);
 
         if (_invalidatePeriod > 0 && _invalidatePeriod < System.currentTimeMillis())

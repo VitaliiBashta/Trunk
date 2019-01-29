@@ -209,8 +209,8 @@ public final class _999_T1Tutorial extends Quest {
 
         String htmltext;
         int Ex = qs.getInt("Ex");
-        int classId = player.getClassId().getId();
-        boolean isMage = (player.getClassId().getRace() != Race.orc) && player.getClassId().isMage();
+        int classId = player.getClassId().id();
+        boolean isMage = (player.getClassId().getRace() != Race.orc) && player.getClassId().isMage;
         if (event.equalsIgnoreCase("TimerEx_NewbieHelper")) {
             if (Ex == 0) {
                 if (isMage)
@@ -274,10 +274,10 @@ public final class _999_T1Tutorial extends Quest {
         if (qs == null)
             return htmltext;
 
-        QuestState st = player.getQuestState(getClass());
+        QuestState st = player.getQuestState(this);
         if (st == null) {
             newQuestState(player, CREATED);
-            st = player.getQuestState(getClass());
+            st = player.getQuestState(this);
         }
 
         int Ex = qs.getInt("Ex");
@@ -285,7 +285,7 @@ public final class _999_T1Tutorial extends Quest {
         int step = st.getInt("step");
         int onlyone = st.getInt("onlyone");
         int level = player.getLevel();
-        boolean isMage = (player.getClassId().getRace() != Race.orc) && player.getClassId().isMage();
+        boolean isMage = (player.getClassId().getRace() != Race.orc) && player.getClassId().isMage;
 
         Talk t = talks.get(npcId);
         if (t == null)

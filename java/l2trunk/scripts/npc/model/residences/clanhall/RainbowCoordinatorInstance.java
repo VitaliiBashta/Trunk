@@ -89,7 +89,7 @@ public class RainbowCoordinatorInstance extends NpcInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
         showChatWindow(player, "residence2/clanhall/game_manager001.htm");
     }
 }

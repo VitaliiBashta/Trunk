@@ -13,7 +13,7 @@ public class CTBTeamObject implements SpawnableObject {
     private final NpcTemplate _flagTemplate;
     private final Location _flagLoc;
     private CTBSiegeClanObject _siegeClan;
-    private NpcInstance _flag;
+    private NpcInstance flag;
     private CTBBossInstance _mob;
 
     public CTBTeamObject(int mobTemplate, int flagTemplate, Location flagLoc) {
@@ -24,12 +24,12 @@ public class CTBTeamObject implements SpawnableObject {
 
     @Override
     public void spawnObject(GlobalEvent event) {
-        if (_flag == null) {
-            _flag = new NpcInstance(IdFactory.getInstance().getNextId(), _flagTemplate);
-            _flag.setFullHpMp();
+        if (flag == null) {
+            flag = new NpcInstance(IdFactory.getInstance().getNextId(), _flagTemplate);
+            flag.setFullHpMp();
             ;
-            _flag.setHasChatWindow(false);
-            _flag.spawnMe(_flagLoc);
+            flag.setHasChatWindow(false);
+            flag.spawnMe(_flagLoc);
         } else if (_mob == null) {
             NpcTemplate template = _siegeClan == null || _siegeClan.getParam() == 0 ? _mobTemplate : NpcHolder.getTemplate((int) _siegeClan.getParam());
 
@@ -38,10 +38,10 @@ public class CTBTeamObject implements SpawnableObject {
             _mob.setMatchTeamObject(this);
             _mob.addEvent(event);
 
-            int x = (int) (_flagLoc.x + 300 * Math.cos(_mob.headingToRadians(_flag.getHeading() - 32768)));
-            int y = (int) (_flagLoc.y + 300 * Math.sin(_mob.headingToRadians(_flag.getHeading() - 32768)));
+            int x = (int) (_flagLoc.x + 300 * Math.cos(_mob.headingToRadians(flag.getHeading() - 32768)));
+            int y = (int) (_flagLoc.y + 300 * Math.sin(_mob.headingToRadians(flag.getHeading() - 32768)));
 
-            Location loc = new Location(x, y, _flag.getZ(), _flag.getHeading());
+            Location loc = new Location(x, y, flag.getZ(), flag.getHeading());
             _mob.setSpawnedLoc(loc);
             _mob.spawnMe(loc);
         } else
@@ -54,9 +54,9 @@ public class CTBTeamObject implements SpawnableObject {
             _mob.deleteMe();
             _mob = null;
         }
-        if (_flag != null) {
-            _flag.deleteMe();
-            _flag = null;
+        if (flag != null) {
+            flag.deleteMe();
+            flag = null;
         }
         _siegeClan = null;
     }
@@ -75,10 +75,10 @@ public class CTBTeamObject implements SpawnableObject {
     }
 
     public boolean isParticle() {
-        return _flag != null && _mob != null;
+        return flag != null && _mob != null;
     }
 
     public NpcInstance getFlag() {
-        return _flag;
+        return flag;
     }
 }

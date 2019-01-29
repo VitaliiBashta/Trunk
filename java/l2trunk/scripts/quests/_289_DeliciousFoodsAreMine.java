@@ -151,7 +151,7 @@ public final class _289_DeliciousFoodsAreMine extends Quest {
             else if (cond == 1 && (st.getQuestItemsCount(FullBarrelofSoup) + (st.getQuestItemsCount(EmptySoupBarrel) * 2)) >= 100) {
                 if (st.getQuestItemsCount(EmptySoupBarrel) >= 2) {
                     st.giveItems(FullBarrelofSoup, st.getQuestItemsCount(EmptySoupBarrel) / 2);
-                    st.takeAllItems(EmptySoupBarrel);
+                    st.takeItems(EmptySoupBarrel);
                 }
                 htmltext = "stan_q289_06.htm";
             }

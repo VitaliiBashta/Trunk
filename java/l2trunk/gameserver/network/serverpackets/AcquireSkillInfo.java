@@ -3,7 +3,6 @@ package l2trunk.gameserver.network.serverpackets;
 import l2trunk.gameserver.model.SkillLearn;
 import l2trunk.gameserver.model.base.AcquireType;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public final class AcquireSkillInfo extends L2GameServerPacket {
@@ -14,16 +13,16 @@ public final class AcquireSkillInfo extends L2GameServerPacket {
     public AcquireSkillInfo(AcquireType type, SkillLearn learn) {
         this.type = type;
         this.learn = learn;
-        if (this.learn.getItemId() != 0)
-            reqs = List.of(new Require(99, this.learn.getItemId(), this.learn.getItemCount(), 50));
+        if (this.learn.itemId() != 0)
+            reqs = List.of(new Require(99, this.learn.itemId(), this.learn.itemCount(), 50));
     }
 
     @Override
     public void writeImpl() {
         writeC(0x91);
-        writeD(learn.getId());
-        writeD(learn.getLevel());
-        writeD(learn.getCost()); // sp/rep
+        writeD(learn.id());
+        writeD(learn.level());
+        writeD(learn.cost()); // sp/rep
         writeD(type.ordinal());
 
         writeD(reqs.size()); //requires size

@@ -59,8 +59,8 @@ public final class _148_PathToBecomingAnExaltedMercenary extends Quest {
             htmlText = "gludio_merc_cap_q0148_07.htm";
         else if (cond == 4) {
             htmlText = "gludio_merc_cap_q0148_08.htm";
-            st.takeAllItems(13767);
-            st.giveItems(13768, 1);
+            st.takeItems(13767);
+            st.giveItems(13768);
             st.setState(COMPLETED);
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(false);

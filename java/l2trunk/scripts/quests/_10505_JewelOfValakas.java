@@ -27,7 +27,7 @@ public final class _10505_JewelOfValakas extends Quest {
             st.setState(STARTED);
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
-            st.giveItems(EMPTY_CRYSTAL, 1);
+            st.giveItems(EMPTY_CRYSTAL);
         }
         return event;
     }
@@ -56,8 +56,8 @@ public final class _10505_JewelOfValakas extends Quest {
             } else if (cond == 2) {
                 if (st.getQuestItemsCount(FILLED_CRYSTAL_VALAKAS) >= 1) {
                     htmltext = "valakas_watchman_klein_q10505_07.htm";
-                    st.takeAllItems(FILLED_CRYSTAL_VALAKAS);
-                    st.giveItems(JEWEL_OF_VALAKAS, 1);
+                    st.takeItems(FILLED_CRYSTAL_VALAKAS);
+                    st.giveItems(JEWEL_OF_VALAKAS);
                     st.playSound(SOUND_FINISH);
                     st.setState(COMPLETED);
                     st.exitCurrentQuest(false);
@@ -73,8 +73,8 @@ public final class _10505_JewelOfValakas extends Quest {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         if (cond == 1 && npcId == VALAKAS) {
-            st.takeAllItems(EMPTY_CRYSTAL);
-            st.giveItems(FILLED_CRYSTAL_VALAKAS, 1);
+            st.takeItems(EMPTY_CRYSTAL);
+            st.giveItems(FILLED_CRYSTAL_VALAKAS);
             st.setCond(2);
         }
         return null;

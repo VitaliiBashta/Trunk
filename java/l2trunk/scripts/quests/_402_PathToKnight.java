@@ -166,7 +166,7 @@ public final class _402_PathToKnight extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        int classid = st.getPlayer().getClassId().getId();
+        int classid = st.getPlayer().getClassId().id();
         int level = st.getPlayer().getLevel();
         long squire = st.getQuestItemsCount(MARK_OF_ESQUIRE);
         long coin1 = st.getQuestItemsCount(COIN_OF_LORDS1);

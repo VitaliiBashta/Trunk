@@ -1,7 +1,7 @@
 package l2trunk.gameserver.scripts;
 
+import l2trunk.gameserver.instancemanager.QuestManager;
 import l2trunk.gameserver.model.Player;
-import l2trunk.gameserver.model.quest.Quests;
 import l2trunk.scripts.actions.OnActionShift;
 import l2trunk.scripts.ai.Zone.HeineFields.HeineFieldsHerbs;
 import l2trunk.scripts.bosses.*;
@@ -142,7 +142,7 @@ public enum Scripts {
     public void init() {
         loadFunctions();
         loadScripts();
-        Quests.init();
+        QuestManager.init();
         scripts.forEach((k, v) -> v.onLoad());
 
 

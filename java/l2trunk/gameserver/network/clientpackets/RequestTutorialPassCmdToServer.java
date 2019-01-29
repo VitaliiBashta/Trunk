@@ -1,14 +1,11 @@
 package l2trunk.gameserver.network.clientpackets;
 
 import l2trunk.gameserver.Config;
-import l2trunk.gameserver.instancemanager.QuestManager;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.achievements.Achievements;
-import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.scripts.Scripts;
 import l2trunk.gameserver.utils.AccountEmail;
-
-import java.util.Map;
+import l2trunk.scripts.quests._255_Tutorial;
 
 public final class RequestTutorialPassCmdToServer extends L2GameClientPacket {
     // format: cS
@@ -52,10 +49,7 @@ public final class RequestTutorialPassCmdToServer extends L2GameClientPacket {
             } else
                 Achievements.INSTANCE.onBypass(player, _bypass, cm);
         } else {
-            Quest tutorial = QuestManager.getQuest(255);
-
-            if (tutorial != null)
-                player.processQuestEvent(tutorial.getName(), _bypass, null);
+            player.processQuestEvent(_255_Tutorial.class, _bypass, null);
         }
 
         if (Config.ALLOW_MAIL_OPTION)

@@ -83,7 +83,7 @@ public final class _620_FourGoblets extends Quest {
         else if (event.equalsIgnoreCase("12")) {
             if (!st.checkQuestItemsCount(GOBLETS))
                 return "31453-14.htm";
-            st.takeAllItems(GOBLETS);
+            st.takeItems(GOBLETS);
             st.giveItems(ANTIQUE_BROOCH, 1);
             st.setCond(2);
             st.playSound(SOUND_FINISH);

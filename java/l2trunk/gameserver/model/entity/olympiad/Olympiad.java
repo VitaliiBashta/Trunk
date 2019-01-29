@@ -281,7 +281,7 @@ public final class Olympiad {
             return false;
         }
 
-        if (validPlayer.getBaseClassId() != validPlayer.getClassId().getId()) {
+        if (validPlayer.getBaseClassId() != validPlayer.getClassId().id()) {
             sendPlayer.sendPacket(new SystemMessage2(SystemMsg.C1_DOES_NOT_MEET_THE_PARTICIPATION_REQUIREMENTS_SUBCLASS_CHARACTER_CANNOT_PARTICIPATE_IN_THE_OLYMPIAD).addName(validPlayer));
             return false;
         }
@@ -694,8 +694,8 @@ public final class Olympiad {
             int classId = noble.getBaseClassId();
             if (classId < 88 || classId >= 123 && classId <= 130) // Если это не 3-я профа, то исправляем со 2-й на 3-ю.
                 for (ClassId id : ClassId.VALUES)
-                    if (id.level() == 3 && id.getParent().getId() == classId) {
-                        classId = id.getId();
+                    if (id.level() == 3 && id.getParent().id() == classId) {
+                        classId = id.id();
                         break;
                     }
 

@@ -63,7 +63,7 @@ public final class _257_GuardIsBusy extends Quest {
                 if (qs != null && qs.getInt("Ex") != 10) {
                     st.showQuestionMark(26);
                     qs.set("Ex", "10");
-                    if (st.getPlayer().getClassId().isMage()) {
+                    if (st.getPlayer().getClassId().isMage) {
                         st.playTutorialVoice("tutorial_voice_027");
                         st.giveItems(5790, 3000);
                     } else {

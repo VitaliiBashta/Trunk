@@ -20,16 +20,18 @@ public final class _901_HowLavasaurusesAreMade extends Quest {
     private static final int LAVASAURUS_HEAD_FRAGMENT = 21910; // Lavasaurus Head Fragment
     private static final int LAVASAURUS_BODY_FRAGMENT = 21911; // Lavasaurus Body Fragment
     private static final int LAVASAURUS_HORN_FRAGMENT = 21912; // Lavasaurus Horn Fragment
+    private static final List<Integer> fragments = List.of(
+            LAVASAURUS_STONE_FRAGMENT, LAVASAURUS_HEAD_FRAGMENT, LAVASAURUS_BODY_FRAGMENT, LAVASAURUS_HORN_FRAGMENT);
     // Monster's
     private static final List<Integer> KILLING_MONSTERS = List.of(18799, 18800, 18801, 18802, 18803);
     // Chance's
     private static final int DROP_CHANCE = 5;
 
     public _901_HowLavasaurusesAreMade() {
-        super(PARTY_ONE); //TODO: мб PARTY_ALL?
+        super(PARTY_ALL);
         addStartNpc(ROONEY);
         addTalkId(ROONEY);
-        addQuestItem(LAVASAURUS_STONE_FRAGMENT, LAVASAURUS_HEAD_FRAGMENT, LAVASAURUS_BODY_FRAGMENT, LAVASAURUS_HORN_FRAGMENT);
+        addQuestItem(fragments);
         addKillId(KILLING_MONSTERS);
     }
 
@@ -39,23 +41,23 @@ public final class _901_HowLavasaurusesAreMade extends Quest {
             st.setState(STARTED);
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("blacksmith_rooney_q901_12a.htm")) {
-            st.giveItems(TOTEM_OF_BODY, 1);
+        } else if ("blacksmith_rooney_q901_12a.htm".equalsIgnoreCase(event)) {
+            st.giveItems(TOTEM_OF_BODY);
             st.playSound(SOUND_FINISH);
             st.setState(COMPLETED);
             st.exitCurrentQuest(this);
-        } else if (event.equalsIgnoreCase("blacksmith_rooney_q901_12b.htm")) {
-            st.giveItems(TOTEM_OF_SPIRIT, 1);
+        } else if ("blacksmith_rooney_q901_12b.htm".equalsIgnoreCase(event)) {
+            st.giveItems(TOTEM_OF_SPIRIT);
             st.playSound(SOUND_FINISH);
             st.setState(COMPLETED);
             st.exitCurrentQuest(this);
-        } else if (event.equalsIgnoreCase("blacksmith_rooney_q901_12c.htm")) {
-            st.giveItems(TOTEM_OF_FORTITUDE, 1);
+        } else if ("blacksmith_rooney_q901_12c.htm".equalsIgnoreCase(event)) {
+            st.giveItems(TOTEM_OF_FORTITUDE);
             st.playSound(SOUND_FINISH);
             st.setState(COMPLETED);
             st.exitCurrentQuest(this);
-        } else if (event.equalsIgnoreCase("blacksmith_rooney_q901_12d.htm")) {
-            st.giveItems(TOTEM_OF_COURAGE, 1);
+        } else if ("blacksmith_rooney_q901_12d.htm".equalsIgnoreCase(event)) {
+            st.giveItems(TOTEM_OF_COURAGE);
             st.playSound(SOUND_FINISH);
             st.setState(COMPLETED);
             st.exitCurrentQuest(this);
@@ -83,9 +85,12 @@ public final class _901_HowLavasaurusesAreMade extends Quest {
                 if (st.getInt("collect") == 1)
                     htmltext = "blacksmith_rooney_q901_07.htm";
                 else {
-                    if (st.haveQuestItem(LAVASAURUS_STONE_FRAGMENT, 10) && st.haveQuestItem(LAVASAURUS_HEAD_FRAGMENT, 10) && st.haveQuestItem(LAVASAURUS_BODY_FRAGMENT, 10) && st.haveQuestItem(LAVASAURUS_HORN_FRAGMENT, 10)) {
+                    if (st.haveQuestItem(LAVASAURUS_STONE_FRAGMENT, 10)
+                            && st.haveQuestItem(LAVASAURUS_HEAD_FRAGMENT, 10)
+                            && st.haveQuestItem(LAVASAURUS_BODY_FRAGMENT, 10)
+                            && st.haveQuestItem(LAVASAURUS_HORN_FRAGMENT, 10)) {
                         htmltext = "blacksmith_rooney_q901_05.htm";
-                        st.takeAllItems(LAVASAURUS_STONE_FRAGMENT, LAVASAURUS_HEAD_FRAGMENT, LAVASAURUS_BODY_FRAGMENT, LAVASAURUS_HORN_FRAGMENT);
+                        st.takeItems(fragments);
                         st.set("collect", 1);
                     } else
                         htmltext = "blacksmith_rooney_q901_06.htm";

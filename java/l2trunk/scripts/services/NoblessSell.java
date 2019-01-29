@@ -12,6 +12,8 @@ import l2trunk.gameserver.network.serverpackets.MagicSkillUse;
 import l2trunk.gameserver.network.serverpackets.SkillList;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.scripts.quests._234_FatesWhisper;
+import l2trunk.scripts.quests._235_MimirsElixir;
+import l2trunk.scripts.quests._236_SeedsOfChaos;
 
 public final class NoblessSell extends Functions {
     public void get() {
@@ -43,24 +45,21 @@ public final class NoblessSell extends Functions {
         Player player = getSelf();
         if (player == null)
             return;
-        Quest q = QuestManager.getQuest(_234_FatesWhisper.class);
-        QuestState qs = player.getQuestState(q.getClass());
+        QuestState qs = player.getQuestState(_234_FatesWhisper.class);
         if (qs != null)
             qs.exitCurrentQuest(true);
-        q.newQuestState(player, Quest.COMPLETED);
+        QuestManager.getQuest(_234_FatesWhisper.class).newQuestState(player, Quest.COMPLETED);
 
         if (player.getRace() == Race.kamael) {
-            q = QuestManager.getQuest("_236_SeedsOfChaos");
-            qs = player.getQuestState(q.getClass());
+            qs = player.getQuestState(_236_SeedsOfChaos.class);
             if (qs != null)
                 qs.exitCurrentQuest(true);
-            q.newQuestState(player, Quest.COMPLETED);
+            QuestManager.getQuest(_236_SeedsOfChaos.class).newQuestState(player, Quest.COMPLETED);
         } else {
-            q = QuestManager.getQuest("_235_MimirsElixir");
-            qs = player.getQuestState(q.getClass());
+            qs = player.getQuestState(_235_MimirsElixir.class);
             if (qs != null)
                 qs.exitCurrentQuest(true);
-            q.newQuestState(player, Quest.COMPLETED);
+            QuestManager.getQuest(_235_MimirsElixir.class).newQuestState(player, Quest.COMPLETED);
         }
     }
 

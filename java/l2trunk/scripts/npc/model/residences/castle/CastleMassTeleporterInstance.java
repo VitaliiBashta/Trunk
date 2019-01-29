@@ -14,6 +14,7 @@ import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.Location;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
@@ -32,19 +33,19 @@ public final class CastleMassTeleporterInstance extends NpcInstance {
             return;
 
         if (_teleportTask != null) {
-            showChatWindow(player, "residence2/castle/CastleTeleportDelayed.htm", "%teleportIn%", getSecondsToTP());
+            showChatWindow(player, "residence2/castle/CastleTeleportDelayed.htm", Map.of("%teleportIn%", getSecondsToTP()));
             return;
         }
 
         _teleportTask = ThreadPoolManager.INSTANCE.schedule(new TeleportTask(), isAllTowersDead() ? 480000L : 30000L);
 
-        showChatWindow(player, "residence2/castle/CastleTeleportDelayed.htm", "%teleportIn%", getSecondsToTP());
+        showChatWindow(player, "residence2/castle/CastleTeleportDelayed.htm", Map.of("%teleportIn%", getSecondsToTP()));
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
         if (_teleportTask != null)
-            showChatWindow(player, "residence2/castle/CastleTeleportDelayed.htm", "%teleportIn%", getSecondsToTP());
+            showChatWindow(player, "residence2/castle/CastleTeleportDelayed.htm", Map.of("%teleportIn%", getSecondsToTP()));
         else {
             if (isAllTowersDead())
                 showChatWindow(player, "residence2/castle/gludio_mass_teleporter002.htm");

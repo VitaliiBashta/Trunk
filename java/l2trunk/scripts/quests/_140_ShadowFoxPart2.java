@@ -6,7 +6,6 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _140_ShadowFoxPart2 extends Quest {
     // NPCs
@@ -37,7 +36,7 @@ public final class _140_ShadowFoxPart2 extends Quest {
     @Override
     public String onFirstTalk(NpcInstance npc, Player player) {
         QuestState qs = player.getQuestState(_139_ShadowFoxPart1.class);
-        if (qs != null && qs.isCompleted() && player.getQuestState(getClass()) == null)
+        if (qs != null && qs.isCompleted() && player.getQuestState(this) == null)
             newQuestState(player, STARTED);
         return "";
     }
@@ -45,38 +44,37 @@ public final class _140_ShadowFoxPart2 extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("30895-02.htm")) {
+        if ("30895-02.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("30895-05.htm")) {
+        } else if ("30895-05.htm".equalsIgnoreCase(event)) {
             st.setCond(2);
             st.setState(STARTED);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("30895-09.htm")) {
+        } else if ("30895-09.htm".equalsIgnoreCase(event)) {
             st.playSound(SOUND_FINISH);
             st.giveItems(ADENA_ID, 18775);
             st.addExpAndSp(30000, 2000);
             Quest q = QuestManager.getQuest(_141_ShadowFoxPart3.class);
-            if (q != null)
-                q.newQuestState(st.getPlayer(), STARTED);
+            q.newQuestState(st.getPlayer(), STARTED);
             st.exitCurrentQuest(false);
-        } else if (event.equalsIgnoreCase("30912-07.htm")) {
+        } else if ("30912-07.htm".equalsIgnoreCase(event)) {
             st.setCond(3);
             st.setState(STARTED);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("30912-09.htm")) {
+        } else if ("30912-09.htm".equalsIgnoreCase(event)) {
             st.takeItems(CRYSTAL, 5);
             if (Rnd.chance(60)) {
-                st.giveItems(OXYDE, 1);
+                st.giveItems(OXYDE);
                 if (st.getQuestItemsCount(OXYDE) >= 3) {
                     htmltext = "30912-09b.htm";
                     st.setCond(4);
                     st.setState(STARTED);
                     st.playSound(SOUND_MIDDLE);
-                    st.takeItems(CRYSTAL, -1);
-                    st.takeItems(OXYDE, -1);
-                    st.giveItems(CRYPT, 1);
+                    st.takeItems(CRYSTAL);
+                    st.takeItems(OXYDE);
+                    st.giveItems(CRYPT);
                 }
             } else
                 htmltext = "30912-09a.htm";

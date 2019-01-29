@@ -22,16 +22,10 @@ public class CastleFakeTowerInstance extends NpcInstance {
         return false;
     }
 
-    /**
-     * Вышки не умеют говорить
-     */
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
     }
 
-    /**
-     * Вышки не умеют говорить
-     */
     @Override
     public void showChatWindow(Player player, String filename) {
     }
@@ -41,11 +35,6 @@ public class CastleFakeTowerInstance extends NpcInstance {
         return false;
     }
 
-    /**
-     * Фэйковые вышки неуязвимы
-     *
-     * @return true
-     */
     @Override
     public boolean isInvul() {
         return true;

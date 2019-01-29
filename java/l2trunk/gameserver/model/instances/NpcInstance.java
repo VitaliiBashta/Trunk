@@ -61,6 +61,7 @@ import l2trunk.gameserver.templates.npc.Faction;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.templates.spawn.SpawnRange;
 import l2trunk.gameserver.utils.*;
+import l2trunk.scripts.quests._136_MoreThanMeetsTheEye;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -109,8 +110,7 @@ public class NpcInstance extends Creature {
     private StatsSet parameters = StatsSet.EMPTY;
     private int displayId = 0;
     private ScheduledFuture<?> _broadcastCharInfoTask;
-    private boolean _isBusy;
-    private String _busyMessage = "";
+    private boolean isBusy;
     private boolean isUnderground = false;
 
     public NpcInstance(int objectId, NpcTemplate template) {
@@ -125,7 +125,7 @@ public class NpcInstance extends Creature {
         _showBoard = getParameter(SHOW_BOARD, "");
 
         template.getSkills().values().stream()
-                .mapToInt(s ->s.id)
+                .mapToInt(s -> s.id)
                 .forEach(this::addSkill);
 
         setName(template.name);
@@ -187,7 +187,7 @@ public class NpcInstance extends Creature {
         final AcquireSkillList asl = new AcquireSkillList(t, skills.size());
 
         for (SkillLearn s : skills) {
-            asl.addSkill(s.getId(), s.getLevel(), s.getLevel(), s.getCost(), 0);
+            asl.addSkill(s);
         }
 
         if (skills.size() == 0) {
@@ -219,7 +219,7 @@ public class NpcInstance extends Creature {
         final AcquireSkillList asl = new AcquireSkillList(AcquireType.SUB_UNIT, learns.size());
 
         for (SkillLearn s : learns) {
-            asl.addSkill(s.getId(), s.getLevel(), s.getLevel(), s.getCost(), 1, Clan.SUBUNIT_KNIGHT4);
+            asl.addSkill(s, 1, Clan.SUBUNIT_KNIGHT4);
         }
 
         if (learns.size() == 0) {
@@ -851,14 +851,14 @@ public class NpcInstance extends Creature {
         player.sendActionFailed();
         player.stopMove(false);
 
-        if (_isBusy) {
+        if (isBusy) {
             showBusyWindow(player);
         } else if (isHasChatWindow()) {
             boolean flag = false;
             List<Quest> qlst = getTemplate().getEventQuests(QuestEventType.NPC_FIRST_TALK);
-            for (Quest element : qlst) {
-                QuestState qs = player.getQuestState(element.getName());
-                if (((qs == null) || !qs.isCompleted()) && element.notifyFirstTalk(this, player)) {
+            for (Quest quest : qlst) {
+                QuestState qs = player.getQuestState(quest);
+                if (((qs == null) || !qs.isCompleted()) && quest.notifyFirstTalk(this, player)) {
                     flag = true;
                 }
             }
@@ -888,7 +888,7 @@ public class NpcInstance extends Creature {
 
         try {
             // Get the state of the selected quest
-            QuestState qs = player.getQuestState(questName);
+            QuestState qs = player.getQuestState(QuestManager.getQuest(questName));
             if (qs != null) {
                 if (qs.isCompleted()) {
                     showChatWindow(player, "completed-quest.htm");
@@ -1085,7 +1085,7 @@ public class NpcInstance extends Creature {
 
                 boolean reset = false;
                 for (SkillLearn skill : skills) {
-                    if (player.getKnownSkill(skill.getId()) != null) {
+                    if (player.getKnownSkill(skill.id()) != null) {
                         reset = true;
                         break;
                     }
@@ -1102,8 +1102,8 @@ public class NpcInstance extends Creature {
                 }
 
                 for (SkillLearn skill : skills) {
-                    if (player.removeSkill(skill.getId(), true) != null) {
-                        ItemFunctions.addItem(player, skill.getItemId(), skill.getItemCount(), true, "RemoveTransferSkill");
+                    if (player.removeSkill(skill.id(), true) != null) {
+                        ItemFunctions.addItem(player, skill.itemId(), skill.itemCount(), true, "RemoveTransferSkill");
                     }
                 }
             } else if (command.startsWith("ExitFromQuestInstance")) {
@@ -1167,7 +1167,7 @@ public class NpcInstance extends Creature {
                     sb.append("]<br1>\n");
                 } else {
                     if (Config.ALLOW_MULTILANG_GATEKEEPER) {
-                        if (player.getVar("tplangg").equals("ru")) {
+                        if ("ru".equals(player.getVar("tplangg"))) {
                             sb.append("[scripts_Util:QuestGatekeeper ").append(tl.getX()).append(" ").append(tl.getY()).append(" ").append(tl.getZ()).append(" ").append(tl.getPrice()).append(" ").append(tl.getItem().getItemId()).append(" @811;F;").append("|").append(tl.getStringNameLang()).append(" - ").append(tl.getPrice()).append(" ").append(HtmlUtils.htmlItemName(tl.getItem().getItemId())).append("]<br1>\n");
                         } else {
                             sb.append("[scripts_Util:QuestGatekeeper ").append(tl.getX()).append(" ").append(tl.getY()).append(" ").append(tl.getZ()).append(" ").append(tl.getPrice()).append(" ").append(tl.getItem().getItemId()).append(" @811;F;").append("|").append(tl.getStringName()).append(" - ").append(tl.getPrice()).append(" ").append(HtmlUtils.htmlItemName(tl.getItem().getItemId())).append("]<br1>\n");
@@ -1189,13 +1189,13 @@ public class NpcInstance extends Creature {
     private void showQuestWindow(Player player) {
         // collect awaiting quests and start points
         Set<Quest> options = player.getQuestsForEvent(this, QuestEventType.QUEST_TALK)
-                .filter(x -> x.getQuest().getQuestIntId() > 0)
+                .filter(x -> x.getQuest().questId > 0)
                 .map(QuestState::getQuest)
                 .collect(Collectors.toSet());
 
 
         options.addAll(getTemplate().getEventQuests(QuestEventType.QUEST_START).stream()
-                .filter(x -> x.getQuestIntId() > 0)
+                .filter(x -> x.questId > 0)
                 .collect(Collectors.toSet()));
 
 
@@ -1227,7 +1227,11 @@ public class NpcInstance extends Creature {
         player.sendPacket(html);
     }
 
-    public void showChatWindow(Player player, int val, Object... replace) {
+    public void showChatWindow(Player player, int val) {
+        showChatWindow(player, val, null);
+    }
+
+    public final void showChatWindow(Player player, int val, Map<String, String> replace) {
         if ((getTemplate().getTeleportList().size() > 0) && checkForDominionWard(player)) {
             return;
         }
@@ -1282,21 +1286,19 @@ public class NpcInstance extends Creature {
         }
 
         NpcHtmlMessage packet = new NpcHtmlMessage(player, this, filename, val);
-        if ((replace.length % 2) == 0) {
-            for (int i = 0; i < replace.length; i += 2) {
-                packet.replace(String.valueOf(replace[i]), String.valueOf(replace[i + 1]));
-            }
-        }
+        replace.forEach(packet::replace);
+
         player.sendPacket(packet);
     }
 
-    public void showChatWindow(Player player, String filename, Object... replace) {
+    public void showChatWindow(Player player, String filename) {
+        showChatWindow(player, filename, null);
+    }
+
+    public void showChatWindow(Player player, String filename, Map<String, String> replace) {
         NpcHtmlMessage packet = new NpcHtmlMessage(player, this, filename, 0);
-        if ((replace.length % 2) == 0) {
-            for (int i = 0; i < replace.length; i += 2) {
-                packet.replace(String.valueOf(replace[i]), String.valueOf(replace[i + 1]));
-            }
-        }
+        if (replace != null)
+            replace.forEach(packet::replace);
         player.sendPacket(packet);
     }
 
@@ -1327,19 +1329,11 @@ public class NpcInstance extends Creature {
     }
 
     public final boolean isBusy() {
-        return _isBusy;
+        return isBusy;
     }
 
     public void setBusy(boolean isBusy) {
-        _isBusy = isBusy;
-    }
-
-    public final String getBusyMessage() {
-        return _busyMessage;
-    }
-
-    public void setBusyMessage(String message) {
-        _busyMessage = message;
+        this.isBusy = isBusy;
     }
 
     private void showBusyWindow(Player player) {
@@ -1347,6 +1341,7 @@ public class NpcInstance extends Creature {
         html.setFile("npcbusy.htm");
         html.replace("%npcname%", getName());
         html.replace("%playername%", player.getName());
+        String _busyMessage = "";
         html.replace("%busymessage%", _busyMessage);
         player.sendPacket(html);
     }
@@ -1363,7 +1358,7 @@ public class NpcInstance extends Creature {
         if (getTemplate().getTeachInfo().isEmpty()) {
             NpcHtmlMessage html = new NpcHtmlMessage(player, this);
             String sb = "<html><head><body>" +
-                    "I cannot teach you. My class list is empty.<br> Ask admin to fix it. <br>NpcId:" + npcId + ", Your classId:" + player.getClassId().getId() + "<br>" +
+                    "I cannot teach you. My class list is empty.<br> Ask admin to fix it. <br>NpcId:" + npcId + ", Your classId:" + player.getClassId().id() + "<br>" +
                     "</body></html>";
             html.setHtml(sb);
             player.sendPacket(html);
@@ -1397,14 +1392,14 @@ public class NpcInstance extends Creature {
                 continue;
             }
 
-            Skill sk = SkillTable.INSTANCE.getInfo(s.getId(), s.getLevel());
+            Skill sk = SkillTable.INSTANCE.getInfo(s.id(), s.level());
             if ((sk == null) || !sk.getCanLearn(player.getClassId()) || !sk.canTeachBy(npcId)) {
                 continue;
             }
 
             counts++;
 
-            asl.addSkill(s.getId(), s.getLevel(), s.getLevel(), s.getCost(), 0);
+            asl.addSkill(s);
         }
 
         if (counts == 0) {
@@ -1451,7 +1446,7 @@ public class NpcInstance extends Creature {
 
     private void showTransformationMultisell(Player player) {
         if (!Config.ALLOW_LEARN_TRANS_SKILLS_WO_QUEST) {
-            if (!player.isQuestCompleted("_136_MoreThanMeetsTheEye")) {
+            if (!player.isQuestCompleted(_136_MoreThanMeetsTheEye.class)) {
                 showChatWindow(player, "trainer/" + getNpcId() + "-nobuy.htm");
                 return;
             }
@@ -1464,7 +1459,7 @@ public class NpcInstance extends Creature {
 
     public void showTransformationSkillList(Player player, AcquireType type) {
         if (!Config.ALLOW_LEARN_TRANS_SKILLS_WO_QUEST) {
-            if (!player.isQuestCompleted("_136_MoreThanMeetsTheEye")) {
+            if (!player.isQuestCompleted(_136_MoreThanMeetsTheEye.class)) {
                 showChatWindow(player, "trainer/" + getNpcId() + "-noquest.htm");
                 return;
             }

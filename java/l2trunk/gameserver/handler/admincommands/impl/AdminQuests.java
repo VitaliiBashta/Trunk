@@ -24,7 +24,7 @@ public class AdminQuests implements IAdminCommandHandler {
 
     private static boolean ShowQuestState(QuestState qs, Player activeChar) {
         Map<String, String> vars = qs.getVars();
-        int id = qs.getQuest().getQuestIntId();
+        int id = qs.getQuest().questId;
         String char_name = qs.getPlayer().getName();
 
         NpcHtmlMessage adminReply = new NpcHtmlMessage(5);
@@ -58,8 +58,8 @@ public class AdminQuests implements IAdminCommandHandler {
         StringBuilder replyMSG = new StringBuilder("<html><body><table width=260>");
         targetChar.getAllQuestsStates().stream()
                 .filter(Objects::nonNull)
-                .filter(qs -> qs.getQuest().getQuestIntId() != 255)
-                .forEach(qs -> replyMSG.append(fmtListRow.sprintf(qs.getQuest().getQuestIntId(),
+                .filter(qs -> qs.getQuest().questId != 255)
+                .forEach(qs -> replyMSG.append(fmtListRow.sprintf(qs.getQuest().questId,
                         targetChar.getName(),
                         qs.getQuest().getName(),
                         qs.getStateName())));
@@ -95,13 +95,13 @@ public class AdminQuests implements IAdminCommandHandler {
                     activeChar.sendMessage("Quest " + wordList[1] + " undefined");
                     return true;
                 }
-                if (wordList.length < 3 || wordList[2].equalsIgnoreCase("SHOW"))
+                if (wordList.length < 3 || "SHOW".equalsIgnoreCase(wordList[2]))
                     return cmd_Show(_quest, wordList, activeChar);
-                if (wordList[2].equalsIgnoreCase("STATE"))
+                if ("STATE".equalsIgnoreCase(wordList[2]))
                     return cmd_State(_quest, wordList, activeChar);
-                if (wordList[2].equalsIgnoreCase("VAR"))
+                if ("VAR".equalsIgnoreCase(wordList[2]))
                     return cmd_Var(_quest, wordList, activeChar);
-                if (wordList[2].equalsIgnoreCase("CLEAR"))
+                if ("CLEAR".equalsIgnoreCase(wordList[2]))
                     return cmd_Clear(_quest, wordList, activeChar);
                 return cmd_Show(_quest, wordList, activeChar);
         }
@@ -111,7 +111,7 @@ public class AdminQuests implements IAdminCommandHandler {
     private boolean cmd_Clear(Quest _quest, String[] wordList, Player activeChar) {
         // quest id|name CLEAR [target]
         Player targetChar = getTargetChar(wordList, 3, activeChar);
-        QuestState qs = targetChar.getQuestState(_quest.getName());
+        QuestState qs = targetChar.getQuestState(_quest);
         if (qs == null) {
             activeChar.sendMessage("Player " + targetChar.getName() + " havn't Quest [" + _quest.getName() + "]");
             return false;
@@ -123,7 +123,7 @@ public class AdminQuests implements IAdminCommandHandler {
     private boolean cmd_Show(Quest _quest, String[] wordList, Player activeChar) {
         // quest id|name SHOW [target]
         Player targetChar = getTargetChar(wordList, 3, activeChar);
-        QuestState qs = targetChar.getQuestState(_quest.getName());
+        QuestState qs = targetChar.getQuestState(_quest);
         if (qs == null) {
             activeChar.sendMessage("Player " + targetChar.getName() + " havn't Quest [" + _quest.getName() + "]");
             return false;
@@ -138,7 +138,7 @@ public class AdminQuests implements IAdminCommandHandler {
         }
 
         Player targetChar = getTargetChar(wordList, 5, activeChar);
-        QuestState qs = targetChar.getQuestState(_quest.getName());
+        QuestState qs = targetChar.getQuestState(_quest);
         if (qs == null) {
             activeChar.sendMessage("Player " + targetChar.getName() + " havn't Quest [" + _quest.getName() + "], init quest by command:");
             activeChar.sendMessage("//quest id|name STATE 1|2|3 [target]");
@@ -166,7 +166,7 @@ public class AdminQuests implements IAdminCommandHandler {
         }
 
         Player targetChar = getTargetChar(wordList, 4, activeChar);
-        QuestState qs = targetChar.getQuestState(_quest.getName());
+        QuestState qs = targetChar.getQuestState(_quest);
         if (qs == null) {
             activeChar.sendMessage("Init Quest [" + _quest.getName() + "] for " + targetChar.getName());
             qs = _quest.newQuestState(targetChar, state);

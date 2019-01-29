@@ -18,8 +18,10 @@ import l2trunk.gameserver.templates.item.ItemTemplate;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.TimeUtils;
 import l2trunk.scripts.quests._504_CompetitionForTheBanditStronghold;
+import net.sf.ehcache.search.parser.MAggregate;
 
 import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 public class BanditMessagerInstance extends NpcInstance {
@@ -173,7 +175,7 @@ public class BanditMessagerInstance extends NpcInstance {
 
         SiegeClanObject siegeClan = siegeEvent.getSiegeClan(ClanHallTeamBattleEvent.ATTACKERS, clan);
         if (siegeEvent.isRegistrationOver()) {
-            showChatWindow(player, "quests/_504_CompetitionForTheBanditStronghold/azit_messenger_q0504_03.htm", "%siege_time%", TimeUtils.toSimpleFormat(clanHall.getSiegeDate()));
+            showChatWindow(player, "quests/_504_CompetitionForTheBanditStronghold/azit_messenger_q0504_03.htm", Map.of("%siege_time%", TimeUtils.toSimpleFormat(clanHall.getSiegeDate())));
             return false;
         }
 
@@ -251,10 +253,10 @@ public class BanditMessagerInstance extends NpcInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
         Clan clan = getClanHall().getOwner();
         if (clan != null)
-            showChatWindow(player, "residence2/clanhall/azit_messenger001.htm", "%owner_name%", clan.getName());
+            showChatWindow(player, "residence2/clanhall/azit_messenger001.htm", Map.of("%owner_name%", clan.getName()));
         else
             showChatWindow(player, "residence2/clanhall/azit_messenger002.htm");
     }
