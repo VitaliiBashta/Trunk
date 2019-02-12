@@ -19,29 +19,29 @@ public final class NevitSystem {
     private static final int MAX_POINTS = 7200;
     private static final int BONUS_EFFECT_TIME = 180; // 180 the effect lasts seconds bonus Nevit.
 
-    private final Player _player;
-    private int _points = 0;
+    private final Player player;
+    private int points = 0;
     private int _time;
     private ScheduledFuture<?> _adventTask;
     private ScheduledFuture<?> _nevitEffectTask;
-    private int _percent;
+    private int percent;
     private boolean active;
 
     public NevitSystem(Player player) {
-        _player = player;
+        this.player = player;
     }
 
     public void setPoints(int points, int time) {
-        _points = points;
+        this.points = points;
         active = false;
-        _percent = getPercent(_points);
+        percent = getPercent(this.points);
 
         Calendar temp = Calendar.getInstance();
         temp.set(Calendar.HOUR_OF_DAY, 6);
         temp.set(Calendar.MINUTE, 30);
         temp.set(Calendar.SECOND, 0);
         temp.set(Calendar.MILLISECOND, 0);
-        if (_player.getLastAccess() < temp.getTimeInMillis() / 1000L && System.currentTimeMillis() > temp.getTimeInMillis())
+        if (player.getLastAccess() < temp.getTimeInMillis() / 1000L && System.currentTimeMillis() > temp.getTimeInMillis())
             _time = ADVENT_TIME;
         else
             _time = time;
@@ -49,19 +49,19 @@ public final class NevitSystem {
 
     public void restartSystem() {
         _time = ADVENT_TIME;
-        _player.sendPacket(new ExNavitAdventTimeChange(active, _time));
+        player.sendPacket(new ExNavitAdventTimeChange(active, _time));
     }
 
     public void onEnterWorld() {
-        _player.sendPacket(new ExNavitAdventPointInfo(_points));
-        _player.sendPacket(new ExNavitAdventTimeChange(active, _time));
-        startNevitEffect(_player.getVarInt("nevit"));
-        if (_percent >= 45 && _percent < 50)
-            _player.sendPacket(SystemMsg.YOU_ARE_STARTING_TO_FEEL_THE_EFFECTS_OF_NEVITS_BLESSING);
-        else if (_percent >= 50 && _percent < 75)
-            _player.sendPacket(SystemMsg.YOU_ARE_FURTHER_INFUSED_WITH_THE_BLESSINGS_OF_NEVIT_CONTINUE_TO_BATTLE_EVIL_WHEREVER_IT_MAY_LURK);
-        else if (_percent >= 75)
-            _player.sendPacket(SystemMsg.NEVITS_BLESSING_SHINES_STRONGLY_FROM_ABOVE_YOU_CAN_ALMOST_SEE_HIS_DIVINE_AURA);
+        player.sendPacket(new ExNavitAdventPointInfo(points));
+        player.sendPacket(new ExNavitAdventTimeChange(active, _time));
+        startNevitEffect(player.getVarInt("nevit"));
+        if (percent >= 45 && percent < 50)
+            player.sendPacket(SystemMsg.YOU_ARE_STARTING_TO_FEEL_THE_EFFECTS_OF_NEVITS_BLESSING);
+        else if (percent >= 50 && percent < 75)
+            player.sendPacket(SystemMsg.YOU_ARE_FURTHER_INFUSED_WITH_THE_BLESSINGS_OF_NEVIT_CONTINUE_TO_BATTLE_EVIL_WHEREVER_IT_MAY_LURK);
+        else if (percent >= 75)
+            player.sendPacket(SystemMsg.NEVITS_BLESSING_SHINES_STRONGLY_FROM_ABOVE_YOU_CAN_ALMOST_SEE_HIS_DIVINE_AURA);
     }
 
     public void startAdventTask() {
@@ -70,7 +70,7 @@ public final class NevitSystem {
             if (_time > 0 && _adventTask == null)
                 _adventTask = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new AdventTask(), 30000L, 30000L);
 
-            _player.sendPacket(new ExNavitAdventTimeChange(active, _time));
+            player.sendPacket(new ExNavitAdventTimeChange(active, _time));
         }
     }
 
@@ -80,11 +80,11 @@ public final class NevitSystem {
             time += getEffectTime();
         }
         if (time > 0) {
-            _player.setVar("nevit", time, -1);
-            _player.sendPacket(new ExNavitAdventEffect(time));
-            _player.sendPacket(SystemMsg.THE_ANGEL_NEVIT_HAS_BLESSED_YOU_FROM_ABOVE_YOU_ARE_IMBUED_WITH_FULL_VITALITY_AS_WELL_AS_A_VITALITY_REPLENISHING_EFFECT);
-            _player.startAbnormalEffect(AbnormalEffect.S_NAVIT);
-            _player.addVitality(Config.ALT_VITALITY_NEVIT_UP_POINT);
+            player.setVar("nevit", time);
+            player.sendPacket(new ExNavitAdventEffect(time));
+            player.sendPacket(SystemMsg.THE_ANGEL_NEVIT_HAS_BLESSED_YOU_FROM_ABOVE_YOU_ARE_IMBUED_WITH_FULL_VITALITY_AS_WELL_AS_A_VITALITY_REPLENISHING_EFFECT);
+            player.startAbnormalEffect(AbnormalEffect.S_NAVIT);
+            player.addVitality(Config.ALT_VITALITY_NEVIT_UP_POINT);
             _nevitEffectTask = ThreadPoolManager.INSTANCE.schedule(new NevitEffectEnd(), time * 1000L);
         }
     }
@@ -101,7 +101,7 @@ public final class NevitSystem {
         }
         active = false;
         if (sendPacket)
-            _player.sendPacket(new ExNavitAdventTimeChange(false, _time));
+            player.sendPacket(new ExNavitAdventTimeChange(false, _time));
     }
 
     private void stopNevitEffectTask(boolean saveTime) {
@@ -109,9 +109,9 @@ public final class NevitSystem {
             if (saveTime) {
                 int time = getEffectTime();
                 if (time > 0)
-                    _player.setVar("nevit", time, -1);
+                    player.setVar("nevit", time);
                 else
-                    _player.unsetVar("nevit");
+                    player.unsetVar("nevit");
             }
             _nevitEffectTask.cancel(true);
             _nevitEffectTask = null;
@@ -131,27 +131,27 @@ public final class NevitSystem {
     }
 
     public int getPoints() {
-        return _points;
+        return points;
     }
 
     public void addPoints(int val) {
-        _points += val;
-        int percent = getPercent(_points);
-        if (_percent != percent) {
-            _percent = percent;
-            if (_percent == 45)
-                _player.sendPacket(SystemMsg.YOU_ARE_STARTING_TO_FEEL_THE_EFFECTS_OF_NEVITS_BLESSING);
-            else if (_percent == 50)
-                _player.sendPacket(SystemMsg.YOU_ARE_FURTHER_INFUSED_WITH_THE_BLESSINGS_OF_NEVIT_CONTINUE_TO_BATTLE_EVIL_WHEREVER_IT_MAY_LURK);
-            else if (_percent == 75)
-                _player.sendPacket(SystemMsg.NEVITS_BLESSING_SHINES_STRONGLY_FROM_ABOVE_YOU_CAN_ALMOST_SEE_HIS_DIVINE_AURA);
+        points += val;
+        int percent = getPercent(points);
+        if (this.percent != percent) {
+            this.percent = percent;
+            if (this.percent == 45)
+                player.sendPacket(SystemMsg.YOU_ARE_STARTING_TO_FEEL_THE_EFFECTS_OF_NEVITS_BLESSING);
+            else if (this.percent == 50)
+                player.sendPacket(SystemMsg.YOU_ARE_FURTHER_INFUSED_WITH_THE_BLESSINGS_OF_NEVIT_CONTINUE_TO_BATTLE_EVIL_WHEREVER_IT_MAY_LURK);
+            else if (this.percent == 75)
+                player.sendPacket(SystemMsg.NEVITS_BLESSING_SHINES_STRONGLY_FROM_ABOVE_YOU_CAN_ALMOST_SEE_HIS_DIVINE_AURA);
         }
-        if (_points > MAX_POINTS) {
-            _percent = 0;
-            _points = 0;
+        if (points > MAX_POINTS) {
+            this.percent = 0;
+            points = 0;
             startNevitEffect(BONUS_EFFECT_TIME);
         }
-        _player.sendPacket(new ExNavitAdventPointInfo(_points));
+        player.sendPacket(new ExNavitAdventPointInfo(points));
     }
 
     private int getPercent(int points) {
@@ -178,7 +178,7 @@ public final class NevitSystem {
             } else {
                 addPoints(72);
                 if ((_time % 60) == 0)
-                    _player.sendPacket(new ExNavitAdventTimeChange(true, _time));
+                    player.sendPacket(new ExNavitAdventTimeChange(true, _time));
             }
         }
     }
@@ -186,11 +186,11 @@ public final class NevitSystem {
     private class NevitEffectEnd extends RunnableImpl {
         @Override
         public void runImpl() {
-            _player.sendPacket(new ExNavitAdventEffect(0));
-            _player.sendPacket(new ExNavitAdventPointInfo(_points));
-            _player.sendPacket(SystemMsg.NEVITS_BLESSING_HAS_ENDED_CONTINUE_YOUR_JOURNEY_AND_YOU_WILL_SURELY_MEET_HIS_FAVOR_AGAIN_SOMETIME_SOON);
-            _player.stopAbnormalEffect(AbnormalEffect.S_NAVIT);
-            _player.unsetVar("nevit");
+            player.sendPacket(new ExNavitAdventEffect(0));
+            player.sendPacket(new ExNavitAdventPointInfo(points));
+            player.sendPacket(SystemMsg.NEVITS_BLESSING_HAS_ENDED_CONTINUE_YOUR_JOURNEY_AND_YOU_WILL_SURELY_MEET_HIS_FAVOR_AGAIN_SOMETIME_SOON);
+            player.stopAbnormalEffect(AbnormalEffect.S_NAVIT);
+            player.unsetVar("nevit");
             stopNevitEffectTask(false);
         }
     }

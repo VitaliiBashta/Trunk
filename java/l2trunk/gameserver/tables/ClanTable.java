@@ -129,7 +129,7 @@ public enum ClanTable {
                 continue;
             }
 
-            clans.put(clan.getClanId(), clan);
+            clans.put(clan.clanId(), clan);
         }
     }
 
@@ -197,7 +197,7 @@ public enum ClanTable {
 
             leader.setPlayerInstance(player, false);
 
-            clans.put(clan.getClanId(), clan);
+            clans.put(clan.clanId(), clan);
 
             return clan;
         } else {
@@ -215,8 +215,8 @@ public enum ClanTable {
             clanMember.broadcastCharInfo();
         });
         clan.flush();
-        deleteClanFromDb(clan.getClanId());
-        clans.remove(clan.getClanId());
+        deleteClanFromDb(clan.clanId());
+        clans.remove(clan.clanId());
         player.sendPacket(SystemMsg.CLAN_HAS_DISPERSED);
     }
 
@@ -264,7 +264,7 @@ public enum ClanTable {
             alliances.put(alliance.getAllyId(), alliance);
 
             player.getClan().setAllyId(alliance.getAllyId());
-            for (Player temp : player.getClan().getOnlineMembers(0)) {
+            for (Player temp : player.getClan().getOnlineMembers()) {
                 temp.broadcastCharInfo();
             }
         }
@@ -312,8 +312,8 @@ public enum ClanTable {
 
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement("REPLACE INTO clan_wars (clan1, clan2) VALUES(?,?)")) {
-            statement.setInt(1, clan1.getClanId());
-            statement.setInt(2, clan2.getClanId());
+            statement.setInt(1, clan1.clanId());
+            statement.setInt(2, clan2.clanId());
             statement.execute();
         } catch (SQLException e) {
             LOG.warn("Could not store clan war data:", e);
@@ -333,8 +333,8 @@ public enum ClanTable {
 
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement("DELETE FROM clan_wars WHERE clan1=? AND clan2=?")) {
-            statement.setInt(1, clan1.getClanId());
-            statement.setInt(2, clan2.getClanId());
+            statement.setInt(1, clan1.clanId());
+            statement.setInt(2, clan2.clanId());
             statement.execute();
         } catch (SQLException e) {
             LOG.warn("Could not delete war data:", e);

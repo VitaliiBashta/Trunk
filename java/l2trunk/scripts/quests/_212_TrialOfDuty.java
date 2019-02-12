@@ -4,7 +4,6 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _212_TrialOfDuty extends Quest {
     private static final int MARK_OF_DUTY_ID = 2633;
@@ -68,28 +67,28 @@ public final class _212_TrialOfDuty extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        String htmltext = event;
-        if (event.equalsIgnoreCase("1")) {
-            htmltext = "hannavalt_q0212_04.htm";
-            st.setState(STARTED);
-            st.playSound(SOUND_ACCEPT);
-            st.setCond(1);
-            if (!st.getPlayer().getVarB("dd1")) {
-                st.giveItems(7562, 64);
-                st.getPlayer().setVar("dd1", "1", -1);
-            }
-        } else if (event.equalsIgnoreCase("30116_1"))
-            htmltext = "dustin_q0212_02.htm";
-        else if (event.equalsIgnoreCase("30116_2"))
-            htmltext = "dustin_q0212_03.htm";
-        else if (event.equalsIgnoreCase("30116_3"))
-            htmltext = "dustin_q0212_04.htm";
-        else if (event.equalsIgnoreCase("30116_4")) {
-            htmltext = "dustin_q0212_05.htm";
-            st.takeItems(TEAR_OF_LOYALTY_ID, 1);
-            st.setCond(14);
+        switch (event) {
+            case "1":
+                st.setState(STARTED);
+                st.playSound(SOUND_ACCEPT);
+                st.setCond(1);
+                if (!st.player.isVarSet("dd1")) {
+                    st.giveItems(7562, 64);
+                    st.player.setVar("dd1", 1);
+                }
+                return "hannavalt_q0212_04.htm";
+            case "30116_1":
+                return  "dustin_q0212_02.htm";
+            case "30116_2":
+                return  "dustin_q0212_03.htm";
+            case "30116_3":
+                return  "dustin_q0212_04.htm";
+            case "30116_4":
+                st.takeItems(TEAR_OF_LOYALTY_ID, 1);
+                st.setCond(14);
+                return  "dustin_q0212_05.htm";
         }
-        return htmltext;
+        return event;
     }
 
     @Override
@@ -103,8 +102,8 @@ public final class _212_TrialOfDuty extends Quest {
         int id = st.getState();
         int cond = st.getCond();
         if (npcId == 30109 && id == CREATED) {
-            if (st.getPlayer().getClassId().ordinal() == 0x04 || st.getPlayer().getClassId().ordinal() == 0x13 || st.getPlayer().getClassId().ordinal() == 0x20)
-                if (st.getPlayer().getLevel() >= 35)
+            if (st.player.getClassId().ordinal() == 0x04 || st.player.getClassId().ordinal() == 0x13 || st.player.getClassId().ordinal() == 0x20)
+                if (st.player.getLevel() >= 35)
                     htmltext = "hannavalt_q0212_03.htm";
                 else {
                     htmltext = "hannavalt_q0212_01.htm";
@@ -115,14 +114,14 @@ public final class _212_TrialOfDuty extends Quest {
                 st.exitCurrentQuest(true);
             }
         } else if (npcId == 30109) {
-            if (cond == 18 && st.getQuestItemsCount(LETTER_OF_DUSTIN_ID) > 0) {
+            if (cond == 18 && st.haveQuestItem(LETTER_OF_DUSTIN_ID) ) {
                 htmltext = "hannavalt_q0212_05.htm";
-                st.takeItems(LETTER_OF_DUSTIN_ID, -1);
-                st.giveItems(MARK_OF_DUTY_ID, 1);
-                if (!st.getPlayer().getVarB("prof2.1")) {
+                st.takeItems(LETTER_OF_DUSTIN_ID);
+                st.giveItems(MARK_OF_DUTY_ID);
+                if (!st.player.isVarSet("prof2.1")) {
                     st.addExpAndSp(RewardExp, RewardSP);
                     st.giveItems(ADENA_ID, RewardAdena);
-                    st.getPlayer().setVar("prof2.1", "1", -1);
+                    st.player.setVar("prof2.1", 1);
                 }
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest(false);
@@ -131,12 +130,11 @@ public final class _212_TrialOfDuty extends Quest {
         } else if (npcId == 30653) {
             if (cond == 1) {
                 htmltext = "sir_aron_tanford_q0212_01.htm";
-                if (st.getQuestItemsCount(OLD_KNIGHT_SWORD_ID) == 0)
-                    st.giveItems(OLD_KNIGHT_SWORD_ID, 1);
+                    st.giveItemIfNotHave(OLD_KNIGHT_SWORD_ID);
                 st.setCond(2);
-            } else if (cond == 2 && st.getQuestItemsCount(KNIGHTS_TEAR_ID) == 0)
+            } else if (cond == 2 && !st.haveQuestItem(KNIGHTS_TEAR_ID))
                 htmltext = "sir_aron_tanford_q0212_02.htm";
-            else if (cond == 3 && st.getQuestItemsCount(KNIGHTS_TEAR_ID) > 0) {
+            else if (cond == 3 && st.haveQuestItem(KNIGHTS_TEAR_ID) ) {
                 htmltext = "sir_aron_tanford_q0212_03.htm";
                 st.takeItems(KNIGHTS_TEAR_ID, 1);
                 st.takeItems(OLD_KNIGHT_SWORD_ID, 1);
@@ -149,27 +147,27 @@ public final class _212_TrialOfDuty extends Quest {
                 st.setCond(5);
             } else if (cond == 5 && st.getQuestItemsCount(TALIANUSS_REPORT_ID) == 0)
                 htmltext = "sir_kiel_nighthawk_q0212_02.htm";
-            else if (cond == 6 && st.getQuestItemsCount(TALIANUSS_REPORT_ID) > 0) {
+            else if (cond == 6 && st.haveQuestItem(TALIANUSS_REPORT_ID) ) {
                 htmltext = "sir_kiel_nighthawk_q0212_03.htm";
                 st.setCond(7);
-                st.giveItems(MIRROR_OF_ORPIC_ID, 1);
-            } else if (cond == 6 && st.getQuestItemsCount(MIRROR_OF_ORPIC_ID) > 0)
+                st.giveItems(MIRROR_OF_ORPIC_ID);
+            } else if (cond == 6 && st.haveQuestItem(MIRROR_OF_ORPIC_ID) )
                 htmltext = "sir_kiel_nighthawk_q0212_04.htm";
-            else if (st.getQuestItemsCount(TEAR_OF_CONFESSION_ID) > 0) {
+            else if (st.haveQuestItem(TEAR_OF_CONFESSION_ID) ) {
                 htmltext = "sir_kiel_nighthawk_q0212_05.htm";
                 st.takeItems(TEAR_OF_CONFESSION_ID, 1);
                 st.setCond(10);
             } else if (cond == 10)
                 htmltext = "sir_kiel_nighthawk_q0212_06.htm";
-        } else if (npcId == 30656 && cond == 8 && st.getQuestItemsCount(MIRROR_OF_ORPIC_ID) > 0) {
+        } else if (npcId == 30656 && cond == 8 && st.haveQuestItem(MIRROR_OF_ORPIC_ID) ) {
             htmltext = "spirit_of_sir_talianus_q0212_01.htm";
             st.takeItems(MIRROR_OF_ORPIC_ID, 1);
             st.takeItems(TALIANUSS_REPORT_ID, 1);
-            st.giveItems(TEAR_OF_CONFESSION_ID, 1);
+            st.giveItems(TEAR_OF_CONFESSION_ID);
             st.setCond(9);
         } else if (npcId == 30655) {
             if (cond == 10)
-                if (st.getPlayer().getLevel() >= 36) {
+                if (st.player.getLevel() >= 36) {
                     htmltext = "isael_silvershadow_q0212_02.htm";
                     st.setCond(11);
                 } else
@@ -178,37 +176,37 @@ public final class _212_TrialOfDuty extends Quest {
                 htmltext = "isael_silvershadow_q0212_03.htm";
             else if (cond == 12 && st.getQuestItemsCount(MILITAS_ARTICLE_ID) >= 20) {
                 htmltext = "isael_silvershadow_q0212_04.htm";
-                st.takeItems(MILITAS_ARTICLE_ID, st.getQuestItemsCount(MILITAS_ARTICLE_ID));
-                st.giveItems(TEAR_OF_LOYALTY_ID, 1);
+                st.takeItems(MILITAS_ARTICLE_ID);
+                st.giveItems(TEAR_OF_LOYALTY_ID);
                 st.setCond(13);
             } else if (cond == 13)
                 htmltext = "isael_silvershadow_q0212_05.htm";
         } else if (npcId == 30116) {
-            if (cond == 13 && st.getQuestItemsCount(TEAR_OF_LOYALTY_ID) > 0)
+            if (cond == 13 && st.haveQuestItem(TEAR_OF_LOYALTY_ID) )
                 htmltext = "dustin_q0212_01.htm";
-            else if (cond == 14 && !(st.getQuestItemsCount(ATEBALTS_SKULL_ID) > 0 && st.getQuestItemsCount(ATEBALTS_RIBS_ID) > 0 && st.getQuestItemsCount(ATEBALTS_SHIN_ID) > 0))
+            else if (cond == 14 && !(st.haveQuestItem(ATEBALTS_SKULL_ID)  && st.haveQuestItem(ATEBALTS_RIBS_ID)  && st.haveQuestItem(ATEBALTS_SHIN_ID) ))
                 htmltext = "dustin_q0212_06.htm";
             else if (cond == 15) {
                 htmltext = "dustin_q0212_07.htm";
                 st.takeItems(ATEBALTS_SKULL_ID, 1);
                 st.takeItems(ATEBALTS_RIBS_ID, 1);
                 st.takeItems(ATEBALTS_SHIN_ID, 1);
-                st.giveItems(SAINTS_ASHES_URN_ID, 1);
+                st.giveItems(SAINTS_ASHES_URN_ID);
                 st.setCond(16);
-            } else if (cond == 17 && st.getQuestItemsCount(LETTER_OF_WINDAWOOD_ID) > 0) {
+            } else if (cond == 17 && st.haveQuestItem(LETTER_OF_WINDAWOOD_ID) ) {
                 htmltext = "dustin_q0212_08.htm";
                 st.takeItems(LETTER_OF_WINDAWOOD_ID, 1);
-                st.giveItems(LETTER_OF_DUSTIN_ID, 1);
+                st.giveItems(LETTER_OF_DUSTIN_ID);
                 st.setCond(18);
             } else if (cond == 16)
                 htmltext = "dustin_q0212_09.htm";
             else if (cond == 18)
                 htmltext = "dustin_q0212_10.htm";
         } else if (npcId == 30311)
-            if (cond == 16 && st.getQuestItemsCount(SAINTS_ASHES_URN_ID) > 0) {
+            if (cond == 16 && st.haveQuestItem(SAINTS_ASHES_URN_ID) ) {
                 htmltext = "sir_collin_windawood_q0212_01.htm";
                 st.takeItems(SAINTS_ASHES_URN_ID, 1);
-                st.giveItems(LETTER_OF_WINDAWOOD_ID, 1);
+                st.giveItems(LETTER_OF_WINDAWOOD_ID);
                 st.setCond(17);
             } else if (cond == 17)
                 htmltext = "sir_collin_windawood_q0212_02.htm";
@@ -216,7 +214,7 @@ public final class _212_TrialOfDuty extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         if (npcId == 20190 || npcId == 20191) {
@@ -226,45 +224,41 @@ public final class _212_TrialOfDuty extends Quest {
                     st.playSound(SOUND_BEFORE_BATTLE);
                 }
         } else if (npcId == 27119 && cond == 2 && st.getQuestItemsCount(OLD_KNIGHT_SWORD_ID) > 0) {
-            st.giveItems(KNIGHTS_TEAR_ID, 1);
+            st.giveItems(KNIGHTS_TEAR_ID);
             st.playSound(SOUND_MIDDLE);
             st.setCond(3);
         } else if ((npcId == 20200 || npcId == 20201) && cond == 5 && st.getQuestItemsCount(TALIANUSS_REPORT_ID) == 0) {
             if (Rnd.chance(50)) {
-                st.giveItems(REPORT_PIECE_ID, 1);
+                st.giveItems(REPORT_PIECE_ID);
                 st.playSound(SOUND_ITEMGET);
             }
             if (st.getQuestItemsCount(REPORT_PIECE_ID) >= 10) {
-                st.takeItems(REPORT_PIECE_ID, st.getQuestItemsCount(REPORT_PIECE_ID));
-                st.giveItems(TALIANUSS_REPORT_ID, 1);
+                st.takeItems(REPORT_PIECE_ID);
+                st.giveItems(TALIANUSS_REPORT_ID);
                 st.setCond(6);
                 st.playSound(SOUND_MIDDLE);
             }
         } else if (npcId == 20144 && cond == 7 && Rnd.chance(20)) {
-            st.addSpawn(30656, npc.getX(), npc.getY(), npc.getZ(), 300000);
+            st.addSpawn(30656, npc.getLoc(),0, 300000);
             st.setCond(8);
             st.playSound(SOUND_MIDDLE);
         } else if (npcId >= 20577 && npcId <= 20582 && cond == 11 && st.getQuestItemsCount(MILITAS_ARTICLE_ID) < 20) {
             if (st.getQuestItemsCount(MILITAS_ARTICLE_ID) == 19) {
-                st.giveItems(MILITAS_ARTICLE_ID, 1);
+                st.giveItems(MILITAS_ARTICLE_ID);
                 st.setCond(12);
                 st.playSound(SOUND_MIDDLE);
             } else {
-                st.giveItems(MILITAS_ARTICLE_ID, 1);
+                st.giveItems(MILITAS_ARTICLE_ID);
                 st.playSound(SOUND_ITEMGET);
             }
         } else if (npcId == 20270 && cond == 14 && Rnd.chance(50))
             if (st.getQuestItemsCount(ATEBALTS_SKULL_ID) == 0) {
-                st.giveItems(ATEBALTS_SKULL_ID, 1);
-                st.playSound(SOUND_ITEMGET);
+                st.giveItems(ATEBALTS_SKULL_ID);
             } else if (st.getQuestItemsCount(ATEBALTS_RIBS_ID) == 0) {
-                st.giveItems(ATEBALTS_RIBS_ID, 1);
-                st.playSound(SOUND_ITEMGET);
+                st.giveItemIfNotHave(ATEBALTS_RIBS_ID);
             } else if (st.getQuestItemsCount(ATEBALTS_SHIN_ID) == 0) {
-                st.giveItems(ATEBALTS_SHIN_ID, 1);
+                st.giveItemIfNotHave(ATEBALTS_SHIN_ID);
                 st.setCond(15);
-                st.playSound(SOUND_ITEMGET);
             }
-        return null;
     }
 }

@@ -4,7 +4,9 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ai.CtrlEvent;
 import l2trunk.gameserver.ai.Fighter;
 import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.SimpleSpawner;
+import l2trunk.gameserver.model.Summon;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.Location;
 
@@ -34,9 +36,10 @@ public final class TurkaCommanderChief extends Fighter {
             NpcInstance npc = npcSpawn(Guardian);
 
             // И натравливаем его
-            if (killer.isPet() || killer.isSummon())
+            if (killer instanceof Summon)
                 npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, killer, Rnd.get(2, 100));
-            npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, killer.getPlayer(), Rnd.get(1, 100));
+            if (killer instanceof Player)
+                npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, killer, Rnd.get(1, 100));
         }
 
         super.onEvtDead(killer);

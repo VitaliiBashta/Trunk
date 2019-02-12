@@ -96,20 +96,20 @@ public enum FishingChampionShipManager {
                 if (fisher.getName().equalsIgnoreCase(pl.getName())) {
                     if (fisher.getLength() < len) {
                         fisher.setLength(len);
-                        pl.sendMessage(new CustomMessage("l2trunk.gameserver.instancemanager.games.FishingChampionShipManager.ResultImproveOn", pl));
+                        pl.sendMessage(new CustomMessage("l2trunk.gameserver.instancemanager.games.FishingChampionShipManager.ResultImproveOn"));
                         recalculateMinLength();
                     }
                     return;
                 }
             _tmpPlayers.add(new Fisher(pl.getName(), len, 0));
-            pl.sendMessage(new CustomMessage("l2trunk.gameserver.instancemanager.games.FishingChampionShipManager.YouInAPrizeList", pl));
+            pl.sendMessage(new CustomMessage("l2trunk.gameserver.instancemanager.games.FishingChampionShipManager.YouInAPrizeList"));
             recalculateMinLength();
         } else if (_minFishLength < len) {
             for (Fisher fisher : _tmpPlayers)
                 if (fisher.getName().equalsIgnoreCase(pl.getName())) {
                     if (fisher.getLength() < len) {
                         fisher.setLength(len);
-                        pl.sendMessage(new CustomMessage("l2trunk.gameserver.instancemanager.games.FishingChampionShipManager.ResultImproveOn", pl));
+                        pl.sendMessage(new CustomMessage("l2trunk.gameserver.instancemanager.games.FishingChampionShipManager.ResultImproveOn"));
                         recalculateMinLength();
                     }
                     return;
@@ -123,7 +123,7 @@ public enum FishingChampionShipManager {
                 }
             _tmpPlayers.remove(minFisher);
             _tmpPlayers.add(new Fisher(pl.getName(), len, 0));
-            pl.sendMessage(new CustomMessage("l2trunk.gameserver.instancemanager.games.FishingChampionShipManager.YouInAPrizeList", pl));
+            pl.sendMessage(new CustomMessage("l2trunk.gameserver.instancemanager.games.FishingChampionShipManager.YouInAPrizeList"));
             recalculateMinLength();
         }
     }
@@ -166,7 +166,7 @@ public enum FishingChampionShipManager {
 
     public void getReward(Player pl) {
         String filename = "fisherman/championship/getReward.htm";
-        NpcHtmlMessage html = new NpcHtmlMessage(pl.getObjectId());
+        NpcHtmlMessage html = new NpcHtmlMessage(pl.objectId());
         html.setFile(filename);
         pl.sendPacket(html);
         for (Fisher fisher : _winPlayers)
@@ -206,7 +206,7 @@ public enum FishingChampionShipManager {
             refreshResult();
             ThreadPoolManager.INSTANCE.schedule(new needRefresh(), 60000);
         }
-        NpcHtmlMessage html = new NpcHtmlMessage(pl.getObjectId());
+        NpcHtmlMessage html = new NpcHtmlMessage(pl.objectId());
         String filename = "fisherman/championship/MidResult.htm";
         html.setFile(filename);
         StringBuilder strBuilder = new StringBuilder();
@@ -226,7 +226,7 @@ public enum FishingChampionShipManager {
     }
 
     public void showChampScreen(Player pl, NpcInstance npc) {
-        NpcHtmlMessage html = new NpcHtmlMessage(pl.getObjectId());
+        NpcHtmlMessage html = new NpcHtmlMessage(pl.objectId());
         String filename = "fisherman/championship/champScreen.htm";
         html.setFile(filename);
         StringBuilder strBuilder = new StringBuilder();
@@ -243,7 +243,7 @@ public enum FishingChampionShipManager {
         html.replace("%prizeFour%", String.valueOf(Config.ALT_FISH_CHAMPIONSHIP_REWARD_4));
         html.replace("%prizeFive%", String.valueOf(Config.ALT_FISH_CHAMPIONSHIP_REWARD_5));
         html.replace("%refresh%", String.valueOf(getTimeRemaining()));
-        html.replace("%objectId%", String.valueOf(npc.getObjectId()));
+        html.replace("%objectId%", String.valueOf(npc.objectId()));
         pl.sendPacket(html);
     }
 

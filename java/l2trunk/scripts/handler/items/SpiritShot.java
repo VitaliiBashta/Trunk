@@ -21,21 +21,12 @@ public final class SpiritShot extends ScriptItemHandler implements ScriptFile {
     private static final List<Integer> SKILL_IDS = List.of(2061, 2155, 2156, 2157, 2158, 2159);
 
     @Override
-    public boolean pickupItem(Playable playable, ItemInstance item) {
-        return true;
-    }
-
-    @Override
     public void onLoad() {
         ItemHandler.INSTANCE.registerItemHandler(this);
     }
 
     @Override
-    public boolean useItem(Playable playable, ItemInstance item, boolean ctrl) {
-        if (playable == null || !playable.isPlayer())
-            return false;
-        Player player = (Player) playable;
-
+    public boolean useItem(Player player, ItemInstance item, boolean ctrl) {
         ItemInstance weaponInst = player.getActiveWeaponInstance();
         WeaponTemplate weaponItem = player.getActiveWeaponItem();
         int SoulshotId = item.getItemId();

@@ -96,19 +96,15 @@ public class MonsterInstance extends NpcInstance {
         return isChampion > 0 || super.isParalyzeImmune();
     }
 
-    /**
-     * Return True if the attacker is not another L2MonsterInstance.<BR><BR>
-     */
     @Override
     public boolean isAutoAttackable(Creature attacker) {
-        return !attacker.isMonster();
+        return !(attacker instanceof MonsterInstance);
     }
 
     public int getChampion() {
         return isChampion;
     }
 
-    @Override
     public boolean isChampion() {
         return getChampion() > 0;
     }
@@ -183,7 +179,7 @@ public class MonsterInstance extends NpcInstance {
     }
 
     @Override
-    public MinionList getMinionList() {
+    public final MinionList getMinionList() {
         return minionList;
     }
 
@@ -216,8 +212,8 @@ public class MonsterInstance extends NpcInstance {
         super.setReflection(reflection);
 
         if (hasMinions())
-            for (MinionInstance m : getMinionList().getAliveMinions())
-                m.setReflection(reflection);
+            getMinionList().getAliveMinions().forEach(m ->
+                m.setReflection(reflection));
         return this;
     }
 
@@ -261,7 +257,7 @@ public class MonsterInstance extends NpcInstance {
         }
 
         // Alexander - We set that this player hit a monster. Used in the catpcha system to see if its fighting with mobs
-        if (attacker != null && attacker.isPlayable())
+        if (attacker instanceof Playable)
             attacker.getPlayer().setLastMonsterDamageTime();
 
         super.onReduceCurrentHp(damage, attacker, skill, awake, standUp, directHp);
@@ -269,10 +265,10 @@ public class MonsterInstance extends NpcInstance {
 
     public void calculateRewards(Creature lastAttacker) {
         Creature topDamager = getAggroList().getTopDamager();
-        if ((lastAttacker == null || !lastAttacker.isPlayable()) && getNpcId() != 22399)//Hardcoded Greater Evil
+        if ((!(lastAttacker instanceof Playable)) && getNpcId() != 22399)//Hardcoded Greater Evil
             lastAttacker = topDamager;
 
-        if (lastAttacker == null || !lastAttacker.isPlayable())
+        if (!(lastAttacker instanceof Playable))
             return;
 
         Player killer = lastAttacker.getPlayer();
@@ -305,7 +301,7 @@ public class MonsterInstance extends NpcInstance {
                     if (isRaid() || quest.getParty() == Quest.PARTY_ALL) // если цель рейд или квест для всей пати награждаем всех участников
                     {
                         for (Player pl : players) {
-                            QuestState qs = pl.getQuestState(quest.getName());
+                            QuestState qs = pl.getQuestState(quest);
                             if (qs != null && !qs.isCompleted())
                                 quest.notifyKill(this, qs);
                         }
@@ -313,7 +309,7 @@ public class MonsterInstance extends NpcInstance {
                     } else { // иначе выбираем одного
                         List<Player> interested = new ArrayList<>(players.size());
                         for (Player pl : players) {
-                            QuestState qs = pl.getQuestState(quest.getName());
+                            QuestState qs = pl.getQuestState(quest);
                             if (qs != null && !qs.isCompleted()) // из тех, у кого взят квест
                                 interested.add(pl);
                         }
@@ -327,7 +323,7 @@ public class MonsterInstance extends NpcInstance {
                     }
 
                 if (toReward != null) {
-                    QuestState qs = toReward.getQuestState(quest.getName());
+                    QuestState qs = toReward.getQuestState(quest);
                     if (qs != null && !qs.isCompleted())
                         quest.notifyKill(this, qs);
                 }
@@ -405,7 +401,7 @@ public class MonsterInstance extends NpcInstance {
         // Check the drop of a cursed weapon
         CursedWeaponsManager.INSTANCE.dropAttackable(this, killer);
 
-        if (topDamager == null || !topDamager.isPlayable())
+        if (!(topDamager instanceof Playable))
             return;
 
         for (Map.Entry<RewardType, RewardList> entry : getTemplate().getRewards().entrySet())
@@ -415,7 +411,7 @@ public class MonsterInstance extends NpcInstance {
     @Override
     public void onRandomAnimation() {
         if (System.currentTimeMillis() - _lastSocialAction > 10000L) {
-            broadcastPacket(new SocialAction(getObjectId(), 1));
+            broadcastPacket(new SocialAction(objectId(), 1));
             _lastSocialAction = System.currentTimeMillis();
         }
     }
@@ -423,11 +419,6 @@ public class MonsterInstance extends NpcInstance {
     @Override
     public void startRandomAnimation() {
         //У мобов анимация обрабатывается в AI
-    }
-
-    @Override
-    public int getKarma() {
-        return 0;
     }
 
     public void addAbsorber(final Player attacker) {
@@ -443,7 +434,7 @@ public class MonsterInstance extends NpcInstance {
             if (_absorbersIds == null)
                 _absorbersIds = new HashSet<>();
 
-            _absorbersIds.add(attacker.getObjectId());
+            _absorbersIds.add(attacker.objectId());
         } finally {
             absorbLock.unlock();
         }
@@ -454,7 +445,7 @@ public class MonsterInstance extends NpcInstance {
         try {
             if (_absorbersIds == null)
                 return false;
-            if (!_absorbersIds.contains(player.getObjectId()))
+            if (!_absorbersIds.contains(player.objectId()))
                 return false;
         } finally {
             absorbLock.unlock();
@@ -503,7 +494,7 @@ public class MonsterInstance extends NpcInstance {
                 return false;
             isSeeded = true;
             _altSeed = altSeed;
-            _seederId = player.getObjectId();
+            _seederId = player.objectId();
             _harvestItem = new RewardItem(Manor.INSTANCE.getCropType(seedId));
             // Количество всходов от xHP до (xHP + xHP/2)
             if (getTemplate().rateHp > 1)
@@ -517,7 +508,7 @@ public class MonsterInstance extends NpcInstance {
 
     public boolean isSeeded(Player player) {
         //засиден этим игроком, и смерть наступила не более 20 секунд назад
-        return isSeeded() && _seederId == player.getObjectId() && getDeadTime() < 20000L;
+        return isSeeded() && _seederId == player.objectId() && getDeadTime() < 20000L;
     }
 
     public boolean isSeeded() {
@@ -537,7 +528,7 @@ public class MonsterInstance extends NpcInstance {
 
         //заспойлен этим игроком, и смерть наступила не более 20 секунд назад
         if (getDeadTime() < 15000L) {
-            return player.getObjectId() == spoilerId;
+            return player.objectId() == spoilerId;
         } else
             return true;
     }
@@ -551,7 +542,7 @@ public class MonsterInstance extends NpcInstance {
             if (isSpoiled())
                 return false;
             isSpoiled = true;
-            spoilerId = player.getObjectId();
+            spoilerId = player.objectId();
         } finally {
             sweepLock.unlock();
         }
@@ -641,7 +632,7 @@ public class MonsterInstance extends NpcInstance {
     }
 
     private double applyOverhit(Player killer, double xp) {
-        if (xp > 0 && killer.getObjectId() == overhitAttackerId) {
+        if (xp > 0 && killer.objectId() == overhitAttackerId) {
             int overHitExp = calculateOverhitExp(xp);
             killer.sendPacket(Msg.OVER_HIT, new SystemMessage(SystemMessage.ACQUIRED_S1_BONUS_EXPERIENCE_THROUGH_OVER_HIT).addNumber(overHitExp));
             xp += overHitExp;
@@ -651,7 +642,7 @@ public class MonsterInstance extends NpcInstance {
 
     @Override
     public void setOverhitAttacker(Creature attacker) {
-        overhitAttackerId = attacker == null ? 0 : attacker.getObjectId();
+        overhitAttackerId = attacker == null ? 0 : attacker.objectId();
     }
 
     public double getOverhitDamage() {
@@ -693,7 +684,7 @@ public class MonsterInstance extends NpcInstance {
         if (getTemplate().baseAtkRange > MIN_DISTANCE_FOR_USE_UD || getLevel() < 20 || getLevel() > 78 || (attacker.getLevel() - getLevel()) > 9 || (getLevel() - attacker.getLevel()) > 9)
             return;
 
-        if (isMinion() || getMinionList() != null || isRaid() || this instanceof ReflectionBossInstance || this instanceof ChestInstance || getChampion() > 0)
+        if (this instanceof MinionInstance || getMinionList() != null || isRaid() || this instanceof ReflectionBossInstance || this instanceof ChestInstance || getChampion() > 0)
             return;
 
         int skillId = 5044;
@@ -716,11 +707,7 @@ public class MonsterInstance extends NpcInstance {
     }
 
     @Override
-    public boolean isMonster() {
-        return true;
-    }
-
-    @Override
+    @Deprecated
     public Clan getClan() {
         return null;
     }
@@ -748,7 +735,7 @@ public class MonsterInstance extends NpcInstance {
 
         @Override
         public int hashCode() {
-            return attacker.getObjectId();
+            return attacker.objectId();
         }
     }
 

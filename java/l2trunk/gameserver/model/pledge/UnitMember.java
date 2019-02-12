@@ -12,8 +12,8 @@ import java.sql.SQLException;
 
 public final class UnitMember {
     private static final Logger _log = LoggerFactory.getLogger(UnitMember.class);
-    private final int objectId;
-    private Player player;
+    final int objectId;
+    public Player player;
     private Clan clan;
     private String name;
     private String title;
@@ -46,7 +46,7 @@ public final class UnitMember {
     }
 
     public UnitMember(Player player) {
-        objectId = player.getObjectId();
+        objectId = player.objectId;
         this.player = player;
     }
 
@@ -59,14 +59,14 @@ public final class UnitMember {
         name = player.getName();
         title = player.getTitle();
         level = player.getLevel();
-        classId = player.getClassId().getId();
+        classId = player.getClassId().id;
         pledgeType = player.getPledgeType();
         powerGrade = player.getPowerGrade();
         apprentice = player.getApprentice();
         sex = player.isMale()? 0:1;
     }
 
-    public Player getPlayer() {
+    public final Player player() {
         return player;
     }
 
@@ -79,7 +79,7 @@ public final class UnitMember {
     }
 
     public int getClassId() {
-        return player == null ? classId : player.getClassId().getId();
+        return player == null ? classId : player.getClassId().id;
     }
 
     public int getSex() {
@@ -94,7 +94,7 @@ public final class UnitMember {
         return player == null ? name : player.getName();
     }
 
-    public int getObjectId() {
+    public int objectId() {
         return objectId;
     }
 
@@ -111,7 +111,7 @@ public final class UnitMember {
             try (Connection con = DatabaseFactory.getInstance().getConnection();
                  PreparedStatement statement = con.prepareStatement("UPDATE characters SET title=? WHERE obj_Id=?")) {
                 statement.setString(1, title);
-                statement.setInt(2, getObjectId());
+                statement.setInt(2, objectId);
                 statement.execute();
             } catch (SQLException e) {
                 _log.error("Error while setting Unit Member Title", e);
@@ -127,8 +127,7 @@ public final class UnitMember {
         return player == null ? pledgeType : player.getPledgeType();
     }
 
-    public void setPledgeType(int pledgeType) {
-        Player player = getPlayer();
+    void setPledgeType(int pledgeType) {
         this.pledgeType = pledgeType;
         if (player != null)
             player.setPledgeType(pledgeType);
@@ -140,7 +139,7 @@ public final class UnitMember {
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement("UPDATE characters SET pledge_type=? WHERE obj_Id=?")) {
             statement.setInt(1, pledgeType);
-            statement.setInt(2, getObjectId());
+            statement.setInt(2, objectId());
             statement.execute();
         } catch (SQLException e) {
             _log.error("Error while updating Unit Member Pledge Type", e);
@@ -176,7 +175,7 @@ public final class UnitMember {
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement("UPDATE characters SET pledge_rank=? WHERE obj_Id=?")) {
             statement.setInt(1, powerGrade);
-            statement.setInt(2, getObjectId());
+            statement.setInt(2, objectId());
             statement.execute();
         } catch (SQLException e) {
             _log.error("Error while updating Unit Member Power Grade", e);
@@ -199,7 +198,7 @@ public final class UnitMember {
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement("UPDATE characters SET apprentice=? WHERE obj_Id=?")) {
             statement.setInt(1, apprentice);
-            statement.setInt(2, getObjectId());
+            statement.setInt(2, objectId());
             statement.execute();
         } catch (SQLException e) {
             _log.error("Error while updating Unit Member Apprentice", e);
@@ -220,10 +219,10 @@ public final class UnitMember {
     public int getSponsor() {
         if (getPledgeType() != Clan.SUBUNIT_ACADEMY)
             return 0;
-        int id = getObjectId();
+        int id = objectId();
         for (UnitMember element : getClan())
             if (element.getApprentice() == id)
-                return element.getObjectId();
+                return element.objectId();
         return 0;
     }
 
@@ -247,14 +246,14 @@ public final class UnitMember {
     }
 
     public boolean isClanLeader() {
-        Player player = getPlayer();
+        Player player = player();
         return player == null ? (leaderOf == Clan.SUBUNIT_MAIN_CLAN) : player.isClanLeader();
     }
 
     public boolean isSubLeader() {
         return getClan().getAllSubUnits().stream()
-                .filter(pledge -> pledge.getLeaderObjectId() == getObjectId())
-                .map(SubUnit::getType)
+                .filter(pledge -> pledge.getLeaderObjectId() == objectId())
+                .map(SubUnit::type)
                 .findFirst().isPresent();
     }
 

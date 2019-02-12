@@ -16,6 +16,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static l2trunk.gameserver.utils.ItemFunctions.removeItem;
+
 public final class Extractable extends SimpleItemHandler implements ScriptFile {
     private static final List<Integer> ITEM_IDS = List.of(
             53, 54, 55, 56, 136, 137, 138, 139, 140, 141, 163, 170, 5906, 5907, 5909,
@@ -292,7 +294,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
     }
 
     private static void addItem(Player player, int itemId, long count) {
-        Functions.addItem(player, itemId, count, "Extractable");
+        addItem(player, itemId, count, "Extractable");
     }
 
     private static boolean addItem(Player player, int itemId) {
@@ -301,7 +303,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
     }
 
     private static void addItem(Player player, int itemId, long count, String log) {
-        Functions.addItem(player, itemId, count, log);
+        addItem(player, itemId, count, log);
     }
 
     // Small fortuna box
@@ -1133,11 +1135,11 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
             addItem(player, 5560, 1);
 
         // Agathion Seal Bracelet - Rudolph (постоянный предмет)
-        if (Functions.getItemCount(player, 10606) == 0 && Rnd.chance(5))
+        if (!player.haveItem( 10606)  && Rnd.chance(5))
             addItem(player, 10606, 1);
 
         // Agathion Seal Bracelet: Rudolph - 30 дней со скилом на виталити
-        if (Functions.getItemCount(player, 20094) == 0 && Rnd.chance(3))
+        if (!player.haveItem(20094)  && Rnd.chance(3))
             addItem(player, 20094, 1);
 
         // Chest of Experience (Event)
@@ -1149,11 +1151,6 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
     private void use20575(Player player, boolean ctrl) {
         addItem(player, 20335, 1); // Rune of Experience: 30% - 5 hour limited time
         addItem(player, 20341, 1); // Rune of SP 30% - 5 Hour Expiration Period
-    }
-
-    @Override
-    public boolean pickupItem(Playable playable, ItemInstance item) {
-        return true;
     }
 
     @Override
@@ -11346,7 +11343,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
         int[] counts = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
 
         if (ctrl) {
-            long item_count = 1 + Functions.removeItem(player, 5944, Functions.getItemCount(player, 5944), "use5944");
+            long item_count = 1 + removeItem(player, 5944, player.inventory.getCountOf(5944), "use5944");
             for (int[] res : mass_extract_item(item_count, list, counts, player))
                 addItem(player, res[0], res[1]);
         } else
@@ -11359,7 +11356,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
         int[] counts = {1, 1, 1, 1, 1};
 
         if (ctrl) {
-            long item_count = 1 + Functions.removeItem(player, 14841, Functions.getItemCount(player, 14841), "use14841");
+            long item_count = 1 + removeItem(player, 14841, player.inventory.getCountOf( 14841), "use14841");
             for (int[] res : mass_extract_item(item_count, list, counts, player))
                 addItem(player, res[0], res[1]);
         } else
@@ -11372,7 +11369,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
         int[] counts = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
 
         if (ctrl) {
-            long item_count = 1 + Functions.removeItem(player, 5955, Functions.getItemCount(player, 5955), "use5955");
+            long item_count = 1 + removeItem(player, 5955, player.inventory.getCountOf( 5955), "use5955");
             for (int[] res : mass_extract_item(item_count, list, counts, player))
                 addItem(player, res[0], res[1]);
         } else
@@ -11385,7 +11382,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
         int[] counts = {1, 1, 1, 1, 1};
 
         if (ctrl) {
-            long item_count = 1 + Functions.removeItem(player, 14847, Functions.getItemCount(player, 14847), "use14847");
+            long item_count = 1 + removeItem(player, 14847, player.inventory.getCountOf( 14847), "use14847");
             for (int[] res : mass_extract_item(item_count, list, counts, player))
                 addItem(player, res[0], res[1]);
         } else
@@ -11433,7 +11430,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
         int[] chances = new int[]{30, 30, 20, 20};
 
         if (ctrl) {
-            long item_count = 1 + Functions.removeItem(player, 6007, Functions.getItemCount(player, 6007), "use6007");
+            long item_count = 1 + removeItem(player, 6007, player.inventory.getCountOf( 6007), "use6007");
             for (int[] res : mass_extract_item_r(item_count, list, counts, chances, player))
                 addItem(player, res[0], res[1]);
         } else
@@ -11453,7 +11450,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
         int[] chances = new int[]{10, 20, 35, 35};
 
         if (ctrl) {
-            long item_count = 1 + Functions.removeItem(player, 6008, Functions.getItemCount(player, 6008), "use6008");
+            long item_count = 1 + removeItem(player, 6008, player.inventory.getCountOf( 6008), "use6008");
             for (int[] res : mass_extract_item_r(item_count, list, counts, chances, player))
                 addItem(player, res[0], res[1]);
         } else
@@ -11473,7 +11470,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
         int[] chances = new int[]{20, 20, 20, 40};
 
         if (ctrl) {
-            long item_count = 1 + Functions.removeItem(player, 6009, Functions.getItemCount(player, 6009), "use6009");
+            long item_count = 1 + removeItem(player, 6009, player.inventory.getCountOf(6009), "use6009");
             for (int[] res : mass_extract_item_r(item_count, list, counts, chances, player))
                 addItem(player, res[0], res[1]);
         } else
@@ -11493,7 +11490,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
         int[] chances = new int[]{20, 20, 35, 25};
 
         if (ctrl) {
-            long item_count = 1 + Functions.removeItem(player, 6010, Functions.getItemCount(player, 6010), "use6010");
+            long item_count = 1 + removeItem(player, 6010, player.inventory.getCountOf( 6010), "use6010");
             for (int[] res : mass_extract_item_r(item_count, list, counts, chances, player))
                 addItem(player, res[0], res[1]);
         } else
@@ -11507,7 +11504,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
         int[] chances = new int[]{7, 39, 7, 3, 12, 32};
 
         if (ctrl) {
-            long item_count = 1 + Functions.removeItem(player, 7725, Functions.getItemCount(player, 7725), "use7725");
+            long item_count = 1 + removeItem(player, 7725, player.inventory.getCountOf(7725), "use7725");
             for (int[] res : mass_extract_item_r(item_count, list, counts, chances, player))
                 addItem(player, res[0], res[1]);
         } else
@@ -11521,7 +11518,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
         int[] chances = new int[]{20, 10, 20, 20, 15, 15};
 
         if (ctrl) {
-            long item_count = 1 + Functions.removeItem(player, 7637, Functions.getItemCount(player, 7637), "use7637");
+            long item_count = 1 + removeItem(player, 7637, player.inventory.getCountOf(7637), "use7637");
             for (int[] res : mass_extract_item_r(item_count, list, counts, chances, player))
                 addItem(player, res[0], res[1]);
         } else
@@ -11535,7 +11532,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
         int[] chances = new int[]{10, 20, 10, 10, 10, 12, 12, 16};
 
         if (ctrl) {
-            long item_count = 1 + Functions.removeItem(player, 7636, Functions.getItemCount(player, 7636), "use7636");
+            long item_count = 1 + removeItem(player, 7636, player.inventory.getCountOf(7636), "use7636");
             for (int[] res : mass_extract_item_r(item_count, list, counts, chances, player))
                 addItem(player, res[0], res[1]);
         } else
@@ -11626,7 +11623,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
         int[] chances = new int[]{4, 10, 1};
 
         if (ctrl) {
-            long item_count = 1 + Functions.removeItem(player, 9599, Functions.getItemCount(player, 9599), "use9599");
+            long item_count = 1 + removeItem(player, 9599, player.inventory.getCountOf( 9599), "use9599");
             for (int[] res : mass_extract_item_r(item_count, list, count_min, count_max, chances, player))
                 addItem(player, res[0], res[1]);
         } else

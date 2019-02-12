@@ -69,7 +69,7 @@ public final class RankingCommunity implements ScriptFile, ICommunityBoardHandle
 
         //Checking if all required images were sent to the player, if not - not allowing to pass
         if (!AutoImageSenderManager.wereAllImagesSent(player)) {
-            player.sendPacket(new Say2(player.getObjectId(), ChatType.CRITICAL_ANNOUNCE, "CB", "Community wasn't loaded yet, try again in few seconds."));
+            player.sendPacket(new Say2(player.objectId(), ChatType.CRITICAL_ANNOUNCE, "CB", "Community wasn't loaded yet, try again in few seconds."));
             return;
         }
 

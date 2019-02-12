@@ -17,10 +17,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public enum ItemsDAO implements JdbcDAO<Integer, ItemInstance> {
@@ -92,7 +90,7 @@ public enum ItemsDAO implements JdbcDAO<Integer, ItemInstance> {
     }
 
     private void save0(ItemInstance item, PreparedStatement statement) throws SQLException {
-        statement.setInt(1, item.getObjectId());
+        statement.setInt(1, item.objectId());
         statement.setInt(2, item.getOwnerId());
         statement.setInt(3, item.getItemId());
         statement.setLong(4, item.getCount());
@@ -124,7 +122,7 @@ public enum ItemsDAO implements JdbcDAO<Integer, ItemInstance> {
     }
 
     private void delete0(ItemInstance item, PreparedStatement statement) throws SQLException {
-        statement.setInt(1, item.getObjectId());
+        statement.setInt(1, item.objectId());
     }
 
     private void delete0(ItemInstance item) throws SQLException {
@@ -137,7 +135,7 @@ public enum ItemsDAO implements JdbcDAO<Integer, ItemInstance> {
     }
 
     private void update0(ItemInstance item, PreparedStatement statement) throws SQLException {
-        statement.setInt(20, item.getObjectId());
+        statement.setInt(20, item.objectId());
         statement.setInt(1, item.getOwnerId());
         statement.setInt(2, item.getItemId());
         statement.setLong(3, item.getCount());
@@ -189,7 +187,7 @@ public enum ItemsDAO implements JdbcDAO<Integer, ItemInstance> {
             return null;
         }
 
-        cache.put(new Element(item.getObjectId(), item));
+        cache.put(new Element(item.objectId(), item));
 
         return item;
     }
@@ -217,7 +215,7 @@ public enum ItemsDAO implements JdbcDAO<Integer, ItemInstance> {
             return;
         }
 
-        cache.put(new Element(item.getObjectId(), item));
+        cache.put(new Element(item.objectId(), item));
     }
 
     public void save(Collection<ItemInstance> items) {
@@ -237,7 +235,7 @@ public enum ItemsDAO implements JdbcDAO<Integer, ItemInstance> {
             return;
         }
 
-        cache.putIfAbsent(new Element(item.getObjectId(), item));
+        cache.putIfAbsent(new Element(item.objectId(), item));
     }
 
     public void update(Collection<ItemInstance> items) {
@@ -269,7 +267,7 @@ public enum ItemsDAO implements JdbcDAO<Integer, ItemInstance> {
             return;
         }
 
-        cache.remove(item.getObjectId());
+        cache.remove(item.objectId());
     }
 
     public void delete(Collection<ItemInstance> items) {

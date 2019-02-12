@@ -110,7 +110,7 @@ public final class AdminEpic implements IAdminCommandHandler, ScriptFile {
             NpcTemplate template = NpcHolder.getTemplate(id);
 
             html = html.replace("<?id_" + i + "?>", String.valueOf(id));
-            html = html.replace("<?name_" + i + "?>", template.getName());
+            html = html.replace("<?name_" + i + "?>", template.name());
             html = html.replace("<?state_" + i + "?>", getStatusNote(epic.getState()));
 
             i++;
@@ -131,7 +131,7 @@ public final class AdminEpic implements IAdminCommandHandler, ScriptFile {
 
         html = html.replace("<?id?>", String.valueOf(id));
 
-        html = html.replace("<?name?>", template.getName());
+        html = html.replace("<?name?>", template.name());
         html = html.replace("<?state?>", getStatusNote(boss.getState()));
         long time = boss.getRespawnDate();
 

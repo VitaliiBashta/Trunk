@@ -2,6 +2,7 @@ package l2trunk.gameserver.skills.effects;
 
 import l2trunk.gameserver.model.Effect;
 import l2trunk.gameserver.model.Summon;
+import l2trunk.gameserver.model.instances.SummonInstance;
 import l2trunk.gameserver.stats.Env;
 
 public final class EffectDestroySummon extends Effect {
@@ -11,9 +12,7 @@ public final class EffectDestroySummon extends Effect {
 
     @Override
     public boolean checkCondition() {
-        if (!effected.isSummon())
-            return false;
-        return super.checkCondition();
+        return effected instanceof SummonInstance;
     }
 
     @Override
@@ -22,9 +21,4 @@ public final class EffectDestroySummon extends Effect {
         ((Summon) effected).unSummon();
     }
 
-    @Override
-    public boolean onActionTime() {
-        // just stop this effect
-        return false;
-    }
 }

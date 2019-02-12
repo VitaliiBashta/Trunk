@@ -11,11 +11,12 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.Util;
 
+import static l2trunk.commons.lang.NumberUtils.toInt;
+
 public final class HairChange extends Functions {
     private static final int[] Male = {1, 1, 1, 1, 1, 0, 0};
 
     private void show() {
-        final Player player = getSelf();
         if (player == null)
             return;
 
@@ -41,11 +42,10 @@ public final class HairChange extends Functions {
     }
 
     public void ask(String[] arg) {
-        final Player player = getSelf();
         if (player == null)
             return;
 
-        int id = Util.isNumber(arg[0]) ? Integer.parseInt(arg[0]) : 0;
+        int id = toInt(arg[0]);
 
         String msg = new CustomMessage("Want to change your hairstyle from Type {0} to Type {1}? Change cost: {2}").addString(HairTypeName(player.getHairStyle())).addString(HairTypeName(id)).addString(Util.formatPay(player, Config.SERVICES_HAIR_CHANGE_COUNT, Config.SERVICES_HAIR_CHANGE_ITEM_ID)).toString();
         ConfirmDlg ask = new ConfirmDlg(SystemMsg.S1, 60000);
@@ -105,8 +105,5 @@ public final class HairChange extends Functions {
             show();
         }
 
-        @Override
-        public void sayNo() {
-        }
     }
 }

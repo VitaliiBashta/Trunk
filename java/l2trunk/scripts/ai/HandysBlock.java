@@ -24,37 +24,35 @@ public final class HandysBlock extends DefaultAI {
     @Override
     public void onEvtSeeSpell(Skill skill, Creature caster) {
         BlockInstance actor = (BlockInstance) getActor();
-        if (caster == null)
-            return;
-        if (!caster.isPlayer())
-            return;
-        Player player = caster.getPlayer();
-        int arena = player.getBlockCheckerArena();
-        if (arena == -1 || arena > 3)
-            return;
+        if (caster instanceof Player) {
+            Player player = (Player)caster;
+            int arena = player.getBlockCheckerArena();
+            if (arena == -1 || arena > 3)
+                return;
 
-        if (player.getTarget() == actor)
-            if (skill.id == 5852 || skill.id == 5853) {
-                ArenaParticipantsHolder holder = HandysBlockCheckerManager.INSTANCE.getHolder(arena);
+            if (player.getTarget() == actor)
+                if (skill.id == 5852 || skill.id == 5853) {
+                    ArenaParticipantsHolder holder = HandysBlockCheckerManager.INSTANCE.getHolder(arena);
 
-                if (holder.getPlayerTeam(player) == 0 && !actor.isRed()) {
-                    actor.changeColor();
-                    increaseTeamPointsAndSend(player, holder.getEvent());
-                } else if (holder.getPlayerTeam(player) == 1 && actor.isRed()) {
-                    actor.changeColor();
-                    increaseTeamPointsAndSend(player, holder.getEvent());
-                } else
-                    return;
+                    if (holder.getPlayerTeam(player) == 0 && !actor.isRed()) {
+                        actor.changeColor();
+                        increaseTeamPointsAndSend(player, holder.getEvent());
+                    } else if (holder.getPlayerTeam(player) == 1 && actor.isRed()) {
+                        actor.changeColor();
+                        increaseTeamPointsAndSend(player, holder.getEvent());
+                    } else
+                        return;
 
-                // 30% chance to drop the event items
-                int random = Rnd.get(100);
-                // Bond
-                if (random > 69 && random <= 84)
-                    dropItem(actor, 13787, holder.getEvent());
-                    // Land Mine
-                else if (random > 84)
-                    dropItem(actor, 13788, holder.getEvent());
-            }
+                    // 30% chance to drop the event items
+                    int random = Rnd.get(100);
+                    // Bond
+                    if (random > 69 && random <= 84)
+                        dropItem(actor, 13787, holder.getEvent());
+                        // Land Mine
+                    else if (random > 84)
+                        dropItem(actor, 13788, holder.getEvent());
+                }
+        }
     }
 
     private void increaseTeamPointsAndSend(Player player, BlockCheckerEngine eng) {

@@ -57,7 +57,7 @@ public final class MuscleBomber extends Fighter {
 
     private void spawn_drakos(NpcInstance actor, Creature attacker) {
         for (int i = 0; i < 3; i++) {
-            NpcInstance n = NpcUtils.spawnSingle(drakos_assassin, (actor.getX() + Rnd.get(-100, 100)), (actor.getY() + Rnd.get(-100, 100)), actor.getZ());
+            NpcInstance n = NpcUtils.spawnSingle(drakos_assassin, (actor.getLoc().randomOffset(100)), actor.getZ());
             n.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker, 2);
         }
     }

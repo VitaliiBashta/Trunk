@@ -4,7 +4,6 @@ import l2trunk.gameserver.model.base.Race;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _222_TestOfDuelist extends Quest {
     //NPC
@@ -218,38 +217,38 @@ public final class _222_TestOfDuelist extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("30623-04.htm") && st.getPlayer().getRace() == Race.orc)
+        if (event.equalsIgnoreCase("30623-04.htm") && st.player.getRace() == Race.orc)
             htmltext = "30623-05.htm";
-        else if (event.equalsIgnoreCase("30623-07.htm")) {
+        else if ("30623-07.htm".equalsIgnoreCase(event)) {
             st.setCond(2);
             st.setState(STARTED);
-            st.giveItems(OrderGludio, 1);
-            st.giveItems(OrderDion, 1);
-            st.giveItems(OrderGiran, 1);
-            st.giveItems(OrderOren, 1);
-            st.giveItems(OrderAden, 1);
-            if (!st.getPlayer().getVarB("dd3")) {
+            st.giveItems(OrderGludio);
+            st.giveItems(OrderDion);
+            st.giveItems(OrderGiran);
+            st.giveItems(OrderOren);
+            st.giveItems(OrderAden);
+            if (!st.player.isVarSet("dd3")) {
                 st.giveItems(7562, 72, false);
-                st.getPlayer().setVar("dd3", "1", -1);
+                st.player.setVar("dd3", 1);
             }
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("30623-16.htm")) {
-            st.takeItems(PunchersShard, -1);
-            st.takeItems(NobleAntsFeeler, -1);
-            st.takeItems(DronesChitin, -1);
-            st.takeItems(DeadSeekerFang, -1);
-            st.takeItems(OverlordNecklace, -1);
-            st.takeItems(FetteredSoulsChain, -1);
-            st.takeItems(ChiefsAmulet, -1);
-            st.takeItems(EnchantedEyeMeat, -1);
-            st.takeItems(TamrinOrcsRing, -1);
-            st.takeItems(TamrinOrcsArrow, -1);
-            st.takeItems(OrderGludio, -1);
-            st.takeItems(OrderDion, -1);
-            st.takeItems(OrderGiran, -1);
-            st.takeItems(OrderOren, -1);
-            st.takeItems(OrderAden, -1);
-            st.giveItems(FinalOrder, 1);
+        } else if ("30623-16.htm".equalsIgnoreCase(event)) {
+            st.takeItems(PunchersShard);
+            st.takeItems(NobleAntsFeeler);
+            st.takeItems(DronesChitin);
+            st.takeItems(DeadSeekerFang);
+            st.takeItems(OverlordNecklace);
+            st.takeItems(FetteredSoulsChain);
+            st.takeItems(ChiefsAmulet);
+            st.takeItems(EnchantedEyeMeat);
+            st.takeItems(TamrinOrcsRing);
+            st.takeItems(TamrinOrcsArrow);
+            st.takeItems(OrderGludio);
+            st.takeItems(OrderDion);
+            st.takeItems(OrderGiran);
+            st.takeItems(OrderOren);
+            st.takeItems(OrderAden);
+            st.giveItems(FinalOrder);
             st.setCond(4);
             st.setState(STARTED);
         }
@@ -266,8 +265,8 @@ public final class _222_TestOfDuelist extends Quest {
                 htmltext = "completed";
                 st.exitCurrentQuest(true);
             } else if (cond == 0) {
-                if (st.getPlayer().getClassId().getId() == 0x01 || st.getPlayer().getClassId().getId() == 0x2f || st.getPlayer().getClassId().getId() == 0x13 || st.getPlayer().getClassId().getId() == 0x20) {
-                    if (st.getPlayer().getLevel() >= 39)
+                if (st.player.getClassId().id == 0x01 || st.player.getClassId().id == 0x2f || st.player.getClassId().id == 0x13 || st.player.getClassId().id == 0x20) {
+                    if (st.player.getLevel() >= 39)
                         htmltext = "30623-03.htm";
                     else {
                         htmltext = "30623-01.htm";
@@ -284,11 +283,11 @@ public final class _222_TestOfDuelist extends Quest {
             else if (cond == 4)
                 htmltext = "30623-17.htm";
             else if (cond == 5) {
-                st.giveItems(MarkOfDuelist, 1);
-                if (!st.getPlayer().getVarB("prof2.3")) {
+                st.giveItems(MarkOfDuelist);
+                if (!st.player.isVarSet("prof2.3")) {
                     st.addExpAndSp(474444, 30704);
-                    st.giveItems(ADENA_ID, 80000); // FIXME: цифра с потолка
-                    st.getPlayer().setVar("prof2.3", "1", -1);
+                    st.giveItems(ADENA_ID, 80000);
+                    st.player.setVar("prof2.3", 1);
                 }
                 htmltext = "30623-18.htm";
                 st.playSound(SOUND_FINISH);
@@ -298,7 +297,7 @@ public final class _222_TestOfDuelist extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         for (int[] aDROPLIST_COND : DROPLIST_COND)
@@ -318,6 +317,5 @@ public final class _222_TestOfDuelist extends Quest {
             st.setCond(5);
             st.setState(STARTED);
         }
-        return null;
     }
 }

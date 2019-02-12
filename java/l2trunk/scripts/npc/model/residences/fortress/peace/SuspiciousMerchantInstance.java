@@ -160,7 +160,7 @@ public final class SuspiciousMerchantInstance extends NpcInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
         NpcHtmlMessage html = new NpcHtmlMessage(player, this);
         Fortress fortress = getFortress();
         if (fortress.getOwner() != null) {

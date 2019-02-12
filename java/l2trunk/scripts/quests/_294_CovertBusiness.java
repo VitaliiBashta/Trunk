@@ -42,10 +42,10 @@ public final class _294_CovertBusiness extends Quest {
         int id = st.getState();
 
         if (id == CREATED) {
-            if (st.getPlayer().getRace() != Race.dwarf) {
+            if (st.player.getRace() != Race.dwarf) {
                 htmltext = "elder_keef_q0294_00.htm";
                 st.exitCurrentQuest(true);
-            } else if (st.getPlayer().getLevel() >= 10) {
+            } else if (st.player.getLevel() >= 10) {
                 htmltext = "elder_keef_q0294_02.htm";
                 return htmltext;
             } else {
@@ -56,7 +56,7 @@ public final class _294_CovertBusiness extends Quest {
             htmltext = "elder_keef_q0294_04.htm";
         else {
             if (st.getQuestItemsCount(RingOfRaccoon) < 1) {
-                st.giveItems(RingOfRaccoon, 1);
+                st.giveItems(RingOfRaccoon);
                 htmltext = "elder_keef_q0294_05.htm";
             } else {
                 st.giveItems(ADENA_ID, 2400);
@@ -71,9 +71,8 @@ public final class _294_CovertBusiness extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getCond() == 1)
             st.rollAndGive(BatFang, 1, 2, 100, 100);
-        return null;
     }
 }

@@ -22,7 +22,7 @@ public class AdminPolymorph implements IAdminCommandHandler {
                 target = activeChar;
             case admin_polymorph:
             case admin_poly:
-                if (target == null || !target.isPlayer()) {
+                if (!(target instanceof Player)) {
                     activeChar.sendPacket(SystemMsg.INVALID_TARGET);
                     return false;
                 }
@@ -41,13 +41,14 @@ public class AdminPolymorph implements IAdminCommandHandler {
                 target = activeChar;
             case admin_unpolymorph:
             case admin_unpoly:
-                if (target == null || !target.isPlayer()) {
+                if (target instanceof Player) {
+                    ((Player) target).setPolyId(0);
+                    ((Player) target).broadcastCharInfo();
+                    break;
+                } else {
                     activeChar.sendPacket(SystemMsg.INVALID_TARGET);
                     return false;
                 }
-                ((Player) target).setPolyId(0);
-                ((Player) target).broadcastCharInfo();
-                break;
         }
 
         return true;

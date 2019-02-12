@@ -4,6 +4,7 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.network.serverpackets.L2GameServerPacket;
 import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 
+import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public enum SystemMsg implements IStaticPacket {
@@ -47,7 +48,7 @@ public enum SystemMsg implements IStaticPacket {
     CANNOT_CRYSTALLIZE_CRYSTALLIZATION_SKILL_LEVEL_TOO_LOW(562),
     // Message: Once an item is augmented, it cannot be augmented again.
     ONCE_AN_ITEM_IS_AUGMENTED_IT_CANNOT_BE_AUGMENTED_AGAIN(1970),
-    // Message: The level of the hardener is too high to be used.
+    // Message: The occupation of the hardener is too high to be used.
     THE_LEVEL_OF_THE_HARDENER_IS_TOO_HIGH_TO_BE_USED(1971),
     // Message: You cannot augment items while a private store or private workshop is in operation.
     YOU_CANNOT_AUGMENT_ITEMS_WHILE_A_PRIVATE_STORE_OR_PRIVATE_WORKSHOP_IS_IN_OPERATION(1972),
@@ -526,15 +527,15 @@ public enum SystemMsg implements IStaticPacket {
     YOU_CANNOT_DISMISS_YOURSELF(269),
     // Message: You have already surrendered.
     YOU_HAVE_ALREADY_SURRENDERED(270),
-    // Message: A player can only be granted a title if the clan is level 3 or above.
+    // Message: A player can only be granted a title if the clan is occupation 3 or above.
     A_PLAYER_CAN_ONLY_BE_GRANTED_A_TITLE_IF_THE_CLAN_IS_LEVEL_3_OR_ABOVE(271),
-    // Message: A clan crest can only be registered when the clan's skill level is 3 or above.
+    // Message: A clan crest can only be registered when the clan's skill occupation is 3 or above.
     A_CLAN_CREST_CAN_ONLY_BE_REGISTERED_WHEN_THE_CLANS_SKILL_LEVEL_IS_3_OR_ABOVE(272),
-    // Message: A clan war can only be declared when a clan's level is 3 or above.
+    // Message: A clan war can only be declared when a clan's occupation is 3 or above.
     A_CLAN_WAR_CAN_ONLY_BE_DECLARED_WHEN_A_CLANS_LEVEL_IS_3_OR_ABOVE(273),
-    // Message: Your clan's level has increased.
+    // Message: Your clan's occupation has increased.
     YOUR_CLANS_LEVEL_HAS_INCREASED(274),
-    // Message: The clan has failed to increase its level.
+    // Message: The clan has failed to increase its occupation.
     THE_CLAN_HAS_FAILED_TO_INCREASE_ITS_LEVEL(275),
     // Message: You do not have the necessary materials or prerequisites to learn this skill.
     YOU_DO_NOT_HAVE_THE_NECESSARY_MATERIALS_OR_PREREQUISITES_TO_LEARN_THIS_SKILL(276),
@@ -626,7 +627,7 @@ public enum SystemMsg implements IStaticPacket {
     IT_IS_NOT_LOCKED(321),
     // Message: Please decide on the sales price.
     PLEASE_DECIDE_ON_THE_SALES_PRICE(322),
-    // Message: Your force has increased to level $s1.
+    // Message: Your force has increased to occupation $s1.
     YOUR_FORCE_HAS_INCREASED_TO_LEVEL_S1(323),
     // Message: Your force has reached maximum capacity.
     YOUR_FORCE_HAS_REACHED_MAXIMUM_CAPACITY(324),
@@ -752,7 +753,7 @@ public enum SystemMsg implements IStaticPacket {
     YOU_DO_NOT_POSSESS_THE_CORRECT_TICKET_TO_BOARD_THE_BOAT(402),
     // Message: You have exceeded your out-of-pocket adena limit.
     YOU_HAVE_EXCEEDED_YOUR_OUTOFPOCKET_ADENA_LIMIT(403),
-    // Message: Your Create Item level is too low to register this recipe.
+    // Message: Your Create Item occupation is too low to register this recipe.
     YOUR_CREATE_ITEM_LEVEL_IS_TOO_LOW_TO_REGISTER_THIS_RECIPE(404),
     // Message: The total price of the product is too high.
     THE_TOTAL_PRICE_OF_THE_PRODUCT_IS_TOO_HIGH(405),
@@ -794,7 +795,7 @@ public enum SystemMsg implements IStaticPacket {
     YOU_HAVE_CANCELLED_THE_ENCHANTING_PROCESS(423),
     // Message: Does not fit strengthening conditions of the scroll.
     DOES_NOT_FIT_STRENGTHENING_CONDITIONS_OF_THE_SCROLL(424),
-    // Message: Your Create Item level is too low to register this recipe.
+    // Message: Your Create Item occupation is too low to register this recipe.
     YOUR_CREATE_ITEM_LEVEL_IS_TOO_LOW_TO_REGISTER_THIS_RECIPE_(425),
     // Message: Your account has been reported for intentionally not paying the cyber cafй fees.
     YOUR_ACCOUNT_HAS_BEEN_REPORTED_FOR_INTENTIONALLY_NOT_PAYING_THE_CYBER_CAF_FEES(426),
@@ -1042,7 +1043,7 @@ public enum SystemMsg implements IStaticPacket {
     TO_CREATE_AN_ALLIANCE_YOUR_CLAN_MUST_BE_LEVEL_5_OR_HIGHER(549),
     // Message: As you are currently schedule for clan dissolution, no alliance can be created.
     AS_YOU_ARE_CURRENTLY_SCHEDULE_FOR_CLAN_DISSOLUTION_NO_ALLIANCE_CAN_BE_CREATED(550),
-    // Message: As you are currently schedule for clan dissolution, your clan level cannot be increased.
+    // Message: As you are currently schedule for clan dissolution, your clan occupation cannot be increased.
     AS_YOU_ARE_CURRENTLY_SCHEDULE_FOR_CLAN_DISSOLUTION_YOUR_CLAN_LEVEL_CANNOT_BE_INCREASED(551),
     // Message: As you are currently schedule for clan dissolution, you cannot register or delete a Clan Crest.
     AS_YOU_ARE_CURRENTLY_SCHEDULE_FOR_CLAN_DISSOLUTION_YOU_CANNOT_REGISTER_OR_DELETE_A_CLAN_CREST(552),
@@ -1064,7 +1065,7 @@ public enum SystemMsg implements IStaticPacket {
     YOU_HAVE_PURCHASED_S2_S3_FROM_C1(560),
     // Message: You have purchased $s3 $s2(s) from $c1.
     YOU_HAVE_PURCHASED_S3_S2S_FROM_C1(561),
-    // Message: You may not crystallize this item. Your crystallization skill level is too low.
+    // Message: You may not crystallize this item. Your crystallization skill occupation is too low.
     YOU_MAY_NOT_CRYSTALLIZE_THIS_ITEM(562),
     // Message: Failed to disable attack target.
     FAILED_TO_DISABLE_ATTACK_TARGET(563),
@@ -1214,7 +1215,7 @@ public enum SystemMsg implements IStaticPacket {
     YOU_HAVE_ALREADY_REGISTERED_TO_THE_DEFENDER_SIDE_AND_MUST_CANCEL_YOUR_REGISTRATION_BEFORE_SUBMITTING_YOUR_REQUEST(643),
     // Message: You are not yet registered for the castle siege.
     YOU_ARE_NOT_YET_REGISTERED_FOR_THE_CASTLE_SIEGE(644),
-    // Message: Only clans of level 5 or higher may register for a castle siege.
+    // Message: Only clans of occupation 5 or higher may register for a castle siege.
     ONLY_CLANS_OF_LEVEL_5_OR_HIGHER_MAY_REGISTER_FOR_A_CASTLE_SIEGE(645),
     // Message: You do not have the authority to modify the castle defender list.
     YOU_DO_NOT_HAVE_THE_AUTHORITY_TO_MODIFY_THE_CASTLE_DEFENDER_LIST(646),
@@ -1244,7 +1245,7 @@ public enum SystemMsg implements IStaticPacket {
     THIS_IS_NOT_THE_TIME_FOR_SIEGE_REGISTRATION_AND_SO_REGISTRATION_AND_CANCELLATION_CANNOT_BE_DONE(660),
     // Message: $s1 adena disappeared.
     S1_ADENA_DISAPPEARED(672),
-    // Message: Only a clan leader whose clan is of level 2 or higher is allowed to participate in a clan hall auction.
+    // Message: Only a clan leader whose clan is of occupation 2 or higher is allowed to participate in a clan hall auction.
     ONLY_A_CLAN_LEADER_WHOSE_CLAN_IS_OF_LEVEL_2_OR_HIGHER_IS_ALLOWED_TO_PARTICIPATE_IN_A_CLAN_HALL_AUCTION(673),
     // Message: It has not yet been seven days since canceling an auction.
     IT_HAS_NOT_YET_BEEN_SEVEN_DAYS_SINCE_CANCELING_AN_AUCTION(674),
@@ -1628,7 +1629,7 @@ public enum SystemMsg implements IStaticPacket {
     QUEST_RECIPES_CAN_NOT_BE_REGISTERED(896),
     // Message: The fee to create the item is incorrect.
     THE_FEE_TO_CREATE_THE_ITEM_IS_INCORRECT(897),
-    // Message: Only characters of level 10 or above are authorized to make recommendations.
+    // Message: Only characters of occupation 10 or above are authorized to make recommendations.
     ONLY_CHARACTERS_OF_LEVEL_10_OR_ABOVE_ARE_AUTHORIZED_TO_MAKE_RECOMMENDATIONS(898),
     // Message: The symbol cannot be drawn.
     THE_SYMBOL_CANNOT_BE_DRAWN(899),
@@ -2216,7 +2217,7 @@ public enum SystemMsg implements IStaticPacket {
     YOUVE_CHOSEN_TO_FIGHT_FOR_THE_SEAL_OF_STRIFE_DURING_THIS_QUEST_EVENT_PERIOD(1277),
     // Message: The NPC server is not operating at this time.
     THE_NPC_SERVER_IS_NOT_OPERATING_AT_THIS_TIME(1278),
-    // Message: Contribution level has exceeded the limit. You may not continue.
+    // Message: Contribution occupation has exceeded the limit. You may not continue.
     CONTRIBUTION_LEVEL_HAS_EXCEEDED_THE_LIMIT(1279),
     // Message: Magic Critical Hit!
     MAGIC_CRITICAL_HIT(1280),
@@ -2508,7 +2509,7 @@ public enum SystemMsg implements IStaticPacket {
     YOU_DO_NOT_HAVE_ENOUGH_SP_TO_ENCHANT_THAT_SKILL(1443),
     // Message: You do not have enough experience (Exp) to enchant that skill.
     YOU_DO_NOT_HAVE_ENOUGH_EXPERIENCE_EXP_TO_ENCHANT_THAT_SKILL(1444),
-    // Message: Your previous subclass will be removed and replaced with the new subclass at level 40.  Do you wish to continue?
+    // Message: Your previous subclass will be removed and replaced with the new subclass at occupation 40.  Do you wish to continue?
     YOUR_PREVIOUS_SUBCLASS_WILL_BE_REMOVED_AND_REPLACED_WITH_THE_NEW_SUBCLASS_AT_LEVEL_40(1445),
     // Message: The ferry from $s1 to $s2 has been delayed.
     THE_FERRY_FROM_S1_TO_S2_HAS_BEEN_DELAYED(1446),
@@ -2733,9 +2734,9 @@ public enum SystemMsg implements IStaticPacket {
     S1_HAS_DECLARED_A_CLAN_WAR(1561),
     // Message: A Clan War has been declared against the clan, $s1.  If you are killed during the Clan War by members of the opposing clan, you will only lose a quarter of the normal experience from death.
     A_CLAN_WAR_HAS_BEEN_DECLARED_AGAINST_THE_CLAN_S1(1562),
-    // Message: The clan, $s1, cannot declare a clan war because their clan is level 2 or lower, and or they do not have enough members.
+    // Message: The clan, $s1, cannot declare a clan war because their clan is occupation 2 or lower, and or they do not have enough members.
     THE_CLAN_S1_CANNOT_DECLARE_A_CLAN_WAR_BECAUSE_THEIR_CLAN_IS_LEVEL_2_OR_LOWER_AND_OR_THEY_DO_NOT_HAVE_ENOUGH_MEMBERS(1563),
-    // Message: A clan war can only be declared if the clan is level 3 or above, and the number of clan members is fifteen or greater.
+    // Message: A clan war can only be declared if the clan is occupation 3 or above, and the number of clan members is fifteen or greater.
     A_CLAN_WAR_CAN_ONLY_BE_DECLARED_IF_THE_CLAN_IS_LEVEL_3_OR_ABOVE_AND_THE_NUMBER_OF_CLAN_MEMBERS_IS_FIFTEEN_OR_GREATER(1564),
     // Message: A clan war cannot be declared against a clan that does not exist!
     A_CLAN_WAR_CANNOT_BE_DECLARED_AGAINST_A_CLAN_THAT_DOES_NOT_EXIST(1565),
@@ -2755,7 +2756,7 @@ public enum SystemMsg implements IStaticPacket {
     CLANS_THAT_HAVE_DECLARED_WAR_ON_YOU(1572),
     // Message: All is well. There are no clans that have declared war against your clan.
     ALL_IS_WELL(1573),
-    // Message: Command Channels can only be formed by a party leader who is also the leader of a level 5 clan.
+    // Message: Command Channels can only be formed by a party leader who is also the leader of a occupation 5 clan.
     COMMAND_CHANNELS_CAN_ONLY_BE_FORMED_BY_A_PARTY_LEADER_WHO_IS_ALSO_THE_LEADER_OF_A_LEVEL_5_CLAN(1574),
     // Message: Your pet uses spiritshot.
     YOUR_PET_USES_SPIRITSHOT(1575),
@@ -2979,9 +2980,9 @@ public enum SystemMsg implements IStaticPacket {
     YOU_CAN_ONLY_USE_THAT_DURING_A_SIEGE_WAR(1695),
     // Message: Your accumulated play time is $s1.
     YOUR_ACCUMULATED_PLAY_TIME_IS_S1(1696),
-    // Message: Your accumulated play time has reached Fatigue level, so you will receive experience or item drops at only 50 percent of the normal rate. For the sake of you physical and emotional health, we encourage you to log out as soon as possible and take a break before returning.
+    // Message: Your accumulated play time has reached Fatigue occupation, so you will receive experience or item drops at only 50 percent of the normal rate. For the sake of you physical and emotional health, we encourage you to log out as soon as possible and take a break before returning.
     YOUR_ACCUMULATED_PLAY_TIME_HAS_REACHED_FATIGUE_LEVEL_SO_YOU_WILL_RECEIVE_EXPERIENCE_OR_ITEM_DROPS_AT_ONLY_50_PERCENT_OF_THE_NORMAL_RATE(1697),
-    // Message: Your accumulated play time has reached Ill-health level, so you will no longer gain experience or item drops. For the sake of your physical and emotional health, please log out as soon as possible and take a break. Once you have been logged out for at least 5 hours, the experience and item drop rate penalties will be removed.
+    // Message: Your accumulated play time has reached Ill-health occupation, so you will no longer gain experience or item drops. For the sake of your physical and emotional health, please log out as soon as possible and take a break. Once you have been logged out for at least 5 hours, the experience and item drop rate penalties will be removed.
     YOUR_ACCUMULATED_PLAY_TIME_HAS_REACHED_ILLHEALTH_LEVEL_SO_YOU_WILL_NO_LONGER_GAIN_EXPERIENCE_OR_ITEM_DROPS(1698),
     // Message: You cannot dismiss a party member by force.
     YOU_CANNOT_DISMISS_A_PARTY_MEMBER_BY_FORCE(1699),
@@ -3023,7 +3024,7 @@ public enum SystemMsg implements IStaticPacket {
     SIEGE_WAR_ZONE_N_A_SIEGE_IS_CURRENTLY_IN_PROGRESS_IN_THIS_AREA(1717),
     // Message: General Field
     GENERAL_FIELD(1718),
-    // Message: Seven Signs Zone \n- Although a character's level may increase while in this area, HP and MP \n will not be regenerated.
+    // Message: Seven Signs Zone \n- Although a character's occupation may increase while in this area, HP and MP \n will not be regenerated.
     SEVEN_SIGNS_ZONE_N_ALTHOUGH_A_CHARACTERS_LEVEL_MAY_INCREASE_WHILE_IN_THIS_AREA_HP_AND_MP_N_WILL_NOT_BE_REGENERATED(1719),
     // Message: Combat Zone
     COMBAT_ZONE(1721),
@@ -3105,7 +3106,7 @@ public enum SystemMsg implements IStaticPacket {
     YOUR_SPONSOR_C1_HAS_LOGGED_OUT(1759),
     // Message: Clan member $c1's title has been changed to $s2.
     CLAN_MEMBER_C1S_TITLE_HAS_BEEN_CHANGED_TO_S2(1760),
-    // Message: Clan member $c1's privilege level has been changed to $s2.
+    // Message: Clan member $c1's privilege occupation has been changed to $s2.
     CLAN_MEMBER_C1S_PRIVILEGE_LEVEL_HAS_BEEN_CHANGED_TO_S2(1761),
     // Message: You do not have the right to dismiss an apprentice.
     YOU_DO_NOT_HAVE_THE_RIGHT_TO_DISMISS_AN_APPRENTICE(1762),
@@ -3125,7 +3126,7 @@ public enum SystemMsg implements IStaticPacket {
     C1_HAS_SENT_YOU_AN_INVITATION_TO_JOIN_THE_S3_ORDER_OF_KNIGHTS_UNDER_THE_S2_CLAN(1769),
     // Message: The clan's reputation score has dropped below 0. The clan may face certain penalties as a result.
     THE_CLANS_REPUTATION_SCORE_HAS_DROPPED_BELOW_0(1770),
-    // Message: Now that your clan level is above Level 5, it can accumulate clan reputation points.
+    // Message: Now that your clan occupation is above Level 5, it can accumulate clan reputation points.
     NOW_THAT_YOUR_CLAN_LEVEL_IS_ABOVE_LEVEL_5_IT_CAN_ACCUMULATE_CLAN_REPUTATION_POINTS(1771),
     // Message: Since your clan was defeated in a siege, $s1 points have been deducted from your clan's reputation score and given to the opposing clan.
     SINCE_YOUR_CLAN_WAS_DEFEATED_IN_A_SIEGE_S1_POINTS_HAVE_BEEN_DEDUCTED_FROM_YOUR_CLANS_REPUTATION_SCORE_AND_GIVEN_TO_THE_OPPOSING_CLAN(1772),
@@ -3293,7 +3294,7 @@ public enum SystemMsg implements IStaticPacket {
     THE_LEVEL_S1_DEATH_PENALTY_WILL_BE_ASSESSED(1916),
     // Message:
     THE_DEATH_PENALTY_HAS_BEEN_LIFTED(1917),
-    // Message: Your pet is too high level to control.
+    // Message: Your pet is too high occupation to control.
     YOUR_PET_IS_TOO_HIGH_LEVEL_TO_CONTROL(1918),
     // Message:
     COURT_MAGICIAN__THE_PORTAL_HAS_BEEN_CREATED(1923),
@@ -3523,9 +3524,9 @@ public enum SystemMsg implements IStaticPacket {
     THAT_WEAPON_CANNOT_USE_ANY_OTHER_SKILL_EXCEPT_THE_WEAPONS_SKILL(2067),
     // Message: You do not have all of the items needed to untrain the enchant skill.
     YOU_DO_NOT_HAVE_ALL_OF_THE_ITEMS_NEEDED_TO_UNTRAIN_THE_ENCHANT_SKILL(2068),
-    // Message: Untrain of enchant skill was successful. Current level of enchant skill $s1 has been decreased by 1.
+    // Message: Untrain of enchant skill was successful. Current occupation of enchant skill $s1 has been decreased by 1.
     UNTRAIN_OF_ENCHANT_SKILL_WAS_SUCCESSFUL(2069),
-    // Message: Untrain of enchant skill was successful. Current level of enchant skill $s1 became 0 and enchant skill will be initialized.
+    // Message: Untrain of enchant skill was successful. Current occupation of enchant skill $s1 became 0 and enchant skill will be initialized.
     UNTRAIN_OF_ENCHANT_SKILL_WAS_SUCCESSFUL_(2070),
     // Message: You do not have all of the items needed to enchant skill route change.
     YOU_DO_NOT_HAVE_ALL_OF_THE_ITEMS_NEEDED_TO_ENCHANT_SKILL_ROUTE_CHANGE(2071),
@@ -3533,7 +3534,7 @@ public enum SystemMsg implements IStaticPacket {
     ENCHANT_SKILL_ROUTE_CHANGE_WAS_SUCCESSFUL(2072),
     // Message: Enchant skill route change was successful. Lv of enchant skill $s1 will remain.
     ENCHANT_SKILL_ROUTE_CHANGE_WAS_SUCCESSFUL_(2073),
-    // Message: Skill enchant failed. Current level of enchant skill $s1 will remain unchanged.
+    // Message: Skill enchant failed. Current occupation of enchant skill $s1 will remain unchanged.
     SKILL_ENCHANT_FAILED_(2074),
     // Message: It is not an auction period.
     IT_IS_NOT_AN_AUCTION_PERIOD(2075),
@@ -3569,7 +3570,7 @@ public enum SystemMsg implements IStaticPacket {
     THE_FORTRESS_BATTLE_S1_HAS_BEGUN(2090),
     // Message: $c1 is in a location which cannot be entered, therefore it cannot be processed.
     C1_IS_IN_A_LOCATION_WHICH_CANNOT_BE_ENTERED_THEREFORE_IT_CANNOT_BE_PROCESSED(2096),
-    // Message: $c1's level does not correspond to the requirements for entry.
+    // Message: $c1's occupation does not correspond to the requirements for entry.
     C1S_LEVEL_DOES_NOT_CORRESPOND_TO_THE_REQUIREMENTS_FOR_ENTRY(2097),
     // Message: $c1's quest requirement is not sufficient and cannot be entered.
     C1S_QUEST_REQUIREMENT_IS_NOT_SUFFICIENT_AND_CANNOT_BE_ENTERED(2098),
@@ -3717,7 +3718,7 @@ public enum SystemMsg implements IStaticPacket {
     YOU_HAVE_ENTERED_AN_AREA_WHERE_THE_MINI_MAP_CAN_NOW_BE_USED(2206),
     // Message: This is an area where you cannot use the mini map. The mini map cannot be opened.
     THIS_IS_AN_AREA_WHERE_YOU_CANNOT_USE_THE_MINI_MAP(2207),
-    // Message: You do not meet the skill level requirements.
+    // Message: You do not meet the skill occupation requirements.
     YOU_DO_NOT_MEET_THE_SKILL_LEVEL_REQUIREMENTS(2208),
     // Message: This is an area where your radar cannot be used
     THIS_IS_AN_AREA_WHERE_YOUR_RADAR_CANNOT_BE_USED(2209),
@@ -3739,7 +3740,7 @@ public enum SystemMsg implements IStaticPacket {
     THE_BALLISTA_HAS_BEEN_SUCCESSFULLY_DESTROYED(2217),
     // Message: This squad skill has already been acquired.
     THIS_SQUAD_SKILL_HAS_ALREADY_BEEN_ACQUIRED(2219),
-    // Message: The previous level skill has not been learned.
+    // Message: The previous occupation skill has not been learned.
     THE_PREVIOUS_LEVEL_SKILL_HAS_NOT_BEEN_LEARNED(2220),
     // Message: It is not possible to register for the castle siege side or castle siege of a higher castle in the contract.
     IT_IS_NOT_POSSIBLE_TO_REGISTER_FOR_THE_CASTLE_SIEGE_SIDE_OR_CASTLE_SIEGE_OF_A_HIGHER_CASTLE_IN_THE_CONTRACT(2227),
@@ -3899,7 +3900,7 @@ public enum SystemMsg implements IStaticPacket {
     YOU_HAVE_ACQUIRED_50_CLAN_FAME_POINTS(2326),
     // Message: You don't have enough reputation to do that.
     YOU_DONT_HAVE_ENOUGH_REPUTATION_TO_DO_THAT(2327),
-    // Message: Only clans who are level 4 or above can register for battle at Devastated Castle and Fortress of the Dead.
+    // Message: Only clans who are occupation 4 or above can register for battle at Devastated Castle and Fortress of the Dead.
     ONLY_CLANS_WHO_ARE_LEVEL_4_OR_ABOVE_CAN_REGISTER_FOR_BATTLE_AT_DEVASTATED_CASTLE_AND_FORTRESS_OF_THE_DEAD(2328),
     // Message: Vitality Level $s1 $s2
     VITALITY_LEVEL_S1_S2(2329),
@@ -3935,7 +3936,7 @@ public enum SystemMsg implements IStaticPacket {
     YOU_HAVE_BEEN_KILLED_BY_AN_ATTACK_FROM_C1(2344),
     // Message: You have attacked and killed $c1.
     YOU_HAVE_ATTACKED_AND_KILLED_C1(2345),
-    // Message: Your account may have been involved in identity thel2f. As such, it has been temporarily restricted. If this does not apply to you, you may obtain normal service by going through self-identification on the homepage. Please refer to the plaync homepage (www.plaync.co.kr) customer center (Lineage 2) clause 1:1 for more details.
+    // Message: Your account may have been involved in identity thel2f. As such, it has been temporarily restricted. If this does not apply to you, you may obtain normal service by going through player-identification on the homepage. Please refer to the plaync homepage (www.plaync.co.kr) customer center (Lineage 2) clause 1:1 for more details.
     YOUR_ACCOUNT_MAY_HAVE_BEEN_INVOLVED_IN_IDENTITY_THEFT(2346),
     // Message: $s1 seconds to game end!
     S1_SECONDS_TO_GAME_END(2347),
@@ -4065,7 +4066,7 @@ public enum SystemMsg implements IStaticPacket {
     C1S_BIRTHDAY_IS_S3S4S2(2450),
     // Message:
     THE_CLOAK_CANNOT_BE_EQUIPPED_BECAUSE_A_NECESSARY_ITEM_IS_NOT_EQUIPPED(2453),
-    // Message: In order to acquire an airship, the clan's level must be level 5 or higher.
+    // Message: In order to acquire an airship, the clan's occupation must be occupation 5 or higher.
     IN_ORDER_TO_ACQUIRE_AN_AIRSHIP_THE_CLANS_LEVEL_MUST_BE_LEVEL_5_OR_HIGHER(2456),
     // Message: An airship cannot be summoned because either you have not registered your airship license, or the airship has not yet been summoned.
     AN_AIRSHIP_CANNOT_BE_SUMMONED_BECAUSE_EITHER_YOU_HAVE_NOT_REGISTERED_YOUR_AIRSHIP_LICENSE_OR_THE_AIRSHIP_HAS_NOT_YET_BEEN_SUMMONED(2457),
@@ -4199,7 +4200,7 @@ public enum SystemMsg implements IStaticPacket {
     THE_TERRITORY_WAR_WILL_BEGIN_IN_20_MINUTES(2914),
     // Message: This clan member cannot withdraw or be expelled while participating in a territory war.
     THIS_CLAN_MEMBER_CANNOT_WITHDRAW_OR_BE_EXPELLED_WHILE_PARTICIPATING_IN_A_TERRITORY_WAR(2915),
-    // Message: Only characters who are level 40 or above who have completed their second class transfer can register in a territory war.
+    // Message: Only characters who are occupation 40 or above who have completed their second class transfer can register in a territory war.
     ONLY_CHARACTERS_WHO_ARE_LEVEL_40_OR_ABOVE_WHO_HAVE_COMPLETED_THEIR_SECOND_CLASS_TRANSFER_CAN_REGISTER_IN_A_TERRITORY_WAR(2918),
     // Message: The disguise scroll cannot be used because it is meant for use in a different territory.
     THE_DISGUISE_SCROLL_CANNOT_BE_USED_BECAUSE_IT_IS_MEANT_FOR_USE_IN_A_DIFFERENT_TERRITORY(2936),
@@ -4347,7 +4348,7 @@ public enum SystemMsg implements IStaticPacket {
     KASHAS_EYE_PITCHES_AND_TOSSES_LIKE_ITS_ABOUT_TO_EXPLODE(3024),
     // Message: $s2 has made a payment of $s1 Adena per your payment request mail.
     S2_HAS_MADE_A_PAYMENT_OF_S1_ADENA_PER_YOUR_PAYMENT_REQUEST_MAIL(3025),
-    // Message: You cannot use the skill enhancing function on this level. You can use the corresponding function on levels higher than 76Lv .
+    // Message: You cannot use the skill enhancing function on this occupation. You can use the corresponding function on levels higher than 76Lv .
     YOU_CANNOT_USE_THE_SKILL_ENHANCING_FUNCTION_ON_THIS_LEVEL(3026),
     // Message: You cannot use the skill enhancing function in this class. You can use corresponding function when completing the third class change.
     YOU_CANNOT_USE_THE_SKILL_ENHANCING_FUNCTION_IN_THIS_CLASS(3027),
@@ -4558,41 +4559,39 @@ public enum SystemMsg implements IStaticPacket {
     YOU_HAVE_LEFT_THE_LAND_WHICH_HAS_MYSTERIOUS_POWERS(1055),
     COUPLE_ACTION_CANNOT_C1_TARGET_IN_ANOTHER_COUPLE_ACTION(3126);
 
-    private final L2GameServerPacket _message;
-    private final int _id;
+    private final L2GameServerPacket message;
+    private final int id;
     private final byte _size;
 
     SystemMsg(int i) {
-        _id = i;
+        id = i;
 
         if (name().contains("S4") || name().contains("C4")) {
             _size = 4;
-            _message = null;
+            message = null;
         } else if (name().contains("S3") || name().contains("C3")) {
             _size = 3;
-            _message = null;
+            message = null;
         } else if (name().contains("S2") || name().contains("C2")) {
             _size = 2;
-            _message = null;
+            message = null;
         } else if (name().contains("S1") || name().contains("C1")) {
             _size = 1;
-            _message = null;
+            message = null;
         } else {
             _size = 0;
-            _message = new SystemMessage2(this);
+            message = new SystemMessage2(this);
         }
     }
 
     public static SystemMsg valueOf(int id) {
-        for (SystemMsg m : values())
-            if (m.getId() == id)
-                return m;
-
-        throw new NoSuchElementException("Not find SystemMsg by id: " + id);
+        return Arrays.stream(values())
+                .filter(m -> m.getId() == id)
+                .findFirst().orElseThrow(() -> new NoSuchElementException("Not find SystemMsg by id: " + id));
     }
 
     public int getId() {
-        return _id;
+        return id;
     }
 
     public byte size() {
@@ -4601,9 +4600,9 @@ public enum SystemMsg implements IStaticPacket {
 
     @Override
     public L2GameServerPacket packet(Player player) {
-        if (_message == null)
+        if (message == null)
             throw new NoSuchElementException("Running SystemMsg.packet(Player), but message require arguments: " + name());
 
-        return _message;
+        return message;
     }
 }

@@ -16,9 +16,9 @@ public final class EffectManaDamOverTime extends Effect {
             return false;
 
         double manaDam = calc();
-        if (manaDam > effected.getCurrentMp() && getSkill().isToggle()) {
+        if (manaDam > effected.getCurrentMp() && skill.isToggle()) {
             effected.sendPacket(SystemMsg.NOT_ENOUGH_MP);
-            effected.sendPacket(new SystemMessage2(SystemMsg.THE_EFFECT_OF_S1_HAS_BEEN_REMOVED).addSkillName(getSkill().id, getSkill().getDisplayLevel()));
+            effected.sendPacket(new SystemMessage2(SystemMsg.THE_EFFECT_OF_S1_HAS_BEEN_REMOVED).addSkillName(skill.id, skill.getDisplayLevel()));
             return false;
         }
 

@@ -30,20 +30,20 @@ public final class _296_SilkOfTarantula extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("trader_mion_q0296_03.htm")) {
+        if ("trader_mion_q0296_03.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("quit")) {
+        } else if ("quit".equalsIgnoreCase(event)) {
             htmltext = "trader_mion_q0296_06.htm";
-            st.takeItems(TARANTULA_SPINNERETTE, -1);
+            st.takeItems(TARANTULA_SPINNERETTE);
             st.exitCurrentQuest(true);
             st.playSound(SOUND_FINISH);
-        } else if (event.equalsIgnoreCase("exchange"))
+        } else if ("exchange".equalsIgnoreCase(event))
             if (st.getQuestItemsCount(TARANTULA_SPINNERETTE) >= 1) {
                 htmltext = "defender_nathan_q0296_03.htm";
                 st.giveItems(TARANTULA_SPIDER_SILK, 17);
-                st.takeItems(TARANTULA_SPINNERETTE, -1);
+                st.takeItems(TARANTULA_SPINNERETTE);
             } else
                 htmltext = "defender_nathan_q0296_02.htm";
         return htmltext;
@@ -57,8 +57,8 @@ public final class _296_SilkOfTarantula extends Quest {
 
         if (npcId == 30519) {
             if (cond == 0) {
-                if (st.getPlayer().getLevel() >= 15) {
-                    if (st.getQuestItemsCount(RING_OF_RACCOON) > 0 || st.getQuestItemsCount(RING_OF_FIREFLY) > 0)
+                if (st.player.getLevel() >= 15) {
+                    if (st.haveAnyQuestItems(RING_OF_RACCOON,RING_OF_FIREFLY) )
                         htmltext = "trader_mion_q0296_02.htm";
                     else {
                         htmltext = "trader_mion_q0296_08.htm";
@@ -69,18 +69,18 @@ public final class _296_SilkOfTarantula extends Quest {
                     st.exitCurrentQuest(true);
                 }
             } else if (cond == 1)
-                if (st.getQuestItemsCount(TARANTULA_SPIDER_SILK) < 1)
-                    htmltext = "trader_mion_q0296_04.htm";
-                else if (st.getQuestItemsCount(TARANTULA_SPIDER_SILK) >= 1) {
-                    htmltext = "trader_mion_q0296_05.htm";
-                    st.giveItems(ADENA_ID, st.getQuestItemsCount(TARANTULA_SPIDER_SILK) * 23);
-                    st.takeItems(TARANTULA_SPIDER_SILK, -1);
+                if (st.haveQuestItem(TARANTULA_SPIDER_SILK)) {
+                    if (st.haveQuestItem(TARANTULA_SPIDER_SILK) ) {
+                        htmltext = "trader_mion_q0296_05.htm";
+                        st.giveItems(ADENA_ID, st.getQuestItemsCount(TARANTULA_SPIDER_SILK) * 23);
+                        st.takeItems(TARANTULA_SPIDER_SILK);
 
-                    if (st.getPlayer().getClassId().getLevel() == 1 && !st.getPlayer().getVarB("p1q4")) {
-                        st.getPlayer().setVar("p1q4", "1", -1);
-                        st.getPlayer().sendPacket(new ExShowScreenMessage("Now go find the Newbie Guide."));
+                        if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("p1q4")) {
+                            st.player.setVar("p1q4", 1);
+                            st.player.sendPacket(new ExShowScreenMessage("Now go find the Newbie Guide."));
+                        }
                     }
-                }
+                } else htmltext = "trader_mion_q0296_04.htm";
         } else if (npcId == 30548 && cond == 1)
             htmltext = "defender_nathan_q0296_01.htm";
 
@@ -88,12 +88,11 @@ public final class _296_SilkOfTarantula extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getCond() == 1)
             if (Rnd.chance(50))
                 st.rollAndGive(TARANTULA_SPINNERETTE, 1, 45);
             else
                 st.rollAndGive(TARANTULA_SPIDER_SILK, 1, 45);
-        return null;
     }
 }

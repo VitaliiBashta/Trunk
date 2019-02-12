@@ -83,7 +83,7 @@ public final class _10270_BirthOfTheSeed extends Quest {
 
         if (npcId == PLENOS) {
             if (cond == 0)
-                if (st.getPlayer().getLevel() >= 75)
+                if (st.player.getLevel() >= 75)
                     htmltext = "plenos_q10270_1.htm";
                 else {
                     htmltext = "plenos_q10270_1a.htm";
@@ -94,7 +94,7 @@ public final class _10270_BirthOfTheSeed extends Quest {
                 htmltext = "artius_q10270_1.htm";
             else if (cond == 2 && (st.getQuestItemsCount(Yehan_Klodekus_Badge) == 0 || st.getQuestItemsCount(Yehan_Klanikus_Badge) == 0 || st.getQuestItemsCount(Lich_Crystal) == 0))
                 htmltext = "artius_q10270_4.htm";
-            else if (cond == 2 && st.getQuestItemsCount(Yehan_Klodekus_Badge) == 1 && st.getQuestItemsCount(Yehan_Klanikus_Badge) == 1 && st.getQuestItemsCount(Lich_Crystal) == 1)
+            else if (cond == 2 && st.haveAllQuestItems(Yehan_Klodekus_Badge, Yehan_Klanikus_Badge, Lich_Crystal))
                 htmltext = "artius_q10270_5.htm";
             else if (cond == 3)
                 htmltext = "artius_q10270_8.htm";
@@ -110,20 +110,12 @@ public final class _10270_BirthOfTheSeed extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
-        int cond = st.getCond();
-        if (cond == 2)
-            if (npcId == Yehan_Klodekus && st.getQuestItemsCount(Yehan_Klodekus_Badge) < 1) {
-                st.giveItems(Yehan_Klodekus_Badge, 1);
-                st.playSound(SOUND_ITEMGET);
-            } else if (npcId == Yehan_Klanikus && st.getQuestItemsCount(Yehan_Klanikus_Badge) < 1) {
-                st.giveItems(Yehan_Klanikus_Badge, 1);
-                st.playSound(SOUND_ITEMGET);
-            } else if (npcId == Cohemenes && st.getQuestItemsCount(Lich_Crystal) < 1) {
-                st.giveItems(Lich_Crystal, 1);
-                st.playSound(SOUND_ITEMGET);
-            }
-        return null;
+        if (st.getCond() == 2) {
+            if (npcId == Yehan_Klodekus) st.giveItemIfNotHave(Yehan_Klodekus_Badge);
+            if (npcId == Yehan_Klanikus) st.giveItemIfNotHave(Yehan_Klanikus_Badge);
+            if (npcId == Cohemenes) st.giveItemIfNotHave(Lich_Crystal);
+        }
     }
 }

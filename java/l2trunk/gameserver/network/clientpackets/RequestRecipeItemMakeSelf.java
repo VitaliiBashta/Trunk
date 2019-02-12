@@ -118,7 +118,7 @@ public class RequestRecipeItemMakeSelf extends L2GameClientPacket {
                 int itemId = recipeList.getFoundation() != 0 ? Rnd.chance(Config.CRAFT_MASTERWORK_CHANCE) ? recipeList.getFoundation() : recipeList.getItemId() : recipeList.getItemId();
                 long count = recipeList.getCount();
                 //TODO [G1ta0] добавить проверку на перевес
-                ItemFunctions.addItem(activeChar, itemId, count, true, "RecipeMakeSelf");
+                ItemFunctions.addItem(activeChar, itemId, count, "RecipeMakeSelf");
 
                 if (itemId == recipeList.getFoundation())
                     activeChar.getCounters().foundationItemsMade++;

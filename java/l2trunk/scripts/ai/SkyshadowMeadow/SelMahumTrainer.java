@@ -45,7 +45,7 @@ public final class SelMahumTrainer extends Fighter {
 
             _wait_timeout = (System.currentTimeMillis() + Rnd.get(20, 30) * 1000);
 
-            actor.broadcastPacket(new SocialAction(actor.getObjectId(), social));
+            actor.broadcastPacket(new SocialAction(actor.objectId(), social));
             actor.setHeading(actor.getSpawnedLoc().h);
 
             int time = 2000;
@@ -53,7 +53,7 @@ public final class SelMahumTrainer extends Fighter {
                 ThreadPoolManager.INSTANCE.schedule(() -> {
                     _arm.forEach(voin -> {
                         voin.setHeading(voin.getSpawnedLoc().h);
-                        voin.broadcastPacket(new SocialAction(voin.getObjectId(), social));
+                        voin.broadcastPacket(new SocialAction(voin.objectId(), social));
                     });
                 }, time);
                 time += 2000;

@@ -49,27 +49,27 @@ public final class _414_PathToOrcRaider extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("prefect_karukia_q0414_05.htm")) {
+        if ("prefect_karukia_q0414_05.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.setState(STARTED);
-            st.giveItems(GOBLIN_DWELLING_MAP, 1);
+            st.giveItems(GOBLIN_DWELLING_MAP);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("to_Gludin")) {
+        } else if ("to_Gludin".equalsIgnoreCase(event)) {
             htmltext = "prefect_karukia_q0414_07a.htm";
-            st.takeItems(KURUKA_RATMAN_TOOTH, -1);
-            st.takeItems(GOBLIN_DWELLING_MAP, -1);
+            st.takeItems(KURUKA_RATMAN_TOOTH);
+            st.takeItems(GOBLIN_DWELLING_MAP);
             st.playSound(SOUND_MIDDLE);
-            st.giveItems(BETRAYER_UMBAR_REPORT, 1);
+            st.giveItems(BETRAYER_UMBAR_REPORT);
             st.addRadar(new Location(-74490, 83275, -3374));
             st.setCond(3);
-        } else if (event.equalsIgnoreCase("to_Schuttgart")) {
+        } else if ("to_Schuttgart".equalsIgnoreCase(event)) {
             htmltext = "prefect_karukia_q0414_07b.htm";
-            st.takeItems(KURUKA_RATMAN_TOOTH, -1);
-            st.takeItems(GOBLIN_DWELLING_MAP, -1);
+            st.takeItems(KURUKA_RATMAN_TOOTH);
+            st.takeItems(GOBLIN_DWELLING_MAP);
             st.addRadar(new Location(90000, -143286, -1520));
             st.playSound(SOUND_MIDDLE);
             st.setCond(5);
-        } else if (event.equalsIgnoreCase("prefect_tazar_q0414_02.htm")) {
+        } else if ("prefect_tazar_q0414_02.htm".equalsIgnoreCase(event)) {
             st.addRadar(new Location(57502, -117576, -3700));
             st.setCond(6);
             st.playSound(SOUND_MIDDLE);
@@ -82,8 +82,8 @@ public final class _414_PathToOrcRaider extends Quest {
         String htmltext = "noquest";
         int npcId = npc.getNpcId();
         int cond = st.getCond();
-        int playerClassID = st.getPlayer().getClassId().getId();
-        int playerLvl = st.getPlayer().getLevel();
+        int playerClassID = st.player.getClassId().id;
+        int playerLvl = st.player.getLevel();
         if (npcId == KARUKIA) {
             if (cond < 1) {
                 if (playerLvl >= 18 && playerClassID == 0x2c && st.getQuestItemsCount(MARK_OF_RAIDER) == 0 && st.getQuestItemsCount(GOBLIN_DWELLING_MAP) == 0)
@@ -93,9 +93,9 @@ public final class _414_PathToOrcRaider extends Quest {
                         htmltext = "prefect_karukia_q0414_02a.htm";
                     else
                         htmltext = "prefect_karukia_q0414_03.htm";
-                } else if (playerLvl < 18 && playerClassID == 0x2c)
+                } else if (playerLvl < 18)
                     htmltext = "prefect_karukia_q0414_02.htm";
-                else if (playerLvl >= 18 && playerClassID == 0x2c && st.getQuestItemsCount(MARK_OF_RAIDER) > 0)
+                else if (st.getQuestItemsCount(MARK_OF_RAIDER) > 0)
                     htmltext = "prefect_karukia_q0414_04.htm";
                 else
                     htmltext = "prefect_karukia_q0414_02.htm";
@@ -115,12 +115,11 @@ public final class _414_PathToOrcRaider extends Quest {
             else if (cond == 4 && st.getQuestItemsCount(HEAD_OF_BETRAYER) > 1) {
                 htmltext = "prefect_kasman_q0414_03.htm";
                 st.exitCurrentQuest(true);
-                if (st.getPlayer().getClassId().getLevel() == 1) {
-                    st.giveItems(MARK_OF_RAIDER, 1);
-                    if (!st.getPlayer().getVarB("prof1")) {
-                        st.getPlayer().setVar("prof1", "1", -1);
+                if (st.player.getClassId().occupation() == 0) {
+                    st.giveItems(MARK_OF_RAIDER);
+                    if (!st.player.isVarSet("prof1")) {
+                        st.player.setVar("prof1", 1);
                         st.addExpAndSp(228064, 16455);
-                        //FIXME [G1ta0] дать адены, только если первый чар на акке
                         st.giveItems(ADENA_ID, 81900);
                     }
                 }
@@ -134,12 +133,11 @@ public final class _414_PathToOrcRaider extends Quest {
             else if (cond == 7 && st.getQuestItemsCount(TIMORA_ORCS_HEAD) > 0) {
                 htmltext = "prefect_tazar_q0414_05.htm";
                 st.exitCurrentQuest(true);
-                if (st.getPlayer().getClassId().getLevel() == 1) {
-                    st.giveItems(MARK_OF_RAIDER, 1);
-                    if (!st.getPlayer().getVarB("prof1")) {
-                        st.getPlayer().setVar("prof1", "1", -1);
+                if (st.player.getClassId().occupation() == 0) {
+                    st.giveItems(MARK_OF_RAIDER);
+                    if (!st.player.isVarSet("prof1")) {
+                        st.player.setVar("prof1", 1);
                         st.addExpAndSp(228064, 16455);
-                        //FIXME [G1ta0] дать адены, только если первый чар на акке
                         st.giveItems(ADENA_ID, 81900);
                     }
                 }
@@ -158,21 +156,21 @@ public final class _414_PathToOrcRaider extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         if (npcId == GOBLIN_TOMB_RAIDER_LEADER && cond == 1) {
             if (st.getQuestItemsCount(GOBLIN_DWELLING_MAP) == 1 && st.getQuestItemsCount(KURUKA_RATMAN_TOOTH) < 10 && st.getQuestItemsCount(GREEN_BLOOD) < 40)
                 if (st.getQuestItemsCount(GREEN_BLOOD) > 20 && Rnd.chance((st.getQuestItemsCount(GREEN_BLOOD) - 20) * 5)) {
-                    st.takeItems(GREEN_BLOOD, -1);
+                    st.takeItems(GREEN_BLOOD);
                     st.addSpawn(27045);
                 } else {
-                    st.giveItems(GREEN_BLOOD, 1);
+                    st.giveItems(GREEN_BLOOD);
                     st.playSound(SOUND_ITEMGET);
                 }
         } else if (npcId == KURUKA_RATMAN_LEADER && cond == 1) {
             if (st.getQuestItemsCount(GOBLIN_DWELLING_MAP) > 0 && st.getQuestItemsCount(KURUKA_RATMAN_TOOTH) < 10) {
-                st.giveItems(KURUKA_RATMAN_TOOTH, 1);
+                st.giveItems(KURUKA_RATMAN_TOOTH);
                 if (st.getQuestItemsCount(KURUKA_RATMAN_TOOTH) > 9) {
                     st.setCond(2);
                     st.playSound(SOUND_MIDDLE);
@@ -191,11 +189,10 @@ public final class _414_PathToOrcRaider extends Quest {
             }
         } else if (npcId == TIMORA_ORC && cond == 6)
             if (st.getQuestItemsCount(TIMORA_ORCS_HEAD) < 1 && Rnd.chance(50)) {
-                st.giveItems(TIMORA_ORCS_HEAD, 1);
+                st.giveItems(TIMORA_ORCS_HEAD);
                 st.addRadar(new Location(90000, -143286, -1520));
                 st.setCond(7);
                 st.playSound(SOUND_MIDDLE);
             }
-        return null;
     }
 }

@@ -79,11 +79,11 @@ public final class PetitionManager implements IPetitionHandler {
 
     public boolean cancelActivePetition(Player player) {
         for (Petition currPetition : getPendingPetitions().values()) {
-            if ((currPetition.getPetitioner() != null) && (currPetition.getPetitioner().getObjectId() == player.getObjectId())) {
+            if ((currPetition.getPetitioner() != null) && (currPetition.getPetitioner().objectId() == player.objectId())) {
                 return currPetition.endPetitionConsultation(PetitionState.Petitioner_Cancel);
             }
 
-            if ((currPetition.getResponder() != null) && (currPetition.getResponder().getObjectId() == player.getObjectId())) {
+            if ((currPetition.getResponder() != null) && (currPetition.getResponder().objectId() == player.objectId())) {
                 return currPetition.endPetitionConsultation(PetitionState.Responder_Cancel);
             }
         }
@@ -98,7 +98,7 @@ public final class PetitionManager implements IPetitionHandler {
                     continue;
                 }
 
-                if (currPetition.getPetitionerObjId() == petitioner.getObjectId() || currPetition.getResponderObjId() == petitioner.getObjectId()) {
+                if (currPetition.getPetitionerObjId() == petitioner.objectId() || currPetition.getResponderObjId() == petitioner.objectId()) {
                     currPetition.getLogMessages().forEach(petitioner::sendPacket);
                     return;
                 }
@@ -116,7 +116,7 @@ public final class PetitionManager implements IPetitionHandler {
                 continue;
             }
 
-            if ((currPetition.getResponder() != null) && (currPetition.getResponder().getObjectId() == player.getObjectId())) {
+            if ((currPetition.getResponder() != null) && (currPetition.getResponder().objectId() == player.objectId())) {
                 return currPetition.endPetitionConsultation(PetitionState.Completed);
             }
         }
@@ -148,7 +148,7 @@ public final class PetitionManager implements IPetitionHandler {
                 continue;
             }
 
-            if ((currPetition.getPetitioner() != null) && (currPetition.getPetitioner().getObjectId() == player.getObjectId())) {
+            if ((currPetition.getPetitioner() != null) && (currPetition.getPetitioner().objectId() == player.objectId())) {
                 petitionCount++;
             }
         }
@@ -158,7 +158,7 @@ public final class PetitionManager implements IPetitionHandler {
                 continue;
             }
 
-            if ((currPetition.getPetitioner() != null) && (currPetition.getPetitioner().getObjectId() == player.getObjectId())) {
+            if ((currPetition.getPetitioner() != null) && (currPetition.getPetitioner().objectId() == player.objectId())) {
                 petitionCount++;
             }
         }
@@ -192,11 +192,11 @@ public final class PetitionManager implements IPetitionHandler {
                     continue;
                 }
 
-                if (currPetition.getResponderObjId() == player.getObjectId()) {
+                if (currPetition.getResponderObjId() == player.objectId()) {
                     return true;
                 }
 
-                if (currPetition.getPetitionerObjId() == player.getObjectId()) {
+                if (currPetition.getPetitionerObjId() == player.objectId()) {
                     return true;
                 }
             }
@@ -216,7 +216,7 @@ public final class PetitionManager implements IPetitionHandler {
                     continue;
                 }
 
-                if ((currPetition.getPetitioner() != null) && (currPetition.getPetitioner().getObjectId() == petitioner.getObjectId())) {
+                if ((currPetition.getPetitioner() != null) && (currPetition.getPetitioner().objectId() == petitioner.objectId())) {
                     return true;
                 }
             }
@@ -255,8 +255,8 @@ public final class PetitionManager implements IPetitionHandler {
                 continue;
             }
 
-            if ((currPetition.getPetitioner() != null) && (currPetition.getPetitioner().getObjectId() == player.getObjectId())) {
-                cs = new Say2(player.getObjectId(), ChatType.PETITION_PLAYER, player.getName(), messageText);
+            if ((currPetition.getPetitioner() != null) && (currPetition.getPetitioner().objectId() == player.objectId())) {
+                cs = new Say2(player.objectId(), ChatType.PETITION_PLAYER, player.getName(), messageText);
                 currPetition.addLogMessage(cs);
 
                 currPetition.sendResponderPacket(cs);
@@ -264,8 +264,8 @@ public final class PetitionManager implements IPetitionHandler {
                 return true;
             }
 
-            if ((currPetition.getResponder() != null) && (currPetition.getResponder().getObjectId() == player.getObjectId())) {
-                cs = new Say2(player.getObjectId(), ChatType.PETITION_GM, player.getName(), messageText);
+            if ((currPetition.getResponder() != null) && (currPetition.getResponder().objectId() == player.objectId())) {
+                cs = new Say2(player.objectId(), ChatType.PETITION_GM, player.getName(), messageText);
                 currPetition.addLogMessage(cs);
 
                 currPetition.sendResponderPacket(cs);
@@ -330,7 +330,7 @@ public final class PetitionManager implements IPetitionHandler {
         // Notify all GMs that a new petition has been submitted.
         String msgContent = petitioner.getName() + " has submitted a new petition."; // (ID:
         // " + newPetitionId + ").";
-        GmListTable.broadcastToGMs(new Say2(petitioner.getObjectId(), ChatType.HERO_VOICE, "Petition System", msgContent));
+        GmListTable.broadcastToGMs(new Say2(petitioner.objectId(), ChatType.HERO_VOICE, "Petition System", msgContent));
 
         return newPetitionId;
     }
@@ -443,7 +443,7 @@ public final class PetitionManager implements IPetitionHandler {
             _id = getNextId();
             _type = PetitionType.values()[petitionType - 1];
             _content = petitionText;
-            _petitioner = petitioner.getObjectId();
+            _petitioner = petitioner.objectId();
         }
 
         boolean addLogMessage(Say2 cs) {
@@ -509,7 +509,7 @@ public final class PetitionManager implements IPetitionHandler {
                 return;
             }
 
-            _responder = responder.getObjectId();
+            _responder = responder.objectId();
         }
 
         int getResponderObjId() {

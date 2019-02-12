@@ -23,10 +23,10 @@ public class BlacksmithInstance extends NpcInstance {
     public void onAction(Player player, boolean shift) {
         if (this != player.getTarget()) {
             player.setTarget(this);
-            player.sendPacket(new MyTargetSelected(getObjectId(), player.getLevel() - getLevel()));
+            player.sendPacket(new MyTargetSelected(objectId(), player.getLevel() - getLevel()));
             player.sendPacket(new ValidateLocation(this));
         } else {
-            player.sendPacket(new MyTargetSelected(getObjectId(), player.getLevel() - getLevel()));
+            player.sendPacket(new MyTargetSelected(objectId(), player.getLevel() - getLevel()));
             if (!isInRange(player, INTERACTION_DISTANCE)) {
                 player.getAI().setIntentionInteract(CtrlIntention.AI_INTENTION_INTERACT, this);
                 player.sendActionFailed();

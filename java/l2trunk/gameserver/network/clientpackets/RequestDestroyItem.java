@@ -81,7 +81,7 @@ public final class RequestDestroyItem extends L2GameClientPacket {
             return;
         }
 
-        if (activeChar.getPet() != null && activeChar.getPet().getControlItemObjId() == item.getObjectId()) {
+        if (activeChar.getPet() != null && activeChar.getPet().getControlItemObjId() == item.objectId()) {
             activeChar.sendPacket(SystemMsg.THE_PET_HAS_BEEN_SUMMONED_AND_CANNOT_BE_DELETED);
             return;
         }
@@ -104,7 +104,7 @@ public final class RequestDestroyItem extends L2GameClientPacket {
                 crystallize = false;
         }
 
-        if (item.getOwnerId() == activeChar.getObjectId()) {
+        if (item.getOwnerId() == activeChar.objectId()) {
             if (!activeChar.getInventory().destroyItemByObjectId(objectId, count, "Delete")) {
                 activeChar.sendActionFailed();
                 return;
@@ -118,7 +118,7 @@ public final class RequestDestroyItem extends L2GameClientPacket {
             if (owner.getInventory().destroyItemByObjectId(objectId, count, "GMDelete")) {
                 List<ItemInstance> items = owner.getInventory().getItems();
                 int questSize = (int) items.stream()
-                        .filter(i -> i.getTemplate().isStackable())
+                        .filter(i -> i.getTemplate().stackable())
                         .count();
                 activeChar.sendPacket(new GMViewItemList(owner, items, items.size() - questSize));
                 activeChar.sendPacket(new ExGMViewQuestItemList(owner, items, questSize));
@@ -135,7 +135,7 @@ public final class RequestDestroyItem extends L2GameClientPacket {
 
         if (crystallize) {
             activeChar.sendPacket(SystemMsg.THE_ITEM_HAS_BEEN_SUCCESSFULLY_CRYSTALLIZED);
-            ItemFunctions.addItem(activeChar, crystalId, crystalAmount, true, "Delete");
+            ItemFunctions.addItem(activeChar, crystalId, crystalAmount, "Delete");
         } else
             activeChar.sendPacket(SystemMessage2.removeItems(item.getItemId(), count));
 

@@ -51,12 +51,12 @@ public final class PDam extends Skill {
                     realTarget.reduceCurrentHp(info.lethal_dmg, activeChar, this, true, true, false, false, false, false, false);
 
                 if (!info.miss || info.damage >= 1)
-                    realTarget.reduceCurrentHp(info.damage, activeChar, this, true, true, info.lethal ? false : _directHp, true, false, false, power != 0);
+                    realTarget.reduceCurrentHp(info.damage, activeChar, this, true, true, !info.lethal && _directHp, true, false, false, power != 0);
 
                 if (!reflected)
                     realTarget.doCounterAttack(this, activeChar, _blow);
 
-                getEffects(activeChar, target, getActivateRate() > 0, false, reflected);
+                getEffects(activeChar, target, activateRate > 0, false, reflected);
             }
 
         if (isSuicideAttack)

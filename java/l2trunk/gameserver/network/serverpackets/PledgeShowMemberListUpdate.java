@@ -17,9 +17,9 @@ public final class PledgeShowMemberListUpdate extends L2GameServerPacket {
     public PledgeShowMemberListUpdate(final Player player) {
         _name = player.getName();
         _lvl = player.getLevel();
-        _classId = player.getClassId().getId();
+        _classId = player.getClassId().id;
         _sex = player.isMale() ? 0 :1;
-        _objectId = player.getObjectId();
+        _objectId = player.objectId();
         _isOnline = player.isOnline() ? 1 : 0;
         _pledgeType = player.getPledgeType();
         SubUnit subUnit = player.getSubUnit();
@@ -33,7 +33,7 @@ public final class PledgeShowMemberListUpdate extends L2GameServerPacket {
         _lvl = cm.getLevel();
         _classId = cm.getClassId();
         _sex = cm.getSex();
-        _objectId = cm.getObjectId();
+        _objectId = cm.objectId();
         _isOnline = cm.isOnline() ? 1 : 0;
         _pledgeType = cm.getPledgeType();
         _isApprentice = cm.hasSponsor() ? 1 : 0;

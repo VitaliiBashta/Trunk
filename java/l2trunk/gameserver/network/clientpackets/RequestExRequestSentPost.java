@@ -29,7 +29,7 @@ public class RequestExRequestSentPost extends L2GameClientPacket {
         if (activeChar == null)
             return;
 
-        Mail mail = MailDAO.getInstance().getSentMailByMailId(activeChar.getObjectId(), postId);
+        Mail mail = MailDAO.getInstance().getSentMailByMailId(activeChar.objectId(), postId);
         if (mail != null) {
             activeChar.sendPacket(new ExReplySentPost(mail));
             return;

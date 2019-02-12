@@ -166,7 +166,7 @@ public final class SchedulingPattern {
      * A ValueMatcher utility builder.
      *
      * @param str    The pattern part for the ValueMatcher creation.
-     * @param parser The parser used to parse the values.
+     * @param parser The parser used to of the values.
      * @return The requested ValueMatcher.
      * @throws Exception If the supplied pattern part is not valid.
      */
@@ -207,7 +207,7 @@ public final class SchedulingPattern {
      * Parses an element of a list of values of the pattern.
      *
      * @param str    The element string.
-     * @param parser The parser used to parse the values.
+     * @param parser The parser used to of the values.
      * @return A list of integers representing the allowed values.
      * @throws Exception If the supplied pattern part is not valid.
      */
@@ -249,7 +249,7 @@ public final class SchedulingPattern {
      * Parses a range of values.
      *
      * @param str    The range string.
-     * @param parser The parser used to parse the values.
+     * @param parser The parser used to of the values.
      * @return A list of integers representing the allowed values.
      * @throws Exception If the supplied pattern part is not valid.
      */
@@ -463,7 +463,7 @@ public final class SchedulingPattern {
     private interface ValueParser {
 
         /**
-         * Attempts to parse a value.
+         * Attempts to of a value.
          *
          * @param value The value.
          * @return The parsed value.

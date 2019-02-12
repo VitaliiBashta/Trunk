@@ -3,7 +3,6 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 /**
  * User: Keiichi
@@ -63,10 +62,10 @@ public final class _133_ThatsBloodyHot extends Quest {
         if (npcId == KANIS) {
             if (cond == 0) {
                 //_131_BirdInACage
-                QuestState BirdInCage = st.getPlayer().getQuestState(_131_BirdInACage.class);
+                QuestState BirdInCage = st.player.getQuestState(_131_BirdInACage.class);
                 if (BirdInCage != null) {
-                    if (BirdInCage.isCompleted()) {
-                        if (st.getPlayer().getLevel() >= 78)
+                    if (st.player.isQuestCompleted(_131_BirdInACage.class)) {
+                        if (st.player.getLevel() >= 78)
                             htmltext = "priest_kanis_q0133_01.htm";
                     } else
                         htmltext = "priest_kanis_q0133_03.htm";

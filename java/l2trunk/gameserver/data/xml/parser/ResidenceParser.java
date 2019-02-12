@@ -63,7 +63,7 @@ public enum ResidenceParser {
         for (Iterator<Element> iterator = rootElement.elementIterator(); iterator.hasNext(); ) {
             Element element = iterator.next();
             String nodeName = element.getName();
-            int level = element.attributeValue("level") == null ? 0 : toInt(element.attributeValue("level"));
+            int level = element.attributeValue("occupation") == null ? 0 : toInt(element.attributeValue("occupation"));
             int lease = (int) ((element.attributeValue("lease") == null ? 0 : toInt(element.attributeValue("lease"))) * Config.RESIDENCE_LEASE_FUNC_MULTIPLIER);
             int npcId = element.attributeValue("npcId") == null ? 0 : toInt(element.attributeValue("npcId"));
             int listId = element.attributeValue("listId") == null ? 0 : toInt(element.attributeValue("listId"));
@@ -81,7 +81,7 @@ public enum ResidenceParser {
                         String nameString = teleportElement.attributeValue("StringName");
                         String nameStringLang = teleportElement.attributeValue("StringNameLang");
                         TeleportLocation loc = new TeleportLocation(itemId, price, npcStringId, nameString, nameStringLang, 0);
-                        loc.set(Location.parseLoc(teleportElement.attributeValue("loc")));
+                        loc.set(Location.of(teleportElement.attributeValue("loc")));
                         targets.add(loc);
                     }
                 }
@@ -114,31 +114,31 @@ public enum ResidenceParser {
                     if (skill != null)
                         residence.addSkill(skill);
                 }
-            } else if (nodeName.equalsIgnoreCase("banish_points")) {
+            } else if ("banish_points".equalsIgnoreCase(nodeName)) {
                 for (Iterator<Element> banishPointsIterator = element.elementIterator(); banishPointsIterator.hasNext(); ) {
-                    Location loc = Location.parse(banishPointsIterator.next());
+                    Location loc = Location.of(banishPointsIterator.next());
 
                     residence.addBanishPoint(loc);
                 }
-            } else if (nodeName.equalsIgnoreCase("owner_restart_points")) {
+            } else if ("owner_restart_points".equalsIgnoreCase(nodeName)) {
                 for (Iterator<Element> ownerRestartPointsIterator = element.elementIterator(); ownerRestartPointsIterator.hasNext(); ) {
-                    Location loc = Location.parse(ownerRestartPointsIterator.next());
+                    Location loc = Location.of(ownerRestartPointsIterator.next());
 
                     residence.addOwnerRestartPoint(loc);
                 }
-            } else if (nodeName.equalsIgnoreCase("other_restart_points")) {
+            } else if ("other_restart_points".equalsIgnoreCase(nodeName)) {
                 for (Iterator<Element> otherRestartPointsIterator = element.elementIterator(); otherRestartPointsIterator.hasNext(); ) {
-                    Location loc = Location.parse(otherRestartPointsIterator.next());
+                    Location loc = Location.of(otherRestartPointsIterator.next());
 
                     residence.addOtherRestartPoint(loc);
                 }
-            } else if (nodeName.equalsIgnoreCase("chaos_restart_points")) {
+            } else if ("chaos_restart_points".equalsIgnoreCase(nodeName)) {
                 for (Iterator<Element> chaosRestartPointsIterator = element.elementIterator(); chaosRestartPointsIterator.hasNext(); ) {
-                    Location loc = Location.parse(chaosRestartPointsIterator.next());
+                    Location loc = Location.of(chaosRestartPointsIterator.next());
 
                     residence.addChaosRestartPoint(loc);
                 }
-            } else if (nodeName.equalsIgnoreCase("related_fortresses")) {
+            } else if ("related_fortresses".equalsIgnoreCase(nodeName)) {
                 for (Iterator<Element> subElementIterator = element.elementIterator(); subElementIterator.hasNext(); ) {
                     Element subElement = subElementIterator.next();
                     if (subElement.getName().equalsIgnoreCase("domain"))
@@ -146,7 +146,7 @@ public enum ResidenceParser {
                     else if (subElement.getName().equalsIgnoreCase("boundary"))
                         ((Castle) residence).addRelatedFortress(Fortress.BOUNDARY, Integer.parseInt(subElement.attributeValue("fortress")));
                 }
-            } else if (nodeName.equalsIgnoreCase("merchant_guards")) {
+            } else if ("merchant_guards".equalsIgnoreCase(nodeName)) {
                 for (Iterator<Element> subElementIterator = element.elementIterator(); subElementIterator.hasNext(); ) {
                     Element subElement = subElementIterator.next();
 

@@ -9,15 +9,11 @@ import l2trunk.gameserver.model.entity.residence.ResidenceFunction;
 import l2trunk.gameserver.stats.Stats;
 import l2trunk.gameserver.stats.funcs.FuncMul;
 
-public class ResidenceEnterLeaveListenerImpl implements OnZoneEnterLeaveListener {
+public final class ResidenceEnterLeaveListenerImpl implements OnZoneEnterLeaveListener {
     public static final OnZoneEnterLeaveListener STATIC = new ResidenceEnterLeaveListenerImpl();
 
     @Override
-    public void onZoneEnter(Zone zone, Creature actor) {
-        if (!actor.isPlayer())
-            return;
-
-        Player player = (Player) actor;
+    public void onZoneEnter(Zone zone, Player player) {
         Residence residence = (Residence) zone.getParams().get("residence");
 
         if (residence.getOwner() == null || residence.getOwner() != player.getClan())
@@ -37,10 +33,7 @@ public class ResidenceEnterLeaveListenerImpl implements OnZoneEnterLeaveListener
     }
 
     @Override
-    public void onZoneLeave(Zone zone, Creature actor) {
-        if (!actor.isPlayer())
-            return;
-
+    public void onZoneLeave(Zone zone, Player actor) {
         Residence residence = (Residence) zone.getParams().get("residence");
 
         actor.removeStatsOwner(residence);

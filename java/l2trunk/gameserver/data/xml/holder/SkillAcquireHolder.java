@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 public final class SkillAcquireHolder {
@@ -104,9 +105,9 @@ public final class SkillAcquireHolder {
                     Map<Integer, SkillLearn> skillLearnMap = new TreeMap<>();
                     for (SkillLearn temp : skills)
                         if (temp.getMinLevel() <= player.getLevel()) {
-                            int knownLevel = player.getSkillLevel(temp.getId());
+                            int knownLevel = player.getSkillLevel(temp.id);
                             if (knownLevel == -1)
-                                skillLearnMap.put(temp.getId(), temp);
+                                skillLearnMap.put(temp.id(), temp);
                         }
 
                     return skillLearnMap.values();
@@ -146,14 +147,14 @@ public final class SkillAcquireHolder {
                 boolean knownSkill = false;
                 for (Skill skill : skills) {
                     if (knownSkill) continue;
-                    if (skill.id == temp.getId()) {
+                    if (skill.id == temp.id()) {
                         knownSkill = true;
                         if (skill.level == temp.getLevel() - 1)
-                            skillLearnMap.put(temp.getId(), temp);
+                            skillLearnMap.put(temp.id(), temp);
                     }
                 }
                 if (!knownSkill && temp.getLevel() == 1)
-                    skillLearnMap.put(temp.getId(), temp);
+                    skillLearnMap.put(temp.id(), temp);
             }
 
         return skillLearnMap.values();
@@ -196,7 +197,7 @@ public final class SkillAcquireHolder {
             return null;
 
         for (SkillLearn temp : skills)
-            if (temp.getLevel() == level && temp.getId() == id)
+            if (temp.getLevel() == level && temp.id() == id)
                 return temp;
 
         return null;
@@ -252,12 +253,12 @@ public final class SkillAcquireHolder {
 
     private static boolean isSkillPossible(Collection<SkillLearn> skills, Skill skill) {
         return skills.stream()
-                .filter(learn -> learn.getId() == skill.id)
+                .filter(learn -> learn.id() == skill.id)
                 .anyMatch(learn -> learn.getLevel() <= skill.level);
     }
 
     public static boolean isSkillPossible(Player player, Skill skill) {
-        return Arrays.stream(AcquireType.VALUES)
+        return Stream.of(AcquireType.VALUES)
                 .anyMatch(aq -> isSkillPossible(player, skill, aq));
     }
 
@@ -275,8 +276,7 @@ public final class SkillAcquireHolder {
     }
 
     public static List<Integer> getAllSpellbookIds() {
-        return NORMAL_SKILL_TREE.entrySet().stream()
-                .map(Map.Entry::getValue)
+        return NORMAL_SKILL_TREE.values().stream()
                 .flatMap(List::stream)
                 .filter(learn -> learn.getItemId() > 0)
                 .filter(SkillLearn::isClicked)
@@ -288,37 +288,29 @@ public final class SkillAcquireHolder {
         int classID;
 
         for (ClassId classId : ClassId.VALUES) {
-            if (classId.name().startsWith("dummyEntry"))
-                continue;
+            if (!classId.name.startsWith("dummyEntry")) {
+                classID = classId.id;
 
-            classID = classId.getId();
+                List<SkillLearn> temp;
 
-            List<SkillLearn> temp;
+                temp = map.get(classID);
+                if (temp == null) {
+                    LOG.info("Not found NORMAL skill learn for class " + classID);
+                    continue;
+                }
 
-            temp = map.get(classID);
-            if (temp == null) {
-                LOG.info("Not found NORMAL skill learn for class " + classID);
-                continue;
-            }
+                NORMAL_SKILL_TREE.put(classId.id, temp);
 
-            NORMAL_SKILL_TREE.put(classId.getId(), temp);
+                classId = classId.parent;
 
-            ClassId secondparent = classId.getParent();
-            if (secondparent == classId.getParent())
-                secondparent = null;
+                while (classId != null) {
+                    List<SkillLearn> parentList = NORMAL_SKILL_TREE.get(classId.id);
+                    temp.addAll(parentList);
 
-            classId = classId.getParent();
-
-            while (classId != null) {
-                List<SkillLearn> parentList = NORMAL_SKILL_TREE.get(classId.getId());
-                temp.addAll(parentList);
-
-                classId = classId.getParent();
-                if (classId == null && secondparent != null) {
-                    classId = secondparent;
-                    secondparent = secondparent.getParent();
+                    classId = classId.parent;
                 }
             }
+
         }
     }
 
@@ -394,9 +386,9 @@ public final class SkillAcquireHolder {
                     Map<Integer, SkillLearn> skillLearnMap = new TreeMap<>();
                     for (SkillLearn temp : skills)
                         if (temp.getMinLevel() <= player.getLevel()) {
-                            int knownLevel = player.getSkillLevel(temp.getId());
+                            int knownLevel = player.getSkillLevel(temp.id());
                             if (knownLevel == -1)
-                                skillLearnMap.put(temp.getId(), temp);
+                                skillLearnMap.put(temp.id(), temp);
                         }
 
                     return skillLearnMap.values();

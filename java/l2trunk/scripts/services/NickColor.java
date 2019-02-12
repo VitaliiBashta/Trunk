@@ -11,12 +11,11 @@ import l2trunk.gameserver.utils.Util;
 
 public final class NickColor extends Functions {
     public void list(String[] param) {
-        Player player = getSelf();
         if (player == null)
             return;
 
         if (!Config.SERVICES_CHANGE_NICK_COLOR_ENABLED) {
-            player.sendMessage(new CustomMessage("scripts.services.off", player));
+            player.sendMessage(new CustomMessage("scripts.services.off"));
             return;
         }
 
@@ -69,7 +68,6 @@ public final class NickColor extends Functions {
     }
 
     public void change(String[] param) {
-        Player player = getSelf();
         if (player == null)
             return;
 

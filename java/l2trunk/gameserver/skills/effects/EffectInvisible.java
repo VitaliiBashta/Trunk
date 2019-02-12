@@ -15,14 +15,12 @@ public final class EffectInvisible extends Effect {
 
     @Override
     public boolean checkCondition() {
-        if (!effected.isPlayer())
-            return false;
-        Player player = (Player) effected;
-        if (player.isInvisible())
-            return false;
-        if (player.getActiveWeaponFlagAttachment() != null)
-            return false;
-        return super.checkCondition();
+        if (effected instanceof Player) {
+            Player player = (Player) effected;
+            if (player.isInvisible())
+                return false;
+            return player.getActiveWeaponFlagAttachment() == null;
+        } else return false;
     }
 
     @Override
@@ -55,8 +53,4 @@ public final class EffectInvisible extends Effect {
             player.getPet().broadcastCharInfo();
     }
 
-    @Override
-    public boolean onActionTime() {
-        return false;
-    }
 }

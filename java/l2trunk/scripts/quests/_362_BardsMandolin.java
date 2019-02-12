@@ -42,7 +42,7 @@ public final class _362_BardsMandolin extends Quest {
             else if (cond == 3 && st.getQuestItemsCount(SWANS_FLUTE) > 0 && st.getQuestItemsCount(SWANS_LETTER) == 0) {
                 htmltext = "30957_3.htm";
                 st.setCond(4);
-                st.giveItems(SWANS_LETTER, 1);
+                st.giveItems(SWANS_LETTER);
             } else if (cond == 4 && st.getQuestItemsCount(SWANS_FLUTE) > 0 && st.getQuestItemsCount(SWANS_LETTER) > 0)
                 htmltext = "30957_6.htm";
             else if (cond == 5)
@@ -53,7 +53,7 @@ public final class _362_BardsMandolin extends Quest {
         } else if (npcId == GALION && cond == 2) {
             htmltext = "30958_1.htm";
             st.setCond(3);
-            st.giveItems(SWANS_FLUTE, 1);
+            st.giveItems(SWANS_FLUTE);
             st.playSound(SOUND_ITEMGET);
         } else if (npcId == NANARIN && cond == 4 && st.getQuestItemsCount(SWANS_FLUTE) > 0 && st.getQuestItemsCount(SWANS_LETTER) > 0) {
             htmltext = "30956_1.htm";
@@ -68,13 +68,13 @@ public final class _362_BardsMandolin extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         int _state = st.getState();
         int cond = st.getCond();
-        if (event.equalsIgnoreCase("30957_2.htm") && _state == CREATED && cond == 0) {
+        if ("30957_2.htm".equalsIgnoreCase(event) && _state == CREATED && cond == 0) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("30957_5.htm") && _state == STARTED && cond == 5) {
+        } else if ("30957_5.htm".equalsIgnoreCase(event) && _state == STARTED && cond == 5) {
             st.giveItems(ADENA_ID, 10000);
-            st.giveItems(Musical_Score__Theme_of_Journey, 1);
+            st.giveItems(Musical_Score__Theme_of_Journey);
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(true);
         }

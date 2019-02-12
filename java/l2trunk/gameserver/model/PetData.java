@@ -15,7 +15,7 @@ public class PetData {
     private int _hpRegen;
     private int _mpRegen;
     private long _exp;
-    private int _accuracy;
+    private int accuracy;
     private int _evasion;
     private int _critical;
     private int _speed;
@@ -126,11 +126,11 @@ public class PetData {
     }
 
     public int getAccuracy() {
-        return _accuracy;
+        return accuracy;
     }
 
     public void setAccuracy(int accuracy) {
-        _accuracy = accuracy;
+        this.accuracy = accuracy;
     }
 
     public int getEvasion() {

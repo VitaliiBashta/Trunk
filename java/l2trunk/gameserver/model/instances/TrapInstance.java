@@ -1,6 +1,5 @@
 package l2trunk.gameserver.model.instances;
 
-import l2trunk.commons.lang.reference.HardReference;
 import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.model.Creature;
@@ -17,17 +16,16 @@ import l2trunk.gameserver.taskmanager.EffectTaskManager;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.Location;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 import java.util.stream.Collectors;
 
 public final class TrapInstance extends NpcInstance {
-    private final HardReference<? extends Creature> _ownerRef;
+    private final Creature owner;
     private final Skill skill;
     private ScheduledFuture<?> _targetTask;
     private ScheduledFuture<?> _destroyTask;
-    private boolean _detected;
+    private boolean detected;
 
     public TrapInstance(int objectId, NpcTemplate template, Creature owner, int skillId) {
         this(objectId, template, owner, skillId, owner.getLoc());
@@ -35,7 +33,7 @@ public final class TrapInstance extends NpcInstance {
 
     public TrapInstance(int objectId, NpcTemplate template, Creature owner, int skillId, Location loc) {
         super(objectId, template);
-        _ownerRef = owner.getRef();
+        this.owner = owner;
         this.skill = SkillTable.INSTANCE.getInfo(skillId);
 
         setReflection(owner.getReflection());
@@ -44,13 +42,8 @@ public final class TrapInstance extends NpcInstance {
         setLoc(loc);
     }
 
-    @Override
-    public boolean isTrap() {
-        return true;
-    }
-
     private Creature getOwner() {
-        return _ownerRef.get();
+        return owner;
     }
 
     @Override
@@ -64,15 +57,13 @@ public final class TrapInstance extends NpcInstance {
 
     @Override
     public void broadcastCharInfo() {
-        if (!isDetected())
-            return;
-        super.broadcastCharInfo();
+        if (detected) super.broadcastCharInfo();
     }
 
     @Override
     protected void onDelete() {
         Creature owner = getOwner();
-        if (owner != null && owner.isPlayer())
+        if (owner instanceof Player)
             ((Player) owner).removeTrap(this);
         if (_destroyTask != null)
             _destroyTask.cancel(false);
@@ -83,12 +74,8 @@ public final class TrapInstance extends NpcInstance {
         super.onDelete();
     }
 
-    private boolean isDetected() {
-        return _detected;
-    }
-
     public void setDetected(boolean detected) {
-        _detected = detected;
+        this.detected = detected;
     }
 
     @Override
@@ -139,7 +126,7 @@ public final class TrapInstance extends NpcInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
     }
 
     @Override
@@ -155,7 +142,7 @@ public final class TrapInstance extends NpcInstance {
         if (player.getTarget() != this) {
             player.setTarget(this);
             if (player.getTarget() == this)
-                player.sendPacket(new MyTargetSelected(getObjectId(), player.getLevel()));
+                player.sendPacket(new MyTargetSelected(objectId(), player.getLevel()));
         }
         player.sendActionFailed();
     }
@@ -163,23 +150,21 @@ public final class TrapInstance extends NpcInstance {
     @Override
     public List<L2GameServerPacket> addPacketList(Player forPlayer, Creature dropper) {
         // если не обезврежена и не овнер, ниче не показываем
-        if (!isDetected() && getOwner() != forPlayer)
-            return Collections.emptyList();
+        if (!detected && getOwner() != forPlayer)
+            return List.of();
 
-        return Collections.<L2GameServerPacket>singletonList(new NpcInfo(this, forPlayer));
+        return List.of(new NpcInfo(this, forPlayer));
     }
 
     private static class CastTask extends RunnableImpl {
-        private final HardReference<NpcInstance> _trapRef;
+        private final TrapInstance trap;
 
         CastTask(TrapInstance trap) {
-            _trapRef = trap.getRef();
+            this.trap = trap;
         }
 
         @Override
         public void runImpl() {
-            TrapInstance trap = (TrapInstance) _trapRef.get();
-
             if (trap == null)
                 return;
 
@@ -200,8 +185,8 @@ public final class TrapInstance extends NpcInstance {
                                 .collect(Collectors.toList());
 
                     trap.skill.useSkill(trap, targets);
-                    if (target.isPlayer())
-                        target.sendMessage(new CustomMessage("common.Trap", target.getPlayer()));
+                    if (target instanceof Player)
+                        ((Player)target).sendMessage(new CustomMessage("common.Trap"));
                     trap.deleteMe();
                 }
             });

@@ -4,7 +4,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
-import java.util.List;
+import static l2trunk.scripts.quests._611_AllianceWithVarkaSilenos.VARKA_NPC_LIST;
 
 public final class _606_WarwithVarkaSilenos extends Quest {
     // NPC
@@ -15,9 +15,6 @@ public final class _606_WarwithVarkaSilenos extends Quest {
     private static final int VARKAS_MANE_DROP_CHANCE = 80;
     private static final int HORN_OF_BUFFALO = 7186;
 
-    private static final List<Integer> VARKA_NPC_LIST = List.of(
-            21350, 21351, 21353, 21354, 21355, 21357, 21358, 21360, 21361, 21362,
-            21364, 21365, 21366, 21368, 21369, 21370, 21371, 21372, 21373, 21374);
 
     public _606_WarwithVarkaSilenos() {
         super(true);
@@ -61,7 +58,7 @@ public final class _606_WarwithVarkaSilenos extends Quest {
         String htmltext = "noquest";
         int cond = st.getCond();
         if (cond == 0) {
-            if (st.getPlayer().getLevel() >= 74)
+            if (st.player.getLevel() >= 74)
                 htmltext = "elder_kadun_zu_ketra_q0606_0101.htm";
             else {
                 htmltext = "elder_kadun_zu_ketra_q0606_0103.htm";
@@ -74,17 +71,9 @@ public final class _606_WarwithVarkaSilenos extends Quest {
         return htmltext;
     }
 
-    private boolean isVarkaNpc(int npc) {
-        for (int i : VARKA_NPC_LIST)
-            if (npc == i)
-                return true;
-        return false;
-    }
-
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
-        if (isVarkaNpc(npc.getNpcId()) && st.getCond() == 1)
+    public void onKill(NpcInstance npc, QuestState st) {
+        if (VARKA_NPC_LIST.contains(npc.getNpcId()) && st.getCond() == 1)
             st.rollAndGive(VARKAS_MANE, 1, VARKAS_MANE_DROP_CHANCE);
-        return null;
     }
 }

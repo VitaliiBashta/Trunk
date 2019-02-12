@@ -8,15 +8,16 @@ import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.Util;
 
+import static l2trunk.gameserver.utils.ItemFunctions.removeItem;
+
 public final class Delevel extends Functions {
     public void delevel_page() {
-        Player player = getSelf();
         if (player == null) {
             return;
         }
         String append = "Delevel Service";
         append += "<br>";
-        append += "<font color=\"LEVEL\">" + new CustomMessage("scripts.services.Delevel.DelevelFor", getSelf()).addString(Util.formatAdena(Config.SERVICES_DELEVEL_COUNT)).addItemName(Config.SERVICES_DELEVEL_ITEM) + "</font>";
+        append += "<font color=\"LEVEL\">" + new CustomMessage("scripts.services.Delevel.DelevelFor", player).addString(Util.formatAdena(Config.SERVICES_DELEVEL_COUNT)).addItemName(Config.SERVICES_DELEVEL_ITEM) + "</font>";
         append += "<table>";
         append += "<tr><td></td></tr>";
         append += "<tr><td><button value=\"Delevel\" action=\"bypass -h scripts_services.Delevel:delevel\" width=80 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td></tr>";
@@ -25,14 +26,13 @@ public final class Delevel extends Functions {
     }
 
     public void delevel() {
-        Player player = getSelf();
         if (!Config.SERVICES_DELEVEL_ENABLED) {
             player.sendMessage("This service is not available.");
             return;
         }
         if (player.getLevel() <= Config.SERVICES_DELEVEL_MIN_LEVEL) {
-            player.sendMessage("This service is available to characters with " + Config.SERVICES_DELEVEL_MIN_LEVEL + " level.");
-        } else if (getItemCount(player, Config.SERVICES_DELEVEL_ITEM) < Config.SERVICES_DELEVEL_COUNT) {
+            player.sendMessage("This service is available to characters with " + Config.SERVICES_DELEVEL_MIN_LEVEL + " occupation.");
+        } else if (!player.haveItem(Config.SERVICES_DELEVEL_ITEM, Config.SERVICES_DELEVEL_COUNT)) {
             player.sendMessage("You don't have enought items.");
         } else {
             long pXp = player.getExp();

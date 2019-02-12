@@ -149,7 +149,7 @@ public final class Say2C extends L2GameClientPacket {
 
             if (!expression.isEmpty()) {
 //                try {
-//                    expr = ExpressionTree.parse(expression);
+//                    expr = ExpressionTree.of(expression);
 //                } catch (ExpressionParseException epe) {
 //
 //                }
@@ -176,7 +176,7 @@ public final class Say2C extends L2GameClientPacket {
             if (Config.CHATFILTER_WORK_TYPE == 1)
                 _type = ChatType.ALL;
             else if (Config.CHATFILTER_WORK_TYPE == 2) {
-                activeChar.sendMessage(new CustomMessage("chat.NotHavePermission", activeChar).addNumber(Config.CHATFILTER_MIN_LEVEL));
+                activeChar.sendMessage(new CustomMessage("chat.NotHavePermission").addNumber(Config.CHATFILTER_MIN_LEVEL));
                 return;
             }
         }
@@ -204,43 +204,29 @@ public final class Say2C extends L2GameClientPacket {
                 break;
             }
 
-            ItemInfoCache.getInstance().put(item);
-        }
-
-        String translit = activeChar.getVar("translit");
-        if (translit != null) {
-            //Rule of transliteration references to objects
-            m = SKIP_ITEM_LINK_PATTERN.matcher(_text);
-            StringBuilder sb = new StringBuilder();
-            int end = 0;
-            while (m.find()) {
-                sb.append(Strings.fromTranslit(_text.substring(end, end = m.start()), translit.equals("tl") ? 1 : 2));
-                sb.append(_text, end, end = m.end());
-            }
-
-            _text = sb.append(Strings.fromTranslit(_text.substring(end), translit.equals("tl") ? 1 : 2)).toString();
+            ItemInfoCache.INSTANCE.put(item);
         }
 
         Log.LogChat(_type.name(), activeChar.getName(), _target, _text);
 
-        final Say2 cs = new Say2(activeChar.getObjectId(), _type, activeChar.getName(), _text);
+        final Say2 cs = new Say2(activeChar.objectId(), _type, activeChar.getName(), _text);
 
         switch (_type) {
             case TELL:
                 if ((receiver == null)) {
-                    Say2 cs1 = new Say2(activeChar.getObjectId(), _type, "->" + _target, _text);
+                    Say2 cs1 = new Say2(activeChar.objectId(), _type, "->" + _target, _text);
                     activeChar.sendPacket(cs1);
                     return;
                 }
 
                 if (!receiver.isInBlockList(activeChar) && !receiver.isBlockAll()) {
                     if (!receiver.getMessageRefusal()) {
-                        if (activeChar.antiFlood.canTell(receiver.getObjectId(), _text))
+                        if (activeChar.antiFlood.canTell(receiver.objectId(), _text))
                             receiver.sendPacket(cs);
 
                         checkAutoRecall(activeChar, receiver);
 
-                        Say2 cs2 = new Say2(activeChar.getObjectId(), _type, "->" + receiver.getName(), _text);
+                        Say2 cs2 = new Say2(activeChar.objectId(), _type, "->" + receiver.getName(), _text);
                         activeChar.sendPacket(cs2);
                     } else
                         activeChar.sendPacket(SystemMsg.THAT_PERSON_IS_IN_MESSAGE_REFUSAL_MODE);
@@ -298,22 +284,21 @@ public final class Say2C extends L2GameClientPacket {
                 break;
             case ALL:
                 if (activeChar.isCursedWeaponEquipped()) {
-                    Say2 cs3 = new Say2(activeChar.getObjectId(), _type, activeChar.getTransformationName(), _text);
+                    Say2 cs3 = new Say2(activeChar.objectId(), _type, activeChar.getTransformationName(), _text);
 
-                    Stream<Player> list = Stream.empty();
+                    Stream<Player> stream = Stream.empty();
 
                     if (activeChar.isInObserverMode() && activeChar.getObserverRegion() != null && activeChar.getOlympiadObserveGame() != null) {
                         OlympiadGame game = activeChar.getOlympiadObserveGame();
-                        list = game.getAllPlayers();
+                        stream = game.getAllPlayers();
                     } else if (activeChar.isInOlympiadMode()) {
                         OlympiadGame game = activeChar.getOlympiadGame();
                         if (game != null)
-                            list = game.getAllPlayers();
+                            stream = game.getAllPlayers();
                     } else
-                        list = World.getAroundPlayers(activeChar);
+                        stream = World.getAroundPlayers(activeChar).stream();
 
-                    list.filter(p -> p != activeChar)
-                            .filter(p -> p.getReflection() == activeChar.getReflection())
+                    stream.filter(p -> p != activeChar)
                             .filter(p -> !p.isBlockAll())
                             .filter(p -> !p.isInBlockList(activeChar))
                             .forEach(p -> p.sendPacket(cs3));
@@ -363,7 +348,7 @@ public final class Say2C extends L2GameClientPacket {
                     return;
                 }
 
-                if (activeChar.isHero() || activeChar.FakeHeroChat() || activeChar.getPlayerAccess().CanAnnounce) {
+                if (activeChar.isHero() || activeChar.getPlayerAccess().CanAnnounce) {
                     // The only limitation for the characters, um, let us say.
                     if (!activeChar.getPlayerAccess().CanAnnounce)
                         if (!activeChar.antiFlood.canHero()) {

@@ -36,7 +36,7 @@ public final class NegateStats extends Skill {
     public void useSkill(Creature activeChar, List<Creature> targets) {
         for (Creature target : targets)
             if (target != null) {
-                if (!negateOffensive && !Formulas.calcSkillSuccess(activeChar, target, this, getActivateRate())) {
+                if (!negateOffensive && !Formulas.calcSkillSuccess(activeChar, target, this, activateRate)) {
                     activeChar.sendPacket(new SystemMessage2(SystemMsg.C1_HAS_RESISTED_YOUR_S2).addString(target.getName()).addSkillName(id, level));
                     continue;
                 }
@@ -44,14 +44,14 @@ public final class NegateStats extends Skill {
                 int count = 0;
                 for (Stats stat : negateStats)
                     for (Effect e : target.getEffectList().getAllEffects()) {
-                        Skill skill = e.getSkill();
+                        Skill skill = e.skill;
                         // Если у бафа выше уровень чем у скилла Cancel, то есть шанс, что этот баф не снимется
                         if (!skill.isOffensive && skill.magicLevel > magicLevel && Rnd.chance(skill.magicLevel - magicLevel)) {
                             count++;
                             continue;
                         }
                         if (skill.isOffensive == negateOffensive && containsStat(e, stat) && skill.isCancelable()) {
-                            target.sendPacket(new SystemMessage2(SystemMsg.THE_EFFECT_OF_S1_HAS_BEEN_REMOVED).addSkillName(e.getSkill().id, e.getSkill().getDisplayLevel()));
+                            target.sendPacket(new SystemMessage2(SystemMsg.THE_EFFECT_OF_S1_HAS_BEEN_REMOVED).addSkillName(e.skill.id, e.skill.getDisplayLevel()));
                             e.exit();
                             count++;
                         }
@@ -59,7 +59,7 @@ public final class NegateStats extends Skill {
                             break;
                     }
 
-                getEffects(activeChar, target, getActivateRate() > 0, false);
+                getEffects(activeChar, target, activateRate > 0, false);
             }
 
         if (isSSPossible())

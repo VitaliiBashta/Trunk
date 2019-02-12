@@ -2,16 +2,13 @@ package l2trunk.scripts.npc.model.residences.clanhall;
 
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.instances.residences.clanhall.CTBBossInstance;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.scripts.ai.residences.clanhall.MatchTrief;
 
-/**
- * @author VISTALL
- * @date 19:55/22.04.2011
- */
-public class MatchTriefInstance extends CTBBossInstance {
+public final class MatchTriefInstance extends CTBBossInstance {
     private long _massiveDamage;
 
     public MatchTriefInstance(int objectId, NpcTemplate template) {
@@ -25,13 +22,13 @@ public class MatchTriefInstance extends CTBBossInstance {
             if (Rnd.chance(10))
                 ((MatchTrief) getAI()).hold();
         } else if (getCurrentHpPercents() > 50) {
-            if (attacker.isPlayer())
+            if (attacker instanceof Player)
                 damage = ((damage / getMaxHp()) / 0.05) * 100;
             else
                 damage = ((damage / getMaxHp()) / 0.05) * 10;
         } else if (getCurrentHpPercents() > 30) {
             if (Rnd.chance(90)) {
-                if (attacker.isPlayer())
+                if (attacker instanceof Player)
                     damage = ((damage / getMaxHp()) / 0.05) * 100;
                 else
                     damage = ((damage / getMaxHp()) / 0.05) * 10;

@@ -60,11 +60,11 @@ public final class BoatHolder extends AbstractHolder {
     }
 
     public void addBoat(Boat boat) {
-        _boats.put(boat.getObjectId(), boat);
+        _boats.put(boat.objectId(), boat);
     }
 
     public void removeBoat(Boat boat) {
-        _boats.remove(boat.getObjectId());
+        _boats.remove(boat.objectId());
     }
 
     @Override

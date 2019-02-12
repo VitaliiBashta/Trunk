@@ -31,6 +31,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static l2trunk.gameserver.utils.ItemFunctions.addItem;
+import static l2trunk.gameserver.utils.ItemFunctions.removeItem;
+
 public final class Hitman extends Functions implements ScriptFile, OnDeathListener, OnPlayerExitListener {
 
     private static final Logger _log = LoggerFactory.getLogger(Hitman.class);
@@ -47,47 +50,47 @@ public final class Hitman extends Functions implements ScriptFile, OnDeathListen
 
     private static boolean checkPlayer(Player player) {
         if (player.isDead()) {
-            show(new CustomMessage("scripts.events.Hitman.CancelledDead", player), player);
+            show(new CustomMessage("scripts.events.Hitman.CancelledDead"), player);
             return false;
         }
 
         if (player.getTeam() != TeamType.NONE) {
-            show(new CustomMessage("scripts.events.Hitman.CancelledOtherEvent", player), player);
+            show(new CustomMessage("scripts.events.Hitman.CancelledOtherEvent"), player);
             return false;
         }
 
         if (player.isMounted()) {
-            show(new CustomMessage("scripts.events.Hitman.Cancelled", player), player);
+            show(new CustomMessage("scripts.events.Hitman.Cancelled"), player);
             return false;
         }
 
         if (player.isCursedWeaponEquipped()) {
-            show(new CustomMessage("scripts.events.Hitman.Cancelled", player), player);
+            show(new CustomMessage("scripts.events.Hitman.Cancelled"), player);
             return false;
         }
 
         if (player.isInDuel()) {
-            show(new CustomMessage("scripts.events.Hitman.CancelledDuel", player), player);
+            show(new CustomMessage("scripts.events.Hitman.CancelledDuel"), player);
             return false;
         }
 
         if (player.getOlympiadGame() != null || Olympiad.isRegistered(player)) {
-            show(new CustomMessage("scripts.events.Hitman.CancelledOlympiad", player), player);
+            show(new CustomMessage("scripts.events.Hitman.CancelledOlympiad"), player);
             return false;
         }
 
         if (player.isInParty() && player.getParty().isInDimensionalRift()) {
-            show(new CustomMessage("scripts.events.Hitman.CancelledOtherEvent", player), player);
+            show(new CustomMessage("scripts.events.Hitman.CancelledOtherEvent"), player);
             return false;
         }
 
         if (player.isInObserverMode()) {
-            show(new CustomMessage("scripts.events.Hitman.CancelledObserver", player), player);
+            show(new CustomMessage("scripts.events.Hitman.CancelledObserver"), player);
             return false;
         }
 
         if (player.isTeleporting()) {
-            show(new CustomMessage("scripts.events.Hitman.CancelledTeleport", player), player);
+            show(new CustomMessage("scripts.events.Hitman.CancelledTeleport"), player);
             return false;
         }
 
@@ -123,15 +126,15 @@ public final class Hitman extends Functions implements ScriptFile, OnDeathListen
             return 4;
         }
 
-        if (Functions.getItemCount(player, Config.EVENT_HITMAN_COST_ITEM_ID) < Config.EVENT_HITMAN_COST_ITEM_COUNT) {
+        if (!player.haveItem(Config.EVENT_HITMAN_COST_ITEM_ID, Config.EVENT_HITMAN_COST_ITEM_COUNT)) {
             return 0;
         }
 
-        if (Functions.getItemCount(player, allowedItems.get(itemname)) < (itemcount * killsCount)) {
+        if (!player.haveItem(allowedItems.get(itemname), (itemcount * killsCount))) {
             return 0;
         }
 
-        if (allowedItems.get(itemname) == 57 && Functions.getItemCount(player, allowedItems.get(itemname)) < (itemcount * killsCount + Config.EVENT_HITMAN_COST_ITEM_COUNT)) {
+        if (player.getAdena() < (itemcount * killsCount + Config.EVENT_HITMAN_COST_ITEM_COUNT)) {
             return 0;
         }
 
@@ -143,21 +146,21 @@ public final class Hitman extends Functions implements ScriptFile, OnDeathListen
             return 2;
         }
 
-        if (World.getPlayer(name).getObjectId() == player.getObjectId()) {
+        if (World.getPlayer(name).objectId() == player.objectId()) {
             return 3;
         }
 
         final Order order = new Order(player.getName(), name, allowedItems.get(itemname), itemcount, killsCount);
 
-        orderMap.put(player.getObjectId(), order);
-        _inList.add(0, player.getObjectId());
-        saveToDatabase(player.getObjectId(), player.getName(), name, allowedItems.get(itemname), itemcount, killsCount);
-        Functions.removeItem(player, Config.EVENT_HITMAN_COST_ITEM_ID, Config.EVENT_HITMAN_COST_ITEM_COUNT, "RemovedHitItem");
-        Functions.removeItem(player, allowedItems.get(itemname), itemcount * killsCount, "Removed Hit Event");
+        orderMap.put(player.objectId(), order);
+        _inList.add(0, player.objectId());
+        saveToDatabase(player.objectId(), player.getName(), name, allowedItems.get(itemname), itemcount, killsCount);
+        removeItem(player, Config.EVENT_HITMAN_COST_ITEM_ID, Config.EVENT_HITMAN_COST_ITEM_COUNT, "RemovedHitItem");
+        removeItem(player, allowedItems.get(itemname), itemcount * killsCount, "Removed Hit Event");
 
-        Announcements.INSTANCE.announceToAll(new CustomMessage("scripts.events.Hitman.Announce", player, player.getName(), itemcount, itemname, name).toString());
+        Announcements.INSTANCE.announceToAll(new CustomMessage("scripts.events.Hitman.Announce", player.getName(), itemcount, itemname, name).toString());
 
-        World.getPlayer(name).setOrdered(player.getObjectId());
+        World.getPlayer(name).setOrdered(player.objectId());
 
         return 5;
     }
@@ -211,7 +214,7 @@ public final class Hitman extends Functions implements ScriptFile, OnDeathListen
         if (GameObjectsStorage.getPlayer(orderMap.get(storedId).getTargetName()) != null) {
             GameObjectsStorage.getPlayer(orderMap.get(storedId).getTargetName()).setOrdered(0);
         }
-        Functions.addItem(World.getPlayer(storedId), orderMap.get(storedId).getItemId(), orderMap.get(storedId).getItemCount() * orderMap.get(storedId).getKillsCount(), "AddingHitItem");
+        addItem(World.getPlayer(storedId), orderMap.get(storedId).getItemId(), orderMap.get(storedId).getItemCount() * orderMap.get(storedId).getKillsCount());
         orderMap.remove(storedId);
         _inList.remove((Object) storedId);
         deleteFromDatabase(storedId);
@@ -220,7 +223,7 @@ public final class Hitman extends Functions implements ScriptFile, OnDeathListen
     }
 
     private static boolean isRegistered(Player player) {
-        return orderMap.containsKey(player.getObjectId());
+        return orderMap.containsKey(player.objectId());
     }
 
     @Override
@@ -247,14 +250,14 @@ public final class Hitman extends Functions implements ScriptFile, OnDeathListen
             return;
         if (getOrderByTargetName(actor.getName()) != null && !actor.getName().equals(killer.getName())) {
             final Order order = getOrderByTargetName(actor.getName());
-            Functions.addItem(killer.getPlayer(), order.getItemId(), order.getItemCount(), "Killed");
+            addItem(killer.getPlayer(), order.getItemId(), order.getItemCount());
             Announcements.INSTANCE.announceToAll(new CustomMessage("scripts.events.Hitman.AnnounceKill", killer.getPlayer(), killer.getName(), actor.getName(), order.getItemCount(), ItemFunctions.createItem(order.getItemId()).getTemplate().getName()).toString());
 
             if (order.getKillsCount() > 1) {
                 order.decrementKillsCount();
             } else {
-                orderMap.remove(World.getPlayer(order.getOwner()).getObjectId());
-                _inList.remove((Object) World.getPlayer(order.getOwner()).getObjectId());
+                orderMap.remove(World.getPlayer(order.getOwner()).objectId());
+                _inList.remove((Object) World.getPlayer(order.getOwner()).objectId());
                 deleteFromDatabase(actor.getName());
             }
         }
@@ -287,8 +290,8 @@ public final class Hitman extends Functions implements ScriptFile, OnDeathListen
             deleteOrder(player.getOrdered());
         }
         // /Выходит тот кто назначил награду
-        else if (orderMap.containsKey(player.getObjectId())) {
-            Player gamer = GameObjectsStorage.getPlayer(player.getObjectId());
+        else if (orderMap.containsKey(player.objectId())) {
+            Player gamer = GameObjectsStorage.getPlayer(player.objectId());
             gamer.sendMessage("Event Hitman :" + " Reward for murder returned");
             deleteOrder(player.getOrdered());
         }

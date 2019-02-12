@@ -30,14 +30,15 @@ public class AdminGmChat implements IAdminCommandHandler {
                     activeChar.sendMessage("You must getBonuses a target.");
                     return false;
                 }
-                if (!target.isPlayer()) {
+                if (target instanceof Player) {
+                    Player player = (Player) target;
+                    player.addSnooper(activeChar);
+                    activeChar.addSnooped(player);
+                    break;
+                } else {
                     activeChar.sendMessage("Target must be a player.");
                     return false;
                 }
-                Player player = (Player) target;
-                player.addSnooper(activeChar);
-                activeChar.addSnooped(player);
-                break;
             }
             case admin_unsnoop: {
                 GameObject target = activeChar.getTarget();
@@ -45,14 +46,15 @@ public class AdminGmChat implements IAdminCommandHandler {
                     activeChar.sendMessage("You must getBonuses a target.");
                     return false;
                 }
-                if (!target.isPlayer()) {
+                if (target instanceof Player) {
+                    Player player = (Player) target;
+                    activeChar.removeSnooped(player);
+                    activeChar.sendMessage("stoped snooping player: " + target.getName());
+                    break;
+                } else {
                     activeChar.sendMessage("Target must be a player.");
                     return false;
                 }
-                Player player = (Player) target;
-                activeChar.removeSnooped(player);
-                activeChar.sendMessage("stoped snooping player: " + target.getName());
-                break;
             }
         }
         return true;

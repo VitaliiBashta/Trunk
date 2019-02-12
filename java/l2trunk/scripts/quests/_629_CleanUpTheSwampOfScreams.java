@@ -3,7 +3,6 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _629_CleanUpTheSwampOfScreams extends Quest {
     //NPC
@@ -93,7 +92,7 @@ public final class _629_CleanUpTheSwampOfScreams extends Quest {
         int cond = st.getCond();
         if (st.getQuestItemsCount(7246) > 0 || st.getQuestItemsCount(7247) > 0) {
             if (cond == 0) {
-                if (st.getPlayer().getLevel() >= 66)
+                if (st.player.getLevel() >= 66)
                     htmltext = "merc_cap_peace_q0629_0101.htm";
                 else {
                     htmltext = "merc_cap_peace_q0629_0103.htm";
@@ -112,9 +111,8 @@ public final class _629_CleanUpTheSwampOfScreams extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getState() == STARTED)
             st.rollAndGive(CLAWS, 1, CHANCE[npc.getNpcId() - 21508][1]);
-        return null;
     }
 }

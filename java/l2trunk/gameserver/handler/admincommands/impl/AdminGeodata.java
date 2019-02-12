@@ -63,7 +63,7 @@ public class AdminGeodata implements IAdminCommandHandler {
                         } else
                             activeChar.sendMessage("GeoEngine: Region [" + rx + "," + ry + "] not loaded.");
                     } catch (Exception e) {
-                        activeChar.sendMessage(new CustomMessage("common.Error", activeChar));
+                        activeChar.sendMessage(new CustomMessage("common.Error"));
                     }
                 break;
             case admin_geo_dump:
@@ -79,9 +79,9 @@ public class AdminGeodata implements IAdminCommandHandler {
                     activeChar.sendMessage("Usage: //geo_trace on|off");
                     return false;
                 }
-                if (wordList[1].equalsIgnoreCase("on"))
-                    activeChar.setVar("trace", "1", -1);
-                else if (wordList[1].equalsIgnoreCase("off"))
+                if ("on".equalsIgnoreCase(wordList[1]))
+                    activeChar.setVar("trace", 1);
+                else if ("off".equalsIgnoreCase(wordList[1]))
                     activeChar.unsetVar("trace");
                 else
                     activeChar.sendMessage("Usage: //geo_trace on|off");

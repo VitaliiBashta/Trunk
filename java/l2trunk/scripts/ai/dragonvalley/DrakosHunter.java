@@ -19,7 +19,7 @@ public final class DrakosHunter extends Fighter {
         if (Rnd.chance(Config.DHUNTER_MS_CHANCE)) {
             NpcInstance actor = getActor();
             for (int i = 0; i < 4; i++) {
-                NpcInstance n = NpcUtils.spawnSingle(22823, (actor.getX() + Rnd.get(-100, 100)), (actor.getY() + Rnd.get(-100, 100)), actor.getZ());
+                NpcInstance n = NpcUtils.spawnSingle(22823, (actor.getLoc().randomOffset(100)));
                 n.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker, 2);
             }
         }

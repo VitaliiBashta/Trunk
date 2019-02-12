@@ -233,7 +233,7 @@ public final class AuctioneerInstance extends NpcInstance {
                 msg.replace("%next_button%", "<td>" + HtmlUtils.NEXT_BUTTON + "</td>");
                 msg.replace("%next_bypass%", "-h npc_%objectId%_bidder_list " + id + " " + (page + 1));
             } else
-                msg.replace("%next_button%", StringUtils.EMPTY);
+                msg.replace("%next_button%", "");
 
             if (page != 0) {
                 msg.replace("%prev_button%", "<td>" + HtmlUtils.PREV_BUTTON + "</td>");
@@ -647,7 +647,7 @@ public final class AuctioneerInstance extends NpcInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
         showChatWindow(player, "residence2/clanhall/auction_dealer001.htm");
     }
 

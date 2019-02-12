@@ -74,37 +74,36 @@ public final class _418_PathToArtisan extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("blacksmith_silvery_q0418_06.htm")) {
+        if ("blacksmith_silvery_q0418_06.htm".equalsIgnoreCase(event)) {
             st.giveItems(SilverasRing);
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("blacksmith_kluto_q0418_04.htm") || event.equalsIgnoreCase("blacksmith_kluto_q0418_07.htm")) {
+        } else if ("blacksmith_kluto_q0418_04.htm".equalsIgnoreCase(event) || "blacksmith_kluto_q0418_07.htm".equalsIgnoreCase(event)) {
             st.giveItems(KlutosLetter);
             st.setCond(4);
             st.setState(STARTED);
-        } else if (event.equalsIgnoreCase("blacksmith_pinter_q0418_03.htm")) {
+        } else if ("blacksmith_pinter_q0418_03.htm".equalsIgnoreCase(event)) {
             st.takeItems(KlutosLetter);
             st.giveItems(FootprintOfThief);
             st.setCond(5);
             st.setState(STARTED);
-        } else if (event.equalsIgnoreCase("blacksmith_pinter_q0418_06.htm")) {
+        } else if ("blacksmith_pinter_q0418_06.htm".equalsIgnoreCase(event)) {
             st.takeItems(StolenSecretBox);
             st.takeItems(FootprintOfThief);
             st.giveItems(SecretBox);
             st.giveItems(PassCertificate2nd);
             st.setCond(7);
             st.setState(STARTED);
-        } else if (event.equalsIgnoreCase("blacksmith_kluto_q0418_10.htm") || event.equalsIgnoreCase("blacksmith_kluto_q0418_12.htm")) {
+        } else if ("blacksmith_kluto_q0418_10.htm".equalsIgnoreCase(event) || "blacksmith_kluto_q0418_12.htm".equalsIgnoreCase(event)) {
             st.takeItems(PassCertificate1st);
             st.takeItems(PassCertificate2nd);
             st.takeItems(SecretBox);
-            if (st.getPlayer().getClassId().getLevel() == 1) {
-                st.giveItems(FinalPassCertificate, 1);
-                if (!st.getPlayer().getVarB("prof1")) {
-                    st.getPlayer().setVar("prof1", "1", -1);
+            if (st.player.getClassId().occupation() == 0) {
+                st.giveItems(FinalPassCertificate);
+                if (!st.player.isVarSet("prof1")) {
+                    st.player.setVar("prof1", 1);
                     st.addExpAndSp(228064, 16455);
-                    //FIXME [G1ta0] дать адены, только если первый чар на акке
                     st.giveItems(ADENA_ID, 81900);
                 }
             }
@@ -120,17 +119,17 @@ public final class _418_PathToArtisan extends Quest {
         String htmltext = "noquest";
         int cond = st.getCond();
         if (npcId == Silvera) {
-            if (st.getQuestItemsCount(FinalPassCertificate) != 0) {
+            if (st.haveQuestItem(FinalPassCertificate) ) {
                 htmltext = "blacksmith_silvery_q0418_04.htm";
                 st.exitCurrentQuest(true);
             } else if (cond == 0) {
-                if (st.getPlayer().getClassId().getId() != 0x35) {
-                    if (st.getPlayer().getClassId().getId() == 0x38)
+                if (st.player.getClassId().id != 0x35) {
+                    if (st.player.getClassId().id == 0x38)
                         htmltext = "blacksmith_silvery_q0418_02a.htm";
                     else
                         htmltext = "blacksmith_silvery_q0418_02.htm";
                     st.exitCurrentQuest(true);
-                } else if (st.getPlayer().getLevel() < 18) {
+                } else if (st.player.getLevel() < 18) {
                     htmltext = "blacksmith_silvery_q0418_03.htm";
                     st.exitCurrentQuest(true);
                 } else
@@ -138,10 +137,10 @@ public final class _418_PathToArtisan extends Quest {
             } else if (cond == 1)
                 htmltext = "blacksmith_silvery_q0418_07.htm";
             else if (cond == 2) {
-                st.takeItems(BoogleRatmanTooth, -1);
-                st.takeItems(BoogleRatmanLeadersTooth, -1);
-                st.takeItems(SilverasRing, -1);
-                st.giveItems(PassCertificate1st, 1);
+                st.takeItems(BoogleRatmanTooth);
+                st.takeItems(BoogleRatmanLeadersTooth);
+                st.takeItems(SilverasRing);
+                st.giveItems(PassCertificate1st);
                 htmltext = "blacksmith_silvery_q0418_08.htm";
                 st.setCond(3);
             } else if (cond == 3)
@@ -166,12 +165,12 @@ public final class _418_PathToArtisan extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         for (int[] aDROPLIST_COND : DROPLIST_COND)
             if (cond == aDROPLIST_COND[0] && npcId == aDROPLIST_COND[2])
-                if (aDROPLIST_COND[3] == 0 || st.getQuestItemsCount(aDROPLIST_COND[3]) > 0)
+                if (aDROPLIST_COND[3] == 0 || st.haveQuestItem(aDROPLIST_COND[3]))
                     if (aDROPLIST_COND[5] == 0)
                         st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[6]);
                     else if (st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[7], aDROPLIST_COND[5], aDROPLIST_COND[6]))
@@ -183,6 +182,5 @@ public final class _418_PathToArtisan extends Quest {
             st.setCond(2);
             st.setState(STARTED);
         }
-        return null;
     }
 }

@@ -6,6 +6,7 @@ import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.events.impl.SiegeEvent;
 import l2trunk.gameserver.model.instances.DoorInstance;
+import l2trunk.scripts.npc.model.residences.SiegeGuardInstance;
 
 public class DoorAI extends CharacterAI {
     public DoorAI(DoorInstance actor) {
@@ -16,20 +17,12 @@ public class DoorAI extends CharacterAI {
         //
     }
 
-    public void onEvtOpen(Player player) {
-        //
-    }
-
-    public void onEvtClose(Player player) {
-        //
-    }
 
     @Override
     public DoorInstance getActor() {
         return (DoorInstance) super.getActor();
     }
 
-    //TODO [VISTALL] унести в SiegeDoor
     @Override
     public void onEvtAttacked(Creature attacker, int damage) {
         Creature actor;
@@ -45,7 +38,7 @@ public class DoorAI extends CharacterAI {
 
         if (siegeEvent1 == null || siegeEvent1 == siegeEvent2 && siegeEvent1.getSiegeClan(SiegeEvent.ATTACKERS, player.getClan()) != null)
             actor.getAroundNpc(900, 200)
-                    .filter(GameObject::isSiegeGuard)
+                    .filter(npc -> npc instanceof SiegeGuardInstance)
                     .forEach(npc -> {
                         if (Rnd.chance(20))
                             npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker, 10000);

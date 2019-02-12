@@ -1,6 +1,5 @@
 package l2trunk.scripts.quests;
 
-import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.CtrlEvent;
@@ -45,7 +44,7 @@ public final class _450_GraveRobberMemberRescue extends Quest {
         int npcId = npc.getNpcId();
         int id = st.getState();
         int cond = st.getCond();
-        Player player = st.getPlayer();
+        Player player = st.player;
 
         if (npcId == KANEMIKA) {
             if (id == CREATED) {
@@ -65,35 +64,27 @@ public final class _450_GraveRobberMemberRescue extends Quest {
             } else if (cond == 2 && st.getQuestItemsCount(EVIDENCE_OF_MIGRATION) == 10) {
                 htmltext = "32650-08.htm";
                 st.giveItems(ADENA_ID, 65000);
-                st.takeItems(EVIDENCE_OF_MIGRATION, -1);
+                st.takeItems(EVIDENCE_OF_MIGRATION);
                 st.exitCurrentQuest(true);
                 st.playSound(SOUND_FINISH);
-                st.getPlayer().setVar(getName(), String.valueOf(System.currentTimeMillis()), -1);
+                st.player.setVar(name, System.currentTimeMillis());
             }
         } else if (cond == 1 && npcId == WARRIOR_NPC)
             if (Rnd.chance(50)) {
                 htmltext = "32651-01.htm";
-                st.giveItems(EVIDENCE_OF_MIGRATION, 1);
+                st.giveItems(EVIDENCE_OF_MIGRATION);
                 st.playSound(SOUND_ITEMGET);
                 npc.moveToLocation(new Location(npc.getX() + 200, npc.getY() + 200, npc.getZ()), 0, false);
 
-                ThreadPoolManager.INSTANCE.schedule(new RunnableImpl() {
-
-                    @Override
-                    public void runImpl() {
-                        npc.deleteMe();
-                    }
-
-                }, 2500L);
+                ThreadPoolManager.INSTANCE.schedule(npc::deleteMe, 2500L);
 
                 if (st.getQuestItemsCount(EVIDENCE_OF_MIGRATION) == 10) {
                     st.setCond(2);
                     st.playSound(SOUND_MIDDLE);
                 }
             } else {
-                htmltext = "";
                 player.sendPacket(new ExShowScreenMessage("The grave robber warrior has been filled with dark energy and is attacking you!", 4000, ScreenMessageAlign.MIDDLE_CENTER, false));
-                NpcInstance warrior = st.addSpawn(WARRIOR_MON, npc.getX(), npc.getY(), npc.getZ(), npc.getHeading(), 100, 120000);
+                NpcInstance warrior = st.addSpawn(WARRIOR_MON, npc.getLoc(), 100, 120000);
                 warrior.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, player, Rnd.get(1, 100));
 
                 if (Rnd.chance(50))
@@ -112,9 +103,9 @@ public final class _450_GraveRobberMemberRescue extends Quest {
     private boolean canEnter(Player player) {
         if (player.isGM())
             return true;
-        String var = player.getVar(getName());
-        if (var == null)
-            return true;
-        return Long.parseLong(var) - System.currentTimeMillis() > 24 * 60 * 60 * 1000;
+        if (player.isVarSet(name)) {
+            return player.getVarLong(name) - System.currentTimeMillis() > 24 * 60 * 60 * 1000;
+        }
+        return true;
     }
 }

@@ -1,6 +1,5 @@
 package l2trunk.gameserver.handler.admincommands.impl;
 
-import l2trunk.gameserver.BalancerConfig;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.dao.OlympiadNobleDAO;
@@ -22,7 +21,6 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.ChangeLogManager;
 import l2trunk.gameserver.model.entity.olympiad.OlympiadDatabase;
 import l2trunk.gameserver.model.quest.Quest;
-import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
 import l2trunk.gameserver.tables.FishTable;
 import l2trunk.gameserver.tables.PetDataTable;
@@ -71,7 +69,7 @@ public class AdminReload implements IAdminCommandHandler {
                     Config.loadGMAccess();
                     GameObjectsStorage.getAllPlayersStream().forEach(player -> {
                         if (!Config.EVERYBODY_HAS_ADMIN_RIGHTS)
-                            player.setPlayerAccess(Config.gmlist.get(player.getObjectId()));
+                            player.setPlayerAccess(Config.gmlist.get(player.objectId()));
                         else
                             player.setPlayerAccess(Config.gmlist.get(0));
                     });
@@ -95,7 +93,7 @@ public class AdminReload implements IAdminCommandHandler {
                 else {
                     GameObject t = activeChar.getTarget();
 
-                    if (t != null && t.isPlayer()) {
+                    if (t instanceof Player) {
                         Player p = (Player) t;
                         reloadQuestStates(p);
                     } else
@@ -108,7 +106,7 @@ public class AdminReload implements IAdminCommandHandler {
                 activeChar.sendMessage("Quest Help:");
                 activeChar.sendMessage("reload_qs_help - This Message.");
                 activeChar.sendMessage("reload_qs <selected target> - reload all quest states for target.");
-                activeChar.sendMessage("reload_qs <no target or target is not player> - reload quests for self.");
+                activeChar.sendMessage("reload_qs <no target or target is not player> - reload quests for player.");
                 activeChar.sendMessage("reload_qs all - reload quests for all players in world.");
                 activeChar.sendMessage("");
                 break;
@@ -176,7 +174,6 @@ public class AdminReload implements IAdminCommandHandler {
                 break;
             }
             case admin_reload_damageclasses: {
-                BalancerConfig.LoadConfig();
                 activeChar.sendMessage("Balance properties data have been reloaded.");
                 break;
             }
@@ -187,7 +184,7 @@ public class AdminReload implements IAdminCommandHandler {
 
     private void reloadQuestStates(Player p) {
         p.getAllQuestsStates().forEach(qs ->
-            p.removeQuestState(qs.getQuest().getName()));
+                p.removeQuestState(qs.quest.name));
         try (Connection con = DatabaseFactory.getInstance().getConnection()) {
             Quest.restoreQuestStates(p, con);
         } catch (SQLException e) {

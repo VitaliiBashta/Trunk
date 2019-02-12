@@ -36,22 +36,22 @@ public final class _10284_AcquisionOfDivineSword extends Quest {
             st.playSound(SOUND_ACCEPT);
         } else if ("enterinstance".equalsIgnoreCase(event)) {
             st.setCond(2);
-            enterInstance(st.getPlayer(), 140);
+            enterInstance(st.player, 140);
             return null;
         } else if ("jinia_q10284_03.htm".equalsIgnoreCase(event)) {
-            if (!st.getPlayer().getReflection().isDefault()) {
-                st.getPlayer().getReflection().startCollapseTimer(60 * 1000L);
-                st.getPlayer().sendPacket(new SystemMessage(SystemMessage.THIS_DUNGEON_WILL_EXPIRE_IN_S1_MINUTES).addNumber(1));
+            if (!st.player.getReflection().isDefault()) {
+                st.player.getReflection().startCollapseTimer(60 * 1000L);
+                st.player.sendPacket(new SystemMessage(SystemMessage.THIS_DUNGEON_WILL_EXPIRE_IN_S1_MINUTES).addNumber(1));
             }
             st.setCond(3);
         } else if ("leaveinstance".equalsIgnoreCase(event)) {
-            st.getPlayer().getReflection().collapse();
+            st.player.getReflection().collapse();
             return null;
         } else if ("entermines".equalsIgnoreCase(event)) {
             st.setCond(4);
             if (st.getQuestItemsCount(COLD_RESISTANCE_POTION) < 1)
-                st.giveItems(COLD_RESISTANCE_POTION, 1);
-            enterInstance(st.getPlayer(), 138);
+                st.giveItems(COLD_RESISTANCE_POTION);
+            enterInstance(st.player, 138);
             return null;
         } else if ("leavemines".equalsIgnoreCase(event)) {
             st.giveItems(ADENA_ID, 296425);
@@ -59,7 +59,7 @@ public final class _10284_AcquisionOfDivineSword extends Quest {
             st.playSound(SOUND_FINISH);
             st.setState(COMPLETED);
             st.exitCurrentQuest(false);
-            st.getPlayer().getReflection().collapse();
+            st.player.getReflection().collapse();
             return null;
         }
         return event;
@@ -72,8 +72,7 @@ public final class _10284_AcquisionOfDivineSword extends Quest {
         int cond = st.getCond();
         if (npcId == RAFFORTY) {
             if (cond == 0) {
-                QuestState qs = st.getPlayer().getQuestState(_10283_RequestOfIceMerchant.class);
-                if (st.getPlayer().getLevel() >= 82 && qs != null && qs.isCompleted())
+                if (st.player.getLevel() >= 82 && st.player.isQuestCompleted(_10283_RequestOfIceMerchant.class))
                     htmltext = "rafforty_q10284_01.htm";
                 else {
                     htmltext = "rafforty_q10284_00.htm";
@@ -91,12 +90,12 @@ public final class _10284_AcquisionOfDivineSword extends Quest {
                 htmltext = "krun_q10284_01.htm";
         } else if (npcId == INJ_KEGOR) {
             if (cond == 4) {
-                st.takeAllItems(COLD_RESISTANCE_POTION);
+                st.takeItems(COLD_RESISTANCE_POTION);
                 st.setCond(5);
                 htmltext = "kegor_q10284_01.htm";
                 for (int i = 0; i < 4; i++) {
-                    NpcInstance mob = st.getPlayer().getReflection().addSpawnWithoutRespawn(MITHRIL_MILLIPEDE, Location.findPointToStay(st.getPlayer(), 50, 100), st.getPlayer().getGeoIndex());
-                    mob.getAI().notifyEvent(CtrlEvent.EVT_ATTACKED, st.getPlayer(), 300);
+                    NpcInstance mob = st.player.getReflection().addSpawnWithoutRespawn(MITHRIL_MILLIPEDE, Location.findPointToStay(st.player, 50, 100), st.player.getGeoIndex());
+                    mob.getAI().notifyEvent(CtrlEvent.EVT_ATTACKED, st.player, 300);
                 }
             } else if (cond == 5)
                 htmltext = "kegor_q10284_02.htm";
@@ -107,7 +106,7 @@ public final class _10284_AcquisionOfDivineSword extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         if (cond == 5 && npcId == MITHRIL_MILLIPEDE) {
@@ -115,11 +114,10 @@ public final class _10284_AcquisionOfDivineSword extends Quest {
                 _count++;
             else {
                 st.setCond(6);
-                st.getPlayer().getReflection().startCollapseTimer(3 * 60 * 1000L);
-                st.getPlayer().sendPacket(new SystemMessage(SystemMessage.THIS_DUNGEON_WILL_EXPIRE_IN_S1_MINUTES).addNumber(3));
+                st.player.getReflection().startCollapseTimer(3 * 60 * 1000L);
+                st.player.sendPacket(new SystemMessage(SystemMessage.THIS_DUNGEON_WILL_EXPIRE_IN_S1_MINUTES).addNumber(3));
             }
         }
-        return null;
     }
 
     private void enterInstance(Player player, int izId) {

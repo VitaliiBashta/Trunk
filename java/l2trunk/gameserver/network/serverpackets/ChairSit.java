@@ -11,7 +11,7 @@ public final class ChairSit extends L2GameServerPacket {
     private final int _staticObjectId;
 
     public ChairSit(Player player, StaticObjectInstance throne) {
-        _objectId = player.getObjectId();
+        _objectId = player.objectId();
         _staticObjectId = throne.getUId();
     }
 

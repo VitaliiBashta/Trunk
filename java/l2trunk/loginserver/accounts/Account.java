@@ -134,7 +134,7 @@ public final class Account {
     }
 
     public void addAccountInfo(int serverId, int size, int[] deleteChars) {
-        _serversInfo.put(serverId, new Pair<>(size, deleteChars));
+        _serversInfo.put(serverId, Pair.of(size, deleteChars));
     }
 
     public Pair<Integer, int[]> getAccountInfo(int serverId) {

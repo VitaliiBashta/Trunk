@@ -247,96 +247,96 @@ public enum SevenSigns {
     }
 
     public void spawnSevenSignsNPC() {
-        AutoSpawnInstance _merchantSpawn = AutoSpawnManager.getInstance().getAutoSpawnInstance(MAMMON_MERCHANT_ID, false);
-        AutoSpawnInstance _blacksmithSpawn = AutoSpawnManager.getInstance().getAutoSpawnInstance(MAMMON_BLACKSMITH_ID, false);
-        Map<Integer, AutoSpawnInstance> _marketeerSpawns = AutoSpawnManager.getInstance().getAllAutoSpawnInstance(MAMMON_MARKETEER_ID);
-        AutoSpawnInstance _spiritInSpawn = AutoSpawnManager.getInstance().getAutoSpawnInstance(SPIRIT_IN_ID, false);
-        AutoSpawnInstance _spiritOutSpawn = AutoSpawnManager.getInstance().getAutoSpawnInstance(SPIRIT_OUT_ID, false);
-        AutoSpawnInstance _lilithSpawn = AutoSpawnManager.getInstance().getAutoSpawnInstance(LILITH_NPC_ID, false);
-        AutoSpawnInstance _anakimSpawn = AutoSpawnManager.getInstance().getAutoSpawnInstance(ANAKIM_NPC_ID, false);
-        AutoSpawnInstance _crestOfDawnSpawn = AutoSpawnManager.getInstance().getAutoSpawnInstance(CREST_OF_DAWN_ID, false);
-        AutoSpawnInstance _crestOfDuskSpawn = AutoSpawnManager.getInstance().getAutoSpawnInstance(CREST_OF_DUSK_ID, false);
-        Map<Integer, AutoSpawnInstance> _oratorSpawns = AutoSpawnManager.getInstance().getAllAutoSpawnInstance(ORATOR_NPC_ID);
-        Map<Integer, AutoSpawnInstance> _preacherSpawns = AutoSpawnManager.getInstance().getAllAutoSpawnInstance(PREACHER_NPC_ID);
+        AutoSpawnInstance _merchantSpawn = AutoSpawnManager.INSTANCE.getAutoSpawnInstance(MAMMON_MERCHANT_ID, false);
+        AutoSpawnInstance _blacksmithSpawn = AutoSpawnManager.INSTANCE.getAutoSpawnInstance(MAMMON_BLACKSMITH_ID, false);
+        Map<Integer, AutoSpawnInstance> _marketeerSpawns = AutoSpawnManager.INSTANCE().getAllAutoSpawnInstance(MAMMON_MARKETEER_ID);
+        AutoSpawnInstance _spiritInSpawn = AutoSpawnManager.INSTANCE.getAutoSpawnInstance(SPIRIT_IN_ID, false);
+        AutoSpawnInstance _spiritOutSpawn = AutoSpawnManager.INSTANCE.getAutoSpawnInstance(SPIRIT_OUT_ID, false);
+        AutoSpawnInstance _lilithSpawn = AutoSpawnManager.INSTANCE.getAutoSpawnInstance(LILITH_NPC_ID, false);
+        AutoSpawnInstance _anakimSpawn = AutoSpawnManager.INSTANCE.getAutoSpawnInstance(ANAKIM_NPC_ID, false);
+        AutoSpawnInstance _crestOfDawnSpawn = AutoSpawnManager.INSTANCE.getAutoSpawnInstance(CREST_OF_DAWN_ID, false);
+        AutoSpawnInstance _crestOfDuskSpawn = AutoSpawnManager.INSTANCE.getAutoSpawnInstance(CREST_OF_DUSK_ID, false);
+        Map<Integer, AutoSpawnInstance> _oratorSpawns = AutoSpawnManager.INSTANCE.getAllAutoSpawnInstance(ORATOR_NPC_ID);
+        Map<Integer, AutoSpawnInstance> _preacherSpawns = AutoSpawnManager.INSTANCE.getAllAutoSpawnInstance(PREACHER_NPC_ID);
 
         if (isSealValidationPeriod() || isCompResultsPeriod()) {
             for (AutoSpawnInstance spawnInst : _marketeerSpawns.values())
-                AutoSpawnManager.getInstance().setSpawnActive(spawnInst, true);
+                AutoSpawnManager.INSTANCE.setSpawnActive(spawnInst, true);
 
             if (getSealOwner(SEAL_GNOSIS) == getCabalHighestScore() && getSealOwner(SEAL_GNOSIS) != CABAL_NULL) {
                 if (!Config.ANNOUNCE_MAMMON_SPAWN)
                     _blacksmithSpawn.setBroadcast(false);
 
-                if (!AutoSpawnManager.getInstance().getAutoSpawnInstance(_blacksmithSpawn.getObjectId(), true).isSpawnActive())
-                    AutoSpawnManager.getInstance().setSpawnActive(_blacksmithSpawn, true);
+                if (!AutoSpawnManager.INSTANCE.getAutoSpawnInstance(_blacksmithSpawn.getObjectId(), true).isSpawnActive())
+                    AutoSpawnManager.INSTANCE.setSpawnActive(_blacksmithSpawn, true);
                 for (AutoSpawnInstance spawnInst : _oratorSpawns.values())
-                    if (!AutoSpawnManager.getInstance().getAutoSpawnInstance(spawnInst.getObjectId(), true).isSpawnActive())
-                        AutoSpawnManager.getInstance().setSpawnActive(spawnInst, true);
+                    if (!AutoSpawnManager.INSTANCE.getAutoSpawnInstance(spawnInst.getObjectId(), true).isSpawnActive())
+                        AutoSpawnManager.INSTANCE.setSpawnActive(spawnInst, true);
                 for (AutoSpawnInstance spawnInst : _preacherSpawns.values())
-                    if (!AutoSpawnManager.getInstance().getAutoSpawnInstance(spawnInst.getObjectId(), true).isSpawnActive())
-                        AutoSpawnManager.getInstance().setSpawnActive(spawnInst, true);
+                    if (!AutoSpawnManager.INSTANCE.getAutoSpawnInstance(spawnInst.getObjectId(), true).isSpawnActive())
+                        AutoSpawnManager.INSTANCE.setSpawnActive(spawnInst, true);
             } else {
-                AutoSpawnManager.getInstance().setSpawnActive(_blacksmithSpawn, false);
+                AutoSpawnManager.INSTANCE.setSpawnActive(_blacksmithSpawn, false);
                 for (AutoSpawnInstance spawnInst : _oratorSpawns.values())
-                    AutoSpawnManager.getInstance().setSpawnActive(spawnInst, false);
+                    AutoSpawnManager.INSTANCE.setSpawnActive(spawnInst, false);
                 for (AutoSpawnInstance spawnInst : _preacherSpawns.values())
-                    AutoSpawnManager.getInstance().setSpawnActive(spawnInst, false);
+                    AutoSpawnManager.INSTANCE.setSpawnActive(spawnInst, false);
             }
 
             if (getSealOwner(SEAL_AVARICE) == getCabalHighestScore() && getSealOwner(SEAL_AVARICE) != CABAL_NULL) {
                 if (!Config.ANNOUNCE_MAMMON_SPAWN)
                     _merchantSpawn.setBroadcast(false);
 
-                if (!AutoSpawnManager.getInstance().getAutoSpawnInstance(_merchantSpawn.getObjectId(), true).isSpawnActive())
-                    AutoSpawnManager.getInstance().setSpawnActive(_merchantSpawn, true);
+                if (!AutoSpawnManager.INSTANCE.getAutoSpawnInstance(_merchantSpawn.getObjectId(), true).isSpawnActive())
+                    AutoSpawnManager.INSTANCE.setSpawnActive(_merchantSpawn, true);
 
-                if (!AutoSpawnManager.getInstance().getAutoSpawnInstance(_spiritInSpawn.getObjectId(), true).isSpawnActive())
-                    AutoSpawnManager.getInstance().setSpawnActive(_spiritInSpawn, true);
-                if (!AutoSpawnManager.getInstance().getAutoSpawnInstance(_spiritOutSpawn.getObjectId(), true).isSpawnActive())
-                    AutoSpawnManager.getInstance().setSpawnActive(_spiritOutSpawn, true);
+                if (!AutoSpawnManager.INSTANCE.getAutoSpawnInstance(_spiritInSpawn.getObjectId(), true).isSpawnActive())
+                    AutoSpawnManager.INSTANCE.setSpawnActive(_spiritInSpawn, true);
+                if (!AutoSpawnManager.INSTANCE.getAutoSpawnInstance(_spiritOutSpawn.getObjectId(), true).isSpawnActive())
+                    AutoSpawnManager.INSTANCE.setSpawnActive(_spiritOutSpawn, true);
 
                 switch (getCabalHighestScore()) {
                     case CABAL_DAWN:
-                        if (!AutoSpawnManager.getInstance().getAutoSpawnInstance(_lilithSpawn.getObjectId(), true).isSpawnActive())
-                            AutoSpawnManager.getInstance().setSpawnActive(_lilithSpawn, true);
-                        AutoSpawnManager.getInstance().setSpawnActive(_anakimSpawn, false);
-                        if (!AutoSpawnManager.getInstance().getAutoSpawnInstance(_crestOfDawnSpawn.getObjectId(), true).isSpawnActive())
-                            AutoSpawnManager.getInstance().setSpawnActive(_crestOfDawnSpawn, true);
-                        AutoSpawnManager.getInstance().setSpawnActive(_crestOfDuskSpawn, false);
+                        if (!AutoSpawnManager.INSTANCE().getAutoSpawnInstance(_lilithSpawn.getObjectId(), true).isSpawnActive())
+                            AutoSpawnManager.INSTANCE().setSpawnActive(_lilithSpawn, true);
+                        AutoSpawnManager.INSTANCE().setSpawnActive(_anakimSpawn, false);
+                        if (!AutoSpawnManager.INSTANCE().getAutoSpawnInstance(_crestOfDawnSpawn.getObjectId(), true).isSpawnActive())
+                            AutoSpawnManager.INSTANCE().setSpawnActive(_crestOfDawnSpawn, true);
+                        AutoSpawnManager.INSTANCE().setSpawnActive(_crestOfDuskSpawn, false);
                         break;
                     case CABAL_DUSK:
-                        if (!AutoSpawnManager.getInstance().getAutoSpawnInstance(_anakimSpawn.getObjectId(), true).isSpawnActive())
-                            AutoSpawnManager.getInstance().setSpawnActive(_anakimSpawn, true);
-                        AutoSpawnManager.getInstance().setSpawnActive(_lilithSpawn, false);
-                        if (!AutoSpawnManager.getInstance().getAutoSpawnInstance(_crestOfDuskSpawn.getObjectId(), true).isSpawnActive())
-                            AutoSpawnManager.getInstance().setSpawnActive(_crestOfDuskSpawn, true);
-                        AutoSpawnManager.getInstance().setSpawnActive(_crestOfDawnSpawn, false);
+                        if (!AutoSpawnManager.INSTANCE().getAutoSpawnInstance(_anakimSpawn.getObjectId(), true).isSpawnActive())
+                            AutoSpawnManager.INSTANCE().setSpawnActive(_anakimSpawn, true);
+                        AutoSpawnManager.INSTANCE().setSpawnActive(_lilithSpawn, false);
+                        if (!AutoSpawnManager.INSTANCE().getAutoSpawnInstance(_crestOfDuskSpawn.getObjectId(), true).isSpawnActive())
+                            AutoSpawnManager.INSTANCE().setSpawnActive(_crestOfDuskSpawn, true);
+                        AutoSpawnManager.INSTANCE().setSpawnActive(_crestOfDawnSpawn, false);
                         break;
                 }
             } else {
-                AutoSpawnManager.getInstance().setSpawnActive(_merchantSpawn, false);
-                AutoSpawnManager.getInstance().setSpawnActive(_lilithSpawn, false);
-                AutoSpawnManager.getInstance().setSpawnActive(_anakimSpawn, false);
-                AutoSpawnManager.getInstance().setSpawnActive(_crestOfDawnSpawn, false);
-                AutoSpawnManager.getInstance().setSpawnActive(_crestOfDuskSpawn, false);
-                AutoSpawnManager.getInstance().setSpawnActive(_spiritInSpawn, false);
-                AutoSpawnManager.getInstance().setSpawnActive(_spiritOutSpawn, false);
+                AutoSpawnManager.INSTANCE().setSpawnActive(_merchantSpawn, false);
+                AutoSpawnManager.INSTANCE().setSpawnActive(_lilithSpawn, false);
+                AutoSpawnManager.INSTANCE().setSpawnActive(_anakimSpawn, false);
+                AutoSpawnManager.INSTANCE().setSpawnActive(_crestOfDawnSpawn, false);
+                AutoSpawnManager.INSTANCE().setSpawnActive(_crestOfDuskSpawn, false);
+                AutoSpawnManager.INSTANCE().setSpawnActive(_spiritInSpawn, false);
+                AutoSpawnManager.INSTANCE().setSpawnActive(_spiritOutSpawn, false);
             }
         } else {
-            AutoSpawnManager.getInstance().setSpawnActive(_merchantSpawn, false);
-            AutoSpawnManager.getInstance().setSpawnActive(_blacksmithSpawn, false);
-            AutoSpawnManager.getInstance().setSpawnActive(_lilithSpawn, false);
-            AutoSpawnManager.getInstance().setSpawnActive(_anakimSpawn, false);
-            AutoSpawnManager.getInstance().setSpawnActive(_crestOfDawnSpawn, false);
-            AutoSpawnManager.getInstance().setSpawnActive(_crestOfDuskSpawn, false);
-            AutoSpawnManager.getInstance().setSpawnActive(_spiritInSpawn, false);
-            AutoSpawnManager.getInstance().setSpawnActive(_spiritOutSpawn, false);
+            AutoSpawnManager.INSTANCE().setSpawnActive(_merchantSpawn, false);
+            AutoSpawnManager.INSTANCE().setSpawnActive(_blacksmithSpawn, false);
+            AutoSpawnManager.INSTANCE().setSpawnActive(_lilithSpawn, false);
+            AutoSpawnManager.INSTANCE().setSpawnActive(_anakimSpawn, false);
+            AutoSpawnManager.INSTANCE().setSpawnActive(_crestOfDawnSpawn, false);
+            AutoSpawnManager.INSTANCE().setSpawnActive(_crestOfDuskSpawn, false);
+            AutoSpawnManager.INSTANCE().setSpawnActive(_spiritInSpawn, false);
+            AutoSpawnManager.INSTANCE().setSpawnActive(_spiritOutSpawn, false);
             for (AutoSpawnInstance spawnInst : _oratorSpawns.values())
-                AutoSpawnManager.getInstance().setSpawnActive(spawnInst, false);
+                AutoSpawnManager.INSTANCE().setSpawnActive(spawnInst, false);
             for (AutoSpawnInstance spawnInst : _preacherSpawns.values())
-                AutoSpawnManager.getInstance().setSpawnActive(spawnInst, false);
+                AutoSpawnManager.INSTANCE().setSpawnActive(spawnInst, false);
             for (AutoSpawnInstance spawnInst : _marketeerSpawns.values())
-                AutoSpawnManager.getInstance().setSpawnActive(spawnInst, false);
+                AutoSpawnManager.INSTANCE().setSpawnActive(spawnInst, false);
         }
     }
 
@@ -490,19 +490,19 @@ public enum SevenSigns {
     }
 
     public final StatsSet getPlayerStatsSet(Player player) {
-        if (!hasRegisteredBefore(player.getObjectId()))
+        if (!hasRegisteredBefore(player.objectId()))
             return null;
 
-        return _signsPlayerData.get(player.getObjectId());
+        return _signsPlayerData.get(player.objectId());
     }
 
     public long getPlayerStoneContrib(Player player) {
-        if (!hasRegisteredBefore(player.getObjectId()))
+        if (!hasRegisteredBefore(player.objectId()))
             return 0;
 
         long stoneCount = 0;
 
-        StatsSet currPlayer = _signsPlayerData.get(player.getObjectId());
+        StatsSet currPlayer = _signsPlayerData.get(player.objectId());
 
         if (getPlayerCabal(player) == CABAL_DAWN) {
             stoneCount += currPlayer.getLong("dawn_red_stones");
@@ -518,33 +518,33 @@ public enum SevenSigns {
     }
 
     public long getPlayerContribScore(Player player) {
-        if (!hasRegisteredBefore(player.getObjectId()))
+        if (!hasRegisteredBefore(player.objectId()))
             return 0;
 
-        StatsSet currPlayer = _signsPlayerData.get(player.getObjectId());
+        StatsSet currPlayer = _signsPlayerData.get(player.objectId());
         if (getPlayerCabal(player) == CABAL_DAWN)
             return currPlayer.getInteger("dawn_contribution_score");
         return currPlayer.getInteger("dusk_contribution_score");
     }
 
     public long getPlayerAdenaCollect(Player player) {
-        if (!hasRegisteredBefore(player.getObjectId()))
+        if (!hasRegisteredBefore(player.objectId()))
             return 0;
-        return _signsPlayerData.get(player.getObjectId()).getLong(getPlayerCabal(player) == CABAL_DAWN ? "dawn_ancient_adena_amount" : "dusk_ancient_adena_amount");
+        return _signsPlayerData.get(player.objectId()).getLong(getPlayerCabal(player) == CABAL_DAWN ? "dawn_ancient_adena_amount" : "dusk_ancient_adena_amount");
     }
 
     public int getPlayerSeal(Player player) {
-        if (!hasRegisteredBefore(player.getObjectId()))
+        if (!hasRegisteredBefore(player.objectId()))
             return SEAL_NULL;
 
-        return _signsPlayerData.get(player.getObjectId()).getInteger("seal");
+        return _signsPlayerData.get(player.objectId()).getInteger("seal");
     }
 
     public int getPlayerCabal(Player player) {
-        if (!hasRegisteredBefore(player.getObjectId()))
+        if (!hasRegisteredBefore(player.objectId()))
             return CABAL_NULL;
 
-        return _signsPlayerData.get(player.getObjectId()).getInteger("cabal");
+        return _signsPlayerData.get(player.objectId()).getInteger("cabal");
     }
 
     /**
@@ -799,7 +799,7 @@ public enum SevenSigns {
      * @return int rewardAmount
      */
     public int getAncientAdenaReward(Player player, boolean removeReward) {
-        int charObjId = player.getObjectId();
+        int charObjId = player.objectId();
         StatsSet currPlayer = _signsPlayerData.get(charObjId);
 
         int rewardAmount = 0;
@@ -833,7 +833,7 @@ public enum SevenSigns {
      * @return int contribScore
      */
     public long addPlayerStoneContrib(Player player, long blueCount, long greenCount, long redCount) {
-        return addPlayerStoneContrib(player.getObjectId(), blueCount, greenCount, redCount);
+        return addPlayerStoneContrib(player.objectId(), blueCount, greenCount, redCount);
     }
 
     public long addPlayerStoneContrib(int charObjId, long blueCount, long greenCount, long redCount) {

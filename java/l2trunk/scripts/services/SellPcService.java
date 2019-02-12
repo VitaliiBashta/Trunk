@@ -17,7 +17,6 @@ public final class SellPcService extends Functions implements ScriptFile {
     private static final Logger _log = LoggerFactory.getLogger(Player.class);
 
     public void dialog() {
-        Player player = getSelf();
         if (player == null)
             return;
 
@@ -26,7 +25,6 @@ public final class SellPcService extends Functions implements ScriptFile {
 
 
     public void pay(String[] param) {
-        Player player = getSelf();
         if (player == null)
             return;
 
@@ -39,7 +37,7 @@ public final class SellPcService extends Functions implements ScriptFile {
         if (item == null)
             return;
 
-        ItemInstance pay = player.getInventory().getItemByItemId(item.getItemId());
+        ItemInstance pay = player.inventory.getItemByItemId(item.itemId());
         if (pay != null && pay.getCount() >= itemCount) //кол-во денег
         {
             player.addPcBangPoints(points, false);

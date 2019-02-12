@@ -7,6 +7,7 @@ import l2trunk.gameserver.cache.Msg;
 import l2trunk.gameserver.listener.actor.OnDeathListener;
 import l2trunk.gameserver.listener.actor.player.OnPlayerEnterListener;
 import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.SimpleSpawner;
 import l2trunk.gameserver.model.actor.listener.CharListenerList;
@@ -22,13 +23,15 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
+import static l2trunk.gameserver.utils.ItemFunctions.addItem;
+
 public final class March8 extends Functions implements ScriptFile, OnDeathListener, OnPlayerEnterListener {
     private static final Logger _log = LoggerFactory.getLogger(March8.class);
     private static final String EVENT_NAME = "March8";
     private static final int RECIPE_PRICE = 50000; // 50.000 adena at x1 servers
     private static final int RECIPE_ID = 20191;
     private static final int EVENT_MANAGER_ID = 4301;
-    private static final List<SimpleSpawner> SPAWNER_LIST = new ArrayList<>();
+    private static List<SimpleSpawner> SPAWNER_LIST = new ArrayList<>();
     private static final List<Integer> DROP = List.of(20192, 20193, 20194);
     private static boolean _active = false;
 
@@ -37,7 +40,7 @@ public final class March8 extends Functions implements ScriptFile, OnDeathListen
     }
 
     private void spawnEventManagers() {
-        SpawnNPCs(EVENT_MANAGER_ID, EventsConfig.EVENT_MANAGERS_coffer_march8, SPAWNER_LIST);
+        SPAWNER_LIST = SpawnNPCs(EVENT_MANAGER_ID, EventsConfig.EVENT_MANAGERS_coffer_march8);
     }
 
     private void unSpawnEventManagers() {
@@ -45,11 +48,10 @@ public final class March8 extends Functions implements ScriptFile, OnDeathListen
     }
 
     public void startEvent() {
-        Player player = getSelf();
         if (!player.getPlayerAccess().IsEventGm)
             return;
 
-        if (SetActive(EVENT_NAME, true)) {
+        if (setActive(EVENT_NAME, true)) {
             spawnEventManagers();
             System.out.println("Event: March 8 started.");
             Announcements.INSTANCE.announceByCustomMessage("scripts.events.March8.AnnounceEventStarted");
@@ -61,10 +63,9 @@ public final class March8 extends Functions implements ScriptFile, OnDeathListen
     }
 
     public void stopEvent() {
-        Player player = getSelf();
         if (!player.getPlayerAccess().IsEventGm)
             return;
-        if (SetActive(EVENT_NAME, false)) {
+        if (setActive(EVENT_NAME, false)) {
             unSpawnEventManagers();
             System.out.println("Event: March 8 stopped.");
             Announcements.INSTANCE.announceByCustomMessage("scripts.events.March8.AnnounceEventStoped");
@@ -76,8 +77,6 @@ public final class March8 extends Functions implements ScriptFile, OnDeathListen
     }
 
     public void buyrecipe() {
-        Player player = getSelf();
-
         if (!player.isQuestContinuationPossible(true))
             return;
 
@@ -91,7 +90,7 @@ public final class March8 extends Functions implements ScriptFile, OnDeathListen
         }
 
         player.reduceAdena(need_adena, true, "March8");
-        Functions.addItem(player, RECIPE_ID, 1, "March8");
+        addItem(player, RECIPE_ID, 1);
     }
 
     public String DialogAppend_4301(Integer val) {
@@ -102,7 +101,7 @@ public final class March8 extends Functions implements ScriptFile, OnDeathListen
         String append = "";
         price = Util.formatAdena((long) (RECIPE_PRICE * Config.EVENT_MARCH8_PRICE_RATE));
         append += "<br><a action=\"bypass -h scripts_events.March8.March8:buyrecipe\">";
-        append += new CustomMessage("scripts.events.March8.buyrecipe", getSelf()).addString(price);
+        append += new CustomMessage("scripts.events.March8.buyrecipe", player).addString(price);
         append += "</a><br>";
         return append;
     }
@@ -136,7 +135,10 @@ public final class March8 extends Functions implements ScriptFile, OnDeathListen
 
     @Override
     public void onDeath(Creature cha, Creature killer) {
-        if (_active && SimpleCheckDrop(cha, killer) && Rnd.chance(Config.EVENT_MARCH8_DROP_CHANCE * killer.getPlayer().getRateItems() * ((NpcInstance) cha).getTemplate().rateHp))
-            ((NpcInstance) cha).dropItem(killer.getPlayer(), Rnd.get(DROP), 1);
+        if (killer instanceof Playable) {
+            Playable playable = (Playable) killer;
+            if (_active && simpleCheckDrop(cha, playable) && Rnd.chance(Config.EVENT_MARCH8_DROP_CHANCE * playable.getPlayer().getRateItems() * ((NpcInstance) cha).getTemplate().rateHp))
+                ((NpcInstance) cha).dropItem(playable.getPlayer(), Rnd.get(DROP), 1);
+        }
     }
 }

@@ -3,7 +3,6 @@ package l2trunk.scripts.ai.hellbound;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ai.DefaultAI;
 import l2trunk.gameserver.model.Creature;
-import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.World;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.items.ItemInstance;
@@ -40,9 +39,7 @@ public final class CoralGardenGolem extends DefaultAI {
         if (!fedCrystal && Rnd.chance(1))
             Functions.npcShout(actor, Rnd.get(phrases_idle));
         if (!actor.isMoving && !trapped) {
-            World.getAroundObjects(actor, 200, 200)
-                    .filter(GameObject::isItem)
-                    .map(obj -> (ItemInstance) obj)
+            World.getAroundItems(actor, 200, 200)
                     .filter(i -> i.getItemId() == 9693) //Crystal Fragment
                     .findFirst().ifPresent(closestItem -> actor.moveToLocation(closestItem.getLoc(), 0, true));
         }
@@ -53,9 +50,9 @@ public final class CoralGardenGolem extends DefaultAI {
     public void onEvtArrived() {
         super.onEvtArrived();
         NpcInstance actor = getActor();
-        World.getAroundObjects(actor, 20, 200)
+        World.getAroundItems(actor, 20, 200)
                 .forEach(obj -> {
-                    if (obj.isItem() && ((ItemInstance) obj).getItemId() == 9693) {
+                    if (obj.getItemId() == 9693) {
                         fedCrystal = true;
                         obj.deleteMe();
                         Functions.npcShout(actor, Rnd.get(phrases_eat));

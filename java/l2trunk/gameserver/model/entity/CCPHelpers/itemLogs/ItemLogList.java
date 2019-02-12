@@ -36,7 +36,7 @@ public class ItemLogList {
         if (!Config.ENABLE_PLAYER_ITEM_LOGS) {
             return new ArrayList<>();
         }
-        List<ItemActionLog> list = _logLists.get(player.getObjectId());
+        List<ItemActionLog> list = _logLists.get(player.objectId());
         if (list == null)
             return new ArrayList<>();
         return list;

@@ -19,6 +19,6 @@ public final class Toggle extends Skill {
             return;
         }
 
-        getEffects(activeChar, activeChar, getActivateRate() > 0, false);
+        getEffects(activeChar, activeChar, activateRate > 0, false);
     }
 }

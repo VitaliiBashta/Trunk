@@ -1,5 +1,6 @@
 package l2trunk.commons.lang;
 
+import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.templates.mapregion.RegionData;
 
 import java.lang.reflect.Array;
@@ -22,7 +23,7 @@ public final class ArrayUtils {
         return array[index];
     }
 
-    public static <T extends Comparable<T>> boolean equalLists(List<T> one, List<T> two) {
+    public static boolean equalLists(List<Skill> one, List<Skill> two) {
         if (one == null && two == null) {
             return true;
         }
@@ -68,15 +69,5 @@ public final class ArrayUtils {
                 return i;
 
         return -1;
-    }
-
-    public static List<Integer> createAscendingList(int min, int max) {
-//        List<Integer> list = new ArrayList<>(max - min + 1);
-        return IntStream.rangeClosed(min, max).boxed().collect(Collectors.toList());
-//        Stream.iterate(min, i -> i+1)
-//        int j = min;
-//        while (j <= max)
-//            list.add(j++);
-//        return list;
     }
 }

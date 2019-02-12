@@ -14,7 +14,7 @@ public class RecipeShopSellList extends L2GameServerPacket {
     private final List<ManufactureItem> createList;
 
     public RecipeShopSellList(Player buyer, Player manufacturer) {
-        objId = manufacturer.getObjectId();
+        objId = manufacturer.objectId();
         curMp = (int) manufacturer.getCurrentMp();
         maxMp = manufacturer.getMaxMp();
         adena = buyer.getAdena();

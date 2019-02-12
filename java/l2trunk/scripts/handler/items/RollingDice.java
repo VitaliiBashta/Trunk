@@ -10,7 +10,6 @@ import l2trunk.gameserver.network.serverpackets.Dice;
 import l2trunk.gameserver.network.serverpackets.SystemMessage;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-import java.util.Arrays;
 import java.util.List;
 
 public final class RollingDice extends ScriptItemHandler implements ScriptFile {
@@ -18,21 +17,12 @@ public final class RollingDice extends ScriptItemHandler implements ScriptFile {
     private static final List<Integer> ITEM_IDS = List.of(4625, 4626, 4627, 4628);
 
     @Override
-    public boolean pickupItem(Playable playable, ItemInstance item) {
-        return true;
-    }
-
-    @Override
     public void onLoad() {
         ItemHandler.INSTANCE.registerItemHandler(this);
     }
 
     @Override
-    public boolean useItem(Playable playable, ItemInstance item, boolean ctrl) {
-        if (playable == null || !playable.isPlayer())
-            return false;
-        Player player = (Player) playable;
-
+    public boolean useItem(Player player, ItemInstance item, boolean ctrl) {
         int itemId = item.getItemId();
 
         if (player.isInOlympiadMode()) {
@@ -51,7 +41,7 @@ public final class RollingDice extends ScriptItemHandler implements ScriptFile {
             return false;
         }
 
-        player.broadcastPacket(new Dice(player.getObjectId(), itemId, number, player.getX() - 30, player.getY() - 30, player.getZ()), new SystemMessage(SystemMessage.S1_HAS_ROLLED_S2).addString(player.getName()).addNumber(number));
+        player.broadcastPacket(new Dice(player.objectId(), itemId, number, player.getX() - 30, player.getY() - 30, player.getZ()), new SystemMessage(SystemMessage.S1_HAS_ROLLED_S2).addString(player.getName()).addNumber(number));
 
         return true;
     }

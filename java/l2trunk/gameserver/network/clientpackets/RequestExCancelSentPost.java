@@ -63,7 +63,7 @@ public class RequestExCancelSentPost extends L2GameClientPacket {
             return;
         }
 
-        Mail mail = MailDAO.getInstance().getSentMailByMailId(activeChar.getObjectId(), postId);
+        Mail mail = MailDAO.getInstance().getSentMailByMailId(activeChar.objectId(), postId);
         if (mail != null) {
             if (mail.getAttachments().isEmpty()) {
                 activeChar.sendActionFailed();
@@ -74,8 +74,8 @@ public class RequestExCancelSentPost extends L2GameClientPacket {
                 int slots = 0;
                 long weight = 0;
                 for (ItemInstance item : mail.getAttachments()) {
-                    weight = SafeMath.addAndCheck(weight, SafeMath.mulAndCheck(item.getCount(), item.getTemplate().getWeight()));
-                    if (!item.getTemplate().isStackable() || activeChar.getInventory().getItemByItemId(item.getItemId()) == null)
+                    weight = SafeMath.addAndCheck(weight, SafeMath.mulAndCheck(item.getCount(), item.getTemplate().weight()));
+                    if (!item.getTemplate().stackable() || activeChar.getInventory().getItemByItemId(item.getItemId()) == null)
                         slots++;
                 }
 

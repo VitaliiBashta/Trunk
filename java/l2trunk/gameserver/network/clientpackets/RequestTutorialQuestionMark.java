@@ -4,6 +4,7 @@ import l2trunk.gameserver.instancemanager.QuestManager;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.achievements.Achievements;
 import l2trunk.gameserver.model.quest.Quest;
+import l2trunk.scripts.quests._255_Tutorial;
 
 public final class RequestTutorialQuestionMark extends L2GameClientPacket {
     // format: cd
@@ -19,11 +20,10 @@ public final class RequestTutorialQuestionMark extends L2GameClientPacket {
         Player player = getClient().getActiveChar();
         if (player == null)
             return;
-        Quest q = QuestManager.getQuest(255);
-        if (q != null)
-            player.processQuestEvent(q.getName(), "QM" + number, null);
+        Quest q = QuestManager.getQuest(_255_Tutorial.class);
+        player.processQuestEvent(q, "QM" + number, null);
 
-        if (number == player.getObjectId())
+        if (number == player.objectId())
             Achievements.INSTANCE.onBypass(player, "_bbs_achievements", null);
     }
 }

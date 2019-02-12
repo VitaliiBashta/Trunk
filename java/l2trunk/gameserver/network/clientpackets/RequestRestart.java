@@ -45,20 +45,20 @@ public class RequestRestart extends L2GameClientPacket {
             activeChar.setBlock(false);
         }
 
-        if (activeChar.getVar("isPvPevents") != null) {
+        if (activeChar.isVarSet("isPvPevents")) {
             activeChar.sendMessage("You can follow any responses did not leave while participating in the event!");
             activeChar.sendActionFailed();
             return;
         }
 
         if (activeChar.isInOlympiadMode()) {
-            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.clientpackets.Logout.Olympiad", activeChar));
+            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.clientpackets.Logout.Olympiad"));
             activeChar.sendPacket(RestartResponse.FAIL, ActionFail.STATIC);
             return;
         }
 
         if (activeChar.isInStoreMode() && !activeChar.isInZone(Zone.ZoneType.offshore)) {
-            activeChar.sendMessage(new CustomMessage("trade.OfflineNoTradeZoneOnlyOffshore", activeChar));
+            activeChar.sendMessage(new CustomMessage("trade.OfflineNoTradeZoneOnlyOffshore"));
             activeChar.sendPacket(RestartResponse.FAIL, ActionFail.STATIC);
             return;
         }
@@ -67,7 +67,7 @@ public class RequestRestart extends L2GameClientPacket {
         // is not longer a participant.
         if (activeChar.isFestivalParticipant()) {
             if (SevenSignsFestival.INSTANCE.isFestivalInitialized()) {
-                activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.clientpackets.RequestRestart.Festival", activeChar));
+                activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.clientpackets.RequestRestart.Festival"));
                 activeChar.sendPacket(RestartResponse.FAIL, ActionFail.STATIC);
                 return;
             }
@@ -75,11 +75,11 @@ public class RequestRestart extends L2GameClientPacket {
 
         if (PartyMatchingBBSManager.getInstance().partyMatchingPlayersList.contains(activeChar)) {
             PartyMatchingBBSManager.getInstance().partyMatchingPlayersList.remove(activeChar);
-            PartyMatchingBBSManager.getInstance().partyMatchingDescriptionList.remove(activeChar.getObjectId());
+            PartyMatchingBBSManager.getInstance().partyMatchingDescriptionList.remove(activeChar.objectId());
         }
 
         if (activeChar.isInAwayingMode()) {
-            activeChar.sendMessage(new CustomMessage("Away.ActionFailed", activeChar, new Object[0]));
+            activeChar.sendMessage(new CustomMessage("Away.ActionFailed", new Object[0]));
             activeChar.sendPacket(new IStaticPacket[]{RestartResponse.FAIL, ActionFail.STATIC});
             return;
         }

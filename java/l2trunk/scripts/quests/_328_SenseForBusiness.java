@@ -48,7 +48,7 @@ public final class _328_SenseForBusiness extends Quest {
         if (id == CREATED)
             st.setCond(0);
         if (st.getCond() == 0) {
-            if (st.getPlayer().getLevel() >= 21) {
+            if (st.player.getLevel() >= 21) {
                 htmltext = "trader_salient_q0328_02.htm";
                 return htmltext;
             }
@@ -71,51 +71,50 @@ public final class _328_SenseForBusiness extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int n = Rnd.get(1, 100);
         if (npcId == 20055) {
             if (n < 47) {
-                st.giveItems(MONSTER_EYE_CARCASS, 1);
+                st.giveItems(MONSTER_EYE_CARCASS);
                 st.playSound(SOUND_ITEMGET);
             } else if (n < 49) {
-                st.giveItems(MONSTER_EYE_LENS, 1);
+                st.giveItems(MONSTER_EYE_LENS);
                 st.playSound(SOUND_ITEMGET);
             }
         } else if (npcId == 20059) {
             if (n < 51) {
-                st.giveItems(MONSTER_EYE_CARCASS, 1);
+                st.giveItems(MONSTER_EYE_CARCASS);
                 st.playSound(SOUND_ITEMGET);
             } else if (n < 53) {
-                st.giveItems(MONSTER_EYE_LENS, 1);
+                st.giveItems(MONSTER_EYE_LENS);
                 st.playSound(SOUND_ITEMGET);
             }
         } else if (npcId == 20067) {
             if (n < 67) {
-                st.giveItems(MONSTER_EYE_CARCASS, 1);
+                st.giveItems(MONSTER_EYE_CARCASS);
                 st.playSound(SOUND_ITEMGET);
             } else if (n < 69) {
-                st.giveItems(MONSTER_EYE_LENS, 1);
+                st.giveItems(MONSTER_EYE_LENS);
                 st.playSound(SOUND_ITEMGET);
             }
         } else if (npcId == 20068) {
             if (n < 75) {
-                st.giveItems(MONSTER_EYE_CARCASS, 1);
+                st.giveItems(MONSTER_EYE_CARCASS);
                 st.playSound(SOUND_ITEMGET);
             } else if (n < 77) {
-                st.giveItems(MONSTER_EYE_LENS, 1);
+                st.giveItems(MONSTER_EYE_LENS);
                 st.playSound(SOUND_ITEMGET);
             }
         } else if (npcId == 20070) {
             if (n < 50) {
-                st.giveItems(BASILISK_GIZZARD, 1);
+                st.giveItems(BASILISK_GIZZARD);
                 st.playSound(SOUND_ITEMGET);
             }
         } else if (npcId == 20072)
             if (n < 51) {
-                st.giveItems(BASILISK_GIZZARD, 1);
+                st.giveItems(BASILISK_GIZZARD);
                 st.playSound(SOUND_ITEMGET);
             }
-        return null;
     }
 }

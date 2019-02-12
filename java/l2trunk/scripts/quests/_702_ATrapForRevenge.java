@@ -39,11 +39,11 @@ public final class _702_ATrapForRevenge extends Quest {
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
             htmltext = "plenos_q702_2.htm";
-        } else if (event.equals("took_mission") && cond == 1) {
+        } else if ("took_mission".equals(event) && cond == 1) {
             st.setCond(2);
             htmltext = "tenius_q702_3.htm";
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equals("hand_over") && cond == 2) {
+        } else if ("hand_over".equals(event) && cond == 2) {
             int rand = Rnd.get(1, 3);
             htmltext = "tenius_q702_6.htm";
             st.takeItems(DRAKES_FLESH, -1);
@@ -68,11 +68,10 @@ public final class _702_ATrapForRevenge extends Quest {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
 
-        QuestState GoodDayToFly = st.getPlayer().getQuestState(_10273_GoodDayToFly.class);
         if (npcId == PLENOS) {
             if (cond == 0) {
-                if (st.getPlayer().getLevel() >= 78) {
-                    if (GoodDayToFly != null && GoodDayToFly.isCompleted())
+                if (st.player.getLevel() >= 78) {
+                    if (st.player.isQuestCompleted(_10273_GoodDayToFly.class))
                         htmltext = "plenos_q702_1.htm";
                     else
                         htmltext = "plenos_q702_1a.htm";
@@ -94,13 +93,12 @@ public final class _702_ATrapForRevenge extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         if (cond == 2 && (npcId == DRAK || npcId == MUTATED_DRAKE_WING) && st.getQuestItemsCount(DRAKES_FLESH) <= 100) {
-            st.giveItems(DRAKES_FLESH, 1);
+            st.giveItems(DRAKES_FLESH);
             st.playSound(SOUND_ITEMGET);
         }
-        return null;
     }
 }

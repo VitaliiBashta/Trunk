@@ -832,7 +832,7 @@
 	</skill>
 	<skill id="4983" levels="1" name="Raid Boss - Level 25">
 		<!--
-			Description: When customers fail to pay Merchants of Mammon, Talloth is summoned to collect. A low-level devil that used to live in Hell, Talloth has entered into a contract with the ancient Merchants of Mammon and helped them ever since. Only the elders of the Dwarf Guilds know of the contract's existence.
+			Description: When customers fail to pay Merchants of Mammon, Talloth is summoned to collect. A low-occupation devil that used to live in Hell, Talloth has entered into a contract with the ancient Merchants of Mammon and helped them ever since. Only the elders of the Dwarf Guilds know of the contract's existence.
 		-->
 		<set name="icon" val="icon.skillraid" />
 		<set name="magicLevel" val="1" />

@@ -70,7 +70,6 @@ public final class Orfen extends Fighter {
 
     @Override
     public void onEvtSeeSpell(Skill skill, Creature caster) {
-        super.onEvtSeeSpell(skill, caster);
         OrfenInstance actor = getActor();
         if (actor.isCastingNow())
             return;

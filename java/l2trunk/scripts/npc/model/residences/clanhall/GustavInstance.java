@@ -87,17 +87,14 @@ public final class GustavInstance extends SiegeGuardInstance implements _34Siege
     private Clan getMostDamagedClan() {
         ClanHallSiegeEvent siegeEvent = getEvent(ClanHallSiegeEvent.class);
 
-        Player temp = null;
+        Player temp;
 
         Map<Player, Integer> damageMap = new HashMap<>();
 
         for (AggroList.HateInfo info : getAggroList().getPlayableMap().values()) {
             Playable killer = (Playable) info.attacker;
             int damage = info.damage;
-            if (killer.isPet() || killer.isSummon())
-                temp = killer.getPlayer();
-            else if (killer.isPlayer())
-                temp = (Player) killer;
+            temp = killer.getPlayer();
 
             if (temp == null || siegeEvent.getSiegeClan(SiegeEvent.ATTACKERS, temp.getClan()) == null)
                 continue;

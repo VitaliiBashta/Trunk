@@ -75,7 +75,7 @@ public final class NpcInfoPoly extends L2GameServerPacket {
             return;
 
         writeC(0x0c);
-        writeD(_obj.getObjectId());
+        writeD(_obj.objectId());
         writeD(_npcId + 1000000); // npctype id
         writeD(0x00);//activeChar.getKarma() > 0 ? 1 : 0
         writeD(_x);

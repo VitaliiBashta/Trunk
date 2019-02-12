@@ -81,7 +81,7 @@ public class RainbowCoordinatorInstance extends NpcInstance {
             Location loc = (Location) spawnEx.getSpawns().get(0).getCurrentSpawnRange();
 
             for (Player member : party.getMembers()) {
-                siegeClan.addPlayer(member.getObjectId());
+                siegeClan.addPlayer(member.objectId());
                 member.teleToLocation(Location.coordsRandomize(loc, 100, 200));
             }
         } else
@@ -89,7 +89,7 @@ public class RainbowCoordinatorInstance extends NpcInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
         showChatWindow(player, "residence2/clanhall/game_manager001.htm");
     }
 }

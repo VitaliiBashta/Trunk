@@ -4,7 +4,6 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _638_SeekersOfTheHolyGrail extends Quest {
     private static final int DROP_CHANCE = 5; // For x1 mobs
@@ -37,11 +36,11 @@ public final class _638_SeekersOfTheHolyGrail extends Quest {
 
     @Override
     public String onTalk(NpcInstance npc, QuestState st) {
-        String htmltext = "noquest";
+        String htmltext;
         int id = st.getState();
 
         if (id == CREATED) {
-            if (st.getPlayer().getLevel() >= 73)
+            if (st.player.getLevel() >= 73)
                 htmltext = "highpriest_innocentin_q0638_01.htm";
             else
                 htmltext = "highpriest_innocentin_q0638_02.htm";
@@ -72,18 +71,16 @@ public final class _638_SeekersOfTheHolyGrail extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         st.rollAndGive(TOTEM, 1, DROP_CHANCE * npc.getTemplate().rateHp);
 
         if ((npc.getNpcId() == 22146 || npc.getNpcId() == 22151) && Rnd.chance(10))
-            npc.dropItem(st.getPlayer(), 8275, 1);
+            npc.dropItem(st.player, 8275, 1);
 
         if ((npc.getNpcId() == 22140 || npc.getNpcId() == 22149) && Rnd.chance(10))
-            npc.dropItem(st.getPlayer(), 8273, 1);
+            npc.dropItem(st.player, 8273, 1);
 
         if ((npc.getNpcId() == 22142 || npc.getNpcId() == 22143) && Rnd.chance(10))
-            npc.dropItem(st.getPlayer(), 8274, 1);
-
-        return null;
+            npc.dropItem(st.player, 8274, 1);
     }
 }

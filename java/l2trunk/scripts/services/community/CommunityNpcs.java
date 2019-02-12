@@ -44,6 +44,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class CommunityNpcs implements ScriptFile, ICommunityBoardHandler {
     private static final Logger _log = LoggerFactory.getLogger(CommunityNpcs.class);
@@ -70,12 +71,12 @@ public class CommunityNpcs implements ScriptFile, ICommunityBoardHandler {
         }
 
         if (player.getEvent(SiegeEvent.class) != null) {
-            player.sendMessage(new CustomMessage("scripts.services.Rename.SiegeNow", player));
+            player.sendMessage(new CustomMessage("scripts.services.Rename.SiegeNow"));
             return;
         }
 
-        if (!CharacterCreate.checkName(newName) && !Config.SERVICES_CHANGE_NICK_ALLOW_SYMBOL) {
-            player.sendMessage(new CustomMessage("scripts.services.Rename.incorrectinput", player));
+        if (CharacterCreate.isValid(newName) && !Config.SERVICES_CHANGE_NICK_ALLOW_SYMBOL) {
+            player.sendMessage(new CustomMessage("scripts.services.Rename.incorrectinput"));
             return;
         }
 
@@ -88,7 +89,7 @@ public class CommunityNpcs implements ScriptFile, ICommunityBoardHandler {
         }
 
         if (CharacterDAO.getObjectIdByName(newName) > 0) {
-            player.sendMessage(new CustomMessage("scripts.services.Rename.Thisnamealreadyexists", player));
+            player.sendMessage(new CustomMessage("scripts.services.Rename.Thisnamealreadyexists"));
             return;
         }
 
@@ -97,7 +98,7 @@ public class CommunityNpcs implements ScriptFile, ICommunityBoardHandler {
         String oldName = player.getName();
         player.reName(newName, true);
         Log.add("Character " + oldName + " renamed to " + newName, "renames");
-        player.sendMessage(new CustomMessage("scripts.services.Rename.changedname", player).addString(oldName).addString(newName));
+        player.sendMessage(new CustomMessage("scripts.services.Rename.changedname").addString(oldName).addString(newName));
         player.sendPacket(new HideBoard());
     }
 
@@ -116,7 +117,7 @@ public class CommunityNpcs implements ScriptFile, ICommunityBoardHandler {
         }
 
         if (player.getEvent(SiegeEvent.class) != null) {
-            player.sendMessage(new CustomMessage("scripts.services.Rename.SiegeNow", player));
+            player.sendMessage(new CustomMessage("scripts.services.Rename.SiegeNow"));
             return;
         }
 
@@ -198,18 +199,17 @@ public class CommunityNpcs implements ScriptFile, ICommunityBoardHandler {
                 replacements[i * 2 + 1] = "<br>";
             else {
                 SubClass playerClass = availableSubs.get(i);
-                replacements[i * 2 + 1] = "<button value=\"Change To " + Util.getFullClassName(ClassId.values()[playerClass.getClassId()]) + "\" action=\"bypass _bbsChangeSubTo_" + playerClass.getClassId() + "\" width=200 height=30 back=\"L2UI_CT1.OlympiadWnd_DF_Fight1None_Down\" fore=\"L2UI_ct1.OlympiadWnd_DF_Fight1None\">";
+                replacements[i * 2 + 1] = "<button value=\"Change To " + ClassId.values()[playerClass.getClassId()] + "\" action=\"bypass _bbsChangeSubTo_" + playerClass.getClassId() + "\" width=200 height=30 back=\"L2UI_CT1.OlympiadWnd_DF_Fight1None_Down\" fore=\"L2UI_ct1.OlympiadWnd_DF_Fight1None\">";
             }
         }
         sendFileToPlayer(player, "smallNpcs/subclassChanger_select.htm", true, replacements);
     }
 
     private static void cancelSubPage(Player player) {
-        List<SubClass> subToChoose = new ArrayList<>();
-        for (SubClass sub : player.getSubClasses().values()) {
-            if (!sub.isBase())
-                subToChoose.add(sub);
-        }
+        List<SubClass> subToChoose = player.getSubClasses().values().stream()
+                .filter(sub -> !sub.isBase())
+                .collect(Collectors.toList());
+
         String[] replacements = new String[FIELDS_IN_SUB_SELECT_PAGE * 2];
         for (int i = 0; i < FIELDS_IN_SUB_SELECT_PAGE; i++) {
             replacements[i * 2] = "%sub" + i + '%';
@@ -263,7 +263,7 @@ public class CommunityNpcs implements ScriptFile, ICommunityBoardHandler {
         if (!canChangeClass(player))
             return;
 
-        if (player.getBaseClassId() == player.getClassId().getId()) {
+        if (player.getBaseClassId() == player.getClassId().id) {
             sendFileToPlayer(player, "smallNpcs/subclassChanger_back.htm", true);
             return;
         }
@@ -405,7 +405,7 @@ public class CommunityNpcs implements ScriptFile, ICommunityBoardHandler {
     public void onBypassCommand(Player player, String bypass) {
         //Checking if all required images were sent to the player, if not - not allowing to pass
         if (!AutoImageSenderManager.wereAllImagesSent(player)) {
-            player.sendPacket(new Say2(player.getObjectId(), ChatType.CRITICAL_ANNOUNCE, "CB", "Community wasn't loaded yet, try again in few seconds."));
+            player.sendPacket(new Say2(player.objectId(), ChatType.CRITICAL_ANNOUNCE, "CB", "Community wasn't loaded yet, try again in few seconds."));
             return;
         }
 
@@ -595,7 +595,7 @@ public class CommunityNpcs implements ScriptFile, ICommunityBoardHandler {
             {
                 if (player.getInventory().destroyItemByItemId(Config.SERVICES_EXPAND_WAREHOUSE_ITEM, Config.SERVICES_EXPAND_WAREHOUSE_PRICE, "Inventory Expand")) {
                     player.setExpandWarehouse(player.getExpandWarehouse() + 1);
-                    player.setVar("ExpandWarehouse", String.valueOf(player.getExpandWarehouse()), -1);
+                    player.setVar("ExpandWarehouse", player.getExpandWarehouse());
                     player.sendMessage("Warehouse capacity is now " + player.getWarehouseLimit());
                 } else if (Config.SERVICES_EXPAND_WAREHOUSE_ITEM == 57)
                     player.sendPacket(Msg.YOU_DO_NOT_HAVE_ENOUGH_ADENA);
@@ -622,8 +622,5 @@ public class CommunityNpcs implements ScriptFile, ICommunityBoardHandler {
             }
         }
 
-        @Override
-        public void sayNo() {
-        }
     }
 }

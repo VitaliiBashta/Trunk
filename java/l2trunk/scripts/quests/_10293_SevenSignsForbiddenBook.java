@@ -32,7 +32,7 @@ public final class _10293_SevenSignsForbiddenBook extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        Player player = st.getPlayer();
+        Player player = st.player;
         if (event.equalsIgnoreCase("elcardia_q10293_3.htm")) {
             st.setCond(1);
             st.setState(STARTED);
@@ -54,16 +54,16 @@ public final class _10293_SevenSignsForbiddenBook extends Quest {
             st.playSound(SOUND_MIDDLE);
         } else if (event.equalsIgnoreCase("teleport_in")) {
             Location loc = new Location(37348, -50383, -1168);
-            st.getPlayer().teleToLocation(loc);
+            st.player.teleToLocation(loc);
             teleportElcardia(player);
             return null;
         } else if (event.equalsIgnoreCase("teleport_out")) {
             Location loc = new Location(37205, -49753, -1128);
-            st.getPlayer().teleToLocation(loc);
+            st.player.teleToLocation(loc);
             teleportElcardia(player);
             return null;
         } else if (event.equalsIgnoreCase("book_q10293_3a.htm")) {
-            st.giveItems(SolinasBiography, 1);
+            st.giveItems(SolinasBiography);
             st.setCond(7);
             st.playSound(SOUND_MIDDLE);
         } else if (event.equalsIgnoreCase("elcardia_q10293_7.htm")) {
@@ -80,14 +80,13 @@ public final class _10293_SevenSignsForbiddenBook extends Quest {
         String htmltext = "noquest";
         int npcId = npc.getNpcId();
         int cond = st.getCond();
-        Player player = st.getPlayer();
+        Player player = st.player;
         if (player.getBaseClassId() != player.getActiveClassId())
             return "no_subclass_allowed.htm";
         switch (npcId) {
             case Elcardia:
                 if (cond == 0) {
-                    QuestState qs = player.getQuestState(_10292_SevenSignsGirlOfDoubt.class);
-                    if (player.getLevel() >= 81 && qs != null && qs.isCompleted())
+                    if (player.getLevel() >= 81 && player.isQuestCompleted(_10292_SevenSignsGirlOfDoubt.class))
                         htmltext = "elcardia_q10293_1.htm";
                     else {
                         htmltext = "elcardia_q10293_0.htm";

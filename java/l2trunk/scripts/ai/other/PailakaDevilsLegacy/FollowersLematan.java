@@ -5,7 +5,6 @@ import l2trunk.gameserver.ai.Fighter;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.World;
 import l2trunk.gameserver.model.instances.NpcInstance;
-import l2trunk.gameserver.tables.SkillTable;
 
 /**
  * - AI мобов Followers Lematan, миньёны-лекари Боса Lematan в пайлаке 61-67.
@@ -31,21 +30,12 @@ public final class FollowersLematan extends Fighter {
 
     private void startSkillTimer() {
         if (getActor() != null)
-            ScheduleTimerTask(20000);
+            ThreadPoolManager.INSTANCE.schedule(() -> {
+                findBoss();
+                startSkillTimer();
+            },  20000);
     }
 
-    private void ScheduleTimerTask(long time) {
-        ThreadPoolManager.INSTANCE.schedule(() -> {
-            findBoss();
-            startSkillTimer();
-        }, time);
-    }
-
-    @Override
-    public void onEvtDead(Creature killer) {
-        // stop timers if any
-        super.onEvtDead(killer);
-    }
 
     @Override
     public boolean randomWalk() {

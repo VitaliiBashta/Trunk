@@ -28,7 +28,7 @@ public class AcquireSkillInfo extends L2GameServerPacket {
     @Override
     public void writeImpl() {
         writeC(0x91);
-        writeD(_learn.getId());
+        writeD(_learn.id());
         writeD(_learn.getLevel());
         writeD(_learn.getCost()); // sp/rep
         writeD(_type.ordinal());

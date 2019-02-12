@@ -8,7 +8,6 @@ import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.TeleportLocation;
 import l2trunk.gameserver.model.base.ClassId;
 import l2trunk.gameserver.model.base.Element;
-import l2trunk.gameserver.model.instances.AllNpcInstances;
 import l2trunk.gameserver.model.reward.RewardData;
 import l2trunk.gameserver.model.reward.RewardGroup;
 import l2trunk.gameserver.model.reward.RewardList;
@@ -156,7 +155,7 @@ public enum NpcParser {
                             LOG.warn("Problems with rewardlist for npc: " + npcId + "; type: " + type);
 
                     template.putRewardList(type, list);
-                } else if (nodeName.equalsIgnoreCase("skills")) {
+                } else if ("skills".equalsIgnoreCase(nodeName)) {
                     for (Iterator<org.dom4j.Element> nextIterator = secondElement.elementIterator(); nextIterator.hasNext(); ) {
                         org.dom4j.Element nextElement = nextIterator.next();
                         int id = toInt(nextElement.attributeValue("id"));
@@ -164,17 +163,11 @@ public enum NpcParser {
 
                         Skill skill = SkillTable.INSTANCE.getInfo(id, level);
                         // Для определения расы используется скилл 4416
-                        if (id == 4416) {
-                            template.setRace(level);
-                        }
+                        if (id == 4416) template.setRace(level);
 
-                        if (skill == null) {
-                            continue;
-                        }
-
-                        template.addSkill(skill);
+                        if (skill != null) template.addSkill(skill);
                     }
-                } else if (nodeName.equalsIgnoreCase("minions")) {
+                } else if ("minions".equalsIgnoreCase(nodeName)) {
                     for (Iterator<org.dom4j.Element> nextIterator = secondElement.elementIterator(); nextIterator.hasNext(); ) {
                         org.dom4j.Element nextElement = nextIterator.next();
                         int id = toInt(nextElement.attributeValue("npc_id"));
@@ -182,7 +175,7 @@ public enum NpcParser {
 
                         template.addMinion(new MinionData(id, count));
                     }
-                } else if (nodeName.equalsIgnoreCase("teach_classes")) {
+                } else if ("teach_classes".equalsIgnoreCase(nodeName)) {
                     for (Iterator<org.dom4j.Element> nextIterator = secondElement.elementIterator(); nextIterator.hasNext(); ) {
                         org.dom4j.Element nextElement = nextIterator.next();
 
@@ -190,7 +183,7 @@ public enum NpcParser {
 
                         template.addTeachInfo(ClassId.VALUES.get(id));
                     }
-                } else if (nodeName.equalsIgnoreCase("absorblist")) {
+                } else if ("absorblist".equalsIgnoreCase(nodeName)) {
                     for (Iterator<org.dom4j.Element> nextIterator = secondElement.elementIterator(); nextIterator.hasNext(); ) {
                         org.dom4j.Element nextElement = nextIterator.next();
 
@@ -203,7 +196,7 @@ public enum NpcParser {
 
                         template.addAbsorbInfo(new AbsorbInfo(skill, absorbType, chance, cursedChance, minLevel, maxLevel));
                     }
-                } else if (nodeName.equalsIgnoreCase("teleportlist")) {
+                } else if ("teleportlist".equalsIgnoreCase(nodeName)) {
                     for (Iterator<org.dom4j.Element> sublistIterator = secondElement.elementIterator(); sublistIterator.hasNext(); ) {
                         org.dom4j.Element subListElement = sublistIterator.next();
                         int id = toInt(subListElement.attributeValue("id"));
@@ -217,7 +210,7 @@ public enum NpcParser {
                             String nameStringLang = targetElement.attributeValue("StringNameLang");
                             int castleId = toInt(targetElement.attributeValue("castle_id", "0"));
                             TeleportLocation loc = new TeleportLocation(itemId, price, npcStringId, nameString, nameStringLang, castleId);
-                            loc.set(Location.parseLoc(targetElement.attributeValue("loc")));
+                            loc.set(Location.of(targetElement.attributeValue("loc")));
                             list.add(loc);
                         }
                         template.addTeleportList(id, list);

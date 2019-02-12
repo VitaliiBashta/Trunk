@@ -22,7 +22,7 @@ public final class EffectRelax extends Effect {
             player.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addSkillName(skill.id, skill.level));
             return false;
         }
-        return super.checkCondition();
+        return true;
     }
 
     @Override
@@ -51,15 +51,15 @@ public final class EffectRelax extends Effect {
         if (!player.isSitting())
             return false;
 
-        if (player.isCurrentHpFull() && getSkill().isToggle()) {
+        if (player.isCurrentHpFull() && skill.isToggle()) {
             effected.sendPacket(SystemMsg.THAT_SKILL_HAS_BEEN_DEACTIVATED_AS_HP_WAS_FULLY_RECOVERED);
             return false;
         }
 
         double manaDam = calc();
         if (manaDam > effected.getCurrentMp())
-            if (getSkill().isToggle()) {
-                player.sendPacket(SystemMsg.NOT_ENOUGH_MP, new SystemMessage2(SystemMsg.THE_EFFECT_OF_S1_HAS_BEEN_REMOVED).addSkillName(getSkill().id, getSkill().getDisplayLevel()));
+            if (skill.isToggle()) {
+                player.sendPacket(SystemMsg.NOT_ENOUGH_MP, new SystemMessage2(SystemMsg.THE_EFFECT_OF_S1_HAS_BEEN_REMOVED).addSkillName(skill.id, skill.getDisplayLevel()));
                 return false;
             }
 

@@ -4,7 +4,6 @@ import l2trunk.gameserver.model.base.Race;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _172_NewHorizons extends Quest {
     //NPC
@@ -46,10 +45,10 @@ public final class _172_NewHorizons extends Quest {
         int cond = st.getCond();
         if (npcId == Zenya) {
             if (cond == 0) {
-                if (st.getPlayer().getRace() != Race.kamael) {
+                if (st.player.getRace() != Race.kamael) {
                     htmltext = "subelder_zenya_q0172_03.htm";
                     st.exitCurrentQuest(true);
-                } else if (st.getPlayer().getLevel() >= 3)
+                } else if (st.player.getLevel() >= 3)
                     htmltext = "subelder_zenya_q0172_01.htm";
                 else
                     htmltext = "subelder_zenya_q0172_02.htm";

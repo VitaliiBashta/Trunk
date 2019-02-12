@@ -5,7 +5,6 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 import java.util.List;
 import java.util.StringTokenizer;
@@ -42,7 +41,7 @@ public final class _254_LegendaryTales extends Quest {
 
             if ((var & mask) == 0) // этого босса еще не убивали
             {
-                String name = NpcHolder.getTemplate(i).getName();
+                String name = NpcHolder.getTemplate(i).name();
                 player.sendMessage(name);
             }
         }
@@ -51,16 +50,16 @@ public final class _254_LegendaryTales extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("gilmore_q254_05.htm")) {
+        if ("gilmore_q254_05.htm".equalsIgnoreCase(event)) {
             st.setState(STARTED);
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if (event.startsWith("gilmore_q254_09.htm")) {
-            st.takeAllItems(LargeBone);
+            st.takeItems(LargeBone);
             StringTokenizer tokenizer = new StringTokenizer(event);
             tokenizer.nextToken();
             int i = toInt(tokenizer.nextToken()) + 1;
-            st.giveItems(items.get(i), 1);
+            st.giveItems(items.get(i));
             st.playSound(SOUND_FINISH);
             st.setState(COMPLETED);
             st.exitCurrentQuest(false);
@@ -76,7 +75,7 @@ public final class _254_LegendaryTales extends Quest {
         int cond = st.getCond();
         if (npc.getNpcId() == Gilmore) {
             if (cond == 0) {
-                if (st.getPlayer().getLevel() >= 80)
+                if (st.player.getLevel() >= 80)
                     htmltext = "gilmore_q254_01.htm";
                 else {
                     htmltext = "gilmore_q254_00.htm";
@@ -92,7 +91,7 @@ public final class _254_LegendaryTales extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int cond = st.getCond();
         if (cond == 1) {
             int mask = 1;
@@ -106,13 +105,12 @@ public final class _254_LegendaryTales extends Quest {
             if ((var & mask) == 0) { // этого босса еще не убивали
                 var |= mask;
                 st.set("RaidsKilled", var);
-                st.giveItems(LargeBone, 1);
+                st.giveItems(LargeBone);
                 if (st.getQuestItemsCount(LargeBone) >= 7)
                     st.setCond(2);
 
             }
-            checkKilledRaids(st.getPlayer(), var);
+            checkKilledRaids(st.player, var);
         }
-        return null;
     }
 }

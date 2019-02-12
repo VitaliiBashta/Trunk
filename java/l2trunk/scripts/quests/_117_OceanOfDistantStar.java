@@ -4,7 +4,6 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _117_OceanOfDistantStar extends Quest {
     //NPC
@@ -81,7 +80,7 @@ public final class _117_OceanOfDistantStar extends Quest {
             cond = st.getCond();
         if (npcId == Abey) {
             if (cond == 0) {
-                if (st.getPlayer().getLevel() >= 39)
+                if (st.player.getLevel() >= 39)
                     htmltext = "railman_abu_q0117_0101.htm";
                 else {
                     htmltext = "railman_abu_q0117_0103.htm";
@@ -115,15 +114,14 @@ public final class _117_OceanOfDistantStar extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getCond() == 7 && Rnd.chance(30)) {
             if (st.getQuestItemsCount(BookOfGreyStar) < 1) {
-                st.giveItems(BookOfGreyStar, 1);
+                st.giveItems(BookOfGreyStar);
                 st.playSound(SOUND_ITEMGET);
             }
             st.setCond(8);
             st.setState(STARTED);
         }
-        return null;
     }
 }

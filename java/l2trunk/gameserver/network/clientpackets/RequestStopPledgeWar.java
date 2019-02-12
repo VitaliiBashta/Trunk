@@ -38,13 +38,13 @@ public class RequestStopPledgeWar extends L2GameClientPacket {
             return;
         }
 
-        if (!playerClan.isAtWarWith(clan.getClanId())) {
+        if (!playerClan.isAtWarWith(clan.clanId())) {
             activeChar.sendPacket(new SystemMessage2(SystemMsg.YOU_HAVE_NOT_DECLARED_A_CLAN_WAR_AGAINST_THE_CLAN_S1).addString(clan.getName()), ActionFail.STATIC);
             return;
         }
 
         for (UnitMember mbr : playerClan)
-            if (mbr.isOnline() && mbr.getPlayer().isInCombat()) {
+            if (mbr.isOnline() && mbr.player().isInCombat()) {
                 activeChar.sendPacket(SystemMsg.A_CEASEFIRE_DURING_A_CLAN_WAR_CAN_NOT_BE_CALLED_WHILE_MEMBERS_OF_YOUR_CLAN_ARE_ENGAGED_IN_BATTLE, ActionFail.STATIC);
                 return;
             }

@@ -11,7 +11,7 @@ public final class RiganInstance extends NpcInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
         String fileName = "custom/" + getNpcId()
                 + (val > 0 ? "-" + val : "") + ".htm";
         player.sendPacket(new NpcHtmlMessage(player, this, fileName, val));

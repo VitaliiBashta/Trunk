@@ -76,7 +76,7 @@ public enum OlympiadHistoryManager {
 
         NpcHtmlMessage html = new NpcHtmlMessage(player, null);
         html.setFile("olympiad/monument_hero_info.htm");
-        html.replace("%title%", StringHolder.INSTANCE.getNotNull(player, "hero.history"));
+        html.replace("%title%", StringHolder.INSTANCE.getNotNull("hero.history"));
 
         int allStatWinner = 0;
         int allStatLoss = 0;

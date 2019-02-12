@@ -23,7 +23,7 @@ public final class _240_ImTheOnlyOneYouCanTrust extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("32640-3.htm")) {
+        if ("32640-3.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
@@ -39,7 +39,7 @@ public final class _240_ImTheOnlyOneYouCanTrust extends Quest {
         if (id == COMPLETED)
             htmltext = "32640-10.htm";
         else if (id == CREATED) {
-            if (st.getPlayer().getLevel() >= 81)
+            if (st.player.getLevel() >= 81)
                 htmltext = "32640-1.htm";
             else {
                 htmltext = "32640-0.htm";
@@ -57,15 +57,14 @@ public final class _240_ImTheOnlyOneYouCanTrust extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getCond() == 1) {
-            st.giveItems(STAKATOFANGS, 1);
+            st.giveItems(STAKATOFANGS);
             if (st.getQuestItemsCount(STAKATOFANGS) >= 25) {
                 st.setCond(2);
                 st.playSound(SOUND_MIDDLE);
             } else
                 st.playSound(SOUND_ITEMGET);
         }
-        return null;
     }
 }

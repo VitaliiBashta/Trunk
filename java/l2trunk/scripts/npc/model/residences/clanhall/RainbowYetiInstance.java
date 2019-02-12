@@ -71,7 +71,7 @@ public final class RainbowYetiInstance extends NpcInstance {
         World.getAroundPlayers(this, 750, 100)
                 .filter(player -> {
                     CMGSiegeClanObject siegeClanObject = event.getSiegeClan(ClanHallMiniGameEvent.ATTACKERS, player.getClan());
-                    return (siegeClanObject == null || !siegeClanObject.getPlayers().contains(player.getObjectId()));
+                    return (siegeClanObject == null || !siegeClanObject.getPlayers().contains(player.objectId()));
                 })
                 .forEach(player ->
                         player.teleToLocation(event.getResidence().getOtherRestartPoint()));
@@ -138,7 +138,7 @@ public final class RainbowYetiInstance extends NpcInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
         showChatWindow(player, "residence2/clanhall/watering_manager001.htm");
     }
 

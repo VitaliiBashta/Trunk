@@ -1,7 +1,6 @@
 package l2trunk.gameserver.ai;
 
 import l2trunk.commons.lang.ArrayUtils;
-import l2trunk.commons.lang.reference.HardReference;
 import l2trunk.commons.math.random.RndSelector;
 import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.commons.util.Rnd;
@@ -196,7 +195,7 @@ public class DefaultAI extends CharacterAI {
     protected void addTaskCast(Creature target, int skillId, int skillLvl) {
         Task task = new Task();
         task.type = TaskType.CAST;
-        task.target = target.getRef();
+        task.target = target;
         task.skill = SkillTable.INSTANCE.getInfo(skillId, skillLvl);
         tasks.add(task);
         defThink = true;
@@ -209,7 +208,7 @@ public class DefaultAI extends CharacterAI {
     protected void addTaskBuff(Creature target, Skill skill) {
         Task task = new Task();
         task.type = TaskType.BUFF;
-        task.target = target.getRef();
+        task.target = target;
         task.skill = skill;
         tasks.add(task);
         defThink = true;
@@ -218,7 +217,7 @@ public class DefaultAI extends CharacterAI {
     public void addTaskAttack(Creature target) {
         Task task = new Task();
         task.type = TaskType.ATTACK;
-        task.target = target.getRef();
+        task.target = target;
         tasks.add(task);
         defThink = true;
     }
@@ -226,7 +225,7 @@ public class DefaultAI extends CharacterAI {
     protected void addTaskAttack(Creature target, int skillId, int skillLvl) {
         Task task = new Task();
         task.type = SkillTable.INSTANCE.getInfo(skillId, skillLvl).isOffensive ? TaskType.CAST : TaskType.BUFF;
-        task.target = target.getRef();
+        task.target = target;
         task.skill = SkillTable.INSTANCE.getInfo(skillId, skillLvl);
 
         task.weight = 1000000;
@@ -252,7 +251,7 @@ public class DefaultAI extends CharacterAI {
         if (_aiTask == null) {
             return;
         }
-        if (!Config.ALLOW_NPC_AIS && (getActor() == null || !getActor().isPlayable())) {
+        if (!Config.ALLOW_NPC_AIS && (getActor() == null)) {
             return;
         }
         // проверяем, если NPC вышел в неактивный регион, отключаем AI
@@ -319,11 +318,11 @@ public class DefaultAI extends CharacterAI {
         return !target.isInvisible();
     }
 
-    public boolean checkAggression(Creature target) {
+    public boolean checkAggression(Playable target) {
         return checkAggression(target, false);
     }
 
-    public boolean checkAggression(Creature target, boolean avoidAttack) {
+    public boolean checkAggression(Playable target, boolean avoidAttack) {
         NpcInstance actor = getActor();
         if ((getIntention() != CtrlIntention.AI_INTENTION_ACTIVE) || !isGlobalAggro()) {
             return false;
@@ -333,42 +332,29 @@ public class DefaultAI extends CharacterAI {
             return false;
         }
 
-        if (target.isNpc() && target.isInvul()) {
+        if (!canSeeInSilentMove(target)) {
             return false;
         }
-
-        if (target.isPlayer() && (target.getPlayer().isInAwayingMode()) && (!Config.AWAY_PLAYER_TAKE_AGGRO)) {
+        if (!canSeeInHide(target)) {
             return false;
         }
-
-        if (target.isPlayable()) {
-            if (!canSeeInSilentMove((Playable) target)) {
-                return false;
-            }
-            if (!canSeeInHide((Playable) target)) {
-                return false;
-            }
-            if (actor.getFaction().getName().equalsIgnoreCase("varka_silenos_clan") && (target.getPlayer().getVarka() > 0)) {
-                return false;
-            }
-            if (actor.getFaction().getName().equalsIgnoreCase("ketra_orc_clan") && (target.getPlayer().getKetra() > 0)) {
-                return false;
-            }
-            /*
-             * if (target.isFollow && !target.isPlayer() && target.getFollowTarget() != null && target.getFollowTarget().isPlayer()) return;
-             */
-            if (target.isPlayer() && ((Player) target).isGM() && target.isInvisible()) {
-                return false;
-            }
-            if (((Playable) target).getNonAggroTime() > System.currentTimeMillis()) {
-                return false;
-            }
-            if (target.isPlayer() && !target.getPlayer().isActive()) {
-                return false;
-            }
-            if (actor.isMonster() && target.isInZonePeace()) {
-                return false;
-            }
+        if ("varka_silenos_clan".equalsIgnoreCase(actor.getFaction().getName()) && (target.getPlayer().getVarka() > 0)) {
+            return false;
+        }
+        if ("ketra_orc_clan".equalsIgnoreCase(actor.getFaction().getName()) && (target.getPlayer().getKetra() > 0)) {
+            return false;
+        }
+        /*
+         * if (target.isFollow && !target.isPlayer() && target.getFollowTarget() != null && target.getFollowTarget().isPlayer()) return;
+         */
+        if (target instanceof Player && ((Player) target).isGM() && target.isInvisible()) {
+            return false;
+        }
+        if (target.getNonAggroTime() > System.currentTimeMillis()) {
+            return false;
+        }
+        if (actor instanceof MonsterInstance && target.isInZonePeace()) {
+            return false;
         }
 
         AggroInfo ai = actor.getAggroList().get(target);
@@ -391,8 +377,8 @@ public class DefaultAI extends CharacterAI {
         if (!avoidAttack) {
             actor.getAggroList().addDamageHate(target, 0, 2);
 
-            if ((target.isSummon() || target.isPet())) {
-                actor.getAggroList().addDamageHate(target.getPlayer(), 0, 1);
+            if (target instanceof Summon) {
+                actor.getAggroList().addDamageHate(((Summon) target).owner, 0, 1);
             }
 
             startRunningTask(AI_TASK_ATTACK_DELAY);
@@ -458,9 +444,9 @@ public class DefaultAI extends CharacterAI {
                  * We call checkAggresion but without action, only checking, then if aggrolist is not empty then we sort it by distance and do the attack
                  * If done otherwise, the performance drop is huge
                  */
-                List<Creature> knowns = World.getAroundCharacters(actor).collect(Collectors.toList());
+                List<Playable> knowns = World.getAroundPlayables(actor).collect(Collectors.toList());
                 if (!knowns.isEmpty()) {
-                    final List<Creature> aggroList = World.getAroundCharacters(actor)
+                    final List<Playable> aggroList = knowns.stream()
                             .filter(cha -> aggressive || actor.getAggroList().get(cha) != null)
                             .filter(cha -> checkAggression(cha, true))
                             .collect(Collectors.toList());
@@ -473,16 +459,16 @@ public class DefaultAI extends CharacterAI {
                     if (!aggroList.isEmpty()) {
                         aggroList.sort(_nearestTargetComparator);
 
-                        for (Creature target : aggroList) {
+                        for (Playable target : aggroList) {
                             if (target == null || target.isAlikeDead())
                                 continue;
 
 							/*
 							actor.getAggroList().addDamageHate(target, 0, 2);
 
-							if ((target.isSummon() || target.isPet()))
+							if ((target.SummonInstance() || target.PetInstance()))
 							{
-								actor.getAggroList().addDamageHate(target.getPlayer(), 0, 1);
+								actor.getAggroList().addDamageHate(target.player(), 0, 1);
 							}
 
 							startRunningTask(AI_TASK_ATTACK_DELAY);
@@ -496,7 +482,7 @@ public class DefaultAI extends CharacterAI {
             }
         }
 
-        if (actor.isMinion()) {
+        if (actor instanceof MinionInstance) {
             MonsterInstance leader = ((MinionInstance) actor).getLeader();
             if (leader != null) {
                 double distance = actor.getDistance(leader.getX(), leader.getY());
@@ -566,7 +552,7 @@ public class DefaultAI extends CharacterAI {
     }
 
     public boolean canAttackCharacter(Creature target) {
-        return target.isPlayable();
+        return target instanceof Playable;
     }
 
     public boolean checkTarget(Creature target, int range) {
@@ -576,7 +562,7 @@ public class DefaultAI extends CharacterAI {
         }
 
         // если не видим чаров в хайде - не атакуем их
-        final boolean hided = target.isPlayable() && !canSeeInHide((Playable) target);
+        final boolean hided = target instanceof Playable && !canSeeInHide((Playable) target);
 
         if (!hided && actor.isConfused()) {
             return true;
@@ -659,7 +645,7 @@ public class DefaultAI extends CharacterAI {
         if ((_pathfindFails >= getMaxPathfindFails()) && (System.currentTimeMillis() > ((getAttackTimeout() - getMaxAttackTimeout()) + getTeleportTimeout())) && actor.isInRange(target, MAX_PURSUE_RANGE)) {
             _pathfindFails = 0;
 
-            if (target.isPlayable()) {
+            if (target instanceof Playable) {
                 AggroInfo hate = actor.getAggroList().get(target);
                 if ((hate == null) || (hate.hate < 100)) {
                     returnHome();
@@ -731,7 +717,7 @@ public class DefaultAI extends CharacterAI {
             break;
             // Задание "добежать - ударить"
             case ATTACK: {
-                Creature target = currentTask.target.get();
+                Creature target = currentTask.target;
 
                 if (!checkTarget(target, MAX_PURSUE_RANGE)) {
                     return true;
@@ -760,7 +746,7 @@ public class DefaultAI extends CharacterAI {
             break;
             // Задание "добежать - атаковать скиллом"
             case CAST: {
-                Creature target = currentTask.target.get();
+                Creature target = currentTask.target;
 
                 if (actor.isMuted(currentTask.skill) || actor.isSkillDisabled(currentTask.skill) || actor.isUnActiveSkill(currentTask.skill.id)) {
                     return true;
@@ -779,7 +765,7 @@ public class DefaultAI extends CharacterAI {
                     clientStopMoving();
                     _pathfindFails = 0;
                     setAttackTimeout(getMaxAttackTimeout() + System.currentTimeMillis());
-                    actor.doCast(currentTask.skill, isAoE ? actor : target, !target.isPlayable());
+                    actor.doCast(currentTask.skill, isAoE ? actor : target, !(target instanceof Playable));
                     return maybeNextTask(currentTask);
                 }
 
@@ -796,7 +782,7 @@ public class DefaultAI extends CharacterAI {
             break;
             // Task "to run - use skill"
             case BUFF: {
-                Creature target = currentTask.target.get();
+                Creature target = currentTask.target;
 
                 if (actor.isMuted(currentTask.skill) || actor.isSkillDisabled(currentTask.skill) || actor.isUnActiveSkill(currentTask.skill.id)) {
                     return true;
@@ -816,7 +802,7 @@ public class DefaultAI extends CharacterAI {
                 if ((actor.getRealDistance3D(target) <= (castRange + 60)) && GeoEngine.canSeeTarget(actor, target, false)) {
                     clientStopMoving();
                     _pathfindFails = 0;
-                    actor.doCast(currentTask.skill, isAoE ? actor : target, !target.isPlayable());
+                    actor.doCast(currentTask.skill, isAoE ? actor : target, !(target instanceof Playable));
                     return maybeNextTask(currentTask);
                 }
 
@@ -885,7 +871,7 @@ public class DefaultAI extends CharacterAI {
         if ((transformer > 0) && Rnd.chance(chance)) {
             NpcInstance npc = NpcUtils.spawnSingle(transformer, actor.getLoc(), actor.getReflection());
 
-            if ((killer != null) && killer.isPlayable()) {
+            if (killer instanceof Playable) {
                 npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, killer, 100);
                 killer.setTarget(npc);
                 killer.sendPacket(npc.makeStatusUpdate(StatusUpdate.CUR_HP, StatusUpdate.MAX_HP));
@@ -948,15 +934,15 @@ public class DefaultAI extends CharacterAI {
                 }
             }
             player.getQuestsForEvent(actor, QuestEventType.ATTACKED_WITH_QUEST)
-                    .forEach(qs -> qs.getQuest().notifyAttack(actor, qs));
+                    .forEach(qs -> qs.quest.notifyAttack(actor, qs));
         }
 
         // Добавляем только хейт, урон, если атакующий - игровой персонаж, будет добавлен в L2NpcInstance.onReduceCurrentHp
         actor.getAggroList().addDamageHate(attacker, 0, damage);
 
         // Обычно 1 хейт добавляется хозяину суммона, чтобы после смерти суммона моб накинулся на хозяина.
-        if ((damage > 0) && (attacker.isSummon() || attacker.isPet())) {
-            actor.getAggroList().addDamageHate(attacker.getPlayer(), 0, actor.getParameter("searchingMaster", false) ? damage : 1);
+        if (damage > 0 && attacker instanceof Summon) {
+            actor.getAggroList().addDamageHate(((Summon) attacker).owner, 0, actor.getParameter("searchingMaster", false) ? damage : 1);
         }
 
         if (getIntention() != CtrlIntention.AI_INTENTION_ATTACK) {
@@ -979,8 +965,8 @@ public class DefaultAI extends CharacterAI {
         actor.getAggroList().addDamageHate(attacker, 0, aggro);
 
         // Обычно 1 хейт добавляется хозяину суммона, чтобы после смерти суммона моб накинулся на хозяина.
-        if ((aggro > 0) && (attacker.isSummon() || attacker.isPet())) {
-            actor.getAggroList().addDamageHate(attacker.getPlayer(), 0, actor.getParameter("searchingMaster", false) ? aggro : 1);
+        if ((aggro > 0) && (attacker instanceof Summon)) {
+            actor.getAggroList().addDamageHate(((Summon) attacker).owner, 0, actor.getParameter("searchingMaster", false) ? aggro : 1);
         }
 
         if (getIntention() != CtrlIntention.AI_INTENTION_ATTACK) {
@@ -1016,7 +1002,7 @@ public class DefaultAI extends CharacterAI {
         actor.setWalking();
 
         // Телепортируемся домой, только если далеко от дома
-        if (!actor.moveToLocation(pos.x, pos.y, pos.z, 0, true) && !isInRange) {
+        if (!actor.moveToLocation(pos, 0, true) && !isInRange) {
             teleportHome();
         }
 
@@ -1083,9 +1069,9 @@ public class DefaultAI extends CharacterAI {
         }
 
         // Новая цель исходя из агрессивности
-        List<Creature> hateList = actor.getAggroList().getHateList();
+        List<Playable> hateList = actor.getAggroList().getHateList();
         Creature hated = null;
-        for (Creature cha : hateList) {
+        for (Playable cha : hateList) {
             // Не подходит, очищаем хейт
             if (!checkTarget(cha, MAX_PURSUE_RANGE)) {
                 actor.getAggroList().remove(cha, true);
@@ -1306,7 +1292,7 @@ public class DefaultAI extends CharacterAI {
         NpcInstance actor = getActor();
         if ((System.currentTimeMillis() - _lastFactionNotifyTime) > _minFactionNotifyInterval) {
             _lastFactionNotifyTime = System.currentTimeMillis();
-            if (actor.isMinion()) {
+            if (actor instanceof MinionInstance) {
                 // Оповестить лидера об атаке
                 MonsterInstance master = ((MinionInstance) actor).getLeader();
                 if (master != null) {
@@ -1503,7 +1489,7 @@ public class DefaultAI extends CharacterAI {
     private static class Task implements Comparable<Task> {
         TaskType type;
         Skill skill;
-        HardReference<? extends Creature> target;
+        Creature target;
         Location loc;
         boolean pathfind;
         int weight = TaskDefaultWeight;

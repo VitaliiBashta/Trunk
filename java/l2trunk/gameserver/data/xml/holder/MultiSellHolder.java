@@ -229,8 +229,8 @@ public enum MultiSellHolder {
                 return null;
             }
             if (multiSellId < 70000 || multiSellId > 70010) //FIXME hardcode. Все кроме GM Shop
-                if (item.getReferencePrice() > entry.getIngredients().get(0).getItemCount())
-                    LOG.warn("MultiSell [" + multiSellId + "] Production '" + item.getName() + "' [" + entry.getProduction().get(0).getItemId() + "] price is lower than referenced | " + item.getReferencePrice() + " > " + entry.getIngredients().get(0).getItemCount());
+                if (item.referencePrice > entry.getIngredients().get(0).getItemCount())
+                    LOG.warn("MultiSell [" + multiSellId + "] Production '" + item.getName() + "' [" + entry.getProduction().get(0).getItemId() + "] price is lower than referenced | " + item.referencePrice + " > " + entry.getIngredients().get(0).getItemCount());
         }
 
         return entry;
@@ -239,14 +239,14 @@ public enum MultiSellHolder {
     public void SeparateAndSend(int listId, Player player, double taxRate) {
         for (int i : Config.ALT_DISABLED_MULTISELL)
             if (i == listId) {
-                player.sendMessage(new CustomMessage("common.Disabled", player));
+                player.sendMessage(new CustomMessage("common.Disabled"));
                 return;
             }
 
         MultiSellListContainer list = getList(listId);
 
         if (list == null) {
-            player.sendMessage(new CustomMessage("common.Disabled", player));
+            player.sendMessage(new CustomMessage("common.Disabled"));
             return;
         }
 
@@ -322,8 +322,8 @@ public enum MultiSellHolder {
                         continue;
 
                     ItemTemplate item = ItemHolder.getTemplate(i.getItemId());
-                    if (item.isStackable())
-                        tax += item.getReferencePrice() * i.getItemCount() * taxRate;
+                    if (item.stackable())
+                        tax += item.referencePrice * i.getItemCount() * taxRate;
                 }
 
                 adena = Math.round(adena + tax);

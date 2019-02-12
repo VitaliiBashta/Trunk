@@ -45,9 +45,9 @@ public class ExShowSellCropList extends L2GameServerPacket {
         writeD(_cropsItems.size()); // size
 
         for (ItemInstance item : _cropsItems.values()) {
-            writeD(item.getObjectId()); // Object id
+            writeD(item.objectId()); // Object id
             writeD(item.getItemId()); // crop id
-            writeD(Manor.INSTANCE.getSeedLevelByCrop(item.getItemId())); // seed level
+            writeD(Manor.INSTANCE.getSeedLevelByCrop(item.getItemId())); // seed occupation
 
             writeC(1);
             writeD(Manor.INSTANCE.getRewardItem(item.getItemId(), 1)); // reward 1 id

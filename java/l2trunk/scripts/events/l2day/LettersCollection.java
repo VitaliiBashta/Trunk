@@ -7,6 +7,7 @@ import l2trunk.gameserver.cache.Msg;
 import l2trunk.gameserver.listener.actor.OnDeathListener;
 import l2trunk.gameserver.listener.actor.player.OnPlayerEnterListener;
 import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.SimpleSpawner;
 import l2trunk.gameserver.model.actor.listener.CharListenerList;
@@ -23,6 +24,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static l2trunk.gameserver.utils.ItemFunctions.addItem;
+import static l2trunk.gameserver.utils.ItemFunctions.removeItem;
 
 public final class LettersCollection extends Functions implements ScriptFile, OnDeathListener, OnPlayerEnterListener {
     private static final Logger _log = LoggerFactory.getLogger(LettersCollection.class);
@@ -56,7 +60,7 @@ public final class LettersCollection extends Functions implements ScriptFile, On
     // Контейнеры, не трогать
     static final Map<String, Integer[][]> _words = new HashMap<>();
     static final Map<String, RewardData[]> _rewards = new HashMap<>();
-    private static final List<SimpleSpawner> SPAWNS = new ArrayList<>();
+    private static List<SimpleSpawner> SPAWNS = new ArrayList<>();
 
     @Override
     public void onLoad() {
@@ -74,7 +78,7 @@ public final class LettersCollection extends Functions implements ScriptFile, On
     }
 
     private void spawnEventManagers() {
-        SpawnNPCs(EVENT_MANAGER_ID, EventsConfig.EVENT_MANAGERS, SPAWNS);
+        SPAWNS = SpawnNPCs(EVENT_MANAGER_ID, EventsConfig.EVENT_MANAGERS);
     }
 
     private void unSpawnEventManagers() {
@@ -93,19 +97,21 @@ public final class LettersCollection extends Functions implements ScriptFile, On
 
     @Override
     public void onDeath(Creature cha, Creature killer) {
-        if (_active && SimpleCheckDrop(cha, killer)) {
-            int[] letter = Rnd.get(letters);
-            if (Rnd.chance(letter[1] * Config.EVENT_L2DAY_LETTER_CHANCE * ((NpcTemplate) cha.getTemplate()).rateHp))
-                ((NpcInstance) cha).dropItem(killer.getPlayer(), letter[0], 1);
+        if (killer instanceof Playable) {
+            Playable playable = (Playable) killer;
+            if (_active && simpleCheckDrop(cha, playable)) {
+                int[] letter = Rnd.get(letters);
+                if (Rnd.chance(letter[1] * Config.EVENT_L2DAY_LETTER_CHANCE * ((NpcTemplate) cha.getTemplate()).rateHp))
+                    ((NpcInstance) cha).dropItem(playable.getPlayer(), letter[0], 1);
+            }
         }
     }
 
     public void startEvent() {
-        Player player = getSelf();
         if (!player.getPlayerAccess().IsEventGm)
             return;
 
-        if (SetActive(_name, true)) {
+        if (setActive(_name, true)) {
             spawnEventManagers();
             System.out.println("Event '" + _name + "' started.");
             Announcements.INSTANCE.announceByCustomMessage(_msgStarted);
@@ -118,10 +124,9 @@ public final class LettersCollection extends Functions implements ScriptFile, On
     }
 
     public void stopEvent() {
-        Player player = getSelf();
         if (!player.getPlayerAccess().IsEventGm)
             return;
-        if (SetActive(_name, false)) {
+        if (setActive(_name, false)) {
             unSpawnEventManagers();
             System.out.println("Event '" + _name + "' stopped.");
             Announcements.INSTANCE.announceByCustomMessage(_msgEnded);
@@ -134,8 +139,6 @@ public final class LettersCollection extends Functions implements ScriptFile, On
     }
 
     public void exchange(String[] var) {
-        Player player = getSelf();
-
         if (!player.isQuestContinuationPossible(true))
             return;
 
@@ -145,7 +148,7 @@ public final class LettersCollection extends Functions implements ScriptFile, On
         Integer[][] mss = _words.get(var[0]);
 
         for (Integer[] l : mss)
-            if (getItemCount(player, l[0]) < l[1]) {
+            if (!player.haveItem(l[0], l[1])) {
                 player.sendPacket(Msg.YOU_DO_NOT_HAVE_ENOUGH_REQUIRED_ITEMS);
                 return;
             }
@@ -162,7 +165,7 @@ public final class LettersCollection extends Functions implements ScriptFile, On
         for (RewardData r : rewards) {
             sum += r.getChance();
             if (sum > random) {
-                addItem(player, r.getItemId(), Rnd.get(r.getMinDrop(), r.getMaxDrop()), "LettersCollection");
+                addItem(player, r.getItemId(), Rnd.get(r.getMinDrop(), r.getMaxDrop()));
                 return;
             }
         }

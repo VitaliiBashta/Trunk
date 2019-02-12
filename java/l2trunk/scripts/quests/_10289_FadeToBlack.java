@@ -4,7 +4,6 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 import java.util.StringTokenizer;
 
@@ -24,7 +23,7 @@ public final class _10289_FadeToBlack extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("greymore_q10289_03.htm")) {
+        if ("greymore_q10289_03.htm".equalsIgnoreCase(event)) {
             st.setState(STARTED);
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
@@ -41,87 +40,88 @@ public final class _10289_FadeToBlack extends Quest {
             int id = Integer.parseInt(str.nextToken());
             switch (id) {
                 case 1:
-                    st.giveItems(15775, 1, false);
+                    st.giveItems(15775);
                     st.giveItems(ADENA_ID, 420920);
                     break;
                 case 2:
-                    st.giveItems(15776, 1, false);
+                    st.giveItems(15776);
                     st.giveItems(ADENA_ID, 420920);
                     break;
                 case 3:
-                    st.giveItems(15777, 1, false);
+                    st.giveItems(15777);
                     st.giveItems(ADENA_ID, 420920);
                     break;
                 case 4:
-                    st.giveItems(15778, 1, false);
+                    st.giveItems(15778);
                     break;
                 case 5:
-                    st.giveItems(15779, 1, false);
+                    st.giveItems(15779);
                     st.giveItems(ADENA_ID, 168360);
                     break;
                 case 6:
-                    st.giveItems(15780, 1, false);
+                    st.giveItems(15780);
                     st.giveItems(ADENA_ID, 168360);
                     break;
                 case 7:
-                    st.giveItems(15781, 1, false);
+                    st.giveItems(15781);
                     st.giveItems(ADENA_ID, 252540);
                     break;
                 case 8:
-                    st.giveItems(15782, 1, false);
+                    st.giveItems(15782);
                     st.giveItems(ADENA_ID, 357780);
                     break;
                 case 9:
-                    st.giveItems(15783, 1, false);
+                    st.giveItems(15783);
                     st.giveItems(ADENA_ID, 357780);
                     break;
                 case 10:
-                    st.giveItems(15784, 1, false);
+                    st.giveItems(15784);
                     st.giveItems(ADENA_ID, 505100);
                     break;
                 case 11:
-                    st.giveItems(15785, 1, false);
+                    st.giveItems(15785);
                     st.giveItems(ADENA_ID, 505100);
                     break;
                 case 12:
-                    st.giveItems(15786, 1, false);
+                    st.giveItems(15786);
                     st.giveItems(ADENA_ID, 505100);
                     break;
                 case 13:
-                    st.giveItems(15787, 1, false);
+                    st.giveItems(15787);
                     st.giveItems(ADENA_ID, 505100);
                     break;
                 case 14:
-                    st.giveItems(15788, 1, false);
+                    st.giveItems(15788);
                     st.giveItems(ADENA_ID, 505100);
                     break;
                 case 15:
-                    st.giveItems(15789, 1, false);
+                    st.giveItems(15789);
                     st.giveItems(ADENA_ID, 505100);
                     break;
                 case 16:
-                    st.giveItems(15790, 1, false);
+                    st.giveItems(15790);
                     st.giveItems(ADENA_ID, 496680);
                     break;
                 case 17:
-                    st.giveItems(15791, 1, false);
+                    st.giveItems(15791);
                     st.giveItems(ADENA_ID, 496680);
                     break;
                 case 18:
-                    st.giveItems(15812, 1, false);
+                    st.giveItems(15812);
                     st.giveItems(ADENA_ID, 563860);
                     break;
                 case 19:
-                    st.giveItems(15813, 1, false);
+                    st.giveItems(15813);
                     st.giveItems(ADENA_ID, 509040);
                     break;
                 case 20:
-                    st.giveItems(15814, 1, false);
+                    st.giveItems(15814);
                     st.giveItems(ADENA_ID, 454240);
                     break;
             }
             htmltext = "greymore_q10289_09.htm";
-            st.takeAllItems(MarkofSplendor, MarkofDarkness);
+            st.takeItems(MarkofSplendor);
+            st.takeItems(MarkofDarkness);
             st.exitCurrentQuest(false);
         }
         return htmltext;
@@ -133,8 +133,7 @@ public final class _10289_FadeToBlack extends Quest {
         int cond = st.getCond();
         if (npc.getNpcId() == Greymore) {
             if (cond == 0) {
-                QuestState qs = st.getPlayer().getQuestState(_10288_SecretMission.class);
-                if (st.getPlayer().getLevel() >= 82 && qs != null && qs.isCompleted())
+                if (st.player.getLevel() >= 82 && st.player.isQuestCompleted(_10288_SecretMission.class))
                     htmltext = "greymore_q10289_01.htm";
                 else {
                     htmltext = "greymore_q10289_00.htm";
@@ -149,20 +148,19 @@ public final class _10289_FadeToBlack extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int cond = st.getCond();
         if (cond == 1) {
             if (npc.getNpcId() == Anays) {
                 if (Rnd.chance(30)) {
-                    st.giveItems(MarkofSplendor, 1);
+                    st.giveItems(MarkofSplendor);
                     st.setCond(3);
                 } else {
-                    st.giveItems(MarkofDarkness, 1);
+                    st.giveItems(MarkofDarkness);
                     st.setCond(2);
                 }
             }
         }
-        return null;
     }
 
 }

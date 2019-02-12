@@ -66,8 +66,7 @@ public final class _290_ThreatRemoval extends Quest {
         int cond = st.getCond();
         if (npc.getNpcId() == GuardPinaps) {
             if (cond == 0) {
-                QuestState qs = st.getPlayer().getQuestState(_251_NoSecrets.class);
-                if (st.getPlayer().getLevel() >= 82 && qs != null && qs.isCompleted())
+                if (st.player.getLevel() >= 82 && st.player.isQuestCompleted(_251_NoSecrets.class))
                     htmltext = "pinaps_q290_01.htm";
                 else {
                     htmltext = "pinaps_q290_00.htm";
@@ -75,7 +74,7 @@ public final class _290_ThreatRemoval extends Quest {
                 }
             } else if (cond == 1 && st.getQuestItemsCount(SelMahumIDTag) < 400)
                 htmltext = "pinaps_q290_03.htm";
-            else if (cond == 1 && st.getQuestItemsCount(SelMahumIDTag) >= 400)
+            else if (cond == 1 && st.haveQuestItem(SelMahumIDTag, 400))
                 htmltext = "pinaps_q290_04.htm";
         }
 
@@ -83,7 +82,7 @@ public final class _290_ThreatRemoval extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int cond = st.getCond();
         if (cond == 1) {
             if (SelMahumTrainers.contains(npc.getNpcId()))
@@ -91,6 +90,5 @@ public final class _290_ThreatRemoval extends Quest {
             else if (SelMahumRecruits.contains(npc.getNpcId()))
                 st.rollAndGive(SelMahumIDTag, 1, 36.3);
         }
-        return null;
     }
 }

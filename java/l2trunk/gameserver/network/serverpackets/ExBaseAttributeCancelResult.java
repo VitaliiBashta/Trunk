@@ -13,7 +13,7 @@ public class ExBaseAttributeCancelResult extends L2GameServerPacket {
 
     public ExBaseAttributeCancelResult(boolean result, ItemInstance item, Element element) {
         _result = result;
-        _objectId = item.getObjectId();
+        _objectId = item.objectId();
         _element = element;
     }
 

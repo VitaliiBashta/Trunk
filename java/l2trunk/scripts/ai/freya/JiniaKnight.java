@@ -3,6 +3,7 @@ package l2trunk.scripts.ai.freya;
 import l2trunk.gameserver.ai.CtrlEvent;
 import l2trunk.gameserver.ai.Fighter;
 import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.model.instances.NpcInstance;
 
 public final class JiniaKnight extends Fighter {
@@ -24,17 +25,12 @@ public final class JiniaKnight extends Fighter {
 
     @Override
     public void onEvtAttacked(Creature attacker, int damage) {
-        if (attacker == null || attacker.isPlayable())
-            return;
-
-        super.onEvtAttacked(attacker, damage);
+        if (attacker != null && !(attacker instanceof Playable))
+            super.onEvtAttacked(attacker, damage);
     }
 
     @Override
-    public boolean checkAggression(Creature target, boolean avoidAttack) {
-        if (target.isPlayable())
-            return false;
-
-        return super.checkAggression(target, avoidAttack);
+    public boolean checkAggression(Playable target, boolean avoidAttack) {
+        return false;
     }
 }

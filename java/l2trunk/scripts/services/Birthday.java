@@ -20,9 +20,6 @@ public final class Birthday extends Functions {
     private static final String msgSpawned = "scripts/services/Birthday-spawned.htm";
 
     public void summonAlegria() {
-        Player player = getSelf();
-        NpcInstance npc = getNpc();
-
         if (player == null || npc == null || !NpcInstance.canBypassCheck(player, player.getLastNpc()))
             return;
 
@@ -36,11 +33,8 @@ public final class Birthday extends Functions {
         player.sendPacket(PlaySound.HB01);
 
         try {
-            //Спаним Аллегрию где-то спереди от ГК
-            int x = (int) (npc.getX() + 40 * Math.cos(npc.headingToRadians(npc.getHeading() - 32768 + 8000)));
-            int y = (int) (npc.getY() + 40 * Math.sin(npc.headingToRadians(npc.getHeading() - 32768 + 8000)));
 
-            NpcInstance alegria = NpcUtils.spawnSingle(NPC_ALEGRIA, x, y, npc.getZ(), 180000);
+            NpcInstance alegria = NpcUtils.spawnSingle(NPC_ALEGRIA, npc.getLoc().randomOffset(40), 180000);
             alegria.setHeading(PositionUtils.calculateHeadingFrom(alegria, player));
         } catch (Exception e) {
             e.printStackTrace();
@@ -51,22 +45,20 @@ public final class Birthday extends Functions {
      * Вызывается у NPC Alegria
      */
     public void exchangeHat() {
-        Player player = getSelf();
-        final NpcInstance npc = getNpc();
 
         if (player == null || npc == null || !NpcInstance.canBypassCheck(player, player.getLastNpc()) || npc.isBusy())
             return;
 
-        if (ItemFunctions.getItemCount(player, EXPLORERHAT) < 1) {
+        if (!player.haveItem(EXPLORERHAT)) {
             show("default/32600-nohat.htm", player, npc);
             return;
         }
-        ItemFunctions.removeItem(player, EXPLORERHAT, 1, true, "exchangeHat");
-        ItemFunctions.addItem(player, HAT, 1, true, "exchangeHat");
+        ItemFunctions.removeItem(player, EXPLORERHAT, 1, "exchangeHat");
+        ItemFunctions.addItem(player, HAT, 1, "exchangeHat");
         show("default/32600-successful.htm", player, npc);
 
         long now = System.currentTimeMillis() / 1000;
-        player.setVar("Birthday", String.valueOf(now), -1);
+        player.setVar("Birthday",now);
 
         npc.setBusy(true);
 

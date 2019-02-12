@@ -16,7 +16,7 @@ public final class ACP implements IVoicedCommandHandler {
     private static final int ID_HEAL_MP = 728;
     private static final int ID_HEAL_HP = 1539;
 
-    // ACP system requirements of level for character
+    // ACP system requirements of occupation for character
     // Can be relocated into Config file in order to avoid compiling
     private static final int ACP_MIN_LVL = 0;
     private static final int ACP_HP_LVL = 1;
@@ -66,53 +66,53 @@ public final class ACP implements IVoicedCommandHandler {
     }
 
     private class AcpHealer implements Runnable {
-        private final Player _activeChar;
+        private final Player player;
 
-        AcpHealer(Player activeChar) {
-            this._activeChar = activeChar;
+        AcpHealer(Player player) {
+            this.player = player;
         }
 
         @Override
         public void run() {
             try {
                 while (true) {
-                    // Check for level requirements
-                    if (_activeChar.getLevel() >= ACP_MIN_LVL) {
-                        ItemInstance cpBottle = _activeChar.getInventory().getItemByItemId(ID_HEAL_CP);
-                        ItemInstance hpBottle = _activeChar.getInventory().getItemByItemId(ID_HEAL_HP);
-                        ItemInstance mpBottle = _activeChar.getInventory().getItemByItemId(ID_HEAL_MP);
+                    // Check for occupation requirements
+                    if (player.getLevel() >= ACP_MIN_LVL) {
+                        ItemInstance cpBottle = player.inventory.getItemByItemId(ID_HEAL_CP);
+                        ItemInstance hpBottle = player.inventory.getItemByItemId(ID_HEAL_HP);
+                        ItemInstance mpBottle = player.inventory.getItemByItemId(ID_HEAL_MP);
 
                         if (hpBottle != null && hpBottle.getCount() > 0) {
                             // Check condition of stats(HP)
-                            if ((_activeChar.getCurrentHp() / _activeChar.getMaxHp()) * 100 < ACP_HP_LVL && ACP_HP) {
+                            if ((player.getCurrentHp() / player.getMaxHp()) * 100 < ACP_HP_LVL && ACP_HP) {
                                 IItemHandler handlerHP = hpBottle.getTemplate().getHandler();
                                 if (handlerHP != null) {
-                                    handlerHP.useItem(_activeChar, hpBottle, false);
-                                    _activeChar.sendMessage("[ACP]: HP has been restored.");
+                                    handlerHP.useItem(player, hpBottle, false);
+                                    player.sendMessage("[ACP]: HP has been restored.");
                                 }
                             }
                             // Check condition of stats(CP)
                             if (cpBottle != null && cpBottle.getCount() > 0) {
-                                if ((_activeChar.getCurrentCp() / _activeChar.getMaxCp()) * 100 < ACP_CP_LVL && ACP_CP) {
+                                if ((player.getCurrentCp() / player.getMaxCp()) * 100 < ACP_CP_LVL && ACP_CP) {
                                     IItemHandler handlerCP = cpBottle.getTemplate().getHandler();
                                     if (handlerCP != null) {
-                                        handlerCP.useItem(_activeChar, cpBottle, false);
-                                        _activeChar.sendMessage("[ACP]: CP has been restored.");
+                                        handlerCP.useItem(player, cpBottle, false);
+                                        player.sendMessage("[ACP]: CP has been restored.");
                                     }
                                 }
                             }
                             // Check condition of stats(MP)
                             if (mpBottle != null && mpBottle.getCount() > 0) {
-                                if ((_activeChar.getCurrentMp() / _activeChar.getMaxMp()) * 100 < ACP_MP_LVL && ACP_MP) {
+                                if ((player.getCurrentMp() / player.getMaxMp()) * 100 < ACP_MP_LVL && ACP_MP) {
                                     IItemHandler handlerMP = mpBottle.getTemplate().getHandler();
                                     if (handlerMP != null) {
-                                        handlerMP.useItem(_activeChar, mpBottle, false);
-                                        _activeChar.sendMessage("[ACP]: MP has been restored.");
+                                        handlerMP.useItem(player, mpBottle, false);
+                                        player.sendMessage("[ACP]: MP has been restored.");
                                     }
                                 }
                             }
                         } else {
-                            _activeChar.sendMessage("You don't have nothing to regenerate.");
+                            player.sendMessage("You don't have nothing to regenerate.");
                             return;
                         }
                     }
@@ -123,7 +123,7 @@ public final class ACP implements IVoicedCommandHandler {
             } catch (Exception e) {
                 Thread.currentThread().interrupt();
             } finally {
-                userAcpMap.remove(_activeChar.toString());
+                userAcpMap.remove(player.toString());
             }
         }
     }

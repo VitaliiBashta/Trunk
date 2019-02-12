@@ -1,13 +1,14 @@
 package l2trunk.gameserver.model.instances;
 
 import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.events.impl.DominionSiegeEvent;
 import l2trunk.gameserver.model.entity.events.objects.TerritoryWardObject;
 import l2trunk.gameserver.model.pledge.Clan;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
-public class TerritoryWardInstance extends NpcInstance {
+public final class TerritoryWardInstance extends NpcInstance {
     private final TerritoryWardObject _territoryWard;
 
     public TerritoryWardInstance(int objectId, NpcTemplate template, TerritoryWardObject territoryWardObject) {
@@ -20,7 +21,7 @@ public class TerritoryWardInstance extends NpcInstance {
     public void onDeath(Creature killer) {
         super.onDeath(killer);
 
-        final Player player = killer.getPlayer();
+        final Player player = killer instanceof Playable ? ((Playable)killer).getPlayer(): null;
         if (player == null)
             return;
 
@@ -52,9 +53,7 @@ public class TerritoryWardInstance extends NpcInstance {
             return false;
         if (siegeEvent == siegeEvent2)
             return false;
-        if (siegeEvent2.getResidence().getOwner() != attacker.getClan())
-            return false;
-        return true;
+        return siegeEvent2.getResidence().getOwner() == ((Player) attacker).getClan();
     }
 
     @Override

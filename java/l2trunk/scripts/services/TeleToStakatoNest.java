@@ -2,7 +2,6 @@ package l2trunk.scripts.services;
 
 import l2trunk.gameserver.model.Party;
 import l2trunk.gameserver.model.Player;
-import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.Location;
@@ -17,13 +16,10 @@ public final class TeleToStakatoNest extends Functions {
             new Location(87682, -43291, -4128)};
 
     public void list() {
-        Player player = getSelf();
-        NpcInstance npc = getNpc();
         if (player == null || npc == null)
             return;
 
-        QuestState qs = player.getQuestState(_240_ImTheOnlyOneYouCanTrust.class);
-        if (qs == null || !qs.isCompleted()) {
+        if (!player.isQuestCompleted(_240_ImTheOnlyOneYouCanTrust.class)) {
             show("scripts/services/TeleToStakatoNest-no.htm", player);
             return;
         }
@@ -32,8 +28,6 @@ public final class TeleToStakatoNest extends Functions {
     }
 
     public void teleTo(String[] args) {
-        Player player = getSelf();
-        NpcInstance npc = getNpc();
         if (npc == null || !npc.isInRange(player, 1000L))
             return;
         if (args.length != 1)

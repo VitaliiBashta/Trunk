@@ -78,7 +78,7 @@ public abstract class ResidenceManager extends MerchantInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
         String filename = null;
         int cond = getCond(player);
         switch (cond) {
@@ -220,7 +220,7 @@ public abstract class ResidenceManager extends MerchantInstance {
                 NpcHtmlMessage html = new NpcHtmlMessage(player, this);
                 html.setFile("residence/item.htm");
                 String template = "<button value=\"Buy Item\" action=\"bypass -h npc_%objectId%_Buy %id%\" width=90 height=25 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_ct1.button_df\">";
-                template = template.replaceAll("%id%", String.valueOf(getResidence().getFunction(ResidenceFunction.ITEM_CREATE).getBuylist()[1])).replace("%objectId%", String.valueOf(getObjectId()));
+                template = template.replaceAll("%id%", String.valueOf(getResidence().getFunction(ResidenceFunction.ITEM_CREATE).getBuylist()[1])).replace("%objectId%", String.valueOf(objectId()));
                 html.replace("%itemList%", template);
                 sendHtmlMessage(player, html);
             } else if (val.equalsIgnoreCase("support")) {

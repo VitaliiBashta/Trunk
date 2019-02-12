@@ -1,28 +1,21 @@
 package l2trunk.gameserver.model.entity;
 
 import l2trunk.commons.lang.NumberUtils;
-import l2trunk.gameserver.instancemanager.QuestManager;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.World;
 import l2trunk.gameserver.model.entity.CCPHelpers.*;
 import l2trunk.gameserver.model.entity.CCPHelpers.itemLogs.CCPItemLogs;
-import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.DeleteObject;
 import l2trunk.gameserver.network.serverpackets.L2GameServerPacket;
+import l2trunk.scripts.quests._255_Tutorial;
 
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.stream.Collectors;
 
-public final class CharacterControlPanel {
-    private static CharacterControlPanel _instance;
-
-    public static CharacterControlPanel getInstance() {
-        if (_instance == null)
-            _instance = new CharacterControlPanel();
-        return _instance;
-    }
+public enum CharacterControlPanel {
+    INSTANCE;
 
     public String useCommand(Player activeChar, String text, String bypass) {
         // While some1 is currently writing secondary password
@@ -34,35 +27,30 @@ public final class CharacterControlPanel {
         if (param.length == 0)
             return "char.htm";
 
-            // Block unwanted buffs
-        else if ("grief".equalsIgnoreCase(param[0])) {
-            CCPSmallCommands.setAntiGrief(activeChar);
-        }
         // Block Experience
         else if ("noe".equalsIgnoreCase(param[0])) {
-            if (activeChar.getVar("NoExp") == null)
-                activeChar.setVar("NoExp", "1", -1);
-            else
+            if (activeChar.isVarSet("NoExp")) {
                 activeChar.unsetVar("NoExp");
+            } else {
+                activeChar.setVar("NoExp");
+            }
         }
         // Auto Shoulshots
         else if ("soulshot".equalsIgnoreCase(param[0])) {
-            if (activeChar.getVar("soulshot") == null)
-                activeChar.setVar("soulshot", "1", -1);
-            else
+            if (activeChar.isVarSet("soulshot")) {
                 activeChar.unsetVar("soulshot");
+            } else {
+                activeChar.setVar("soulshot");
+            }
         }
         // Show Online Players
         else if ("online".equalsIgnoreCase(param[0])) {
             activeChar.sendMessage(CCPSmallCommands.showOnlineCount());
         } else if ("changeLog".equalsIgnoreCase(param[0])) {
-            Quest q = QuestManager.getQuest(QuestManager.TUTORIAL_QUEST_ID);
-            if (q != null) {
-                QuestState st = activeChar.getQuestState(q.getName());
-                if (st != null) {
-                    String change = ChangeLogManager.INSTANCE.getChangeLog(ChangeLogManager.INSTANCE.getLatestChangeId());
-                    st.showTutorialHTML(change);
-                }
+            QuestState st = activeChar.getQuestState(_255_Tutorial.class);
+            if (st != null) {
+                String change = ChangeLogManager.INSTANCE.getChangeLog(ChangeLogManager.INSTANCE.getLatestChangeId());
+                st.showTutorialHTML(change);
             }
         }
         // Item logs
@@ -72,33 +60,33 @@ public final class CharacterControlPanel {
         }
         // Show private stores Hide private stores / Fixed
         else if (Player.NO_TRADERS_VAR.equalsIgnoreCase(param[0])) {
-            if (activeChar.getVar(Player.NO_TRADERS_VAR) == null) {
-                List<L2GameServerPacket> pls = World.getAroundPlayers(activeChar)
+            if (activeChar.isVarSet(Player.NO_TRADERS_VAR)) {
+                activeChar.setNotShowTraders();
+                activeChar.unsetVar(Player.NO_TRADERS_VAR);
+
+                World.getAroundPlayers(activeChar).stream()
+                        .filter(p -> p.getPrivateStoreType() != Player.STORE_PRIVATE_NONE)
+                        .forEach(p -> p.broadcastUserInfo(true));
+            } else {
+                List<L2GameServerPacket> pls = World.getAroundPlayers(activeChar).stream()
                         .filter(p -> p.getPrivateStoreType() != Player.STORE_PRIVATE_NONE)
                         .map(DeleteObject::new)
                         .collect(Collectors.toList());
 
                 activeChar.sendPacket(pls);
                 activeChar.setNotShowTraders();
-                activeChar.setVar(Player.NO_TRADERS_VAR, "1", -1);
-            } else {
-                activeChar.setNotShowTraders();
-                activeChar.unsetVar(Player.NO_TRADERS_VAR);
-
-                World.getAroundPlayers(activeChar)
-                        .filter(p -> p.getPrivateStoreType() != Player.STORE_PRIVATE_NONE)
-                        .forEach(p -> p.broadcastUserInfo(true));
+                activeChar.setVar(Player.NO_TRADERS_VAR);
             }
         }
 
         // Show skill animations
         else if (Player.NO_ANIMATION_OF_CAST_VAR.equalsIgnoreCase(param[0])) {
-            if (activeChar.getVar(Player.NO_ANIMATION_OF_CAST_VAR) == null) {
-                activeChar.setNotShowBuffAnim(true);
-                activeChar.setVar(Player.NO_ANIMATION_OF_CAST_VAR, "true", -1);
-            } else {
+            if (activeChar.isVarSet(Player.NO_ANIMATION_OF_CAST_VAR)) {
                 activeChar.setNotShowBuffAnim(false);
                 activeChar.unsetVar(Player.NO_ANIMATION_OF_CAST_VAR);
+            } else {
+                activeChar.setNotShowBuffAnim(true);
+                activeChar.setVar(Player.NO_ANIMATION_OF_CAST_VAR);
             }
         } else if ("blocktrade".equalsIgnoreCase(param[0])) {
             activeChar.setTradeRefusal(!activeChar.getTradeRefusal());
@@ -113,9 +101,6 @@ public final class CharacterControlPanel {
                 return null;
         } else if (param[0].startsWith("poll") || param[0].startsWith("Poll")) {
             CCPPoll.bypass(activeChar, param);
-            return null;
-        } else if ("combine".equals(param[0])) {
-            CCPSmallCommands.combineTalismans(activeChar);
             return null;
         } else if ("otoad".equals(param[0])) {
             CCPSmallCommands.openToad(activeChar, -1);
@@ -164,13 +149,13 @@ public final class CharacterControlPanel {
         return "char.htm";
     }
 
-    public String replacePage(String currentPage, Player activeChar, String additionalText, String bypass) {
+    public String replacePage(String currentPage, Player activeChar) {
         currentPage = currentPage.replaceFirst("%online%", CCPSmallCommands.showOnlineCount());
-        currentPage = currentPage.replaceFirst("%antigrief%", getONOFF(activeChar.getVarB("antigrief")));
-        currentPage = currentPage.replaceFirst("%noe%", getONOFF(activeChar.getVarB("NoExp")));
-        currentPage = currentPage.replaceFirst("%soulshot%", getONOFF(activeChar.getVarB("soulshot")));
-        currentPage = currentPage.replaceFirst("%notraders%", getONOFF(activeChar.getVarB("notraders")));
-        currentPage = currentPage.replaceFirst("%notShowBuffAnim%", getONOFF(activeChar.getVarB("notShowBuffAnim")));
+        currentPage = currentPage.replaceFirst("%antigrief%", getONOFF(activeChar.isVarSet("antigrief")));
+        currentPage = currentPage.replaceFirst("%noe%", getONOFF(activeChar.isVarSet("NoExp")));
+        currentPage = currentPage.replaceFirst("%soulshot%", getONOFF(activeChar.isVarSet("soulshot")));
+        currentPage = currentPage.replaceFirst("%notraders%", getONOFF(activeChar.isVarSet("notraders")));
+        currentPage = currentPage.replaceFirst("%notShowBuffAnim%", getONOFF(activeChar.isVarSet("notShowBuffAnim")));
         currentPage = currentPage.replaceFirst("%blocktrade%", getONOFF(activeChar.getTradeRefusal()));
         currentPage = currentPage.replaceFirst("%blockpartyinvite%", getONOFF(activeChar.getPartyInviteRefusal()));
         currentPage = currentPage.replaceFirst("%blockfriendinvite%", getONOFF(activeChar.getFriendInviteRefusal()));

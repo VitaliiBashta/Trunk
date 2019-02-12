@@ -14,11 +14,6 @@ public final class Books extends SimpleItemHandler implements ScriptFile {
     private static final List<Integer> ITEM_IDS = List.of(5555, 5707);
 
     @Override
-    public boolean pickupItem(Playable playable, ItemInstance item) {
-        return true;
-    }
-
-    @Override
     public void onLoad() {
         ItemHandler.INSTANCE.registerItemHandler(this);
     }

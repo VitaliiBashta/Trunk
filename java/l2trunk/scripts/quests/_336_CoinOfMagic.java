@@ -5,6 +5,9 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
+import java.util.List;
+import java.util.Map;
+
 public final class _336_CoinOfMagic extends Quest {
     private static final int COIN_DIAGRAM = 3811;
     private static final int KALDIS_COIN = 3812;
@@ -40,11 +43,8 @@ public final class _336_CoinOfMagic extends Quest {
     private static final int MANAKS_SILVER_DRYAD = 3497;
     private static final int NIAS_SILVER_FAIRY = 3498;
 
-    private static final int[] BASIC_COINS = {
-            BLOOD_MEDUSA,
-            GOLD_WYVERN,
-            SILVER_UNICORN
-    };
+    private static final List<Integer> BASIC_COINS = List.of(
+            BLOOD_MEDUSA, GOLD_WYVERN, SILVER_UNICORN);
 
     private static final int SORINT = 30232;
     private static final int BERNARD = 30702;
@@ -90,19 +90,15 @@ public final class _336_CoinOfMagic extends Quest {
     private static final int DoomArcher = 21008;
     private static final int DoomKnight = 20674;
 
-    //private static final int Kookaburra1 = 21277;
     private static final int Kookaburra2 = 21276;
     private static final int Kookaburra3 = 21275;
     private static final int Kookaburra4 = 21274;
-    //private static final int Antelope1 = 21281;
     private static final int Antelope2 = 21278;
     private static final int Antelope3 = 21279;
     private static final int Antelope4 = 21280;
-    //private static final int Bandersnatch1 = 21285;
     private static final int Bandersnatch2 = 21282;
     private static final int Bandersnatch3 = 21284;
     private static final int Bandersnatch4 = 21283;
-    //private static final int Buffalo1 = 21289;
     private static final int Buffalo2 = 21287;
     private static final int Buffalo3 = 21288;
     private static final int Buffalo4 = 21286;
@@ -138,148 +134,31 @@ public final class _336_CoinOfMagic extends Quest {
             }
     };
 
-    private static final int[][] EXCHANGE_LEVEL = {
-            {
-                    PAGE,
-                    3
-            },
-            {
-                    LORAIN,
-                    3
-            },
-            {
-                    HAGGER,
-                    3
-            },
-            {
-                    RALFORD,
-                    2
-            },
-            {
-                    STAN,
-                    2
-            },
-            {
-                    DUNING,
-                    2
-            },
-            {
-                    FERRIS,
-                    1
-            },
-            {
-                    COLLOB,
-                    1
-            },
-            {
-                    PANO,
-                    1
-            },
-    };
+    private static final Map<Integer, Integer> EXCHANGE_LEVEL = Map.of(
+            PAGE, 3,
+            LORAIN, 3,
+            HAGGER, 3,
+            RALFORD, 2,
+            STAN, 2,
+            DUNING, 2,
+            FERRIS, 1,
+            COLLOB, 1,
+            PANO, 1);
+    private static final List<Integer> BLOOD_MEDUSA_DROP = List.of(
+            TimakOrcArcher, TimakOrcSoldier, TimakOrcShaman, Lakin, TorturedUndead, HatarHanishee);
+    private static final List<Integer> GOLD_WYVERN_DROP = List.of(
+            TimakOrc, Shackle, HeadlessKnight, RoyalCaveServant, MalrukSuccubusTuren);
+    private static final List<Integer> SILVER_UNICORN_DROP = List.of(
+            Formor, FormorElder, VanorSilenosShaman, TarlkBugbearHighWarrior, OelMahum, OelMahumWarrior);
 
-    private static final int[][] DROPLIST = {
-            {
-                    TimakOrcArcher,
-                    BLOOD_MEDUSA
-            },
-            {
-                    TimakOrcSoldier,
-                    BLOOD_MEDUSA
-            },
-            {
-                    TimakOrcShaman,
-                    BLOOD_MEDUSA
-            },
-            {
-                    Lakin,
-                    BLOOD_MEDUSA
-            },
-            {
-                    TorturedUndead,
-                    BLOOD_MEDUSA
-            },
-            {
-                    HatarHanishee,
-                    BLOOD_MEDUSA
-            },
-
-            {
-                    TimakOrc,
-                    GOLD_WYVERN
-            },
-            {
-                    Shackle,
-                    GOLD_WYVERN
-            },
-            {
-                    HeadlessKnight,
-                    GOLD_WYVERN
-            },
-            {
-                    RoyalCaveServant,
-                    GOLD_WYVERN
-            },
-            {
-                    MalrukSuccubusTuren,
-                    GOLD_WYVERN
-            },
-
-            {
-                    Formor,
-                    SILVER_UNICORN
-            },
-            {
-                    FormorElder,
-                    SILVER_UNICORN
-            },
-            {
-                    VanorSilenosShaman,
-                    SILVER_UNICORN
-            },
-            {
-                    TarlkBugbearHighWarrior,
-                    SILVER_UNICORN
-            },
-            {
-                    OelMahum,
-                    SILVER_UNICORN
-            },
-            {
-                    OelMahumWarrior,
-                    SILVER_UNICORN
-            },
-    };
-
-    private static final int[] UNKNOWN = {
-            GraveLich,
-            DoomServant,
-            DoomArcher,
-            DoomKnight,
-            //Kookaburra1,
-            Kookaburra2,
-            Kookaburra3,
-            Kookaburra4,
-            //Antelope1,
-            Antelope2,
-            Antelope3,
-            Antelope4,
-            //Bandersnatch1,
-            Bandersnatch2,
-            Bandersnatch3,
-            Bandersnatch4,
-            //Buffalo1,
-            Buffalo2,
-            Buffalo3,
-            Buffalo4,
-            ClawsofSplendor,
-            WisdomofSplendor,
-            PunishmentofSplendor,
-            WailingofSplendor,
-            HungeredCorpse,
-            BloodyGhost,
-            NihilInvader,
-            DarkGuard
-    };
+    private static final List<Integer> UNKNOWN = List.of(
+            GraveLich, DoomServant, DoomArcher, DoomKnight,
+            Kookaburra2, Kookaburra3, Kookaburra4,
+            Antelope2, Antelope3, Antelope4,
+            Bandersnatch2, Bandersnatch3, Bandersnatch4,
+             Buffalo2, Buffalo3, Buffalo4,
+            ClawsofSplendor, WisdomofSplendor, PunishmentofSplendor, WailingofSplendor,
+            HungeredCorpse, BloodyGhost, NihilInvader, DarkGuard);
 
     public _336_CoinOfMagic() {
         super(true);
@@ -299,8 +178,9 @@ public final class _336_CoinOfMagic extends Quest {
                 LORAIN
         );
 
-        for (int[] mob : DROPLIST)
-            addKillId(mob[0]);
+        addKillId(BLOOD_MEDUSA_DROP);
+        addKillId(GOLD_WYVERN_DROP);
+        addKillId(SILVER_UNICORN_DROP);
 
         addKillId(UNKNOWN);
 
@@ -318,28 +198,28 @@ public final class _336_CoinOfMagic extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
         int cond = st.getCond();
-        if (event.equalsIgnoreCase("30702-06.htm")) {
+        if ("30702-06.htm".equalsIgnoreCase(event)) {
             if (cond < 7) {
                 st.setCond(7);
                 st.playSound(SOUND_ACCEPT);
             }
-        } else if (event.equalsIgnoreCase("30232-22.htm")) {
+        } else if ("30232-22.htm".equalsIgnoreCase(event)) {
             if (cond < 6)
                 st.setCond(6);
-        } else if (event.equalsIgnoreCase("30232-23.htm")) {
+        } else if ("30232-23.htm".equalsIgnoreCase(event)) {
             if (cond < 5)
                 st.setCond(5);
-        } else if (event.equalsIgnoreCase("30702-02.htm"))
+        } else if ("30702-02.htm".equalsIgnoreCase(event))
             st.setCond(2);
-        else if (event.equalsIgnoreCase("30232-05.htm")) {
+        else if ("30232-05.htm".equalsIgnoreCase(event)) {
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
             st.giveItems(COIN_DIAGRAM, 1);
             st.setCond(1);
-        } else if (event.equalsIgnoreCase("30232-04.htm") || event.equalsIgnoreCase("30232-18a.htm")) {
+        } else if ("30232-04.htm".equalsIgnoreCase(event) || "30232-18a.htm".equalsIgnoreCase(event)) {
             st.exitCurrentQuest(true);
             st.playSound(SOUND_GIVEUP);
-        } else if (event.equalsIgnoreCase("raise"))
+        } else if ("raise".equalsIgnoreCase(event))
             htmltext = promote(st);
         return htmltext;
     }
@@ -357,17 +237,17 @@ public final class _336_CoinOfMagic extends Quest {
             if (h == 6) {
                 for (int i : PROMOTE[grade])
                     st.takeItems(i, 1);
-                html = "30232-" + str(19 - grade) + ".htm";
-                st.takeItems(3812 + grade, -1);
-                st.giveItems(3811 + grade, 1);
-                st.set("grade", str(grade - 1));
+                html = "30232-" + (19 - grade) + ".htm";
+                st.takeItems(3812 + grade);
+                st.giveItems(3811 + grade);
+                st.set("grade", grade - 1);
                 if (grade == 3)
                     st.setCond(9);
                 else if (grade == 2)
                     st.setCond(11);
                 st.playSound(SOUND_FANFARE_MIDDLE);
             } else {
-                html = "30232-" + str(16 - grade) + ".htm";
+                html = "30232-" + (16 - grade) + ".htm";
                 if (grade == 3)
                     st.setCond(8);
                 else if (grade == 2)
@@ -385,17 +265,17 @@ public final class _336_CoinOfMagic extends Quest {
         int grade = st.getInt("grade");
         if (npcId == SORINT) {
             if (id == CREATED) {
-                if (st.getPlayer().getLevel() < 40) {
+                if (st.player.getLevel() < 40) {
                     htmltext = "30232-01.htm";
                     st.exitCurrentQuest(true);
                 } else
                     htmltext = "30232-02.htm";
-            } else if (st.getQuestItemsCount(COIN_DIAGRAM) > 0) {
-                if (st.getQuestItemsCount(KALDIS_COIN) > 0) {
-                    st.takeItems(KALDIS_COIN, -1);
-                    st.takeItems(COIN_DIAGRAM, -1);
-                    st.giveItems(MEMBERSHIP_3, 1);
-                    st.set("grade", "3");
+            } else if (st.haveQuestItem(COIN_DIAGRAM) ) {
+                if (st.haveQuestItem(KALDIS_COIN) ) {
+                    st.takeItems(KALDIS_COIN);
+                    st.takeItems(COIN_DIAGRAM);
+                    st.giveItems(MEMBERSHIP_3);
+                    st.set("grade", 3);
                     st.setCond(4);
                     st.playSound(SOUND_FANFARE_MIDDLE);
                     htmltext = "30232-07.htm";
@@ -412,15 +292,13 @@ public final class _336_CoinOfMagic extends Quest {
                 htmltext = "30702-01.htm";
             else if (grade == 3)
                 htmltext = "30702-05.htm";
-        } else
-            for (int[] e : EXCHANGE_LEVEL)
-                if (npcId == e[0] && grade <= e[1])
-                    htmltext = npcId + "-01.htm";
+        } else if (grade <= EXCHANGE_LEVEL.get(npcId))
+            htmltext = npcId + "-01.htm";
         return htmltext;
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int cond = st.getCond();
         int grade = st.getInt("grade");
         int chance = npc.getLevel() + grade * 3 - 20;
@@ -429,18 +307,18 @@ public final class _336_CoinOfMagic extends Quest {
             if (cond == 2)
                 if (st.rollAndGive(KALDIS_COIN, 1, 1, 1, 10 * npc.getTemplate().rateHp))
                     st.setCond(3);
-            return null;
+            return;
         }
-        for (int[] e : DROPLIST)
-            if (e[0] == npcId) {
-                st.rollAndGive(e[1], 1, chance);
-                return null;
-            }
-        for (int u : UNKNOWN)
-            if (u == npcId) {
-                st.rollAndGive(BASIC_COINS[Rnd.get(BASIC_COINS.length)], 1, chance * npc.getTemplate().rateHp);
-                return null;
-            }
-        return null;
+        if (BLOOD_MEDUSA_DROP.contains(npcId)) {
+            st.rollAndGive(BLOOD_MEDUSA, 1, chance);
+        }
+        if (GOLD_WYVERN_DROP.contains(npcId)) {
+            st.rollAndGive(GOLD_WYVERN, 1, chance);
+        }
+        if (SILVER_UNICORN_DROP.contains(npcId)) {
+            st.rollAndGive(SILVER_UNICORN, 1, chance);
+        }
+        if (UNKNOWN.contains(npcId))
+            st.rollAndGive(Rnd.get(BASIC_COINS), 1, chance * npc.getTemplate().rateHp);
     }
 }

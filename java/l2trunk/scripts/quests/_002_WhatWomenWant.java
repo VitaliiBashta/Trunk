@@ -6,7 +6,6 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _002_WhatWomenWant extends Quest {
     private final int ARUJIEN = 30223;
@@ -34,27 +33,31 @@ public final class _002_WhatWomenWant extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("quest_accept")) {
-            htmltext = "arujien_q0002_04.htm";
-            st.giveItems(ARUJIENS_LETTER1, 1, false);
-            st.setCond(1);
-            st.setState(STARTED);
-            st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("2_1")) {
-            htmltext = "arujien_q0002_08.htm";
-            st.takeItems(ARUJIENS_LETTER3, -1);
-            st.giveItems(POETRY_BOOK, 1, false);
-            st.setCond(4);
-            st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("2_2")) {
-            htmltext = "arujien_q0002_09.htm";
-            st.takeItems(ARUJIENS_LETTER3, -1);
-            st.giveItems(ADENA_ID, 2300, true);
-            st.getPlayer().addExpAndSp(4254, 335);
-            if (st.getPlayer().getClassId().getLevel() == 1 && !st.getPlayer().getVarB("ng1"))
-                st.getPlayer().sendPacket(new ExShowScreenMessage("  Delivery duty complete.\nGo find the Newbie Guide."));
-            st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(false);
+        switch (event) {
+            case "quest_accept":
+                htmltext = "arujien_q0002_04.htm";
+                st.giveItems(ARUJIENS_LETTER1);
+                st.setCond(1);
+                st.setState(STARTED);
+                st.playSound(SOUND_ACCEPT);
+                break;
+            case "2_1":
+                htmltext = "arujien_q0002_08.htm";
+                st.takeItems(ARUJIENS_LETTER3);
+                st.giveItems(POETRY_BOOK);
+                st.setCond(4);
+                st.playSound(SOUND_MIDDLE);
+                break;
+            case "2_2":
+                htmltext = "arujien_q0002_09.htm";
+                st.takeItems(ARUJIENS_LETTER3);
+                st.giveItems(ADENA_ID, 2300, true);
+                st.player.addExpAndSp(4254, 335);
+                if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("ng1"))
+                    st.player.sendPacket(new ExShowScreenMessage("  Delivery duty complete.\nGo find the Newbie Guide."));
+                st.playSound(SOUND_FINISH);
+                st.exitCurrentQuest(false);
+                break;
         }
         return htmltext;
     }
@@ -66,9 +69,9 @@ public final class _002_WhatWomenWant extends Quest {
         int cond = st.getCond();
         if (npcId == ARUJIEN) {
             if (cond == 0) {
-                if (st.getPlayer().getRace() != Race.elf && st.getPlayer().getRace() != Race.human)
+                if (st.player.getRace() != Race.elf && st.player.getRace() != Race.human)
                     htmltext = "arujien_q0002_00.htm";
-                else if (st.getPlayer().getLevel() >= 2)
+                else if (st.player.getLevel() >= 2)
                     htmltext = "arujien_q0002_02.htm";
                 else {
                     htmltext = "arujien_q0002_01.htm";
@@ -84,21 +87,21 @@ public final class _002_WhatWomenWant extends Quest {
                 htmltext = "arujien_q0002_11.htm";
             else if (cond == 5 && st.getQuestItemsCount(GREENIS_LETTER) > 0) {
                 htmltext = "arujien_q0002_09.htm";
-                st.takeItems(GREENIS_LETTER, -1);
+                st.takeItems(GREENIS_LETTER);
                 int MYSTICS_EARRING = 113;
-                st.giveItems(MYSTICS_EARRING, 1, false);
+                st.giveItems(MYSTICS_EARRING);
                 st.giveItems(ADENA_ID, (int) ((Config.RATE_QUESTS_REWARD - 1) * 620 + 1850 * Config.RATE_QUESTS_REWARD), false); // T2
-                st.getPlayer().addExpAndSp(4254, 335);
-                if (st.getPlayer().getClassId().getLevel() == 1 && !st.getPlayer().getVarB("ng1"))
-                    st.getPlayer().sendPacket(new ExShowScreenMessage("  Delivery duty complete.\nGo find the Newbie Guide."));
+                st.player.addExpAndSp(4254, 335);
+                if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("ng1"))
+                    st.player.sendPacket(new ExShowScreenMessage("  Delivery duty complete.\nGo find the Newbie Guide."));
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest(false);
             }
         } else if (npcId == MIRABEL) {
             if (cond == 1 && st.getQuestItemsCount(ARUJIENS_LETTER1) > 0) {
                 htmltext = "mint_q0002_01.htm";
-                st.takeItems(ARUJIENS_LETTER1, -1);
-                st.giveItems(ARUJIENS_LETTER2, 1, false);
+                st.takeItems(ARUJIENS_LETTER1);
+                st.giveItems(ARUJIENS_LETTER2);
                 st.setCond(2);
                 st.playSound(SOUND_MIDDLE);
             } else if (cond == 2)
@@ -106,8 +109,8 @@ public final class _002_WhatWomenWant extends Quest {
         } else if (npcId == HERBIEL) {
             if (cond == 2 && st.getQuestItemsCount(ARUJIENS_LETTER2) > 0) {
                 htmltext = "green_q0002_01.htm";
-                st.takeItems(ARUJIENS_LETTER2, -1);
-                st.giveItems(ARUJIENS_LETTER3, 1, false);
+                st.takeItems(ARUJIENS_LETTER2);
+                st.giveItems(ARUJIENS_LETTER3);
                 st.setCond(3);
                 st.playSound(SOUND_MIDDLE);
             } else if (cond == 3)
@@ -115,8 +118,8 @@ public final class _002_WhatWomenWant extends Quest {
         } else if (npcId == GREENIS)
             if (cond == 4 && st.getQuestItemsCount(POETRY_BOOK) > 0) {
                 htmltext = "grain_q0002_02.htm";
-                st.takeItems(POETRY_BOOK, -1);
-                st.giveItems(GREENIS_LETTER, 1, false);
+                st.takeItems(POETRY_BOOK);
+                st.giveItems(GREENIS_LETTER);
                 st.setCond(5);
                 st.playSound(SOUND_MIDDLE);
             } else if (cond == 5 && st.getQuestItemsCount(GREENIS_LETTER) > 0)

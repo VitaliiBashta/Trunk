@@ -6,7 +6,6 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _169_OffspringOfNightmares extends Quest {
     //NPC
@@ -36,20 +35,20 @@ public final class _169_OffspringOfNightmares extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("30145-04.htm")) {
+        if ("30145-04.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("30145-08.htm")) {
-            st.takeItems(CrackedSkull, -1);
-            st.takeItems(PerfectSkull, -1);
-            st.giveItems(BoneGaiters, 1);
+        } else if ("30145-08.htm".equalsIgnoreCase(event)) {
+            st.takeItems(CrackedSkull);
+            st.takeItems(PerfectSkull);
+            st.giveItems(BoneGaiters);
             st.giveItems(ADENA_ID, 17050, true);
-            st.getPlayer().addExpAndSp(17475, 818);
+            st.player.addExpAndSp(17475, 818);
 
-            if (st.getPlayer().getClassId().getLevel() == 1 && !st.getPlayer().getVarB("p1q4")) {
-                st.getPlayer().setVar("p1q4", "1", -1);
-                st.getPlayer().sendPacket(new ExShowScreenMessage("Now go find the Newbie Guide."));
+            if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("p1q4")) {
+                st.player.setVar("p1q4", 1);
+                st.player.sendPacket(new ExShowScreenMessage("Now go find the Newbie Guide."));
             }
 
             st.playSound(SOUND_FINISH);
@@ -65,10 +64,10 @@ public final class _169_OffspringOfNightmares extends Quest {
         int cond = st.getCond();
         if (npcId == Vlasty)
             if (cond == 0) {
-                if (st.getPlayer().getRace() != Race.darkelf) {
+                if (st.player.getRace() != Race.darkelf) {
                     htmltext = "30145-00.htm";
                     st.exitCurrentQuest(true);
-                } else if (st.getPlayer().getLevel() >= 15)
+                } else if (st.player.getLevel() >= 15)
                     htmltext = "30145-03.htm";
                 else {
                     htmltext = "30145-02.htm";
@@ -85,20 +84,18 @@ public final class _169_OffspringOfNightmares extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
-        int cond = st.getCond();
-        if (cond == 1) {
+    public void onKill(NpcInstance npc, QuestState st) {
+        if (st.getCond() == 1) {
             if (Rnd.chance(20) && st.getQuestItemsCount(PerfectSkull) == 0) {
-                st.giveItems(PerfectSkull, 1);
+                st.giveItems(PerfectSkull);
                 st.playSound(SOUND_MIDDLE);
                 st.setCond(2);
                 st.setState(STARTED);
             }
             if (Rnd.chance(70)) {
-                st.giveItems(CrackedSkull, 1);
+                st.giveItems(CrackedSkull);
                 st.playSound(SOUND_ITEMGET);
             }
         }
-        return null;
     }
 }

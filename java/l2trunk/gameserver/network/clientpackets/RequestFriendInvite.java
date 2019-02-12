@@ -40,7 +40,7 @@ public final class RequestFriendInvite extends L2GameClientPacket {
             return;
         }
 
-        if (activeChar.getFriendList().getList().containsKey(target.getObjectId())) {
+        if (activeChar.getFriendList().getList().containsKey(target.objectId())) {
             activeChar.sendPacket(new SystemMessage2(SystemMsg.C1_IS_ALREADY_ON_YOUR_FRIEND_LIST).addName(target));
             return;
         }

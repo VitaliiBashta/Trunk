@@ -47,8 +47,8 @@ public final class _10288_SecretMission extends Quest {
                     st.setCond(2);
                     st.playSound(SOUND_MIDDLE);
                 }
-            } else if (st.getState() == COMPLETED && event.equalsIgnoreCase("teleport")) {
-                st.getPlayer().teleToLocation(118833, -80589, -2688);
+            } else if (st.getState() == COMPLETED && "teleport".equalsIgnoreCase(event)) {
+                st.player.teleToLocation(118833, -80589, -2688);
                 return null;
             }
         }
@@ -62,7 +62,7 @@ public final class _10288_SecretMission extends Quest {
         if (npcId == _dominic) {
             switch (st.getState()) {
                 case CREATED:
-                    if (st.getPlayer().getLevel() >= 82)
+                    if (st.player.getLevel() >= 82)
                         htmltext = "31350-01.htm";
                     else
                         htmltext = "31350-00.htm";
@@ -90,10 +90,10 @@ public final class _10288_SecretMission extends Quest {
 
     @Override
     public String onFirstTalk(NpcInstance npc, Player player) {
-        QuestState st = player.getQuestState(getClass());
+        QuestState st = player.getQuestState(this);
         if (st == null) {
             newQuestState(player, CREATED);
-            st = player.getQuestState(getClass());
+            st = player.getQuestState(this);
         }
         if (npc.getNpcId() == _aquilani) {
             if (st.getState() == COMPLETED)

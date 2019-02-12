@@ -8,6 +8,7 @@ import l2trunk.gameserver.network.serverpackets.SocialAction;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Location;
+import l2trunk.gameserver.utils.NpcUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -174,7 +175,7 @@ public final class FantasyIsle extends Functions implements ScriptFile {
     }
 
     private static NpcInstance addSpawn(int npcId, int x, int y, int z, int heading) {
-        return Functions.spawn(new Location(x, y, z, heading), npcId);
+        return NpcUtils.spawnSingle(npcId,new Location(x, y, z, heading) );
     }
 
     private static void startQuestTimer(String event, int time, NpcInstance temp_npc) {
@@ -237,7 +238,7 @@ public final class FantasyIsle extends Functions implements ScriptFile {
             temp_npc.moveToLocation(new Location(-56511, -56647, -2008, 36863), 0, true);
             temp_npc.broadcastPacket(new PlaySound(PlaySound.Type.MUSIC, "NS22_F", 0, 0, 0, 0, 0));
             NpcInstance elf = addSpawn(singer1, -56344, -56328, -2008, 32768);
-            elf.moveToLocation(new Location(-56657, -56338, -2008, 33102), 0, true);
+            elf.moveToLocation(Location.of(-56657, -56338, -2008, 33102), 0, true);
             NpcInstance elf1 = addSpawn(singer2, -56552, -56245, -2008, 36863);
             NpcInstance elf2 = addSpawn(singer2, -56546, -56426, -2008, 28672);
             NpcInstance elf3 = addSpawn(singer2, -56570, -56473, -2008, 28672);
@@ -364,7 +365,7 @@ public final class FantasyIsle extends Functions implements ScriptFile {
             startQuestTimer("clean_npc", 4100, temp_npc);
             isStarted = false;
         } else if ((event.equals("social1") || event.equals("social1_1")) && temp_npc != null)
-            temp_npc.broadcastPacket(new SocialAction(temp_npc.getObjectId(), 1));
+            temp_npc.broadcastPacket(new SocialAction(temp_npc.objectId(), 1));
         else if (event.equals("clean_npc") && temp_npc != null)
             temp_npc.deleteMe();
     }

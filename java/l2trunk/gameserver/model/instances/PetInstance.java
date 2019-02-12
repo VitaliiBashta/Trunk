@@ -37,8 +37,8 @@ public class PetInstance extends Summon {
     private static final Logger _log = LoggerFactory.getLogger(PetInstance.class);
 
     private static final int DELUXE_FOOD_FOR_STRIDER = 5169;
-    private final int _controlItemObjId;
-    private final PetInventory _inventory;
+    private final int controlItemObjId;
+    public final PetInventory inventory;
     private PetData petData;
     private int _curFed;
     private Future<?> _feedTask;
@@ -60,7 +60,7 @@ public class PetInstance extends Summon {
     public PetInstance(int objectId, NpcTemplate template, Player owner, ItemInstance control, int currentLevel, long exp) {
         super(objectId, template, owner);
 
-        _controlItemObjId = control.getObjectId();
+        controlItemObjId = control.objectId();
         _exp = exp;
         level = control.getEnchantLevel();
 
@@ -91,14 +91,14 @@ public class PetInstance extends Summon {
         }
 
         petData = PetDataTable.INSTANCE.getInfo(template.npcId, level);
-        _inventory = new PetInventory(this);
+        inventory = new PetInventory(this);
     }
 
     public static PetInstance restore(ItemInstance control, NpcTemplate template, Player owner) {
         PetInstance pet;
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement("SELECT objId, name, level, curHp, curMp, exp, sp, fed FROM pets WHERE item_obj_id=?")) {
-            statement.setInt(1, control.getObjectId());
+            statement.setInt(1, control.objectId());
             ResultSet rset = statement.executeQuery();
 
             if (!rset.next()) {
@@ -119,7 +119,7 @@ public class PetInstance extends Summon {
             String name = rset.getString("name");
             pet.setName(name == null || name.isEmpty() ? template.name : name);
             pet.setFullHpMp();
-            pet.setCurrentCp(pet.getMaxCp());
+            pet.setFullCp();
             pet.setSp(rset.getInt("sp"));
             pet.setCurrentFed(rset.getInt("fed"));
         } catch (SQLException e) {
@@ -154,8 +154,8 @@ public class PetInstance extends Summon {
 
         int newFed = Math.min(getMaxFed(), getCurrentFed() + Math.max(getMaxFed() * getAddFed() * (deluxFood ? 2 : 1) / 100, 1));
         if (getCurrentFed() != newFed)
-            if (getInventory().destroyItem(item, 1L, null)) {
-                getPlayer().sendPacket(new SystemMessage(SystemMessage.PET_TOOK_S1_BECAUSE_HE_WAS_HUNGRY).addItemName(item.getItemId()));
+            if (inventory.destroyItem(item, 1L, null)) {
+                owner.sendPacket(new SystemMessage(SystemMessage.PET_TOOK_S1_BECAUSE_HE_WAS_HUNGRY).addItemName(item.getItemId()));
                 setCurrentFed(newFed);
                 sendStatusUpdate();
             }
@@ -163,16 +163,14 @@ public class PetInstance extends Summon {
     }
 
     private boolean tryFeed() {
-        ItemInstance food = getInventory().getItemByItemId(getFoodId());
+        ItemInstance food = inventory.getItemByItemId(getFoodId());
         if (food == null && PetDataTable.isStrider(getNpcId()))
-            food = getInventory().getItemByItemId(DELUXE_FOOD_FOR_STRIDER);
+            food = inventory.getItemByItemId(DELUXE_FOOD_FOR_STRIDER);
         return tryFeedItem(food);
     }
 
     @Override
     public void addExpAndSp(long addToExp, long addToSp) {
-        Player owner = getPlayer();
-
         if (PetDataTable.isVitaminPet(getNpcId()))
             return;
 
@@ -194,8 +192,8 @@ public class PetInstance extends Summon {
             level--;
 
         if (old_level < level) {
-            owner.sendMessage(new CustomMessage("l2trunk.gameserver.model.instances.L2PetInstance.PetLevelUp", owner).addNumber(level));
-            broadcastPacket(new SocialAction(getObjectId(), SocialAction.LEVEL_UP));
+            owner.sendMessage(new CustomMessage("l2trunk.gameserver.model.instances.L2PetInstance.PetLevelUp").addNumber(level));
+            broadcastPacket(new SocialAction(objectId(), SocialAction.LEVEL_UP));
             setFullHpMp();
         }
 
@@ -210,7 +208,7 @@ public class PetInstance extends Summon {
 
     @Override
     public boolean consumeItem(int itemConsumeId, long itemCount) {
-        return getInventory().destroyItemByItemId(itemConsumeId, itemCount, "Consume");
+        return inventory.destroyItemByItemId(itemConsumeId, itemCount, "Consume");
     }
 
     private void deathPenalty() {
@@ -227,7 +225,6 @@ public class PetInstance extends Summon {
      * Remove the Pet from DB and its associated item from the player inventory
      */
     private void destroyControlItem() {
-        Player owner = getPlayer();
         if (getControlItemObjId() == 0)
             return;
         if (!owner.getInventory().destroyItemByObjectId(getControlItemObjId(), 1L, "Destroy"))
@@ -247,8 +244,6 @@ public class PetInstance extends Summon {
     protected void onDeath(Creature killer) {
         super.onDeath(killer);
 
-        Player owner = getPlayer();
-
         owner.sendPacket(Msg.THE_PET_HAS_BEEN_KILLED_IF_YOU_DO_NOT_RESURRECT_IT_WITHIN_24_HOURS_THE_PETS_BODY_WILL_DISAPPEAR_ALONG_WITH_ALL_THE_PETS_ITEMS);
         startDecay(86400000L);
 
@@ -260,15 +255,8 @@ public class PetInstance extends Summon {
     }
 
     @Override
-    public void doPickupItem(GameObject object) {
-        Player owner = getPlayer();
-
+    public void doPickupItem(ItemInstance item) {
         stopMove();
-
-        if (!object.isItem())
-            return;
-
-        ItemInstance item = (ItemInstance) object;
 
         if (item.isCursed()) {
             owner.sendPacket(new SystemMessage(SystemMessage.YOU_HAVE_FAILED_TO_PICK_UP_S1).addItemName(item.getItemId()));
@@ -281,24 +269,24 @@ public class PetInstance extends Summon {
 
             if (item.isHerb()) {
                 item.getTemplate().getAttachedSkills().stream()
-                    .mapToInt(s ->s.id)
-                    .forEach(skill ->
-                        altUseSkill(skill, this));
+                        .mapToInt(s -> s.id)
+                        .forEach(skill ->
+                                altUseSkill(skill, this));
                 item.deleteMe();
                 return;
             }
 
-            if (!getInventory().validateWeight(item)) {
+            if (!inventory.validateWeight(item)) {
                 sendPacket(Msg.EXCEEDED_PET_INVENTORYS_WEIGHT_LIMIT);
                 return;
             }
 
-            if (!getInventory().validateCapacity(item)) {
+            if (!inventory.validateCapacity(item)) {
                 sendPacket(Msg.DUE_TO_THE_VOLUME_LIMIT_OF_THE_PETS_INVENTORY_NO_MORE_ITEMS_CAN_BE_PLACED_THERE);
                 return;
             }
 
-            if (!item.getTemplate().getHandler().pickupItem(this, item))
+            if (!item.getTemplate().getHandler().pickupItem(this.owner, item))
                 return;
 
             FlagItemAttachment attachment = item.getAttachment() instanceof FlagItemAttachment ? (FlagItemAttachment) item.getAttachment() : null;
@@ -309,7 +297,7 @@ public class PetInstance extends Summon {
         }
 
         if (owner.getParty() == null || owner.getParty().getLootDistribution() == Party.ITEM_LOOTER) {
-            getInventory().addItem(item, "PickUp");
+            inventory.addItem(item, "PickUp");
             sendChanges();
         } else if (item.isCursed()) {
             owner.getInventory().addItem(item, "PickUp");
@@ -320,6 +308,7 @@ public class PetInstance extends Summon {
 
         broadcastPickUpMsg(item);
     }
+
 
     public void doRevive(double percent) {
         restoreExp(percent);
@@ -350,7 +339,6 @@ public class PetInstance extends Summon {
     }
 
     public ItemInstance getControlItem() {
-        Player owner = getPlayer();
         if (owner == null)
             return null;
         int item_obj_id = getControlItemObjId();
@@ -361,7 +349,7 @@ public class PetInstance extends Summon {
 
     @Override
     public int getControlItemObjId() {
-        return _controlItemObjId;
+        return controlItemObjId;
     }
 
     @Override
@@ -402,13 +390,13 @@ public class PetInstance extends Summon {
     }
 
     @Override
-    public PetInventory getInventory() {
-        return _inventory;
+    public final PetInventory getInventory() {
+        return inventory;
     }
 
     @Override
     public long getWearedMask() {
-        return _inventory.getWearedMask();
+        return inventory.getWearedMask();
     }
 
     @Override
@@ -607,8 +595,8 @@ public class PetInstance extends Summon {
             statement.setLong(5, _exp);
             statement.setLong(6, _sp);
             statement.setInt(7, _curFed);
-            statement.setInt(8, getObjectId());
-            statement.setInt(9, _controlItemObjId);
+            statement.setInt(8, objectId());
+            statement.setInt(9, controlItemObjId);
             statement.executeUpdate();
         } catch (SQLException e) {
             _log.error("Could not store pet data!", e);
@@ -618,7 +606,7 @@ public class PetInstance extends Summon {
 
     @Override
     protected void onDecay() {
-        getInventory().store();
+        inventory.store();
         destroyControlItem(); // this should also delete the pet from the db
 
         super.onDecay();
@@ -627,7 +615,7 @@ public class PetInstance extends Summon {
     @Override
     public void unSummon() {
         stopFeed();
-        getInventory().store();
+        inventory.store();
         store();
 
         super.unSummon();
@@ -641,7 +629,6 @@ public class PetInstance extends Summon {
         controlItem.setCustomType2(isDefaultName() ? 0 : 1);
         controlItem.setJdbcState(JdbcEntityState.UPDATED);
         controlItem.update();
-        Player owner = getPlayer();
         owner.sendPacket(new InventoryUpdate().addModifiedItem(controlItem));
     }
 
@@ -656,7 +643,6 @@ public class PetInstance extends Summon {
 
     @Override
     public void displayGiveDamageMessage(Creature target, int damage, boolean crit, boolean miss, boolean shld, boolean magic) {
-        Player owner = getPlayer();
         if (crit)
             owner.sendPacket(SystemMsg.SUMMONED_MONSTERS_CRITICAL_HIT);
         if (miss)
@@ -667,11 +653,9 @@ public class PetInstance extends Summon {
 
     @Override
     public void displayReceiveDamageMessage(Creature attacker, int damage) {
-        Player owner = getPlayer();
-
         if (!isDead()) {
             SystemMessage sm = new SystemMessage(SystemMessage.THE_PET_RECEIVED_DAMAGE_OF_S2_CAUSED_BY_S1);
-            if (attacker.isNpc())
+            if (attacker instanceof NpcInstance)
                 sm.addNpcName(((NpcInstance) attacker).getTemplate().npcId);
             else
                 sm.addString(attacker.getName());
@@ -698,11 +682,6 @@ public class PetInstance extends Summon {
         return 0;
     }
 
-    @Override
-    public boolean isPet() {
-        return true;
-    }
-
     public boolean isDefaultName() {
         return StringUtils.isEmpty(name) || getName().equalsIgnoreCase(getTemplate().name);
     }
@@ -727,8 +706,6 @@ public class PetInstance extends Summon {
     class FeedTask extends RunnableImpl {
         @Override
         public void runImpl() {
-            Player owner = getPlayer();
-
             while (getCurrentFed() <= 0.55 * getMaxFed() && tryFeed()) {
             }
 
@@ -736,7 +713,7 @@ public class PetInstance extends Summon {
                 deleteMe();
             else if (getCurrentFed() <= 0.10 * getMaxFed()) {
                 // If the food is over, withdraw pet
-                owner.sendMessage(new CustomMessage("l2trunk.gameserver.model.instances.L2PetInstance.UnSummonHungryPet", owner));
+                owner.sendMessage(new CustomMessage("l2trunk.gameserver.model.instances.L2PetInstance.UnSummonHungryPet"));
                 unSummon();
                 return;
             }

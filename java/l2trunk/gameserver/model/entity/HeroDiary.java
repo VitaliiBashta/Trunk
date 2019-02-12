@@ -26,18 +26,18 @@ public final class HeroDiary {
         CustomMessage message;
         switch (_id) {
             case ACTION_RAID_KILLED:
-                message = new CustomMessage("l2trunk.gameserver.model.entity.Hero.RaidBossKilled", player).addString(HtmlUtils.htmlNpcName(_param));
+                message = new CustomMessage("l2trunk.gameserver.model.entity.Hero.RaidBossKilled").addString(HtmlUtils.htmlNpcName(_param));
                 break;
             case ACTION_HERO_GAINED:
-                message = new CustomMessage("l2trunk.gameserver.model.entity.Hero.HeroGained", player);
+                message = new CustomMessage("l2trunk.gameserver.model.entity.Hero.HeroGained");
                 break;
             case ACTION_CASTLE_TAKEN:
-                message = new CustomMessage("l2trunk.gameserver.model.entity.Hero.CastleTaken", player).addString(HtmlUtils.htmlResidenceName(_param));
+                message = new CustomMessage("l2trunk.gameserver.model.entity.Hero.CastleTaken").addString(HtmlUtils.htmlResidenceName(_param));
                 break;
             default:
                 return null;
         }
 
-        return new Pair<>(SIMPLE_FORMAT.format(_time), message.toString());
+        return Pair.of(SIMPLE_FORMAT.format(_time), message.toString());
     }
 }

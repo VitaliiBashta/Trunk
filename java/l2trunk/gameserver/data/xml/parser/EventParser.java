@@ -147,7 +147,7 @@ public enum EventParser {
             if (nodeName.equalsIgnoreCase("boat_point"))
                 objects.add(BoatPoint.parse(objectsElement));
             else if (nodeName.equalsIgnoreCase("point"))
-                objects.add(Location.parse(objectsElement));
+                objects.add(Location.of(objectsElement));
             else if (nodeName.equalsIgnoreCase("spawn_ex"))
                 objects.add(new SpawnExObject(objectsElement.attributeValue("name")));
             else if (nodeName.equalsIgnoreCase("door"))
@@ -189,7 +189,7 @@ public enum EventParser {
             } else if (nodeName.equalsIgnoreCase("ctb_team")) {
                 int mobId = toInt(objectsElement.attributeValue("mob_id"));
                 int flagId = toInt(objectsElement.attributeValue("id"));
-                Location loc = Location.parse(objectsElement);
+                Location loc = Location.of(objectsElement);
 
                 objects.add(new CTBTeamObject(mobId, flagId, loc));
             }

@@ -16,9 +16,9 @@ public final class ForgeElement {
         String noicon = "icon.NOIMAGE";
         String slotclose = "L2UI_CT1.ItemWindow_DF_SlotBox_Disable";
         String dot = "<font color=\"FF0000\">...</font>";
-        String immposible = new CustomMessage("communityboard.forge.attribute.immposible", player).toString();
-        String maxenchant = new CustomMessage("communityboard.forge.attribute.maxenchant", player).toString();
-        String heronot = new CustomMessage("communityboard.forge.attribute.heronot", player).toString();
+        String immposible = new CustomMessage("communityboard.forge.attribute.immposible").toString();
+        String maxenchant = new CustomMessage("communityboard.forge.attribute.maxenchant").toString();
+        String heronot = new CustomMessage("communityboard.forge.attribute.heronot").toString();
         String picenchant = "l2ui_ch3.multisell_plusicon";
         String pvp = "icon.pvp_tab";
 
@@ -36,7 +36,7 @@ public final class ForgeElement {
                     data[2] = maxenchant;
                     data[3] = slotclose;
                 } else {
-                    data[2] = "<button action=\"bypass _bbsforge:attribute:item:" + slot + "\" value=\"" + new CustomMessage("common.enchant.attribute", player).toString() + "\" width=120 height=25 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\">";
+                    data[2] = "<button action=\"bypass _bbsforge:attribute:item:" + slot + "\" value=\"" + new CustomMessage("common.enchant.attribute").toString() + "\" width=120 height=25 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\">";
 					/*
 					if (item.getTemplate().isPvP())
 						data[3] = pvp;
@@ -50,7 +50,7 @@ public final class ForgeElement {
             }
         } else {
             data[0] = noicon;
-            data[1] = new CustomMessage("common.item.not.clothed." + slot + "", player).toString();
+            data[1] = new CustomMessage("common.item.not.clothed." + slot + "").toString();
             data[2] = dot;
             data[3] = slotclose;
         }
@@ -64,7 +64,7 @@ public final class ForgeElement {
         String noicon = "icon.NOIMAGE";
         String slotclose = "L2UI_CT1.ItemWindow_DF_SlotBox_Disable";
         String dot = "<font color=\"FF0000\">...</font>";
-        String maxenchant = new CustomMessage("communityboard.forge.enchant.max", player).toString();
+        String maxenchant = new CustomMessage("communityboard.forge.enchant.max").toString();
         String picenchant = "l2ui_ch3.multisell_plusicon";
         String pvp = "icon.pvp_tab";
 
@@ -76,7 +76,7 @@ public final class ForgeElement {
                     data[2] = maxenchant;
                     data[3] = slotclose;
                 } else {
-                    data[2] = "<button action=\"bypass _bbsforge:enchant:item:" + slot + "\" value=\"" + new CustomMessage("common.enchant", player).toString() + "\"width=120 height=25 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\">";
+                    data[2] = "<button action=\"bypass _bbsforge:enchant:item:" + slot + "\" value=\"" + new CustomMessage("common.enchant").toString() + "\"width=120 height=25 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\">";
 					/*
 					if (item.getTemplate().isPvP())
 						data[3] = pvp;
@@ -90,7 +90,7 @@ public final class ForgeElement {
             }
         } else {
             data[0] = noicon;
-            data[1] = new CustomMessage("common.item.not.clothed." + slot + "", player).toString();
+            data[1] = new CustomMessage("common.item.not.clothed." + slot + "").toString();
             data[2] = dot;
             data[3] = slotclose;
         }
@@ -104,7 +104,7 @@ public final class ForgeElement {
         String noicon = "icon.NOIMAGE";
         String slotclose = "L2UI_CT1.ItemWindow_DF_SlotBox_Disable";
         String dot = "<font color=\"FF0000\">...</font>";
-        String no = new CustomMessage("communityboard.forge.no.foundation", player).toString();
+        String no = new CustomMessage("communityboard.forge.no.foundation").toString();
         String picenchant = "l2ui_ch3.multisell_plusicon";
         String pvp = "icon.pvp_tab";
 
@@ -117,7 +117,7 @@ public final class ForgeElement {
                     data[2] = no;
                     data[3] = slotclose;
                 } else {
-                    data[2] = "<button action=\"bypass _bbsforge:foundation:item:" + slot + "\" value=\"" + new CustomMessage("common.exchange", player).toString() + "\"width=120 height=25 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\">";
+                    data[2] = "<button action=\"bypass _bbsforge:foundation:item:" + slot + "\" value=\"" + new CustomMessage("common.exchange").toString() + "\"width=120 height=25 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\">";
 					/*
 					if (item.getTemplate().isPvP())
 						data[3] = pvp;
@@ -131,7 +131,7 @@ public final class ForgeElement {
             }
         } else {
             data[0] = noicon;
-            data[1] = new CustomMessage("common.item.not.clothed." + slot + "", player).toString();
+            data[1] = new CustomMessage("common.item.not.clothed." + slot + "").toString();
             data[2] = dot;
             data[3] = slotclose;
         }

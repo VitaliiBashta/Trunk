@@ -96,15 +96,6 @@ public final class Zone {
         return getTemplate().getAffectRace();
     }
 
-    /**
-     * Номер системного вообщения которое будет отослано игроку при нанесении урона зоной
-     *
-     * @return SystemMessage ID
-     */
-    private int getDamageMessageId() {
-        return getTemplate().getDamageMessageId();
-    }
-
     private int getDamageOnHP() {
         return getTemplate().getDamageOnHP();
     }
@@ -165,7 +156,7 @@ public final class Zone {
     }
 
     private boolean checkIfInZone(int x, int y, int z, Reflection reflection) {
-        return isActive() && _reflection == reflection && getTerritory().isInside(new Location(x, y, z));
+        return isActive() && _reflection == reflection && getTerritory().isInside(Location.of(x, y, z));
     }
 
     public boolean checkIfInZone(Creature cha) {
@@ -196,8 +187,8 @@ public final class Zone {
         if (added)
             onZoneEnter(cha);
 
-        if ((cha != null) && (cha.isPlayer()) && (cha.getPlayer().isGM())) {
-            cha.sendMessage("Entered the zone " + getName());
+        if ((cha instanceof Player) && ((Player) cha).isGM()) {
+            ((Player)cha).sendMessage("Entered the zone " + getName());
         }
     }
 
@@ -210,22 +201,23 @@ public final class Zone {
         checkEffects(actor, true);
         addZoneStats(actor);
 
-        if (actor.isPlayer()) {
+        if (actor instanceof Player) {
+            Player player = (Player) actor;
             if (getType() == ZoneType.buff_store_only)
-                actor.sendMessage("You have entered a buff store zone!");
+                player.sendMessage("You have entered a buff store zone!");
             if (getEnteringMessageId() != 0)
-                actor.sendPacket(new SystemMessage2(SystemMsg.valueOf(getEnteringMessageId())));
+                player.sendPacket(new SystemMessage2(SystemMsg.valueOf(getEnteringMessageId())));
             if (getTemplate().getEventId() != 0)
-                actor.sendPacket(new EventTrigger(getTemplate().getEventId(), true));
+                player.sendPacket(new EventTrigger(getTemplate().getEventId(), true));
             if (getTemplate().getBlockedActions() != null)
-                ((Player) actor).blockActions(getTemplate().getBlockedActions());
+                player.blockActions(getTemplate().getBlockedActions());
             if (getType() == ZoneType.fix_beleth) {
-                actor.sendMessage("Anti-beleth exploit");
-                ((Player) actor).teleToClosestTown();
+                player.sendMessage("Anti-beleth exploit");
+                player.teleToClosestTown();
             }
+            listeners.onEnter(player);
         }
 
-        listeners.onEnter(actor);
     }
 
     /**
@@ -243,8 +235,8 @@ public final class Zone {
         if (removed)
             onZoneLeave(cha);
 
-        if ((cha != null) && (cha.isPlayer()) && (cha.getPlayer().isGM())) {
-            cha.sendMessage("Left the area " + getName());
+        if ((cha instanceof Player) && ((Player) cha).isGM()) {
+            ((Player)cha).sendMessage("Left the area " + getName());
         }
     }
 
@@ -257,25 +249,21 @@ public final class Zone {
         checkEffects(actor, false);
         removeZoneStats(actor);
 
-        if (actor.isPlayer()) {
+        if (actor instanceof Player) {
+            Player player = (Player) actor;
             if (getType() == ZoneType.buff_store_only)
-                actor.sendMessage("You have left the Buff Store Only Zone");
-            if (getLeavingMessageId() != 0 && actor.isPlayer())
-                actor.sendPacket(new SystemMessage2(SystemMsg.valueOf(getLeavingMessageId())));
-            if (getTemplate().getEventId() != 0 && actor.isPlayer())
-                actor.sendPacket(new EventTrigger(getTemplate().getEventId(), false));
+                player.sendMessage("You have left the Buff Store Only Zone");
+            if (getLeavingMessageId() != 0)
+                player.sendPacket(new SystemMessage2(SystemMsg.valueOf(getLeavingMessageId())));
+            if (getTemplate().getEventId() != 0)
+                player.sendPacket(new EventTrigger(getTemplate().getEventId(), false));
             if (getTemplate().getBlockedActions() != null)
-                ((Player) actor).unblockActions(getTemplate().getBlockedActions());
+                player.unblockActions(getTemplate().getBlockedActions());
+            listeners.onLeave(player);
         }
 
-        listeners.onLeave(actor);
     }
 
-    /**
-     * Добавляет статы зоне
-     *
-     * @param cha персонаж которому добавляется
-     */
     private void addZoneStats(Creature cha) {
         // Проверка цели
         if (!checkTarget(cha))
@@ -284,7 +272,7 @@ public final class Zone {
         // Скорость движения накладывается только на L2Playable
         // affectRace в базе не указан, если надо будет влияние, то поправим
         if (getMoveBonus() != 0)
-            if (cha.isPlayable()) {
+            if (cha instanceof Playable) {
                 cha.addStatFunc(new FuncAdd(Stats.RUN_SPEED, ZONE_STATS_ORDER, this, getMoveBonus()));
                 cha.sendChanges();
             }
@@ -356,27 +344,27 @@ public final class Zone {
     private boolean checkTarget(Creature cha) {
         switch (getZoneTarget()) {
             case pc:
-                if (!cha.isPlayable())
+                if (!(cha instanceof Playable))
                     return false;
                 break;
             case only_pc:
-                if (!cha.isPlayer())
+                if (!(cha instanceof Player))
                     return false;
                 break;
             case npc:
-                if (!cha.isNpc())
+                if (!(cha instanceof NpcInstance))
                     return false;
                 break;
         }
 
         // Если у нас раса не "all"
         if (getAffectRace() != null) {
-            Player player = cha.getPlayer();
+            if (cha instanceof Player) {
+                // если раса не подходит
+                return ((Player) cha).getRace() == getAffectRace();
+            }
             //если не игровой персонаж
-            if (player == null)
-                return false;
-            // если раса не подходит
-            return player.getRace() == getAffectRace();
+            return false;
         }
 
         return true;
@@ -388,21 +376,20 @@ public final class Zone {
 
     public Stream<Player> getInsidePlayers() {
         return objects.stream()
-                .filter(GameObject::isPlayer)
+                .filter(o -> o instanceof Player)
                 .map(o -> (Player) o);
     }
 
     public Stream<Playable> getInsidePlayables() {
         return objects.stream()
                 .filter(Objects::nonNull)
-                .filter(GameObject::isPlayable)
+                .filter(o -> o instanceof Playable)
                 .map(o -> (Playable) o);
     }
 
     public Stream<NpcInstance> getInsideNpcs() {
         return objects.stream()
-                .filter(Objects::nonNull)
-                .filter(GameObject::isNpc)
+                .filter(o ->o instanceof NpcInstance)
                 .map(o -> (NpcInstance) o);
 
     }
@@ -535,14 +522,12 @@ public final class Zone {
 
             if (activateTime == 0) {
                 activateTime = System.currentTimeMillis() + (zoneTime + Rnd.get(-_randomTime, _randomTime));
-            }
-            else if (isActive()) {
+            } else if (isActive()) {
                 if (activateTime < System.currentTimeMillis()) {
                     setActive(false);
                     activateTime = System.currentTimeMillis() + (zoneTime + Rnd.get(-_randomTime, _randomTime));
                 }
-            }
-            else {
+            } else {
                 if (activateTime < System.currentTimeMillis()) {
                     setActive(true);
                     activateTime = System.currentTimeMillis() + (zoneTime + Rnd.get(-_randomTime, _randomTime));
@@ -617,13 +602,13 @@ public final class Zone {
     }
 
     private class ZoneListenerList extends ListenerList {
-        void onEnter(Creature actor) {
+        void onEnter(Player actor) {
             getListeners().stream().filter(l -> l instanceof OnZoneEnterLeaveListener)
                     .map(l -> (OnZoneEnterLeaveListener) l)
                     .forEach(l -> l.onZoneEnter(Zone.this, actor));
         }
 
-        void onLeave(Creature actor) {
+        void onLeave(Player actor) {
             getListeners().stream().filter(l -> l instanceof OnZoneEnterLeaveListener)
                     .map(l -> (OnZoneEnterLeaveListener) l)
                     .forEach(l -> l.onZoneLeave(Zone.this, actor));

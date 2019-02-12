@@ -1,12 +1,10 @@
 package l2trunk.scripts.events.TheFlowOfTheHorror;
 
-import l2trunk.commons.lang.reference.HardReference;
-import l2trunk.commons.lang.reference.HardReferences;
 import l2trunk.gameserver.data.xml.holder.NpcHolder;
 import l2trunk.gameserver.idfactory.IdFactory;
 import l2trunk.gameserver.instancemanager.ServerVariables;
+import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.GameObjectsStorage;
-import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.MonsterInstance;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.Functions;
@@ -18,18 +16,13 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public final class TheFlowOfTheHorror extends Functions implements ScriptFile {
     private static final Logger LOG = LoggerFactory.getLogger(TheFlowOfTheHorror.class);
     private static final int Gilmore = 30754;
     private static final int Shackle = 20235;
-
-    private static HardReference<NpcInstance> _oldGilmoreRef = HardReferences.emptyRef();
-
-    private static int stage = 1;
-
     private static final List<MonsterInstance> _spawns = new ArrayList<>();
-
     private static final List<Location> points11 = new ArrayList<>();
     private static final List<Location> points12 = new ArrayList<>();
     private static final List<Location> points13 = new ArrayList<>();
@@ -39,6 +32,42 @@ public final class TheFlowOfTheHorror extends Functions implements ScriptFile {
     private static final List<Location> points31 = new ArrayList<>();
     private static final List<Location> points32 = new ArrayList<>();
     private static final List<Location> points33 = new ArrayList<>();
+    private static NpcInstance _oldGilmoreRef = null;
+    private static int stage = 1;
+
+    public static void spawnNewWave() {
+        spawn(Shackle, points11);
+        spawn(Shackle, points12);
+        spawn(Shackle, points13);
+        spawn(Shackle, points21);
+        spawn(Shackle, points22);
+        spawn(Shackle, points23);
+        spawn(Shackle, points31);
+        spawn(Shackle, points32);
+        spawn(Shackle, points33);
+
+        stage = 2;
+    }
+
+    private static void spawn(int id, List<Location> points) {
+        NpcTemplate template = NpcHolder.getTemplate(id);
+        MonsterInstance monster = new MonsterInstance(IdFactory.getInstance().getNextId(), template);
+        monster.setFullHpMp();
+        monster.setLoc(points.get(0));
+        MonstersAI ai = new MonstersAI(monster);
+        ai.setPoints(points);
+        monster.setAI(ai);
+        monster.spawnMe();
+        _spawns.add(monster);
+    }
+
+    private static boolean isActive() {
+        return ServerVariables.getString("TheFlowOfTheHorror", "off").equalsIgnoreCase("on");
+    }
+
+    public static int getStage() {
+        return stage;
+    }
 
     @Override
     public void onLoad() {
@@ -131,42 +160,16 @@ public final class TheFlowOfTheHorror extends Functions implements ScriptFile {
             LOG.info("Loaded Event: The Flow Of The Horror [state: deactivated]");
     }
 
-    public static void spawnNewWave() {
-        spawn(Shackle, points11);
-        spawn(Shackle, points12);
-        spawn(Shackle, points13);
-        spawn(Shackle, points21);
-        spawn(Shackle, points22);
-        spawn(Shackle, points23);
-        spawn(Shackle, points31);
-        spawn(Shackle, points32);
-        spawn(Shackle, points33);
-
-        stage = 2;
-    }
-
-    private static void spawn(int id, List<Location> points) {
-        NpcTemplate template = NpcHolder.getTemplate(id);
-        MonsterInstance monster = new MonsterInstance(IdFactory.getInstance().getNextId(), template);
-        monster.setFullHpMp();
-        monster.setLoc(points.get(0));
-        MonstersAI ai = new MonstersAI(monster);
-        ai.setPoints(points);
-        monster.setAI(ai);
-        monster.spawnMe();
-        _spawns.add(monster);
-    }
-
     private void activateAI() {
         NpcInstance target = GameObjectsStorage.getByNpcId(Gilmore);
         if (target != null) {
-            _oldGilmoreRef = target.getRef();
+            _oldGilmoreRef = target;
             target.decayMe();
 
             NpcTemplate template = NpcHolder.getTemplate(Gilmore);
             MonsterInstance monster = new MonsterInstance(IdFactory.getInstance().getNextId(), template);
             monster.setFullHpMp();
-            monster.setXYZ(73329, 117705, -3741);
+            monster.setLoc(new Location(73329, 117705, -3741));
             GilmoreAI ai = new GilmoreAI(monster);
             monster.setAI(ai);
             monster.spawnMe();
@@ -175,21 +178,17 @@ public final class TheFlowOfTheHorror extends Functions implements ScriptFile {
     }
 
     private void deactivateAI() {
-        for (MonsterInstance monster : _spawns)
-            if (monster != null)
-                monster.deleteMe();
+        _spawns.stream()
+                .filter(Objects::nonNull)
+                .forEach(GameObject::deleteMe);
 
-        NpcInstance GilmoreInstance = _oldGilmoreRef.get();
+
+        NpcInstance GilmoreInstance = _oldGilmoreRef;
         if (GilmoreInstance != null)
             GilmoreInstance.spawnMe();
     }
 
-    private static boolean isActive() {
-        return ServerVariables.getString("TheFlowOfTheHorror", "off").equalsIgnoreCase("on");
-    }
-
     public void startEvent() {
-        Player player = getSelf();
         if (!player.getPlayerAccess().IsEventGm)
             return;
 
@@ -204,7 +203,6 @@ public final class TheFlowOfTheHorror extends Functions implements ScriptFile {
     }
 
     public void stopEvent() {
-        Player player = getSelf();
         if (!player.getPlayerAccess().IsEventGm)
             return;
         if (isActive()) {
@@ -225,10 +223,6 @@ public final class TheFlowOfTheHorror extends Functions implements ScriptFile {
     @Override
     public void onShutdown() {
         deactivateAI();
-    }
-
-    public static int getStage() {
-        return stage;
     }
 
 //    public static void setStage(int stage) {

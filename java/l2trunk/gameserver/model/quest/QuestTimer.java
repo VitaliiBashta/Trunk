@@ -37,7 +37,7 @@ public final class QuestTimer extends RunnableImpl {
         QuestState qs = getQuestState();
         if (qs != null) {
             qs.removeQuestTimer(getName());
-            qs.getQuest().notifyEvent(getName(), qs, getNpc());
+            qs.quest.notifyEvent(getName(), qs, getNpc());
         }
     }
 

@@ -6,7 +6,6 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _293_HiddenVein extends Quest {
     // NPCs
@@ -64,11 +63,11 @@ public final class _293_HiddenVein extends Quest {
         if (_state == CREATED) {
             if (npcId != Filaur)
                 return "noquest";
-            if (st.getPlayer().getRace() != Race.dwarf) {
+            if (st.player.getRace() != Race.dwarf) {
                 st.exitCurrentQuest(true);
                 return "elder_filaur_q0293_00.htm";
             }
-            if (st.getPlayer().getLevel() < 6) {
+            if (st.player.getLevel() < 6) {
                 st.exitCurrentQuest(true);
                 return "elder_filaur_q0293_01.htm";
             }
@@ -87,19 +86,19 @@ public final class _293_HiddenVein extends Quest {
                 return "elder_filaur_q0293_04.htm";
 
             if (Chrysolite_Ore_count > 0)
-                st.takeItems(Chrysolite_Ore, -1);
+                st.takeItems(Chrysolite_Ore);
             if (Hidden_Ore_Map_count > 0)
-                st.takeItems(Hidden_Ore_Map, -1);
+                st.takeItems(Hidden_Ore_Map);
             st.giveItems(ADENA_ID, reward);
 
-            if (st.getPlayer().getClassId().getLevel() == 1 && !st.getPlayer().getVarB("p1q2")) {
-                st.getPlayer().setVar("p1q2", "1", -1);
-                st.getPlayer().sendPacket(new ExShowScreenMessage("Acquisition of Soulshot for beginners complete.\n                  Go find the Newbie Guide."));
-                QuestState qs = st.getPlayer().getQuestState(_255_Tutorial.class);
+            if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("p1q2")) {
+                st.player.setVar("p1q2", 1);
+                st.player.sendPacket(new ExShowScreenMessage("Acquisition of Soulshot for beginners complete.\n                  Go find the Newbie Guide."));
+                QuestState qs = st.player.getQuestState(_255_Tutorial.class);
                 if (qs != null && qs.getInt("Ex") != 10) {
                     st.showQuestionMark(26);
-                    qs.set("Ex", "10");
-                    if (st.getPlayer().getClassId().isMage()) {
+                    qs.set("Ex", 10);
+                    if (st.player.getClassId().isMage) {
                         st.playTutorialVoice("tutorial_voice_027");
                         st.giveItems(5790, 3000);
                     } else {
@@ -119,18 +118,16 @@ public final class _293_HiddenVein extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState qs) {
+    public void onKill(NpcInstance npc, QuestState qs) {
         if (qs.getState() != STARTED)
-            return null;
+            return;
 
         if (Rnd.chance(Torn_Map_Fragment_Chance)) {
-            qs.giveItems(Torn_Map_Fragment, 1);
+            qs.giveItems(Torn_Map_Fragment);
             qs.playSound(SOUND_ITEMGET);
         } else if (Rnd.chance(Chrysolite_Ore_Chance)) {
-            qs.giveItems(Chrysolite_Ore, 1);
+            qs.giveItems(Chrysolite_Ore);
             qs.playSound(SOUND_ITEMGET);
         }
-
-        return null;
     }
 }

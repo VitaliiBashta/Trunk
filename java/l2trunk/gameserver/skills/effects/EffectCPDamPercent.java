@@ -3,7 +3,7 @@ package l2trunk.gameserver.skills.effects;
 import l2trunk.gameserver.model.Effect;
 import l2trunk.gameserver.stats.Env;
 
-public class EffectCPDamPercent extends Effect {
+public final class EffectCPDamPercent extends Effect {
     public EffectCPDamPercent(final Env env, final EffectTemplate template) {
         super(env, template);
     }
@@ -20,8 +20,4 @@ public class EffectCPDamPercent extends Effect {
         effected.setCurrentCp(newCp);
     }
 
-    @Override
-    public boolean onActionTime() {
-        return false;
-    }
 }

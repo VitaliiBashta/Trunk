@@ -27,11 +27,11 @@ public final class _10277_MutatedKaneusDion extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("30071-03.htm")) {
+        if ("30071-03.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("30461-02.htm")) {
+        } else if ("30461-02.htm".equalsIgnoreCase(event)) {
             st.giveItems(57, 120000);
             st.exitCurrentQuest(false);
             st.playSound(SOUND_FINISH);
@@ -49,7 +49,7 @@ public final class _10277_MutatedKaneusDion extends Quest {
             if (npcId == Lucas)
                 htmltext = "30071-0a.htm";
         } else if (id == CREATED && npcId == Lucas) {
-            if (st.getPlayer().getLevel() >= 28)
+            if (st.player.getLevel() >= 28)
                 htmltext = "30071-01.htm";
             else
                 htmltext = "30071-00.htm";
@@ -67,13 +67,12 @@ public final class _10277_MutatedKaneusDion extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getState() == STARTED && st.getCond() == 1) {
-            st.giveItems(Tissue1, 1);
-            st.giveItems(Tissue2, 1);
+            st.giveItems(Tissue1);
+            st.giveItems(Tissue2);
             st.setCond(2);
             st.playSound(SOUND_MIDDLE);
         }
-        return null;
     }
 }

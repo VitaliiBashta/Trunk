@@ -9,7 +9,6 @@ import l2trunk.gameserver.cache.Msg;
 import l2trunk.gameserver.data.xml.holder.NpcHolder;
 import l2trunk.gameserver.instancemanager.ServerVariables;
 import l2trunk.gameserver.listener.zone.OnZoneEnterLeaveListener;
-import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Zone;
 import l2trunk.gameserver.model.instances.NpcInstance;
@@ -110,8 +109,6 @@ public final class SeedOfAnnihilation extends Functions implements ScriptFile {
     }
 
     public void transform() {
-        Player player = getSelf();
-        NpcInstance npc = getNpc();
         if (player == null || npc == null)
             return;
 
@@ -170,23 +167,20 @@ public final class SeedOfAnnihilation extends Functions implements ScriptFile {
 
     private class ZoneListener implements OnZoneEnterLeaveListener {
         @Override
-        public void onZoneEnter(Zone zone, Creature cha) {
+        public void onZoneEnter(Zone zone, Player player) {
             if (TELEPORT_ZONES.containsKey(zone.getName())) {
                 //Заглушка для 454 квеста.
-                cha.getAroundNpc(500, 300)
+                player.getAroundNpc(500, 300)
                         .filter(npc -> npc.getNpcId() == 32738)
                         .filter(npc -> npc.getFollowTarget() != null)
-                        .filter(npc -> npc.getFollowTarget().getObjectId() == cha.getObjectId())
+                        .filter(npc -> npc.getFollowTarget().objectId() == player.objectId())
                         .forEach(npc -> {
                             npc.teleToLocation(TELEPORT_ZONES.get(zone.getName()));
-                            npc.getAI().setIntention(CtrlIntention.AI_INTENTION_FOLLOW, cha, Config.FOLLOW_RANGE);
+                            npc.getAI().setIntention(CtrlIntention.AI_INTENTION_FOLLOW, player, Config.FOLLOW_RANGE);
                         });
-                cha.teleToLocation(TELEPORT_ZONES.get(zone.getName()));
+                player.teleToLocation(TELEPORT_ZONES.get(zone.getName()));
             }
         }
 
-        @Override
-        public void onZoneLeave(Zone zone, Creature cha) {
-        }
     }
 }

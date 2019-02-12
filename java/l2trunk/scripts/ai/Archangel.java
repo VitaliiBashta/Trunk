@@ -16,7 +16,7 @@ import java.util.List;
 
 public final class Archangel extends Fighter {
     private final Zone _zone = ReflectionUtils.getZone("[baium_epic]");
-    private long _new_target = System.currentTimeMillis() + 20000;
+    private long newTarget = System.currentTimeMillis() + 20000;
 
     public Archangel(NpcInstance actor) {
         super(actor);
@@ -33,27 +33,24 @@ public final class Archangel extends Fighter {
         if (actor == null)
             return;
 
-        if (_new_target < System.currentTimeMillis()) {
+        if (newTarget < System.currentTimeMillis()) {
             List<Creature> alive = new ArrayList<>();
             actor.getAroundCharacters(2000, 200)
                     .filter(target -> !target.isDead())
                     .forEach(target -> {
-                        if (target.getNpcId() == 29020) {
-                            if (Rnd.chance(5))
-                                alive.add(target);
-                        } else
+                        if (target.getNpcId() == 29020 && Rnd.chance(5))
+                            alive.add(target);
+                        else
                             alive.add(target);
 
                     });
             if (!alive.isEmpty()) {
-                Creature rndTarget = alive.get(Rnd.get(alive.size()));
-                if (rndTarget != null && (rndTarget.getNpcId() == 29020 || rndTarget.isPlayer())) {
-                    setIntentionAttack(rndTarget);
-                    actor.getAggroList().addDamageHate(rndTarget, 100, 10);
-                }
+                Creature rndTarget = Rnd.get(alive);
+                setIntentionAttack(rndTarget);
+                actor.getAggroList().addDamageHate(rndTarget, 100, 10);
             }
 
-            _new_target = (System.currentTimeMillis() + 20000);
+            newTarget = (System.currentTimeMillis() + 20000);
         }
         super.thinkAttack();
     }

@@ -10,7 +10,7 @@ public final class GvGBossInstance extends MonsterInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
     }
 
     @Override

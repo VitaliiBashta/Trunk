@@ -3,7 +3,6 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _338_AlligatorHunter extends Quest {
     //NPC
@@ -97,14 +96,14 @@ public final class _338_AlligatorHunter extends Quest {
             st.playSound(SOUND_ACCEPT);
             st.setCond(1);
             st.setState(STARTED);
-        } else if (event.equalsIgnoreCase("30892-02-afmenu.htm")) {
+        } else if ("30892-02-afmenu.htm".equalsIgnoreCase(event)) {
             long AdenaCount = st.getQuestItemsCount(AlligatorLeather) * 40;
-            st.takeItems(AlligatorLeather, -1);
+            st.takeItems(AlligatorLeather);
             st.giveItems(ADENA_ID, AdenaCount);
-        } else if (event.equalsIgnoreCase("quit")) {
-            if (st.getQuestItemsCount(AlligatorLeather) >= 1) {
+        } else if ("quit".equalsIgnoreCase(event)) {
+            if (st.haveQuestItem(AlligatorLeather) ) {
                 long AdenaCount = st.getQuestItemsCount(AlligatorLeather) * 40;
-                st.takeItems(AlligatorLeather, -1);
+                st.takeItems(AlligatorLeather);
                 st.giveItems(ADENA_ID, AdenaCount);
                 htmltext = "30892-havequit.htm";
             } else
@@ -119,29 +118,28 @@ public final class _338_AlligatorHunter extends Quest {
     public String onTalk(NpcInstance npc, QuestState st) {
         String htmltext = "<html><body>I have nothing to say you</body></html>";
         int npcId = npc.getNpcId();
-        int cond = st.getCond();
         if (npcId == Enverun)
-            if (cond == 0) {
-                if (st.getPlayer().getLevel() >= 40)
+            if (st.getCond() == 0) {
+                if (st.player.getLevel() >= 40)
                     htmltext = "30892-01.htm";
                 else {
                     htmltext = "30892-00.htm";
                     st.exitCurrentQuest(true);
                 }
-            } else if (st.getQuestItemsCount(AlligatorLeather) == 0)
-                htmltext = "30892-02-rep.htm";
-            else
+            } else if (st.haveQuestItem(AlligatorLeather))
                 htmltext = "30892-menu.htm";
+            else
+                htmltext = "30892-02-rep.htm";
         return htmltext;
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         for (int[] aDROPLIST_COND : DROPLIST_COND)
             if (cond == aDROPLIST_COND[0] && npcId == aDROPLIST_COND[2])
-                if (aDROPLIST_COND[3] == 0 || st.getQuestItemsCount(aDROPLIST_COND[3]) > 0)
+                if (aDROPLIST_COND[3] == 0 || st.haveQuestItem(aDROPLIST_COND[3]))
                     if (aDROPLIST_COND[5] == 0)
                         st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[6]);
                     else if (st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[7], aDROPLIST_COND[5], aDROPLIST_COND[6]))
@@ -149,6 +147,5 @@ public final class _338_AlligatorHunter extends Quest {
                             st.setCond(aDROPLIST_COND[1]);
                             st.setState(STARTED);
                         }
-        return null;
     }
 }

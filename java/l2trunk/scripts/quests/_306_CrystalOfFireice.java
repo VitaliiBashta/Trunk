@@ -39,11 +39,11 @@ public final class _306_CrystalOfFireice extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         int _state = st.getState();
-        if (event.equalsIgnoreCase("katrine_q0306_04.htm") && _state == CREATED) {
+        if ("katrine_q0306_04.htm".equalsIgnoreCase(event) && _state == CREATED) {
             st.setState(STARTED);
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("katrine_q0306_08.htm") && _state == STARTED) {
+        } else if ("katrine_q0306_08.htm".equalsIgnoreCase(event) && _state == STARTED) {
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(true);
         }
@@ -59,7 +59,7 @@ public final class _306_CrystalOfFireice extends Quest {
         int _state = st.getState();
 
         if (_state == CREATED) {
-            if (st.getPlayer().getLevel() < 17) {
+            if (st.player.getLevel() < 17) {
                 htmltext = "katrine_q0306_02.htm";
                 st.exitCurrentQuest(true);
             } else {
@@ -71,8 +71,8 @@ public final class _306_CrystalOfFireice extends Quest {
             long Reward = Shrads_count * 30 + (Shrads_count >= 10 ? 5000 : 0);
             if (Reward > 0) {
                 htmltext = "katrine_q0306_07.htm";
-                st.takeItems(Flame_Shard, -1);
-                st.takeItems(Ice_Shard, -1);
+                st.takeItems(Flame_Shard);
+                st.takeItems(Ice_Shard);
                 st.giveItems(ADENA_ID, Reward);
             } else
                 htmltext = "katrine_q0306_05.htm";
@@ -82,20 +82,19 @@ public final class _306_CrystalOfFireice extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState qs) {
+    public void onKill(NpcInstance npc, QuestState qs) {
         if (qs.getState() != STARTED)
-            return null;
+            return;
         int npcId = npc.getNpcId();
 
         if ((npcId == Salamander || npcId == Undine) && !Rnd.chance(Chance))
-            return null;
+            return ;
         if ((npcId == Salamander_Elder || npcId == Undine_Elder) && !Rnd.chance(Elder_Chance))
-            return null;
+            return ;
         if ((npcId == Salamander_Noble || npcId == Undine_Noble) && !Rnd.chance(Noble_Chance))
-            return null;
-        qs.giveItems(npcId == Salamander || npcId == Salamander_Elder || npcId == Salamander_Noble ? Flame_Shard : Ice_Shard, 1);
+            return ;
+        qs.giveItems(npcId == Salamander || npcId == Salamander_Elder || npcId == Salamander_Noble ? Flame_Shard : Ice_Shard);
         qs.playSound(SOUND_ITEMGET);
-        return null;
     }
 
 }

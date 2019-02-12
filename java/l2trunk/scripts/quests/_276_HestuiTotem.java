@@ -6,7 +6,6 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _276_HestuiTotem extends Quest {
     //NPCs
@@ -32,7 +31,7 @@ public final class _276_HestuiTotem extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("seer_tanapi_q0276_03.htm") && st.getState() == CREATED && st.getPlayer().getRace() == Race.orc && st.getPlayer().getLevel() >= 15) {
+        if ("seer_tanapi_q0276_03.htm".equalsIgnoreCase(event) && st.getState() == CREATED && st.player.getRace() == Race.orc && st.player.getLevel() >= 15) {
             st.setState(STARTED);
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
@@ -48,10 +47,10 @@ public final class _276_HestuiTotem extends Quest {
         int _state = st.getState();
 
         if (_state == CREATED) {
-            if (st.getPlayer().getRace() != Race.orc) {
+            if (st.player.getRace() != Race.orc) {
                 htmltext = "seer_tanapi_q0276_00.htm";
                 st.exitCurrentQuest(true);
-            } else if (st.getPlayer().getLevel() < 15) {
+            } else if (st.player.getLevel() < 15) {
                 htmltext = "seer_tanapi_q0276_01.htm";
                 st.exitCurrentQuest(true);
             } else {
@@ -61,17 +60,17 @@ public final class _276_HestuiTotem extends Quest {
         } else if (_state == STARTED)
             if (st.getQuestItemsCount(Kasha_Crystal) > 0) {
                 htmltext = "seer_tanapi_q0276_05.htm";
-                st.takeItems(Kasha_Parasite, -1);
-                st.takeItems(Kasha_Crystal, -1);
+                st.takeItems(Kasha_Parasite);
+                st.takeItems(Kasha_Crystal);
 
-                st.giveItems(Leather_Pants, 1);
-                st.giveItems(Totem_of_Hestui, 1);
+                st.giveItems(Leather_Pants);
+                st.giveItems(Totem_of_Hestui);
                 if (st.getRateQuestsReward() > 1)
-                    st.giveItems(57, Math.round(ItemHolder.getTemplate(Totem_of_Hestui).getReferencePrice() * (st.getRateQuestsReward() - 1) / 2), false);
+                    st.giveItems(57, Math.round(ItemHolder.getTemplate(Totem_of_Hestui).referencePrice * (st.getRateQuestsReward() - 1) / 2), false);
 
-                if (st.getPlayer().getClassId().getLevel() == 1 && !st.getPlayer().getVarB("p1q4")) {
-                    st.getPlayer().setVar("p1q4", "1", -1);
-                    st.getPlayer().sendPacket(new ExShowScreenMessage("Now go find the Newbie Guide."));
+                if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("p1q4")) {
+                    st.player.setVar("p1q4", 1);
+                    st.player.sendPacket(new ExShowScreenMessage("Now go find the Newbie Guide."));
                 }
 
                 st.playSound(SOUND_FINISH);
@@ -83,24 +82,22 @@ public final class _276_HestuiTotem extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState qs) {
+    public void onKill(NpcInstance npc, QuestState qs) {
         if (qs.getState() != STARTED)
-            return null;
+            return;
         int npcId = npc.getNpcId();
 
         if (npcId == Kasha_Bear && qs.getQuestItemsCount(Kasha_Crystal) == 0) {
             if (qs.getQuestItemsCount(Kasha_Parasite) < 50) {
-                qs.giveItems(Kasha_Parasite, 1);
+                qs.giveItems(Kasha_Parasite);
                 qs.playSound(SOUND_ITEMGET);
             } else {
-                qs.takeItems(Kasha_Parasite, -1);
+                qs.takeItems(Kasha_Parasite);
                 qs.addSpawn(Kasha_Bear_Totem_Spirit);
             }
         } else if (npcId == Kasha_Bear_Totem_Spirit && qs.getQuestItemsCount(Kasha_Crystal) == 0) {
-            qs.giveItems(Kasha_Crystal, 1);
+            qs.giveItems(Kasha_Crystal);
             qs.playSound(SOUND_MIDDLE);
         }
-
-        return null;
     }
 }

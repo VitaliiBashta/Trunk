@@ -24,8 +24,10 @@ public final class QuestSiegeGuardInstance extends SiegeGuardInstance {
     @Override
     public void onDeath(Creature lastAttacker) {
         super.onDeath(lastAttacker);
+        if (!(lastAttacker instanceof Playable))
+            return;
 
-        Player killer = lastAttacker.getPlayer();
+        Player killer = ((Playable) lastAttacker).getPlayer();
         if (killer == null)
             return;
 
@@ -49,15 +51,15 @@ public final class QuestSiegeGuardInstance extends SiegeGuardInstance {
                 if (quest.getParty() != Quest.PARTY_NONE)
                     if (isRaid() || quest.getParty() == Quest.PARTY_ALL) {// если цель рейд или квест для всей пати награждаем всех участников
                         for (Player pl : players) {
-                            QuestState qs = pl.getQuestState(quest.getName());
+                            QuestState qs = pl.getQuestState(quest);
                             if (qs != null && !qs.isCompleted())
                                 quest.notifyKill(this, qs);
                         }
                         toReward = null;
                     } else { // иначе выбираем одного
                         List<Player> interested = players.stream()
-                                .filter(pl -> pl.getQuestState(quest.getName()) != null)
-                                .filter(pl -> !pl.getQuestState(quest.getName()).isCompleted())
+                                .filter(pl -> pl.getQuestState(quest) != null)
+                                .filter(pl -> !pl.getQuestState(quest).isCompleted())
                                 .collect(Collectors.toList());// из тех, у кого взят квест
                         if (interested.isEmpty())
                             continue;
@@ -68,7 +70,7 @@ public final class QuestSiegeGuardInstance extends SiegeGuardInstance {
                     }
 
                 if (toReward != null) {
-                    QuestState qs = toReward.getQuestState(quest.getName());
+                    QuestState qs = toReward.getQuestState(quest);
                     if (qs != null && !qs.isCompleted())
                         quest.notifyKill(this, qs);
                 }

@@ -4,7 +4,6 @@ import l2trunk.gameserver.model.base.Race;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _173_ToTheIsleOfSouls extends Quest {
     private static final int GALLADUCCIS_ORDER_DOCUMENT_ID_1 = 7563;
@@ -59,7 +58,7 @@ public final class _173_ToTheIsleOfSouls extends Quest {
         String htmltext = "noquest";
         int id = st.getState();
         if (id == CREATED) {
-            if (st.getPlayer().getRace() == Race.kamael && st.getQuestItemsCount(MARK_OF_TRAVELER_ID) > 0)
+            if (st.player.getRace() == Race.kamael && st.getQuestItemsCount(MARK_OF_TRAVELER_ID) > 0)
                 htmltext = "30097-02.htm";
             else {
                 htmltext = "30097-01.htm";

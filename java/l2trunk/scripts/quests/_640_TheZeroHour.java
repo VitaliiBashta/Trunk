@@ -3,7 +3,6 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _640_TheZeroHour extends Quest  {
     // NPC's
@@ -28,16 +27,16 @@ public final class _640_TheZeroHour extends Quest  {
         int cond = st.getCond();
         String htmltext = event;
 
-        if (event.equals("merc_kahmun_q0640_0103.htm") && cond == 0) {
+        if ("merc_kahmun_q0640_0103.htm".equals(event) && cond == 0) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
         }
 
-        if (event.equals("reward") && cond == 2) {
+        if ("reward".equals(event) && cond == 2) {
             htmltext = "merc_kahmun_q0640_0107.htm";
-            st.takeItems(STAKATO_QUEENS_FANG, -1);
-            st.giveItems(KAHMANS_SUPPLY_BOX, 1);
+            st.takeItems(STAKATO_QUEENS_FANG);
+            st.giveItems(KAHMANS_SUPPLY_BOX);
             st.exitCurrentQuest(false);
         }
 
@@ -50,11 +49,10 @@ public final class _640_TheZeroHour extends Quest  {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
 
-        QuestState InSearchOfTheNest = st.getPlayer().getQuestState(_109_InSearchOfTheNest.class);
         if (npcId == KAHMAN)
             if (cond == 0)
-                if (st.getPlayer().getLevel() >= 81) {
-                    if (InSearchOfTheNest != null && InSearchOfTheNest.isCompleted())
+                if (st.player.getLevel() >= 81) {
+                    if (st.player.isQuestCompleted(_109_InSearchOfTheNest.class))
                         htmltext = "merc_kahmun_q0640_0101.htm";
                     else
                         htmltext = "merc_kahmun_q0640_0104.htm";
@@ -69,11 +67,10 @@ public final class _640_TheZeroHour extends Quest  {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getState() == STARTED) {
             st.setCond(2);
-            st.giveItems(STAKATO_QUEENS_FANG, 1);
+            st.giveItems(STAKATO_QUEENS_FANG);
         }
-        return null;
     }
 }

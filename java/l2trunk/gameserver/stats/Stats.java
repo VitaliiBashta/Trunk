@@ -1,6 +1,7 @@
 package l2trunk.gameserver.stats;
 
 import java.util.NoSuchElementException;
+import java.util.stream.Stream;
 
 public enum Stats {
     MAX_HP("maxHp", 0., Double.POSITIVE_INFINITY, 1.),
@@ -21,7 +22,7 @@ public enum Stats {
     MAGIC_DEFENCE("mDef"),
     POWER_ATTACK("pAtk"),
     MAGIC_ATTACK("mAtk"),
-    POWER_ATTACK_SPEED("pAtkSpd"),
+    POWER_ATTACK_SPEED("pAtkSpd", 1., 10000., 1),
     MAGIC_ATTACK_SPEED("mAtkSpd"),
 
     MAGIC_REUSE_RATE("mReuse"),
@@ -47,8 +48,8 @@ public enum Stats {
     SHIELD_RATE("rShld", 0., 90.),
     SHIELD_ANGLE("shldAngle", 0., 360., 60.),
 
-    POWER_ATTACK_RANGE("pAtkRange", 0., 1500.),
-    MAGIC_ATTACK_RANGE("mAtkRange", 0., 1500.),
+    POWER_ATTACK_RANGE("pAtkRange", 0., 3500.),
+    MAGIC_ATTACK_RANGE("mAtkRange", 0., 3500.),
     POLE_ATTACK_ANGLE("poleAngle", 0., 180.),
     POLE_TARGET_COUNT("poleTargetCount"),
 
@@ -192,7 +193,7 @@ public enum Stats {
     private final String value;
     private final double min;
     private final double max;
-    private final double init;
+    public final double init;
 
     Stats(String s) {
         this(s, 0., Double.POSITIVE_INFINITY, 0.);
@@ -210,18 +211,16 @@ public enum Stats {
     }
 
     public static Stats valueOfXml(String name) {
-        for (Stats s : values())
-            if (s.value.equals(name))
-                return s;
-
-        throw new NoSuchElementException("Unknown name '" + name + "' for enum BaseStats");
+        return Stream.of(values())
+            .filter(s -> s.value.equalsIgnoreCase(name))
+            .findFirst().orElseThrow( () -> new NoSuchElementException("Unknown name '" + name + "' for enum BaseStats"));
     }
 
     public String getValue() {
         return value;
     }
 
-    public double getInit() {
+    public double init() {
         return init;
     }
 

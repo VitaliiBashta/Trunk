@@ -5,7 +5,6 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.PlaySound;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _111_ElrokianHuntersProof extends Quest {
     private static final int Marquez = 32113;
@@ -70,7 +69,7 @@ public final class _111_ElrokianHuntersProof extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         int cond = st.getCond();
-        Player player = st.getPlayer();
+        Player player = st.player;
 
         if (event.equalsIgnoreCase("marquez_q111_2.htm") && cond == 0) {
             st.setCond(2);
@@ -104,9 +103,9 @@ public final class _111_ElrokianHuntersProof extends Quest {
             st.takeItems(PachycephalosaurusSkin, -1);
             st.setCond(12);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("asamah_q111_8.htm")) {
+        } else if ("asamah_q111_8.htm".equalsIgnoreCase(event)) {
             st.giveItems(ADENA_ID, 1071691);
-            st.giveItems(ElrokianTrap, 1);
+            st.giveItems(ElrokianTrap);
             st.giveItems(TrapStone, 100);
             st.setState(COMPLETED);
             st.exitCurrentQuest(false);
@@ -122,9 +121,9 @@ public final class _111_ElrokianHuntersProof extends Quest {
         int cond = st.getCond();
 
         if (npcId == Marquez) {
-            if (st.getPlayer().getLevel() >= 75 && cond == 0)
+            if (st.player.getLevel() >= 75 && cond == 0)
                 htmltext = "marquez_q111_1.htm";
-            else if (st.getPlayer().getLevel() < 75 && cond == 0)
+            else if (st.player.getLevel() < 75 && cond == 0)
                 htmltext = "marquez_q111_0.htm";
             else if (cond == 3)
                 htmltext = "marquez_q111_3.htm";
@@ -144,42 +143,40 @@ public final class _111_ElrokianHuntersProof extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int id = npc.getNpcId();
         int cond = st.getCond();
         if (cond == 4) {
             for (int i : Velociraptor)
                 if (id == i && st.getQuestItemsCount(DiaryFragment) < 50) {
-                    st.giveItems(DiaryFragment, 1, false);
+                    st.giveItems(DiaryFragment);
                     if (st.getQuestItemsCount(DiaryFragment) == 50) {
                         st.playSound(SOUND_MIDDLE);
                         st.setCond(5);
-                        return null;
+                        return;
                     } else
                         st.playSound(SOUND_ITEMGET);
                 }
         } else if (cond == 10) {
             for (int i : Ornithomimus)
                 if (id == i && st.getQuestItemsCount(OrnithomimusClaw) < 10) {
-                    st.giveItems(OrnithomimusClaw, 1, false);
-                    return null;
+                    st.giveItems(OrnithomimusClaw);
+                    return ;
                 }
             for (int i : Deinonychus)
                 if (id == i && st.getQuestItemsCount(DeinonychusBone) < 10) {
-                    st.giveItems(DeinonychusBone, 1, false);
-                    return null;
+                    st.giveItems(DeinonychusBone);
+                    return;
                 }
             for (int i : Pachycephalosaurus)
                 if (id == i && st.getQuestItemsCount(PachycephalosaurusSkin) < 10) {
-                    st.giveItems(PachycephalosaurusSkin, 1, false);
-                    return null;
+                    st.giveItems(PachycephalosaurusSkin);
+                    return ;
                 }
             if (st.getQuestItemsCount(OrnithomimusClaw) >= 10 && st.getQuestItemsCount(DeinonychusBone) >= 10 && st.getQuestItemsCount(PachycephalosaurusSkin) >= 10) {
                 st.setCond(11);
                 st.playSound(SOUND_MIDDLE);
-                return null;
             }
         }
-        return null;
     }
 }

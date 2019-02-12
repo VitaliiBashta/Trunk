@@ -53,7 +53,7 @@ public final class PartyInfo implements IUserCommandHandler {
         }
 
         activeChar.sendPacket(new SystemMessage2(SystemMsg.PARTY_LEADER_C1).addString(partyLeader.getName()));
-        activeChar.sendMessage(new CustomMessage("scripts.commands.user.PartyInfo.Members", activeChar).addNumber(memberCount));
+        activeChar.sendMessage(new CustomMessage("scripts.commands.user.PartyInfo.Members").addNumber(memberCount));
         activeChar.sendPacket(SystemMsg.__DASHES__);
         return true;
     }

@@ -6,6 +6,7 @@ import l2trunk.gameserver.Config;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Skill;
+import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.network.serverpackets.PlaySound;
 import l2trunk.gameserver.network.serverpackets.SystemMessage2;
@@ -64,18 +65,18 @@ public final class ExtractStone extends Skill {
     }
 
     @Override
-    public boolean checkCondition(Creature activeChar, Creature target, boolean forceUse, boolean dontMove, boolean first) {
-        if (target == null || !target.isNpc() || getItemId(target.getNpcId()) == 0) {
-            activeChar.sendPacket(SystemMsg.INVALID_TARGET);
+    public boolean checkCondition(Player player, Creature target, boolean forceUse, boolean dontMove, boolean first) {
+        if (!(target instanceof NpcInstance) || getItemId(target.getNpcId()) == 0) {
+            player.sendPacket(SystemMsg.INVALID_TARGET);
             return false;
         }
 
         if (!npcIds.isEmpty() && !npcIds.contains(target.getNpcId())) {
-            activeChar.sendPacket(SystemMsg.INVALID_TARGET);
+            player.sendPacket(SystemMsg.INVALID_TARGET);
             return false;
         }
 
-        return super.checkCondition(activeChar, target, forceUse, dontMove, first);
+        return super.checkCondition(player, target, forceUse, dontMove, first);
     }
 
     private int getItemId(int npcId) {

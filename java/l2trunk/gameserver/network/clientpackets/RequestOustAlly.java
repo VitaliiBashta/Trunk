@@ -44,7 +44,7 @@ public class RequestOustAlly extends L2GameClientPacket {
 
         clan = ClanTable.INSTANCE.getClanByName(_clanName);
         if (clan != null) {
-            if (!alliance.isMember(clan.getClanId())) {
+            if (!alliance.isMember(clan.clanId())) {
                 activeChar.sendActionFailed();
                 return;
             }
@@ -59,9 +59,9 @@ public class RequestOustAlly extends L2GameClientPacket {
             clan.setAllyId(0);
             clan.setLeavedAlly();
             alliance.broadcastAllyStatus();
-            alliance.removeAllyMember(clan.getClanId());
+            alliance.removeAllyMember(clan.clanId());
             alliance.setExpelledMember();
-            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.clientpackets.RequestOustAlly.ClanDismissed", activeChar).addString(clan.getName()).addString(alliance.getAllyName()));
+            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.clientpackets.RequestOustAlly.ClanDismissed").addString(clan.getName()).addString(alliance.getAllyName()));
         }
     }
 }

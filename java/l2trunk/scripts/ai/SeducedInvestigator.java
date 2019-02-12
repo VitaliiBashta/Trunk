@@ -4,6 +4,7 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ai.CtrlEvent;
 import l2trunk.gameserver.ai.Fighter;
 import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.World;
 import l2trunk.gameserver.model.entity.Reflection;
@@ -36,7 +37,7 @@ public final class SeducedInvestigator extends Fighter {
 
         if (Rnd.chance(0.1) && _reuse + 30000 < System.currentTimeMillis()) {
             List<Player> players = World.getAroundPlayers(actor, 500, 200).collect(Collectors.toList());
-            if (players.size() < 1)
+            if (players.isEmpty())
                 return false;
             Player player = Rnd.get(players);
             if (player.getReflectionId() == actor.getReflectionId()) {
@@ -73,7 +74,7 @@ public final class SeducedInvestigator extends Fighter {
         if (attacker == null)
             return;
 
-        if (attacker.isPlayable())
+        if (attacker instanceof Playable)
             return;
 
         if (attacker.getNpcId() == 25659 || attacker.getNpcId() == 25660 || attacker.getNpcId() == 25661)
@@ -84,17 +85,14 @@ public final class SeducedInvestigator extends Fighter {
 
     @Override
     public void onEvtAggression(Creature target, int aggro) {
-        if (target.isPlayer() || target.isPet() || target.isSummon())
+        if (target instanceof Playable)
             return;
 
         super.onEvtAggression(target, aggro);
     }
 
     @Override
-    public boolean checkAggression(Creature target, boolean avoidAttack) {
-        if (target.isPlayable())
-            return false;
-
-        return super.checkAggression(target, avoidAttack);
+    public boolean checkAggression(Playable target, boolean avoidAttack) {
+        return false;
     }
 }

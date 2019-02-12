@@ -3,6 +3,7 @@ package l2trunk.gameserver.skills.skillclasses;
 import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.ai.CtrlEvent;
 import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.instances.NpcInstance;
 
@@ -31,23 +32,23 @@ public final class Aggression extends Skill {
 
         for (Creature target : targets)
             if (target != null) {
-                if (!target.isAutoAttackable(activeChar))
-                    continue;
-                if (target.isNpc())
-                    if (_unaggring) {
-                        if (target.isNpc() && activeChar.isPlayable())
-                            ((NpcInstance) target).getAggroList().addDamageHate(activeChar, 0, -effect);
-                    } else {
-                        target.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, activeChar, effect);
-                        if (!_silent)
-                            target.getAI().notifyEvent(CtrlEvent.EVT_ATTACKED, activeChar, 0);
+                if (target.isAutoAttackable(activeChar)) {
+                    if (target instanceof NpcInstance)
+                        if (_unaggring) {
+                            if (activeChar instanceof Playable)
+                                ((NpcInstance) target).getAggroList().addDamageHate(activeChar, 0, -effect);
+                        } else {
+                            target.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, activeChar, effect);
+                            if (!_silent)
+                                target.getAI().notifyEvent(CtrlEvent.EVT_ATTACKED, activeChar, 0);
+                        }
+                    else if (!ignorePlayables && target instanceof Playable && !target.isDebuffImmune()) {
+                        target.setTarget(activeChar);
+                        if (autoAttack)
+                            target.getAI().Attack(activeChar, false, false);
                     }
-                else if (!ignorePlayables && target.isPlayable() && !target.isDebuffImmune()) {
-                    target.setTarget(activeChar);
-                    if (autoAttack)
-                        target.getAI().Attack(activeChar, false, false);
+                    getEffects(activeChar, target, activateRate > 0, false);
                 }
-                getEffects(activeChar, target, getActivateRate() > 0, false);
             }
 
         if (isSSPossible())

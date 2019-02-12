@@ -4,7 +4,6 @@ import l2trunk.gameserver.model.base.Race;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _164_BloodFiend extends Quest {
     //NPC
@@ -40,10 +39,10 @@ public final class _164_BloodFiend extends Quest {
         int cond = st.getCond();
         if (npcId == Creamees)
             if (cond == 0) {
-                if (st.getPlayer().getRace() == Race.darkelf) {
+                if (st.player.getRace() == Race.darkelf) {
                     htmltext = "30149-00.htm";
                     st.exitCurrentQuest(true);
-                } else if (st.getPlayer().getLevel() < 21) {
+                } else if (st.player.getLevel() < 21) {
                     htmltext = "30149-02.htm";
                     st.exitCurrentQuest(true);
                 } else
@@ -51,7 +50,7 @@ public final class _164_BloodFiend extends Quest {
             } else if (cond == 1)
                 htmltext = "30149-05.htm";
             else if (cond == 2) {
-                st.takeItems(KirunakSkull, -1);
+                st.takeItems(KirunakSkull);
                 st.giveItems(ADENA_ID, 42130, true);
                 st.addExpAndSp(35637, 1854);
                 htmltext = "30149-06.htm";
@@ -62,16 +61,15 @@ public final class _164_BloodFiend extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         if (cond == 1 && npcId == Kirunak) {
             if (st.getQuestItemsCount(KirunakSkull) == 0)
-                st.giveItems(KirunakSkull, 1);
+                st.giveItems(KirunakSkull);
             st.playSound(SOUND_MIDDLE);
             st.setCond(2);
             st.setState(STARTED);
         }
-        return null;
     }
 }

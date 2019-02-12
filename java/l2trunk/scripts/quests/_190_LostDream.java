@@ -4,7 +4,6 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _190_LostDream extends Quest {
     private static final int Kusto = 30512;
@@ -42,7 +41,7 @@ public final class _190_LostDream extends Quest {
         if (st.getState() == STARTED)
             if (npcId == Kusto) {
                 if (cond == 0)
-                    if (st.getPlayer().getLevel() < 42)
+                    if (st.player.getLevel() < 42)
                         htmltext = "head_blacksmith_kusto_q0190_02.htm";
                     else
                         htmltext = "head_blacksmith_kusto_q0190_01.htm";
@@ -83,8 +82,7 @@ public final class _190_LostDream extends Quest {
 
     @Override
     public String onFirstTalk(NpcInstance npc, Player player) {
-        QuestState qs = player.getQuestState(_187_NikolasHeart.class);
-        if (qs != null && qs.isCompleted() && player.getQuestState(getClass()) == null)
+        if (player.isQuestCompleted(_187_NikolasHeart.class) && player.getQuestState(this) == null)
             newQuestState(player, STARTED);
         return "";
     }

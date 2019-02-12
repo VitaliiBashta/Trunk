@@ -94,10 +94,10 @@ public final class _048_ToTheImmortalPlateau extends Quest {
         String htmltext = "noquest";
         int id = st.getState();
         if (id == CREATED) {
-            if (st.getPlayer().getRace() != Race.orc || st.getQuestItemsCount(MARK_OF_TRAVELER_ID) == 0) {
+            if (st.player.getRace() != Race.orc || st.getQuestItemsCount(MARK_OF_TRAVELER_ID) == 0) {
                 htmltext = "galladuchi_q0048_0102.htm";
                 st.exitCurrentQuest(true);
-            } else if (st.getPlayer().getLevel() < 3) {
+            } else if (st.player.getLevel() < 3) {
                 htmltext = "galladuchi_q0048_0103.htm";
                 st.exitCurrentQuest(true);
             } else

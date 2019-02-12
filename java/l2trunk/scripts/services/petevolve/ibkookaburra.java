@@ -15,8 +15,6 @@ public final class ibkookaburra extends Functions {
     private static final int IN_KOOKABURRA_OCARINA = L2Pet.IMPROVED_BABY_KOOKABURRA.getControlItemId();
 
     public void evolve() {
-        Player player = getSelf();
-        NpcInstance npc = getNpc();
         if (player == null || npc == null)
             return;
         Summon pet = player.getPet();

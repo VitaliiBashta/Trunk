@@ -3,7 +3,6 @@ package l2trunk.scripts.ai;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ai.Fighter;
 import l2trunk.gameserver.model.Creature;
-import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.World;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.items.ItemInstance;
@@ -89,9 +88,7 @@ public final class CrystallineGolem extends Fighter {
             actor.getReflection().openDoor(CORAL_GARDEN_SECRETGATE);
 
         if (Rnd.chance(10))
-            World.getAroundObjects(actor, 300, 200)
-                    .filter(GameObject::isItem)
-                    .map(obj -> (ItemInstance) obj)
+            World.getAroundItems(actor, 300, 200)
                     .filter(item -> item.getItemId() == Crystal_Fragment)
                     .findFirst().ifPresent(item -> {
                 if (Rnd.chance(50))

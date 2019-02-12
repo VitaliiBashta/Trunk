@@ -6,10 +6,9 @@ import l2trunk.gameserver.model.entity.Reflection;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
+import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.ReflectionUtils;
 
-import java.util.Arrays;
 import java.util.List;
 
 public final class _10292_SevenSignsGirlOfDoubt extends Quest {
@@ -39,31 +38,31 @@ public final class _10292_SevenSignsGirlOfDoubt extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        Player player = st.getPlayer();
-        if (event.equalsIgnoreCase("priest_wood_q10292_3.htm")) {
+        Player player = st.player;
+        if ("priest_wood_q10292_3.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("priest_wood_q10292_4.htm"))
+        } else if ("priest_wood_q10292_4.htm".equalsIgnoreCase(event))
             enterInstance(player);
-        else if (event.equalsIgnoreCase("witness_of_dawn_q10292_2.htm")) {
+        else if ("witness_of_dawn_q10292_2.htm".equalsIgnoreCase(event)) {
             st.setCond(2);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("elcadia_abyssal_saintess_q10292_2.htm")) {
+        } else if ("elcadia_abyssal_saintess_q10292_2.htm".equalsIgnoreCase(event)) {
             st.setCond(3);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("elcadia_abyssal_saintess_q10292_9.htm")) {
+        } else if ("elcadia_abyssal_saintess_q10292_9.htm".equalsIgnoreCase(event)) {
             st.setCond(7);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("hardin_q10292_1.htm")) {
+        } else if ("hardin_q10292_1.htm".equalsIgnoreCase(event)) {
             st.setCond(8);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("spawnTestMobs")) {
+        } else if ("spawnTestMobs".equalsIgnoreCase(event)) {
             int reflectId = player.getReflectionId();
             st.set("CreatureOfTheDusk1", 1);
             st.set("CreatureOfTheDusk2", 1);
-            addSpawnToInstance(CREATURE_OF_THE_DUSK_1, 89416, -237992, -9632, 0, 0, reflectId);
-            addSpawnToInstance(CREATURE_OF_THE_DUSK_2, 89416, -238136, -9632, 0, 0, reflectId);
+            addSpawnToInstance(CREATURE_OF_THE_DUSK_1, Location.of(89416, -237992, -9632), reflectId);
+            addSpawnToInstance(CREATURE_OF_THE_DUSK_2, Location.of(89416, -238136, -9632), reflectId);
             return null;
         }
         return event;
@@ -74,15 +73,13 @@ public final class _10292_SevenSignsGirlOfDoubt extends Quest {
         String htmltext = "noquest";
         int npcId = npc.getNpcId();
         int cond = st.getCond();
-        int id = st.getState();
-        Player player = st.getPlayer();
+        Player player = st.player;
         if (player.getBaseClassId() != player.getActiveClassId())
             return "no_subclass_allowed.htm";
         switch (npcId) {
             case WOOD:
                 if (cond == 0) {
-                    QuestState qs = player.getQuestState(_198_SevenSignsEmbryo.class);
-                    if (player.getLevel() >= 81 && qs != null && qs.isCompleted())
+                    if (player.getLevel() >= 81 && player.isQuestCompleted(_198_SevenSignsEmbryo.class))
                         htmltext = "priest_wood_q10292_0.htm";
                     else {
                         htmltext = "priest_wood_q10292_0n.htm";
@@ -91,7 +88,7 @@ public final class _10292_SevenSignsGirlOfDoubt extends Quest {
                 } else if (cond == 1)
                     htmltext = "priest_wood_q10292_3.htm";
                 else if (cond > 1 && !st.isCompleted())
-                    htmltext = "priest_wood_q10292_5.htm"; //TODO: Отредактировать диалог по оффу
+                    htmltext = "priest_wood_q10292_5.htm";
                 else if (st.isCompleted())
                     htmltext = "priest_wood_q10292_6.htm";
                 break;
@@ -136,7 +133,7 @@ public final class _10292_SevenSignsGirlOfDoubt extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
 
@@ -150,18 +147,17 @@ public final class _10292_SevenSignsGirlOfDoubt extends Quest {
             }
         } else if (npcId == CREATURE_OF_THE_DUSK_1) {
             st.set("CreatureOfTheDusk1", 2);
-            if (st.get("CreatureOfTheDusk2") != null && Integer.parseInt(st.get("CreatureOfTheDusk2")) == 2) {
+            if (st.getInt("CreatureOfTheDusk2") == 2) {
                 st.playSound(SOUND_MIDDLE);
                 st.setCond(6);
             }
         } else if (npcId == CREATURE_OF_THE_DUSK_2) {
             st.set("CreatureOfTheDusk2", 2);
-            if (st.get("CreatureOfTheDusk1") != null && Integer.parseInt(st.get("CreatureOfTheDusk1")) == 2) {
+            if (st.getInt("CreatureOfTheDusk1") == 2) {
                 st.playSound(SOUND_MIDDLE);
                 st.setCond(6);
             }
         }
-        return null;
     }
 
     private void enterInstance(Player player) {

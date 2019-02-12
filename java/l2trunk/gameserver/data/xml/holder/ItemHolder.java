@@ -17,7 +17,7 @@ public final class ItemHolder {
     }
 
     public static void addItem(ItemTemplate template) {
-        items.put(template.getItemId(), template);
+        items.put(template.itemId(), template);
     }
 
     public static List<ItemTemplate> getDroppableTemplates() {
@@ -34,6 +34,7 @@ public final class ItemHolder {
     public static ItemTemplate getTemplate(int id) {
         if (!items.containsKey(id)) {
             LOG.warn("Not defined item id : " + id + ", or out of range!", new Exception());
+            throw new IllegalArgumentException("Not defined itemId "+ id);
         }
         return items.get(id);
     }

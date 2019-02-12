@@ -18,8 +18,8 @@ public final class EffectsComparator implements Comparator<Effect>, Serializable
 
     @Override
     public int compare(Effect o1, Effect o2) {
-        boolean toggle1 = o1.getSkill().isToggle();
-        boolean toggle2 = o2.getSkill().isToggle();
+        boolean toggle1 = o1.skill.isToggle();
+        boolean toggle2 = o2.skill.isToggle();
 
         if (toggle1 && toggle2)
             return compareStartTime(o1, o2);
@@ -30,8 +30,8 @@ public final class EffectsComparator implements Comparator<Effect>, Serializable
             else
                 return -1;
 
-        boolean music1 = o1.getSkill().isMusic();
-        boolean music2 = o2.getSkill().isMusic();
+        boolean music1 = o1.skill.isMusic();
+        boolean music2 = o2.skill.isMusic();
 
         if (music1 && music2)
             return compareStartTime(o1, o2);
@@ -54,8 +54,8 @@ public final class EffectsComparator implements Comparator<Effect>, Serializable
             else
                 return -1;
 
-        boolean trigger1 = o1.getSkill().isTrigger;
-        boolean trigger2 = o2.getSkill().isTrigger;
+        boolean trigger1 = o1.skill.isTrigger;
+        boolean trigger2 = o2.skill.isTrigger;
 
         if (trigger1 && trigger2)
             return compareStartTime(o1, o2);

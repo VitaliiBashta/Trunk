@@ -3,7 +3,6 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _167_DwarvenKinship extends Quest {
     //NPC
@@ -59,7 +58,7 @@ public final class _167_DwarvenKinship extends Quest {
         int cond = st.getCond();
         if (npcId == Carlon) {
             if (cond == 0) {
-                if (st.getPlayer().getLevel() >= 15)
+                if (st.player.getLevel() >= 15)
                     htmltext = "30350-03.htm";
                 else {
                     htmltext = "30350-02.htm";

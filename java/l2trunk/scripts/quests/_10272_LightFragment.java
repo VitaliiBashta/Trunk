@@ -4,7 +4,6 @@ import l2trunk.gameserver.cache.Msg;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Location;
 
 public final class _10272_LightFragment extends Quest {
@@ -47,49 +46,49 @@ public final class _10272_LightFragment extends Quest {
         int cond = st.getCond();
         String htmltext = event;
 
-        if (event.equalsIgnoreCase("orbyu_q10272_2.htm") && cond == 0) {
+        if ("orbyu_q10272_2.htm".equalsIgnoreCase(event) && cond == 0) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("artius_q10272_2.htm")) {
+        } else if ("artius_q10272_2.htm".equalsIgnoreCase(event)) {
             st.setCond(2);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("artius_q10272_4.htm")) {
+        } else if ("artius_q10272_4.htm".equalsIgnoreCase(event)) {
             st.setCond(3);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("tele_to_lelikia")) {
+        } else if ("tele_to_lelikia".equalsIgnoreCase(event)) {
             if (st.getQuestItemsCount(ADENA_ID) >= 10000) {
                 st.takeItems(ADENA_ID, 10000);
-                st.getPlayer().teleToLocation(LELIKIA_POSITION);
+                st.player.teleToLocation(LELIKIA_POSITION);
                 return null;
             } else {
-                st.getPlayer().sendPacket(Msg.YOU_DO_NOT_HAVE_ENOUGH_ADENA);
+                st.player.sendPacket(Msg.YOU_DO_NOT_HAVE_ENOUGH_ADENA);
                 return null;
             }
-        } else if (event.equalsIgnoreCase("lelikia_q10272_2.htm")) {
+        } else if ("lelikia_q10272_2.htm".equalsIgnoreCase(event)) {
             st.setCond(4);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("tele_to_base")) {
-            st.getPlayer().teleToLocation(BASE_POSITION);
+        } else if ("tele_to_base".equalsIgnoreCase(event)) {
+            st.player.teleToLocation(BASE_POSITION);
             return null;
-        } else if (event.equalsIgnoreCase("artius_q10272_7.htm")) {
+        } else if ("artius_q10272_7.htm".equalsIgnoreCase(event)) {
             st.setCond(5);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("artius_q10272_9.htm")) {
+        } else if ("artius_q10272_9.htm".equalsIgnoreCase(event)) {
             st.setCond(6);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("artius_q10272_11.htm")) {
+        } else if ("artius_q10272_11.htm".equalsIgnoreCase(event)) {
             st.setCond(7);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("lekon_q10272_2.htm")) {
+        } else if ("lekon_q10272_2.htm".equalsIgnoreCase(event)) {
             if (st.getQuestItemsCount(DestroyedLightFragmentPowder) >= 100) {
-                st.takeItems(DestroyedLightFragmentPowder, -1);
-                st.giveItems(SacredLightFragment, 1);
+                st.takeItems(DestroyedLightFragmentPowder);
+                st.giveItems(SacredLightFragment);
                 st.setCond(8);
                 st.playSound(SOUND_MIDDLE);
             } else
                 htmltext = "lekon_q10272_1a.htm";
-        } else if (event.equalsIgnoreCase("artius_q10272_12.htm")) {
+        } else if ("artius_q10272_12.htm".equalsIgnoreCase(event)) {
             st.giveItems(ADENA_ID, 556980);
             st.addExpAndSp(1009016, 91363);
             st.setState(COMPLETED);
@@ -104,11 +103,10 @@ public final class _10272_LightFragment extends Quest {
         String htmltext = "noquest";
         int npcId = npc.getNpcId();
         int cond = st.getCond();
-        QuestState TheEnvelopingDarkness = st.getPlayer().getQuestState(_10271_TheEnvelopingDarkness.class);
 
         if (npcId == Orbyu) {
             if (cond == 0) {
-                if (st.getPlayer().getLevel() >= 75 && TheEnvelopingDarkness != null && TheEnvelopingDarkness.isCompleted())
+                if (st.player.getLevel() >= 75 && st.player.isQuestCompleted(_10271_TheEnvelopingDarkness.class))
                     htmltext = "orbyu_q10272_1.htm";
                 else {
                     htmltext = "orbyu_q10272_0.htm";
@@ -151,12 +149,11 @@ public final class _10272_LightFragment extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getCond() == 5)
             if (st.getQuestItemsCount(DestroyedDarknessFragmentPowder) <= 100) {
-                st.giveItems(DestroyedDarknessFragmentPowder, 1);
+                st.giveItems(DestroyedDarknessFragmentPowder);
                 st.playSound(SOUND_ITEMGET);
             }
-        return null;
     }
 }

@@ -3,7 +3,6 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _238_SuccessFailureOfBusiness extends Quest {
     private static final int Helvetica = 32641;
@@ -25,12 +24,12 @@ public final class _238_SuccessFailureOfBusiness extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("32641-03.htm")) {
+        if ("32641-03.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.setState(STARTED);
         }
-        if (event.equalsIgnoreCase("32641-06.htm")) {
-            st.takeAllItems(BrokenPieveOfMagicForce);
+        if ("32641-06.htm".equalsIgnoreCase(event)) {
+            st.takeItems(BrokenPieveOfMagicForce);
             st.setCond(3);
         }
         return event;
@@ -45,13 +44,14 @@ public final class _238_SuccessFailureOfBusiness extends Quest {
 
         if (npcId == Helvetica)
             if (id == CREATED) {
-                if (st.getPlayer().getLevel() < 82 || !st.getPlayer().isQuestCompleted(_237_WindsOfChange.class)) {
+                if (st.player.getLevel() < 82 || !st.player.isQuestCompleted(_237_WindsOfChange.class)) {
                     st.exitCurrentQuest(true);
                     htmltext = "32641-00.htm";
-                } else if (st.getQuestItemsCount(VicinityOfTheFieldOfSilenceResearchCenter) == 0)
-                    htmltext = "32641-10.htm";
-                else
+                } else if (st.haveQuestItem(VicinityOfTheFieldOfSilenceResearchCenter)) {
                     htmltext = "32641-01.htm";
+                } else {
+                    htmltext = "32641-10.htm";
+                }
             } else if (id == COMPLETED)
                 htmltext = "32641-09.htm";
             else if (cond == 1)
@@ -61,8 +61,8 @@ public final class _238_SuccessFailureOfBusiness extends Quest {
             else if (cond == 3)
                 htmltext = "32641-07.htm";
             else if (cond == 4) {
-                st.takeAllItems(VicinityOfTheFieldOfSilenceResearchCenter);
-                st.takeAllItems(GuardianSpiritFragment);
+                st.takeItems(VicinityOfTheFieldOfSilenceResearchCenter);
+                st.takeItems(GuardianSpiritFragment);
                 st.giveItems(ADENA_ID, 283346);
                 st.addExpAndSp(1319736, 103553);
                 st.setState(COMPLETED);
@@ -74,17 +74,16 @@ public final class _238_SuccessFailureOfBusiness extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int cond = st.getCond();
         if (cond == 1 && npc.getNpcId() == BrazierOfPurity) {
-            st.giveItems(BrokenPieveOfMagicForce, 1);
+            st.giveItems(BrokenPieveOfMagicForce);
             if (st.getQuestItemsCount(BrokenPieveOfMagicForce) >= 10)
                 st.setCond(2);
         } else if (cond == 3 && (npc.getNpcId() == EvilSpirit || npc.getNpcId() == GuardianSpirit)) {
-            st.giveItems(GuardianSpiritFragment, 1);
-            if (st.getQuestItemsCount(GuardianSpiritFragment) >= 20)
+            st.giveItems(GuardianSpiritFragment);
+            if (st.haveQuestItem(GuardianSpiritFragment, 20))
                 st.setCond(4);
         }
-        return null;
     }
 }

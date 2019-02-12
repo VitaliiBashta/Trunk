@@ -91,7 +91,7 @@ public enum RestartPointParser {
                 if (restarts.isEmpty())
                     throw new RuntimeException("RestartPointParser: restarts not defined!");
 
-                restartArea.add(new Pair<>(territory, restarts));
+                restartArea.add(Pair.of(territory, restarts));
             } else if ("restart_loc".equals(listElement.getName())) {
                 String name = listElement.attributeValue("name");
                 int bbs = toInt(listElement.attributeValue("bbs", "0"));
@@ -105,7 +105,7 @@ public enum RestartPointParser {
                         for (Iterator<Element> ii = n.elementIterator(); ii.hasNext(); ) {
                             Element d = ii.next();
                             if ("coords".equalsIgnoreCase(d.getName())) {
-                                Location loc = Location.parseLoc(d.attribute("loc").getValue());
+                                Location loc = Location.of(d.attribute("loc").getValue());
                                 restartPoints.add(loc);
                             }
                         }
@@ -113,7 +113,7 @@ public enum RestartPointParser {
                         for (Iterator<Element> ii = n.elementIterator(); ii.hasNext(); ) {
                             Element d = ii.next();
                             if ("coords".equalsIgnoreCase(d.getName())) {
-                                Location loc = Location.parseLoc(d.attribute("loc").getValue());
+                                Location loc = Location.of(d.attribute("loc").getValue());
                                 PKrestartPoints.add(loc);
                             }
                         }

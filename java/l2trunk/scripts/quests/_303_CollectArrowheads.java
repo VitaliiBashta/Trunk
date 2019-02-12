@@ -21,7 +21,7 @@ public final class _303_CollectArrowheads extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("minx_q0303_04.htm")) {
+        if ("minx_q0303_04.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
@@ -31,11 +31,11 @@ public final class _303_CollectArrowheads extends Quest {
 
     @Override
     public String onTalk(NpcInstance npc, QuestState st) {
-        String htmltext = "noquest";
+        String htmltext;
         int cond = st.getCond();
 
         if (cond == 0)
-            if (st.getPlayer().getLevel() >= 10)
+            if (st.player.getLevel() >= 10)
                 htmltext = "minx_q0303_03.htm";
             else {
                 htmltext = "minx_q0303_02.htm";
@@ -55,15 +55,14 @@ public final class _303_CollectArrowheads extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getQuestItemsCount(ORCISH_ARROWHEAD) < 10) {
-            st.giveItems(ORCISH_ARROWHEAD, 1);
+            st.giveItems(ORCISH_ARROWHEAD);
             if (st.getQuestItemsCount(ORCISH_ARROWHEAD) == 10) {
                 st.setCond(2);
                 st.playSound(SOUND_MIDDLE);
             } else
                 st.playSound(SOUND_ITEMGET);
         }
-        return null;
     }
 }

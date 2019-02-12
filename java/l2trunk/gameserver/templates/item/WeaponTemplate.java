@@ -25,26 +25,26 @@ public final class WeaponTemplate extends ItemTemplate {
         _mpConsume = set.getInteger("mp_consume", 0);
 
         if (getItemType() == WeaponType.NONE) {
-            _type1 = TYPE1_SHIELD_ARMOR;
+            type1 = TYPE1_SHIELD_ARMOR;
             _type2 = TYPE2_SHIELD_ARMOR;
         } else {
-            _type1 = TYPE1_WEAPON_RING_EARRING_NECKLACE;
+            type1 = TYPE1_WEAPON_RING_EARRING_NECKLACE;
             _type2 = TYPE2_WEAPON;
         }
 
         if (getItemType() == WeaponType.PET) {
-            _type1 = ItemTemplate.TYPE1_WEAPON_RING_EARRING_NECKLACE;
+            type1 = ItemTemplate.TYPE1_WEAPON_RING_EARRING_NECKLACE;
 
-            if (_bodyPart == ItemTemplate.SLOT_WOLF)
+            if (bodyPart == ItemTemplate.SLOT_WOLF)
                 _type2 = ItemTemplate.TYPE2_PET_WOLF;
-            else if (_bodyPart == ItemTemplate.SLOT_GWOLF)
+            else if (bodyPart == ItemTemplate.SLOT_GWOLF)
                 _type2 = ItemTemplate.TYPE2_PET_GWOLF;
-            else if (_bodyPart == ItemTemplate.SLOT_HATCHLING)
+            else if (bodyPart == ItemTemplate.SLOT_HATCHLING)
                 _type2 = ItemTemplate.TYPE2_PET_HATCHLING;
             else
                 _type2 = ItemTemplate.TYPE2_PET_STRIDER;
 
-            _bodyPart = ItemTemplate.SLOT_R_HAND;
+            bodyPart = ItemTemplate.SLOT_R_HAND;
         }
     }
 

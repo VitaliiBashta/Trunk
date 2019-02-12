@@ -6,6 +6,7 @@ import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.CtrlEvent;
 import l2trunk.gameserver.ai.Fighter;
 import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.SimpleSpawner;
 import l2trunk.gameserver.model.World;
 import l2trunk.gameserver.model.entity.Reflection;
@@ -28,7 +29,6 @@ public final class Kanabion extends Fighter {
         int npcId = actor.getNpcId();
         int nextId = 0;
         int type = 0;
-        //TODO: [Bonux] пересмотреть шансы спавна доплеров и воидеров. Реализовать шанс при ударе 2\3 ХП моба.
         if (npcId != getNextDoppler(npcId) && npcId != getNextVoid(npcId)) {
             type = 1;
             if (isOverhit) {
@@ -68,8 +68,9 @@ public final class Kanabion extends Fighter {
 
         if (spawnPossible && nextId > 0) {
             Creature player = null;
-            if (!killer.isPlayer()) // На оффе если убить саммоном или петом, то следующий канабион агрится не на пета, а на хозяина.
-                player = World.getAroundPlayers(actor).findFirst().orElse(null);
+            if (!(killer instanceof Player)){ // На оффе если убить саммоном или петом, то следующий канабион агрится не на пета, а на хозяина.
+                player = World.getAroundPlayers(actor).stream().findFirst().orElse(null);
+            }
             if (player == null)
                 player = killer;
             ThreadPoolManager.INSTANCE.schedule(new SpawnNext(actor, player, nextId), 5000);

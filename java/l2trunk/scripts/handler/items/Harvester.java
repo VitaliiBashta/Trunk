@@ -21,12 +21,6 @@ public final class Harvester extends SimpleItemHandler implements ScriptFile {
         return List.of(ITEM_IDS);
     }
 
-
-    @Override
-    public boolean pickupItem(Playable playable, ItemInstance item) {
-        return true;
-    }
-
     @Override
     public void onLoad() {
         ItemHandler.INSTANCE.registerItemHandler(this);
@@ -35,23 +29,24 @@ public final class Harvester extends SimpleItemHandler implements ScriptFile {
     @Override
     protected boolean useItemImpl(Player player, ItemInstance item, boolean ctrl) {
         GameObject target = player.getTarget();
-        if (target == null || !target.isMonster()) {
+        if (target instanceof MonsterInstance) {
+            MonsterInstance monster = (MonsterInstance) player.getTarget();
+
+            if (!monster.isDead()) {
+                player.sendPacket(SystemMsg.THAT_IS_AN_INCORRECT_TARGET);
+                return false;
+            }
+
+            Skill skill = SkillTable.INSTANCE.getInfo(2098);
+            if (skill != null && skill.checkCondition(player, monster, false, false, true)) {
+                player.getAI().cast(skill, monster);
+                return true;
+            }
+            return false;
+        } else {
             player.sendPacket(SystemMsg.THAT_IS_AN_INCORRECT_TARGET);
             return false;
         }
 
-        MonsterInstance monster = (MonsterInstance) player.getTarget();
-
-        if (!monster.isDead()) {
-            player.sendPacket(SystemMsg.THAT_IS_AN_INCORRECT_TARGET);
-            return false;
-        }
-
-        Skill skill = SkillTable.INSTANCE.getInfo(2098);
-        if (skill != null && skill.checkCondition(player, monster, false, false, true)) {
-            player.getAI().cast(skill, monster);
-            return true;
-        }
-        return false;
     }
 }

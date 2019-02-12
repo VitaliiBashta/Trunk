@@ -24,12 +24,12 @@ public final class _650_ABrokenDream extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("quest_accept")) {
+        if ("quest_accept".equalsIgnoreCase(event)) {
             htmltext = "ghost_of_railroadman_q0650_0103.htm";
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
             st.setCond(1);
-        } else if (event.equalsIgnoreCase("650_4")) {
+        } else if ("650_4".equalsIgnoreCase(event)) {
             htmltext = "ghost_of_railroadman_q0650_0205.htm";
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(true);
@@ -43,10 +43,10 @@ public final class _650_ABrokenDream extends Quest {
         int cond = st.getCond();
         String htmltext = "noquest";
         if (cond == 0) {
-            QuestState OceanOfDistantStar = st.getPlayer().getQuestState(_117_OceanOfDistantStar.class);
+            QuestState OceanOfDistantStar = st.player.getQuestState(_117_OceanOfDistantStar.class);
             if (OceanOfDistantStar != null) {
                 if (OceanOfDistantStar.isCompleted()) {
-                    if (st.getPlayer().getLevel() < 39) {
+                    if (st.player.getLevel() < 39) {
                         st.exitCurrentQuest(true);
                         htmltext = "ghost_of_railroadman_q0650_0102.htm";
                     } else
@@ -65,9 +65,8 @@ public final class _650_ABrokenDream extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         st.rollAndGive(RemnantsOfOldDwarvesDreams, 1, 1, 68);
-        return null;
     }
 
 }

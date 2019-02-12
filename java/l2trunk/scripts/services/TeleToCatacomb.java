@@ -73,7 +73,6 @@ public final class TeleToCatacomb extends Functions {
         if (val != 0 || !Config.ALT_TELE_TO_CATACOMBS)
             return "";
 
-        Player player = getSelf();
         String append = "";
 
         append += "<br>";

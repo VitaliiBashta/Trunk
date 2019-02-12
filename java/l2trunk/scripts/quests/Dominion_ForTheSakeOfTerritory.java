@@ -51,7 +51,7 @@ public abstract class Dominion_ForTheSakeOfTerritory extends Quest {
     }
 
     private void handleReward(QuestState st) {
-        Player player = st.getPlayer();
+        Player player = st.player;
         if (player == null)
             return;
 
@@ -67,9 +67,9 @@ public abstract class Dominion_ForTheSakeOfTerritory extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
-        if (!isValidNpcKill(st.getPlayer(), npc))
-            return null;
+    public void onKill(NpcInstance npc, QuestState st) {
+        if (!isValidNpcKill(st.player, npc))
+            return;
         int npcId = npc.getNpcId();
         int condID = st.getCond();
         switch (condID) {
@@ -136,7 +136,6 @@ public abstract class Dominion_ForTheSakeOfTerritory extends Quest {
                 }
 
         }
-        return null;
     }
 
     @Override
@@ -151,10 +150,10 @@ public abstract class Dominion_ForTheSakeOfTerritory extends Quest {
             if (siegeEvent == null || siegeEvent.getId() != getDominionId())
                 return;
 
-            QuestState questState = player.getQuestState(Dominion_ForTheSakeOfTerritory.this.getClass());
+            QuestState questState = player.getQuestState(Dominion_ForTheSakeOfTerritory.this);
             if (player.getLevel() > 61 && questState == null) {
-                questState = newQuestState(player, Quest.CREATED);
-                questState.setState(Quest.STARTED);
+                questState = newQuestState(player, CREATED);
+                questState.setState(STARTED);
                 questState.setCond(1);
             }
         }

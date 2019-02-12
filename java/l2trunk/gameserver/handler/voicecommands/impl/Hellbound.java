@@ -20,7 +20,7 @@ public class Hellbound extends Functions implements IVoicedCommandHandler {
     @Override
     public boolean useVoicedCommand(String command, Player activeChar, String target) {
         if (command.equals("hellbound")) {
-            activeChar.sendMessage("Hellbound level: " + HellboundManager.getHellboundLevel());
+            activeChar.sendMessage("Hellbound occupation: " + HellboundManager.getHellboundLevel());
             activeChar.sendMessage("Confidence: " + HellboundManager.getConfidence());
         }
         return false;

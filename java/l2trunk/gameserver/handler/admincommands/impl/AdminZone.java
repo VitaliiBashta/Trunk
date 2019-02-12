@@ -3,7 +3,6 @@ package l2trunk.gameserver.handler.admincommands.impl;
 import l2trunk.gameserver.data.xml.holder.ResidenceHolder;
 import l2trunk.gameserver.handler.admincommands.IAdminCommandHandler;
 import l2trunk.gameserver.instancemanager.MapRegionHolder;
-import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.World;
 import l2trunk.gameserver.model.Zone;
@@ -12,6 +11,7 @@ import l2trunk.gameserver.templates.mapregion.DomainArea;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 public class AdminZone implements IAdminCommandHandler {
@@ -36,14 +36,14 @@ public class AdminZone implements IAdminCommandHandler {
             case admin_region: {
                 activeChar.sendMessage("Current region: " + activeChar.getCurrentRegion());
                 activeChar.sendMessage("Objects list:");
-                for (GameObject o : activeChar.getCurrentRegion())
-                    if (o != null)
-                        activeChar.sendMessage(o.toString());
+                activeChar.getCurrentRegion().getObjects().stream()
+                        .filter(Objects::nonNull)
+                        .forEach(o -> activeChar.sendMessage(o.toString()));
                 break;
             }
             case admin_vis_count: {
                 activeChar.sendMessage("Current region: " + activeChar.getCurrentRegion());
-                activeChar.sendMessage("Players count: " + World.getAroundPlayers(activeChar).count());
+                activeChar.sendMessage("Players count: " + World.getAroundPlayers(activeChar).size());
                 break;
             }
             case admin_pos: {

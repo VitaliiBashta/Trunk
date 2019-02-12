@@ -7,12 +7,15 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.utils.TradeHelper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public final class RequestPrivateStoreBuy extends L2GameClientPacket {
     private int _sellerId;
     private int _count;
-    private int[] _items; // object id
-    private long[] _itemQ; // count
-    private long[] _itemP; // price
+    private List<Integer> _items; // object id
+    private List<Long> _itemQ; // count
+    private List<Long> _itemP; // price
 
     @Override
     protected void readImpl() {
@@ -23,16 +26,16 @@ public final class RequestPrivateStoreBuy extends L2GameClientPacket {
             return;
         }
 
-        _items = new int[_count];
-        _itemQ = new long[_count];
-        _itemP = new long[_count];
+        _items = new ArrayList<>(_count);
+        _itemQ = new ArrayList<>(_count);
+        _itemP = new ArrayList<>(_count);
 
         for (int i = 0; i < _count; i++) {
-            _items[i] = readD();
-            _itemQ[i] = readQ();
-            _itemP[i] = readQ();
+            _items.add(readD());
+            _itemQ.add(readQ());
+            _itemP.add(readQ());
 
-            if (_itemQ[i] < 1 || _itemP[i] < 1 || ArrayUtils.indexOf(_items, _items[i]) < i) {
+            if (_itemQ.get(i) < 1 || _itemP.get(i) < 1 || _items.indexOf(i) < i) {
                 _count = 0;
                 break;
             }

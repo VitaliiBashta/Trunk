@@ -4,7 +4,6 @@ import l2trunk.gameserver.model.base.Race;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _160_NerupasFavor extends Quest {
     private static final int SILVERY_SPIDERSILK = 1026;
@@ -71,17 +70,17 @@ public final class _160_NerupasFavor extends Quest {
         int cond = st.getCond();
         if (npcId == NERUPA) {
             if (st.getState() == CREATED) {
-                if (st.getPlayer().getRace() != Race.elf)
+                if (st.player.getRace() != Race.elf)
                     htmltext = "30370-00.htm";
-                else if (st.getPlayer().getLevel() < 3) {
+                else if (st.player.getLevel() < 3) {
                     htmltext = "30370-02.htm";
                     st.exitCurrentQuest(true);
                 } else
                     htmltext = "30370-03.htm";
             } else if (cond == COND1)
                 htmltext = "30370-04.htm";
-            else if (cond == COND4 && st.getQuestItemsCount(NIGHTSHADE_LEAF) > 0) {
-                st.takeItems(NIGHTSHADE_LEAF, -1);
+            else if (cond == COND4 && st.haveQuestItem(NIGHTSHADE_LEAF) ) {
+                st.takeItems(NIGHTSHADE_LEAF);
                 st.giveItems(LESSER_HEALING_POTION, 5);
                 st.addExpAndSp(1000, 0);
                 st.playSound(SOUND_FINISH);
@@ -91,8 +90,8 @@ public final class _160_NerupasFavor extends Quest {
                 htmltext = "30370-05.htm";
         } else if (npcId == UNOREN) {
             if (cond == COND1) {
-                st.takeItems(SILVERY_SPIDERSILK, -1);
-                st.giveItems(UNOS_RECEIPT, 1);
+                st.takeItems(SILVERY_SPIDERSILK);
+                st.giveItems(UNOS_RECEIPT);
                 st.setCond(COND2);
                 htmltext = "30147-01.htm";
             } else if (cond == COND2 || cond == COND3)
@@ -101,8 +100,8 @@ public final class _160_NerupasFavor extends Quest {
                 htmltext = "30147-03.htm";
         } else if (npcId == CREAMEES) {
             if (cond == COND2) {
-                st.takeItems(UNOS_RECEIPT, -1);
-                st.giveItems(CELS_TICKET, 1);
+                st.takeItems(UNOS_RECEIPT);
+                st.giveItems(CELS_TICKET);
                 st.setCond(COND3);
                 htmltext = "30149-01.htm";
             } else if (cond == COND3)
@@ -111,8 +110,8 @@ public final class _160_NerupasFavor extends Quest {
                 htmltext = "30149-03.htm";
         } else if (npcId == JULIA)
             if (cond == COND3) {
-                st.takeItems(CELS_TICKET, -1);
-                st.giveItems(NIGHTSHADE_LEAF, 1);
+                st.takeItems(CELS_TICKET);
+                st.giveItems(NIGHTSHADE_LEAF);
                 htmltext = "30152-01.htm";
                 st.setCond(COND4);
             } else if (cond == COND4)

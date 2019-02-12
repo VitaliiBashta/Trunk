@@ -38,13 +38,16 @@ public final class _902_ReclaimOurEra extends Quest {
         } else if (event.equalsIgnoreCase("mathias_q902_07.htm")) {
             st.setCond(4);
         } else if (event.equalsIgnoreCase("mathias_q902_09.htm")) {
-            if (st.takeAllItems(ShatteredBones) > 0) {
-                st.giveItems(21750, 1);
+            if (st.getQuestItemsCount(ShatteredBones) > 0) {
+                st.takeItems(ShatteredBones);
+                st.giveItems(21750);
                 st.giveItems(ADENA_ID, 134038);
-            } else if (st.takeAllItems(CannibalisticStakatoLeaderClaw) > 0) {
+            } else if (st.getQuestItemsCount(CannibalisticStakatoLeaderClaw) > 0) {
+                st.takeItems(CannibalisticStakatoLeaderClaw);
                 st.giveItems(21750, 3);
                 st.giveItems(ADENA_ID, 210119);
-            } else if (st.takeAllItems(AnaisScroll) > 0) {
+            } else if (st.getQuestItemsCount(AnaisScroll) > 0) {
+                st.takeItems(AnaisScroll);
                 st.giveItems(21750, 3);
                 st.giveItems(ADENA_ID, 348155);
             }
@@ -64,7 +67,7 @@ public final class _902_ReclaimOurEra extends Quest {
             switch (st.getState()) {
                 case CREATED:
                     if (st.isNowAvailable()) {
-                        if (st.getPlayer().getLevel() >= 80)
+                        if (st.player.getLevel() >= 80)
                             htmltext = "mathias_q902_01.htm";
                         else {
                             htmltext = "mathias_q902_00.htm";
@@ -92,19 +95,18 @@ public final class _902_ReclaimOurEra extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int cond = st.getCond();
         if (cond == 2 && OrcsSilenos.contains(npc.getNpcId())) {
-            st.giveItems(ShatteredBones, 1);
+            st.giveItems(ShatteredBones);
             st.setCond(5);
         } else if (cond == 3 && CannibalisticStakatoChief.contains(npc.getNpcId())) {
-            st.giveItems(CannibalisticStakatoLeaderClaw, 1);
+            st.giveItems(CannibalisticStakatoLeaderClaw);
             st.setCond(5);
         } else if (cond == 4 && npc.getNpcId() == Anais) {
-            st.giveItems(AnaisScroll, 1);
+            st.giveItems(AnaisScroll);
             st.setCond(5);
         }
-        return null;
     }
 
 }

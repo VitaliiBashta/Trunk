@@ -16,7 +16,7 @@ public final class RequestPartyMatchDetail extends L2GameClientPacket {
     protected void readImpl() {
         roomId = readD(); // room id, если 0 то autojoin
         locations = readD(); // location
-        level = readD(); // 1 - all, 0 - my level (только при autojoin)
+        level = readD(); // 1 - all, 0 - my occupation (только при autojoin)
         //readD();
     }
 

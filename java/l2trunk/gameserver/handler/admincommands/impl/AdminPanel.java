@@ -16,6 +16,7 @@ import l2trunk.gameserver.tables.SkillTable;
 
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.stream.Collectors;
 
 import static l2trunk.commons.lang.NumberUtils.toInt;
 
@@ -84,10 +85,13 @@ public final class AdminPanel implements IAdminCommandHandler {
 
         NpcHtmlMessage html;
         String text = null;
-        GameObject target;
+        if (!(activeChar.getTarget() instanceof Player))
+            return false;
+        final Player target = (Player)activeChar.getTarget();
         Player caster = null;
         Party p;
-        final List<Player> world = GameObjectsStorage.getAllPlayers();
+        final List<Player> world = GameObjectsStorage.getAllPlayersStream()
+                .collect(Collectors.toList());
 
         switch (command) {
             case admin_panel:
@@ -108,8 +112,6 @@ public final class AdminPanel implements IAdminCommandHandler {
                 break;
 
             case admin_imitate:
-                target = activeChar.getTarget();
-
                 if (target == null) {
                     activeChar.sendMessage("Target incorrect");
                     return false;
@@ -119,9 +121,9 @@ public final class AdminPanel implements IAdminCommandHandler {
                     text = fullString.substring(14);
                 String t = text;
                 World.getAroundPlayers(activeChar)
-                        .forEach(pl -> pl.sendPacket(new CreatureSay(target.getObjectId(), 0, target.getName(), t)));
+                        .forEach(pl -> pl.sendPacket(new CreatureSay(pl.objectId(), 0, pl.getName(), t)));
 
-                activeChar.sendPacket(new CreatureSay(target.getObjectId(), 0, target.getName(), text));
+                activeChar.sendPacket(new CreatureSay(target.objectId(), 0, target.getName(), text));
                 html = new NpcHtmlMessage(5);
                 html.setFile("admin/panel/controlpanel.htm");
                 activeChar.sendPacket(html);
@@ -158,7 +160,8 @@ public final class AdminPanel implements IAdminCommandHandler {
 
             case admin_sit_down:
 
-                activeChar.getTarget().getPlayer().sitDown(null);
+                if (activeChar.getTarget() instanceof Player)
+                    ((Player)activeChar.getTarget()).sitDown(null);
 
                 html = new NpcHtmlMessage(5);
                 html.setFile("admin/panel/controlpanel.htm");
@@ -166,16 +169,16 @@ public final class AdminPanel implements IAdminCommandHandler {
                 break;
 
             case admin_sit_down_party:
-                target = activeChar.getTarget().getPlayer();
+//                target = activeChar.getTarget().player();
 
-                p = target.getPlayer().getParty();
+                p = target.getParty();
 
                 if (p == null) {
                     activeChar.sendMessage("This char has not party.");
                     return false;
                 }
 
-                if (!p.isLeader(caster)) {
+                if (!p.isLeader(null)) {
                     activeChar.sendMessage("You must use it on leader only. Leader of this party is " + p.getLeader().getName());
                     return false;
                 }
@@ -188,14 +191,14 @@ public final class AdminPanel implements IAdminCommandHandler {
                 break;
 
             case admin_stand_up:
-                activeChar.getTarget().getPlayer().standUp();
+                target.standUp();
                 html = new NpcHtmlMessage(5);
                 html.setFile("admin/panel/controlpanel.htm");
                 activeChar.sendPacket(html);
                 break;
 
             case admin_stand_up_party:
-                p = activeChar.getTarget().getPlayer().getParty();
+                p = target.getParty();
 
                 if (p == null) {
                     activeChar.sendMessage("This char has not party.");
@@ -248,15 +251,13 @@ public final class AdminPanel implements IAdminCommandHandler {
                     return false;
                 }
 
-                target = activeChar.getTarget().getPlayer();
-
                 int skillId = toInt(st.nextToken());
                 int skillLevel = toInt(st.nextToken());
                 Skill skill = SkillTable.INSTANCE.getInfo(skillId, skillLevel);
-                if (skill != null && target.getPlayer().getClan() != null) {
-                    Clan clan = target.getPlayer().getClan();
+                if (skill != null && target.getClan() != null) {
+                    Clan clan = target.getClan();
                     clan.addSkill(skill, true);
-                    target.getPlayer().sendMessage("Admin add to your clan " + skill.name + " skill.");
+                    target.sendMessage("Admin add to your clan " + skill.name + " skill.");
                     activeChar.sendMessage("You add " + skill.name + " skill to the clan " + clan.getName());
                 }
                 clanSkillList(activeChar);
@@ -309,7 +310,7 @@ public final class AdminPanel implements IAdminCommandHandler {
             long expire = ((long) 60 * 1000 * 60 * 24 * days);
             _player.setHero(true);
             Hero.addSkills(_player);
-            _player.setVar("DonateHero", "true", System.currentTimeMillis() + expire);
+            _player.setVar("DonateHero", 1, System.currentTimeMillis() + expire);
             GmListTable.broadcastMessageToGMs("GM " + activeChar.getName() + " set hero stat for player " + _playername + " for " + _time + " day(s)");
             _player.sendMessage(activeChar.getName() + ", added you hero for " + days + " days.");
             activeChar.sendMessage("The hero status added to " + _player.getName() + " for " + days + " days.");

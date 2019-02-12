@@ -6,7 +6,6 @@ import l2trunk.gameserver.idfactory.IdFactory;
 import l2trunk.gameserver.utils.ItemFunctions;
 import l2trunk.gameserver.utils.Log;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.locks.Lock;
@@ -25,15 +24,13 @@ public abstract class ItemContainer {
     private final Lock readLock = lock.readLock();
     private final Lock writeLock = lock.writeLock();
 
-    ItemContainer() {
 
-    }
 
     public int getSize() {
         return items.size();
     }
 
-    public synchronized List<ItemInstance> getItems() {
+    public final synchronized List<ItemInstance> getItems() {
         return items;
     }
 
@@ -59,16 +56,10 @@ public abstract class ItemContainer {
 
     public synchronized ItemInstance getItemByObjectId(int objectId) {
         return items.stream()
-                .filter(i -> i.getObjectId() == objectId)
+                .filter(i -> i.objectId() == objectId)
                 .findFirst().orElse(null);
     }
 
-    /**
-     * Найти первую вещь по itemId
-     *
-     * @param itemId
-     * @return вещь, если найдена, либо null если не найдена
-     */
     public synchronized ItemInstance getItemByItemId(int itemId) {
         return items.stream()
                 .filter(item -> item.getItemId() == itemId)
@@ -81,7 +72,7 @@ public abstract class ItemContainer {
                 .collect(Collectors.toList());
     }
 
-    public synchronized long getCountOf(int itemId) {
+    public final synchronized long getCountOf(int itemId) {
         return items.stream()
                 .filter(i -> i.getItemId() == itemId)
                 .count();
@@ -143,7 +134,7 @@ public abstract class ItemContainer {
 
         writeLock();
         try {
-            if (getItemByObjectId(item.getObjectId()) != null)
+            if (getItemByObjectId(item.objectId()) != null)
                 return null;
 
             long countToAdd = item.getCount();

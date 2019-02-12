@@ -49,7 +49,7 @@ public final class _352_HelpRoodRaiseANewPet extends Quest {
         int _state = st.getState();
 
         if (_state == CREATED) {
-            if (st.getPlayer().getLevel() < 39) {
+            if (st.player.getLevel() < 39) {
                 htmltext = "31067-00.htm";
                 st.exitCurrentQuest(true);
             } else {
@@ -72,18 +72,17 @@ public final class _352_HelpRoodRaiseANewPet extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState qs) {
+    public void onKill(NpcInstance npc, QuestState qs) {
         if (qs.getState() != STARTED)
-            return null;
+            return;
 
         if (Rnd.chance(LIENRIK_EGG1_Chance)) {
-            qs.giveItems(LIENRIK_EGG1, 1);
+            qs.giveItems(LIENRIK_EGG1);
             qs.playSound(SOUND_ITEMGET);
         } else if (Rnd.chance(LIENRIK_EGG2_Chance)) {
-            qs.giveItems(LIENRIK_EGG2, 1);
+            qs.giveItems(LIENRIK_EGG2);
             qs.playSound(SOUND_ITEMGET);
         }
-        return null;
     }
 
 }

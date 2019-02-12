@@ -6,7 +6,6 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.tables.PetDataTable;
 
 public final class _422_RepentYourSins extends Quest {
@@ -41,18 +40,6 @@ public final class _422_RepentYourSins extends Quest {
     private final static int TYRANT_KINGPIN = 20193;
     private final static int TRISALIM_TARANTULA = 20561;
 
-    private int findPetLvl(QuestState st) {
-        ItemInstance item = st.getPlayer().getInventory().getItemByItemId(PENITENTS_MANACLES);
-        if (item == null)
-            return 0;
-        Summon pet = st.getPlayer().getPet();
-        if (pet == null)
-            return item.getEnchantLevel();
-        if (pet.getNpcId() != Sin_Eater)
-            return 0;
-        return pet.getLevel();
-    }
-
     public _422_RepentYourSins() {
         super(false);
 
@@ -77,22 +64,34 @@ public final class _422_RepentYourSins extends Quest {
         addQuestItem(PENITENTS_MANACLES1);
     }
 
+    private int findPetLvl(QuestState st) {
+        ItemInstance item = st.player.getInventory().getItemByItemId(PENITENTS_MANACLES);
+        if (item == null)
+            return 0;
+        Summon pet = st.player.getPet();
+        if (pet == null)
+            return item.getEnchantLevel();
+        if (pet.getNpcId() != Sin_Eater)
+            return 0;
+        return pet.getLevel();
+    }
+
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         int Pk_remove;
         if (event.equalsIgnoreCase("Start")) {
             st.playSound(SOUND_ACCEPT);
             st.setState(STARTED);
-            if (st.getPlayer().getLevel() <= 20) {
+            if (st.player.getLevel() <= 20) {
                 st.setCond(1);
                 st.setCond(2);
                 return "black_judge_q0422_03.htm";
             }
-            if (st.getPlayer().getLevel() <= 30) {
+            if (st.player.getLevel() <= 30) {
                 st.setCond(3);
                 return "black_judge_q0422_04.htm";
             }
-            if (st.getPlayer().getLevel() <= 40) {
+            if (st.player.getLevel() <= 40) {
                 st.setCond(4);
                 return "black_judge_q0422_05.htm";
             }
@@ -100,55 +99,53 @@ public final class _422_RepentYourSins extends Quest {
             return "black_judge_q0422_06.htm";
         }
 
-        if (event.equalsIgnoreCase("1")) {
-            if (st.getQuestItemsCount(PENITENTS_MANACLES1) >= 1)
-                st.takeItems(PENITENTS_MANACLES1, -1);
-            if (st.getQuestItemsCount(PENITENTS_MANACLES) >= 1)
-                st.takeItems(PENITENTS_MANACLES, -1);
-            st.setCond(16);
-            st.set("level", String.valueOf(st.getPlayer().getLevel()));
-            st.giveItems(PENITENTS_MANACLES, 1);
-            return "black_judge_q0422_11.htm";
-        }
-        if (event.equalsIgnoreCase("2"))
-            return "black_judge_q0422_14.htm";
-        if (event.equalsIgnoreCase("3")) {
-            int plevel = findPetLvl(st);
-            int level = st.getPlayer().getLevel();
-            int olevel = st.getInt("level");
-            Summon pet = st.getPlayer().getPet();
-            if (pet != null) {
-                if (pet.getNpcId() == Sin_Eater)
-                    return "black_judge_q0422_15t.htm";
-            } else {
-                if (level > olevel)
-                    Pk_remove = plevel - level;
-                else
-                    Pk_remove = plevel - olevel;
-                if (Pk_remove < 0)
-                    Pk_remove = 0;
-                Pk_remove = Rnd.get(10 + Pk_remove) + 1;
-                if (st.getPlayer().getPkKills() <= Pk_remove) {
-                    st.getPlayer().setPkKills(0);
-                    st.playSound(SOUND_FINISH);
-                    if (st.getQuestItemsCount(PENITENTS_MANACLES2) < 1)
-                        st.giveItems(PENITENTS_MANACLES2, 1);
-                    st.exitCurrentQuest(true);
-                    return "black_judge_q0422_15.htm";
+        switch (event) {
+            case "1":
+                st.takeItems(PENITENTS_MANACLES1);
+                st.takeItems(PENITENTS_MANACLES);
+                st.setCond(16);
+                st.set("level", st.player.getLevel());
+                st.giveItems(PENITENTS_MANACLES);
+                return "black_judge_q0422_11.htm";
+            case "2":
+                return "black_judge_q0422_14.htm";
+            case "3":
+                int plevel = findPetLvl(st);
+                int level = st.player.getLevel();
+                int olevel = st.getInt("occupation");
+                Summon pet = st.player.getPet();
+                if (pet != null) {
+                    if (pet.getNpcId() == Sin_Eater)
+                        return "black_judge_q0422_15t.htm";
+                } else {
+                    if (level > olevel)
+                        Pk_remove = plevel - level;
+                    else
+                        Pk_remove = plevel - olevel;
+                    if (Pk_remove < 0)
+                        Pk_remove = 0;
+                    Pk_remove = Rnd.get(10 + Pk_remove) + 1;
+                    if (st.player.getPkKills() <= Pk_remove) {
+                        st.player.setPkKills(0);
+                        st.playSound(SOUND_FINISH);
+                        if (st.getQuestItemsCount(PENITENTS_MANACLES2) < 1)
+                            st.giveItems(PENITENTS_MANACLES2);
+                        st.exitCurrentQuest(true);
+                        return "black_judge_q0422_15.htm";
+                    }
+                    st.takeItems(PENITENTS_MANACLES, 1);
+                    int Pk_new = st.player.getPkKills() - Pk_remove;
+                    st.player.setPkKills(Pk_new);
+                    st.set("occupation", 0);
+                    return "black_judge_q0422_16.htm";
                 }
-                st.takeItems(PENITENTS_MANACLES, 1);
-                int Pk_new = st.getPlayer().getPkKills() - Pk_remove;
-                st.getPlayer().setPkKills(Pk_new);
-                st.set("level", "0");
-                return "black_judge_q0422_16.htm";
-            }
-        }
-        if (event.equalsIgnoreCase("4"))
-            return "black_judge_q0422_17.htm";
-        if (event.equalsIgnoreCase("Quit")) {
-            st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
-            return "black_judge_q0422_18.htm";
+                break;
+            case "4":
+                return "black_judge_q0422_17.htm";
+            case "Quit":
+                st.playSound(SOUND_FINISH);
+                st.exitCurrentQuest(true);
+                return "black_judge_q0422_18.htm";
         }
 
         return event;
@@ -162,14 +159,14 @@ public final class _422_RepentYourSins extends Quest {
 
         if (npcId == Black_Judge) {
             if (id == CREATED) {
-                if (st.getPlayer().getPkKills() >= 1 && st.getPlayer().getLevel() <= 85)
+                if (st.player.getPkKills() >= 1 && st.player.getLevel() <= 85)
                     return "black_judge_q0422_02.htm";
                 st.exitCurrentQuest(true);
                 return "black_judge_q0422_01.htm";
             }
             if (cond <= 9)
                 return "black_judge_q0422_07.htm";
-            if (cond <= 13 && cond > 9 && st.getQuestItemsCount(MANUAL_OF_MANACLES) < 1) {
+            if (cond <= 13 && st.getQuestItemsCount(MANUAL_OF_MANACLES) < 1) {
                 if (st.getQuestItemsCount(PENITENTS_MANACLES2) < 1) {
                     st.setCond(14);
                     st.giveItems(MANUAL_OF_MANACLES, 1);
@@ -177,7 +174,7 @@ public final class _422_RepentYourSins extends Quest {
                 }
                 st.takeItems(PENITENTS_MANACLES2, -1);
                 if (st.getQuestItemsCount(PENITENTS_MANACLES) < 1)
-                    st.giveItems(PENITENTS_MANACLES, 1, false);
+                    st.giveItems(PENITENTS_MANACLES);
                 st.setCond(16);
                 cond = 16;
             }
@@ -188,9 +185,9 @@ public final class _422_RepentYourSins extends Quest {
             if (cond >= 16) {
                 if (st.getQuestItemsCount(PENITENTS_MANACLES) > 0) {
                     int plevel = findPetLvl(st);
-                    int level = st.getPlayer().getLevel();
-                    if (st.getInt("level") > level)
-                        level = st.getInt("level");
+                    int level = st.player.getLevel();
+                    if (st.getInt("occupation") > level)
+                        level = st.getInt("occupation");
                     if (plevel > 0) {
                         if (plevel > level)
                             return "black_judge_q0422_13.htm";
@@ -275,7 +272,7 @@ public final class _422_RepentYourSins extends Quest {
                         st.takeItems(COKES, 10);
                         st.takeItems(STEEL, 5);
                         st.takeItems(BLACKSMITHS_FRAME, 1);
-                        st.giveItems(PENITENTS_MANACLES1, 1);
+                        st.giveItems(PENITENTS_MANACLES1);
                         st.playSound(SOUND_MIDDLE);
                         return "blacksmith_pushkin_q0422_02.htm";
                     }
@@ -287,9 +284,9 @@ public final class _422_RepentYourSins extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getState() != STARTED)
-            return null;
+            return;
         int cond = st.getCond();
         int npcId = npc.getNpcId();
         long skulls = st.getQuestItemsCount(SCAVENGER_WERERAT_SKULL);
@@ -298,33 +295,26 @@ public final class _422_RepentYourSins extends Quest {
         long sacs = st.getQuestItemsCount(TRISALIM_TARANTULAS_VENOM_SAC);
         if (npcId == SCAVENGER_WERERAT)
             if (cond == 6 && skulls < 10) {
-                st.giveItems(SCAVENGER_WERERAT_SKULL, 1);
-                if (skulls == 10)
-                    st.playSound(SOUND_MIDDLE);
-                else
-                    st.playSound(SOUND_ITEMGET);
+                st.giveItems(SCAVENGER_WERERAT_SKULL);
+                st.playSound(SOUND_ITEMGET);
             }
         if (npcId == TUREK_WARHOUND)
             if (cond == 7 && tails < 10) {
-                st.giveItems(TUREK_WARHOUND_TAIL, 1);
-                if (tails == 10)
-                    st.playSound(SOUND_MIDDLE);
-                else
-                    st.playSound(SOUND_ITEMGET);
+                st.giveItems(TUREK_WARHOUND_TAIL);
+                st.playSound(SOUND_ITEMGET);
             }
         if (npcId == TYRANT_KINGPIN)
             if (cond == 8 && heart < 1) {
-                st.giveItems(TYRANT_KINGPIN_HEART, 1);
+                st.giveItems(TYRANT_KINGPIN_HEART);
                 st.playSound(SOUND_MIDDLE);
             }
         if (npcId == TRISALIM_TARANTULA)
             if (cond == 9 && sacs < 3) {
-                st.giveItems(TRISALIM_TARANTULAS_VENOM_SAC, 1);
+                st.giveItems(TRISALIM_TARANTULAS_VENOM_SAC);
                 if (skulls == 3)
                     st.playSound(SOUND_MIDDLE);
                 else
                     st.playSound(SOUND_ITEMGET);
             }
-        return null;
     }
 }

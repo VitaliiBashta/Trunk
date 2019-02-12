@@ -18,12 +18,14 @@ public final class ConditionSlotItemId extends ConditionInventory {
 
     @Override
     protected boolean testImpl(Env env) {
-        if (!env.character.isPlayer())
+        if (env.character instanceof Player) {
+            Inventory inv = ((Player) env.character).inventory;
+            ItemInstance item = inv.getPaperdollItem(slot);
+            if (item == null)
+                return itemId == 0;
+            return item.getItemId() == itemId && item.getEnchantLevel() >= enchantLevel;
+        } else {
             return false;
-        Inventory inv = ((Player) env.character).getInventory();
-        ItemInstance item = inv.getPaperdollItem(slot);
-        if (item == null)
-            return itemId == 0;
-        return item.getItemId() == itemId && item.getEnchantLevel() >= enchantLevel;
+        }
     }
 }

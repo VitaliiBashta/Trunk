@@ -73,9 +73,9 @@ public final class _456_DontKnowDontCare extends Quest {
             }
             return null;
         } else if (event.equalsIgnoreCase("sepsoul_q456_08.htm")) {
-            st.takeAllItems(DrakeLordsEssence);
-            st.takeAllItems(BehemothLeadersEssence);
-            st.takeAllItems(DragonBeastsEssence);
+            st.takeItems(DrakeLordsEssence);
+            st.takeItems(BehemothLeadersEssence);
+            st.takeItems(DragonBeastsEssence);
 
             if (Rnd.chance(2))
                 st.giveItems(Rnd.get(weapons));
@@ -106,7 +106,7 @@ public final class _456_DontKnowDontCare extends Quest {
             switch (st.getState()) {
                 case CREATED:
                     if (st.isNowAvailable()) {
-                        if (st.getPlayer().getLevel() >= 80)
+                        if (st.player.getLevel() >= 80)
                             htmltext = "sepsoul_q456_01.htm";
                         else {
                             htmltext = "sepsoul_q456_00.htm";

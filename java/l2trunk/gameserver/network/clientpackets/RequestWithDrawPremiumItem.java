@@ -31,7 +31,7 @@ public final class RequestWithDrawPremiumItem extends L2GameClientPacket {
             return;
         }
 
-        if (activeChar.getObjectId() != _charId) {
+        if (activeChar.objectId() != _charId) {
             // audit
             return;
         }
@@ -52,7 +52,7 @@ public final class RequestWithDrawPremiumItem extends L2GameClientPacket {
         if (_item == null) {
             return;
         }
-        boolean stackable = ItemHolder.getTemplate(_item.getItemId()).isStackable();
+        boolean stackable = ItemHolder.getTemplate(_item.getItemId()).stackable();
         if (_item.getCount() < _itemcount) {
             return;
         }

@@ -1,6 +1,5 @@
 package l2trunk.gameserver.model.entity.events.impl;
 
-import l2trunk.commons.collections.CollectionUtils;
 import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.dao.SiegeClanDAO;
 import l2trunk.gameserver.dao.SiegePlayerDAO;
@@ -157,7 +156,7 @@ public final class ClanHallTeamBattleEvent extends SiegeEvent<ClanHall, CTBSiege
         if (!isInProgress() || player.getClan() == null)
             return false;
         CTBSiegeClanObject object = getSiegeClan(ATTACKERS, player.getClan());
-        return object != null && object.getPlayers().contains(player.getObjectId());
+        return object != null && object.getPlayers().contains(player.objectId());
     }
 
     @Override

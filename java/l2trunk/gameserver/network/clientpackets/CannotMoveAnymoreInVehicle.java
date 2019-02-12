@@ -61,7 +61,7 @@ import l2trunk.gameserver.utils.Location;
         /* 30 */
         Boat boat = player.getBoat();
         /* 31 */
-        if ((boat == null) || (boat.getObjectId() != this._boatid))
+        if ((boat == null) || (boat.objectId() != this._boatid))
             /*	*/ return;
         /* 33 */
         player.setInBoatPosition(this._loc);

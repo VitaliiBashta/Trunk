@@ -4,14 +4,12 @@ import l2trunk.gameserver.Config;
 import l2trunk.gameserver.data.htm.HtmCache;
 import l2trunk.gameserver.data.xml.holder.ItemHolder;
 import l2trunk.gameserver.model.Player;
-import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.Util;
 
 public final class TitleColor extends Functions {
     public void list(String[] param) {
-        Player player = getSelf();
         if (player == null)
             return;
 
@@ -61,11 +59,10 @@ public final class TitleColor extends Functions {
         html = html.replace("{list}", list);
         html = html.replace("{navigation}", navigation);
 
-        show(html, player, null);
+        show(html, player);
     }
 
     public void change(String[] param) {
-        Player player = getSelf();
         if (player == null)
             return;
 

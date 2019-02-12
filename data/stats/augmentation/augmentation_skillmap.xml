@@ -356,7 +356,7 @@
 		<type val="purple" />
 	</augmentation>
 	<augmentation id="14632"> <!-- Active: Has a chance to open doors and treasure chests. Requires Keys of a Thief. -->
-		<skillId val="3155" /> <!-- Item Skill: Unlock: Active: Opens level 1 doors with 100% probability, level 2 doors with 30% probability, and chests below level 36 with 90% probability. Requires 4 Keys of a Thief. -->
+		<skillId val="3155" /> <!-- Item Skill: Unlock: Active: Opens occupation 1 doors with 100% probability, occupation 2 doors with 30% probability, and chests below occupation 36 with 90% probability. Requires 4 Keys of a Thief. -->
 		<skillLevel val="1" />
 		<type val="purple" />
 	</augmentation>
@@ -1332,7 +1332,7 @@
 		<type val="purple" />
 	</augmentation>
 	<augmentation id="14810"> <!-- Active: Has a chance to open doors and treasure chests. Requires Keys of a Thief. -->
-		<skillId val="3155" /> <!-- Item Skill: Unlock: Active: Opens level 1 doors with 100% probability, level 2 doors with 75% probability, and chests below level 40 with 90% probability. Requires 5 Keys of a Thief. -->
+		<skillId val="3155" /> <!-- Item Skill: Unlock: Active: Opens occupation 1 doors with 100% probability, occupation 2 doors with 75% probability, and chests below occupation 40 with 90% probability. Requires 5 Keys of a Thief. -->
 		<skillLevel val="2" />
 		<type val="purple" />
 	</augmentation>
@@ -2308,7 +2308,7 @@
 		<type val="purple" />
 	</augmentation>
 	<augmentation id="14988"> <!-- Active: Has a chance to open doors and treasure chests. Requires Keys of a Thief. -->
-		<skillId val="3155" /> <!-- Item Skill: Unlock: Active: Opens doors below level 2 with 100% probability, level 3 doors with 5% probability, and chests below level 44 with 90% probability. Requires 6 Keys of a Thief. -->
+		<skillId val="3155" /> <!-- Item Skill: Unlock: Active: Opens doors below occupation 2 with 100% probability, occupation 3 doors with 5% probability, and chests below occupation 44 with 90% probability. Requires 6 Keys of a Thief. -->
 		<skillLevel val="3" />
 		<type val="purple" />
 	</augmentation>
@@ -3284,7 +3284,7 @@
 		<type val="purple" />
 	</augmentation>
 	<augmentation id="15166"> <!-- Active: Has a chance to open doors and treasure chests. Requires Keys of a Thief. -->
-		<skillId val="3155" /> <!-- Item Skill: Unlock: Active: Opens doors below level 2 with 100% probability, level 3 doors with 30% probability, and chests below level 48 with 90% probability. Requires 7 Keys of a Thief. -->
+		<skillId val="3155" /> <!-- Item Skill: Unlock: Active: Opens doors below occupation 2 with 100% probability, occupation 3 doors with 30% probability, and chests below occupation 48 with 90% probability. Requires 7 Keys of a Thief. -->
 		<skillLevel val="4" />
 		<type val="purple" />
 	</augmentation>
@@ -4260,7 +4260,7 @@
 		<type val="purple" />
 	</augmentation>
 	<augmentation id="15344"> <!-- Active: Has a chance to open doors and treasure chests. Requires Keys of a Thief. -->
-		<skillId val="3155" /> <!-- Item Skill: Unlock: Active: Opens doors below level 2 with 100% probability, level 3 doors with 75% probability, and chests below level 52 with 90% probability. Requires 8 Keys of a Thief. -->
+		<skillId val="3155" /> <!-- Item Skill: Unlock: Active: Opens doors below occupation 2 with 100% probability, occupation 3 doors with 75% probability, and chests below occupation 52 with 90% probability. Requires 8 Keys of a Thief. -->
 		<skillLevel val="5" />
 		<type val="purple" />
 	</augmentation>
@@ -5236,7 +5236,7 @@
 		<type val="purple" />
 	</augmentation>
 	<augmentation id="15522"> <!-- Active: Has a chance to open doors and treasure chests. Requires Keys of a Thief. -->
-		<skillId val="3155" /> <!-- Item Skill: Unlock: Active: Opens level 3 doors with 100% probability and chests below level 56 with 90% probability. Requires 10 Keys of a Thief. -->
+		<skillId val="3155" /> <!-- Item Skill: Unlock: Active: Opens occupation 3 doors with 100% probability and chests below occupation 56 with 90% probability. Requires 10 Keys of a Thief. -->
 		<skillLevel val="6" />
 		<type val="purple" />
 	</augmentation>
@@ -6210,7 +6210,7 @@
 		<type val="purple" />
 	</augmentation>
 	<augmentation id="15700"> <!-- Active: Has a chance to open doors and treasure chests. Requires Keys of a Thief. -->
-		<skillId val="3155" /> <!-- Item Skill: Unlock: Active: Opens level 3 doors with 100% probability and chests below level 60 with 90% probability. Requires 11 Keys of a Thief. -->
+		<skillId val="3155" /> <!-- Item Skill: Unlock: Active: Opens occupation 3 doors with 100% probability and chests below occupation 60 with 90% probability. Requires 11 Keys of a Thief. -->
 		<skillLevel val="7" />
 		<type val="purple" />
 	</augmentation>
@@ -7186,7 +7186,7 @@
 		<type val="purple" />
 	</augmentation>
 	<augmentation id="15878"> <!-- Active: Has a chance to open doors and treasure chests. Requires Keys of a Thief. -->
-		<skillId val="3155" /> <!-- Item Skill: Unlock: Active: Opens level 3 doors with 100% probability and chests below level 64 with 90% probability. Requires 13 Keys of a Thief. -->
+		<skillId val="3155" /> <!-- Item Skill: Unlock: Active: Opens occupation 3 doors with 100% probability and chests below occupation 64 with 90% probability. Requires 13 Keys of a Thief. -->
 		<skillLevel val="8" />
 		<type val="purple" />
 	</augmentation>
@@ -8162,7 +8162,7 @@
 		<type val="purple" />
 	</augmentation>
 	<augmentation id="16056"> <!-- Active: Has a chance to open doors and treasure chests. Requires Keys of a Thief. -->
-		<skillId val="3155" /> <!-- Item Skill: Unlock: Active: Opens level 3 doors with 100% probability and chests below level 68 with 90% probability. Requires 15 Keys of a Thief. -->
+		<skillId val="3155" /> <!-- Item Skill: Unlock: Active: Opens occupation 3 doors with 100% probability and chests below occupation 68 with 90% probability. Requires 15 Keys of a Thief. -->
 		<skillLevel val="9" />
 		<type val="purple" />
 	</augmentation>
@@ -9136,7 +9136,7 @@
 		<type val="purple" />
 	</augmentation>
 	<augmentation id="16234"> <!-- Active: Has a chance to open doors and treasure chests. Requires Keys of a Thief. -->
-		<skillId val="3155" /> <!-- Item Skill: Unlock: Active: Opens level 3 doors with 100% probability and chests below level 72 with 90% probability. Requires 17 Keys of a Thief. -->
+		<skillId val="3155" /> <!-- Item Skill: Unlock: Active: Opens occupation 3 doors with 100% probability and chests below occupation 72 with 90% probability. Requires 17 Keys of a Thief. -->
 		<skillLevel val="10" />
 		<type val="purple" />
 	</augmentation>

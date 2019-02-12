@@ -1,6 +1,8 @@
 package l2trunk.gameserver.skills.effects;
 
 import l2trunk.gameserver.model.Effect;
+import l2trunk.gameserver.model.instances.MonsterInstance;
+import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.FinishRotating;
 import l2trunk.gameserver.network.serverpackets.StartRotating;
 import l2trunk.gameserver.stats.Env;
@@ -12,9 +14,7 @@ public final class EffectBluff extends Effect {
 
     @Override
     public boolean checkCondition() {
-        if (effected.isNpc() && !effected.isMonster())
-            return false;
-        return super.checkCondition();
+        return !(effected instanceof NpcInstance) || effected instanceof MonsterInstance;
     }
 
     @Override
@@ -29,8 +29,4 @@ public final class EffectBluff extends Effect {
         return true;
     }
 
-    @Override
-    public boolean onActionTime() {
-        return false;
-    }
 }

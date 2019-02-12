@@ -14,11 +14,7 @@ public final class Ride extends Skill {
     }
 
     @Override
-    public boolean checkCondition(Creature activeChar, Creature target, boolean forceUse, boolean dontMove, boolean first) {
-        if (!activeChar.isPlayer())
-            return false;
-
-        Player player = (Player) activeChar;
+    public boolean checkCondition(Player player, Creature target, boolean forceUse, boolean dontMove, boolean first) {
         if (npcId != 0) {
             if (player.isInOlympiadMode()) {
                 player.sendPacket(SystemMsg.YOU_CANNOT_USE_THAT_ITEM_IN_A_GRAND_OLYMPIAD_MATCH);
@@ -30,16 +26,13 @@ public final class Ride extends Skill {
             }
         } else if (!player.isMounted())
             return false;
-
-        return super.checkCondition(activeChar, target, forceUse, dontMove, first);
+        return super.checkCondition(player, target, forceUse, dontMove, first);
     }
 
     @Override
     public void useSkill(Creature caster, List<Creature> targets) {
-        if (!caster.isPlayer())
-            return;
-
-        Player activeChar = (Player) caster;
-        activeChar.setMount(npcId, 0, 0);
+        if (caster instanceof Player) {
+            ((Player) caster).setMount(npcId, 0, 0);
+        }
     }
 }

@@ -11,10 +11,6 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
-/**
- * @author VISTALL
- * @date 19:36/19.04.2011
- */
 public class MainMachineInstance extends NpcInstance {
     private int _powerUnits;
 
@@ -89,7 +85,7 @@ public class MainMachineInstance extends NpcInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
         NpcHtmlMessage message = new NpcHtmlMessage(player, this);
         if (_powerUnits != 0)
             message.setFile("residence2/fortress/fortress_mainpower002.htm");

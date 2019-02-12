@@ -7,21 +7,17 @@ import l2trunk.gameserver.utils.Location;
 
 public final class TeleToMDT extends Functions {
     public void toMDT() {
-        Player player = getSelf();
-        NpcInstance npc = getNpc();
         if (player == null || npc == null)
             return;
 
         if (!NpcInstance.canBypassCheck(player, npc))
             return;
 
-        player.setVar("backCoords", player.getLoc().toXYZString(), -1);
+        player.setVar("backCoords", player.getLoc().toXYZString());
         player.teleToLocation(12661, 181687, -3560);
     }
 
     public void fromMDT() {
-        Player player = getSelf();
-        NpcInstance npc = getNpc();
         if (player == null || npc == null)
             return;
 
@@ -33,12 +29,10 @@ public final class TeleToMDT extends Functions {
             teleOut();
             return;
         }
-        player.teleToLocation(Location.parseLoc(var));
+        player.teleToLocation(Location.of(var));
     }
 
     private void teleOut() {
-        Player player = getSelf();
-        NpcInstance npc = getNpc();
         if (player == null || npc == null)
             return;
         player.teleToLocation(12902, 181011, -3563);

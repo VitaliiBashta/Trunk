@@ -66,8 +66,8 @@ public class RequestGetItemFromPet extends L2GameClientPacket {
         }
 
         int slots = 0;
-        long weight = item.getTemplate().getWeight() * _amount;
-        if (!item.getTemplate().isStackable() || activeChar.getInventory().getItemByItemId(item.getItemId()) == null)
+        long weight = item.getTemplate().weight() * _amount;
+        if (!item.getTemplate().stackable() || activeChar.getInventory().getItemByItemId(item.getItemId()) == null)
             slots = 1;
 
         if (!activeChar.getInventory().validateWeight(weight)) {

@@ -185,7 +185,7 @@ public final class ClanHallMiniGameEvent extends SiegeEvent<ClanHall, CMGSiegeCl
 
     @Override
     public void onAddEvent(GameObject object) {
-        if (object.isItem())
+        if (object instanceof ItemInstance)
             addBanishItem((ItemInstance) object);
     }
 }

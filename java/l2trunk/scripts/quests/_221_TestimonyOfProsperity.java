@@ -4,7 +4,6 @@ import l2trunk.gameserver.model.base.Race;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _221_TestimonyOfProsperity extends Quest {
     //NPC
@@ -270,19 +269,19 @@ public final class _221_TestimonyOfProsperity extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
         if (event.equalsIgnoreCase("30104-04.htm")) {
-            if (!st.getPlayer().getVarB("dd2")) {
+            if (!st.player.isVarSet("dd2")) {
                 st.giveItems(7562, 50);
-                st.getPlayer().setVar("dd2", "1", -1);
+                st.player.setVar("dd2", 1);
             }
             st.playSound(SOUND_ACCEPT);
-            st.giveItems(RingOfTestimony1st, 1);
+            st.giveItems(RingOfTestimony1st);
             st.setCond(1);
             st.setState(STARTED);
         } else if (event.equalsIgnoreCase("30466-03.htm"))
-            st.giveItems(BrightsList, 1);
+            st.giveItems(BrightsList);
         else if (event.equalsIgnoreCase("30620-03.htm")) {
-            st.takeItems(MandragoraBouquet, -1);
-            st.giveItems(EmilysRecipe, 1);
+            st.takeItems(MandragoraBouquet);
+            st.giveItems(EmilysRecipe);
             htmltext = "30620-03.htm";
             if (st.getQuestItemsCount(OldAccountBook) > 0 && st.getQuestItemsCount(BlessedSeed) > 0 && st.getQuestItemsCount(EmilysRecipe) > 0 && st.getQuestItemsCount(LilithsElvenWafer) > 0) {
                 st.setCond(2);
@@ -315,21 +314,21 @@ public final class _221_TestimonyOfProsperity extends Quest {
         else if (event.equalsIgnoreCase("30534-03a.htm") && st.getQuestItemsCount(ADENA_ID) >= 5000) {
             htmltext = "30534-03b.htm";
             st.takeItems(ADENA_ID, 5000);
-            st.takeItems(ProcurationOfTorocco, -1);
-            st.giveItems(ReceiptOfContribution3st, 1);
+            st.takeItems(ProcurationOfTorocco);
+            st.giveItems(ReceiptOfContribution3st);
         } else if (event.equalsIgnoreCase("30104-07.htm")) {
-            st.takeItems(RingOfTestimony1st, -1);
-            st.takeItems(OldAccountBook, -1);
-            st.takeItems(BlessedSeed, -1);
-            st.takeItems(EmilysRecipe, -1);
-            st.takeItems(LilithsElvenWafer, -1);
-            if (st.getPlayer().getLevel() < 38) {
-                st.giveItems(ParmansInstructions, 1);
+            st.takeItems(RingOfTestimony1st);
+            st.takeItems(OldAccountBook);
+            st.takeItems(BlessedSeed);
+            st.takeItems(EmilysRecipe);
+            st.takeItems(LilithsElvenWafer);
+            if (st.player.getLevel() < 38) {
+                st.giveItems(ParmansInstructions);
                 st.setCond(3);
                 st.setState(STARTED);
             } else {
-                st.giveItems(ParmansLetter, 1);
-                st.giveItems(RingOfTestimony2st, 1);
+                st.giveItems(ParmansLetter);
+                st.giveItems(RingOfTestimony2st);
                 htmltext = "30104-08.htm";
                 st.setCond(4);
                 st.setState(STARTED);
@@ -363,8 +362,8 @@ public final class _221_TestimonyOfProsperity extends Quest {
                 htmltext = "completed";
                 st.exitCurrentQuest(true);
             } else if (cond == 0) {
-                if (st.getPlayer().getRace() == Race.dwarf) {
-                    if (st.getPlayer().getLevel() >= 37)
+                if (st.player.getRace() == Race.dwarf) {
+                    if (st.player.getLevel() >= 37)
                         htmltext = "30104-03.htm";
                     else {
                         htmltext = "30104-02.htm";
@@ -380,13 +379,13 @@ public final class _221_TestimonyOfProsperity extends Quest {
                 if (st.getQuestItemsCount(OldAccountBook) > 0 && st.getQuestItemsCount(BlessedSeed) > 0 && st.getQuestItemsCount(EmilysRecipe) > 0 && st.getQuestItemsCount(LilithsElvenWafer) > 0)
                     htmltext = "30104-06.htm";
             } else if (cond == 3 && st.getQuestItemsCount(ParmansInstructions) > 0) {
-                if (st.getPlayer().getLevel() < 38)
+                if (st.player.getLevel() < 38)
                     htmltext = "30104-09.htm";
                 else {
                     htmltext = "30104-10.htm";
-                    st.takeItems(ParmansInstructions, -1);
-                    st.giveItems(RingOfTestimony2st, 1);
-                    st.giveItems(ParmansLetter, 1);
+                    st.takeItems(ParmansInstructions);
+                    st.giveItems(RingOfTestimony2st);
+                    st.giveItems(ParmansLetter);
                     st.setCond(4);
                     st.setState(STARTED);
                 }
@@ -395,14 +394,14 @@ public final class _221_TestimonyOfProsperity extends Quest {
             else if (cond >= 5 && cond <= 7)
                 htmltext = "30104-12.htm";
             else if (cond == 9) {
-                if (!st.getPlayer().getVarB("prof2.2")) {
+                if (!st.player.isVarSet("prof2.2")) {
                     st.addExpAndSp(599979, 40040);
                     st.giveItems(57, 108841);
-                    st.getPlayer().setVar("prof2.2", "1", -1);
+                    st.player.setVar("prof2.2", 1);
                 }
-                st.takeItems(RingOfTestimony2st, -1);
-                st.takeItems(MaphrTabletFragment, -1);
-                st.giveItems(MarkOfProsperity, 1);
+                st.takeItems(RingOfTestimony2st);
+                st.takeItems(MaphrTabletFragment);
+                st.giveItems(MarkOfProsperity);
                 htmltext = "30104-13.htm";
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest(true);
@@ -413,13 +412,13 @@ public final class _221_TestimonyOfProsperity extends Quest {
             else if (st.getQuestItemsCount(CollectionLicense) > 0) {
                 if (st.getQuestItemsCount(ReceiptOfContribution1st) > 0 && st.getQuestItemsCount(ReceiptOfContribution2st) > 0 && st.getQuestItemsCount(ReceiptOfContribution3st) > 0 && st.getQuestItemsCount(ReceiptOfContribution4st) > 0 && st.getQuestItemsCount(ReceiptOfContribution5st) > 0) {
                     htmltext = "30531-05.htm";
-                    st.takeItems(CollectionLicense, -1);
-                    st.takeItems(ReceiptOfContribution1st, -1);
-                    st.takeItems(ReceiptOfContribution2st, -1);
-                    st.takeItems(ReceiptOfContribution3st, -1);
-                    st.takeItems(ReceiptOfContribution4st, -1);
-                    st.takeItems(ReceiptOfContribution5st, -1);
-                    st.giveItems(OldAccountBook, 1);
+                    st.takeItems(CollectionLicense);
+                    st.takeItems(ReceiptOfContribution1st);
+                    st.takeItems(ReceiptOfContribution2st);
+                    st.takeItems(ReceiptOfContribution3st);
+                    st.takeItems(ReceiptOfContribution4st);
+                    st.takeItems(ReceiptOfContribution5st);
+                    st.giveItems(OldAccountBook);
                     if (st.getQuestItemsCount(OldAccountBook) > 0 && st.getQuestItemsCount(BlessedSeed) > 0 && st.getQuestItemsCount(EmilysRecipe) > 0 && st.getQuestItemsCount(LilithsElvenWafer) > 0)
                         st.setCond(2);
                 } else
@@ -611,7 +610,7 @@ public final class _221_TestimonyOfProsperity extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         for (int[] aDROPLIST_COND : DROPLIST_COND)
@@ -628,6 +627,5 @@ public final class _221_TestimonyOfProsperity extends Quest {
             st.setCond(8);
             st.setState(STARTED);
         }
-        return null;
     }
 }

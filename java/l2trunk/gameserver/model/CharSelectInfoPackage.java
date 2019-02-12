@@ -5,8 +5,6 @@ import l2trunk.gameserver.model.items.Inventory;
 import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.model.items.ItemInstance.ItemLocation;
 
-import java.util.Collection;
-
 public final class CharSelectInfoPackage {
     private final ItemInstance[] _paperdoll;
     private String _name;
@@ -151,7 +149,7 @@ public final class CharSelectInfoPackage {
     public int getPaperdollObjectId(int slot) {
         ItemInstance item = _paperdoll[slot];
         if (item != null)
-            return item.getObjectId();
+            return item.objectId();
         return 0;
     }
 

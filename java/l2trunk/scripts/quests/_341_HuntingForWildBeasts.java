@@ -47,7 +47,7 @@ public final class _341_HuntingForWildBeasts extends Quest {
             return htmltext;
         int _state = st.getState();
         if (_state == CREATED) {
-            if (st.getPlayer().getLevel() >= 20) {
+            if (st.player.getLevel() >= 20) {
                 htmltext = "pano_q0341_01.htm";
                 st.setCond(0);
             } else {
@@ -57,7 +57,7 @@ public final class _341_HuntingForWildBeasts extends Quest {
         } else if (_state == STARTED)
             if (st.getQuestItemsCount(BEAR_SKIN) >= 20) {
                 htmltext = "pano_q0341_05.htm";
-                st.takeItems(BEAR_SKIN, -1);
+                st.takeItems(BEAR_SKIN);
                 st.giveItems(ADENA_ID, 3710);
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest(true);
@@ -68,20 +68,19 @@ public final class _341_HuntingForWildBeasts extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState qs) {
+    public void onKill(NpcInstance npc, QuestState qs) {
         if (qs.getState() != STARTED)
-            return null;
+            return;
 
         long BEAR_SKIN_COUNT = qs.getQuestItemsCount(BEAR_SKIN);
         if (BEAR_SKIN_COUNT < 20 && Rnd.chance(BEAR_SKIN_CHANCE)) {
-            qs.giveItems(BEAR_SKIN, 1);
+            qs.giveItems(BEAR_SKIN);
             if (BEAR_SKIN_COUNT == 19) {
                 qs.setCond(2);
                 qs.playSound(SOUND_MIDDLE);
             } else
                 qs.playSound(SOUND_ITEMGET);
         }
-        return null;
     }
 
 }

@@ -23,7 +23,7 @@ public class ExFishingHpRegen extends L2GameServerPacket {
     private final int char_obj_id;
 
     public ExFishingHpRegen(Creature character, int time, int fishHP, int HPmode, int GoodUse, int anim, int penalty, int hpBarColor) {
-        char_obj_id = character.getObjectId();
+        char_obj_id = character.objectId();
         _time = time;
         _fishHP = fishHP;
         _HPmode = HPmode;

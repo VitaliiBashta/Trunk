@@ -12,7 +12,7 @@ import l2trunk.gameserver.utils.Log;
  * S: Message
  * S: Receiving Player
  */
-public class RequestSendL2FriendSay extends L2GameClientPacket {
+public final class RequestSendL2FriendSay extends L2GameClientPacket {
     private String _message;
     private String _reciever;
 
@@ -47,7 +47,7 @@ public class RequestSendL2FriendSay extends L2GameClientPacket {
             return;
         }
 
-        if (!activeChar.getFriendList().getList().containsKey(targetPlayer.getObjectId()))
+        if (!activeChar.getFriendList().getList().containsKey(targetPlayer.objectId()))
             return;
 
         Log.LogChat("FRIENDTELL", activeChar.getName(), _reciever, _message);

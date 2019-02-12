@@ -32,11 +32,11 @@ public final class _269_InventionAmbition extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equals("inventor_maru_q0269_04.htm")) {
+        if ("inventor_maru_q0269_04.htm".equals(event)) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equals("inventor_maru_q0269_07.htm")) {
+        } else if ("inventor_maru_q0269_07.htm".equals(event)) {
             st.exitCurrentQuest(true);
             st.playSound(SOUND_FINISH);
         }
@@ -48,14 +48,14 @@ public final class _269_InventionAmbition extends Quest {
         String htmltext;
         long count = st.getQuestItemsCount(ENERGY_ORES);
         if (st.getState() == CREATED)
-            if (st.getPlayer().getLevel() < 18) {
+            if (st.player.getLevel() < 18) {
                 htmltext = "inventor_maru_q0269_02.htm";
                 st.exitCurrentQuest(true);
             } else
                 htmltext = "inventor_maru_q0269_01.htm";
         else if (count > 0) {
             st.giveItems(ADENA_ID, count * 50 + 2044 * (count / 20), true);
-            st.takeItems(ENERGY_ORES, -1);
+            st.takeItems(ENERGY_ORES);
             htmltext = "inventor_maru_q0269_06.htm";
         } else
             htmltext = "inventor_maru_q0269_05.htm";
@@ -63,13 +63,12 @@ public final class _269_InventionAmbition extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getState() != STARTED)
-            return null;
+            return;
         if (Rnd.chance(60)) {
-            st.giveItems(ENERGY_ORES, 1, false);
+            st.giveItems(ENERGY_ORES);
             st.playSound(SOUND_ITEMGET);
         }
-        return null;
     }
 }

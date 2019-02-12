@@ -24,7 +24,7 @@ public final class ColiseumManagerInstance extends ColiseumHelperInstance {
     public ColiseumManagerInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
 
-        _startHtm = getParameter("start_htm", StringUtils.EMPTY);
+        _startHtm = getParameter("start_htm", "");
         _coliseumId = getParameter("coliseum_id", 0);
     }
 
@@ -72,7 +72,7 @@ public final class ColiseumManagerInstance extends ColiseumHelperInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... ar) {
+    public void showChatWindow(Player player, int val) {
         showChatWindow(player, _startHtm);
     }
 }

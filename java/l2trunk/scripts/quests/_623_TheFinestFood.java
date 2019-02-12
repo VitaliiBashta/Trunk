@@ -32,16 +32,16 @@ public final class _623_TheFinestFood extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("quest_accept")) {
+        if ("quest_accept".equalsIgnoreCase(event)) {
             htmltext = "jeremy_q0623_0104.htm";
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("623_3")) {
+        } else if ("623_3".equalsIgnoreCase(event)) {
             htmltext = "jeremy_q0623_0201.htm";
-            st.takeItems(LEAF_OF_FLAVA, -1);
-            st.takeItems(BUFFALO_MEAT, -1);
-            st.takeItems(ANTELOPE_HORN, -1);
+            st.takeItems(LEAF_OF_FLAVA);
+            st.takeItems(BUFFALO_MEAT);
+            st.takeItems(ANTELOPE_HORN);
             st.giveItems(ADENA_ID, 73000);
             st.addExpAndSp(230000, 18250);
             st.playSound(SOUND_FINISH);
@@ -63,7 +63,7 @@ public final class _623_TheFinestFood extends Quest {
         int cond = st.getCond();
         if (npcId == JEREMY)
             if (cond == 0) {
-                if (st.getPlayer().getLevel() >= 71)
+                if (st.player.getLevel() >= 71)
                     htmltext = "jeremy_q0623_0101.htm";
                 else {
                     htmltext = "jeremy_q0623_0103.htm";
@@ -77,41 +77,29 @@ public final class _623_TheFinestFood extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int cond = st.getCond();
         int npcId = npc.getNpcId();
         if (cond == 1) // Like off C4 PTS AI (убрали  && Rnd.chance(50))
             if (npcId == HOT_SPRINGS_BUFFALO) {
-                if (st.getQuestItemsCount(BUFFALO_MEAT) < 100) {
-                    st.giveItems(BUFFALO_MEAT, 1);
-                    if (st.getQuestItemsCount(BUFFALO_MEAT) == 100) {
-                        if (summ(st) >= 300)
-                            st.setCond(2);
-                        st.playSound(SOUND_MIDDLE);
-                    } else
-                        st.playSound(SOUND_ITEMGET);
-                }
+                giveItem(st, BUFFALO_MEAT);
             } else if (npcId == HOT_SPRINGS_FLAVA) {
-                if (st.getQuestItemsCount(LEAF_OF_FLAVA) < 100) {
-                    st.giveItems(LEAF_OF_FLAVA, 1);
-                    if (st.getQuestItemsCount(LEAF_OF_FLAVA) == 100) {
-                        if (summ(st) >= 300)
-                            st.setCond(2);
-                        st.playSound(SOUND_MIDDLE);
-                    } else
-                        st.playSound(SOUND_ITEMGET);
-                }
-            } else if (npcId == HOT_SPRINGS_ANTELOPE)
-                if (st.getQuestItemsCount(ANTELOPE_HORN) < 100) {
-                    st.giveItems(ANTELOPE_HORN, 1);
-                    if (st.getQuestItemsCount(ANTELOPE_HORN) == 100) {
-                        if (summ(st) >= 300)
-                            st.setCond(2);
-                        st.playSound(SOUND_MIDDLE);
-                    } else
-                        st.playSound(SOUND_ITEMGET);
-                }
-        return null;
+                giveItem(st, LEAF_OF_FLAVA);
+            } else if (npcId == HOT_SPRINGS_ANTELOPE) {
+                giveItem(st, ANTELOPE_HORN);
+            }
+    }
+
+    private void giveItem(QuestState st, int itemId) {
+        if (st.getQuestItemsCount(itemId) < 100) {
+            st.giveItems(itemId);
+            if (st.getQuestItemsCount(itemId) == 100) {
+                if (summ(st) >= 300)
+                    st.setCond(2);
+                st.playSound(SOUND_MIDDLE);
+            } else
+                st.playSound(SOUND_ITEMGET);
+        }
     }
 
     private long summ(QuestState st) {

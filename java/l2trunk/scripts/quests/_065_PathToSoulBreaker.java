@@ -9,6 +9,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.Location;
+import l2trunk.gameserver.utils.NpcUtils;
 
 public final class _065_PathToSoulBreaker extends Quest {
     private static final int Vitus = 32213;
@@ -67,70 +68,70 @@ public final class _065_PathToSoulBreaker extends Quest {
         Katenar_Spawn = null;
     }
 
-    private void Spawn_Katenar(QuestState st) {
-        Katenar_Spawn = Functions.spawn(Location.findPointToStay(st.getPlayer(), 50, 100), Katenar);
+    private void spawnKatenar(QuestState st) {
+        Katenar_Spawn = NpcUtils.spawnSingle(Katenar,Location.findPointToStay(st.player, 50, 100) );
     }
 
-    private void Despawn_Guardian_Angel() {
+    private void despawnGuardianAngel() {
         if (Guardian_Angel_Spawn != null)
             Guardian_Angel_Spawn.deleteMe();
         Guardian_Angel_Spawn = null;
     }
 
     private void Spawn_Guardian_Angel(QuestState st) {
-        Guardian_Angel_Spawn = Functions.spawn(Location.findPointToStay(st.getPlayer(), 50, 100), Guardian_Angel);
+        Guardian_Angel_Spawn = NpcUtils.spawnSingle(Guardian_Angel,Location.findPointToStay(st.player, 50, 100));
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("32213-02.htm")) {
+        if ("32213-02.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.setState(STARTED);
-            if (!st.getPlayer().getVarB("dd1")) {
+            if (!st.player.isVarSet("dd1")) {
                 st.giveItems(DD, 47);
-                st.getPlayer().setVar("dd1", "1", -1);
+                st.player.setVar("dd1", 1);
             }
             st.playSound(SOUND_ACCEPT);
         }
-        if (event.equalsIgnoreCase("32138-03.htm")) {
+        if ("32138-03.htm".equalsIgnoreCase(event)) {
             st.setCond(2);
             st.setState(STARTED);
         }
-        if (event.equalsIgnoreCase("32139-01.htm")) {
+        if ("32139-01.htm".equalsIgnoreCase(event)) {
             st.setCond(3);
             st.setState(STARTED);
         }
-        if (event.equalsIgnoreCase("32139-03.htm")) {
+        if ("32139-03.htm".equalsIgnoreCase(event)) {
             st.setCond(4);
             st.setState(STARTED);
         }
-        if (event.equalsIgnoreCase("32199-01.htm")) {
+        if ("32199-01.htm".equalsIgnoreCase(event)) {
             st.setCond(5);
             st.setState(STARTED);
         }
-        if (event.equalsIgnoreCase("30071-01.htm")) {
+        if ("30071-01.htm".equalsIgnoreCase(event)) {
             st.setCond(8);
             st.setState(STARTED);
         }
-        if (event.equalsIgnoreCase("32214-01.htm")) {
+        if ("32214-01.htm".equalsIgnoreCase(event)) {
             st.setCond(11);
             st.setState(STARTED);
         }
-        if (event.equalsIgnoreCase("30879-02.htm")) {
+        if ("30879-02.htm".equalsIgnoreCase(event)) {
             st.setCond(12);
             st.setState(STARTED);
         }
-        if (event.equalsIgnoreCase("32332-01.htm")) {
+        if ("32332-01.htm".equalsIgnoreCase(event)) {
             st.cancelQuestTimer("Katenar_Fail");
-            st.giveItems(Sealed_Doc, 1);
+            st.giveItems(Sealed_Doc);
             st.setCond(13);
             st.unset("id");
             st.setState(STARTED);
             Despawn_Katenar();
         }
-        if (event.equalsIgnoreCase("32139-06.htm")) {
-            st.takeItems(Sealed_Doc, 1);
+        if ("32139-06.htm".equalsIgnoreCase(event)) {
+            st.takeItems(Sealed_Doc);
             st.setCond(14);
             st.setState(STARTED);
         }
@@ -138,17 +139,17 @@ public final class _065_PathToSoulBreaker extends Quest {
             st.setCond(15);
             st.setState(STARTED);
         }
-        if (event.equalsIgnoreCase("32138-09.htm")) {
+        if ("32138-09.htm".equalsIgnoreCase(event)) {
             st.takeItems(Wyrm_Heart, 10);
-            st.giveItems(Kekropus_Rec, 1);
+            st.giveItems(Kekropus_Rec);
             st.setCond(17);
             st.setState(STARTED);
         }
-        if (event.equalsIgnoreCase("Guardian_Angel_Fail")) {
-            Despawn_Guardian_Angel();
+        if ("Guardian_Angel_Fail".equalsIgnoreCase(event)) {
+            despawnGuardianAngel();
             htmltext = null;
         }
-        if (event.equalsIgnoreCase("Katenar_Fail")) {
+        if ("Katenar_Fail".equalsIgnoreCase(event)) {
             Despawn_Katenar();
             htmltext = null;
         }
@@ -161,12 +162,12 @@ public final class _065_PathToSoulBreaker extends Quest {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         if (npcId == Vitus) {
-            if (st.getQuestItemsCount(SB_Certificate) > 0) {
+            if (st.haveQuestItem(SB_Certificate) ) {
                 htmltext = "completed";
                 st.exitCurrentQuest(true);
             } else if (cond == 0)
-                if (st.getPlayer().getClassId().getId() == 0x7e || st.getPlayer().getClassId().getId() == 0x7d) {
-                    if (st.getPlayer().getLevel() >= 39)
+                if (st.player.getClassId().id == 0x7e || st.player.getClassId().id == 0x7d) {
+                    if (st.player.getLevel() >= 39)
                         htmltext = "32213.htm";
                     else {
                         htmltext = "32213-00a.htm";
@@ -179,12 +180,12 @@ public final class _065_PathToSoulBreaker extends Quest {
             else if (cond == 17) {
                 htmltext = "32213-03.htm";
                 st.takeItems(Kekropus_Rec, 1);
-                if (!st.getPlayer().getVarB("prof2.1")) {
+                if (!st.player.isVarSet("prof2.1")) {
                     st.addExpAndSp(196875, 13510);
                     st.giveItems(ADENA_ID, 35597);
-                    st.getPlayer().setVar("prof2.1", "1", -1);
+                    st.player.setVar("prof2.1", 1);
                 }
-                st.giveItems(SB_Certificate, 1);
+                st.giveItems(SB_Certificate);
                 st.exitCurrentQuest(true);
             }
         } else if (npcId == Kekropus) {
@@ -244,18 +245,18 @@ public final class _065_PathToSoulBreaker extends Quest {
         } else if (npcId == Box) {
             if (cond == 12) {
                 htmltext = "32243-01.htm";
-                if (World.getAroundPlayers(st.getPlayer()).anyMatch(cha -> cha.getRace() == Race.kamael))
+                if (World.getAroundPlayers(st.player).stream().anyMatch(cha -> cha.getRace() == Race.kamael))
                     htmltext = "32243-02.htm";
 
                 if (!htmltext.equals("32243-02.htm")) {
-                    Despawn_Guardian_Angel();
+                    despawnGuardianAngel();
 
-                    st.set("id", "0");
+                    st.set("id", 0);
                     Spawn_Guardian_Angel(st);
                     st.startQuestTimer("Guardian_Angel_Fail", 120000);
                     // Натравим ангела
                     if (Guardian_Angel_Spawn != null) {
-                        Guardian_Angel_Spawn.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, st.getPlayer(), 1);
+                        Guardian_Angel_Spawn.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, st.player, 1);
                     }
                 }
             } else
@@ -272,29 +273,29 @@ public final class _065_PathToSoulBreaker extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         if (npcId == Guardian_Angel) {
             st.cancelQuestTimer("Guardian_Angel_Fail");
 
-            Despawn_Guardian_Angel();
+            despawnGuardianAngel();
 
             if (cond == 12) {
-                if (World.getAroundPlayers(st.getPlayer())
+                if (World.getAroundPlayers(st.player).stream()
                         .anyMatch(cha -> cha.getRace() == Race.kamael))
-                    return null;
+                    return;
                 Despawn_Katenar();
 
-                st.set("id", "1");
-                Spawn_Katenar(st);
+                st.set("id", 1);
+                spawnKatenar(st);
                 st.startQuestTimer("Katenar_Fail", 120000);
                 if (Katenar_Spawn != null)
                     Functions.npcSay(Katenar_Spawn, "I am late!");
             }
         }
         if (cond == 15 && npcId == Wyrm && Rnd.chance(40)) {
-            st.giveItems(Wyrm_Heart, 1);
+            st.giveItems(Wyrm_Heart);
             if (st.getQuestItemsCount(Wyrm_Heart) < 10)
                 st.playSound(SOUND_ITEMGET);
             else {
@@ -303,6 +304,5 @@ public final class _065_PathToSoulBreaker extends Quest {
                 st.setCond(16);
             }
         }
-        return null;
     }
 }

@@ -58,7 +58,7 @@ public enum PetSkillsTable {
 
         int lvl = 0;
         for (SkillLearn temp : skills) {
-            if (temp.getId() != skillId)
+            if (temp.id() != skillId)
                 continue;
             if (temp.getLevel() == 0) {
                 if (cha.getLevel() < 70) {
@@ -69,7 +69,7 @@ public enum PetSkillsTable {
                     lvl = 7 + (cha.getLevel() - 70) / 5;
 
                 // formula usable for skill that have 10 or more skill levels
-                int maxLvl = SkillTable.INSTANCE.getMaxLevel(temp.getId());
+                int maxLvl = SkillTable.INSTANCE.getMaxLevel(temp.id());
                 if (lvl > maxLvl)
                     lvl = maxLvl;
                 break;

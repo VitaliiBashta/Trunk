@@ -34,11 +34,11 @@ public final class _648_AnIceMerchantsDream extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         int _state = st.getState();
-        if (event.equalsIgnoreCase("repre_q0648_04.htm") && _state == CREATED) {
+        if ("repre_q0648_04.htm".equalsIgnoreCase(event) && _state == CREATED) {
             st.setState(STARTED);
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("repre_q0648_22.htm") && _state == STARTED) {
+        } else if ("repre_q0648_22.htm".equalsIgnoreCase(event) && _state == STARTED) {
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(true);
         }
@@ -48,7 +48,7 @@ public final class _648_AnIceMerchantsDream extends Quest {
         long Silver_Ice_Crystal_Count = st.getQuestItemsCount(Silver_Ice_Crystal);
         long Black_Ice_Crystal_Count = st.getQuestItemsCount(Black_Ice_Crystal);
 
-        if (event.equalsIgnoreCase("repre_q0648_14.htm")) {
+        if ("repre_q0648_14.htm".equalsIgnoreCase(event)) {
             long reward = Silver_Ice_Crystal_Count * 300 + Black_Ice_Crystal_Count * 1200;
             if (reward > 0) {
                 st.takeItems(Silver_Ice_Crystal, -1);
@@ -56,8 +56,8 @@ public final class _648_AnIceMerchantsDream extends Quest {
                 st.giveItems(ADENA_ID, reward);
             } else
                 return "repre_q0648_15.htm";
-        } else if (event.equalsIgnoreCase("ice_lathe_q0648_06.htm")) {
-            int char_obj_id = st.getPlayer().getObjectId();
+        } else if ("ice_lathe_q0648_06.htm".equalsIgnoreCase(event)) {
+            int char_obj_id = st.player.objectId();
             synchronized (silver2black) {
                 if (silver2black.contains(char_obj_id))
                     return event;
@@ -69,8 +69,8 @@ public final class _648_AnIceMerchantsDream extends Quest {
 
             st.takeItems(Silver_Ice_Crystal, 1);
             st.playSound(SOUND_BROKEN_KEY);
-        } else if (event.equalsIgnoreCase("ice_lathe_q0648_08.htm")) {
-            Integer char_obj_id = st.getPlayer().getObjectId();
+        } else if ("ice_lathe_q0648_08.htm".equalsIgnoreCase(event)) {
+            Integer char_obj_id = st.player.objectId();
             synchronized (silver2black) {
                 if (silver2black.contains(char_obj_id))
                     while (silver2black.contains(char_obj_id))
@@ -99,7 +99,7 @@ public final class _648_AnIceMerchantsDream extends Quest {
 
         if (_state == CREATED) {
             if (npcId == Rafforty) {
-                if (st.getPlayer().getLevel() >= 53) {
+                if (st.player.getLevel() >= 53) {
                     st.setCond(0);
                     return "repre_q0648_03.htm";
                 }
@@ -119,8 +119,7 @@ public final class _648_AnIceMerchantsDream extends Quest {
 
         long Black_Ice_Crystal_Count = st.getQuestItemsCount(Black_Ice_Crystal);
         if (npcId == Rafforty) {
-            QuestState st_115 = st.getPlayer().getQuestState(_115_TheOtherSideOfTruth.class);
-            if (st_115 != null && st_115.isCompleted()) {
+            if (st.player.isQuestCompleted(_115_TheOtherSideOfTruth.class)) {
                 cond = 2;
                 st.setCond(2);
                 st.playSound(SOUND_MIDDLE);
@@ -140,14 +139,12 @@ public final class _648_AnIceMerchantsDream extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState qs) {
+    public void onKill(NpcInstance npc, QuestState qs) {
         int cond = qs.getCond();
         if (cond > 0) {
-            qs.rollAndGive(Silver_Ice_Crystal, /*(int)Config.RATE_QUESTS_DROP*/ 1, npc.getNpcId() - 22050);
+            qs.rollAndGive(Silver_Ice_Crystal,  1, npc.getNpcId() - 22050);
             if (cond == 2)
-                qs.rollAndGive(Silver_Hemocyte, /*(int)Config.RATE_QUESTS_DROP*/ 1, Silver_Hemocyte_Chance);
+                qs.rollAndGive(Silver_Hemocyte,  1, Silver_Hemocyte_Chance);
         }
-
-        return null;
     }
 }

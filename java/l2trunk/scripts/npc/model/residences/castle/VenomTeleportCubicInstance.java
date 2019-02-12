@@ -10,8 +10,8 @@ import java.util.List;
 
 public final class VenomTeleportCubicInstance extends NpcInstance {
     private static final List<Location> LOCS = List.of(
-                    new Location(11913, -48851, -1088),
-            new Location(11918, -49447, -1088));
+                     Location.of(11913, -48851, -1088),
+             Location.of(11918, -49447, -1088));
 
     public VenomTeleportCubicInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
@@ -25,7 +25,7 @@ public final class VenomTeleportCubicInstance extends NpcInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
         showChatWindow(player, "residence2/castle/teleport_cube_benom001.htm");
     }
 }

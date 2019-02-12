@@ -38,8 +38,8 @@ public final class AdminIP implements IAdminCommandHandler {
                 break;
             case admin_ip:
                 Player target;
-                if (activeChar.getTarget() != null && activeChar.getTarget().isPlayer())
-                    target = activeChar.getTarget().getPlayer();
+                if (activeChar.getTarget() instanceof Player)
+                    target = (Player)activeChar.getTarget();
                 else
                     target = activeChar;
 

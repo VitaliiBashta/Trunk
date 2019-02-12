@@ -23,15 +23,15 @@ public final class ZakenDay83 extends Reflection {
             new Location(55272, 219080, -2952),
             new Location(55272, 219080, -3224),
             new Location(55272, 219080, -3496));
-    private static final Location zakenSpawn = new Location(55048, 216808, -3772);
+    private static final Location zakenSpawn = Location.of(55048, 216808, -3772);
     private final DeathListener _deathListener = new DeathListener();
     private long startedTime;
 
     @Override
     protected void onCreate() {
         super.onCreate();
-        addSpawnWithoutRespawn(Anchor, Rnd.get(zakenTp), 0);
-        NpcInstance zaken = addSpawnWithoutRespawn(UltraDayZaken, zakenSpawn, 0);
+        addSpawnWithoutRespawn(Anchor, Rnd.get(zakenTp));
+        NpcInstance zaken = addSpawnWithoutRespawn(UltraDayZaken, zakenSpawn);
         zaken.addListener(_deathListener);
         zaken.setInvul(true);
         startedTime = System.currentTimeMillis();
@@ -52,7 +52,7 @@ public final class ZakenDay83 extends Reflection {
     private class DeathListener implements OnDeathListener {
         @Override
         public void onDeath(Creature self, Creature killer) {
-            if (self.isNpc() && self.getNpcId() == UltraDayZaken) {
+            if (self.getNpcId() == UltraDayZaken) {
                 long timePassed = (System.currentTimeMillis() - startedTime) / 60 / 1000;
 
                 final int reward = timePassed < 5 ? sealedVorpalNeckace :
@@ -61,7 +61,7 @@ public final class ZakenDay83 extends Reflection {
                 if (reward != 0)
                     getPlayers().forEach(p -> {
                         if (Rnd.chance(10))
-                            ItemFunctions.addItem(p, reward, 1, true, "ZakenDay83");
+                            ItemFunctions.addItem(p, reward, 1, "ZakenDay83");
 
                     });
                 getPlayers().forEach(p ->

@@ -13,16 +13,13 @@ public final class SeducedInvestigatorInstance extends MonsterInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
         player.sendPacket(new NpcHtmlMessage(player, this, "common/seducedinvestigator.htm", val));
     }
 
     @Override
     public boolean isAutoAttackable(Creature attacker) {
-        Player player = attacker.getPlayer();
-        if (player == null)
-            return false;
-        return !player.isPlayable();
+        return false;
     }
 
     @Override

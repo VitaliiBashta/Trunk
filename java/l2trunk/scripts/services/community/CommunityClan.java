@@ -119,7 +119,7 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
     private static final Map<Integer, List<String>> CLAN_SKILL_DESCRIPTIONS = new HashMap<>();
     private final Listener _listener = new Listener();
 
-    {
+    static {
         CLAN_SKILL_DESCRIPTIONS.put(370, List.of(
                 "Increases clan members' Max HP by 3%. It only affects those who are of an Heir rank or higher.",
                 "Increases clan members' Max HP by 5%. It only affects those who are of an Heir rank or higher.",
@@ -367,6 +367,14 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
         }
     }
 
+    public static void main(String[] args) {
+        CommunityClan communityClan = new CommunityClan();
+        System.out.println(communityClan.getConvertedAdena(999));
+        System.out.println(communityClan.getConvertedAdena(999_999));
+        System.out.println(communityClan.getConvertedAdena(999_999_999));
+        System.out.println(communityClan.getConvertedAdena(999_999_999_999L));
+    }
+
     @Override
     public void onLoad() {
         CharListenerList.addGlobal(_listener);
@@ -468,14 +476,14 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
             if (toInt(next.substring(0, 1)) == 1) {
                 try {
                     if (!manageClanJoinWindow(player, clan, next.substring(2))) {
-                        sendInfoMessage(player, "You have already sent petition to this clan!", "_clbbsclan_" + clan.getClanId(), true);
+                        sendInfoMessage(player, "You have already sent petition to this clan!", "_clbbsclan_" + clan.clanId(), true);
                         return;
                     }
                 } catch (Exception e) {
-                    sendErrorMessage(player, "The petition you tried to send is incorrect!", "_bbsclanjoin_" + clan.getClanId() + "_0");
+                    sendErrorMessage(player, "The petition you tried to send is incorrect!", "_bbsclanjoin_" + clan.clanId() + "_0");
                     return;
                 }
-                sendInfoMessage(player, "Your petition has been submitted!", "_clbbsclan_" + clan.getClanId(), false);
+                sendInfoMessage(player, "Your petition has been submitted!", "_clbbsclan_" + clan.clanId(), false);
                 return;
             }
             html = HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + "bbs_clanjoin.htm", player);
@@ -566,8 +574,8 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
 
             html = HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + "bbs_pledge_mail_write.htm", player);
 
-            html = html.replace("%PLEDGE_ID%", String.valueOf(clan.getClanId()));
-            html = html.replace("%pledge_id%", String.valueOf(clan.getClanId()));
+            html = html.replace("%PLEDGE_ID%", String.valueOf(clan.clanId()));
+            html = html.replace("%pledge_id%", String.valueOf(clan.clanId()));
             html = html.replace("%pledge_name%", clan.getName());
 
             html = BbsUtil.htmlBuff(html, player);
@@ -584,7 +592,7 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
             String notice = "";
             int type = 0;
             try (Connection con = DatabaseFactory.getInstance().getConnection(); PreparedStatement statement = con.prepareStatement("SELECT * FROM `bbs_clannotice` WHERE `clan_id` = ? and type != 2")) {
-                statement.setInt(1, clan.getClanId());
+                statement.setInt(1, clan.clanId());
 
                 try (ResultSet rset = statement.executeQuery()) {
                     if (rset.next()) {
@@ -638,9 +646,10 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
 
             int type = toInt(st.nextToken());
 
-            try (Connection con = DatabaseFactory.getInstance().getConnection(); PreparedStatement statement = con.prepareStatement("UPDATE `bbs_clannotice` SET type = ? WHERE `clan_id` = ? and type = ?")) {
+            try (Connection con = DatabaseFactory.getInstance().getConnection();
+                 PreparedStatement statement = con.prepareStatement("UPDATE `bbs_clannotice` SET type = ? WHERE `clan_id` = ? and type = ?")) {
                 statement.setInt(1, type);
-                statement.setInt(2, clan.getClanId());
+                statement.setInt(2, clan.clanId());
                 statement.setInt(3, type == 1 ? 0 : 1);
                 statement.execute();
             } catch (Exception e) {
@@ -657,7 +666,7 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
 
     private String getMainClanPage(Player player, Clan clan, String html) {
         html = html.replace("%clanName%", clan.getName());
-        html = html.replace("%clanId%", String.valueOf(clan.getClanId()));
+        html = html.replace("%clanId%", String.valueOf(clan.clanId()));
         html = html.replace("%position%", "#" + clan.getRank());
         html = html.replace("%clanLeader%", clan.getLeaderName());
         html = html.replace("%allyName%", (clan.getAlliance() != null ? clan.getAlliance().getAllyName() : "No Alliance"));
@@ -681,7 +690,7 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
         html = html.replace("%nobleCount%", String.valueOf(data[2]));
         html = html.replace("%heroCount%", String.valueOf(data[3]));
         html = html.replace("%clan_avarage_level%", Util.formatAdena(clan.getAverageLevel()));
-        html = html.replace("%clan_online%", Util.formatAdena(clan.getOnlineMembers(0).size()));
+        html = html.replace("%clan_online%", Util.formatAdena(clan.getOnlineMembers().size()));
 
         // Synerge - Code to replace the white border of the crests with a black one
         //html = html.replace("%clan_crest%", clan.hasCrest() ? "Crest.crest_" + Config.REQUEST_ID + "_" + clan.getCrestId() : "L2UI_CH3.ssq_bar1back");
@@ -732,7 +741,7 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
                 index = 0;
             }
             wars += "<td align=center>";
-            wars += "<button action=\"bypass _clbbsclan_" + warClan.getClanId() + "\" value=\"" + warClan.getName() + "\" width=130 height=20 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_ct1.button_df\">";
+            wars += "<button action=\"bypass _clbbsclan_" + warClan.clanId() + "\" value=\"" + warClan.getName() + "\" width=130 height=20 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_ct1.button_df\">";
             wars += "</td>";
             index++;
         }
@@ -744,7 +753,7 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
         String joinClan = "";
         if (player.getClan() == null) {
             joinClan = "<tr><td width=200 align=\"center\">";
-            joinClan += "<button action=\"bypass _bbsclanjoin_" + clan.getClanId() + "_0\" value=\"Join Clan\" width=200 height=22 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_ct1.Button_DF\">";
+            joinClan += "<button action=\"bypass _bbsclanjoin_" + clan.clanId() + "_0\" value=\"Join Clan\" width=200 height=22 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_ct1.Button_DF\">";
             joinClan += "</td></tr>";
         }
         html = html.replace("%joinClan%", joinClan);
@@ -752,13 +761,13 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
         String manageRecruitment = "";
         String managePetitions = "";
         String manageNotice = "";
-        if (player.getClan() != null && player.getClan().equals(clan) && player.getClan().getLeaderId() == player.getObjectId()) {
+        if (player.getClan() != null && player.getClan().equals(clan) && player.getClan().getLeaderId() == player.objectId()) {
             manageRecruitment = "<tr><td width=200 align=\"center\">";
             manageRecruitment += "<button action=\"bypass _clbbsmanage_0\" value=\"Manage Recruitment\" width=200 height=22 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_ct1.Button_DF\">";
             manageRecruitment += "</td></tr>";
 
             managePetitions = "<tr><td width=200 align=\"center\">";
-            managePetitions += "<button action=\"bypass _clbbspetitions_" + clan.getClanId() + "\" value=\"Manage Petitions\" width=200 height=22 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_ct1.Button_DF\">";
+            managePetitions += "<button action=\"bypass _clbbspetitions_" + clan.clanId() + "\" value=\"Manage Petitions\" width=200 height=22 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_ct1.Button_DF\">";
             managePetitions += "</td></tr>";
 
             manageNotice = "<tr><td width=200 align=\"center\">";
@@ -785,10 +794,10 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
             builder.append("<tr>");
             builder.append("<td width=100><font name=hs12 color=\"f1b45d\">").append(index + 1).append(".</font></td>");
             builder.append("<td width=150><font name=hs12 color=\"FFFFFF\">").append(member.getName()).append("</font></td>");
-            //builder.append("<button action=\"bypass _clbbssinglemember_").append(member.getObjectId()).append("\" value=\"").append(member.name()).append("\" width=150 height=25 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.button_df\">");
-            builder.append("<td align=center width=100>").append(member.getPlayer() != null ? "<font name=hs12 color=6a9b54>True</font>" : "<font name=hs12 color=FF6666>False</font>").append("</td>");
+            //builder.append("<button action=\"bypass _clbbssinglemember_").append(member.objectId()).append("\" value=\"").append(member.name()).append("\" width=150 height=25 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.button_df\">");
+            builder.append("<td align=center width=100>").append(member.player() != null ? "<font name=hs12 color=6a9b54>True</font>" : "<font name=hs12 color=FF6666>False</font>").append("</td>");
             builder.append("<td align=center width=100>").append(member.isSubLeader() || member.isClanLeader() ? "<font name=hs12 color=6a9b54>True</font>" : "<font name=hs12 color=FF6666>False</font>").append("</td>");
-            builder.append("<td align=center width=75><font name=hs12 color=\"BBFF44\">").append(getUnitName(member.getSubUnit().getType())).append("</font></td>");
+            builder.append("<td align=center width=75><font name=hs12 color=\"BBFF44\">").append(getUnitName(member.getSubUnit().type())).append("</font></td>");
             builder.append("<td align=center width=75></td>");
             builder.append("</tr>");
             index++;
@@ -802,12 +811,12 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
         builder.append("<table width=750><tr><td align=center width=350>");
 
         if (page > 0)
-            builder.append("<button action=\"bypass _bbsclanmembers_").append(clan.getClanId()).append("_").append(page - 1).append("\" value=\"Previous\" width=140 height=25 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.button_df\">");
+            builder.append("<button action=\"bypass _bbsclanmembers_").append(clan.clanId()).append("_").append(page - 1).append("\" value=\"Previous\" width=140 height=25 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.button_df\">");
 
         builder.append("</td><td align=center width=350>");
 
         if (members.size() > MEMBERS_PER_PAGE + MEMBERS_PER_PAGE * page)
-            builder.append("<center><button action=\"bypass _bbsclanmembers_").append(clan.getClanId() + "_" + (page + 1)).append("\" value=\"Next\" width=140 height=25 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.button_df\"></center>");
+            builder.append("<center><button action=\"bypass _bbsclanmembers_").append(clan.clanId() + "_" + (page + 1)).append("\" value=\"Next\" width=140 height=25 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.button_df\"></center>");
 
         builder.append("</td></tr></table>");
 
@@ -817,16 +826,16 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
 
     private String getClanSingleMemberPage(Player member, String html) {
         html = html.replace("%playerName%", member.getName());
-        html = html.replace("%playerId%", String.valueOf(member.getObjectId()));
+        html = html.replace("%playerId%", String.valueOf(member.objectId()));
         html = html.replace("%clanName%", member.getClan() != null ? member.getClan().getName() : "");
         html = html.replace("%online%", "<font color=6a9b54>True</font>");
         html = html.replace("%title%", member.getTitle());
         html = html.replace("%pvpPoints%", String.valueOf(member.getPvpKills()));
         html = html.replace("%pkPoints%", String.valueOf(member.getPkKills()));
-        html = html.replace("%rank%", "Level " + (member.getClan() != null ? member.getClan().getAnyMember(member.getObjectId()).getPowerGrade() : 0));
+        html = html.replace("%rank%", "Level " + (member.getClan() != null ? member.getClan().getAnyMember(member.objectId()).getPowerGrade() : 0));
         html = html.replace("%onlineTime%", getConvertedTime(member.getOnlineTime()));
-        html = html.replace("%leader%", member.getSubUnit() != null ? (member.getSubUnit().getLeaderObjectId() == member.getObjectId() ? "True" : "False") : "False");
-        html = html.replace("%subpledge%", getUnitName(member.getSubUnit().getType()));
+        html = html.replace("%leader%", member.getSubUnit() != null ? (member.getSubUnit().getLeaderObjectId() == member.objectId() ? "True" : "False") : "False");
+        html = html.replace("%subpledge%", getUnitName(member.getSubUnit().type()));
         html = html.replace("%nobless%", member.isNoble() ? "True" : "False");
         html = html.replace("%hero%", member.isHero() ? "True" : "False");
         html = html.replace("%adena%", getConvertedAdena(member.getAdena()));
@@ -850,7 +859,7 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
                 subIndex++;
             }
 
-            html = html.replace("%" + replacement + "%", ClassId.values()[sub.getClassId()].getName() + "(" + sub.getLevel() + ")");
+            html = html.replace("%" + replacement + "%", ClassId.values()[sub.getClassId()].name + "(" + sub.getLevel() + ")");
         }
         html = html.replace("%firstSub%", "");
         html = html.replace("%secondSub%", "");
@@ -872,10 +881,10 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
         html = html.replace("%pvpPoints%", "" + data.pvpKills);
         html = html.replace("%pkPoints%", "" + data.pkKills);
         html = html.replace("%onlineTime%", getConvertedTime(data.onlineTime));
-        html = html.replace("%leader%", Util.boolToString(data.isClanLeader));
+        html = html.replace("%leader%", Boolean.toString(data.isClanLeader));
         html = html.replace("%subpledge%", getUnitName(data.pledge_type));
-        html = html.replace("%nobless%", Util.boolToString(data.isNoble));
-        html = html.replace("%hero%", Util.boolToString(data.isHero));
+        html = html.replace("%nobless%", Boolean.toString(data.isNoble));
+        html = html.replace("%hero%", Boolean.toString(data.isHero));
         html = html.replace("%adena%", getConvertedAdena(data.adenaCount));
         html = html.replace("%recs%", "" + data.rec_have);
         html = html.replace("%sevenSigns%", SevenSigns.getCabalShortName(data.sevenSignsSide));
@@ -886,9 +895,9 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
         int index = 0;
         for (int[] sub : data.subClassIdLvlBase) {
             if (sub[2] == 1)
-                html = html.replace("%mainClass%", ClassId.values()[sub[0]].getName() + "(" + sub[1] + ")");
+                html = html.replace("%mainClass%", ClassId.values()[sub[0]].name + "(" + sub[1] + ")");
             else
-                html = html.replace(otherSubs.get(index), ClassId.values()[sub[0]].getName() + "(" + sub[1] + ")");
+                html = html.replace(otherSubs.get(index), ClassId.values()[sub[0]].name + "(" + sub[1] + ")");
         }
         // In case player doesn't have all subclasses
         for (String sub : otherSubs)
@@ -899,7 +908,7 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
 
     private String getClanSkills(Clan clan, String html) {
         html = html.replace("%clanName%", clan.getName());
-        html = html.replace("%clanId%", String.valueOf(clan.getClanId()));
+        html = html.replace("%clanId%", String.valueOf(clan.clanId()));
 
         String skills = "";
         for (Skill clanSkill : clan.getSkills()) {
@@ -924,8 +933,8 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
     }
 
     private String getClanSinglePetitionPage(Player leader, Player member, String html) {
-        html = html.replace("%clanId%", String.valueOf(leader.getClan().getClanId()));
-        html = html.replace("%playerId%", String.valueOf(member.getObjectId()));
+        html = html.replace("%clanId%", String.valueOf(leader.getClan().clanId()));
+        html = html.replace("%playerId%", String.valueOf(member.objectId()));
         html = html.replace("%playerName%", member.getName());
         html = html.replace("%online%", "<font color=6a9b54>True</font>");
         html = html.replace("%onlineTime%", getConvertedTime(member.getOnlineTime()));
@@ -950,7 +959,7 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
                 subIndex++;
             }
 
-            html = html.replace("%" + replacement + "%", ClassId.values()[sub.getClassId()].getName() + "(Level: " + sub.getLevel() + ")");
+            html = html.replace("%" + replacement + "%", ClassId.values()[sub.getClassId()].name + "(Level: " + sub.getLevel() + ")");
         }
         html = html.replace("%firstSub%", "");
         html = html.replace("%secondSub%", "");
@@ -962,7 +971,7 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
             index++;
         }
 
-        SinglePetition petition = leader.getClan().getPetition(member.getObjectId());
+        SinglePetition petition = leader.getClan().getPetition(member.objectId());
         index = 1;
         for (String answer : petition.getAnswers()) {
             html = html.replace("%answer" + index + "%", answer != null && answer.length() > 2 ? answer : "");
@@ -996,9 +1005,9 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
         int index = 0;
         for (int[] sub : data.subClassIdLvlBase) {
             if (sub[2] == 1)
-                html = html.replace("%mainClass%", ClassId.values()[sub[0]].getName() + "(" + sub[1] + ")");
+                html = html.replace("%mainClass%", ClassId.values()[sub[0]].name + "(" + sub[1] + ")");
             else
-                html = html.replace(otherSubs[index], ClassId.values()[sub[0]].getName() + "(" + sub[1] + ")");
+                html = html.replace(otherSubs[index], ClassId.values()[sub[0]].name + "(" + sub[1] + ")");
         }
         // In case player doesn't have all subclasses
         for (String sub : otherSubs)
@@ -1059,7 +1068,7 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
     }
 
     private String getClanJoinPage(Player player, Clan clan, String html) {
-        html = html.replace("%clanId%", String.valueOf(clan.getClanId()));
+        html = html.replace("%clanId%", String.valueOf(clan.clanId()));
         html = html.replace("%clanName%", clan.getName());
         for (int i = 0; i < 8; i++) {
             String question = clan.getQuestions()[i];
@@ -1089,7 +1098,7 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
                 canJoin = true;
 
             classes += "<td width=130><font color=\"" + (goodClass ? "00FF00" : "9b5454") + "\">";
-            classes += ClassId.values()[classNeeded].getName();
+            classes += ClassId.values()[classNeeded].name;
             classes += "</font></td>";
         }
         classes += "</tr>";
@@ -1097,7 +1106,7 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
         html = html.replace("%classes%", classes);
 
         if (canJoin)
-            html = html.replace("%joinClanButton%", "<br><center><button action=\"bypass _bbsclanjoin_" + clan.getClanId() + "_1 | $answer1 | $answer2 | $answer3 | $answer4 | $answer5 | $answer6 | $answer7 | $answer8 | $comment |\" value=\"Send\" width=320 height=25 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.button_df\"></center>");
+            html = html.replace("%joinClanButton%", "<br><center><button action=\"bypass _bbsclanjoin_" + clan.clanId() + "_1 | $answer1 | $answer2 | $answer3 | $answer4 | $answer5 | $answer6 | $answer7 | $answer8 | $comment |\" value=\"Send\" width=320 height=25 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.button_df\"></center>");
         else
             html = html.replace("%joinClanButton%", "");
 
@@ -1107,7 +1116,7 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
     private String getClanPetitionsPage(Player player, Clan clan, String html) {
         html = html.replace("%clanName%", clan.getName());
 
-        String petitions = "";
+        StringBuilder petitions = new StringBuilder();
         int index = 1;
         List<SinglePetition> _petitionsToRemove = new ArrayList<>();
 
@@ -1117,33 +1126,35 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
                 _petitionsToRemove.add(petition);
                 continue;
             }
-            petitions += "<tr><td width=30><font name=\"hs12\" color=\"f1b45d\">";
-            petitions += index;
-            petitions += ".</font></font></td><td align=center width=150>";
-            petitions += "<button action=\"bypass _clbbsplayerpetition_" + petition.getSenderId() + "\" value=\"" + data.char_name + "\" width=150 height=25 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.button_df\">";
-            petitions += "</td><td width=100><center>";
-            petitions += data.online;
-            petitions += "</td><td width=95><font color=\"f1b45d\"><center>";
-            petitions += data.pvpKills;
-            petitions += "</center></font></td><td width=100><font color=\"f1b45d\"><center>";
-            petitions += getConvertedTime(data.onlineTime);
-            petitions += "</center></font></td><td width=75><font color=\"f1b45d\"><center>";
-            petitions += Util.boolToString(data.isNoble);
-            petitions += "</center></font></td></tr>";
+            petitions.append("<tr><td width=30><font name=\"hs12\" color=\"f1b45d\">");
+            petitions.append(index);
+            petitions.append(".</font></font></td><td align=center width=150>");
+            petitions.append("<button action=\"bypass _clbbsplayerpetition_")
+                    .append(petition.getSenderId()).append("\" value=\"")
+                    .append(data.char_name)
+                    .append("\" width=150 height=25 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.button_df\">");
+            petitions.append("</td><td width=100><center>");
+            petitions.append(data.online);
+            petitions.append("</td><td width=95><font color=\"f1b45d\"><center>");
+            petitions.append(data.pvpKills);
+            petitions.append("</center></font></td><td width=100><font color=\"f1b45d\"><center>");
+            petitions.append(getConvertedTime(data.onlineTime));
+            petitions.append("</center></font></td><td width=75><font color=\"f1b45d\"><center>");
+            petitions.append(data.isNoble);
+            petitions.append("</center></font></td></tr>");
             index++;
         }
 
-        for (SinglePetition petitionToRemove : _petitionsToRemove)
-            clan.deletePetition(petitionToRemove);
+        _petitionsToRemove.forEach(clan::deletePetition);
 
-        html = html.replace("%petitions%", petitions);
+        html = html.replace("%petitions%", petitions.toString());
 
         return html;
     }
 
     private String getPlayerInventoryPage(Player player, String html) {
         html = html.replace("%playerName%", player.getName());
-        html = html.replace("%back%", (player.getClan() != null ? "_clbbssinglemember_" + player.getObjectId() : "_clbbsplayerpetition_" + player.getObjectId()));
+        html = html.replace("%back%", (player.getClan() != null ? "_clbbssinglemember_" + player.objectId() : "_clbbsplayerpetition_" + player.objectId()));
 
         PcInventory pcInv = player.getInventory();
         String inventory = "<tr>";
@@ -1226,20 +1237,20 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
         int[] data = new int[5];
 
         try (Connection con = DatabaseFactory.getInstance().getConnection()) {
-            try (PreparedStatement statement = con.prepareStatement("SELECT SUM(pvpkills), SUM(pkkills) FROM characters WHERE characters.clanid = '" + clan.getClanId() + "'"); ResultSet rset = statement.executeQuery()) {
+            try (PreparedStatement statement = con.prepareStatement("SELECT SUM(pvpkills), SUM(pkkills) FROM characters WHERE characters.clanid = '" + clan.clanId() + "'"); ResultSet rset = statement.executeQuery()) {
                 if (rset.next()) {
                     data[0] = rset.getInt("SUM(pvpkills)");
                     data[1] = rset.getInt("SUM(pkkills)");
                 }
             }
 
-            try (PreparedStatement statement = con.prepareStatement("SELECT count(`characters`.`obj_Id`) FROM `characters` join `olympiad_nobles` ON `characters`.`obj_Id` = `olympiad_nobles`.`char_id` where `characters`.`clanid` = '" + clan.getClanId() + "'");
+            try (PreparedStatement statement = con.prepareStatement("SELECT count(`characters`.`obj_Id`) FROM `characters` join `olympiad_nobles` ON `characters`.`obj_Id` = `olympiad_nobles`.`char_id` where `characters`.`clanid` = '" + clan.clanId() + "'");
                  ResultSet rset = statement.executeQuery()) {
                 if (rset.next())
                     data[2] = rset.getInt("count(`characters`.`obj_Id`)");
             }
 
-            try (PreparedStatement statement = con.prepareStatement("SELECT count(`characters`.`obj_Id`) FROM `characters` join `heroes` on `characters`.`obj_Id` = `heroes`.`char_id` where `characters`.`clanid` = '" + clan.getClanId() + "'"); ResultSet rset = statement.executeQuery()) {
+            try (PreparedStatement statement = con.prepareStatement("SELECT count(`characters`.`obj_Id`) FROM `characters` join `heroes` on `characters`.`obj_Id` = `heroes`.`char_id` where `characters`.`clanid` = '" + clan.clanId() + "'"); ResultSet rset = statement.executeQuery()) {
                 if (rset.next())
                     data[3] = rset.getInt("count(`characters`.`obj_Id`)");
             }
@@ -1303,12 +1314,12 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
                 while (rset.next()) {
                     int[] sub = new int[3];
                     sub[0] = rset.getInt("class_id");
-                    sub[1] = rset.getInt("level");
+                    sub[1] = rset.getInt("occupation");
                     sub[2] = rset.getInt("isBase");
                     data.subClassIdLvlBase.add(sub);
                 }
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             _log.error("Error in getSinglePlayerData:", e);
         }
 
@@ -1338,12 +1349,12 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
                 while (rset.next()) {
                     int[] sub = new int[3];
                     sub[0] = rset.getInt("class_id");
-                    sub[1] = rset.getInt("level");
+                    sub[1] = rset.getInt("occupation");
                     sub[2] = rset.getInt("isBase");
                     data.subClassIdLvlBase.add(sub);
                 }
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             _log.error("Error in getSinglePetitionPlayerData:", e);
         }
 
@@ -1378,7 +1389,7 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
                         data.isNoble = true;
                     }
                 }
-            } catch (Exception e) {
+            } catch (SQLException e) {
                 _log.error("Error in getClanPetitionsData:", e);
             }
         }
@@ -1438,19 +1449,11 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
     }
 
     private String getUnitName(int type) {
-        String subUnitName = "";
-        switch (type) {
-            case Clan.SUBUNIT_MAIN_CLAN:
-                subUnitName = "Main Clan";
-                break;
-            case Clan.SUBUNIT_ROYAL1:
-            case Clan.SUBUNIT_ROYAL2:
-                subUnitName = "Royal Guard";
-                break;
-            default:
-                subUnitName = "Order of Knight";
-        }
-        return subUnitName;
+        if (type == Clan.SUBUNIT_MAIN_CLAN)
+            return "Main Clan";
+        if (type == Clan.SUBUNIT_ROYAL1 || type == Clan.SUBUNIT_ROYAL2)
+            return "Royal Guard";
+        return "Order of Knight";
     }
 
     private void sendErrorMessage(Player player, String message, String backPage) {
@@ -1531,7 +1534,7 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
                 text.append("<td width=46>&nbsp;</td>");
 
             text.append("<td width=130 align=left valign=bottom>");
-            text.append("<button action=\"bypass _clbbsclan_").append(clan.getClanId()).append("\" value=\"").append(clan.getName()).append("\" width=160 height=27 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></center>");
+            text.append("<button action=\"bypass _clbbsclan_").append(clan.clanId()).append("\" value=\"").append(clan.getName()).append("\" width=160 height=27 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></center>");
             text.append("</td>");
             text.append("</tr></table>");
 
@@ -1548,7 +1551,7 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
             else if (player.getClan() != null)
                 text.append("<center><button action=\"bypass _clbbslist_").append(page).append("\" value=\"Recrutation Opened\" width=200 height=31 back=\"L2UI_CT1.OlympiadWnd_DF_Apply_Down\" fore=\"L2UI_CT1.OlympiadWnd_DF_Apply\"></center>");
             else
-                text.append("<center><button action=\"bypass _bbsclanjoin_").append(clan.getClanId()).append("_0\" value=\"Join Clan\" width=200 height=31 back=\"L2UI_CT1.OlympiadWnd_DF_Apply_Down\" fore=\"L2UI_CT1.OlympiadWnd_DF_Apply\"></center>");
+                text.append("<center><button action=\"bypass _bbsclanjoin_").append(clan.clanId()).append("_0\" value=\"Join Clan\" width=200 height=31 back=\"L2UI_CT1.OlympiadWnd_DF_Apply_Down\" fore=\"L2UI_CT1.OlympiadWnd_DF_Apply\"></center>");
 
             text.append("</td></tr></table>");
             text.append("</td></tr>");
@@ -1632,7 +1635,7 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
             answers.add(answer);
         }
         String comment = st.nextToken();
-        return clan.addPetition(player.getObjectId(), answers, comment);
+        return clan.addPetition(player.objectId(), answers, comment);
     }
 
     private void managePlayerPetition(Player player, int senderId, int action) {
@@ -1642,8 +1645,8 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
             case 1:
                 int type = -1;
                 for (SubUnit unit : clan.getAllSubUnits())
-                    if (clan.getUnitMembersSize(unit.getType()) < clan.getSubPledgeLimit(unit.getType()))
-                        type = unit.getType();
+                    if (clan.getUnitMembersSize(unit.type) < clan.getSubPledgeLimit(unit.type))
+                        type = unit.type;
 
                 if (type == -1) {
                     sendErrorMessage(player, "Clan is full!", "_clbbsplayerpetition_" + senderId);
@@ -1652,18 +1655,18 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
                 if (sender != null) {
                     player.getClan().addMember(sender, type);
                 } else {
-                    try (Connection con = DatabaseFactory.getInstance().getConnection(); PreparedStatement statement = con.prepareStatement("UPDATE characters SET clanid=" + clan.getClanId() + ", pledge_type=" + type + " WHERE obj_Id=" + senderId + " AND clanid=0")) {
+                    try (Connection con = DatabaseFactory.getInstance().getConnection(); PreparedStatement statement = con.prepareStatement("UPDATE characters SET clanid=" + clan.clanId() + ", pledge_type=" + type + " WHERE obj_Id=" + senderId + " AND clanid=0")) {
                         statement.execute();
                     } catch (Exception e) {
                         _log.error("Error in managePlayerPetition:", e);
                     }
                     player.getClan().getSubUnit(type).addUnitMember(getSubUnitMember(clan, type, senderId));
                 }
-                sendInfoMessage(player, "Member has been added!", "_clbbspetitions_" + clan.getClanId(), false);
+                sendInfoMessage(player, "Member has been added!", "_clbbspetitions_" + clan.clanId(), false);
             case 2:
                 clan.deletePetition(senderId);
                 if (action == 2)
-                    sendInfoMessage(player, "Petition has been deleted!", "_clbbspetitions_" + clan.getClanId(), false);
+                    sendInfoMessage(player, "Petition has been deleted!", "_clbbspetitions_" + clan.clanId(), false);
                 break;
         }
     }
@@ -1684,7 +1687,7 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
 
             try (ResultSet rset = statement.executeQuery()) {
                 if (rset.next()) {
-                    member = new UnitMember(clan, rset.getString("char_name"), rset.getString("title"), rset.getInt("level"), rset.getInt("class_id"), memberId, type, rset.getInt("pledge_rank"), 0, rset.getInt("sex"), Clan.SUBUNIT_NONE);
+                    member = new UnitMember(clan, rset.getString("char_name"), rset.getString("title"), rset.getInt("occupation"), rset.getInt("class_id"), memberId, type, rset.getInt("pledge_rank"), 0, rset.getInt("sex"), Clan.SUBUNIT_NONE);
                 }
             }
         } catch (SQLException e) {
@@ -1745,7 +1748,7 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
             int type = toInt(st.nextToken());
 
             try (Connection con = DatabaseFactory.getInstance().getConnection(); PreparedStatement statement = con.prepareStatement("REPLACE INTO `bbs_clannotice`(clan_id, type, notice) VALUES(?, ?, ?)")) {
-                statement.setInt(1, clan.getClanId());
+                statement.setInt(1, clan.clanId());
                 statement.setInt(2, type);
                 statement.setString(3, arg3);
                 statement.execute();
@@ -1821,7 +1824,7 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
                 String notice = "";
                 int type = 0;
                 try (Connection con = DatabaseFactory.getInstance().getConnection(); PreparedStatement statement = con.prepareStatement("SELECT * FROM `bbs_clannotice` WHERE `clan_id` = ? and type != 2")) {
-                    statement.setInt(1, clan.getClanId());
+                    statement.setInt(1, clan.clanId());
 
                     try (ResultSet rset = statement.executeQuery()) {
                         if (rset.next()) {

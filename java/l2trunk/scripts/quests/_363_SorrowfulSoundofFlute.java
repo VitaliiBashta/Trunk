@@ -4,7 +4,6 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _363_SorrowfulSoundofFlute extends Quest {
     //NPC
@@ -72,7 +71,7 @@ public final class _363_SorrowfulSoundofFlute extends Quest {
         int cond = st.getCond();
         if (npcId == NANARIN) {
             if (cond == 0) {
-                if (st.getPlayer().getLevel() < 15) {
+                if (st.player.getLevel() < 15) {
                     htmltext = "30956-00.htm";
                     st.exitCurrentQuest(true);
                 } else

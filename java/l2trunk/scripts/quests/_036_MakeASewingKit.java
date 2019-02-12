@@ -50,8 +50,8 @@ public final class _036_MakeASewingKit extends Quest {
         String htmltext = "noquest";
         int cond = st.getCond();
         if (cond == 0 && st.getQuestItemsCount(SEWING_KIT) == 0) {
-            if (st.getPlayer().getLevel() >= 60) {
-                QuestState fwear = st.getPlayer().getQuestState(_037_PleaseMakeMeFormalWear.class);
+            if (st.player.getLevel() >= 60) {
+                QuestState fwear = st.player.getQuestState(_037_PleaseMakeMeFormalWear.class);
                 if (fwear != null && fwear.getState() == STARTED) {
                     if (fwear.getCond() == 6)
                         htmltext = "head_blacksmith_ferris_q0036_0101.htm";
@@ -73,15 +73,14 @@ public final class _036_MakeASewingKit extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getQuestItemsCount(REINFORCED_STEEL) < 5) {
-            st.giveItems(REINFORCED_STEEL, 1);
+            st.giveItems(REINFORCED_STEEL);
             if (st.getQuestItemsCount(REINFORCED_STEEL) == 5) {
                 st.playSound(SOUND_MIDDLE);
                 st.setCond(2);
             } else
                 st.playSound(SOUND_ITEMGET);
         }
-        return null;
     }
 }

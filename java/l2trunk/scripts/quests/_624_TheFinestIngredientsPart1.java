@@ -39,8 +39,8 @@ public final class _624_TheFinestIngredientsPart1 extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("jeremy_q0624_0104.htm"))
-            if (st.getPlayer().getLevel() >= 73) {
+        if ("jeremy_q0624_0104.htm".equalsIgnoreCase(event))
+            if (st.player.getLevel() >= 73) {
                 st.setState(STARTED);
                 st.setCond(1);
                 st.playSound(SOUND_ACCEPT);
@@ -48,14 +48,14 @@ public final class _624_TheFinestIngredientsPart1 extends Quest {
                 htmltext = "jeremy_q0624_0103.htm";
                 st.exitCurrentQuest(true);
             }
-        else if (event.equalsIgnoreCase("jeremy_q0624_0201.htm"))
+        else if ("jeremy_q0624_0201.htm".equalsIgnoreCase(event))
             if (st.getQuestItemsCount(TRUNK_OF_NEPENTHES) == 50 && st.getQuestItemsCount(FOOT_OF_BANDERSNATCHLING) == 50 && st.getQuestItemsCount(SECRET_SPICE) == 50) {
-                st.takeItems(TRUNK_OF_NEPENTHES, -1);
-                st.takeItems(FOOT_OF_BANDERSNATCHLING, -1);
-                st.takeItems(SECRET_SPICE, -1);
+                st.takeItems(TRUNK_OF_NEPENTHES);
+                st.takeItems(FOOT_OF_BANDERSNATCHLING);
+                st.takeItems(SECRET_SPICE);
                 st.playSound(SOUND_FINISH);
-                st.giveItems(SAUCE, 1);
-                st.giveItems(CRYOLITE, 1);
+                st.giveItems(SAUCE);
+                st.giveItems(CRYOLITE);
                 htmltext = "jeremy_q0624_0201.htm";
                 st.exitCurrentQuest(true);
             } else {
@@ -79,9 +79,9 @@ public final class _624_TheFinestIngredientsPart1 extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getState() != STARTED)
-            return null;
+            return;
         int npcId = npc.getNpcId();
         if (st.getCond() == 1) {
             if (npcId == HOT_SPRINGS_NEPENTHES && st.getQuestItemsCount(TRUNK_OF_NEPENTHES) < 50)
@@ -92,7 +92,6 @@ public final class _624_TheFinestIngredientsPart1 extends Quest {
                 st.rollAndGive(SECRET_SPICE, 1, 1, 50, 100);
             onKillCheck(st);
         }
-        return null;
     }
 
     private void onKillCheck(QuestState st) {

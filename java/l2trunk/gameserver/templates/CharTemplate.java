@@ -2,38 +2,37 @@ package l2trunk.gameserver.templates;
 
 import l2trunk.commons.collections.StatsSet;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class CharTemplate {
-    public  int baseSTR;
-    public  int baseCON;
-    public  int baseDEX;
-    public  int baseINT;
-    public  int baseWIT;
-    public  int baseMEN;
-    public  double baseHpMax;
-    public  double baseCpMax;
-    public  double baseMpMax;
-    public  double baseHpReg;
-    public  double baseMpReg;
-    public  int basePAtk;
-    public  int baseMAtk;
-    public  int basePDef;
-    public  int baseMDef;
-    public  int basePAtkSpd;
-    public  int baseMAtkSpd;
-    public  int baseShldDef;
-    public  int baseAtkRange;
-    public  int baseShldRate;
-    public  int baseCritRate;
-    public  int baseRunSpd;
-    public  int baseWalkSpd;
-    public  List<Integer> baseAttributeAttack;
-    public  List<Integer> baseAttributeDefence;
-    public  double collisionRadius;
-    public  double collisionHeight;
+    public int baseSTR;
+    public int baseCON;
+    public int baseDEX;
+    public int baseINT;
+    public int baseWIT;
+    public int baseMEN;
+    public double baseHpMax;
+    public double baseCpMax;
+    public double baseMpMax;
+    public double baseHpReg;
+    public double baseMpReg;
+    public int basePAtk;
+    public int baseMAtk;
+    public int basePDef;
+    public int baseMDef;
+    public int basePAtkSpd;
+    public int baseMAtkSpd;
+    public int baseShldDef;
+    public int baseAtkRange;
+    public int baseShldRate;
+    public int baseCritRate;
+    public int baseRunSpd;
+    public int baseWalkSpd;
+    public List<Integer> baseAttributeAttack;
+    public List<Integer> baseAttributeDefence;
+    public double collisionRadius;
+    public double collisionHeight;
 
     public CharTemplate(StatsSet set) {
         baseSTR = set.getInteger("baseSTR");
@@ -59,7 +58,7 @@ public class CharTemplate {
         baseCritRate = set.getInteger("baseCritRate");
         baseRunSpd = set.getInteger("baseRunSpd");
         baseWalkSpd = set.getInteger("baseWalkSpd");
-        List<Integer> EMPTY_ATTRIBUTES = Collections.nCopies(6, 0);
+        List<Integer> EMPTY_ATTRIBUTES = List.of(0,0,0,0,0,0);
         baseAttributeAttack = set.getIntegerList("baseAttributeAttack", EMPTY_ATTRIBUTES);
         baseAttributeDefence = set.getIntegerList("baseAttributeDefence", EMPTY_ATTRIBUTES);
         // Geometry
@@ -68,32 +67,31 @@ public class CharTemplate {
     }
 
     public static StatsSet getEmptyStatsSet() {
-        StatsSet npcDat = new StatsSet();
-        npcDat.set("baseSTR", 0);
-        npcDat.set("baseCON", 0);
-        npcDat.set("baseDEX", 0);
-        npcDat.set("baseINT", 0);
-        npcDat.set("baseWIT", 0);
-        npcDat.set("baseMEN", 0);
-        npcDat.set("baseHpMax", 0);
-        npcDat.set("baseCpMax", 0);
-        npcDat.set("baseMpMax", 0);
-        npcDat.set("baseHpReg", 3.e-3f);
-        npcDat.set("baseCpReg", 0);
-        npcDat.set("baseMpReg", 3.e-3f);
-        npcDat.set("basePAtk", 0);
-        npcDat.set("baseMAtk", 0);
-        npcDat.set("basePDef", 100);
-        npcDat.set("baseMDef", 100);
-        npcDat.set("basePAtkSpd", 0);
-        npcDat.set("baseMAtkSpd", 0);
-        npcDat.set("baseShldDef", 0);
-        npcDat.set("baseAtkRange", 0);
-        npcDat.set("baseShldRate", 0);
-        npcDat.set("baseCritRate", 0);
-        npcDat.set("baseRunSpd", 0);
-        npcDat.set("baseWalkSpd", 0);
-        return npcDat;
+        return new StatsSet()
+                .set("baseSTR", 0)
+                .set("baseCON", 0)
+                .set("baseDEX", 0)
+                .set("baseINT", 0)
+                .set("baseWIT", 0)
+                .set("baseMEN", 0)
+                .set("baseHpMax", 0)
+                .set("baseCpMax", 0)
+                .set("baseMpMax", 0)
+                .set("baseHpReg", 3.e-3f)
+                .set("baseCpReg", 0)
+                .set("baseMpReg", 3.e-3f)
+                .set("basePAtk", 0)
+                .set("baseMAtk", 0)
+                .set("basePDef", 100)
+                .set("baseMDef", 100)
+                .set("basePAtkSpd", 0)
+                .set("baseMAtkSpd", 0)
+                .set("baseShldDef", 0)
+                .set("baseAtkRange", 0)
+                .set("baseShldRate", 0)
+                .set("baseCritRate", 0)
+                .set("baseRunSpd", 0)
+                .set("baseWalkSpd", 0);
     }
 
     public int getNpcId() {

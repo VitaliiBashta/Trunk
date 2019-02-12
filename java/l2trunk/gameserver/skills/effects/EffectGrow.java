@@ -12,7 +12,7 @@ public final class EffectGrow extends Effect {
     @Override
     public void onStart() {
         super.onStart();
-        if (effected.isNpc()) {
+        if (effected instanceof NpcInstance) {
             NpcInstance npc = (NpcInstance) effected;
             npc.setCollisionHeight(npc.getCollisionHeight() * 1.24);
             npc.setCollisionRadius(npc.getCollisionRadius() * 1.19);
@@ -22,15 +22,11 @@ public final class EffectGrow extends Effect {
     @Override
     public void onExit() {
         super.onExit();
-        if (effected.isNpc()) {
+        if (effected instanceof NpcInstance) {
             NpcInstance npc = (NpcInstance) effected;
             npc.setCollisionHeight(npc.getTemplate().collisionHeight);
             npc.setCollisionRadius(npc.getTemplate().collisionRadius);
         }
     }
 
-    @Override
-    public boolean onActionTime() {
-        return false;
-    }
 }

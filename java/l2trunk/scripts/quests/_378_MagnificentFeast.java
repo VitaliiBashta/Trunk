@@ -3,7 +3,6 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -81,64 +80,64 @@ public final class _378_MagnificentFeast extends Quest {
         int cond = st.getCond();
         int score = st.getInt("score");
 
-        if (event.equalsIgnoreCase("quest_accept") && _state == CREATED) {
+        if ("quest_accept".equalsIgnoreCase(event) && _state == CREATED) {
             htmltext = "warehouse_chief_ranspo_q0378_03.htm";
             st.setState(STARTED);
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("378_1") && _state == STARTED) {
-            if (cond == 1 && st.getQuestItemsCount(WINE_15) > 0) {
+        } else if ("378_1".equals(event) && _state == STARTED) {
+            if (cond == 1 && st.haveQuestItem(WINE_15) ) {
                 htmltext = "warehouse_chief_ranspo_q0378_05.htm";
                 st.takeItems(WINE_15, 1);
                 st.setCond(2);
-                st.set("score", String.valueOf(score + 1));
+                st.set("score", score + 1);
             } else
                 htmltext = "warehouse_chief_ranspo_q0378_08.htm";
-        } else if (event.equalsIgnoreCase("378_2") && _state == STARTED) {
-            if (cond == 1 && st.getQuestItemsCount(WINE_30) > 0) {
+        } else if ("378_2".equals(event) && _state == STARTED) {
+            if (cond == 1 && st.haveQuestItem(WINE_30) ) {
                 htmltext = "warehouse_chief_ranspo_q0378_06.htm";
                 st.takeItems(WINE_30, 1);
                 st.setCond(2);
-                st.set("score", String.valueOf(score + 2));
+                st.set("score", score + 2);
             } else
                 htmltext = "warehouse_chief_ranspo_q0378_08.htm";
-        } else if (event.equalsIgnoreCase("378_3") && _state == STARTED) {
-            if (cond == 1 && st.getQuestItemsCount(WINE_60) > 0) {
+        } else if ("378_3".equals(event) && _state == STARTED) {
+            if (cond == 1 && st.haveQuestItem(WINE_60) ) {
                 htmltext = "warehouse_chief_ranspo_q0378_07.htm";
                 st.takeItems(WINE_60, 1);
                 st.setCond(2);
-                st.set("score", String.valueOf(score + 4));
+                st.set("score", score + 4);
             } else
                 htmltext = "warehouse_chief_ranspo_q0378_08.htm";
-        } else if (event.equalsIgnoreCase("378_5") && _state == STARTED) {
-            if (cond == 2 && st.getQuestItemsCount(Musical_Score__Theme_of_the_Feast) > 0) {
+        } else if ("378_5".equals(event) && _state == STARTED) {
+            if (cond == 2 && st.haveQuestItem(Musical_Score__Theme_of_the_Feast)) {
                 htmltext = "warehouse_chief_ranspo_q0378_12.htm";
                 st.takeItems(Musical_Score__Theme_of_the_Feast, 1);
                 st.setCond(3);
             } else
                 htmltext = "warehouse_chief_ranspo_q0378_10.htm";
-        } else if (event.equalsIgnoreCase("378_6") && _state == STARTED) {
-            if (cond == 3 && st.getQuestItemsCount(Jonass_Salad_Recipe) > 0) {
+        } else if (event.equals("378_6") && _state == STARTED) {
+            if (cond == 3 && st.haveQuestItem(Jonass_Salad_Recipe) ) {
                 htmltext = "warehouse_chief_ranspo_q0378_14.htm";
                 st.takeItems(Jonass_Salad_Recipe, 1);
                 st.setCond(4);
-                st.set("score", String.valueOf(score + 8));
+                st.set("score", score + 8);
             } else
                 htmltext = "warehouse_chief_ranspo_q0378_17.htm";
-        } else if (event.equalsIgnoreCase("378_7") && _state == STARTED) {
-            if (cond == 3 && st.getQuestItemsCount(Jonass_Sauce_Recipe) > 0) {
+        } else if (event.equals("378_7") && _state == STARTED) {
+            if (cond == 3 && st.haveQuestItem(Jonass_Sauce_Recipe)) {
                 htmltext = "warehouse_chief_ranspo_q0378_15.htm";
                 st.takeItems(Jonass_Sauce_Recipe, 1);
                 st.setCond(4);
-                st.set("score", String.valueOf(score + 16));
+                st.set("score", score + 16);
             } else
                 htmltext = "warehouse_chief_ranspo_q0378_17.htm";
-        } else if (event.equalsIgnoreCase("378_8") && _state == STARTED)
-            if (cond == 3 && st.getQuestItemsCount(Jonass_Steak_Recipe) > 0) {
+        } else if (event.equals("378_8") && _state == STARTED)
+            if (cond == 3 && st.haveQuestItem(Jonass_Steak_Recipe) ) {
                 htmltext = "warehouse_chief_ranspo_q0378_16.htm";
                 st.takeItems(Jonass_Steak_Recipe, 1);
                 st.setCond(4);
-                st.set("score", String.valueOf(score + 32));
+                st.set("score", score + 32);
             } else
                 htmltext = "warehouse_chief_ranspo_q0378_17.htm";
 
@@ -154,7 +153,7 @@ public final class _378_MagnificentFeast extends Quest {
         int cond = st.getCond();
 
         if (_state == CREATED) {
-            if (st.getPlayer().getLevel() < 20) {
+            if (st.player.getLevel() < 20) {
                 htmltext = "warehouse_chief_ranspo_q0378_01.htm";
                 st.exitCurrentQuest(true);
             } else {
@@ -164,12 +163,12 @@ public final class _378_MagnificentFeast extends Quest {
         } else if (cond == 1 && _state == STARTED)
             htmltext = "warehouse_chief_ranspo_q0378_04.htm";
         else if (cond == 2 && _state == STARTED)
-            htmltext = st.getQuestItemsCount(Musical_Score__Theme_of_the_Feast) > 0 ? "warehouse_chief_ranspo_q0378_11.htm" : "warehouse_chief_ranspo_q0378_10.htm";
+            htmltext = st.haveQuestItem(Musical_Score__Theme_of_the_Feast)  ? "warehouse_chief_ranspo_q0378_11.htm" : "warehouse_chief_ranspo_q0378_10.htm";
         else if (cond == 3 && _state == STARTED)
             htmltext = "warehouse_chief_ranspo_q0378_13.htm";
         else if (cond == 4 && _state == STARTED) {
             int[] reward = rewards.get(st.getInt("score"));
-            if (st.getQuestItemsCount(Ritrons_Dessert_Recipe) > 0 && reward != null) {
+            if (st.haveQuestItem(Ritrons_Dessert_Recipe)  && reward != null) {
                 htmltext = "warehouse_chief_ranspo_q0378_20.htm";
                 st.takeItems(Ritrons_Dessert_Recipe, 1);
                 st.giveItems(reward[0], reward[1]);

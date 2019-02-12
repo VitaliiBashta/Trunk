@@ -56,7 +56,7 @@ public final class _007_ATripBegins extends Quest {
         int cond = st.getCond();
         if (npcId == MIRABEL) {
             if (cond == 0)
-                if (st.getPlayer().getRace() == Race.elf && st.getPlayer().getLevel() >= 3)
+                if (st.player.getRace() == Race.elf && st.player.getLevel() >= 3)
                     htmltext = "mint_q0007_0101.htm";
                 else {
                     htmltext = "mint_q0007_0102.htm";

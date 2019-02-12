@@ -19,8 +19,8 @@ public final class Default extends Skill {
 
     @Override
     public void useSkill(Creature activeChar, List<Creature> targets) {
-        if (activeChar.isPlayer())
-            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.skills.skillclasses.Default.NotImplemented", (Player) activeChar).addNumber(id).addString("" + skillType));
+        if (activeChar instanceof Player)
+            ((Player)activeChar).sendMessage(new CustomMessage("l2trunk.gameserver.skills.skillclasses.Default.NotImplemented").addNumber(id).addString("" + skillType));
         LOG.warn("NOTDONE skill: " + id + ", used by" + activeChar);
         activeChar.sendActionFailed();
     }

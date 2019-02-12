@@ -45,7 +45,7 @@ public class CourtInstance extends NpcInstance {
             }
             if (command.startsWith("gotoleader")) {
                 if (player.getClan() != null) {
-                    Player clanLeader = player.getClan().getLeader().getPlayer();
+                    Player clanLeader = player.getClan().getLeader().player();
                     if (clanLeader == null)
                         return;
 
@@ -65,7 +65,7 @@ public class CourtInstance extends NpcInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
         player.sendActionFailed();
         String filename = "castle/CourtMagician/CourtMagician-no.htm";
 
@@ -81,7 +81,7 @@ public class CourtInstance extends NpcInstance {
 
         NpcHtmlMessage html = new NpcHtmlMessage(player, this);
         html.setFile(filename);
-        html.replace("%objectId%", String.valueOf(getObjectId()));
+        html.replace("%objectId%", String.valueOf(objectId()));
         html.replace("%npcname%", getName());
         player.sendPacket(html);
     }

@@ -13,6 +13,8 @@ import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.tables.SkillTreeTable;
 import l2trunk.gameserver.utils.Log;
 
+import static l2trunk.gameserver.utils.ItemFunctions.removeItem;
+
 public final class RequestExEnchantSkill extends L2GameClientPacket {
     private int skillId;
     private int skillLvl;
@@ -47,7 +49,7 @@ public final class RequestExEnchantSkill extends L2GameClientPacket {
             return;
         }
 
-        if (activeChar.getLevel() < 76 || activeChar.getClassId().getLevel() < 4) {
+        if (activeChar.getLevel() < 76 || activeChar.getClassId().occupation() < 3) {
             activeChar.sendMessage("You must have 3rd class change quest completed.");
             return;
         }
@@ -62,19 +64,19 @@ public final class RequestExEnchantSkill extends L2GameClientPacket {
 
         int enchantLevel = SkillTreeTable.convertEnchantLevel(sl.getBaseLevel(), skillLvl, sl.getMaxLevel());
 
-        // already knows the skill with this level
+        // already knows the skill with this occupation
         if (slevel >= enchantLevel)
             return;
 
         // Можем ли мы перейти с текущего уровня скилла на данную заточку
         if (slevel == sl.getBaseLevel() ? skillLvl % 100 != 1 : slevel != enchantLevel - 1) {
-            activeChar.sendMessage("Incorrect enchant level.");
+            activeChar.sendMessage("Incorrect enchant occupation.");
             return;
         }
 
         Skill skill = SkillTable.INSTANCE.getInfo(skillId, enchantLevel);
         if (skill == null) {
-            activeChar.sendMessage("Internal error: not found skill level");
+            activeChar.sendMessage("Internal error: not found skill occupation");
             return;
         }
 
@@ -95,16 +97,16 @@ public final class RequestExEnchantSkill extends L2GameClientPacket {
 
         if (skillLvl % 100 == 1) // only first lvl requires book (101, 201, 301 ...)
         {
-            if (Functions.getItemCount(activeChar, SkillTreeTable.NORMAL_ENCHANT_BOOK) == 0) {
+            if (!activeChar.haveItem(SkillTreeTable.NORMAL_ENCHANT_BOOK)) {
                 activeChar.sendPacket(SystemMsg.YOU_DO_NOT_HAVE_ALL_OF_THE_ITEMS_NEEDED_TO_ENCHANT_THAT_SKILL);
                 return;
             }
-            Functions.removeItem(activeChar, SkillTreeTable.NORMAL_ENCHANT_BOOK, 1, "SkillEnchant");
+            removeItem(activeChar, SkillTreeTable.NORMAL_ENCHANT_BOOK, 1, "SkillEnchant");
         }
 
         if (Rnd.chance(rate)) {
             activeChar.addExpAndSp(0, -1 * requiredSp);
-            Functions.removeItem(activeChar, 57, requiredAdena, "SkillEnchant");
+            removeItem(activeChar, 57, requiredAdena, "SkillEnchant");
             activeChar.sendPacket(new SystemMessage2(SystemMsg.YOUR_SP_HAS_DECREASED_BY_S1).addInteger(requiredSp), new SystemMessage2(SystemMsg.SKILL_ENCHANT_WAS_SUCCESSFUL_S1_HAS_BEEN_ENCHANTED).addSkillName(skillId, skillLvl), new SkillList(activeChar), new ExEnchantSkillResult(1));
             Log.add(activeChar.getName() + "|Successfully enchanted|" + skillId + "|to+" + skillLvl + "|" + rate, "enchant_skills");
         } else {

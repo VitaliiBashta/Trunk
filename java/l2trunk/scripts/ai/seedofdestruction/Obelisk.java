@@ -40,7 +40,7 @@ public final class Obelisk extends DefaultAI {
             _firstTimeAttacked = false;
             for (int i = 0; i < 8; i++)
                 MOBS.forEach(mobId -> {
-                    NpcInstance npc = actor.getReflection().addSpawnWithoutRespawn(mobId, Location.findPointToStay(actor, 400, 1000), 0);
+                    NpcInstance npc = actor.getReflection().addSpawnWithoutRespawn(mobId, Location.findPointToStay(actor, 400, 1000));
                     Creature randomHated = actor.getAggroList().getRandomHated();
                     npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, randomHated != null ? randomHated : attacker, Rnd.get(1, 100));
                 });

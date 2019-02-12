@@ -24,7 +24,7 @@ public class BlockInstance extends NpcInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
     }
 
     @Override
@@ -37,8 +37,5 @@ public class BlockInstance extends NpcInstance {
         return _isRed ? 0x53 : 0;
     }
 
-    @Override
-    public boolean isInvul() {
-        return true;
-    }
+
 }

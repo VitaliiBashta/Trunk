@@ -29,7 +29,7 @@
 		<set name="operateType" val="OP_PASSIVE"/>
 	</skill>
 	<skill id="6904" levels="1" name="84 level Raid Boss">
-		<!-- The monster was created by the demon Maluk by joining a high-level demon with a dragon. It possesses the advantages of both demons and dragons. Maluk offered this exceptional creature to Antharas. Antharas fed its blood to the Muscle Bomber and appointed it as the Valley's Watcher. -->
+		<!-- The monster was created by the demon Maluk by joining a high-occupation demon with a dragon. It possesses the advantages of both demons and dragons. Maluk offered this exceptional creature to Antharas. Antharas fed its blood to the Muscle Bomber and appointed it as the Valley's Watcher. -->
 		<set name="icon" val="icon.skillraid"/>
 		<set name="target" val="TARGET_NONE"/>
 		<set name="skillType" val="NOTDONE"/>

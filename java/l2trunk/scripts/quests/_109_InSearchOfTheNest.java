@@ -3,7 +3,6 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _109_InSearchOfTheNest extends Quest {
     //NPC
@@ -29,13 +28,13 @@ public final class _109_InSearchOfTheNest extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
         int cond = st.getCond();
-        if (event.equalsIgnoreCase("Memo") && cond == 1) {
-            st.giveItems(MEMO, 1);
+        if (event.equalsIgnoreCase("Memo") && (cond == 1)) {
+            st.giveItems(MEMO);
             st.setCond(2);
             st.playSound(SOUND_ITEMGET);
             htmltext = "You've find something...";
-        } else if (event.equalsIgnoreCase("merc_cap_peace_q0109_0301.htm") && cond == 2) {
-            st.takeItems(MEMO, -1);
+        } else if ("merc_cap_peace_q0109_0301.htm".equalsIgnoreCase(event) && cond == 2) {
+            st.takeItems(MEMO);
             st.setCond(3);
         }
         return htmltext;
@@ -51,7 +50,7 @@ public final class _109_InSearchOfTheNest extends Quest {
         String htmltext = "noquest";
 
         if (id == CREATED) {
-            if (st.getPlayer().getLevel() >= 66 && npcId == PIERCE && (st.getQuestItemsCount(GOLDEN_BADGE_RECRUIT) > 0 || st.getQuestItemsCount(GOLDEN_BADGE_SOLDIER) > 0)) {
+            if (st.player.getLevel() >= 66 && npcId == PIERCE && (st.getQuestItemsCount(GOLDEN_BADGE_RECRUIT) > 0 || st.getQuestItemsCount(GOLDEN_BADGE_SOLDIER) > 0)) {
                 st.setState(STARTED);
                 st.playSound(SOUND_ACCEPT);
                 st.setCond(1);
@@ -83,8 +82,4 @@ public final class _109_InSearchOfTheNest extends Quest {
         return htmltext;
     }
 
-    @Override
-    public String onKill(NpcInstance npc, QuestState st) {
-        return null;
-    }
 }

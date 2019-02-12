@@ -74,7 +74,7 @@ public final class RecipeHolder {
 
                             att = attrs.getNamedItem("level");
                             if (att == null) {
-                                LOG.error("Missing level for recipe item id: " + id + ", skipping");
+                                LOG.error("Missing  level for recipe item id: " + id + ", skipping");
                                 continue;
                             }
                             set.set("level", toInt(att.getNodeValue()));

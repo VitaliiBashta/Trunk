@@ -14,24 +14,15 @@ public class CastleFakeTowerInstance extends NpcInstance {
         super(objectId, template);
     }
 
-    /**
-     * Фэйковые вышки нельзя атаковать
-     */
     @Override
     public boolean isAutoAttackable(Creature player) {
         return false;
     }
 
-    /**
-     * Вышки не умеют говорить
-     */
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
     }
 
-    /**
-     * Вышки не умеют говорить
-     */
     @Override
     public void showChatWindow(Player player, String filename, Object... replace) {
     }
@@ -41,15 +32,6 @@ public class CastleFakeTowerInstance extends NpcInstance {
         return false;
     }
 
-    /**
-     * Фэйковые вышки неуязвимы
-     *
-     * @return true
-     */
-    @Override
-    public boolean isInvul() {
-        return true;
-    }
 
     @Override
     public boolean isFearImmune() {

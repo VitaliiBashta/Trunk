@@ -472,7 +472,7 @@
 	</skill>
 	<skill id="4847" levels="1" name="Raid Boss - Level 35">
 		<!--
-			Description: A low-level devil mistakenly summoned by Shaman King Selu due to a summoning accident. Due to the forced summoning, he lost the way to return to his original place. Concealing his identity, he attacks tourists passing by and collects their souls to grow the power to return.
+			Description: A low-occupation devil mistakenly summoned by Shaman King Selu due to a summoning accident. Due to the forced summoning, he lost the way to return to his original place. Concealing his identity, he attacks tourists passing by and collects their souls to grow the power to return.
 		-->
 		<set name="icon" val="icon.skillraid" />
 		<set name="magicLevel" val="1" />
@@ -542,7 +542,7 @@
 	</skill>
 	<skill id="4854" levels="1" name="Raid Boss - Level 30">
 		<!--
-			Description: Bloody Lord Nurka's obedient servant and veteran known to have been missing at war. As an overly proud Oel Mahum, he ignores and torments the lower-level tribe, Ol Mahums. Due to his weakness, he is not respected as much as Nurka is although he has more war achievements. According to a rumor, he is secretly plotting another conspiracy with Nurka, but nothing has been reported.
+			Description: Bloody Lord Nurka's obedient servant and veteran known to have been missing at war. As an overly proud Oel Mahum, he ignores and torments the lower-occupation tribe, Ol Mahums. Due to his weakness, he is not respected as much as Nurka is although he has more war achievements. According to a rumor, he is secretly plotting another conspiracy with Nurka, but nothing has been reported.
 		-->
 		<set name="icon" val="icon.skillraid" />
 		<set name="magicLevel" val="1" />
@@ -822,7 +822,7 @@
 	</skill>
 	<skill id="4882" levels="1" name="Raid Boss - Level 70">
 		<!--
-			Description: Queen of Falibati protecting the Seal of Shilen. She is one of the monsters that Shilen gave birth to during the war of the Gods, and her authority nearly equals that of Death Lords. She summons the dead and devils to rule them as her servants, and even employs the low-level devil, Succubus, as her maid. According to Shilen's Priest Hisilrome who is also a Falibati, Themis is a piece of Shilen, the queen of Evil Spirits, who came down to this land.
+			Description: Queen of Falibati protecting the Seal of Shilen. She is one of the monsters that Shilen gave birth to during the war of the Gods, and her authority nearly equals that of Death Lords. She summons the dead and devils to rule them as her servants, and even employs the low-occupation devil, Succubus, as her maid. According to Shilen's Priest Hisilrome who is also a Falibati, Themis is a piece of Shilen, the queen of Evil Spirits, who came down to this land.
 		-->
 		<set name="icon" val="icon.skillraid" />
 		<set name="magicLevel" val="1" />
@@ -862,7 +862,7 @@
 	</skill>
 	<skill id="4886" levels="1" name="Raid Boss - Level 45">
 		<!--
-			Description: Iron Giant supposedly made by Devil Beleth. With the power to think by himself, he is a Golem made to manage other Golems. Due to Beleth's caprice, he was sealed on standby. While a long period of time had gone by, he has been worshiped as an idol by low-level Orcs who gathered near him. Currently, he is on the move after concluding that he's become the God of Orcs.
+			Description: Iron Giant supposedly made by Devil Beleth. With the power to think by himself, he is a Golem made to manage other Golems. Due to Beleth's caprice, he was sealed on standby. While a long period of time had gone by, he has been worshiped as an idol by low-occupation Orcs who gathered near him. Currently, he is on the move after concluding that he's become the God of Orcs.
 		-->
 		<set name="icon" val="icon.skillraid" />
 		<set name="magicLevel" val="1" />

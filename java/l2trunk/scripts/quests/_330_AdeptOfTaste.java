@@ -200,7 +200,7 @@ public final class _330_AdeptOfTaste extends Quest {
         if (_state == CREATED) {
             if (npcId != Jonas)
                 return "noquest";
-            if (st.getPlayer().getLevel() < 24) {
+            if (st.player.getLevel() < 24) {
                 st.exitCurrentQuest(true);
                 return "30469_01.htm";
             }
@@ -221,9 +221,9 @@ public final class _330_AdeptOfTaste extends Quest {
                 if (all_ingredients_count < 5)
                     return "30469_04.htm";
 
-                st.takeAllItems(Ingredient_List);
-                st.takeAllItems(ingredients);
-                st.takeAllItems(spec_ingredients);
+                st.takeItems(Ingredient_List);
+                st.takeItems(ingredients);
+                st.takeItems(spec_ingredients);
                 if (spec_ingredients_count > 3)
                     spec_ingredients_count = 3;
 
@@ -242,7 +242,7 @@ public final class _330_AdeptOfTaste extends Quest {
                 if (Jonass_Steak_Dish_count == 0 && Miriens_Review_count > 0)
                     for (int i = Miriens_Reviews.size(); i > 0; i--)
                         if (st.getQuestItemsCount(Miriens_Reviews.get(i - 1)) > 0) {
-                            st.takeAllItems(Miriens_Reviews);
+                            st.takeItems(Miriens_Reviews);
                             st.giveItems(ADENA_ID, adena_rewards[i - 1]);
                             if (rewards.get(i - 1) > 0)
                                 st.giveItems(rewards.get(i - 1), 1);
@@ -261,7 +261,7 @@ public final class _330_AdeptOfTaste extends Quest {
                     return "30461_04.htm";
                 for (int i = Jonass_Steak_Dishes.size(); i > 0; i--)
                     if (st.getQuestItemsCount(Jonass_Steak_Dishes.get(i - 1)) > 0) {
-                        st.takeAllItems(Jonass_Steak_Dishes);
+                        st.takeItems(Jonass_Steak_Dishes);
                         st.playSound(SOUND_MIDDLE);
                         st.giveItems(Miriens_Reviews.get(i - 1));
                         return "30461_02t" + i + ".htm";
@@ -375,16 +375,16 @@ public final class _330_AdeptOfTaste extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getState() != STARTED)
-            return null;
+            return;
         int npcId = npc.getNpcId();
         long ingredients_count = st.getQuestItemsCount(ingredients);
         long spec_ingredients_count = st.getQuestItemsCount(spec_ingredients);
         long all_ingredients_count = ingredients_count + spec_ingredients_count;
         boolean Has_Ingredient_List = st.getQuestItemsCount(Ingredient_List) > 0;
         if (!(Has_Ingredient_List && all_ingredients_count < 5))
-            return null;
+            return;
 
         if (npcId == Hobgoblin && st.getQuestItemsCount(Panos_Contract) > 0)
             st.rollAndGive(Hobgoblin_Amulet, 1, 1, 30, 100);
@@ -409,6 +409,5 @@ public final class _330_AdeptOfTaste extends Quest {
         else if (npcId == Monster_Eye_Gazer && st.getQuestItemsCount(Rollants_Creature_Book) > 0)
             st.rollAndGive(Body_of_Monster_Eye, 1, 2, 30, 100);
 
-        return null;
     }
 }

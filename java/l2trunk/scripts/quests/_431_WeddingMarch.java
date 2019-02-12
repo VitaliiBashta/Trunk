@@ -28,8 +28,8 @@ public final class _431_WeddingMarch extends Quest {
             st.setState(STARTED);
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
-        } else if ("431_3".equalsIgnoreCase(event))
-            if (st.getQuestItemsCount(SILVER_CRYSTAL) == 50) {
+        } else if ("431_3".equals(event))
+            if (st.haveQuestItem(SILVER_CRYSTAL, 50)) {
                 htmltext = "muzyk_q0431_0201.htm";
                 st.takeItems(SILVER_CRYSTAL);
                 st.giveItems(WEDDING_ECHO_CRYSTAL, 25);
@@ -48,34 +48,33 @@ public final class _431_WeddingMarch extends Quest {
         int id = st.getState();
         if (npcId == MELODY_MAESTRO_KANTABILON)
             if (id != STARTED) {
-                if (st.getPlayer().getLevel() < 38) {
+                if (st.player.getLevel() < 38) {
                     htmltext = "muzyk_q0431_0103.htm";
                     st.exitCurrentQuest(true);
                 } else
                     htmltext = "muzyk_q0431_0101.htm";
             } else if (condition == 1)
                 htmltext = "muzyk_q0431_0106.htm";
-            else if (condition == 2 && st.getQuestItemsCount(SILVER_CRYSTAL) == 50)
+            else if (condition == 2 && st.haveQuestItem(SILVER_CRYSTAL,50))
                 htmltext = "muzyk_q0431_0105.htm";
         return htmltext;
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getState() != STARTED)
-            return null;
+            return;
         int npcId = npc.getNpcId();
 
         if (npcId == 20786 || npcId == 20787)
-            if (st.getCond() == 1 && st.getQuestItemsCount(SILVER_CRYSTAL) < 50) {
-                st.giveItems(SILVER_CRYSTAL);
+            if (st.getCond() == 1) {
+                st.giveItemIfNotHave(SILVER_CRYSTAL, 50);
 
-                if (st.getQuestItemsCount(SILVER_CRYSTAL) == 50) {
+                if (st.haveQuestItem(SILVER_CRYSTAL,50)) {
                     st.playSound(SOUND_MIDDLE);
                     st.setCond(2);
                 } else
                     st.playSound(SOUND_ITEMGET);
             }
-        return null;
     }
 }

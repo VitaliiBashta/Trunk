@@ -31,7 +31,6 @@ import l2trunk.scripts.npc.model.residences.fortress.siege.PowerControlUnitInsta
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Map;
 
 import static l2trunk.commons.lang.NumberUtils.toInt;
 
@@ -113,7 +112,7 @@ public final class AdminResidence implements IAdminCommandHandler, ScriptFile {
                 } else {
                     msg.setFile("admin/residence/siege_info.htm");
                     msg.replace("%residence%", HtmlUtils.htmlResidenceName(r.getId()));
-                    msg.replace("%id%", String.valueOf(r.getId()));
+                    msg.replace("%id%", ""+r.getId());
                     msg.replace("%owner%", r.getOwner() == null ? "NPC" : r.getOwner().getName());
                     msg.replace("%cycle%", String.valueOf(r.getCycle()));
                     msg.replace("%paid_cycle%", String.valueOf(r.getPaidCycle()));
@@ -121,13 +120,12 @@ public final class AdminResidence implements IAdminCommandHandler, ScriptFile {
                     msg.replace("%left_time%", String.valueOf(r.getCycleDelay()));
 
                     StringBuilder clans = new StringBuilder(100);
-                    for (Map.Entry<String, List<Object>> entry : event.getObjects().entrySet()) {
-                        for (Object o : entry.getValue()) {
-                            if (o instanceof SiegeClanObject) {
-                                SiegeClanObject siegeClanObject = (SiegeClanObject) o;
-                                clans.append("<tr>").append("<td>").append(siegeClanObject.getClan().getName()).append("</td>").append("<td>").append(siegeClanObject.getClan().getLeaderName()).append("</td>").append("<td>").append(siegeClanObject.getType()).append("</td>").append("</tr>");
-                            }
-                        }
+                    for (List<Object> objects : event.getObjects().values()) {
+                        objects.stream()
+                                .filter(o -> o instanceof SiegeClanObject)
+                                .map(o -> (SiegeClanObject) o)
+                                .forEach(siegeClanObject ->
+                                        clans.append("<tr>").append("<td>").append(siegeClanObject.getClan().getName()).append("</td>").append("<td>").append(siegeClanObject.getClan().getLeaderName()).append("</td>").append("<td>").append(siegeClanObject.getType()).append("</td>").append("</tr>"));
                     }
                     msg.replace("%clans%", clans.toString());
                 }
@@ -147,7 +145,7 @@ public final class AdminResidence implements IAdminCommandHandler, ScriptFile {
                     return false;
                 Clan clan = null;
                 String clanName = wordList[2];
-                if (!clanName.equalsIgnoreCase("npc")) {
+                if (!"npc".equalsIgnoreCase(clanName)) {
                     clan = ClanTable.INSTANCE.getClanByName(clanName);
                     if (clan == null) {
                         activeChar.sendPacket(SystemMsg.INCORRECT_NAME);

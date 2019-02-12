@@ -3,6 +3,7 @@ package l2trunk.gameserver.skills.effects;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.Effect;
 import l2trunk.gameserver.model.Playable;
+import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.stats.Env;
 import l2trunk.gameserver.utils.ItemFunctions;
@@ -12,7 +13,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class EffectRestorationRandom extends Effect {
+public final class EffectRestorationRandom extends Effect {
     private static final Pattern groupPattern = Pattern.compile("\\{\\[([\\d:;]+?)\\]([\\d.e-]+)\\}");
     private final List<List<Item>> items;
     private final double[] chances;
@@ -62,17 +63,10 @@ public class EffectRestorationRandom extends Effect {
 
         if (i < chances.length) {
             List<Item> itemList = items.get(i);
-            for (Item item : itemList) {
-                ItemFunctions.addItem((Playable) effected, item.itemId, item.count, true, "EffectRestorationRandom");
-            }
+            itemList.forEach(item -> ItemFunctions.addItem((Player)effected, item.itemId, item.count, "EffectRestorationRandom"));
         } else {
             effected.sendPacket(SystemMsg.THERE_WAS_NOTHING_FOUND_INSIDE);
         }// иначе ничего не выдаем
-    }
-
-    @Override
-    protected boolean onActionTime() {
-        return false;
     }
 
     private final class Item {

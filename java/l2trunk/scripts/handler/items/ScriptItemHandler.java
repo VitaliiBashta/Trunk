@@ -10,11 +10,6 @@ import l2trunk.gameserver.utils.Location;
 
 public abstract class ScriptItemHandler implements IItemHandler {
     @Override
-    public boolean pickupItem(Playable playable, ItemInstance item) {
-        return true;
-    }
-
-    @Override
     public void dropItem(Player player, ItemInstance item, long count, Location loc) {
         NULL.dropItem(player,item,count,loc);
         ItemLogHandler.getInstance().addLog(player, item, count, ItemActionType.DROPPED_ON_PURPOSE);

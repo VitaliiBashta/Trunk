@@ -46,7 +46,7 @@ public final class Time implements IUserCommandHandler {
         activeChar.sendPacket(sm);
 
         if (Config.ALT_SHOW_SERVER_TIME)
-            activeChar.sendMessage(new CustomMessage("usercommandhandlers.Time.ServerTime", activeChar, sf.format(new Date(System.currentTimeMillis()))));
+            activeChar.sendMessage(new CustomMessage("usercommandhandlers.Time.ServerTime", sf.format(new Date(System.currentTimeMillis()))));
 
         return true;
     }

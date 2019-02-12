@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 public enum AdminCommandHandler {
     INSTANCE;
@@ -87,7 +86,7 @@ public enum AdminCommandHandler {
 
     public void useAdminCommandHandler(Player activeChar, String adminCommand) {
         if (!(activeChar.isGM() || activeChar.getPlayerAccess().CanUseGMCommand)) {
-            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.clientpackets.SendBypassBuildCmd.NoCommandOrAccess", activeChar).addString(adminCommand));
+            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.clientpackets.SendBypassBuildCmd.NoCommandOrAccess").addString(adminCommand));
             return;
         }
 

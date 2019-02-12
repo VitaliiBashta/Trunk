@@ -18,7 +18,7 @@ public final class MasterOfEnchanting extends Functions implements ScriptFile, O
     private static final Logger LOG = LoggerFactory.getLogger(MasterOfEnchanting.class);
     private static final String EVENT_NAME = "MasterOfEnchanting";
     private static final int EVENT_MANAGER_ID = 32599;
-    private static final List<SimpleSpawner> _spawns = new ArrayList<>();
+    private static List<SimpleSpawner> _spawns = new ArrayList<>();
     private static boolean _active = false;
     private static final int[][] _herbdrop = {{20000, 100}, //Spicy Kimchee
             {20001, 100}, //Spicy Kimchee
@@ -32,7 +32,7 @@ public final class MasterOfEnchanting extends Functions implements ScriptFile, O
                 new Location(-119494, 44882, 360, 24576), //Kamael Village
                 new Location(86865, -142915, -1336, 26000));
 
-        SpawnNPCs(EVENT_MANAGER_ID, EVENT_MANAGERS, _spawns);
+        _spawns = SpawnNPCs(EVENT_MANAGER_ID, EVENT_MANAGERS);
     }
 
 
@@ -45,11 +45,10 @@ public final class MasterOfEnchanting extends Functions implements ScriptFile, O
     }
 
     public void startEvent() {
-        Player player = getSelf();
         if (!player.getPlayerAccess().IsEventGm)
             return;
 
-        if (SetActive(EVENT_NAME, true)) {
+        if (setActive(EVENT_NAME, true)) {
             spawnEventManagers();
             System.out.println("Event: Master of Enchanting started.");
             Announcements.INSTANCE.announceByCustomMessage("scripts.events.MasOfEnch.AnnounceEventStarted");
@@ -61,10 +60,9 @@ public final class MasterOfEnchanting extends Functions implements ScriptFile, O
     }
 
     public void stopEvent() {
-        Player player = getSelf();
         if (!player.getPlayerAccess().IsEventGm)
             return;
-        if (SetActive(EVENT_NAME, false)) {
+        if (setActive(EVENT_NAME, false)) {
             unSpawnEventManagers();
             System.out.println("Event: Master of Enchanting stopped.");
             Announcements.INSTANCE.announceByCustomMessage("scripts.events.MasOfEnch.AnnounceEventStoped");

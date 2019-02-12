@@ -152,7 +152,7 @@ public final class Forge implements ScriptFile, ICommunityBoardHandler {
                 String name = ItemHolder.getTemplate(Config.BBS_FORGE_ENCHANT_ITEM).getName();
 
                 if (name.isEmpty()) {
-                    name = new CustomMessage("common.item.no.name", player).toString();
+                    name = new CustomMessage("common.item.no.name").toString();
                 }
                 if ((item < 1) || (item > 12)) {
                     return;
@@ -189,7 +189,7 @@ public final class Forge implements ScriptFile, ICommunityBoardHandler {
                 }
                 template = template.replace("{name}", _name);
                 template = template.replace("{enchant}", _item.getEnchantLevel() <= 0 ? "" : "+" + _item.getEnchantLevel());
-                template = template.replace("{msg}", new CustomMessage("communityboard.forge.enchant.getBonuses", player).toString());
+                template = template.replace("{msg}", new CustomMessage("communityboard.forge.enchant.getBonuses").toString());
 
                 String button_tm = HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + "forge/enchant_button_template.htm", player);
                 String button = null;
@@ -312,7 +312,7 @@ public final class Forge implements ScriptFile, ICommunityBoardHandler {
                     if (Util.getPay(player, Config.BBS_FORGE_FOUNDATION_ITEM, price, true)) {
                         PcInventory inv = player.getInventory();
                         ItemInstance _found = ItemFunctions.createItem(found);
-                        if (inv.destroyItemByObjectId(_item.getObjectId(), _item.getCount(), "Forge")) {
+                        if (inv.destroyItemByObjectId(_item.objectId(), _item.getCount(), "Forge")) {
                             _found.setEnchantLevel(_item.getEnchantLevel());
                             _found.setAugmentationId(_item.getAugmentationId());
 
@@ -600,7 +600,7 @@ public final class Forge implements ScriptFile, ICommunityBoardHandler {
                     }
                     html = html.replace("{name}", _name);
                     html = html.replace("{enchant}", _item.getEnchantLevel() <= 0 ? "" : " +" + _item.getEnchantLevel());
-                    html = html.replace("{msg}", new CustomMessage("communityboard.forge.attribute.getBonuses", player).toString());
+                    html = html.replace("{msg}", new CustomMessage("communityboard.forge.attribute.getBonuses").toString());
                     html = html.replace("{fire}", buttonFire);
                     html = html.replace("{water}", buttonWater);
                     html = html.replace("{earth}", buttonEarth);
@@ -615,24 +615,24 @@ public final class Forge implements ScriptFile, ICommunityBoardHandler {
 
                     String elementName = "";
                     if (element == 0)
-                        elementName = new CustomMessage("common.element.0", player).toString();
+                        elementName = new CustomMessage("common.element.0").toString();
                     else if (element == 1)
-                        elementName = new CustomMessage("common.element.1", player).toString();
+                        elementName = new CustomMessage("common.element.1").toString();
                     else if (element == 2)
-                        elementName = new CustomMessage("common.element.2", player).toString();
+                        elementName = new CustomMessage("common.element.2").toString();
                     else if (element == 3)
-                        elementName = new CustomMessage("common.element.3", player).toString();
+                        elementName = new CustomMessage("common.element.3").toString();
                     else if (element == 4)
-                        elementName = new CustomMessage("common.element.4", player).toString();
+                        elementName = new CustomMessage("common.element.4").toString();
                     else if (element == 5) {
-                        elementName = new CustomMessage("common.element.5", player).toString();
+                        elementName = new CustomMessage("common.element.5").toString();
                     }
                     int item = toInt(array[4]);
 
                     String name = ItemHolder.getTemplate(Config.BBS_FORGE_ENCHANT_ITEM).getName();
 
                     if (name.isEmpty()) {
-                        name = new CustomMessage("common.item.no.name", player).toString();
+                        name = new CustomMessage("common.item.no.name").toString();
                     }
                     ItemInstance _item = player.getInventory().getPaperdollItem(item);
 
@@ -666,7 +666,7 @@ public final class Forge implements ScriptFile, ICommunityBoardHandler {
                     }
                     template = template.replace("{name}", _name);
                     template = template.replace("{enchant}", _item.getEnchantLevel() <= 0 ? "" : "+" + _item.getEnchantLevel());
-                    template = template.replace("{msg}", new CustomMessage("communityboard.forge.attribute.selected", player).addString(elementName).toString());
+                    template = template.replace("{msg}", new CustomMessage("communityboard.forge.attribute.selected").addString(elementName).toString());
 
                     String button_tm = HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + "forge/enchant_button_template.htm", player);
                     StringBuilder button = new StringBuilder();
@@ -698,25 +698,25 @@ public final class Forge implements ScriptFile, ICommunityBoardHandler {
                     ItemInstance _item = player.getInventory().getPaperdollItem(item);
 
                     if (_item == null) {
-                        player.sendMessage(new CustomMessage("communityboard.forge.item.null", player).toString());
+                        player.sendMessage(new CustomMessage("communityboard.forge.item.null").toString());
                         Util.communityNextPage(player, "_bbsforge:attribute:list");
                         return;
                     }
 
                     if (!ForgeElement.itemCheckGrade(true, _item)) {
-                        player.sendMessage(new CustomMessage("communityboard.forge.grade.incorrect", player).toString());
+                        player.sendMessage(new CustomMessage("communityboard.forge.grade.incorrect").toString());
                         Util.communityNextPage(player, "_bbsforge:attribute:list");
                         return;
                     }
 
                     if (_item.isHeroWeapon()) {
-                        player.sendMessage(new CustomMessage("communityboard.forge.item.hero", player).toString());
+                        player.sendMessage(new CustomMessage("communityboard.forge.item.hero").toString());
                         Util.communityNextPage(player, "_bbsforge:attribute:list");
                         return;
                     }
 
                     if ((_item.isArmor()) && (!ForgeElement.canEnchantArmorAttribute(att, _item))) {
-                        player.sendMessage(new CustomMessage("communityboard.forge.attribute.terms.incorrect", player).toString());
+                        player.sendMessage(new CustomMessage("communityboard.forge.attribute.terms.incorrect").toString());
                         Util.communityNextPage(player, "_bbsforge:attribute:list");
                         return;
                     }
@@ -744,19 +744,19 @@ public final class Forge implements ScriptFile, ICommunityBoardHandler {
 
                         String elementName = "";
                         if (att == 0)
-                            elementName = new CustomMessage("common.element.0", player).toString();
+                            elementName = new CustomMessage("common.element.0").toString();
                         else if (att == 1)
-                            elementName = new CustomMessage("common.element.1", player).toString();
+                            elementName = new CustomMessage("common.element.1").toString();
                         else if (att == 2)
-                            elementName = new CustomMessage("common.element.2", player).toString();
+                            elementName = new CustomMessage("common.element.2").toString();
                         else if (att == 3)
-                            elementName = new CustomMessage("common.element.3", player).toString();
+                            elementName = new CustomMessage("common.element.3").toString();
                         else if (att == 4)
-                            elementName = new CustomMessage("common.element.4", player).toString();
+                            elementName = new CustomMessage("common.element.4").toString();
                         else if (att == 5) {
-                            elementName = new CustomMessage("common.element.5", player).toString();
+                            elementName = new CustomMessage("common.element.5").toString();
                         }
-                        player.sendMessage(new CustomMessage("communityboard.forge.enchant.attribute.success", player).addString(_item.getName()).addString(elementName).addNumber(Value).toString());
+                        player.sendMessage(new CustomMessage("communityboard.forge.enchant.attribute.success").addString(_item.getName()).addString(elementName).addNumber(Value).toString());
                     }
 
                     Util.communityNextPage(player, "_bbsforge:attribute:list");

@@ -4,8 +4,9 @@ import l2trunk.gameserver.instancemanager.QuestManager;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.achievements.Achievements;
 import l2trunk.gameserver.model.quest.Quest;
+import l2trunk.scripts.quests._255_Tutorial;
 
-public class RequestTutorialLinkHtml extends L2GameClientPacket {
+public final class RequestTutorialLinkHtml extends L2GameClientPacket {
     // format: cS
 
     private String _bypass;
@@ -21,9 +22,8 @@ public class RequestTutorialLinkHtml extends L2GameClientPacket {
         if (player == null)
             return;
 
-        Quest q = QuestManager.getQuest(255);
-        if (q != null)
-            player.processQuestEvent(q.getName(), _bypass, null);
+        Quest q = QuestManager.getQuest(_255_Tutorial.class);
+        player.processQuestEvent(q, _bypass, null);
 
         if (_bypass.startsWith("_bbs_achievements")) {
             _bypass = _bypass.replaceAll("%", " ");

@@ -5,7 +5,6 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _175_TheWayOfTheWarrior extends Quest {
     //NPC
@@ -137,20 +136,20 @@ public final class _175_TheWayOfTheWarrior extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("32138-04.htm")) {
+        if ("32138-04.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("32138-08.htm")) {
-            st.takeItems(MuertosClaw, -1);
+        } else if ("32138-08.htm".equalsIgnoreCase(event)) {
+            st.takeItems(MuertosClaw);
 
-            st.giveItems(WarriorsSword, 1);
+            st.giveItems(WarriorsSword);
             st.giveItems(ADENA_ID, 8799, false);
-            st.getPlayer().addExpAndSp(20739, 1777);
+            st.player.addExpAndSp(20739, 1777);
 
-            if (st.getPlayer().getClassId().getLevel() == 1 && !st.getPlayer().getVarB("p1q3")) {
-                st.getPlayer().setVar("p1q3", "1", -1); // flag for helper
-                st.getPlayer().sendPacket(new ExShowScreenMessage("Now go find the Newbie Guide."));
+            if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("p1q3")) {
+                st.player.setVar("p1q3", 1); // flag for helper
+                st.player.sendPacket(new ExShowScreenMessage("Now go find the Newbie Guide."));
                 st.giveItems(1060, 100); // healing potion
                 for (int item = 4412; item <= 4417; item++)
                     st.giveItems(item, 10); // echo cry
@@ -171,10 +170,10 @@ public final class _175_TheWayOfTheWarrior extends Quest {
         int cond = st.getCond();
         if (npcId == Kekropus) {
             if (cond == 0) {
-                if (st.getPlayer().getRace() != Race.kamael) {
+                if (st.player.getRace() != Race.kamael) {
                     htmltext = "32138-00.htm";
                     st.exitCurrentQuest(true);
-                } else if (st.getPlayer().getLevel() < 10) {
+                } else if (st.player.getLevel() < 10) {
                     htmltext = "32138-01.htm";
                     st.exitCurrentQuest(true);
 
@@ -211,7 +210,7 @@ public final class _175_TheWayOfTheWarrior extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         for (int[] aDROPLIST_COND : DROPLIST_COND)
@@ -224,6 +223,5 @@ public final class _175_TheWayOfTheWarrior extends Quest {
                             st.setCond(aDROPLIST_COND[1]);
                             st.setState(STARTED);
                         }
-        return null;
     }
 }

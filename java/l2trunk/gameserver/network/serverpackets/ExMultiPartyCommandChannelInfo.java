@@ -21,7 +21,7 @@ public class ExMultiPartyCommandChannelInfo extends L2GameServerPacket {
         for (Party party : channel.getParties()) {
             Player leader = party.getLeader();
             if (leader != null)
-                parties.add(new ChannelPartyInfo(leader.getName(), leader.getObjectId(), party.size()));
+                parties.add(new ChannelPartyInfo(leader.getName(), leader.objectId(), party.size()));
         }
     }
 

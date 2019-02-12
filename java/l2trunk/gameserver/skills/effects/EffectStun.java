@@ -29,8 +29,4 @@ public final class EffectStun extends Effect {
         effected.stopStunning();
     }
 
-    @Override
-    public boolean onActionTime() {
-        return false;
-    }
 }

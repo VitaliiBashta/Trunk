@@ -7,6 +7,7 @@ import l2trunk.gameserver.ai.CtrlEvent;
 import l2trunk.gameserver.ai.CtrlIntention;
 import l2trunk.gameserver.geodata.GeoEngine;
 import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.network.serverpackets.FlyToLocation;
 import l2trunk.gameserver.network.serverpackets.SystemMessage;
@@ -23,15 +24,14 @@ public final class InstantJump extends Skill {
     }
 
     @Override
-    public void useSkill(Creature activeChar, List<Creature> targets) {
-        if (targets.size() == 0)
+    public void useSkill(Creature activeChar, Creature target) {
+        if (target == null)
             return;
 
-        Creature target = targets.get(0);
         if (Rnd.chance(target.calcStat(Stats.PSKILL_EVASION, 0, activeChar, this))) {
-            if (activeChar.isPlayer())
+            if (activeChar instanceof Player)
                 activeChar.sendPacket(new SystemMessage(SystemMessage.C1_DODGES_THE_ATTACK).addName(target));
-            if (target.isPlayer())
+            if (target instanceof Player)
                 target.sendPacket(new SystemMessage(SystemMessage.C1_HAS_EVADED_C2S_ATTACK).addName(target).addName(activeChar));
             return;
         }

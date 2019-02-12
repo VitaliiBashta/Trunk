@@ -1,6 +1,5 @@
 package l2trunk.gameserver.model;
 
-import l2trunk.commons.lang.reference.HardReference;
 import l2trunk.commons.util.Rnd;
 import l2trunk.commons.util.concurrent.atomic.AtomicState;
 import l2trunk.gameserver.Config;
@@ -15,7 +14,7 @@ import l2trunk.gameserver.model.Zone.ZoneType;
 import l2trunk.gameserver.model.base.TeamType;
 import l2trunk.gameserver.model.entity.events.GlobalEvent;
 import l2trunk.gameserver.model.entity.events.impl.DuelEvent;
-import l2trunk.gameserver.model.instances.StaticObjectInstance;
+import l2trunk.gameserver.model.instances.*;
 import l2trunk.gameserver.model.items.Inventory;
 import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.network.serverpackets.Revive;
@@ -45,10 +44,10 @@ public abstract class Playable extends Creature {
         nonAggroTime = 0L;
     }
 
-    @Override
-    public HardReference<? extends Playable> getRef() {
-        return (HardReference<? extends Playable>) super.getRef();
-    }
+//    @Override
+//    public iHardReference<? extends Playable> getRef() {
+//        return (iHardReference<? extends Playable>) super.getRef();
+//    }
 
     public abstract Inventory getInventory();
 
@@ -79,7 +78,7 @@ public abstract class Playable extends Creature {
         }
 
         if (skill != null) {
-            if (skill.altUse()) {
+            if (skill.isAltUse) {
                 return false;
             }
             if (skill.targetType == SkillTargetType.TARGET_FEEDABLE_BEAST) {
@@ -112,11 +111,18 @@ public abstract class Playable extends Creature {
             return false;
         }
         if ((skill == null) || skill.isOffensive) {
-            if (target.getKarma() > 0) {
+            if (target instanceof Player && ((Player) target).getKarma() > 0) {
                 return false;
-            } else return target.isPlayable();
-        } else return (target.getPvpFlag() > 0) || (target.getKarma() > 0) || target.isMonster();
+            } else return target instanceof Playable;
+        } else return target.getPvpFlag() > 0 || ((Playable) target).getKarma() > 0;
 
+    }
+
+
+    @Override
+    public Player getPlayer() {
+        if (this instanceof Player) return (Player) this;
+        else return ((Summon) this).owner;
     }
 
     /**
@@ -138,7 +144,7 @@ public abstract class Playable extends Creature {
             return false;
         }
 
-        if (target.isDoor() && !target.isAttackable(this)) {
+        if (target instanceof DoorInstance && !target.isAttackable(this)) {
             player.sendPacket(Msg.INVALID_TARGET);
             return false;
         }
@@ -156,7 +162,7 @@ public abstract class Playable extends Creature {
         }
 
         // The prohibition to attack civilians in the siege NPC zone on TW. Otherwise way stuffed glasses.
-        // if (player.getTerritorySiege() > -1 && target.isNpc() && !(target instanceof L2TerritoryFlagInstance) && !(target.getAI() instanceof DefaultAI) && player.isInZone(ZoneType.Siege))
+        // if (player.getTerritorySiege() > -1 && target.NpcInstance() && !(target instanceof L2TerritoryFlagInstance) && !(target.getAI() instanceof DefaultAI) && player.isInZone(ZoneType.Siege))
         // {
         // player.sendPacket(Msg.INVALID_TARGET);
         // return false;
@@ -167,7 +173,7 @@ public abstract class Playable extends Creature {
             return false;
         }
 
-        if (target.isPlayable()) {
+        if (target instanceof Playable) {
             // You can not attack someone who is on the scene, if you were not in the arena
             if (isInZoneBattle() != target.isInZoneBattle()) {
                 player.sendPacket(Msg.INVALID_TARGET);
@@ -192,7 +198,7 @@ public abstract class Playable extends Creature {
             return;
         }
 
-        if ((isSummon() || isPet()) && target.isPlayer() && target.getPlayer().equals(getPlayer()) && !isBetray()) {
+        if (this instanceof Summon && target instanceof Player && ((Player) target).equals(((Summon) this).owner) && !isBetray()) {
             player.sendMessage("Pet cannot hit its owner!");
             player.sendActionFailed();
             sendActionFailed();
@@ -205,7 +211,7 @@ public abstract class Playable extends Creature {
         }
 
         if (player.isInObserverMode()) {
-            player.sendMessage(new CustomMessage("l2trunk.gameserver.model.L2Playable.OutOfControl.ObserverNoAttack", player));
+            player.sendMessage(new CustomMessage("l2trunk.gameserver.model.L2Playable.OutOfControl.ObserverNoAttack"));
             return;
         }
 
@@ -232,7 +238,7 @@ public abstract class Playable extends Creature {
                     bowMpConsume = calcStat(Stats.MP_USE_BOW, bowMpConsume, target, null);
                 }
 
-                if (_currentMp < bowMpConsume) {
+                if (currentMp < bowMpConsume) {
                     getAI().setIntention(CtrlIntention.AI_INTENTION_ACTIVE);
                     player.sendPacket(Msg.NOT_ENOUGH_MP);
                     player.sendActionFailed();
@@ -254,7 +260,7 @@ public abstract class Playable extends Creature {
     }
 
     private boolean isBetray() {
-        if (isSummon()) return getEffectList().getAllEffects().stream()
+        if (this instanceof SummonInstance) return getEffectList().getAllEffects().stream()
                 .anyMatch(e -> e.getEffectType() == EffectType.Betray);
         return false;
     }
@@ -267,9 +273,9 @@ public abstract class Playable extends Creature {
 
         Player activeChar = getPlayer();
 
-        if ((isSummon() || isPet()) && skill.isOffensive && target.isPlayer() && (target.getPlayer().equals(activeChar)) && (skill.id != Skill.SKILL_BETRAY)) {
-            getPlayer().sendMessage("Pet cannot hit its owner!");
-            getPlayer().sendActionFailed();
+        if (this instanceof Summon && skill.isOffensive && target instanceof Player && target.equals(activeChar) && (skill.id != Skill.SKILL_BETRAY)) {
+            ((Summon) this).owner.sendMessage("Pet cannot hit its owner!");
+            ((Summon) this).owner.sendActionFailed();
             sendActionFailed();
             return;
         }
@@ -286,7 +292,7 @@ public abstract class Playable extends Creature {
             return;
         }
 
-        if ((skill.skillType == SkillType.DEBUFF) && target.isNpc() && target.isInvul() && !target.isMonster() && !target.isInCombat() && (target.getPvpFlag() == 0)) {
+        if ((skill.skillType == SkillType.DEBUFF) && target instanceof NpcInstance && target.isInvul() && !(target instanceof MonsterInstance) && !target.isInCombat() && (target.getPvpFlag() == 0)) {
             getPlayer().sendPacket(Msg.INVALID_TARGET);
             return;
         }
@@ -311,7 +317,7 @@ public abstract class Playable extends Creature {
             return;
         }
 
-        if (!attacker.equals(this) && attacker.isPlayable()) {
+        if (!attacker.equals(this) && attacker instanceof Playable) {
             Player player = getPlayer();
             Player pcAttacker = attacker.getPlayer();
             if (!pcAttacker.equals(player)) {
@@ -341,6 +347,7 @@ public abstract class Playable extends Creature {
 
     @Override
     public int getPAtkSpd() {
+//        return  (int)calcStat(Stats.POWER_ATTACK_SPEED, null,null);
         return Math.max((int) calcStat(Stats.POWER_ATTACK_SPEED, calcStat(Stats.ATK_BASE, template.basePAtkSpd)), 1);
     }
 
@@ -421,12 +428,6 @@ public abstract class Playable extends Creature {
             if (player.isInOlympiadMode() && player.getOlympiadSide() == pcAttacker.getOlympiadSide() && !force)
                 return false;
 
-            // TODO that for
-            /*
-             * if (pcAttacker.getTeam() > 0 && pcAttacker.isChecksForTeam() && player.getTeam() == 0) // The ban on the attack / buff party event an unregistered player return false; if (player.getTeam() > 0 && player.isChecksForTeam() && pcAttacker.getTeam() == 0) // Запрет на атаку/баф участника
-             * эвента незарегистрированным игроком return false; if (player.getTeam() > 0 && player.isChecksForTeam() && pcAttacker.getTeam() > 0 && pcAttacker.isChecksForTeam() && player.getTeam() == pcAttacker.getTeam()) // Свою команду атаковать нельзя return false;
-             */
-
             if (isInZonePeace())
                 return false;
 
@@ -464,7 +465,6 @@ public abstract class Playable extends Creature {
         return true;
     }
 
-    @Override
     public int getKarma() {
         Player player = getPlayer();
         return player == null ? 0 : player.getKarma();
@@ -477,9 +477,9 @@ public abstract class Playable extends Creature {
             return;
         }
 
-        if (useActionSkills && !skill.altUse() && !skill.skillType.equals(SkillType.BEAST_FEED)) {
+        if (useActionSkills && !skill.isAltUse && !skill.skillType.equals(SkillType.BEAST_FEED)) {
             for (Creature target : targets) {
-                if (target.isNpc()) {
+                if (target instanceof NpcInstance) {
                     if (skill.isOffensive) {
                         // mobs will hate on debuff
                         if (target.paralizeOnAttack(player)) {
@@ -496,7 +496,7 @@ public abstract class Playable extends Creature {
                     }
                     target.getAI().notifySeeSpell(skill, this);
                 } else // исключать баффы питомца на владельца
-                    if (target.isPlayable() && !target.equals(getPet()) && !((isSummon() || isPet()) && target.equals(player))) {
+                    if (target instanceof Playable && !(this instanceof Summon) && target.equals(player)) {
                         int aggro = skill.effectPoint == 0 ? Math.max(1, (int) skill.power) : skill.effectPoint;
 
                         World.getAroundNpc(target)
@@ -533,7 +533,7 @@ public abstract class Playable extends Creature {
      *
      * @param item предмет который был поднят
      */
-    public void broadcastPickUpMsg(ItemInstance item) {
+    protected void broadcastPickUpMsg(ItemInstance item) {
         Player player = getPlayer();
 
         if ((item == null) || (player == null) || player.isInvisible()) {
@@ -546,10 +546,10 @@ public abstract class Playable extends Creature {
             String playerName = player.getName();
 
             if (item.getEnchantLevel() > 0) {
-                msgId = isPlayer() ? SystemMessage.ATTENTION_S1_PICKED_UP__S2_S3 : SystemMessage.ATTENTION_S1_PET_PICKED_UP__S2_S3;
+                msgId = this instanceof Player ? SystemMessage.ATTENTION_S1_PICKED_UP__S2_S3 : SystemMessage.ATTENTION_S1_PET_PICKED_UP__S2_S3;
                 msg = new SystemMessage(msgId).addString(playerName).addNumber(item.getEnchantLevel()).addItemName(item.getItemId());
             } else {
-                msgId = isPlayer() ? SystemMessage.ATTENTION_S1_PICKED_UP_S2 : SystemMessage.ATTENTION_S1_PET_PICKED_UP__S2_S3;
+                msgId = this instanceof Player ? SystemMessage.ATTENTION_S1_PICKED_UP_S2 : SystemMessage.ATTENTION_S1_PET_PICKED_UP__S2_S3;
                 msg = new SystemMessage(msgId).addString(playerName).addItemName(item.getItemId());
             }
 
@@ -578,18 +578,15 @@ public abstract class Playable extends Creature {
         } else {
             isPendingRevive = false;
 
-            if (isSalvation() || isPlayer()) {
+            if (isSalvation() || this instanceof Player) {
                 getEffectList().getAllEffects().stream()
                         .filter(e -> e.getEffectType() == EffectType.Salvation)
                         .findFirst().ifPresent(Effect::exit);
                 setCurrentHp(getMaxHp(), true);
                 setCurrentMp(getMaxMp());
-                setCurrentCp(getMaxCp());
+                setFullCp();
             } else {
                 setCurrentHp(Math.max(1.0, getMaxHp() * Config.RESPAWN_RESTORE_HP), true);
-                if (isPlayer() && (Config.RESPAWN_RESTORE_CP > 0)) {
-                    setCurrentCp(getMaxCp() * Config.RESPAWN_RESTORE_CP);
-                }
 
                 if (Config.RESPAWN_RESTORE_MP >= 0) {
                     setCurrentMp(getMaxMp() * Config.RESPAWN_RESTORE_MP);
@@ -600,7 +597,7 @@ public abstract class Playable extends Creature {
         }
     }
 
-    public abstract void doPickupItem(GameObject object);
+    public abstract void doPickupItem(ItemInstance object);
 
     public void sitDown(StaticObjectInstance throne, boolean... force) {
     }
@@ -668,8 +665,4 @@ public abstract class Playable extends Creature {
         return 0;
     }
 
-    @Override
-    public boolean isPlayable() {
-        return true;
-    }
 }

@@ -13,6 +13,7 @@ import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.NpcUtils;
 
 import java.util.List;
+import java.util.Objects;
 
 public final class FortuneBug extends DefaultAI {
     private static final int MAX_RADIUS = 500;
@@ -53,10 +54,7 @@ public final class FortuneBug extends DefaultAI {
             return;
 
         if (_nextEat < System.currentTimeMillis()) {
-            ItemInstance closestItem = World.getAroundObjects(actor, 20, 200)
-                    .filter(GameObject::isItem)
-                    .map(obj -> (ItemInstance) obj)
-                    .filter(ItemInstance::isStackable)
+            ItemInstance closestItem = World.getAroundItems(actor, 20, 200)
                     .filter(ItemInstance::isAdena)
                     .findFirst().orElse(null);
 
@@ -112,10 +110,7 @@ public final class FortuneBug extends DefaultAI {
             return true;
 
         if (!actor.isMoving && _nextEat < System.currentTimeMillis()) {
-            World.getAroundObjects(actor, MAX_RADIUS, 200)
-                    .filter(GameObject::isItem)
-                    .map(obj -> (ItemInstance) obj)
-                    .filter(ItemInstance::isStackable)
+            World.getAroundItems(actor, MAX_RADIUS, 200)
                     .filter(ItemInstance::isAdena)
                     .findFirst().ifPresent(closestItem -> actor.moveToLocation(closestItem.getLoc(), 0, true));
         }

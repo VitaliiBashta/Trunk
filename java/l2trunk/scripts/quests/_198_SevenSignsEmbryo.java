@@ -8,7 +8,6 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.ExStartScenePlayer;
 import l2trunk.gameserver.scripts.Functions;
-import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.ReflectionUtils;
 
@@ -39,29 +38,29 @@ public final class _198_SevenSignsEmbryo extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        Player player = st.getPlayer();
-        if (event.equalsIgnoreCase("wood_q198_2.htm")) {
+        Player player = st.player;
+        if ("wood_q198_2.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("wood_q198_3.htm")) {
+        } else if ("wood_q198_3.htm".equalsIgnoreCase(event)) {
             enterInstance(player);
-            if (st.get("embryo") != null)
+            if (st.getInt("embryo") != 0)
                 st.unset("embryo");
-        } else if (event.equalsIgnoreCase("franz_q198_3.htm")) {
-            NpcInstance embryo = player.getReflection().addSpawnWithoutRespawn(ShilensEvilThoughtsCapt, setcloc, 0);
+        } else if ("franz_q198_3.htm".equalsIgnoreCase(event)) {
+            NpcInstance embryo = player.getReflection().addSpawnWithoutRespawn(ShilensEvilThoughtsCapt, setcloc);
             st.set("embryo", 1);
             Functions.npcSay(npc, player.getName() + "! You should kill this monster! I'll try to help!");
             Functions.npcSay(embryo, "This is not yours.");
             embryo.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, player, 500);
-        } else if (event.equalsIgnoreCase("wood_q198_8.htm"))
+        } else if ("wood_q198_8.htm".equalsIgnoreCase(event))
             enterInstance(player);
-        else if (event.equalsIgnoreCase("franz_q198_5.htm")) {
+        else if ("franz_q198_5.htm".equalsIgnoreCase(event)) {
             Functions.npcSay(npc, "We will be with you always...");
-            st.takeItems(PieceOfDoubt, -1);
+            st.takeItems(PieceOfDoubt);
             st.setCond(3);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("jaina_q198_2.htm"))
+        } else if ("jaina_q198_2.htm".equalsIgnoreCase(event))
             player.getReflection().collapse();
         return event;
     }
@@ -70,12 +69,11 @@ public final class _198_SevenSignsEmbryo extends Quest {
     public String onTalk(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
-        Player player = st.getPlayer();
+        Player player = st.player;
         String htmltext = "noquest";
         if (npcId == Wood) {
-            QuestState qs = player.getQuestState(_197_SevenSignsTheSacredBookofSeal.class);
             if (cond == 0) {
-                if (player.getLevel() >= 79 && qs != null && qs.isCompleted())
+                if (player.getLevel() >= 79 && player.isQuestCompleted(_197_SevenSignsTheSacredBookofSeal.class))
                     htmltext = "wood_q198_1.htm";
                 else {
                     htmltext = "wood_q198_0.htm";
@@ -86,7 +84,7 @@ public final class _198_SevenSignsEmbryo extends Quest {
             else if (cond == 3) {
                 if (player.getBaseClassId() == player.getActiveClassId()) {
                     st.addExpAndSp(315108090, 34906059);
-                    st.giveItems(DawnsBracelet, 1);
+                    st.giveItems(DawnsBracelet);
                     st.giveItems(AncientAdena, 1500000);
                     st.setState(COMPLETED);
                     st.playSound(SOUND_FINISH);
@@ -97,7 +95,7 @@ public final class _198_SevenSignsEmbryo extends Quest {
             }
         } else if (npcId == Franz) {
             if (cond == 1) {
-                if (st.get("embryo") == null || Integer.parseInt(st.get("embryo")) != 1)
+                if (st.getInt("embryo") != 1)
                     htmltext = "franz_q198_1.htm";
                 else
                     htmltext = "franz_q198_3a.htm";
@@ -111,21 +109,20 @@ public final class _198_SevenSignsEmbryo extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
-        Player player = st.getPlayer();
+        Player player = st.player;
         if (player == null)
-            return null;
+            return;
 
         if (npcId == ShilensEvilThoughtsCapt && cond == 1) {
             Functions.npcSay(npc, player.getName() + ", I'm leaving now. But we shall meet again!");
             st.set("embryo", 2);
             st.setCond(2);
-            st.giveItems(PieceOfDoubt, 1);
+            st.giveItems(PieceOfDoubt);
             player.showQuestMovie(ExStartScenePlayer.SCENE_SSQ_EMBRYO);
         }
-        return null;
     }
 
     private void enterInstance(Player player) {

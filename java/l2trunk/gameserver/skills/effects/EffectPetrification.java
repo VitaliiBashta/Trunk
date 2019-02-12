@@ -10,9 +10,7 @@ public final class EffectPetrification extends Effect {
 
     @Override
     public boolean checkCondition() {
-        if (effected.isParalyzeImmune())
-            return false;
-        return super.checkCondition();
+        return !effected.isParalyzeImmune();
     }
 
     @Override
@@ -35,8 +33,4 @@ public final class EffectPetrification extends Effect {
         effected.stopDamageBlocked();
     }
 
-    @Override
-    public boolean onActionTime() {
-        return false;
-    }
 }

@@ -3,7 +3,7 @@ package l2trunk.gameserver.skills.effects;
 import l2trunk.gameserver.model.Effect;
 import l2trunk.gameserver.stats.Env;
 
-public class EffectConsumeSoulsOverTime extends Effect {
+public final class EffectConsumeSoulsOverTime extends Effect {
     public EffectConsumeSoulsOverTime(Env env, EffectTemplate template) {
         super(env, template);
     }

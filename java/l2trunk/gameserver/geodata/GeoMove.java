@@ -42,7 +42,7 @@ public class GeoMove {
         if (Config.PATH_CLEAN)
             pathClean(targetRecorder, geoIndex);
 
-        if (showTrace && obj.isPlayer() && ((Player) obj).getVarB("trace")) {
+        if (showTrace && obj instanceof Player && ((Player) obj).isVarSet("trace")) {
             Player player = (Player) obj;
             ExShowTrace trace = new ExShowTrace();
             int i = 0;

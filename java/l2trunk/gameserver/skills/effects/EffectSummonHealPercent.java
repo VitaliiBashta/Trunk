@@ -6,7 +6,7 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.stats.Env;
 import l2trunk.gameserver.stats.Stats;
 
-public class EffectSummonHealPercent extends Effect {
+public final class EffectSummonHealPercent extends Effect {
     private final boolean _ignoreHpEff;
 
     public EffectSummonHealPercent(Env env, EffectTemplate template) {
@@ -22,7 +22,7 @@ public class EffectSummonHealPercent extends Effect {
             return;
 
         double hp = calc() * effected.getMaxHp() / 100.;
-        double newHp = hp * (!_ignoreHpEff ? effected.calcStat(Stats.HEAL_EFFECTIVNESS, 100., effector, getSkill()) : 100.) / 100.;
+        double newHp = hp * (!_ignoreHpEff ? effected.calcStat(Stats.HEAL_EFFECTIVNESS, 100., effector, skill) : 100.) / 100.;
         double addToHp = Math.max(0, Math.min(newHp, effected.calcStat(Stats.HP_LIMIT, null, null) * effected.getMaxHp() / 100. - effected.getCurrentHp()));
 
         effected.sendPacket(new SystemMessage2(SystemMsg.S1_HP_HAS_BEEN_RESTORED).addInteger(Math.round(addToHp)));
@@ -31,8 +31,4 @@ public class EffectSummonHealPercent extends Effect {
             effected.setCurrentHp(addToHp + effected.getCurrentHp(), false);
     }
 
-    @Override
-    public boolean onActionTime() {
-        return false;
-    }
 }

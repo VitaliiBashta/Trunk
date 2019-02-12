@@ -33,7 +33,7 @@ public final class DelusionChamber extends DimensionalRift {
                         String var = p.getVar("backCoords");
                         if (var == null || var.equals(""))
                             continue;
-                        p.teleToLocation(Location.parseLoc(var), ReflectionManager.DEFAULT);
+                        p.teleToLocation(Location.of(var), ReflectionManager.DEFAULT);
                         p.unsetVar("backCoords");
                     }
             collapse();

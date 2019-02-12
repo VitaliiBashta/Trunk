@@ -39,7 +39,7 @@ public final class _510_AClansReputation extends Quest {
     @Override
     public String onTalk(NpcInstance npc, QuestState st) {
         String htmltext = "<html><body>You are either not on a quest that involves this NPC, or you don't meet this NPC's minimum quest requirements.</body></html>";
-        Player player = st.getPlayer();
+        Player player = st.player;
         Clan clan = player.getClan();
         if (player.getClan() == null || !player.isClanLeader()) {
             st.exitCurrentQuest(true);
@@ -71,16 +71,15 @@ public final class _510_AClansReputation extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
-        if (!st.getPlayer().isClanLeader())
+    public void onKill(NpcInstance npc, QuestState st) {
+        if (!st.player.isClanLeader())
             st.exitCurrentQuest(true);
         else if (st.getState() == STARTED) {
             int npcId = npc.getNpcId();
             if (npcId >= 22215 && npcId <= 22218) {
-                st.giveItems(CLAW, 1);
+                st.giveItems(CLAW);
                 st.playSound(SOUND_ITEMGET);
             }
         }
-        return null;
     }
 }

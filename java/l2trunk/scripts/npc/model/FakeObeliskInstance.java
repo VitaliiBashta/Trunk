@@ -9,13 +9,13 @@ import l2trunk.gameserver.templates.npc.NpcTemplate;
  *
  * @author SYS
  */
-public class FakeObeliskInstance extends NpcInstance {
+public final class FakeObeliskInstance extends NpcInstance {
     public FakeObeliskInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
     }
 
     @Override

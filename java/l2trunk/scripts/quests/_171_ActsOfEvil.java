@@ -5,8 +5,8 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.Functions;
-import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Location;
+import l2trunk.gameserver.utils.NpcUtils;
 
 public final class _171_ActsOfEvil extends Quest {
     //NPC
@@ -118,7 +118,7 @@ public final class _171_ActsOfEvil extends Quest {
     }
 
     private void Spawn_OlMahumSupportTroop(QuestState st) {
-        OlMahumSupportTroop_Spawn = Functions.spawn(Location.findPointToStay(st.getPlayer(), 50, 100), OlMahumSupportTroop);
+        OlMahumSupportTroop_Spawn = NpcUtils.spawnSingle(OlMahumSupportTroop,Location.findPointToStay(st.player, 50, 100));
     }
 
     public _171_ActsOfEvil() {
@@ -194,7 +194,7 @@ public final class _171_ActsOfEvil extends Quest {
         int cond = st.getCond();
         if (npcId == Alvah) {
             if (cond == 0) {
-                if (st.getPlayer().getLevel() <= 26) {
+                if (st.player.getLevel() <= 26) {
                     htmltext = "30381-01a.htm";
                     st.exitCurrentQuest(true);
                 } else
@@ -287,7 +287,7 @@ public final class _171_ActsOfEvil extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         for (int[] aDROPLIST_COND : DROPLIST_COND)
@@ -312,10 +312,10 @@ public final class _171_ActsOfEvil extends Quest {
                 st.giveItems(RangerReportPart1, 1);
                 st.playSound(SOUND_ITEMGET);
             } else if (st.getQuestItemsCount(RangerReportPart2) == 0 && Rnd.chance(CHANCE21)) {
-                st.giveItems(RangerReportPart2, 1);
+                st.giveItems(RangerReportPart2);
                 st.playSound(SOUND_ITEMGET);
             } else if (st.getQuestItemsCount(RangerReportPart3) == 0 && Rnd.chance(CHANCE22)) {
-                st.giveItems(RangerReportPart3, 1);
+                st.giveItems(RangerReportPart3);
                 st.playSound(SOUND_ITEMGET);
             } else if (st.getQuestItemsCount(RangerReportPart4) == 0 && Rnd.chance(CHANCE23)) {
                 st.giveItems(RangerReportPart4, 1);
@@ -323,12 +323,11 @@ public final class _171_ActsOfEvil extends Quest {
             }
         } else if (cond == 6 && npcId == OlMahumGeneral)
             if (st.getQuestItemsCount(WeaponsTradeContract) == 0 && Rnd.chance(CHANCE24)) {
-                st.giveItems(WeaponsTradeContract, 1);
+                st.giveItems(WeaponsTradeContract);
                 st.playSound(SOUND_ITEMGET);
             } else if (st.getQuestItemsCount(AttackDirectives) == 0 && Rnd.chance(CHANCE25)) {
-                st.giveItems(AttackDirectives, 1);
+                st.giveItems(AttackDirectives);
                 st.playSound(SOUND_ITEMGET);
             }
-        return null;
     }
 }

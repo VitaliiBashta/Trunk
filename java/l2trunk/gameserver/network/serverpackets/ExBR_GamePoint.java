@@ -7,7 +7,7 @@ public class ExBR_GamePoint extends L2GameServerPacket {
     private final long _points;
 
     public ExBR_GamePoint(Player player) {
-        _objectId = player.getObjectId();
+        _objectId = player.objectId();
         _points = player.getPremiumPoints();
     }
 

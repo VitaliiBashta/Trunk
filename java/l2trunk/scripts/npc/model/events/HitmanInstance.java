@@ -102,7 +102,7 @@ public class HitmanInstance extends NpcInstance {
                     break;
             }
         } else if (curCommand.equals("delete"))
-            if (Hitman.deleteOrder(player.getObjectId()))
+            if (Hitman.deleteOrder(player.objectId()))
                 sendResult(player, "Completed!", "<center>You have removed your order. The remaining funds returned.</center>");
             else
                 sendResult(player, "Error!", "<center>You haven't set an award.</center>");
@@ -190,7 +190,7 @@ public class HitmanInstance extends NpcInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... args) {
+    public void showChatWindow(Player player, int val) {
         showChatWindow(player, HTML_INDEX);
     }
 

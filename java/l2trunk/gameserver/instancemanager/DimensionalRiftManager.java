@@ -113,7 +113,7 @@ public enum DimensionalRiftManager {
                                     for (Node coord = room.getFirstChild(); coord != null; coord = coord.getNextSibling())
                                         if ("teleport".equalsIgnoreCase(coord.getNodeName())) {
                                             attrs = coord.getAttributes();
-                                            tele = Location.parseLoc(attrs.getNamedItem("loc").getNodeValue());
+                                            tele = Location.of(attrs.getNamedItem("loc").getNodeValue());
                                         } else if ("zone".equalsIgnoreCase(coord.getNodeName())) {
                                             attrs = coord.getAttributes();
                                             xMin = Integer.parseInt(attrs.getNamedItem("xMin").getNodeValue());
@@ -206,7 +206,7 @@ public enum DimensionalRiftManager {
                 showHtmlFile(player, "rift/Cheater.htm", npc);
 
                 if (!player.isGM())
-                    LOG.warn("Player " + player.getName() + "(" + player.getObjectId() + ") was cheating in dimension rift area!");
+                    LOG.warn("Player " + player.getName() + "(" + player.objectId() + ") was cheating in dimension rift area!");
 
                 return;
             }

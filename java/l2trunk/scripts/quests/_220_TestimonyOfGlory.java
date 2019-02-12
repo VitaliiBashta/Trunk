@@ -4,7 +4,6 @@ import l2trunk.gameserver.model.GameObjectsStorage;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _220_TestimonyOfGlory extends Quest {
     //NPC
@@ -293,23 +292,23 @@ public final class _220_TestimonyOfGlory extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("RETURN"))
+        if ("RETURN".equalsIgnoreCase(event))
             return null;
-        else if (event.equalsIgnoreCase("30514-05.htm")) {
+        else if ("30514-05.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.setState(STARTED);
             st.giveItems(VokiansOrder, 1);
-            if (!st.getPlayer().getVarB("dd2")) {
+            if (!st.player.isVarSet("dd2")) {
                 st.giveItems(7562, 102);
-                st.getPlayer().setVar("dd2", "1", -1);
+                st.player.setVar("dd2", 1);
             }
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("30642-03.htm")) {
+        } else if ("30642-03.htm".equalsIgnoreCase(event)) {
             st.takeItems(VokiansOrder2, -1);
             st.giveItems(ChiantaOrder1st, 1);
             st.setCond(4);
             st.setState(STARTED);
-        } else if (event.equalsIgnoreCase("30571-03.htm")) {
+        } else if ("30571-03.htm".equalsIgnoreCase(event)) {
             st.takeItems(ScepterBox, -1);
             st.giveItems(TanapisOrder, 1);
             st.setCond(9);
@@ -321,7 +320,7 @@ public final class _220_TestimonyOfGlory extends Quest {
             st.takeItems(ScepterOfTurek, -1);
             st.takeItems(ScepterOfTunath, -1);
             st.takeItems(ChiantaOrder1st, -1);
-            if (st.getPlayer().getLevel() >= 38) {
+            if (st.player.getLevel() >= 38) {
                 st.giveItems(ChiantasOrder3rd, 1);
                 st.setCond(6);
                 st.setState(STARTED);
@@ -501,8 +500,8 @@ public final class _220_TestimonyOfGlory extends Quest {
                 htmltext = "completed";
                 st.exitCurrentQuest(true);
             } else if (cond == 0) {
-                if (st.getPlayer().getClassId().getId() == 45 || st.getPlayer().getClassId().getId() == 47 || st.getPlayer().getClassId().getId() == 50) {
-                    if (st.getPlayer().getLevel() >= 37)
+                if (st.player.getClassId().id == 45 || st.player.getClassId().id == 47 || st.player.getClassId().id == 50) {
+                    if (st.player.getLevel() >= 37)
                         htmltext = "30514-03.htm";
                     else {
                         htmltext = "30514-01.htm";
@@ -537,9 +536,9 @@ public final class _220_TestimonyOfGlory extends Quest {
                 if (st.getQuestItemsCount(ChiantaOrder1st) > 0)
                     htmltext = "30642-05.htm";
                 else if (st.getQuestItemsCount(ChiantasOrder2rd) > 0)
-                    if (st.getPlayer().getLevel() >= 38) {
-                        st.takeItems(ChiantasOrder2rd, -1);
-                        st.giveItems(ChiantasOrder3rd, 1);
+                    if (st.player.getLevel() >= 38) {
+                        st.takeItems(ChiantasOrder2rd);
+                        st.giveItems(ChiantasOrder3rd);
                         htmltext = "30642-09.htm";
                         st.setCond(6);
                         st.setState(STARTED);
@@ -717,12 +716,12 @@ public final class _220_TestimonyOfGlory extends Quest {
             } else if (cond == 11)
                 htmltext = "30571-06.htm";
         if (npcId == Kakai && cond == 11) {
-            st.takeItems(RitualBox, -1);
-            st.giveItems(MarkOfGlory, 1);
-            if (!st.getPlayer().getVarB("prof2.2")) {
+            st.takeItems(RitualBox);
+            st.giveItems(MarkOfGlory);
+            if (!st.player.isVarSet("prof2.2")) {
                 st.addExpAndSp(724113, 48324);
                 st.giveItems(ADENA_ID, 131360);
-                st.getPlayer().setVar("prof2.2", "1", -1);
+                st.player.setVar("prof2.2", 1);
             }
             htmltext = "30565-02.htm";
             st.playSound(SOUND_FINISH);
@@ -733,7 +732,7 @@ public final class _220_TestimonyOfGlory extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         for (int[] aDROPLIST_COND : DROPLIST_COND)
@@ -756,7 +755,7 @@ public final class _220_TestimonyOfGlory extends Quest {
                 if (isQuest != null)
                     isQuest.deleteMe();
                 if (st.getQuestItemsCount(GloveOfVoltar) > 0 && st.getQuestItemsCount(PashikasHead) == 0)
-                    st.giveItems(PashikasHead, 1);
+                    st.giveItems(PashikasHead);
             } else if (npcId == VultusSonOfVoltarQuestMonster) {
                 st.cancelQuestTimer("VultusSonOfVoltarQuestMonster");
                 NpcInstance isQuest = GameObjectsStorage.getByNpcId(VultusSonOfVoltarQuestMonster);
@@ -785,11 +784,10 @@ public final class _220_TestimonyOfGlory extends Quest {
                 NpcInstance isQuest = GameObjectsStorage.getByNpcId(RevenantOfTantosChief);
                 if (isQuest != null)
                     isQuest.deleteMe();
-                st.giveItems(ScepterOfTantos, 1);
+                st.giveItems(ScepterOfTantos);
                 st.setCond(10);
                 st.setState(STARTED);
                 st.playSound(SOUND_MIDDLE);
             }
-        return null;
     }
 }

@@ -105,11 +105,11 @@ public final class ExBasicActionList extends L2GameServerPacket {
             1021, // skill number 2 used Kai
             1022, // skill number 2 used Jupiter
             1023, // skill number 2 used Mirage
-            1024, // number 2 Skill used Bekarev
+            1024, // number 2 AcruireSkill used Bekarev
             1025, // skill number 2 used Shadow
-            1026, // Skill number 1 used Shadow
+            1026, // AcruireSkill number 1 used Shadow
             1027, // skill number 2 used Hecate
-            1028, // Skill number 1 used Resurrection
+            1028, // AcruireSkill number 1 used Resurrection
             1029, // Ability to number 2 , used Resurrection
             1030, // skill number 2 used vicious
             1031, // The King of Cats : A powerful cutting attack . Maximum damage.
@@ -258,9 +258,9 @@ public final class ExBasicActionList extends L2GameServerPacket {
             1023, // skill number 2 used Mirage
             1024,// Ability to number 2 , used the Unicorn
             1025,// skill number 2 used Shadow
-            1026,// Skill number 1 used Shadow
+            1026,// AcruireSkill number 1 used Shadow
             1027,// skill number 2 used Hecate
-            1028, // Skill number 1 used Resurrection
+            1028, // AcruireSkill number 1 used Resurrection
             1029, // Ability to number 2 , used Resurrection
             1030, // skill number 2 used vicious
             1031, //​ The King of Cats : A powerful cutting attack . Maximum damage .

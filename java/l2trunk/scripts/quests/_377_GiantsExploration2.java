@@ -60,16 +60,16 @@ public final class _377_GiantsExploration2 extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("yes")) {
+        if ("yes".equalsIgnoreCase(event)) {
             htmltext = "Starting.htm";
             st.setState(STARTED);
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("0")) {
+        } else if ("0".equalsIgnoreCase(event)) {
             htmltext = "ext_msg.htm";
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(true);
-        } else if (event.equalsIgnoreCase("show")) {
+        } else if ("show".equalsIgnoreCase(event)) {
             htmltext = "no_items.htm";
             for (int[] i : EXCHANGE) {
                 long count = Long.MAX_VALUE;
@@ -90,7 +90,7 @@ public final class _377_GiantsExploration2 extends Quest {
                             item = 5336; // nightmare armor 60%
                         else
                             item = 5338; // majestic leather 60%
-                        st.giveItems(item, 1);
+                        st.giveItems(item);
                     }
                 }
             }
@@ -106,7 +106,7 @@ public final class _377_GiantsExploration2 extends Quest {
             st.exitCurrentQuest(true);
         else if (id == CREATED) {
             htmltext = "start.htm";
-            if (st.getPlayer().getLevel() < 75) {
+            if (st.player.getLevel() < 75) {
                 st.exitCurrentQuest(true);
                 htmltext = "error_1.htm";
             }
@@ -119,9 +119,8 @@ public final class _377_GiantsExploration2 extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getCond() == 1)
             st.rollAndGive(ANC_BOOK, 1, DROP_RATE);
-        return null;
     }
 }

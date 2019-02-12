@@ -9,16 +9,17 @@ import l2trunk.gameserver.listener.game.OnSSPeriodListener;
 import l2trunk.gameserver.model.HardSpawner;
 import l2trunk.gameserver.model.Spawner;
 import l2trunk.gameserver.model.entity.SevenSigns;
-import l2trunk.gameserver.model.instances.MonsterInstance;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
-import l2trunk.gameserver.templates.spawn.PeriodOfDay;
 import l2trunk.gameserver.templates.spawn.SpawnTemplate;
 import l2trunk.gameserver.utils.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public enum SpawnManager {
@@ -29,7 +30,7 @@ public enum SpawnManager {
     private static final String DAWN_GROUP2 = "dawn_spawn2";
     private static final String DUSK_GROUP2 = "dusk_spawn2";
     //    private static final SpawnManager _instance = new SpawnManager();
-    private final Map<String, List<Spawner>> _spawns = new ConcurrentHashMap<>();
+    private final Map<String, List<Spawner>> spawns = new ConcurrentHashMap<>();
     private final Listeners listeners = new Listeners();
     private final Map<Integer, Integer> spawnCountByNpcId = new HashMap<>();
     private final Map<Integer, List<Location>> spawnLocationsByNpcId = new HashMap<>();
@@ -46,9 +47,9 @@ public enum SpawnManager {
             return;
         }
 
-        List<Spawner> spawnerList = _spawns.get(group);
+        List<Spawner> spawnerList = spawns.get(group);
         if (spawnerList == null) {
-            _spawns.put(group, spawnerList = new ArrayList<>(templateList.size()));
+            spawns.put(group, spawnerList = new ArrayList<>(templateList.size()));
         }
 
         for (SpawnTemplate template : templateList) {
@@ -83,7 +84,7 @@ public enum SpawnManager {
             }
 
 
-            if (npcTemplate.isRaid && group.equals(PeriodOfDay.NONE.name())) {
+            if (npcTemplate.isRaid && group.equals("NONE")) {
                 RaidBossSpawnManager.INSTANCE.addNewSpawn(npcTemplate.getNpcId(), spawner);
             }
         }
@@ -91,7 +92,7 @@ public enum SpawnManager {
     }
 
     public void spawnAll() {
-        spawn(PeriodOfDay.NONE.name());
+        spawn("NONE");
         if (Config.ALLOW_EVENT_GATEKEEPER) {
             spawn("event_gatekeeper");
         }
@@ -113,7 +114,7 @@ public enum SpawnManager {
     }
 
     public void spawn(String group) {
-        List<Spawner> spawnerList = _spawns.get(group);
+        List<Spawner> spawnerList = spawns.get(group);
         if (spawnerList == null) {
             return;
         }
@@ -131,19 +132,16 @@ public enum SpawnManager {
     }
 
     public void despawn(String group) {
-        List<Spawner> spawnerList = _spawns.get(group);
+        List<Spawner> spawnerList = spawns.get(group);
         if (spawnerList == null) {
             return;
         }
-
-        for (Spawner spawner : spawnerList) {
-            spawner.deleteAll();
-        }
+        spawnerList.forEach(Spawner::deleteAll);
     }
 
     public List<Spawner> getSpawners(String group) {
-        List<Spawner> list = _spawns.get(group);
-        return list == null ? Collections.emptyList() : list;
+        List<Spawner> list = spawns.get(group);
+        return list == null ? List.of() : list;
     }
 
     public int getSpawnedCountByNpc(int npcId) {
@@ -158,7 +156,7 @@ public enum SpawnManager {
     }
 
     public void reloadAll() {
-        for (List<Spawner> spawnerList : _spawns.values()) {
+        for (List<Spawner> spawnerList : spawns.values()) {
             for (Spawner spawner : spawnerList) {
                 spawner.deleteAll();
             }
@@ -194,14 +192,14 @@ public enum SpawnManager {
     private class Listeners implements OnDayNightChangeListener, OnSSPeriodListener {
         @Override
         public void onDay() {
-            despawn(PeriodOfDay.NIGHT.name());
-            spawn(PeriodOfDay.DAY.name());
+            despawn("NIGHT");
+            spawn("DAY");
         }
 
         @Override
         public void onNight() {
-            despawn(PeriodOfDay.DAY.name());
-            spawn(PeriodOfDay.NIGHT.name());
+            despawn("DAY");
+            spawn("NIGHT");
         }
 
         @Override

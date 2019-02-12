@@ -7,7 +7,7 @@ public class PartySmallWindowAdd extends L2GameServerPacket {
     private final int objectId;
 
     public PartySmallWindowAdd(Player player, Player member) {
-        objectId = player.getObjectId();
+        objectId = player.objectId();
         this.member = new PartySmallWindowAll.PartySmallWindowMemberInfo(member);
     }
 

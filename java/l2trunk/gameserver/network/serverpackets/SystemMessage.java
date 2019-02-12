@@ -3129,9 +3129,9 @@ public class SystemMessage extends L2GameServerPacket {
      */
     public SystemMessage addName(Creature cha) {
         if (cha == null)
-            return addString(StringUtils.EMPTY);
+            return addString("");
 
-        if (cha.isDoor())
+        if (cha instanceof DoorInstance)
             return addDoorName(((DoorInstance) cha).getDoorId());
 
         if (cha.getNpcId() <= 0)
@@ -3246,7 +3246,7 @@ public class SystemMessage extends L2GameServerPacket {
                 case TYPE_SKILL_NAME: {
                     int[] skill = (int[]) e.obj;
                     writeD(skill[0]); // id
-                    writeD(skill[1]); // level
+                    writeD(skill[1]); // occupation
                     break;
                 }
                 case TYPE_LONG: {

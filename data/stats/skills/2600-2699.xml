@@ -73,7 +73,7 @@
 	<skill id="2608" levels="3" name="Blue Crystal of Fantasy">
 		<!--.
 			Last modify:	19.11.2008
-			Description:	1 level - 50000, 2 level - 100000, 3 level - 200000.
+			Description:	1 occupation - 50000, 2 occupation - 100000, 3 occupation - 200000.
 		-->
 		<table name="#item">13386 13387 13388</table>
 		<table name="#power">50000 100000 200000</table>

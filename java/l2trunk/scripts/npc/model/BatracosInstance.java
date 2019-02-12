@@ -15,7 +15,7 @@ public final class BatracosInstance extends NpcInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
         if (val == 0) {
             String htmlpath;
             if (getReflection().isDefault())

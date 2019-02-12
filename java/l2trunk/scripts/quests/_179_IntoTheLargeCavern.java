@@ -2,13 +2,14 @@ package l2trunk.scripts.quests;
 
 import l2trunk.gameserver.listener.actor.OnDeathListener;
 import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.model.Player;
+import l2trunk.gameserver.model.Summon;
 import l2trunk.gameserver.model.base.Race;
 import l2trunk.gameserver.model.entity.Reflection;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.ReflectionUtils;
 
@@ -30,6 +31,7 @@ public final class _179_IntoTheLargeCavern extends Quest implements OnDeathListe
     private final static int GardenGuard2 = 18348;
     private final static int GardenGuard3 = 18349;
 
+    private final static  Map<Integer,Integer> NPC_DROP_ITEMS = Map.of();
     private final static int Kamael_Guard = 18352;
     private final static int Guardian_of_Records = 18353;
     private final static int Guardian_of_Observation = 18354;
@@ -63,14 +65,14 @@ public final class _179_IntoTheLargeCavern extends Quest implements OnDeathListe
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("32138-06.htm")) {
+        if ("32138-06.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("EnterNornilsGarden")) {
-            if (st.getCond() != 1 || st.getPlayer().getRace() != Race.kamael)
+        } else if ("EnterNornilsGarden".equalsIgnoreCase(event)) {
+            if (st.getCond() != 1 || st.player.getRace() != Race.kamael)
                 return "noquest";
-            enterInstance(npc, st.getPlayer());
+            enterInstance(st.player);
             return null;
         }
         return event;
@@ -78,14 +80,14 @@ public final class _179_IntoTheLargeCavern extends Quest implements OnDeathListe
 
     @Override
     public String onTalk(NpcInstance npc, QuestState st) {
-        Player player = st.getPlayer();
+        Player player = st.player;
         String htmltext;
         if (st.getCond() == 0) {
             htmltext = "32138-01.htm";
             if (player.getLevel() < 17) {
                 htmltext = "32138-02.htm";
                 st.exitCurrentQuest(true);
-            } else if (player.getLevel() > 20 || player.getClassId().getLevel() > 1) {
+            } else if (player.getLevel() > 20 || player.getClassId().occupation() > 0) {
                 htmltext = "32138-02a.htm";
                 st.exitCurrentQuest(true);
             } else if (!player.isQuestCompleted(_178_IconicTrinity.class)) {
@@ -101,63 +103,64 @@ public final class _179_IntoTheLargeCavern extends Quest implements OnDeathListe
     }
 
     @Override
-    public String onAttack(NpcInstance npc, QuestState st) {
+    public void onAttack(NpcInstance npc, QuestState st) {
         World world = worlds.get(npc.getReflectionId());
         if (world != null && world.status == 0) {
             world.status = 1;
-            addSpawnToInstance(GardenGuard3, new Location(-110016, 74512, -12533, 0), 0, world.instanceId);
-            addSpawnToInstance(GardenGuard2, new Location(-109729, 74913, -12533, 0), 0, world.instanceId);
-            addSpawnToInstance(GardenGuard2, new Location(-109981, 74899, -12533, 0), 0, world.instanceId);
+            addSpawnToInstance(GardenGuard3, new Location(-110016, 74512, -12533, 0), world.instanceId);
+            addSpawnToInstance(GardenGuard2, new Location(-109729, 74913, -12533, 0), world.instanceId);
+            addSpawnToInstance(GardenGuard2, new Location(-109981, 74899, -12533, 0), world.instanceId);
         }
-        return null;
     }
 
     @Override
     public void onDeath(Creature cha, Creature killer) {
-        if (!cha.isNpc() || killer == null || !killer.isPlayable())
-            return;
+        if (cha instanceof NpcInstance && killer instanceof Playable) {
+            Player player = killer instanceof Summon ? ((Summon)killer).owner: (Player)killer;
+            QuestState st = player.getQuestState(this);
+            if (st == null)
+                return;
+            NpcInstance npc = (NpcInstance) cha;
 
-        Player player = killer.getPlayer();
-        QuestState st = player.getQuestState(this.getClass());
-        if (st == null)
+            switch (cha.getNpcId()) {
+                case Kamael_Guard:
+                    st.dropItem(npc, Gate_Key_Kamael);
+                    break;
+                case Guardian_of_Records:
+                    st.dropItem(npc, Gate_Key_Archives);
+                    break;
+                case Guardian_of_Observation:
+                    st.dropItem(npc, Gate_Key_Observation);
+                    break;
+                case Spiculas_Guard:
+                    st.dropItem(npc, Gate_Key_Spicula);
+                    break;
+                case Harkilgameds_Gatekeeper:
+                    st.dropItem(npc, Gate_Key_Harkilgamed);
+                    break;
+                case Rodenpiculas_Gatekeeper:
+                    st.dropItem(npc, Gate_Key_Rodenpicula);
+                    break;
+                case Guardian_of_Arviterre:
+                    st.dropItem(npc, Gate_Key_Arviterre);
+                    break;
+                case Katenars_Gatekeeper:
+                    st.dropItem(npc, Gate_Key_Katenar);
+                    break;
+                case Guardian_of_Prediction:
+                    st.dropItem(npc, Gate_Key_Prediction);
+                    break;
+                case Guardian_of_Secrets:
+                    st.dropItem(npc, Gate_Key_Massive_Cavern);
+                    break;
+            }
+        } else {
             return;
-        NpcInstance npc = (NpcInstance) cha;
-
-        switch (cha.getNpcId()) {
-            case Kamael_Guard:
-                st.dropItem(npc, Gate_Key_Kamael, 1);
-                break;
-            case Guardian_of_Records:
-                st.dropItem(npc, Gate_Key_Archives, 1);
-                break;
-            case Guardian_of_Observation:
-                st.dropItem(npc, Gate_Key_Observation, 1);
-                break;
-            case Spiculas_Guard:
-                st.dropItem(npc, Gate_Key_Spicula, 1);
-                break;
-            case Harkilgameds_Gatekeeper:
-                st.dropItem(npc, Gate_Key_Harkilgamed, 1);
-                break;
-            case Rodenpiculas_Gatekeeper:
-                st.dropItem(npc, Gate_Key_Rodenpicula, 1);
-                break;
-            case Guardian_of_Arviterre:
-                st.dropItem(npc, Gate_Key_Arviterre, 1);
-                break;
-            case Katenars_Gatekeeper:
-                st.dropItem(npc, Gate_Key_Katenar, 1);
-                break;
-            case Guardian_of_Prediction:
-                st.dropItem(npc, Gate_Key_Prediction, 1);
-                break;
-            case Guardian_of_Secrets:
-                st.dropItem(npc, Gate_Key_Massive_Cavern, 1);
-                break;
         }
+
     }
 
-    private void enterInstance(NpcInstance npc, Player player) {
+    private void enterInstance(Player player) {
         Reflection r = player.getActiveReflection();
         if (r != null) {
             if (player.canReenterInstance(izId))
@@ -165,8 +168,8 @@ public final class _179_IntoTheLargeCavern extends Quest implements OnDeathListe
         } else if (player.canEnterInstance(izId)) {
             Reflection newInstance = ReflectionUtils.enterReflection(player, izId);
             World world = new World();
-            world.instanceId = newInstance.getId();
-            worlds.put(newInstance.getId(), world);
+            world.instanceId = newInstance.id;
+            worlds.put(newInstance.id, world);
         }
     }
 }

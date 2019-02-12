@@ -63,14 +63,14 @@ public final class SelMahumSquadLeader extends Fighter {
         }
 
         if (!_firstTime2) {
-            actor.broadcastPacket(new SocialAction(getActor().getObjectId(), 2));
+            actor.broadcastPacket(new SocialAction(getActor().objectId(), 2));
             actor.broadcastPacket(new ChangeWaitType(getActor(), 0));
             actor.setNpcState((byte) 1);
             _firstTime2 = true;
         }
 
         if (!_firstTime4) {
-            actor.broadcastPacket(new SocialAction(getActor().getObjectId(), 2));
+            actor.broadcastPacket(new SocialAction(getActor().objectId(), 2));
             actor.broadcastPacket(new ChangeWaitType(getActor(), 0));
             actor.setNpcState((byte) 2);
             _firstTime4 = true;

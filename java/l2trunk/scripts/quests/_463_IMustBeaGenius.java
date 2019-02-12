@@ -37,22 +37,22 @@ public final class _463_IMustBeaGenius extends Quest {
                 st.setCond(1);
                 // Generate random daily number for player
                 int _number = Rnd.get(500, 600);
-                st.set("number", String.valueOf(_number));
+                st.set("number", _number);
                 // Set drop for mobs
                 for (int _mob : MOBS) {
                     int _rand = Rnd.get(-2, 4);
                     if (_rand == 0)
                         _rand = 5;
-                    st.set(String.valueOf(_mob), String.valueOf(_rand));
+                    st.set(String.valueOf(_mob), _rand);
                 }
                 // One with higher chance
-                st.set(String.valueOf(Rnd.get(MOBS)), String.valueOf(Rnd.get(1, 100)));
-                htmltext = HtmCache.INSTANCE.getNotNull("quests/_463_IMustBeaGenius/" + event, st.getPlayer());
+                st.set(String.valueOf(Rnd.get(MOBS)), Rnd.get(1, 100));
+                htmltext = HtmCache.INSTANCE.getNotNull("quests/_463_IMustBeaGenius/" + event, st.player);
                 htmltext = htmltext.replace("%num%", String.valueOf(_number));
             } else if (event.equalsIgnoreCase("collecter_gutenhagen_q0463_07.htm")) {
-                htmltext = HtmCache.INSTANCE.getNotNull("quests/_463_IMustBeaGenius/" + event, st.getPlayer());
-                htmltext = htmltext.replace("%num%", st.get("number"));
-            } else if (event.equalsIgnoreCase("reward")) {
+                htmltext = HtmCache.INSTANCE.getNotNull("quests/_463_IMustBeaGenius/" + event, st.player);
+                htmltext = htmltext.replace("%num%", String.valueOf(st.getInt("number")));
+            } else if ("reward".equalsIgnoreCase(event)) {
                 int diff = st.getInt("number") - 500;
                 if (diff == 0) {
                     st.addExpAndSp(198725, 15892);
@@ -87,8 +87,7 @@ public final class _463_IMustBeaGenius extends Quest {
                 }
                 st.unset("cond");
                 st.unset("number");
-                for (int _mob : MOBS)
-                    st.unset(String.valueOf(_mob));
+                MOBS.forEach(mob -> st.unset(String.valueOf(mob)));
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest(this);
             }
@@ -99,7 +98,7 @@ public final class _463_IMustBeaGenius extends Quest {
     @Override
     public String onTalk(NpcInstance npc, QuestState st) {
         String htmltext = "noquest";
-        Player player = st.getPlayer();
+        Player player = st.player;
         if (npc.getNpcId() == GUTENHAGEN) {
             switch (st.getState()) {
                 case CREATED:
@@ -128,27 +127,26 @@ public final class _463_IMustBeaGenius extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getState() == STARTED && st.getCond() == 1) {
             int _day_number = st.getInt("number");
             int _number = st.getInt(String.valueOf(npc.getNpcId()));
             if (_number > 0) {
                 st.giveItems(CORPSE_LOG, _number);
                 st.playSound(SOUND_ITEMGET);
-                Functions.npcSay(npc, NpcString.ATT__ATTACK__S1__RO__ROGUE__S2, st.getPlayer().getName(), String.valueOf(_number));
+                Functions.npcSay(npc, NpcString.ATT__ATTACK__S1__RO__ROGUE__S2, st.player.getName() + String.valueOf(_number));
             } else if (_number < 0 && ((st.getQuestItemsCount(CORPSE_LOG) + _number) > 0)) {
                 st.takeItems(CORPSE_LOG, Math.abs(_number));
                 st.playSound(SOUND_ITEMGET);
-                Functions.npcSay(npc, NpcString.ATT__ATTACK__S1__RO__ROGUE__S2, st.getPlayer().getName(), String.valueOf(_number));
+                Functions.npcSay(npc, NpcString.ATT__ATTACK__S1__RO__ROGUE__S2, st.player.getName()+ String.valueOf(_number));
             }
 
             if (st.getQuestItemsCount(CORPSE_LOG) >= _day_number) {
-                st.takeItems(CORPSE_LOG, -1);
-                st.giveItems(COLLECTION, 1);
+                st.takeItems(CORPSE_LOG);
+                st.giveItems(COLLECTION);
                 st.setCond(2);
             }
 
         }
-        return null;
     }
 }

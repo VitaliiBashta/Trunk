@@ -28,7 +28,7 @@ public class RequestOustPartyMember extends L2GameClientPacket {
         }
 
         if (activeChar.isInOlympiadMode()) {
-            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.clientpackets.RequestOustPartyMember.CantOutOfGroup", activeChar));
+            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.clientpackets.RequestOustPartyMember.CantOutOfGroup"));
             return;
         }
 
@@ -47,9 +47,9 @@ public class RequestOustPartyMember extends L2GameClientPacket {
         Reflection r = party.getReflection();
 
         if (r != null && r instanceof DimensionalRift && member.getReflection().equals(r))
-            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.clientpackets.RequestOustPartyMember.CantOustInRift", activeChar));
+            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.clientpackets.RequestOustPartyMember.CantOustInRift"));
         else if (r != null && !(r instanceof DimensionalRift))
-            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.clientpackets.RequestOustPartyMember.CantOustInDungeon", activeChar));
+            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.clientpackets.RequestOustPartyMember.CantOustInDungeon"));
         else
             party.removePartyMember(member, true);
     }

@@ -44,29 +44,29 @@ public final class _662_AGameOfCards extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         int _state = st.getState();
-        if (event.equalsIgnoreCase("30845_02.htm") && _state == CREATED) {
+        if ("30845_02.htm".equalsIgnoreCase(event) && _state == CREATED) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("30845_07.htm") && _state == STARTED) {
+        } else if ("30845_07.htm".equalsIgnoreCase(event) && _state == STARTED) {
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(true);
-        } else if (event.equalsIgnoreCase("30845_03.htm") && _state == STARTED && st.getQuestItemsCount(RED_GEM) >= 50)
+        } else if ("30845_03.htm".equalsIgnoreCase(event) && _state == STARTED && st.getQuestItemsCount(RED_GEM) >= 50)
             return "30845_04.htm";
-        else if (event.equalsIgnoreCase("30845_10.htm") && _state == STARTED) {
+        else if ("30845_10.htm".equalsIgnoreCase(event) && _state == STARTED) {
             if (st.getQuestItemsCount(RED_GEM) < 50)
                 return "30845_10a.htm";
             st.takeItems(RED_GEM, 50);
-            int player_id = st.getPlayer().getObjectId();
+            int player_id = st.player.objectId();
             Games.remove(player_id);
             Games.put(player_id, new CardGame(player_id));
-        } else if (event.equalsIgnoreCase("play") && _state == STARTED) {
-            int player_id = st.getPlayer().getObjectId();
+        } else if ("play".equalsIgnoreCase(event) && _state == STARTED) {
+            int player_id = st.player.objectId();
             if (!Games.containsKey(player_id))
                 return null;
             return Games.get(player_id).playField();
         } else if (event.startsWith("card") && _state == STARTED) {
-            int player_id = st.getPlayer().getObjectId();
+            int player_id = st.player.objectId();
             if (!Games.containsKey(player_id))
                 return null;
             try {
@@ -85,7 +85,7 @@ public final class _662_AGameOfCards extends Quest {
             return "noquest";
         int _state = st.getState();
         if (_state == CREATED) {
-            if (st.getPlayer().getLevel() < 61) {
+            if (st.player.getLevel() < 61) {
                 st.exitCurrentQuest(true);
                 return "30845_00.htm";
             }
@@ -98,10 +98,9 @@ public final class _662_AGameOfCards extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState qs) {
+    public void onKill(NpcInstance npc, QuestState qs) {
         if (qs.getState() == STARTED)
             qs.rollAndGive(RED_GEM, 1, drop_chance);
-        return null;
     }
 
     private static class CardGame {
@@ -143,8 +142,8 @@ public final class _662_AGameOfCards extends Quest {
             for (String card : cards)
                 if (matches.get(card) < 2)
                     matches.remove(card);
-            String[] smatches = matches.keySet().toArray(new String[matches.size()]);
-            Integer[] cmatches = matches.values().toArray(new Integer[matches.size()]);
+            String[] smatches = matches.keySet().toArray(new String[0]);
+            Integer[] cmatches = matches.values().toArray(new Integer[0]);
             String txt = "Hmmm...? This is... No pair? Tough luck, my friend! Want to try again? Perhaps your luck will take a turn for the better...";
             if (cmatches.length == 1) {
                 if (cmatches[0] == 5) {

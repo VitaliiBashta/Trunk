@@ -16,10 +16,8 @@ import l2trunk.gameserver.listener.actor.player.impl.ReviveAnswerListener;
 import l2trunk.gameserver.model.*;
 import l2trunk.gameserver.model.base.InvisibleType;
 import l2trunk.gameserver.model.entity.CCPHelpers.CCPSecondaryPassword;
-import l2trunk.gameserver.model.entity.Hero;
 import l2trunk.gameserver.model.entity.SevenSigns;
 import l2trunk.gameserver.model.entity.events.impl.ClanHallAuctionEvent;
-import l2trunk.gameserver.model.entity.olympiad.Olympiad;
 import l2trunk.gameserver.model.entity.residence.ClanHall;
 import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.model.mail.Mail;
@@ -37,6 +35,7 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.skills.AbnormalEffect;
 import l2trunk.gameserver.templates.item.ItemTemplate;
 import l2trunk.gameserver.utils.*;
+import l2trunk.scripts.quests._255_Tutorial;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,7 +52,7 @@ public final class EnterWorld extends L2GameClientPacket {
         if (clan == null || subUnit == null)
             return;
 
-        UnitMember member = subUnit.getUnitMember(activeChar.getObjectId());
+        UnitMember member = subUnit.getUnitMember(activeChar.objectId());
         if (member == null)
             return;
 
@@ -64,11 +63,11 @@ public final class EnterWorld extends L2GameClientPacket {
         L2GameServerPacket msg = new SystemMessage2(SystemMsg.CLAN_MEMBER_S1_HAS_LOGGED_INTO_GAME).addName(activeChar);
         IStaticPacket memberUpdate = new PledgeShowMemberListUpdate(activeChar);
 
-        for (Player clanMember : clan.getOnlineMembers(activeChar.getObjectId())) {
+        for (Player clanMember : clan.getOnlineMembers(activeChar.objectId())) {
             clanMember.sendPacket(memberUpdate);
-            if (clanMember.getObjectId() == sponsor)
+            if (clanMember.objectId() == sponsor)
                 clanMember.sendPacket(new SystemMessage2(SystemMsg.YOUR_APPRENTICE_C1_HAS_LOGGED_OUT).addName(activeChar));
-            else if (clanMember.getObjectId() == apprentice)
+            else if (clanMember.objectId() == apprentice)
                 clanMember.sendPacket(new SystemMessage2(SystemMsg.YOUR_SPONSOR_C1_HAS_LOGGED_IN).addName(activeChar));
             else
                 clanMember.sendPacket(msg);
@@ -89,17 +88,16 @@ public final class EnterWorld extends L2GameClientPacket {
     }
 
     private static void loadTutorial(Player player) {
-        Quest q = QuestManager.getQuest(255);
-        if (q != null) {
-            if (CCPSecondaryPassword.hasPassword(player)) {
-                player.processQuestEvent(q.getName(), "CheckPass", null, false);
+        Quest q = QuestManager.getQuest(_255_Tutorial.class);
+        if (CCPSecondaryPassword.hasPassword(player)) {
+            player.processQuestEvent(q, "CheckPass", null, false);
 
-            } else {
-                player.processQuestEvent(q.getName(), "ProposePass", null, false);
+        } else {
+            player.processQuestEvent(q, "ProposePass", null, false);
 
-            }
+        }
 			/*
-			else if (player.level() == 1 || Rnd.get(10) == 1)
+			else if (player.occupation() == 1 || Rnd.get(10) == 1)
 			{
 				player.processQuestEvent(q.name(), "ProposePass", null, false);
 			}
@@ -108,11 +106,10 @@ public final class EnterWorld extends L2GameClientPacket {
 				player.processQuestEvent(q.name(), "UC", null, false);
 			}
 			*/
-            player.processQuestEvent(q.getName(), "OpenClassMaster", null, false);
-            player.processQuestEvent(q.getName(), "ShowChangeLog", null, false);
+        player.processQuestEvent(q, "OpenClassMaster", null, false);
+        player.processQuestEvent(q, "ShowChangeLog", null, false);
 
 
-        }
     }
 
     @Override
@@ -120,10 +117,8 @@ public final class EnterWorld extends L2GameClientPacket {
         // readS(); - client always sends the String "narcasse"
     }
 
-    @SuppressWarnings("null")
     @Override
     protected void runImpl() {
-        long lastAccess = 0;
         final GameClient client = getClient();
         Player activeChar = client.getActiveChar();
 
@@ -132,13 +127,13 @@ public final class EnterWorld extends L2GameClientPacket {
             return;
         }
 
-        int myObjectId = activeChar.getObjectId();
+        int myObjectId = activeChar.objectId();
         int myStoreId = activeChar.getStoredId();
 
         synchronized (_lock) { // TODO [G1ta0] Th is for garbage, and why is it here?
             GameObjectsStorage.getAllPlayersStream()
                     .filter(cha -> myStoreId != cha.getStoredId())
-                    .filter(cha -> cha.getObjectId() == myObjectId)
+                    .filter(cha -> cha.objectId() == myObjectId)
                     .forEach(cha -> {
                         LOG.warn("Double EnterWorld for char: " + activeChar.getName());
                         cha.kick();
@@ -149,9 +144,9 @@ public final class EnterWorld extends L2GameClientPacket {
 
         boolean first = activeChar.entering;
 
-        if (!activeChar.isHero() || !activeChar.isFakeHero()) {
-            ItemFunctions.removeItem(activeChar, 6842, 1, true, "RemoveCirclet");
-            ItemFunctions.removeItem(activeChar, 37032, 1, true, "removeCloak");
+        if (!activeChar.isHero()) {
+            ItemFunctions.removeItem(activeChar, 6842, 1, "RemoveCirclet");
+            ItemFunctions.removeItem(activeChar, 37032, 1, "removeCloak");
         }
 
         if (activeChar.getTitle().equals("*Away*")) {
@@ -162,7 +157,6 @@ public final class EnterWorld extends L2GameClientPacket {
         if (first) {
             activeChar.setUptime(System.currentTimeMillis());
             activeChar.setOnlineStatus(true);
-            lastAccess = activeChar.getLastAccess();
             if (activeChar.getPlayerAccess().GodMode && !Config.SHOW_GM_LOGIN) {
                 activeChar.setInvisibleType(InvisibleType.EFFECT);
                 activeChar.startAbnormalEffect(AbnormalEffect.STEALTH);
@@ -194,14 +188,14 @@ public final class EnterWorld extends L2GameClientPacket {
 
 
         if (Config.ENTER_WORLD_ANNOUNCEMENTS_HERO_LOGIN) {
-            if ((activeChar.isHero()) || (activeChar.isFakeHero())) {
+            if (activeChar.isHero()) {
                 Announcements.INSTANCE.announceToAll(new CustomMessage("Hero {0} entered the game.").addString(activeChar.getName()).toString());
             }
         }
         if (Config.ENTER_WORLD_ANNOUNCEMENTS_LORD_LOGIN) {
             if ((activeChar.getClan() != null) && (activeChar.isClanLeader()) && (activeChar.getClan().getCastle() != 0)) {
                 int id = activeChar.getCastle().getId();
-                Announcements.INSTANCE.announceToAll(new CustomMessage("Lord {0} the owner of the castle {1} entered the game.").addString(activeChar.getName()).addString(new CustomMessage("common.castle." + id, activeChar).toString()).toString());
+                Announcements.INSTANCE.announceToAll(new CustomMessage("Lord {0} the owner of the castle {1} entered the game.").addString(activeChar.getName()).addString(new CustomMessage("common.castle." + id).toString()).toString());
             }
         }
         activeChar.getMacroses().sendUpdate();
@@ -210,31 +204,11 @@ public final class EnterWorld extends L2GameClientPacket {
         activeChar.sendPacket(new ShortCutInit(activeChar), new SkillList(activeChar), new SkillCoolTime(activeChar));
         activeChar.sendPacket(SystemMsg.WELCOME_TO_THE_WORLD_OF_LINEAGE_II);
 
-        // New char is Hero
-        if (Config.NEW_CHAR_IS_HERO) {
-            activeChar.setHero(true);
-            Hero.addSkills(activeChar);
-        }
-
-        // Add Hero SKills on enter if character log in
-        if (activeChar.isFakeHero()) {
-            Hero.addSkills(activeChar);
-        }
-
-        // New char is NOBLE
-        if (Config.NEW_CHAR_IS_NOBLE && !activeChar.isNoble()) {
-            Olympiad.addNoble(activeChar);
-            activeChar.setNoble(true);
-            activeChar.updatePledgeClass();
-            activeChar.updateNobleSkills();
-            activeChar.sendPacket(new SkillList(activeChar));
-            activeChar.broadcastUserInfo(true);
-        }
 
         if (Config.HTML_WELCOME) {
             String html = HtmCache.INSTANCE.getNotNull("welcome.htm", activeChar);
             NpcHtmlMessage msg = new NpcHtmlMessage(5);
-            html.replace("%name%", activeChar.getName());
+            html = html.replace("%name%", activeChar.getName());
             msg.setHtml(Strings.bbParse(html));
             activeChar.sendPacket(msg);
         }
@@ -249,11 +223,8 @@ public final class EnterWorld extends L2GameClientPacket {
         if (first && activeChar.getCreateTime() > 0L) {
             Calendar create = Calendar.getInstance();
             create.setTimeInMillis(activeChar.getCreateTime());
-            Calendar now = Calendar.getInstance();
 
-            int day = create.get(Calendar.DAY_OF_MONTH);
-            if (create.get(Calendar.MONTH) == Calendar.FEBRUARY && day == 29)
-                day = 28;
+            create.get(Calendar.MONTH);
 
         }
 
@@ -269,13 +240,13 @@ public final class EnterWorld extends L2GameClientPacket {
             loadTutorial(activeChar);
             activeChar.restoreDisableSkills();
 
-            if (activeChar.getVar("Para") != null) {
+            if (activeChar.isVarSet("Para")) {
                 if (!activeChar.isBlocked())
                     activeChar.setBlock(true);
                 activeChar.startAbnormalEffect(AbnormalEffect.HOLD_1);
                 activeChar.abortAttack(true, false);
                 activeChar.abortCast(true, false);
-                activeChar.sendPacket(new Say2(activeChar.getObjectId(), ChatType.TELL, "Paralyze", "You are paralyzed for " + (activeChar.getVarTimeToExpire("Para") / 60000L) + " more minutes!"));
+                activeChar.sendPacket(new Say2(activeChar.objectId(), ChatType.TELL, "Paralyze", "You are paralyzed for " + (activeChar.getVarTimeToExpire("Para") / 60000L) + " more minutes!"));
             }
 
             if (Config.ALLOW_MAIL_OPTION)
@@ -296,7 +267,7 @@ public final class EnterWorld extends L2GameClientPacket {
                 Skill castingSkill = activeChar.getCastingSkill();
                 long animationEndTime = activeChar.getAnimationEndTime();
 
-                if (castingSkill != null && castingTarget != null && castingTarget.isCreature() && activeChar.getAnimationEndTime() > 0L)
+                if (castingSkill != null && castingTarget != null && activeChar.getAnimationEndTime() > 0L)
                     sendPacket(new MagicSkillUse(activeChar, castingTarget, castingSkill.id, castingSkill.level, (int) (animationEndTime - System.currentTimeMillis()), 0));
             }
 
@@ -338,21 +309,18 @@ public final class EnterWorld extends L2GameClientPacket {
 
         if (first && activeChar.isGM() && Config.SAVE_GM_EFFECTS && activeChar.getPlayerAccess().CanUseGMCommand) {
             // gmspeed
-            try {
-                int var_gmspeed = Integer.parseInt(activeChar.getVar("gm_gmspeed"));
-                if (var_gmspeed >= 1 && var_gmspeed <= 4) {
-                    activeChar.doCast(7029, var_gmspeed, activeChar, true);
-                }
-            } catch (NumberFormatException e) {
-                //LOG.error("Error while loading gmSpeed var ", e);
+            int var_gmspeed = activeChar.getVarInt("gm_gmspeed");
+            if (var_gmspeed >= 1 && var_gmspeed <= 4) {
+                activeChar.doCast(7029, var_gmspeed, activeChar, true);
             }
+
             // silence
-            if (activeChar.getVarB("gm_silence")) {
+            if (activeChar.isVarSet("gm_silence")) {
                 activeChar.setMessageRefusal(true);
                 activeChar.sendPacket(SystemMsg.MESSAGE_REFUSAL_MODE);
             }
             // invul
-            if (activeChar.getVarB("gm_invul")) {
+            if (activeChar.isVarSet("gm_invul")) {
                 activeChar.setInvul(true);
                 activeChar.sendMessage(activeChar.getName() + " is now Spartan !!!");
             }
@@ -430,15 +398,12 @@ public final class EnterWorld extends L2GameClientPacket {
                 }
             }
 
-            for (int shotId : activeChar.getAutoSoulShot()) {
-                sendPacket(new ExAutoSoulShot(shotId, true));
-            }
+            activeChar.getAutoSoulShot().forEach(shotId -> sendPacket(new ExAutoSoulShot(shotId, true)));
 
-            for (Effect e : activeChar.getEffectList().getAllFirstEffects()) {
-                if (e.getSkill().isToggle()) {
-                    sendPacket(new MagicSkillLaunched(activeChar.getObjectId(), e.getSkill().id, e.getSkill().level, activeChar));
-                }
-            }
+            activeChar.getEffectList().getAllFirstEffects().stream()
+                    .filter(e -> e.skill.isToggle())
+                    .forEach(e ->
+                            sendPacket(new MagicSkillLaunched(activeChar.objectId(), e.skill.id, e.skill.level, activeChar)));
 
             activeChar.broadcastCharInfo();
         }
@@ -446,7 +411,7 @@ public final class EnterWorld extends L2GameClientPacket {
         activeChar.updateEffectIcons();
         activeChar.updateStats();
 
-        if (activeChar.getVarB("soulshot")) {
+        if (activeChar.isVarSet("soulshot")) {
             ItemInstance item = activeChar.getActiveWeaponInstance();
             if (item != null) {
                 switch (item.getCrystalType().cry) {
@@ -604,37 +569,16 @@ public final class EnterWorld extends L2GameClientPacket {
         if (!activeChar.getPremiumItemList().isEmpty())
             activeChar.sendPacket(Config.GOODS_INVENTORY_ENABLED ? ExGoodsInventoryChangedNotify.STATIC : ExNotifyPremiumItem.STATIC);
 
-        if (activeChar.getVarB("HeroPeriod") && Config.SERVICES_HERO_SELL_ENABLED) {
-            activeChar.setHero(true);
-        }
-
         activeChar.sendVoteSystemInfo();
         activeChar.sendPacket(new ExReceiveShowPostFriend(activeChar));
         activeChar.getNevitSystem().onEnterWorld();
 
         checkNewMail(activeChar);
 
-        String lastAccessDate = TimeUtils.convertDateToString(lastAccess * 1000);
-
-        String ip = activeChar.getVar("LastIP");
-        if (ip != null && !ip.isEmpty() && activeChar.getIP() != null) {
-            if (!activeChar.getIP().equalsIgnoreCase(ip)) {
-                activeChar.sendPacket(new Say2(activeChar.getObjectId(), ChatType.CRITICAL_ANNOUNCE, "SYS", "You are logging in from another IP. Last access: " + lastAccessDate));
-
-                if (Config.ALLOW_MAIL_OPTION)
-                    AccountEmail.verifyEmail(activeChar, null); // Send an e-mail verification html to this character so he can play only when he verifies his e-mail.
-                else
-                    activeChar.setVar("LastIP", activeChar.getIP()); // Handled in verifyEmail if the above is ran. It is used to not abuse character relog to escape the verifyEmail.
-            }
-        } else {
-            // IP is null or empty, must populate the var for the next time.
-            activeChar.setVar("LastIP", activeChar.getIP());
-        }
-
     }
 
     private void checkNewMail(Player activeChar) {
-        for (Mail mail : MailDAO.getInstance().getReceivedMailByOwnerId(activeChar.getObjectId()))
+        for (Mail mail : MailDAO.getInstance().getReceivedMailByOwnerId(activeChar.objectId()))
             if (mail.isUnread()) {
                 sendPacket(ExNoticePostArrived.STATIC_FALSE);
                 break;

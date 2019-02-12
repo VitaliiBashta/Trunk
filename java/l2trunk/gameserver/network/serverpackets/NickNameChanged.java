@@ -7,7 +7,7 @@ public class NickNameChanged extends L2GameServerPacket {
     private final String title;
 
     public NickNameChanged(Creature cha) {
-        objectId = cha.getObjectId();
+        objectId = cha.objectId();
         title = cha.getTitle();
     }
 

@@ -39,14 +39,14 @@ public final class _642_APowerfulPrimevalCreature extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         int state = st.getState();
         long Dinosaur_Tissue_Count = st.getQuestItemsCount(Dinosaur_Tissue);
-        if (event.equalsIgnoreCase("dindin_q0642_04.htm") && state == CREATED) {
+        if ("dindin_q0642_04.htm".equalsIgnoreCase(event) && state == CREATED) {
             st.setState(STARTED);
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("dindin_q0642_12.htm") && state == STARTED) {
+        } else if ("dindin_q0642_12.htm".equalsIgnoreCase(event) && state == STARTED) {
             if (Dinosaur_Tissue_Count == 0)
                 return "dindin_q0642_08a.htm";
-            st.takeItems(Dinosaur_Tissue, -1);
+            st.takeItems(Dinosaur_Tissue);
             st.giveItems(ADENA_ID, Dinosaur_Tissue_Count * 3000, false);
             st.playSound(SOUND_MIDDLE);
         } else if (event.equalsIgnoreCase("0"))
@@ -60,7 +60,7 @@ public final class _642_APowerfulPrimevalCreature extends Quest {
                     .peek(reward -> {
                         st.takeItems(Dinosaur_Tissue, 150);
                         st.takeItems(Dinosaur_Egg, 1);
-                        st.giveItems(reward, 1);
+                        st.giveItems(reward);
                         st.giveItems(ADENA_ID, 44000);
                         st.playSound(SOUND_MIDDLE);
 
@@ -79,7 +79,7 @@ public final class _642_APowerfulPrimevalCreature extends Quest {
             return "noquest";
         int _state = st.getState();
         if (_state == CREATED) {
-            if (st.getPlayer().getLevel() < 75) {
+            if (st.player.getLevel() < 75) {
                 st.exitCurrentQuest(true);
                 return "dindin_q0642_01a.htm";
             }
@@ -99,13 +99,12 @@ public final class _642_APowerfulPrimevalCreature extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getState() != STARTED || st.getCond() != 1)
-            return null;
+            return ;
         if (npc.getNpcId() == Ancient_Egg)
             st.rollAndGive(Dinosaur_Egg, 1, Dinosaur_Egg_Chance);
         else
             st.rollAndGive(Dinosaur_Tissue, 1, Dinosaur_Tissue_Chance);
-        return null;
     }
 }

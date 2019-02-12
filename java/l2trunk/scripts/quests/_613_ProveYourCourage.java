@@ -3,7 +3,6 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _613_ProveYourCourage extends Quest {
     private final static int DURAI = 31377;
@@ -12,15 +11,6 @@ public final class _613_ProveYourCourage extends Quest {
     // Quest items
     private final static int HEAD_OF_HEKATON = 7240;
     private final static int FEATHER_OF_VALOR = 7229;
-
-    // etc
-    @SuppressWarnings("unused")
-    private final static int MARK_OF_VARKA_ALLIANCE1 = 7221;
-    @SuppressWarnings("unused")
-    private final static int MARK_OF_VARKA_ALLIANCE2 = 7222;
-    private final static int MARK_OF_VARKA_ALLIANCE3 = 7223;
-    private final static int MARK_OF_VARKA_ALLIANCE4 = 7224;
-    private final static int MARK_OF_VARKA_ALLIANCE5 = 7225;
 
     public _613_ProveYourCourage() {
         super(true);
@@ -34,16 +24,16 @@ public final class _613_ProveYourCourage extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equals("quest_accept")) {
+        if ("quest_accept".equals(event)) {
             htmltext = "elder_ashas_barka_durai_q0613_0104.htm";
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equals("613_3"))
-            if (st.getQuestItemsCount(HEAD_OF_HEKATON) >= 1) {
+        } else if ("613_3".equals(event))
+            if (st.haveQuestItem(HEAD_OF_HEKATON)) {
                 htmltext = "elder_ashas_barka_durai_q0613_0201.htm";
-                st.takeItems(HEAD_OF_HEKATON, -1);
-                st.giveItems(FEATHER_OF_VALOR, 1);
+                st.takeItems(HEAD_OF_HEKATON);
+                st.giveItems(FEATHER_OF_VALOR);
                 st.addExpAndSp(0, 10000);
                 st.unset("cond");
                 st.playSound(SOUND_FINISH);
@@ -58,8 +48,8 @@ public final class _613_ProveYourCourage extends Quest {
         String htmltext = "noquest";
         int cond = st.getCond();
         if (cond == 0) {
-            if (st.getPlayer().getLevel() >= 75) {
-                if (st.getQuestItemsCount(MARK_OF_VARKA_ALLIANCE3) == 1 || st.getQuestItemsCount(MARK_OF_VARKA_ALLIANCE4) == 1 || st.getQuestItemsCount(MARK_OF_VARKA_ALLIANCE5) == 1)
+            if (st.player.getLevel() >= 75) {
+                if (st.player.getVarka() >2 )
                     htmltext = "elder_ashas_barka_durai_q0613_0101.htm";
                 else {
                     htmltext = "elder_ashas_barka_durai_q0613_0102.htm";
@@ -69,21 +59,19 @@ public final class _613_ProveYourCourage extends Quest {
                 htmltext = "elder_ashas_barka_durai_q0613_0103.htm";
                 st.exitCurrentQuest(true);
             }
-        } else if (cond == 1 && st.getQuestItemsCount(HEAD_OF_HEKATON) == 0)
+        } else if (cond == 1 && !st.haveQuestItem(HEAD_OF_HEKATON))
             htmltext = "elder_ashas_barka_durai_q0613_0106.htm";
-        else if (cond == 2 && st.getQuestItemsCount(HEAD_OF_HEKATON) >= 1)
+        else if (cond == 2 && st.haveQuestItem(HEAD_OF_HEKATON))
             htmltext = "elder_ashas_barka_durai_q0613_0105.htm";
         return htmltext;
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
-        int npcId = npc.getNpcId();
-        if (npcId == KETRAS_HERO_HEKATON && st.getCond() == 1) {
-            st.giveItems(HEAD_OF_HEKATON, 1);
+    public void onKill(NpcInstance npc, QuestState st) {
+        if (npc.getNpcId() == KETRAS_HERO_HEKATON && st.getCond() == 1) {
+            st.giveItems(HEAD_OF_HEKATON);
             st.setCond(2);
             st.playSound(SOUND_ITEMGET);
         }
-        return null;
     }
 }

@@ -23,11 +23,11 @@ public final class _10504_JewelOfAntharas extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("antharas_watchman_theodric_q10504_04.htm")) {
+        if ("antharas_watchman_theodric_q10504_04.htm".equalsIgnoreCase(event)) {
             st.setState(STARTED);
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
-            st.giveItems(CLEAR_CRYSTAL, 1);
+            st.giveItems(CLEAR_CRYSTAL);
         }
         return event;
     }
@@ -39,25 +39,28 @@ public final class _10504_JewelOfAntharas extends Quest {
         int cond = st.getCond();
         if (npcId == THEODRIC) {
             if (cond == 0) {
-                if (st.getPlayer().getLevel() < 84)
+                if (st.player.getLevel() < 84)
                     htmltext = "antharas_watchman_theodric_q10504_00.htm";
-                else if (st.getQuestItemsCount(PORTAL_STONE) < 1)
+                else if (st.haveQuestItem(PORTAL_STONE)) {
+                    if (st.isNowAvailable())
+                        htmltext = "antharas_watchman_theodric_q10504_01.htm";
+                    else
+                        htmltext = "antharas_watchman_theodric_q10504_09.htm";
+                } else {
                     htmltext = "antharas_watchman_theodric_q10504_00a.htm";
-                else if (st.isNowAvailable())
-                    htmltext = "antharas_watchman_theodric_q10504_01.htm";
-                else
-                    htmltext = "antharas_watchman_theodric_q10504_09.htm";
+                }
             } else if (cond == 1) {
-                if (st.getQuestItemsCount(CLEAR_CRYSTAL) < 1) {
-                    htmltext = "antharas_watchman_theodric_q10504_08.htm";
-                    st.giveItems(CLEAR_CRYSTAL, 1);
-                } else
+                if (st.haveQuestItem(CLEAR_CRYSTAL)) {
                     htmltext = "antharas_watchman_theodric_q10504_05.htm";
+                } else {
+                    htmltext = "antharas_watchman_theodric_q10504_08.htm";
+                    st.giveItems(CLEAR_CRYSTAL);
+                }
             } else if (cond == 2) {
-                if (st.getQuestItemsCount(FILLED_CRYSTAL_ANTHARAS) >= 1) {
+                if (st.haveQuestItem(FILLED_CRYSTAL_ANTHARAS)) {
                     htmltext = "antharas_watchman_theodric_q10504_07.htm";
-                    st.takeAllItems(FILLED_CRYSTAL_ANTHARAS);
-                    st.giveItems(JEWEL_OF_ANTHARAS, 1);
+                    st.takeItems(FILLED_CRYSTAL_ANTHARAS);
+                    st.giveItems(JEWEL_OF_ANTHARAS);
                     st.playSound(SOUND_FINISH);
                     st.setState(COMPLETED);
                     st.exitCurrentQuest(false);
@@ -69,15 +72,14 @@ public final class _10504_JewelOfAntharas extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
 
         if (cond == 1 && npcId == ULTIMATE_ANTHARAS) {
-            st.takeAllItems(CLEAR_CRYSTAL);
-            st.giveItems(FILLED_CRYSTAL_ANTHARAS, 1);
+            st.takeItems(CLEAR_CRYSTAL);
+            st.giveItems(FILLED_CRYSTAL_ANTHARAS);
             st.setCond(2);
         }
-        return null;
     }
 }

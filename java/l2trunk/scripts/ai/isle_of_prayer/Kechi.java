@@ -132,7 +132,7 @@ public final class Kechi extends DefaultAI {
 
         NpcInstance actor = getActor();
         guard_run.forEach(npcLoc -> {
-            NpcInstance guard = actor.getReflection().addSpawnWithoutRespawn(npcLoc.npcId, guard_spawn_loc, 0);
+            NpcInstance guard = actor.getReflection().addSpawnWithoutRespawn(npcLoc.npcId, guard_spawn_loc);
 
             guard.setRunning();
             DefaultAI ai = (DefaultAI) guard.getAI();

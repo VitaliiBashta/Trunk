@@ -22,10 +22,10 @@ public final class ZakenAnchor extends DefaultAI {
 
         if (i1 >= 4) {
             if (actor.getReflection().getInstancedZoneId() == 133) {
-                actor.getReflection().addSpawnWithoutRespawn(DayZaken, actor.getLoc(), 0);
+                actor.getReflection().addSpawnWithoutRespawn(DayZaken, actor);
                 for (int i = 0; i < 4; i++) {
-                    actor.getReflection().addSpawnWithoutRespawn(20845, actor.getLoc(), 200);
-                    actor.getReflection().addSpawnWithoutRespawn(20847, actor.getLoc(), 200);
+                    actor.getReflection().addSpawnWithoutRespawn(20845, actor, 200);
+                    actor.getReflection().addSpawnWithoutRespawn(20847, actor, 200);
                 }
                 actor.deleteMe();
                 return true;
@@ -38,14 +38,13 @@ public final class ZakenAnchor extends DefaultAI {
                         });
                 //actor.getReflection().addSpawnWithoutRespawn(UltraDayZaken, actor.getTerritory(), 0);
                 for (int i = 0; i < 4; i++) {
-                    actor.getReflection().addSpawnWithoutRespawn(29184, actor.getLoc(), 300);
-                    actor.getReflection().addSpawnWithoutRespawn(29183, actor.getLoc(), 300);
+                    actor.getReflection().addSpawnWithoutRespawn(29184, actor, 300);
+                    actor.getReflection().addSpawnWithoutRespawn(29183, actor, 300);
                 }
                 actor.deleteMe();
                 return true;
             }
-        } else
-            i1 = 0;
+        }
 
         return false;
     }

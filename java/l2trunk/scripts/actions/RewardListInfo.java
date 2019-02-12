@@ -10,6 +10,7 @@ import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
 import l2trunk.gameserver.stats.Stats;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.HtmlUtils;
+import l2trunk.scripts.npc.model.residences.SiegeGuardInstance;
 import l2trunk.scripts.services.community.CommunityDropCalculator;
 
 import java.text.NumberFormat;
@@ -28,7 +29,7 @@ public class RewardListInfo {
     static void showInfo(Player player, NpcInstance npc) {
         double mod = npc.calcStat(Stats.REWARD_MULTIPLIER, 1.0, player, null);
 
-        showInfo(player, npc.getTemplate(), npc instanceof RaidBossInstance, npc.isSiegeGuard(), mod);
+        showInfo(player, npc.getTemplate(), npc instanceof RaidBossInstance, npc instanceof SiegeGuardInstance, mod);
     }
 
     public static void showInfo(Player player, NpcTemplate npcTemplate, boolean isBoss, boolean isSiegeGuard, double mod) {
@@ -39,10 +40,10 @@ public class RewardListInfo {
         mod *= Experience.penaltyModifier(diff, 9);
 
         NpcHtmlMessage htmlMessage = new NpcHtmlMessage(5);
-        htmlMessage.replace("%npc_name%", npcTemplate.getName());
+        htmlMessage.replace("%npc_name%", npcTemplate.name());
 
         //@SuppressWarnings("unused")
-        //boolean icons = player.getVarB("DroplistIcons");
+        //boolean icons = player.isVarSet("DroplistIcons");
 
         if (mod <= 0) {
             htmlMessage.setFile("actions/rewardlist_to_weak.htm");

@@ -62,7 +62,7 @@ public final class SumielInstance extends NpcInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
         if (val == 0) {
             String htmlpath = null;
             if (c_ai0 == null && i_quest2 == 0) {
@@ -104,7 +104,7 @@ public final class SumielInstance extends NpcInstance {
                 player.teleToLocation(110712, -81352, -2688);
                 break;
             case "start":
-                if (player.getInventory().getCountOf(15540) == 0)
+                if (!player.haveItem(15540))
                     showChatWindow(player, "event/monastyre/minigame_instructor005.htm");
                 else if (c_ai1 != player)
                     showChatWindow(player, "event/monastyre/minigame_instructor004.htm");

@@ -1,7 +1,5 @@
 package l2trunk.gameserver.model.instances;
 
-import l2trunk.commons.lang.reference.HardReference;
-import l2trunk.commons.lang.reference.HardReferences;
 import l2trunk.gameserver.data.xml.holder.AirshipDockHolder;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.boat.ClanAirShip;
@@ -14,12 +12,14 @@ import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.templates.AirshipDock;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
+import static l2trunk.gameserver.utils.ItemFunctions.removeItem;
+
 public final class ClanAirShipControllerInstance extends AirShipControllerInstance {
     private static final int ENERGY_STAR_STONE = 13277;
     private static final int AIRSHIP_SUMMON_LICENSE = 13559;
     private final AirshipDock airshipDock;
     private final AirshipDock.AirshipPlatform _platform;
-    private HardReference<ClanAirShip> _dockedShipRef = HardReferences.emptyRef();
+    private ClanAirShip _dockedShipRef = null;
 
     public ClanAirShipControllerInstance(int objectID, NpcTemplate template) {
         super(objectID, template);
@@ -62,11 +62,11 @@ public final class ClanAirShipControllerInstance extends AirShipControllerInstan
             }
 
             if (dockedAirShip != null) {
-                Functions.npcSay(this, NpcString.IN_AIR_HARBOR_ALREADY_AIRSHIP_DOCKED_PLEASE_WAIT_AND_TRY_AGAIN, ChatType.SHOUT, 5000);
+                Functions.npcSay(this, NpcString.IN_AIR_HARBOR_ALREADY_AIRSHIP_DOCKED_PLEASE_WAIT_AND_TRY_AGAIN, ChatType.SHOUT, 5000, "");
                 return;
             }
 
-            if (Functions.removeItem(player, ENERGY_STAR_STONE, 5, "Clan Airship") != 5) {
+            if (removeItem(player, ENERGY_STAR_STONE, 5, "Clan Airship") != 5) {
                 player.sendPacket(new SystemMessage2(SystemMsg.AN_AIRSHIP_CANNOT_BE_SUMMONED_BECAUSE_YOU_DONT_HAVE_ENOUGH_S1).addItemName(ENERGY_STAR_STONE));
                 return;
             }
@@ -79,8 +79,8 @@ public final class ClanAirShipControllerInstance extends AirShipControllerInstan
             dockedShip.spawnMe(_platform.getSpawnLoc());
             dockedShip.startDepartTask();
 
-            Functions.npcSay(this, NpcString.AIRSHIP_IS_SUMMONED_IS_DEPART_IN_5_MINUTES, ChatType.SHOUT, 5000);
-        } else if (command.equalsIgnoreCase("register")) {
+            Functions.npcSay(this, NpcString.AIRSHIP_IS_SUMMONED_IS_DEPART_IN_5_MINUTES, ChatType.SHOUT, 5000, "");
+        } else if ("register".equalsIgnoreCase(command)) {
             if (player.getClan() == null || !player.isClanLeader() || player.getClan().getLevel() < 5) {
                 player.sendPacket(SystemMsg.IN_ORDER_TO_ACQUIRE_AN_AIRSHIP_THE_CLANS_LEVEL_MUST_BE_LEVEL_5_OR_HIGHER);
                 return;
@@ -91,12 +91,12 @@ public final class ClanAirShipControllerInstance extends AirShipControllerInstan
                 return;
             }
 
-            if (Functions.getItemCount(player, AIRSHIP_SUMMON_LICENSE) == 0) {
+            if (!player.haveItem(AIRSHIP_SUMMON_LICENSE)) {
                 player.sendPacket(SystemMsg.YOU_DO_NOT_HAVE_ENOUGH_REQUIRED_ITEMS);
                 return;
             }
 
-            Functions.removeItem(player, AIRSHIP_SUMMON_LICENSE, 1, "Clan Airship");
+            removeItem(player, AIRSHIP_SUMMON_LICENSE, 1, "Clan Airship");
             player.getClan().setAirshipLicense(true);
             player.getClan().setAirshipFuel(ClanAirShip.MAX_FUEL);
             player.getClan().updateClanInDB();
@@ -107,7 +107,7 @@ public final class ClanAirShipControllerInstance extends AirShipControllerInstan
 
     @Override
     protected ClanAirShip getDockedAirShip() {
-        ClanAirShip ship = _dockedShipRef.get();
+        ClanAirShip ship = _dockedShipRef;
         if (ship != null && ship.isDocked())
             return ship;
         else
@@ -115,10 +115,9 @@ public final class ClanAirShipControllerInstance extends AirShipControllerInstan
     }
 
     public void setDockedShip(ClanAirShip dockedShip) {
-        ClanAirShip old = _dockedShipRef.get();
-        if (old != null) {
-            old.setDock(null);
-            old.setPlatform(null);
+        if (_dockedShipRef != null) {
+            _dockedShipRef.setDock(null);
+            _dockedShipRef.setPlatform(null);
         }
 
         if (dockedShip != null) {
@@ -129,9 +128,6 @@ public final class ClanAirShipControllerInstance extends AirShipControllerInstan
                 dockedShip.startArrivalTask();
         }
 
-        if (dockedShip == null)
-            _dockedShipRef = HardReferences.emptyRef();
-        else
-            _dockedShipRef = (HardReference<ClanAirShip>) dockedShip.getRef();
+        _dockedShipRef = dockedShip;
     }
 }

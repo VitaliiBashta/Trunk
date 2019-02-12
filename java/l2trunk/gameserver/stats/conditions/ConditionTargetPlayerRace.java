@@ -5,16 +5,16 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.base.Race;
 import l2trunk.gameserver.stats.Env;
 
-public class ConditionTargetPlayerRace extends Condition {
-    private final Race _race;
+public final class ConditionTargetPlayerRace extends Condition {
+    private final Race race;
 
     public ConditionTargetPlayerRace(String race) {
-        _race = Race.valueOf(race.toLowerCase());
+        this.race = Race.valueOf(race.toLowerCase());
     }
 
     @Override
     protected boolean testImpl(Env env) {
         Creature target = env.target;
-        return target != null && target.isPlayer() && _race == ((Player) target).getRace();
+        return target instanceof Player && race == ((Player) target).getRace();
     }
 }

@@ -15,11 +15,9 @@ public final class fenrir extends Functions {
     private static final int FENRIR_NECKLACE = L2Pet.FENRIR_WOLF.getControlItemId();
 
     public void evolve() {
-        Player player = getSelf();
-        NpcInstance npc = getNpc();
         if (player == null || npc == null)
             return;
-        if (player.getInventory().getItemByItemId(GREAT_WOLF_NECKLACE) == null) {
+        if (!player.haveItem(GREAT_WOLF_NECKLACE) ) {
             show("scripts/services/petevolve/no_item.htm", player, npc);
             return;
         }

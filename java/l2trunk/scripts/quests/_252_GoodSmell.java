@@ -3,9 +3,7 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-import java.util.Arrays;
 import java.util.List;
 
 public final class _252_GoodSmell extends Quest {
@@ -25,12 +23,13 @@ public final class _252_GoodSmell extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("stan_q252_03.htm")) {
+        if ("stan_q252_03.htm".equalsIgnoreCase(event)) {
             st.setState(STARTED);
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("stan_q252_06.htm")) {
-            st.takeAllItems(SelMahumDiary, SelMahumCookbookPage);
+        } else if ("stan_q252_06.htm".equalsIgnoreCase(event)) {
+            st.takeItems(SelMahumDiary);
+            st.takeItems(SelMahumCookbookPage);
             st.setState(COMPLETED);
             st.giveItems(57, 147656);
             st.addExpAndSp(716238, 78324);
@@ -46,7 +45,7 @@ public final class _252_GoodSmell extends Quest {
         int cond = st.getCond();
         if (npc.getNpcId() == GuardStan) {
             if (cond == 0) {
-                if (st.getPlayer().getLevel() >= 82)
+                if (st.player.getLevel() >= 82)
                     htmltext = "stan_q252_01.htm";
                 else
                     htmltext = "stan_q252_00.htm";
@@ -60,7 +59,7 @@ public final class _252_GoodSmell extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int cond = st.getCond();
         if (cond == 1) {
             if (st.getQuestItemsCount(SelMahumDiary) < 10 && SelMahums.contains(npc.getNpcId()))
@@ -70,6 +69,5 @@ public final class _252_GoodSmell extends Quest {
             if (st.getQuestItemsCount(SelMahumDiary) >= 10 && st.getQuestItemsCount(SelMahumCookbookPage) >= 5)
                 st.setCond(2);
         }
-        return null;
     }
 }

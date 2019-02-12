@@ -13,15 +13,13 @@ public final class PaganDoormans extends Functions {
     private static final int SecondDoor2Id = 19160010;
 
     public void openMainDoor() {
-        Player player = getSelf();
-        NpcInstance npc = getNpc();
         if (player == null || npc == null)
             return;
 
         if (!NpcInstance.canBypassCheck(player, npc))
             return;
 
-        if (getItemCount(player, 8064) == 0 && getItemCount(player, 8067) == 0) {
+        if (!player.haveItem(8064) && !player.haveItem( 8067)) {
             player.sendPacket(Msg.YOU_DO_NOT_HAVE_ENOUGH_REQUIRED_ITEMS);
             return;
         }
@@ -31,15 +29,13 @@ public final class PaganDoormans extends Functions {
     }
 
     public void openSecondDoor() {
-        Player player = getSelf();
-        NpcInstance npc = getNpc();
         if (player == null || npc == null)
             return;
 
         if (!NpcInstance.canBypassCheck(player, npc))
             return;
 
-        if (getItemCount(player, 8067) == 0) {
+        if (!player.haveItem( 8067)) {
             show("default/32036-2.htm", player, npc);
             return;
         }
@@ -50,8 +46,6 @@ public final class PaganDoormans extends Functions {
     }
 
     public void pressSkull() {
-        Player player = getSelf();
-        NpcInstance npc = getNpc();
         if (player == null || npc == null)
             return;
 
@@ -63,8 +57,6 @@ public final class PaganDoormans extends Functions {
     }
 
     public void press2ndSkull() {
-        Player player = getSelf();
-        NpcInstance npc = getNpc();
         if (player == null || npc == null)
             return;
 

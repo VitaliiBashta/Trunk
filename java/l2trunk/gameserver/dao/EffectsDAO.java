@@ -28,7 +28,7 @@ public enum EffectsDAO {
     public void restoreEffects(final Playable playable, final boolean heal, final double healToHp, final double healToCp, final double healToMp) {
         int id = getId(playable);
         if (id == 0) return;
-        int objectId = playable.isPlayer() ? playable.getObjectId() : playable.getPlayer().getObjectId();
+        int objectId = playable.getPlayer().objectId();
 
         if (playable.getPlayer().isInOlympiadMode()) {
             if (heal) {
@@ -107,7 +107,7 @@ public enum EffectsDAO {
     }
 
     private void heal(Playable playable, double hp, double cp, double mp) {
-        if (!playable.isPlayer()) {
+        if (!(playable instanceof Player)) {
             hp = playable.getMaxHp();
             cp = playable.getMaxCp();
             mp = playable.getMaxMp();
@@ -117,9 +117,9 @@ public enum EffectsDAO {
     }
 
     private int getId(Playable playable) {
-        if (playable.isPlayer()) {
+        if (playable instanceof Player) {
             return  ((Player) playable).getActiveClassId();
-        } else if (playable.isSummon()) {
+        } else if (playable instanceof SummonInstance) {
             return ((SummonInstance) playable).getEffectIdentifier() + SUMMON_SKILL_OFFSET;
         }
         return 0;
@@ -128,7 +128,7 @@ public enum EffectsDAO {
     public void insert(Playable playable) {
         int id = getId(playable);
         if (id == 0) return;
-        int objectId = playable.isPlayer() ? playable.getObjectId() : playable.getPlayer().getObjectId();
+        int objectId = playable instanceof Player ? playable.objectId() : playable.getPlayer().objectId();
 
 
         try (Connection con = DatabaseFactory.getInstance().getConnection()) {
@@ -140,18 +140,18 @@ public enum EffectsDAO {
             StringBuilder sb;
             List<Effect> allSavableEffects = playable.getEffectList().getAllEffects().stream()
                     .filter(Effect::isInUse)
-                    .filter(e -> !e.getSkill().isToggle())
+                    .filter(e -> !e.skill.isToggle())
                     .filter(e -> e.getEffectType() != EffectType.HealOverTime)
                     .filter(e -> e.getEffectType() != EffectType.CombatPointHealOverTime)
-                    .filter(e -> !(playable.isSummon() && e.getSkill().isOffensive))// Summons should not store debuffs, only buffs
+                    .filter(e -> !(playable instanceof SummonInstance && e.skill.isOffensive))// Summons should not store debuffs, only buffs
                     .collect(Collectors.toList());
             for (Effect effect : allSavableEffects) {
 
                 if (effect.isSaveable()) {
                     sb = new StringBuilder("(");
                     sb.append(objectId).append(",");
-                    sb.append(effect.getSkill().id).append(",");
-                    sb.append(effect.getSkill().level).append(",");
+                    sb.append(effect.skill.id).append(",");
+                    sb.append(effect.skill.level).append(",");
                     sb.append(effect.getCount()).append(",");
                     sb.append(effect.getTime()).append(",");
                     sb.append(effect.getPeriod()).append(",");
@@ -162,8 +162,8 @@ public enum EffectsDAO {
                 while ((effect = effect.getNext()) != null && effect.isSaveable()) {
                     sb = new StringBuilder("(");
                     sb.append(objectId).append(",");
-                    sb.append(effect.getSkill().id).append(",");
-                    sb.append(effect.getSkill().level).append(",");
+                    sb.append(effect.skill.id).append(",");
+                    sb.append(effect.skill.level).append(",");
                     sb.append(effect.getCount()).append(",");
                     sb.append(effect.getTime()).append(",");
                     sb.append(effect.getPeriod()).append(",");

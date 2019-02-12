@@ -373,19 +373,19 @@ public final class FestivalSpawn {
             new Location(-76941, 85307, -5151, 0), // 42 and below
             new Location(-74855, 87135, -5151, 0), // 53 and below
             new Location(-80208, 88222, -5151, 0), // 64 and below
-            new Location(-79954, 84697, -5151, 0)); // No level limit
+            new Location(-79954, 84697, -5151, 0)); // No occupation limit
     static final List<NpcLocation> FESTIVAL_DAWN_WITCH_SPAWNS = List.of(
             new NpcLocation(-79183, 113052, -4891, 0, 31132), // 31 and below
             new NpcLocation(-75916, 110270, -4891, 0, 31133), // 42 and below
             new NpcLocation(-73979, 111970, -4891, 0, 31134), // 53 and below
             new NpcLocation(-76174, 113663, -4891, 0, 31135), // 64 and below
-            new NpcLocation(-78930, 109664, -4891, 0, 31136)); // No level limit
+            new NpcLocation(-78930, 109664, -4891, 0, 31136)); // No occupation limit
     static final List<NpcLocation> FESTIVAL_DUSK_WITCH_SPAWNS = List.of(
             new NpcLocation(-77199, 88830, -5147, 0, 31142), // 31 and below
             new NpcLocation(-76942, 85438, -5147, 0, 31143), // 42 and below
             new NpcLocation(-74990, 87135, -5147, 0, 31144), // 53 and below
             new NpcLocation(-80207, 88222, -5147, 0, 31145), // 64 and below
-            new NpcLocation(-79952, 84833, -5147, 0, 31146)); // No level limit
+            new NpcLocation(-79952, 84833, -5147, 0, 31146)); // No occupation limit
     static final List<List<NpcLocation>> FESTIVAL_DAWN_PRIMARY_SPAWNS = List.of(
             /* Level 31 and Below - Offering of the Branded */
             List.of(
@@ -487,7 +487,7 @@ public final class FestivalSpawn {
             new Location(-75918, 110137, -4895, 0), // 42 and below
             new Location(-73835, 111969, -4895, 0), // 53 and below
             new Location(-76170, 113804, -4895, 0), // 64 and below
-            new Location(-78927, 109528, -4895, 0)); // No level limit
+            new Location(-78927, 109528, -4895, 0)); // No occupation limit
     public final Location loc;
     public final int npcId;
 

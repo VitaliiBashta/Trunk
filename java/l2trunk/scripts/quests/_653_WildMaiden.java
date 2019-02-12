@@ -7,19 +7,16 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.MagicSkillUse;
-import l2trunk.gameserver.scripts.ScriptFile;
-import l2trunk.gameserver.templates.spawn.PeriodOfDay;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public final class _653_WildMaiden extends Quest {
+    // Items
+    private static final int SOE = 736;
     // Npc
     private final int SUKI = 32013;
     private final int GALIBREDO = 30181;
-
-    // Items
-    private static final int SOE = 736;
 
     public _653_WildMaiden() {
         super(false);
@@ -33,7 +30,7 @@ public final class _653_WildMaiden extends Quest {
     private NpcInstance findNpc(Player player) {
         NpcInstance instance = null;
         List<NpcInstance> npclist = new ArrayList<>();
-        for (Spawner spawn : SpawnManager.INSTANCE.getSpawners(PeriodOfDay.NONE.name()))
+        for (Spawner spawn : SpawnManager.INSTANCE.getSpawners("NONE"))
             if (spawn.getCurrentNpcId() == 32013) {
                 instance = spawn.getLastSpawn();
                 npclist.add(instance);
@@ -49,7 +46,7 @@ public final class _653_WildMaiden extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        Player player = st.getPlayer();
+        Player player = st.player;
         if (event.equalsIgnoreCase("spring_girl_sooki_q0653_03.htm")) {
             if (st.getQuestItemsCount(SOE) > 0) {
                 st.setCond(1);
@@ -64,7 +61,7 @@ public final class _653_WildMaiden extends Quest {
         } else if (event.equalsIgnoreCase("spring_girl_sooki_q0653_03.htm")) {
             st.exitCurrentQuest(false);
             st.playSound(SOUND_GIVEUP);
-        } else if (event.equalsIgnoreCase("suki_timer")) {
+        } else if ("suki_timer".equalsIgnoreCase(event)) {
             NpcInstance n = findNpc(player);
             n.deleteMe();
             htmltext = null;
@@ -79,7 +76,7 @@ public final class _653_WildMaiden extends Quest {
         int npcId = npc.getNpcId();
         int id = st.getState();
         if (npcId == SUKI && id == CREATED) {
-            if (st.getPlayer().getLevel() >= 36)
+            if (st.player.getLevel() >= 36)
                 htmltext = "spring_girl_sooki_q0653_01.htm";
             else {
                 htmltext = "spring_girl_sooki_q0653_01a.htm";

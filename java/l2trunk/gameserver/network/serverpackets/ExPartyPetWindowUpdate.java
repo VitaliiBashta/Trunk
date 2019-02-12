@@ -12,10 +12,10 @@ public final class ExPartyPetWindowUpdate extends L2GameServerPacket {
     @Override
     protected final void writeImpl() {
         writeEx(0x19);
-        writeD(summon.getObjectId());
+        writeD(summon.objectId());
         writeD(summon.getTemplate().npcId + 1000000);
         writeD(summon.getSummonType());
-        writeD(summon.getPlayer().getObjectId());
+        writeD(summon.owner.objectId());
         writeS(summon.getName());
         writeD((int) summon.getCurrentHp());
         writeD(summon.getMaxHp());

@@ -2,9 +2,8 @@ package l2trunk.gameserver.skills.skillclasses;
 
 import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Skill;
-
-import java.util.List;
 
 public final class SPHeal extends Skill {
     public SPHeal(StatsSet set) {
@@ -12,23 +11,16 @@ public final class SPHeal extends Skill {
     }
 
     @Override
-    public boolean checkCondition(final Creature activeChar, final Creature target, boolean forceUse, boolean dontMove, boolean first) {
-        if (!activeChar.isPlayer())
-            return false;
-
+    public boolean checkCondition(final Player activeChar, final Creature target, boolean forceUse, boolean dontMove, boolean first) {
         return super.checkCondition(activeChar, target, forceUse, dontMove, first);
     }
 
     @Override
-    public void useSkill(Creature activeChar, List<Creature> targets) {
-        for (Creature target : targets)
-            if (target != null) {
-                target.getPlayer().addExpAndSp(0, (long) power);
-
-                getEffects(activeChar, target, getActivateRate() > 0, false);
-            }
-
-        if (isSSPossible())
-            activeChar.unChargeShots(isMagic());
+    public void useSkill(Creature activeChar, Creature target) {
+        if (target instanceof Player) {
+            Player player = (Player) target;
+            player.addExpAndSp(0, (long) power);
+            getEffects(activeChar, player, activateRate > 0, false);
+        }
     }
 }

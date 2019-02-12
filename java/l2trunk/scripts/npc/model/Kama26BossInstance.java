@@ -45,7 +45,7 @@ public final class Kama26BossInstance extends KamalokaBossInstance {
         super.onDeath(killer);
     }
 
-    public class ReflectionCollapseListener implements OnReflectionCollapseListener {
+    private class ReflectionCollapseListener implements OnReflectionCollapseListener {
         @Override
         public void onReflectionCollapse(Reflection ref) {
             if (_spawner != null)

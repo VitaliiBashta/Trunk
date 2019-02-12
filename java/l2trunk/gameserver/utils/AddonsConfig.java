@@ -109,11 +109,11 @@ public final class AddonsConfig {
     }
 
     public static double getQuestRewardRates(Quest q) {
-        return questRewardRates.getOrDefault(q.getQuestIntId(), 1.0);
+        return questRewardRates.getOrDefault(q.id, 1.0);
     }
 
     public static double getQuestDropRates(Quest q) {
-        return questDropRates.getOrDefault(q.getQuestIntId(), 1.0);
+        return questDropRates.getOrDefault(q.id, 1.0);
     }
 
 }

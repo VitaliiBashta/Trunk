@@ -32,11 +32,11 @@ public final class _001_LettersOfLove extends Quest {
     @Override
     public String onEvent(String event, QuestState qs, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("quest_accept")) {
+        if ("quest_accept".equalsIgnoreCase(event)) {
             htmltext = "daring_q0001_06.htm";
             qs.setCond(1);
             qs.setState(STARTED);
-            qs.giveItems(DARINGS_LETTER, 1, false);
+            qs.giveItems(DARINGS_LETTER);
             qs.playSound(SOUND_ACCEPT);
         }
         return htmltext;
@@ -50,7 +50,7 @@ public final class _001_LettersOfLove extends Quest {
         switch (npcId) {
             case DARIN:
                 if (cond == 0) {
-                    if (st.getPlayer().getLevel() >= 2)
+                    if (st.player.getLevel() >= 2)
                         htmltext = "daring_q0001_02.htm";
                     else {
                         htmltext = "daring_q0001_01.htm";
@@ -60,20 +60,20 @@ public final class _001_LettersOfLove extends Quest {
                     htmltext = "daring_q0001_07.htm";
                 else if (cond == 2 && st.getQuestItemsCount(ROXXY_KERCHIEF) == 1) {
                     htmltext = "daring_q0001_08.htm";
-                    st.takeItems(ROXXY_KERCHIEF, -1);
-                    st.giveItems(DARINGS_RECEIPT, 1, false);
+                    st.takeItems(ROXXY_KERCHIEF);
+                    st.giveItems(DARINGS_RECEIPT);
                     st.setCond(3);
                     st.playSound(SOUND_MIDDLE);
                 } else if (cond == 3)
                     htmltext = "daring_q0001_09.htm";
                 else if (cond == 4 && st.getQuestItemsCount(BAULS_POTION) == 1) {
                     htmltext = "daring_q0001_10.htm";
-                    st.takeItems(BAULS_POTION, -1);
-                    st.giveItems(NECKLACE, 1, false);
-                    if (st.getPlayer().getClassId().getLevel() == 1 && !st.getPlayer().getVarB("ng1"))
-                        st.getPlayer().sendPacket(new ExShowScreenMessage("  Delivery duty complete.\nGo find the Newbie Guide."));
+                    st.takeItems(BAULS_POTION);
+                    st.giveItems(NECKLACE);
+                    if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("ng1"))
+                        st.player.sendPacket(new ExShowScreenMessage("  Delivery duty complete.\nGo find the Newbie Guide."));
                     st.giveItems(ADENA_ID, (int) ((Config.RATE_QUESTS_REWARD - 1) * 1200 + 2466 * Config.RATE_QUESTS_REWARD), false); // T2
-                    st.getPlayer().addExpAndSp(5672, 446);
+                    st.player.addExpAndSp(5672, 446);
                     st.playSound(SOUND_FINISH);
                     st.exitCurrentQuest(false);
                 }
@@ -81,8 +81,8 @@ public final class _001_LettersOfLove extends Quest {
             case ROXXY:
                 if (cond == 1 && st.getQuestItemsCount(ROXXY_KERCHIEF) == 0 && st.getQuestItemsCount(DARINGS_LETTER) > 0) {
                     htmltext = "rapunzel_q0001_01.htm";
-                    st.takeItems(DARINGS_LETTER, -1);
-                    st.giveItems(ROXXY_KERCHIEF, 1, false);
+                    st.takeItems(DARINGS_LETTER);
+                    st.giveItems(ROXXY_KERCHIEF);
                     st.setCond(2);
                     st.playSound(SOUND_MIDDLE);
                 } else if (cond == 2 && st.getQuestItemsCount(ROXXY_KERCHIEF) > 0)
@@ -93,8 +93,8 @@ public final class _001_LettersOfLove extends Quest {
             case BAULRO:
                 if (cond == 3 && st.getQuestItemsCount(DARINGS_RECEIPT) == 1) {
                     htmltext = "baul_q0001_01.htm";
-                    st.takeItems(DARINGS_RECEIPT, -1);
-                    st.giveItems(BAULS_POTION, 1, false);
+                    st.takeItems(DARINGS_RECEIPT);
+                    st.giveItems(BAULS_POTION);
                     st.setCond(4);
                     st.playSound(SOUND_MIDDLE);
                 } else if (cond == 4)

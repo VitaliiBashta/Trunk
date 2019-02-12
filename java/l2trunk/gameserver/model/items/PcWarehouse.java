@@ -1,15 +1,10 @@
 package l2trunk.gameserver.model.items;
 
-import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.items.ItemInstance.ItemLocation;
 
-public class PcWarehouse extends Warehouse {
-    public PcWarehouse(Player owner) {
-        super(owner.getObjectId());
-    }
-
-    public PcWarehouse(int ownerId) {
-        super(ownerId);
+public final class PcWarehouse extends Warehouse {
+    public PcWarehouse(int owner) {
+        super(owner);
     }
 
     @Override

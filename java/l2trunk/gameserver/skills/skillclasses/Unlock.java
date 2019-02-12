@@ -9,8 +9,6 @@ import l2trunk.gameserver.model.instances.ChestInstance;
 import l2trunk.gameserver.model.instances.DoorInstance;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
-import java.util.List;
-
 public final class Unlock extends Skill {
     private final int _unlockPower;
 
@@ -20,52 +18,17 @@ public final class Unlock extends Skill {
     }
 
     @Override
-    public boolean checkCondition(Creature activeChar, Creature target, boolean forceUse, boolean dontMove, boolean first) {
+    public boolean checkCondition(Player activeChar, Creature target, boolean forceUse, boolean dontMove, boolean first) {
         if (target == null || target instanceof ChestInstance && target.isDead()) {
             activeChar.sendPacket(SystemMsg.INVALID_TARGET);
             return false;
         }
 
-        if (target instanceof ChestInstance && activeChar.isPlayer())
+        if (target instanceof ChestInstance)
             return super.checkCondition(activeChar, target, forceUse, dontMove, first);
-        //Unlock Fix
-//		if (target instanceof ChestInstance && activeChar.isPlayer())
-//		{
-//			int charLevel = activeChar.level();
-//			int chestLevel = target.level();
-//
-//			try
-//			{
-//				int levelDiff = chestLevel - charLevel;
-//				
-//				if (chestLevel < 77)
-//				{
-//					if (levelDiff > 6 || levelDiff < -6) 
-//						return false;
-//				} 
-//				
-//				else if (chestLevel < 78)
-//				{
-//					if (levelDiff > 5 || levelDiff < -5) 
-//						return false;
-//				} 
-//				
-//				else
-//				{
-//					if (levelDiff > 3 || levelDiff < -3) 
-//						return false;
-//				}
-//			}
-//			catch (Exception e)
-//			{
-//				e.printStackTrace();
-//			}
-//			
-//			return super.checkCondition(activeChar, target, forceUse, dontMove, first);
-//		}
-//		//unlock end
 
-        if (!target.isDoor() || _unlockPower == 0) {
+
+        if (!(target instanceof DoorInstance) || _unlockPower == 0) {
             activeChar.sendPacket(SystemMsg.INVALID_TARGET);
             return false;
         }
@@ -98,20 +61,17 @@ public final class Unlock extends Skill {
     }
 
     @Override
-    public void useSkill(Creature activeChar, List<Creature> targets) {
-        for (Creature targ : targets)
-            if (targ != null) {
-                if (targ.isDoor()) {
-                    DoorInstance target = (DoorInstance) targ;
-                    if (!target.isOpen() && (target.getKey() > 0 || Rnd.chance(_unlockPower - target.getLevel() * 100))) {
-                        target.openMe((Player) activeChar, true);
-                    } else
-                        activeChar.sendPacket(SystemMsg.YOU_HAVE_FAILED_TO_UNLOCK_THE_DOOR);
-                } else if (targ instanceof ChestInstance) {
-                    ChestInstance target = (ChestInstance) targ;
-                    if (!target.isDead())
-                        target.tryOpen((Player) activeChar, this);
-                }
-            }
+    public void useSkill(Creature activeChar, Creature target) {
+        if (target instanceof DoorInstance) {
+            DoorInstance door = (DoorInstance) target;
+            if (!door.isOpen() && (door.getKey() > 0 || Rnd.chance(_unlockPower - door.getLevel() * 100))) {
+                door.openMe(true);
+            } else
+                activeChar.sendPacket(SystemMsg.YOU_HAVE_FAILED_TO_UNLOCK_THE_DOOR);
+        } else if (target instanceof ChestInstance) {
+            ChestInstance chest = (ChestInstance) target;
+            if (!chest.isDead())
+                chest.tryOpen((Player) activeChar, this);
+        }
     }
 }

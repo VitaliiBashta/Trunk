@@ -6,7 +6,6 @@ import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.data.xml.holder.NpcHolder;
 import l2trunk.gameserver.instancemanager.ServerVariables;
 import l2trunk.gameserver.listener.zone.OnZoneEnterLeaveListener;
-import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Zone;
 import l2trunk.gameserver.model.instances.MonsterInstance;
@@ -16,6 +15,7 @@ import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.Location;
+import l2trunk.gameserver.utils.NpcUtils;
 import l2trunk.gameserver.utils.PositionUtils;
 import l2trunk.gameserver.utils.ReflectionUtils;
 import org.slf4j.Logger;
@@ -124,11 +124,9 @@ public final class BelethManager extends Functions implements ScriptFile {
     public class ZoneListener implements OnZoneEnterLeaveListener {
 
         @Override
-        public void onZoneEnter(Zone zone, Creature actor) {
-            if (!actor.isPlayer() || _entryLocked)
+        public void onZoneEnter(Zone zone, Player player) {
+            if (player == null || _entryLocked)
                 return;
-
-            Player player = actor.getPlayer();
 
             if (!_indexedPlayers.contains(player))
                 if (checkPlayer(player))
@@ -141,12 +139,7 @@ public final class BelethManager extends Functions implements ScriptFile {
         }
 
         @Override
-        public void onZoneLeave(Zone zone, Creature actor) {
-            if (!actor.isPlayer())
-                return;
-
-            Player player = actor.getPlayer();
-
+        public void onZoneLeave(Zone zone, Player player) {
             _indexedPlayers.remove(player);
         }
     }
@@ -415,7 +408,7 @@ public final class BelethManager extends Functions implements ScriptFile {
     }
 
     private static void spawnElpy() {
-        _elpy = Functions.spawn(new Location(-45480, 246824, -14209, 49152), 25604);
+        _elpy = NpcUtils.spawnSingle(25604,new Location(-45480, 246824, -14209, 49152) );
     }
 
     @Override

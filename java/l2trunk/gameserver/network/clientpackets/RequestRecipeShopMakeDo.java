@@ -82,8 +82,8 @@ public class RequestRecipeShopMakeDo extends L2GameClientPacket {
         int success = 0;
 
         if (recipeList.getRecipes().length == 0) {
-            manufacturer.sendMessage(new CustomMessage("l2trunk.gameserver.RecipeController.NoRecipe", manufacturer).addString(recipeList.getRecipeName()));
-            buyer.sendMessage(new CustomMessage("l2trunk.gameserver.RecipeController.NoRecipe", manufacturer).addString(recipeList.getRecipeName()));
+            manufacturer.sendMessage(new CustomMessage("l2trunk.gameserver.RecipeController.NoRecipe").addString(recipeList.getRecipeName()));
+            buyer.sendMessage(new CustomMessage("l2trunk.gameserver.RecipeController.NoRecipe").addString(recipeList.getRecipeName()));
             return;
         }
 
@@ -134,7 +134,7 @@ public class RequestRecipeShopMakeDo extends L2GameClientPacket {
             long tax = TradeHelper.getTax(manufacturer, _price);
             if (tax > 0) {
                 _price -= tax;
-                manufacturer.sendMessage(new CustomMessage("trade.HavePaidTax", manufacturer).addNumber(tax));
+                manufacturer.sendMessage(new CustomMessage("trade.HavePaidTax").addNumber(tax));
             }
 
             manufacturer.addAdena(_price, "RecipeShopReward");
@@ -142,7 +142,7 @@ public class RequestRecipeShopMakeDo extends L2GameClientPacket {
             buyer.getInventory().writeUnlock();
         }
 
-        manufacturer.sendMessage(new CustomMessage("l2trunk.gameserver.RecipeController.GotOrder", manufacturer).addString(recipeList.getRecipeName()));
+        manufacturer.sendMessage(new CustomMessage("l2trunk.gameserver.RecipeController.GotOrder").addString(recipeList.getRecipeName()));
 
         manufacturer.reduceCurrentMp(recipeList.getMpCost(), null);
         manufacturer.sendStatusUpdate(false, false, StatusUpdate.CUR_MP);
@@ -155,7 +155,7 @@ public class RequestRecipeShopMakeDo extends L2GameClientPacket {
             if (Rnd.chance(recipeList.getSuccessRate())) {
                 int itemId = recipeList.getFoundation() != 0 ? Rnd.chance(Config.CRAFT_MASTERWORK_CHANCE) ? recipeList.getFoundation() : recipeList.getItemId() : recipeList.getItemId();
                 long count = recipeList.getCount();
-                ItemFunctions.addItem(buyer, itemId, count, true, "RecipeShopMake");
+                ItemFunctions.addItem(buyer, itemId, count, "RecipeShopMake");
                 success = 1;
                 successCount++;
             }

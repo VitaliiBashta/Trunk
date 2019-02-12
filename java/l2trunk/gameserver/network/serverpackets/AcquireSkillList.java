@@ -6,44 +6,41 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-/**
- * Reworked: VISTALL
- */
-public class AcquireSkillList extends L2GameServerPacket {
-    private final List<Skill> _skills;
-    private final AcquireType _type;
+public final class AcquireSkillList extends L2GameServerPacket {
+    private final List<AcruireSkill> skills;
+    private final AcquireType type;
 
     public AcquireSkillList(AcquireType type, int size) {
-        _skills = new ArrayList<>(size);
-        _type = type;
+        skills = new ArrayList<>(size);
+        this.type = type;
     }
 
     public void addSkill(int id, int nextLevel, int maxLevel, int Cost, int requirements, int subUnit) {
-        _skills.add(new Skill(id, nextLevel, maxLevel, Cost, requirements, subUnit));
+        skills.add(new AcruireSkill(id, nextLevel, maxLevel, Cost, requirements, subUnit));
     }
 
     public void addSkill(int id, int nextLevel, int maxLevel, int Cost, int requirements) {
-        _skills.add(new Skill(id, nextLevel, maxLevel, Cost, requirements, 0));
+        skills.add(new AcruireSkill(id, nextLevel, maxLevel, Cost, requirements, 0));
     }
 
     @Override
     protected final void writeImpl() {
         writeC(0x90);
-        writeD(_type.ordinal());
-        writeD(_skills.size());
+        writeD(type.ordinal());
+        writeD(skills.size());
 
-        for (Skill temp : _skills) {
-            writeD(temp.id);
-            writeD(temp.nextLevel);
-            writeD(temp.maxLevel);
-            writeD(temp.cost);
-            writeD(temp.requirements);
-            if (_type == AcquireType.SUB_UNIT)
-                writeD(temp.subUnit);
-        }
+        skills.forEach(skill -> {
+            writeD(skill.id);
+            writeD(skill.nextLevel);
+            writeD(skill.maxLevel);
+            writeD(skill.cost);
+            writeD(skill.requirements);
+            if (type == AcquireType.SUB_UNIT)
+                writeD(skill.subUnit);
+        });
     }
 
-    class Skill {
+    class AcruireSkill {
         final int id;
         final int nextLevel;
         final int maxLevel;
@@ -51,7 +48,7 @@ public class AcquireSkillList extends L2GameServerPacket {
         final int requirements;
         final int subUnit;
 
-        Skill(int id, int nextLevel, int maxLevel, int cost, int requirements, int subUnit) {
+        AcruireSkill(int id, int nextLevel, int maxLevel, int cost, int requirements, int subUnit) {
             this.id = id;
             this.nextLevel = nextLevel;
             this.maxLevel = maxLevel;

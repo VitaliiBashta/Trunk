@@ -508,7 +508,6 @@ public final class PetBabyInstance extends PetInstance {
 
     private Skill onActionTask() {
         try {
-            Player owner = getPlayer();
             if (!owner.isDead() && !owner.isInvul() && !isCastingNow()) {
                 if (getEffectList().getEffectsCountForSkill(5753) > 0) // Awakening
                     return null;
@@ -536,7 +535,7 @@ public final class PetBabyInstance extends PetInstance {
                             skill = SkillTable.INSTANCE.getInfo(Recharge, getRechargeLevel());
                     }
 
-                    if (skill != null && skill.checkCondition(PetBabyInstance.this, owner, false, !isFollowMode(), true)) {
+                    if (skill != null && skill.checkCondition(PetBabyInstance.this.owner, owner, false, !isFollowMode(), true)) {
                         setTarget(owner);
                         getAI().cast(skill, owner, false, !isFollowMode());
                         return skill;
@@ -553,7 +552,7 @@ public final class PetBabyInstance extends PetInstance {
                     if (owner.getEffectList().getAllEffects().stream().anyMatch(ef -> checkEffect(ef, buff)))
                         continue;
 
-                    if (buff.checkCondition(PetBabyInstance.this, owner, false, !isFollowMode(), true)) {
+                    if (buff.checkCondition(PetBabyInstance.this.owner, owner, false, !isFollowMode(), true)) {
                         setTarget(owner);
                         getAI().cast(buff, owner, false, !isFollowMode());
                         return buff;

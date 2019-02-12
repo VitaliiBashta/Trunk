@@ -5,6 +5,7 @@ import l2trunk.gameserver.ai.Mystic;
 import l2trunk.gameserver.geodata.GeoEngine;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Playable;
+import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.Functions;
 
@@ -22,17 +23,17 @@ public final class GatekeeperZombie extends Mystic {
     }
 
     @Override
-    public boolean checkAggression(Creature target, boolean avoidAttack) {
+    public boolean checkAggression(Playable target, boolean avoidAttack) {
         NpcInstance actor = getActor();
         if (actor.isDead())
             return false;
         if (getIntention() != CtrlIntention.AI_INTENTION_ACTIVE || !isGlobalAggro())
             return false;
-        if (target.isAlikeDead() || !target.isPlayable())
+        if (target.isAlikeDead() || !(target instanceof Player))
             return false;
         if (!target.isInRangeZ(actor.getSpawnedLoc(), actor.getAggroRange()))
             return false;
-        if (Functions.getItemCount((Playable) target, 8067) != 0 || Functions.getItemCount((Playable) target, 8064) != 0)
+        if (((Player) target).haveItem( 8067)  || ((Player) target).haveItem( 8064) )
             return false;
         if (!GeoEngine.canSeeTarget(actor, target, false))
             return false;

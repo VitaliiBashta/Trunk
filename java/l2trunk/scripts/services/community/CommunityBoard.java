@@ -88,7 +88,7 @@ public final class CommunityBoard implements ScriptFile, ICommunityBoardHandler 
         if ("bbshome".equals(cmd)) {
             //Checking if all required images were sent to the player, if not - not allowing to pass
             if (!AutoImageSenderManager.wereAllImagesSent(player)) {
-                player.sendPacket(new Say2(player.getObjectId(), ChatType.CRITICAL_ANNOUNCE, "CB", "Community wasn't loaded yet, try again in few seconds."));
+                player.sendPacket(new Say2(player.objectId(), ChatType.CRITICAL_ANNOUNCE, "CB", "Community wasn't loaded yet, try again in few seconds."));
                 return;
             }
             StringTokenizer p = new StringTokenizer(Config.BBS_DEFAULT, "_");
@@ -100,15 +100,15 @@ public final class CommunityBoard implements ScriptFile, ICommunityBoardHandler 
                 html = html.replace("<?clan_count?>", String.valueOf(ClanTable.INSTANCE.getClans().size()));
                 html = html.replace("<?market_count?>", String.valueOf(CommunityBoardManager.getIntProperty("col_count")));
                 html = html.replace("<?player_name?>", String.valueOf(player.getName()));
-                html = html.replace("<?player_class?>", String.valueOf(Util.getFullClassName(player.getClassId().getId())));
+                html = html.replace("<?player_class?>", player.getClassId().name);
                 html = html.replace("<?player_level?>", String.valueOf(player.getLevel()));
                 html = html.replace("<?player_clan?>", String.valueOf(player.getClan() != null ? player.getClan().getName() : "<font color=\"FF0000\">No</font>"));
-                html = html.replace("<?player_noobless?>", String.valueOf(player.isNoble() ? "<font color=\"18FF00\">Yes</font>" : "<font color=\"FF0000\">No</font>"));
+                html = html.replace("<?player_noobless?>", player.isNoble() ? "<font color=\"18FF00\">Yes</font>" : "<font color=\"FF0000\">No</font>");
                 html = html.replace("<?online_time?>", TimeUtils.formatTime((int) player.getOnlineTime() / 1000, false));
                 html = html.replace("<?player_ip?>", String.valueOf(player.getIP()));
-                html = html.replace("<?server_uptime?>", String.valueOf(uptime()));
+                html = html.replace("<?server_uptime?>", uptime());
 
-                html = html.replace("<?time?>", String.valueOf(time()));
+                html = html.replace("<?time?>", time());
                 html = html.replace("<?online?>", online());
                 ImagesCache.sendUsedImages(html, player);
             } else {
@@ -127,7 +127,7 @@ public final class CommunityBoard implements ScriptFile, ICommunityBoardHandler 
                 html = html.replaceFirst("%prof%", String.valueOf(player.getActiveClass().toStringCB()));
                 html = html.replaceFirst("%lvl%", String.valueOf(player.getLevel()));
                 html = html.replaceFirst("%clan%", player.getClan() != null ? String.valueOf(player.getClan().getName()) : "<font color=\"FF0000\">No</font>");
-                html = html.replaceFirst("%noobl%", player.isNoble() ? String.valueOf("Yes") : "<font color=\"FF0000\">Need Subclass lvl 76</font>");
+                html = html.replaceFirst("%noobl%", player.isNoble() ? "Yes" : "<font color=\"FF0000\">Need Subclass lvl 76</font>");
                 html = html.replaceFirst("%time%", String.valueOf(player.getHoursInGames()).concat(" hour(s)"));
                 html = html.replaceFirst("%servhwid%", "<a action=\"bypass -h user_lock\">Lock</a>");
                 html = html.replaceFirst("%servip%", "<a action=\"bypass -h user_lock\">Lock</a>");

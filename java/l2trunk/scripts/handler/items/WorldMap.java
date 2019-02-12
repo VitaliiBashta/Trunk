@@ -1,13 +1,11 @@
 package l2trunk.scripts.handler.items;
 
 import l2trunk.gameserver.handler.items.ItemHandler;
-import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.network.serverpackets.ShowMiniMap;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-import java.util.Arrays;
 import java.util.List;
 
 public final class WorldMap extends ScriptItemHandler implements ScriptFile {
@@ -15,22 +13,13 @@ public final class WorldMap extends ScriptItemHandler implements ScriptFile {
     private static final List<Integer> ITEM_IDS = List.of(1665, 1863, 9994);
 
     @Override
-    public boolean pickupItem(Playable playable, ItemInstance item) {
-        return true;
-    }
-
-    @Override
     public void onLoad() {
         ItemHandler.INSTANCE.registerItemHandler(this);
     }
 
     @Override
-    public boolean useItem(Playable playable, ItemInstance item, boolean ctrl) {
-        if (playable == null || !playable.isPlayer())
-            return false;
-        Player player = (Player) playable;
-
-        player.sendPacket(new ShowMiniMap(player, item.getItemId()));
+    public boolean useItem(Player player, ItemInstance item, boolean ctrl) {
+        player.sendPacket(new ShowMiniMap(item.getItemId()));
         return true;
     }
 

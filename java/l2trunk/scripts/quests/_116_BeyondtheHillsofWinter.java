@@ -3,7 +3,6 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _116_BeyondtheHillsofWinter extends Quest {
     //NPC
@@ -67,7 +66,7 @@ public final class _116_BeyondtheHillsofWinter extends Quest {
             cond = st.getCond();
         if (npcId == FILAUR) {
             if (cond == 0) {
-                if (st.getPlayer().getLevel() < 30) {
+                if (st.player.getLevel() < 30) {
                     htmltext = "elder_filaur_q0116_0103.htm";
                     st.exitCurrentQuest(true);
                 } else

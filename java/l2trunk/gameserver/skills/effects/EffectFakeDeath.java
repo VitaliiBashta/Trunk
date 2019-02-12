@@ -46,9 +46,9 @@ public final class EffectFakeDeath extends Effect {
 
         double manaDam = calc();
 
-        if (manaDam > effected.getCurrentMp() && getSkill().isToggle()) {
+        if (manaDam > effected.getCurrentMp() && skill.isToggle()) {
             effected.sendPacket(SystemMsg.NOT_ENOUGH_MP);
-            effected.sendPacket(new SystemMessage(SystemMessage.THE_EFFECT_OF_S1_HAS_BEEN_REMOVED).addSkillName(getSkill().id, getSkill().getDisplayLevel()));
+            effected.sendPacket(new SystemMessage(SystemMessage.THE_EFFECT_OF_S1_HAS_BEEN_REMOVED).addSkillName(skill.id, skill.getDisplayLevel()));
             return false;
         }
 

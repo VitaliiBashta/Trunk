@@ -8,6 +8,8 @@ import l2trunk.gameserver.scripts.Functions;
 
 import java.util.List;
 
+import static l2trunk.gameserver.utils.ItemFunctions.removeItem;
+
 public final class Teleport implements IVoicedCommandHandler {
     private static final List<String> COMMAND_LIST = List.of("pvp", "farm", "farm_hard", "farm_low");
 
@@ -37,7 +39,7 @@ public final class Teleport implements IVoicedCommandHandler {
                     return false;
                 }
                 activeChar.teleToLocation(Config.PVP_X, Config.PVP_Y, Config.PVP_Z);
-                Functions.removeItem(activeChar, Config.PVP_TELEPORT_ITEM_ID, CoinCountPvP, ".pvp");
+                removeItem(activeChar, Config.PVP_TELEPORT_ITEM_ID, CoinCountPvP, ".pvp");
                 activeChar.sendMessage("You moved to the PvP Arena");
         return true;
     }
@@ -52,7 +54,7 @@ public final class Teleport implements IVoicedCommandHandler {
                     return false;
                 }
                 activeChar.teleToLocation(Config.FARM_X, Config.FARM_Y, Config.FARM_Z);
-                Functions.removeItem(activeChar, Config.FARM_TELEPORT_ITEM_ID, CoinCountFarm, ".farm");
+                removeItem(activeChar, Config.FARM_TELEPORT_ITEM_ID, CoinCountFarm, ".farm");
                 activeChar.sendMessage("You moved to the farm area");
         return true;
     }
@@ -68,7 +70,7 @@ public final class Teleport implements IVoicedCommandHandler {
                 }
 
                 activeChar.teleToLocation(Config.FARM_HARD_X, Config.FARM_HARD_Y, Config.FARM_HARD_Z);
-                Functions.removeItem(activeChar, Config.FARM_HARD_TELEPORT_ITEM_ID, CoinCountFarmH, ".farm_hard");
+                removeItem(activeChar, Config.FARM_HARD_TELEPORT_ITEM_ID, CoinCountFarmH, ".farm_hard");
                 activeChar.sendMessage("You moved to the farm area");
         return true;
     }
@@ -84,7 +86,7 @@ public final class Teleport implements IVoicedCommandHandler {
                 }
 
                 activeChar.teleToLocation(Config.FARM_LOW_X, Config.FARM_LOW_Y, Config.FARM_LOW_Z);
-                Functions.removeItem(activeChar, Config.FARM_LOW_TELEPORT_ITEM_ID, CoinCount, ".farm_low");
+                removeItem(activeChar, Config.FARM_LOW_TELEPORT_ITEM_ID, CoinCount, ".farm_low");
                 activeChar.sendMessage("You moved to the farm area");
         return true;
     }

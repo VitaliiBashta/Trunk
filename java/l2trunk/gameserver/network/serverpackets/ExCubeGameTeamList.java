@@ -41,12 +41,12 @@ public class ExCubeGameTeamList extends L2GameServerPacket {
 
         writeD(_bluePlayers.size());
         for (Player player : _bluePlayers) {
-            writeD(player.getObjectId());
+            writeD(player.objectId());
             writeS(player.getName());
         }
         writeD(_redPlayers.size());
         for (Player player : _redPlayers) {
-            writeD(player.getObjectId());
+            writeD(player.objectId());
             writeS(player.getName());
         }
     }

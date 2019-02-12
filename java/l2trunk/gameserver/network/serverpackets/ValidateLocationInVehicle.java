@@ -9,8 +9,8 @@ public class ValidateLocationInVehicle extends L2GameServerPacket {
     private final Location _loc;
 
     public ValidateLocationInVehicle(Player player) {
-        _playerObjectId = player.getObjectId();
-        _boatObjectId = player.getBoat().getObjectId();
+        _playerObjectId = player.objectId();
+        _boatObjectId = player.getBoat().objectId();
         _loc = player.getInBoatPosition();
     }
 

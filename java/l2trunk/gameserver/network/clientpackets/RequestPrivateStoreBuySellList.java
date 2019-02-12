@@ -131,7 +131,7 @@ public class RequestPrivateStoreBuySellList extends L2GameClientPacket {
                                 break loop;
 
                             totalCost = SafeMath.addAndCheck(totalCost, SafeMath.mulAndCheck(count, price));
-                            weight = SafeMath.addAndCheck(weight, SafeMath.mulAndCheck(count, item.getTemplate().getWeight()));
+                            weight = SafeMath.addAndCheck(weight, SafeMath.mulAndCheck(count, item.getTemplate().weight()));
                             if (!item.isStackable() || buyer.getInventory().getItemByItemId(item.getItemId()) == null)
                                 slots++;
 
@@ -197,7 +197,7 @@ public class RequestPrivateStoreBuySellList extends L2GameClientPacket {
                 long tax = TradeHelper.getTax(seller, totalCost);
                 if (tax > 0) {
                     totalCost -= tax;
-                    seller.sendMessage(new CustomMessage("trade.HavePaidTax", seller).addNumber(tax));
+                    seller.sendMessage(new CustomMessage("trade.HavePaidTax").addNumber(tax));
                 }
 
                 seller.addAdena(totalCost, "Private Store Sell to " + buyer.toString());

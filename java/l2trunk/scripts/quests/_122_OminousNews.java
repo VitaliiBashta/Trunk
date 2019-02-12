@@ -3,7 +3,6 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _122_OminousNews extends Quest {
     private final int MOIRA = 31979;
@@ -42,7 +41,7 @@ public final class _122_OminousNews extends Quest {
         int cond = st.getCond();
         if (npcId == MOIRA) {
             if (cond == 0) {
-                if (st.getPlayer().getLevel() >= 20)
+                if (st.player.getLevel() >= 20)
                     htmltext = "seer_moirase_q0122_0101.htm";
                 else {
                     htmltext = "seer_moirase_q0122_0103.htm";

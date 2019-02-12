@@ -68,67 +68,76 @@ public final class _211_TrialOfChallenger extends Quest {
     private void Spawn_Raldo(QuestState st) {
         if (Raldo_Spawn != null)
             Raldo_Spawn.deleteMe();
-        Raldo_Spawn = addSpawn(Raldo, st.getPlayer().getLoc(), 100, 300000);
+        Raldo_Spawn = addSpawn(Raldo, st.player.getLoc(), 100, 300000);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("1")) {
-            htmltext = "kash_q0211_05.htm";
-            st.setCond(1);
-            st.setState(STARTED);
-            if (!st.getPlayer().getVarB("dd1")) {
-                st.giveItems(7562, 64);
-                st.getPlayer().setVar("dd1", "1", -1);
-            }
-            st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("30644_1"))
-            htmltext = "kash_q0211_04.htm";
-        else if (event.equalsIgnoreCase("30645_1")) {
-            htmltext = "martian_q0211_02.htm";
-            st.takeItems(LETTER_OF_KASH_ID, 1);
-            st.setCond(4);
-        } else if (event.equalsIgnoreCase("30647_1")) {
-            if (st.getQuestItemsCount(BROKEN_KEY_ID) > 0) {
-                st.giveItems(SCROLL_OF_SHYSLASSY_ID, 1);
-                if (Rnd.chance(22)) {
-                    htmltext = "chest_of_shyslassys_q0211_03.htm";
-                    st.takeItems(BROKEN_KEY_ID, 1);
-                    st.playSound(SOUND_JACKPOT);
-                    int n = Rnd.get(100);
-                    if (n > 90) {
-                        st.giveItems(MITHRIL_SCALE_GAITERS_MATERIAL_ID, 1);
-                        st.giveItems(BRIGANDINE_GAUNTLET_PATTERN_ID, 1);
-                        st.giveItems(MANTICOR_SKIN_GAITERS_PATTERN_ID, 1);
-                        st.giveItems(GAUNTLET_OF_REPOSE_OF_THE_SOUL_PATTERN_ID, 1);
-                        st.giveItems(IRON_BOOTS_DESIGN_ID, 1);
-                    } else if (n > 70) {
-                        st.giveItems(TOME_OF_BLOOD_PAGE_ID, 1);
-                        st.giveItems(ELVEN_NECKLACE_BEADS_ID, 1);
-                    } else if (n > 40)
-                        st.giveItems(WHITE_TUNIC_PATTERN_ID, 1);
-                    else
-                        st.giveItems(IRON_BOOTS_DESIGN_ID, 1);
-                } else {
-                    htmltext = "chest_of_shyslassys_q0211_02.htm";
-                    st.takeItems(BROKEN_KEY_ID, -1);
-                    st.giveItems(ADENA_ID, Rnd.get(1000) + 1);
+        switch (event) {
+            case "1":
+                htmltext = "kash_q0211_05.htm";
+                st.setCond(1);
+                st.setState(STARTED);
+                if (!st.player.isVarSet("dd1")) {
+                    st.giveItems(7562, 64);
+                    st.player.setVar("dd1", 1);
                 }
-            } else
-                htmltext = "chest_of_shyslassys_q0211_04.htm";
-        } else if (event.equalsIgnoreCase("30646_1"))
-            htmltext = "raldo_q0211_02.htm";
-        else if (event.equalsIgnoreCase("30646_2"))
-            htmltext = "raldo_q0211_03.htm";
-        else if (event.equalsIgnoreCase("30646_3")) {
-            htmltext = "raldo_q0211_04.htm";
-            st.setCond(8);
-            st.takeItems(WATCHERS_EYE2_ID, 1);
-        } else if (event.equalsIgnoreCase("30646_4")) {
-            htmltext = "raldo_q0211_06.htm";
-            st.setCond(8);
-            st.takeItems(WATCHERS_EYE2_ID, 1);
+                st.playSound(SOUND_ACCEPT);
+                break;
+            case "30644_1":
+                htmltext = "kash_q0211_04.htm";
+                break;
+            case "30645_1":
+                htmltext = "martian_q0211_02.htm";
+                st.takeItems(LETTER_OF_KASH_ID, 1);
+                st.setCond(4);
+                break;
+            case "30647_1":
+                if (st.getQuestItemsCount(BROKEN_KEY_ID) > 0) {
+                    st.giveItems(SCROLL_OF_SHYSLASSY_ID);
+                    if (Rnd.chance(22)) {
+                        htmltext = "chest_of_shyslassys_q0211_03.htm";
+                        st.takeItems(BROKEN_KEY_ID, 1);
+                        st.playSound(SOUND_JACKPOT);
+                        int n = Rnd.get(100);
+                        if (n > 90) {
+                            st.giveItems(MITHRIL_SCALE_GAITERS_MATERIAL_ID);
+                            st.giveItems(BRIGANDINE_GAUNTLET_PATTERN_ID);
+                            st.giveItems(MANTICOR_SKIN_GAITERS_PATTERN_ID);
+                            st.giveItems(GAUNTLET_OF_REPOSE_OF_THE_SOUL_PATTERN_ID);
+                            st.giveItems(IRON_BOOTS_DESIGN_ID);
+                        } else if (n > 70) {
+                            st.giveItems(TOME_OF_BLOOD_PAGE_ID);
+                            st.giveItems(ELVEN_NECKLACE_BEADS_ID);
+                        } else if (n > 40)
+                            st.giveItems(WHITE_TUNIC_PATTERN_ID);
+                        else
+                            st.giveItems(IRON_BOOTS_DESIGN_ID);
+                    } else {
+                        htmltext = "chest_of_shyslassys_q0211_02.htm";
+                        st.takeItems(BROKEN_KEY_ID);
+                        st.giveItems(ADENA_ID, Rnd.get(1000) + 1);
+                    }
+                } else
+                    htmltext = "chest_of_shyslassys_q0211_04.htm";
+                break;
+            case "30646_1":
+                htmltext = "raldo_q0211_02.htm";
+                break;
+            case "30646_2":
+                htmltext = "raldo_q0211_03.htm";
+                break;
+            case "30646_3":
+                htmltext = "raldo_q0211_04.htm";
+                st.setCond(8);
+                st.takeItems(WATCHERS_EYE2_ID, 1);
+                break;
+            case "30646_4":
+                htmltext = "raldo_q0211_06.htm";
+                st.setCond(8);
+                st.takeItems(WATCHERS_EYE2_ID, 1);
+                break;
         }
         return htmltext;
     }
@@ -146,8 +155,12 @@ public final class _211_TrialOfChallenger extends Quest {
         if (id == CREATED) {
             st.setCond(0);
             if (npcId == Kash)
-                if (st.getPlayer().getClassId().ordinal() == 0x01 || st.getPlayer().getClassId().ordinal() == 0x13 || st.getPlayer().getClassId().ordinal() == 0x20 || st.getPlayer().getClassId().ordinal() == 0x2d || st.getPlayer().getClassId().ordinal() == 0x2f)
-                    if (st.getPlayer().getLevel() >= 35)
+                if (st.player.getClassId().ordinal() == 0x01
+                        || st.player.getClassId().ordinal() == 0x13
+                        || st.player.getClassId().ordinal() == 0x20
+                        || st.player.getClassId().ordinal() == 0x2d
+                        || st.player.getClassId().ordinal() == 0x2f)
+                    if (st.player.getLevel() >= 35)
                         htmltext = "kash_q0211_03.htm";
                     else {
                         htmltext = "kash_q0211_01.htm";
@@ -190,17 +203,17 @@ public final class _211_TrialOfChallenger extends Quest {
                 htmltext = "raldo_q0211_06a.htm";
             else if (npcId == Raldo && cond == 10) {
                 htmltext = "raldo_q0211_07.htm";
-                st.takeItems(BROKEN_KEY_ID, -1);
-                st.giveItems(MARK_OF_CHALLENGER_ID, 1);
-                if (!st.getPlayer().getVarB("prof2.1")) {
+                st.takeItems(BROKEN_KEY_ID);
+                st.giveItems(MARK_OF_CHALLENGER_ID);
+                if (!st.player.isVarSet("prof2.1")) {
                     st.addExpAndSp(RewardExp, RewardSP);
                     st.giveItems(ADENA_ID, RewardAdena);
-                    st.getPlayer().setVar("prof2.1", "1", -1);
+                    st.player.setVar("prof2.1", 1);
                 }
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest(false);
             } else if (npcId == 30535 && cond == 8)
-                if (st.getPlayer().getLevel() >= 36) {
+                if (st.player.getLevel() >= 36) {
                     htmltext = "elder_filaur_q0211_01.htm";
                     st.addRadar(new Location(176560, -184969, -3729));
                     st.setCond(9);
@@ -215,21 +228,21 @@ public final class _211_TrialOfChallenger extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         if (npcId == Shyslassys && cond == 1 && st.getQuestItemsCount(SCROLL_OF_SHYSLASSY_ID) == 0 && st.getQuestItemsCount(BROKEN_KEY_ID) == 0) {
-            st.giveItems(BROKEN_KEY_ID, 1);
+            st.giveItems(BROKEN_KEY_ID);
             st.addSpawn(ChestOfShyslassys);
             st.playSound(SOUND_MIDDLE);
             st.setCond(2);
         } else if (npcId == Gorr && cond == 4 && st.getQuestItemsCount(WATCHERS_EYE1_ID) == 0) {
-            st.giveItems(WATCHERS_EYE1_ID, 1);
+            st.giveItems(WATCHERS_EYE1_ID);
             st.setCond(5);
             st.playSound(SOUND_MIDDLE);
         } else if (npcId == Baraham && (cond == 6 || cond == 7)) {
             if (st.getQuestItemsCount(WATCHERS_EYE2_ID) == 0)
-                st.giveItems(WATCHERS_EYE2_ID, 1);
+                st.giveItems(WATCHERS_EYE2_ID);
             st.playSound(SOUND_MIDDLE);
             st.setCond(7);
             Spawn_Raldo(st);
@@ -238,6 +251,5 @@ public final class _211_TrialOfChallenger extends Quest {
             st.playSound(SOUND_MIDDLE);
             Spawn_Raldo(st);
         }
-        return null;
     }
 }

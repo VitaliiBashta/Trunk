@@ -19,11 +19,11 @@ public final class _10291_FireDragonDestroyer extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("klein_q10291_04.htm")) {
+        if ("klein_q10291_04.htm".equalsIgnoreCase(event)) {
             st.setState(STARTED);
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
-            st.giveItems(PoorNecklace, 1);
+            st.giveItems(PoorNecklace);
         }
         return event;
     }
@@ -35,7 +35,7 @@ public final class _10291_FireDragonDestroyer extends Quest {
         int cond = st.getCond();
         if (npcId == Klein) {
             if (cond == 0) {
-                if (st.getPlayer().getLevel() >= 83 && st.getQuestItemsCount(7267) >= 1)
+                if (st.player.getLevel() >= 83 && st.haveQuestItem(7267))
                     htmltext = "klein_q10291_01.htm";
                 else if (st.getQuestItemsCount(7267) < 1)
                     htmltext = "klein_q10291_00a.htm";
@@ -44,10 +44,10 @@ public final class _10291_FireDragonDestroyer extends Quest {
             } else if (cond == 1)
                 htmltext = "klein_q10291_05.htm";
             else if (cond == 2) {
-                if (st.getQuestItemsCount(ValorNecklace) >= 1) {
+                if (st.haveQuestItem(ValorNecklace) ) {
                     htmltext = "klein_q10291_07.htm";
-                    st.takeAllItems(ValorNecklace);
-                    st.giveItems(8567, 1);
+                    st.takeItems(ValorNecklace);
+                    st.giveItems(8567);
                     st.giveItems(ADENA_ID, 126549);
                     st.addExpAndSp(717291, 77397);
                     st.playSound(SOUND_FINISH);
@@ -61,15 +61,14 @@ public final class _10291_FireDragonDestroyer extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
 
         if (cond == 1 && npcId == Valakas) {
-            st.takeAllItems(PoorNecklace);
-            st.giveItems(ValorNecklace, 1);
+            st.takeItems(PoorNecklace);
+            st.giveItems(ValorNecklace);
             st.setCond(2);
         }
-        return null;
     }
 }

@@ -6,16 +6,13 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.ExQuestNpcLogList;
 
-/**
- * @author VISTALL
- * @date 14:47/26.02.2011
- */
-public class RequestAddExpandQuestAlarm extends L2GameClientPacket {
-    private int _questId;
+
+public final class RequestAddExpandQuestAlarm extends L2GameClientPacket {
+    private int questId;
 
     @Override
     protected void readImpl() {
-        _questId = readD();
+        questId = readD();
     }
 
     @Override
@@ -24,11 +21,11 @@ public class RequestAddExpandQuestAlarm extends L2GameClientPacket {
         if (player == null)
             return;
 
-        Quest quest = QuestManager.getQuest(_questId);
+        Quest quest = QuestManager.getQuest(questId);
         if (quest == null)
             return;
 
-        QuestState state = player.getQuestState(quest.getClass());
+        QuestState state = player.getQuestState(quest);
         if (state == null)
             return;
 

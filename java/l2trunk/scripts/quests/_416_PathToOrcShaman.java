@@ -121,24 +121,23 @@ public final class _416_PathToOrcShaman extends Quest {
             st.giveItems(TotemSpiritClaw, 1);
             st.setCond(4);
         } else if ("tataru_zu_hestui_q0416_11.htm".equalsIgnoreCase(event)) {
-            st.takeItems(TotemSpiritClaw, -1);
-            st.giveItems(TatarusLetterOfRecommendation, 1);
+            st.takeItems(TotemSpiritClaw);
+            st.giveItems(TatarusLetterOfRecommendation);
             st.setCond(5);
-        } else if (event.equalsIgnoreCase("tataru_zu_hestui_q0416_11c.htm")) {
-            st.takeItems(TotemSpiritClaw, -1);
+        } else if ("tataru_zu_hestui_q0416_11c.htm".equalsIgnoreCase(event)) {
+            st.takeItems(TotemSpiritClaw);
             st.setCond(12);
-        } else if (event.equalsIgnoreCase("dudamara_totem_spirit_q0416_03.htm")) {
-            st.takeItems(BloodCauldron, -1);
-            st.giveItems(SpiritNet, 1);
+        } else if ("dudamara_totem_spirit_q0416_03.htm".equalsIgnoreCase(event)) {
+            st.takeItems(BloodCauldron);
+            st.giveItems(SpiritNet);
             st.setCond(9);
-        } else if (event.equalsIgnoreCase("seer_umos_q0416_07.htm")) {
-            st.takeItems(TotemSpiritBlood, -1);
-            if (st.getPlayer().getClassId().getLevel() == 1) {
-                st.giveItems(MaskOfMedium, 1);
-                if (!st.getPlayer().getVarB("prof1")) {
-                    st.getPlayer().setVar("prof1", "1", -1);
+        } else if ("seer_umos_q0416_07.htm".equalsIgnoreCase(event)) {
+            st.takeItems(TotemSpiritBlood);
+            if (st.player.getClassId().occupation() == 0) {
+                st.giveItems(MaskOfMedium);
+                if (!st.player.isVarSet("prof1")) {
+                    st.player.setVar("prof1", 1);
                     st.addExpAndSp(228064, 16455);
-                    //FIXME [G1ta0] дать адены, только если первый чар на акке
                     st.giveItems(ADENA_ID, 81900);
                 }
             }
@@ -166,13 +165,13 @@ public final class _416_PathToOrcShaman extends Quest {
                 htmltext = "seer_umos_q0416_04.htm";
                 st.exitCurrentQuest(true);
             } else if (cond == 0) {
-                if (st.getPlayer().getClassId().getId() != 0x31) {
-                    if (st.getPlayer().getClassId().getId() == 0x32)
+                if (st.player.getClassId().id != 0x31) {
+                    if (st.player.getClassId().id == 0x32)
                         htmltext = "tataru_zu_hestui_q0416_02a.htm";
                     else
                         htmltext = "tataru_zu_hestui_q0416_02.htm";
                     st.exitCurrentQuest(true);
-                } else if (st.getPlayer().getLevel() < 18) {
+                } else if (st.player.getLevel() < 18) {
                     htmltext = "tataru_zu_hestui_q0416_03.htm";
                     st.exitCurrentQuest(true);
                 } else
@@ -181,12 +180,12 @@ public final class _416_PathToOrcShaman extends Quest {
                 htmltext = "tataru_zu_hestui_q0416_07.htm";
             else if (cond == 2) {
                 htmltext = "tataru_zu_hestui_q0416_08.htm";
-                st.takeItems(KashaBearPelt, -1);
-                st.takeItems(KashaBladeSpiderHusk, -1);
-                st.takeItems(FieryEgg1st, -1);
-                st.takeItems(FireCharm, -1);
-                st.giveItems(HestuiMask, 1);
-                st.giveItems(FieryEgg2nd, 1);
+                st.takeItems(KashaBearPelt);
+                st.takeItems(KashaBladeSpiderHusk);
+                st.takeItems(FieryEgg1st);
+                st.takeItems(FireCharm);
+                st.giveItems(HestuiMask);
+                st.giveItems(FieryEgg2nd);
                 st.setCond(3);
             } else if (cond == 3)
                 htmltext = "tataru_zu_hestui_q0416_09.htm";
@@ -209,16 +208,16 @@ public final class _416_PathToOrcShaman extends Quest {
             }
             if (npcId == SeerUmos) {
                 if (cond == 5) {
-                    st.takeItems(TatarusLetterOfRecommendation, -1);
-                    st.giveItems(FlameCharm, 1);
+                    st.takeItems(TatarusLetterOfRecommendation);
+                    st.giveItems(FlameCharm);
                     htmltext = "seer_umos_q0416_01.htm";
                     st.setCond(6);
                 } else if (cond == 6)
                     htmltext = "seer_umos_q0416_02.htm";
                 else if (cond == 7) {
-                    st.takeItems(GrizzlyBlood, -1);
-                    st.takeItems(FlameCharm, -1);
-                    st.giveItems(BloodCauldron, 1);
+                    st.takeItems(GrizzlyBlood);
+                    st.takeItems(FlameCharm);
+                    st.giveItems(BloodCauldron);
                     htmltext = "seer_umos_q0416_03.htm";
                     st.setCond(8);
                 } else if (cond == 8)
@@ -235,13 +234,12 @@ public final class _416_PathToOrcShaman extends Quest {
                     htmltext = "seer_moirase_q0416_02.htm";
                 else if (cond == 21) {
                     htmltext = "seer_moirase_q0416_03.htm";
-                    if (st.getPlayer().getClassId().getLevel() == 1) {
-                        st.giveItems(MaskOfMedium, 1);
-                        if (!st.getPlayer().getVarB("prof1")) {
-                            st.getPlayer().setVar("prof1", "1", -1);
+                    if (st.player.getClassId().occupation() == 0) {
+                        st.giveItems(MaskOfMedium);
+                        if (!st.player.isVarSet("prof1")) {
+                            st.player.setVar("prof1", 1);
                             st.addExpAndSp(295862, 18194);
-                            //TODO [G1ta0] дать адены, если первый чар на акке 81900 х Config.RATE_QUESTS_OCCUPATION_CHANGE
-                            //st.giveItems(ADENA_ID, 81900);
+                            st.giveItems(ADENA_ID, 81900);
                         }
                     }
                     st.playSound(SOUND_FINISH);
@@ -288,7 +286,7 @@ public final class _416_PathToOrcShaman extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         for (int[] aDROPLIST_COND : DROPLIST_COND)
@@ -303,12 +301,12 @@ public final class _416_PathToOrcShaman extends Quest {
             st.setCond(2);
         else if (cond == 9 && (npcId == VenomousSpider || npcId == ArachnidTracker)) {
             if (st.getQuestItemsCount(DurkaParasite) < 8) {
-                st.giveItems(DurkaParasite, 1);
+                st.giveItems(DurkaParasite);
                 st.playSound(SOUND_ITEMGET);
             }
             if (st.getQuestItemsCount(DurkaParasite) == 8 || st.getQuestItemsCount(DurkaParasite) >= 5 && Rnd.chance(st.getQuestItemsCount(DurkaParasite) * 10))
                 if (GameObjectsStorage.getByNpcId(QuestMonsterDurkaSpirit) == null) {
-                    st.takeItems(DurkaParasite, -1);
+                    st.takeItems(DurkaParasite);
                     st.addSpawn(QuestMonsterDurkaSpirit);
                     st.startQuestTimer("QuestMonsterDurkaSpirit_Fail", 300000);
                 }
@@ -318,20 +316,19 @@ public final class _416_PathToOrcShaman extends Quest {
             GameObjectsStorage.getAllByNpcId(QuestMonsterDurkaSpirit, false)
                     .forEach(GameObject::deleteMe);
             if (cond == 9) {
-                st.takeItems(SpiritNet, -1);
-                st.takeItems(DurkaParasite, -1);
-                st.giveItems(BoundDurkaSpirit, 1);
+                st.takeItems(SpiritNet);
+                st.takeItems(DurkaParasite);
+                st.giveItems(BoundDurkaSpirit);
                 st.playSound(SOUND_MIDDLE);
                 st.setCond(10);
             }
         } else if (npcId == QuestBlackLeopard)
             if (cond == 14 && Rnd.chance(50)) {
-                Functions.npcSayCustomMessage(GameObjectsStorage.getByNpcId(LeopardCarcass), new CustomMessage("quests._416_PathToOrcShaman.LeopardCarcass", st.getPlayer()).toString(), st.getPlayer());
+                Functions.npcSayCustomMessage(GameObjectsStorage.getByNpcId(LeopardCarcass), new CustomMessage("quests._416_PathToOrcShaman.LeopardCarcass").toString(), st.player);
                 st.setCond(15);
             } else if (cond == 16 && Rnd.chance(50))
                 st.setCond(17);
             else if (cond == 18 && Rnd.chance(50))
                 st.setCond(19);
-        return null;
     }
 }

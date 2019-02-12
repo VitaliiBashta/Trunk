@@ -4,7 +4,6 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _136_MoreThanMeetsTheEye extends Quest {
     //NPC
@@ -96,7 +95,7 @@ public final class _136_MoreThanMeetsTheEye extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if (event.equalsIgnoreCase("hardin_q0136_08.htm")) {
             st.setCond(2);
-            st.set("id", "0");
+            st.set("id", 0);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("magister_errickin_q0136_03.htm")) {
@@ -127,7 +126,7 @@ public final class _136_MoreThanMeetsTheEye extends Quest {
         int cond = st.getCond();
         if (npcId == HARDIN) {
             if (cond == 0) {
-                if (st.getPlayer().getLevel() >= 50) {
+                if (st.player.getLevel() >= 50) {
                     st.setCond(1);
                     htmltext = "hardin_q0136_01.htm";
                 } else {
@@ -156,18 +155,18 @@ public final class _136_MoreThanMeetsTheEye extends Quest {
             } else if (cond == 4 && st.getInt("id") == 0) {
                 st.takeItems(Ectoplasm, -1);
                 htmltext = "magister_errickin_q0136_05.htm";
-                st.set("id", "1");
+                st.set("id", 1);
             } else if (cond == 4 && st.getInt("id") == 1) {
                 htmltext = "magister_errickin_q0136_06.htm";
-                st.giveItems(StabilizedEctoplasm, 1);
-                st.set("id", "0");
+                st.giveItems(StabilizedEctoplasm);
+                st.set("id", 0);
                 st.setCond(5);
                 st.setState(STARTED);
             } else if (cond == 5)
                 htmltext = "magister_errickin_q0136_07.htm";
         } else if (npcId == CLAYTON)
             if (cond == 6) {
-                st.takeItems(HardinsInstructions, -1);
+                st.takeItems(HardinsInstructions);
                 htmltext = "magister_clayton_q0136_09.htm";
             } else if (cond == 7)
                 htmltext = "magister_clayton_q0136_12.htm";
@@ -176,8 +175,8 @@ public final class _136_MoreThanMeetsTheEye extends Quest {
                 st.setCond(7);
             } else if (cond == 8) {
                 htmltext = "magister_clayton_q0136_13.htm";
-                st.takeItems(GlassJaguarCrystal, -1);
-                st.giveItems(BlankSealbook, 1);
+                st.takeItems(GlassJaguarCrystal);
+                st.giveItems(BlankSealbook);
                 st.setCond(9);
                 st.setState(STARTED);
             } else if (cond == 9)
@@ -186,7 +185,7 @@ public final class _136_MoreThanMeetsTheEye extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         for (int[] aDROPLIST_COND : DROPLIST_COND)
@@ -223,6 +222,5 @@ public final class _136_MoreThanMeetsTheEye extends Quest {
                             st.playSound(SOUND_ITEMGET);
                     }
                 }
-        return null;
     }
 }

@@ -28,7 +28,7 @@ public final class BossRandom extends Functions implements ScriptFile {
     private final Zone _zone = ReflectionUtils.getZone("[dino_peace]");
 
     private static void spawnBoss() {
-        boss = NpcUtils.spawnSingle(BossId, Config.RANDOM_BOSS_X, Config.RANDOM_BOSS_Y, Config.RANDOM_BOSS_Z);
+        boss = NpcUtils.spawnSingle(BossId, Location.of(Config.RANDOM_BOSS_X, Config.RANDOM_BOSS_Y, Config.RANDOM_BOSS_Z));
     }
 
     public void OnDie(Creature self, Creature killer) {

@@ -7,12 +7,7 @@ import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
-/**
- * Данный инстанс используется NPC Ballista на осадах фортов
- *
- * @author SYS
- */
-public class BallistaInstance extends NpcInstance {
+public final class BallistaInstance extends NpcInstance {
     public BallistaInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
     }
@@ -21,15 +16,15 @@ public class BallistaInstance extends NpcInstance {
     protected void onDeath(Creature killer) {
         super.onDeath(killer);
 
-        if (killer == null || !killer.isPlayer())
-            return;
+        if (killer instanceof Player) {
+            Player player = (Player)killer;
+            if (player.getClan() != null) {
+                player.getClan().incReputation(30, false, "Ballista " + getTitle());
+                player.sendPacket(new SystemMessage2(SystemMsg.THE_BALLISTA_HAS_BEEN_SUCCESSFULLY_DESTROYED));
+            }
 
-        Player player = killer.getPlayer();
-        if (player.getClan() == null)
-            return;
+        }
 
-        player.getClan().incReputation(30, false, "Ballista " + getTitle());
-        player.sendPacket(new SystemMessage2(SystemMsg.THE_BALLISTA_HAS_BEEN_SUCCESSFULLY_DESTROYED));
     }
 
     @Override
@@ -38,7 +33,7 @@ public class BallistaInstance extends NpcInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
     }
 
     @Override

@@ -9,7 +9,7 @@ public class StartRotating extends L2GameServerPacket {
     private final int _speed;
 
     public StartRotating(Creature cha, int degree, int side, int speed) {
-        _charId = cha.getObjectId();
+        _charId = cha.objectId();
         _degree = degree;
         _side = side;
         _speed = speed;

@@ -34,7 +34,7 @@ public final class DuelSnapshotObject implements Serializable {
 
         effects = new ArrayList<>();
         player.getEffectList().getAllEffects().forEach(eff -> {
-            Effect effect = eff.getTemplate().getEffect(new Env(eff.effector, eff.effected, eff.getSkill()));
+            Effect effect = eff.getTemplate().getEffect(new Env(eff.effector, eff.effected, eff.skill));
             effect.setCount(eff.getCount());
             effect.setPeriod(eff.getCount() == 1 ? eff.getPeriod() - eff.getTime() : eff.getPeriod());
 

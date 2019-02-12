@@ -21,15 +21,15 @@ public final class _183_RelicExploration extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        Player player = st.getPlayer();
-        if (event.equalsIgnoreCase("30512-03.htm")) {
+        Player player = st.player;
+        if ("30512-03.htm".equalsIgnoreCase(event)) {
             st.playSound(SOUND_ACCEPT);
             st.setCond(1);
             st.setState(STARTED);
-        } else if (event.equalsIgnoreCase("30673-04.htm")) {
+        } else if ("30673-04.htm".equalsIgnoreCase(event)) {
             st.setCond(2);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("Contract")) {
+        } else if ("Contract".equalsIgnoreCase(event)) {
             Quest q1 = QuestManager.getQuest(_184_NikolasCooperationContract.class);
             if (q1 != null) {
                 st.giveItems(ADENA_ID, 18100);
@@ -44,7 +44,7 @@ public final class _183_RelicExploration extends Quest {
             Quest q2 = QuestManager.getQuest(_185_NikolasCooperationConsideration.class);
             if (q2 != null) {
                 st.giveItems(ADENA_ID, 18100);
-                QuestState qs2 = q2.newQuestState(st.getPlayer(), STARTED);
+                QuestState qs2 = q2.newQuestState(st.player, STARTED);
                 q2.notifyEvent("30621-01.htm", qs2, npc);
                 st.playSound(SOUND_MIDDLE);
                 st.exitCurrentQuest(false);
@@ -61,7 +61,7 @@ public final class _183_RelicExploration extends Quest {
         int cond = st.getCond();
         if (npcId == Kusto) {
             if (st.getState() == CREATED)
-                if (st.getPlayer().getLevel() < 40)
+                if (st.player.getLevel() < 40)
                     htmltext = "30512-00.htm";
                 else
                     htmltext = "30512-01.htm";

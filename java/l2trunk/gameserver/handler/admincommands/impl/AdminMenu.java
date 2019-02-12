@@ -55,7 +55,7 @@ public class AdminMenu implements IAdminCommandHandler {
                     activeChar.sendMessage("Player " + player + " not found in game.");
                 obj = plyr;
             }
-            if (obj != null && obj.isCreature()) {
+            if (obj instanceof Creature) {
                 Creature target = (Creature) obj;
                 target.reduceCurrentHp(target.getMaxHp() + 1, activeChar, null, true, true, true, false, false, false, true);
             } else
@@ -88,15 +88,15 @@ public class AdminMenu implements IAdminCommandHandler {
 
     private void teleportToCharacter(Player activeChar, GameObject target) {
         Player player;
-        if (target != null && target.isPlayer())
+        if (target instanceof Player)
             player = (Player) target;
         else {
             activeChar.sendPacket(SystemMsg.INVALID_TARGET);
             return;
         }
 
-        if (player.getObjectId() == activeChar.getObjectId())
-            activeChar.sendMessage("You cannot self teleport.");
+        if (player.objectId() == activeChar.objectId())
+            activeChar.sendMessage("You cannot player teleport.");
         else {
             activeChar.teleToLocation(player.getLoc());
             activeChar.sendMessage("You have teleported to character " + player.getName() + ".");

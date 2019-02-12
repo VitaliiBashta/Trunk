@@ -8,7 +8,6 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.pledge.Clan;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.TimeUtils;
 
 public final class _504_CompetitionForTheBanditStronghold extends Quest {
@@ -41,10 +40,10 @@ public final class _504_CompetitionForTheBanditStronghold extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("azit_messenger_q0504_02.htm")) {
+        if ("azit_messenger_q0504_02.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.setState(STARTED);
-            st.giveItems(CONTEST_CERTIFICATE, 1);
+            st.giveItems(CONTEST_CERTIFICATE);
             st.playSound(SOUND_ACCEPT);
         }
         return event;
@@ -54,16 +53,16 @@ public final class _504_CompetitionForTheBanditStronghold extends Quest {
     public String onTalk(NpcInstance npc, QuestState st) {
         String htmltext = "noquest";
         int cond = st.getCond();
-        Player player = st.getPlayer();
+        Player player = st.player;
         Clan clan = player.getClan();
         ClanHall clanhall = ResidenceHolder.getResidence(35);
 
         if (clanhall.getSiegeEvent().isRegistrationOver()) {
             htmltext = null;
-            showHtmlFile(player, "azit_messenger_q0504_03.htm", false, "%siege_time%", TimeUtils.toSimpleFormat(clanhall.getSiegeDate()));
-        } else if (clan == null || player.getObjectId() != clan.getLeaderId())
+            showHtmlFile(player, "azit_messenger_q0504_03.htm", TimeUtils.toSimpleFormat(clanhall.getSiegeDate()));
+        } else if (clan == null || player.objectId() != clan.getLeaderId())
             htmltext = "azit_messenger_q0504_05.htm";
-        else if (player.getObjectId() == clan.getLeaderId() && clan.getLevel() < 4)
+        else if (player.objectId() == clan.getLeaderId() && clan.getLevel() < 4)
             htmltext = "azit_messenger_q0504_04.htm";
         else if (clanhall.getSiegeEvent().getSiegeClan(SiegeEvent.ATTACKERS, player.getClan()) != null)
             htmltext = "azit_messenger_q0504_06.htm";
@@ -77,9 +76,9 @@ public final class _504_CompetitionForTheBanditStronghold extends Quest {
             else if (st.getQuestItemsCount(ALIANCE_TROPHEY) >= 1)
                 htmltext = "azit_messenger_q0504_07a.htm";
             else if (st.getQuestItemsCount(CONTEST_CERTIFICATE) == 1 && st.getQuestItemsCount(AMULET) == 30) {
-                st.takeItems(AMULET, -1);
-                st.takeItems(CONTEST_CERTIFICATE, -1);
-                st.giveItems(ALIANCE_TROPHEY, 1);
+                st.takeItems(AMULET);
+                st.takeItems(CONTEST_CERTIFICATE);
+                st.giveItems(ALIANCE_TROPHEY);
                 st.playSound(SOUND_FINISH);
                 st.setCond(-1);
                 htmltext = "azit_messenger_q0504_08.htm";
@@ -90,11 +89,10 @@ public final class _504_CompetitionForTheBanditStronghold extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getQuestItemsCount(AMULET) < 30) {
-            st.giveItems(AMULET, 1);
+            st.giveItems(AMULET);
             st.playSound(SOUND_ITEMGET);
         }
-        return null;
     }
 }

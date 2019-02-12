@@ -9,7 +9,7 @@ public final class PrivateStoreMsgBuy extends L2GameServerPacket {
     private final String _name;
 
     public PrivateStoreMsgBuy(Player player) {
-        _objId = player.getObjectId();
+        _objId = player.objectId();
         _name = StringUtils.defaultString(player.getBuyStoreName());
     }
 

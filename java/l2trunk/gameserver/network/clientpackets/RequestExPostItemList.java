@@ -26,7 +26,7 @@ public class RequestExPostItemList extends L2GameClientPacket {
             activeChar.sendActionFailed();
 
         if (!Config.ALLOW_MAIL) {
-            activeChar.sendMessage(new CustomMessage("mail.Disabled", activeChar));
+            activeChar.sendMessage(new CustomMessage("mail.Disabled"));
             activeChar.sendActionFailed();
             return;
         }

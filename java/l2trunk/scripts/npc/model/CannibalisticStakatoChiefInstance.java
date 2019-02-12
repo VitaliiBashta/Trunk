@@ -4,6 +4,7 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Party;
+import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.RaidBossInstance;
 import l2trunk.gameserver.model.items.ItemInstance;
@@ -22,7 +23,7 @@ public final class CannibalisticStakatoChiefInstance extends RaidBossInstance {
     @Override
     protected void onDeath(Creature killer) {
         super.onDeath(killer);
-        if (killer == null)
+        if (!(killer instanceof Playable))
             return;
         Creature topdam = getAggroList().getTopDamager();
         if (topdam == null)

@@ -12,13 +12,12 @@ public final class EffectDisarm extends Effect {
 
     @Override
     public boolean checkCondition() {
-        if (!effected.isPlayer())
-            return false;
-        Player player = effected.getPlayer();
-        // Нельзя снимать/одевать проклятое оружие и флаги
-        if (player.isCursedWeaponEquipped() || player.getActiveWeaponFlagAttachment() != null)
-            return false;
-        return super.checkCondition();
+        if (effected instanceof Player) {
+            Player player = (Player)effected;
+            // Нельзя снимать/одевать проклятое оружие и флаги
+            return !player.isCursedWeaponEquipped() && player.getActiveWeaponFlagAttachment() == null;
+        }
+        return false;
     }
 
     @Override
@@ -40,9 +39,4 @@ public final class EffectDisarm extends Effect {
         effected.stopWeaponEquipBlocked();
     }
 
-    @Override
-    public boolean onActionTime() {
-        // just stop this effect
-        return false;
-    }
 }

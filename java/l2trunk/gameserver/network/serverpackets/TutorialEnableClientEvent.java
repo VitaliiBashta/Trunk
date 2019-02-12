@@ -1,7 +1,7 @@
 package l2trunk.gameserver.network.serverpackets;
 
-public class TutorialEnableClientEvent extends L2GameServerPacket {
-    private int _event = 0;
+public final class TutorialEnableClientEvent extends L2GameServerPacket {
+    private int _event;
 
     public TutorialEnableClientEvent(int event) {
         _event = event;

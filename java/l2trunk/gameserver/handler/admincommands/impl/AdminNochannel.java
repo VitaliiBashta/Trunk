@@ -17,21 +17,14 @@ public class AdminNochannel implements IAdminCommandHandler {
             return false;
 
         int banChatCount = 0;
-        int penaltyCount = 0;
+        int penaltyCount;
         int banChatCountPerDay = activeChar.getPlayerAccess().BanChatCountPerDay;
         if (banChatCountPerDay > 0) {
-            String count = activeChar.getVar("banChatCount");
-            if (count != null)
-                banChatCount = Integer.parseInt(count);
+            banChatCount = activeChar.getVarInt("banChatCount");
 
-            String penalty = activeChar.getVar("penaltyChatCount");
-            if (penalty != null)
-                penaltyCount = Integer.parseInt(penalty);
+            penaltyCount = activeChar.getVarInt("penaltyChatCount");
 
-            long LastBanChatDayTime = 0;
-            String time = activeChar.getVar("LastBanChatDayTime");
-            if (time != null)
-                LastBanChatDayTime = Long.parseLong(time);
+            long LastBanChatDayTime =  activeChar.getVarLong("LastBanChatDayTime");
 
             if (LastBanChatDayTime != 0) {
                 if (System.currentTimeMillis() - LastBanChatDayTime < 1000 * 60 * 60 * 24) {
@@ -40,9 +33,7 @@ public class AdminNochannel implements IAdminCommandHandler {
                         return false;
                     }
                 } else {
-                    int bonus_mod = banChatCount / 10;
-                    bonus_mod = Math.max(1, bonus_mod);
-                    bonus_mod = 1; // Убрать, если потребуется сделать зависимость бонуса от количества банов
+                    int bonus_mod = 1; // Убрать, если потребуется сделать зависимость бонуса от количества банов
                     if (activeChar.getPlayerAccess().BanChatBonusId > 0 && activeChar.getPlayerAccess().BanChatBonusCount > 0) {
                         int add_count = activeChar.getPlayerAccess().BanChatBonusCount * bonus_mod;
 
@@ -52,19 +43,19 @@ public class AdminNochannel implements IAdminCommandHandler {
                         if (penaltyCount > 0) // У модератора был штраф за нарушения
                         {
                             activeChar.sendMessage("Fine for violation: " + penaltyCount + " " + item.getName());
-                            activeChar.setVar("penaltyChatCount", "" + Math.max(0, penaltyCount - add_count), -1); // Уменьшаем штраф
+                            activeChar.setVar("penaltyChatCount",  Math.max(0, penaltyCount - add_count)); // Уменьшаем штраф
                             add_count -= penaltyCount; // Вычитаем штраф из бонуса
                         }
 
                         if (add_count > 0)
-                            ItemFunctions.addItem(activeChar, activeChar.getPlayerAccess().BanChatBonusId, add_count, true, "AdminNoChannel");
+                            ItemFunctions.addItem(activeChar, activeChar.getPlayerAccess().BanChatBonusId, add_count, "AdminNoChannel");
                     }
-                    activeChar.setVar("LastBanChatDayTime", "" + System.currentTimeMillis(), -1);
-                    activeChar.setVar("banChatCount", "0", -1);
+                    activeChar.setVar("LastBanChatDayTime", System.currentTimeMillis());
+                    activeChar.setVar("banChatCount", 0);
                     banChatCount = 0;
                 }
             } else
-                activeChar.setVar("LastBanChatDayTime", "" + System.currentTimeMillis(), -1);
+                activeChar.setVar("LastBanChatDayTime", System.currentTimeMillis());
         }
 
         switch (command) {
@@ -87,7 +78,7 @@ public class AdminNochannel implements IAdminCommandHandler {
 
                 if (banChatCountPerDay > -1 && msg.startsWith("You are banned from chat")) {
                     banChatCount++;
-                    activeChar.setVar("banChatCount", "" + banChatCount, -1);
+                    activeChar.setVar("banChatCount",  banChatCount);
                     activeChar.sendMessage("You have left " + (banChatCountPerDay - banChatCount) + " Bans chat.");
                 }
             }

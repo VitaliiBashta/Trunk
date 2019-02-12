@@ -17,18 +17,9 @@ public final class PetSummon extends ScriptItemHandler implements ScriptFile {
     private static final List<Integer> ITEM_IDS = PetDataTable.getPetControlItems();
 
     @Override
-    public boolean useItem(Playable playable, ItemInstance item, boolean ctrl) {
-        if (playable == null || !playable.isPlayer())
-            return false;
-        Player player = (Player) playable;
-
+    public boolean useItem(Player player, ItemInstance item, boolean ctrl) {
         player.setPetControlItem(item);
         player.getAI().cast(wolvesNecklace, player, false, true);
-        return true;
-    }
-
-    @Override
-    public boolean pickupItem(Playable playable, ItemInstance item) {
         return true;
     }
 

@@ -99,7 +99,7 @@ public final class _622_DeliveryofSpecialLiquor extends Quest {
         if (st.getState() == CREATED) {
             if (npcId != JEREMY)
                 return htmltext;
-            if (st.getPlayer().getLevel() >= 68) {
+            if (st.player.getLevel() >= 68) {
                 st.setCond(0);
                 return "jeremy_q0622_0101.htm";
             }

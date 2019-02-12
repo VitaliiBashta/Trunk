@@ -111,7 +111,7 @@ public enum ZoneParser {
                         for (Iterator<Element> ii = n.elementIterator(); ii.hasNext(); ) {
                             Element d = ii.next();
                             if ("coords".equalsIgnoreCase(d.getName())) {
-                                Location loc = Location.parseLoc(d.attribute("loc").getValue());
+                                Location loc = Location.of(d.attribute("loc").getValue());
                                 restartPoints.add(loc);
                             }
                         }
@@ -121,7 +121,7 @@ public enum ZoneParser {
                         for (Iterator<Element> ii = n.elementIterator(); ii.hasNext(); ) {
                             Element d = ii.next();
                             if ("coords".equalsIgnoreCase(d.getName())) {
-                                Location loc = Location.parseLoc(d.attribute("loc").getValue());
+                                Location loc = Location.of(d.attribute("loc").getValue());
                                 PKrestartPoints.add(loc);
                             }
                         }

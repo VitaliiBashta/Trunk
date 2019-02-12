@@ -30,7 +30,7 @@ public final class _711_PathToBecomingALordInnadril extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         Castle castle = ResidenceHolder.getResidence(InnadrilCastle);
-        Player castleOwner = castle.getOwner().getLeader().getPlayer();
+        Player castleOwner = castle.getOwner().getLeader().player();
         String htmltext = event;
         switch (event) {
             case "neurath_q711_03.htm":
@@ -43,8 +43,8 @@ public final class _711_PathToBecomingALordInnadril extends Quest {
                 break;
             case "neurath_q711_08.htm":
                 if (isLordAvailable(2, st)) {
-                    castleOwner.getQuestState(getClass()).set("confidant", String.valueOf(st.getPlayer().getObjectId()), true);
-                    castleOwner.getQuestState(getClass()).setCond(3);
+                    castleOwner.getQuestState(this).set("confidant", st.player.objectId());
+                    castleOwner.getQuestState(this).setCond(3);
                     st.setState(STARTED);
                 } else
                     htmltext = "neurath_q711_07a.htm";
@@ -52,12 +52,12 @@ public final class _711_PathToBecomingALordInnadril extends Quest {
                 break;
             case "heine_q711_03.htm":
                 if (isLordAvailable(3, st))
-                    castleOwner.getQuestState(getClass()).setCond(4);
+                    castleOwner.getQuestState(this).setCond(4);
                 else
                     htmltext = "heine_q711_00a.htm";
                 break;
             case "neurath_q711_12.htm":
-                Functions.npcSay(npc, NpcString.S1_HAS_BECOME_THE_LORD_OF_THE_TOWN_OF_INNADRIL, st.getPlayer().getName());
+                Functions.npcSay(npc, NpcString.S1_HAS_BECOME_THE_LORD_OF_THE_TOWN_OF_INNADRIL, st.player.getName());
                 castle.getDominion().changeOwner(castleOwner.getClan());
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest(true);
@@ -74,12 +74,12 @@ public final class _711_PathToBecomingALordInnadril extends Quest {
         Castle castle = ResidenceHolder.getResidence(InnadrilCastle);
         if (castle.getOwner() == null)
             return "Castle has no lord";
-        Player castleOwner = castle.getOwner().getLeader().getPlayer();
+        Player castleOwner = castle.getOwner().getLeader().player();
 
         if (npcId == Neurath) {
             if (cond == 0) {
-                if (castleOwner == st.getPlayer()) {
-                    if (castle.getDominion().getLordObjectId() != st.getPlayer().getObjectId())
+                if (castleOwner == st.player) {
+                    if (castle.getDominion().getLordObjectId() != st.player.objectId())
                         htmltext = "neurath_q711_01.htm";
                     else {
                         htmltext = "neurath_q711_00.htm";
@@ -112,12 +112,12 @@ public final class _711_PathToBecomingALordInnadril extends Quest {
         } else if (npcId == IasonHeine) {
             if (st.getState() == STARTED && cond == 0) {
                 if (isLordAvailable(3, st)) {
-                    if (Integer.parseInt(castleOwner.getQuestState(this.getClass()).get("confidant")) == st.getPlayer().getObjectId())
+                    if (castleOwner.getQuestState(this).getInt("confidant") == st.player.objectId())
                         htmltext = "heine_q711_01.htm";
                     else
                         htmltext = "heine_q711_00.htm";
                 } else if (isLordAvailable(4, st)) {
-                    if (Integer.parseInt(castleOwner.getQuestState(this.getClass()).get("confidant")) == st.getPlayer().getObjectId())
+                    if (castleOwner.getQuestState(this).getInt("confidant") == st.player.objectId())
                         htmltext = "heine_q711_03.htm";
                     else
                         htmltext = "heine_q711_00.htm";
@@ -130,22 +130,21 @@ public final class _711_PathToBecomingALordInnadril extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getCond() == 5) {
             if (st.getInt("mobs") < 99)
                 st.set("mobs", st.getInt("mobs") + 1);
             else
                 st.setCond(6);
         }
-        return null;
     }
 
     private boolean isLordAvailable(int cond, QuestState st) {
         Castle castle = ResidenceHolder.getResidence(InnadrilCastle);
         Clan owner = castle.getOwner();
-        Player castleOwner = castle.getOwner().getLeader().getPlayer();
+        Player castleOwner = castle.getOwner().getLeader().player;
         if (owner != null)
-            return castleOwner != null && castleOwner != st.getPlayer() && owner == st.getPlayer().getClan() && castleOwner.getQuestState(getClass()) != null && castleOwner.getQuestState(getClass()).getCond() == cond;
+            return castleOwner != null && castleOwner != st.player && owner == st.player.getClan() && castleOwner.getQuestState(this) != null && castleOwner.getQuestState(this).getCond() == cond;
         return false;
     }
 

@@ -5,7 +5,6 @@ import l2trunk.gameserver.model.entity.olympiad.OlympiadGame;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _551_OlympiadStarter extends Quest {
     // NPCs
@@ -30,8 +29,8 @@ public final class _551_OlympiadStarter extends Quest {
     public String onTalk(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         if (npcId == OLYMPIAD_MANAGER) {
-            Player player = st.getPlayer();
-            if (!player.isNoble() || player.getLevel() < 75 || player.getClassId().getLevel() < 4)
+            Player player = st.player;
+            if (!player.isNoble() || player.getLevel() < 75 || player.getClassId().occupation() < 3)
                 return "olympiad_operator_q0551_08.htm";
 
             if (st.isCreated()) {
@@ -46,9 +45,9 @@ public final class _551_OlympiadStarter extends Quest {
                 if (st.getQuestItemsCount(OLYMPIAD_CERT3) > 0) {
                     st.giveItems(OLYMPIAD_CHEST, 4);
                     st.giveItems(MEDAL_OF_GLORY, 5);
-                    st.takeItems(OLYMPIAD_CERT1, -1);
-                    st.takeItems(OLYMPIAD_CERT2, -1);
-                    st.takeItems(OLYMPIAD_CERT3, -1);
+                    st.takeItems(OLYMPIAD_CERT1);
+                    st.takeItems(OLYMPIAD_CERT2);
+                    st.takeItems(OLYMPIAD_CERT3);
                     st.playSound(SOUND_FINISH);
                     st.exitCurrentQuest(this);
                     return "olympiad_operator_q0551_07.htm";
@@ -62,33 +61,33 @@ public final class _551_OlympiadStarter extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("olympiad_operator_q0551_03.htm")) {
+        if ("olympiad_operator_q0551_03.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("olympiad_operator_q0551_07.htm")) {
+        } else if ("olympiad_operator_q0551_07.htm".equalsIgnoreCase(event)) {
             if (st.getQuestItemsCount(OLYMPIAD_CERT3) > 0) {
                 st.giveItems(OLYMPIAD_CHEST, 4);
                 st.giveItems(MEDAL_OF_GLORY, 5);
-                st.takeItems(OLYMPIAD_CERT1, -1);
-                st.takeItems(OLYMPIAD_CERT2, -1);
-                st.takeItems(OLYMPIAD_CERT3, -1);
+                st.takeItems(OLYMPIAD_CERT1);
+                st.takeItems(OLYMPIAD_CERT2);
+                st.takeItems(OLYMPIAD_CERT3);
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest(this);
             } else if (st.getQuestItemsCount(OLYMPIAD_CERT2) > 0) {
                 st.giveItems(OLYMPIAD_CHEST, 2);
                 st.giveItems(MEDAL_OF_GLORY, 3); // от балды
-                st.takeItems(OLYMPIAD_CERT1, -1);
-                st.takeItems(OLYMPIAD_CERT2, -1);
-                st.takeItems(OLYMPIAD_CERT3, -1);
+                st.takeItems(OLYMPIAD_CERT1);
+                st.takeItems(OLYMPIAD_CERT2);
+                st.takeItems(OLYMPIAD_CERT3);
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest(this);
             } else if (st.getQuestItemsCount(OLYMPIAD_CERT1) > 0) {
                 st.giveItems(OLYMPIAD_CHEST, 1);
                 //st.giveItems(MEDAL_OF_GLORY, 5); ??
-                st.takeItems(OLYMPIAD_CERT1, -1);
-                st.takeItems(OLYMPIAD_CERT2, -1);
-                st.takeItems(OLYMPIAD_CERT3, -1);
+                st.takeItems(OLYMPIAD_CERT1);
+                st.takeItems(OLYMPIAD_CERT2);
+                st.takeItems(OLYMPIAD_CERT3);
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest(this);
             }
@@ -102,13 +101,13 @@ public final class _551_OlympiadStarter extends Quest {
             int count = qs.getInt("count") + 1;
             qs.set("count", count);
             if (count == 3) {
-                qs.giveItems(OLYMPIAD_CERT1, 1);
+                qs.giveItems(OLYMPIAD_CERT1);
                 qs.playSound(SOUND_ITEMGET);
             } else if (count == 5) {
-                qs.giveItems(OLYMPIAD_CERT2, 1);
+                qs.giveItems(OLYMPIAD_CERT2);
                 qs.playSound(SOUND_ITEMGET);
             } else if (count == 10) {
-                qs.giveItems(OLYMPIAD_CERT3, 1);
+                qs.giveItems(OLYMPIAD_CERT3);
                 qs.setCond(2);
                 qs.playSound(SOUND_MIDDLE);
             }

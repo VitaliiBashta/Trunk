@@ -4,7 +4,6 @@ import l2trunk.gameserver.Config;
 import l2trunk.gameserver.cache.Msg;
 import l2trunk.gameserver.instancemanager.ReflectionManager;
 import l2trunk.gameserver.listener.zone.OnZoneEnterLeaveListener;
-import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.SimpleSpawner;
 import l2trunk.gameserver.model.Zone;
@@ -113,8 +112,6 @@ public final class TeleToParnassus extends Functions implements ScriptFile {
     }
 
     public void toParnassus() {
-        Player player = getSelf();
-        NpcInstance npc = getNpc();
         if (npc == null || !npc.isInRange(player, 1000L))
             return;
 
@@ -127,13 +124,11 @@ public final class TeleToParnassus extends Functions implements ScriptFile {
         }
 
         player.reduceAdena(Config.SERVICES_PARNASSUS_PRICE, true, "TeleToParnassus");
-        player.setVar("backCoords", player.getLoc().toXYZString(), -1);
+        player.setVar("backCoords", player.getLoc().toXYZString());
         player.teleToLocation(Location.findPointToStay(_zone.getSpawn(), 30, 200, ReflectionManager.PARNASSUS.getGeoIndex()), ReflectionManager.PARNASSUS);
     }
 
     public void fromParnassus() {
-        Player player = getSelf();
-        NpcInstance npc = getNpc();
         if (npc == null || !npc.isInRange(player, 1000L))
             return;
 
@@ -145,12 +140,10 @@ public final class TeleToParnassus extends Functions implements ScriptFile {
             teleOut();
             return;
         }
-        player.teleToLocation(Location.parseLoc(var), 0);
+        player.teleToLocation(Location.of(var), 0);
     }
 
     private void teleOut() {
-        Player player = getSelf();
-        NpcInstance npc = getNpc();
         if (npc == null || !npc.isInRange(player, 1000L))
             return;
         player.teleToLocation(new Location(46776, 185784, -3528), 0);
@@ -236,7 +229,6 @@ public final class TeleToParnassus extends Functions implements ScriptFile {
     private String getHtmlAppends(Integer val) {
         if (val != 0 || !Config.SERVICES_PARNASSUS_ENABLED)
             return "";
-        Player player = getSelf();
         if (player == null)
             return "";
         return en;
@@ -249,7 +241,6 @@ public final class TeleToParnassus extends Functions implements ScriptFile {
     private String getHtmlAppends2(Integer val) {
         if (val != 0 || !Config.SERVICES_PARNASSUS_ENABLED)
             return "";
-        Player player = getSelf();
         if (player == null || player.getReflection() != ReflectionManager.PARNASSUS)
             return "";
         return en2;
@@ -257,17 +248,15 @@ public final class TeleToParnassus extends Functions implements ScriptFile {
 
     public class ZoneListener implements OnZoneEnterLeaveListener {
         @Override
-        public void onZoneEnter(Zone zone, Creature cha) {
+        public void onZoneEnter(Zone zone, Player cha) {
         }
 
         @Override
-        public void onZoneLeave(Zone zone, Creature cha) {
-            Player player = cha.getPlayer();
-            if (player != null)
+        public void onZoneLeave(Zone zone, Player player) {
                 if (Config.SERVICES_PARNASSUS_ENABLED && player.getReflection() == ReflectionManager.PARNASSUS && player.isVisible()) {
-                    double angle = PositionUtils.convertHeadingToDegree(cha.getHeading());
+                    double angle = PositionUtils.convertHeadingToDegree(player.getHeading());
                     double radian = Math.toRadians(angle - 90);
-                    cha.teleToLocation((int) (cha.getX() + 50 * Math.sin(radian)), (int) (cha.getY() - 50 * Math.cos(radian)), cha.getZ());
+                    player.teleToLocation((int) (player.getX() + 50 * Math.sin(radian)), (int) (player.getY() - 50 * Math.cos(radian)), player.getZ());
                 }
         }
     }

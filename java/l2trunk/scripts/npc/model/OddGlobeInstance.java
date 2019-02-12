@@ -43,27 +43,20 @@ public final class OddGlobeInstance extends NpcInstance {
         private boolean done = false;
 
         @Override
-        public void onZoneEnter(Zone zone, Creature cha) {
-            Player player = cha.getPlayer();
-            if (player == null || !cha.isPlayer() || done)
+        public void onZoneEnter(Zone zone, Player player) {
+            if (player == null || done)
                 return;
             done = true;
             player.showQuestMovie(ExStartScenePlayer.SCENE_SSQ2_HOLY_BURIAL_GROUND_OPENING);
         }
 
-        @Override
-        public void onZoneLeave(Zone zone, Creature cha) {
-        }
     }
 
     public class ZoneListener2 implements OnZoneEnterLeaveListener {
         private boolean done = false;
 
         @Override
-        public void onZoneEnter(Zone zone, Creature cha) {
-            Player player = cha.getPlayer();
-            if (player == null || !cha.isPlayer())
-                return;
+        public void onZoneEnter(Zone zone, Player player) {
             player.broadcastPacket(new EventTrigger(21100100, true));
             if (!done) {
                 done = true;
@@ -71,9 +64,6 @@ public final class OddGlobeInstance extends NpcInstance {
             }
         }
 
-        @Override
-        public void onZoneLeave(Zone zone, Creature cha) {
-        }
     }
 
 

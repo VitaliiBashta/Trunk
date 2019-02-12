@@ -6,6 +6,7 @@ import l2trunk.gameserver.listener.actor.OnDeathListener;
 import l2trunk.gameserver.listener.actor.player.OnPlayerEnterListener;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.GameObjectsStorage;
+import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.actor.listener.CharListenerList;
 import l2trunk.gameserver.model.instances.NpcInstance;
@@ -27,11 +28,10 @@ public final class AprilFoolsDay extends Functions implements ScriptFile, OnDeat
     }
 
     public void startEvent() {
-        Player player = getSelf();
         if (!player.getPlayerAccess().IsEventGm)
             return;
 
-        if (SetActive("AprilFoolsDay", true)) {
+        if (setActive("AprilFoolsDay", true)) {
             System.out.println("Event: 'April Fools Day' started.");
             ExBR_BroadcastEventState es = new ExBR_BroadcastEventState(ExBR_BroadcastEventState.APRIL_FOOLS, 1);
             GameObjectsStorage.getAllPlayersStream().forEach(p -> p.sendPacket(es));
@@ -43,10 +43,9 @@ public final class AprilFoolsDay extends Functions implements ScriptFile, OnDeat
     }
 
     public void stopEvent() {
-        Player player = getSelf();
         if (!player.getPlayerAccess().IsEventGm)
             return;
-        if (SetActive("AprilFoolsDay", false))
+        if (setActive("AprilFoolsDay", false))
             System.out.println("Event: 'April Fools Day' stopped.");
         else
             player.sendMessage("Event: 'April Fools Day' not started.");
@@ -73,7 +72,10 @@ public final class AprilFoolsDay extends Functions implements ScriptFile, OnDeat
 
     @Override
     public void onDeath(Creature cha, Creature killer) {
-        if (_active && SimpleCheckDrop(cha, killer) && Rnd.chance(Config.EVENT_APIL_FOOLS_DROP_CHANCE / 10.0D))
-            ((NpcInstance) cha).dropItem(killer.getPlayer(),Rnd.get(HERBS), 1);
+        if (killer instanceof Playable) {
+            Playable playable = (Playable) killer;
+            if (_active && simpleCheckDrop(cha, playable) && Rnd.chance(Config.EVENT_APIL_FOOLS_DROP_CHANCE / 10.0D))
+                ((NpcInstance) cha).dropItem(playable.getPlayer(), Rnd.get(HERBS), 1);
+        }
     }
 }

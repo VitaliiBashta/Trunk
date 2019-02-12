@@ -1,6 +1,7 @@
 package l2trunk.gameserver.model.instances;
 
 import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.Hero;
 import l2trunk.gameserver.model.entity.HeroDiary;
@@ -26,14 +27,14 @@ public class BossInstance extends RaidBossInstance {
 
     @Override
     protected void onDeath(Creature killer) {
-        if (killer.isPlayable()) {
-            Player player = killer.getPlayer();
+        if (killer instanceof Playable) {
+            Player player = ((Playable)killer).getPlayer();
             if (player.isInParty()) {
                 player.getParty().getMembers().stream()
                         .filter(Player::isNoble)
-                        .forEach(member -> Hero.INSTANCE.addHeroDiary(member.getObjectId(), HeroDiary.ACTION_RAID_KILLED, getNpcId()));
+                        .forEach(member -> Hero.INSTANCE.addHeroDiary(member.objectId(), HeroDiary.ACTION_RAID_KILLED, getNpcId()));
             } else if (player.isNoble())
-                Hero.INSTANCE.addHeroDiary(player.getObjectId(), HeroDiary.ACTION_RAID_KILLED, getNpcId());
+                Hero.INSTANCE.addHeroDiary(player.objectId(), HeroDiary.ACTION_RAID_KILLED, getNpcId());
         }
         super.onDeath(killer);
     }

@@ -59,7 +59,7 @@ public final class PlayerVsPlayerDuelEvent extends DuelEvent {
 
     @Override
     public void createDuel(Player player, Player target) {
-        PlayerVsPlayerDuelEvent duelEvent = new PlayerVsPlayerDuelEvent(getDuelType(), player.getObjectId() + "_" + target.getObjectId() + "_duel");
+        PlayerVsPlayerDuelEvent duelEvent = new PlayerVsPlayerDuelEvent(getDuelType(), player.objectId() + "_" + target.objectId() + "_duel");
         cloneTo(duelEvent);
 
         duelEvent.addObject(BLUE_TEAM, new DuelSnapshotObject(player, TeamType.BLUE));
@@ -98,13 +98,13 @@ public final class PlayerVsPlayerDuelEvent extends DuelEvent {
                 winners.get(0).getPlayer().getCounters().duelsWon++;
 
                 for (DuelSnapshotObject d : lossers)
-                    d.getPlayer().broadcastPacket(new SocialAction(d.getPlayer().getObjectId(), SocialAction.BOW));
+                    d.getPlayer().broadcastPacket(new SocialAction(d.getPlayer().objectId(), SocialAction.BOW));
 
                 // Alexander - Add to the stats the won and lost duel for each part
 //				for (DuelSnapshotObject d : winners)
-//					d.getPlayer().addPlayerStats(Ranking.STAT_TOP_DUELS_WIN);
+//					d.player().addPlayerStats(Ranking.STAT_TOP_DUELS_WIN);
 //				for (DuelSnapshotObject d : lossers)
-//					d.getPlayer().addPlayerStats(Ranking.STAT_TOP_DUELS_LOST);
+//					d.player().addPlayerStats(Ranking.STAT_TOP_DUELS_LOST);
                 break;
         }
 

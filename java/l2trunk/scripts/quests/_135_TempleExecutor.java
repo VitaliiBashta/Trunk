@@ -81,7 +81,7 @@ public final class _135_TempleExecutor extends Quest {
         if (_state == CREATED) {
             if (npcId != Shegfield)
                 return "noquest";
-            if (st.getPlayer().getLevel() < 35) {
+            if (st.player.getLevel() < 35) {
                 st.exitCurrentQuest(true);
                 return "shegfield_q0135_02.htm";
             }
@@ -97,11 +97,11 @@ public final class _135_TempleExecutor extends Quest {
             if (cond == 5) {
                 if (st.getInt("Report") == 1)
                     return "shegfield_q0135_09.htm";
-                if (st.getQuestItemsCount(Sonins_Credentials) > 0 && st.getQuestItemsCount(Panos_Credentials) > 0 && st.getQuestItemsCount(Alexs_Credentials) > 0) {
-                    st.takeItems(Panos_Credentials, -1);
-                    st.takeItems(Sonins_Credentials, -1);
-                    st.takeItems(Alexs_Credentials, -1);
-                    st.set("Report", "1");
+                if (st.haveAllQuestItems(Sonins_Credentials,Panos_Credentials,Alexs_Credentials) ) {
+                    st.takeItems(Panos_Credentials);
+                    st.takeItems(Sonins_Credentials);
+                    st.takeItems(Alexs_Credentials);
+                    st.set("Report", 1);
                     return "shegfield_q0135_08.htm";
                 }
                 return "noquest";
@@ -115,10 +115,10 @@ public final class _135_TempleExecutor extends Quest {
             if (cond == 3)
                 return "alankell_q0135_08.htm";
             if (cond == 4) {
-                if (st.getQuestItemsCount(Sonins_Credentials) > 0 && st.getQuestItemsCount(Panos_Credentials) > 0) {
+                if (st.haveAllQuestItems(Sonins_Credentials,Panos_Credentials)) {
                     st.setCond(5);
-                    st.takeItems(Old_Treasure_Map, -1);
-                    st.giveItems(Alexs_Credentials, 1);
+                    st.takeItems(Old_Treasure_Map);
+                    st.giveItems(Alexs_Credentials);
                     st.playSound(SOUND_MIDDLE);
                     return "alankell_q0135_10.htm";
                 }
@@ -140,8 +140,8 @@ public final class _135_TempleExecutor extends Quest {
         if (npcId == Pano && _state == STARTED && cond == 4) {
             if (st.getQuestItemsCount(Hate_Crystal) < 10)
                 return "pano_q0135_04.htm";
-            st.takeItems(Hate_Crystal, -1);
-            st.giveItems(Panos_Credentials, 1);
+            st.takeItems(Hate_Crystal);
+            st.giveItems(Panos_Credentials);
             st.playSound(SOUND_MIDDLE);
             return "pano_q0135_03.htm";
         }
@@ -150,7 +150,7 @@ public final class _135_TempleExecutor extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState qs) {
+    public void onKill(NpcInstance npc, QuestState qs) {
         if (qs.getState() == STARTED && qs.getCond() == 3) {
             List<Integer> drops = new ArrayList<>();
             if (qs.getQuestItemsCount(Stolen_Cargo) < 10)
@@ -160,16 +160,15 @@ public final class _135_TempleExecutor extends Quest {
             if (qs.getQuestItemsCount(Old_Treasure_Map) < 10)
                 drops.add(Old_Treasure_Map);
             if (drops.isEmpty())
-                return null;
-            int drop = drops.get(Rnd.get(drops.size()));
-            qs.giveItems(drop, 1);
+                return;
+            int drop = Rnd.get(drops);
+            qs.giveItems(drop);
             if (drops.size() == 1 && qs.getQuestItemsCount(drop) >= 10) {
                 qs.setCond(4);
                 qs.playSound(SOUND_MIDDLE);
-                return null;
+                return;
             }
             qs.playSound(SOUND_ITEMGET);
         }
-        return null;
     }
 }

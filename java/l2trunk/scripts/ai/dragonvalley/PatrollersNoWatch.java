@@ -26,9 +26,9 @@ public class PatrollersNoWatch extends Fighter {
     }
 
     @Override
-    public boolean checkAggression(Creature target) {
+    public boolean checkAggression(Playable target) {
         NpcInstance actor = getActor();
-        if (target.isPlayable() && !target.isDead() && !target.isInvisible() && !((Playable) target).isSilentMoving()) {
+        if ( !target.isDead() && !target.isInvisible() && !target.isSilentMoving()) {
             actor.getAggroList().addDamageHate(target, 0, 1);
             setIntentionAttack(target);
         }

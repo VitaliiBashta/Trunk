@@ -3,9 +3,7 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-import java.util.Arrays;
 import java.util.List;
 
 public final class _461_RumbleInTheBase extends Quest{
@@ -40,8 +38,7 @@ public final class _461_RumbleInTheBase extends Quest{
         if (npc.getNpcId() == Stan) {
             switch (st.getState()) {
                 case CREATED:
-                    QuestState qs = st.getPlayer().getQuestState(_252_GoodSmell.class);
-                    if (st.getPlayer().getLevel() >= 82 && qs != null && qs.isCompleted()) {
+                    if (st.player.getLevel() >= 82 && st.player.isQuestCompleted(_252_GoodSmell.class)) {
                         if (st.isNowAvailable())
                             htmltext = "stan_q461_01.htm";
                         else
@@ -54,8 +51,8 @@ public final class _461_RumbleInTheBase extends Quest{
                         htmltext = "stan_q461_04.htm";
                     else if (cond == 2) {
                         htmltext = "stan_q461_05.htm";
-                        st.takeAllItems(ShoesStringofSelMahum);
-                        st.takeAllItems(ShinySalmon);
+                        st.takeItems(ShoesStringofSelMahum);
+                        st.takeItems(ShinySalmon);
                         st.addExpAndSp(224784, 342528);
                         st.setState(COMPLETED);
                         st.playSound(SOUND_FINISH);
@@ -68,7 +65,7 @@ public final class _461_RumbleInTheBase extends Quest{
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int cond = st.getCond();
         int npcId = npc.getNpcId();
         if (cond == 1) {
@@ -80,6 +77,5 @@ public final class _461_RumbleInTheBase extends Quest{
             } else
                 st.setCond(2);
         }
-        return null;
     }
 }

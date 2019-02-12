@@ -107,7 +107,7 @@ public final class FestivalGuideInstance extends NpcInstance {
 
                     // Check if a festival is in progress, then don't allow registration yet.
                     if (SevenSignsFestival.INSTANCE.isFestivalInitialized()) {
-                        player.sendMessage(new CustomMessage("l2trunk.gameserver.model.instances.L2FestivalGuideInstance.InProgress", player));
+                        player.sendMessage(new CustomMessage("l2trunk.gameserver.model.instances.L2FestivalGuideInstance.InProgress"));
                         return;
                     }
 
@@ -123,7 +123,7 @@ public final class FestivalGuideInstance extends NpcInstance {
                         return;
                     }
 
-                    // Check if all the party members are in the required level range.
+                    // Check if all the party members are in the required occupation range.
                     int maxlevel = SevenSignsFestival.getMaxLevelForFestival(_festivalType);
                     for (Player p : playerParty.getMembers())
                         if (p.getLevel() > maxlevel) {
@@ -143,7 +143,7 @@ public final class FestivalGuideInstance extends NpcInstance {
                     long stonesNeeded = (long) Math.floor(SevenSignsFestival.getStoneCount(_festivalType, stoneType) * Config.FESTIVAL_RATE_PRICE);
 
                     if (!player.getInventory().destroyItemByItemId(stoneType, stonesNeeded, "Festival Guide")) {
-                        player.sendMessage(new CustomMessage("l2trunk.gameserver.model.instances.L2FestivalGuideInstance.NotEnoughSSType", player));
+                        player.sendMessage(new CustomMessage("l2trunk.gameserver.model.instances.L2FestivalGuideInstance.NotEnoughSSType"));
                         return;
                     }
 
@@ -169,27 +169,27 @@ public final class FestivalGuideInstance extends NpcInstance {
                     if (overallData != null)
                         overallScore = overallData.getInteger("score");
 
-                    strBuffer.append(SevenSignsFestival.getFestivalName(_festivalType) + " festival.<br>");
+                    strBuffer.append(SevenSignsFestival.getFestivalName(_festivalType)).append(" festival.<br>");
 
                     if (dawnScore > 0)
-                        strBuffer.append("Dawn: " + calculateDate(dawnData.getString("date")) + ". Score " + dawnScore + "<br>" + dawnData.getString("names").replaceAll(",", ", ") + "<br>");
+                        strBuffer.append("Dawn: ").append(calculateDate(dawnData.getString("date"))).append(". Score ").append(dawnScore).append("<br>").append(dawnData.getString("names").replaceAll(",", ", ")).append("<br>");
                     else
                         strBuffer.append("Dawn: No record exists. Score 0<br>");
 
                     if (duskScore > 0)
-                        strBuffer.append("Dusk: " + calculateDate(duskData.getString("date")) + ". Score " + duskScore + "<br>" + duskData.getString("names").replaceAll(",", ", ") + "<br>");
+                        strBuffer.append("Dusk: ").append(calculateDate(duskData.getString("date"))).append(". Score ").append(duskScore).append("<br>").append(duskData.getString("names").replaceAll(",", ", ")).append("<br>");
                     else
                         strBuffer.append("Dusk: No record exists. Score 0<br>");
 
-                    if (overallScore > 0 && overallData != null) {
+                    if (overallScore > 0) {
                         String cabalStr = "Children of Dusk";
                         if (overallData.getInteger("cabal") == SevenSigns.CABAL_DAWN)
                             cabalStr = "Children of Dawn";
-                        strBuffer.append("Consecutive top scores: " + calculateDate(overallData.getString("date")) + ". Score " + overallScore + "<br>Affilated side: " + cabalStr + "<br>" + overallData.getString("names").replaceAll(",", ", ") + "<br>");
+                        strBuffer.append("Consecutive top scores: ").append(calculateDate(overallData.getString("date"))).append(". Score ").append(overallScore).append("<br>Affilated side: ").append(cabalStr).append("<br>").append(overallData.getString("names").replaceAll(",", ", ")).append("<br>");
                     } else
                         strBuffer.append("Consecutive top scores: No record exists. Score 0<br>");
 
-                    strBuffer.append("<a action=\"bypass -h npc_" + getObjectId() + "_Chat 0\">Go back.</a></body></html>");
+                    strBuffer.append("<a action=\"bypass -h npc_" + objectId() + "_Chat 0\">Go back.</a></body></html>");
 
                     NpcHtmlMessage html = new NpcHtmlMessage(player, this);
                     html.setHtml(strBuffer.toString());
@@ -263,7 +263,7 @@ public final class FestivalGuideInstance extends NpcInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
         String filename = SevenSigns.SEVEN_SIGNS_HTML_PATH;
 
         switch (getNpcId()) {
@@ -306,7 +306,7 @@ public final class FestivalGuideInstance extends NpcInstance {
     private String getStatsTable() {
         StringBuilder tableHtml = new StringBuilder();
 
-        // Get the scores for each of the festival level ranges (types).
+        // Get the scores for each of the festival occupation ranges (types).
         for (int i = 0; i < 5; i++) {
             long dawnScore = SevenSignsFestival.INSTANCE.getHighestScore(SevenSigns.CABAL_DAWN, i);
             long duskScore = SevenSignsFestival.INSTANCE.getHighestScore(SevenSigns.CABAL_DUSK, i);
@@ -327,7 +327,7 @@ public final class FestivalGuideInstance extends NpcInstance {
     private String getBonusTable() {
         StringBuilder tableHtml = new StringBuilder();
 
-        // Get the accumulated scores for each of the festival level ranges (types).
+        // Get the accumulated scores for each of the festival occupation ranges (types).
         for (int i = 0; i < 5; i++) {
             long accumScore = SevenSignsFestival.INSTANCE.getAccumulatedBonus(i);
             String festivalName = SevenSignsFestival.getFestivalName(i);

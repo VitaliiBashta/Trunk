@@ -38,7 +38,7 @@ public final class LeylaDancer extends DefaultAI {
             if (actor != null) {
                 if (count < 50) {
                     count++;
-                    actor.broadcastPacket(new SocialAction(actor.getObjectId(), Rnd.get(1, 2)));
+                    actor.broadcastPacket(new SocialAction(actor.objectId(), Rnd.get(1, 2)));
                     ThreadPoolManager.INSTANCE.schedule(new ScheduleStart(), 3600);
                 } else {
                     count = 0;

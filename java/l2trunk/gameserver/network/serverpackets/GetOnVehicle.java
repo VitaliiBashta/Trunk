@@ -11,8 +11,8 @@ public class GetOnVehicle extends L2GameServerPacket {
 
     public GetOnVehicle(Player activeChar, Boat boat, Location loc) {
         _loc = loc;
-        _playerObjectId = activeChar.getObjectId();
-        _boatObjectId = boat.getObjectId();
+        _playerObjectId = activeChar.objectId();
+        _boatObjectId = boat.objectId();
     }
 
     @Override

@@ -4,7 +4,6 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _357_WarehouseKeepersAmbition extends Quest {
 
@@ -51,7 +50,7 @@ public final class _357_WarehouseKeepersAmbition extends Quest {
                 long reward = count * REWARD1;
                 if (count >= 100)
                     reward = reward + REWARD2;
-                st.takeItems(JADE_CRYSTAL, -1);
+                st.takeItems(JADE_CRYSTAL);
                 st.giveItems(ADENA_ID, reward);
             } else
                 htmltext = "warehouse_keeper_silva_q0357_06.htm";
@@ -69,7 +68,7 @@ public final class _357_WarehouseKeepersAmbition extends Quest {
         int cond = st.getCond();
         long jade = st.getQuestItemsCount(JADE_CRYSTAL);
         if (cond == 0 || id == CREATED) {
-            if (st.getPlayer().getLevel() >= 47)
+            if (st.player.getLevel() >= 47)
                 htmltext = "warehouse_keeper_silva_q0357_02.htm";
             else {
                 htmltext = "warehouse_keeper_silva_q0357_01.htm";
@@ -83,11 +82,10 @@ public final class _357_WarehouseKeepersAmbition extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (Rnd.chance(DROPRATE)) {
-            st.giveItems(JADE_CRYSTAL, 1);
+            st.giveItems(JADE_CRYSTAL);
             st.playSound(SOUND_ITEMGET);
         }
-        return null;
     }
 }

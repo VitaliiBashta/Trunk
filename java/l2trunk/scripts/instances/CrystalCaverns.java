@@ -1,6 +1,5 @@
 package l2trunk.scripts.instances;
 
-import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.listener.actor.OnDeathListener;
 import l2trunk.gameserver.listener.zone.OnZoneEnterLeaveListener;
@@ -9,6 +8,8 @@ import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Zone;
 import l2trunk.gameserver.model.entity.Reflection;
+import l2trunk.gameserver.model.instances.MinionInstance;
+import l2trunk.gameserver.model.instances.MonsterInstance;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.ItemFunctions;
 import l2trunk.gameserver.utils.Location;
@@ -128,11 +129,10 @@ public final class CrystalCaverns extends Reflection {
 
     public void notifyTearsDead(NpcInstance npc) {
         setReenterTime(System.currentTimeMillis());
-        addSpawnWithoutRespawn(32276, npc.getLoc(), 0);
-        npc.getAroundCharacters(600, 300)
-        .filter(GameObject::isPlayer)
-            .forEach(c ->
-                ItemFunctions.addItem(c.getPlayer(), 9697, 1, true, "TearsDead")); //Clear Crystal
+        addSpawnWithoutRespawn(32276, npc);
+        npc.getAroundPlayers(600, 300)
+                .forEach(p ->
+                        ItemFunctions.addItem(p, 9697, 1, "TearsDead")); //Clear Crystal
 
         // Synerge - Finish the instance after the boss dies, to avoid exploits
         startCollapseTimer(60000);
@@ -144,7 +144,7 @@ public final class CrystalCaverns extends Reflection {
         timerActivated = true;
         getPlayers().forEach(p ->
                 p.altOnMagicUseTimer(p, 5239));
-        failureTimer = ThreadPoolManager.INSTANCE.schedule(new FailureTimer(), 5 * 60 * 1000L);
+        failureTimer = ThreadPoolManager.INSTANCE.schedule(this::collapse, 5 * 60 * 1000L);
         spawnByGroup("cry_cav_steam_room_1");
         invokeDeathListener();
     }
@@ -157,11 +157,11 @@ public final class CrystalCaverns extends Reflection {
             protectorsIndex.put(npc, 0);
         if (protectorsIndex.get(npc) > 8) {
             if (npc.isInZone("[cry_cav_steam_corr_room1]"))
-                addSpawnWithoutRespawn(32273, npc.getLoc(), 0);
+                addSpawnWithoutRespawn(32273, npc);
             else if (npc.isInZone("[cry_cav_steam_corr_room2]"))
-                addSpawnWithoutRespawn(32274, npc.getLoc(), 0);
+                addSpawnWithoutRespawn(32274, npc);
             else if (npc.isInZone("[cry_cav_steam_corr_room3]"))
-                addSpawnWithoutRespawn(32275, npc.getLoc(), 0);
+                addSpawnWithoutRespawn(32275, npc);
             protectorsLoc.remove(npc.getNpcId());
             removeProtectors();
             protectorsIndex.clear();
@@ -194,7 +194,7 @@ public final class CrystalCaverns extends Reflection {
             return;
         if (failureTimer != null) {
             failureTimer.cancel(false);
-            failureTimer = ThreadPoolManager.INSTANCE.schedule(new FailureTimer(), min * 60 * 1000L);
+            failureTimer = ThreadPoolManager.INSTANCE.schedule(this::collapse, min * 60 * 1000L);
         }
         Location l = loc;
         int lvl = level;
@@ -220,10 +220,9 @@ public final class CrystalCaverns extends Reflection {
 
     public void notifyKechiDead(NpcInstance npc) {
         setReenterTime(System.currentTimeMillis());
-        addSpawnWithoutRespawn(32277, npc.getLoc(), 0);
-        npc.getAroundCharacters(600, 300)
-                .filter(GameObject::isPlayer)
-                .forEach(c -> ItemFunctions.addItem(c.getPlayer(), 9696, 1, true, "KechiDead")); //Red Crystal
+        addSpawnWithoutRespawn(32277, npc.getLoc());
+        npc.getAroundPlayers(600, 300)
+                .forEach(player -> ItemFunctions.addItem(player, 9696, 1, "KechiDead")); //Red Crystal
         if (failureTimer != null) {
             failureTimer.cancel(false);
             failureTimer = null;
@@ -248,11 +247,10 @@ public final class CrystalCaverns extends Reflection {
 
     public void notifyDarnelDead(NpcInstance npc) {
         setReenterTime(System.currentTimeMillis());
-        addSpawnWithoutRespawn(32276, npc.getLoc(), 0);
-        npc.getAroundCharacters(600, 300)
-                .filter(GameObject::isPlayer)
-                .forEach(c ->
-                        ItemFunctions.addItem(c.getPlayer(), 9695, 1, true, "DarnelDead")); // Blue Crystal
+        addSpawnWithoutRespawn(32276, npc);
+        npc.getAroundPlayers(600, 300)
+                .forEach(player ->
+                        ItemFunctions.addItem(player, 9695, 1, "DarnelDead")); // Blue Crystal
 
         // Synerge - Finish the instance after the boss dies, to avoid exploits
         startCollapseTimer(60000);
@@ -268,119 +266,109 @@ public final class CrystalCaverns extends Reflection {
 
     private boolean checkRoomWiped(Zone zone) {
         return zone.getInsideNpcs()
-                .filter(GameObject::isMonster)
-                .filter(npc -> !npc.isMinion())
+                .filter(o -> o instanceof MonsterInstance)
+                .filter(npc -> !(npc instanceof MinionInstance))
                 .allMatch(Creature::isDead);
     }
 
     private class DeathListener implements OnDeathListener {
         @Override
         public void onDeath(Creature self, Creature killer) {
-            if (!self.isNpc())
-                return;
-            Zone square = getZone("[cry_cav_emerald_emerald_square]");
-            if (cor_gar_monsters.contains(self.getNpcId())) {
-                if (!golemSpawned) {
-                    if (getNpcs().filter(GameObject::isMonster)
-                            .anyMatch(npc -> !npc.isDead()))
-                        return;
-                    golemSpawned = true;
-                    spawnByGroup("cry_cav_corgar_golem");
-                }
-            } else if (self.getNpcId() == gatekeeper_provo) {
-                if (getAllByNpcId(gatekeeper_lohan, true).count() > 0)
-                    ((NpcInstance) self).dropItem(killer.getPlayer(), 9699, 1); //Red Coral Key
-            } else if (self.getNpcId() == gatekeeper_lohan) {
-                if (getAllByNpcId(gatekeeper_provo, true).count() > 0)
-                    ((NpcInstance) self).dropItem(killer.getPlayer(), 9698, 1); //Blue Coral Key
-            } else if (cor_gar_st_room_monsters.contains(self.getNpcId())) {
-                Zone room1 = getZone("[cry_cav_steam_corr_room1]");
-                Zone room2 = getZone("[cry_cav_steam_corr_room2]");
-                Zone room3 = getZone("[cry_cav_steam_corr_room3]");
-                Zone room4 = getZone("[cry_cav_steam_corr_room4]");
-                if (self.isInZone(room1)) {
-                    if (!room1ProtectorsSpawned && checkRoomWiped(room1)) {
-                        room1ProtectorsSpawned = true;
-                        for (int id : protectorsLoc.keySet())
-                            addSpawnWithoutRespawn(id, protectorsLoc.get(id).get(0), 0); // getting first spawn location for existing set of npcs
+            if (self instanceof NpcInstance) {
+                Zone square = getZone("[cry_cav_emerald_emerald_square]");
+                if (cor_gar_monsters.contains(self.getNpcId())) {
+                    if (!golemSpawned) {
+                        if (getNpcs().filter(npc -> npc instanceof MonsterInstance)
+                                .anyMatch(npc -> !npc.isDead()))
+                            return;
+                        golemSpawned = true;
+                        spawnByGroup("cry_cav_corgar_golem");
                     }
-                } else if (self.isInZone(room2)) {
-                    if (!room2ProtectorsSpawned && checkRoomWiped(room2)) {
-                        room2ProtectorsSpawned = true;
-                        for (int id : protectorsLoc.keySet())
-                            addSpawnWithoutRespawn(id, protectorsLoc.get(id).get(1), 0); // getting second spawn location for existing set of npcs
+                } else if (self.getNpcId() == gatekeeper_provo) {
+                    if (getAllByNpcId(gatekeeper_lohan, true).count() > 0)
+                        ((NpcInstance) self).dropItem(killer.getPlayer(), 9699, 1); //Red Coral Key
+                } else if (self.getNpcId() == gatekeeper_lohan) {
+                    if (getAllByNpcId(gatekeeper_provo, true).count() > 0)
+                        ((NpcInstance) self).dropItem(killer.getPlayer(), 9698, 1); //Blue Coral Key
+                } else if (cor_gar_st_room_monsters.contains(self.getNpcId())) {
+                    Zone room1 = getZone("[cry_cav_steam_corr_room1]");
+                    Zone room2 = getZone("[cry_cav_steam_corr_room2]");
+                    Zone room3 = getZone("[cry_cav_steam_corr_room3]");
+                    Zone room4 = getZone("[cry_cav_steam_corr_room4]");
+                    if (self.isInZone(room1)) {
+                        if (!room1ProtectorsSpawned && checkRoomWiped(room1)) {
+                            room1ProtectorsSpawned = true;
+                            for (int id : protectorsLoc.keySet())
+                                addSpawnWithoutRespawn(id, protectorsLoc.get(id).get(0)); // getting first spawn location for existing set of npcs
+                        }
+                    } else if (self.isInZone(room2)) {
+                        if (!room2ProtectorsSpawned && checkRoomWiped(room2)) {
+                            room2ProtectorsSpawned = true;
+                            for (int id : protectorsLoc.keySet())
+                                addSpawnWithoutRespawn(id, protectorsLoc.get(id).get(1)); // getting second spawn location for existing set of npcs
+                        }
+                    } else if (self.isInZone(room3)) {
+                        if (!room3ProtectorsSpawned && checkRoomWiped(room3)) {
+                            room3ProtectorsSpawned = true;
+                            for (int id : protectorsLoc.keySet())
+                                addSpawnWithoutRespawn(id, protectorsLoc.get(id).get(2)); // getting third spawn location for existing set of npcs
+                        }
+                    } else if (self.isInZone(room4)) {
+                        if (!room4DoorOpened && checkRoomWiped(room4)) {
+                            room4DoorOpened = true;
+                            spawnByGroup("cry_cav_steam_kechi");
+                            getDoor(door_cry_cav_steam_c_room4_door).openMe();
+                            getDoor(door_cry_cav_steam_c_kechi_door).openMe();
+                        }
                     }
-                } else if (self.isInZone(room3)) {
-                    if (!room3ProtectorsSpawned && checkRoomWiped(room3)) {
-                        room3ProtectorsSpawned = true;
-                        for (int id : protectorsLoc.keySet())
-                            addSpawnWithoutRespawn(id, protectorsLoc.get(id).get(2), 0); // getting third spawn location for existing set of npcs
+                } else if (cor_gar_emerald_sq_monsters.contains(self.getNpcId())) {
+                    if (self.isInZone(square)) {
+                        if (!emeraldWiped && checkRoomWiped(square)) {
+                            emeraldWiped = true;
+                            spawnByGroup("cry_cav_emerald_main_reef_golems");
+                            invokeDeathListener();
+                        }
                     }
-                } else if (self.isInZone(room4)) {
-                    if (!room4DoorOpened && checkRoomWiped(room4)) {
-                        room4DoorOpened = true;
-                        spawnByGroup("cry_cav_steam_kechi");
-                        getDoor(door_cry_cav_steam_c_room4_door).openMe();
-                        getDoor(door_cry_cav_steam_c_kechi_door).openMe();
-                    }
-                }
-            } else if (cor_gar_emerald_sq_monsters.contains(self.getNpcId())) {
-                if (self.isInZone(square)) {
-                    if (!emeraldWiped && checkRoomWiped(square)) {
-                        emeraldWiped = true;
-                        spawnByGroup("cry_cav_emerald_main_reef_golems");
+                } else if (cor_gar_emerald_sq_reef_golems.contains(self.getNpcId())) {
+                    if (checkRoomWiped(square)) {
+                        spawnByGroup("cry_cav_emerald_main_callers");
                         invokeDeathListener();
                     }
+                } else if (cor_gar_emerald_sq_callers.contains(self.getNpcId())) {
+                    if (checkRoomWiped(square) && !emeraldReady) {
+                        emeraldReady = true;
+                        spawnByGroup("cry_cav_emerald_main_guardian");
+                        spawnByGroup("cry_cav_emerald_main_doorcontrollers");
+                        spawnByGroup("cry_cav_emerald_main_trap");
+                        invokeDeathListener();
+                    }
+                } else if (cor_gar_emerald_sq_guardians.contains(self.getNpcId())) {
+                    if (checkRoomWiped(square) && emeraldReady) {
+                        getDoor(door_cry_cav_emerald_darnel).openMe();
+                        getDoor(door_cry_cav_emerald_darnel_inner).openMe();
+                        spawnByGroup("cry_cav_emerald_main_darnel");
+                    }
                 }
-            } else if (cor_gar_emerald_sq_reef_golems.contains(self.getNpcId())) {
-                if (checkRoomWiped(square)) {
-                    spawnByGroup("cry_cav_emerald_main_callers");
-                    invokeDeathListener();
-                }
-            } else if (cor_gar_emerald_sq_callers.contains(self.getNpcId())) {
-                if (checkRoomWiped(square) && !emeraldReady) {
-                    emeraldReady = true;
-                    spawnByGroup("cry_cav_emerald_main_guardian");
-                    spawnByGroup("cry_cav_emerald_main_doorcontrollers");
-                    spawnByGroup("cry_cav_emerald_main_trap");
-                    invokeDeathListener();
-                }
-            } else if (cor_gar_emerald_sq_guardians.contains(self.getNpcId())) {
-                if (checkRoomWiped(square) && emeraldReady) {
-                    getDoor(door_cry_cav_emerald_darnel).openMe();
-                    getDoor(door_cry_cav_emerald_darnel_inner).openMe();
-                    spawnByGroup("cry_cav_emerald_main_darnel");
-                }
+            } else {
+                return;
             }
         }
     }
 
     private class ZoneListener implements OnZoneEnterLeaveListener {
         @Override
-        public void onZoneEnter(Zone zone, Creature cha) {
-            Player player = cha.getPlayer();
-            if (player == null || !cha.isPlayer())
-                return;
-            if (!emeraldHallActivated && zone.getName().equalsIgnoreCase("[cry_cav_steam_corr_starter]")) {
-                notifySteamStarted();
-                zone.removeListener(this);
-            }
-            if (!emeraldHallActivated && zone.getName().equalsIgnoreCase("[cry_cav_emerald_starter]")) {
-                emeraldHallActivated = true;
-                notifyEmeraldStarted();
-                zone.removeListener(this);
-            }
+        public void onZoneEnter(Zone zone, Player player) {
+                if (!emeraldHallActivated && zone.getName().equalsIgnoreCase("[cry_cav_steam_corr_starter]")) {
+                    notifySteamStarted();
+                    zone.removeListener(this);
+                }
+                if (!emeraldHallActivated && zone.getName().equalsIgnoreCase("[cry_cav_emerald_starter]")) {
+                    emeraldHallActivated = true;
+                    notifyEmeraldStarted();
+                    zone.removeListener(this);
+                }
         }
 
-        @Override
-        public void onZoneLeave(Zone zone, Creature cha) {
-        }
     }
 
-    private class FailureTimer extends RunnableImpl {
-        @Override
-        public void runImpl() {
-            collapse();
-        }
-    }
 }

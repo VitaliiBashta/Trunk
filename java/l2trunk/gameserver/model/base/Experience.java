@@ -4,7 +4,7 @@ import l2trunk.gameserver.Config;
 
 public final class Experience {
 
-    public final static long[] LEVEL = {-1L, // level 0 (unreachable)
+    public final static long[] LEVEL = {-1L, // occupation 0 (unreachable)
             /* Lvl:1 */        0L,
             /* Lvl:2 */        68L,
             /* Lvl:3 */        363L,

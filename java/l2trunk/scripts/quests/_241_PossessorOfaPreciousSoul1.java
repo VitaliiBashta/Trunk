@@ -4,7 +4,6 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _241_PossessorOfaPreciousSoul1 extends Quest {
     private static final int LEGENG_OF_SEVENTEEN = 7587;
@@ -100,7 +99,7 @@ public final class _241_PossessorOfaPreciousSoul1 extends Quest {
 
     @Override
     public String onTalk(NpcInstance npc, QuestState st) {
-        if (!st.getPlayer().isSubClassActive())
+        if (!st.player.isSubClassActive())
             return "Subclass only!";
 
         String htmltext = "noquest";
@@ -108,7 +107,7 @@ public final class _241_PossessorOfaPreciousSoul1 extends Quest {
         int cond = st.getCond();
         if (npcId == 31739) {
             if (cond == 0)
-                if (st.getPlayer().getLevel() >= 50)
+                if (st.player.getLevel() >= 50)
                     htmltext = "31739-01.htm";
                 else {
                     htmltext = "31739-00.htm";
@@ -190,9 +189,9 @@ public final class _241_PossessorOfaPreciousSoul1 extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
-        if (!st.getPlayer().isSubClassActive())
-            return null;
+    public void onKill(NpcInstance npc, QuestState st) {
+        if (!st.player.isSubClassActive())
+            return;
 
         int npcId = npc.getNpcId();
         int cond = st.getCond();
@@ -201,14 +200,14 @@ public final class _241_PossessorOfaPreciousSoul1 extends Quest {
             if (npcId == 21154 && Rnd.chance(10))
                 st.addSpawn(27113);
             else if (npcId == 27113 && st.getQuestItemsCount(LEGENG_OF_SEVENTEEN) == 0) {
-                st.giveItems(LEGENG_OF_SEVENTEEN, 1);
+                st.giveItems(LEGENG_OF_SEVENTEEN);
                 st.setCond(4);
                 st.playSound(SOUND_ITEMGET);
             }
         } else if (cond == 6) {
             if ((npcId == 20244 || npcId == 20245) && Rnd.chance(40)) {
                 if (st.getQuestItemsCount(MALRUK_SUCCUBUS_CLAW) <= 9)
-                    st.giveItems(MALRUK_SUCCUBUS_CLAW, 1);
+                    st.giveItems(MALRUK_SUCCUBUS_CLAW);
                 if (st.getQuestItemsCount(MALRUK_SUCCUBUS_CLAW) == 10) {
                     st.playSound(SOUND_MIDDLE);
                     st.setCond(7);
@@ -218,13 +217,12 @@ public final class _241_PossessorOfaPreciousSoul1 extends Quest {
         } else if (cond == 14)
             if (npcId == 20669 && Rnd.chance(50)) {
                 if (st.getQuestItemsCount(CRIMSON_MOSS) <= 4)
-                    st.giveItems(CRIMSON_MOSS, 1);
+                    st.giveItems(CRIMSON_MOSS);
                 if (st.getQuestItemsCount(CRIMSON_MOSS) == 5) {
                     st.playSound(SOUND_MIDDLE);
                     st.setCond(15);
                 } else
                     st.playSound(SOUND_ITEMGET);
             }
-        return null;
     }
 }

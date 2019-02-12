@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.Functions;
-import l2trunk.gameserver.scripts.ScriptFile;
+import l2trunk.gameserver.utils.Location;
 
 public final class _197_SevenSignsTheSacredBookofSeal extends Quest {
     // NPCs
@@ -32,7 +32,7 @@ public final class _197_SevenSignsTheSacredBookofSeal extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        Player player = st.getPlayer();
+        Player player = st.player;
         if (event.equalsIgnoreCase("wood_q197_2.htm")) {
             st.setCond(1);
             st.setState(STARTED);
@@ -44,21 +44,21 @@ public final class _197_SevenSignsTheSacredBookofSeal extends Quest {
             st.setCond(3);
             st.playSound(SOUND_MIDDLE);
         } else if (event.equalsIgnoreCase("lawrence_q197_2.htm")) {
-            NpcInstance mob = st.addSpawn(ShilensEvilThoughts, 152520, -57502, -3408, 0, 0, 180000);
+            NpcInstance mob = st.addSpawn(ShilensEvilThoughts, Location.of(152520, -57502, -3408), 0, 180000);
             Functions.npcSay(mob, "Shilen's power is endless!");
             mob.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, player, 100000);
             st.set("evilthought", 1);
         } else if (event.equalsIgnoreCase("lawrence_q197_4.htm")) {
             st.setCond(5);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("sofia_q197_2.htm")) {
+        } else if ("sofia_q197_2.htm".equalsIgnoreCase(event)) {
             st.setCond(6);
-            st.giveItems(MysteriousHandwrittenText, 1);
+            st.giveItems(MysteriousHandwrittenText);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("wood_q197_4.htm"))
+        } else if ("wood_q197_4.htm".equalsIgnoreCase(event))
             if (player.getBaseClassId() == player.getActiveClassId()) {
-                st.takeItems(PieceofDoubt, -1);
-                st.takeItems(MysteriousHandwrittenText, -1);
+                st.takeItems(PieceofDoubt);
+                st.takeItems(MysteriousHandwrittenText);
                 st.addExpAndSp(25000000, 2500000);
                 st.setState(COMPLETED);
                 st.exitCurrentQuest(false);
@@ -72,12 +72,11 @@ public final class _197_SevenSignsTheSacredBookofSeal extends Quest {
     public String onTalk(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
-        Player player = st.getPlayer();
+        Player player = st.player;
         String htmltext = "noquest";
         if (npcId == Wood) {
-            QuestState qs = player.getQuestState(_196_SevenSignsSealoftheEmperor.class);
             if (cond == 0) {
-                if (player.getLevel() >= 79 && qs != null && qs.isCompleted())
+                if (player.getLevel() >= 79 && player.isQuestCompleted(_196_SevenSignsSealoftheEmperor.class))
                     htmltext = "wood_q197_1.htm";
                 else {
                     htmltext = "wood_q197_0.htm";
@@ -99,7 +98,7 @@ public final class _197_SevenSignsTheSacredBookofSeal extends Quest {
                 htmltext = "leopard_q197_3.htm";
         } else if (npcId == Lawrence) {
             if (cond == 3) {
-                if (st.get("evilthought") != null && Integer.parseInt(st.get("evilthought")) == 1)
+                if (st.getInt("evilthought") == 1)
                     htmltext = "lawrence_q197_0.htm";
                 else
                     htmltext = "lawrence_q197_1.htm";
@@ -116,18 +115,16 @@ public final class _197_SevenSignsTheSacredBookofSeal extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int cond = st.getCond();
-        Player player = st.getPlayer();
-        if (player == null)
-            return null;
+        if (st.player == null)
+            return ;
 
         if (npc.getNpcId() == ShilensEvilThoughts && cond == 3) {
             st.setCond(4);
             st.playSound(SOUND_ITEMGET);
-            st.giveItems(PieceofDoubt, 1);
+            st.giveItems(PieceofDoubt);
             st.set("evilthought", 2);
         }
-        return null;
     }
 }

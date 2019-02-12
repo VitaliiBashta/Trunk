@@ -77,8 +77,7 @@ public final class Party implements PlayerGroup {
     }
 
 
-    @Override
-    public List<Player> getMembers() {
+        public List<Player> getMembers() {
         return members;
     }
 
@@ -371,7 +370,7 @@ public final class Party implements PlayerGroup {
 
             if (target.pickupItem(item, fromNpc == null ? "NULL NPC" : fromNpc.toString())) {
                 if (fromNpc == null)
-                    player.broadcastPacket(new GetItem(item, player.getObjectId()));
+                    player.broadcastPacket(new GetItem(item, player.objectId()));
 
                 player.broadcastPickUpMsg(item);
                 item.pickupMe();
@@ -415,7 +414,7 @@ public final class Party implements PlayerGroup {
         }
 
         if (fromNpc == null)
-            player.broadcastPacket(new GetItem(item, player.getObjectId()));
+            player.broadcastPacket(new GetItem(item, player.objectId()));
 
         item.pickupMe();
     }
@@ -533,7 +532,7 @@ public final class Party implements PlayerGroup {
     }
 
     public void setDimensionalRift(DimensionalRift dr) {
-        dimentionalRift = dr == null ? 0 : dr.getId();
+        dimentionalRift = dr == null ? 0 : dr.id;
     }
 
     public boolean isInReflection() {
@@ -552,7 +551,7 @@ public final class Party implements PlayerGroup {
         return null;
     }
 
-    @Override
+
     public Party setReflection(Reflection reflection) {
         this.reflection = reflection;
         return this;
@@ -570,9 +569,6 @@ public final class Party implements PlayerGroup {
         commandChannel = channel;
     }
 
-    /**
-     * Телепорт всей пати в одну точку dest
-     */
     public void teleport(Location dest) {
         members.forEach(pl -> pl.teleToLocation(dest));
     }
@@ -608,13 +604,13 @@ public final class Party implements PlayerGroup {
     public synchronized void answerLootChangeRequest(Player member, boolean answer) {
         if (_requestChangeLoot == -1)
             return;
-        if (_changeLootAnswers.contains(member.getObjectId()))
+        if (_changeLootAnswers.contains(member.objectId()))
             return;
         if (!answer) {
             finishLootRequest(false);
             return;
         }
-        _changeLootAnswers.add(member.getObjectId());
+        _changeLootAnswers.add(member.objectId());
         if (_changeLootAnswers.size() >= size() - 1) {
             finishLootRequest(true);
         }

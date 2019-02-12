@@ -3,13 +3,11 @@ package l2trunk.scripts.services;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.cache.Msg;
 import l2trunk.gameserver.dao.CharacterDAO;
-import l2trunk.gameserver.database.DatabaseFactory;
 import l2trunk.gameserver.database.mysql;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.SubClass;
 import l2trunk.gameserver.model.base.ClassId;
 import l2trunk.gameserver.model.base.PlayerClass;
-import l2trunk.gameserver.model.base.Race;
 import l2trunk.gameserver.model.entity.events.impl.SiegeEvent;
 import l2trunk.gameserver.model.entity.olympiad.Olympiad;
 import l2trunk.gameserver.model.pledge.Clan;
@@ -26,16 +24,14 @@ import l2trunk.gameserver.tables.ClanTable;
 import l2trunk.gameserver.utils.Log;
 import l2trunk.gameserver.utils.Util;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
+import static l2trunk.gameserver.utils.ItemFunctions.removeItem;
+
 public final class Rename extends Functions {
     public void rename_page() {
-        Player player = getSelf();
         if (player == null)
             return;
         if (!Config.SERVICES_CHANGE_NICK_ENABLED) {
@@ -43,28 +39,6 @@ public final class Rename extends Functions {
             return;
         }
         player.sendPacket(new NpcHtmlMessage(5).setFile("scripts/services/NameChange/index.htm"));
-    }
-
-    public void changesex_page() {
-        Player player = getSelf();
-        if (player == null)
-            return;
-        if (!Config.SERVICES_CHANGE_SEX_ENABLED) {
-            show("Service is disabled.", player);
-            return;
-        }
-        if (!player.isInPeaceZone()) {
-            show("You must be in peace zone to use this service.", player);
-            return;
-        }
-
-        String append = "Sex change:";
-        append += "<br>";
-        append += "<font color=\"LEVEL\">" + new CustomMessage("scripts.services.SexChange.SexChangeFor", player).addString(Util.formatAdena(Config.SERVICES_CHANGE_SEX_PRICE)).addItemName(Config.SERVICES_CHANGE_SEX_ITEM) + "</font>";
-        append += "<table>";
-        append += "<tr><td><button value=\"" + new CustomMessage("scripts.services.SexChange.Button", player) + "\" action=\"bypass -h scripts_services.Rename:changesex\" width=80 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td></tr>";
-        append += "</table>";
-        show(append, player);
     }
 
     public void separate_page(Player player, String newName) {
@@ -90,35 +64,34 @@ public final class Rename extends Functions {
         }
 
         if (player.getEvent(SiegeEvent.class) != null) {
-            player.sendMessage(new CustomMessage("scripts.services.Rename.SiegeNow", player));
+            player.sendMessage(new CustomMessage("scripts.services.Rename.SiegeNow"));
             return;
         }
 
-        if (!CharacterCreate.checkName(newName) && !Config.SERVICES_CHANGE_NICK_ALLOW_SYMBOL) {
-            player.sendMessage(new CustomMessage("scripts.services.Rename.incorrectinput", player));
+        if (CharacterCreate.isValid(newName) && !Config.SERVICES_CHANGE_NICK_ALLOW_SYMBOL) {
+            player.sendMessage(new CustomMessage("scripts.services.Rename.incorrectinput"));
             return;
         }
         if (player.getActiveClass().getLevel() < 75) {
-            show("You must have 75 sub-class level.", player);
+            show("You must have 75 sub-class occupation.", player);
             return;
         }
 
         String append = "Department subclass:";
         append += "<br>";
-        append += "<font color=\"LEVEL\">" + new CustomMessage("scripts.services.Separate.Price", player).addString(Util.formatAdena(Config.SERVICES_SEPARATE_SUB_PRICE)).addItemName(Config.SERVICES_SEPARATE_SUB_ITEM) + "</font>&nbsp;";
+        append += "<font color=\"LEVEL\">" + new CustomMessage("scripts.services.Separate.Price").addString(Util.formatAdena(Config.SERVICES_SEPARATE_SUB_PRICE)).addItemName(Config.SERVICES_SEPARATE_SUB_ITEM) + "</font>&nbsp;";
         append += "<edit var=\"name\" width=80 height=15 /><br>";
         append += "<table>";
 
         for (SubClass s : player.getSubClasses().values())
-            if (!s.isBase() && s.getClassId() != ClassId.inspector.getId() && s.getClassId() != ClassId.judicator.getId())
-                append += "<tr><td><button value=\"" + new CustomMessage("scripts.services.Separate.Button", player).addString(ClassId.VALUES.get(s.getClassId()).toString()) + "\" action=\"bypass -h scripts_services.Rename:separate " + s.getClassId() + " $name\" width=200 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td></tr>";
+            if (!s.isBase() && s.getClassId() != ClassId.inspector.id && s.getClassId() != ClassId.judicator.id)
+                append += "<tr><td><button value=\"" + new CustomMessage("scripts.services.Separate.Button").addString(ClassId.VALUES.get(s.getClassId()).toString()) + "\" action=\"bypass -h scripts_services.Rename:separate " + s.getClassId() + " $name\" width=200 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td></tr>";
 
         append += "</table>";
         show(append, player);
     }
 
     public void separate(String[] param) {
-        Player player = getSelf();
         if (player == null)
             return;
         if (!Config.SERVICES_SEPARATE_SUB_ENABLED) {
@@ -141,7 +114,7 @@ public final class Rename extends Functions {
         }
 
         if (player.getActiveClass().getLevel() < 75) {
-            show("You must have 75 sub-class level.", player);
+            show("You must have 75 sub-class occupation.", player);
             return;
         }
 
@@ -150,7 +123,7 @@ public final class Rename extends Functions {
             return;
         }
 
-        if (getItemCount(player, Config.SERVICES_SEPARATE_SUB_ITEM) < Config.SERVICES_SEPARATE_SUB_PRICE) {
+        if (!player.haveItem(Config.SERVICES_SEPARATE_SUB_ITEM, Config.SERVICES_SEPARATE_SUB_PRICE)) {
             if (Config.SERVICES_SEPARATE_SUB_ITEM == 57)
                 player.sendPacket(Msg.YOU_DO_NOT_HAVE_ENOUGH_ADENA);
             else
@@ -169,8 +142,8 @@ public final class Rename extends Functions {
             return;
         }
 
-        if (mysql.simple_get_int("level", "character_subclasses", "char_obj_id=" + newcharid + " AND level > 1") > 1) {
-            show("The aim should be level 1.", player);
+        if (mysql.simple_get_int("occupation", "character_subclasses", "char_obj_id=" + newcharid + " AND occupation > 1") > 1) {
+            show("The aim should be occupation 1.", player);
             return;
         }
 
@@ -182,14 +155,14 @@ public final class Rename extends Functions {
         mysql.set("DELETE FROM character_shortcuts WHERE char_obj_id=" + newcharid);
         mysql.set("DELETE FROM character_variables WHERE obj_id=" + newcharid);
 
-        mysql.set("UPDATE character_subclasses SET char_obj_id=" + newcharid + ", isBase=1, certification=0 WHERE char_obj_id=" + player.getObjectId() + " AND class_id=" + classtomove);
-        mysql.set("UPDATE character_skills SET char_obj_id=" + newcharid + " WHERE char_obj_id=" + player.getObjectId() + " AND class_index=" + classtomove);
-        mysql.set("UPDATE character_skills_save SET char_obj_id=" + newcharid + " WHERE char_obj_id=" + player.getObjectId() + " AND class_index=" + classtomove);
-        mysql.set("UPDATE character_effects_save SET object_id=" + newcharid + " WHERE object_id=" + player.getObjectId() + " AND id=" + classtomove);
-        mysql.set("UPDATE character_hennas SET char_obj_id=" + newcharid + " WHERE char_obj_id=" + player.getObjectId() + " AND class_index=" + classtomove);
-        mysql.set("UPDATE character_shortcuts SET char_obj_id=" + newcharid + " WHERE char_obj_id=" + player.getObjectId() + " AND class_index=" + classtomove);
+        mysql.set("UPDATE character_subclasses SET char_obj_id=" + newcharid + ", isBase=1, certification=0 WHERE char_obj_id=" + player.objectId() + " AND class_id=" + classtomove);
+        mysql.set("UPDATE character_skills SET char_obj_id=" + newcharid + " WHERE char_obj_id=" + player.objectId() + " AND class_index=" + classtomove);
+        mysql.set("UPDATE character_skills_save SET char_obj_id=" + newcharid + " WHERE char_obj_id=" + player.objectId() + " AND class_index=" + classtomove);
+        mysql.set("UPDATE character_effects_save SET object_id=" + newcharid + " WHERE object_id=" + player.objectId() + " AND id=" + classtomove);
+        mysql.set("UPDATE character_hennas SET char_obj_id=" + newcharid + " WHERE char_obj_id=" + player.objectId() + " AND class_index=" + classtomove);
+        mysql.set("UPDATE character_shortcuts SET char_obj_id=" + newcharid + " WHERE char_obj_id=" + player.objectId() + " AND class_index=" + classtomove);
 
-        mysql.set("UPDATE character_variables SET obj_id=" + newcharid + " WHERE obj_id=" + player.getObjectId() + " AND name like 'TransferSkills%'");
+        mysql.set("UPDATE character_variables SET obj_id=" + newcharid + " WHERE obj_id=" + player.objectId() + " AND name like 'TransferSkills%'");
 
         player.modifySubClass(classtomove, 0);
 
@@ -199,7 +172,6 @@ public final class Rename extends Functions {
     }
 
     public void changebase_page() {
-        Player player = getSelf();
         if (player == null)
             return;
         if (!Config.SERVICES_CHANGE_BASE_ENABLED) {
@@ -212,13 +184,13 @@ public final class Rename extends Functions {
         }
 
         if (player.isHero()) {
-            sendMessage("Not available for heroes.", player);
+            player.sendMessage("Not available for heroes.");
             return;
         }
 
         String append = "Changing the base class:";
         append += "<br>";
-        append += "<font color=\"LEVEL\">" + new CustomMessage("scripts.services.BaseChange.Price", player).addString(Util.formatAdena(Config.SERVICES_CHANGE_BASE_PRICE)).addItemName(Config.SERVICES_CHANGE_BASE_ITEM) + "</font>";
+        append += "<font color=\"LEVEL\">" + new CustomMessage("scripts.services.BaseChange.Price").addString(Util.formatAdena(Config.SERVICES_CHANGE_BASE_PRICE)).addItemName(Config.SERVICES_CHANGE_BASE_ITEM) + "</font>";
         append += "<table>";
 
         List<SubClass> possible = new ArrayList<>();
@@ -233,16 +205,15 @@ public final class Rename extends Functions {
         }
 
         if (possible.isEmpty())
-            append += "<tr><td width=300>" + new CustomMessage("scripts.services.BaseChange.NotPossible", player) + "</td></tr>";
+            append += "<tr><td width=300>" + new CustomMessage("scripts.services.BaseChange.NotPossible") + "</td></tr>";
         else
             for (SubClass s : possible)
-                append += "<tr><td><button value=\"" + new CustomMessage("scripts.services.BaseChange.Button", player).addString(ClassId.VALUES.get(s.getClassId()).toString()) + "\" action=\"bypass -h scripts_services.Rename:changebase " + s.getClassId() + "\" width=200 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td></tr>";
+                append += "<tr><td><button value=\"" + new CustomMessage("scripts.services.BaseChange.Button").addString(ClassId.VALUES.get(s.getClassId()).toString()) + "\" action=\"bypass -h scripts_services.Rename:changebase " + s.getClassId() + "\" width=200 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td></tr>";
         append += "</table>";
         show(append, player);
     }
 
     public void changebase(String[] param) {
-        Player player = getSelf();
         if (player == null)
             return;
         if (!Config.SERVICES_CHANGE_BASE_ENABLED) {
@@ -264,7 +235,7 @@ public final class Rename extends Functions {
             return;
         }
 
-        if (getItemCount(player, Config.SERVICES_CHANGE_BASE_ITEM) < Config.SERVICES_CHANGE_BASE_PRICE) {
+        if (!player.haveItem(Config.SERVICES_CHANGE_BASE_ITEM, Config.SERVICES_CHANGE_BASE_PRICE)) {
             if (Config.SERVICES_CHANGE_BASE_ITEM == 57)
                 player.sendPacket(Msg.YOU_DO_NOT_HAVE_ENOUGH_ADENA);
             else
@@ -296,7 +267,6 @@ public final class Rename extends Functions {
     }
 
     public void rename() {
-        Player player = getSelf();
         if (player == null)
             return;
 
@@ -304,7 +274,6 @@ public final class Rename extends Functions {
     }
 
     public void rename(String[] args) {
-        Player player = getSelf();
         if (player == null)
             return;
 
@@ -334,12 +303,12 @@ public final class Rename extends Functions {
             return;
         }
 
-        if (!CharacterCreate.checkName(name) && !Config.SERVICES_CHANGE_NICK_ALLOW_SYMBOL) {
+        if (CharacterCreate.isValid(name) && !Config.SERVICES_CHANGE_NICK_ALLOW_SYMBOL) {
             player.sendMessage("Incorrect name, try again!");
             return;
         }
 
-        if (!player.getName().endsWith("V") && getItemCount(player, Config.SERVICES_CHANGE_NICK_ITEM) < Config.SERVICES_CHANGE_NICK_PRICE) {
+        if (!player.getName().endsWith("V") && !player.haveItem(Config.SERVICES_CHANGE_NICK_ITEM, Config.SERVICES_CHANGE_NICK_PRICE)) {
             if (Config.SERVICES_CHANGE_NICK_ITEM == 57)
                 player.sendPacket(Msg.YOU_DO_NOT_HAVE_ENOUGH_ADENA);
             else
@@ -356,56 +325,10 @@ public final class Rename extends Functions {
 
         String oldName = player.getName();
         player.reName(name, true);
-        player.sendPacket(new Say2(player.getObjectId(), ChatType.CRITICAL_ANNOUNCE, "Rename", "You changed name from " + oldName + " to " + name + "!"));
-    }
-
-    public void changesex() {
-        Player player = getSelf();
-        if (player == null)
-            return;
-        if (!Config.SERVICES_CHANGE_SEX_ENABLED) {
-            show("Service is disabled.", player);
-            return;
-        }
-        if (player.getRace() == Race.kamael) {
-            show("Not available for Kamael.", player);
-            return;
-        }
-
-        if (!player.isInPeaceZone()) {
-            show("You need to be in a peaceful area to use this service.", player);
-            return;
-        }
-
-        if (getItemCount(player, Config.SERVICES_CHANGE_SEX_ITEM) < Config.SERVICES_CHANGE_SEX_PRICE) {
-            if (Config.SERVICES_CHANGE_SEX_ITEM == 57)
-                player.sendPacket(Msg.YOU_DO_NOT_HAVE_ENOUGH_ADENA);
-            else
-                player.sendPacket(SystemMsg.INCORRECT_ITEM_COUNT);
-            return;
-        }
-
-        try (Connection con = DatabaseFactory.getInstance().getConnection();
-             PreparedStatement offline = con.prepareStatement("UPDATE characters SET sex = ? WHERE obj_Id = ?")) {
-            offline.setInt(1, player.isMale()  ? 1 : 0);
-            offline.setInt(2, player.getObjectId());
-            offline.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            show(new CustomMessage("common.Error", player), player);
-            return;
-        }
-
-        player.setHairColor(0);
-        player.setHairStyle(0);
-        player.setFace(0);
-        removeItem(player, Config.SERVICES_CHANGE_SEX_ITEM, Config.SERVICES_CHANGE_SEX_PRICE, "Rename$changeSex");
-        player.logout();
-        Log.add("Character " + player + " sex changed to " + (player.isMale() ? "male" : "female"), "renames");
+        player.sendPacket(new Say2(player.objectId(), ChatType.CRITICAL_ANNOUNCE, "Rename", "You changed name from " + oldName + " to " + name + "!"));
     }
 
     public void rename_clan_page() {
-        Player player = getSelf();
         if (player == null)
             return;
         if (!Config.SERVICES_CHANGE_CLAN_NAME_ENABLED) {
@@ -423,7 +346,6 @@ public final class Rename extends Functions {
     }
 
     private void rename_clan(String[] param) {
-        Player player = getSelf();
         if (player == null || param == null || param.length == 0)
             return;
 
@@ -437,7 +359,7 @@ public final class Rename extends Functions {
         }
 
         if (player.getEvent(SiegeEvent.class) != null) {
-            show(new CustomMessage("scripts.services.Rename.SiegeNow", player), player);
+            show(new CustomMessage("scripts.services.Rename.SiegeNow"), player);
             return;
         }
 
@@ -450,14 +372,11 @@ public final class Rename extends Functions {
             return;
         }
 
-        if (getItemCount(player, Config.SERVICES_CHANGE_CLAN_NAME_ITEM) < Config.SERVICES_CHANGE_CLAN_NAME_PRICE) {
-            if (Config.SERVICES_CHANGE_CLAN_NAME_ITEM == 57)
-                player.sendPacket(Msg.YOU_DO_NOT_HAVE_ENOUGH_ADENA);
-            else
+        if (!player.haveItem( Config.SERVICES_CHANGE_CLAN_NAME_ITEM, Config.SERVICES_CHANGE_CLAN_NAME_PRICE)) {
                 player.sendPacket(SystemMsg.INCORRECT_ITEM_COUNT);
             return;
         }
-        show(new CustomMessage("scripts.services.Rename.changedname", player).addString(player.getClan().getName()).addString(param[0]), player);
+        show(new CustomMessage("scripts.services.Rename.changedname").addString(player.getClan().getName()).addString(param[0]), player);
         SubUnit sub = player.getClan().getSubUnit(Clan.SUBUNIT_MAIN_CLAN);
         sub.setName(param[0], true);
 

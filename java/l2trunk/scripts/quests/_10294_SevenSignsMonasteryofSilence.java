@@ -10,6 +10,8 @@ import l2trunk.gameserver.utils.Location;
 
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public final class _10294_SevenSignsMonasteryofSilence extends Quest {
     private static final int Elcardia = 32784;
@@ -29,7 +31,7 @@ public final class _10294_SevenSignsMonasteryofSilence extends Quest {
     private static final int SolinasEvilThoughts = 32793;
 
     // reading desks
-    private static final List<Integer> ReadingDesk = ArrayUtils.createAscendingList(32821, 32836);
+    private static final List<Integer> ReadingDesk = IntStream.rangeClosed(32821, 32836).boxed().collect(Collectors.toList());
 
     private static final List<Integer> YellowRoomDesks = ReadingDesk.subList(0, 4);
     private static final int YellowTrueReadingDesk = YellowRoomDesks.get(2);
@@ -58,7 +60,7 @@ public final class _10294_SevenSignsMonasteryofSilence extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        Player player = st.getPlayer();
+        Player player = st.player;
         String htmltext = event;
         if (event.equalsIgnoreCase("elcardia_q10294_4.htm")) {
             st.setCond(1);
@@ -112,29 +114,29 @@ public final class _10294_SevenSignsMonasteryofSilence extends Quest {
                 proccessComplete(st);
             } else
                 htmltext = "readingdesk_q10294_0.htm";
-        } else if (event.equalsIgnoreCase("readingdesk_q10294_greentrue2.htm")) {
+        } else if ("readingdesk_q10294_greentrue2.htm".equalsIgnoreCase(event)) {
             if (st.getInt("green") == 0) {
                 npc.setNpcState(1);
                 st.set("green", 1);
-                st.getPlayer().getReflection().addSpawnWithoutRespawn(JudevanEtinasEvilThoughts, new Location(87704, -249496, -8320, 49152), 0);
+                st.player.getReflection().addSpawnWithoutRespawn(JudevanEtinasEvilThoughts, Location.of(87704, -249496, -8320, 49152));
                 for (int i = 0; i < 3; i++)
-                    st.getPlayer().getReflection().addSpawnWithoutRespawn(SolinaLayrother, Location.findPointToStay(st.getPlayer(), 300), 0);
+                    st.player.getReflection().addSpawnWithoutRespawn(SolinaLayrother, Location.findPointToStay(st.player, 300));
                 proccessComplete(st);
             } else
                 htmltext = "readingdesk_q10294_0.htm";
-        } else if (event.equalsIgnoreCase("readingdesk_q10294_bluetrue2.htm")) {
+        } else if ("readingdesk_q10294_bluetrue2.htm".equalsIgnoreCase(event)) {
             if (st.getInt("blue") == 0) {
                 npc.setNpcState(1);
                 st.set("blue", 1);
-                st.getPlayer().getReflection().addSpawnWithoutRespawn(SolinasEvilThoughts, new Location(86680, -246728, -8320, 0), 0);
+                st.player.getReflection().addSpawnWithoutRespawn(SolinasEvilThoughts, new Location(86680, -246728, -8320));
                 proccessComplete(st);
             } else
                 htmltext = "readingdesk_q10294_0.htm";
-        } else if (event.equalsIgnoreCase("readingdesk_q10294_redtrue2.htm")) {
+        } else if ("readingdesk_q10294_redtrue2.htm".equalsIgnoreCase(event)) {
             if (st.getInt("red") == 0) {
                 npc.setNpcState(1);
                 st.set("red", 1);
-                st.getPlayer().getReflection().addSpawnWithoutRespawn(JudevanEtinasEvilThoughts2, new Location(84840, -252392, -8320, 49152), 0);
+                st.player.getReflection().addSpawnWithoutRespawn(JudevanEtinasEvilThoughts2, new Location(84840, -252392, -8320, 49152));
                 proccessComplete(st);
             } else
                 htmltext = "readingdesk_q10294_0.htm";
@@ -184,13 +186,12 @@ public final class _10294_SevenSignsMonasteryofSilence extends Quest {
         String htmltext = "noquest";
         int npcId = npc.getNpcId();
         int cond = st.getCond();
-        Player player = st.getPlayer();
+        Player player = st.player;
         if (player.getBaseClassId() != player.getActiveClassId())
             return "no_subclass_allowed.htm";
         if (npcId == Elcardia) {
             if (cond == 0) {
-                QuestState qs = player.getQuestState(_10293_SevenSignsForbiddenBook.class);
-                if (player.getLevel() >= 81 && qs != null && qs.isCompleted())
+                if (player.getLevel() >= 81 && player.isQuestCompleted(_10293_SevenSignsForbiddenBook.class))
                     htmltext = "elcardia_q10294_1.htm";
                 else {
                     htmltext = "elcardia_q10294_0.htm";
@@ -262,7 +263,7 @@ public final class _10294_SevenSignsMonasteryofSilence extends Quest {
 
     private void proccessComplete(QuestState st) {
         if (checkComplete(st))
-            st.getPlayer().showQuestMovie(ExStartScenePlayer.SCENE_SSQ2_HOLY_BURIAL_GROUND_CLOSING);
+            st.player.showQuestMovie(ExStartScenePlayer.SCENE_SSQ2_HOLY_BURIAL_GROUND_CLOSING);
 
     }
 }

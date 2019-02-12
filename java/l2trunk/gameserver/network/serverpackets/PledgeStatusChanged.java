@@ -16,7 +16,7 @@ public class PledgeStatusChanged extends L2GameServerPacket {
 
     public PledgeStatusChanged(Clan clan) {
         leader_id = clan.getLeaderId();
-        clan_id = clan.getClanId();
+        clan_id = clan.clanId();
         level = clan.getLevel();
     }
 

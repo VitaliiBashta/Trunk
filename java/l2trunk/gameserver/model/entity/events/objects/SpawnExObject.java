@@ -15,12 +15,12 @@ public final class SpawnExObject implements SpawnableObject {
     private static final Logger _log = LoggerFactory.getLogger(SpawnExObject.class);
 
     private final List<Spawner> _spawns;
-    private final String _name;
+    private final String name;
     private boolean _spawned;
 
     public SpawnExObject(String name) {
-        _name = name;
-        _spawns = SpawnManager.INSTANCE.getSpawners(_name);
+        this.name = name;
+        _spawns = SpawnManager.INSTANCE.getSpawners(this.name);
         if (_spawns.isEmpty())
             _log.info("SpawnExObject: not found spawn group: " + name);
     }
@@ -28,7 +28,7 @@ public final class SpawnExObject implements SpawnableObject {
     @Override
     public void spawnObject(GlobalEvent event) {
         if (_spawned)
-            _log.info("SpawnExObject: can't spawn twice: " + _name + "; event: " + event, new Exception());
+            _log.info("SpawnExObject: can't spawn twice: " + name + "; event: " + event, new Exception());
         else {
             for (Spawner spawn : _spawns) {
                 if (event.isInProgress())

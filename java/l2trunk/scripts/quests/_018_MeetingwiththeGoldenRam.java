@@ -3,7 +3,6 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _018_MeetingwiththeGoldenRam extends Quest {
     private static final int SUPPLY_BOX = 7245;
@@ -51,7 +50,7 @@ public final class _018_MeetingwiththeGoldenRam extends Quest {
         int cond = st.getCond();
         if (npcId == 31314) {
             if (cond == 0)
-                if (st.getPlayer().getLevel() >= 66)
+                if (st.player.getLevel() >= 66)
                     htmltext = "warehouse_chief_donal_q0018_0101.htm";
                 else {
                     htmltext = "warehouse_chief_donal_q0018_0103.htm";

@@ -5,7 +5,6 @@ import l2trunk.gameserver.Config;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _125_InTheNameOfEvilPart1 extends Quest {
     private final int Mushika = 32114;
@@ -71,8 +70,7 @@ public final class _125_InTheNameOfEvilPart1 extends Quest {
         int cond = st.getCond();
         if (npcId == Mushika) {
             if (cond == 0) {
-                QuestState meetQuest = st.getPlayer().getQuestState(_124_MeetingTheElroki.class);
-                if (st.getPlayer().getLevel() > 76 && meetQuest != null && meetQuest.isCompleted())
+                if (st.player.getLevel() > 76 && st.player.isQuestCompleted(_124_MeetingTheElroki.class))
                     htmltext = "32114.htm";
                 else {
                     htmltext = "32114-0.htm";
@@ -93,8 +91,8 @@ public final class _125_InTheNameOfEvilPart1 extends Quest {
             else if (cond == 3)
                 htmltext = "32117-09.htm";
             else if (cond == 4) {
-                st.takeAllItems(DienBone);
-                st.takeAllItems(OrClaw);
+                st.takeItems(DienBone);
+                st.takeItems(OrClaw);
                 htmltext = "32117-1.htm";
             }
         } else if (npcId == UluKaimu) {
@@ -110,21 +108,20 @@ public final class _125_InTheNameOfEvilPart1 extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
 
         if (st.getCond() == 3) {
             if ((npcId == 22744 || npcId == 22742) && st.getQuestItemsCount(OrClaw) < 2 && Rnd.chance(10 * Config.RATE_QUESTS_DROP)) {
-                st.giveItems(OrClaw, 1);
+                st.giveItems(OrClaw);
                 st.playSound(SOUND_MIDDLE);
             }
             if ((npcId == 22743 || npcId == 22745) && st.getQuestItemsCount(DienBone) < 2 && Rnd.chance(10 * Config.RATE_QUESTS_DROP)) {
-                st.giveItems(DienBone, 1);
+                st.giveItems(DienBone);
                 st.playSound(SOUND_MIDDLE);
             }
             if (st.getQuestItemsCount(DienBone) >= 2 && st.getQuestItemsCount(OrClaw) >= 2)
                 st.setCond(4);
         }
-        return null;
     }
 }

@@ -3,14 +3,12 @@ package l2trunk.scripts.services;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.cache.Msg;
 import l2trunk.gameserver.data.xml.holder.ItemHolder;
-import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.templates.item.ItemTemplate;
 
 public final class ExpandWarehouse extends Functions {
     public void get() {
-        Player player = getSelf();
         if (player == null)
             return;
 
@@ -19,9 +17,9 @@ public final class ExpandWarehouse extends Functions {
             return;
         }
 
-        if (player.getInventory().destroyItemByItemId(Config.SERVICES_EXPAND_WAREHOUSE_ITEM, Config.SERVICES_EXPAND_WAREHOUSE_PRICE, "ExpandWarehouse$get")) {
+        if (player.inventory.destroyItemByItemId(Config.SERVICES_EXPAND_WAREHOUSE_ITEM, Config.SERVICES_EXPAND_WAREHOUSE_PRICE, "ExpandWarehouse$get")) {
             player.setExpandWarehouse(player.getExpandWarehouse() + 1);
-            player.setVar("ExpandWarehouse", String.valueOf(player.getExpandWarehouse()), -1);
+            player.setVar("ExpandWarehouse", player.getExpandWarehouse());
             player.sendMessage("Warehouse capacity is now " + player.getWarehouseLimit());
         } else if (Config.SERVICES_EXPAND_WAREHOUSE_ITEM == 57)
             player.sendPacket(Msg.YOU_DO_NOT_HAVE_ENOUGH_ADENA);
@@ -32,7 +30,6 @@ public final class ExpandWarehouse extends Functions {
     }
 
     private void show() {
-        Player player = getSelf();
         if (player == null)
             return;
 

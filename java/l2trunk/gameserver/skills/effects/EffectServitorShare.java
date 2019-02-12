@@ -4,13 +4,12 @@ import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Effect;
 import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.Player;
+import l2trunk.gameserver.model.instances.PetInstance;
 import l2trunk.gameserver.stats.Env;
 import l2trunk.gameserver.stats.Stats;
 import l2trunk.gameserver.stats.funcs.Func;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Stream;
 
 public final class EffectServitorShare extends Effect {
     public EffectServitorShare(Env paramEnv, EffectTemplate paramEffectTemplate) {
@@ -32,7 +31,7 @@ public final class EffectServitorShare extends Effect {
                         Player pc = env.character.getPlayer();
                         if (pc != null) {
                             GameObject target = env.character.getTarget();
-                            env.value += pc.getPAtk((Creature) ((target != null) && (target.isPet()) ? target : null)) * 0.5D;
+                            env.value += pc.getPAtk((Creature) ((target instanceof PetInstance) ? target : null)) * 0.5D;
                         }
                     }
                 })
@@ -41,7 +40,7 @@ public final class EffectServitorShare extends Effect {
                         Player pc = env.character.getPlayer();
                         if (pc != null) {
                             GameObject target = env.character.getTarget();
-                            env.value += pc.getPDef((Creature) ((target != null) && (target.isPet()) ? target : null)) * 0.5D;
+                            env.value += pc.getPDef((Creature) ((target instanceof PetInstance) ? target : null)) * 0.5D;
                         }
                     }
                 }
@@ -50,7 +49,7 @@ public final class EffectServitorShare extends Effect {
                         Player pc = env.character.getPlayer();
                         if (pc != null) {
                             GameObject target = env.character.getTarget();
-                            env.value += pc.getMAtk((Creature) ((target != null) && (target.isPet()) ? target : null), env.skill) * 0.25D;
+                            env.value += pc.getMAtk((Creature) ((target instanceof PetInstance) ? target : null), env.skill) * 0.25D;
                         }
                     }
                 }
@@ -59,7 +58,7 @@ public final class EffectServitorShare extends Effect {
                         Player pc = env.character.getPlayer();
                         if (pc != null) {
                             GameObject target = env.character.getTarget();
-                            env.value += pc.getMDef((Creature) ((target != null) && (target.isPet()) ? target : null), env.skill) * 0.25D;
+                            env.value += pc.getMDef((Creature) ((target instanceof PetInstance) ? target : null), env.skill) * 0.25D;
                         }
                     }
                 }
@@ -82,7 +81,7 @@ public final class EffectServitorShare extends Effect {
                         Player pc = env.character.getPlayer();
                         if (pc != null) {
                             GameObject target = env.character.getTarget();
-                            env.value += pc.getCriticalHit((Creature) ((target != null) && (target.isPet()) ? target : null), env.skill) * 0.2D;
+                            env.value += pc.getCriticalHit((Creature) ((target instanceof PetInstance) ? target : null), env.skill) * 0.2D;
                         }
                     }
                 }
@@ -101,9 +100,4 @@ public final class EffectServitorShare extends Effect {
                     }
                 });
     }
-
-    protected boolean onActionTime() {
-        return false;
     }
-
-}

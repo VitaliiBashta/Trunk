@@ -4,7 +4,6 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _696_ConquertheHallofErosion extends Quest {
     // NPC
@@ -34,13 +33,13 @@ public final class _696_ConquertheHallofErosion extends Quest {
     public String onTalk(NpcInstance npc, QuestState st) {
         String htmltext = "noquest";
         int npcId = npc.getNpcId();
-        Player player = st.getPlayer();
+        Player player = st.player;
         int cond = st.getCond();
 
         if (npcId == TEPIOS) {
             if (cond == 0) {
                 if (player.getLevel() >= 75) {
-                    if (st.getQuestItemsCount(MARK_OF_KEUCEREUS_STAGE_1) > 0 || st.getQuestItemsCount(MARK_OF_KEUCEREUS_STAGE_2) > 0)
+                    if (st.haveAnyQuestItems(MARK_OF_KEUCEREUS_STAGE_1,MARK_OF_KEUCEREUS_STAGE_2) )
                         htmltext = "tepios_q696_1.htm";
                     else {
                         htmltext = "tepios_q696_6.htm";
@@ -53,8 +52,8 @@ public final class _696_ConquertheHallofErosion extends Quest {
             } else if (cond == 1) {
                 if (st.getInt("cohemenesDone") != 0) {
                     if (st.getQuestItemsCount(MARK_OF_KEUCEREUS_STAGE_2) < 1) {
-                        st.takeAllItems(MARK_OF_KEUCEREUS_STAGE_1);
-                        st.giveItems(MARK_OF_KEUCEREUS_STAGE_2, 1);
+                        st.takeItems(MARK_OF_KEUCEREUS_STAGE_1);
+                        st.giveItems(MARK_OF_KEUCEREUS_STAGE_2);
                     }
                     htmltext = "tepios_q696_5.htm";
                     st.playSound(SOUND_FINISH);
@@ -67,9 +66,8 @@ public final class _696_ConquertheHallofErosion extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (npc.getNpcId() == Cohemenes)
             st.set("cohemenesDone", 1);
-        return null;
     }
 }

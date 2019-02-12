@@ -80,7 +80,7 @@ public final class SendWareHouseWithDrawList extends L2GameClientPacket {
             logType = Log.ClanWarehouseWithdraw;
             boolean canWithdrawCWH = false;
             if (activeChar.getClan() != null) {
-                if ((activeChar.getClanPrivileges() & Clan.CP_CL_WAREHOUSE_SEARCH) == Clan.CP_CL_WAREHOUSE_SEARCH && (Config.ALT_ALLOW_OTHERS_WITHDRAW_FROM_CLAN_WAREHOUSE || activeChar.isClanLeader() || activeChar.getVarB("canWhWithdraw")))
+                if ((activeChar.getClanPrivileges() & Clan.CP_CL_WAREHOUSE_SEARCH) == Clan.CP_CL_WAREHOUSE_SEARCH && (Config.ALT_ALLOW_OTHERS_WITHDRAW_FROM_CLAN_WAREHOUSE || activeChar.isClanLeader() || activeChar.isVarSet("canWhWithdraw")))
                     canWithdrawCWH = true;
             }
             if (!canWithdrawCWH && activeChar.getWithdrawWarehouse() == null)
@@ -118,7 +118,7 @@ public final class SendWareHouseWithDrawList extends L2GameClientPacket {
                     return;
                 }
 
-                weight = SafeMath.addAndCheck(weight, SafeMath.mulAndCheck(item.getTemplate().getWeight(), _itemQ[i]));
+                weight = SafeMath.addAndCheck(weight, SafeMath.mulAndCheck(item.getTemplate().weight(), _itemQ[i]));
                 if (!item.isStackable() || inventory.getItemByItemId(item.getItemId()) == null) // вещь требует слота
                     slots++;
             }

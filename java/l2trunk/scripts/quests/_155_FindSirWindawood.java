@@ -3,7 +3,6 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _155_FindSirWindawood extends Quest {
     private static final int OFFICIAL_LETTER = 1019;
@@ -23,7 +22,7 @@ public final class _155_FindSirWindawood extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if (event.equals("30042-04.htm")) {
-            st.giveItems(OFFICIAL_LETTER, 1);
+            st.giveItems(OFFICIAL_LETTER);
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
@@ -38,7 +37,7 @@ public final class _155_FindSirWindawood extends Quest {
         int cond = st.getCond();
         if (npcId == 30042) {
             if (cond == 0) {
-                if (st.getPlayer().getLevel() >= 3) {
+                if (st.player.getLevel() >= 3) {
                     htmltext = "30042-03.htm";
                     return htmltext;
                 }
@@ -48,8 +47,8 @@ public final class _155_FindSirWindawood extends Quest {
                 htmltext = "30042-05.htm";
         } else if (npcId == 30311 && cond == 1 && st.getQuestItemsCount(OFFICIAL_LETTER) == 1) {
             htmltext = "30311-01.htm";
-            st.takeItems(OFFICIAL_LETTER, -1);
-            st.giveItems(HASTE_POTION, 1);
+            st.takeItems(OFFICIAL_LETTER);
+            st.giveItems(HASTE_POTION);
             st.setCond(0);
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(false);

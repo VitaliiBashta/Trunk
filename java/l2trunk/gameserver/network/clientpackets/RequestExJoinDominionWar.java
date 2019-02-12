@@ -46,7 +46,7 @@ public final class RequestExJoinDominionWar extends L2GameClientPacket {
             return;
         }
 
-        if ((player.getLevel() < 40) || (player.getClassId().getLevel() <= 2)) {
+        if ((player.getLevel() < 40) || (player.getClassId().occupation() < 2)) {
             player.sendPacket(SystemMsg.ONLY_CHARACTERS_WHO_ARE_LEVEL_40_OR_ABOVE_WHO_HAVE_COMPLETED_THEIR_SECOND_CLASS_TRANSFER_CAN_REGISTER_IN_A_TERRITORY_WAR);
             return;
         }
@@ -55,7 +55,7 @@ public final class RequestExJoinDominionWar extends L2GameClientPacket {
         int clanReg = 0;
         for (Dominion d : ResidenceHolder.getResidenceList(Dominion.class)) {
             DominionSiegeEvent dominionSiegeEvent = d.getSiegeEvent();
-            if (dominionSiegeEvent.getObjects(DominionSiegeEvent.DEFENDER_PLAYERS).contains(player.getObjectId())) {
+            if (dominionSiegeEvent.getObjects(DominionSiegeEvent.DEFENDER_PLAYERS).contains(player.objectId())) {
                 playerReg = d.getId();
             } else if (dominionSiegeEvent.getSiegeClan(DominionSiegeEvent.DEFENDERS, player.getClan()) != null) {
                 clanReg = d.getId();
@@ -87,8 +87,8 @@ public final class RequestExJoinDominionWar extends L2GameClientPacket {
 
                 player.sendPacket(new SystemMessage2(SystemMsg.CLAN_PARTICIPATION_IS_REQUESTED_IN_S1_TERRITORY).addResidenceName(dominion));
             } else {
-                siegeEvent.addObject(DominionSiegeEvent.DEFENDER_PLAYERS, player.getObjectId());
-                SiegePlayerDAO.INSTANCE.insert(dominion, 0, player.getObjectId());
+                siegeEvent.addObject(DominionSiegeEvent.DEFENDER_PLAYERS, player.objectId());
+                SiegePlayerDAO.INSTANCE.insert(dominion, 0, player.objectId());
 
                 player.sendPacket(new SystemMessage2(SystemMsg.MERCENARY_PARTICIPATION_IS_REQUESTED_IN_S1_TERRITORY).addResidenceName(dominion));
             }
@@ -112,8 +112,8 @@ public final class RequestExJoinDominionWar extends L2GameClientPacket {
 
                 player.sendPacket(new SystemMessage2(SystemMsg.CLAN_PARTICIPATION_REQUEST_IS_CANCELLED_IN_S1_TERRITORY).addResidenceName(dominion));
             } else {
-                siegeEvent.removeObject(DominionSiegeEvent.DEFENDER_PLAYERS, player.getObjectId());
-                SiegePlayerDAO.INSTANCE.delete(dominion, 0, player.getObjectId());
+                siegeEvent.removeObject(DominionSiegeEvent.DEFENDER_PLAYERS, player.objectId());
+                SiegePlayerDAO.INSTANCE.delete(dominion, 0, player.objectId());
 
                 player.sendPacket(new SystemMessage2(SystemMsg.MERCENARY_PARTICIPATION_REQUEST_IS_CANCELLED_IN_S1_TERRITORY).addResidenceName(dominion));
             }

@@ -229,25 +229,15 @@ public final class _419_GetaPet extends Quest {
         addTalkId(MC_ELLIE);
         addTalkId(GD_METTY);
 
-        addQuestItem(ANIMAL_LOVERS_LIST1);
-        addQuestItem(ANIMAL_SLAYER_LIST2);
-        addQuestItem(ANIMAL_SLAYER_LIST3);
-        addQuestItem(ANIMAL_SLAYER_LIST4);
-        addQuestItem(ANIMAL_SLAYER_LIST5);
-        addQuestItem(ANIMAL_SLAYER_LIST6);
-        addQuestItem(SPIDER_LEG1);
-        addQuestItem(SPIDER_LEG2);
-        addQuestItem(SPIDER_LEG3);
-        addQuestItem(SPIDER_LEG4);
-        addQuestItem(SPIDER_LEG5);
-        addQuestItem(SPIDER_LEG6);
+        addQuestItem(ANIMAL_LOVERS_LIST1,ANIMAL_SLAYER_LIST2,ANIMAL_SLAYER_LIST3,ANIMAL_SLAYER_LIST4,ANIMAL_SLAYER_LIST5,ANIMAL_SLAYER_LIST6);
+        addQuestItem(SPIDER_LEG1,SPIDER_LEG2,SPIDER_LEG3,SPIDER_LEG4,SPIDER_LEG5,SPIDER_LEG6);
 
         for (int[] aDROPLIST_COND : DROPLIST_COND) addKillId(aDROPLIST_COND[2]);
     }
 
     private long getCount_proof(QuestState st) {
         long counts = 0;
-        switch (st.getPlayer().getRace()) {
+        switch (st.player.getRace()) {
             case human:
                 counts = st.getQuestItemsCount(SPIDER_LEG1);
                 break;
@@ -270,7 +260,7 @@ public final class _419_GetaPet extends Quest {
     }
 
     private String check_questions(QuestState st) {
-        String htmltext = "";
+        String htmltext;
         int answers = st.getInt("answers");
         int question = st.getInt("question");
         if (question > 0)
@@ -283,7 +273,7 @@ public final class _419_GetaPet extends Quest {
             String quiz = "";
             if (GetQuestion + 1 == ANS.length) {
                 for (int i = 0; i < ANS.length - 2; i++)
-                    quiz = quiz + ANS[i] + " ";
+                    quiz += ANS[i] + " ";
                 quiz = quiz + ANS[ANS.length - 2];
             } else {
                 for (int i = 0; i < ANS.length - 1; i++)
@@ -294,7 +284,7 @@ public final class _419_GetaPet extends Quest {
             st.set("quiz", quiz);
             htmltext = "419_q" + index + ".htm";
         } else {
-            st.giveItems(WOLF_COLLAR, 1);
+            st.giveItems(WOLF_COLLAR);
             st.playSound(SOUND_FINISH);
             htmltext = "Completed.htm";
             st.exitCurrentQuest(true);
@@ -308,32 +298,32 @@ public final class _419_GetaPet extends Quest {
         int StateId = st.getInt("id");
         if (event.equalsIgnoreCase("details"))
             htmltext = "419_confirm.htm";
-        else if (event.equalsIgnoreCase("agree")) {
+        else if ("agree".equalsIgnoreCase(event)) {
             st.setState(STARTED);
             st.setCond(1);
-            switch (st.getPlayer().getRace()) {
+            switch (st.player.getRace()) {
                 case human:
-                    st.giveItems(ANIMAL_SLAYER_LIST1, 1);
+                    st.giveItems(ANIMAL_SLAYER_LIST1);
                     htmltext = "419_slay_0.htm";
                     break;
                 case elf:
-                    st.giveItems(ANIMAL_SLAYER_LIST2, 1);
+                    st.giveItems(ANIMAL_SLAYER_LIST2);
                     htmltext = "419_slay_1.htm";
                     break;
                 case darkelf:
-                    st.giveItems(ANIMAL_SLAYER_LIST3, 1);
+                    st.giveItems(ANIMAL_SLAYER_LIST3);
                     htmltext = "419_slay_2.htm";
                     break;
                 case orc:
-                    st.giveItems(ANIMAL_SLAYER_LIST4, 1);
+                    st.giveItems(ANIMAL_SLAYER_LIST4);
                     htmltext = "419_slay_3.htm";
                     break;
                 case dwarf:
-                    st.giveItems(ANIMAL_SLAYER_LIST5, 1);
+                    st.giveItems(ANIMAL_SLAYER_LIST5);
                     htmltext = "419_slay_4.htm";
                     break;
                 case kamael:
-                    st.giveItems(ANIMAL_SLAYER_LIST6, 1);
+                    st.giveItems(ANIMAL_SLAYER_LIST6);
                     htmltext = "419_slay_5.htm";
             }
             st.playSound(SOUND_ACCEPT);
@@ -345,30 +335,30 @@ public final class _419_GetaPet extends Quest {
                 htmltext = "419_talk.htm";
             else if (event.equalsIgnoreCase("talk1"))
                 htmltext = "419_bella_2.htm";
-            else if (event.equalsIgnoreCase("talk2")) {
-                st.set("progress", String.valueOf(st.getInt("progress") | 1));
+            else if ("talk2".equalsIgnoreCase(event)) {
+                st.set("progress", st.getInt("progress") | 1);
                 htmltext = "419_bella_3.htm";
-            } else if (event.equalsIgnoreCase("talk3")) {
-                st.set("progress", String.valueOf(st.getInt("progress") | 2));
+            } else if ("talk3".equalsIgnoreCase(event)) {
+                st.set("progress", st.getInt("progress") | 2);
                 htmltext = "419_ellie_2.htm";
-            } else if (event.equalsIgnoreCase("talk4")) {
-                st.set("progress", String.valueOf(st.getInt("progress") | 4));
+            } else if ("talk4".equalsIgnoreCase(event)) {
+                st.set("progress", st.getInt("progress") | 4);
                 htmltext = "419_metty_2.htm";
             }
         } else if (StateId == 2)
-            if (event.equalsIgnoreCase("tryme"))
+            if ("tryme".equalsIgnoreCase(event))
                 htmltext = check_questions(st);
-            else if (event.equalsIgnoreCase("wrong")) {
-                st.set("id", "1");
-                st.set("progress", "0");
+            else if ("wrong".equalsIgnoreCase(event)) {
+                st.set("id", 1);
+                st.set("progress", 0);
                 st.unset("quiz");
                 st.unset("answers");
                 st.unset("question");
-                st.giveItems(ANIMAL_LOVERS_LIST1, 1);
+                st.giveItems(ANIMAL_LOVERS_LIST1);
                 htmltext = "419_failed.htm";
-            } else if (event.equalsIgnoreCase("right")) {
-                st.set("answers", String.valueOf(st.getInt("answers") + 1));
-                st.set("question", "0");
+            } else if ("right".equalsIgnoreCase(event)) {
+                st.set("answers", st.getInt("answers") + 1);
+                st.set("question", 0);
                 htmltext = check_questions(st);
             }
         return htmltext;
@@ -382,7 +372,7 @@ public final class _419_GetaPet extends Quest {
         int cond = st.getCond();
         if (cond == 0) {
             if (npcId == PET_MANAGER_MARTIN)
-                if (st.getPlayer().getLevel() < 15) {
+                if (st.player.getLevel() < 15) {
                     htmltext = "419_low_level.htm";
                     st.exitCurrentQuest(true);
                 } else
@@ -396,41 +386,41 @@ public final class _419_GetaPet extends Quest {
                     else if (counts < REQUIRED_SPIDER_LEGS)
                         htmltext = "419_pending_slay.htm";
                     else {
-                        switch (st.getPlayer().getRace()) {
+                        switch (st.player.getRace()) {
                             case human:
-                                st.takeItems(ANIMAL_SLAYER_LIST1, -1);
-                                st.takeItems(SPIDER_LEG1, -1);
+                                st.takeItems(ANIMAL_SLAYER_LIST1);
+                                st.takeItems(SPIDER_LEG1);
                                 break;
                             case elf:
-                                st.takeItems(ANIMAL_SLAYER_LIST2, -1);
-                                st.takeItems(SPIDER_LEG2, -1);
+                                st.takeItems(ANIMAL_SLAYER_LIST2);
+                                st.takeItems(SPIDER_LEG2);
                                 break;
                             case darkelf:
-                                st.takeItems(ANIMAL_SLAYER_LIST3, -1);
-                                st.takeItems(SPIDER_LEG3, -1);
+                                st.takeItems(ANIMAL_SLAYER_LIST3);
+                                st.takeItems(SPIDER_LEG3);
                                 break;
                             case orc:
-                                st.takeItems(ANIMAL_SLAYER_LIST4, -1);
-                                st.takeItems(SPIDER_LEG4, -1);
+                                st.takeItems(ANIMAL_SLAYER_LIST4);
+                                st.takeItems(SPIDER_LEG4);
                                 break;
                             case dwarf:
-                                st.takeItems(ANIMAL_SLAYER_LIST5, -1);
-                                st.takeItems(SPIDER_LEG5, -1);
+                                st.takeItems(ANIMAL_SLAYER_LIST5);
+                                st.takeItems(SPIDER_LEG5);
                                 break;
                             case kamael:
-                                st.takeItems(ANIMAL_SLAYER_LIST6, -1);
-                                st.takeItems(SPIDER_LEG6, -1);
+                                st.takeItems(ANIMAL_SLAYER_LIST6);
+                                st.takeItems(SPIDER_LEG6);
                         }
-                        st.set("id", "1");
-                        st.giveItems(ANIMAL_LOVERS_LIST1, 1);
+                        st.set("id", 1);
+                        st.giveItems(ANIMAL_LOVERS_LIST1);
                         htmltext = "Slayed.htm";
                     }
                 } else if (StateId == 1) {
                     if (st.getInt("progress") == 7) {
-                        st.takeItems(ANIMAL_LOVERS_LIST1, -1);
+                        st.takeItems(ANIMAL_LOVERS_LIST1);
                         st.set("quiz", "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15");
-                        st.set("answers", "0");
-                        st.set("id", "2");
+                        st.set("answers", 0);
+                        st.set("id", 2);
                         htmltext = "Talked.htm";
                     } else
                         htmltext = "419_pending_talk.htm";
@@ -447,7 +437,7 @@ public final class _419_GetaPet extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         for (int[] aDROPLIST_COND : DROPLIST_COND)
@@ -460,6 +450,5 @@ public final class _419_GetaPet extends Quest {
                             st.setCond(aDROPLIST_COND[1]);
                             st.setState(STARTED);
                         }
-        return null;
     }
 }

@@ -16,7 +16,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -61,7 +60,6 @@ public final class Config {
     private static final Path RESIDENCE_CONFIG_FILE = CONFIG.resolve("residence.ini");
     private static final Path SPOIL_CONFIG_FILE = CONFIG.resolve("spoil.ini");
     private static final Path ALT_SETTINGS_FILE = CONFIG.resolve("altsettings.ini");
-    private static final Path FORMULAS_CONFIGURATION_FILE = CONFIG.resolve("formulas.ini");
     private static final Path PVP_CONFIG_FILE = CONFIG.resolve("pvp.ini");
     private static final Path TELNET_CONFIGURATION_FILE = CONFIG.resolve("telnet.ini");
     private static final Path CONFIGURATION_FILE = CONFIG.resolve("server.ini");
@@ -139,7 +137,6 @@ public final class Config {
     public static int CHATFILTER_MIN_LEVEL = 0;
     public static int SHOUT_REQUIRED_LEVEL;
     public static int ALT_MAIL_MIN_LVL;
-    public static boolean MANAHEAL_SPS_BONUS;
     public static int ALT_ADD_RECIPES;
     public static int ALT_MAX_ALLY_SIZE;
     public static int ALT_LEVEL_DIFFERENCE_PROTECTION;
@@ -150,11 +147,6 @@ public final class Config {
     public static double ALT_VITALITY_RATE;
     public static double ALT_VITALITY_CONSUME_RATE;
     public static int ALT_VITALITY_RAID_BONUS;
-    public static int AWAY_TIMER;
-    public static int BACK_TIMER;
-    public static int AWAY_TITLE_COLOR;
-    public static boolean AWAY_PLAYER_TAKE_AGGRO;
-    public static boolean AWAY_PEACE_ZONE;
     public static boolean SERVICES_EXCHANGE_EQUIP;
     // L2Mythras Configs
     public static int DONATOR_NPC_ITEM;
@@ -369,9 +361,6 @@ public final class Config {
     public static boolean SERVICES_EXCHANGE_BABY_PET_ENABLED;
     public static int SERVICES_EXCHANGE_BABY_PET_PRICE;
     public static int SERVICES_EXCHANGE_BABY_PET_ITEM;
-    public static boolean SERVICES_CHANGE_SEX_ENABLED;
-    public static int SERVICES_CHANGE_SEX_PRICE;
-    public static int SERVICES_CHANGE_SEX_ITEM;
     public static boolean SERVICES_CHANGE_BASE_ENABLED;
     public static int SERVICES_CHANGE_BASE_PRICE;
     public static int SERVICES_CHANGE_BASE_ITEM;
@@ -385,13 +374,6 @@ public final class Config {
     public static boolean SERVICES_NOBLESS_SELL_ENABLED;
     public static int SERVICES_NOBLESS_SELL_PRICE;
     public static int SERVICES_NOBLESS_SELL_ITEM;
-    public static boolean SERVICES_HERO_SELL_ENABLED;
-    public static List<Integer> SERVICES_HERO_SELL_DAY;
-    public static List<Integer> SERVICES_HERO_SELL_PRICE;
-    public static List<Integer> SERVICES_HERO_SELL_ITEM;
-    public static boolean SERVICES_HERO_SELL_CHAT;
-    public static boolean SERVICES_HERO_SELL_SKILL;
-    public static boolean SERVICES_HERO_SELL_ITEMS;
     public static boolean SERVICES_WASH_PK_ENABLED;
     public static int SERVICES_WASH_PK_ITEM;
     public static int SERVICES_WASH_PK_PRICE;
@@ -445,15 +427,9 @@ public final class Config {
     public static boolean ADEPT_ENABLE;
     // By SmokiMo
     public static int HENNA_STATS;
-    // PvP Configs
-    public static boolean NEW_CHAR_IS_NOBLE;
-    public static boolean NEW_CHAR_IS_HERO;
+
     /* .km-all-to-me */
     public static boolean ENABLE_KM_ALL_TO_ME;
-    /* .res */
-    public static boolean COMMAND_RES;
-    public static int ITEM_ID_RESS;
-    public static int PRICE_RESS;
     public static int FARM_TELEPORT_ITEM_ID;
     public static int PRICE_FARM;
     public static int FARM_X;
@@ -595,9 +571,6 @@ public final class Config {
     public static double ALT_CHAMPION_CHANCE2;
     public static boolean ALT_CHAMPION_CAN_BE_AGGRO;
     public static boolean ALT_CHAMPION_CAN_BE_SOCIAL;
-    public static boolean ALT_CHAMPION_DROP_HERBS;
-    public static boolean ALT_SHOW_MONSTERS_LVL;
-    public static boolean ALT_SHOW_MONSTERS_AGRESSION;
     public static int ALT_CHAMPION_TOP_LEVEL;
     public static int ALT_CHAMPION_MIN_LEVEL;
     public static boolean ALLOW_DISCARDITEM;
@@ -840,13 +813,6 @@ public final class Config {
     public static int ALT_PET_INVENTORY_LIMIT;
     public static int ALT_CLAN_LEVEL_CREATE;
     /**
-     * limits of stats
-     **/
-    public static int LIM_MOVE;
-    public static int GM_LIM_MOVE;
-    public static int LIM_FAME;
-    public static int LIM_PDEF;
-    /**
      * Enchant Config
      **/
     public static int SAFE_ENCHANT_LVL;
@@ -1066,7 +1032,6 @@ public final class Config {
     public static int CLAN_LEAVE_PENALTY;
     public static int ALLY_LEAVE_PENALTY;
     public static int DISSOLVED_ALLY_PENALTY;
-    public static boolean ALLOW_MULTILANG_GATEKEEPER;
     public static boolean LOAD_CUSTOM_SPAWN;
     public static boolean SAVE_GM_SPAWN;
     // Log items
@@ -1500,7 +1465,7 @@ public final class Config {
         WAREHOUSE_SLOTS_CLAN = otherSettings.getProperty("MaximumWarehouseSlotsForClan", 200);
         FREIGHT_SLOTS = otherSettings.getProperty("MaximumFreightSlots", 10);
 
-        /* chance to enchant an item over safe level */
+        /* chance to enchant an item over safe occupation */
         SAFE_ENCHANT_LVL = otherSettings.getProperty("SafeEnchant", 0);
         SHOW_ENCHANT_EFFECT_RESULT = otherSettings.getProperty("ShowEnchantEffectResult", false);
 
@@ -1601,15 +1566,6 @@ public final class Config {
         RANDOMINTERVALOFSAILRENSPAWN = epicBossSettings.getProperty("SailrenRandomSpawnHours", 24);
     }
 
-    private static void loadFormulasConfig() {
-        ExProperties formulasSettings = load(FORMULAS_CONFIGURATION_FILE);
-
-        LIM_MOVE = formulasSettings.getProperty("LimitMove", 250);
-        GM_LIM_MOVE = formulasSettings.getProperty("GmLimitMove", 1500);
-        LIM_FAME = formulasSettings.getProperty("LimitFame", 50000);
-        LIM_PDEF = formulasSettings.getProperty("LimitPDef", 15000);
-    }
-
     private static void loadDevelopSettings() {
         ExProperties DevelopSettings = load(DEVELOP_FILE);
 
@@ -1686,11 +1642,9 @@ public final class Config {
         ALLOW_PET_ATTACK_MASTER = altSettings.getProperty("allowPetAttackMaster", true);
         ALT_SHOW_REUSE_MSG = altSettings.getProperty("AltShowSkillReuseMessage", true);
         ALT_DELETE_SA_BUFFS = altSettings.getProperty("AltDeleteSABuffs", false);
-        AUTO_LOOT = altSettings.getProperty("AutoLoot", false);
         AUTO_LOOT_FROM_RAIDS = altSettings.getProperty("AutoLootFromRaids", false);
         AUTO_LOOT_PK = altSettings.getProperty("AutoLootPK", false);
         ALT_GAME_KARMA_PLAYER_CAN_SHOP = altSettings.getProperty("AltKarmaPlayerCanShop", false);
-        MANAHEAL_SPS_BONUS = altSettings.getProperty("ManahealSpSBonus", false);
         CRAFT_MASTERWORK_CHANCE = altSettings.getProperty("CraftMasterworkChance", 3.);
         CRAFT_DOUBLECRAFT_CHANCE = altSettings.getProperty("CraftDoubleCraftChance", 3.);
         ALT_RAID_RESPAWN_MULTIPLIER = altSettings.getProperty("AltRaidRespawnMultiplier", 1.0);
@@ -1787,9 +1741,6 @@ public final class Config {
         ALT_CHAMPION_CHANCE2 = altSettings.getProperty("AltChampionChance2", 0.);
         ALT_CHAMPION_CAN_BE_AGGRO = altSettings.getProperty("AltChampionAggro", false);
         ALT_CHAMPION_CAN_BE_SOCIAL = altSettings.getProperty("AltChampionSocial", false);
-        ALT_CHAMPION_DROP_HERBS = altSettings.getProperty("AltChampionDropHerbs", false);
-        ALT_SHOW_MONSTERS_AGRESSION = altSettings.getProperty("AltShowMonstersAgression", false);
-        ALT_SHOW_MONSTERS_LVL = altSettings.getProperty("AltShowMonstersLvL", false);
         ALT_CHAMPION_TOP_LEVEL = altSettings.getProperty("AltChampionTopLevel", 75);
         ALT_CHAMPION_MIN_LEVEL = altSettings.getProperty("AltChampionMinLevel", 20);
 
@@ -1939,12 +1890,6 @@ public final class Config {
 
         // by Grivesky
         HENNA_STATS = PvPmodConfig.getProperty("HennaStats", 5);
-
-        // by Grivesky
-        NEW_CHAR_IS_NOBLE = PvPmodConfig.getProperty("NewCharIsNoble", false);
-        NEW_CHAR_IS_HERO = PvPmodConfig.getProperty("NewCharIsHero", false);
-
-
         ADEPT_ENABLE = PvPmodConfig.getProperty("ADEPT_ENABLE", true);
 
         SPAWN_CITIES_TREE = PvPmodConfig.getProperty("SPAWN_CITIES_TREE", true);
@@ -1983,9 +1928,6 @@ public final class Config {
         SERVICES_EXCHANGE_BABY_PET_PRICE = servicesSettings.getProperty("BabyPetExchangePrice", 100);
         SERVICES_EXCHANGE_BABY_PET_ITEM = servicesSettings.getProperty("BabyPetExchangeItem", 4037);
 
-        SERVICES_CHANGE_SEX_ENABLED = servicesSettings.getProperty("SexChangeEnabled", false);
-        SERVICES_CHANGE_SEX_PRICE = servicesSettings.getProperty("SexChangePrice", 100);
-        SERVICES_CHANGE_SEX_ITEM = servicesSettings.getProperty("SexChangeItem", 4037);
 
         SERVICES_CHANGE_BASE_ENABLED = servicesSettings.getProperty("BaseChangeEnabled", false);
         SERVICES_CHANGE_BASE_PRICE = servicesSettings.getProperty("BaseChangePrice", 100);
@@ -2005,13 +1947,6 @@ public final class Config {
         SERVICES_CHANGE_Title_COLOR_LIST = servicesSettings.getProperty("TitleColorChangeList", new String[]{"00FF00"});
 
 
-        SERVICES_HERO_SELL_ENABLED = servicesSettings.getProperty("HeroSellEnabled", false);
-        SERVICES_HERO_SELL_DAY = servicesSettings.getProperty("HeroSellDay", Collections.singletonList(30));
-        SERVICES_HERO_SELL_PRICE = servicesSettings.getProperty("HeroSellPrice", Collections.singletonList(30));
-        SERVICES_HERO_SELL_ITEM = servicesSettings.getProperty("HeroSellItem", Collections.singletonList(4037));
-        SERVICES_HERO_SELL_CHAT = servicesSettings.getProperty("HeroChat", false);
-        SERVICES_HERO_SELL_SKILL = servicesSettings.getProperty("HeroSkills", false);
-        SERVICES_HERO_SELL_ITEMS = servicesSettings.getProperty("HeroItems", false);
 
         SERVICES_WASH_PK_ENABLED = servicesSettings.getProperty("WashPkEnabled", false);
         SERVICES_WASH_PK_ITEM = servicesSettings.getProperty("WashPkItem", 4037);
@@ -2071,13 +2006,6 @@ public final class Config {
         SERVICES_PK_KILL_REWARD_COUNT = servicesSettings.getProperty("PkKillRewardCount", 1L);
         SERVICES_PK_PVP_TIE_IF_SAME_IP = servicesSettings.getProperty("PkPvPTieifSameIP", true);
 
-        //Away
-        // Away Manager
-        AWAY_PLAYER_TAKE_AGGRO = servicesSettings.getProperty("AwayPlayerTakeAggro", false);
-        AWAY_TITLE_COLOR = Integer.decode("0x" + servicesSettings.getProperty("AwayTitleColor", "0000FF"));
-        AWAY_TIMER = servicesSettings.getProperty("AwayTimer", 30);
-        BACK_TIMER = servicesSettings.getProperty("BackTimer", 30);
-        AWAY_PEACE_ZONE = servicesSettings.getProperty("AwayOnlyInPeaceZone", false);
 
         ITEM_BROKER_ITEM_SEARCH = servicesSettings.getProperty("UseItemBrokerItemSearch", false);
 
@@ -2095,7 +2023,6 @@ public final class Config {
         SERVICES_LVL_DOWN_PRICE = servicesSettings.getProperty("LevelDownChangePrice", 1000);
         SERVICES_LVL_DOWN_ITEM = servicesSettings.getProperty("LevelDownChangeItem", 4037);
 
-        ALLOW_MULTILANG_GATEKEEPER = servicesSettings.getProperty("AllowMultiLangGatekeeper", false);
         ALLOW_UPDATE_ANNOUNCER = servicesSettings.getProperty("AllowUpdateAnnouncer", false);
 
         SERVICES_HAIR_CHANGE_ITEM_ID = servicesSettings.getProperty("HairChangeItemID", 4037);
@@ -2110,9 +2037,6 @@ public final class Config {
 
         ENABLE_KM_ALL_TO_ME = CommandsSettings.getProperty("EnableKmAllToMe", false);
 
-        COMMAND_RES = CommandsSettings.getProperty("Command_ress", false);
-        ITEM_ID_RESS = CommandsSettings.getProperty("Item_Id_ress", 57);
-        PRICE_RESS = CommandsSettings.getProperty("price_ress", 57);
 
         /* .lock */
         FARM_TELEPORT_ITEM_ID = CommandsSettings.getProperty("FARM_TELEPORT_ITEM_ID", 57);
@@ -2438,7 +2362,6 @@ public final class Config {
         loadResidenceConfig();
         loadOtherConfig();
         loadSpoilConfig();
-        loadFormulasConfig();
         loadAltSettings();
         loadServicesSettings();
         loadPvPSettings();
@@ -2547,11 +2470,7 @@ public final class Config {
     public static ExProperties load(Path file) {
         ExProperties result = new ExProperties();
 
-        try {
-            result.load(file);
-        } catch (IOException e) {
-            _log.error("Error loading config : " + file.toAbsolutePath() + "!", e);
-        }
+        result.load(file);
 
         return result;
     }

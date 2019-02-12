@@ -15,10 +15,7 @@ import java.io.IOException;
 import java.io.LineNumberReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.StringTokenizer;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -42,14 +39,14 @@ public enum Manor {
         return crops;
     }
 
-    public Map<Integer, SeedData> getAllSeeds() {
-        return seeds;
+    public Set<Integer> getAllSeeds() {
+        return seeds.keySet();
     }
 
     public int getSeedBasicPrice(int seedId) {
         ItemTemplate seedItem = ItemHolder.getTemplate(seedId);
         if (seedItem != null)
-            return seedItem.getReferencePrice();
+            return seedItem.referencePrice;
         return 0;
     }
 
@@ -63,7 +60,7 @@ public enum Manor {
     public int getCropBasicPrice(int cropId) {
         ItemTemplate cropItem = ItemHolder.getTemplate(cropId);
         if (cropItem != null)
-            return cropItem.getReferencePrice();
+            return cropItem.referencePrice;
         return 0;
     }
 
@@ -219,7 +216,7 @@ public enum Manor {
         StringTokenizer st = new StringTokenizer(line, ";");
 
         int seedId = toInt(st.nextToken()); // seed id
-        int level = toInt(st.nextToken()); // seed level
+        int level = toInt(st.nextToken()); // seed occupation
         int cropId = toInt(st.nextToken()); // crop id
         int matureId = toInt(st.nextToken()); // mature crop id
         int type1R = toInt(st.nextToken()); // type I reward
@@ -236,7 +233,7 @@ public enum Manor {
     }
 
     private class SeedData {
-        private final int level; // seed level
+        private final int level; // seed occupation
         private final int crop; // crop type
         private final int mature; // mature crop type
         private int id;

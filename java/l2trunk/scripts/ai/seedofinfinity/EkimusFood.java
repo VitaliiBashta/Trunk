@@ -3,6 +3,7 @@ package l2trunk.scripts.ai.seedofinfinity;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ai.DefaultAI;
 import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.scripts.instances.HeartInfinityDefence;
@@ -46,7 +47,7 @@ public final class EkimusFood extends DefaultAI {
     }
 
     @Override
-    public boolean checkAggression(Creature target, boolean avoidAttack) {
+    public boolean checkAggression(Playable target, boolean avoidAttack) {
         return false;
     }
 

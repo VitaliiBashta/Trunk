@@ -1,7 +1,6 @@
 package l2trunk.gameserver.data.xml.parser;
 
 import l2trunk.commons.data.xml.ParserUtil;
-import l2trunk.commons.lang.NumberUtils;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.data.xml.holder.OptionDataHolder;
 import l2trunk.gameserver.model.Skill;
@@ -48,7 +47,7 @@ public enum OptionDataParser /*extends StatParser<OptionDataHolder>*/ {
                         if (skill != null)
                             template.addSkill(skill);
                         else
-                            LOG.info("Skill not found(" + id + "," + level + ") for option data:" + template.getId() + "; element:" + optionDataElement);
+                            LOG.info("Skill not found(" + id + "," + level + ") for option data:" + template.id() + "; element:" + optionDataElement);
                     }
                 }
             }

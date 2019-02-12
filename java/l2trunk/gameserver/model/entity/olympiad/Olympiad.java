@@ -191,45 +191,43 @@ public final class Olympiad {
         _scheduledWeeklyTask = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new WeeklyTask(), getMillisToWeekChange(), Config.ALT_OLY_WPERIOD);
     }
 
-    public static synchronized boolean registerNoble(Player noble, CompType type) {
-        if (noble.getClassId().getLevel() != 4) {
-            return false;
-        }
+    public static synchronized void registerNoble(Player noble, CompType type) {
+        if (noble.getClassId().occupation() < 3) return;
 
         if (!_inCompPeriod || _isOlympiadEnd) {
             noble.sendPacket(SystemMsg.THE_GRAND_OLYMPIAD_GAMES_ARE_NOT_CURRENTLY_IN_PROGRESS);
-            return false;
+            return;
         }
 
         if (getMillisToOlympiadEnd() <= 600 * 1000) {
             noble.sendPacket(SystemMsg.THE_GRAND_OLYMPIAD_GAMES_ARE_NOT_CURRENTLY_IN_PROGRESS);
-            return false;
+            return;
         }
 
         if (getMillisToCompEnd() <= 600 * 1000) {
             noble.sendPacket(SystemMsg.THE_GRAND_OLYMPIAD_GAMES_ARE_NOT_CURRENTLY_IN_PROGRESS);
-            return false;
+            return;
         }
 
         if (noble.isCursedWeaponEquipped()) {
             noble.sendPacket(SystemMsg.YOU_CANNOT_REGISTER_WHILE_IN_POSSESSION_OF_A_CURSED_WEAPON);
-            return false;
+            return;
         }
 
-        StatsSet nobleInfo = _nobles.get(noble.getObjectId());
+        StatsSet nobleInfo = _nobles.get(noble.objectId());
 
         if (!validPlayer(noble, noble, type)) {
-            return false;
+            return;
         }
 
-        if (getNoblePoints(noble.getObjectId()) < 1) {
-            noble.sendMessage(new CustomMessage("l2trunk.gameserver.model.entity.Olympiad.LessPoints", noble));
-            return false;
+        if (getNoblePoints(noble.objectId()) < 1) {
+            noble.sendMessage(new CustomMessage("l2trunk.gameserver.model.entity.Olympiad.LessPoints"));
+            return;
         }
 
         if (noble.getOlympiadGame() != null) {
             //
-            return false;
+            return;
         }
 
         int classId = nobleInfo.getInteger(CLASS_ID, 0);
@@ -240,12 +238,12 @@ public final class Olympiad {
 
         switch (type) {
             case CLASSED: {
-                _classBasedRegisters.put(classId, noble.getObjectId());
+                _classBasedRegisters.put(classId, noble.objectId());
                 noble.sendPacket(SystemMsg.YOU_HAVE_BEEN_REGISTERED_FOR_THE_GRAND_OLYMPIAD_WAITING_LIST_FOR_A_CLASS_SPECIFIC_MATCH);
                 break;
             }
             case NON_CLASSED: {
-                _nonClassBasedRegisters.add(noble.getObjectId());
+                _nonClassBasedRegisters.add(noble.objectId());
                 noble.sendPacket(SystemMsg.YOU_ARE_CURRENTLY_REGISTERED_FOR_A_1V1_CLASS_IRRELEVANT_MATCH);
                 break;
             }
@@ -253,26 +251,25 @@ public final class Olympiad {
                 Party party = noble.getParty();
                 if (party == null) {
                     noble.sendPacket(SystemMsg.ONLY_A_PARTY_LEADER_CAN_REQUEST_A_TEAM_MATCH);
-                    return false;
+                    return;
                 }
 
                 if (party.size() != TEAM_PARTY_SIZE) {
                     noble.sendPacket(SystemMsg.THE_REQUEST_CANNOT_BE_MADE_BECAUSE_THE_REQUIREMENTS_HAVE_NOT_BEEN_MET);
-                    return false;
+                    return;
                 }
 
                 if (party.getMembers().stream()
                         .anyMatch(member -> !validPlayer(noble, member, type))) {
-                    return false;
+                    return;
                 }
 
-                _teamBasedRegisters.putAll(noble.getObjectId(), party.getMembersObjIds());
+                _teamBasedRegisters.putAll(noble.objectId(), party.getMembersObjIds());
                 noble.sendPacket(SystemMsg.YOU_ARE_CURRENTLY_REGISTERED_FOR_A_3_VS_3_CLASS_IRRELEVANT_TEAM_MATCH);
                 break;
             }
         }
 
-        return true;
     }
 
     private static boolean validPlayer(Player sendPlayer, Player validPlayer, CompType type) {
@@ -281,16 +278,16 @@ public final class Olympiad {
             return false;
         }
 
-        if (validPlayer.getBaseClassId() != validPlayer.getClassId().getId()) {
+        if (validPlayer.getBaseClassId() != validPlayer.getClassId().id) {
             sendPlayer.sendPacket(new SystemMessage2(SystemMsg.C1_DOES_NOT_MEET_THE_PARTICIPATION_REQUIREMENTS_SUBCLASS_CHARACTER_CANNOT_PARTICIPATE_IN_THE_OLYMPIAD).addName(validPlayer));
             return false;
         }
 
-        int[] ar = getWeekGameCounts(validPlayer.getObjectId());
+        int[] ar = getWeekGameCounts(validPlayer.objectId());
 
         switch (type) {
             case CLASSED:
-                if (_classBasedRegisters.containsValue(validPlayer.getObjectId())) {
+                if (_classBasedRegisters.containsValue(validPlayer.objectId())) {
                     sendPlayer.sendPacket(new SystemMessage2(SystemMsg.C1_IS_ALREADY_REGISTERED_ON_THE_CLASS_MATCH_WAITING_LIST).addName(validPlayer));
                     return false;
                 }
@@ -301,7 +298,7 @@ public final class Olympiad {
                 }
                 break;
             case NON_CLASSED:
-                if (_nonClassBasedRegisters.contains(validPlayer.getObjectId())) {
+                if (_nonClassBasedRegisters.contains(validPlayer.objectId())) {
                     sendPlayer.sendPacket(new SystemMessage2(SystemMsg.C1_IS_ALREADY_REGISTERED_ON_THE_WAITING_LIST_FOR_THE_CLASS_IRRELEVANT_INDIVIDUAL_MATCH).addName(validPlayer));
                     return false;
                 }
@@ -311,7 +308,7 @@ public final class Olympiad {
                 }
                 break;
             case TEAM:
-                if (_teamBasedRegisters.containsValue(validPlayer.getObjectId())) {
+                if (_teamBasedRegisters.containsValue(validPlayer.objectId())) {
                     sendPlayer.sendPacket(new SystemMessage2(SystemMsg.C1_IS_ALREADY_REGISTERED_ON_THE_WAITING_LIST_FOR_THE_3_VS_3_CLASS_IRRELEVANT_TEAM_MATCH).addName(validPlayer));
                     return false;
                 }
@@ -336,9 +333,9 @@ public final class Olympiad {
     }
 
     public static synchronized void logoutPlayer(Player player) {
-        _classBasedRegisters.removeValue(player.getObjectId());
-        _nonClassBasedRegisters.remove(player.getObjectId());
-        _teamBasedRegisters.removeValue(player.getObjectId());
+        _classBasedRegisters.removeValue(player.objectId());
+        _nonClassBasedRegisters.remove(player.objectId());
+        _teamBasedRegisters.removeValue(player.objectId());
 
         OlympiadGame game = player.getOlympiadGame();
         if (game != null)
@@ -382,9 +379,9 @@ public final class Olympiad {
                 _log.error("Error on olympiad unRegister Noble", e);
             }
         }
-        _classBasedRegisters.removeValue(noble.getObjectId());
-        _nonClassBasedRegisters.remove(noble.getObjectId());
-        _teamBasedRegisters.removeValue(noble.getObjectId());
+        _classBasedRegisters.removeValue(noble.objectId());
+        _nonClassBasedRegisters.remove(noble.objectId());
+        _teamBasedRegisters.removeValue(noble.objectId());
 
         noble.sendPacket(SystemMsg.YOU_HAVE_BEEN_REMOVED_FROM_THE_GRAND_OLYMPIAD_WAITING_LIST);
 
@@ -541,7 +538,7 @@ public final class Olympiad {
     }
 
     public static synchronized int getNoblessePasses(Player player) {
-        int objId = player.getObjectId();
+        int objId = player.objectId();
 
         StatsSet noble = _nobles.get(objId);
         if (noble == null)
@@ -569,7 +566,7 @@ public final class Olympiad {
                 points = Config.ALT_OLY_RANK5_POINTS;
         }
 
-        if (player.isHero() || Hero.INSTANCE.isInactiveHero(player.getObjectId()))
+        if (player.isHero() || Hero.INSTANCE.isInactiveHero(player.objectId()))
             points += Config.ALT_OLY_HERO_POINTS;
 
         noble.set(POINTS_PAST, 0);
@@ -579,11 +576,11 @@ public final class Olympiad {
     }
 
     public static synchronized boolean isRegistered(Player noble) {
-        if (_classBasedRegisters.containsValue(noble.getObjectId()))
+        if (_classBasedRegisters.containsValue(noble.objectId()))
             return true;
-        if (_nonClassBasedRegisters.contains(noble.getObjectId()))
+        if (_nonClassBasedRegisters.contains(noble.objectId()))
             return true;
-        return _teamBasedRegisters.containsValue(noble.getObjectId());
+        return _teamBasedRegisters.containsValue(noble.objectId());
     }
 
     public static synchronized boolean isRegisteredInComp(Player player) {
@@ -592,7 +589,7 @@ public final class Olympiad {
         if (_manager == null || _manager.getOlympiadGames() == null)
             return false;
         for (OlympiadGame g : _manager.getOlympiadGames().values())
-            if (g != null && g.isRegistered(player.getObjectId()))
+            if (g != null && g.isRegistered(player.objectId()))
                 return true;
         return false;
     }
@@ -690,12 +687,12 @@ public final class Olympiad {
     }
 
     public static synchronized void addNoble(Player noble) {
-        if (!_nobles.containsKey(noble.getObjectId())) {
+        if (!_nobles.containsKey(noble.objectId())) {
             int classId = noble.getBaseClassId();
             if (classId < 88 || classId >= 123 && classId <= 130) // Если это не 3-я профа, то исправляем со 2-й на 3-ю.
                 for (ClassId id : ClassId.VALUES)
-                    if (id.level() == 3 && id.getParent().getId() == classId) {
-                        classId = id.getId();
+                    if (id.occupation() == 3 && id.parent.id == classId) {
+                        classId = id.id;
                         break;
                     }
 
@@ -712,13 +709,13 @@ public final class Olympiad {
             statDat.set(GAME_NOCLASSES_COUNT, 0);
             statDat.set(GAME_TEAM_COUNT, 0);
 
-            _nobles.put(noble.getObjectId(), statDat);
+            _nobles.put(noble.objectId(), statDat);
             OlympiadDatabase.saveNobleData();
         }
     }
 
     public static synchronized void removeNoble(Player noble) {
-        _nobles.remove(noble.getObjectId());
+        _nobles.remove(noble.objectId());
         OlympiadDatabase.saveNobleData();
     }
 

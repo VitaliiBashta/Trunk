@@ -6,6 +6,7 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.SimpleSpawner;
 import l2trunk.gameserver.model.base.Race;
 import l2trunk.gameserver.model.instances.NpcInstance;
+import l2trunk.gameserver.model.instances.SummonInstance;
 import l2trunk.gameserver.network.serverpackets.MagicSkillUse;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.scripts.ScriptFile;
@@ -20,7 +21,7 @@ public final class GiftOfVitality extends Functions implements ScriptFile {
     private static final String EVENT_NAME = "GiftOfVitality";
     private static final int REUSE_HOURS = 6; // reuse
     private static final int EVENT_MANAGER_ID = 109; // npc id
-    private static final List<SimpleSpawner> SPAWNER_LIST = new ArrayList<>();
+    private static List<SimpleSpawner> SPAWNER_LIST = new ArrayList<>();
     private static final Logger LOG = LoggerFactory.getLogger(GiftOfVitality.class);
     private static final int blessingOfEnergy = 23179;
     private final static List<Integer> MAGE_BUFF = List.of(
@@ -30,7 +31,7 @@ public final class GiftOfVitality extends Functions implements ScriptFile {
             5633,  // blessthesoul
             5634,  // acumen
             5635,  // concentration
-            5636 ); // empower
+            5636); // empower
 
     private final static List<Integer> WARR_BUFF = List.of(
             5627,  // windwalk
@@ -59,25 +60,25 @@ public final class GiftOfVitality extends Functions implements ScriptFile {
 
     private void spawnEventManagers() {
         final List<Location> EVENT_MANAGERS = List.of(
-                        new Location(-119494, 44882, 360, 24576),  // Kamael Village
-                        new Location(-82687, 243157, -3734, 4096),  // Talking Island Village
-                        new Location(45538, 48357, -3056, 18000),   // Elven Village
-                        new Location(9929, 16324, -4568, 62999),    // Dark Elven Village
-                        new Location(115096, -178370, -880, 0),     // Dwarven Village
-                        new Location(-45372, -114104, -240, 16384), // Orc Village
-                        new Location(-83156, 150994, -3120, 0),     // Gludin
-                        new Location(-13727, 122117, -2984, 16384), // Gludio
-                        new Location(16111, 142850, -2696, 16000),  // Dion
-                        new Location(111176, 220968, -3544, 16384), // Heine
-                        new Location(82792, 149448, -3494, 0),      // Giran
-                        new Location(81083, 56118, -1552, 32768),   // Oren
-                        new Location(117016, 77240, -2688, 49151),  // Hunters Village
-                        new Location(147016, 25928, -2038, 16384),  // Aden
-                        new Location(43966, -47709, -792, 49999),   // Rune
-                        new Location(148088, -55416, -2728, 49151), // Goddart
-                        new Location(87080, -141336, -1344, 0));     // Schutgard
+                new Location(-119494, 44882, 360, 24576),  // Kamael Village
+                new Location(-82687, 243157, -3734, 4096),  // Talking Island Village
+                new Location(45538, 48357, -3056, 18000),   // Elven Village
+                new Location(9929, 16324, -4568, 62999),    // Dark Elven Village
+                new Location(115096, -178370, -880, 0),     // Dwarven Village
+                new Location(-45372, -114104, -240, 16384), // Orc Village
+                new Location(-83156, 150994, -3120, 0),     // Gludin
+                new Location(-13727, 122117, -2984, 16384), // Gludio
+                new Location(16111, 142850, -2696, 16000),  // Dion
+                new Location(111176, 220968, -3544, 16384), // Heine
+                new Location(82792, 149448, -3494, 0),      // Giran
+                new Location(81083, 56118, -1552, 32768),   // Oren
+                new Location(117016, 77240, -2688, 49151),  // Hunters Village
+                new Location(147016, 25928, -2038, 16384),  // Aden
+                new Location(43966, -47709, -792, 49999),   // Rune
+                new Location(148088, -55416, -2728, 49151), // Goddart
+                new Location(87080, -141336, -1344, 0));     // Schutgard
 
-        SpawnNPCs(EVENT_MANAGER_ID, EVENT_MANAGERS, SPAWNER_LIST);
+        SPAWNER_LIST = SpawnNPCs(EVENT_MANAGER_ID, EVENT_MANAGERS);
     }
 
     private void unSpawnEventManagers() {
@@ -85,11 +86,10 @@ public final class GiftOfVitality extends Functions implements ScriptFile {
     }
 
     public void startEvent() {
-        Player player = getSelf();
         if (!player.getPlayerAccess().IsEventGm)
             return;
 
-        if (SetActive(EVENT_NAME, true)) {
+        if (setActive(EVENT_NAME, true)) {
             spawnEventManagers();
             System.out.println("Event: 'Gift Of Vitality' started.");
             Announcements.INSTANCE.announceByCustomMessage("scripts.events.GiftOfVitality.AnnounceEventStarted");
@@ -100,10 +100,9 @@ public final class GiftOfVitality extends Functions implements ScriptFile {
     }
 
     public void stopEvent() {
-        Player player = getSelf();
         if (!player.getPlayerAccess().IsEventGm)
             return;
-        if (SetActive(EVENT_NAME, false)) {
+        if (setActive(EVENT_NAME, false)) {
             unSpawnEventManagers();
             System.out.println("Event: 'Gift Of Vitality' stopped.");
             Announcements.INSTANCE.announceByCustomMessage("scripts.events.GiftOfVitality.AnnounceEventStoped");
@@ -133,22 +132,20 @@ public final class GiftOfVitality extends Functions implements ScriptFile {
     }
 
     private void buffMe(BuffType type) {
-        if (getSelf() == null || getNpc() == null)
+        if (player == null || npc == null)
             return;
 
         String htmltext = null;
-        Player player = getSelf().getPlayer();
-        NpcInstance npc = getNpc();
-        String var = player.getVar("govEventTime");
+        long var = player.getVarLong("govEventTime");
 
         switch (type) {
             case VITALITY:
-                if (var != null && Long.parseLong(var) > System.currentTimeMillis())
+                if ( var > System.currentTimeMillis())
                     htmltext = "jack-notime.htm";
                 else {
                     npc.broadcastPacket(new MagicSkillUse(npc, player, blessingOfEnergy));
                     player.altOnMagicUseTimer(player, blessingOfEnergy);
-                    player.setVar("govEventTime", String.valueOf(System.currentTimeMillis() + REUSE_HOURS * 60 * 60 * 1000L), -1);
+                    player.setVar("govEventTime", System.currentTimeMillis() + REUSE_HOURS * 60 * 60 * 1000L);
                     player.setVitality(Config.VITALITY_LEVELS.get(4));
                     htmltext = "jack-okvitality.htm";
                 }
@@ -156,7 +153,7 @@ public final class GiftOfVitality extends Functions implements ScriptFile {
             case SUMMON:
                 if (player.getLevel() < 76)
                     htmltext = "jack-nolevel.htm";
-                else if (player.getPet() == null || !player.getPet().isSummon())
+                else if (!(player.getPet() instanceof SummonInstance))
                     htmltext = "jack-nosummon.htm";
                 else {
                     _summonBuff.forEach(skill -> {
@@ -184,7 +181,7 @@ public final class GiftOfVitality extends Functions implements ScriptFile {
                 }
                 break;
         }
-        show("scripts/events/GiftOfVitality/" + htmltext, getSelf().getPlayer());
+        show("scripts/events/GiftOfVitality/" + htmltext, player);
     }
 
     public void buffVitality() {

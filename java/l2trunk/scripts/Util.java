@@ -21,15 +21,17 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.WarehouseFunctions;
+import l2trunk.scripts.quests._255_Tutorial;
 
 import static l2trunk.commons.lang.NumberUtils.toInt;
+import static l2trunk.gameserver.utils.ItemFunctions.addItem;
+import static l2trunk.gameserver.utils.ItemFunctions.removeItem;
 
 public final class Util extends Functions {
     public void Gatekeeper(String[] param) {
         if (param.length < 4)
             throw new IllegalArgumentException();
 
-        Player player = getSelf();
         if (player == null)
             return;
 
@@ -105,7 +107,7 @@ public final class Util extends Functions {
 
         // Synerge - Epidos cube on teleport should add allowed player to beleth zone, so other players cannot exploit it
         //	if (npcId == 32376)
-        //		BelethManager._allowedPlayers.add(player.getObjectId());
+        //		BelethManager._allowedPlayers.add(player.objectId());
 
         Location pos = Location.findPointToStay(loc, 50, 100, player.getGeoIndex());
 
@@ -118,7 +120,6 @@ public final class Util extends Functions {
         if (param.length < 4)
             throw new IllegalArgumentException();
 
-        Player player = getSelf();
         if (player == null)
             return;
 
@@ -161,7 +162,6 @@ public final class Util extends Functions {
         if (param.length < 4)
             throw new IllegalArgumentException();
 
-        Player player = getSelf();
         if (player == null)
             return;
 
@@ -207,7 +207,7 @@ public final class Util extends Functions {
 
         // Synerge - Extra parameter to close tutorial
         if (closeTutorial) {
-            final QuestState qs = player.getQuestState("_255_Tutorial");
+            final QuestState qs = player.getQuestState(_255_Tutorial.class);
             if (qs != null)
                 qs.closeTutorial();
         }
@@ -221,8 +221,6 @@ public final class Util extends Functions {
     public void SSGatekeeper(String[] param) {
         if (param.length < 4)
             throw new IllegalArgumentException();
-
-        Player player = getSelf();
         if (player == null)
             return;
 
@@ -262,7 +260,6 @@ public final class Util extends Functions {
         if (param.length < 5)
             throw new IllegalArgumentException();
 
-        Player player = getSelf();
         if (player == null)
             return;
 
@@ -294,7 +291,6 @@ public final class Util extends Functions {
         if (param.length < 5)
             throw new IllegalArgumentException();
 
-        Player player = getSelf();
         if (player == null)
             return;
 
@@ -309,143 +305,143 @@ public final class Util extends Functions {
     }
 
     public void CommunityMultisell(String[] param) {
-        if (!getSelf().isInZonePeace()) {
-            getSelf().sendMessage("It can be used only in Peaceful zone!");
+        if (!player.isInZonePeace()) {
+            player.sendMessage("It can be used only in Peaceful zone!");
             return;
         }
 
-        if (getSelf().isJailed()) {
-            getSelf().sendMessage("You cannot do it in Jail!");
+        if (player.isJailed()) {
+            player.sendMessage("You cannot do it in Jail!");
             return;
         }
 
         String listId = param[0];
-        MultiSellHolder.INSTANCE.SeparateAndSend(toInt(listId), getSelf(), 0);
+        MultiSellHolder.INSTANCE.SeparateAndSend(toInt(listId), player, 0);
     }
 
     public void CommunitySell() {
-        if (!getSelf().isInZonePeace()) {
-            getSelf().sendMessage("It can be used only in Peaceful zone!");
+        if (!player.isInZonePeace()) {
+            player.sendMessage("It can be used only in Peaceful zone!");
             return;
         }
-        if (getSelf().isJailed()) {
-            getSelf().sendMessage("You cannot do it in Jail!");
+        if (player.isJailed()) {
+            player.sendMessage("You cannot do it in Jail!");
             return;
         }
 
         BuyListHolder.NpcTradeList list = BuyListHolder.INSTANCE.getBuyList(0);
         if (list == null)
-            getSelf().sendPacket(new ExBuySellList.BuyList(list, getSelf(), 0), new ExBuySellList.SellRefundList(getSelf(), false));
+            player.sendPacket(new ExBuySellList.BuyList(list, player, 0), new ExBuySellList.SellRefundList(player, false));
     }
 
     public void CommunityAugment() {
-        if (!getSelf().isInZonePeace()) {
-            getSelf().sendMessage("It can be used only in Peaceful zone!");
+        if (!player.isInZonePeace()) {
+            player.sendMessage("It can be used only in Peaceful zone!");
             return;
         }
-        getSelf().sendPacket(Msg.SELECT_THE_ITEM_TO_BE_AUGMENTED, ExShowVariationMakeWindow.STATIC);
+        player.sendPacket(Msg.SELECT_THE_ITEM_TO_BE_AUGMENTED, ExShowVariationMakeWindow.STATIC);
     }
 
     public void CommunityRemoveAugment() {
-        if (!getSelf().isInZonePeace()) {
-            getSelf().sendMessage("It can be used only in Peaceful zone!");
+        if (!player.isInZonePeace()) {
+            player.sendMessage("It can be used only in Peaceful zone!");
             return;
         }
-        getSelf().sendPacket(Msg.SELECT_THE_ITEM_FROM_WHICH_YOU_WISH_TO_REMOVE_AUGMENTATION, ExShowVariationCancelWindow.STATIC);
+        player.sendPacket(Msg.SELECT_THE_ITEM_FROM_WHICH_YOU_WISH_TO_REMOVE_AUGMENTATION, ExShowVariationCancelWindow.STATIC);
     }
 
     public void CommunityPrivateWarehouseDeposit() {
-        if (!getSelf().isInZonePeace()) {
-            getSelf().sendMessage("It can be used only in Peaceful zone!");
+        if (!player.isInZonePeace()) {
+            player.sendMessage("It can be used only in Peaceful zone!");
             return;
         }
-        if (getSelf().isJailed()) {
-            getSelf().sendMessage("You cannot do it in Jail!");
+        if (player.isJailed()) {
+            player.sendMessage("You cannot do it in Jail!");
             return;
         }
 
-        WarehouseFunctions.showDepositWindow(getSelf());
+        WarehouseFunctions.showDepositWindow(player);
     }
 
     public void CommunityPrivateWarehouseRetrieve() {
-        if (!getSelf().isInZonePeace()) {
-            getSelf().sendMessage("It can be used only in Peaceful zone!");
+        if (!player.isInZonePeace()) {
+            player.sendMessage("It can be used only in Peaceful zone!");
             return;
         }
-        if (getSelf().isJailed()) {
-            getSelf().sendMessage("You cannot do it in Jail!");
+        if (player.isJailed()) {
+            player.sendMessage("You cannot do it in Jail!");
             return;
         }
 
-        WarehouseFunctions.showRetrieveWindow(getSelf(), 0);
+        WarehouseFunctions.showRetrieveWindow(player, 0);
     }
 
     public void CommunityClanWarehouseDeposit() {
-        if (!getSelf().isInZonePeace()) {
-            getSelf().sendMessage("It can be used only in Peaceful zone!");
+        if (!player.isInZonePeace()) {
+            player.sendMessage("It can be used only in Peaceful zone!");
             return;
         }
-        if (getSelf().isJailed()) {
-            getSelf().sendMessage("You cannot do it in Jail!");
+        if (player.isJailed()) {
+            player.sendMessage("You cannot do it in Jail!");
             return;
         }
 
-        WarehouseFunctions.showDepositWindowClan(getSelf());
+        WarehouseFunctions.showDepositWindowClan(player);
     }
 
     public void CommunityClanWarehouseWithdraw() {
-        if (!getSelf().isInZonePeace()) {
-            getSelf().sendMessage("It can be used only in Peaceful zone!");
+        if (!player.isInZonePeace()) {
+            player.sendMessage("It can be used only in Peaceful zone!");
             return;
         }
-        if (getSelf().isJailed()) {
-            getSelf().sendMessage("You cannot do it in Jail!");
+        if (player.isJailed()) {
+            player.sendMessage("You cannot do it in Jail!");
             return;
         }
 
-        WarehouseFunctions.showWithdrawWindowClan(getSelf(), 0);
+        WarehouseFunctions.showWithdrawWindowClan(player, 0);
     }
 
     public void CommunityDrawSymbol() {
-        if (!getSelf().isInZonePeace()) {
-            getSelf().sendMessage("It can be used only in Peaceful zone!");
+        if (!player.isInZonePeace()) {
+            player.sendMessage("It can be used only in Peaceful zone!");
             return;
         }
-        getSelf().sendPacket(new HennaEquipList(getSelf()));
+        player.sendPacket(new HennaEquipList(player));
     }
 
     public void CommunityRemoveSymbol() {
-        if (!getSelf().isInZonePeace()) {
-            getSelf().sendMessage("It can be used only in Peaceful zone!");
+        if (!player.isInZonePeace()) {
+            player.sendMessage("It can be used only in Peaceful zone!");
             return;
         }
-        getSelf().sendPacket(new HennaUnequipList(getSelf()));
+        player.sendPacket(new HennaUnequipList(player));
     }
 
     public void CommunityCert65() {
-        SubClass clzz = getSelf().getActiveClass();
+        SubClass clzz = player.getActiveClass();
         if (!checkCertificationCondition(65, SubClass.CERTIFICATION_65))
             return;
 
-        Functions.addItem(getSelf(), 10280, 1, "CommunityCert65");
+        addItem(player, 10280, 1);
         clzz.addCertification(SubClass.CERTIFICATION_65);
-        getSelf().store(true);
-        CommunityBoardManager.getCommunityHandler("_bbsChooseCertificate").onBypassCommand(getSelf(), "_bbsChooseCertificate");
+        player.store(true);
+        CommunityBoardManager.getCommunityHandler("_bbsChooseCertificate").onBypassCommand(player, "_bbsChooseCertificate");
     }
 
     public void CommunityCert70() {
-        SubClass clzz = getSelf().getActiveClass();
+        SubClass clzz = player.getActiveClass();
         if (!checkCertificationCondition(70, SubClass.CERTIFICATION_70))
             return;
 
-        Functions.addItem(getSelf(), 10280, 1, "CommunityCert70");
+        addItem(player, 10280, 1);
         clzz.addCertification(SubClass.CERTIFICATION_70);
-        getSelf().store(true);
-        CommunityBoardManager.getCommunityHandler("_bbsChooseCertificate").onBypassCommand(getSelf(), "_bbsChooseCertificate");
+        player.store(true);
+        CommunityBoardManager.getCommunityHandler("_bbsChooseCertificate").onBypassCommand(player, "_bbsChooseCertificate");
     }
 
     public void CommunityCert75Class() {
-        SubClass clzz = getSelf().getActiveClass();
+        SubClass clzz = player.getActiveClass();
         if (!checkCertificationCondition(75, SubClass.CERTIFICATION_75))
             return;
 
@@ -453,25 +449,25 @@ public final class Util extends Functions {
         if (cl.getType2() == null)
             return;
 
-        Functions.addItem(getSelf(), cl.getType2().getCertificateId(), 1, "CommunityCert75Class");
+        addItem(player, cl.getType2().certificate(), 1);
         clzz.addCertification(SubClass.CERTIFICATION_75);
-        getSelf().store(true);
-        CommunityBoardManager.getCommunityHandler("_bbsChooseCertificate").onBypassCommand(getSelf(), "_bbsChooseCertificate");
+        player.store(true);
+        CommunityBoardManager.getCommunityHandler("_bbsChooseCertificate").onBypassCommand(player, "_bbsChooseCertificate");
     }
 
     public void CommunityCert75Master() {
-        SubClass clzz = getSelf().getActiveClass();
+        SubClass clzz = player.getActiveClass();
         if (!checkCertificationCondition(75, SubClass.CERTIFICATION_75))
             return;
 
-        Functions.addItem(getSelf(), 10612, 1, "CommunityCert75Master"); // master ability
+        addItem(player, 10612, 1); // master ability
         clzz.addCertification(SubClass.CERTIFICATION_75);
-        getSelf().store(true);
-        CommunityBoardManager.getCommunityHandler("_bbsChooseCertificate").onBypassCommand(getSelf(), "_bbsChooseCertificate");
+        player.store(true);
+        CommunityBoardManager.getCommunityHandler("_bbsChooseCertificate").onBypassCommand(player, "_bbsChooseCertificate");
     }
 
     public void CommunityCert80() {
-        SubClass clzz = getSelf().getActiveClass();
+        SubClass clzz = player.getActiveClass();
         if (!checkCertificationCondition(80, SubClass.CERTIFICATION_80))
             return;
 
@@ -479,33 +475,32 @@ public final class Util extends Functions {
         if (cl.getType2() == null)
             return;
 
-        Functions.addItem(getSelf(), cl.getType2().getTransformationId(), 1, "CommunityCert80");
+        addItem(player, cl.getType2().transformation(), 1);
         clzz.addCertification(SubClass.CERTIFICATION_80);
-        getSelf().store(true);
-        CommunityBoardManager.getCommunityHandler("_bbsChooseCertificate").onBypassCommand(getSelf(), "_bbsChooseCertificate");
+        player.store(true);
+        CommunityBoardManager.getCommunityHandler("_bbsChooseCertificate").onBypassCommand(player, "_bbsChooseCertificate");
     }
 
     private boolean checkCertificationCondition(int requiredLevel, int certificationIndex) {
         boolean failed = false;
-        if (getSelf().getLevel() < requiredLevel) {
-            getSelf().sendMessage("Your Level is too low!");
+        if (player.getLevel() < requiredLevel) {
+            player.sendMessage("Your Level is too low!");
             failed = true;
         }
-        SubClass clazz = getSelf().getActiveClass();
+        SubClass clazz = player.getActiveClass();
         if (!failed && clazz.isCertificationGet(certificationIndex)) {
-            getSelf().sendMessage("You already have this Certification!");
+            player.sendMessage("You already have this Certification!");
             failed = true;
         }
 
         if (failed) {
-            CommunityBoardManager.getCommunityHandler("_bbsfile").onBypassCommand(getSelf(), "_bbsfile:smallNpcs/subclassChanger");
+            CommunityBoardManager.getCommunityHandler("_bbsfile").onBypassCommand(player, "_bbsfile:smallNpcs/subclassChanger");
             return false;
         }
         return true;
     }
 
     public void TokenJump(String[] param) {
-        Player player = getSelf();
         if (player == null)
             return;
         if (player.getLevel() <= 19)
@@ -515,7 +510,6 @@ public final class Util extends Functions {
     }
 
     public void NoblessTeleport() {
-        Player player = getSelf();
         if (player == null)
             return;
         if (player.isNoble() || Config.ALLOW_NOBLE_TP_TO_ALL)
@@ -528,7 +522,6 @@ public final class Util extends Functions {
         if (param.length < 2)
             throw new IllegalArgumentException();
 
-        Player player = getSelf();
         if (player == null)
             return;
 
@@ -536,7 +529,7 @@ public final class Util extends Functions {
         int item = toInt(param[1]);
         long price = Long.parseLong(param[2]);
 
-        if (getItemCount(player, item) < price) {
+        if (!player.haveItem(item, price)) {
             player.sendPacket(item == 57 ? Msg.YOU_DO_NOT_HAVE_ENOUGH_ADENA : SystemMsg.INCORRECT_ITEM_COUNT);
             return;
         }
@@ -545,122 +538,4 @@ public final class Util extends Functions {
         show(page, player);
     }
 
-//    public void MakeEchoCrystal(String[] param) {
-//        if (param.length < 2)
-//            throw new IllegalArgumentException();
-//
-//        Player player = getSelf();
-//        if (player == null)
-//            return;
-//
-//        if (!NpcInstance.canBypassCheck(player, player.getLastNpc()))
-//            return;
-//
-//        int crystal = toInt(param[0]);
-//        int score = toInt(param[1]);
-//
-//        if (crystal < 4411 || crystal > 4417)
-//            return;
-//
-//        if (getItemCount(player, score) == 0) {
-//            player.getLastNpc().onBypassFeedback(player, "Chat 1");
-//            return;
-//        }
-//
-//        if (getItemCount(player, 57) < 200) {
-//            player.sendPacket(Msg.YOU_DO_NOT_HAVE_ENOUGH_ADENA);
-//            return;
-//        }
-//
-//        removeItem(player, 57, 200, "MakeEchoCrystal");
-//        addItem(player, crystal, 1, "MakeEchoCrystal");
-//    }
-
-//    public void TakeNewbieWeaponCoupon() {
-//        Player player = getSelf();
-//        if (player == null)
-//            return;
-//        if (!Config.ALT_ALLOW_SHADOW_WEAPONS) {
-//            show(new CustomMessage("common.Disabled", player), player);
-//            return;
-//        }
-//        if (player.level() > 19 || player.getClassId().level() > 1) {
-//            show("Your level is too high!", player);
-//            return;
-//        }
-//        if (player.level() < 6) {
-//            show("Your level is too low!", player);
-//            return;
-//        }
-//        if (player.getVarB("newbieweapon")) {
-//            show("Your already got your newbie weapon!", player);
-//            return;
-//        }
-//        addItem(player, 7832, 5, "TakeNewbieWeaponCoupon");
-//        player.setVar("newbieweapon", "true", -1);
-//    }
-
-//    public void TakeAdventurersArmorCoupon() {
-//        Player player = getSelf();
-//        if (player == null)
-//            return;
-//        if (!Config.ALT_ALLOW_SHADOW_WEAPONS) {
-//            show(new CustomMessage("common.Disabled", player), player);
-//            return;
-//        }
-//        if (player.level() > 39 || player.getClassId().level() > 2) {
-//            show("Your level is too high!", player);
-//            return;
-//        }
-//        if (player.level() < 20 || player.getClassId().level() < 2) {
-//            show("Your level is too low!", player);
-//            return;
-//        }
-//        if (player.getVarB("newbiearmor")) {
-//            show("Your already got your newbie weapon!", player);
-//            return;
-//        }
-//        addItem(player, 7833, 1, "TakeAdventurersArmorCoupon");
-//        player.setVar("newbiearmor", "true", -1);
-//    }
-
-//    public void enter_dc() {
-//        Player player = getSelf();
-//        NpcInstance npc = getNpc();
-//        if (player == null || npc == null)
-//            return;
-//
-//        if (!NpcInstance.canBypassCheck(player, npc))
-//            return;
-//
-//        player.setVar("DCBackCoords", player.getTerritory().toXYZString(), -1);
-//        player.teleToLocation(-114582, -152635, -6742);
-//    }
-
-//    public void exit_dc() {
-//        Player player = getSelf();
-//        NpcInstance npc = getNpc();
-//        if (player == null || npc == null)
-//            return;
-//
-//        if (!NpcInstance.canBypassCheck(player, npc))
-//            return;
-//
-//        String var = player.getVar("DCBackCoords");
-//        if (var == null || var.isEmpty()) {
-//            player.teleToLocation(new Location(43768, -48232, -800), 0);
-//            return;
-//        }
-//        player.teleToLocation(Location.parseLoc(var), 0);
-//        player.unsetVar("DCBackCoords");
-//    }
-
-//    public void addPlayerToTvT() {
-//        Player player = getSelf();
-//
-//        AbstractFightClub event = (AbstractFightClub) EventHolder.INSTANCE().getEvent(EventType.FIGHT_CLUB_EVENT, 2);
-//
-//
-//        FightClubEventManager.INSTANCE.trySignForEvent(player, event, true);
-//    }
 }

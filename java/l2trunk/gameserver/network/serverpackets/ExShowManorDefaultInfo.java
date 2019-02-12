@@ -14,9 +14,9 @@ import java.util.List;
  * d  - size
  * <p>
  * [
- * d  - level
+ * d  - occupation
  * d  - seed price
- * d  - seed level
+ * d  - seed occupation
  * d  - crop price
  * c
  * d  - reward 1 id
@@ -38,7 +38,7 @@ public final class ExShowManorDefaultInfo extends L2GameServerPacket {
         writeD(_crops.size());
         for (int cropId : _crops) {
             writeD(cropId); // crop Id
-            writeD(Manor.INSTANCE.getSeedLevelByCrop(cropId)); // level
+            writeD(Manor.INSTANCE.getSeedLevelByCrop(cropId)); // occupation
             writeD(Manor.INSTANCE.getSeedBasicPriceByCrop(cropId)); // seed price
             writeD(Manor.INSTANCE.getCropBasicPrice(cropId)); // crop price
             writeC(1); // rewrad 1 Type

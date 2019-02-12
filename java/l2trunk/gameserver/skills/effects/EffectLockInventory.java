@@ -35,8 +35,4 @@ public final class EffectLockInventory extends Effect {
         player.getInventory().unlock();
     }
 
-    @Override
-    protected boolean onActionTime() {
-        return false;
-    }
 }

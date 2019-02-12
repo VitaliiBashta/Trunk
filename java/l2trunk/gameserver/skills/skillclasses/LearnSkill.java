@@ -10,6 +10,7 @@ import l2trunk.gameserver.tables.SkillTable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public final class LearnSkill extends Skill {
     private final List<Integer> _learnSkillId;
@@ -23,7 +24,7 @@ public final class LearnSkill extends Skill {
                 .collect(Collectors.toList());
 
 
-        _learnSkillLvl = Arrays.stream(set.getString("learnSkillLvl", "1").split(","))
+        _learnSkillLvl = Stream.of(set.getString("learnSkillLvl", "1").split(","))
                 .map(NumberUtils::toInt)
                 .collect(Collectors.toList());
     }
@@ -34,11 +35,10 @@ public final class LearnSkill extends Skill {
             return;
 
         final Player player = ((Player) activeChar);
-        Skill newSkill;
 
         for (int i = 0; i < _learnSkillId.size(); i++) {
             if (player.getSkillLevel(_learnSkillId.get(i)) < _learnSkillLvl.get(i) && _learnSkillId.get(i) != 0) {
-                newSkill = SkillTable.INSTANCE.getInfo(_learnSkillId.get(i), _learnSkillLvl.get(i));
+                Skill newSkill = SkillTable.INSTANCE.getInfo(_learnSkillId.get(i), _learnSkillLvl.get(i));
                 if (newSkill != null)
                     player.addSkill(newSkill, true);
             }

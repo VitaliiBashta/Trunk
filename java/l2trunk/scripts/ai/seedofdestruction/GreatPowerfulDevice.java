@@ -28,7 +28,7 @@ public final class GreatPowerfulDevice extends DefaultAI {
             // Спаун мобов вокруг обелиска
             for (int i = 0; i < 6; i++)
                 MOBS.forEach(mobId ->
-                        actor.getReflection().addSpawnWithoutRespawn(mobId, Location.findPointToStay(OBELISK_LOC.clone().setZ(-12224), 600, 1200, actor.getGeoIndex()), 0));
+                        actor.getReflection().addSpawnWithoutRespawn(mobId, Location.findPointToStay(OBELISK_LOC.clone().setZ(-12224), 600, 1200, actor.getGeoIndex())));
             actor.getReflection().openDoor(12240027);
             actor.getReflection().getNpcs()
                     .filter(n -> n.getNpcId() == 18778)

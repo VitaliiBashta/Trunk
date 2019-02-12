@@ -14,8 +14,6 @@ public final class wolfevolve extends Functions {
     private static final int GREAT_WOLF_NECKLACE = L2Pet.GREAT_WOLF.getControlItemId(); // Ожерелье Great Wolf
 
     public void evolve() {
-        Player player = getSelf();
-        NpcInstance npc = getNpc();
         if (player == null || npc == null)
             return;
         Summon pl_pet = player.getPet();

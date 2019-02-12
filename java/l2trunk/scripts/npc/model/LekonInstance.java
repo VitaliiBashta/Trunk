@@ -5,6 +5,9 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
+import static l2trunk.gameserver.utils.ItemFunctions.addItem;
+import static l2trunk.gameserver.utils.ItemFunctions.removeItem;
+
 public final class LekonInstance extends NpcInstance {
     private static final int ENERGY_STAR_STONE = 13277;
     private static final int AIRSHIP_SUMMON_LICENSE = 13559;
@@ -24,17 +27,17 @@ public final class LekonInstance extends NpcInstance {
                 return;
             }
 
-            if (player.getClan().isHaveAirshipLicense() || Functions.getItemCount(player, AIRSHIP_SUMMON_LICENSE) > 0) {
+            if (player.getClan().isHaveAirshipLicense() || player.haveItem(AIRSHIP_SUMMON_LICENSE)) {
                 showChatWindow(player, 4);
                 return;
             }
 
-            if (Functions.removeItem(player, ENERGY_STAR_STONE, 10, "LekonInstance") != 10) {
+            if (removeItem(player, ENERGY_STAR_STONE, 10, "LekonInstance") != 10) {
                 showChatWindow(player, 3);
                 return;
             }
 
-            Functions.addItem(player, AIRSHIP_SUMMON_LICENSE, 1, "LekonInstance");
+            addItem(player, AIRSHIP_SUMMON_LICENSE, 1);
         } else
             super.onBypassFeedback(player, command);
     }

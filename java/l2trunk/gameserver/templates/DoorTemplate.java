@@ -9,15 +9,11 @@ import l2trunk.gameserver.utils.Location;
 import l2trunk.scripts.ai.door.ResidenceDoor;
 import l2trunk.scripts.ai.door.SSQDoor;
 import l2trunk.scripts.ai.door.SiegeDoor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.lang.reflect.Constructor;
 
 public final class DoorTemplate extends CharTemplate {
     private final int _id;
-    private final String _name;
-    private final DoorType _doorType;
+    public final String name;
+    private final DoorType doortype;
     private final boolean _unlockable;
     private final boolean _isHPVisible;
     private final boolean _opened;
@@ -30,13 +26,13 @@ public final class DoorTemplate extends CharTemplate {
     private final int _closeTime;
     private final int masterDoor;
     private final StatsSet _aiParams;
-    private String classAI = "DoorAI";
+    private String classAI;
 
     public DoorTemplate(StatsSet set) {
         super(set);
         _id = set.getInteger("uid");
-        _name = set.getString("name");
-        _doorType = set.getEnum("door_type", DoorType.class, DoorType.DOOR);
+        name = set.getString("name");
+        doortype = set.getEnum("door_type", DoorType.class, DoorType.DOOR);
         _unlockable = set.getBool("unlockable", false);
         _isHPVisible = set.getBool("show_hp", false);
         _opened = set.getBool("opened", false);
@@ -75,11 +71,11 @@ public final class DoorTemplate extends CharTemplate {
     }
 
     public String getName() {
-        return _name;
+        return name;
     }
 
     public DoorType getDoorType() {
-        return _doorType;
+        return doortype;
     }
 
     public boolean isUnlockable() {

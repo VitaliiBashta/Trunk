@@ -4,7 +4,6 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _324_SweetestVenom extends Quest {
     //NPCs
@@ -35,7 +34,7 @@ public final class _324_SweetestVenom extends Quest {
         int _state = st.getState();
 
         if (_state == CREATED) {
-            if (st.getPlayer().getLevel() >= 18) {
+            if (st.player.getLevel() >= 18) {
                 htmltext = "astaron_q0324_03.htm";
                 st.setCond(0);
             } else {
@@ -46,7 +45,7 @@ public final class _324_SweetestVenom extends Quest {
             long _count = st.getQuestItemsCount(VENOM_SAC);
             if (_count >= 10) {
                 htmltext = "astaron_q0324_06.htm";
-                st.takeItems(VENOM_SAC, -1);
+                st.takeItems(VENOM_SAC);
                 st.giveItems(ADENA_ID, 5810);
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest(true);
@@ -67,22 +66,21 @@ public final class _324_SweetestVenom extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState qs) {
+    public void onKill(NpcInstance npc, QuestState qs) {
         if (qs.getState() != STARTED)
-            return null;
+            return;
 
         long _count = qs.getQuestItemsCount(VENOM_SAC);
         int _chance = VENOM_SAC_BASECHANCE + (npc.getNpcId() - Prowler) / 4 * 12;
 
         if (_count < 10 && Rnd.chance(_chance)) {
-            qs.giveItems(VENOM_SAC, 1);
+            qs.giveItems(VENOM_SAC);
             if (_count == 9) {
                 qs.setCond(2);
                 qs.playSound(SOUND_MIDDLE);
             } else
                 qs.playSound(SOUND_ITEMGET);
         }
-        return null;
     }
 
 }

@@ -1,6 +1,5 @@
 package l2trunk.scripts.ai.residences.clanhall;
 
-import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.CharacterAI;
@@ -29,74 +28,74 @@ public final class RainbowYeti extends CharacterAI {
         ClanHallMiniGameEvent miniGameEvent = actor.getEvent(ClanHallMiniGameEvent.class);
         if (miniGameEvent == null)
             return;
-        if (!character.isPlayer())
-            return;
+        if (character instanceof Player) {
+            Player player = (Player) character;
 
-        Player player = character.getPlayer();
+            CMGSiegeClanObject siegeClan = null;
+            List<CMGSiegeClanObject> attackers = miniGameEvent.getObjects(ClanHallMiniGameEvent.ATTACKERS);
+            for (CMGSiegeClanObject $ : attackers)
+                if ($.isParticle(player))
+                    siegeClan = $;
 
-        CMGSiegeClanObject siegeClan = null;
-        List<CMGSiegeClanObject> attackers = miniGameEvent.getObjects(ClanHallMiniGameEvent.ATTACKERS);
-        for (CMGSiegeClanObject $ : attackers)
-            if ($.isParticle(player))
-                siegeClan = $;
+            if (siegeClan == null)
+                return;
 
-        if (siegeClan == null)
-            return;
+            int index = attackers.indexOf(siegeClan);
+            int warIndex;
 
-        int index = attackers.indexOf(siegeClan);
-        int warIndex;
+            RainbowGourdInstance gourdInstance;
+            RainbowGourdInstance gourdInstance2;
+            switch (skill.id) {
+                case 2240: //nectar
+                    // убить хп у своего Фрукта :D
+                    if (Rnd.chance(90)) {
+                        gourdInstance = getGourd(index);
+                        if (gourdInstance == null)
+                            return;
 
-        RainbowGourdInstance gourdInstance;
-        RainbowGourdInstance gourdInstance2;
-        switch (skill.id) {
-            case 2240: //nectar
-                // убить хп у своего Фрукта :D
-                if (Rnd.chance(90)) {
-                    gourdInstance = getGourd(index);
-                    if (gourdInstance == null)
+                        gourdInstance.doDecrease(player);
+                    } else
+                        actor.addMob(NpcUtils.spawnSingle(35592, actor.getLoc().randomOffset(10)));
+                    break;
+                case 2241: //mineral water
+                    // увеличить ХП у чужого фрукта
+                    warIndex = rndEx(attackers.size(), index);
+                    if (warIndex == Integer.MIN_VALUE)
                         return;
 
-                    gourdInstance.doDecrease(player);
-                } else
-                    actor.addMob(NpcUtils.spawnSingle(35592, actor.getX() + 10, actor.getY() + 10, actor.getZ(), 0));
-                break;
-            case 2241: //mineral water
-                // увеличить ХП у чужого фрукта
-                warIndex = rndEx(attackers.size(), index);
-                if (warIndex == Integer.MIN_VALUE)
-                    return;
+                    gourdInstance2 = getGourd(warIndex);
+                    if (gourdInstance2 == null)
+                        return;
+                    gourdInstance2.doHeal();
+                    break;
+                case 2242: //water
+                    // обменять ХП с чужим фруктом
+                    warIndex = rndEx(attackers.size(), index);
+                    if (warIndex == Integer.MIN_VALUE)
+                        return;
 
-                gourdInstance2 = getGourd(warIndex);
-                if (gourdInstance2 == null)
-                    return;
-                gourdInstance2.doHeal();
-                break;
-            case 2242: //water
-                // обменять ХП с чужим фруктом
-                warIndex = rndEx(attackers.size(), index);
-                if (warIndex == Integer.MIN_VALUE)
-                    return;
+                    gourdInstance = getGourd(index);
+                    gourdInstance2 = getGourd(warIndex);
+                    if (gourdInstance2 == null || gourdInstance == null)
+                        return;
 
-                gourdInstance = getGourd(index);
-                gourdInstance2 = getGourd(warIndex);
-                if (gourdInstance2 == null || gourdInstance == null)
-                    return;
+                    gourdInstance.doSwitch(gourdInstance2);
+                    break;
+                case 2243: //sulfur
+                    // наложить дебафф в чужогой арене
+                    warIndex = rndEx(attackers.size(), index);
+                    if (warIndex == Integer.MIN_VALUE)
+                        return;
 
-                gourdInstance.doSwitch(gourdInstance2);
-                break;
-            case 2243: //sulfur
-                // наложить дебафф в чужогой арене
-                warIndex = rndEx(attackers.size(), index);
-                if (warIndex == Integer.MIN_VALUE)
-                    return;
-
-                ZoneObject zone = miniGameEvent.getFirstObject("zone_" + warIndex);
-                if (zone == null)
-                    return;
-                zone.setActive(true);
-                ThreadPoolManager.INSTANCE.schedule(() -> zone.setActive(false), 60000L);
-                break;
+                    ZoneObject zone = miniGameEvent.getFirstObject("zone_" + warIndex);
+                    if (zone == null)
+                        return;
+                    zone.setActive(true);
+                    ThreadPoolManager.INSTANCE.schedule(() -> zone.setActive(false), 60000L);
+                    break;
+            }
         }
+
     }
 
     private RainbowGourdInstance getGourd(int index) {
@@ -118,16 +117,4 @@ public final class RainbowYeti extends CharacterAI {
         return rnd;
     }
 
-    private static class ZoneDeactive extends RunnableImpl {
-        private final ZoneObject zone;
-
-        ZoneDeactive(ZoneObject zone) {
-            this.zone = zone;
-        }
-
-        @Override
-        public void runImpl() {
-            zone.setActive(false);
-        }
-    }
 }

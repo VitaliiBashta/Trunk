@@ -1,6 +1,5 @@
 package l2trunk.gameserver.model;
 
-import l2trunk.commons.lang.reference.HardReference;
 import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.ai.CtrlEvent;
@@ -18,31 +17,30 @@ import java.util.List;
 
 public final class GameObjectTasks {
     public static class DeleteTask extends RunnableImpl {
-        private final HardReference<? extends Creature> hardReference;
+        private final Creature creature;
 
-        public DeleteTask(Creature c) {
-            hardReference = c.getRef();
+        public DeleteTask(Creature creature) {
+            this.creature = creature;
         }
 
         @Override
         public void runImpl() {
-            Creature c = hardReference.get();
-            if (c != null)
-                c.deleteMe();
+            if (creature != null)
+                creature.deleteMe();
         }
     }
 
     // ============================ Таски для L2Player ==============================
     public static class SoulConsumeTask extends RunnableImpl {
-        private final HardReference<Player> _playerRef;
+        private final Player player;
 
         public SoulConsumeTask(Player player) {
-            _playerRef = player.getRef();
+            this.player = player;
         }
 
         @Override
         public void runImpl() {
-            Player player = _playerRef.get();
+            Player player = this.player;
             if (player == null)
                 return;
             player.setConsumedSouls(player.getConsumedSouls() + 1, null);
@@ -53,15 +51,14 @@ public final class GameObjectTasks {
      * PvPFlagTask
      */
     public static class PvPFlagTask extends RunnableImpl {
-        private final HardReference<Player> _playerRef;
+        private final Player player;
 
         public PvPFlagTask(Player player) {
-            _playerRef = player.getRef();
+            this.player = player;
         }
 
         @Override
         public void runImpl() {
-            Player player = _playerRef.get();
             if (player == null)
                 return;
 
@@ -79,15 +76,14 @@ public final class GameObjectTasks {
      * HourlyTask
      */
     public static class HourlyTask extends RunnableImpl {
-        private final HardReference<Player> _playerRef;
+        private final Player player;
 
-        public HourlyTask(Player player) {
-            _playerRef = player.getRef();
+        HourlyTask(Player player) {
+            this.player = player;
         }
 
         @Override
         public void runImpl() {
-            Player player = _playerRef.get();
             if (player == null)
                 return;
             // Каждый час в игре оповещаем персонажу сколько часов он играет.
@@ -101,15 +97,14 @@ public final class GameObjectTasks {
      * RecomBonusTask
      */
     public static class RecomBonusTask extends RunnableImpl {
-        private final HardReference<Player> _playerRef;
+        private final Player player;
 
-        public RecomBonusTask(Player player) {
-            _playerRef = player.getRef();
+        RecomBonusTask(Player player) {
+            this.player = player;
         }
 
         @Override
         public void runImpl() {
-            Player player = _playerRef.get();
             if (player == null)
                 return;
             player.setRecomBonusTime(0);
@@ -118,15 +113,14 @@ public final class GameObjectTasks {
     }
 
     public static class WaterTask extends RunnableImpl {
-        private final HardReference<Player> _playerRef;
+        private final Player player;
 
         public WaterTask(Player player) {
-            _playerRef = player.getRef();
+            this.player = player;
         }
 
         @Override
         public void runImpl() {
-            Player player = _playerRef.get();
             if (player == null)
                 return;
             if (player.isDead() || !player.isInWater()) {
@@ -141,15 +135,14 @@ public final class GameObjectTasks {
     }
 
     public static class KickTask extends RunnableImpl {
-        private final HardReference<Player> _playerRef;
+        private final Player player;
 
         public KickTask(Player player) {
-            _playerRef = player.getRef();
+            this.player = player;
         }
 
         @Override
         public void runImpl() {
-            Player player = _playerRef.get();
             if (player == null)
                 return;
             player.kick();
@@ -157,18 +150,16 @@ public final class GameObjectTasks {
     }
 
     public static class UnJailTask extends RunnableImpl {
-        private final HardReference<Player> _playerRef;
+        private final Player player;
         private final boolean _msg;
 
         public UnJailTask(Player player, boolean msg) {
-            _playerRef = player.getRef();
+            this.player = player;
             _msg = msg;
         }
 
         @Override
         public void runImpl() {
-            Player player = _playerRef.get();
-
             if (player == null) {
                 return;
             }
@@ -184,8 +175,7 @@ public final class GameObjectTasks {
                 player.sendPacket(new Say2(0, ChatType.TELL, "Jail", "You are now free to go!"));
             }
 
-            if (player.isBlocked()) // prevent locks
-            {
+            if (player.isBlocked()) {// prevent locks
                 player.setBlock();
             }
             player.standUp();
@@ -196,15 +186,14 @@ public final class GameObjectTasks {
      * EndSitDownTask
      */
     public static class EndSitDownTask extends RunnableImpl {
-        private final HardReference<Player> _playerRef;
+        private final Player player;
 
         EndSitDownTask(Player player) {
-            _playerRef = player.getRef();
+            this.player = player;
         }
 
         @Override
         public void runImpl() {
-            Player player = _playerRef.get();
             if (player == null)
                 return;
             player.sittingTaskLaunched = false;
@@ -216,15 +205,14 @@ public final class GameObjectTasks {
      * EndStandUpTask
      */
     public static class EndStandUpTask extends RunnableImpl {
-        private final HardReference<Player> _playerRef;
+        private final Player player;
 
         EndStandUpTask(Player player) {
-            _playerRef = player.getRef();
+            this.player = player;
         }
 
         @Override
         public void runImpl() {
-            Player player = _playerRef.get();
             if (player == null)
                 return;
             player.sittingTaskLaunched = false;
@@ -235,25 +223,24 @@ public final class GameObjectTasks {
     }
 
     public static class ReturnTask extends RunnableImpl {
-        private final HardReference<? extends Creature> _ref;
-        private final List<Skill> _list;
-        private final List<Integer> _timeLeft;
+        private final Creature creature;
+        private final List<Skill> list;
+        private final List<Integer> timeLeft;
 
-        public ReturnTask(Creature c, List<Skill> list, List<Integer> timeLeft) {
-            _ref = c.getRef();
-            _list = list;
-            _timeLeft = timeLeft;
+        public ReturnTask(Creature creature, List<Skill> list, List<Integer> timeLeft) {
+            this.creature = creature;
+            this.list = list;
+            this.timeLeft = timeLeft;
         }
 
         @Override
         public void runImpl() {
-            Creature c = _ref.get();
             int i;
-            if ((c != null) && (_list != null) && (!c.isDead()) && (!c.isInOlympiadMode()) && (!c.isInObserverMode())) {
+            if ((creature != null) && (list != null) && (!creature.isDead()) && creature instanceof Player && (!((Player)creature).isInOlympiadMode()) && (!((Player)creature).isInObserverMode())) {
                 i = 0;
-                for (Skill skill : _list) {
+                for (Skill skill : list) {
                     if (skill != null)
-                        skill.getEffects(c, c, false, false, _timeLeft.get(i) * 1000, 1.0, false);
+                        skill.getEffects(creature, creature, false, false, timeLeft.get(i) * 1000, 1.0, false);
                     i++;
                 }
             }
@@ -266,36 +253,32 @@ public final class GameObjectTasks {
      */
     public static class AltMagicUseTask extends RunnableImpl {
         final int skillId;
-        private final HardReference<? extends Creature> _charRef, _targetRef;
+        private final Creature creature, target;
 
         public AltMagicUseTask(Creature character, Creature target, int skillId) {
-            _charRef = character.getRef();
-            _targetRef = target.getRef();
+            creature = character;
+            this.target = target;
             this.skillId = skillId;
         }
 
         @Override
         public void runImpl() {
             Creature cha, target;
-            if ((cha = _charRef.get()) == null || (target = _targetRef.get()) == null)
+            if ((cha = creature) == null || (target = this.target) == null)
                 return;
             cha.altOnMagicUseTimer(target, skillId);
         }
     }
 
-    /**
-     * CastEndTimeTask
-     */
     public static class CastEndTimeTask extends RunnableImpl {
-        private final HardReference<? extends Creature> _charRef;
+        private final  Creature character;
 
         public CastEndTimeTask(Creature character) {
-            _charRef = character.getRef();
+            this.character = character;
         }
 
         @Override
         public void runImpl() {
-            Creature character = _charRef.get();
             if (character == null)
                 return;
             character.onCastEndTime();
@@ -313,11 +296,11 @@ public final class GameObjectTasks {
         final boolean unchargeSS;
         final boolean notify;
         final int damage;
-        private final HardReference<? extends Creature> charRef, targetRef;
+        private final Creature creature, target;
 
         public HitTask(Creature cha, Creature target, int damage, boolean crit, boolean miss, boolean soulshot, boolean shld, boolean unchargeSS, boolean notify) {
-            charRef = cha.getRef();
-            targetRef = target.getRef();
+            creature = cha;
+            this.target = target;
             this.damage = damage;
             this.crit = crit;
             this.shld = shld;
@@ -330,7 +313,7 @@ public final class GameObjectTasks {
         @Override
         public void runImpl() {
             Creature character, target;
-            if ((character = charRef.get()) == null || (target = targetRef.get()) == null)
+            if ((character = creature) == null || (target = this.target) == null)
                 return;
 
             if (character.isAttackAborted())
@@ -348,16 +331,16 @@ public final class GameObjectTasks {
      */
     public static class MagicUseTask extends RunnableImpl {
         final boolean _forceUse;
-        private final HardReference<? extends Creature> _charRef;
+        private final Creature creature;
 
         public MagicUseTask(Creature cha, boolean forceUse) {
-            _charRef = cha.getRef();
+            creature = cha;
             _forceUse = forceUse;
         }
 
         @Override
         public void runImpl() {
-            Creature character = _charRef.get();
+            Creature character = creature;
             if (character == null)
                 return;
             Skill castingSkill = character.getCastingSkill();
@@ -372,16 +355,16 @@ public final class GameObjectTasks {
 
     public static class MagicLaunchedTask extends RunnableImpl {
         final boolean forceUse;
-        private final HardReference<? extends Creature> charRef;
+        private final Creature charRef;
 
         public MagicLaunchedTask(Creature cha, boolean forceUse) {
-            charRef = cha.getRef();
+            charRef = cha;
             this.forceUse = forceUse;
         }
 
         @Override
         public void runImpl() {
-            Creature character = charRef.get();
+            Creature character = charRef;
             if (character == null)
                 return;
             Skill castingSkill = character.getCastingSkill();
@@ -391,7 +374,7 @@ public final class GameObjectTasks {
                 return;
             }
             List<Creature> targets = castingSkill.getTargets(character, castingTarget, forceUse);
-            character.broadcastPacket(new MagicSkillLaunched(character.getObjectId(), castingSkill.displayId, castingSkill.getDisplayLevel(), Collections.unmodifiableList(targets)));
+            character.broadcastPacket(new MagicSkillLaunched(character.objectId(), castingSkill.displayId, castingSkill.getDisplayLevel(), Collections.unmodifiableList(targets)));
         }
     }
 
@@ -399,14 +382,14 @@ public final class GameObjectTasks {
         private final CtrlEvent evt;
         private final Creature creature;
         private final Integer damage;
-        private final HardReference<? extends Creature> charRef;
+        private final Creature charRef;
 
         public NotifyAITask(Creature cha, CtrlEvent evt, Creature creature) {
             this(cha, evt, creature, null);
         }
 
         public NotifyAITask(Creature cha, CtrlEvent evt, Creature creature, Integer damage) {
-            charRef = cha.getRef();
+            charRef = cha;
             this.evt = evt;
             this.creature = creature;
             this.damage = damage;
@@ -418,7 +401,7 @@ public final class GameObjectTasks {
 
         @Override
         public void runImpl() {
-            Creature character = charRef.get();
+            Creature character = charRef;
             if (character == null || !character.hasAI() || !Config.ALLOW_NPC_AIS)
                 return;
 
@@ -437,15 +420,15 @@ public final class GameObjectTasks {
      * Task of Checking Skill cast Landing
      **/
     public static class MagicGeoCheckTask extends RunnableImpl {
-        private final HardReference<? extends Creature> charRef;
+        private final Creature charRef;
 
         public MagicGeoCheckTask(Creature cha) {
-            charRef = cha.getRef();
+            charRef = cha;
         }
 
         @Override
         public void runImpl() {
-            Creature character = charRef.get();
+            Creature character = charRef;
             if (character == null) {
                 return;
             }

@@ -4,7 +4,6 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _050_LanoscosSpecialBait extends Quest {
     // NPC
@@ -56,10 +55,10 @@ public final class _050_LanoscosSpecialBait extends Quest {
         int id = st.getState();
         if (npcId == Lanosco)
             if (id == CREATED) {
-                if (st.getPlayer().getLevel() < 27) {
+                if (st.player.getLevel() < 27) {
                     htmltext = "fisher_lanosco_q0050_0103.htm";
                     st.exitCurrentQuest(true);
-                } else if (st.getPlayer().getSkillLevel(FishSkill) >= 8)
+                } else if (st.player.getSkillLevel(FishSkill) >= 8)
                     htmltext = "fisher_lanosco_q0050_0101.htm";
                 else {
                     htmltext = "fisher_lanosco_q0050_0102.htm";
@@ -75,17 +74,16 @@ public final class _050_LanoscosSpecialBait extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         if (npcId == SingingWind && st.getCond() == 1)
             if (st.getQuestItemsCount(EssenceofWind) < 100 && Rnd.chance(30)) {
-                st.giveItems(EssenceofWind, 1);
+                st.giveItems(EssenceofWind);
                 if (st.getQuestItemsCount(EssenceofWind) == 100) {
                     st.playSound(SOUND_MIDDLE);
                     st.setCond(2);
                 } else
                     st.playSound(SOUND_ITEMGET);
             }
-        return null;
     }
 }

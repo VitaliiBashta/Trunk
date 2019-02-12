@@ -16,13 +16,13 @@ public final class DeleteObject extends L2GameServerPacket {
     private final int objectId;
 
     public DeleteObject(GameObject obj) {
-        objectId = obj.getObjectId();
+        objectId = obj.objectId();
     }
 
     @Override
     protected final void writeImpl() {
         Player activeChar = getClient().getActiveChar();
-        if (activeChar == null || activeChar.getObjectId() == objectId)
+        if (activeChar == null || activeChar.objectId() == objectId)
             return;
 
         writeC(0x08);

@@ -186,7 +186,7 @@ public final class CharacterDAO {
         try (Connection con = DatabaseFactory.getInstance().getConnection()) {
             try (PreparedStatement statement = con.prepareStatement("INSERT INTO `characters` (account_name, obj_Id, char_name, face, hairStyle, hairColor, sex, karma, pvpkills, pkkills, clanid, createtime, deletetime, title, accesslevel, online, leaveclan, deleteclan, nochannel, pledge_type, pledge_rank, lvl_joined_academy, apprentice) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")) {
                 statement.setString(1, player.getAccountName());
-                statement.setInt(2, player.getObjectId());
+                statement.setInt(2, player.objectId());
                 statement.setString(3, player.getName());
                 statement.setInt(4, player.getFace());
                 statement.setInt(5, player.getHairStyle());
@@ -212,8 +212,8 @@ public final class CharacterDAO {
             }
 
             try (PreparedStatement statement = con.prepareStatement("INSERT INTO character_subclasses (char_obj_id, class_id, exp, sp, curHp, curMp, curCp, maxHp, maxMp, maxCp, level, active, isBase, death_penalty, certification) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")) {
-                statement.setInt(1, player.getObjectId());
-                statement.setInt(2, player.getTemplate().classId.getId());
+                statement.setInt(1, player.objectId());
+                statement.setInt(2, player.getTemplate().classId.id);
                 statement.setInt(3, 0);
                 statement.setInt(4, 0);
                 statement.setDouble(5, player.getTemplate().baseHpMax + player.getTemplate().lvlHpAdd + player.getTemplate().lvlHpMod);

@@ -33,9 +33,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 
+import static l2trunk.gameserver.utils.ItemFunctions.addItem;
+import static l2trunk.gameserver.utils.ItemFunctions.removeItem;
+
 public final class SavingSnowman extends Functions implements ScriptFile, OnDeathListener, OnPlayerEnterListener {
     private static final Logger _log = LoggerFactory.getLogger(SavingSnowman.class);
-    private static final List<SimpleSpawner> SPAWNS = new ArrayList<>();
+    private static List<SimpleSpawner> SPAWNS = new ArrayList<>();
     private static final int INITIAL_SAVE_DELAY = 10 * 60 * 1000; // 10 мин
     private static final int SAVE_INTERVAL = 60 * 60 * 1000; // 60 мин
     private static final int SNOWMAN_SHOUT_INTERVAL = 60 * 1000; // 1 мин
@@ -49,7 +52,7 @@ public final class SavingSnowman extends Functions implements ScriptFile, OnDeat
     private static final int SANTA_BUFF_REUSE = 12 * 3600 * 1000; // 12 hours
     private static final int SANTA_LOTTERY_REUSE = 3 * 3600 * 1000; // 3 hours
     // Оружие для обмена купонов
-    private static final int WEAPONS[][] = {{20109, 20110, 20111, 20112, 20113, 20114, 20115, 20116, 20117, 20118, 20119, 20120, 20121, 20122}, // D
+    private static final int[][] WEAPONS = {{20109, 20110, 20111, 20112, 20113, 20114, 20115, 20116, 20117, 20118, 20119, 20120, 20121, 20122}, // D
             {20123, 20124, 20125, 20126, 20127, 20128, 20129, 20130, 20131, 20132, 20133, 20134, 20135, 20136}, // C
             {20137, 20138, 20139, 20140, 20141, 20142, 20143, 20144, 20145, 20146, 20147, 20148, 20149, 20150}, // B
             {20151, 20152, 20153, 20154, 20155, 20156, 20157, 20158, 20159, 20160, 20161, 20162, 20163, 20164}, // A
@@ -97,7 +100,7 @@ public final class SavingSnowman extends Functions implements ScriptFile, OnDeat
 
         Location targetLoc = Location.findFrontPosition(rewarded, rewarded, 40, 50);
         rewarder.setSpawnedLoc(targetLoc);
-        rewarder.broadcastPacket(new CharMoveToLocation(rewarder.getObjectId(), rewarder.getLoc(), targetLoc));
+        rewarder.broadcastPacket(new CharMoveToLocation(rewarder.objectId(), rewarder.getLoc(), targetLoc));
 
         ThreadPoolManager.INSTANCE.schedule(() -> reward(rewarder, rewarded), 5000);
     }
@@ -106,7 +109,7 @@ public final class SavingSnowman extends Functions implements ScriptFile, OnDeat
         if (!_active || rewarder == null || rewarded == null)
             return;
         Functions.npcSayCustomMessage(rewarder, "scripts.events.SavingSnowman.RewarderPhrase2", rewarded.getName());
-        Functions.addItem(rewarded, 14616, 1, "SavingSnowman"); // Gift from Santa Claus
+        addItem(rewarded, 14616, 1); // Gift from Santa Claus
         ThreadPoolManager.INSTANCE.schedule(() -> removeRewarder(rewarder), 5000);
     }
 
@@ -123,7 +126,7 @@ public final class SavingSnowman extends Functions implements ScriptFile, OnDeat
         int y = loc.y + (int) (Math.cos(radian) * 300);
         int z = loc.z;
 
-        rewarder.broadcastPacket(new CharMoveToLocation(rewarder.getObjectId(), loc, new Location(x, y, z)));
+        rewarder.broadcastPacket(new CharMoveToLocation(rewarder.objectId(), loc, Location.of(x, y, z)));
 
         ThreadPoolManager.INSTANCE.schedule(() -> unspawnRewarder(rewarder), 2000);
     }
@@ -132,13 +135,6 @@ public final class SavingSnowman extends Functions implements ScriptFile, OnDeat
         if (!_active || rewarder == null)
             return;
         rewarder.deleteMe();
-    }
-
-    private static Location getRandomSpawnPoint() {
-        //L2Territory[] locs = TerritoryTable.INSTANCE().getLocations();
-        //L2Territory terr = locs[Rnd.get(locs.length)];
-        //return new Location(terr.getRandomPoint());
-        return new Location(0, 0, 0);
     }
 
     // Индюк захавывает снеговика
@@ -162,7 +158,7 @@ public final class SavingSnowman extends Functions implements ScriptFile, OnDeat
 
     // Индюк умер, освобождаем снеговика
     public static void freeSnowman(Creature topDamager) {
-        if (_snowman == null || topDamager == null || !topDamager.isPlayable())
+        if (_snowman == null || !(topDamager instanceof Playable))
             return;
 
         GameObjectsStorage.getAllPlayersStream().forEach(player ->
@@ -181,9 +177,9 @@ public final class SavingSnowman extends Functions implements ScriptFile, OnDeat
 
         Player player = topDamager.getPlayer();
         Functions.npcSayCustomMessage(_snowman, "scripts.events.SavingSnowman.SnowmanSayTnx", player.getName());
-        addItem(player, 20034, 3, "SavingSnowman"); // Revita-Pop
-        addItem(player, 20338, 1, "SavingSnowman"); // Rune of Experience Points 50%	10 Hour Expiration Period
-        addItem(player, 20344, 1, "SavingSnowman"); // Rune of SP 50% 10 Hour Expiration Period
+        addItem(player, 20034, 3); // Revita-Pop
+        addItem(player, 20338, 1); // Rune of Experience Points 50%	10 Hour Expiration Period
+        addItem(player, 20344, 1); // Rune of SP 50% 10 Hour Expiration Period
 
         ThreadPoolManager.INSTANCE.execute(() -> _snowman.deleteMe());
     }
@@ -203,11 +199,10 @@ public final class SavingSnowman extends Functions implements ScriptFile, OnDeat
     }
 
     public void startEvent() {
-        Player player = getSelf();
         if (!player.getPlayerAccess().IsEventGm)
             return;
 
-        if (SetActive("SavingSnowman", true)) {
+        if (setActive("SavingSnowman", true)) {
             spawnEventManagers();
             System.out.println("Event 'SavingSnowman' started.");
             Announcements.INSTANCE.announceByCustomMessage("scripts.events.SavingSnowman.AnnounceEventStarted");
@@ -228,10 +223,9 @@ public final class SavingSnowman extends Functions implements ScriptFile, OnDeat
      * Останавливает эвент
      */
     public void stopEvent() {
-        Player player = getSelf();
         if (!player.getPlayerAccess().IsEventGm)
             return;
-        if (SetActive("SavingSnowman", false)) {
+        if (setActive("SavingSnowman", false)) {
             unSpawnEventManagers();
             if (_snowman != null)
                 _snowman.deleteMe();
@@ -261,8 +255,8 @@ public final class SavingSnowman extends Functions implements ScriptFile, OnDeat
     }
 
     private void spawnEventManagers() {
-        SpawnNPCs(EVENT_MANAGER_ID, EventsConfig.EVENT_MANAGERS, SPAWNS);
-        SpawnNPCs(CTREE_ID, EventsConfig.CTREES, SPAWNS);
+        SPAWNS = SpawnNPCs(EVENT_MANAGER_ID, EventsConfig.EVENT_MANAGERS);
+        SPAWNS.addAll(SpawnNPCs(CTREE_ID, EventsConfig.CTREES));
     }
 
     private void unSpawnEventManagers() {
@@ -288,30 +282,32 @@ public final class SavingSnowman extends Functions implements ScriptFile, OnDeat
 
     @Override
     public void onDeath(Creature cha, Creature killer) {
-        if (_active && killer != null) {
-            Player pKiller = killer.getPlayer();
-            if (pKiller != null && SimpleCheckDrop(cha, killer) && Rnd.get(1000) < Config.EVENT_SAVING_SNOWMAN_REWARDER_CHANCE) {
-                List<Player> players = new ArrayList<>();
-                if (pKiller.isInParty())
-                    players = pKiller.getParty().getMembers();
-                else
-                    players.add(pKiller);
+        if (killer instanceof Playable) {
+            Playable playable = (Playable) killer;
+            if (_active) {
+                Player pKiller = playable.getPlayer();
+                if (pKiller != null && simpleCheckDrop(cha, playable) && Rnd.get(1000) < Config.EVENT_SAVING_SNOWMAN_REWARDER_CHANCE) {
+                    List<Player> players = new ArrayList<>();
+                    if (pKiller.isInParty())
+                        players = pKiller.getParty().getMembers();
+                    else
+                        players.add(pKiller);
 
-                spawnRewarder(players.get(Rnd.get(players.size())));
+                    spawnRewarder(Rnd.get(players));
+                }
             }
         }
     }
 
     public void buff() {
-        Player player = getSelf();
         if (!_active || player.isActionsDisabled() || player.isSitting() || player.getLastNpc() == null || player.getLastNpc().getDistance(player) > 300)
             return;
 
         if (!player.isQuestContinuationPossible(true))
             return;
 
-        String var = player.getVar("santaEventTime");
-        if (var != null && Long.parseLong(var) > System.currentTimeMillis()) {
+        long var = player.getVarLong("santaEventTime");
+        if (var > System.currentTimeMillis()) {
             show("default/13184-4.htm", player);
             return;
         }
@@ -323,7 +319,7 @@ public final class SavingSnowman extends Functions implements ScriptFile, OnDeat
 
         player.broadcastPacket(new MagicSkillUse(player, 23017));
         player.altOnMagicUseTimer(player, 23017);
-        player.setVar("santaEventTime", String.valueOf(System.currentTimeMillis() + SANTA_BUFF_REUSE), -1);
+        player.setVar("santaEventTime", System.currentTimeMillis() + SANTA_BUFF_REUSE);
 
         Summon pet = player.getPet();
         if (pet != null) {
@@ -333,7 +329,6 @@ public final class SavingSnowman extends Functions implements ScriptFile, OnDeat
     }
 
     public void locateSnowman() {
-        Player player = getSelf();
         if (!_active || player.isActionsDisabled() || player.isSitting() || player.getLastNpc() == null || player.getLastNpc().getDistance(player) > 300)
             return;
 
@@ -346,14 +341,13 @@ public final class SavingSnowman extends Functions implements ScriptFile, OnDeat
     }
 
     public void coupon(String[] var) {
-        Player player = getSelf();
         if (!_active || player.isActionsDisabled() || player.isSitting() || player.getLastNpc() == null || player.getLastNpc().getDistance(player) > 300)
             return;
 
         if (!player.isQuestContinuationPossible(true))
             return;
 
-        if (getItemCount(player, 20107) < 1) {
+        if (!player.haveItem(20107)) {
             player.sendPacket(Msg.YOU_DO_NOT_HAVE_ENOUGH_REQUIRED_ITEMS);
             return;
         }
@@ -377,65 +371,63 @@ public final class SavingSnowman extends Functions implements ScriptFile, OnDeat
     }
 
     public void lotery() {
-        Player player = getSelf();
         if (!_active || player.isActionsDisabled() || player.isSitting() || player.getLastNpc() == null || player.getLastNpc().getDistance(player) > 300)
             return;
 
         if (!player.isQuestContinuationPossible(true))
             return;
 
-        if (getItemCount(player, 57) < Config.EVENT_SAVING_SNOWMAN_LOTERY_PRICE) {
+        if (player.getAdena()< Config.EVENT_SAVING_SNOWMAN_LOTERY_PRICE) {
             player.sendPacket(Msg.YOU_DO_NOT_HAVE_ENOUGH_ADENA);
             return;
         }
 
-        String var = player.getVar("santaLotteryTime");
-        if (var != null && Long.parseLong(var) > System.currentTimeMillis()) {
+        long var = player.getVarLong("santaLotteryTime");
+        if (var > System.currentTimeMillis()) {
             show("default/13184-5.htm", player);
             return;
         }
-
-        removeItem(player, 57, Config.EVENT_SAVING_SNOWMAN_LOTERY_PRICE, "SavingSnowman");
-        player.setVar("santaLotteryTime", String.valueOf(System.currentTimeMillis() + SANTA_LOTTERY_REUSE), -1);
+        player.reduceAdena( Config.EVENT_SAVING_SNOWMAN_LOTERY_PRICE, "SavingSnowman");
+        player.setVar("santaLotteryTime", System.currentTimeMillis() + SANTA_LOTTERY_REUSE);
 
         int chance = Rnd.get(RewardList.MAX_CHANCE);
 
         // Special Christmas Tree            30%
         if (chance < 300000)
-            addItem(player, 5561, 1, "SavingSnowman");
+            addItem(player, 5561, 1);
             // Christmas Red Sock                18%
         else if (chance < 480000)
-            addItem(player, 14612, 1, "SavingSnowman");
+            addItem(player, 14612, 1);
             // Santa Claus' Weapon Exchange Ticket - 12 Hour Expiration Period      15%
         else if (chance < 630000)
-            addItem(player, 20107, 1, "SavingSnowman");
+            addItem(player, 20107, 1);
             // Gift from Santa Claus             5%
         else if (chance < 680000)
-            addItem(player, 14616, 1, "SavingSnowman");
+            addItem(player, 14616, 1);
             // Rudolph's Nose                    5%
-        else if (chance < 730000 && getItemCount(player, 14611) == 0)
-            addItem(player, 14611, 1, "SavingSnowman");
+        else if (chance < 730000 && !player.haveItem( 14611) )
+            addItem(player, 14611, 1);
             // Santa's Hat                       5%
-        else if (chance < 780000 && getItemCount(player, 7836) == 0)
-            addItem(player, 7836, 1, "SavingSnowman");
+        else if (chance < 780000 && !player.haveItem( 7836))
+            addItem(player, 7836, 1);
             // Santa's Antlers                   5%
-        else if (chance < 830000 && getItemCount(player, 8936) == 0)
-            addItem(player, 8936, 1, "SavingSnowman");
+        else if (chance < 830000 && !player.haveItem(8936))
+            addItem(player, 8936, 1);
             // Agathion Seal Bracelet - Rudolph (постоянный предмет)                5%
-        else if (chance < 880000 && getItemCount(player, 10606) == 0)
-            addItem(player, 10606, 1, "SavingSnowman");
+        else if (chance < 880000 && !player.haveItem( 10606))
+            addItem(player, 10606, 1);
             // Agathion Seal Bracelet: Rudolph - 30 дней со скилом на виталити      5%
-        else if (chance < 930000 && getItemCount(player, 20094) == 0)
-            addItem(player, 20094, 1, "SavingSnowman");
+        else if (chance < 930000 && !player.haveItem( 20094))
+            addItem(player, 20094, 1);
             // Chest of Experience (Event)       3%
         else if (chance < 960000)
-            addItem(player, 20575, 1, "SavingSnowman");
+            addItem(player, 20575, 1);
             // Призрачные аксессуары             2.5%
         else if (chance < 985000)
-            addItem(player, Rnd.get(9177, 9204), 1, "SavingSnowman");
+            addItem(player, Rnd.get(9177, 9204), 1);
             // BOSE или BRES                     1.2%
         else if (chance < 997000)
-            addItem(player, Rnd.get(9156, 9157), 1, "SavingSnowman");
+            addItem(player, Rnd.get(9156, 9157), 1);
     }
 
     public String DialogAppend_13184(Integer val) {
@@ -453,7 +445,7 @@ public final class SavingSnowman extends Functions implements ScriptFile, OnDeat
 
     // Индюк захватывает снеговика
     private void captureSnowman() {
-        Location spawnPoint = getRandomSpawnPoint();
+        Location spawnPoint = Location.of();
 
         GameObjectsStorage.getAllPlayersStream().forEach(player -> {
             Announcements.INSTANCE.announceToPlayerByCustomMessage(player, "scripts.events.SavingSnowman.AnnounceSnowmanCaptured", null, ChatType.CRITICAL_ANNOUNCE);

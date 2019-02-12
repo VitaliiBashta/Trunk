@@ -3,7 +3,6 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _250_WatchWhatYouEat extends Quest {
     // NPCs
@@ -59,7 +58,7 @@ public final class _250_WatchWhatYouEat extends Quest {
         if (npc.getNpcId() == SALLY) {
             switch (st.getState()) {
                 case CREATED:
-                    if (st.getPlayer().getLevel() >= 82)
+                    if (st.player.getLevel() >= 82)
                         htmltext = "32743-01.htm";
                     else
                         htmltext = "32743-00.htm";
@@ -71,7 +70,7 @@ public final class _250_WatchWhatYouEat extends Quest {
                         if (st.getQuestItemsCount(MOBS[0][1]) > 0 && st.getQuestItemsCount(MOBS[1][1]) > 0 && st.getQuestItemsCount(MOBS[2][1]) > 0) {
                             htmltext = "32743-05.htm";
                             for (int[] items : MOBS)
-                                st.takeItems(items[1], -1);
+                                st.takeItems(items[1]);
                         } else
                             htmltext = "32743-06.htm";
                     }
@@ -85,12 +84,12 @@ public final class _250_WatchWhatYouEat extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getState() == STARTED && st.getCond() == 1) {
             for (int[] mob : MOBS) {
                 if (npc.getNpcId() == mob[0]) {
                     if (st.getQuestItemsCount(mob[1]) == 0) {
-                        st.giveItems(mob[1], 1);
+                        st.giveItems(mob[1]);
                         st.playSound(SOUND_ITEMGET);
                     }
                 }
@@ -100,6 +99,5 @@ public final class _250_WatchWhatYouEat extends Quest {
                 st.playSound(SOUND_MIDDLE);
             }
         }
-        return null;
     }
 }

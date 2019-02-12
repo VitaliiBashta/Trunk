@@ -4,7 +4,6 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _286_FabulousFeathers extends Quest {
     //NPCs
@@ -34,12 +33,12 @@ public final class _286_FabulousFeathers extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         int _state = st.getState();
-        if (event.equalsIgnoreCase("trader_erinu_q0286_0103.htm") && _state == CREATED) {
+        if ("trader_erinu_q0286_0103.htm".equalsIgnoreCase(event) && _state == CREATED) {
             st.setState(STARTED);
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("trader_erinu_q0286_0201.htm") && _state == STARTED) {
-            st.takeItems(Commanders_Feather, -1);
+        } else if ("trader_erinu_q0286_0201.htm".equalsIgnoreCase(event) && _state == STARTED) {
+            st.takeItems(Commanders_Feather);
             st.giveItems(ADENA_ID, 4160);
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(true);
@@ -55,7 +54,7 @@ public final class _286_FabulousFeathers extends Quest {
         int _state = st.getState();
 
         if (_state == CREATED) {
-            if (st.getPlayer().getLevel() >= 17) {
+            if (st.player.getLevel() >= 17) {
                 htmltext = "trader_erinu_q0286_0101.htm";
                 st.setCond(0);
             } else {
@@ -69,19 +68,18 @@ public final class _286_FabulousFeathers extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState qs) {
+    public void onKill(NpcInstance npc, QuestState qs) {
         if (qs.getState() != STARTED)
-            return null;
+            return;
 
         long Commanders_Feather_count = qs.getQuestItemsCount(Commanders_Feather);
         if (Commanders_Feather_count < 80 && Rnd.chance(Commanders_Feather_Chance)) {
-            qs.giveItems(Commanders_Feather, 1);
+            qs.giveItems(Commanders_Feather);
             if (Commanders_Feather_count == 79) {
                 qs.setCond(2);
                 qs.playSound(SOUND_MIDDLE);
             } else
                 qs.playSound(SOUND_ITEMGET);
         }
-        return null;
     }
 }

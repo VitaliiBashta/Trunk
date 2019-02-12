@@ -21,12 +21,12 @@ import l2trunk.gameserver.templates.PlayerTemplate;
 import l2trunk.gameserver.templates.item.CreateItem;
 import l2trunk.gameserver.templates.item.ItemTemplate;
 import l2trunk.gameserver.utils.ItemFunctions;
+import l2trunk.scripts.quests._255_Tutorial;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.List;
 
 public final class CharacterCreate extends L2GameClientPacket {
     private static final Logger LOG = LoggerFactory.getLogger(CharacterCreate.class);
@@ -38,16 +38,16 @@ public final class CharacterCreate extends L2GameClientPacket {
     private int _hairColor;
     private int _face;
 
-    public static boolean checkName(String name) {
+    public static boolean isValid(String name) {
         for (int i=0; i<name.length(); i++) {
             if (!Character.isDigit(name.charAt(i)) && !Character.isLetter(name.charAt(i)))
-                return false;
+                return true;
         }
-        return true;
+        return false;
     }
 
     private static void startTutorialQuest(Player player) {
-        Quest q = QuestManager.getQuest(255);
+        Quest q = QuestManager.getQuest(_255_Tutorial.class);
         if (q != null)
             q.newQuestState(player, Quest.CREATED);
     }
@@ -72,13 +72,13 @@ public final class CharacterCreate extends L2GameClientPacket {
     @Override
     protected void runImpl() {
         for (ClassId cid : ClassId.VALUES)
-            if (cid.getId() == _classId && cid.getLevel() != 1)
+            if (cid.id == _classId && cid.occupation() != 0)
                 return;
         if (CharacterDAO.accountCharNumber(getClient().getLogin()) >= 8) {
             sendPacket(CharacterCreateFail.REASON_TOO_MANY_CHARACTERS);
             return;
         }
-        if (!checkName(_name) || _name.length() > 16) {
+        if (isValid(_name) || _name.length() > 16) {
             sendPacket(CharacterCreateFail.REASON_16_ENG_CHARS);
             return;
         } else if (CharacterDAO.getObjectIdByName(_name) > 0) {
@@ -131,19 +131,19 @@ public final class CharacterCreate extends L2GameClientPacket {
 
 
         for (CreateItem i : template.getItems()) {
-            ItemInstance item = ItemFunctions.createItem(i.getItemId());
+            ItemInstance item = ItemFunctions.createItem(i.id);
             newChar.getInventory().addItem(item, "New Char Item");
 
-            if (i.getShortcut() - 1 > -1) // tutorial book
-                newChar.registerShortCut(new ShortCut(Math.min(i.getShortcut() - 1, 11), 0, ShortCut.TYPE_ITEM, item.getObjectId(), -1, 1));
+            if (i.shortcut - 1 > -1) // tutorial book
+                newChar.registerShortCut(new ShortCut(Math.min(i.shortcut - 1, 11), 0, ShortCut.TYPE_ITEM, item.objectId(), -1, 1));
 
-            if (i.isEquipable() && item.isEquipable() && (newChar.getActiveWeaponItem() == null || item.getTemplate().getType2() != ItemTemplate.TYPE2_WEAPON))
+            if (i.equipable && item.isEquipable() && (newChar.getActiveWeaponItem() == null || item.getTemplate().getType2() != ItemTemplate.TYPE2_WEAPON))
                 newChar.getInventory().equipItem(item);
         }
 
         ClassId nclassId = ClassId.VALUES.get(_classId);
         if (Config.ALLOW_START_ITEMS) {
-            if (nclassId.isMage()) {
+            if (nclassId.isMage) {
                 for (int i = 0; i < Config.START_ITEMS_MAGE.size(); i++) {
                     ItemInstance item = ItemFunctions.createItem(Config.START_ITEMS_MAGE.get(i));
                     item.setCount(Config.START_ITEMS_MAGE_COUNT.get(i));
@@ -172,7 +172,7 @@ public final class CharacterCreate extends L2GameClientPacket {
         newChar.getInventory().addItem(item, "New Char Item");
 
         for (SkillLearn skill : SkillAcquireHolder.getAvailableSkills(newChar, AcquireType.NORMAL))
-            newChar.addSkill(skill.getId(), skill.getLevel(), true);
+            newChar.addSkill(skill.id(), skill.getLevel(), true);
 
         if (newChar.getSkillLevel(1001) > 0) // Soul Cry
             newChar.registerShortCut(new ShortCut(1, 0, ShortCut.TYPE_SKILL, 1001, 1, 1));

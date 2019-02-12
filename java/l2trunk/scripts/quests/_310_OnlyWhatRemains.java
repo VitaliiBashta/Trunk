@@ -43,8 +43,7 @@ public final class _310_OnlyWhatRemains extends Quest {
         if (id == COMPLETED)
             htmltext = "32640-10.htm";
         else if (id == CREATED) {
-            QuestState ImTheOnlyOneYouCanTrust = st.getPlayer().getQuestState(_240_ImTheOnlyOneYouCanTrust.class);
-            if (st.getPlayer().getLevel() >= 81 && ImTheOnlyOneYouCanTrust != null && ImTheOnlyOneYouCanTrust.isCompleted())
+            if (st.player.getLevel() >= 81 && st.player.isQuestCompleted(_240_ImTheOnlyOneYouCanTrust.class))
                 htmltext = "32640-1.htm";
             else {
                 htmltext = "32640-0.htm";
@@ -64,15 +63,14 @@ public final class _310_OnlyWhatRemains extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getCond() == 1) {
-            st.giveItems(DIRTYBEAD, 1);
+            st.giveItems(DIRTYBEAD);
             if (st.getQuestItemsCount(DIRTYBEAD) >= 500) {
                 st.setCond(2);
                 st.playSound(SOUND_MIDDLE);
             } else
                 st.playSound(SOUND_ITEMGET);
         }
-        return null;
     }
 }

@@ -10,8 +10,8 @@ public class ExGetOnAirShip extends L2GameServerPacket {
     private final Location _loc;
 
     public ExGetOnAirShip(Player cha, Boat boat, Location loc) {
-        _playerObjectId = cha.getObjectId();
-        _boatObjectId = boat.getObjectId();
+        _playerObjectId = cha.objectId();
+        _boatObjectId = boat.objectId();
         _loc = loc;
     }
 

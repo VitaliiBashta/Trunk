@@ -1,61 +1,56 @@
 package l2trunk.gameserver.model.actor.instances.player;
 
-import l2trunk.commons.lang.reference.HardReference;
-import l2trunk.commons.lang.reference.HardReferences;
 import l2trunk.gameserver.model.Player;
 
 public final class Friend {
-    private final int _objectId;
-    private String _name;
-    private int _classId;
-    private int _level;
+    private final int objectId;
+    private String name;
+    private int classId;
+    private int level;
 
-    private HardReference<Player> _playerRef = HardReferences.emptyRef();
+    private Player player = null;
 
     public Friend(int objectId, String name, int classId, int level) {
-        _objectId = objectId;
-        _name = name;
-        _classId = classId;
-        _level = level;
+        this.objectId = objectId;
+        this.name = name;
+        this.classId = classId;
+        this.level = level;
     }
 
     public Friend(Player player) {
-        _objectId = player.getObjectId();
+        objectId = player.objectId();
         update(player, true);
     }
 
     public void update(Player player, boolean set) {
-        _level = player.getLevel();
-        _name = player.getName();
-        _classId = player.getActiveClassId();
-        _playerRef = set ? player.getRef() : HardReferences.emptyRef();
+        level = player.getLevel();
+        name = player.getName();
+        classId = player.getActiveClassId();
+        this.player = set ? player : null;
     }
 
     public String getName() {
-        Player player = getPlayer();
-        return player == null ? _name : player.getName();
+        Player player = this.player;
+        return player == null ? name : player.getName();
     }
 
     public int getObjectId() {
-        return _objectId;
+        return objectId;
     }
 
     public int getClassId() {
-        Player player = getPlayer();
-        return player == null ? _classId : player.getActiveClassId();
+        Player player = this.player;
+        return player == null ? classId : player.getActiveClassId();
     }
 
     public int getLevel() {
-        Player player = getPlayer();
-        return player == null ? _level : player.getLevel();
+        Player player = this.player;
+        return player == null ? level : player.getLevel();
     }
 
     public boolean isOnline() {
-        Player player = _playerRef.get();
+        Player player = this.player;
         return player != null;
     }
 
-    private Player getPlayer() {
-        return _playerRef.get();
-    }
 }

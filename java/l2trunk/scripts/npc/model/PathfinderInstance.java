@@ -7,7 +7,6 @@ import l2trunk.gameserver.instancemanager.ReflectionManager;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.Reflection;
 import l2trunk.gameserver.model.instances.NpcInstance;
-import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.templates.InstantZone;
 import l2trunk.gameserver.templates.mapregion.DomainArea;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
@@ -15,6 +14,7 @@ import l2trunk.gameserver.utils.ReflectionUtils;
 import l2trunk.scripts.instances.KamalokaNightmare;
 
 import static l2trunk.commons.lang.NumberUtils.toInt;
+import static l2trunk.gameserver.utils.ItemFunctions.addItem;
 
 public class PathfinderInstance extends NpcInstance {
     //Instance's ID
@@ -121,7 +121,7 @@ public class PathfinderInstance extends NpcInstance {
                             int id = item[0];
                             int count = item[1];
                             if (id > 0 && count > 0)
-                                Functions.addItem(player, id, count, "PathfinderInstance");
+                                addItem(player, id, count);
                         }
 
                 _rewarded = true;

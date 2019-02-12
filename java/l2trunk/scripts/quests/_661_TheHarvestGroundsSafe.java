@@ -4,7 +4,6 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _661_TheHarvestGroundsSafe extends Quest {
     //NPC
@@ -25,13 +24,9 @@ public final class _661_TheHarvestGroundsSafe extends Quest {
 
         addStartNpc(NORMAN);
 
-        addKillId(GIANT_POISON_BEE);
-        addKillId(CLOYDY_BEAST);
-        addKillId(YOUNG_ARANEID);
+        addKillId(GIANT_POISON_BEE,CLOYDY_BEAST,YOUNG_ARANEID);
 
-        addQuestItem(STING_OF_GIANT_POISON);
-        addQuestItem(TALON_OF_YOUNG_ARANEID);
-        addQuestItem(CLOUDY_GEM);
+        addQuestItem(STING_OF_GIANT_POISON,TALON_OF_YOUNG_ARANEID,CLOUDY_GEM);
     }
 
     @Override
@@ -69,14 +64,14 @@ public final class _661_TheHarvestGroundsSafe extends Quest {
         String htmltext = "noquest";
         int cond = st.getCond();
         if (cond == 0)
-            if (st.getPlayer().getLevel() >= 21)
+            if (st.player.getLevel() >= 21)
                 htmltext = "warehouse_keeper_norman_q0661_0101.htm";
             else {
                 htmltext = "warehouse_keeper_norman_q0661_0102.htm";
                 st.exitCurrentQuest(true);
             }
         else if (cond == 1)
-            if (st.getQuestItemsCount(STING_OF_GIANT_POISON) + st.getQuestItemsCount(TALON_OF_YOUNG_ARANEID) + st.getQuestItemsCount(CLOUDY_GEM) > 0)
+            if (st.haveAnyQuestItems(STING_OF_GIANT_POISON, TALON_OF_YOUNG_ARANEID,CLOUDY_GEM) )
                 htmltext = "warehouse_keeper_norman_q0661_0105.htm";
             else
                 htmltext = "warehouse_keeper_norman_q0661_0206.htm";
@@ -84,25 +79,24 @@ public final class _661_TheHarvestGroundsSafe extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getState() != STARTED)
-            return null;
+            return;
         int npcId = npc.getNpcId();
 
         if (st.getCond() == 1) {
             if (npcId == GIANT_POISON_BEE && Rnd.chance(75)) {
-                st.giveItems(STING_OF_GIANT_POISON, 1);
+                st.giveItems(STING_OF_GIANT_POISON);
                 st.playSound(SOUND_ITEMGET);
             }
             if (npcId == CLOYDY_BEAST && Rnd.chance(71)) {
-                st.giveItems(CLOUDY_GEM, 1);
+                st.giveItems(CLOUDY_GEM);
                 st.playSound(SOUND_ITEMGET);
             }
             if (npcId == YOUNG_ARANEID && Rnd.chance(67)) {
-                st.giveItems(TALON_OF_YOUNG_ARANEID, 1);
+                st.giveItems(TALON_OF_YOUNG_ARANEID);
                 st.playSound(SOUND_ITEMGET);
             }
         }
-        return null;
     }
 }

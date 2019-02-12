@@ -7,6 +7,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.utils.ReflectionUtils;
 
+import java.util.List;
 import java.util.StringTokenizer;
 
 import static l2trunk.scripts.quests._10283_RequestOfIceMerchant.JINIA;
@@ -15,6 +16,8 @@ import static l2trunk.scripts.quests._10285_MeetingSirra.JINIA_2;
 import static l2trunk.scripts.quests._10285_MeetingSirra.KEGOR;
 
 public final class _10287_StoryOfThoseLeft extends Quest {
+    private static List<Integer> forgottenScrols = List.of(
+            10549, 10550, 10551, 10552, 10553, 14219);
 
     public _10287_StoryOfThoseLeft() {
         super(false);
@@ -32,47 +35,30 @@ public final class _10287_StoryOfThoseLeft extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("rafforty_q10287_02.htm")) {
+        if ("rafforty_q10287_02.htm".equalsIgnoreCase(event)) {
             st.setState(STARTED);
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("enterinstance")) {
+        } else if ("enterinstance".equalsIgnoreCase(event)) {
             st.setCond(2);
-            enterInstance(st.getPlayer());
+            enterInstance(st.player);
             return null;
-        } else if (event.equalsIgnoreCase("jinia_q10287_03.htm"))
+        } else if ("jinia_q10287_03.htm".equalsIgnoreCase(event))
             st.setCond(3);
-        else if (event.equalsIgnoreCase("kegor_q10287_03.htm"))
+        else if ("kegor_q10287_03.htm".equalsIgnoreCase(event))
             st.setCond(4);
-        else if (event.equalsIgnoreCase("exitinstance")) {
+        else if ("exitinstance".equalsIgnoreCase(event)) {
             st.setCond(5);
-            st.getPlayer().getReflection().collapse();
+            st.player.getReflection().collapse();
             return null;
         } else if (event.startsWith("exgivebook")) {
             StringTokenizer str = new StringTokenizer(event);
             str.nextToken();
             int id = Integer.parseInt(str.nextToken());
             htmltext = "rafforty_q10287_05.htm";
-            switch (id) {
-                case 1:
-                    st.giveItems(10549, 1);
-                    break;
-                case 2:
-                    st.giveItems(10550, 1);
-                    break;
-                case 3:
-                    st.giveItems(10551, 1);
-                    break;
-                case 4:
-                    st.giveItems(10552, 1);
-                    break;
-                case 5:
-                    st.giveItems(10553, 1);
-                    break;
-                case 6:
-                    st.giveItems(14219, 1);
-                    break;
-            }
+
+            st.giveItems(forgottenScrols.get(id + 1));
+
             st.setState(COMPLETED);
             st.exitCurrentQuest(false);
         }
@@ -87,8 +73,7 @@ public final class _10287_StoryOfThoseLeft extends Quest {
         int cond = st.getCond();
         if (npcId == RAFFORTY) {
             if (cond == 0) {
-                QuestState qs = st.getPlayer().getQuestState(_10286_ReunionWithSirra.class);
-                if (st.getPlayer().getLevel() >= 82 && qs != null && qs.isCompleted())
+                if (st.player.getLevel() >= 82 && st.player.isQuestCompleted(_10286_ReunionWithSirra.class))
                     htmltext = "rafforty_q10287_01.htm";
                 else {
                     htmltext = "rafforty_q10287_00.htm";

@@ -16,9 +16,8 @@ public final class BeastFeed extends Skill {
 
     @Override
     public void useSkill(final Creature activeChar, List<Creature> targets) {
-        targets.forEach(target -> ThreadPoolManager.INSTANCE.execute(() -> {
-            if (target instanceof FeedableBeastInstance)
-                ((FeedableBeastInstance) target).onSkillUse((Player) activeChar, id);
-        }));
+        targets.stream().filter(t -> t instanceof FeedableBeastInstance)
+                .map(t -> (FeedableBeastInstance) t)
+                .forEach(target -> ThreadPoolManager.INSTANCE.execute(() -> target.onSkillUse((Player) activeChar, id)));
     }
 }

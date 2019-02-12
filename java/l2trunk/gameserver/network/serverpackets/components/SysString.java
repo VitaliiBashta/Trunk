@@ -1,9 +1,5 @@
 package l2trunk.gameserver.network.serverpackets.components;
 
-/**
- * @author VISTALL
- * @date 22:24/05.01.2011
- */
 public enum SysString {
     // Text: Passenger Boat Info
     PASSENGER_BOAT_INFO(801),
@@ -14,10 +10,10 @@ public enum SysString {
 
     private static final SysString[] VALUES = values();
 
-    private final int _id;
+    private final int id;
 
     SysString(int i) {
-        _id = i;
+        id = i;
     }
 
     public static SysString valueOf2(String id) {
@@ -37,6 +33,6 @@ public enum SysString {
     }
 
     public int getId() {
-        return _id;
+        return id;
     }
 }

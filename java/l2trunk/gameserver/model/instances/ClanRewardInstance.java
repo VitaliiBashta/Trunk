@@ -7,7 +7,6 @@ import l2trunk.gameserver.network.serverpackets.PledgeShowInfoUpdate;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
 public final class ClanRewardInstance extends NpcInstance {
-    private static final long serialVersionUID = 5938813598479742068L;
 
     public ClanRewardInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
@@ -19,7 +18,7 @@ public final class ClanRewardInstance extends NpcInstance {
             return;
         }
 
-        if (command.equalsIgnoreCase("getClanReward")) {
+        if ("getClanReward".equalsIgnoreCase(command)) {
             if (player.getClan() != null) {
                 if (player.getClan().getOnlineMembers().size() < 15) {
                     player.sendMessage("You must have atleast 15 members online to receive reward.");
@@ -32,7 +31,7 @@ public final class ClanRewardInstance extends NpcInstance {
                 }
 
                 if (player.getClan().getLevel() >= 6) {
-                    player.sendMessage("Your clan is already level 6 and can't receive reward.");
+                    player.sendMessage("Your clan is already occupation 6 and can't receive reward.");
                     return;
                 }
 
@@ -43,11 +42,8 @@ public final class ClanRewardInstance extends NpcInstance {
 
                 player.getClan().setLevel(6);
                 player.getClan().incReputation(30000, false, "ClanRewardNpc");
-                player.getClan().broadcastToOnlineMembers(new L2GameServerPacket[]
-                        {
-                                new PledgeShowInfoUpdate(player.getClan())
-                        });
-                player.sendMessage("Your clan received 30 000 clan reputation and level 6 from Clan Reward!");
+                player.getClan().broadcastToOnlineMembers(new PledgeShowInfoUpdate(player.getClan()));
+                player.sendMessage("Your clan received 30 000 clan reputation and occupation 6 from Clan Reward!");
                 player.getInventory().addItem(9816, 30, "ClanReward Earth Eggs");
                 player.getInventory().addItem(9818, 10, "ClanReward Angelic Essence");
                 player.getInventory().addItem(9817, 20, "ClanReward Angelic Essence");
@@ -60,11 +56,6 @@ public final class ClanRewardInstance extends NpcInstance {
         } else {
             super.onBypassFeedback(player, command);
         }
-    }
-
-    @Override
-    public boolean isNpc() {
-        return true;
     }
 
 }

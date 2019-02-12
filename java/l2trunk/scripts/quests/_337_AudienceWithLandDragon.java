@@ -4,7 +4,6 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _337_AudienceWithLandDragon extends Quest {
     //npc
@@ -49,7 +48,7 @@ public final class _337_AudienceWithLandDragon extends Quest {
     private final int SECOND_ABYSS_FRAGMENT_ID = 3860;
     private final int THIRD_ABYSS_FRAGMENT_ID = 3861;
     private final int HERALD_OF_SLAYER_ID = 3890;
-    private final int PORTAL_STONE_ID = 3865;
+    private static final int PORTAL_STONE_ID = 3865;
     private final int MARK_OF_WATCHMAN_ID = 3864;
 
     //	# [STEP, MOB, ITEM, NEED_COUNT, CHANCE, DROP]
@@ -250,51 +249,62 @@ public final class _337_AudienceWithLandDragon extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("1")) {
-            st.set("step", "1");
-            st.setCond(1);
-            st.set("guard", "0");
-            st.setState(STARTED);
-            st.giveItems(FEATHER_OF_GABRIELLE_ID, 1);
-            htmltext = "30753-02.htm";
-            st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("2")) {
-            st.set("step", "2");
-            htmltext = "30720-02.htm";
-        } else if (event.equalsIgnoreCase("4")) {
-            st.set("step", "4");
-            htmltext = "30857-02.htm";
-        } else if (event.equalsIgnoreCase("6")) {
-            st.set("step", "6");
-            htmltext = "30851-02.htm";
-        } else if (event.equalsIgnoreCase("8")) {
-            st.set("step", "8");
-            htmltext = "30705-02.htm";
-        } else if (event.equalsIgnoreCase("10")) {
-            st.takeItems(MARK_OF_WATCHMAN_ID, -1);
-            st.set("step", "10");
-            st.setCond(2);
-            htmltext = "30753-05.htm";
-        } else if (event.equalsIgnoreCase("11")) {
-            st.set("step", "11");
-            htmltext = "30498-02.htm";
-        } else if (event.equalsIgnoreCase("13")) {
-            st.set("step", "13");
-            htmltext = "30678-02.htm";
-        } else if (event.equalsIgnoreCase("15")) {
-            st.set("step", "15");
-            st.setCond(3);
-            htmltext = "30753-06.htm";
-            st.takeItems(MARK_OF_WATCHMAN_ID, -1);
-            st.takeItems(FEATHER_OF_GABRIELLE_ID, -1);
-            st.giveItems(HERALD_OF_SLAYER_ID, 1);
-            st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("16")) {
-            st.set("step", "16");
-            st.setCond(4);
-            htmltext = "30754-02.htm";
-            st.takeItems(HERALD_OF_SLAYER_ID, -1);
-            st.playSound(SOUND_MIDDLE);
+        switch (event) {
+            case "1":
+                st.set("step", 1);
+                st.setCond(1);
+                st.set("guard", 0);
+                st.setState(STARTED);
+                st.giveItems(FEATHER_OF_GABRIELLE_ID);
+                htmltext = "30753-02.htm";
+                st.playSound(SOUND_ACCEPT);
+                break;
+            case "2":
+                st.set("step", 2);
+                htmltext = "30720-02.htm";
+                break;
+            case "4":
+                st.set("step", 4);
+                htmltext = "30857-02.htm";
+                break;
+            case "6":
+                st.set("step", 6);
+                htmltext = "30851-02.htm";
+                break;
+            case "8":
+                st.set("step", 8);
+                htmltext = "30705-02.htm";
+                break;
+            case "10":
+                st.takeItems(MARK_OF_WATCHMAN_ID);
+                st.set("step", 10);
+                st.setCond(2);
+                htmltext = "30753-05.htm";
+                break;
+            case "11":
+                st.set("step", 11);
+                htmltext = "30498-02.htm";
+                break;
+            case "13":
+                st.set("step", 13);
+                htmltext = "30678-02.htm";
+                break;
+            case "15":
+                st.set("step", 15);
+                st.setCond(3);
+                htmltext = "30753-06.htm";
+                st.takeItems(MARK_OF_WATCHMAN_ID);
+                st.takeItems(FEATHER_OF_GABRIELLE_ID);
+                st.giveItems(HERALD_OF_SLAYER_ID);
+                st.playSound(SOUND_MIDDLE);
+                break;
+            case "16":
+                st.set("step", 16);
+                st.setCond(4);
+                htmltext = "30754-02.htm";
+                st.takeItems(HERALD_OF_SLAYER_ID);
+                st.playSound(SOUND_MIDDLE);
+                break;
         }
         return htmltext;
     }
@@ -307,7 +317,7 @@ public final class _337_AudienceWithLandDragon extends Quest {
         int cond = st.getCond();
         if (npcId == GABRIELLE) {
             if (cond == 0) {
-                if (st.getPlayer().getLevel() < 50) {
+                if (st.player.getLevel() < 50) {
                     htmltext = "30753-00.htm";
                     st.exitCurrentQuest(true);
                 } else
@@ -316,21 +326,20 @@ public final class _337_AudienceWithLandDragon extends Quest {
                 htmltext = "30753-02.htm";
             else if (step == 9)
                 htmltext = "30753-03.htm";
-            else if (step > 9 && step < 14)
+            else if (step < 14)
                 htmltext = "30753-05.htm";
             else if (step == 14)
                 htmltext = "30753-04.htm";
-            else if (step > 14)
-                htmltext = "30753-06.htm";
+            else htmltext = "30753-06.htm";
         } else if (npcId == KAIENA && cond == 1 && step < 4) {
             if (st.getQuestItemsCount(STALKER_HORN_ID) < 1 && st.getQuestItemsCount(DRAKE_TALON_ID) < 1 && step == 1)
                 htmltext = "30720-01.htm";
-            else if (st.getQuestItemsCount(STALKER_HORN_ID) > 0 && st.getQuestItemsCount(DRAKE_TALON_ID) > 0) {
+            else if (st.haveAllQuestItems(STALKER_HORN_ID,DRAKE_TALON_ID) ) {
                 htmltext = "30720-03.htm";
-                st.takeItems(STALKER_HORN_ID, -1);
-                st.takeItems(DRAKE_TALON_ID, -1);
-                st.giveItems(MARK_OF_WATCHMAN_ID, 1);
-                st.set("step", "3");
+                st.takeItems(STALKER_HORN_ID);
+                st.takeItems(DRAKE_TALON_ID);
+                st.giveItems(MARK_OF_WATCHMAN_ID);
+                st.set("step", 3);
                 st.playSound(SOUND_MIDDLE);
             } else if (step == 2)
                 htmltext = "30720-02.htm";
@@ -339,11 +348,11 @@ public final class _337_AudienceWithLandDragon extends Quest {
         } else if (npcId == ORVEN && cond == 1 && step > 2 && step < 6) {
             if (st.getQuestItemsCount(REMAINS_OF_SACRIFICED_ID) < 1 && step == 3)
                 htmltext = "30857-01.htm";
-            else if (st.getQuestItemsCount(REMAINS_OF_SACRIFICED_ID) > 0) {
+            else if (st.haveQuestItem(REMAINS_OF_SACRIFICED_ID)) {
                 htmltext = "30857-03.htm";
-                st.takeItems(REMAINS_OF_SACRIFICED_ID, -1);
-                st.giveItems(MARK_OF_WATCHMAN_ID, 1);
-                st.set("step", "5");
+                st.takeItems(REMAINS_OF_SACRIFICED_ID);
+                st.giveItems(MARK_OF_WATCHMAN_ID);
+                st.set("step", 5);
                 st.playSound(SOUND_MIDDLE);
             } else if (step == 4)
                 htmltext = "30857-02.htm";
@@ -352,11 +361,11 @@ public final class _337_AudienceWithLandDragon extends Quest {
         } else if (npcId == KENDRA && cond == 1 && step > 4 && step < 8) {
             if (st.getQuestItemsCount(TOTEM_OF_LAND_DRAGON_ID) < 1 && step == 5)
                 htmltext = "30851-01.htm";
-            else if (st.getQuestItemsCount(TOTEM_OF_LAND_DRAGON_ID) > 0) {
+            else if (st.haveQuestItem(TOTEM_OF_LAND_DRAGON_ID) ) {
                 htmltext = "30851-03.htm";
-                st.takeItems(TOTEM_OF_LAND_DRAGON_ID, -1);
-                st.giveItems(MARK_OF_WATCHMAN_ID, 1);
-                st.set("step", "7");
+                st.takeItems(TOTEM_OF_LAND_DRAGON_ID);
+                st.giveItems(MARK_OF_WATCHMAN_ID);
+                st.set("step", 7);
                 st.playSound(SOUND_MIDDLE);
             } else if (step == 6)
                 htmltext = "30851-02.htm";
@@ -365,12 +374,12 @@ public final class _337_AudienceWithLandDragon extends Quest {
         } else if (npcId == CHAKIRIS && cond == 1 && step > 6 && step < 10) {
             if (st.getQuestItemsCount(HAMRUT_LEG_ID) < 1 && st.getQuestItemsCount(KRANROT_SKIN_ID) < 1 && step == 7)
                 htmltext = "30705-01.htm";
-            else if (st.getQuestItemsCount(HAMRUT_LEG_ID) > 0 && st.getQuestItemsCount(KRANROT_SKIN_ID) > 0) {
+            else if (st.haveAllQuestItems(HAMRUT_LEG_ID,KRANROT_SKIN_ID)) {
                 htmltext = "30705-03.htm";
-                st.takeItems(HAMRUT_LEG_ID, -1);
-                st.takeItems(KRANROT_SKIN_ID, -1);
-                st.giveItems(MARK_OF_WATCHMAN_ID, 1);
-                st.set("step", "9");
+                st.takeItems(HAMRUT_LEG_ID);
+                st.takeItems(KRANROT_SKIN_ID);
+                st.giveItems(MARK_OF_WATCHMAN_ID);
+                st.set("step", 9);
                 st.playSound(SOUND_MIDDLE);
             } else if (step == 8)
                 htmltext = "30705-02.htm";
@@ -379,12 +388,12 @@ public final class _337_AudienceWithLandDragon extends Quest {
         } else if (npcId == MOKE && cond == 2 && step < 13) {
             if (st.getQuestItemsCount(MARA_FANG_ID) < 1 && st.getQuestItemsCount(FIRST_ABYSS_FRAGMENT_ID) < 1 && step == 10)
                 htmltext = "30498-01.htm";
-            else if (st.getQuestItemsCount(MARA_FANG_ID) > 0 && st.getQuestItemsCount(FIRST_ABYSS_FRAGMENT_ID) > 0) {
+            else if (st.haveAllQuestItems(MARA_FANG_ID,FIRST_ABYSS_FRAGMENT_ID)) {
                 htmltext = "30498-03.htm";
-                st.takeItems(MARA_FANG_ID, -1);
-                st.takeItems(FIRST_ABYSS_FRAGMENT_ID, -1);
-                st.giveItems(MARK_OF_WATCHMAN_ID, 1);
-                st.set("step", "12");
+                st.takeItems(MARA_FANG_ID);
+                st.takeItems(FIRST_ABYSS_FRAGMENT_ID);
+                st.giveItems(MARK_OF_WATCHMAN_ID);
+                st.set("step", 12);
                 st.playSound(SOUND_MIDDLE);
             } else if (step == 11)
                 htmltext = "30498-02.htm";
@@ -393,19 +402,19 @@ public final class _337_AudienceWithLandDragon extends Quest {
         } else if (npcId == HELTON && cond == 2 && step > 11 && step < 15) {
             if (st.getQuestItemsCount(MUSFEL_FANG_ID) < 1 && st.getQuestItemsCount(SECOND_ABYSS_FRAGMENT_ID) < 1 && step == 12)
                 htmltext = "30678-01.htm";
-            else if (st.getQuestItemsCount(MUSFEL_FANG_ID) > 0 && st.getQuestItemsCount(SECOND_ABYSS_FRAGMENT_ID) > 0) {
+            else if (st.haveAllQuestItems(MUSFEL_FANG_ID,SECOND_ABYSS_FRAGMENT_ID) ) {
                 htmltext = "30678-03.htm";
-                st.takeItems(MUSFEL_FANG_ID, -1);
-                st.takeItems(SECOND_ABYSS_FRAGMENT_ID, -1);
-                st.giveItems(MARK_OF_WATCHMAN_ID, 1);
-                st.set("step", "14");
+                st.takeItems(MUSFEL_FANG_ID);
+                st.takeItems(SECOND_ABYSS_FRAGMENT_ID);
+                st.giveItems(MARK_OF_WATCHMAN_ID);
+                st.set("step", 14);
                 st.playSound(SOUND_MIDDLE);
             } else if (step == 13)
                 htmltext = "30678-02.htm";
             else if (step == 14)
                 htmltext = "30678-03.htm";
         } else if (npcId == GILMORE && step < 17) {
-            if (st.getQuestItemsCount(HERALD_OF_SLAYER_ID) > 0 && cond == 3)
+            if (st.haveQuestItem(HERALD_OF_SLAYER_ID)  && cond == 3)
                 htmltext = "30754-01.htm";
             else if (cond == 4)
                 htmltext = "30754-02.htm";
@@ -414,19 +423,19 @@ public final class _337_AudienceWithLandDragon extends Quest {
                 htmltext = "30755-02.htm";
             else {
                 htmltext = "30755-01.htm";
-                st.takeItems(THIRD_ABYSS_FRAGMENT_ID, -1);
+                st.takeItems(THIRD_ABYSS_FRAGMENT_ID);
                 st.unset("step");
                 st.unset("cond");
                 st.unset("guard");
                 st.exitCurrentQuest(true);
-                st.giveItems(PORTAL_STONE_ID, 1);
+                st.giveItems(PORTAL_STONE_ID);
                 st.playSound(SOUND_FINISH);
             }
         return htmltext;
     }
 
     @Override
-    public String onAttack(NpcInstance npc, QuestState st) {
+    public void onAttack(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int step = st.getInt("step");
         for (int[] element : SPAWNLIST)
@@ -435,13 +444,13 @@ public final class _337_AudienceWithLandDragon extends Quest {
                 for (int j = 0; j < element[3]; j++)
                     st.addSpawn(element[2]);
                 st.playSound(SOUND_BEFORE_BATTLE);
-                st.set("guard", "1");
+                st.set("guard", 1);
             }
-        return null;
+//        return null;
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int step = st.getInt("step");
         for (int[] element : DROPLIST)
@@ -458,8 +467,7 @@ public final class _337_AudienceWithLandDragon extends Quest {
                 st.playSound(SOUND_BEFORE_BATTLE);
             }
             if (step == element[0] && npcId == element[1] && st.getInt("guard") == 1)
-                st.set("guard", "0");
+                st.set("guard", 0);
         }
-        return null;
     }
 }

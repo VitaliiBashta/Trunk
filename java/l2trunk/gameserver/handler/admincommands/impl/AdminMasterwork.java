@@ -64,8 +64,8 @@ public final class AdminMasterwork implements IAdminCommandHandler {
             return false;
 
         Player target;
-        if (activeChar.getTarget() != null && activeChar.getTarget().isPlayer())
-            target = activeChar.getTarget().getPlayer();
+        if (activeChar.getTarget() instanceof Player)
+            target = (Player)activeChar.getTarget();
         else
             target = activeChar;
 

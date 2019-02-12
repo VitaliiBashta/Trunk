@@ -12,12 +12,6 @@ public final class _608_SlayTheEnemyCommander extends Quest {
     //quest items
     private static final int HEAD_OF_MOS = 7236;
     private static final int TOTEM_OF_WISDOM = 7220;
-    @SuppressWarnings("unused")
-    private static final int MARK_OF_KETRA_ALLIANCE1 = 7211;
-    @SuppressWarnings("unused")
-    private static final int MARK_OF_KETRA_ALLIANCE2 = 7212;
-    @SuppressWarnings("unused")
-    private static final int MARK_OF_KETRA_ALLIANCE3 = 7213;
     private static final int MARK_OF_KETRA_ALLIANCE4 = 7214;
     private static final int MARK_OF_KETRA_ALLIANCE5 = 7215;
 
@@ -31,13 +25,13 @@ public final class _608_SlayTheEnemyCommander extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("quest_accept")) {
+        if ("quest_accept".equalsIgnoreCase(event)) {
             htmltext = "elder_kadun_zu_ketra_q0608_0104.htm";
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("608_3"))
-            if (st.getQuestItemsCount(HEAD_OF_MOS) >= 1) {
+        } else if ("608_3".equals(event))
+            if (st.haveQuestItem(HEAD_OF_MOS)) {
                 htmltext = "elder_kadun_zu_ketra_q0608_0201.htm";
                 st.takeItems(HEAD_OF_MOS);
                 st.giveItems(TOTEM_OF_WISDOM);
@@ -55,8 +49,8 @@ public final class _608_SlayTheEnemyCommander extends Quest {
         String htmltext = "noquest";
         int cond = st.getCond();
         if (cond == 0) {
-            if (st.getPlayer().getLevel() >= 75) {
-                if (st.getQuestItemsCount(MARK_OF_KETRA_ALLIANCE4) == 1 || st.getQuestItemsCount(MARK_OF_KETRA_ALLIANCE5) == 1)
+            if (st.player.getLevel() >= 75) {
+                if (st.haveQuestItem(MARK_OF_KETRA_ALLIANCE4)  || st.haveQuestItem(MARK_OF_KETRA_ALLIANCE5) )
                     htmltext = "elder_kadun_zu_ketra_q0608_0101.htm";
                 else {
                     htmltext = "elder_kadun_zu_ketra_q0608_0102.htm";
@@ -66,20 +60,19 @@ public final class _608_SlayTheEnemyCommander extends Quest {
                 htmltext = "elder_kadun_zu_ketra_q0608_0103.htm";
                 st.exitCurrentQuest(true);
             }
-        } else if (cond == 1 && st.getQuestItemsCount(HEAD_OF_MOS) == 0)
+        } else if (cond == 1 && !st.haveQuestItem(HEAD_OF_MOS) )
             htmltext = "elder_kadun_zu_ketra_q0608_0106.htm";
-        else if (cond == 2 && st.getQuestItemsCount(HEAD_OF_MOS) >= 1)
+        else if (cond == 2 && st.haveQuestItem(HEAD_OF_MOS) )
             htmltext = "elder_kadun_zu_ketra_q0608_0105.htm";
         return htmltext;
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getCond() == 1) {
-            st.giveItems(HEAD_OF_MOS, 1);
+            st.giveItems(HEAD_OF_MOS);
             st.setCond(2);
             st.playSound(SOUND_ITEMGET);
         }
-        return null;
     }
 }

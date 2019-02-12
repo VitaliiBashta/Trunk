@@ -22,8 +22,6 @@ import l2trunk.gameserver.utils.Util;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static l2trunk.commons.lang.NumberUtils.toInt;
 
@@ -71,7 +69,7 @@ public final class AdminTeleport implements IAdminCommandHandler {
                     activeChar.sendMessage("USAGE: //teleport x y z [ref]");
                     return false;
                 }
-                activeChar.teleToLocation(Location.parseLoc(Util.joinStrings(" ", wordList, 1, 3)), (ArrayUtils.valid(wordList, 4) != null && !ArrayUtils.valid(wordList, 4).isEmpty() ? Integer.parseInt(wordList[4]) : 0));
+                activeChar.teleToLocation(Location.of(Util.joinStrings(" ", wordList, 1, 3)), (ArrayUtils.valid(wordList, 4) != null && !ArrayUtils.valid(wordList, 4).isEmpty() ? Integer.parseInt(wordList[4]) : 0));
                 break;
             case admin_walk:
                 if (wordList.length < 2) {
@@ -79,7 +77,7 @@ public final class AdminTeleport implements IAdminCommandHandler {
                     return false;
                 }
                 try {
-                    activeChar.moveToLocation(Location.parseLoc(Util.joinStrings(" ", wordList, 1)), 0, true);
+                    activeChar.moveToLocation(Location.of(Util.joinStrings(" ", wordList, 1)), 0, true);
                 } catch (IllegalArgumentException e) {
                     activeChar.sendMessage("USAGE: //walk x y z");
                     return false;
@@ -175,7 +173,7 @@ public final class AdminTeleport implements IAdminCommandHandler {
                     activeChar.sendMessage("USAGE: //teleport_character x y z");
                     return false;
                 }
-                activeChar.teleToLocation(Location.parseLoc(Util.joinStrings(" ", wordList, 1)));
+                activeChar.teleToLocation(Location.of(Util.joinStrings(" ", wordList, 1)));
                 showTeleportCharWindow(activeChar);
                 break;
             case admin_recall:
@@ -276,33 +274,28 @@ public final class AdminTeleport implements IAdminCommandHandler {
     private void showTeleportWindow(Player activeChar) {
         NpcHtmlMessage adminReply = new NpcHtmlMessage(5);
 
-        StringBuilder replyMSG = new StringBuilder("<html><title>teleport Menu</title>");
-        replyMSG.append("<body>");
-
-        replyMSG.append("<br>");
-        replyMSG.append("<center><table>");
-
-        replyMSG.append("<tr><td><button value=\"  \" action=\"bypass -h admin_tele\" width=70 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td>");
-        replyMSG.append("<td><button value=\"North\" action=\"bypass -h admin_gonorth\" width=70 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td>");
-        replyMSG.append("<td><button value=\"Up\" action=\"bypass -h admin_goup\" width=70 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td></tr>");
-        replyMSG.append("<tr><td><button value=\"West\" action=\"bypass -h admin_gowest\" width=70 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td>");
-        replyMSG.append("<td><button value=\"  \" action=\"bypass -h admin_tele\" width=70 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td>");
-        replyMSG.append("<td><button value=\"East\" action=\"bypass -h admin_goeast\" width=70 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td></tr>");
-        replyMSG.append("<tr><td><button value=\"  \" action=\"bypass -h admin_tele\" width=70 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td>");
-        replyMSG.append("<td><button value=\"South\" action=\"bypass -h admin_gosouth\" width=70 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td>");
-        replyMSG.append("<td><button value=\"Down\" action=\"bypass -h admin_godown\" width=70 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td></tr>");
-
-        replyMSG.append("</table></center>");
-        replyMSG.append("</body></html>");
-
-        adminReply.setHtml(replyMSG.toString());
+        String replyMSG = "<html><title>teleport Menu</title>" + "<body>" +
+                "<br>" +
+                "<center><table>" +
+                "<tr><td><button value=\"  \" action=\"bypass -h admin_tele\" width=70 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td>" +
+                "<td><button value=\"North\" action=\"bypass -h admin_gonorth\" width=70 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td>" +
+                "<td><button value=\"Up\" action=\"bypass -h admin_goup\" width=70 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td></tr>" +
+                "<tr><td><button value=\"West\" action=\"bypass -h admin_gowest\" width=70 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td>" +
+                "<td><button value=\"  \" action=\"bypass -h admin_tele\" width=70 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td>" +
+                "<td><button value=\"East\" action=\"bypass -h admin_goeast\" width=70 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td></tr>" +
+                "<tr><td><button value=\"  \" action=\"bypass -h admin_tele\" width=70 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td>" +
+                "<td><button value=\"South\" action=\"bypass -h admin_gosouth\" width=70 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td>" +
+                "<td><button value=\"Down\" action=\"bypass -h admin_godown\" width=70 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td></tr>" +
+                "</table></center>" +
+                "</body></html>";
+        adminReply.setHtml(replyMSG);
         activeChar.sendPacket(adminReply);
     }
 
     private void showTeleportCharWindow(Player activeChar) {
         GameObject target = activeChar.getTarget();
-        Player player = null;
-        if (target.isPlayer())
+        Player player;
+        if (target instanceof Player)
             player = (Player) target;
         else {
             activeChar.sendPacket(SystemMsg.INVALID_TARGET);
@@ -310,23 +303,20 @@ public final class AdminTeleport implements IAdminCommandHandler {
         }
         NpcHtmlMessage adminReply = new NpcHtmlMessage(5);
 
-        StringBuilder replyMSG = new StringBuilder("<html><title>teleport Character</title>");
-        replyMSG.append("<body>");
-        replyMSG.append("The character you will teleport is " + player.getName() + ".");
-        replyMSG.append("<br>");
-
-        replyMSG.append("Co-ordinate x");
-        replyMSG.append("<edit var=\"char_cord_x\" width=110>");
-        replyMSG.append("Co-ordinate y");
-        replyMSG.append("<edit var=\"char_cord_y\" width=110>");
-        replyMSG.append("Co-ordinate z");
-        replyMSG.append("<edit var=\"char_cord_z\" width=110>");
-        replyMSG.append("<button value=\"teleport\" action=\"bypass -h admin_teleport_character $char_cord_x $char_cord_y $char_cord_z\" width=60 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\">");
-        replyMSG.append("<button value=\"teleport near you\" action=\"bypass -h admin_teleport_character " + activeChar.getX() + " " + activeChar.getY() + " " + activeChar.getZ() + "\" width=115 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\">");
-        replyMSG.append("<center><button value=\"Back\" action=\"bypass -h admin_current_player\" width=40 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></center>");
-        replyMSG.append("</body></html>");
-
-        adminReply.setHtml(replyMSG.toString());
+        String replyMSG = "<html><title>teleport Character</title>" + "<body>" +
+                "The character you will teleport is " + player.getName() + "." +
+                "<br>" +
+                "Co-ordinate x" +
+                "<edit var=\"char_cord_x\" width=110>" +
+                "Co-ordinate y" +
+                "<edit var=\"char_cord_y\" width=110>" +
+                "Co-ordinate z" +
+                "<edit var=\"char_cord_z\" width=110>" +
+                "<button value=\"teleport\" action=\"bypass -h admin_teleport_character $char_cord_x $char_cord_y $char_cord_z\" width=60 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\">" +
+                "<button value=\"teleport near you\" action=\"bypass -h admin_teleport_character " + activeChar.getX() + " " + activeChar.getY() + " " + activeChar.getZ() + "\" width=115 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\">" +
+                "<center><button value=\"Back\" action=\"bypass -h admin_current_player\" width=40 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></center>" +
+                "</body></html>";
+        adminReply.setHtml(replyMSG);
         activeChar.sendPacket(adminReply);
     }
 
@@ -347,7 +337,7 @@ public final class AdminTeleport implements IAdminCommandHandler {
 
                     @Override
                     public void sayNo() {
-                        Location loc = Location.parseLoc(target.getVar("lastRecallLoc"));
+                        Location loc = Location.of(target.getVar("lastRecallLoc"));
                         if (loc != null) {
                             target.teleToLocation(loc);
                         }
@@ -397,7 +387,7 @@ public final class AdminTeleport implements IAdminCommandHandler {
 
     private void recallNPC(Player activeChar) {
         GameObject obj = activeChar.getTarget();
-        if (obj != null && obj.isNpc()) {
+        if (obj instanceof NpcInstance) {
             obj.setLoc(activeChar.getLoc());
             ((NpcInstance) obj).broadcastCharInfo();
             activeChar.sendMessage("You teleported npc " + obj.getName() + " to " + activeChar.getLoc().toString() + ".");

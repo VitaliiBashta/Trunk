@@ -4,7 +4,6 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.model.quest.QuestState;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,10 +67,10 @@ public final class OpenSealedBox {
     }
 
     private boolean canGiveReward() {
-        int FreeInvSlots = st.getPlayer().getInventoryLimit() - st.getPlayer().getInventory().getSize();
+        int FreeInvSlots = st.player.getInventoryLimit() - st.player.getInventory().getSize();
 
         for (Integer itemId : rewards.keySet()) {
-            ItemInstance item = st.getPlayer().getInventory().getItemByItemId(itemId);
+            ItemInstance item = st.player.getInventory().getItemByItemId(itemId);
             if (item == null || !item.isStackable())
                 FreeInvSlots--;
         }

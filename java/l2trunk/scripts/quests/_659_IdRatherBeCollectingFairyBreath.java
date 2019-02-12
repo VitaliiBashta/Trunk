@@ -28,22 +28,22 @@ public final class _659_IdRatherBeCollectingFairyBreath extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("high_summoner_galatea_q0659_0103.htm")) {
+        if ("high_summoner_galatea_q0659_0103.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("high_summoner_galatea_q0659_0203.htm")) {
+        } else if ("high_summoner_galatea_q0659_0203.htm".equalsIgnoreCase(event)) {
             long count = st.getQuestItemsCount(FAIRY_BREATH);
             if (count > 0) {
-                long reward = 0;
+                long reward;
                 if (count < 10)
                     reward = count * 50;
                 else
                     reward = count * 50 + 5365;
-                st.takeItems(FAIRY_BREATH, -1);
+                st.takeItems(FAIRY_BREATH);
                 st.giveItems(ADENA_ID, reward);
             }
-        } else if (event.equalsIgnoreCase("high_summoner_galatea_q0659_0204.htm"))
+        } else if ("high_summoner_galatea_q0659_0204.htm".equalsIgnoreCase(event))
             st.exitCurrentQuest(true);
         return event;
     }
@@ -57,7 +57,7 @@ public final class _659_IdRatherBeCollectingFairyBreath extends Quest {
         if (id != CREATED)
             cond = st.getCond();
         if (npcId == GALATEA)
-            if (st.getPlayer().getLevel() < 26) {
+            if (st.player.getLevel() < 26) {
                 htmltext = "high_summoner_galatea_q0659_0102.htm";
                 st.exitCurrentQuest(true);
             } else if (cond == 0)
@@ -71,16 +71,12 @@ public final class _659_IdRatherBeCollectingFairyBreath extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
-        int cond = st.getCond();
-        if (cond == 1)
-            MOBS.stream()
-                    .filter(i -> (npcId == i && Rnd.chance(30)))
-                    .forEach(i -> {
-                        st.giveItems(FAIRY_BREATH, 1);
-                        st.playSound(SOUND_ITEMGET);
-                    });
-        return null;
+        if (st.getCond() == 1)
+            if (MOBS.contains(npcId) && Rnd.chance(30)) {
+                st.giveItems(FAIRY_BREATH);
+                st.playSound(SOUND_ITEMGET);
+            }
     }
 }

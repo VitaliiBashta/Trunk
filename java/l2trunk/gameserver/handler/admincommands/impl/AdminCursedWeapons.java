@@ -72,7 +72,7 @@ public class AdminCursedWeapons implements IAdminCommandHandler {
                     activeChar.sendMessage("This cursed weapon is already active.");
                 else {
                     GameObject target = activeChar.getTarget();
-                    if (target != null && target.isPlayer() && !target.isInOlympiadMode()) {
+                    if (target instanceof Player && !((Player)target).isInOlympiadMode()) {
                         Player player = (Player) target;
                         ItemInstance item = ItemFunctions.createItem(cw.getItemId());
 
@@ -102,7 +102,7 @@ public class AdminCursedWeapons implements IAdminCommandHandler {
                     activeChar.sendMessage("This cursed weapon is already active.");
                 else {
                     GameObject target = activeChar.getTarget();
-                    if (target != null && target.isPlayer() && !((Player) target).isInOlympiadMode()) {
+                    if (target instanceof Player && !((Player) target).isInOlympiadMode()) {
                         Player player = (Player) target;
                         cw.create(null, player);
                     }

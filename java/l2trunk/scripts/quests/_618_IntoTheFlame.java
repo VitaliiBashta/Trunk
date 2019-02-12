@@ -4,7 +4,6 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _618_IntoTheFlame extends Quest {
     //NPCs
@@ -36,24 +35,24 @@ public final class _618_IntoTheFlame extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
         int cond = st.getCond();
-        if (event.equalsIgnoreCase("watcher_valakas_klein_q0618_0104.htm") && cond == 0) {
+        if ("watcher_valakas_klein_q0618_0104.htm".equalsIgnoreCase(event) && cond == 0) {
             st.setState(STARTED);
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("watcher_valakas_klein_q0618_0401.htm"))
+        } else if ("watcher_valakas_klein_q0618_0401.htm".equalsIgnoreCase(event))
             if (st.getQuestItemsCount(VACUALITE) > 0 && cond == 4) {
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest(true);
-                st.giveItems(FLOATING_STONE, 1);
+                st.giveItems(FLOATING_STONE);
             } else
                 htmltext = "watcher_valakas_klein_q0618_0104.htm";
-        else if (event.equalsIgnoreCase("blacksmith_hilda_q0618_0201.htm") && cond == 1) {
+        else if ("blacksmith_hilda_q0618_0201.htm".equalsIgnoreCase(event) && cond == 1) {
             st.setCond(2);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("blacksmith_hilda_q0618_0301.htm"))
+        } else if ("blacksmith_hilda_q0618_0301.htm".equalsIgnoreCase(event))
             if (cond == 3 && st.getQuestItemsCount(VACUALITE_ORE) == 50) {
-                st.takeItems(VACUALITE_ORE, -1);
-                st.giveItems(VACUALITE, 1);
+                st.takeItems(VACUALITE_ORE);
+                st.giveItems(VACUALITE);
                 st.setCond(4);
                 st.playSound(SOUND_MIDDLE);
             } else
@@ -68,7 +67,7 @@ public final class _618_IntoTheFlame extends Quest {
         int cond = st.getCond();
         if (npcId == KLEIN) {
             if (cond == 0) {
-                if (st.getPlayer().getLevel() < 60) {
+                if (st.player.getLevel() < 60) {
                     htmltext = "watcher_valakas_klein_q0618_0103.htm";
                     st.exitCurrentQuest(true);
                 } else
@@ -90,16 +89,15 @@ public final class _618_IntoTheFlame extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         long count = st.getQuestItemsCount(VACUALITE_ORE);
         if (Rnd.chance(CHANCE_FOR_QUEST_ITEMS) && count < 50) {
-            st.giveItems(VACUALITE_ORE, 1);
+            st.giveItems(VACUALITE_ORE);
             if (count == 49) {
                 st.setCond(3);
                 st.playSound(SOUND_MIDDLE);
             } else
                 st.playSound(SOUND_ITEMGET);
         }
-        return null;
     }
 }

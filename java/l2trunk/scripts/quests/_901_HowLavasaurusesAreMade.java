@@ -70,7 +70,7 @@ public final class _901_HowLavasaurusesAreMade extends Quest {
         int cond = st.getCond();
         if (npcId == ROONEY) {
             if (cond == 0) {
-                if (st.getPlayer().getLevel() >= 76) {
+                if (st.player.getLevel() >= 76) {
                     if (st.isNowAvailable())
                         htmltext = "blacksmith_rooney_q901_01.htm";
                     else
@@ -96,10 +96,10 @@ public final class _901_HowLavasaurusesAreMade extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getCond() == 1) {
             if (!KILLING_MONSTERS.contains(npc.getNpcId()))
-                return null;
+                return ;
 
             if (!st.haveQuestItem(LAVASAURUS_STONE_FRAGMENT, 10))
                 st.rollAndGive(LAVASAURUS_STONE_FRAGMENT, 1, DROP_CHANCE);
@@ -115,7 +115,6 @@ public final class _901_HowLavasaurusesAreMade extends Quest {
                 st.playSound(SOUND_MIDDLE);
             }
         }
-        return null;
     }
 
 }

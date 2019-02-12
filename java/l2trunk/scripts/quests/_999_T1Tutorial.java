@@ -199,38 +199,36 @@ public final class _999_T1Tutorial extends Quest {
 
     @Override
     public String onEvent(String event, final QuestState st, NpcInstance npc) {
-        QuestState qs = st.getPlayer().getQuestState(_255_Tutorial.class);
+        QuestState qs = st.player.getQuestState(_255_Tutorial.class);
         if (qs == null)
             return null;
 
-        final Player player = st.getPlayer();
-        if (player == null)
-            return null;
+        final Player player = st.player;
 
         String htmltext;
         int Ex = qs.getInt("Ex");
-        int classId = player.getClassId().getId();
-        boolean isMage = (player.getClassId().getRace() != Race.orc) && player.getClassId().isMage();
-        if (event.equalsIgnoreCase("TimerEx_NewbieHelper")) {
+        int classId = player.getClassId().id;
+        boolean isMage = (player.getClassId().race != Race.orc) && player.getClassId().isMage;
+        if ("TimerEx_NewbieHelper".equalsIgnoreCase(event)) {
             if (Ex == 0) {
                 if (isMage)
                     st.playTutorialVoice("tutorial_voice_009b");
                 else
                     st.playTutorialVoice("tutorial_voice_009a");
-                qs.set("Ex", "1");
+                qs.set("Ex", 1);
             } else if (Ex == 3) {
                 st.playTutorialVoice("tutorial_voice_010a");
-                qs.set("Ex", "4");
+                qs.set("Ex", 4);
             }
             return null;
-        } else if (event.equalsIgnoreCase("TimerEx_GrandMaster")) {
+        } else if ("TimerEx_GrandMaster".equalsIgnoreCase(event)) {
             if (Ex >= 4) {
                 st.showQuestionMark(7);
                 st.playSound(SOUND_TUTORIAL);
                 st.playTutorialVoice("tutorial_voice_025");
             }
             return null;
-        } else if (event.equalsIgnoreCase("isle")) {
+        } else if ("isle".equalsIgnoreCase(event)) {
             st.addRadar(new Location(-119692, 44504, 380));
             player.teleToLocation(-120050, 44500, 360);
             String title = npc == null ? "" : npc.getTitle() + " " + npc.getName();
@@ -238,12 +236,12 @@ public final class _999_T1Tutorial extends Quest {
         } else {
             final Event e = events.get(event);
             htmltext = e.htm;
-            if (st.getQuestItemsCount(e.item) > 0 && st.getInt("onlyone") == 0) {
+            if (st.haveQuestItem(e.item)  && st.getInt("onlyone") == 0) {
                 st.addExpAndSp(0, 50);
                 st.startQuestTimer("TimerEx_GrandMaster", 60000);
                 st.takeItems(e.item, 1);
                 if (Ex <= 3)
-                    qs.set("Ex", "4");
+                    qs.set("Ex", 4);
                 if (classId == e.classId1) {
                     st.giveItems(e.gift1, e.count1);
                     if (e.gift1 == SPIRITSHOT_NOVICE)
@@ -256,8 +254,8 @@ public final class _999_T1Tutorial extends Quest {
                         st.playTutorialVoice("tutorial_voice_026");
                     }
                 }
-                st.set("step", "3");
-                st.set("onlyone", "1");
+                st.set("step", 3);
+                st.set("onlyone", 1);
             }
 
             if (e.radarLoc != null) {
@@ -274,10 +272,10 @@ public final class _999_T1Tutorial extends Quest {
         if (qs == null)
             return htmltext;
 
-        QuestState st = player.getQuestState(getClass());
+        QuestState st = player.getQuestState(this);
         if (st == null) {
             newQuestState(player, CREATED);
-            st = player.getQuestState(getClass());
+            st = player.getQuestState(this);
         }
 
         int Ex = qs.getInt("Ex");
@@ -285,7 +283,7 @@ public final class _999_T1Tutorial extends Quest {
         int step = st.getInt("step");
         int onlyone = st.getInt("onlyone");
         int level = player.getLevel();
-        boolean isMage = (player.getClassId().getRace() != Race.orc) && player.getClassId().isMage();
+        boolean isMage = (player.getClassId().race != Race.orc) && player.getClassId().isMage;
 
         Talk t = talks.get(npcId);
         if (t == null)
@@ -298,24 +296,24 @@ public final class _999_T1Tutorial extends Quest {
                 htmltext = t.htmlfiles[0];
             if (t.npcTyp == 1) {
                 if (step == 0 && Ex < 0) {
-                    qs.set("Ex", "0");
+                    qs.set("Ex", 0);
                     st.startQuestTimer("TimerEx_NewbieHelper", 30000);
                     if (isMage) {
-                        st.set("step", "1");
+                        st.set("step", 1);
                         st.setState(STARTED);
                     } else {
                         htmltext = "30530-01.htm";
-                        st.set("step", "1");
+                        st.set("step", 1);
                         st.setState(STARTED);
                     }
                 } else if (step == 1 && st.getQuestItemsCount(t.item) == 0 && Ex <= 2) {
                     if (st.getQuestItemsCount(BLUE_GEM) > 0) {
                         st.takeItems(BLUE_GEM, st.getQuestItemsCount(BLUE_GEM));
-                        st.giveItems(t.item, 1);
-                        st.set("step", "2");
-                        qs.set("Ex", "3");
+                        st.giveItems(t.item);
+                        st.set("step", 2);
+                        qs.set("Ex", 3);
                         st.startQuestTimer("TimerEx_NewbieHelper", 30000);
-                        qs.set("ucMemo", "3");
+                        qs.set("ucMemo", 3);
                         if (isMage) {
                             st.playTutorialVoice("tutorial_voice_027");
                             st.giveItems(SPIRITSHOT_NOVICE, 100);
@@ -353,19 +351,18 @@ public final class _999_T1Tutorial extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
-        QuestState qs = st.getPlayer().getQuestState(_255_Tutorial.class);
+    public void onKill(NpcInstance npc, QuestState st) {
+        QuestState qs = st.player.getQuestState(_255_Tutorial.class);
         if (qs == null)
-            return null;
+            return;
         int Ex = qs.getInt("Ex");
         if (Ex <= 1) {
             st.playTutorialVoice("tutorial_voice_011");
             st.showQuestionMark(3);
-            qs.set("Ex", "2");
+            qs.set("Ex", 2);
         }
         if (Ex <= 2 && st.getQuestItemsCount(BLUE_GEM) < 1)
             ThreadPoolManager.INSTANCE.schedule(new DropGem(npc, st), 3000);
-        return null;
     }
 
     @Override
@@ -422,7 +419,7 @@ public final class _999_T1Tutorial extends Quest {
 
         public void runImpl() {
             if (st != null && npc != null) {
-                npc.dropItem(st.getPlayer(), BLUE_GEM, 1);
+                npc.dropItem(st.player, BLUE_GEM, 1);
                 st.playSound(SOUND_TUTORIAL);
             }
         }

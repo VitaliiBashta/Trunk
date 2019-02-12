@@ -199,7 +199,7 @@ public final class RequestEnchantItem extends L2GameClientPacket {
                     crystalAmount = 1;
 
                 player.sendPacket(new EnchantResult(1, crystalId, crystalAmount));
-                ItemFunctions.addItem(player, crystalId, crystalAmount, true, "EnchantFailCrystals");
+                ItemFunctions.addItem(player, crystalId, crystalAmount, "EnchantFailCrystals");
             } else player.sendPacket(EnchantResult.FAILED_NO_CRYSTALS);
 
             if (scrollId == 13540 || Config.SHOW_ENCHANT_EFFECT_RESULT) {
@@ -371,7 +371,7 @@ public final class RequestEnchantItem extends L2GameClientPacket {
                                 crystalAmount = 1;
 
                             player.sendPacket(new EnchantResult(1, crystalId, crystalAmount));
-                            ItemFunctions.addItem(player, crystalId, crystalAmount, true, "EnchantFailCrystals");
+                            ItemFunctions.addItem(player, crystalId, crystalAmount, "EnchantFailCrystals");
                         } else
                             player.sendPacket(EnchantResult.FAILED_NO_CRYSTALS);
 

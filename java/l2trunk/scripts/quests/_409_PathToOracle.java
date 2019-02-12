@@ -46,39 +46,41 @@ public final class _409_PathToOracle extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        String htmltext = event;
-        if (event.equalsIgnoreCase("1")) {
-            if (event.equalsIgnoreCase("1"))
-                if (st.getPlayer().getClassId().getId() != 0x19) {
-                    if (st.getPlayer().getClassId().getId() == 0x1d)
-                        htmltext = "father_manuell_q0409_02a.htm";
+        switch (event) {
+            case "1":
+                if (st.player.getClassId().id != 0x19) {
+                    if (st.player.getClassId().id == 0x1d)
+                        return  "father_manuell_q0409_02a.htm";
                     else
-                        htmltext = "father_manuell_q0409_02.htm";
-                } else if (st.getPlayer().getLevel() < 18)
-                    htmltext = "father_manuell_q0409_03.htm";
+                        return  "father_manuell_q0409_02.htm";
+                } else if (st.player.getLevel() < 18)
+                   return  "father_manuell_q0409_03.htm";
                 else if (st.getQuestItemsCount(LEAF_OF_ORACLE_ID) > 0)
-                    htmltext = "father_manuell_q0409_04.htm";
+                    return  "father_manuell_q0409_04.htm";
                 else {
                     st.setCond(1);
                     st.setState(STARTED);
                     st.playSound(SOUND_ACCEPT);
-                    st.giveItems(CRYSTAL_MEDALLION_ID, 1);
-                    htmltext = "father_manuell_q0409_05.htm";
+                    st.giveItems(CRYSTAL_MEDALLION_ID);
+                    return  "father_manuell_q0409_05.htm";
                 }
-        } else if (event.equalsIgnoreCase("allana_q0409_08.htm")) {
-            st.addSpawn(LIZARDMAN_WARRIOR);
-            st.addSpawn(LIZARDMAN_SCOUT);
-            st.addSpawn(LIZARDMAN);
-            st.setCond(2);
-        } else if (event.equalsIgnoreCase("30424_1"))
-            htmltext = "";
-        else if (event.equalsIgnoreCase("30428_1"))
-            htmltext = "perrin_q0409_02.htm";
-        else if (event.equalsIgnoreCase("30428_2"))
-            htmltext = "perrin_q0409_03.htm";
-        else if (event.equalsIgnoreCase("30428_3"))
-            st.addSpawn(TAMIL);
-        return htmltext;
+            case "allana_q0409_08.htm":
+                st.addSpawn(LIZARDMAN_WARRIOR);
+                st.addSpawn(LIZARDMAN_SCOUT);
+                st.addSpawn(LIZARDMAN);
+                st.setCond(2);
+                return event;
+            case "30424_1":
+                return  "";
+            case "30428_1":
+                return  "perrin_q0409_02.htm";
+            case "30428_2":
+                return  "perrin_q0409_03.htm";
+            case "30428_3":
+                st.addSpawn(TAMIL);
+                return event;
+        }
+        return event;
     }
 
     @Override
@@ -89,21 +91,20 @@ public final class _409_PathToOracle extends Quest {
         if (npcId == MANUEL) {
             if (cond < 1)
                 htmltext = "father_manuell_q0409_01.htm";
-            else if (st.getQuestItemsCount(CRYSTAL_MEDALLION_ID) > 0)
+            else if (st.haveQuestItem(CRYSTAL_MEDALLION_ID) )
                 if (st.getQuestItemsCount(MONEY_OF_SWINDLER_ID) < 1 && st.getQuestItemsCount(DAIRY_OF_ALLANA_ID) < 1 && st.getQuestItemsCount(LIZARD_CAPTAIN_ORDER_ID) < 1 && st.getQuestItemsCount(HALF_OF_DAIRY_ID) < 1)
                     htmltext = "father_manuell_q0409_09.htm";
                 else if (st.getQuestItemsCount(MONEY_OF_SWINDLER_ID) > 0 && st.getQuestItemsCount(DAIRY_OF_ALLANA_ID) > 0 && st.getQuestItemsCount(LIZARD_CAPTAIN_ORDER_ID) > 0 && st.getQuestItemsCount(HALF_OF_DAIRY_ID) < 1) {
                     htmltext = "father_manuell_q0409_08.htm";
                     st.takeItems(MONEY_OF_SWINDLER_ID, 1);
-                    st.takeItems(DAIRY_OF_ALLANA_ID, -1);
-                    st.takeItems(LIZARD_CAPTAIN_ORDER_ID, -1);
-                    st.takeItems(CRYSTAL_MEDALLION_ID, -1);
-                    if (st.getPlayer().getClassId().getLevel() == 1) {
-                        st.giveItems(LEAF_OF_ORACLE_ID, 1);
-                        if (!st.getPlayer().getVarB("prof1")) {
-                            st.getPlayer().setVar("prof1", "1", -1);
+                    st.takeItems(DAIRY_OF_ALLANA_ID);
+                    st.takeItems(LIZARD_CAPTAIN_ORDER_ID);
+                    st.takeItems(CRYSTAL_MEDALLION_ID);
+                    if (st.player.getClassId().occupation() == 0) {
+                        st.giveItems(LEAF_OF_ORACLE_ID);
+                        if (!st.player.isVarSet("prof1")) {
+                            st.player.setVar("prof1", 1);
                             st.addExpAndSp(228064, 16455);
-                            //FIXME [G1ta0] дать адены, только если первый чар на акке
                             st.giveItems(ADENA_ID, 81900);
                         }
                     }
@@ -120,28 +121,29 @@ public final class _409_PathToOracle extends Quest {
                         htmltext = "allana_q0409_01.htm";
                 } else if (st.getQuestItemsCount(MONEY_OF_SWINDLER_ID) < 1 && st.getQuestItemsCount(DAIRY_OF_ALLANA_ID) < 1 && st.getQuestItemsCount(LIZARD_CAPTAIN_ORDER_ID) > 0 && st.getQuestItemsCount(HALF_OF_DAIRY_ID) < 1) {
                     htmltext = "allana_q0409_02.htm";
-                    st.giveItems(HALF_OF_DAIRY_ID, 1);
+                    st.giveItems(HALF_OF_DAIRY_ID);
                     st.setCond(4);
                 } else if (st.getQuestItemsCount(MONEY_OF_SWINDLER_ID) < 1 && st.getQuestItemsCount(DAIRY_OF_ALLANA_ID) < 1 && st.getQuestItemsCount(LIZARD_CAPTAIN_ORDER_ID) > 0 && st.getQuestItemsCount(HALF_OF_DAIRY_ID) > 0) {
-                    if (st.getQuestItemsCount(TAMATOS_NECKLACE_ID) < 1)
-                        htmltext = "allana_q0409_06.htm";
-                    else
+                    if (st.haveQuestItem(TAMATOS_NECKLACE_ID)) {
                         htmltext = "allana_q0409_03.htm";
-                } else if (st.getQuestItemsCount(MONEY_OF_SWINDLER_ID) > 0 && st.getQuestItemsCount(DAIRY_OF_ALLANA_ID) < 1 && st.getQuestItemsCount(LIZARD_CAPTAIN_ORDER_ID) > 0 && st.getQuestItemsCount(HALF_OF_DAIRY_ID) > 0) {
+                    } else {
+                        htmltext = "allana_q0409_06.htm";
+                    }
+                } else if (st.haveQuestItem(MONEY_OF_SWINDLER_ID) && st.getQuestItemsCount(DAIRY_OF_ALLANA_ID) < 1 && st.getQuestItemsCount(LIZARD_CAPTAIN_ORDER_ID) > 0 && st.getQuestItemsCount(HALF_OF_DAIRY_ID) > 0) {
                     htmltext = "allana_q0409_04.htm";
-                    st.takeItems(HALF_OF_DAIRY_ID, -1);
-                    st.giveItems(DAIRY_OF_ALLANA_ID, 1);
+                    st.takeItems(HALF_OF_DAIRY_ID);
+                    st.giveItems(DAIRY_OF_ALLANA_ID);
                     st.setCond(7);
-                } else if (st.getQuestItemsCount(MONEY_OF_SWINDLER_ID) > 0 && st.getQuestItemsCount(LIZARD_CAPTAIN_ORDER_ID) > 0 && st.getQuestItemsCount(HALF_OF_DAIRY_ID) < 1 && st.getQuestItemsCount(DAIRY_OF_ALLANA_ID) > 0)
+                } else if (st.haveQuestItem(MONEY_OF_SWINDLER_ID)  && st.haveQuestItem(LIZARD_CAPTAIN_ORDER_ID)  && st.getQuestItemsCount(HALF_OF_DAIRY_ID) < 1 && st.getQuestItemsCount(DAIRY_OF_ALLANA_ID) > 0)
                     htmltext = "allana_q0409_05.htm";
         } else if (npcId == PERRIN)
-            if (st.getQuestItemsCount(CRYSTAL_MEDALLION_ID) > 0 && st.getQuestItemsCount(LIZARD_CAPTAIN_ORDER_ID) > 0)
-                if (st.getQuestItemsCount(TAMATOS_NECKLACE_ID) > 0) {
+            if (st.haveQuestItem(CRYSTAL_MEDALLION_ID)  && st.haveQuestItem(LIZARD_CAPTAIN_ORDER_ID) )
+                if (st.haveQuestItem(TAMATOS_NECKLACE_ID)) {
                     htmltext = "perrin_q0409_04.htm";
-                    st.takeItems(TAMATOS_NECKLACE_ID, -1);
-                    st.giveItems(MONEY_OF_SWINDLER_ID, 1);
+                    st.takeItems(TAMATOS_NECKLACE_ID);
+                    st.giveItems(MONEY_OF_SWINDLER_ID);
                     st.setCond(6);
-                } else if (st.getQuestItemsCount(MONEY_OF_SWINDLER_ID) > 0)
+                } else if (st.haveQuestItem(MONEY_OF_SWINDLER_ID) )
                     htmltext = "perrin_q0409_05.htm";
                 else if (cond > 4)
                     htmltext = "perrin_q0409_06.htm";
@@ -151,21 +153,20 @@ public final class _409_PathToOracle extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         if (npcId == LIZARDMAN_WARRIOR | npcId == LIZARDMAN_SCOUT | npcId == LIZARDMAN) {
             if (cond == 2 && st.getQuestItemsCount(LIZARD_CAPTAIN_ORDER_ID) < 1) {
-                st.giveItems(LIZARD_CAPTAIN_ORDER_ID, 1);
+                st.giveItems(LIZARD_CAPTAIN_ORDER_ID);
                 st.playSound(SOUND_MIDDLE);
                 st.setCond(3);
             }
         } else if (npcId == TAMIL)
             if (cond == 4 && st.getQuestItemsCount(TAMATOS_NECKLACE_ID) < 1) {
-                st.giveItems(TAMATOS_NECKLACE_ID, 1);
+                st.giveItems(TAMATOS_NECKLACE_ID);
                 st.playSound(SOUND_MIDDLE);
                 st.setCond(5);
             }
-        return null;
     }
 }

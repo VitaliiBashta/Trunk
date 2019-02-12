@@ -3,6 +3,7 @@ package l2trunk.scripts.ai.seedofinfinity;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ai.DefaultAI;
 import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.model.instances.NpcInstance;
 
 import java.util.List;
@@ -16,11 +17,10 @@ public final class WardofDeath extends DefaultAI {
     }
 
     @Override
-    public boolean checkAggression(Creature target, boolean avoidAttack) {
+    public boolean checkAggression(Playable target, boolean avoidAttack) {
         NpcInstance actor = getActor();
-        if (target.isInRange(actor, actor.getAggroRange()) && target.isPlayable() && !target.isDead() && !target.isInvisible()) {
-            if (actor.getNpcId() == 18667) // trap skill
-            {
+        if (target.isInRange(actor, actor.getAggroRange()) && !target.isDead() && !target.isInvisible()) {
+            if (actor.getNpcId() == 18667) { // trap skill
                 if (!avoidAttack) {
                     actor.doCast(Rnd.get(5423, 5424), 9, actor, false);
                     actor.doDie(null);

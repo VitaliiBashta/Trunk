@@ -27,7 +27,7 @@ public class ShowBoard extends L2GameServerPacket {
             _addFav = "bypass _bbsaddfav_List";
 
         if (htmlCode != null) {
-            if (id.equalsIgnoreCase("101"))
+            if (id.equals("101"))
                 player.cleanBypasses(true);
 
             _htmlCode = player.encodeBypasses(htmlCode, true);
@@ -44,7 +44,7 @@ public class ShowBoard extends L2GameServerPacket {
     public static void separateAndSend(String html, Player player) {
         // Alexander - Dont show community board on players below lvl 6
         if (player.getLevel() < 6) {
-            player.sendMessage("You cannot use the Community Board until you are level 6 or more");
+            player.sendMessage("You cannot use the Community Board until you are occupation 6 or more");
             return;
         }
 

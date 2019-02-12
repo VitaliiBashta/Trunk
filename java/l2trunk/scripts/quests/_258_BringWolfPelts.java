@@ -4,7 +4,6 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _258_BringWolfPelts extends Quest {
     private final int WOLF_PELT = 702;
@@ -40,7 +39,7 @@ public final class _258_BringWolfPelts extends Quest {
         String htmltext = "noquest";
         int cond = st.getCond();
         if (cond == 0) {
-            if (st.getPlayer().getLevel() >= 3) {
+            if (st.player.getLevel() >= 3) {
                 htmltext = "lector_q0258_02.htm";
                 return htmltext;
             }
@@ -70,16 +69,15 @@ public final class _258_BringWolfPelts extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         long count = st.getQuestItemsCount(WOLF_PELT);
         if (count < 40 && st.getCond() == 1) {
-            st.giveItems(WOLF_PELT, 1);
+            st.giveItems(WOLF_PELT);
             if (count == 39) {
                 st.playSound(SOUND_MIDDLE);
                 st.setCond(2);
             } else
                 st.playSound(SOUND_ITEMGET);
         }
-        return null;
     }
 }

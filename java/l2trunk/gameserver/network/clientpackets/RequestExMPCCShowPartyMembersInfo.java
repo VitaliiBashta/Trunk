@@ -21,7 +21,7 @@ public class RequestExMPCCShowPartyMembersInfo extends L2GameClientPacket {
 
         for (Party party : activeChar.getParty().getCommandChannel().getParties()) {
             Player leader = party.getLeader();
-            if (leader != null && leader.getObjectId() == _objectId) {
+            if (leader != null && leader.objectId() == _objectId) {
                 activeChar.sendPacket(new ExMPCCShowPartyMemberInfo(party));
                 break;
             }

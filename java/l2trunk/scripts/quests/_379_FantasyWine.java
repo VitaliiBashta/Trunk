@@ -66,7 +66,7 @@ public final class _379_FantasyWine extends Quest {
             cond = st.getCond();
         if (npcId == HARLAN)
             if (cond == 0) {
-                if (st.getPlayer().getLevel() < 20) {
+                if (st.player.getLevel() < 20) {
                     htmltext = "hitsran_q0379_01.htm";
                     st.exitCurrentQuest(true);
                 } else
@@ -96,19 +96,18 @@ public final class _379_FantasyWine extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         if (st.getCond() == 1) {
             if (npcId == Enku_Orc_Champion && st.getQuestItemsCount(LEAF_OF_EUCALYPTUS) < 80)
-                st.giveItems(LEAF_OF_EUCALYPTUS, 1);
+                st.giveItems(LEAF_OF_EUCALYPTUS);
             else if (npcId == Enku_Orc_Shaman && st.getQuestItemsCount(STONE_OF_CHILL) < 100)
-                st.giveItems(STONE_OF_CHILL, 1);
+                st.giveItems(STONE_OF_CHILL);
             if (st.getQuestItemsCount(LEAF_OF_EUCALYPTUS) >= 80 && st.getQuestItemsCount(STONE_OF_CHILL) >= 100) {
                 st.playSound(SOUND_MIDDLE);
                 st.setCond(2);
             } else
                 st.playSound(SOUND_ITEMGET);
         }
-        return null;
     }
 }

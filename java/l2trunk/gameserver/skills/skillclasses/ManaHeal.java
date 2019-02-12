@@ -2,38 +2,26 @@ package l2trunk.gameserver.skills.skillclasses;
 
 
 import l2trunk.commons.collections.StatsSet;
-import l2trunk.gameserver.Config;
 import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.stats.Stats;
 
-import java.util.List;
-
 public final class ManaHeal extends Skill {
-    private final boolean _ignoreMpEff;
 
     public ManaHeal(StatsSet set) {
         super(set);
-        _ignoreMpEff = set.getBool("ignoreMpEff", false);
     }
 
     @Override
-    public void useSkill(Creature activeChar, List<Creature> targets) {
-        double mp = power;
+    public void useSkill(Creature activeChar, Creature target) {
 
-        int sps = isSSPossible() ? activeChar.getChargedSpiritShot() : 0;
-        if (sps > 0 && Config.MANAHEAL_SPS_BONUS)
-            mp *= sps == 2 ? 1.5 : 1.3;
+        if (!target.isHealBlocked()) {
+            double newMp = activeChar == target ? power : Math.min(power * 1.7, power + target.calcStat(Stats.MANAHEAL_EFFECTIVNESS, 0., activeChar, this));
 
-        for (Creature target : targets) {
-            if (target.isHealBlocked())
-                continue;
-
-            double newMp = activeChar == target ? mp : Math.min(mp * 1.7, mp + target.calcStat(Stats.MANAHEAL_EFFECTIVNESS, 0., activeChar, this));
-
-            // Treatment differences leveled at RECHARGER. difference skill level and target level.
+            // Treatment differences leveled at RECHARGER. difference skill occupation and target occupation.
             // 1013 = id skill recharge. For servitors not verified decrease mana until left as is.
             if (magicLevel > 0 && activeChar != target) {
                 int diff = target.getLevel() - magicLevel;
@@ -44,25 +32,23 @@ public final class ManaHeal extends Skill {
                         newMp = 0;
             }
 
-            if (newMp == 0) {
+            if (newMp != 0) {
+                double addToMp = Math.max(0, Math.min(newMp, target.calcStat(Stats.MP_LIMIT, null, null) * target.getMaxMp() / 100. - target.getCurrentMp()));
+
+                if (addToMp > 0)
+                    target.setCurrentMp(addToMp + target.getCurrentMp());
+                if (target instanceof Player)
+                    if (activeChar != target)
+                        target.sendPacket(new SystemMessage2(SystemMsg.S2_MP_HAS_BEEN_RESTORED_BY_C1).addString(activeChar.getName()).addInteger(Math.round(addToMp)));
+                    else
+                        activeChar.sendPacket(new SystemMessage2(SystemMsg.S1_MP_HAS_BEEN_RESTORED).addInteger(Math.round(addToMp)));
+                getEffects(activeChar, target, activateRate > 0, false);
+            } else {
                 activeChar.sendPacket(new SystemMessage2(SystemMsg.S1_HAS_FAILED).addSkillName(id, getDisplayLevel()));
-                getEffects(activeChar, target, getActivateRate() > 0, false);
-                continue;
+                getEffects(activeChar, target, activateRate > 0, false);
             }
 
-            double addToMp = Math.max(0, Math.min(newMp, target.calcStat(Stats.MP_LIMIT, null, null) * target.getMaxMp() / 100. - target.getCurrentMp()));
-
-            if (addToMp > 0)
-                target.setCurrentMp(addToMp + target.getCurrentMp());
-            if (target.isPlayer())
-                if (activeChar != target)
-                    target.sendPacket(new SystemMessage2(SystemMsg.S2_MP_HAS_BEEN_RESTORED_BY_C1).addString(activeChar.getName()).addInteger(Math.round(addToMp)));
-                else
-                    activeChar.sendPacket(new SystemMessage2(SystemMsg.S1_MP_HAS_BEEN_RESTORED).addInteger(Math.round(addToMp)));
-            getEffects(activeChar, target, getActivateRate() > 0, false);
         }
 
-        if (isSSPossible())
-            activeChar.unChargeShots(isMagic());
     }
 }

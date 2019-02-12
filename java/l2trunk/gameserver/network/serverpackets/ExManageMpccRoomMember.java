@@ -38,7 +38,7 @@ public final class ExManageMpccRoomMember extends L2GameServerPacket {
         final String name;
 
         MpccRoomMemberInfo(Player member, int type) {
-            this.objectId = member.getObjectId();
+            this.objectId = member.objectId();
             this.name = member.getName();
             this.classId = member.getClassId().ordinal();
             this.level = member.getLevel();

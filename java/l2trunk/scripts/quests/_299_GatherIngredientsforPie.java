@@ -4,7 +4,6 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _299_GatherIngredientsforPie extends Quest {
     // NPCs
@@ -84,7 +83,7 @@ public final class _299_GatherIngredientsforPie extends Quest {
         if (_state == CREATED) {
             if (npcId != Emily)
                 return "noquest";
-            if (st.getPlayer().getLevel() >= 34) {
+            if (st.player.getLevel() >= 34) {
                 st.setCond(0);
                 return "emilly_q0299_0101.htm";
             }
@@ -104,7 +103,7 @@ public final class _299_GatherIngredientsforPie extends Quest {
                 return "emilly_q0299_0301.htm";
             if (cond == 5 && st.getQuestItemsCount(Fruit_Basket) == 0)
                 return "emilly_q0299_0403.htm";
-            if (cond == 6 && st.getQuestItemsCount(Fruit_Basket) == 1)
+            if (cond == 6 && st.haveQuestItem(Fruit_Basket) )
                 return "emilly_q0299_0501.htm";
         }
         if (npcId == Lara && _state == STARTED && cond == 3)
@@ -113,20 +112,20 @@ public final class _299_GatherIngredientsforPie extends Quest {
             return "lars_q0299_0302.htm";
         if (npcId == Bright && _state == STARTED && cond == 5)
             return "guard_bright_q0299_0401.htm";
-        if (npcId == Bright && _state == STARTED && cond == 5)
+        if (npcId == Bright && _state == STARTED && cond == 6)
             return "guard_bright_q0299_0502.htm";
 
         return "noquest";
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState qs) {
+    public void onKill(NpcInstance npc, QuestState qs) {
         if (qs.getState() != STARTED || qs.getCond() != 1 || qs.getQuestItemsCount(Honey_Pouch) >= 100)
-            return null;
+            return ;
 
         int npcId = npc.getNpcId();
         if (npcId == Wasp_Worker && Rnd.chance(Wasp_Worker_Chance) || npcId == Wasp_Leader && Rnd.chance(Wasp_Leader_Chance)) {
-            qs.giveItems(Honey_Pouch, 1);
+            qs.giveItems(Honey_Pouch);
             if (qs.getQuestItemsCount(Honey_Pouch) < 100)
                 qs.playSound(SOUND_ITEMGET);
             else {
@@ -134,7 +133,5 @@ public final class _299_GatherIngredientsforPie extends Quest {
                 qs.playSound(SOUND_MIDDLE);
             }
         }
-
-        return null;
     }
 }

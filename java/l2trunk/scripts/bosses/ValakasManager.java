@@ -17,10 +17,7 @@ import l2trunk.gameserver.network.serverpackets.SocialAction;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.scripts.ScriptFile;
-import l2trunk.gameserver.utils.Location;
-import l2trunk.gameserver.utils.Log;
-import l2trunk.gameserver.utils.ReflectionUtils;
-import l2trunk.gameserver.utils.TimeUtils;
+import l2trunk.gameserver.utils.*;
 import l2trunk.scripts.bosses.EpicBossState.State;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -104,7 +101,7 @@ public final class ValakasManager extends Functions implements ScriptFile, OnDea
 
         _entryLocked = false;
         _teleportCubeLocation.forEach(loc ->
-                _teleportCube.add(Functions.spawn(loc, _teleportCubeId)));
+                _teleportCube.add(NpcUtils.spawnSingle(_teleportCubeId,loc )));
         Log.add("Valakas died", "bosses");
     }
 
@@ -137,8 +134,7 @@ public final class ValakasManager extends Functions implements ScriptFile, OnDea
         if (valakas != null)
             valakas.deleteMe();
 
-        for (NpcInstance npc : _spawnedMinions)
-            npc.deleteMe();
+        _spawnedMinions.forEach(GameObject::deleteMe);
 
         // Delete teleport cube.
         _teleportCube.forEach(cube -> {
@@ -264,10 +260,10 @@ public final class ValakasManager extends Functions implements ScriptFile, OnDea
         switch (taskId) {
             case 1:
                 // Do spawn.
-                valakas = (BossInstance) Functions.spawn(new Location(212852, -114842, -1632, 833), Valakas);
+                valakas = (BossInstance) NpcUtils.spawnSingle(Valakas, Location.of(212852, -114842, -1632, 833));
 
                 valakas.setBlock(true);
-                valakas.broadcastPacket(new PlaySound(PlaySound.Type.MUSIC, "BS03_A", 1, valakas.getObjectId(), valakas.getLoc()));
+                valakas.broadcastPacket(new PlaySound(PlaySound.Type.MUSIC, "BS03_A", 1, valakas.objectId(), valakas.getLoc()));
 
                 state.setRespawnDate(getRespawnInterval());
                 state.setState(State.ALIVE);
@@ -276,7 +272,7 @@ public final class ValakasManager extends Functions implements ScriptFile, OnDea
                 break;
             case 2:
                 // Do social.
-                valakas.broadcastPacket(new SocialAction(valakas.getObjectId(), 1));
+                valakas.broadcastPacket(new SocialAction(valakas.objectId(), 1));
                 showMovie(1800, 180, -1, 1500, 0, 0, 0);
                 break;
             case 3:
@@ -321,7 +317,7 @@ public final class ValakasManager extends Functions implements ScriptFile, OnDea
 
             // Death Movie
             case 12:
-                valakas.broadcastPacket(new PlaySound(PlaySound.Type.MUSIC, "B03_D", 1, valakas.getObjectId(), valakas.getLoc()));
+                valakas.broadcastPacket(new PlaySound(PlaySound.Type.MUSIC, "B03_D", 1, valakas.objectId(), valakas.getLoc()));
                 broadcastScreenMessage(NpcString.VALAKAS_THE_EVIL_FIRE_DRAGON_VALAKAS_DEFEATED);
                 onValakasDie();
                 showMovie(2000, 130, -1, 0, 0, 0, 1);
@@ -354,9 +350,9 @@ public final class ValakasManager extends Functions implements ScriptFile, OnDea
 
     @Override
     public void onDeath(Creature self, Creature killer) {
-        if (self.isPlayer() && state != null && state.getState() == State.ALIVE && zone != null && zone.checkIfInZone(self.getX(), self.getY()))
+        if (self instanceof Player && state != null && state.getState() == State.ALIVE && zone != null && zone.checkIfInZone(self.getX(), self.getY()))
             checkAnnihilated();
-        else if (self.isNpc() && self.getNpcId() == Valakas)
+        else if (self.getNpcId() == Valakas)
             ThreadPoolManager.INSTANCE.schedule(new SpawnDespawn(12), 1);
     }
 

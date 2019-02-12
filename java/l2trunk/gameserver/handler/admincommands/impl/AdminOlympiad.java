@@ -58,9 +58,9 @@ public class AdminOlympiad implements IAdminCommandHandler {
                         return false;
                     }
 
-                    int curPoints = Olympiad.getNoblePoints(player.getObjectId());
-                    Olympiad.manualSetNoblePoints(player.getObjectId(), curPoints + pointToAdd);
-                    int newPoints = Olympiad.getNoblePoints(player.getObjectId());
+                    int curPoints = Olympiad.getNoblePoints(player.objectId());
+                    Olympiad.manualSetNoblePoints(player.objectId(), curPoints + pointToAdd);
+                    int newPoints = Olympiad.getNoblePoints(player.objectId());
 
                     activeChar.sendMessage("Added " + pointToAdd + " points to character " + player.getName());
                     activeChar.sendMessage("Old points: " + curPoints + ", new points: " + newPoints);
@@ -101,7 +101,7 @@ public class AdminOlympiad implements IAdminCommandHandler {
 
                     StatsSet hero = new StatsSet();
                     hero.set(Olympiad.CLASS_ID, player.getBaseClassId());
-                    hero.set(Olympiad.CHAR_ID, player.getObjectId());
+                    hero.set(Olympiad.CHAR_ID, player.objectId());
                     hero.set(Olympiad.CHAR_NAME, player.getName());
 
                     List<StatsSet> heroesToBe = new ArrayList<>();

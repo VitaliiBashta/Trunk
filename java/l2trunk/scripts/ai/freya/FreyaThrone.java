@@ -4,9 +4,8 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ai.CtrlEvent;
 import l2trunk.gameserver.ai.Fighter;
 import l2trunk.gameserver.model.Creature;
-import l2trunk.gameserver.model.GameObject;
-import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.Reflection;
+import l2trunk.gameserver.model.instances.MonsterInstance;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage.ScreenMessageAlign;
@@ -109,7 +108,7 @@ public final class FreyaThrone extends Fighter {
         if (System.currentTimeMillis() - _lastFactionNotifyTime > _minFactionNotifyInterval) {
             _lastFactionNotifyTime = System.currentTimeMillis();
             actor.getReflection().getNpcs()
-                    .filter(GameObject::isMonster)
+                    .filter(o -> o instanceof MonsterInstance)
                     .filter(npc -> npc != actor)
                     .forEach(npc ->
                             npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, actor.getAggroList().getMostHated(), 5));
@@ -150,7 +149,7 @@ public final class FreyaThrone extends Fighter {
         if (!getActor().isDead() && _idleDelay > 0 && _idleDelay + 60000 < System.currentTimeMillis())
             if (!ref.isDefault()) {
                 ref.getPlayers().forEach(p ->
-                    p.sendMessage(new CustomMessage("scripts.ai.freya.FreyaFailure", p)));
+                    p.sendMessage(new CustomMessage("scripts.ai.freya.FreyaFailure")));
                 ref.collapse();
             }
 

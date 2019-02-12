@@ -1,5 +1,6 @@
 package l2trunk.gameserver.model.entity.achievements;
 
+import l2trunk.gameserver.Config;
 import l2trunk.gameserver.data.htm.HtmCache;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.network.serverpackets.TutorialCloseHtml;
@@ -10,7 +11,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.File;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -130,7 +131,7 @@ public enum Achievements {
 
                 notDoneAchievement = notDoneAchievement.replaceFirst("%bg%", a.getId() % 2 == 0 ? "090908" : "0f100f");
                 notDoneAchievement = notDoneAchievement.replaceFirst("%icon%", a.getIcon());
-                notDoneAchievement = notDoneAchievement.replaceFirst("%name%", a.getName() + (a.getLevel() > 1 ? (" Lv. " + a.getLevel()) : ""));
+                notDoneAchievement = notDoneAchievement.replaceFirst("%name%", a.name + (a.getLevel() > 1 ? (" Lv. " + a.getLevel()) : ""));
 
                 html = notDoneAchievement;
             } else {
@@ -149,7 +150,7 @@ public enum Achievements {
 
                 doneAchievement = doneAchievement.replaceFirst("%bg%", a.getId() % 2 == 0 ? "090908" : "0f100f");
                 doneAchievement = doneAchievement.replaceFirst("%icon%", a.getIcon());
-                doneAchievement = doneAchievement.replaceFirst("%name%", a.getName() + (a.getLevel() > 1 ? (" Lv. " + a.getLevel()) : ""));
+                doneAchievement = doneAchievement.replaceFirst("%name%", a.name + (a.getLevel() > 1 ? (" Lv. " + a.getLevel()) : ""));
 
                 html = doneAchievement;
             }
@@ -253,15 +254,15 @@ public enum Achievements {
         achievementMaxLevels.clear();
         achievementCategories.clear();
         try {
-            File file = new File("config/achievements.xml");
+            Path file = Config.CONFIG.resolve("achievements.xml");
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             factory.setValidating(false);
             factory.setIgnoringComments(true);
-            Document doc = factory.newDocumentBuilder().parse(file);
+            Document doc = factory.newDocumentBuilder().parse(file.toFile());
 
             for (Node g = doc.getFirstChild(); g != null; g = g.getNextSibling()) {
                 for (Node z = g.getFirstChild(); z != null; z = z.getNextSibling()) {
-                    if (z.getNodeName().equals("categories")) {
+                    if ("categories".equals(z.getNodeName())) {
                         for (Node i = z.getFirstChild(); i != null; i = i.getNextSibling()) {
                             if ("cat".equalsIgnoreCase(i.getNodeName())) {
                                 int categoryId = Integer.valueOf(i.getAttributes().getNamedItem("id").getNodeValue());
@@ -271,7 +272,7 @@ public enum Achievements {
                                 achievementCategories.add(new AchievementCategory(categoryId, categoryName, categoryIcon, categoryDesc));
                             }
                         }
-                    } else if (z.getNodeName().equals("achievement")) {
+                    } else if ("achievement".equals(z.getNodeName())) {
                         int achievementId = Integer.valueOf(z.getAttributes().getNamedItem("id").getNodeValue());
                         int achievementCategory = Integer.valueOf(z.getAttributes().getNamedItem("cat").getNodeValue());
                         String desc = String.valueOf(z.getAttributes().getNamedItem("desc").getNodeValue());
@@ -279,7 +280,7 @@ public enum Achievements {
                         int achievementMaxLevel = 0;
 
                         for (Node i = z.getFirstChild(); i != null; i = i.getNextSibling()) {
-                            if ("level".equalsIgnoreCase(i.getNodeName())) {
+                            if ("occupation".equalsIgnoreCase(i.getNodeName())) {
                                 int level = Integer.valueOf(i.getAttributes().getNamedItem("id").getNodeValue());
                                 long pointsToComplete = Long.parseLong(i.getAttributes().getNamedItem("need").getNodeValue());
                                 int fame = Integer.valueOf(i.getAttributes().getNamedItem("fame").getNodeValue());

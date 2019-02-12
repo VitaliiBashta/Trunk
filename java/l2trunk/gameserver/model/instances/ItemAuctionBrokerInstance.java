@@ -23,7 +23,7 @@ public final class ItemAuctionBrokerInstance extends NpcInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, final int val, Object... arg) {
+    public void showChatWindow(Player player, final int val) {
         String filename = val == 0 ? "itemauction/itembroker.htm" : "itemauction/itembroker-" + val + ".htm";
         player.sendPacket(new NpcHtmlMessage(player, this, filename, val));
     }
@@ -63,7 +63,7 @@ public final class ItemAuctionBrokerInstance extends NpcInstance {
                         else
                             player.sendPacket(Msg.THERE_ARE_NO_FUNDS_PRESENTLY_DUE_TO_YOU);
                     } else {
-                        for (final ItemAuction auction : _instance.getAuctionsByBidder(player.getObjectId()))
+                        for (final ItemAuction auction : _instance.getAuctionsByBidder(player.objectId()))
                             auction.cancelBid(player);
                     }
                 } else if (params[1].equals("show")) {

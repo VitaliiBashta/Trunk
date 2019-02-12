@@ -13,7 +13,6 @@ public final class PlayerTemplate extends CharTemplate {
     public final ClassId classId;
 
     public final Race race;
-    public final String className;
 
     public final Location spawnLoc = new Location();
 
@@ -33,7 +32,6 @@ public final class PlayerTemplate extends CharTemplate {
         super(set);
         classId = ClassId.VALUES.get(id);
         race = Race.values()[set.getInteger("raceId")];
-        className = set.getString("name");
 
         spawnLoc.set(new Location(set.getInteger("spawnX"), set.getInteger("spawnY"), set.getInteger("spawnZ")));
 

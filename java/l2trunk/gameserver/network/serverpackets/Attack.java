@@ -20,7 +20,7 @@ public final class Attack extends L2GameServerPacket {
     private Hit[] hits;
 
     public Attack(Creature attacker, Creature target, boolean ss, int grade) {
-        _attackerId = attacker.getObjectId();
+        _attackerId = attacker.objectId();
         _soulshot = ss;
         this.grade = grade;
         _x = attacker.getX();
@@ -87,7 +87,7 @@ public final class Attack extends L2GameServerPacket {
         int flags;
 
         Hit(GameObject target, int damage, boolean miss, boolean crit, boolean shld) {
-            targetId = target.getObjectId();
+            targetId = target.objectId();
             this.damage = damage;
             if (_soulshot)
                 flags |= 0x10 | grade;

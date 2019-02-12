@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public final class RewardGroup implements Cloneable {
+public final class RewardGroup /*implements Cloneable*/ {
     private final List<RewardData> _items = new ArrayList<>();
     private double _chance;
     private boolean _isAdena = false; // Шанс фиксирован, растет только количество
@@ -18,7 +18,7 @@ public final class RewardGroup implements Cloneable {
     private double _chanceSum;
 
     public RewardGroup(double chance) {
-        setChance(chance);
+        _chance = chance;
     }
 
     public boolean notRate() {
@@ -59,13 +59,13 @@ public final class RewardGroup implements Cloneable {
     /**
      * Возвращает полностью независимую копию группы
      */
-    @Override
+/*    @Override
     public RewardGroup clone() {
         RewardGroup ret = new RewardGroup(_chance);
         for (RewardData i : _items)
             ret.addData(i.clone());
         return ret;
-    }
+    }*/
 
     /**
      * Функция используется в основном механизме расчета дропа, выбирает одну/несколько вещей из группы, в зависимости от рейтов

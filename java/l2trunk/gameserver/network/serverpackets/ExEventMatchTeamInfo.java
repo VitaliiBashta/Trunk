@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ExEventMatchTeamInfo extends L2GameServerPacket {
+public final class ExEventMatchTeamInfo extends L2GameServerPacket {
     @SuppressWarnings("unused")
     private final int leader_id;
     @SuppressWarnings("unused")
@@ -15,7 +15,7 @@ public class ExEventMatchTeamInfo extends L2GameServerPacket {
     private final List<EventMatchTeamInfo> members = new ArrayList<>();
 
     public ExEventMatchTeamInfo(List<Player> party, Player exclude) {
-        leader_id = party.get(0).getObjectId();
+        leader_id = party.get(0).objectId();
         loot = party.get(0).getParty().getLootDistribution();
 
         for (Player member : party)
@@ -52,7 +52,7 @@ public class ExEventMatchTeamInfo extends L2GameServerPacket {
 
         EventMatchTeamInfo(Player member) {
             _name = member.getName();
-            _id = member.getObjectId();
+            _id = member.objectId();
             curCp = (int) member.getCurrentCp();
             maxCp = member.getMaxCp();
             curHp = (int) member.getCurrentHp();
@@ -60,12 +60,12 @@ public class ExEventMatchTeamInfo extends L2GameServerPacket {
             curMp = (int) member.getCurrentMp();
             maxMp = member.getMaxMp();
             level = member.getLevel();
-            class_id = member.getClassId().getId();
+            class_id = member.getClassId().id;
             race_id = member.getRace().ordinal();
 
             Summon pet = member.getPet();
             if (pet != null) {
-                pet_id = pet.getObjectId();
+                pet_id = pet.objectId();
                 pet_NpcId = pet.getNpcId() + 1000000;
                 pet_Name = pet.getName();
                 pet_curHp = (int) pet.getCurrentHp();

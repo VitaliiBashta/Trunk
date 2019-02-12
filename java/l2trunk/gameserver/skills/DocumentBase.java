@@ -45,7 +45,7 @@ abstract class DocumentBase {
         tables = new HashMap<>();
     }
 
-    Document parse() {
+    void parse() {
         Document doc;
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -62,19 +62,17 @@ abstract class DocumentBase {
             doc = factory.newDocumentBuilder().parse(output);
         } catch (FileNotFoundException e) {
             LOG.error("Didn't find " + file, e);
-            return null;
+            return;
         } catch (IOException | ParserConfigurationException | SAXException e) {
             LOG.error("Error loading file " + file, e);
-            return null;
+            return;
         }
 
         try {
             parseDocument(doc);
         } catch (RuntimeException e) {
             LOG.error("Error in file " + file, e);
-            return null;
         }
-        return doc;
     }
 
     protected abstract void parseDocument(Document doc);
@@ -267,7 +265,7 @@ abstract class DocumentBase {
         for (n = n.getFirstChild(); n != null; n = n.getNextSibling())
             if (n.getNodeType() == Node.ELEMENT_NODE)
                 cond.add(parseCondition(n));
-        if (cond._conditions == null || cond._conditions.size() == 0)
+        if (cond.conditions == null || cond.conditions.size() == 0)
             LOG.error("Empty <or> condition in " + file);
         return cond;
     }
@@ -381,7 +379,7 @@ abstract class DocumentBase {
                         cond = joinAnd(cond, new ConditionPlayerRiding(CheckPlayerRiding.NONE));
                     break;
                 case "classid":
-                    cond = joinAnd(cond, new ConditionPlayerClassId(a.getNodeValue().split(",")));
+                    cond = joinAnd(cond, new ConditionPlayerClassId(a.getNodeValue()));
                     break;
                 case "hasbuffid": {
                     StringTokenizer st = new StringTokenizer(a.getNodeValue(), ";");
@@ -450,7 +448,7 @@ abstract class DocumentBase {
                     cond = joinAnd(cond, new ConditionTargetPlayerRace(nodeValue));
                     break;
                 case "forbiddenclassids":
-                    cond = joinAnd(cond, new ConditionTargetForbiddenClassId(nodeValue.split(";")));
+                    cond = joinAnd(cond, new ConditionTargetForbiddenClassId(nodeValue));
                     break;
                 case "playerSameClan":
                     cond = joinAnd(cond, new ConditionTargetClan(nodeValue));
@@ -648,7 +646,7 @@ abstract class DocumentBase {
             }
             return Double.valueOf(value);
         } catch (NumberFormatException e) {
-//            LOG.warn("parse excetion with value :" + value);
+//            LOG.warn("of excetion with value :" + value);
             return null;
         }
 

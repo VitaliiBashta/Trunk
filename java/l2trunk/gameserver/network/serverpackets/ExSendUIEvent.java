@@ -16,7 +16,7 @@ public final class ExSendUIEvent extends NpcStringContainer {
 
     public ExSendUIEvent(Player player, boolean isHide, boolean isIncrease, int startTime, int endTime, NpcString npcString, String... params) {
         super(npcString, params);
-        objectId = player.getObjectId();
+        objectId = player.objectId();
         this.isHide = isHide;
         this.isIncrease = isIncrease;
         this.startTime = startTime;

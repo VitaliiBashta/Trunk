@@ -5,7 +5,6 @@ import l2trunk.gameserver.model.base.Race;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _159_ProtectHeadsprings extends Quest {
     private final int PLAGUE_DUST_ID = 1035;
@@ -44,10 +43,10 @@ public final class _159_ProtectHeadsprings extends Quest {
         String htmltext = "noquest";
         int cond = st.getCond();
         if (cond == 0) {
-            if (st.getPlayer().getRace() != Race.elf) {
+            if (st.player.getRace() != Race.elf) {
                 htmltext = "30154-00.htm";
                 st.exitCurrentQuest(true);
-            } else if (st.getPlayer().getLevel() >= 12) {
+            } else if (st.player.getLevel() >= 12) {
                 htmltext = "30154-03.htm";
                 return htmltext;
             } else {
@@ -57,9 +56,9 @@ public final class _159_ProtectHeadsprings extends Quest {
         } else if (cond == 1)
             htmltext = "30154-05.htm";
         else if (cond == 2) {
-            st.takeItems(PLAGUE_DUST_ID, -1);
-            st.takeItems(HYACINTH_CHARM1_ID, -1);
-            st.giveItems(HYACINTH_CHARM2_ID, 1);
+            st.takeItems(PLAGUE_DUST_ID);
+            st.takeItems(HYACINTH_CHARM1_ID);
+            st.giveItems(HYACINTH_CHARM2_ID);
             st.setCond(3);
             htmltext = "30154-06.htm";
         } else if (cond == 3)
@@ -76,22 +75,21 @@ public final class _159_ProtectHeadsprings extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int cond = st.getCond();
 
         if (cond == 1 && Rnd.chance(60)) {
-            st.giveItems(PLAGUE_DUST_ID, 1);
+            st.giveItems(PLAGUE_DUST_ID);
             st.setCond(2);
             st.playSound(SOUND_MIDDLE);
         } else if (cond == 3 && Rnd.chance(60))
             if (st.getQuestItemsCount(PLAGUE_DUST_ID) == 4) {
-                st.giveItems(PLAGUE_DUST_ID, 1);
+                st.giveItems(PLAGUE_DUST_ID);
                 st.setCond(4);
                 st.playSound(SOUND_MIDDLE);
             } else {
-                st.giveItems(PLAGUE_DUST_ID, 1);
+                st.giveItems(PLAGUE_DUST_ID);
                 st.playSound(SOUND_ITEMGET);
             }
-        return null;
     }
 }

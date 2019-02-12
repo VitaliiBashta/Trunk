@@ -20,8 +20,4 @@ public final class EffectDebuffImmunity extends Effect {
         effected.stopDebuffImmunity();
     }
 
-    @Override
-    public boolean onActionTime() {
-        return false;
-    }
 }

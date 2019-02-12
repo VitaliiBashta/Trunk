@@ -12,19 +12,19 @@ public enum ClassType2 {
 
     public static final ClassType2[] VALUES = values();
 
-    private final int _certificate;
-    private final int _transformation;
+    public final int certificate;
+    public final int transformation;
 
     ClassType2(int cer, int tra) {
-        _certificate = cer;
-        _transformation = tra;
+        certificate = cer;
+        transformation = tra;
     }
 
-    public int getCertificateId() {
-        return _certificate;
+    public int certificate() {
+        return certificate;
     }
 
-    public int getTransformationId() {
-        return _transformation;
+    public int transformation() {
+        return transformation;
     }
 }

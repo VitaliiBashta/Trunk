@@ -9,7 +9,6 @@ import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.skills.skillclasses.Call;
 import l2trunk.gameserver.utils.Location;
 
-import java.util.Collections;
 import java.util.List;
 
 public final class Relocate extends Functions implements IVoicedCommandHandler {
@@ -33,7 +32,7 @@ public final class Relocate extends Functions implements IVoicedCommandHandler {
                 activeChar.sendPacket(msg);
                 return false;
             }
-            List<Player> players = activeChar.getClan().getOnlineMembers(activeChar.getObjectId());
+            List<Player> players = activeChar.getClan().getOnlineMembers(activeChar.objectId());
             for (Player player : players) {
                 if (Call.canBeSummoned(activeChar, player) == null) {
                     player.summonCharacterRequest(activeChar, Location.findAroundPosition(activeChar, 100, 150), 5);

@@ -8,6 +8,7 @@ import l2trunk.gameserver.database.DatabaseFactory;
 import l2trunk.gameserver.idfactory.IdFactory;
 import l2trunk.gameserver.model.GameObjectsStorage;
 import l2trunk.gameserver.model.Player;
+import l2trunk.gameserver.model.instances.SummonInstance;
 import l2trunk.gameserver.model.items.AuctionStorage;
 import l2trunk.gameserver.model.items.ItemAttributes;
 import l2trunk.gameserver.model.items.ItemInstance;
@@ -65,7 +66,7 @@ public final class AuctionManager {
     }
 
     public Collection<Auction> getMyAuctions(Player player) {
-        return getMyAuctions(player.getObjectId());
+        return getMyAuctions(player.objectId());
     }
 
     public Collection<Auction> getMyAuctions(int playerObjectId) {
@@ -111,7 +112,7 @@ public final class AuctionManager {
             statement.setInt(1, auction.getAuctionId());
             statement.setInt(2, auction.getSellerObjectId());
             statement.setString(3, auction.getSellerName());
-            statement.setInt(4, auction.getItem().getObjectId());
+            statement.setInt(4, auction.getItem().objectId());
             statement.setLong(5, auction.getPricePerItem());
             statement.execute();
         } catch (SQLException e) {
@@ -217,7 +218,7 @@ public final class AuctionManager {
         if (auctionId <= 0)
             return;
         Auction a = getAuction(auctionId);
-        if (a == null || !a.isPrivateStore() || a.getSellerObjectId() != seller.getObjectId())
+        if (a == null || !a.isPrivateStore() || a.getSellerObjectId() != seller.objectId())
             return;
         _auctions.remove(auctionId);
     }
@@ -226,7 +227,7 @@ public final class AuctionManager {
         if (!Config.AUCTION_PRIVATE_STORE_AUTO_ADDED)
             return;
 
-        int playerObjId = player.getObjectId();
+        int playerObjId = player.objectId();
         List<Integer> keysToRemove = new ArrayList<>();
         for (Entry<Integer, Auction> auction : _auctions.entrySet()) {
             if (auction.getValue().getSellerObjectId() == playerObjId && auction.getValue().isPrivateStore())
@@ -253,7 +254,7 @@ public final class AuctionManager {
             sendMessage(buyer, "You cannot buy items while being blocked!");
             return;
         }
-        if (auction.getSellerObjectId() == buyer.getObjectId()) {
+        if (auction.getSellerObjectId() == buyer.objectId()) {
             sendMessage(buyer, "You cannot win your own auction!");
             return;
         }
@@ -281,7 +282,7 @@ public final class AuctionManager {
                 sendMessage(buyer, "This auction doesnt exist anymore !");
                 return;
             }
-            TradeHelper.buyFromStore(seller, buyer, 1, new int[]{item.getObjectId()}, new long[]{quantity}, new long[]{auction.getPricePerItem()});
+            TradeHelper.buyFromStore(seller, buyer, 1, List.of(item.objectId()), List.of(quantity), List.of(auction.getPricePerItem()));
             return;
         }
 
@@ -294,7 +295,7 @@ public final class AuctionManager {
         storage.writeLock();
         try {
             if (item.getCount() == quantity) {
-                item.setOwnerId(buyer.getObjectId());
+                item.setOwnerId(buyer.objectId());
                 storage.removeItem(item, null, null);
                 inventory.addItem(item, "Auction Whole Bought");
 
@@ -303,7 +304,7 @@ public final class AuctionManager {
                 wholeItemBought = true;
             } else {
                 ItemInstance newItem = copyItem(item, quantity);
-                newItem.setOwnerId(buyer.getObjectId());
+                newItem.setOwnerId(buyer.objectId());
                 storage.removeItem(item, quantity, null, null);
                 inventory.addItem(newItem, "Auction Part Bought");
                 inventory.refreshEquip();
@@ -369,7 +370,7 @@ public final class AuctionManager {
 
 
         seller.sendChanges();
-        _lastMadeAuction.put(seller.getObjectId(), System.currentTimeMillis() + Config.SECONDS_BETWEEN_ADDING_AUCTIONS * 1000);
+        _lastMadeAuction.put(seller.objectId(), System.currentTimeMillis() + Config.SECONDS_BETWEEN_ADDING_AUCTIONS * 1000);
 
         seller.getInventory().reduceAdena(Config.AUCTION_FEE, "Create Auctino Fee");
         addAuctionToDatabase(auction);
@@ -377,7 +378,7 @@ public final class AuctionManager {
     }
 
     private Auction addAuction(Player seller, int auctionId, ItemInstance item, long salePrice, long sellCount, AuctionItemTypes itemType, boolean privateStore) {
-        Auction newAuction = new Auction(auctionId, seller.getObjectId(), seller.getName(), item, salePrice, sellCount, itemType, privateStore);
+        Auction newAuction = new Auction(auctionId, seller.objectId(), seller.getName(), item, salePrice, sellCount, itemType, privateStore);
         _auctions.put(auctionId, newAuction);
         return newAuction;
     }
@@ -422,7 +423,7 @@ public final class AuctionManager {
             return false;
         }
 
-        if (item.getOwnerId() != seller.getObjectId() || seller.getInventory().getItemByObjectId(item.getObjectId()) == null) {
+        if (item.getOwnerId() != seller.objectId() || seller.getInventory().getItemByObjectId(item.objectId()) == null) {
             sendMessage(seller, "Item you are trying to sell, doesn't exist!");
             return false;
         }
@@ -452,7 +453,7 @@ public final class AuctionManager {
             return false;
         }
 
-        if (seller.getPet() != null && item.isSummon() && item.getTemplate().isForPet()) {
+        if (seller.getPet() != null && item.getTemplate().isForPet()) {
             sendMessage(seller, "Please unsummon your pet before trying to sell this item.");
             return false;
         }
@@ -492,8 +493,8 @@ public final class AuctionManager {
             sendMessage(seller, "Close your store before creating new Auction!");
             return false;
         }
-        if (_lastMadeAuction.containsKey(seller.getObjectId()))
-            if (_lastMadeAuction.get(seller.getObjectId()) > System.currentTimeMillis()) {
+        if (_lastMadeAuction.containsKey(seller.objectId()))
+            if (_lastMadeAuction.get(seller.objectId()) > System.currentTimeMillis()) {
                 sendMessage(seller, "You cannot do it so often!");
                 return false;
             }
@@ -546,8 +547,6 @@ public final class AuctionManager {
         if (SoulCrystalHolder.getInstance().getCrystal(item.getItemId()) != null)
             return EtcAuctionItemType.SA_crystal;
 
-        if (item.isPet())
-            return PetItemType.Pet;
         if (item.getItemType() == EtcItemType.PET_COLLAR)
             return PetItemType.Pet;
         if (item.getTemplate().isForPet())

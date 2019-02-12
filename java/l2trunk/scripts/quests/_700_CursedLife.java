@@ -22,9 +22,9 @@ public final class _700_CursedLife extends Quest {
     private static final int Rok = 25624;
 
     //Prices
-    private static final int _skullprice = 50000;
-    private static final int _sternumprice = 5000;
-    private static final int _bonesprice = 500;
+    private static final int SKULLPRICE = 50000;
+    private static final int STERNUMPRICE = 5000;
+    private static final int BONESPRICE = 500;
 
     public _700_CursedLife() {
         super(false);
@@ -45,16 +45,13 @@ public final class _700_CursedLife extends Quest {
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
         } else if (event.equals("ex_bones") && cond == 1)
-            if (st.getQuestItemsCount(SwallowedSkull) >= 1 || st.getQuestItemsCount(SwallowedSternum) >= 1 || st.getQuestItemsCount(SwallowedBones) >= 1) {
-                long _adenatogive = st.getQuestItemsCount(SwallowedSkull) * _skullprice + st.getQuestItemsCount(SwallowedSternum) * _sternumprice + st.getQuestItemsCount(SwallowedBones) * _bonesprice;
+            if (st.haveAnyQuestItems(SwallowedSkull,SwallowedSternum,SwallowedBones)) {
+                long _adenatogive = st.getQuestItemsCount(SwallowedSkull) * SKULLPRICE + st.getQuestItemsCount(SwallowedSternum) * STERNUMPRICE + st.getQuestItemsCount(SwallowedBones) * BONESPRICE;
 
                 st.giveItems(ADENA_ID, _adenatogive);
-                if (st.getQuestItemsCount(SwallowedSkull) >= 1)
-                    st.takeItems(SwallowedSkull, -1);
-                if (st.getQuestItemsCount(SwallowedSternum) >= 1)
-                    st.takeItems(SwallowedSternum, -1);
-                if (st.getQuestItemsCount(SwallowedBones) >= 1)
-                    st.takeItems(SwallowedBones, -1);
+                    st.takeItems(SwallowedSkull);
+                    st.takeItems(SwallowedSternum);
+                    st.takeItems(SwallowedBones);
                 htmltext = "orbyu_q700_4.htm";
             } else
                 htmltext = "orbyu_q700_3a.htm";
@@ -67,17 +64,16 @@ public final class _700_CursedLife extends Quest {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
 
-        QuestState GoodDayToFly = st.getPlayer().getQuestState(_10273_GoodDayToFly.class);
         if (npcId == Orbyu)
             if (cond == 0) {
-                if (st.getPlayer().getLevel() >= 75 && GoodDayToFly != null && GoodDayToFly.isCompleted())
+                if (st.player.getLevel() >= 75 && st.player.isQuestCompleted(_10273_GoodDayToFly.class))
                     htmltext = "orbyu_q700_1.htm";
                 else {
                     htmltext = "orbyu_q700_0.htm";
                     st.exitCurrentQuest(true);
                 }
             } else if (cond == 1)
-                if (st.getQuestItemsCount(SwallowedSkull) >= 1 || st.getQuestItemsCount(SwallowedSternum) >= 1 || st.getQuestItemsCount(SwallowedBones) >= 1)
+                if (st.haveAnyQuestItems(SwallowedSkull,SwallowedSternum,SwallowedBones) )
                     htmltext = "orbyu_q700_3.htm";
                 else
                     htmltext = "orbyu_q700_3a.htm";
@@ -85,23 +81,22 @@ public final class _700_CursedLife extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         if (cond == 1)
             if (npcId == MutantBird1 || npcId == MutantBird2 || npcId == DraHawk1 || npcId == DraHawk2) {
-                st.giveItems(SwallowedBones, 1);
+                st.giveItems(SwallowedBones);
                 st.playSound(SOUND_ITEMGET);
                 if (Rnd.chance(20))
-                    st.giveItems(SwallowedSkull, 1);
+                    st.giveItems(SwallowedSkull);
                 else if (Rnd.chance(20))
-                    st.giveItems(SwallowedSternum, 1);
+                    st.giveItems(SwallowedSternum);
             } else if (npcId == Rok) {
                 st.giveItems(SwallowedSternum, 50);
                 st.giveItems(SwallowedSkull, 30);
                 st.giveItems(SwallowedBones, 100);
                 st.playSound(SOUND_ITEMGET);
             }
-        return null;
     }
 }

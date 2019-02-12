@@ -5,7 +5,6 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _141_ShadowFoxPart3 extends Quest {
     // NPC
@@ -31,8 +30,7 @@ public final class _141_ShadowFoxPart3 extends Quest {
 
     @Override
     public String onFirstTalk(NpcInstance npc, Player player) {
-        QuestState qs = player.getQuestState(_140_ShadowFoxPart2.class);
-        if (qs != null && qs.isCompleted() && player.getQuestState(getClass()) == null)
+        if (player.isQuestCompleted(_140_ShadowFoxPart2.class) && player.getQuestState(this) == null)
             newQuestState(player, STARTED);
         return "";
     }
@@ -40,41 +38,41 @@ public final class _141_ShadowFoxPart3 extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("30894-02.htm")) {
+        if ("30894-02.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("30894-04.htm")) {
+        } else if ("30894-04.htm".equalsIgnoreCase(event)) {
             st.setCond(2);
             st.setState(STARTED);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("30894-15.htm")) {
+        } else if ("30894-15.htm".equalsIgnoreCase(event)) {
             st.setCond(4);
             st.setState(STARTED);
             st.unset("talk");
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("30894-18.htm")) {
+        } else if ("30894-18.htm".equalsIgnoreCase(event)) {
             if (st.getInt("reward") != 1) {
                 st.playSound(SOUND_FINISH);
                 st.giveItems(ADENA_ID, 88888);
                 st.addExpAndSp(278005, 17058);
-                st.set("reward", "1");
+                st.set("reward", 1);
                 htmltext = "getBonuses.htm";
             } else
                 htmltext = "getBonuses.htm";
-        } else if (event.equalsIgnoreCase("dawn")) {
+        } else if ("dawn".equalsIgnoreCase(event)) {
             Quest q1 = QuestManager.getQuest(_142_FallenAngelRequestOfDawn.class);
             if (q1 != null) {
                 st.exitCurrentQuest(false);
-                QuestState qs1 = q1.newQuestState(st.getPlayer(), STARTED);
+                QuestState qs1 = q1.newQuestState(st.player, STARTED);
                 q1.notifyEvent("start", qs1, npc);
                 return null;
             }
-        } else if (event.equalsIgnoreCase("dusk")) {
+        } else if ("dusk".equalsIgnoreCase(event)) {
             Quest q1 = QuestManager.getQuest(_143_FallenAngelRequestOfDusk.class);
             if (q1 != null) {
                 st.exitCurrentQuest(false);
-                QuestState qs1 = q1.newQuestState(st.getPlayer(), STARTED);
+                QuestState qs1 = q1.newQuestState(st.player, STARTED);
                 q1.notifyEvent("start", qs1, npc);
                 return null;
             }
@@ -87,7 +85,7 @@ public final class _141_ShadowFoxPart3 extends Quest {
         int cond = st.getCond();
         String htmltext = "noquest";
         if (cond == 0) {
-            if (st.getPlayer().getLevel() >= 37)
+            if (st.player.getLevel() >= 37)
                 htmltext = "30894-01.htm";
             else
                 htmltext = "30894-00.htm";
@@ -100,8 +98,8 @@ public final class _141_ShadowFoxPart3 extends Quest {
                 htmltext = "30894-07.htm";
             else {
                 htmltext = "30894-06.htm";
-                st.takeItems(REPORT, -1);
-                st.set("talk", "1");
+                st.takeItems(REPORT);
+                st.set("talk", 1);
             }
         } else if (cond == 4)
             htmltext = "30894-16.htm";
@@ -109,9 +107,8 @@ public final class _141_ShadowFoxPart3 extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getCond() == 2 && st.rollAndGive(REPORT, 1, 1, 30, 80 * npc.getTemplate().rateHp))
             st.setCond(3);
-        return null;
     }
 }

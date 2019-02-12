@@ -58,7 +58,7 @@ public enum ParserUtil {
             return reader.read(CryptUtil.decryptOnDemand(xmlFile)).getRootElement();
         } catch (DocumentException | IOException e) {
             e.printStackTrace();
-            throw new IllegalArgumentException("Can't parse file: " + xmlFile);
+            throw new IllegalArgumentException("Can't of file: " + xmlFile);
         }
     }
 }

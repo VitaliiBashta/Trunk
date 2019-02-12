@@ -69,7 +69,6 @@ public abstract class ItemTemplate extends StatTemplate {
     public static final int TYPE2_SHIELD_ARMOR = 1;
     public static final int TYPE2_ACCESSORY = 2;
     public static final int TYPE2_OTHER = 5;
-    public static final int TYPE2_NODROP = 9;
     public static final int SLOT_UNDERWEAR = 0x00001;
     public static final int SLOT_R_EAR = 0x00002;
     public static final int SLOT_L_EAR = 0x00004;
@@ -130,59 +129,59 @@ public abstract class ItemTemplate extends StatTemplate {
     static final int SLOT_BABYPET = -103;
     static final int SLOT_GWOLF = -104;
     static final int SLOT_PENDANT = -105;
-    protected final int _itemId;
-    protected final String _name;
-    private final String _addname;
-    private final String _icon;
-    private final String _icon32;
-    private final Grade _crystalType; // default to none-grade
-    private final ItemClass _class;
-    private final int _weight;
+    public final int itemId;
+    protected final String name;
+    private final String addname;
+    private final String icon;
+    public final String icon32;
+    private final Grade crystalType; // default to none-grade
+    private final ItemClass clazz;
+    public final int weight;
     private final boolean _masterwork;
     private final int masterworkConvert;
-    private final int _durability;
-    private final int _referencePrice;
+    private final int durability;
+    public final int referencePrice;
     private final int _crystalCount;
-    private final boolean _temporal;
-    private final boolean _stackable;
-    private final boolean _crystallizable;
+    public final boolean temporal;
+    public final boolean stackable;
+    private final boolean crystallizable;
     private final ReuseType _reuseType;
     private final int _reuseDelay;
     private final int _reuseGroup;
     private final int _agathionEnergy;
     private final List<CapsuledItem> _capsuledItems = new ArrayList<>();
     ItemType type;
-    int _type1; // needed for item list (inventory)
+    int type1; // needed for item list (inventory)
     int _type2; // different lists for armor, weapon, etc
-    int _bodyPart;
+    int bodyPart;
     private List<Skill> skills;
     private Map<Integer, AugmentationInfo> _augmentationInfos = new HashMap<>();//Containers.emptyIntObjectMap();
-    private int _flags;
-    private Skill _enchant4Skill = null; // skill that activates when item is enchanted +4 (for duals)
+    private int flags;
+    private Skill enchant4Skill = null; // skill that activates when item is enchanted +4 (for duals)
     private int[] _baseAttributes = new int[6];
     private Map<Integer, int[]> _enchantOptions = new HashMap<>();//Containers.emptyIntObjectMap();
     private Condition _condition;
     private IItemHandler handler = IItemHandler.NULL;
 
     ItemTemplate(final StatsSet set) {
-        _itemId = set.getInteger("item_id");
-        _class = set.getEnum("class", ItemClass.class, ItemClass.OTHER);
-        _name = set.getString("name");
-        _addname = set.getString("add_name", "");
-        _icon = set.getString("icon", "");
-        _icon32 = "<img src=icon." + _icon + " width=32 height=32>";
-        _weight = set.getInteger("weight", 0);
-        _crystallizable = set.getBool("crystallizable", false);
-        _stackable = set.getBool("stackable", false);
-        _crystalType = set.getEnum("crystal_type", Grade.class, Grade.NONE); // default to none-grade
-        _durability = set.getInteger("durability", -1);
-        _temporal = set.getBool("temporal", false);
-        _bodyPart = set.getInteger("bodypart", 0);
-        _referencePrice = set.getInteger("price", 0);
+        itemId = set.getInteger("item_id");
+        clazz = set.getEnum("class", ItemClass.class, ItemClass.OTHER);
+        name = set.getString("name");
+        addname = set.getString("add_name", "");
+        icon = set.getString("icon", "");
+        icon32 = "<img src=icon." + icon + " width=32 height=32>";
+        weight = set.getInteger("weight", 0);
+        crystallizable = set.getBool("crystallizable", false);
+        stackable = set.getBool("stackable", false);
+        crystalType = set.getEnum("crystal_type", Grade.class, Grade.NONE); // default to none-grade
+        durability = set.getInteger("durability", -1);
+        temporal = set.getBool("temporal", false);
+        bodyPart = set.getInteger("bodypart", 0);
+        referencePrice = set.getInteger("price", 0);
         _crystalCount = set.getInteger("crystal_count", 0);
         _reuseType = set.getEnum("reuse_type", ReuseType.class, ReuseType.NORMAL);
         _reuseDelay = set.getInteger("reuse_delay", 0);
-        _reuseGroup = set.getInteger("delay_share_group", -_itemId);
+        _reuseGroup = set.getInteger("delay_share_group", -itemId);
         _agathionEnergy = set.getInteger("agathion_energy", 0);
         _masterwork = set.getBool("masterwork", false);
         masterworkConvert = set.getInteger("masterwork_convert", -1);
@@ -208,38 +207,16 @@ public abstract class ItemTemplate extends StatTemplate {
     }
 
     public String getIcon() {
-        return _icon;
+        return icon;
     }
 
-    /**
-     * Returns ready for display in the html string of the form <img src=icon.icon width=32 height=32>
-     *
-     * @return
-     */
-    public String getIcon32() {
-        return _icon32;
-    }
-
-    /**
-     * Returns the durability of the item
-     *
-     * @return int
-     */
     public final int getDurability() {
-        return _durability;
+        return durability;
     }
 
-    public final boolean isTemporal() {
-        return _temporal;
-    }
 
-    /**
-     * Returns the ID of the item
-     *
-     * @return int
-     */
-    public final int getItemId() {
-        return _itemId;
+    public final int itemId() {
+        return itemId;
     }
 
     public abstract long getItemMask();
@@ -260,7 +237,7 @@ public abstract class ItemTemplate extends StatTemplate {
         return _baseAttributes[element.getId()];
     }
 
-    public void setBaseAtributeElements(int[] val) {
+    public final void setBaseAtributeElements(int[] val) {
         _baseAttributes = val;
     }
 
@@ -272,7 +249,7 @@ public abstract class ItemTemplate extends StatTemplate {
             case TYPE2_PET_STRIDER:
             case TYPE2_PET_GWOLF:
             case TYPE2_PET_BABY:
-                if (_bodyPart == ItemTemplate.SLOT_CHEST) {
+                if (bodyPart == ItemTemplate.SLOT_CHEST) {
                     type2 = TYPE2_SHIELD_ARMOR;
                 } else {
                     type2 = TYPE2_WEAPON;
@@ -285,13 +262,8 @@ public abstract class ItemTemplate extends StatTemplate {
         return type2;
     }
 
-    /**
-     * Returns the weight of the item
-     *
-     * @return int
-     */
-    public final int getWeight() {
-        return _weight;
+    public final int weight() {
+        return weight;
     }
 
     /**
@@ -300,7 +272,7 @@ public abstract class ItemTemplate extends StatTemplate {
      * @return boolean
      */
     public final boolean isCrystallizable() {
-        return _crystallizable && !isStackable() && (getCrystalType() != Grade.NONE) && (getCrystalCount() > 0);
+        return crystallizable && !stackable() && (getCrystalType() != Grade.NONE) && (getCrystalCount() > 0);
     }
 
     /**
@@ -309,7 +281,7 @@ public abstract class ItemTemplate extends StatTemplate {
      * @return int
      */
     public final Grade getCrystalType() {
-        return _crystalType;
+        return crystalType;
     }
 
     /**
@@ -339,16 +311,12 @@ public abstract class ItemTemplate extends StatTemplate {
      * @return String
      */
     public final String getName() {
-        return _name;
+        return name;
     }
 
-    /**
-     * Returns the additional name of the item
-     *
-     * @return String
-     */
+
     public final String getAdditionalName() {
-        return _addname;
+        return addname;
     }
 
     /**
@@ -357,59 +325,26 @@ public abstract class ItemTemplate extends StatTemplate {
      * @return int
      */
     public final int getBodyPart() {
-        return _bodyPart;
+        return bodyPart;
     }
 
-    /**
-     * Returns the type 1 of the item
-     *
-     * @return int
-     */
+
     public final int getType1() {
-        return _type1;
+        return type1;
     }
 
-    /**
-     * Returns if the item is stackable
-     *
-     * @return boolean
-     */
-    public final boolean isStackable() {
-        return _stackable;
+    public final boolean stackable() {
+        return stackable;
     }
 
-    /**
-     * Returns the price of reference of the item
-     *
-     * @return int
-     */
-    public final int getReferencePrice() {
-        return _referencePrice;
-    }
-
-    /**
-     * Returns if item is for hatchling
-     *
-     * @return boolean
-     */
     public boolean isForHatchling() {
         return _type2 == TYPE2_PET_HATCHLING;
     }
 
-    /**
-     * Returns if item is for strider
-     *
-     * @return boolean
-     */
     public boolean isForStrider() {
         return _type2 == TYPE2_PET_STRIDER;
     }
 
-    /**
-     * Returns if item is for wolf
-     *
-     * @return boolean
-     */
     public boolean isForWolf() {
         return _type2 == TYPE2_PET_WOLF;
     }
@@ -427,11 +362,6 @@ public abstract class ItemTemplate extends StatTemplate {
         return _type2 == TYPE2_PET_GWOLF;
     }
 
-    /**
-     * Магическая броня для петов
-     *
-     * @return
-     */
     public boolean isPendant() {
         return _type2 == TYPE2_PENDANT;
     }
@@ -453,19 +383,12 @@ public abstract class ItemTemplate extends StatTemplate {
         return skills;
     }
 
-    public Skill getFirstSkill() {
-        return skills.get(0);
-    }
-
-    /**
-     * @return skill that player get when has equipped weapon +4 or more (for duals SA)
-     */
     public Skill getEnchant4Skill() {
-        return _enchant4Skill;
+        return enchant4Skill;
     }
 
     public void setEnchant4Skill(Skill enchant4Skill) {
-        _enchant4Skill = enchant4Skill;
+        this.enchant4Skill = enchant4Skill;
     }
 
     /**
@@ -475,7 +398,7 @@ public abstract class ItemTemplate extends StatTemplate {
      */
     @Override
     public String toString() {
-        return _itemId + " " + _name;
+        return itemId + " " + name;
     }
 
     /**
@@ -484,84 +407,79 @@ public abstract class ItemTemplate extends StatTemplate {
      * @return true, если предмет призрачный
      */
     public boolean isShadowItem() {
-        return (_durability > 0) && !isTemporal();
+        return (durability > 0) && !temporal;
     }
 
     public boolean isCommonItem() {
-        return _name.startsWith("Common Item - ");
+        return name.startsWith("Common Item - ");
     }
 
     public boolean isSealedItem() {
-        return _name.startsWith("Sealed");
+        return name.startsWith("Sealed");
     }
 
     public boolean isAltSeed() {
-        return _name.contains("Alternative");
+        return name.contains("Alternative");
     }
 
     public ItemClass getItemClass() {
-        return _class;
+        return clazz;
     }
 
-    /**
-     * Is the item if is money adena or stone Print
-     *
-     * @return
-     */
     public boolean isAdena() {
-        return (_itemId == 57) || (_itemId == 6360) || (_itemId == 6361) || (_itemId == 6362);
+        return (itemId == 57) || (itemId == 6360) || (itemId == 6361) || (itemId == 6362);
     }
 
     public boolean isLifeStone() {
-        return ((_itemId >= 8723) && (_itemId <= 8762)) || ((_itemId >= 9573) && (_itemId <= 9576)) || ((_itemId >= 10483) && (_itemId <= 10486)) || ((_itemId >= 12754) && (_itemId <= 12763)) || (_itemId == 12821) || (_itemId == 12822) || ((_itemId >= 12840) && (_itemId <= 12851)) || (_itemId == 14008) || ((_itemId >= 14166) && (_itemId <= 14169)) || ((_itemId >= 16160) && (_itemId <= 16167)) || (_itemId == 16177) || (_itemId == 16178);
+        return ((itemId >= 8723) && (itemId <= 8762)) || ((itemId >= 9573) && (itemId <= 9576)) || ((itemId >= 10483) && (itemId <= 10486)) || ((itemId >= 12754) && (itemId <= 12763)) || (itemId == 12821) || (itemId == 12822) || ((itemId >= 12840) && (itemId <= 12851)) || (itemId == 14008) || ((itemId >= 14166) && (itemId <= 14169)) || ((itemId >= 16160) && (itemId <= 16167)) || (itemId == 16177) || (itemId == 16178);
     }
 
     public boolean isEnchantScroll() {
-        return ((_itemId >= 6569) && (_itemId <= 6578)) || ((_itemId >= 17255) && (_itemId <= 17264)) || ((_itemId >= 22314) && (_itemId <= 22323)) || ((_itemId >= 949) && (_itemId <= 962)) || ((_itemId >= 729) && (_itemId <= 732));
+        return ((itemId >= 6569) && (itemId <= 6578)) || ((itemId >= 17255) && (itemId <= 17264)) || ((itemId >= 22314) && (itemId <= 22323)) || ((itemId >= 949) && (itemId <= 962)) || ((itemId >= 729) && (itemId <= 732));
     }
 
     public boolean isForgottenScroll() {
-        return ((_itemId >= 10549) && (_itemId <= 10599)) || ((_itemId >= 12768) && (_itemId <= 12778)) || ((_itemId >= 14170) && (_itemId <= 14227)) || (_itemId == 17030) || ((_itemId >= 17034) && (_itemId <= 17039));
+        return ((itemId >= 10549) && (itemId <= 10599)) || ((itemId >= 12768) && (itemId <= 12778)) || ((itemId >= 14170) && (itemId <= 14227)) || (itemId == 17030) || ((itemId >= 17034) && (itemId <= 17039));
     }
 
     public boolean isShieldNoEnchant() {
-        return (_itemId == 11508) || (_itemId == 6377) || (_itemId == 11532) || (_itemId == 9441) || (_itemId == 16304) || (_itemId == 15621) || (_itemId == 16321) || (_itemId == 13471) || (_itemId == 15587) || (_itemId == 15604);
+        return (itemId == 11508) || (itemId == 6377) || (itemId == 11532) || (itemId == 9441) || (itemId == 16304) || (itemId == 15621) || (itemId == 16321) || (itemId == 13471) || (itemId == 15587) || (itemId == 15604);
     }
 
     public boolean isNoEnchant() {
-        return (_itemId == 10514) || (_itemId == 10512) || (_itemId == 10513);
+        return (itemId == 10514) || (itemId == 10512) || (itemId == 10513);
     }
 
     public boolean isSigelNoEnchant() {
-        return ((_itemId >= 12811) && (_itemId <= 12813)) || (_itemId == 16305) || (_itemId == 15588) || (_itemId == 15605) || (_itemId == 16322) || (_itemId == 15622) || (_itemId >= 13078) || (_itemId == 10119);
+        return ((itemId >= 12811) && (itemId <= 12813)) || (itemId == 16305) || (itemId == 15588) || (itemId == 15605) || (itemId == 16322) || (itemId == 15622) || (itemId >= 13078) || (itemId == 10119);
     }
 
     public boolean isCodexBook() {
-        return _itemId >= 9625 && _itemId <= 9627 || _itemId == 6622;
+        return itemId >= 9625 && itemId <= 9627 || itemId == 6622;
     }
 
     public boolean isAttributeStone() {
-        return _itemId >= 9546 && _itemId <= 9551;
+        return itemId >= 9546 && itemId <= 9551;
     }
 
     public boolean isEquipment() {
-        return _type1 != TYPE1_ITEM_QUESTITEM_ADENA;
+        return type1 != TYPE1_ITEM_QUESTITEM_ADENA;
     }
 
     public boolean isKeyMatherial() {
-        return _class == ItemClass.PIECES;
+        return clazz == ItemClass.PIECES;
     }
 
     public boolean isRecipe() {
-        return _class == ItemClass.RECIPIES;
+        return clazz == ItemClass.RECIPIES;
     }
 
     public boolean isExtractable() {
-        return this._class == ItemClass.EXTRACTABLE;
+        return this.clazz == ItemClass.EXTRACTABLE;
     }
 
     public boolean isTerritoryAccessory() {
-        return ((_itemId >= 13740) && (_itemId <= 13748)) || ((_itemId >= 14592) && (_itemId <= 14600)) || ((_itemId >= 14664) && (_itemId <= 14672)) || ((_itemId >= 14801) && (_itemId <= 14809)) || ((_itemId >= 15282) && (_itemId <= 15299));
+        return ((itemId >= 13740) && (itemId <= 13748)) || ((itemId >= 14592) && (itemId <= 14600)) || ((itemId >= 14664) && (itemId <= 14672)) || ((itemId >= 14801) && (itemId <= 14809)) || ((itemId >= 15282) && (itemId <= 15299));
     }
 
     public boolean isArrow() {
@@ -569,23 +487,23 @@ public abstract class ItemTemplate extends StatTemplate {
     }
 
     public boolean isBelt() {
-        return _bodyPart == SLOT_BELT;
+        return bodyPart == SLOT_BELT;
     }
 
     public boolean isBracelet() {
-        return (_bodyPart == SLOT_R_BRACELET) || (_bodyPart == SLOT_L_BRACELET);
+        return (bodyPart == SLOT_R_BRACELET) || (bodyPart == SLOT_L_BRACELET);
     }
 
     public boolean isUnderwear() {
-        return _bodyPart == SLOT_UNDERWEAR;
+        return bodyPart == SLOT_UNDERWEAR;
     }
 
     public boolean isCloak() {
-        return _bodyPart == SLOT_BACK;
+        return bodyPart == SLOT_BACK;
     }
 
     public boolean isTalisman() {
-        return _bodyPart == SLOT_DECO;
+        return bodyPart == SLOT_DECO;
     }
 
     public boolean isHerb() {
@@ -597,27 +515,27 @@ public abstract class ItemTemplate extends StatTemplate {
     }
 
     public boolean isAttributeCrystal() {
-        return (_itemId == 9552) || (_itemId == 9553) || (_itemId == 9554) || (_itemId == 9555) || (_itemId == 9556) || (_itemId == 9557);
+        return (itemId == 9552) || (itemId == 9553) || (itemId == 9554) || (itemId == 9555) || (itemId == 9556) || (itemId == 9557);
     }
 
     private boolean isAttributeJewel() {
-        return (_itemId == 9558) || (_itemId == 9559) || (_itemId == 9560) || (_itemId == 9561) || (_itemId == 9562) || (_itemId == 9563);
+        return (itemId == 9558) || (itemId == 9559) || (itemId == 9560) || (itemId == 9561) || (itemId == 9562) || (itemId == 9563);
     }
 
     private boolean isAttributeEnergy() {
-        return (_itemId == 9564) || (_itemId == 9565) || (_itemId == 9566) || (_itemId == 9567) || (_itemId == 9568) || (_itemId == 9569);
+        return (itemId == 9564) || (itemId == 9565) || (itemId == 9566) || (itemId == 9567) || (itemId == 9568) || (itemId == 9569);
     }
 
     public boolean isHeroWeapon() {
-        return ((_itemId >= 6611) && (_itemId <= 6621)) || ((_itemId >= 9388) && (_itemId <= 9390));
+        return ((itemId >= 6611) && (itemId <= 6621)) || ((itemId >= 9388) && (itemId <= 9390));
     }
 
     public boolean isEpolets() {
-        return _itemId == 9912;
+        return itemId == 9912;
     }
 
     public boolean isCursed() {
-        return CursedWeaponsManager.INSTANCE.isCursed(_itemId);
+        return CursedWeaponsManager.INSTANCE.isCursed(itemId);
     }
 
     public boolean isMercenaryTicket() {
@@ -625,7 +543,7 @@ public abstract class ItemTemplate extends StatTemplate {
     }
 
     public boolean isTerritoryFlag() {
-        return (_itemId == 13560) || (_itemId == 13561) || (_itemId == 13562) || (_itemId == 13563) || (_itemId == 13564) || (_itemId == 13565) || (_itemId == 13566) || (_itemId == 13567) || (_itemId == 13568);
+        return (itemId == 13560) || (itemId == 13561) || (itemId == 13562) || (itemId == 13563) || (itemId == 13564) || (itemId == 13565) || (itemId == 13566) || (itemId == 13567) || (itemId == 13568);
     }
 
     public boolean isRod() {
@@ -637,7 +555,7 @@ public abstract class ItemTemplate extends StatTemplate {
     }
 
     public boolean isNotAugmented() {
-        return _itemId == 21712;
+        return itemId == 21712;
     }
 
     public boolean isArmor() {
@@ -695,7 +613,7 @@ public abstract class ItemTemplate extends StatTemplate {
         boolean res = _condition.test(env);
         if (!res && (_condition.getSystemMsg() != null)) {
             if (_condition.getSystemMsg().size() > 0) {
-                player.sendPacket(new SystemMessage2(_condition.getSystemMsg()).addItemName(getItemId()));
+                player.sendPacket(new SystemMessage2(_condition.getSystemMsg()).addItemName(itemId()));
             } else {
                 player.sendPacket(_condition.getSystemMsg());
             }
@@ -720,7 +638,7 @@ public abstract class ItemTemplate extends StatTemplate {
         return hasFlag(ItemFlags.DESTROYABLE);
     }
 
-    public boolean isDropable() {
+    public final boolean isDropable() {
         return hasFlag(ItemFlags.DROPABLE);
     }
 
@@ -745,11 +663,11 @@ public abstract class ItemTemplate extends StatTemplate {
     }
 
     private boolean hasFlag(ItemFlags f) {
-        return (_flags & f.mask()) == f.mask();
+        return (flags & f.mask()) == f.mask();
     }
 
     private void activeFlag(ItemFlags f) {
-        _flags |= f.mask();
+        flags |= f.mask();
     }
 
     public IItemHandler getHandler() {
@@ -793,7 +711,7 @@ public abstract class ItemTemplate extends StatTemplate {
     }
 
     public boolean isShield() {
-        return this._bodyPart == 256;
+        return this.bodyPart == 256;
     }
 
     public List<CapsuledItem> getCapsuledItems() {

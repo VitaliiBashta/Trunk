@@ -3,7 +3,6 @@ package l2trunk.scripts.events.CofferofShadows;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.handler.items.ItemHandler;
-import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.model.reward.RewardData;
@@ -156,28 +155,24 @@ public final class Coffer extends ScriptItemHandler implements ScriptFile {
     );
 
     @Override
-    public boolean useItem(Playable playable, ItemInstance item, boolean ctrl) {
-        if (!playable.isPlayer())
-            return false;
-        Player activeChar = playable.getPlayer();
-
-        if (!activeChar.isQuestContinuationPossible(true))
+    public boolean useItem(Player player, ItemInstance item, boolean ctrl) {
+        if (!player.isQuestContinuationPossible(true))
             return false;
 
         Map<Integer, Long> items = new HashMap<>();
         long count = 0;
         do {
             count++;
-            getGroupItem(activeChar, _dropmats, items);
-            getGroupItem(activeChar, _dropacc, items);
-            getGroupItem(activeChar, _dropevents, items);
-            getGroupItem(activeChar, _dropench, items);
-        } while (ctrl && item.getCount() > count && activeChar.isQuestContinuationPossible(false));
+            getGroupItem(player, _dropmats, items);
+            getGroupItem(player, _dropacc, items);
+            getGroupItem(player, _dropevents, items);
+            getGroupItem(player, _dropench, items);
+        } while (ctrl && item.getCount() > count && player.isQuestContinuationPossible(false));
 
-        activeChar.getInventory().destroyItem(item, count, "CofferofShadows"); //FIXME [G1ta0] item-API
-        activeChar.sendPacket(SystemMessage2.removeItems(item.getItemId(), count));
+        player.inventory.destroyItem(item, count, "CofferofShadows"); //FIXME [G1ta0] item-API
+        player.sendPacket(SystemMessage2.removeItems(item.getItemId(), count));
         for (Entry<Integer, Long> e : items.entrySet())
-            activeChar.sendPacket(SystemMessage2.obtainItems(e.getKey(), e.getValue(), 0));
+            player.sendPacket(SystemMessage2.obtainItems(e.getKey(), e.getValue(), 0));
         return true;
     }
 
@@ -191,7 +186,7 @@ public final class Coffer extends ScriptItemHandler implements ScriptFile {
                 long count = Rnd.get(d.getMinDrop(), d.getMaxDrop());
                 item = ItemFunctions.createItem(d.getItemId());
                 item.setCount(count);
-                activeChar.getInventory().addItem(item, "CofferofShadows");
+                activeChar.inventory.addItem(item, "CofferofShadows");
                 Long old = report.get(d.getItemId());
                 report.put(d.getItemId(), old != null ? old + count : count);
             }

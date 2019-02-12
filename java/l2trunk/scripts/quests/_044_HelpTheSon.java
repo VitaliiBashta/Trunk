@@ -3,7 +3,6 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _044_HelpTheSon extends Quest {
     private static final int LUNDY = 30827;
@@ -67,7 +66,7 @@ public final class _044_HelpTheSon extends Quest {
         String htmltext = "noquest";
         int id = st.getState();
         if (id == CREATED) {
-            if (st.getPlayer().getLevel() >= 24)
+            if (st.player.getLevel() >= 24)
                 htmltext = "pet_manager_lundy_q0044_0101.htm";
             else {
                 st.exitCurrentQuest(true);
@@ -99,10 +98,10 @@ public final class _044_HelpTheSon extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int cond = st.getCond();
         if (cond == 2 && st.getQuestItemsCount(GEMSTONE_FRAGMENT) < 30) {
-            st.giveItems(GEMSTONE_FRAGMENT, 1);
+            st.giveItems(GEMSTONE_FRAGMENT);
             if (st.getQuestItemsCount(GEMSTONE_FRAGMENT) >= 30) {
                 st.playSound(SOUND_MIDDLE);
                 st.setCond(3);
@@ -110,6 +109,5 @@ public final class _044_HelpTheSon extends Quest {
             } else
                 st.playSound(SOUND_ITEMGET);
         }
-        return null;
     }
 }

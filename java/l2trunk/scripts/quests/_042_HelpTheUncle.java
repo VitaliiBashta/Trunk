@@ -67,7 +67,7 @@ public final class _042_HelpTheUncle extends Quest {
         int id = st.getState();
         int cond = st.getCond();
         if (id == CREATED) {
-            if (st.getPlayer().getLevel() >= 25)
+            if (st.player.getLevel() >= 25)
                 htmltext = "pet_manager_waters_q0042_0101.htm";
             else {
                 htmltext = "pet_manager_waters_q0042_0103.htm";
@@ -76,10 +76,11 @@ public final class _042_HelpTheUncle extends Quest {
         } else if (id == STARTED)
             if (npcId == WATERS) {
                 if (cond == 1)
-                    if (st.getQuestItemsCount(TRIDENT) == 0)
-                        htmltext = "pet_manager_waters_q0042_0106.htm";
-                    else
+                    if (st.haveQuestItem(TRIDENT)) {
                         htmltext = "pet_manager_waters_q0042_0105.htm";
+                    } else {
+                        htmltext = "pet_manager_waters_q0042_0106.htm";
+                    }
                 else if (cond == 2)
                     htmltext = "pet_manager_waters_q0042_0204.htm";
                 else if (cond == 3)
@@ -89,7 +90,7 @@ public final class _042_HelpTheUncle extends Quest {
                 else if (cond == 5)
                     htmltext = "pet_manager_waters_q0042_0401.htm";
             } else if (npcId == SOPHYA)
-                if (cond == 4 && st.getQuestItemsCount(MAP) > 0)
+                if (cond == 4 && st.haveQuestItem(MAP))
                     htmltext = "sophia_q0042_0301.htm";
                 else if (cond == 5)
                     htmltext = "sophia_q0042_0402.htm";
@@ -97,19 +98,18 @@ public final class _042_HelpTheUncle extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int cond = st.getCond();
         if (cond == 2) {
             long pieces = st.getQuestItemsCount(MAP_PIECE);
             if (pieces < MAX_COUNT - 1) {
-                st.giveItems(MAP_PIECE, 1);
+                st.giveItems(MAP_PIECE);
                 st.playSound(SOUND_ITEMGET);
             } else if (pieces == MAX_COUNT - 1) {
-                st.giveItems(MAP_PIECE, 1);
+                st.giveItems(MAP_PIECE);
                 st.playSound(SOUND_MIDDLE);
                 st.setCond(3);
             }
         }
-        return null;
     }
 }

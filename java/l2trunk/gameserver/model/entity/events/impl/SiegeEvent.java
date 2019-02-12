@@ -2,7 +2,6 @@ package l2trunk.gameserver.model.entity.events.impl;
 
 import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.dao.JdbcEntityState;
-import l2trunk.commons.lang.reference.HardReference;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.dao.SiegeClanDAO;
@@ -33,11 +32,9 @@ import l2trunk.gameserver.tables.ClanTable;
 import l2trunk.gameserver.templates.DoorTemplate;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.TimeUtils;
+import l2trunk.scripts.npc.model.residences.SiegeGuardInstance;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ScheduledFuture;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -57,7 +54,7 @@ public abstract class SiegeEvent<R extends Residence, S extends SiegeClanObject>
     private static ScheduledFuture<?> _resultsThread = null;
     final int _dayOfWeek;
     final int _hourOfDay;
-    private final List<HardReference<SummonInstance>> _siegeSummons = new ArrayList<>();
+    private final List<SummonInstance> siegeSummons = new ArrayList<>();
     R residence;
     Clan _oldOwner;
     OnKillListener _killListener = new KillListener();
@@ -270,7 +267,7 @@ public abstract class SiegeEvent<R extends Residence, S extends SiegeClanObject>
     public S getSiegeClan(String name, Clan clan) {
         if (clan == null)
             return null;
-        return getSiegeClan(name, clan.getClanId());
+        return getSiegeClan(name, clan.clanId());
     }
 
     @SuppressWarnings("unchecked")
@@ -426,7 +423,7 @@ public abstract class SiegeEvent<R extends Residence, S extends SiegeClanObject>
             return null;
         }
         SiegeClanObject siegeClan1 = getSiegeClan("attackers", player.getClan());
-        if ((siegeClan1 == null) && (attacker.isSiegeGuard()))
+        if ((siegeClan1 == null) && (attacker instanceof SiegeGuardInstance))
             return SystemMsg.INVALID_TARGET;
         Player playerAttacker = attacker.getPlayer();
         if (playerAttacker == null) {
@@ -469,7 +466,7 @@ public abstract class SiegeEvent<R extends Residence, S extends SiegeClanObject>
         if (_killListener == null)
             return;
 
-        if (object.isPlayer())
+        if (object instanceof Player)
             ((Player) object).addListener(_killListener);
     }
 
@@ -478,7 +475,7 @@ public abstract class SiegeEvent<R extends Residence, S extends SiegeClanObject>
         if (_killListener == null)
             return;
 
-        if (object.isPlayer())
+        if (object instanceof Player)
             ((Player) object).removeListener(_killListener);
     }
 
@@ -527,20 +524,19 @@ public abstract class SiegeEvent<R extends Residence, S extends SiegeClanObject>
 
     // ========================================================================================================================================================================
     public void addSiegeSummon(SummonInstance summon) {
-        _siegeSummons.add(summon.getRef());
+        siegeSummons.add(summon);
     }
 
     public boolean containsSiegeSummon(SummonInstance cha) {
-        return _siegeSummons.contains(cha.getRef());
+        return siegeSummons.contains(cha);
     }
 
     void despawnSiegeSummons() {
-        for (HardReference<SummonInstance> ref : _siegeSummons) {
-            SummonInstance summon = ref.get();
-            if (summon != null)
-                summon.unSummon();
-        }
-        _siegeSummons.clear();
+        siegeSummons.stream()
+                .filter(Objects::nonNull)
+                .forEach(SummonInstance::unSummon);
+
+        siegeSummons.clear();
     }
 
 
@@ -563,36 +559,34 @@ public abstract class SiegeEvent<R extends Residence, S extends SiegeClanObject>
         public void onKill(Creature actor, Creature victim) {
             Player winner = actor.getPlayer();
 
-            if (winner == null || !victim.isPlayer() || winner.getLevel() < 40 || winner == victim || victim.getEvent(SiegeEvent.this.getClass()) != SiegeEvent.this || !checkIfInZone(actor) || !checkIfInZone(victim))
-                return;
+            if (winner != null && victim instanceof Player && winner.getLevel() >= 40 && winner != victim && victim.getEvent(SiegeEvent.this.getClass()) == SiegeEvent.this && checkIfInZone(actor) && checkIfInZone(victim)) {
+                Player killed = (Player) victim;
 
-            Player killed = victim.getPlayer();
-            if (killed == null)
-                return;
+                if (killed.isVarSet("DisabledSiegeFame"))
+                    return;
 
-            if (killed.getVar("DisabledSiegeFame") != null)
-                return;
+                killed.setVar("DisabledSiegeFame", 1, System.currentTimeMillis() + 300000L);
 
-            killed.setVar("DisabledSiegeFame", "true", System.currentTimeMillis() + 300000L);
-
-            if (winner.getPlayerGroup() == killed.getPlayerGroup()) // Self, Party and Command Channel check.
-                return;
+                if (winner.getPlayerGroup() == killed.getPlayerGroup()) // Self, Party and Command Channel check.
+                    return;
 
 
-            if (winner.isInSameClan(killed)) {
-                return;
+                if (winner.isInSameClan(killed)) {
+                    return;
+                }
+                if (winner.getParty() == null)
+                    winner.addFame(Rnd.get(10, 20), SiegeEvent.this.toString());
+                else {
+                    for (Player member : winner.getParty().getMembers())
+                        member.addFame(Rnd.get(10, 20), SiegeEvent.this.toString());
+                }
+
+                if (SiegeEvent.this instanceof CastleSiegeEvent)
+                    winner.getCounters().playersKilledInSiege++;
+                if (SiegeEvent.this instanceof DominionSiegeEvent)
+                    winner.getCounters().playersKilledInDominion++;
             }
-            if (winner.getParty() == null)
-                winner.addFame(Rnd.get(10, 20), SiegeEvent.this.toString());
-            else {
-                for (Player member : winner.getParty().getMembers())
-                    member.addFame(Rnd.get(10, 20), SiegeEvent.this.toString());
-            }
 
-            if (SiegeEvent.this instanceof CastleSiegeEvent)
-                winner.getCounters().playersKilledInSiege++;
-            if (SiegeEvent.this instanceof DominionSiegeEvent)
-                winner.getCounters().playersKilledInDominion++;
         }
 
         @Override

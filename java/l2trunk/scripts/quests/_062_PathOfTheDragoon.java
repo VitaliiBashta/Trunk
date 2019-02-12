@@ -4,7 +4,6 @@ import l2trunk.gameserver.model.base.ClassId;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _062_PathOfTheDragoon extends Quest {
     private final int Shubain = 32194;
@@ -37,11 +36,11 @@ public final class _062_PathOfTheDragoon extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equals("master_tbwain_q0062_06.htm")) {
+        if ("master_tbwain_q0062_06.htm".equals(event)) {
             st.setState(STARTED);
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equals("master_shubain_q0062_02.htm"))
+        } else if ("master_shubain_q0062_02.htm".equals(event))
             st.setCond(2);
         return event;
     }
@@ -54,26 +53,25 @@ public final class _062_PathOfTheDragoon extends Quest {
         int cond = st.getCond();
         if (npcId == Gwain) {
             if (id == CREATED) {
-                if (st.getPlayer().getClassId() != ClassId.maleSoldier) {
+                if (st.player.getClassId() != ClassId.maleSoldier) {
                     htmltext = "master_tbwain_q0062_02.htm";
                     st.exitCurrentQuest(true);
-                } else if (st.getPlayer().getLevel() < 18) {
+                } else if (st.player.getLevel() < 18) {
                     htmltext = "master_tbwain_q0062_03.htm";
                     st.exitCurrentQuest(true);
                 } else
                     htmltext = "master_tbwain_q0062_01.htm";
             } else if (cond == 4) {
-                st.takeItems(ShubainsRecommendation, -1);
+                st.takeItems(ShubainsRecommendation);
                 st.setCond(5);
                 htmltext = "master_tbwain_q0062_08.htm";
             } else if (cond == 5 && st.getQuestItemsCount(TumranBugbearHeart) > 0) {
-                st.takeItems(TumranBugbearHeart, -1);
-                if (st.getPlayer().getClassId().getLevel() == 1) {
-                    st.giveItems(GwainsRecommendation, 1);
-                    if (!st.getPlayer().getVarB("prof1")) {
-                        st.getPlayer().setVar("prof1", "1", -1);
+                st.takeItems(TumranBugbearHeart);
+                if (st.player.getClassId().occupation() == 0) {
+                    st.giveItems(GwainsRecommendation);
+                    if (!st.player.isVarSet("prof1")) {
+                        st.player.setVar("prof1");
                         st.addExpAndSp(160267, 11023);
-                        //FIXME [G1ta0] дать адены, только если первый чар на акке
                         st.giveItems(ADENA_ID, 81900);
                     }
                 }
@@ -85,12 +83,12 @@ public final class _062_PathOfTheDragoon extends Quest {
             if (cond == 1)
                 htmltext = "master_shubain_q0062_01.htm";
             else if (cond == 2 && st.getQuestItemsCount(FelimHead) >= 5) {
-                st.takeItems(FelimHead, -1);
+                st.takeItems(FelimHead);
                 st.setCond(3);
                 htmltext = "master_shubain_q0062_04.htm";
             } else if (cond == 3 && st.getQuestItemsCount(VenomousSpiderLeg) >= 10) {
-                st.takeItems(VenomousSpiderLeg, -1);
-                st.giveItems(ShubainsRecommendation, 1);
+                st.takeItems(VenomousSpiderLeg);
+                st.giveItems(ShubainsRecommendation);
                 st.setCond(4);
                 htmltext = "master_shubain_q0062_06.htm";
             }
@@ -98,13 +96,13 @@ public final class _062_PathOfTheDragoon extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int id = npc.getNpcId();
         int cond = st.getCond();
         if (id == FelimLizardmanWarrior && cond == 2) {
             long count = st.getQuestItemsCount(FelimHead);
             if (count < 5) {
-                st.giveItems(FelimHead, 1);
+                st.giveItems(FelimHead);
                 if (count == 4)
                     st.playSound(SOUND_MIDDLE);
                 else
@@ -114,7 +112,7 @@ public final class _062_PathOfTheDragoon extends Quest {
         if (id == VenomousSpider && cond == 3) {
             long count = st.getQuestItemsCount(VenomousSpiderLeg);
             if (count < 10) {
-                st.giveItems(VenomousSpiderLeg, 1);
+                st.giveItems(VenomousSpiderLeg);
                 if (count == 9)
                     st.playSound(SOUND_MIDDLE);
                 else
@@ -123,9 +121,8 @@ public final class _062_PathOfTheDragoon extends Quest {
         }
         if (id == TumranBugbear && cond == 5)
             if (st.getQuestItemsCount(TumranBugbearHeart) == 0) {
-                st.giveItems(TumranBugbearHeart, 1);
+                st.giveItems(TumranBugbearHeart);
                 st.playSound(SOUND_MIDDLE);
             }
-        return null;
     }
 }

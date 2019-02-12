@@ -13,7 +13,7 @@ public class ExFishingStart extends L2GameServerPacket {
     private final boolean _isNightLure;
 
     public ExFishingStart(Creature character, int fishType, Location loc, boolean isNightLure) {
-        _charObjId = character.getObjectId();
+        _charObjId = character.objectId();
         _fishType = fishType;
         _loc = loc;
         _isNightLure = isNightLure;

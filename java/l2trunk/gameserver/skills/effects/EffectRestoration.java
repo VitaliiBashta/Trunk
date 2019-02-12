@@ -2,6 +2,7 @@ package l2trunk.gameserver.skills.effects;
 
 import l2trunk.gameserver.model.Effect;
 import l2trunk.gameserver.model.Playable;
+import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.stats.Env;
 import l2trunk.gameserver.utils.ItemFunctions;
 
@@ -14,20 +15,15 @@ public final class EffectRestoration extends Effect {
 
     public EffectRestoration(Env env, EffectTemplate template) {
         super(env, template);
-        String item = getTemplate().getParam().getString("Item");
-        itemId = toInt(item.split(":")[0]);
-        count = toLong(item.split(":")[1]);
-
+        String[] item = getTemplate().getParam().getString("Item").split(":");
+        itemId = toInt(item[0]);
+        count = toLong(item[1]);
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        ItemFunctions.addItem((Playable) effected, itemId, count, true, "EffectRestoration");
+        ItemFunctions.addItem((Player) effected, itemId, count, "EffectRestoration");
     }
 
-    @Override
-    protected boolean onActionTime() {
-        return false;
-    }
 }

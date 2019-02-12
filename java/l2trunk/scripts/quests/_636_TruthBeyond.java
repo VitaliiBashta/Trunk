@@ -21,11 +21,11 @@ public final class _636_TruthBeyond extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equals("priest_eliyah_q0636_05.htm")) {
+        if ("priest_eliyah_q0636_05.htm".equals(event)) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equals("falsepriest_flauron_q0636_02.htm")) {
+        } else if ("falsepriest_flauron_q0636_02.htm".equals(event)) {
             st.playSound(SOUND_FINISH);
             st.giveItems(VISITORSMARK, 1);
             st.exitCurrentQuest(true);
@@ -40,7 +40,7 @@ public final class _636_TruthBeyond extends Quest {
         int cond = st.getCond();
         if (npcId == ELIYAH && cond == 0) {
             if (st.getQuestItemsCount(VISITORSMARK) == 0 && st.getQuestItemsCount(MARK) == 0) {
-                if (st.getPlayer().getLevel() > 72)
+                if (st.player.getLevel() > 72)
                     htmltext = "priest_eliyah_q0636_01.htm";
                 else {
                     htmltext = "priest_eliyah_q0636_03.htm";

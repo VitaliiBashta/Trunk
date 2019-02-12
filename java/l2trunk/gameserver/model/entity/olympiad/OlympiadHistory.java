@@ -39,11 +39,11 @@ public final class OlympiadHistory {
         int team = objectId1 == target ? 1 : 2;
         String main;
         if (gameStatus == 0)
-            main = StringHolder.INSTANCE.getNotNull(player, "hero.history.tie");
+            main = StringHolder.INSTANCE.getNotNull("hero.history.tie");
         else if (team == gameStatus)
-            main = StringHolder.INSTANCE.getNotNull(player, "hero.history.win");
+            main = StringHolder.INSTANCE.getNotNull("hero.history.win");
         else
-            main = StringHolder.INSTANCE.getNotNull(player, "hero.history.loss");
+            main = StringHolder.INSTANCE.getNotNull("hero.history.loss");
 
         main = main.replace("%classId%", String.valueOf(team == 1 ? classId2 : classId1));
         main = main.replace("%name%", team == 1 ? name2 : name1);

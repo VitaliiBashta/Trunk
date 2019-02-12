@@ -7,7 +7,6 @@ import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.network.serverpackets.ExChangeNicknameNColor;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-import java.util.Arrays;
 import java.util.List;
 
 public final class NameColor extends SimpleItemHandler implements ScriptFile {
@@ -19,18 +18,13 @@ public final class NameColor extends SimpleItemHandler implements ScriptFile {
     }
 
     @Override
-    public boolean pickupItem(Playable playable, ItemInstance item) {
-        return true;
-    }
-
-    @Override
     public void onLoad() {
         ItemHandler.INSTANCE.registerItemHandler(this);
     }
 
     @Override
     protected boolean useItemImpl(Player player, ItemInstance item, boolean ctrl) {
-        player.sendPacket(new ExChangeNicknameNColor(item.getObjectId()));
+        player.sendPacket(new ExChangeNicknameNColor(item.objectId()));
         return true;
     }
 }

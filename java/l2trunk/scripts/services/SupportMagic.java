@@ -2,11 +2,12 @@ package l2trunk.scripts.services;
 
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Player;
+import l2trunk.gameserver.model.Summon;
 import l2trunk.gameserver.model.base.Race;
 import l2trunk.gameserver.model.instances.NpcInstance;
+import l2trunk.gameserver.model.instances.SummonInstance;
 import l2trunk.gameserver.network.serverpackets.MagicSkillUse;
 import l2trunk.gameserver.scripts.Functions;
-import l2trunk.gameserver.tables.SkillTable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,24 +59,21 @@ public final class SupportMagic extends Functions {
     private final static int maxSupLvl = 75;
 
     public void getSupportMagic() {
-        doSupportMagic(getNpc(), getSelf(), false);
+        doSupportMagic(npc, player, false);
     }
 
     public void getSupportServitorMagic() {
-        doSupportMagic(getNpc(), getSelf(), true);
+        doSupportMagic(npc, player, true);
     }
 
     public void getProtectionBlessing() {
-        Player player = getSelf();
-        NpcInstance npc = getNpc();
-
-        if (player == null || npc == null || !npc.isInRange(player, 1000L))
+        if (npc == null || !npc.isInRange(player, 1000L))
             return;
 
         // Не выдаём блессиг протекшена ПКшникам.
         if (player.getKarma() > 0)
             return;
-        if (player.getLevel() > 39 || player.getClassId().getLevel() >= 3) {
+        if (player.getLevel() > 39 || player.getClassId().occupation() > 1) {
             show("default/newbie_blessing_no.htm", player, npc);
             return;
         }
@@ -87,8 +85,8 @@ public final class SupportMagic extends Functions {
         if (npc == null || !npc.isInRange(player, 1000L) || player.isCursedWeaponEquipped())
             return;
         int lvl = player.getLevel();
-
-        if (servitor && (player.getPet() == null || !player.getPet().isSummon())) {
+        Summon pet = player.getPet();
+        if (servitor && (!(pet instanceof SummonInstance))) {
             show("default/newbie_nosupport_servitor.htm", player, npc);
             return;
         } else {
@@ -105,11 +103,11 @@ public final class SupportMagic extends Functions {
         List<Creature> target = new ArrayList<>();
 
         if (servitor) {
-            target.add(player.getPet());
+            target.add(pet);
 
             for (int[] buff : _summonBuff)
                 if (lvl >= buff[0] && lvl <= buff[1]) {
-                    npc.broadcastPacket(new MagicSkillUse(npc, player.getPet(), buff[2], buff[3]));
+                    npc.broadcastPacket(new MagicSkillUse(npc, pet, buff[2], buff[3]));
                     npc.callSkill(buff[2], buff[3], target, true);
                 }
         } else {

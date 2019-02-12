@@ -34,13 +34,13 @@ import java.util.stream.Stream;
 
 public class Reflection {
     private final static AtomicInteger _nextId = new AtomicInteger();
+    public final int id;
     protected final Lock lock = new ReentrantLock();
     protected final List<GameObject> objects = new CopyOnWriteArrayList<>();
-    private final int id;
     private final ReflectionListenerList listeners = new ReflectionListenerList();
     private final List<Spawner> spawns = new ArrayList<>();
     private final Set<Integer> visitors = new HashSet<>();
-    int _playerCount;
+    int playerCount;
     // vars
     private Map<Integer, DoorInstance> doors = new HashMap<>();
     private Map<String, Zone> zones = Collections.emptyMap();
@@ -82,10 +82,6 @@ public class Reflection {
         return new Reflection(id);
     }
 
-    public int getId() {
-        return id;
-    }
-
     public int getInstancedZoneId() {
         return instance == null ? 0 : instance.getId();
     }
@@ -114,7 +110,7 @@ public class Reflection {
         this.name = name;
     }
 
-    public InstantZone getInstancedZone() {
+    public final InstantZone getInstancedZone() {
         return instance;
     }
 
@@ -221,7 +217,7 @@ public class Reflection {
     private synchronized void minuteBeforeCollapse() {
         if (isCollapseStarted) return;
         objects.stream()
-                .filter(GameObject::isPlayer)
+                .filter(o -> o instanceof Player)
                 .map(o -> (Player) o)
                 .forEach(player -> {
                     if (player.isInParty())
@@ -271,9 +267,9 @@ public class Reflection {
             lock.lock();
             try {
                 for (GameObject o : objects) {
-                    if (o.isPlayer()) {
+                    if (o instanceof Player) {
                         teleport.add((Player) o);
-                    } else if (!o.isPlayable()) {
+                    } else if (!(o instanceof Playable)) {
                         delete.add(o);
                     }
                 }
@@ -316,7 +312,7 @@ public class Reflection {
             visitors.clear();
             doors.clear();
 
-            _playerCount = 0;
+            playerCount = 0;
 
             onCollapse();
         } finally {
@@ -336,10 +332,10 @@ public class Reflection {
         lock.lock();
         try {
             objects.add(o);
-            if (o.isPlayer()) {
-                _playerCount++;
-                visitors.add(o.getObjectId());
-                onPlayerEnter(o.getPlayer());
+            if (o instanceof Player) {
+                playerCount++;
+                visitors.add(o.objectId());
+                onPlayerEnter((Player) o);
             }
         } finally {
             lock.unlock();
@@ -360,15 +356,15 @@ public class Reflection {
             if (!objects.remove(o)) {
                 return;
             }
-            if (o.isPlayer()) {
-                _playerCount--;
-                onPlayerExit(o.getPlayer());
+            if (o instanceof Player) {
+                playerCount--;
+                onPlayerExit((Player) o);
             }
         } finally {
             lock.unlock();
         }
 
-        if ((_playerCount <= 0) && !isDefault() && (_hiddencollapseTask == null)) {
+        if ((playerCount <= 0) && !isDefault() && (_hiddencollapseTask == null)) {
             if (_collapseIfEmptyTime <= 0) {
                 collapse();
             } else {
@@ -389,19 +385,19 @@ public class Reflection {
 
     public synchronized Stream<Player> getPlayers() {
         return objects.stream()
-                .filter(GameObject::isPlayer)
+                .filter(o -> o instanceof Player)
                 .map(o -> (Player) o);
     }
 
     public synchronized Stream<NpcInstance> getNpcs() {
         return objects.stream()
-                .filter(GameObject::isNpc)
+                .filter(o -> o instanceof NpcInstance)
                 .map(o -> (NpcInstance) o);
     }
 
     public Stream<NpcInstance> getAllByNpcId(int npcId, boolean onlyAlive) {
         return objects.stream()
-                .filter(GameObject::isNpc)
+                .filter(o -> o instanceof NpcInstance)
                 .map(o -> (NpcInstance) o)
                 .filter(npc -> npcId == npc.getNpcId())
                 .filter(npc -> (!onlyAlive || !npc.isDead()));
@@ -614,6 +610,18 @@ public class Reflection {
         }
     }
 
+    public NpcInstance addSpawnWithoutRespawn(int npcId, GameObject object) {
+        return addSpawnWithoutRespawn(npcId, object, 0);
+    }
+
+    public NpcInstance addSpawnWithoutRespawn(int npcId, GameObject object, int randomOffset) {
+        return addSpawnWithoutRespawn(npcId, object.getLoc(), randomOffset);
+    }
+
+    public NpcInstance addSpawnWithoutRespawn(int npcId, Location loc) {
+        return addSpawnWithoutRespawn(npcId, loc, 0);
+    }
+
     public NpcInstance addSpawnWithoutRespawn(int npcId, Location loc, int randomOffset) {
         Location newLoc;
         if (randomOffset > 0) {
@@ -636,7 +644,7 @@ public class Reflection {
     }
 
     public boolean isDefault() {
-        return getId() <= 0;
+        return id <= 0;
     }
 
     public Set<Integer> getVisitors() {
@@ -674,7 +682,7 @@ public class Reflection {
         instance = instantZone;
 
         if (instantZone.getMapX() >= 0) {
-            int geoIndex = GeoEngine.NextGeoIndex(instantZone.getMapX(), instantZone.getMapY(), getId());
+            int geoIndex = GeoEngine.NextGeoIndex(instantZone.getMapX(), instantZone.getMapY(), id);
             setGeoIndex(geoIndex);
         }
 

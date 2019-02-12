@@ -35,7 +35,7 @@ public final class ZoneTemplate {
      */
     private final Race _affectRace;
 
-    private final ZoneTarget _target;
+    private final ZoneTarget target;
 
     private final Skill skill;
     private final int skillProb;
@@ -94,7 +94,7 @@ public final class ZoneTemplate {
         _enteringMessageId = set.getInteger("entering_message_no", 0);
         _leavingMessageId = set.getInteger("leaving_message_no", 0);
 
-        _target = ZoneTarget.valueOf(set.getString("target", "pc"));
+        target = ZoneTarget.valueOf(set.getString("target", "pc"));
         _affectRace = set.getString("affect_race", "all").equals("all") ? null : Race.valueOf(set.getString("affect_race"));
 
         //Зона с эффектом
@@ -187,7 +187,7 @@ public final class ZoneTemplate {
     }
 
     public ZoneTarget getZoneTarget() {
-        return _target;
+        return target;
     }
 
     public Race getAffectRace() {

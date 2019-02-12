@@ -6,7 +6,9 @@ import l2trunk.gameserver.ai.Fighter;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.SimpleSpawner;
 import l2trunk.gameserver.model.Skill;
+import l2trunk.gameserver.model.Summon;
 import l2trunk.gameserver.model.instances.NpcInstance;
+import l2trunk.gameserver.model.instances.SummonInstance;
 import l2trunk.gameserver.utils.Location;
 
 public final class FrostBuffalo extends Fighter {
@@ -29,7 +31,7 @@ public final class FrostBuffalo extends Fighter {
                 SimpleSpawner sp = new SimpleSpawner(MOBS);
                 sp.setLoc(Location.findPointToStay(actor, 100, 120));
                 NpcInstance npc = sp.doSpawn(true);
-                if (caster.isPet() || caster.isSummon())
+                if (caster instanceof Summon)
                     npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, caster, Rnd.get(2, 100));
                 npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, caster.getPlayer(), Rnd.get(1, 100));
             }

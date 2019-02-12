@@ -16,6 +16,6 @@ public class L2FriendStatus extends L2GameServerPacket {
         writeC(0x77);
         writeD(_login ? 1 : 0); //Logged in 1 logged off 0
         writeS(_charName);
-        writeD(0); //id персонажа с базы оффа, не object_id
+        writeD(0); //id персонажа с базы оффа, не objectId
     }
 }

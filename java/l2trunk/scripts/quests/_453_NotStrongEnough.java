@@ -66,8 +66,7 @@ public final class _453_NotStrongEnough extends Quest {
         if (npcId == Klemis) {
             switch (st.getState()) {
                 case CREATED: {
-                    QuestState qs = st.getPlayer().getQuestState(_10282_ToTheSeedOfAnnihilation.class);
-                    if (st.getPlayer().getLevel() >= 84 && qs != null && qs.isCompleted()) {
+                    if (st.player.getLevel() >= 84 && st.player.isQuestCompleted(_10282_ToTheSeedOfAnnihilation.class)) {
                         if (st.isNowAvailable())
                             htmltext = "klemis_q453_01.htm";
                         else
@@ -101,7 +100,7 @@ public final class _453_NotStrongEnough extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         boolean doneKill = updateKill(npc, st);
         if (doneKill) {
             st.unset(A_MOBS);
@@ -110,6 +109,5 @@ public final class _453_NotStrongEnough extends Quest {
             st.unset(E_MOBS);
             st.setCond(5);
         }
-        return null;
     }
 }

@@ -2,17 +2,18 @@ package l2trunk.scripts.handler.items;
 
 import l2trunk.gameserver.cache.Msg;
 import l2trunk.gameserver.handler.items.ItemHandler;
-import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.network.serverpackets.SystemMessage;
-import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.scripts.ScriptFile;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static l2trunk.gameserver.utils.ItemFunctions.addItem;
+import static l2trunk.gameserver.utils.ItemFunctions.removeItem;
 
 public final class PathfinderEquipment extends SimpleItemHandler implements ScriptFile {
     private static final Map<Integer, int[][]> rewards = new HashMap<>();
@@ -71,11 +72,6 @@ public final class PathfinderEquipment extends SimpleItemHandler implements Scri
     }
 
     @Override
-    public boolean pickupItem(Playable playable, ItemInstance item) {
-        return true;
-    }
-
-    @Override
     public void onLoad() {
         ItemHandler.INSTANCE.registerItemHandler(this);
     }
@@ -91,13 +87,13 @@ public final class PathfinderEquipment extends SimpleItemHandler implements Scri
         if (_rewards == null || _rewards.length <= 0)
             return false;
 
-        if (Functions.removeItem(player, itemId, 1, "Pathfinder") != 1)
+        if (removeItem(player, itemId, 1, "Pathfinder") != 1)
             return false;
 
         for (int[] reward : _rewards)
             if (reward.length == 2)
                 if (reward[0] > 0 && reward[1] > 0)
-                    Functions.addItem(player, reward[0], reward[1], "Pathfinder");
+                    addItem(player, reward[0], reward[1]);
 
         return true;
     }

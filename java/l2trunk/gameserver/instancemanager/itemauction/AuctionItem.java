@@ -6,16 +6,16 @@ import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.utils.ItemFunctions;
 
 public final class AuctionItem extends ItemInfo {
-    private final int _auctionItemId;
-    private final int _auctionLength;
-    private final long _auctionInitBid;
+    private final int auctionItemId;
+    private final int auctionLength;
+    private final long auctionInitBid;
 
     public AuctionItem(final int auctionItemId, final int auctionLength, final long auctionInitBid,
                        final int itemId, final long itemCount, boolean altByItem,
                        final StatsSet itemExtra) {
-        _auctionItemId = auctionItemId;
-        _auctionLength = auctionLength;
-        _auctionInitBid = auctionInitBid;
+        this.auctionItemId = auctionItemId;
+        this.auctionLength = auctionLength;
+        this.auctionInitBid = auctionInitBid;
 
         setObjectId(itemId);
         setItemId(itemId);
@@ -26,15 +26,15 @@ public final class AuctionItem extends ItemInfo {
     }
 
     public final int getAuctionItemId() {
-        return _auctionItemId;
+        return auctionItemId;
     }
 
     public final int getAuctionLength() {
-        return _auctionLength;
+        return auctionLength;
     }
 
     public final long getAuctionInitBid() {
-        return _auctionInitBid;
+        return auctionInitBid;
     }
 
     public final ItemInstance createNewItemInstance() {

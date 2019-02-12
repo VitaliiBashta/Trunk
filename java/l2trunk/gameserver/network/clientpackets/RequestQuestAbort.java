@@ -5,7 +5,7 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
-public class RequestQuestAbort extends L2GameClientPacket {
+public final class RequestQuestAbort extends L2GameClientPacket {
     private int _questID;
 
     @Override
@@ -23,7 +23,7 @@ public class RequestQuestAbort extends L2GameClientPacket {
         if (!quest.canAbortByPacket())
             return;
 
-        QuestState qs = activeChar.getQuestState(quest.getClass());
+        QuestState qs = activeChar.getQuestState(quest);
         if (qs != null && !qs.isCompleted())
             qs.abortQuest();
     }

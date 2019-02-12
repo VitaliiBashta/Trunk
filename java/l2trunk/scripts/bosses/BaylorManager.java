@@ -287,7 +287,7 @@ public final class BaylorManager extends Functions implements ScriptFile {
                     Dying = false;
 
                     _baylor = spawn(new Location(153569, 142075, -12732, 59864), Baylor);
-                    _baylor.addListener(BaylorDeathListener.getInstance());
+                    _baylor.addListener(new BaylorDeathListener());
 
                     _state.setRespawnDate(getRespawnInterval() + FWBA_ACTIVITYTIMEOFMOBS);
                     _state.setState(EpicBossState.State.ALIVE);
@@ -327,14 +327,14 @@ public final class BaylorManager extends Functions implements ScriptFile {
 
         @Override
         public void runImpl() {
-            npc.broadcastPacket(new SocialAction(npc.getObjectId(), action));
+            npc.broadcastPacket(new SocialAction(npc.objectId(), action));
         }
     }
 
     private static class EndScene extends RunnableImpl {
         @Override
         public void runImpl() {
-            getPlayersInside().forEach(player ->  {
+            getPlayersInside().forEach(player -> {
                 player.setBlock();
                 if (_baylor != null) {
                     double angle = PositionUtils.convertHeadingToDegree(_baylor.getHeading());
@@ -353,25 +353,17 @@ public final class BaylorManager extends Functions implements ScriptFile {
 
     private static class BaylorZoneListener implements OnZoneEnterLeaveListener {
         @Override
-        public void onZoneEnter(Zone zone, Creature actor) {
-            if (actor.isPlayer())
-                actor.addListener(PlayerDeathListener.getInstance());
+        public void onZoneEnter(Zone zone, Player actor) {
+            actor.addListener((OnDeathListener) (actor1, killer) -> checkAnnihilated());
         }
 
         @Override
-        public void onZoneLeave(Zone zone, Creature actor) {
-            if (actor.isPlayer())
-                actor.removeListener(PlayerDeathListener.getInstance());
+        public void onZoneLeave(Zone zone, Player actor) {
+            actor.removeListener(new PlayerDeathListener());
         }
     }
 
     private static class PlayerDeathListener implements OnDeathListener {
-        private static final OnDeathListener _instance = new PlayerDeathListener();
-
-        static OnDeathListener getInstance() {
-            return _instance;
-        }
-
         @Override
         public void onDeath(Creature actor, Creature killer) {
             checkAnnihilated();
@@ -379,12 +371,6 @@ public final class BaylorManager extends Functions implements ScriptFile {
     }
 
     private static class BaylorDeathListener implements OnDeathListener {
-        private static final OnDeathListener _instance = new BaylorDeathListener();
-
-        static OnDeathListener getInstance() {
-            return _instance;
-        }
-
         @Override
         public void onDeath(Creature actor, Creature killer) {
             onBaylorDie();

@@ -10,8 +10,8 @@ public class ExStopMoveInAirShip extends L2GameServerPacket {
     private final Location _loc;
 
     public ExStopMoveInAirShip(Player cha) {
-        char_id = cha.getObjectId();
-        boat_id = cha.getBoat().getObjectId();
+        char_id = cha.objectId();
+        boat_id = cha.getBoat().objectId();
         _loc = cha.getInBoatPosition();
         char_heading = cha.getHeading();
     }

@@ -45,14 +45,11 @@ public final class NpcSayAction implements EventAction {
                         if (tx >= rx - offset && tx <= rx + offset && ty >= ry - offset && ty <= ry + offset)
                             packet(npc, player);
                     });
-        } else {
-            World.getAroundPlayers(npc, _range, Math.max(_range / 2, 200))
-                    .filter(player -> npc.getReflection() == player.getReflection())
-                    .forEach(player -> packet(npc, player));
-        }
+        } else World.getAroundPlayers(npc, _range, Math.max(_range / 2, 200))
+                .forEach(player -> packet(npc, player));
     }
 
     private void packet(NpcInstance npc, Player player) {
-        player.sendPacket(new NpcSay(npc, _chatType, _text));
+        player.sendPacket(new NpcSay(npc, _chatType, _text,""));
     }
 }

@@ -10,11 +10,6 @@ public final class ArtefactInstance extends NpcInstance {
     }
 
     @Override
-    public boolean isArtefact() {
-        return true;
-    }
-
-    @Override
     public boolean isAutoAttackable(Creature attacker) {
         return false;
     }
@@ -24,13 +19,6 @@ public final class ArtefactInstance extends NpcInstance {
         return false;
     }
 
-    /**
-     * Артефакт нельзя убить
-     */
-    @Override
-    public boolean isInvul() {
-        return true;
-    }
 
     @Override
     public boolean isFearImmune() {

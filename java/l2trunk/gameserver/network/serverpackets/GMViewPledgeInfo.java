@@ -18,7 +18,7 @@ public class GMViewPledgeInfo extends L2GameServerPacket {
     private final int hasCastle;
     private final int hasHideout;
     private final int hasFortress;
-    private final int atWar;
+    private final boolean atWar;
     private final List<PledgeMemberInfo> infos = new ArrayList<>();
     private String char_name;
     private int clan_id;
@@ -34,13 +34,13 @@ public class GMViewPledgeInfo extends L2GameServerPacket {
             char_name = member.getName();
             clan_level = member.getLevel();
             clan_id = member.getClassId();
-            clan_crest_id = member.isOnline() ? member.getObjectId() : 0;
+            clan_crest_id = member.isOnline() ? member.objectId() : 0;
             rep = member.getSponsor() != 0 ? 1 : 0;
             infos.add(new PledgeMemberInfo(char_name, clan_level, clan_id, clan_crest_id, member.getSex(), 1, rep));
         }
 
         char_name = activeChar.getName();
-        clan_id = clan.getClanId();
+        clan_id = clan.clanId();
         clan_name = clan.getName();
         leader_name = clan.getLeaderName();
         clan_crest_id = clan.getCrestId();

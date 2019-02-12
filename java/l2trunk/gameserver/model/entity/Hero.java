@@ -40,7 +40,6 @@ public enum Hero {
     public static final String ALLY_NAME = "ally_name";
     public static final String ALLY_CREST = "ally_crest";
     public static final String ACTIVE = "active";
-    public static final String MESSAGE = "message";  //TODO [VISTALL]
     private static final String PLAYED = "played";
     private static final Logger LOG = LoggerFactory.getLogger(Hero.class);
     private static final String GET_HEROES = "SELECT * FROM heroes WHERE played = 1";
@@ -67,7 +66,7 @@ public enum Hero {
              PreparedStatement statement = con.prepareStatement("REPLACE INTO heroes (char_id, count, played, active) VALUES (?,?,?,?)")) {
 
             for (Integer heroId : heroes.keySet()) {
-                int id = player.getObjectId();
+                int id = player.objectId();
                 if (id > 0 && heroId != id)
                     continue;
                 StatsSet hero = heroes.get(heroId);
@@ -107,11 +106,9 @@ public enum Hero {
         _herodiary = new ConcurrentHashMap<>();
         _heroMessage = new ConcurrentHashMap<>();
 
-        PreparedStatement statement = null;
-        ResultSet rset = null;
         try (Connection con = DatabaseFactory.getInstance().getConnection()) {
-            statement = con.prepareStatement(GET_HEROES);
-            rset = statement.executeQuery();
+            PreparedStatement statement = con.prepareStatement(GET_HEROES);
+            ResultSet rset = statement.executeQuery();
             while (rset.next()) {
                 StatsSet hero = new StatsSet();
                 int charId = rset.getInt(Olympiad.CHAR_ID);
@@ -261,23 +258,23 @@ public enum Hero {
     }
 
     public void activateHero(Player player) {
-        StatsSet hero = heroes.get(player.getObjectId());
+        StatsSet hero = heroes.get(player.objectId());
         hero.set(ACTIVE, 1);
-        heroes.remove(player.getObjectId());
-        heroes.put(player.getObjectId(), hero);
+        heroes.remove(player.objectId());
+        heroes.put(player.objectId(), hero);
 
         if (player.getBaseClassId() == player.getActiveClassId())
             addSkills(player);
 
         player.setHero(true);
         player.updatePledgeClass();
-        player.broadcastPacket(new SocialAction(player.getObjectId(), SocialAction.GIVE_HERO));
+        player.broadcastPacket(new SocialAction(player.objectId(), SocialAction.GIVE_HERO));
         if (player.getClan() != null && player.getClan().getLevel() >= 5) {
             player.getClan().incReputation(1000, true, "Hero:activateHero:" + player);
             player.getClan().broadcastToOtherOnlineMembers(new SystemMessage(SystemMessage.CLAN_MEMBER_S1_WAS_NAMED_A_HERO_2S_POINTS_HAVE_BEEN_ADDED_TO_YOUR_CLAN_REPUTATION_SCORE).addString(player.getName()).addNumber(Math.round(1000 * Config.RATE_CLAN_REP_SCORE)), player);
         }
         player.broadcastUserInfo(true);
-        updateHeroes(player.getObjectId());
+        updateHeroes(player.objectId());
 
         player.getCounters().timesHero++;
     }
@@ -315,7 +312,7 @@ public enum Hero {
         if (mainlist != null) {
             NpcHtmlMessage html = new NpcHtmlMessage(activeChar, null);
             html.setFile("olympiad/monument_hero_info.htm");
-            html.replace("%title%", StringHolder.INSTANCE.getNotNull(activeChar, "hero.diary"));
+            html.replace("%title%", StringHolder.INSTANCE.getNotNull("hero.diary"));
             html.replace("%heroname%", Olympiad.getNobleName(charid));
             html.replace("%message%", _heroMessage.get(charid));
 

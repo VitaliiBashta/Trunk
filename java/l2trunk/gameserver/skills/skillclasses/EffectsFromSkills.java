@@ -17,6 +17,6 @@ public final class EffectsFromSkills extends Skill {
         targets.stream()
                 .filter(Objects::nonNull)
                 .forEach(target -> getAddedSkills().forEach(as ->
-                        as.getSkill().getEffects(activeChar, target)));
+                        as.skill.getEffects(activeChar, target)));
     }
 }

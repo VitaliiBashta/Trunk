@@ -57,7 +57,7 @@ public class MoveBackwardToLocation extends L2GameClientPacket {
             if (activeChar.getOlympiadObserveGame() == null)
                 activeChar.sendActionFailed();
             else
-                activeChar.sendPacket(new CharMoveToLocation(activeChar.getObjectId(), _originLoc, _targetLoc));
+                activeChar.sendPacket(new CharMoveToLocation(activeChar.objectId(), _originLoc, _targetLoc));
             return;
         }
 
@@ -77,6 +77,6 @@ public class MoveBackwardToLocation extends L2GameClientPacket {
         if (activeChar.isInFlyingTransform())
             _targetLoc.z = Math.min(5950, Math.max(50, _targetLoc.z)); // В летающей трансформе нельзя летать ниже, чем 0, и выше, чем 6000
 
-        activeChar.moveToLocation(_targetLoc, 0, _moveMovement != 0 && !activeChar.getVarB("no_pf"));
+        activeChar.moveToLocation(_targetLoc, 0, _moveMovement != 0 && !activeChar.isVarSet("no_pf"));
     }
 }

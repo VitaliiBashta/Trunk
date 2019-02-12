@@ -3,10 +3,7 @@ package l2trunk.scripts.handler.items;
 import l2trunk.gameserver.cache.Msg;
 import l2trunk.gameserver.handler.items.ItemHandler;
 import l2trunk.gameserver.instancemanager.MapRegionHolder;
-import l2trunk.gameserver.model.Manor;
-import l2trunk.gameserver.model.Playable;
-import l2trunk.gameserver.model.Player;
-import l2trunk.gameserver.model.Skill;
+import l2trunk.gameserver.model.*;
 import l2trunk.gameserver.model.instances.ChestInstance;
 import l2trunk.gameserver.model.instances.MinionInstance;
 import l2trunk.gameserver.model.instances.MonsterInstance;
@@ -22,15 +19,10 @@ import java.util.List;
 import java.util.Set;
 
 public final class Seed extends ScriptItemHandler implements ScriptFile {
-    private static Set<Integer> _itemIds;
+    private static Set<Integer> itemIds;
 
     public Seed() {
-        _itemIds = Manor.INSTANCE.getAllSeeds().keySet();
-    }
-
-    @Override
-    public boolean pickupItem(Playable playable, ItemInstance item) {
-        return true;
+        itemIds = Manor.INSTANCE.getAllSeeds();
     }
 
     @Override
@@ -39,38 +31,30 @@ public final class Seed extends ScriptItemHandler implements ScriptFile {
     }
 
     @Override
-    public boolean useItem(Playable playable, ItemInstance item, boolean ctrl) {
-        if (playable == null || !playable.isPlayer())
-            return false;
-        Player player = (Player) playable;
-
+    public boolean useItem(Player player, ItemInstance item, boolean ctrl) {
         // Цель не выбрана
-        if (playable.getTarget() == null) {
+        if (player.getTarget() == null) {
             player.sendActionFailed();
             return false;
         }
 
         // Цель не моб, РБ или миньон
-        if (!player.getTarget().isMonster() || player.getTarget() instanceof RaidBossInstance || player.getTarget() instanceof MinionInstance && ((MinionInstance) player.getTarget()).getLeader() instanceof RaidBossInstance || player.getTarget() instanceof ChestInstance || ((MonsterInstance) playable.getTarget()).getChampion() > 0 && !item.isAltSeed()) {
+        GameObject target = player.getTarget();
+        if (!(target instanceof MonsterInstance) || target instanceof RaidBossInstance || target instanceof MinionInstance  || target instanceof ChestInstance) {
             player.sendPacket(SystemMsg.THE_TARGET_IS_UNAVAILABLE_FOR_SEEDING);
             return false;
         }
 
-        MonsterInstance target = (MonsterInstance) playable.getTarget();
-
-        if (target == null) {
-            player.sendPacket(Msg.INVALID_TARGET);
-            return false;
-        }
+        MonsterInstance monster = (MonsterInstance) target;
 
         // Моб мертв
-        if (target.isDead()) {
+        if (monster.isDead()) {
             player.sendPacket(Msg.INVALID_TARGET);
             return false;
         }
 
         // Уже посеяно
-        if (target.isSeeded()) {
+        if (monster.isSeeded()) {
             player.sendPacket(SystemMsg.THE_SEED_HAS_BEEN_SOWN);
             return false;
         }
@@ -96,15 +80,15 @@ public final class Seed extends ScriptItemHandler implements ScriptFile {
             return false;
         }
 
-        if (skill.checkCondition(player, target, false, false, true)) {
+        if (skill.checkCondition(player, monster, false, false, true)) {
             player.setUseSeed(seedId);
-            player.getAI().cast(skill, target);
+            player.getAI().cast(skill, monster);
         }
         return true;
     }
 
     @Override
     public final List<Integer> getItemIds() {
-        return new ArrayList<>(_itemIds);
+        return new ArrayList<>(itemIds);
     }
 }

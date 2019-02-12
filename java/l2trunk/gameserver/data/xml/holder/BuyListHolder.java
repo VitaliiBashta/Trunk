@@ -92,7 +92,7 @@ public enum BuyListHolder {
                                                             continue;
                                                         counterItems++;
 
-                                                        long price = i.getAttributes().getNamedItem("price") != null ? Long.parseLong(i.getAttributes().getNamedItem("price").getNodeValue()) : Math.round(template.getReferencePrice() * markup);
+                                                        long price = i.getAttributes().getNamedItem("price") != null ? Long.parseLong(i.getAttributes().getNamedItem("price").getNodeValue()) : Math.round(template.referencePrice * markup);
                                                         TradeItem item = new TradeItem();
                                                         item.setItemId(itemId);
                                                         final int itemCount = i.getAttributes().getNamedItem("count") != null ? Integer.parseInt(i.getAttributes().getNamedItem("count").getNodeValue()) : 0;
@@ -128,13 +128,13 @@ public enum BuyListHolder {
         if (template.isEquipment() && !template.isForPet() && Config.ALT_SHOP_PRICE_LIMITS.size() > 0)
             for (int i = 0; i < Config.ALT_SHOP_PRICE_LIMITS.size(); i += 2)
                 if (template.getBodyPart() == Config.ALT_SHOP_PRICE_LIMITS.get(i)) {
-                    if (template.getReferencePrice() > Config.ALT_SHOP_PRICE_LIMITS.get(i + 1))
+                    if (template.referencePrice > Config.ALT_SHOP_PRICE_LIMITS.get(i + 1))
                         return false;
                     break;
                 }
         if (Config.ALT_SHOP_UNALLOWED_ITEMS.size() > 0)
             return Config.ALT_SHOP_UNALLOWED_ITEMS.stream()
-                    .noneMatch(i -> template.getItemId() == i);
+                    .noneMatch(i -> template.itemId() == i);
         return true;
     }
 

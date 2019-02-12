@@ -62,16 +62,16 @@ public class AdminRes implements IAdminCommandHandler {
         if (!target.isDead())
             return;
 
-        if (target.isPlayable()) {
-            if (target.isPlayer())
+        if (target instanceof Playable) {
+            if (target instanceof Player)
                 ((Player) target).doRevive(100.);
             else
                 ((Playable) target).doRevive();
-        } else if (target.isNpc())
+        } else if (target instanceof NpcInstance)
             ((NpcInstance) target).stopDecay();
 
         target.setFullHpMp();
-        target.setCurrentCp(target.getMaxCp());
+        target.setFullCp();
     }
 
     private enum Commands {

@@ -90,7 +90,7 @@ public final class EnvoyInstance extends NpcInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
         String filename = null;
         int cond = getCond(player);
         switch (cond) {
@@ -109,7 +109,7 @@ public final class EnvoyInstance extends NpcInstance {
         if (residence == null)
             throw new IllegalArgumentException("Not find fortress: " + getNpcId() + "; loc: " + getLoc());
         Clan residenceOwner = residence.getOwner();
-        if (residenceOwner != null && player.getClan() == residenceOwner && residenceOwner.getLeaderId() == player.getObjectId())
+        if (residenceOwner != null && player.getClan() == residenceOwner && residenceOwner.getLeaderId() == player.objectId())
             return COND_LEADER;
         else
             return COND_FAIL;

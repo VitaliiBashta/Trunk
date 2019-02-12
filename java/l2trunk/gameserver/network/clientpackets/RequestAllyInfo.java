@@ -34,7 +34,7 @@ public final class RequestAllyInfo extends L2GameClientPacket {
         int[] count = new int[clancount + 1];
         List<Clan> clans = player.getAlliance().getMembers();
         for (int i = 0; i < clancount; i++) {
-            online[i + 1] = clans.get(i).getOnlineMembers(0).size();
+            online[i + 1] = clans.get(i).getOnlineMembers().size();
             count[i + 1] = clans.get(i).getAllSize();
             online[0] += online[i + 1];
             count[0] += count[i + 1];

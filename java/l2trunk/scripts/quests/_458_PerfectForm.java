@@ -237,7 +237,7 @@ public final class _458_PerfectForm extends Quest {
         if (npc.getNpcId() == Kelleyia) {
             switch (st.getState()) {
                 case CREATED:
-                    if (st.getPlayer().getLevel() >= 82) {
+                    if (st.player.getLevel() >= 82) {
                         if (st.isNowAvailable())
                             htmltext = "kelleyia_q458_01.htm";
                         else
@@ -257,7 +257,7 @@ public final class _458_PerfectForm extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         boolean doneCond = updateKill(npc, st);
         if (doneCond) {
             st.set("normaloverhits", Rnd.get(1, 3));
@@ -265,6 +265,5 @@ public final class _458_PerfectForm extends Quest {
             st.set("contoverhits", Rnd.get(1, 3));
             st.setCond(2);
         }
-        return null;
     }
 }

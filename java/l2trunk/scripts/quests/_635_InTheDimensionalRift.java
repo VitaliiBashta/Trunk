@@ -13,7 +13,7 @@ public final class _635_InTheDimensionalRift extends Quest {
 
     // Rift Posts should take you back to the place you came from
     private static final List<Location> COORD = List.of(
-            new Location(),            // filler
+            new Location(0,0,0),            // filler
             new Location(-41572, 209731, -5087),    //Necropolis of Sacrifice
             new Location(42950, 143934, -5381),     //Catacomb of the Heretic
             new Location(45256, 123906, -5411),     //Pilgrim's Necropolis
@@ -50,14 +50,14 @@ public final class _635_InTheDimensionalRift extends Quest {
         String loc = st.get("loc");
         if (event.equals("5.htm"))
             if (id > 0 || loc != null) {
-                if (isZiggurat(st.getPlayer().getLastNpc().getNpcId()) && !takeAdena(st)) {
+                if (isZiggurat(st.player.getLastNpc().getNpcId()) && !takeAdena(st)) {
                     htmltext = "Sorry...";
                     st.exitCurrentQuest(true);
                     return htmltext;
                 }
                 st.setState(STARTED);
                 st.setCond(1);
-                st.getPlayer().teleToLocation(-114790, -180576, -6781);
+                st.player.teleToLocation(-114790, -180576, -6781);
             } else {
                 htmltext = "What are you trying to do?";
                 st.exitCurrentQuest(true);
@@ -74,7 +74,7 @@ public final class _635_InTheDimensionalRift extends Quest {
         int id = st.getInt("id");
         String loc = st.get("loc");
         if (isZiggurat(npcId) || isKeeper(npcId)) {
-            if (st.getPlayer().getLevel() < 20) {
+            if (st.player.getLevel() < 20) {
                 st.exitCurrentQuest(true);
                 htmltext = "1.htm";
             } else if (st.getQuestItemsCount(DIMENSION_FRAGMENT) == 0) {
@@ -83,18 +83,18 @@ public final class _635_InTheDimensionalRift extends Quest {
                 else
                     htmltext = "3-ziggurat.htm";
             } else {
-                st.set("loc", st.getPlayer().getLoc().toString());
+                st.set("loc", st.player.getLoc().toString());
                 if (isKeeper(npcId))
                     htmltext = "4.htm";
                 else
                     htmltext = "4-ziggurat.htm";
             }
         } else if (id > 0) {
-            st.getPlayer().teleToLocation(COORD.get(id));
+            st.player.teleToLocation(COORD.get(id));
             htmltext = "7.htm";
             st.exitCurrentQuest(true);
         } else if (loc != null) {
-            st.getPlayer().teleToLocation(Location.parseLoc(loc));
+            st.player.teleToLocation(Location.of(loc));
             htmltext = "7.htm";
             st.exitCurrentQuest(true);
         } else {
@@ -105,7 +105,7 @@ public final class _635_InTheDimensionalRift extends Quest {
     }
 
     private boolean takeAdena(QuestState st) {
-        int level = st.getPlayer().getLevel();
+        int level = st.player.getLevel();
         int fee;
         if (level < 30)
             fee = 2000;
@@ -119,8 +119,8 @@ public final class _635_InTheDimensionalRift extends Quest {
             fee = 18000;
         else
             fee = 24500;
-        if (!st.getPlayer().reduceAdena(fee, true, "_635_InTheDimensionalRift")) {
-            st.getPlayer().sendPacket(Msg.YOU_DO_NOT_HAVE_ENOUGH_ADENA);
+        if (!st.player.reduceAdena(fee, true, "_635_InTheDimensionalRift")) {
+            st.player.sendPacket(Msg.YOU_DO_NOT_HAVE_ENOUGH_ADENA);
             return false;
         }
         return true;

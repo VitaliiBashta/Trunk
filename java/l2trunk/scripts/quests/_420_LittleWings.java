@@ -5,6 +5,8 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
+import java.util.Map;
+
 public final class _420_LittleWings extends Quest {
     // NPCs
     private static final int Cooper = 30829;
@@ -64,55 +66,20 @@ public final class _420_LittleWings extends Quest {
     private static final int Egg_Chance = 50;
     private static final int Pet_Armor_Chance = 35;
 
-    private static final int[][] Fairy_Stone_Items = {
-            {
-                    Coal,
-                    10
-            },
-            {
-                    Charcoal,
-                    10
-            },
-            {
-                    GemstoneD,
-                    1
-            },
-            {
-                    Silver_Nugget,
-                    3
-            },
-            {
-                    Toad_Lord_Back_Skin,
-                    10
-            }
-    };
+    private static final Map<Integer, Integer> Fairy_Stone_Items = Map.of(
+            Coal, 10,
+            Charcoal, 10,
+            GemstoneD, 1,
+            Silver_Nugget, 3,
+            Toad_Lord_Back_Skin, 10);
 
-    private static final int[][] Delux_Fairy_Stone_Items = {
-            {
-                    Coal,
-                    10
-            },
-            {
-                    Charcoal,
-                    10
-            },
-            {
-                    GemstoneC,
-                    1
-            },
-            {
-                    Stone_of_Purity,
-                    1
-            },
-            {
-                    Silver_Nugget,
-                    5
-            },
-            {
-                    Toad_Lord_Back_Skin,
-                    20
-            }
-    };
+    private static final Map<Integer, Integer> Delux_Fairy_Stone_Items = Map.of(
+            Coal, 10,
+            Charcoal, 10,
+            GemstoneC, 1,
+            Stone_of_Purity, 1,
+            Silver_Nugget, 5,
+            Toad_Lord_Back_Skin, 20);
 
     private static final int[][] wyrms = {
             {
@@ -166,23 +133,49 @@ public final class _420_LittleWings extends Quest {
             addKillId(wyrm[0]);
         }
 
-        addQuestItem(Fairy_Dust);
-        addQuestItem(Fairy_Stone);
-        addQuestItem(Deluxe_Fairy_Stone);
-        addQuestItem(Fairy_Stone_List);
-        addQuestItem(Deluxe_Fairy_Stone_List);
-        addQuestItem(Toad_Lord_Back_Skin);
-        addQuestItem(Juice_of_Monkshood);
-        addQuestItem(Scale_of_Drake_Exarion);
-        addQuestItem(Scale_of_Drake_Zwov);
-        addQuestItem(Scale_of_Drake_Kalibran);
-        addQuestItem(Scale_of_Wyvern_Suzet);
-        addQuestItem(Scale_of_Wyvern_Shamhai);
-        addQuestItem(Egg_of_Drake_Exarion);
-        addQuestItem(Egg_of_Drake_Zwov);
-        addQuestItem(Egg_of_Drake_Kalibran);
-        addQuestItem(Egg_of_Wyvern_Suzet);
-        addQuestItem(Egg_of_Wyvern_Shamhai);
+        addQuestItem(Fairy_Dust,Fairy_Stone,Deluxe_Fairy_Stone,Fairy_Stone_List,Deluxe_Fairy_Stone_List,
+                Toad_Lord_Back_Skin,Juice_of_Monkshood,Scale_of_Drake_Exarion,Scale_of_Drake_Zwov,
+                Scale_of_Drake_Kalibran,Scale_of_Wyvern_Suzet,Scale_of_Wyvern_Shamhai,Egg_of_Drake_Exarion,
+        Egg_of_Drake_Zwov,Egg_of_Drake_Kalibran,Egg_of_Wyvern_Suzet,Egg_of_Wyvern_Shamhai);
+    }
+
+    private static int getWyrmScale(int npc_id) {
+        for (int[] wyrm : wyrms)
+            if (npc_id == wyrm[1])
+                return wyrm[2];
+        return 0;
+    }
+
+    private static int getWyrmEgg(int npc_id) {
+        for (int[] wyrm : wyrms)
+            if (npc_id == wyrm[1])
+                return wyrm[3];
+        return 0;
+    }
+
+    private static int isWyrmStoler(int npc_id) {
+        for (int[] wyrm : wyrms)
+            if (npc_id == wyrm[0])
+                return wyrm[1];
+        return 0;
+    }
+
+    private static int getNeededSkins(QuestState st) {
+        if (st.getQuestItemsCount(Deluxe_Fairy_Stone_List) > 0)
+            return 20;
+        if (st.getQuestItemsCount(Fairy_Stone_List) > 0)
+            return 10;
+        return -1;
+    }
+
+    private static boolean checkFairyStoneItems(QuestState st, Map<Integer, Integer> item_list) {
+        return item_list.entrySet().stream()
+                .allMatch(e -> st.haveAnyQuestItems(e.getKey(), e.getValue()));
+
+    }
+
+    private static void TakeFairyStoneItems(QuestState st, Map<Integer, Integer> item_list) {
+        item_list.forEach(st::takeItems);
     }
 
     @Override
@@ -210,7 +203,7 @@ public final class _420_LittleWings extends Quest {
             st.giveItems(Deluxe_Fairy_Stone_List);
             st.playSound(SOUND_MIDDLE);
         } else if (event.equalsIgnoreCase("30608-03.htm") && _state == STARTED && cond == 2 && st.getQuestItemsCount(Fairy_Stone_List) > 0) {
-            if (CheckFairyStoneItems(st, Fairy_Stone_Items)) {
+            if (checkFairyStoneItems(st, Fairy_Stone_Items)) {
                 st.setCond(3);
                 TakeFairyStoneItems(st, Fairy_Stone_Items);
                 st.giveItems(Fairy_Stone);
@@ -218,7 +211,7 @@ public final class _420_LittleWings extends Quest {
             } else
                 return "30608-01.htm";
         } else if (event.equalsIgnoreCase("30608-03a.htm") && _state == STARTED && cond == 2 && st.getQuestItemsCount(Deluxe_Fairy_Stone_List) > 0) {
-            if (CheckFairyStoneItems(st, Delux_Fairy_Stone_Items)) {
+            if (checkFairyStoneItems(st, Delux_Fairy_Stone_Items)) {
                 st.setCond(3);
                 TakeFairyStoneItems(st, Delux_Fairy_Stone_Items);
                 st.giveItems(Deluxe_Fairy_Stone);
@@ -234,10 +227,10 @@ public final class _420_LittleWings extends Quest {
                 return "30711-04.htm";
         } else if (event.equalsIgnoreCase("30747-02.htm") && _state == STARTED && cond == 4 && st.getQuestItemsCount(Fairy_Stone) > 0) {
             st.takeItems(Fairy_Stone);
-            st.set("takedStone", "1");
+            st.set("takedStone", 1);
         } else if (event.equalsIgnoreCase("30747-02a.htm") && _state == STARTED && cond == 4 && st.getQuestItemsCount(Deluxe_Fairy_Stone) > 0) {
             st.takeItems(Deluxe_Fairy_Stone);
-            st.set("takedStone", "2");
+            st.set("takedStone", 2);
             st.giveItems(Fairy_Dust);
             st.playSound(SOUND_ITEMGET);
         } else if (event.equalsIgnoreCase("30747-04.htm") && _state == STARTED && cond == 4 && st.getInt("takedStone") > 0) {
@@ -315,7 +308,7 @@ public final class _420_LittleWings extends Quest {
         if (_state == CREATED) {
             if (npcId != Cooper)
                 return "noquest";
-            if (st.getPlayer().getLevel() < 35) {
+            if (st.player.getLevel() < 35) {
                 st.exitCurrentQuest(true);
                 return "30829-00.htm";
             }
@@ -350,9 +343,9 @@ public final class _420_LittleWings extends Quest {
         if (npcId == Maria)
             if (cond == 2) {
                 if (st.getQuestItemsCount(Deluxe_Fairy_Stone_List) > 0)
-                    return CheckFairyStoneItems(st, Delux_Fairy_Stone_Items) ? "30608-02a.htm" : "30608-01a.htm";
+                    return checkFairyStoneItems(st, Delux_Fairy_Stone_Items) ? "30608-02a.htm" : "30608-01a.htm";
                 if (st.getQuestItemsCount(Fairy_Stone_List) > 0)
-                    return CheckFairyStoneItems(st, Fairy_Stone_Items) ? "30608-02.htm" : "30608-01.htm";
+                    return checkFairyStoneItems(st, Fairy_Stone_Items) ? "30608-02.htm" : "30608-01.htm";
             } else if (cond > 2)
                 return "30608-04.htm";
 
@@ -370,9 +363,9 @@ public final class _420_LittleWings extends Quest {
         }
 
         if (npcId == Mimyu) {
-            if (cond == 4 && st.getQuestItemsCount(Deluxe_Fairy_Stone) > 0)
+            if (cond == 4 && st.haveAnyQuestItems(Deluxe_Fairy_Stone) )
                 return "30747-01a.htm";
-            if (cond == 4 && st.getQuestItemsCount(Fairy_Stone) > 0)
+            if (cond == 4 && st.haveAnyQuestItems(Fairy_Stone) )
                 return "30747-01.htm";
             if (cond == 5)
                 return "30747-05.htm";
@@ -389,15 +382,15 @@ public final class _420_LittleWings extends Quest {
         }
 
         if (npcId >= Exarion && npcId <= Shamhai) {
-            if (cond == 5 && st.getQuestItemsCount(Juice_of_Monkshood) > 0)
+            if (cond == 5 && st.haveAnyQuestItems(Juice_of_Monkshood) )
                 return npcId + "-01.htm";
-            if (cond == 6 && st.getQuestItemsCount(getWyrmScale(npcId)) > 0) {
+            if (cond == 6 && st.haveQuestItem(getWyrmScale(npcId))) {
                 int egg_id = getWyrmEgg(npcId);
                 if (st.getQuestItemsCount(egg_id) < 20)
                     return npcId + "-03.htm";
                 st.takeItems(getWyrmScale(npcId));
                 st.takeItems(egg_id);
-                st.giveItems(egg_id, 1);
+                st.giveItems(egg_id);
                 st.setCond(7);
                 return npcId + "-04.htm";
             }
@@ -409,9 +402,9 @@ public final class _420_LittleWings extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getState() != STARTED)
-            return null;
+            return;
         int npcId = npc.getNpcId();
         int cond = st.getCond();
 
@@ -421,14 +414,14 @@ public final class _420_LittleWings extends Quest {
                 st.giveItems(Toad_Lord_Back_Skin, 1);
                 st.playSound(st.getQuestItemsCount(Toad_Lord_Back_Skin) < needed_skins ? SOUND_ITEMGET : SOUND_MIDDLE);
             }
-            return null;
+            return;
         }
 
         if (npcId >= Enchanted_Valey_First && npcId <= Enchanted_Valey_Last && st.getQuestItemsCount(Deluxe_Fairy_Stone) > 0) {
             st.takeItems(Deluxe_Fairy_Stone, 1);
-            st.set("broken", "1");
+            st.set("broken", 1);
             st.setCond(1);
-            return "You lost fairy stone deluxe!";
+            return;
         }
 
         if (cond == 6) {
@@ -438,48 +431,5 @@ public final class _420_LittleWings extends Quest {
                 st.playSound(st.getQuestItemsCount(getWyrmEgg(wyrm_id)) < 20 ? SOUND_ITEMGET : SOUND_MIDDLE);
             }
         }
-
-        return null;
-    }
-
-    private static int getWyrmScale(int npc_id) {
-        for (int[] wyrm : wyrms)
-            if (npc_id == wyrm[1])
-                return wyrm[2];
-        return 0;
-    }
-
-    private static int getWyrmEgg(int npc_id) {
-        for (int[] wyrm : wyrms)
-            if (npc_id == wyrm[1])
-                return wyrm[3];
-        return 0;
-    }
-
-    private static int isWyrmStoler(int npc_id) {
-        for (int[] wyrm : wyrms)
-            if (npc_id == wyrm[0])
-                return wyrm[1];
-        return 0;
-    }
-
-    private static int getNeededSkins(QuestState st) {
-        if (st.getQuestItemsCount(Deluxe_Fairy_Stone_List) > 0)
-            return 20;
-        if (st.getQuestItemsCount(Fairy_Stone_List) > 0)
-            return 10;
-        return -1;
-    }
-
-    private static boolean CheckFairyStoneItems(QuestState st, int[][] item_list) {
-        for (int[] _item : item_list)
-            if (st.getQuestItemsCount(_item[0]) < _item[1])
-                return false;
-        return true;
-    }
-
-    private static void TakeFairyStoneItems(QuestState st, int[][] item_list) {
-        for (int[] _item : item_list)
-            st.takeItems(_item[0], _item[1]);
     }
 }

@@ -39,7 +39,7 @@ public final class ShortCutList {
             deleteShortCutFromDb(oldShortCut);
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement("REPLACE INTO character_shortcuts SET object_id=?,slot=?,page=?,type=?,shortcut_id=?,level=?,character_type=?,class_index=?")) {
-            statement.setInt(1, player.getObjectId());
+            statement.setInt(1, player.objectId());
             statement.setInt(2, shortcut.getSlot());
             statement.setInt(3, shortcut.getPage());
             statement.setInt(4, shortcut.getType());
@@ -49,14 +49,14 @@ public final class ShortCutList {
             statement.setInt(8, player.getActiveClassId());
             statement.execute();
         } catch (SQLException e) {
-            _log.error("Could not store shortcuts player:" + player + " slot:" + shortcut.getSlot() + " page:" + shortcut.getPage() + " type:" + shortcut.getType() + " id:" + shortcut.getId() + " level:" + shortcut.getLevel() + " CharType:" + shortcut.getCharacterType(), e);
+            _log.error("Could not store shortcuts player:" + player + " slot:" + shortcut.getSlot() + " page:" + shortcut.getPage() + " type:" + shortcut.getType() + " id:" + shortcut.getId() + " occupation:" + shortcut.getLevel() + " CharType:" + shortcut.getCharacterType(), e);
         }
     }
 
     private void deleteShortCutFromDb(ShortCut shortcut) {
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement("DELETE FROM character_shortcuts WHERE object_id=? AND slot=? AND page=? AND class_index=?")) {
-            statement.setInt(1, player.getObjectId());
+            statement.setInt(1, player.objectId());
             statement.setInt(2, shortcut.getSlot());
             statement.setInt(3, shortcut.getPage());
             statement.setInt(4, player.getActiveClassId());
@@ -105,7 +105,7 @@ public final class ShortCutList {
         shortCuts.clear();
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement("SELECT character_type, slot, page, type, shortcut_id, level FROM character_shortcuts WHERE object_id=? AND class_index=?")) {
-            statement.setInt(1, player.getObjectId());
+            statement.setInt(1, player.objectId());
             statement.setInt(2, player.getActiveClassId());
             ResultSet rset = statement.executeQuery();
             while (rset.next()) {
@@ -113,7 +113,7 @@ public final class ShortCutList {
                 int page = rset.getInt("page");
                 int type = rset.getInt("type");
                 int id = rset.getInt("shortcut_id");
-                int level = rset.getInt("level");
+                int level = rset.getInt("occupation");
                 int character_type = rset.getInt("character_type");
 
                 shortCuts.put(slot + page * 12, new ShortCut(slot, page, type, id, level, character_type));

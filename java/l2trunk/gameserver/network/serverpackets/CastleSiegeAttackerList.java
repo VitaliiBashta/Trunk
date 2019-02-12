@@ -61,7 +61,7 @@ public final class CastleSiegeAttackerList extends L2GameServerPacket {
         for (SiegeClanObject siegeClan : _clans) {
             Clan clan = siegeClan.getClan();
 
-            writeD(clan.getClanId());
+            writeD(clan.clanId());
             writeS(clan.getName());
             writeS(clan.getLeaderName());
             writeD(clan.getCrestId());

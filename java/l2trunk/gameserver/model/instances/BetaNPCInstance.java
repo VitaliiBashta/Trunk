@@ -28,7 +28,7 @@ public final class BetaNPCInstance extends NpcInstance {
             try (Connection con = DatabaseFactory.getInstance().getConnection();
                  PreparedStatement offline = con.prepareStatement("UPDATE characters SET sex = ? WHERE obj_Id = ?")) {
                 offline.setInt(1, player.isMale() ? 1 : 0);
-                offline.setInt(2, player.getObjectId());
+                offline.setInt(2, player.objectId());
                 offline.executeUpdate();
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -54,12 +54,12 @@ public final class BetaNPCInstance extends NpcInstance {
             player.sendMessage("You received 10.000 fame points !");
         } else if ("give_noblesse".equalsIgnoreCase(command)) {
             if (!player.isNoble()) {
-                Olympiad.addNoble(player.getPlayer());
-                player.getPlayer().setNoble(true);
-                player.getPlayer().updatePledgeClass();
-                player.getPlayer().updateNobleSkills();
-                player.getPlayer().sendPacket(new SkillList(player.getPlayer()));
-                player.getPlayer().broadcastUserInfo(true);
+                Olympiad.addNoble(player);
+                player.setNoble(true);
+                player.updatePledgeClass();
+                player.updateNobleSkills();
+                player.sendPacket(new SkillList(player));
+                player.broadcastUserInfo(true);
                 player.getInventory().addItem(7694, 1L, "nobleTiara");
                 player.sendMessage("Congratulations! You gained noblesse rank.");
                 player.broadcastUserInfo(true);
@@ -76,7 +76,7 @@ public final class BetaNPCInstance extends NpcInstance {
                 player.addSkill(1375);
                 player.addSkill(1376);
                 player.sendPacket(new SkillList(player));
-                player.getPlayer().broadcastUserInfo(true);
+                player.broadcastUserInfo(true);
                 player.sendMessage("Congratulations! You gained hero rank.");
                 player.broadcastUserInfo(true);
             } else if (player.isNoble()) {
@@ -85,11 +85,6 @@ public final class BetaNPCInstance extends NpcInstance {
         } else {
             super.onBypassFeedback(player, command);
         }
-    }
-
-    @Override
-    public boolean isNpc() {
-        return true;
     }
 
 }

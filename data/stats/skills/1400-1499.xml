@@ -950,7 +950,7 @@
 			Last modify:	14.05.2009
 
 			Description:
-			Greatly regenerates MP of party members. Can be used when Spell Force is level 3 or higher. Consumes 1 Magic Symbol.
+			Greatly regenerates MP of party members. Can be used when Spell Force is occupation 3 or higher. Consumes 1 Magic Symbol.
 		-->
 		<set name="magicType" val="MAGIC" />
 		<set name="icon" val="icon.skill1428" />

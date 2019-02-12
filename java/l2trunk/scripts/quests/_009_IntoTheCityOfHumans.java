@@ -4,7 +4,6 @@ import l2trunk.gameserver.model.base.Race;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _009_IntoTheCityOfHumans extends Quest {
     //NPC
@@ -52,7 +51,7 @@ public final class _009_IntoTheCityOfHumans extends Quest {
         int cond = st.getCond();
         if (npcId == PETUKAI) {
             if (cond == 0) {
-                if (st.getPlayer().getRace() == Race.orc && st.getPlayer().getLevel() >= 3)
+                if (st.player.getRace() == Race.orc && st.player.getLevel() >= 3)
                     htmltext = "centurion_petukai_q0009_0101.htm";
                 else {
                     htmltext = "centurion_petukai_q0009_0102.htm";

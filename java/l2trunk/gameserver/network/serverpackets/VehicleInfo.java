@@ -8,7 +8,7 @@ public class VehicleInfo extends L2GameServerPacket {
     private final Location _loc;
 
     public VehicleInfo(Boat boat) {
-        _boatObjectId = boat.getObjectId();
+        _boatObjectId = boat.objectId();
         _loc = boat.getLoc();
     }
 

@@ -1,7 +1,8 @@
 package l2trunk.gameserver.scripts;
 
+import l2trunk.gameserver.instancemanager.QuestManager;
 import l2trunk.gameserver.model.Player;
-import l2trunk.gameserver.model.quest.Quests;
+import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.scripts.actions.OnActionShift;
 import l2trunk.scripts.ai.Zone.HeineFields.HeineFieldsHerbs;
 import l2trunk.scripts.bosses.*;
@@ -45,12 +46,9 @@ import l2trunk.scripts.services.villagemasters.Clan;
 import l2trunk.scripts.services.villagemasters.Occupation;
 import l2trunk.scripts.zones.SeedOfAnnihilation;
 import l2trunk.scripts.zones.TullyWorkshopZone;
-import org.apache.commons.lang3.reflect.FieldUtils;
-import org.apache.commons.lang3.reflect.MethodUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -95,39 +93,45 @@ public enum Scripts {
         return callScripts(caller, className, methodName, args, null);
     }
 
-    public Object callScripts(Player caller, String className, String methodName, Object[] args, Map<String, Object> variables) {
+    public Object callScripts(Player caller, String className, String methodName, Object[] args, NpcInstance npc) {
         String shortClassName = className.replace("l2trunk.scripts.", "");
-        Object o = scripts.get(shortClassName);
-        if (o == null)
-            o = functions.get(shortClassName);
+//        Object o = scripts.get(shortClassName);
+//        if (o == null)
+        Functions o = functions.get(shortClassName);
         if (o == null)
             throw new IllegalArgumentException("not found script " + className);
 
-
-        if (variables != null && !variables.isEmpty())
-            for (Map.Entry<String, Object> param : variables.entrySet())
-                try {
-                    FieldUtils.writeField(o, param.getKey(), param.getValue());
-                } catch (IllegalAccessException e) {
-                    LOG.error("Scripts: Failed setting fields for " + o.getClass().getName(), e);
-                }
-
-        if (caller != null)
-            try {
-                Field field;
-                if ((field = FieldUtils.getField(o.getClass(), "self")) != null)
-                    FieldUtils.writeField(field, o, caller.getRef());
-            } catch (IllegalAccessException e) {
-                LOG.error("Scripts: Failed setting field for " + o.getClass().getName(), e);
-            }
+        o.setNpc(npc);
+        o.setPlayer(caller);
+//            for (Map.Entry<String, Object> param : variables.entrySet())
+//                try {
+//                    (FieldUtils.writeField(o, param.getKey(), param.getValue());
+//                } catch (IllegalAccessException e) {
+//                    LOG.error("Scripts: Failed setting fields for " + o.getClass().getName(), e);
+//                }
+//        }
+//        if (caller != null)
+////            try {
+////                Field field;
+////                if ((field = FieldUtils.getField(o.getClass(), "player")) != null) {
+////
+////                    FieldUtils.writeField(field, o, caller.getRef());
+////                }
+//                if (o instanceof Functions) {
+//                    ((Functions)o).player = caller.getRef();
+//                }
+////            } catch (IllegalAccessException e) {
+////                LOG.error("Scripts: Failed setting field for " + o.getClass().getName(), e);
+////            }
 
         Object ret = null;
         try {
             Class<?>[] parameterTypes = new Class<?>[args.length];
             for (int i = 0; i < args.length; i++)
                 parameterTypes[i] = args[i] != null ? args[i].getClass() : null;
-
-            ret = MethodUtils.invokeMethod(o, methodName, args, parameterTypes);
+            Method method = o.getClass().getMethod(methodName, parameterTypes);
+            ret = method.invoke(o, args);
+//            ret = MethodUtils.invokeMethod(o, methodName, args, parameterTypes);
         } catch (NoSuchMethodException nsme) {
             LOG.error("Scripts: No such method " + o.getClass().getName() + "." + methodName + "()!", nsme);
         } catch (InvocationTargetException ite) {
@@ -142,7 +146,7 @@ public enum Scripts {
     public void init() {
         loadFunctions();
         loadScripts();
-        Quests.init();
+        QuestManager.initAllQuests();
         scripts.forEach((k, v) -> v.onLoad());
 
 
@@ -189,7 +193,6 @@ public enum Scripts {
         functions.put("scriptconfig.ScriptConfig", new ScriptConfig());
         functions.put("services.Augmentation", new Augmentation());
         functions.put("services.Birthday", new Birthday());
-        functions.put("services.BuyHero", new BuyHero());
         functions.put("services.BuyWashPk", new BuyWashPk());
         functions.put("services.ClearPK", new ClearPK());
         functions.put("services.CoinPoinExch", new CoinPoinExch());

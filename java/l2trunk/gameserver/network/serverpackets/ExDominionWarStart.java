@@ -13,7 +13,7 @@ public class ExDominionWarStart extends L2GameServerPacket {
     private final boolean _isDisguised;
 
     public ExDominionWarStart(Player player) {
-        _objectId = player.getObjectId();
+        _objectId = player.objectId();
         DominionSiegeEvent siegeEvent = player.getEvent(DominionSiegeEvent.class);
         _territoryId = siegeEvent.getId();
         _isDisguised = siegeEvent.getObjects(DominionSiegeEvent.DISGUISE_PLAYERS).contains(_objectId);

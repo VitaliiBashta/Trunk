@@ -4,7 +4,6 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _262_TradewiththeIvoryTower extends Quest {
     //NPC
@@ -40,7 +39,7 @@ public final class _262_TradewiththeIvoryTower extends Quest {
         String htmltext = "noquest";
         int cond = st.getCond();
         if (cond == 0) {
-            if (st.getPlayer().getLevel() >= 8) {
+            if (st.player.getLevel() >= 8) {
                 htmltext = "vollodos_q0262_02.htm";
                 return htmltext;
             }
@@ -48,9 +47,9 @@ public final class _262_TradewiththeIvoryTower extends Quest {
             st.exitCurrentQuest(true);
         } else if (cond == 1 && st.getQuestItemsCount(FUNGUS_SAC) < 10)
             htmltext = "vollodos_q0262_04.htm";
-        else if (cond == 2 && st.getQuestItemsCount(FUNGUS_SAC) >= 10) {
+        else if (cond == 2 && st.haveQuestItem(FUNGUS_SAC, 10)) {
             st.giveItems(ADENA_ID, 3000);
-            st.takeItems(FUNGUS_SAC, -1);
+            st.takeItems(FUNGUS_SAC);
             st.setCond(0);
             st.playSound(SOUND_FINISH);
             htmltext = "vollodos_q0262_05.htm";
@@ -59,18 +58,17 @@ public final class _262_TradewiththeIvoryTower extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int random = Rnd.get(10);
         if (st.getCond() == 1 && st.getQuestItemsCount(FUNGUS_SAC) < 10)
             if (npcId == GREEN_FUNGUS && random < 3 || npcId == BLOOD_FUNGUS && random < 4) {
-                st.giveItems(FUNGUS_SAC, 1);
+                st.giveItems(FUNGUS_SAC);
                 if (st.getQuestItemsCount(FUNGUS_SAC) == 10) {
                     st.setCond(2);
                     st.playSound(SOUND_MIDDLE);
                 } else
                     st.playSound(SOUND_ITEMGET);
             }
-        return null;
     }
 }

@@ -4,17 +4,13 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
-/**
- * @author VISTALL
- * @date 16:14/17.04.2011
- */
-public class ArcherCaptionInstance extends NpcInstance {
+public final class ArcherCaptionInstance extends NpcInstance {
     public ArcherCaptionInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
         showChatWindow(player, "residence2/fortress/fortress_archer.htm");
     }
 }

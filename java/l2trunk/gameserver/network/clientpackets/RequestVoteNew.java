@@ -22,12 +22,12 @@ public class RequestVoteNew extends L2GameClientPacket {
             return;
 
         GameObject target = activeChar.getTarget();
-        if (target == null || !target.isPlayer() || target.getObjectId() != _targetObjectId) {
+        if (!(target instanceof Player) || target.objectId() != _targetObjectId) {
             activeChar.sendPacket(SystemMsg.THAT_IS_AN_INCORRECT_TARGET);
             return;
         }
 
-        if (target.getObjectId() == activeChar.getObjectId()) {
+        if (target.objectId() == activeChar.objectId()) {
             activeChar.sendPacket(SystemMsg.YOU_CANNOT_RECOMMEND_YOURSELF);
             return;
         }

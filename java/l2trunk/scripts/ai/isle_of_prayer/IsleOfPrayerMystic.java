@@ -7,6 +7,7 @@ import l2trunk.gameserver.data.xml.holder.NpcHolder;
 import l2trunk.gameserver.idfactory.IdFactory;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Party;
+import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.MonsterInstance;
 import l2trunk.gameserver.model.instances.NpcInstance;
@@ -27,8 +28,8 @@ public final class IsleOfPrayerMystic extends Mystic {
     @Override
     public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
-        if (_penaltyMobsNotSpawned && attacker.isPlayable() && attacker.getPlayer() != null) {
-            Party party = attacker.getPlayer().getParty();
+        if (_penaltyMobsNotSpawned && attacker instanceof Playable && ((Playable)attacker).getPlayer() != null) {
+            Party party = ((Playable)attacker).getPlayer().getParty();
             if (party != null && party.size() > 2) {
                 _penaltyMobsNotSpawned = false;
                 for (int i = 0; i < 2; i++) {

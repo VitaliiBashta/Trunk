@@ -15,10 +15,7 @@ public enum VoicedCommandHandler {
     private final Map<String, IVoicedCommandHandler> datatable = new HashMap<>();
 
     VoicedCommandHandler() {
-        registerVoicedCommandHandler(new Away());
         registerVoicedCommandHandler(new Atod());
-        registerVoicedCommandHandler(new AntiGrief());
-        registerVoicedCommandHandler(new CombineTalismans());
         registerVoicedCommandHandler(new Cfg());
         registerVoicedCommandHandler(new Help());
         registerVoicedCommandHandler(new Online());
@@ -32,11 +29,9 @@ public enum VoicedCommandHandler {
         registerVoicedCommandHandler(new ServerInfo());
         registerVoicedCommandHandler(new WhoAmI());
         registerVoicedCommandHandler(new Debug());
-        registerVoicedCommandHandler(new res());
         registerVoicedCommandHandler(new FindParty());
         registerVoicedCommandHandler(new Ping());
         registerVoicedCommandHandler(new CommandSiege());
-        registerVoicedCommandHandler(new LockPc());
         registerVoicedCommandHandler(new NpcSpawn());
 
         if (Config.ENABLE_ACHIEVEMENTS)

@@ -38,7 +38,7 @@ public final class _907_DragonTrophyValakas extends Quest {
         if (npc.getNpcId() == Klein) {
             switch (st.getState()) {
                 case CREATED:
-                    if (st.getPlayer().getLevel() >= 84) {
+                    if (st.player.getLevel() >= 84) {
                         if (st.getQuestItemsCount(7267) > 0)
                             htmltext = "klein_q907_01.htm";
                         else
@@ -61,12 +61,10 @@ public final class _907_DragonTrophyValakas extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
-        int cond = st.getCond();
-        if (cond == 1) {
+    public void onKill(NpcInstance npc, QuestState st) {
+        if (st.getCond() == 1) {
             if (npc.getNpcId() == Valakas)
                 st.setCond(2);
         }
-        return null;
     }
 }

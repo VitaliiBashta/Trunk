@@ -20,10 +20,8 @@ public final class ExNpcQuestHtmlMessage extends NpcHtmlMessage {
         if (player == null)
             return;
 
-        if (file != null) //TODO may not be very good to do it here ...
-        {
-            if (player.isGM())
-                Functions.sendDebugMessage(player, "HTML: " + file);
+        if (file != null) {
+            Functions.sendDebugMessage(player, "HTML: " + file);
             String content = HtmCache.INSTANCE.getNotNull(file, player);
             String content2 = HtmCache.INSTANCE.getNullable(file);
             if (content2 == null)

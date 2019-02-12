@@ -189,7 +189,7 @@ public final class ItemAuction {
         if (getAuctionState() != ItemAuctionState.STARTED)
             return;
 
-        int charId = player.getObjectId();
+        int charId = player.objectId();
 
         synchronized (_auctionBids) {
             if (_highestBid != null && newBid < _highestBid.getLastBid()) {
@@ -249,7 +249,7 @@ public final class ItemAuction {
             if (_auctionEndingExtendState == 0) {
                 _auctionEndingExtendState = 1;
                 broadcastToAllBidders(new SystemMessage2(SystemMsg.BIDDER_EXISTS__THE_AUCTION_TIME_HAS_BEEN_EXTENDED_BY_5_MINUTES));
-            } else if (_auctionEndingExtendState == 1 && getAndSetLastBidPlayerObjectId(player.getObjectId()) != player.getObjectId()) {
+            } else if (_auctionEndingExtendState == 1 && getAndSetLastBidPlayerObjectId(player.objectId()) != player.objectId()) {
                 _auctionEndingExtendState = 2;
                 broadcastToAllBidders(new SystemMessage2(SystemMsg.BIDDER_EXISTS__AUCTION_TIME_HAS_BEEN_EXTENDED_BY_3_MINUTES));
             }
@@ -281,7 +281,7 @@ public final class ItemAuction {
                     break;
         }
 
-        int charId = player.getObjectId();
+        int charId = player.objectId();
 
         synchronized (_auctionBids) {
             // _highestBid == null logical consequence is that no one bet yet
@@ -343,7 +343,7 @@ public final class ItemAuction {
      * @return The last bid the player made or -1
      */
     public long getLastBid(Player player) {
-        ItemAuctionBid bid = getBidFor(player.getObjectId());
+        ItemAuctionBid bid = getBidFor(player.objectId());
         return bid != null ? bid.getLastBid() : -1L;
     }
 

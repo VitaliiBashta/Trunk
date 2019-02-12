@@ -174,12 +174,12 @@ public enum InstantZoneEntryType {
         if (InstantZoneHolder.getMinutesToNextEntrance(instancedZone.getId(), player) > 0)
             return SystemMsg.C1_MAY_NOT_REENTER_YET;
 
-        if (instancedZone.getRemovedItemId() > 0 && instancedZone.getRemovedItemNecessity() && ItemFunctions.getItemCount(player, instancedZone.getRemovedItemId()) < 1)
+        if (instancedZone.getRemovedItemId() > 0 && instancedZone.getRemovedItemNecessity() && !player.haveItem(instancedZone.getRemovedItemId()) )
             return SystemMsg.C1S_ITEM_REQUIREMENT_IS_NOT_SUFFICIENT_AND_CANNOT_BE_ENTERED;
 
         if (instancedZone.getRequiredQuestId() > 0) {
             Quest q = QuestManager.getQuest(instancedZone.getRequiredQuestId());
-            QuestState qs = player.getQuestState(q.getClass());
+            QuestState qs = player.getQuestState(q);
             if (qs == null || qs.getState() != Quest.STARTED)
                 return SystemMsg.C1S_QUEST_REQUIREMENT_IS_NOT_SUFFICIENT_AND_CANNOT_BE_ENTERED;
         }

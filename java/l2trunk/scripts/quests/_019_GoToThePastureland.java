@@ -23,14 +23,14 @@ public final class _019_GoToThePastureland extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equals("trader_vladimir_q0019_0104.htm")) {
-            st.giveItems(BEAST_MEAT, 1);
+        if ("trader_vladimir_q0019_0104.htm".equals(event)) {
+            st.giveItems(BEAST_MEAT);
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
         }
-        if (event.equals("beast_herder_tunatun_q0019_0201.htm")) {
-            st.takeItems(BEAST_MEAT, -1);
+        if ("beast_herder_tunatun_q0019_0201.htm".equals(event)) {
+            st.takeItems(BEAST_MEAT);
             st.addExpAndSp(136766, 12688);
             st.giveItems(ADENA_ID, 50000);
             st.playSound(SOUND_FINISH);
@@ -46,7 +46,7 @@ public final class _019_GoToThePastureland extends Quest {
         int cond = st.getCond();
         if (npcId == VLADIMIR) {
             if (cond == 0)
-                if (st.getPlayer().getLevel() >= 63)
+                if (st.player.getLevel() >= 63)
                     htmltext = "trader_vladimir_q0019_0101.htm";
                 else {
                     htmltext = "trader_vladimir_q0019_0103.htm";

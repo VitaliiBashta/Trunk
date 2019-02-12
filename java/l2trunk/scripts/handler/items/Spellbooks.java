@@ -24,22 +24,12 @@ public final class Spellbooks extends ScriptItemHandler implements ScriptFile {
     }
 
     @Override
-    public boolean pickupItem(Playable playable, ItemInstance item) {
-        return true;
-    }
-
-    @Override
     public void onLoad() {
         ItemHandler.INSTANCE.registerItemHandler(this);
     }
 
     @Override
-    public boolean useItem(Playable playable, ItemInstance item, boolean ctrl) {
-        if (!playable.isPlayer())
-            return false;
-
-        Player player = (Player) playable;
-
+    public boolean useItem(Player player, ItemInstance item, boolean ctrl) {
         if (item.getCount() < 1) {
             player.sendPacket(SystemMsg.INCORRECT_ITEM_COUNT);
             return false;
@@ -55,7 +45,7 @@ public final class Spellbooks extends ScriptItemHandler implements ScriptFile {
         boolean alreadyHas = true;
         boolean good = true;
         for (SkillLearn learn : list) {
-            if (player.getSkillLevel(learn.getId()) != learn.getLevel()) {
+            if (player.getSkillLevel(learn.id()) != learn.getLevel()) {
                 alreadyHas = false;
                 break;
             }
@@ -91,7 +81,7 @@ public final class Spellbooks extends ScriptItemHandler implements ScriptFile {
             return false;
 
         for (SkillLearn skillLearn : list) {
-            Skill skill = SkillTable.INSTANCE.getInfo(skillLearn.getId(), skillLearn.getLevel());
+            Skill skill = SkillTable.INSTANCE.getInfo(skillLearn.id(), skillLearn.getLevel());
             if (skill == null)
                 continue;
             player.sendPacket(new SystemMessage2(SystemMsg.YOU_HAVE_EARNED_S1_SKILL).addSkillName(skill.id, skill.level));

@@ -7,6 +7,7 @@ import l2trunk.gameserver.model.GameObjectsStorage;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.World;
 import l2trunk.gameserver.model.base.Element;
+import l2trunk.gameserver.model.instances.PetInstance;
 import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.network.serverpackets.InventoryUpdate;
 import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
@@ -76,20 +77,21 @@ public class AdminCreateItem implements IAdminCommandHandler {
                 break;
             case admin_create_item_target:
                 GameObject target = activeChar.getTarget();
-                if (target == null || !(target.isPlayer() || target.isPet())) {
+                if ((target instanceof Player || target instanceof PetInstance)) {
+                    if (wordList.length < 2) {
+                        activeChar.sendMessage("USAGE: create_item_target id [count]");
+                        return false;
+                    }
+
+                    item_id = toInt(wordList[1]);
+                    item_count = wordList.length < 3 ? 1 : Long.parseLong(wordList[2]);
+                    createItem((Player) activeChar.getTarget(), item_id, item_count);
+                    activeChar.sendPacket(new NpcHtmlMessage(5).setFile("admin/itemcreation.htm"));
+                    break;
+                } else {
                     activeChar.sendPacket(SystemMsg.INVALID_TARGET);
                     return false;
                 }
-                if (wordList.length < 2) {
-                    activeChar.sendMessage("USAGE: create_item_target id [count]");
-                    return false;
-                }
-
-                item_id = toInt(wordList[1]);
-                item_count = wordList.length < 3 ? 1 : Long.parseLong(wordList[2]);
-                createItem((Player) activeChar.getTarget(), item_id, item_count);
-                activeChar.sendPacket(new NpcHtmlMessage(5).setFile("admin/itemcreation.htm"));
-                break;
             case admin_create_item_range:
                 if (wordList.length < 3) {
                     activeChar.sendMessage("USAGE: create_item_range id count range");
@@ -107,11 +109,11 @@ public class AdminCreateItem implements IAdminCommandHandler {
                 break;
             case admin_add_pp:
                 target = activeChar.getTarget();
-                if (target == null || !(target.isPlayer() || target.isPet())) {
+                if (!(target instanceof Player)) {
                     activeChar.sendPacket(SystemMsg.INVALID_TARGET);
                     return false;
                 }
-                Player player = target.getPlayer();
+                Player player = (Player)target;
                 if (wordList.length < 2) {
                     activeChar.sendMessage("USAGE: add_pp [count]");
                     return false;
@@ -123,7 +125,7 @@ public class AdminCreateItem implements IAdminCommandHandler {
                 break;
             case admin_add_pcp:
                 target = activeChar.getTarget();
-                if (target == null || !(target.isPlayer() || target.isPet())) {
+                if (!(target instanceof Player)) {
                     activeChar.sendPacket(SystemMsg.INVALID_TARGET);
                     return false;
                 }
@@ -133,7 +135,7 @@ public class AdminCreateItem implements IAdminCommandHandler {
                 }
 
                 item_count = toInt(wordList[1]);
-                target.getPlayer().addPcBangPoints((int) item_count, false);
+                ((Player)target).addPcBangPoints((int) item_count, false);
                 activeChar.sendPacket(new NpcHtmlMessage(5).setFile("admin/itemcreation.htm"));
                 break;
             case admin_spreaditem:

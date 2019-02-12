@@ -41,7 +41,7 @@ public final class _709_PathToBecomingALordDion extends Quest {
         Castle castle = ResidenceHolder.getResidence(DionCastle);
         if (castle.getOwner() == null)
             return "Castle has no lord";
-        Player castleOwner = castle.getOwner().getLeader().getPlayer();
+        Player castleOwner = castle.getOwner().getLeader().player();
         switch (event) {
             case "crosby_q709_03.htm":
                 st.setState(STARTED);
@@ -50,15 +50,15 @@ public final class _709_PathToBecomingALordDion extends Quest {
                 break;
             case "crosby_q709_06.htm":
                 if (isLordAvailable(2, st)) {
-                    castleOwner.getQuestState(getClass()).set("confidant", String.valueOf(st.getPlayer().getObjectId()), true);
-                    castleOwner.getQuestState(getClass()).setCond(3);
+                    castleOwner.getQuestState(this).set("confidant", st.player.objectId());
+                    castleOwner.getQuestState(this).setCond(3);
                     st.setState(STARTED);
                 } else
                     htmltext = "crosby_q709_05a.htm";
                 break;
             case "rouke_q709_03.htm":
                 if (isLordAvailable(3, st)) {
-                    castleOwner.getQuestState(getClass()).setCond(4);
+                    castleOwner.getQuestState(this).setCond(4);
                 } else
                     htmltext = "crosby_q709_05a.htm";
                 break;
@@ -70,12 +70,12 @@ public final class _709_PathToBecomingALordDion extends Quest {
                 break;
             case "rouke_q709_05.htm":
                 if (isLordAvailable(8, st)) {
-                    st.takeAllItems(MandragoraRoot);
-                    castleOwner.getQuestState(getClass()).setCond(9);
+                    st.takeItems(MandragoraRoot);
+                    castleOwner.getQuestState(this).setCond(9);
                 }
                 break;
             case "crosby_q709_10.htm":
-                Functions.npcSay(npc, NpcString.S1_HAS_BECOME_THE_LORD_OF_THE_TOWN_OF_DION, st.getPlayer().getName());
+                Functions.npcSay(npc, NpcString.S1_HAS_BECOME_THE_LORD_OF_THE_TOWN_OF_DION, st.player.getName());
                 castle.getDominion().changeOwner(castleOwner.getClan());
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest(true);
@@ -92,11 +92,11 @@ public final class _709_PathToBecomingALordDion extends Quest {
         Castle castle = ResidenceHolder.getResidence(DionCastle);
         if (castle.getOwner() == null)
             return "Castle has no lord";
-        Player castleOwner = castle.getOwner().getLeader().getPlayer();
+        Player castleOwner = castle.getOwner().getLeader().player;
         if (npcId == Crosby) {
             if (cond == 0) {
-                if (castleOwner == st.getPlayer()) {
-                    if (castle.getDominion().getLordObjectId() != st.getPlayer().getObjectId())
+                if (castleOwner == st.player) {
+                    if (castle.getDominion().getLordObjectId() != st.player.objectId())
                         htmltext = "crosby_q709_01.htm";
                     else {
                         htmltext = "crosby_q709_00.htm";
@@ -128,7 +128,7 @@ public final class _709_PathToBecomingALordDion extends Quest {
 
         } else if (npcId == Rouke) {
             if (st.getState() == STARTED && cond == 0 && isLordAvailable(3, st)) {
-                if (Integer.parseInt(castleOwner.getQuestState(getClass()).get("confidant")) == st.getPlayer().getObjectId())
+                if (castleOwner.getQuestState(this).getInt("confidant") == st.player.objectId())
                     htmltext = "rouke_q709_01.htm";
             } else if (st.getState() == STARTED && cond == 0 && isLordAvailable(8, st)) {
                 if (st.getQuestItemsCount(MandragoraRoot) >= 100)
@@ -154,26 +154,25 @@ public final class _709_PathToBecomingALordDion extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getCond() == 6 && OlMahums.contains(npc.getNpcId())) {
             if (Rnd.chance(10)) {
-                st.giveItems(Epaulette, 1);
+                st.giveItems(Epaulette);
                 st.setCond(7);
             }
         }
         if (st.getState() == STARTED && st.getCond() == 0 && isLordAvailable(8, st) && Manragoras.contains(npc.getNpcId())) {
             if (st.getQuestItemsCount(MandragoraRoot) < 100)
-                st.giveItems(MandragoraRoot, 1);
+                st.giveItems(MandragoraRoot);
         }
-        return null;
     }
 
     private boolean isLordAvailable(int cond, QuestState st) {
         Castle castle = ResidenceHolder.getResidence(DionCastle);
         Clan owner = castle.getOwner();
-        Player castleOwner = castle.getOwner().getLeader().getPlayer();
+        Player castleOwner = castle.getOwner().getLeader().player;
         if (owner != null)
-            return castleOwner != null && castleOwner != st.getPlayer() && owner == st.getPlayer().getClan() && castleOwner.getQuestState(getClass()) != null && castleOwner.getQuestState(getClass()).getCond() == cond;
+            return castleOwner != null && castleOwner != st.player && owner == st.player.getClan() && castleOwner.getQuestState(this) != null && castleOwner.getQuestState(this).getCond() == cond;
         return false;
     }
 

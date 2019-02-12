@@ -113,8 +113,6 @@ public final class HeroItems extends Functions {
                     "Crossbow"}};
 
     public void rendershop(String[] val) {
-        Player player = getSelf();
-        NpcInstance npc = getNpc();
         if (player == null || npc == null)
             return;
 
@@ -178,7 +176,6 @@ public final class HeroItems extends Functions {
     }
 
     public void getweapon(String[] var) {
-        Player player = getSelf();
         if (player == null)
             return;
 
@@ -188,7 +185,6 @@ public final class HeroItems extends Functions {
             return;
         }
 
-        NpcInstance npc = getNpc();
         if (npc == null)
             return;
 
@@ -205,7 +201,7 @@ public final class HeroItems extends Functions {
                 }
             }
             if (!have) {
-                ItemFunctions.addItem(player, item, 1, true, "HeroItems");
+                ItemFunctions.addItem(player, item, 1, "HeroItems");
                 fileName += "monument_weapon_give.htm";
             }
         } else
@@ -215,12 +211,7 @@ public final class HeroItems extends Functions {
     }
 
     public String getcir() {
-        Player player = getSelf();
-        if (player == null)
-            return null;
-
-        NpcInstance npc = getNpc();
-        if (npc == null)
+        if (player == null || npc == null)
             return null;
 
         String fileName = OLYMPIAD_HTML_PATH;
@@ -228,7 +219,7 @@ public final class HeroItems extends Functions {
             if (player.getInventory().getItemByItemId(6842) != null || player.getWarehouse().getItemByItemId(6842) != null)
                 fileName += "monument_circlet_have.htm";
             else {
-                ItemFunctions.addItem(player, 6842, 1, true, "Hero Items"); //Wings of Destiny Circlet
+                ItemFunctions.addItem(player, 6842, 1, "Hero Items"); //Wings of Destiny Circlet
 
                 fileName += "monument_circlet_give.htm";
             }
@@ -240,12 +231,7 @@ public final class HeroItems extends Functions {
     }
 
     public String getcloak() {
-        Player player = getSelf();
-        if (player == null)
-            return null;
-
-        NpcInstance npc = getNpc();
-        if (npc == null)
+        if (player == null||npc == null)
             return null;
 
         String fileName = OLYMPIAD_HTML_PATH;
@@ -253,7 +239,7 @@ public final class HeroItems extends Functions {
             if (player.getInventory().getItemByItemId(37032) != null || player.getWarehouse().getItemByItemId(37032) != null)
                 fileName += "monument_cloak_have.htm";
             else {
-                ItemFunctions.addItem(player, 37032, 1, true, "CloakofHero"); //Cloak of Hero
+                ItemFunctions.addItem(player, 37032, 1, "CloakofHero"); //Cloak of Hero
 
                 fileName += "monument_cloak_give.htm";
             }

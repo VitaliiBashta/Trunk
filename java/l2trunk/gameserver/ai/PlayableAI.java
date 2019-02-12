@@ -7,6 +7,9 @@ import l2trunk.gameserver.geodata.GeoEngine;
 import l2trunk.gameserver.model.*;
 import l2trunk.gameserver.model.Skill.NextAction;
 import l2trunk.gameserver.model.Skill.SkillType;
+import l2trunk.gameserver.model.instances.DoorInstance;
+import l2trunk.gameserver.model.instances.PetInstance;
+import l2trunk.gameserver.model.instances.SummonInstance;
 import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.network.serverpackets.MyTargetSelected;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
@@ -100,7 +103,7 @@ public class PlayableAI extends CharacterAI {
                 _forceUse = nextAction_arg2;
                 _dontMove = nextAction_arg3;
                 clearNextAction();
-                if (!skill.checkCondition(actor, target, _forceUse, _dontMove, true)) {
+                if (!skill.checkCondition(actor.getPlayer(), target, _forceUse, _dontMove, true)) {
                     if ((skill.nextAction == NextAction.ATTACK) && !actor.equals(target)) {
                         setNextAction(PlayableAI.nextAction.ATTACK, target, null, _forceUse, false);
                         return setNextIntention();
@@ -138,12 +141,13 @@ public class PlayableAI extends CharacterAI {
                 onIntentionPickUp(object);
                 break;
             case EQIP:
-                if ((nextAction_arg0 == null) || (!actor.isPlayer()) || (!(nextAction_arg0 instanceof ItemInstance))) {
+                if ((actor instanceof Player) && (nextAction_arg0 instanceof ItemInstance)) {
+                    ItemInstance item = (ItemInstance) nextAction_arg0;
+                    item.getTemplate().getHandler().useItem((Player)actor, item, _nextAction_arg2);
+                    break;
+                } else {
                     return false;
                 }
-                ItemInstance item = (ItemInstance) nextAction_arg0;
-                item.getTemplate().getHandler().useItem(actor, item, _nextAction_arg2);
-                break;
             case COUPLE_ACTION:
                 if ((nextAction_arg0 == null) || (nextAction_arg1 == null)) {
                     return false;
@@ -234,8 +238,9 @@ public class PlayableAI extends CharacterAI {
                     thinkAttack(true);
                     break;
                 case AI_INTENTION_CAST:
-                    if (actor.isPlayer() && (actor.getPlayer().isCastingNow() || (actor.getPlayer().getCastingSkill() != null))) {
-                        return;
+                    if (actor instanceof Player) {
+                        Player player = (Player)actor;
+                        if (player.isCastingNow() || (player.getCastingSkill() != null)) return;
                     }
                     thinkCast(true);
                     break;
@@ -331,7 +336,7 @@ public class PlayableAI extends CharacterAI {
         int range = (int) (Math.max(30, actor.getMinDistance(target)) + 20);
 
         if (actor.isInRangeZ(target, range)) {
-            if (actor.isPlayer()) {
+            if (actor instanceof Player) {
                 ((Player) actor).doInteract(target);
             }
             setIntention(AI_INTENTION_ACTIVE);
@@ -367,8 +372,9 @@ public class PlayableAI extends CharacterAI {
         }
 
         if (actor.isInRange(target, 30) && (Math.abs(actor.getZ() - target.getZ()) < 50)) {
-            if (actor.isPlayer() || actor.isPet()) {
-                actor.doPickupItem(target);
+            if (actor instanceof Player || actor instanceof PetInstance ) {
+                if (target instanceof ItemInstance)
+                actor.doPickupItem((ItemInstance)target);
             }
             setIntention(AI_INTENTION_ACTIVE);
         } else {
@@ -454,7 +460,7 @@ public class PlayableAI extends CharacterAI {
         Creature target = getAttackTarget();
 
         if ((skill.skillType == SkillType.CRAFT) || skill.isToggle()) {
-            if (skill.checkCondition(actor, target, _forceUse, _dontMove, true)) {
+            if (skill.checkCondition(actor.getPlayer(), target, _forceUse, _dontMove, true)) {
                 actor.doCast(skill, target, _forceUse);
             }
             return;
@@ -476,7 +482,7 @@ public class PlayableAI extends CharacterAI {
 
             clientStopMoving();
 
-            if (skill.checkCondition(actor, target, _forceUse, _dontMove, true)) {
+            if (skill.checkCondition(actor.getPlayer(), target, _forceUse, _dontMove, true)) {
                 actor.doCast(skill, target, _forceUse);
             } else {
                 setNextIntention();
@@ -524,7 +530,7 @@ public class PlayableAI extends CharacterAI {
                 clearNextAction();
             }
 
-            if (skill.checkCondition(actor, target, _forceUse, _dontMove, true)) {
+            if (skill.checkCondition(actor.getPlayer(), target, _forceUse, _dontMove, true)) {
                 clientStopMoving();
                 actor.doCast(skill, target, _forceUse);
             } else {
@@ -594,7 +600,7 @@ public class PlayableAI extends CharacterAI {
              */
 
             if (actorStoredTarget != target) {
-                actor.sendPacket(new MyTargetSelected(target.getObjectId(), 0));
+                actor.sendPacket(new MyTargetSelected(target.objectId(), 0));
             }
         }
     }
@@ -603,7 +609,7 @@ public class PlayableAI extends CharacterAI {
     public void Attack(Creature target, boolean forceUse, boolean dontMove) {
         Playable actor = getActor();
 
-        if (target.isCreature() && (actor.isActionsDisabled() || actor.isAttackingDisabled())) {
+        if (actor.isActionsDisabled() || actor.isAttackingDisabled()) {
             // Если не можем атаковать, то атаковать позже
             setNextAction(nextAction.ATTACK, target, null, forceUse, false);
             actor.sendActionFailed();
@@ -623,11 +629,14 @@ public class PlayableAI extends CharacterAI {
         // Если скилл альтернативного типа (например, бутылка на хп),
         // то он может использоваться во время каста других скиллов, или во время атаки, или на бегу.
         // Поэтому пропускаем дополнительные проверки.
-        if ((actor.isPlayer()) && (actor.getPlayer().getCastingSkill() != null) && (actor.getPlayer().getCastingSkill().skillType == Skill.SkillType.TRANSFORMATION)) {
-            clientActionFailed();
-            return;
+        if (actor instanceof Player) {
+            Player player = (Player)actor;
+            if ((player.getCastingSkill() != null) && (player.getCastingSkill().skillType == SkillType.TRANSFORMATION)) {
+                clientActionFailed();
+                return;
+            }
         }
-        if (skill.altUse() || skill.isToggle()) {
+        if (skill.isAltUse || skill.isToggle()) {
             if ((skill.isToggle() || skill.isItemHandler) && (actor.isOutOfControl() || actor.isStunned() || actor.isSleeping() || actor.isParalyzed() || actor.isAlikeDead())) {
                 clientActionFailed();
             } else {
@@ -674,7 +683,7 @@ public class PlayableAI extends CharacterAI {
 
             if (getIntention() != AI_INTENTION_FOLLOW) {
                 // If the pet has stopped the persecution, change status, it was not necessary to click on the Follow button 2 times.
-                if ((actor.isPet() || actor.isSummon()) && (getIntention() == AI_INTENTION_ACTIVE)) {
+                if ((actor instanceof Summon) && (getIntention() == AI_INTENTION_ACTIVE)) {
                     ((Summon) actor).setFollowMode(false);
                 }
                 return;
@@ -691,7 +700,7 @@ public class PlayableAI extends CharacterAI {
 
             Player player = actor.getPlayer();
 
-            if (player == null || player.isLogoutStarted() || (actor.isPet() || actor.isSummon()) && player.getPet() != actor) {
+            if (player == null || player.isLogoutStarted() || ( actor instanceof Summon ) && player.getPet() != actor) {
                 setIntention(CtrlIntention.AI_INTENTION_ACTIVE);
                 return;
             }
@@ -702,21 +711,21 @@ public class PlayableAI extends CharacterAI {
         }
     }
 
-    protected class ExecuteFollow extends RunnableImpl {
-        private final Creature _target;
-        private final int _range;
+    private class ExecuteFollow extends RunnableImpl {
+        private final Creature target;
+        private final int range;
 
         ExecuteFollow(Creature target, int range) {
-            _target = target;
-            _range = range;
+            this.target = target;
+            this.range = range;
         }
 
         @Override
         public void runImpl() {
-            if (_target.isDoor()) {
-                actor.moveToLocation(_target.getLoc(), 40, true);
+            if (target instanceof DoorInstance) {
+                actor.moveToLocation(target.getLoc(), 40, true);
             } else {
-                actor.followToCharacter(_target, _range, true);
+                actor.followToCharacter(target, range, true);
             }
         }
     }
@@ -728,7 +737,7 @@ public class PlayableAI extends CharacterAI {
             Creature target = (_intention_arg0 instanceof Creature) ? (Creature) _intention_arg0 : null;
 
             if (getIntention() == AI_INTENTION_FOLLOW) {
-                if (actor == null || target == null || !(actor.isSummon())) {
+                if (target == null || !(actor instanceof SummonInstance)) {
                     return;
                 }
 

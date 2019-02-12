@@ -11,7 +11,7 @@ public final class TradeStart extends L2GameServerPacket {
     private final int targetId;
 
     public TradeStart(Player player, Player target) {
-        targetId = target.getObjectId();
+        targetId = target.objectId();
         player.getInventory().getItems().stream()
                 .filter(item -> item.canBeTraded(player))
                 .forEach(item -> _tradelist.add(new ItemInfo(item)));

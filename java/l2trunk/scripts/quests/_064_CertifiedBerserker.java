@@ -4,9 +4,8 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.Functions;
-import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Location;
+import l2trunk.gameserver.utils.NpcUtils;
 
 public final class _064_CertifiedBerserker extends Quest {
     // NPC
@@ -46,7 +45,7 @@ public final class _064_CertifiedBerserker extends Quest {
     }
 
     private void SPAWN_HARKILGAMED(QuestState st) {
-        HARKILGAMED_SPAWN = Functions.spawn(Location.findPointToStay(st.getPlayer(), 50, 100), HARKILGAMED);
+        HARKILGAMED_SPAWN = NpcUtils.spawnSingle(HARKILGAMED,Location.findPointToStay(st.player, 50, 100));
     }
 
     public _064_CertifiedBerserker() {
@@ -73,41 +72,41 @@ public final class _064_CertifiedBerserker extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("32207-01a.htm")) {
+        if ("32207-01a.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.setState(STARTED);
-            if (!st.getPlayer().getVarB("dd1")) {
+            if (!st.player.isVarSet("dd1")) {
                 st.giveItems(Dimenional_Diamonds, 48);
-                st.getPlayer().setVar("dd1", "1", -1);
+                st.player.setVar("dd1", 1);
             }
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("32215-01a.htm"))
+        } else if ("32215-01a.htm".equalsIgnoreCase(event))
             st.setCond(2);
-        else if (event.equalsIgnoreCase("32252-01a.htm"))
+        else if ("32252-01a.htm".equalsIgnoreCase(event))
             st.setCond(5);
-        else if (event.equalsIgnoreCase("32215-03d.htm")) {
-            st.takeItems(MESSAGE_PLATE, -1);
+        else if ("32215-03d.htm".equalsIgnoreCase(event)) {
+            st.takeItems(MESSAGE_PLATE);
             st.setCond(8);
-        } else if (event.equalsIgnoreCase("32236-01a.htm")) {
+        } else if ("32236-01a.htm".equalsIgnoreCase(event)) {
             st.setCond(13);
-            st.giveItems(H_LETTER, 1);
+            st.giveItems(H_LETTER);
             st.cancelQuestTimer("HARKILGAMED_Fail");
             DESPAWN_HARKILGAMED();
-        } else if (event.equalsIgnoreCase("32215-05a.htm")) {
+        } else if ("32215-05a.htm".equalsIgnoreCase(event)) {
             st.setCond(14);
-            st.takeItems(H_LETTER, -1);
-            st.giveItems(T_REC, 1);
-        } else if (event.equalsIgnoreCase("32207-03a.htm")) {
-            if (!st.getPlayer().getVarB("prof2.1")) {
+            st.takeItems(H_LETTER);
+            st.giveItems(T_REC);
+        } else if ("32207-03a.htm".equalsIgnoreCase(event)) {
+            if (!st.player.isVarSet("prof2.1")) {
                 st.addExpAndSp(174503, 11973);
                 st.giveItems(ADENA_ID, 31552);
-                st.getPlayer().setVar("prof2.1", "1", -1);
+                st.player.setVar("prof2.1", 1);
             }
-            st.giveItems(OrkurusRecommendation, 1);
+            st.giveItems(OrkurusRecommendation);
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(true);
         }
-        if (event.equalsIgnoreCase("HARKILGAMED_Fail")) {
+        if ("HARKILGAMED_Fail".equalsIgnoreCase(event)) {
             DESPAWN_HARKILGAMED();
             return null;
         }
@@ -124,8 +123,8 @@ public final class _064_CertifiedBerserker extends Quest {
                 htmltext = "32207-00.htm";
                 st.exitCurrentQuest(true);
             } else if (cond == 0) {
-                if (st.getPlayer().getClassId().getId() == 0x7D) {
-                    if (st.getPlayer().getLevel() >= 39)
+                if (st.player.getClassId().id == 0x7D) {
+                    if (st.player.getLevel() >= 39)
                         htmltext = "32207-01.htm";
                     else {
                         htmltext = "32207-02.htm";
@@ -145,11 +144,11 @@ public final class _064_CertifiedBerserker extends Quest {
                 htmltext = "32215-01.htm";
             else if (cond == 3) {
                 htmltext = "32215-02.htm";
-                st.takeItems(BREKA_ORC_HEAD, -1);
+                st.takeItems(BREKA_ORC_HEAD);
                 st.setCond(4);
             } else if (cond > 1 && st.getQuestItemsCount(BREKA_ORC_HEAD) == 20) {
                 htmltext = "32215-02.htm";
-                st.takeItems(BREKA_ORC_HEAD, -1);
+                st.takeItems(BREKA_ORC_HEAD);
                 st.setCond(4);
             } else if (cond == 7)
                 htmltext = "32215-03.htm";
@@ -167,7 +166,7 @@ public final class _064_CertifiedBerserker extends Quest {
             else if (cond == 6) {
                 htmltext = "32252-02.htm";
                 st.setCond(7);
-            } else if (cond > 4 && st.getQuestItemsCount(MESSAGE_PLATE) == 1) {
+            } else if (cond > 4 && st.haveQuestItem(MESSAGE_PLATE)) {
                 htmltext = "32252-02.htm";
                 st.setCond(7);
             }
@@ -177,8 +176,8 @@ public final class _064_CertifiedBerserker extends Quest {
                 htmltext = "32200-01.htm";
             } else if (cond == 10) {
                 st.setCond(11);
-                st.takeItems(REPORT1, -1);
-                st.takeItems(REPORT2, -1);
+                st.takeItems(REPORT1);
+                st.takeItems(REPORT2);
                 htmltext = "32200-02.htm";
             }
         } else if (npcId == HARKILGAMED)
@@ -189,13 +188,13 @@ public final class _064_CertifiedBerserker extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         if (cond == 2)
             if (npcId == BREKA_ORC || npcId == BREKA_ORC_ARCHER || npcId == BREKA_ORC_SHAMAN || npcId == BREKA_ORC_OVERLORD || npcId == BREKA_ORC_WARRIOR)
                 if (st.getQuestItemsCount(BREKA_ORC_HEAD) <= 19) {
-                    st.giveItems(BREKA_ORC_HEAD, 1);
+                    st.giveItems(BREKA_ORC_HEAD);
                     if (st.getQuestItemsCount(BREKA_ORC_HEAD) == 20) {
                         st.playSound(SOUND_MIDDLE);
                         st.setCond(3);
@@ -203,15 +202,15 @@ public final class _064_CertifiedBerserker extends Quest {
                         st.playSound(SOUND_ITEMGET);
                 }
         if (cond == 5 && npcId == ROAD_SCAVENGER && Rnd.chance(20) && st.getQuestItemsCount(MESSAGE_PLATE) == 0) {
-            st.giveItems(MESSAGE_PLATE, 1);
+            st.giveItems(MESSAGE_PLATE);
             st.setCond(6);
             st.playSound(SOUND_MIDDLE);
         }
         if (cond == 9 && Rnd.chance(30)) {
             if (npcId == DEAD_SEEKER && st.getQuestItemsCount(REPORT1) == 0)
-                st.giveItems(REPORT1, 1);
+                st.giveItems(REPORT1);
             else if (npcId == STAKATO && st.getQuestItemsCount(REPORT2) == 0)
-                st.giveItems(REPORT2, 1);
+                st.giveItems(REPORT2);
             if (st.getQuestItemsCount(REPORT1) == 1 && st.getQuestItemsCount(REPORT2) == 1) {
                 st.playSound(SOUND_MIDDLE);
                 st.setCond(10);
@@ -225,6 +224,5 @@ public final class _064_CertifiedBerserker extends Quest {
             if (!st.isRunningQuestTimer("HARKILGAMED_Fail"))
                 st.startQuestTimer("HARKILGAMED_Fail", 120000);
         }
-        return null;
     }
 }

@@ -1,26 +1,21 @@
 package l2trunk.gameserver.model.items;
 
-import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.PetInstance;
 import l2trunk.gameserver.model.items.ItemInstance.ItemLocation;
 import l2trunk.gameserver.network.serverpackets.PetInventoryUpdate;
 import l2trunk.gameserver.utils.ItemFunctions;
 
-public class PetInventory extends Inventory {
-    private final PetInstance _actor;
+public final class PetInventory extends Inventory {
+    private final PetInstance actor;
 
     public PetInventory(PetInstance actor) {
-        super(actor.getPlayer().getObjectId());
-        _actor = actor;
+        super(actor.owner.objectId());
+        this.actor = actor;
     }
 
     @Override
     public PetInstance getActor() {
-        return _actor;
-    }
-
-    private Player getOwner() {
-        return _actor.getPlayer();
+        return actor;
     }
 
     @Override
@@ -40,17 +35,17 @@ public class PetInventory extends Inventory {
 
     @Override
     protected void sendAddItem(ItemInstance item) {
-        getOwner().sendPacket(new PetInventoryUpdate().addNewItem(item));
+        actor.owner.sendPacket(new PetInventoryUpdate().addNewItem(item));
     }
 
     @Override
     protected void sendModifyItem(ItemInstance item) {
-        getOwner().sendPacket(new PetInventoryUpdate().addModifiedItem(item));
+        actor.owner.sendPacket(new PetInventoryUpdate().addModifiedItem(item));
     }
 
     @Override
     protected void sendRemoveItem(ItemInstance item) {
-        getOwner().sendPacket(new PetInventoryUpdate().addRemovedItem(item));
+        actor.owner.sendPacket(new PetInventoryUpdate().addRemovedItem(item));
     }
 
     @Override
@@ -95,42 +90,38 @@ public class PetInventory extends Inventory {
     }
 
     public boolean destroyItem(ItemInstance item, long count, String log) {
-        return destroyItem(item, count, "Pet " + _actor.getPlayer().toString(), log);
+        return destroyItem(item, count, "Pet " + actor.owner.toString(), log);
     }
 
     public boolean destroyItem(ItemInstance item, String log) {
-        return destroyItem(item, "Pet " + _actor.getPlayer().toString(), log);
+        return destroyItem(item, "Pet " + actor.owner.toString(), log);
     }
 
     public boolean destroyItemByItemId(int itemId, long count, String log) {
-        return destroyItemByItemId(itemId, count, "Pet " + _actor.getPlayer().toString(), log);
+        return destroyItemByItemId(itemId, count, "Pet " + actor.owner.toString(), log);
     }
 
     public boolean destroyItemByObjectId(int objectId, long count, String log) {
-        return destroyItemByObjectId(objectId, count, "Pet " + _actor.getPlayer().toString(), log);
+        return destroyItemByObjectId(objectId, count, "Pet " + actor.owner.toString(), log);
     }
 
     public ItemInstance addItem(ItemInstance item, String log) {
-        return addItem(item, "Pet " + _actor.getPlayer().toString(), log);
+        return addItem(item, "Pet " + actor.owner.toString(), log);
     }
 
     public ItemInstance addItem(int itemId, long count, String log) {
-        return addItem(itemId, count, "Pet " + _actor.getPlayer().toString(), log);
+        return addItem(itemId, count, "Pet " + actor.owner.toString(), log);
     }
 
     public ItemInstance removeItem(ItemInstance item, long count, String log) {
-        return removeItem(item, count, "Pet " + _actor.getPlayer().toString(), log);
+        return removeItem(item, count, "Pet " + actor.owner.toString(), log);
     }
 
     public ItemInstance removeItem(ItemInstance item, String log) {
-        return removeItem(item, "Pet " + _actor.getPlayer().toString(), log);
-    }
-
-    public ItemInstance removeItemByItemId(int itemId, long count, String log) {
-        return removeItemByItemId(itemId, count, "Pet " + _actor.getPlayer().toString(), log);
+        return removeItem(item, "Pet " + actor.owner.toString(), log);
     }
 
     public ItemInstance removeItemByObjectId(int objectId, long count, String log) {
-        return removeItemByObjectId(objectId, count, "Pet " + _actor.getPlayer().toString(), log);
+        return removeItemByObjectId(objectId, count, "Pet " + actor.owner.toString(), log);
     }
 }

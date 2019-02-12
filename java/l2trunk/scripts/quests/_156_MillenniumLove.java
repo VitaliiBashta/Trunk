@@ -3,7 +3,6 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _156_MillenniumLove extends Quest {
     private final int LILITHS_LETTER = 1022;
@@ -60,7 +59,7 @@ public final class _156_MillenniumLove extends Quest {
         int cond = st.getCond();
         if (npcId == 30368) {
             if (cond == 0) {
-                if (st.getPlayer().getLevel() >= 15)
+                if (st.player.getLevel() >= 15)
                     htmltext = "30368-02.htm";
                 else {
                     htmltext = "30368-05.htm";
@@ -69,11 +68,11 @@ public final class _156_MillenniumLove extends Quest {
             } else if (cond == 1 && st.getQuestItemsCount(LILITHS_LETTER) == 1)
                 htmltext = "30368-07.htm";
             else if (cond == 2 && st.getQuestItemsCount(THEONS_DIARY) == 1) {
-                st.takeItems(THEONS_DIARY, -1);
-                if (st.getPlayer().getClassId().isMage())
-                    st.giveItems(GR_COMP_PACKAGE_SPS, 1);
+                st.takeItems(THEONS_DIARY);
+                if (st.player.getClassId().isMage)
+                    st.giveItems(GR_COMP_PACKAGE_SPS);
                 else
-                    st.giveItems(GR_COMP_PACKAGE_SS, 1);
+                    st.giveItems(GR_COMP_PACKAGE_SS);
                 st.addExpAndSp(3000, 0);
                 st.playSound(SOUND_FINISH);
                 htmltext = "30368-08.htm";

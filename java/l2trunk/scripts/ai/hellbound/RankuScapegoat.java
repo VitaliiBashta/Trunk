@@ -16,7 +16,7 @@ public final class RankuScapegoat extends DefaultAI {
     @Override
     public void onEvtDead(Creature killer) {
         NpcInstance actor = getActor();
-        NpcInstance mob = actor.getReflection().addSpawnWithoutRespawn(Eidolon_ID, actor.getLoc(), 0);
+        NpcInstance mob = actor.getReflection().addSpawnWithoutRespawn(Eidolon_ID, actor);
         NpcInstance boss = getBoss();
         if (mob != null && boss != null) {
             Creature cha = boss.getAggroList().getTopDamager();

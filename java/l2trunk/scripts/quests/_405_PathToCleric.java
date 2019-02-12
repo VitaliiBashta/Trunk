@@ -63,18 +63,18 @@ public final class _405_PathToCleric extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
         if (event.equalsIgnoreCase("1"))
-            if (st.getPlayer().getLevel() >= 18 && st.getPlayer().getClassId().getId() == 0x0a && st.getQuestItemsCount(MARK_OF_FAITH) < 1) {
+            if (st.player.getLevel() >= 18 && st.player.getClassId().id == 0x0a && st.getQuestItemsCount(MARK_OF_FAITH) < 1) {
                 st.setCond(1);
                 st.setState(STARTED);
                 st.playSound(SOUND_ACCEPT);
-                st.giveItems(LETTER_OF_ORDER1, 1);
+                st.giveItems(LETTER_OF_ORDER1);
                 htmltext = "gigon_q0405_05.htm";
-            } else if (st.getPlayer().getClassId().getId() != 0x0a) {
-                if (st.getPlayer().getClassId().getId() == 0x0f)
+            } else if (st.player.getClassId().id != 0x0a) {
+                if (st.player.getClassId().id == 0x0f)
                     htmltext = "gigon_q0405_02a.htm";
                 else
                     htmltext = "gigon_q0405_02.htm";
-            } else if (st.getPlayer().getLevel() < 18)
+            } else if (st.player.getLevel() < 18)
                 htmltext = "gigon_q0405_03.htm";
             else if (st.getQuestItemsCount(MARK_OF_FAITH) > 0)
                 htmltext = "gigon_q0405_04.htm";
@@ -108,15 +108,15 @@ public final class _405_PathToCleric extends Quest {
                 htmltext = "gigon_q0405_07.htm";
             else if (cond == 6 && st.getQuestItemsCount(LETTER_OF_ORDER2) > 0 && st.getQuestItemsCount(LEMONIELLS_COVENANT) > 0) {
                 htmltext = "gigon_q0405_09.htm";
-                st.takeItems(LEMONIELLS_COVENANT, -1);
-                st.takeItems(LETTER_OF_ORDER2, -1);
-                if (!st.getPlayer().getVarB("q405"))
-                    st.getPlayer().setVar("q405", "1", -1);
+                st.takeItems(LEMONIELLS_COVENANT);
+                st.takeItems(LETTER_OF_ORDER2);
+                if (!st.player.isVarSet("q405"))
+                    st.player.setVar("q405", 1);
                 st.exitCurrentQuest(true);
-                if (st.getPlayer().getClassId().getLevel() == 1) {
-                    st.giveItems(MARK_OF_FAITH, 1);
-                    if (!st.getPlayer().getVarB("prof1")) {
-                        st.getPlayer().setVar("prof1", "1", -1);
+                if (st.player.getClassId().occupation() == 0) {
+                    st.giveItems(MARK_OF_FAITH);
+                    if (!st.player.isVarSet("prof1")) {
+                        st.player.setVar("prof1", 1);
                         st.addExpAndSp(295862, 17964);
                         st.giveItems(ADENA_ID, 81900);
                     }
@@ -179,13 +179,12 @@ public final class _405_PathToCleric extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         if (npcId == RUIN_ZOMBIE | npcId == RUIN_ZOMBIE_LEADER)
             if (st.getCond() == 1 && st.getQuestItemsCount(PENDANT_OF_MOTHER) < 1) {
                 st.giveItems(PENDANT_OF_MOTHER, 1);
                 st.playSound(SOUND_MIDDLE);
             }
-        return null;
     }
 }

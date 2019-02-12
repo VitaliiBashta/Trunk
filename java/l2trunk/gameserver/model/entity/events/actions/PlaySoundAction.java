@@ -21,7 +21,7 @@ public final class PlaySoundAction implements EventAction {
         GameObject object = event.getCenterObject();
         PlaySound packet;
         if (object != null)
-            packet = new PlaySound(type, sound, 1, object.getObjectId(), object.getLoc());
+            packet = new PlaySound(type, sound, 1, object.objectId(), object.getLoc());
         else
             packet = new PlaySound(type, sound, 0, 0, 0, 0, 0);
 

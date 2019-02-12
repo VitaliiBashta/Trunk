@@ -5,7 +5,6 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Drop;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -134,7 +133,7 @@ public final class _327_ReclaimTheLand extends Quest {
         if (_state == CREATED) {
             if (npcId != Piotur)
                 return "noquest";
-            if (st.getPlayer().getLevel() < 25) {
+            if (st.player.getLevel() < 25) {
                 st.exitCurrentQuest(true);
                 return "piotur_q0327_01.htm";
             }
@@ -164,29 +163,27 @@ public final class _327_ReclaimTheLand extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState qs) {
+    public void onKill(NpcInstance npc, QuestState qs) {
         if (qs.getState() != STARTED)
-            return null;
+            return;
         int npcId = npc.getNpcId();
 
         Drop _drop = DROPLIST.get(npcId);
         if (_drop == null)
-            return null;
+            return ;
 
         if (Rnd.chance(_drop.chance)) {
             int n = Rnd.get(100);
             if (n < 25)
-                qs.giveItems(CLAY_URN_FRAGMENT, 1);
+                qs.giveItems(CLAY_URN_FRAGMENT);
             else if (n < 50)
-                qs.giveItems(BRASS_TRINKET_PIECE, 1);
+                qs.giveItems(BRASS_TRINKET_PIECE);
             else if (n < 75)
-                qs.giveItems(BRONZE_MIRROR_PIECE, 1);
+                qs.giveItems(BRONZE_MIRROR_PIECE);
             else
-                qs.giveItems(JADE_NECKLACE_BEAD, 1);
+                qs.giveItems(JADE_NECKLACE_BEAD);
         }
         qs.giveItems(_drop.itemList.get(0), 1);
         qs.playSound(SOUND_ITEMGET);
-
-        return null;
     }
 }

@@ -87,12 +87,12 @@ public class SetPrivateStoreBuyList extends L2GameClientPacket {
                 if (item == null || itemId == ItemTemplate.ITEM_ID_ADENA)
                     continue;
 
-                if (item.getReferencePrice() / 2 > price) {
-                    buyer.sendMessage(new CustomMessage("l2trunk.gameserver.clientpackets.SetPrivateStoreBuyList.TooLowPrice", buyer).addItemName(item).addNumber(item.getReferencePrice() / 2));
+                if (item.referencePrice / 2 > price) {
+                    buyer.sendMessage(new CustomMessage("l2trunk.gameserver.clientpackets.SetPrivateStoreBuyList.TooLowPrice").addItemName(item).addNumber(item.referencePrice / 2));
                     continue;
                 }
 
-                if (item.isStackable())
+                if (item.stackable())
                     for (TradeItem bi : buyList)
                         if (bi.getItemId() == itemId) {
                             bi.setOwnersPrice(price);

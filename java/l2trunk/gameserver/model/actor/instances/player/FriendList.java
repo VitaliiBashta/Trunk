@@ -43,7 +43,7 @@ public final class FriendList {
         for (Friend friend : friendList.values()) {
             Player friendPlayer = GameObjectsStorage.getPlayer(friend.getObjectId());
             if (friendPlayer != null) {
-                Friend thisFriend = friendPlayer.getFriendList().getList().get(_owner.getObjectId());
+                Friend thisFriend = friendPlayer.getFriendList().getList().get(_owner.objectId());
                 if (thisFriend == null)
                     continue;
 
@@ -60,7 +60,7 @@ public final class FriendList {
     }
 
     public void addFriend(Player friendPlayer) {
-        friendList.put(friendPlayer.getObjectId(), new Friend(friendPlayer));
+        friendList.put(friendPlayer.objectId(), new Friend(friendPlayer));
 
         CharacterFriendDAO.getInstance().insert(_owner, friendPlayer);
     }

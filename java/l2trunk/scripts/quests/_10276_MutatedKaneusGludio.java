@@ -27,11 +27,11 @@ public final class _10276_MutatedKaneusGludio extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("30332-03.htm")) {
+        if ("30332-03.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("30344-02.htm")) {
+        } else if ("30344-02.htm".equalsIgnoreCase(event)) {
             st.giveItems(57, 60000);
             st.exitCurrentQuest(false);
             st.playSound(SOUND_FINISH);
@@ -49,7 +49,7 @@ public final class _10276_MutatedKaneusGludio extends Quest {
             if (npcId == Bathis)
                 htmltext = "30332-0a.htm";
         } else if (id == CREATED && npcId == Bathis) {
-            if (st.getPlayer().getLevel() >= 18)
+            if (st.player.getLevel() >= 18)
                 htmltext = "30332-01.htm";
             else
                 htmltext = "30332-00.htm";
@@ -67,13 +67,12 @@ public final class _10276_MutatedKaneusGludio extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getState() == STARTED && st.getCond() == 1) {
-            st.giveItems(Tissue1, 1);
-            st.giveItems(Tissue2, 1);
+            st.giveItems(Tissue1);
+            st.giveItems(Tissue2);
             st.setCond(2);
             st.playSound(SOUND_MIDDLE);
         }
-        return null;
     }
 }

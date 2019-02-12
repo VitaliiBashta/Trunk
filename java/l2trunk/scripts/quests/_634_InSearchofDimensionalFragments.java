@@ -8,7 +8,6 @@ import l2trunk.gameserver.model.quest.QuestState;
 public final class _634_InSearchofDimensionalFragments extends Quest {
     private static final int DIMENSION_FRAGMENT_ID = 7079;
 
-
     public _634_InSearchofDimensionalFragments() {
         super(true);
 
@@ -24,12 +23,12 @@ public final class _634_InSearchofDimensionalFragments extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("quest_accept")) {
+        if ("quest_accept".equalsIgnoreCase(event)) {
             htmltext = "dimension_keeper_1_q0634_03.htm";
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
             st.setCond(1);
-        } else if (event.equalsIgnoreCase("634_2")) {
+        } else if ("634_2".equalsIgnoreCase(event)) {
             htmltext = "dimension_keeper_1_q0634_06.htm";
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(true);
@@ -42,7 +41,7 @@ public final class _634_InSearchofDimensionalFragments extends Quest {
         String htmltext = "noquest";
         int id = st.getState();
         if (id == CREATED) {
-            if (st.getPlayer().getLevel() > 20)
+            if (st.player.getLevel() > 20)
                 htmltext = "dimension_keeper_1_q0634_01.htm";
             else {
                 htmltext = "dimension_keeper_1_q0634_02.htm";
@@ -54,8 +53,7 @@ public final class _634_InSearchofDimensionalFragments extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
-        st.rollAndGive(DIMENSION_FRAGMENT_ID, 2, 60 * Experience.penaltyModifier(st.calculateLevelDiffForDrop(npc.getLevel(), st.getPlayer().getLevel()), 9) * npc.getTemplate().rateHp / 4);
-        return null;
+    public void onKill(NpcInstance npc, QuestState st) {
+        st.rollAndGive(DIMENSION_FRAGMENT_ID, 2, 60 * Experience.penaltyModifier(st.calculateLevelDiffForDrop(npc.getLevel(), st.player.getLevel()), 9) * npc.getTemplate().rateHp / 4);
     }
 }

@@ -3,7 +3,6 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _014_WhereaboutsoftheArchaeologist extends Quest {
     private static final int LETTER_TO_ARCHAEOLOGIST = 7253;
@@ -42,7 +41,7 @@ public final class _014_WhereaboutsoftheArchaeologist extends Quest {
         int cond = st.getCond();
         if (npcId == 31263) {
             if (cond == 0)
-                if (st.getPlayer().getLevel() >= 74)
+                if (st.player.getLevel() >= 74)
                     htmltext = "trader_liesel_q0014_0101.htm";
                 else {
                     htmltext = "trader_liesel_q0014_0103.htm";

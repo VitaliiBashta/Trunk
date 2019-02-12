@@ -1,7 +1,6 @@
 package l2trunk.gameserver.model;
 
 import l2trunk.commons.collections.StatsSet;
-import l2trunk.commons.lang.reference.HardReference;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
@@ -12,8 +11,8 @@ public final class Request extends StatsSet {
     private final static AtomicInteger _nextId = new AtomicInteger();
     private final int id;
     private final L2RequestType _type;
-    private final HardReference<Player> requestor;
-    private HardReference<Player> reciever;
+    private final Player requestor;
+    private Player reciever;
     private boolean _isRequestorConfirmed;
     private boolean _isRecieverConfirmed;
     private boolean _isCancelled;
@@ -26,8 +25,8 @@ public final class Request extends StatsSet {
      */
     public Request(L2RequestType type, Player requestor, Player reciever) {
         id = _nextId.incrementAndGet();
-        this.requestor = requestor.getRef();
-        this.reciever = reciever.getRef();
+        this.requestor = requestor;
+        this.reciever = reciever;
         _type = type;
         requestor.setRequest(this);
         reciever.setRequest(this);
@@ -51,7 +50,7 @@ public final class Request extends StatsSet {
         if (_timeoutTask != null)
             _timeoutTask.cancel(false);
         _timeoutTask = null;
-        Player player = requestor.get();
+        Player player = requestor;
         if (player != null && player.getRequest() == this)
             player.setRequest(null);
         player = getReciever();
@@ -95,11 +94,11 @@ public final class Request extends StatsSet {
     }
 
     public Player getRequestor() {
-        return requestor.get();
+        return requestor;
     }
 
     private Player getReciever() {
-        return reciever.get();
+        return reciever;
     }
 
     /**

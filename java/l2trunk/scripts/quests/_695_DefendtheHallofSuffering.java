@@ -28,7 +28,7 @@ public final class _695_DefendtheHallofSuffering extends Quest {
     public String onTalk(NpcInstance npc, QuestState st) {
         String htmltext = "noquest";
         int npcId = npc.getNpcId();
-        Player player = st.getPlayer();
+        Player player = st.player;
         int cond = st.getCond();
         if (npcId == TEPIOS) {
             if (cond == 0) {

@@ -48,15 +48,12 @@ public final class ClanHall extends Residence {
         initZone();
         initEvent();
 
-        // Alexander - Add a listener to get zone enter events
-        //getZone().addListener(new ZoneListener());
-
         loadData();
         loadFunctions();
         rewardSkills();
 
         // если это Аукционный КХ, и есть овнер, и КХ, непродается
-        if ((getSiegeEvent().getClass() == ClanHallAuctionEvent.class) && (_owner != null) && (getAuctionLength() == 0)) {
+        if ((getSiegeEvent().getClass() == ClanHallAuctionEvent.class) && (owner != null) && (getAuctionLength() == 0)) {
             startCycleTask();
         }
     }
@@ -65,7 +62,7 @@ public final class ClanHall extends Residence {
     public void changeOwner(Clan clan) {
         Clan oldOwner = getOwner();
 
-        if ((oldOwner != null) && ((clan == null) || (clan.getClanId() != oldOwner.getClanId()))) {
+        if ((oldOwner != null) && ((clan == null) || (clan.clanId() != oldOwner.clanId()))) {
             removeSkills();
             oldOwner.setHasHideout(0);
 
@@ -89,13 +86,13 @@ public final class ClanHall extends Residence {
 
     @Override
     protected void loadData() {
-        _owner = ClanDataDAO.INSTANCE.getOwner(this);
+        owner = ClanDataDAO.INSTANCE.getOwner(this);
 
         ClanHallDAO.INSTANCE.select(this);
     }
 
     private void updateOwnerInDB(Clan clan) {
-        _owner = clan;
+        owner = clan;
 
         try (Connection con = DatabaseFactory.getInstance().getConnection()) {
             PreparedStatement statement = con.prepareStatement("UPDATE clan_data SET hasHideout=0 WHERE hasHideout=?");
@@ -172,16 +169,16 @@ public final class ClanHall extends Residence {
 
         setPaidCycle(getPaidCycle() + 1);
         if (getPaidCycle() >= REWARD_CYCLE) {
-            if (_owner.getWarehouse().getCountOf(ItemTemplate.ITEM_ID_ADENA) > _rentalFee) {
-                _owner.getWarehouse().destroyItemByItemId(ItemTemplate.ITEM_ID_ADENA, _rentalFee, "Clan Hall Cycle");
+            if (owner.getWarehouse().getCountOf(ItemTemplate.ITEM_ID_ADENA) > _rentalFee) {
+                owner.getWarehouse().destroyItemByItemId(ItemTemplate.ITEM_ID_ADENA, _rentalFee, "Clan Hall Cycle");
                 setPaidCycle(0);
             } else {
-                UnitMember member = _owner.getLeader();
+                UnitMember member = owner.getLeader();
 
                 if (member.isOnline()) {
-                    member.getPlayer().sendPacket(SystemMsg.THE_CLAN_HALL_FEE_IS_ONE_WEEK_OVERDUE_THEREFORE_THE_CLAN_HALL_OWNERSHIP_HAS_BEEN_REVOKED);
+                    member.player().sendPacket(SystemMsg.THE_CLAN_HALL_FEE_IS_ONE_WEEK_OVERDUE_THEREFORE_THE_CLAN_HALL_OWNERSHIP_HAS_BEEN_REVOKED);
                 } else {
-                    PlayerMessageStack.getInstance().mailto(member.getObjectId(), SystemMsg.THE_CLAN_HALL_FEE_IS_ONE_WEEK_OVERDUE_THEREFORE_THE_CLAN_HALL_OWNERSHIP_HAS_BEEN_REVOKED.packet(null));
+                    PlayerMessageStack.getInstance().mailto(member.objectId(), SystemMsg.THE_CLAN_HALL_FEE_IS_ONE_WEEK_OVERDUE_THEREFORE_THE_CLAN_HALL_OWNERSHIP_HAS_BEEN_REVOKED.packet(null));
                 }
 
                 changeOwner(null);
@@ -189,43 +186,4 @@ public final class ClanHall extends Residence {
         }
     }
 
-    /**
-     * Alexander
-     *
-     * @return Returns true if all clan hall doors are closed
-     */
-    private boolean isDoorsClosed() {
-        return DoorHolder.getDoors().values().stream()
-                .filter(door -> door.getAIParams().getInteger("residence_id", 0) == getId())
-                .noneMatch(DoorTemplate::isOpened);
-    }
-
-    // Alexander - Listener to control players that enter the clan hall, when doors are closed
-    private class ZoneListener implements OnZoneEnterLeaveListener {
-        @Override
-        public void onZoneEnter(Zone zone, Creature actor) {
-            if (!actor.isPlayer())
-                return;
-
-            // No gms
-            if (actor.getAccessLevel() > 0)
-                return;
-
-            Player player = actor.getPlayer();
-
-            // Clan Hall owner
-            if (player.getClanId() == getOwnerId())
-                return;
-
-            // Doors opened
-            if (!isDoorsClosed())
-                return;
-
-            player.teleToLocation(getBanishPoint());
-        }
-
-        @Override
-        public void onZoneLeave(Zone zone, Creature actor) {
-        }
-    }
 }

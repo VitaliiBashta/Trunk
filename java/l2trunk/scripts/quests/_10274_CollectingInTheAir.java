@@ -3,7 +3,8 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
+
+import java.util.List;
 
 public final class _10274_CollectingInTheAir extends Quest {
     private final static int Lekon = 32557;
@@ -38,15 +39,14 @@ public final class _10274_CollectingInTheAir extends Quest {
         if (id == COMPLETED)
             htmltext = "32557-0a.htm";
         else if (id == CREATED) {
-            QuestState qs = st.getPlayer().getQuestState(_10273_GoodDayToFly.class);
-            if (qs != null && qs.isCompleted() && st.getPlayer().getLevel() >= 75)
+            if (st.player.isQuestCompleted(_10273_GoodDayToFly.class) && st.player.getLevel() >= 75)
                 htmltext = "32557-01.htm";
             else
                 htmltext = "32557-00.htm";
         } else if (st.getQuestItemsCount(ExtractedCoarseRedStarStone) + st.getQuestItemsCount(ExtractedCoarseBlueStarStone) + st.getQuestItemsCount(ExtractedCoarseGreenStarStone) >= 8) {
             htmltext = "32557-05.htm";
-            st.takeAllItems(ExtractedCoarseRedStarStone, ExtractedCoarseBlueStarStone, ExtractedCoarseGreenStarStone);
-            st.giveItems(ExpertTextStarStoneExtractionSkillLevel1, 1);
+            st.takeItems(List.of(ExtractedCoarseRedStarStone, ExtractedCoarseBlueStarStone, ExtractedCoarseGreenStarStone));
+            st.giveItems(ExpertTextStarStoneExtractionSkillLevel1);
             st.addExpAndSp(25160, 2525);
             st.exitCurrentQuest(false);
             st.playSound(SOUND_FINISH);

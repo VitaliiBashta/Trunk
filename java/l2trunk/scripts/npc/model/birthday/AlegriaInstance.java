@@ -19,13 +19,13 @@ public final class AlegriaInstance extends NpcInstance {
             return;
 
         if ("exchangeHat".equalsIgnoreCase(command)) {
-            if (ItemFunctions.getItemCount(player, EXPLORERHAT) < 1) {
+            if (!player.haveItem(EXPLORERHAT)) {
                 showChatWindow(player, "default/32600-nohat.htm");
                 return;
             }
 
-            ItemFunctions.removeItem(player, EXPLORERHAT, 1, true, "AlegriaInstance");
-            ItemFunctions.addItem(player, HAT, 1, true, "AlegriaInstance");
+            ItemFunctions.removeItem(player, EXPLORERHAT, 1, "AlegriaInstance");
+            ItemFunctions.addItem(player, HAT, 1, "AlegriaInstance");
 
             showChatWindow(player, "default/32600-successful.htm");
 

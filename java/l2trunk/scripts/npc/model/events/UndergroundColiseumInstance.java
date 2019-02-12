@@ -62,7 +62,7 @@ public class UndergroundColiseumInstance extends NpcInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... replace) {
+    public void showChatWindow(Player player, int val) {
         String filename = "Coliseum/" + val + ".htm";
         NpcHtmlMessage html = new NpcHtmlMessage(player, this, filename, val);
         html.replace("%levelMin%", "" + getMinLevel());

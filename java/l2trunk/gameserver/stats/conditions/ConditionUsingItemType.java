@@ -12,7 +12,7 @@ public final class ConditionUsingItemType extends Condition {
 
     @Override
     protected boolean testImpl(Env env) {
-        if (!env.character.isPlayable())
+        if (!(env.character instanceof Playable))
             return false;
         return (_mask & ((Playable) env.character).getWearedMask()) != 0;
     }

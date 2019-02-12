@@ -26,7 +26,7 @@ public final class _457_LostAndFound extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        Player player = st.getPlayer();
+        Player player = st.player;
         if (event.equalsIgnoreCase("lost_villager_q0457_06.htm")) {
             st.setCond(1);
             st.setState(STARTED);
@@ -44,18 +44,18 @@ public final class _457_LostAndFound extends Quest {
 
     @Override
     public String onTalk(NpcInstance npc, QuestState st) {
-        Player player = st.getPlayer();
+        Player player = st.player;
         int npcId = npc.getNpcId();
         int state = st.getState();
         int cond = st.getCond();
         if (npcId == GUMIEL) {
             if (state == 1) {
-                if (DefaultAI.namechar != null && DefaultAI.namechar != player.getName())
+                if (DefaultAI.namechar != null && !DefaultAI.namechar.equals(player.getName()))
                     return "lost_villager_q0457_01a.htm";
-                String req = st.getPlayer().getVar("NextQuest457") == null || st.getPlayer().getVar("NextQuest457").equalsIgnoreCase("null") ? "0" : st.getPlayer().getVar("NextQuest457");
-                if (Long.parseLong(req) > System.currentTimeMillis())
+                long req =  st.player.getVarLong("NextQuest457");
+                if (req > System.currentTimeMillis())
                     return "lost_villager_q0457_02.htm";
-                if (st.getPlayer().getLevel() >= 82)
+                if (st.player.getLevel() >= 82)
                     return "lost_villager_q0457_01.htm";
                 return "lost_villager_q0457_03.htm";
             }
@@ -74,7 +74,7 @@ public final class _457_LostAndFound extends Quest {
                     if (reDo.get(Calendar.HOUR_OF_DAY) >= RESET_HOUR)
                         reDo.add(Calendar.DATE, 1);
                     reDo.set(Calendar.HOUR_OF_DAY, RESET_HOUR);
-                    st.getPlayer().setVar("NextQuest457", String.valueOf(reDo.getTimeInMillis()), -1);
+                    st.player.setVar("NextQuest457", reDo.getTimeInMillis());
                     return "lost_villager_q0457_09.htm";
                 }
                 if (cond == 1)

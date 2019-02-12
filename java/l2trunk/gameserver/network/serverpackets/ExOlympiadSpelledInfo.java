@@ -20,7 +20,7 @@ public class ExOlympiadSpelledInfo extends L2GameServerPacket {
 
     public void addSpellRecivedPlayer(Player cha) {
         if (cha != null)
-            char_obj_id = cha.getObjectId();
+            char_obj_id = cha.objectId();
     }
 
     @Override

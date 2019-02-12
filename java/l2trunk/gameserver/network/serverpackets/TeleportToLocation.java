@@ -1,6 +1,7 @@
 package l2trunk.gameserver.network.serverpackets;
 
 import l2trunk.gameserver.Config;
+import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.utils.Location;
 
@@ -11,17 +12,17 @@ import l2trunk.gameserver.utils.Location;
  * 0000: 3a  69 08 10 48  02 c1 00 00  f7 56 00 00  89 ea ff    :i..H.....V.....
  * 0010: ff  0c b2 d8 61                                     ....a
  */
-public class TeleportToLocation extends L2GameServerPacket {
+public final class TeleportToLocation extends L2GameServerPacket {
     private final int _targetId;
     private final Location _loc;
 
-    public TeleportToLocation(GameObject cha, Location loc) {
-        _targetId = cha.getObjectId();
+    public TeleportToLocation(Creature cha, Location loc) {
+        _targetId = cha.objectId();
         _loc = loc;
     }
 
-    public TeleportToLocation(GameObject cha, int x, int y, int z) {
-        _targetId = cha.getObjectId();
+    public TeleportToLocation(Creature cha, int x, int y, int z) {
+        _targetId = cha.objectId();
         _loc = new Location(x, y, z, cha.getHeading());
     }
 

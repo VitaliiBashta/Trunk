@@ -13,9 +13,7 @@ public final class Effect extends Skill {
     }
 
     @Override
-    public void useSkill(Creature activeChar, List<Creature> targets) {
-        targets.stream()
-                .filter(Objects::nonNull)
-                .forEach(target -> getEffects(activeChar, target));
+    public void useSkill(Creature activeChar, Creature target) {
+        getEffects(activeChar, target);
     }
 }

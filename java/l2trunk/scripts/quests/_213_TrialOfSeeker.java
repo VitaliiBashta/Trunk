@@ -3,7 +3,6 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _213_TrialOfSeeker extends Quest {
     //NPC
@@ -204,74 +203,75 @@ public final class _213_TrialOfSeeker extends Quest {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-            st.giveItems(DufnersLetter, 1);
-            if (!st.getPlayer().getVarB("dd1")) {
+            st.giveItems(DufnersLetter);
+            if (!st.player.isVarSet("dd1")) {
                 st.giveItems(7562, 64, false);
-                st.getPlayer().setVar("dd1", "1", -1);
+                st.player.setVar("dd1", 1);
             }
-        } else if (event.equalsIgnoreCase("terry_q0213_03.htm")) {
-            st.giveItems(Terrys1stOrder, 1);
-            st.takeItems(DufnersLetter, -1);
+        } else if ("terry_q0213_03.htm".equalsIgnoreCase(event)) {
+            st.giveItems(Terrys1stOrder);
+            st.takeItems(DufnersLetter);
             st.setCond(2);
             st.setState(STARTED);
-        } else if (event.equalsIgnoreCase("terry_q0213_07.htm")) {
-            st.takeItems(Terrys1stOrder, -1);
-            st.takeItems(MysteriousRunestone, -1);
-            st.giveItems(Terrys2ndOrder, 1);
+        } else if ("terry_q0213_07.htm".equalsIgnoreCase(event)) {
+            st.takeItems(Terrys1stOrder);
+            st.takeItems(MysteriousRunestone);
+            st.giveItems(Terrys2ndOrder);
             st.setCond(4);
             st.setState(STARTED);
-        } else if (event.equalsIgnoreCase("terry_q0213_10.htm")) {
-            st.takeItems(Terrys2ndOrder, -1);
-            st.takeItems(OlMahumRunestone, -1);
-            st.takeItems(TurekRunestone, -1);
-            st.takeItems(AntRunestone, -1);
-            st.takeItems(TurakBugbearRunestone, -1);
-            st.giveItems(TerrysLetter, 1);
-            st.giveItems(TerrysBox, 1);
+        } else if ("terry_q0213_10.htm".equalsIgnoreCase(event)) {
+            st.takeItems(Terrys2ndOrder);
+            st.takeItems(OlMahumRunestone);
+            st.takeItems(TurekRunestone);
+            st.takeItems(AntRunestone);
+            st.takeItems(TurakBugbearRunestone);
+            st.giveItems(TerrysLetter);
+            st.giveItems(TerrysBox);
             st.setCond(6);
             st.setState(STARTED);
-        } else if (event.equalsIgnoreCase("trader_viktor_q0213_05.htm")) {
-            st.takeItems(TerrysLetter, -1);
-            st.giveItems(ViktorsLetter, 1);
+        } else if ("trader_viktor_q0213_05.htm".equalsIgnoreCase(event)) {
+            st.takeItems(TerrysLetter);
+            st.giveItems(ViktorsLetter);
             st.setCond(7);
             st.setState(STARTED);
-        } else if (event.equalsIgnoreCase("trader_viktor_q0213_11.htm")) {
-            st.takeItems(TerrysLetter, -1);
-            st.takeItems(TerrysBox, -1);
-            st.takeItems(HawkeyesLetter, -1);
-            st.giveItems(ViktorsRequest, 1);
+        } else if ("trader_viktor_q0213_11.htm".equalsIgnoreCase(event)) {
+            st.takeItems(TerrysLetter);
+            st.takeItems(TerrysBox);
+            st.takeItems(HawkeyesLetter);
+            st.giveItems(ViktorsRequest);
             st.setCond(9);
             st.setState(STARTED);
-        } else if (event.equalsIgnoreCase("trader_viktor_q0213_15.htm")) {
-            st.takeItems(ViktorsRequest, -1);
-            st.takeItems(MedusaScales, -1);
-            st.giveItems(ShilensRunestone, 1);
-            st.giveItems(AnalysisRequest, 1);
+        } else if ("trader_viktor_q0213_15.htm".equalsIgnoreCase(event)) {
+            st.takeItems(ViktorsRequest);
+            st.takeItems(MedusaScales);
+            st.giveItems(ShilensRunestone);
+            st.giveItems(AnalysisRequest);
             st.setCond(11);
             st.setState(STARTED);
-        } else if (event.equalsIgnoreCase("magister_marina_q0213_02.htm")) {
-            st.takeItems(ShilensRunestone, -1);
-            st.takeItems(AnalysisRequest, -1);
-            st.giveItems(MarinasLetter, 1);
+        } else if ("magister_marina_q0213_02.htm".equalsIgnoreCase(event)) {
+            st.takeItems(ShilensRunestone);
+            st.takeItems(AnalysisRequest);
+            st.giveItems(MarinasLetter);
             st.setCond(12);
             st.setState(STARTED);
-        } else if (event.equalsIgnoreCase("magister_marina_q0213_05.htm")) {
+        } else if ("magister_marina_q0213_05.htm".equalsIgnoreCase(event)) {
             st.takeItems(ExperimentTools, 1);
-            st.giveItems(AnalysisResult, 1);
+            st.giveItems(AnalysisResult);
             st.setCond(14);
             st.setState(STARTED);
-        } else if (event.equalsIgnoreCase("terry_q0213_18.htm"))
-            if (st.getPlayer().getLevel() < 36) {
+        } else if (event.equalsIgnoreCase("terry_q0213_18.htm")) {
+            if (st.player.getLevel() < 36) {
                 htmltext = "terry_q0213_17.htm";
-                st.takeItems(AnalysisResult, -1);
-                st.giveItems(Terrys3rdOrder, 1);
+                st.takeItems(AnalysisResult);
+                st.giveItems(Terrys3rdOrder);
             } else {
                 htmltext = "terry_q0213_18.htm";
-                st.giveItems(ListOfHost, 1);
-                st.takeItems(AnalysisResult, -1);
+                st.giveItems(ListOfHost);
+                st.takeItems(AnalysisResult);
                 st.setCond(16);
                 st.setState(STARTED);
             }
+        }
         return htmltext;
     }
 
@@ -285,8 +285,8 @@ public final class _213_TrialOfSeeker extends Quest {
                 htmltext = "completed";
                 st.exitCurrentQuest(true);
             } else if (cond == 0 && st.getQuestItemsCount(TerrysReport) == 0) {
-                if (st.getPlayer().getClassId().ordinal() == 0x07 || st.getPlayer().getClassId().ordinal() == 0x16 || st.getPlayer().getClassId().ordinal() == 0x23)
-                    if (st.getPlayer().getLevel() < 35) {
+                if (st.player.getClassId().ordinal() == 0x07 || st.player.getClassId().ordinal() == 0x16 || st.player.getClassId().ordinal() == 0x23)
+                    if (st.player.getLevel() < 35) {
                         htmltext = "dufner_q0213_02.htm";
                         st.exitCurrentQuest(true);
                     } else
@@ -300,10 +300,10 @@ public final class _213_TrialOfSeeker extends Quest {
             else if (st.getQuestItemsCount(DufnersLetter) == 0 && st.getQuestItemsCount(TerrysReport) == 0)
                 htmltext = "dufner_q0213_07.htm";
             else if (st.getQuestItemsCount(TerrysReport) != 0) {
-                if (!st.getPlayer().getVarB("prof2.1")) {
+                if (!st.player.isVarSet("prof2.1")) {
                     st.addExpAndSp(514739, 33384);
                     st.giveItems(ADENA_ID, 93803);
-                    st.getPlayer().setVar("prof2.1", "1", -1);
+                    st.player.setVar("prof2.1", 1);
                 }
                 htmltext = "dufner_q0213_08.htm";
                 st.playSound(SOUND_FINISH);
@@ -343,7 +343,7 @@ public final class _213_TrialOfSeeker extends Quest {
             else if (cond == 14 && st.getQuestItemsCount(AnalysisResult) > 0)
                 htmltext = "terry_q0213_15.htm";
             else if ((cond == 14 || cond == 15) && st.getQuestItemsCount(Terrys3rdOrder) > 0) {
-                if (st.getPlayer().getLevel() < 36)
+                if (st.player.getLevel() < 36)
                     htmltext = "terry_q0213_20.htm";
                 else {
                     htmltext = "terry_q0213_21.htm";
@@ -357,12 +357,12 @@ public final class _213_TrialOfSeeker extends Quest {
             else if (cond == 17)
                 if (st.getQuestItemsCount(AbyssRunestone1) != 0 && st.getQuestItemsCount(AbyssRunestone2) != 0 && st.getQuestItemsCount(AbyssRunestone3) != 0 && st.getQuestItemsCount(AbyssRunestone4) != 0) {
                     htmltext = "terry_q0213_23.htm";
-                    st.takeItems(ListOfHost, -1);
-                    st.takeItems(AbyssRunestone1, -1);
-                    st.takeItems(AbyssRunestone2, -1);
-                    st.takeItems(AbyssRunestone3, -1);
-                    st.takeItems(AbyssRunestone4, -1);
-                    st.giveItems(TerrysReport, 1);
+                    st.takeItems(ListOfHost);
+                    st.takeItems(AbyssRunestone1);
+                    st.takeItems(AbyssRunestone2);
+                    st.takeItems(AbyssRunestone3);
+                    st.takeItems(AbyssRunestone4);
+                    st.giveItems(TerrysReport);
                     st.setCond(0); //Тут непонятки, в клиенте нету когда 18, а последний 17 говорит что нада идти к Терри, но после него есть еще один пункт.  Нужна проверка с офф сервера.
                 } else {
                     htmltext = "terry_q0213_22.htm";
@@ -404,7 +404,7 @@ public final class _213_TrialOfSeeker extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         for (int[] aDROPLIST_COND : DROPLIST_COND)
@@ -424,6 +424,5 @@ public final class _213_TrialOfSeeker extends Quest {
             st.setCond(17);
             st.setState(STARTED);
         }
-        return null;
     }
 }

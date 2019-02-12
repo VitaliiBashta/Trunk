@@ -32,8 +32,4 @@ public final class EffectRemoveTarget extends Effect {
         return true;
     }
 
-    @Override
-    public boolean onActionTime() {
-        return false;
-    }
 }

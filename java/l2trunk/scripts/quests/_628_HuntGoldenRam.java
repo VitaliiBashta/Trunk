@@ -4,7 +4,6 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _628_HuntGoldenRam extends Quest {
     //Npcs
@@ -33,15 +32,15 @@ public final class _628_HuntGoldenRam extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("31554-03a.htm")) {
+        if ("31554-03a.htm".equalsIgnoreCase(event)) {
             if (st.getQuestItemsCount(CHITIN) >= 100 && st.getCond() == 1) {
                 st.setCond(2);
                 st.takeItems(CHITIN, 100);
                 st.giveItems(RECRUIT, 1);
-                st.getPlayer().updateRam();
+                st.player.updateRam();
                 htmltext = "31554-04.htm";
             }
-        } else if (event.equalsIgnoreCase("31554-07.htm")) {
+        } else if ("31554-07.htm".equalsIgnoreCase(event)) {
             st.playSound(SOUND_GIVEUP);
             st.exitCurrentQuest(true);
         }
@@ -57,7 +56,7 @@ public final class _628_HuntGoldenRam extends Quest {
         if (st.isCompleted())
             htmltext = "31554-05a.htm";
         else if (cond == 0) {
-            if (st.getPlayer().getLevel() >= 66) {
+            if (st.player.getLevel() >= 66) {
                 htmltext = "31554-02.htm";
                 st.setCond(1);
                 st.setState(STARTED);
@@ -73,12 +72,11 @@ public final class _628_HuntGoldenRam extends Quest {
                 htmltext = "31554-03a.htm";
         } else if (cond == 2) {
             if (chitin1 >= 100 && chitin2 >= 100) {
-                htmltext = "31554-05.htm";
-                st.takeItems(CHITIN, -1);
-                st.takeItems(CHITIN2, -1);
-                st.takeItems(RECRUIT, -1);
-                st.giveItems(SOLDIER, 1);
-                st.getPlayer().updateRam();
+                st.takeItems(CHITIN);
+                st.takeItems(CHITIN2);
+                st.takeItems(RECRUIT);
+                st.giveItems(SOLDIER);
+                st.player.updateRam();
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest(true);
             }
@@ -91,15 +89,15 @@ public final class _628_HuntGoldenRam extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getState() != STARTED)
-            return null;
+            return ;
         int npcId = npc.getNpcId();
         int cond = st.getCond();
 
         if (cond >= 1 && 21507 < npcId && npcId < 21513) {
             if (Rnd.chance(CHANCE + (npcId - 21506) * 2)) {
-                st.giveItems(CHITIN, 1);
+                st.giveItems(CHITIN);
 
                 if (st.getQuestItemsCount(CHITIN) < 100)
                     st.playSound(SOUND_ITEMGET);
@@ -108,13 +106,12 @@ public final class _628_HuntGoldenRam extends Quest {
             }
         } else if (cond == 2 && 21513 <= npcId && npcId <= 21518)
             if (Rnd.chance(CHANCE + (npcId - 21512) * 3)) {
-                st.giveItems(CHITIN2, 1);
+                st.giveItems(CHITIN2);
 
                 if (st.getQuestItemsCount(CHITIN2) < 100)
                     st.playSound(SOUND_ITEMGET);
                 else
                     st.playSound(SOUND_MIDDLE);
             }
-        return null;
     }
 }

@@ -3,7 +3,6 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -83,7 +82,7 @@ public final class _369_CollectorOfJewels extends Quest {
         int _state = st.getState();
 
         if (_state == CREATED) {
-            if (st.getPlayer().getLevel() >= 25) {
+            if (st.player.getLevel() >= 25) {
                 st.setCond(0);
                 return "30376-02.htm";
             }
@@ -126,19 +125,19 @@ public final class _369_CollectorOfJewels extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState qs) {
+    public void onKill(NpcInstance npc, QuestState qs) {
         int cond = qs.getCond();
         if (cond != 1 && cond != 3)
-            return null;
+            return;
 
         int[] drop = DROPLIST.get(npc.getNpcId());
         if (drop == null)
-            return null;
+            return;
 
         int max_count = cond == 1 ? 50 : 200;
         if (qs.getQuestItemsCount(drop[0]) < max_count && qs.rollAndGive(drop[0], 1, 1, max_count, drop[1]) && qs.getQuestItemsCount(FLARE_SHARD) >= max_count && qs.getQuestItemsCount(FREEZING_SHARD) >= max_count)
             qs.setCond(cond == 1 ? 2 : 4);
 
-        return null;
+        return;
     }
 }

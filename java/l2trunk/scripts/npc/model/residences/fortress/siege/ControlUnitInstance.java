@@ -35,7 +35,7 @@ public final class ControlUnitInstance extends NpcInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
         int cond = getCond(player);
         switch (cond) {
             case COND_CAN_OPEN:
@@ -65,7 +65,7 @@ public final class ControlUnitInstance extends NpcInstance {
         }
 
         if (allPowerDisabled) {
-            if (player.getInventory().getCountOf(ITEM_ID) > 0)
+            if (player.haveItem(ITEM_ID) )
                 return COND_CAN_OPEN;
             else
                 return COND_NO_ITEM;

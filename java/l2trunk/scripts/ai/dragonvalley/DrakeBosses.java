@@ -48,7 +48,7 @@ public final class DrakeBosses extends Fighter {
                         {
                             qs = pl.getQuestState(_456_DontKnowDontCare.class);
                             if (qs != null && qs.getCond() == 1)
-                                qs.set("RaidKilled", corpse.getObjectId());
+                                qs.set("RaidKilled", corpse.objectId());
                         }
                     }
                 }

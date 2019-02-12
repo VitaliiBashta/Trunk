@@ -38,7 +38,7 @@ public final class ExShowDominionRegistry extends L2GameServerPacket {
         _currentTime = (int) (System.currentTimeMillis() / 1000L);
         _mercReq = siegeEvent.getObjects(DominionSiegeEvent.DEFENDER_PLAYERS).size();
         _clanReq = siegeEvent.getObjects(DominionSiegeEvent.DEFENDERS).size() + 1;
-        _registeredAsPlayer = siegeEvent.getObjects(DominionSiegeEvent.DEFENDER_PLAYERS).contains(activeChar.getObjectId());
+        _registeredAsPlayer = siegeEvent.getObjects(DominionSiegeEvent.DEFENDER_PLAYERS).contains(activeChar.objectId());
         _registeredAsClan = siegeEvent.getSiegeClan(DominionSiegeEvent.DEFENDERS, activeChar.getClan()) != null;
 
         List<Dominion> dominions = ResidenceHolder.getResidenceList(Dominion.class);

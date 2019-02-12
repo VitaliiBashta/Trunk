@@ -27,7 +27,7 @@ public class QuestNotAggroMob extends DefaultAI {
 
         if (player != null) {
             player.getQuestsForEvent(actor, QuestEventType.ATTACKED_WITH_QUEST)
-                    .forEach(qs -> qs.getQuest().notifyAttack(actor, qs));
+                    .forEach(qs -> qs.quest.notifyAttack(actor, qs));
         }
     }
 

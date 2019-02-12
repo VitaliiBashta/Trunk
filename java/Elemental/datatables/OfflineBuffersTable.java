@@ -42,15 +42,15 @@ public enum OfflineBuffersTable {
 
                     player.spawnMe();
 
-                    if (player.getClan() != null && player.getClan().getAnyMember(player.getObjectId()) != null)
-                        player.getClan().getAnyMember(player.getObjectId()).setPlayerInstance(player, false);
+                    if (player.getClan() != null && player.getClan().getAnyMember(player.objectId()) != null)
+                        player.getClan().getAnyMember(player.objectId()).setPlayerInstance(player, false);
 
                     // Create the buffer data
                     final BufferData buffer = new BufferData(player, rs.getString("title"), rs.getInt("price"));
 
                     // Get all the buffs from the db
                     try (PreparedStatement stm_items = con.prepareStatement("SELECT * FROM character_offline_buffer_buffs WHERE charId = ?")) {
-                        stm_items.setInt(1, player.getObjectId());
+                        stm_items.setInt(1, player.objectId());
                         try (ResultSet skills = stm_items.executeQuery()) {
                             if (skills.next()) {
                                 final String[] skillIds = skills.getString("skillIds").split(",");
@@ -66,7 +66,7 @@ public enum OfflineBuffersTable {
                     }
 
                     // Add the buffer data to the manager
-                    OfflineBufferManager.INSTANCE.getBuffStores().put(player.getObjectId(), buffer);
+                    OfflineBufferManager.INSTANCE.getBuffStores().put(player.objectId(), buffer);
 
                     // Sit the player, put it on store and and change the colors and titles
                     player.sitDown(null);
@@ -97,17 +97,17 @@ public enum OfflineBuffersTable {
     public synchronized void onLogin(Player trader) {
         try (Connection con = DatabaseFactory.getInstance().getConnection()) {
             // Remove the buffer from the manager
-            OfflineBufferManager.INSTANCE.getBuffStores().remove(trader.getObjectId());
+            OfflineBufferManager.INSTANCE.getBuffStores().remove(trader.objectId());
 
             // Borramos el buff store
             try (PreparedStatement st = con.prepareStatement("DELETE FROM character_offline_buffers WHERE charId=?")) {
-                st.setInt(1, trader.getObjectId());
+                st.setInt(1, trader.objectId());
                 st.executeUpdate();
             }
 
             // Borramos tambien sus buffs
             try (PreparedStatement st = con.prepareStatement("DELETE FROM character_offline_buffer_buffs WHERE charId=?")) {
-                st.setInt(1, trader.getObjectId());
+                st.setInt(1, trader.objectId());
                 st.executeUpdate();
             }
         } catch (Exception e) {
@@ -116,21 +116,21 @@ public enum OfflineBuffersTable {
     }
 
     public synchronized void onLogout(Player trader) {
-        final BufferData buffer = OfflineBufferManager.INSTANCE.getBuffStores().get(trader.getObjectId());
+        final BufferData buffer = OfflineBufferManager.INSTANCE.getBuffStores().get(trader.objectId());
         if (buffer == null)
             return;
 
         try (Connection con = DatabaseFactory.getInstance().getConnection()) {
             // Guardamos primero el offline buffer
             try (PreparedStatement st = con.prepareStatement("REPLACE INTO character_offline_buffers VALUES (?,?,?)")) {
-                st.setInt(1, trader.getObjectId());
+                st.setInt(1, trader.objectId());
                 st.setInt(2, buffer.buffPrice);
                 st.setString(3, buffer.saleTitle);
                 st.executeUpdate();
             }
 
             try (PreparedStatement st = con.prepareStatement("REPLACE INTO character_offline_buffer_buffs VALUES (?,?)")) {
-                st.setInt(1, trader.getObjectId());
+                st.setInt(1, trader.objectId());
                 st.setString(2, joinAllSkillsToString(buffer.buffs.values()));
                 st.executeUpdate();
             }

@@ -3,7 +3,6 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _10278_MutatedKaneusHeine extends Quest {
     // NPCs
@@ -28,11 +27,11 @@ public final class _10278_MutatedKaneusHeine extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("30916-03.htm")) {
+        if ("30916-03.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("30907-02.htm")) {
+        } else if ("30907-02.htm".equalsIgnoreCase(event)) {
             st.giveItems(57, 180000);
             st.exitCurrentQuest(false);
             st.playSound(SOUND_FINISH);
@@ -50,7 +49,7 @@ public final class _10278_MutatedKaneusHeine extends Quest {
             if (npcId == Gosta)
                 htmltext = "30916-0a.htm";
         } else if (id == CREATED && npcId == Gosta) {
-            if (st.getPlayer().getLevel() >= 38)
+            if (st.player.getLevel() >= 38)
                 htmltext = "30916-01.htm";
             else
                 htmltext = "30916-00.htm";
@@ -68,13 +67,12 @@ public final class _10278_MutatedKaneusHeine extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getState() == STARTED && st.getCond() == 1) {
-            st.giveItems(Tissue1, 1);
-            st.giveItems(Tissue2, 1);
+            st.giveItems(Tissue1);
+            st.giveItems(Tissue2);
             st.setCond(2);
             st.playSound(SOUND_MIDDLE);
         }
-        return null;
     }
 }

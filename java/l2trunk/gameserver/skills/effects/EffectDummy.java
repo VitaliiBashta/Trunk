@@ -20,8 +20,4 @@ public final class EffectDummy extends Effect {
     public void onExit() {
         super.onExit();
     }
-
-    public boolean onActionTime() {
-        return false;
-    }
 }

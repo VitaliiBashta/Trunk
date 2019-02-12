@@ -52,7 +52,7 @@ public class AttackRequest extends L2GameClientPacket {
             return;
         }
 
-        if (target.isPlayer() && (activeChar.isInBoat() || target.isInBoat())) {
+        if (target instanceof Player && (activeChar.isInBoat() || target.isInBoat())) {
             activeChar.sendActionFailed();
             return;
         }
@@ -62,7 +62,7 @@ public class AttackRequest extends L2GameClientPacket {
             return;
         }
 
-        if (target.getObjectId() != activeChar.getObjectId() && !activeChar.isInStoreMode() && !activeChar.isProcessingRequest())
+        if (target.objectId() != activeChar.objectId() && !activeChar.isInStoreMode() && !activeChar.isProcessingRequest())
             target.onForcedAttack(activeChar, false);
     }
 }

@@ -19,14 +19,14 @@ public abstract class DoormanInstance extends NpcInstance {
     protected String _mainDialog;
     protected String _failDialog;
 
-    protected final List<Integer> _doors;
+    protected final List<Integer> doors;
 
     protected DoormanInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
 
         setDialogs();
 
-        _doors = template.getAIParams().getIntegerList("doors");
+        doors = template.getAIParams().getIntegerList("doors");
     }
 
     protected void setDialogs() {
@@ -43,10 +43,10 @@ public abstract class DoormanInstance extends NpcInstance {
         switch (cond) {
             case COND_OWNER:
                 if (command.equalsIgnoreCase("openDoors"))
-                    for (int i : _doors)
+                    for (int i : doors)
                         ReflectionUtils.getDoor(i).openMe();
                 else if (command.equalsIgnoreCase("closeDoors"))
-                    for (int i : _doors)
+                    for (int i : doors)
                         ReflectionUtils.getDoor(i).closeMe();
                 break;
             case COND_SIEGE:
@@ -59,7 +59,7 @@ public abstract class DoormanInstance extends NpcInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
         String filename = null;
         int cond = getCond(player);
         switch (cond) {

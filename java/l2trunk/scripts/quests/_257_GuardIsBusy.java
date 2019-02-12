@@ -23,18 +23,18 @@ public final class _257_GuardIsBusy extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("gilbert_q0257_03.htm")) {
+        if ("gilbert_q0257_03.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-            st.takeItems(GLUDIO_LORDS_MARK, -1);
-            st.giveItems(GLUDIO_LORDS_MARK, 1);
-        } else if (event.equalsIgnoreCase("257_2")) {
+            st.takeItems(GLUDIO_LORDS_MARK);
+            st.giveItems(GLUDIO_LORDS_MARK);
+        } else if ("257_2".equals(event)) {
             htmltext = "gilbert_q0257_05.htm";
-            st.takeItems(GLUDIO_LORDS_MARK, -1);
+            st.takeItems(GLUDIO_LORDS_MARK);
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(true);
-        } else if (event.equalsIgnoreCase("257_3"))
+        } else if ("257_3".equals(event))
             htmltext = "gilbert_q0257_06.htm";
         return htmltext;
     }
@@ -45,7 +45,7 @@ public final class _257_GuardIsBusy extends Quest {
         int cond = st.getCond();
 
         if (cond == 0) {
-            if (st.getPlayer().getLevel() >= 6) {
+            if (st.player.getLevel() >= 6) {
                 htmltext = "gilbert_q0257_02.htm";
                 return htmltext;
             }
@@ -53,17 +53,17 @@ public final class _257_GuardIsBusy extends Quest {
             st.exitCurrentQuest(true);
         } else if (cond == 1 && st.getQuestItemsCount(ORC_AMULET) < 1 && st.getQuestItemsCount(ORC_NECKLACE) < 1 && st.getQuestItemsCount(WEREWOLF_FANG) < 1)
             htmltext = "gilbert_q0257_04.htm";
-        else if (cond == 1 && (st.getQuestItemsCount(ORC_AMULET) > 0 || st.getQuestItemsCount(ORC_NECKLACE) > 0 || st.getQuestItemsCount(WEREWOLF_FANG) > 0)) {
+        else if (cond == 1 && (st.haveQuestItem(ORC_AMULET)  || st.haveQuestItem(ORC_NECKLACE)  || st.haveQuestItem(WEREWOLF_FANG) )) {
             st.giveItems(ADENA, 12 * st.getQuestItemsCount(ORC_AMULET) + 20 * st.getQuestItemsCount(ORC_NECKLACE) + 25 * st.getQuestItemsCount(WEREWOLF_FANG), false);
 
-            if (st.getPlayer().getClassId().getLevel() == 1 && !st.getPlayer().getVarB("p1q2")) {
-                st.getPlayer().setVar("p1q2", "1", -1);
-                st.getPlayer().sendPacket(new ExShowScreenMessage("Acquisition of Soulshot for beginners complete.\n                  Go find the Newbie Guide."));
-                QuestState qs = st.getPlayer().getQuestState(_255_Tutorial.class);
+            if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("p1q2")) {
+                st.player.setVar("p1q2", 1);
+                st.player.sendPacket(new ExShowScreenMessage("Acquisition of Soulshot for beginners complete.\n                  Go find the Newbie Guide."));
+                QuestState qs = st.player.getQuestState(_255_Tutorial.class);
                 if (qs != null && qs.getInt("Ex") != 10) {
                     st.showQuestionMark(26);
-                    qs.set("Ex", "10");
-                    if (st.getPlayer().getClassId().isMage()) {
+                    qs.set("Ex", 10);
+                    if (st.player.getClassId().isMage) {
                         st.playTutorialVoice("tutorial_voice_027");
                         st.giveItems(5790, 3000);
                     } else {
@@ -73,18 +73,18 @@ public final class _257_GuardIsBusy extends Quest {
                 }
             }
 
-            st.takeItems(ORC_AMULET, -1);
-            st.takeItems(ORC_NECKLACE, -1);
-            st.takeItems(WEREWOLF_FANG, -1);
+            st.takeItems(ORC_AMULET);
+            st.takeItems(ORC_NECKLACE);
+            st.takeItems(WEREWOLF_FANG);
             htmltext = "gilbert_q0257_07.htm";
         }
         return htmltext;
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
-        if (st.getQuestItemsCount(GLUDIO_LORDS_MARK) > 0 && st.getCond() > 0)
+        if (st.haveQuestItem(GLUDIO_LORDS_MARK)  && st.getCond() > 0)
             if (npcId == 20130 || npcId == 20131 || npcId == 20006)
                 st.rollAndGive(ORC_AMULET, 1, 50);
             else if (npcId == 20093 || npcId == 20096 || npcId == 20098)
@@ -95,6 +95,5 @@ public final class _257_GuardIsBusy extends Quest {
                 st.rollAndGive(WEREWOLF_FANG, 1, 50);
             else if (npcId == 20342)
                 st.rollAndGive(WEREWOLF_FANG, 1, 75);
-        return null;
     }
 }

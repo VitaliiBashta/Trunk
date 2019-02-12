@@ -4,7 +4,6 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -196,7 +195,7 @@ public final class _372_LegacyOfInsolence extends Quest {
         if (_state == CREATED) {
             if (npcId != WALDERAL)
                 return htmltext;
-            if (st.getPlayer().getLevel() >= 59)
+            if (st.player.getLevel() >= 59)
                 htmltext = "30844-4.htm";
             else {
                 htmltext = "30844-5.htm";
@@ -209,15 +208,14 @@ public final class _372_LegacyOfInsolence extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState qs) {
+    public void onKill(NpcInstance npc, QuestState qs) {
         if (qs.getState() != STARTED)
-            return null;
+            return ;
 
         int[] drop = DROPLIST.get(npc.getNpcId());
         if (drop == null)
-            return null;
+            return ;
 
         qs.rollAndGive(drop[0], 1, drop[1]);
-        return null;
     }
 }

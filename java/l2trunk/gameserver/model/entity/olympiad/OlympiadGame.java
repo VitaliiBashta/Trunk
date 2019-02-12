@@ -253,7 +253,7 @@ public class OlympiadGame {
         teamsPlayers.forEach(player ->
                 player.getAllQuestsStates().stream()
                         .filter(QuestState::isStarted)
-                        .forEach(qs -> qs.getQuest().onOlympiadEnd(this, qs)));
+                        .forEach(qs -> qs.quest.onOlympiadEnd(this, qs)));
 
 
         broadcastPacket(packet, true, false);
@@ -390,7 +390,7 @@ public class OlympiadGame {
                 broadcastPacket(new ExOlympiadUserInfo(sender, sender.getOlympiadSide()), !onlyToSpectators, true);
         } else {
             // Рассылаем информацию о первой команде
-            team1.getPlayers().forEach(player ->  {
+            team1.getPlayers().forEach(player -> {
                 if (receiver != null)
                     receiver.sendPacket(new ExOlympiadUserInfo(player, player.getOlympiadSide()));
                 else {

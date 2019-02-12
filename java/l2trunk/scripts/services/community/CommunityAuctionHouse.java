@@ -172,12 +172,12 @@ public final class CommunityAuctionHouse implements ScriptFile, ICommunityBoardH
                     ItemInstance item = AuctionStorage.getInstance().getItemByObjectId(currentObjectId);
                     if (item == null) {
                         player.sendMessage("Item has been already sold");
-                        Collection<Auction> auctions = AuctionManager.getInstance().getMyAuctions(player.getObjectId());
+                        Collection<Auction> auctions = AuctionManager.getInstance().getMyAuctions(player.objectId());
                         for (Auction a : auctions) {
                             if (a.getItem() == null)
                                 _log.error("Auction bugged! Item:null itemId:" + currentObjectId + " auctionId:" + a.getAuctionId() + " Count:" + a.getCountToSell() + " Price:" + a.getPricePerItem() + " Seller:" + a.getSellerName() + "[" + a.getSellerObjectId() + "] store:" + a.isPrivateStore());
                             else
-                                _log.error("Auction bugged! Item:" + a.getItem().getName() + " itemId:" + currentObjectId + " playerInv:" + player.getInventory().getItemByObjectId(player.getObjectId()) + " auctionId:" + a.getAuctionId() + " Count:" + a.getCountToSell() + " Price:" + a.getPricePerItem() + " Seller:" + a.getSellerName() + "[" + a.getSellerObjectId() + "] store:" + a.isPrivateStore());
+                                _log.error("Auction bugged! Item:" + a.getItem().getName() + " itemId:" + currentObjectId + " playerInv:" + player.getInventory().getItemByObjectId(player.objectId()) + " auctionId:" + a.getAuctionId() + " Count:" + a.getCountToSell() + " Price:" + a.getPricePerItem() + " Seller:" + a.getSellerName() + "[" + a.getSellerObjectId() + "] store:" + a.isPrivateStore());
                             AuctionManager.getInstance().removeStore(player, a.getAuctionId());
                         }
                     } else {
@@ -388,7 +388,7 @@ public final class CommunityAuctionHouse implements ScriptFile, ICommunityBoardH
             builder.append("<tr>");
             builder.append("<td width=32 height=32 align=center valign=top>");
             if (item != null)
-                builder.append("<button value=\"\" action=\"bypass _bbsNewAuction_ n").append(item.getObjectId()).append(" _ ").append(line).append("\" width=32 height=32 back=L2UI_CT1.ItemWindow_DF_Frame_Down fore=L2UI_CT1.ItemWindow_DF_Frame />");
+                builder.append("<button value=\"\" action=\"bypass _bbsNewAuction_ n").append(item.objectId()).append(" _ ").append(line).append("\" width=32 height=32 back=L2UI_CT1.ItemWindow_DF_Frame_Down fore=L2UI_CT1.ItemWindow_DF_Frame />");
             else
                 builder.append("<br>");
             builder.append("</td>");
@@ -418,7 +418,7 @@ public final class CommunityAuctionHouse implements ScriptFile, ICommunityBoardH
             for (TradeItem ti : player.getSellList()) {
                 for (Auction auction : auctions) // Dont use myAuctions here...
                 {
-                    if (auction.getItem() != null && auction.getItem().getObjectId() == ti.getObjectId())
+                    if (auction.getItem() != null && auction.getItem().objectId() == ti.getObjectId())
                         myAuctions.remove(auction);
                 }
             }
@@ -440,7 +440,7 @@ public final class CommunityAuctionHouse implements ScriptFile, ICommunityBoardH
             builder.append("<tr><td width=260><table border=0 width=260><tr><td width=32 height=32 background=" + item.getTemplate().getIcon() + ">");
             //button with image of item icon
             if (!player.hasDialogAskActive())
-                builder.append("<button value=\"\" action=\"bypass _bbsNewAuction_ c").append(item.getObjectId()).append(" _ ").append(line).append(" _ 1\" width=32 height=32 back=\"L2UI_CT1.ItemWindow_DF_Frame_Down\" fore=\"L2UI_CT1.ItemWindow_DF_Frame\">");
+                builder.append("<button value=\"\" action=\"bypass _bbsNewAuction_ c").append(item.objectId()).append(" _ ").append(line).append(" _ 1\" width=32 height=32 back=\"L2UI_CT1.ItemWindow_DF_Frame_Down\" fore=\"L2UI_CT1.ItemWindow_DF_Frame\">");
             else
                 builder.append("<button width=32 height=32 back=\"L2UI_CT1.ItemWindow_DF_Frame_Down\" fore=\"L2UI_CT1.ItemWindow_DF_Frame\">");
             builder.append("</td>");

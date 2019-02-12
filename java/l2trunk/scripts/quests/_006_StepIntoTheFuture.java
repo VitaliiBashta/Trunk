@@ -33,16 +33,16 @@ public final class _006_StepIntoTheFuture extends Quest {
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("baul_q0006_0201.htm")) {
-            st.giveItems(BaulrosLetter, 1, false);
+            st.giveItems(BaulrosLetter);
             st.setCond(2);
             st.playSound(SOUND_MIDDLE);
         } else if (event.equalsIgnoreCase("sir_collin_windawood_q0006_0301.htm")) {
-            st.takeItems(BaulrosLetter, -1);
+            st.takeItems(BaulrosLetter);
             st.setCond(3);
             st.playSound(SOUND_MIDDLE);
         } else if (event.equalsIgnoreCase("rapunzel_q0006_0401.htm")) {
-            st.giveItems(ScrollOfEscapeGiran, 1, false);
-            st.giveItems(MarkOfTraveler, 1, false);
+            st.giveItems(ScrollOfEscapeGiran);
+            st.giveItems(MarkOfTraveler);
             st.unset("cond");
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(false);
@@ -57,7 +57,7 @@ public final class _006_StepIntoTheFuture extends Quest {
         int cond = st.getCond();
         if (npcId == Roxxy) {
             if (cond == 0)
-                if (st.getPlayer().getRace() == Race.human && st.getPlayer().getLevel() >= 3)
+                if (st.player.getRace() == Race.human && st.player.getLevel() >= 3)
                     htmltext = "rapunzel_q0006_0101.htm";
                 else {
                     htmltext = "rapunzel_q0006_0102.htm";

@@ -90,7 +90,7 @@ public final class RequestCrystallizeItem extends L2GameClientPacket {
         }
 
         activeChar.sendPacket(SystemMsg.THE_ITEM_HAS_BEEN_SUCCESSFULLY_CRYSTALLIZED);
-        ItemFunctions.addItem(activeChar, crystalId, crystalAmount, true, "Crystalize");
+        ItemFunctions.addItem(activeChar, crystalId, crystalAmount, "Crystalize");
         activeChar.sendChanges();
 
         ItemLogHandler.getInstance().addLog(activeChar, item, 1L, ItemActionType.CRYSTALIZED);

@@ -6,11 +6,12 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.residence.Fortress;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
-import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.Location;
 
 import java.util.List;
+
+import static l2trunk.gameserver.utils.ItemFunctions.addItem;
 
 
 public final class LogisticsOfficerInstance extends FacilityManagerInstance {
@@ -78,7 +79,7 @@ public final class LogisticsOfficerInstance extends FacilityManagerInstance {
                 fortress.setJdbcState(JdbcEntityState.UPDATED);
                 fortress.update();
 
-                Functions.addItem(player, ITEM_ID, count, "LogisticsOfficerInstance");
+                addItem(player, ITEM_ID, count);
             } else
                 filename = "residence2/fortress/fortress_supply_officer014.htm";
 
@@ -94,7 +95,7 @@ public final class LogisticsOfficerInstance extends FacilityManagerInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
         showChatWindow(player, "residence2/fortress/fortress_supply_officer001.htm");
     }
 }

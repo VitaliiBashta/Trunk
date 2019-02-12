@@ -3,12 +3,11 @@ package l2trunk.gameserver.skills.skillclasses;
 import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.Creature;
-import l2trunk.gameserver.model.Playable;
+import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.utils.ItemFunctions;
 
 import java.util.List;
-import java.util.Objects;
 
 public final class SummonItem extends Skill {
     private final int itemId;
@@ -29,16 +28,15 @@ public final class SummonItem extends Skill {
 
     @Override
     public void useSkill(final Creature activeChar, final List<Creature> targets) {
-        if (!activeChar.isPlayable())
-            return;
-        targets.stream()
-                .filter(Objects::nonNull)
-                .forEach(target -> {
-                    int itemId = minId > 0 ? Rnd.get(minId, maxId) : this.itemId;
-                    long count = Rnd.get(minCount, maxCount);
+        if (activeChar instanceof Player) {
+            Player player = (Player) activeChar;
+            targets.forEach(target -> {
+                int itemId = minId > 0 ? Rnd.get(minId, maxId) : this.itemId;
+                long count = Rnd.get(minCount, maxCount);
 
-                    ItemFunctions.addItem((Playable) activeChar, itemId, count, true, "SummonItem");
-                    getEffects(activeChar, target, getActivateRate() > 0, false);
-                });
+                ItemFunctions.addItem(player, itemId, count, "SummonItem");
+                getEffects(player, target, activateRate > 0, false);
+            });
+        }
     }
 }

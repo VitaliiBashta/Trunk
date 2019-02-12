@@ -11,19 +11,15 @@ public final class EffectAddSkills extends Effect {
     @Override
     public void onStart() {
         super.onStart();
-        getSkill().getAddedSkills().forEach(as ->
-                effected.addSkill(as.getSkill().id));
+        skill.getAddedSkills().forEach(as ->
+                effected.addSkill(as.skill.id));
     }
 
     @Override
     public void onExit() {
         super.onExit();
-        getSkill().getAddedSkills().forEach(as ->
-                effected.removeSkill(as.getSkill()));
+        skill.getAddedSkills().forEach(as ->
+                effected.removeSkill(as.skill.id));
     }
 
-    @Override
-    public boolean onActionTime() {
-        return false;
-    }
 }

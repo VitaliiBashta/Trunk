@@ -2,8 +2,9 @@ package l2trunk.scripts.npc.model;
 
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.NpcInstance;
-import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
+
+import static l2trunk.gameserver.utils.ItemFunctions.addItem;
 
 public final class KegorNpcInstance extends NpcInstance {
     public KegorNpcInstance(int objectId, NpcTemplate template) {
@@ -26,10 +27,11 @@ public final class KegorNpcInstance extends NpcInstance {
             return;
 
         if ("request_stone".equalsIgnoreCase(command)) {
-            if (player.getInventory().getCountOf(15469) == 0 && player.getInventory().getCountOf(15470) == 0)
-                Functions.addItem(player, 15469, 1, "KegorNpcInstance");
-            else
+            if (player.haveItem(15469)  || player.haveItem(15470)) {
                 player.sendMessage("You can't take more than 1 Frozen Core.");
+            } else {
+                addItem(player, 15469, 1);
+            }
         } else
             super.onBypassFeedback(player, command);
     }

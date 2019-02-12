@@ -3,7 +3,6 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _228_TestOfMagus extends Quest {
     //NPC
@@ -264,37 +263,37 @@ public final class _228_TestOfMagus extends Quest {
             st.giveItems(RukalsLetter, 1);
             st.setCond(1);
             st.setState(STARTED);
-            if (!st.getPlayer().getVarB("dd3")) {
+            if (!st.player.isVarSet("dd3")) {
                 st.giveItems(7562, 122);
-                st.getPlayer().setVar("dd3", "1", -1);
+                st.player.setVar("dd3", 1);
             }
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("30391-02.htm")) {
-            st.takeItems(RukalsLetter, -1);
-            st.giveItems(ParinasLetter, 1);
+        } else if ("30391-02.htm".equalsIgnoreCase(event)) {
+            st.takeItems(RukalsLetter);
+            st.giveItems(ParinasLetter);
             st.setCond(2);
             st.setState(STARTED);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("30612-02.htm")) {
-            st.takeItems(ParinasLetter, -1);
-            st.giveItems(LilacCharm, 1);
+        } else if ("30612-02.htm".equalsIgnoreCase(event)) {
+            st.takeItems(ParinasLetter);
+            st.giveItems(LilacCharm);
             st.setCond(3);
             st.setState(STARTED);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("30629-10.htm")) {
-            st.takeItems(LilacCharm, -1);
-            st.takeItems(GoldenSeed1st, -1);
-            st.takeItems(GoldenSeed2st, -1);
-            st.takeItems(GoldenSeed3st, -1);
-            st.giveItems(ScoreOfElements, 1);
+        } else if ("30629-10.htm".equalsIgnoreCase(event)) {
+            st.takeItems(LilacCharm);
+            st.takeItems(GoldenSeed1st);
+            st.takeItems(GoldenSeed2st);
+            st.takeItems(GoldenSeed3st);
+            st.giveItems(ScoreOfElements);
             st.setCond(5);
             st.setState(STARTED);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("30412-02.htm")) {
-            st.giveItems(SylphCharm, 1);
+        } else if ("30412-02.htm".equalsIgnoreCase(event)) {
+            st.giveItems(SylphCharm);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("30409-03.htm")) {
-            st.giveItems(SerpentCharm, 1);
+        } else if ("30409-03.htm".equalsIgnoreCase(event)) {
+            st.giveItems(SerpentCharm);
             st.playSound(SOUND_MIDDLE);
         }
         return event;
@@ -310,8 +309,8 @@ public final class _228_TestOfMagus extends Quest {
                 htmltext = "completed";
                 st.exitCurrentQuest(true);
             } else if (cond == 0) {
-                if (st.getPlayer().getClassId().getId() == 0x0b || st.getPlayer().getClassId().getId() == 0x1a || st.getPlayer().getClassId().getId() == 0x27) {
-                    if (st.getPlayer().getLevel() >= 39)
+                if (st.player.getClassId().id == 0x0b || st.player.getClassId().id == 0x1a || st.player.getClassId().id == 0x27) {
+                    if (st.player.getLevel() >= 39)
                         htmltext = "30629-03.htm";
                     else {
                         htmltext = "30629-02.htm";
@@ -339,10 +338,10 @@ public final class _228_TestOfMagus extends Quest {
                 st.takeItems(ToneOfEarth, -1);
                 st.giveItems(MarkOfMagus, 1);
                 htmltext = "30629-12.htm";
-                if (!st.getPlayer().getVarB("prof2.3")) {
+                if (!st.player.isVarSet("prof2.3")) {
                     st.addExpAndSp(1029122, 70620);
                     st.giveItems(ADENA_ID, 186077);
-                    st.getPlayer().setVar("prof2.3", "1", -1);
+                    st.player.setVar("prof2.3", 1);
                 }
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest(true);
@@ -441,7 +440,7 @@ public final class _228_TestOfMagus extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         for (int[] aDROPLIST_COND : DROPLIST_COND)
@@ -458,6 +457,5 @@ public final class _228_TestOfMagus extends Quest {
             st.setCond(4);
             st.setState(STARTED);
         }
-        return null;
     }
 }

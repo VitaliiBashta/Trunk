@@ -78,7 +78,7 @@ public final class UserInfo extends L2GameServerPacket {
             Clan clan = player.getClan();
             Alliance alliance = clan == null ? null : clan.getAlliance();
             //
-            clan_id = clan == null ? 0 : clan.getClanId();
+            clan_id = clan == null ? 0 : clan.clanId();
             clan_crest_id = clan == null ? 0 : clan.getCrestId();
             large_clan_crest_id = clan == null ? 0 : clan.getCrestLargeId();
             //
@@ -139,8 +139,8 @@ public final class UserInfo extends L2GameServerPacket {
             _relation = e.getUserRelation(player, _relation);
 
         _loc = player.getLoc();
-        obj_id = player.getObjectId();
-        vehicle_obj_id = player.isInBoat() ? player.getBoat().getObjectId() : 0x00;
+        obj_id = player.objectId();
+        vehicle_obj_id = player.isInBoat() ? player.getBoat().objectId() : 0x00;
         _race = player.getRace().ordinal();
         sex = player.isMale()? 1:0;
         base_class = player.getBaseClassId();
@@ -178,7 +178,7 @@ public final class UserInfo extends L2GameServerPacket {
         hair_color = player.getHairColor();
         face = player.getFace();
         gm_commands = player.isGM() || player.getPlayerAccess().CanUseGMCommand ? 1 : 0;
-        // builder level активирует в клиенте админские команды
+        // builder occupation активирует в клиенте админские команды
         clan_id = player.getClanId();
         ally_id = player.getAllyId();
         private_store = (player.isInBuffStore() ? 0 : player.getPrivateStoreType());
@@ -192,7 +192,7 @@ public final class UserInfo extends L2GameServerPacket {
         rec_left = player.getRecomLeft(); //c2 recommendations remaining
         rec_have = player.getRecomHave(); //c2 recommendations received
         InventoryLimit = player.getInventoryLimit();
-        class_id = player.getClassId().getId();
+        class_id = player.getClassId().id;
         maxCp = player.getMaxCp();
         curCp = (int) player.getCurrentCp();
         _team = player.getTeam();

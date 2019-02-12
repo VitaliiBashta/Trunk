@@ -3,12 +3,8 @@ package l2trunk.gameserver.skills.skillclasses;
 import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.model.Creature;
-import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Skill;
-
-import java.util.List;
-import java.util.Objects;
 
 public final class DeathPenalty extends Skill {
     public DeathPenalty(StatsSet set) {
@@ -16,22 +12,20 @@ public final class DeathPenalty extends Skill {
     }
 
     @Override
-    public boolean checkCondition(final Creature activeChar, final Creature target, boolean forceUse, boolean dontMove, boolean first) {
+    public boolean checkCondition(final Player player, final Creature target, boolean forceUse, boolean dontMove, boolean first) {
         // Chaotic characters can't use scrolls of recovery
-        if (activeChar.getKarma() > 0 && !Config.ALT_DEATH_PENALTY_C5_CHAOTIC_RECOVERY) {
-            activeChar.sendActionFailed();
-            return false;
-        }
-
-        return super.checkCondition(activeChar, target, forceUse, dontMove, first);
+        if (player != null)
+            if (player.getKarma() > 0 && !Config.ALT_DEATH_PENALTY_C5_CHAOTIC_RECOVERY) {
+                player.sendActionFailed();
+                return false;
+            } else return false;
+        return super.checkCondition(player, target, forceUse, dontMove, first);
     }
 
     @Override
-    public void useSkill(Creature activeChar, List<Creature> targets) {
-        targets.stream()
-                .filter(Objects::nonNull)
-                .filter(GameObject::isPlayer)
-                .map(t -> (Player) t)
-                .forEach(p -> p.getDeathPenalty().reduceLevel());
+    public void useSkill(Creature activeChar, Creature target) {
+        if (target instanceof Player) {
+            ((Player) target).getDeathPenalty().reduceLevel();
+        }
     }
 }

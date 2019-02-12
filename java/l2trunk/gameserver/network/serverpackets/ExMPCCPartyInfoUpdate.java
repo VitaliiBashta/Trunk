@@ -27,7 +27,7 @@ public class ExMPCCPartyInfoUpdate extends L2GameServerPacket {
     protected void writeImpl() {
         writeEx(0x5b);
         writeS(_leader.getName());
-        writeD(_leader.getObjectId());
+        writeD(_leader.objectId());
         writeD(_count);
         writeD(_mode); // mode 0 = Remove Party, 1 = AddParty, maybe more...
     }

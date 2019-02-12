@@ -25,13 +25,13 @@ public final class _288_HandleWithCare extends Quest {
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("request_reward")) {
             if (st.getCond() == 2 && st.getQuestItemsCount(MiddleGradeLizardScale) >= 1) {
-                st.takeAllItems(MiddleGradeLizardScale);
+                st.takeItems(MiddleGradeLizardScale);
                 switch (Rnd.get(1, 6)) {
                     case 1:
-                        st.giveItems(959, 1);
+                        st.giveItems(959);
                         break;
                     case 2:
-                        st.giveItems(960, 1);
+                        st.giveItems(960);
                         break;
                     case 3:
                         st.giveItems(960, 2);
@@ -40,7 +40,7 @@ public final class _288_HandleWithCare extends Quest {
                         st.giveItems(960, 3);
                         break;
                     case 5:
-                        st.giveItems(9557, 1);
+                        st.giveItems(9557);
                         break;
                     case 6:
                         st.giveItems(9557, 2);
@@ -49,23 +49,23 @@ public final class _288_HandleWithCare extends Quest {
                 htmltext = "ankumi_q288_06.htm";
                 st.exitCurrentQuest(true);
             } else if (st.getCond() == 3 && st.getQuestItemsCount(HighestGradeLizardScale) >= 1) {
-                st.takeAllItems(HighestGradeLizardScale);
+                st.takeItems(HighestGradeLizardScale);
                 switch (Rnd.get(1, 4)) {
                     case 1:
-                        st.giveItems(959, 1);
-                        st.giveItems(9557, 1);
+                        st.giveItems(959);
+                        st.giveItems(9557);
                         break;
                     case 2:
-                        st.giveItems(960, 1);
-                        st.giveItems(9557, 1);
+                        st.giveItems(960);
+                        st.giveItems(9557);
                         break;
                     case 3:
                         st.giveItems(960, 2);
-                        st.giveItems(9557, 1);
+                        st.giveItems(9557);
                         break;
                     case 4:
                         st.giveItems(960, 3);
-                        st.giveItems(9557, 1);
+                        st.giveItems(9557);
                         break;
                 }
                 htmltext = "ankumi_q288_06.htm";
@@ -85,7 +85,7 @@ public final class _288_HandleWithCare extends Quest {
         int cond = st.getCond();
         if (npcId == Ankumi) {
             if (cond == 0) {
-                if (st.getPlayer().getLevel() >= 82)
+                if (st.player.getLevel() >= 82)
                     htmltext = "ankumi_q288_01.htm";
                 else {
                     htmltext = "ankumi_q288_00.htm";

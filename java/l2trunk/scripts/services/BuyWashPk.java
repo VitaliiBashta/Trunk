@@ -11,7 +11,6 @@ public final class BuyWashPk extends Functions {
     private static final int[] PKS = {1, 2, 5, 10, 25, 50, 100, 250, 500, 1000};
 
     public void list() {
-        Player player = getSelf();
         if (!Config.SERVICES_WASH_PK_ENABLED) {
             show(HtmCache.INSTANCE.getNotNull("npcdefault.htm", player), player);
             return;
@@ -40,7 +39,6 @@ public final class BuyWashPk extends Functions {
     }
 
     public void get(String[] param) {
-        Player player = getSelf();
         if (!Config.SERVICES_WASH_PK_ENABLED) {
             show(HtmCache.INSTANCE.getNotNull("npcdefault.htm", player), player);
             return;

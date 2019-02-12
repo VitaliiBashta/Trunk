@@ -53,12 +53,12 @@ public final class _016_TheComingDarkness extends Quest {
         int cond = st.getCond();
         if (npcId == 31517)
             if (cond < 1) {
-                if (st.getPlayer().getLevel() < 61) {
+                if (st.player.getLevel() < 61) {
                     htmltext = "31517-00.htm";
                     st.exitCurrentQuest(true);
                 } else
                     htmltext = "31517-01.htm";
-            } else if (cond < 6 && st.getQuestItemsCount(CRYSTAL_OF_SEAL) > 0)
+            } else if (cond < 6 && st.haveQuestItem(CRYSTAL_OF_SEAL) )
                 htmltext = "31517-02r.htm";
             else if (cond < 6 && st.getQuestItemsCount(CRYSTAL_OF_SEAL) < 1) {
                 htmltext = "31517-proeb.htm";
@@ -72,7 +72,7 @@ public final class _016_TheComingDarkness extends Quest {
         for (Map.Entry<Integer, Integer> element : ALTAR_LIST.entrySet())
             if (npcId == element.getKey())
                 if (cond == element.getValue()) {
-                    if (st.getQuestItemsCount(CRYSTAL_OF_SEAL) > 0)
+                    if (st.haveQuestItem(CRYSTAL_OF_SEAL) )
                         htmltext = element.getKey() + "-01.htm";
                     else
                         htmltext = element.getKey() + "-03.htm";

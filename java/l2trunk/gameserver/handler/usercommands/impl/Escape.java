@@ -26,7 +26,7 @@ public final class Escape implements IUserCommandHandler {
             return false;
 
         if (activeChar.getTeleMode() != 0 || !activeChar.getPlayerAccess().UseTeleport) {
-            activeChar.sendMessage(new CustomMessage("common.TryLater", activeChar));
+            activeChar.sendMessage(new CustomMessage("common.TryLater"));
             return false;
         }
         if (activeChar.isJailed()) {
@@ -40,7 +40,7 @@ public final class Escape implements IUserCommandHandler {
         }
 
         if (activeChar.isInDuel() || activeChar.getTeam() != TeamType.NONE) {
-            activeChar.sendMessage(new CustomMessage("common.RecallInDuel", activeChar));
+            activeChar.sendMessage(new CustomMessage("common.RecallInDuel"));
             return false;
         }
 

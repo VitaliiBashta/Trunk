@@ -42,17 +42,17 @@ public final class _032_AnObviousLie extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equals("30120-1.htm")) {
+        if ("30120-1.htm".equals(event)) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equals("30094-1.htm")) {
+        } else if ("30094-1.htm".equals(event)) {
             st.giveItems(MAP, 1);
             st.setCond(2);
-        } else if (event.equals("31706-1.htm")) {
+        } else if ("31706-1.htm".equals(event)) {
             st.takeItems(MAP, 1);
             st.setCond(3);
-        } else if (event.equals("30094-4.htm")) {
+        } else if ("30094-4.htm".equals(event)) {
             if (st.getQuestItemsCount(MEDICINAL_HERB) > 19) {
                 st.takeItems(MEDICINAL_HERB, 20);
                 st.setCond(5);
@@ -60,29 +60,29 @@ public final class _032_AnObviousLie extends Quest {
                 htmltext = "You don't have enough materials";
                 st.setCond(3);
             }
-        } else if (event.equals("30094-7.htm")) {
+        } else if ("30094-7.htm".equals(event)) {
             if (st.getQuestItemsCount(SPIRIT_ORES) >= 500) {
                 st.takeItems(SPIRIT_ORES, 500);
                 st.setCond(6);
             } else
                 htmltext = "You don't have enough materials";
-        } else if (event.equals("31706-4.htm"))
+        } else if ("31706-4.htm".equals(event))
             st.setCond(7);
-        else if (event.equals("30094-10.htm"))
+        else if ("30094-10.htm".equals(event))
             st.setCond(8);
-        else if (event.equals("30094-13.htm")) {
+        else if ("30094-13.htm".equals(event)) {
             if (st.getQuestItemsCount(THREAD) < 1000 || st.getQuestItemsCount(SUEDE) < 500)
                 htmltext = "You don't have enough materials";
-        } else if (event.equalsIgnoreCase("cat") || event.equalsIgnoreCase("racoon") || event.equalsIgnoreCase("rabbit"))
+        } else if ("cat".equalsIgnoreCase(event) || "racoon".equalsIgnoreCase(event) || "rabbit".equalsIgnoreCase(event))
             if (st.getCond() == 8 && st.getQuestItemsCount(THREAD) >= 1000 && st.getQuestItemsCount(SUEDE) >= 500) {
                 st.takeItems(THREAD, 1000);
                 st.takeItems(SUEDE, 500);
-                if (event.equalsIgnoreCase("cat"))
-                    st.giveItems(CAT_EAR, 1);
-                else if (event.equalsIgnoreCase("racoon"))
-                    st.giveItems(RACCOON_EAR, 1);
-                else if (event.equalsIgnoreCase("rabbit"))
-                    st.giveItems(RABBIT_EAR, 1);
+                if ("cat".equalsIgnoreCase(event))
+                    st.giveItems(CAT_EAR);
+                else if ("racoon".equalsIgnoreCase(event))
+                    st.giveItems(RACCOON_EAR);
+                else if ("rabbit".equalsIgnoreCase(event))
+                    st.giveItems(RABBIT_EAR);
                 st.unset("cond");
                 st.playSound(SOUND_FINISH);
                 htmltext = "30094-14.htm";
@@ -99,7 +99,7 @@ public final class _032_AnObviousLie extends Quest {
         int cond = st.getCond();
         if (npcId == MAXIMILIAN)
             if (cond == 0) {
-                if (st.getPlayer().getLevel() >= 45)
+                if (st.player.getLevel() >= 45)
                     htmltext = "30120-0.htm";
                 else {
                     htmltext = "30120-0a.htm";
@@ -141,17 +141,16 @@ public final class _032_AnObviousLie extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         long count = st.getQuestItemsCount(MEDICINAL_HERB);
         if (Rnd.chance(CHANCE_FOR_DROP) && st.getCond() == 3)
             if (count < 20) {
-                st.giveItems(MEDICINAL_HERB, 1);
+                st.giveItems(MEDICINAL_HERB);
                 if (count == 19) {
                     st.playSound(SOUND_MIDDLE);
                     st.setCond(4);
                 } else
                     st.playSound(SOUND_ITEMGET);
             }
-        return null;
     }
 }

@@ -58,7 +58,7 @@ public class RequestMultiSellChoose extends L2GameClientPacket {
             return;
         }
 
-        if (activeChar.getVar("isPvPevents") != null) {
+        if (activeChar.isVarSet("isPvPevents")) {
             activeChar.sendMessage("You can follow any responses did not leave while participating in the event!");
             activeChar.sendActionFailed();
             activeChar.setMultisell(null);
@@ -132,8 +132,8 @@ public class RequestMultiSellChoose extends L2GameClientPacket {
                 }
                 ItemTemplate item = ItemHolder.getTemplate(i.getItemId());
 
-                weight = SafeMath.addAndCheck(weight, SafeMath.mulAndCheck(SafeMath.mulAndCheck(i.getItemCount(), _amount), item.getWeight()));
-                if (item.isStackable()) {
+                weight = SafeMath.addAndCheck(weight, SafeMath.mulAndCheck(SafeMath.mulAndCheck(i.getItemCount(), _amount), item.weight()));
+                if (item.stackable) {
                     if (inventory.getItemByItemId(i.getItemId()) == null) {
                         slots++;
                     }
@@ -174,7 +174,7 @@ public class RequestMultiSellChoose extends L2GameClientPacket {
                     }
 
                     if (activeChar.getClan().getLevel() < 5) {
-                        activeChar.sendMessage("The level of the clan must be at least the 5th!");
+                        activeChar.sendMessage("The occupation of the clan must be at least the 5th!");
                         return;
                     }
 
@@ -183,7 +183,7 @@ public class RequestMultiSellChoose extends L2GameClientPacket {
                         return;
                     }
 
-                    if (activeChar.getClan().getLeaderId() != activeChar.getObjectId()) {
+                    if (activeChar.getClan().getLeaderId() != activeChar.objectId()) {
                         activeChar.sendPacket(new SystemMessage2(SystemMsg.S1_IS_NOT_A_CLAN_LEADER).addString(activeChar.getName()));
                         return;
                     }
@@ -209,7 +209,7 @@ public class RequestMultiSellChoose extends L2GameClientPacket {
                 } else {
                     ItemTemplate template = ItemHolder.getTemplate(ingridientItemId);
 
-                    if (!template.isStackable()) {
+                    if (!template.stackable) {
                         for (int i = 0; i < (ingridientItemCount * _amount); i++) {
                             List<ItemInstance> list = inventory.getItemsByItemId(ingridientItemId);
                             // Если энчант имеет значение - то ищем вещи с точно таким энчантом
@@ -290,7 +290,7 @@ public class RequestMultiSellChoose extends L2GameClientPacket {
                             return;
                         }
                         if (activeChar.getClan().getLevel() < 5) {
-                            activeChar.sendMessage("The level of the clan must be at least the 5th!");
+                            activeChar.sendMessage("The occupation of the clan must be at least the 5th!");
                             return;
                         }
                         activeChar.getClan().incReputation((int) -count, false, "MultiSell");
@@ -321,7 +321,7 @@ public class RequestMultiSellChoose extends L2GameClientPacket {
 
             if ((tax > 0) && !notax) {
                 if (castle != null) {
-                    activeChar.sendMessage(new CustomMessage("trade.HavePaidTax", activeChar).addNumber(tax));
+                    activeChar.sendMessage(new CustomMessage("trade.HavePaidTax").addNumber(tax));
                     if ((merchant != null) && (merchant.getReflection() == ReflectionManager.DEFAULT)) {
                         castle.addToTreasury(tax, true, false);
                     }
@@ -336,7 +336,7 @@ public class RequestMultiSellChoose extends L2GameClientPacket {
                             return;
                         }
                         if (activeChar.getClan().getLevel() < 5) {
-                            activeChar.sendMessage("The level of the clan must be at least the 5th!");
+                            activeChar.sendMessage("The occupation of the clan must be at least the 5th!");
                             return;
                         }
                         activeChar.getClan().incReputation((int) (in.getItemCount() * _amount), false, "MultiSell");
@@ -346,9 +346,9 @@ public class RequestMultiSellChoose extends L2GameClientPacket {
                     } else if (in.getItemId() == ItemTemplate.ITEM_ID_FAME) {
                         activeChar.addFame((int) (in.getItemCount() * _amount), "MultiSell");
                     }
-                } else if (ItemHolder.getTemplate(in.getItemId()).isStackable()) {
+                } else if (ItemHolder.getTemplate(in.getItemId()).stackable()) {
                     long total = SafeMath.mulAndLimit(in.getItemCount(), _amount);
-                    ItemFunctions.addItem(activeChar, in.getItemId(), total, true, "Multisell");
+                    ItemFunctions.addItem(activeChar, in.getItemId(), total, "Multisell");
                 } else {
                     for (int i = 0; i < _amount; i++) {
                         ItemInstance product = ItemFunctions.createItem(in.getItemId());

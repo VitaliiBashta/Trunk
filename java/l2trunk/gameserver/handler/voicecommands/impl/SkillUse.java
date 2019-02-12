@@ -22,7 +22,7 @@ public final class SkillUse extends Functions implements IVoicedCommandHandler {
         Skill skill = SkillTable.INSTANCE.getInfo(skills, activeChar.getSkillLevel(skills));
 
         String sk = "/useskill " + skill.name;
-        Say2 cs = new Say2(activeChar.getObjectId(), ChatType.ALL, activeChar.getName(), sk);
+        Say2 cs = new Say2(activeChar.objectId(), ChatType.ALL, activeChar.getName(), sk);
 
         activeChar.setMacroSkill(skill);
         activeChar.sendPacket(cs);

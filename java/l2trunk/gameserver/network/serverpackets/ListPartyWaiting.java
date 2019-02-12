@@ -42,15 +42,15 @@ public class ListPartyWaiting extends L2GameServerPacket {
             writeD(room.getId()); //room id
             writeS(room.getLeader() == null ? "None" : room.getLeader().getName());
             writeD(room.getLocationId());
-            writeD(room.getMinLevel()); //min level
-            writeD(room.getMaxLevel()); //max level
+            writeD(room.getMinLevel()); //min occupation
+            writeD(room.getMaxLevel()); //max occupation
             writeD(room.getMaxMembersSize()); //max members coun
             writeS(room.getTopic()); // room name
 
             Collection<Player> players = room.getPlayers();
             writeD(players.size()); //members count
             for (Player player : players) {
-                writeD(player.getClassId().getId());
+                writeD(player.getClassId().id);
                 writeS(player.getName());
             }
         }

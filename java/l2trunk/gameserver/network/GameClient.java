@@ -103,7 +103,7 @@ public final class GameClient extends MMOClient<MMOConnection<GameClient>> {
             return;
         }
 
-        if ((_activeChar != null) && (_activeChar.getObjectId() == objId)) {
+        if ((_activeChar != null) && (_activeChar.objectId() == objId)) {
             _activeChar.setDeleteTimer(0);
         }
 
@@ -122,7 +122,7 @@ public final class GameClient extends MMOClient<MMOConnection<GameClient>> {
             return;
         }
 
-        if ((_activeChar != null) && (_activeChar.getObjectId() == objId)) {
+        if ((_activeChar != null) && (_activeChar.objectId() == objId)) {
             _activeChar.setDeleteTimer((int) (System.currentTimeMillis() / 1000));
         }
 

@@ -28,7 +28,7 @@ public class RequestConfirmTargetItem extends L2GameClientPacket {
         }
 
         if (activeChar.getLevel() < 46) {
-            activeChar.sendMessage("You have to be level 46 in order to augment an item");
+            activeChar.sendMessage("You have to be occupation 46 in order to augment an item");
             return;
         }
 

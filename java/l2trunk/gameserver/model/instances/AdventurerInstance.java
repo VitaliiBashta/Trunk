@@ -37,7 +37,7 @@ public final class AdventurerInstance extends NpcInstance {
                         player.sendPacket(new RadarControl(2, 2, loc), new RadarControl(0, 1, loc));
                         break;
                     case UNDEFINED:
-                        player.sendMessage(new CustomMessage("l2trunk.gameserver.model.instances.L2AdventurerInstance.BossNotInGame", player).addNumber(bossId));
+                        player.sendMessage(new CustomMessage("l2trunk.gameserver.model.instances.L2AdventurerInstance.BossNotInGame").addNumber(bossId));
                         break;
                 }
             } catch (NumberFormatException e) {
@@ -48,7 +48,7 @@ public final class AdventurerInstance extends NpcInstance {
 
             String filename = "adventurer_guildsman/raid_info/info.htm";
             if (bossLevel != 0)
-                filename = "adventurer_guildsman/raid_info/level" + bossLevel + ".htm";
+                filename = "adventurer_guildsman/raid_info/occupation" + bossLevel + ".htm";
 
             showChatWindow(player, filename);
         } else if (command.equalsIgnoreCase("questlist"))

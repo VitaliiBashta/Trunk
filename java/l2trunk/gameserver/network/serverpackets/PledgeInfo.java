@@ -8,7 +8,7 @@ public final class PledgeInfo extends L2GameServerPacket {
     private final String ally_name;
 
     public PledgeInfo(Clan clan) {
-        clan_id = clan.getClanId();
+        clan_id = clan.clanId();
         clan_name = clan.getName();
         ally_name = clan.getAlliance() == null ? "" : clan.getAlliance().getAllyName();
     }

@@ -28,18 +28,18 @@ public final class _030_ChestCaughtWithABaitOfFire extends Quest {
                 st.playSound(SOUND_ACCEPT);
                 break;
             case "fisher_linneaus_q0030_0201.htm":
-                if (st.getQuestItemsCount(RedTreasureChest) > 0) {
+                if (st.haveQuestItem(RedTreasureChest)) {
                     st.takeItems(RedTreasureChest, 1);
-                    st.giveItems(RukalsMusicalScore, 1);
+                    st.giveItems(RukalsMusicalScore);
                     st.setCond(2);
                     st.playSound(SOUND_MIDDLE);
                 } else
                     htmltext = "fisher_linneaus_q0030_0202.htm";
                 break;
             case "bard_rukal_q0030_0301.htm":
-                if (st.getQuestItemsCount(RukalsMusicalScore) == 1) {
-                    st.takeItems(RukalsMusicalScore, -1);
-                    st.giveItems(NecklaceOfProtection, 1);
+                if (st.haveAnyQuestItems(RukalsMusicalScore) ) {
+                    st.takeItems(RukalsMusicalScore);
+                    st.giveItems(NecklaceOfProtection);
                     st.playSound(SOUND_FINISH);
                     st.exitCurrentQuest(false);
                 } else {
@@ -59,11 +59,11 @@ public final class _030_ChestCaughtWithABaitOfFire extends Quest {
         int cond = st.getCond();
         if (npcId == Linnaeus) {
             if (id == CREATED) {
-                if (st.getPlayer().getLevel() < 60) {
+                if (st.player.getLevel() < 60) {
                     htmltext = "fisher_linneaus_q0030_0102.htm";
                     st.exitCurrentQuest(true);
                 } else {
-                    QuestState LinnaeusSpecialBait = st.getPlayer().getQuestState(_053_LinnaeusSpecialBait.class);
+                    QuestState LinnaeusSpecialBait = st.player.getQuestState(_053_LinnaeusSpecialBait.class);
                     if (LinnaeusSpecialBait != null) {
                         if (LinnaeusSpecialBait.isCompleted())
                             htmltext = "fisher_linneaus_q0030_0101.htm";
@@ -78,7 +78,7 @@ public final class _030_ChestCaughtWithABaitOfFire extends Quest {
                 }
             } else if (cond == 1) {
                 htmltext = "fisher_linneaus_q0030_0105.htm";
-                if (st.getQuestItemsCount(RedTreasureChest) == 0)
+                if (!st.haveQuestItem(RedTreasureChest))
                     htmltext = "fisher_linneaus_q0030_0106.htm";
             } else if (cond == 2)
                 htmltext = "fisher_linneaus_q0030_0203.htm";

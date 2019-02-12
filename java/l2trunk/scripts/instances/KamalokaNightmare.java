@@ -4,10 +4,7 @@ import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.data.xml.holder.NpcHolder;
 import l2trunk.gameserver.idfactory.IdFactory;
-import l2trunk.gameserver.model.GameObject;
-import l2trunk.gameserver.model.GameObjectsStorage;
-import l2trunk.gameserver.model.Player;
-import l2trunk.gameserver.model.Spawner;
+import l2trunk.gameserver.model.*;
 import l2trunk.gameserver.model.entity.Reflection;
 import l2trunk.gameserver.network.serverpackets.SystemMessage;
 import l2trunk.gameserver.templates.InstantZone;
@@ -37,7 +34,7 @@ public final class KamalokaNightmare extends Reflection {
     private boolean is_spawn_possible = true;
 
     public KamalokaNightmare(Player player) {
-        playerId = player.getObjectId();
+        playerId = player.objectId();
     }
 
     @Override
@@ -109,7 +106,7 @@ public final class KamalokaNightmare extends Reflection {
                     lock.lock();
                     try {
                         objects.stream()
-                                .filter(o -> !o.isPlayable())
+                                .filter(o -> !(o instanceof Playable))
                                 .forEach(GameObject::deleteMe);
                     } finally {
                         lock.unlock();
@@ -118,14 +115,14 @@ public final class KamalokaNightmare extends Reflection {
 
                     Player p = (Player) GameObjectsStorage.findObject(playerId);
                     if (p != null) {
-                        p.getPlayer().sendPacket(new SystemMessage(SystemMessage.THIS_DUNGEON_WILL_EXPIRE_IN_S1_MINUTES).addNumber(delay_after_spawn / 60000));
+                        p.sendPacket(new SystemMessage(SystemMessage.THIS_DUNGEON_WILL_EXPIRE_IN_S1_MINUTES).addNumber(delay_after_spawn / 60000));
 
                         InstantZone iz = KamalokaNightmare.this.getInstancedZone();
                         if (iz != null) {
                             String loc = iz.getAddParams().getString("pathfinder_loc", null);
                             if (loc != null) {
                                 PathfinderInstance npc = new PathfinderInstance(IdFactory.getInstance().getNextId(), NpcHolder.getTemplate(PATHFINDER));
-                                npc.setSpawnedLoc(Location.parseLoc(loc));
+                                npc.setSpawnedLoc(Location.of(loc));
                                 npc.setReflection(KamalokaNightmare.this);
                                 npc.spawnMe(npc.getSpawnedLoc());
                             }

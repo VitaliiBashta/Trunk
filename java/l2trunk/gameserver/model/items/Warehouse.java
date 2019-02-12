@@ -7,21 +7,20 @@ import l2trunk.gameserver.templates.item.ItemTemplate;
 import l2trunk.gameserver.templates.item.ItemTemplate.ItemClass;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public abstract class Warehouse extends ItemContainer {
     private static final ItemsDAO _itemsDAO = ItemsDAO.INSTANCE;
-    private final int _ownerId;
+    private final int ownerId;
 
     Warehouse(int ownerId) {
-        _ownerId = ownerId;
+        this.ownerId = ownerId;
     }
 
     private int getOwnerId() {
-        return _ownerId;
+        return ownerId;
     }
 
     protected abstract ItemLocation getItemLocation();
@@ -69,7 +68,6 @@ public abstract class Warehouse extends ItemContainer {
     public void restore() {
         writeLock();
         try {
-
             this.items.addAll(_itemsDAO.getItemsByOwnerIdAndLoc(getOwnerId(), getItemLocation()).collect(Collectors.toList()));
         } finally {
             writeUnlock();

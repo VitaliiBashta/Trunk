@@ -4,7 +4,6 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _313_CollectSpores extends Quest {
     //NPC
@@ -25,7 +24,7 @@ public final class _313_CollectSpores extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("green_q0313_05.htm")) {
+        if ("green_q0313_05.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
@@ -38,7 +37,7 @@ public final class _313_CollectSpores extends Quest {
         String htmltext = "noquest";
         int cond = st.getCond();
         if (cond == 0) {
-            if (st.getPlayer().getLevel() >= 8)
+            if (st.player.getLevel() >= 8)
                 htmltext = "green_q0313_03.htm";
             else {
                 htmltext = "green_q0313_02.htm";
@@ -51,7 +50,7 @@ public final class _313_CollectSpores extends Quest {
                 st.setCond(1);
                 htmltext = "green_q0313_06.htm";
             } else {
-                st.takeItems(SporeSac, -1);
+                st.takeItems(SporeSac);
                 st.giveItems(ADENA_ID, 3500, true);
                 st.playSound(SOUND_FINISH);
                 htmltext = "green_q0313_07.htm";
@@ -61,11 +60,11 @@ public final class _313_CollectSpores extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         if (cond == 1 && npcId == SporeFungus && Rnd.chance(70)) {
-            st.giveItems(SporeSac, 1);
+            st.giveItems(SporeSac);
             if (st.getQuestItemsCount(SporeSac) < 10)
                 st.playSound(SOUND_ITEMGET);
             else {
@@ -74,6 +73,5 @@ public final class _313_CollectSpores extends Quest {
                 st.setState(STARTED);
             }
         }
-        return null;
     }
 }

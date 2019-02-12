@@ -6,7 +6,6 @@ import l2trunk.gameserver.geodata.GeoEngine;
 import l2trunk.gameserver.model.*;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.Functions;
-import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.PositionUtils;
 
@@ -32,17 +31,16 @@ public final class GuardofDawnFemale extends DefaultAI {
         return true;
     }
 
-    private boolean checkAroundPlayers(NpcInstance actor) {
-        return World.getAroundPlayables(actor, AGGRORANGE, AGGRORANGE).stream()
-                .filter(Objects::nonNull)
+    private void checkAroundPlayers(NpcInstance actor) {
+        World.getAroundPlayers(actor, AGGRORANGE, AGGRORANGE)
                 .filter(this::canSeeInSilentMove)
                 .filter(this::canSeeInHide)
-                .filter(GameObject::isPlayer)
                 .filter(Playable::isSilentMoving)
                 .filter(target -> !target.isInvul())
                 .filter(target -> GeoEngine.canSeeTarget(actor, target, false))
                 .filter(target -> PositionUtils.isFacing(actor, target, 150))
-                .peek(target -> {
+                .findFirst()
+                .ifPresent(target -> {
                     actor.doCast(deathStrike, target, true);
                     Functions.npcSay(actor, "Who are you?! A new face like you can't approach this place!");
                     noCheckPlayers = true;
@@ -50,7 +48,7 @@ public final class GuardofDawnFemale extends DefaultAI {
                         target.teleToLocation(location);
                         noCheckPlayers = false;
                     }, 3000);
-                }).findFirst().isPresent();
+                });
     }
 
     @Override

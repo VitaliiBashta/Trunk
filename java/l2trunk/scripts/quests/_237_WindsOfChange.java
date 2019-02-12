@@ -3,7 +3,6 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _237_WindsOfChange extends Quest {
     private static final int Flauen = 30899;
@@ -71,7 +70,7 @@ public final class _237_WindsOfChange extends Quest {
 
         if (npcId == Flauen) {
             if (id == CREATED) {
-                if (st.getPlayer().getLevel() < 82) {
+                if (st.player.getLevel() < 82) {
                     st.exitCurrentQuest(true);
                     htmltext = "30899-00.htm";
                 } else

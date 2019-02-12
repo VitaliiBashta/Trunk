@@ -45,7 +45,7 @@ public final class MercManagerInstance extends MerchantInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
         String filename = "castle/mercmanager/mercmanager-no.htm";
         int condition = validateCondition(player);
         if (condition == COND_BUSY_BECAUSE_OF_SIEGE)

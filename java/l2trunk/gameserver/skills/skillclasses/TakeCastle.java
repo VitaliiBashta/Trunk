@@ -4,6 +4,7 @@ import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.model.*;
 import l2trunk.gameserver.model.Zone.ZoneType;
 import l2trunk.gameserver.model.entity.events.impl.CastleSiegeEvent;
+import l2trunk.gameserver.model.instances.ArtefactInstance;
 import l2trunk.gameserver.network.serverpackets.Say2;
 import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.ChatType;
@@ -18,34 +19,30 @@ public final class TakeCastle extends Skill {
     }
 
     @Override
-    public boolean checkCondition(Creature activeChar, Creature target, boolean forceUse, boolean dontMove, boolean first) {
+    public boolean checkCondition(Player player, Creature target, boolean forceUse, boolean dontMove, boolean first) {
         Zone siegeZone = target.getZone(ZoneType.SIEGE);
 
-        if (!super.checkCondition(activeChar, target, forceUse, dontMove, first))
+        if (!super.checkCondition(player, target, forceUse, dontMove, first))
             return false;
 
-        if (activeChar == null || !activeChar.isPlayer())
-            return false;
-
-        Player player = (Player) activeChar;
         if (player.getClan() == null || !player.isClanLeader()) {
-            activeChar.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addSkillName(this));
+            player.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addSkillName(this));
             return false;
         }
 
         CastleSiegeEvent siegeEvent = player.getEvent(CastleSiegeEvent.class);
         if (siegeEvent == null) {
-            activeChar.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addSkillName(this));
+            player.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addSkillName(this));
             return false;
         }
 
         if (siegeEvent.getSiegeClan(CastleSiegeEvent.ATTACKERS, player.getClan()) == null || siegeEvent.getResidence().getId() != siegeZone.getParams().getInteger("residence", 0)) {
-            activeChar.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addSkillName(this));
+            player.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addSkillName(this));
             return false;
         }
 
         if (player.isMounted()) {
-            activeChar.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addSkillName(this));
+            player.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addSkillName(this));
             return false;
         }
 
@@ -61,17 +58,14 @@ public final class TakeCastle extends Skill {
     }
 
     @Override
-    public void useSkill(Creature activeChar, List<Creature> targets) {
-        for (Creature target : targets)
-            if (target != null) {
-                if (!target.isArtefact())
-                    continue;
+    public void useSkill(Creature activeChar, Creature target) {
+            if (target instanceof ArtefactInstance) {
                 Player player = (Player) activeChar;
 
                 CastleSiegeEvent siegeEvent = player.getEvent(CastleSiegeEvent.class);
                 if (siegeEvent != null) {
-                    IStaticPacket lostPacket = siegeEvent.getResidence().getOwner() != null ? new Say2(activeChar.getObjectId(), ChatType.CRITICAL_ANNOUNCE, siegeEvent.getResidence().getName() + " Castle", "Clan " + siegeEvent.getResidence().getOwner().getName() + " has lost " + siegeEvent.getResidence().getName() + " Castle") : null;
-                    IStaticPacket winPacket = new Say2(activeChar.getObjectId(), ChatType.CRITICAL_ANNOUNCE, siegeEvent.getResidence().getName() + " Castle", "Clan " + player.getClan().getName() + " has taken " + siegeEvent.getResidence().getName() + " Castle");
+                    IStaticPacket lostPacket = siegeEvent.getResidence().getOwner() != null ? new Say2(player.objectId, ChatType.CRITICAL_ANNOUNCE, siegeEvent.getResidence().getName() + " Castle", "Clan " + siegeEvent.getResidence().getOwner().getName() + " has lost " + siegeEvent.getResidence().getName() + " Castle") : null;
+                    IStaticPacket winPacket = new Say2(player.objectId, ChatType.CRITICAL_ANNOUNCE, siegeEvent.getResidence().getName() + " Castle", "Clan " + player.getClan().getName() + " has taken " + siegeEvent.getResidence().getName() + " Castle");
                     GameObjectsStorage.getAllPlayersStream().forEach(pl -> {
                         if (lostPacket != null)
                             pl.sendPacket(lostPacket);

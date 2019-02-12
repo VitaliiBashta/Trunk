@@ -60,7 +60,7 @@ public class RequestExReceivePost extends L2GameClientPacket {
             return;
         }
 
-        Mail mail = MailDAO.getInstance().getReceivedMailByMailId(activeChar.getObjectId(), postId);
+        Mail mail = MailDAO.getInstance().getReceivedMailByMailId(activeChar.objectId(), postId);
         if (mail != null) {
             activeChar.getInventory().writeLock();
             try {
@@ -80,8 +80,8 @@ public class RequestExReceivePost extends L2GameClientPacket {
                     int slots = 0;
                     long weight = 0;
                     for (ItemInstance item : items) {
-                        weight = SafeMath.addAndCheck(weight, SafeMath.mulAndCheck(item.getCount(), item.getTemplate().getWeight()));
-                        if (!item.getTemplate().isStackable() || activeChar.getInventory().getItemByItemId(item.getItemId()) == null)
+                        weight = SafeMath.addAndCheck(weight, SafeMath.mulAndCheck(item.getCount(), item.getTemplate().weight()));
+                        if (!item.getTemplate().stackable() || activeChar.getInventory().getItemByItemId(item.getItemId()) == null)
                             slots++;
                     }
 

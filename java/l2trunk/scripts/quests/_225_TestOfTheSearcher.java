@@ -4,7 +4,6 @@ import l2trunk.gameserver.model.GameObjectsStorage;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _225_TestOfTheSearcher extends Quest {
     //NPC
@@ -133,30 +132,30 @@ public final class _225_TestOfTheSearcher extends Quest {
             st.giveItems(LuthersLetter, 1);
             st.setCond(1);
             st.setState(STARTED);
-            if (!st.getPlayer().getVarB("dd3")) {
+            if (!st.player.isVarSet("dd3")) {
                 st.giveItems(7562, 82);
-                st.getPlayer().setVar("dd3", "1", -1);
+                st.player.setVar("dd3", 1);
             }
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("30291-07.htm")) {
-            st.takeItems(LeirynnsReport, -1);
-            st.takeItems(StrangeMap, -1);
-            st.giveItems(LambertsMap, 1);
-            st.giveItems(AlexsLetter, 1);
-            st.giveItems(AlexsOrder, 1);
+            st.takeItems(LeirynnsReport);
+            st.takeItems(StrangeMap);
+            st.giveItems(LambertsMap);
+            st.giveItems(AlexsLetter);
+            st.giveItems(AlexsOrder);
             st.setCond(8);
             st.setState(STARTED);
-        } else if (event.equalsIgnoreCase("30420-01a.htm")) {
-            st.takeItems(WineCatalog, -1);
-            st.giveItems(TyrasContract, 1);
+        } else if ("30420-01a.htm".equalsIgnoreCase(event)) {
+            st.takeItems(WineCatalog);
+            st.giveItems(TyrasContract);
             st.setCond(10);
             st.setState(STARTED);
-        } else if (event.equalsIgnoreCase("30730-01d.htm")) {
-            st.takeItems(OldOrder, -1);
-            st.giveItems(JaxsDiary, 1);
+        } else if ("30730-01d.htm".equalsIgnoreCase(event)) {
+            st.takeItems(OldOrder);
+            st.giveItems(JaxsDiary);
             st.setCond(14);
             st.setState(STARTED);
-        } else if (event.equalsIgnoreCase("30627-01a.htm")) {
+        } else if ("30627-01a.htm".equalsIgnoreCase(event)) {
             NpcInstance isQuest = GameObjectsStorage.getByNpcId(Chest);
             if (isQuest == null) {
                 if (st.getQuestItemsCount(RustedKey) == 0)
@@ -197,9 +196,9 @@ public final class _225_TestOfTheSearcher extends Quest {
                 htmltext = "completed";
                 st.exitCurrentQuest(true);
             } else if (cond == 0) {
-                if (st.getPlayer().getClassId().getId() == 0x07 || st.getPlayer().getClassId().getId() == 0x16 || st.getPlayer().getClassId().getId() == 0x23 || st.getPlayer().getClassId().getId() == 0x36) {
-                    if (st.getPlayer().getLevel() >= 39) {
-                        if (st.getPlayer().getClassId().getId() == 0x36)
+                if (st.player.getClassId().id == 0x07 || st.player.getClassId().id == 0x16 || st.player.getClassId().id == 0x23 || st.player.getClassId().id == 0x36) {
+                    if (st.player.getLevel() >= 39) {
+                        if (st.player.getClassId().id == 0x36)
                             htmltext = "30690-04.htm";
                         else
                             htmltext = "30690-03.htm";
@@ -217,10 +216,10 @@ public final class _225_TestOfTheSearcher extends Quest {
                 htmltext = "30623-17.htm";
             else if (cond == 19) {
                 htmltext = "30690-08.htm";
-                if (!st.getPlayer().getVarB("prof2.3")) {
+                if (!st.player.isVarSet("prof2.3")) {
                     st.addExpAndSp(447444, 30704);
                     st.giveItems(ADENA_ID, 80093);
-                    st.getPlayer().setVar("prof2.3", "1", -1);
+                    st.player.setVar("prof2.3", 1);
                 }
                 st.takeItems(AlexsRecommend, -1);
                 st.giveItems(MarkOfSearcher, 1);
@@ -346,7 +345,7 @@ public final class _225_TestOfTheSearcher extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         for (int[] aDROPLIST_COND : DROPLIST_COND)
@@ -361,24 +360,24 @@ public final class _225_TestOfTheSearcher extends Quest {
                         }
         if (cond == 5 && npcId == DeluChiefKalkis) {
             if (st.getQuestItemsCount(StrangeMap) == 0)
-                st.giveItems(StrangeMap, 1);
+                st.giveItems(StrangeMap);
             if (st.getQuestItemsCount(ChiefKalkisFang) == 0)
-                st.giveItems(ChiefKalkisFang, 1);
+                st.giveItems(ChiefKalkisFang);
             st.playSound(SOUND_MIDDLE);
             st.setCond(6);
             st.setState(STARTED);
         } else if (cond == 14) {
             if (npcId == RoadScavenger && st.getQuestItemsCount(SoltsMap) == 0) {
-                st.giveItems(TornMapPiece1st, 1);
+                st.giveItems(TornMapPiece1st);
                 if (st.getQuestItemsCount(TornMapPiece1st) >= 4) {
-                    st.takeItems(TornMapPiece1st, -1);
-                    st.giveItems(SoltsMap, 1);
+                    st.takeItems(TornMapPiece1st);
+                    st.giveItems(SoltsMap);
                 }
             } else if (npcId == HangmanTree && st.getQuestItemsCount(MakelsMap) == 0) {
-                st.giveItems(TornMapPiece2st, 1);
+                st.giveItems(TornMapPiece2st);
                 if (st.getQuestItemsCount(TornMapPiece2st) >= 4) {
-                    st.takeItems(TornMapPiece2st, -1);
-                    st.giveItems(MakelsMap, 1);
+                    st.takeItems(TornMapPiece2st);
+                    st.giveItems(MakelsMap);
                 }
             }
             if (st.getQuestItemsCount(SoltsMap) != 0 && st.getQuestItemsCount(MakelsMap) != 0) {
@@ -386,6 +385,5 @@ public final class _225_TestOfTheSearcher extends Quest {
                 st.setState(STARTED);
             }
         }
-        return null;
     }
 }

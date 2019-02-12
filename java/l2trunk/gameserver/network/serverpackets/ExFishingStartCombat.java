@@ -14,7 +14,7 @@ public class ExFishingStartCombat extends L2GameServerPacket {
     private final int char_obj_id;
 
     public ExFishingStartCombat(Creature character, int time, int hp, int mode, int lureType, int deceptiveMode) {
-        char_obj_id = character.getObjectId();
+        char_obj_id = character.objectId();
         _time = time;
         _hp = hp;
         _mode = mode;

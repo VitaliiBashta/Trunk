@@ -15,7 +15,7 @@ public class RecipeShopItemInfo extends L2GameServerPacket {
 
     public RecipeShopItemInfo(Player activeChar, Player manufacturer, int recipeId, long price, int success) {
         _recipeId = recipeId;
-        _shopId = manufacturer.getObjectId();
+        _shopId = manufacturer.objectId();
         _price = price;
         _success = success;
         _curMp = (int) manufacturer.getCurrentMp();

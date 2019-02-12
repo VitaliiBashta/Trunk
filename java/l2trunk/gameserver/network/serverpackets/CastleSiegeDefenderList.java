@@ -80,7 +80,7 @@ public class CastleSiegeDefenderList extends L2GameServerPacket {
         for (DefenderClan defenderClan : _defenderClans) {
             Clan clan = defenderClan._clan;
 
-            writeD(clan.getClanId());
+            writeD(clan.clanId());
             writeS(clan.getName());
             writeS(clan.getLeaderName());
             writeD(clan.getCrestId());

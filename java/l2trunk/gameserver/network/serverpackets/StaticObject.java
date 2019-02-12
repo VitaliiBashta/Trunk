@@ -19,7 +19,7 @@ public class StaticObject extends L2GameServerPacket {
 
     public StaticObject(StaticObjectInstance obj) {
         _staticObjectId = obj.getUId();
-        _objectId = obj.getObjectId();
+        _objectId = obj.objectId();
         _type = 0;
         _isTargetable = 1;
         _meshIndex = obj.getMeshIndex();
@@ -33,7 +33,7 @@ public class StaticObject extends L2GameServerPacket {
 
     public StaticObject(DoorInstance door, Player player) {
         _staticObjectId = door.getDoorId();
-        _objectId = door.getObjectId();
+        _objectId = door.objectId();
         _type = 1;
         _isTargetable = door.getTemplate().isTargetable() ? 1 : 0;
         _meshIndex = 1;

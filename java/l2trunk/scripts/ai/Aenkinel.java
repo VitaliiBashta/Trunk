@@ -23,10 +23,10 @@ public final class Aenkinel extends Fighter {
 
         if (actor.getNpcId() == 25694)
             for (int i = 0; i < 4; i++)
-                actor.getReflection().addSpawnWithoutRespawn(18820, actor.getLoc(), 250);
+                actor.getReflection().addSpawnWithoutRespawn(18820, actor, 250);
         else if (actor.getNpcId() == 25695)
             for (int i = 0; i < 4; i++)
-                actor.getReflection().addSpawnWithoutRespawn(18823, actor.getLoc(), 250);
+                actor.getReflection().addSpawnWithoutRespawn(18823, actor, 250);
 
         super.onEvtDead(killer);
     }

@@ -7,9 +7,7 @@ import l2trunk.gameserver.model.base.Race;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-import java.util.Arrays;
 import java.util.List;
 
 public final class _236_SeedsOfChaos extends Quest {
@@ -83,9 +81,9 @@ public final class _236_SeedsOfChaos extends Quest {
             st.setCond(19);
         else if (event.equalsIgnoreCase("32239_14.htm") && _state == STARTED && cond == 19)
             st.setCond(20);
-        else if (event.equalsIgnoreCase("31522_03b.htm") && _state == STARTED && st.getQuestItemsCount(BLACK_ECHO_CRYSTAL) > 0) {
-            st.takeItems(BLACK_ECHO_CRYSTAL, -1);
-            st.set("echo", "1");
+        else if (event.equalsIgnoreCase("31522_03b.htm") && _state == STARTED && st.haveQuestItem(BLACK_ECHO_CRYSTAL)) {
+            st.takeItems(BLACK_ECHO_CRYSTAL);
+            st.set("echo", 1);
         } else if (event.equalsIgnoreCase("31522-ready") && _state == STARTED && (cond == 3 || cond == 4) && st.getInt("echo") == 1) {
             if (cond == 3)
                 st.setCond(4);
@@ -111,8 +109,8 @@ public final class _236_SeedsOfChaos extends Quest {
         } else if (event.equalsIgnoreCase("32190_02.htm") && _state == STARTED && (cond == 15 || cond == 16)) {
             if (cond == 15)
                 st.setCond(16);
-            st.getPlayer().teleToLocation(-119534, 87176, -12593);
-        } else if (event.equalsIgnoreCase("32237_15.htm") && _state == STARTED && cond == 20) {
+            st.player.teleToLocation(-119534, 87176, -12593);
+        } else if ("32237_15.htm".equalsIgnoreCase(event) && _state == STARTED && cond == 20) {
             st.giveItems(SCROLL_ENCHANT_WEAPON_A, 1, true);
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(false);
@@ -131,20 +129,20 @@ public final class _236_SeedsOfChaos extends Quest {
         if (_state == CREATED) {
             if (npcId != KEKROPUS)
                 return "noquest";
-            if (st.getPlayer().getRace() != Race.kamael) {
+            if (st.player.getRace() != Race.kamael) {
                 st.exitCurrentQuest(true);
                 return "32138_00.htm";
             }
-            if (st.getPlayer().getLevel() < 75) {
+            if (st.player.getLevel() < 75) {
                 st.exitCurrentQuest(true);
                 return "32138_01.htm";
             }
-            if (st.getQuestItemsCount(STAR_OF_DESTINY) > 0) {
-                st.takeItems(STAR_OF_DESTINY, -1);
+            if (st.haveQuestItem(STAR_OF_DESTINY)) {
+                st.takeItems(STAR_OF_DESTINY);
                 st.setCond(0);
                 return "32138_02.htm";
             }
-            if (st.getPlayer().getQuestState(_234_FatesWhisper.class) != null && st.getPlayer().getQuestState(_234_FatesWhisper.class).isCompleted()) {
+            if (st.player.isQuestCompleted(_234_FatesWhisper.class)) {
                 st.setCond(0);
                 return "32138_02.htm";
             }
@@ -195,7 +193,7 @@ public final class _236_SeedsOfChaos extends Quest {
                     st.setCond(12);
                     return "32236_06.htm";
                 }
-                st.takeItems(SHINING_MEDALLION, -1);
+                st.takeItems(SHINING_MEDALLION);
                 return "32236_07.htm";
             }
             if (cond > 13)
@@ -231,21 +229,21 @@ public final class _236_SeedsOfChaos extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState qs) {
+    public void onKill(NpcInstance npc, QuestState qs) {
         if (qs.getState() != STARTED)
-            return null;
+            return;
         int npcId = npc.getNpcId();
         int cond = qs.getCond();
 
         if (NEEDLE_STAKATO_DRONES.contains(npcId)) {
             if (cond == 2 && qs.getQuestItemsCount(BLACK_ECHO_CRYSTAL) == 0 && Rnd.chance(BLACK_ECHO_CRYSTAL_CHANCE)) {
-                qs.giveItems(BLACK_ECHO_CRYSTAL, 1);
+                qs.giveItems(BLACK_ECHO_CRYSTAL);
                 qs.setCond(3);
                 qs.playSound(SOUND_MIDDLE);
             }
         } else if (SPLENDOR_MOBS.contains(npcId))
             if (cond == 12 && qs.getQuestItemsCount(SHINING_MEDALLION) < 62 && Rnd.chance(SHINING_MEDALLION_CHANCE)) {
-                qs.giveItems(SHINING_MEDALLION, 1);
+                qs.giveItems(SHINING_MEDALLION);
                 if (qs.getQuestItemsCount(SHINING_MEDALLION) < 62)
                     qs.playSound(SOUND_ITEMGET);
                 else {
@@ -253,7 +251,5 @@ public final class _236_SeedsOfChaos extends Quest {
                     qs.playSound(SOUND_MIDDLE);
                 }
             }
-
-        return null;
     }
 }

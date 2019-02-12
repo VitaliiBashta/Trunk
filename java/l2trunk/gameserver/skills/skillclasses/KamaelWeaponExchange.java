@@ -20,24 +20,23 @@ public final class KamaelWeaponExchange extends Skill {
     }
 
     @Override
-    public boolean checkCondition(Creature activeChar, Creature target, boolean forceUse, boolean dontMove, boolean first) {
-        Player p = (Player) activeChar;
-        if (p.isInStoreMode() || p.isProcessingRequest())
+    public boolean checkCondition(Player player, Creature target, boolean forceUse, boolean dontMove, boolean first) {
+        if (player.isInStoreMode() || player.isProcessingRequest())
             return false;
 
-        ItemInstance item = activeChar.getActiveWeaponInstance();
+        ItemInstance item = player.getActiveWeaponInstance();
         if (item != null && ((WeaponTemplate) item.getTemplate()).getKamaelConvert() == 0) {
-            activeChar.sendPacket(SystemMsg.YOU_CANNOT_CONVERT_THIS_ITEM);
+            player.sendPacket(SystemMsg.YOU_CANNOT_CONVERT_THIS_ITEM);
             return false;
         }
 
-        return super.checkCondition(activeChar, target, forceUse, dontMove, first);
+        return super.checkCondition(player, target, forceUse, dontMove, first);
     }
 
     @Override
     public void useSkill(Creature activeChar, List<Creature> targets) {
         final Player player = (Player) activeChar;
-        final ItemInstance item = activeChar.getActiveWeaponInstance();
+        final ItemInstance item = player.getActiveWeaponInstance();
         if (item == null)
             return;
 

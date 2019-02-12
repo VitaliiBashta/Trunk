@@ -8,7 +8,7 @@ public class VehicleCheckLocation extends L2GameServerPacket {
     private final Location _loc;
 
     public VehicleCheckLocation(Boat instance) {
-        _boatObjectId = instance.getObjectId();
+        _boatObjectId = instance.objectId();
         _loc = instance.getLoc();
     }
 

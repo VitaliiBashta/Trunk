@@ -20,7 +20,7 @@ public class RequestPartyMatchConfig extends L2GameClientPacket {
     protected void readImpl() {
         _page = readD();
         _region = readD(); // 0 to 15, or -1
-        _allLevels = readD(); // 1 -> all levels, 0 -> only levels matching my level
+        _allLevels = readD(); // 1 -> all levels, 0 -> only levels matching my occupation
     }
 
     @Override

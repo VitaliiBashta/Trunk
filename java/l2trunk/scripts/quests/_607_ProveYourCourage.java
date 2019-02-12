@@ -12,10 +12,6 @@ public final class _607_ProveYourCourage extends Quest {
     private final static int HEAD_OF_SHADITH = 7235;
     private final static int TOTEM_OF_VALOR = 7219;
 
-    private final static int MARK_OF_KETRA_ALLIANCE3 = 7213;
-    private final static int MARK_OF_KETRA_ALLIANCE4 = 7214;
-    private final static int MARK_OF_KETRA_ALLIANCE5 = 7215;
-
     public _607_ProveYourCourage() {
         super(true);
 
@@ -28,16 +24,16 @@ public final class _607_ProveYourCourage extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equals("quest_accept")) {
+        if ("quest_accept".equals(event)) {
             htmltext = "elder_kadun_zu_ketra_q0607_0104.htm";
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equals("607_3"))
-            if (st.getQuestItemsCount(HEAD_OF_SHADITH) >= 1) {
+        } else if ("607_3".equals(event))
+            if (st.haveQuestItem(HEAD_OF_SHADITH)) {
                 htmltext = "elder_kadun_zu_ketra_q0607_0201.htm";
-                st.takeItems(HEAD_OF_SHADITH, -1);
-                st.giveItems(TOTEM_OF_VALOR, 1);
+                st.takeItems(HEAD_OF_SHADITH);
+                st.giveItems(TOTEM_OF_VALOR);
                 st.addExpAndSp(0, 10000);
                 st.unset("cond");
                 st.playSound(SOUND_FINISH);
@@ -52,8 +48,8 @@ public final class _607_ProveYourCourage extends Quest {
         String htmltext = "noquest";
         int cond = st.getCond();
         if (cond == 0) {
-            if (st.getPlayer().getLevel() >= 75) {
-                if (st.getQuestItemsCount(MARK_OF_KETRA_ALLIANCE3) == 1 || st.getQuestItemsCount(MARK_OF_KETRA_ALLIANCE4) == 1 || st.getQuestItemsCount(MARK_OF_KETRA_ALLIANCE5) == 1)
+            if (st.player.getLevel() >= 75) {
+                if (st.player.getKetra()> 2)
                     htmltext = "elder_kadun_zu_ketra_q0607_0101.htm";
                 else {
                     htmltext = "elder_kadun_zu_ketra_q0607_0102.htm";
@@ -65,19 +61,18 @@ public final class _607_ProveYourCourage extends Quest {
             }
         } else if (cond == 1 && st.getQuestItemsCount(HEAD_OF_SHADITH) == 0)
             htmltext = "elder_kadun_zu_ketra_q0607_0106.htm";
-        else if (cond == 2 && st.getQuestItemsCount(HEAD_OF_SHADITH) >= 1)
+        else if (cond == 2 && st.haveQuestItem(HEAD_OF_SHADITH) )
             htmltext = "elder_kadun_zu_ketra_q0607_0105.htm";
         return htmltext;
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         if (npcId == VARKAS_HERO_SHADITH && st.getCond() == 1) {
-            st.giveItems(HEAD_OF_SHADITH, 1);
+            st.giveItems(HEAD_OF_SHADITH);
             st.setCond(2);
             st.playSound(SOUND_ITEMGET);
         }
-        return null;
     }
 }

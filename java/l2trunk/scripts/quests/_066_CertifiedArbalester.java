@@ -4,7 +4,6 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _066_CertifiedArbalester extends Quest {
     //NPC
@@ -225,46 +224,46 @@ public final class _066_CertifiedArbalester extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if (event.equalsIgnoreCase("32201-05.htm")) {
             st.setCond(2);
-            st.set("id", "0");
+            st.set("id", 0);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-            if (!st.getPlayer().getVarB("dd1")) {
+            if (!st.player.isVarSet("dd1")) {
                 st.giveItems(7562, 64);
-                st.getPlayer().setVar("dd1", "1", -1);
+                st.player.setVar("dd1", 1);
             }
         } else if (event.equalsIgnoreCase("30464-05.htm")) {
             st.setCond(3);
             st.setState(STARTED);
         } else if (event.equalsIgnoreCase("30464-09.htm")) {
-            st.set("id", "0");
+            st.set("id", 0);
             st.takeItems(EnmityCrystalCore, 1);
             st.setCond(5);
             st.setState(STARTED);
         } else if (event.equalsIgnoreCase("30458-07.htm")) {
-            st.takeItems(EnmityCrystalCore, -1);
+            st.takeItems(EnmityCrystalCore);
             st.setCond(6);
             st.setState(STARTED);
         } else if (event.equalsIgnoreCase("30058-04.htm")) {
             st.setCond(7);
             st.setState(STARTED);
         } else if (event.equalsIgnoreCase("30058-07.htm")) {
-            st.takeItems(ManuscriptPage, -1);
+            st.takeItems(ManuscriptPage);
             st.setCond(9);
             st.setState(STARTED);
         } else if (event.equalsIgnoreCase("32214-03.htm")) {
-            st.giveItems(KamaelInquisitorTraineeMark, 1);
+            st.giveItems(KamaelInquisitorTraineeMark);
             st.setCond(10);
             st.setState(STARTED);
         } else if (event.equalsIgnoreCase("32220-08.htm")) {
             st.setCond(11);
             st.setState(STARTED);
         } else if (event.equalsIgnoreCase("30171-05.htm")) {
-            st.takeItems(FragmentofAttackOrders, -1);
-            st.takeItems(KamaelInquisitorTraineeMark, -1); //возможно не тут забирают
+            st.takeItems(FragmentofAttackOrders);
+            st.takeItems(KamaelInquisitorTraineeMark); //возможно не тут забирают
             st.setCond(15);
             st.setState(STARTED);
         } else if (event.equalsIgnoreCase("30717-07.htm")) {
-            st.takeItems(ManashenTalisman, -1);
+            st.takeItems(ManashenTalisman);
             st.setCond(17);
             st.setState(STARTED);
         } else if (event.equalsIgnoreCase("30720-03.htm")) {
@@ -290,8 +289,8 @@ public final class _066_CertifiedArbalester extends Quest {
                 htmltext = "32201-00.htm";
                 st.exitCurrentQuest(true);
             } else if (cond == 0)
-                if (st.getPlayer().getClassId().getId() == 0x7e) {
-                    if (st.getPlayer().getLevel() >= 39) {
+                if (st.player.getClassId().id == 0x7e) {
+                    if (st.player.getLevel() >= 39) {
                         htmltext = "32201-03.htm";
                         st.setCond(1);
                     } else {
@@ -315,7 +314,7 @@ public final class _066_CertifiedArbalester extends Quest {
                 if (st.getInt("id") == 0 && st.getQuestItemsCount(EnmityCrystal) == 30) {
                     htmltext = "30464-07.htm";
                     st.takeItems(EnmityCrystal, -1);
-                    st.set("id", "1");
+                    st.set("id", 1);
                 } else if (st.getInt("id") == 1)
                     htmltext = "30464-08.htm";
                 else if (st.getInt("id") == 0 && st.getQuestItemsCount(EnmityCrystal) < 30) {
@@ -358,11 +357,11 @@ public final class _066_CertifiedArbalester extends Quest {
             else if (cond == 19)
                 htmltext = "32220-18.htm";
             else if (cond == 20) {
-                st.takeItems(ResearchOnTheGiantsAndTheAncientRace, -1);
-                if (!st.getPlayer().getVarB("prof2.1")) {
+                st.takeItems(ResearchOnTheGiantsAndTheAncientRace);
+                if (!st.player.isVarSet("prof2.1")) {
                     st.addExpAndSp(214773, 14738);
                     st.giveItems(ADENA_ID, 38833);
-                    st.getPlayer().setVar("prof2.1", "1", -1);
+                    st.player.setVar("prof2.1", 1);
                 }
                 st.giveItems(KamaelInquisitorMark, 1);
                 htmltext = "32220-19.htm";
@@ -397,7 +396,7 @@ public final class _066_CertifiedArbalester extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         for (int[] aDROPLIST_COND : DROPLIST_COND)
@@ -412,9 +411,9 @@ public final class _066_CertifiedArbalester extends Quest {
                         }
         if (cond == 19 && (npcId == TimakOrcArcher || npcId == TimakOrcSoldier)) {
             if (st.getInt("id") < 20)
-                st.set("id", String.valueOf(st.getInt("id") + 1));
+                st.set("id", st.getInt("id") + 1);
             else if (Rnd.chance(25)) {
-                st.set("id", "0");
+                st.set("id", 0);
                 st.addSpawn(CrimsonLady);
             }
         } else if (cond == 19 && npcId == CrimsonLady) {
@@ -422,6 +421,5 @@ public final class _066_CertifiedArbalester extends Quest {
             st.setCond(20);
             st.setState(STARTED);
         }
-        return null;
     }
 }

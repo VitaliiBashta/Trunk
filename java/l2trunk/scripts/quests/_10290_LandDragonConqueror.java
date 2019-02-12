@@ -3,7 +3,6 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _10290_LandDragonConqueror extends Quest {
     private static final int Theodric = 30755;
@@ -20,11 +19,11 @@ public final class _10290_LandDragonConqueror extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("theodric_q10290_04.htm")) {
+        if ("theodric_q10290_04.htm".equalsIgnoreCase(event)) {
             st.setState(STARTED);
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
-            st.giveItems(ShabbyNecklace, 1);
+            st.giveItems(ShabbyNecklace);
         }
         return event;
     }
@@ -36,7 +35,7 @@ public final class _10290_LandDragonConqueror extends Quest {
         int cond = st.getCond();
         if (npcId == Theodric) {
             if (cond == 0) {
-                if (st.getPlayer().getLevel() >= 83 && st.getQuestItemsCount(3865) >= 1)
+                if (st.player.getLevel() >= 83 && st.haveQuestItem(3865))
                     htmltext = "theodric_q10290_01.htm";
                 else if (st.getQuestItemsCount(3865) < 1)
                     htmltext = "theodric_q10290_00a.htm";
@@ -45,10 +44,10 @@ public final class _10290_LandDragonConqueror extends Quest {
             } else if (cond == 1)
                 htmltext = "theodric_q10290_05.htm";
             else if (cond == 2) {
-                if (st.getQuestItemsCount(MiracleNecklace) >= 1) {
+                if (st.haveQuestItem(MiracleNecklace)) {
                     htmltext = "theodric_q10290_07.htm";
-                    st.takeAllItems(MiracleNecklace);
-                    st.giveItems(8568, 1);
+                    st.takeItems(MiracleNecklace);
+                    st.giveItems(8568);
                     st.giveItems(ADENA_ID, 131236);
                     st.addExpAndSp(702557, 76334);
                     st.playSound(SOUND_FINISH);
@@ -62,15 +61,14 @@ public final class _10290_LandDragonConqueror extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
 
         if (cond == 1 && npcId == UltimateAntharas) {
-            st.takeAllItems(ShabbyNecklace);
-            st.giveItems(MiracleNecklace, 1);
+            st.takeItems(ShabbyNecklace);
+            st.giveItems(MiracleNecklace);
             st.setCond(2);
         }
-        return null;
     }
 }

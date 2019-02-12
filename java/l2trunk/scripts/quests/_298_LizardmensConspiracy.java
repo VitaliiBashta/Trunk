@@ -4,7 +4,6 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _298_LizardmensConspiracy extends Quest {
     //	npc
@@ -67,15 +66,15 @@ public final class _298_LizardmensConspiracy extends Quest {
         if (event.equalsIgnoreCase("guard_praga_q0298_0104.htm")) {
             st.setState(STARTED);
             st.setCond(1);
-            st.giveItems(REPORT, 1);
+            st.giveItems(REPORT);
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("magister_rohmer_q0298_0201.htm")) {
-            st.takeItems(REPORT, -1);
+            st.takeItems(REPORT);
             st.setCond(2);
             st.playSound(SOUND_MIDDLE);
         } else if (event.equalsIgnoreCase("magister_rohmer_q0298_0301.htm") && st.getQuestItemsCount(SHINING_GEM) + st.getQuestItemsCount(SHINING_RED_GEM) > 99) {
-            st.takeItems(SHINING_GEM, -1);
-            st.takeItems(SHINING_RED_GEM, -1);
+            st.takeItems(SHINING_GEM);
+            st.takeItems(SHINING_RED_GEM);
             st.addExpAndSp(0, 42000);
             st.exitCurrentQuest(true);
             st.playSound(SOUND_FINISH);
@@ -90,7 +89,7 @@ public final class _298_LizardmensConspiracy extends Quest {
         int cond = st.getCond();
         if (npcId == PRAGA) {
             if (cond < 1)
-                if (st.getPlayer().getLevel() < 25) {
+                if (st.player.getLevel() < 25) {
                     htmltext = "guard_praga_q0298_0102.htm";
                     st.exitCurrentQuest(true);
                 } else
@@ -111,7 +110,7 @@ public final class _298_LizardmensConspiracy extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int rand = Rnd.get(10);
         if (st.getCond() == 2)
@@ -121,13 +120,12 @@ public final class _298_LizardmensConspiracy extends Quest {
                         if (rand < 2 && element[1] == SHINING_GEM)
                             st.giveItems(element[1], 2);
                         else
-                            st.giveItems(element[1], 1);
+                            st.giveItems(element[1]);
                         if (st.getQuestItemsCount(SHINING_GEM) + st.getQuestItemsCount(SHINING_RED_GEM) > 99) {
                             st.setCond(3);
                             st.playSound(SOUND_MIDDLE);
                         } else
                             st.playSound(SOUND_ITEMGET);
                     }
-        return null;
     }
 }

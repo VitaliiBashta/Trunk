@@ -33,15 +33,13 @@ public final class AuctionedDoormanInstance extends NpcInstance {
         ClanHall clanHall = getClanHall();
         if ("openDoors".equalsIgnoreCase(command)) {
             if (player.hasPrivilege(Privilege.CH_ENTER_EXIT) && player.getClan().getHasHideout() == clanHall.getId()) {
-                doors.forEach(d ->
-                        ReflectionUtils.getDoor(d).openMe());
+                doors.forEach(d -> ReflectionUtils.getDoor(d).openMe());
                 showChatWindow(player, "residence2/clanhall/agitafterdooropen.htm");
             } else
                 showChatWindow(player, "residence2/clanhall/noAuthority.htm");
         } else if ("closeDoors".equalsIgnoreCase(command)) {
             if (player.hasPrivilege(Privilege.CH_ENTER_EXIT) && player.getClan().getHasHideout() == clanHall.getId()) {
-                doors.forEach(d ->
-                        ReflectionUtils.getDoor(d).closeMe(player, true));
+                doors.forEach(d -> ReflectionUtils.getDoor(d).closeMe());
                 showChatWindow(player, "residence2/clanhall/agitafterdoorclose.htm");
             } else
                 showChatWindow(player, "residence2/clanhall/noAuthority.htm");
@@ -56,7 +54,7 @@ public final class AuctionedDoormanInstance extends NpcInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
         ClanHall clanHall = getClanHall();
         if (clanHall != null) {
             Clan playerClan = player.getClan();

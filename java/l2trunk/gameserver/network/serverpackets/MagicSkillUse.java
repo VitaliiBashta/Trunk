@@ -37,8 +37,8 @@ public final class MagicSkillUse extends L2GameServerPacket {
         this(cha, cha, skillId, skillLevel, hitTime, 0);
     }
     public MagicSkillUse(Creature cha, Creature target, int skillId, int skillLevel, int hitTime, long reuseDelay) {
-        chaId = cha.getObjectId();
-        targetId = target.getObjectId();
+        chaId = cha.objectId();
+        targetId = target.objectId();
         this.skillId = skillId;
         this.skillLevel = skillLevel;
         this.hitTime = hitTime;
@@ -55,7 +55,7 @@ public final class MagicSkillUse extends L2GameServerPacket {
     protected final void writeImpl() {
         Player activeChar = getClient().getActiveChar();
 
-        if (activeChar != null && activeChar.isNotShowBuffAnim() && activeChar.getObjectId() != chaId)
+        if (activeChar != null && activeChar.isNotShowBuffAnim() && activeChar.objectId() != chaId)
             return;
 
         writeC(0x48);

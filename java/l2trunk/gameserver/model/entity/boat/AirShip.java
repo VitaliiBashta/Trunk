@@ -61,11 +61,6 @@ public class AirShip extends Boat {
     }
 
     @Override
-    public boolean isAirShip() {
-        return true;
-    }
-
-    @Override
     public void oustPlayers() {
         players.forEach(p -> oustPlayer(p, getReturnLoc(), true));
     }

@@ -3,12 +3,12 @@ package l2trunk.scripts.ai.hellbound;
 import l2trunk.gameserver.ai.DefaultAI;
 import l2trunk.gameserver.geodata.GeoEngine;
 import l2trunk.gameserver.model.Creature;
-import l2trunk.gameserver.model.Playable;
-import l2trunk.gameserver.model.Skill;
+import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.World;
 import l2trunk.gameserver.model.instances.NpcInstance;
-import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.Location;
+
+import java.util.Objects;
 
 public final class Sandstorm extends DefaultAI {
     private static final int AGGRO_RANGE = 200;
@@ -24,13 +24,17 @@ public final class Sandstorm extends DefaultAI {
     public boolean thinkActive() {
         NpcInstance actor = getActor();
         if (lastThrow + 5000 < System.currentTimeMillis())
-            for (Playable target : World.getAroundPlayables(actor, AGGRO_RANGE, AGGRO_RANGE))
-                if (target != null && !target.isAlikeDead() && !target.isInvul() && target.isVisible() && GeoEngine.canSeeTarget(actor, target, false)) {
-                    actor.doCast(gust, target, true);
-                    actor.doCast(blow, target, true);
-                    lastThrow = System.currentTimeMillis();
-                    break;
-                }
+            World.getAroundPlayables(actor, AGGRO_RANGE, AGGRO_RANGE)
+                    .filter(target -> !target.isAlikeDead())
+                    .filter(target -> !target.isInvul())
+                    .filter(GameObject::isVisible)
+                    .filter(target -> GeoEngine.canSeeTarget(actor, target, false))
+                    .peek(target -> {
+                        actor.doCast(gust, target, true);
+                        actor.doCast(blow, target, true);
+                    })
+                    .mapToLong(target -> System.currentTimeMillis())
+                    .findFirst().ifPresent(t -> lastThrow = t);
 
         return super.thinkActive();
     }

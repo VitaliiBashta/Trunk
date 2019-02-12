@@ -48,12 +48,13 @@ public final class _639_GuardiansOfTheHolyGrail extends Quest {
                 st.exitCurrentQuest(true);
                 break;
             case "falsepriest_dominic_q0639_08.htm":
-                st.giveItems(ADENA_ID, st.takeAllItems(SCRIPTURES) * 1625, false);
+                st.giveItems(ADENA_ID, st.getQuestItemsCount(SCRIPTURES) * 1625, false);
+                st.takeItems(SCRIPTURES);
                 break;
             case "falsepriest_gremory_q0639_05.htm":
                 st.setCond(2);
                 st.playSound(SOUND_MIDDLE);
-                st.giveItems(WATER_BOTTLE, 1, false);
+                st.giveItems(WATER_BOTTLE);
                 break;
             case "holy_grail_q0639_02.htm":
                 st.setCond(3);
@@ -68,11 +69,11 @@ public final class _639_GuardiansOfTheHolyGrail extends Quest {
                 break;
             case "falsepriest_gremory_q0639_11.htm":
                 st.takeItems(SCRIPTURES, 4000);
-                st.giveItems(EWS, 1, false);
+                st.giveItems(EWS);
                 break;
             case "falsepriest_gremory_q0639_13.htm":
                 st.takeItems(SCRIPTURES, 400);
-                st.giveItems(EAS, 1, false);
+                st.giveItems(EAS);
                 break;
         }
         return event;
@@ -86,12 +87,12 @@ public final class _639_GuardiansOfTheHolyGrail extends Quest {
         int cond = st.getInt("cond");
         if (npcId == DOMINIC) {
             if (id == CREATED) {
-                if (st.getPlayer().getLevel() >= 73)
+                if (st.player.getLevel() >= 73)
                     htmltext = "falsepriest_dominic_q0639_01.htm";
                 else
                     htmltext = "falsepriest_dominic_q0639_02.htm";
                 st.exitCurrentQuest(true);
-            } else if (st.getQuestItemsCount(SCRIPTURES) >= 1)
+            } else if (st.haveQuestItem(SCRIPTURES) )
                 htmltext = "falsepriest_dominic_q0639_05.htm";
             else
                 htmltext = "falsepriest_dominic_q0639_06.htm";
@@ -102,11 +103,11 @@ public final class _639_GuardiansOfTheHolyGrail extends Quest {
                 htmltext = "falsepriest_gremory_q0639_06.htm";
             else if (cond == 3)
                 htmltext = "falsepriest_gremory_q0639_08.htm";
-            else if (cond == 4 && st.getQuestItemsCount(SCRIPTURES) < 400)
+            else if (cond == 4 && !st.haveQuestItem(SCRIPTURES, 400))
                 htmltext = "falsepriest_gremory_q0639_09.htm";
-            else if (cond == 4 && st.getQuestItemsCount(SCRIPTURES) >= 4000)
+            else if (cond == 4 && st.haveQuestItem(SCRIPTURES, 4000))
                 htmltext = "falsepriest_gremory_q0639_10.htm";
-            else if (cond == 4 && st.getQuestItemsCount(SCRIPTURES) >= 400 && st.getQuestItemsCount(SCRIPTURES) < 4000)
+            else if (cond == 4 && st.haveQuestItem(SCRIPTURES, 400) && !st.haveQuestItem(SCRIPTURES, 4000))
                 htmltext = "falsepriest_gremory_q0639_14.htm";
         } else if (npcId == GRAIL && cond == 2) {
             htmltext = "holy_grail_q0639_01.htm";
@@ -115,9 +116,7 @@ public final class _639_GuardiansOfTheHolyGrail extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         st.rollAndGive(SCRIPTURES, (int) Config.RATE_QUESTS_DROP, DROP_CHANCE * npc.getTemplate().rateHp);
-
-        return null;
     }
 }

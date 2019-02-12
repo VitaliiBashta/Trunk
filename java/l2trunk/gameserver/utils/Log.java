@@ -253,7 +253,7 @@ public final class Log {
 
         StringBuilder sb = new StringBuilder();
 
-        sb.append(item.getTemplate().getItemId());
+        sb.append(item.getTemplate().itemId());
         sb.append(' ');
         if (item.getEnchantLevel() > 0) {
             sb.append('+');
@@ -281,7 +281,7 @@ public final class Log {
         sb.append(Util.getNumberWithCommas(count));
         sb.append(')');
         sb.append('[');
-        sb.append(item.getObjectId());
+        sb.append(item.objectId());
         sb.append(']');
 
         return sb.toString();

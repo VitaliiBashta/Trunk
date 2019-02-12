@@ -84,15 +84,14 @@ public class ValidatePosition extends L2GameClientPacket {
             h = 0;
         }
 
-        if (h >= 256) // Пока падаем, высоту не корректируем
-        {
+        if (h >= 256){ // Пока падаем, высоту не корректируем
             activeChar.falling(h);
         } else if (dz >= (activeChar.isFlying() ? 1024 : 512)) {
             if (activeChar.getIncorrectValidateCount() >= 3)
                 activeChar.teleToClosestTown();
             else {
                 activeChar.teleToLocation(activeChar.getLoc());
-                activeChar.setIncorrectValidateCount(activeChar.getIncorrectValidateCount() + 1);
+                activeChar.incIncorrectValidate();
             }
         } else if (dz >= 256) {
             activeChar.validateLocation(0);
@@ -101,20 +100,20 @@ public class ValidatePosition extends L2GameClientPacket {
                 activeChar.teleToClosestTown();
             else {
                 correctPosition(activeChar);
-                activeChar.setIncorrectValidateCount(activeChar.getIncorrectValidateCount() + 1);
+                activeChar.incIncorrectValidate();
             }
         } else if (diff > 1024) {
             if (activeChar.getIncorrectValidateCount() >= 3)
                 activeChar.teleToClosestTown();
             else {
                 activeChar.teleToLocation(activeChar.getLoc());
-                activeChar.setIncorrectValidateCount(activeChar.getIncorrectValidateCount() + 1);
+                activeChar.incIncorrectValidate();
             }
         } else if (diff > 256) {
             //TODO реализовать NetPing и вычислять предельное отклонение исходя из пинга по формуле: 16 + (ping * activeChar.getMoveSpeed()) / 1000
             activeChar.validateLocation(1);
         } else
-            activeChar.setIncorrectValidateCount(0);
+            activeChar.resetIncorrectValidateCount();
 
         activeChar.setLastClientPosition(_loc.setH(activeChar.getHeading()));
         activeChar.setLastServerPosition(activeChar.getLoc());

@@ -70,7 +70,7 @@ public final class CharacterSelectionInfo extends L2GameServerPacket {
                         set.set("baseClassId", rset.getInt("class_id"));
                     if (rset.getInt("active") == 1) {
                         set.set("activeClassId", rset.getInt("class_id"));
-                        set.set("activeLevel", rset.getInt("level"));
+                        set.set("activeLevel", rset.getInt("occupation"));
                         set.set("activeMaxHp", rset.getInt("maxHp"));
                         set.set("activeMaxMp", rset.getInt("maxMp"));
                         set.set("activeCurHp", rset.getDouble("curHp"));
@@ -245,7 +245,7 @@ public final class CharacterSelectionInfo extends L2GameServerPacket {
 
             // Freya by Vistall:
             writeD(0x00); // npdid - 16024 Tame Tiny Baby Kookaburra A9E89C
-            writeD(0x00); // level
+            writeD(0x00); // occupation
             writeD(0x00); // ?
             writeD(0x00); // food? - 1200
             writeF(0x00); // max Hp

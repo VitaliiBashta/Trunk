@@ -1,6 +1,5 @@
 package l2trunk.gameserver.taskmanager;
 
-import l2trunk.commons.lang.reference.HardReference;
 import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.model.Spawner;
@@ -10,7 +9,6 @@ import l2trunk.gameserver.utils.Util;
 import java.util.ArrayList;
 import java.util.List;
 
-//TODO [G1ta0] переписать
 public enum SpawnTaskManager {
     INSTANCE;
     private final Object spawnTasks_lock = new Object();
@@ -127,16 +125,16 @@ public enum SpawnTaskManager {
     }
 
     private class SpawnTask {
-        private final HardReference<NpcInstance> _npcRef;
+        private final NpcInstance npc;
         long endtime;
 
         SpawnTask(NpcInstance cha, long delay) {
-            _npcRef = cha.getRef();
+            npc = cha;
             endtime = delay;
         }
 
         NpcInstance getActor() {
-            return _npcRef.get();
+            return npc;
         }
     }
 }

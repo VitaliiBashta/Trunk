@@ -124,8 +124,8 @@ public class RequestBuySeed extends L2GameClientPacket {
                 if (item == null)
                     return;
 
-                weight = SafeMath.addAndCheck(weight, SafeMath.mulAndCheck(count, item.getWeight()));
-                if (!item.isStackable() || activeChar.getInventory().getItemByItemId(seedId) == null)
+                weight = SafeMath.addAndCheck(weight, SafeMath.mulAndCheck(count, item.weight()));
+                if (!item.stackable() || activeChar.getInventory().getItemByItemId(seedId) == null)
                     slots++;
             }
 

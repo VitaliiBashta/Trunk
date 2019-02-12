@@ -50,11 +50,11 @@ public class RequestGiveNickName extends L2GameClientPacket {
         if (member != null) {
             member.setTitle(_title);
             if (member.isOnline()) {
-                member.getPlayer().sendPacket(SystemMsg.YOUR_TITLE_HAS_BEEN_CHANGED);
-                member.getPlayer().sendChanges();
+                member.player.sendPacket(SystemMsg.YOUR_TITLE_HAS_BEEN_CHANGED);
+                member.player.sendChanges();
             }
         } else
-            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.clientpackets.RequestGiveNickName.NotInClan", activeChar));
+            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.clientpackets.RequestGiveNickName.NotInClan"));
 
     }
 }

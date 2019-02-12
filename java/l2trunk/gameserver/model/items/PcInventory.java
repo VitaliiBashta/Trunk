@@ -52,7 +52,7 @@ public final class PcInventory extends Inventory {
     private boolean mustShowDressMe = false;
 
     public PcInventory(Player owner) {
-        super(owner.getObjectId());
+        super(owner.objectId());
         this.owner = owner;
 
         addListener(ItemSkillsListener.getInstance());
@@ -79,22 +79,15 @@ public final class PcInventory extends Inventory {
     }
 
     public long getAdena() {
-        ItemInstance _adena = getItemByItemId(57);
-        if (_adena == null) {
+        ItemInstance adena = getItemByItemId(57);
+        if (adena == null) {
             return 0;
         }
-        return _adena.getCount();
+        return adena.getCount();
     }
 
-    /**
-     * Добавляет адену игроку.<BR>
-     * <BR>
-     *
-     * @param amount - сколько адены дать
-     * @return L2ItemInstance - новое количество адены
-     */
-    public ItemInstance addAdena(long amount, String log) {
-        return addItem(ItemTemplate.ITEM_ID_ADENA, amount, log);
+    public void addAdena(long amount, String log) {
+        addItem(ItemTemplate.ITEM_ID_ADENA, amount, log);
     }
 
     public boolean reduceAdena(long adena, String log) {
@@ -284,17 +277,13 @@ public final class PcInventory extends Inventory {
 
     public ItemInstance findEquippedLure() {
         ItemInstance res = null;
-        int last_lure = 0;
-        Player owner = getActor();
-        String LastLure = owner.getVar("LastLure");
-        if ((LastLure != null) && !LastLure.isEmpty()) {
-            last_lure = Integer.valueOf(LastLure);
-        }
+        int last_lure = owner.getVarInt("LastLure");
+
         for (ItemInstance temp : getItems()) {
             if (temp.getItemType() == EtcItemType.BAIT) {
                 if ((temp.getLocation() == ItemLocation.PAPERDOLL) && (temp.getEquipSlot() == PAPERDOLL_LHAND)) {
                     return temp;
-                } else if ((last_lure > 0) && (res == null) && (temp.getObjectId() == last_lure)) {
+                } else if ((last_lure > 0) && (res == null) && (temp.objectId() == last_lure)) {
                     res = temp;
                 }
             }
@@ -381,7 +370,7 @@ public final class PcInventory extends Inventory {
     protected void onRemoveItem(ItemInstance item) {
         super.onRemoveItem(item);
 
-        getActor().removeItemFromShortCut(item.getObjectId());
+        getActor().removeItemFromShortCut(item.objectId());
 
         if (item.getItemType() == EtcItemType.RUNE) {
             listeners.onUnequip(-1, item);
@@ -481,7 +470,11 @@ public final class PcInventory extends Inventory {
     }
 
     public boolean destroyItem(ItemInstance item, String log) {
-        return destroyItem(item, owner.toString(), log);
+         return destroyItem(item, owner.toString(), log);
+    }
+
+    public boolean destroyItemByItemId(int itemId, String log) {
+        return destroyItemByItemId(itemId, 1, log);
     }
 
     public boolean destroyItemByItemId(int itemId, long count, String log) {
@@ -492,16 +485,16 @@ public final class PcInventory extends Inventory {
         return destroyItemByObjectId(objectId, count, owner.toString(), log);
     }
 
-    public ItemInstance addItem(ItemInstance item, String log) {
-        return addItem(item, owner.toString(), log);
+    public void addItem(ItemInstance item, String log) {
+         addItem(item, owner.toString(), log);
     }
 
     public ItemInstance addItem(int itemId, long count, String log) {
         return addItem(itemId, count, owner.toString(), log);
     }
 
-    public ItemInstance removeItem(ItemInstance item, long count, String log) {
-        return removeItem(item, count, owner.toString(), log);
+    public void removeItem(ItemInstance item, long count, String log) {
+        removeItem(item, count, owner.toString(), log);
     }
 
     public ItemInstance removeItem(ItemInstance item, String log) {
@@ -516,15 +509,10 @@ public final class PcInventory extends Inventory {
         return removeItemByObjectId(objectId, count, owner.toString(), log);
     }
 
-    public void startTimers() {
-
-    }
-
     public void stopAllTimers() {
         getItems().stream()
                 .filter(item -> (item.isShadowItem() || item.isTemporalItem()))
                 .forEach(ItemInstance::stopTimer);
-
     }
 
     @Override
@@ -534,7 +522,7 @@ public final class PcInventory extends Inventory {
             DressArmorData dress = DressArmorHolder.getArmorByPartId(item.getVisualItemId());
             if (dress != null) {
                 getItems().stream()
-                        .filter(i -> i.getObjectId() != item.getObjectId())
+                        .filter(i -> i.objectId != item.objectId())
                         .filter(i -> i.getVisualItemId() > 0)
                         .filter(i -> dress.getVisualIds().contains(i.getVisualItemId()))
                         .forEach(i -> {
@@ -544,10 +532,10 @@ public final class PcInventory extends Inventory {
                         });
 
                 // Refund the price paid for this set so he can pay for it again
-                ItemFunctions.addItem(owner, dress.priceId, dress.priceCount, true, "DressMeRefund");
+                ItemFunctions.addItem(owner, dress.priceId, dress.priceCount, "DressMeRefund");
 
                 // Send message
-                owner.sendPacket(new Say2(owner.getObjectId(), ChatType.CRITICAL_ANNOUNCE, "DressMe", "You have destroyed a part of a dressMe set, for that you will be refunded with the original price, so you can make it again"));
+                owner.sendPacket(new Say2(owner.objectId(), ChatType.CRITICAL_ANNOUNCE, "DressMe", "You have destroyed a part of a dressMe set, for that you will be refunded with the original price, so you can make it again"));
             }
         }
 
@@ -614,7 +602,7 @@ public final class PcInventory extends Inventory {
         }
     }
 
-    protected class LifeTimeTask extends RunnableImpl {
+    private class LifeTimeTask extends RunnableImpl {
         private final ItemInstance item;
 
         LifeTimeTask(ItemInstance item) {

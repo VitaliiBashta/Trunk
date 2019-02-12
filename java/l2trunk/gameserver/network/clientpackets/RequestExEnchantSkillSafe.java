@@ -2,14 +2,14 @@ package l2trunk.gameserver.network.clientpackets;
 
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.Player;
-import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.base.EnchantSkillLearn;
 import l2trunk.gameserver.network.serverpackets.*;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.scripts.Functions;
-import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.tables.SkillTreeTable;
 import l2trunk.gameserver.utils.Log;
+
+import static l2trunk.gameserver.utils.ItemFunctions.removeItem;
 
 /**
  * Format (ch) dd
@@ -35,7 +35,7 @@ public final class RequestExEnchantSkillSafe extends L2GameClientPacket {
             return;
         }
 
-        if (activeChar.getLevel() < 76 || activeChar.getClassId().getLevel() < 4) {
+        if (activeChar.getLevel() < 76 || activeChar.getClassId().occupation() < 3) {
             activeChar.sendMessage("You must have 3rd class change quest completed.");
             return;
         }
@@ -51,13 +51,13 @@ public final class RequestExEnchantSkillSafe extends L2GameClientPacket {
 
         int enchantLevel = SkillTreeTable.convertEnchantLevel(sl.getBaseLevel(), _skillLvl, sl.getMaxLevel());
 
-        // already knows the skill with this level
+        // already knows the skill with this occupation
         if (slevel >= enchantLevel)
             return;
 
         // Можем ли мы перейти с текущего уровня скилла на данную заточку
         if (slevel == sl.getBaseLevel() ? _skillLvl % 100 != 1 : slevel != enchantLevel - 1) {
-            activeChar.sendMessage("Incorrect enchant level.");
+            activeChar.sendMessage("Incorrect enchant occupation.");
             return;
         }
 
@@ -72,22 +72,22 @@ public final class RequestExEnchantSkillSafe extends L2GameClientPacket {
             return;
         }
 
-        if (activeChar.getAdena() < requiredAdena) {
+        if (!activeChar.haveAdena(requiredAdena)) {
             activeChar.sendPacket(SystemMsg.YOU_DO_NOT_HAVE_ENOUGH_ADENA);
             return;
         }
 
-        if (Functions.getItemCount(activeChar, SkillTreeTable.SAFE_ENCHANT_BOOK) == 0) {
+        if (!activeChar.haveItem(SkillTreeTable.SAFE_ENCHANT_BOOK) ) {
             activeChar.sendPacket(SystemMsg.YOU_DO_NOT_HAVE_ALL_OF_THE_ITEMS_NEEDED_TO_ENCHANT_THAT_SKILL);
             return;
         }
 
-        Functions.removeItem(activeChar, SkillTreeTable.SAFE_ENCHANT_BOOK, 1, "SkillEnchantSafe");
+        removeItem(activeChar, SkillTreeTable.SAFE_ENCHANT_BOOK, 1, "SkillEnchantSafe");
 
         if (Rnd.chance(rate)) {
             activeChar.addSkill(_skillId,enchantLevel, true);
             activeChar.addExpAndSp(0, -1 * requiredSp);
-            Functions.removeItem(activeChar, 57, requiredAdena, "SkillEnchantSafe");
+            removeItem(activeChar, 57, requiredAdena, "SkillEnchantSafe");
             activeChar.sendPacket(new SystemMessage2(SystemMsg.YOUR_SP_HAS_DECREASED_BY_S1).addInteger(requiredSp), new SystemMessage2(SystemMsg.SKILL_ENCHANT_WAS_SUCCESSFUL_S1_HAS_BEEN_ENCHANTED).addSkillName(_skillId, _skillLvl), new ExEnchantSkillResult(1));
             activeChar.sendPacket(new SkillList(activeChar));
             RequestExEnchantSkill.updateSkillShortcuts(activeChar, _skillId, _skillLvl);

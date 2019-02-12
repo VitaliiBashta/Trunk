@@ -7,7 +7,6 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.items.Inventory;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.tables.SkillTable;
 
 public final class _10275_ContainingTheAttributePower extends Quest {
@@ -42,7 +41,7 @@ public final class _10275_ContainingTheAttributePower extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
 
-        Player player = st.getPlayer();
+        Player player = st.player;
 
         if (event.equalsIgnoreCase("30839-02.htm") || event.equalsIgnoreCase("31307-02.htm")) {
             st.setCond(1);
@@ -74,12 +73,12 @@ public final class _10275_ContainingTheAttributePower extends Quest {
                 htmltext = "32326-07.htm";
             }
             st.giveItems(YangSword, 1, Element.EARTH, 10);
-        } else if (event.equalsIgnoreCase("32325-09.htm")) {
+        } else if ("32325-09.htm".equalsIgnoreCase(event)) {
             st.setCond(5);
             SkillTable.INSTANCE.getInfo(2635).getEffects(player);
             st.giveItems(YinSword, 1, Element.FIRE, 10);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("32326-09.htm")) {
+        } else if ("32326-09.htm".equalsIgnoreCase(event)) {
             st.setCond(10);
             SkillTable.INSTANCE.getInfo(2636).getEffects(player);
             st.giveItems(YangSword, 1, Element.EARTH, 10);
@@ -87,18 +86,26 @@ public final class _10275_ContainingTheAttributePower extends Quest {
         } else {
             int item = 0;
 
-            if (event.equalsIgnoreCase("1"))
-                item = 10521;
-            else if (event.equalsIgnoreCase("2"))
-                item = 10522;
-            else if (event.equalsIgnoreCase("3"))
-                item = 10523;
-            else if (event.equalsIgnoreCase("4"))
-                item = 10524;
-            else if (event.equalsIgnoreCase("5"))
-                item = 10525;
-            else if (event.equalsIgnoreCase("6"))
-                item = 10526;
+            switch (event) {
+                case "1":
+                    item = 10521;
+                    break;
+                case "2":
+                    item = 10522;
+                    break;
+                case "3":
+                    item = 10523;
+                    break;
+                case "4":
+                    item = 10524;
+                    break;
+                case "5":
+                    item = 10525;
+                    break;
+                case "6":
+                    item = 10526;
+                    break;
+            }
 
             if (item > 0) {
                 st.giveItems(item, 2, true);
@@ -106,7 +113,7 @@ public final class _10275_ContainingTheAttributePower extends Quest {
                 st.exitCurrentQuest(false);
                 st.playSound(SOUND_FINISH);
                 if (npc != null)
-                    htmltext = str(npc.getNpcId()) + "-1" + event + ".htm";
+                    htmltext = npc.getNpcId() + "-1" + event + ".htm";
                 else
                     htmltext = null;
             }
@@ -128,7 +135,7 @@ public final class _10275_ContainingTheAttributePower extends Quest {
             else if (npcId == Weber)
                 htmltext = "31307-0a.htm";
         } else if (id == CREATED)
-            if (st.getPlayer().getLevel() >= 76)
+            if (st.player.getLevel() >= 76)
                 if (npcId == Holly)
                     htmltext = "30839-01.htm";
                 else
@@ -174,16 +181,16 @@ public final class _10275_ContainingTheAttributePower extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getState() != STARTED)
-            return null;
+            return;
 
         int cond = st.getCond();
         int npcId = npc.getNpcId();
 
         if (npcId == Air) {
             if (st.getItemEquipped(Inventory.PAPERDOLL_RHAND) == YangSword && (cond == 8 || cond == 10) && st.getQuestItemsCount(SoulPieceAir) < 6 && Rnd.chance(30)) {
-                st.giveItems(SoulPieceAir, 1, false);
+                st.giveItems(SoulPieceAir);
                 if (st.getQuestItemsCount(SoulPieceAir) >= 6) {
                     st.setCond(cond + 1);
                     st.playSound(SOUND_MIDDLE);
@@ -191,13 +198,11 @@ public final class _10275_ContainingTheAttributePower extends Quest {
             }
         } else if (npcId == Water)
             if (st.getItemEquipped(Inventory.PAPERDOLL_RHAND) == YinSword && (cond == 3 || cond == 5) && st.getQuestItemsCount(SoulPieceWater) < 6 && Rnd.chance(30)) {
-                st.giveItems(SoulPieceWater, 1, false);
+                st.giveItems(SoulPieceWater);
                 if (st.getQuestItemsCount(SoulPieceWater) >= 6) {
                     st.setCond(cond + 1);
                     st.playSound(SOUND_MIDDLE);
                 }
             }
-
-        return null;
     }
 }

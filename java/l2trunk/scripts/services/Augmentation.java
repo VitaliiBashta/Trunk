@@ -26,7 +26,6 @@ public final class Augmentation extends Functions {
     public void run(String[] arg) {
         int _page = 0;
         Options.AugmentationFilter _filter = Options.AugmentationFilter.NONE;
-        Player player = getSelf();
         if (arg.length < 1) {
             showMainMenu(player, 0, _filter);
             return;
@@ -112,7 +111,7 @@ public final class Augmentation extends Functions {
                         inv.equipItem(targetItem);
                         player.sendPacket(new InventoryUpdate().addModifiedItem(targetItem));
                         for (ShortCut sc : player.getAllShortCuts()) {
-                            if ((sc.getId() == targetItem.getObjectId()) && (sc.getType() == 1))
+                            if ((sc.getId() == targetItem.objectId()) && (sc.getType() == 1))
                                 player.sendPacket(new ShortCutRegister(player, sc));
                         }
                         player.sendChanges();
@@ -147,7 +146,6 @@ public final class Augmentation extends Functions {
         if (item.getAugmentationId() == 0)
             return;
 
-        Player player = getSelf();
         boolean equipped = item.isEquipped();
         if (equipped) {
             player.getInventory().unEquipItem(item);
@@ -164,7 +162,7 @@ public final class Augmentation extends Functions {
         sm.addItemName(item.getItemId());
         player.sendPacket(new ExVariationCancelResult(1), iu, sm);
         for (ShortCut sc : player.getAllShortCuts())
-            if ((sc.getId() == item.getObjectId()) && (sc.getType() == 1))
+            if ((sc.getId() == item.objectId()) && (sc.getType() == 1))
                 player.sendPacket(new ShortCutRegister(player, sc));
         player.sendChanges();
     }
@@ -228,7 +226,7 @@ public final class Augmentation extends Functions {
         }
         count = 0;
         for (OptionDataTemplate augm : augmentations) {
-            if (!checkId(augm.getId()))
+            if (!checkId(augm.id))
                 continue;
             count++;
             if (count >= MAX_AUGMENTATIONS_PER_PAGE) {
@@ -240,29 +238,29 @@ public final class Augmentation extends Functions {
                 break;
             if (page != _page)
                 continue;
-            Skill skill = !augm.getSkills().isEmpty() ? augm.getSkills().get(0) : !augm.getTriggerList().isEmpty() ? augm.getTriggerList().get(0).getSkill() : null;
+            Skill skill = !augm.getSkills().isEmpty() ? augm.getSkills().get(0) : !augm.getTriggerList().isEmpty() ? augm.getTriggerList().get(0).skill : null;
             block = template;
-            block = block.replace("{bypass}", "bypass -h scripts_services.Augmentation:run put " + augm.getId() + " " + (_filter.ordinal() + 1));
+            block = block.replace("{bypass}", "bypass -h scripts_services.Augmentation:run put " + augm.id + " " + (_filter.ordinal() + 1));
             String name;
             if (skill != null) {
                 name = skill.name.length() > 28 ? skill.name.substring(0, 28) : skill.name;
             } else {
                 name = "+1 ";
-                switch (augm.getId()) {
+                switch (augm.id) {
                     case 16341:
-                        name = name + "STR";
+                        name += "STR";
                         break;
                     case 16342:
-                        name = name + "CON";
+                        name +=  "CON";
                         break;
                     case 16343:
-                        name = name + "INT";
+                        name +=  "INT";
                         break;
                     case 16344:
-                        name = name + "MEN";
+                        name +=  "MEN";
                         break;
                     default:
-                        name = name + "(Id:" + augm.getId() + ")";
+                        name +=  "(Id:" + augm.id + ")";
                 }
             }
 

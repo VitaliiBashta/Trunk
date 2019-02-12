@@ -48,7 +48,7 @@ public class RequestStartPledgeWar extends L2GameClientPacket {
         } else if (clan.equals(targetClan)) {
             activeChar.sendPacket(SystemMsg.FOOL_YOU_CANNOT_DECLARE_WAR_AGAINST_YOUR_OWN_CLAN, ActionFail.STATIC);
             return;
-        } else if (clan.isAtWarWith(targetClan.getClanId())) {
+        } else if (clan.isAtWarWith(targetClan.clanId())) {
             activeChar.sendPacket(SystemMsg.WAR_HAS_ALREADY_BEEN_DECLARED_AGAINST_THAT_CLAN_BUT_ILL_MAKE_NOTE_THAT_YOU_REALLY_DONT_LIKE_THEM, ActionFail.STATIC);
             return;
         } else if (clan.getAllyId() == targetClan.getAllyId() && clan.getAllyId() != 0) {

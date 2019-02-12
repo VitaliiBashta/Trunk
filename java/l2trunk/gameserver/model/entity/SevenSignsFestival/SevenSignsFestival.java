@@ -26,6 +26,7 @@ import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static l2trunk.commons.lang.NumberUtils.toInt;
+import static l2trunk.gameserver.utils.ItemFunctions.removeItem;
 
 public enum SevenSignsFestival {
     INSTANCE;
@@ -58,7 +59,7 @@ public enum SevenSignsFestival {
     }
 
     /**
-     * Returns the associated name (level range) to a given festival ID.
+     * Returns the associated name (occupation range) to a given festival ID.
      *
      * @return String festivalName
      */
@@ -78,7 +79,7 @@ public enum SevenSignsFestival {
     }
 
     /**
-     * Returns the maximum allowed player level for the given festival type.
+     * Returns the maximum allowed player occupation for the given festival type.
      */
     public static int getMaxLevelForFestival(int festivalId) {
         switch (festivalId) {
@@ -329,7 +330,7 @@ public enum SevenSignsFestival {
         saveFestivalData(updateSettings);
         // Remove any unused blood offerings from online players.
         GameObjectsStorage.getAllPlayersStream().forEach(p ->
-            Functions.removeItem(p, FESTIVAL_BLOOD_OFFERING, Functions.getItemCount(p, FESTIVAL_BLOOD_OFFERING), "resetFestivalData"));
+                removeItem(p, FESTIVAL_BLOOD_OFFERING, p.inventory.getCountOf(FESTIVAL_BLOOD_OFFERING), "resetFestivalData"));
         _log.info("SevenSignsFestival: Reinitialized engine for next competition period.");
     }
 
@@ -423,7 +424,7 @@ public enum SevenSignsFestival {
             _duskFestivalScores.put(festivalId, offeringScore);
         }
         StatsSet currFestData = getHighestScoreData(oracle, festivalId);
-        // Check if this is the highest score for this level range so far for the player's cabal.
+        // Check if this is the highest score for this occupation range so far for the player's cabal.
         if (offeringScore > thisCabalHighScore) {
             // If the current score is greater than that for the other cabal, then they already have the points from this festival.
             //if (thisCabalHighScore > otherCabalHighScore)

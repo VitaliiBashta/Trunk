@@ -11,7 +11,6 @@ import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.utils.ItemFunctions;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public final class Sweep extends Skill {
@@ -20,106 +19,98 @@ public final class Sweep extends Skill {
     }
 
     @Override
-    public boolean checkCondition(Creature activeChar, Creature target, boolean forceUse, boolean dontMove, boolean first) {
+    public boolean checkCondition(Player player, Creature target, boolean forceUse, boolean dontMove, boolean first) {
         if (isNotTargetAoE())
-            return super.checkCondition(activeChar, target, forceUse, dontMove, first);
+            return super.checkCondition(player, target, forceUse, dontMove, first);
 
         if (target == null)
             return false;
 
-        if (!target.isMonster() || !target.isDead()) {
-            activeChar.sendPacket(SystemMsg.INVALID_TARGET);
+        if (!(target instanceof MonsterInstance) || !target.isDead()) {
+            player.sendPacket(SystemMsg.INVALID_TARGET);
             return false;
         }
 
         if (!((MonsterInstance) target).isSpoiled()) {
-            activeChar.sendPacket(SystemMsg.SWEEPER_FAILED_TARGET_NOT_SPOILED);
+            player.sendPacket(SystemMsg.SWEEPER_FAILED_TARGET_NOT_SPOILED);
             return false;
         }
 
-        if (!((MonsterInstance) target).isSpoiled((Player) activeChar)) {
-            activeChar.sendPacket(SystemMsg.THERE_ARE_NO_PRIORITY_RIGHTS_ON_A_SWEEPER);
+        if (!((MonsterInstance) target).isSpoiled(player)) {
+            player.sendPacket(SystemMsg.THERE_ARE_NO_PRIORITY_RIGHTS_ON_A_SWEEPER);
             return false;
         }
 
-        return super.checkCondition(activeChar, target, forceUse, dontMove, first);
+        return super.checkCondition(player, target, forceUse, dontMove, first);
     }
 
     @Override
-    public void useSkill(Creature activeChar, List<Creature> targets) {
-        if (!activeChar.isPlayer())
+    public void useSkill(Creature activeChar, Creature target) {
+        if (!(activeChar instanceof Player))
             return;
 
         Player player = (Player) activeChar;
 
-        List<MonsterInstance> monstersToDecay = new ArrayList<>();
+        if (target instanceof MonsterInstance && target.isDead() && ((MonsterInstance) target).isSpoiled()) {
+            MonsterInstance monster = (MonsterInstance) target;
 
-        for (Creature targ : targets) {
-            if (targ == null || !targ.isMonster() || !targ.isDead() || !((MonsterInstance) targ).isSpoiled())
-                continue;
+            if (monster.isSpoiled(player)) {
+                List<RewardItem> items = monster.takeSweep();
 
-            MonsterInstance target = (MonsterInstance) targ;
+                if (items != null) {
+                    for (RewardItem item : items) {
+                        ItemInstance sweep = ItemFunctions.createItem(item.itemId);
+                        sweep.setCount(item.count);
 
-            if (!target.isSpoiled(player)) {
-                activeChar.sendPacket(SystemMsg.THERE_ARE_NO_PRIORITY_RIGHTS_ON_A_SWEEPER);
-                continue;
-            }
+                        if (player.isInParty() && player.getParty().isDistributeSpoilLoot()) {
+                            player.getParty().distributeItem(player, sweep, null);
+                        } else {
+                            if (player.getInventory().validateCapacity(sweep) && player.getInventory().validateWeight(sweep)) {
+                                player.getInventory().addItem(sweep, "Sweep");
 
-            List<RewardItem> items = target.takeSweep();
+                                SystemMessage2 smsg = getMessage(item, false);
+                                player.sendPacket(smsg);
+                                if (player.isInParty()) {
+                                    smsg = getMessage(item, true);
+                                    player.getParty().sendPacket(player, smsg);
+                                }
+                            }
+                        }
 
-            if (items == null) {
-                activeChar.getAI().setAttackTarget(null);
-                target.endDecayTask();
-                continue;
-            }
-
-            for (RewardItem item : items) {
-                ItemInstance sweep = ItemFunctions.createItem(item.itemId);
-                sweep.setCount(item.count);
-
-                if (player.isInParty() && player.getParty().isDistributeSpoilLoot()) {
-                    player.getParty().distributeItem(player, sweep, null);
-                    continue;
-                }
-
-                if (!player.getInventory().validateCapacity(sweep) || !player.getInventory().validateWeight(sweep)) {
-                    sweep.dropToTheGround(player, target);
-                    continue;
-                }
-
-                player.getInventory().addItem(sweep, "Sweep");
-
-                SystemMessage2 smsg;
-                if (item.count == 1) {
-                    smsg = new SystemMessage2(SystemMsg.YOU_HAVE_OBTAINED_S1);
-                    smsg.addItemName(item.itemId);
-                    player.sendPacket(smsg);
-                } else {
-                    smsg = new SystemMessage2(SystemMsg.YOU_HAVE_OBTAINED_S2_S1);
-                    smsg.addItemName(item.itemId);
-                    smsg.addInteger(item.count);
-                    player.sendPacket(smsg);
-                }
-                if (player.isInParty())
-                    if (item.count == 1) {
-                        smsg = new SystemMessage2(SystemMsg.C1_HAS_OBTAINED_S2_BY_USING_SWEEPER);
-                        smsg.addName(player);
-                        smsg.addItemName(item.itemId);
-                        player.getParty().sendPacket(player, smsg);
-                    } else {
-                        smsg = new SystemMessage2(SystemMsg.C1_HAS_OBTAINED_S3_S2_BY_USING_SWEEPER);
-                        smsg.addName(player);
-                        smsg.addItemName(item.itemId);
-                        smsg.addInteger(item.count);
-                        player.getParty().sendPacket(player, smsg);
                     }
+                }
+                player.getAI().setAttackTarget(null);
+                monster.endDecayTask();
             }
-
-            activeChar.getAI().setAttackTarget(null);
-            monstersToDecay.add(target);
+        } else {
+            player.sendPacket(SystemMsg.THERE_ARE_NO_PRIORITY_RIGHTS_ON_A_SWEEPER);
         }
 
-        for (MonsterInstance c : monstersToDecay)
-            c.endDecayTask();
+    }
+
+
+    private SystemMessage2 getMessage(RewardItem item, boolean party) {
+        SystemMessage2 smsg;
+        if (!party) {
+            if (item.count == 1) {
+                smsg = new SystemMessage2(SystemMsg.YOU_HAVE_OBTAINED_S1);
+                smsg.addItemName(item.itemId);
+            } else {
+                smsg = new SystemMessage2(SystemMsg.YOU_HAVE_OBTAINED_S2_S1);
+                smsg.addItemName(item.itemId);
+                smsg.addInteger(item.count);
+            }
+        } else {
+            if (item.count == 1) {
+                smsg = new SystemMessage2(SystemMsg.YOU_HAVE_OBTAINED_S1);
+                smsg.addItemName(item.itemId);
+            } else {
+                smsg = new SystemMessage2(SystemMsg.YOU_HAVE_OBTAINED_S2_S1);
+                smsg.addItemName(item.itemId);
+                smsg.addInteger(item.count);
+            }
+
+        }
+        return smsg;
     }
 }

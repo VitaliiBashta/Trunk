@@ -153,7 +153,6 @@ public final class BlockCheckerEngine {
 
     /**
      * Increases player points for his teams
-
      */
     public synchronized void increasePlayerPoints(Player player, int team) {
         if (player == null)
@@ -197,7 +196,7 @@ public final class BlockCheckerEngine {
      */
     private void broadcastRelationChanged(Player plr) {
         holder.getAllPlayers().forEach(p ->
-            p.sendPacket(RelationChanged.update(plr, p, plr)));
+                p.sendPacket(RelationChanged.update(plr, p, plr)));
     }
 
     /**
@@ -221,9 +220,9 @@ public final class BlockCheckerEngine {
         Zone zone = ReflectionUtils.getZone(zoneName);
         if (zone != null)
             for (Creature cha : zone.getObjects())
-                if (cha.isPlayer() && cha.getPlayer().getBlockCheckerArena() < 0)
-                    cha.getPlayer().teleToClosestTown();
-                else if (cha.isNpc())
+                if (cha instanceof Player && ((Player)cha).getBlockCheckerArena() < 0)
+                    ((Player)cha).teleToClosestTown();
+                else if (cha instanceof NpcInstance)
                     cha.deleteMe();
     }
 

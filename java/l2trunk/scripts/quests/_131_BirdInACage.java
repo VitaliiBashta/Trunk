@@ -6,7 +6,6 @@ import l2trunk.gameserver.instancemanager.ServerVariables;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _131_BirdInACage extends Quest {
     // NPC's
@@ -42,7 +41,7 @@ public final class _131_BirdInACage extends Quest {
             st.setCond(3);
             st.giveItems(PARMES_LETTER, 1);
             st.playSound(SOUND_MIDDLE);
-            st.getPlayer().teleToLocation(143472 + Rnd.get(-100, 100), 191040 + Rnd.get(-100, 100), -3696);
+            st.player.teleToLocation(143472 + Rnd.get(-100, 100), 191040 + Rnd.get(-100, 100), -3696);
         } else if (event.equals("priest_kanis_q0131_17.htm") && cond == 3) {
             st.playSound(SOUND_MIDDLE);
             st.takeItems(PARMES_LETTER, -1);
@@ -54,7 +53,7 @@ public final class _131_BirdInACage extends Quest {
             if (HellboundManager.getHellboundLevel() == 0)
                 ServerVariables.set("HellboundConfidence", 1);
         } else if (event.equals("meet") && cond == 2)
-            st.getPlayer().teleToLocation(153736, 142056, -9744);
+            st.player.teleToLocation(153736, 142056, -9744);
 
         return event;
     }
@@ -67,7 +66,7 @@ public final class _131_BirdInACage extends Quest {
 
         if (npcId == KANIS) {
             if (cond == 0)
-                if (st.getPlayer().getLevel() >= 78)
+                if (st.player.getLevel() >= 78)
                     htmltext = "priest_kanis_q0131_01.htm";
                 else {
                     htmltext = "priest_kanis_q0131_02.htm";

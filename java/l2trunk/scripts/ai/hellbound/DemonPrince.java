@@ -39,7 +39,7 @@ public final class DemonPrince extends Fighter {
         _notUsedUltimateDefense = true;
 
         actor.getReflection().setReenterTime(System.currentTimeMillis());
-        actor.getReflection().addSpawnWithoutRespawn(TELEPORTATION_CUBIC_ID, CUBIC_POSITION, 0);
+        actor.getReflection().addSpawnWithoutRespawn(TELEPORTATION_CUBIC_ID, CUBIC_POSITION);
 
         super.onEvtDead(killer);
     }

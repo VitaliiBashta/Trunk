@@ -26,9 +26,9 @@ public final class _423_TakeYourBestShot extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("johnny_q423_04.htm"))
+        if ("johnny_q423_04.htm".equalsIgnoreCase(event))
             st.exitCurrentQuest(true);
-        else if (event.equalsIgnoreCase("johnny_q423_05.htm")) {
+        else if ("johnny_q423_05.htm".equalsIgnoreCase(event)) {
             st.setState(STARTED);
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
@@ -43,8 +43,7 @@ public final class _423_TakeYourBestShot extends Quest {
         int cond = st.getCond();
         if (npcId == Johnny) {
             if (cond == 0) {
-                QuestState qs = st.getPlayer().getQuestState(_249_PoisonedPlainsOfTheLizardmen.class);
-                if (st.getPlayer().getLevel() >= 82 && qs != null && qs.isCompleted())
+                if (st.player.getLevel() >= 82 && st.player.isQuestCompleted(_249_PoisonedPlainsOfTheLizardmen.class))
                     htmltext = "johnny_q423_01.htm";
                 else {
                     htmltext = "johnny_q423_00.htm";
@@ -59,7 +58,7 @@ public final class _423_TakeYourBestShot extends Quest {
                 htmltext = "batracos_q423_01.htm";
             else if (cond == 2) {
                 htmltext = "batracos_q423_02.htm";
-                st.giveItems(SeerUgorosPass, 1);
+                st.giveItems(SeerUgorosPass);
                 st.exitCurrentQuest(true);
             }
         }
@@ -67,16 +66,14 @@ public final class _423_TakeYourBestShot extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         if (st.getCond() == 1) {
             if (TantaClan.contains(npcId) && Rnd.chance(2)) {
-                Location loc = st.getPlayer().getLoc();
-                addSpawn(TantaGuard, loc.x, loc.y, loc.z, 0, 100, 120000);
+                addSpawn(TantaGuard, st.player.getLoc(), 100, 120000);
             } else if (npcId == TantaGuard && st.getQuestItemsCount(SeerUgorosPass) < 1)
                 st.setCond(2);
         }
-        return null;
     }
 
 }

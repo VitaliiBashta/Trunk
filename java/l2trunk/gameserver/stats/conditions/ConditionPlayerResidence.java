@@ -5,26 +5,28 @@ import l2trunk.gameserver.model.entity.residence.ResidenceType;
 import l2trunk.gameserver.model.pledge.Clan;
 import l2trunk.gameserver.stats.Env;
 
-public class ConditionPlayerResidence extends Condition {
-    private final int _id;
-    private final ResidenceType _type;
+public final class ConditionPlayerResidence extends Condition {
+    private final int id;
+    private final ResidenceType type;
 
     public ConditionPlayerResidence(int id, ResidenceType type) {
-        _id = id;
-        _type = type;
+        this.id = id;
+        this.type = type;
     }
 
     @Override
     protected boolean testImpl(Env env) {
-        if (!env.character.isPlayer())
-            return false;
-        Player player = (Player) env.character;
-        Clan clan = player.getClan();
-        if (clan == null)
-            return false;
+        if (env.character instanceof Player) {
+            Player player = (Player) env.character;
+            Clan clan = player.getClan();
+            if (clan == null)
+                return false;
 
-        int residenceId = clan.getResidenceId(_type);
+            int residenceId = clan.getResidenceId(type);
 
-        return _id > 0 ? residenceId == _id : residenceId > 0;
+            return id > 0 ? residenceId == id : residenceId > 0;
+        } else {
+            return false;
+        }
     }
 }

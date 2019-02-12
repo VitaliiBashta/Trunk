@@ -4,6 +4,7 @@ import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.handler.admincommands.IAdminCommandHandler;
 import l2trunk.gameserver.instancemanager.ReflectionManager;
 import l2trunk.gameserver.instancemanager.SoDManager;
+import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.Reflection;
 import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
@@ -17,7 +18,7 @@ public class AdminInstance implements IAdminCommandHandler {
     @Override
     public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, final Player activeChar) {
         Commands command = (Commands) comm;
-
+        GameObject target = activeChar.getTarget();
         if (!activeChar.getPlayerAccess().CanTeleport)
             return false;
 
@@ -41,45 +42,20 @@ public class AdminInstance implements IAdminCommandHandler {
                     activeChar.sendMessage("Cannot collapse default reflection!");
                 break;
             case admin_reset_reuse:
-                if (wordList.length > 1 && activeChar.getTarget() != null && activeChar.getTarget().isPlayer()) {
-                    Player p = activeChar.getTarget().getPlayer();
+                if (wordList.length > 1 && target instanceof Player) {
+                    Player p = (Player) target;
                     p.removeInstanceReuse(Integer.parseInt(wordList[1]));
                     Functions.sendDebugMessage(activeChar, "Instance reuse has been removed");
                 }
                 break;
             case admin_reset_reuse_all:
-                if (activeChar.getTarget() != null && activeChar.getTarget().isPlayer()) {
-                    Player p = activeChar.getTarget().getPlayer();
+                if (target instanceof Player) {
+                    Player p = (Player) target;
                     p.removeAllInstanceReuses();
                     Functions.sendDebugMessage(activeChar, "All instance reuses has been removed");
                 }
                 break;
             case admin_clean_files:
-                if (wordList.length > 1) {
-                    final String ext = wordList[1];
-                    ThreadPoolManager.INSTANCE.schedule(() -> {
-                        try {
-                            activeChar.sendMessage("Looking for " + ext);
-                            File[] roots = File.listRoots();
-                            activeChar.sendMessage("Found " + roots.length + " roots");
-
-                            for (File root : roots) {
-                                activeChar.sendMessage("Starting to clean: " + root);
-                                Collection<File> files = Collections.emptySet(); //TODO ??
-
-                                for (File file : files)
-                                    if (file.getName().endsWith(ext)) {
-                                        file.delete();
-                                        activeChar.sendMessage("Cleaned!");
-                                    }
-                            }
-                            activeChar.sendMessage("Finished!");
-                        } catch (Exception e) {
-                            activeChar.sendMessage("Exception!");
-                        }
-                    }, 1000);
-
-                }
                 break;
             case admin_set_reuse:
                 if (activeChar.getReflection() != null)
@@ -113,7 +89,7 @@ public class AdminInstance implements IAdminCommandHandler {
             int countPlayers = 0;
             if (reflection.getPlayers() != null)
                 countPlayers = (int) reflection.getPlayers().count();
-            replyMSG.append("<a action=\"bypass -h admin_instance_id ").append(reflection.getId()).append(" \">").append(reflection.getName()).append("(").append(countPlayers).append(" players). Id: ").append(reflection.getId()).append("</a><br>");
+            replyMSG.append("<a action=\"bypass -h admin_instance_id ").append(reflection.id).append(" \">").append(reflection.getName()).append("(").append(countPlayers).append(" players). Id: ").append(reflection.id).append("</a><br>");
         }
 
         replyMSG.append("<button value=\"Refresh\" action=\"bypass -h admin_instance\" width=50 height=20 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\">");

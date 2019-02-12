@@ -46,9 +46,9 @@ public class PlayerMessageStack {
     public void CheckMessages(Player cha) {
         List<L2GameServerPacket> messages;
         synchronized (_stack) {
-            if (!_stack.containsKey(cha.getObjectId()))
+            if (!_stack.containsKey(cha.objectId()))
                 return;
-            messages = _stack.remove(cha.getObjectId());
+            messages = _stack.remove(cha.objectId());
         }
         if (messages == null || messages.size() == 0)
             return;

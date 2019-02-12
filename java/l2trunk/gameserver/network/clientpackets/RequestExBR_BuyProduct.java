@@ -9,14 +9,14 @@ import l2trunk.gameserver.network.serverpackets.ExBR_BuyProduct;
 import l2trunk.gameserver.network.serverpackets.ExBR_GamePoint;
 import l2trunk.gameserver.templates.item.ItemTemplate;
 
-public class RequestExBR_BuyProduct extends L2GameClientPacket {
+public final class RequestExBR_BuyProduct extends L2GameClientPacket {
     private int _productId;
-    private int _count;
+    private int count;
 
     @Override
     protected void readImpl() {
         _productId = readD();
-        _count = readD();
+        count = readD();
     }
 
     @Override
@@ -26,7 +26,7 @@ public class RequestExBR_BuyProduct extends L2GameClientPacket {
         if (activeChar == null)
             return;
 
-        if (_count > 99 || _count < 0)
+        if (count > 99 || count < 0)
             return;
 
         ProductItem product = ProductHolder.getInstance().getProduct(_productId);
@@ -40,7 +40,7 @@ public class RequestExBR_BuyProduct extends L2GameClientPacket {
             return;
         }
 
-        int totalPoints = product.getPoints() * _count;
+        int totalPoints = product.getPoints() * count;
 
         if (totalPoints < 0) {
             activeChar.sendPacket(new ExBR_BuyProduct(ExBR_BuyProduct.RESULT_WRONG_PRODUCT));
@@ -54,21 +54,20 @@ public class RequestExBR_BuyProduct extends L2GameClientPacket {
             return;
         }
 
-        int totalWeight = 0;
-        for (ProductItemComponent com : product.getComponents())
-            totalWeight += com.getWeight();
+        int totalWeight = product.getComponents().stream()
+                .mapToInt(com -> com.weight).sum();
 
-        totalWeight *= _count; //увеличиваем вес согласно количеству
+        totalWeight *= count; //увеличиваем вес согласно количеству
 
         int totalCount = 0;
 
         for (ProductItemComponent com : product.getComponents()) {
-            ItemTemplate item = ItemHolder.getTemplate(com.getItemId());
+            ItemTemplate item = ItemHolder.getTemplate(com.itemId);
             if (item == null) {
                 activeChar.sendPacket(new ExBR_BuyProduct(ExBR_BuyProduct.RESULT_WRONG_PRODUCT));
                 return; //what
             }
-            totalCount += item.isStackable() ? 1 : com.getCount() * _count;
+            totalCount += item.stackable ? 1 : com.count * count;
         }
 
         if (!activeChar.getInventory().validateCapacity(totalCount) || !activeChar.getInventory().validateWeight(totalWeight)) {
@@ -79,7 +78,7 @@ public class RequestExBR_BuyProduct extends L2GameClientPacket {
         activeChar.reducePremiumPoints(totalPoints);
 
         for (ProductItemComponent $comp : product.getComponents()) {
-            activeChar.getInventory().addItem($comp.getItemId(), $comp.getCount() * _count, "RequestExBR_BuyProduct");
+            activeChar.getInventory().addItem($comp.itemId, $comp.count * count, "RequestExBR_BuyProduct");
         }
 
         activeChar.sendPacket(new ExBR_GamePoint(activeChar));

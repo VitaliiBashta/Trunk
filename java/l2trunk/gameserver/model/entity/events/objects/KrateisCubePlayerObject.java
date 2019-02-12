@@ -14,19 +14,19 @@ import java.util.List;
 import java.util.concurrent.Future;
 
 public class KrateisCubePlayerObject implements Serializable, Comparable<KrateisCubePlayerObject> {
-    private final Player _player;
+    private final Player player;
     private final long _registrationTime;
     private boolean _showRank;
     private int _points;
     private Future<?> _ressurectTask;
 
     public KrateisCubePlayerObject(Player player) {
-        _player = player;
+        this.player = player;
         _registrationTime = System.currentTimeMillis();
     }
 
     public String getName() {
-        return _player.getName();
+        return player.getName();
     }
 
     public boolean isShowRank() {
@@ -50,11 +50,11 @@ public class KrateisCubePlayerObject implements Serializable, Comparable<Krateis
     }
 
     public int getObjectId() {
-        return _player.getObjectId();
+        return player.objectId();
     }
 
     public Player getPlayer() {
-        return _player;
+        return player;
     }
 
     public void startRessurectTask() {
@@ -89,15 +89,15 @@ public class KrateisCubePlayerObject implements Serializable, Comparable<Krateis
         public void runImpl() {
             _seconds -= 1;
             if (_seconds == 0) {
-                KrateisCubeEvent cubeEvent = _player.getEvent(KrateisCubeEvent.class);
+                KrateisCubeEvent cubeEvent = player.getEvent(KrateisCubeEvent.class);
                 List<Location> waitLocs = cubeEvent.getObjects(KrateisCubeEvent.WAIT_LOCS);
 
                 _ressurectTask = null;
 
-                _player.teleToLocation(Rnd.get(waitLocs));
-                _player.doRevive();
+                player.teleToLocation(Rnd.get(waitLocs));
+                player.doRevive();
             } else {
-                _player.sendPacket(new SystemMessage2(SystemMsg.RESURRECTION_WILL_TAKE_PLACE_IN_THE_WAITING_ROOM_AFTER_S1_SECONDS).addInteger(_seconds));
+                player.sendPacket(new SystemMessage2(SystemMsg.RESURRECTION_WILL_TAKE_PLACE_IN_THE_WAITING_ROOM_AFTER_S1_SECONDS).addInteger(_seconds));
                 _ressurectTask = ThreadPoolManager.INSTANCE.schedule(this, 1000L);
             }
         }

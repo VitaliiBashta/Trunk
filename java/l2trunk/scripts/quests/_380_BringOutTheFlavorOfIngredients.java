@@ -4,7 +4,6 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _380_BringOutTheFlavorOfIngredients extends Quest {
     //NPCs
@@ -89,7 +88,7 @@ public final class _380_BringOutTheFlavorOfIngredients extends Quest {
         int cond = st.getCond();
         if (npcId == Rollant) {
             if (cond == 0) {
-                if (st.getPlayer().getLevel() >= 24)
+                if (st.player.getLevel() >= 24)
                     htmltext = "rollant_q0380_02.htm";
                 else {
                     htmltext = "rollant_q0380_01.htm";
@@ -99,9 +98,9 @@ public final class _380_BringOutTheFlavorOfIngredients extends Quest {
                 htmltext = "rollant_q0380_06.htm";
             else if (cond == 2 && st.getQuestItemsCount(Antidote) >= 2) {
                 st.takeItems(Antidote, 2);
-                st.takeItems(RitronsFruit, -1);
-                st.takeItems(MoonFaceFlower, -1);
-                st.takeItems(LeechFluids, -1);
+                st.takeItems(RitronsFruit);
+                st.takeItems(MoonFaceFlower);
+                st.takeItems(LeechFluids);
                 htmltext = "rollant_q0380_07.htm";
                 st.setCond(3);
                 st.setState(STARTED);
@@ -133,7 +132,7 @@ public final class _380_BringOutTheFlavorOfIngredients extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         for (int[] aDROPLIST_COND : DROPLIST_COND)
@@ -150,6 +149,5 @@ public final class _380_BringOutTheFlavorOfIngredients extends Quest {
             st.setCond(2);
             st.setState(STARTED);
         }
-        return null;
     }
 }

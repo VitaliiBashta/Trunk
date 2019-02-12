@@ -6,7 +6,6 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _105_SkirmishWithOrcs extends Quest {
     //NPC
@@ -70,13 +69,13 @@ public final class _105_SkirmishWithOrcs extends Quest {
             if (st.getQuestItemsCount(Kendells1stOrder) + st.getQuestItemsCount(Kendells2stOrder) + st.getQuestItemsCount(Kendells3stOrder) + st.getQuestItemsCount(Kendells4stOrder) == 0) {
                 int n = Rnd.get(4);
                 if (n == 0)
-                    st.giveItems(Kendells1stOrder, 1, false);
+                    st.giveItems(Kendells1stOrder);
                 else if (n == 1)
-                    st.giveItems(Kendells2stOrder, 1, false);
+                    st.giveItems(Kendells2stOrder);
                 else if (n == 2)
-                    st.giveItems(Kendells3stOrder, 1, false);
+                    st.giveItems(Kendells3stOrder);
                 else
-                    st.giveItems(Kendells4stOrder, 1, false);
+                    st.giveItems(Kendells4stOrder);
             }
         }
         return event;
@@ -87,10 +86,10 @@ public final class _105_SkirmishWithOrcs extends Quest {
         String htmltext = "noquest";
         int cond = st.getCond();
         if (cond == 0) {
-            if (st.getPlayer().getRace() != Race.elf) {
+            if (st.player.getRace() != Race.elf) {
                 htmltext = "sentinel_kendnell_q0105_00.htm";
                 st.exitCurrentQuest(true);
-            } else if (st.getPlayer().getLevel() < 10) {
+            } else if (st.player.getLevel() < 10) {
                 htmltext = "sentinel_kendnell_q0105_10.htm";
                 st.exitCurrentQuest(true);
             } else
@@ -99,47 +98,47 @@ public final class _105_SkirmishWithOrcs extends Quest {
             htmltext = "sentinel_kendnell_q0105_05.htm";
         else if (cond == 2 && st.getQuestItemsCount(KabooChiefs1stTorque) != 0) {
             htmltext = "sentinel_kendnell_q0105_06.htm";
-            st.takeItems(Kendells1stOrder, -1);
-            st.takeItems(Kendells2stOrder, -1);
-            st.takeItems(Kendells3stOrder, -1);
-            st.takeItems(Kendells4stOrder, -1);
+            st.takeItems(Kendells1stOrder);
+            st.takeItems(Kendells2stOrder);
+            st.takeItems(Kendells3stOrder);
+            st.takeItems(Kendells4stOrder);
             st.takeItems(KabooChiefs1stTorque, 1);
             int n = Rnd.get(4);
             if (n == 0)
-                st.giveItems(Kendells5stOrder, 1, false);
+                st.giveItems(Kendells5stOrder);
             else if (n == 1)
-                st.giveItems(Kendells6stOrder, 1, false);
+                st.giveItems(Kendells6stOrder);
             else if (n == 2)
-                st.giveItems(Kendells7stOrder, 1, false);
+                st.giveItems(Kendells7stOrder);
             else
-                st.giveItems(Kendells8stOrder, 1, false);
+                st.giveItems(Kendells8stOrder);
             st.setCond(3);
             st.setState(STARTED);
         } else if (cond == 3 && st.getQuestItemsCount(Kendells5stOrder) + st.getQuestItemsCount(Kendells6stOrder) + st.getQuestItemsCount(Kendells7stOrder) + st.getQuestItemsCount(Kendells8stOrder) == 1)
             htmltext = "sentinel_kendnell_q0105_07.htm";
         else if (cond == 4 && st.getQuestItemsCount(KabooChiefs2stTorque) > 0) {
             htmltext = "sentinel_kendnell_q0105_08.htm";
-            st.takeItems(Kendells5stOrder, -1);
-            st.takeItems(Kendells6stOrder, -1);
-            st.takeItems(Kendells7stOrder, -1);
-            st.takeItems(Kendells8stOrder, -1);
-            st.takeItems(KabooChiefs2stTorque, -1);
+            st.takeItems(Kendells5stOrder);
+            st.takeItems(Kendells6stOrder);
+            st.takeItems(Kendells7stOrder);
+            st.takeItems(Kendells8stOrder);
+            st.takeItems(KabooChiefs2stTorque);
 
-            if (st.getPlayer().getClassId().isMage())
-                st.giveItems(RED_SUNSET_STAFF, 1, false);
+            if (st.player.getClassId().isMage)
+                st.giveItems(RED_SUNSET_STAFF);
             else
-                st.giveItems(RED_SUNSET_SWORD, 1, false);
+                st.giveItems(RED_SUNSET_SWORD);
 
             st.giveItems(ADENA_ID, 17599, false);
-            st.getPlayer().addExpAndSp(41478, 3555);
+            st.player.addExpAndSp(41478, 3555);
 
-            if (st.getPlayer().getClassId().getLevel() == 1 && !st.getPlayer().getVarB("p1q3")) {
-                st.getPlayer().setVar("p1q3", "1", -1); // flag for helper
-                st.getPlayer().sendPacket(new ExShowScreenMessage("Now go find the Newbie Guide."));
+            if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("p1q3")) {
+                st.player.setVar("p1q3", 1); // flag for helper
+                st.player.sendPacket(new ExShowScreenMessage("Now go find the Newbie Guide."));
                 st.giveItems(1060, 100); // healing potion
                 for (int item = 4412; item <= 4417; item++)
                     st.giveItems(item, 10); // echo cry
-                if (st.getPlayer().getClassId().isMage()) {
+                if (st.player.getClassId().isMage) {
                     st.playTutorialVoice("tutorial_voice_027");
                     st.giveItems(5790, 3000); // newbie sps
                 } else {
@@ -155,18 +154,18 @@ public final class _105_SkirmishWithOrcs extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         if (cond == 1 && st.getQuestItemsCount(KabooChiefs1stTorque) == 0) {
             if (npcId == KabooChiefUoph && st.getQuestItemsCount(Kendells1stOrder) > 0)
-                st.giveItems(KabooChiefs1stTorque, 1, false);
+                st.giveItems(KabooChiefs1stTorque);
             else if (npcId == KabooChiefKracha && st.getQuestItemsCount(Kendells2stOrder) > 0)
-                st.giveItems(KabooChiefs1stTorque, 1, false);
+                st.giveItems(KabooChiefs1stTorque);
             else if (npcId == KabooChiefBatoh && st.getQuestItemsCount(Kendells3stOrder) > 0)
-                st.giveItems(KabooChiefs1stTorque, 1, false);
+                st.giveItems(KabooChiefs1stTorque);
             else if (npcId == KabooChiefTanukia && st.getQuestItemsCount(Kendells4stOrder) > 0)
-                st.giveItems(KabooChiefs1stTorque, 1, false);
+                st.giveItems(KabooChiefs1stTorque);
             if (st.getQuestItemsCount(KabooChiefs1stTorque) > 0) {
                 st.setCond(2);
                 st.setState(STARTED);
@@ -174,19 +173,18 @@ public final class _105_SkirmishWithOrcs extends Quest {
             }
         } else if (cond == 3 && st.getQuestItemsCount(KabooChiefs2stTorque) == 0) {
             if (npcId == KabooChiefTurel && st.getQuestItemsCount(Kendells5stOrder) > 0)
-                st.giveItems(KabooChiefs2stTorque, 1, false);
+                st.giveItems(KabooChiefs2stTorque);
             else if (npcId == KabooChiefRoko && st.getQuestItemsCount(Kendells6stOrder) > 0)
-                st.giveItems(KabooChiefs2stTorque, 1, false);
+                st.giveItems(KabooChiefs2stTorque);
             else if (npcId == KabooChiefKamut && st.getQuestItemsCount(Kendells7stOrder) > 0)
-                st.giveItems(KabooChiefs2stTorque, 1, false);
+                st.giveItems(KabooChiefs2stTorque);
             else if (npcId == KabooChiefMurtika && st.getQuestItemsCount(Kendells8stOrder) > 0)
-                st.giveItems(KabooChiefs2stTorque, 1, false);
+                st.giveItems(KabooChiefs2stTorque);
             if (st.getQuestItemsCount(KabooChiefs2stTorque) > 0) {
                 st.setCond(4);
                 st.setState(STARTED);
                 st.playSound(SOUND_MIDDLE);
             }
         }
-        return null;
     }
 }

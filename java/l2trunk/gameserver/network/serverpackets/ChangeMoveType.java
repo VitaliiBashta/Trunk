@@ -15,7 +15,7 @@ public class ChangeMoveType extends L2GameServerPacket {
     private final boolean _running;
 
     public ChangeMoveType(Creature cha) {
-        _chaId = cha.getObjectId();
+        _chaId = cha.objectId();
         _running = cha.isRunning();
     }
 

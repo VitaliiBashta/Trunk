@@ -6,8 +6,10 @@ import l2trunk.gameserver.Config;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.listener.actor.OnDeathListener;
 import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.model.SimpleSpawner;
 import l2trunk.gameserver.model.Territory;
+import l2trunk.gameserver.model.instances.MonsterInstance;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.ReflectionUtils;
 import org.slf4j.Logger;
@@ -109,15 +111,15 @@ public enum HellboundManager {
         final int sdoor_trans_mesh00 = 20250002;
         final int Hell_gate_door = 20250001;
 
-        final int[] _doors = {
+        final List<Integer> doors = List.of(
                 NativeHell_native0131,
                 NativeHell_native0132,
                 NativeHell_native0133,
                 NativeHell_native0134,
                 sdoor_trans_mesh00,
-                Hell_gate_door};
+                Hell_gate_door);
 
-        for (int _door : _doors) ReflectionUtils.getDoor(_door).closeMe();
+        doors.forEach(d -> ReflectionUtils.getDoor(d).closeMe());
 
         switch (getHellboundLevel()) {
             case 0:
@@ -220,7 +222,7 @@ public enum HellboundManager {
                             int npcId = Integer.parseInt(d1.getAttributes().getNamedItem("npc_id").getNodeValue());
                             Location spawnLoc = null;
                             if (d1.getAttributes().getNamedItem("loc") != null)
-                                spawnLoc = Location.parseLoc(d1.getAttributes().getNamedItem("loc").getNodeValue());
+                                spawnLoc = Location.of(d1.getAttributes().getNamedItem("loc").getNodeValue());
                             int count = 1;
                             if (d1.getAttributes().getNamedItem("count") != null)
                                 count = Integer.parseInt(d1.getAttributes().getNamedItem("count").getNodeValue());
@@ -288,14 +290,14 @@ public enum HellboundManager {
     private class DeathListener implements OnDeathListener {
         @Override
         public void onDeath(Creature cha, Creature killer) {
-            if (killer == null || !cha.isMonster() || !killer.isPlayable())
+            if (!(cha instanceof MonsterInstance) || !(killer instanceof Playable))
                 return;
-
+            int npcId = cha.getNpcId();
             switch (getHellboundLevel()) {
                 case 0:
                     break;
                 case 1: {
-                    switch (cha.getNpcId()) {
+                    switch (npcId) {
                         case 22320: // Junior Watchman
                         case 22321: // Junior Summoner
                         case 22324: // Blind Huntsman
@@ -316,7 +318,7 @@ public enum HellboundManager {
                     break;
                 }
                 case 2: {
-                    switch (cha.getNpcId()) {
+                    switch (npcId) {
                         case 18463: // Remnant Diabolist
                         case 18464: // Remnant Diviner
                             addConfidence(5);
@@ -330,7 +332,7 @@ public enum HellboundManager {
                     break;
                 }
                 case 3: {
-                    switch (cha.getNpcId()) {
+                    switch (npcId) {
                         case 22342: // Darion's Enforcer
                         case 22343: // Darion's Executioner
                             addConfidence(3);
@@ -347,7 +349,7 @@ public enum HellboundManager {
                     break;
                 }
                 case 4: {
-                    switch (cha.getNpcId()) {
+                    switch (npcId) {
                         case 18465: // Derek
                             addConfidence(10000);
                             ServerVariables.set("HB_derekKilled", true);
@@ -361,15 +363,14 @@ public enum HellboundManager {
                     break;
                 }
                 case 5: {
-                    switch (cha.getNpcId()) {
-                        case 22448: // Leodas
-                            reduceConfidence(50);
-                            break;
+                    // Leodas
+                    if (npcId == 22448) {
+                        reduceConfidence(50);
                     }
                     break;
                 }
                 case 6: {
-                    switch (cha.getNpcId()) {
+                    switch (npcId) {
                         case 22326: // Hellinark
                             addConfidence(500);
                             break;
@@ -380,11 +381,10 @@ public enum HellboundManager {
                     break;
                 }
                 case 8: {
-                    switch (cha.getNpcId()) {
-                        case 18466: // Outpost Captain
-                            addConfidence(10000);
-                            ServerVariables.set("HB_captainKilled", true);
-                            break;
+                    // Outpost Captain
+                    if (npcId == 18466) {
+                        addConfidence(10000);
+                        ServerVariables.set("HB_captainKilled", true);
                     }
                     break;
                 }

@@ -459,7 +459,7 @@
 		<!--
 			Last modify:	27.07.2009
 
-			Description: Immediately increases spiritual energy to its maximum level.
+			Description: Immediately increases spiritual energy to its maximum occupation.
 		-->
 		<set name="icon" val="icon.skill0918" />
 		<set name="reuseDelay" val="75000" />
@@ -477,7 +477,7 @@
 	</skill>
 	<skill id="919" levels="1" name="Maximum Focus Sonic">
 		<!--
-			Description: Immediately increases spiritual energy to its maximum level.
+			Description: Immediately increases spiritual energy to its maximum occupation.
 		-->
 		<set name="icon" val="icon.skill0919" />
 		<set name="reuseDelay" val="75000" />
@@ -935,7 +935,7 @@
 	</skill>
 	<skill id="939" levels="1" name="Soul Rage">
 		<!--
-			Description: Gathers souls and attacks an enemy by hurling projectiles. Possible up to level 40. Critical hit and over-hit are possible.
+			Description: Gathers souls and attacks an enemy by hurling projectiles. Possible up to occupation 40. Critical hit and over-hit are possible.
 		-->
 		<set name="icon" val="icon.skill0939" />
 		<set name="power" val="1" />

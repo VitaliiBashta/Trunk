@@ -22,14 +22,9 @@ public final class TakeFlag extends Skill {
     }
 
     @Override
-    public boolean checkCondition(Creature activeChar, Creature target, boolean forceUse, boolean dontMove, boolean first) {
-        if (!super.checkCondition(activeChar, target, forceUse, dontMove, first))
+    public boolean checkCondition(Player player, Creature target, boolean forceUse, boolean dontMove, boolean first) {
+        if (!super.checkCondition(player, target, forceUse, dontMove, first))
             return false;
-
-        if (activeChar == null || !activeChar.isPlayer())
-            return false;
-
-        Player player = (Player) activeChar;
 
         if (player.getClan() == null)
             return false;
@@ -39,23 +34,23 @@ public final class TakeFlag extends Skill {
             return false;
 
         if (!(player.getActiveWeaponFlagAttachment() instanceof TerritoryWardObject)) {
-            activeChar.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addSkillName(this));
+            player.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addSkillName(this));
             return false;
         }
 
         if (player.isMounted()) {
-            activeChar.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addSkillName(this));
+            player.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addSkillName(this));
             return false;
         }
 
-        if (!(target instanceof SiegeFlagInstance) || target.getNpcId() != 36590 || target.getClan() != player.getClan()) {
-            activeChar.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addSkillName(this));
+        if (!(target instanceof SiegeFlagInstance) || target.getNpcId() != 36590 || (((SiegeFlagInstance)target).getClan() != player.getClan())) {
+            player.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addSkillName(this));
             return false;
         }
 
         DominionSiegeEvent siegeEvent2 = target.getEvent(DominionSiegeEvent.class);
         if (siegeEvent2 == null || siegeEvent1 != siegeEvent2) {
-            activeChar.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addSkillName(this));
+            player.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addSkillName(this));
             return false;
         }
 

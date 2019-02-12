@@ -45,6 +45,6 @@ public class RequestWithdrawAlly extends L2GameClientPacket {
         clan.setAllyId(0);
         clan.setLeavedAlly();
         alliance.broadcastAllyStatus();
-        alliance.removeAllyMember(clan.getClanId());
+        alliance.removeAllyMember(clan.clanId());
     }
 }

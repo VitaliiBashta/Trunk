@@ -1,6 +1,5 @@
 package l2trunk.gameserver.model.instances;
 
-import l2trunk.commons.lang.reference.HardReference;
 import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.data.xml.holder.NpcHolder;
@@ -13,22 +12,21 @@ import l2trunk.gameserver.network.serverpackets.MyTargetSelected;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 
 public final class DecoyInstance extends NpcInstance {
 
-    private final HardReference<Player> playerRef;
-    private int _lifeTime, _timeRemaining;
+    private final Player player;
+    private int _lifeTime, timeRemaining;
     private ScheduledFuture<?> _decoyLifeTask, _hateSpam;
 
-    public DecoyInstance(int objectId, NpcTemplate template, Player owner, int lifeTime) {
+    public DecoyInstance(int objectId, NpcTemplate template, Player player, int lifeTime) {
         super(objectId, template);
 
-        playerRef = owner.getRef();
+        this.player = player;
         _lifeTime = lifeTime;
-        _timeRemaining = _lifeTime;
+        timeRemaining = _lifeTime;
         int skilllevel = getNpcId() < 13257 ? getNpcId() - 13070 : getNpcId() - 13250;
         _decoyLifeTask = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new DecoyLifetime(), 1000, 1000);
         _hateSpam = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new HateSpam(5272, skilllevel), 1000, 3000);
@@ -56,12 +54,12 @@ public final class DecoyInstance extends NpcInstance {
         deleteMe();
     }
 
-    private void decTimeRemaining(int value) {
-        _timeRemaining -= value;
+    private void decTimeRemaining() {
+        timeRemaining -= 1000;
     }
 
     private int getTimeRemaining() {
-        return _timeRemaining;
+        return timeRemaining;
     }
 
     public int getLifeTime() {
@@ -69,27 +67,18 @@ public final class DecoyInstance extends NpcInstance {
     }
 
     @Override
-    public Player getPlayer() {
-        return playerRef.get();
-    }
-
-    @Override
     public boolean isAutoAttackable(Creature attacker) {
-        Player owner = getPlayer();
-        return owner != null && owner.isAutoAttackable(attacker);
+        return player.isAutoAttackable(attacker);
     }
 
     @Override
     public boolean isAttackable(Creature attacker) {
-        Player owner = getPlayer();
-        return owner != null && owner.isAttackable(attacker);
+        return player.isAttackable(attacker);
     }
 
     @Override
     protected void onDelete() {
-        Player owner = getPlayer();
-        if (owner != null)
-            owner.setDecoy(null);
+        player.setDecoy(null);
         super.onDelete();
     }
 
@@ -97,16 +86,13 @@ public final class DecoyInstance extends NpcInstance {
     public void onAction(Player player, boolean shift) {
         if (player.getTarget() != this) {
             player.setTarget(this);
-            player.sendPacket(new MyTargetSelected(getObjectId(), 0));
+            player.sendPacket(new MyTargetSelected(objectId(), 0));
         } else if (isAutoAttackable(player))
             player.getAI().Attack(this, false, shift);
     }
 
     @Override
     public double getColRadius() {
-        Player player = getPlayer();
-        if (player == null)
-            return 0;
         if (player.getTransformation() != 0 && player.getTransformationTemplate() != 0)
             return NpcHolder.getTemplate(player.getTransformationTemplate()).collisionRadius;
         return player.getBaseTemplate().collisionRadius;
@@ -114,9 +100,6 @@ public final class DecoyInstance extends NpcInstance {
 
     @Override
     public double getColHeight() {
-        Player player = getPlayer();
-        if (player == null)
-            return 0;
         if (player.getTransformation() != 0 && player.getTransformationTemplate() != 0)
             return NpcHolder.getTemplate(player.getTransformationTemplate()).collisionHeight;
         return player.getBaseTemplate().collisionHeight;
@@ -125,7 +108,7 @@ public final class DecoyInstance extends NpcInstance {
     @Override
     public List<L2GameServerPacket> addPacketList(Player forPlayer, Creature dropper) {
         if (!isInCombat())
-            return Collections.<L2GameServerPacket>singletonList(new CharInfo(this, forPlayer));
+            return List.of(new CharInfo(this, forPlayer));
         else {
             List<L2GameServerPacket> list = new ArrayList<>(2);
             list.add(new CharInfo(this, forPlayer));
@@ -144,7 +127,7 @@ public final class DecoyInstance extends NpcInstance {
         public void runImpl() {
             try {
                 double newTimeRemaining;
-                decTimeRemaining(1000);
+                decTimeRemaining();
                 newTimeRemaining = getTimeRemaining();
                 if (newTimeRemaining < 0)
                     unSummon();
@@ -168,7 +151,7 @@ public final class DecoyInstance extends NpcInstance {
         public void runImpl() {
             try {
                 setTarget(DecoyInstance.this);
-                doCast(skillId,skillLvl, DecoyInstance.this, true);
+                doCast(skillId, skillLvl, DecoyInstance.this, true);
             } catch (RuntimeException e) {
                 _log.error("Error while Changing Target to DecoyInstance", e);
             }

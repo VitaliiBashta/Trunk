@@ -5,7 +5,6 @@ import l2trunk.gameserver.model.base.Race;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _165_ShilensHunt extends Quest {
     private static final int DARK_BEZOAR = 1160;
@@ -44,9 +43,9 @@ public final class _165_ShilensHunt extends Quest {
         int cond = st.getCond();
 
         if (cond == 0) {
-            if (st.getPlayer().getRace() != Race.darkelf)
+            if (st.player.getRace() != Race.darkelf)
                 htmltext = "30348-00.htm";
-            else if (st.getPlayer().getLevel() >= 3) {
+            else if (st.player.getLevel() >= 3) {
                 htmltext = "30348-02.htm";
                 return htmltext;
             } else {
@@ -57,7 +56,7 @@ public final class _165_ShilensHunt extends Quest {
             htmltext = "30348-04.htm";
         else if (cond == 2) {
             htmltext = "30348-05.htm";
-            st.takeItems(DARK_BEZOAR, -1);
+            st.takeItems(DARK_BEZOAR);
             st.giveItems(LESSER_HEALING_POTION, 5);
             st.addExpAndSp(1000, 0);
             st.playSound(SOUND_FINISH);
@@ -67,16 +66,15 @@ public final class _165_ShilensHunt extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int cond = st.getCond();
         if (cond == 1 && st.getQuestItemsCount(DARK_BEZOAR) < 13 && Rnd.chance(90)) {
-            st.giveItems(DARK_BEZOAR, 1);
+            st.giveItems(DARK_BEZOAR);
             if (st.getQuestItemsCount(DARK_BEZOAR) == 13) {
                 st.setCond(2);
                 st.playSound(SOUND_MIDDLE);
             } else
                 st.playSound(SOUND_ITEMGET);
         }
-        return null;
     }
 }

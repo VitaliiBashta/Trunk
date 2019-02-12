@@ -246,12 +246,12 @@ public final class CastleSiegeEvent extends SiegeEvent<Castle, SiegeClanObject> 
                 }
 
                 for (UnitMember member : ownerClan) {
-                    Player player = member.getPlayer();
+                    Player player = member.player();
                     if (player != null) {
-                        player.getPlayer().getCounters().castleSiegesWon++;
+                        player.getCounters().castleSiegesWon++;
                         player.sendPacket(PlaySound.SIEGE_VICTORY);
                         if (player.isOnline() && player.isNoble()) {
-                            Hero.INSTANCE.addHeroDiary(player.getObjectId(), HeroDiary.ACTION_CASTLE_TAKEN, getResidence().getId());
+                            Hero.INSTANCE.addHeroDiary(player.objectId(), HeroDiary.ACTION_CASTLE_TAKEN, getResidence().getId());
                         }
                     }
                 }
@@ -266,7 +266,7 @@ public final class CastleSiegeEvent extends SiegeEvent<Castle, SiegeClanObject> 
             if (id == 3 || id == 5 || id == 8) {
                 //ownerClan.incReputation(20000);
                 ownerClan.incReputation(Config.SIEGE_WINNER_REPUTATION_REWARD, false, "SiegeWinnerCustomReward");
-                Player leader = ownerClan.getLeader().getPlayer();
+                Player leader = ownerClan.getLeader().player();
                 if (leader != null && leader.isOnline()) {
                     leader.getInventory().addItem(24003, 1, "SiegeEvent");
                 }

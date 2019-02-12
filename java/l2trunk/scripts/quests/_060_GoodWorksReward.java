@@ -9,6 +9,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.Functions;
+import l2trunk.gameserver.utils.Location;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -230,51 +231,51 @@ public final class _060_GoodWorksReward extends Quest {
         int _state = st.getState();
         int cond = st.getCond();
 
-        if (event.equalsIgnoreCase("31435-03.htm") && _state == CREATED) {
+        if ("31435-03.htm".equalsIgnoreCase(event) && _state == CREATED) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("32487-02.htm") && cond == 1 && !IsPursuerSpawned()) {
-            NpcInstance n = st.addSpawn(Pursuer, 72590, 148100, -3320, 1800000);
+        } else if ("32487-02.htm".equalsIgnoreCase(event) && cond == 1 && !IsPursuerSpawned()) {
+            NpcInstance n = st.addSpawn(Pursuer, Location.of(72590, 148100, -3320),0, 1800000);
             Last_Spawned_Pursuer = n.getStoredId();
             n.setRunning();
-            n.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, st.getPlayer(), 100000);
-            Functions.npcSay(n, msgPursuer.sprintf(st.getPlayer().getName()));
-        } else if (event.equalsIgnoreCase("31435-05.htm") && cond == 3) {
+            n.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, st.player, 100000);
+            Functions.npcSay(n, msgPursuer.sprintf(st.player.getName()));
+        } else if ("31435-05.htm".equalsIgnoreCase(event) && cond == 3) {
             st.setCond(4);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("30081-03.htm") && cond == 4) {
+        } else if ("30081-03.htm".equalsIgnoreCase(event) && cond == 4) {
             if (st.getQuestItemsCount(Bloody_Cloth_Fragment) < 1)
                 return "30081-03a.htm";
-            st.takeItems(Bloody_Cloth_Fragment, -1);
+            st.takeItems(Bloody_Cloth_Fragment);
             st.setCond(5);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("30081-05.htm") && cond == 5) {
+        } else if ("30081-05.htm".equalsIgnoreCase(event) && cond == 5) {
             st.setCond(6);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("30081-08.htm") && (cond == 5 || cond == 6)) {
+        } else if ("30081-08.htm".equalsIgnoreCase(event) && (cond == 5 || cond == 6)) {
             if (st.getQuestItemsCount(ADENA_ID) < 3000000) {
                 st.setCond(6);
                 st.playSound(SOUND_MIDDLE);
                 return "30081-07.htm";
             }
             st.takeItems(ADENA_ID, 3000000);
-            st.giveItems(Helvetias_Antidote, 1, false);
+            st.giveItems(Helvetias_Antidote);
             st.setCond(7);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("32487-06.htm") && cond == 7) {
+        } else if ("32487-06.htm".equalsIgnoreCase(event) && cond == 7) {
             if (st.getQuestItemsCount(Helvetias_Antidote) < 1)
                 return "32487-06a.htm";
-            st.takeItems(Helvetias_Antidote, -1);
+            st.takeItems(Helvetias_Antidote);
             st.setCond(8);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("31435-08.htm") && cond == 8) {
+        } else if ("31435-08.htm".equalsIgnoreCase(event) && cond == 8) {
             st.setCond(9);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("31092-04.htm") && cond == 10) {
-            if (profs.containsKey(st.getPlayer().getClassId().getId()))
-                return Mammon_dialog.sprintf(profs.get(st.getPlayer().getClassId().getId()));
-        } else if (event.equalsIgnoreCase("31092-05.htm") && cond == 10) {
+        } else if ("31092-04.htm".equalsIgnoreCase(event) && cond == 10) {
+            if (profs.containsKey(st.player.getClassId().id))
+                return Mammon_dialog.sprintf(profs.get(st.player.getClassId().id));
+        } else if ("31092-05.htm".equalsIgnoreCase(event) && cond == 10) {
             st.giveItems(ADENA_ID, 3000000, false);
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(false);
@@ -288,7 +289,7 @@ public final class _060_GoodWorksReward extends Quest {
                 if (st.getQuestItemsCount(mark) > 0)
                     return_adena += 1000000;
                 else
-                    st.giveItems(mark, 1, false);
+                    st.giveItems(mark);
             if (return_adena > 0)
                 st.giveItems(ADENA_ID, return_adena, false);
             st.playSound(SOUND_FINISH);
@@ -310,7 +311,7 @@ public final class _060_GoodWorksReward extends Quest {
         if (_state == CREATED) {
             if (npcId != Daeger)
                 return "noquest";
-            if (st.getPlayer().getLevel() < 39 || st.getPlayer().getRace() == Race.kamael || st.getPlayer().getClassId().level() != 1) {
+            if (st.player.getLevel() < 39 || st.player.getRace() == Race.kamael || st.player.getClassId().occupation() != 1) {
                 st.exitCurrentQuest(true);
                 return "31435-00.htm";
             }
@@ -366,18 +367,17 @@ public final class _060_GoodWorksReward extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState qs) {
+    public void onKill(NpcInstance npc, QuestState qs) {
         Last_Spawned_Pursuer = 0;
         if (qs.getState() == STARTED && qs.getCond() == 1) {
             if (Rnd.chance(50)) {
                 Functions.npcSay(npc, diePursuer_return);
-                return null;
+                return;
             }
             Functions.npcSay(npc, diePursuer);
             qs.setCond(2);
-            qs.giveItems(Bloody_Cloth_Fragment, 1, false);
+            qs.giveItems(Bloody_Cloth_Fragment);
             qs.playSound(SOUND_MIDDLE);
         }
-        return null;
     }
 }

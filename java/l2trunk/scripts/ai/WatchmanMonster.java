@@ -1,7 +1,5 @@
 package l2trunk.scripts.ai;
 
-import l2trunk.commons.lang.reference.HardReference;
-import l2trunk.commons.lang.reference.HardReferences;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ai.CtrlEvent;
 import l2trunk.gameserver.ai.Fighter;
@@ -16,7 +14,7 @@ public final class WatchmanMonster extends Fighter {
     private static final List<String> flood2 = List.of("Help me!", "Alarm! We are under attack!");
     private long _lastSearch = 0;
     private boolean isSearching = false;
-    private HardReference<? extends Creature> _attackerRef = HardReferences.emptyRef();
+    private Creature attacker = null;
 
     public WatchmanMonster(NpcInstance actor) {
         super(actor);
@@ -27,7 +25,7 @@ public final class WatchmanMonster extends Fighter {
         final NpcInstance actor = getActor();
         if (attacker != null && !actor.getFaction().isNone() && actor.getCurrentHpPercents() < 50 && _lastSearch < System.currentTimeMillis() - 15000) {
             _lastSearch = System.currentTimeMillis();
-            _attackerRef = attacker.getRef();
+            this.attacker = attacker;
 
             if (findHelp())
                 return;
@@ -39,7 +37,6 @@ public final class WatchmanMonster extends Fighter {
     private boolean findHelp() {
         isSearching = false;
         final NpcInstance actor = getActor();
-        Creature attacker = _attackerRef.get();
         if (attacker == null)
             return false;
         if (!actor.isDead())
@@ -58,7 +55,7 @@ public final class WatchmanMonster extends Fighter {
     @Override
     public void onEvtDead(Creature killer) {
         _lastSearch = 0;
-        _attackerRef = HardReferences.emptyRef();
+        attacker = null;
         isSearching = false;
         super.onEvtDead(killer);
     }
@@ -67,7 +64,6 @@ public final class WatchmanMonster extends Fighter {
     public void onEvtArrived() {
         NpcInstance actor = getActor();
         if (isSearching) {
-            Creature attacker = _attackerRef.get();
             if (attacker != null) {
                 Functions.npcSay(actor, Rnd.get(flood2));
                 notifyFriends(attacker, 100);

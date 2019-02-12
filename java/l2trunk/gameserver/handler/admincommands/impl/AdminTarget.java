@@ -8,7 +8,6 @@ import l2trunk.gameserver.model.World;
 public class AdminTarget implements IAdminCommandHandler {
     @Override
     public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
-        Commands command = (Commands) comm;
 
         if (!activeChar.getPlayerAccess().CanViewChar)
             return false;
@@ -16,7 +15,7 @@ public class AdminTarget implements IAdminCommandHandler {
         try {
             String targetName = wordList[1];
             GameObject obj = World.getPlayer(targetName);
-            if (obj != null && obj.isPlayer())
+            if (obj != null)
                 obj.onAction(activeChar, false);
             else
                 activeChar.sendMessage("Player " + targetName + " not found");

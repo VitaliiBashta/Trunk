@@ -12,7 +12,7 @@ public final class CharMoveToLocation extends L2GameServerPacket {
     private Location _destination;
 
     public CharMoveToLocation(Creature cha) {
-        _objectId = cha.getObjectId();
+        _objectId = cha.objectId();
         _current = cha.getLoc();
         _destination = cha.getDestination();
         if (!cha.isFlying())
@@ -21,7 +21,7 @@ public final class CharMoveToLocation extends L2GameServerPacket {
             _client_z_shift += Config.CLIENT_Z_SHIFT;
 
         if (_destination == null) {
-            Log.debug("CharMoveToLocation: desc is null, but moving. L2Character: " + cha.getObjectId() + ":" + cha.getName() + "; Loc: " + _current);
+            Log.debug("CharMoveToLocation: desc is null, but moving. L2Character: " + cha.objectId() + ":" + cha.getName() + "; Loc: " + _current);
             _destination = _current;
         }
     }

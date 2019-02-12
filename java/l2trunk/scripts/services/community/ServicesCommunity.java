@@ -15,7 +15,6 @@ import l2trunk.gameserver.utils.ItemFunctions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collections;
 import java.util.List;
 
 public final class ServicesCommunity extends Functions implements ScriptFile, ICommunityBoardHandler {
@@ -55,32 +54,32 @@ public final class ServicesCommunity extends Functions implements ScriptFile, IC
         }
 
 
-        if (bypass.startsWith("_bbsservices:level")) {
+        if (bypass.startsWith("_bbsservices:occupation")) {
             String html = HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + "pages/pages/content.htm", player);
 
             StringBuilder _content = new StringBuilder();
             _content.append("<table width=400><tr><td align=center> Improve Services. </td></tr></table>");
             _content.append("<table border=0 width=400><tr>");
-            int LvList[] = ServicesConfig.get("LevelUpList", new int[]{});
-            int LvPiceList[] = ServicesConfig.get("LevelUpPiceList", new int[]{});
+            int[] LvList = ServicesConfig.get("LevelUpList");
+            int[] LvPiceList = ServicesConfig.get("LevelUpPiceList");
             for (int i = 0; i < LvList.length; i++) {
                 if (LvList[i] > player.getLevel()) {
                     if (i % 4 == 0)
                         _content.append("</tr><tr>");
-                    _content.append("<td><center><button value=\"On ").append(LvList[i]).append(" (Price:").append(LvPiceList[i]).append(" ").append(NameItemPice).append(")\" action=\"bypass _bbsservices:level:up:").append(LvList[i]).append(":").append(LvPiceList[i]).append("\" width=180 height=20 back=\"L2UI_CT1.Button_DF\" fore=\"L2UI_CT1.Button_DF\"></center></td>");
+                    _content.append("<td><center><button value=\"On ").append(LvList[i]).append(" (Price:").append(LvPiceList[i]).append(" ").append(NameItemPice).append(")\" action=\"bypass _bbsservices:occupation:up:").append(LvList[i]).append(":").append(LvPiceList[i]).append("\" width=180 height=20 back=\"L2UI_CT1.Button_DF\" fore=\"L2UI_CT1.Button_DF\"></center></td>");
                 }
             }
             _content.append("</tr></table>");
             html = html.replace("%content%", _content.toString());
             ShowBoard.separateAndSend(html, player);
         }
-        if (bypass.startsWith("_bbsservices:level:up")) {
-            String var[] = bypass.split(":");
+        if (bypass.startsWith("_bbsservices:occupation:up")) {
+            String[] var = bypass.split(":");
             if (player.getInventory().destroyItemByItemId(ServicesConfig.get("LevelUpItemPice", 4357), Integer.parseInt(var[4]), "Level Up Service"))
                 player.addExpAndSp(Experience.LEVEL[Integer.parseInt(var[3])] - player.getExp(), 0);
             else
                 player.sendPacket(SystemMsg.INCORRECT_ITEM_COUNT);
-            onBypassCommand(player, "_bbsservices:level");
+            onBypassCommand(player, "_bbsservices:occupation");
         }
     }
 

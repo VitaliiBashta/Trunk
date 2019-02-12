@@ -40,7 +40,7 @@ public class ColiseumHelperInstance extends NpcInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
         showChatWindow(player, "events/guide_gcol001.htm");
     }
 }

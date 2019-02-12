@@ -122,10 +122,10 @@
 	</achievement>
 	<!--
 	<achievement id="28" cat="2" type="playersRessurected" desc="Ressurect %need% dead bodies.">
-		<level id="1" name="Holymancer" icon="icon.skill4450" need="20" fame="1000"/>
-		<level id="2" name="Holymancer" icon="icon.skill4450" need="100" fame="3000"/>
-		<level id="3" name="Holymancer" icon="icon.skill4450" need="500" fame="5000"/>
-		<level id="4" name="Holymancer" icon="icon.skill4450" need="1000" fame="5000"/>
+		<occupation id="1" name="Holymancer" icon="icon.skill4450" need="20" fame="1000"/>
+		<occupation id="2" name="Holymancer" icon="icon.skill4450" need="100" fame="3000"/>
+		<occupation id="3" name="Holymancer" icon="icon.skill4450" need="500" fame="5000"/>
+		<occupation id="4" name="Holymancer" icon="icon.skill4450" need="1000" fame="5000"/>
 	</achievement>
 	-->
 	<achievement id="29" cat="2" type="fameAcquired" desc="Acquire %need% fame.">
@@ -161,8 +161,8 @@
 
 	<!-- Others achievements 
 	<achievement id="50" cat="5" type="distanceWalked" desc="Walk %need% distance.">
-		<level id="1" name="Wise Walker" icon="icon.action002" need="1000000" fame="0"/>
-		<level id="2" name="Wise Walker" icon="icon.action002" need="10000000" fame="0"/>
+		<occupation id="1" name="Wise Walker" icon="icon.action002" need="1000000" fame="0"/>
+		<occupation id="2" name="Wise Walker" icon="icon.action002" need="10000000" fame="0"/>
 	</achievement>
 	-->
 	<achievement id="51" cat="5" type="adenaDestroyed" desc="Destroy %need% adena.">
@@ -203,24 +203,24 @@
 		<level id="5" name="Pirate" icon="icon.skill0419" need="1000" fame="300"/>
 	</achievement>
 	<!--<achievement id="58" cat="5" type="timesMarried" desc="Get Married">-->
-		<!--<level id="1" name="Meet your Love" icon="icon.mysterious_wedding_i00" need="1" fame="10">-->
+		<!--<occupation id="1" name="Meet your Love" icon="icon.mysterious_wedding_i00" need="1" fame="10">-->
 			<!--<reward id="6407" count="1" name="Fire-Works"/>-->
-		<!--</level>-->
+		<!--</occupation>-->
 	<!--</achievement>-->
 	<!--
 	<achievement id="59" cat="5" type="timesVoted" desc="Vote for the server %need% times.">
-		<level id="1" name="I love the Server" icon="icon.action051" need="1" fame="1000"/>
-		<level id="2" name="I love the Server" icon="icon.action051" need="5" fame="1000"/>
-		<level id="3" name="I love the Server" icon="icon.action051" need="10" fame="5000"/>
-		<level id="4" name="I love the Server" icon="icon.action051" need="20" fame="5000"/>
-		<level id="5" name="I love the Server" icon="icon.action051" need="30" fame="6000"/>
-		<level id="6" name="I love the Server" icon="icon.action051" need="40" fame="6000"/>
-		<level id="7" name="I love the Server" icon="icon.action051" need="50" fame="7000"/>
-		<level id="8" name="I love the Server" icon="icon.action051" need="60" fame="7000"/>
-		<level id="9" name="I love the Server" icon="icon.action051" need="70" fame="8000"/>
-		<level id="10" name="I love the Server" icon="icon.action051" need="80" fame="8000"/>
-		<level id="11" name="I love the Server" icon="icon.action051" need="90" fame="9000"/>
-		<level id="12" name="I love the Server" icon="icon.action051" need="100" fame="9000"/>
+		<occupation id="1" name="I love the Server" icon="icon.action051" need="1" fame="1000"/>
+		<occupation id="2" name="I love the Server" icon="icon.action051" need="5" fame="1000"/>
+		<occupation id="3" name="I love the Server" icon="icon.action051" need="10" fame="5000"/>
+		<occupation id="4" name="I love the Server" icon="icon.action051" need="20" fame="5000"/>
+		<occupation id="5" name="I love the Server" icon="icon.action051" need="30" fame="6000"/>
+		<occupation id="6" name="I love the Server" icon="icon.action051" need="40" fame="6000"/>
+		<occupation id="7" name="I love the Server" icon="icon.action051" need="50" fame="7000"/>
+		<occupation id="8" name="I love the Server" icon="icon.action051" need="60" fame="7000"/>
+		<occupation id="9" name="I love the Server" icon="icon.action051" need="70" fame="8000"/>
+		<occupation id="10" name="I love the Server" icon="icon.action051" need="80" fame="8000"/>
+		<occupation id="11" name="I love the Server" icon="icon.action051" need="90" fame="9000"/>
+		<occupation id="12" name="I love the Server" icon="icon.action051" need="100" fame="9000"/>
 	</achievement>
 	-->
 </list>

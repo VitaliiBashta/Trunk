@@ -4,7 +4,6 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _345_MethodToRaiseTheDead extends Quest {
 
@@ -78,7 +77,7 @@ public final class _345_MethodToRaiseTheDead extends Quest {
         int npcId = npc.getNpcId();
         String htmltext = "noquest";
         int id = st.getState();
-        int level = st.getPlayer().getLevel();
+        int level = st.player.getLevel();
         int cond = st.getCond();
         long amount = st.getQuestItemsCount(USELESS_BONE_PIECES);
         if (npcId == 30970)
@@ -117,21 +116,20 @@ public final class _345_MethodToRaiseTheDead extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int random = Rnd.get(100);
         if (random <= CHANCE)
             if (st.getQuestItemsCount(VICTIMS_ARM_BONE) == 0)
-                st.giveItems(VICTIMS_ARM_BONE, 1);
+                st.giveItems(VICTIMS_ARM_BONE);
             else if (st.getQuestItemsCount(VICTIMS_THIGH_BONE) == 0)
-                st.giveItems(VICTIMS_THIGH_BONE, 1);
+                st.giveItems(VICTIMS_THIGH_BONE);
             else if (st.getQuestItemsCount(VICTIMS_SKULL) == 0)
-                st.giveItems(VICTIMS_SKULL, 1);
+                st.giveItems(VICTIMS_SKULL);
             else if (st.getQuestItemsCount(VICTIMS_RIB_BONE) == 0)
-                st.giveItems(VICTIMS_RIB_BONE, 1);
+                st.giveItems(VICTIMS_RIB_BONE);
             else if (st.getQuestItemsCount(VICTIMS_SPINE) == 0)
-                st.giveItems(VICTIMS_SPINE, 1);
+                st.giveItems(VICTIMS_SPINE);
         if (random <= CHANCE2)
             st.giveItems(USELESS_BONE_PIECES, Rnd.get(8) + 1);
-        return null;
     }
 }

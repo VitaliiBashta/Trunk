@@ -49,8 +49,8 @@ public final class _344_1000YearsEndofLamentation extends Quest {
         String htmltext = event;
         long amount = st.getQuestItemsCount(ARTICLES_DEAD_HEROES);
         int cond = st.getCond();
-        int level = st.getPlayer().getLevel();
-        if (event.equalsIgnoreCase("30754-04.htm")) {
+        int level = st.player.getLevel();
+        if ("30754-04.htm".equalsIgnoreCase(event)) {
             if (level >= 48 && cond == 0) {
                 st.setState(STARTED);
                 st.setCond(1);
@@ -59,10 +59,10 @@ public final class _344_1000YearsEndofLamentation extends Quest {
                 htmltext = "noquest";
                 st.exitCurrentQuest(true);
             }
-        } else if (event.equalsIgnoreCase("30754-08.htm")) {
+        } else if ("30754-08.htm".equalsIgnoreCase(event)) {
             st.exitCurrentQuest(true);
             st.playSound(SOUND_FINISH);
-        } else if (event.equalsIgnoreCase("30754-06.htm") && cond == 1) {
+        } else if ("30754-06.htm".equalsIgnoreCase(event) && cond == 1) {
             if (amount == 0)
                 htmltext = "30754-06a.htm";
             else {
@@ -70,12 +70,12 @@ public final class _344_1000YearsEndofLamentation extends Quest {
                     st.giveItems(ADENA_ID, amount * 60);
                 else {
                     htmltext = "30754-10.htm";
-                    st.set("ok", "1");
-                    st.set("amount", str(amount));
+                    st.set("ok", 1);
+                    st.set("amount", (int)amount);
                 }
-                st.takeItems(ARTICLES_DEAD_HEROES, -1);
+                st.takeItems(ARTICLES_DEAD_HEROES);
             }
-        } else if (event.equalsIgnoreCase("30754-11.htm") && cond == 1)
+        } else if ("30754-11.htm".equalsIgnoreCase(event) && cond == 1)
             if (st.getInt("ok") != 1)
                 htmltext = "noquest";
             else {
@@ -84,15 +84,15 @@ public final class _344_1000YearsEndofLamentation extends Quest {
                 st.unset("ok");
                 if (random < 25) {
                     htmltext = "30754-12.htm";
-                    st.giveItems(OLD_KEY, 1);
+                    st.giveItems(OLD_KEY);
                 } else if (random < 50) {
                     htmltext = "30754-13.htm";
-                    st.giveItems(OLD_HILT, 1);
+                    st.giveItems(OLD_HILT);
                 } else if (random < 75) {
                     htmltext = "30754-14.htm";
-                    st.giveItems(OLD_TOTEM, 1);
+                    st.giveItems(OLD_TOTEM);
                 } else
-                    st.giveItems(CRUCIFIX, 1);
+                    st.giveItems(CRUCIFIX);
             }
         return htmltext;
     }
@@ -105,7 +105,7 @@ public final class _344_1000YearsEndofLamentation extends Quest {
         int cond = st.getCond();
         long amount = st.getQuestItemsCount(ARTICLES_DEAD_HEROES);
         if (id == CREATED) {
-            if (st.getPlayer().getLevel() >= 48)
+            if (st.player.getLevel() >= 48)
                 htmltext = "30754-02.htm";
             else {
                 htmltext = "30754-01.htm";
@@ -120,7 +120,7 @@ public final class _344_1000YearsEndofLamentation extends Quest {
             if (npcId == GILMORE)
                 htmltext = "30754-15.htm";
             else if (rewards(st, npcId)) {
-                htmltext = str(npcId) + "-01.htm";
+                htmltext = npcId + "-01.htm";
                 st.setCond(3);
                 st.playSound(SOUND_MIDDLE);
             }
@@ -132,11 +132,11 @@ public final class _344_1000YearsEndofLamentation extends Quest {
                 if (mission == 1)
                     bonus = 1500;
                 else if (mission == 2)
-                    st.giveItems(4044, 1);
+                    st.giveItems(4044);
                 else if (mission == 3)
-                    st.giveItems(4043, 1);
+                    st.giveItems(4043);
                 else if (mission == 4)
-                    st.giveItems(4042, 1);
+                    st.giveItems(4042);
                 if (amt > 0) {
                     st.unset("amount");
                     st.giveItems(ADENA_ID, amt * 50 + bonus, true);
@@ -145,62 +145,61 @@ public final class _344_1000YearsEndofLamentation extends Quest {
                 st.setCond(1);
                 st.unset("mission");
             } else
-                htmltext = str(npcId) + "-02.htm";
+                htmltext = npcId + "-02.htm";
         return htmltext;
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getCond() == 1)
             st.rollAndGive(ARTICLES_DEAD_HEROES, 1, CHANCE + (npc.getNpcId() - 20234) * 2);
-        return null;
     }
 
     private boolean rewards(QuestState st, int npcId) {
         boolean state = false;
         int chance = Rnd.get(100);
-        if (npcId == ORVEN && st.getQuestItemsCount(CRUCIFIX) > 0) {
-            st.set("mission", "1");
-            st.takeItems(CRUCIFIX, -1);
+        if (npcId == ORVEN && st.haveQuestItem(CRUCIFIX)) {
+            st.set("mission", 1);
+            st.takeItems(CRUCIFIX);
             state = true;
             if (chance < 50)
                 st.giveItems(1875, 19);
             else if (chance < 70)
                 st.giveItems(952, 5);
             else
-                st.giveItems(2437, 1);
-        } else if (npcId == GARVARENTZ && st.getQuestItemsCount(OLD_TOTEM) > 0) {
-            st.set("mission", "2");
-            st.takeItems(OLD_TOTEM, -1);
+                st.giveItems(2437);
+        } else if (npcId == GARVARENTZ && st.haveQuestItem(OLD_TOTEM) ) {
+            st.set("mission", 2);
+            st.takeItems(OLD_TOTEM);
             state = true;
             if (chance < 45)
                 st.giveItems(1882, 70);
             else if (chance < 95)
                 st.giveItems(1881, 50);
             else
-                st.giveItems(191, 1);
-        } else if (npcId == KAIEN && st.getQuestItemsCount(OLD_HILT) > 0) {
-            st.set("mission", "3");
-            st.takeItems(OLD_HILT, -1);
+                st.giveItems(191);
+        } else if (npcId == KAIEN && st.haveQuestItem(OLD_HILT)) {
+            st.set("mission", 3);
+            st.takeItems(OLD_HILT);
             state = true;
             if (chance < 50)
                 st.giveItems(1874, 25);
             else if (chance < 75)
                 st.giveItems(1887, 10);
             else if (chance < 99)
-                st.giveItems(951, 1);
+                st.giveItems(951);
             else
-                st.giveItems(133, 1);
-        } else if (npcId == RODEMAI && st.getQuestItemsCount(OLD_KEY) > 0) {
-            st.set("mission", "4");
-            st.takeItems(OLD_KEY, -1);
+                st.giveItems(133);
+        } else if (npcId == RODEMAI && st.haveQuestItem(OLD_KEY)) {
+            st.set("mission", 4);
+            st.takeItems(OLD_KEY);
             state = true;
             if (chance < 40)
                 st.giveItems(1879, 55);
             else if (chance < 90)
-                st.giveItems(951, 1);
+                st.giveItems(951);
             else
-                st.giveItems(885, 1);
+                st.giveItems(885);
         }
         return state;
     }

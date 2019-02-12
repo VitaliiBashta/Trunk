@@ -28,7 +28,7 @@ public enum DoorParser {
 
     private StatsSet initBaseStats() {
         StatsSet baseDat = new StatsSet();
-        baseDat.set("level", 0);
+        baseDat.set("occupation", 0);
         baseDat.set("baseSTR", 0);
         baseDat.set("baseCON", 0);
         baseDat.set("baseDEX", 0);

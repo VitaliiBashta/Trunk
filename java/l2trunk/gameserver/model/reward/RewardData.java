@@ -41,7 +41,7 @@ public final class RewardData implements Cloneable {
     }
 
     public int getItemId() {
-        return _item.getItemId();
+        return _item.itemId();
     }
 
     public ItemTemplate getItem() {
@@ -138,7 +138,7 @@ public final class RewardData implements Cloneable {
                     count = Rnd.get(getMinDrop(), getMaxDrop());
 
                 if (t == null) {
-                    ret.add(t = new RewardItem(_item.getItemId()));
+                    ret.add(t = new RewardItem(_item.itemId()));
                     t.count = count;
                 } else
                     t.count = SafeMath.addAndLimit(t.count, count);

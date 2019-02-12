@@ -3,7 +3,6 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _277_GatekeepersOffering extends Quest {
     private static final int STARSTONE1_ID = 1572;
@@ -20,7 +19,7 @@ public final class _277_GatekeepersOffering extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
         if (event.equals("1"))
-            if (st.getPlayer().getLevel() >= 15) {
+            if (st.player.getLevel() >= 15) {
                 htmltext = "gatekeeper_tamil_q0277_03.htm";
                 st.setCond(1);
                 st.setState(STARTED);
@@ -44,7 +43,7 @@ public final class _277_GatekeepersOffering extends Quest {
             htmltext = "gatekeeper_tamil_q0277_04.htm";
         else if (npcId == 30576 && cond == 2 && st.getQuestItemsCount(STARSTONE1_ID) >= 20) {
             htmltext = "gatekeeper_tamil_q0277_05.htm";
-            st.takeItems(STARSTONE1_ID, -1);
+            st.takeItems(STARSTONE1_ID);
             st.giveItems(GATEKEEPER_CHARM_ID, 2);
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(true);
@@ -54,10 +53,9 @@ public final class _277_GatekeepersOffering extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         st.rollAndGive(STARSTONE1_ID, 1, 1, 20, 33);
         if (st.getQuestItemsCount(STARSTONE1_ID) >= 20)
             st.setCond(2);
-        return null;
     }
 }

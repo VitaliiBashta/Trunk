@@ -4,6 +4,8 @@ import l2trunk.gameserver.ai.CtrlEvent;
 import l2trunk.gameserver.ai.Fighter;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.GameObject;
+import l2trunk.gameserver.model.Playable;
+import l2trunk.gameserver.model.instances.MonsterInstance;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.Functions;
 
@@ -15,11 +17,11 @@ public final class Leogul extends Fighter {
     }
 
     @Override
-    public boolean checkAggression(Creature target, boolean avoidAttack) {
+    public boolean checkAggression(Playable target, boolean avoidAttack) {
         if (super.checkAggression(target, avoidAttack)) {
             Functions.npcSayCustomMessage(getActor(), "scripts.ai.Leogul");
             getActor().getAroundNpc(800, 128)
-                    .filter(GameObject::isMonster)
+                    .filter(o -> o instanceof MonsterInstance)
                     .filter(npc -> npc.getNpcId() >= 22660)
                     .filter(npc -> npc.getNpcId() <= 22677)
                     .forEach(npc ->

@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.entity.DimensionalRift;
 import l2trunk.gameserver.model.entity.Reflection;
 import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 
-public class RequestWithDrawalParty extends L2GameClientPacket {
+public final class RequestWithDrawalParty extends L2GameClientPacket {
     @Override
     protected void readImpl() {
     }
@@ -29,8 +29,8 @@ public class RequestWithDrawalParty extends L2GameClientPacket {
         }
 
         Reflection r = activeChar.getParty().getReflection();
-        if (r != null && r instanceof DimensionalRift && activeChar.getReflection().equals(r))
-            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.clientpackets.RequestWithDrawalParty.Rift", activeChar));
+        if (r instanceof DimensionalRift && activeChar.getReflection().equals(r))
+            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.clientpackets.RequestWithDrawalParty.Rift"));
         else if (r != null && activeChar.isInCombat())
             activeChar.sendMessage("Вы не можете сейчас выйти из группы.");
         else

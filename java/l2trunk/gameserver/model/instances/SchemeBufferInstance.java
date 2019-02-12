@@ -23,6 +23,7 @@ import java.sql.*;
 import java.util.*;
 
 import static l2trunk.commons.lang.NumberUtils.toInt;
+import static l2trunk.gameserver.utils.ItemFunctions.removeItem;
 
 public final class SchemeBufferInstance extends NpcInstance {
 
@@ -62,7 +63,7 @@ public final class SchemeBufferInstance extends NpcInstance {
     private static final int SCHEMES_PER_PLAYER = Config.NpcBuffer_MaxScheme;
     private static final int MAX_SCHEME_BUFFS = Config.ALT_BUFF_LIMIT;
     private static final int MAX_SCHEME_DANCES = Config.ALT_MUSIC_LIMIT;
-    private static final int CONSUMABLE_ID = 57;
+//    private static final int CONSUMABLE_ID = 57;
 
     private static final String SET_FIGHTER = "Fighter";
     private static final String SET_MAGE = "Mage";
@@ -116,7 +117,7 @@ public final class SchemeBufferInstance extends NpcInstance {
     public static void loadSchemes(Player player, Connection con) {
         // Loading Scheme Templates
         try (PreparedStatement statement = con.prepareStatement("SELECT id, scheme_name, icon FROM npcbuffer_scheme_list WHERE player_id=?")) {
-            statement.setInt(1, player.getObjectId());
+            statement.setInt(1, player.objectId());
             try (ResultSet rset = statement.executeQuery()) {
                 while (rset.next()) {
                     int schemeId = rset.getInt("id");
@@ -169,7 +170,7 @@ public final class SchemeBufferInstance extends NpcInstance {
     private static boolean checkConditions(Player player) {
         String msg = null;
         int playerReflectionId = player.getReflection().getInstancedZoneId();
-        if (playerReflectionId != ReflectionManager.DEFAULT.getId()) {
+        if (playerReflectionId != ReflectionManager.DEFAULT.id) {
             msg = "You cannot receive buffs outside the default instance.";
         } else if (player.isInOlympiadMode() || Olympiad.isRegistered(player)) {
             msg = "You cannot receive buffs while registered in the Grand Olympiad.";
@@ -182,7 +183,7 @@ public final class SchemeBufferInstance extends NpcInstance {
         } else if (Olympiad.isRegistered(player)) {
             msg = "You cannot use the buffer while participating in the Grand Olympiad.";
         } else if (player.getLevel() < MIN_LEVEL) {
-            msg = "Your level is too low. You have to be at least level " + MIN_LEVEL + ", to use the buffer.";
+            msg = "Your occupation is too low. You have to be at least occupation " + MIN_LEVEL + ", to use the buffer.";
         } else if ((player.getPvpFlag() > 0) && !Config.SCHEME_ALLOW_FLAG) {
             msg = "You cannot receive buffs while flagged. Please, try again later.";
         } else if (player.isInCombat() && !Config.SCHEME_ALLOW_FLAG) {
@@ -457,15 +458,13 @@ public final class SchemeBufferInstance extends NpcInstance {
         if (!canHeal(player))
             return;
         if (!isPet) {
-            player.setCurrentHp(player.getMaxHp(), false);
-            player.setCurrentMp(player.getMaxMp());
-            player.setCurrentCp(player.getMaxCp());
-            player.broadcastSkillOrSocialAnimation(22217, 1, 0, 0);
+            player.setFullHpMp();
+            player.setFullCp();
+            player.broadcastSkillOrSocialAnimation(22217, 1, 0);
         } else if (player.getPet() != null) {
             Summon pet = player.getPet();
-            pet.setCurrentHp(pet.getMaxHp(), false);
-            pet.setCurrentMp(pet.getMaxMp());
-            pet.setCurrentCp(pet.getMaxCp());
+            pet.setFullHpMp();
+            pet.setFullCp();
             pet.broadcastPacket(new MagicSkillUse(pet, 22217));
         }
     }
@@ -519,7 +518,7 @@ public final class SchemeBufferInstance extends NpcInstance {
         return dialog;
     }
 
-    private static String getItemNameHtml(Player st, int itemval) {
+    private static String getItemNameHtml(int itemval) {
         return "&#" + itemval + ";";
     }
 
@@ -981,7 +980,7 @@ public final class SchemeBufferInstance extends NpcInstance {
 		{
 			if (player.getTarget() != null)
 			{
-				if (player.getTarget().isNpc() && player.getTarget() instanceof SchemeBufferInstance)
+				if (player.getTarget().NpcInstance() && player.getTarget() instanceof SchemeBufferInstance)
 				{
 					npc = ((Creature) player.getTarget());
 					if (!player.isInRange(npc, 240))
@@ -1178,8 +1177,8 @@ public final class SchemeBufferInstance extends NpcInstance {
             }
 
             if (!FREE_BUFFS) {
-                if (Functions.getItemCount(player, CONSUMABLE_ID) < cost) {
-                    sendErrorMessageToPlayer(player, "You do not have the necessary items. You need: " + cost + " " + getItemNameHtml(player, CONSUMABLE_ID) + ".");
+                if (!player.haveAdena(cost)) {
+                    sendErrorMessageToPlayer(player, "You do not have the necessary items. You need: " + cost + " " + getItemNameHtml(57) + ".");
                     showCommunity(player, main(player));
                     return;
                 }
@@ -1226,8 +1225,8 @@ public final class SchemeBufferInstance extends NpcInstance {
             if (player.isBlocked())
                 return;
             if (!FREE_BUFFS) {
-                if (Functions.getItemCount(player, CONSUMABLE_ID) < BUFF_SET_PRICE) {
-                    sendErrorMessageToPlayer(player, "You do not have enough necessary items. You need: " + BUFF_SET_PRICE + " " + getItemNameHtml(player, CONSUMABLE_ID) + ".");
+                if (player.getAdena() < BUFF_SET_PRICE) {
+                    sendErrorMessageToPlayer(player, "You do not have enough necessary items. You need: " + BUFF_SET_PRICE + " " + getItemNameHtml(57) + ".");
                     return;
                 }
             }
@@ -1278,11 +1277,11 @@ public final class SchemeBufferInstance extends NpcInstance {
                     return;
                 }
             }
-            Functions.removeItem(player, CONSUMABLE_ID, BUFF_SET_PRICE, "SchemeBuffer");
+            player.reduceAdena( BUFF_SET_PRICE, "SchemeBuffer");
 
             msg = main(player);
         } else if (eventParam0.equalsIgnoreCase("heal")) {
-            if (Functions.getItemCount(player, CONSUMABLE_ID) < HEAL_PRICE) {
+            if (player.getAdena() < HEAL_PRICE) {
                 sendErrorMessageToPlayer(player, "You don't have enough Adena!");
                 showCommunity(player, main(player)); // Resend the main page or the cb will get stucked
                 return;
@@ -1304,11 +1303,11 @@ public final class SchemeBufferInstance extends NpcInstance {
             } else {
                 heal(player, getpetbuff);
             }
-            Functions.removeItem(player, CONSUMABLE_ID, HEAL_PRICE, "SchemeBuffer");
+            player.reduceAdena( HEAL_PRICE, "SchemeBuffer");
 
             msg = main(player);
         } else if (eventParam0.equalsIgnoreCase("removeBuffs")) {
-            if (Functions.getItemCount(player, CONSUMABLE_ID) < BUFF_REMOVE_PRICE) {
+            if (player.getAdena() < BUFF_REMOVE_PRICE) {
                 sendErrorMessageToPlayer(player, "You don't have enough Adena!");
                 showCommunity(player, main(player)); // Resend the main page or the cb will get stucked
                 return;
@@ -1331,12 +1330,12 @@ public final class SchemeBufferInstance extends NpcInstance {
                     }
                 }
             }
-            Functions.removeItem(player, CONSUMABLE_ID, BUFF_REMOVE_PRICE, "SchemeBuffer");
+            player.reduceAdena( BUFF_REMOVE_PRICE, "SchemeBuffer");
 
             msg = main(player);
         } else if (eventParam0.equalsIgnoreCase("cast")) {
             if (!FREE_BUFFS) {
-                if (Functions.getItemCount(player, CONSUMABLE_ID) < SCHEME_BUFF_PRICE) {
+                if (player.getAdena() < SCHEME_BUFF_PRICE) {
                     sendErrorMessageToPlayer(player, "You don't have enough Adena!");
                     return;
                 }
@@ -1446,7 +1445,7 @@ public final class SchemeBufferInstance extends NpcInstance {
                     }
                 });
             }
-            Functions.removeItem(player, CONSUMABLE_ID, SCHEME_BUFF_PRICE, "SchemeBuffer");
+            player.reduceAdena( SCHEME_BUFF_PRICE, "SchemeBuffer");
 
             msg = main(player);
         } else if (eventParam0.equalsIgnoreCase("manage_scheme_1")) {
@@ -1531,7 +1530,7 @@ public final class SchemeBufferInstance extends NpcInstance {
 
             try (Connection con = DatabaseFactory.getInstance().getConnection();
                  PreparedStatement statement = con.prepareStatement("INSERT INTO npcbuffer_scheme_list (player_id,scheme_name,icon) VALUES (?,?,?)", Statement.RETURN_GENERATED_KEYS)) {
-                statement.setInt(1, player.getObjectId());
+                statement.setInt(1, player.objectId());
                 statement.setString(2, name);
                 statement.setInt(3, iconId);
                 statement.executeUpdate();
@@ -1584,7 +1583,7 @@ public final class SchemeBufferInstance extends NpcInstance {
             if (player.isBlocked())
                 return;
             if (!FREE_BUFFS) {
-                if (Functions.getItemCount(player, CONSUMABLE_ID) < BUFF_SET_PRICE) {
+                if (!player.haveAdena( BUFF_SET_PRICE)) {
                     sendErrorMessageToPlayer(player, "You don't have enough Adena! You need" + BUFF_SET_PRICE + " Adena!");
                     showCommunity(player, main(player)); // Resend the main page or the cb will get stucked
                     return;
@@ -1631,7 +1630,7 @@ public final class SchemeBufferInstance extends NpcInstance {
                     return;
                 }
             }
-            Functions.removeItem(player, CONSUMABLE_ID, BUFF_SET_PRICE, "SchemeBuffer");
+           player.reduceAdena(BUFF_SET_PRICE, "SchemeBuffer");
 
             msg = main(player);
         }
@@ -1727,7 +1726,7 @@ public final class SchemeBufferInstance extends NpcInstance {
     }
 
     private static void sendErrorMessageToPlayer(Player player, String msg) {
-        player.sendPacket(new Say2(player.getObjectId(), ChatType.CRITICAL_ANNOUNCE, "Error", msg));
+        player.sendPacket(new Say2(player.objectId(), ChatType.CRITICAL_ANNOUNCE, "Error", msg));
     }
 
     private static void askQuestion(Player player, int id, String name) {

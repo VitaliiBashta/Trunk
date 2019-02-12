@@ -4,7 +4,6 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _188_SealRemoval extends Quest {
     private static final int Dorothy = 30970;
@@ -47,7 +46,7 @@ public final class _188_SealRemoval extends Quest {
         if (st.getState() == STARTED)
             if (npcId == Lorain) {
                 if (cond == 0)
-                    if (st.getPlayer().getLevel() < 41)
+                    if (st.player.getLevel() < 41)
                         htmltext = "researcher_lorain_q0188_02.htm";
                     else
                         htmltext = "researcher_lorain_q0188_01.htm";
@@ -66,9 +65,7 @@ public final class _188_SealRemoval extends Quest {
 
     @Override
     public String onFirstTalk(NpcInstance npc, Player player) {
-        QuestState qs1 = player.getQuestState(_186_ContractExecution.class);
-        QuestState qs2 = player.getQuestState(_187_NikolasHeart.class);
-        if ((qs1 != null && qs1.isCompleted() || qs2 != null && qs2.isCompleted()) && player.getQuestState(getClass()) == null)
+        if ((player.isQuestCompleted(_186_ContractExecution.class) || player.isQuestCompleted(_187_NikolasHeart.class)) && player.getQuestState(this) == null)
             newQuestState(player, STARTED);
         return "";
     }

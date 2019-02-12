@@ -11,7 +11,7 @@ public class TargetUnselected extends L2GameServerPacket {
     private final Location _loc;
 
     public TargetUnselected(GameObject obj) {
-        _targetId = obj.getObjectId();
+        _targetId = obj.objectId();
         _loc = obj.getLoc();
     }
 

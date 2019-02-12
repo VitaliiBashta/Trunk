@@ -9,7 +9,7 @@ public class NetPingPacket extends L2GameServerPacket {
     private final int _clientId;
 
     public NetPingPacket(Player cha) {
-        _clientId = cha.getObjectId();
+        _clientId = cha.objectId();
     }
 
     @Override

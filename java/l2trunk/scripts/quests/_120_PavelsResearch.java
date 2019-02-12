@@ -72,8 +72,8 @@ public final class _120_PavelsResearch extends Quest {
             if (st.getCond() == 10)
                 if (st.getInt("talk") + st.getInt("talk1") == 2) {
                     st.setCond(11);
-                    st.set("talk", "0");
-                    st.set("talk1", "0");
+                    st.set("talk", 0);
+                    st.set("talk1", 0);
                     st.playSound("ItemSound.quest_middle");
                 } else
                     htmltext = "32042-03.htm";
@@ -82,25 +82,25 @@ public final class _120_PavelsResearch extends Quest {
                 htmltext = "32042-14.htm";
         } else if (event.equalsIgnoreCase("32042-11.htm")) {
             if (st.getInt("talk") == 0)
-                st.set("talk", "1");
+                st.set("talk", 1);
         } else if (event.equalsIgnoreCase("32042-12.htm")) {
             if (st.getInt("talk1") == 0)
-                st.set("talk1", "1");
+                st.set("talk1", 1);
         } else if (event.equalsIgnoreCase("32042-13.htm")) {
             if (st.getInt("talk2") == 0)
-                st.set("talk2", "1");
+                st.set("talk2", 1);
         } else if (event.equalsIgnoreCase("32042-15.htm")) {
             st.setCond(12);
-            st.set("talk", "0");
-            st.set("talk1", "0");
-            st.set("talk2", "0");
+            st.set("talk", 0);
+            st.set("talk1", 0);
+            st.set("talk2", 0);
             st.playSound("ItemSound.quest_middle");
         } else if (event.equalsIgnoreCase("32043-06.htm")) {
             if (st.getCond() == 17)
                 if (st.getInt("talk") + st.getInt("talk1") == 2) {
                     st.setCond(18);
-                    st.set("talk", "0");
-                    st.set("talk1", "0");
+                    st.set("talk", 0);
+                    st.set("talk1", 0);
                     st.playSound("ItemSound.quest_middle");
                 } else
                     htmltext = "32043-03.htm";
@@ -111,20 +111,20 @@ public final class _120_PavelsResearch extends Quest {
             if (st.getInt("talk") == 1)
                 htmltext = "32043-21.htm";
         } else if (event.equalsIgnoreCase("32043-20.htm")) {
-            st.set("talk", "1");
+            st.set("talk", 1);
             st.playSound("AmbSound.ed_drone_02");
         } else if (event.equalsIgnoreCase("32043-28.htm"))
-            st.set("talk1", "1");
+            st.set("talk1", 1);
         else if (event.equalsIgnoreCase("32043-30.htm")) {
             st.setCond(19);
-            st.set("talk", "0");
-            st.set("talk1", "0");
+            st.set("talk", 0);
+            st.set("talk1", 0);
         } else if (event.equalsIgnoreCase("32044-06.htm")) {
             if (st.getCond() == 20)
                 if (st.getInt("talk") + st.getInt("talk1") == 2) {
                     st.setCond(21);
-                    st.set("talk", "0");
-                    st.set("talk1", "0");
+                    st.set("talk", 0);
+                    st.set("talk1", 0);
                     st.playSound("ItemSound.quest_middle");
                 } else
                     htmltext = "32044-03.htm";
@@ -133,26 +133,26 @@ public final class _120_PavelsResearch extends Quest {
                 htmltext = "32044-11.htm";
         } else if (event.equalsIgnoreCase("32044-09.htm")) {
             if (st.getInt("talk") == 0)
-                st.set("talk", "1");
+                st.set("talk", 1);
         } else if (event.equalsIgnoreCase("32044-10.htm")) {
             if (st.getInt("talk1") == 0)
-                st.set("talk1", "1");
-        } else if (event.equalsIgnoreCase("32044-17.htm")) {
+                st.set("talk1", 1);
+        } else if ("32044-17.htm".equalsIgnoreCase(event)) {
             st.setCond(22);
-            st.set("talk", "0");
-            st.set("talk1", "0");
+            st.set("talk", 0);
+            st.set("talk1", 0);
             st.playSound("ItemSound.quest_middle");
-        } else if (event.equalsIgnoreCase("32045-02.htm")) {
+        } else if ("32045-02.htm".equalsIgnoreCase(event)) {
             st.setCond(15);
             st.playSound("ItemSound.quest_middle");
-            st.giveItems(Report, 1);
-            Player player = st.getPlayer();
+            st.giveItems(Report);
+            Player player = st.player;
             if (player != null)
                 npc.broadcastPacket(new MagicSkillUse(npc, player, 5073, 5, 1500, 0));
         } else if (event.equalsIgnoreCase("32046-04.htm") || event.equalsIgnoreCase("32046-05.htm"))
             st.exitCurrentQuest(true);
         else if (event.equalsIgnoreCase("32046-06.htm")) {
-            if (st.getPlayer().getLevel() >= 50) {
+            if (st.player.getLevel() >= 50) {
                 st.playSound("ItemSound.quest_accept");
                 st.setCond(1);
                 st.setState(STARTED);
@@ -200,24 +200,24 @@ public final class _120_PavelsResearch extends Quest {
         } else if (event.equalsIgnoreCase("32047-32.htm")) {
             st.setCond(25);
             st.playSound("ItemSound.quest_middle");
-            st.giveItems(Necklace, 1);
+            st.giveItems(Necklace);
         } else if (event.equalsIgnoreCase("w1_1")) {
-            st.set("talk", "1");
+            st.set("talk", 1);
             htmltext = "32042-04.htm";
         } else if (event.equalsIgnoreCase("w1_2")) {
-            st.set("talk1", "1");
+            st.set("talk1", 1);
             htmltext = "32042-05.htm";
         } else if (event.equalsIgnoreCase("w2_1")) {
-            st.set("talk", "1");
+            st.set("talk", 1);
             htmltext = "32043-04.htm";
         } else if (event.equalsIgnoreCase("w2_2")) {
-            st.set("talk1", "1");
+            st.set("talk1", 1);
             htmltext = "32043-05.htm";
         } else if (event.equalsIgnoreCase("w3_1")) {
-            st.set("talk", "1");
+            st.set("talk", 1);
             htmltext = "32044-04.htm";
         } else if (event.equalsIgnoreCase("w3_2")) {
-            st.set("talk1", "1");
+            st.set("talk1", 1);
             htmltext = "32044-05.htm";
         }
         return htmltext;
@@ -229,11 +229,11 @@ public final class _120_PavelsResearch extends Quest {
         String htmltext = "<html><head><body>You are either not on a quest that involves this NPC, or you don't meet this NPC's minimum quest requirements.</body></html>";
         int cond = st.getCond();
         if (npcId == Stones) {
-            QuestState q = st.getPlayer().getQuestState(_114_ResurrectionOfAnOldManager.class);
+            QuestState q = st.player.getQuestState(_114_ResurrectionOfAnOldManager.class);
             if (q == null)
                 return htmltext;
             else if (cond == 0) {
-                if (st.getPlayer().getLevel() >= 70 && q.isCompleted())
+                if (st.player.getLevel() >= 70 && q.isCompleted())
                     htmltext = "32046-01.htm";
                 else {
                     htmltext = "32046-00.htm";

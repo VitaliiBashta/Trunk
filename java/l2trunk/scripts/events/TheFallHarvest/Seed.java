@@ -2,7 +2,6 @@ package l2trunk.scripts.events.TheFallHarvest;
 
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.handler.items.ItemHandler;
-import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.SimpleSpawner;
 import l2trunk.gameserver.model.Zone.ZoneType;
@@ -24,31 +23,30 @@ public final class Seed extends ScriptItemHandler implements ScriptFile {
     );
 
     @Override
-    public boolean useItem(Playable playable, ItemInstance item, boolean ctrl) {
-        Player activeChar = (Player) playable;
-        if (activeChar.isInZone(ZoneType.RESIDENCE)) {
+    public boolean useItem(Player player, ItemInstance item, boolean ctrl) {
+        if (player.isInZone(ZoneType.RESIDENCE)) {
             return false;
         }
-        if (activeChar.isInOlympiadMode()) {
-            activeChar.sendMessage("You can not cultivate a pumpkin at the stadium.");
+        if (player.isInOlympiadMode()) {
+            player.sendMessage("You can not cultivate a pumpkin at the stadium.");
             return false;
         }
-        if (!activeChar.getReflection().isDefault()) {
-            activeChar.sendMessage("You can not cultivate a pumpkin in an instance.");
+        if (!player.getReflection().isDefault()) {
+            player.sendMessage("You can not cultivate a pumpkin in an instance.");
             return false;
         }
 
         int npcId = NPC_IDS.get(0);
         if (item.getItemId() == ITEM_IDS.get(1)) npcId = NPC_IDS.get(1);
 
-        if (!activeChar.getInventory().destroyItem(item, 1L, "useSeed"))
+        if (!player.getInventory().destroyItem(item, 1L, "useSeed"))
             return false;
 
         SimpleSpawner spawn = new SimpleSpawner(npcId)
-                .setLoc(Location.findPointToStay(activeChar, 30, 70));
+                .setLoc(Location.findPointToStay(player, 30, 70));
         NpcInstance npc = spawn.doSpawn(true);
         npc.setAI(new SquashAI(npc));
-        ((SquashInstance) npc).setSpawner(activeChar);
+        ((SquashInstance) npc).setSpawner(player);
 
         ThreadPoolManager.INSTANCE.schedule(spawn::deleteAll, 180000);
 

@@ -12,7 +12,6 @@ import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.NpcUtils;
 import l2trunk.gameserver.utils.ReflectionUtils;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 
@@ -324,7 +323,7 @@ public final class AndreasVanHalter extends Fighter {
                     // Ищем заного жертву
                     NpcInstance npc2 = GameObjectsStorage.getByNpcId(RitualOffering);
                     // Показываем социалку о том что мы умерли
-                    npc2.sendPacket(new SocialAction(npc2.getObjectId(), 1));
+                    npc2.sendPacket(new SocialAction(npc2.objectId(), 1));
                     // Стави жертве ХП 0
                     npc2.setCurrentHp(0, true);
                     // Ищем игроков в радиусе и показываем мувик

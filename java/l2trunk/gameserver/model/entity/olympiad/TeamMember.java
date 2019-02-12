@@ -11,6 +11,7 @@ import l2trunk.gameserver.model.base.TeamType;
 import l2trunk.gameserver.model.entity.Hero;
 import l2trunk.gameserver.model.entity.Reflection;
 import l2trunk.gameserver.model.entity.events.impl.DuelEvent;
+import l2trunk.gameserver.model.instances.PetInstance;
 import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.network.serverpackets.*;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
@@ -34,7 +35,7 @@ public final class TeamMember {
     private int _classId;
     private double _damage;
     private boolean _isDead;
-    private Player _player;
+    private Player player;
     private Location _returnLoc = null;
 
     public TeamMember(int obj_id, String name, Player player, OlympiadGame game, int side) {
@@ -44,8 +45,8 @@ public final class TeamMember {
         _type = game.getType();
         _side = side;
 
-        _player = player;
-        if (_player == null)
+        this.player = player;
+        if (this.player == null)
             return;
 
         _clanName = player.getClan() == null ? StringUtils.EMPTY : player.getClan().getName();
@@ -91,7 +92,7 @@ public final class TeamMember {
             Log.add("Olympiad Result: " + _name + " lost " + diff + " points for crash", "olympiad");
 
             // TODO: Снести подробный лог после исправления беспричинного отъёма очков.
-            Player player = _player;
+            Player player = this.player;
             if (player == null)
                 Log.add("Olympiad info: " + _name + " crashed coz player == null", "olympiad");
             else {
@@ -110,16 +111,16 @@ public final class TeamMember {
     }
 
     public boolean checkPlayer() {
-        Player player = _player;
+        Player player = this.player;
         if (player == null || player.isLogoutStarted() || player.getOlympiadGame() == null || player.isInObserverMode())
             return false;
         return true;
     }
 
     public void portPlayerToArena() {
-        Player player = _player;
+        Player player = this.player;
         if (!checkPlayer() || player.isTeleporting()) {
-            _player = null;
+            this.player = null;
             return;
         }
 
@@ -159,7 +160,7 @@ public final class TeamMember {
     }
 
     public void portPlayerBack() {
-        Player player = _player;
+        Player player = this.player;
         if (player == null)
             return;
 
@@ -185,13 +186,11 @@ public final class TeamMember {
             Hero.addSkills(player);
 
         if (player.isDead()) {
-            player.setCurrentHp(player.getMaxHp(), true);
             player.broadcastPacket(new Revive(player));
-        } else
-            player.setCurrentHp(player.getMaxHp(), false);
+        }
 
-        player.setCurrentCp(player.getMaxCp());
-        player.setCurrentMp(player.getMaxMp());
+        player.setFullCp();
+        player.setFullHpMp();
 
         // Обновляем скилл лист, после добавления скилов
         player.sendPacket(new SkillList(player));
@@ -203,9 +202,7 @@ public final class TeamMember {
 
     }
 
-    public void preparePlayer() {
-        Player player = _player;
-
+    void preparePlayer() {
         if (player == null)
             return;
 
@@ -220,7 +217,7 @@ public final class TeamMember {
             player.getClan().disableSkills(player);
 
         // Remove Hero Skills
-        if (player.isHero() || player.FakeHeroSkill())
+        if (player.isHero())
             Hero.removeSkills(player);
 
         // Abort casting if player casting
@@ -273,32 +270,32 @@ public final class TeamMember {
     }
 
     public void startComp() {
-        Player player = _player;
+        Player player = this.player;
         if (player == null)
             return;
-        _player.setOlympiadCompStarted(true);
+        this.player.setOlympiadCompStarted(true);
     }
 
     public void stopComp() {
-        Player player = _player;
+        Player player = this.player;
         if (player == null)
             return;
-        _player.setOlympiadCompStarted(false);
+        this.player.setOlympiadCompStarted(false);
     }
 
     public void heal() {
-        Player player = _player;
+        Player player = this.player;
         if (player == null)
             return;
 
         player.setFullHpMp();
-        player.setCurrentCp(player.getMaxCp());
+        player.setFullCp();
         player.broadcastUserInfo(true);
 
     }
 
     public void removeBuffs(boolean fromSummon) {
-        Player player = _player;
+        Player player = this.player;
         if (player == null)
             return;
 
@@ -308,8 +305,8 @@ public final class TeamMember {
 
         player.getEffectList().getAllEffects().stream()
                 .filter(e -> e.getEffectType() != EffectType.Cubic)
-                .filter(e -> !e.getSkill().isToggle())
-                .peek(e -> player.sendPacket(new SystemMessage(SystemMsg.THE_EFFECT_OF_S1_HAS_BEEN_REMOVED).addSkillName(e.getSkill().id, e.getSkill().level)))
+                .filter(e -> !e.skill.isToggle())
+                .peek(e -> player.sendPacket(new SystemMessage(SystemMsg.THE_EFFECT_OF_S1_HAS_BEEN_REMOVED).addSkillName(e.skill.id, e.skill.level)))
                 .forEach(Effect::exit);
 
 
@@ -323,7 +320,7 @@ public final class TeamMember {
                 servitor.abortCast(true, true);
 
             if (fromSummon) {
-                if (servitor.isPet())
+                if (servitor instanceof PetInstance)
                     servitor.unSummon();
                 else
                     servitor.getEffectList().stopAllEffects();
@@ -339,11 +336,11 @@ public final class TeamMember {
     }
 
     public void logout() {
-        _player = null;
+        player = null;
     }
 
     public Player getPlayer() {
-        return _player;
+        return player;
     }
 
     public String getName() {

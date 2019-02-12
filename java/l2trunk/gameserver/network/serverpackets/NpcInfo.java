@@ -3,15 +3,19 @@ package l2trunk.gameserver.network.serverpackets;
 import l2trunk.commons.lang.StringUtils;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Summon;
 import l2trunk.gameserver.model.base.TeamType;
+import l2trunk.gameserver.model.instances.MonsterInstance;
 import l2trunk.gameserver.model.instances.NpcInstance;
+import l2trunk.gameserver.model.instances.PetInstance;
+import l2trunk.gameserver.model.instances.SummonInstance;
 import l2trunk.gameserver.model.pledge.Alliance;
 import l2trunk.gameserver.model.pledge.Clan;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.utils.Location;
 
-public class NpcInfo extends L2GameServerPacket {
+public final class NpcInfo extends L2GameServerPacket {
     private boolean can_writeImpl = false;
     private int _npcObjId, _npcId, running, incombat, dead, _showSpawnAnimation;
     private int _runSpd, _walkSpd, _mAtkSpd, _pAtkSpd, _rhand, _lhand, _enchantEffect;
@@ -38,7 +42,7 @@ public class NpcInfo extends L2GameServerPacket {
         if (Config.SERVER_SIDE_NPC_TITLE || cha.getTemplate().displayId != 0 || cha.getTitle() != cha.getTemplate().title) {
             _title = cha.getTitle();
             if (Config.SERVER_SIDE_NPC_TITLE_ETC)
-                if (cha.isMonster())
+                if (cha instanceof MonsterInstance )
                     if (_title.isEmpty())
                         _title = "LvL " + cha.getLevel();
         }
@@ -52,7 +56,7 @@ public class NpcInfo extends L2GameServerPacket {
     }
 
     public NpcInfo(Summon cha, Creature attacker) {
-        if (cha.getPlayer() != null && cha.getPlayer().isInvisible())
+        if (cha.owner != null && cha.owner.isInvisible())
             return;
 
         _npcId = cha.getTemplate().npcId;
@@ -73,14 +77,16 @@ public class NpcInfo extends L2GameServerPacket {
         colRadius = cha.getTemplate().collisionRadius;
         currentColHeight = cha.getColHeight();
         currentColRadius = cha.getColRadius();
-        _npcObjId = cha.getObjectId();
+        _npcObjId = cha.objectId();
         _loc = cha.getLoc();
         _mAtkSpd = cha.getMAtkSpd();
         //
-        Clan clan = cha.getClan();
+        Clan clan = null;
+        if (cha instanceof Player)
+            clan = ((Player) cha).getClan();
         Alliance alliance = clan == null ? null : clan.getAlliance();
         //
-        clan_id = clan == null ? 0 : clan.getClanId();
+        clan_id = clan == null ? 0 : clan.clanId();
         clan_crest_id = clan == null ? 0 : clan.getCrestId();
         //
         ally_id = alliance == null ? 0 : alliance.getAllyId();
@@ -88,7 +94,7 @@ public class NpcInfo extends L2GameServerPacket {
 
         _runSpd = cha.getRunSpeed();
         _walkSpd = cha.getWalkSpeed();
-        karma = cha.getKarma();
+        karma = 0;
         pvp_flag = cha.getPvpFlag();
         _pAtkSpd = cha.getPAtkSpd();
         running = cha.isRunning() ? 1 : 0;
@@ -100,7 +106,7 @@ public class NpcInfo extends L2GameServerPacket {
         _team = cha.getTeam();
         _formId = cha.getFormId();
         _isNameAbove = cha.isNameAbove();
-        _titleColor = (cha.isSummon() || cha.isPet()) ? 1 : 0;
+        _titleColor = (cha instanceof Summon) ? 1 : 0;
 
         can_writeImpl = true;
     }

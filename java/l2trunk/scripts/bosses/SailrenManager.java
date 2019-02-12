@@ -14,10 +14,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.SocialAction;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.scripts.ScriptFile;
-import l2trunk.gameserver.utils.Location;
-import l2trunk.gameserver.utils.Log;
-import l2trunk.gameserver.utils.ReflectionUtils;
-import l2trunk.gameserver.utils.TimeUtils;
+import l2trunk.gameserver.utils.*;
 import l2trunk.scripts.bosses.EpicBossState.State;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,7 +74,7 @@ public final class SailrenManager extends Functions implements ScriptFile, OnDea
         Log.add("Sailren died", "bosses");
 
         _cubeSpawnTask = ThreadPoolManager.INSTANCE.schedule(() ->
-                _teleportCube = spawn(new Location(27734, -6838, -1982, 0), TeleportCubeId), 10000);
+                _teleportCube = NpcUtils.spawnSingle(TeleportCubeId, Location.of(27734, -6838, -1982)), 10000);
     }
 
     // Start interval.
@@ -219,7 +216,7 @@ public final class SailrenManager extends Functions implements ScriptFile, OnDea
 
     @Override
     public void onDeath(Creature self, Creature killer) {
-        if (self.isPlayer() && _state != null && _state.getState() == State.ALIVE && zone != null && zone.checkIfInZone(self.getX(), self.getY()))
+        if (self instanceof Player && _state != null && _state.getState() == State.ALIVE && zone != null && zone.checkIfInZone(self.getX(), self.getY()))
             checkAnnihilated();
         else if (self == _velociraptor) {
             if (_monsterSpawnTask != null)
@@ -266,7 +263,7 @@ public final class SailrenManager extends Functions implements ScriptFile, OnDea
 
         @Override
         public void runImpl() {
-            npc.broadcastPacket(new SocialAction(npc.getObjectId(), action));
+            npc.broadcastPacket(new SocialAction(npc.objectId(), action));
         }
     }
 
@@ -288,7 +285,7 @@ public final class SailrenManager extends Functions implements ScriptFile, OnDea
 
             switch (npcId) {
                 case Velociraptor:
-                    _velociraptor = spawn(new Location(27852, -5536, -1983, 44732), Velociraptor);
+                    _velociraptor = NpcUtils.spawnSingle(Velociraptor,new Location(27852, -5536, -1983, 44732) );
                     ((DefaultAI) _velociraptor.getAI()).addTaskMove(_pos, false);
 
                     if (_socialTask != null) {
@@ -303,7 +300,7 @@ public final class SailrenManager extends Functions implements ScriptFile, OnDea
                     _activityTimeEndTask = ThreadPoolManager.INSTANCE.schedule(SailrenManager::sleep, FWS_ACTIVITYTIMEOFMOBS);
                     break;
                 case Pterosaur:
-                    _pterosaur = spawn(new Location(27852, -5536, -1983, 44732), Pterosaur);
+                    _pterosaur = NpcUtils.spawnSingle(Pterosaur,new Location(27852, -5536, -1983, 44732));
                     ((DefaultAI) _pterosaur.getAI()).addTaskMove(_pos, false);
                     if (_socialTask != null) {
                         _socialTask.cancel(false);
@@ -317,7 +314,7 @@ public final class SailrenManager extends Functions implements ScriptFile, OnDea
                     _activityTimeEndTask = ThreadPoolManager.INSTANCE.schedule(new ActivityTimeEnd(), FWS_ACTIVITYTIMEOFMOBS);
                     break;
                 case Tyrannosaurus:
-                    _tyranno = spawn(new Location(27852, -5536, -1983, 44732), Tyrannosaurus);
+                    _tyranno = NpcUtils.spawnSingle(Tyrannosaurus,new Location(27852, -5536, -1983, 44732) );
                     ((DefaultAI) _tyranno.getAI()).addTaskMove(_pos, false);
                     if (_socialTask != null) {
                         _socialTask.cancel(false);
@@ -331,7 +328,7 @@ public final class SailrenManager extends Functions implements ScriptFile, OnDea
                     _activityTimeEndTask = ThreadPoolManager.INSTANCE.schedule(new ActivityTimeEnd(), FWS_ACTIVITYTIMEOFMOBS);
                     break;
                 case Sailren:
-                    _sailren = spawn(new Location(27810, -5655, -1983, 44732), Sailren);
+                    _sailren = NpcUtils.spawnSingle(Sailren,new Location(27810, -5655, -1983, 44732));
 
                     _state.setRespawnDate(getRespawnInterval() + FWS_ACTIVITYTIMEOFMOBS);
                     _state.setState(State.ALIVE);

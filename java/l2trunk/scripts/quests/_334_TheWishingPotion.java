@@ -344,24 +344,22 @@ public final class _334_TheWishingPotion extends Quest {
             cond = st.getCond();
         if (npcId == ALCHEMIST_MATILD) {
             if (cond == 0) {
-                if (st.getPlayer().getLevel() <= 29) {
+                if (st.player.getLevel() <= 29) {
                     htmltext = "30738-21.htm";
                     st.exitCurrentQuest(true);
                 } else if (st.getQuestItemsCount(MATILDS_ORB_ID) == 0)
                     htmltext = "30738-01.htm";
                 else if (st.getQuestItemsCount(WISH_POTION_ID) == 0) {
                     st.setCond(3);
-                    if (st.getQuestItemsCount(POTION_RECIPE_1_ID) == 0)
-                        st.giveItems(POTION_RECIPE_1_ID, 1);
-                    if (st.getQuestItemsCount(POTION_RECIPE_2_ID) == 0)
-                        st.giveItems(POTION_RECIPE_2_ID, 1);
+                    st.giveItemIfNotHave(POTION_RECIPE_1_ID);
+                    st.giveItemIfNotHave(POTION_RECIPE_2_ID);
                     htmltext = "30738-12.htm";
                 } else
                     htmltext = "30738-11.htm";
-            } else if (cond == 1 && st.getQuestItemsCount(ALCHEMY_TEXT_ID) == 1)
+            } else if (cond == 1 && st.haveQuestItem(ALCHEMY_TEXT_ID))
                 htmltext = "30738-04.htm";
             else if (cond == 2) {
-                if (st.getQuestItemsCount(SECRET_BOOK_ID) == 1 && st.getQuestItemsCount(ALCHEMY_TEXT_ID) == 1)
+                if (st.haveAllQuestItems(SECRET_BOOK_ID,ALCHEMY_TEXT_ID))
                     htmltext = "30738-05.htm";
             } else if (cond == 4)
                 if (checkIngr(st))
@@ -369,7 +367,7 @@ public final class _334_TheWishingPotion extends Quest {
                 else
                     htmltext = "30738-07.htm";
         } else if (npcId == TORAI) {
-            if (st.getQuestItemsCount(FORBIDDEN_LOVE_SCROLL_ID) >= 1) {
+            if (st.haveQuestItem(FORBIDDEN_LOVE_SCROLL_ID)) {
                 st.takeItems(FORBIDDEN_LOVE_SCROLL_ID, 1);
                 st.giveItems(ADENA_ID, 500000);
                 htmltext = "30557-01.htm";
@@ -377,38 +375,38 @@ public final class _334_TheWishingPotion extends Quest {
         } else if (npcId == WISDOM_CHEST) {
             int DROP_CHANCE = Rnd.get(100) + 1;
             if (DROP_CHANCE <= 20) {
-                st.giveItems(SPELLBOOK_ICEBOLT_ID, 1);
-                st.giveItems(SPELLBOOK_BATTLEHEAL_ID, 1);
-                st.getPlayer().getTarget().decayMe();
+                st.giveItems(SPELLBOOK_ICEBOLT_ID);
+                st.giveItems(SPELLBOOK_BATTLEHEAL_ID);
+                st.player.getTarget().decayMe();
                 htmltext = "30743-06.htm";
             } else if (DROP_CHANCE <= 30) {
-                st.giveItems(HEART_OF_PAAGRIO_ID, 1);
-                st.getPlayer().getTarget().decayMe();
+                st.giveItems(HEART_OF_PAAGRIO_ID);
+                st.player.getTarget().decayMe();
                 htmltext = "30743-06.htm";
             } else {
-                st.getPlayer().getTarget().decayMe();
+                st.player.getTarget().decayMe();
                 htmltext = "30743-0" + (Rnd.get(5) + 1) + ".htm";
             }
         } else if (npcId == RUPINA) {
             int DROP_CHANCE = Rnd.get(100) + 1;
 
             if (DROP_CHANCE <= DROP_CHANCE_NECKLACE_OF_GRACE_ID)
-                st.giveItems(NECKLACE_OF_GRACE_ID, 1);
+                st.giveItems(NECKLACE_OF_GRACE_ID);
             else
-                st.giveItems(SCROLL_OF_ESCAPE_ID, 1);
-            st.getPlayer().getTarget().decayMe();
+                st.giveItems(SCROLL_OF_ESCAPE_ID);
+            st.player.getTarget().decayMe();
             htmltext = "30742-01.htm";
         }
         return htmltext;
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         for (int[] aDROPLIST_COND : DROPLIST_COND)
             if (cond == aDROPLIST_COND[0] && npcId == aDROPLIST_COND[2])
-                if (aDROPLIST_COND[3] == 0 || st.getQuestItemsCount(aDROPLIST_COND[3]) > 0)
+                if (aDROPLIST_COND[3] == 0 || st.haveQuestItem(aDROPLIST_COND[3]))
                     if (aDROPLIST_COND[5] == 0)
                         st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[6]);
                     else if (st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[7], aDROPLIST_COND[5], aDROPLIST_COND[6])) {
@@ -434,15 +432,14 @@ public final class _334_TheWishingPotion extends Quest {
             st.addSpawn(GREAT_DEMON_KING);
         else if (npcId == GREAT_DEMON_KING && Rnd.chance(51)) {
             if (DROP_CHANCE <= 25)
-                st.giveItems(DEMONS_BOOTS_ID, 1);
+                st.giveItems(DEMONS_BOOTS_ID);
             else if (DROP_CHANCE <= 50)
-                st.giveItems(DEMONS_GLOVES_ID, 1);
+                st.giveItems(DEMONS_GLOVES_ID);
             else if (DROP_CHANCE <= 75)
-                st.giveItems(DEMONS_STOCKINGS_ID, 1);
+                st.giveItems(DEMONS_STOCKINGS_ID);
             else
-                st.giveItems(DEMONS_TUNIC_ID, 1);
+                st.giveItems(DEMONS_TUNIC_ID);
             st.playSound(SOUND_ITEMGET);
         }
-        return null;
     }
 }

@@ -3,7 +3,6 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _015_SweetWhispers extends Quest {
     public _015_SweetWhispers() {
@@ -17,13 +16,13 @@ public final class _015_SweetWhispers extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("trader_vladimir_q0015_0104.htm")) {
+        if ("trader_vladimir_q0015_0104.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("dark_necromancer_q0015_0201.htm"))
+        } else if ("dark_necromancer_q0015_0201.htm".equalsIgnoreCase(event))
             st.setCond(2);
-        else if (event.equalsIgnoreCase("dark_presbyter_q0015_0301.htm")) {
+        else if ("dark_presbyter_q0015_0301.htm".equalsIgnoreCase(event)) {
             st.addExpAndSp(350531, 28204);
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(false);
@@ -38,7 +37,7 @@ public final class _015_SweetWhispers extends Quest {
         int cond = st.getCond();
         if (npcId == 31302) {
             if (cond == 0)
-                if (st.getPlayer().getLevel() >= 60)
+                if (st.player.getLevel() >= 60)
                     htmltext = "trader_vladimir_q0015_0101.htm";
                 else {
                     htmltext = "trader_vladimir_q0015_0103.htm";
@@ -57,8 +56,4 @@ public final class _015_SweetWhispers extends Quest {
         return htmltext;
     }
 
-    @Override
-    public String onKill(NpcInstance npc, QuestState st) {
-        return null;
-    }
 }

@@ -24,30 +24,29 @@ public final class MeleonSeed extends ScriptItemHandler implements ScriptFile {
             13275);// Young Honey Watermelon
 
     @Override
-    public boolean useItem(Playable playable, ItemInstance item, boolean ctrl) {
-        Player activeChar = (Player) playable;
-        if (activeChar.isInZone(ZoneType.RESIDENCE)) {
+    public boolean useItem(Player player, ItemInstance item, boolean ctrl) {
+        if (player.isInZone(ZoneType.RESIDENCE)) {
             return false;
         }
-        if (activeChar.isInOlympiadMode()) {
-            activeChar.sendMessage("You can not cultivate a watermelon at the stadium.");
+        if (player.isInOlympiadMode()) {
+            player.sendMessage("You can not cultivate a watermelon at the stadium.");
             return false;
         }
-        if (!activeChar.getReflection().isDefault()) {
-            activeChar.sendMessage("You can not cultivate a watermelon in an instance.");
+        if (!player.getReflection().isDefault()) {
+            player.sendMessage("You can not cultivate a watermelon in an instance.");
             return false;
         }
         int templateId = NPC_IDS.get(1);
         if (item.getItemId() == ITEM_IDS.get(0)) templateId = NPC_IDS.get(0);
 
-        if (!activeChar.getInventory().destroyItem(item, 1L, "MeleonSeed"))
+        if (!player.getInventory().destroyItem(item, 1L, "MeleonSeed"))
             return false;
 
         SimpleSpawner spawn = new SimpleSpawner(templateId);
-        spawn.setLoc(Location.findPointToStay(activeChar, 30, 70));
+        spawn.setLoc(Location.findPointToStay(player, 30, 70));
         NpcInstance npc = spawn.doSpawn(true);
         npc.setAI(new MeleonAI(npc));
-        ((MeleonInstance) npc).setSpawner(activeChar);
+        ((MeleonInstance) npc).setSpawner(player);
 
         ThreadPoolManager.INSTANCE.schedule(spawn::deleteAll, 180000);
 

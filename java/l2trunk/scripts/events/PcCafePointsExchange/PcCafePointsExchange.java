@@ -29,11 +29,6 @@ public class PcCafePointsExchange extends Functions implements ScriptFile {
         deSpawnNPCs(_spawns);
     }
 
-    /**
-     * Читает статус эвента из базы.
-     *
-     * @return
-     */
     private static boolean isActive() {
         return isActive(EVENT_NAME);
     }
@@ -42,11 +37,10 @@ public class PcCafePointsExchange extends Functions implements ScriptFile {
      * Запускает эвент
      */
     public void startEvent() {
-        Player player = getSelf();
         if (!player.getPlayerAccess().IsEventGm)
             return;
 
-        if (SetActive(EVENT_NAME, true)) {
+        if (setActive(EVENT_NAME, true)) {
             spawnEventManagers();
             System.out.println("Event: 'PcCafePointsExchange' started.");
         } else
@@ -59,10 +53,9 @@ public class PcCafePointsExchange extends Functions implements ScriptFile {
      * Останавливает эвент
      */
     public void stopEvent() {
-        Player player = getSelf();
         if (!player.getPlayerAccess().IsEventGm)
             return;
-        if (SetActive(EVENT_NAME, false)) {
+        if (setActive(EVENT_NAME, false)) {
             unSpawnEventManagers();
             System.out.println("Event: 'PcCafePointsExchange' stopped.");
         } else

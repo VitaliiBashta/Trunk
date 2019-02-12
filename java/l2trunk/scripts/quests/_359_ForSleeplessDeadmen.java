@@ -2,12 +2,12 @@ package l2trunk.scripts.quests;
 
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.data.xml.holder.ResidenceHolder;
+import l2trunk.gameserver.instancemanager.QuestManager;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.residence.Castle;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _359_ForSleeplessDeadmen extends Quest {
 
@@ -53,30 +53,31 @@ public final class _359_ForSleeplessDeadmen extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("30857-06.htm")) {
+        if ("30857-06.htm".equalsIgnoreCase(event)) {
             st.setState(STARTED);
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("30857-07.htm")) {
+        } else if ("30857-07.htm".equalsIgnoreCase(event)) {
             // 713 quest hook
             Castle castle = ResidenceHolder.getResidence(5);
             if (castle.getOwner() != null) {
-                Player castleOwner = castle.getOwner().getLeader().getPlayer();
-                if (castleOwner != null && castleOwner != st.getPlayer() && castleOwner.getClan() == st.getPlayer().getClan() && castleOwner.getQuestState(_713_PathToBecomingALordAden.class) != null && castleOwner.getQuestState(_713_PathToBecomingALordAden.class).getCond() == 2) {
-                    if (castleOwner.getQuestState(_713_PathToBecomingALordAden.class).get("questsDone") != null) {
-                        if (Integer.parseInt(castleOwner.getQuestState(_713_PathToBecomingALordAden.class).get("questsDone")) < 5)
-                            castleOwner.getQuestState(_713_PathToBecomingALordAden.class).set("questsDone", String.valueOf(Integer.parseInt(castleOwner.getQuestState(_713_PathToBecomingALordAden.class).get("questsDone")) + 1), true);
+                Player castleOwner = castle.getOwner().getLeader().player;
+                Quest quest = QuestManager.getQuest(_713_PathToBecomingALordAden.class);
+                if (castleOwner != null && castleOwner != st.player && castleOwner.getClan() == st.player.getClan() && castleOwner.getQuestState(quest) != null && castleOwner.getQuestState(quest).getCond() == 2) {
+                    if (castleOwner.getQuestState(quest).getInt("questsDone") != 0) {
+                        if (castleOwner.getQuestState(quest).getInt("questsDone") < 5)
+                            castleOwner.getQuestState(quest).set("questsDone", castleOwner.getQuestState(quest).getInt("questsDone") + 1);
                         else
-                            castleOwner.getQuestState(_713_PathToBecomingALordAden.class).setCond(4);
+                            castleOwner.getQuestState(quest).setCond(4);
                     } else
-                        castleOwner.getQuestState(_713_PathToBecomingALordAden.class).set("questsDone", "1", true);
+                        castleOwner.getQuestState(quest).set("questsDone", 1);
 
                 }
             }
             //---------------
             st.exitCurrentQuest(true);
             st.playSound(SOUND_FINISH);
-        } else if (event.equalsIgnoreCase("30857-08.htm")) {
+        } else if ("30857-08.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             //Vibor nagradi
             int chance = Rnd.get(100);
@@ -108,7 +109,7 @@ public final class _359_ForSleeplessDeadmen extends Quest {
         int id = st.getState();
         int cond = st.getCond();
         if (id == CREATED) {
-            if (st.getPlayer().getLevel() < 60) {
+            if (st.player.getLevel() < 60) {
                 st.exitCurrentQuest(true);
                 htmltext = "30857-01.htm";
             } else
@@ -127,16 +128,15 @@ public final class _359_ForSleeplessDeadmen extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         long count = st.getQuestItemsCount(REMAINS);
         if (count < REQUIRED && Rnd.chance(DROP_RATE)) {
-            st.giveItems(REMAINS, 1);
+            st.giveItems(REMAINS);
             if (count + 1 >= REQUIRED) {
                 st.playSound(SOUND_MIDDLE);
                 st.setCond(2);
             } else
                 st.playSound(SOUND_ITEMGET);
         }
-        return null;
     }
 }

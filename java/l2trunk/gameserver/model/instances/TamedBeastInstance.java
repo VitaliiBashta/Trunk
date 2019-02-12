@@ -1,7 +1,5 @@
 package l2trunk.gameserver.model.instances;
 
-import l2trunk.commons.lang.reference.HardReference;
-import l2trunk.commons.lang.reference.HardReferences;
 import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.Config;
@@ -41,7 +39,7 @@ public final class TamedBeastInstance extends FeedableBeastInstance {
     }
 
     private final List<Integer> _skills = new ArrayList<>();
-    private HardReference<Player> _playerRef = HardReferences.emptyRef();
+    private Player player = null;
     private int _foodSkillId, _remainingTime = MAX_DURATION;
     private Future<?> _durationCheckTask = null;
 
@@ -118,15 +116,15 @@ public final class TamedBeastInstance extends FeedableBeastInstance {
     }
 
     public void buffOwner() {
-        if (!isInRange(getPlayer(), MAX_DISTANCE_FOR_BUFF)) {
-            setFollowTarget(getPlayer());
-            getAI().setIntention(CtrlIntention.AI_INTENTION_FOLLOW, getPlayer(), Config.FOLLOW_RANGE);
+        if (!isInRange(player, MAX_DISTANCE_FOR_BUFF)) {
+            setFollowTarget(player);
+            getAI().setIntention(CtrlIntention.AI_INTENTION_FOLLOW, player, Config.FOLLOW_RANGE);
             return;
         }
 
         int delay = 0;
         for (Integer skill : _skills) {
-            ThreadPoolManager.INSTANCE.schedule(new Buff(this, getPlayer(), skill), delay);
+            ThreadPoolManager.INSTANCE.schedule(new Buff(this, player, skill), delay);
             delay = delay + SkillTable.INSTANCE.getInfo(skill).hitTime + 500;
         }
     }
@@ -139,21 +137,20 @@ public final class TamedBeastInstance extends FeedableBeastInstance {
             _durationCheckTask = null;
         }
 
-        Player owner = getPlayer();
+        Player owner = player;
         if (owner != null)
-            owner.removeTrainedBeast(getObjectId());
+            owner.removeTrainedBeast(objectId);
 
         _foodSkillId = 0;
         _remainingTime = 0;
     }
 
-    @Override
     public Player getPlayer() {
-        return _playerRef.get();
+        return player;
     }
 
     public void setOwner(Player owner) {
-        _playerRef = owner == null ? HardReferences.<Player>emptyRef() : owner.getRef();
+        player = owner;
         if (owner != null) {
             setTitle(owner.getName());
             owner.addTrainedBeast(this);
@@ -162,7 +159,7 @@ public final class TamedBeastInstance extends FeedableBeastInstance {
                     .forEach(p -> p.sendPacket(new NpcInfo(this, p)));
 
             // always and automatically follow the owner.
-            setFollowTarget(getPlayer());
+            setFollowTarget(player);
             getAI().setIntention(CtrlIntention.AI_INTENTION_FOLLOW, owner, Config.FOLLOW_RANGE);
         } else
             doDespawn(); // despawn if no owner
@@ -184,7 +181,7 @@ public final class TamedBeastInstance extends FeedableBeastInstance {
         // clean up variables
         Player owner = getPlayer();
         if (owner != null)
-            owner.removeTrainedBeast(getObjectId());
+            owner.removeTrainedBeast(objectId());
 
         setTarget(null);
         _foodSkillId = 0;

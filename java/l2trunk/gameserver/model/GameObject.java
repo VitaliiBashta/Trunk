@@ -1,7 +1,5 @@
 package l2trunk.gameserver.model;
 
-import l2trunk.commons.lang.reference.HardReference;
-import l2trunk.commons.lang.reference.HardReferences;
 import l2trunk.gameserver.geodata.GeoEngine;
 import l2trunk.gameserver.instancemanager.ReflectionManager;
 import l2trunk.gameserver.model.base.InvisibleType;
@@ -26,44 +24,26 @@ public abstract class GameObject extends EventOwner {
     private static final Logger _log = LoggerFactory.getLogger(GameObject.class);
 
     private final AtomicInteger state = new AtomicInteger(CREATED);
-    protected int objectId;
+    public int objectId;
     private Reflection reflection = ReflectionManager.DEFAULT;
-    /**
-     * Позиция объекта в мире
-     */
-    private int x;
-    private int y;
-    private int z;
-    private WorldRegion currentRegion;
 
-    protected GameObject() {
-    }
+    private Location location = new Location();
+    private WorldRegion currentRegion;
 
     protected GameObject(int objectId) {
         this.objectId = objectId;
-    }
-
-    protected HardReference<? extends GameObject> getRef() {
-        return HardReferences.emptyRef();
-    }
-
-    private void clearRef() {
-        HardReference<? extends GameObject> reference = getRef();
-        if (reference != null)
-            reference.clear();
     }
 
     public final Reflection getReflection() {
         return reflection;
     }
 
-    public GameObject setReflection(int reflectionId) {
+    public final GameObject setReflection(int reflectionId) {
         Reflection r = ReflectionManager.INSTANCE.get(reflectionId);
         if (r == null) {
             Log.debug("Trying to set unavailable reflection: " + reflectionId + " for object: " + this + "!", new Throwable().fillInStackTrace());
             return this;
         }
-
         return setReflection(r);
     }
 
@@ -94,7 +74,7 @@ public abstract class GameObject extends EventOwner {
     }
 
     public int getReflectionId() {
-        return reflection.getId();
+        return reflection.id;
     }
 
     public int getGeoIndex() {
@@ -104,28 +84,29 @@ public abstract class GameObject extends EventOwner {
     /**
      * Return the identifier of the L2Object.<BR><BR>
      */
-//    @Override
-//    public final int hashCode() {
-//        return objectId;
-//    }
-    public final int getObjectId() {
+    @Override
+    public final int hashCode() {
+        return objectId;
+    }
+
+    public final int objectId() {
         return objectId;
     }
 
     public int getX() {
-        return x;
+        return location.x;
     }
 
     public int getY() {
-        return y;
+        return location.y;
     }
 
     public int getZ() {
-        return z;
+        return location.z;
     }
 
-    public Location getLoc() {
-        return new Location(x, y, z, getHeading());
+    public final Location getLoc() {
+        return location;
     }
 
     public GameObject setLoc(Location loc) {
@@ -138,10 +119,8 @@ public abstract class GameObject extends EventOwner {
     }
 
 
-    public void setXYZ(int x, int y, int z) {
-        this.x = World.validCoordX(x);
-        this.y = World.validCoordY(y);
-        this.z = World.validCoordZ(z);
+    protected void setXYZ(int x, int y, int z) {
+        this.location = new Location(World.validCoordX(x), World.validCoordY(y), World.validCoordZ(z));
 
         World.addVisibleObject(this, null);
     }
@@ -171,14 +150,11 @@ public abstract class GameObject extends EventOwner {
     }
 
     protected void spawnMe0(Location loc, Creature dropper) {
-        x = loc.x;
-        y = loc.y;
-        z = getGeoZ(loc);
-
+        location = new Location(loc.x, loc.y, getGeoZ(loc));
         spawn0(dropper);
     }
 
-    public GameObject spawnMe() {
+    public final GameObject spawnMe() {
         spawn0(null);
         return this;
     }
@@ -216,8 +192,7 @@ public abstract class GameObject extends EventOwner {
         onDespawn();
     }
 
-    void onDespawn() {
-
+    protected void onDespawn() {
     }
 
     /**
@@ -241,7 +216,6 @@ public abstract class GameObject extends EventOwner {
         if (!r.isDefault())
             r.removeObject(this);
 
-        clearRef();
     }
 
     public void onAction(Player player, boolean shift) {
@@ -372,27 +346,16 @@ public abstract class GameObject extends EventOwner {
 
     private double getRealDistance3D(GameObject obj, boolean ignoreZ) {
         double distance = ignoreZ ? getDistance(obj) : getDistance3D(obj);
-        if (isCreature())
+        if (this instanceof Creature)
             distance -= ((Creature) this).getTemplate().collisionRadius;
-        if (obj.isCreature())
+        if (obj instanceof Creature)
             distance -= ((Creature) obj).getTemplate().collisionRadius;
         return distance > 0 ? distance : 0;
     }
 
-    /**
-     * Возвращает L2Player управляющий даным обьектом.<BR>
-     * <li>Для L2Player это сам игрок.</li>
-     * <li>Для L2Summon это его хозяин.</li><BR><BR>
-     *
-     * @return L2Player управляющий даным обьектом.
-     */
-    public Player getPlayer() {
-        return null;
-    }
-
-    public int getHeading() {
-        return 0;
-    }
+//    public int getHeading() {
+//        return 0;
+//    }
 
     int getMoveSpeed() {
         return 0;
@@ -406,19 +369,15 @@ public abstract class GameObject extends EventOwner {
         currentRegion = region;
     }
 
-    public boolean isInObserverMode() {
-        return false;
-    }
+//    public boolean isInObserverMode() {
+//        return false;
+//    }
 
-    public boolean isInOlympiadMode() {
-        return false;
-    }
+//    public boolean isInOlympiadMode() {
+//        return false;
+//    }
 
     public boolean isInBoat() {
-        return false;
-    }
-
-    public boolean isFlying() {
         return false;
     }
 
@@ -434,81 +393,11 @@ public abstract class GameObject extends EventOwner {
         return 0;
     }
 
-    public boolean isCreature() {
-        return false;
-    }
-
-    public boolean isPlayable() {
-        return false;
-    }
-
-    public boolean isPlayer() {
-        return false;
-    }
-
-    public boolean isPet() {
-        return false;
-    }
-
-    public boolean isSummon() {
-        return false;
-    }
-
-    public boolean isNpc() {
-        return false;
-    }
-
-    public boolean isMonster() {
-        return false;
-    }
-
-    public boolean isItem() {
-        return false;
-    }
-
     public boolean isRaid() {
         return false;
     }
 
-    public boolean isChampion() {
-        return false;
-    }
-
     public boolean isBoss() {
-        return false;
-    }
-
-    public boolean isTrap() {
-        return false;
-    }
-
-    public boolean isDoor() {
-        return false;
-    }
-
-
-
-    public boolean isSiegeGuard() {
-        return false;
-    }
-
-    public boolean isClanAirShip() {
-        return false;
-    }
-
-    public boolean isAirShip() {
-        return false;
-    }
-
-    protected boolean isBoat() {
-        return false;
-    }
-
-    public boolean isVehicle() {
-        return false;
-    }
-
-    public boolean isMinion() {
         return false;
     }
 

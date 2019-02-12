@@ -37,7 +37,7 @@ public class RequestConfirmRefinerItem extends L2GameClientPacket {
             return;
         }
 
-        int refinerItemId = refinerItem.getTemplate().getItemId();
+        int refinerItemId = refinerItem.getTemplate().itemId();
 
         boolean isAccessoryLifeStone = ItemFunctions.isAccessoryLifeStone(refinerItem.getItemId());
 

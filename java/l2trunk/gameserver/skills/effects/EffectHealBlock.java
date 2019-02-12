@@ -10,9 +10,7 @@ public final class EffectHealBlock extends Effect {
 
     @Override
     public boolean checkCondition() {
-        if (effected.isHealBlocked())
-            return false;
-        return super.checkCondition();
+        return !effected.isHealBlocked();
     }
 
     @Override
@@ -27,8 +25,4 @@ public final class EffectHealBlock extends Effect {
         effected.stopHealBlocked();
     }
 
-    @Override
-    public boolean onActionTime() {
-        return false;
-    }
 }

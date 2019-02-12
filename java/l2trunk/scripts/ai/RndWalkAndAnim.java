@@ -43,7 +43,7 @@ public final class RndWalkAndAnim extends DefaultAI {
         int z = GeoEngine.getHeight(x, y, sloc.z, actor.getGeoIndex());
 
         actor.setRunning();
-        actor.moveToLocation(x, y, z, 0, true);
+        actor.moveToLocation(Location.of(x, y, z), 0, true);
 
         return true;
     }

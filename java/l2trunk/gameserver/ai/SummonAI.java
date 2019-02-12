@@ -15,11 +15,11 @@ public final class SummonAI extends PlayableAI {
 
         clearNextAction();
         if (actor.isDepressed()) {
-            setAttackTarget(actor.getPlayer());
-            changeIntention(CtrlIntention.AI_INTENTION_ATTACK, actor.getPlayer(), null);
+            setAttackTarget(actor.owner);
+            changeIntention(CtrlIntention.AI_INTENTION_ATTACK, actor.owner, null);
             thinkAttack(true);
         } else if (actor.isFollowMode()) {
-            changeIntention(CtrlIntention.AI_INTENTION_FOLLOW, actor.getPlayer(), Config.FOLLOW_RANGE);
+            changeIntention(CtrlIntention.AI_INTENTION_FOLLOW, actor.owner, Config.FOLLOW_RANGE);
             thinkFollow();
         }
 
@@ -31,7 +31,7 @@ public final class SummonAI extends PlayableAI {
         Summon actor = getActor();
 
         if (actor.isDepressed())
-            setAttackTarget(actor.getPlayer());
+            setAttackTarget(actor.owner);
 
         super.thinkAttack(checkRange);
     }
@@ -39,7 +39,7 @@ public final class SummonAI extends PlayableAI {
     @Override
     public void onEvtAttacked(Creature attacker, int damage) {
         Summon actor = getActor();
-        if (attacker != null && actor.getPlayer().isDead() && !actor.isDepressed())
+        if (attacker != null && actor.owner.isDead() && !actor.isDepressed())
             Attack(attacker, false, false);
         super.onEvtAttacked(attacker, damage);
     }

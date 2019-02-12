@@ -15,7 +15,7 @@ public class PartySmallWindowUpdate extends L2GameServerPacket {
     private final String obj_name;
 
     public PartySmallWindowUpdate(Player member) {
-        obj_id = member.getObjectId();
+        obj_id = member.objectId();
         obj_name = member.getName();
         curCp = (int) member.getCurrentCp();
         maxCp = member.getMaxCp();
@@ -24,7 +24,7 @@ public class PartySmallWindowUpdate extends L2GameServerPacket {
         curMp = (int) member.getCurrentMp();
         maxMp = member.getMaxMp();
         level = member.getLevel();
-        class_id = member.getClassId().getId();
+        class_id = member.getClassId().id;
     }
 
     @Override

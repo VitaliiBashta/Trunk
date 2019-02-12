@@ -26,7 +26,7 @@ public final class _003_WilltheSealbeBroken extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("quest_accept")) {
+        if ("quest_accept".equalsIgnoreCase(event)) {
             htmltext = "redry_q0003_03.htm";
             st.setCond(1);
             st.setState(STARTED);
@@ -40,10 +40,10 @@ public final class _003_WilltheSealbeBroken extends Quest {
         String htmltext = "noquest";
         int id = st.getState();
         if (id == CREATED)
-            if (st.getPlayer().getRace() != Race.darkelf) {
+            if (st.player.getRace() != Race.darkelf) {
                 htmltext = "redry_q0003_00.htm";
                 st.exitCurrentQuest(true);
-            } else if (st.getPlayer().getLevel() >= 16) {
+            } else if (st.player.getLevel() >= 16) {
                 htmltext = "redry_q0003_02.htm";
                 return htmltext;
             } else {
@@ -53,9 +53,9 @@ public final class _003_WilltheSealbeBroken extends Quest {
         else if (id == STARTED)
             if (st.getQuestItemsCount(OnyxBeastEye) > 0 && st.getQuestItemsCount(TaintStone) > 0 && st.getQuestItemsCount(SuccubusBlood) > 0) {
                 htmltext = "redry_q0003_06.htm";
-                st.takeItems(OnyxBeastEye, -1);
-                st.takeItems(TaintStone, -1);
-                st.takeItems(SuccubusBlood, -1);
+                st.takeItems(OnyxBeastEye);
+                st.takeItems(TaintStone);
+                st.takeItems(SuccubusBlood);
                 st.giveItems(956, 1, true);
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest(false);
@@ -65,18 +65,18 @@ public final class _003_WilltheSealbeBroken extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int id = st.getState();
         if (id == STARTED) {
             if (npcId == Monster.get(0) && st.getQuestItemsCount(OnyxBeastEye) == 0) {
-                st.giveItems(OnyxBeastEye, 1, false);
+                st.giveItems(OnyxBeastEye);
                 st.playSound(SOUND_ITEMGET);
             } else if ((npcId == Monster.get(1) || npcId == Monster.get(2)) && st.getQuestItemsCount(TaintStone) == 0) {
-                st.giveItems(TaintStone, 1, false);
+                st.giveItems(TaintStone);
                 st.playSound(SOUND_ITEMGET);
             } else if ((npcId == Monster.get(3) || npcId == Monster.get(4) || npcId == Monster.get(5) && st.getQuestItemsCount(SuccubusBlood) == 0)) {
-                st.giveItems(SuccubusBlood, 1, false);
+                st.giveItems(SuccubusBlood);
                 st.playSound(SOUND_ITEMGET);
             }
             if (st.getQuestItemsCount(OnyxBeastEye) > 0 && st.getQuestItemsCount(TaintStone) > 0 && st.getQuestItemsCount(SuccubusBlood) > 0) {
@@ -84,6 +84,5 @@ public final class _003_WilltheSealbeBroken extends Quest {
                 st.playSound(SOUND_MIDDLE);
             }
         }
-        return null;
     }
 }

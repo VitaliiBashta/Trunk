@@ -20,7 +20,7 @@ public final class CrystalCavernControllerInstance extends NpcInstance {
     public String getHtmlPath(int npcId, int val, Player player) {
         String htmlpath = null;
         if (val == 0) {
-            if (player.isInParty() && player.getParty().getLeader() == player) {
+            if (player.isPartyLeader()) {
                 if (getNpcId() == 32280)
                     htmlpath = "default/32280-2.htm";
                 else if (getNpcId() == 32278)
@@ -61,15 +61,15 @@ public final class CrystalCavernControllerInstance extends NpcInstance {
             }
             if (player.isInParty()) {
                 for (Player p : player.getParty().getMembers()) {
-                    if (ItemFunctions.getItemCount(p, 9695) < 1) {
+                    if (!p.haveItem(9695)) {
                         Functions.npcSay(this, NpcString.S1___________________, p.getName());
                         return;
                     }
-                    if (ItemFunctions.getItemCount(p, 9696) < 1) {
+                    if (!p.haveItem(9696) ) {
                         Functions.npcSay(this, NpcString.S1__________________, p.getName());
                         return;
                     }
-                    if (ItemFunctions.getItemCount(p, 9697) < 1) {
+                    if (!p.haveItem(9697)) {
                         Functions.npcSay(this, NpcString.S1____________________, p.getName());
                         return;
                     }
@@ -78,11 +78,11 @@ public final class CrystalCavernControllerInstance extends NpcInstance {
                         return;
                     }
                 }
-                ItemFunctions.addItem(player, 10015, 1, true, "CrystalCavernControllerInstance");
+                ItemFunctions.addItem(player, 10015, 1, "CrystalCavernControllerInstance");
                 for (Player p : player.getParty().getMembers()) {
-                    ItemFunctions.removeItem(p, 9695, 1, true, "CrystalCavernControllerInstance");
-                    ItemFunctions.removeItem(p, 9696, 1, true, "CrystalCavernControllerInstance");
-                    ItemFunctions.removeItem(p, 9697, 1, true, "CrystalCavernControllerInstance");
+                    ItemFunctions.removeItem(p, 9695, 1, "CrystalCavernControllerInstance");
+                    ItemFunctions.removeItem(p, 9696, 1, "CrystalCavernControllerInstance");
+                    ItemFunctions.removeItem(p, 9697, 1, "CrystalCavernControllerInstance");
                     p.teleToLocation(new Location(153526, 142172, -12736));
                 }
                 BaylorManager.entryToBaylorLair(player);

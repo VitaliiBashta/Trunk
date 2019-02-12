@@ -1,8 +1,6 @@
 package l2trunk.scripts.ai.isle_of_prayer;
 
 import l2trunk.gameserver.ai.DefaultAI;
-import l2trunk.gameserver.model.Creature;
-import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.DoorInstance;
 import l2trunk.gameserver.model.instances.NpcInstance;
@@ -31,20 +29,18 @@ public final class EmeraldDoorController extends DefaultAI {
         if (refl != null)
             active = refl.areDoorsActivated();
         if (door != null && active) {
-            for (Creature c : getActor().getAroundCharacters(250, 150).collect(Collectors.toList()))
-                if (!openedDoor && c.isPlayer() && ItemFunctions.getItemCount(c.getPlayer(), 9694) > 0) {// Secret Key
+            for (Player player : getActor().getAroundPlayers(250, 150).collect(Collectors.toList()))
+                if (!openedDoor && player.haveItem( 9694) ) {// Secret Key
                     openedDoor = true;
-                    ItemFunctions.removeItem(c.getPlayer(), 9694, 1, true, "EmeraldDoorController");
+                    ItemFunctions.removeItem(player, 9694, 1, "EmeraldDoorController");
                     door.openMe();
-                    opener = c.getPlayer();
+                    opener = player;
                 }
 
             boolean found = false;
             if (opener != null)
-                found = getActor().getAroundCharacters(250, 150)
-                        .filter(c -> openedDoor)
-                        .filter(GameObject::isPlayer)
-                        .anyMatch(c -> c.getPlayer() == opener);
+                found = getActor().getAroundPlayers(250, 150)
+                        .anyMatch(c -> c == opener);
 
             if (!found)
                 door.closeMe();
@@ -54,7 +50,7 @@ public final class EmeraldDoorController extends DefaultAI {
 
     private DoorInstance getClosestDoor() {
         return getActor().getAroundCharacters(200, 200)
-                .filter(GameObject::isDoor)
+                .filter(o -> o instanceof DoorInstance)
                 .map(c -> (DoorInstance) c)
                 .findFirst().orElse(null);
     }

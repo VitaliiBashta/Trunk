@@ -8,20 +8,16 @@ import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 
-public class ItemInfoCache {
-    private final static ItemInfoCache _instance = new ItemInfoCache();
+public enum ItemInfoCache {
+    INSTANCE;
     private final Cache cache;
 
-    private ItemInfoCache() {
-        cache = CacheManager.getInstance().getCache(this.getClass().getName());
-    }
-
-    public static ItemInfoCache getInstance() {
-        return _instance;
+    ItemInfoCache() {
+        cache = CacheManager.getInstance().getCache(getClass().getName());
     }
 
     public void put(ItemInstance item) {
-        cache.put(new Element(item.getObjectId(), new ItemInfo(item)));
+        cache.put(new Element(item.objectId(), new ItemInfo(item)));
     }
 
     /**
@@ -38,7 +34,7 @@ public class ItemInfoCache {
         if (element != null)
             info = (ItemInfo) element.getObjectValue();
 
-        Player player = null;
+        Player player;
 
         if (info != null) {
             player = World.getPlayer(info.getOwnerId());
@@ -50,7 +46,7 @@ public class ItemInfoCache {
 
             if (item != null)
                 if (item.getItemId() == info.getItemId())
-                    cache.put(new Element(item.getObjectId(), info = new ItemInfo(item)));
+                    cache.put(new Element(item.objectId(), info = new ItemInfo(item)));
         }
 
         return info;

@@ -6,7 +6,6 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _697_DefendtheHallofErosion extends Quest {
     private static final int TEPIOS = 32603;
@@ -19,9 +18,7 @@ public final class _697_DefendtheHallofErosion extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        Player player = st.getPlayer();
-
-        if (event.equalsIgnoreCase("tepios_q697_3.htm")) {
+        if ("tepios_q697_3.htm".equalsIgnoreCase(event)) {
             st.setState(STARTED);
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
@@ -33,7 +30,7 @@ public final class _697_DefendtheHallofErosion extends Quest {
     public String onTalk(NpcInstance npc, QuestState st) {
         String htmltext = "noquest";
         int npcId = npc.getNpcId();
-        Player player = st.getPlayer();
+        Player player = st.player;
         int cond = st.getCond();
 
         if (npcId == TEPIOS) {

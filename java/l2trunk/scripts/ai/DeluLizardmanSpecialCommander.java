@@ -5,6 +5,7 @@ import l2trunk.gameserver.ai.CtrlEvent;
 import l2trunk.gameserver.ai.Fighter;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.GameObject;
+import l2trunk.gameserver.model.instances.MonsterInstance;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.Functions;
 
@@ -28,7 +29,7 @@ public final class DeluLizardmanSpecialCommander extends Fighter {
             _shouted = true;
             Functions.npcSay(actor, "Come on my fellows, assist me here!");
             actor.getAroundNpc(1000, 300)
-                    .filter(GameObject::isMonster)
+                    .filter(n -> n instanceof MonsterInstance)
                     .forEach(npc -> npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker, 5000));
         }
         super.onEvtAttacked(attacker, damage);

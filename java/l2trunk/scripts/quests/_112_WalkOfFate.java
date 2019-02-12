@@ -3,7 +3,6 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _112_WalkOfFate extends Quest {
     //NPC
@@ -21,13 +20,13 @@ public final class _112_WalkOfFate extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("karuda_q0112_0201.htm")) {
+        if ("karuda_q0112_0201.htm".equalsIgnoreCase(event)) {
             st.addExpAndSp(112876, 5774);
             st.giveItems(ADENA_ID, (long) (22308 + 6000 * (st.getRateQuestsReward() - 1)), true);
-            st.giveItems(EnchantD, 1, false);
+            st.giveItems(EnchantD);
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(false);
-        } else if (event.equalsIgnoreCase("seer_livina_q0112_0104.htm")) {
+        } else if ("seer_livina_q0112_0104.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
@@ -42,7 +41,7 @@ public final class _112_WalkOfFate extends Quest {
         int cond = st.getCond();
         if (npcId == Livina) {
             if (cond == 0) {
-                if (st.getPlayer().getLevel() >= 20)
+                if (st.player.getLevel() >= 20)
                     htmltext = "seer_livina_q0112_0101.htm";
                 else {
                     htmltext = "seer_livina_q0112_0103.htm";

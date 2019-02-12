@@ -29,7 +29,7 @@ public final class ContaminatedMucrokian extends Fighter {
             return;
         }
         if (getIntention() == CtrlIntention.AI_INTENTION_ACTIVE) {
-            Functions.npcSay(actor, NpcString.NAIA_WAGANAGEL_PEUTAGUN, ChatType.NPC_ALL, 5000);
+            Functions.npcSay(actor, NpcString.NAIA_WAGANAGEL_PEUTAGUN, ChatType.NPC_ALL, 5000, "");
         }
         super.onIntentionAttack(target);
     }

@@ -5,11 +5,11 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
 public final class RequestHandOverPartyMaster extends L2GameClientPacket {
-    private String _name;
+    private String name;
 
     @Override
     protected void readImpl() {
-        _name = readS(16);
+        name = readS(16);
     }
 
     @Override
@@ -26,7 +26,7 @@ public final class RequestHandOverPartyMaster extends L2GameClientPacket {
         }
 
 
-        Player member = party.getPlayerByName(_name);
+        Player member = party.getPlayerByName(name);
 
         if (member == activeChar) {
             activeChar.sendPacket(SystemMsg.SLOW_DOWN_YOU_ARE_ALREADY_THE_PARTY_LEADER);

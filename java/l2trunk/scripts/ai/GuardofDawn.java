@@ -9,6 +9,9 @@ import l2trunk.gameserver.model.World;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.Location;
+import l2trunk.gameserver.utils.PositionUtils;
+
+import java.util.Objects;
 
 /**
  * AI NPC для SSQ Dungeon
@@ -17,11 +20,11 @@ import l2trunk.gameserver.utils.Location;
  * - Никогда и никого не атакуют
  */
 public final class GuardofDawn extends DefaultAI {
-    private static final int _aggrorange = 150;
-    private static final int _skill = 5978;
+    private static final int AGGRORANGE = 150;
+    private static final int deathStrike = 5978;
     private Location _locStart = null;
     private Location _locEnd = null;
-    private Location _locTele = null;
+    private Location location = null;
     private boolean moveToEnd = true;
     private boolean noCheckPlayers = false;
 
@@ -60,23 +63,24 @@ public final class GuardofDawn extends DefaultAI {
         return true;
     }
 
-    private boolean checkAroundPlayers(NpcInstance actor) {
-        for (Playable target : World.getAroundPlayables(actor, _aggrorange, _aggrorange)) {
-            if (!canSeeInSilentMove(target) || !canSeeInHide(target))
-                continue;
-
-            if (target != null && target.isPlayer() && !target.isInvul() && GeoEngine.canSeeTarget(actor, target, false)) {
-                actor.doCast(_skill, target, true);
-                Functions.npcSay(actor, "Intruder! Protect the Priests of Dawn!");
-                noCheckPlayers = true;
-                ThreadPoolManager.INSTANCE.schedule(() -> {
-                    target.teleToLocation(getTelePoint());
-                    noCheckPlayers = false;
-                }, 3000);
-                return true;
-            }
-        }
-        return false;
+    private void checkAroundPlayers(NpcInstance actor) {
+        World.getAroundPlayers(actor, AGGRORANGE, AGGRORANGE)
+                .filter(this::canSeeInSilentMove)
+                .filter(this::canSeeInHide)
+                .filter(Playable::isSilentMoving)
+                .filter(target -> !target.isInvul())
+                .filter(target -> GeoEngine.canSeeTarget(actor, target, false))
+                .filter(target -> PositionUtils.isFacing(actor, target, 150))
+                .findFirst()
+                .ifPresent(target -> {
+                    actor.doCast(deathStrike, target, true);
+                    Functions.npcSay(actor, "Who are you?! A new face like you can't approach this place!");
+                    noCheckPlayers = true;
+                    ThreadPoolManager.INSTANCE.schedule(() -> {
+                        target.teleToLocation(location);
+                        noCheckPlayers = false;
+                    }, 3000);
+                });
     }
 
     private Location getStartPoint() {
@@ -96,11 +100,11 @@ public final class GuardofDawn extends DefaultAI {
     }
 
     private Location getTelePoint() {
-        return _locTele;
+        return location;
     }
 
     private void setTelePoint(Location loc) {
-        _locTele = loc;
+        location = loc;
     }
 
     @Override

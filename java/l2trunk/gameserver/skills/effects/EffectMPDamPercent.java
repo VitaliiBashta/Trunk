@@ -3,7 +3,7 @@ package l2trunk.gameserver.skills.effects;
 import l2trunk.gameserver.model.Effect;
 import l2trunk.gameserver.stats.Env;
 
-public class EffectMPDamPercent extends Effect {
+public final class EffectMPDamPercent extends Effect {
     public EffectMPDamPercent(final Env env, final EffectTemplate template) {
         super(env, template);
     }
@@ -20,8 +20,4 @@ public class EffectMPDamPercent extends Effect {
         effected.setCurrentMp(newMp);
     }
 
-    @Override
-    public boolean onActionTime() {
-        return false;
-    }
 }

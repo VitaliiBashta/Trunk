@@ -4,7 +4,7 @@ import l2trunk.gameserver.model.Effect;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.stats.Env;
 
-public class EffectEnervation extends Effect {
+public final class EffectEnervation extends Effect {
     public EffectEnervation(Env env, EffectTemplate template) {
         super(env, template);
     }
@@ -12,19 +12,14 @@ public class EffectEnervation extends Effect {
     @Override
     public void onStart() {
         super.onStart();
-        if (effected.isNpc())
+        if (effected instanceof NpcInstance)
             ((NpcInstance) effected).setParameter("DebuffIntention", 0.5);
-    }
-
-    @Override
-    public boolean onActionTime() {
-        return false;
     }
 
     @Override
     public void onExit() {
         super.onExit();
-        if (effected.isNpc())
+        if (effected instanceof NpcInstance)
             ((NpcInstance) effected).setParameter("DebuffIntention", 1.);
     }
 }

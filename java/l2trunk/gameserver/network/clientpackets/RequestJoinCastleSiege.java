@@ -53,7 +53,7 @@ public class RequestJoinCastleSiege extends L2GameClientPacket {
             }
 
             if (attacker) {
-                if (castle.getOwnerId() == playerClan.getClanId()) {
+                if (castle.getOwnerId() == playerClan.clanId()) {
                     player.sendPacket(SystemMsg.CASTLE_OWNING_CLANS_ARE_AUTOMATICALLY_REGISTERED_ON_THE_DEFENDING_SIDE);
                     return;
                 }
@@ -119,7 +119,7 @@ public class RequestJoinCastleSiege extends L2GameClientPacket {
                 if (castle.getOwnerId() == 0)
                     return;
 
-                if (castle.getOwnerId() == playerClan.getClanId()) {
+                if (castle.getOwnerId() == playerClan.clanId()) {
                     player.sendPacket(SystemMsg.CASTLE_OWNING_CLANS_ARE_AUTOMATICALLY_REGISTERED_ON_THE_DEFENDING_SIDE);
                     return;
                 }

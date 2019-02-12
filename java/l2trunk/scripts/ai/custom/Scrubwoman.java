@@ -10,6 +10,8 @@ import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.Location;
 
+import java.util.Objects;
+
 public final class Scrubwoman extends DefaultAI {
     private static final int MAX_RADIUS = 900;
     private long _nextEat;
@@ -32,9 +34,7 @@ public final class Scrubwoman extends DefaultAI {
             return;
 
         if (_nextEat < System.currentTimeMillis()) {
-            ItemInstance closestItem = World.getAroundObjects(actor, MAX_RADIUS, 200)
-                    .filter(GameObject::isItem)
-                    .map(obj -> (ItemInstance) obj)
+            ItemInstance closestItem = World.getAroundItems(actor, MAX_RADIUS, 200)
                     .filter(i -> i.getItemId() > 1)
                     .findFirst().orElse(null);
 
@@ -75,9 +75,7 @@ public final class Scrubwoman extends DefaultAI {
         if (actor == null || actor.isDead())
             return true;
         if (!actor.isMoving && _nextEat < System.currentTimeMillis()) {
-            World.getAroundObjects(actor, MAX_RADIUS, 200)
-                    .filter(GameObject::isItem)
-                    .map(obj -> (ItemInstance) obj)
+            World.getAroundItems(actor, MAX_RADIUS, 200)
                     .filter(i -> i.getItemId() > 1)
                     .findFirst().ifPresent(closestItem -> actor.moveToLocation(closestItem.getLoc(), 0, true));
         }

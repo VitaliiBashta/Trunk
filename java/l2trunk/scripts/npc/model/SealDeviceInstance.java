@@ -2,10 +2,7 @@ package l2trunk.scripts.npc.model;
 
 import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.ThreadPoolManager;
-import l2trunk.gameserver.model.Creature;
-import l2trunk.gameserver.model.GameObject;
-import l2trunk.gameserver.model.Player;
-import l2trunk.gameserver.model.Skill;
+import l2trunk.gameserver.model.*;
 import l2trunk.gameserver.model.instances.MonsterInstance;
 import l2trunk.gameserver.network.serverpackets.ExStartScenePlayer;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
@@ -21,16 +18,19 @@ public final class SealDeviceInstance extends MonsterInstance {
 
     @Override
     public void reduceCurrentHp(double i, Creature attacker, Skill skill, boolean awake, boolean standUp, boolean directHp, boolean canReflect, boolean transferDamage, boolean isDot, boolean sendMessage) {
+        if (!(attacker instanceof Playable))
+            return;
+        Player player = ((Playable) attacker).getPlayer();
         if (this.getCurrentHp() < i) {
-            if (!_gaveItem && ItemFunctions.getItemCount(attacker.getPlayer(), 13846) < 4) {
+            if (!_gaveItem && !player.haveItem( 13846, 4) ) {
                 this.setRHandId(15281);
                 this.broadcastCharInfo();
-                ItemFunctions.addItem(attacker.getPlayer(), 13846, 1, true, "SealDeviceInstance");
+                ItemFunctions.addItem(player, 13846, 1, "SealDeviceInstance");
                 _gaveItem = true;
 
-                if (ItemFunctions.getItemCount(attacker.getPlayer(), 13846) >= 4) {
-                    attacker.getPlayer().showQuestMovie(ExStartScenePlayer.SCENE_SSQ_SEALING_EMPEROR_2ND);
-                    ThreadPoolManager.INSTANCE.schedule(new TeleportPlayer(attacker.getPlayer()), 26500L);
+                if (player.haveItem(13846, 4)) {
+                    player.showQuestMovie(ExStartScenePlayer.SCENE_SSQ_SEALING_EMPEROR_2ND);
+                    ThreadPoolManager.INSTANCE.schedule(new TeleportPlayer(player), 26500L);
                 }
             }
             i = this.getCurrentHp() - 1;
@@ -72,7 +72,7 @@ public final class SealDeviceInstance extends MonsterInstance {
                     .filter(n -> n.getNpcId() != 32586)
                     .filter(n -> n.getNpcId() != 32587)
                     .forEach(GameObject::deleteMe);
-            pl.getPlayer().teleToLocation(new Location(-89560, 215784, -7488));
+            pl.teleToLocation(new Location(-89560, 215784, -7488));
         }
     }
 }

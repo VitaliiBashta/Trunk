@@ -19,17 +19,20 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
+import static l2trunk.commons.lang.NumberUtils.toInt;
+import static l2trunk.gameserver.utils.ItemFunctions.addItem;
+
 // Эвент Coffer of Shadows
 public class CofferofShadows extends Functions implements ScriptFile, OnPlayerEnterListener {
     private static final int COFFER_PRICE = 50000; // 50.000 adena at x1 servers
     private static final int COFFER_ID = 8659;
     private static final int EVENT_MANAGER_ID = 32091;
-    private static final List<SimpleSpawner> _spawns = new ArrayList<>();
+    private static  List<SimpleSpawner> _spawns = new ArrayList<>();
     private static final Logger _log = LoggerFactory.getLogger(CofferofShadows.class);
     private static boolean _active = false;
 
     private void spawnEventManagers() {
-        SpawnNPCs(EVENT_MANAGER_ID, EventsConfig.EVENT_MANAGERS_coffer_march8, _spawns);
+        _spawns = SpawnNPCs(EVENT_MANAGER_ID, EventsConfig.EVENT_MANAGERS_coffer_march8);
     }
 
     /**
@@ -47,11 +50,10 @@ public class CofferofShadows extends Functions implements ScriptFile, OnPlayerEn
      * Запускает эвент
      */
     public void startEvent() {
-        Player player = getSelf();
         if (!player.getPlayerAccess().IsEventGm)
             return;
 
-        if (SetActive("CofferofShadows", true)) {
+        if (setActive("CofferofShadows", true)) {
             spawnEventManagers();
             System.out.println("Event: Coffer of Shadows started.");
             Announcements.INSTANCE.announceByCustomMessage("scripts.events.CofferofShadows.AnnounceEventStarted");
@@ -66,10 +68,9 @@ public class CofferofShadows extends Functions implements ScriptFile, OnPlayerEn
      * Останавливает эвент
      */
     public void stopEvent() {
-        Player player = getSelf();
         if (!player.getPlayerAccess().IsEventGm)
             return;
-        if (SetActive("CofferofShadows", false)) {
+        if (setActive("CofferofShadows", false)) {
             unSpawnEventManagers();
             System.out.println("Event: Coffer of Shadows stopped.");
             Announcements.INSTANCE.announceByCustomMessage("scripts.events.CofferofShadows.AnnounceEventStoped");
@@ -86,7 +87,6 @@ public class CofferofShadows extends Functions implements ScriptFile, OnPlayerEn
      * @param var
      */
     public void buycoffer(String[] var) {
-        Player player = getSelf();
 
         if (!player.isQuestContinuationPossible(true))
             return;
@@ -94,20 +94,16 @@ public class CofferofShadows extends Functions implements ScriptFile, OnPlayerEn
         if (!NpcInstance.canBypassCheck(player, player.getLastNpc()))
             return;
 
-        int coffer_count = 1;
-        try {
-            coffer_count = Integer.valueOf(var[0]);
-        } catch (Exception E) {
-        }
+        int coffer_count = toInt(var[0],1);
 
         long need_adena = (long) (COFFER_PRICE * Config.EVENT_CofferOfShadowsPriceRate * coffer_count);
-        if (player.getAdena() < need_adena) {
+        if (player.haveAdena( need_adena)) {
             player.sendPacket(Msg.YOU_DO_NOT_HAVE_ENOUGH_ADENA);
             return;
         }
 
         player.reduceAdena(need_adena, true, "BuyCofferOfShadows");
-        Functions.addItem(player, COFFER_ID, coffer_count, "BuyCofferOfShadows");
+        addItem(player, COFFER_ID, coffer_count);
     }
 
     /**
@@ -125,9 +121,9 @@ public class CofferofShadows extends Functions implements ScriptFile, OnPlayerEn
             price = Util.formatAdena((long) (COFFER_PRICE * Config.EVENT_CofferOfShadowsPriceRate * cnt));
             append += "<a action=\"bypass -h scripts_events.CofferofShadows.CofferofShadows:buycoffer " + cnt + "\">";
             if (cnt == 1)
-                append += new CustomMessage("scripts.events.CofferofShadows.buycoffer", getSelf()).addString(price);
+                append += new CustomMessage("scripts.events.CofferofShadows.buycoffer", player).addString(price);
             else
-                append += new CustomMessage("scripts.events.CofferofShadows.buycoffers", getSelf()).addNumber(cnt).addString(price);
+                append += new CustomMessage("scripts.events.CofferofShadows.buycoffers", player).addNumber(cnt).addString(price);
             append += "</a><br>";
         }
 

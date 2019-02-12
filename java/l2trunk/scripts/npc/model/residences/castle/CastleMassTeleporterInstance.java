@@ -23,7 +23,7 @@ public final class CastleMassTeleporterInstance extends NpcInstance {
 
     public CastleMassTeleporterInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
-        _teleportLoc = Location.parseLoc(template.getAIParams().getString("teleport_loc"));
+        _teleportLoc = Location.of(template.getAIParams().getString("teleport_loc"));
     }
 
     @Override
@@ -42,7 +42,7 @@ public final class CastleMassTeleporterInstance extends NpcInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, int val, Object... arg) {
+    public void showChatWindow(Player player, int val) {
         if (_teleportTask != null)
             showChatWindow(player, "residence2/castle/CastleTeleportDelayed.htm", "%teleportIn%", getSecondsToTP());
         else {

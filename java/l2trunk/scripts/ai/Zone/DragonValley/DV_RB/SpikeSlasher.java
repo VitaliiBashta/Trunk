@@ -63,7 +63,7 @@ public final class SpikeSlasher extends Fighter {
 
     private void spawn_gemdragons(NpcInstance actor, Creature attacker) {
         for (int i = 0; i < 3; i++) {
-            NpcInstance n = NpcUtils.spawnSingle(gem_dragon, (actor.getX() + Rnd.get(-100, 100)), (actor.getY() + Rnd.get(-100, 100)), actor.getZ());
+            NpcInstance n = NpcUtils.spawnSingle(gem_dragon, actor.getLoc().randomOffset(100));
             n.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker, 2);
         }
     }

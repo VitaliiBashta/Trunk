@@ -31,6 +31,7 @@ import l2trunk.gameserver.network.serverpackets.components.IStaticPacket;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.templates.DoorTemplate;
 import l2trunk.gameserver.utils.Location;
+import l2trunk.scripts.quests._729_ProtectTheTerritoryCatapult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -147,7 +148,7 @@ public class DominionSiegeEvent extends SiegeEvent<Dominion, SiegeClanObject> {
         DominionRewardDAO.getInstance().insert(getResidence());
 
         for (SiegeClanObject clan : defenders)
-            clan.getClan().getOnlineMembers(0).stream().filter(Objects::nonNull).forEach(plr -> plr.getCounters().dominionSiegesWon++);
+            clan.getClan().getOnlineMembers().stream().filter(Objects::nonNull).forEach(plr -> plr.getCounters().dominionSiegesWon++);
     }
 
     @Override
@@ -167,13 +168,13 @@ public class DominionSiegeEvent extends SiegeEvent<Dominion, SiegeClanObject> {
                 s.getClan().setWarDominion(start ? getId() : 0);
 
                 PledgeShowInfoUpdate packet = new PledgeShowInfoUpdate(s.getClan());
-                for (Player player : s.getClan().getOnlineMembers(0)) {
+                for (Player player : s.getClan().getOnlineMembers()) {
                     player.sendPacket(packet);
 
                     updatePlayer(player, start);
                 }
             } else {
-                for (Player player : s.getClan().getOnlineMembers(0))
+                for (Player player : s.getClan().getOnlineMembers())
                     updatePlayer(player, start);
             }
         }
@@ -217,7 +218,7 @@ public class DominionSiegeEvent extends SiegeEvent<Dominion, SiegeClanObject> {
             sakeQuestState.setState(Quest.STARTED);
             sakeQuestState.setCond(1);
 
-            Quest protectCatapultQuest = QuestManager.getQuest("_729_ProtectTheTerritoryCatapult");
+            Quest protectCatapultQuest = QuestManager.getQuest(_729_ProtectTheTerritoryCatapult.class);
             if (protectCatapultQuest == null)
                 return;
 
@@ -226,7 +227,7 @@ public class DominionSiegeEvent extends SiegeEvent<Dominion, SiegeClanObject> {
             questState.setStateAndNotSave(Quest.STARTED);
         } else {
             for (Quest q : _runnerEvent.getBreakQuests()) {
-                QuestState questState = player.getQuestState(q.getClass());
+                QuestState questState = player.getQuestState(q);
                 if (questState != null)
                     questState.abortQuest();
             }
@@ -238,7 +239,7 @@ public class DominionSiegeEvent extends SiegeEvent<Dominion, SiegeClanObject> {
         if (_runnerEvent == null)
             return false;
         if (isInProgress() || _runnerEvent.isBattlefieldChatActive()) {
-            boolean registered = getObjects(DEFENDER_PLAYERS).contains(player.getObjectId()) || getSiegeClan(DEFENDERS, player.getClan()) != null;
+            boolean registered = getObjects(DEFENDER_PLAYERS).contains(player.objectId()) || getSiegeClan(DEFENDERS, player.getClan()) != null;
             if (!registered)
                 return false;
             else {
@@ -448,15 +449,15 @@ public class DominionSiegeEvent extends SiegeEvent<Dominion, SiegeClanObject> {
     }
 
     public void addReward(Player player, int type, int v) {
-        int val[] = _playersRewards.get(player.getObjectId());
+        int val[] = _playersRewards.get(player.objectId());
         if (val == null)
-            _playersRewards.put(player.getObjectId(), val = new int[REWARD_MAX]);
+            _playersRewards.put(player.objectId(), val = new int[REWARD_MAX]);
 
         val[type] += v;
     }
 
     public int getReward(Player player, int type) {
-        int val[] = _playersRewards.get(player.getObjectId());
+        int val[] = _playersRewards.get(player.objectId());
         if (val == null)
             return 0;
         else
@@ -475,7 +476,7 @@ public class DominionSiegeEvent extends SiegeEvent<Dominion, SiegeClanObject> {
     }
 
     public int[] calculateReward(Player player) {
-        int rewards[] = _playersRewards.get(player.getObjectId());
+        int rewards[] = _playersRewards.get(player.objectId());
         if (rewards == null)
             return null;
 
@@ -523,7 +524,7 @@ public class DominionSiegeEvent extends SiegeEvent<Dominion, SiegeClanObject> {
 
             Clan owner = getResidence().getOwner();
             if (owner != null && owner.getLeader().isOnline())
-                owner.getLeader().getPlayer().sendPacket(SystemMsg.THE_CASTLE_GATE_HAS_BEEN_DESTROYED);
+                owner.getLeader().player.sendPacket(SystemMsg.THE_CASTLE_GATE_HAS_BEEN_DESTROYED);
         }
     }
     //========================================================================================================================================================================
@@ -535,7 +536,7 @@ public class DominionSiegeEvent extends SiegeEvent<Dominion, SiegeClanObject> {
         public void onKill(Creature actor, Creature victim) {
             Player winner = actor.getPlayer();
 
-            if (winner == null || !victim.isPlayer() || winner.getLevel() < 40 || winner == victim || victim.getEvent(DominionSiegeEvent.class) == DominionSiegeEvent.this || !actor.isInZone(Zone.ZoneType.SIEGE) || !victim.isInZone(Zone.ZoneType.SIEGE))
+            if (winner == null || !(victim instanceof Player) || winner.getLevel() < 40 || winner == victim || victim.getEvent(DominionSiegeEvent.class) == DominionSiegeEvent.this || !actor.isInZone(Zone.ZoneType.SIEGE) || !victim.isInZone(Zone.ZoneType.SIEGE))
                 return;
 
             winner.addFame(Rnd.get(10, 20), DominionSiegeEvent.this.toString());
@@ -547,7 +548,7 @@ public class DominionSiegeEvent extends SiegeEvent<Dominion, SiegeClanObject> {
                 if (q == null)
                     return;
 
-                QuestState questState = winner.getQuestState(q.getClass());
+                QuestState questState = winner.getQuestState(q);
                 if (questState == null) {
                     questState = q.newQuestState(winner, Quest.CREATED);
                     q.notifyKill(((Player) victim), questState);

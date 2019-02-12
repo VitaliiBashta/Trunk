@@ -90,7 +90,7 @@ public class AdminEnchant implements IAdminCommandHandler {
         try {
             int ench = Integer.parseInt(wordList[1]);
             if (ench < 0 || ench > 65535)
-                activeChar.sendMessage("You must set the enchant level to be between 0-65535.");
+                activeChar.sendMessage("You must set the enchant occupation to be between 0-65535.");
             else
                 setEnchant(activeChar, ench, armorType);
         } catch (StringIndexOutOfBoundsException e) {
@@ -109,7 +109,7 @@ public class AdminEnchant implements IAdminCommandHandler {
         GameObject target = activeChar.getTarget();
         if (target == null)
             target = activeChar;
-        if (!target.isPlayer()) {
+        if (!(target instanceof Player)) {
             activeChar.sendMessage("Wrong target type.");
             return;
         }
@@ -117,7 +117,7 @@ public class AdminEnchant implements IAdminCommandHandler {
         Player player = (Player) target;
 
         // now we need to find the equipped weapon of the targeted character...
-        int curEnchant = 0; // display purposes only
+        int curEnchant; // display purposes only
 
         // only attempt to enchant if there is a weapon equipped
         ItemInstance itemInstance = player.getInventory().getPaperdollItem(armorType);
@@ -146,64 +146,62 @@ public class AdminEnchant implements IAdminCommandHandler {
         if (target == null)
             target = activeChar;
         Player player = activeChar;
-        if (target.isPlayer())
+        if (target instanceof Player)
             player = (Player) target;
 
         NpcHtmlMessage adminReply = new NpcHtmlMessage(5);
 
-        StringBuilder replyMSG = new StringBuilder("<html noscrollbar><body><title>Enchant Menu</title>");
-        replyMSG.append("<table border=0 cellpadding=0 cellspacing=0 width=292 height=358 background=\"l2ui_ct1.Windows_DF_TooltipBG\">");
-        replyMSG.append("<tr><td align=center>");
-        replyMSG.append("<br>");
-        replyMSG.append("<table cellpadding=0 cellspacing=-5 width=260><tr>");
-        replyMSG.append("<td><button value=\"Main\" action=\"bypass -h admin_admin\" width=60 height=23 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>");
-        replyMSG.append("<td><button value=\"Events\" action=\"bypass -h admin_show_html events/events.htm\" width=60 height=23 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>");
-        replyMSG.append("<td><button value=\"Chars\" action=\"bypass -h admin_char_manage\" width=60 height=23 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>");
-        replyMSG.append("<td><button value=\"Server\" action=\"bypass -h admin_server admserver.htm\" width=60 height=23 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>");
-        replyMSG.append("<td><button value=\"GM Shop\" action=\"bypass -h admin_gmshop\" width=60 height=23 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>");
-        replyMSG.append("</tr></table>");
-        replyMSG.append("<br><br><br>");
-        replyMSG.append("<table cellpadding=0 cellspacing=-2 width=260><tr>");
-        replyMSG.append("<td align=center><font name=\"hs12\" color=\"LEVEL\">Equip for player:</font></td>");
-        replyMSG.append("<td align=center><font name=\"hs12\" color=\"00FF00\">" + player.getName() + "</font></td>");
-        replyMSG.append("</tr></table>");
-        replyMSG.append("<br><br><br>");
-        replyMSG.append("<table cellpadding=0 cellspacing=-5 width=280><tr>");
-        replyMSG.append("<td><button value=\"Shirt\" action=\"bypass -h admin_setun $menu_command\" width=60 height=23 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>");
-        replyMSG.append("<td><button value=\"Helmet\" action=\"bypass -h admin_seteh $menu_command\" width=60 height=23 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>");
-        replyMSG.append("<td><button value=\"Cloak\" action=\"bypass -h admin_setba $menu_command\" width=60 height=23 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>");
-        replyMSG.append("<td><button value=\"Mask\" action=\"bypass -h admin_setha $menu_command\" width=60 height=23 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>");
-        replyMSG.append("<td><button value=\"Necklace\" action=\"bypass -h admin_seten $menu_command\" width=60 height=23 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>");
-        replyMSG.append("</tr><tr>");
-        replyMSG.append("<td><button value=\"Weapon\" action=\"bypass -h admin_setew $menu_command\" width=60 height=23 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>");
-        replyMSG.append("<td><button value=\"Chest\" action=\"bypass -h admin_setec $menu_command\" width=60 height=23 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>");
-        replyMSG.append("<td><button value=\"Shield\" action=\"bypass -h admin_setes $menu_command\" width=60 height=23 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>");
-        replyMSG.append("<td><button value=\"Earring\" action=\"bypass -h admin_setre $menu_command\" width=60 height=23 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>");
-        replyMSG.append("<td><button value=\"Earring\" action=\"bypass -h admin_setle $menu_command\" width=60 height=23 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>");
-        replyMSG.append("</tr><tr>");
-        replyMSG.append("<td><button value=\"Gloves\" action=\"bypass -h admin_seteg $menu_command\" width=60 height=23 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>");
-        replyMSG.append("<td><button value=\"Leggings\" action=\"bypass -h admin_setel $menu_command\" width=60 height=23 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>");
-        replyMSG.append("<td><button value=\"Boots\" action=\"bypass -h admin_seteb $menu_command\" width=60 height=23 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>");
-        replyMSG.append("<td><button value=\"Ring\" action=\"bypass -h admin_setrf $menu_command\" width=60 height=23 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>");
-        replyMSG.append("<td><button value=\"Ring\" action=\"bypass -h admin_setlf $menu_command\" width=60 height=23 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>");
-        replyMSG.append("</tr></table>");
-        replyMSG.append("<br><br>");
-        replyMSG.append("<table cellpadding=0 cellspacing=-5 width=280><tr>");
-        replyMSG.append("<td><button value=\"Hair\" action=\"bypass -h admin_setdha $menu_command\" width=75 height=23 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>");
-        replyMSG.append("<td><button value=\"R-Bracelet\" action=\"bypass -h admin_setrbr $menu_command\" width=75 height=23 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>");
-        replyMSG.append("<td><button value=\"L-Bracelet\" action=\"bypass -h admin_setlbr $menu_command\" width=75 height=23 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>");
-        replyMSG.append("<td><button value=\"Belt\" action=\"bypass -h admin_setbelt $menu_command\" width=75 height=23 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>");
-        replyMSG.append("</tr></table>");
-        replyMSG.append("<br><br><br>");
-        replyMSG.append("<table cellpadding=0 cellspacing=-2 width=260><tr>");
-        replyMSG.append("<td align=center><font name=\"hs12\" color=\"LEVEL\">Enchant from 0 - 65535</font></td>");
-        replyMSG.append("</tr><tr>");
-        replyMSG.append("<td align=center><br><br><edit var=\"menu_command\" type=number width=200 height=15></td>");
-        replyMSG.append("</tr></table>");
-        replyMSG.append("</td></tr>");
-        replyMSG.append("</table></body></html>");
-
-        adminReply.setHtml(replyMSG.toString());
+        String replyMSG = "<html noscrollbar><body><title>Enchant Menu</title>" + "<table border=0 cellpadding=0 cellspacing=0 width=292 height=358 background=\"l2ui_ct1.Windows_DF_TooltipBG\">" +
+                "<tr><td align=center>" +
+                "<br>" +
+                "<table cellpadding=0 cellspacing=-5 width=260><tr>" +
+                "<td><button value=\"Main\" action=\"bypass -h admin_admin\" width=60 height=23 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>" +
+                "<td><button value=\"Events\" action=\"bypass -h admin_show_html events/events.htm\" width=60 height=23 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>" +
+                "<td><button value=\"Chars\" action=\"bypass -h admin_char_manage\" width=60 height=23 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>" +
+                "<td><button value=\"Server\" action=\"bypass -h admin_server admserver.htm\" width=60 height=23 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>" +
+                "<td><button value=\"GM Shop\" action=\"bypass -h admin_gmshop\" width=60 height=23 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>" +
+                "</tr></table>" +
+                "<br><br><br>" +
+                "<table cellpadding=0 cellspacing=-2 width=260><tr>" +
+                "<td align=center><font name=\"hs12\" color=\"LEVEL\">Equip for player:</font></td>" +
+                "<td align=center><font name=\"hs12\" color=\"00FF00\">" + player.getName() + "</font></td>" +
+                "</tr></table>" +
+                "<br><br><br>" +
+                "<table cellpadding=0 cellspacing=-5 width=280><tr>" +
+                "<td><button value=\"Shirt\" action=\"bypass -h admin_setun $menu_command\" width=60 height=23 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>" +
+                "<td><button value=\"Helmet\" action=\"bypass -h admin_seteh $menu_command\" width=60 height=23 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>" +
+                "<td><button value=\"Cloak\" action=\"bypass -h admin_setba $menu_command\" width=60 height=23 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>" +
+                "<td><button value=\"Mask\" action=\"bypass -h admin_setha $menu_command\" width=60 height=23 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>" +
+                "<td><button value=\"Necklace\" action=\"bypass -h admin_seten $menu_command\" width=60 height=23 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>" +
+                "</tr><tr>" +
+                "<td><button value=\"Weapon\" action=\"bypass -h admin_setew $menu_command\" width=60 height=23 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>" +
+                "<td><button value=\"Chest\" action=\"bypass -h admin_setec $menu_command\" width=60 height=23 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>" +
+                "<td><button value=\"Shield\" action=\"bypass -h admin_setes $menu_command\" width=60 height=23 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>" +
+                "<td><button value=\"Earring\" action=\"bypass -h admin_setre $menu_command\" width=60 height=23 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>" +
+                "<td><button value=\"Earring\" action=\"bypass -h admin_setle $menu_command\" width=60 height=23 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>" +
+                "</tr><tr>" +
+                "<td><button value=\"Gloves\" action=\"bypass -h admin_seteg $menu_command\" width=60 height=23 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>" +
+                "<td><button value=\"Leggings\" action=\"bypass -h admin_setel $menu_command\" width=60 height=23 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>" +
+                "<td><button value=\"Boots\" action=\"bypass -h admin_seteb $menu_command\" width=60 height=23 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>" +
+                "<td><button value=\"Ring\" action=\"bypass -h admin_setrf $menu_command\" width=60 height=23 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>" +
+                "<td><button value=\"Ring\" action=\"bypass -h admin_setlf $menu_command\" width=60 height=23 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>" +
+                "</tr></table>" +
+                "<br><br>" +
+                "<table cellpadding=0 cellspacing=-5 width=280><tr>" +
+                "<td><button value=\"Hair\" action=\"bypass -h admin_setdha $menu_command\" width=75 height=23 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>" +
+                "<td><button value=\"R-Bracelet\" action=\"bypass -h admin_setrbr $menu_command\" width=75 height=23 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>" +
+                "<td><button value=\"L-Bracelet\" action=\"bypass -h admin_setlbr $menu_command\" width=75 height=23 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>" +
+                "<td><button value=\"Belt\" action=\"bypass -h admin_setbelt $menu_command\" width=75 height=23 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>" +
+                "</tr></table>" +
+                "<br><br><br>" +
+                "<table cellpadding=0 cellspacing=-2 width=260><tr>" +
+                "<td align=center><font name=\"hs12\" color=\"LEVEL\">Enchant from 0 - 65535</font></td>" +
+                "</tr><tr>" +
+                "<td align=center><br><br><edit var=\"menu_command\" type=number width=200 height=15></td>" +
+                "</tr></table>" +
+                "</td></tr>" +
+                "</table></body></html>";
+        adminReply.setHtml(replyMSG);
         activeChar.sendPacket(adminReply);
     }
 

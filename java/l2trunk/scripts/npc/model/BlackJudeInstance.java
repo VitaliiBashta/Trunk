@@ -19,7 +19,7 @@ public final class BlackJudeInstance extends NpcInstance {
         switch (command) {
             case "tryRemovePenalty":
                 if (player.getDeathPenalty().getLevel() > 0)
-                    showChatWindow(player, 2, "%price%", getPrice(player));
+                    showChatWindow(player, 2);
                 else
                     showChatWindow(player, 1);
                 break;

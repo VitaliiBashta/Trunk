@@ -27,9 +27,9 @@ public final class _903_TheCallofAntharas extends Quest {
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("theodric_q903_06.htm")) {
-            st.takeAllItems(BehemothDragonLeather);
-            st.takeAllItems(TaraskDragonsLeatherFragment);
-            st.giveItems(21897, 1); // Scroll: Antharas Call
+            st.takeItems(BehemothDragonLeather);
+            st.takeItems(TaraskDragonsLeatherFragment);
+            st.giveItems(21897); // Scroll: Antharas Call
             st.setState(COMPLETED);
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(this);
@@ -46,7 +46,7 @@ public final class _903_TheCallofAntharas extends Quest {
             switch (st.getState()) {
                 case CREATED:
                     if (st.isNowAvailable()) {
-                        if (st.getPlayer().getLevel() >= 83) {
+                        if (st.player.getLevel() >= 83) {
                             if (st.getQuestItemsCount(3865) > 0)
                                 htmltext = "theodric_q903_01.htm";
                             else
@@ -71,25 +71,21 @@ public final class _903_TheCallofAntharas extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int cond = st.getCond();
         if (cond == 1) {
-            switch (npc.getNpcId()) {
-                case TaraskDragon:
-                    if (st.getQuestItemsCount(TaraskDragonsLeatherFragment) < 1)
-                        st.giveItems(TaraskDragonsLeatherFragment, 1);
-                    break;
-                case BehemothDragon:
-                    if (st.getQuestItemsCount(BehemothDragonLeather) < 1)
-                        st.giveItems(BehemothDragonLeather, 1);
-                    break;
-                default:
-                    break;
+            int npcId = npc.getNpcId();
+            if (npcId == TaraskDragon) {
+                if (st.getQuestItemsCount(TaraskDragonsLeatherFragment) < 1)
+                    st.giveItems(TaraskDragonsLeatherFragment);
+            }
+            if (npcId == BehemothDragon) {
+                if (st.getQuestItemsCount(BehemothDragonLeather) < 1)
+                    st.giveItems(BehemothDragonLeather);
             }
             if (st.getQuestItemsCount(BehemothDragonLeather) > 0 && st.getQuestItemsCount(TaraskDragonsLeatherFragment) > 0)
                 st.setCond(2);
         }
-        return null;
     }
 
 }

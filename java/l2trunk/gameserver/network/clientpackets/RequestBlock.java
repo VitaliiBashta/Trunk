@@ -7,9 +7,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 
-public class RequestBlock extends L2GameClientPacket {
+public final class RequestBlock extends L2GameClientPacket {
     // format: cd(S)
-    private static final Logger _log = LoggerFactory.getLogger(RequestBlock.class);
+    private static final Logger LOG = LoggerFactory.getLogger(RequestBlock.class);
 
     private final static int BLOCK = 0;
     private final static int UNBLOCK = 1;
@@ -17,14 +17,14 @@ public class RequestBlock extends L2GameClientPacket {
     private final static int ALLBLOCK = 3;
     private final static int ALLUNBLOCK = 4;
 
-    private Integer _type;
+    private Integer type;
     private String targetName = null;
 
     @Override
     protected void readImpl() {
-        _type = readD(); //0x00 - setBlock, 0x01 - setBlock, 0x03 - allblock, 0x04 - allunblock
+        type = readD(); //0x00 - setBlock, 0x01 - setBlock, 0x03 - allblock, 0x04 - allunblock
 
-        if (_type == BLOCK || _type == UNBLOCK)
+        if (type == BLOCK || type == UNBLOCK)
             targetName = readS(16);
     }
 
@@ -34,7 +34,7 @@ public class RequestBlock extends L2GameClientPacket {
         if (activeChar == null)
             return;
 
-        switch (_type) {
+        switch (type) {
             case BLOCK:
                 activeChar.addToBlockList(targetName);
                 break;
@@ -42,16 +42,9 @@ public class RequestBlock extends L2GameClientPacket {
                 activeChar.removeFromBlockList(targetName);
                 break;
             case BLOCKLIST:
-                Collection<String> blockList = activeChar.getBlockList();
-
-                if (blockList != null) {
-                    activeChar.sendPacket(SystemMsg.IGNORE_LIST);
-
-                    for (String name : blockList)
-                        activeChar.sendMessage(name);
-
-                    activeChar.sendPacket(SystemMsg.__EQUALS__);
-                }
+                activeChar.sendPacket(SystemMsg.IGNORE_LIST);
+                activeChar.getBlockList().forEach(activeChar::sendMessage);
+                activeChar.sendPacket(SystemMsg.__EQUALS__);
                 break;
             case ALLBLOCK:
                 activeChar.setBlockAll(true);
@@ -64,7 +57,7 @@ public class RequestBlock extends L2GameClientPacket {
                 activeChar.sendEtcStatusUpdate();
                 break;
             default:
-                _log.info("Unknown 0x0a setBlock type: " + _type);
+                LOG.info("Unknown 0x0a setBlock type: " + type);
         }
     }
 }

@@ -6,6 +6,7 @@ import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.Fighter;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Playable;
+import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.ItemFunctions;
 import l2trunk.scripts.events.PiratesTreasure.PiratesTreasure;
@@ -63,7 +64,7 @@ public final class PiratesKing extends Fighter {
         actor.setTargetable(true);
 
         if (isFirst) {
-            ItemFunctions.addItem((Playable) target, 6673, 5, true, "PirateKing"); // Awards first finder
+            ItemFunctions.addItem((Player) target, 6673, 5, "PirateKing"); // Awards first finder
             isFirst = false; // protection against cheating
             Announcements.INSTANCE.announceToAll("The Pirate King of Darkness founded!");
         }

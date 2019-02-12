@@ -3,9 +3,9 @@ package l2trunk.gameserver.handler.admincommands.impl;
 import l2trunk.gameserver.handler.admincommands.IAdminCommandHandler;
 import l2trunk.gameserver.model.GameObjectsStorage;
 import l2trunk.gameserver.model.Player;
-import l2trunk.gameserver.scripts.Functions;
 
 import static l2trunk.commons.lang.NumberUtils.toInt;
+import static l2trunk.gameserver.utils.ItemFunctions.addItem;
 
 public final class AdminGiveAll implements IAdminCommandHandler {
 
@@ -15,7 +15,7 @@ public final class AdminGiveAll implements IAdminCommandHandler {
             int _id = toInt(wordList[1]);
             int _count = toInt(wordList[2]);
             GameObjectsStorage.getAllPlayersStream().forEach(player -> {
-                Functions.addItem(player, _id, _count, "Give ALl");
+                addItem(player, _id, _count);
                 player.sendMessage("You have been rewarded!");
             });
         } else {

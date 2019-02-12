@@ -5,9 +5,7 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-import java.util.Arrays;
 import java.util.List;
 
 public final class _451_LuciensAltar extends Quest {
@@ -44,7 +42,7 @@ public final class _451_LuciensAltar extends Quest {
         String htmltext = "noquest";
         int npcId = npc.getNpcId();
         int cond = st.getCond();
-        Player player = st.getPlayer();
+        Player player = st.player;
 
         if (npcId == DAICHIR) {
             if (cond == 0) {
@@ -64,7 +62,7 @@ public final class _451_LuciensAltar extends Quest {
                 st.takeItems(DISCHARGED_BEAD, -1);
                 st.exitCurrentQuest(true);
                 st.playSound(SOUND_FINISH);
-                st.getPlayer().setVar(getName(), String.valueOf(System.currentTimeMillis()), -1);
+                st.player.setVar(name, System.currentTimeMillis());
             }
         } else if (cond == 1 && ALTARS.contains(npcId))
             if (npcId == ALTAR_1 && st.getInt("Altar1") < 1) {
@@ -94,7 +92,7 @@ public final class _451_LuciensAltar extends Quest {
 
     private void onAltarCheck(QuestState st) {
         st.takeItems(REPLENISHED_BEAD, 1);
-        st.giveItems(DISCHARGED_BEAD, 1);
+        st.giveItems(DISCHARGED_BEAD);
         st.playSound(SOUND_ITEMGET);
         if (st.getQuestItemsCount(DISCHARGED_BEAD) >= 5) {
             st.setCond(2);
@@ -105,9 +103,6 @@ public final class _451_LuciensAltar extends Quest {
     private boolean canEnter(Player player) {
         if (player.isGM())
             return true;
-        String var = player.getVar(getName());
-        if (var == null)
-            return true;
-        return Long.parseLong(var) - System.currentTimeMillis() > 24 * 60 * 60 * 1000;
+        return !player.isVarSet(name)  || player.getVarLong(name) - System.currentTimeMillis() > 24 * 60 * 60 * 1000;
     }
 }

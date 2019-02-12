@@ -21,25 +21,17 @@ public final class HelpBook extends ScriptItemHandler implements ScriptFile {
             13134, 13135, 13136, 17213);
 
     @Override
-    public boolean pickupItem(Playable playable, ItemInstance item) {
-        return true;
-    }
-
-    @Override
     public void onLoad() {
         ItemHandler.INSTANCE.registerItemHandler(this);
     }
 
 
     @Override
-    public boolean useItem(Playable playable, ItemInstance item, boolean ctrl) {
-        if (!playable.isPlayer())
-            return false;
-        Player activeChar = (Player) playable;
-        Functions.show("help/" + item.getItemId() + ".htm", activeChar, null);
+    public boolean useItem(Player player, ItemInstance item, boolean ctrl) {
+        Functions.show("help/" + item.getItemId() + ".htm", player, null);
         if (item.getItemId() == 7063)
-            activeChar.sendPacket(new RadarControl(0, 2, new Location(51995, -51265, -3104)));
-        activeChar.sendActionFailed();
+            player.sendPacket(new RadarControl(0, 2, new Location(51995, -51265, -3104)));
+        player.sendActionFailed();
         return true;
     }
 

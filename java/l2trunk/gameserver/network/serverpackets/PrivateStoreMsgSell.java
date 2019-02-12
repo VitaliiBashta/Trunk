@@ -12,7 +12,7 @@ public class PrivateStoreMsgSell extends L2GameServerPacket {
      * Название личного магазина продажи
      */
     public PrivateStoreMsgSell(Player player) {
-        _objId = player.getObjectId();
+        _objId = player.objectId();
         _pkg = player.getPrivateStoreType() == Player.STORE_PRIVATE_SELL_PACKAGE;
         _name = StringUtils.defaultString(player.getSellStoreName());
     }

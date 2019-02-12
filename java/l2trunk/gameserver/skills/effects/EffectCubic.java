@@ -7,6 +7,8 @@ import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.CtrlEvent;
 import l2trunk.gameserver.data.xml.holder.CubicHolder;
 import l2trunk.gameserver.model.*;
+import l2trunk.gameserver.model.instances.DoorInstance;
+import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.MagicSkillLaunched;
 import l2trunk.gameserver.network.serverpackets.MagicSkillUse;
 import l2trunk.gameserver.stats.Env;
@@ -33,7 +35,7 @@ public final class EffectCubic extends Effect {
         if (target == null || target.isDead())
             return false;
 
-        if (target.isDoor() && !info.isCanAttackDoor())
+        if (target instanceof DoorInstance && !info.isCanAttackDoor())
             return false;
 
         if (!attacker.isInRangeZ(target, info.getSkill().castRange))
@@ -52,7 +54,7 @@ public final class EffectCubic extends Effect {
             double currentHp = Integer.MAX_VALUE;
             List<Player> members = player.getParty().getMembers().stream().filter(Objects::nonNull).collect(Collectors.toList());
             for (Player member : members) {
-                if (player.isInRange(member, info.getSkill().castRange()) && !member.isCurrentHpFull() && !member.isDead() && member.getCurrentHp() < currentHp) {
+                if (player.isInRange(member, info.getSkill().castRange) && !member.isCurrentHpFull() && !member.isDead() && member.getCurrentHp() < currentHp) {
                     currentHp = member.getCurrentHp();
                     target = member;
                 }
@@ -72,7 +74,7 @@ public final class EffectCubic extends Effect {
         player.disableSkill(skill, delay * 1000L);
         ThreadPoolManager.INSTANCE.schedule(() -> {
             final List<Creature> targets = List.of(aimTarget);
-            player.broadcastPacket(new MagicSkillLaunched(player.getObjectId(), skill.displayId, skill.getDisplayLevel(), targets));
+            player.broadcastPacket(new MagicSkillLaunched(player.objectId(), skill.displayId, skill.getDisplayLevel(), targets));
             player.callSkill(skill, targets, false);
         }, skill.hitTime);
     }
@@ -85,7 +87,7 @@ public final class EffectCubic extends Effect {
         Creature target = null;
         if (player.isInCombat()) {
             GameObject object = player.getTarget();
-            target = object != null && object.isCreature() ? (Creature) object : null;
+            target = object instanceof Creature ? (Creature) object : null;
         }
         if (!canBeAttacked(player, target, info))
             return;
@@ -94,12 +96,12 @@ public final class EffectCubic extends Effect {
         player.broadcastPacket(new MagicSkillUse(player, target, skill.displayId, skill.getDisplayLevel(), skill.hitTime, 0));
         player.disableSkill(skill, delay * 1000L);
         ThreadPoolManager.INSTANCE.schedule(() -> {
-            final List<Creature> targets = Collections.singletonList(aimTarget);
+            final List<Creature> targets = List.of(aimTarget);
 
-            player.broadcastPacket(new MagicSkillLaunched(player.getObjectId(), skill.displayId, skill.getDisplayLevel(), targets));
+            player.broadcastPacket(new MagicSkillLaunched(player.objectId(), skill.displayId, skill.getDisplayLevel(), targets));
             player.callSkill(skill, targets, false);
 
-            if (aimTarget.isNpc())
+            if (aimTarget instanceof NpcInstance)
                 if (aimTarget.paralizeOnAttack(player)) {
                     if (Config.PARALIZE_ON_RAID_DIFF)
                         player.paralizeMe(aimTarget);
@@ -118,7 +120,7 @@ public final class EffectCubic extends Effect {
         Creature target = null;
         if (player.isInCombat()) {
             GameObject object = player.getTarget();
-            target = object != null && object.isCreature() ? (Creature) object : null;
+            target = object instanceof Creature ? (Creature) object : null;
         }
         if (!canBeAttacked(player, target, info))
             return;
@@ -129,13 +131,13 @@ public final class EffectCubic extends Effect {
         ThreadPoolManager.INSTANCE.schedule(new RunnableImpl() {
             @Override
             public void runImpl() {
-                final List<Creature> targets = Collections.singletonList(aimTarget);
-                player.broadcastPacket(new MagicSkillLaunched(player.getObjectId(), skill.displayId, skill.getDisplayLevel(), targets));
+                final List<Creature> targets = List.of(aimTarget);
+                player.broadcastPacket(new MagicSkillLaunched(player.objectId(), skill.displayId, skill.getDisplayLevel(), targets));
                 final boolean succ = Formulas.calcSkillSuccess(player, aimTarget, skill, info.getChance());
                 if (succ)
                     player.callSkill(skill, targets, false);
 
-                if (aimTarget.isNpc())
+                if (aimTarget instanceof NpcInstance)
                     if (aimTarget.paralizeOnAttack(player)) {
                         if (Config.PARALIZE_ON_RAID_DIFF)
                             player.paralizeMe(aimTarget);
@@ -163,7 +165,7 @@ public final class EffectCubic extends Effect {
         player.disableSkill(skill, delay * 1000L);
         ThreadPoolManager.INSTANCE.schedule(() -> {
             final List<Creature> targets = Collections.singletonList(player);
-            player.broadcastPacket(new MagicSkillLaunched(player.getObjectId(), skill.displayId, skill.getDisplayLevel(), targets));
+            player.broadcastPacket(new MagicSkillLaunched(player.objectId(), skill.displayId, skill.getDisplayLevel(), targets));
             player.callSkill(skill, targets, false);
         }, skill.hitTime);
     }
@@ -171,9 +173,10 @@ public final class EffectCubic extends Effect {
     @Override
     public void onStart() {
         super.onStart();
-        Player player = effected.getPlayer();
-        if (player == null)
+        if (!(effected instanceof Playable)) {
             return;
+        }
+        Player player = ((Playable) effected).getPlayer();
 
         player.addCubic(this);
         _task = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new ActionTask(), 1000L, 1000L);
@@ -182,10 +185,11 @@ public final class EffectCubic extends Effect {
     @Override
     public void onExit() {
         super.onExit();
-        Player player = effected.getPlayer();
-        if (player == null)
+        if (!(effected instanceof Playable)) {
             return;
+        }
 
+        Player player = ((Playable) effected).getPlayer();
         player.removeCubic(getId());
         _task.cancel(true);
         _task = null;
@@ -220,27 +224,22 @@ public final class EffectCubic extends Effect {
     }
 
     private boolean canAttack() {
-        if (effected.getPlayer() == null)
+        if (!(effected instanceof Playable))
             return true;
 
-        Player effected = this.effected.getPlayer();
+        Player effectedPlayer = ((Playable) effected).getPlayer();
 
-        if (effected.isInCombat() || effected.getPvpFlag() > 0)
+        if (effectedPlayer.isInCombat() || effectedPlayer.getPvpFlag() > 0)
             return true;
 
-        if (effected.isInZone(Zone.ZoneType.battle_zone) || effected.isInZone(Zone.ZoneType.SIEGE))
+        if (effectedPlayer.isInZone(Zone.ZoneType.battle_zone) || effectedPlayer.isInZone(Zone.ZoneType.SIEGE))
             return true;
 
-        if (effected.isAttackingNow())
+        if (effectedPlayer.isAttackingNow())
             return true;
 
-        return effected.isInOlympiadMode() || effected.isInDuel();
+        return effectedPlayer.isInOlympiadMode() || effectedPlayer.isInDuel();
 
-    }
-
-    @Override
-    protected boolean onActionTime() {
-        return false;
     }
 
     @Override
@@ -262,12 +261,8 @@ public final class EffectCubic extends Effect {
         public void runImpl() {
             if (!isActive())
                 return;
-
-            Player player = effected != null && effected.isPlayer() ? (Player) effected : null;
-            if (player == null)
-                return;
-
-            doAction(player);
+            if (effected instanceof Player)
+                doAction((Player) effected);
         }
     }
 }

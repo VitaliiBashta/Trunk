@@ -37,7 +37,7 @@ public class CMGSiegeClanObject extends SiegeClanObject {
 
     @Override
     public boolean isParticle(Player player) {
-        return players.contains(player.getObjectId());
+        return players.contains(player.objectId());
     }
 
     @Override

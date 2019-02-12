@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.List;
 
 
-public class RecipeShopManageList extends L2GameServerPacket {
+public final class RecipeShopManageList extends L2GameServerPacket {
     private final List<ManufactureItem> createList;
     private final Collection<Recipe> recipes;
     private final int sellerId;
@@ -16,7 +16,7 @@ public class RecipeShopManageList extends L2GameServerPacket {
     private final boolean isDwarven;
 
     public RecipeShopManageList(Player seller, boolean isDwarvenCraft) {
-        sellerId = seller.getObjectId();
+        sellerId = seller.objectId();
         adena = seller.getAdena();
         isDwarven = isDwarvenCraft;
         if (isDwarven)

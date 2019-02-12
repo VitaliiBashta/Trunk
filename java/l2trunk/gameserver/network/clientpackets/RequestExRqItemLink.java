@@ -17,7 +17,7 @@ public final class RequestExRqItemLink extends L2GameClientPacket {
     @Override
     protected void runImpl() {
         ItemInfo item;
-        if ((item = ItemInfoCache.getInstance().get(objectId)) == null) {
+        if ((item = ItemInfoCache.INSTANCE.get(objectId)) == null) {
             // Nik: Support for question mark listeners. Used for party find and other shits. objectId is used as the questionMarkId. Use with caution.
             getClient().getActiveChar().getListeners().onQuestionMarkClicked(objectId);
 

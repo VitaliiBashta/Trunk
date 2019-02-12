@@ -27,7 +27,6 @@ public final class Ballista extends DefaultAI {
 
     @Override
     public void onEvtSeeSpell(Skill skill, Creature caster) {
-        super.onEvtSeeSpell(skill, caster);
 
         NpcInstance actor = getActor();
         if (caster == null || skill.id != BALLISTA_BOMB_SKILL_ID)

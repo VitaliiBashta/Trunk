@@ -5,7 +5,7 @@ import l2trunk.gameserver.model.Effect;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.stats.Env;
 
-public class EffectMutePhisycal extends Effect {
+public final class EffectMutePhisycal extends Effect {
     public EffectMutePhisycal(Env env, EffectTemplate template) {
         super(env, template);
     }
@@ -26,8 +26,4 @@ public class EffectMutePhisycal extends Effect {
         effected.stopPMuted();
     }
 
-    @Override
-    public boolean onActionTime() {
-        return false;
-    }
 }

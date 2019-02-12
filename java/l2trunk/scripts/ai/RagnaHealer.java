@@ -4,6 +4,7 @@ import l2trunk.gameserver.ai.CtrlEvent;
 import l2trunk.gameserver.ai.Priest;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.GameObject;
+import l2trunk.gameserver.model.instances.MonsterInstance;
 import l2trunk.gameserver.model.instances.NpcInstance;
 
 public final class RagnaHealer extends Priest {
@@ -22,7 +23,6 @@ public final class RagnaHealer extends Priest {
         if (System.currentTimeMillis() - lastFactionNotifyTime > 10000) {
             lastFactionNotifyTime = System.currentTimeMillis();
             actor.getAroundNpc(500, 300)
-                    .filter(GameObject::isMonster)
                     .filter(npc -> npc.getNpcId() >= 22691)
                     .filter(npc -> npc.getNpcId() <= 22702)
                     .forEach(npc ->

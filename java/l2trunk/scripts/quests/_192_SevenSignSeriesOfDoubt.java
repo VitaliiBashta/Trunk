@@ -5,7 +5,6 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.ExStartScenePlayer;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _192_SevenSignSeriesOfDoubt extends Quest{
     // NPC
@@ -30,18 +29,18 @@ public final class _192_SevenSignSeriesOfDoubt extends Quest{
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        Player player = st.getPlayer();
+        Player player = st.player;
         String htmltext = event;
-        if (event.equalsIgnoreCase("30676-03.htm")) {
+        if ("30676-03.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("8")) {
+        } else if ("8".equalsIgnoreCase(event)) {
             st.setCond(2);
             st.playSound(SOUND_MIDDLE);
             player.showQuestMovie(ExStartScenePlayer.SCENE_SSQ_SUSPICIOUS_DEATH);
             return "";
-        } else if (event.equalsIgnoreCase("30197-03.htm")) {
+        } else if ("30197-03.htm".equalsIgnoreCase(event)) {
             st.setCond(4);
             st.takeItems(CROOP_INTRO, 1);
             st.playSound(SOUND_MIDDLE);
@@ -55,11 +54,11 @@ public final class _192_SevenSignSeriesOfDoubt extends Quest{
         } else if (event.equalsIgnoreCase("30676-12.htm")) {
             st.setCond(7);
             st.takeItems(JACOB_NECK, 1);
-            st.giveItems(CROOP_LETTER, 1);
+            st.giveItems(CROOP_LETTER);
             st.playSound(SOUND_MIDDLE);
         } else if (event.equalsIgnoreCase("30191-03.htm"))
             if (player.getLevel() < 79)
-                htmltext = "<html><body>Only characters who are <font color=\"LEVEL\">level 79</font> or higher may complete this quest.</body></html>";
+                htmltext = "<html><body>Only characters who are <font color=\"LEVEL\">occupation 79</font> or higher may complete this quest.</body></html>";
             else if (player.getBaseClassId() == player.getActiveClassId()) {
                 st.addExpAndSp(25000000, 2500000);
                 st.setState(COMPLETED);
@@ -76,7 +75,7 @@ public final class _192_SevenSignSeriesOfDoubt extends Quest{
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         int id = st.getState();
-        Player player = st.getPlayer();
+        Player player = st.player;
         if (npcId == CROOP) {
             if (id == CREATED && player.getLevel() >= 79)
                 htmltext = "30676-01.htm";
@@ -86,7 +85,7 @@ public final class _192_SevenSignSeriesOfDoubt extends Quest{
                 htmltext = "30676-05.htm";
                 st.setCond(3);
                 st.playSound(SOUND_MIDDLE);
-                st.giveItems(CROOP_INTRO, 1);
+                st.giveItems(CROOP_INTRO);
             } else if (cond >= 3 && cond <= 5)
                 htmltext = "30676-06.htm";
             else if (cond == 6)

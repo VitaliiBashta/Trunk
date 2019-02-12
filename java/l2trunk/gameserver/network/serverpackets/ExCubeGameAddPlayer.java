@@ -15,7 +15,7 @@ public class ExCubeGameAddPlayer extends L2GameServerPacket {
     private final String _name;
 
     public ExCubeGameAddPlayer(Player player, boolean isRedTeam) {
-        _objectId = player.getObjectId();
+        _objectId = player.objectId();
         _name = player.getName();
         _isRedTeam = isRedTeam;
     }

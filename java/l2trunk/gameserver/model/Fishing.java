@@ -242,7 +242,7 @@ public final class Fishing {
         // Проверка на Fisherman's Potion
         Effect effect = player.getEffectList().getEffectOfFishPot();
         if (effect != null)
-            skilllvl = (int) effect.getSkill().power;
+            skilllvl = (int) effect.skill.power;
         else
             skilllvl = player.getSkillLevel(1315);
 
@@ -523,7 +523,7 @@ public final class Fishing {
             } else {
                 fisher.sendPacket(SystemMsg.SUCCEEDED_IN_FISHING);
                 //TODO [G1ta0] добавить проверку на перевес
-                ItemFunctions.addItem(fisher, _fish.getId(), 1, true, "Fishing");
+                ItemFunctions.addItem(fisher, _fish.getId(), 1, "Fishing");
                 FishingChampionShipManager.INSTANCE.newFish(fisher, _lureId);
             }
 

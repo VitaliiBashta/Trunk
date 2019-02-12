@@ -19,43 +19,43 @@ public final class ArmorTemplate extends ItemTemplate {
         super(set);
         type = set.getEnum("type", ArmorType.class);
 
-        if (_bodyPart == SLOT_NECK || (_bodyPart & SLOT_L_EAR) != 0 || (_bodyPart & SLOT_L_FINGER) != 0) {
-            _type1 = TYPE1_WEAPON_RING_EARRING_NECKLACE;
+        if (bodyPart == SLOT_NECK || (bodyPart & SLOT_L_EAR) != 0 || (bodyPart & SLOT_L_FINGER) != 0) {
+            type1 = TYPE1_WEAPON_RING_EARRING_NECKLACE;
             _type2 = TYPE2_ACCESSORY;
-        } else if (_bodyPart == SLOT_HAIR || _bodyPart == SLOT_DHAIR || _bodyPart == SLOT_HAIRALL) {
-            _type1 = TYPE1_OTHER;
+        } else if (bodyPart == SLOT_HAIR || bodyPart == SLOT_DHAIR || bodyPart == SLOT_HAIRALL) {
+            type1 = TYPE1_OTHER;
             _type2 = ItemTemplate.TYPE2_OTHER;
         } else {
-            _type1 = TYPE1_SHIELD_ARMOR;
+            type1 = TYPE1_SHIELD_ARMOR;
             _type2 = TYPE2_SHIELD_ARMOR;
         }
 
         if (getItemType() == ArmorType.PET) {
-            _type1 = TYPE1_SHIELD_ARMOR;
-            switch (_bodyPart) {
+            type1 = TYPE1_SHIELD_ARMOR;
+            switch (bodyPart) {
                 case SLOT_WOLF:
                     _type2 = TYPE2_PET_WOLF;
-                    _bodyPart = SLOT_CHEST;
+                    bodyPart = SLOT_CHEST;
                     break;
                 case SLOT_GWOLF:
                     _type2 = TYPE2_PET_GWOLF;
-                    _bodyPart = SLOT_CHEST;
+                    bodyPart = SLOT_CHEST;
                     break;
                 case SLOT_HATCHLING:
                     _type2 = TYPE2_PET_HATCHLING;
-                    _bodyPart = SLOT_CHEST;
+                    bodyPart = SLOT_CHEST;
                     break;
                 case SLOT_PENDANT:
                     _type2 = TYPE2_PENDANT;
-                    _bodyPart = SLOT_NECK;
+                    bodyPart = SLOT_NECK;
                     break;
                 case SLOT_BABYPET:
                     _type2 = TYPE2_PET_BABY;
-                    _bodyPart = SLOT_CHEST;
+                    bodyPart = SLOT_CHEST;
                     break;
                 default:
                     _type2 = TYPE2_PET_STRIDER;
-                    _bodyPart = SLOT_CHEST;
+                    bodyPart = SLOT_CHEST;
                     break;
             }
         }

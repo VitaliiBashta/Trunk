@@ -1,6 +1,5 @@
 package l2trunk.gameserver.model.instances;
 
-import l2trunk.commons.lang.reference.HardReference;
 import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.cache.Msg;
@@ -41,11 +40,11 @@ public final class SummonInstance extends Summon {
         _disappearTask = ThreadPoolManager.INSTANCE.schedule(new Lifetime(), CYCLE);
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public HardReference<SummonInstance> getRef() {
-        return (HardReference<SummonInstance>) super.getRef();
-    }
+//    @SuppressWarnings("unchecked")
+//    @Override
+//    public iHardReference<SummonInstance> getRef() {
+//        return (iHardReference<SummonInstance>) super.getRef();
+//    }
 
     @Override
     public final int getLevel() {
@@ -111,7 +110,6 @@ public final class SummonInstance extends Summon {
 
     @Override
     public void displayGiveDamageMessage(Creature target, int damage, boolean crit, boolean miss, boolean shld, boolean magic) {
-        Player owner = getPlayer();
         if (owner == null)
             return;
         if (crit)
@@ -124,18 +122,12 @@ public final class SummonInstance extends Summon {
 
     @Override
     public void displayReceiveDamageMessage(Creature attacker, int damage) {
-        Player owner = getPlayer();
         owner.sendPacket(new SystemMessage(SystemMessage.C1_HAS_RECEIVED_DAMAGE_OF_S3_FROM_C2).addName(this).addName(attacker).addNumber((long) damage));
     }
 
     @Override
     public int getEffectIdentifier() {
         return _summonSkillId;
-    }
-
-    @Override
-    public boolean isSummon() {
-        return true;
     }
 
     @Override
@@ -149,12 +141,12 @@ public final class SummonInstance extends Summon {
             dialog = HtmCache.INSTANCE.getNotNull("scripts/actions/admin.L2SummonInstance.onActionShift.htm", player);
             dialog = dialog.replaceFirst("%name%", String.valueOf(getName()));
             dialog = dialog.replaceFirst("%level%", String.valueOf(getLevel()));
-            dialog = dialog.replaceFirst("%class%", String.valueOf(getClass().getSimpleName().replaceFirst("L2", "").replaceFirst("Instance", "")));
+            dialog = dialog.replaceFirst("%class%", getClass().getSimpleName().replaceFirst("L2", "").replaceFirst("Instance", ""));
             dialog = dialog.replaceFirst("%xyz%", getLoc().x + " " + getLoc().y + " " + getLoc().z);
             dialog = dialog.replaceFirst("%heading%", String.valueOf(getLoc().h));
 
-            dialog = dialog.replaceFirst("%owner%", String.valueOf(getPlayer().getName()));
-            dialog = dialog.replaceFirst("%ownerId%", String.valueOf(getPlayer().getObjectId()));
+            dialog = dialog.replaceFirst("%owner%", owner.getName());
+            dialog = dialog.replaceFirst("%ownerId%", String.valueOf(owner.objectId()));
 
             dialog = dialog.replaceFirst("%npcId%", String.valueOf(getNpcId()));
             dialog = dialog.replaceFirst("%expPenalty%", String.valueOf(getExpPenalty()));
@@ -198,7 +190,6 @@ public final class SummonInstance extends Summon {
     class Lifetime extends RunnableImpl {
         @Override
         public void runImpl() {
-            Player owner = getPlayer();
             if (owner == null) {
                 _disappearTask = null;
                 unSummon();

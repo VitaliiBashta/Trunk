@@ -32,7 +32,7 @@ public enum MatchingRoomManager {
         return players.stream()
                 .filter(m -> m.getLevel() >= minLevel)
                 .filter(m -> m.getLevel() <= maxLevel)
-                .filter(m -> (classes.size() == 0 || classes.contains(m.getClassId().getId())))
+                .filter(m -> (classes.size() == 0 || classes.contains(m.getClassId().id)))
                 .collect(Collectors.toList());
     }
 

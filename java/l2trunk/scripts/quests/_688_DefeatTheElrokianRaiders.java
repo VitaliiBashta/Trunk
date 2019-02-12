@@ -75,7 +75,7 @@ public final class _688_DefeatTheElrokianRaiders extends Quest {
         long count = st.getQuestItemsCount(q_necklace_of_storming_party);
 
         if (cond == 0) {
-            if (st.getPlayer().getLevel() >= 75)
+            if (st.player.getLevel() >= 75)
                 htmltext = "dindin_q0688_01.htm";
             else {
                 htmltext = "dindin_q0688_02.htm";
@@ -90,7 +90,7 @@ public final class _688_DefeatTheElrokianRaiders extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         long count = st.getQuestItemsCount(q_necklace_of_storming_party);
 
         if (st.getCond() == 1 && count < 100 && Rnd.chance(DROP_CHANCE)) {
@@ -103,6 +103,5 @@ public final class _688_DefeatTheElrokianRaiders extends Quest {
                 st.playSound(SOUND_ITEMGET);
             st.giveItems(q_necklace_of_storming_party, numItems);
         }
-        return null;
     }
 }

@@ -2,18 +2,18 @@ package l2trunk.gameserver.model.entity.events;
 
 import l2trunk.gameserver.taskmanager.actionrunner.ActionWrapper;
 
-public class EventWrapper extends ActionWrapper {
-    private final GlobalEvent _event;
-    private final int _time;
+public final class EventWrapper extends ActionWrapper {
+    private final GlobalEvent event;
+    private final int time;
 
-    public EventWrapper(String name, GlobalEvent event, int time) {
+    EventWrapper(String name, GlobalEvent event, int time) {
         super(name);
-        _event = event;
-        _time = time;
+        this.event = event;
+        this.time = time;
     }
 
     @Override
     public void runImpl0() {
-        _event.timeActions(_time);
+        event.timeActions(time);
     }
 }

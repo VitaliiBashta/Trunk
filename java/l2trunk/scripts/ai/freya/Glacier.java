@@ -4,10 +4,12 @@ import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.Fighter;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.GameObject;
+import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.NpcInstance;
 
 public final class Glacier extends Fighter {
     private final int skill = 6301;
+
     public Glacier(NpcInstance actor) {
         super(actor);
         actor.setBlock(true);
@@ -23,8 +25,7 @@ public final class Glacier extends Fighter {
 
     @Override
     public void onEvtDead(Creature killer) {
-        getActor().getAroundCharacters(350, 100)
-                .filter(GameObject::isPlayer)
+        getActor().getAroundPlayers(350, 100)
                 .forEach(cha -> cha.altOnMagicUseTimer(cha, skill));
 
         super.onEvtDead(killer);

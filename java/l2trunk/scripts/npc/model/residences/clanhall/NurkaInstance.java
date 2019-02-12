@@ -2,6 +2,8 @@ package l2trunk.scripts.npc.model.residences.clanhall;
 
 import l2trunk.gameserver.model.*;
 import l2trunk.gameserver.model.entity.events.impl.SiegeEvent;
+import l2trunk.gameserver.model.instances.PetInstance;
+import l2trunk.gameserver.model.instances.SummonInstance;
 import l2trunk.gameserver.model.pledge.Clan;
 import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
@@ -48,9 +50,9 @@ public final class NurkaInstance extends SiegeGuardInstance {
         for (AggroList.HateInfo info : getAggroList().getPlayableMap().values()) {
             Playable killer = (Playable) info.attacker;
             int damage = info.damage;
-            if (killer.isPet() || killer.isSummon())
-                temp = killer.getPlayer();
-            else if (killer.isPlayer())
+            if (killer instanceof PetInstance || killer instanceof SummonInstance)
+                temp = ((Summon)killer).owner;
+            else if (killer instanceof Player)
                 temp = (Player) killer;
 
             if (temp == null || temp.getClan() == null || temp.getClan().getHasHideout() > 0)

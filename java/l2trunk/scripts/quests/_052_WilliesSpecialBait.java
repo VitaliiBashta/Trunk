@@ -36,7 +36,7 @@ public final class _052_WilliesSpecialBait extends Quest {
                 htmltext = "fisher_willeri_q0052_0202.htm";
             else {
                 st.unset("cond");
-                st.takeItems(EyeOfTarlkBasilisk, -1);
+                st.takeItems(EyeOfTarlkBasilisk);
                 st.giveItems(EarthFishingLure, 4);
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest(false);
@@ -52,10 +52,10 @@ public final class _052_WilliesSpecialBait extends Quest {
         int id = st.getState();
         if (npcId == Willie)
             if (id == CREATED) {
-                if (st.getPlayer().getLevel() < 48) {
+                if (st.player.getLevel() < 48) {
                     htmltext = "fisher_willeri_q0052_0103.htm";
                     st.exitCurrentQuest(true);
-                } else if (st.getPlayer().getSkillLevel(FishSkill) >= 16)
+                } else if (st.player.getSkillLevel(FishSkill) >= 16)
                     htmltext = "fisher_willeri_q0052_0101.htm";
                 else {
                     htmltext = "fisher_willeri_q0052_0102.htm";
@@ -71,16 +71,15 @@ public final class _052_WilliesSpecialBait extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (TarlkBasilisks.contains(npc.getNpcId()) && st.getCond() == 1)
             if (st.getQuestItemsCount(EyeOfTarlkBasilisk) < 100 && Rnd.chance(30)) {
-                st.giveItems(EyeOfTarlkBasilisk, 1);
+                st.giveItems(EyeOfTarlkBasilisk);
                 if (st.getQuestItemsCount(EyeOfTarlkBasilisk) == 100) {
                     st.playSound(SOUND_MIDDLE);
                     st.setCond(2);
                 } else
                     st.playSound(SOUND_ITEMGET);
             }
-        return null;
     }
 }

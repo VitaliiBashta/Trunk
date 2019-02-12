@@ -35,19 +35,19 @@ public final class _309_ForAGoodCause extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("32647-05.htm")) {
+        if ("32647-05.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.setState(STARTED);
-        } else if (event.equalsIgnoreCase("32646-14.htm"))
+        } else if ("32646-14.htm".equalsIgnoreCase(event)) {
             st.exitCurrentQuest(true);
-        else if (event.equalsIgnoreCase("moirairec")) {
+        } else if ("moirairec".equalsIgnoreCase(event)) {
             if (st.getQuestItemsCount(MucrokianHide) >= 180) {
                 st.takeItems(MucrokianHide, 180);
                 st.giveItems(Rnd.get(MoiraiRecipes));
                 return null;
             } else
                 htmltext = "32646-14.htm";
-        } else if (event.equalsIgnoreCase("moiraimat")) {
+        } else if ("moiraimat".equalsIgnoreCase(event)) {
             if (st.getQuestItemsCount(MucrokianHide) >= 100) {
                 st.takeItems(MucrokianHide, 100);
                 st.giveItems(Rnd.get(Moiraimaterials));
@@ -67,20 +67,21 @@ public final class _309_ForAGoodCause extends Quest {
 
         if (npcId == Atra)
             if (id == CREATED) {
-                QuestState qs1 = st.getPlayer().getQuestState(_308_ReedFieldMaintenance.class);
+                QuestState qs1 = st.player.getQuestState(_308_ReedFieldMaintenance.class);
                 if (qs1 != null && qs1.isStarted())
                     return "32647-17.htm"; // нельзя брать оба квеста сразу
-                if (st.getPlayer().getLevel() < 82)
+                if (st.player.getLevel() < 82)
                     return "32647-00.htm";
                 return "32647-01.htm";
             } else if (cond == 1) {
-                long fallen = st.takeAllItems(FallenMucrokianHide);
+                long fallen = st.getQuestItemsCount(FallenMucrokianHide);
+                st.takeItems(FallenMucrokianHide);
                 if (fallen > 0)
                     st.giveItems(MucrokianHide, fallen * 2);
 
                 if (st.getQuestItemsCount(MucrokianHide) == 0)
                     return "32647-06.htm"; // нечего менять
-                else if (!st.getPlayer().isQuestCompleted(_239_WontYouJoinUs.class))
+                else if (!st.player.isQuestCompleted(_239_WontYouJoinUs.class))
                     return "32647-a1.htm"; // обычные цены
                 else
                     return "32647-a2.htm"; // со скидкой
@@ -90,8 +91,7 @@ public final class _309_ForAGoodCause extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         st.rollAndGive(npc.getNpcId() == ContaminatedMucrokian ? FallenMucrokianHide : MucrokianHide, 1, 60);
-        return null;
     }
 }

@@ -5,7 +5,6 @@ import l2trunk.gameserver.model.pledge.Clan;
 import l2trunk.gameserver.model.pledge.SubUnit;
 import l2trunk.gameserver.model.pledge.UnitMember;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,8 +29,8 @@ public class PledgeShowMemberListAll extends L2GameServerPacket {
     private String _allianceName;
 
     public PledgeShowMemberListAll(Clan clan, final SubUnit sub) {
-        _pledgeType = sub.getType();
-        _clanObjectId = clan.getClanId();
+        _pledgeType = sub.type();
+        _clanObjectId = clan.clanId();
         _unitName = sub.getName();
         _leaderName = sub.getLeaderName();
         _clanCrestId = clan.getCrestId();
@@ -108,8 +107,8 @@ public class PledgeShowMemberListAll extends L2GameServerPacket {
             _level = m.getLevel();
             _classId = m.getClassId();
             _sex = m.getSex();
-            _race = 0; //TODO m.getRace()
-            _online = m.isOnline() ? m.getObjectId() : 0;
+            _race = 0; //TODO m.race()
+            _online = m.isOnline() ? m.objectId() : 0;
             _hasSponsor = m.getSponsor() != 0;
         }
     }
