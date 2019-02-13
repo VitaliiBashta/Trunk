@@ -33,7 +33,7 @@ public class ExReplySentPost extends L2GameServerPacket {
         writeD(mail.getAttachments().size()); // количество приложенных вещей
         for (ItemInstance item : mail.getAttachments()) {
             writeItemInfo(item);
-            writeD(item.getObjectId());
+            writeD(item.objectId());
         }
 
         writeQ(mail.getPrice()); // для писем с оплатой - цена

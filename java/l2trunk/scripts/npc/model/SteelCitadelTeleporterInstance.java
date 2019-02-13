@@ -21,7 +21,7 @@ public final class SteelCitadelTeleporterInstance extends NpcInstance {
             showChatWindow(player, "default/32745-1.htm");
             return;
         }
-        if (player.getParty().getLeader() != player) {
+        if (!player.isPartyLeader()) {
             showChatWindow(player, "default/32745-2.htm");
             return;
         }

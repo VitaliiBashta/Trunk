@@ -66,10 +66,10 @@ public final class _308_ReedFieldMaintenance extends Quest {
 
         if (npcId == Katensa)
             if (id == CREATED) {
-                QuestState qs1 = st.getPlayer().getQuestState(_309_ForAGoodCause.class);
+                QuestState qs1 = st.player.getQuestState(_309_ForAGoodCause.class);
                 if (qs1 != null && qs1.isStarted())
                     return "32646-15.htm"; // нельзя брать оба квеста сразу
-                if (st.getPlayer().getLevel() < 82)
+                if (st.player.getLevel() < 82)
                     return "32646-00.htm";
                 return "32646-01.htm";
             } else if (cond == 1) {
@@ -80,7 +80,7 @@ public final class _308_ReedFieldMaintenance extends Quest {
 
                 if (st.getQuestItemsCount(MucrokianHide) == 0)
                     return "32646-05.htm";
-                else if (!st.getPlayer().isQuestCompleted(_238_SuccessFailureOfBusiness.class))
+                else if (!st.player.isQuestCompleted(_238_SuccessFailureOfBusiness.class))
                     return "32646-a1.htm"; // обычные цены
                 else
                     return "32646-a2.htm"; // со скидкой
@@ -90,8 +90,7 @@ public final class _308_ReedFieldMaintenance extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         st.rollAndGive(npc.getNpcId() == ChangedMucrokian ? AwakenMucrokianHide : MucrokianHide, 1, 60);
-        return null;
     }
 }

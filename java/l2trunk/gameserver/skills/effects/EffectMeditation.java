@@ -22,8 +22,4 @@ public final class EffectMeditation extends Effect {
         effected.setMeditated(false);
     }
 
-    @Override
-    public boolean onActionTime() {
-        return false;
-    }
 }

@@ -59,7 +59,7 @@ public final class _620_FourGoblets extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        Player player = st.getPlayer();
+        Player player = st.player;
         int cond = st.getCond();
 
         if (event.equalsIgnoreCase("Enter")) {
@@ -69,7 +69,7 @@ public final class _620_FourGoblets extends Quest {
 
         if (event.equalsIgnoreCase("accept")) {
             if (cond == 0) {
-                if (st.getPlayer().getLevel() >= 74) {
+                if (st.player.getLevel() >= 74) {
                     st.setState(STARTED);
                     st.playSound(SOUND_ACCEPT);
                     st.setCond(1);
@@ -80,70 +80,70 @@ public final class _620_FourGoblets extends Quest {
             }
         } else if (event.startsWith("openBoxes "))
             return onOpenBoxes(st, event.replace("openBoxes ", "").trim());
-        else if (event.equalsIgnoreCase("12")) {
-            if (!st.checkQuestItemsCount(GOBLETS))
+        if ("12".equals(event)) {
+            if (!st.haveAllItems(GOBLETS))
                 return "31453-14.htm";
             st.takeItems(GOBLETS);
-            st.giveItems(ANTIQUE_BROOCH, 1);
+            st.giveItems(ANTIQUE_BROOCH);
             st.setCond(2);
             st.playSound(SOUND_FINISH);
             return "31453-16.htm";
-        } else if (event.equalsIgnoreCase("13")) {
+        } else if ("13".equals(event)) {
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(true);
             return "31453-18.htm";
-        } else if (event.equalsIgnoreCase("14")) {
+        } else if (event.equals("14")) {
             if (cond == 2)
                 return "31453-19.htm";
             return "31453-13.htm";
         }
         // Ghost Chamberlain of Elmoreden: teleport to 4th sepulcher
-        else if (event.equalsIgnoreCase("15")) {
+        else if (event.equals("15")) {
             if (st.getQuestItemsCount(ANTIQUE_BROOCH) >= 1) {
-                st.getPlayer().teleToLocation(178298, -84574, -7216);
+                st.player.teleToLocation(178298, -84574, -7216);
                 return null;
             }
-            if (st.getQuestItemsCount(GRAVE_PASS) >= 1) {
+            if (st.haveQuestItem(GRAVE_PASS)) {
                 st.takeItems(GRAVE_PASS, 1);
-                st.getPlayer().teleToLocation(178298, -84574, -7216);
+                st.player.teleToLocation(178298, -84574, -7216);
                 return null;
             }
-            return "" + str(npc.getNpcId()) + "-0.htm";
+            return "" + npc.getNpcId() + "-0.htm";
         }
         // Ghost Chamberlain of Elmoreden: teleport to Imperial Tomb entrance
-        else if (event.equalsIgnoreCase("16")) {
-            if (st.getQuestItemsCount(ANTIQUE_BROOCH) >= 1) {
-                st.getPlayer().teleToLocation(186942, -75602, -2834);
+        else if ("16".equals(event)) {
+            if (st.haveQuestItem(ANTIQUE_BROOCH)) {
+                st.player.teleToLocation(186942, -75602, -2834);
                 return null;
             }
-            if (st.getQuestItemsCount(GRAVE_PASS) >= 1) {
+            if (st.haveQuestItem(GRAVE_PASS)) {
                 st.takeItems(GRAVE_PASS, 1);
-                st.getPlayer().teleToLocation(186942, -75602, -2834);
+                st.player.teleToLocation(186942, -75602, -2834);
                 return null;
             }
-            return "" + str(npc.getNpcId()) + "-0.htm";
+            return "" + npc.getNpcId() + "-0.htm";
         }
         // teleport to Pilgrims Temple
-        else if (event.equalsIgnoreCase("17")) {
-            if (st.getQuestItemsCount(ANTIQUE_BROOCH) >= 1)
-                st.getPlayer().teleToLocation(169590, -90218, -2914);
+        else if (event.equals("17")) {
+            if (st.haveQuestItem(ANTIQUE_BROOCH) )
+                st.player.teleToLocation(169590, -90218, -2914);
             else {
                 st.takeItems(GRAVE_PASS, 1);
-                st.getPlayer().teleToLocation(169590, -90218, -2914);
+                st.player.teleToLocation(169590, -90218, -2914);
             }
             return "31452-6.htm";
-        } else if (event.equalsIgnoreCase("18")) {
+        } else if (event.equals("18")) {
             if (st.getSumQuestItemsCount(GOBLETS) < 3)
                 return "31452-3.htm";
             if (st.getSumQuestItemsCount(GOBLETS) == 3)
                 return "31452-4.htm";
             if (st.getSumQuestItemsCount(GOBLETS) >= 4)
                 return "31452-5.htm";
-        } else if (event.equalsIgnoreCase("19"))
+        } else if (event.equals("19"))
             return new OpenSealedBox(st, 1).apply();
         else if (event.startsWith("19 "))
             return onOpenBoxes(st, event.replaceFirst("19 ", ""));
-        else if (event.equalsIgnoreCase("11"))
+        else if (event.equals("11"))
             return "<html><body><a action=\"bypass -h Quest _620_FourGoblets 19\">\"Please open a box.\"</a><br><a action=\"bypass -h Quest _620_FourGoblets 19 5\">\"Please open 5 boxes.\"</a><br><a action=\"bypass -h Quest _620_FourGoblets 19 10\">\"Please open 10 boxes.\"</a><br><a action=\"bypass -h Quest _620_FourGoblets 19 50\">\"Please open 50 boxes.\"</a><br></body></html>";
         else {
             int id = toInt(event);
@@ -166,14 +166,14 @@ public final class _620_FourGoblets extends Quest {
             st.setCond(0);
         if (npcId == NAMELESS_SPIRIT) {
             if (cond == 0)
-                if (st.getPlayer().getLevel() >= 74)
+                if (st.player.getLevel() >= 74)
                     htmltext = "31453-1.htm";
                 else {
                     htmltext = "31453-12.htm";
                     st.exitCurrentQuest(true);
                 }
             else if (cond == 1)
-                if (st.checkQuestItemsCount(GOBLETS))
+                if (st.haveAllItems(GOBLETS))
                     htmltext = "31453-15.htm";
                 else
                     htmltext = "31453-14.htm";
@@ -190,26 +190,26 @@ public final class _620_FourGoblets extends Quest {
         } else if (npcId == GHOST_OF_WIGOTH_2) {
             if (st.getQuestItemsCount(RELIC) >= 1000)
                 if (st.getQuestItemsCount(Sealed_Box) >= 1)
-                    if (st.checkQuestItemsCount(GOBLETS))
+                    if (st.haveAllItems(GOBLETS))
                         htmltext = "31454-4.htm";
-                    else if (st.checkQuestItemsCount(GOBLETS))
+                    else if (st.haveAllItems(GOBLETS))
                         htmltext = "31454-8.htm";
                     else
                         htmltext = "31454-12.htm";
-                else if (st.checkQuestItemsCount(GOBLETS))
+                else if (st.haveAllItems(GOBLETS))
                     htmltext = "31454-3.htm";
                 else if (st.getSumQuestItemsCount(GOBLETS) > 1)
                     htmltext = "31454-7.htm";
                 else
                     htmltext = "31454-11.htm";
             else if (st.getQuestItemsCount(Sealed_Box) >= 1)
-                if (st.checkQuestItemsCount(GOBLETS))
+                if (st.haveAllItems(GOBLETS))
                     htmltext = "31454-2.htm";
                 else if (st.getSumQuestItemsCount(GOBLETS) > 1)
                     htmltext = "31454-6.htm";
                 else
                     htmltext = "31454-10.htm";
-            else if (st.checkQuestItemsCount(GOBLETS))
+            else if (st.haveAllItems(GOBLETS))
                 htmltext = "31454-1.htm";
             else if (st.getSumQuestItemsCount(GOBLETS) > 1)
                 htmltext = "31454-5.htm";
@@ -229,13 +229,12 @@ public final class _620_FourGoblets extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         if ((cond == 1 || cond == 2) && npcId >= 18120 && npcId <= 18256 && Rnd.chance(30)) {
-            st.giveItems(Sealed_Box, 1);
+            st.giveItems(Sealed_Box);
             st.playSound(SOUND_ITEMGET);
         }
-        return null;
     }
 }

@@ -52,7 +52,7 @@ public enum OfflineBufferManager {
                     title = new StringBuilder(title.toString().trim());
 
                     // Check if the player already has an active store, just in case
-                    if (buffStores.containsKey(player.getObjectId())) {
+                    if (buffStores.containsKey(player.objectId())) {
                         //player.sendMessage("This buffer already exists. Cheater?");
                         break;
                     }
@@ -64,7 +64,7 @@ public enum OfflineBufferManager {
                     }
 
                     // Check if the player can set a store
-                    if (!Config.BUFF_STORE_ALLOWED_CLASS_LIST.contains(player.getClassId().id())) {
+                    if (!Config.BUFF_STORE_ALLOWED_CLASS_LIST.contains(player.getClassId().id)) {
                         player.sendMessage("Your profession is not allowed to set an Buff Store.");
                         break;
                     }
@@ -116,7 +116,7 @@ public enum OfflineBufferManager {
                         if (skill.isHeroic)
                             continue;
 
-                        // Not only self skills
+                        // Not only player skills
                         if (skill.targetType == SkillTargetType.TARGET_SELF)
                             continue;
 
@@ -147,7 +147,7 @@ public enum OfflineBufferManager {
                     }
 
                     // Add the buffer data to the array
-                    buffStores.put(player.getObjectId(), buffer);
+                    buffStores.put(player.objectId(), buffer);
 
                     // Sit the player, put it on store and and change the colors and titles
                     player.sitDown(null);
@@ -181,7 +181,7 @@ public enum OfflineBufferManager {
                 }
 
                 // Remove the buffer from the array
-                buffStores.remove(player.getObjectId());
+                buffStores.remove(player.objectId());
 
                 // Stand the player and put the original colors and title back
                 player.setPrivateStoreType(Player.STORE_PRIVATE_NONE);
@@ -369,7 +369,7 @@ public enum OfflineBufferManager {
             buffList.append("<table height=35 border=0 cellspacing=2 cellpadding=0 bgcolor=").append(changeColor ? "171612" : "23221e").append(">");
             buffList.append("<tr>");
             buffList.append("<td width=5></td>");
-            buffList.append("<td width=30 align=center background=").append(buff.icon).append("><button value=\"\" action=\"bypass -h BuffStore purchasebuff ").append(buffer.owner.getObjectId()).append(" ").append(isForPlayer ? "player" : "summon").append(" ").append(buff.id).append(" ").append(currentPage).append("\" width=32 height=32 back=L2UI_CT1.ItemWindow_DF_Frame_Down fore=L2UI_CT1.ItemWindow_DF_Frame></td>");
+            buffList.append("<td width=30 align=center background=").append(buff.icon).append("><button value=\"\" action=\"bypass -h BuffStore purchasebuff ").append(buffer.owner.objectId()).append(" ").append(isForPlayer ? "player" : "summon").append(" ").append(buff.id).append(" ").append(currentPage).append("\" width=32 height=32 back=L2UI_CT1.ItemWindow_DF_Frame_Down fore=L2UI_CT1.ItemWindow_DF_Frame></td>");
             buffList.append("<td width=12></td>");
             if (buff.level > baseMaxLvl) {
                 // Buffs encantados
@@ -407,17 +407,17 @@ public enum OfflineBufferManager {
         final String previousPageButton;
         final String nextPageButton;
         if (currentPage > 0)
-            previousPageButton = "<button value=\"\" width=15 height=15 action=\"bypass -h BuffStore bufflist " + buffer.owner.getObjectId() + " " + (isForPlayer ? "player" : "summon") + " " + (currentPage - 1) + "\" back=L2UI_CT1.ItemWindow_DF_Frame_Down fore=L2UI_CT1.ItemWindow_DF_Frame>";
+            previousPageButton = "<button value=\"\" width=15 height=15 action=\"bypass -h BuffStore bufflist " + buffer.owner.objectId() + " " + (isForPlayer ? "player" : "summon") + " " + (currentPage - 1) + "\" back=L2UI_CT1.ItemWindow_DF_Frame_Down fore=L2UI_CT1.ItemWindow_DF_Frame>";
         else
             previousPageButton = "<button value=\"\" width=15 height=15 action=\"\" back=L2UI_CT1.ItemWindow_DF_Frame_Down fore=L2UI_CT1.ItemWindow_DF_Frame>";
 
         if (currentPage < maxPage)
-            nextPageButton = "<button value=\"\" width=15 height=15 action=\"bypass -h BuffStore bufflist " + buffer.owner.getObjectId() + " " + (isForPlayer ? "player" : "summon") + " " + (currentPage + 1) + "\" back=L2UI_CT1.ItemWindow_DF_Frame_Down fore=L2UI_CT1.ItemWindow_DF_Frame>";
+            nextPageButton = "<button value=\"\" width=15 height=15 action=\"bypass -h BuffStore bufflist " + buffer.owner.objectId() + " " + (isForPlayer ? "player" : "summon") + " " + (currentPage + 1) + "\" back=L2UI_CT1.ItemWindow_DF_Frame_Down fore=L2UI_CT1.ItemWindow_DF_Frame>";
         else
             nextPageButton = "<button value=\"\" width=15 height=15 action=\"\" back=L2UI_CT1.ItemWindow_DF_Frame_Down fore=L2UI_CT1.ItemWindow_DF_Frame>";
 
-        html.replace("%bufferId%", buffer.owner.getObjectId());
-        html.replace("%bufferClass%", Util.toProperCaseAll(CharTemplateHolder.getTemplate(buffer.owner.getClassId(), false).className));
+        html.replace("%bufferId%", buffer.owner.objectId());
+        html.replace("%bufferClass%", buffer.owner.getClassId().name);
         html.replace("%bufferLvl%", (buffer.owner.getLevel() >= 76 && buffer.owner.getLevel() < 80 ? 76 : (buffer.owner.getLevel() >= 84 ? 84 : (int) Math.round(buffer.owner.getLevel() / 10.) * 10)));
         html.replace("%bufferName%", buffer.owner.getName());
         html.replace("%bufferMp%", (int) buffer.owner.getCurrentMp());

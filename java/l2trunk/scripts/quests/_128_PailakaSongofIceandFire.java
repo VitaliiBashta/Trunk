@@ -76,7 +76,7 @@ public final class _128_PailakaSongofIceandFire extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        Player player = st.getPlayer();
+        Player player = st.player;
         int refId = player.getReflectionId();
         String htmltext = event;
 
@@ -87,37 +87,37 @@ public final class _128_PailakaSongofIceandFire extends Quest {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("32500-06.htm")) {
+        } else if ("32500-06.htm".equalsIgnoreCase(event)) {
             st.setCond(2);
             st.playSound(SOUND_MIDDLE);
             st.giveItems(SpritesSword);
             st.giveItems(TempleBookofSecrets1);
-        } else if (event.equalsIgnoreCase("32507-03.htm")) {
+        } else if ("32507-03.htm".equalsIgnoreCase(event)) {
             st.setCond(4);
             st.playSound(SOUND_MIDDLE);
             st.takeItems(TempleBookofSecrets2);
             st.giveItems(TempleBookofSecrets3);
-            if (st.getQuestItemsCount(EssenceofWater) == 0)
-                htmltext = "32507-01.htm";
-            else {
+            if (st.haveQuestItem(EssenceofWater) ) {
                 st.takeItems(SpritesSword);
                 st.takeItems(EssenceofWater);
                 st.giveItems(EnhancedSpritesSword);
+            } else {
+                htmltext = "32507-01.htm";
             }
-            addSpawnToInstance(PAPION, new Location(-53903, 181484, -4555, 30456), 0, refId);
-        } else if (event.equalsIgnoreCase("32507-07.htm")) {
+            addSpawnToInstance(PAPION, new Location(-53903, 181484, -4555, 30456), refId);
+        } else if ("32507-07.htm".equalsIgnoreCase(event)) {
             st.setCond(7);
             st.playSound(SOUND_MIDDLE);
             st.takeItems(TempleBookofSecrets5);
             st.giveItems(TempleBookofSecrets6);
-            if (st.getQuestItemsCount(EssenceofFire) == 0)
-                htmltext = "32507-04.htm";
-            else {
+            if (st.haveQuestItem(EssenceofFire)) {
                 st.takeItems(EnhancedSpritesSword);
                 st.takeItems(EssenceofFire);
                 st.giveItems(SwordofIceandFire);
+            } else {
+                htmltext = "32507-04.htm";
             }
-            addSpawnToInstance(GARGOS, new Location(-61354, 183624, -4821, 63613), 0, refId);
+            addSpawnToInstance(GARGOS, new Location(-61354, 183624, -4821, 63613), refId);
         } else if ("32510-02.htm".equalsIgnoreCase(event)) {
             st.giveItems(PailakaRing);
             st.giveItems(PailakaEarring);
@@ -137,14 +137,15 @@ public final class _128_PailakaSongofIceandFire extends Quest {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         int id = st.getState();
-        Player player = st.getPlayer();
+        Player player = st.player;
         if (npcId == ADLER) {
             if (cond == 0)
-                if (player.getLevel() < 36 || player.getLevel() > 42) {
+                if (player.getLevel() >= 36 && player.getLevel() <= 42) {
+                    return "32497-01.htm";
+                } else {
                     htmltext = "32497-no.htm";
                     st.exitCurrentQuest(true);
-                } else
-                    return "32497-01.htm";
+                }
             else if (id == COMPLETED)
                 htmltext = "32497-no.htm";
             else
@@ -183,28 +184,28 @@ public final class _128_PailakaSongofIceandFire extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
-        Player player = st.getPlayer();
+    public void onKill(NpcInstance npc, QuestState st) {
+        Player player = st.player;
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         int refId = player.getReflectionId();
         if (MOBS.contains(npcId)) {
             if (Rnd.get(100) < 50)
-                st.dropItem(npc, Rnd.get(HPHERBS), 1);
+                st.dropItem(npc, Rnd.get(HPHERBS));
             if (Rnd.get(100) < 50)
-                st.dropItem(npc, Rnd.get(MPHERBS), 1);
+                st.dropItem(npc, Rnd.get(MPHERBS));
         } else if (npcId == HILLAS && cond == 2) {
-            st.takeItems(TempleBookofSecrets1, -1);
-            st.giveItems(EssenceofWater, 1);
-            st.giveItems(TempleBookofSecrets2, 1);
+            st.takeItems(TempleBookofSecrets1);
+            st.giveItems(EssenceofWater);
+            st.giveItems(TempleBookofSecrets2);
             st.setCond(3);
             st.playSound(SOUND_MIDDLE);
         } else if (npcId == PAPION && cond == 4) {
-            st.takeItems(TempleBookofSecrets3, -1);
-            st.giveItems(TempleBookofSecrets4, 1);
+            st.takeItems(TempleBookofSecrets3);
+            st.giveItems(TempleBookofSecrets4);
             st.setCond(5);
             st.playSound(SOUND_MIDDLE);
-            addSpawnToInstance(KINSUS, new Location(-61404, 181351, -4815, 63953), 0, refId);
+            addSpawnToInstance(KINSUS, new Location(-61404, 181351, -4815, 63953), refId);
         } else if (npcId == KINSUS && cond == 5) {
             st.takeItems(TempleBookofSecrets4);
             st.giveItems(EssenceofFire);
@@ -216,12 +217,12 @@ public final class _128_PailakaSongofIceandFire extends Quest {
             st.giveItems(TempleBookofSecrets7);
             st.setCond(8);
             st.playSound(SOUND_MIDDLE);
-            addSpawnToInstance(ADIANTUM, new Location(-53297, 185027, -4617, 1512), 0, refId);
+            addSpawnToInstance(ADIANTUM,  Location.of(-53297, 185027, -4617, 1512), refId);
         } else if (npcId == ADIANTUM && cond == 8) {
             st.takeItems(TempleBookofSecrets7);
             st.setCond(9);
             st.playSound(SOUND_MIDDLE);
-            addSpawnToInstance(ADLER2, new Location(npc.getX(), npc.getY(), npc.getZ(), npc.getHeading()), 0, refId);
+            addSpawnToInstance(ADLER2, npc.getLoc(), refId);
         } else if (npcId == Bloom) {
             if (Rnd.chance(50))
                 st.dropItem(npc, PailakaInstantShield, Rnd.get(1, 7));
@@ -242,7 +243,6 @@ public final class _128_PailakaSongofIceandFire extends Quest {
             if (Rnd.chance(10))
                 st.dropItem(npc, FireAttributeEnhancer, Rnd.get(1, 5));
         }
-        return null;
     }
 
     private void enterInstance(Player player) {

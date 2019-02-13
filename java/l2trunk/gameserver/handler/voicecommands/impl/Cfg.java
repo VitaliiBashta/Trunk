@@ -6,7 +6,6 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.CharacterControlPanel;
 import l2trunk.gameserver.scripts.Functions;
 
-import java.util.Arrays;
 import java.util.List;
 
 public final class Cfg extends Functions implements IVoicedCommandHandler {
@@ -24,7 +23,7 @@ public final class Cfg extends Functions implements IVoicedCommandHandler {
         String dialog = HtmCache.INSTANCE.getNotNull(html, activeChar);
 
         String additionalText = args.split(" ").length > 1 ? args.split(" ")[1] : "";
-        dialog = CharacterControlPanel.INSTANCE.replacePage(dialog, activeChar, additionalText, "-h user_control ");
+        dialog = CharacterControlPanel.INSTANCE.replacePage(dialog, activeChar);
 
         show(dialog, activeChar);
 

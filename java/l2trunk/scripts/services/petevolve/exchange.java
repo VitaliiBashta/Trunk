@@ -16,6 +16,9 @@ import l2trunk.gameserver.tables.PetDataTable.L2Pet;
 import l2trunk.gameserver.templates.item.ItemTemplate;
 import l2trunk.gameserver.utils.Util;
 
+import static l2trunk.gameserver.utils.ItemFunctions.addItem;
+import static l2trunk.gameserver.utils.ItemFunctions.removeItem;
+
 public final class exchange extends Functions {
     /**
      * Билеты для обмена
@@ -32,44 +35,40 @@ public final class exchange extends Functions {
     private static final int BkookaburraO = 6650;
 
     public void exch_1() {
-        Player player = getSelf();
         if (player == null)
             return;
-        if (getItemCount(player, PEticketB) >= 1) {
+        if (player.haveItem(PEticketB) ) {
             removeItem(player, PEticketB, 1, "Exchange$exch_1");
-            addItem(player, BbuffaloP, 1, "Exchange$exch_1");
+            addItem(player, BbuffaloP, 1);
             return;
         }
         show("scripts/services/petevolve/exchange_no.htm", player);
     }
 
     public void exch_2() {
-        Player player = getSelf();
         if (player == null)
             return;
-        if (getItemCount(player, PEticketC) >= 1) {
+        if (player.haveItem(PEticketC)) {
             removeItem(player, PEticketC, 1, "Exchange$exch_2");
-            addItem(player, BcougarC, 1, "Exchange$exch_2");
+            addItem(player, BcougarC, 1);
             return;
         }
         show("scripts/services/petevolve/exchange_no.htm", player);
     }
 
     public void exch_3() {
-        Player player = getSelf();
         if (player == null)
             return;
 
-        if (getItemCount(player, PEticketK) >= 1) {
+        if (player.haveItem(PEticketK)) {
             removeItem(player, PEticketK, 1, "Exchange$exch_3");
-            addItem(player, BkookaburraO, 1, "Exchange$exch_3");
+            addItem(player, BkookaburraO, 1);
             return;
         }
         show("scripts/services/petevolve/exchange_no.htm", player);
     }
 
     public void showBabyPetExchange() {
-        Player player = getSelf();
         if (player == null)
             return;
         if (!Config.SERVICES_EXCHANGE_BABY_PET_ENABLED) {
@@ -88,7 +87,6 @@ public final class exchange extends Functions {
     }
 
     public void showErasePetName() {
-        Player player = getSelf();
         if (player == null)
             return;
         if (!Config.SERVICES_CHANGE_PET_NAME_ENABLED) {
@@ -105,7 +103,6 @@ public final class exchange extends Functions {
     }
 
     public void erasePetName() {
-        Player player = getSelf();
         if (player == null)
             return;
         if (!Config.SERVICES_CHANGE_PET_NAME_ENABLED) {
@@ -113,31 +110,30 @@ public final class exchange extends Functions {
             return;
         }
         Summon pl_pet = player.getPet();
-        if (pl_pet == null || !pl_pet.isPet()) {
-            show("The pet must be called.", player);
-            return;
-        }
-        if (player.getInventory().destroyItemByItemId(Config.SERVICES_CHANGE_PET_NAME_ITEM, Config.SERVICES_CHANGE_PET_NAME_PRICE, "Erasing Pet Name")) {
-            pl_pet.setName(pl_pet.getTemplate().name);
-            pl_pet.broadcastCharInfo();
+        if (pl_pet instanceof PetInstance) {
+            if (player.getInventory().destroyItemByItemId(Config.SERVICES_CHANGE_PET_NAME_ITEM, Config.SERVICES_CHANGE_PET_NAME_PRICE, "Erasing Pet Name")) {
+                pl_pet.setName(pl_pet.getTemplate().name);
+                pl_pet.broadcastCharInfo();
 
-            PetInstance _pet = (PetInstance) pl_pet;
-            ItemInstance control = _pet.getControlItem();
-            if (control != null) {
-                control.setCustomType2(1);
-                control.setJdbcState(JdbcEntityState.UPDATED);
-                control.update();
-                player.sendPacket(new InventoryUpdate().addModifiedItem(control));
-            }
-            show("Name erased.", player);
-        } else if (Config.SERVICES_CHANGE_PET_NAME_ITEM == 57)
-            player.sendPacket(Msg.YOU_DO_NOT_HAVE_ENOUGH_ADENA);
-        else
-            player.sendPacket(SystemMsg.INCORRECT_ITEM_COUNT);
+                PetInstance _pet = (PetInstance) pl_pet;
+                ItemInstance control = _pet.getControlItem();
+                if (control != null) {
+                    control.setCustomType2(1);
+                    control.setJdbcState(JdbcEntityState.UPDATED);
+                    control.update();
+                    player.sendPacket(new InventoryUpdate().addModifiedItem(control));
+                }
+                show("Name erased.", player);
+            } else if (Config.SERVICES_CHANGE_PET_NAME_ITEM == 57)
+                player.sendPacket(Msg.YOU_DO_NOT_HAVE_ENOUGH_ADENA);
+            else
+                player.sendPacket(SystemMsg.INCORRECT_ITEM_COUNT);
+        } else {
+            show("The pet must be called.", player);
+        }
     }
 
     public void exToCougar() {
-        Player player = getSelf();
         if (player == null)
             return;
         if (!Config.SERVICES_EXCHANGE_BABY_PET_ENABLED) {
@@ -164,7 +160,6 @@ public final class exchange extends Functions {
     }
 
     public void exToBuffalo() {
-        Player player = getSelf();
         if (player == null)
             return;
         if (!Config.SERVICES_EXCHANGE_BABY_PET_ENABLED) {
@@ -195,7 +190,6 @@ public final class exchange extends Functions {
     }
 
     public void exToKookaburra() {
-        Player player = getSelf();
         if (player == null)
             return;
         if (!Config.SERVICES_EXCHANGE_BABY_PET_ENABLED) {

@@ -5,7 +5,6 @@ import l2trunk.gameserver.model.base.Race;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _217_TestimonyOfTrust extends Quest {
     private static final int MARK_OF_TRUST_ID = 2734;
@@ -36,8 +35,6 @@ public final class _217_TestimonyOfTrust extends Quest {
     private static final int LETTER_TO_NICHOLA_ID = 2759;
     private static final int ORDER_OF_NICHOLA_ID = 2760;
     private static final int HEART_OF_PORTA_ID = 2761;
-    private static final int RewardExp = 695149;
-    private static final int RewardSP = 46391;
     private static final int RewardAdena = 126106;
 
     public _217_TestimonyOfTrust() {
@@ -106,58 +103,67 @@ public final class _217_TestimonyOfTrust extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("1")) {
-            if (!st.getPlayer().getVarB("dd2")) {
-                st.giveItems(7562, 96);
-                st.getPlayer().setVar("dd2", "1", -1);
-            }
-            htmltext = "hollin_q0217_04.htm";
-            st.setCond(1);
-            st.set("id", "0");
-            st.setState(STARTED);
-            st.playSound(SOUND_ACCEPT);
-            st.giveItems(LETTER_TO_ELF_ID, 1);
-            st.giveItems(LETTER_TO_DARKELF_ID, 1);
-        } else if (event.equalsIgnoreCase("30154_1"))
-            htmltext = "ozzy_q0217_02.htm";
-        else if (event.equalsIgnoreCase("30154_2")) {
-            htmltext = "ozzy_q0217_03.htm";
-            st.takeItems(LETTER_TO_ELF_ID, 1);
-            st.giveItems(ORDER_OF_OZZY_ID, 1);
-            st.setCond(2);
-        } else if (event.equalsIgnoreCase("30358_1")) {
-            htmltext = "tetrarch_thifiell_q0217_02.htm";
-            st.takeItems(LETTER_TO_DARKELF_ID, 1);
-            st.giveItems(LETTER_OF_THIFIELL_ID, 1);
-            st.setCond(5);
-        } else if (event.equalsIgnoreCase("30657_1"))
-            if (st.getPlayer().getLevel() >= 38) {
-                htmltext = "cardinal_seresin_q0217_03.htm";
-                st.takeItems(LETTER_TO_SERESIN_ID, 1);
-                st.giveItems(LETTER_TO_ORC_ID, 1);
-                st.giveItems(LETTER_TO_DWARF_ID, 1);
-                st.setCond(12);
-            } else
-                htmltext = "cardinal_seresin_q0217_02.htm";
-        else if (event.equalsIgnoreCase("30565_1")) {
-            htmltext = "kakai_the_lord_of_flame_q0217_02.htm";
-            st.takeItems(LETTER_TO_ORC_ID, 1);
-            st.giveItems(LETTER_TO_MANAKIA_ID, 1);
-            st.setCond(13);
-        } else if (event.equalsIgnoreCase("30515_1")) {
-            htmltext = "seer_manakia_q0217_02.htm";
-            st.takeItems(LETTER_TO_MANAKIA_ID, 1);
-            st.setCond(14);
-        } else if (event.equalsIgnoreCase("30531_1")) {
-            htmltext = "first_elder_lockirin_q0217_02.htm";
-            st.takeItems(LETTER_TO_DWARF_ID, 1);
-            st.giveItems(LETTER_TO_NICHOLA_ID, 1);
-            st.setCond(18);
-        } else if (event.equalsIgnoreCase("30621_1")) {
-            htmltext = "maestro_nikola_q0217_02.htm";
-            st.takeItems(LETTER_TO_NICHOLA_ID, 1);
-            st.giveItems(ORDER_OF_NICHOLA_ID, 1);
-            st.setCond(19);
+        switch (event) {
+            case "1":
+                if (!st.player.isVarSet("dd2")) {
+                    st.giveItems(7562, 96);
+                    st.player.setVar("dd2", 1);
+                }
+                htmltext = "hollin_q0217_04.htm";
+                st.setCond(1);
+                st.set("id", 0);
+                st.setState(STARTED);
+                st.playSound(SOUND_ACCEPT);
+                st.giveItems(LETTER_TO_ELF_ID);
+                st.giveItems(LETTER_TO_DARKELF_ID);
+                break;
+            case "30154_1":
+                htmltext = "ozzy_q0217_02.htm";
+                break;
+            case "30154_2":
+                htmltext = "ozzy_q0217_03.htm";
+                st.takeItems(LETTER_TO_ELF_ID, 1);
+                st.giveItems(ORDER_OF_OZZY_ID);
+                st.setCond(2);
+                break;
+            case "30358_1":
+                htmltext = "tetrarch_thifiell_q0217_02.htm";
+                st.takeItems(LETTER_TO_DARKELF_ID, 1);
+                st.giveItems(LETTER_OF_THIFIELL_ID);
+                st.setCond(5);
+                break;
+            case "30657_1":
+                if (st.player.getLevel() >= 38) {
+                    htmltext = "cardinal_seresin_q0217_03.htm";
+                    st.takeItems(LETTER_TO_SERESIN_ID, 1);
+                    st.giveItems(LETTER_TO_ORC_ID);
+                    st.giveItems(LETTER_TO_DWARF_ID );
+                    st.setCond(12);
+                } else
+                    htmltext = "cardinal_seresin_q0217_02.htm"; break;
+            case "30565_1":
+                htmltext = "kakai_the_lord_of_flame_q0217_02.htm";
+                st.takeItems(LETTER_TO_ORC_ID, 1);
+                st.giveItems(LETTER_TO_MANAKIA_ID, 1);
+                st.setCond(13);
+                break;
+            case "30515_1":
+                htmltext = "seer_manakia_q0217_02.htm";
+                st.takeItems(LETTER_TO_MANAKIA_ID, 1);
+                st.setCond(14);
+                break;
+            case "30531_1":
+                htmltext = "first_elder_lockirin_q0217_02.htm";
+                st.takeItems(LETTER_TO_DWARF_ID, 1);
+                st.giveItems(LETTER_TO_NICHOLA_ID, 1);
+                st.setCond(18);
+                break;
+            case "30621_1":
+                htmltext = "maestro_nikola_q0217_02.htm";
+                st.takeItems(LETTER_TO_NICHOLA_ID, 1);
+                st.giveItems(ORDER_OF_NICHOLA_ID, 1);
+                st.setCond(19);
+                break;
         }
         return htmltext;
     }
@@ -173,8 +179,8 @@ public final class _217_TestimonyOfTrust extends Quest {
         int cond = st.getCond();
         if (npcId == 30191) {
             if (cond == 0) {
-                if (st.getPlayer().getRace() == Race.human)
-                    if (st.getPlayer().getLevel() >= 37)
+                if (st.player.getRace() == Race.human)
+                    if (st.player.getLevel() >= 37)
                         htmltext = "hollin_q0217_03.htm";
                     else {
                         htmltext = "hollin_q0217_01.htm";
@@ -244,9 +250,9 @@ public final class _217_TestimonyOfTrust extends Quest {
                 htmltext = "magister_clayton_q0217_03.htm";
             }
         } else if (npcId == 30657) {
-            if ((cond == 10 || cond == 11) && st.getQuestItemsCount(LETTER_TO_SERESIN_ID) > 0 && st.getPlayer().getLevel() >= 38)
+            if ((cond == 10 || cond == 11) && st.getQuestItemsCount(LETTER_TO_SERESIN_ID) > 0 && st.player.getLevel() >= 38)
                 htmltext = "cardinal_seresin_q0217_01.htm";
-            else if ((cond == 10 || cond == 11) && st.getPlayer().getLevel() < 38) {
+            else if ((cond == 10 || cond == 11) && st.player.getLevel() < 38) {
                 htmltext = "cardinal_seresin_q0217_02.htm";
                 if (cond == 10)
                     st.setCond(11);
@@ -260,24 +266,24 @@ public final class _217_TestimonyOfTrust extends Quest {
             else if (cond == 16) {
                 htmltext = "kakai_the_lord_of_flame_q0217_04.htm";
                 st.takeItems(LETTER_OF_MANAKIA_ID, 1);
-                st.giveItems(SCROLL_OF_ORC_TRUST_ID, 1);
+                st.giveItems(SCROLL_OF_ORC_TRUST_ID);
                 st.setCond(17);
             } else if (cond >= 17)
                 htmltext = "kakai_the_lord_of_flame_q0217_05.htm";
         } else if (npcId == 30515) {
-            if (cond == 13 && st.getQuestItemsCount(LETTER_TO_MANAKIA_ID) > 0)
+            if (cond == 13 && st.haveQuestItem(LETTER_TO_MANAKIA_ID) )
                 htmltext = "seer_manakia_q0217_01.htm";
             else if (cond == 14 && st.getQuestItemsCount(PARASITE_OF_LOTA_ID) < 10)
                 htmltext = "seer_manakia_q0217_03.htm";
             else if (cond == 15 && st.getQuestItemsCount(PARASITE_OF_LOTA_ID) == 10) {
                 htmltext = "seer_manakia_q0217_04.htm";
-                st.takeItems(PARASITE_OF_LOTA_ID, -1);
-                st.giveItems(LETTER_OF_MANAKIA_ID, 1);
+                st.takeItems(PARASITE_OF_LOTA_ID);
+                st.giveItems(LETTER_OF_MANAKIA_ID);
                 st.setCond(16);
             } else if (cond == 16)
                 htmltext = "seer_manakia_q0217_05.htm";
         } else if (npcId == 30531) {
-            if (cond == 17 && st.getQuestItemsCount(LETTER_TO_DWARF_ID) > 0)
+            if (cond == 17 && st.haveQuestItem(LETTER_TO_DWARF_ID))
                 htmltext = "first_elder_lockirin_q0217_01.htm";
             else if (cond == 18)
                 htmltext = "first_elder_lockirin_q0217_03.htm";
@@ -294,19 +300,19 @@ public final class _217_TestimonyOfTrust extends Quest {
                 htmltext = "maestro_nikola_q0217_03.htm";
             else if (cond == 20 && st.getQuestItemsCount(HEART_OF_PORTA_ID) >= 1) {
                 htmltext = "maestro_nikola_q0217_04.htm";
-                st.takeItems(HEART_OF_PORTA_ID, -1);
-                st.takeItems(ORDER_OF_NICHOLA_ID, 1);
+                st.takeItems(HEART_OF_PORTA_ID);
+                st.takeItems(ORDER_OF_NICHOLA_ID);
                 st.setCond(21);
             } else if (cond == 21)
                 htmltext = "maestro_nikola_q0217_05.htm";
         } else if (npcId == 30031 && cond == 23 && st.getQuestItemsCount(RECOMMENDATION_OF_HOLLIN_ID) > 0) {
             htmltext = "quilt_q0217_01.htm";
-            st.takeItems(RECOMMENDATION_OF_HOLLIN_ID, -1);
-            st.giveItems(MARK_OF_TRUST_ID, 1);
-            if (!st.getPlayer().getVarB("prof2.2")) {
-                st.addExpAndSp(RewardExp, RewardSP);
+            st.takeItems(RECOMMENDATION_OF_HOLLIN_ID);
+            st.giveItems(MARK_OF_TRUST_ID);
+            if (!st.player.isVarSet("prof2.2")) {
+                st.addExpAndSp(695149, 46391);
                 st.giveItems(ADENA_ID, RewardAdena);
-                st.getPlayer().setVar("prof2.2", "1", -1);
+                st.player.setVar("prof2.2", 1);
             }
             st.playSound(SOUND_FINISH);
             st.unset("cond");
@@ -316,62 +322,62 @@ public final class _217_TestimonyOfTrust extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         if (npcId == 20036 || npcId == 20044) {
-            if (cond == 2 && st.getQuestItemsCount(BREATH_OF_WINDS_ID) == 0) {
-                st.set("id", String.valueOf(st.getInt("id") + 1));
+            if (cond == 2 && !st.haveQuestItem(BREATH_OF_WINDS_ID)) {
+                st.set("id", st.getInt("id") + 1);
                 if (Rnd.chance(st.getInt("id") * 33)) {
                     st.addSpawn(27120);
                     st.playSound(SOUND_BEFORE_BATTLE);
                 }
             }
         } else if (npcId == 20013 || npcId == 20019) {
-            if (cond == 2 && st.getQuestItemsCount(SEED_OF_VERDURE_ID) == 0) {
-                st.set("id", String.valueOf(st.getInt("id") + 1));
+            if (cond == 2 && !st.haveQuestItem(SEED_OF_VERDURE_ID)) {
+                st.set("id", st.getInt("id") + 1);
                 if (Rnd.chance(st.getInt("id") * 33)) {
                     st.addSpawn(27121);
                     st.playSound(SOUND_BEFORE_BATTLE);
                 }
             }
         } else if (npcId == 27120) {
-            if (cond == 2 && st.getQuestItemsCount(BREATH_OF_WINDS_ID) == 0)
-                if (st.getQuestItemsCount(SEED_OF_VERDURE_ID) > 0) {
-                    st.giveItems(BREATH_OF_WINDS_ID, 1);
+            if (cond == 2 && !st.haveQuestItem(BREATH_OF_WINDS_ID) )
+                if (st.haveQuestItem(SEED_OF_VERDURE_ID) ) {
+                    st.giveItems(BREATH_OF_WINDS_ID);
                     st.setCond(3);
                     st.playSound(SOUND_MIDDLE);
                 } else {
-                    st.giveItems(BREATH_OF_WINDS_ID, 1);
+                    st.giveItems(BREATH_OF_WINDS_ID);
                     st.playSound(SOUND_ITEMGET);
                 }
         } else if (npcId == 27121) {
-            if (cond == 2 && st.getQuestItemsCount(SEED_OF_VERDURE_ID) == 0)
-                if (st.getQuestItemsCount(BREATH_OF_WINDS_ID) > 0) {
-                    st.giveItems(SEED_OF_VERDURE_ID, 1);
+            if (cond == 2 && !st.haveQuestItem(SEED_OF_VERDURE_ID))
+                if (st.haveQuestItem(BREATH_OF_WINDS_ID)) {
+                    st.giveItems(SEED_OF_VERDURE_ID);
                     st.setCond(3);
                     st.playSound(SOUND_MIDDLE);
                 } else {
-                    st.giveItems(SEED_OF_VERDURE_ID, 1);
+                    st.giveItems(SEED_OF_VERDURE_ID);
                     st.playSound(SOUND_ITEMGET);
                 }
         } else if (npcId == 20550) {
             if (cond == 6 && st.getQuestItemsCount(BLOOD_OF_GUARDIAN_BASILISK_ID) < 10 && st.getQuestItemsCount(ORDER_OF_CLAYTON_ID) > 0 && st.getQuestItemsCount(BASILISK_PLASMA_ID) == 0)
                 if (st.getQuestItemsCount(BLOOD_OF_GUARDIAN_BASILISK_ID) == 9) {
-                    st.takeItems(BLOOD_OF_GUARDIAN_BASILISK_ID, -1);
-                    st.giveItems(BASILISK_PLASMA_ID, 1);
+                    st.takeItems(BLOOD_OF_GUARDIAN_BASILISK_ID);
+                    st.giveItems(BASILISK_PLASMA_ID);
                     if (st.getQuestItemsCount(STAKATO_ICHOR_ID) + st.getQuestItemsCount(BASILISK_PLASMA_ID) + st.getQuestItemsCount(HONEY_DEW_ID) == 3)
                         st.setCond(7);
                     st.playSound(SOUND_MIDDLE);
                 } else {
-                    st.giveItems(BLOOD_OF_GUARDIAN_BASILISK_ID, 1);
+                    st.giveItems(BLOOD_OF_GUARDIAN_BASILISK_ID);
                     st.playSound(SOUND_ITEMGET);
                 }
         } else if (npcId == 20157 || npcId == 20230 || npcId == 20232 || npcId == 20234) {
             if (cond == 6 && st.getQuestItemsCount(STAKATOS_FLUIDS_ID) < 10 && st.getQuestItemsCount(ORDER_OF_CLAYTON_ID) > 0 && st.getQuestItemsCount(STAKATO_ICHOR_ID) == 0)
                 if (st.getQuestItemsCount(STAKATOS_FLUIDS_ID) == 9) {
-                    st.takeItems(STAKATOS_FLUIDS_ID, -1);
-                    st.giveItems(STAKATO_ICHOR_ID, 1);
+                    st.takeItems(STAKATOS_FLUIDS_ID);
+                    st.giveItems(STAKATO_ICHOR_ID);
                     if (st.getQuestItemsCount(STAKATO_ICHOR_ID) + st.getQuestItemsCount(BASILISK_PLASMA_ID) + st.getQuestItemsCount(HONEY_DEW_ID) == 3)
                         st.setCond(7);
                     st.playSound(SOUND_MIDDLE);
@@ -382,30 +388,29 @@ public final class _217_TestimonyOfTrust extends Quest {
         } else if (npcId == 20082 || npcId == 20086 || npcId == 20087 || npcId == 20084 || npcId == 20088) {
             if (cond == 6 && st.getQuestItemsCount(GIANT_APHID_ID) < 10 && st.getQuestItemsCount(ORDER_OF_CLAYTON_ID) > 0 && st.getQuestItemsCount(HONEY_DEW_ID) == 0)
                 if (st.getQuestItemsCount(GIANT_APHID_ID) == 9) {
-                    st.takeItems(GIANT_APHID_ID, -1);
+                    st.takeItems(GIANT_APHID_ID);
                     st.giveItems(HONEY_DEW_ID, 1);
                     if (st.getQuestItemsCount(STAKATO_ICHOR_ID) + st.getQuestItemsCount(BASILISK_PLASMA_ID) + st.getQuestItemsCount(HONEY_DEW_ID) == 3)
                         st.setCond(7);
                     st.playSound(SOUND_MIDDLE);
                 } else {
-                    st.giveItems(GIANT_APHID_ID, 1);
+                    st.giveItems(GIANT_APHID_ID);
                     st.playSound(SOUND_ITEMGET);
                 }
         } else if (npcId == 20553) {
             if (cond == 14 && st.getQuestItemsCount(PARASITE_OF_LOTA_ID) < 10 && Rnd.chance(50))
                 if (st.getQuestItemsCount(PARASITE_OF_LOTA_ID) == 9) {
-                    st.giveItems(PARASITE_OF_LOTA_ID, 1);
+                    st.giveItems(PARASITE_OF_LOTA_ID);
                     st.setCond(15);
                     st.playSound(SOUND_MIDDLE);
                 } else {
-                    st.giveItems(PARASITE_OF_LOTA_ID, 1);
+                    st.giveItems(PARASITE_OF_LOTA_ID);
                     st.playSound(SOUND_ITEMGET);
                 }
         } else if (npcId == 20213 && cond == 19 && st.getQuestItemsCount(HEART_OF_PORTA_ID) < 1) {
-            st.giveItems(HEART_OF_PORTA_ID, 1);
+            st.giveItems(HEART_OF_PORTA_ID);
             st.setCond(20);
             st.playSound(SOUND_MIDDLE);
         }
-        return null;
     }
 }

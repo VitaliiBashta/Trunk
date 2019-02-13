@@ -103,7 +103,7 @@ public final class RainbowGourdInstance extends NpcInstance {
 
         miniGameEvent.removeBanishItems();
 
-        final NpcInstance npc = NpcUtils.spawnSingle(35600, loc.x, loc.y, loc.z, 0);
+        final NpcInstance npc = NpcUtils.spawnSingle(35600, loc);
         ThreadPoolManager.INSTANCE.schedule(() -> {
             npc.deleteMe();
             World.getAroundPlayers(npc, 750, 100).forEach(player ->

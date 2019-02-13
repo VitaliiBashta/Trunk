@@ -21,7 +21,7 @@ public final class L2FriendList extends L2GameServerPacket {
             writeD(0);
             writeS(f.getName()); //name
             writeD(f.isOnline() ? 1 : 0); //online or offline
-            writeD(f.getObjectId()); //object_id
+            writeD(f.getObjectId()); //objectId
         });
     }
 }

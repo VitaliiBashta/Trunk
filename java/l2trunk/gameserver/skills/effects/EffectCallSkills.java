@@ -27,8 +27,4 @@ public final class EffectCallSkills extends Effect {
         }
     }
 
-    @Override
-    public boolean onActionTime() {
-        return false;
-    }
 }

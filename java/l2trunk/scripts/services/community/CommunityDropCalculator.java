@@ -1,6 +1,5 @@
 package l2trunk.scripts.services.community;
 
-import l2trunk.commons.lang.Pair;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.data.htm.HtmCache;
 import l2trunk.gameserver.data.xml.holder.ItemHolder;
@@ -55,7 +54,7 @@ public final class CommunityDropCalculator implements ScriptFile, ICommunityBoar
     private static String replaceItemsByNamePage(String html, String itemName, int page) {
         String newHtml = html;
 
-        List<ItemTemplate> itemsByName = ItemHolder.getItemsByNameContainingString(itemName);
+        List<ItemTemplate> itemsByName = ItemHolder.getItemsByNameContainingString(itemName, true);
         itemsByName.sort(new ItemComparator(itemName));
 
         int itemIndex = 0;
@@ -67,10 +66,10 @@ public final class CommunityDropCalculator implements ScriptFile, ICommunityBoar
             newHtml = newHtml.replace("%itemIcon" + i + '%', item != null ? getItemIcon(item) : "<br>");
             newHtml = newHtml.replace("%itemName" + i + '%', item != null ? getName(item.getName()) : "<br>");
             newHtml = newHtml.replace("%itemGrade" + i + '%', item != null ? getItemGradeIcon(item) : "<br>");
-            newHtml = newHtml.replace("%dropLists" + i + '%', item != null ? String.valueOf(CalculateRewardChances.getDroplistsCountByItemId(item.getItemId(), true)) : "<br>");
-            newHtml = newHtml.replace("%spoilLists" + i + '%', item != null ? String.valueOf(CalculateRewardChances.getDroplistsCountByItemId(item.getItemId(), false)) : "<br>");
+            newHtml = newHtml.replace("%dropLists" + i + '%', item != null ? String.valueOf(CalculateRewardChances.getDroplistsCountByItemId(item.itemId, true)) : "<br>");
+            newHtml = newHtml.replace("%spoilLists" + i + '%', item != null ? String.valueOf(CalculateRewardChances.getDroplistsCountByItemId(item.itemId, false)) : "<br>");
             newHtml = newHtml.replace("%showMonsters" + i + '%', item != null ? "<button value=\"Show Monsters\" action=\"bypass _dropMonstersByItem_%itemChosenId" + i + "%\" width=120 height=32 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_ct1.Button_DF\">" : "<br>");
-            newHtml = newHtml.replace("%itemChosenId" + i + '%', item != null ? String.valueOf(item.getItemId()) : "<br>");
+            newHtml = newHtml.replace("%itemChosenId" + i + '%', item != null ? String.valueOf(item.itemId) : "<br>");
         }
 
         newHtml = newHtml.replace("%previousButton%", page > 1 ? "<button value=\"Previous\" action=\"bypass _dropItemsByName_" + itemName + "_" + (page - 1) + "\" width=100 height=22 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_ct1.Button_DF\">" : "<br>");
@@ -103,12 +102,12 @@ public final class CommunityDropCalculator implements ScriptFile, ICommunityBoar
             CalculateRewardChances.NpcTemplateDrops drops = templates.size() > npcIndex ? templates.get(npcIndex) : null;
             NpcTemplate npc = templates.size() > npcIndex ? templates.get(npcIndex).template : null;
 
-            newHtml = newHtml.replace("%monsterName" + i + '%', npc != null ? getName(npc.getName()) : "<br>");
+            newHtml = newHtml.replace("%monsterName" + i + '%', npc != null ? getName(npc.name()) : "<br>");
             newHtml = newHtml.replace("%monsterLevel" + i + '%', npc != null ? String.valueOf(npc.level) : "<br>");
-            newHtml = newHtml.replace("%monsterAggro" + i + '%', npc != null ? Util.boolToString(npc.aggroRange > 0) : "<br>");
+            newHtml = newHtml.replace("%monsterAggro" + i + '%', npc != null ? Boolean.toString(npc.aggroRange > 0) : "<br>");
             newHtml = newHtml.replace("%monsterType" + i + '%', npc != null ? drops.dropNoSpoil ? "Drop" : "Spoil" : "<br>");
             newHtml = newHtml.replace("%monsterCount" + i + '%', npc != null ? String.valueOf(getDropCount(player, npc, itemId, drops.dropNoSpoil)) : "<br>");
-            newHtml = newHtml.replace("%monsterChance" + i + '%', npc != null ? String.valueOf(getDropChance(player, npc, itemId, drops.dropNoSpoil)) : "<br>");
+            newHtml = newHtml.replace("%monsterChance" + i + '%', npc != null ? getDropChance(player, npc, itemId, drops.dropNoSpoil) : "<br>");
             newHtml = newHtml.replace("%showDetails" + i + '%', npc != null ? "<button value=\"Show Details\" action=\"bypass _dropMonsterDetailsByItem_%monsterId" + i + "%\" width=120 height=32 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_ct1.Button_DF\">" : "<br>");
             newHtml = newHtml.replace("%monsterId" + i + '%', npc != null ? String.valueOf(npc.getNpcId()) : "<br>");
         }
@@ -142,12 +141,12 @@ public final class CommunityDropCalculator implements ScriptFile, ICommunityBoar
         newHtml = newHtml.replace("%itemChosenId%", String.valueOf(player.getQuickVarI("DCItemId")));
         newHtml = newHtml.replace("%monsterPage%", String.valueOf(player.getQuickVarI("DCMonstersPage")));
         newHtml = newHtml.replace("%monsterId%", String.valueOf(monsterId));
-        newHtml = newHtml.replace("%monsterName%", getName(template.getName()));
+        newHtml = newHtml.replace("%monsterName%", getName(template.name()));
         newHtml = newHtml.replace("%monsterLevel%", String.valueOf(template.level));
         newHtml = newHtml.replace("%monsterAggro%", Util.boolToString(template.aggroRange > 0));
         if (itemId > 0) {
-            newHtml = newHtml.replace("%monsterDropSpecific%", String.valueOf(getDropChance(player, template, itemId, true)));
-            newHtml = newHtml.replace("%monsterSpoilSpecific%", String.valueOf(getDropChance(player, template, itemId, false)));
+            newHtml = newHtml.replace("%monsterDropSpecific%", getDropChance(player, template, itemId, true));
+            newHtml = newHtml.replace("%monsterSpoilSpecific%", getDropChance(player, template, itemId, false));
         }
         newHtml = newHtml.replace("%monsterDropAll%", String.valueOf(CalculateRewardChances.getDrops(template, true, false).size()));
         newHtml = newHtml.replace("%monsterSpoilAll%", String.valueOf(CalculateRewardChances.getDrops(template, false, true).size()));
@@ -178,7 +177,7 @@ public final class CommunityDropCalculator implements ScriptFile, ICommunityBoar
     private static String replaceMonstersByName(String html, String monsterName, int page) {
         String newHtml = html;
         List<NpcTemplate> npcTemplates = CalculateRewardChances.getNpcsContainingString(monsterName);
-        sortMonsters(npcTemplates, monsterName);
+        npcTemplates = sortMonsters(npcTemplates, monsterName);
 
         int npcIndex = 0;
 
@@ -186,7 +185,7 @@ public final class CommunityDropCalculator implements ScriptFile, ICommunityBoar
             npcIndex = i + (page - 1) * 10;
             NpcTemplate npc = npcTemplates.size() > npcIndex ? npcTemplates.get(npcIndex) : null;
 
-            newHtml = newHtml.replace("%monsterName" + i + '%', npc != null ? getName(npc.getName()) : "<br>");
+            newHtml = newHtml.replace("%monsterName" + i + '%', npc != null ? getName(npc.name()) : "<br>");
             newHtml = newHtml.replace("%monsterLevel" + i + '%', npc != null ? String.valueOf(npc.level) : "<br>");
             newHtml = newHtml.replace("%monsterAggro" + i + '%', npc != null ? Util.boolToString(npc.aggroRange > 0) : "<br>");
             newHtml = newHtml.replace("%monsterDrops" + i + '%', npc != null ? String.valueOf(CalculateRewardChances.getDrops(npc, true, false).size()) : "<br>");
@@ -221,7 +220,7 @@ public final class CommunityDropCalculator implements ScriptFile, ICommunityBoar
                     return;
 
                 player.sendPacket(new RadarControl(2, 2));
-                player.sendPacket(new Say2(player.getObjectId(), ChatType.COMMANDCHANNEL_ALL, "", "Open Map to see Locations"));
+                player.sendPacket(new Say2(player.objectId(), ChatType.COMMANDCHANNEL_ALL, "", "Open Map to see Locations"));
 
                 for (Location loc : locs)
                     player.sendPacket(new RadarControl(0, 1, loc));
@@ -276,8 +275,8 @@ public final class CommunityDropCalculator implements ScriptFile, ICommunityBoar
     }
 
     private static String getDropCount(Player player, NpcTemplate monster, int itemId, boolean drop) {
-        Pair<Long, Long> counts = CalculateRewardChances.getDropCounts(player, monster, drop, itemId);
-        String formattedCounts = "[" + counts.getKey() + "..." + counts.getValue() + ']';
+        long[] counts = CalculateRewardChances.getDropCounts(player, monster, drop, itemId);
+        String formattedCounts = "[" + counts[0] + "..." + counts[1] + ']';
         if (formattedCounts.length() > 20)
             formattedCounts = "</font><font color=c47e0f>" + formattedCounts;
         return formattedCounts;
@@ -299,8 +298,9 @@ public final class CommunityDropCalculator implements ScriptFile, ICommunityBoar
         return realChance + '%';
     }
 
-    private static void sortMonsters(List<NpcTemplate> npcTemplates, String monsterName) {
+    private static List<NpcTemplate> sortMonsters(List<NpcTemplate> npcTemplates, String monsterName) {
         npcTemplates.sort(new MonsterComparator(monsterName));
+        return npcTemplates;
     }
 
     @Override
@@ -402,7 +402,7 @@ public final class CommunityDropCalculator implements ScriptFile, ICommunityBoar
             if (o2.getName().equalsIgnoreCase(search))
                 return 1;
 
-            return Integer.compare(CalculateRewardChances.getDroplistsCountByItemId(o2.getItemId(), true), CalculateRewardChances.getDroplistsCountByItemId(o1.getItemId(), true));
+            return Integer.compare(CalculateRewardChances.getDroplistsCountByItemId(o2.itemId(), true), CalculateRewardChances.getDroplistsCountByItemId(o1.itemId(), true));
         }
     }
 
@@ -418,14 +418,14 @@ public final class CommunityDropCalculator implements ScriptFile, ICommunityBoar
 
         @Override
         public int compare(CalculateRewardChances.NpcTemplateDrops o1, CalculateRewardChances.NpcTemplateDrops o2) {
-            BigDecimal maxDrop1 = BigDecimal.valueOf(CalculateRewardChances.getDropCounts(player, o1.template, o1.dropNoSpoil, itemId).getValue());
-            BigDecimal maxDrop2 = BigDecimal.valueOf(CalculateRewardChances.getDropCounts(player, o2.template, o2.dropNoSpoil, itemId).getValue());
+            BigDecimal maxDrop1 = BigDecimal.valueOf(CalculateRewardChances.getDropCounts(player, o1.template, o1.dropNoSpoil, itemId)[1]);
+            BigDecimal maxDrop2 = BigDecimal.valueOf(CalculateRewardChances.getDropCounts(player, o2.template, o2.dropNoSpoil, itemId)[1]);
             BigDecimal chance1 = new BigDecimal(CalculateRewardChances.getDropChance(player, o1.template, o1.dropNoSpoil, itemId));
             BigDecimal chance2 = new BigDecimal(CalculateRewardChances.getDropChance(player, o2.template, o2.dropNoSpoil, itemId));
 
             int compare = chance2.multiply(maxDrop2).compareTo(chance1.multiply(maxDrop1));
             if (compare == 0)
-                return o2.template.getName().compareTo(o1.template.getName());
+                return o2.template.name().compareTo(o1.template.name());
             return compare;
         }
     }
@@ -441,11 +441,12 @@ public final class CommunityDropCalculator implements ScriptFile, ICommunityBoar
         public int compare(NpcTemplate o1, NpcTemplate o2) {
             if (o1.equals(o2))
                 return 0;
-            if (o1.getName().equalsIgnoreCase(search))
+            if (o1.name().equalsIgnoreCase(search))
                 return 1;
-            if (o2.getName().equalsIgnoreCase(search))
+            if (o2.name().equalsIgnoreCase(search))
                 return -1;
-            return o2.getName().compareTo(o1.getName());
+
+            return o2.name().compareTo(o2.name());
         }
     }
 }

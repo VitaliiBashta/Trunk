@@ -5,7 +5,6 @@ import l2trunk.gameserver.model.base.Race;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _235_MimirsElixir extends Quest {
     private final static int chance = 45;
@@ -44,12 +43,12 @@ public final class _235_MimirsElixir extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("1")) {
-            st.takeItems(STAR_OF_DESTINY, -1);
+        if ("1".equals(event)) {
+            st.takeItems(STAR_OF_DESTINY);
             st.setState(STARTED);
             st.setCond(1);
             htmltext = "30721-02a.htm";
-        } else if (event.equalsIgnoreCase("30718_1")) {
+        } else if ("30718_1".equals(event)) {
             st.setCond(3);
             htmltext = "30718-01a.htm";
         }
@@ -62,7 +61,7 @@ public final class _235_MimirsElixir extends Quest {
         if (id == COMPLETED)
             return "completed";
 
-        if (st.getPlayer().getRace() == Race.kamael) {
+        if (st.player.getRace() == Race.kamael) {
             st.exitCurrentQuest(true);
             return "<html><body>I'm sorry, but I am not allowed to offer this quest to Kamael. Talk to Hierarch Kekropus.</body></html>";
         }
@@ -72,16 +71,16 @@ public final class _235_MimirsElixir extends Quest {
         int cond = st.getCond();
         if (npcId == LADD) {
             if (id == CREATED) {
-                if (st.getPlayer().getLevel() < MINLEVEL) {
+                if (st.player.getLevel() < MINLEVEL) {
                     st.exitCurrentQuest(true);
                     return "30721-01.htm";
                 }
-                if (st.getQuestItemsCount(STAR_OF_DESTINY) > 0) {
-                    st.takeItems(STAR_OF_DESTINY, -1);
+                if (st.haveQuestItem(STAR_OF_DESTINY)) {
+                    st.takeItems(STAR_OF_DESTINY);
                     st.setCond(0);
                     return "30721-02.htm";
                 }
-                if (st.getPlayer().getQuestState(_234_FatesWhisper.class) != null && st.getPlayer().getQuestState(_234_FatesWhisper.class).isCompleted()) {
+                if (st.player.isQuestCompleted(_234_FatesWhisper.class)) {
                     st.setCond(0);
                     return "30721-02.htm";
                 }
@@ -142,19 +141,18 @@ public final class _235_MimirsElixir extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         if (npcId == Chimera_Piece && cond == 3 && st.getQuestItemsCount(SAGES_STONE) == 0 && Rnd.chance(chance)) {
-            st.giveItems(SAGES_STONE, 1);
+            st.giveItems(SAGES_STONE);
             st.playSound(SOUND_ITEMGET);
             st.setCond(cond + 1);
         }
         if (npcId == Bloody_Guardian && cond == 6 && st.getQuestItemsCount(BLOOD_FIRE) == 0 && Rnd.chance(chance)) {
-            st.giveItems(BLOOD_FIRE, 1);
+            st.giveItems(BLOOD_FIRE);
             st.playSound(SOUND_ITEMGET);
             st.setCond(cond + 1);
         }
-        return null;
     }
 }

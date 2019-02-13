@@ -56,7 +56,7 @@ public final class _365_DevilsLegacy extends Quest {
         String htmltext = "noquest";
         int cond = st.getCond();
         if (cond == 0) {
-            if (st.getPlayer().getLevel() >= 39)
+            if (st.player.getLevel() >= 39)
                 htmltext = "30095-0.htm";
             else {
                 htmltext = "30095-0a.htm";
@@ -71,11 +71,10 @@ public final class _365_DevilsLegacy extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (Rnd.chance(CHANCE_OF_DROP)) {
-            st.giveItems(TREASURE_CHEST, 1);
+            st.giveItems(TREASURE_CHEST);
             st.playSound(SOUND_ITEMGET);
         }
-        return null;
     }
 }

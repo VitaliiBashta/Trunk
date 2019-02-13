@@ -49,7 +49,7 @@ public final class ExPartyRoomMember extends L2GameServerPacket {
         final Collection<Integer> instanceReuses;
 
         PartyRoomMemberInfo(Player member, int type) {
-            objectId = member.getObjectId();
+            objectId = member.objectId();
             name = member.getName();
             classId = member.getClassId().ordinal();
             level = member.getLevel();

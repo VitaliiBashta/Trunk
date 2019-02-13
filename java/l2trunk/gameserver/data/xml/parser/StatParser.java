@@ -18,7 +18,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import static l2trunk.commons.lang.NumberUtils.toBoolean;
+import static l2trunk.commons.lang.NumberUtils.*;
 
 public final class StatParser {
     public static final Logger LOG = LoggerFactory.getLogger(StatParser.class);
@@ -74,7 +74,7 @@ public final class StatParser {
             cond.add(parseCond(condElement));
         }
 
-        if (cond._conditions == null || cond._conditions.size() == 0)
+        if (cond.conditions == null || cond.conditions.size() == 0)
             LOG.error("Empty <or> condition in " + n);
         return cond;
     }
@@ -118,20 +118,20 @@ public final class StatParser {
             Attribute attribute = iterator.next();
             String name = attribute.getName();
             String value = attribute.getValue();
-            if (name.equalsIgnoreCase("residence")) {
+            if ("residence".equalsIgnoreCase(name)) {
                 String[] st = value.split(";");
                 cond = joinAnd(cond, new ConditionPlayerResidence(Integer.parseInt(st[1]), ResidenceType.valueOf(st[0])));
             } else if (name.equalsIgnoreCase("classId"))
-                cond = joinAnd(cond, new ConditionPlayerClassId(value.split(",")));
-            else if (name.equalsIgnoreCase("olympiad"))
+                cond = joinAnd(cond, new ConditionPlayerClassId(value));
+            else if ("olympiad".equalsIgnoreCase(name))
                 cond = joinAnd(cond, new ConditionPlayerOlympiad(Boolean.valueOf(value)));
             else if (name.equalsIgnoreCase("instance_zone"))
-                cond = joinAnd(cond, new ConditionPlayerInstanceZone(Integer.parseInt(value)));
+                cond = joinAnd(cond, new ConditionPlayerInstanceZone(toInt(value)));
             else if (name.equalsIgnoreCase("race"))
                 cond = joinAnd(cond, new ConditionPlayerRace(value));
             else if (name.equalsIgnoreCase("damage")) {
                 String[] st = value.split(";");
-                cond = joinAnd(cond, new ConditionPlayerMinMaxDamage(Double.parseDouble(st[0]), Double.parseDouble(st[1])));
+                cond = joinAnd(cond, new ConditionPlayerMinMaxDamage(toDouble(st[0]), toDouble(st[1])));
             }
         }
 

@@ -29,11 +29,12 @@ public final class AdminDisconnect implements IAdminCommandHandler {
                         activeChar.sendMessage("Select character or specify player name.");
                         break;
                     }
-                    if (!target.isPlayer()) {
+                    if (target instanceof Player) {
+                        player = (Player) target;
+                    } else {
                         activeChar.sendPacket(SystemMsg.INVALID_TARGET);
                         break;
                     }
-                    player = (Player) target;
                 } else {
                     // Обработка по нику
                     player = World.getPlayer(wordList[1]);
@@ -45,7 +46,7 @@ public final class AdminDisconnect implements IAdminCommandHandler {
 
                 activeChar.sendMessage("Character " + player.getName() + " disconnected from server.");
 
-                player.sendMessage(new CustomMessage("admincommandhandlers.AdminDisconnect.YoureKickedByGM", player));
+                player.sendMessage(new CustomMessage("admincommandhandlers.AdminDisconnect.YoureKickedByGM"));
                 player.sendPacket(SystemMsg.YOU_HAVE_BEEN_DISCONNECTED_FROM_THE_SERVER_);
                 ThreadPoolManager.INSTANCE.schedule(player::kick, 500);
                 break;

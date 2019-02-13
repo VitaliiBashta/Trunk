@@ -4,7 +4,7 @@ import l2trunk.gameserver.model.Effect;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.stats.Env;
 
-public class EffectMute extends Effect {
+public final class EffectMute extends Effect {
     public EffectMute(Env env, EffectTemplate template) {
         super(env, template);
     }
@@ -19,12 +19,6 @@ public class EffectMute extends Effect {
                 effected.abortCast(true, true);
         }
     }
-
-    @Override
-    public boolean onActionTime() {
-        return false;
-    }
-
     @Override
     public void onExit() {
         super.onExit();

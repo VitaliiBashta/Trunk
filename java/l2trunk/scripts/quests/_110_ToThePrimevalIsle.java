@@ -3,7 +3,6 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _110_ToThePrimevalIsle extends Quest {
     // NPC
@@ -52,7 +51,7 @@ public final class _110_ToThePrimevalIsle extends Quest {
         int id = st.getState();
         int cond = st.getCond();
         if (id == CREATED)
-            if (st.getPlayer().getLevel() >= 75)
+            if (st.player.getLevel() >= 75)
                 htmltext = "scroll_seller_anton_q0110_01.htm";
             else {
                 st.exitCurrentQuest(true);
@@ -70,8 +69,4 @@ public final class _110_ToThePrimevalIsle extends Quest {
         return htmltext;
     }
 
-    @Override
-    public String onKill(NpcInstance npc, QuestState st) {
-        return null;
-    }
 }

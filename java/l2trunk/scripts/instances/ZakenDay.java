@@ -20,7 +20,7 @@ public final class ZakenDay extends Reflection {
     @Override
     protected void onCreate() {
         super.onCreate();
-        addSpawnWithoutRespawn(Anchor, Rnd.get(zakenTp), 0);
+        addSpawnWithoutRespawn(Anchor, Rnd.get(zakenTp));
         _savedTime = System.currentTimeMillis();
     }
 

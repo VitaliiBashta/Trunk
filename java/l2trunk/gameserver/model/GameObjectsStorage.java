@@ -57,11 +57,6 @@ public final class GameObjectsStorage {
                 .map(o -> (Player) o);
     }
 
-    public static List<Player> getAllPlayers() {
-        return getAllPlayersStream()
-                .collect(Collectors.toList());
-    }
-
     public static long getAllPlayersCount() {
         return getAllPlayersStream().count();
     }
@@ -103,11 +98,11 @@ public final class GameObjectsStorage {
     }
 
     public static NpcInstance getNpc(int objId) {
-        return getAllNpcs().filter(n -> n.getObjectId() == objId).findFirst().orElse(null);
+        return getAllNpcs().filter(n -> n.objectId() == objId).findFirst().orElse(null);
     }
 
     public static void put(Creature o) {
-        objects.put(o.getObjectId(), o);
+        objects.put(o.objectId(), o);
     }
 
     public static GameObject remove(int storedId) {

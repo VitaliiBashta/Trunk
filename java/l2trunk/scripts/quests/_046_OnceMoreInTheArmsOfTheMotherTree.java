@@ -4,7 +4,6 @@ import l2trunk.gameserver.model.base.Race;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _046_OnceMoreInTheArmsOfTheMotherTree extends Quest {
     private static final int GALLADUCCIS_ORDER_DOCUMENT_ID_1 = 7563;
@@ -95,10 +94,10 @@ public final class _046_OnceMoreInTheArmsOfTheMotherTree extends Quest {
         String htmltext = "noquest";
         int id = st.getState();
         if (id == CREATED) {
-            if (st.getPlayer().getRace() != Race.elf || st.getQuestItemsCount(MARK_OF_TRAVELER_ID) == 0) {
+            if (st.player.getRace() != Race.elf || st.getQuestItemsCount(MARK_OF_TRAVELER_ID) == 0) {
                 htmltext = "galladuchi_q0046_0102.htm";
                 st.exitCurrentQuest(true);
-            } else if (st.getPlayer().getLevel() < 3) {
+            } else if (st.player.getLevel() < 3) {
                 htmltext = "galladuchi_q0046_0103.htm";
                 st.exitCurrentQuest(true);
             } else

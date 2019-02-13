@@ -5,7 +5,6 @@ import l2trunk.gameserver.model.entity.olympiad.OlympiadGame;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _552_OlympiadVeteran extends Quest {
     // NPCs
@@ -29,32 +28,30 @@ public final class _552_OlympiadVeteran extends Quest {
     @Override
     public String onTalk(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
-        switch (npcId) {
-            case OLYMPIAD_MANAGER:
-                Player player = st.getPlayer();
-                if (!player.isNoble() || player.getLevel() < 75 || player.getClassId().getLevel() < 4)
-                    return "olympiad_operator_q0552_08.htm";
+        if (npcId == OLYMPIAD_MANAGER) {
+            Player player = st.player;
+            if (!player.isNoble() || player.getLevel() < 75 || player.getClassId().occupation() < 3)
+                return "olympiad_operator_q0552_08.htm";
 
-                if (st.isCreated()) {
-                    if (st.isNowAvailable())
-                        return "olympiad_operator_q0552_01.htm";
-                    else
-                        return "olympiad_operator_q0552_06.htm";
-                } else if (st.isStarted()) {
-                    if (st.getQuestItemsCount(TEAM_CERTIFICATE, CLASS_FREE_CERTIFICATE, CLASS_CERTIFICATE) == 0)
-                        return "olympiad_operator_q0552_04.htm";
-                    else if (st.getQuestItemsCount(TEAM_CERTIFICATE) > 0 && st.getQuestItemsCount(CLASS_FREE_CERTIFICATE) > 0 && st.getQuestItemsCount(CLASS_CERTIFICATE) > 0) {
-                        st.giveItems(OLYMPIAD_CHEST, 3);
-                        st.takeItems(TEAM_CERTIFICATE);
-                        st.takeItems(CLASS_FREE_CERTIFICATE);
-                        st.takeItems(CLASS_CERTIFICATE);
-                        st.playSound(SOUND_FINISH);
-                        st.exitCurrentQuest(this);
-                        return "olympiad_operator_q0552_07.htm";
-                    }
-                    return "olympiad_operator_q0552_05.htm";
+            if (st.isCreated()) {
+                if (st.isNowAvailable())
+                    return "olympiad_operator_q0552_01.htm";
+                else
+                    return "olympiad_operator_q0552_06.htm";
+            } else if (st.isStarted()) {
+                if (st.getQuestItemsCount(TEAM_CERTIFICATE, CLASS_FREE_CERTIFICATE, CLASS_CERTIFICATE) == 0)
+                    return "olympiad_operator_q0552_04.htm";
+                else if (st.haveAllQuestItems(TEAM_CERTIFICATE,CLASS_FREE_CERTIFICATE,CLASS_CERTIFICATE) ) {
+                    st.giveItems(OLYMPIAD_CHEST, 3);
+                    st.takeItems(TEAM_CERTIFICATE);
+                    st.takeItems(CLASS_FREE_CERTIFICATE);
+                    st.takeItems(CLASS_CERTIFICATE);
+                    st.playSound(SOUND_FINISH);
+                    st.exitCurrentQuest(this);
+                    return "olympiad_operator_q0552_07.htm";
                 }
-                break;
+                return "olympiad_operator_q0552_05.htm";
+            }
         }
 
         return null;
@@ -67,13 +64,7 @@ public final class _552_OlympiadVeteran extends Quest {
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
         } else if ("olympiad_operator_q0552_07.htm".equalsIgnoreCase(event)) {
-            int count = 0;
-            if (st.getQuestItemsCount(TEAM_CERTIFICATE) > 0)
-                count++;
-            if (st.getQuestItemsCount(CLASS_FREE_CERTIFICATE) > 0)
-                count++;
-            if (st.getQuestItemsCount(CLASS_CERTIFICATE) > 0)
-                count++;
+            int count = (int)st.getQuestItemsCount(TEAM_CERTIFICATE,CLASS_FREE_CERTIFICATE,CLASS_CERTIFICATE);
             if (count > 0) {
                 st.giveItems(OLYMPIAD_CHEST, count);
                 st.takeItems(TEAM_CERTIFICATE);
@@ -96,7 +87,7 @@ public final class _552_OlympiadVeteran extends Quest {
                 int count1 = qs.getInt("count1") + 1;
                 qs.set("count1", count1);
                 if (count1 == 5) {
-                    qs.giveItems(TEAM_CERTIFICATE, 1);
+                    qs.giveItems(TEAM_CERTIFICATE);
                     if (qs.getInt("count2") >= 5 && qs.getInt("count3") >= 5) {
                         qs.setCond(2);
                         qs.playSound(SOUND_MIDDLE);
@@ -108,7 +99,7 @@ public final class _552_OlympiadVeteran extends Quest {
                 int count2 = qs.getInt("count2") + 1;
                 qs.set("count2", count2);
                 if (count2 == 5) {
-                    qs.giveItems(CLASS_CERTIFICATE, 1);
+                    qs.giveItems(CLASS_CERTIFICATE);
                     if (qs.getInt("count1") >= 5 && qs.getInt("count3") >= 5) {
                         qs.setCond(2);
                         qs.playSound(SOUND_MIDDLE);
@@ -120,7 +111,7 @@ public final class _552_OlympiadVeteran extends Quest {
                 int count3 = qs.getInt("count3") + 1;
                 qs.set("count3", count3);
                 if (count3 == 5) {
-                    qs.giveItems(CLASS_FREE_CERTIFICATE, 1);
+                    qs.giveItems(CLASS_FREE_CERTIFICATE);
                     if (qs.getInt("count1") >= 5 && qs.getInt("count2") >= 5) {
                         qs.setCond(2);
                         qs.playSound(SOUND_MIDDLE);

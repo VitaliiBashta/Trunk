@@ -6,7 +6,6 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _106_ForgottenTruth extends Quest {
     private final int ONYX_TALISMAN1 = 984;
@@ -30,7 +29,7 @@ public final class _106_ForgottenTruth extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if (event.equals("tetrarch_thifiell_q0106_05.htm")) {
-            st.giveItems(ONYX_TALISMAN1);
+            st.giveItems(ONYX_TALISMAN1, 1);
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
@@ -45,10 +44,10 @@ public final class _106_ForgottenTruth extends Quest {
         int cond = st.getCond();
         if (npcId == 30358) {
             if (cond == 0) {
-                if (st.getPlayer().getRace() != Race.darkelf) {
+                if (st.player.getRace() != Race.darkelf) {
                     htmltext = "tetrarch_thifiell_q0106_00.htm";
                     st.exitCurrentQuest(true);
-                } else if (st.getPlayer().getLevel() >= 10)
+                } else if (st.player.getLevel() >= 10)
                     htmltext = "tetrarch_thifiell_q0106_03.htm";
                 else {
                     htmltext = "tetrarch_thifiell_q0106_02.htm";
@@ -58,23 +57,23 @@ public final class _106_ForgottenTruth extends Quest {
                 htmltext = "tetrarch_thifiell_q0106_06.htm";
             else if (cond == 4 && st.getQuestItemsCount(KARTAS_TRANSLATION) > 0) {
                 htmltext = "tetrarch_thifiell_q0106_07.htm";
-                st.takeItems(KARTAS_TRANSLATION, -1);
+                st.takeItems(KARTAS_TRANSLATION);
 
-                if (st.getPlayer().isMageClass())
-                    st.giveItems(ELDRITCH_STAFF, 1);
+                if (st.player.getClassId().isMage)
+                    st.giveItems(ELDRITCH_STAFF);
                 else
-                    st.giveItems(ELDRITCH_DAGGER, 1);
+                    st.giveItems(ELDRITCH_DAGGER);
 
                 st.giveItems(ADENA_ID, 10266, false);
-                st.getPlayer().addExpAndSp(24195, 2074);
+                st.player.addExpAndSp(24195, 2074);
 
-                if (st.getPlayer().getClassId().getLevel() == 1 && !st.getPlayer().getVarB("p1q3")) {
-                    st.getPlayer().setVar("p1q3", "1", -1); // flag for helper
-                    st.getPlayer().sendPacket(new ExShowScreenMessage("Now go find the Newbie Guide."));
+                if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("p1q3")) {
+                    st.player.setVar("p1q3", 1); // flag for helper
+                    st.player.sendPacket(new ExShowScreenMessage("Now go find the Newbie Guide."));
                     st.giveItems(1060, 100); // healing potion
                     for (int item = 4412; item <= 4417; item++)
                         st.giveItems(item, 10); // echo cry
-                    if (st.getPlayer().getClassId().isMage) {
+                    if (st.player.getClassId().isMage) {
                         st.playTutorialVoice("tutorial_voice_027");
                         st.giveItems(5790, 3000); // newbie sps
                     } else {
@@ -96,10 +95,10 @@ public final class _106_ForgottenTruth extends Quest {
                 htmltext = "karta_q0106_02.htm";
             else if (cond == 3 && st.getQuestItemsCount(ANCIENT_SCROLL) > 0 && st.getQuestItemsCount(ANCIENT_CLAY_TABLET) > 0) {
                 htmltext = "karta_q0106_03.htm";
-                st.takeItems(ONYX_TALISMAN2);
-                st.takeItems(ANCIENT_SCROLL);
-                st.takeItems(ANCIENT_CLAY_TABLET);
-                st.giveItems(KARTAS_TRANSLATION);
+                st.takeItems(ONYX_TALISMAN2, -1);
+                st.takeItems(ANCIENT_SCROLL, -1);
+                st.takeItems(ANCIENT_CLAY_TABLET, -1);
+                st.giveItems(KARTAS_TRANSLATION, 1);
                 st.setCond(4);
             } else if (cond == 4 && st.getQuestItemsCount(KARTAS_TRANSLATION) > 0)
                 htmltext = "karta_q0106_04.htm";
@@ -107,7 +106,7 @@ public final class _106_ForgottenTruth extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         if (npcId == 27070)
             if (st.getCond() == 2 && st.getQuestItemsCount(ONYX_TALISMAN2) > 0)
@@ -120,6 +119,5 @@ public final class _106_ForgottenTruth extends Quest {
                 }
         if (st.getQuestItemsCount(ANCIENT_SCROLL) > 0 && st.getQuestItemsCount(ANCIENT_CLAY_TABLET) > 0)
             st.setCond(3);
-        return null;
     }
 }

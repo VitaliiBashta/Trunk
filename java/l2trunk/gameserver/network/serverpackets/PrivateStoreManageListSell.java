@@ -20,7 +20,7 @@ public final class PrivateStoreManageListSell extends L2GameServerPacket {
      * Окно управления личным магазином продажи
      */
     public PrivateStoreManageListSell(Player seller, boolean pkg) {
-        _sellerId = seller.getObjectId();
+        _sellerId = seller.objectId();
         _adena = seller.getAdena();
         _package = pkg;
         _sellList0 = seller.getSellList(_package);
@@ -53,7 +53,7 @@ public final class PrivateStoreManageListSell extends L2GameServerPacket {
         for (ItemInstance item : items)
             if (item.canBeTraded(seller) && item.getItemId() != ItemTemplate.ITEM_ID_ADENA) {
                 for (TradeItem si : _sellList0)
-                    if (si.getObjectId() == item.getObjectId()) {
+                    if (si.getObjectId() == item.objectId()) {
                         if (si.getCount() == item.getCount())
                             continue loop;
                         // Показывает остаток вещей для продажи

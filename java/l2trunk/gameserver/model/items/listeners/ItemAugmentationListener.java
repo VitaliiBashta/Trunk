@@ -43,7 +43,7 @@ public final class ItemAugmentationListener implements OnEquipListener {
 
             for (Skill skill : template.getSkills()) {
                 sendList = true;
-                player.removeSkill(skill);
+                player.removeSkill(skill.id);
             }
 
             player.removeTriggers(template);

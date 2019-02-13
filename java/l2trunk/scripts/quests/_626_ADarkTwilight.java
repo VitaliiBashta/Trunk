@@ -50,7 +50,7 @@ public final class _626_ADarkTwilight extends Quest {
         int npcId = npc.getNpcId();
         if (npcId == Hierarch)
             if (cond == 0) {
-                if (st.getPlayer().getLevel() < 60) {
+                if (st.player.getLevel() < 60) {
                     htmltext = "dark_presbyter_q0626_0103.htm";
                     st.exitCurrentQuest(true);
                 } else
@@ -63,12 +63,11 @@ public final class _626_ADarkTwilight extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getCond() == 1 && Rnd.chance(70)) {
-            st.giveItems(BloodOfSaint, 1);
+            st.giveItems(BloodOfSaint);
             if (st.getQuestItemsCount(BloodOfSaint) == 300)
                 st.setCond(2);
         }
-        return null;
     }
 }

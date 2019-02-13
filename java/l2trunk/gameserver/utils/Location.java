@@ -19,6 +19,8 @@ public class Location extends Point3D implements SpawnRange {
     public int h;
 
     public Location() {
+        super(0, 0, 0);
+        h = 0;
     }
 
     public Location(int x, int y, int z, int heading) {
@@ -27,33 +29,48 @@ public class Location extends Point3D implements SpawnRange {
     }
 
     public Location(String[] loc) {
-        if (loc.length < 3 )
-             throw new IllegalArgumentException("invalid coord for location " + Arrays.toString(loc));
-        this.x=toInt(loc[0]);
-        this.y=toInt(loc[1]);
-        this.z=toInt(loc[2]);
-        if (loc.length ==4)
-            this.h= toInt(loc[3]);
+        if (loc.length < 3)
+            throw new IllegalArgumentException("invalid coord for location " + Arrays.toString(loc));
+        this.x = toInt(loc[0]);
+        this.y = toInt(loc[1]);
+        this.z = toInt(loc[2]);
+        if (loc.length == 4)
+            this.h = toInt(loc[3]);
     }
+
     public Location(int x, int y, int z) {
         this(x, y, z, 0);
     }
 
+    private Location(GameObject obj) {
+        this(obj.getX(), obj.getY(), obj.getZ(), 0);
+    }
 
-    public Location(GameObject obj) {
-        this(obj.getX(), obj.getY(), obj.getZ(), obj.getHeading());
+    public static Location of (GameObject obj) {
+        return new Location(obj);
+    }
+    public static Location of(int x, int y, int z, int heading) {
+        return new Location(x, y, z, heading);
+    }
+
+    public static Location of(int x, int y, int z, boolean randomHeading) {
+        return of(x, y, z, randomHeading ? Rnd.get(65535) : 0);
+    }
+
+    public static Location of(int x, int y, int z) {
+        return of(x, y, z, 0);
     }
 
     /**
      * Парсит Location из строки, где координаты разделены пробелами или запятыми
      */
-    public static Location parseLoc(String s) throws IllegalArgumentException {
+    public static Location of(String s) {
         if (s == null)
             return null;
 
         String[] xyzh = s.split("[\\s,;]+");
         if (xyzh.length < 3)
-            throw new IllegalArgumentException("Can't parse location from string: " + s);
+            throw new IllegalArgumentException("Can't of location from string: " + s);
         int x = Integer.parseInt(xyzh[0]);
         int y = Integer.parseInt(xyzh[1]);
         int z = Integer.parseInt(xyzh[2]);
@@ -61,7 +78,7 @@ public class Location extends Point3D implements SpawnRange {
         return new Location(x, y, z, h);
     }
 
-    public static Location parse(Element element) {
+    public static Location of(Element element) {
         int x = toInt(element.attributeValue("x"));
         int y = toInt(element.attributeValue("y"));
         int z = toInt(element.attributeValue("z"));
@@ -74,7 +91,7 @@ public class Location extends Point3D implements SpawnRange {
      */
     public static Location findFrontPosition(GameObject obj, GameObject obj2, int radiusmin, int radiusmax) {
         if (radiusmax == 0 || radiusmax < radiusmin)
-            return new Location(obj);
+            return Location.of(obj);
 
         double collision = obj.getColRadius() + obj2.getColRadius();
         int randomRadius, randomAngle, tempz;
@@ -100,12 +117,12 @@ public class Location extends Point3D implements SpawnRange {
                 if (!obj.equals(obj2))
                     pos.h = PositionUtils.getHeadingTo(pos, obj2.getLoc());
                 else
-                    pos.h = obj.getHeading();
+                    pos.h = 0;
                 return pos;
             }
         }
 
-        return new Location(obj);
+        return Location.of(obj);
     }
 
     /**
@@ -148,30 +165,30 @@ public class Location extends Point3D implements SpawnRange {
     /**
      * Найти стабильную точку в пределах радиуса от начальной
      */
-    private static Location findPointToStay(int x, int y, int z, int radiusmin, int radiusmax, int geoIndex) {
+    private static Location findPointToStay0(Location loc, int radiusmin, int radiusmax, int geoIndex) {
         Location pos;
         int tempz;
         for (int i = 0; i < 100; i++) {
-            pos = Location.coordsRandomize(x, y, z, 0, radiusmin, radiusmax);
+            pos = Location.coordsRandomize(loc, radiusmin, radiusmax);
             tempz = GeoEngine.getHeight(pos.x, pos.y, pos.z, geoIndex);
             if (Math.abs(pos.z - tempz) < 200 && GeoEngine.getNSWE(pos.x, pos.y, tempz, geoIndex) == GeoEngine.NSWE_ALL) {
                 pos.z = tempz;
                 return pos;
             }
         }
-        return new Location(x, y, z);
+        return loc;
     }
 
     public static Location findPointToStay(Location loc, int radius, int geoIndex) {
-        return findPointToStay(loc.x, loc.y, loc.z, 0, radius, geoIndex);
+        return findPointToStay0(loc, 0, radius, geoIndex);
     }
 
     public static Location findPointToStay(Location loc, int radiusmin, int radiusmax, int geoIndex) {
-        return findPointToStay(loc.x, loc.y, loc.z, radiusmin, radiusmax, geoIndex);
+        return findPointToStay0(loc, radiusmin, radiusmax, geoIndex);
     }
 
     public static Location findPointToStay(GameObject obj, Location loc, int radiusmin, int radiusmax) {
-        return findPointToStay(loc.x, loc.y, loc.z, radiusmin, radiusmax, obj.getGeoIndex());
+        return findPointToStay0(loc, radiusmin, radiusmax, obj.getGeoIndex());
     }
 
     public static Location findPointToStay(GameObject obj, int radiusmin, int radiusmax) {
@@ -205,8 +222,21 @@ public class Location extends Point3D implements SpawnRange {
         return defloc;
     }
 
-    public static int getRandomHeading() {
-        return Rnd.get(65535);
+    public static Location of() {
+        return of(0,0,0);
+    }
+
+    public Location randomOffset(int radius) {
+        int dx = Rnd.get( -radius, radius);
+        int dy = Rnd.get( -radius, radius);
+        return Location.of(x + dx, y + dy, z, h);
+    }
+    public Location addX(int dx) {
+        return new Location(this.x + dx, this.y, this.z, this.h);
+    }
+
+    public Location addY(int dy) {
+        return new Location(this.x, this.y + dy, this.z, this.h);
     }
 
     public Location changeZ(int zDiff) {

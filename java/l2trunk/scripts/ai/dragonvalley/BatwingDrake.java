@@ -18,7 +18,7 @@ public final class BatwingDrake extends Mystic {
     public void onEvtAttacked(Creature attacker, int damage) {
         if (Rnd.chance(Config.BDRAKE_MS_CHANCE)) {
             NpcInstance actor = getActor();
-            NpcInstance n = NpcUtils.spawnSingle(22828, (actor.getX() + Rnd.get(-100, 100)), (actor.getY() + Rnd.get(-100, 100)), actor.getZ());
+            NpcInstance n = NpcUtils.spawnSingle(22828, (actor.getLoc().randomOffset(100)));
             n.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker, 2);
         }
         super.onEvtAttacked(attacker, damage);

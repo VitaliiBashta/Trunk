@@ -61,7 +61,7 @@ public final class _005_MinersFavor extends Quest {
         int cond = st.getCond();
         if (npcId == BOLTER) {
             if (cond == 0) {
-                if (st.getPlayer().getLevel() >= 2)
+                if (st.player.getLevel() >= 2)
                     htmltext = "miner_bolter_q0005_02.htm";
                 else {
                     htmltext = "miner_bolter_q0005_01.htm";
@@ -77,9 +77,9 @@ public final class _005_MinersFavor extends Quest {
                 st.takeItems(REDSTONE_BEER, -1);
                 st.takeItems(BOLTERS_LIST, -1);
                 st.giveItems(NECKLACE, 1, false);
-                st.getPlayer().addExpAndSp(5672, 446);
-                if (st.getPlayer().getClassId().getLevel() == 1 && !st.getPlayer().getVarB("ng1"))
-                    st.getPlayer().sendPacket(new ExShowScreenMessage("  Delivery duty complete.\nGo find the Newbie Guide."));
+                st.player.addExpAndSp(5672, 446);
+                if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("ng1"))
+                    st.player.sendPacket(new ExShowScreenMessage("  Delivery duty complete.\nGo find the Newbie Guide."));
                 st.giveItems(ADENA_ID, 2466);
                 st.unset("cond");
                 st.playSound(SOUND_FINISH);
@@ -89,7 +89,7 @@ public final class _005_MinersFavor extends Quest {
             if (npcId == SHARI) {
                 if (st.getQuestItemsCount(BOOMBOOM_POWDER) == 0) {
                     htmltext = "trader_chali_q0005_01.htm";
-                    st.giveItems(BOOMBOOM_POWDER, 1, false);
+                    st.giveItems(BOOMBOOM_POWDER);
                     st.playSound(SOUND_ITEMGET);
                 } else
                     htmltext = "trader_chali_q0005_02.htm";

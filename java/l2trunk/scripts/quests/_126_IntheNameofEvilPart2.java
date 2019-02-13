@@ -3,7 +3,6 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _126_IntheNameofEvilPart2 extends Quest {
     private final int Mushika = 32114;
@@ -33,7 +32,7 @@ public final class _126_IntheNameofEvilPart2 extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("asamah_q126_4.htm")) {
+        if ("asamah_q126_4.htm".equalsIgnoreCase(event)) {
             st.setState(STARTED);
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
@@ -126,8 +125,7 @@ public final class _126_IntheNameofEvilPart2 extends Quest {
 
         if (npcId == Asamah) {
             if (cond == 0) {
-                QuestState qs = st.getPlayer().getQuestState(_125_InTheNameOfEvilPart1.class);
-                if (st.getPlayer().getLevel() >= 77 && qs != null && qs.isCompleted())
+                if (st.player.getLevel() >= 77 && st.player.isQuestCompleted(_125_InTheNameOfEvilPart1.class))
                     htmltext = "asamah_q126_1.htm";
                 else {
                     htmltext = "asamah_q126_0.htm";

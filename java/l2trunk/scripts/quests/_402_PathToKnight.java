@@ -166,8 +166,8 @@ public final class _402_PathToKnight extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        int classid = st.getPlayer().getClassId().id();
-        int level = st.getPlayer().getLevel();
+        int classid = st.player.getClassId().id;
+        int level = st.player.getLevel();
         long squire = st.getQuestItemsCount(MARK_OF_ESQUIRE);
         long coin1 = st.getQuestItemsCount(COIN_OF_LORDS1);
         long coin2 = st.getQuestItemsCount(COIN_OF_LORDS2);
@@ -189,42 +189,41 @@ public final class _402_PathToKnight extends Quest {
                 htmltext = "sir_karrel_vasper_q0402_04.htm";
             else
                 htmltext = "sir_karrel_vasper_q0402_05.htm";
-        } else if (event.equalsIgnoreCase("sir_karrel_vasper_q0402_08.htm")) {
+        } else if ("sir_karrel_vasper_q0402_08.htm".equalsIgnoreCase(event)) {
             if (st.getCond() == 0 && classid == 0x00 && level >= 18) {
                 st.setCond(1);
                 st.setState(STARTED);
                 st.playSound(SOUND_ACCEPT);
-                st.giveItems(MARK_OF_ESQUIRE, 1);
+                st.giveItems(MARK_OF_ESQUIRE);
             }
-        } else if (event.equalsIgnoreCase("captain_bathia_q0402_02.htm")) {
+        } else if ("captain_bathia_q0402_02.htm".equalsIgnoreCase(event)) {
             if (squire > 0 && guards_mark1 < 1 && coin1 < 1)
-                st.giveItems(GLUDIO_GUARDS_MARK1, 1);
-        } else if (event.equalsIgnoreCase("bishop_raimund_q0402_03.htm")) {
+                st.giveItems(GLUDIO_GUARDS_MARK1);
+        } else if ("bishop_raimund_q0402_03.htm".equalsIgnoreCase(event)) {
             if (squire > 0 && church_mark1 < 1 && coin2 < 1)
-                st.giveItems(EINHASAD_CHURCH_MARK1, 1);
-        } else if (event.equalsIgnoreCase("captain_bezique_q0402_02.htm")) {
+                st.giveItems(EINHASAD_CHURCH_MARK1);
+        } else if ("captain_bezique_q0402_02.htm".equalsIgnoreCase(event)) {
             if (squire > 0 && guards_mark2 < 1 && coin3 < 1)
-                st.giveItems(GLUDIO_GUARDS_MARK2, 1);
-        } else if (event.equalsIgnoreCase("levian_q0402_02.htm")) {
+                st.giveItems(GLUDIO_GUARDS_MARK2);
+        } else if ("levian_q0402_02.htm".equalsIgnoreCase(event)) {
             if (squire > 0 && church_mark2 < 1 && coin4 < 1)
-                st.giveItems(EINHASAD_CHURCH_MARK2, 1);
-        } else if (event.equalsIgnoreCase("gilbert_q0402_02.htm")) {
+                st.giveItems(EINHASAD_CHURCH_MARK2);
+        } else if ("gilbert_q0402_02.htm".equalsIgnoreCase(event)) {
             if (squire > 0 && guards_mark3 < 1 && coin5 < 1)
-                st.giveItems(GLUDIO_GUARDS_MARK3, 1);
-        } else if (event.equalsIgnoreCase("quilt_q0402_02.htm")) {
+                st.giveItems(GLUDIO_GUARDS_MARK3);
+        } else if ("quilt_q0402_02.htm".equalsIgnoreCase(event)) {
             if (squire > 0 && church_mark3 < 1 && coin6 < 1)
-                st.giveItems(EINHASAD_CHURCH_MARK3, 1);
-        } else if (event.equalsIgnoreCase("sir_karrel_vasper_q0402_13.htm") | event.equalsIgnoreCase("sir_karrel_vasper_q0402_14.htm"))
+                st.giveItems(EINHASAD_CHURCH_MARK3);
+        } else if ("sir_karrel_vasper_q0402_13.htm".equalsIgnoreCase(event) | "sir_karrel_vasper_q0402_14.htm".equalsIgnoreCase(event))
             if (squire > 0 && coin1 + coin2 + coin3 + coin4 + coin5 + coin6 >= 3) {
                 for (int i = 1162; i < 1179; i++)
                     st.takeItems(i, -1);
-                st.takeItems(MARK_OF_ESQUIRE, -1);
-                if (st.getPlayer().getClassId().getLevel() == 1) {
-                    st.giveItems(SWORD_OF_RITUAL, 1);
-                    if (!st.getPlayer().getVarB("prof1")) {
-                        st.getPlayer().setVar("prof1", "1", -1);
+                st.takeItems(MARK_OF_ESQUIRE);
+                if (st.player.getClassId().occupation() == 0) {
+                    st.giveItems(SWORD_OF_RITUAL);
+                    if (!st.player.isVarSet("prof1")) {
+                        st.player.setVar("prof1", 1);
                         st.addExpAndSp(228064, 16455);
-                        //FIXME [G1ta0] дать адены, только если первый чар на акке
                         st.giveItems(ADENA_ID, 81900);
                     }
                 }
@@ -365,7 +364,7 @@ public final class _402_PathToKnight extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         for (int[] element : DROPLIST)
             if (st.getCond() > 0 && npcId == element[0] && st.getQuestItemsCount(element[1]) > 0 && st.getQuestItemsCount(element[2]) < element[3] && Rnd.chance(element[4])) {
@@ -375,6 +374,5 @@ public final class _402_PathToKnight extends Quest {
                 else
                     st.playSound(SOUND_ITEMGET);
             }
-        return null;
     }
 }

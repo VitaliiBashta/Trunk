@@ -111,8 +111,8 @@ public class RequestProcureCrop extends L2GameClientPacket {
                 if (template == null)
                     return;
 
-                weight = SafeMath.addAndCheck(weight, SafeMath.mulAndCheck(count, template.getWeight()));
-                if (!template.isStackable() || activeChar.getInventory().getItemByItemId(itemId) == null)
+                weight = SafeMath.addAndCheck(weight, SafeMath.mulAndCheck(count, template.weight()));
+                if (!template.stackable() || activeChar.getInventory().getItemByItemId(itemId) == null)
                     slots++;
             }
         } catch (ArithmeticException ae) {

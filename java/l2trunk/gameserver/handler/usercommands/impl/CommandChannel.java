@@ -8,7 +8,6 @@ import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -33,7 +32,7 @@ public final class CommandChannel implements IUserCommandHandler {
         switch (id) {
             case 92: // channelcreate
                 // "Используйте команду /channelinvite"
-                activeChar.sendMessage(new CustomMessage("usercommandhandlers.CommandChannel", activeChar));
+                activeChar.sendMessage(new CustomMessage("usercommandhandlers.CommandChannel"));
                 break;
             case 93: // channeldelete
                 if (!activeChar.isInParty() || !activeChar.getParty().isInCommandChannel())

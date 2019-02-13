@@ -161,7 +161,7 @@ public final class _631_DeliciousTopChoiceMeat extends Quest {
         String htmltext = "noquest";
         int cond = st.getCond();
         if (cond < 1) {
-            if (st.getPlayer().getLevel() < 82) {
+            if (st.player.getLevel() < 82) {
                 htmltext = "beast_herder_tunatun_q0631_0103.htm";
                 st.exitCurrentQuest(true);
             } else
@@ -179,7 +179,7 @@ public final class _631_DeliciousTopChoiceMeat extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getCond() == 1 && Rnd.chance(MEAT_DROP_CHANCE)) {
             st.giveItems(PRIME_MEAT, 1, true);
             if (st.getQuestItemsCount(PRIME_MEAT) < 120)
@@ -189,6 +189,5 @@ public final class _631_DeliciousTopChoiceMeat extends Quest {
                 st.setCond(2);
             }
         }
-        return null;
     }
 }

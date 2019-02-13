@@ -79,38 +79,46 @@ public final class _224_TestOfSagittarius extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equals("1")) {
-            htmltext = "30702-04.htm";
-            st.setCond(1);
-            st.setState(STARTED);
-            if (!st.getPlayer().getVarB("dd3")) {
-                st.giveItems(7562, 96);
-                st.getPlayer().setVar("dd3", "1", -1);
-            }
-            st.playSound(SOUND_ACCEPT);
-            st.giveItems(BERNARDS_INTRODUCTION_ID, 1);
-        } else if (event.equals("30626_1"))
-            htmltext = "30626-02.htm";
-        else if (event.equals("30626_2")) {
-            htmltext = "30626-03.htm";
-            st.takeItems(BERNARDS_INTRODUCTION_ID, st.getQuestItemsCount(BERNARDS_INTRODUCTION_ID));
-            st.giveItems(LETTER_OF_HAMIL1_ID, 1);
-            st.setCond(2);
-        } else if (event.equals("30626_3"))
-            htmltext = "30626-06.htm";
-        else if (event.equals("30626_4")) {
-            htmltext = "30626-07.htm";
-            st.takeItems(HUNTERS_RUNE1_ID, st.getQuestItemsCount(HUNTERS_RUNE1_ID));
-            st.giveItems(LETTER_OF_HAMIL2_ID, 1);
-            st.setCond(5);
-        } else if (event.equals("30653_1")) {
-            htmltext = "30653-02.htm";
-            st.takeItems(LETTER_OF_HAMIL1_ID, st.getQuestItemsCount(LETTER_OF_HAMIL1_ID));
-            st.setCond(3);
-        } else if (event.equals("30514_1")) {
-            htmltext = "30514-02.htm";
-            st.takeItems(LETTER_OF_HAMIL2_ID, st.getQuestItemsCount(LETTER_OF_HAMIL2_ID));
-            st.setCond(6);
+        switch (event) {
+            case "1":
+                htmltext = "30702-04.htm";
+                st.setCond(1);
+                st.setState(STARTED);
+                if (!st.player.isVarSet("dd3")) {
+                    st.giveItems(7562, 96);
+                    st.player.setVar("dd3", 1);
+                }
+                st.playSound(SOUND_ACCEPT);
+                st.giveItems(BERNARDS_INTRODUCTION_ID);
+                break;
+            case "30626_1":
+                htmltext = "30626-02.htm";
+                break;
+            case "30626_2":
+                htmltext = "30626-03.htm";
+                st.takeItems(BERNARDS_INTRODUCTION_ID);
+                st.giveItems(LETTER_OF_HAMIL1_ID);
+                st.setCond(2);
+                break;
+            case "30626_3":
+                htmltext = "30626-06.htm";
+                break;
+            case "30626_4":
+                htmltext = "30626-07.htm";
+                st.takeItems(HUNTERS_RUNE1_ID);
+                st.giveItems(LETTER_OF_HAMIL2_ID);
+                st.setCond(5);
+                break;
+            case "30653_1":
+                htmltext = "30653-02.htm";
+                st.takeItems(LETTER_OF_HAMIL1_ID);
+                st.setCond(3);
+                break;
+            case "30514_1":
+                htmltext = "30514-02.htm";
+                st.takeItems(LETTER_OF_HAMIL2_ID);
+                st.setCond(6);
+                break;
         }
         return htmltext;
     }
@@ -127,11 +135,11 @@ public final class _224_TestOfSagittarius extends Quest {
         if (id == CREATED) {
             st.setState(STARTED);
             st.setCond(0);
-            st.set("id", "0");
+            st.set("id", 0);
         }
         if (npcId == 30702 && st.getCond() == 0) {
-            if (st.getPlayer().getClassId().id() == 0x07 || st.getPlayer().getClassId().id() == 0x16 || st.getPlayer().getClassId().id() == 0x23) {
-                if (st.getPlayer().getLevel() >= 39)
+            if (st.player.getClassId().id == 0x07 || st.player.getClassId().id == 0x16 || st.player.getClassId().id == 0x23) {
+                if (st.player.getLevel() >= 39)
                     htmltext = "30702-03.htm";
                 else {
                     htmltext = "30702-01.htm";
@@ -164,14 +172,14 @@ public final class _224_TestOfSagittarius extends Quest {
             htmltext = "30626-12.htm";
         else if (npcId == 30626 && st.getCond() == 14 && st.getQuestItemsCount(TALISMAN_OF_KADESH_ID) > 0) {
             htmltext = "30626-13.htm";
-            st.takeItems(CRESCENT_MOON_BOW_ID, -1);
-            st.takeItems(TALISMAN_OF_KADESH_ID, -1);
-            st.takeItems(BLOOD_OF_LIZARDMAN_ID, -1);
-            st.giveItems(MARK_OF_SAGITTARIUS_ID, 1);
-            if (!st.getPlayer().getVarB("prof2.3")) {
+            st.takeItems(CRESCENT_MOON_BOW_ID);
+            st.takeItems(TALISMAN_OF_KADESH_ID);
+            st.takeItems(BLOOD_OF_LIZARDMAN_ID);
+            st.giveItems(MARK_OF_SAGITTARIUS_ID);
+            if (!st.player.isVarSet("prof2.3")) {
                 st.addExpAndSp(RewardExp, RewardSP);
                 st.giveItems(ADENA_ID, RewardAdena);
-                st.getPlayer().setVar("prof2.3", "1", -1);
+                st.player.setVar("prof2.3", 1);
             }
             st.playSound(SOUND_FINISH);
             st.unset("cond");
@@ -212,11 +220,11 @@ public final class _224_TestOfSagittarius extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         if (npcId == 20079 || npcId == 20080 || npcId == 20081 || npcId == 20084 || npcId == 20086 || npcId == 20089 || npcId == 20090) {
             if (st.getCond() == 3 && st.getQuestItemsCount(HUNTERS_RUNE1_ID) < 10 && Rnd.chance(50)) {
-                st.giveItems(HUNTERS_RUNE1_ID, 1);
+                st.giveItems(HUNTERS_RUNE1_ID);
                 if (st.getQuestItemsCount(HUNTERS_RUNE1_ID) == 10) {
                     st.setCond(4);
                     st.playSound(SOUND_MIDDLE);
@@ -225,61 +233,27 @@ public final class _224_TestOfSagittarius extends Quest {
             }
         } else if (npcId == 20269 || npcId == 20270) {
             if (st.getCond() == 6 && st.getQuestItemsCount(HUNTERS_RUNE2_ID) < 10 && Rnd.chance(50)) {
-                st.giveItems(HUNTERS_RUNE2_ID, 1);
+                st.giveItems(HUNTERS_RUNE2_ID);
                 if (st.getQuestItemsCount(HUNTERS_RUNE2_ID) == 10) {
                     st.takeItems(HUNTERS_RUNE2_ID, 10);
-                    st.giveItems(TALISMAN_OF_SNAKE_ID, 1);
+                    st.giveItems(TALISMAN_OF_SNAKE_ID);
                     st.setCond(7);
                     st.playSound(SOUND_MIDDLE);
                 } else
                     st.playSound(SOUND_ITEMGET);
             }
         } else if (npcId == 20230 || npcId == 20232 || npcId == 20234) {
-            if (st.getCond() == 10 && st.getQuestItemsCount(STAKATO_CHITIN_ID) == 0 && Rnd.chance(10)) {
-                st.giveItems(STAKATO_CHITIN_ID, 1);
-                if (st.getQuestItemsCount(MITHRIL_CLIP_ID) > 0 && st.getQuestItemsCount(ST_BOWSTRING_ID) > 0 && st.getQuestItemsCount(MANASHENS_HORN_ID) > 0) {
-                    st.setCond(11);
-                    st.playSound(SOUND_MIDDLE);
-                } else
-                    st.playSound(SOUND_ITEMGET);
+            if (st.getQuestItemsCount(MITHRIL_CLIP_ID) > 0 && st.getQuestItemsCount(MANASHENS_HORN_ID) > 0 && st.getQuestItemsCount(STAKATO_CHITIN_ID) > 0) {
+                st.setCond(11);
             }
         } else if (npcId == 20563) {
-            if (st.getCond() == 10 && st.getQuestItemsCount(MANASHENS_HORN_ID) == 0 && Rnd.chance(10)) {
-                st.giveItems(MANASHENS_HORN_ID, 1);
-                if (st.getQuestItemsCount(MITHRIL_CLIP_ID) > 0 && st.getQuestItemsCount(ST_BOWSTRING_ID) > 0 && st.getQuestItemsCount(STAKATO_CHITIN_ID) > 0) {
-                    st.setCond(11);
-                    st.playSound(SOUND_MIDDLE);
-                } else
-                    st.playSound(SOUND_ITEMGET);
-            }
+            checkState(st,MANASHENS_HORN_ID);
+
         } else if (npcId == 20233) {
-            if (st.getCond() == 10 && st.getQuestItemsCount(ST_BOWSTRING_ID) == 0 && Rnd.chance(10)) {
-                st.giveItems(ST_BOWSTRING_ID, 1);
-                if (st.getQuestItemsCount(MITHRIL_CLIP_ID) > 0 && st.getQuestItemsCount(MANASHENS_HORN_ID) > 0 && st.getQuestItemsCount(STAKATO_CHITIN_ID) > 0) {
-                    st.setCond(11);
-                    st.playSound(SOUND_MIDDLE);
-                } else
-                    st.playSound(SOUND_ITEMGET);
-            }
+            checkState(st,STAKATO_CHITIN_ID);
         } else if (npcId == 20551) {
-            if (st.getCond() == 10 && st.getQuestItemsCount(MITHRIL_CLIP_ID) == 0 && Rnd.chance(10)) {
-                st.giveItems(MITHRIL_CLIP_ID, 1);
-                if (st.getQuestItemsCount(ST_BOWSTRING_ID) > 0 && st.getQuestItemsCount(MANASHENS_HORN_ID) > 0 && st.getQuestItemsCount(STAKATO_CHITIN_ID) > 0) {
-                    st.setCond(11);
-                    st.playSound(SOUND_MIDDLE);
-                } else
-                    st.playSound(SOUND_ITEMGET);
-            }
-        } else if (npcId == 20551) {
-            if (st.getCond() == 10 && st.getQuestItemsCount(MITHRIL_CLIP_ID) == 0 && Rnd.chance(10))
-                if (st.getQuestItemsCount(ST_BOWSTRING_ID) > 0 && st.getQuestItemsCount(MANASHENS_HORN_ID) > 0 && st.getQuestItemsCount(STAKATO_CHITIN_ID) > 0) {
-                    st.giveItems(MITHRIL_CLIP_ID, 1);
-                    st.setCond(11);
-                    st.playSound(SOUND_MIDDLE);
-                } else {
-                    st.giveItems(MITHRIL_CLIP_ID, 1);
-                    st.playSound(SOUND_ITEMGET);
-                }
+            checkState(st,MITHRIL_CLIP_ID);
+
         } else if (npcId == 20577 || npcId == 20578 || npcId == 20579 || npcId == 20580 || npcId == 20581 || npcId == 20582) {
             if (st.getCond() == 13)
                 if (Rnd.chance((st.getQuestItemsCount(BLOOD_OF_LIZARDMAN_ID) - 120) * 5)) {
@@ -287,17 +261,27 @@ public final class _224_TestOfSagittarius extends Quest {
                     st.takeItems(BLOOD_OF_LIZARDMAN_ID, st.getQuestItemsCount(BLOOD_OF_LIZARDMAN_ID));
                     st.playSound(SOUND_BEFORE_BATTLE);
                 } else {
-                    st.giveItems(BLOOD_OF_LIZARDMAN_ID, 1);
+                    st.giveItems(BLOOD_OF_LIZARDMAN_ID);
                     st.playSound(SOUND_ITEMGET);
                 }
         } else if (npcId == 27090)
             if (st.getCond() == 13 && st.getQuestItemsCount(TALISMAN_OF_KADESH_ID) == 0)
                 if (st.getItemEquipped(Inventory.PAPERDOLL_RHAND) == CRESCENT_MOON_BOW_ID) {
-                    st.giveItems(TALISMAN_OF_KADESH_ID, 1);
+                    st.giveItems(TALISMAN_OF_KADESH_ID);
                     st.setCond(14);
                     st.playSound(SOUND_MIDDLE);
                 } else
                     st.addSpawn(27090);
-        return null;
+    }
+
+    private static void checkState(QuestState st, int item) {
+        if (st.getCond() == 10 && st.getQuestItemsCount(item) == 0 && Rnd.chance(10)) {
+            st.giveItems(item);
+            if (st.getQuestItemsCount(MITHRIL_CLIP_ID) > 0 && st.getQuestItemsCount(MANASHENS_HORN_ID) > 0 && st.getQuestItemsCount(STAKATO_CHITIN_ID) > 0) {
+                st.setCond(11);
+                st.playSound(SOUND_MIDDLE);
+            } else
+                st.playSound(SOUND_ITEMGET);
+        }
     }
 }

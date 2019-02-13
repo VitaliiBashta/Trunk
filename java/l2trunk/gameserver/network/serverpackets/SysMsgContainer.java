@@ -45,15 +45,15 @@ public abstract class SysMsgContainer<T extends SysMsgContainer<T>> extends L2Ga
         if (object == null)
             return add(new StringArgument(null));
 
-        if (object.isNpc())
+        if (object instanceof NpcInstance)
             return add(new NpcNameArgument(((NpcInstance) object).getNpcId() + 1000000));
         else if (object instanceof Summon)
             return add(new NpcNameArgument(((Summon) object).getNpcId() + 1000000));
-        else if (object.isItem())
+        else if (object instanceof ItemInstance)
             return add(new ItemNameArgument(((ItemInstance) object).getItemId()));
-        else if (object.isPlayer())
+        else if (object instanceof Player)
             return add(new PlayerNameArgument((Player) object));
-        else if (object.isDoor())
+        else if (object instanceof DoorInstance)
             return add(new StaticObjectNameArgument(((DoorInstance) object).getDoorId()));
         else if (object instanceof StaticObjectInstance)
             return add(new StaticObjectNameArgument(((StaticObjectInstance) object).getUId()));

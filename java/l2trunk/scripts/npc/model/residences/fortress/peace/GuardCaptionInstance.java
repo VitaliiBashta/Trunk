@@ -12,11 +12,7 @@ import l2trunk.scripts.npc.model.residences.fortress.FacilityManagerInstance;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author VISTALL
- * @date 16:29/17.04.2011
- */
-public class GuardCaptionInstance extends FacilityManagerInstance {
+public final class GuardCaptionInstance extends FacilityManagerInstance {
     public GuardCaptionInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
     }
@@ -52,7 +48,7 @@ public class GuardCaptionInstance extends FacilityManagerInstance {
             if (buy) {
                 List<DoorObject> doorObjects = fortress.getSiegeEvent().getObjects(FortressSiegeEvent.UPGRADEABLE_DOORS);
                 for (DoorObject d : doorObjects)
-                    d.setUpgradeValue(fortress.<SiegeEvent>getSiegeEvent(), d.getDoor().getMaxHp() * fortress.getFacilityLevel(Fortress.DOOR_UPGRADE));
+                    d.setUpgradeValue(fortress.getSiegeEvent(), d.getDoor().getMaxHp() * fortress.getFacilityLevel(Fortress.DOOR_UPGRADE));
             }
         } else if (command.equalsIgnoreCase("hireDwarves"))
             buyFacility(player, Fortress.DWARVENS, 1, 100000);

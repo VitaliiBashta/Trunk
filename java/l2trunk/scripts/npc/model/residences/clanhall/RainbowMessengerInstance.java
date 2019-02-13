@@ -42,7 +42,7 @@ public class RainbowMessengerInstance extends NpcInstance {
                 showChatWindow(player, "residence2/clanhall/messenger_yetti011.htm");
                 return;
             }
-            if (clan.getLeaderId() != player.getObjectId()) {
+            if (clan.getLeaderId() != player.objectId()) {
                 showChatWindow(player, "residence2/clanhall/messenger_yetti010.htm");
                 return;
             }
@@ -80,7 +80,7 @@ public class RainbowMessengerInstance extends NpcInstance {
                 showChatWindow(player, "residence2/clanhall/messenger_yetti011.htm");
                 return;
             }
-            if (clan.getLeaderId() != player.getObjectId()) {
+            if (clan.getLeaderId() != player.objectId()) {
                 showChatWindow(player, "residence2/clanhall/messenger_yetti010.htm");
                 return;
             }
@@ -92,7 +92,7 @@ public class RainbowMessengerInstance extends NpcInstance {
                 miniGameEvent.removeObject(ClanHallMiniGameEvent.ATTACKERS, siegeClanObject);
                 SiegeClanDAO.INSTANCE.delete(clanHall, siegeClanObject);
 
-                ItemFunctions.addItem(player, ITEM_ID, siegeClanObject.getParam() / 2L, true, "RainbowMessenger");
+                ItemFunctions.addItem(player, ITEM_ID, siegeClanObject.getParam() / 2L, "RainbowMessenger");
 
                 showChatWindow(player, "residence2/clanhall/messenger_yetti005.htm");
             }
@@ -107,7 +107,7 @@ public class RainbowMessengerInstance extends NpcInstance {
                 showChatWindow(player, "residence2/clanhall/messenger_yetti011.htm");
                 return;
             }
-            if (clan.getLeaderId() != player.getObjectId()) {
+            if (clan.getLeaderId() != player.objectId()) {
                 showChatWindow(player, "residence2/clanhall/messenger_yetti010.htm");
                 return;
             }
@@ -119,7 +119,7 @@ public class RainbowMessengerInstance extends NpcInstance {
                 miniGameEvent.removeObject(ClanHallMiniGameEvent.REFUND, siegeClanObject);
                 SiegeClanDAO.INSTANCE.delete(clanHall, siegeClanObject);
 
-                ItemFunctions.addItem(player, ITEM_ID, siegeClanObject.getParam(), true, "RainbowMessenger");
+                ItemFunctions.addItem(player, ITEM_ID, siegeClanObject.getParam(), "RainbowMessenger");
 
                 showChatWindow(player, "residence2/clanhall/messenger_yetti019.htm");
             }

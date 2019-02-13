@@ -5,11 +5,12 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
 import l2trunk.gameserver.network.serverpackets.SystemMessage;
-import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.scripts.bosses.BelethManager;
 
 import java.util.StringTokenizer;
+
+import static l2trunk.gameserver.utils.ItemFunctions.addItem;
 
 public final class BelethCoffinInstance extends NpcInstance {
     private static final int RING = 10314;
@@ -40,7 +41,7 @@ public final class BelethCoffinInstance extends NpcInstance {
 
             CommandChannel channel = player.getParty().getCommandChannel();
 
-            Functions.addItem(player, RING, 1, "BelethCoffinInstance");
+            addItem(player, RING, 1);
 
             SystemMessage smsg = new SystemMessage(SystemMessage.S1_HAS_OBTAINED_S2);
             smsg.addString(player.getName());

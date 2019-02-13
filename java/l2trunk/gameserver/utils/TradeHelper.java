@@ -29,12 +29,12 @@ public final class TradeHelper {
         }
 
         if (player.getLevel() < Config.SERVICES_TRADE_MIN_LEVEL) {
-            player.sendMessage(new CustomMessage("trade.NotHavePermission", player).addNumber(Config.SERVICES_TRADE_MIN_LEVEL));
+            player.sendMessage(new CustomMessage("trade.NotHavePermission").addNumber(Config.SERVICES_TRADE_MIN_LEVEL));
             return false;
         }
 
-        String tradeBan = player.getVar("tradeBan");
-        if (tradeBan != null && (tradeBan.equals("-1") || Long.parseLong(tradeBan) >= System.currentTimeMillis())) {
+        long tradeBan = player.getVarLong("tradeBan");
+        if (tradeBan !=0 && (tradeBan ==-1  || tradeBan >= System.currentTimeMillis())) {
             player.sendPacket(SystemMsg.YOU_ARE_CURRENTLY_BLOCKED_FROM_USING_THE_PRIVATE_STORE_AND_PRIVATE_WORKSHOP);
             return false;
         }
@@ -66,7 +66,7 @@ public final class TradeHelper {
                 tradenear = true;
 
             if (tradenear) {
-                player.sendMessage(new CustomMessage("trade.OtherTradersNear", player));
+                player.sendMessage(new CustomMessage("trade.OtherTradersNear"));
                 return false;
             }
         }
@@ -76,7 +76,7 @@ public final class TradeHelper {
 
     public static void purchaseItem(Player buyer, Player seller, TradeItem item) {
         long price = item.getCount() * item.getOwnersPrice();
-        if (!item.getItem().isStackable()) {
+        if (!item.getItem().stackable()) {
             if (item.getEnchantLevel() > 0) {
                 seller.sendPacket(new SystemMessage2(SystemMsg.S2S3_HAS_BEEN_SOLD_TO_C1_AT_THE_PRICE_OF_S4_ADENA).addString(buyer.getName()).addInteger(item.getEnchantLevel()).addItemName(item.getItemId()).addLong(price));
                 buyer.sendPacket(new SystemMessage2(SystemMsg.S2S3_HAS_BEEN_PURCHASED_FROM_C1_AT_THE_PRICE_OF_S4_ADENA).addString(seller.getName()).addInteger(item.getEnchantLevel()).addItemName(item.getItemId()).addLong(price));
@@ -107,7 +107,7 @@ public final class TradeHelper {
         activeChar.broadcastCharInfo();
     }
 
-    public static void buyFromStore(Player seller, Player buyer, int _count, int[] _items, long[] _itemQ, long[] _itemP) {
+    public static void buyFromStore(Player seller, Player buyer, int _count, List<Integer> _items, List<Long> _itemQ, List<Long> _itemP) {
         List<TradeItem> sellList = seller.getSellList();
         if (sellList.isEmpty()) {
             buyer.sendPacket(SystemMsg.THE_ATTEMPT_TO_TRADE_HAS_FAILED);
@@ -126,37 +126,41 @@ public final class TradeHelper {
         try {
             loop:
             for (int i = 0; i < _count; i++) {
-                int objectId = _items[i];
-                long count = _itemQ[i];
-                long price = _itemP[i];
+                int objectId = _items.get(i);
+                long count = _itemQ.get(i);
+                long price = _itemP.get(i);
 
                 TradeItem bi;
                 for (TradeItem si : sellList) {
                     if (si.getObjectId() == objectId) {
                         if (si.getOwnersPrice() == price) {
-                            if (count > si.getCount())
+                            if (count <= si.getCount()) {
+                                ItemInstance item = seller.getInventory().getItemByObjectId(objectId);
+                                if (item != null && item.getCount() >= count && item.canBeTraded(seller)) {
+                                    totalCost = SafeMath.addAndCheck(totalCost, SafeMath.mulAndCheck(count, price));
+                                    weight = SafeMath.addAndCheck(weight, SafeMath.mulAndCheck(count, item.getTemplate().weight()));
+                                    if (!item.isStackable() || buyer.getInventory().getItemByItemId(item.getItemId()) == null)
+                                        slots++;
+
+                                    bi = new TradeItem();
+                                    bi.setObjectId(objectId);
+                                    bi.setItemId(item.getItemId());
+                                    bi.setCount(count);
+                                    bi.setOwnersPrice(price);
+                                    if (si.getCount() == count)
+                                        bi.setAuctionId(si.getAuctionId());
+                                    else
+                                        AuctionManager.getInstance().setNewCount(si.getAuctionId(), si.getCount() - count);
+                                    buyList.add(bi);
+                                    break;
+                                } else {
+                                    break loop;
+                                }
+
+                            } else {
                                 break loop;
+                            }
 
-                            ItemInstance item = seller.getInventory().getItemByObjectId(objectId);
-                            if (item == null || item.getCount() < count || !item.canBeTraded(seller))
-                                break loop;
-
-                            totalCost = SafeMath.addAndCheck(totalCost, SafeMath.mulAndCheck(count, price));
-                            weight = SafeMath.addAndCheck(weight, SafeMath.mulAndCheck(count, item.getTemplate().getWeight()));
-                            if (!item.isStackable() || buyer.getInventory().getItemByItemId(item.getItemId()) == null)
-                                slots++;
-
-                            bi = new TradeItem();
-                            bi.setObjectId(objectId);
-                            bi.setItemId(item.getItemId());
-                            bi.setCount(count);
-                            bi.setOwnersPrice(price);
-                            if (si.getCount() == count)
-                                bi.setAuctionId(si.getAuctionId());
-                            else
-                                AuctionManager.getInstance().setNewCount(si.getAuctionId(), si.getCount() - count);
-                            buyList.add(bi);
-                            break;
                         }
                     }
                 }
@@ -210,7 +214,7 @@ public final class TradeHelper {
                 long tax = getTax(seller, totalCost);
                 if (tax > 0L) {
                     totalCost -= tax;
-                    seller.sendMessage(new CustomMessage("trade.HavePaidTax", seller).addNumber(tax));
+                    seller.sendMessage(new CustomMessage("trade.HavePaidTax").addNumber(tax));
                 }
 
                 seller.addAdena(totalCost, "Reward From Store Sell to " + buyer.toString());

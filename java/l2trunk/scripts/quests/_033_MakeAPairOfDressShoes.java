@@ -66,8 +66,8 @@ public final class _033_MakeAPairOfDressShoes extends Quest {
         int cond = st.getCond();
         if (npcId == 30838) {
             if (cond == 0 && st.getQuestItemsCount(DRESS_SHOES_BOX) == 0) {
-                if (st.getPlayer().getLevel() >= 60) {
-                    QuestState fwear = st.getPlayer().getQuestState(_037_PleaseMakeMeFormalWear.class);
+                if (st.player.getLevel() >= 60) {
+                    QuestState fwear = st.player.getQuestState(_037_PleaseMakeMeFormalWear.class);
                     if (fwear != null && fwear.getCond() == 7)
                         htmltext = "30838-0.htm";
                     else

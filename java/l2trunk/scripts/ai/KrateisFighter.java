@@ -15,10 +15,10 @@ public final class KrateisFighter extends Fighter {
     @Override
     public void onEvtDead(Creature killer) {
         super.onEvtDead(killer);
-
-        Player player = killer.getPlayer();
-        if (player == null)
-            return;
+        Player player;
+        if (killer instanceof Player)
+            player = (Player) killer;
+        else return;
 
         KrateisCubeEvent cubeEvent = getActor().getEvent(KrateisCubeEvent.class);
         if (cubeEvent == null)

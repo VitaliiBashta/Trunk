@@ -109,7 +109,7 @@ public enum FishTable {
         }
 
         if (result.isEmpty())
-            LOG.warn("No fishes for group : " + group + " type: " + type + " level: " + lvl + "!");
+            LOG.warn("No fishes for group : " + group + " type: " + type + " occupation: " + lvl + "!");
 
         return result;
     }

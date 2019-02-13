@@ -1,6 +1,7 @@
 package l2trunk.scripts.npc.model.residences;
 
 import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.base.Experience;
 import l2trunk.gameserver.model.entity.events.impl.SiegeEvent;
@@ -22,20 +23,16 @@ public class SiegeGuardInstance extends NpcInstance {
     }
 
     @Override
-    public boolean isSiegeGuard() {
-        return true;
-    }
-
-    @Override
     public int getAggroRange() {
         return 1200;
     }
 
     @Override
     public boolean isAutoAttackable(Creature attacker) {
-        Player player = attacker.getPlayer();
-        if (player == null)
+        if (!(attacker instanceof Playable)) {
             return false;
+        }
+        Player player = ((Playable)attacker).getPlayer();
         SiegeEvent<?, ?> siegeEvent = getEvent(SiegeEvent.class);
         SiegeEvent<?, ?> siegeEvent2 = attacker.getEvent(SiegeEvent.class);
         Clan clan = player.getClan();
@@ -89,8 +86,8 @@ public class SiegeGuardInstance extends NpcInstance {
 
         List<RewardItem> rewardItems = list.roll(activePlayer, mod, false, true);
 
-        for (RewardItem drop : rewardItems)
-            dropItem(activePlayer, drop.itemId, drop.count);
+        rewardItems.forEach(drop ->
+            dropItem(activePlayer, drop.itemId, drop.count));
     }
 
     @Override

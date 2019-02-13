@@ -12,7 +12,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.tables.SpawnTable;
 
-public class AdminDelete implements IAdminCommandHandler {
+public final class AdminDelete implements IAdminCommandHandler {
     @Override
     public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
         Commands command = (Commands) comm;
@@ -20,22 +20,20 @@ public class AdminDelete implements IAdminCommandHandler {
         if (!activeChar.getPlayerAccess().CanEditNPC)
             return false;
 
-        switch (command) {
-            case admin_delete:
-                GameObject obj = wordList.length == 1 ? activeChar.getTarget() : GameObjectsStorage.getNpc(NumberUtils.toInt(wordList[1], 0));
-                if (obj != null && obj.isNpc()) {
-                    NpcInstance target = (NpcInstance) obj;
-                    if (Config.SAVE_GM_SPAWN)
-                        SpawnTable.INSTANCE.deleteSpawn(target.getSpawnedLoc(), target.getNpcId());
-                    target.deleteMe();
+        if (command == Commands.admin_delete) {
+            GameObject obj = wordList.length == 1 ? activeChar.getTarget() : GameObjectsStorage.getNpc(NumberUtils.toInt(wordList[1], 0));
+            if (obj instanceof NpcInstance) {
+                NpcInstance target = (NpcInstance) obj;
+                if (Config.SAVE_GM_SPAWN)
+                    SpawnTable.INSTANCE.deleteSpawn(target.getSpawnedLoc(), target.getNpcId());
+                target.deleteMe();
 
-                    Spawner spawn = target.getSpawn();
+                Spawner spawn = target.getSpawn();
 
-                    if (spawn != null)
-                        spawn.stopRespawn();
-                } else
-                    activeChar.sendPacket(SystemMsg.INVALID_TARGET);
-                break;
+                if (spawn != null)
+                    spawn.stopRespawn();
+            } else
+                activeChar.sendPacket(SystemMsg.INVALID_TARGET);
         }
 
         return true;

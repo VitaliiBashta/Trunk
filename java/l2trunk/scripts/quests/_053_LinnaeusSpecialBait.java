@@ -52,10 +52,10 @@ public final class _053_LinnaeusSpecialBait extends Quest {
         int id = st.getState();
         if (npcId == Linnaeu)
             if (id == CREATED) {
-                if (st.getPlayer().getLevel() < 60) {
+                if (st.player.getLevel() < 60) {
                     htmltext = "fisher_linneaus_q0053_0103.htm";
                     st.exitCurrentQuest(true);
-                } else if (st.getPlayer().getSkillLevel(FishSkill) >= 21)
+                } else if (st.player.getSkillLevel(FishSkill) >= 21)
                     htmltext = "fisher_linneaus_q0053_0101.htm";
                 else {
                     htmltext = "fisher_linneaus_q0053_0102.htm";
@@ -71,17 +71,16 @@ public final class _053_LinnaeusSpecialBait extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         if (npcId == CrimsonDrake && st.getCond() == 1)
             if (st.getQuestItemsCount(HeartOfCrimsonDrake) < 100 && Rnd.chance(30)) {
-                st.giveItems(HeartOfCrimsonDrake, 1);
+                st.giveItems(HeartOfCrimsonDrake);
                 if (st.getQuestItemsCount(HeartOfCrimsonDrake) == 100) {
                     st.playSound(SOUND_MIDDLE);
                     st.setCond(2);
                 } else
                     st.playSound(SOUND_ITEMGET);
             }
-        return null;
     }
 }

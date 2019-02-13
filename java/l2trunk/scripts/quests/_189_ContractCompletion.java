@@ -4,7 +4,6 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _189_ContractCompletion extends Quest {
     private static final int Kusto = 30512;
@@ -52,7 +51,7 @@ public final class _189_ContractCompletion extends Quest {
         if (st.getState() == STARTED)
             if (npcId == Luka) {
                 if (cond == 0)
-                    if (st.getPlayer().getLevel() < 42)
+                    if (st.player.getLevel() < 42)
                         htmltext = "blueprint_seller_luka_q0189_02.htm";
                     else
                         htmltext = "blueprint_seller_luka_q0189_01.htm";
@@ -82,8 +81,7 @@ public final class _189_ContractCompletion extends Quest {
 
     @Override
     public String onFirstTalk(NpcInstance npc, Player player) {
-        QuestState qs = player.getQuestState(_186_ContractExecution.class);
-        if (qs != null && qs.isCompleted() && player.getQuestState(getClass()) == null)
+        if (player.isQuestCompleted(_186_ContractExecution.class) && player.getQuestState(this) == null)
             newQuestState(player, STARTED);
         return "";
     }

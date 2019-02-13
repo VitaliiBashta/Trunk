@@ -6,11 +6,8 @@ import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.network.serverpackets.*;
 
 import java.util.List;
-//import l2trunk.gameserver.network.serverpackets.ShortCutInit;
-//import l2trunk.gameserver.network.serverpackets.SkillCoolTime;
-//import l2trunk.gameserver.network.serverpackets.SkillList;
 
-public class RequestGMCommand extends L2GameClientPacket {
+public final class RequestGMCommand extends L2GameClientPacket {
     private String _targetName;
     private int _command;
 
@@ -54,11 +51,6 @@ public class RequestGMCommand extends L2GameClientPacket {
                 player.sendPacket(new ExGMViewQuestItemList(target, items, questSize));
 
                 player.sendPacket(new GMHennaInfo(target));
-                // TODO: This is a custom solution for not losing skill bar.
-                // It should be fixed the proper way.
-                //player.sendPacket(new ShortCutInit(player));
-                //player.sendPacket(new SkillList(player));
-                //player.sendPacket(new SkillCoolTime(player));
                 break;
             case 6:
                 player.sendPacket(new GMViewWarehouseWithdrawList(target));

@@ -6,6 +6,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Drop;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
+import l2trunk.gameserver.utils.Location;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -108,29 +109,14 @@ public final class _232_TestOfLord extends Quest {
                 if (!isQuestItem(item_id))
                     addQuestItem(item_id);
 
-        addQuestItem(ORDEAL_NECKLACE);
-        addQuestItem(VARKEES_CHARM);
-        addQuestItem(TANTUS_CHARM);
-        addQuestItem(HATOS_CHARM);
-        addQuestItem(TAKUNA_CHARM);
-        addQuestItem(CHIANTA_CHARM);
-        addQuestItem(MANAKIAS_ORDERS);
-        addQuestItem(MANAKIAS_AMULET);
-        addQuestItem(HUGE_ORC_FANG);
-        addQuestItem(SUMARIS_LETTER);
-        addQuestItem(URUTU_BLADE);
-        addQuestItem(SWORD_INTO_SKULL);
-        addQuestItem(NERUGA_AXE_BLADE);
-        addQuestItem(AXE_OF_CEREMONY);
-        addQuestItem(HANDIWORK_SPIDER_BROOCH);
-        addQuestItem(MONSTEREYE_WOODCARVING);
-        addQuestItem(BEAR_FANG_NECKLACE);
-        addQuestItem(MARTANKUS_CHARM);
-        addQuestItem(IMMORTAL_FLAME);
+        addQuestItem(ORDEAL_NECKLACE,VARKEES_CHARM,TANTUS_CHARM,HATOS_CHARM,TAKUNA_CHARM,
+                CHIANTA_CHARM,MANAKIAS_ORDERS,MANAKIAS_AMULET,HUGE_ORC_FANG,SUMARIS_LETTER,
+               URUTU_BLADE,SWORD_INTO_SKULL,NERUGA_AXE_BLADE,AXE_OF_CEREMONY,HANDIWORK_SPIDER_BROOCH,
+                MONSTEREYE_WOODCARVING,BEAR_FANG_NECKLACE,MARTANKUS_CHARM,IMMORTAL_FLAME);
     }
 
     private static void spawn_First_Orc(QuestState st) {
-        st.addSpawn(First_Orc, 21036, -107690, -3038);
+        st.addSpawn(First_Orc, Location.of(21036, -107690, -3038));
     }
 
     @Override
@@ -139,22 +125,22 @@ public final class _232_TestOfLord extends Quest {
         if (state == CREATED) {
             if (event.equalsIgnoreCase("30565-05.htm")) {
                 st.giveItems(ORDEAL_NECKLACE);
-                if (!st.getPlayer().getVarB("dd3")) {
+                if (!st.player.isVarSet("dd3")) {
                     st.giveItems(Dimensional_Diamond, 92);
-                    st.getPlayer().setVar("dd3", "1", -1);
+                    st.player.setVar("dd3", 1);
                 }
                 st.setState(STARTED);
                 st.setCond(1);
                 st.playSound(SOUND_ACCEPT);
             }
         } else if (state == STARTED)
-            if (event.equalsIgnoreCase("30565-12.htm") && st.getQuestItemsCount(IMMORTAL_FLAME) > 0) {
-                st.takeItems(IMMORTAL_FLAME, -1);
-                st.giveItems(MARK_OF_LORD, 1);
-                if (!st.getPlayer().getVarB("prof2.3")) {
-                    st.addExpAndSp(434000, 60000); // FIXME: цифра приблизительная
-                    st.giveItems(ADENA_ID, 100000); // FIXME: с потолка
-                    st.getPlayer().setVar("prof2.3", "1", -1);
+            if (event.equalsIgnoreCase("30565-12.htm") && st.haveQuestItem(IMMORTAL_FLAME)) {
+                st.takeItems(IMMORTAL_FLAME);
+                st.giveItems(MARK_OF_LORD);
+                if (!st.player.isVarSet("prof2.3")) {
+                    st.addExpAndSp(434000, 60000);
+                    st.giveItems(ADENA_ID, 100000);
+                    st.player.setVar("prof2.3", 1);
                 }
                 st.playSound(SOUND_FINISH);
                 st.unset("cond");
@@ -208,15 +194,15 @@ public final class _232_TestOfLord extends Quest {
         if (_state == CREATED) {
             if (npcId != Kakai)
                 return "noquest";
-            if (st.getPlayer().getRace() != Race.orc) {
+            if (st.player.getRace() != Race.orc) {
                 st.exitCurrentQuest(true);
                 return "30565-01.htm";
             }
-            if (st.getPlayer().getClassId().id() != 0x32) {
+            if (st.player.getClassId().id != 0x32) {
                 st.exitCurrentQuest(true);
                 return "30565-02.htm";
             }
-            if (st.getPlayer().getLevel() < 39) {
+            if (st.player.getLevel() < 39) {
                 st.exitCurrentQuest(true);
                 return "30565-03.htm";
             }
@@ -266,9 +252,9 @@ public final class _232_TestOfLord extends Quest {
                 return "30566-01.htm";
             if (MANAKIAS_AMULET_COUNT == 0)
                 return "30566-03.htm";
-            st.takeItems(VARKEES_CHARM, -1);
-            st.takeItems(MANAKIAS_AMULET, -1);
-            st.giveItems(HUGE_ORC_FANG, 1);
+            st.takeItems(VARKEES_CHARM);
+            st.takeItems(MANAKIAS_AMULET);
+            st.giveItems(HUGE_ORC_FANG);
             if (cond1Complete(st)) {
                 st.playSound(SOUND_JACKPOT);
                 st.setCond(2);
@@ -452,14 +438,14 @@ public final class _232_TestOfLord extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState qs) {
+    public void onKill(NpcInstance npc, QuestState qs) {
         if (qs.getState() != STARTED)
-            return null;
+            return;
         int npcId = npc.getNpcId();
 
         Drop _drop = DROPLIST.get(npcId);
         if (_drop == null)
-            return null;
+            return;
         int cond = qs.getCond();
 
         for (int item_id : _drop.itemList) {
@@ -487,8 +473,6 @@ public final class _232_TestOfLord extends Quest {
                     qs.playSound(SOUND_ITEMGET);
             }
         }
-
-        return null;
     }
 
 }

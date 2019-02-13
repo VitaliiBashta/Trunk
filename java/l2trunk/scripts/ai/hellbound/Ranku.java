@@ -49,7 +49,7 @@ public final class Ranku extends Fighter {
 
         if (actor.getReflection() != null) {
             actor.getReflection().setReenterTime(System.currentTimeMillis());
-            actor.getReflection().addSpawnWithoutRespawn(TELEPORTATION_CUBIC_ID, CUBIC_POSITION, 0);
+            actor.getReflection().addSpawnWithoutRespawn(TELEPORTATION_CUBIC_ID, CUBIC_POSITION);
         }
         super.onEvtDead(killer);
     }

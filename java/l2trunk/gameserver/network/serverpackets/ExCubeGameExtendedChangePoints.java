@@ -24,7 +24,7 @@ public class ExCubeGameExtendedChangePoints extends L2GameServerPacket {
         _bluePoints = bluePoints;
         _redPoints = redPoints;
         _isRedTeam = isRedTeam;
-        _objectId = player.getObjectId();
+        _objectId = player.objectId();
         _playerPoints = playerPoints;
     }
 

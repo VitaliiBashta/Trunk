@@ -20,20 +20,20 @@ public final class RafortyInstance extends NpcInstance {
             return;
 
         if ("exchange_necklace_1".equalsIgnoreCase(command)) {
-            if (ItemFunctions.getItemCount(player, FREYA_NECKLACE) > 0)
+            if (player.haveItem(FREYA_NECKLACE))
                 showChatWindow(player, "default/" + getNpcId() + "-ex4.htm");
             else
                 showChatWindow(player, "default/" + getNpcId() + "-ex6.htm");
         } else if ("exchange_necklace_2".equalsIgnoreCase(command)) {
-            if (ItemFunctions.getItemCount(player, BOTTLE_OF_FREYAS_SOUL) > 0)
+            if (player.haveItem(BOTTLE_OF_FREYAS_SOUL))
                 showChatWindow(player, "default/" + getNpcId() + "-ex8.htm");
             else
                 showChatWindow(player, "default/" + getNpcId() + "-ex7.htm");
         } else if ("exchange_necklace_3".equalsIgnoreCase(command)) {
-            if (ItemFunctions.getItemCount(player, FREYA_NECKLACE) > 0 && ItemFunctions.getItemCount(player, BOTTLE_OF_FREYAS_SOUL) > 0) {
-                ItemFunctions.removeItem(player, FREYA_NECKLACE, 1, true, "RafortyInstance");
-                ItemFunctions.removeItem(player, BOTTLE_OF_FREYAS_SOUL, 1, true, "RafortyInstance");
-                ItemFunctions.addItem(player, BLESSED_FREYA_NECKLACE, 1, true, "RafortyInstance");
+            if (player.haveAnyItem(FREYA_NECKLACE, BOTTLE_OF_FREYAS_SOUL)) {
+                ItemFunctions.removeItem(player, FREYA_NECKLACE, 1, "RafortyInstance");
+                ItemFunctions.removeItem(player, BOTTLE_OF_FREYAS_SOUL, 1, "RafortyInstance");
+                ItemFunctions.addItem(player, BLESSED_FREYA_NECKLACE, 1, "RafortyInstance");
                 showChatWindow(player, "default/" + getNpcId() + "-ex9.htm");
             } else
                 showChatWindow(player, "default/" + getNpcId() + "-ex11.htm");

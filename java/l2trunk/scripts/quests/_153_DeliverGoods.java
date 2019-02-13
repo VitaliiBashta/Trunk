@@ -3,7 +3,6 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _153_DeliverGoods extends Quest {
     private final int DELIVERY_LIST = 1012;
@@ -41,13 +40,13 @@ public final class _153_DeliverGoods extends Quest {
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
             if (st.getQuestItemsCount(DELIVERY_LIST) == 0)
-                st.giveItems(DELIVERY_LIST);
+                st.giveItems(DELIVERY_LIST, 1);
             if (st.getQuestItemsCount(HEAVY_WOOD_BOX) == 0)
-                st.giveItems(HEAVY_WOOD_BOX);
+                st.giveItems(HEAVY_WOOD_BOX, 1);
             if (st.getQuestItemsCount(CLOTH_BUNDLE) == 0)
-                st.giveItems(CLOTH_BUNDLE);
+                st.giveItems(CLOTH_BUNDLE, 1);
             if (st.getQuestItemsCount(CLAY_POT) == 0)
-                st.giveItems(CLAY_POT);
+                st.giveItems(CLAY_POT, 1);
             htmltext = "30041-04.htm";
         }
         return htmltext;
@@ -60,7 +59,7 @@ public final class _153_DeliverGoods extends Quest {
         int cond = st.getCond();
         if (npcId == 30041) {
             if (cond == 0) {
-                if (st.getPlayer().getLevel() >= 2) {
+                if (st.player.getLevel() >= 2) {
                     htmltext = "30041-03.htm";
                     return htmltext;
                 }
@@ -92,7 +91,7 @@ public final class _153_DeliverGoods extends Quest {
                 st.takeItems(CLOTH_BUNDLE, -1);
                 if (st.getQuestItemsCount(SILVIAS_RECEIPT) == 0) {
                     st.giveItems(SILVIAS_RECEIPT);
-                    if (st.getPlayer().getClassId().isMage)
+                    if (st.player.getClassId().isMage)
                         st.giveItems(2509, 3);
                     else
                         st.giveItems(1835, 6);
@@ -102,9 +101,9 @@ public final class _153_DeliverGoods extends Quest {
                 htmltext = "30003-02.htm";
         } else if (npcId == 30054)
             if (cond == 1 && st.getQuestItemsCount(CLAY_POT) == 1) {
-                st.takeItems(CLAY_POT);
+                st.takeItems(CLAY_POT, -1);
                 if (st.getQuestItemsCount(RANTS_RECEIPT) == 0)
-                    st.giveItems(RANTS_RECEIPT);
+                    st.giveItems(RANTS_RECEIPT, 1);
                 htmltext = "30054-01.htm";
             } else if (cond == 1 && st.getQuestItemsCount(RANTS_RECEIPT) > 0)
                 htmltext = "30054-02.htm";

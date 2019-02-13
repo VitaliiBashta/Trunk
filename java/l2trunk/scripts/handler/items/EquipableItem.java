@@ -24,13 +24,8 @@ public final class EquipableItem extends ScriptItemHandler implements ScriptFile
     public EquipableItem() {
         itemIds = ItemHolder.getAllTemplates().stream()
                 .filter(ItemTemplate::isEquipable)
-                .map(ItemTemplate::getItemId)
+                .map(ItemTemplate::itemId)
                 .collect(Collectors.toSet());
-    }
-
-    @Override
-    public boolean pickupItem(Playable playable, ItemInstance item) {
-        return true;
     }
 
     @Override
@@ -39,10 +34,7 @@ public final class EquipableItem extends ScriptItemHandler implements ScriptFile
     }
 
     @Override
-    public boolean useItem(Playable playable, ItemInstance item, boolean ctrl) {
-        if (!playable.isPlayer())
-            return false;
-        Player player = playable.getPlayer();
+    public boolean useItem(Player player, ItemInstance item, boolean ctrl) {
         if (player.isCastingNow()) {
             player.sendPacket(Msg.YOU_MAY_NOT_EQUIP_ITEMS_WHILE_CASTING_OR_PERFORMING_A_SKILL);
             return false;

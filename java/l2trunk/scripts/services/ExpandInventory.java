@@ -10,7 +10,6 @@ import l2trunk.gameserver.templates.item.ItemTemplate;
 
 public final class ExpandInventory extends Functions {
     public void get() {
-        Player player = getSelf();
         if (player == null)
             return;
 
@@ -26,7 +25,7 @@ public final class ExpandInventory extends Functions {
 
         if (player.getInventory().destroyItemByItemId(Config.SERVICES_EXPAND_INVENTORY_ITEM, Config.SERVICES_EXPAND_INVENTORY_PRICE, "ExpandInventory$get")) {
             player.setExpandInventory(player.getExpandInventory() + 1);
-            player.setVar("ExpandInventory", String.valueOf(player.getExpandInventory()), -1);
+            player.setVar("ExpandInventory", player.getExpandInventory());
             player.sendMessage("Inventory capacity is now " + player.getInventoryLimit());
         } else if (Config.SERVICES_EXPAND_INVENTORY_ITEM == 57)
             player.sendPacket(Msg.YOU_DO_NOT_HAVE_ENOUGH_ADENA);
@@ -37,7 +36,6 @@ public final class ExpandInventory extends Functions {
     }
 
     private void show() {
-        Player player = getSelf();
         if (player == null)
             return;
 

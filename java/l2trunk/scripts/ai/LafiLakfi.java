@@ -12,6 +12,8 @@ import l2trunk.gameserver.network.serverpackets.MagicSkillUse;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.scripts.Functions;
 
+import java.util.Objects;
+
 public final class LafiLakfi extends DefaultAI {
     private static final int MAX_RADIUS = 500;
     private final static int s_display_bug_of_fortune1 = 6045;
@@ -60,10 +62,8 @@ public final class LafiLakfi extends DefaultAI {
             return;
         }
         if (_nextEat < System.currentTimeMillis()) {
-            ItemInstance closestItem = World.getAroundObjects(actor, 20, 200)
-                    .filter(GameObject::isItem)
-                    .map(i -> (ItemInstance) i)
-                    .filter(obj -> obj.getItemId() == 57)
+            ItemInstance closestItem = World.getAroundItems(actor, 20, 200)
+                    .filter(ItemInstance::isAdena)
                     .findFirst().orElse(null);
 
 
@@ -113,10 +113,8 @@ public final class LafiLakfi extends DefaultAI {
             return true;
 
         if (!actor.isMoving && _nextEat < System.currentTimeMillis()) {
-            World.getAroundObjects(actor, MAX_RADIUS, 200)
-                    .filter(GameObject::isItem)
-                    .map(obj -> (ItemInstance) obj)
-                    .filter(i -> i.getItemId() == 57)
+            World.getAroundItems(actor, MAX_RADIUS, 200)
+                    .filter(ItemInstance::isAdena)
                     .findFirst().ifPresent(closestItem -> actor.moveToLocation(closestItem.getLoc(), 0, true));
 
         }

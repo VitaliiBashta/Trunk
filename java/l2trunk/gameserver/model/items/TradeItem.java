@@ -1,36 +1,36 @@
 package l2trunk.gameserver.model.items;
 
 public final class TradeItem extends ItemInfo {
-    private long _price;
-    private long _referencePrice;
-    private long _currentValue;
-    private int _lastRechargeTime;
-    private int _rechargeTime;
-    private int _auctionId;
+    private long price;
+    private long referencePrice;
+    private long currentValue;
+    private int lastRechargeTime;
+    private int rechargeTime;
+    private int auctionId;
 
     public TradeItem() {
-        super();
+//        super();
     }
 
     public TradeItem(ItemInstance item) {
-        super(item);
+//        super(item);
         setReferencePrice(item.getReferencePrice());
     }
 
     public long getOwnersPrice() {
-        return _price;
+        return price;
     }
 
     public void setOwnersPrice(long price) {
-        _price = price;
+        this.price = price;
     }
 
     public long getReferencePrice() {
-        return _referencePrice;
+        return referencePrice;
     }
 
     private void setReferencePrice(long price) {
-        _referencePrice = price;
+        referencePrice = price;
     }
 
     public long getStorePrice() {
@@ -38,11 +38,11 @@ public final class TradeItem extends ItemInfo {
     }
 
     public long getCurrentValue() {
-        return _currentValue;
+        return currentValue;
     }
 
     public void setCurrentValue(long value) {
-        _currentValue = value;
+        currentValue = value;
     }
 
     /**
@@ -51,7 +51,7 @@ public final class TradeItem extends ItemInfo {
      * @return unixtime в минутах
      */
     public int getRechargeTime() {
-        return _rechargeTime;
+        return rechargeTime;
     }
 
     /**
@@ -60,7 +60,7 @@ public final class TradeItem extends ItemInfo {
      * @param rechargeTime : unixtime в минутах
      */
     public void setRechargeTime(int rechargeTime) {
-        _rechargeTime = rechargeTime;
+        this.rechargeTime = rechargeTime;
     }
 
     /**
@@ -78,7 +78,7 @@ public final class TradeItem extends ItemInfo {
      * @return unixtime в минутах
      */
     public int getLastRechargeTime() {
-        return _lastRechargeTime;
+        return lastRechargeTime;
     }
 
     /**
@@ -87,14 +87,14 @@ public final class TradeItem extends ItemInfo {
      * @param lastRechargeTime : unixtime в минутах
      */
     public void setLastRechargeTime(int lastRechargeTime) {
-        _lastRechargeTime = lastRechargeTime;
+        this.lastRechargeTime = lastRechargeTime;
     }
 
     public int getAuctionId() {
-        return _auctionId;
+        return auctionId;
     }
 
     public void setAuctionId(int id) {
-        _auctionId = id;
+        auctionId = id;
     }
 }

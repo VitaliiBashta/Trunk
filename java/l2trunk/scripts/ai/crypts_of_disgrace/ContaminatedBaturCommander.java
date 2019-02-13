@@ -6,6 +6,8 @@ import l2trunk.gameserver.ai.Fighter;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.SimpleSpawner;
 import l2trunk.gameserver.model.instances.NpcInstance;
+import l2trunk.gameserver.model.instances.PetInstance;
+import l2trunk.gameserver.model.instances.SummonInstance;
 import l2trunk.gameserver.utils.Location;
 
 public final class ContaminatedBaturCommander extends Fighter {
@@ -26,7 +28,7 @@ public final class ContaminatedBaturCommander extends Fighter {
             NpcInstance npc = sp.doSpawn(true);
 
             // Натравливаем на атакующего
-            if (killer.isPet() || killer.isSummon())
+            if (killer instanceof PetInstance  || killer instanceof SummonInstance )
                 npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, killer, Rnd.get(2, 100));
             npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, killer.getPlayer(), Rnd.get(1, 100));
         }

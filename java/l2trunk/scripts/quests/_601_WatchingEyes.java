@@ -57,8 +57,8 @@ public final class _601_WatchingEyes extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("eye_of_argos_q0601_0104.htm"))
-            if (st.getPlayer().getLevel() < 71) {
+        if ("eye_of_argos_q0601_0104.htm".equalsIgnoreCase(event))
+            if (st.player.getLevel() < 71) {
                 htmltext = "eye_of_argos_q0601_0103.htm";
                 st.exitCurrentQuest(true);
             } else {
@@ -66,7 +66,7 @@ public final class _601_WatchingEyes extends Quest {
                 st.setCond(1);
                 st.playSound(SOUND_ACCEPT);
             }
-        else if (event.equalsIgnoreCase("eye_of_argos_q0601_0201.htm")) {
+        else if ("eye_of_argos_q0601_0201.htm".equalsIgnoreCase(event)) {
             int random = Rnd.get(101);
             int i = 0;
             int item = 0;
@@ -92,7 +92,7 @@ public final class _601_WatchingEyes extends Quest {
 
     @Override
     public String onTalk(NpcInstance npc, QuestState st) {
-        String htmltext = "noquest";
+        String htmltext;
         int cond = st.getCond();
         if (cond == 0)
             htmltext = "eye_of_argos_q0601_0101.htm";
@@ -108,11 +108,11 @@ public final class _601_WatchingEyes extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getCond() == 1) {
             long count = st.getQuestItemsCount(PROOF_OF_AVENGER);
             if (count < 100 && Rnd.chance(DROP_CHANCE)) {
-                st.giveItems(PROOF_OF_AVENGER, 1);
+                st.giveItems(PROOF_OF_AVENGER);
                 if (count == 99) {
                     st.setCond(2);
                     st.playSound(SOUND_MIDDLE);
@@ -120,6 +120,5 @@ public final class _601_WatchingEyes extends Quest {
                     st.playSound(SOUND_ITEMGET);
             }
         }
-        return null;
     }
 }

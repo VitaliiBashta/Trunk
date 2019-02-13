@@ -52,7 +52,7 @@ public class DimensionalRift extends Reflection {
         setReturnLoc(party.getLeader().getLoc());
         setTeleportLoc(coords);
         for (Player p : party.getMembers()) {
-            p.setVar("backCoords", getReturnLoc().toXYZString(), -1);
+            p.setVar("backCoords", getReturnLoc().toXYZString());
             DimensionalRiftManager.teleToLocation(p, Location.findPointToStay(coords, 50, 100, getGeoIndex()), this);
             p.setReflection(this);
         }
@@ -106,7 +106,7 @@ public class DimensionalRift extends Reflection {
                 for (int i = 0; i < sp.getAmount(); i++)
                     sp.doSpawn(true);
             }
-            DimensionalRift.this.addSpawnWithoutRespawn(getManagerId(), riftRoom.getTeleportCoords(), 0);
+            DimensionalRift.this.addSpawnWithoutRespawn(getManagerId(), riftRoom.getTeleportCoords());
         }, Config.RIFT_SPAWN_DELAY);
     }
 
@@ -277,7 +277,7 @@ public class DimensionalRift extends Reflection {
     }
 
     int getPlayersInside(boolean alive) {
-        if (_playerCount == 0)
+        if (playerCount == 0)
             return 0;
         return (int) getPlayers()
                 .filter(p -> (!alive || !p.isDead()))
@@ -286,8 +286,8 @@ public class DimensionalRift extends Reflection {
 
     @Override
     public void removeObject(GameObject o) {
-        if (o.isPlayer())
-            if (_playerCount <= 1)
+        if (o instanceof Player)
+            if (playerCount <= 1)
                 createNewKillRiftTimer();
         super.removeObject(o);
     }

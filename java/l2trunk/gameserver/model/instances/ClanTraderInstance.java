@@ -24,12 +24,12 @@ public final class ClanTraderInstance extends NpcInstance {
             else
                 html.setFile("default/" + getNpcId() + "-1.htm");
 
-            html.replace("%objectId%", String.valueOf(getObjectId()));
+            html.replace("%objectId%", objectId);
             player.sendPacket(html);
         } else if (command.startsWith("exchange")) {
             if (!player.isClanLeader()) {
                 html.setFile("default/" + getNpcId() + "-no.htm");
-                html.replace("%objectId%", String.valueOf(getObjectId()));
+                html.replace("%objectId%", objectId);
                 player.sendPacket(html);
                 return;
             }
@@ -63,7 +63,7 @@ public final class ClanTraderInstance extends NpcInstance {
             } else
                 html.setFile("default/" + getNpcId() + "-ExchangeFailed.htm");
 
-            html.replace("%objectId%", String.valueOf(getObjectId()));
+            html.replace("%objectId%", String.valueOf(objectId()));
             player.sendPacket(html);
         } else
             super.onBypassFeedback(player, command);

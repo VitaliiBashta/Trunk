@@ -1,24 +1,22 @@
 package l2trunk.gameserver.listener.actor.player.impl;
 
-import l2trunk.commons.lang.reference.HardReference;
 import l2trunk.gameserver.listener.actor.player.OnAnswerListener;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.PetInstance;
 
-public class ReviveAnswerListener implements OnAnswerListener {
-    private final HardReference<Player> _playerRef;
+public final class ReviveAnswerListener implements OnAnswerListener {
+    private final Player player;
     private final double _power;
     private final boolean _forPet;
 
     public ReviveAnswerListener(Player player, double power, boolean forPet) {
-        _playerRef = player.getRef();
+        this.player = player;
         _forPet = forPet;
         _power = power;
     }
 
     @Override
     public void sayYes() {
-        Player player = _playerRef.get();
         if (player == null)
             return;
         if (!player.isDead() && !_forPet || _forPet && player.getPet() != null && !player.getPet().isDead())
@@ -32,11 +30,6 @@ public class ReviveAnswerListener implements OnAnswerListener {
             player.doRevive(_power);
         else if (player.getPet() != null)
             ((PetInstance) player.getPet()).doRevive(_power);
-    }
-
-    @Override
-    public void sayNo() {
-
     }
 
     public double getPower() {

@@ -4,7 +4,6 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _637_ThroughOnceMore extends Quest {
     //Drop rate
@@ -44,7 +43,7 @@ public final class _637_ThroughOnceMore extends Quest {
         String htmltext;
         int cond = st.getCond();
         if (cond == 0) {
-            if (st.getPlayer().getLevel() > 72 && st.getQuestItemsCount(VISITORSMARK) > 0 && st.getQuestItemsCount(MARK) == 0)
+            if (st.player.getLevel() > 72 && st.getQuestItemsCount(VISITORSMARK) > 0 && st.getQuestItemsCount(MARK) == 0)
                 htmltext = "falsepriest_flauron_q0637_02.htm";
             else {
                 htmltext = "falsepriest_flauron_q0637_01.htm";
@@ -53,7 +52,7 @@ public final class _637_ThroughOnceMore extends Quest {
         } else if (cond == 2 && st.getQuestItemsCount(NECROHEART) == 10) {
             htmltext = "falsepriest_flauron_q0637_05.htm";
             st.takeItems(NECROHEART, 10);
-            st.giveItems(MARK, 1);
+            st.giveItems(MARK);
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(true);
         } else
@@ -62,22 +61,20 @@ public final class _637_ThroughOnceMore extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         long count = st.getQuestItemsCount(NECROHEART);
         if (st.getCond() == 1 && Rnd.chance(CHANCE) && count < 10) {
-            st.giveItems(NECROHEART, 1);
+            st.giveItems(NECROHEART);
             if (count == 9) {
                 st.playSound(SOUND_MIDDLE);
                 st.setCond(2);
             } else
                 st.playSound(SOUND_ITEMGET);
         }
-        return null;
     }
 
     @Override
     public void onAbort(QuestState st) {
-        if (st.getQuestItemsCount(VISITORSMARK) == 0)
-            st.giveItems(VISITORSMARK, 1);
+            st.giveItemIfNotHave(VISITORSMARK);
     }
 }

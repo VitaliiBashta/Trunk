@@ -2,7 +2,6 @@ package l2trunk.gameserver.skills;
 
 import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.model.Skill;
-import l2trunk.gameserver.model.Skill.SkillType;
 import l2trunk.gameserver.model.base.EnchantSkillLearn;
 import l2trunk.gameserver.stats.conditions.Condition;
 import l2trunk.gameserver.tables.SkillTreeTable;
@@ -73,7 +72,7 @@ public final class DocumentSkill extends DocumentBase {
                 return a.get(idx);
             return a.get(a.size() - 1);
         } catch (RuntimeException e) {
-            LOG.error("Wrong level count in skill Id " + currentSkill.id + " table " + name + " level " + idx, e);
+            LOG.error("Wrong occupation count in skill Id " + currentSkill.id + " table " + name + " occupation " + idx, e);
             return 0;
         }
     }
@@ -158,7 +157,7 @@ public final class DocumentSkill extends DocumentBase {
             for (int i = 0; i < lastLvl; i++) {
                 currentSkill.sets.add(new StatsSet()
                         .set("skill_id", currentSkill.id)
-                        .set("level", i + 1)
+                        .set("occupation", i + 1)
                         .set("name", currentSkill.name)
                         .set("base_level", levels));
             }
@@ -237,11 +236,11 @@ public final class DocumentSkill extends DocumentBase {
 
     private void makeSkills() {
         currentSkill.currentSkills = currentSkill.sets.stream()
-                .map(set -> set.getEnum("skillType", SkillType.class).makeSkill(set))
+                .map(set -> Skill.makeSkill(set.getString("skillType"), set))
                 .collect(Collectors.toList());
     }
 
-    class SkillData {
+    private class SkillData {
         final List<Skill> skills = new ArrayList<>();
         int id;
         String name;

@@ -5,11 +5,6 @@ import l2trunk.gameserver.model.entity.residence.Castle;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
-/**
- * @author VISTALL
- * @date 21:58/23.05.2011
- * 35506
- */
 public class VenomTeleporterInstance extends NpcInstance {
     public VenomTeleporterInstance(int objectId, NpcTemplate template) {
         super(objectId, template);

@@ -5,8 +5,10 @@ import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.World;
+import l2trunk.gameserver.model.instances.MonsterInstance;
 
 import java.util.List;
+import java.util.Objects;
 
 public final class ShiftAggression extends Skill {
     public ShiftAggression(StatsSet set) {
@@ -15,25 +17,23 @@ public final class ShiftAggression extends Skill {
 
     @Override
     public void useSkill(Creature activeChar, List<Creature> targets) {
-        if (activeChar.getPlayer() == null)
+        if (! (activeChar instanceof Player))
             return;
 
-        for (Creature target : targets)
-            if (target != null) {
-                if (!target.isPlayer())
-                    continue;
+        Player player = (Player) activeChar;
+        targets.stream()
+                .filter(target -> target instanceof MonsterInstance)
+                .map(target -> (MonsterInstance) target)
+                .forEach(monster ->
+                        World.getAroundNpc(player, skillRadius, skillRadius)
+                                .filter(npc -> npc.getAggroList().get(player) != null)
+                                .forEach(npc -> {
+                                    npc.getAggroList().addDamageHate(monster, 0, npc.getAggroList().get(player).hate);
+                                    npc.getAggroList().remove(player, true);
+                                }));
 
-                Player player = (Player) target;
-
-                World.getAroundNpc(activeChar, skillRadius, skillRadius)
-                        .filter(npc -> npc.getAggroList().get(activeChar) != null)
-                        .forEach(npc -> {
-                            npc.getAggroList().addDamageHate(player, 0, npc.getAggroList().get(activeChar).hate);
-                            npc.getAggroList().remove(activeChar, true);
-                        });
-            }
 
         if (isSSPossible())
-            activeChar.unChargeShots(isMagic());
+            player.unChargeShots(isMagic());
     }
 }

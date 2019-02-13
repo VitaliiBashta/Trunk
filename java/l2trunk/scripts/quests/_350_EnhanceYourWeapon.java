@@ -30,7 +30,6 @@ public final class _350_EnhanceYourWeapon extends Quest {
     private static final int Jurek = 30115;
     private static final int Gideon = 30194;
     private static final int Winonin = 30856;
-
     public _350_EnhanceYourWeapon() {
         super(false);
         addStartNpc(Jurek);
@@ -63,7 +62,7 @@ public final class _350_EnhanceYourWeapon extends Quest {
 
     @Override
     public String onTalk(NpcInstance npc, QuestState st) {
-        String npcId = str(npc.getNpcId());
+        int npcId = npc.getNpcId();
         String htmltext;
         int id = st.getState();
         if (st.getQuestItemsCount(RED_SOUL_CRYSTAL0_ID) == 0 && st.getQuestItemsCount(GREEN_SOUL_CRYSTAL0_ID) == 0 && st.getQuestItemsCount(BLUE_SOUL_CRYSTAL0_ID) == 0)
@@ -82,29 +81,27 @@ public final class _350_EnhanceYourWeapon extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState qs) {
-        Player player = qs.getPlayer();
-        if (player == null || !npc.isMonster())
-            return null;
+    public void onKill(NpcInstance npc, QuestState qs) {
+        Player player = qs.player;
+        if (player != null && npc instanceof MonsterInstance) {
+            List<PlayerResult> list;
+            Party party = player.getParty();
+            if (party == null) {
+                list = List.of(new PlayerResult(player));
+            } else {
+                list = party.getMembers().stream()
+                        .filter(m -> m.isInRange(npc.getLoc(), Config.ALT_PARTY_DISTRIBUTION_RANGE))
+                        .map(PlayerResult::new)
+                        .collect(Collectors.toList());
+                list.add(new PlayerResult(player)); // DS: у убившего двойной шанс, из ai
+            }
 
-        List<PlayerResult> list;
-        Party party = player.getParty();
-        if (party == null) {
-            list = List.of(new PlayerResult(player));
-        } else {
-            list = party.getMembers().stream()
-                    .filter(m -> m.isInRange(npc.getLoc(), Config.ALT_PARTY_DISTRIBUTION_RANGE))
-                    .map(PlayerResult::new)
-                    .collect(Collectors.toList());
-            list.add(new PlayerResult(player)); // DS: у убившего двойной шанс, из ai
+            for (AbsorbInfo info : npc.getTemplate().getAbsorbInfo())
+                calcAbsorb(list, (MonsterInstance) npc, info);
+
+            list.forEach(PlayerResult::send);
         }
 
-        npc.getTemplate().getAbsorbInfo().forEach(info ->
-                calcAbsorb(list, (MonsterInstance) npc, info));
-
-        list.forEach(PlayerResult::send);
-
-        return null;
     }
 
     private void calcAbsorb(List<PlayerResult> players, MonsterInstance npc, AbsorbInfo info) {
@@ -146,7 +143,7 @@ public final class _350_EnhanceYourWeapon extends Quest {
         for (PlayerResult target : targets) {
             if (target == null || !(target.getMessage() == null || target.getMessage() == SystemMsg.THE_SOUL_CRYSTAL_IS_REFUSING_TO_ABSORB_THE_SOUL))
                 continue;
-            Player targetPlayer = target.getPlayer();
+            Player targetPlayer = target.player;
             if (info.isSkill() && !npc.isAbsorbed(targetPlayer))
                 continue;
             if (targetPlayer.getQuestState(_350_EnhanceYourWeapon.class) == null)
@@ -210,10 +207,6 @@ public final class _350_EnhanceYourWeapon extends Quest {
 
         PlayerResult(Player player) {
             this.player = player;
-        }
-
-        Player getPlayer() {
-            return player;
         }
 
         SystemMsg getMessage() {

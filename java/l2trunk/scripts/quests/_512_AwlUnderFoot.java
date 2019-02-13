@@ -63,26 +63,26 @@ public final class _512_AwlUnderFoot extends Quest {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("exit")) {
+        } else if ("exit".equalsIgnoreCase(event)) {
             st.exitCurrentQuest(true);
             return null;
-        } else if (event.equalsIgnoreCase("enter"))
-            if (st.getState() == CREATED || !check(st.getPlayer()))
+        } else if ("enter".equalsIgnoreCase(event))
+            if (st.getState() == CREATED || !check(st.player))
                 return "gludio_prison_keeper_q0512_01a.htm";
             else
-                return enterPrison(st.getPlayer());
+                return enterPrison(st.player);
         return event;
     }
 
     @Override
     public String onTalk(NpcInstance npc, QuestState st) {
-        if (!check(st.getPlayer()))
+        if (!check(st.player))
             return "gludio_prison_keeper_q0512_01a.htm";
         if (st.getState() == CREATED)
             return "gludio_prison_keeper_q0512_01.htm";
-        if (st.getQuestItemsCount(FragmentOfTheDungeonLeaderMark) > 0) {
+        if (st.haveQuestItem(FragmentOfTheDungeonLeaderMark)) {
             st.giveItems(KnightsEpaulette, st.getQuestItemsCount(FragmentOfTheDungeonLeaderMark));
-            st.takeItems(FragmentOfTheDungeonLeaderMark, -1);
+            st.takeItems(FragmentOfTheDungeonLeaderMark);
             st.playSound(SOUND_FINISH);
             return "gludio_prison_keeper_q0512_08.htm";
         }
@@ -90,7 +90,7 @@ public final class _512_AwlUnderFoot extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         for (Prison prison : _prisons.values())
             if (prison.getReflectionId() == npc.getReflectionId()) {
                 switch (npc.getNpcId()) {
@@ -108,20 +108,20 @@ public final class _512_AwlUnderFoot extends Quest {
                     case BeautifulAtrielle:
                     case NagenTheTomboy:
                     case JaxTheDestroyer:
-                        Party party = st.getPlayer().getParty();
+                        Party party = st.player.getParty();
                         if (party != null)
                             for (Player member : party.getMembers()) {
                                 QuestState qs = member.getQuestState(this);
                                 if (qs != null && qs.isStarted()) {
                                     qs.giveItems(FragmentOfTheDungeonLeaderMark, RewardMarksCount / party.size());
                                     qs.playSound(SOUND_ITEMGET);
-                                    qs.getPlayer().sendPacket(new SystemMessage(SystemMessage.THIS_DUNGEON_WILL_EXPIRE_IN_S1_MINUTES).addNumber(5));
+                                    qs.player.sendPacket(new SystemMessage(SystemMessage.THIS_DUNGEON_WILL_EXPIRE_IN_S1_MINUTES).addNumber(5));
                                 }
                             }
                         else {
                             st.giveItems(FragmentOfTheDungeonLeaderMark, RewardMarksCount);
                             st.playSound(SOUND_ITEMGET);
-                            st.getPlayer().sendPacket(new SystemMessage(SystemMessage.THIS_DUNGEON_WILL_EXPIRE_IN_S1_MINUTES).addNumber(5));
+                            st.player.sendPacket(new SystemMessage(SystemMessage.THIS_DUNGEON_WILL_EXPIRE_IN_S1_MINUTES).addNumber(5));
                         }
                         Reflection r = ReflectionManager.INSTANCE.get(prison.getReflectionId());
                         if (r != null)
@@ -130,8 +130,6 @@ public final class _512_AwlUnderFoot extends Quest {
                 }
                 break;
             }
-
-        return null;
     }
 
     private boolean check(Player player) {
@@ -141,7 +139,7 @@ public final class _512_AwlUnderFoot extends Quest {
         Clan clan = player.getClan();
         if (clan == null)
             return false;
-        return clan.getClanId() == castle.getOwnerId();
+        return clan.clanId() == castle.getOwnerId();
     }
 
     private String enterPrison(Player player) {
@@ -158,7 +156,6 @@ public final class _512_AwlUnderFoot extends Quest {
             if (!_prisons.isEmpty()) {
                 prison = _prisons.get(castle.getId());
                 if (prison != null && prison.isLocked()) {
-                    // TODO правильное сообщение
                     player.sendPacket(new SystemMessage(SystemMessage.C1_MAY_NOT_RE_ENTER_YET).addName(player));
                     return null;
                 }
@@ -169,7 +166,7 @@ public final class _512_AwlUnderFoot extends Quest {
                     if (r != null) {
                         player.setReflection(r);
                         player.teleToLocation(iz.getTeleportCoord());
-                        player.setVar("backCoords", r.getReturnLoc().toXYZString(), -1);
+                        player.setVar("backCoords", r.getReturnLoc().toXYZString());
                         player.setInstanceReuse(iz.getId(), System.currentTimeMillis());
                         return null;
                     }
@@ -188,7 +185,7 @@ public final class _512_AwlUnderFoot extends Quest {
                     newQuestState(member, STARTED);
                 member.setReflection(r);
                 member.teleToLocation(iz.getTeleportCoord());
-                member.setVar("backCoords", r.getReturnLoc().toXYZString(), -1);
+                member.setVar("backCoords", r.getReturnLoc().toXYZString());
                 member.setInstanceReuse(iz.getId(), System.currentTimeMillis());
             }
 
@@ -220,7 +217,7 @@ public final class _512_AwlUnderFoot extends Quest {
             try {
                 Reflection r = new Reflection();
                 r.init(iz);
-                _reflectionId = r.getId();
+                _reflectionId = r.id;
                 _castleId = id;
                 _lastEnter = System.currentTimeMillis();
             } catch (Exception e) {
@@ -253,7 +250,7 @@ public final class _512_AwlUnderFoot extends Quest {
 
             @Override
             public void runImpl() {
-                addSpawnToInstance(_npcId, new Location(12152, -49272, -3008, 25958), 0, _reflectionId);
+                addSpawnToInstance(_npcId, new Location(12152, -49272, -3008, 25958), _reflectionId);
             }
         }
     }

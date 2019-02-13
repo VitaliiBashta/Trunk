@@ -9,7 +9,7 @@ public class SoulCrystal {
 
     @XmlAttribute(name = "item_id")
     private int itemId;
-    @XmlAttribute(name = "level")
+    @XmlAttribute(name = "occupation")
     private int level;
     @XmlAttribute(name = "next_item_id")
     private int nextItemId;
@@ -47,7 +47,7 @@ public class SoulCrystal {
     public String toString() {
         return "SoulCrystal{" +
                 "itemId=" + itemId +
-                ", level=" + level +
+                ", occupation=" + level +
                 ", nextItemId=" + nextItemId +
                 ", cursedNextItemId=" + cursedNextItemId +
                 '}';

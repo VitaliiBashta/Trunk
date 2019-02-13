@@ -5,10 +5,7 @@ import l2trunk.commons.geometry.Circle;
 import l2trunk.commons.lang.StringUtils;
 import l2trunk.gameserver.instancemanager.ReflectionManager;
 import l2trunk.gameserver.listener.zone.OnZoneEnterLeaveListener;
-import l2trunk.gameserver.model.Creature;
-import l2trunk.gameserver.model.Territory;
-import l2trunk.gameserver.model.World;
-import l2trunk.gameserver.model.Zone;
+import l2trunk.gameserver.model.*;
 import l2trunk.gameserver.model.entity.events.impl.DominionSiegeEvent;
 import l2trunk.gameserver.model.instances.residences.SiegeFlagInstance;
 import l2trunk.gameserver.stats.Stats;
@@ -16,7 +13,7 @@ import l2trunk.gameserver.stats.funcs.FuncMul;
 import l2trunk.gameserver.templates.ZoneTemplate;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
-public class OutpostInstance extends SiegeFlagInstance {
+public final class OutpostInstance extends SiegeFlagInstance {
     private Zone zone;
 
     public OutpostInstance(int objectId, NpcTemplate template) {
@@ -50,14 +47,9 @@ public class OutpostInstance extends SiegeFlagInstance {
         zone = null;
     }
 
-    @Override
-    public boolean isInvul() {
-        return true;
-    }
-
     private class OnZoneEnterLeaveListenerImpl implements OnZoneEnterLeaveListener {
         @Override
-        public void onZoneEnter(Zone zone, Creature actor) {
+        public void onZoneEnter(Zone zone, Player actor) {
             DominionSiegeEvent siegeEvent = OutpostInstance.this.getEvent(DominionSiegeEvent.class);
             if (siegeEvent == null)
                 return;
@@ -71,7 +63,7 @@ public class OutpostInstance extends SiegeFlagInstance {
         }
 
         @Override
-        public void onZoneLeave(Zone zone, Creature actor) {
+        public void onZoneLeave(Zone zone, Player actor) {
             actor.removeStatsOwner(OutpostInstance.this);
         }
     }

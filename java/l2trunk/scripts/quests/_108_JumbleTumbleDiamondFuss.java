@@ -72,36 +72,36 @@ public final class _108_JumbleTumbleDiamondFuss extends Quest {
         int cond = st.getCond();
         if (npcId == 30523) {
             if (cond == 0) {
-                if (st.getPlayer().getRace() != Race.dwarf) {
+                if (st.player.getRace() != Race.dwarf) {
                     htmltext = "collector_gouph_q0108_00.htm";
                     st.exitCurrentQuest(true);
-                } else if (st.getPlayer().getLevel() >= 10)
+                } else if (st.player.getLevel() >= 10)
                     htmltext = "collector_gouph_q0108_02.htm";
                 else {
                     htmltext = "collector_gouph_q0108_01.htm";
                     st.exitCurrentQuest(true);
                 }
             } else {
-                if (cond > 1 && cond < 7 && (st.getQuestItemsCount(REEPS_CONTRACT) > 0 || st.getQuestItemsCount(ELVEN_WINE) > 0 || st.getQuestItemsCount(BRONPS_DICE) > 0 || st.getQuestItemsCount(BRONPS_CONTRACT) > 0))
+                if (cond > 1 && cond < 7 && (st.haveAnyQuestItems(REEPS_CONTRACT,ELVEN_WINE,BRONPS_DICE,BRONPS_CONTRACT) ))
                     htmltext = "collector_gouph_q0108_05.htm";
                 else if (cond == 7 && st.getQuestItemsCount(GEM_BOX1) > 0) {
                     htmltext = "collector_gouph_q0108_06.htm";
                     st.takeItems(GEM_BOX1, 1);
-                    st.giveItems(COAL_PIECE, 1);
+                    st.giveItems(COAL_PIECE);
                     st.setCond(8);
-                } else if (cond > 7 && cond < 12 && (st.getQuestItemsCount(BRONPS_LETTER) > 0 || st.getQuestItemsCount(COAL_PIECE) > 0 || st.getQuestItemsCount(BERRY_TART) > 0 || st.getQuestItemsCount(BAT_DIAGRAM) > 0))
+                } else if (cond > 7 && cond < 12 && (st.haveAnyQuestItems(BRONPS_LETTER,COAL_PIECE,BERRY_TART,BAT_DIAGRAM) ))
                     htmltext = "collector_gouph_q0108_07.htm";
-                else if (cond == 12 && st.getQuestItemsCount(STAR_DIAMOND) > 0) {
+                else if (cond == 12 && st.haveAnyQuestItems(STAR_DIAMOND) ) {
                     htmltext = "collector_gouph_q0108_08.htm";
                     st.takeItems(STAR_DIAMOND, 1);
 
-                    st.giveItems(SILVERSMITH_HAMMER, 1);
-                    st.getPlayer().addExpAndSp(34565, 2962);
+                    st.giveItems(SILVERSMITH_HAMMER);
+                    st.player.addExpAndSp(34565, 2962);
                     st.giveItems(ADENA_ID, 14666, false);
 
-                    if (st.getPlayer().getClassId().getLevel() == 1 && !st.getPlayer().getVarB("p1q3")) {
-                        st.getPlayer().setVar("p1q3", "1", -1); // flag for helper
-                        st.getPlayer().sendPacket(new ExShowScreenMessage("Now go find the Newbie Guide."));
+                    if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("p1q3")) {
+                        st.player.setVar("p1q3", 1); // flag for helper
+                        st.player.sendPacket(new ExShowScreenMessage("Now go find the Newbie Guide."));
                         st.giveItems(1060, 100); // healing potion
                         for (int item = 4412; item <= 4417; item++)
                             st.giveItems(item, 10); // echo cry
@@ -189,7 +189,7 @@ public final class _108_JumbleTumbleDiamondFuss extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         if (npcId == 20323 || npcId == 20324) {
@@ -219,10 +219,9 @@ public final class _108_JumbleTumbleDiamondFuss extends Quest {
             if (cond == 11 && st.getQuestItemsCount(BAT_DIAGRAM) > 0 && st.getQuestItemsCount(STAR_DIAMOND) == 0)
                 if (Rnd.chance(50)) {
                     st.takeItems(BAT_DIAGRAM, 1);
-                    st.giveItems(STAR_DIAMOND, 1);
+                    st.giveItems(STAR_DIAMOND);
                     st.setCond(12);
                     st.playSound(SOUND_MIDDLE);
                 }
-        return null;
     }
 }

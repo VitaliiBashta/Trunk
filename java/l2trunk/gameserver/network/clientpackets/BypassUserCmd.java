@@ -27,7 +27,7 @@ public class BypassUserCmd extends L2GameClientPacket {
         IUserCommandHandler handler = UserCommandHandler.INSTANCE.getUserCommandHandler(_command);
 
         if (handler == null)
-            activeChar.sendMessage(new CustomMessage("common.S1NotImplemented", activeChar).addString(String.valueOf(_command)));
+            activeChar.sendMessage(new CustomMessage("common.S1NotImplemented").addString(String.valueOf(_command)));
         else
             handler.useUserCommand(_command, activeChar);
     }

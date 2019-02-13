@@ -5,14 +5,13 @@ import l2trunk.gameserver.handler.voicecommands.IVoicedCommandHandler;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 
-import java.util.Collections;
 import java.util.List;
 
-public class Debug implements IVoicedCommandHandler {
+public final class Debug implements IVoicedCommandHandler {
 
     @Override
     public List<String> getVoicedCommandList() {
-        return Collections.emptyList();
+        return List.of("debug");
     }
 
     @Override
@@ -22,10 +21,10 @@ public class Debug implements IVoicedCommandHandler {
 
         if (player.isDebug()) {
             player.setDebug(false);
-            player.sendMessage(new CustomMessage("voicedcommandhandlers.Debug.Disabled", player));
+            player.sendMessage(new CustomMessage("voicedcommandhandlers.Debug.Disabled"));
         } else {
             player.setDebug(true);
-            player.sendMessage(new CustomMessage("voicedcommandhandlers.Debug.Enabled", player));
+            player.sendMessage(new CustomMessage("voicedcommandhandlers.Debug.Enabled"));
         }
         return true;
     }

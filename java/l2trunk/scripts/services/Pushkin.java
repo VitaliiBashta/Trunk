@@ -57,7 +57,6 @@ public final class Pushkin extends Functions {
     }
 
     public void doCrystallize() {
-        Player player = getSelf();
         NpcInstance merchant = player.getLastNpc();
         Castle castle = merchant != null ? merchant.getCastle(player) : null;
 
@@ -70,9 +69,9 @@ public final class Pushkin extends Functions {
         for (final ItemInstance itm : inv.getItems())
             if (itm.canBeCrystallized(player)) {
                 final ItemTemplate crystal = ItemHolder.getTemplate(itm.getTemplate().getCrystalType().cry);
-                MultiSellEntry possibleEntry = new MultiSellEntry(++entry, crystal.getItemId(), itm.getTemplate().getCrystalCount(), 0);
+                MultiSellEntry possibleEntry = new MultiSellEntry(++entry, crystal.itemId(), itm.getTemplate().getCrystalCount(), 0);
                 possibleEntry.addIngredient(new MultiSellIngredient(itm.getItemId(), 1, itm.getEnchantLevel()));
-                possibleEntry.addIngredient(new MultiSellIngredient(ItemTemplate.ITEM_ID_ADENA, Math.round(itm.getTemplate().getCrystalCount() * crystal.getReferencePrice() * 0.05), 0));
+                possibleEntry.addIngredient(new MultiSellIngredient(ItemTemplate.ITEM_ID_ADENA, Math.round(itm.getTemplate().getCrystalCount() * crystal.referencePrice * 0.05), 0));
                 list.addEntry(possibleEntry);
             }
 

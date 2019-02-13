@@ -6,7 +6,6 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.MagicSkillUse;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _061_LawEnforcement extends Quest {
     /**
@@ -35,10 +34,10 @@ public final class _061_LawEnforcement extends Quest {
         String htmltext = event;
         switch (event) {
             case "ask":
-                if (st.getPlayer().getRace() != Race.kamael) {
+                if (st.player.getRace() != Race.kamael) {
                     htmltext = "grandmaste_piane_q0061_03.htm";
                     st.exitCurrentQuest(true);
-                } else if (st.getPlayer().getClassId() != ClassId.inspector || st.getPlayer().getLevel() < 76) {
+                } else if (st.player.getClassId() != ClassId.inspector || st.player.getLevel() < 76) {
                     htmltext = "grandmaste_piane_q0061_02.htm";
                     st.exitCurrentQuest(true);
                 } else
@@ -56,10 +55,10 @@ public final class _061_LawEnforcement extends Quest {
             case "subelder_aientburg_q0061_08.htm":
             case "subelder_aientburg_q0061_09.htm":
                 st.giveItems(ADENA_ID, 26000);
-                st.getPlayer().setClassId(ClassId.judicator.ordinal(), false, true);
-                st.getPlayer().broadcastCharInfo();
-                st.getPlayer().broadcastPacket(new MagicSkillUse(st.getPlayer(), 4339, 1, 6000));
-                st.getPlayer().broadcastPacket(new MagicSkillUse(npc, 4339, 1, 6000));
+                st.player.setClassId(ClassId.judicator.ordinal(), false, true);
+                st.player.broadcastCharInfo();
+                st.player.broadcastPacket(new MagicSkillUse(st.player, 4339, 1, 6000));
+                st.player.broadcastPacket(new MagicSkillUse(npc, 4339, 1, 6000));
                 st.exitCurrentQuest(true);
                 break;
         }
@@ -87,8 +86,4 @@ public final class _061_LawEnforcement extends Quest {
         return htmltext;
     }
 
-    @Override
-    public String onKill(NpcInstance npc, QuestState st) {
-        return null;
-    }
 }

@@ -4,9 +4,7 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -79,13 +77,12 @@ public final class _426_QuestforFishingShot extends Quest  {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         if (Rnd.chance(30)) {
             if (HMOBS.contains(npcId))
                 st.giveItems(SWEET_FLUID, Rnd.get(5) + 1);
             st.playSound(SOUND_ITEMGET);
         }
-        return null;
     }
 }

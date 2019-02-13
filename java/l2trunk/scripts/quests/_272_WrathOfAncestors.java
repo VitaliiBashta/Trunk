@@ -4,7 +4,6 @@ import l2trunk.gameserver.model.base.Race;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _272_WrathOfAncestors extends Quest {
     //NPC
@@ -66,10 +65,10 @@ public final class _272_WrathOfAncestors extends Quest {
         int cond = st.getCond();
         if (npcId == Livina)
             if (cond == 0) {
-                if (st.getPlayer().getRace() != Race.orc) {
+                if (st.player.getRace() != Race.orc) {
                     htmltext = "seer_livina_q0272_00.htm";
                     st.exitCurrentQuest(true);
-                } else if (st.getPlayer().getLevel() < 5) {
+                } else if (st.player.getLevel() < 5) {
                     htmltext = "seer_livina_q0272_01.htm";
                     st.exitCurrentQuest(true);
                 } else {
@@ -89,7 +88,7 @@ public final class _272_WrathOfAncestors extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         for (int[] aDROPLIST_COND : DROPLIST_COND)
@@ -102,6 +101,5 @@ public final class _272_WrathOfAncestors extends Quest {
                             st.setCond(aDROPLIST_COND[1]);
                             st.setState(STARTED);
                         }
-        return null;
     }
 }

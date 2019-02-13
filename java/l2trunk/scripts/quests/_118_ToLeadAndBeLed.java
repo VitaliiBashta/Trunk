@@ -4,7 +4,6 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _118_ToLeadAndBeLed extends Quest {
     private static final int PINTER = 30298;
@@ -50,15 +49,15 @@ public final class _118_ToLeadAndBeLed extends Quest {
                 st.playSound(SOUND_ACCEPT);
                 break;
             case "30298-05a.htm":
-                st.set("choose", "1");
+                st.set("choose", 1);
                 st.setCond(3);
                 break;
             case "30298-05b.htm":
-                st.set("choose", "2");
+                st.set("choose", 2);
                 st.setCond(4);
                 break;
             case "30298-05c.htm":
-                st.set("choose", "3");
+                st.set("choose", 3);
                 st.setCond(5);
                 break;
             case "30298-08.htm":
@@ -80,15 +79,15 @@ public final class _118_ToLeadAndBeLed extends Quest {
             return "noquest";
         int _state = st.getState();
         if (_state == CREATED) {
-            if (st.getPlayer().getLevel() < 19) {
+            if (st.player.getLevel() < 19) {
                 st.exitCurrentQuest(true);
                 return "30298-00.htm";
             }
-            if (st.getPlayer().getClanId() == 0) {
+            if (st.player.getClanId() == 0) {
                 st.exitCurrentQuest(true);
                 return "30298-00a.htm";
             }
-            if (st.getPlayer().getSponsor() == 0) {
+            if (st.player.getSponsor() == 0) {
                 st.exitCurrentQuest(true);
                 return "30298-00b.htm";
             }
@@ -153,24 +152,23 @@ public final class _118_ToLeadAndBeLed extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         if (npcId == MAILLE_LIZARDMAN && st.getQuestItemsCount(BLOOD_OF_MAILLE_LIZARDMAN) < 10 && cond == 1 && Rnd.chance(50)) {
-            st.giveItems(BLOOD_OF_MAILLE_LIZARDMAN, 1);
+            st.giveItems(BLOOD_OF_MAILLE_LIZARDMAN);
             if (st.getQuestItemsCount(BLOOD_OF_MAILLE_LIZARDMAN) == 10) {
                 st.playSound(SOUND_MIDDLE);
                 st.setCond(2);
             } else
                 st.playSound(SOUND_ITEMGET);
         } else if (npcId == KING_OF_THE_ARANEID && st.getQuestItemsCount(KING_OF_THE_ARANEID_LEG) < 8 && cond == 7 && Rnd.chance(50)) {
-            st.giveItems(KING_OF_THE_ARANEID_LEG, 1);
+            st.giveItems(KING_OF_THE_ARANEID_LEG);
             if (st.getQuestItemsCount(KING_OF_THE_ARANEID_LEG) == 8) {
                 st.playSound(SOUND_MIDDLE);
                 st.setCond(8);
             } else
                 st.playSound(SOUND_ITEMGET);
         }
-        return null;
     }
 }

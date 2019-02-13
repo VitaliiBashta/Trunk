@@ -46,8 +46,8 @@ public final class AutoRechargeManager extends SteppingRunnableQueueManager {
             private long msCpLastCheck = System.currentTimeMillis();
 
             boolean consumeItem(int itemId) {
-                if (ItemFunctions.getItemCount(player, itemId) > 0) {
-                    List<Skill> itemSkills = player.getInventory().getItemByItemId(itemId).getTemplate().getAttachedSkills();
+                if (player.haveItem(itemId)) {
+                    List<Skill> itemSkills = player.inventory.getItemByItemId(itemId).getTemplate().getAttachedSkills();
                     itemSkills.stream()
                             .mapToInt(s ->s.id)
                             .forEach(s -> player.altUseSkill(s, player));

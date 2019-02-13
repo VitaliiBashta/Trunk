@@ -29,7 +29,7 @@ public class StatsSet {
     }
 
     public void set(String key, boolean value) {
-        map.put(key, value ? Boolean.TRUE : Boolean.FALSE);
+        map.put(key, value);
     }
 
     public StatsSet set(String key, int value) {
@@ -45,8 +45,9 @@ public class StatsSet {
         map.put(key, value);
     }
 
-    public void set(String key, double value) {
+    public StatsSet set(String key, double value) {
         map.put(key, value);
+        return this;
     }
 
     public void set(String key, Enum<?> value) {

@@ -1,21 +1,20 @@
 package l2trunk.commons.configuration;
 
 import l2trunk.commons.lang.NumberUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
-import static l2trunk.commons.lang.NumberUtils.toDouble;
-
 public final class ExProperties extends Properties {
     public static final String defaultDelimiter = "[\\s,;]+";
-    private static final long serialVersionUID = 1L;
+    private static final Logger _log = LoggerFactory.getLogger(ExProperties.class);
     private static final List<String> True = List.of("y", "yes", "true", "1");
     private static final List<String> False = List.of("n", "no", "false", "0");
 
@@ -25,9 +24,11 @@ public final class ExProperties extends Properties {
         throw new IllegalArgumentException("For input string: \"" + s + "\"");
     }
 
-    public void load(Path file) throws IOException {
+    public void load(Path file) {
         try (InputStream is = Files.newInputStream(file)) {
             load(is);
+        } catch (IOException e) {
+            _log.warn("Error loading config : " + file.toString() + "!");
         }
     }
 

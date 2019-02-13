@@ -20,22 +20,22 @@ public final class RequestDispel extends L2GameClientPacket {
     @Override
     protected void runImpl() {
         Player activeChar = getClient().getActiveChar();
-        if ((activeChar == null) || ((activeChar.getObjectId() != objectId) && (activeChar.getPet() == null))) {
+        if ((activeChar == null) || ((activeChar.objectId() != objectId) && (activeChar.getPet() == null))) {
             return;
         }
 
         Creature target = activeChar;
-        if (activeChar.getObjectId() != objectId) {
+        if (activeChar.objectId() != objectId) {
             target = activeChar.getPet();
         }
 
         target.getEffectList().getAllEffects().stream()
-                .filter(e -> e.getDisplayId() == id)
-                .filter(e -> e.getDisplayLevel() == level)
+                .filter(e -> e.displayId == id)
+                .filter(e -> e.displayLevel == level)
                 .filter(e -> !e.isOffensive())
-                .filter(e -> (!e.getSkill().isMusic() || Config.ALT_DISPEL_MUSIC))
-                .filter(e -> e.getSkill().isSelfDispellable)
-                .filter(e -> e.getSkill().skillType != SkillType.TRANSFORMATION)
+                .filter(e -> (!e.skill.isMusic() || Config.ALT_DISPEL_MUSIC))
+                .filter(e -> e.skill.isSelfDispellable)
+                .filter(e -> e.skill.skillType != SkillType.TRANSFORMATION)
                 .filter(e -> e.getTemplate().getEffectType() != EffectType.Hourglass)
                 .findFirst().ifPresent(Effect::exit);
     }

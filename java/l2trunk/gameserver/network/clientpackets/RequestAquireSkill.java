@@ -25,26 +25,26 @@ public final class RequestAquireSkill extends L2GameClientPacket {
      * Изучение следующего возможного уровня скилла
      */
     private static void learnSimpleNextLevel(Player player, SkillLearn skillLearn, Skill skill) {
-        final int skillLevel = player.getSkillLevel(skillLearn.id(), 0);
-        if (skillLevel != skillLearn.level() - 1)
+        final int skillLevel = player.getSkillLevel(skillLearn.id);
+        if (skillLevel != skillLearn.getLevel() - 1)
             return;
 
         learnSimple(player, skillLearn, skill);
     }
 
     private static void learnSimple(Player player, SkillLearn skillLearn, Skill skill) {
-        if (player.getSp() < skillLearn.cost()) {
+        if (player.getSp() < skillLearn.getCost()) {
             player.sendPacket(SystemMsg.YOU_DO_NOT_HAVE_ENOUGH_SP_TO_LEARN_THIS_SKILL);
             return;
         }
 
-        if (skillLearn.itemId() > 0)
-            if (!player.consumeItem(skillLearn.itemId(), skillLearn.itemCount()))
+        if (skillLearn.getItemId() > 0)
+            if (!player.consumeItem(skillLearn.getItemId(), skillLearn.getItemCount()))
                 return;
 
         player.sendPacket(new SystemMessage2(SystemMsg.YOU_HAVE_EARNED_S1_SKILL).addSkillName(skill.id, skill.level));
 
-        player.setSp(player.getSp() - skillLearn.cost());
+        player.setSp(player.getSp() - skillLearn.getCost());
         player.addSkill(skill, true);
         player.sendUserInfo();
         player.updateStats();
@@ -65,18 +65,18 @@ public final class RequestAquireSkill extends L2GameClientPacket {
 
         Clan clan = player.getClan();
         final int skillLevel = clan.getSkillLevel(skillLearn.id(), 0);
-        if (skillLevel != skillLearn.level() - 1) // можно выучить только следующий уровень
+        if (skillLevel != skillLearn.getLevel() - 1) // можно выучить только следующий уровень
             return;
-        if (clan.getReputationScore() < skillLearn.cost) {
+        if (clan.getReputationScore() < skillLearn.getCost()) {
             player.sendPacket(SystemMsg.THE_CLAN_REPUTATION_SCORE_IS_TOO_LOW);
             return;
         }
 
-        if (skillLearn.itemId() > 0)
-            if (!player.consumeItem(skillLearn.itemId(), skillLearn.itemCount()))
+        if (skillLearn.getItemId() > 0)
+            if (!player.consumeItem(skillLearn.getItemId(), skillLearn.getItemCount()))
                 return;
 
-        clan.incReputation(-skillLearn.cost(), false, "AquireSkill: " + skillLearn.id() + ", lvl " + skillLearn.level());
+        clan.incReputation(-skillLearn.getCost(), false, "AquireSkill: " + skillLearn.id() + ", lvl " + skillLearn.getLevel());
         clan.addSkill(skill, true);
         clan.broadcastToOnlineMembers(new SystemMessage2(SystemMsg.THE_CLAN_SKILL_S1_HAS_BEEN_ADDED).addSkillName(skill));
 
@@ -97,26 +97,26 @@ public final class RequestAquireSkill extends L2GameClientPacket {
         }
 
         int lvl = sub.getSkillLevel(skillLearn.id(), 0);
-        if (lvl >= skillLearn.level()) {
+        if (lvl >= skillLearn.getLevel()) {
             player.sendPacket(SystemMsg.THIS_SQUAD_SKILL_HAS_ALREADY_BEEN_ACQUIRED);
             return;
         }
 
-        if (lvl != (skillLearn.level() - 1)) {
+        if (lvl != (skillLearn.getLevel() - 1)) {
             player.sendPacket(SystemMsg.THE_PREVIOUS_LEVEL_SKILL_HAS_NOT_BEEN_LEARNED);
             return;
         }
 
-        if (clan.getReputationScore() < skillLearn.cost()) {
+        if (clan.getReputationScore() < skillLearn.getCost()) {
             player.sendPacket(SystemMsg.THE_CLAN_REPUTATION_SCORE_IS_TOO_LOW);
             return;
         }
 
-        if (skillLearn.itemId() > 0)
-            if (!player.consumeItem(skillLearn.itemId(), skillLearn.itemCount()))
+        if (skillLearn.getItemId() > 0)
+            if (!player.consumeItem(skillLearn.getItemId(), skillLearn.getItemCount()))
                 return;
 
-        clan.incReputation(-skillLearn.cost(), false, "AquireSkill2: " + skillLearn.id() + ", lvl " + skillLearn.level());
+        clan.incReputation(-skillLearn.getCost(), false, "AquireSkill2: " + skillLearn.id() + ", lvl " + skillLearn.getLevel());
         sub.addSkill(skill, true);
         player.sendPacket(new SystemMessage2(SystemMsg.THE_CLAN_SKILL_S1_HAS_BEEN_ADDED).addSkillName(skill));
 
@@ -128,14 +128,14 @@ public final class RequestAquireSkill extends L2GameClientPacket {
         if (Config.ALT_DISABLE_SPELLBOOKS)
             return true;
 
-        if (skillLearn.itemId() == 0)
+        if (skillLearn.getItemId() == 0)
             return true;
 
         // скилы по клику учатся другим способом
         if (skillLearn.isClicked())
             return false;
 
-        return player.getInventory().getCountOf(skillLearn.itemId()) >= skillLearn.itemCount();
+        return player.getInventory().getCountOf(skillLearn.getItemId()) >= skillLearn.getItemCount();
     }
 
     @Override

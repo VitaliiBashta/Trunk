@@ -53,8 +53,4 @@ public class MinionInstance extends MonsterInstance {
         return false;
     }
 
-    @Override
-    public boolean isMinion() {
-        return true;
-    }
 }

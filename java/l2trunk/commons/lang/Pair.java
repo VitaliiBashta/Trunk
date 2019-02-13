@@ -3,8 +3,11 @@ package l2trunk.commons.lang;
 public final class Pair<K, V> {
     private K first;
     private V second;
+    public static <K,V> Pair<K,V> of (K key, V value) {
+        return new Pair<>(key,value);
+    }
 
-    public Pair(K first, V second) {
+    private Pair(K first, V second) {
         this.first = first;
         this.second = second;
     }

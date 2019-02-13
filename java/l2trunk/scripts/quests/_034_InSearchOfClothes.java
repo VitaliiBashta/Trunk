@@ -3,7 +3,6 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _034_InSearchOfClothes extends Quest {
     private final int SPINNERET = 7528;
@@ -66,8 +65,8 @@ public final class _034_InSearchOfClothes extends Quest {
         int cond = st.getCond();
         if (npcId == 30088) {
             if (cond == 0 && st.getQuestItemsCount(MYSTERIOUS_CLOTH) == 0) {
-                if (st.getPlayer().getLevel() >= 60) {
-                    QuestState fwear = st.getPlayer().getQuestState(_037_PleaseMakeMeFormalWear.class);
+                if (st.player.getLevel() >= 60) {
+                    QuestState fwear = st.player.getQuestState(_037_PleaseMakeMeFormalWear.class);
                     if (fwear != null && fwear.getCond() == 6)
                         htmltext = "30088-0.htm";
                     else
@@ -102,15 +101,14 @@ public final class _034_InSearchOfClothes extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getQuestItemsCount(SPINNERET) < 10) {
-            st.giveItems(SPINNERET, 1);
+            st.giveItems(SPINNERET);
             if (st.getQuestItemsCount(SPINNERET) == 10) {
                 st.playSound(SOUND_MIDDLE);
                 st.setCond(5);
             } else
                 st.playSound(SOUND_ITEMGET);
         }
-        return null;
     }
 }

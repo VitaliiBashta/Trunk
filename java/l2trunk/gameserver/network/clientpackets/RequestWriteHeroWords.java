@@ -26,6 +26,6 @@ public class RequestWriteHeroWords extends L2GameClientPacket {
         if (_heroWords == null || _heroWords.length() > 300)
             return;
 
-        Hero.INSTANCE.setHeroMessage(player.getObjectId(), _heroWords);
+        Hero.INSTANCE.setHeroMessage(player.objectId(), _heroWords);
     }
 }

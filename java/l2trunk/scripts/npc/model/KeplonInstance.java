@@ -20,20 +20,20 @@ public final class KeplonInstance extends NpcInstance {
             return;
 
         if ("buygreen".equalsIgnoreCase(command)) {
-            if (ItemFunctions.removeItem(player, 57, 10000, true, "KeplonInstance") >= 10000) {
-                ItemFunctions.addItem(player, 4401, 1, true, "KeplonInstance");
+            if (ItemFunctions.removeItem(player, 57, 10000, "KeplonInstance") >= 10000) {
+                ItemFunctions.addItem(player, 4401, 1, "KeplonInstance");
             } else {
                 player.sendPacket(Msg.YOU_DO_NOT_HAVE_ENOUGH_ADENA);
             }
         } else if (command.startsWith("buyblue")) {
-            if (ItemFunctions.removeItem(player, 57, 10000, true, "KeplonInstance") >= 10000) {
-                ItemFunctions.addItem(player, 4402, 1, true, "KeplonInstance");
+            if (ItemFunctions.removeItem(player, 57, 10000, "KeplonInstance") >= 10000) {
+                ItemFunctions.addItem(player, 4402, 1, "KeplonInstance");
             } else {
                 player.sendPacket(Msg.YOU_DO_NOT_HAVE_ENOUGH_ADENA);
             }
         } else if (command.startsWith("buyred")) {
-            if (ItemFunctions.removeItem(player, 57, 10000, true, "KeplonInstance") >= 10000) {
-                ItemFunctions.addItem(player, 4403, 1, true, "KeplonInstance");
+            if (ItemFunctions.removeItem(player, 57, 10000, "KeplonInstance") >= 10000) {
+                ItemFunctions.addItem(player, 4403, 1, "KeplonInstance");
             } else {
                 player.sendPacket(Msg.YOU_DO_NOT_HAVE_ENOUGH_ADENA);
             }

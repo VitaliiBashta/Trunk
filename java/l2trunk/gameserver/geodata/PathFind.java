@@ -4,6 +4,7 @@ import l2trunk.gameserver.Config;
 import l2trunk.gameserver.geodata.PathFindBuffers.GeoNode;
 import l2trunk.gameserver.geodata.PathFindBuffers.PathFindBuffer;
 import l2trunk.gameserver.model.GameObject;
+import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.utils.Location;
 
 import java.util.ArrayList;
@@ -51,7 +52,7 @@ class PathFind {
 
             //статистика
             buff.totalUses++;
-            if (obj.isPlayable())
+            if (obj instanceof Playable)
                 buff.playableUses++;
 
             findPath();

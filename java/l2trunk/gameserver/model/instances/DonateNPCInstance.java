@@ -17,6 +17,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import static l2trunk.gameserver.utils.ItemFunctions.removeItem;
+
 public final class DonateNPCInstance extends NpcInstance {
 
     public DonateNPCInstance(int objectId, NpcTemplate template) {
@@ -37,10 +39,6 @@ public final class DonateNPCInstance extends NpcInstance {
         player.sendMessage("Congratulations! You are now nobless!");
     }
 
-    @Override
-    public boolean isNpc() {
-        return true;
-    }
 
     @Override
     public void onBypassFeedback(Player player, String command) {
@@ -101,7 +99,7 @@ public final class DonateNPCInstance extends NpcInstance {
             }
 
             if (player.getSubLevel() < 75) {
-                player.sendMessage("You must make sub class level 75 first!");
+                player.sendMessage("You must make sub class occupation 75 first!");
                 return;
             }
 
@@ -111,17 +109,17 @@ public final class DonateNPCInstance extends NpcInstance {
             } else {
                 player.sendMessage("You don't have enough " + Config.DONATOR_NPC_ITEM_NAME + ".");
             }
-        } else if (command.equalsIgnoreCase("change_sex")) {
+        } else if ("change_sex".equalsIgnoreCase(command)) {
             html.setFile("default/" + getNpcId() + ".htm");
             html.replace("%donate_sex%", "" + Config.DONATOR_NPC_COUNT_SEX);
-            html.replace("%nick%", String.valueOf(player.getName().toString()));
+            html.replace("%nick%", player.getName());
             player.sendPacket(html);
 
             if (player.getRace() == Race.kamael) {
                 player.sendMessage("Not available for Kamael.");
                 return;
             }
-            if (Functions.getItemCount(player, Config.DONATOR_NPC_ITEM) < Config.DONATOR_NPC_COUNT_SEX) {
+            if (!player.haveItem(Config.DONATOR_NPC_ITEM, Config.DONATOR_NPC_COUNT_SEX)) {
                 player.sendMessage("You don't have enough " + Config.DONATOR_NPC_ITEM_NAME + ".");
                 return;
             }
@@ -129,14 +127,14 @@ public final class DonateNPCInstance extends NpcInstance {
             try (Connection con = DatabaseFactory.getInstance().getConnection();
                  PreparedStatement offline = con.prepareStatement("UPDATE characters SET sex = ? WHERE obj_Id = ?")) {
                 offline.setInt(1, player.isMale() ? 1 : 0);
-                offline.setInt(2, player.getObjectId());
+                offline.setInt(2, player.objectId());
                 offline.executeUpdate();
             } catch (SQLException e) {
                 e.printStackTrace();
                 return;
             }
 
-            Functions.removeItem(player, Config.DONATOR_NPC_ITEM, Config.DONATOR_NPC_COUNT_SEX, "Removed");
+            removeItem(player, Config.DONATOR_NPC_ITEM, Config.DONATOR_NPC_COUNT_SEX, "Removed");
             player.changeSex();
             player.setTransformation(251);
             player.sendMessage("Your gender has been changed!");
@@ -146,24 +144,24 @@ public final class DonateNPCInstance extends NpcInstance {
         } else if (command.equalsIgnoreCase("give_level")) {
             html.setFile("default/" + getNpcId() + ".htm");
             html.replace("%donate_level%", "" + Config.DONATOR_NPC_COUNT_LEVEL);
-            html.replace("%nick%", String.valueOf(player.getName().toString()));
+            html.replace("%nick%", player.getName());
             player.sendPacket(html);
 
             int lvl = player.isSubClassActive() ? Experience.getMaxSubLevel() : Experience.getMaxLevel();
 
             if (player.getLevel() == lvl) {
-                player.sendMessage("Your level is already at maximum!");
+                player.sendMessage("Your occupation is already at maximum!");
                 return;
             }
 
-            if (Functions.getItemCount(player, Config.DONATOR_NPC_ITEM) < Config.DONATOR_NPC_COUNT_LEVEL) {
+            if (!player.haveItem(Config.DONATOR_NPC_ITEM, Config.DONATOR_NPC_COUNT_LEVEL)) {
                 player.sendMessage("You don't have enough " + Config.DONATOR_NPC_ITEM_NAME + ".");
                 return;
             }
-            Functions.removeItem(player, Config.DONATOR_NPC_ITEM, Config.DONATOR_NPC_COUNT_LEVEL, "Removed");
+            removeItem(player, Config.DONATOR_NPC_ITEM, Config.DONATOR_NPC_COUNT_LEVEL, "Removed");
             long exp_add = Experience.LEVEL[lvl] - player.getExp();
             player.addExpAndSp(exp_add, 0);
-            player.sendMessage("Congratulations! You are now level " + lvl + "!");
+            player.sendMessage("Congratulations! You are now occupation " + lvl + "!");
             System.out.println("Character " + player + "  lvl up via donation");
 
         } else {

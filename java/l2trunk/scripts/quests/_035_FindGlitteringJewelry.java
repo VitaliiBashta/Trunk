@@ -3,7 +3,6 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _035_FindGlitteringJewelry extends Quest {
     private final int ROUGH_JEWEL = 7162;
@@ -41,7 +40,7 @@ public final class _035_FindGlitteringJewelry extends Quest {
             } else
                 htmltext = "30091-hvnore.htm";
         } else if (event.equals("30091-5.htm") && cond == 4)
-            if (st.getQuestItemsCount(ORIHARUKON) >= 5 && st.getQuestItemsCount(SILVER_NUGGET) >= 500 && st.getQuestItemsCount(THONS) >= 150) {
+            if (st.haveQuestItem(ORIHARUKON, 5) && st.haveQuestItem(SILVER_NUGGET, 500) && st.haveQuestItem(THONS, 150)) {
                 st.takeItems(ORIHARUKON, 5);
                 st.takeItems(SILVER_NUGGET, 500);
                 st.takeItems(THONS, 150);
@@ -60,8 +59,8 @@ public final class _035_FindGlitteringJewelry extends Quest {
         int cond = st.getCond();
         if (npcId == 30091) {
             if (cond == 0 && st.getQuestItemsCount(JEWEL_BOX) == 0) {
-                if (st.getPlayer().getLevel() >= 60) {
-                    QuestState fwear = st.getPlayer().getQuestState(_037_PleaseMakeMeFormalWear.class);
+                if (st.player.getLevel() >= 60) {
+                    QuestState fwear = st.player.getQuestState(_037_PleaseMakeMeFormalWear.class);
                     if (fwear != null && fwear.getCond() == 6)
                         htmltext = "30091-0.htm";
                     else
@@ -78,7 +77,7 @@ public final class _035_FindGlitteringJewelry extends Quest {
                 htmltext = "30091-2.htm";
             else if (cond == 4 && (st.getQuestItemsCount(ORIHARUKON) < 5 || st.getQuestItemsCount(SILVER_NUGGET) < 500 || st.getQuestItemsCount(THONS) < 150))
                 htmltext = "30091-hvnmat.htm";
-            else if (cond == 4 && st.getQuestItemsCount(ORIHARUKON) >= 5 && st.getQuestItemsCount(SILVER_NUGGET) >= 500 && st.getQuestItemsCount(THONS) >= 150)
+            else if (cond == 4 && st.haveQuestItem(ORIHARUKON, 5) && st.haveQuestItem(SILVER_NUGGET,500) && st.haveQuestItem(THONS, 150))
                 htmltext = "30091-4.htm";
         } else if (npcId == 30879)
             if (cond == 1)
@@ -89,16 +88,14 @@ public final class _035_FindGlitteringJewelry extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
-        long count = st.getQuestItemsCount(ROUGH_JEWEL);
-        if (count < 10) {
-            st.giveItems(ROUGH_JEWEL, 1);
-            if (st.getQuestItemsCount(ROUGH_JEWEL) == 10) {
+    public void onKill(NpcInstance npc, QuestState st) {
+        if (st.getQuestItemsCount(ROUGH_JEWEL) < 10) {
+            st.giveItems(ROUGH_JEWEL);
+            if (st.haveQuestItem(ROUGH_JEWEL,10)) {
                 st.playSound(SOUND_MIDDLE);
                 st.setCond(3);
             } else
                 st.playSound(SOUND_ITEMGET);
         }
-        return null;
     }
 }

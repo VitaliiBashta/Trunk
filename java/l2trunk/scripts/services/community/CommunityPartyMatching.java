@@ -147,7 +147,7 @@ public final class CommunityPartyMatching extends Functions implements ScriptFil
             html += "<td width=75><center><font color=" + getTextColor(i) + ">" + (player.getBaseClassId() == player.getActiveClassId() ? "Yes" : "No") + "</font></center></td>";
             html += "<td width=180><center><font color=" + getTextColor(i) + ">" + (player.getClan() != null ? player.getClan().getName() : "<br>") + "</font></center></td>";
             if (!player.equals(visitor) || player.getParty() != null)
-                html += "<td width=120><center><button value=\"Invite\" action=\"bypass _partymatching_%class%_%sort%_%asc%_%page%_" + player.getObjectId() + "_0\" width=70 height=25 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_ct1.button_df\"><center></td>";
+                html += "<td width=120><center><button value=\"Invite\" action=\"bypass _partymatching_%class%_%sort%_%asc%_%page%_" + player.objectId() + "_0\" width=70 height=25 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_ct1.button_df\"><center></td>";
             else
                 html += "<td width=120><br></td>";
 
@@ -162,19 +162,16 @@ public final class CommunityPartyMatching extends Functions implements ScriptFil
         return html;
     }
 
-    private boolean containsClass(ClassId[] group, int clazz) {
-        for (ClassId classInGroup : group) {
-            if (clazz == classInGroup.id())
-                return true;
-        }
-        return false;
+    private boolean containsClass(List<ClassId> group, int clazz) {
+        return group.stream()
+                .anyMatch(cls -> cls.id == clazz);
     }
 
     private boolean isClassTestPassed(Player player, int classSortType) {
 
         for (ClassId clazz : getNeededClasses(classSortType)) {
             for (SubClass sub : player.getSubClasses().values()) {
-                if (clazz.id() == sub.getClassId())
+                if (clazz.id == sub.getClassId())
                     return true;
             }
         }
@@ -202,20 +199,19 @@ public final class CommunityPartyMatching extends Functions implements ScriptFil
     }
 
     private int getMaxLevel(Player player, int classSortType) {
-        ClassId[] group = getNeededClasses(classSortType).toArray(new ClassId[0]);
+        List<ClassId> group = getNeededClasses(classSortType);
         int maxLevel = 0;
 
         for (SubClass sub : player.getSubClasses().values()) {
-            if (!containsClass(group, sub.getClassId()))
-                continue;
-            int level = Experience.getLevel(sub.getExp());
-            if (level > maxLevel)
-                maxLevel = level;
+            if (containsClass(group, sub.getClassId())) {
+                if (Experience.getLevel(sub.getExp()) > maxLevel)
+                    maxLevel = Experience.getLevel(sub.getExp());
+            }
         }
         return maxLevel;
     }
 
-    private int getUnlocksSize(Player player, int classSortType) {
+    private int getUnlocksSize(Player player) {
         return player.getSubClasses().size();
     }
 
@@ -324,7 +320,7 @@ public final class CommunityPartyMatching extends Functions implements ScriptFil
             if (_type == 1) // lvl
                 return Integer.compare(getMaxLevel(o2, _classType), getMaxLevel(o1, _classType));
             if (_type == 2) // unlocks
-                return Integer.compare(getUnlocksSize(o2, _classType), getUnlocksSize(o1, _classType));
+                return Integer.compare(getUnlocksSize(o2), getUnlocksSize(o1));
             return 0;
         }
     }

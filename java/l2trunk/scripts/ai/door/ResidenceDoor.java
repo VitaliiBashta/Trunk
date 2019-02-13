@@ -26,9 +26,9 @@ public final class ResidenceDoor extends DoorAI {
                 @Override
                 public void sayYes() {
                     if (door.isOpen())
-                        door.closeMe(player, true);
+                        door.closeMe();
                     else
-                        door.openMe(player, true);
+                        door.openMe();
                 }
 
                 @Override

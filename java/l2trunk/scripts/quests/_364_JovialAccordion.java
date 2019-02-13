@@ -38,7 +38,7 @@ public final class _364_JovialAccordion extends Quest {
             if (npcId != BARBADO)
                 return htmltext;
             st.setCond(0);
-            st.set("ok", "0");
+            st.set("ok", 0);
         }
 
         int cond = st.getCond();
@@ -47,7 +47,7 @@ public final class _364_JovialAccordion extends Quest {
                 htmltext = "30959-01.htm";
             else if (cond == 3) {
                 htmltext = "30959-03.htm";
-                st.giveItems(ECHO, 1);
+                st.giveItems(ECHO);
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest(true);
             } else if (cond > 0)
@@ -63,9 +63,9 @@ public final class _364_JovialAccordion extends Quest {
                     htmltext = "30957-04.htm";
                 } else
                     htmltext = "30957-03.htm";
-        } else if (npcId == SABRIN && cond == 2 && st.getQuestItemsCount(BEER) > 0) {
-            st.set("ok", "1");
-            st.takeItems(BEER, -1);
+        } else if (npcId == SABRIN && cond == 2 && st.haveQuestItem(BEER)) {
+            st.set("ok", 1);
+            st.takeItems(BEER);
             htmltext = "30060-01.htm";
         } else if (npcId == BEER_CHEST && cond == 2)
             htmltext = "30960-01.htm";
@@ -80,20 +80,20 @@ public final class _364_JovialAccordion extends Quest {
         String htmltext = event;
         int _state = st.getState();
         int cond = st.getCond();
-        if (event.equalsIgnoreCase("30959-02.htm") && _state == CREATED && cond == 0) {
+        if ("30959-02.htm".equalsIgnoreCase(event) && _state == CREATED && cond == 0) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("30957-02.htm") && _state == STARTED && cond == 1) {
+        } else if ("30957-02.htm".equalsIgnoreCase(event) && _state == STARTED && cond == 1) {
             st.setCond(2);
-            st.giveItems(KEY_1, 1);
-            st.giveItems(KEY_2, 1);
-        } else if (event.equalsIgnoreCase("30960-03.htm") && cond == 2 && st.getQuestItemsCount(KEY_2) > 0) {
-            st.takeItems(KEY_2, -1);
-            st.giveItems(BEER, 1);
+            st.giveItems(KEY_1);
+            st.giveItems(KEY_2);
+        } else if ("30960-03.htm".equalsIgnoreCase(event) && cond == 2 && st.haveQuestItem(KEY_2) ) {
+            st.takeItems(KEY_2);
+            st.giveItems(BEER);
             htmltext = "30960-02.htm";
-        } else if (event.equalsIgnoreCase("30961-03.htm") && cond == 2 && st.getQuestItemsCount(KEY_1) > 0) {
-            st.takeItems(KEY_1, -1);
+        } else if ("30961-03.htm".equalsIgnoreCase(event) && cond == 2 && st.haveQuestItem(KEY_1) ) {
+            st.takeItems(KEY_1);
             htmltext = "30961-02.htm";
         }
         return htmltext;

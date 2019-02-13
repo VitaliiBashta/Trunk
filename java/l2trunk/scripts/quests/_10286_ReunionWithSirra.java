@@ -28,11 +28,11 @@ public final class _10286_ReunionWithSirra extends Quest {
             st.playSound(SOUND_ACCEPT);
         } else if ("enterinstance".equalsIgnoreCase(event)) {
             st.setCond(2);
-            _10287_StoryOfThoseLeft.enterInstance(st.getPlayer());
+            _10287_StoryOfThoseLeft.enterInstance(st.player);
             return null;
         } else if ("sirraspawn".equalsIgnoreCase(event)) {
             st.setCond(3);
-            NpcInstance sirra = st.getPlayer().getReflection().addSpawnWithoutRespawn(SIRRA, new Location(-23848, -8744, -5413, 49152), 0);
+            NpcInstance sirra = st.player.getReflection().addSpawnWithoutRespawn(SIRRA, new Location(-23848, -8744, -5413, 49152));
             Functions.npcSay(sirra, "You are so enthusiastic in the road and that's all you do? Ha ha ha ...");
             return null;
         } else if ("sirra_q10286_04.htm".equalsIgnoreCase(event)) {
@@ -41,7 +41,7 @@ public final class _10286_ReunionWithSirra extends Quest {
             npc.deleteMe();
         } else if ("leaveinstance".equalsIgnoreCase(event)) {
             st.setCond(5);
-            st.getPlayer().getReflection().collapse();
+            st.player.getReflection().collapse();
             return null;
         }
 
@@ -55,8 +55,7 @@ public final class _10286_ReunionWithSirra extends Quest {
         int cond = st.getCond();
         if (npcId == RAFFORTY) {
             if (cond == 0) {
-                QuestState qs = st.getPlayer().getQuestState(_10285_MeetingSirra.class);
-                if (st.getPlayer().getLevel() >= 82 && qs != null && qs.isCompleted())
+                if (st.player.getLevel() >= 82 && st.player.isQuestCompleted(_10285_MeetingSirra.class))
                     htmltext = "rafforty_q10286_01.htm";
                 else {
                     htmltext = "rafforty_q10286_00.htm";

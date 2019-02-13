@@ -39,7 +39,7 @@ public final class _645_GhostsOfBatur extends Quest {
         String htmltext;
         int cond = st.getCond();
         if (cond == 0) {
-            if (st.getPlayer().getLevel() < 61) {
+            if (st.player.getLevel() < 61) {
                 htmltext = "karuda_q0645_0102.htm";
                 st.exitCurrentQuest(true);
             } else
@@ -57,10 +57,9 @@ public final class _645_GhostsOfBatur extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getCond() > 0)
             if (Rnd.chance(15))
                 st.giveItems(CursedBurialItems, 1, true);
-        return null;
     }
 }

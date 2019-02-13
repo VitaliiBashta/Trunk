@@ -5,7 +5,6 @@ import l2trunk.commons.lang.StringUtils;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.scripts.Functions;
-import l2trunk.gameserver.utils.Language;
 import l2trunk.gameserver.utils.Strings;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
@@ -25,15 +24,10 @@ public enum HtmCache {
 
     private static final Logger _log = LoggerFactory.getLogger(HtmCache.class);
 
-    private final Cache[] _cache = new Cache[Language.values().length];
+    private final Cache _cache;
 
     HtmCache() {
-        for (int i = 0; i < _cache.length; i++)
-            _cache[i] = CacheManager.getInstance().getCache(getClass().getName() + "." + Language.VALUES[i].name());
-    }
-
-    public static HtmCache INSTANCE() {
-        return INSTANCE;
+        _cache = CacheManager.getInstance().getCache(getClass().getName());
     }
 
     public void reload() {
@@ -41,18 +35,14 @@ public enum HtmCache {
 
         switch (Config.HTM_CACHE_MODE) {
             case ENABLED:
-                for (Language lang : Language.VALUES) {
-                    Path root = Config.DATAPACK_ROOT.resolve("data/html-" + lang.getShortName());
-                    if (!Files.exists(root)) {
-                        _log.info("HtmCache: Not find html dir for lang: " + lang);
-                        continue;
-                    }
-                    load(lang, root, root.toAbsolutePath() + "/");
+                Path root = Config.DATAPACK_ROOT.resolve("data/html-en");
+                if (!Files.exists(root)) {
+                    _log.info("HtmCache: Not find html dir: " + root);
+                    break;
                 }
-                for (int i = 0; i < _cache.length; i++) {
-                    Cache c = _cache[i];
-                    _log.info(String.format("HtmCache: parsing %d documents; lang: %s.", c.getSize(), Language.VALUES[i]));
-                }
+                load(root, root.toAbsolutePath() + "/");
+                _log.info("HtmCache: parsing" + _cache.getSize() + " documents;");
+
                 break;
             case LAZY:
                 _log.info("HtmCache: lazy cache mode.");
@@ -63,25 +53,23 @@ public enum HtmCache {
         }
     }
 
-    private void load(Language lang, Path f, final String rootPath) {
+    public void load(Path f, final String rootPath) {
         if (!Files.exists(f)) {
             _log.info("HtmCache: dir not exists: " + f);
             return;
         }
         List<Path> files = FileUtils.getAllFiles(f, true, ".htm");
 
-        for (Path file : files) {
-            putContent(lang, file, rootPath);
-        }
+        files.forEach(file -> putContent(file, rootPath));
     }
 
 
-    private void putContent(Language lang, Path f, final String rootPath) {
+    private void putContent(Path f, final String rootPath) {
         String content = FileUtils.readFileToString(f);
 
         String path = f.toAbsolutePath().toString().substring(rootPath.length()).replace("\\", "/").toLowerCase();
 
-        _cache[lang.ordinal()].put(new Element(path, Strings.bbParse(content)));
+        _cache.put(new Element(path, Strings.bbParse(content)));
     }
 
     public String getNotNull(String fileName, Player player) {
@@ -95,7 +83,7 @@ public enum HtmCache {
         String cache = getCache(fileName);
 
         if (StringUtils.isEmpty(cache))
-            cache = "Dialog not found: " + fileName + "; Lang: " + Language.ENGLISH;
+            cache = "Dialog not found: " + fileName;
 
         return cache;
     }
@@ -134,7 +122,7 @@ public enum HtmCache {
 
     private String loadDisabled(String file) {
         String cache = null;
-        Path f = Config.DATAPACK_ROOT.resolve("data/html-" + Language.ENGLISH.getShortName() + "/" + file);
+        Path f = Config.DATAPACK_ROOT.resolve("data/html-en/" + file);
         if (Files.exists(f)) {
             cache = FileUtils.readFileToString(f);
             cache = Strings.bbParse(cache);
@@ -144,26 +132,26 @@ public enum HtmCache {
 
     private String loadLazy(String file) {
         String cache = null;
-        Path f = Config.DATAPACK_ROOT.resolve("data/html-" + Language.ENGLISH.getShortName() + "/" + file);
+        Path f = Config.DATAPACK_ROOT.resolve("data/html-en/" + file);
         if (Files.exists(f)) {
             cache = FileUtils.readFileToString(f);
             cache = Strings.bbParse(cache);
 
-            _cache[Language.ENGLISH.ordinal()].put(new Element(file, cache));
+            _cache.put(new Element(file, cache));
         }
         return cache;
     }
 
     private String get(String f) {
-        Element element = _cache[Language.ENGLISH.ordinal()].get(f);
+        Element element = _cache.get(f);
 
         if (element == null)
-            element = _cache[Language.ENGLISH.ordinal()].get(f);
+            element = _cache.get(f);
 
         return element == null ? null : (String) element.getObjectValue();
     }
 
     public void clear() {
-        for (Cache a_cache : _cache) a_cache.removeAll();
+        _cache.removeAll();
     }
 }

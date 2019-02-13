@@ -35,7 +35,7 @@ public final class _712_PathToBecomingALordOren extends Quest {
         Castle castle = ResidenceHolder.getResidence(OrenCastle);
         if (castle.getOwner() == null)
             return "Castle has no lord";
-        Player castleOwner = castle.getOwner().getLeader().getPlayer();
+        Player castleOwner = castle.getOwner().getLeader().player;
         switch (event) {
             case "brasseur_q712_03.htm":
                 st.setState(STARTED);
@@ -64,7 +64,7 @@ public final class _712_PathToBecomingALordOren extends Quest {
                 st.setCond(8);
                 break;
             case "brasseur_q712_06.htm":
-                Functions.npcSay(npc, NpcString.S1_HAS_BECOME_THE_LORD_OF_THE_TOWN_OF_OREN, st.getPlayer().getName());
+                Functions.npcSay(npc, NpcString.S1_HAS_BECOME_THE_LORD_OF_THE_TOWN_OF_OREN, st.player.getName());
                 castle.getDominion().changeOwner(castleOwner.getClan());
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest(true);
@@ -81,12 +81,12 @@ public final class _712_PathToBecomingALordOren extends Quest {
         Castle castle = ResidenceHolder.getResidence(OrenCastle);
         if (castle.getOwner() == null)
             return "Castle has no lord";
-        Player castleOwner = castle.getOwner().getLeader().getPlayer();
+        Player castleOwner = castle.getOwner().getLeader().player;
 
         if (npcId == Brasseur) {
             if (cond == 0) {
-                if (castleOwner == st.getPlayer()) {
-                    if (castle.getDominion().getLordObjectId() != st.getPlayer().getObjectId())
+                if (castleOwner == st.player) {
+                    if (castle.getDominion().getLordObjectId() != st.player.objectId())
                         htmltext = "brasseur_q712_01.htm";
                     else {
                         htmltext = "brasseur_q712_00.htm";
@@ -132,22 +132,21 @@ public final class _712_PathToBecomingALordOren extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getCond() == 6) {
             if (st.getQuestItemsCount(NebuliteOrb) < 300)
-                st.giveItems(NebuliteOrb, 1);
+                st.giveItems(NebuliteOrb);
             if (st.getQuestItemsCount(NebuliteOrb) >= 300)
                 st.setCond(7);
         }
-        return null;
     }
 
     private boolean isLordAvailable(int cond, QuestState st) {
         Castle castle = ResidenceHolder.getResidence(OrenCastle);
         Clan owner = castle.getOwner();
-        Player castleOwner = castle.getOwner().getLeader().getPlayer();
+        Player castleOwner = castle.getOwner().getLeader().player;
         if (owner != null)
-            return castleOwner != null && castleOwner != st.getPlayer() && owner == st.getPlayer().getClan() && castleOwner.getQuestState(this) != null && castleOwner.getQuestState(this).getCond() == cond;
+            return castleOwner != null && castleOwner != st.player && owner == st.player.getClan() && castleOwner.getQuestState(this) != null && castleOwner.getQuestState(this).getCond() == cond;
         return false;
     }
 }

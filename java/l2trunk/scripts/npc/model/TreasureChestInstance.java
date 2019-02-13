@@ -32,8 +32,8 @@ public final class TreasureChestInstance extends ChestInstance {
         if (!isCommonTreasureChest()) {
             double levelmod = (double) skill.magicLevel - npcLvl;
             chance += levelmod * skill.levelModifier;
-            if (npcLvl - opener.getLevel() >= 5) // Custom way to prevent low level players opening top level chests.
-                chance += (opener.getLevel() - npcLvl) * 10; // 10% penalty for each next level.
+            if (npcLvl - opener.getLevel() >= 5) // Custom way to prevent low occupation players opening top occupation chests.
+                chance += (opener.getLevel() - npcLvl) * 10; // 10% penalty for each next occupation.
         } else {
             int openerLvl = opener.getLevel();
             int lvlDiff = Math.max(openerLvl - npcLvl, 0);

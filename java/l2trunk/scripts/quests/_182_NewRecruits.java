@@ -4,7 +4,6 @@ import l2trunk.gameserver.model.base.Race;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Location;
 
 public final class _182_NewRecruits extends Quest {
@@ -44,7 +43,7 @@ public final class _182_NewRecruits extends Quest {
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(false);
         } else if (event.equals("EnterNornilsGarden") && cond == 1)
-            st.getPlayer().teleToLocation(TELEPORT_POSITION);
+            st.player.teleToLocation(TELEPORT_POSITION);
 
         return htmltext;
     }
@@ -56,7 +55,7 @@ public final class _182_NewRecruits extends Quest {
         int cond = st.getCond();
 
         if (npcId == Kekropus) {
-            if (cond == 0 && st.getPlayer().getRace() != Race.kamael && st.getPlayer().getLevel() >= 17)
+            if (cond == 0 && st.player.getRace() != Race.kamael && st.player.getLevel() >= 17)
                 htmltext = "kekropus_q182_1.htm";
             else {
                 htmltext = "kekropus_q182_1a.htm";

@@ -38,16 +38,18 @@ public final class CharacterCreate extends L2GameClientPacket {
     private int _hairColor;
     private int _face;
 
-    public static boolean checkName(String name) {
-        for (int i = 0; i < name.length(); i++) {
+    public static boolean isValid(String name) {
+        for (int i=0; i<name.length(); i++) {
             if (!Character.isDigit(name.charAt(i)) && !Character.isLetter(name.charAt(i)))
-                return false;
+                return true;
         }
-        return true;
+        return false;
     }
 
     private static void startTutorialQuest(Player player) {
-        QuestManager.getQuest(_255_Tutorial.class).newQuestState(player, Quest.CREATED);
+        Quest q = QuestManager.getQuest(_255_Tutorial.class);
+        if (q != null)
+            q.newQuestState(player, Quest.CREATED);
     }
 
     @Override
@@ -70,13 +72,13 @@ public final class CharacterCreate extends L2GameClientPacket {
     @Override
     protected void runImpl() {
         for (ClassId cid : ClassId.VALUES)
-            if (cid.id() == _classId && cid.getLevel() != 1)
+            if (cid.id == _classId && cid.occupation() != 0)
                 return;
         if (CharacterDAO.accountCharNumber(getClient().getLogin()) >= 8) {
             sendPacket(CharacterCreateFail.REASON_TOO_MANY_CHARACTERS);
             return;
         }
-        if (!checkName(_name) || _name.length() > 16) {
+        if (isValid(_name) || _name.length() > 16) {
             sendPacket(CharacterCreateFail.REASON_16_ENG_CHARS);
             return;
         } else if (CharacterDAO.getObjectIdByName(_name) > 0) {
@@ -120,7 +122,7 @@ public final class CharacterCreate extends L2GameClientPacket {
             newChar.addExpAndSp(Experience.LEVEL[Config.STARTING_LVL] - newChar.getExp(), 0);
 
 
-        newChar.setLoc(template.spawnLoc);
+            newChar.setLoc(template.spawnLoc);
 
         if (Config.CHAR_TITLE)
             newChar.setTitle(Config.ADD_CHAR_TITLE);
@@ -129,13 +131,13 @@ public final class CharacterCreate extends L2GameClientPacket {
 
 
         for (CreateItem i : template.getItems()) {
-            ItemInstance item = ItemFunctions.createItem(i.getItemId());
+            ItemInstance item = ItemFunctions.createItem(i.id);
             newChar.getInventory().addItem(item, "New Char Item");
 
-            if (i.getShortcut() - 1 > -1) // tutorial book
-                newChar.registerShortCut(new ShortCut(Math.min(i.getShortcut() - 1, 11), 0, ShortCut.TYPE_ITEM, item.getObjectId(), -1, 1));
+            if (i.shortcut - 1 > -1) // tutorial book
+                newChar.registerShortCut(new ShortCut(Math.min(i.shortcut - 1, 11), 0, ShortCut.TYPE_ITEM, item.objectId(), -1, 1));
 
-            if (i.isEquipable() && item.isEquipable() && (newChar.getActiveWeaponItem() == null || item.getTemplate().getType2() != ItemTemplate.TYPE2_WEAPON))
+            if (i.equipable && item.isEquipable() && (newChar.getActiveWeaponItem() == null || item.getTemplate().getType2() != ItemTemplate.TYPE2_WEAPON))
                 newChar.getInventory().equipItem(item);
         }
 
@@ -170,7 +172,7 @@ public final class CharacterCreate extends L2GameClientPacket {
         newChar.getInventory().addItem(item, "New Char Item");
 
         for (SkillLearn skill : SkillAcquireHolder.getAvailableSkills(newChar, AcquireType.NORMAL))
-            newChar.addSkill(skill.id(), skill.level(), true);
+            newChar.addSkill(skill.id(), skill.getLevel(), true);
 
         if (newChar.getSkillLevel(1001) > 0) // Soul Cry
             newChar.registerShortCut(new ShortCut(1, 0, ShortCut.TYPE_SKILL, 1001, 1, 1));

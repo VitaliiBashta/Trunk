@@ -23,7 +23,7 @@ public class ExShowSentPostList extends L2GameServerPacket {
     private final List<Mail> mails;
 
     public ExShowSentPostList(Player cha) {
-        mails = MailDAO.getInstance().getSentMailByOwnerId(cha.getObjectId());
+        mails = MailDAO.getInstance().getSentMailByOwnerId(cha.objectId());
         Collections.sort(mails);
     }
 

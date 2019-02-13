@@ -10,7 +10,6 @@ import l2trunk.gameserver.utils.Util;
 
 public final class ClearPK extends Functions {
     public void clear() {
-        final Player player = getSelf();
         if (player == null)
             return;
 

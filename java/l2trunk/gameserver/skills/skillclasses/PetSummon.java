@@ -2,6 +2,7 @@ package l2trunk.gameserver.skills.skillclasses;
 
 import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.model.*;
+import l2trunk.gameserver.model.instances.DoorInstance;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.tables.PetDataTable;
 
@@ -13,8 +14,7 @@ public final class PetSummon extends Skill {
     }
 
     @Override
-    public boolean checkCondition(Creature activeChar, Creature target, boolean forceUse, boolean dontMove, boolean first) {
-        Player player = activeChar.getPlayer();
+    public boolean checkCondition(Player player, Creature target, boolean forceUse, boolean dontMove, boolean first) {
         if (player == null)
             return false;
 
@@ -58,29 +58,20 @@ public final class PetSummon extends Skill {
             return false;
         }
 
-        if (activeChar.getPlayer().isJailed()) {
+        if (player.isJailed()) {
             player.sendMessage("You cannot use that item in Jail!");
             return false;
         }
-
-
-        if (World.getAroundObjects(player, 120, 200)
-                .filter(GameObject::isDoor)
-                .peek(o -> player.sendPacket(SystemMsg.YOU_MAY_NOT_SUMMON_FROM_YOUR_CURRENT_LOCATION))
-                .findFirst().isPresent())
-            return false;
-
-
-        return super.checkCondition(activeChar, target, forceUse, dontMove, first);
+        return super.checkCondition(player, target, forceUse, dontMove, first);
     }
 
     @Override
-    public void useSkill(Creature caster, List<Creature> targets) {
-        Player activeChar = caster.getPlayer();
+    public void useSkill(Creature creature, List<Creature> targets) {
+        Player activeChar = (Player)creature;
 
         activeChar.summonPet();
 
         if (isSSPossible())
-            caster.unChargeShots(isMagic());
+            creature.unChargeShots(isMagic());
     }
 }

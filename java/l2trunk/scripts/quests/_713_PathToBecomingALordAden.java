@@ -17,7 +17,7 @@ public final class _713_PathToBecomingALordAden extends Quest {
     private static final List<Integer> Orcs = List.of(20669, 20665);
 
     private static final int AdenCastle = 5;
-    private int _mobs = 0;
+    private int mobs = 0;
 
     public _713_PathToBecomingALordAden() {
         super(false);
@@ -31,7 +31,7 @@ public final class _713_PathToBecomingALordAden extends Quest {
         Castle castle = ResidenceHolder.getResidence(AdenCastle);
         if (castle.getOwner() == null)
             return "Castle has no lord";
-        Player castleOwner = castle.getOwner().getLeader().getPlayer();
+        Player castleOwner = castle.getOwner().getLeader().player();
 
         switch (event) {
             case "logan_q713_02.htm":
@@ -43,7 +43,7 @@ public final class _713_PathToBecomingALordAden extends Quest {
                 st.setCond(2);
                 break;
             case "logan_q713_05.htm":
-                Functions.npcSay(npc, NpcString.S1_HAS_BECOME_THE_LORD_OF_THE_TOWN_OF_ADEN, st.getPlayer().getName());
+                Functions.npcSay(npc, NpcString.S1_HAS_BECOME_THE_LORD_OF_THE_TOWN_OF_ADEN, st.player.getName());
                 castle.getDominion().changeOwner(castleOwner.getClan());
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest(true);
@@ -60,12 +60,12 @@ public final class _713_PathToBecomingALordAden extends Quest {
         Castle castle = ResidenceHolder.getResidence(AdenCastle);
         if (castle.getOwner() == null)
             return "Castle has no lord";
-        Player castleOwner = castle.getOwner().getLeader().getPlayer();
+        Player castleOwner = castle.getOwner().getLeader().player();
 
         if (npcId == Logan) {
             if (cond == 0) {
-                if (castleOwner == st.getPlayer()) {
-                    if (castle.getDominion().getLordObjectId() != st.getPlayer().getObjectId())
+                if (castleOwner == st.player) {
+                    if (castle.getDominion().getLordObjectId() != st.player.objectId())
                         htmltext = "logan_q713_01.htm";
                     else {
                         htmltext = "logan_q713_00.htm";
@@ -97,13 +97,9 @@ public final class _713_PathToBecomingALordAden extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
-        if (st.getCond() == 4) {
-            if (_mobs < 100)
-                _mobs++;
-            else
+    public void onKill(NpcInstance npc, QuestState st) {
+        if (st.getCond() == 4)
+            if (mobs++ >= 100)
                 st.setCond(5);
-        }
-        return null;
     }
 }

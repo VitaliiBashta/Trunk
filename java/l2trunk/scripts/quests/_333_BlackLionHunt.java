@@ -4,7 +4,6 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _333_BlackLionHunt extends Quest {
     //Technical relatet Items
@@ -315,20 +314,20 @@ public final class _333_BlackLionHunt extends Quest {
             st.playSound(SOUND_ACCEPT);
             return "30735-01.htm";
         } else if (event.equalsIgnoreCase("p1_t")) {
-            st.set("part", "1");
-            st.giveItems(SOPHIAS_LETTER1, 1);
+            st.set("part", 1);
+            st.giveItems(SOPHIAS_LETTER1);
             return "30735-02.htm";
         } else if (event.equalsIgnoreCase("p2_t")) {
-            st.set("part", "2");
-            st.giveItems(SOPHIAS_LETTER2, 1);
+            st.set("part", 2);
+            st.giveItems(SOPHIAS_LETTER2);
             return "30735-03.htm";
         } else if (event.equalsIgnoreCase("p3_t")) {
-            st.set("part", "3");
-            st.giveItems(SOPHIAS_LETTER3, 1);
+            st.set("part", 3);
+            st.giveItems(SOPHIAS_LETTER3);
             return "30735-04.htm";
         } else if (event.equalsIgnoreCase("p4_t")) {
-            st.set("part", "4");
-            st.giveItems(SOPHIAS_LETTER4, 1);
+            st.set("part", 4);
+            st.giveItems(SOPHIAS_LETTER4);
             return "30735-05.htm";
         } else if (event.equalsIgnoreCase("exit")) {
             st.exitCurrentQuest(true);
@@ -375,7 +374,7 @@ public final class _333_BlackLionHunt extends Quest {
                 return "30735-06.htm";
             }
             return "30735-start.htm";
-        } else if (event.equalsIgnoreCase("leave")) {
+        } else if ("leave".equalsIgnoreCase(event)) {
             int order;
             if (part == 1)
                 order = SOPHIAS_LETTER1;
@@ -387,55 +386,55 @@ public final class _333_BlackLionHunt extends Quest {
                 order = SOPHIAS_LETTER4;
             else
                 order = 0;
-            st.set("part", "0");
+            st.set("part", 0);
             if (order > 0)
                 st.takeItems(order, 1);
             return "30735-07.htm";
-        } else if (event.equalsIgnoreCase("f_info")) {
+        } else if ("f_info".equalsIgnoreCase(event)) {
             int text = st.getInt("text");
             if (text < 4) {
-                st.set("text", String.valueOf(text + 1));
+                st.set("text", text + 1);
                 return "red_foor_text_" + Rnd.get(1, 19) + ".htm";
             }
             return "red_foor-01.htm";
-        } else if (event.equalsIgnoreCase("f_give")) {
-            if (st.getQuestItemsCount(CARGO_BOX1) > 0) {
+        } else if ("f_give".equalsIgnoreCase(event)) {
+            if (st.haveQuestItem(CARGO_BOX1)) {
                 if (st.getQuestItemsCount(ADENA_ID) >= OPEN_BOX_PRICE) {
                     st.takeItems(CARGO_BOX1, 1);
                     st.takeItems(ADENA_ID, OPEN_BOX_PRICE);
                     int rand = Rnd.get(1, 162);
                     if (rand < 21) {
-                        st.giveItems(GLUDIO_APPLE, 1);
+                        st.giveItems(GLUDIO_APPLE);
                         return "red_foor-02.htm";
                     } else if (rand < 41) {
-                        st.giveItems(CORN_MEAL, 1);
+                        st.giveItems(CORN_MEAL);
                         return "red_foor-03.htm";
                     } else if (rand < 61) {
-                        st.giveItems(WOLF_PELTS, 1);
+                        st.giveItems(WOLF_PELTS);
                         return "red_foor-04.htm";
                     } else if (rand < 74) {
-                        st.giveItems(MONNSTONE, 1);
+                        st.giveItems(MONNSTONE);
                         return "red_foor-05.htm";
                     } else if (rand < 86) {
-                        st.giveItems(GLUDIO_WEETS_FLOWER, 1);
+                        st.giveItems(GLUDIO_WEETS_FLOWER);
                         return "red_foor-06.htm";
                     } else if (rand < 98) {
-                        st.giveItems(SPIDERSILK_ROPE, 1);
+                        st.giveItems(SPIDERSILK_ROPE);
                         return "red_foor-07.htm";
                     } else if (rand < 99) {
-                        st.giveItems(ALEXANDRIT, 1);
+                        st.giveItems(ALEXANDRIT);
                         return "red_foor-08.htm";
                     } else if (rand < 109) {
-                        st.giveItems(SILVER_TEA, 1);
+                        st.giveItems(SILVER_TEA);
                         return "red_foor-09.htm";
                     } else if (rand < 119) {
-                        st.giveItems(GOLEM_PART, 1);
+                        st.giveItems(GOLEM_PART);
                         return "red_foor-10.htm";
                     } else if (rand < 123) {
-                        st.giveItems(FIRE_EMERALD, 1);
+                        st.giveItems(FIRE_EMERALD);
                         return "red_foor-11.htm";
                     } else if (rand < 127) {
-                        st.giveItems(SILK_FROCK, 1);
+                        st.giveItems(SILK_FROCK);
                         return "red_foor-12.htm";
                     } else if (rand < 131) {
                         st.giveItems(PORCELAN_URN, 1);
@@ -446,31 +445,31 @@ public final class _333_BlackLionHunt extends Quest {
                     } else if (rand < 147) {
                         int random_stat = Rnd.get(4);
                         if (random_stat == 3) {
-                            st.giveItems(STATUE_SHILIEN_HEAD, 1);
+                            st.giveItems(STATUE_SHILIEN_HEAD);
                             return "red_foor-14.htm";
                         } else if (random_stat == 0) {
-                            st.giveItems(STATUE_SHILIEN_TORSO, 1);
+                            st.giveItems(STATUE_SHILIEN_TORSO);
                             return "red_foor-14.htm";
                         } else if (random_stat == 1) {
-                            st.giveItems(STATUE_SHILIEN_ARM, 1);
+                            st.giveItems(STATUE_SHILIEN_ARM);
                             return "red_foor-14.htm";
                         } else if (random_stat == 2) {
-                            st.giveItems(STATUE_SHILIEN_LEG, 1);
+                            st.giveItems(STATUE_SHILIEN_LEG);
                             return "red_foor-14.htm";
                         }
                     } else if (rand <= 162) {
                         int random_tab = Rnd.get(4);
                         if (random_tab == 0) {
-                            st.giveItems(FRAGMENT_ANCIENT_TABLE1, 1);
+                            st.giveItems(FRAGMENT_ANCIENT_TABLE1);
                             return "red_foor-15.htm";
                         } else if (random_tab == 1) {
-                            st.giveItems(FRAGMENT_ANCIENT_TABLE2, 1);
+                            st.giveItems(FRAGMENT_ANCIENT_TABLE2);
                             return "red_foor-15.htm";
                         } else if (random_tab == 2) {
-                            st.giveItems(FRAGMENT_ANCIENT_TABLE3, 1);
+                            st.giveItems(FRAGMENT_ANCIENT_TABLE3);
                             return "red_foor-15.htm";
                         } else if (random_tab == 3) {
-                            st.giveItems(FRAGMENT_ANCIENT_TABLE4, 1);
+                            st.giveItems(FRAGMENT_ANCIENT_TABLE4);
                             return "red_foor-15.htm";
                         }
                     }
@@ -478,7 +477,7 @@ public final class _333_BlackLionHunt extends Quest {
                     return "red_foor-no_adena.htm";
             } else
                 return "red_foor-no_box.htm";
-        } else if (event.equalsIgnoreCase("r_give_statue") || event.equalsIgnoreCase("r_give_tablet")) {
+        } else if ("r_give_statue".equalsIgnoreCase(event) || "r_give_tablet".equalsIgnoreCase(event)) {
             int[] items = statue_list;
             int item = COMPLETE_STATUE;
             String pieces = "rupio-01.htm";
@@ -499,22 +498,22 @@ public final class _333_BlackLionHunt extends Quest {
                 for (int id = items[0]; id <= items[items.length - 1]; id++)
                     st.takeItems(id, 1);
                 if (Rnd.chance(2)) {
-                    st.giveItems(item, 1);
+                    st.giveItems(item);
                     return complete;
                 }
                 return brockes;
             }
-            if (count < 4 && count != 0)
+            if (count != 0)
                 return pieces;
             return "rupio-07.htm";
-        } else if (event.equalsIgnoreCase("l_give")) {
+        } else if ("l_give".equalsIgnoreCase(event)) {
             if (st.getQuestItemsCount(COMPLETE_TABLET) > 0) {
                 st.takeItems(COMPLETE_TABLET, 1);
                 st.giveItems(ADENA_ID, 30000);
                 return "lockirin-01.htm";
             }
             return "lockirin-02.htm";
-        } else if (event.equalsIgnoreCase("u_give")) {
+        } else if ("u_give".equalsIgnoreCase(event)) {
             if (st.getQuestItemsCount(COMPLETE_STATUE) > 0) {
                 st.takeItems(COMPLETE_STATUE, 1);
                 st.giveItems(ADENA_ID, 30000);
@@ -575,11 +574,11 @@ public final class _333_BlackLionHunt extends Quest {
         String htmltext = "noquest";
         if (cond == 0) {
             st.setCond(0);
-            st.set("part", "0");
-            st.set("text", "0");
+            st.set("part", 0);
+            st.set("text", 0);
             if (npcId == Sophya) {
-                if (st.getQuestItemsCount(BLACK_LION_MARK) > 0) {
-                    if (st.getPlayer().getLevel() > 24)
+                if (st.haveQuestItem(BLACK_LION_MARK)) {
+                    if (st.player.getLevel() > 24)
                         return "30735-17.htm";
                     st.exitCurrentQuest(true);
                     return "30735-18.htm";
@@ -660,7 +659,7 @@ public final class _333_BlackLionHunt extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         boolean on_npc = false;
         int part = 0;
@@ -708,7 +707,5 @@ public final class _333_BlackLionHunt extends Quest {
             if (Rnd.chance(15))
                 st.giveItems(CARGO_BOX1, 1);
         }
-
-        return null;
     }
 }

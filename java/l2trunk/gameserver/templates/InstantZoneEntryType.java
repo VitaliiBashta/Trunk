@@ -174,7 +174,7 @@ public enum InstantZoneEntryType {
         if (InstantZoneHolder.getMinutesToNextEntrance(instancedZone.getId(), player) > 0)
             return SystemMsg.C1_MAY_NOT_REENTER_YET;
 
-        if (instancedZone.getRemovedItemId() > 0 && instancedZone.getRemovedItemNecessity() && ItemFunctions.getItemCount(player, instancedZone.getRemovedItemId()) < 1)
+        if (instancedZone.getRemovedItemId() > 0 && instancedZone.getRemovedItemNecessity() && !player.haveItem(instancedZone.getRemovedItemId()) )
             return SystemMsg.C1S_ITEM_REQUIREMENT_IS_NOT_SUFFICIENT_AND_CANNOT_BE_ENTERED;
 
         if (instancedZone.getRequiredQuestId() > 0) {

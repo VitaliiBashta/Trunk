@@ -17,21 +17,21 @@ public final class ReelingPumping extends Skill {
     }
 
     @Override
-    public boolean checkCondition(Creature activeChar, Creature target, boolean forceUse, boolean dontMove, boolean first) {
-        if (!((Player) activeChar).isFishing()) {
-            activeChar.sendPacket(skillType == SkillType.PUMPING ? SystemMsg.YOU_MAY_ONLY_USE_THE_PUMPING_SKILL_WHILE_YOU_ARE_FISHING : SystemMsg.YOU_MAY_ONLY_USE_THE_REELING_SKILL_WHILE_YOU_ARE_FISHING);
-            activeChar.sendActionFailed();
+    public boolean checkCondition(Player player, Creature target, boolean forceUse, boolean dontMove, boolean first) {
+        if (!player.isFishing()) {
+            player.sendPacket(skillType == SkillType.PUMPING ? SystemMsg.YOU_MAY_ONLY_USE_THE_PUMPING_SKILL_WHILE_YOU_ARE_FISHING : SystemMsg.YOU_MAY_ONLY_USE_THE_REELING_SKILL_WHILE_YOU_ARE_FISHING);
+            player.sendActionFailed();
             return false;
         }
-        return super.checkCondition(activeChar, target, forceUse, dontMove, first);
+        return super.checkCondition(player, target, forceUse, dontMove, first);
     }
 
     @Override
     public void useSkill(Creature caster, List<Creature> targets) {
-        if (caster == null || !caster.isPlayer())
+        if (!(caster instanceof Player))
             return;
 
-        Player player = caster.getPlayer();
+        Player player = (Player) caster;
         Fishing fishing = player.getFishing();
         if (fishing == null || !fishing.isInCombat())
             return;
@@ -42,8 +42,7 @@ public final class ReelingPumping extends Skill {
         double gradebonus = 1 + weaponItem.getCrystalType().ordinal() * 0.1;
         int dmg = (int) (power * gradebonus * SS);
 
-        if (player.getSkillLevel(1315) < level - 2) // 1315 - Fish Expertise
-        {
+        if (player.getSkillLevel(1315) < level - 2) { // 1315 - Fish Expertise
             // Penalty
             player.sendPacket(SystemMsg.DUE_TO_YOUR_REELING_ANDOR_PUMPING_SKILL_BEING_THREE_OR_MORE_LEVELS_HIGHER_THAN_YOUR_FISHING_SKILL_A_50_DAMAGE_PENALTY_WILL_BE_APPLIED);
             pen = 50;

@@ -17,11 +17,10 @@ public final class Disablers extends Skill {
     }
 
     @Override
-    public void useSkill(Creature activeChar, List<Creature> targets) {
+    public void useSkill(Creature activeChar, Creature target) {
         Creature realTarget;
         boolean reflected;
 
-        for (Creature target : targets)
             if (target != null) {
                 reflected = target.checkReflectSkill(activeChar, this);
                 realTarget = reflected ? activeChar : target;
@@ -35,8 +34,5 @@ public final class Disablers extends Skill {
 
                 getEffects(activeChar, target, activateRate > 0, false, _staticTime, 1, reflected);
             }
-
-        if (isSSPossible())
-            activeChar.unChargeShots(isMagic());
     }
 }

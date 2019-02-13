@@ -1,10 +1,7 @@
 package l2trunk.gameserver.model.instances.residences;
 
 import l2trunk.gameserver.data.xml.holder.NpcHolder;
-import l2trunk.gameserver.model.Creature;
-import l2trunk.gameserver.model.Player;
-import l2trunk.gameserver.model.Skill;
-import l2trunk.gameserver.model.Spawner;
+import l2trunk.gameserver.model.*;
 import l2trunk.gameserver.model.entity.events.impl.DominionSiegeEvent;
 import l2trunk.gameserver.model.entity.events.impl.SiegeEvent;
 import l2trunk.gameserver.model.instances.NpcInstance;
@@ -56,21 +53,16 @@ public abstract class SiegeToggleNpcInstance extends NpcInstance {
 
     @Override
     public boolean isAutoAttackable(Creature attacker) {
-        if (attacker == null)
+        if (!(attacker instanceof Playable))
             return false;
-        Player player = attacker.getPlayer();
-        if (player == null)
-            return false;
+        Player player = ((Playable)attacker).getPlayer();
 
         SiegeEvent<?, ?> siegeEvent = getEvent(SiegeEvent.class);
         if (siegeEvent == null || !siegeEvent.isInProgress())
             return false;
         if (siegeEvent.getSiegeClan(DominionSiegeEvent.DEFENDERS, player.getClan()) != null)
             return false;
-        if (siegeEvent.getObjects(DominionSiegeEvent.DEFENDER_PLAYERS).contains(player.getObjectId()))
-            return false;
-
-        return true;
+        return !siegeEvent.getObjects(DominionSiegeEvent.DEFENDER_PLAYERS).contains(player.objectId());
     }
 
     @Override

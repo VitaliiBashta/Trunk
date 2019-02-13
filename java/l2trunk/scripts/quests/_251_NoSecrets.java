@@ -12,14 +12,13 @@ public final class _251_NoSecrets extends Quest {
     private static final List<Integer> SelMahumRecruits = List.of(22780, 22782, 22784);
     private static final int SelMahumTrainingDiary = 15508;
     private static final int SelMahumTrainingTimetable = 15509;
-    private static final List<Integer> trainingNotes = List.of(SelMahumTrainingDiary, SelMahumTrainingTimetable);
 
     public _251_NoSecrets() {
         super(false);
         addStartNpc(GuardPinaps);
         addKillId(SelMahumTrainers);
         addKillId(SelMahumRecruits);
-        addQuestItem(trainingNotes);
+        addQuestItem(SelMahumTrainingDiary, SelMahumTrainingTimetable);
     }
 
     @Override
@@ -38,14 +37,15 @@ public final class _251_NoSecrets extends Quest {
         int cond = st.getCond();
         if (npc.getNpcId() == GuardPinaps) {
             if (cond == 0) {
-                if (st.getPlayer().getLevel() >= 82)
+                if (st.player.getLevel() >= 82)
                     htmltext = "pinaps_q251_01.htm";
                 else
                     htmltext = "pinaps_q251_00.htm";
             } else if (cond == 1)
                 htmltext = "pinaps_q251_04.htm";
             else if (cond == 2) {
-                st.takeItems(trainingNotes);
+                st.takeItems(SelMahumTrainingDiary);
+                st.takeItems( SelMahumTrainingTimetable);
                 htmltext = "pinaps_q251_05.htm";
                 st.setState(COMPLETED);
                 st.giveItems(57, 313355);
@@ -59,7 +59,7 @@ public final class _251_NoSecrets extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int cond = st.getCond();
         if (cond == 1) {
             if (st.getQuestItemsCount(SelMahumTrainingDiary) < 10 && SelMahumRecruits.contains(npc.getNpcId()))
@@ -70,6 +70,5 @@ public final class _251_NoSecrets extends Quest {
             if (st.getQuestItemsCount(SelMahumTrainingDiary) >= 10 && st.getQuestItemsCount(SelMahumTrainingTimetable) >= 5)
                 st.setCond(2);
         }
-        return null;
     }
 }

@@ -6,14 +6,10 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
-import l2trunk.gameserver.scripts.ScriptFile;
-
-import java.util.List;
 
 public final class _273_InvadersOfHolyland extends Quest {
     private final int BLACK_SOULSTONE = 1475;
     private final int RED_SOULSTONE = 1476;
-    private final List<Integer> stones = List.of(BLACK_SOULSTONE,RED_SOULSTONE);
 
     public _273_InvadersOfHolyland() {
         super(false);
@@ -22,7 +18,8 @@ public final class _273_InvadersOfHolyland extends Quest {
         addKillId(20311,
                 20312,
                 20313);
-        addQuestItem(stones);
+        addQuestItem(BLACK_SOULSTONE,
+                RED_SOULSTONE);
     }
 
     @Override
@@ -52,10 +49,10 @@ public final class _273_InvadersOfHolyland extends Quest {
         String htmltext = "noquest";
         int cond = st.getCond();
         if (cond == 0) {
-            if (st.getPlayer().getRace() != Race.orc) {
+            if (st.player.getRace() != Race.orc) {
                 htmltext = "atuba_chief_varkees_q0273_00.htm";
                 st.exitCurrentQuest(true);
-            } else if (st.getPlayer().getLevel() < 6) {
+            } else if (st.player.getLevel() < 6) {
                 htmltext = "atuba_chief_varkees_q0273_01.htm";
                 st.exitCurrentQuest(true);
             } else {
@@ -75,17 +72,18 @@ public final class _273_InvadersOfHolyland extends Quest {
                     htmltext = "atuba_chief_varkees_q0273_06.htm";
                     adena += st.getQuestItemsCount(RED_SOULSTONE) * 50;
                 }
-                st.takeItems(stones);
+                st.takeItems(BLACK_SOULSTONE);
+                st.takeItems(RED_SOULSTONE);
                 st.giveItems(ADENA_ID, adena);
 
-                if (st.getPlayer().getClassId().getLevel() == 1 && !st.getPlayer().getVarB("p1q2")) {
-                    st.getPlayer().setVar("p1q2", "1", -1);
-                    st.getPlayer().sendPacket(new ExShowScreenMessage("Acquisition of Soulshot for beginners complete.\n                  Go find the Newbie Guide."));
-                    QuestState qs = st.getPlayer().getQuestState(_255_Tutorial.class);
+                if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("p1q2")) {
+                    st.player.setVar("p1q2", 1);
+                    st.player.sendPacket(new ExShowScreenMessage("Acquisition of Soulshot for beginners complete.\n                  Go find the Newbie Guide."));
+                    QuestState qs = st.player.getQuestState(_255_Tutorial.class);
                     if (qs != null && qs.getInt("Ex") != 10) {
                         st.showQuestionMark(26);
-                        qs.set("Ex", "10");
-                        if (st.getPlayer().getClassId().isMage) {
+                        qs.set("Ex", 10);
+                        if (st.player.getClassId().isMage) {
                             st.playTutorialVoice("tutorial_voice_027");
                             st.giveItems(5790, 3000);
                         } else {
@@ -102,33 +100,32 @@ public final class _273_InvadersOfHolyland extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         if (npcId == 20311) {
             if (cond == 1) {
                 if (Rnd.chance(90))
-                    st.giveItems(BLACK_SOULSTONE, 1);
+                    st.giveItems(BLACK_SOULSTONE);
                 else
-                    st.giveItems(RED_SOULSTONE, 1);
+                    st.giveItems(RED_SOULSTONE);
                 st.playSound(SOUND_ITEMGET);
             }
         } else if (npcId == 20312) {
             if (cond == 1) {
                 if (Rnd.chance(87))
-                    st.giveItems(BLACK_SOULSTONE, 1);
+                    st.giveItems(BLACK_SOULSTONE);
                 else
-                    st.giveItems(RED_SOULSTONE, 1);
+                    st.giveItems(RED_SOULSTONE);
                 st.playSound(SOUND_ITEMGET);
             }
         } else if (npcId == 20313)
             if (cond == 1) {
                 if (Rnd.chance(77))
-                    st.giveItems(BLACK_SOULSTONE, 1);
+                    st.giveItems(BLACK_SOULSTONE);
                 else
-                    st.giveItems(RED_SOULSTONE, 1);
+                    st.giveItems(RED_SOULSTONE);
                 st.playSound(SOUND_ITEMGET);
             }
-        return null;
     }
 }

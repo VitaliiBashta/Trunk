@@ -26,7 +26,7 @@ public final class _715_PathToBecomingALordGoddard extends Quest {
         Castle castle = ResidenceHolder.getResidence(GoddardCastle);
         if (castle.getOwner() == null)
             return "Castle has no lord";
-        Player castleOwner = castle.getOwner().getLeader().getPlayer();
+        Player castleOwner = castle.getOwner().getLeader().player();
 
         switch (event) {
             case "alfred_q715_03.htm":
@@ -56,11 +56,11 @@ public final class _715_PathToBecomingALordGoddard extends Quest {
         Castle castle = ResidenceHolder.getResidence(GoddardCastle);
         if (castle.getOwner() == null)
             return "Castle has no lord";
-        Player castleOwner = castle.getOwner().getLeader().getPlayer();
+        Player castleOwner = castle.getOwner().getLeader().player;
 
         if (cond == 0) {
-            if (castleOwner == st.getPlayer()) {
-                if (castle.getDominion().getLordObjectId() != st.getPlayer().getObjectId())
+            if (castleOwner == st.player) {
+                if (castle.getDominion().getLordObjectId() != st.player.objectId())
                     htmltext = "alfred_q715_01.htm";
                 else {
                     htmltext = "alfred_q715_00.htm";
@@ -92,7 +92,7 @@ public final class _715_PathToBecomingALordGoddard extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getCond() == 2 && npc.getNpcId() == FireSpiritNastron)
             st.setCond(4);
         else if (st.getCond() == 3 && npc.getNpcId() == WaterSpiritAshutar)
@@ -102,7 +102,6 @@ public final class _715_PathToBecomingALordGoddard extends Quest {
             st.setCond(9);
         else if (st.getCond() == 7 && npc.getNpcId() == FireSpiritNastron)
             st.setCond(8);
-        return null;
     }
 
 }

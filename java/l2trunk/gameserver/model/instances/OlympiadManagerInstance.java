@@ -1,9 +1,9 @@
 package l2trunk.gameserver.model.instances;
 
 import l2trunk.gameserver.Config;
-import l2trunk.gameserver.data.xml.holder.CharTemplateHolder;
 import l2trunk.gameserver.data.xml.holder.MultiSellHolder;
 import l2trunk.gameserver.model.Player;
+import l2trunk.gameserver.model.base.ClassId;
 import l2trunk.gameserver.model.entity.Hero;
 import l2trunk.gameserver.model.entity.olympiad.CompType;
 import l2trunk.gameserver.model.entity.olympiad.Olympiad;
@@ -25,7 +25,7 @@ import java.util.StringTokenizer;
 
 import static l2trunk.commons.lang.NumberUtils.toInt;
 
-public class OlympiadManagerInstance extends NpcInstance {
+public final class OlympiadManagerInstance extends NpcInstance {
     public OlympiadManagerInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
         if (Config.ENABLE_OLYMPIAD && (template.npcId == 31688 || template.npcId == 39018))
@@ -36,7 +36,8 @@ public class OlympiadManagerInstance extends NpcInstance {
         final int comp_matches_to_show = Config.OLYMPIAD_BATTLES_FOR_REWARD;
         int points, comp_done, pos = 0;
         String char_name;
-        String Class = CharTemplateHolder.getTemplate(classId, false).className;
+        String Class = ClassId.VALUES.stream().filter(cls -> cls.id == classId)
+                .map(cls -> cls.name).findFirst().orElseThrow(() -> new IllegalArgumentException("not for class for id " + classId));
 
         NpcHtmlMessage nhm = new NpcHtmlMessage(5);
         StringBuilder html = new StringBuilder();
@@ -170,7 +171,7 @@ public class OlympiadManagerInstance extends NpcInstance {
                     player.sendPacket(new ExHeroList());
                     break;
                 case 5:
-                    if (Hero.INSTANCE.isInactiveHero(player.getObjectId())) {
+                    if (Hero.INSTANCE.isInactiveHero(player.objectId())) {
                         Hero.INSTANCE.activateHero(player);
                         reply.setFile(Olympiad.OLYMPIAD_HTML_PATH + "monument_give_hero.htm");
                     } else
@@ -211,25 +212,25 @@ public class OlympiadManagerInstance extends NpcInstance {
 
         if (actualCommand.equalsIgnoreCase("openfile")) {
             String name = st.nextToken();
-            NpcHtmlMessage html = new NpcHtmlMessage(getObjectId());
+            NpcHtmlMessage html = new NpcHtmlMessage(objectId());
             html.setFile("olympiad/ranks/" + name + ".htm");
-            html.replace("%objectId%", String.valueOf(getObjectId()));
+            html.replace("%objectId%", String.valueOf(objectId()));
             html.replace("%name%", player.getName());
             player.sendPacket(html);
         } else if (actualCommand.equalsIgnoreCase("gofolder")) {
             String name = st.nextToken();
-            NpcHtmlMessage html = new NpcHtmlMessage(getObjectId());
+            NpcHtmlMessage html = new NpcHtmlMessage(objectId());
             html.setFile("olympiad/" + name + "/index.htm");
-            html.replace("%objectId%", String.valueOf(getObjectId()));
+            html.replace("%objectId%", String.valueOf(objectId()));
             html.replace("%name%", player.getName());
             player.sendPacket(html);
-        } else if (actualCommand.equalsIgnoreCase("rank")) {
+        } else if ("rank".equalsIgnoreCase(actualCommand)) {
             int val = toInt(st.nextToken());
             CheckRank(player, val);
-        } else if (actualCommand.equalsIgnoreCase("back")) {
-            NpcHtmlMessage html = new NpcHtmlMessage(getObjectId());
+        } else if ("back".equalsIgnoreCase(actualCommand)) {
+            NpcHtmlMessage html = new NpcHtmlMessage(objectId());
             html.setFile("olympiad/index.htm");
-            html.replace("%objectId%", String.valueOf(getObjectId()));
+            html.replace("%objectId%", String.valueOf(objectId()));
             html.replace("%name%", player.getName());
             player.sendPacket(html);
         } else

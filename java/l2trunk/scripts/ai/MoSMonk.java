@@ -4,6 +4,7 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ai.CtrlIntention;
 import l2trunk.gameserver.ai.Fighter;
 import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.Functions;
 
@@ -20,7 +21,7 @@ public final class MoSMonk extends Fighter {
     }
 
     @Override
-    public boolean checkAggression(Creature target, boolean avoidAttack) {
+    public boolean checkAggression(Playable target, boolean avoidAttack) {
         if (target.getActiveWeaponInstance() == null)
             return false;
         return super.checkAggression(target, avoidAttack);

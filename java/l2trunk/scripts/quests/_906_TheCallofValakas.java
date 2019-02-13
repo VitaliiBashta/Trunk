@@ -41,8 +41,8 @@ public final class _906_TheCallofValakas extends Quest {
             switch (st.getState()) {
                 case CREATED:
                     if (st.isNowAvailable()) {
-                        if (st.getPlayer().getLevel() >= 83) {
-                            if (st.getQuestItemsCount(7267) > 0)
+                        if (st.player.getLevel() >= 83) {
+                            if (st.haveQuestItem(7267))
                                 htmltext = "klein_q906_01.htm";
                             else
                                 htmltext = "klein_q906_00b.htm";
@@ -66,7 +66,7 @@ public final class _906_TheCallofValakas extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int cond = st.getCond();
         if (cond == 1) {
             if (npc.getNpcId() == ValakasMinion && Rnd.chance(40)) {
@@ -74,6 +74,5 @@ public final class _906_TheCallofValakas extends Quest {
                 st.setCond(2);
             }
         }
-        return null;
     }
 }

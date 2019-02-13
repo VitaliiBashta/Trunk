@@ -3,7 +3,7 @@
 <!-- 
 id - serial number of sets (storage, the appropriate script)
 All other parameters can be specified as an array of strings separated by ';' - Legs = "2402; 11378".
-The level of skill and id divided "-"
+The occupation of skill and id divided "-"
 If the set is not part of, or ability, the parameter is not needed
 3006 skill set is added to the server, make here does not need to
  -->

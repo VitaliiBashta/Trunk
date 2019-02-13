@@ -4,7 +4,6 @@ import l2trunk.gameserver.model.base.Race;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _168_DeliverSupplies extends Quest {
     private final int JENNIES_LETTER_ID = 1153;
@@ -35,12 +34,12 @@ public final class _168_DeliverSupplies extends Quest {
 
         String htmltext = event;
         if (event.equals("1")) {
-            st.set("id", "0");
+            st.set("id", 0);
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
             htmltext = "30349-03.htm";
-            st.giveItems(JENNIES_LETTER_ID, 1);
+            st.giveItems(JENNIES_LETTER_ID);
         }
         return htmltext;
     }
@@ -53,9 +52,9 @@ public final class _168_DeliverSupplies extends Quest {
         int cond = st.getCond();
         if (npcId == 30349 && cond == 0) {
             if (cond < 15) {
-                if (st.getPlayer().getRace() != Race.darkelf)
+                if (st.player.getRace() != Race.darkelf)
                     htmltext = "30349-00.htm";
-                else if (st.getPlayer().getLevel() >= 3)
+                else if (st.player.getLevel() >= 3)
                     htmltext = "30349-02.htm";
                 else {
                     htmltext = "30349-01.htm";

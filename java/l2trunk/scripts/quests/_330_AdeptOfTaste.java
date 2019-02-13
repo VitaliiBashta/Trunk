@@ -200,7 +200,7 @@ public final class _330_AdeptOfTaste extends Quest {
         if (_state == CREATED) {
             if (npcId != Jonas)
                 return "noquest";
-            if (st.getPlayer().getLevel() < 24) {
+            if (st.player.getLevel() < 24) {
                 st.exitCurrentQuest(true);
                 return "30469_01.htm";
             }
@@ -375,16 +375,16 @@ public final class _330_AdeptOfTaste extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getState() != STARTED)
-            return null;
+            return;
         int npcId = npc.getNpcId();
         long ingredients_count = st.getQuestItemsCount(ingredients);
         long spec_ingredients_count = st.getQuestItemsCount(spec_ingredients);
         long all_ingredients_count = ingredients_count + spec_ingredients_count;
         boolean Has_Ingredient_List = st.getQuestItemsCount(Ingredient_List) > 0;
         if (!(Has_Ingredient_List && all_ingredients_count < 5))
-            return null;
+            return;
 
         if (npcId == Hobgoblin && st.getQuestItemsCount(Panos_Contract) > 0)
             st.rollAndGive(Hobgoblin_Amulet, 1, 1, 30, 100);
@@ -409,6 +409,5 @@ public final class _330_AdeptOfTaste extends Quest {
         else if (npcId == Monster_Eye_Gazer && st.getQuestItemsCount(Rollants_Creature_Book) > 0)
             st.rollAndGive(Body_of_Monster_Eye, 1, 2, 30, 100);
 
-        return null;
     }
 }

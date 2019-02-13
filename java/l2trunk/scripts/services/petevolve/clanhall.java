@@ -40,21 +40,17 @@ public final class clanhall extends Functions {
     private static final int RED_TW_ITEM = L2Pet.RED_STRIDER_TWILIGHT.getControlItemId();
 
     public void evolve() {
-        Player player = getSelf();
-        NpcInstance npc = getNpc();
         if (player == null || npc == null)
             return;
         show("scripts/services/petevolve/chamberlain.htm", player, npc);
     }
 
     public void greatsw(String[] direction) {
-        Player player = getSelf();
-        NpcInstance npc = getNpc();
         if (player == null || npc == null)
             return;
         boolean fwd = Integer.parseInt(direction[0]) == 1;
 
-        if (player.getInventory().getCountOf(fwd ? GREAT_WOLF_NECKLACE : WHITE_WOLF_NECKLACE) > 1) {
+        if (player.haveItem(fwd ? GREAT_WOLF_NECKLACE : WHITE_WOLF_NECKLACE,2) ) {
             show("scripts/services/petevolve/error_3.htm", player, npc);
             return;
         }
@@ -93,13 +89,11 @@ public final class clanhall extends Functions {
     }
 
     public void fenrir(String[] direction) {
-        Player player = getSelf();
-        NpcInstance npc = getNpc();
         if (player == null || npc == null)
             return;
         boolean fwd = Integer.parseInt(direction[0]) == 1;
 
-        if (player.getInventory().getCountOf(fwd ? FENRIR_NECKLACE : WHITE_FENRIR_NECKLACE) > 1) {
+        if (player.haveItem(fwd ? FENRIR_NECKLACE : WHITE_FENRIR_NECKLACE,2) ) {
             show("scripts/services/petevolve/error_3.htm", player, npc);
             return;
         }
@@ -138,13 +132,11 @@ public final class clanhall extends Functions {
     }
 
     public void fenrirW(String[] direction) {
-        Player player = getSelf();
-        NpcInstance npc = getNpc();
         if (player == null || npc == null)
             return;
         boolean fwd = Integer.parseInt(direction[0]) == 1;
 
-        if (player.getInventory().getCountOf(fwd ? WHITE_WOLF_NECKLACE : WHITE_FENRIR_NECKLACE) > 1) {
+        if (player.haveItem(fwd ? WHITE_WOLF_NECKLACE : WHITE_FENRIR_NECKLACE)) {
             show("scripts/services/petevolve/error_3.htm", player, npc);
             return;
         }
@@ -183,13 +175,11 @@ public final class clanhall extends Functions {
     }
 
     public void wstrider(String[] direction) {
-        Player player = getSelf();
-        NpcInstance npc = getNpc();
         if (player == null || npc == null)
             return;
         boolean fwd = Integer.parseInt(direction[0]) == 1;
 
-        if (player.getInventory().getCountOf(fwd ? WIND_STRIDER_ITEM : RED_WS_ITEM) > 1) {
+        if (player.haveItem(fwd ? WIND_STRIDER_ITEM : RED_WS_ITEM) ) {
             show("scripts/services/petevolve/error_3.htm", player, npc);
             return;
         }
@@ -197,7 +187,7 @@ public final class clanhall extends Functions {
             show("scripts/services/petevolve/error_4.htm", player, npc);
             return;
         }
-        ItemInstance collar = player.getInventory().getItemByItemId(fwd ? WIND_STRIDER_ITEM : RED_WS_ITEM);
+        ItemInstance collar = player.inventory.getItemByItemId(fwd ? WIND_STRIDER_ITEM : RED_WS_ITEM);
         if (collar == null) {
             show("scripts/services/petevolve/no_item.htm", player, npc);
             return;
@@ -228,13 +218,11 @@ public final class clanhall extends Functions {
     }
 
     public void sstrider(String[] direction) {
-        Player player = getSelf();
-        NpcInstance npc = getNpc();
         if (player == null || npc == null)
             return;
         boolean fwd = Integer.parseInt(direction[0]) == 1;
 
-        if (player.getInventory().getCountOf(fwd ? STAR_STRIDER_ITEM : RED_SS_ITEM) > 1) {
+        if (player.haveItem(fwd ? STAR_STRIDER_ITEM : RED_SS_ITEM)) {
             show("scripts/services/petevolve/error_3.htm", player, npc);
             return;
         }
@@ -273,13 +261,11 @@ public final class clanhall extends Functions {
     }
 
     public void tstrider(String[] direction) {
-        Player player = getSelf();
-        NpcInstance npc = getNpc();
         if (player == null || npc == null)
             return;
         boolean fwd = Integer.parseInt(direction[0]) == 1;
 
-        if (player.getInventory().getCountOf(fwd ? TWILING_STRIDER_ITEM : RED_TW_ITEM) > 1) {
+        if (player.haveItem(fwd ? TWILING_STRIDER_ITEM : RED_TW_ITEM)) {
             show("scripts/services/petevolve/error_3.htm", player, npc);
             return;
         }

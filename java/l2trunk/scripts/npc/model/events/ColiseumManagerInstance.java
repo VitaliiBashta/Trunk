@@ -25,7 +25,7 @@ public final class ColiseumManagerInstance extends ColiseumHelperInstance {
     public ColiseumManagerInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
 
-        _startHtm = getParameter("start_htm", StringUtils.EMPTY);
+        _startHtm = getParameter("start_htm", "");
         _coliseumId = getParameter("coliseum_id", 0);
     }
 

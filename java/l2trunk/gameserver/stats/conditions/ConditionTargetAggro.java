@@ -1,6 +1,7 @@
 package l2trunk.gameserver.stats.conditions;
 
 import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.MonsterInstance;
 import l2trunk.gameserver.stats.Env;
 
@@ -16,10 +17,10 @@ public final class ConditionTargetAggro extends Condition {
         Creature target = env.target;
         if (target == null)
             return false;
-        if (target.isMonster())
+        if (target instanceof MonsterInstance)
             return ((MonsterInstance) target).isAggressive() == isAggro;
-        if (target.isPlayer())
-            return target.getKarma() > 0;
+        if (target instanceof Player)
+            return ((Player)target).getKarma() > 0;
         return false;
     }
 }

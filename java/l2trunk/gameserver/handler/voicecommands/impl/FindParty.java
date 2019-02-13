@@ -53,7 +53,7 @@ public final class FindParty extends Functions implements IVoicedCommandHandler 
         if (command.startsWith("partylist")) {
             int i = 0;
             Say2[] packets = new Say2[_requests.size() + 2];
-            packets[i++] = new Say2(activeChar.getObjectId(), ChatType.BATTLEFIELD, "[Party Request]", "---------=[List Party Requests]=---------");
+            packets[i++] = new Say2(activeChar.objectId(), ChatType.BATTLEFIELD, "[Party Request]", "---------=[List Party Requests]=---------");
             for (FindPartyRequest request : _requests.values()) {
                 if (target != null && !target.isEmpty() && !request.message.toLowerCase().contains(target.toLowerCase()))
                     continue;
@@ -68,9 +68,9 @@ public final class FindParty extends Functions implements IVoicedCommandHandler 
                 if (freeSlots <= 0)
                     continue;
 
-                packets[i++] = new Say2(activeChar.getObjectId(), ChatType.PARTY, "[Find Party]", "\b\tType=1 \tID=" + partyLeader.getObjectId() + " \tColor=0 \tUnderline=0 \tTitle=\u001B\u001B\b" + partyLeader.getName() + " (" + freeSlots + "/" + Party.MAX_SIZE + ")" + " free slots. " + request.message);
+                packets[i++] = new Say2(activeChar.objectId(), ChatType.PARTY, "[Find Party]", "\b\tType=1 \tID=" + partyLeader.objectId() + " \tColor=0 \tUnderline=0 \tTitle=\u001B\u001B\b" + partyLeader.getName() + " (" + freeSlots + "/" + Party.MAX_SIZE + ")" + " free slots. " + request.message);
             }
-            packets[i++] = new Say2(activeChar.getObjectId(), ChatType.BATTLEFIELD, "[Party Request]", "---------=[End Party Requests]=---------");
+            packets[i++] = new Say2(activeChar.objectId(), ChatType.BATTLEFIELD, "[Party Request]", "---------=[End Party Requests]=---------");
             activeChar.sendPacket(packets);
             return true;
         } else if (command.startsWith("invite")) {
@@ -80,8 +80,8 @@ public final class FindParty extends Functions implements IVoicedCommandHandler 
 
             if (playerToInvite != null) // A party member asks the party leader to invite specified player.
             {
-                Say2 packetLeader = new Say2(activeChar.getObjectId(), ChatType.PARTY, "[Party Request]", "Please invite " + playerToInvite.getName() + " to the party. \b\tType=1 \tID=" + playerToInvite.getObjectId() + " \tColor=0 \tUnderline=0 \tTitle=\u001B\u001B\b");
-                Say2 packet = new Say2(activeChar.getObjectId(), ChatType.PARTY, "[Party Request]", "Please invite " + playerToInvite.getName() + " to the party.");
+                Say2 packetLeader = new Say2(activeChar.objectId(), ChatType.PARTY, "[Party Request]", "Please invite " + playerToInvite.getName() + " to the party. \b\tType=1 \tID=" + playerToInvite.objectId() + " \tColor=0 \tUnderline=0 \tTitle=\u001B\u001B\b");
+                Say2 packet = new Say2(activeChar.objectId(), ChatType.PARTY, "[Party Request]", "Please invite " + playerToInvite.getName() + " to the party.");
                 for (Player ptMem : activeChar.getParty()) {
                     if (activeChar.getParty().getLeader() == ptMem)
                         ptMem.sendPacket(packetLeader);
@@ -103,7 +103,7 @@ public final class FindParty extends Functions implements IVoicedCommandHandler 
             }
             int partyRequestObjId = 0;
             for (Entry<Integer, FindPartyRequest> entry : _requests.entrySet()) {
-                if (entry.getValue().requestorObjId == activeChar.getObjectId()) {
+                if (entry.getValue().requestorObjId == activeChar.objectId()) {
                     partyRequestObjId = entry.getKey();
                     break;
                 }
@@ -141,7 +141,7 @@ public final class FindParty extends Functions implements IVoicedCommandHandler 
             _requests.put(partyRequestObjId, request);
 
             //																															 [Party Find]: [?] Nik (3/9) free slots. Message
-            Say2 packet = new Say2(activeChar.getObjectId(), ChatType.PARTY, "[Find Party]", "\b\tType=1 \tID=" + partyRequestObjId + " \tColor=0 \tUnderline=0 \tTitle=\u001B\u001B\b" + activeChar.getName() + " (" + freeSlots + "/" + Party.MAX_SIZE + ")" + " free slots. " + request.message);
+            Say2 packet = new Say2(activeChar.objectId(), ChatType.PARTY, "[Find Party]", "\b\tType=1 \tID=" + partyRequestObjId + " \tColor=0 \tUnderline=0 \tTitle=\u001B\u001B\b" + activeChar.getName() + " (" + freeSlots + "/" + Party.MAX_SIZE + ")" + " free slots. " + request.message);
             GameObjectsStorage.getAllPlayersStream()
                     .filter(player -> (player.canJoinParty(activeChar) == null))
                     .filter(player -> (activeChar.isInParty()))
@@ -162,7 +162,7 @@ public final class FindParty extends Functions implements IVoicedCommandHandler 
             int requestorObjId = _requests.containsKey(targetObjId) ? _requests.get(targetObjId).requestorObjId : 0;
             if (requestorObjId > 0) // Its a regular party request to the server for additional party members.
             {
-                if (player.getObjectId() != requestorObjId) {
+                if (player.objectId() != requestorObjId) {
                     Player partyLeader = World.getPlayer(requestorObjId);
                     if (partyLeader == null) {
                         player.sendMessage("Party leader is offline.");
@@ -175,7 +175,7 @@ public final class FindParty extends Functions implements IVoicedCommandHandler 
                             return;
                         }
                         player.addQuickVar("partyrequestsent", System.currentTimeMillis());
-                        Say2 packetLeader = new Say2(player, ChatType.BATTLEFIELD, "I'm Level: " + player.getLevel() + ", Class: " + player.getClassId().getName() + ". Invite \b\tType=1 \tID=" + player.getObjectId() + " \tColor=0 \tUnderline=0 \tTitle=\u001B\u001B\b");
+                        Say2 packetLeader = new Say2(player, ChatType.BATTLEFIELD, "I'm Level: " + player.getLevel() + ", Class: " + player.getClassId().name + ". Invite \b\tType=1 \tID=" + player.objectId() + " \tColor=0 \tUnderline=0 \tTitle=\u001B\u001B\b");
                         partyLeader.sendPacket(packetLeader);
                         player.sendMessage("Party request sent to " + partyLeader.getName());
                     }
@@ -235,7 +235,7 @@ public final class FindParty extends Functions implements IVoicedCommandHandler 
                 }
 
                 if (partyLeader.getParty().isInDimensionalRift()) {
-                    partyLeader.sendMessage(new CustomMessage("l2trunk.gameserver.clientpackets.RequestJoinParty.InDimensionalRift", partyLeader));
+                    partyLeader.sendMessage(new CustomMessage("l2trunk.gameserver.clientpackets.RequestJoinParty.InDimensionalRift"));
                     partyLeader.sendActionFailed();
                     return;
                 }
@@ -261,13 +261,13 @@ public final class FindParty extends Functions implements IVoicedCommandHandler 
 
         @SuppressWarnings("unused")
         public FindPartyRequest(Player player) {
-            requestorObjId = player.getObjectId();
+            requestorObjId = player.objectId();
             requestStartTimeMilis = System.currentTimeMillis();
             message = "";
         }
 
         FindPartyRequest(Player player, String msg) {
-            requestorObjId = player.getObjectId();
+            requestorObjId = player.objectId();
             requestStartTimeMilis = System.currentTimeMillis();
             message = msg == null ? "" : msg;
         }

@@ -12,15 +12,6 @@ public final class NpcUtils {
     private NpcUtils() {
     }
 
-    public static NpcInstance spawnSingle(int npcId, int x, int y, int z) {
-        return spawnSingle(npcId, new Location(x, y, z, -1), ReflectionManager.DEFAULT, 0);
-    }
-
-    public static NpcInstance spawnSingle(int npcId, int x, int y, int z, long despawnTime) {
-        return spawnSingle(npcId, new Location(x, y, z, -1), ReflectionManager.DEFAULT, despawnTime);
-    }
-
-
     public static NpcInstance spawnSingle(int npcId, Location loc) {
         return spawnSingle(npcId, loc, ReflectionManager.DEFAULT, 0);
     }
@@ -33,7 +24,7 @@ public final class NpcUtils {
         return spawnSingle(npcId, loc, reflection, 0);
     }
 
-    public static NpcInstance spawnSingle(int npcId, Location loc, Reflection reflection, long despawnTime) {
+    private static NpcInstance spawnSingle(int npcId, Location loc, Reflection reflection, long despawnTime) {
         NpcInstance npc = NpcHolder.getTemplate(npcId).getNewInstance();
         npc.setSpawnedLoc(loc)
                 .setFullHpMp()

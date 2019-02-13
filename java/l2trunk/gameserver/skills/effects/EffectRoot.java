@@ -21,8 +21,4 @@ public final class EffectRoot extends Effect {
         effected.stopRooted();
     }
 
-    @Override
-    public boolean onActionTime() {
-        return false;
-    }
 }

@@ -5,7 +5,6 @@ import l2trunk.gameserver.Config;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -196,13 +195,13 @@ public final class _384_WarehouseKeepersPastime extends Quest {
             if (medals < need_medals)
                 return event.replaceFirst("-big", "").replaceFirst("game", "09.htm");
             st.takeItems(Warehouse_Keepers_Medal, need_medals);
-            int char_obj_id = st.getPlayer().getObjectId();
+            int char_obj_id = st.player.objectId();
             bingos.remove(char_obj_id);
             Bingo bingo = new Bingo(big_game, st);
             bingos.put(char_obj_id, bingo);
             return bingo.getDialog("");
         } else if (event.contains("choice-") && _state == STARTED) {
-            int char_obj_id = st.getPlayer().getObjectId();
+            int char_obj_id = st.player.objectId();
             if (!bingos.containsKey(char_obj_id))
                 return null;
             Bingo bingo = bingos.get(char_obj_id);
@@ -219,7 +218,7 @@ public final class _384_WarehouseKeepersPastime extends Quest {
         if (_state == CREATED) {
             if (npcId != Cliff)
                 return "noquest";
-            if (st.getPlayer().getLevel() < 40) {
+            if (st.player.getLevel() < 40) {
                 st.exitCurrentQuest(true);
                 return "30182-04.htm";
             }
@@ -239,16 +238,14 @@ public final class _384_WarehouseKeepersPastime extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState qs) {
+    public void onKill(NpcInstance npc, QuestState qs) {
         if (qs.getState() != STARTED)
-            return null;
+            return;
         Integer chance = Medal_Chances.get(npc.getNpcId());
         if (chance != null && Rnd.chance(chance * Config.RATE_QUESTS_REWARD)) {
-            qs.giveItems(Warehouse_Keepers_Medal, 1);
+            qs.giveItems(Warehouse_Keepers_Medal);
             qs.playSound(qs.getQuestItemsCount(Warehouse_Keepers_Medal) == 10 ? SOUND_MIDDLE : SOUND_ITEMGET);
         }
-
-        return null;
     }
 
     protected static class Bingo extends l2trunk.scripts.quests.Bingo {
@@ -273,7 +270,7 @@ public final class _384_WarehouseKeepersPastime extends Quest {
             else if (lines == 0)
                 reward(_BigGame ? Rewards_Lose_Big : Rewards_Lose);
 
-            bingos.remove(_qs.getPlayer().getObjectId());
+            bingos.remove(_qs.player.objectId());
             return result;
         }
 

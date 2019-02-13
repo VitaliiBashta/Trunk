@@ -2,10 +2,13 @@ package l2trunk.scripts.ai;
 
 import l2trunk.gameserver.ai.Fighter;
 import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.model.Skill;
+import l2trunk.gameserver.model.Summon;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.Functions;
-import l2trunk.gameserver.tables.SkillTable;
+
+import static l2trunk.gameserver.utils.ItemFunctions.addItem;
 
 /**
  * AI мобов Prison Guard на Isle of Prayer.<br>
@@ -25,7 +28,7 @@ public final class PrisonGuard extends Fighter {
     }
 
     @Override
-    public boolean checkAggression(Creature target, boolean avoidAttack) {
+    public boolean checkAggression(Playable target, boolean avoidAttack) {
         // 18367 не агрятся
         NpcInstance actor = getActor();
         if (actor.isDead() || actor.getNpcId() == 18367)
@@ -42,8 +45,8 @@ public final class PrisonGuard extends Fighter {
         NpcInstance actor = getActor();
         if (actor.isDead())
             return;
-        if (attacker.isSummon() || attacker.isPet())
-            attacker = attacker.getPlayer();
+        if (attacker instanceof Summon )
+            attacker = ((Summon)attacker).owner;
         if (attacker.getEffectList().getEffectsCountForSkill(Skill.SKILL_EVENT_TIMER) == 0) {
             if (actor.getNpcId() == 18367)
                 Functions.npcSay(actor, "It's not easy to obtain.");
@@ -52,8 +55,7 @@ public final class PrisonGuard extends Fighter {
 
 
             actor.doCast(petrification, attacker, true);
-            if (attacker.getPet() != null)
-                actor.doCast(petrification, attacker.getPet(), true);
+
 
             return;
         }
@@ -74,7 +76,7 @@ public final class PrisonGuard extends Fighter {
             return;
 
         if (actor.getNpcId() == 18367 && killer.getPlayer().getEffectList().getEffectsBySkillId(Skill.SKILL_EVENT_TIMER) != null)
-            Functions.addItem(killer.getPlayer(), RACE_STAMP, 1, "PrisonGuard");
+            addItem(killer.getPlayer(), RACE_STAMP, 1);
 
         super.onEvtDead(killer);
     }

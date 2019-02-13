@@ -31,13 +31,10 @@ public final class SummonSiegeFlag extends Skill {
     }
 
     @Override
-    public boolean checkCondition(Creature activeChar, Creature target, boolean forceUse, boolean dontMove, boolean first) {
-        if (!activeChar.isPlayer())
-            return false;
-        if (!super.checkCondition(activeChar, target, forceUse, dontMove, first))
+    public boolean checkCondition(Player player, Creature target, boolean forceUse, boolean dontMove, boolean first) {
+        if (!super.checkCondition(player, target, forceUse, dontMove, first))
             return false;
 
-        Player player = (Player) activeChar;
         if (player.getClan() == null || !player.isClanLeader())
             return false;
 
@@ -54,7 +51,7 @@ public final class SummonSiegeFlag extends Skill {
                     return false;
                 }
 
-                SiegeEvent siegeEvent = activeChar.getEvent(SiegeEvent.class);
+                SiegeEvent siegeEvent = player.getEvent(SiegeEvent.class);
                 if (siegeEvent == null) {
                     player.sendPacket(SystemMsg.YOU_CANNOT_SET_UP_A_BASE_HERE, new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addSkillName(this));
                     return false;
@@ -103,32 +100,29 @@ public final class SummonSiegeFlag extends Skill {
         if (siegeClan == null)
             return;
 
-        switch (_flagType) {
-            case DESTROY:
-                siegeClan.deleteFlag();
-                break;
-            default:
-                if (siegeClan.getFlag() != null)
-                    return;
+        if (_flagType == FlagType.DESTROY) {
+            siegeClan.deleteFlag();
+        } else {
+            if (siegeClan.getFlag() != null)
+                return;
 
-                // 35062/36590
-                SiegeFlagInstance flag = (SiegeFlagInstance) NpcHolder.getTemplate(_flagType == FlagType.OUTPOST ? 36590 : 35062).getNewInstance();
-                flag.setClan(siegeClan);
-                flag.addEvent(siegeEvent);
+            // 35062/36590
+            SiegeFlagInstance flag = (SiegeFlagInstance) NpcHolder.getTemplate(_flagType == FlagType.OUTPOST ? 36590 : 35062).getNewInstance();
+            flag.setClan(siegeClan);
+            flag.addEvent(siegeEvent);
 
-                if (_flagType == FlagType.ADVANCED)
-                    flag.addStatFunc(new FuncMul(Stats.MAX_HP, 0x50, flag, _advancedMult));
+            if (_flagType == FlagType.ADVANCED)
+                flag.addStatFunc(new FuncMul(Stats.MAX_HP, 0x50, flag, _advancedMult));
 
-                flag.setFullHpMp();
-                flag.setHeading(player.getHeading());
+            flag.setFullHpMp();
+            flag.setHeading(player.getHeading());
 
-                // Ставим флаг перед чаром
-                int x = (int) (player.getX() + 100 * Math.cos(player.headingToRadians(player.getHeading() - 32768)));
-                int y = (int) (player.getY() + 100 * Math.sin(player.headingToRadians(player.getHeading() - 32768)));
-                flag.spawnMe(GeoEngine.moveCheck(player.getX(), player.getY(), player.getZ(), x, y, player.getGeoIndex()));
+            // Ставим флаг перед чаром
+            int x = (int) (player.getX() + 100 * Math.cos(player.headingToRadians(player.getHeading() - 32768)));
+            int y = (int) (player.getY() + 100 * Math.sin(player.headingToRadians(player.getHeading() - 32768)));
+            flag.spawnMe(GeoEngine.moveCheck(player.getX(), player.getY(), player.getZ(), x, y, player.getGeoIndex()));
 
-                siegeClan.setFlag(flag);
-                break;
+            siegeClan.setFlag(flag);
         }
     }
 

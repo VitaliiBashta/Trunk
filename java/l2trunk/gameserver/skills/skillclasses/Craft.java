@@ -17,16 +17,15 @@ public final class Craft extends Skill {
     }
 
     @Override
-    public boolean checkCondition(Creature activeChar, Creature target, boolean forceUse, boolean dontMove, boolean first) {
-        Player p = (Player) activeChar;
-        if (p.isInStoreMode() || p.isProcessingRequest())
+    public boolean checkCondition(Player player, Creature target, boolean forceUse, boolean dontMove, boolean first) {
+        if (player.isInStoreMode() || player.isProcessingRequest())
             return false;
 
-        return super.checkCondition(activeChar, target, forceUse, dontMove, first);
+        return super.checkCondition(player, target, forceUse, dontMove, first);
     }
 
     @Override
-    public void useSkill(Creature activeChar, List<Creature> targets) {
+    public void useSkill(Creature activeChar, Creature targets) {
         activeChar.sendPacket(new RecipeBookItemList((Player) activeChar, dwarven));
     }
 }

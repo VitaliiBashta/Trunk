@@ -4,7 +4,6 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _694_BreakThroughTheHallOfSuffering extends Quest {
     // NPC
@@ -34,7 +33,7 @@ public final class _694_BreakThroughTheHallOfSuffering extends Quest {
         String htmltext = "noquest";
         int npcId = npc.getNpcId();
         int cond = st.getCond();
-        Player player = st.getPlayer();
+        Player player = st.player;
 
         if (npcId == TEPIOS) {
             if (cond == 0) {

@@ -24,7 +24,7 @@ public class AdminDoorControl implements IAdminCommandHandler {
                 else
                     target = activeChar.getTarget();
 
-                if (target != null && target.isDoor())
+                if (target instanceof DoorInstance)
                     ((DoorInstance) target).openMe();
                 else
                     activeChar.sendPacket(SystemMsg.INVALID_TARGET);
@@ -35,7 +35,7 @@ public class AdminDoorControl implements IAdminCommandHandler {
                     target = World.getAroundObjectById(activeChar, Integer.parseInt(wordList[1]));
                 else
                     target = activeChar.getTarget();
-                if (target != null && target.isDoor())
+                if (target instanceof DoorInstance)
                     ((DoorInstance) target).closeMe();
                 else
                     activeChar.sendPacket(SystemMsg.INVALID_TARGET);

@@ -6,7 +6,6 @@ import l2trunk.commons.geometry.Polygon;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.data.xml.holder.SpawnHolder;
 import l2trunk.gameserver.model.Territory;
-import l2trunk.gameserver.templates.spawn.PeriodOfDay;
 import l2trunk.gameserver.templates.spawn.SpawnNpcInfo;
 import l2trunk.gameserver.templates.spawn.SpawnTemplate;
 import l2trunk.gameserver.utils.Location;
@@ -44,10 +43,10 @@ public enum SpawnParser {
                 int respawn = spawnElement.attributeValue("respawn") == null ? 60 : toInt(spawnElement.attributeValue("respawn"));
                 int respawnRandom = spawnElement.attributeValue("respawn_random") == null ? 0 : toInt(spawnElement.attributeValue("respawn_random"));
                 int count = spawnElement.attributeValue("count") == null ? 1 : toInt(spawnElement.attributeValue("count"));
-                PeriodOfDay periodOfDay = spawnElement.attributeValue("period_of_day") == null ? PeriodOfDay.NONE : PeriodOfDay.valueOf(spawnElement.attributeValue("period_of_day").toUpperCase());
+                String periodOfDay = spawnElement.attributeValue("period_of_day") == null ? "NONE" : spawnElement.attributeValue("period_of_day").toUpperCase();
                 if (group == null)
-                    group = periodOfDay.name();
-                SpawnTemplate template = new SpawnTemplate(periodOfDay, count, respawn, respawnRandom);
+                    group = periodOfDay;
+                SpawnTemplate template = new SpawnTemplate(count, respawn, respawnRandom);
 
                 for (Iterator<Element> subIterator = spawnElement.elementIterator(); subIterator.hasNext(); ) {
                     Element subElement = subIterator.next();

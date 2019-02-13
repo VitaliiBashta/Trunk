@@ -78,8 +78,4 @@ public final class PartyMatchingRoom extends MatchingRoom {
         return member.equals(_leader) ? ROOM_MASTER : member.getParty() != null && _leader.getParty() == member.getParty() ? PARTY_MEMBER : WAIT_PLAYER;
     }
 
-    @Override
-    public PartyMatchingRoom setReflection(Reflection reflection) {
-        return this;
-    }
 }

@@ -903,7 +903,7 @@
 	</skill>
 	<skill id="26048" levels="5" name="Rune of Crystal Form 1st Phase" >
 		<!--
-		      Description: One's Grade Penalty decreases by 1 level.
+		      Description: One's Grade Penalty decreases by 1 occupation.
 		-->
 		<table name="#power">1 2 3 4 5</table>
 		<set name="icon" val="br_cashtex.skill.br_cash_rune_of_rp_buff_1" />

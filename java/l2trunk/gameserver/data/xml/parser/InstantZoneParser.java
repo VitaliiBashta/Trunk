@@ -86,7 +86,7 @@ public enum InstantZoneParser {
             for (Iterator<Element> subIterator = element.elementIterator(); subIterator.hasNext(); ) {
                 Element subElement = subIterator.next();
 
-                if ("level".equalsIgnoreCase(subElement.getName())) {
+                if ("occupation".equalsIgnoreCase(subElement.getName())) {
                     if (Config.ALLOW_INSTANCES_LEVEL_MANUAL) {
                         minLevel = Config.INSTANCES_LEVEL_MIN;
                         maxLevel = Config.INSTANCES_LEVEL_MAX;
@@ -106,11 +106,11 @@ public enum InstantZoneParser {
                         maxParty = Integer.parseInt(subElement.attributeValue("max"));
                     }
                 } else if ("return".equalsIgnoreCase(subElement.getName()))
-                    ret = Location.parseLoc(subElement.attributeValue("loc"));
+                    ret = Location.of(subElement.attributeValue("loc"));
                 else if ("teleport".equalsIgnoreCase(subElement.getName())) {
                     if (teleportLocs.isEmpty())
                         teleportLocs = new ArrayList<>(1);
-                    teleportLocs.add(Location.parseLoc(subElement.attributeValue("loc")));
+                    teleportLocs.add(Location.of(subElement.attributeValue("loc")));
                 } else if ("remove".equalsIgnoreCase(subElement.getName())) {
                     removedItemId = Integer.parseInt(subElement.attributeValue("itemId"));
                     removedItemCount = Integer.parseInt(subElement.attributeValue("count"));
@@ -185,7 +185,7 @@ public enum InstantZoneParser {
 
                             for (Element e2 : e.elements())
                                 if ("coords".equalsIgnoreCase(e2.getName()))
-                                    coords.add(Location.parseLoc(e2.attributeValue("loc")));
+                                    coords.add(Location.of(e2.attributeValue("loc")));
 
                             Territory territory = null;
                             if (spawnType == 2) {

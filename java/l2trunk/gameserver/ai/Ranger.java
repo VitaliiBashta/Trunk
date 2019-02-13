@@ -24,7 +24,7 @@ public class Ranger extends DefaultAI {
 
         if (actor.isMoving)
             return;
-        Location oldLocation = new Location(actor);
+        Location oldLocation = Location.of(actor);
         int posX = actor.getX();
         int posY = actor.getY();
         int posZ = actor.getZ();

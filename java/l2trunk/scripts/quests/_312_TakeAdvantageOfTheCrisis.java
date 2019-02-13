@@ -72,14 +72,14 @@ public final class _312_TakeAdvantageOfTheCrisis extends Quest {
         int cond = st.getCond();
         if (npcId == FILAUR)
             if (cond == 0) {
-                if (st.getPlayer().getLevel() >= 80)
+                if (st.player.getLevel() >= 80)
                     htmltext = "30535-01.htm";
                 else {
                     htmltext = "30535-00.htm";
                     st.exitCurrentQuest(true);
                 }
             } else if (id == STARTED)
-                if (st.getQuestItemsCount(MINERAL_FRAGMENT) >= 1)
+                if (st.haveAnyQuestItems(MINERAL_FRAGMENT))
                     htmltext = "30535-10.htm";
                 else
                     htmltext = "30535-07.htm";
@@ -87,12 +87,11 @@ public final class _312_TakeAdvantageOfTheCrisis extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getCond() == 1 && MINE_MOBS.contains(npc.getNpcId()))
             if (Rnd.chance(DROP_CHANCE)) {
                 st.giveItems(MINERAL_FRAGMENT, (int) Config.RATE_QUESTS_REWARD);
                 st.playSound(SOUND_ITEMGET);
             }
-        return null;
     }
 }

@@ -100,8 +100,8 @@ public enum GameTimeController {
         return listenerEngine;
     }
 
-    public <T extends GameListener> boolean addListener(T listener) {
-        return listenerEngine.add(listener);
+    public <T extends GameListener> void addListener(T listener) {
+        listenerEngine.add(listener);
     }
 
     public <T extends GameListener> boolean removeListener(T listener) {
@@ -115,7 +115,7 @@ public enum GameTimeController {
         }
     }
 
-    public class CheckSunState extends RunnableImpl {
+    private class CheckSunState extends RunnableImpl {
         @Override
         public void runImpl() {
             if (isNowNight())

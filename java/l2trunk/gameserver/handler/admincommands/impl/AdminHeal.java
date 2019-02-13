@@ -48,8 +48,7 @@ public final class AdminHeal implements IAdminCommandHandler {
                 int radius = Math.max(toInt(player), 100);
                 activeChar.getAroundCharacters(radius, 200)
                         .peek(Creature::setFullHpMp)
-                        .filter(GameObject::isPlayer)
-                        .forEach(c -> c.setCurrentCp(c.getMaxCp()));
+                        .forEach(Creature::setFullCp);
                 activeChar.sendMessage("Healed within " + radius + " unit radius.");
                 return;
             }
@@ -61,8 +60,8 @@ public final class AdminHeal implements IAdminCommandHandler {
         if (obj instanceof Creature) {
             Creature target = (Creature) obj;
             target.setFullHpMp();
-            if (target.isPlayer())
-                target.setCurrentCp(target.getMaxCp());
+            if (target instanceof Player)
+                target.setFullCp();
         } else
             activeChar.sendPacket(SystemMsg.INVALID_TARGET);
     }

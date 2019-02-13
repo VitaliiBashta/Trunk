@@ -60,11 +60,11 @@ public final class _028_ChestCaughtWithABaitOfIcyAir extends Quest {
         int cond = st.getCond();
         if (npcId == OFulle) {
             if (id == CREATED) {
-                if (st.getPlayer().getLevel() < 36) {
+                if (st.player.getLevel() < 36) {
                     htmltext = "fisher_ofulle_q0028_0101.htm";
                     st.exitCurrentQuest(true);
                 } else {
-                    QuestState OFullesSpecialBait = st.getPlayer().getQuestState(_051_OFullesSpecialBait.class);
+                    QuestState OFullesSpecialBait = st.player.getQuestState(_051_OFullesSpecialBait.class);
                     if (OFullesSpecialBait != null) {
                         if (OFullesSpecialBait.isCompleted())
                             htmltext = "fisher_ofulle_q0028_0101.htm";

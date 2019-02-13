@@ -32,14 +32,14 @@ public final class _454_CompletelyLost extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("wounded_soldier_q454_02.htm")) {
+        if ("wounded_soldier_q454_02.htm".equalsIgnoreCase(event)) {
             st.setState(STARTED);
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("wounded_soldier_q454_03.htm")) {
-            if (seeSoldier(npc, st.getPlayer()) == null) {
-                npc.setFollowTarget(st.getPlayer());
-                npc.getAI().setIntention(CtrlIntention.AI_INTENTION_FOLLOW, st.getPlayer(), Config.FOLLOW_RANGE);
+        } else if ("wounded_soldier_q454_03.htm".equalsIgnoreCase(event)) {
+            if (seeSoldier(npc, st.player) == null) {
+                npc.setFollowTarget(st.player);
+                npc.getAI().setIntention(CtrlIntention.AI_INTENTION_FOLLOW, st.player, Config.FOLLOW_RANGE);
             }
         }
         return event;
@@ -52,7 +52,7 @@ public final class _454_CompletelyLost extends Quest {
             switch (st.getState()) {
                 case CREATED:
                     if (st.isNowAvailable()) {
-                        if (st.getPlayer().getLevel() >= 84)
+                        if (st.player.getLevel() >= 84)
                             htmltext = "wounded_soldier_q454_01.htm";
                         else {
                             htmltext = "wounded_soldier_q454_00.htm";
@@ -64,18 +64,18 @@ public final class _454_CompletelyLost extends Quest {
                 case STARTED:
                     if (st.getCond() == 1) {
                         htmltext = "wounded_soldier_q454_04.htm";
-                        if (seeSoldier(npc, st.getPlayer()) == null) {
-                            npc.setFollowTarget(st.getPlayer());
-                            npc.getAI().setIntention(CtrlIntention.AI_INTENTION_FOLLOW, st.getPlayer(), Config.FOLLOW_RANGE);
+                        if (seeSoldier(npc, st.player) == null) {
+                            npc.setFollowTarget(st.player);
+                            npc.getAI().setIntention(CtrlIntention.AI_INTENTION_FOLLOW, st.player, Config.FOLLOW_RANGE);
                         }
                     }
                     break;
             }
         } else if (npc.getNpcId() == Ermian) {
             if (st.getCond() == 1) {
-                if (seeSoldier(npc, st.getPlayer()) != null) {
+                if (seeSoldier(npc, st.player) != null) {
                     htmltext = "ermian_q454_01.htm";
-                    NpcInstance soldier = seeSoldier(npc, st.getPlayer());
+                    NpcInstance soldier = seeSoldier(npc, st.player);
                     soldier.doDie(null);
                     soldier.endDecayTask();
                     giveReward(st);
@@ -94,7 +94,7 @@ public final class _454_CompletelyLost extends Quest {
         return npc.getAroundNpc(Config.FOLLOW_RANGE * 2, 300)
                 .filter(n -> n.getNpcId() == WoundedSoldier)
                 .filter(n -> n.getFollowTarget() != null)
-                .filter(n -> n.getFollowTarget().getObjectId() == player.getObjectId())
+                .filter(n -> n.getFollowTarget().objectId() == player.objectId())
                 .findFirst().orElse(null);
     }
 

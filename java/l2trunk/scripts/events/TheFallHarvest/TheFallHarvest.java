@@ -7,13 +7,13 @@ import l2trunk.gameserver.data.xml.holder.MultiSellHolder;
 import l2trunk.gameserver.listener.actor.OnDeathListener;
 import l2trunk.gameserver.listener.actor.player.OnPlayerEnterListener;
 import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.SimpleSpawner;
 import l2trunk.gameserver.model.actor.listener.CharListenerList;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.scripts.ScriptFile;
-import l2trunk.gameserver.utils.Location;
 import l2trunk.scripts.events.EventsConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +25,7 @@ import java.util.List;
 public final class TheFallHarvest extends Functions implements ScriptFile, OnDeathListener, OnPlayerEnterListener {
     private static final Logger _log = LoggerFactory.getLogger(TheFallHarvest.class);
     private static final int EVENT_MANAGER_ID = 31255;
-    private static final List<SimpleSpawner> SPAWNS = new ArrayList<>();
+    private static List<SimpleSpawner> SPAWNS = new ArrayList<>();
 
     private static boolean _active = false;
     private static boolean MultiSellLoaded = false;
@@ -59,11 +59,10 @@ public final class TheFallHarvest extends Functions implements ScriptFile, OnDea
      * Запускает эвент
      */
     public void startEvent() {
-        Player player = getSelf();
         if (!player.getPlayerAccess().IsEventGm)
             return;
 
-        if (SetActive("TheFallHarvest", true)) {
+        if (setActive("TheFallHarvest", true)) {
             loadMultiSell();
             spawnEventManagers();
             System.out.println("Event 'The Fall Harvest' started.");
@@ -77,10 +76,9 @@ public final class TheFallHarvest extends Functions implements ScriptFile, OnDea
     }
 
     public void stopEvent() {
-        Player player = getSelf();
         if (!player.getPlayerAccess().IsEventGm)
             return;
-        if (SetActive("TheFallHarvest", false)) {
+        if (setActive("TheFallHarvest", false)) {
             unSpawnEventManagers();
             System.out.println("Event 'The Fall Harvest' stopped.");
             Announcements.INSTANCE.announceByCustomMessage("scripts.events.TheFallHarvest.AnnounceEventStoped");
@@ -93,7 +91,7 @@ public final class TheFallHarvest extends Functions implements ScriptFile, OnDea
     }
 
     private void spawnEventManagers() {
-        SpawnNPCs(EVENT_MANAGER_ID, EventsConfig.EVENT_MANAGERS_harvest_meleons, SPAWNS);
+        SPAWNS = SpawnNPCs(EVENT_MANAGER_ID, EventsConfig.EVENT_MANAGERS_harvest_meleons);
     }
 
     private void unSpawnEventManagers() {
@@ -111,10 +109,12 @@ public final class TheFallHarvest extends Functions implements ScriptFile, OnDea
 
     @Override
     public void onDeath(Creature cha, Creature killer) {
-        if (_active && SimpleCheckDrop(cha, killer) && Rnd.chance(Config.EVENT_TFH_POLLEN_CHANCE * killer.getPlayer().getRateItems() * ((NpcInstance) cha).getTemplate().rateHp))
-            ((NpcInstance) cha).dropItem(killer.getPlayer(), 6391, 1);
+        if (killer instanceof Playable) {
+            Playable playable = (Playable) killer;
+            if (_active && simpleCheckDrop(cha, playable) && Rnd.chance(Config.EVENT_TFH_POLLEN_CHANCE * playable.getPlayer().getRateItems() * ((NpcInstance) cha).getTemplate().rateHp))
+                ((NpcInstance) cha).dropItem(playable.getPlayer(), 6391, 1);
+        }
     }
-
     @Override
     public void onPlayerEnter(Player player) {
         if (_active)

@@ -22,17 +22,17 @@ public final class _704_Missqueen extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = "noquest";
         if (event.equals("31760-02.htm")) {
-            if (st.getCond() == 0 && st.getPlayer().getLevel() <= 20 && st.getPlayer().getLevel() >= 6 && st.getPlayer().getPkKills() == 0) {
-                st.giveItems(item_1, 1);
+            if (st.getCond() == 0 && st.player.getLevel() <= 20 && st.player.getLevel() >= 6 && st.player.getPkKills() == 0) {
+                st.giveItems(item_1);
                 st.setCond(1);
                 htmltext = "c_1.htm";
                 st.playSound(SOUND_ACCEPT);
             } else
                 htmltext = "fail-01.htm";
         } else if (event.equals("31760-03.htm"))
-            if (st.getInt("m_scond") == 0 && st.getPlayer().getLevel() <= 25 && st.getPlayer().getLevel() >= 20 && st.getPlayer().getPkKills() == 0) {
-                st.giveItems(item_2, 1);
-                st.set("m_scond", "1");
+            if (st.getInt("m_scond") == 0 && st.player.getLevel() <= 25 && st.player.getLevel() >= 20 && st.player.getPkKills() == 0) {
+                st.giveItems(item_2);
+                st.set("m_scond", 1);
                 htmltext = "c_2.htm";
                 st.playSound(SOUND_ACCEPT);
             } else

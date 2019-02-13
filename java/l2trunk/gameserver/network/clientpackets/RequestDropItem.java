@@ -37,7 +37,7 @@ public class RequestDropItem extends L2GameClientPacket {
         }
 
         if (!Config.ALLOW_DISCARDITEM || (!Config.ALLOW_DISCARDITEM_AT_PEACE && activeChar.isInPeaceZone() && !activeChar.isGM())) {
-            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.clientpackets.RequestDropItem.Disallowed", activeChar));
+            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.clientpackets.RequestDropItem.Disallowed"));
             return;
         }
 

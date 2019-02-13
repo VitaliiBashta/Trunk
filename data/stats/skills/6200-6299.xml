@@ -176,10 +176,10 @@
 	</skill>
 	<skill id="6209" levels="4" name="Weapon Grade Penalty" >
 		<!--
-		6209	1	Weapon Grade Penalty	The equipped weapon's grade doesn't match your level, so the following penalties are incurred: Decrease in accuracy by 16, Critical Rate by 10%, Critical Power by 10%, Atk. Spd. by 10%, and P. Atk. by 10%.
-		6209	2	Weapon Grade Penalty	The equipped weapon's grade doesn't match your level, so the following penalties are incurred: Decrease in accuracy by 16, Critical Rate by 20%, Critical Power by 20%, Atk. Spd. by 10%, and P. Atk. by 10%.
-		6209	3	Weapon Grade Penalty	The equipped weapon's grade doesn't match your level, so the following penalties are incurred: Decrease in accuracy by 16, Critical Rate by 30%, Critical Power by 30%, Atk. Spd. by 10%, and P. Atk. by 10%.
-		6209	4	Weapon Grade Penalty	The equipped weapon's grade doesn't match your level, so the following penalties are incurred: Decrease in accuracy by 16, Critical Rate by 40%, Critical Power by 40%, Atk. Spd. by 10%, and P. Atk. by 10%.
+		6209	1	Weapon Grade Penalty	The equipped weapon's grade doesn't match your occupation, so the following penalties are incurred: Decrease in accuracy by 16, Critical Rate by 10%, Critical Power by 10%, Atk. Spd. by 10%, and P. Atk. by 10%.
+		6209	2	Weapon Grade Penalty	The equipped weapon's grade doesn't match your occupation, so the following penalties are incurred: Decrease in accuracy by 16, Critical Rate by 20%, Critical Power by 20%, Atk. Spd. by 10%, and P. Atk. by 10%.
+		6209	3	Weapon Grade Penalty	The equipped weapon's grade doesn't match your occupation, so the following penalties are incurred: Decrease in accuracy by 16, Critical Rate by 30%, Critical Power by 30%, Atk. Spd. by 10%, and P. Atk. by 10%.
+		6209	4	Weapon Grade Penalty	The equipped weapon's grade doesn't match your occupation, so the following penalties are incurred: Decrease in accuracy by 16, Critical Rate by 40%, Critical Power by 40%, Atk. Spd. by 10%, and P. Atk. by 10%.
 		-->
 		<table name="#power">0.9 0.8 0.7 0.6</table>
 		<table name="#mAtk">0.8 0.6 0.4 0.15</table>
@@ -199,10 +199,10 @@
 	</skill>
 	<skill id="6213" levels="4" name="Armor Grade Penalty" >
 		<!--
-		6213	1	Armor Grade Penalty	When equipped with armor or accessories whose grade doesn't fit with your level, a penalty is incurred ith decreases in evasion by 2.5, Atk. Spd./Casting Spd./moving speed by 16.67%.
-		6213	2	Armor Grade Penalty	When equipped with armor or accessories whose grade doesn't fit with your level, a penalty is incurred ith decreases in evasion by 5, Atk. Spd./Casting Spd./moving speed by 30.56%.
-		6213	3	Armor Grade Penalty	When equipped with armor or accessories whose grade doesn't fit with your level, a penalty is incurred ith decreases in evasion by 7.5, Atk. Spd./Casting Spd./moving speed by 42.13%.
-		6213	4	Armor Grade Penalty	When equipped with armor or accessories whose grade doesn't fit with your level, a penalty is incurred ith decreases in evasion by 10, Atk. Spd./Casting Spd./moving speed by 51.77%.
+		6213	1	Armor Grade Penalty	When equipped with armor or accessories whose grade doesn't fit with your occupation, a penalty is incurred ith decreases in evasion by 2.5, Atk. Spd./Casting Spd./moving speed by 16.67%.
+		6213	2	Armor Grade Penalty	When equipped with armor or accessories whose grade doesn't fit with your occupation, a penalty is incurred ith decreases in evasion by 5, Atk. Spd./Casting Spd./moving speed by 30.56%.
+		6213	3	Armor Grade Penalty	When equipped with armor or accessories whose grade doesn't fit with your occupation, a penalty is incurred ith decreases in evasion by 7.5, Atk. Spd./Casting Spd./moving speed by 42.13%.
+		6213	4	Armor Grade Penalty	When equipped with armor or accessories whose grade doesn't fit with your occupation, a penalty is incurred ith decreases in evasion by 10, Atk. Spd./Casting Spd./moving speed by 51.77%.
 		-->
 		<table name="#rEvas">2.5 5 7.5 10</table>
 		<table name="#rate">0.8333 0.6944 0.5787 0.4823</table>

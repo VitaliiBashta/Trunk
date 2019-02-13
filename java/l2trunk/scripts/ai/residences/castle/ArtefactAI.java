@@ -1,18 +1,17 @@
 package l2trunk.scripts.ai.residences.castle;
 
-import l2trunk.commons.lang.reference.HardReference;
 import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.CharacterAI;
 import l2trunk.gameserver.ai.CtrlEvent;
 import l2trunk.gameserver.model.Creature;
-import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.entity.events.impl.SiegeEvent;
 import l2trunk.gameserver.model.entity.events.objects.SiegeClanObject;
 import l2trunk.gameserver.model.instances.NpcInstance;
+import l2trunk.scripts.npc.model.residences.SiegeGuardInstance;
 
 public final class ArtefactAI extends CharacterAI {
     public ArtefactAI(NpcInstance actor) {
@@ -35,21 +34,20 @@ public final class ArtefactAI extends CharacterAI {
     }
 
     private class notifyGuard extends RunnableImpl {
-        private final HardReference<Player> _playerRef;
+        private final Player attacker;
 
         notifyGuard(Player attacker) {
-            _playerRef = attacker.getRef();
+            this.attacker = attacker;
         }
 
         @Override
         public void runImpl() {
             NpcInstance actor;
-            Player attacker = _playerRef.get();
             if (attacker == null || (actor = (NpcInstance) getActor()) == null)
                 return;
 
             actor.getAroundNpc(1500, 200)
-                    .filter(GameObject::isSiegeGuard)
+                    .filter(npc -> npc instanceof SiegeGuardInstance)
                     .filter(npc -> Rnd.chance(20))
                     .forEach(npc -> npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker, 5000));
 

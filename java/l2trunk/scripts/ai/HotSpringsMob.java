@@ -33,7 +33,7 @@ public final class HotSpringsMob extends Mystic {
             Integer DeBuff = Rnd.get(DEBUFFS);
             Optional<Effect> effect = attacker.getEffectList().getEffectsBySkillId(DeBuff).findFirst();
             if (effect.isPresent()) {
-                int level = effect.get().getSkill().level;
+                int level = effect.get().skill.level;
                 if (level < 10) {
                     effect.get().exit();
                     SkillTable.INSTANCE.getInfo(DeBuff, level + 1).getEffects(actor, attacker);

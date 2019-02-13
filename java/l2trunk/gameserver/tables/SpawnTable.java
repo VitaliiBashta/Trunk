@@ -5,7 +5,6 @@ import l2trunk.gameserver.Config;
 import l2trunk.gameserver.data.xml.holder.SpawnHolder;
 import l2trunk.gameserver.database.DatabaseFactory;
 import l2trunk.gameserver.model.SimpleSpawner;
-import l2trunk.gameserver.templates.spawn.PeriodOfDay;
 import l2trunk.gameserver.templates.spawn.SpawnNpcInfo;
 import l2trunk.gameserver.templates.spawn.SpawnTemplate;
 import l2trunk.gameserver.utils.Location;
@@ -41,10 +40,10 @@ public enum SpawnTable {
                 int z = rset.getInt("locz");
                 int h = rset.getInt("heading");
 
-                SpawnTemplate template = new SpawnTemplate(PeriodOfDay.NONE, count, delay, delay_rnd);
+                SpawnTemplate template = new SpawnTemplate(count, delay, delay_rnd);
                 template.addNpc(new SpawnNpcInfo(npcId, 1, StatsSet.EMPTY));
                 template.addSpawnRange(new Location(x, y, z, h));
-                SpawnHolder.addSpawn(PeriodOfDay.NONE.name(), template);
+                SpawnHolder.addSpawn("NONE", template);
             }
         } catch (SQLException e1) {
             _log.warn("custom_spawnlist couldnt be initialized:" + e1);

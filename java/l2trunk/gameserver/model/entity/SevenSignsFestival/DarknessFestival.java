@@ -50,7 +50,7 @@ public final class DarknessFestival extends Reflection {
         party.setReflection(this);
         setReturnLoc(party.getLeader().getLoc());
         party.getMembers().forEach(p -> {
-            p.setVar("backCoords", p.getLoc().toXYZString(), -1);
+            p.setVar("backCoords", p.getLoc().toXYZString());
             p.getEffectList().stopAllEffects();
             p.teleToLocation(Location.findPointToStay(_startLocation.loc, 20, 100, getGeoIndex()), this);
         });
@@ -71,9 +71,9 @@ public final class DarknessFestival extends Reflection {
                 currentState = FESTIVAL_FIRST_SPAWN;
 
                 _spawnTimerTask = ThreadPoolManager.INSTANCE.schedule(() -> {
-                        spawnFestivalMonsters(0);
-                        sendMessageToParticipants("Go!");
-                        scheduleNext();
+                    spawnFestivalMonsters(0);
+                    sendMessageToParticipants("Go!");
+                    scheduleNext();
                 }, FESTIVAL_FIRST_SPAWN);
                 break;
             case FESTIVAL_FIRST_SPAWN:
@@ -172,7 +172,7 @@ public final class DarknessFestival extends Reflection {
                 if (isHighestScore)
                     sendMessageToParticipants("Your score is highest!");
             } else
-                player.sendMessage(new CustomMessage("l2trunk.gameserver.model.instances.L2FestivalGuideInstance.BloodOfferings", player));
+                player.sendMessage(new CustomMessage("l2trunk.gameserver.model.instances.L2FestivalGuideInstance.BloodOfferings"));
         }
 
         super.collapse();
@@ -183,7 +183,7 @@ public final class DarknessFestival extends Reflection {
     }
 
     private void sendCustomMessageToParticipants() {
-        getPlayers().forEach(p -> p.sendMessage(new CustomMessage("l2trunk.gameserver.model.entity.SevenSignsFestival.Ended", p)));
+        getPlayers().forEach(p -> p.sendMessage(new CustomMessage("l2trunk.gameserver.model.entity.SevenSignsFestival.Ended")));
     }
 
     public void partyMemberExited() {

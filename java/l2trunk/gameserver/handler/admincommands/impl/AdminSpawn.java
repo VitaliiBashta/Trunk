@@ -3,21 +3,18 @@ package l2trunk.gameserver.handler.admincommands.impl;
 import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.ai.AIs;
-import l2trunk.gameserver.ai.CharacterAI;
 import l2trunk.gameserver.data.xml.holder.NpcHolder;
 import l2trunk.gameserver.handler.admincommands.IAdminCommandHandler;
 import l2trunk.gameserver.instancemanager.RaidBossSpawnManager;
 import l2trunk.gameserver.model.*;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
-import l2trunk.gameserver.scripts.Scripts;
 import l2trunk.gameserver.tables.SpawnTable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.lang.reflect.Constructor;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -31,11 +28,11 @@ public final class AdminSpawn implements IAdminCommandHandler {
     @Override
     public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, final Player activeChar) {
         Commands command = (Commands) comm;
-
+        GameObject target = activeChar.getTarget();
         if (!activeChar.getPlayerAccess().CanEditNPC)
             return false;
         StringTokenizer st;
-        NpcInstance target;
+        NpcInstance npcInstance;
         Spawner spawn;
         NpcInstance npc;
 
@@ -81,8 +78,8 @@ public final class AdminSpawn implements IAdminCommandHandler {
                 }
                 break;
             case admin_setai:
-                if (activeChar.getTarget() == null || !activeChar.getTarget().isNpc()) {
-                    activeChar.sendMessage("Please getBonuses target NPC or mob.");
+                if (!(target instanceof NpcInstance)) {
+                    activeChar.sendMessage("Please getBonuses npcInstance NPC or mob.");
                     return false;
                 }
 
@@ -93,70 +90,72 @@ public final class AdminSpawn implements IAdminCommandHandler {
                     return false;
                 }
                 String aiName = st.nextToken();
-                target = (NpcInstance) activeChar.getTarget();
-                target.setAI(AIs.getNewAI("ai." + aiName, target));
-                target.getAI().startAITask();
+                npcInstance = (NpcInstance) target;
+                npcInstance.setAI(AIs.getNewAI("ai." + aiName, npcInstance));
+                npcInstance.getAI().startAITask();
 
                 break;
             case admin_setaiparam:
-                if (activeChar.getTarget() == null || !activeChar.getTarget().isNpc()) {
-                    activeChar.sendMessage("Please getBonuses target NPC or mob.");
+                if (target instanceof NpcInstance) {
+                    st = new StringTokenizer(fullString, " ");
+                    st.nextToken();
+
+                    if (!st.hasMoreTokens()) {
+                        activeChar.sendMessage("Please specify AI parameter name.");
+                        activeChar.sendMessage("USAGE: //setaiparam <param> <value>");
+                        return false;
+                    }
+
+                    String paramName = st.nextToken();
+                    if (!st.hasMoreTokens()) {
+                        activeChar.sendMessage("Please specify AI parameter value.");
+                        activeChar.sendMessage("USAGE: //setaiparam <param> <value>");
+                        return false;
+                    }
+                    String paramValue = st.nextToken();
+                    npcInstance = (NpcInstance) target;
+                    npcInstance.setParameter(paramName, paramValue);
+                    npcInstance.decayMe();
+                    npcInstance.spawnMe();
+                    activeChar.sendMessage("AI parameter " + paramName + " succesfully setted to " + paramValue);
+                    break;
+                } else {
+                    activeChar.sendMessage("Please getBonuses npcInstance NPC or mob.");
                     return false;
                 }
 
-                st = new StringTokenizer(fullString, " ");
-                st.nextToken();
-
-                if (!st.hasMoreTokens()) {
-                    activeChar.sendMessage("Please specify AI parameter name.");
-                    activeChar.sendMessage("USAGE: //setaiparam <param> <value>");
-                    return false;
-                }
-
-                String paramName = st.nextToken();
-                if (!st.hasMoreTokens()) {
-                    activeChar.sendMessage("Please specify AI parameter value.");
-                    activeChar.sendMessage("USAGE: //setaiparam <param> <value>");
-                    return false;
-                }
-                String paramValue = st.nextToken();
-                target = (NpcInstance) activeChar.getTarget();
-                target.setParameter(paramName, paramValue);
-                target.decayMe();
-                target.spawnMe();
-                activeChar.sendMessage("AI parameter " + paramName + " succesfully setted to " + paramValue);
-                break;
             case admin_dumpparams:
-                if (activeChar.getTarget() == null || !activeChar.getTarget().isNpc()) {
-                    activeChar.sendMessage("Please getBonuses target NPC or mob.");
+                if (target instanceof NpcInstance) {
+                    npcInstance = (NpcInstance) target;
+                    StatsSet set = npcInstance.getParameters();
+                    if (!set.isEmpty())
+                        _log.info("Dump of Parameters:\r\n" + set.toString());
+                    else
+                        _log.info("Parameters is empty.");
+                    break;
+                } else {
+                    activeChar.sendMessage("Please getBonuses npcInstance NPC or mob.");
                     return false;
                 }
-                target = (NpcInstance) activeChar.getTarget();
-                StatsSet set = target.getParameters();
-                if (!set.isEmpty())
-                    _log.info("Dump of Parameters:\r\n" + set.toString());
-                else
-                    _log.info("Parameters is empty.");
-                break;
             case admin_setheading:
-                GameObject obj = activeChar.getTarget();
-                if (!obj.isNpc()) {
+                if (target instanceof NpcInstance) {
+                    npc = (NpcInstance) target;
+                    npc.setHeading(activeChar.getHeading());
+                    npc.decayMe();
+                    npc.spawnMe();
+                    activeChar.sendMessage("New heading : " + activeChar.getHeading());
+
+                    spawn = npc.getSpawn();
+                    if (spawn == null) {
+                        activeChar.sendMessage("Spawn for this npc == null!");
+                        return false;
+                    }
+                    break;
+                } else {
                     activeChar.sendMessage("Target is incorrect!");
                     return false;
                 }
 
-                npc = (NpcInstance) obj;
-                npc.setHeading(activeChar.getHeading());
-                npc.decayMe();
-                npc.spawnMe();
-                activeChar.sendMessage("New heading : " + activeChar.getHeading());
-
-                spawn = npc.getSpawn();
-                if (spawn == null) {
-                    activeChar.sendMessage("Spawn for this npc == null!");
-                    return false;
-                }
-                break;
             case admin_generate_loc:
 
                 break;
@@ -178,7 +177,7 @@ public final class AdminSpawn implements IAdminCommandHandler {
                                 + "<point x=\"" + activeChar.getLoc().x + "\" y=\"" + activeChar.getLoc().y
                                 + "\" z=\"" + activeChar.getLoc().z + "\" h=\"" + activeChar.getLoc().h
                                 + "\" />\n\t" + "<npc id=\"" + toInt(id3) + "\" /><!--"
-                                + NpcHolder.getTemplate(toInt(id3)).getName() + "-->\n" + "</spawn>\n");
+                                + NpcHolder.getTemplate(toInt(id3)).name() + "-->\n" + "</spawn>\n");
                         writer.close();
                     } catch (Exception e) {
 
@@ -227,7 +226,7 @@ public final class AdminSpawn implements IAdminCommandHandler {
             spawn.init();
             if (respawnTime == 0)
                 spawn.stopRespawn();
-            activeChar.sendMessage("Created " + templateId + " on " + target.getObjectId() + ".");
+            activeChar.sendMessage("Created " + templateId + " on " + target.objectId() + ".");
         }
     }
 

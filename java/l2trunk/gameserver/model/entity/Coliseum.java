@@ -379,13 +379,13 @@ public final class Coliseum {
             if (!isParty1Ready) {
                 party_waiting_list.remove(_party1);
                 setIsWaitingRoom1Free(true);
-                _party2.sendMessage("opponents party is offline, wait for next opponent");
+                _party2.getMembers().forEach(m -> m.sendMessage("opponents party is offline, wait for next opponent"));
                 return;
             }
             if (!isParty2Ready) {
                 party_waiting_list.remove(_party2);
                 setIsWaitingRoom2Free(true);
-                _party1.sendMessage("opponents party is offline, wait for next opponent");
+                _party1.getMembers().forEach(m -> m.sendMessage("opponents party is offline, wait for next opponent"));
                 return;
             }
 
@@ -401,7 +401,7 @@ public final class Coliseum {
                 ArrayList<Party> toDel = new ArrayList<>();
                 for (Party party : party_waiting_list) {
                     if (party.getMembers().size() > 6) {
-                        party.sendMessage("Free room at coliseum append");
+                        party.getMembers().forEach(m -> m.sendMessage("Free room at coliseum append"));
                     } else {
                         toDel.add(party);
                     }

@@ -24,7 +24,7 @@ public final class CastleMassTeleporterInstance extends NpcInstance {
 
     public CastleMassTeleporterInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
-        _teleportLoc = Location.parseLoc(template.getAIParams().getString("teleport_loc"));
+        _teleportLoc = Location.of(template.getAIParams().getString("teleport_loc"));
     }
 
     @Override

@@ -42,7 +42,7 @@ public final class TutorialShowHtml extends L2GameServerPacket {
         html = playername.matcher(html).replaceAll(player.getName());
 
         // Player class name replace
-        html = playerClassName.matcher(html).replaceAll(player.getClassId().getName());
+        html = playerClassName.matcher(html).replaceAll(player.getClassId().name);
 
         writeC(0xa6);
         writeS(html);

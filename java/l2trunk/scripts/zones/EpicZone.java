@@ -1,7 +1,7 @@
 package l2trunk.scripts.zones;
 
 import l2trunk.gameserver.listener.zone.OnZoneEnterLeaveListener;
-import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Zone;
 import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 import l2trunk.gameserver.scripts.ScriptFile;
@@ -22,22 +22,19 @@ public final class EpicZone implements ScriptFile {
 
     public static class ZoneListener implements OnZoneEnterLeaveListener {
         @Override
-        public void onZoneEnter(Zone zone, Creature cha) {
-            if (zone.getParams() == null || !cha.isPlayable() || cha.getPlayer().isGM())
+        public void onZoneEnter(Zone zone, Player player) {
+            if (zone.getParams() == null || player.isGM())
                 return;
-            // Synerge - Added protection to only allow x max class level to certain zones if set. It also checks if player has subclasses, that should be the same as having 3rd class
+            // Synerge - Added protection to only allow x max class occupation to certain zones if set. It also checks if player has subclasses, that should be the same as having 3rd class
             final int maxClassLvl = zone.getParams().getInteger("maxClassLevelAllowed", -1);
-            if (cha.getLevel() > zone.getParams().getInteger("levelLimit")
-                    || (maxClassLvl >= 0 && cha.getPlayer().getClassId().getLevel() > maxClassLvl)
-                    || (maxClassLvl >= 0 && cha.getPlayer().isSubClassActive())) {
-                cha.getPlayer().sendMessage(new CustomMessage("scripts.zones.epic.banishMsg", cha.getPlayer()));
-                cha.teleToLocation(Location.parseLoc(zone.getParams().getString("tele")));
+            if (player.getLevel() > zone.getParams().getInteger("levelLimit")
+                    || (maxClassLvl >= 0 && player.getClassId().occupation() > maxClassLvl-1)
+                    || (maxClassLvl >= 0 && player.isSubClassActive())) {
+                player.sendMessage(new CustomMessage("scripts.zones.epic.banishMsg"));
+                player.teleToLocation(Location.of(zone.getParams().getString("tele")));
             }
         }
 
-        @Override
-        public void onZoneLeave(Zone zone, Creature cha) {
-        }
     }
 }
 

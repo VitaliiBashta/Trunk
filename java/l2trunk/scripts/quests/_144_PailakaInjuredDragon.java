@@ -92,45 +92,45 @@ public final class _144_PailakaInjuredDragon extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        Player player = st.getPlayer();
+        Player player = st.player;
         String htmltext = event;
-        if (event.equalsIgnoreCase("Enter")) {
+        if ("Enter".equalsIgnoreCase(event)) {
             enterInstance(player);
             return null;
         } else if (event.startsWith("buff")) {
             int[] skill = BUFFS[Integer.parseInt(event.split("buff")[1])];
             if (st.getInt("spells") < 4) {
                 makeBuff(npc, player, skill[0], skill[1]);
-                st.set("spells", "" + (st.getInt("spells") + 1));
+                st.set("spells", st.getInt("spells") + 1);
                 htmltext = "32509-06.htm";
                 return htmltext;
             }
             if (st.getInt("spells") == 4) {
                 makeBuff(npc, player, skill[0], skill[1]);
-                st.set("spells", "5");
+                st.set("spells", 5);
                 htmltext = "32509-05.htm";
                 return htmltext;
             }
-        } else if (event.equalsIgnoreCase("Support")) {
+        } else if ("Support".equalsIgnoreCase(event)) {
             if (st.getInt("spells") < 5)
                 htmltext = "32509-06.htm";
             else
                 htmltext = "32509-04.htm";
             return htmltext;
-        } else if (event.equalsIgnoreCase("32499-02.htm")) {
-            st.set("spells", "0");
-            st.set("stage", "1");
+        } else if ("32499-02.htm".equalsIgnoreCase(event)) {
+            st.set("spells", 0);
+            st.set("stage", 1);
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("32499-05.htm")) {
+        } else if ("32499-05.htm".equalsIgnoreCase(event)) {
             st.setCond(2);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("32502-05.htm")) {
+        } else if ("32502-05.htm".equalsIgnoreCase(event)) {
             st.setCond(3);
             st.playSound(SOUND_MIDDLE);
-            st.giveItems(SPEAR, 1);
-        } else if (event.equalsIgnoreCase("32512-02.htm")) {
+            st.giveItems(SPEAR);
+        } else if ("32512-02.htm".equalsIgnoreCase(event)) {
             st.takeItems(SPEAR, 1);
             st.takeItems(ENCHSPEAR, 1);
             st.takeItems(LASTSPEAR, 1);
@@ -144,7 +144,7 @@ public final class _144_PailakaInjuredDragon extends Quest {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         int id = st.getState();
-        Player player = st.getPlayer();
+        Player player = st.player;
         if (npcId == KETRAOSHAMAN) {
             if (cond == 0) {
                 if (player.getLevel() < 73 || player.getLevel() > 77) {
@@ -208,8 +208,8 @@ public final class _144_PailakaInjuredDragon extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
-        Player player = st.getPlayer();
+    public void onKill(NpcInstance npc, QuestState st) {
+        Player player = st.player;
         int npcId = npc.getNpcId();
         int refId = player.getReflectionId();
 
@@ -217,96 +217,93 @@ public final class _144_PailakaInjuredDragon extends Quest {
             case VSWARRIOR1:
             case VSWARRIOR2:
                 if (st.getInt("stage") == 1)
-                    st.set("stage", "2");
+                    st.set("stage", 2);
                 break;
             case VSCOMMAO1:
             case VSCOMMAO2:
                 if (st.getInt("stage") == 2)
-                    st.set("stage", "3");
+                    st.set("stage", 3);
                 if (st.getQuestItemsCount(SPEAR) > 0 && st.getQuestItemsCount(STAGE1) == 0)
                     st.giveItems(STAGE1, 1);
                 break;
             case VSGMAG1:
             case VSGMAG2:
                 if (st.getInt("stage") == 3)
-                    st.set("stage", "4");
+                    st.set("stage", 4);
                 if (st.getQuestItemsCount(ENCHSPEAR) > 0 && st.getQuestItemsCount(STAGE2) == 0)
                     st.giveItems(STAGE2, 1);
                 break;
             case VSHGAPG1:
             case VSHGAPG2:
                 if (st.getInt("stage") == 4)
-                    st.set("stage", "5");
+                    st.set("stage", 5);
                 break;
             case LATANA:
                 st.setCond(4);
                 st.playSound(SOUND_MIDDLE);
-                addSpawnToInstance(KOSUPPORTER2, npc.getLoc(), 0, refId);
+                addSpawnToInstance(KOSUPPORTER2, npc.getLoc(), refId);
                 break;
         }
 
         if (Pailaka3rd.contains(npcId))
             if (Rnd.get(100) < 30)
-                st.dropItem(npc, Rnd.get(PAILAKA3DROP), 1);
+                st.dropItem(npc, Rnd.get(PAILAKA3DROP));
 
         if (Antelopes.contains(npcId))
             st.dropItem(npc, Rnd.get(ANTELOPDROP), Rnd.get(1, 10));
-
-        return null;
     }
 
     @Override
-    public String onAttack(NpcInstance npc, QuestState st) {
-        Player player = st.getPlayer();
+    public void onAttack(NpcInstance npc, QuestState st) {
+        Player player = st.player;
         int npcId = npc.getNpcId();
         switch (npcId) {
             case VSCOMMAO1:
             case VSCOMMAO2:
                 if (st.getInt("stage") < 2) {
                     player.teleToLocation(122789, -45692, -3036);
-                    return null;
+                    return ;
                 }
                 break;
             case VSGMAG1:
             case VSGMAG2:
                 if (st.getInt("stage") == 1) {
                     player.teleToLocation(122789, -45692, -3036);
-                    return null;
+                    return ;
                 } else if (st.getInt("stage") == 2) {
                     player.teleToLocation(116948, -46445, -2673);
-                    return null;
+                    return ;
                 }
                 break;
             case VSHGAPG1:
             case VSHGAPG2:
                 if (st.getInt("stage") == 1) {
                     player.teleToLocation(122789, -45692, -3036);
-                    return null;
+                    return ;
                 } else if (st.getInt("stage") == 2) {
                     player.teleToLocation(116948, -46445, -2673);
-                    return null;
+                    return ;
                 } else if (st.getInt("stage") == 3) {
                     player.teleToLocation(112445, -44118, -2700);
-                    return null;
+                    return ;
                 }
                 break;
             case LATANA:
                 if (st.getInt("stage") == 1) {
                     player.teleToLocation(122789, -45692, -3036);
-                    return null;
+                    return ;
                 } else if (st.getInt("stage") == 2) {
                     player.teleToLocation(116948, -46445, -2673);
-                    return null;
+                    return ;
                 } else if (st.getInt("stage") == 3) {
                     player.teleToLocation(112445, -44118, -2700);
-                    return null;
+                    return ;
                 } else if (st.getInt("stage") == 4) {
                     player.teleToLocation(109947, -41433, -2311);
-                    return null;
+                    return ;
                 }
                 break;
         }
-        return null;
     }
 
     private void enterInstance(Player player) {

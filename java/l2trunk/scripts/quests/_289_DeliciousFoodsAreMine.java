@@ -4,9 +4,7 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-import java.util.Arrays;
 import java.util.List;
 
 public final class _289_DeliciousFoodsAreMine extends Quest {
@@ -14,7 +12,7 @@ public final class _289_DeliciousFoodsAreMine extends Quest {
     private static final int FoulFruit = 15507;
     private static final int FullBarrelofSoup = 15712;
     private static final int EmptySoupBarrel = 15713;
-    private static final List<Integer> SelMahums =List.of(22786, 22787, 22788);
+    private static final List<Integer> SelMahums = List.of(22786, 22787, 22788);
     private static final int SelChef = 18908;
 
     public _289_DeliciousFoodsAreMine() {
@@ -139,8 +137,7 @@ public final class _289_DeliciousFoodsAreMine extends Quest {
         int cond = st.getCond();
         if (npc.getNpcId() == GuardStan) {
             if (cond == 0) {
-                QuestState qs = st.getPlayer().getQuestState(_252_GoodSmell.class);
-                if (st.getPlayer().getLevel() >= 82 && qs != null && qs.isCompleted())
+                if (st.player.getLevel() >= 82 && st.player.isQuestCompleted(_252_GoodSmell.class))
                     htmltext = "stan_q289_01.htm";
                 else {
                     htmltext = "stan_q289_00.htm";
@@ -161,13 +158,14 @@ public final class _289_DeliciousFoodsAreMine extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int cond = st.getCond();
         if (cond == 1) {
             if (SelMahums.contains(npc.getNpcId()) || npc.getNpcId() == SelChef)
-                if (!st.rollAndGive(FullBarrelofSoup, 1, 15))
+                if (Rnd.chance(15))
+                    st.rollAndGive(FullBarrelofSoup, 1, 100);
+                else
                     st.rollAndGive(EmptySoupBarrel, 1, 100);
         }
-        return null;
     }
 }

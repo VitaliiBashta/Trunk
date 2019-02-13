@@ -41,13 +41,13 @@ public final class RequestExEnchantSkillInfoDetail extends L2GameClientPacket {
             return;
         }
 
-        if (activeChar.getLevel() < 76 || activeChar.getClassId().getLevel() < 4) {
+        if (activeChar.getLevel() < 76 || activeChar.getClassId().occupation() < 3) {
             activeChar.sendMessage("You must have 3rd class change quest completed.");
             return;
         }
 
         int bookId = 0;
-        int sp = 0;
+        int sp;
         int adenaCount = 0;
         double spMult = SkillTreeTable.NORMAL_ENCHANT_COST_MULTIPLIER;
 
@@ -74,7 +74,7 @@ public final class RequestExEnchantSkillInfoDetail extends L2GameClientPacket {
                     esd = SkillTreeTable.getEnchantsForChange(_skillId, _skillLvl).get(0);
                     spMult = 1f / SkillTreeTable.SAFE_ENCHANT_COST_MULTIPLIER;
                 } catch (RuntimeException e) {
-                    LOG.error("Error while loading Change Skill Enchant Details for skill id:" + _skillId + " level:" + _skillLvl, e);
+                    LOG.error("Error while loading Change Skill Enchant Details for skill id:" + _skillId + " occupation:" + _skillLvl, e);
                 }
                 break;
         }

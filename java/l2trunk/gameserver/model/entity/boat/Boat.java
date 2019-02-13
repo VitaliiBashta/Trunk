@@ -39,7 +39,7 @@ public abstract class Boat extends Creature {
     }
 
     @Override
-    public void setXYZ(int x, int y, int z, boolean MoveTask) {
+    protected void setXYZ(int x, int y, int z, boolean MoveTask) {
         super.setXYZ(x, y, z, MoveTask);
 
         updatePeopleInTheBoat(new Location(x, y, z));
@@ -274,11 +274,6 @@ public abstract class Boat extends Creature {
 
     public Location getReturnLoc() {
         return getCurrentWay().getReturnLoc();
-    }
-
-    @Override
-    public boolean isBoat() {
-        return true;
     }
 
     @Override

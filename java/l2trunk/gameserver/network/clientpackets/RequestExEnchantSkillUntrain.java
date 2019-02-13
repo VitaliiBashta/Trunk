@@ -13,6 +13,8 @@ import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.tables.SkillTreeTable;
 import l2trunk.gameserver.utils.Log;
 
+import static l2trunk.gameserver.utils.ItemFunctions.removeItem;
+
 public final class RequestExEnchantSkillUntrain extends L2GameClientPacket {
     private int skillId;
     private int skillLvl;
@@ -34,7 +36,7 @@ public final class RequestExEnchantSkillUntrain extends L2GameClientPacket {
             return;
         }
 
-        if (activeChar.getLevel() < 76 || activeChar.getClassId().getLevel() < 4) {
+        if (activeChar.getLevel() < 76 || activeChar.getClassId().occupation() < 3) {
             activeChar.sendMessage("You must have 3rd class change quest completed.");
             return;
         }
@@ -61,12 +63,12 @@ public final class RequestExEnchantSkillUntrain extends L2GameClientPacket {
         if (newSkill == null)
             return;
 
-        if (Functions.getItemCount(activeChar, SkillTreeTable.UNTRAIN_ENCHANT_BOOK) == 0) {
+        if (!activeChar.haveItem( SkillTreeTable.UNTRAIN_ENCHANT_BOOK)) {
             activeChar.sendPacket(SystemMsg.YOU_DO_NOT_HAVE_ALL_OF_THE_ITEMS_NEEDED_TO_ENCHANT_THAT_SKILL);
             return;
         }
 
-        Functions.removeItem(activeChar, SkillTreeTable.UNTRAIN_ENCHANT_BOOK, 1, "SkillEnchantUntrain");
+        removeItem(activeChar, SkillTreeTable.UNTRAIN_ENCHANT_BOOK, 1, "SkillEnchantUntrain");
 
         activeChar.addExpAndSp(0, sl.getCost()[1] * sl.getCostMult());
         activeChar.addSkill(newSkill, true);

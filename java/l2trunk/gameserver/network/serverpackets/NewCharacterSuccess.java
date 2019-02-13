@@ -6,40 +6,40 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class NewCharacterSuccess extends L2GameServerPacket {
+public final class NewCharacterSuccess extends L2GameServerPacket {
     // dddddddddddddddddddd
-    private final List<PlayerTemplate> _chars = new ArrayList<>();
+    private final List<PlayerTemplate> chars = new ArrayList<>();
 
     public void addChar(PlayerTemplate template) {
-        _chars.add(template);
+        chars.add(template);
     }
 
     @Override
     protected final void writeImpl() {
         writeC(0x0d);
-        writeD(_chars.size());
+        writeD(chars.size());
 
-        for (PlayerTemplate temp : _chars) {
-            writeD(temp.race.ordinal());
-            writeD(temp.classId.id());
+        chars.forEach(cha -> {
+            writeD(cha.race.ordinal());
+            writeD(cha.classId.id);
             writeD(0x46);
-            writeD(temp.baseSTR);
+            writeD(cha.baseSTR);
             writeD(0x0a);
             writeD(0x46);
-            writeD(temp.baseDEX);
+            writeD(cha.baseDEX);
             writeD(0x0a);
             writeD(0x46);
-            writeD(temp.baseCON);
+            writeD(cha.baseCON);
             writeD(0x0a);
             writeD(0x46);
-            writeD(temp.baseINT);
+            writeD(cha.baseINT);
             writeD(0x0a);
             writeD(0x46);
-            writeD(temp.baseWIT);
+            writeD(cha.baseWIT);
             writeD(0x0a);
             writeD(0x46);
-            writeD(temp.baseMEN);
+            writeD(cha.baseMEN);
             writeD(0x0a);
-        }
+        });
     }
 }

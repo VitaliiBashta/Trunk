@@ -84,7 +84,7 @@ public final class _509_TheClansPrestige extends Quest {
             st.setState(STARTED);
         } else if (Util.isNumber(event)) {
             int evt = Integer.parseInt(event);
-            st.set("raid", event);
+            st.set("raid", evt);
             htmltext = "31331-" + event + ".htm";
             if (evt > 0)
                 st.addRadar(RADAR.get(evt));
@@ -99,12 +99,12 @@ public final class _509_TheClansPrestige extends Quest {
     @Override
     public String onTalk(NpcInstance npc, QuestState st) {
         String htmltext = "noquest";
-        Clan clan = st.getPlayer().getClan();
+        Clan clan = st.player.getClan();
 
         if (clan == null) {
             st.exitCurrentQuest(true);
             htmltext = "31331-0a.htm";
-        } else if (clan.getLeader().getPlayer() != st.getPlayer()) {
+        } else if (clan.getLeader().player() != st.player) {
             st.exitCurrentQuest(true);
             htmltext = "31331-0a.htm";
         } else if (clan.getLevel() < 6) {
@@ -124,7 +124,7 @@ public final class _509_TheClansPrestige extends Quest {
                 else if (count == 1) {
                     htmltext = "31331-" + raid + "buffPrice.htm";
                     int increasedPoints = clan.incReputation(REWARDS_LIST[raid][2], true, "_509_TheClansPrestige");
-                    st.getPlayer().sendPacket(new SystemMessage(SystemMessage.YOU_HAVE_SUCCESSFULLY_COMPLETED_A_CLAN_QUEST_S1_POINTS_HAVE_BEEN_ADDED_TO_YOUR_CLAN_REPUTATION_SCORE).addNumber(increasedPoints));
+                    st.player.sendPacket(new SystemMessage(SystemMessage.YOU_HAVE_SUCCESSFULLY_COMPLETED_A_CLAN_QUEST_S1_POINTS_HAVE_BEEN_ADDED_TO_YOUR_CLAN_REPUTATION_SCORE).addNumber(increasedPoints));
                     st.takeItems(item, 1);
                 }
             }
@@ -133,27 +133,26 @@ public final class _509_TheClansPrestige extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         QuestState id = null;
-        Clan clan = st.getPlayer().getClan();
+        Clan clan = st.player.getClan();
         if (clan == null)
-            return null;
-        Player clan_leader = clan.getLeader().getPlayer();
+            return ;
+        Player clan_leader = clan.getLeader().player();
         if (clan_leader == null)
-            return null;
-        if (clan_leader.equals(st.getPlayer()) || clan_leader.getDistance(npc) <= 1600)
+            return ;
+        if (clan_leader.equals(st.player) || clan_leader.getDistance(npc) <= 1600)
             id = clan_leader.getQuestState(this);
         if (id == null)
-            return null;
+            return ;
         if (st.getCond() == 1 && st.getState() == STARTED) {
             int raid = REWARDS_LIST[st.getInt("raid")][0];
             int item = REWARDS_LIST[st.getInt("raid")][1];
             int npcId = npc.getNpcId();
             if (npcId == raid && st.getQuestItemsCount(item) == 0) {
-                st.giveItems(item, 1);
+                st.giveItems(item);
                 st.playSound(SOUND_MIDDLE);
             }
         }
-        return null;
     }
 }

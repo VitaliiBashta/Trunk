@@ -26,8 +26,7 @@ public final class BaiumNpc extends DefaultAI {
         if (_wait_timeout < System.currentTimeMillis()) {
             _wait_timeout = System.currentTimeMillis() + BAIUM_EARTHQUAKE_TIMEOUT;
             L2GameServerPacket eq = new Earthquake(actor.getLoc(), 40, 10);
-            actor.getAroundCharacters(5000, 10000)
-                    .filter(GameObject::isPlayer)
+            actor.getAroundPlayers(5000, 10000)
                     .forEach(cha -> cha.sendPacket(eq));
         }
         return false;

@@ -4,7 +4,6 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _602_ShadowofLight extends Quest {
     //NPC
@@ -60,12 +59,12 @@ public final class _602_ShadowofLight extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("eye_of_argos_q0602_0104.htm")) {
+        if ("eye_of_argos_q0602_0104.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("eye_of_argos_q0602_0201.htm")) {
-            st.takeItems(EYE_OF_DARKNESS, -1);
+        } else if ("eye_of_argos_q0602_0201.htm".equalsIgnoreCase(event)) {
+            st.takeItems(EYE_OF_DARKNESS);
             int random = Rnd.get(100) + 1;
             for (int[] REWARD : REWARDS)
                 if (REWARD[4] <= random && random <= REWARD[5]) {
@@ -90,7 +89,7 @@ public final class _602_ShadowofLight extends Quest {
             cond = st.getCond();
         if (npcId == ARGOS)
             if (cond == 0)
-                if (st.getPlayer().getLevel() < 68) {
+                if (st.player.getLevel() < 68) {
                     htmltext = "eye_of_argos_q0602_0103.htm";
                     st.exitCurrentQuest(true);
                 } else
@@ -107,11 +106,11 @@ public final class _602_ShadowofLight extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getCond() == 1) {
             long count = st.getQuestItemsCount(EYE_OF_DARKNESS);
             if (count < 100 && Rnd.chance(npc.getNpcId() == 21299 ? 35 : 40)) {
-                st.giveItems(EYE_OF_DARKNESS, 1);
+                st.giveItems(EYE_OF_DARKNESS);
                 if (count == 99) {
                     st.setCond(2);
                     st.playSound(SOUND_MIDDLE);
@@ -119,6 +118,5 @@ public final class _602_ShadowofLight extends Quest {
                     st.playSound(SOUND_ITEMGET);
             }
         }
-        return null;
     }
 }

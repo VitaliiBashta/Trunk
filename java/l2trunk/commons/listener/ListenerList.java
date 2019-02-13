@@ -6,7 +6,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 public class ListenerList implements Listener {
     private final Set<Listener> listeners = new CopyOnWriteArraySet<>();
 
-    public Set<Listener> getListeners() {
+    public final Set<Listener> getListeners() {
         return listeners;
     }
 

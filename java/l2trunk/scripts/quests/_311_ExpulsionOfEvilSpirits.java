@@ -35,19 +35,19 @@ public final class _311_ExpulsionOfEvilSpirits extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("chairen_q311_03.htm")) {
+        if ("chairen_q311_03.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("continue"))
+        } else if ("continue".equalsIgnoreCase(event))
             htmltext = "chairen_q311_04b.htm";
-        else if (event.equalsIgnoreCase("quit")) {
+        else if ("quit".equalsIgnoreCase(event)) {
             htmltext = "chairen_q311_04a.htm";
             st.exitCurrentQuest(true);
-        } else if (event.equalsIgnoreCase("soulores")) {
+        } else if ("soulores".equalsIgnoreCase(event)) {
             if (st.getQuestItemsCount(SoulCoreContainingEvilSpirit) >= 10) {
                 st.takeItems(SoulCoreContainingEvilSpirit, 10);
-                st.giveItems(ProtectionSoulsPendant, 1);
+                st.giveItems(ProtectionSoulsPendant);
                 htmltext = "chairen_q311_06a.htm";
             } else
                 htmltext = "chairen_q311_06b.htm";
@@ -111,7 +111,7 @@ public final class _311_ExpulsionOfEvilSpirits extends Quest {
                 }
                 if (count > 0) {
                     if (st.getQuestItemsCount(RagnaOrcAmulet) >= count) {
-                        st.giveItems(id, 1);
+                        st.giveItems(id);
                         st.takeItems(RagnaOrcAmulet, count);
                         st.playSound(SOUND_MIDDLE);
                         htmltext = "chairen_q311_10.htm";
@@ -132,7 +132,7 @@ public final class _311_ExpulsionOfEvilSpirits extends Quest {
         int cond = st.getCond();
         if (npcId == Chairen)
             if (cond == 0) {
-                if (st.getPlayer().getLevel() >= 80)
+                if (st.player.getLevel() >= 80)
                     htmltext = "chairen_q311_01.htm";
                 else {
                     htmltext = "chairen_q311_00.htm";
@@ -148,13 +148,13 @@ public final class _311_ExpulsionOfEvilSpirits extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
 
         if (cond == 1 && MOBS.contains(npcId)) {
             if (Rnd.chance(DROP_CHANCE1) && st.getQuestItemsCount(SoulCoreContainingEvilSpirit) < 10) {
-                st.giveItems(SoulCoreContainingEvilSpirit, 1);
+                st.giveItems(SoulCoreContainingEvilSpirit);
                 st.playSound(SOUND_FANFARE2);
             }
             if (Rnd.chance(DROP_CHANCE2)) {
@@ -162,6 +162,5 @@ public final class _311_ExpulsionOfEvilSpirits extends Quest {
                 st.playSound(SOUND_ITEMGET);
             }
         }
-        return null;
     }
 }

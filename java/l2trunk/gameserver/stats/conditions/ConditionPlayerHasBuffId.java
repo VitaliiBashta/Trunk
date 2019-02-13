@@ -19,6 +19,6 @@ public final class ConditionPlayerHasBuffId extends Condition {
         if (character == null)
             return false;
         return character.getEffectList().getEffectsBySkillId(id)
-                .anyMatch(e -> e.getSkill().level >= level);
+                .anyMatch(e -> e.skill.level >= level);
     }
 }

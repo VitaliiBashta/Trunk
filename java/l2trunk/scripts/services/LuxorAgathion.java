@@ -8,6 +8,9 @@ import l2trunk.gameserver.scripts.Functions;
 import java.util.List;
 import java.util.Map;
 
+import static l2trunk.gameserver.utils.ItemFunctions.addItem;
+import static l2trunk.gameserver.utils.ItemFunctions.removeItem;
+
 /**
  * Используется в Luxor Shop NPC Alexandria (id: 30098), для продажи Agathion-ов.
  */
@@ -43,13 +46,11 @@ public final class LuxorAgathion extends Functions {
     }
 
     private void agathion(List<Integer> braceletes, int type) {
-        Player player = getSelf();
-        NpcInstance npc = getNpc();
         if (player == null || npc == null)
             return;
 
         boolean notEnough = INGRIDIENTS.entrySet().stream()
-                .filter(e -> getItemCount(player, e.getKey()) < e.getValue())
+                .filter(e -> !player.haveItem( e.getKey(), e.getValue()))
                 .peek(e -> show("merchant/30098-2.htm", player, npc))
                 .findFirst().isPresent();
         if (notEnough) return;
@@ -59,16 +60,16 @@ public final class LuxorAgathion extends Functions {
             removeItem(player, k, v, "LuxorAgathion");
 
             if (!Rnd.chance(SUCCESS_RATE)) {
-                addItem(player, OldAgathion, 1, "LuxorAgathion");
+                addItem(player, OldAgathion, 1);
                 if (type == 1)
-                    addItem(player, ShadowPurpleVikingCirclet, 1, "LuxorAgathion");
+                    addItem(player, ShadowPurpleVikingCirclet, 1);
                 else
-                    addItem(player, ShadowGoldenVikingCirclet, 1, "LuxorAgathion");
+                    addItem(player, ShadowGoldenVikingCirclet, 1);
                 show("merchant/30098-3.htm", player, npc);
                 return;
             }
 
-            addItem(player, braceletes.get(Rnd.chance(RARE_RATE) ? 0 : Rnd.get(1, braceletes.size() - 1)), 1, "LuxorAgathion");
+            addItem(player, braceletes.get(Rnd.chance(RARE_RATE) ? 0 : Rnd.get(1, braceletes.size() - 1)), 1);
             show("merchant/30098-4.htm", player, npc);
         });
     }

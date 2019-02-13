@@ -8,7 +8,6 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 import java.util.List;
 
@@ -39,7 +38,7 @@ public final class _147_PathToBecomingAnEliteMercenary extends Quest {
 
     @Override
     public String onTalk(NpcInstance npc, QuestState st) {
-        Player player = st.getPlayer();
+        Player player = st.player;
         Castle castle = npc.getCastle();
         String htmlText = NO_QUEST_DIALOG;
 
@@ -52,7 +51,7 @@ public final class _147_PathToBecomingAnEliteMercenary extends Quest {
                     return "gludio_merc_cap_q0147_02.htm";
             }
 
-            if (player.getLevel() < 40 || player.getClassId().getLevel() <= 2)
+            if (player.getLevel() < 40 || player.getClassId().occupation() < 2)
                 htmlText = "gludio_merc_cap_q0147_03.htm";
             else if (st.getQuestItemsCount(13766) < 1)
                 htmlText = "gludio_merc_cap_q0147_04a.htm";
@@ -73,37 +72,35 @@ public final class _147_PathToBecomingAnEliteMercenary extends Quest {
     }
 
     @Override
-    public String onKill(Player killed, QuestState st) {
+    public void onKill(Player killed, QuestState st) {
         if (st.getCond() == 1 || st.getCond() == 3) {
-            if (isValidKill(killed, st.getPlayer())) {
+            if (isValidKill(killed, st.player)) {
                 int killedCount = st.getInt("enemies");
                 int maxCount = 10;
                 killedCount++;
                 if (killedCount < maxCount) {
                     st.set("enemies", killedCount);
-                    st.getPlayer().sendPacket(new ExShowScreenMessage(NpcString.YOU_HAVE_DEFEATED_S2_OF_S1_ENEMIES, 4000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, true, String.valueOf(maxCount), String.valueOf(killedCount)));
+                    st.player.sendPacket(new ExShowScreenMessage(NpcString.YOU_HAVE_DEFEATED_S2_OF_S1_ENEMIES, 4000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, true, String.valueOf(maxCount), String.valueOf(killedCount)));
                 } else {
                     if (st.getCond() == 1)
                         st.setCond(2);
                     else if (st.getCond() == 3)
                         st.setCond(4);
                     st.unset("enemies");
-                    st.getPlayer().sendPacket(new ExShowScreenMessage(NpcString.YOU_WEAKENED_THE_ENEMYS_ATTACK, 4000));
+                    st.player.sendPacket(new ExShowScreenMessage(NpcString.YOU_WEAKENED_THE_ENEMYS_ATTACK, 4000));
                 }
             }
         }
-        return null;
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
-        if (isValidNpcKill(st.getPlayer(), npc)) {
+    public void onKill(NpcInstance npc, QuestState st) {
+        if (isValidNpcKill(st.player, npc)) {
             if (st.getCond() == 1)
                 st.setCond(3);
             else if (st.getCond() == 2)
                 st.setCond(4);
         }
-        return null;
     }
 
     private boolean isValidKill(Player killed, Player killer) {

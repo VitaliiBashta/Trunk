@@ -4,7 +4,6 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _10503_CapeEmbroideredSoulThree extends Quest {
     // NPC's
@@ -39,7 +38,7 @@ public final class _10503_CapeEmbroideredSoulThree extends Quest {
         String htmltext = "noquest";
         int cond = st.getCond();
         if (cond == 0) {
-            if (st.getPlayer().getLevel() >= 80)
+            if (st.player.getLevel() >= 80)
                 htmltext = "olf_adams_q10503_01.htm";
             else {
                 htmltext = "olf_adams_q10503_00.htm";
@@ -52,8 +51,8 @@ public final class _10503_CapeEmbroideredSoulThree extends Quest {
                 st.setCond(1);
                 htmltext = "olf_adams_q10503_03.htm";
             } else {
-                st.takeItems(SOUL_FRINTEZZA, -1);
-                st.giveItems(CLOAK_FRINTEZZA, 1);
+                st.takeItems(SOUL_FRINTEZZA);
+                st.giveItems(CLOAK_FRINTEZZA);
                 st.playSound(SOUND_FINISH);
                 htmltext = "olf_adams_q10503_04.htm";
                 st.exitCurrentQuest(false);
@@ -62,7 +61,7 @@ public final class _10503_CapeEmbroideredSoulThree extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         if (cond == 1 && npcId == FRINTEZZA) {
@@ -73,6 +72,5 @@ public final class _10503_CapeEmbroideredSoulThree extends Quest {
                 st.playSound(SOUND_MIDDLE);
             }
         }
-        return null;
     }
 }

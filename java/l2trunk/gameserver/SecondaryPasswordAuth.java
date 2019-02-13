@@ -161,7 +161,7 @@ public final class SecondaryPasswordAuth {
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement("INSERT INTO bans (account_name, obj_id, baned, unban, reason, GM, endban) VALUES(?,?,?,?,?,?,?)")) {
             statement.setString(1, actor.getAccountName());
-            statement.setInt(2, actor.getObjectId());
+            statement.setInt(2, actor.objectId());
             statement.setString(3, "SU");
             statement.setString(4, "SU");
             statement.setString(5, msg);

@@ -60,13 +60,13 @@ public final class _271_ProofOfValor extends Quest {
         int cond = st.getCond();
         if (npcId == RUKAIN)
             if (cond == 0) {
-                if (st.getPlayer().getRace() != Race.orc) {
+                if (st.player.getRace() != Race.orc) {
                     htmltext = "praetorian_rukain_q0271_00.htm";
                     st.exitCurrentQuest(true);
-                } else if (st.getPlayer().getLevel() < 4) {
+                } else if (st.player.getLevel() < 4) {
                     htmltext = "praetorian_rukain_q0271_01.htm";
                     st.exitCurrentQuest(true);
-                } else if (st.getQuestItemsCount(NECKLACE_OF_COURAGE_ID) > 0 || st.getQuestItemsCount(NECKLACE_OF_VALOR_ID) > 0) {
+                } else if (st.haveQuestItem(NECKLACE_OF_COURAGE_ID)  || st.haveQuestItem(NECKLACE_OF_VALOR_ID) ) {
                     htmltext = "praetorian_rukain_q0271_06.htm";
                     st.exitCurrentQuest(true);
                 } else
@@ -74,13 +74,13 @@ public final class _271_ProofOfValor extends Quest {
             } else if (cond == 1)
                 htmltext = "praetorian_rukain_q0271_04.htm";
             else if (cond == 2 && st.getQuestItemsCount(KASHA_WOLF_FANG_ID) == 50) {
-                st.takeItems(KASHA_WOLF_FANG_ID, -1);
+                st.takeItems(KASHA_WOLF_FANG_ID);
                 if (Rnd.chance(14)) {
-                    st.takeItems(NECKLACE_OF_VALOR_ID, -1);
-                    st.giveItems(NECKLACE_OF_VALOR_ID, 1);
+                    st.takeItems(NECKLACE_OF_VALOR_ID);
+                    st.giveItems(NECKLACE_OF_VALOR_ID);
                 } else {
-                    st.takeItems(NECKLACE_OF_COURAGE_ID, -1);
-                    st.giveItems(NECKLACE_OF_COURAGE_ID, 1);
+                    st.takeItems(NECKLACE_OF_COURAGE_ID);
+                    st.giveItems(NECKLACE_OF_COURAGE_ID);
                 }
                 htmltext = "praetorian_rukain_q0271_05.htm";
                 st.exitCurrentQuest(true);
@@ -93,12 +93,12 @@ public final class _271_ProofOfValor extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         for (int[] aDROPLIST_COND : DROPLIST_COND)
             if (cond == aDROPLIST_COND[0] && npcId == aDROPLIST_COND[2])
-                if (aDROPLIST_COND[3] == 0 || st.getQuestItemsCount(aDROPLIST_COND[3]) > 0)
+                if (aDROPLIST_COND[3] == 0 || st.haveQuestItem(aDROPLIST_COND[3]))
                     if (aDROPLIST_COND[5] == 0)
                         st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[6]);
                     else if (st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[7], aDROPLIST_COND[5], aDROPLIST_COND[6]))
@@ -106,6 +106,5 @@ public final class _271_ProofOfValor extends Quest {
                             st.setCond(aDROPLIST_COND[1]);
                             st.setState(STARTED);
                         }
-        return null;
     }
 }

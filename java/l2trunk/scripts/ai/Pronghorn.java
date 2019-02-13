@@ -7,6 +7,8 @@ import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.SimpleSpawner;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.instances.NpcInstance;
+import l2trunk.gameserver.model.instances.PetInstance;
+import l2trunk.gameserver.model.instances.SummonInstance;
 import l2trunk.gameserver.utils.Location;
 
 public final class Pronghorn extends Fighter {
@@ -29,7 +31,7 @@ public final class Pronghorn extends Fighter {
                 SimpleSpawner sp = new SimpleSpawner(MOBS)
                         .setLoc(Location.findPointToStay(actor, 100, 120));
                 NpcInstance npc = sp.doSpawn(true);
-                if (caster.isPet() || caster.isSummon())
+                if (caster instanceof PetInstance  || caster instanceof SummonInstance )
                     npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, caster, Rnd.get(2, 100));
                 npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, caster.getPlayer(), Rnd.get(1, 100));
             }

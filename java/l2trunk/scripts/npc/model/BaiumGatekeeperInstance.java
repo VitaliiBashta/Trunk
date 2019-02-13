@@ -25,7 +25,7 @@ public final class BaiumGatekeeperInstance extends NpcInstance {
             return;
 
         if (command.startsWith("request_entrance")) {
-            if (ItemFunctions.getItemCount(player, BloodedFabric) > 0) {
+            if (player.haveItem(BloodedFabric)) {
                 NpcInstance baiumBoss = GameObjectsStorage.getByNpcId(Baium);
                 if (baiumBoss != null) {
                     showChatWindow(player, "default/31862-1.htm");
@@ -36,14 +36,14 @@ public final class BaiumGatekeeperInstance extends NpcInstance {
                     showChatWindow(player, "default/31862-2.htm");
                     return;
                 }
-                ItemFunctions.removeItem(player, BloodedFabric, 1, true, "BaiumGatekeeperInstance");
-                player.setVar("baiumPermission", "granted", -1);
+                ItemFunctions.removeItem(player, BloodedFabric, 1, "BaiumGatekeeperInstance");
+                player.setVar("baiumPermission");
                 player.teleToLocation(TELEPORT_POSITION);
             } else {
                 showChatWindow(player, "default/31862-3.htm");
             }
         } else if (command.startsWith("request_wakeup")) {
-            if (player.getVar("baiumPermission") == null || !"granted".equalsIgnoreCase(player.getVar("baiumPermission"))) {
+            if (player.isVarSet("baiumPermission")) {
                 showChatWindow(player, "default/29025-1.htm");
                 return;
             }

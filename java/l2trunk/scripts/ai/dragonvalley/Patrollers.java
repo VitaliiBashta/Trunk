@@ -5,6 +5,7 @@ import l2trunk.gameserver.ai.CtrlIntention;
 import l2trunk.gameserver.ai.Fighter;
 import l2trunk.gameserver.geodata.GeoEngine;
 import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.model.instances.MonsterInstance;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.Location;
@@ -29,11 +30,11 @@ public class Patrollers extends Fighter {
     }
 
     @Override
-    public boolean checkAggression(Creature target, boolean avoidAttack) {
+    public boolean checkAggression(Playable target, boolean avoidAttack) {
         NpcInstance actor = getActor();
         if (actor.isDead())
             return false;
-        if (target.isAlikeDead() || !target.isPlayable() || target.isInvisible())
+        if (target.isAlikeDead() || target.isInvisible())
             return false;
         if (!target.isInRangeZ(actor.getLoc(), actor.getAggroRange()))
             return false;

@@ -8,7 +8,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.ExStartScenePlayer;
 import l2trunk.gameserver.scripts.Functions;
-import l2trunk.gameserver.scripts.ScriptFile;
+import l2trunk.gameserver.utils.Location;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,19 +41,19 @@ public final class _193_SevenSignDyingMessage extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        Player player = st.getPlayer();
+        Player player = st.player;
         String htmltext = event;
-        if (event.equalsIgnoreCase("30191-02.htm")) {
+        if ("30191-02.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-            st.giveItems(JacobsNecklace, 1);
-        } else if (event.equalsIgnoreCase("32569-05.htm")) {
+            st.giveItems(JacobsNecklace);
+        } else if ("32569-05.htm".equalsIgnoreCase(event)) {
             st.setCond(2);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("32570-02.htm")) {
+        } else if ("32570-02.htm".equalsIgnoreCase(event)) {
             st.setCond(3);
-            st.giveItems(DeadmansHerb, 1);
+            st.giveItems(DeadmansHerb);
             st.playSound(SOUND_MIDDLE);
         } else if (event.equalsIgnoreCase("30760-02.htm")) {
             if (player.getBaseClassId() == player.getActiveClassId()) {
@@ -71,9 +71,9 @@ public final class _193_SevenSignDyingMessage extends Quest {
             return "";
         } else if (event.equalsIgnoreCase("32569-09.htm")) {
             htmltext = "32569-09.htm";
-            Functions.npcSay(npc, st.getPlayer().getName() + "! That stranger must be defeated. Here is the ultimate help!");
-            NpcInstance mob = st.addSpawn(ShilensEvilThoughts, 82425, 47232, -3216, 0, 0, 180000);
-            spawns.put(player.getObjectId(), mob.getObjectId());
+            Functions.npcSay(npc, st.player.getName() + "! That stranger must be defeated. Here is the ultimate help!");
+            NpcInstance mob = st.addSpawn(ShilensEvilThoughts, Location.of(82425, 47232, -3216), 0, 180000);
+            spawns.put(player.objectId(), mob.objectId());
             mob.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, player, 100000);
         } else if (event.equalsIgnoreCase("32569-13.htm")) {
             st.setCond(6);
@@ -88,15 +88,14 @@ public final class _193_SevenSignDyingMessage extends Quest {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         int id = st.getState();
-        Player player = st.getPlayer();
+        Player player = st.player;
         if (npcId == Hollint) {
             if (id == CREATED) {
                 if (player.getLevel() < 79) {
                     st.exitCurrentQuest(true);
                     return "30191-00.htm";
                 }
-                QuestState qs = player.getQuestState(_192_SevenSignSeriesOfDoubt.class);
-                if (qs == null || !qs.isCompleted()) {
+                if (player.isQuestCompleted(_192_SevenSignSeriesOfDoubt.class)) {
                     st.exitCurrentQuest(true);
                     return "noquest";
                 }
@@ -111,7 +110,7 @@ public final class _193_SevenSignDyingMessage extends Quest {
             else if (cond == 3)
                 return "32569-07.htm";
             else if (cond == 4) {
-                Integer obj_id = spawns.get(player.getObjectId());
+                Integer obj_id = spawns.get(player.objectId());
                 NpcInstance mob = obj_id != null ? GameObjectsStorage.getNpc(obj_id) : null;
                 if (mob == null || mob.isDead())
                     return "32569-08.htm";
@@ -133,22 +132,21 @@ public final class _193_SevenSignDyingMessage extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
-        Player player = st.getPlayer();
+        Player player = st.player;
         if (player == null)
-            return null;
+            return;
 
         if (npcId == ShilensEvilThoughts && cond == 4) {
-            Integer obj_id = spawns.get(player.getObjectId());
-            if (obj_id != null && obj_id == npc.getObjectId()) {
-                spawns.remove(player.getObjectId());
+            Integer obj_id = spawns.get(player.objectId());
+            if (obj_id != null && obj_id == npc.objectId()) {
+                spawns.remove(player.objectId());
                 st.setCond(5);
                 st.playSound(SOUND_ITEMGET);
                 st.giveItems(SculptureofDoubt, 1);
             }
         }
-        return null;
     }
 }

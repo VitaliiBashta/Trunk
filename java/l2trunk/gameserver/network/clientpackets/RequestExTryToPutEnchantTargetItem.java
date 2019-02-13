@@ -85,7 +85,7 @@ public final class RequestExTryToPutEnchantTargetItem extends L2GameClientPacket
         }
 
         // Запрет на заточку чужих вещей, баг может вылезти на серверных лагах
-        if (itemToEnchant.getOwnerId() != activeChar.getObjectId()) {
+        if (itemToEnchant.getOwnerId() != activeChar.objectId()) {
             activeChar.sendPacket(new ExPutEnchantTargetItemResult(0));
             activeChar.setEnchantScroll(null);
             return;
@@ -121,7 +121,7 @@ public final class RequestExTryToPutEnchantTargetItem extends L2GameClientPacket
             return;
         }
 
-        Log.add(player.getName() + "|Trying to put enchant|" + itemToEnchant.getItemId() + "|+" + itemToEnchant.getEnchantLevel() + "|" + itemToEnchant.getObjectId(), "enchants");
+        Log.add(player.getName() + "|Trying to put enchant|" + itemToEnchant.getItemId() + "|+" + itemToEnchant.getEnchantLevel() + "|" + itemToEnchant.objectId(), "enchants");
 
         int scrollId = scroll.getItemId();
         int itemId = itemToEnchant.getItemId();
@@ -149,7 +149,7 @@ public final class RequestExTryToPutEnchantTargetItem extends L2GameClientPacket
             return;
         }
 
-        if ((scroll = inventory.getItemByObjectId(scroll.getObjectId())) == null) {
+        if ((scroll = inventory.getItemByObjectId(scroll.objectId())) == null) {
             player.sendPacket(ExPutEnchantTargetItemResult.FAIL);
             player.setEnchantScroll(null);
             return;
@@ -186,7 +186,7 @@ public final class RequestExTryToPutEnchantTargetItem extends L2GameClientPacket
         }
 
         // Запрет на заточку чужих вещей, баг может вылезти на серверных лагах
-        if (itemToEnchant.getOwnerId() != player.getObjectId()) {
+        if (itemToEnchant.getOwnerId() != player.objectId()) {
             player.sendPacket(ExPutEnchantTargetItemResult.FAIL);
             player.setEnchantScroll(null);
             return;

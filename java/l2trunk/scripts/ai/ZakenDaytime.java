@@ -4,7 +4,6 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.Fighter;
 import l2trunk.gameserver.model.Creature;
-import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.Reflection;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.ExSendUIEvent;
@@ -64,7 +63,7 @@ public final class ZakenDaytime extends Fighter {
         r.setReenterTime(System.currentTimeMillis());
         r.getPlayers().forEach(p ->
             p.sendPacket(new ExSendUIEvent(p, true, true, 0, 0)));
-        actor.broadcastPacket(new PlaySound(PlaySound.Type.MUSIC, "BS02_D", 1, actor.getObjectId(), actor.getLoc()));
+        actor.broadcastPacket(new PlaySound(PlaySound.Type.MUSIC, "BS02_D", 1, actor.objectId(), actor.getLoc()));
         super.onEvtDead(killer);
     }
 

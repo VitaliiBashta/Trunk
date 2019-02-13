@@ -9,7 +9,6 @@ import l2trunk.gameserver.network.serverpackets.RadarControl;
 import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 import l2trunk.gameserver.scripts.Functions;
 
-import java.util.Arrays;
 import java.util.List;
 
 public final class Help extends Functions implements IVoicedCommandHandler {
@@ -30,10 +29,10 @@ public final class Help extends Functions implements IVoicedCommandHandler {
 
     private boolean exp(String command, Player activeChar, String args) {
         if (activeChar.getLevel() >= (activeChar.isSubClassActive() ? Experience.getMaxSubLevel() : Experience.getMaxLevel()))
-            activeChar.sendMessage(new CustomMessage("voicedcommandhandlers.Help.MaxLevel", activeChar));
+            activeChar.sendMessage(new CustomMessage("voicedcommandhandlers.Help.MaxLevel"));
         else {
             long exp = Experience.LEVEL[activeChar.getLevel() + 1] - activeChar.getExp();
-            activeChar.sendMessage(new CustomMessage("voicedcommandhandlers.Help.ExpLeft", activeChar).addNumber(exp));
+            activeChar.sendMessage(new CustomMessage("voicedcommandhandlers.Help.ExpLeft").addNumber(exp));
         }
         return true;
     }

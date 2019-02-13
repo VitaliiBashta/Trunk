@@ -22,7 +22,7 @@ public final class ExHeroList extends L2GameServerPacket {
         heroList.values().forEach(hero -> {
             writeS(hero.getString(Olympiad.CHAR_NAME));
             writeD(hero.getInteger(Olympiad.CLASS_ID));
-            writeS(hero.getString(Hero.CLAN_NAME, StringUtils.EMPTY));
+            writeS(hero.getString(Hero.CLAN_NAME, ""));
             writeD(hero.getInteger(Hero.CLAN_CREST, 0));
             writeS(hero.getString(Hero.ALLY_NAME, StringUtils.EMPTY));
             writeD(hero.getInteger(Hero.ALLY_CREST, 0));

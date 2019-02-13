@@ -52,13 +52,13 @@ public final class PartyVsPartyDuelEvent extends DuelEvent {
                     sendPacket(new SystemMessage2(SystemMsg.C1S_PARTY_HAS_WON_THE_DUEL).addName(winners.get(0).getPlayer()));
 
                     for (DuelSnapshotObject d : lossers)
-                        d.getPlayer().broadcastPacket(new SocialAction(d.getPlayer().getObjectId(), SocialAction.BOW));
+                        d.getPlayer().broadcastPacket(new SocialAction(d.getPlayer().objectId(), SocialAction.BOW));
 
                     // Alexander - Add to the stats the won and lost duel for each part
 //					for (DuelSnapshotObject d : winners)
-//						d.getPlayer().addPlayerStats(Ranking.STAT_TOP_DUELS_WIN);
+//						d.player().addPlayerStats(Ranking.STAT_TOP_DUELS_WIN);
 //					for (DuelSnapshotObject d : lossers)
-//						d.getPlayer().addPlayerStats(Ranking.STAT_TOP_DUELS_LOST);
+//						d.player().addPlayerStats(Ranking.STAT_TOP_DUELS_LOST);
                 } else
                     sendPacket(SystemMsg.THE_DUEL_HAS_ENDED_IN_A_TIE);
                 break;
@@ -143,7 +143,7 @@ public final class PartyVsPartyDuelEvent extends DuelEvent {
 
     @Override
     public void createDuel(Player player, Player target) {
-        PartyVsPartyDuelEvent duelEvent = new PartyVsPartyDuelEvent(getDuelType(), player.getObjectId() + "_" + target.getObjectId() + "_duel");
+        PartyVsPartyDuelEvent duelEvent = new PartyVsPartyDuelEvent(getDuelType(), player.objectId() + "_" + target.objectId() + "_duel");
         cloneTo(duelEvent);
 
         for (Player $member : player.getParty())

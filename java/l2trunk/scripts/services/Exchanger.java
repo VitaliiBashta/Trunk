@@ -22,10 +22,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static l2trunk.commons.lang.NumberUtils.toInt;
+import static l2trunk.gameserver.utils.ItemFunctions.removeItem;
 
 public final class Exchanger extends Functions {
     public void change_page(String[] arg) {
-        final Player player = getSelf();
         if (player == null)
             return;
 
@@ -107,7 +107,6 @@ public final class Exchanger extends Functions {
     }
 
     public void change_list(String[] arg) {
-        final Player player = getSelf();
         if (player == null)
             return;
 
@@ -121,7 +120,7 @@ public final class Exchanger extends Functions {
 
         NpcHtmlMessage html = new NpcHtmlMessage(5).setFile("scripts/services/Exchanger/list.htm");
         String template = HtmCache.INSTANCE.getNotNull("scripts/services/Exchanger/template.htm", player);
-        String block = "";
+        String block;
         String list = "";
 
         Change change = ExchangeItemHolder.getChanges(id, isUpgrade);
@@ -138,9 +137,9 @@ public final class Exchanger extends Functions {
         for (int i = (page - 1) * perpage; i < _list.size(); i++) {
             Variant pack = _list.get(i);
             block = template;
-            block = block.replace("{bypass}", "bypass -h scripts_services.Exchanger:change_open " + pack.getNumber() + " " + (isUpgrade ? 1 : 0));
-            block = block.replace("{name}", pack.getName());
-            block = block.replace("{icon}", pack.getIcon());
+            block = block.replace("{bypass}", "bypass -h scripts_services.Exchanger:change_open " + pack.number + " " + (isUpgrade ? 1 : 0));
+            block = block.replace("{name}", pack.name);
+            block = block.replace("{icon}", pack.icon);
             block = block.replace("{cost}", new CustomMessage("scripts.services.cost").addString(Util.formatPay(player, change.getCostCount(), change.getCostId())).toString());
             list = list + block;
 
@@ -175,7 +174,6 @@ public final class Exchanger extends Functions {
     }
 
     public void change_att(String[] arg) {
-        final Player player = getSelf();
         if (player == null)
             return;
 
@@ -206,7 +204,6 @@ public final class Exchanger extends Functions {
     }
 
     private void cleanAtt(int exclude) {
-        final Player player = getSelf();
         if (player == null)
             return;
 
@@ -221,7 +218,6 @@ public final class Exchanger extends Functions {
     }
 
     private void change_open(String[] arg) {
-        final Player player = getSelf();
         if (player == null)
             return;
 
@@ -230,7 +226,7 @@ public final class Exchanger extends Functions {
             return;
         }
         int new_id = toInt(arg[0]);
-        boolean isUpgrade = arg[1].equalsIgnoreCase("1");
+        boolean isUpgrade = "1".equals(arg[1]);
         ItemInstance item = null;
         Change change = null;
         for (ItemInstance inv : player.getInventory().getPaperdollItems()) {
@@ -250,11 +246,11 @@ public final class Exchanger extends Functions {
             return;
         }
         removeVars(false);
-        player.addQuickVar("exchange_obj", item.getObjectId());
-        player.addQuickVar("exchange_new", variant.getId());
+        player.addQuickVar("exchange_obj", item.objectId());
+        player.addQuickVar("exchange_new", variant.id);
         player.addQuickVar("exchange_attribute", change.attChange());
         if (change.attChange()) {
-            player.addQuickVar("exchange_number", variant.getNumber());
+            player.addQuickVar("exchange_number", variant.number);
         }
         NpcHtmlMessage html = new NpcHtmlMessage(5).setFile("scripts/services/Exchanger/general.htm");
         html.replace("%my_name%", item.getName());
@@ -290,8 +286,8 @@ public final class Exchanger extends Functions {
             html.replace("%att_info%", att_info);
         }
         html.replace("%cost%", Util.formatPay(player, change.getCostCount(), change.getCostId()));
-        html.replace("%new_name%", variant.getName());
-        html.replace("%new_icon%", variant.getIcon());
+        html.replace("%new_name%", variant.name);
+        html.replace("%new_icon%", variant.icon);
         html.replace("%new_id%", String.valueOf(id));
         html.replace("%is_upgrade%", (isUpgrade ? 1 : 0));
 
@@ -299,7 +295,6 @@ public final class Exchanger extends Functions {
     }
 
     public void exchange(String[] arg) {
-        final Player player = getSelf();
         if (player == null)
             return;
 
@@ -329,7 +324,7 @@ public final class Exchanger extends Functions {
             return;
         }
 
-        if (getItemCount(player, change.getCostId()) < change.getCostCount()) {
+        if (!player.haveItem(change.getCostId(), change.getCostCount())) {
             if (change.getCostId() == 57)
                 player.sendPacket(Msg.YOU_DO_NOT_HAVE_ENOUGH_ADENA);
             else
@@ -358,7 +353,7 @@ public final class Exchanger extends Functions {
             }
         }
         String msg = "You exchange item " + item_my.getName() + " to " + item.getName();
-        if (inv.destroyItemByObjectId(item_my.getObjectId(), item_my.getCount(), "destroied")) {
+        if (inv.destroyItemByObjectId(item_my.objectId(), item_my.getCount(), "destroied")) {
             inv.addItem(item, "added the item");
             item.setJdbcState(JdbcEntityState.UPDATED);
             item.update();
@@ -374,7 +369,6 @@ public final class Exchanger extends Functions {
     }
 
     private void removeVars(boolean exchange) {
-        final Player player = getSelf();
         if (player == null)
             return;
 

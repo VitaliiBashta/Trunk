@@ -229,9 +229,9 @@ public final class ChamberlainInstance extends ResidenceManager {
                 while (st.hasMoreTokens()) {
                     DoorInstance door = ReflectionUtils.getDoor(toInt(st.nextToken()));
                     if (open)
-                        door.openMe(player, true);
+                        door.openMe();
                     else
-                        door.closeMe(player, true);
+                        door.closeMe();
                 }
             }
 
@@ -346,7 +346,7 @@ public final class ChamberlainInstance extends ResidenceManager {
             NpcHtmlMessage html = new NpcHtmlMessage(player, this);
             html.setFile("castle/chamberlain/doorConfirm.htm");
             html.replace("%id%", String.valueOf(id));
-            html.replace("%level%", String.valueOf(level));
+            html.replace("%occupation%", String.valueOf(level));
             html.replace("%type%", String.valueOf(type));
             html.replace("%price%", String.valueOf(price));
             player.sendPacket(html);
@@ -371,7 +371,7 @@ public final class ChamberlainInstance extends ResidenceManager {
             int upgradeHp = (door.getMaxHp() - door.getUpgradeHp()) * level - door.getMaxHp();
 
             if (price == 0 || upgradeHp < 0) {
-                player.sendMessage(new CustomMessage("common.Error", player));
+                player.sendMessage(new CustomMessage("common.Error"));
                 return;
             }
 
@@ -379,7 +379,7 @@ public final class ChamberlainInstance extends ResidenceManager {
                 int oldLevel = door.getUpgradeHp() / (door.getMaxHp() - door.getUpgradeHp()) + 1;
                 NpcHtmlMessage html = new NpcHtmlMessage(player, this);
                 html.setFile("castle/chamberlain/doorAlready.htm");
-                html.replace("%level%", String.valueOf(oldLevel));
+                html.replace("%occupation%", String.valueOf(oldLevel));
                 player.sendPacket(html);
                 return;
             }

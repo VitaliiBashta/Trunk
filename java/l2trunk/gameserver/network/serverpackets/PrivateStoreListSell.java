@@ -19,7 +19,7 @@ public class PrivateStoreListSell extends L2GameServerPacket {
      * @param seller
      */
     public PrivateStoreListSell(Player buyer, Player seller) {
-        _sellerId = seller.getObjectId();
+        _sellerId = seller.objectId();
         _adena = buyer.getAdena();
         _package = seller.getPrivateStoreType() == Player.STORE_PRIVATE_SELL_PACKAGE;
         _sellList = seller.getSellList();

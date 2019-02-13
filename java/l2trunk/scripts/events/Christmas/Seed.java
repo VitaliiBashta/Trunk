@@ -33,28 +33,26 @@ public final class Seed extends ScriptItemHandler implements ScriptFile {
 
 
     @Override
-    public boolean useItem(Playable playable, ItemInstance item, boolean ctrl) {
-        Player activeChar = (Player) playable;
-
-        if (activeChar.isInOlympiadMode() || Olympiad.isRegistered(activeChar)) return false;
+    public boolean useItem(Player player, ItemInstance item, boolean ctrl) {
+        if (player.isInOlympiadMode() || Olympiad.isRegistered(player)) return false;
 
         int itemId = item.getItemId();
         int npcId = NPC_IDS.get(0);
         if (itemId == ITEM_IDS.get(1)) npcId = NPC_IDS.get(1);
 
-        if (World.getAroundNpc(activeChar, 300, 200)
+        if (World.getAroundNpc(player, 300, 200)
                 .filter(npc -> NPC_IDS.contains(npc.getNpcId()))
-                .peek(npc -> activeChar.sendPacket(new SystemMessage2(SystemMsg.SINCE_S1_ALREADY_EXISTS_NEARBY_YOU_CANNOT_SUMMON_IT_AGAIN).addName(npc)))
+                .peek(npc -> player.sendPacket(new SystemMessage2(SystemMsg.SINCE_S1_ALREADY_EXISTS_NEARBY_YOU_CANNOT_SUMMON_IT_AGAIN).addName(npc)))
                 .findFirst().isPresent())
             return false;
 
-        if (!activeChar.getInventory().destroyItem(item, 1L, "Seed"))
+        if (!player.getInventory().destroyItem(item, 1L, "Seed"))
             return false;
 
         SimpleSpawner spawn = new SimpleSpawner(npcId)
-                .setLoc(activeChar.getLoc());
+                .setLoc(player.getLoc());
         NpcInstance npc = spawn.doSpawn(false);
-        npc.setTitle(activeChar.getName()); //FIXME Почему-то не устанавливается
+        npc.setTitle(player.getName()); //FIXME Почему-то не устанавливается
         spawn.respawnNpc(npc);
 
         // АИ вещающее бафф регена устанавливается только для большой елки
@@ -62,7 +60,7 @@ public final class Seed extends ScriptItemHandler implements ScriptFile {
             npc.setAI(new ctreeAI(npc));
 
         ThreadPoolManager.INSTANCE.schedule(spawn::deleteAll, DESPAWN_TIME);
-        playable.sendMessage("Christmas Tree will stay here for 1 Hour!");
+        player.sendMessage("Christmas Tree will stay here for 1 Hour!");
         return true;
     }
 

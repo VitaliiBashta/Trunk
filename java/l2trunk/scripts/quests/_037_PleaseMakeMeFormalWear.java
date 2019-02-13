@@ -3,7 +3,6 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.templates.item.ItemTemplate;
 
 public final class _037_PleaseMakeMeFormalWear extends Quest {
@@ -40,7 +39,7 @@ public final class _037_PleaseMakeMeFormalWear extends Quest {
                 break;
             case "reply_1":
                 st.setCond(2);
-                st.giveItems(q_seal_of_stock, 1);
+                st.giveItems(q_seal_of_stock);
                 st.playSound(SOUND_MIDDLE);
                 htmltext = "leikar_q0037_0201.htm";
                 break;
@@ -51,7 +50,7 @@ public final class _037_PleaseMakeMeFormalWear extends Quest {
                 htmltext = "leikar_q0037_0601.htm";
                 break;
             case "reply_1_1_1":
-                if (st.getQuestItemsCount(q_mysterious_cloth) >= 1 && st.getQuestItemsCount(q_box_of_jewel) >= 1 && st.getQuestItemsCount(q_workbox) >= 1) {
+                if (st.haveAllQuestItems(q_mysterious_cloth,q_box_of_jewel,q_workbox)) {
                     st.setCond(7);
                     st.takeItems(q_mysterious_cloth, 1);
                     st.takeItems(q_box_of_jewel, 1);
@@ -62,10 +61,10 @@ public final class _037_PleaseMakeMeFormalWear extends Quest {
                     htmltext = "leikar_q0037_0702.htm";
                 break;
             case "reply_3":
-                if (st.getQuestItemsCount(q_box_of_dress_shoes) >= 1 && st.getQuestItemsCount(q_seal_of_stock) >= 1) {
+                if (st.haveAllQuestItems(q_box_of_dress_shoes,q_seal_of_stock)) {
                     st.takeItems(q_box_of_dress_shoes, 1);
                     st.takeItems(q_seal_of_stock, 1);
-                    st.giveItems(ItemTemplate.ITEM_ID_FORMAL_WEAR, 1);
+                    st.giveItems(ItemTemplate.ITEM_ID_FORMAL_WEAR);
                     st.unset("cond");
                     htmltext = "leikar_q0037_0801.htm";
                     st.playSound(SOUND_FINISH);
@@ -75,18 +74,18 @@ public final class _037_PleaseMakeMeFormalWear extends Quest {
                 break;
             case "reply_1a":
                 st.setCond(3);
-                st.giveItems(q_luxury_wine, 1);
+                st.giveItems(q_luxury_wine);
                 st.playSound(SOUND_MIDDLE);
                 htmltext = "jeremy_q0037_0301.htm";
                 break;
             case "reply_1b":
                 st.setCond(5);
-                st.giveItems(q_box_of_cookies, 1);
+                st.giveItems(q_box_of_cookies);
                 st.playSound(SOUND_MIDDLE);
                 htmltext = "jeremy_q0037_0301.htm";
                 break;
             case "reply_1c":
-                if (st.getQuestItemsCount(q_luxury_wine) >= 1) {
+                if (st.haveQuestItem(q_luxury_wine)) {
                     st.setCond(4);
                     st.takeItems(q_luxury_wine, 1);
                     st.playSound(SOUND_MIDDLE);
@@ -106,7 +105,7 @@ public final class _037_PleaseMakeMeFormalWear extends Quest {
 
         if (npcId == trader_alexis) {
             if (cond == 0) {
-                if (st.getPlayer().getLevel() >= 60)
+                if (st.player.getLevel() >= 60)
                     htmltext = "trader_alexis_q0037_0101.htm";
                 else {
                     htmltext = "trader_alexis_q0037_0103.htm";
@@ -119,20 +118,20 @@ public final class _037_PleaseMakeMeFormalWear extends Quest {
                 htmltext = "leikar_q0037_0101.htm";
             else if (cond == 2)
                 htmltext = "leikar_q0037_0202.htm";
-            else if (cond == 5 && st.getQuestItemsCount(q_box_of_cookies) >= 1)
+            else if (cond == 5 && st.haveQuestItem(q_box_of_cookies) )
                 htmltext = "leikar_q0037_0501.htm";
             else if (cond == 6) {
-                if (st.getQuestItemsCount(q_mysterious_cloth) >= 1 && st.getQuestItemsCount(q_box_of_jewel) >= 1 && st.getQuestItemsCount(q_workbox) >= 1)
+                if (st.haveAllQuestItems(q_mysterious_cloth,q_box_of_jewel,q_workbox))
                     htmltext = "leikar_q0037_0603.htm";
                 else
                     htmltext = "leikar_q0037_0604.htm";
             } else if (cond == 7)
-                if (st.getQuestItemsCount(q_box_of_dress_shoes) >= 1)
+                if (st.haveQuestItem(q_box_of_dress_shoes))
                     htmltext = "leikar_q0037_0703.htm";
                 else
                     htmltext = "leikar_q0037_0704.htm";
         } else if (npcId == jeremy) {
-            if (cond == 2 && st.getQuestItemsCount(q_seal_of_stock) >= 1)
+            if (cond == 2 && st.haveQuestItem(q_seal_of_stock))
                 htmltext = "jeremy_q0037_0201.htm";
             else if (cond == 3)
                 htmltext = "jeremy_q0037_0303.htm";
@@ -141,7 +140,7 @@ public final class _037_PleaseMakeMeFormalWear extends Quest {
             else if (cond == 5)
                 htmltext = "jeremy_q0037_0502.htm";
         } else if (npcId == mist)
-            if (cond == 3 && st.getQuestItemsCount(q_luxury_wine) >= 1)
+            if (cond == 3 && st.haveQuestItem(q_luxury_wine))
                 htmltext = "mist_q0037_0301.htm";
         return htmltext;
     }

@@ -6,7 +6,6 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _265_ChainsOfSlavery extends Quest {
     // NPC
@@ -31,23 +30,23 @@ public final class _265_ChainsOfSlavery extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("sentry_krpion_q0265_03.htm")) {
+        if ("sentry_krpion_q0265_03.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("sentry_krpion_q0265_06.htm"))
+        } else if ("sentry_krpion_q0265_06.htm".equalsIgnoreCase(event))
             st.exitCurrentQuest(true);
         return event;
     }
 
     @Override
     public String onTalk(NpcInstance npc, QuestState st) {
-        String htmltext = "noquest";
+        String htmltext;
         if (st.getCond() == 0) {
-            if (st.getPlayer().getRace() != Race.darkelf) {
+            if (st.player.getRace() != Race.darkelf) {
                 htmltext = "sentry_krpion_q0265_00.htm";
                 st.exitCurrentQuest(true);
-            } else if (st.getPlayer().getLevel() < 6) {
+            } else if (st.player.getLevel() < 6) {
                 htmltext = "sentry_krpion_q0265_01.htm";
                 st.exitCurrentQuest(true);
             } else
@@ -62,14 +61,14 @@ public final class _265_ChainsOfSlavery extends Quest {
             st.takeItems(IMP_SHACKLES, -1);
             htmltext = "sentry_krpion_q0265_05.htm";
 
-            if (st.getPlayer().getClassId().getLevel() == 1 && !st.getPlayer().getVarB("p1q2")) {
-                st.getPlayer().setVar("p1q2", "1", -1);
-                st.getPlayer().sendPacket(new ExShowScreenMessage("Acquisition of Soulshot for beginners complete.\n                  Go find the Newbie Guide."));
-                QuestState qs = st.getPlayer().getQuestState(_255_Tutorial.class);
+            if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("p1q2")) {
+                st.player.setVar("p1q2", 1);
+                st.player.sendPacket(new ExShowScreenMessage("Acquisition of Soulshot for beginners complete.\n                  Go find the Newbie Guide."));
+                QuestState qs = st.player.getQuestState(_255_Tutorial.class);
                 if (qs != null && qs.getInt("Ex") != 10) {
                     st.showQuestionMark(26);
-                    qs.set("Ex", "10");
-                    if (st.getPlayer().getClassId().isMage) {
+                    qs.set("Ex", 10);
+                    if (st.player.getClassId().isMage) {
                         st.playTutorialVoice("tutorial_voice_027");
                         st.giveItems(5790, 3000);
                     } else {
@@ -84,12 +83,11 @@ public final class _265_ChainsOfSlavery extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         if (st.getCond() == 1 && Rnd.chance(5 + npcId - 20004)) {
-            st.giveItems(IMP_SHACKLES, 1);
+            st.giveItems(IMP_SHACKLES);
             st.playSound(SOUND_ITEMGET);
         }
-        return null;
     }
 }

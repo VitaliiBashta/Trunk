@@ -14,7 +14,7 @@ import l2trunk.gameserver.utils.Util;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class TradeRequest extends L2GameClientPacket {
+public final class TradeRequest extends L2GameClientPacket {
     //Format: cd
     private int _objectId;
 
@@ -56,7 +56,7 @@ public class TradeRequest extends L2GameClientPacket {
         }
 
         if (activeChar.isInAwayingMode()) {
-            activeChar.sendMessage(new CustomMessage("Away.ActionFailed", activeChar, new Object[0]));
+            activeChar.sendMessage(new CustomMessage("Away.ActionFailed", new Object[0]));
             return;
         }
 
@@ -65,17 +65,17 @@ public class TradeRequest extends L2GameClientPacket {
             return;
         }
 
-        String tradeBan = activeChar.getVar("tradeBan");
-        if (tradeBan != null && (tradeBan.equals("-1") || Long.parseLong(tradeBan) >= System.currentTimeMillis())) {
-            if (tradeBan.equals("-1"))
-                activeChar.sendMessage(new CustomMessage("common.TradeBannedPermanently", activeChar));
+        long tradeBan = activeChar.getVarLong("tradeBan");
+        if ((tradeBan == -1) || tradeBan >= System.currentTimeMillis()) {
+            if (tradeBan ==-1)
+                activeChar.sendMessage(new CustomMessage("common.TradeBannedPermanently"));
             else
-                activeChar.sendMessage(new CustomMessage("common.TradeBanned", activeChar).addString(Util.formatTime((int) (Long.parseLong(tradeBan) / 1000L - System.currentTimeMillis() / 1000L))));
+                activeChar.sendMessage(new CustomMessage("common.TradeBanned").addString(Util.formatTime((int) (tradeBan / 1000L - System.currentTimeMillis() / 1000L))));
             return;
         }
 
         GameObject target = activeChar.getVisibleObject(_objectId);
-        if (target == null || !target.isPlayer() || target == activeChar) {
+        if (!(target instanceof Player) || target == activeChar) {
             activeChar.sendPacket(SystemMsg.THAT_IS_AN_INCORRECT_TARGET);
             return;
         }
@@ -96,8 +96,8 @@ public class TradeRequest extends L2GameClientPacket {
             return;
         }
 
-        tradeBan = reciever.getVar("tradeBan");
-        if (tradeBan != null && (tradeBan.equals("-1") || Long.parseLong(tradeBan) >= System.currentTimeMillis())) {
+        tradeBan = reciever.getVarLong("tradeBan");
+        if (tradeBan != 0 && (tradeBan ==-1 || tradeBan >= System.currentTimeMillis())) {
             activeChar.sendPacket(SystemMsg.THAT_IS_AN_INCORRECT_TARGET);
             return;
         }
@@ -113,7 +113,7 @@ public class TradeRequest extends L2GameClientPacket {
         }
 
         if (reciever.isInAwayingMode()) {
-            reciever.sendMessage(new CustomMessage("Away.ActionFailed", reciever, new Object[0]));
+            reciever.sendMessage(new CustomMessage("Away.ActionFailed", new Object[0]));
             return;
         }
 
@@ -126,7 +126,7 @@ public class TradeRequest extends L2GameClientPacket {
             activeChar.sendPacket(new SystemMessage2(SystemMsg.YOU_BEGIN_TRADING_WITH_C1).addString(reciever.getName()), new TradeStart(activeChar, reciever));
         } else {
             new Request(L2RequestType.TRADE_REQUEST, activeChar, reciever).setTimeout(10000L);
-            reciever.sendPacket(new SendTradeRequest(activeChar.getObjectId()));
+            reciever.sendPacket(new SendTradeRequest(activeChar.objectId()));
             activeChar.sendPacket(new SystemMessage2(SystemMsg.YOU_HAVE_REQUESTED_A_TRADE_WITH_C1).addString(reciever.getName()));
         }
     }

@@ -134,8 +134,8 @@ public final class RequestProcureCropList extends L2GameClientPacket {
                 if (template == null)
                     return;
 
-                weight = SafeMath.addAndCheck(weight, SafeMath.mulAndCheck(count, template.getWeight()));
-                if (!template.isStackable() || activeChar.getInventory().getItemByItemId(cropId) == null)
+                weight = SafeMath.addAndCheck(weight, SafeMath.mulAndCheck(count, template.weight()));
+                if (!template.stackable() || activeChar.getInventory().getItemByItemId(cropId) == null)
                     slots++;
             }
         } catch (ArithmeticException ae) {
@@ -185,7 +185,7 @@ public final class RequestProcureCropList extends L2GameClientPacket {
 
                 int rewardItemId = Manor.INSTANCE.getRewardItem(cropId, crop.getReward());
                 long sellPrice = count * crop.getPrice();
-                long rewardPrice = ItemHolder.getTemplate(rewardItemId).getReferencePrice();
+                long rewardPrice = ItemHolder.getTemplate(rewardItemId).referencePrice;
 
                 if (rewardPrice == 0)
                     continue;
@@ -219,9 +219,7 @@ public final class RequestProcureCropList extends L2GameClientPacket {
                 crop.setAmount(crop.getAmount() - count);
                 castle.updateCrop(crop.getId(), crop.getAmount(), CastleManorManager.PERIOD_CURRENT);
                 castle.addToTreasuryNoTax(fee, false, false);
-
-                if (activeChar.getInventory().addItem(rewardItemId, rewardItemCount, "RequestProcureCropList") == null)
-                    continue;
+                activeChar.getInventory().addItem(rewardItemId, rewardItemCount, "RequestProcureCropList");
 
                 activeChar.sendPacket(new SystemMessage2(SystemMsg.TRADED_S2_OF_S1_CROPS).addItemName(cropId).addInteger(count), SystemMessage2.removeItems(cropId, count), SystemMessage2.obtainItems(rewardItemId, rewardItemCount, 0));
                 if (fee > 0L)

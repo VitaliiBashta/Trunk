@@ -60,7 +60,7 @@ public final class RequestPetUseItem extends L2GameClientPacket {
             List<Skill> skills = item.getTemplate().getAttachedSkills();
             for (Skill skill : skills) {
                 Creature aimingTarget = skill.getAimingTarget(pet, pet.getTarget());
-                if (skill.checkCondition(pet, aimingTarget, false, false, true))
+                if (skill.checkCondition(pet.owner, aimingTarget, false, false, true))
                     pet.getAI().cast(skill, aimingTarget, false, false);
             }
             return;
@@ -69,9 +69,9 @@ public final class RequestPetUseItem extends L2GameClientPacket {
         SystemMessage2 sm = ItemFunctions.checkIfCanEquip(pet, item);
         if (sm == null) {
             if (item.isEquipped())
-                pet.getInventory().unEquipItem(item);
+                pet.inventory.unEquipItem(item);
             else
-                pet.getInventory().equipItem(item);
+                pet.inventory.equipItem(item);
             pet.broadcastCharInfo();
             return;
         }

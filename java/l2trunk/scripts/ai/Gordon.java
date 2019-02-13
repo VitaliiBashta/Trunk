@@ -4,6 +4,8 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ai.CtrlIntention;
 import l2trunk.gameserver.ai.Fighter;
 import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.Playable;
+import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.Location;
 
@@ -59,9 +61,9 @@ public final class Gordon extends Fighter {
     }
 
     @Override
-    public boolean checkAggression(Creature target, boolean avoidAttack) {
+    public boolean checkAggression(Playable target, boolean avoidAttack) {
         // Агрится только на носителей проклятого оружия
-        if (!target.isCursedWeaponEquipped())
+        if (target instanceof Player && !((Player)target).isCursedWeaponEquipped())
             return false;
         // Продолжит идти с предыдущей точки
         if (getIntention() != CtrlIntention.AI_INTENTION_ACTIVE && current_point > -1)

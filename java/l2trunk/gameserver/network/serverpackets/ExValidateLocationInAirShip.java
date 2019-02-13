@@ -9,8 +9,8 @@ public class ExValidateLocationInAirShip extends L2GameServerPacket {
     private final Location _loc;
 
     public ExValidateLocationInAirShip(Player cha) {
-        _playerObjectId = cha.getObjectId();
-        _boatObjectId = cha.getBoat().getObjectId();
+        _playerObjectId = cha.objectId();
+        _boatObjectId = cha.getBoat().objectId();
         _loc = cha.getInBoatPosition();
     }
 

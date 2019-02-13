@@ -23,7 +23,7 @@ public final class _10505_JewelOfValakas extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("valakas_watchman_klein_q10505_04.htm")) {
+        if ("valakas_watchman_klein_q10505_04.htm".equalsIgnoreCase(event)) {
             st.setState(STARTED);
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
@@ -39,7 +39,7 @@ public final class _10505_JewelOfValakas extends Quest {
         int cond = st.getCond();
         if (npcId == KLEIN) {
             if (cond == 0) {
-                if (st.getPlayer().getLevel() < 84)
+                if (st.player.getLevel() < 84)
                     htmltext = "valakas_watchman_klein_q10505_00.htm";
                 else if (st.getQuestItemsCount(VACUALITE_FLOATING_STONE) < 1)
                     htmltext = "valakas_watchman_klein_q10505_00a.htm";
@@ -48,13 +48,14 @@ public final class _10505_JewelOfValakas extends Quest {
                 else
                     htmltext = "valakas_watchman_klein_q10505_09.htm";
             } else if (cond == 1) {
-                if (st.getQuestItemsCount(EMPTY_CRYSTAL) < 1) {
-                    htmltext = "valakas_watchman_klein_q10505_08.htm";
-                    st.giveItems(EMPTY_CRYSTAL, 1);
-                } else
+                if (st.haveQuestItem(EMPTY_CRYSTAL)) {
                     htmltext = "valakas_watchman_klein_q10505_05.htm";
+                } else {
+                    htmltext = "valakas_watchman_klein_q10505_08.htm";
+                    st.giveItems(EMPTY_CRYSTAL);
+                }
             } else if (cond == 2) {
-                if (st.getQuestItemsCount(FILLED_CRYSTAL_VALAKAS) >= 1) {
+                if (st.haveQuestItem(FILLED_CRYSTAL_VALAKAS)) {
                     htmltext = "valakas_watchman_klein_q10505_07.htm";
                     st.takeItems(FILLED_CRYSTAL_VALAKAS);
                     st.giveItems(JEWEL_OF_VALAKAS);
@@ -69,7 +70,7 @@ public final class _10505_JewelOfValakas extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         if (cond == 1 && npcId == VALAKAS) {
@@ -77,6 +78,5 @@ public final class _10505_JewelOfValakas extends Quest {
             st.giveItems(FILLED_CRYSTAL_VALAKAS);
             st.setCond(2);
         }
-        return null;
     }
 }

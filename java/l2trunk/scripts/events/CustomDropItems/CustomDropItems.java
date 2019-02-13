@@ -4,6 +4,7 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.listener.actor.OnDeathListener;
 import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.model.actor.listener.CharListenerList;
 import l2trunk.gameserver.model.instances.MonsterInstance;
 import l2trunk.gameserver.model.instances.NpcInstance;
@@ -77,20 +78,26 @@ public final class CustomDropItems extends Functions implements ScriptFile, OnDe
     }
 
     private void dropItemMob(Creature cha, Creature killer) {
-        if (_active && SimpleCheckDrop(cha, killer))
-            for (int i = 0; i < DROP.size(); i++)
-                if (Rnd.chance(CustomDropItemsChance.get(i) * killer.getPlayer().getRateItems() * ((MonsterInstance) cha).getTemplate().rateHp))
-                    ((MonsterInstance) cha).dropItem(killer.getPlayer(), DROP.get(i), Rnd.get(CDItemsCountDropMin.get(i), CDItemsCountDropMax.get(i)));
-                else
-                    return;
+        if (killer instanceof Playable) {
+            Playable  playable= (Playable) killer;
+            if (_active && simpleCheckDrop(cha, playable))
+                for (int i = 0; i < DROP.size(); i++)
+                    if (Rnd.chance(CustomDropItemsChance.get(i) * playable.getPlayer().getRateItems() * ((MonsterInstance) cha).getTemplate().rateHp))
+                        ((MonsterInstance) cha).dropItem(playable.getPlayer(), DROP.get(i), Rnd.get(CDItemsCountDropMin.get(i), CDItemsCountDropMax.get(i)));
+                    else
+                        return;
+        }
     }
 
     private void dropItemRb(Creature cha, Creature killer) {
-        if (_active)
-            for (int i = 0; i < DROP.size(); i++)
-                if (Rnd.chance(CustomDropItemsChance.get(i) * killer.getPlayer().getRateItems() * ((NpcInstance) cha).getTemplate().rateHp))
-                    ((NpcInstance) cha).dropItem(killer.getPlayer(), DROP.get(i), Rnd.get(CDItemsCountDropMin.get(i), CDItemsCountDropMax.get(i)));
-                else
-                    return;
+        if (killer instanceof Playable) {
+            Playable playable = (Playable) killer;
+            if (_active)
+                for (int i = 0; i < DROP.size(); i++)
+                    if (Rnd.chance(CustomDropItemsChance.get(i) * playable.getPlayer().getRateItems() * ((NpcInstance) cha).getTemplate().rateHp))
+                        ((NpcInstance) cha).dropItem(playable.getPlayer(), DROP.get(i), Rnd.get(CDItemsCountDropMin.get(i), CDItemsCountDropMax.get(i)));
+                    else
+                        return;
+        }
     }
 }

@@ -10,7 +10,6 @@ import l2trunk.gameserver.templates.item.ItemTemplate;
 
 public class ExpandCWH extends Functions {
     public void get() {
-        Player player = getSelf();
         if (player == null)
             return;
 
@@ -36,7 +35,6 @@ public class ExpandCWH extends Functions {
     }
 
     private void show() {
-        Player player = getSelf();
         if (player == null)
             return;
 

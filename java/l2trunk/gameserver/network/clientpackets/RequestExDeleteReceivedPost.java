@@ -33,12 +33,12 @@ public final class RequestExDeleteReceivedPost extends L2GameClientPacket {
         if (activeChar == null || _count == 0)
             return;
 
-        List<Mail> mails = MailDAO.getInstance().getReceivedMailByOwnerId(activeChar.getObjectId());
+        List<Mail> mails = MailDAO.getInstance().getReceivedMailByOwnerId(activeChar.objectId());
         if (!mails.isEmpty()) {
             for (Mail mail : mails)
                 if (_list.contains(mail.getMessageId()))
                     if (mail.getAttachments().isEmpty()) {
-                        MailDAO.getInstance().deleteReceivedMailByMailId(activeChar.getObjectId(), mail.getMessageId());
+                        MailDAO.getInstance().deleteReceivedMailByMailId(activeChar.objectId(), mail.getMessageId());
                     }
         }
 

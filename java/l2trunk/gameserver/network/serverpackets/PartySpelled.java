@@ -1,20 +1,22 @@
 package l2trunk.gameserver.network.serverpackets;
 
 import l2trunk.gameserver.model.Playable;
+import l2trunk.gameserver.model.instances.PetInstance;
+import l2trunk.gameserver.model.instances.SummonInstance;
 import l2trunk.gameserver.utils.EffectsComparator;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class PartySpelled extends L2GameServerPacket {
+public final class PartySpelled extends L2GameServerPacket {
     private final int _type;
     private final int _objId;
     private final List<Effect> _effects;
 
     public PartySpelled(Playable activeChar, boolean full) {
-        _objId = activeChar.getObjectId();
-        _type = activeChar.isPet() ? 1 : activeChar.isSummon() ? 2 : 0;
+        _objId = activeChar.objectId();
+        _type = activeChar instanceof PetInstance  ? 1 : activeChar instanceof SummonInstance ? 2 : 0;
         // 0 - L2Player // 1 - петы // 2 - саммоны
         _effects = new ArrayList<>();
         if (full) {

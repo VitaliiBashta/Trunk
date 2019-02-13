@@ -17,7 +17,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -27,7 +26,7 @@ public class CCPRepair {
     public static boolean repairChar(Player activeChar, String target) {
         if (!target.isEmpty()) {
             if (activeChar.getName().equalsIgnoreCase(target)) {
-                Functions.sendMessage(new CustomMessage("voicedcommandhandlers.Repair.YouCantRepairYourself", activeChar), activeChar);
+                activeChar.sendMessage(new CustomMessage("voicedcommandhandlers.Repair.YouCantRepairYourself"));
                 return false;
             }
 
@@ -41,10 +40,10 @@ public class CCPRepair {
             }
 
             if (objId == 0) {
-                Functions.sendMessage(new CustomMessage("voicedcommandhandlers.Repair.YouCanRepairOnlyOnSameAccount", activeChar), activeChar);
+                activeChar.sendMessage(new CustomMessage("voicedcommandhandlers.Repair.YouCanRepairOnlyOnSameAccount"));
                 return false;
             } else if (World.getPlayer(objId) != null) {
-                Functions.sendMessage(new CustomMessage("voicedcommandhandlers.Repair.CharIsOnline", activeChar), activeChar);
+                activeChar.sendMessage(new CustomMessage("voicedcommandhandlers.Repair.CharIsOnline"));
                 return false;
             }
 
@@ -72,19 +71,19 @@ public class CCPRepair {
                     statement.execute();
 
                     ItemsDAO.INSTANCE.getItemsByOwnerIdAndLoc(objId, ItemLocation.PAPERDOLL)
-                    .filter(ItemInstance::isEquipped)
-                    .forEach(item ->{
-                            item.setEquipped(false);
-                            item.setJdbcState(JdbcEntityState.UPDATED);
-                            item.update();
-                        });
+                            .filter(ItemInstance::isEquipped)
+                            .forEach(item -> {
+                                item.setEquipped(false);
+                                item.setJdbcState(JdbcEntityState.UPDATED);
+                                item.update();
+                            });
                 }
 
                 statement = con.prepareStatement("DELETE FROM character_variables WHERE obj_id=? AND type='user-var' AND name='reflection'");
                 statement.setInt(1, objId);
                 statement.execute();
 
-                Functions.sendMessage(new CustomMessage("voicedcommandhandlers.Repair.RepairDone", activeChar), activeChar);
+                activeChar.sendMessage(new CustomMessage("voicedcommandhandlers.Repair.RepairDone"));
                 return true;
             } catch (SQLException e) {
                 _log.error("Error while repairing Char", e);

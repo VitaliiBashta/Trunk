@@ -3,7 +3,6 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _158_SeedOfEvil extends Quest {
     private static final int CLAY_TABLET_ID = 1025;
@@ -22,8 +21,8 @@ public final class _158_SeedOfEvil extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equals("1")) {
-            st.set("id", "0");
+        if ("1".equals(event)) {
+            st.set("id", 0);
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
@@ -39,11 +38,11 @@ public final class _158_SeedOfEvil extends Quest {
         int id = st.getState();
         if (id == CREATED) {
             st.setState(STARTED);
-            st.set("id", "0");
+            st.set("id", 0);
         }
         if (npcId == 30031 && st.getCond() == 0) {
             if (st.getCond() < 15) {
-                if (st.getPlayer().getLevel() >= 21) {
+                if (st.player.getLevel() >= 21) {
                     htmltext = "30031-03.htm";
                     return htmltext;
                 }
@@ -62,7 +61,7 @@ public final class _158_SeedOfEvil extends Quest {
             st.playSound(SOUND_FINISH);
             st.giveItems(ADENA_ID, 1495);
             st.addExpAndSp(17818, 927);
-            st.giveItems(ENCHANT_ARMOR_D, 1);
+            st.giveItems(ENCHANT_ARMOR_D);
             htmltext = "30031-06.htm";
             st.exitCurrentQuest(false);
         }
@@ -70,12 +69,11 @@ public final class _158_SeedOfEvil extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getQuestItemsCount(CLAY_TABLET_ID) == 0) {
-            st.giveItems(CLAY_TABLET_ID, 1);
+            st.giveItems(CLAY_TABLET_ID);
             st.playSound(SOUND_MIDDLE);
             st.setCond(2);
         }
-        return null;
     }
 }

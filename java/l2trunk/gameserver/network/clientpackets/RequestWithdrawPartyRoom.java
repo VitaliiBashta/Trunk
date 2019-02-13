@@ -27,7 +27,7 @@ public class RequestWithdrawPartyRoom extends L2GameClientPacket {
 
         if (room == null) {
             _log.warn("Null matching room in CLIENT PACKET - should not happen, for player: "
-                    + player.getName() + "| Object Id: " + player.getObjectId());
+                    + player.getName() + "| Object Id: " + player.objectId());
             return;
         }
 

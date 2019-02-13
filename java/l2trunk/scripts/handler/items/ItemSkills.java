@@ -21,16 +21,6 @@ public final class ItemSkills extends ScriptItemHandler implements ScriptFile {
     private static List<Integer> itemIds;
 
 
-    @Override
-    public boolean pickupItem(Playable playable, ItemInstance item) {
-        return true;
-    }
-
-    @Override
-    public void onLoad() {
-        ItemHandler.INSTANCE.registerItemHandler(this);
-    }
-
     public ItemSkills() {
         Set<Integer> set = new HashSet<>();
         for (ItemTemplate template : ItemHolder.getAllTemplates()) {
@@ -39,21 +29,18 @@ public final class ItemSkills extends ScriptItemHandler implements ScriptFile {
 
             for (Skill skill : template.getAttachedSkills())
                 if (skill.isItemHandler)
-                    set.add(template.getItemId());
+                    set.add(template.itemId());
         }
         itemIds = new ArrayList<>(set);
     }
 
     @Override
-    public boolean useItem(Playable playable, ItemInstance item, boolean ctrl) {
-        Player player;
-        if (playable.isPlayer())
-            player = (Player) playable;
-        else if (playable.isPet())
-            player = playable.getPlayer();
-        else
-            return false;
+    public void onLoad() {
+        ItemHandler.INSTANCE.registerItemHandler(this);
+    }
 
+    @Override
+    public boolean useItem(Player player, ItemInstance item, boolean ctrl) {
         int itemId = item.getItemId();
 
         if (ctrl && (itemId == Player.autoHp || itemId == Player.autoCp || itemId == Player.autoMp)) {

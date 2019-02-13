@@ -5,7 +5,6 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.RadarControl;
-import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Location;
 
 public final class _1102_Nottingale extends Quest {
@@ -18,7 +17,7 @@ public final class _1102_Nottingale extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        Player player = st.getPlayer();
+        Player player = st.player;
         QuestState qs = player.getQuestState(_10273_GoodDayToFly.class);
         if (qs == null || qs.getState() != COMPLETED) {
             player.sendPacket(new RadarControl(2, 2));

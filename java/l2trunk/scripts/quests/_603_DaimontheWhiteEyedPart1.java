@@ -43,7 +43,7 @@ public final class _603_DaimontheWhiteEyedPart1 extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
         if (event.equalsIgnoreCase("31683-02.htm")) {
-            if (st.getPlayer().getLevel() < 73) {
+            if (st.player.getLevel() < 73) {
                 htmltext = "31683-01a.htm";
                 st.exitCurrentQuest(true);
             } else {
@@ -60,7 +60,7 @@ public final class _603_DaimontheWhiteEyedPart1 extends Quest {
             st.setCond(3);
             st.setState(STARTED);
             st.playSound("ItemSound.quest_middle");
-            st.giveItems(BROKEN_CRYSTAL, 1);
+            st.giveItems(BROKEN_CRYSTAL);
         } else if (event.equalsIgnoreCase("31550-02.htm")) {
             st.setCond(4);
             st.setState(STARTED);
@@ -153,12 +153,11 @@ public final class _603_DaimontheWhiteEyedPart1 extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         st.rollAndGive(EVIL_SPIRIT, 1, 1, 200, 100);
         if (st.getQuestItemsCount(EVIL_SPIRIT) == 200) {
             st.setCond(8);
             st.setState(STARTED);
         }
-        return null;
     }
 }

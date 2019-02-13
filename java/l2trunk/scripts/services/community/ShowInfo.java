@@ -4,7 +4,6 @@ import l2trunk.gameserver.Config;
 import l2trunk.gameserver.data.htm.HtmCache;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.scripts.Functions;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 /**
  * info_folder = папка для категорий страниц - String
@@ -15,7 +14,6 @@ import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class ShowInfo extends Functions {
     public void show(String[] param) {
-        Player player = getSelf();
         String info_folder;
         String info_page;
 

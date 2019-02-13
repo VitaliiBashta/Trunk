@@ -2,7 +2,6 @@ package l2trunk.gameserver.skills.skillclasses;
 
 import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.model.Creature;
-import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.World;
 import l2trunk.gameserver.model.instances.TrapInstance;
@@ -18,7 +17,7 @@ public final class DetectTrap extends Skill {
     @Override
     public void useSkill(Creature activeChar, List<Creature> targets) {
         activeChar.getAroundCharacters(skillRadius, 300)
-                .filter(GameObject::isTrap)
+                .filter(o -> o instanceof TrapInstance)
                 .map(target -> (TrapInstance) target)
                 .filter(trap -> trap.getLevel() <= power)
                 .forEach(trap -> {
@@ -27,8 +26,5 @@ public final class DetectTrap extends Skill {
                             .forEach(p -> p.sendPacket(new NpcInfo(trap, p)));
 
                 });
-        if (isSSPossible()) {
-            activeChar.unChargeShots(isMagic());
-        }
     }
 }

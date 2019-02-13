@@ -4,7 +4,8 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.Fighter;
 import l2trunk.gameserver.model.Creature;
-import l2trunk.gameserver.model.GameObject;
+import l2trunk.gameserver.model.Playable;
+import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.Zone.ZoneType;
 import l2trunk.gameserver.model.instances.NpcInstance;
@@ -13,6 +14,7 @@ import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage.ScreenMessag
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 
 import java.util.List;
+import java.util.Objects;
 
 
 public final class Maguen extends Fighter {
@@ -33,8 +35,7 @@ public final class Maguen extends Fighter {
         }, 10000L);
         ExShowScreenMessage sm = new ExShowScreenMessage(NpcString.MAGUEN_APPEARANCE, 5000, ScreenMessageAlign.TOP_CENTER, true, 1, -1, true);
         if (!getActor().isInZone(ZoneType.dummy)) {
-            getActor().getAroundCharacters(800, 300)
-                    .filter(GameObject::isPlayer)
+            getActor().getAroundPlayers(800, 300)
                     .forEach(a -> a.sendPacket(sm));
         }
     }
@@ -87,20 +88,14 @@ public final class Maguen extends Fighter {
 
     @Override
     public void onEvtAttacked(Creature attacker, int damage) {
-        if (attacker == null)
-            return;
-
-        if (attacker.isPlayable())
+        if (attacker == null || attacker instanceof Playable)
             return;
 
         super.onEvtAttacked(attacker, damage);
     }
 
     @Override
-    public boolean checkAggression(Creature target, boolean avoidAttack) {
-        if (target.isPlayable())
-            return false;
-
-        return super.checkAggression(target, avoidAttack);
+    public boolean checkAggression(Playable target, boolean avoidAttack) {
+        return false;
     }
 }

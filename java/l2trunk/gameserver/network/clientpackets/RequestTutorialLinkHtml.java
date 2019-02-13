@@ -1,7 +1,9 @@
 package l2trunk.gameserver.network.clientpackets;
 
+import l2trunk.gameserver.instancemanager.QuestManager;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.achievements.Achievements;
+import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.scripts.quests._255_Tutorial;
 
 public final class RequestTutorialLinkHtml extends L2GameClientPacket {
@@ -20,7 +22,8 @@ public final class RequestTutorialLinkHtml extends L2GameClientPacket {
         if (player == null)
             return;
 
-        player.processQuestEvent(_255_Tutorial.class, _bypass, null);
+        Quest q = QuestManager.getQuest(_255_Tutorial.class);
+        player.processQuestEvent(q, _bypass, null);
 
         if (_bypass.startsWith("_bbs_achievements")) {
             _bypass = _bypass.replaceAll("%", " ");

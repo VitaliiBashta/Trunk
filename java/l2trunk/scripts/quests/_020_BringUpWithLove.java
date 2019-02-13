@@ -47,7 +47,7 @@ public final class _020_BringUpWithLove extends Quest {
         if (npc.getNpcId() == TUNATUN) {
             switch (st.getState()) {
                 case CREATED:
-                    if (st.getPlayer().getLevel() >= 82)
+                    if (st.player.getLevel() >= 82)
                         htmtext = "31537-01.htm";
                     else
                         htmtext = "31537-00.htm";

@@ -14,16 +14,12 @@ package l2trunk.gameserver.network.serverpackets;
  * 6	-> 8	light-blue<p>
  * 9	-> xx	blue<p>
  * <p>
- * usually the color equals the level difference to the selected target
+ * usually the color equals the occupation difference to the selected target
  */
-public class MyTargetSelected extends L2GameServerPacket {
+public final class MyTargetSelected extends L2GameServerPacket {
     private final int _objectId;
     private final int _color;
 
-    /**
-     * @param int objectId of the target
-     * @param int level difference to the target. name color is calculated from that
-     */
     public MyTargetSelected(int objectId, int color) {
         _objectId = objectId;
         _color = color;

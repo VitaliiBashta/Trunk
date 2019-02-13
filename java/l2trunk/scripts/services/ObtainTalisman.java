@@ -9,10 +9,11 @@ import l2trunk.gameserver.scripts.Functions;
 import java.util.ArrayList;
 import java.util.List;
 
+import static l2trunk.gameserver.utils.ItemFunctions.addItem;
+import static l2trunk.gameserver.utils.ItemFunctions.removeItem;
+
 public final class ObtainTalisman extends Functions {
     public void Obtain() {
-        Player player = getSelf();
-        NpcInstance npc = getNpc();
         if (player == null || npc == null)
             return;
 
@@ -24,7 +25,7 @@ public final class ObtainTalisman extends Functions {
             return;
         }
 
-        if (getItemCount(player, 9912) < 200) {
+        if (!player.haveItem(9912, 200)) {
             show("scripts/services/ObtainTalisman-no.htm", player, npc);
             return;
         }
@@ -47,7 +48,7 @@ public final class ObtainTalisman extends Functions {
 
         removeItem(player, 9912, 200, "ObtainTalisman");
         for (int i = 0; i < 20; i++) {
-            addItem(player, Rnd.get(talismans), 1, "ObtainTalisman");
+            addItem(player, Rnd.get(talismans), 1);
         }
         show("scripts/services/ObtainTalisman.htm", player, npc);
     }

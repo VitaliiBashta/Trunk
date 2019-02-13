@@ -4,7 +4,7 @@ import l2trunk.gameserver.model.Effect;
 import l2trunk.gameserver.skills.skillclasses.NegateStats;
 import l2trunk.gameserver.stats.Env;
 
-public class EffectBlockStat extends Effect {
+public final class EffectBlockStat extends Effect {
     public EffectBlockStat(Env env, EffectTemplate template) {
         super(env, template);
     }
@@ -21,8 +21,4 @@ public class EffectBlockStat extends Effect {
         effected.removeBlockStats(((NegateStats) skill).getNegateStats());
     }
 
-    @Override
-    public boolean onActionTime() {
-        return false;
-    }
 }

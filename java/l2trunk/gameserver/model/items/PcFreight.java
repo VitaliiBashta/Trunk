@@ -1,12 +1,6 @@
 package l2trunk.gameserver.model.items;
 
-import l2trunk.gameserver.model.Player;
-
-public final class PcFreight extends Warehouse {
-    public PcFreight(Player player) {
-        super(player.getObjectId());
-    }
-
+public class PcFreight extends Warehouse {
     public PcFreight(int objectId) {
         super(objectId);
     }

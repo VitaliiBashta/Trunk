@@ -1,7 +1,5 @@
 package l2trunk.gameserver.ai;
 
-import l2trunk.commons.lang.reference.HardReference;
-import l2trunk.commons.lang.reference.HardReferences;
 import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.GameObject;
@@ -19,7 +17,7 @@ public abstract class AbstractAI extends RunnableImpl {
     protected static final Logger _log = LoggerFactory.getLogger(AbstractAI.class);
 
     protected final Creature actor;
-    private HardReference<? extends Creature> _attackTarget = HardReferences.emptyRef();
+    private Creature attackTarget = null;
 
     private CtrlIntention intention = CtrlIntention.AI_INTENTION_IDLE;
 
@@ -222,7 +220,7 @@ public abstract class AbstractAI extends RunnableImpl {
 
     protected void clientActionFailed() {
         Creature actor = getActor();
-        if (actor != null && actor.isPlayer())
+        if (actor instanceof Player)
             actor.sendActionFailed();
     }
 
@@ -265,11 +263,11 @@ public abstract class AbstractAI extends RunnableImpl {
     }
 
     public Creature getAttackTarget() {
-        return _attackTarget.get();
+        return attackTarget;
     }
 
     public void setAttackTarget(Creature target) {
-        _attackTarget = target == null ? HardReferences.emptyRef() : target.getRef();
+        attackTarget = target;
     }
 
     public boolean isGlobalAI() {

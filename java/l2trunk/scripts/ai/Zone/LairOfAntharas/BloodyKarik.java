@@ -27,7 +27,7 @@ public final class BloodyKarik extends Fighter {
     public void onEvtDead(Creature killer) {
         super.onEvtDead(killer);
         NpcInstance npc = getActor();
-        if (Rnd.chance(BKARIK_D_M_CHANCE) && !spawned_minion.containsKey(npc.getObjectId())) {
+        if (Rnd.chance(BKARIK_D_M_CHANCE) && !spawned_minion.containsKey(npc.objectId())) {
             for (int x = 0; x < BLOODYKARIK_COUNT; x++) {
                 NpcInstance mob = NpcHolder.getTemplate(BLOODYKARIK).getNewInstance();
                 mob.setSpawnedLoc(npc.getLoc());
@@ -35,9 +35,9 @@ public final class BloodyKarik extends Fighter {
                 mob.setFullHpMp();
                 mob.spawnMe(mob.getSpawnedLoc());
                 mob.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, killer.getPlayer(), 1);
-                spawned_minion.put(mob.getObjectId(), 1);
+                spawned_minion.put(mob.objectId(), 1);
             }
         }
-        spawned_minion.remove(npc.getObjectId());
+        spawned_minion.remove(npc.objectId());
     }
 }

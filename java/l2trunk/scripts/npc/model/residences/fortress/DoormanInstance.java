@@ -19,7 +19,7 @@ public class DoormanInstance extends l2trunk.scripts.npc.model.residences.Doorma
         super(objectId, template);
         String loc = template.getAIParams().getString("tele_loc", null);
         if (loc != null)
-            _loc = Location.parseLoc(loc);
+            _loc = Location.of(loc);
     }
 
     @Override
@@ -29,12 +29,10 @@ public class DoormanInstance extends l2trunk.scripts.npc.model.residences.Doorma
         int cond = getCond(player);
         switch (cond) {
             case COND_OWNER:
-                if (command.equalsIgnoreCase("openDoors"))
-                    for (int i : _doors)
-                        ReflectionUtils.getDoor(i).openMe(player, true);
-                else if (command.equalsIgnoreCase("closeDoors"))
-                    for (int i : _doors)
-                        ReflectionUtils.getDoor(i).closeMe(player, true);
+                if ("openDoors".equalsIgnoreCase(command))
+                    doors.forEach(d -> ReflectionUtils.getDoor(d).openMe());
+                else if ("closeDoors".equalsIgnoreCase(command))
+                    doors.forEach(d -> ReflectionUtils.getDoor(d).closeMe());
                 break;
             case COND_SIEGE:
                 if (command.equalsIgnoreCase("tele"))

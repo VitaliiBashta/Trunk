@@ -30,7 +30,7 @@ public class RequestExRequestReceivedPost extends L2GameClientPacket {
         if (activeChar == null)
             return;
 
-        Mail mail = MailDAO.getInstance().getReceivedMailByMailId(activeChar.getObjectId(), postId);
+        Mail mail = MailDAO.getInstance().getReceivedMailByMailId(activeChar.objectId(), postId);
         if (mail != null) {
             if (mail.isUnread()) {
                 mail.setUnread(false);

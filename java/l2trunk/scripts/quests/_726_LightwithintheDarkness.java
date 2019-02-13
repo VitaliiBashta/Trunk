@@ -34,13 +34,13 @@ public final class _726_LightwithintheDarkness extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         int cond = st.getCond();
-        Player player = st.getPlayer();
+        Player player = st.player;
 
         if (event.equals("dcw_q726_4.htm") && cond == 0) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equals("reward") && cond == 1 && "done".equalsIgnoreCase(player.getVar("q726"))) {
+        } else if (event.equals("reward") && cond == 1 && player.isVarSet("q726")) {
             player.unsetVar("q726");
             player.unsetVar("q726done");
             st.giveItems(KnightsEpaulette, 152);
@@ -55,10 +55,10 @@ public final class _726_LightwithintheDarkness extends Quest {
     public String onTalk(NpcInstance npc, QuestState st) {
         String htmltext = "noquest";
         int cond = st.getCond();
-        Player player = st.getPlayer();
+        Player player = st.player;
         QuestState qs727 = player.getQuestState(_727_HopewithintheDarkness.class);
 
-        if (!check(st.getPlayer())) {
+        if (!check(st.player)) {
             st.exitCurrentQuest(true);
             return "dcw_q726_1a.htm";
         }
@@ -66,14 +66,14 @@ public final class _726_LightwithintheDarkness extends Quest {
             st.exitCurrentQuest(true);
             return "dcw_q726_1b.htm";
         } else if (cond == 0) {
-            if (st.getPlayer().getLevel() >= 70)
+            if (st.player.getLevel() >= 70)
                 htmltext = "dcw_q726_1.htm";
             else {
                 htmltext = "dcw_q726_0.htm";
                 st.exitCurrentQuest(true);
             }
         } else if (cond == 1)
-            if (player.getVar("q726done") != null)
+            if (player.isVarSet("q726done"))
                 htmltext = "dcw_q726_6.htm";
             else
                 htmltext = "dcw_q726_5.htm";
@@ -81,10 +81,10 @@ public final class _726_LightwithintheDarkness extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
-        Player player = st.getPlayer();
+        Player player = st.player;
         Party party = player.getParty();
 
         if (cond == 1 && npcId == KanadisGuide3 && checkAllDestroyed(player.getReflectionId())) {
@@ -92,13 +92,12 @@ public final class _726_LightwithintheDarkness extends Quest {
                 for (Player member : party.getMembers())
                     if (!member.isDead() && member.getParty().isInReflection()) {
                         member.sendPacket(new SystemMessage(SystemMessage.THIS_DUNGEON_WILL_EXPIRE_IN_S1_MINUTES).addNumber(1));
-                        member.setVar("q726", "done", -1);
-                        member.setVar("q726done", "done", -1);
+                        member.setVar("q726");
+                        member.setVar("q726done");
                         st.playSound(SOUND_ITEMGET);
                     }
             player.getReflection().startCollapseTimer(60 * 1000L);
         }
-        return null;
     }
 
     private boolean check(Player player) {
@@ -108,7 +107,7 @@ public final class _726_LightwithintheDarkness extends Quest {
         Clan clan = player.getClan();
         if (clan == null)
             return false;
-        if (clan.getClanId() != fort.getOwnerId())
+        if (clan.clanId() != fort.getOwnerId())
             return false;
         return fort.getContractState() == 1;
     }

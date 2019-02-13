@@ -93,13 +93,13 @@ public final class _063_PathToWarder extends Quest {
         String htmltext = "noquest";
         int npcId = npc.getNpcId();
         int cond = st.getCond();
-        int id = st.getState();
+        int state = st.getState();
         if (npcId == Sione)
-            if (id == CREATED) {
-                if (st.getPlayer().getClassId() != ClassId.femaleSoldier) {
+            if (state == CREATED) {
+                if (st.player.getClassId() != ClassId.femaleSoldier) {
                     htmltext = "master_sione_q0063_04.htm";
                     st.exitCurrentQuest(true);
-                } else if (st.getPlayer().getLevel() < 18) {
+                } else if (st.player.getLevel() < 18) {
                     htmltext = "master_sione_q0063_02.htm";
                     st.exitCurrentQuest(true);
                 } else
@@ -113,9 +113,9 @@ public final class _063_PathToWarder extends Quest {
                     else {
                         htmltext = "master_sione_q0063_10.htm";
                         st.setCond(4);
-                        st.takeItems(OlMahumOrders, -1);
-                        st.takeItems(OlMahumOrganizationChart, -1);
-                        st.giveItems(GobiesOrders, 1);
+                        st.takeItems(OlMahumOrders);
+                        st.takeItems(OlMahumOrganizationChart);
+                        st.giveItems(GobiesOrders);
                     }
                 if (cond == 9) {
                     st.takeItems(ReporttoSione, 1);
@@ -130,7 +130,7 @@ public final class _063_PathToWarder extends Quest {
                 else {
                     htmltext = "master_gobie_q0063_03.htm";
                     st.takeItems(GobiesOrders, 1);
-                    st.giveItems(LettertotheHumans, 1);
+                    st.giveItems(LettertotheHumans);
                     st.setCond(5);
                 }
             if (cond == 6)
@@ -142,14 +142,13 @@ public final class _063_PathToWarder extends Quest {
             if (cond == 11)
                 htmltext = "master_gobie_q0063_17.htm";
             if (cond == 12)
-                if (st.getQuestItemsCount(TaksCapturedSoul) > 0) {
+                if (st.haveQuestItem(TaksCapturedSoul)) {
                     st.takeItems(TaksCapturedSoul, 1);
-                    if (st.getPlayer().getClassId().getLevel() == 1) {
-                        st.giveItems(SteelrazorEvaluation, 1);
-                        if (!st.getPlayer().getVarB("prof1")) {
-                            st.getPlayer().setVar("prof1", "1", -1);
+                    if (st.player.getClassId().occupation() == 0) {
+                        st.giveItems(SteelrazorEvaluation);
+                        if (!st.player.isVarSet("prof1")) {
+                            st.player.setVar("prof1", 1);
                             st.addExpAndSp(160267, 11023);
-                            //FIXME [G1ta0] дать адены, только если первый чар на акке
                             st.giveItems(ADENA_ID, 81900);
                         }
                     }
@@ -167,15 +166,15 @@ public final class _063_PathToWarder extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         if (cond == 2) {
             if (npcId == Patrol) {
-                st.giveItems(OlMahumOrganizationChart, 1);
+                st.giveItems(OlMahumOrganizationChart);
                 st.playSound(SOUND_ITEMGET);
             } else if (npcId == Novice) {
-                st.giveItems(OlMahumOrders, 1);
+                st.giveItems(OlMahumOrders);
                 st.playSound(SOUND_ITEMGET);
             }
             if (st.getQuestItemsCount(OlMahumOrders) > 9 && st.getQuestItemsCount(OlMahumOrganizationChart) > 4) {
@@ -188,10 +187,9 @@ public final class _063_PathToWarder extends Quest {
                 st.addSpawn(Tak);
             else if (npcId == Tak) {
                 st.takeItems(EmptySoulCrystal, 1);
-                st.giveItems(TaksCapturedSoul, 1);
+                st.giveItems(TaksCapturedSoul);
                 st.setCond(12);
                 st.playSound(SOUND_MIDDLE);
             }
-        return null;
     }
 }

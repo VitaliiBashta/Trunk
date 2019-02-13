@@ -150,7 +150,7 @@ public abstract class Inventory extends ItemContainer {
     }
 
     void onRestoreItem(ItemInstance item) {
-        _totalWeight += item.getTemplate().getWeight() * item.getCount();
+        _totalWeight += item.getTemplate().weight() * item.getCount();
     }
 
     @Override
@@ -283,11 +283,11 @@ public abstract class Inventory extends ItemContainer {
     public int getPaperdollObjectId(int slot) {
         ItemInstance item = paperdoll.get(slot);
         if (item != null)
-            return item.getObjectId();
+            return item.objectId();
         else if (slot == PAPERDOLL_HAIR) {
             item = paperdoll.get(PAPERDOLL_DHAIR);
             if (item != null)
-                return item.getObjectId();
+                return item.objectId();
         }
         return 0;
     }
@@ -495,11 +495,13 @@ public abstract class Inventory extends ItemContainer {
                         return;
                     if (rHandItemTemplate.getItemType() != WeaponType.ROD)
                         return;
-                    if (!getActor().isPlayer())
+                    if (getActor() instanceof Player) {
+                        Player owner = (Player) getActor();
+                        owner.setVar("LastLure", item.objectId());
+                    } else {
                         return;
+                    }
 
-                    Player owner = (Player) getActor();
-                    owner.setVar("LastLure", String.valueOf(item.getObjectId()), -1);
                 } else {
                     // unequip two-hand weapon
                     if (rHandItemTemplate != null && rHandItemTemplate.getBodyPart() == ItemTemplate.SLOT_LR_HAND)
@@ -850,7 +852,7 @@ public abstract class Inventory extends ItemContainer {
         getActor().setCurrentMp(mp);
         getActor().setCurrentCp(cp);
 
-        if (getActor().isPlayer())
+        if (getActor() instanceof Player)
             ((Player) getActor()).autoShot();
     }
 
@@ -860,9 +862,6 @@ public abstract class Inventory extends ItemContainer {
 
     protected abstract void sendRemoveItem(ItemInstance item);
 
-    /**
-     * Refresh the weight of equipment loaded
-     */
     void refreshWeight() {
         int weight = 0;
 
@@ -871,7 +870,7 @@ public abstract class Inventory extends ItemContainer {
             ItemInstance item;
             for (ItemInstance _item : items) {
                 item = _item;
-                weight += item.getTemplate().getWeight() * item.getCount();
+                weight += item.getTemplate().weight() * item.getCount();
             }
         } finally {
             readUnlock();
@@ -905,7 +904,7 @@ public abstract class Inventory extends ItemContainer {
 
     private boolean validateCapacity(ItemTemplate item, long count) {
         long slots = 0;
-        if (!item.isStackable() || getItemByItemId(item.getItemId()) == null)
+        if (!item.stackable || getItemByItemId(item.itemId) == null)
             slots = count;
         return validateCapacity(slots);
     }
@@ -921,7 +920,7 @@ public abstract class Inventory extends ItemContainer {
     }
 
     public boolean validateWeight(ItemInstance item) {
-        long weight = item.getTemplate().getWeight() * item.getCount();
+        long weight = item.getTemplate().weight() * item.getCount();
         return validateWeight(weight);
     }
 
@@ -931,7 +930,7 @@ public abstract class Inventory extends ItemContainer {
     }
 
     private boolean validateWeight(ItemTemplate item, long count) {
-        long weight = item.getWeight() * count;
+        long weight = item.weight() * count;
         return validateWeight(weight);
     }
 
@@ -952,10 +951,6 @@ public abstract class Inventory extends ItemContainer {
     @Override
     public int getSize() {
         return super.getSize() - getQuestSize();
-    }
-
-    public int getAllSize() {
-        return super.getSize();
     }
 
     public int getQuestSize() {

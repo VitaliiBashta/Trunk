@@ -55,9 +55,8 @@ public final class _692_HowtoOpposeEvil extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
         int cond = st.getCond();
-        if (event.equalsIgnoreCase("take_test") && cond == 0) {
-            QuestState GoodDayToFly = st.getPlayer().getQuestState(_10273_GoodDayToFly.class);
-            if (GoodDayToFly != null && GoodDayToFly.isCompleted()) {
+        if ("take_test".equalsIgnoreCase(event) && cond == 0) {
+            if (st.player.isQuestCompleted(_10273_GoodDayToFly.class)) {
                 st.setCond(2);
                 st.setState(STARTED);
                 st.playSound(SOUND_ACCEPT);
@@ -68,9 +67,9 @@ public final class _692_HowtoOpposeEvil extends Quest {
                 st.playSound(SOUND_ACCEPT);
                 htmltext = "dilios_q692_3.htm";
             }
-        } else if (event.equalsIgnoreCase("lekon_q692_2.htm") && cond == 1)
+        } else if ("lekon_q692_2.htm".equalsIgnoreCase(event) && cond == 1)
             st.exitCurrentQuest(true);
-        else if (event.equalsIgnoreCase("kutran_q692_2.htm") && cond == 2) {
+        else if ("kutran_q692_2.htm".equalsIgnoreCase(event) && cond == 2) {
             st.setCond(3);
             st.playSound(SOUND_MIDDLE);
         } else if (event.equalsIgnoreCase("exchange_sod") && cond == 3) {
@@ -100,23 +99,23 @@ public final class _692_HowtoOpposeEvil extends Quest {
                 st.giveItems(SpiritStoneFragment, _soulstogive);
                 htmltext = "kutran_q692_5.htm";
             }
-        } else if (event.equalsIgnoreCase("exchange_breath") && cond == 3) {
+        } else if ("exchange_breath".equalsIgnoreCase(event) && cond == 3) {
             if (st.getQuestItemsCount(BreathofTiat) == 0)
                 htmltext = "kutran_q692_7.htm";
             else {
                 st.giveItems(ADENA_ID, st.getQuestItemsCount(BreathofTiat) * 2500);
-                st.takeItems(BreathofTiat, -1);
+                st.takeItems(BreathofTiat);
                 htmltext = "kutran_q692_5.htm";
             }
-        } else if (event.equalsIgnoreCase("exchange_portion") && cond == 3) {
+        } else if ("exchange_portion".equalsIgnoreCase(event) && cond == 3) {
             if (st.getQuestItemsCount(PortionofaSoul) == 0)
                 htmltext = "kutran_q692_7.htm";
             else {
                 st.giveItems(ADENA_ID, st.getQuestItemsCount(PortionofaSoul) * 2500);
-                st.takeItems(PortionofaSoul, -1);
+                st.takeItems(PortionofaSoul);
                 htmltext = "kutran_q692_5.htm";
             }
-        } else if (event.equalsIgnoreCase("exchange_energy") && cond == 3) {
+        } else if ("exchange_energy".equalsIgnoreCase(event) && cond == 3) {
             if (st.getQuestItemsCount(ConcentratedSpiritEnergy) == 0)
                 htmltext = "kutran_q692_7.htm";
             else {
@@ -136,7 +135,7 @@ public final class _692_HowtoOpposeEvil extends Quest {
 
         if (npcId == Dilios) {
             if (cond == 0)
-                if (st.getPlayer().getLevel() >= 75)
+                if (st.player.getLevel() >= 75)
                     htmltext = "dilios_q692_1.htm";
                 else {
                     htmltext = "dilios_q692_0.htm";
@@ -154,7 +153,7 @@ public final class _692_HowtoOpposeEvil extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         if (cond == 3) {
@@ -165,6 +164,5 @@ public final class _692_HowtoOpposeEvil extends Quest {
             else if (SOA.contains(npcId))
                 st.rollAndGive(SpiritStoneDust, (int) Config.RATE_QUESTS_REWARD, 20); //Шанс на глаз и с потолка. Умножается на рейт квестов и делится на кол-во членов группы. Для нас это (nRate*3)/9
         }
-        return null;
     }
 }

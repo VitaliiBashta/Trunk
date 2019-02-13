@@ -1,14 +1,12 @@
 package l2trunk.gameserver.scripts;
 
-import l2trunk.commons.lang.reference.HardReference;
-import l2trunk.commons.lang.reference.HardReferences;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.dao.CharacterDAO;
-import l2trunk.gameserver.instancemanager.ReflectionManager;
 import l2trunk.gameserver.instancemanager.ServerVariables;
 import l2trunk.gameserver.model.*;
-import l2trunk.gameserver.model.entity.Reflection;
+import l2trunk.gameserver.model.instances.MonsterInstance;
 import l2trunk.gameserver.model.instances.NpcInstance;
+import l2trunk.gameserver.model.instances.PetInstance;
 import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.model.mail.Mail;
 import l2trunk.gameserver.network.serverpackets.ExNoticePostArrived;
@@ -22,12 +20,25 @@ import l2trunk.gameserver.utils.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Functions {
-    public HardReference<Player> self = HardReferences.emptyRef();
-    public HardReference<NpcInstance> npc = HardReferences.emptyRef();
+    protected Player player = null;
+    protected NpcInstance npc = null;
 
-    public static void show(String text, Player self, NpcInstance npc, Object... arg) {
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
+    public void setNpc(NpcInstance npc) {
+        this.npc = npc;
+    }
+
+    public static void show(String text, Player self, NpcInstance npc) {
+        show(text, self, npc, null);
+    }
+
+    public static void show(String text, Player self, NpcInstance npc, Map<String, String> replace) {
         if (text == null || self == null)
             return;
 
@@ -38,46 +49,41 @@ public class Functions {
         else
             msg.setHtml(Strings.bbParse(text));
 
-        if (arg != null && arg.length % 2 == 0) {
-            for (int i = 0; i < arg.length; i = +2) {
-                msg.replace(String.valueOf(arg[i]), String.valueOf(arg[i + 1]));
-            }
-        }
+        if (replace != null)
+            replace.forEach(msg::replace);
 
         self.sendPacket(msg);
     }
 
     public static void show(CustomMessage message, Player self) {
-        show(message.toString(), self, null);
+        show(message.toString(), self, null, null);
     }
 
-    protected static void sendMessage(String text, Player self) {
-        self.sendMessage(text);
+    public static void npcSay(NpcInstance npc, String text) {
+        npcSayInRange(npc, 1500, NpcString.NONE, text);
     }
 
-    public static void sendMessage(CustomMessage message, Player self) {
-        self.sendMessage(message);
+
+    public static void npcSayInRange(NpcInstance npc, int range, NpcString fStringId) {
+        npcSayInRange(npc, range, fStringId, "");
     }
 
-    private static void npcSayInRange(NpcInstance npc, String text, int range) {
-        npcSayInRange(npc, range, NpcString.NONE, text);
-    }
-
-    public static void npcSayInRange(NpcInstance npc, int range, NpcString fStringId, String... params) {
+    private static void npcSayInRange(NpcInstance npc, int range, NpcString fStringId, String text) {
         if (npc == null)
             return;
-        NpcSay cs = new NpcSay(npc, ChatType.ALL, fStringId, params);
+        NpcSay cs = new NpcSay(npc, ChatType.ALL, fStringId, text);
         World.getAroundPlayers(npc, range, Math.max(range / 2, 200))
                 .filter(player -> npc.getReflection() == player.getReflection())
                 .forEach(player -> player.sendPacket(cs));
     }
 
-    public static void npcSay(NpcInstance npc, String text) {
-        npcSayInRange(npc, text, 1500);
+
+    public static void npcSay(NpcInstance npc, NpcString npcString) {
+        npcSay(npc, npcString, "");
     }
 
-    public static void npcSay(NpcInstance npc, NpcString npcString, String... params) {
-        npcSayInRange(npc, 1500, npcString, params);
+    public static void npcSay(NpcInstance npc, NpcString npcString, String text) {
+        npcSayInRange(npc, 1500, npcString, text);
     }
 
     public static void npcSayInRangeCustomMessage(NpcInstance npc, int range, String address, Object... replacements) {
@@ -85,7 +91,7 @@ public class Functions {
             return;
         World.getAroundPlayers(npc, range, Math.max(range / 2, 200))
                 .filter(player -> npc.getReflection() == player.getReflection())
-                .forEach(player -> player.sendPacket(new NpcSay(npc, ChatType.ALL, new CustomMessage(address, player, replacements).toString())));
+                .forEach(player -> player.sendPacket(new NpcSay(npc, ChatType.ALL, new CustomMessage(address, replacements).toString())));
     }
 
     public static void npcSayCustomMessage(NpcInstance npc, String address, Object... replacements) {
@@ -94,21 +100,18 @@ public class Functions {
 
     // private message
     public static void npcSayToPlayer(NpcInstance npc, Player player, String text) {
-        npcSayToPlayer(npc, player, NpcString.NONE, text);
-    }
-
-    // private message
-    private static void npcSayToPlayer(NpcInstance npc, Player player, NpcString npcString, String... params) {
-        if (npc == null)
-            return;
-        player.sendPacket(new NpcSay(npc, ChatType.TELL, npcString, params));
+        player.sendPacket(new NpcSay(npc, ChatType.TELL, NpcString.NONE, text));
     }
 
     public static void npcShout(NpcInstance npc, String text) {
         npcShout(npc, NpcString.NONE, text);
     }
 
-    public static void npcShout(NpcInstance npc, NpcString npcString, String... params) {
+    public static void npcShout(NpcInstance npc, NpcString npcString) {
+        npcShout(npc, npcString, "");
+    }
+
+    public static void npcShout(NpcInstance npc, NpcString npcString, String params) {
         if (npc == null)
             return;
         NpcSay cs = new NpcSay(npc, ChatType.SHOUT, npcString, params);
@@ -144,11 +147,11 @@ public class Functions {
                     int ty = MapUtils.regionY(p);
 
                     if (tx >= rx - offset && tx <= rx + offset && ty >= ry - offset && ty <= ry + offset || npc.isInRange(p, Config.CHAT_RANGE))
-                        p.sendPacket(new NpcSay(npc, ChatType.SHOUT, new CustomMessage(address, p, replacements).toString()));
+                        p.sendPacket(new NpcSay(npc, ChatType.SHOUT, new CustomMessage(address, replacements).toString()));
                 });
     }
 
-    public static void npcSay(NpcInstance npc, NpcString address, ChatType type, int range, String... replacements) {
+    public static void npcSay(NpcInstance npc, NpcString address, ChatType type, int range, String replacements) {
         if (npc == null)
             return;
         World.getAroundPlayers(npc, range, Math.max(range / 2, 200))
@@ -157,21 +160,24 @@ public class Functions {
                         player.sendPacket(new NpcSay(npc, type, address, replacements)));
     }
 
-    public static void addItem(Playable playable, int itemId, long count, String log) {
-        ItemFunctions.addItem(playable, itemId, count, true, log);
-    }
+//    @Deprecated
+//    public static void addItem(Playable playable, int itemId, long count, String log) {
+//        ItemFunctions.addItem(playable, itemId, count, true, log);
+//    }
 
-    protected static void addItem(Playable playable, int itemId, long count, boolean mess, String log) {
-        ItemFunctions.addItem(playable, itemId, count, mess, log);
-    }
+//    @Deprecated
+//    protected static void addItem(Playable playable, int itemId, long count, boolean mess, String log) {
+//        ItemFunctions.addItem(playable, itemId, count, mess, log);
+//    }
 
-    public static long getItemCount(Playable playable, int itemId) {
-        return ItemFunctions.getItemCount(playable, itemId);
-    }
+//    @Deprecated
+//    public static long getItemCount(Player player, int itemId) {
+//        return ItemFunctions.getItemCount(player, itemId);
+//    }
 
-    public static long removeItem(Playable playable, int itemId, long count, String log) {
-        return ItemFunctions.removeItem(playable, itemId, count, true, log);
-    }
+//    public static long removeItem(Player playable, int itemId, long count, String log) {
+//        return ItemFunctions.removeItem(playable, itemId, count, true, log);
+//    }
 
     protected static boolean ride(Player player, int pet) {
         if (player.isMounted())
@@ -195,25 +201,15 @@ public class Functions {
         Summon pet = player.getPet();
         if (pet == null)
             return;
-        if (pet.isPet() || !onlyPets)
+        if (pet instanceof PetInstance || !onlyPets)
             pet.unSummon();
     }
 
-    // @Deprecated
-    public static NpcInstance spawn(Location loc, int npcId) {
-        return spawn(loc, npcId, ReflectionManager.DEFAULT);
-    }
-
-    private static NpcInstance spawn(Location loc, int npcId, Reflection reflection) {
-        return NpcUtils.spawnSingle(npcId, loc, reflection, 0);
-    }
-
-    protected static void SpawnNPCs(int npcId, List<Location> locations, List<SimpleSpawner> list) {
-        for (Location location : locations) {
-            NpcUtils.spawnSingle(npcId, location);
-            if (list != null)
-                list.add(new SimpleSpawner(npcId));
-        }
+    protected static List<SimpleSpawner> SpawnNPCs(int npcId, List<Location> locations) {
+        return locations.stream()
+                .peek(location -> NpcUtils.spawnSingle(npcId, location))
+                .map(location -> new SimpleSpawner(npcId))
+                .collect(Collectors.toList());
     }
 
     protected static void SpawnNPCs(int npcId, List<Location> locations, List<SimpleSpawner> list, int respawn) {
@@ -237,7 +233,7 @@ public class Functions {
         return ServerVariables.getString(name, "off").equalsIgnoreCase("on");
     }
 
-    protected static boolean SetActive(String name, boolean active) {
+    protected static boolean setActive(String name, boolean active) {
         if (active == isActive(name))
             return false;
         if (active)
@@ -247,14 +243,12 @@ public class Functions {
         return true;
     }
 
-    protected static boolean SimpleCheckDrop(Creature mob, Creature killer) {
-        return mob != null && mob.isMonster() && !mob.isRaid() && killer != null && killer.getPlayer() != null && killer.getLevel() - mob.getLevel() < 9;
+    protected static boolean simpleCheckDrop(Creature mob, Playable killer) {
+        return mob instanceof MonsterInstance && !mob.isRaid() && killer != null && killer.getPlayer() != null && killer.getLevel() - mob.getLevel() < 9;
     }
 
     public static void sendDebugMessage(Player player, String message) {
-        if (!player.isGM())
-            return;
-        player.sendMessage(message);
+        if (player.isGM()) player.sendMessage(message);
     }
 
     public static void sendSystemMail(Player receiver, String title, String body, Map<Integer, Long> items) {
@@ -268,7 +262,7 @@ public class Functions {
         Mail mail = new Mail();
         mail.setSenderId(1);
         mail.setSenderName("Admin");
-        mail.setReceiverId(receiver.getObjectId());
+        mail.setReceiverId(receiver.objectId());
         mail.setReceiverName(receiver.getName());
         mail.setTopic(title);
         mail.setBody(body);
@@ -295,7 +289,7 @@ public class Functions {
             return false;
 
         Player receiver = GameObjectsStorage.getPlayer(receiverName);
-        int objectId = receiver != null ? receiver.getObjectId() : CharacterDAO.getObjectIdByName(receiverName);
+        int objectId = receiver != null ? receiver.objectId() : CharacterDAO.getObjectIdByName(receiverName);
 
         if (objectId <= 0)
             return false;
@@ -331,23 +325,16 @@ public class Functions {
         String scount = Long.toString(count);
         if (count < 1000)
             return scount;
-        if (count < 1000000)
+        if (count < 1_000_000)
             return scount.substring(0, scount.length() - 3) + " k";
-        if (count < 1000000000)
+        if (count < 1_000_000_000)
             return scount.substring(0, scount.length() - 6) + " kk";
         return scount.substring(0, scount.length() - 9) + " kkk";
     }
 
     protected void show(String text, Player self) {
-        show(text, self, getNpc());
+        show(text, self, npc);
     }
 
-    protected Player getSelf() {
-        return self.get();
-    }
-
-    protected NpcInstance getNpc() {
-        return npc.get();
-    }
 
 }

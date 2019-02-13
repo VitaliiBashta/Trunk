@@ -63,13 +63,13 @@ public final class UseItem extends L2GameClientPacket {
 
 
         if (Config.ITEM_USE_LIST_ID.contains(itemId) && !Config.ITEM_USE_IS_COMBAT_FLAG && (activeChar.getPvpFlag() != 0 || activeChar.isInDuel() || activeChar.isInCombat())) {
-            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.network.l2.c2s.UseItem.NotUseIsFlag", activeChar));
+            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.network.l2.c2s.UseItem.NotUseIsFlag"));
             return;
         }
 
 
         if (Config.ITEM_USE_LIST_ID.contains(itemId) && !Config.ITEM_USE_IS_ATTACK && activeChar.isAttackingNow()) {
-            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.network.l2.c2s.UseItem.NotUseIsFlag", activeChar));
+            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.network.l2.c2s.UseItem.NotUseIsFlag"));
             return;
         }
 
@@ -79,7 +79,7 @@ public final class UseItem extends L2GameClientPacket {
         }
 
         if (activeChar.isInAwayingMode()) {
-            activeChar.sendMessage(new CustomMessage("Away.ActionFailed", activeChar));
+            activeChar.sendMessage(new CustomMessage("Away.ActionFailed"));
             return;
         }
 
@@ -116,7 +116,7 @@ public final class UseItem extends L2GameClientPacket {
             return;
         }
 
-        if (activeChar.getObjectId() == item.getOwnerId()) {
+        if (activeChar.objectId() == item.getOwnerId()) {
             boolean success = item.getTemplate().getHandler().useItem(activeChar, item, _ctrlPressed);
             if (success) {
                 long nextTimeUse = item.getTemplate().getReuseType().next(item);

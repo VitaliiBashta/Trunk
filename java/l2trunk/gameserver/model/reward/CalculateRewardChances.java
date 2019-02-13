@@ -28,7 +28,7 @@ public final class CalculateRewardChances {
         List<NpcTemplate> templates = new ArrayList<>();
 
         for (NpcTemplate template : NpcHolder.getAll())
-            if (templateExists(template) && StringUtils.containsIgnoreCase(template.getName(), name))
+            if (templateExists(template) && StringUtils.containsIgnoreCase(template.name(), name))
                 if (isDroppingAnything(template))
                     templates.add(template);
 
@@ -49,7 +49,7 @@ public final class CalculateRewardChances {
                 for (Map.Entry<RewardType, RewardList> rewardEntry : template.getRewards().entrySet())
                     for (RewardGroup group : rewardEntry.getValue())
                         for (RewardData data : group.getItems())
-                            if (data.getItem().getItemId() == itemId)
+                            if (data.getItem().itemId() == itemId)
                                 if (rewardEntry.getKey() == RewardType.SWEEP)
                                     spoilCount++;
                                 else

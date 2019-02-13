@@ -8,7 +8,7 @@ public class FinishRotating extends L2GameServerPacket {
     private final int _speed;
 
     public FinishRotating(Creature player, int degree, int speed) {
-        _charId = player.getObjectId();
+        _charId = player.objectId();
         _degree = degree;
         _speed = speed;
     }

@@ -15,7 +15,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ReflectionUtils {
+public final class ReflectionUtils {
     public static DoorInstance getDoor(int id) {
         return ReflectionManager.DEFAULT.getDoor(id);
     }
@@ -57,14 +57,14 @@ public class ReflectionUtils {
         switch (type) {
             case SOLO:
                 if (iz.getRemovedItemId() > 0)
-                    ItemFunctions.removeItem(invoker, iz.getRemovedItemId(), iz.getRemovedItemCount(), true, "ReflectionUtils");
+                    ItemFunctions.removeItem(invoker, iz.getRemovedItemId(), iz.getRemovedItemCount(),  "ReflectionUtils");
                 if (iz.getGiveItemId() > 0)
-                    ItemFunctions.addItem(invoker, iz.getGiveItemId(), iz.getGiveItemCount(), true, "ReflectionUtils");
+                    ItemFunctions.addItem(invoker, iz.getGiveItemId(), iz.getGiveItemCount(), "ReflectionUtils");
                 if (iz.isDispelBuffs())
                     invoker.dispelBuffs();
                 if (iz.getSetReuseUponEntry() && iz.getResetReuse().next(System.currentTimeMillis()) > System.currentTimeMillis())
                     invoker.setInstanceReuse(iz.getId(), System.currentTimeMillis());
-                invoker.setVar("backCoords", invoker.getLoc().toXYZString(), -1);
+                invoker.setVar("backCoords", invoker.getLoc().toXYZString());
                 if (iz.getTeleportCoord() != null)
                     invoker.teleToLocation(iz.getTeleportCoord(), r);
                 break;
@@ -76,14 +76,14 @@ public class ReflectionUtils {
 
                 for (Player member : party.getMembers()) {
                     if (iz.getRemovedItemId() > 0)
-                        ItemFunctions.removeItem(member, iz.getRemovedItemId(), iz.getRemovedItemCount(), true, "ReflectionUtils");
+                        ItemFunctions.removeItem(member, iz.getRemovedItemId(), iz.getRemovedItemCount(), "ReflectionUtils");
                     if (iz.getGiveItemId() > 0)
-                        ItemFunctions.addItem(member, iz.getGiveItemId(), iz.getGiveItemCount(), true, "ReflectionUtils");
+                        ItemFunctions.addItem(member, iz.getGiveItemId(), iz.getGiveItemCount(), "ReflectionUtils");
                     if (iz.isDispelBuffs())
                         member.dispelBuffs();
                     if (iz.getSetReuseUponEntry())
                         member.setInstanceReuse(iz.getId(), System.currentTimeMillis());
-                    member.setVar("backCoords", invoker.getLoc().toXYZString(), -1);
+                    member.setVar("backCoords", invoker.getLoc().toXYZString());
                     if (iz.getTeleportCoord() != null)
                         member.teleToLocation(iz.getTeleportCoord(), r);
                 }
@@ -97,14 +97,14 @@ public class ReflectionUtils {
 
                 for (Player member : cc) {
                     if (iz.getRemovedItemId() > 0)
-                        ItemFunctions.removeItem(member, iz.getRemovedItemId(), iz.getRemovedItemCount(), true, "ReflectionUtils");
+                        ItemFunctions.removeItem(member, iz.getRemovedItemId(), iz.getRemovedItemCount(), "ReflectionUtils");
                     if (iz.getGiveItemId() > 0)
-                        ItemFunctions.addItem(member, iz.getGiveItemId(), iz.getGiveItemCount(), true, "ReflectionUtils");
+                        ItemFunctions.addItem(member, iz.getGiveItemId(), iz.getGiveItemCount(), "ReflectionUtils");
                     if (iz.isDispelBuffs())
                         member.dispelBuffs();
                     if (iz.getSetReuseUponEntry())
                         member.setInstanceReuse(iz.getId(), System.currentTimeMillis());
-                    member.setVar("backCoords", invoker.getLoc().toXYZString(), -1);
+                    member.setVar("backCoords", invoker.getLoc().toXYZString());
                     member.teleToLocation(iz.getTeleportCoord(), r);
                 }
 

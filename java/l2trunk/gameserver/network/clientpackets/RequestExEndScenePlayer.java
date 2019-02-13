@@ -2,12 +2,12 @@ package l2trunk.gameserver.network.clientpackets;
 
 import l2trunk.gameserver.model.Player;
 
-public class RequestExEndScenePlayer extends L2GameClientPacket {
-    private int _movieId;
+public final class RequestExEndScenePlayer extends L2GameClientPacket {
+    private int movieId;
 
     @Override
     protected void readImpl() {
-        _movieId = readD();
+        movieId = readD();
     }
 
     @Override
@@ -15,7 +15,7 @@ public class RequestExEndScenePlayer extends L2GameClientPacket {
         Player activeChar = getClient().getActiveChar();
         if (activeChar == null)
             return;
-        if (!activeChar.isInMovie() || activeChar.getMovieId() != _movieId) {
+        if (!activeChar.isInMovie() || activeChar.getMovieId() != movieId) {
             activeChar.sendActionFailed();
             return;
         }

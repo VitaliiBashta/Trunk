@@ -17,7 +17,7 @@ public class PartySmallWindowAll extends L2GameServerPacket {
     private final List<PartySmallWindowMemberInfo> members = new ArrayList<>();
 
     public PartySmallWindowAll(Party party, Player exclude) {
-        leaderId = party.getLeader().getObjectId();
+        leaderId = party.getLeader().objectId();
         loot = party.getLootDistribution();
 
         for (Player member : party.getMembers())
@@ -84,7 +84,7 @@ public class PartySmallWindowAll extends L2GameServerPacket {
 
         public PartySmallWindowMemberInfo(Player member) {
             _name = member.getName();
-            _id = member.getObjectId();
+            _id = member.objectId();
             curCp = (int) member.getCurrentCp();
             maxCp = member.getMaxCp();
             curHp = (int) member.getCurrentHp();
@@ -92,12 +92,12 @@ public class PartySmallWindowAll extends L2GameServerPacket {
             curMp = (int) member.getCurrentMp();
             maxMp = member.getMaxMp();
             level = member.getLevel();
-            class_id = member.getClassId().id();
+            class_id = member.getClassId().id;
             race_id = member.getRace().ordinal();
 
             Summon pet = member.getPet();
             if (pet != null) {
-                pet_id = pet.getObjectId();
+                pet_id = pet.objectId();
                 pet_NpcId = pet.getNpcId() + 1000000;
                 pet_Name = pet.getName();
                 pet_curHp = (int) pet.getCurrentHp();

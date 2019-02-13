@@ -110,7 +110,7 @@ public final class _371_ShriekOfGhosts extends Quest {
         if (_state == CREATED) {
             if (npcId != REVA)
                 return htmltext;
-            if (st.getPlayer().getLevel() >= 59) {
+            if (st.player.getLevel() >= 59) {
                 htmltext = "30867-02.htm";
                 st.setCond(0);
             } else {
@@ -118,7 +118,7 @@ public final class _371_ShriekOfGhosts extends Quest {
                 st.exitCurrentQuest(true);
             }
         } else if (_state == STARTED && npcId == REVA)
-            htmltext = st.getQuestItemsCount(Ancient_Porcelain) > 0 ? "30867-05.htm" : "30867-04.htm";
+            htmltext = st.haveQuestItem(Ancient_Porcelain)  ? "30867-05.htm" : "30867-04.htm";
         else if (_state == STARTED && npcId == PATRIN)
             htmltext = "30929-01.htm";
 
@@ -126,22 +126,20 @@ public final class _371_ShriekOfGhosts extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState qs) {
+    public void onKill(NpcInstance npc, QuestState qs) {
         Player player = qs.getRandomPartyMember(STARTED, Config.ALT_PARTY_DISTRIBUTION_RANGE);
         if (player == null)
-            return null;
-        QuestState st = player.getQuestState(qs.getQuest());
+            return;
+        QuestState st = player.getQuestState(this);
 
         Integer _chance = common_chances.get(npc.getNpcId());
         if (_chance == null)
-            return null;
+            return;
 
         if (Rnd.chance(_chance)) {
-            st.giveItems(Rnd.chance(Urn_Chance) ? Ancient_Ash_Urn : Ancient_Porcelain, 1);
+            st.giveItems(Rnd.chance(Urn_Chance) ? Ancient_Ash_Urn : Ancient_Porcelain);
             st.playSound(SOUND_ITEMGET);
         }
-
-        return null;
     }
 
 }

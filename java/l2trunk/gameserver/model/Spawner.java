@@ -23,9 +23,9 @@ public abstract class Spawner extends EventOwner implements Cloneable {
     private static final Logger _log = LoggerFactory.getLogger(Spawner.class);
     private static final int MIN_RESPAWN_DELAY = 20;
     int maximumCount;
-    int _referenceCount;
-    int currentCount;
-    int _scheduledCount;
+    private int referenceCount;
+    private int currentCount;
+    private int scheduledCount;
 
     int respawnDelay;
     int respawnDelayRandom;
@@ -36,8 +36,8 @@ public abstract class Spawner extends EventOwner implements Cloneable {
     private NpcInstance _lastSpawn;
 
     public void decreaseScheduledCount() {
-        if (_scheduledCount > 0)
-            _scheduledCount--;
+        if (scheduledCount > 0)
+            scheduledCount--;
     }
 
     public boolean isDoRespawn() {
@@ -79,19 +79,18 @@ public abstract class Spawner extends EventOwner implements Cloneable {
     }
 
     public Spawner setAmount(int amount) {
-        if (_referenceCount == 0)
-            _referenceCount = amount;
+        if (referenceCount == 0)
+            referenceCount = amount;
         maximumCount = amount;
         return this;
     }
 
     public void deleteAll() {
         stopRespawn();
-        for (NpcInstance npc : spawned)
-            npc.deleteMe();
+        spawned.forEach(GameObject::deleteMe);
         spawned.clear();
         _respawnTime = 0;
-        _scheduledCount = 0;
+        scheduledCount = 0;
         currentCount = 0;
     }
 
@@ -110,7 +109,7 @@ public abstract class Spawner extends EventOwner implements Cloneable {
 
     //-----------------------------------------------------------------------------------------------------------------------------------
     public int init() {
-        while (currentCount + _scheduledCount < maximumCount)
+        while (currentCount + scheduledCount < maximumCount)
             doSpawn(false);
 
         doRespawn = true;
@@ -120,7 +119,7 @@ public abstract class Spawner extends EventOwner implements Cloneable {
 
     public List<NpcInstance> initAndReturn() {
         List<NpcInstance> spawnedNpcs = new ArrayList<>();
-        while (currentCount + _scheduledCount < maximumCount)
+        while (currentCount + scheduledCount < maximumCount)
             spawnedNpcs.add(doSpawn(false));
 
         doRespawn = true;
@@ -195,7 +194,7 @@ public abstract class Spawner extends EventOwner implements Cloneable {
             // Спавнится в указанном отражении
             mob.setReflection(getReflection());
 
-            if (mob.isMonster())
+            if (mob instanceof MonsterInstance)
                 ((MonsterInstance) mob).setChampion();
 
             // Init other values of the L2NpcInstance (ex : from its L2CharTemplate for INT, STR, DEX...) and add it in the world as a visible object
@@ -207,7 +206,7 @@ public abstract class Spawner extends EventOwner implements Cloneable {
             mob.setLoc(newLoc);
 
             // Update the current number of SpawnTask in progress or stand by of this L2Spawn
-            _scheduledCount++;
+            scheduledCount++;
 
             SpawnTaskManager.INSTANCE.addSpawnTask(mob, _respawnTime * 1000L - System.currentTimeMillis());
         }
@@ -226,9 +225,9 @@ public abstract class Spawner extends EventOwner implements Cloneable {
         if (respawnDelay == 0)
             return;
 
-        if (doRespawn && _scheduledCount + currentCount < maximumCount) {
+        if (doRespawn && scheduledCount + currentCount < maximumCount) {
             // Update the current number of SpawnTask in progress or stand by of this L2Spawn
-            _scheduledCount++;
+            scheduledCount++;
 
             long delay = (long) (template.isRaid ? Config.ALT_RAID_RESPAWN_MULTIPLIER * getRespawnDelayWithRnd() : getRespawnDelayWithRnd()) * 1000L;
             delay = Math.max(1000, delay - deadTime);

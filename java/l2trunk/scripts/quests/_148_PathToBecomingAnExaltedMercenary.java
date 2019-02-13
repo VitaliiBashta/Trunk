@@ -26,7 +26,7 @@ public final class _148_PathToBecomingAnExaltedMercenary extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("gludio_merc_cap_q0148_06.htm")) {
+        if ("gludio_merc_cap_q0148_06.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
@@ -36,7 +36,7 @@ public final class _148_PathToBecomingAnExaltedMercenary extends Quest {
 
     @Override
     public String onTalk(NpcInstance npc, QuestState st) {
-        Player player = st.getPlayer();
+        Player player = st.player;
         Castle castle = npc.getCastle();
         String htmlText = NO_QUEST_DIALOG;
 
@@ -49,7 +49,7 @@ public final class _148_PathToBecomingAnExaltedMercenary extends Quest {
                     return "gludio_merc_cap_q0148_02.htm";
             }
 
-            if (player.getLevel() < 40 || player.getClassId().getLevel() <= 2)
+            if (player.getLevel() < 40 || player.getClassId().occupation() < 2)
                 htmlText = "gludio_merc_cap_q0148_03.htm";
             else if (st.getQuestItemsCount(13767) < 1)
                 htmlText = "gludio_merc_cap_q0148_03a.htm";
@@ -70,31 +70,30 @@ public final class _148_PathToBecomingAnExaltedMercenary extends Quest {
     }
 
     @Override
-    public String onKill(Player killed, QuestState st) {
+    public void onKill(Player killed, QuestState st) {
         if (st.getCond() == 1 || st.getCond() == 3) {
-            if (isValidKill(killed, st.getPlayer())) {
+            if (isValidKill(killed, st.player)) {
                 int killedCount = st.getInt("enemies");
                 int maxCount = 30;
                 killedCount++;
                 if (killedCount < maxCount) {
                     st.set("enemies", killedCount);
-                    st.getPlayer().sendPacket(new ExShowScreenMessage(NpcString.YOU_HAVE_DEFEATED_S2_OF_S1_ENEMIES, 4000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, true, String.valueOf(maxCount), String.valueOf(killedCount)));
+                    st.player.sendPacket(new ExShowScreenMessage(NpcString.YOU_HAVE_DEFEATED_S2_OF_S1_ENEMIES, 4000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, true, String.valueOf(maxCount), String.valueOf(killedCount)));
                 } else {
                     if (st.getCond() == 1)
                         st.setCond(2);
                     else if (st.getCond() == 3)
                         st.setCond(4);
                     st.unset("enemies");
-                    st.getPlayer().sendPacket(new ExShowScreenMessage(NpcString.YOU_WEAKENED_THE_ENEMYS_ATTACK, 4000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, true));
+                    st.player.sendPacket(new ExShowScreenMessage(NpcString.YOU_WEAKENED_THE_ENEMYS_ATTACK, 4000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, true));
                 }
             }
         }
-        return null;
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
-        if (isValidNpcKill(st.getPlayer(), npc)) {
+    public void onKill(NpcInstance npc, QuestState st) {
+        if (isValidNpcKill(st.player, npc)) {
             int killedCatapultasCount = st.getInt("catapultas");
             int maxCatapultasCount = 2;
             killedCatapultasCount++;
@@ -108,7 +107,6 @@ public final class _148_PathToBecomingAnExaltedMercenary extends Quest {
                 st.unset("catapultas");
             }
         }
-        return null;
     }
 
     private boolean isValidKill(Player killed, Player killer) {
@@ -140,6 +138,5 @@ public final class _148_PathToBecomingAnExaltedMercenary extends Quest {
     @Override
     public void onAbort(QuestState qs) {
         qs.removePlayerOnKillListener();
-        super.onAbort(qs);
     }
 }

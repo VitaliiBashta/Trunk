@@ -5,6 +5,7 @@ import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.World;
+import l2trunk.gameserver.model.instances.DoorInstance;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
 import static l2trunk.commons.lang.NumberUtils.toInt;
@@ -50,14 +51,14 @@ public final class AdminKill implements IAdminCommandHandler {
             else {
                 int radius = Math.max(toInt(player), 100);
                 activeChar.getAroundCharacters(radius, 200)
-                        .filter(c -> !c.isDoor())
+                        .filter(c -> !(c instanceof DoorInstance))
                         .forEach(c -> c.doDie(activeChar));
                 activeChar.sendMessage("Killed within " + radius + " unit radius.");
                 return;
             }
         }
 
-        if (obj != null && obj.isCreature()) {
+        if (obj instanceof Creature) {
             Creature target = (Creature) obj;
             target.doDie(activeChar);
         } else
@@ -72,14 +73,14 @@ public final class AdminKill implements IAdminCommandHandler {
             return;
         }
 
-        if (!obj.isCreature()) {
+        if (obj instanceof Creature) {
+            Creature cha = (Creature) obj;
+            cha.reduceCurrentHp(damage, activeChar, null, true, true, false, false, false, false, true);
+            activeChar.sendMessage("You gave " + damage + " damage to " + cha.getName() + ".");
+        } else {
             activeChar.sendPacket(SystemMsg.INVALID_TARGET);
-            return;
         }
 
-        Creature cha = (Creature) obj;
-        cha.reduceCurrentHp(damage, activeChar, null, true, true, false, false, false, false, true);
-        activeChar.sendMessage("You gave " + damage + " damage to " + cha.getName() + ".");
     }
 
     private enum Commands {

@@ -2,9 +2,7 @@ package l2trunk.scripts.npc.model;
 
 import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.ThreadPoolManager;
-import l2trunk.gameserver.model.Creature;
-import l2trunk.gameserver.model.GameObject;
-import l2trunk.gameserver.model.Skill;
+import l2trunk.gameserver.model.*;
 import l2trunk.gameserver.model.instances.MonsterInstance;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.MagicSkillUse;
@@ -47,8 +45,8 @@ public final class MushroomInstance extends MonsterInstance {
 
         // Даже если убил моба саммон, то эффекты грибов идут хозяину.
         Creature killer = attacker;
-        if (killer.isPet() || killer.isSummon())
-            killer = killer.getPlayer();
+        if (killer instanceof Summon)
+            killer = ((Summon)killer).owner;
 
         if (getNpcId() == RAINBOW_FROG) // Этот моб баффает баффом.
         {
@@ -67,7 +65,7 @@ public final class MushroomInstance extends MonsterInstance {
             doDie(killer);
         } else if (getNpcId() == FANTASY_MUSHROOM) {// Этот моб сзывает всех мобов в окружности и станит их.
             getAroundNpc(700, 300)
-                    .filter(GameObject::isMonster)
+                    .filter(o -> o instanceof MonsterInstance)
                     .filter(npc -> npc.getNpcId() >= 22768)
                     .filter(npc -> npc.getNpcId() <= 22774)
                     .forEach(npc -> {
@@ -97,7 +95,7 @@ public final class MushroomInstance extends MonsterInstance {
             if (actor != null && actor.getNpcId() == FANTASY_MUSHROOM) {
                 actor.broadcastPacket(new MagicSkillUse(actor, skill.id, skill.level));
                 actor.getAroundNpc(200, 300)
-                        .filter(GameObject::isMonster)
+                        .filter(o -> o instanceof MonsterInstance)
                         .filter(npc -> npc.getNpcId() >= 22768)
                         .filter(npc -> npc.getNpcId() <= 22774)
                         .forEach(skill::getEffects);
@@ -105,7 +103,7 @@ public final class MushroomInstance extends MonsterInstance {
                 return;
             }
 
-            if (killer != null && killer.isPlayer() && !killer.isDead()) {
+            if (killer != null && killer instanceof Player && !killer.isDead()) {
                 List<Creature> targets = new ArrayList<>();
                 targets.add(killer);
                 killer.broadcastPacket(new MagicSkillUse(killer, skill));

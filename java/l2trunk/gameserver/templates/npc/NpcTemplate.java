@@ -23,8 +23,8 @@ public final class NpcTemplate extends CharTemplate {
     private final Map<Integer, List<TeleportLocation>> teleportList = new HashMap<>();
     private final Map<QuestEventType, List<Quest>> questEvents = new HashMap<>();
     private final Map<Integer, Skill> skills = new HashMap<>();
-    public int npcId;
-    public String name;
+    public final int npcId;
+    public final String name;
     public String title;
     // не используется - public final String sex;
     public int level;
@@ -36,7 +36,7 @@ public final class NpcTemplate extends CharTemplate {
     public int lhand;
     public double rateHp;
     public int displayId;
-    public boolean isRaid;
+    public final boolean isRaid = false;
     private StatsSet AIParams;
     private int castleId;
     private String _htmRoot;
@@ -290,7 +290,7 @@ public final class NpcTemplate extends CharTemplate {
         return npcId;
     }
 
-    public String getName() {
+    public String name() {
         return name;
     }
 

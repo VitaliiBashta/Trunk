@@ -12,6 +12,8 @@ import l2trunk.gameserver.scripts.Functions;
 
 import java.util.List;
 
+import static l2trunk.gameserver.utils.ItemFunctions.addItem;
+
 public final class FreyaEventAI extends DefaultAI {
     private static final List<Integer> GIFT_SKILLS = List.of(9150, 9151, 9152, 9153, 9154, 9155, 9156);
     private static final int GIFT_CHANCE = 5;
@@ -42,19 +44,19 @@ public final class FreyaEventAI extends DefaultAI {
     public void onEvtSeeSpell(Skill skill, Creature caster) {
         NpcInstance actor = getActor();
 
-        if (caster == null || !caster.isPlayer())
+        if (!(caster instanceof Player))
             return;
 
         GameObject casterTarget = caster.getTarget();
-        if (casterTarget == null || casterTarget.getObjectId() != actor.getObjectId())
+        if (casterTarget == null || casterTarget.objectId() != actor.objectId())
             return;
 
-        Player player = caster.getPlayer();
+        Player player = (Player)caster;
 
         if (GIFT_SKILLS.contains(skill.id)) {
             if (Rnd.chance(GIFT_CHANCE)) {
                 Functions.npcSay(actor, SAY_TEXT.get(0), player.getName());
-                Functions.addItem(player, FREYA_GIFT, 1, "FreyaEventAI");
+                addItem(player, FREYA_GIFT, 1);
             } else if (Rnd.chance(70))
                 Functions.npcSay(actor, Rnd.get(SAY_TEXT));
         }

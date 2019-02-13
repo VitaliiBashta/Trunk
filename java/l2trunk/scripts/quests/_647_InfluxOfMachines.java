@@ -32,14 +32,14 @@ public final class _647_InfluxOfMachines extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("quest_accept")) {
+        if ("quest_accept".equalsIgnoreCase(event)) {
             htmltext = "collecter_gutenhagen_q0647_0103.htm";
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("647_3"))
+        } else if ("647_3".equalsIgnoreCase(event))
             if (st.getQuestItemsCount(BROKEN_GOLEM_FRAGMENT) >= 500) {
-                st.takeItems(BROKEN_GOLEM_FRAGMENT, -1);
+                st.takeItems(BROKEN_GOLEM_FRAGMENT);
                 st.giveItems(Rnd.get(RECIPES));
                 htmltext = "collecter_gutenhagen_q0647_0201.htm";
                 st.playSound(SOUND_FINISH);
@@ -55,7 +55,7 @@ public final class _647_InfluxOfMachines extends Quest {
         int cond = st.getCond();
         long count = st.getQuestItemsCount(BROKEN_GOLEM_FRAGMENT);
         if (cond == 0)
-            if (st.getPlayer().getLevel() >= 70)
+            if (st.player.getLevel() >= 70)
                 htmltext = "collecter_gutenhagen_q0647_0101.htm";
             else {
                 htmltext = "collecter_gutenhagen_q0647_0102.htm";
@@ -69,9 +69,8 @@ public final class _647_InfluxOfMachines extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getCond() == 1 && st.rollAndGive(BROKEN_GOLEM_FRAGMENT, 1, 1, 500, DROP_CHANCE * npc.getTemplate().rateHp))
             st.setCond(2);
-        return null;
     }
 }

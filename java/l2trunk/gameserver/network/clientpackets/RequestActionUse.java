@@ -8,9 +8,9 @@ import l2trunk.gameserver.ai.CtrlIntention;
 import l2trunk.gameserver.geodata.GeoEngine;
 import l2trunk.gameserver.model.*;
 import l2trunk.gameserver.model.Request.L2RequestType;
+import l2trunk.gameserver.model.entity.boat.AirShip;
 import l2trunk.gameserver.model.entity.boat.ClanAirShip;
-import l2trunk.gameserver.model.instances.PetBabyInstance;
-import l2trunk.gameserver.model.instances.StaticObjectInstance;
+import l2trunk.gameserver.model.instances.*;
 import l2trunk.gameserver.model.instances.residences.SiegeFlagInstance;
 import l2trunk.gameserver.network.serverpackets.*;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
@@ -20,8 +20,6 @@ import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.TradeHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Objects;
 
 /**
  * packet type id 0x56
@@ -80,7 +78,7 @@ public final class RequestActionUse extends L2GameClientPacket {
                 activeChar.sendPacket(SystemMsg.YOU_CANNOT_DO_THAT_WHILE_FISHING_2);
                 return;
             }
-            activeChar.broadcastPacket(new SocialAction(activeChar.getObjectId(), action.value));
+            activeChar.broadcastPacket(new SocialAction(activeChar.objectId(), action.value));
             if (Config.ALT_SOCIAL_ACTION_REUSE) {
                 ThreadPoolManager.INSTANCE.schedule(new SocialTask(activeChar), 2600);
                 activeChar.startParalyzed();
@@ -95,11 +93,11 @@ public final class RequestActionUse extends L2GameClientPacket {
                 activeChar.sendActionFailed();
                 return;
             }
-            if (target == null || !target.isPlayer()) {
+            if (!(target instanceof Player)) {
                 activeChar.sendActionFailed();
                 return;
             }
-            final Player pcTarget = target.getPlayer();
+            final Player pcTarget = (Player)target;
             if (pcTarget.isProcessingRequest() && pcTarget.getRequest().isTypeOf(L2RequestType.COUPLE_ACTION)) {
                 activeChar.sendPacket(new SystemMessage2(SystemMsg.COUPLE_ACTION_CANNOT_C1_TARGET_IN_ANOTHER_COUPLE_ACTION).addName(pcTarget));
                 return;
@@ -108,7 +106,7 @@ public final class RequestActionUse extends L2GameClientPacket {
                 activeChar.sendPacket(new SystemMessage2(SystemMsg.C1_IS_ON_ANOTHER_TASK).addName(pcTarget));
                 return;
             }
-            if (!activeChar.isInRange(pcTarget, 300) || activeChar.isInRange(pcTarget, 25) || activeChar.getTargetId() == activeChar.getObjectId() || !GeoEngine.canSeeTarget(activeChar, pcTarget, false)) {
+            if (!activeChar.isInRange(pcTarget, 300) || activeChar.isInRange(pcTarget, 25) || activeChar.getTargetId() == activeChar.objectId() || !GeoEngine.canSeeTarget(activeChar, pcTarget, false)) {
                 activeChar.sendPacket(SystemMsg.THE_REQUEST_CANNOT_BE_COMPLETED_BECAUSE_THE_TARGET_DOES_NOT_MEET_LOCATION_REQUIREMENTS);
                 return;
             }
@@ -117,7 +115,7 @@ public final class RequestActionUse extends L2GameClientPacket {
 
             new Request(L2RequestType.COUPLE_ACTION, activeChar, pcTarget).setTimeout(10000L);
             activeChar.sendPacket(new SystemMessage2(SystemMsg.YOU_HAVE_REQUESTED_A_COUPLE_ACTION_WITH_C1).addName(pcTarget));
-            pcTarget.sendPacket(new ExAskCoupleAction(activeChar.getObjectId(), action.value));
+            pcTarget.sendPacket(new ExAskCoupleAction(activeChar.objectId(), action.value));
 
             if (Config.ALT_SOCIAL_ACTION_REUSE) {
                 ThreadPoolManager.INSTANCE.schedule(new SocialTask(activeChar), 2600);
@@ -144,12 +142,11 @@ public final class RequestActionUse extends L2GameClientPacket {
                 return;
 
             // TODO transfer these skills in terms of
-            if (action.id == 1000 && !target.isDoor()) // Siege Golem - Siege Hammer
-            {
+            if (action.id == 1000 && !(target instanceof DoorInstance)){ // Siege Golem - Siege Hammer
                 activeChar.sendActionFailed();
                 return;
             }
-            if ((action.id == 1039 || action.id == 1040) && (target.isDoor() || target instanceof SiegeFlagInstance)) // Swoop Cannon (can not attack the door and flags)
+            if ((action.id == 1039 || action.id == 1040) && (target instanceof DoorInstance || target instanceof SiegeFlagInstance)) // Swoop Cannon (can not attack the door and flags)
             {
                 activeChar.sendActionFailed();
                 return;
@@ -195,7 +192,6 @@ public final class RequestActionUse extends L2GameClientPacket {
                 break;
             case 7: // Next Target
                 Creature nearest_target = World.getAroundCharacters(activeChar, 400, 200)
-                        .filter(Objects::nonNull)
                         .filter(cha -> !cha.isAlikeDead())
                         .filter(cha -> cha.isAutoAttackable(activeChar))
                         .min((cha1, cha2) -> (int) (activeChar.getDistance3D(cha1) - activeChar.getDistance3D(cha2)))
@@ -203,12 +199,12 @@ public final class RequestActionUse extends L2GameClientPacket {
                 if (nearest_target != null && activeChar.getTarget() != nearest_target) {
                     activeChar.setTarget(nearest_target);
                     if (activeChar.getTarget() == nearest_target)
-                        if (nearest_target.isNpc()) {
-                            activeChar.sendPacket(new MyTargetSelected(nearest_target.getObjectId(), activeChar.getLevel() - nearest_target.getLevel()));
+                        if (nearest_target instanceof NpcInstance) {
+                            activeChar.sendPacket(new MyTargetSelected(nearest_target.objectId(), activeChar.getLevel() - nearest_target.getLevel()));
                             activeChar.sendPacket(nearest_target.makeStatusUpdate(StatusUpdate.CUR_HP, StatusUpdate.MAX_HP));
                             activeChar.sendPacket(new ValidateLocation(nearest_target), ActionFail.STATIC);
                         } else
-                            activeChar.sendPacket(new MyTargetSelected(nearest_target.getObjectId(), 0));
+                            activeChar.sendPacket(new MyTargetSelected(nearest_target.objectId(), 0));
                     return;
                 }
                 break;
@@ -306,7 +302,7 @@ public final class RequestActionUse extends L2GameClientPacket {
                 break;
             case 16:
             case 22: // Атака петом
-                if (target == null || !target.isCreature() || pet == target || pet.isDead()) {
+                if (!(target instanceof Creature) || pet == target || pet.isDead()) {
                     activeChar.sendActionFailed();
                     return;
                 }
@@ -320,7 +316,7 @@ public final class RequestActionUse extends L2GameClientPacket {
                 if (pet.getTemplate().getNpcId() == PetDataTable.SIN_EATER_ID)
                     return;
 
-                if (!ctrlPressed && target.isCreature() && !((Creature) target).isAutoAttackable(pet))
+                if (!ctrlPressed && !((Creature) target).isAutoAttackable(pet))
                     return;
 
                 if (ctrlPressed && !target.isAttackable(pet)) {
@@ -328,7 +324,7 @@ public final class RequestActionUse extends L2GameClientPacket {
                     return;
                 }
 
-                if (!target.isMonster() && (pet.isInZonePeace() || target.isCreature() && ((Creature) target).isInZonePeace())) {
+                if (!(target instanceof MonsterInstance) && (pet.isInZonePeace() || ((Creature) target).isInZonePeace())) {
                     activeChar.sendPacket(SystemMsg.YOU_MAY_NOT_ATTACK_THIS_TARGET_IN_A_PEACEFUL_ZONE);
                     return;
                 }
@@ -361,7 +357,7 @@ public final class RequestActionUse extends L2GameClientPacket {
                     break;
                 }
 
-                if (!PetDataTable.isVitaminPet(pet.getNpcId()) && pet.isPet() && pet.getCurrentFed() < 0.55 * pet.getMaxFed()) {
+                if (!PetDataTable.isVitaminPet(pet.getNpcId()) && pet instanceof PetInstance && pet.getCurrentFed() < 0.55 * pet.getMaxFed()) {
                     activeChar.sendPacket(SystemMsg.YOU_MAY_NOT_RESTORE_A_HUNGRY_PET, ActionFail.STATIC);
                     break;
                 }
@@ -404,7 +400,7 @@ public final class RequestActionUse extends L2GameClientPacket {
                     activeChar.sendPacket(SystemMsg.YOU_CANNOT_BOARD_BECAUSE_YOU_DO_NOT_MEET_THE_REQUIREMENTS);
                 else {
                     activeChar.getEffectList().stopEffect(Skill.SKILL_EVENT_TIMER);
-                    activeChar.setMount(pet.getTemplate().npcId, pet.getObjectId(), pet.getLevel());
+                    activeChar.setMount(pet.getTemplate().npcId, pet.objectId(), pet.getLevel());
                     pet.unSummon();
                 }
                 break;
@@ -432,7 +428,7 @@ public final class RequestActionUse extends L2GameClientPacket {
                     ((PetBabyInstance) pet).triggerBuff();
                 break;
             case 67: // Steer. Allows you to control the Airship.
-                if (activeChar.isInBoat() && activeChar.getBoat().isClanAirShip() && !activeChar.getBoat().isMoving) {
+                if (activeChar.isInBoat() && activeChar.getBoat() instanceof ClanAirShip && !activeChar.getBoat().isMoving) {
                     ClanAirShip boat = (ClanAirShip) activeChar.getBoat();
                     if (boat.getDriver() == null)
                         boat.setDriver(activeChar);
@@ -452,7 +448,7 @@ public final class RequestActionUse extends L2GameClientPacket {
                     activeChar.sendPacket(new ExAirShipTeleportList((ClanAirShip) activeChar.getBoat()));
                 break;
             case 70: // Exit Airship. Disembarks from the Airship.
-                if (activeChar.isInBoat() && activeChar.getBoat().isAirShip() && activeChar.getBoat().isDocked())
+                if (activeChar.isInBoat() && activeChar.getBoat() instanceof AirShip && activeChar.getBoat().isDocked())
                     activeChar.getBoat().oustPlayer(activeChar, activeChar.getBoat().getReturnLoc(), true);
                 break;
             case 1001:
@@ -487,7 +483,7 @@ public final class RequestActionUse extends L2GameClientPacket {
         }
 
         Creature aimingTarget = skill.getAimingTarget(pet, activeChar.getTarget());
-        if (skill.checkCondition(pet, aimingTarget, ctrlPressed, shiftPressed, true))
+        if (skill.checkCondition(pet.owner, aimingTarget, ctrlPressed, shiftPressed, true))
             pet.getAI().cast(skill, aimingTarget, ctrlPressed, shiftPressed);
         else
             activeChar.sendActionFailed();

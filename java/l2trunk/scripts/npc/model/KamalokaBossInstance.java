@@ -17,7 +17,7 @@ public class KamalokaBossInstance extends LostCaptainInstance {
     }
 
     @Override
-    public boolean isRaid() {
+    public final boolean isRaid() {
         return false;
     }
 
@@ -58,7 +58,7 @@ public class KamalokaBossInstance extends LostCaptainInstance {
     private class ManaRegen implements Runnable {
         @Override
         public void run() {
-            World.getAroundPlayers(KamalokaBossInstance.this)
+            World.getAroundPlayers(KamalokaBossInstance.this).stream()
                     .filter(p -> !p.isHealBlocked())
                     .forEach(p -> {
                         int newMp = getNewMp(p.getCurrentMp(), p.getMaxMp());

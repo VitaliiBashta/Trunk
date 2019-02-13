@@ -108,7 +108,7 @@ public final class _455_WingsofSand extends Quest {
             switch (st.getState()) {
                 case CREATED:
                     if (st.isNowAvailable()) {
-                        if (st.getPlayer().getLevel() >= 80)
+                        if (st.player.getLevel() >= 80)
                             htmltext = "sepsoul_q455_01.htm";
                         else {
                             htmltext = "sepsoul_q455_00.htm";
@@ -132,14 +132,13 @@ public final class _455_WingsofSand extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int cond = st.getCond();
         if (cond == 1) {
-            st.giveItems(LargeDragon, 1);
+            st.giveItems(LargeDragon);
             st.setCond(2);
         } else if (cond == 2)
             st.setCond(3);
-        return null;
     }
 
 }

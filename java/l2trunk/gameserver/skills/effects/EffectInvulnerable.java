@@ -15,9 +15,7 @@ public final class EffectInvulnerable extends Effect {
         if (effected.isInvul())
             return false;
         Skill skill = effected.getCastingSkill();
-        if (skill != null && (skill.skillType == SkillType.TAKECASTLE || skill.skillType == SkillType.TAKEFORTRESS || skill.skillType == SkillType.TAKEFLAG))
-            return false;
-        return super.checkCondition();
+        return skill == null || (skill.skillType != SkillType.TAKECASTLE && skill.skillType != SkillType.TAKEFORTRESS && skill.skillType != SkillType.TAKEFLAG);
     }
 
     @Override
@@ -34,8 +32,4 @@ public final class EffectInvulnerable extends Effect {
         effected.setInvul(false);
     }
 
-    @Override
-    public boolean onActionTime() {
-        return false;
-    }
 }

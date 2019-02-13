@@ -12,7 +12,7 @@ public final class FlyToLocation extends L2GameServerPacket {
     public FlyToLocation(Creature cha, Location destLoc, FlyType type) {
         this.destLoc = destLoc;
         this.type = type;
-        chaObjId = cha.getObjectId();
+        chaObjId = cha.objectId();
         loc = cha.getLoc();
     }
 

@@ -11,7 +11,7 @@ public final class PartyMemberPosition extends L2GameServerPacket {
     private final Map<Integer, Location> positions = new HashMap<>();
 
     public PartyMemberPosition add(Player actor) {
-        positions.put(actor.getObjectId(), actor.getLoc());
+        positions.put(actor.objectId(), actor.getLoc());
         return this;
     }
 

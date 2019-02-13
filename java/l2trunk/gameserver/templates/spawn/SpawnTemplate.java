@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class SpawnTemplate {
-    private final PeriodOfDay _periodOfDay;
     private final int _count;
     private final int _respawn;
     private final int _respawnRandom;
@@ -12,8 +11,7 @@ public final class SpawnTemplate {
     private final List<SpawnNpcInfo> npcList = new ArrayList<>(1);
     private final List<SpawnRange> _spawnRangeList = new ArrayList<>(1);
 
-    public SpawnTemplate(PeriodOfDay periodOfDay, int count, int respawn, int respawnRandom) {
-        _periodOfDay = periodOfDay;
+    public SpawnTemplate(int count, int respawn, int respawnRandom) {
         _count = count;
         _respawn = respawn;
         _respawnRandom = respawnRandom;
@@ -58,7 +56,4 @@ public final class SpawnTemplate {
         return _respawnRandom;
     }
 
-    public PeriodOfDay getPeriodOfDay() {
-        return _periodOfDay;
-    }
 }

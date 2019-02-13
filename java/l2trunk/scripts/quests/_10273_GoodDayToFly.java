@@ -5,7 +5,6 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.tables.SkillTable;
 
 public final class _10273_GoodDayToFly extends Quest {
@@ -27,7 +26,7 @@ public final class _10273_GoodDayToFly extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        Player player = st.getPlayer();
+        Player player = st.player;
 
         if ("32557-06.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
@@ -38,7 +37,7 @@ public final class _10273_GoodDayToFly extends Quest {
                 player.sendPacket(Msg.YOU_ALREADY_POLYMORPHED_AND_CANNOT_POLYMORPH_AGAIN);
                 return null;
             }
-            st.set("transform", "1");
+            st.set("transform", 1);
             SkillTable.INSTANCE.getInfo(5982).getEffects(player);
         } else if ("32557-10.htm".equalsIgnoreCase(event)) {
             if (player.getTransformation() != 0) {
@@ -68,7 +67,7 @@ public final class _10273_GoodDayToFly extends Quest {
         if (id == COMPLETED)
             htmltext = "32557-0a.htm";
         else if (id == CREATED)
-            if (st.getPlayer().getLevel() < 75)
+            if (st.player.getLevel() < 75)
                 htmltext = "32557-00.htm";
             else
                 htmltext = "32557-01.htm";
@@ -92,9 +91,9 @@ public final class _10273_GoodDayToFly extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getState() != STARTED)
-            return null;
+            return;
 
         int cond = st.getCond();
         long count = st.getQuestItemsCount(Mark);
@@ -106,6 +105,5 @@ public final class _10273_GoodDayToFly extends Quest {
             } else
                 st.playSound(SOUND_ITEMGET);
         }
-        return null;
     }
 }

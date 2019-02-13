@@ -12,7 +12,7 @@ public class ExFishingEnd extends L2GameServerPacket {
     private final boolean _win;
 
     public ExFishingEnd(Player character, boolean win) {
-        _charId = character.getObjectId();
+        _charId = character.objectId();
         _win = win;
     }
 

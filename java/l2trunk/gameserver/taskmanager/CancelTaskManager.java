@@ -21,7 +21,7 @@ public enum CancelTaskManager {
 
     public void addNewCancelTask(Playable playable, List<Effect> buffs) {
         int buffCancelTime = 45;
-        playable.sendMessage("You will get your buffs back in " + buffCancelTime + " secs.");
+        playable.getPlayer().sendMessage("You will get your buffs back in " + buffCancelTime + " secs.");
 
         taskTimes.add(new DispelClass((System.currentTimeMillis() + (buffCancelTime * 1000)), playable, buffs));
     }
@@ -71,7 +71,6 @@ public enum CancelTaskManager {
                 toRemove.add(task);
 
                 task._cancelled.sendPacket(new ExShowScreenMessage("Cancelled buffs returned!", 2000, ScreenMessageAlign.TOP_LEFT, false));
-                task._cancelled.sendMessage("Cancelled buffs returned!");
             }
 
             toRemove.forEach(taskTimes::remove);

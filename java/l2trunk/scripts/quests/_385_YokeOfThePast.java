@@ -4,7 +4,6 @@ import l2trunk.gameserver.model.base.Experience;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _385_YokeOfThePast extends Quest {
     private final int ANCIENT_SCROLL = 5902;
@@ -45,11 +44,10 @@ public final class _385_YokeOfThePast extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
-        double rand = 60 * Experience.penaltyModifier(st.calculateLevelDiffForDrop(npc.getLevel(), st.getPlayer().getLevel()), 9) * npc.getTemplate().rateHp / 4;
+    public void onKill(NpcInstance npc, QuestState st) {
+        double rand = 60 * Experience.penaltyModifier(st.calculateLevelDiffForDrop(npc.getLevel(), st.player.getLevel()), 9) * npc.getTemplate().rateHp / 4;
 
         st.rollAndGive(ANCIENT_SCROLL, 1, rand);
-        return null;
     }
 
     @Override
@@ -57,7 +55,7 @@ public final class _385_YokeOfThePast extends Quest {
         int npcId = npc.getNpcId();
         String htmltext = "noquest";
         if (checkNPC(npcId) && st.getCond() == 0)
-            if (st.getPlayer().getLevel() < 20) {
+            if (st.player.getLevel() < 20) {
                 htmltext = "enter_necropolis1_q0385_02.htm";
                 st.exitCurrentQuest(true);
             } else
@@ -67,7 +65,7 @@ public final class _385_YokeOfThePast extends Quest {
         else if (st.getCond() == 1 && st.getQuestItemsCount(ANCIENT_SCROLL) > 0) {
             htmltext = "enter_necropolis1_q0385_09.htm";
             st.giveItems(BLANK_SCROLL, st.getQuestItemsCount(ANCIENT_SCROLL));
-            st.takeItems(ANCIENT_SCROLL, -1);
+            st.takeItems(ANCIENT_SCROLL);
         } else
             st.exitCurrentQuest(true);
         return htmltext;

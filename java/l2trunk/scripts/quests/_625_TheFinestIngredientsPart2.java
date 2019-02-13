@@ -12,7 +12,6 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.Functions;
-import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Location;
 
 public final class _625_TheFinestIngredientsPart2 extends Quest {
@@ -82,7 +81,7 @@ public final class _625_TheFinestIngredientsPart2 extends Quest {
         if (_state == CREATED) {
             if (npcId != Jeremy)
                 return "noquest";
-            if (st.getPlayer().getLevel() < 73) {
+            if (st.player.getLevel() < 73) {
                 st.exitCurrentQuest(true);
                 return "jeremy_q0625_0103.htm";
             }
@@ -126,17 +125,15 @@ public final class _625_TheFinestIngredientsPart2 extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
 
         if (st.getCond() == 1 || st.getCond() == 2) {
             if (st.getQuestItemsCount(Food_for_Bumbalump) > 0)
                 st.takeItems(Food_for_Bumbalump, 1);
-            st.giveItems(Special_Yeti_Meat, 1);
+            st.giveItems(Special_Yeti_Meat);
             st.setCond(3);
             st.playSound(SOUND_MIDDLE);
         }
-
-        return null;
     }
 
     private static class DeathListener implements OnDeathListener {

@@ -5,11 +5,9 @@ import l2trunk.gameserver.Config;
 import l2trunk.gameserver.ai.CtrlIntention;
 import l2trunk.gameserver.ai.Guard;
 import l2trunk.gameserver.geodata.GeoEngine;
-import l2trunk.gameserver.model.AggroList;
-import l2trunk.gameserver.model.Creature;
-import l2trunk.gameserver.model.Playable;
-import l2trunk.gameserver.model.Player;
+import l2trunk.gameserver.model.*;
 import l2trunk.gameserver.model.instances.NpcInstance;
+import l2trunk.gameserver.model.instances.PetInstance;
 import l2trunk.gameserver.scripts.Functions;
 
 import java.util.List;
@@ -94,54 +92,57 @@ public final class TalkingGuard extends Guard {
     }
 
     @Override
-    public boolean checkAggression(Creature target, boolean avoidAttack) {
+    public boolean checkAggression(Playable target, boolean avoidAttack) {
         if (_crazyState) {
             NpcInstance actor = getActor();
-            Player player = target.getPlayer();
-            if (actor == null || actor.isDead() || player == null)
-                return false;
-            if (player.isGM())
-                return false;
-            if (Rnd.chance(_sayNormalChance)) {
-                if (target.isPlayer() && target.getKarma() <= 0 && (_lastNormalSay + _sayNormalPeriod < System.currentTimeMillis()) && actor.isInRange(target, 250L)) {
-                    Functions.npcSay(actor, target.getPlayer().isMale()
-                            ? Rnd.get(SAY_NORMAL_TEXT_M).replace("{name}", target.getName())
-                            : Rnd.get(SAY_NORMAL_TEXT_F).replace("{name}", target.getName()));
-                    _lastNormalSay = System.currentTimeMillis();
-                }
-            }
-            if (target.getKarma() <= 0)
-                return false;
-            if (getIntention() != CtrlIntention.AI_INTENTION_ACTIVE)
-                return false;
-            if (globalAggro < 0L)
-                return false;
-            AggroList.AggroInfo ai = actor.getAggroList().get(target);
-            if (ai != null && ai.hate > 0) {
-                if (!target.isInRangeZ(actor.getSpawnedLoc(), MAX_PURSUE_RANGE))
+            Player player =  target.getPlayer();
+            if (actor != null && !actor.isDead()) {
+                if (player.isGM())
                     return false;
-            } else if (!target.isInRangeZ(actor.getSpawnedLoc(), 600))
-                return false;
-            if (target.isPlayable() && !canSeeInSilentMove((Playable) target))
-                return false;
-            if (!GeoEngine.canSeeTarget(actor, target, false))
-                return false;
-            if (target.isPlayer() && ((Player) target).isInvisible())
-                return false;
-
-            if (!avoidAttack) {
-                if ((target.isSummon() || target.isPet()) && target.getPlayer() != null)
-                    actor.getAggroList().addDamageHate(target.getPlayer(), 0, 1);
-                actor.getAggroList().addDamageHate(target, 0, 2);
-                startRunningTask(2000);
-                if (_lastAggroSay + _sayAggroPeriod < System.currentTimeMillis()) {
-                    Functions.npcSay(actor, Rnd.get(_sayAggroText).replace("{name}", target.getPlayer().getName()));
-                    _lastAggroSay = System.currentTimeMillis();
+                if (Rnd.chance(_sayNormalChance)) {
+                    if (player.getKarma() <= 0 && (_lastNormalSay + _sayNormalPeriod < System.currentTimeMillis()) && actor.isInRange(target, 250L)) {
+                        Functions.npcSay(actor, player.isMale()
+                                ? Rnd.get(SAY_NORMAL_TEXT_M).replace("{name}", player.getName())
+                                : Rnd.get(SAY_NORMAL_TEXT_F).replace("{name}", player.getName()));
+                        _lastNormalSay = System.currentTimeMillis();
+                    }
                 }
+                if (player.getKarma() <= 0)
+                    return false;
+                if (getIntention() != CtrlIntention.AI_INTENTION_ACTIVE)
+                    return false;
+                if (globalAggro < 0L)
+                    return false;
+                AggroList.AggroInfo ai = actor.getAggroList().get(player);
+                if (ai != null && ai.hate > 0) {
+                    if (!player.isInRangeZ(actor.getSpawnedLoc(), MAX_PURSUE_RANGE))
+                        return false;
+                } else if (!player.isInRangeZ(actor.getSpawnedLoc(), 600))
+                    return false;
+                if (!canSeeInSilentMove(player))
+                    return false;
+                if (!GeoEngine.canSeeTarget(actor, player, false))
+                    return false;
+                if (player.isInvisible())
+                    return false;
 
-                setIntentionAttack(target);
+                if (!avoidAttack) {
+                    if (target instanceof Summon)
+                        actor.getAggroList().addDamageHate(player, 0, 1);
+                    actor.getAggroList().addDamageHate(target, 0, 2);
+                    startRunningTask(2000);
+                    if (_lastAggroSay + _sayAggroPeriod < System.currentTimeMillis()) {
+                        Functions.npcSay(actor, Rnd.get(_sayAggroText).replace("{name}", player.getName()));
+                        _lastAggroSay = System.currentTimeMillis();
+                    }
+
+                    setIntentionAttack(target);
+                }
+                return true;
+            } else {
+                return false;
             }
-            return true;
+
         } else {
             super.checkAggression(target, avoidAttack);
         }

@@ -28,7 +28,7 @@ public enum SkillTable {
         skills = SkillsEngine.INSTANCE.loadAllSkills();
         int maxId = skills.values().stream().mapToInt(s -> s.id).max().orElse(0);
         int maxLvl = skills.values().stream().mapToInt(s -> s.level).max().orElse(0);
-        LOG.info("SkillsEngine: Loaded " + skills.values().size() + " skill templates from XML files. Max id: " + maxId + ", max level: " + maxLvl);
+        LOG.info("SkillsEngine: Loaded " + skills.values().size() + " skill templates from XML files. Max id: " + maxId + ", max occupation: " + maxLvl);
 
         makeLevelsTable();
     }

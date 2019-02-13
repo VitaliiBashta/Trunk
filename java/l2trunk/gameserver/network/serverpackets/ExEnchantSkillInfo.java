@@ -23,7 +23,7 @@ public class ExEnchantSkillInfo extends L2GameServerPacket {
         // skill already enchanted?
         if (_level > 100) {
             canDecrease = 1;
-            // get detail for next level
+            // get detail for next occupation
             EnchantSkillLearn esd = SkillTreeTable.getSkillEnchant(_id, _level + 1);
 
             // if it exists add it

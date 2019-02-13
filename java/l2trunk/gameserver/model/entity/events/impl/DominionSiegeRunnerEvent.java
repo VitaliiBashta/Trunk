@@ -60,10 +60,10 @@ public final class DominionSiegeRunnerEvent extends GlobalEvent {
                         DominionSiegeEvent siegeEvent2 = d2.getSiegeEvent();
                         List<Integer> defenderPlayers2 = siegeEvent2.getObjects(DominionSiegeEvent.DEFENDER_PLAYERS);
 
-                        defenderPlayers2.remove(Integer.valueOf(member.getObjectId()));
+                        defenderPlayers2.remove(Integer.valueOf(member.objectId()));
 
                         if (d != d2)
-                            siegeEvent2.clearReward(member.getObjectId());
+                            siegeEvent2.clearReward(member.objectId());
                     }
                 }
             }

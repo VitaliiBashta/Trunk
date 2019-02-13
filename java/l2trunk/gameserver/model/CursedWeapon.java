@@ -1,7 +1,6 @@
 package l2trunk.gameserver.model;
 
 import l2trunk.commons.util.Rnd;
-import l2trunk.gameserver.model.Skill.AddedSkill;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.items.Inventory;
 import l2trunk.gameserver.model.items.ItemInstance;
@@ -11,9 +10,9 @@ import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.ItemFunctions;
 import l2trunk.gameserver.utils.Location;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public final class CursedWeapon {
     private final String _name;
@@ -122,10 +121,10 @@ public final class CursedWeapon {
     }
 
     private void giveSkill(Player player) {
-        for (Skill s : getSkills()) {
+        getSkills().forEach(s -> {
             player.addSkill(s, false);
             player.transformationSkills.put(s.id, s);
-        }
+        });
         player.sendPacket(new SkillList(player));
     }
 
@@ -135,10 +134,10 @@ public final class CursedWeapon {
             level = _skillMaxLevel;
 
         Skill skill = SkillTable.INSTANCE.getInfo(skillId, level);
-        List<Skill> ret = new ArrayList<>();
-        ret.add(skill);
-        for (AddedSkill s : skill.getAddedSkills())
-            ret.add(SkillTable.INSTANCE.getInfo(s.id, s.level));
+        List<Skill> ret =  skill.getAddedSkills().stream()
+        .map(s -> SkillTable.INSTANCE.getInfo(s.id, s.level))
+        .collect(Collectors.toList());
+        ret.add(0,skill);
         return ret;
     }
 
@@ -166,7 +165,7 @@ public final class CursedWeapon {
     }
 
     public void activate(Player player, ItemInstance item) {
-        if (isDropped() || getPlayerId() != player.getObjectId()) // оружие уже в руках игрока или новый игрок
+        if (isDropped() || getPlayerId() != player.objectId()) // оружие уже в руках игрока или новый игрок
         {
             _playerKarma = player.getKarma();
             _playerPkKills = player.getPkKills();
@@ -201,7 +200,7 @@ public final class CursedWeapon {
         giveSkill(player);
 
         player.setFullHpMp();
-        player.setCurrentCp(player.getMaxCp());
+        player.setFullCp();
         player.broadcastUserInfo(true);
     }
 

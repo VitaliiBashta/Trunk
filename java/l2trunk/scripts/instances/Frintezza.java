@@ -6,15 +6,16 @@ import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.CtrlEvent;
 import l2trunk.gameserver.listener.actor.OnCurrentHpDamageListener;
 import l2trunk.gameserver.listener.actor.OnDeathListener;
-import l2trunk.gameserver.listener.zone.OnZoneEnterLeaveListener;
-import l2trunk.gameserver.model.*;
+import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.GameObject;
+import l2trunk.gameserver.model.Player;
+import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.entity.Reflection;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.*;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage.ScreenMessageAlign;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.tables.SkillTable;
-import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.NpcLocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,7 +63,6 @@ public final class Frintezza extends Reflection {
     private final List<NpcInstance> demons = new ArrayList<>(4);
     private final DeathListener _deathListener = new DeathListener();
     private final CurrentHpListener _currentHpListener = new CurrentHpListener();
-    private final ZoneListener _zoneListener = new ZoneListener();
     private NpcInstance _frintezzaDummy, frintezza, weakScarlet, strongScarlet;
     private int _scarletMorph = 0;
     private ScheduledFuture<?> musicTask;
@@ -70,8 +70,6 @@ public final class Frintezza extends Reflection {
     @Override
     protected void onCreate() {
         super.onCreate();
-
-        getZone("[Frintezza]").addListener(_zoneListener);
 
         getNpcs().forEach(n -> n.addListener(_deathListener));
 
@@ -105,7 +103,7 @@ public final class Frintezza extends Reflection {
                 });
 
         if (socialAction > 0 && socialAction < 5)
-            target.broadcastPacket(new SocialAction(target.getObjectId(), socialAction));
+            target.broadcastPacket(new SocialAction(target.objectId(), socialAction));
     }
 
     private void blockAll(boolean flag) {
@@ -219,7 +217,7 @@ public final class Frintezza extends Reflection {
                         ThreadPoolManager.INSTANCE.schedule(new Spawn(6), 1350);
                         break;
                     case 6:
-                        frintezza.broadcastPacket(new SocialAction(frintezza.getObjectId(), 2));
+                        frintezza.broadcastPacket(new SocialAction(frintezza.objectId(), 2));
                         ThreadPoolManager.INSTANCE.schedule(new Spawn(7), 7000);
                         break;
                     case 7:
@@ -446,14 +444,14 @@ public final class Frintezza extends Reflection {
                         ThreadPoolManager.INSTANCE.schedule(new SecondMorph(2), 2000);
                         break;
                     case 2:
-                        weakScarlet.broadcastPacket(new SocialAction(weakScarlet.getObjectId(), 1));
+                        weakScarlet.broadcastPacket(new SocialAction(weakScarlet.objectId(), 1));
                         weakScarlet.setCurrentHp(weakScarlet.getMaxHp() * 3 / 4., false);
                         weakScarlet.setRHandId(_frintezzasSwordId);
                         weakScarlet.broadcastCharInfo();
                         ThreadPoolManager.INSTANCE.schedule(new SecondMorph(3), 5500);
                         break;
                     case 3:
-                        weakScarlet.broadcastPacket(new SocialAction(weakScarlet.getObjectId(), 4));
+                        weakScarlet.broadcastPacket(new SocialAction(weakScarlet.objectId(), 4));
                         blockAll(false);
                         demonMorph.getEffects(weakScarlet);
                         getPlayers().forEach(Player::leaveMovieMode);
@@ -481,8 +479,8 @@ public final class Frintezza extends Reflection {
                         _angle = Math.abs((weakScarlet.getHeading() < 32768 ? 180 : 540) - (int) (weakScarlet.getHeading() / 182.044444444));
                         getPlayers().forEach(Player::enterMovieMode);
                         blockAll(true);
-                        frintezza.broadcastPacket(new MagicSkillCanceled(frintezza.getObjectId()));
-                        frintezza.broadcastPacket(new SocialAction(frintezza.getObjectId(), 4));
+                        frintezza.broadcastPacket(new MagicSkillCanceled(frintezza.objectId()));
+                        frintezza.broadcastPacket(new SocialAction(frintezza.objectId(), 4));
                         ThreadPoolManager.INSTANCE.schedule(new ThirdMorph(2), 100);
                         break;
                     case 2:
@@ -601,7 +599,7 @@ public final class Frintezza extends Reflection {
     private class DeathListener implements OnDeathListener {
         @Override
         public void onDeath(Creature self, Creature killer) {
-            if (self.isNpc()) {
+            if (self instanceof NpcInstance) {
                 if (self.getNpcId() == HallAlarmDevice) {
                     hallADoors.forEach(Frintezza.this::openDoor);
                     blockUnblockNpcs(false, blockANpcs);
@@ -638,19 +636,4 @@ public final class Frintezza extends Reflection {
         }
     }
 
-    public class ZoneListener implements OnZoneEnterLeaveListener {
-        @Override
-        public void onZoneEnter(Zone zone, Creature cha) {
-        }
-
-        @Override
-        public void onZoneLeave(Zone zone, Creature cha) {
-            if (cha.isNpc() && (cha.getNpcId() == _weakScarletId || cha.getNpcId() == _strongScarletId)) {
-                cha.teleToLocation(new Location(-87784, -153304, -9176));
-                ((NpcInstance) cha).getAggroList().clear(true);
-                cha.setFullHpMp();
-                cha.broadcastCharInfo();
-            }
-        }
-    }
 }

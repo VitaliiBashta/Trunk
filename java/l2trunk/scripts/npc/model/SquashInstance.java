@@ -1,6 +1,5 @@
 package l2trunk.scripts.npc.model;
 
-import l2trunk.commons.lang.reference.HardReference;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Skill;
@@ -12,26 +11,23 @@ public final class SquashInstance extends SpecialMonsterInstance {
     public final static int High_Quality_Squash = 12775;
     public final static int Low_Quality_Squash = 12776;
     public final static int Large_Young_Squash = 12777;
+    public final static int King_Squash = 13016;
     private final static int High_Quality_Large_Squash = 12778;
     private final static int Low_Quality_Large_Squash = 12779;
-    public final static int King_Squash = 13016;
     private final static int Emperor_Squash = 13017;
 
-    private HardReference<Player> _spawnerRef;
+    private Player player;
 
     public SquashInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
     }
 
-    public void setSpawner(Player spawner) {
-        _spawnerRef = spawner.getRef();
+    public Player getSpawner() {
+        return player;
     }
 
-    public Player getSpawner() {
-        if (_spawnerRef == null)
-            return null;
-
-        return _spawnerRef.get();
+    public void setSpawner(Player spawner) {
+        player = spawner;
     }
 
     @Override

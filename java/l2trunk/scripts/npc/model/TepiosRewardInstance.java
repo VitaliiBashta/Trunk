@@ -56,28 +56,29 @@ public final class TepiosRewardInstance extends NpcInstance {
                 time1 = ((SufferingHallDefence) getReflection()).timeSpent;
             int time = time1;
             getReflection().getPlayers()
-                    .filter(p -> ItemFunctions.getItemCount(p, MARK_OF_KEUCEREUS_STAGE_1) < 1 && ItemFunctions.getItemCount(p, MARK_OF_KEUCEREUS_STAGE_2) < 1)
+                    .filter(p -> !p.haveItem(MARK_OF_KEUCEREUS_STAGE_1))
+                    .filter(p -> ! p.haveItem(MARK_OF_KEUCEREUS_STAGE_2))
                     .forEach(p -> {
-                        ItemFunctions.addItem(p, MARK_OF_KEUCEREUS_STAGE_1, 1, true, "TepiosRewardInstance");
-                        ItemFunctions.addItem(p, SOE, 1, true, "TepiosRewardInstance");
+                        ItemFunctions.addItem(p, MARK_OF_KEUCEREUS_STAGE_1, 1, "TepiosRewardInstance");
+                        ItemFunctions.addItem(p, SOE, 1, "TepiosRewardInstance");
 
                         if (time > 0) {
                             if (time <= 20 * 60 + 59)
-                                ItemFunctions.addItem(p, SUPPLIES1, 1, true, "TepiosRewardInstance");
+                                ItemFunctions.addItem(p, SUPPLIES1, 1, "TepiosRewardInstance");
                                 // 21 мин - 22 мин 59 сек
                             else if (time <= 22 * 60 + 59)
-                                ItemFunctions.addItem(p, SUPPLIES2, 1, true, "TepiosRewardInstance");
+                                ItemFunctions.addItem(p, SUPPLIES2, 1, "TepiosRewardInstance");
                                 // 23 мин - 24 мин 59 сек
                             else if (time <= 24 * 60 + 59)
-                                ItemFunctions.addItem(p, SUPPLIES3, 1, true, "TepiosRewardInstance");
+                                ItemFunctions.addItem(p, SUPPLIES3, 1, "TepiosRewardInstance");
                                 // 25 мин - 26 мин 59 сек
                             else if (time <= 26 * 60 + 59)
-                                ItemFunctions.addItem(p, SUPPLIES4, 1, true, "TepiosRewardInstance");
+                                ItemFunctions.addItem(p, SUPPLIES4, 1, "TepiosRewardInstance");
                                 // 27 мин - 28 мин 59 сек
                             else if (time <= 28 * 60 + 59)
-                                ItemFunctions.addItem(p, SUPPLIES5, 1, true, "TepiosRewardInstance");
+                                ItemFunctions.addItem(p, SUPPLIES5, 1, "TepiosRewardInstance");
                                 // 29 мин - 60 мин
-                            else ItemFunctions.addItem(p, Rnd.get(SUPPLIES6_10), 1, true, "TepiosRewardInstance");
+                            else ItemFunctions.addItem(p, Rnd.get(SUPPLIES6_10), 1, "TepiosRewardInstance");
                         }
                         QuestState qs = p.getQuestState(_694_BreakThroughTheHallOfSuffering.class);
                         QuestState qs2 = p.getQuestState(_695_DefendtheHallofSuffering.class);

@@ -15,7 +15,7 @@ public class ExGetPremiumItemList extends L2GameServerPacket {
     private final Map<Integer, PremiumItem> _list;
 
     public ExGetPremiumItemList(Player activeChar) {
-        _objectId = activeChar.getObjectId();
+        _objectId = activeChar.objectId();
         _list = activeChar.getPremiumItemList();
     }
 

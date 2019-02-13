@@ -11,7 +11,7 @@ public final class PledgeShowInfoUpdate extends L2GameServerPacket {
     private final int clan_rep;
     private final int crest_id;
     private final int ally_id;
-    private final int atwar;
+    private final boolean atwar;
     private final int _territorySide;
     private final int HasCastle;
     private final int HasHideout;
@@ -20,7 +20,7 @@ public final class PledgeShowInfoUpdate extends L2GameServerPacket {
     private String ally_name = StringUtils.EMPTY;
 
     public PledgeShowInfoUpdate(final Clan clan) {
-        clan_id = clan.getClanId();
+        clan_id = clan.clanId();
         clan_level = clan.getLevel();
         HasCastle = clan.getCastle();
         HasHideout = clan.getHasHideout();

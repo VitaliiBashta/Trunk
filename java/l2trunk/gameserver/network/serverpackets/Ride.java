@@ -10,7 +10,7 @@ public class Ride extends L2GameServerPacket {
     private final Location _loc;
 
     public Ride(Player cha) {
-        _id = cha.getObjectId();
+        _id = cha.objectId();
         _mountType = cha.getMountType();
         _rideClassID = cha.getMountNpcId() + 1000000;
         _loc = cha.getLoc();

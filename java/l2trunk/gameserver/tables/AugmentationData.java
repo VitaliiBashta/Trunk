@@ -161,7 +161,6 @@ public class AugmentationData {
         return _Instance;
     }
 
-    @SuppressWarnings({"unchecked", "resource"})
     private void load() {
         // Load the skillmap
         // Note: the skillmap data is only used when generating new augmentations
@@ -225,7 +224,7 @@ public class AugmentationData {
                             else if (type.equalsIgnoreCase("red"))
                                 ((List<Integer>) _redSkills[k]).add(augmentationId);
 
-                            _allSkills.put(augmentationId, new Options(augmentationId, type, skillId, skillLvL, t, chance));
+                            _allSkills.put(augmentationId, new Options(augmentationId, skillId, skillLvL, t, chance));
                         }
 
             if (badAugmantData != 0)
@@ -271,7 +270,8 @@ public class AugmentationData {
                             if ("stat".equalsIgnoreCase(d.getNodeName())) {
                                 NamedNodeMap attrs = d.getAttributes();
                                 String statName = attrs.getNamedItem("name").getNodeValue();
-                                double soloValues[] = null, combinedValues[] = null;
+                                double[] soloValues;
+                                double[] combinedValues;
 
                                 for (Node cd = d.getFirstChild(); cd != null; cd = cd.getNextSibling())
                                     if ("table".equalsIgnoreCase(cd.getNodeName())) {
@@ -297,7 +297,7 @@ public class AugmentationData {
                                     }
 
                                 // store this stat
-                                ((List<augmentationStat>) _augStats[(i - 1)]).add(new augmentationStat(Stats.valueOfXml(statName), soloValues, combinedValues));
+                                ((List<Stats>) _augStats[(i - 1)]).add(Stats.valueOfXml(statName));
                             }
             } catch (DOMException | FileNotFoundException | NumberFormatException | ParserConfigurationException | SAXException e) {
                 LOG.error("Error parsing augmentation_stats" + i + ".xml.", e);
@@ -329,7 +329,8 @@ public class AugmentationData {
                             if ("stat".equalsIgnoreCase(d.getNodeName())) {
                                 NamedNodeMap attrs = d.getAttributes();
                                 String statName = attrs.getNamedItem("name").getNodeValue();
-                                double soloValues[] = null, combinedValues[] = null;
+                                double[] soloValues;
+                                double[] combinedValues;
 
                                 for (Node cd = d.getFirstChild(); cd != null; cd = cd.getNextSibling())
                                     if ("table".equalsIgnoreCase(cd.getNodeName())) {
@@ -355,7 +356,7 @@ public class AugmentationData {
                                     }
 
                                 // store this stat
-                                ((List<augmentationStat>) _augAccStats[(i - 1)]).add(new augmentationStat(Stats.valueOfXml(statName), soloValues, combinedValues));
+                                ((List<augmentationStat>) _augAccStats[(i - 1)]).add(new augmentationStat(Stats.valueOfXml(statName)));
                             }
             } catch (DOMException | FileNotFoundException | NumberFormatException | ParserConfigurationException | SAXException e) {
                 LOG.error("Error parsing jewel augmentation_stats" + i + ".xml.", e);
@@ -396,7 +397,7 @@ public class AugmentationData {
         boolean generateSkill = false;
         boolean generateGlow = false;
 
-        //lifestonelevel is used for stat Id and skill level, but here the max level is 9
+        //lifestonelevel is used for stat Id and skill occupation, but here the max occupation is 9
         lifeStoneLevel = Math.min(lifeStoneLevel, 9);
 
         switch (lifeStoneGrade) {
@@ -455,7 +456,7 @@ public class AugmentationData {
         }
 
         // Third: Calculate the subblock offset for the choosen color,
-        // and the level of the lifeStone
+        // and the occupation of the lifeStone
         // from large number of retail augmentations:
         // no skill part
         // Id for stat12:
@@ -562,19 +563,11 @@ public class AugmentationData {
         return Rnd.get(offset, offset + STAT_SUBBLOCKSIZE - 1);
     }
 
-    class augmentationStat {
+    private class augmentationStat {
         private final Stats stat;
-        private final int _singleSize;
-        private final int _combinedSize;
-        private final double _singleValues[];
-        private final double _combinedValues[];
 
-        augmentationStat(Stats stat, double sValues[], double cValues[]) {
+        augmentationStat(Stats stat) {
             this.stat = stat;
-            _singleSize = sValues.length;
-            _singleValues = sValues;
-            _combinedSize = cValues.length;
-            _combinedValues = cValues;
         }
 
         public Stats getStat() {

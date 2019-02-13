@@ -72,7 +72,7 @@ public final class DragonValley implements ScriptFile, OnPlayerExitListener {
             return;
         if (inzone.contains(player)) {
             if (!_isActive)
-                inzone.remove(player.getPlayer());
+                inzone.remove(player);
             else
                 ThreadPoolManager.INSTANCE.schedule(() -> addPlayer(player), 5000);
         }
@@ -108,7 +108,7 @@ public final class DragonValley implements ScriptFile, OnPlayerExitListener {
     private double getCoefficient(int count) {
         switch (count) {
             case 4:
-                return  0.7;
+                return 0.7;
             case 5:
                 return 0.75;
             case 6:
@@ -141,22 +141,21 @@ public final class DragonValley implements ScriptFile, OnPlayerExitListener {
 
     public class ZoneListener implements OnZoneEnterLeaveListener {
         @Override
-        public void onZoneEnter(Zone zone, Creature cha) {
-            if (cha.isPlayer()) {
-                if (!_isActive)
-                    inzone.add(cha.getPlayer());
-                else
-                    ThreadPoolManager.INSTANCE.schedule(() ->addPlayer(cha.getPlayer()), 5000);
-            }
+        public void onZoneEnter(Zone zone, Player player) {
+            if (!_isActive)
+                inzone.add(player);
+            else
+                ThreadPoolManager.INSTANCE.schedule(() -> addPlayer(player), 5000);
+
         }
 
         @Override
-        public void onZoneLeave(Zone zone, Creature cha) {
-            if (cha.isPlayer() && inzone.contains(cha.getPlayer())) {
+        public void onZoneLeave(Zone zone, Player player) {
+            if (inzone.contains(player)) {
                 if (!_isActive)
-                    inzone.remove(cha.getPlayer());
+                    inzone.remove(player);
                 else
-                    ThreadPoolManager.INSTANCE.schedule(() -> addPlayer(cha.getPlayer()), 5000);
+                    ThreadPoolManager.INSTANCE.schedule(() -> addPlayer(player), 5000);
             }
         }
     }

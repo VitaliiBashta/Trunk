@@ -1,6 +1,5 @@
 package l2trunk.scripts.instances;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ThreadPoolManager;
@@ -23,6 +22,8 @@ import l2trunk.scripts.quests._697_DefendtheHallofErosion;
 
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public final class ErosionHallDefence extends Reflection {
     private static final int AliveTumor = 18708;
@@ -30,7 +31,7 @@ public final class ErosionHallDefence extends Reflection {
     private static final int UnstableSeed = 32541;
     private static final int RegenerationCoffin = 18709;
     private static final int SoulWagon = 25636;
-    private final List<Integer> zoneEventTriggers = ArrayUtils.createAscendingList(14240001, 14240012);
+    private final List<Integer> zoneEventTriggers = IntStream.rangeClosed(14240001, 14240012).boxed().collect(Collectors.toList());
     private final ZoneListener startZoneListener = new ZoneListener();
     private final DeathListener deathListener = new DeathListener();
     private boolean conquestBegun = false;
@@ -122,7 +123,7 @@ public final class ErosionHallDefence extends Reflection {
     }
 
     private void spawnCoffin(NpcInstance tumor) {
-        addSpawnWithoutRespawn(RegenerationCoffin, new Location(tumor.getLoc().x, tumor.getLoc().y, tumor.getLoc().z, Location.getRandomHeading()), 250);
+        addSpawnWithoutRespawn(RegenerationCoffin, Location.of(tumor.getLoc().x, tumor.getLoc().y, tumor.getLoc().z, true), 250);
     }
 
     private NpcInstance getNearestSeed(NpcInstance mob) {
@@ -216,46 +217,45 @@ public final class ErosionHallDefence extends Reflection {
 
     public class ZoneListener implements OnZoneEnterLeaveListener {
         @Override
-        public void onZoneEnter(Zone zone, Creature cha) {
+        public void onZoneEnter(Zone zone, Player cha) {
             if (!conquestBegun) {
                 conquestBegun = true;
                 conquestBegins();
             }
         }
 
-        @Override
-        public void onZoneLeave(Zone zone, Creature cha) {
-        }
     }
 
     private class DeathListener implements OnDeathListener {
         @Override
         public void onDeath(Creature self, Creature killer) {
-            if (!self.isNpc())
+            if (self instanceof NpcInstance) {
+                if (self.getNpcId() == AliveTumor) {
+                    ((NpcInstance) self).dropItem(killer.getPlayer(), 13797, Rnd.get(2, 5));
+                    final NpcInstance deadTumor = addSpawnWithoutRespawn(DeadTumor, self);
+                    notifyTumorDeath();
+                    self.deleteMe();
+                    getPlayers().forEach(p ->
+                            p.sendPacket(new ExShowScreenMessage(NpcString.THE_TUMOR_INSIDE_S1_HAS_BEEN_DESTROYED_NTHE_NEARBY_UNDEAD_THAT_WERE_ATTACKING_SEED_OF_LIFE_START_LOSING_THEIR_ENERGY_AND_RUN_AWAY, 8000, ExShowScreenMessage.ScreenMessageAlign.MIDDLE_CENTER, false, 1, -1, false, "#" + NpcString.HALL_OF_EROSION.getId())));
+                    ThreadPoolManager.INSTANCE.schedule(new RunnableImpl() {
+                        @Override
+                        public void runImpl() {
+                            deadTumor.deleteMe();
+                            addSpawnWithoutRespawn(AliveTumor, deadTumor);
+                            handleTumorHp(0.25);
+                            invokeDeathListener();
+                            getPlayers().forEach(p ->
+                                    p.sendPacket(new ExShowScreenMessage(NpcString.THE_TUMOR_INSIDE_S1_HAS_COMPLETELY_REVIVED_, 8000, ExShowScreenMessage.ScreenMessageAlign.MIDDLE_CENTER, false, 1, -1, false, "#" + NpcString.HALL_OF_EROSION.getId())));
+                        }
+                    }, tumorRespawnTime);
+                } else if (self.getNpcId() == SoulWagon) {
+                    if (getAllByNpcId(SoulWagon, true).count() > 0)
+                        rescheduleFailureTask(60000L);
+                    else
+                        conquestConclusion(true);
+                }
+            } else {
                 return;
-            if (self.getNpcId() == AliveTumor) {
-                ((NpcInstance) self).dropItem(killer.getPlayer(), 13797, Rnd.get(2, 5));
-                final NpcInstance deadTumor = addSpawnWithoutRespawn(DeadTumor, self.getLoc(), 0);
-                notifyTumorDeath();
-                self.deleteMe();
-                getPlayers().forEach(p ->
-                        p.sendPacket(new ExShowScreenMessage(NpcString.THE_TUMOR_INSIDE_S1_HAS_BEEN_DESTROYED_NTHE_NEARBY_UNDEAD_THAT_WERE_ATTACKING_SEED_OF_LIFE_START_LOSING_THEIR_ENERGY_AND_RUN_AWAY, 8000, ExShowScreenMessage.ScreenMessageAlign.MIDDLE_CENTER, false, 1, -1, false, "#" + NpcString.HALL_OF_EROSION.getId())));
-                ThreadPoolManager.INSTANCE.schedule(new RunnableImpl() {
-                    @Override
-                    public void runImpl() {
-                        deadTumor.deleteMe();
-                        addSpawnWithoutRespawn(AliveTumor, deadTumor.getLoc(), 0);
-                        handleTumorHp(0.25);
-                        invokeDeathListener();
-                        getPlayers().forEach(p ->
-                                p.sendPacket(new ExShowScreenMessage(NpcString.THE_TUMOR_INSIDE_S1_HAS_COMPLETELY_REVIVED_, 8000, ExShowScreenMessage.ScreenMessageAlign.MIDDLE_CENTER, false, 1, -1, false, "#" + NpcString.HALL_OF_EROSION.getId())));
-                    }
-                }, tumorRespawnTime);
-            } else if (self.getNpcId() == SoulWagon) {
-                if (getAllByNpcId(SoulWagon, true).count() > 0)
-                    rescheduleFailureTask(60000L);
-                else
-                    conquestConclusion(true);
             }
         }
     }

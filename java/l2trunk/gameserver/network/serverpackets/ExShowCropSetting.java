@@ -11,7 +11,7 @@ import java.util.List;
 public final class ExShowCropSetting extends L2GameServerPacket {
     private final int _manorId;
     private final int _count;
-    private final long[] _cropData; // data to send, size:_count*14
+    private final long[] _cropData; // data to send, size:count*14
 
     public ExShowCropSetting(int manorId) {
         _manorId = manorId;
@@ -62,7 +62,7 @@ public final class ExShowCropSetting extends L2GameServerPacket {
 
         for (int i = 0; i < _count; i++) {
             writeD((int) _cropData[i * 14 + 0]); // crop id
-            writeD((int) _cropData[i * 14 + 1]); // seed level
+            writeD((int) _cropData[i * 14 + 1]); // seed occupation
 
             writeC(1);
             writeD((int) _cropData[i * 14 + 2]); // reward 1 id

@@ -82,12 +82,10 @@ public final class ItemBroker extends Functions {
             11216, 11217, 11218, 11219, 11220, 11221, 11222, 11223, 11224, 11225, 11226, 11227, 11228, 11229, 11230, 11231, 11232, 11233, 11234, 11235, 11236, 11237, 11238, 11239, 11240, 11241, 11242, 11243, 11244, 11245, 11246, 11247, 11248, 11249, 11250, 11251, 11252, 11253, 11254, 11255, 11256, 11257, 11258, 11259, 11260, 11261, 11262, 11263, 11264, 11265, 11266, 11267, 11268, 11269, 11270, 11271, 11272, 11273, 11274, 11275, 11276, 11277, 11278, 11279, 11280, 11281, 11282, 11283, 11284, 11285, 11286, 11287, 11288, 11289, 11290, 11291, 11292, 11293, 11294, 11295, 11296, 11297, 11298, 11299, 11300, 11301, 11302, 11303, 11304, 11305, 11306, 11307, 11308, 11309, 11310, 11311, 11312, 11313, 11314, 11315, 11316, 11317, 11318, 11319, 11320, 11321, 11322, 11323, 11324, 11325, 11326, 11327, 11328, 11329, 11330, 11331, 11332, 11333, 11334, 11335, 11336, 11337, 11338, 11339, 11340, 11341, 11342, 11343, 11344, 11345, 11346, 11347, 11348, 11362, 11374, 11385, 11416, 11425, 11469, 11480, 11502, 11508, 11532, 11569, 12852, 12853, 12854, 12855, 12856, 12857, 12858, 12859, 12860, 12861, 12862, 12863, 12864, 12865, 12866, 12867, 12868, 12869, 12870, 12871, 12872, 12873, 12874, 12875, 12876, 12877, 12878, 12879, 12880, 12881, 12882, 12883, 12884, 12885, 12886, 12887, 12888, 12889, 12890, 12891, 12892, 12893, 12894, 12895, 12896, 12897, 12898, 12899, 12900, 12901, 12902, 12903, 12904, 12905, 12906, 12907, 12908, 12909, 12910, 12911, 12912, 12913, 12914, 12915, 12916, 12917, 12918, 12919, 12920, 12921, 12922, 12923, 12924, 12925, 12926, 12927, 12928, 12929, 12930, 12931, 12932, 12933, 12934, 12935, 12936, 12937, 12938, 12939, 12940, 12941, 12942, 12943, 12944, 12945, 12946, 12947, 12948, 12949, 12950, 12951, 12952, 12953, 12954, 12955, 12956, 12957, 12958, 12959, 12960, 12961, 12962, 12963, 12964, 12965, 12966, 12967, 12968, 12969, 12970, 12971, 12972, 12973, 12974, 12975, 12976, 12977, 14412, 14413, 14414, 14415, 14416, 14417, 14418, 14419, 14420, 14421, 14422, 14423, 14424, 14425, 14426, 14427, 14428, 14429, 14430, 14431, 14432, 14433, 14434, 14435, 14436, 14437, 14438, 14439, 14440, 14441, 14442, 14443, 14444, 14445, 14446, 14447, 14448, 14449, 14450, 14451, 14452, 14453, 14454, 14455, 14456, 14457, 14458, 14459, 14460, 14526, 14527, 14528, 14529, 14560, 14561, 14562, 14563, 14564, 14565, 14566, 14567, 14568, 14569, 14570, 14571, 14572, 14573, 14574, 14575, 14576, 14577, 14578, 14579, 14580, 14581, 16042, 16043, 16044, 16045, 16046, 16047, 16048, 16049, 16050, 16051, 16052, 16053, 16054, 16055, 16056, 16057, 16058, 16059, 16060, 16061, 16062, 16063, 16064, 16065, 16066, 16067, 16068, 16069, 16070, 16071, 16072, 16073, 16074, 16075, 16076, 16077, 16078, 16079, 16080, 16081, 16082, 16083, 16084, 16085, 16086, 16087, 16088, 16089, 16090, 16091, 16092, 16093, 16094, 16095, 16096, 16097, 16134, 16135, 16136, 16137, 16138, 16139, 16140, 16141, 16142, 16143, 16144, 16145, 16146, 16147, 16148, 16149, 16150, 16151, 16179, 16180, 16181, 16182, 16183, 16184, 16185, 16186, 16187, 16188, 16189, 16190, 16191, 16192, 16193, 16194, 16195, 16196, 16197, 16198, 16199, 16200, 16201, 16202, 16203, 16204, 16205, 16206, 16207, 16208, 16209, 16210, 16211, 16212, 16213, 16214, 16215, 16216, 16217, 16218, 16219, 16220, 16304, 16321, 16338, 16355);
 
     private Map<String, Map<Long, Item>> getItems(int type) {
-        Player player = getSelf();
-        NpcInstance npc = getNpc();
         if (player == null || npc == null)
             return null;
         updateInfo(player, npc);
-        NpcInfo info = _npcInfos.get(getNpc().getObjectId());
+        NpcInfo info = _npcInfos.get(npc.objectId());
         if (info == null)
             return null;
         switch (type) {
@@ -198,8 +196,6 @@ public final class ItemBroker extends Functions {
     }
 
     public void list(String[] var) {
-        Player player = getSelf();
-        NpcInstance npc = getNpc();
         if (player == null || npc == null)
             return;
 
@@ -306,7 +302,7 @@ public final class ItemBroker extends Functions {
                     continue;
 
                 out.append("<tr><td>");
-                out.append(temp.getIcon32());
+                out.append(temp.icon32);
                 out.append("</td><td><table width=100%><tr><td>[scripts_services.ItemBroker:listForItem ");
                 out.append(type);
                 out.append(" ");
@@ -325,7 +321,7 @@ public final class ItemBroker extends Functions {
                 out.append(Util.formatAdena(item.price));
                 if (item.isPackage)
                     out.append(" (Package)");
-                if (temp.isStackable())
+                if (temp.stackable())
                     out.append(", count: ").append(Util.formatAdena(item.count));
                 out.append("</td></tr></table></td></tr>");
                 count++;
@@ -354,151 +350,6 @@ public final class ItemBroker extends Functions {
         out.append("]&nbsp;");
     }
 
-//    public void listForItem(String[] var) {
-//        Player player = getSelf();
-//        NpcInstance npc = getNpc();
-//        if (player == null || npc == null)
-//            return;
-//
-//        if (var.length < 7 || var.length > 12) {
-//            show("Incorrect data length", player, npc);
-//            return;
-//        }
-//
-//        int type;
-//        int itemId;
-//        int minEnchant;
-//        int rare;
-//        int itemType;
-//        int currentPage;
-//        int returnPage;
-//        List<String> search = null;
-//
-//        try {
-//            type = Integer.valueOf(var[0]);
-//            itemId = Integer.valueOf(var[1]);
-//            minEnchant = Integer.valueOf(var[2]);
-//            rare = Integer.valueOf(var[3]);
-//            itemType = Integer.valueOf(var[4]);
-//            currentPage = Integer.valueOf(var[5]);
-//            returnPage = Integer.valueOf(var[6]);
-//            if (var.length > 7) {
-//                search = new String[var.length - 7];
-//                System.arraycopy(var, 7, search, 0, search.length);
-//            }
-//        } catch (Exception e) {
-//            show("Incorrect data", player, npc);
-//            return;
-//        }
-//
-//        ItemTemplate template = ItemHolder.getTemplate(itemId);
-//        if (template == null) {
-//            show("Error - itemId not specified.", player, npc);
-//            return;
-//        }
-//
-//        TreeMap<String, TreeMap<Long, Item>> tmpItems = getItems(type);
-//        if (tmpItems == null) {
-//            show("Error - this type of subject matter is not.", player, npc);
-//            return;
-//        }
-//
-//        TreeMap<Long, Item> allItems = tmpItems.get(template.name());
-//        if (allItems == null) {
-//            show("Error - items with the same name found.", player, npc);
-//            return;
-//        }
-//
-//        StringBuilder out = new StringBuilder(200);
-//        if (search == null)
-//            listPageNum(out, type, itemType, returnPage, minEnchant, rare, "Back");
-//        else
-//            findPageNum(out, type, returnPage, search, "Back");
-//        out.append("&nbsp;&nbsp;");
-//
-//        NavigableMap<Long, Item> sortedItems = type == Player.STORE_PRIVATE_BUY ? allItems.descendingMap() : allItems;
-//        if (sortedItems == null) {
-//            show("Error - No results.", player, npc);
-//            return;
-//        }
-//
-//        List<Item> items = new ArrayList<>(sortedItems.size());
-//        for (Item item : sortedItems.values()) {
-//            if (item == null || item.enchant < minEnchant || (rare > 0 && !item.rare))
-//                continue;
-//
-//            items.add(item);
-//        }
-//
-//        int totalPages = items.size();
-//        totalPages = totalPages / MAX_ITEMS_PER_PAGE + (totalPages % MAX_ITEMS_PER_PAGE > 0 ? 1 : 0);
-//        totalPages = Math.max(1, totalPages);
-//        currentPage = Math.min(totalPages, Math.max(1, currentPage));
-//
-//        if (totalPages > 1) {
-//            int page = Math.max(1, Math.min(totalPages - MAX_PAGES_PER_LIST + 1, currentPage - MAX_PAGES_PER_LIST / 2));
-//
-//            if (page > 1)
-//                listForItemPageNum(out, type, itemId, minEnchant, rare, itemType, 1, returnPage, search, "1");
-//            if (currentPage > 11)
-//                listForItemPageNum(out, type, itemId, minEnchant, rare, itemType, currentPage - 10, returnPage, search, String.valueOf(currentPage - 10));
-//            if (currentPage > 1)
-//                listForItemPageNum(out, type, itemId, minEnchant, rare, itemType, currentPage - 1, returnPage, search, "<");
-//
-//            for (int count = 0; count < MAX_PAGES_PER_LIST && page <= totalPages; count++, page++) {
-//                if (page == currentPage)
-//                    out.append(page).append("&nbsp;");
-//                else
-//                    listForItemPageNum(out, type, itemId, minEnchant, rare, itemType, page, returnPage, search, String.valueOf(page));
-//            }
-//
-//            if (currentPage < totalPages)
-//                listForItemPageNum(out, type, itemId, minEnchant, rare, itemType, currentPage + 1, returnPage, search, ">");
-//            if (currentPage < totalPages - 10)
-//                listForItemPageNum(out, type, itemId, minEnchant, rare, itemType, currentPage + 10, returnPage, search, String.valueOf(currentPage + 10));
-//            if (page <= totalPages)
-//                listForItemPageNum(out, type, itemId, minEnchant, rare, itemType, totalPages, returnPage, search, String.valueOf(totalPages));
-//        }
-//
-//        out.append("<table width=100%>");
-//
-//        if (items.size() > 0) {
-//            int count = 0;
-//            ListIterator<Item> iter = items.listIterator((currentPage - 1) * MAX_ITEMS_PER_PAGE);
-//            while (iter.hasNext() && count < MAX_ITEMS_PER_PAGE) {
-//                Item item = iter.next();
-//                ItemTemplate temp = item.item != null ? item.item.getItem() : ItemHolder.getTemplate(item.itemId);
-//                if (temp == null)
-//                    continue;
-//
-//                out.append("<tr><td>");
-//                out.append(temp.getIcon32());
-//                out.append("</td><td><table width=100%><tr><td>[scripts_services.ItemBroker:path ");
-//                out.append(type);
-//                out.append(" ");
-//                out.append(item.itemId);
-//                out.append(" ");
-//                out.append(item.itemObjId);
-//                out.append("|");
-//                out.append(item.name);
-//                out.append("</td></tr><tr><td>price: ");
-//                out.append(Util.formatAdena(item.price));
-//                if (item.isPackage)
-//                    out.append(" (Package)");
-//                if (temp.isStackable())
-//                    out.append(", count: ").append(Util.formatAdena(item.count));
-//                out.append(", owner: ").append(item.merchantName);
-//                out.append("</td></tr></table></td></tr>");
-//                count++;
-//            }
-//        } else
-//            out.append("<tr><td colspan=2>Nothing found.</td></tr>");
-//
-//        out.append("</table><br>&nbsp;");
-//
-//        show(out.toString(), player, npc);
-//    }
-
     private void listForItemPageNum(StringBuilder out, int type, int itemId, int minEnchant, int rare, int itemType, int page, int returnPage, String[] search, String letter) {
         out.append("[scripts_services.ItemBroker:listForItem ");
         out.append(type);
@@ -525,8 +376,6 @@ public final class ItemBroker extends Functions {
     }
 
     public void path(String[] var) {
-        Player player = getSelf();
-        NpcInstance npc = getNpc();
         if (player == null || npc == null)
             return;
 
@@ -633,7 +482,7 @@ public final class ItemBroker extends Functions {
         RadarControl rc = new RadarControl(0, 1, item.player);
         player.sendPacket(rc);
 
-        if (player.getVarB(Player.NO_TRADERS_VAR)) {
+        if (player.isVarSet(Player.NO_TRADERS_VAR)) {
             player.sendPacket(new CharInfo(trader, player));
             if (trader.getPrivateStoreType() == Player.STORE_PRIVATE_BUY)
                 player.sendPacket(new PrivateStoreMsgBuy(trader));
@@ -648,7 +497,7 @@ public final class ItemBroker extends Functions {
     }
 
     private void updateInfo(Player player, NpcInstance npc) {
-        NpcInfo info = _npcInfos.get(npc.getObjectId());
+        NpcInfo info = _npcInfos.get(npc.objectId());
         if (info == null || info.lastUpdate < System.currentTimeMillis() - 300000) {
             info = new NpcInfo();
             info.lastUpdate = System.currentTimeMillis();
@@ -674,7 +523,7 @@ public final class ItemBroker extends Functions {
                             if (temp == null)
                                 continue;
                             Map<Long, Item> oldItems = items.computeIfAbsent(temp.getName(), k -> new TreeMap<>());
-                            Item newItem = new Item(item.getItemId(), type, item.getOwnersPrice(), item.getCount(), item.getEnchantLevel(), temp.getName(), pl.getObjectId(), pl.getName(), pl.getLoc(), item.getObjectId(), item, false);
+                            Item newItem = new Item(item.getItemId(), type, item.getOwnersPrice(), item.getCount(), item.getEnchantLevel(), temp.getName(), pl.objectId(), pl.getName(), pl.getLoc(), item.getObjectId(), item, false);
                             long key = newItem.price * 100;
                             while (key < newItem.price * 100 + 100 && oldItems.containsKey(key))
                                 key++;
@@ -695,7 +544,7 @@ public final class ItemBroker extends Functions {
                             if (temp == null)
                                 continue;
                             Map<Long, Item> oldItems = items.computeIfAbsent(temp.getName(), k -> new TreeMap<>());
-                            Item newItem = new Item(item.getItemId(), type, packagePrice, item.getCount(), item.getEnchantLevel(), temp.getName(), pl.getObjectId(), pl.getName(), pl.getLoc(), item.getObjectId(), item, true);
+                            Item newItem = new Item(item.getItemId(), type, packagePrice, item.getCount(), item.getEnchantLevel(), temp.getName(), pl.objectId(), pl.getName(), pl.getLoc(), item.getObjectId(), item, true);
                             long key = newItem.price * 100;
                             while (key < newItem.price * 100 + 100 && oldItems.containsKey(key))
                                 key++;
@@ -712,7 +561,7 @@ public final class ItemBroker extends Functions {
                             if (temp == null)
                                 continue;
                             Map<Long, Item> oldItems = items.computeIfAbsent(temp.getName(), k -> new TreeMap<>());
-                            Item newItem = new Item(item.getItemId(), type, item.getOwnersPrice(), item.getCount(), item.getEnchantLevel(), temp.getName(), pl.getObjectId(), pl.getName(), pl.getLoc(), itemObjId, item, false);
+                            Item newItem = new Item(item.getItemId(), type, item.getOwnersPrice(), item.getCount(), item.getEnchantLevel(), temp.getName(), pl.objectId(), pl.getName(), pl.getLoc(), itemObjId, item, false);
                             long key = newItem.price * 100;
                             while (key < newItem.price * 100 + 100 && oldItems.containsKey(key))
                                 key++;
@@ -734,7 +583,7 @@ public final class ItemBroker extends Functions {
                                 if (temp == null)
                                     continue;
                                 Map<Long, Item> oldItems = items.computeIfAbsent(temp.getName(), k -> new TreeMap<>());
-                                Item newItem = new Item(recipe.getItemId(), type, mitem.getCost(), recipe.getCount(), 0, temp.getName(), pl.getObjectId(), pl.getName(), pl.getLoc(), itemObjId, null, false);
+                                Item newItem = new Item(recipe.getItemId(), type, mitem.getCost(), recipe.getCount(), 0, temp.getName(), pl.objectId(), pl.getName(), pl.getLoc(), itemObjId, null, false);
                                 long key = newItem.price * 100;
                                 while (key < newItem.price * 100 + 100 && oldItems.containsKey(key))
                                     key++;
@@ -743,7 +592,7 @@ public final class ItemBroker extends Functions {
                         break;
                 }
             });
-            _npcInfos.put(npc.getObjectId(), info);
+            _npcInfos.put(npc.objectId(), info);
         }
     }
 

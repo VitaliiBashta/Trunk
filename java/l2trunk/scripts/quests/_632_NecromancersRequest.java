@@ -55,7 +55,7 @@ public final class _632_NecromancersRequest extends Quest {
                     }
                 break;
             case "quest_accept":
-                if (st.getPlayer().getLevel() > 62) {
+                if (st.player.getLevel() > 62) {
                     htmltext = "shadow_hardin_q0632_0104.htm";
                     st.setCond(1);
                     st.setState(STARTED);
@@ -86,18 +86,14 @@ public final class _632_NecromancersRequest extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
-        for (int i : VAMPIRES)
-            if (i == npc.getNpcId()) {
-                if (st.getCond() < 2 && Rnd.chance(50)) {
-                    st.giveItems(V_HEART, 1, false);
-                    if (st.getQuestItemsCount(V_HEART) > 199)
-                        st.setCond(2);
-                }
-                return null;
+    public void onKill(NpcInstance npc, QuestState st) {
+        int npcId = npc.getNpcId();
+        if (VAMPIRES.contains(npcId))
+            if (st.getCond() < 2 && Rnd.chance(50)) {
+                st.giveItems(V_HEART);
+                if (st.getQuestItemsCount(V_HEART) > 199)
+                    st.setCond(2);
             }
-
         st.rollAndGive(Z_BRAIN, 1, 33);
-        return null;
     }
 }

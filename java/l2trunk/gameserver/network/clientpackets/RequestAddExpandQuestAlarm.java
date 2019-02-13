@@ -6,6 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.ExQuestNpcLogList;
 
+
 public final class RequestAddExpandQuestAlarm extends L2GameClientPacket {
     private int questId;
 

@@ -75,7 +75,7 @@ public final class ArenaManagerInstance extends WarehouseInstance {
                 return;
             }
             player.reduceAdena(neededmoney, true, "ArenaManagerInstance");
-            player.setCurrentCp(player.getMaxCp());
+            player.setFullCp();
             player.sendPacket(new SystemMessage2(SystemMsg.S1_CP_HAS_BEEN_RESTORED).addName(player));
         } else if (command.equals("HPRecovery")) {
             if (player.isCursedWeaponEquipped() || player.isInZone(Zone.ZoneType.battle_zone))

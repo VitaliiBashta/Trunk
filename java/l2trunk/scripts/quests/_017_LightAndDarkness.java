@@ -59,7 +59,7 @@ public final class _017_LightAndDarkness extends Quest {
         int cond = st.getCond();
         if (npcId == 31517) {
             if (cond == 0)
-                if (st.getPlayer().getLevel() >= 61)
+                if (st.player.getLevel() >= 61)
                     htmltext = "dark_presbyter_q0017_01.htm";
                 else {
                     htmltext = "dark_presbyter_q0017_03.htm";

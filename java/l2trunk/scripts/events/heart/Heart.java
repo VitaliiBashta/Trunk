@@ -8,6 +8,7 @@ import l2trunk.gameserver.data.htm.HtmCache;
 import l2trunk.gameserver.listener.actor.OnDeathListener;
 import l2trunk.gameserver.listener.actor.player.OnPlayerEnterListener;
 import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.SimpleSpawner;
 import l2trunk.gameserver.model.actor.listener.CharListenerList;
@@ -20,14 +21,16 @@ import l2trunk.gameserver.utils.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static l2trunk.gameserver.utils.ItemFunctions.addItem;
+import static l2trunk.gameserver.utils.ItemFunctions.removeItem;
+
 public final class Heart extends Functions implements ScriptFile, OnDeathListener, OnPlayerEnterListener {
     private static final Logger LOG = LoggerFactory.getLogger(Heart.class);
-    private static final List<SimpleSpawner> SPAWNS = new ArrayList<>();
+    private static List<SimpleSpawner> SPAWNS;
     private static final Map<Integer, Integer> Guesses = new HashMap<>();
     private static final List<String> variants = List.of("Rock", "Scissors", "Paper");
     private static final int EVENT_MANAGER_ID = 31227; //Buzz the Cat
@@ -63,11 +66,10 @@ public final class Heart extends Functions implements ScriptFile, OnDeathListene
     }
 
     public void startEvent() {
-        Player player = getSelf();
         if (!player.getPlayerAccess().IsEventGm)
             return;
 
-        if (SetActive("Heart", true)) {
+        if (setActive("Heart", true)) {
             spawnEventManagers();
             System.out.println("Event 'Change of Heart' started.");
             Announcements.INSTANCE.announceByCustomMessage("scripts.events.ChangeofHeart.AnnounceEventStarted");
@@ -79,10 +81,9 @@ public final class Heart extends Functions implements ScriptFile, OnDeathListene
     }
 
     public void stopEvent() {
-        Player player = getSelf();
         if (!player.getPlayerAccess().IsEventGm)
             return;
-        if (SetActive("Heart", false)) {
+        if (setActive("Heart", false)) {
             unSpawnEventManagers();
             System.out.println("Event 'Change of Heart' stopped.");
             Announcements.INSTANCE.announceByCustomMessage("scripts.events.ChangeofHeart.AnnounceEventStoped");
@@ -95,8 +96,6 @@ public final class Heart extends Functions implements ScriptFile, OnDeathListene
     }
 
     public void letsplay() {
-        Player player = getSelf();
-
         if (!player.isQuestContinuationPossible(true))
             return;
 
@@ -108,8 +107,6 @@ public final class Heart extends Functions implements ScriptFile, OnDeathListene
     }
 
     public void play(String[] var) {
-        Player player = getSelf();
-
         if (!player.isQuestContinuationPossible(true) || var.length == 0)
             return;
 
@@ -166,37 +163,37 @@ public final class Heart extends Functions implements ScriptFile, OnDeathListene
         switch (guesses) {
             case -1:
             case 0:
-                addItem(player, Rnd.get(scrolls), 1, "heardReward");
+                addItem(player, Rnd.get(scrolls), 1);
                 break;
             case 1:
-                addItem(player, Rnd.get(potions), 10, "heardReward");
+                addItem(player, Rnd.get(potions), 10);
                 break;
             case 2:
-                addItem(player, 1538, 1, "heardReward"); // 1  Blessed Scroll of Escape
+                addItem(player, 1538, 1); // 1  Blessed Scroll of Escape
                 break;
             case 3:
-                addItem(player, 3936, 1, "heardReward"); // 1  Blessed Scroll of Resurrection
+                addItem(player, 3936, 1); // 1  Blessed Scroll of Resurrection
                 break;
             case 4:
-                addItem(player, 951, 2, "heardReward"); // 2  Scroll: Enchant Weapon (C)
+                addItem(player, 951, 2); // 2  Scroll: Enchant Weapon (C)
                 break;
             case 5:
-                addItem(player, 948, 4, "heardReward"); // 4  Scroll: Enchant Armor (B)
+                addItem(player, 948, 4); // 4  Scroll: Enchant Armor (B)
                 break;
             case 6:
-                addItem(player, 947, 1, "heardReward"); // 1  Scroll: Enchant Weapon (B)
+                addItem(player, 947, 1); // 1  Scroll: Enchant Weapon (B)
                 break;
             case 7:
-                addItem(player, 730, 3, "heardReward"); // 3  Scroll: Enchant Armor (A)
+                addItem(player, 730, 3); // 3  Scroll: Enchant Armor (A)
                 break;
             case 8:
-                addItem(player, 729, 1, "heardReward"); // 1  Scroll: Enchant Weapon (A)
+                addItem(player, 729, 1); // 1  Scroll: Enchant Weapon (A)
                 break;
             case 9:
-                addItem(player, 960, 2, "heardReward"); // 2  Scroll: Enchant Armor (S)
+                addItem(player, 960, 2); // 2  Scroll: Enchant Armor (S)
                 break;
             case 10:
-                addItem(player, 959, 1, "heardReward"); // 1  Scroll: Enchant Weapon (S)
+                addItem(player, 959, 1); // 1  Scroll: Enchant Weapon (S)
                 break;
         }
     }
@@ -220,18 +217,18 @@ public final class Heart extends Functions implements ScriptFile, OnDeathListene
     }
 
     private int getGuesses(Player player) {
-        return Guesses.getOrDefault(player.getObjectId(), 0);
+        return Guesses.getOrDefault(player.objectId(), 0);
     }
 
     private void incGuesses(Player player) {
         int val = 1;
-        if (Guesses.containsKey(player.getObjectId()))
-            val = Guesses.remove(player.getObjectId()) + 1;
-        Guesses.put(player.getObjectId(), val);
+        if (Guesses.containsKey(player.objectId()))
+            val = Guesses.remove(player.objectId()) + 1;
+        Guesses.put(player.objectId(), val);
     }
 
     private void zeroGuesses(Player player) {
-        Guesses.remove(player.getObjectId());
+        Guesses.remove(player.objectId());
     }
 
     private void takeHeartsSet(Player player) {
@@ -240,14 +237,16 @@ public final class Heart extends Functions implements ScriptFile, OnDeathListene
     }
 
     private boolean haveAllHearts(Player player) {
-        return hearts.stream()
-                .noneMatch(heart_id -> (player.getInventory().getCountOf(heart_id) < 1));
+        return hearts.stream().allMatch(player::haveItem);
     }
 
     @Override
     public void onDeath(Creature cha, Creature killer) {
-        if (active && SimpleCheckDrop(cha, killer))
-            ((NpcInstance) cha).dropItem(killer.getPlayer(), Rnd.get(hearts), Util.rollDrop(1, 1, Config.EVENT_CHANGE_OF_HEART_CHANCE * killer.getPlayer().getRateItems() * ((MonsterInstance) cha).getTemplate().rateHp * 10000L, true));
+        if (killer instanceof Playable) {
+            Playable playable = (Playable) killer;
+            if (active && simpleCheckDrop(cha, playable))
+                ((NpcInstance) cha).dropItem(playable.getPlayer(), Rnd.get(hearts), Util.rollDrop(1, 1, Config.EVENT_CHANGE_OF_HEART_CHANCE * playable.getPlayer().getRateItems() * ((MonsterInstance) cha).getTemplate().rateHp * 10000L, true));
+        }
     }
 
     @Override
@@ -268,7 +267,7 @@ public final class Heart extends Functions implements ScriptFile, OnDeathListene
                 new Location(87801, -143150, -1296, 28800), // Shuttgard
                 new Location(-80684, 149458, -3040, 16384)); // Gludin
 
-        SpawnNPCs(EVENT_MANAGER_ID, EVENT_MANAGERS, SPAWNS);
+        SPAWNS = SpawnNPCs(EVENT_MANAGER_ID, EVENT_MANAGERS);
     }
 
     private void unSpawnEventManagers() {

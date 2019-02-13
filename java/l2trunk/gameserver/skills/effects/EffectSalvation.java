@@ -1,6 +1,7 @@
 package l2trunk.gameserver.skills.effects;
 
 import l2trunk.gameserver.model.Effect;
+import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.stats.Env;
 
 public final class EffectSalvation extends Effect {
@@ -10,7 +11,7 @@ public final class EffectSalvation extends Effect {
 
     @Override
     public boolean checkCondition() {
-        return effected.isPlayer() && super.checkCondition();
+        return effected instanceof Player;
     }
 
     @Override
@@ -24,8 +25,4 @@ public final class EffectSalvation extends Effect {
         effected.setIsSalvation(false);
     }
 
-    @Override
-    public boolean onActionTime() {
-        return false;
-    }
 }

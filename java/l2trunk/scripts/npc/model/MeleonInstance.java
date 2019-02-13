@@ -1,6 +1,5 @@
 package l2trunk.scripts.npc.model;
 
-import l2trunk.commons.lang.reference.HardReference;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Skill;
@@ -9,27 +8,26 @@ import l2trunk.gameserver.templates.npc.NpcTemplate;
 
 public final class MeleonInstance extends SpecialMonsterInstance {
     public final static int Young_Watermelon = 13271;
+    public final static int Young_Honey_Watermelon = 13275;
     private final static int Rain_Watermelon = 13273;
     private final static int Defective_Watermelon = 13272;
-    public final static int Young_Honey_Watermelon = 13275;
     private final static int Rain_Honey_Watermelon = 13277;
     private final static int Defective_Honey_Watermelon = 13276;
     private final static int Large_Rain_Watermelon = 13274;
     private final static int Large_Rain_Honey_Watermelon = 13278;
 
-    private HardReference<Player> _spawnerRef;
+    private Player player;
 
     public MeleonInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
     }
 
-    public void setSpawner(Player spawner) {
-        if (spawner != null)
-            _spawnerRef = spawner.getRef();
+    public Player getSpawner() {
+        return player;
     }
 
-    public Player getSpawner() {
-        return _spawnerRef.get();
+    public void setSpawner(Player spawner) {
+        player = spawner;
     }
 
     @Override

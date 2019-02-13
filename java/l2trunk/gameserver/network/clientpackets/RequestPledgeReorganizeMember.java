@@ -40,32 +40,32 @@ public final class RequestPledgeReorganizeMember extends L2GameClientPacket {
         }
 
         if (!activeChar.isClanLeader()) {
-            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.clientpackets.RequestPledgeReorganizeMember.ChangeAffiliations", activeChar));
+            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.clientpackets.RequestPledgeReorganizeMember.ChangeAffiliations"));
             activeChar.sendActionFailed();
             return;
         }
 
         UnitMember subject = clan.getAnyMember(_subjectName);
         if (subject == null) {
-            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.clientpackets.RequestPledgeReorganizeMember.NotInYourClan", activeChar));
+            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.clientpackets.RequestPledgeReorganizeMember.NotInYourClan"));
             activeChar.sendActionFailed();
             return;
         }
 
         if (subject.getPledgeType() == _targetUnit) {
-            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.clientpackets.RequestPledgeReorganizeMember.AlreadyInThatCombatUnit", activeChar));
+            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.clientpackets.RequestPledgeReorganizeMember.AlreadyInThatCombatUnit"));
             activeChar.sendActionFailed();
             return;
         }
 
         if (_targetUnit != 0 && clan.getSubUnit(_targetUnit) == null) {
-            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.clientpackets.RequestPledgeReorganizeMember.NoSuchCombatUnit", activeChar));
+            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.clientpackets.RequestPledgeReorganizeMember.NoSuchCombatUnit"));
             activeChar.sendActionFailed();
             return;
         }
 
         if (clan.isAcademy(_targetUnit)) {
-            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.clientpackets.RequestPledgeReorganizeMember.AcademyViaInvitation", activeChar));
+            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.clientpackets.RequestPledgeReorganizeMember.AcademyViaInvitation"));
             activeChar.sendActionFailed();
             return;
         }
@@ -74,7 +74,7 @@ public final class RequestPledgeReorganizeMember extends L2GameClientPacket {
          * (needs LvlJoinedAcademy to be put on UnitMember if so, to be able relocate from academy correctly)
          */
         if (clan.isAcademy(subject.getPledgeType())) {
-            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.clientpackets.RequestPledgeReorganizeMember.CantMoveAcademyMember", activeChar));
+            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.clientpackets.RequestPledgeReorganizeMember.CantMoveAcademyMember"));
             activeChar.sendActionFailed();
             return;
         }
@@ -84,17 +84,17 @@ public final class RequestPledgeReorganizeMember extends L2GameClientPacket {
         if (_replace > 0) {
             replacement = clan.getAnyMember(_replaceName);
             if (replacement == null) {
-                activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.clientpackets.RequestPledgeReorganizeMember.CharacterNotBelongClan", activeChar));
+                activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.clientpackets.RequestPledgeReorganizeMember.CharacterNotBelongClan"));
                 activeChar.sendActionFailed();
                 return;
             }
             if (replacement.getPledgeType() != _targetUnit) {
-                activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.clientpackets.RequestPledgeReorganizeMember.CharacterNotBelongCombatUnit", activeChar));
+                activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.clientpackets.RequestPledgeReorganizeMember.CharacterNotBelongCombatUnit"));
                 activeChar.sendActionFailed();
                 return;
             }
             if (replacement.isSubLeader()) {
-                activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.clientpackets.RequestPledgeReorganizeMember.CharacterLeaderAnotherCombatUnit", activeChar));
+                activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.clientpackets.RequestPledgeReorganizeMember.CharacterLeaderAnotherCombatUnit"));
                 activeChar.sendActionFailed();
                 return;
             }
@@ -109,7 +109,7 @@ public final class RequestPledgeReorganizeMember extends L2GameClientPacket {
             }
 
             if (subject.isSubLeader()) {
-                activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.clientpackets.RequestPledgeReorganizeMember.MemberLeaderAnotherUnit", activeChar));
+                activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.clientpackets.RequestPledgeReorganizeMember.MemberLeaderAnotherUnit"));
                 activeChar.sendActionFailed();
                 return;
             }
@@ -121,25 +121,25 @@ public final class RequestPledgeReorganizeMember extends L2GameClientPacket {
         if (replacement != null) {
             oldUnit = replacement.getSubUnit();
 
-            oldUnit.replace(replacement.getObjectId(), subject.getPledgeType());
+            oldUnit.replace(replacement.objectId(), subject.getPledgeType());
 
             clan.broadcastToOnlineMembers(new PledgeShowMemberListUpdate(replacement));
 
             if (replacement.isOnline()) {
-                replacement.getPlayer().updatePledgeClass();
-                replacement.getPlayer().broadcastCharInfo();
+                replacement.player().updatePledgeClass();
+                replacement.player().broadcastCharInfo();
             }
         }
 
         oldUnit = subject.getSubUnit();
 
-        oldUnit.replace(subject.getObjectId(), _targetUnit);
+        oldUnit.replace(subject.objectId(), _targetUnit);
 
         clan.broadcastToOnlineMembers(new PledgeShowMemberListUpdate(subject));
 
         if (subject.isOnline()) {
-            subject.getPlayer().updatePledgeClass();
-            subject.getPlayer().broadcastCharInfo();
+            subject.player().updatePledgeClass();
+            subject.player().broadcastCharInfo();
         }
     }
 }

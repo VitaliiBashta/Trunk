@@ -56,11 +56,8 @@ public class Change {
     }
 
     public Variant getVariant(int id) {
-        for (Variant var : variants) {
-            if (var.getNumber() == id) {
-                return var;
-            }
-        }
-        return null;
+        return variants.stream()
+                .filter(var -> var.number == id)
+                .findFirst().orElse(null);
     }
 }

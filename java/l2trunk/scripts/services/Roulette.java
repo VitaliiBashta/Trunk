@@ -11,6 +11,8 @@ import l2trunk.gameserver.utils.GameStats;
 import l2trunk.gameserver.utils.Util;
 
 import static l2trunk.commons.lang.NumberUtils.toLong;
+import static l2trunk.gameserver.utils.ItemFunctions.addItem;
+import static l2trunk.gameserver.utils.ItemFunctions.removeItem;
 
 public final class Roulette extends Functions {
     private static final String R = "red";
@@ -89,12 +91,10 @@ public final class Roulette extends Functions {
     }
 
     public void dialog() {
-        Player player = getSelf();
         show(HtmCache.INSTANCE.getNotNull("scripts/services/roulette.htm", player).replaceFirst("%min%", Util.formatAdena(Config.SERVICES_ROULETTE_MIN_BET)).replaceFirst("%max%", Util.formatAdena(Config.SERVICES_ROULETTE_MAX_BET)), player);
     }
 
     public void play(String[] param) {
-        Player player = getSelf();
         GameType type;
         long bet;
         String betID;
@@ -138,7 +138,7 @@ public final class Roulette extends Functions {
             GameStats.addRoulette(bet);
             ret = ret.replace("%result%", "<font color=\"FF0000\">Fail!</font>");
         } else {
-            addItem(player, 57, bet * result, "Roulette");
+            addItem(player, 57, bet * result);
             GameStats.addRoulette(-1 * bet * result);
             ret = ret.replace("%result%", "<font color=\"00FF00\">Succes!</font>");
         }
@@ -146,14 +146,14 @@ public final class Roulette extends Functions {
         if (player.isGM())
             player.sendMessage("Roulette balance: " + Util.formatAdena(GameStats.getRouletteSum()));
 
-        ret = ret.replace("%bettype%", new CustomMessage("Roulette." + type.toString(), player).toString());
-        ret = ret.replace("%betnumber%", type == GameType.StraightUp ? betID : new CustomMessage("Roulette." + betID, player).toString());
+        ret = ret.replace("%bettype%", new CustomMessage("Roulette." + type.toString()).toString());
+        ret = ret.replace("%betnumber%", type == GameType.StraightUp ? betID : new CustomMessage("Roulette." + betID).toString());
         ret = ret.replace("%number%", roll[0]);
-        ret = ret.replace("%color%", new CustomMessage("Roulette." + roll[1], player).toString());
-        ret = ret.replace("%evenness%", new CustomMessage("Roulette." + roll[4], player).toString());
-        ret = ret.replace("%column%", new CustomMessage("Roulette." + roll[3], player).toString());
-        ret = ret.replace("%dozen%", new CustomMessage("Roulette." + roll[2], player).toString());
-        ret = ret.replace("%highness%", new CustomMessage("Roulette." + roll[5], player).toString());
+        ret = ret.replace("%color%", new CustomMessage("Roulette." + roll[1]).toString());
+        ret = ret.replace("%evenness%", new CustomMessage("Roulette." + roll[4]).toString());
+        ret = ret.replace("%column%", new CustomMessage("Roulette." + roll[3]).toString());
+        ret = ret.replace("%dozen%", new CustomMessage("Roulette." + roll[2]).toString());
+        ret = ret.replace("%highness%", new CustomMessage("Roulette." + roll[5]).toString());
         ret = ret.replace("%param%", param[0] + " " + param[1] + " " + param[2]);
 
         show(ret, player);
@@ -214,9 +214,8 @@ public final class Roulette extends Functions {
     }
 
     private String getHtmlAppends(Integer val) {
-        Player player = getSelf();
         if (Config.SERVICES_ALLOW_ROULETTE)
-            return "<br><a action=\"bypass -h scripts_services.Roulette:dialog\">" + new CustomMessage("Roulette.dialog", player).toString() + "</a>";
+            return "<br><a action=\"bypass -h scripts_services.Roulette:dialog\">" + new CustomMessage("Roulette.dialog").toString() + "</a>";
         return "";
     }
 }

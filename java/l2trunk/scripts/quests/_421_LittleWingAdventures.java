@@ -12,7 +12,6 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.InventoryUpdate;
 import l2trunk.gameserver.scripts.Functions;
-import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.tables.PetDataTable;
 import l2trunk.gameserver.tables.PetDataTable.L2Pet;
 import l2trunk.gameserver.utils.Location;
@@ -59,7 +58,7 @@ public final class _421_LittleWingAdventures extends Quest {
 
     private static ItemInstance GetDragonflute(QuestState st) {
         List<ItemInstance> Dragonflutes = new ArrayList<>();
-        for (ItemInstance item : st.getPlayer().getInventory().getItems())
+        for (ItemInstance item : st.player.getInventory().getItems())
             if (item != null && (item.getItemId() == Dragonflute_of_Wind || item.getItemId() == Dragonflute_of_Star || item.getItemId() == Dragonflute_of_Twilight))
                 Dragonflutes.add(item);
 
@@ -73,14 +72,14 @@ public final class _421_LittleWingAdventures extends Quest {
         int dragonflute_id = st.getInt("dragonflute");
 
         for (ItemInstance item : Dragonflutes)
-            if (item.getObjectId() == dragonflute_id)
+            if (item.objectId() == dragonflute_id)
                 return item;
 
         return null;
     }
 
     private static boolean HatchlingSummoned(QuestState st, boolean CheckObjID) {
-        Summon _pet = st.getPlayer().getPet();
+        Summon _pet = st.player.getPet();
         if (_pet == null)
             return false;
         if (CheckObjID) {
@@ -114,7 +113,7 @@ public final class _421_LittleWingAdventures extends Quest {
         } else if ((event.equalsIgnoreCase("30747_03.htm") || event.equalsIgnoreCase("30747_04.htm")) && _state == STARTED && cond == 1) {
             if (dragonflute == null)
                 return "noquest";
-            if (dragonflute.getObjectId() != dragonflute_id) {
+            if (dragonflute.objectId() != dragonflute_id) {
                 if (Rnd.chance(10)) {
                     st.takeItems(dragonflute.getItemId(), 1);
                     st.playSound(SOUND_FINISH);
@@ -146,7 +145,7 @@ public final class _421_LittleWingAdventures extends Quest {
         if (_state == CREATED) {
             if (npcId != Cronos)
                 return "noquest";
-            if (st.getPlayer().getLevel() < 45) {
+            if (st.player.getLevel() < 45) {
                 st.exitCurrentQuest(true);
                 return "30610_01.htm";
             }
@@ -159,7 +158,7 @@ public final class _421_LittleWingAdventures extends Quest {
                 return "30610_03.htm";
             }
             st.setCond(0);
-            st.set("dragonflute", String.valueOf(dragonflute.getObjectId()));
+            st.set("dragonflute", dragonflute.objectId());
             return "30610_04.htm";
         }
 
@@ -169,7 +168,7 @@ public final class _421_LittleWingAdventures extends Quest {
         if (npcId == Cronos) {
             if (dragonflute == null)
                 return "30610_02.htm";
-            return dragonflute.getObjectId() == dragonflute_id ? "30610_07.htm" : "30610_06.htm";
+            return dragonflute.objectId() == dragonflute_id ? "30610_07.htm" : "30610_06.htm";
         }
 
         if (npcId == Mimyu) {
@@ -190,7 +189,7 @@ public final class _421_LittleWingAdventures extends Quest {
                 return "30747_10.htm";
             }
             if (cond == 3) {
-                if (dragonflute.getObjectId() != dragonflute_id)
+                if (dragonflute.objectId() != dragonflute_id)
                     return "30747_00a.htm";
                 if (st.getQuestItemsCount(Fairy_Leaf) > 0) {
                     st.playSound(SOUND_FINISH);
@@ -205,16 +204,16 @@ public final class _421_LittleWingAdventures extends Quest {
                 if (st.getInt("welldone") == 0) {
                     if (!HatchlingSummoned(st, false))
                         return "30747_09.htm";
-                    st.set("welldone", "1");
+                    st.set("welldone", 1);
                     return "30747_12.htm";
                 }
-                if (HatchlingSummoned(st, false) || st.getPlayer().getPet() != null)
+                if (HatchlingSummoned(st, false) || st.player.getPet() != null)
                     return "30747_13a.htm";
 
                 dragonflute.setItemId(Dragon_Bugle_of_Wind + dragonflute.getItemId() - Dragonflute_of_Wind);
                 dragonflute.setJdbcState(JdbcEntityState.UPDATED);
                 dragonflute.update();
-                st.getPlayer().sendPacket(new InventoryUpdate().addModifiedItem(dragonflute));
+                st.player.sendPacket(new InventoryUpdate().addModifiedItem(dragonflute));
 
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest(true);
@@ -229,16 +228,16 @@ public final class _421_LittleWingAdventures extends Quest {
      * благодаря ai.Quest421FairyTree вызовется только при атаке от L2PetInstance
      */
     @Override
-    public String onAttack(NpcInstance npc, QuestState st) {
+    public void onAttack(NpcInstance npc, QuestState st) {
         if (st.getState() != STARTED || st.getCond() != 2 || !HatchlingSummoned(st, true) || st.getQuestItemsCount(Fairy_Leaf) == 0)
-            return null;
+            return ;
 
         String npcID = String.valueOf(npc.getNpcId());
         int attaked_times = st.getInt(npcID);
         if (CheckTree(st, npc.getNpcId()))
-            return null;
+            return ;
         if (attaked_times > Min_Fairy_Tree_Attaks) {
-            st.set(npcID, "1000000");
+            st.set(npcID, 1000000);
             Functions.npcSay(npc, "Give me the leaf!");
             st.takeItems(Fairy_Leaf, 1);
             if (CheckTree(st, Fairy_Tree_of_Wind) && CheckTree(st, Fairy_Tree_of_Star) && CheckTree(st, Fairy_Tree_of_Twilight) && CheckTree(st, Fairy_Tree_of_Abyss)) {
@@ -247,14 +246,12 @@ public final class _421_LittleWingAdventures extends Quest {
             } else
                 st.playSound(SOUND_ITEMGET);
         } else
-            st.set(npcID, String.valueOf(attaked_times + 1));
-        return null;
+            st.set(npcID, attaked_times + 1);
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         ThreadPoolManager.INSTANCE.schedule(new GuardiansSpawner(npc, st, Rnd.get(15, 20)), 1000);
-        return null;
     }
 
     public class GuardiansSpawner extends RunnableImpl {
@@ -271,13 +268,13 @@ public final class _421_LittleWingAdventures extends Quest {
                         .setAmount(1)
                         .doSpawn(true);
 
-                agressor = st.getPlayer().getName();
-                if (st.getPlayer().getPet() != null)
-                    agressors_pet = st.getPlayer().getPet().getName();
-                if (st.getPlayer().getParty() != null) {
+                agressor = st.player.getName();
+                if (st.player.getPet() != null)
+                    agressors_pet = st.player.getPet().getName();
+                if (st.player.getParty() != null) {
                     agressors_party = new ArrayList<>();
-                    for (Player _member : st.getPlayer().getParty().getMembers())
-                        if (!_member.equals(st.getPlayer()))
+                    for (Player _member : st.player.getParty().getMembers())
+                        if (!_member.equals(st.player))
                             agressors_party.add(_member.getName());
                 }
             }

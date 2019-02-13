@@ -56,7 +56,7 @@ public final class SeerUgoros extends Mystic {
         }
         _weeds = 0;
         if (!getActor().getReflection().isDefault())
-            getActor().getReflection().addSpawnWithoutRespawn(32740, new Location(95688, 85688, -3757, 0), 0);
+            getActor().getReflection().addSpawnWithoutRespawn(32740, new Location(95688, 85688, -3757));
         super.onEvtDead(killer);
     }
 }

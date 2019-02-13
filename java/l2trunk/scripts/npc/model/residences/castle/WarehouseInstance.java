@@ -8,11 +8,12 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.pledge.Clan;
 import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
-import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
-import l2trunk.gameserver.utils.ItemFunctions;
 import l2trunk.gameserver.utils.Log;
 import l2trunk.gameserver.utils.WarehouseFunctions;
+
+import static l2trunk.gameserver.utils.ItemFunctions.addItem;
+import static l2trunk.gameserver.utils.ItemFunctions.removeItem;
 
 public class WarehouseInstance extends NpcInstance {
     private static final int COND_ALL_FALSE = 0;
@@ -78,10 +79,10 @@ public class WarehouseInstance extends NpcInstance {
                 NpcHtmlMessage html = new NpcHtmlMessage(player, this);
                 html.setFile("castle/warehouse/castlewarehouse-notcl.htm");
                 player.sendPacket(html);
-            } else if (Functions.removeItem(player, ITEM_BLOOD_ALLI, 1, "ExchangeBloodAlli") == 0)
+            } else if (removeItem(player, ITEM_BLOOD_ALLI, 1, "ExchangeBloodAlli") == 0)
                 player.sendPacket(Msg.YOU_DO_NOT_HAVE_ENOUGH_REQUIRED_ITEMS);
             else
-                ItemFunctions.addItem(player, ITEM_BLOOD_OATH, 30, true, "ExchangeBloodAlli");
+                addItem(player, ITEM_BLOOD_OATH, 30, "ExchangeBloodAlli");
         } else if (command.equalsIgnoreCase("ReciveBloodAlli")) {
             Castle castle = getCastle();
             String filename;
@@ -96,7 +97,7 @@ public class WarehouseInstance extends NpcInstance {
                 castle.setJdbcState(JdbcEntityState.UPDATED);
                 castle.update();
 
-                Functions.addItem(player, ITEM_BLOOD_ALLI, count, "ReciveBloodAlli");
+                addItem(player, ITEM_BLOOD_ALLI, count);
             } else
                 filename = "castle/warehouse/castlewarehouse-4.htm";
 
@@ -107,7 +108,7 @@ public class WarehouseInstance extends NpcInstance {
             int val = 0;
             try {
                 val = Integer.parseInt(command.substring(5));
-            } catch (IndexOutOfBoundsException | NumberFormatException ioobe) {
+            } catch (IndexOutOfBoundsException | NumberFormatException ignored) {
             }
             showChatWindow(player, val);
         } else

@@ -3,7 +3,9 @@ package l2trunk.scripts.ai;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ai.DefaultAI;
 import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Skill;
+import l2trunk.gameserver.model.Summon;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.scripts.bosses.BaiumManager;
@@ -39,10 +41,10 @@ public final class Baium extends DefaultAI {
             NpcInstance actor = getActor();
             if (attacker == null)
                 return;
-            if (attacker.isPlayer() && attacker.getPet() != null)
-                attacker.getPet().doDie(actor);
-            else if ((attacker.isSummon() || attacker.isPet()) && attacker.getPlayer() != null)
-                attacker.getPlayer().doDie(actor);
+            if (attacker instanceof Player && ((Player)attacker).getPet() != null)
+                ((Player)attacker).getPet().doDie(actor);
+            else if (attacker instanceof Summon && ((Summon) attacker).owner != null)
+                ((Summon) attacker).owner.doDie(actor);
             attacker.doDie(actor);
         }
 

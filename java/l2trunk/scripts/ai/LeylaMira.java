@@ -53,13 +53,13 @@ public final class LeylaMira extends DefaultAI {
                     ThreadPoolManager.INSTANCE.schedule(new ScheduleStart(2, _actor), 100);
                     break;
                 case 2:
-                    _actor.broadcastPacket(new SocialAction(_actor.getObjectId(), 3));
+                    _actor.broadcastPacket(new SocialAction(_actor.objectId(), 3));
                     ThreadPoolManager.INSTANCE.schedule(new ScheduleStart(3, _actor), 9000);
                     break;
                 case 3:
                     if (count < 10) {
                         count++;
-                        _actor.broadcastPacket(new SocialAction(_actor.getObjectId(), 1));
+                        _actor.broadcastPacket(new SocialAction(_actor.objectId(), 1));
                         ThreadPoolManager.INSTANCE.schedule(new ScheduleStart(3, _actor), 3000);
                     } else {
                         count = 0;
@@ -67,21 +67,21 @@ public final class LeylaMira extends DefaultAI {
                     }
                     break;
                 case 4:
-                    _actor.broadcastPacket(new SocialAction(_actor.getObjectId(), 2));
+                    _actor.broadcastPacket(new SocialAction(_actor.objectId(), 2));
                     ThreadPoolManager.INSTANCE.schedule(new ScheduleStart(5, _actor), 3000);
                     break;
                 case 5:
-                    _actor.broadcastPacket(new SocialAction(_actor.getObjectId(), 1));
+                    _actor.broadcastPacket(new SocialAction(_actor.objectId(), 1));
                     ThreadPoolManager.INSTANCE.schedule(new ScheduleStart(6, _actor), 36000);
                     break;
                 case 6:
-                    _actor.broadcastPacket(new SocialAction(_actor.getObjectId(), 2));
+                    _actor.broadcastPacket(new SocialAction(_actor.objectId(), 2));
                     ThreadPoolManager.INSTANCE.schedule(new ScheduleStart(7, _actor), 3000);
                     break;
                 case 7:
                     if (count < 2) {
                         count++;
-                        _actor.broadcastPacket(new SocialAction(_actor.getObjectId(), 1));
+                        _actor.broadcastPacket(new SocialAction(_actor.objectId(), 1));
                         ThreadPoolManager.INSTANCE.schedule(new ScheduleStart(7, _actor), 3000);
                     } else {
                         count = 0;
@@ -89,17 +89,17 @@ public final class LeylaMira extends DefaultAI {
                     }
                     break;
                 case 8:
-                    _actor.broadcastPacket(new SocialAction(_actor.getObjectId(), 2));
+                    _actor.broadcastPacket(new SocialAction(_actor.objectId(), 2));
                     ThreadPoolManager.INSTANCE.schedule(new ScheduleStart(9, _actor), 3000);
                     break;
                 case 9:
-                    _actor.broadcastPacket(new SocialAction(_actor.getObjectId(), 1));
+                    _actor.broadcastPacket(new SocialAction(_actor.objectId(), 1));
                     ThreadPoolManager.INSTANCE.schedule(new ScheduleStart(10, _actor), 21000);
                     break;
                 case 10:
                     if (count < 3) {
                         count++;
-                        _actor.broadcastPacket(new SocialAction(_actor.getObjectId(), 1));
+                        _actor.broadcastPacket(new SocialAction(_actor.objectId(), 1));
                         ThreadPoolManager.INSTANCE.schedule(new ScheduleStart(10, _actor), 3000);
                     } else {
                         count = 0;
@@ -107,13 +107,13 @@ public final class LeylaMira extends DefaultAI {
                     }
                     break;
                 case 11:
-                    _actor.broadcastPacket(new SocialAction(_actor.getObjectId(), 2));
+                    _actor.broadcastPacket(new SocialAction(_actor.objectId(), 2));
                     ThreadPoolManager.INSTANCE.schedule(new ScheduleStart(12, _actor), 3000);
                     break;
                 case 12:
                     if (count < 2) {
                         count++;
-                        _actor.broadcastPacket(new SocialAction(_actor.getObjectId(), 1));
+                        _actor.broadcastPacket(new SocialAction(_actor.objectId(), 1));
                         ThreadPoolManager.INSTANCE.schedule(new ScheduleStart(12, _actor), 3000);
                     } else {
                         count = 0;
@@ -123,7 +123,7 @@ public final class LeylaMira extends DefaultAI {
                 case 13:
                     if (count < 18) {
                         count++;
-                        _actor.broadcastPacket(new SocialAction(_actor.getObjectId(), 1));
+                        _actor.broadcastPacket(new SocialAction(_actor.objectId(), 1));
                         ThreadPoolManager.INSTANCE.schedule(new ScheduleStart(13, _actor), 3000);
                     } else
                         count = 0;

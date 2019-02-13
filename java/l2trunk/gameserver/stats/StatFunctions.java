@@ -1,6 +1,5 @@
 package l2trunk.gameserver.stats;
 
-import l2trunk.gameserver.BalancerConfig;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Player;
@@ -10,6 +9,8 @@ import l2trunk.gameserver.model.base.ClassType2;
 import l2trunk.gameserver.model.base.Element;
 import l2trunk.gameserver.model.base.Race;
 import l2trunk.gameserver.model.entity.SevenSigns;
+import l2trunk.gameserver.model.instances.PetInstance;
+import l2trunk.gameserver.model.instances.SummonInstance;
 import l2trunk.gameserver.model.items.Inventory;
 import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.stats.conditions.ConditionPlayerState;
@@ -45,7 +46,7 @@ public class StatFunctions {
     };
 
     public static void addPredefinedFuncs(Creature cha) {
-        if (cha.isPlayer()) {
+        if (cha instanceof Player) {
             cha.addStatFunc(FuncMultRegenResting.getFunc(Stats.REGENERATE_CP_RATE));
             cha.addStatFunc(FuncMultRegenStanding.getFunc(Stats.REGENERATE_CP_RATE));
             cha.addStatFunc(FuncMultRegenRunning.getFunc(Stats.REGENERATE_CP_RATE));
@@ -81,24 +82,16 @@ public class StatFunctions {
 
             cha.addStatFunc(FuncSDefPlayers.func);
 
-            cha.addStatFunc(FuncMaxHpLimit.func);
-            cha.addStatFunc(FuncMaxMpLimit.func);
-            cha.addStatFunc(FuncMaxCpLimit.func);
-            cha.addStatFunc(FuncRunSpdLimit.func);
-            cha.addStatFunc(FuncPDefLimit.func);
-            cha.addStatFunc(FuncMDefLimit.func);
-            cha.addStatFunc(FuncPAtkLimit.func);
-            cha.addStatFunc(FuncMAtkLimit.func);
         }
 
-        if (cha.isPlayer() || cha.isPet()) {
+        if (cha instanceof Player || cha instanceof PetInstance) {
             cha.addStatFunc(FuncPAtkMul.func);
             cha.addStatFunc(FuncMAtkMul.func);
             cha.addStatFunc(FuncPDefMul.func);
             cha.addStatFunc(FuncMDefMul.func);
         }
 
-        if (cha.isSummon()) {
+        if (cha instanceof SummonInstance) {
             cha.addStatFunc(FuncAttributeAttackSet.getFunc(Element.FIRE));
             cha.addStatFunc(FuncAttributeAttackSet.getFunc(Element.WATER));
             cha.addStatFunc(FuncAttributeAttackSet.getFunc(Element.EARTH));
@@ -114,25 +107,18 @@ public class StatFunctions {
             cha.addStatFunc(FuncAttributeDefenceSet.getFunc(Element.UNHOLY));
         }
 
-        if (!cha.isPet()) {
+        if (!(cha instanceof PetInstance)) {
             cha.addStatFunc(FuncAccuracyAdd.func);
             cha.addStatFunc(FuncEvasionAdd.func);
         }
 
-        if (!cha.isPet() && !cha.isSummon()) {
+        if (!(cha instanceof Summon)) {
             cha.addStatFunc(FuncPAtkSpeedMul.func);
             cha.addStatFunc(FuncMAtkSpeedMul.func);
             cha.addStatFunc(FuncSDefInit.func);
             cha.addStatFunc(FuncSDefAll.func);
         }
 
-        cha.addStatFunc(FuncPAtkSpdLimit.func);
-        cha.addStatFunc(FuncMAtkSpdLimit.func);
-        cha.addStatFunc(FuncCAtkLimit.func);
-        cha.addStatFunc(FuncEvasionLimit.func);
-        cha.addStatFunc(FuncAccuracyLimit.func);
-        cha.addStatFunc(FuncCritLimit.func);
-        cha.addStatFunc(FuncMCritLimit.func);
 
         cha.addStatFunc(FuncMCriticalRateMul.func);
         cha.addStatFunc(FuncPCriticalRateMul.func);
@@ -158,7 +144,7 @@ public class StatFunctions {
         static final FuncMultRegenResting[] func = new FuncMultRegenResting[Stats.NUM_STATS];
 
         private FuncMultRegenResting(Stats stat) {
-            super(stat, 0x30, null);
+            super(stat, 0x30, null, 1.0);
             setCondition(new ConditionPlayerState(CheckPlayerState.RESTING, true));
         }
 
@@ -171,9 +157,7 @@ public class StatFunctions {
 
         @Override
         public void calc(Env env) {
-            if (env.character.isPlayer() && env.character.getLevel() <= 40 && ((Player) env.character).getClassId().getLevel() < 3 && stat == Stats.REGENERATE_HP_RATE)
-                env.value *= 6.; // TODO: переделать красивее
-            else
+            if (env.character instanceof Player && stat == Stats.REGENERATE_HP_RATE)
                 env.value *= 1.5;
         }
     }
@@ -182,7 +166,7 @@ public class StatFunctions {
         static final FuncMultRegenStanding[] func = new FuncMultRegenStanding[Stats.NUM_STATS];
 
         private FuncMultRegenStanding(Stats stat) {
-            super(stat, 0x30, null);
+            super(stat, 0x30, null,1.0);
             setCondition(new ConditionPlayerState(CheckPlayerState.STANDING, true));
         }
 
@@ -203,7 +187,7 @@ public class StatFunctions {
         static final FuncMultRegenRunning[] func = new FuncMultRegenRunning[Stats.NUM_STATS];
 
         private FuncMultRegenRunning(Stats stat) {
-            super(stat, 0x30, null);
+            super(stat, 0x30, null,1.0);
             setCondition(new ConditionPlayerState(CheckPlayerState.RUNNING, true));
         }
 
@@ -224,7 +208,7 @@ public class StatFunctions {
         static final FuncPAtkMul func = new FuncPAtkMul();
 
         private FuncPAtkMul() {
-            super(Stats.POWER_ATTACK, 0x20, null);
+            super(Stats.POWER_ATTACK, 0x20, null,1.0); // TODO edited to 1.0
         }
 
         @Override
@@ -237,7 +221,7 @@ public class StatFunctions {
         static final FuncMAtkMul func = new FuncMAtkMul();
 
         private FuncMAtkMul() {
-            super(Stats.MAGIC_ATTACK, 0x20, null);
+            super(Stats.MAGIC_ATTACK, 0x20, null,1.0);
         }
 
         @Override
@@ -253,7 +237,7 @@ public class StatFunctions {
         static final FuncPDefMul func = new FuncPDefMul();
 
         private FuncPDefMul() {
-            super(Stats.POWER_DEFENCE, 0x20, null);
+            super(Stats.POWER_DEFENCE, 0x20, null, 1.0);
         }
 
         @Override
@@ -266,7 +250,7 @@ public class StatFunctions {
         static final FuncMDefMul func = new FuncMDefMul();
 
         private FuncMDefMul() {
-            super(Stats.MAGIC_DEFENCE, 0x20, null);
+            super(Stats.MAGIC_DEFENCE, 0x20, null,1.0);
         }
 
         @Override
@@ -279,7 +263,7 @@ public class StatFunctions {
         static final FuncAttackRange func = new FuncAttackRange();
 
         private FuncAttackRange() {
-            super(Stats.POWER_ATTACK_RANGE, 0x20, null);
+            super(Stats.POWER_ATTACK_RANGE, 0x20, null,1.0);
         }
 
         @Override
@@ -294,18 +278,18 @@ public class StatFunctions {
         static final FuncAccuracyAdd func = new FuncAccuracyAdd();
 
         private FuncAccuracyAdd() {
-            super(Stats.ACCURACY_COMBAT, 0x10, null);
+            super(Stats.ACCURACY_COMBAT, 0x10, null, 1.0);
         }
 
         @Override
         public void calc(Env env) {
-            if (env.character.isPet())
+            if (env.character instanceof PetInstance)
                 return;
 
             //[Square(DEX)]*6 + lvl + weapon hitbonus;
             env.value += Math.sqrt(env.character.getDEX()) * 6 + ACCURACY_LEVEL_BONUS[env.character.getLevel()];
 
-            if (env.character.isSummon())
+            if (env.character instanceof SummonInstance )
                 env.value += env.character.getLevel() < 60 ? 4 : 5;
         }
     }
@@ -314,7 +298,7 @@ public class StatFunctions {
         static final FuncEvasionAdd func = new FuncEvasionAdd();
 
         private FuncEvasionAdd() {
-            super(Stats.EVASION_RATE, 0x10, null);
+            super(Stats.EVASION_RATE, 0x10, null,1.0);
         }
 
         @Override
@@ -327,7 +311,7 @@ public class StatFunctions {
         static final FuncMCriticalRateMul func = new FuncMCriticalRateMul();
 
         private FuncMCriticalRateMul() {
-            super(Stats.MCRITICAL_RATE, 0x10, null);
+            super(Stats.MCRITICAL_RATE, 0x10, null, 1.);
         }
 
         @Override
@@ -340,7 +324,7 @@ public class StatFunctions {
         static final FuncPCriticalRateMul func = new FuncPCriticalRateMul();
 
         private FuncPCriticalRateMul() {
-            super(Stats.CRITICAL_BASE, 0x10, null);
+            super(Stats.CRITICAL_BASE, 0x10, null,1.0);
         }
 
         @Override
@@ -355,7 +339,7 @@ public class StatFunctions {
         static final FuncMoveSpeedMul func = new FuncMoveSpeedMul();
 
         private FuncMoveSpeedMul() {
-            super(Stats.RUN_SPEED, 0x20, null);
+            super(Stats.RUN_SPEED, 0x20, null,1.0);
         }
 
         @Override
@@ -368,7 +352,7 @@ public class StatFunctions {
         static final FuncPAtkSpeedMul func = new FuncPAtkSpeedMul();
 
         private FuncPAtkSpeedMul() {
-            super(Stats.POWER_ATTACK_SPEED, 0x20, null);
+            super(Stats.POWER_ATTACK_SPEED, 0x20, null,1.0);
         }
 
         @Override
@@ -381,7 +365,7 @@ public class StatFunctions {
         static final FuncMAtkSpeedMul func = new FuncMAtkSpeedMul();
 
         private FuncMAtkSpeedMul() {
-            super(Stats.MAGIC_ATTACK_SPEED, 0x20, null);
+            super(Stats.MAGIC_ATTACK_SPEED, 0x20, null,1.0);
         }
 
         @Override
@@ -491,7 +475,7 @@ public class StatFunctions {
         public void calc(Env env) {
             PlayerTemplate t = (PlayerTemplate) env.character.getTemplate();
 
-            // Alexander - Temporary fix for HP when players delevel from a third class to lvl 20 or close. HP were not decreasing from the base level, and from lower lvls they were going to 0
+            // Alexander - Temporary fix for HP when players delevel from a third class to lvl 20 or close. HP were not decreasing from the base occupation, and from lower lvls they were going to 0
             final int lvl = env.character.getLevel() - t.classBaseLevel;
             final double hpAdd = (t.classBaseLevel >= 76 && env.character.getLevel() <= 20 ? t.lvlHpAdd * 0.9 : t.lvlHpAdd);
 
@@ -527,7 +511,7 @@ public class StatFunctions {
         public void calc(Env env) {
             PlayerTemplate t = (PlayerTemplate) env.character.getTemplate();
 
-            // Alexander - Temporary fix for CP when players delevel from a third class to lvl 20 or close. HP were not decreasing from the base level, and from lower lvls they were going to 0
+            // Alexander - Temporary fix for CP when players delevel from a third class to lvl 20 or close. HP were not decreasing from the base occupation, and from lower lvls they were going to 0
             final int lvl = env.character.getLevel() - t.classBaseLevel;
             final double cpAdd = (t.classBaseLevel >= 76 && env.character.getLevel() <= 20 ? t.lvlCpAdd * 0.9 : t.lvlCpAdd);
 
@@ -572,7 +556,7 @@ public class StatFunctions {
         public void calc(Env env) {
             PlayerTemplate t = (PlayerTemplate) env.character.getTemplate();
 
-            // Alexander - Temporary fix for MP when players delevel from a third class to lvl 20 or close. HP were not decreasing from the base level, and from lower lvls they were going to 0
+            // Alexander - Temporary fix for MP when players delevel from a third class to lvl 20 or close. HP were not decreasing from the base occupation, and from lower lvls they were going to 0
             final int lvl = env.character.getLevel() - t.classBaseLevel;
             final double mpAdd = (t.classBaseLevel >= 76 && env.character.getLevel() <= 20 ? t.lvlMpAdd * 0.9 : t.lvlMpAdd);
 
@@ -642,7 +626,7 @@ public class StatFunctions {
         static final FuncInventory func = new FuncInventory();
 
         private FuncInventory() {
-            super(Stats.INVENTORY_LIMIT, 0x01, null);
+            super(Stats.INVENTORY_LIMIT, 0x01, null, 80);
         }
 
         @Override
@@ -756,204 +740,6 @@ public class StatFunctions {
             if (shld == null || shld.getItemType() != WeaponType.NONE)
                 return;
             env.value *= BaseStats.DEX.calcBonus(env.character);
-        }
-    }
-
-    private static class FuncMaxHpLimit extends Func {
-        static final Func func = new FuncMaxHpLimit();
-
-        private FuncMaxHpLimit() {
-            super(Stats.MAX_HP, 0x100, null);
-        }
-
-        @Override
-        public void calc(Env env) {
-            env.value = Math.min(40000, env.value);
-        }
-    }
-
-    private static class FuncMaxMpLimit extends Func {
-        static final Func func = new FuncMaxMpLimit();
-
-        private FuncMaxMpLimit() {
-            super(Stats.MAX_MP, 0x100, null);
-        }
-
-        @Override
-        public void calc(Env env) {
-            env.value = Math.min(40000, env.value);
-        }
-    }
-
-    private static class FuncMaxCpLimit extends Func {
-        static final Func func = new FuncMaxCpLimit();
-
-        private FuncMaxCpLimit() {
-            super(Stats.MAX_CP, 0x100, null);
-        }
-
-        @Override
-        public void calc(Env env) {
-            env.value = Math.min(100000, env.value);
-        }
-    }
-
-    private static class FuncRunSpdLimit extends Func {
-        static final Func func = new FuncRunSpdLimit();
-
-        private FuncRunSpdLimit() {
-            super(Stats.RUN_SPEED, 0x100, null);
-        }
-
-        @Override
-        public void calc(Env env) {
-            if (env.character.getPlayer().isGM())
-                env.value = Math.min(Config.GM_LIM_MOVE, env.value);
-            else
-                env.value = Math.min(Config.LIM_MOVE, env.value);
-        }
-    }
-
-    private static class FuncPDefLimit extends Func {
-        static final Func func = new FuncPDefLimit();
-
-        private FuncPDefLimit() {
-            super(Stats.POWER_DEFENCE, 0x100, null);
-        }
-
-        @Override
-        public void calc(Env env) {
-            env.value = Math.min(Config.LIM_PDEF, env.value);
-        }
-    }
-
-    private static class FuncMDefLimit extends Func {
-        static final Func func = new FuncMDefLimit();
-
-        private FuncMDefLimit() {
-            super(Stats.MAGIC_DEFENCE, 0x100, null);
-        }
-
-        @Override
-        public void calc(Env env) {
-            env.value = Math.min(BalancerConfig.LIM_MDEF, env.value);
-        }
-    }
-
-    private static class FuncPAtkLimit extends Func {
-        static final Func func = new FuncPAtkLimit();
-
-        private FuncPAtkLimit() {
-            super(Stats.POWER_ATTACK, 0x100, null);
-        }
-
-        @Override
-        public void calc(Env env) {
-            env.value = Math.min(BalancerConfig.LIM_PATK, env.value);
-        }
-    }
-
-    private static class FuncMAtkLimit extends Func {
-        static final Func func = new FuncMAtkLimit();
-
-        private FuncMAtkLimit() {
-            super(Stats.MAGIC_ATTACK, 0x100, null);
-        }
-
-        @Override
-        public void calc(Env env) {
-            env.value = Math.min(BalancerConfig.LIM_MATK, env.value);
-        }
-    }
-
-    private static class FuncPAtkSpdLimit extends Func {
-        static final Func func = new FuncPAtkSpdLimit();
-
-        private FuncPAtkSpdLimit() {
-            super(Stats.POWER_ATTACK_SPEED, 0x100, null);
-        }
-
-        @Override
-        public void calc(Env env) {
-            env.value = Math.min(BalancerConfig.LIM_PATK_SPD, env.value);
-        }
-    }
-
-    private static class FuncMAtkSpdLimit extends Func {
-        static final Func func = new FuncMAtkSpdLimit();
-
-        private FuncMAtkSpdLimit() {
-            super(Stats.MAGIC_ATTACK_SPEED, 0x100, null);
-        }
-
-        @Override
-        public void calc(Env env) {
-            env.value = Math.min(BalancerConfig.LIM_MATK_SPD, env.value);
-        }
-    }
-
-    private static class FuncCAtkLimit extends Func {
-        static final Func func = new FuncCAtkLimit();
-
-        private FuncCAtkLimit() {
-            super(Stats.CRITICAL_DAMAGE, 0x100, null);
-        }
-
-        @Override
-        public void calc(Env env) {
-            env.value = Math.min(BalancerConfig.LIM_CRIT_DAM / 2., env.value);
-        }
-    }
-
-    private static class FuncEvasionLimit extends Func {
-        static final Func func = new FuncEvasionLimit();
-
-        private FuncEvasionLimit() {
-            super(Stats.EVASION_RATE, 0x100, null);
-        }
-
-        @Override
-        public void calc(Env env) {
-            env.value = Math.min(BalancerConfig.LIM_EVASION, env.value);
-        }
-    }
-
-    private static class FuncAccuracyLimit extends Func {
-        static final Func func = new FuncAccuracyLimit();
-
-        private FuncAccuracyLimit() {
-            super(Stats.ACCURACY_COMBAT, 0x100, null);
-        }
-
-        @Override
-        public void calc(Env env) {
-            env.value = Math.min(BalancerConfig.LIM_ACCURACY, env.value);
-        }
-    }
-
-    private static class FuncCritLimit extends Func {
-        static final Func func = new FuncCritLimit();
-
-        private FuncCritLimit() {
-            super(Stats.CRITICAL_BASE, 0x100, null);
-        }
-
-        @Override
-        public void calc(Env env) {
-            env.value = Math.min(BalancerConfig.LIM_CRIT, env.value);
-        }
-    }
-
-    private static class FuncMCritLimit extends Func {
-        static final Func func = new FuncMCritLimit();
-
-        private FuncMCritLimit() {
-            super(Stats.MCRITICAL_RATE, 0x100, null);
-        }
-
-        @Override
-        public void calc(Env env) {
-            env.value = Math.min(BalancerConfig.LIM_MCRIT, env.value);
         }
     }
 

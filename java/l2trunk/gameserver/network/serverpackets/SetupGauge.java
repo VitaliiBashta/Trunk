@@ -12,7 +12,7 @@ public class SetupGauge extends L2GameServerPacket {
     private final int _time;
 
     public SetupGauge(Creature character, int dat1, int time) {
-        _charId = character.getObjectId();
+        _charId = character.objectId();
         _dat1 = dat1;// color  0-blue   1-red  2-cyan  3-
         _time = time;
     }

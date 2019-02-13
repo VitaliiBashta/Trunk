@@ -50,7 +50,7 @@ public final class _001_LettersOfLove extends Quest {
         switch (npcId) {
             case DARIN:
                 if (cond == 0) {
-                    if (st.getPlayer().getLevel() >= 2)
+                    if (st.player.getLevel() >= 2)
                         htmltext = "daring_q0001_02.htm";
                     else {
                         htmltext = "daring_q0001_01.htm";
@@ -70,10 +70,10 @@ public final class _001_LettersOfLove extends Quest {
                     htmltext = "daring_q0001_10.htm";
                     st.takeItems(BAULS_POTION);
                     st.giveItems(NECKLACE);
-                    if (st.getPlayer().getClassId().getLevel() == 1 && !st.getPlayer().getVarB("ng1"))
-                        st.getPlayer().sendPacket(new ExShowScreenMessage("  Delivery duty complete.\nGo find the Newbie Guide."));
+                    if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("ng1"))
+                        st.player.sendPacket(new ExShowScreenMessage("  Delivery duty complete.\nGo find the Newbie Guide."));
                     st.giveItems(ADENA_ID, (int) ((Config.RATE_QUESTS_REWARD - 1) * 1200 + 2466 * Config.RATE_QUESTS_REWARD), false); // T2
-                    st.getPlayer().addExpAndSp(5672, 446);
+                    st.player.addExpAndSp(5672, 446);
                     st.playSound(SOUND_FINISH);
                     st.exitCurrentQuest(false);
                 }

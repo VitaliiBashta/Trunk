@@ -3,50 +3,36 @@ package l2trunk.gameserver.instancemanager;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.scripts.quests.*;
 
+import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.ConcurrentSkipListSet;
 
 public final class QuestManager {
 
-    private static final Set<Quest> QUESTS = new ConcurrentSkipListSet<>();
+    private static final Set<Quest> quests = new HashSet<>();
 
     public static Quest getQuest(String name) {
-        return QUESTS.stream()
-                .filter(q -> q.getName().equalsIgnoreCase(name))
-                .findFirst().orElse(null);
+        return quests.stream()
+                .filter(q -> q.name.equalsIgnoreCase(name))
+                .findFirst().orElseThrow(() -> new IllegalArgumentException("no quest with name " + name));
     }
 
-    public static Quest getQuest(Class<?> quest) {
-        return QUESTS.stream()
-        .filter(q -> q.getClass() == quest)
-        .findFirst().orElseThrow( () -> new IllegalArgumentException("not found quest "+ quest));
-
+    public static Quest getQuest(Class<? extends Quest> quest) {
+        return quests.stream()
+                .filter(q -> q.getClass() == quest)
+                .findFirst().orElseThrow(() -> new IllegalArgumentException("not  found quest " + quest));
     }
 
     public static Quest getQuest(int questId) {
-        return QUESTS.stream()
-                .filter(q -> q.questId == questId)
-                .findFirst().orElse(null);
-    }
-
-    public static Quest getQuest2(String nameOrId) {
-        try {
-            int questId = Integer.valueOf(nameOrId);
-            return getQuest(questId);
-        } catch (NumberFormatException e) {
-            return getQuest(nameOrId);
-        }
+        return quests.stream()
+                .filter(q -> q.id == questId)
+                .findFirst().orElseThrow(() -> new IllegalArgumentException("no quest with Id " + questId));
     }
 
     public static void addQuest(Quest newQuest) {
-        QUESTS.add(newQuest);
+        quests.add(newQuest);
     }
 
-//    public static Collection<Quest> getQuests() {
-//        return QUESTS;
-//    }
-
-    public static void init() {
+    public static void initAllQuests() {
         new _001_LettersOfLove();
         new _002_WhatWomenWant();
         new _003_WilltheSealbeBroken();
@@ -580,5 +566,4 @@ public final class QuestManager {
         new _907_DragonTrophyValakas();
         new _999_T1Tutorial();
     }
-
 }

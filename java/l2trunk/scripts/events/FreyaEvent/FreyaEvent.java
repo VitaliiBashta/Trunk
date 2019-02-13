@@ -5,6 +5,7 @@ import l2trunk.gameserver.Announcements;
 import l2trunk.gameserver.listener.actor.OnDeathListener;
 import l2trunk.gameserver.listener.actor.player.OnPlayerEnterListener;
 import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.SimpleSpawner;
 import l2trunk.gameserver.model.actor.listener.CharListenerList;
@@ -18,6 +19,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static l2trunk.gameserver.utils.ItemFunctions.addItem;
+import static l2trunk.gameserver.utils.ItemFunctions.removeItem;
 
 public final class FreyaEvent extends Functions implements ScriptFile, OnDeathListener, OnPlayerEnterListener {
     private static final int EVENT_MANAGER_ID = 13296;
@@ -33,7 +37,7 @@ public final class FreyaEvent extends Functions implements ScriptFile, OnDeathLi
     private static final String _msgStarted = "scripts.events.FreyaEvent.AnnounceEventStarted";
     private static final String _msgEnded = "scripts.events.FreyaEvent.AnnounceEventStoped";
     private static final Logger _log = LoggerFactory.getLogger(FreyaEvent.class);
-    private static final List<SimpleSpawner> _spawns = new ArrayList<>();
+    private static List<SimpleSpawner> _spawns = new ArrayList<>();
 
     private static boolean _active = false;
 
@@ -54,43 +58,43 @@ public final class FreyaEvent extends Functions implements ScriptFile, OnDeathLi
 
     private void spawnEventManagers() {
            List<Location> EVENT_MANAGERS = List.of(
-                new Location(16111, 142850, -2707, 16000),
-                new Location(17275, 145000, -3037, 25000),
-                new Location(83037, 149324, -3470, 44000),
-                new Location(82145, 148609, -3468, 0),
-                new Location(81755, 146487, -3534, 32768),
-                new Location(-81031, 150038, -3045, 0),
-                new Location(-83156, 150994, -3130, 0),
-                new Location(-13727, 122117, -2990, 16384),
-                new Location(-14129, 123869, -3118, 40959),
-                new Location(-84411, 244813, -3730, 57343),
-                new Location(-84023, 243051, -3730, 4096),
-                new Location(46908, 50856, -2997, 8192),
-                new Location(45538, 48357, -3061, 18000),
-                new Location(9929, 16324, -4576, 62999),
-                new Location(11546, 17599, -4586, 46900),
-                new Location(81987, 53723, -1497, 0),
-                new Location(81083, 56118, -1562, 32768),
-                new Location(147200, 25614, -2014, 16384),
-                new Location(148557, 26806, -2206, 32768),
-                new Location(117356, 76708, -2695, 49151),
-                new Location(115887, 76382, -2714, 0),
-                new Location(-117239, 46842, 367, 49151),
-                new Location(-119494, 44882, 367, 24576),
-                new Location(111004, 218928, -3544, 16384),
-                new Location(108426, 221876, -3600, 49151),
-                new Location(-45278, -112766, -241, 0),
-                new Location(-45372, -114104, -241, 16384),
-                new Location(115096, -178370, -891, 0),
-                new Location(116199, -182694, -1506, 0),
-                new Location(86865, -142915, -1341, 26000),
-                new Location(85584, -142490, -1343, 0),
-                new Location(147421, -55435, -2736, 49151),
-                new Location(148206, -55786, -2782, 61439),
-                new Location(43165, -48461, -797, 17000),
-                new Location(43966, -47709, -798, 49999));
-        
-        SpawnNPCs(EVENT_MANAGER_ID, EVENT_MANAGERS, _spawns);
+                Location.of(16111, 142850, -2707, 16000),
+                Location.of(17275, 145000, -3037, 25000),
+                Location.of(83037, 149324, -3470, 44000),
+                Location.of(82145, 148609, -3468, 0),
+                Location.of(81755, 146487, -3534, 32768),
+                Location.of(-81031, 150038, -3045, 0),
+                Location.of(-83156, 150994, -3130, 0),
+                Location.of(-13727, 122117, -2990, 16384),
+                Location.of(-14129, 123869, -3118, 40959),
+                Location.of(-84411, 244813, -3730, 57343),
+                Location.of(-84023, 243051, -3730, 4096),
+                Location.of(46908, 50856, -2997, 8192),
+                Location.of(45538, 48357, -3061, 18000),
+                Location.of(9929, 16324, -4576, 62999),
+                Location.of(11546, 17599, -4586, 46900),
+                Location.of(81987, 53723, -1497, 0),
+                Location.of(81083, 56118, -1562, 32768),
+                Location.of(147200, 25614, -2014, 16384),
+                Location.of(148557, 26806, -2206, 32768),
+                Location.of(117356, 76708, -2695, 49151),
+                Location.of(115887, 76382, -2714, 0),
+                Location.of(-117239, 46842, 367, 49151),
+                Location.of(-119494, 44882, 367, 24576),
+                Location.of(111004, 218928, -3544, 16384),
+                Location.of(108426, 221876, -3600, 49151),
+                Location.of(-45278, -112766, -241, 0),
+                Location.of(-45372, -114104, -241, 16384),
+                Location.of(115096, -178370, -891, 0),
+                Location.of(116199, -182694, -1506, 0),
+                Location.of(86865, -142915, -1341, 26000),
+                Location.of(85584, -142490, -1343, 0),
+                Location.of(147421, -55435, -2736, 49151),
+                Location.of(148206, -55786, -2782, 61439),
+                Location.of(43165, -48461, -797, 17000),
+                Location.of(43966, -47709, -798, 49999));
+
+        _spawns = SpawnNPCs(EVENT_MANAGER_ID, EVENT_MANAGERS);
     }
 
     private void unSpawnEventManagers() {
@@ -109,19 +113,21 @@ public final class FreyaEvent extends Functions implements ScriptFile, OnDeathLi
 
     @Override
     public void onDeath(Creature cha, Creature killer) {
-        if (_active && SimpleCheckDrop(cha, killer)) {
-            int itemId = Rnd.get(DROP_LIST);
-            if (Rnd.chance(DROP_CHANCE))
-                ((NpcInstance) cha).dropItem(killer.getPlayer(), itemId, 1);
+        if (killer instanceof Playable) {
+            Playable playable = (Playable) killer;
+            if (_active && simpleCheckDrop(cha, playable)) {
+                int itemId = Rnd.get(DROP_LIST);
+                if (Rnd.chance(DROP_CHANCE))
+                    ((NpcInstance) cha).dropItem(playable.getPlayer(), itemId, 1);
+            }
         }
     }
 
     public void startEvent() {
-        Player player = getSelf();
         if (!player.getPlayerAccess().IsEventGm)
             return;
 
-        if (SetActive(_name, true)) {
+        if (setActive(_name, true)) {
             spawnEventManagers();
             System.out.println("Event '" + _name + "' started.");
             Announcements.INSTANCE.announceByCustomMessage(_msgStarted);
@@ -134,10 +140,9 @@ public final class FreyaEvent extends Functions implements ScriptFile, OnDeathLi
     }
 
     public void stopEvent() {
-        Player player = getSelf();
         if (!player.getPlayerAccess().IsEventGm)
             return;
-        if (SetActive(_name, false)) {
+        if (setActive(_name, false)) {
             unSpawnEventManagers();
             System.out.println("Event '" + _name + "' stopped.");
             Announcements.INSTANCE.announceByCustomMessage(_msgEnded);
@@ -156,22 +161,20 @@ public final class FreyaEvent extends Functions implements ScriptFile, OnDeathLi
     }
 
     public void receiveGift() {
-        Player player = getSelf();
         long _remaining_time;
         long _reuse_time = GIFT_RECEIVE_DELAY * 60 * 60 * 1000;
         long _curr_time = System.currentTimeMillis();
-        String _last_use_time = player.getVar("FreyaCelebration");
 
-        if (_last_use_time != null)
-            _remaining_time = _curr_time - Long.parseLong(_last_use_time);
+        if (player.isVarSet("FreyaCelebration") )
+            _remaining_time = _curr_time - player.getVarLong("FreyaCelebration");
         else
             _remaining_time = _reuse_time;
 
         if (_remaining_time >= _reuse_time) {
-            if (getItemCount(player, ADENA) >= GIFT_PRICE) {
-                removeItem(player, ADENA, GIFT_PRICE, "FreyaEvent");
-                addItem(player, GIFT_ID, 1, "FreyaEvent");
-                player.setVar("FreyaCelebration", String.valueOf(_curr_time), -1);
+            if (player.haveAdena(GIFT_PRICE)) {
+                player.reduceAdena( GIFT_PRICE, "FreyaEvent");
+                addItem(player, GIFT_ID, 1);
+                player.setVar("FreyaCelebration", _curr_time);
             } else
                 player.sendPacket(new SystemMessage(SystemMessage._2_UNITS_OF_THE_ITEM_S1_IS_REQUIRED).addNumber(GIFT_PRICE));
         } else {
@@ -181,10 +184,10 @@ public final class FreyaEvent extends Functions implements ScriptFile, OnDeathLi
                 player.sendPacket(new SystemMessage(SystemMessage.THERE_ARE_S1_HOURSS_AND_S2_MINUTES_REMAINING_UNTIL_THE_TIME_WHEN_THE_ITEM_CAN_BE_PURCHASED).addNumber(hours).addNumber(minutes));
             else if (minutes > 0)
                 player.sendPacket(new SystemMessage(SystemMessage.THERE_ARE_S1_MINUTES_REMAINING_UNTIL_THE_TIME_WHEN_THE_ITEM_CAN_BE_PURCHASED).addNumber(minutes));
-            else if (getItemCount(player, ADENA) >= GIFT_PRICE) {
+            else if (player.haveAdena( GIFT_PRICE)) {
                 removeItem(player, ADENA, GIFT_PRICE, "FreyaEvent");
-                addItem(player, GIFT_ID, 1, "FreyaEvent");
-                player.setVar("FreyaCelebration", String.valueOf(_curr_time), -1);
+                addItem(player, GIFT_ID, 1);
+                player.setVar("FreyaCelebration", _curr_time);
             } else
                 player.sendPacket(new SystemMessage(SystemMessage._2_UNITS_OF_THE_ITEM_S1_IS_REQUIRED).addNumber(GIFT_PRICE));
         }

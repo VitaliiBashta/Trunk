@@ -33,12 +33,12 @@ public final class _366_SilverHairedShaman extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("30111-02.htm")) {
+        if ("30111-02.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("30111-quit.htm")) {
-            st.takeItems(SAIRONS_SILVER_HAIR, -1);
+        } else if ("30111-quit.htm".equalsIgnoreCase(event)) {
+            st.takeItems(SAIRONS_SILVER_HAIR);
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(true);
         }
@@ -57,15 +57,15 @@ public final class _366_SilverHairedShaman extends Quest {
             cond = st.getCond();
         if (npcId == 30111)
             if (cond == 0) {
-                if (st.getPlayer().getLevel() >= 48)
+                if (st.player.getLevel() >= 48)
                     htmltext = "30111-01.htm";
                 else {
                     htmltext = "30111-00.htm";
                     st.exitCurrentQuest(true);
                 }
-            } else if (cond == 1 && st.getQuestItemsCount(SAIRONS_SILVER_HAIR) == 0)
+            } else if (cond == 1 && !st.haveQuestItem(SAIRONS_SILVER_HAIR) )
                 htmltext = "30111-03.htm";
-            else if (cond == 1 && st.getQuestItemsCount(SAIRONS_SILVER_HAIR) >= 1) {
+            else if (cond == 1 && st.haveQuestItem(SAIRONS_SILVER_HAIR)) {
                 st.giveItems(ADENA_ID, (st.getQuestItemsCount(SAIRONS_SILVER_HAIR) * ADENA_PER_ONE + START_ADENA));
                 st.takeItems(SAIRONS_SILVER_HAIR);
                 htmltext = "30111-have.htm";
@@ -74,12 +74,10 @@ public final class _366_SilverHairedShaman extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
-        int cond = st.getCond();
-        if (cond == 1 && Rnd.chance(66)) {
+    public void onKill(NpcInstance npc, QuestState st) {
+        if (st.getCond() == 1 && Rnd.chance(66)) {
             st.giveItems(SAIRONS_SILVER_HAIR);
             st.playSound(SOUND_MIDDLE);
         }
-        return null;
     }
 }

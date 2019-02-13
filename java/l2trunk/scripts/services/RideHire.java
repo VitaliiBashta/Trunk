@@ -20,15 +20,12 @@ public final class RideHire extends Functions {
         }
 
         if (val == 0) {
-            Player player = getSelf();
             return "<br>[scripts_services.RideHire:ride_prices|Ride hire mountable pet.]";
         }
         return "";
     }
 
     public void ride_prices() {
-        Player player = getSelf();
-        NpcInstance npc = getNpc();
         if (player == null || npc == null)
             return;
 
@@ -36,8 +33,6 @@ public final class RideHire extends Functions {
     }
 
     public void ride(String[] args) {
-        Player player = getSelf();
-        NpcInstance npc = getNpc();
         if (player == null || npc == null)
             return;
 
@@ -111,7 +106,6 @@ public final class RideHire extends Functions {
     }
 
     private void rideOver() {
-        Player player = getSelf();
         if (player == null)
             return;
 

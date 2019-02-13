@@ -4,7 +4,6 @@ import l2trunk.gameserver.model.base.Race;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _010_IntoTheWorld extends Quest {
     private final int VERY_EXPENSIVE_NECKLACE = 7574;
@@ -60,7 +59,7 @@ public final class _010_IntoTheWorld extends Quest {
         int cond = st.getCond();
         if (npcId == BALANKI) {
             if (cond == 0) {
-                if (st.getPlayer().getRace() == Race.dwarf && st.getPlayer().getLevel() >= 3)
+                if (st.player.getRace() == Race.dwarf && st.player.getLevel() >= 3)
                     htmltext = "elder_balanki_q0010_0101.htm";
                 else {
                     htmltext = "elder_balanki_q0010_0102.htm";
@@ -80,7 +79,7 @@ public final class _010_IntoTheWorld extends Quest {
             else if (cond == 4)
                 htmltext = "warehouse_chief_reed_q0010_0402.htm";
         } else if (npcId == GERALD)
-            if (cond == 2 && st.getQuestItemsCount(VERY_EXPENSIVE_NECKLACE) > 0)
+            if (cond == 2 && st.haveQuestItem(VERY_EXPENSIVE_NECKLACE) )
                 htmltext = "gerald_priest_of_earth_q0010_0201.htm";
             else if (cond == 3)
                 htmltext = "gerald_priest_of_earth_q0010_0302.htm";

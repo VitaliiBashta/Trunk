@@ -28,8 +28,10 @@ import java.util.Set;
 import java.util.concurrent.ScheduledFuture;
 import java.util.stream.Stream;
 
-public class FourSepulchersManager extends Functions implements ScriptFile, OnDeathListener {
-    public static final Class<_620_FourGoblets> FOUR_GOBLETS = _620_FourGoblets.class;
+import static l2trunk.gameserver.utils.ItemFunctions.addItem;
+import static l2trunk.gameserver.utils.ItemFunctions.removeItem;
+
+public final class FourSepulchersManager extends Functions implements ScriptFile, OnDeathListener {
     private static final Logger _log = LoggerFactory.getLogger(FourSepulchersManager.class);
     private static final List<Zone> ZONES = List.of(
             ReflectionUtils.getZone("[FourSepulchers1]"),
@@ -149,7 +151,7 @@ public class FourSepulchersManager extends Functions implements ScriptFile, OnDe
         }
 
         for (Player mem : player.getParty().getMembers()) {
-            QuestState qs = mem.getQuestState(FOUR_GOBLETS);
+            QuestState qs = mem.getQuestState(_620_FourGoblets.class);
             if (qs == null || !qs.isStarted() && !qs.isCompleted()) {
                 showHtmlFile(player, npcId + "-NS.htm", npc, mem);
                 return;
@@ -181,10 +183,10 @@ public class FourSepulchersManager extends Functions implements ScriptFile, OnDe
         Location loc = FourSepulchersSpawn._startHallSpawns.get(npcId);
         for (Player member : player.getParty().getMembers()) {
             member.teleToLocation(Location.findPointToStay(member, loc, 0, 80));
-            Functions.removeItem(member, ENTRANCE_PASS, 1, "FourSepulchersManager");
+            removeItem(member, ENTRANCE_PASS, 1, "FourSepulchersManager");
             if (member.getInventory().getItemByItemId(ANTIQUE_BROOCH) == null)
-                Functions.addItem(member, USED_PASS, 1, "FourSepulchersManager");
-            Functions.removeItem(member, CHAPEL_KEY, 999999, "FourSepulchersManager");
+                addItem(member, USED_PASS, 1);
+            removeItem(member, CHAPEL_KEY, 999999, "FourSepulchersManager");
         }
         FourSepulchersSpawn._hallInUse.put(npcId, true);
     }
@@ -252,7 +254,7 @@ public class FourSepulchersManager extends Functions implements ScriptFile, OnDe
     }
 
     private static void showHtmlFile(Player player, String file, NpcInstance npc, Player member) {
-        NpcHtmlMessage html = new NpcHtmlMessage(npc.getObjectId());
+        NpcHtmlMessage html = new NpcHtmlMessage(npc.objectId());
         html.setFile("SepulcherNpc/" + file);
         if (member != null)
             html.replace("%member%", member.getName());
@@ -296,7 +298,7 @@ public class FourSepulchersManager extends Functions implements ScriptFile, OnDe
 
     @Override
     public void onDeath(Creature self, Creature killer) {
-        if (self.isPlayer() && self.getZ() >= -7250 && self.getZ() <= -6841 && checkIfInZone(self))
+        if (self instanceof Player && self.getZ() >= -7250 && self.getZ() <= -6841 && checkIfInZone(self))
             checkAnnihilated((Player) self);
     }
 

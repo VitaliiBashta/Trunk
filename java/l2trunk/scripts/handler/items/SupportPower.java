@@ -26,11 +26,6 @@ public final class SupportPower extends ScriptItemHandler implements ScriptFile 
             116, 24008);//Doomcryer
 
     @Override
-    public boolean pickupItem(Playable playable, ItemInstance item) {
-        return true;
-    }
-
-    @Override
     public void onLoad() {
         ItemHandler.INSTANCE.registerItemHandler(this);
     }
@@ -40,12 +35,7 @@ public final class SupportPower extends ScriptItemHandler implements ScriptFile 
         return Collections.singletonList(ITEM_IDS);
     }
 
-    public boolean useItem(Playable playable, ItemInstance item, boolean ctrl) {
-        if (playable == null || !playable.isPlayer())
-            return false;
-
-        Player player = playable.getPlayer();
-
+    public boolean useItem(Player player, ItemInstance item, boolean ctrl) {
         int itemId = item.getItemId();
         int classId = player.getBaseClassId();
 

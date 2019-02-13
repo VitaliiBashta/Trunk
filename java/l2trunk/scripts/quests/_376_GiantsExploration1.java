@@ -101,17 +101,17 @@ public final class _376_GiantsExploration1 extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
         int cond = st.getCond();
-        if (event.equalsIgnoreCase("yes")) {
+        if ("yes".equalsIgnoreCase(event)) {
             htmltext = "Starting.htm";
             st.setState(STARTED);
             st.setCond(1);
-            st.giveItems(DICT1, 1);
+            st.giveItems(DICT1);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("no")) {
+        } else if ("no".equalsIgnoreCase(event)) {
             htmltext = "ext_msg.htm";
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(true);
-        } else if (event.equalsIgnoreCase("show")) {
+        } else if ("show".equalsIgnoreCase(event)) {
             htmltext = "no_items.htm";
             for (int i = 0; i < EXCHANGE.length; i = i + 2) {
                 long count = Long.MAX_VALUE;
@@ -127,7 +127,7 @@ public final class _376_GiantsExploration1 extends Quest {
                     }
                 }
             }
-        } else if (event.equalsIgnoreCase("myst"))
+        } else if ("myst".equalsIgnoreCase(event))
             if (st.getQuestItemsCount(MST_BK) > 0) {
                 if (cond == 1) {
                     st.setState(STARTED);
@@ -148,18 +148,18 @@ public final class _376_GiantsExploration1 extends Quest {
         int cond = st.getCond();
         if (npcId == HR_SOBLING) {
             if (id == CREATED) {
-                if (st.getPlayer().getLevel() < 75) {
+                if (st.player.getLevel() < 75) {
                     st.exitCurrentQuest(true);
                     htmltext = "error_1.htm";
                 } else
                     htmltext = "start.htm";
             } else if (id == STARTED)
-                if (st.getQuestItemsCount(ANCIENT_PARCHMENT) != 0)
+                if (st.haveQuestItem(ANCIENT_PARCHMENT) )
                     htmltext = "checkout2.htm";
                 else
                     htmltext = "checkout.htm";
         } else if (npcId == WF_CLIFF)
-            if (cond == 2 & st.getQuestItemsCount(MST_BK) > 0) {
+            if (cond == 2 & st.haveQuestItem(MST_BK) ) {
                 htmltext = "ok_part2.htm";
                 st.takeItems(MST_BK);
                 st.giveItems(DICT2);
@@ -170,7 +170,7 @@ public final class _376_GiantsExploration1 extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int cond = st.getCond();
         if (cond > 0) {
             st.rollAndGive(ANCIENT_PARCHMENT, 1, 1, DROP_RATE);
@@ -178,6 +178,5 @@ public final class _376_GiantsExploration1 extends Quest {
             if (cond == 1)
                 st.rollAndGive(MST_BK, 1, 1, 1, DROP_RATE_BOOK);
         }
-        return null;
     }
 }

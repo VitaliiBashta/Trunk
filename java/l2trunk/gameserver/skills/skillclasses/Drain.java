@@ -2,6 +2,7 @@ package l2trunk.gameserver.skills.skillclasses;
 
 import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.stats.Formulas;
@@ -50,7 +51,7 @@ public final class Drain extends Skill {
                         double targetCP = realTarget.getCurrentCp();
 
                         // Нельзя восстанавливать HP из CP
-                        if (damage > targetCP || !realTarget.isPlayer())
+                        if (damage > targetCP || !(realTarget instanceof Player))
                             hp = (damage - targetCP) * absorbPart;
 
                         realTarget.reduceCurrentHp(damage, activeChar, this, true, true, false, true, false, false, true);
@@ -72,7 +73,7 @@ public final class Drain extends Skill {
                     if (addToHp > 0 && !activeChar.isHealBlocked())
                         activeChar.setCurrentHp(activeChar.getCurrentHp() + addToHp, false);
 
-                    if (realTarget.isDead() && corpseSkill && realTarget.isNpc()) {
+                    if (realTarget.isDead() && corpseSkill && realTarget instanceof NpcInstance) {
                         activeChar.getAI().setAttackTarget(null);
                         ((NpcInstance) realTarget).endDecayTask();
                     }

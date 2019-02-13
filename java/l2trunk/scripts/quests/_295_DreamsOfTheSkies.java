@@ -41,7 +41,7 @@ public final class _295_DreamsOfTheSkies extends Quest {
             st.setCond(0);
         int cond = st.getCond();
         if (cond == 0) {
-            if (st.getPlayer().getLevel() >= 11) {
+            if (st.player.getLevel() >= 11) {
                 htmltext = "elder_arin_q0295_02.htm";
                 return htmltext;
             }
@@ -65,10 +65,10 @@ public final class _295_DreamsOfTheSkies extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getCond() == 1 && st.getQuestItemsCount(FLOATING_STONE) < 50)
             if (Rnd.chance(25)) {
-                st.giveItems(FLOATING_STONE, 1);
+                st.giveItems(FLOATING_STONE);
                 if (st.getQuestItemsCount(FLOATING_STONE) == 50) {
                     st.playSound(SOUND_MIDDLE);
                     st.setCond(2);
@@ -82,6 +82,5 @@ public final class _295_DreamsOfTheSkies extends Quest {
                 st.giveItems(FLOATING_STONE, 2);
                 st.playSound(SOUND_ITEMGET);
             }
-        return null;
     }
 }

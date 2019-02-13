@@ -36,11 +36,11 @@ public final class RequestExDeleteSentPost extends L2GameClientPacket {
         if (activeChar == null || count == 0)
             return;
 
-        Collection<Mail> mails = MailDAO.getInstance().getSentMailByOwnerId(activeChar.getObjectId());
+        Collection<Mail> mails = MailDAO.getInstance().getSentMailByOwnerId(activeChar.objectId());
         mails.stream()
                 .filter(mail -> list.contains(mail.getMessageId()))
                 .filter(mail -> mail.getAttachments().isEmpty())
-                .forEach(mail -> MailDAO.getInstance().deleteSentMailByMailId(activeChar.getObjectId(), mail.getMessageId()));
+                .forEach(mail -> MailDAO.getInstance().deleteSentMailByMailId(activeChar.objectId(), mail.getMessageId()));
         activeChar.sendPacket(new ExShowSentPostList(activeChar));
     }
 }

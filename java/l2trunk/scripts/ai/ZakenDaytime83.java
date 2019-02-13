@@ -33,7 +33,7 @@ public final class ZakenDaytime83 extends Fighter {
     public void onEvtDead(Creature killer) {
         Reflection r = actor.getReflection();
         r.setReenterTime(System.currentTimeMillis());
-        actor.broadcastPacket(new PlaySound(PlaySound.Type.MUSIC, "BS02_D", 1, actor.getObjectId(), actor.getLoc()));
+        actor.broadcastPacket(new PlaySound(PlaySound.Type.MUSIC, "BS02_D", 1, actor.objectId(), actor.getLoc()));
         super.onEvtDead(killer);
     }
 

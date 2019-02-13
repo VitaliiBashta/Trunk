@@ -8,7 +8,7 @@ public class PledgeReceiveSubPledgeCreated extends L2GameServerPacket {
     private final String leader_name;
 
     public PledgeReceiveSubPledgeCreated(SubUnit subPledge) {
-        type = subPledge.getType();
+        type = subPledge.type();
         _name = subPledge.getName();
         leader_name = subPledge.getLeaderName();
     }

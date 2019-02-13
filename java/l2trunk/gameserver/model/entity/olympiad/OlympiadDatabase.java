@@ -158,21 +158,21 @@ public final class OlympiadDatabase {
             StatsSet hero;
 
             for (ClassId id : ClassId.VALUES) {
-                if (id.id() == 133)
-                    continue;
-                if (id.level() == 3) {
-                    statement = con.prepareStatement(id.id() == 132 ? OlympiadNobleDAO.OLYMPIAD_GET_HEROS_SOULHOUND : OlympiadNobleDAO.OLYMPIAD_GET_HEROS);
-                    statement.setInt(1, id.id());
-                    statement.setInt(2, Config.OLYMPIAD_BATTLES_FOR_REWARD);
-                    rset = statement.executeQuery();
+                if (id != ClassId.femaleSoulhound) {
+                    if (id.occupation() == 3) {
+                        statement = con.prepareStatement(id.id == 132 ? OlympiadNobleDAO.OLYMPIAD_GET_HEROS_SOULHOUND : OlympiadNobleDAO.OLYMPIAD_GET_HEROS);
+                        statement.setInt(1, id.id);
+                        statement.setInt(2, Config.OLYMPIAD_BATTLES_FOR_REWARD);
+                        rset = statement.executeQuery();
 
-                    if (rset.next()) {
-                        hero = new StatsSet();
-                        hero.set(Olympiad.CLASS_ID, id.id());
-                        hero.set(Olympiad.CHAR_ID, rset.getInt(Olympiad.CHAR_ID));
-                        hero.set(Olympiad.CHAR_NAME, rset.getString(Olympiad.CHAR_NAME));
+                        if (rset.next()) {
+                            hero = new StatsSet();
+                            hero.set(Olympiad.CLASS_ID, id.id);
+                            hero.set(Olympiad.CHAR_ID, rset.getInt(Olympiad.CHAR_ID));
+                            hero.set(Olympiad.CHAR_NAME, rset.getString(Olympiad.CHAR_NAME));
 
-                        Olympiad._heroesToBe.add(hero);
+                            Olympiad._heroesToBe.add(hero);
+                        }
                     }
                 }
             }

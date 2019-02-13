@@ -24,71 +24,70 @@ public final class Spoil extends Skill {
 
     @Override
     public void useSkill(Creature activeChar, List<Creature> targets) {
-        if (!activeChar.isPlayer())
+        if (!(activeChar instanceof Player))
             return;
-
-        int ss = isSSPossible() ? (isMagic() ? activeChar.getChargedSpiritShot() : activeChar.getChargedSoulShot() ? 2 : 0) : 0;
+        Player player = (Player) activeChar;
+        int ss = isSSPossible() ? (isMagic() ? player.getChargedSpiritShot() : player.getChargedSoulShot() ? 2 : 0) : 0;
         if (ss > 0 && power > 0)
-            activeChar.unChargeShots(false);
+            player.unChargeShots(false);
 
         targets.stream()
                 .filter(Objects::nonNull)
                 .filter(t -> !t.isDead())
-                .forEach(t -> {
-                    if (t.isMonster()) {
-                        if (isSpoilUse(t)) {
-                            if (((MonsterInstance) t).isSpoiled())
-                                activeChar.sendPacket(SystemMsg.IT_HAS_ALREADY_BEEN_SPOILED);
-                            else {
-                                MonsterInstance monster = (MonsterInstance) t;
-                                boolean success;
-                                if (!Config.ALT_SPOIL_FORMULA) {
-                                    int monsterLevel = monster.getLevel();
-                                    int modifier = Math.abs(monsterLevel - activeChar.getLevel());
-                                    double rateOfSpoil = Config.BASE_SPOIL_RATE;
-                                    if (modifier > 8)
-                                        rateOfSpoil = rateOfSpoil - rateOfSpoil * (modifier - 8) * 9 / 100;
+                .filter(t -> t instanceof MonsterInstance)
+                .map(t -> (MonsterInstance)t)
+                .forEach(monster -> {
+                    if (isSpoilUse(monster)) {
+                        if (monster.isSpoiled())
+                            player.sendPacket(SystemMsg.IT_HAS_ALREADY_BEEN_SPOILED);
+                        else {
+                            boolean success;
+                            if (!Config.ALT_SPOIL_FORMULA) {
+                                int monsterLevel = monster.getLevel();
+                                int modifier = Math.abs(monsterLevel - player.getLevel());
+                                double rateOfSpoil = Config.BASE_SPOIL_RATE;
+                                if (modifier > 8)
+                                    rateOfSpoil = rateOfSpoil - rateOfSpoil * (modifier - 8) * 9 / 100;
 
-                                    rateOfSpoil = rateOfSpoil * magicLevel / monsterLevel;
-                                    if (rateOfSpoil < Config.MINIMUM_SPOIL_RATE)
-                                        rateOfSpoil = Config.MINIMUM_SPOIL_RATE;
-                                    else if (rateOfSpoil > 99.)
-                                        rateOfSpoil = 99.;
+                                rateOfSpoil = rateOfSpoil * magicLevel / monsterLevel;
+                                if (rateOfSpoil < Config.MINIMUM_SPOIL_RATE)
+                                    rateOfSpoil = Config.MINIMUM_SPOIL_RATE;
+                                else if (rateOfSpoil > 99.)
+                                    rateOfSpoil = 99.;
 
-                                    if (((Player) activeChar).isGM())
-                                        activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.skills.skillclasses.Spoil.Chance", (Player) activeChar).addNumber((long) rateOfSpoil));
-                                    success = Rnd.chance(rateOfSpoil);
+                                if (player.isGM())
+                                    player.sendMessage(new CustomMessage("l2trunk.gameserver.skills.skillclasses.Spoil.Chance").addNumber((long) rateOfSpoil));
+                                success = Rnd.chance(rateOfSpoil);
 
-                                } else
-                                    success = Formulas.calcSkillSuccess(activeChar, t, this, activateRate);
-                                if (success && monster.setSpoiled(activeChar.getPlayer()))
-                                    activeChar.sendPacket(SystemMsg.THE_SPOIL_CONDITION_HAS_BEEN_ACTIVATED);
-                                else
-                                    activeChar.sendPacket(new SystemMessage2(SystemMsg.S1_HAS_FAILED).addSkillName(id, getDisplayLevel()));
-                            }
-                        } else
-                            activeChar.sendPacket(new SystemMessage2(SystemMsg.S1_HAS_FAILED).addSkillName(id, getDisplayLevel()));
-                    }
+                            } else
+                                success = Formulas.calcSkillSuccess(player, monster, this, activateRate);
+                            if (success && monster.setSpoiled(player))
+                                player.sendPacket(SystemMsg.THE_SPOIL_CONDITION_HAS_BEEN_ACTIVATED);
+                            else
+                                player.sendPacket(new SystemMessage2(SystemMsg.S1_HAS_FAILED).addSkillName(id, getDisplayLevel()));
+                        }
+                    } else
+                        player.sendPacket(new SystemMessage2(SystemMsg.S1_HAS_FAILED).addSkillName(id, getDisplayLevel()));
 
                     if (power > 0) {
                         double damage;
                         if (isMagic())
-                            damage = Formulas.calcMagicDam(activeChar, t, this, ss);
+                            damage = Formulas.calcMagicDam(player, monster, this, ss);
                         else {
-                            AttackInfo info = Formulas.calcPhysDam(activeChar, t, this, false, false, ss > 0, false);
+                            AttackInfo info = Formulas.calcPhysDam(player, monster, this, false, false, ss > 0, false);
                             damage = info.damage;
 
                             if (info.lethal_dmg > 0)
-                                t.reduceCurrentHp(info.lethal_dmg, activeChar, this, true, true, false, false, false, false, false);
+                                monster.reduceCurrentHp(info.lethal_dmg, player, this, true, true, false, false, false, false, false);
                         }
 
-                        t.reduceCurrentHp(damage, activeChar, this, true, true, false, true, false, false, true);
-                        t.doCounterAttack(this, activeChar, false);
+                        monster.reduceCurrentHp(damage, player, this, true, true, false, true, false, false, true);
+                        monster.doCounterAttack(this, player, false);
                     }
 
-                    getEffects(activeChar, t);
+                    getEffects(player, monster);
 
-                    t.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, activeChar, Math.max(effectPoint, 1));
+                    monster.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, player, Math.max(effectPoint, 1));
                 });
     }
 

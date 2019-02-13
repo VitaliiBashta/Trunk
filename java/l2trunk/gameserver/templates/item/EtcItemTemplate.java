@@ -8,7 +8,7 @@ public final class EtcItemTemplate extends ItemTemplate {
     public EtcItemTemplate(StatsSet set) {
         super(set);
         type = set.getEnum("type", EtcItemType.class);
-        _type1 = TYPE1_ITEM_QUESTITEM_ADENA;
+        type1 = TYPE1_ITEM_QUESTITEM_ADENA;
         switch (getItemType()) {
             case QUEST:
                 _type2 = TYPE2_QUEST;

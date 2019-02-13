@@ -81,7 +81,7 @@ public class RainbowCoordinatorInstance extends NpcInstance {
             Location loc = (Location) spawnEx.getSpawns().get(0).getCurrentSpawnRange();
 
             for (Player member : party.getMembers()) {
-                siegeClan.addPlayer(member.getObjectId());
+                siegeClan.addPlayer(member.objectId());
                 member.teleToLocation(Location.coordsRandomize(loc, 100, 200));
             }
         } else

@@ -1,24 +1,18 @@
 package l2trunk.gameserver.network.serverpackets;
 
 import l2trunk.gameserver.model.Party;
-import l2trunk.gameserver.model.Player;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
-/**
- * Format: ch d[Sdd]
- *
- * @author SYS
- */
-public class ExMPCCShowPartyMemberInfo extends L2GameServerPacket {
+public final class ExMPCCShowPartyMemberInfo extends L2GameServerPacket {
     private final List<PartyMemberInfo> members;
 
     public ExMPCCShowPartyMemberInfo(Party party) {
-        members = new ArrayList<>();
-        for (Player _member : party.getMembers())
-            members.add(new PartyMemberInfo(_member.getName(), _member.getObjectId(), _member.getClassId().id()));
+        members =  party.getMembers().stream()
+        .map(m -> new PartyMemberInfo(m.getName(), m.objectId(), m.getClassId().id))
+        .collect(Collectors.toList());
     }
 
     @Override
@@ -28,22 +22,22 @@ public class ExMPCCShowPartyMemberInfo extends L2GameServerPacket {
 
         for (PartyMemberInfo member : members) {
             writeS(member.name); // Имя члена пати
-            writeD(member.object_id); // object Id члена пати
-            writeD(member.class_id); // id класса члена пати
+            writeD(member.objectId); // object Id члена пати
+            writeD(member.classId); // id класса члена пати
         }
 
         members.clear();
     }
 
-    static class PartyMemberInfo {
+    private static class PartyMemberInfo {
         final String name;
-        final int object_id;
-        final int class_id;
+        final int objectId;
+        final int classId;
 
-        PartyMemberInfo(String _name, int _object_id, int _class_id) {
-            name = _name;
-            object_id = _object_id;
-            class_id = _class_id;
+        PartyMemberInfo(String name, int objectId, int classId) {
+            this.name = name;
+            this.objectId = objectId;
+            this.classId = classId;
         }
     }
 }

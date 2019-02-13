@@ -19,12 +19,11 @@ public final class Balance extends Skill {
         int summaryMaximumHp = 0;
 
         for (Creature target : targets)
-            if (target != null) {
-                if (target.isAlikeDead())
-                    continue;
-                summaryCurrentHp += target.getCurrentHp();
-                summaryMaximumHp += target.getMaxHp();
-            }
+            if (target != null)
+                if (!target.isAlikeDead()) {
+                    summaryCurrentHp += target.getCurrentHp();
+                    summaryMaximumHp += target.getMaxHp();
+                }
 
         double percent = summaryCurrentHp / summaryMaximumHp;
 

@@ -3,7 +3,6 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _115_TheOtherSideOfTruth extends Quest {
     // NPCs
@@ -98,10 +97,10 @@ public final class _115_TheOtherSideOfTruth extends Quest {
             st.playSound(SOUND_MIDDLE);
         } else if (event.startsWith("32021") || event.startsWith("32077")) {
             if (event.contains("-pick")) {
-                st.set("talk", "1");
+                st.set("talk", 1);
                 event = event.replace("-pick", "");
             }
-            st.set(event, "1");
+            st.set(event, 1);
             return "Sculpture-05.htm";
         }
 
@@ -117,7 +116,7 @@ public final class _115_TheOtherSideOfTruth extends Quest {
         if (_state == CREATED) {
             if (npcId != Rafforty)
                 return "noquest";
-            if (st.getPlayer().getLevel() >= 53) {
+            if (st.player.getLevel() >= 53) {
                 st.setCond(0);
                 return "32020-01.htm";
             }
@@ -158,7 +157,7 @@ public final class _115_TheOtherSideOfTruth extends Quest {
         } else if (npcId == Misa && _state == STARTED) {
             if (cond == 1) {
                 st.setCond(2);
-                st.giveItems(Misas_Letter, 1);
+                st.giveItems(Misas_Letter);
                 st.playSound(SOUND_MIDDLE);
                 return "32018-01.htm";
             } else if (cond == 2)
@@ -182,14 +181,14 @@ public final class _115_TheOtherSideOfTruth extends Quest {
                 } else if (npcId_flag == 1)
                     return "Sculpture-02.htm";
                 else {
-                    st.set(_npcId, "1");
+                    st.set(_npcId, 1);
                     return "Sculpture-01.htm";
                 }
             } else if (cond == 8)
                 return "Sculpture-04.htm";
             else if (cond == 11) {
                 st.setCond(12);
-                st.giveItems(Piece_of_Tablet, 1);
+                st.giveItems(Piece_of_Tablet);
                 st.playSound(SOUND_MIDDLE);
                 return "Sculpture-07.htm";
             } else if (cond == 12)

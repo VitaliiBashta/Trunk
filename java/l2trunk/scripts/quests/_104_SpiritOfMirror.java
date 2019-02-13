@@ -7,7 +7,6 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
 import l2trunk.gameserver.network.serverpackets.SystemMessage2;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 import java.util.List;
 
@@ -16,13 +15,12 @@ public final class _104_SpiritOfMirror extends Quest {
     private static final int WAND_SPIRITBOUND1 = 1135;
     private static final int WAND_SPIRITBOUND2 = 1136;
     private static final int WAND_SPIRITBOUND3 = 1137;
-    private static final List<Integer> spirits = List.of(WAND_SPIRITBOUND1, WAND_SPIRITBOUND2, WAND_SPIRITBOUND3);
     private static final int WAND_OF_ADEPT = 747;
 
     private static final SystemMessage2 CACHE_SYSMSG_GALLINS_OAK_WAND = SystemMessage2.removeItems(GALLINS_OAK_WAND, 1);
 
     public _104_SpiritOfMirror() {
-        super(false);
+        super(PARTY_NONE);
         addStartNpc(30017);
         addTalkId(30041, 30043, 30045);
         addKillId(27003, 27004, 27005);
@@ -46,10 +44,10 @@ public final class _104_SpiritOfMirror extends Quest {
         int cond = st.getCond();
         if (npcId == 30017) {
             if (cond == 0)
-                if (st.getPlayer().getRace() != Race.human) {
+                if (st.player.getRace() != Race.human) {
                     htmltext = "gallin_q0104_00.htm";
                     st.exitCurrentQuest(true);
-                } else if (st.getPlayer().getLevel() >= 10) {
+                } else if (st.player.getLevel() >= 10) {
                     htmltext = "gallin_q0104_02.htm";
                     return htmltext;
                 } else {
@@ -59,19 +57,19 @@ public final class _104_SpiritOfMirror extends Quest {
             else if (cond == 1 && st.getQuestItemsCount(GALLINS_OAK_WAND) >= 1 && (st.getQuestItemsCount(WAND_SPIRITBOUND1) == 0 || st.getQuestItemsCount(WAND_SPIRITBOUND2) == 0 || st.getQuestItemsCount(WAND_SPIRITBOUND3) == 0))
                 htmltext = "gallin_q0104_04.htm";
             else if (cond == 3 && st.getQuestItemsCount(WAND_SPIRITBOUND1) >= 1 && st.getQuestItemsCount(WAND_SPIRITBOUND2) >= 1 && st.getQuestItemsCount(WAND_SPIRITBOUND3) >= 1) {
-                st.takeItems(spirits);
+                st.takeItems(List.of(WAND_SPIRITBOUND1, WAND_SPIRITBOUND2, WAND_SPIRITBOUND3));
 
-                st.giveItems(WAND_OF_ADEPT, 1);
+                st.giveItems(WAND_OF_ADEPT);
                 st.giveItems(ADENA_ID, 16866, false);
-                st.getPlayer().addExpAndSp(39750, 3407);
+                st.player.addExpAndSp(39750, 3407);
 
-                if (st.getPlayer().getClassId().getLevel() == 1 && !st.getPlayer().getVarB("p1q3")) {
-                    st.getPlayer().setVar("p1q3", "1", -1); // flag for helper
-                    st.getPlayer().sendPacket(new ExShowScreenMessage("Now go find the Newbie Guide."));
+                if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("p1q3")) {
+                    st.player.setVar("p1q3", 1); // flag for helper
+                    st.player.sendPacket(new ExShowScreenMessage("Now go find the Newbie Guide."));
                     st.giveItems(1060, 100); // healing potion
                     for (int item = 4412; item <= 4417; item++)
                         st.giveItems(item, 10); // echo cry
-                    if (st.getPlayer().getClassId().isMage) {
+                    if (st.player.getClassId().isMage) {
                         st.playTutorialVoice("tutorial_voice_027");
                         st.giveItems(5790, 3000); // newbie sps
                     } else {
@@ -86,13 +84,13 @@ public final class _104_SpiritOfMirror extends Quest {
             }
         } else if ((npcId == 30041 || npcId == 30043 || npcId == 30045) && cond == 1) {
             if (npcId == 30041 && st.getInt("id1") == 0)
-                st.set("id1", "1");
+                st.set("id1", 1);
             htmltext = "arnold_q0104_01.htm";
             if (npcId == 30043 && st.getInt("id2") == 0)
-                st.set("id2", "1");
+                st.set("id2", 1);
             htmltext = "johnson_q0104_01.htm";
             if (npcId == 30045 && st.getInt("id3") == 0)
-                st.set("id3", "1");
+                st.set("id3", 1);
             htmltext = "ken_q0104_01.htm";
             if (st.getInt("id1") + st.getInt("id2") + st.getInt("id3") == 3) {
                 st.setCond(2);
@@ -105,16 +103,16 @@ public final class _104_SpiritOfMirror extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int cond = st.getCond();
         int npcId = npc.getNpcId();
 
-        if ((cond == 1 || cond == 2) && st.getPlayer().getActiveWeaponInstance() != null && st.getPlayer().getActiveWeaponInstance().getItemId() == GALLINS_OAK_WAND) {
-            ItemInstance weapon = st.getPlayer().getActiveWeaponInstance();
+        if ((cond == 1 || cond == 2) && st.player.getActiveWeaponInstance() != null && st.player.getActiveWeaponInstance().getItemId() == GALLINS_OAK_WAND) {
+            ItemInstance weapon = st.player.getActiveWeaponInstance();
             if (npcId == 27003 && st.getQuestItemsCount(WAND_SPIRITBOUND1) == 0) {
-                if (st.getPlayer().getInventory().destroyItem(weapon, 1L, "_104_SpiritOfMirror")) {
-                    st.giveItems(WAND_SPIRITBOUND1, 1);
-                    st.getPlayer().sendPacket(CACHE_SYSMSG_GALLINS_OAK_WAND);
+                if (st.player.getInventory().destroyItem(weapon, 1L, "_104_SpiritOfMirror")) {
+                    st.giveItems(WAND_SPIRITBOUND1);
+                    st.player.sendPacket(CACHE_SYSMSG_GALLINS_OAK_WAND);
                     long Collect = st.getQuestItemsCount(WAND_SPIRITBOUND1) + st.getQuestItemsCount(WAND_SPIRITBOUND2) + st.getQuestItemsCount(WAND_SPIRITBOUND3);
                     if (Collect == 3) {
                         st.setCond(3);
@@ -123,9 +121,9 @@ public final class _104_SpiritOfMirror extends Quest {
                         st.playSound(SOUND_ITEMGET);
                 }
             } else if (npcId == 27004 && st.getQuestItemsCount(WAND_SPIRITBOUND2) == 0) {
-                if (st.getPlayer().getInventory().destroyItem(weapon, 1L, "_104_SpiritOfMirror")) {
-                    st.giveItems(WAND_SPIRITBOUND2, 1);
-                    st.getPlayer().sendPacket(CACHE_SYSMSG_GALLINS_OAK_WAND);
+                if (st.player.getInventory().destroyItem(weapon, 1L, "_104_SpiritOfMirror")) {
+                    st.giveItems(WAND_SPIRITBOUND2);
+                    st.player.sendPacket(CACHE_SYSMSG_GALLINS_OAK_WAND);
                     long Collect = st.getQuestItemsCount(WAND_SPIRITBOUND1) + st.getQuestItemsCount(WAND_SPIRITBOUND2) + st.getQuestItemsCount(WAND_SPIRITBOUND3);
                     if (Collect == 3) {
                         st.setCond(3);
@@ -134,9 +132,9 @@ public final class _104_SpiritOfMirror extends Quest {
                         st.playSound(SOUND_ITEMGET);
                 }
             } else if (npcId == 27005 && st.getQuestItemsCount(WAND_SPIRITBOUND3) == 0)
-                if (st.getPlayer().getInventory().destroyItem(weapon, 1L, "_104_SpiritOfMirror")) {
-                    st.giveItems(WAND_SPIRITBOUND3, 1);
-                    st.getPlayer().sendPacket(CACHE_SYSMSG_GALLINS_OAK_WAND);
+                if (st.player.getInventory().destroyItem(weapon, 1L, "_104_SpiritOfMirror")) {
+                    st.giveItems(WAND_SPIRITBOUND3);
+                    st.player.sendPacket(CACHE_SYSMSG_GALLINS_OAK_WAND);
                     long Collect = st.getQuestItemsCount(WAND_SPIRITBOUND1) + st.getQuestItemsCount(WAND_SPIRITBOUND2) + st.getQuestItemsCount(WAND_SPIRITBOUND3);
                     if (Collect == 3) {
                         st.setCond(3);
@@ -145,6 +143,5 @@ public final class _104_SpiritOfMirror extends Quest {
                         st.playSound(SOUND_ITEMGET);
                 }
         }
-        return null;
     }
 }

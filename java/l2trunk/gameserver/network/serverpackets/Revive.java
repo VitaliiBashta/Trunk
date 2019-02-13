@@ -12,7 +12,7 @@ public class Revive extends L2GameServerPacket {
     private final int _objectId;
 
     public Revive(GameObject obj) {
-        _objectId = obj.getObjectId();
+        _objectId = obj.objectId();
     }
 
     @Override

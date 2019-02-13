@@ -2,10 +2,6 @@ package l2trunk.gameserver.network.serverpackets;
 
 import l2trunk.gameserver.model.Player;
 
-/**
- * @author VISTALL
- * @date 23:37/23.03.2011
- */
 public class ExGoodsInventoryInfo extends L2GameServerPacket {
 
     public ExGoodsInventoryInfo(Player player) {

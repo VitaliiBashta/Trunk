@@ -74,8 +74,6 @@ public final class StatManager implements ScriptFile, ICommunityBoardHandler {
     /**
      * Вызываем показ текущего списка лучших 20 плееров по ПВП показателю
      * Осуществляем внутри-классовый конект и чекинг таблицы (по приведённым параметрам)
-     *
-     * @param player
      */
     private void showPvp(Player player) {
         try (Connection con = DatabaseFactory.getInstance().getConnection();

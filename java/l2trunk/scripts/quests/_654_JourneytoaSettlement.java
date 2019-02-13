@@ -4,7 +4,6 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _654_JourneytoaSettlement extends Quest {
     // NPC
@@ -30,14 +29,14 @@ public final class _654_JourneytoaSettlement extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("printessa_spirit_q0654_03.htm")) {
+        if ("printessa_spirit_q0654_03.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
         }
-        if (event.equalsIgnoreCase("printessa_spirit_q0654_04.htm"))
+        if ("printessa_spirit_q0654_04.htm".equalsIgnoreCase(event))
             st.setCond(2);
-        if (event.equalsIgnoreCase("printessa_spirit_q0654_07.htm")) {
+        if ("printessa_spirit_q0654_07.htm".equalsIgnoreCase(event)) {
             st.giveItems(FrintezzasMagicForceFieldRemovalScroll, 5);
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(true);
@@ -48,10 +47,10 @@ public final class _654_JourneytoaSettlement extends Quest {
     @Override
     public String onTalk(NpcInstance npc, QuestState st) {
         String htmltext = "noquest";
-        QuestState q = st.getPlayer().getQuestState(_119_LastImperialPrince.class);
+        QuestState q = st.player.getQuestState(_119_LastImperialPrince.class);
         if (q == null)
             return htmltext;
-        if (st.getPlayer().getLevel() < 74) {
+        if (st.player.getLevel() < 74) {
             htmltext = "printessa_spirit_q0654_02.htm";
             st.exitCurrentQuest(true);
             return htmltext;
@@ -75,12 +74,11 @@ public final class _654_JourneytoaSettlement extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getCond() == 2 && Rnd.chance(5)) {
             st.setCond(3);
-            st.giveItems(AntelopeSkin, 1);
+            st.giveItems(AntelopeSkin);
             st.playSound(SOUND_MIDDLE);
         }
-        return null;
     }
 }

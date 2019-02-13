@@ -7,11 +7,9 @@ import l2trunk.gameserver.templates.item.ItemTemplate;
 public class ItemInfo {
     private int ownerId;
     private int lastChange;
-    private int type1;
     private int objectId;
     private int itemId;
     private long count;
-    private int type2;
     private int customType1;
     private boolean isEquipped;
     private int bodyPart;
@@ -38,26 +36,26 @@ public class ItemInfo {
 
     public ItemInfo(ItemInstance item) {
         setOwnerId(item.getOwnerId());
-        setObjectId(item.getObjectId());
+        this.objectId = item.objectId();
         setItemId(item.getItemId());
-        setCount(item.getCount());
-        setCustomType1(item.getCustomType1());
-        setEquipped(item.isEquipped());
-        setEnchantLevel(item.getEnchantLevel());
-        setCustomType2(item.getCustomType2());
-        setAugmentationId(item.getAugmentationId());
-        setShadowLifeTime(item.getShadowLifeTime());
-        setAttackElement(item.getAttackElement().getId());
-        setAttackElementValue(item.getAttackElementValue());
-        setDefenceFire(item.getDefenceFire());
-        setDefenceWater(item.getDefenceWater());
-        setDefenceWind(item.getDefenceWind());
-        setDefenceEarth(item.getDefenceEarth());
-        setDefenceHoly(item.getDefenceHoly());
-        setDefenceUnholy(item.getDefenceUnholy());
-        setEquipSlot(item.getEquipSlot());
-        setTemporalLifeTime(item.getTemporalLifeTime());
-        setEnchantOptions(item.getEnchantOptions());
+        this.count = item.getCount();
+        this.customType1 = item.getCustomType1();
+        this.isEquipped = item.isEquipped();
+        this.enchantLevel = item.getEnchantLevel();
+        this.customType2 = item.getCustomType2();
+        this.augmentationId = item.getAugmentationId();
+        this.shadowLifeTime = item.getShadowLifeTime();
+        this.attackElement = item.getAttackElement().getId();
+        this.attackElementValue = item.getAttackElementValue();
+        this.defenceFire = item.getDefenceFire();
+        this.defenceWater = item.getDefenceWater();
+        this.defenceWind = item.getDefenceWind();
+        this.defenceEarth = item.getDefenceEarth();
+        this.defenceHoly = item.getDefenceHoly();
+        this.defenceUnholy = item.getDefenceUnholy();
+        this.equipSlot =  item.getEquipSlot();
+        this.temporalLifeTime = item.getTemporalLifeTime();
+        this.enchantOptions = item.getEnchantOptions();
     }
 
     public ItemTemplate getItem() {
@@ -80,14 +78,6 @@ public class ItemInfo {
         this.lastChange = lastChange;
     }
 
-    public int getType1() {
-        return type1;
-    }
-
-    private void setType1(int type1) {
-        this.type1 = type1;
-    }
-
     public int getObjectId() {
         return objectId;
     }
@@ -107,9 +97,7 @@ public class ItemInfo {
         else
             item = null;
         if (item != null) {
-            setType1(item.getType1());
-            setType2(item.getType2ForPackets());
-            setBodyPart(item.getBodyPart());
+            this.bodyPart = item.getBodyPart();
         }
     }
 
@@ -121,20 +109,9 @@ public class ItemInfo {
         this.count = count;
     }
 
-    public int getType2() {
-        return type2;
-    }
-
-    private void setType2(int type2) {
-        this.type2 = type2;
-    }
 
     public int getCustomType1() {
         return customType1;
-    }
-
-    private void setCustomType1(int customType1) {
-        this.customType1 = customType1;
     }
 
     public boolean isEquipped() {
@@ -147,10 +124,6 @@ public class ItemInfo {
 
     public int getBodyPart() {
         return bodyPart;
-    }
-
-    private void setBodyPart(int bodyPart) {
-        this.bodyPart = bodyPart;
     }
 
     public int getEnchantLevel() {
@@ -173,96 +146,48 @@ public class ItemInfo {
         return shadowLifeTime;
     }
 
-    private void setShadowLifeTime(int shadowLifeTime) {
-        this.shadowLifeTime = shadowLifeTime;
-    }
-
     public int getCustomType2() {
         return customType2;
-    }
-
-    private void setCustomType2(int customType2) {
-        this.customType2 = customType2;
     }
 
     public int getAttackElement() {
         return attackElement;
     }
 
-    private void setAttackElement(int attackElement) {
-        this.attackElement = attackElement;
-    }
-
     public int getAttackElementValue() {
         return attackElementValue;
-    }
-
-    private void setAttackElementValue(int attackElementValue) {
-        this.attackElementValue = attackElementValue;
     }
 
     public int getDefenceFire() {
         return defenceFire;
     }
 
-    private void setDefenceFire(int defenceFire) {
-        this.defenceFire = defenceFire;
-    }
-
     public int getDefenceWater() {
         return defenceWater;
-    }
-
-    private void setDefenceWater(int defenceWater) {
-        this.defenceWater = defenceWater;
     }
 
     public int getDefenceWind() {
         return defenceWind;
     }
 
-    private void setDefenceWind(int defenceWind) {
-        this.defenceWind = defenceWind;
-    }
-
     public int getDefenceEarth() {
         return defenceEarth;
-    }
-
-    private void setDefenceEarth(int defenceEarth) {
-        this.defenceEarth = defenceEarth;
     }
 
     public int getDefenceHoly() {
         return defenceHoly;
     }
 
-    private void setDefenceHoly(int defenceHoly) {
-        this.defenceHoly = defenceHoly;
-    }
-
     public int getDefenceUnholy() {
         return defenceUnholy;
-    }
-
-    private void setDefenceUnholy(int defenceUnholy) {
-        this.defenceUnholy = defenceUnholy;
     }
 
     public int getEquipSlot() {
         return equipSlot;
     }
 
-    private void setEquipSlot(int equipSlot) {
-        this.equipSlot = equipSlot;
-    }
-
     public int getTemporalLifeTime() {
         return temporalLifeTime;
-    }
-
-    private void setTemporalLifeTime(int temporalLifeTime) {
-        this.temporalLifeTime = temporalLifeTime;
     }
 
     @Override
@@ -282,7 +207,4 @@ public class ItemInfo {
         return enchantOptions;
     }
 
-    private void setEnchantOptions(int[] enchantOptions) {
-        this.enchantOptions = enchantOptions;
-    }
 }

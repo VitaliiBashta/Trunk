@@ -3,6 +3,7 @@ package l2trunk.gameserver.model.base;
 import l2trunk.gameserver.stats.Stats;
 
 import java.util.Arrays;
+import java.util.stream.Stream;
 
 
 public enum Element {
@@ -14,9 +15,7 @@ public enum Element {
     UNHOLY(5, Stats.ATTACK_UNHOLY, Stats.DEFENCE_UNHOLY),
     NONE(-2, null, null);
 
-    /**
-     * Массив элементов без NONE
-     **/
+
     public final static Element[] VALUES = Arrays.copyOf(values(), 6);
 
     private final int id;
@@ -66,8 +65,8 @@ public enum Element {
                 .findFirst().orElse(NONE);
     }
 
-    public static Element getElementByName(String name) {
-        return Arrays.stream(VALUES)
+    private static Element getElementByName(String name) {
+        return Stream.of(VALUES)
                 .filter(e -> (e.name().equalsIgnoreCase(name)))
                 .findFirst().orElse(NONE);
     }

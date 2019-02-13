@@ -3,7 +3,6 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _10280_MutatedKaneusSchuttgart extends Quest {
     // NPCs
@@ -50,7 +49,7 @@ public final class _10280_MutatedKaneusSchuttgart extends Quest {
             if (npcId == Vishotsky)
                 htmltext = "31981-0a.htm";
         } else if (id == CREATED && npcId == Vishotsky) {
-            if (st.getPlayer().getLevel() >= 58)
+            if (st.player.getLevel() >= 58)
                 htmltext = "31981-01.htm";
             else
                 htmltext = "31981-00.htm";
@@ -68,13 +67,12 @@ public final class _10280_MutatedKaneusSchuttgart extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getState() == STARTED && st.getCond() == 1) {
-            st.giveItems(Tissue1, 1);
-            st.giveItems(Tissue2, 1);
+            st.giveItems(Tissue1);
+            st.giveItems(Tissue2);
             st.setCond(2);
             st.playSound(SOUND_MIDDLE);
         }
-        return null;
     }
 }

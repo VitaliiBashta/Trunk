@@ -20,7 +20,7 @@ public class ChangeWaitType extends L2GameServerPacket {
     private final int _z;
 
     public ChangeWaitType(Creature cha, int newMoveType) {
-        _objectId = cha.getObjectId();
+        _objectId = cha.objectId();
         _moveType = newMoveType;
         _x = cha.getX();
         _y = cha.getY();

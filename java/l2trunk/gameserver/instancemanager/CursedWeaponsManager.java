@@ -250,7 +250,7 @@ public enum CursedWeaponsManager {
                 player.setTransformation(0);
                 player.setTransformationName(null);
                 player.removeSkill(cw.getSkillId(), false);
-                player.getInventory().destroyItemByItemId(cw.getItemId(), 1L, "CursedWeapon");
+                player.getInventory().destroyItemByItemId(cw.getItemId(),  "CursedWeapon");
                 player.broadcastCharInfo();
             } else {
                 // Remove from Db
@@ -281,7 +281,7 @@ public enum CursedWeaponsManager {
             // OR this cursed weapon is on the ground.
             if (cw.getPlayer() != null && cw.getPlayer().getInventory().getItemByItemId(cw.getItemId()) != null) {
                 Player player = cw.getPlayer();
-                if (!cw.getPlayer().getInventory().destroyItemByItemId(cw.getItemId(), 1, "CursedWeapon"))
+                if (!cw.getPlayer().getInventory().destroyItemByItemId(cw.getItemId(),  "CursedWeapon"))
                     LOG.info("CursedWeaponsManager[453]: Error! Cursed weapon not found!!!");
 
                 player.sendChanges();
@@ -340,7 +340,7 @@ public enum CursedWeaponsManager {
         if (cw == null)
             return;
 
-        if (player.getObjectId() == cw.getPlayerId() || cw.getPlayerId() == 0 || cw.isDropped()) {
+        if (player.objectId() == cw.getPlayerId() || cw.getPlayerId() == 0 || cw.isDropped()) {
             activate(player, item);
             showUsageTime(player, cw);
         } else {

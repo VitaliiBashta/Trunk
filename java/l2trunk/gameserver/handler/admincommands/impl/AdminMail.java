@@ -2,6 +2,7 @@ package l2trunk.gameserver.handler.admincommands.impl;
 
 
 import l2trunk.gameserver.handler.admincommands.IAdminCommandHandler;
+import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
 
@@ -10,7 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class AdminMail implements IAdminCommandHandler {
+public final class AdminMail implements IAdminCommandHandler {
     public static final String MAIL_ALL_TEXT = "MAIL_ALL";
     public static final String MAIL_LIST = "MAIL_LIST";
     private static final Map<Integer, List<String>> mailNicks = new HashMap<>();
@@ -21,7 +22,7 @@ public class AdminMail implements IAdminCommandHandler {
         StringBuilder htmlBuilder = new StringBuilder("<html><title>Mail</title><body>");
         htmlBuilder.append("<table width=270>");
         int index = 0;
-        for (String name : mailNicks.get(activeChar.getObjectId())) {
+        for (String name : mailNicks.get(activeChar.objectId())) {
             if (index % 3 == 0) {
                 if (index > 0)
                     htmlBuilder.append("</tr>");
@@ -47,7 +48,7 @@ public class AdminMail implements IAdminCommandHandler {
     @Override
     public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
         Commands command = (Commands) comm;
-
+        GameObject target = activeChar.getTarget();
         if (!activeChar.getPlayerAccess().CanAnnounce)
             return false;
 
@@ -56,16 +57,16 @@ public class AdminMail implements IAdminCommandHandler {
                 String targetToAdd;
                 if (wordList.length > 1) {
                     targetToAdd = wordList[1];
-                } else if (activeChar.getTarget() != null && activeChar.getTarget().isPlayable()) {
-                    targetToAdd = activeChar.getTarget().getPlayer().getName();
+                } else if (target instanceof Player) {
+                    targetToAdd = target.getName();
                 } else {
                     activeChar.sendMessage("Target a player and use //add_mail or use //add_mail nick");
                     return false;
                 }
 
-                List<String> nicks = mailNicks.containsKey(activeChar.getObjectId()) ? mailNicks.get(activeChar.getObjectId()) : new ArrayList<>();
+                List<String> nicks = mailNicks.containsKey(activeChar.objectId()) ? mailNicks.get(activeChar.objectId()) : new ArrayList<>();
                 nicks.add(targetToAdd);
-                mailNicks.put(activeChar.getObjectId(), nicks);
+                mailNicks.put(activeChar.objectId(), nicks);
                 activeChar.sendMessage("Player " + targetToAdd + " was added to the list!");
                 showList(activeChar);
                 break;
@@ -73,15 +74,15 @@ public class AdminMail implements IAdminCommandHandler {
                 String targetToRemove;
                 if (wordList.length > 1) {
                     targetToRemove = wordList[1];
-                } else if (activeChar.getTarget() != null && activeChar.getTarget().isPlayable()) {
-                    targetToRemove = activeChar.getTarget().getPlayer().getName();
+                } else if (target instanceof Player) {
+                    targetToRemove = target.getName();
                 } else {
                     activeChar.sendMessage("Target a player and use //remove_mail or use //remove_mail nick");
                     return false;
                 }
-                List<String> currentNicks = mailNicks.containsKey(activeChar.getObjectId()) ? mailNicks.get(activeChar.getObjectId()) : new ArrayList<>();
+                List<String> currentNicks = mailNicks.containsKey(activeChar.objectId()) ? mailNicks.get(activeChar.objectId()) : new ArrayList<>();
                 currentNicks.remove(targetToRemove);
-                mailNicks.put(activeChar.getObjectId(), currentNicks);
+                mailNicks.put(activeChar.objectId(), currentNicks);
                 activeChar.sendMessage("Player " + targetToRemove + " was removed from the list!");
                 showList(activeChar);
                 break;

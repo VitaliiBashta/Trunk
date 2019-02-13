@@ -14,7 +14,6 @@ import l2trunk.gameserver.utils.Util;
 
 public final class LevelPanel extends Functions {
     public void show() {
-        final Player player = getSelf();
         if (player == null)
             return;
 
@@ -24,8 +23,8 @@ public final class LevelPanel extends Functions {
         }
         NpcHtmlMessage html = new NpcHtmlMessage(5).setFile("scripts/services/LevelPanel/index.htm");
 
-        String up = "";
-        String lower = "";
+        String up;
+        String lower;
         if (!Config.SERVICES_LEVEL_UP_ENABLE) {
             up = HtmCache.INSTANCE.getNotNull("scripts/services/LevelPanel/up_off.htm", player);
             up = up.replace("{cost}", "<font color=\"CC3333\">" + new CustomMessage("Service is turned off.").toString() + "</font>");
@@ -51,15 +50,14 @@ public final class LevelPanel extends Functions {
     }
 
     public void calc() {
-        final Player player = getSelf();
         if (player == null) {
             return;
         }
         if (player.getLevel() >= 85) {
-            player.sendMessage("You are already max level.");
+            player.sendMessage("You are already max occupation.");
             return;
         }
-        String msg = "Do you want to maximize your level for 10 coins?";
+        String msg = "Do you want to maximize your occupation for 10 coins?";
         ConfirmDlg ask = new ConfirmDlg(SystemMsg.S1, 60000);
         ask.addString(msg);
         player.ask(ask, new AnswerListener(player));
@@ -79,7 +77,7 @@ public final class LevelPanel extends Functions {
             }
             int level = 85;
             if (!LevelPanel.correct(level, _player.getActiveClass().isBase())) {
-                _player.sendMessage("Incorrect level!");
+                _player.sendMessage("Incorrect occupation!");
                 return;
             }
             if ((!Config.SERVICES_LEVEL_UP_ENABLE)) {
@@ -87,16 +85,12 @@ public final class LevelPanel extends Functions {
                 return;
             }
             if (Util.getPay(_player, Config.SERVICES_LEVEL_UP[0], 10, true)) {
-                _player.sendMessage(new CustomMessage("level.change").addNumber(_player.getLevel()).addNumber(level));
+                _player.sendMessage(new CustomMessage("occupation.change").addNumber(_player.getLevel()).addNumber(level));
                 long exp = Experience.getExpForLevel(level) - _player.getExp();
                 _player.addExpAndSp(exp, 899999999);
             }
         }
 
-        @Override
-        public void sayNo() {
-            //
-        }
     }
 
     private static boolean correct(int level, boolean base) {

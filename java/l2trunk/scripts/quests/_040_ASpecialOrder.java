@@ -65,10 +65,10 @@ public final class _040_ASpecialOrder extends Quest {
         int cond = st.getCond();
         if (npcId == Helvetia) {
             if (cond == 0)
-                if (st.getPlayer().getLevel() >= 40)
+                if (st.player.getLevel() >= 40)
                     htmltext = "Helvetia-1.htm";
                 else {
-                    htmltext = "Helvetia-level.htm";
+                    htmltext = "Helvetia-occupation.htm";
                     st.exitCurrentQuest(true);
                 }
             else if (cond == 2 || cond == 3 || cond == 5 || cond == 6)
@@ -93,7 +93,7 @@ public final class _040_ASpecialOrder extends Quest {
                     st.takeItems(FatOrangeFish, 10);
                     st.takeItems(NimbleOrangeFish, 10);
                     st.takeItems(OrangeUglyFish, 10);
-                    st.giveItems(FishChest, 1, false);
+                    st.giveItems(FishChest);
                     st.setCond(4);
                     htmltext = "OFulle-2.htm";
                 } else
@@ -108,7 +108,7 @@ public final class _040_ASpecialOrder extends Quest {
                     st.takeItems(GoldenCobol, 40);
                     st.takeItems(ThornCobol, 40);
                     st.takeItems(GreatCobol, 40);
-                    st.giveItems(SeedJar, 1, false);
+                    st.giveItems(SeedJar);
                     st.setCond(7);
                     htmltext = "Gesto-4.htm";
                 } else

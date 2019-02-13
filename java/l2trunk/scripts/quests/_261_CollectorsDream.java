@@ -4,7 +4,6 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _261_CollectorsDream extends Quest {
     private final int GIANT_SPIDER_LEG = 1087;
@@ -38,7 +37,7 @@ public final class _261_CollectorsDream extends Quest {
         String htmltext = "noquest";
         int cond = st.getCond();
         if (cond == 0) {
-            if (st.getPlayer().getLevel() >= 15) {
+            if (st.player.getLevel() >= 15) {
                 htmltext = "moneylender_alshupes_q0261_02.htm";
                 return htmltext;
             }
@@ -47,14 +46,14 @@ public final class _261_CollectorsDream extends Quest {
         } else if (cond == 1 || st.getQuestItemsCount(GIANT_SPIDER_LEG) < 8)
             htmltext = "moneylender_alshupes_q0261_04.htm";
         else if (cond == 2 && st.getQuestItemsCount(GIANT_SPIDER_LEG) >= 8) {
-            st.takeItems(GIANT_SPIDER_LEG, -1);
+            st.takeItems(GIANT_SPIDER_LEG);
 
             st.giveItems(ADENA_ID, 1000);
             st.addExpAndSp(2000, 0);
 
-            if (st.getPlayer().getClassId().getLevel() == 1 && !st.getPlayer().getVarB("p1q4")) {
-                st.getPlayer().setVar("p1q4", "1", -1);
-                st.getPlayer().sendPacket(new ExShowScreenMessage("Now go find the Newbie Guide."));
+            if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("p1q4")) {
+                st.player.setVar("p1q4", 1);
+                st.player.sendPacket(new ExShowScreenMessage("Now go find the Newbie Guide."));
             }
 
             htmltext = "moneylender_alshupes_q0261_05.htm";
@@ -65,15 +64,14 @@ public final class _261_CollectorsDream extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getCond() == 1 && st.getQuestItemsCount(GIANT_SPIDER_LEG) < 8) {
-            st.giveItems(GIANT_SPIDER_LEG, 1);
+            st.giveItems(GIANT_SPIDER_LEG);
             if (st.getQuestItemsCount(GIANT_SPIDER_LEG) == 8) {
                 st.playSound(SOUND_MIDDLE);
                 st.setCond(2);
             } else
                 st.playSound(SOUND_ITEMGET);
         }
-        return null;
     }
 }

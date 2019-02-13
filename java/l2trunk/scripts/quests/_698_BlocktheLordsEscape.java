@@ -7,7 +7,6 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _698_BlocktheLordsEscape extends Quest {
     // NPC
@@ -23,7 +22,7 @@ public final class _698_BlocktheLordsEscape extends Quest {
     public String onTalk(NpcInstance npc, QuestState st) {
         String htmltext = "noquest";
         int npcId = npc.getNpcId();
-        Player player = st.getPlayer();
+        Player player = st.player;
 
         if (npcId == TEPIOS)
             if (st.getState() == CREATED) {

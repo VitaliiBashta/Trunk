@@ -40,19 +40,19 @@ public class RequestPledgeSetAcademyMaster extends L2GameClientPacket {
 
                 if (_mode == 1) {
                     if (sponsor.hasApprentice()) {
-                        activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.clientpackets.RequestOustAlly.MemberAlreadyHasApprentice", activeChar));
+                        activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.clientpackets.RequestOustAlly.MemberAlreadyHasApprentice"));
                         return;
                     }
                     if (apprentice.hasSponsor()) {
-                        activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.clientpackets.RequestOustAlly.ApprenticeAlreadyHasSponsor", activeChar));
+                        activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.clientpackets.RequestOustAlly.ApprenticeAlreadyHasSponsor"));
                         return;
                     }
-                    sponsor.setApprentice(apprentice.getObjectId());
+                    sponsor.setApprentice(apprentice.objectId());
                     clan.broadcastToOnlineMembers(new PledgeShowMemberListUpdate(apprentice));
                     clan.broadcastToOnlineMembers(new SystemMessage2(SystemMsg.S2_HAS_BEEN_DESIGNATED_AS_THE_APPRENTICE_OF_CLAN_MEMBER_S1).addString(sponsor.getName()).addString(apprentice.getName()));
                 } else {
                     if (!sponsor.hasApprentice()) {
-                        activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.clientpackets.RequestOustAlly.MemberHasNoApprentice", activeChar));
+                        activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.clientpackets.RequestOustAlly.MemberHasNoApprentice"));
                         return;
                     }
                     sponsor.setApprentice(0);
@@ -60,10 +60,10 @@ public class RequestPledgeSetAcademyMaster extends L2GameClientPacket {
                     clan.broadcastToOnlineMembers(new SystemMessage2(SystemMsg.S2_CLAN_MEMBER_C1S_APPRENTICE_HAS_BEEN_REMOVED).addString(sponsor.getName()).addString(apprentice.getName()));
                 }
                 if (apprentice.isOnline())
-                    apprentice.getPlayer().broadcastCharInfo();
+                    apprentice.player().broadcastCharInfo();
                 activeChar.sendPacket(new PledgeReceiveMemberInfo(sponsor));
             }
         } else
-            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.clientpackets.RequestOustAlly.NoMasterRights", activeChar));
+            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.clientpackets.RequestOustAlly.NoMasterRights"));
     }
 }

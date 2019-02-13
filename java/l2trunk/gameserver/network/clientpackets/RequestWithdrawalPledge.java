@@ -11,7 +11,7 @@ import l2trunk.gameserver.network.serverpackets.SkillList;
 import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
-public class RequestWithdrawalPledge extends L2GameClientPacket {
+public final class RequestWithdrawalPledge extends L2GameClientPacket {
     @Override
     protected void readImpl() {
     }
@@ -37,7 +37,7 @@ public class RequestWithdrawalPledge extends L2GameClientPacket {
         if (clan == null)
             return;
 
-        UnitMember member = clan.getAnyMember(activeChar.getObjectId());
+        UnitMember member = clan.getAnyMember(activeChar.objectId());
         if (member == null) {
             activeChar.sendActionFailed();
             return;
@@ -56,7 +56,7 @@ public class RequestWithdrawalPledge extends L2GameClientPacket {
 
         int subUnitType = activeChar.getPledgeType();
 
-        clan.removeClanMember(subUnitType, activeChar.getObjectId());
+        clan.removeClanMember(subUnitType, activeChar.objectId());
 
         clan.broadcastToOnlineMembers(new SystemMessage2(SystemMsg.S1_HAS_WITHDRAWN_FROM_THE_CLAN).addString(activeChar.getName()), new PledgeShowMemberListDelete(activeChar.getName()));
 

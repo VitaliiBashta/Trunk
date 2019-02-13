@@ -47,11 +47,10 @@ public final class ForgeoftheGods extends Fighter {
         if (actor.isDead() || !Rnd.chance(TAR_BEETLE_ACTIVATE_SKILL_CHANGE))
             return false;
 
-        List<Player> players = World.getAroundPlayers(actor, TAR_BEETLE_SEARCH_RADIUS, 200).collect(Collectors.toList());
-        if (players.size() < 1)
-            return false;
-        actor.doCast(6142, Rnd.get(1, 3), Rnd.get(players), false);
-        return true;
+        return  !World.getAroundPlayers(actor, TAR_BEETLE_SEARCH_RADIUS, 200)
+                .filter(p -> Rnd.chance(50))
+                .peek(p -> actor.doCast(6142, Rnd.get(1, 3), p, false))
+                .findFirst().isPresent();
     }
 
     @Override

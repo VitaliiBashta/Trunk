@@ -8,7 +8,7 @@ import java.util.List;
 
 public final class OptionDataTemplate extends StatTemplate {
     private final List<Skill> skills = new ArrayList<>(0);
-    private final int id;
+    public final int id;
 
     public OptionDataTemplate(int id) {
         this.id = id;
@@ -22,7 +22,7 @@ public final class OptionDataTemplate extends StatTemplate {
         return skills;
     }
 
-    public int getId() {
+    public int id() {
         return id;
     }
 }

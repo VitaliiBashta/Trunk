@@ -4,6 +4,7 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
+import l2trunk.gameserver.utils.Location;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,31 +57,31 @@ public final class _383_SearchingForTreasure extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("30890-03.htm")) {
+        if ("30890-03.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.setState(STARTED);
-        } else if (event.equalsIgnoreCase("30890-07.htm")) {
-            if (st.getQuestItemsCount(PIRATES_TREASURE_MAP) > 0) {
+        } else if ("30890-07.htm".equalsIgnoreCase(event)) {
+            if (st.haveQuestItem(PIRATES_TREASURE_MAP) ) {
                 st.setCond(2);
                 st.takeItems(PIRATES_TREASURE_MAP, 1);
-                st.addSpawn(PIRATES_CHEST, 106583, 197747, -4209, 900000);
-                st.addSpawn(SHARK, 106570, 197740, -4209, 900000);
-                st.addSpawn(SHARK, 106580, 197747, -4209, 900000);
-                st.addSpawn(SHARK, 106590, 197743, -4209, 900000);
+                st.addSpawn(PIRATES_CHEST, Location.of(106583, 197747, -4209),0, 900000);
+                st.addSpawn(SHARK, Location.of(106570, 197740, -4209),0, 900000);
+                st.addSpawn(SHARK, Location.of(106580, 197747, -4209),0, 900000);
+                st.addSpawn(SHARK, Location.of(106590, 197743, -4209),0, 900000);
                 st.playSound(SOUND_ACCEPT);
             } else {
                 htmltext = "You don't have required items";
                 st.exitCurrentQuest(true);
             }
-        } else if (event.equalsIgnoreCase("30890-02b.htm")) {
-            if (st.getQuestItemsCount(PIRATES_TREASURE_MAP) > 0) {
+        } else if ("30890-02b.htm".equalsIgnoreCase(event)) {
+            if (st.haveQuestItem(PIRATES_TREASURE_MAP) ) {
                 st.giveItems(ADENA_ID, 1000);
                 st.playSound("ItemSound.quest_finish");
             } else
                 htmltext = "You don't have required items";
             st.exitCurrentQuest(true);
-        } else if (event.equalsIgnoreCase("31148-02.htm"))
-            if (st.getQuestItemsCount(1661) > 0) {
+        } else if ("31148-02.htm".equalsIgnoreCase(event))
+            if (st.haveQuestItem(1661) ) {
                 st.takeItems(1661, 1);
                 st.giveItems(ADENA_ID, 500 + Rnd.get(5) * 300);
                 int count = 0;
@@ -112,8 +113,8 @@ public final class _383_SearchingForTreasure extends Quest {
         String htmltext = "noquest";
         int npcId = npc.getNpcId();
         if (st.getState() == CREATED) {
-            if (st.getPlayer().getLevel() >= 42) {
-                if (st.getQuestItemsCount(PIRATES_TREASURE_MAP) > 0)
+            if (st.player.getLevel() >= 42) {
+                if (st.haveQuestItem(PIRATES_TREASURE_MAP) )
                     htmltext = "30890-01.htm";
                 else {
                     htmltext = "30890-00.htm";

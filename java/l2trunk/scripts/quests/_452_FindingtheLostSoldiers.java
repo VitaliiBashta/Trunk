@@ -49,7 +49,7 @@ public final class _452_FindingtheLostSoldiers extends Quest {
         if (npc.getNpcId() == JAKAN) {
             switch (st.getState()) {
                 case CREATED:
-                    if (st.getPlayer().getLevel() >= 84) {
+                    if (st.player.getLevel() >= 84) {
                         if (st.isNowAvailable())
                             htmltext = "32773-1.htm";
                         else

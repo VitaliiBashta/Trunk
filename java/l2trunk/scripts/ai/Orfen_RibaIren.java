@@ -28,7 +28,7 @@ public final class Orfen_RibaIren extends Fighter {
 
         int heal_chance = 0;
         if (attacked_member.getNpcId() == actor.getNpcId())
-            heal_chance = attacked_member.getObjectId() == actor.getObjectId() ? 100 : 0;
+            heal_chance = attacked_member.objectId() == actor.objectId() ? 100 : 0;
         else
             heal_chance = attacked_member.getNpcId() == Orfen_id ? 90 : 10;
 

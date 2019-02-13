@@ -4,6 +4,9 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.Functions;
 
+import static l2trunk.gameserver.utils.ItemFunctions.addItem;
+import static l2trunk.gameserver.utils.ItemFunctions.removeItem;
+
 public final class VitaminManager extends Functions {
     private static final int PetCoupon = 13273;
     private static final int SpecialPetCoupon = 14065;
@@ -19,13 +22,10 @@ public final class VitaminManager extends Functions {
     private static final int TurtleNeck = 13551;
 
     public void giveWeasel() {
-        Player player = getSelf();
-        NpcInstance npc = getNpc();
-
         String htmltext;
-        if (getItemCount(player, PetCoupon) > 0) {
+        if (player.haveItem(PetCoupon)) {
             removeItem(player, PetCoupon, 1, "VitaminManager");
-            addItem(player, WeaselNeck, 1, "VitaminManager");
+            addItem(player, WeaselNeck, 1);
             htmltext = npc.getNpcId() + "-ok.htm";
         } else
             htmltext = npc.getNpcId() + "-no.htm";
@@ -34,13 +34,10 @@ public final class VitaminManager extends Functions {
     }
 
     public void givePrinc() {
-        Player player = getSelf();
-        NpcInstance npc = getNpc();
-
         String htmltext;
-        if (getItemCount(player, PetCoupon) > 0) {
+        if (player.haveItem( PetCoupon)) {
             removeItem(player, PetCoupon, 1, "givePrinc");
-            addItem(player, PrincNeck, 1, "givePrinc");
+            addItem(player, PrincNeck, 1);
             htmltext = npc.getNpcId() + "-ok.htm";
         } else
             htmltext = npc.getNpcId() + "-no.htm";
@@ -49,13 +46,10 @@ public final class VitaminManager extends Functions {
     }
 
     public void giveBeast() {
-        Player player = getSelf();
-        NpcInstance npc = getNpc();
-
         String htmltext;
-        if (getItemCount(player, PetCoupon) > 0) {
+        if (player.haveItem( PetCoupon) ) {
             removeItem(player, PetCoupon, 1, "giveBeast");
-            addItem(player, BeastNeck, 1, "giveBeast");
+            addItem(player, BeastNeck, 1);
             htmltext = npc.getNpcId() + "-ok.htm";
         } else
             htmltext = npc.getNpcId() + "-no.htm";
@@ -64,13 +58,10 @@ public final class VitaminManager extends Functions {
     }
 
     public void giveFox() {
-        Player player = getSelf();
-        NpcInstance npc = getNpc();
-
         String htmltext;
-        if (getItemCount(player, PetCoupon) > 0) {
+        if (player.haveItem( PetCoupon) ) {
             removeItem(player, PetCoupon, 1, "giveFox");
-            addItem(player, FoxNeck, 1, "giveFox");
+            addItem(player, FoxNeck, 1);
             htmltext = npc.getNpcId() + "-ok.htm";
         } else
             htmltext = npc.getNpcId() + "-no.htm";
@@ -79,13 +70,10 @@ public final class VitaminManager extends Functions {
     }
 
     public void giveKnight() {
-        Player player = getSelf();
-        NpcInstance npc = getNpc();
-
         String htmltext;
-        if (getItemCount(player, SpecialPetCoupon) > 0) {
+        if (player.haveItem(SpecialPetCoupon) ) {
             removeItem(player, SpecialPetCoupon, 1, "giveKnight");
-            addItem(player, KnightNeck, 1, "giveKnight");
+            addItem(player, KnightNeck, 1);
             htmltext = npc.getNpcId() + "-ok.htm";
         } else
             htmltext = npc.getNpcId() + "-no.htm";
@@ -94,13 +82,10 @@ public final class VitaminManager extends Functions {
     }
 
     public void giveSpirit() {
-        Player player = getSelf();
-        NpcInstance npc = getNpc();
-
         String htmltext;
-        if (getItemCount(player, SpecialPetCoupon) > 0) {
+        if (player.haveItem( SpecialPetCoupon) ) {
             removeItem(player, SpecialPetCoupon, 1, "giveSpirit");
-            addItem(player, SpiritNeck, 1, "giveSpirit");
+            addItem(player, SpiritNeck, 1);
             htmltext = npc.getNpcId() + "-ok.htm";
         } else
             htmltext = npc.getNpcId() + "-no.htm";
@@ -109,13 +94,10 @@ public final class VitaminManager extends Functions {
     }
 
     public void giveOwl() {
-        Player player = getSelf();
-        NpcInstance npc = getNpc();
-
         String htmltext;
-        if (getItemCount(player, SpecialPetCoupon) > 0) {
+        if (player.haveItem( SpecialPetCoupon)) {
             removeItem(player, SpecialPetCoupon, 1, "giveOwl");
-            addItem(player, OwlNeck, 1, "giveOwl");
+            addItem(player, OwlNeck, 1);
             htmltext = npc.getNpcId() + "-ok.htm";
         } else
             htmltext = npc.getNpcId() + "-no.htm";
@@ -124,13 +106,10 @@ public final class VitaminManager extends Functions {
     }
 
     public void giveTurtle() {
-        Player player = getSelf();
-        NpcInstance npc = getNpc();
-
         String htmltext;
-        if (getItemCount(player, SpecialPetCoupon) > 0) {
+        if (player.haveItem(SpecialPetCoupon) ) {
             removeItem(player, SpecialPetCoupon, 1, "giveTurtle");
-            addItem(player, TurtleNeck, 1, "giveTurtle");
+            addItem(player, TurtleNeck, 1);
             htmltext = npc.getNpcId() + "-ok.htm";
         } else
             htmltext = npc.getNpcId() + "-no.htm";

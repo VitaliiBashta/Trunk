@@ -45,12 +45,12 @@ public class _627_HeartInSearchOfPower extends Quest {
                 break;
             case "dark_necromancer_q0627_0201.htm":
                 st.takeItems(GEM_OF_SUBMISSION, 300);
-                st.giveItems(SEAL_OF_LIGHT, 1, false);
+                st.giveItems(SEAL_OF_LIGHT);
                 st.setCond(3);
                 break;
             case "enfeux_q0627_0301.htm":
                 st.takeItems(SEAL_OF_LIGHT, 1);
-                st.giveItems(GEM_OF_SAINTS, 1, false);
+                st.giveItems(GEM_OF_SAINTS);
                 st.setCond(4);
                 break;
             case "dark_necromancer_q0627_0401.htm":
@@ -97,7 +97,7 @@ public class _627_HeartInSearchOfPower extends Quest {
         int cond = st.getCond();
         if (npcId == M_NECROMANCER) {
             if (cond == 0)
-                if (st.getPlayer().getLevel() >= 60)
+                if (st.player.getLevel() >= 60)
                     htmltext = "dark_necromancer_q0627_0101.htm";
                 else {
                     htmltext = "dark_necromancer_q0627_0103.htm";
@@ -115,16 +115,15 @@ public class _627_HeartInSearchOfPower extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         long count = st.getQuestItemsCount(GEM_OF_SUBMISSION);
         if (st.getCond() == 1 && count < 300) {
-            st.giveItems(GEM_OF_SUBMISSION, 1);
+            st.giveItems(GEM_OF_SUBMISSION);
             if (count == 299) {
                 st.playSound(SOUND_MIDDLE);
                 st.setCond(2);
             } else
                 st.playSound(SOUND_ITEMGET);
         }
-        return null;
     }
 }

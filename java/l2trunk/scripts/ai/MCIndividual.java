@@ -30,7 +30,7 @@ public final class MCIndividual extends DefaultAI {
         @Override
         public void run() {
             NpcInstance actor = getActor();
-            actor.broadcastPacket(new SocialAction(actor.getObjectId(), 1));
+            actor.broadcastPacket(new SocialAction(actor.objectId(), 1));
         }
     }
 }

@@ -5,7 +5,6 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _186_ContractExecution extends Quest {
     private static final int Luka = 31437;
@@ -60,7 +59,7 @@ public final class _186_ContractExecution extends Quest {
         if (st.getState() == STARTED)
             if (npcId == Lorain) {
                 if (cond == 0)
-                    if (st.getPlayer().getLevel() < 41)
+                    if (st.player.getLevel() < 41)
                         htmltext = "researcher_lorain_q0186_02.htm";
                     else
                         htmltext = "researcher_lorain_q0186_01.htm";
@@ -80,18 +79,16 @@ public final class _186_ContractExecution extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getState() == STARTED && st.getQuestItemsCount(Accessory) <= 0 && st.getCond() == 2 && Rnd.get(5) == 0) {
             st.playSound(SOUND_MIDDLE);
             st.giveItems(Accessory, 1);
         }
-        return null;
     }
 
     @Override
     public String onFirstTalk(NpcInstance npc, Player player) {
-        QuestState qs = player.getQuestState(_184_NikolasCooperationContract.class);
-        if (qs != null && qs.isCompleted() && player.getQuestState(getClass()) == null)
+        if (player.isQuestCompleted(_184_NikolasCooperationContract.class) && player.getQuestState(this) == null)
             newQuestState(player, STARTED);
         return "";
     }

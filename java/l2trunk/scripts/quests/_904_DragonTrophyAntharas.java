@@ -17,11 +17,11 @@ public final class _904_DragonTrophyAntharas extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("theodric_q904_04.htm")) {
+        if ("theodric_q904_04.htm".equalsIgnoreCase(event)) {
             st.setState(STARTED);
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("theodric_q904_07.htm")) {
+        } else if ("theodric_q904_07.htm".equalsIgnoreCase(event)) {
             st.giveItems(MedalofGlory, 30);
             st.setState(COMPLETED);
             st.playSound(SOUND_FINISH);
@@ -38,7 +38,7 @@ public final class _904_DragonTrophyAntharas extends Quest {
         if (npc.getNpcId() == Theodric) {
             switch (st.getState()) {
                 case CREATED:
-                    if (st.getPlayer().getLevel() >= 84) {
+                    if (st.player.getLevel() >= 84) {
                         if (st.getQuestItemsCount(3865) > 0)
                             htmltext = "theodric_q904_01.htm";
                         else
@@ -61,13 +61,11 @@ public final class _904_DragonTrophyAntharas extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
-        int cond = st.getCond();
-        if (cond == 1) {
+    public void onKill(NpcInstance npc, QuestState st) {
+        if (st.getCond() == 1) {
             if (npc.getNpcId() == AntharasMax)
                 st.setCond(2);
         }
-        return null;
     }
 
 }

@@ -44,11 +44,7 @@ public final class Summon extends Skill {
     }
 
     @Override
-    public boolean checkCondition(Creature activeChar, Creature target, boolean forceUse, boolean dontMove, boolean first) {
-        Player player = activeChar.getPlayer();
-        if (player == null)
-            return false;
-
+    public boolean checkCondition(Player player, Creature target, boolean forceUse, boolean dontMove, boolean first) {
         if (player.isProcessingRequest()) {
             player.sendPacket(SystemMsg.PETS_AND_SERVITORS_ARE_NOT_AVAILABLE_AT_THIS_TIME);
             return false;
@@ -57,7 +53,7 @@ public final class Summon extends Skill {
         switch (_summonType) {
             case TRAP:
                 if (player.isInZonePeace()) {
-                    activeChar.sendPacket(SystemMsg.A_MALICIOUS_SKILL_CANNOT_BE_USED_IN_A_PEACE_ZONE);
+                    player.sendPacket(SystemMsg.A_MALICIOUS_SKILL_CANNOT_BE_USED_IN_A_PEACE_ZONE);
                     return false;
                 }
                 break;
@@ -75,24 +71,26 @@ public final class Summon extends Skill {
                 }
         }
 
-        return super.checkCondition(activeChar, target, forceUse, dontMove, first);
+        return super.checkCondition(player, target, forceUse, dontMove, first);
     }
 
     @Override
     public void useSkill(Creature caster, List<Creature> targets) {
-        Player activeChar = caster.getPlayer();
+        if (!(caster instanceof Player))
+            return;
+        Player player = (Player)caster;
 
         switch (_summonType) {
             case AGATHION:
-                activeChar.setAgathion(npcId);
+                player.setAgathion(npcId);
                 break;
             case TRAP:
                 int trapSkillId = getFirstAddedSkill().id;
 
-                if (activeChar.getTrapsCount() >= 5)
-                    activeChar.destroyFirstTrap();
-                TrapInstance trap = new TrapInstance(IdFactory.getInstance().getNextId(), NpcHolder.getTemplate(npcId), activeChar, trapSkillId);
-                activeChar.addTrap(trap);
+                if (player.getTrapsCount() >= 5)
+                    player.destroyFirstTrap();
+                TrapInstance trap = new TrapInstance(IdFactory.getInstance().getNextId(), NpcHolder.getTemplate(npcId), player, trapSkillId);
+                player.addTrap(trap);
                 trap.spawnMe();
                 break;
             case PET:
@@ -102,52 +100,52 @@ public final class Summon extends Skill {
                 if (targetType == SkillTargetType.TARGET_CORPSE)
                     for (Creature target : targets)
                         if (target != null && target.isDead()) {
-                            activeChar.getAI().setAttackTarget(null);
+                            player.getAI().setAttackTarget(null);
                             loc = target.getLoc();
-                            if (target.isNpc())
+                            if (target instanceof NpcInstance)
                                 ((NpcInstance) target).endDecayTask();
-                            else if (target.isSummon())
+                            else if (target instanceof SummonInstance)
                                 ((SummonInstance) target).endDecayTask();
                             else
                                 return; // кто труп ?
                         }
 
-                if (activeChar.getPet() != null || activeChar.isMounted())
+                if (player.getPet() != null || player.isMounted())
                     return;
 
                 NpcTemplate summonTemplate = NpcHolder.getTemplate(npcId);
-                SummonInstance summon = new SummonInstance(IdFactory.getInstance().getNextId(), summonTemplate, activeChar, lifeTime, itemConsumeIdInTime, itemConsumeCountInTime, itemConsumeDelay, this);
-                activeChar.setPet(summon);
+                SummonInstance summon = new SummonInstance(IdFactory.getInstance().getNextId(), summonTemplate, player, lifeTime, itemConsumeIdInTime, itemConsumeCountInTime, itemConsumeDelay, this);
+                player.setPet(summon);
 
-                summon.setTitle(activeChar.getName());
+                summon.setTitle(player.getName());
                 summon.setExpPenalty(expPenalty);
                 summon.setExp(Experience.LEVEL[Math.min(summon.getLevel(), Experience.LEVEL.length - 1)]);
-                summon.setHeading(activeChar.getHeading());
-                summon.setReflection(activeChar.getReflection());
-                summon.spawnMe(loc == null ? Location.findAroundPosition(activeChar, 50, 70) : loc);
+                summon.setHeading(player.getHeading());
+                summon.setReflection(player.getReflection());
+                summon.spawnMe(loc == null ? Location.findAroundPosition(player, 50, 70) : loc);
                 summon.setRunning();
                 summon.setFollowMode(true);
 
                 if (summon.getSkillLevel(4140) > 0)
-                    summon.altUseSkill(4140, summon.getSkillLevel(4140), activeChar);
+                    summon.altUseSkill(4140, summon.getSkillLevel(4140), player);
 
                 if ("Shadow".equalsIgnoreCase(summon.getName()))//FIXME [G1ta0] идиотский хардкод
                     summon.addStatFunc(new FuncAdd(Stats.ABSORB_DAMAGE_PERCENT, 0x40, this, 15));
 
                 EffectsDAO.INSTANCE.restoreEffects(summon, true, summon.getMaxHp(), summon.getMaxCp(), summon.getMaxMp());
-                if (activeChar.isInOlympiadMode())
+                if (player.isInOlympiadMode())
                     summon.getEffectList().stopAllEffects();
 
                 summon.setFullHpMp();
 
                 if (_summonType == SummonType.SIEGE_SUMMON) {
-                    SiegeEvent siegeEvent = activeChar.getEvent(SiegeEvent.class);
+                    SiegeEvent siegeEvent = player.getEvent(SiegeEvent.class);
 
                     siegeEvent.addSiegeSummon(summon);
                 }
                 break;
             case MERCHANT:
-                if (activeChar.getPet() != null || activeChar.isMounted())
+                if (player.getPet() != null || player.isMounted())
                     return;
 
                 NpcTemplate merchantTemplate = NpcHolder.getTemplate(npcId);
@@ -155,9 +153,9 @@ public final class Summon extends Skill {
 
                 merchant.setCurrentHp(merchant.getMaxHp(), false);
                 merchant.setCurrentMp(merchant.getMaxMp());
-                merchant.setHeading(activeChar.getHeading());
-                merchant.setReflection(activeChar.getReflection());
-                merchant.spawnMe(activeChar.getLoc());
+                merchant.setHeading(player.getHeading());
+                merchant.setReflection(player.getReflection());
+                merchant.spawnMe(player.getLoc());
 
                 ThreadPoolManager.INSTANCE.schedule(new GameObjectTasks.DeleteTask(merchant), lifeTime);
                 break;

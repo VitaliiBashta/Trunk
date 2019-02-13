@@ -26,9 +26,7 @@ import l2trunk.gameserver.scripts.Events;
 import l2trunk.gameserver.templates.DoorTemplate;
 import l2trunk.gameserver.templates.item.WeaponTemplate;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -52,7 +50,7 @@ public final class DoorInstance extends Creature implements GeoCollision {
 
     @Override
     public String getName() {
-        return getTemplate().getName();
+        return getTemplate().name;
     }
 
     @Override
@@ -109,7 +107,7 @@ public final class DoorInstance extends Creature implements GeoCollision {
 
         switch (getDoorType()) {
             case WALL:
-                if (!attacker.isSummon() || siegeEvent == null || !siegeEvent.containsSiegeSummon((SummonInstance) attacker))
+                if (!(attacker instanceof SummonInstance) || (siegeEvent == null) || !siegeEvent.containsSiegeSummon((SummonInstance) attacker))
                     return false;
                 break;
             case DOOR:
@@ -119,7 +117,7 @@ public final class DoorInstance extends Creature implements GeoCollision {
                 if (siegeEvent != null) {
                     if (siegeEvent.getSiegeClan(SiegeEvent.DEFENDERS, player.getClan()) != null)
                         return false;
-                    if (siegeEvent.getObjects(DominionSiegeEvent.DEFENDER_PLAYERS).contains(player.getObjectId()))
+                    if (siegeEvent.getObjects(DominionSiegeEvent.DEFENDER_PLAYERS).contains(player.objectId()))
                         return false;
                 }
                 break;
@@ -159,14 +157,14 @@ public final class DoorInstance extends Creature implements GeoCollision {
 
         if (this != player.getTarget()) {
             player.setTarget(this);
-            player.sendPacket(new MyTargetSelected(getObjectId(), player.getLevel()));
+            player.sendPacket(new MyTargetSelected(objectId(), player.getLevel()));
 
             if (isAutoAttackable(player))
                 player.sendPacket(new StaticObject(this, player));
 
             player.sendPacket(new ValidateLocation(this));
         } else {
-            player.sendPacket(new MyTargetSelected(getObjectId(), 0));
+            player.sendPacket(new MyTargetSelected(objectId(), 0));
 
             if (isAutoAttackable(player)) {
                 player.getAI().Attack(this, false, shift);
@@ -194,15 +192,14 @@ public final class DoorInstance extends Creature implements GeoCollision {
     @Override
     public void broadcastStatusUpdate() {
         World.getAroundPlayers(this)
-                .filter(Objects::nonNull)
                 .forEach(player -> player.sendPacket(new StaticObject(this, player)));
     }
 
     public boolean openMe() {
-        return openMe(null, true);
+        return openMe(true);
     }
 
-    public boolean openMe(Player opener, boolean autoClose) {
+    public boolean openMe(boolean autoClose) {
         _openLock.lock();
         try {
             if (!setOpen(true))
@@ -218,8 +215,6 @@ public final class DoorInstance extends Creature implements GeoCollision {
         if (autoClose && getTemplate().getCloseTime() > 0)
             scheduleAutoAction(false, this.getTemplate().getCloseTime() * 1000L);
 
-        getAI().onEvtOpen(opener);
-
         getListeners().getListeners().stream()
                 .filter(l -> l instanceof OnOpenCloseListener)
                 .map(l -> (OnOpenCloseListener) l)
@@ -229,10 +224,10 @@ public final class DoorInstance extends Creature implements GeoCollision {
     }
 
     public boolean closeMe() {
-        return closeMe(null, true);
+        return closeMe(true);
     }
 
-    public boolean closeMe(Player closer, boolean autoOpen) {
+    public boolean closeMe(boolean autoOpen) {
         if (isDead())
             return false;
 
@@ -255,8 +250,6 @@ public final class DoorInstance extends Creature implements GeoCollision {
 
             scheduleAutoAction(true, openDelay);
         }
-
-        getAI().onEvtClose(closer);
 
         getListeners().getListeners().stream()
                 .filter(l -> l instanceof OnOpenCloseListener)
@@ -285,8 +278,6 @@ public final class DoorInstance extends Creature implements GeoCollision {
 
     @Override
     protected void onRevive() {
-        super.onRevive();
-
         _openLock.lock();
         try {
             if (!isOpen())
@@ -302,7 +293,7 @@ public final class DoorInstance extends Creature implements GeoCollision {
 
         setFullHpMp();
 
-        closeMe(null, true);
+        closeMe();
     }
 
     @Override
@@ -438,12 +429,7 @@ public final class DoorInstance extends Creature implements GeoCollision {
 
     @Override
     public List<L2GameServerPacket> addPacketList(Player forPlayer, Creature dropper) {
-        return Collections.<L2GameServerPacket>singletonList(new StaticObject(this, forPlayer));
-    }
-
-    @Override
-    public boolean isDoor() {
-        return true;
+        return List.of(new StaticObject(this, forPlayer));
     }
 
     @Override
@@ -475,18 +461,18 @@ public final class DoorInstance extends Creature implements GeoCollision {
     }
 
     private class AutoOpenClose extends RunnableImpl {
-        private final boolean _open;
+        private final boolean open;
 
         AutoOpenClose(boolean open) {
-            _open = open;
+            this.open = open;
         }
 
         @Override
         public void runImpl() {
-            if (_open)
-                openMe(null, true);
+            if (open)
+                openMe();
             else
-                closeMe(null, true);
+                closeMe();
         }
     }
 }

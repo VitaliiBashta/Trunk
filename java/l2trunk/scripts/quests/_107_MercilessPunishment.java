@@ -5,7 +5,6 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _107_MercilessPunishment extends Quest {
     private final int HATOSS_ORDER1 = 1553;
@@ -31,7 +30,7 @@ public final class _107_MercilessPunishment extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if (event.equalsIgnoreCase("urutu_chief_hatos_q0107_03.htm")) {
-            st.giveItems(HATOSS_ORDER1, 1);
+            st.giveItems(HATOSS_ORDER1);
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
@@ -46,14 +45,14 @@ public final class _107_MercilessPunishment extends Quest {
             st.giveItems(ADENA_ID, 200);
             st.unset("cond");
             st.playSound(SOUND_GIVEUP);
-        } else if (event.equalsIgnoreCase("urutu_chief_hatos_q0107_07.htm")) {
+        } else if ("urutu_chief_hatos_q0107_07.htm".equalsIgnoreCase(event)) {
             st.takeItems(HATOSS_ORDER1, 1);
             if (st.getQuestItemsCount(HATOSS_ORDER2) == 0)
-                st.giveItems(HATOSS_ORDER2, 1);
-        } else if (event.equalsIgnoreCase("urutu_chief_hatos_q0107_09.htm")) {
+                st.giveItems(HATOSS_ORDER2);
+        } else if ("urutu_chief_hatos_q0107_09.htm".equalsIgnoreCase(event)) {
             st.takeItems(HATOSS_ORDER2, 1);
             if (st.getQuestItemsCount(HATOSS_ORDER3) == 0)
-                st.giveItems(HATOSS_ORDER3, 1);
+                st.giveItems(HATOSS_ORDER3);
         }
         return event;
     }
@@ -68,10 +67,10 @@ public final class _107_MercilessPunishment extends Quest {
             cond = st.getCond();
         if (npcId == 30568) {
             if (id == CREATED) {
-                if (st.getPlayer().getRace() != Race.orc) {
+                if (st.player.getRace() != Race.orc) {
                     htmltext = "urutu_chief_hatos_q0107_00.htm";
                     st.exitCurrentQuest(true);
-                } else if (st.getPlayer().getLevel() >= 10)
+                } else if (st.player.getLevel() >= 10)
                     htmltext = "urutu_chief_hatos_q0107_02.htm";
                 else {
                     htmltext = "urutu_chief_hatos_q0107_01.htm";
@@ -93,18 +92,18 @@ public final class _107_MercilessPunishment extends Quest {
                 htmltext = "urutu_chief_hatos_q0107_08.htm";
             else if (cond == 7 && st.getQuestItemsCount(HATOSS_ORDER3) > 0 && st.getQuestItemsCount(LETTER_TO_ELF) + st.getQuestItemsCount(LETTER_TO_HUMAN) + st.getQuestItemsCount(LETTER_TO_DARKELF) == 3) {
                 htmltext = "urutu_chief_hatos_q0107_10.htm";
-                st.takeItems(LETTER_TO_DARKELF, -1);
-                st.takeItems(LETTER_TO_HUMAN, -1);
-                st.takeItems(LETTER_TO_ELF, -1);
-                st.takeItems(HATOSS_ORDER3, -1);
+                st.takeItems(LETTER_TO_DARKELF);
+                st.takeItems(LETTER_TO_HUMAN);
+                st.takeItems(LETTER_TO_ELF);
+                st.takeItems(HATOSS_ORDER3);
 
-                st.giveItems(BUTCHER, 1);
-                st.getPlayer().addExpAndSp(34565, 2962);
+                st.giveItems(BUTCHER);
+                st.player.addExpAndSp(34565, 2962);
                 st.giveItems(ADENA_ID, 14666, false);
 
-                if (st.getPlayer().getClassId().getLevel() == 1 && !st.getPlayer().getVarB("p1q3")) {
-                    st.getPlayer().setVar("p1q3", "1", -1); // flag for helper
-                    st.getPlayer().sendPacket(new ExShowScreenMessage("Acquisition of race-specific weapon complete.\n           Go find the Newbie Guide."));
+                if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("p1q3")) {
+                    st.player.setVar("p1q3", 1); // flag for helper
+                    st.player.sendPacket(new ExShowScreenMessage("Acquisition of race-specific weapon complete.\n           Go find the Newbie Guide."));
                     st.giveItems(1060, 100); // healing potion
                     for (int item = 4412; item <= 4417; item++)
                         st.giveItems(item, 10); // echo cry
@@ -124,23 +123,22 @@ public final class _107_MercilessPunishment extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         if (npcId == 27041)
             if (cond == 2 && st.getQuestItemsCount(HATOSS_ORDER1) > 0 && st.getQuestItemsCount(LETTER_TO_HUMAN) == 0) {
-                st.giveItems(LETTER_TO_HUMAN, 1);
+                st.giveItems(LETTER_TO_HUMAN);
                 st.setCond(3);
                 st.playSound(SOUND_ITEMGET);
             } else if (cond == 4 && st.getQuestItemsCount(HATOSS_ORDER2) > 0 && st.getQuestItemsCount(LETTER_TO_DARKELF) == 0) {
-                st.giveItems(LETTER_TO_DARKELF, 1);
+                st.giveItems(LETTER_TO_DARKELF);
                 st.setCond(5);
                 st.playSound(SOUND_ITEMGET);
             } else if (cond == 6 && st.getQuestItemsCount(HATOSS_ORDER3) > 0 && st.getQuestItemsCount(LETTER_TO_ELF) == 0) {
-                st.giveItems(LETTER_TO_ELF, 1);
+                st.giveItems(LETTER_TO_ELF);
                 st.setCond(7);
                 st.playSound(SOUND_ITEMGET);
             }
-        return null;
     }
 }

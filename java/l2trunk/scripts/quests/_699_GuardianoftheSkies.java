@@ -51,11 +51,10 @@ public final class _699_GuardianoftheSkies extends Quest {
         String htmltext = "noquest";
         int npcId = npc.getNpcId();
         int cond = st.getCond();
-        QuestState GoodDayToFly = st.getPlayer().getQuestState(_10273_GoodDayToFly.class);
 
         if (npcId == engineer_recon)
             if (cond == 0) {
-                if (st.getPlayer().getLevel() >= 75 && GoodDayToFly != null && GoodDayToFly.isCompleted())
+                if (st.player.getLevel() >= 75 && st.player.isQuestCompleted(_10273_GoodDayToFly.class))
                     htmltext = "engineer_recon_q0699_01.htm";
                 else {
                     htmltext = "engineer_recon_q0699_02.htm";
@@ -63,39 +62,39 @@ public final class _699_GuardianoftheSkies extends Quest {
                 }
             } else if (cond == 1 && st.getQuestItemsCount(q_gold_feather_of_vulture) < 1)
                 htmltext = "engineer_recon_q0699_05.htm";
-            else if (cond == 1 && st.getQuestItemsCount(q_gold_feather_of_vulture) >= 1 && st.getQuestItemsCount(q_gold_feather_of_vulture) < 10) {
+            else if (cond == 1 && st.haveQuestItem(q_gold_feather_of_vulture)  && st.getQuestItemsCount(q_gold_feather_of_vulture) < 10) {
                 st.giveItems(ADENA_ID, st.getQuestItemsCount(q_gold_feather_of_vulture) * 1500);
-                st.takeItems(q_gold_feather_of_vulture, -1);
+                st.takeItems(q_gold_feather_of_vulture);
                 htmltext = "engineer_recon_q0699_06.htm";
-            } else if (cond == 1 && st.getQuestItemsCount(q_gold_feather_of_vulture) >= 10) {
+            } else if (cond == 1 && st.haveQuestItem(q_gold_feather_of_vulture,10)) {
                 st.giveItems(ADENA_ID, st.getQuestItemsCount(q_gold_feather_of_vulture) * 1500 + 8335);
-                st.takeItems(q_gold_feather_of_vulture, -1);
+                st.takeItems(q_gold_feather_of_vulture);
                 htmltext = "engineer_recon_q0699_06.htm";
             }
         return htmltext;
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         if (cond == 1)
             if (npcId == vulture_rider_1lv) {
                 int i3 = Rnd.get(1000);
                 if (i3 < 840) {
-                    st.giveItems(q_gold_feather_of_vulture, 1);
+                    st.giveItems(q_gold_feather_of_vulture);
                     st.playSound(SOUND_ITEMGET);
                 }
             } else if (npcId == vulture_rider_2lv) {
                 int i3 = Rnd.get(1000);
                 if (i3 < 857) {
-                    st.giveItems(q_gold_feather_of_vulture, 1);
+                    st.giveItems(q_gold_feather_of_vulture);
                     st.playSound(SOUND_ITEMGET);
                 }
             } else if (npcId == vulture_rider_3lv) {
                 int i3 = Rnd.get(1000);
                 if (i3 < 719) {
-                    st.giveItems(q_gold_feather_of_vulture, 1);
+                    st.giveItems(q_gold_feather_of_vulture);
                     st.playSound(SOUND_ITEMGET);
                 }
             } else if (npcId == master_rider) {
@@ -118,6 +117,5 @@ public final class _699_GuardianoftheSkies extends Quest {
                     st.playSound(SOUND_ITEMGET);
                 }
             }
-        return null;
     }
 }

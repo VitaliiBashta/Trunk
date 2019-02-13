@@ -8,7 +8,6 @@ import l2trunk.gameserver.model.entity.events.impl.DominionSiegeRunnerEvent;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _176_StepsForHonor extends Quest {
     private static final int RAPIDUS = 36479;
@@ -19,16 +18,15 @@ public final class _176_StepsForHonor extends Quest {
     }
 
     @Override
-    public String onKill(Player killed, QuestState st) {
+    public void onKill(Player killed, QuestState st) {
         int cond = st.getCond();
-        if (!isValidKill(killed, st.getPlayer()))
-            return null;
+        if (!isValidKill(killed, st.player))
+            return;
         if (cond == 1 || cond == 3 || cond == 5 || cond == 7) {
             st.set("kill", st.getInt("kill") + 1);
             if (st.getInt("kill") >= calculatePlayersToKill(cond))
                 st.setCond(cond + 1);
         }
-        return null;
     }
 
     private static int calculatePlayersToKill(int cond) {
@@ -66,7 +64,7 @@ public final class _176_StepsForHonor extends Quest {
         else {
             switch (cond) {
                 default:
-                    if (st.getPlayer().getLevel() >= 80)
+                    if (st.player.getLevel() >= 80)
                         htmltext = "rapidus_q176_03.htm";
                     else {
                         htmltext = "rapidus_q176_02.htm";
@@ -131,6 +129,5 @@ public final class _176_StepsForHonor extends Quest {
     @Override
     public void onAbort(QuestState qs) {
         qs.removePlayerOnKillListener();
-        super.onAbort(qs);
     }
 }

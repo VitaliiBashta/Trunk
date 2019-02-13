@@ -6,6 +6,7 @@ public final class NpcLocation extends Location{
     public int npcId;
 
     public NpcLocation() {
+
     }
 
     public NpcLocation(Location loc, int npcId) {

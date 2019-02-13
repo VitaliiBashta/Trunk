@@ -4,7 +4,6 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _291_RevengeOfTheRedbonnet extends Quest {
     //NPC
@@ -47,7 +46,7 @@ public final class _291_RevengeOfTheRedbonnet extends Quest {
         int cond = st.getCond();
 
         if (cond == 0) {
-            if (st.getPlayer().getLevel() < 4) {
+            if (st.player.getLevel() < 4) {
                 htmltext = "marife_redbonnet_q0291_01.htm";
                 st.exitCurrentQuest(true);
             } else
@@ -59,16 +58,16 @@ public final class _291_RevengeOfTheRedbonnet extends Quest {
             st.setCond(1);
         } else if (cond == 2 && st.getQuestItemsCount(BlackWolfPelt) >= 40) {
             int random = Rnd.get(100);
-            st.takeItems(BlackWolfPelt, -1);
+            st.takeItems(BlackWolfPelt);
             if (random < 3)
-                st.giveItems(GrandmasPearl, 1);
+                st.giveItems(GrandmasPearl);
             else if (random < 21)
-                st.giveItems(GrandmasMirror, 1);
+                st.giveItems(GrandmasMirror);
             else if (random < 46)
-                st.giveItems(GrandmasNecklace, 1);
+                st.giveItems(GrandmasNecklace);
             else {
-                st.giveItems(ScrollOfEscape, 1);
-                st.giveItems(GrandmasHairpin, 1);
+                st.giveItems(ScrollOfEscape);
+                st.giveItems(GrandmasHairpin);
             }
             htmltext = "marife_redbonnet_q0291_05.htm";
             st.playSound(SOUND_FINISH);
@@ -78,9 +77,9 @@ public final class _291_RevengeOfTheRedbonnet extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getCond() == 1 && st.getQuestItemsCount(BlackWolfPelt) < 40) {
-            st.giveItems(BlackWolfPelt, 1);
+            st.giveItems(BlackWolfPelt);
             if (st.getQuestItemsCount(BlackWolfPelt) < 40)
                 st.playSound(SOUND_ITEMGET);
             else {
@@ -89,6 +88,5 @@ public final class _291_RevengeOfTheRedbonnet extends Quest {
                 st.setState(STARTED);
             }
         }
-        return null;
     }
 }

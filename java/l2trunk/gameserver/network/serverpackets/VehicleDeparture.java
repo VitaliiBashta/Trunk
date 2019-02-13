@@ -10,7 +10,7 @@ public class VehicleDeparture extends L2GameServerPacket {
     private final Location _loc;
 
     public VehicleDeparture(Boat boat) {
-        _boatObjId = boat.getObjectId();
+        _boatObjId = boat.objectId();
         _moveSpeed = boat.getMoveSpeed();
         _rotationSpeed = boat.getRotationSpeed();
         _loc = boat.getDestination();

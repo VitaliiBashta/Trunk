@@ -40,20 +40,20 @@ public final class _280_TheFoodChain extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         int _state = st.getState();
-        if (event.equalsIgnoreCase("jager_bixon_q0280_03.htm") && _state == CREATED) {
+        if ("jager_bixon_q0280_03.htm".equalsIgnoreCase(event) && _state == CREATED) {
             st.setState(STARTED);
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("jager_bixon_q0280_09.htm") && _state == STARTED) {
+        } else if ("jager_bixon_q0280_09.htm".equalsIgnoreCase(event) && _state == STARTED) {
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(true);
         } else if (_state == STARTED) {
             long Grey_Keltir_Tooth_count = st.getQuestItemsCount(Grey_Keltir_Tooth);
             long Black_Wolf_Tooth_count = st.getQuestItemsCount(Black_Wolf_Tooth);
 
-            if (event.equalsIgnoreCase("ADENA")) {
-                st.takeItems(Grey_Keltir_Tooth, -1);
-                st.takeItems(Black_Wolf_Tooth, -1);
+            if ("ADENA".equalsIgnoreCase(event)) {
+                st.takeItems(Grey_Keltir_Tooth);
+                st.takeItems(Black_Wolf_Tooth);
                 st.giveItems(ADENA_ID, (Grey_Keltir_Tooth_count + Black_Wolf_Tooth_count) * 2);
                 st.playSound(SOUND_MIDDLE);
                 return "jager_bixon_q0280_06.htm";
@@ -95,7 +95,7 @@ public final class _280_TheFoodChain extends Quest {
             return "noquest";
         int _state = st.getState();
         if (_state == CREATED) {
-            if (st.getPlayer().getLevel() >= 3) {
+            if (st.player.getLevel() >= 3) {
                 st.setCond(0);
                 return "jager_bixon_q0280_01.htm";
             }
@@ -108,18 +108,17 @@ public final class _280_TheFoodChain extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState qs) {
+    public void onKill(NpcInstance npc, QuestState qs) {
         if (qs.getState() != STARTED)
-            return null;
+            return;
         int npcId = npc.getNpcId();
 
         if ((npcId == Young_Grey_Keltir || npcId == Grey_Keltir || npcId == Dominant_Grey_Keltir) && Rnd.chance(Grey_Keltir_Tooth_Chance)) {
-            qs.giveItems(Grey_Keltir_Tooth, 1);
+            qs.giveItems(Grey_Keltir_Tooth);
             qs.playSound(SOUND_ITEMGET);
         } else if ((npcId == Black_Wolf || npcId == Dominant_Black_Wolf) && Rnd.chance(Black_Wolf_Tooth_Chance)) {
             qs.giveItems(Black_Wolf_Tooth, 3);
             qs.playSound(SOUND_ITEMGET);
         }
-        return null;
     }
 }

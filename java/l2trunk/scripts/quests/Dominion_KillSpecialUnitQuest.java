@@ -39,20 +39,20 @@ public abstract class Dominion_KillSpecialUnitQuest extends Quest {
     protected abstract List<ClassId> getTargetClassIds();
 
     @Override
-    public String onKill(Player killed, QuestState qs) {
-        Player player = qs.getPlayer();
+    public void onKill(Player killed, QuestState qs) {
+        Player player = qs.player;
         if (player == null)
-            return null;
+            return ;
 
         DominionSiegeEvent event1 = player.getEvent(DominionSiegeEvent.class);
         if (event1 == null)
-            return null;
+            return ;
         DominionSiegeEvent event2 = killed.getEvent(DominionSiegeEvent.class);
         if (event2 == null || event2 == event1)
-            return null;
+            return ;
 
         if (!classIds.contains(killed.getClassId()))
-            return null;
+            return ;
 
         int max_kills = qs.getInt("max_kills");
         if (max_kills == 0) {
@@ -94,8 +94,6 @@ public abstract class Dominion_KillSpecialUnitQuest extends Quest {
 
             }
         }
-
-        return null;
     }
 
     @Override

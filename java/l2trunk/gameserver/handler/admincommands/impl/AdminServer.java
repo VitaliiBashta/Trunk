@@ -52,7 +52,7 @@ public class AdminServer implements IAdminCommandHandler {
                     return false;
                 }
 
-                if (!obj.isCreature()) {
+                if (!(obj instanceof Creature)) {
                     activeChar.sendMessage("target is not a character");
                     return false;
                 }
@@ -158,7 +158,7 @@ public class AdminServer implements IAdminCommandHandler {
                 .init();
         if (respawnTime == 0)
             spawn.stopRespawn();
-        activeChar.sendMessage("Created " + templateId + " on " + target.getObjectId() + ".");
+        activeChar.sendMessage("Created " + templateId + " on " + target.objectId() + ".");
     }
 
     private enum Commands {

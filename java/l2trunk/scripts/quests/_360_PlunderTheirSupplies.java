@@ -4,7 +4,6 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _360_PlunderTheirSupplies extends Quest {
     //NPC
@@ -38,11 +37,11 @@ public final class _360_PlunderTheirSupplies extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("guard_coleman_q0360_04.htm")) {
+        if ("guard_coleman_q0360_04.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("guard_coleman_q0360_10.htm")) {
+        } else if ("guard_coleman_q0360_10.htm".equalsIgnoreCase(event)) {
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(true);
         }
@@ -51,19 +50,19 @@ public final class _360_PlunderTheirSupplies extends Quest {
 
     @Override
     public String onTalk(NpcInstance npc, QuestState st) {
-        String htmltext = "noquest";
+        String htmltext;
         int id = st.getState();
         long docs = st.getQuestItemsCount(RECIPE_OF_SUPPLY);
         long supplies = st.getQuestItemsCount(SUPPLY_ITEM);
         if (id != STARTED) {
-            if (st.getPlayer().getLevel() >= 52)
+            if (st.player.getLevel() >= 52)
                 htmltext = "guard_coleman_q0360_02.htm";
             else
                 htmltext = "guard_coleman_q0360_01.htm";
         } else if (docs > 0 || supplies > 0) {
             long reward = 6000 + supplies * 100 + docs * 6000;
-            st.takeItems(SUPPLY_ITEM, -1);
-            st.takeItems(RECIPE_OF_SUPPLY, -1);
+            st.takeItems(SUPPLY_ITEM);
+            st.takeItems(RECIPE_OF_SUPPLY);
             st.giveItems(ADENA_ID, reward);
             htmltext = "guard_coleman_q0360_08.htm";
         } else
@@ -72,21 +71,20 @@ public final class _360_PlunderTheirSupplies extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         if (npcId == TAIK_SEEKER && Rnd.chance(ITEM_DROP_SEEKER) || npcId == TAIK_LEADER && Rnd.chance(ITEM_DROP_LEADER)) {
-            st.giveItems(SUPPLY_ITEM, 1);
+            st.giveItems(SUPPLY_ITEM);
             st.playSound(SOUND_ITEMGET);
         }
         if (Rnd.chance(DOCUMENT_DROP)) {
             if (st.getQuestItemsCount(SUSPICIOUS_DOCUMENT) < 4)
-                st.giveItems(SUSPICIOUS_DOCUMENT, 1);
+                st.giveItems(SUSPICIOUS_DOCUMENT);
             else {
-                st.takeItems(SUSPICIOUS_DOCUMENT, -1);
-                st.giveItems(RECIPE_OF_SUPPLY, 1);
+                st.takeItems(SUSPICIOUS_DOCUMENT);
+                st.giveItems(RECIPE_OF_SUPPLY);
             }
             st.playSound(SOUND_ITEMGET);
         }
-        return null;
     }
 }

@@ -8,30 +8,29 @@ import static l2trunk.commons.lang.NumberUtils.toInt;
 
 public class AdminCancel implements IAdminCommandHandler {
     @Override
-    public boolean useAdminCommand(@SuppressWarnings("rawtypes") Enum comm, String[] wordList, String fullString, Player activeChar) {
+    public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player player) {
         Commands command = (Commands) comm;
 
-        if (!activeChar.getPlayerAccess().CanEditChar)
+        if (!player.getPlayerAccess().CanEditChar)
             return false;
 
         switch (command) {
             case admin_cancel:
-                handleCancel(activeChar, wordList.length > 1 ? wordList[1] : null);
+                handleCancel(player, wordList.length > 1 ? wordList[1] : null);
                 break;
             case admin_cleanse:
-                Creature target = activeChar.getTarget() != null && activeChar.getTarget().isPlayable() ? (Creature) activeChar.getTarget() : activeChar;
+                Playable target = player.getTarget() != null && player.getTarget() instanceof Playable ? (Playable) player.getTarget() : player;
                 target.getEffectList().getAllEffects().stream()
                         .filter(Effect::isOffensive)
                         .filter(Effect::isCancelable)
                         .forEach(Effect::exit);
-                activeChar.sendMessage("Negative effects of " + target.getName() + " were removed!");
+                player.sendMessage("Negative effects of " + target.getName() + " were removed!");
                 break;
         }
 
         return true;
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
     public Enum[] getAdminCommandEnum() {
         return Commands.values();
@@ -58,7 +57,7 @@ public class AdminCancel implements IAdminCommandHandler {
 
         if (obj == null)
             obj = activeChar;
-        if (obj.isCreature())
+        if (obj instanceof Creature)
             ((Creature) obj).getEffectList().stopAllEffects();
         else
             activeChar.sendPacket(SystemMsg.INVALID_TARGET);

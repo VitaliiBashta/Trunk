@@ -253,7 +253,7 @@ public final class RequestRefine extends L2GameClientPacket {
         player.sendPacket(new InventoryUpdate().addModifiedItem(targetItem));
 
         for (ShortCut sc : player.getAllShortCuts())
-            if (sc.getId() == targetItem.getObjectId() && sc.getType() == ShortCut.TYPE_ITEM)
+            if (sc.getId() == targetItem.objectId() && sc.getType() == ShortCut.TYPE_ITEM)
                 player.sendPacket(new ShortCutRegister(player, sc));
         player.sendChanges();
         return true;

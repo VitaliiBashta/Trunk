@@ -41,7 +41,7 @@ public enum MiniGameScoreManager {
         if (addScore(player.getName(), score)) {
             try (Connection con = DatabaseFactory.getInstance().getConnection();
                  PreparedStatement statement = con.prepareStatement("INSERT INTO character_minigame_score(object_id, score) VALUES (?, ?)")) {
-                statement.setInt(1, player.getObjectId());
+                statement.setInt(1, player.objectId());
                 statement.setInt(2, score);
                 statement.execute();
             } catch (SQLException e) {

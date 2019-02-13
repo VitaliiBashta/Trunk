@@ -11,10 +11,6 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
-/**
- * @author VISTALL
- * @date 19:36/19.04.2011
- */
 public class MainMachineInstance extends NpcInstance {
     private int _powerUnits;
 

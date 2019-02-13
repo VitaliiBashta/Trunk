@@ -123,7 +123,7 @@ public final class RequestRefineCancel extends L2GameClientPacket {
         activeChar.sendPacket(new ExVariationCancelResult(1), iu, sm);
 
         for (ShortCut sc : activeChar.getAllShortCuts())
-            if (sc.getId() == targetItem.getObjectId() && sc.getType() == ShortCut.TYPE_ITEM)
+            if (sc.getId() == targetItem.objectId() && sc.getType() == ShortCut.TYPE_ITEM)
                 activeChar.sendPacket(new ShortCutRegister(activeChar, sc));
         activeChar.sendChanges();
     }

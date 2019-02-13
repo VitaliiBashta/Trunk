@@ -40,7 +40,7 @@ public enum Announcements {
 
 
     public static void shout(Creature activeChar, String text, ChatType type) {
-        Say2 cs = new Say2(activeChar.getObjectId(), type, activeChar.getName(), text);
+        Say2 cs = new Say2(activeChar.objectId(), type, activeChar.getName(), text);
 
         int rx = MapUtils.regionX(activeChar);
         int ry = MapUtils.regionY(activeChar);
@@ -131,12 +131,12 @@ public enum Announcements {
     }
 
     public void announceToPlayerByCustomMessage(Player player, String address) {
-        CustomMessage cm = new CustomMessage(address, player);
+        CustomMessage cm = new CustomMessage(address);
         player.sendPacket(new Say2(0, ChatType.ANNOUNCEMENT, "", cm.toString()));
     }
 
     public void announceToPlayerByCustomMessage(Player player, String address, String[] replacements, ChatType type) {
-        CustomMessage cm = new CustomMessage(address, player);
+        CustomMessage cm = new CustomMessage(address);
         if (replacements != null)
             for (String s : replacements)
                 cm.addString(s);

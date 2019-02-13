@@ -3,7 +3,6 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _10282_ToTheSeedOfAnnihilation extends Quest {
     private final static int KBALDIR = 32733;
@@ -46,7 +45,7 @@ public final class _10282_ToTheSeedOfAnnihilation extends Quest {
             else if (npcId == KLEMIS)
                 htmltext = "32734-03.htm";
         } else if (id == CREATED) {
-            if (st.getPlayer().getLevel() >= 84)
+            if (st.player.getLevel() >= 84)
                 htmltext = "32733-01.htm";
             else
                 htmltext = "32733-00.htm";

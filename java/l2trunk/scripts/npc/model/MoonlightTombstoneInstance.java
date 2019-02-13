@@ -11,6 +11,7 @@ import l2trunk.gameserver.utils.Location;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import static l2trunk.gameserver.utils.ItemFunctions.removeItem;
 
 
 public final class MoonlightTombstoneInstance extends NpcInstance {
@@ -53,8 +54,8 @@ public final class MoonlightTombstoneInstance extends NpcInstance {
                 return;
             }
 
-            if (Functions.getItemCount(player, KEY_ID) > 0) {
-                Functions.removeItem(player, KEY_ID, 1, "MoonlightTombstoneInstance");
+            if (player.haveItem( KEY_ID) ) {
+                removeItem(player, KEY_ID, 1, "MoonlightTombstoneInstance");
                 player.getReflection().startCollapseTimer(COLLAPSE_TIME * 60 * 1000L);
                 _activated = true;
                 broadcastPacketToOthers(new SystemMessage(SystemMessage.THIS_DUNGEON_WILL_EXPIRE_IN_S1_MINUTES).addNumber(COLLAPSE_TIME));

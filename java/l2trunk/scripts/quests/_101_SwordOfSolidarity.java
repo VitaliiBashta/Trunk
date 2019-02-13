@@ -6,7 +6,6 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _101_SwordOfSolidarity extends Quest {
     private final int ROIENS_LETTER = 796;
@@ -31,29 +30,29 @@ public final class _101_SwordOfSolidarity extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("roien_q0101_04.htm")) {
+        if ("roien_q0101_04.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-            st.giveItems(ROIENS_LETTER, 1);
-        } else if (event.equalsIgnoreCase("blacksmith_alltran_q0101_02.htm")) {
+            st.giveItems(ROIENS_LETTER);
+        } else if ("blacksmith_alltran_q0101_02.htm".equalsIgnoreCase(event)) {
             st.setCond(2);
-            st.takeItems(ROIENS_LETTER, -1);
-            st.giveItems(HOWTOGO_RUINS, 1);
-        } else if (event.equalsIgnoreCase("blacksmith_alltran_q0101_07.htm")) {
-            st.takeItems(BROKEN_SWORD_HANDLE, -1);
+            st.takeItems(ROIENS_LETTER);
+            st.giveItems(HOWTOGO_RUINS);
+        } else if ("blacksmith_alltran_q0101_07.htm".equalsIgnoreCase(event)) {
+            st.takeItems(BROKEN_SWORD_HANDLE);
 
-            st.giveItems(SWORD_OF_SOLIDARITY, 1);
+            st.giveItems(SWORD_OF_SOLIDARITY);
             st.giveItems(ADENA_ID, 10981, false);
-            st.getPlayer().addExpAndSp(25747, 2171);
+            st.player.addExpAndSp(25747, 2171);
 
-            if (st.getPlayer().getClassId().getLevel() == 1 && !st.getPlayer().getVarB("p1q3")) {
-                st.getPlayer().setVar("p1q3", "1", -1); // flag for helper
-                st.getPlayer().sendPacket(new ExShowScreenMessage("Now go find the Newbie Guide."));
+            if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("p1q3")) {
+                st.player.setVar("p1q3", 1); // flag for helper
+                st.player.sendPacket(new ExShowScreenMessage("Now go find the Newbie Guide."));
                 st.giveItems(1060, 100); // healing potion
                 for (int item = 4412; item <= 4417; item++)
                     st.giveItems(item, 10); // echo cry
-                if (st.getPlayer().getClassId().isMage) {
+                if (st.player.getClassId().isMage) {
                     st.playTutorialVoice("tutorial_voice_027");
                     st.giveItems(5790, 3000); // newbie sps
                 } else {
@@ -76,9 +75,9 @@ public final class _101_SwordOfSolidarity extends Quest {
         if (npcId == 30008) {
             if (cond == 0) {
 
-                if (st.getPlayer().getRace() != Race.human)
+                if (st.player.getRace() != Race.human)
                     htmltext = "roien_q0101_00.htm";
-                else if (st.getPlayer().getLevel() >= 9) {
+                else if (st.player.getLevel() >= 9) {
                     htmltext = "roien_q0101_02.htm";
                     return htmltext;
                 } else {
@@ -100,8 +99,8 @@ public final class _101_SwordOfSolidarity extends Quest {
             } else if (cond == 4 && st.getQuestItemsCount(ALLTRANS_NOTE) > 0) {
                 htmltext = "roien_q0101_06.htm";
                 st.setCond(5);
-                st.takeItems(ALLTRANS_NOTE, -1);
-                st.giveItems(BROKEN_SWORD_HANDLE, 1);
+                st.takeItems(ALLTRANS_NOTE);
+                st.giveItems(BROKEN_SWORD_HANDLE);
             }
         } else if (npcId == 30283)
             if (cond == 1 && st.getQuestItemsCount(ROIENS_LETTER) > 0)
@@ -114,10 +113,10 @@ public final class _101_SwordOfSolidarity extends Quest {
                 else if (st.getQuestItemsCount(BROKEN_BLADE_TOP) > 0 && st.getQuestItemsCount(BROKEN_BLADE_BOTTOM) > 0) {
                     htmltext = "blacksmith_alltran_q0101_04.htm";
                     st.setCond(4);
-                    st.takeItems(HOWTOGO_RUINS, -1);
-                    st.takeItems(BROKEN_BLADE_TOP, -1);
-                    st.takeItems(BROKEN_BLADE_BOTTOM, -1);
-                    st.giveItems(ALLTRANS_NOTE, 1);
+                    st.takeItems(HOWTOGO_RUINS);
+                    st.takeItems(BROKEN_BLADE_TOP);
+                    st.takeItems(BROKEN_BLADE_BOTTOM);
+                    st.giveItems(ALLTRANS_NOTE);
                 } else if (cond == 4 && st.getQuestItemsCount(ALLTRANS_NOTE) > 0)
                     htmltext = "blacksmith_alltran_q0101_05.htm";
             } else if (cond == 5 && st.getQuestItemsCount(BROKEN_SWORD_HANDLE) > 0)
@@ -126,19 +125,18 @@ public final class _101_SwordOfSolidarity extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         if ((npcId == 20361 || npcId == 20362) && st.getQuestItemsCount(HOWTOGO_RUINS) > 0) {
             if (st.getQuestItemsCount(BROKEN_BLADE_TOP) == 0 && Rnd.chance(60)) {
-                st.giveItems(BROKEN_BLADE_TOP, 1);
+                st.giveItems(BROKEN_BLADE_TOP);
                 st.playSound(SOUND_MIDDLE);
             } else if (st.getQuestItemsCount(BROKEN_BLADE_BOTTOM) == 0 && Rnd.chance(60)) {
-                st.giveItems(BROKEN_BLADE_BOTTOM, 1);
+                st.giveItems(BROKEN_BLADE_BOTTOM);
                 st.playSound(SOUND_MIDDLE);
             }
             if (st.getQuestItemsCount(BROKEN_BLADE_TOP) > 0 && st.getQuestItemsCount(BROKEN_BLADE_BOTTOM) > 0)
                 st.setCond(3);
         }
-        return null;
     }
 }

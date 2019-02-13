@@ -38,11 +38,11 @@ public enum ReflectionManager {
     }
 
     public synchronized Reflection add(Reflection ref) {
-        return reflections.put(ref.getId(), ref);
+        return reflections.put(ref.id, ref);
     }
 
     public synchronized Reflection remove(Reflection ref) {
-        return reflections.remove(ref.getId());
+        return reflections.remove(ref.id);
     }
 
     public synchronized Collection<Reflection> getAll() {

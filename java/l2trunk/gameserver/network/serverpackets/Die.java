@@ -18,12 +18,12 @@ public final class Die extends L2GameServerPacket {
     private boolean _sweepable, isPvPevents;
 
     public Die(Creature cha) {
-        _objectId = cha.getObjectId();
+        _objectId = cha.objectId();
         _fake = !cha.isDead();
 
-        if (cha.isMonster())
+        if (cha instanceof MonsterInstance)
             _sweepable = ((MonsterInstance) cha).isSweepActive();
-        else if (cha.isPlayer() && GmEventManager.INSTANCE.canResurrect(cha.getPlayer())) {
+        else if (cha instanceof Player && GmEventManager.INSTANCE.canResurrect(cha.getPlayer())) {
             Player player = (Player) cha;
             put(RestartType.FIXED, player.getPlayerAccess().ResurectFixed || ((player.getInventory().getCountOf(10649) > 0 || player.getInventory().getCountOf(13300) > 0) && !player.isOnSiegeField()));
             put(RestartType.AGATHION, player.isAgathionResAvailable());
@@ -38,8 +38,7 @@ public final class Die extends L2GameServerPacket {
 
             cha.getEvents().forEach(e -> e.checkRestartLocs(player, _types));
 
-            if (player.getVar("isPvPevents") != null)
-                isPvPevents = true;
+            isPvPevents = player.isVarSet("isPvPevents");
         }
     }
 

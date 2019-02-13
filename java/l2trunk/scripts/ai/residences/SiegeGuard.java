@@ -6,12 +6,12 @@ import l2trunk.gameserver.ai.CtrlIntention;
 import l2trunk.gameserver.ai.Fighter;
 import l2trunk.gameserver.geodata.GeoEngine;
 import l2trunk.gameserver.model.*;
+import l2trunk.gameserver.model.instances.MonsterInstance;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.scripts.npc.model.residences.SiegeGuardInstance;
 
 import java.util.List;
-import java.util.Objects;
 
 public class SiegeGuard extends Fighter {
     public SiegeGuard(NpcInstance actor) {
@@ -51,25 +51,19 @@ public class SiegeGuard extends Fighter {
     }
 
     @Override
-    public boolean checkAggression(Creature target, boolean avoidAttack) {
+    public boolean checkAggression(Playable target, boolean avoidAttack) {
         NpcInstance actor = getActor();
         if (getIntention() != CtrlIntention.AI_INTENTION_ACTIVE || !isGlobalAggro())
             return false;
         if (target.isAlikeDead() || target.isInvul())
             return false;
 
-        if (target.isPlayable()) {
-            if (!canSeeInSilentMove((Playable) target))
-                return false;
-            if (!canSeeInHide((Playable) target))
-                return false;
-            if (target.isPlayer() && ((Player) target).isGM() && target.isInvisible())
-                return false;
-            if (target.isPlayer() && !target.getPlayer().isActive())
-                return false;
-            if (actor.isMonster() && target.isInZonePeace())
-                return false;
-        }
+        if (!canSeeInSilentMove(target) || !canSeeInHide(target))
+            return false;
+        if (target instanceof Player && ((Player) target).isGM() && target.isInvisible())
+            return false;
+        if (target instanceof Player && !((Player)target).isActive())
+            return false;
 
         AggroList.AggroInfo ai = actor.getAggroList().get(target);
         if (ai != null && ai.hate > 0) {
@@ -86,8 +80,8 @@ public class SiegeGuard extends Fighter {
         if (!avoidAttack) {
             actor.getAggroList().addDamageHate(target, 0, 2);
 
-            if ((target.isSummon() || target.isPet()))
-                actor.getAggroList().addDamageHate(target.getPlayer(), 0, 1);
+            if (target instanceof Summon)
+                actor.getAggroList().addDamageHate(((Summon)target).owner, 0, 1);
 
             startRunningTask(AI_TASK_ATTACK_DELAY);
             setIntentionAttack(target);
@@ -127,9 +121,8 @@ public class SiegeGuard extends Fighter {
         if (now - _checkAggroTimestamp > Config.AGGRO_CHECK_INTERVAL) {
             _checkAggroTimestamp = now;
 
-            if (World.getAroundCharacters(actor)
+            if (World.getAroundPlayables(actor)
                     .filter(cha -> checkAggression(cha, true))
-                    .filter(Objects::nonNull)
                     .filter(cha -> !cha.isDead())
                     .anyMatch(cha -> checkAggression(cha, false)))
                 return true;
@@ -152,9 +145,9 @@ public class SiegeGuard extends Fighter {
             return null;
 
         // Новая цель исходя из агрессивности
-        List<Creature> hateList = actor.getAggroList().getHateList();
+        List<Playable> hateList = actor.getAggroList().getHateList();
         Creature hated = null;
-        for (Creature cha : hateList) {
+        for (Playable cha : hateList) {
             //Не подходит, очищаем хейт
             if (!checkTarget(cha, MAX_PURSUE_RANGE)) {
                 actor.getAggroList().remove(cha, true);

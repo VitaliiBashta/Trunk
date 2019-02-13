@@ -6,13 +6,11 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _102_SeaofSporesFever extends Quest {
     private final int ALBERRYUS_LETTER = 964;
     private final int EVERGREEN_AMULET = 965;
     private final int DRYAD_TEARS = 966;
-    int LBERRYUS_LIST = 746;
     private final int COBS_MEDICINE1 = 1130;
     private final int COBS_MEDICINE2 = 1131;
     private final int COBS_MEDICINE3 = 1132;
@@ -47,10 +45,10 @@ public final class _102_SeaofSporesFever extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("alberryus_q0102_02.htm")) {
+        if ("alberryus_q0102_02.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.setState(STARTED);
-            st.giveItems(ALBERRYUS_LETTER, 1);
+            st.giveItems(ALBERRYUS_LETTER);
             st.playSound(SOUND_ACCEPT);
         }
         return event;
@@ -63,10 +61,10 @@ public final class _102_SeaofSporesFever extends Quest {
         int cond = st.getCond();
         if (npcId == 30284) {
             if (cond == 0) {
-                if (st.getPlayer().getRace() != Race.elf) {
+                if (st.player.getRace() != Race.elf) {
                     htmltext = "alberryus_q0102_00.htm";
                     st.exitCurrentQuest(true);
-                } else if (st.getPlayer().getLevel() >= 12) {
+                } else if (st.player.getLevel() >= 12) {
                     htmltext = "alberryus_q0102_07.htm";
                     return htmltext;
                 } else {
@@ -88,20 +86,20 @@ public final class _102_SeaofSporesFever extends Quest {
             else if (cond == 6 && st.getQuestItemsCount(ALBERRYUS_LIST) == 1) {
                 st.takeItems(ALBERRYUS_LIST, 1);
                 st.giveItems(ADENA_ID, 6331);
-                st.getPlayer().addExpAndSp(30202, 1339);
+                st.player.addExpAndSp(30202, 1339);
 
-                if (st.getPlayer().getClassId().isMage)
+                if (st.player.getClassId().isMage)
                     st.giveItems(STAFF_OF_SENTINEL);
                 else
                     st.giveItems(SWORD_OF_SENTINEL);
 
-                if (st.getPlayer().getClassId().getLevel() == 1 && !st.getPlayer().getVarB("p1q3")) {
-                    st.getPlayer().setVar("p1q3", "1", -1); // flag for helper
-                    st.getPlayer().sendPacket(new ExShowScreenMessage("Now go find the Newbie Guide."));
+                if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("p1q3")) {
+                    st.player.setVar("p1q3", 1); // flag for helper
+                    st.player.sendPacket(new ExShowScreenMessage("Now go find the Newbie Guide."));
                     st.giveItems(1060, 100); // healing potion
                     for (int item = 4412; item <= 4417; item++)
                         st.giveItems(item, 10); // echo cry
-                    if (st.getPlayer().getClassId().isMage) {
+                    if (st.player.getClassId().isMage) {
                         st.playTutorialVoice("tutorial_voice_027");
                         st.giveItems(5790, 3000); // newbie sps
                     } else {
@@ -126,7 +124,7 @@ public final class _102_SeaofSporesFever extends Quest {
                 htmltext = "cob_q0102_07.htm";
             else if (cond == 3 && st.getQuestItemsCount(EVERGREEN_AMULET) > 0 && st.getQuestItemsCount(DRYAD_TEARS) >= 10) {
                 st.takeItems(EVERGREEN_AMULET, 1);
-                st.takeItems(DRYAD_TEARS, -1);
+                st.takeItems(DRYAD_TEARS);
                 st.giveItems(COBS_MEDICINE1);
                 st.giveItems(COBS_MEDICINE2);
                 st.giveItems(COBS_MEDICINE3);
@@ -157,7 +155,7 @@ public final class _102_SeaofSporesFever extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         if ((npcId == 20013 || npcId == 20019) && Rnd.chance(33))
             if (st.getQuestItemsCount(EVERGREEN_AMULET) > 0 && st.getQuestItemsCount(DRYAD_TEARS) < 10) {
@@ -168,6 +166,5 @@ public final class _102_SeaofSporesFever extends Quest {
                 } else
                     st.playSound(SOUND_ITEMGET);
             }
-        return null;
     }
 }

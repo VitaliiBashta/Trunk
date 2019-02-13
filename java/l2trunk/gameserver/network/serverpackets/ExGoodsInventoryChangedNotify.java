@@ -1,10 +1,6 @@
 package l2trunk.gameserver.network.serverpackets;
 
-/**
- * @author VISTALL
- * @date 11:33/03.07.2011
- */
-public class ExGoodsInventoryChangedNotify extends L2GameServerPacket {
+public final class ExGoodsInventoryChangedNotify extends L2GameServerPacket {
     public static final L2GameServerPacket STATIC = new ExGoodsInventoryChangedNotify();
 
     @Override

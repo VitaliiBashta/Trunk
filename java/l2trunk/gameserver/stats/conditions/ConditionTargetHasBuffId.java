@@ -18,6 +18,6 @@ public final class ConditionTargetHasBuffId extends Condition {
         if (target == null)
             return false;
         return target.getEffectList().getEffectsBySkillId(id)
-                .anyMatch(e -> e.getSkill().level >= level);
+                .anyMatch(e -> e.skill.level >= level);
     }
 }

@@ -47,7 +47,7 @@ public final class _10281_MutatedKaneusRune extends Quest {
             if (npcId == Mathias)
                 htmltext = "31340-0a.htm";
         } else if (id == CREATED && npcId == Mathias) {
-            if (st.getPlayer().getLevel() >= 68)
+            if (st.player.getLevel() >= 68)
                 htmltext = "31340-01.htm";
             else
                 htmltext = "31340-00.htm";
@@ -65,12 +65,11 @@ public final class _10281_MutatedKaneusRune extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getState() == STARTED && st.getCond() == 1) {
-            st.giveItems(Tissue, 1);
+            st.giveItems(Tissue);
             st.setCond(2);
             st.playSound(SOUND_MIDDLE);
         }
-        return null;
     }
 }

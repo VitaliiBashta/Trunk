@@ -97,8 +97,8 @@ public final class _143_FallenAngelRequestOfDusk extends Quest {
                     htmltext = "master_tobias_q0143_03.htm";
                 else {
                     htmltext = "master_tobias_q0143_02.htm";
-                    st.takeItems(SEALED_PATH, -1);
-                    st.set("talk", "1");
+                    st.takeItems(SEALED_PATH);
+                    st.set("talk", 1);
                 }
             else if (cond == 3)
                 htmltext = "master_tobias_q0143_06.htm";
@@ -114,8 +114,8 @@ public final class _143_FallenAngelRequestOfDusk extends Quest {
                     htmltext = "sage_kasian_q0143_03.htm";
                 else {
                     htmltext = "sage_kasian_q0143_02.htm";
-                    st.takeItems(PATH, -1);
-                    st.set("talk", "1");
+                    st.takeItems(PATH);
+                    st.set("talk", 1);
                 }
             } else if (cond == 4)
                 htmltext = "sage_kasian_q0143_09.htm";
@@ -132,8 +132,8 @@ public final class _143_FallenAngelRequestOfDusk extends Quest {
                     htmltext = "q_fallen_angel_npc_q0143_04.htm";
                 else {
                     htmltext = "q_fallen_angel_npc_q0143_03.htm";
-                    st.takeItems(MEDICINE, -1);
-                    st.set("talk", "1");
+                    st.takeItems(MEDICINE);
+                    st.set("talk", 1);
                 }
         } else if (cond == 5)
             htmltext = "q_fallen_angel_npc_q0143_14.htm";

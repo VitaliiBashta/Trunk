@@ -4,7 +4,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
-import static l2trunk.scripts.quests._615_MagicalPowerofFire1.KETRA_NPC_LIST;
+import static l2trunk.scripts.quests._605_AllianceWithKetraOrcs.KETRA_NPC_LIST;
 
 public final class _612_WarwithKetraOrcs extends Quest {
     // NPC
@@ -51,7 +51,7 @@ public final class _612_WarwithKetraOrcs extends Quest {
         String htmltext = "noquest";
         int cond = st.getCond();
         if (cond == 0) {
-            if (st.getPlayer().getLevel() >= 74)
+            if (st.player.getLevel() >= 74)
                 htmltext = "elder_ashas_barka_durai_q0612_0101.htm";
             else {
                 htmltext = "elder_ashas_barka_durai_q0612_0103.htm";
@@ -59,15 +59,14 @@ public final class _612_WarwithKetraOrcs extends Quest {
             }
         } else if (cond == 1 && st.getQuestItemsCount(MOLAR_OF_KETRA_ORC) == 0)
             htmltext = "elder_ashas_barka_durai_q0612_0106.htm";
-        else if (cond == 1 && st.getQuestItemsCount(MOLAR_OF_KETRA_ORC) > 0)
+        else if (cond == 1 && st.haveQuestItem(MOLAR_OF_KETRA_ORC))
             htmltext = "elder_ashas_barka_durai_q0612_0105.htm";
         return htmltext;
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (KETRA_NPC_LIST.contains(npc.getNpcId()) && st.getCond() == 1)
             st.rollAndGive(MOLAR_OF_KETRA_ORC, 1, MOLAR_OF_KETRA_ORC_DROP_CHANCE);
-        return null;
     }
 }

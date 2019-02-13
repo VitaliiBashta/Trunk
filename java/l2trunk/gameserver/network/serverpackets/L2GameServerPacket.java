@@ -50,7 +50,7 @@ public abstract class L2GameServerPacket extends SendablePacket<GameClient> impl
     }
 
     void writeItemInfo(ItemInstance item) {
-        writeD(item.getObjectId());
+        writeD(item.objectId());
         writeD(item.getItemId());
         writeD(item.getEquipSlot());
         writeQ(item.getCount());

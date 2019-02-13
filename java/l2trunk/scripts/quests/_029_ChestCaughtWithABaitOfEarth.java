@@ -61,11 +61,11 @@ public final class _029_ChestCaughtWithABaitOfEarth extends Quest {
         int cond = st.getCond();
         if (npcId == Willie) {
             if (id == CREATED) {
-                if (st.getPlayer().getLevel() < 48) {
+                if (st.player.getLevel() < 48) {
                     htmltext = "fisher_willeri_q0029_0102.htm";
                     st.exitCurrentQuest(true);
                 } else {
-                    QuestState WilliesSpecialBait = st.getPlayer().getQuestState(_052_WilliesSpecialBait.class);
+                    QuestState WilliesSpecialBait = st.player.getQuestState(_052_WilliesSpecialBait.class);
                     if (WilliesSpecialBait != null) {
                         if (WilliesSpecialBait.isCompleted())
                             htmltext = "fisher_willeri_q0029_0101.htm";

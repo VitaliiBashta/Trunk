@@ -3,7 +3,6 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _641_AttackSailren extends Quest {
     //NPC
@@ -37,14 +36,14 @@ public final class _641_AttackSailren extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("statue_of_shilen_q0641_05.htm")) {
+        if ("statue_of_shilen_q0641_05.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("statue_of_shilen_q0641_08.htm")) {
+        } else if ("statue_of_shilen_q0641_08.htm".equalsIgnoreCase(event)) {
             st.playSound(SOUND_FINISH);
-            st.takeItems(FRAGMENTS, -1);
-            st.giveItems(GAZKH, 1);
+            st.takeItems(FRAGMENTS);
+            st.giveItems(GAZKH);
             st.exitCurrentQuest(true);
             st.unset("cond");
         }
@@ -56,10 +55,9 @@ public final class _641_AttackSailren extends Quest {
         String htmltext = "noquest";
         int cond = st.getCond();
         if (cond == 0) {
-            QuestState qs = st.getPlayer().getQuestState(_126_IntheNameofEvilPart2.class);
-            if (qs == null || !qs.isCompleted())
+            if (st.player.isQuestCompleted(_126_IntheNameofEvilPart2.class))
                 htmltext = "statue_of_shilen_q0641_02.htm";
-            else if (st.getPlayer().getLevel() >= 77)
+            else if (st.player.getLevel() >= 77)
                 htmltext = "statue_of_shilen_q0641_01.htm";
             else
                 st.exitCurrentQuest(true);
@@ -71,9 +69,9 @@ public final class _641_AttackSailren extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getQuestItemsCount(FRAGMENTS) < 30) {
-            st.giveItems(FRAGMENTS, 1);
+            st.giveItems(FRAGMENTS);
             if (st.getQuestItemsCount(FRAGMENTS) == 30) {
                 st.playSound(SOUND_MIDDLE);
                 st.setCond(2);
@@ -81,6 +79,5 @@ public final class _641_AttackSailren extends Quest {
             } else
                 st.playSound(SOUND_ITEMGET);
         }
-        return null;
     }
 }

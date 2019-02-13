@@ -41,10 +41,10 @@ public class RequestPledgeSetMemberPowerGrade extends L2GameClientPacket {
                 else
                     member.setPowerGrade(_powerGrade);
                 if (member.isOnline())
-                    member.getPlayer().sendUserInfo();
+                    member.player().sendUserInfo();
             } else
-                activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.clientpackets.RequestPledgeSetMemberPowerGrade.NotBelongClan", activeChar));
+                activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.clientpackets.RequestPledgeSetMemberPowerGrade.NotBelongClan"));
         } else
-            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.clientpackets.RequestPledgeSetMemberPowerGrade.HaveNotAuthority", activeChar));
+            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.clientpackets.RequestPledgeSetMemberPowerGrade.HaveNotAuthority"));
     }
 }

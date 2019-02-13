@@ -4,7 +4,7 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
-public final class TriolsMirrorInstance extends NpcInstance {
+public class TriolsMirrorInstance extends NpcInstance {
     public TriolsMirrorInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
     }

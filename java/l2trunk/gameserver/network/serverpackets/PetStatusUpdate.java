@@ -21,7 +21,7 @@ public final class PetStatusUpdate extends L2GameServerPacket {
 
     public PetStatusUpdate(final Summon summon) {
         type = summon.getSummonType();
-        obj_id = summon.getObjectId();
+        obj_id = summon.objectId();
         _loc = summon.getLoc();
         title = summon.getTitle();
         curHp = (int) summon.getCurrentHp();

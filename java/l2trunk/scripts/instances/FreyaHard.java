@@ -170,7 +170,7 @@ public final class FreyaHard extends Reflection {
                     p.sendPacket(new ExShowScreenMessage(NpcString.BEGIN_STAGE_1_FREYA, 6000, ScreenMessageAlign.TOP_CENTER, true, 1, -1, true)));
             //spawning few guards
             for (int i = 0; i < 15; i++)
-                addSpawnWithoutRespawn(IceKnightHard, Territory.getRandomLoc(centralRoom, getGeoIndex()), 0);
+                addSpawnWithoutRespawn(IceKnightHard, Territory.getRandomLoc(centralRoom, getGeoIndex()));
             ThreadPoolManager.INSTANCE.schedule(new FirstStage(), 40000L);
         }
     }
@@ -182,7 +182,7 @@ public final class FreyaHard extends Reflection {
             getPlayers().forEach(player ->
                     player.sendPacket(new ExShowScreenMessage(NpcString.FREYA_HAS_STARTED_TO_MOVE, 4000, ScreenMessageAlign.MIDDLE_CENTER, true)));
             //Spawning Freya Throne
-            NpcInstance freyaTrhone = addSpawnWithoutRespawn(FreyaThrone, new Location(114720, -117085, -11088, 15956), 0);
+            NpcInstance freyaTrhone = addSpawnWithoutRespawn(FreyaThrone, new Location(114720, -117085, -11088, 15956));
             freyaTrhone.addListener(_deathListener);
             firstStageGuardSpawn = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new GuardSpawnTask(4), 2000L, 50000L);
         }
@@ -229,12 +229,12 @@ public final class FreyaHard extends Reflection {
                     break;
             }
             for (int i = 0; i < Rnd.get(_knightsMin, _knightsMax); i++)
-                addSpawnWithoutRespawn(IceKnightHard, Territory.getRandomLoc(centralRoom, getGeoIndex()), 0);
+                addSpawnWithoutRespawn(IceKnightHard, Territory.getRandomLoc(centralRoom, getGeoIndex()));
             for (int i = 0; i < Rnd.get(_breathMin, _breathMax); i++)
-                addSpawnWithoutRespawn(IceCastleBreath, Territory.getRandomLoc(centralRoom, getGeoIndex()), 0);
+                addSpawnWithoutRespawn(IceCastleBreath, Territory.getRandomLoc(centralRoom, getGeoIndex()));
             if (Rnd.chance(60))
                 for (int i = 0; i < Rnd.get(1, 3); i++)
-                    addSpawnWithoutRespawn(Glacier, Territory.getRandomLoc(centralRoom, getGeoIndex()), 0);
+                    addSpawnWithoutRespawn(Glacier, Territory.getRandomLoc(centralRoom, getGeoIndex()));
         }
     }
 
@@ -287,7 +287,7 @@ public final class FreyaHard extends Reflection {
         public void runImpl() {
             manageDamageZone(6, false);
             getNpcs().forEach(n -> n.setBlock(false));
-            NpcInstance knightLeader = addSpawnWithoutRespawn(IceKnightLeaderHard, new Location(114707, -114799, -11199, 15956), 0);
+            NpcInstance knightLeader = addSpawnWithoutRespawn(IceKnightLeaderHard, new Location(114707, -114799, -11199, 15956));
             knightLeader.addListener(_deathListener);
         }
     }
@@ -327,7 +327,7 @@ public final class FreyaHard extends Reflection {
                 p.sendPacket(new ExChangeClientEffectInfo(2));
             });
             thirdStageGuardSpawn = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new GuardSpawnTask(4), 2000L, 50000L);
-            NpcInstance freyaStand = addSpawnWithoutRespawn(FreyaStandHard, new Location(114720, -117085, -11088, 15956), 0);
+            NpcInstance freyaStand = addSpawnWithoutRespawn(FreyaStandHard, new Location(114720, -117085, -11088, 15956));
             freyaStand.addListener(_currentHpListener);
             freyaStand.addListener(_deathListener);
         }
@@ -353,8 +353,8 @@ public final class FreyaHard extends Reflection {
                 p.setBlock(false);
                 p.sendPacket(new ExShowScreenMessage(NpcString.BEGIN_STAGE_4_FREYA, 6000, ScreenMessageAlign.TOP_CENTER, true, 1, -1, true));
             });
-            addSpawnWithoutRespawn(Jinia, new Location(114727, -114700, -11200, -16260), 0);
-            addSpawnWithoutRespawn(Kegor, new Location(114690, -114700, -11200, -16260), 0);
+            addSpawnWithoutRespawn(Jinia, new Location(114727, -114700, -11200, -16260));
+            addSpawnWithoutRespawn(Kegor, new Location(114690, -114700, -11200, -16260));
             managePcBuffZone(false);
         }
     }
@@ -401,12 +401,12 @@ public final class FreyaHard extends Reflection {
     private class DeathListener implements OnDeathListener {
         @Override
         public void onDeath(Creature self, Creature killer) {
-            if (self.isNpc() && self.getNpcId() == FreyaThrone) {
+            if (self.getNpcId() == FreyaThrone) {
                 ThreadPoolManager.INSTANCE.schedule(new PreSecondStage(), 10);
                 self.deleteMe();
-            } else if (self.isNpc() && self.getNpcId() == IceKnightLeaderHard)
+            } else if (self.getNpcId() == IceKnightLeaderHard)
                 ThreadPoolManager.INSTANCE.schedule(new PreThirdStage(), 10);
-            else if (self.isNpc() && self.getNpcId() == FreyaStandHard)
+            else if (self.getNpcId() == FreyaStandHard)
                 ThreadPoolManager.INSTANCE.schedule(new FreyaDeathStage(), 10);
         }
     }
@@ -426,14 +426,10 @@ public final class FreyaHard extends Reflection {
         }
     }
 
-    public class ZoneListener implements OnZoneEnterLeaveListener {
+    private class ZoneListener implements OnZoneEnterLeaveListener {
         @Override
-        public void onZoneEnter(Zone zone, Creature cha) {
+        public void onZoneEnter(Zone zone, Player cha) {
             if (_entryLocked)
-                return;
-
-            Player player = cha.getPlayer();
-            if (player == null || !cha.isPlayer())
                 return;
 
             if (checkstartCond(raidplayers.incrementAndGet())) {
@@ -443,24 +439,16 @@ public final class FreyaHard extends Reflection {
         }
 
         @Override
-        public void onZoneLeave(Zone zone, Creature cha) {
-            Player player = cha.getPlayer();
-            if (player == null || !cha.isPlayer())
-                return;
-
+        public void onZoneLeave(Zone zone, Player cha) {
             raidplayers.decrementAndGet();
         }
     }
 
     public class ZoneListenerL implements OnZoneEnterLeaveListener {
         @Override
-        public void onZoneEnter(Zone zone, Creature cha) {
-            if (cha.isPlayer())
-                cha.sendPacket(new ExChangeClientEffectInfo(1));
+        public void onZoneEnter(Zone zone, Player cha) {
+            cha.sendPacket(new ExChangeClientEffectInfo(1));
         }
 
-        @Override
-        public void onZoneLeave(Zone zone, Creature cha) {
-        }
     }
 }

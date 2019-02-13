@@ -30,31 +30,30 @@ public final class _124_MeetingTheElroki extends Quest {
 
         if (event.equals("marquez_q0124_03.htm"))
             st.setState(STARTED);
-        if (event.equals("marquez_q0124_04.htm") && cond == 0) {
+        else if (event.equals("marquez_q0124_04.htm") && cond == 0) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-        }
-        if (event.equals("marquez_q0124_06.htm") && cond == 1) {
+        }else         if (event.equals("marquez_q0124_06.htm") && cond == 1) {
             st.setCond(2);
             st.playSound(SOUND_ITEMGET);
-        }
+        }else
         if (event.equals("mushika_q0124_03.htm") && cond == 2) {
             st.setCond(3);
             st.playSound(SOUND_ITEMGET);
-        }
+        }else
         if (event.equals("asama_q0124_06.htm") && cond == 3) {
             st.setCond(4);
             st.playSound(SOUND_ITEMGET);
-        }
+        }else
         if (event.equals("shaman_caracawe_q0124_03.htm") && cond == 4)
-            st.set("id", "1");
+            st.set("id", 1);
         if (event.equals("shaman_caracawe_q0124_05.htm") && cond == 4) {
             st.setCond(5);
             st.playSound(SOUND_ITEMGET);
         }
         if (event.equals("egg_of_mantarasa_q0124_02.htm") && cond == 5) {
-            st.giveItems(Mushika_egg, 1);
+            st.giveItems(Mushika_egg);
             st.setCond(6);
             st.playSound(SOUND_MIDDLE);
         }
@@ -68,7 +67,7 @@ public final class _124_MeetingTheElroki extends Quest {
         int cond = st.getCond();
         if (npcId == Marquez) {
             if (cond == 0) {
-                if (st.getPlayer().getLevel() < 75) {
+                if (st.player.getLevel() < 75) {
                     htmltext = "marquez_q0124_02.htm";
                     st.exitCurrentQuest(true);
                 } else

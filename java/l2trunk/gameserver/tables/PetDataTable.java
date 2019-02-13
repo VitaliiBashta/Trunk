@@ -79,54 +79,28 @@ public enum PetDataTable {
     private static final Logger _log = LoggerFactory.getLogger(PetDataTable.class);
     private final Map<Integer, PetData> pets = new HashMap<>();
 
-    public static void deletePet(ItemInstance item, Creature owner) {
+    public static void deletePet(ItemInstance item, Player owner) {
         int petObjectId = 0;
 
         try (Connection con = DatabaseFactory.getInstance().getConnection()) {
             PreparedStatement statement = con.prepareStatement("SELECT objId FROM pets WHERE item_obj_id=?");
-            statement.setInt(1, item.getObjectId());
+            statement.setInt(1, item.objectId());
             ResultSet rset = statement.executeQuery();
             while (rset.next())
                 petObjectId = rset.getInt("objId");
 
             Summon summon = owner.getPet();
-            if (summon != null && summon.getObjectId() == petObjectId)
+            if (summon != null && summon.objectId() == petObjectId)
                 summon.unSummon();
 
-            Player player = owner.getPlayer();
-            if (player != null && player.isMounted() && player.getMountObjId() == petObjectId)
-                player.setMount(0, 0, 0);
+            if (owner.isMounted() && owner.getMountObjId() == petObjectId)
+                owner.setMount(0, 0, 0);
 
             // if it's a pet control item, delete the pet
             statement = con.prepareStatement("DELETE FROM pets WHERE item_obj_id=?");
-            statement.setInt(1, item.getObjectId());
+            statement.setInt(1, item.objectId());
             statement.execute();
         } catch (Exception e) {
-            _log.error("could not restore pet objectid:", e);
-        }
-    }
-
-    public static void unSummonPet(ItemInstance oldItem, Creature owner) {
-        int petObjectId = 0;
-        try (Connection con = DatabaseFactory.getInstance().getConnection();
-             PreparedStatement statement = con.prepareStatement("SELECT objId FROM pets WHERE item_obj_id=?")) {
-            statement.setInt(1, oldItem.getObjectId());
-            ResultSet rset = statement.executeQuery();
-
-            while (rset.next())
-                petObjectId = rset.getInt("objId");
-
-            if (owner == null)
-                return;
-
-            Summon summon = owner.getPet();
-            if (summon != null && summon.getObjectId() == petObjectId)
-                summon.unSummon();
-
-            Player player = owner.getPlayer();
-            if (player != null && player.isMounted() && player.getMountObjId() == petObjectId)
-                player.setMount(0, 0, 0);
-        } catch (SQLException e) {
             _log.error("could not restore pet objectid:", e);
         }
     }
@@ -359,7 +333,7 @@ public enum PetDataTable {
             while (rset.next()) {
                 petData = new PetData();
                 petData.setID(rset.getInt("id"));
-                petData.setLevel(rset.getInt("level"));
+                petData.setLevel(rset.getInt("occupation"));
                 petData.setExp(rset.getLong("exp"));
                 petData.setHP(rset.getInt("hp"));
                 petData.setMP(rset.getInt("mp"));

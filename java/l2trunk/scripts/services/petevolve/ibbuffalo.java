@@ -16,8 +16,6 @@ public final class ibbuffalo extends Functions {
     private static final int IN_BABY_BUFFALO_NECKLACE = L2Pet.IMPROVED_BABY_BUFFALO.getControlItemId();
 
     public void evolve() {
-        Player player = getSelf();
-        NpcInstance npc = getNpc();
         if (player == null || npc == null)
             return;
         Summon pl_pet = player.getPet();

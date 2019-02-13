@@ -5,7 +5,6 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _174_SupplyCheck extends Quest {
     private final int Marcela = 32173;
@@ -53,7 +52,7 @@ public final class _174_SupplyCheck extends Quest {
 
         if (npcId == Marcela) {
             if (cond == 0) {
-                if (st.getPlayer().getLevel() == 1) {
+                if (st.player.getLevel() == 1) {
                     st.exitCurrentQuest(true);
                     htmltext = "zerstorer_morsell_q0174_02.htm";
                 } else
@@ -62,12 +61,12 @@ public final class _174_SupplyCheck extends Quest {
                 htmltext = "zerstorer_morsell_q0174_05.htm";
             else if (cond == 2) {
                 st.setCond(3);
-                st.takeItems(WarehouseManifest, -1);
+                st.takeItems(WarehouseManifest);
                 htmltext = "zerstorer_morsell_q0174_06.htm";
             } else if (cond == 3)
                 htmltext = "zerstorer_morsell_q0174_07.htm";
             else if (cond == 4) {
-                if (st.getPlayer().getClassId().isMage && !st.getPlayer().getClassId().equalsOrChildOf(ClassId.orcMage)) {
+                if (st.player.getClassId().isMage && !st.player.getClassId().equalsOrChildOf(ClassId.orcMage)) {
                     st.giveItems(LeatherTunic);
                     st.giveItems(LeatherStockings);
                 } else {
@@ -77,10 +76,10 @@ public final class _174_SupplyCheck extends Quest {
                 st.giveItems(WoodenHelmet);
                 st.giveItems(LeatherShoes);
                 st.giveItems(Gloves);
-                st.giveItems(ADENA_ID, 2466);
-                st.getPlayer().addExpAndSp(5672, 446);
-                if (st.getPlayer().getClassId().getLevel() == 1 && !st.getPlayer().getVarB("ng1"))
-                    st.getPlayer().sendPacket(new ExShowScreenMessage("  Delivery duty complete.\nGo find the Newbie Guide."));
+                st.giveItems(ADENA_ID, 2466, true);
+                st.player.addExpAndSp(5672, 446);
+                if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("ng1"))
+                    st.player.sendPacket(new ExShowScreenMessage("  Delivery duty complete.\nGo find the Newbie Guide."));
                 st.exitCurrentQuest(false);
                 htmltext = "zerstorer_morsell_q0174_12.htm";
             }
@@ -105,7 +104,7 @@ public final class _174_SupplyCheck extends Quest {
 
 			else if (cond == 8)
 			{
-				if (st.getPlayer().getClassId().isMage() && !st.getPlayer().getClassId().equalsOrChildOf(ClassId.orcMage))
+				if (st.player().getClassId().isMage() && !st.player().getClassId().equalsOrChildOf(ClassId.orcMage))
 				{
 					st.giveItems(LeatherTunic, 1);
 					st.giveItems(LeatherStockings, 1);
@@ -119,9 +118,9 @@ public final class _174_SupplyCheck extends Quest {
 				st.giveItems(LeatherShoes, 1);
 				st.giveItems(Gloves, 1);
 				st.giveItems(ADENA_ID, 2466, true);
-				st.getPlayer().addExpAndSp(5672, 446, false, false);
-				if (st.getPlayer().getClassId().level() == 1 && !st.getPlayer().getVarB("ng1"))
-					st.getPlayer().sendPacket(new ExShowScreenMessage("  Delivery duty complete.\nGo find the Newbie Guide.", 5000, ScreenMessageAlign.TOP_CENTER, true));
+				st.player().addExpAndSp(5672, 446, false, false);
+				if (st.player().getClassId().occupation() == 1 && !st.player().isVarSet("ng1"))
+					st.player().sendPacket(new ExShowScreenMessage("  Delivery duty complete.\nGo find the Newbie Guide.", 5000, ScreenMessageAlign.TOP_CENTER, true));
 				st.exitCurrentQuest(false);
 				htmltext = "zerstorer_morsell_q0174_12.htm";
 			}
@@ -129,7 +128,7 @@ public final class _174_SupplyCheck extends Quest {
         } else if (npcId == Benis)
             if (cond == 1) {
                 st.setCond(2);
-                st.giveItems(WarehouseManifest);
+                st.giveItems(WarehouseManifest, 1);
                 htmltext = "warehouse_keeper_benis_q0174_01.htm";
             } else
                 htmltext = "warehouse_keeper_benis_q0174_02.htm";
@@ -139,7 +138,7 @@ public final class _174_SupplyCheck extends Quest {
                 htmltext = "subelder_casca_q0174_01.htm";
             else if (cond == 3) {
                 st.setCond(4);
-                st.giveItems(GroceryStoreManifest);
+                st.giveItems(GroceryStoreManifest, 1);
                 htmltext = "trader_neagel_q0174_02.htm";
             } else
                 htmltext = "trader_neagel_q0174_03.htm";

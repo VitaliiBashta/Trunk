@@ -5,6 +5,8 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
 public final class _023_LidiasHeart extends Quest {
+    // ~~~~~ itemId List ~~~~~
+    private static final int MapForestofDeadman = 7063;
     // ~~~~~~ npcId list: ~~~~~~
     private final int Innocentin = 31328;
     private final int BrokenBookshelf = 31526;
@@ -12,9 +14,6 @@ public final class _023_LidiasHeart extends Quest {
     private final int Tombstone = 31523;
     private final int Violet = 31386;
     private final int Box = 31530;
-
-    // ~~~~~ itemId List ~~~~~
-    private static final int MapForestofDeadman = 7063;
     private final int SilverKey = 7149;
     private final int LidiaHairPin = 7148;
     private final int LidiaDiary = 7064;
@@ -38,8 +37,8 @@ public final class _023_LidiasHeart extends Quest {
         String htmltext = event;
         switch (event) {
             case "31328-02.htm":
-                st.giveItems(MapForestofDeadman, 1);
-                st.giveItems(SilverKey, 1);
+                st.giveItems(MapForestofDeadman);
+                st.giveItems(SilverKey);
                 st.setCond(1);
                 st.setState(STARTED);
                 st.playSound(SOUND_ACCEPT);
@@ -51,12 +50,12 @@ public final class _023_LidiasHeart extends Quest {
                 st.setCond(3);
                 break;
             case "31526-05.htm":
-                st.giveItems(LidiaHairPin, 1);
+                st.giveItems(LidiaHairPin);
                 if (st.getQuestItemsCount(LidiaDiary) != 0)
                     st.setCond(4);
                 break;
             case "31526-11.htm":
-                st.giveItems(LidiaDiary, 1);
+                st.giveItems(LidiaDiary);
                 if (st.getQuestItemsCount(LidiaHairPin) != 0)
                     st.setCond(4);
                 break;
@@ -65,7 +64,7 @@ public final class _023_LidiasHeart extends Quest {
                 break;
             case "31524-04.htm":
                 st.setCond(7);
-                st.takeItems(LidiaDiary, -1);
+                st.takeItems(LidiaDiary);
                 break;
             case "31523-02.htm":
                 st.addSpawn(GhostofvonHellmann, 120000);
@@ -79,8 +78,8 @@ public final class _023_LidiasHeart extends Quest {
                 break;
             case "31530-02.htm":
                 st.setCond(10);
-                st.takeItems(SilverKey, -1);
-                st.giveItems(SilverSpear, 1);
+                st.takeItems(SilverKey);
+                st.giveItems(SilverSpear);
                 break;
             case "i7064-02.htm":
                 htmltext = "i7064-02.htm";
@@ -102,12 +101,10 @@ public final class _023_LidiasHeart extends Quest {
         int cond = st.getCond();
         if (npcId == Innocentin) {
             if (cond == 0) {
-                QuestState TragedyInVonHellmannForest = st.getPlayer().getQuestState(_022_TragedyInVonHellmannForest.class);
-                if (TragedyInVonHellmannForest != null)
-                    if (TragedyInVonHellmannForest.isCompleted())
-                        htmltext = "31328-01.htm";
-                    else
-                        htmltext = "31328-00.htm";
+                if (st.player.isQuestCompleted(_022_TragedyInVonHellmannForest.class))
+                    htmltext = "31328-01.htm";
+                else
+                    htmltext = "31328-00.htm";
             } else if (cond == 1)
                 htmltext = "31328-03.htm";
             else if (cond == 2)
@@ -121,9 +118,9 @@ public final class _023_LidiasHeart extends Quest {
                 if (st.getQuestItemsCount(SilverKey) != 0)
                     htmltext = "31526-00.htm";
             } else if (cond == 3) {
-                if (st.getQuestItemsCount(LidiaHairPin) == 0 && st.getQuestItemsCount(LidiaDiary) != 0)
+                if (st.getQuestItemsCount(LidiaHairPin) == 0 && st.haveQuestItem(LidiaDiary) )
                     htmltext = "31526-12.htm";
-                else if (st.getQuestItemsCount(LidiaHairPin) != 0 && st.getQuestItemsCount(LidiaDiary) == 0)
+                else if (st.haveQuestItem(LidiaHairPin)  && st.getQuestItemsCount(LidiaDiary) == 0)
                     htmltext = "31526-06.htm";
                 else if (st.getQuestItemsCount(LidiaHairPin) == 0 && st.getQuestItemsCount(LidiaDiary) == 0)
                     htmltext = "31526-02.htm";
@@ -153,7 +150,7 @@ public final class _023_LidiasHeart extends Quest {
             else if (cond == 10)
                 if (st.getQuestItemsCount(SilverSpear) != 0) {
                     htmltext = "31386-03.htm";
-                    st.takeItems(SilverSpear, -1);
+                    st.takeItems(SilverSpear);
                     st.giveItems(ADENA_ID, 350000);
                     st.addExpAndSp(456893, 42112);
                     st.playSound(SOUND_FINISH);
@@ -171,8 +168,4 @@ public final class _023_LidiasHeart extends Quest {
         return htmltext;
     }
 
-    @Override
-    public String onKill(NpcInstance npc, QuestState st) {
-        return null;
-    }
 }

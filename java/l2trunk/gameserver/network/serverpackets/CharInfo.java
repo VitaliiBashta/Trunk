@@ -90,14 +90,14 @@ public final class CharInfo extends L2GameServerPacket {
         if (player.isInBoat()) {
             _loc = player.getInBoatPosition();
             if (player.isClanAirShipDriver()) {
-                _clanBoatObjectId = player.getBoat().getObjectId();
+                _clanBoatObjectId = player.getBoat().objectId();
             }
         }
 
         if (_loc == null)
             _loc = cha.getLoc();
 
-        _objId = cha.getObjectId();
+        _objId = cha.objectId();
 
         // Cursed weapon and transformation to hide the name of the TV and all the other markings
         if (player.getTransformationName() != null || (player.getReflection() == ReflectionManager.GIRAN_HARBOR || player.getReflection() == ReflectionManager.PARNASSUS) && player.getPrivateStoreType() != Player.STORE_PRIVATE_NONE) {
@@ -114,7 +114,7 @@ public final class CharInfo extends L2GameServerPacket {
             _name = player.getVisibleName();
             if (player.getPrivateStoreType() != Player.STORE_PRIVATE_NONE && !player.isInBuffStore()) {
                 _title = "";
-            } else if (!player.isConnected() && !player.isFakePlayer() && !player.isInBuffStore()) {
+            } else if (!player.isConnected() && !player.isInBuffStore()) {
                 _title = "";
             } else {
                 _title = player.getVisibleTitle();
@@ -124,7 +124,7 @@ public final class CharInfo extends L2GameServerPacket {
             Clan clan = player.getClan();
             Alliance alliance = clan == null ? null : clan.getAlliance();
             //
-            clan_id = clan == null ? 0 : clan.getClanId();
+            clan_id = clan == null ? 0 : clan.clanId();
             clan_crest_id = clan == null ? 0 : clan.getCrestId();
             large_clan_crest_id = clan == null ? 0 : clan.getCrestLargeId();
             //
@@ -196,7 +196,7 @@ public final class CharInfo extends L2GameServerPacket {
         _abnormalEffect = player.getAbnormalEffect();
         _abnormalEffect2 = player.getAbnormalEffect2();
         rec_have = player.isGM() ? 0 : player.getRecomHave();
-        class_id = player.getClassId().id();
+        class_id = player.getClassId().id;
         _team = player.getTeam();
 
         _noble = player.isNoble() ? 1 : 0; // 0x01: symbol on char menu ctrl+I
@@ -245,7 +245,7 @@ public final class CharInfo extends L2GameServerPacket {
             return;
         }
 
-        if (activeChar.getObjectId() == _objId) {
+        if (activeChar.objectId() == _objId) {
             _log.error("You cant send CharInfo about his character to active user!!!");
             return;
         }

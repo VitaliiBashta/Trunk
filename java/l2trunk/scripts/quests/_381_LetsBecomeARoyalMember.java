@@ -4,7 +4,6 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _381_LetsBecomeARoyalMember extends Quest {
     //Quest items
@@ -40,8 +39,8 @@ public final class _381_LetsBecomeARoyalMember extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("warehouse_keeper_sorint_q0381_02.htm"))
-            if (st.getPlayer().getLevel() >= 55 && st.getQuestItemsCount(MEMBERSHIP_1) > 0) {
+        if ("warehouse_keeper_sorint_q0381_02.htm".equalsIgnoreCase(event))
+            if (st.player.getLevel() >= 55 && st.haveQuestItem(MEMBERSHIP_1)) {
                 st.setCond(1);
                 st.setState(STARTED);
                 st.playSound(SOUND_ACCEPT);
@@ -50,9 +49,9 @@ public final class _381_LetsBecomeARoyalMember extends Quest {
                 htmltext = "warehouse_keeper_sorint_q0381_02.htm";
                 st.exitCurrentQuest(true);
             }
-        else if (event.equalsIgnoreCase("sandra_q0381_02.htm"))
+        else if ("sandra_q0381_02.htm".equalsIgnoreCase(event))
             if (st.getCond() == 1) {
-                st.set("id", "1");
+                st.set("id", 1);
                 st.playSound(SOUND_ACCEPT);
             }
         return htmltext;
@@ -72,9 +71,9 @@ public final class _381_LetsBecomeARoyalMember extends Quest {
             else if (cond == 1) {
                 long coin = st.getQuestItemsCount(KAILS_COIN);
                 if (coin > 0 && album > 0) {
-                    st.takeItems(KAILS_COIN, -1);
-                    st.takeItems(COIN_ALBUM, -1);
-                    st.giveItems(ROYAL_MEMBERSHIP, 1);
+                    st.takeItems(KAILS_COIN);
+                    st.takeItems(COIN_ALBUM);
+                    st.giveItems(ROYAL_MEMBERSHIP);
                     st.playSound(SOUND_FINISH);
                     st.exitCurrentQuest(true);
                     htmltext = "warehouse_keeper_sorint_q0381_06.htm";
@@ -88,8 +87,8 @@ public final class _381_LetsBecomeARoyalMember extends Quest {
             if (album > 0)
                 htmltext = "sandra_q0381_05.htm";
             else if (clover > 0) {
-                st.takeItems(CLOVER_COIN, -1);
-                st.giveItems(COIN_ALBUM, 1);
+                st.takeItems(CLOVER_COIN);
+                st.giveItems(COIN_ALBUM);
                 st.playSound(SOUND_ITEMGET);
                 htmltext = "sandra_q0381_04.htm";
             } else if (st.getInt("id") == 0)
@@ -102,9 +101,9 @@ public final class _381_LetsBecomeARoyalMember extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getState() != STARTED)
-            return null;
+            return;
         int npcId = npc.getNpcId();
 
         long album = st.getQuestItemsCount(COIN_ALBUM);
@@ -113,7 +112,7 @@ public final class _381_LetsBecomeARoyalMember extends Quest {
 
         if (npcId == ANCIENT_GARGOYLE && coin == 0) {
             if (Rnd.chance(GARGOYLE_CHANCE)) {
-                st.giveItems(KAILS_COIN, 1);
+                st.giveItems(KAILS_COIN);
                 if (album > 0 || clover > 0)
                     st.playSound(SOUND_MIDDLE);
                 else
@@ -121,12 +120,11 @@ public final class _381_LetsBecomeARoyalMember extends Quest {
             }
         } else if (npcId == VEGUS && clover + album == 0 && st.getInt("id") != 0)
             if (Rnd.chance(VEGUS_CHANCE)) {
-                st.giveItems(CLOVER_COIN, 1);
+                st.giveItems(CLOVER_COIN);
                 if (coin > 0)
                     st.playSound(SOUND_MIDDLE);
                 else
                     st.playSound(SOUND_ITEMGET);
             }
-        return null;
     }
 }

@@ -122,14 +122,14 @@ public final class StakatoNest extends Fighter {
 			/*
 			case CANNIBALISTIC_STAKATO_CHIEF:
 			if (killer.isPlayer())
-			if (killer.getPlayer().getParty() != null)
+			if (killer.player().getParty() != null)
 			{
-				List<L2Player> party = killer.getPlayer().getParty().getMembers();
+				List<L2Player> party = killer.player().getParty().getMembers();
 				for (L2Player member : party)
 					giveCocoon(member);
 			}
 			else
-				giveCocoon(killer.getPlayer());
+				giveCocoon(killer.player());
 			break;
 			 */
             case QUEEN_SHYEED:
@@ -150,7 +150,6 @@ public final class StakatoNest extends Fighter {
     public void onEvtSeeSpell(Skill skill, Creature caster) {
         NpcInstance actor = getActor();
         if (actor == null || !BIZARRE_COCOON.contains(actor.getNpcId()) || caster == null || skill.id != SKILL_GROWTH_ACCELERATOR) {
-            super.onEvtSeeSpell(skill, caster);
             return;
         }
         if (FAIL_COCOON_CHANCE > Rnd.get(100)) {
@@ -165,7 +164,6 @@ public final class StakatoNest extends Fighter {
                 .setReflection(actor.getReflection());
         mob.spawnMe(mob.getSpawnedLoc());
         mob.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, caster.getPlayer(), Rnd.get(1, 100));
-        super.onEvtSeeSpell(skill, caster);
     }
 
     private MinionInstance getAliveMinion(NpcInstance npc) {

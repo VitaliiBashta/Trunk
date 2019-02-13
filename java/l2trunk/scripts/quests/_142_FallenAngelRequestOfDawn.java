@@ -4,7 +4,6 @@ import l2trunk.gameserver.model.GameObjectsStorage;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _142_FallenAngelRequestOfDawn extends Quest {
     // NPCs
@@ -90,8 +89,8 @@ public final class _142_FallenAngelRequestOfDawn extends Quest {
                     htmltext = "bishop_raimund_q0142_02a.htm";
                 else {
                     htmltext = "bishop_raimund_q0142_02.htm";
-                    st.takeItems(CRYPT, -1);
-                    st.set("talk", "1");
+                    st.takeItems(CRYPT);
+                    st.set("talk", 1);
                 }
             else if (cond == 3)
                 htmltext = "bishop_raimund_q0142_06.htm";
@@ -112,8 +111,8 @@ public final class _142_FallenAngelRequestOfDawn extends Quest {
             else if (cond == 5) {
                 htmltext = "stained_rock_q0142_02.htm";
                 if (st.getInt("talk") != 1) {
-                    st.takeItems(BLOOD, -1);
-                    st.set("talk", "1");
+                    st.takeItems(BLOOD);
+                    st.set("talk", 1);
                 }
             } else
                 htmltext = "stained_rock_q0142_06.htm";
@@ -121,14 +120,14 @@ public final class _142_FallenAngelRequestOfDawn extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int cond = st.getCond();
         if (npc.getNpcId() == FallenAngel) {
             if (cond == 5) {
                 st.setCond(6);
                 st.setState(STARTED);
                 st.playSound(SOUND_MIDDLE);
-                st.giveItems(BLOOD, 1);
+                st.giveItems(BLOOD);
             }
         } else if (cond == 4 && st.getQuestItemsCount(FRAGMENT) < 30) {
             st.rollAndGive(FRAGMENT, 1, 1, 30, 20);
@@ -137,6 +136,5 @@ public final class _142_FallenAngelRequestOfDawn extends Quest {
                 st.setState(STARTED);
             }
         }
-        return null;
     }
 }

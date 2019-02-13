@@ -2,12 +2,12 @@ package l2trunk.gameserver.network.serverpackets;
 
 import l2trunk.gameserver.model.entity.boat.Boat;
 
-public class VehicleStart extends L2GameServerPacket {
+public final class VehicleStart extends L2GameServerPacket {
     private final int _objectId;
     private final int _state;
 
     public VehicleStart(Boat boat) {
-        _objectId = boat.getObjectId();
+        _objectId = boat.objectId();
         _state = boat.getRunState();
     }
 

@@ -4,7 +4,6 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -384,31 +383,29 @@ public final class _386_StolenDignity extends Quest {
         dropchances.put(21113, 25);
         dropchances.put(21114, 23);
         dropchances.put(21116, 25);
-
-        for (int kill_id : dropchances.keySet())
-            addKillId(kill_id);
+        addKillId(dropchances.keySet());
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("warehouse_keeper_romp_q0386_05.htm")) {
+        if ("warehouse_keeper_romp_q0386_05.htm".equalsIgnoreCase(event)) {
             st.setState(STARTED);
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("warehouse_keeper_romp_q0386_08.htm")) {
+        } else if ("warehouse_keeper_romp_q0386_08.htm".equalsIgnoreCase(event)) {
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(true);
-        } else if (event.equalsIgnoreCase("game")) {
+        } else if ("game".equalsIgnoreCase(event)) {
             if (st.getQuestItemsCount(Stolen_Infernium_Ore) < Required_Stolen_Infernium_Ore)
                 return "warehouse_keeper_romp_q0386_11.htm";
             st.takeItems(Stolen_Infernium_Ore, Required_Stolen_Infernium_Ore);
-            int char_obj_id = st.getPlayer().getObjectId();
+            int char_obj_id = st.player.objectId();
             bingos.remove(char_obj_id);
             Bingo bingo = new Bingo(st);
             bingos.put(char_obj_id, bingo);
             return bingo.getDialog("");
         } else if (event.contains("choice-")) {
-            int char_obj_id = st.getPlayer().getObjectId();
+            int char_obj_id = st.player.objectId();
             if (!bingos.containsKey(char_obj_id))
                 return null;
             Bingo bingo = bingos.get(char_obj_id);
@@ -420,7 +417,7 @@ public final class _386_StolenDignity extends Quest {
     @Override
     public String onTalk(NpcInstance npc, QuestState st) {
         if (st.getState() == CREATED) {
-            if (st.getPlayer().getLevel() < 58) {
+            if (st.player.getLevel() < 58) {
                 st.exitCurrentQuest(true);
                 return "warehouse_keeper_romp_q0386_04.htm";
             }
@@ -430,11 +427,10 @@ public final class _386_StolenDignity extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState qs) {
+    public void onKill(NpcInstance npc, QuestState qs) {
         Integer _chance = dropchances.get(npc.getNpcId());
         if (_chance != null)
             qs.rollAndGive(Stolen_Infernium_Ore, 1, _chance);
-        return null;
     }
 
     protected static class Bingo extends l2trunk.scripts.quests.Bingo {
@@ -459,12 +455,12 @@ public final class _386_StolenDignity extends Quest {
             else if (lines == 0)
                 reward(Rewards_Lose);
 
-            bingos.remove(_qs.getPlayer().getObjectId());
+            bingos.remove(_qs.player.objectId());
             return result;
         }
 
         private void reward(int[][] rew) {
-            int[] r = rew[Rnd.get(rew.length)];
+            int[] r = Rnd.get(rew);
             _qs.giveItems(r[0], r[1], false);
         }
     }

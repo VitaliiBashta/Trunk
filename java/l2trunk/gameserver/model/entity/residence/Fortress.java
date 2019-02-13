@@ -72,7 +72,7 @@ public final class Fortress extends Residence {
         }
 
         // If this fortress is someone captured, it takes away from the fortress
-        if (getOwnerId() > 0 && (clan == null || clan.getClanId() != getOwnerId())) {
+        if (getOwnerId() > 0 && (clan == null || clan.clanId() != getOwnerId())) {
             // Remove Fortress skills with the old owner
             removeSkills();
             Clan oldOwner = getOwner();
@@ -99,17 +99,17 @@ public final class Fortress extends Residence {
         update();
 
         if (clan != null)
-            clan.getAllMembers().stream().filter(UnitMember::isOnline).forEach(plr -> plr.getPlayer().getCounters().fortSiegesWon++);
+            clan.getAllMembers().stream().filter(UnitMember::isOnline).forEach(plr -> plr.player().getCounters().fortSiegesWon++);
     }
 
     @Override
     protected void loadData() {
-        _owner = ClanDataDAO.INSTANCE.getOwner(this);
+        owner = ClanDataDAO.INSTANCE.getOwner(this);
         FortressDAO.INSTANCE.select(this);
     }
 
     private void updateOwnerInDB(Clan clan) {
-        _owner = clan;
+        owner = clan;
 
         PreparedStatement statement = null;
         try (Connection con = DatabaseFactory.getInstance().getConnection()) {
@@ -160,14 +160,14 @@ public final class Fortress extends Residence {
 
             if (getContractState() == CONTRACT_WITH_CASTLE) {
                 Castle castle = ResidenceHolder.getResidence(Castle.class, _castleId);
-                if (castle.getOwner() == null || castle.getOwner().getReputationScore() < 2 || _owner.getWarehouse().getCountOf(ItemTemplate.ITEM_ID_ADENA) > CASTLE_FEE) {
+                if (castle.getOwner() == null || castle.getOwner().getReputationScore() < 2 || owner.getWarehouse().getCountOf(ItemTemplate.ITEM_ID_ADENA) > CASTLE_FEE) {
                     setSupplyCount(0);
                     setFortState(INDEPENDENT, 0);
                     clearFacility();
                 } else {
                     if (_supplyCount < 6) {
                         castle.getOwner().incReputation(-2, false, "Fortress:chanceCycle():" + getId());
-                        _owner.getWarehouse().destroyItemByItemId(ItemTemplate.ITEM_ID_ADENA, CASTLE_FEE, "Fortress Cycle");
+                        owner.getWarehouse().destroyItemByItemId(ItemTemplate.ITEM_ID_ADENA, CASTLE_FEE, "Fortress Cycle");
                         _supplyCount++;
                     }
                 }

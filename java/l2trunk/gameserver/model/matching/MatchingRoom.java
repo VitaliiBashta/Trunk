@@ -156,10 +156,8 @@ public abstract class MatchingRoom implements PlayerGroup {
             player.sendPacket(arg);
     }
 
-    @Override
     public void sendMessage(String message) {
-        for (Player member : members)
-            member.sendMessage(message);
+        members.forEach(member ->            member.sendMessage(message));
     }
 
     @Override
@@ -242,7 +240,7 @@ public abstract class MatchingRoom implements PlayerGroup {
         return _leader == player;
     }
 
-    @Override
+
     public List<Player> getMembers() {
         return members;
     }

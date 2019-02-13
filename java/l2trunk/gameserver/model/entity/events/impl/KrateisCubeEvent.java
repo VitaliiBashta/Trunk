@@ -23,11 +23,12 @@ import l2trunk.gameserver.network.serverpackets.ExPVPMatchCCRetire;
 import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.IStaticPacket;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
-import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.Location;
 
 import java.util.*;
+
+import static l2trunk.gameserver.utils.ItemFunctions.addItem;
 
 public final class KrateisCubeEvent extends GlobalEvent {
     public static final String REGISTERED_PLAYERS = "registered_players";
@@ -119,10 +120,10 @@ public final class KrateisCubeEvent extends GlobalEvent {
             Player player = krateisPlayer.getPlayer();
             pos++;
             if (krateisPlayer.getPoints() >= 10) {
-                int count = (int) (krateisPlayer.getPoints() * dif * (1.0 + players.size() * 0.04 / pos ));
+                int count = (int) (krateisPlayer.getPoints() * dif * (1.0 + players.size() * 0.04 / pos));
                 dif -= 0.0016;
                 if (count > 0) {
-                    Functions.addItem(player, 13067, count, "Kratei Reward");
+                    addItem(player, 13067, count);
 
                     int exp = count * 2880;
                     int sp = count * 288;
@@ -139,7 +140,7 @@ public final class KrateisCubeEvent extends GlobalEvent {
 
     private void giveEffects(Player player) {
         player.setFullHpMp();
-        player.setCurrentCp(player.getMaxCp());
+        player.setFullCp();
         SKILL_IDS.forEach((k, v) -> SkillTable.INSTANCE.getInfo(k, v).getEffects(player));
 
     }
@@ -166,10 +167,9 @@ public final class KrateisCubeEvent extends GlobalEvent {
 
     public KrateisCubePlayerObject getRegisteredPlayer(Player player) {
         List<KrateisCubePlayerObject> registeredPlayers = getObjects(REGISTERED_PLAYERS);
-        for (KrateisCubePlayerObject p : registeredPlayers)
-            if (p.getPlayer() == player)
-                return p;
-        return null;
+        return registeredPlayers.stream()
+                .filter(p -> p.getPlayer() == player)
+                .findFirst().orElse(null);
     }
 
     public KrateisCubePlayerObject getParticlePlayer(Player player) {
@@ -255,14 +255,14 @@ public final class KrateisCubeEvent extends GlobalEvent {
 
     @Override
     public void onAddEvent(GameObject o) {
-        if (o.isPlayer())
-            o.getPlayer().addListener(_listeners);
+        if (o instanceof Player)
+            ((Player) o).addListener(_listeners);
     }
 
     @Override
     public void onRemoveEvent(GameObject o) {
-        if (o.isPlayer())
-            o.getPlayer().removeListener(_listeners);
+        if (o instanceof Player)
+            ((Player) o).removeListener(_listeners);
     }
 
     @Override
@@ -298,7 +298,7 @@ public final class KrateisCubeEvent extends GlobalEvent {
     private class Listeners implements OnKillListener, OnPlayerExitListener, OnTeleportListener {
         @Override
         public void onKill(Creature actor, Creature victim) {
-            if (!victim.isPlayer())
+            if (!(victim instanceof Player))
                 return;
 
             KrateisCubeEvent cubeEvent2 = victim.getEvent(KrateisCubeEvent.class);

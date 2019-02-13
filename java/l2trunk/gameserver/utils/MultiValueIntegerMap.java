@@ -21,10 +21,9 @@ public final class MultiValueIntegerMap {
         return map.entrySet();
     }
 
-    private List<Integer> remove(Integer key) {
-        return map.remove(key);
+    private void remove(Integer key) {
+        map.remove(key);
     }
-
 
     public void clear() {
         map.clear();
@@ -34,16 +33,14 @@ public final class MultiValueIntegerMap {
         return map.size();
     }
 
-    public Integer removeValue(Integer value) {
+    public void removeValue(Integer value) {
         List<Integer> toRemove = new ArrayList<>(1);
         for (Map.Entry<Integer, List<Integer>> entry : map.entrySet()) {
             entry.getValue().remove(value);
             if (entry.getValue().isEmpty())
                 toRemove.add(entry.getKey());
         }
-        for (Integer key : toRemove)
-            remove(key);
-        return value;
+        toRemove.forEach(this::remove);
     }
 
     public Integer put(Integer key, Integer value) {
@@ -57,39 +54,26 @@ public final class MultiValueIntegerMap {
     }
 
     public boolean containsValue(Integer value) {
-        for (Map.Entry<Integer, List<Integer>> entry : map.entrySet())
-            if (entry.getValue().contains(value))
-                return true;
-        return false;
+        return map.values().stream()
+                .anyMatch(entry -> entry.contains(value));
     }
 
-    public int size(Integer key) {
-        List<Integer> coll = map.get(key);
-        if (coll == null)
-            return 0;
-        return coll.size();
-    }
-
-    public boolean putAll(Integer key, Collection<? extends Integer> values) {
+    public void putAll(Integer key, Collection<Integer> values) {
         if (values == null || values.size() == 0)
-            return false;
-        boolean result = false;
+            return;
         List<Integer> coll = map.get(key);
         if (coll == null) {
             coll = new CopyOnWriteArrayList<>(values);
             if (coll.size() > 0) {
                 map.put(key, coll);
-                result = true;
             }
         } else
-            result = coll.addAll(values);
-        return result;
+            coll.addAll(values);
     }
 
     public int totalSize() {
-        int total = 0;
-        for (Map.Entry<Integer, List<Integer>> entry : map.entrySet())
-            total += entry.getValue().size();
-        return total;
+        return map.values().stream()
+                .mapToInt(List::size)
+                .sum();
     }
 }

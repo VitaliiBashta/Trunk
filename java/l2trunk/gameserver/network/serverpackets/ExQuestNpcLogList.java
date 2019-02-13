@@ -8,14 +8,14 @@ import java.util.Collections;
 import java.util.List;
 
 
-public class ExQuestNpcLogList extends L2GameServerPacket {
-    private final int questId;
+public final class ExQuestNpcLogList extends L2GameServerPacket {
+    private final int _questId;
     private List<int[]> _logList = Collections.emptyList();
 
     public ExQuestNpcLogList(QuestState state) {
-        questId = state.getQuest().questId;
+        _questId = state.quest.id;
         int cond = state.getCond();
-        List<QuestNpcLogInfo> vars = state.getQuest().getNpcLogList(cond);
+        List<QuestNpcLogInfo> vars = state.quest.getNpcLogList(cond);
         if (vars == null)
             return;
 
@@ -31,7 +31,7 @@ public class ExQuestNpcLogList extends L2GameServerPacket {
     @Override
     protected void writeImpl() {
         writeEx(0xC5);
-        writeD(questId);
+        writeD(_questId);
         writeC(_logList.size());
         for (int[] values : _logList) {
             writeD(values[0]);

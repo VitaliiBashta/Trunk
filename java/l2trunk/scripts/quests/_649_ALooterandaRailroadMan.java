@@ -3,7 +3,6 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _649_ALooterandaRailroadMan extends Quest {
     //NPC
@@ -140,7 +139,7 @@ public final class _649_ALooterandaRailroadMan extends Quest {
             cond = st.getCond();
         if (npcId == OBI)
             if (cond == 0)
-                if (st.getPlayer().getLevel() < 30) {
+                if (st.player.getLevel() < 30) {
                     htmltext = "railman_obi_q0649_0102.htm";
                     st.exitCurrentQuest(true);
                 } else
@@ -157,7 +156,7 @@ public final class _649_ALooterandaRailroadMan extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         for (int[] aDROPLIST_COND : DROPLIST_COND)
@@ -170,7 +169,6 @@ public final class _649_ALooterandaRailroadMan extends Quest {
                             st.setCond(aDROPLIST_COND[1]);
                             st.setState(STARTED);
                         }
-        return null;
     }
 
 }

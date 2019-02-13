@@ -1,6 +1,5 @@
 package l2trunk.scripts.npc.model.residences.clanhall;
 
-import l2trunk.commons.collections.CollectionUtils;
 import l2trunk.commons.lang.StringUtils;
 import l2trunk.gameserver.dao.SiegeClanDAO;
 import l2trunk.gameserver.dao.SiegePlayerDAO;
@@ -68,12 +67,12 @@ public class FarmMessengerInstance extends NpcInstance {
                 showChatWindow(player, "residence2/clanhall/farm_kel_mahum_messenger_7.htm");
                 return;
             }
-            if (siegeClan.getClan().getLeaderId() == player.getObjectId()) {
+            if (siegeClan.getClan().getLeaderId() == player.objectId()) {
                 showChatWindow(player, "residence2/clanhall/farm_kel_mahum_messenger_5.htm");
                 return;
             }
 
-            if (siegeClan.getPlayers().contains(player.getObjectId()))
+            if (siegeClan.getPlayers().contains(player.objectId()))
                 showChatWindow(player, "residence2/clanhall/farm_kel_mahum_messenger_9.htm");
             else {
                 if (siegeClan.getPlayers().size() >= 18) {
@@ -81,8 +80,8 @@ public class FarmMessengerInstance extends NpcInstance {
                     return;
                 }
 
-                siegeClan.getPlayers().add(player.getObjectId());
-                SiegePlayerDAO.INSTANCE.insert(clanHall, clan.getClanId(), player.getObjectId());
+                siegeClan.getPlayers().add(player.objectId());
+                SiegePlayerDAO.INSTANCE.insert(clanHall, clan.clanId(), player.objectId());
                 showChatWindow(player, "residence2/clanhall/farm_kel_mahum_messenger_9.htm");
             }
         } else if (command.startsWith("formAlliance")) {
@@ -91,7 +90,7 @@ public class FarmMessengerInstance extends NpcInstance {
                 showChatWindow(player, "residence2/clanhall/farm_kel_mahum_messenger_7.htm");
                 return;
             }
-            if (siegeClan.getClan().getLeaderId() != player.getObjectId()) {
+            if (siegeClan.getClan().getLeaderId() != player.objectId()) {
                 showChatWindow(player, "residence2/clanhall/agit_oel_mahum_messeger_10.htm");
                 return;
             }
@@ -111,7 +110,7 @@ public class FarmMessengerInstance extends NpcInstance {
                 showChatWindow(player, "residence2/clanhall/farm_kel_mahum_messenger_7.htm");
                 return;
             }
-            if (siegeClan.getClan().getLeaderId() != player.getObjectId()) {
+            if (siegeClan.getClan().getLeaderId() != player.objectId()) {
                 showChatWindow(player, "residence2/clanhall/agit_oel_mahum_messeger_10.htm");
                 return;
             }
@@ -155,12 +154,12 @@ public class FarmMessengerInstance extends NpcInstance {
         ClanHallTeamBattleEvent siegeEvent = clanHall.getSiegeEvent();
 
         CTBSiegeClanObject siegeClan = new CTBSiegeClanObject(ClanHallTeamBattleEvent.ATTACKERS, clan, 0);
-        siegeClan.getPlayers().add(player.getObjectId());
+        siegeClan.getPlayers().add(player.objectId());
 
         siegeEvent.addObject(ClanHallTeamBattleEvent.ATTACKERS, siegeClan);
 
         SiegeClanDAO.INSTANCE.insert(clanHall, siegeClan);
-        SiegePlayerDAO.INSTANCE.insert(clanHall, clan.getClanId(), player.getObjectId());
+        SiegePlayerDAO.INSTANCE.insert(clanHall, clan.clanId(), player.objectId());
 
         List<CTBSiegeClanObject> siegeClans = siegeEvent.getObjects(ClanHallTeamBattleEvent.ATTACKERS);
 
@@ -232,12 +231,12 @@ public class FarmMessengerInstance extends NpcInstance {
         if (regMenu && siegeClan != null)
             return true;
 
-        if (clan == null || player.getObjectId() != clan.getLeaderId()) {
+        if (clan == null || player.objectId() != clan.getLeaderId()) {
             showChatWindow(player, "quests/_655_AGrandPlanForTamingWildBeasts/farm_messenger_q0655_03.htm");
             return false;
         }
 
-        if (player.getObjectId() == clan.getLeaderId() && clan.getLevel() < 4) {
+        if (player.objectId() == clan.getLeaderId() && clan.getLevel() < 4) {
             showChatWindow(player, "quests/_655_AGrandPlanForTamingWildBeasts/farm_messenger_q0655_05.htm");
             return false;
         }

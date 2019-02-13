@@ -12,6 +12,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.Location;
+import l2trunk.gameserver.utils.NpcUtils;
 import l2trunk.scripts.bosses.AntharasManager;
 
 import java.util.ArrayList;
@@ -100,7 +101,7 @@ public final class Antharas extends DefaultAI {
 
         // Minions spawn
         if (_minionsSpawnDelay < System.currentTimeMillis() && getAliveMinionsCount() < 30 && Rnd.chance(5)) {
-            NpcInstance minion = Functions.spawn(Location.findPointToStay(actor.getLoc(), 400, 700, actor.getGeoIndex()), Rnd.chance(50) ? 29190 : 29069);  // Antharas Minions
+            NpcInstance minion = NpcUtils.spawnSingle(Rnd.chance(50) ? 29190 : 29069,Location.findPointToStay(actor.getLoc(), 400, 700, actor.getGeoIndex()) );  // Antharas Minions
             minions.add(minion);
             AntharasManager.addSpawnedMinion(minion);
             setNextMinionSpawnDelay();

@@ -7,6 +7,9 @@ import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.scripts.quests._111_ElrokianHuntersProof;
 
+import static l2trunk.gameserver.utils.ItemFunctions.addItem;
+import static l2trunk.gameserver.utils.ItemFunctions.removeItem;
+
 public final class AsamahInstance extends NpcInstance {
     private static final int ElrokianTrap = 8763;
     private static final int TrapStone = 8764;
@@ -20,16 +23,16 @@ public final class AsamahInstance extends NpcInstance {
         if (!canBypassCheck(player, this))
             return;
 
-        if (command.equals("buyTrap")) {
-            String htmltext = null;
+        if ("buyTrap".equals(command)) {
+            String htmltext;
             QuestState ElrokianHuntersProof = player.getQuestState(_111_ElrokianHuntersProof.class);
 
-            if (player.getLevel() >= 75 && ElrokianHuntersProof != null && ElrokianHuntersProof.isCompleted() && Functions.getItemCount(player, 57) > 1000000) {
-                if (Functions.getItemCount(player, ElrokianTrap) > 0)
+            if (player.getLevel() >= 75 && ElrokianHuntersProof != null && ElrokianHuntersProof.isCompleted() && player.getAdena() > 1_000_000) {
+                if (player.haveItem( ElrokianTrap))
                     htmltext = getNpcId() + "-alreadyhave.htm";
                 else {
-                    Functions.removeItem(player, 57, 1000000, "AsamahInstance");
-                    Functions.addItem(player, ElrokianTrap, 1, "AsamahInstance");
+                    player.reduceAdena(1_000_000, "AsamahInstance");
+                    addItem(player, ElrokianTrap, 1);
                     htmltext = getNpcId() + "-given.htm";
                 }
 
@@ -37,13 +40,13 @@ public final class AsamahInstance extends NpcInstance {
                 htmltext = getNpcId() + "-cant.htm";
 
             showChatWindow(player, "default/" + htmltext);
-        } else if (command.equals("buyStones")) {
+        } else if ("buyStones".equals(command)) {
             String htmltext;
             QuestState ElrokianHuntersProof = player.getQuestState(_111_ElrokianHuntersProof.class);
 
-            if (player.getLevel() >= 75 && ElrokianHuntersProof != null && ElrokianHuntersProof.isCompleted() && Functions.getItemCount(player, 57) > 1000000) {
-                Functions.removeItem(player, 57, 1000000, "AsamahInstance");
-                Functions.addItem(player, TrapStone, 100, "AsamahInstance");
+            if (player.getLevel() >= 75 && ElrokianHuntersProof != null && ElrokianHuntersProof.isCompleted() && player.getAdena()> 1_000_000) {
+                player.reduceAdena( 1_000_000, "AsamahInstance");
+                addItem(player, TrapStone, 100);
                 htmltext = getNpcId() + "-given.htm";
             } else
                 htmltext = getNpcId() + "-cant.htm";

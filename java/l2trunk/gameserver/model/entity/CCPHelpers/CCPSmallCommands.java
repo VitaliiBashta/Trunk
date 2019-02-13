@@ -1,18 +1,13 @@
 package l2trunk.gameserver.model.entity.CCPHelpers;
 
-import l2trunk.commons.dao.JdbcEntityState;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.model.GameObjectsStorage;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.base.Experience;
-import l2trunk.gameserver.model.items.ItemInstance;
-import l2trunk.gameserver.network.serverpackets.InventoryUpdate;
 import l2trunk.gameserver.network.serverpackets.NetPingPacket;
-import l2trunk.gameserver.scripts.Functions;
 
-import java.util.ArrayList;
-import java.util.List;
+import static l2trunk.gameserver.utils.ItemFunctions.addItem;
 
 public final class CCPSmallCommands {
     private static final int DECREASE_LEVEL_REQUIREMENT_ID = 6673;
@@ -45,29 +40,19 @@ public final class CCPSmallCommands {
 
             if (activeChar.getInventory().destroyItemByItemId(9599, a + b + c, "Opening TOAD")) {
                 if (a > 0) {
-                    Functions.addItem(activeChar, 9600, a, "Opening TOAD");
+                    addItem(activeChar, 9600, a);
                 }
                 if (b > 0) {
-                    Functions.addItem(activeChar, 9601, b, "Opening TOAD");
+                    addItem(activeChar, 9601, b);
                 }
                 if (c > 0) {
-                    Functions.addItem(activeChar, 9602, c, "Opening TOAD");
+                    addItem(activeChar, 9602, c);
                 }
             } else {
                 activeChar.sendMessage("You do not have enough Ancient Tomes of the Demon.");
             }
         } else {
             activeChar.sendMessage("You do not have enough Ancient Tomes of the Demon.");
-        }
-    }
-
-    public static void setAntiGrief(Player activeChar) {
-        if (!activeChar.getVarB("antigrief", false)) {
-            activeChar.setVar("antigrief", "true", -1);
-            activeChar.sendMessage("You are now PROTECTED from unwanted buffs!");
-        } else {
-            activeChar.unsetVar("antigrief");
-            activeChar.sendMessage("You are NO LONGER protected from unwanted buffs!");
         }
     }
 
@@ -80,58 +65,6 @@ public final class CCPSmallCommands {
         activeChar.sendPacket(new NetPingPacket(activeChar));
         ThreadPoolManager.INSTANCE.schedule(new AnswerTask(activeChar), 3000L);
         return true;
-    }
-
-    public static void combineTalismans(Player activeChar) {
-        List<int[]> sameIds = new ArrayList<>();
-
-        for (ItemInstance item : activeChar.getInventory().getItems()) {
-            // Getting talisman
-            if (item.getLifeTime() > 0 && item.getName().contains("Talisman")) {
-                talismanAddToCurrent(sameIds, item.getItemId());
-            }
-        }
-
-        int allCount = 0;
-        int newCount = 0;
-        for (int[] idCount : sameIds) {
-            // Item Count > 1
-            if (idCount[1] > 1) {
-                int lifeTime = 0;
-                List<ItemInstance> existingTalismans = activeChar.getInventory().getItemsByItemId(idCount[0]);
-                for (ItemInstance existingTalisman : existingTalismans) {
-                    lifeTime += existingTalisman.getLifeTime();
-                    activeChar.getInventory().destroyItem(existingTalisman, "Combine Talismans");
-                }
-
-                ItemInstance newTalisman = activeChar.getInventory().addItem(idCount[0], 1L, "Combine Talismans");
-                newTalisman.setLifeTime(lifeTime);
-                newTalisman.setJdbcState(JdbcEntityState.UPDATED);
-                newTalisman.update();
-                activeChar.sendPacket(new InventoryUpdate().addModifiedItem(newTalisman));
-
-                allCount += idCount[0];
-                newCount++;
-            }
-        }
-
-        if (allCount > 0)
-            activeChar.sendMessage(allCount + " Talismans were combined into " + newCount);
-        else
-            activeChar.sendMessage("You don't have Talismans to combine!");
-    }
-
-    private static void talismanAddToCurrent(List<int[]> sameIds, int itemId) {
-        for (int[] sameId : sameIds)
-            if (sameId[0] == itemId) {
-                sameId[1] = sameId[1] + 1;
-                return;
-            }
-        sameIds.add(new int[]
-                {
-                        itemId,
-                        1
-                });
     }
 
     public static boolean decreaseLevel(Player activeChar, int levelsToRemove) {

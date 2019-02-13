@@ -6,6 +6,7 @@ import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.cache.Msg;
 import l2trunk.gameserver.listener.zone.OnZoneEnterLeaveListener;
 import l2trunk.gameserver.model.*;
+import l2trunk.gameserver.model.instances.MonsterInstance;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.*;
 import l2trunk.gameserver.scripts.ScriptFile;
@@ -84,7 +85,7 @@ public final class KashaNegate implements ScriptFile {
             actor.setDisplayId(npcId);
             DeleteObject d = new DeleteObject(actor);
             L2GameServerPacket su = actor.makeStatusUpdate(StatusUpdate.CUR_HP, StatusUpdate.MAX_HP);
-            World.getAroundPlayers(actor)
+            World.getAroundPlayers(actor).stream()
                     .peek(p -> p.sendPacket(d, new NpcInfo(actor, p)))
                     .filter(p -> p.getTarget() == actor)
                     .forEach(p -> {
@@ -98,7 +99,7 @@ public final class KashaNegate implements ScriptFile {
     private void destroyKashaInCamp(Zone zone) {
         boolean _debuffed = false;
         for (Creature c : zone.getObjects())
-            if (c.isMonster())
+            if (c instanceof MonsterInstance)
                 for (int m : mobs)
                     if (m == getRealNpcId((NpcInstance) c)) {
                         if (m == mobs.get(0) && !c.isDead()) {
@@ -123,7 +124,7 @@ public final class KashaNegate implements ScriptFile {
     private NpcInstance getKasha(Zone zone) {
         List<NpcInstance> mobs = new ArrayList<>();
         zone.getObjects().stream()
-                .filter(GameObject::isMonster)
+                .filter(c -> c instanceof MonsterInstance)
                 .filter(c -> !c.isDead())
                 .forEach(c -> KashaNegate.mobs.stream()
                         .filter(k -> k == getRealNpcId((NpcInstance) c))
@@ -193,7 +194,7 @@ public final class KashaNegate implements ScriptFile {
         @Override
         public void runImpl() {
             if (zone.getObjects().stream()
-                    .filter(GameObject::isMonster)
+                    .filter(o -> o instanceof MonsterInstance)
                     .filter(c -> !c.isDead())
                     .map(c -> (NpcInstance) c)
                     .anyMatch(c -> getRealNpcId(c) == mobs.get(0))) {
@@ -204,13 +205,12 @@ public final class KashaNegate implements ScriptFile {
 
     public class ZoneListener implements OnZoneEnterLeaveListener {
         @Override
-        public void onZoneEnter(Zone zone, Creature cha) {
+        public void onZoneEnter(Zone zone, Player cha) {
         }
 
         @Override
-        public void onZoneLeave(Zone zone, Creature pl) {
-            if (pl.isPlayable())
-                BUFFS.forEach(skillId -> pl.getEffectList().stopEffect(skillId));
+        public void onZoneLeave(Zone zone, Player pl) {
+            BUFFS.forEach(skillId -> pl.getEffectList().stopEffect(skillId));
         }
     }
 
@@ -225,7 +225,7 @@ public final class KashaNegate implements ScriptFile {
                     int yearningLvl = 0;
                     int despairLvl = 0;
                     for (Creature c : zone.getObjects())
-                        if (c.isMonster() && !c.isDead())
+                        if (c instanceof MonsterInstance && !c.isDead())
                             if (getRealNpcId((NpcInstance) c) == mobs.get(0))
                                 curseLvl++;
                             else if (getRealNpcId((NpcInstance) c) == mobs.get(1))

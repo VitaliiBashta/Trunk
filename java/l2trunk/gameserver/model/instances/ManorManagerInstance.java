@@ -25,9 +25,9 @@ public final class ManorManagerInstance extends MerchantInstance {
     public void onAction(Player player, boolean shift) {
         if (this != player.getTarget()) {
             player.setTarget(this);
-            player.sendPacket(new MyTargetSelected(getObjectId(), player.getLevel() - getLevel()), new ValidateLocation(this));
+            player.sendPacket(new MyTargetSelected(objectId(), player.getLevel() - getLevel()), new ValidateLocation(this));
         } else {
-            MyTargetSelected my = new MyTargetSelected(getObjectId(), player.getLevel() - getLevel());
+            MyTargetSelected my = new MyTargetSelected(objectId(), player.getLevel() - getLevel());
             player.sendPacket(my);
             if (!isInRange(player, INTERACTION_DISTANCE)) {
                 player.getAI().setIntentionInteract(CtrlIntention.AI_INTENTION_INTERACT, this);
@@ -36,7 +36,7 @@ public final class ManorManagerInstance extends MerchantInstance {
                 if (CastleManorManager.INSTANCE.isDisabled()) {
                     NpcHtmlMessage html = new NpcHtmlMessage(player, this);
                     html.setFile("npcdefault.htm");
-                    html.replace("%objectId%", String.valueOf(getObjectId()));
+                    html.replace("%objectId%", String.valueOf(objectId()));
                     html.replace("%npcname%", getName());
                     player.sendPacket(html);
                 } else if (!player.isGM() // Player is not GM
@@ -148,7 +148,7 @@ public final class ManorManagerInstance extends MerchantInstance {
     private void showMessageWindow(Player player, String filename) {
         NpcHtmlMessage html = new NpcHtmlMessage(player, this);
         html.setFile(getHtmlPath() + filename);
-        html.replace("%objectId%", String.valueOf(getObjectId()));
+        html.replace("%objectId%", String.valueOf(objectId()));
         html.replace("%npcId%", String.valueOf(getNpcId()));
         html.replace("%npcname%", getName());
         player.sendPacket(html);

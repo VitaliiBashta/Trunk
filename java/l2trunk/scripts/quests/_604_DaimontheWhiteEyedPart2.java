@@ -8,7 +8,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.Functions;
-import l2trunk.gameserver.scripts.ScriptFile;
+import l2trunk.gameserver.utils.Location;
 
 public final class _604_DaimontheWhiteEyedPart2 extends Quest {
     //NPC
@@ -40,74 +40,74 @@ public final class _604_DaimontheWhiteEyedPart2 extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         NpcInstance isQuest = GameObjectsStorage.getByNpcId(DAIMON);
-        if (event.equalsIgnoreCase("31683-02.htm")) {
-            if (st.getPlayer().getLevel() < 73) {
+        if ("31683-02.htm".equalsIgnoreCase(event)) {
+            if (st.player.getLevel() < 73) {
                 st.exitCurrentQuest(true);
                 return "31683-00b.htm";
             }
             st.setCond(1);
             st.setState(STARTED);
             st.takeItems(U_SUMMON, 1);
-            st.giveItems(S_SUMMON, 1);
+            st.giveItems(S_SUMMON);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("31541-02.htm")) {
-            if (st.getQuestItemsCount(S_SUMMON) == 0)
+        } else if ("31541-02.htm".equalsIgnoreCase(event)) {
+            if (!st.haveQuestItem(S_SUMMON) )
                 return "31541-04.htm";
             if (isQuest != null)
                 return "31541-03.htm";
-            if (ServerVariables.getLong(_604_DaimontheWhiteEyedPart2.class.getSimpleName(), 0) + 3 * 60 * 60 * 1000 > System.currentTimeMillis())
+            if (ServerVariables.getLong(getClass().getSimpleName(), 0) + 3 * 60 * 60 * 1000 > System.currentTimeMillis())
                 return "31541-05.htm";
             st.takeItems(S_SUMMON, 1);
-            isQuest = st.addSpawn(DAIMON, 186320, -43904, -3175);
+            isQuest = st.addSpawn(DAIMON, Location.of(186320, -43904, -3175));
             Functions.npcSay(isQuest, "Who called me?");
             isQuest.addListener(new DeathListener());
             st.playSound(SOUND_MIDDLE);
             st.setCond(2);
             st.setState(STARTED);
-            st.getPlayer().sendMessage("Daimon the White-Eyed has spawned in 186320, -43904, -3175");
+            st.player.sendMessage("Daimon the White-Eyed has spawned in 186320, -43904, -3175");
             st.startQuestTimer("DAIMON_Fail", 12000000);
-        } else if (event.equalsIgnoreCase("31683-04.htm")) {
-            if (st.getQuestItemsCount(ESSENCE) >= 1)
+        } else if ("31683-04.htm".equalsIgnoreCase(event)) {
+            if (st.haveQuestItem(ESSENCE) )
                 return "list.htm";
             st.exitCurrentQuest(true);
             return "31683-05.htm";
-        } else if (event.equalsIgnoreCase("INT_MEN")) {
+        } else if ("INT_MEN".equalsIgnoreCase(event)) {
             st.giveItems(INT_MEN, 5, true);
             st.takeItems(ESSENCE, 1);
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(true);
             return null;
-        } else if (event.equalsIgnoreCase("INT_WIT")) {
+        } else if ("INT_WIT".equalsIgnoreCase(event)) {
             st.giveItems(INT_WIT, 5, true);
             st.takeItems(ESSENCE, 1);
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(true);
             return null;
-        } else if (event.equalsIgnoreCase("MEN_INT")) {
+        } else if ("MEN_INT".equalsIgnoreCase(event)) {
             st.giveItems(MEN_INT, 5, true);
             st.takeItems(ESSENCE, 1);
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(true);
             return null;
-        } else if (event.equalsIgnoreCase("MEN_WIT")) {
+        } else if ("MEN_WIT".equalsIgnoreCase(event)) {
             st.giveItems(MEN_WIT, 5, true);
             st.takeItems(ESSENCE, 1);
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(true);
             return null;
-        } else if (event.equalsIgnoreCase("WIT_INT")) {
+        } else if ("WIT_INT".equalsIgnoreCase(event)) {
             st.giveItems(WIT_INT, 5, true);
             st.takeItems(ESSENCE, 1);
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(true);
             return null;
-        } else if (event.equalsIgnoreCase("WIT_MEN")) {
+        } else if ("WIT_MEN".equalsIgnoreCase(event)) {
             st.giveItems(WIT_MEN, 5, true);
             st.takeItems(ESSENCE, 1);
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(true);
             return null;
-        } else if (event.equalsIgnoreCase("DAIMON_Fail") && isQuest != null) {
+        } else if ("DAIMON_Fail".equalsIgnoreCase(event) && isQuest != null) {
             Functions.npcSay(isQuest, "Darkness could not have ray?");
             isQuest.deleteMe();
             return null;
@@ -118,7 +118,7 @@ public final class _604_DaimontheWhiteEyedPart2 extends Quest {
     private static class DeathListener implements OnDeathListener {
         @Override
         public void onDeath(Creature actor, Creature killer) {
-            ServerVariables.set(_604_DaimontheWhiteEyedPart2.class.getSimpleName(), String.valueOf(System.currentTimeMillis()));
+            ServerVariables.set(getClass().getSimpleName(), String.valueOf(System.currentTimeMillis()));
         }
     }
 
@@ -130,7 +130,7 @@ public final class _604_DaimontheWhiteEyedPart2 extends Quest {
         int cond = st.getCond();
         if (cond == 0) {
             if (npcId == EYE)
-                if (st.getQuestItemsCount(U_SUMMON) >= 1)
+                if (st.haveQuestItem(U_SUMMON))
                     htmltext = "31683-01.htm";
                 else
                     htmltext = "31683-00a.htm";
@@ -138,7 +138,7 @@ public final class _604_DaimontheWhiteEyedPart2 extends Quest {
             if (npcId == EYE)
                 htmltext = "31683-02a.htm";
             else if (npcId == ALTAR)
-                if (ServerVariables.getLong(_604_DaimontheWhiteEyedPart2.class.getSimpleName(), 0) + 3 * 60 * 60 * 1000 > System.currentTimeMillis())
+                if (ServerVariables.getLong(getClass().getSimpleName(), 0) + 3 * 60 * 60 * 1000 > System.currentTimeMillis())
                     htmltext = "31541-05.htm";
                 else
                     htmltext = "31541-01.htm";
@@ -146,20 +146,20 @@ public final class _604_DaimontheWhiteEyedPart2 extends Quest {
             if (npcId == ALTAR)
                 if (isQuest != null)
                     htmltext = "31541-03.htm";
-                else if (ServerVariables.getLong(_604_DaimontheWhiteEyedPart2.class.getSimpleName(), 0) + 3 * 60 * 60 * 1000 > System.currentTimeMillis())
+                else if (ServerVariables.getLong(getClass().getSimpleName(), 0) + 3 * 60 * 60 * 1000 > System.currentTimeMillis())
                     htmltext = "31541-05.htm";
                 else {
-                    isQuest = st.addSpawn(DAIMON, 186320, -43904, -3175);
+                    isQuest = st.addSpawn(DAIMON, Location.of(186320, -43904, -3175));
                     Functions.npcSay(isQuest, "Who called me?");
                     st.playSound(SOUND_MIDDLE);
                     st.setState(STARTED);
-                    st.getPlayer().sendMessage("Daimon the White-Eyed has spawned in 186320, -43904, -3175");
+                    st.player.sendMessage("Daimon the White-Eyed has spawned in 186320, -43904, -3175");
                     isQuest.addListener(new DeathListener());
                     st.startQuestTimer("DAIMON_Fail", 12000000);
                 }
         } else if (cond == 3) {
             if (npcId == EYE)
-                if (st.getQuestItemsCount(ESSENCE) >= 1)
+                if (st.haveQuestItem(ESSENCE))
                     htmltext = "31683-03.htm";
                 else
                     htmltext = "31683-06.htm";
@@ -170,14 +170,13 @@ public final class _604_DaimontheWhiteEyedPart2 extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
-        if (st.getQuestItemsCount(S_SUMMON) > 0) {
+    public void onKill(NpcInstance npc, QuestState st) {
+        if (st.haveQuestItem(S_SUMMON)) {
             st.takeItems(S_SUMMON, 1);
-            st.giveItems(ESSENCE, 1);
+            st.giveItems(ESSENCE);
             st.setCond(3);
             st.setState(STARTED);
             st.playSound(SOUND_MIDDLE);
         }
-        return null;
     }
 }

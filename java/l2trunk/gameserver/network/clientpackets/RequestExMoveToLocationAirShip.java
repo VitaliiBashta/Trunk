@@ -35,7 +35,7 @@ public class RequestExMoveToLocationAirShip extends L2GameClientPacket {
     @Override
     protected void runImpl() {
         Player player = getClient().getActiveChar();
-        if (player == null || player.getBoat() == null || !player.getBoat().isClanAirShip())
+        if (player == null || player.getBoat() == null || !(player.getBoat() instanceof ClanAirShip))
             return;
 
         ClanAirShip airship = (ClanAirShip) player.getBoat();

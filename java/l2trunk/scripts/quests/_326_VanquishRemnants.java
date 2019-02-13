@@ -4,6 +4,8 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
+import java.util.List;
+
 public final class _326_VanquishRemnants extends Quest {
     //NPC
     private static final int Leopold = 30435;
@@ -13,75 +15,30 @@ public final class _326_VanquishRemnants extends Quest {
     private static final int BlackCrossBadge = 1361;
     //Items
     private static final int BlackLionMark = 1369;
-    //MOB
-    private static final int OlMahumPatrol = 30425;
-    private static final int OlMahumGuard = 20058;
-    private static final int OlMahumStraggler = 20061;
-    private static final int OlMahumShooter = 20063;
-    private static final int OlMahumCaptain = 20066;
-    private static final int OlMahumCommander = 20076;
-    private static final int OlMahumSupplier = 20436;
-    private static final int OlMahumRecruit = 20437;
-    private static final int OlMahumGeneral = 20438;
+
     //Drop Cond
-    //# [COND, NEWCOND, ID, REQUIRED, ITEM, NEED_COUNT, CHANCE, DROP]
-    private final int[][] DROPLIST_COND = {
-            {
-                    OlMahumPatrol,
-                    RedCrossBadge
-            },
-            {
-                    OlMahumGuard,
-                    RedCrossBadge
-            },
-            {
-                    OlMahumRecruit,
-                    RedCrossBadge
-            },
-            {
-                    OlMahumStraggler,
-                    BlueCrossBadge
-            },
-            {
-                    OlMahumShooter,
-                    BlueCrossBadge
-            },
-            {
-                    OlMahumSupplier,
-                    BlueCrossBadge
-            },
-            {
-                    OlMahumCaptain,
-                    BlackCrossBadge
-            },
-            {
-                    OlMahumGeneral,
-                    BlackCrossBadge
-            },
-            {
-                    OlMahumCommander,
-                    BlackCrossBadge
-            }
-    };
+    private final List<Integer> RedCrossBadges = List.of(30425,20058,20437);
+    private final List<Integer> BlueCrossBadges = List.of(20061,20063,20436);
+    private final List<Integer> BlackCrossBadges = List.of(20066,20438,20076);
 
     public _326_VanquishRemnants() {
         super(false);
         addStartNpc(Leopold);
         addTalkId(Leopold);
         //Mob Drop
-        for (int[] aDROPLIST_COND : DROPLIST_COND) addKillId(aDROPLIST_COND[0]);
-        addQuestItem(RedCrossBadge);
-        addQuestItem(BlueCrossBadge);
-        addQuestItem(BlackCrossBadge);
+        addKillId(RedCrossBadges);
+        addKillId(BlueCrossBadges);
+        addKillId(BlackCrossBadges);
+        addQuestItem(RedCrossBadge,BlueCrossBadge,BlackCrossBadge);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("leopold_q0326_03.htm")) {
+        if ("leopold_q0326_03.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("leopold_q0326_03.htm")) {
+        } else if ("leopold_q0326_03.htm".equalsIgnoreCase(event)) {
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(true);
         }
@@ -94,7 +51,7 @@ public final class _326_VanquishRemnants extends Quest {
         String htmltext = "noquest";
         int cond = st.getCond();
         if (npcId == Leopold)
-            if (st.getPlayer().getLevel() < 21) {
+            if (st.player.getLevel() < 21) {
                 htmltext = "leopold_q0326_01.htm";
                 st.exitCurrentQuest(true);
             } else if (cond == 0)
@@ -105,25 +62,28 @@ public final class _326_VanquishRemnants extends Quest {
                 if (st.getQuestItemsCount(RedCrossBadge) + st.getQuestItemsCount(BlueCrossBadge) + st.getQuestItemsCount(BlackCrossBadge) >= 100) {
                     if (st.getQuestItemsCount(BlackLionMark) == 0) {
                         htmltext = "leopold_q0326_09.htm";
-                        st.giveItems(BlackLionMark, 1);
+                        st.giveItems(BlackLionMark);
                     } else
                         htmltext = "leopold_q0326_06.htm";
                 } else
                     htmltext = "leopold_q0326_05.htm";
                 st.giveItems(ADENA_ID, st.getQuestItemsCount(RedCrossBadge) * 89 + st.getQuestItemsCount(BlueCrossBadge) * 95 + st.getQuestItemsCount(BlackCrossBadge) * 101, true);
-                st.takeItems(RedCrossBadge, -1);
-                st.takeItems(BlueCrossBadge, -1);
-                st.takeItems(BlackCrossBadge, -1);
+                st.takeItems(RedCrossBadge);
+                st.takeItems(BlueCrossBadge);
+                st.takeItems(BlackCrossBadge);
             }
         return htmltext;
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
-        if (st.getState() == STARTED)
-            for (int[] aDROPLIST_COND : DROPLIST_COND)
-                if (npc.getNpcId() == aDROPLIST_COND[0])
-                    st.giveItems(aDROPLIST_COND[1], 1);
-        return null;
+    public void onKill(NpcInstance npc, QuestState st) {
+        if (st.getState() == STARTED) {
+            if (RedCrossBadges.contains(npc.getNpcId()))
+                st.giveItems(RedCrossBadge);
+            if (BlueCrossBadges.contains(npc.getNpcId()))
+                st.giveItems(BlackCrossBadge);
+            if (BlackCrossBadges.contains(npc.getNpcId()))
+                st.giveItems(BlackCrossBadge);
+        }
     }
 }

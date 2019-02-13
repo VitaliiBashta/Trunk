@@ -46,15 +46,15 @@ public final class _123_TheLeaderAndTheFollower extends Quest {
                 st.playSound(SOUND_ACCEPT);
                 break;
             case "31961-05.htm":
-                st.set("choose", "1");
+                st.set("choose", 1);
                 st.setCond(3);
                 break;
             case "31961-06.htm":
-                st.set("choose", "2");
+                st.set("choose", 2);
                 st.setCond(4);
                 break;
             case "31961-07.htm":
-                st.set("choose", "3");
+                st.set("choose", 3);
                 st.setCond(5);
                 break;
             case "31961-08.htm":
@@ -77,13 +77,13 @@ public final class _123_TheLeaderAndTheFollower extends Quest {
         String htmltext = "noquest";
         int cond = st.getCond();
         if (cond == 0) {
-            if (st.getPlayer().getLevel() < 19) {
-                htmltext = "<html><body>Your level is too low</body></html>";
+            if (st.player.getLevel() < 19) {
+                htmltext = "<html><body>Your occupation is too low</body></html>";
                 return htmltext;
-            } else if (st.getPlayer().getClanId() == 0) {
+            } else if (st.player.getClanId() == 0) {
                 htmltext = "<html><body>You are not in clan</body></html>";
                 return htmltext;
-            } else if (st.getPlayer().getSponsor() == 0) {
+            } else if (st.player.getSponsor() == 0) {
                 htmltext = "<html><body>You have no sponsor</body></html>";
                 return htmltext;
             } else
@@ -127,11 +127,11 @@ public final class _123_TheLeaderAndTheFollower extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         if (npcId == BRUIN_LIZARDMEN && st.getQuestItemsCount(BRUIN_BLOOD) < 10 && cond == 1 && Rnd.chance(50)) {
-            st.giveItems(BRUIN_BLOOD, 1);
+            st.giveItems(BRUIN_BLOOD);
             if (st.getQuestItemsCount(BRUIN_BLOOD) == 10) {
                 st.playSound(SOUND_MIDDLE);
                 st.setCond(2);
@@ -143,6 +143,5 @@ public final class _123_TheLeaderAndTheFollower extends Quest {
                 st.setCond(8);
             }
         }
-        return null;
     }
 }

@@ -6,6 +6,8 @@ import l2trunk.gameserver.model.quest.QuestState;
 
 import java.util.List;
 
+import static l2trunk.scripts.quests._611_AllianceWithVarkaSilenos.VARKA_NPC_LIST;
+
 public final class _609_MagicalPowerofWater1 extends Quest {
     // NPC
     private static final int WAHKAN = 31371;
@@ -18,23 +20,15 @@ public final class _609_MagicalPowerofWater1 extends Quest {
     private static final int GREEN_TOTEM = 7238;
 
     // etc
-    private static final int MARK_OF_KETRA_ALLIANCE1 = 7211;
-    private static final int MARK_OF_KETRA_ALLIANCE2 = 7212;
-    private static final int MARK_OF_KETRA_ALLIANCE3 = 7213;
-    private static final int MARK_OF_KETRA_ALLIANCE4 = 7214;
-    private static final int MARK_OF_KETRA_ALLIANCE5 = 7215;
     private static final int THIEF_KEY = 1661;
 
-    private static final List<Integer> VARKA_NPC_LIST = List.of(
-            21350, 21351, 21353, 21354, 21355, 21357, 21358, 21360, 21361, 21362,
-            21364, 21365, 21366, 21368, 21369, 21370, 21371, 21372, 21373, 21374);
 
     public _609_MagicalPowerofWater1() {
         super(false);
         addStartNpc(WAHKAN);
         addTalkId(ASEFA);
         addTalkId(UDANS_MARDUI_BOX);
-        VARKA_NPC_LIST.forEach(this::addAttackId);
+        addAttackId(VARKA_NPC_LIST);
     }
 
     @Override
@@ -69,9 +63,9 @@ public final class _609_MagicalPowerofWater1 extends Quest {
         int proval = st.getInt("proval");
         if (npcId == WAHKAN) {
             if (cond == 0)
-                if (st.getPlayer().getLevel() >= 74)
-                    if (st.getQuestItemsCount(MARK_OF_KETRA_ALLIANCE1) == 1 || st.getQuestItemsCount(MARK_OF_KETRA_ALLIANCE2) == 1 || st.getQuestItemsCount(MARK_OF_KETRA_ALLIANCE3) == 1 || st.getQuestItemsCount(MARK_OF_KETRA_ALLIANCE4) == 1 || st.getQuestItemsCount(MARK_OF_KETRA_ALLIANCE5) == 1) {
-                        if (st.getQuestItemsCount(DIVINE_STONE_OF_WISDOM) == 0)
+                if (st.player.getLevel() >= 74)
+                    if (st.player.getKetra()>0) {
+                        if (st.haveQuestItem(DIVINE_STONE_OF_WISDOM))
                             htmltext = "herald_wakan_q0609_01.htm";
                         else {
                             htmltext = "completed";
@@ -93,13 +87,13 @@ public final class _609_MagicalPowerofWater1 extends Quest {
                 st.setCond(2);
             } else if (cond == 2 && proval == 1) {
                 htmltext = "shaman_asefa_q0609_03.htm";
-                npc.doCast(4548, st.getPlayer(), true);
-                st.set("proval", "0");
-            } else if (cond == 3 && st.getQuestItemsCount(STOLEN_GREEN_TOTEM) >= 1) {
+                npc.doCast(4548, st.player, true);
+                st.set("proval", 0);
+            } else if (cond == 3 && st.haveQuestItem(STOLEN_GREEN_TOTEM) ) {
                 htmltext = "shaman_asefa_q0609_04.htm";
-                st.takeItems(STOLEN_GREEN_TOTEM, st.getQuestItemsCount(STOLEN_GREEN_TOTEM));
-                st.giveItems(GREEN_TOTEM, 1);
-                st.giveItems(DIVINE_STONE_OF_WISDOM, 1);
+                st.takeItems(STOLEN_GREEN_TOTEM);
+                st.giveItems(GREEN_TOTEM);
+                st.giveItems(DIVINE_STONE_OF_WISDOM);
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest(true);
             }
@@ -109,11 +103,10 @@ public final class _609_MagicalPowerofWater1 extends Quest {
     }
 
     @Override
-    public String onAttack(NpcInstance npc, QuestState st) {
+    public void onAttack(NpcInstance npc, QuestState st) {
         if (st.getCond() == 2 && st.getInt("proval") == 0) {
-            npc.doCast(4547, st.getPlayer(), true);
-            st.set("proval", "1");
+            npc.doCast(4547, st.player, true);
+            st.set("proval", 1);
         }
-        return null;
     }
 }

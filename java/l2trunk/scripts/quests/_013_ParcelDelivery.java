@@ -3,7 +3,6 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _013_ParcelDelivery extends Quest {
     private static final int PACKAGE = 7263;
@@ -43,7 +42,7 @@ public final class _013_ParcelDelivery extends Quest {
         int cond = st.getCond();
         if (npcId == 31274) {
             if (cond == 0)
-                if (st.getPlayer().getLevel() >= 74)
+                if (st.player.getLevel() >= 74)
                     htmltext = "mineral_trader_fundin_q0013_0101.htm";
                 else {
                     htmltext = "mineral_trader_fundin_q0013_0103.htm";

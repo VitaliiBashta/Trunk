@@ -20,8 +20,4 @@ public final class EffectAgathionRes extends Effect {
         effected.setIsBlessedByNoblesse(false);
     }
 
-    @Override
-    public boolean onActionTime() {
-        return false;
-    }
 }

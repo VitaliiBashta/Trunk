@@ -31,10 +31,10 @@ public class FameManagerInstance extends NpcInstance {
                     html.setFile("default/" + getNpcId() + "-nohavepk.htm");
             } else
                 html.setFile("default/" + getNpcId() + "-nofame.htm");
-            html.replace("%objectId%", String.valueOf(getObjectId()));
+            html.replace("%objectId%", String.valueOf(objectId()));
             player.sendPacket(html);
         } else if (actualCommand.equalsIgnoreCase("CRP")) {
-            if (player.getClan() == null || player.getClassId().level() < 2 || player.getClan().getLevel() < 5)
+            if (player.getClan() == null || player.getClassId().occupation() < 2 || player.getClan().getLevel() < 5)
                 html.setFile("default/" + getNpcId() + "-noclancrp.htm");
             else if (player.getFame() < 1000)
                 html.setFile("default/" + getNpcId() + "-nofame.htm");
@@ -45,7 +45,7 @@ public class FameManagerInstance extends NpcInstance {
                 player.sendPacket(Msg.ACQUIRED_50_CLAN_FAME_POINTS);
                 html.setFile("default/" + getNpcId() + "-okclancrp.htm");
             }
-            html.replace("%objectId%", String.valueOf(getObjectId()));
+            html.replace("%objectId%", String.valueOf(objectId()));
             player.sendPacket(html);
         } else
             super.onBypassFeedback(player, command);

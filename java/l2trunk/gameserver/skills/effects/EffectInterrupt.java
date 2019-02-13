@@ -15,8 +15,4 @@ public final class EffectInterrupt extends Effect {
             effected.abortCast(false, true);
     }
 
-    @Override
-    public boolean onActionTime() {
-        return false;
-    }
 }

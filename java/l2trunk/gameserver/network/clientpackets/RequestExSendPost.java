@@ -36,7 +36,7 @@ import java.util.Map;
  */
 public final class RequestExSendPost extends L2GameClientPacket {
     private int _messageType;
-    private String _recieverName, _topic, _body;
+    private String recieverName, _topic, _body;
     private int _count;
     private List<Integer> _items;
     private List<Long> _itemQ;
@@ -47,7 +47,7 @@ public final class RequestExSendPost extends L2GameClientPacket {
      */
     @Override
     protected void readImpl() {
-        _recieverName = readS(35); // the recipient's name
+        recieverName = readS(35); // the recipient's name
         _messageType = readD(); // Type the letters 0 1 simple request payment
         _topic = readS(Byte.MAX_VALUE); // topic
         _body = readS(Short.MAX_VALUE); // body
@@ -93,7 +93,7 @@ public final class RequestExSendPost extends L2GameClientPacket {
         }
 
         // Custom
-        if (activeChar.isGM() && _recieverName.equalsIgnoreCase(AdminMail.MAIL_ALL_TEXT)) {
+        if (activeChar.isGM() && recieverName.equalsIgnoreCase(AdminMail.MAIL_ALL_TEXT)) {
             Map<Integer, Long> map = new HashMap<>();
             if (_items != null && _items.size() > 0)
                 for (int i = 0; i < _items.size(); i++) {
@@ -108,7 +108,7 @@ public final class RequestExSendPost extends L2GameClientPacket {
             activeChar.sendPacket(ExReplyWritePost.STATIC_TRUE);
             activeChar.sendPacket(SystemMsg.MAIL_SUCCESSFULLY_SENT);
             return;
-        } else if (activeChar.isGM() && _recieverName.equalsIgnoreCase(AdminMail.MAIL_LIST)) {
+        } else if (activeChar.isGM() && recieverName.equalsIgnoreCase(AdminMail.MAIL_LIST)) {
             Map<Integer, Long> map = new HashMap<>();
             if (_items != null && _items.size() > 0)
                 for (int i = 0; i < _items.size(); i++) {
@@ -117,7 +117,7 @@ public final class RequestExSendPost extends L2GameClientPacket {
                 }
 
             int count = 0;
-            for (String name : AdminMail.getMailNicks(activeChar.getObjectId())) {
+            for (String name : AdminMail.getMailNicks(activeChar.objectId())) {
                 boolean success = Functions.sendSystemMail(name, _topic, _body, map);
                 if (!success)
                     activeChar.sendMessage("Mail couldn't be sent to " + name);
@@ -127,13 +127,13 @@ public final class RequestExSendPost extends L2GameClientPacket {
 
             activeChar.sendPacket(ExReplyWritePost.STATIC_TRUE);
             activeChar.sendPacket(SystemMsg.MAIL_SUCCESSFULLY_SENT);
-            AdminMail.clearNicks(activeChar.getObjectId());
+            AdminMail.clearNicks(activeChar.objectId());
             activeChar.sendMessage("Mail was sent to " + count + " players!");
             return;
         }
 
         if (!Config.ALLOW_MAIL) {
-            activeChar.sendMessage(new CustomMessage("mail.Disabled", activeChar));
+            activeChar.sendMessage(new CustomMessage("mail.Disabled"));
             activeChar.sendActionFailed();
             return;
         }
@@ -153,7 +153,7 @@ public final class RequestExSendPost extends L2GameClientPacket {
             return;
         }
 
-        if (activeChar.getName().equalsIgnoreCase(_recieverName)) {
+        if (activeChar.getName().equalsIgnoreCase(recieverName)) {
             activeChar.sendPacket(SystemMsg.YOU_CANNOT_SEND_A_MAIL_TO_YOURSELF);
             return;
         }
@@ -169,7 +169,7 @@ public final class RequestExSendPost extends L2GameClientPacket {
         }
 
         if (activeChar.getLevel() < Config.ALT_MAIL_MIN_LVL) {
-            activeChar.sendMessage(new StringBuilder().append("Mail is allowed only for characters with level higher than ").append(Config.ALT_MAIL_MIN_LVL).append(" to avoid spam!").toString());
+            activeChar.sendMessage(new StringBuilder().append("Mail is allowed only for characters with occupation higher than ").append(Config.ALT_MAIL_MIN_LVL).append(" to avoid spam!").toString());
             activeChar.sendActionFailed();
             return;
         }
@@ -181,40 +181,39 @@ public final class RequestExSendPost extends L2GameClientPacket {
 
         if (_price > 0) {
 
-            String tradeBan = activeChar.getVar("tradeBan");
-            if (tradeBan != null && (tradeBan.equals("-1") || Long.parseLong(tradeBan) >= System.currentTimeMillis())) {
-                if (tradeBan.equals("-1"))
-                    activeChar.sendMessage(new CustomMessage("common.TradeBannedPermanently", activeChar));
+            long tradeBan = activeChar.getVarLong("tradeBan");
+            if (tradeBan !=0  && (tradeBan ==-1 || tradeBan >= System.currentTimeMillis())) {
+                if (tradeBan ==-1)
+                    activeChar.sendMessage(new CustomMessage("common.TradeBannedPermanently"));
                 else
-                    activeChar.sendMessage(new CustomMessage("common.TradeBanned", activeChar).addString(Util.formatTime((int) (Long.parseLong(tradeBan) / 1000L - System.currentTimeMillis() / 1000L))));
+                    activeChar.sendMessage(new CustomMessage("common.TradeBanned").addString(Util.formatTime((int) (tradeBan / 1000L - System.currentTimeMillis() / 1000L))));
                 return;
             }
         }
 
         // looking for a goal and check bloklisty
-        if (activeChar.isInBlockList(_recieverName)) // those who do not blokliste helmet
-        {
-            activeChar.sendPacket(new SystemMessage2(SystemMsg.YOU_HAVE_BLOCKED_C1).addString(_recieverName));
+        if (activeChar.isInBlockList(recieverName)) {
+            activeChar.sendPacket(new SystemMessage2(SystemMsg.YOU_HAVE_BLOCKED_C1).addString(recieverName));
             return;
         }
 
         int recieverId;
-        Player target = World.getPlayer(_recieverName);
+        Player target = World.getPlayer(recieverName);
         if (target != null) {
-            recieverId = target.getObjectId();
-            _recieverName = target.getName();
+            recieverId = target.objectId();
+            recieverName = target.getName();
             if (target.isInBlockList(activeChar)) // goal blocked senders
             {
-                activeChar.sendPacket(new SystemMessage2(SystemMsg.C1_HAS_BLOCKED_YOU).addString(_recieverName));
+                activeChar.sendPacket(new SystemMessage2(SystemMsg.C1_HAS_BLOCKED_YOU).addString(recieverName));
                 return;
             }
         } else {
-            recieverId = CharacterDAO.getObjectIdByName(_recieverName);
+            recieverId = CharacterDAO.getObjectIdByName(recieverName);
             if (recieverId > 0)
-                //TODO [G1ta0] adjust _recieverName
-                if (mysql.simple_get_int("target_Id", "character_blocklist", "obj_Id=" + recieverId + " AND target_Id=" + activeChar.getObjectId()) > 0) // goal blocked senders
+                //TODO [G1ta0] adjust recieverName
+                if (mysql.simple_get_int("target_Id", "character_blocklist", "obj_Id=" + recieverId + " AND target_Id=" + activeChar.objectId()) > 0) // goal blocked senders
                 {
-                    activeChar.sendPacket(new SystemMessage2(SystemMsg.C1_HAS_BLOCKED_YOU).addString(_recieverName));
+                    activeChar.sendPacket(new SystemMessage2(SystemMsg.C1_HAS_BLOCKED_YOU).addString(recieverName));
                     return;
                 }
         }
@@ -264,7 +263,7 @@ public final class RequestExSendPost extends L2GameClientPacket {
                 for (int i = 0; i < _count; i++) {
                     ItemInstance item = activeChar.getInventory().removeItemByObjectId(_items.get(i), _itemQ.get(i), "SendPost");
 
-                    item.setOwnerId(activeChar.getObjectId());
+                    item.setOwnerId(activeChar.objectId());
                     item.setLocation(ItemLocation.MAIL);
                     if (item.getJdbcState().isSavable()) {
                         item.save();
@@ -281,10 +280,10 @@ public final class RequestExSendPost extends L2GameClientPacket {
         }
 
         Mail mail = new Mail();
-        mail.setSenderId(activeChar.getObjectId());
+        mail.setSenderId(activeChar.objectId());
         mail.setSenderName(activeChar.getName());
         mail.setReceiverId(recieverId);
-        mail.setReceiverName(_recieverName);
+        mail.setReceiverName(recieverName);
         mail.setTopic(_topic);
         mail.setBody(_body);
         mail.setPrice(_messageType > 0 ? _price : 0);
@@ -304,6 +303,6 @@ public final class RequestExSendPost extends L2GameClientPacket {
         }
 
 
-        ItemLogHandler.getInstance().addLog(activeChar, attachments, this._recieverName, ItemActionType.MAIL);
+        ItemLogHandler.getInstance().addLog(activeChar, attachments, this.recieverName, ItemActionType.MAIL);
     }
 }

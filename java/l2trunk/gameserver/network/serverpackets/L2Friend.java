@@ -11,7 +11,7 @@ public class L2Friend extends L2GameServerPacket {
     public L2Friend(Player player, boolean add) {
         _add = add;
         _name = player.getName();
-        _object_id = player.getObjectId();
+        _object_id = player.objectId();
         _online = true;
     }
 
@@ -29,6 +29,6 @@ public class L2Friend extends L2GameServerPacket {
         writeD(0); //и снова тут идет ID персонажа в списке оффа, не object id
         writeS(_name);
         writeD(_online ? 1 : 0); // онлайн или оффлайн
-        writeD(_object_id); //object_id if online
+        writeD(_object_id); //objectId if online
     }
 }

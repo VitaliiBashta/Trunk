@@ -1,18 +1,15 @@
 package l2trunk.gameserver.network.serverpackets;
 
-/**
- * sample: d
- */
-public class ShowCalc extends L2GameServerPacket {
-    private final int _calculatorId;
+public final class ShowCalc extends L2GameServerPacket {
+    private final int calculatorId;
 
     public ShowCalc(int calculatorId) {
-        _calculatorId = calculatorId;
+        this.calculatorId = calculatorId;
     }
 
     @Override
     protected final void writeImpl() {
         writeC(0xe2);
-        writeD(_calculatorId);
+        writeD(calculatorId);
     }
 }

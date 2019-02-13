@@ -2,7 +2,10 @@ package l2trunk.gameserver.skills.skillclasses;
 
 import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.Playable;
+import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Skill;
+import l2trunk.gameserver.model.instances.MonsterInstance;
 import l2trunk.gameserver.stats.Formulas;
 import l2trunk.gameserver.stats.Formulas.AttackInfo;
 
@@ -18,42 +21,30 @@ public final class ChargeSoul extends Skill {
 
     @Override
     public void useSkill(Creature activeChar, List<Creature> targets) {
-        if (!activeChar.isPlayer())
+        if (!(activeChar instanceof Player))
             return;
-
-        boolean ss = activeChar.getChargedSoulShot() && isSSPossible();
-        if (ss && targetType != SkillTargetType.TARGET_SELF)
-            activeChar.unChargeShots(false);
-
-        Creature realTarget;
-        boolean reflected;
+        Player player = (Player)activeChar;
 
         for (Creature target : targets)
-            if (target != null) {
-                if (target.isDead())
-                    continue;
+            if (target != null && !target.isDead()) {
+                    boolean reflected = target != player && target.checkReflectSkill(player, this);
+                    Creature realTarget = reflected ? player : target;
 
-                reflected = target != activeChar && target.checkReflectSkill(activeChar, this);
-                realTarget = reflected ? activeChar : target;
+                    if (power > 0) {// Если == 0 значит скилл "отключен"
+                        AttackInfo info = Formulas.calcPhysDam(player, player, this, false, false, false, false);
 
-                if (power > 0) {// Если == 0 значит скилл "отключен"
-                    AttackInfo info = Formulas.calcPhysDam(activeChar, realTarget, this, false, false, ss, false);
+                        realTarget.reduceCurrentHp(info.damage, player, this, true, true, false, true, false, false, true);
+                        if (!reflected)
+                            realTarget.doCounterAttack(this, player, false);
+                    }
 
-                    if (info.lethal_dmg > 0)
-                        realTarget.reduceCurrentHp(info.lethal_dmg, activeChar, this, true, true, false, false, false, false, false);
+                    if (realTarget instanceof Playable || realTarget instanceof MonsterInstance)
+                        player.setConsumedSouls(player.getConsumedSouls() + numSouls, null);
 
-                    realTarget.reduceCurrentHp(info.damage, activeChar, this, true, true, false, true, false, false, true);
-                    if (!reflected)
-                        realTarget.doCounterAttack(this, activeChar, false);
+                    getEffects(player, target, activateRate > 0, false, reflected);
                 }
 
-                if (realTarget.isPlayable() || realTarget.isMonster())
-                    activeChar.setConsumedSouls(activeChar.getConsumedSouls() + numSouls, null);
-
-                getEffects(activeChar, target, activateRate > 0, false, reflected);
-            }
-
         if (isSSPossible())
-            activeChar.unChargeShots(isMagic());
+            player.unChargeShots(isMagic());
     }
 }

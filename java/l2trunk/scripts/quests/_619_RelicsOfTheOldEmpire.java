@@ -158,7 +158,7 @@ public final class _619_RelicsOfTheOldEmpire extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         switch (event) {
             case "explorer_ghost_a_q0619_03.htm":
-                if (st.getPlayer().getLevel() < 74) {
+                if (st.player.getLevel() < 74) {
                     st.exitCurrentQuest(true);
                     return "explorer_ghost_a_q0619_02.htm";
                 }
@@ -183,7 +183,7 @@ public final class _619_RelicsOfTheOldEmpire extends Quest {
     @Override
     public String onTalk(NpcInstance npc, QuestState st) {
         if (st.getState() == CREATED) {
-            if (st.getPlayer().getLevel() < 74) {
+            if (st.player.getLevel() < 74) {
                 st.exitCurrentQuest(true);
                 return "explorer_ghost_a_q0619_02.htm";
             }
@@ -198,15 +198,11 @@ public final class _619_RelicsOfTheOldEmpire extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
-        Integer Broken_Relic_Part_chance = drops.get(npcId);
-        if (Broken_Relic_Part_chance == null)
-            return null;
-
-        st.rollAndGive(Broken_Relic_Part, 1, Broken_Relic_Part_chance);
-        if (npcId > 20000) // npcId < 20000 тут это мобы из Four Goblets, из них билет в Sepulcher не должен падать
+        if (drops.containsKey(npcId)) {
+            st.rollAndGive(Broken_Relic_Part, 1, drops.get(npcId));
             st.rollAndGive(Entrance_Pass_to_the_Sepulcher, 1, 3);
-        return null;
+        }
     }
 }

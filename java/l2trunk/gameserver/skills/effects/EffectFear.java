@@ -3,6 +3,7 @@ package l2trunk.gameserver.skills.effects;
 import l2trunk.gameserver.ai.CtrlIntention;
 import l2trunk.gameserver.geodata.GeoEngine;
 import l2trunk.gameserver.model.Effect;
+import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.events.impl.SiegeEvent;
 import l2trunk.gameserver.model.instances.SummonInstance;
@@ -25,10 +26,10 @@ public final class EffectFear extends Effect {
         }
 
         // Fear нельзя наложить на осадных саммонов
-        Player player = effected.getPlayer();
+        Player player = effected instanceof Playable ? ((Playable) effected).getPlayer() : null;
         if (player != null) {
             SiegeEvent<?, ?> siegeEvent = player.getEvent(SiegeEvent.class);
-            if (effected.isSummon() && siegeEvent != null && siegeEvent.containsSiegeSummon((SummonInstance) effected)) {
+            if (effected instanceof SummonInstance && siegeEvent != null && siegeEvent.containsSiegeSummon((SummonInstance) effected)) {
                 effector.sendPacket(SystemMsg.THAT_IS_AN_INCORRECT_TARGET);
                 return false;
             }
@@ -38,8 +39,7 @@ public final class EffectFear extends Effect {
             effector.sendPacket(SystemMsg.YOU_MAY_NOT_ATTACK_IN_A_PEACEFUL_ZONE);
             return false;
         }
-
-        return super.checkCondition();
+        return true;
     }
 
     @Override

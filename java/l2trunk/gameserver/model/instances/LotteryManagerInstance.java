@@ -169,7 +169,7 @@ public final class LotteryManagerInstance extends NpcInstance {
                 if (item == null)
                     continue;
                 if (item.getItemId() == 4442 && item.getCustomType1() < lotonumber) {
-                    message += "<a action=\"bypass -h npc_%objectId%_Loto " + item.getObjectId() + "\">" + item.getCustomType1();
+                    message += "<a action=\"bypass -h npc_%objectId%_Loto " + item.objectId() + "\">" + item.getCustomType1();
                     message += " " + HtmlUtils.htmlNpcString(NpcString.EVENT_NUMBER) + " ";
                     int[] numbers = LotteryManager.INSTANCE.decodeNumbers(item.getEnchantLevel(), item.getCustomType2());
                     for (int i = 0; i < 5; i++)
@@ -221,7 +221,7 @@ public final class LotteryManagerInstance extends NpcInstance {
             return;
         }
 
-        html.replace("%objectId%", String.valueOf(getObjectId()));
+        html.replace("%objectId%", String.valueOf(objectId()));
         html.replace("%race%", "" + LotteryManager.INSTANCE.getId());
         html.replace("%adena%", "" + LotteryManager.INSTANCE.getPrize());
         html.replace("%ticket_price%", "" + Config.SERVICES_LOTTERY_TICKET_PRICE);

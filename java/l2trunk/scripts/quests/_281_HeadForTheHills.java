@@ -48,12 +48,12 @@ public final class _281_HeadForTheHills extends Quest {
                 st.setState(STARTED);
                 st.playSound(SOUND_ACCEPT);
             }
-        } else if (event.equalsIgnoreCase("adena")) {
+        } else if ("adena".equalsIgnoreCase(event)) {
             st.giveItems(ADENA_ID, st.getQuestItemsCount(HillsOfGoldMonsterClaw) * 50, false);
-            st.takeItems(HillsOfGoldMonsterClaw, -1);
+            st.takeItems(HillsOfGoldMonsterClaw);
             tryGiveOneTimeRevard(st);
             htmltext = "zerstorer_morsell_q0281_06.htm";
-        } else if (event.equalsIgnoreCase("soe")) {
+        } else if ("soe".equalsIgnoreCase(event)) {
             if (st.getQuestItemsCount(HillsOfGoldMonsterClaw) >= 50) {
                 st.takeItems(HillsOfGoldMonsterClaw, 50);
                 st.giveItems(ScrollOfEscape, 5, false);
@@ -68,14 +68,14 @@ public final class _281_HeadForTheHills extends Quest {
     }
 
     private void tryGiveOneTimeRevard(QuestState st) {
-        if (st.getPlayer().getClassId().getLevel() == 1 && !st.getPlayer().getVarB("p1q2")) {
-            st.getPlayer().setVar("p1q2", "1", -1);
-            st.getPlayer().sendPacket(new ExShowScreenMessage("Acquisition of Soulshot for beginners complete.\n                  Go find the Newbie Guide."));
-            QuestState qs = st.getPlayer().getQuestState(_255_Tutorial.class);
+        if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("p1q2")) {
+            st.player.setVar("p1q2", 1);
+            st.player.sendPacket(new ExShowScreenMessage("Acquisition of Soulshot for beginners complete.\n                  Go find the Newbie Guide."));
+            QuestState qs = st.player.getQuestState(_255_Tutorial.class);
             if (qs != null && qs.getInt("Ex") != 10) {
                 st.showQuestionMark(26);
-                qs.set("Ex", "10");
-                if (st.getPlayer().getClassId().isMage) {
+                qs.set("Ex", 10);
+                if (st.player.getClassId().isMage) {
                     st.playTutorialVoice("tutorial_voice_027");
                     st.giveItems(5790, 3000);
                 } else {
@@ -95,12 +95,12 @@ public final class _281_HeadForTheHills extends Quest {
         if (id != CREATED)
             cond = st.getCond();
         if (npcId == Marcela)
-            if (st.getPlayer().getLevel() < 6) {
+            if (st.player.getLevel() < 6) {
                 htmltext = "zerstorer_morsell_q0281_02.htm";
                 st.exitCurrentQuest(true);
             } else if (cond == 0)
                 htmltext = "zerstorer_morsell_q0281_01.htm";
-            else if (cond == 1 && st.getQuestItemsCount(HillsOfGoldMonsterClaw) > 0)
+            else if (cond == 1 && st.haveQuestItem(HillsOfGoldMonsterClaw))
                 htmltext = "zerstorer_morsell_q0281_05.htm";
             else
                 htmltext = "zerstorer_morsell_q0281_03.htm";
@@ -108,14 +108,11 @@ public final class _281_HeadForTheHills extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
-        int cond = st.getCond();
-        if (cond != 1)
-            return null;
-        DROPLIST_CHANCES.entrySet().stream()
-                .filter(e -> e.getKey() == npcId)
-                .findFirst().ifPresent(e -> st.rollAndGive(HillsOfGoldMonsterClaw, 1, e.getValue()));
-        return null;
+        if (st.getCond() != 1)
+            return;
+        if (DROPLIST_CHANCES.keySet().contains(npcId))
+            st.rollAndGive(HillsOfGoldMonsterClaw, 1, DROPLIST_CHANCES.get(npcId));
     }
 }

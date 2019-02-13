@@ -40,7 +40,7 @@ public class Mucrokian extends Fighter {
                         }
                     }
                     if (Rnd.chance(10)) {
-                        Functions.npcSay(actor, Rnd.get(MsgText), ChatType.NPC_ALL, 5000);
+                        Functions.npcSay(actor, Rnd.get(MsgText), ChatType.NPC_ALL, 5000,"");
                     }
                 }
             }

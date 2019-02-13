@@ -4,10 +4,7 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.DefaultAI;
 import l2trunk.gameserver.data.xml.holder.NpcHolder;
-import l2trunk.gameserver.model.Creature;
-import l2trunk.gameserver.model.GameObject;
-import l2trunk.gameserver.model.Skill;
-import l2trunk.gameserver.model.World;
+import l2trunk.gameserver.model.*;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.tables.SkillTable;
 
@@ -37,8 +34,8 @@ public final class KrateisCubeWatcherRed extends DefaultAI {
     public void onEvtThink() {
         NpcInstance actor = getActor();
 
-        World.getAroundCharacters(actor, 600, 300)
-                .filter(GameObject::isPlayer)
+        World.getAroundPlayers(actor, 600, 300)
+                .filter(creature -> creature instanceof Player)
                 .filter(cha -> !cha.isDead())
                 .filter(cha -> Rnd.chance(SKILL_CHANCE))
                 .forEach(cha -> {

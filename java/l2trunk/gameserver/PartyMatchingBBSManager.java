@@ -46,7 +46,7 @@ public final class PartyMatchingBBSManager extends Functions implements ICommuni
              */
             else {
                 partyMatchingPlayersList.add(activeChar);
-                partyMatchingDescriptionList.put(activeChar.getObjectId(), command.substring(23));
+                partyMatchingDescriptionList.put(activeChar.objectId(), command.substring(23));
                 activeChar.sendMessage("You've joined the Party Matching list.");
             }
 
@@ -58,7 +58,7 @@ public final class PartyMatchingBBSManager extends Functions implements ICommuni
                 activeChar.sendMessage("You cant join the Party Matching list while you're in party!");
             } else {
                 partyMatchingPlayersList.remove(activeChar);
-                partyMatchingDescriptionList.remove(activeChar.getObjectId());
+                partyMatchingDescriptionList.remove(activeChar.objectId());
                 activeChar.sendMessage("You've left the Party Matching list.");
             }
 
@@ -109,12 +109,12 @@ public final class PartyMatchingBBSManager extends Functions implements ICommuni
                 }
 
                 changeColor++;
-                partyMatchingList.append("<table width=775 height=35 " + ((changeColor % 2) == 1 ? "" : "bgcolor=171612") + "><tr>");
-                partyMatchingList.append("<td fixwidth=200 align=center>" + activeChar.getName() + "</td>");
-                partyMatchingList.append("<td fixwidth=14 height=18><img src=\"L2UI_CH3." + getClassIcon(activeChar.getClassId().id()) + "\" width=12 height=12></td>");
-                partyMatchingList.append("<td fixwidth=125>" + Util.getFullClassName(activeChar.getClassId()) + "</td>");
-                partyMatchingList.append("<td fixwidth=350>" + partyMatchingDescriptionList.get(activeChar.getObjectId()) + "</td>");
-                partyMatchingList.append("<td fixwidth=80 align=right><button action=\"bypass -h partyMatchingInvite " + activeChar.getName() + " \" value=\"Invite\" width=80 height=27 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td>");
+                partyMatchingList.append("<table width=775 height=35 ").append((changeColor % 2) == 1 ? "" : "bgcolor=171612").append("><tr>");
+                partyMatchingList.append("<td fixwidth=200 align=center>").append(activeChar.getName()).append("</td>");
+                partyMatchingList.append("<td fixwidth=14 height=18><img src=\"L2UI_CH3.").append(getClassIcon(activeChar.getClassId().id)).append("\" width=12 height=12></td>");
+                partyMatchingList.append("<td fixwidth=125>").append(Util.getFullClassName(activeChar.getClassId())).append("</td>");
+                partyMatchingList.append("<td fixwidth=350>").append(partyMatchingDescriptionList.get(activeChar.objectId())).append("</td>");
+                partyMatchingList.append("<td fixwidth=80 align=right><button action=\"bypass -h partyMatchingInvite ").append(activeChar.getName()).append(" \" value=\"Invite\" width=80 height=27 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td>");
                 partyMatchingList.append("</tr></table>");
                 partyMatchingList.append("<img src=\"L2UI.SquareGray\" width=780 height=1>");
             }
@@ -123,9 +123,9 @@ public final class PartyMatchingBBSManager extends Functions implements ICommuni
         StringBuilder pages = new StringBuilder();
         for (int i = Math.max(currentPage - (maxPlayersPerPage / 2), 1); i <= maxPage; i++) {
             if (i == currentPage) {
-                pages.append("<td fixwidth=20 align=center><font color=LEVEL>" + i + "</font></td>");
+                pages.append("<td fixwidth=20 align=center><font color=LEVEL>").append(i).append("</font></td>");
             } else {
-                pages.append("<td fixwidth=20 align=center><a action=\"bypass _bbsPartyMatching;" + i + "\">" + i + "</a></td>");
+                pages.append("<td fixwidth=20 align=center><a action=\"bypass _bbsPartyMatching;").append(i).append("\">").append(i).append("</a></td>");
             }
 
             if (i != maxPage) {

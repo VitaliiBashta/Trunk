@@ -105,8 +105,8 @@ public final class TradeDone extends L2GameClientPacket {
                 if (item == null || item.getCount() < ti.getCount() || !item.canBeTraded(parthner1))
                     return;
 
-                weight = SafeMath.addAndCheck(weight, SafeMath.mulAndCheck(ti.getCount(), ti.getItem().getWeight()));
-                if (!ti.getItem().isStackable() || parthner2.getInventory().getItemByItemId(ti.getItemId()) == null)
+                weight = SafeMath.addAndCheck(weight, SafeMath.mulAndCheck(ti.getCount(), ti.getItem().weight()));
+                if (!ti.getItem().stackable() || parthner2.getInventory().getItemByItemId(ti.getItemId()) == null)
                     slots++;
             }
 
@@ -128,8 +128,8 @@ public final class TradeDone extends L2GameClientPacket {
                 if (item == null || item.getCount() < ti.getCount() || !item.canBeTraded(parthner2))
                     return;
 
-                weight = SafeMath.addAndCheck(weight, SafeMath.mulAndCheck(ti.getCount(), ti.getItem().getWeight()));
-                if (!ti.getItem().isStackable() || parthner1.getInventory().getItemByItemId(ti.getItemId()) == null)
+                weight = SafeMath.addAndCheck(weight, SafeMath.mulAndCheck(ti.getCount(), ti.getItem().weight()));
+                if (!ti.getItem().stackable() || parthner1.getInventory().getItemByItemId(ti.getItemId()) == null)
                     slots++;
             }
 

@@ -25,7 +25,7 @@ public final class ExShowReceivedPostList extends L2GameServerPacket {
     private final List<Mail> mails;
 
     public ExShowReceivedPostList(Player cha) {
-        mails = MailDAO.getInstance().getReceivedMailByOwnerId(cha.getObjectId());
+        mails = MailDAO.getInstance().getReceivedMailByOwnerId(cha.objectId());
         Collections.sort(mails);
     }
 

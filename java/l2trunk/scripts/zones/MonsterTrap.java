@@ -5,11 +5,10 @@ import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.CtrlEvent;
 import l2trunk.gameserver.listener.zone.OnZoneEnterLeaveListener;
-import l2trunk.gameserver.model.Creature;
-import l2trunk.gameserver.model.Player;
-import l2trunk.gameserver.model.SimpleSpawner;
-import l2trunk.gameserver.model.Zone;
+import l2trunk.gameserver.model.*;
+import l2trunk.gameserver.model.instances.DecoyInstance;
 import l2trunk.gameserver.model.instances.NpcInstance;
+import l2trunk.gameserver.model.instances.TamedBeastInstance;
 import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.ReflectionUtils;
 
@@ -41,9 +40,8 @@ public final class MonsterTrap implements ScriptFile {
 
     private class ZoneListener implements OnZoneEnterLeaveListener {
         @Override
-        public void onZoneEnter(Zone zone, Creature cha) {
-            Player player = cha.getPlayer();
-            if (player == null || zone.getParams() == null)
+        public void onZoneEnter(Zone zone, Player player) {
+            if (zone.getParams() == null)
                 return;
 
             String[] params;
@@ -91,8 +89,5 @@ public final class MonsterTrap implements ScriptFile {
                 }
         }
 
-        @Override
-        public void onZoneLeave(Zone zone, Creature cha) {
-        }
     }
 }

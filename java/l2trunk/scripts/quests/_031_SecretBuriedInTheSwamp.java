@@ -63,7 +63,7 @@ public final class _031_SecretBuriedInTheSwamp extends Quest {
         int cond = st.getCond();
         if (npcId == ABERCROMBIE) {
             if (cond == 0) {
-                if (st.getPlayer().getLevel() >= 66)
+                if (st.player.getLevel() >= 66)
                     htmltext = "31555-0.htm";
                 else {
                     htmltext = "31555-0a.htm";

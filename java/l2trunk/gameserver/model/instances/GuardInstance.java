@@ -1,6 +1,7 @@
 package l2trunk.gameserver.model.instances;
 
 import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
@@ -11,8 +12,8 @@ public class GuardInstance extends NpcInstance {
     }
 
     @Override
-    public boolean isAutoAttackable(Creature attacker) {
-        return attacker.isMonster() && ((MonsterInstance) attacker).isAggressive() || attacker.isPlayable() && attacker.getKarma() > 0;
+    public final boolean isAutoAttackable(Creature attacker) {
+        return attacker instanceof MonsterInstance && ((MonsterInstance) attacker).isAggressive() || attacker instanceof Playable && ((Playable)attacker).getKarma() > 0;
     }
 
     @Override

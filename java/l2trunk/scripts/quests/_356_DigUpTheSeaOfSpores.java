@@ -23,8 +23,7 @@ public final class _356_DigUpTheSeaOfSpores extends Quest {
         addKillId(SPORE_ZOMBIE);
         addKillId(ROTTING_TREE);
 
-        addQuestItem(CARNIVORE_SPORE);
-        addQuestItem(HERBIBOROUS_SPORE);
+        addQuestItem(CARNIVORE_SPORE, HERBIBOROUS_SPORE);
     }
 
     @Override
@@ -32,8 +31,8 @@ public final class _356_DigUpTheSeaOfSpores extends Quest {
         String htmltext = event;
         long carn = st.getQuestItemsCount(CARNIVORE_SPORE);
         long herb = st.getQuestItemsCount(HERBIBOROUS_SPORE);
-        if (event.equalsIgnoreCase("magister_gauen_q0356_06.htm")) {
-            if (st.getPlayer().getLevel() >= 43) {
+        if ("magister_gauen_q0356_06.htm".equalsIgnoreCase(event)) {
+            if (st.player.getLevel() >= 43) {
                 st.setCond(1);
                 st.setState(STARTED);
                 st.playSound(SOUND_ACCEPT);
@@ -41,12 +40,12 @@ public final class _356_DigUpTheSeaOfSpores extends Quest {
                 htmltext = "magister_gauen_q0356_01.htm";
                 st.exitCurrentQuest(true);
             }
-        } else if ((event.equalsIgnoreCase("magister_gauen_q0356_20.htm") || event.equalsIgnoreCase("magister_gauen_q0356_17.htm")) && carn >= 50 && herb >= 50) {
+        } else if (("magister_gauen_q0356_20.htm".equalsIgnoreCase(event) || "magister_gauen_q0356_17.htm".equalsIgnoreCase(event)) && carn >= 50 && herb >= 50) {
             st.takeItems(CARNIVORE_SPORE, -1);
             st.takeItems(HERBIBOROUS_SPORE, -1);
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(true);
-            if (event.equalsIgnoreCase("magister_gauen_q0356_17.htm"))
+            if ("magister_gauen_q0356_17.htm".equalsIgnoreCase(event))
                 st.giveItems(ADENA_ID, 44000);
             else
                 st.addExpAndSp(36000, 2600);
@@ -67,13 +66,13 @@ public final class _356_DigUpTheSeaOfSpores extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         long carn = st.getQuestItemsCount(CARNIVORE_SPORE);
         long herb = st.getQuestItemsCount(HERBIBOROUS_SPORE);
         if (npcId == SPORE_ZOMBIE) {
             if (carn < 50) {
-                st.giveItems(CARNIVORE_SPORE, 1);
+                st.giveItems(CARNIVORE_SPORE);
                 if (carn == 49) {
                     st.playSound(SOUND_MIDDLE);
                     if (herb >= 50) {
@@ -85,7 +84,7 @@ public final class _356_DigUpTheSeaOfSpores extends Quest {
             }
         } else if (npcId == ROTTING_TREE)
             if (herb < 50) {
-                st.giveItems(HERBIBOROUS_SPORE, 1);
+                st.giveItems(HERBIBOROUS_SPORE);
                 if (herb == 49) {
                     st.playSound(SOUND_MIDDLE);
                     if (carn >= 50) {
@@ -95,7 +94,5 @@ public final class _356_DigUpTheSeaOfSpores extends Quest {
                 } else
                     st.playSound(SOUND_ITEMGET);
             }
-
-        return null;
     }
 }

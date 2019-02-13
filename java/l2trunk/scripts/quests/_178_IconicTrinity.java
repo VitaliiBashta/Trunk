@@ -68,11 +68,11 @@ public final class _178_IconicTrinity extends Quest {
                 }
             } else {
                 if (cond == 1)
-                    htmltext = HtmCache.INSTANCE.getNotNull("quests/_178_IconicTrinity/32255-03.htm", st.getPlayer());
+                    htmltext = HtmCache.INSTANCE.getNotNull("quests/_178_IconicTrinity/32255-03.htm", st.player);
                 else if (cond == 2)
-                    htmltext = HtmCache.INSTANCE.getNotNull("quests/_178_IconicTrinity/32256-03.htm", st.getPlayer());
+                    htmltext = HtmCache.INSTANCE.getNotNull("quests/_178_IconicTrinity/32256-03.htm", st.player);
                 else
-                    htmltext = HtmCache.INSTANCE.getNotNull("quests/_178_IconicTrinity/32257-03.htm", st.getPlayer());
+                    htmltext = HtmCache.INSTANCE.getNotNull("quests/_178_IconicTrinity/32257-03.htm", st.player);
 
                 if (len == 0)
                     htmltext = htmltext.replace("Password :  ", "").replace("#N", "first");
@@ -85,15 +85,15 @@ public final class _178_IconicTrinity extends Quest {
                 else if (len == 4)
                     htmltext = htmltext.replace("Password :  ", "****").replace("#N", "fifth");
             }
-        } else if (event.equalsIgnoreCase("32138-04.htm")) {
+        } else if ("32138-04.htm".equalsIgnoreCase(event)) {
             st.giveItems(EnchantD, 1, true);
             st.addExpAndSp(20123, 976);
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(false);
         }
         if (event.equalsIgnoreCase("32255-07.htm") || event.equalsIgnoreCase("32255-09.htm") || event.equalsIgnoreCase("32256-07.htm") || event.equalsIgnoreCase("32256-08.htm") || event.equalsIgnoreCase("32256-09.htm") || event.equalsIgnoreCase("32257-06.htm")) {
-            htmltext = HtmCache.INSTANCE.getNotNull("quests/_178_IconicTrinity/" + event, st.getPlayer());
-            htmltext = htmltext.replace("%player_name%", st.getPlayer().getName());
+            htmltext = HtmCache.INSTANCE.getNotNull("quests/_178_IconicTrinity/" + event, st.player);
+            htmltext = htmltext.replace("%player_name%", st.player.getName());
         }
 
         return htmltext;
@@ -106,10 +106,10 @@ public final class _178_IconicTrinity extends Quest {
         int cond = st.getCond();
         if (npcId == Kekropus) {
             if (cond == 0) {
-                if (st.getPlayer().getRace() != Race.kamael) {
+                if (st.player.getRace() != Race.kamael) {
                     htmltext = "32138-05.htm";
                     st.exitCurrentQuest(true);
-                } else if (st.getPlayer().getLevel() < 17) {
+                } else if (st.player.getLevel() < 17) {
                     htmltext = "32138-00.htm";
                     st.exitCurrentQuest(true);
                 } else

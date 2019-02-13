@@ -84,7 +84,7 @@ public class RequestExMPCCAcceptJoin extends L2GameClientPacket {
                 boolean haveItem = false;
                 // Скила нету, придется расходовать предмет, ищем Strategy Guide в инвентаре
                 if (!haveSkill) {
-                    if (haveItem = requestor.getInventory().destroyItemByItemId(CommandChannel.STRATEGY_GUIDE_ID, 1, "CommandChannel"))
+                    if (haveItem = requestor.getInventory().destroyItemByItemId(CommandChannel.STRATEGY_GUIDE_ID,  "CommandChannel"))
                         requestor.sendPacket(SystemMessage2.removeItems(CommandChannel.STRATEGY_GUIDE_ID, 1));
                 }
 

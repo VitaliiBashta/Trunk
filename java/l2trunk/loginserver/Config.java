@@ -50,10 +50,7 @@ public class Config {
     public static long IP_BAN_TIME;
 
     public static boolean FAKE_LOGIN_SERVER;
-    private static boolean HIDE_ONLINE;
-    private static PasswordHash DEFAULT_CRYPT;
     public static PasswordHash[] LEGACY_CRYPT;
-    private static boolean LOGIN_LOG;
     private static ScrambledKeyPair[] keyPairs;
     private static byte[][] _blowfishKeys;
 
@@ -67,12 +64,12 @@ public class Config {
     }
 
     public static void initCrypt() throws Throwable {
-        DEFAULT_CRYPT = new PasswordHash(Config.DEFAULT_PASSWORD_HASH);
+        PasswordHash DEFAULT_CRYPT = new PasswordHash(Config.DEFAULT_PASSWORD_HASH);
         List<PasswordHash> legacy = new ArrayList<>();
         for (String method : Config.LEGACY_PASSWORD_HASH.split(";"))
             if (!method.equalsIgnoreCase(Config.DEFAULT_PASSWORD_HASH))
                 legacy.add(new PasswordHash(method));
-        LEGACY_CRYPT = legacy.toArray(new PasswordHash[legacy.size()]);
+        LEGACY_CRYPT = legacy.toArray(new PasswordHash[0]);
 
         _log.info("Loaded " + Config.DEFAULT_PASSWORD_HASH + " as default crypt.");
 
@@ -155,9 +152,9 @@ public class Config {
         GAME_SERVER_PING_DELAY = serverSettings.getProperty("GameServerPingDelay", 30) * 1000L;
         GAME_SERVER_PING_RETRY = serverSettings.getProperty("GameServerPingRetry", 4);
         FAKE_LOGIN_SERVER = serverSettings.getProperty("FakeLogin", false);
-        HIDE_ONLINE = serverSettings.getProperty("HideOnline", false);
+        boolean HIDE_ONLINE = serverSettings.getProperty("HideOnline", false);
 
-        LOGIN_LOG = serverSettings.getProperty("LoginLog", true);
+        boolean LOGIN_LOG = serverSettings.getProperty("LoginLog", true);
     }
 
     private static ExProperties load(String filename) {
@@ -167,11 +164,7 @@ public class Config {
     private static ExProperties load(Path file) {
         ExProperties result = new ExProperties();
 
-        try {
-            result.load(file);
-        } catch (IOException e) {
-            _log.error("", e);
-        }
+        result.load(file);
 
         return result;
     }

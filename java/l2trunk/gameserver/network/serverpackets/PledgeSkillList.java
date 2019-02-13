@@ -22,7 +22,7 @@ public final class PledgeSkillList extends L2GameServerPacket {
 
         for (SubUnit subUnit : clan.getAllSubUnits()) {
             for (Skill sk : subUnit.getSkills())
-                unitSkills.add(new UnitSkillInfo(subUnit.getType(), sk.id, sk.level));
+                unitSkills.add(new UnitSkillInfo(subUnit.type(), sk.id, sk.level));
         }
     }
 

@@ -5,14 +5,15 @@ import l2trunk.gameserver.model.items.Inventory;
 import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.network.serverpackets.SystemMessage;
 import l2trunk.gameserver.scripts.Functions;
-import l2trunk.gameserver.scripts.ScriptFile;
+
+import static l2trunk.gameserver.utils.ItemFunctions.addItem;
+import static l2trunk.gameserver.utils.ItemFunctions.removeItem;
 
 
 public final class EnchantingReward extends Functions {
     private static final int MASTER_YOGI_STAFF = 13539;
     private static final int MASTER_YOGI_SCROLL = 13540;
 
-    private static final int ADENA = 57;
     private static final int STAFF_PRICE = 500000;
     private static final int TIMED_SCROLL_PRICE = 3000000;
     private static final int TIMED_SCROLL_HOURS = 6;
@@ -25,10 +26,9 @@ public final class EnchantingReward extends Functions {
     private static int[] SOUL_CRYSTALL = new int[]{9570, 9571, 9572};
 
     public void buy_staff() {
-        Player player = getSelf();
-        if (getItemCount(player, MASTER_YOGI_STAFF) == 0 && getItemCount(player, ADENA) >= STAFF_PRICE) {
-            removeItem(player, ADENA, STAFF_PRICE, "MasterOfEnchanting");
-            addItem(player, MASTER_YOGI_STAFF, 1, "MasterOfEnchanting");
+        if (!player.haveItem(MASTER_YOGI_STAFF) && player.haveAdena( STAFF_PRICE)) {
+            player.reduceAdena( STAFF_PRICE, "MasterOfEnchanting");
+            addItem(player, MASTER_YOGI_STAFF, 1, "Yogi");
             show("scripts/events/MasterOfEnchanting/32599-staffbuyed.htm", player);
         } else {
             show("scripts/events/MasterOfEnchanting/32599-staffcant.htm", player);
@@ -36,20 +36,18 @@ public final class EnchantingReward extends Functions {
     }
 
     public void buy_scroll_lim() {
-        Player player = getSelf();
         long _reuse_time = TIMED_SCROLL_HOURS * 60 * 60 * 1000;
         long _curr_time = System.currentTimeMillis();
-        String _last_use_time = player.getVar("MasterOfEnch");
         long _remaining_time;
-        if (_last_use_time != null)
-            _remaining_time = _curr_time - Long.parseLong(_last_use_time);
+        if (player.isVarSet("MasterOfEnch"))
+            _remaining_time = _curr_time - player.getVarLong("MasterOfEnch");
         else
             _remaining_time = _reuse_time;
         if (_remaining_time >= _reuse_time) {
-            if (getItemCount(player, ADENA) >= TIMED_SCROLL_PRICE) {
-                removeItem(player, ADENA, TIMED_SCROLL_PRICE, "MasterOfEnchanting");
-                addItem(player, MASTER_YOGI_SCROLL, 1, "MasterOfEnchanting");
-                player.setVar("MasterOfEnch", String.valueOf(_curr_time), -1);
+            if (player.haveAdena(TIMED_SCROLL_PRICE)) {
+                player.reduceAdena(TIMED_SCROLL_PRICE, "MasterOfEnchanting");
+                addItem(player, MASTER_YOGI_SCROLL, 1);
+                player.setVar("MasterOfEnch", _curr_time);
                 show("scripts/events/MasterOfEnchanting/32599-scroll24.htm", player);
             } else
                 show("scripts/events/MasterOfEnchanting/32599-s24-no.htm", player);
@@ -67,10 +65,10 @@ public final class EnchantingReward extends Functions {
                 sm.addNumber(minutes);
                 player.sendPacket(sm);
                 show("scripts/events/MasterOfEnchanting/32599-scroll24.htm", player);
-            } else if (getItemCount(player, ADENA) >= TIMED_SCROLL_PRICE) {
-                removeItem(player, ADENA, TIMED_SCROLL_PRICE, "MasterOfEnchanting");
-                addItem(player, MASTER_YOGI_SCROLL, 1, "MasterOfEnchanting");
-                player.setVar("MasterOfEnch", String.valueOf(_curr_time), -1);
+            } else if (player.getAdena() >= TIMED_SCROLL_PRICE) {
+                player.reduceAdena(TIMED_SCROLL_PRICE, "MasterOfEnchanting");
+                addItem(player, MASTER_YOGI_SCROLL, 1);
+                player.setVar("MasterOfEnch", _curr_time);
                 show("scripts/events/MasterOfEnchanting/32599-scroll24.htm", player);
             } else
                 show("scripts/events/MasterOfEnchanting/32599-s24-no.htm", player);
@@ -78,10 +76,9 @@ public final class EnchantingReward extends Functions {
     }
 
     public void buy_scroll_1() {
-        Player player = getSelf();
-        if (getItemCount(player, ADENA) >= ONE_SCROLL_PRICE) {
-            removeItem(player, ADENA, ONE_SCROLL_PRICE, "MasterOfEnchanting");
-            addItem(player, MASTER_YOGI_SCROLL, 1, "MasterOfEnchanting");
+        if (player.haveAdena(ONE_SCROLL_PRICE)) {
+            player.reduceAdena( ONE_SCROLL_PRICE, "MasterOfEnchanting");
+            addItem(player, MASTER_YOGI_SCROLL, 1);
             show("scripts/events/MasterOfEnchanting/32599-scroll-ok.htm", player);
         } else {
             show("scripts/events/MasterOfEnchanting/32599-s1-no.htm", player);
@@ -89,10 +86,9 @@ public final class EnchantingReward extends Functions {
     }
 
     public void buy_scroll_10() {
-        Player player = getSelf();
-        if (getItemCount(player, ADENA) >= TEN_SCROLLS_PRICE) {
-            removeItem(player, ADENA, TEN_SCROLLS_PRICE, "MasterOfEnchanting");
-            addItem(player, MASTER_YOGI_SCROLL, 10, "MasterOfEnchanting");
+        if (player.haveAdena( TEN_SCROLLS_PRICE)) {
+            player.reduceAdena(TEN_SCROLLS_PRICE, "MasterOfEnchanting");
+            addItem(player, MASTER_YOGI_SCROLL, 10);
             show("scripts/events/MasterOfEnchanting/32599-scroll-ok.htm", player);
         } else {
             show("scripts/events/MasterOfEnchanting/32599-s10-no.htm", player);
@@ -100,64 +96,63 @@ public final class EnchantingReward extends Functions {
     }
 
     public void receive_reward() {
-        Player player = getSelf();
         int Equip_Id = player.getInventory().getPaperdollItemId(Inventory.PAPERDOLL_RHAND);
         if (Equip_Id != MASTER_YOGI_STAFF) {
             show("scripts/events/MasterOfEnchanting/32599-rewardnostaff.htm", player);
             return;
         }
-        ItemInstance enchanteditem = player.getInventory().getItemByItemId(Equip_Id);
+        ItemInstance enchanteditem = player.inventory.getItemByItemId(Equip_Id);
         int Ench_Lvl = enchanteditem.getEnchantLevel();
 
         if (Ench_Lvl > 3) {
             switch (Ench_Lvl) {
                 case 4:
-                    addItem(player, 6406, 2, "MasterOfEnchanting"); // Firework
+                    addItem(player, 6406, 2); // Firework
                     break;
                 case 5:
-                    addItem(player, 6407, 3, "MasterOfEnchanting"); // Firework
+                    addItem(player, 6407, 3); // Firework
                     break;
                 case 6:
-                    addItem(player, 8752, 1, "MasterOfEnchanting"); // HG LS 76
+                    addItem(player, 8752, 1); // HG LS 76
                     break;
                 case 7:
-                    addItem(player, 8762, 1, "MasterOfEnchanting"); // TOP LS 76
+                    addItem(player, 8762, 1); // TOP LS 76
                     break;
                 case 8:
-                    addItem(player, 960, 1, "MasterOfEnchanting"); // Scroll: Enchant Weapon (D)
+                    addItem(player, 960, 1); // Scroll: Enchant Weapon (D)
                     break;
                 case 9:
-                    addItem(player, 959, 1, "MasterOfEnchanting"); // Scroll: Enchant Weapon (D)
+                    addItem(player, 959, 1); // Scroll: Enchant Weapon (D)
                     break;
                 case 10:
-                    addItem(player, 6622, 1, "MasterOfEnchanting"); // Scroll: Enchant Weapon (C)
+                    addItem(player, 6622, 1); // Scroll: Enchant Weapon (C)
                     break;
                 case 11:
-                    addItem(player, 9627, 1, "MasterOfEnchanting"); // Scroll: Enchant Weapon (C)
+                    addItem(player, 9627, 1); // Scroll: Enchant Weapon (C)
                     break;
                 case 12:
-                    addItem(player, 20335, 1, "MasterOfEnchanting"); // EXP Rune (30%)
+                    addItem(player, 20335, 1); // EXP Rune (30%)
                     break;
                 case 13:
-                    addItem(player, 10511, 1, "MasterOfEnchanting"); // Shirt A CP
+                    addItem(player, 10511, 1); // Shirt A CP
                     break;
                 case 14:
-                    addItem(player, 10514, 1, "MasterOfEnchanting"); // Shirt S CP
+                    addItem(player, 10514, 1); // Shirt S CP
                     break;
                 case 15:
-                    addItem(player, 13953, 1, "MasterOfEnchanting"); // Belt (S)
+                    addItem(player, 13953, 1); // Belt (S)
                     break;
                 case 16:
-                    addItem(player, 13989, 1, "MasterOfEnchanting"); // Dyn Armor Box
+                    addItem(player, 13989, 1); // Dyn Armor Box
                     break;
                 case 17:
-                    addItem(player, 13988, 1, "MasterOfEnchanting"); // Dyn Wep Box
+                    addItem(player, 13988, 1); // Dyn Wep Box
                     break;
                 case 18:
-                    addItem(player, 21587, 1, "MasterOfEnchanting"); // 7th Anniv Cloak
+                    addItem(player, 21587, 1); // 7th Anniv Cloak
                     break;
                 default:
-                    addItem(player, 21587, 1, "MasterOfEnchanting"); // S80 Grade Weapon Chest (Event)
+                    addItem(player, 21587, 1); // S80 Grade Weapon Chest (Event)
                     break;
             }
             removeItem(player, Equip_Id, 1, "MasterOfEnchanting");

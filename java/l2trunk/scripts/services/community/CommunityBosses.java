@@ -75,7 +75,7 @@ public final class CommunityBosses implements ScriptFile, ICommunityBoardHandler
 
             boolean isAlive = isBossAlive(boss);
 
-            newHtml = newHtml.replace("<?name_" + i + "?>", temp.getName());
+            newHtml = newHtml.replace("<?name_" + i + "?>", temp.name());
             newHtml = newHtml.replace("<?level_" + i + "?>", String.valueOf(temp.level));
             newHtml = newHtml.replace("<?status_" + i + "?>", isAlive ? "Alive" : getRespawnTime(boss));
             newHtml = newHtml.replace("<?status_color_" + i + "?>", getTextColor(isAlive));
@@ -127,7 +127,7 @@ public final class CommunityBosses implements ScriptFile, ICommunityBoardHandler
     }
 
     /**
-     * Showing detailed info about Boss in Community Board. Including name, level, status, stats, image
+     * Showing detailed info about Boss in Community Board. Including name, occupation, status, stats, image
      *
      * @param player guy that will receive details
      * @param sort   index of the sorting type
@@ -201,8 +201,8 @@ public final class CommunityBosses implements ScriptFile, ICommunityBoardHandler
 
         boolean isAlive = isBossAlive(bossSet);
 
-        newHtml = newHtml.replace("<?name?>", bossTemplate.getName());
-        newHtml = newHtml.replace("<?level?>", String.valueOf(bossTemplate.level));
+        newHtml = newHtml.replace("<?name?>", bossTemplate.name());
+        newHtml = newHtml.replace("<?occupation?>", String.valueOf(bossTemplate.level));
         newHtml = newHtml.replace("<?status?>", isAlive ? "Alive" : getRespawnTime(bossSet));
         newHtml = newHtml.replace("<?status_color?>", getTextColor(isAlive));
         newHtml = newHtml.replace("<?minions?>", String.valueOf(getMinionsCount(bossTemplate)));
@@ -312,7 +312,7 @@ public final class CommunityBosses implements ScriptFile, ICommunityBoardHandler
         } else {
             for (Entry<Integer, StatsSet> entry : RaidBossSpawnManager.INSTANCE.getAllBosses().entrySet()) {
                 NpcTemplate temp = NpcHolder.getTemplate(entry.getKey());
-                if (StringUtils.containsIgnoreCase(temp.getName(), search))
+                if (StringUtils.containsIgnoreCase(temp.name(), search))
                     finalResult.put(entry.getKey(), entry.getValue());
             }
         }
@@ -444,9 +444,9 @@ public final class CommunityBosses implements ScriptFile, ICommunityBoardHandler
             StatsSet set2 = base.get(b);
             switch (sorting) {
                 case NAME_ASC:
-                    return temp1.getName().compareTo(temp2.getName());
+                    return temp1.name().compareTo(temp2.name());
                 case NAME_DESC:
-                    return temp2.getName().compareTo(temp1.getName());
+                    return temp2.name().compareTo(temp1.name());
                 case LEVEL_ASC:
                     return Integer.compare(temp1.level, temp2.level);
                 case LEVEL_DESC:

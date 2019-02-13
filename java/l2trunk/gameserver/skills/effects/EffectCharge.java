@@ -16,7 +16,7 @@ public final class EffectCharge extends Effect {
     public void onStart() {
         super.onStart();
 
-        if (effected.isPlayer()) {
+        if (effected instanceof Player) {
             final Player player = (Player) effected;
 
             if (player.getIncreasedForce() >= calc())
@@ -26,8 +26,4 @@ public final class EffectCharge extends Effect {
         }
     }
 
-    @Override
-    public boolean onActionTime() {
-        return false;
-    }
 }

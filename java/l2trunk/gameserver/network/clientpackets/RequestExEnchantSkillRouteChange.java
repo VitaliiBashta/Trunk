@@ -11,6 +11,7 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.tables.SkillTreeTable;
+import l2trunk.gameserver.utils.ItemFunctions;
 import l2trunk.gameserver.utils.Log;
 
 public final class RequestExEnchantSkillRouteChange extends L2GameClientPacket {
@@ -34,7 +35,7 @@ public final class RequestExEnchantSkillRouteChange extends L2GameClientPacket {
             return;
         }
 
-        if (activeChar.getLevel() < 76 || activeChar.getClassId().getLevel() < 4) {
+        if (activeChar.getLevel() < 76 || activeChar.getClassId().occupation() < 3) {
             activeChar.sendMessage("You must have 3rd class change quest completed.");
             return;
         }
@@ -64,13 +65,13 @@ public final class RequestExEnchantSkillRouteChange extends L2GameClientPacket {
             return;
         }
 
-        if (Functions.getItemCount(activeChar, SkillTreeTable.CHANGE_ENCHANT_BOOK) == 0) {
+        if (!activeChar.haveItem(SkillTreeTable.CHANGE_ENCHANT_BOOK)) {
             activeChar.sendPacket(SystemMsg.YOU_DO_NOT_HAVE_ALL_OF_THE_ITEMS_NEEDED_TO_ENCHANT_THAT_SKILL);
             return;
         }
 
-        Functions.removeItem(activeChar, SkillTreeTable.CHANGE_ENCHANT_BOOK, 1, "SkillRouteChange");
-        Functions.removeItem(activeChar, 57, requiredAdena, "SkillRouteChange");
+        ItemFunctions.removeItem(activeChar, SkillTreeTable.CHANGE_ENCHANT_BOOK, 1, "SkillRouteChange");
+        ItemFunctions.removeItem(activeChar, 57, requiredAdena, "SkillRouteChange");
         activeChar.addExpAndSp(0, -1 * requiredSp);
 
         int levelPenalty = Rnd.get(Math.min(4, _skillLvl % 100));

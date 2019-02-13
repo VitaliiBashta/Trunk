@@ -1,12 +1,10 @@
 package l2trunk.gameserver.model.instances;
 
-import l2trunk.commons.lang.reference.HardReference;
 import l2trunk.gameserver.ai.CtrlIntention;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.World;
-import l2trunk.gameserver.model.reference.L2Reference;
 import l2trunk.gameserver.network.serverpackets.*;
 import l2trunk.gameserver.scripts.Events;
 import l2trunk.gameserver.templates.StaticObjectTemplate;
@@ -15,20 +13,13 @@ import l2trunk.gameserver.utils.Location;
 import java.util.List;
 
 public final class StaticObjectInstance extends GameObject {
-    private final HardReference<StaticObjectInstance> reference;
     private final StaticObjectTemplate template;
-    private int _meshIndex;
+    private int meshIndex;
 
     public StaticObjectInstance(int objectId, StaticObjectTemplate template) {
         super(objectId);
 
         this.template = template;
-        reference = new L2Reference<>(this);
-    }
-
-    @Override
-    public HardReference<StaticObjectInstance> getRef() {
-        return reference;
     }
 
     public int getUId() {
@@ -46,11 +37,11 @@ public final class StaticObjectInstance extends GameObject {
 
         if (player.getTarget() != this) {
             player.setTarget(this);
-            player.sendPacket(new MyTargetSelected(getObjectId(), 0));
+            player.sendPacket(new MyTargetSelected(objectId(), 0));
             return;
         }
 
-        MyTargetSelected my = new MyTargetSelected(getObjectId(), 0);
+        MyTargetSelected my = new MyTargetSelected(objectId(), 0);
         player.sendPacket(my);
 
         if (!isInRange(player, 150)) {
@@ -61,7 +52,7 @@ public final class StaticObjectInstance extends GameObject {
 
         if (template.type == 0) // Arena Board
             player.sendPacket(new NpcHtmlMessage(player, getUId(), "newspaper/arena.htm", 0));
-        else if (template.type == 2){ // Village map
+        else if (template.type == 2) { // Village map
             player.sendPacket(new ShowTownMap(template.filePath, template.mapX, template.mapY));
             player.sendActionFailed();
         }
@@ -77,7 +68,7 @@ public final class StaticObjectInstance extends GameObject {
         return false;
     }
 
-    public void broadcastInfo(boolean force) {
+    public void broadcastInfo() {
         StaticObject p = new StaticObject(this);
         World.getAroundPlayers(this)
                 .forEach(pl -> pl.sendPacket(p));
@@ -89,10 +80,10 @@ public final class StaticObjectInstance extends GameObject {
     }
 
     public int getMeshIndex() {
-        return _meshIndex;
+        return meshIndex;
     }
 
     public void setMeshIndex(int meshIndex) {
-        _meshIndex = meshIndex;
+        this.meshIndex = meshIndex;
     }
 }

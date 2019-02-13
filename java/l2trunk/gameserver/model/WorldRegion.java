@@ -6,62 +6,39 @@ import l2trunk.gameserver.ai.CtrlIntention;
 import l2trunk.gameserver.model.entity.Reflection;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.L2GameServerPacket;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public final class WorldRegion implements Iterable<GameObject> {
+public final class WorldRegion /*implements Iterable<GameObject>*/ {
 
-    @SuppressWarnings("unused")
-    private static final Logger _log = LoggerFactory.getLogger(WorldRegion.class);
-    /**
-     * Координаты региона в мире
-     */
-    private final int tileX, tileY, tileZ;
+    final int x;
+    final int y;
+    final int z;
 
     private final AtomicBoolean isActive = new AtomicBoolean();
-    /**
-     * Все объекты в регионе
-     */
-    private volatile GameObject[] _objects = new GameObject[0];
-    /**
-     * Количество объектов в регионе
-     */
-    private int _objectsCount = 0;
+
+    private volatile List<GameObject> objects = new CopyOnWriteArrayList<>();
     /**
      * Зоны пересекающие этот регион
      */
     private volatile List<Zone> zones = new CopyOnWriteArrayList<>();
-    /**
-     * Количество игроков в регионе
-     */
-    private int _playersCount = 0;
+    private int playersCount = 0;
     /**
      * Запланированная задача активации/деактивации текущего и соседних регионов
      */
-    private Future<?> _activateTask;
+    private Future<?> activateTask;
 
     WorldRegion(int x, int y, int z) {
-        tileX = x;
-        tileY = y;
-        tileZ = z;
+        this.x = x;
+        this.y = y;
+        this.z = z;
     }
 
-    int getX() {
-        return tileX;
-    }
-
-    int getY() {
-        return tileY;
-    }
-
-    int getZ() {
-        return tileZ;
+    public List<GameObject> getObjects() {
+        return objects;
     }
 
     void addToPlayers(GameObject object, Creature dropper) {
@@ -69,25 +46,23 @@ public final class WorldRegion implements Iterable<GameObject> {
             return;
 
         Player player = null;
-        if (object.isPlayer())
+        if (object instanceof Player)
             player = (Player) object;
 
-        int oid = object.getObjectId();
+        int oid = object.objectId();
         int rid = object.getReflectionId();
 
-        Player p;
+        for (GameObject obj : objects) {
+            if (obj.objectId() != oid && obj.getReflectionId() == rid) {
+                // Если object - игрок, показать ему все видимые обьекты в регионе
+                if (player != null)
+                    player.sendPacket(player.addVisibleObject(obj, null));
 
-        for (GameObject obj : this) {
-            if (obj.getObjectId() == oid || obj.getReflectionId() != rid)
-                continue;
-            // Если object - игрок, показать ему все видимые обьекты в регионе
-            if (player != null)
-                player.sendPacket(player.addVisibleObject(obj, null));
-
-            // Показать обьект всем игрокам в регионе
-            if (obj.isPlayer()) {
-                p = (Player) obj;
-                p.sendPacket(p.addVisibleObject(object, dropper));
+                // Показать обьект всем игрокам в регионе
+                if (obj instanceof Player) {
+                    Player p = (Player) obj;
+                    p.sendPacket(p.addVisibleObject(object, dropper));
+                }
             }
         }
     }
@@ -96,29 +71,26 @@ public final class WorldRegion implements Iterable<GameObject> {
         if (object == null)
             return;
 
-        Player player = null;
-        if (object.isPlayer())
-            player = (Player) object;
+        Player player = (object instanceof Player) ? (Player) object : null;
 
-        int oid = object.getObjectId();
+        int oid = object.objectId();
         Reflection rid = object.getReflection();
 
         Player p;
         List<L2GameServerPacket> d = null;
 
-        for (GameObject obj : this) {
-            if (obj.getObjectId() == oid || obj.getReflection() != rid)
-                continue;
+        for (GameObject obj : objects) {
+            if (obj.objectId() != oid && obj.getReflection() == rid) {// Если object - игрок, убрать у него все видимые обьекты в регионе
+                if (player != null)
+                    player.sendPacket(player.removeVisibleObject(obj, null));
 
-            // Если object - игрок, убрать у него все видимые обьекты в регионе
-            if (player != null)
-                player.sendPacket(player.removeVisibleObject(obj, null));
-
-            // Убрать обьект у всех игроков в регионе
-            if (obj.isPlayer()) {
-                p = (Player) obj;
-                p.sendPacket(p.removeVisibleObject(object, d == null ? d = object.deletePacketList() : d));
+                // Убрать обьект у всех игроков в регионе
+                if (obj instanceof Player) {
+                    p = (Player) obj;
+                    p.sendPacket(p.removeVisibleObject(object, d == null ? d = object.deletePacketList() : d));
+                }
             }
+
         }
     }
 
@@ -126,21 +98,14 @@ public final class WorldRegion implements Iterable<GameObject> {
         if (obj == null)
             return;
 
-        GameObject[] objects = _objects;
+        objects.add(obj);
 
-        GameObject[] resizedObjects = new GameObject[_objectsCount + 1];
-        System.arraycopy(objects, 0, resizedObjects, 0, _objectsCount);
-        objects = resizedObjects;
-        objects[_objectsCount++] = obj;
-
-        _objects = resizedObjects;
-
-        if (obj.isPlayer())
-            if (_playersCount++ == 0) {
-                if (_activateTask != null)
-                    _activateTask.cancel(false);
+        if (obj instanceof Player)
+            if (playersCount++ == 0) {
+                if (activateTask != null)
+                    activateTask.cancel(false);
                 //активируем регион и соседние регионы через секунду
-                _activateTask = ThreadPoolManager.INSTANCE.schedule(new ActivateTask(true), 1000L);
+                activateTask = ThreadPoolManager.INSTANCE.schedule(new ActivateTask(true), 1000L);
             }
     }
 
@@ -148,39 +113,19 @@ public final class WorldRegion implements Iterable<GameObject> {
         if (obj == null)
             return;
 
-        GameObject[] objects = _objects;
+        objects.remove(obj);
 
-        int index = -1;
-
-        for (int i = 0; i < _objectsCount; i++) {
-            if (objects[i] == obj) {
-                index = i;
-                break;
-            }
-        }
-
-        if (index == -1) //Ошибочная ситуация
-            return;
-
-        _objectsCount--;
-
-        GameObject[] resizedObjects = new GameObject[_objectsCount];
-        objects[index] = objects[_objectsCount];
-        System.arraycopy(objects, 0, resizedObjects, 0, _objectsCount);
-
-        _objects = resizedObjects;
-
-        if (obj.isPlayer())
-            if (--_playersCount == 0) {
-                if (_activateTask != null)
-                    _activateTask.cancel(false);
+        if (obj instanceof Player)
+            if (--playersCount == 0) {
+                if (activateTask != null)
+                    activateTask.cancel(false);
                 //деактивируем регион и соседние регионы через минуту
-                _activateTask = ThreadPoolManager.INSTANCE.schedule(new ActivateTask(false), 60000L);
+                activateTask = ThreadPoolManager.INSTANCE.schedule(new ActivateTask(false), 60000L);
             }
     }
 
     public boolean isEmpty() {
-        return _playersCount == 0;
+        return playersCount == 0;
     }
 
     public boolean isActive() {
@@ -196,22 +141,21 @@ public final class WorldRegion implements Iterable<GameObject> {
         if (!isActive.compareAndSet(!activate, activate))
             return;
 
-        NpcInstance npc;
-        for (GameObject obj : this) {
-            if (!obj.isNpc())
-                continue;
-            npc = (NpcInstance) obj;
-            if (npc.getAI().isActive() != isActive())
-                if (isActive()) {
-                    npc.getAI().startAITask();
-                    npc.getAI().setIntention(CtrlIntention.AI_INTENTION_ACTIVE);
-                    npc.startRandomAnimation();
-                } else if (!npc.getAI().isGlobalAI()) {
-                    npc.getAI().stopAITask();
-                    npc.getAI().setIntention(CtrlIntention.AI_INTENTION_IDLE);
-                    npc.stopRandomAnimation();
-                }
-        }
+        objects.stream()
+                .filter(obj -> obj instanceof NpcInstance)
+                .map(obj -> (NpcInstance) obj)
+                .forEach(npc -> {
+                    if (npc.getAI().isActive() != isActive())
+                        if (isActive()) {
+                            npc.getAI().startAITask();
+                            npc.getAI().setIntention(CtrlIntention.AI_INTENTION_ACTIVE);
+                            npc.startRandomAnimation();
+                        } else if (!npc.getAI().isGlobalAI()) {
+                            npc.getAI().stopAITask();
+                            npc.getAI().setIntention(CtrlIntention.AI_INTENTION_IDLE);
+                            npc.stopRandomAnimation();
+                        }
+                });
     }
 
     synchronized void addZone(Zone zone) {
@@ -229,13 +173,13 @@ public final class WorldRegion implements Iterable<GameObject> {
 
     @Override
     public String toString() {
-        return "[" + tileX + ", " + tileY + ", " + tileZ + "]";
+        return "[" + x + ", " + y + ", " + z + "]";
     }
 
-    @Override
-    public Iterator<GameObject> iterator() {
-        return new InternalIterator(_objects);
-    }
+//    @Override
+//    public Iterator<GameObject> iterator() {
+//        return new InternalIterator(objects);
+//    }
 
 
     public class ActivateTask extends RunnableImpl {
@@ -254,29 +198,29 @@ public final class WorldRegion implements Iterable<GameObject> {
         }
     }
 
-    private class InternalIterator implements Iterator<GameObject> {
-        final GameObject[] objects;
-        int cursor = 0;
-
-        InternalIterator(final GameObject[] objects) {
-            this.objects = objects;
-        }
-
-        @Override
-        public boolean hasNext() {
-            if (cursor < objects.length)
-                return objects[cursor] != null;
-            return false;
-        }
-
-        @Override
-        public GameObject next() {
-            return objects[cursor++];
-        }
-
-        @Override
-        public void remove() {
-            throw new UnsupportedOperationException();
-        }
-    }
+//    private class InternalIterator implements Iterator<GameObject> {
+//        final GameObject[] objects;
+//        int cursor = 0;
+//
+//        InternalIterator(final GameObject[] objects) {
+//            this.objects = objects;
+//        }
+//
+//        @Override
+//        public boolean hasNext() {
+//            if (cursor < objects.length)
+//                return objects[cursor] != null;
+//            return false;
+//        }
+//
+//        @Override
+//        public GameObject next() {
+//            return objects[cursor++];
+//        }
+//
+//        @Override
+//        public void remove() {
+//            throw new UnsupportedOperationException();
+//        }
+//    }
 }

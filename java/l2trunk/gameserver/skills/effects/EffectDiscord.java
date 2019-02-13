@@ -7,6 +7,8 @@ import l2trunk.gameserver.model.Effect;
 import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.events.impl.SiegeEvent;
+import l2trunk.gameserver.model.instances.MonsterInstance;
+import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.instances.SummonInstance;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.stats.Env;
@@ -28,7 +30,7 @@ public final class EffectDiscord extends Effect {
 
         boolean multitargets = skill.isAoE();
 
-        if (!effected.isMonster()) {
+        if (!(effected instanceof MonsterInstance)) {
             if (!multitargets)
                 effector.sendPacket(SystemMsg.THAT_IS_AN_INCORRECT_TARGET);
             return false;
@@ -40,24 +42,12 @@ public final class EffectDiscord extends Effect {
             return false;
         }
 
-        // Discord нельзя наложить на осадных саммонов
-        Player player = effected.getPlayer();
-        if (player != null) {
-            SiegeEvent<?, ?> siegeEvent = player.getEvent(SiegeEvent.class);
-            if (effected.isSummon() && siegeEvent != null && siegeEvent.containsSiegeSummon((SummonInstance) effected)) {
-                if (!multitargets)
-                    effector.sendPacket(SystemMsg.THAT_IS_AN_INCORRECT_TARGET);
-                return false;
-            }
-        }
-
         if (effected.isInZonePeace()) {
             if (!multitargets)
                 effector.sendPacket(SystemMsg.YOU_MAY_NOT_ATTACK_IN_A_PEACEFUL_ZONE);
             return false;
         }
-
-        return super.checkCondition();
+        return true;
     }
 
     @Override
@@ -85,7 +75,7 @@ public final class EffectDiscord extends Effect {
     @Override
     protected boolean onActionTime() {
         List<Creature> targetList = effected.getAroundCharacters(900, 200)
-                .filter(GameObject::isNpc)
+                .filter(c ->c instanceof NpcInstance)
                 .filter(c -> c != effected)
                 .collect(Collectors.toList());
 

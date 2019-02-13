@@ -23,10 +23,10 @@ public final class DrillSergeant extends Fighter {
         if (System.currentTimeMillis() > waitTimeout) {
             waitTimeout = System.currentTimeMillis() + Rnd.get(10, 30) * 1000L;
             List<Integer> socialAction = List.of(7, 4, 5);
-            actor.broadcastPacket(new SocialAction(actor.getObjectId(), 7));
+            actor.broadcastPacket(new SocialAction(actor.objectId(), 7));
             actor.getAroundNpc(700, 100)
                     .filter(mob -> recruits.contains(mob.getNpcId()))
-                    .forEach(mob -> mob.broadcastPacket(new SocialAction(mob.getObjectId(), Rnd.get(socialAction))));
+                    .forEach(mob -> mob.broadcastPacket(new SocialAction(mob.objectId(), Rnd.get(socialAction))));
         }
         return false;
     }

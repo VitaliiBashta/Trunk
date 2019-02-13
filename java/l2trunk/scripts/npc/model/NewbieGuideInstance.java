@@ -9,13 +9,14 @@ import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
 import l2trunk.gameserver.network.serverpackets.PlaySound;
 import l2trunk.gameserver.network.serverpackets.RadarControl;
-import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.scripts.quests.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+
+import static l2trunk.gameserver.utils.ItemFunctions.addItem;
 
 public final class NewbieGuideInstance extends NpcInstance {
     private static final Logger _log = LoggerFactory.getLogger(NewbieGuideInstance.class);
@@ -28,37 +29,36 @@ public final class NewbieGuideInstance extends NpcInstance {
     @Override
     public void showChatWindow(Player player, int val) {
         if (val == 0 && mainHelpers.contains(getNpcId()))
-            if (player.getClassId().getLevel() == 1) {
-                if (player.getVar("NewGuidReward") == null) {
+            if (player.getClassId().occupation() == 0) {
+                if (!player.isVarSet("NewGuidReward")) {
                     QuestState qs = player.getQuestState(_999_T1Tutorial.class);
                     if (qs != null)
                         qs.unset("step");
 
-                    player.setVar("NewGuidReward", "1", -1);
-                    boolean isMage = (player.getClassId().getRace() != Race.orc) && player.getClassId().isMage;
+                    player.setVar("NewGuidReward");
+                    boolean isMage = (player.getClassId().race != Race.orc) && player.getClassId().isMage;
                     if (isMage) {
                         player.sendPacket(new PlaySound("tutorial_voice_027"));
-                        Functions.addItem(player, 5790, 100, "NewbieGuideInstance"); // Spiritshot
+                        addItem(player, 5790, 100); // Spiritshot
                     } else {
                         player.sendPacket(new PlaySound("tutorial_voice_026"));
-                        Functions.addItem(player, 5789, 200, "NewbieGuideInstance"); // Soulshot
+                        addItem(player, 5789, 200); // Soulshot
                     }
-                    Functions.addItem(player, 8594, 2, "NewbieGuideInstance"); // Recovery Scroll: NG
+                    addItem(player, 8594, 2); // Recovery Scroll: NG
                     if (player.getLevel() == 1)
                         player.addExpAndSp(Experience.LEVEL[2] - player.getExp(), 50, 0, 0, true, false);
                     else
                         player.addExpAndSp(0, 50, 0, 0, true, false);
                 }
-                if (player.getLevel() < 6) // FIXME: если получить 6 левел во время квеста то награду не дадут
+                if (player.getLevel() < 6)
                     if (player.isQuestCompleted(_001_LettersOfLove.class)
                             || player.isQuestCompleted(_002_WhatWomenWant.class)
                             || player.isQuestCompleted(_004_LongLivethePaagrioLord.class)
                             || player.isQuestCompleted(_005_MinersFavor.class)
                             || player.isQuestCompleted(_166_DarkMass.class)
                             || player.isQuestCompleted(_174_SupplyCheck.class)) {
-                        if (!player.getVarB("ng1")) {
-                            String oldVar = player.getVar("ng1");
-                            player.setVar("ng1", oldVar == null ? "1" : String.valueOf(Integer.parseInt(oldVar) + 1), -1);
+                        if (!player.isVarSet("ng1")) {
+                            player.incVar("ng1");
                             player.addExpAndSp(Experience.LEVEL[6] - player.getExp(), 127, 0, 0, true, false);
                             player.addAdena(11567, "NewbieGuide");
                         }
@@ -69,12 +69,12 @@ public final class NewbieGuideInstance extends NpcInstance {
                         return;
                     }
                 if (player.getLevel() < 10)
-                    if (player.getVarB("p1q2")) {
-                        if (!player.getVarB("ng2")) {
-                            String oldVar = player.getVar("ng2");
-                            player.setVar("ng2", oldVar == null ? "1" : String.valueOf(Integer.parseInt(oldVar) + 1), -1);
+                    if (player.isVarSet("p1q2")) {
+                        if (!player.isVarSet("ng2")) {
+                            player.incVar("ng2");
                             long addexp = Experience.LEVEL[10] - player.getExp();
                             player.addExpAndSp(addexp, addexp / 24, 0, 0, true, false);
+                            //FIXME [G1ta0] дать адены ?
                         }
                         player.sendPacket(new NpcHtmlMessage(player, this, "newbiehelper/q3-1.htm", val).replace("%tonpc%", getQuestNpc(3, player)));
                         return;
@@ -83,12 +83,12 @@ public final class NewbieGuideInstance extends NpcInstance {
                         return;
                     }
                 if (player.getLevel() < 15)
-                    if (player.getVarB("p1q3")) {
-                        if (!player.getVarB("ng3")) {
-                            String oldVar = player.getVar("ng3");
-                            player.setVar("ng3", oldVar == null ? "1" : String.valueOf(Integer.parseInt(oldVar) + 1), -1);
+                    if (player.isVarSet("p1q3")) {
+                        if (!player.isVarSet("ng3")) {
+                            player.incVar("ng3");
                             long addexp = Experience.LEVEL[15] - player.getExp();
                             player.addExpAndSp(addexp, addexp / 22, 0, 0, true, false);
+                            //FIXME [G1ta0] дать адены, только если первый чар на акке
                             player.addAdena(38180, "NewbieGuide");
                         }
                         player.sendPacket(new NpcHtmlMessage(player, this, "newbiehelper/q4-1.htm", val).replace("%tonpc%", getQuestNpc(4, player)));
@@ -98,10 +98,9 @@ public final class NewbieGuideInstance extends NpcInstance {
                         return;
                     }
                 if (player.getLevel() < 18)
-                    if (player.getVarB("p1q4")) {
-                        if (!player.getVarB("ng4")) {
-                            String oldVar = player.getVar("ng4");
-                            player.setVar("ng4", oldVar == null ? "1" : String.valueOf(Integer.parseInt(oldVar) + 1), -1);
+                    if (player.isVarSet("p1q4")) {
+                        if (!player.isVarSet("ng4")) {
+                            player.incVar("ng4");
                             long addexp = Experience.LEVEL[18] - player.getExp();
                             player.addExpAndSp(addexp, addexp / 5, 0, 0, true, false);
                             player.addAdena(10018, "NewbieGuide");
@@ -125,7 +124,7 @@ public final class NewbieGuideInstance extends NpcInstance {
     private String getQuestNpc(int quest, Player player) {
         int val = 0;
         switch (quest) {
-            case 1: // level 2
+            case 1: // occupation 2
                 switch (getNpcId()) {
                     case 30598: // Human
                         val = 30048; // Darin, _001_LettersOfLove
@@ -147,7 +146,7 @@ public final class NewbieGuideInstance extends NpcInstance {
                         break;
                 }
                 break;
-            case 2: // level 6
+            case 2: // occupation 6
                 switch (getNpcId()) {
                     case 30598: // Human
                         val = 30039; // Gilbert, _257_GuardIsBusy
@@ -169,7 +168,7 @@ public final class NewbieGuideInstance extends NpcInstance {
                         break;
                 }
                 break;
-            case 3: // level 10
+            case 3: // occupation 10
                 switch (player.getClassId()) {
                     case fighter:
                         val = 30008; // Roien, _101_SwordOfSolidarity
@@ -198,7 +197,7 @@ public final class NewbieGuideInstance extends NpcInstance {
                         break;
                 }
                 break;
-            case 4: // level 15
+            case 4: // occupation 15
                 switch (getNpcId()) {
                     case 30598: // Human
                         val = 30050; // Elias, _151_CureforFeverDisease

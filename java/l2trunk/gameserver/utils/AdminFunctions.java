@@ -78,15 +78,15 @@ public final class AdminFunctions {
     private static void updateNoChannel(Player player, int time, String reason) {
         player.updateNoChannel(time * 60000);
         if (time == 0)
-            player.sendMessage(new CustomMessage("common.ChatUnBanned", player));
+            player.sendMessage(new CustomMessage("common.ChatUnBanned"));
         else if (time > 0) {
             if (reason == null || reason.isEmpty())
-                player.sendMessage(new CustomMessage("common.ChatBanned", player).addNumber(time));
+                player.sendMessage(new CustomMessage("common.ChatBanned").addNumber(time));
             else
-                player.sendMessage(new CustomMessage("common.ChatBannedWithReason", player).addNumber(time).addString(reason));
+                player.sendMessage(new CustomMessage("common.ChatBannedWithReason").addNumber(time).addString(reason));
         } else if (reason == null || reason.isEmpty())
-            player.sendMessage(new CustomMessage("common.ChatBannedPermanently", player));
+            player.sendMessage(new CustomMessage("common.ChatBannedPermanently"));
         else
-            player.sendMessage(new CustomMessage("common.ChatBannedPermanentlyWithReason", player).addString(reason));
+            player.sendMessage(new CustomMessage("common.ChatBannedPermanentlyWithReason").addString(reason));
     }
 }

@@ -5,37 +5,32 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
-import java.util.List;
+import java.util.Map;
 
 public final class _279_TargetOfOpportunity extends Quest {
     private static final int Jerian = 32302;
-    private static final int CosmicScout = 22373;
-    private static final int CosmicWatcher = 22374;
-    private static final int CosmicPriest = 22375;
-    private static final int CosmicLord = 22376;
+    private static final Map<Integer, Integer> rewards = Map.of(
+            22373, 15517,
+            22374, 15518,
+            22375, 15519,
+            22376, 15520);
 
-    private static final int SealComponentsPart1 = 15517;
-    private static final int SealComponentsPart2 = 15518;
-    private static final int SealComponentsPart3 = 15519;
-    private static final int SealComponentsPart4 = 15520;
-    private static final List<Integer> components = List.of(
-            SealComponentsPart1, SealComponentsPart2, SealComponentsPart3, SealComponentsPart4);
 
     public _279_TargetOfOpportunity() {
         super(PARTY_ALL);
         addStartNpc(Jerian);
-        addKillId(CosmicScout, CosmicWatcher, CosmicPriest, CosmicLord);
-        addQuestItem(components);
+        addKillId(rewards.keySet());
+        addQuestItem(rewards.values());
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("jerian_q279_04.htm")) {
+        if ("jerian_q279_04.htm".equalsIgnoreCase(event)) {
             st.setState(STARTED);
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("jerian_q279_07.htm")) {
-            st.takeItems(components);
+        } else if ("jerian_q279_07.htm".equalsIgnoreCase(event)) {
+            st.takeItems(rewards.values());
             st.giveItems(15515);
             st.giveItems(15516);
             st.playSound(SOUND_FINISH);
@@ -51,7 +46,7 @@ public final class _279_TargetOfOpportunity extends Quest {
         int cond = st.getCond();
         if (npcId == Jerian) {
             if (cond == 0) {
-                if (st.getPlayer().getLevel() >= 82)
+                if (st.player.getLevel() >= 82)
                     htmltext = "jerian_q279_01.htm";
                 else {
                     htmltext = "jerian_q279_00.htm";
@@ -66,22 +61,15 @@ public final class _279_TargetOfOpportunity extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
-        if (cond == 1) {
-            if (npcId == CosmicScout && st.getQuestItemsCount(SealComponentsPart1) < 1 && Rnd.chance(15))
-                st.giveItems(SealComponentsPart1);
-            else if (npcId == CosmicWatcher && st.getQuestItemsCount(SealComponentsPart2) < 1 && Rnd.chance(15))
-                st.giveItems(SealComponentsPart2);
-            else if (npcId == CosmicPriest && st.getQuestItemsCount(SealComponentsPart3) < 1 && Rnd.chance(15))
-                st.giveItems(SealComponentsPart3);
-            else if (npcId == CosmicLord && st.getQuestItemsCount(SealComponentsPart4) < 1 && Rnd.chance(15))
-                st.giveItems(SealComponentsPart4);
+        if (cond == 1 && Rnd.chance(15)) {
+            if (rewards.containsKey(npcId))
+                st.giveItemIfNotHave(rewards.get(npcId));
 
-            if (st.getQuestItemsCount(SealComponentsPart1) >= 1 && st.getQuestItemsCount(SealComponentsPart2) >= 1 && st.getQuestItemsCount(SealComponentsPart3) >= 1 && st.getQuestItemsCount(SealComponentsPart4) >= 1)
+            if (st.haveAllQuestItems(rewards.values()))
                 st.setCond(2);
         }
-        return null;
     }
 }

@@ -32,7 +32,7 @@ public final class StaticObjectObject implements SpawnableObject {
 
     public void setMeshIndex(int id) {
         instance.setMeshIndex(id);
-        instance.broadcastInfo(false);
+        instance.broadcastInfo();
     }
 
     public int getUId() {

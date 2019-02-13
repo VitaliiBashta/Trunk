@@ -14,19 +14,19 @@ public enum ItemFlags {
 
     public static final ItemFlags[] VALUES = values();
 
-    private final int _mask;
-    private final boolean _defaultValue;
+    private final int mask;
+    private final boolean defaultValue;
 
     ItemFlags(boolean defaultValue) {
-        _defaultValue = defaultValue;
-        _mask = 1 << ordinal();
+        this.defaultValue = defaultValue;
+        mask = 1 << ordinal();
     }
 
     public int mask() {
-        return _mask;
+        return mask;
     }
 
     public boolean getDefaultValue() {
-        return _defaultValue;
+        return defaultValue;
     }
 }

@@ -5,10 +5,12 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.network.serverpackets.ExBR_GamePoint;
 import l2trunk.gameserver.scripts.Functions;
 
+import static l2trunk.gameserver.utils.ItemFunctions.addItem;
+import static l2trunk.gameserver.utils.ItemFunctions.removeItem;
+
 public final class CoinPoinExch extends Functions {
 
     public void Show() {
-        Player player = getSelf();
         if (player == null)
             return;
 
@@ -22,17 +24,16 @@ public final class CoinPoinExch extends Functions {
         append += "Please getBonuses a direction:<br>";
         append += "<button value=\"Coin -> ItemMall\" action=\"bypass -h scripts_services.CoinPoinExch:ShowC2P \" width=250 height=15><br>";
         append += "<button value=\"ItemMall -> Coin\" action=\"bypass -h scripts_services.CoinPoinExch:ShowP2C \" width=250 height=15><br>";
-        show(append, player, null);
+        show(append, player );
     }
 
     public void ShowP2C() {
-        Player player = getSelf();
         if (player == null)
             return;
 
         if (player.getPremiumPoints() < 30) {
             String append = "Your balance is too small for execution of this function!";
-            show(append, player, null);
+            show(append, player );
             return;
         }
 
@@ -41,12 +42,11 @@ public final class CoinPoinExch extends Functions {
         append2 += "Specify the number that you exchange!<br>";
         append2 += "<edit var=\"exch2\" width=70> <br>";
         append2 += "<button value=\"exchange\" action=\"bypass -h scripts_services.CoinPoinExch:DoP2C $exch2\" width=150 height=15><br> <br>";
-        show(append2, player, null);
+        show(append2, player);
 
     }
 
     public void DoP2C(String[] param) {
-        Player player = getSelf();
         if (player == null)
             return;
 
@@ -66,19 +66,18 @@ public final class CoinPoinExch extends Functions {
         player.sendPacket(new ExBR_GamePoint(player));
         double _coinsToExDouble = _coinsToEx / 30.;
         int _finalAmmount = (int) Math.ceil(_coinsToExDouble);
-        addItem(player, Config._coinID, _finalAmmount, "DoP2C Transfer");
+        addItem(player, Config._coinID, _finalAmmount);
         player.sendMessage("" + player.getName() + ", successfully added " + _finalAmmount + " L2Game Coin");
         player.sendChanges();
     }
 
     public void ShowC2P() {
-        Player player = getSelf();
         if (player == null)
             return;
 
-        if (player.getInventory().getCountOf(Config._coinID) <= 0) {
+        if (!player.haveItem(Config._coinID)) {
             String append = "You have no L2Game Coin in inventory!";
-            show(append, player, null);
+            show(append, player);
             return;
         }
 
@@ -87,12 +86,11 @@ public final class CoinPoinExch extends Functions {
         append2 += "Specify the number that you exchange!<br>";
         append2 += "<edit var=\"exch1\" width=70> <br>";
         append2 += "<button value=\"Exchange\" action=\"bypass -h scripts_services.CoinPoinExch:DoC2P $exch1\" width=150 height=15><br> <br>";
-        show(append2, player, null);
+        show(append2, player);
 
     }
 
     public void DoC2P(String[] param) {
-        Player player = getSelf();
         if (player == null)
             return;
 
@@ -119,11 +117,11 @@ public final class CoinPoinExch extends Functions {
 
     private boolean checkInteger(String number) {
         try {
-            int x = Integer.parseInt(number);
-            number = Integer.toString(x);
+            Integer.parseInt(number);
             return true;
         } catch (NumberFormatException e) {
+            return false;
         }
-        return false;
+
     }
 }

@@ -4,6 +4,8 @@ import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Skill;
+import l2trunk.gameserver.model.Summon;
+import l2trunk.gameserver.model.instances.DoorInstance;
 import l2trunk.gameserver.model.instances.residences.SiegeFlagInstance;
 import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
@@ -23,11 +25,11 @@ public final class Heal extends Skill {
     }
 
     @Override
-    public boolean checkCondition(Creature activeChar, Creature target, boolean forceUse, boolean dontMove, boolean first) {
-        if ((target == null) || target.isDoor() || target.isRaid() || target.isBoss() || (target instanceof SiegeFlagInstance)) {
+    public boolean checkCondition(Player player, Creature target, boolean forceUse, boolean dontMove, boolean first) {
+        if ((target == null) || target instanceof DoorInstance || target.isRaid() || target.isBoss() || (target instanceof SiegeFlagInstance)) {
             return false;
         }
-        return super.checkCondition(activeChar, target, forceUse, dontMove, first);
+        return super.checkCondition(player, target, forceUse, dontMove, first);
     }
 
     @Override
@@ -59,14 +61,14 @@ public final class Heal extends Skill {
 
                 // Player holding a cursed weapon can't be healed and can't heal
                 if (target != activeChar) {
-                    if (target.isPlayer() && target.isCursedWeaponEquipped()) {
+                    if (target instanceof Player && ((Player)target).isCursedWeaponEquipped()) {
                         continue;
-                    } else if (activeChar.isPlayer() && activeChar.isCursedWeaponEquipped()) {
+                    } else if (activeChar instanceof Player && ((Player)activeChar).isCursedWeaponEquipped()) {
                         continue;
                     }
                 }
 
-                double addToHp = 0;
+                double addToHp;
                 if (staticPower) {
                     addToHp = power;
                 } else {
@@ -81,27 +83,27 @@ public final class Heal extends Skill {
                 }
                 if (id == 4051) {
                     target.sendPacket(SystemMsg.REJUVENATING_HP);
-                } else if (target.isPlayer()) {
+                } else if (target instanceof Player) {
                     if (activeChar == target) {
                         activeChar.sendPacket(new SystemMessage2(SystemMsg.S1_HP_HAS_BEEN_RESTORED).addInteger(Math.round(addToHp)));
                     } else {
                         // FIXME show a healer, as he restored the HP goal?
                         target.sendPacket(new SystemMessage2(SystemMsg.S2_HP_HAS_BEEN_RESTORED_BY_C1).addString(activeChar.getName()).addInteger(Math.round(addToHp)));
                     }
-                } else if (target.isSummon() || target.isPet()) {
-                    Player owner = target.getPlayer();
+                } else if (target instanceof l2trunk.gameserver.model.Summon) {
+                    Player owner = ((Summon)target).owner;
                     if (owner != null) {
                         if (activeChar == target) {
-                            owner.sendMessage(new CustomMessage("YOU_HAVE_RESTORED_S1_HP_OF_YOUR_PET", owner).addNumber(Math.round(addToHp)));
+                            owner.sendMessage(new CustomMessage("YOU_HAVE_RESTORED_S1_HP_OF_YOUR_PET").addNumber(Math.round(addToHp)));
                         } else if (owner == activeChar) {
-                            owner.sendMessage(new CustomMessage("YOU_HAVE_RESTORED_S1_HP_OF_YOUR_PET", owner).addNumber(Math.round(addToHp)));
+                            owner.sendMessage(new CustomMessage("YOU_HAVE_RESTORED_S1_HP_OF_YOUR_PET").addNumber(Math.round(addToHp)));
                         } else {
                             // Пета лечит кто-то другой
-                            owner.sendMessage(new CustomMessage("S1_HAS_BEEN_RESTORED_S2_HP_OF_YOUR_PET", owner).addString(activeChar.getName()).addNumber(Math.round(addToHp)));
+                            owner.sendMessage(new CustomMessage("S1_HAS_BEEN_RESTORED_S2_HP_OF_YOUR_PET").addString(activeChar.getName()).addNumber(Math.round(addToHp)));
                         }
                     }
                 }
-                getEffects(activeChar, target, getActivateRate() > 0, false);
+                getEffects(activeChar, target, activateRate > 0, false);
             }
         }
 

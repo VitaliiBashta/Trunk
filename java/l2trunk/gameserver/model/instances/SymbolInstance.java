@@ -134,6 +134,7 @@ public final class SymbolInstance extends NpcInstance {
         player.sendActionFailed();
     }
 
+    @Deprecated
     @Override
     public Clan getClan() {
         return null;

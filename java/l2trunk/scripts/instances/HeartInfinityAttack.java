@@ -8,6 +8,7 @@ import l2trunk.gameserver.instancemanager.SoIManager;
 import l2trunk.gameserver.listener.actor.OnDeathListener;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.GameObject;
+import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.Reflection;
 import l2trunk.gameserver.model.instances.NpcInstance;
@@ -77,9 +78,9 @@ public final class HeartInfinityAttack extends Reflection {
         getAllByNpcId(AliveTumor, true).forEach(n -> n.setCurrentHp(n.getMaxHp() * .5, false));
         spawnByGroup("soi_hoi_attack_wards");
         //spawnByGroup("soi_hoi_attack_echmus");
-        ekimus = addSpawnWithoutRespawn(Ekimus, new Location(-179537, 208854, -15504, 16384), 0);
-        hounds.add(addSpawnWithoutRespawn(Hound, new Location(-179224, 209624, -15504, 16384), 0));
-        hounds.add(addSpawnWithoutRespawn(Hound, new Location(-179880, 209464, -15504, 16384), 0));
+        ekimus = addSpawnWithoutRespawn(Ekimus, new Location(-179537, 208854, -15504, 16384));
+        hounds.add(addSpawnWithoutRespawn(Hound, new Location(-179224, 209624, -15504, 16384)));
+        hounds.add(addSpawnWithoutRespawn(Hound, new Location(-179880, 209464, -15504, 16384)));
         handleEkimusStats();
         getZone("[soi_hoi_attack_attackup_1]").setActive(true);
         getZone("[soi_hoi_attack_attackup_2]").setActive(true);
@@ -256,20 +257,20 @@ public final class HeartInfinityAttack extends Reflection {
     private class DeathListener implements OnDeathListener {
         @Override
         public void onDeath(Creature self, Creature killer) {
-            if (!self.isNpc())
-                return;
-            if (self.getNpcId() == AliveTumor) {
-                ((NpcInstance) self).dropItem(killer.getPlayer(), 13797, Rnd.get(2, 5));
-                NpcInstance deadTumor = addSpawnWithoutRespawn(DeadTumor, self.getLoc(), 0);
-                self.deleteMe();
-                notifyTumorDeath();
-                //Schedule tumor revival
-                ThreadPoolManager.INSTANCE.schedule(new TumorRevival(deadTumor), tumorRespawnTime);
-                // Schedule regeneration coffins spawn
-                ThreadPoolManager.INSTANCE.schedule(new RegenerationCoffinSpawn(deadTumor), 20000L);
-            } else if (self.getNpcId() == Ekimus) {
-                conquestConclusion(true);
-                SoIManager.notifyEkimusKill();
+            if (self instanceof NpcInstance) {
+                if (self.getNpcId() == AliveTumor) {
+                    ((NpcInstance) self).dropItem(((Playable)killer).getPlayer(), 13797, Rnd.get(2, 5));
+                    NpcInstance deadTumor = addSpawnWithoutRespawn(DeadTumor, self);
+                    self.deleteMe();
+                    notifyTumorDeath();
+                    //Schedule tumor revival
+                    ThreadPoolManager.INSTANCE.schedule(new TumorRevival(deadTumor), tumorRespawnTime);
+                    // Schedule regeneration coffins spawn
+                    ThreadPoolManager.INSTANCE.schedule(new RegenerationCoffinSpawn(deadTumor), 20000L);
+                } else if (self.getNpcId() == Ekimus) {
+                    conquestConclusion(true);
+                    SoIManager.notifyEkimusKill();
+                }
             }
         }
     }
@@ -285,7 +286,7 @@ public final class HeartInfinityAttack extends Reflection {
         public void runImpl() {
             if (conquestEnded)
                 return;
-            NpcInstance tumor = addSpawnWithoutRespawn(AliveTumor, _deadTumor.getLoc(), 0);
+            NpcInstance tumor = addSpawnWithoutRespawn(AliveTumor, _deadTumor);
             tumor.setCurrentHp(tumor.getMaxHp() * .25, false);
             notifyTumorRevival();
             _deadTumor.deleteMe();
@@ -305,7 +306,7 @@ public final class HeartInfinityAttack extends Reflection {
             if (conquestEnded)
                 return;
             for (int i = 0; i < 4; i++)
-                addSpawnWithoutRespawn(RegenerationCoffin, new Location(_deadTumor.getLoc().x, _deadTumor.getLoc().y, _deadTumor.getLoc().z, Location.getRandomHeading()), 250);
+                addSpawnWithoutRespawn(RegenerationCoffin, Location.of(_deadTumor.getLoc().x, _deadTumor.getLoc().y, _deadTumor.getLoc().z, true), 250);
         }
     }
 

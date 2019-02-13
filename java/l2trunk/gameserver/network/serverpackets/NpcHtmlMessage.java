@@ -64,14 +64,14 @@ public class NpcHtmlMessage extends L2GameServerPacket {
     public NpcHtmlMessage(Player player, NpcInstance npc, String filename, int val) {
         this(player, npc.getNpcId(), filename, val);
 
-        _npcObjId = npc.getObjectId();
+        _npcObjId = npc.objectId();
 
         player.setLastNpc(npc);
 
         replace("%npcId%", String.valueOf(npc.getNpcId()));
         replace("%npcname%", npc.getName());
         replace("%nick%", player.getName());
-        replace("%class%", player.getClassId().getLevel());
+        replace("%class%", player.getClassId().occupation());
         replace("%festivalMins%", SevenSignsFestival.INSTANCE.getTimeToNextFestivalStr());
     }
 
@@ -80,7 +80,7 @@ public class NpcHtmlMessage extends L2GameServerPacket {
             _npcObjId = 5;
             player.setLastNpc(null);
         } else {
-            _npcObjId = npc.getObjectId();
+            _npcObjId = npc.objectId();
             player.setLastNpc(npc);
         }
     }

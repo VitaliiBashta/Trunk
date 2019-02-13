@@ -1,6 +1,7 @@
 package l2trunk.gameserver.skills.effects;
 
 import l2trunk.gameserver.model.Effect;
+import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.stats.Env;
 import l2trunk.gameserver.stats.Stats;
 
@@ -16,12 +17,12 @@ public final class EffectDamOverTimeLethal extends Effect {
 
         double damage = calc();
 
-        if (getSkill().isOffensive)
+        if (skill.isOffensive)
             damage *= 2;
 
-        damage = effector.calcStat(getSkill().isMagic() ? Stats.MAGIC_DAMAGE : Stats.PHYSICAL_DAMAGE, damage, effected, getSkill());
+        damage = effector.calcStat(skill.isMagic() ? Stats.MAGIC_DAMAGE : Stats.PHYSICAL_DAMAGE, damage, effected, skill);
 
-        effected.reduceCurrentHp(damage, effector, getSkill(), !effected.isNpc() && effected != effector, effected != effector, effector.isNpc() || effected == effector, false, false, true, false);
+        effected.reduceCurrentHp(damage, effector, skill, !(effected instanceof NpcInstance) && effected != effector, effected != effector, effector instanceof NpcInstance || effected == effector, false, false, true, false);
 
         return true;
     }

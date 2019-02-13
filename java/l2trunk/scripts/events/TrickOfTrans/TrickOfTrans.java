@@ -6,6 +6,7 @@ import l2trunk.gameserver.Config;
 import l2trunk.gameserver.listener.actor.OnDeathListener;
 import l2trunk.gameserver.listener.actor.player.OnPlayerEnterListener;
 import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.SimpleSpawner;
 import l2trunk.gameserver.model.actor.listener.CharListenerList;
@@ -18,6 +19,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static l2trunk.gameserver.utils.ItemFunctions.addItem;
+import static l2trunk.gameserver.utils.ItemFunctions.removeItem;
 
 public final class TrickOfTrans extends Functions implements ScriptFile, OnDeathListener, OnPlayerEnterListener {
         private static final Logger LOG = LoggerFactory.getLogger(TrickOfTrans.class);
@@ -46,8 +50,8 @@ public final class TrickOfTrans extends Functions implements ScriptFile, OnDeath
 
         private static boolean active = false;
 
-        private static final List<SimpleSpawner> EM_SPAWNS = new ArrayList<>();
-        private static final ArrayList<SimpleSpawner> _ch_spawns = new ArrayList<>();
+        private static List<SimpleSpawner> EM_SPAWNS = new ArrayList<>();
+        private static  List<SimpleSpawner> _ch_spawns = new ArrayList<>();
 
         // Ингридиенты
         private static final int PhilosophersStoneOre = 9168; // Philosopher''s Stone Ore
@@ -72,9 +76,7 @@ public final class TrickOfTrans extends Functions implements ScriptFile, OnDeath
         }
 
         public void startEvent() {
-            final Player player = getSelf();
-
-            if (SetActive("trickoftrans", true)) {
+            if (setActive("trickoftrans", true)) {
                 spawnEventManagers();
                 System.out.println("Event 'Trick of Transmutation' started.");
                 Announcements.INSTANCE.announceByCustomMessage("scripts.events.TrickOfTrans.AnnounceEventStarted");
@@ -87,10 +89,9 @@ public final class TrickOfTrans extends Functions implements ScriptFile, OnDeath
         }
 
         public void stopEvent() {
-            final Player player = getSelf();
             if (!player.getPlayerAccess().IsEventGm)
                 return;
-            if (SetActive("trickoftrans", false)) {
+            if (setActive("trickoftrans", false)) {
                 unSpawnEventManagers();
                 System.out.println("Event 'Trick of Transmutation' stopped.");
                 Announcements.INSTANCE.announceByCustomMessage("scripts.events.TrickOfTrans.AnnounceEventStoped");
@@ -155,7 +156,7 @@ public final class TrickOfTrans extends Functions implements ScriptFile, OnDeath
                     new Location(-81696, 150347, -3155, 22854), // Gludin
                     new Location(-81559, 150332, -3134, 3356)); // Gludin
 
-            SpawnNPCs(EVENT_MANAGER_ID, EVENT_MANAGERS, EM_SPAWNS);
+            EM_SPAWNS = SpawnNPCs(EVENT_MANAGER_ID, EVENT_MANAGERS);
             SpawnNPCs(CHESTS_ID, CHESTS, _ch_spawns, 300);
         }
 
@@ -166,41 +167,40 @@ public final class TrickOfTrans extends Functions implements ScriptFile, OnDeath
 
     @Override
     public void onDeath(final Creature cha, final Creature killer) {
-        if (active && SimpleCheckDrop(cha, killer) && Rnd.chance(Config.EVENT_TRICK_OF_TRANS_CHANCE * killer.getPlayer().getRateItems() * Config.RATE_DROP_ITEMS * ((NpcInstance) cha).getTemplate().rateHp))
-            ((NpcInstance) cha).dropItem(killer.getPlayer(), A_CHEST_KEY, 1);
+        if (killer instanceof Playable) {
+            Playable playable = (Playable) killer;
+            if (active && simpleCheckDrop(cha, playable) && Rnd.chance(Config.EVENT_TRICK_OF_TRANS_CHANCE * playable.getPlayer().getRateItems() * Config.RATE_DROP_ITEMS * ((NpcInstance) cha).getTemplate().rateHp))
+                ((NpcInstance) cha).dropItem(playable.getPlayer(), A_CHEST_KEY, 1);
+        }
     }
 
     public void accept() {
-        final Player player = getSelf();
-
         if (!player.isQuestContinuationPossible(true))
             return;
 
         if (!player.findRecipe(RED_PSTC_R))
-            addItem(player, RED_PSTC, 1, "TrickOrTrans");
+            addItem(player, RED_PSTC, 1);
         if (!player.findRecipe(BLACK_PSTC_R))
-            addItem(player, BLACK_PSTC, 1, "TrickOrTrans");
+            addItem(player, BLACK_PSTC, 1);
         if (!player.findRecipe(BLUE_PSTC_R))
-            addItem(player, BLUE_PSTC, 1, "TrickOrTrans");
+            addItem(player, BLUE_PSTC, 1);
         if (!player.findRecipe(GREEN_PSTC_R))
-            addItem(player, GREEN_PSTC, 1, "TrickOrTrans");
+            addItem(player, GREEN_PSTC, 1);
         if (!player.findRecipe(ORANGE_PSTC_R))
-            addItem(player, ORANGE_PSTC, 1, "TrickOrTrans");
+            addItem(player, ORANGE_PSTC, 1);
         if (!player.findRecipe(WHITE_PSTC_R))
-            addItem(player, WHITE_PSTC, 1, "TrickOrTrans");
+            addItem(player, WHITE_PSTC, 1);
 
         show("scripts/events/TrickOfTrans/TrickOfTrans_01.htm", player);
     }
 
     public void open() {
-        final Player player = getSelf();
-
-        if (getItemCount(player, A_CHEST_KEY) > 0) {
+        if (player.haveItem(A_CHEST_KEY)) {
             removeItem(player, A_CHEST_KEY, 1, "TrickOrTrans");
-            addItem(player, PhilosophersStoneOre, Rnd.get(1, PhilosophersStoneOreMax), "TrickOrTrans");
-            addItem(player, MagicReagents, Rnd.get(1, MagicReagentsMax), "TrickOrTrans");
+            addItem(player, PhilosophersStoneOre, Rnd.get(1, PhilosophersStoneOreMax));
+            addItem(player, MagicReagents, Rnd.get(1, MagicReagentsMax));
             if (Rnd.chance(80))
-                addItem(player, PhilosophersStoneConversionFormula, 1, "TrickOrTrans");
+                addItem(player, PhilosophersStoneConversionFormula, 1);
 
             show("scripts/events/TrickOfTrans/TrickOfTrans_02.htm", player);
         } else

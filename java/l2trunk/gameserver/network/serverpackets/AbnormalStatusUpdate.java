@@ -14,32 +14,32 @@ import java.util.List;
  *
  * @version $Revision: 1.3.2.1.2.6 $ $Date: 2005/04/05 19:41:08 $
  */
-public class AbnormalStatusUpdate extends L2GameServerPacket {
+public final class AbnormalStatusUpdate extends L2GameServerPacket {
     public static final int INFINITIVE_EFFECT = -1;
-    private final List<Effect> _effects;
+    private final List<Effect> effects;
 
     public AbnormalStatusUpdate() {
-        _effects = new ArrayList<>();
+        effects = new ArrayList<>();
     }
 
     public void addEffect(int skillId, int dat, int duration) {
-        _effects.add(new Effect(skillId, dat, duration));
+        effects.add(new Effect(skillId, dat, duration));
     }
 
     @Override
     protected final void writeImpl() {
         writeC(0x85);
 
-        writeH(_effects.size());
+        writeH(effects.size());
 
-        for (Effect temp : _effects) {
-            writeD(temp.skillId);
-            writeH(temp.dat);
-            writeD(temp.duration);
-        }
+        effects.forEach(effect ->  {
+            writeD(effect.skillId);
+            writeH(effect.dat);
+            writeD(effect.duration);
+        });
     }
 
-    class Effect {
+    private class Effect {
         final int skillId;
         final int dat;
         final int duration;

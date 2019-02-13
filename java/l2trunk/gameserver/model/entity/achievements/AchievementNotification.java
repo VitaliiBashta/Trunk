@@ -8,6 +8,8 @@ import l2trunk.gameserver.model.GameObjectsStorage;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.actor.listener.CharListenerList;
 import l2trunk.gameserver.model.instances.GuardInstance;
+import l2trunk.gameserver.model.instances.MonsterInstance;
+import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.TutorialShowQuestionMark;
 import l2trunk.scripts.npc.model.TreasureChestInstance;
 import l2trunk.scripts.npc.model.residences.SiegeGuardInstance;
@@ -22,7 +24,7 @@ public final class AchievementNotification {
 
     private AchievementNotification(int intervalInMiliseconds) {
         _globalNotification = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(() ->
-                GameObjectsStorage.getAllPlayersStream().forEach(player ->  {
+                GameObjectsStorage.getAllPlayersStream().forEach(player -> {
 
                     for (Entry<Integer, Integer> arco : player.getAchievements().entrySet()) {
                         int achievementId = arco.getKey();
@@ -33,7 +35,7 @@ public final class AchievementNotification {
                         Achievement nextLevelAchievement = Achievements.INSTANCE.getAchievement(achievementId, ++achievementLevel);
                         if (nextLevelAchievement != null && nextLevelAchievement.isDone(player.getCounters().getPoints(nextLevelAchievement.getType()))) {
                             // Make a question mark button.
-                            player.sendPacket(new TutorialShowQuestionMark(player.getObjectId()));
+                            player.sendPacket(new TutorialShowQuestionMark(player.objectId()));
                             break;
                         }
                     }
@@ -62,14 +64,14 @@ public final class AchievementNotification {
             if (!Config.ENABLE_ACHIEVEMENTS)
                 return;
 
-            Player player = actor.getPlayer();
-            if (player == null)
+            if (!(actor instanceof Player))
                 return;
+            Player player = (Player) actor;
 
-            if (victim.isPlayer())
-                victim.getPlayer().getCounters().timesDied++;
+            if (victim instanceof Player)
+                ((Player) victim).getCounters().timesDied++;
 
-            if (victim.isNpc()) {
+            if (victim instanceof NpcInstance) {
                 if (victim instanceof TreasureChestInstance)
                     player.getCounters().treasureBoxesOpened++;
                 else if (victim instanceof GuardInstance)
@@ -81,16 +83,16 @@ public final class AchievementNotification {
             if (player.getLevel() - victim.getLevel() >= 10) // 10 levels difference
                 return;
 
-            if (victim.isMonster())
+            if (victim instanceof MonsterInstance)
                 player.getCounters().mobsKilled++;
 
             if (victim.isRaid())
                 player.getPlayerGroup().getMembersInRange(victim, 5000).forEach(plr -> plr.getCounters().raidsKilled++);
 
-            if (victim.isChampion())
+            if (victim instanceof MonsterInstance && ((MonsterInstance) victim).isChampion())
                 player.getCounters().championsKilled++;
 
-            if (victim.isNpc()) {
+            if (victim instanceof NpcInstance) {
                 switch (victim.getNpcId()) {
                     case 29001: // Queen Ant
                         player.getPlayerGroup().getMembersInRange(victim, 5000).forEach(plr -> plr.getCounters().antQueenKilled++);

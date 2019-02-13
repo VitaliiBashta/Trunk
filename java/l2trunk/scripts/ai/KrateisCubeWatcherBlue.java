@@ -27,14 +27,13 @@ public final class KrateisCubeWatcherBlue extends DefaultAI {
     public void onEvtThink() {
         NpcInstance actor = getActor();
 
-        World.getAroundCharacters(actor, 600, 300)
-                .filter(GameObject::isPlayer)
+        World.getAroundPlayers(actor, 600, 300)
                 .filter(cha -> !cha.isDead())
                 .filter(cha -> Rnd.chance(RESTORE_CHANCE))
                 .forEach(cha -> {
                     double valCP = cha.getMaxCp() - cha.getCurrentCp();
                     if (valCP > 0) {
-                        cha.setCurrentCp(valCP + cha.getCurrentCp());
+                        cha.addCp(valCP);
                         cha.sendPacket(new SystemMessage2(SystemMsg.S1_CP_HAS_BEEN_RESTORED).addInteger(Math.round(valCP)));
                     }
 

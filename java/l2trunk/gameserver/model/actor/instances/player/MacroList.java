@@ -68,7 +68,7 @@ public final class MacroList {
     private void registerMacroInDb(Macro macro) {
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement("REPLACE INTO character_macroses (char_obj_id,id,icon,name,descr,acronym,commands) values(?,?,?,?,?,?,?)")) {
-            statement.setInt(1, player.getObjectId());
+            statement.setInt(1, player.objectId());
             statement.setInt(2, macro.id);
             statement.setInt(3, macro.icon);
             statement.setString(4, macro.name);
@@ -93,7 +93,7 @@ public final class MacroList {
     private void deleteMacroFromDb(Macro macro) {
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement("DELETE FROM character_macroses WHERE char_obj_id=? AND id=?")) {
-            statement.setInt(1, player.getObjectId());
+            statement.setInt(1, player.objectId());
             statement.setInt(2, macro.id);
             statement.execute();
         } catch (SQLException e) {
@@ -108,7 +108,7 @@ public final class MacroList {
         L2MacroCmd mcmd;
 
         try (PreparedStatement statement = con.prepareStatement("SELECT char_obj_id, id, icon, name, descr, acronym, commands FROM character_macroses WHERE char_obj_id=?")) {
-            statement.setInt(1, player.getObjectId());
+            statement.setInt(1, player.objectId());
 
             try (ResultSet rset = statement.executeQuery()) {
                 while (rset.next()) {

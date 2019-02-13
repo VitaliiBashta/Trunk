@@ -6,7 +6,6 @@ import l2trunk.gameserver.handler.items.ItemHandler;
 import l2trunk.gameserver.instancemanager.QuestManager;
 import l2trunk.gameserver.instancemanager.ReflectionManager;
 import l2trunk.gameserver.model.GameObject;
-import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Zone.ZoneType;
 import l2trunk.gameserver.model.instances.DoorInstance;
@@ -17,30 +16,27 @@ import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.SystemMessage;
 import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
-import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Location;
+import l2trunk.gameserver.utils.NpcUtils;
 import l2trunk.scripts.bosses.AntharasManager;
 import l2trunk.scripts.bosses.ValakasManager;
 import l2trunk.scripts.quests._464_Oath;
 
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
+
+import static l2trunk.gameserver.utils.ItemFunctions.addItem;
+import static l2trunk.gameserver.utils.ItemFunctions.removeItem;
 
 public final class Special extends SimpleItemHandler implements ScriptFile {
     private static final List<Integer> ITEM_IDS = List.of(
             8060, 8556, 13853, 13808, 13809, 20630, 21106, 21107, 14835, 15537,
             10632, 21899, 21900, 21901, 21902, 21903, 21904, 17268);
 
-    private static long useItem(Player player, int itemId, long count) {
+    private static void useItem(Player player, int itemId, long count) {
         player.sendPacket(new SystemMessage(SystemMessage.YOU_USE_S1).addItemName(itemId));
-        return Functions.removeItem(player, itemId, count, "useItem");
-    }
-
-    @Override
-    public boolean pickupItem(Playable playable, ItemInstance item) {
-        return true;
+        removeItem(player, itemId, count, "useItem");
     }
 
     @Override
@@ -128,191 +124,191 @@ public final class Special extends SimpleItemHandler implements ScriptFile {
 
     // Wondrous Cubic 1 time use
     private boolean use21106(Player player, boolean ctrl) {
-        Functions.removeItem(player, 21106, 1, "use21106");
+        removeItem(player, 21106, 1, "use21106");
 
         int chance = Rnd.get(100);
 
-        if (chance >= 0 && chance < 2) Functions.addItem(player, 21593, 1, "use21106");
+        if (chance >= 0 && chance < 2) addItem(player, 21593, 1);
 
         else if (chance >= 2 && chance < 20)
-            Functions.addItem(player, 10633, 1, "use21106");
+            addItem(player, 10633, 1);
 
         else if (chance >= 20 && chance < 37)
-            Functions.addItem(player, 10642, 1, "use21106");
+            addItem(player, 10642, 1);
 
         else if (chance >= 37 && chance < 43)
-            Functions.addItem(player, 21096, 1, "use21106");
+            addItem(player, 21096, 1);
 
         else if (chance >= 43 && chance < 49)
-            Functions.addItem(player, 21101, 1, "use21106");
+            addItem(player, 21101, 1);
 
         else if (chance >= 49 && chance < 55)
-            Functions.addItem(player, 10634, 1, "use21106");
+            addItem(player, 10634, 1);
 
         else if (chance >= 55 && chance < 60)
-            Functions.addItem(player, 10643, 1, "use21106");
+            addItem(player, 10643, 1);
 
         else if (chance >= 60 && chance < 65)
-            Functions.addItem(player, 21097, 1, "use21106");
+            addItem(player, 21097, 1);
 
         else if (chance >= 65 && chance < 70)
-            Functions.addItem(player, 21102, 1, "use21106");
+            addItem(player, 21102, 1);
 
         else if (chance >= 70 && chance < 74)
-            Functions.addItem(player, 10635, 1, "use21106");
+            addItem(player, 10635, 1);
 
         else if (chance >= 74 && chance < 78)
-            Functions.addItem(player, 10644, 1, "use21106");
+            addItem(player, 10644, 1);
 
         else if (chance >= 78 && chance < 82)
-            Functions.addItem(player, 21098, 1, "use21106");
+            addItem(player, 21098, 1);
 
         else if (chance >= 82 && chance < 86)
-            Functions.addItem(player, 21103, 1, "use21106");
+            addItem(player, 21103, 1);
 
         else if (chance >= 86 && chance < 89)
-            Functions.addItem(player, 10636, 1, "use21106");
+            addItem(player, 10636, 1);
 
         else if (chance >= 89 && chance < 92)
-            Functions.addItem(player, 10645, 1, "use21106");
+            addItem(player, 10645, 1);
 
         else if (chance >= 92 && chance < 94)
-            Functions.addItem(player, 21099, 1, "use21106");
+            addItem(player, 21099, 1);
 
         else if (chance >= 94 && chance < 96)
-            Functions.addItem(player, 21104, 1, "use21106");
+            addItem(player, 21104, 1);
 
         else if (chance >= 96 && chance < 97)
-            Functions.addItem(player, 10637, 1, "use21106");
+            addItem(player, 10637, 1);
 
         else if (chance >= 97 && chance < 98)
-            Functions.addItem(player, 10646, 1, "use21106");
+            addItem(player, 10646, 1);
 
         else if (chance >= 98 && chance < 99)
-            Functions.addItem(player, 21100, 1, "use21106");
+            addItem(player, 21100, 1);
 
         else if (chance >= 99)
-            Functions.addItem(player, 21105, 1, "use21106");
+            addItem(player, 21105, 1);
 
         return true;
     }
 
     private boolean use21107(Player player, boolean ctrl) {
-        Functions.removeItem(player, 21107, 1, "use21107");
+        removeItem(player, 21107, 1, "use21107");
 
         int chance = Rnd.get(100);
 
         if (chance >= 0 && chance < 6)
-            Functions.addItem(player, 12845, 1, "use21107");
+            addItem(player, 12845, 1);
 
         else if (chance >= 6 && chance < 12)
-            Functions.addItem(player, 12846, 1, "use21107");
+            addItem(player, 12846, 1);
 
         else if (chance >= 12 && chance < 18)
-            Functions.addItem(player, 12847, 1, "use21107");
+            addItem(player, 12847, 1);
 
         else if (chance >= 18 && chance < 24)
-            Functions.addItem(player, 12848, 1, "use21107");
+            addItem(player, 12848, 1);
 
         else if (chance >= 24 && chance < 29)
-            Functions.addItem(player, 12849, 1, "use21107");
+            addItem(player, 12849, 1);
 
         else if (chance >= 29 && chance < 34)
-            Functions.addItem(player, 12850, 1, "use21107");
+            addItem(player, 12850, 1);
 
         else if (chance >= 34 && chance < 39)
-            Functions.addItem(player, 12851, 1, "use21107");
+            addItem(player, 12851, 1);
 
         else if (chance >= 39 && chance < 44)
-            Functions.addItem(player, 14166, 1, "use21107");
+            addItem(player, 14166, 1);
 
         else if (chance >= 44 && chance < 48)
-            Functions.addItem(player, 8738, 1, "use21107");
+            addItem(player, 8738, 1);
 
         else if (chance >= 48 && chance < 52)
-            Functions.addItem(player, 8739, 1, "use21107");
+            addItem(player, 8739, 1);
 
         else if (chance >= 52 && chance < 56)
-            Functions.addItem(player, 8740, 1, "use21107");
+            addItem(player, 8740, 1);
 
         else if (chance >= 56 && chance < 60)
-            Functions.addItem(player, 8741, 1, "use21107");
+            addItem(player, 8741, 1);
 
         else if (chance >= 60 && chance < 64)
-            Functions.addItem(player, 8742, 1, "use21107");
+            addItem(player, 8742, 1);
 
         else if (chance >= 64 && chance < 68)
-            Functions.addItem(player, 9574, 1, "use21107");
+            addItem(player, 9574, 1);
 
         else if (chance >= 68 && chance < 72)
-            Functions.addItem(player, 10484, 1, "use21107");
+            addItem(player, 10484, 1);
 
         else if (chance >= 72 && chance < 76)
-            Functions.addItem(player, 14167, 1, "use21107");
+            addItem(player, 14167, 1);
 
         else if (chance >= 76 && chance < 78)
-            Functions.addItem(player, 8748, 1, "use21107");
+            addItem(player, 8748, 1);
 
         else if (chance >= 78 && chance < 80)
-            Functions.addItem(player, 8749, 1, "use21107");
+            addItem(player, 8749, 1);
 
         else if (chance >= 80 && chance < 82)
-            Functions.addItem(player, 8750, 1, "use21107");
+            addItem(player, 8750, 1);
 
         else if (chance >= 82 && chance < 84)
-            Functions.addItem(player, 8751, 1, "use21107");
+            addItem(player, 8751, 1);
 
         else if (chance >= 84 && chance < 86)
-            Functions.addItem(player, 8752, 1, "use21107");
+            addItem(player, 8752, 1);
 
         else if (chance >= 86 && chance < 88)
-            Functions.addItem(player, 9575, 1, "use21107");
+            addItem(player, 9575, 1);
 
         else if (chance >= 88 && chance < 90)
-            Functions.addItem(player, 10485, 1, "use21107");
+            addItem(player, 10485, 1);
 
         else if (chance >= 90 && chance < 92)
-            Functions.addItem(player, 14168, 1, "use21107");
+            addItem(player, 14168, 1);
 
         else if (chance >= 92 && chance < 93)
-            Functions.addItem(player, 8958, 1, "use21107");
+            addItem(player, 8958, 1);
 
         else if (chance >= 93 && chance < 94)
-            Functions.addItem(player, 8959, 1, "use21107");
+            addItem(player, 8959, 1);
 
         else if (chance >= 94 && chance < 95)
-            Functions.addItem(player, 8960, 1, "use21107");
+            addItem(player, 8960, 1);
 
         else if (chance >= 95 && chance < 96)
-            Functions.addItem(player, 8961, 1, "use21107");
+            addItem(player, 8961, 1);
 
         else if (chance >= 96 && chance < 97)
-            Functions.addItem(player, 8962, 1, "use21107");
+            addItem(player, 8962, 1);
 
         else if (chance >= 97 && chance < 98)
-            Functions.addItem(player, 9576, 1, "use21107");
+            addItem(player, 9576, 1);
 
         else if (chance >= 98 && chance < 99)
-            Functions.addItem(player, 10486, 1, "use21107");
+            addItem(player, 10486, 1);
 
         else if (chance >= 99)
-            Functions.addItem(player, 14169, 1, "use21107");
+            addItem(player, 14169, 1);
 
         return true;
     }
 
     //Key of Enigma
     private boolean use8060(Player player, boolean ctrl) {
-        if (Functions.removeItem(player, 8058, 1, "use8060") == 1) {
-            Functions.addItem(player, 8059, 1, "use8060");
+        if (removeItem(player, 8058, 1, "use8060") == 1) {
+            addItem(player, 8059, 1);
             return true;
         }
         return false;
     }
 
     private boolean use20630(Player player, boolean ctrl) {
-        Functions.addItem(player, 20602, 1, "use20630");
-        Functions.addItem(player, 20603, 1, "use20630");
+        addItem(player, 20602, 1);
+        addItem(player, 20603, 1);
         return true;
     }
 
@@ -321,7 +317,7 @@ public final class Special extends SimpleItemHandler implements ScriptFile {
         List<Integer> npcs = List.of(29048, 29049);
 
         GameObject t = player.getTarget();
-        if (t == null || !t.isNpc() || !npcs.contains(((NpcInstance) t).getNpcId())) {
+        if (!(t instanceof NpcInstance) || !npcs.contains(((NpcInstance) t).getNpcId())) {
             player.sendPacket(new SystemMessage(SystemMessage.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addItemName(8556));
             return false;
         }
@@ -342,7 +338,7 @@ public final class Special extends SimpleItemHandler implements ScriptFile {
             return false;
         }
         useItem(player, 13853, 1);
-        Functions.addItem(player, 13854, 1, "use13853");
+        addItem(player, 13854, 1);
         return true;
     }
 
@@ -353,7 +349,7 @@ public final class Special extends SimpleItemHandler implements ScriptFile {
         GameObject target = player.getTarget();
         if (player.getDistance(target) > 150)
             return false;
-        if (target != null && target.isDoor()) {
+        if (target instanceof DoorInstance) {
             int _door = ((DoorInstance) target).getDoorId();
             if (allowedDoors.contains(_door))
                 player.getReflection().openDoor(_door);
@@ -376,7 +372,7 @@ public final class Special extends SimpleItemHandler implements ScriptFile {
         }
         player.bookmarks.setCapacity(player.bookmarks.getCapacity() + 3);
         player.sendPacket(new SystemMessage(SystemMessage.THE_NUMBER_OF_MY_TELEPORTS_SLOTS_HAS_BEEN_INCREASED));
-        Functions.removeItem(player, 13015, 1, "use13015");
+        removeItem(player, 13015, 1, "use13015");
         return true;
     }
 
@@ -385,7 +381,7 @@ public final class Special extends SimpleItemHandler implements ScriptFile {
         List<Integer> allowedDoors = List.of(17240103, 17240107);
 
         GameObject target = player.getTarget();
-        if (target != null && target.isDoor()) {
+        if (target instanceof DoorInstance) {
             int _door = ((DoorInstance) target).getDoorId();
             if (allowedDoors.contains(_door)) {
                 useItem(player, 13809, 1);
@@ -419,12 +415,13 @@ public final class Special extends SimpleItemHandler implements ScriptFile {
         QuestState qs = player.getQuestState(_464_Oath.class);
         if (player.getLevel() >= 82 && qs == null) {
             useItem(player, 15537, 1);
-            Functions.addItem(player, 15538, 1, "use15537");
-            QuestState st = QuestManager.getQuest(_464_Oath.class).newQuestState(player, Quest.CREATED);
+            addItem(player, 15538, 1);
+            Quest q = QuestManager.getQuest(_464_Oath.class);
+            QuestState st = q.newQuestState(player, Quest.CREATED);
             st.setState(Quest.STARTED);
             st.setCond(1);
         } else {
-            player.sendMessage(new CustomMessage("Quest._464_Oath.QuestCannotBeTaken", player));
+            player.sendMessage(new CustomMessage("Quest._464_Oath.QuestCannotBeTaken"));
             return false;
         }
         return true;
@@ -441,26 +438,26 @@ public final class Special extends SimpleItemHandler implements ScriptFile {
         int chance = Rnd.get(1000000);
 
         if (chance < 350000) // Rough Blue Cubic Piece            35%
-            Functions.addItem(player, 10633, 1, "use10632");
+            addItem(player, 10633, 1);
         else if (chance < 550000) // Rough Yellow Cubic Piece     20%
-            Functions.addItem(player, 10634, 1, "use10632");
+            addItem(player, 10634, 1);
         else if (chance < 650000) // Rough Green Cubic Piece      10%
-            Functions.addItem(player, 10635, 1, "use10632");
+            addItem(player, 10635, 1);
         else if (chance < 730000) // Rough Red Cubic Piece        8%
-            Functions.addItem(player, 10636, 1, "use10632");
+            addItem(player, 10636, 1);
         else if (chance < 750000) // Rough White Cubic Piece      2%
-            Functions.addItem(player, 10637, 1, "use10632");
+            addItem(player, 10637, 1);
 
         else if (chance < 890000) // Fine Blue Cubic Piece        14%
-            Functions.addItem(player, 10642, 1, "use10632");
+            addItem(player, 10642, 1);
         else if (chance < 960000) // Fine Yellow Cubic Piece      7%
-            Functions.addItem(player, 10643, 1, "use10632");
+            addItem(player, 10643, 1);
         else if (chance < 985000) // Fine Green Cubic Piece       2.5%
-            Functions.addItem(player, 10644, 1, "use10632");
+            addItem(player, 10644, 1);
         else if (chance < 995000) // Fine Red Cubic Piece         1%
-            Functions.addItem(player, 10645, 1, "use10632");
+            addItem(player, 10645, 1);
         else if (chance <= 1000000) // Fine White Cubic Piece     0.5%
-            Functions.addItem(player, 10646, 1, "use10632");
+            addItem(player, 10646, 1);
 
         return true;
     }
@@ -471,7 +468,7 @@ public final class Special extends SimpleItemHandler implements ScriptFile {
             player.sendPacket(new SystemMessage(SystemMessage.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addItemName(21899));
             return false;
         }
-        Functions.spawn(Location.findPointToStay(player.getLoc(), 50, 100, player.getGeoIndex()), 143);
+        NpcUtils.spawnSingle(143, Location.findPointToStay(player.getLoc(), 50, 100, player.getGeoIndex()));
         return true;
     }
 
@@ -481,7 +478,7 @@ public final class Special extends SimpleItemHandler implements ScriptFile {
             player.sendPacket(new SystemMessage(SystemMessage.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addItemName(21900));
             return false;
         }
-        Functions.spawn(Location.findPointToStay(player.getLoc(), 50, 100, player.getGeoIndex()), 144);
+        NpcUtils.spawnSingle(144, Location.findPointToStay(player.getLoc(), 50, 100, player.getGeoIndex()));
         return true;
     }
 
@@ -491,7 +488,7 @@ public final class Special extends SimpleItemHandler implements ScriptFile {
             player.sendPacket(new SystemMessage(SystemMessage.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addItemName(21901));
             return false;
         }
-        Functions.spawn(Location.findPointToStay(player.getLoc(), 50, 100, player.getGeoIndex()), 145);
+        NpcUtils.spawnSingle(145, Location.findPointToStay(player.getLoc(), 50, 100, player.getGeoIndex()));
         return true;
     }
 
@@ -501,7 +498,7 @@ public final class Special extends SimpleItemHandler implements ScriptFile {
             player.sendPacket(new SystemMessage(SystemMessage.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addItemName(21902));
             return false;
         }
-        Functions.spawn(Location.findPointToStay(player.getLoc(), 50, 100, player.getGeoIndex()), 146);
+        NpcUtils.spawnSingle(146, Location.findPointToStay(player.getLoc(), 50, 100, player.getGeoIndex()));
         return true;
     }
 
@@ -512,7 +509,7 @@ public final class Special extends SimpleItemHandler implements ScriptFile {
             return false;
         }
         player.doCast(22298, player, false);
-        Functions.removeItem(player, 21903, 1, "use21903");
+        removeItem(player, 21903, 1, "use21903");
         return true;
     }
 
@@ -523,7 +520,7 @@ public final class Special extends SimpleItemHandler implements ScriptFile {
             return false;
         }
         player.doCast(22299, player, false);
-        Functions.removeItem(player, 21904, 1, "use21904");
+        removeItem(player, 21904, 1, "use21904");
         return true;
     }
 
@@ -534,7 +531,7 @@ public final class Special extends SimpleItemHandler implements ScriptFile {
             return false;
         }
         player.doCast(9179, player, false);
-        Functions.removeItem(player, 17268, 1, "use17268");
+        removeItem(player, 17268, 1, "use17268");
         return true;
     }
 }

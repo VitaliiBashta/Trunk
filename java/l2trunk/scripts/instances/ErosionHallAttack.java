@@ -1,6 +1,5 @@
 package l2trunk.scripts.instances;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ThreadPoolManager;
@@ -24,6 +23,7 @@ import l2trunk.gameserver.utils.Location;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public final class ErosionHallAttack extends Reflection {
     private static final int AliveTumor = 18708;
@@ -44,7 +44,7 @@ public final class ErosionHallAttack extends Reflection {
             getZone("[soi_hoe_attack_pc_vicera_10]"),
             getZone("[soi_hoe_attack_pc_vicera_11]"),
             getZone("[soi_hoe_attack_pc_vicera_12]"));
-    private final List<Integer> zoneEventTriggers = ArrayUtils.createAscendingList(14240001, 14240012);
+    private final List<Integer> zoneEventTriggers = IntStream.rangeClosed(14240001, 14240012).boxed().collect(Collectors.toList());
     private final ZoneListener startZoneListener = new ZoneListener();
     private final DeathListener deathListener = new DeathListener();
     private boolean conquestBegun = false;
@@ -123,7 +123,7 @@ public final class ErosionHallAttack extends Reflection {
         getPlayers().forEach(p ->
                 p.sendPacket(new ExShowScreenMessage(NpcString.ALL_THE_TUMORS_INSIDE_S1_HAVE_BEEN_DESTROYED_DRIVEN_INTO_A_CORNER_COHEMENES_APPEARS_CLOSE_BY, 8000, ExShowScreenMessage.ScreenMessageAlign.MIDDLE_CENTER, false, 1, -1, false, "#" + NpcString.HALL_OF_EROSION.getId())));
 
-        cohemenes = addSpawnWithoutRespawn(Cohemenes, getRandomSymbolLocation(), 0);
+        cohemenes = addSpawnWithoutRespawn(Cohemenes, getRandomSymbolLocation());
         cohemenes.getMinionList().spawnMinions();
         invokeDeathListener();
         Functions.npcShout(cohemenes, NpcString.CMON_CMON_SHOW_YOUR_FACE_YOU_LITTLE_RATS_LET_ME_SEE_WHAT_THE_DOOMED_WEAKLINGS_ARE_SCHEMING);
@@ -222,36 +222,33 @@ public final class ErosionHallAttack extends Reflection {
 
     public class ZoneListener implements OnZoneEnterLeaveListener {
         @Override
-        public void onZoneEnter(Zone zone, Creature cha) {
+        public void onZoneEnter(Zone zone, Player cha) {
             if (!conquestBegun) {
                 conquestBegun = true;
                 conquestBegins();
             }
         }
 
-        @Override
-        public void onZoneLeave(Zone zone, Creature cha) {
-        }
     }
 
     private class DeathListener implements OnDeathListener {
         @Override
         public void onDeath(Creature self, Creature killer) {
-            if (!self.isNpc())
-                return;
-            if (self.getNpcId() == AliveTumor) {
-                ((NpcInstance) self).dropItem(killer.getPlayer(), 13797, Rnd.get(2, 5));
-                NpcInstance deadTumor = addSpawnWithoutRespawn(DeadTumor, self.getLoc(), 0);
-                self.deleteMe();
-                notifyTumorDeath(deadTumor);
-                //Schedule tumor revival
-                ThreadPoolManager.INSTANCE.schedule(new TumorRevival(deadTumor), tumorRespawnTime);
-                // Schedule regeneration coffins spawn
-                ThreadPoolManager.INSTANCE.schedule(new RegenerationCoffinSpawn(deadTumor), 20000L);
-            } else if (self.getNpcId() == Cohemenes) {
-                Functions.npcShout(cohemenes, NpcString.KEU);
-                conquestConclusion(true);
-                SoIManager.notifyCohemenesKill();
+            if (self instanceof NpcInstance) {
+                if (self.getNpcId() == AliveTumor) {
+                    ((NpcInstance) self).dropItem(killer.getPlayer(), 13797, Rnd.get(2, 5));
+                    NpcInstance deadTumor = addSpawnWithoutRespawn(DeadTumor, self.getLoc(), 0);
+                    self.deleteMe();
+                    notifyTumorDeath(deadTumor);
+                    //Schedule tumor revival
+                    ThreadPoolManager.INSTANCE.schedule(new TumorRevival(deadTumor), tumorRespawnTime);
+                    // Schedule regeneration coffins spawn
+                    ThreadPoolManager.INSTANCE.schedule(new RegenerationCoffinSpawn(deadTumor), 20000L);
+                } else if (self.getNpcId() == Cohemenes) {
+                    Functions.npcShout(cohemenes, NpcString.KEU);
+                    conquestConclusion(true);
+                    SoIManager.notifyCohemenesKill();
+                }
             }
         }
     }
@@ -267,7 +264,7 @@ public final class ErosionHallAttack extends Reflection {
         public void runImpl() {
             if (conquestEnded)
                 return;
-            NpcInstance tumor = addSpawnWithoutRespawn(AliveTumor, _deadTumor.getLoc(), 0);
+            NpcInstance tumor = addSpawnWithoutRespawn(AliveTumor, _deadTumor);
             tumor.setCurrentHp(tumor.getMaxHp() * .25, false);
             notifyTumorRevival(_deadTumor);
             _deadTumor.deleteMe();
@@ -276,10 +273,10 @@ public final class ErosionHallAttack extends Reflection {
     }
 
     private class RegenerationCoffinSpawn extends RunnableImpl {
-        final NpcInstance _deadTumor;
+        final NpcInstance deadTumor;
 
         RegenerationCoffinSpawn(NpcInstance deadTumor) {
-            _deadTumor = deadTumor;
+            this.deadTumor = deadTumor;
         }
 
         @Override
@@ -287,7 +284,7 @@ public final class ErosionHallAttack extends Reflection {
             if (conquestEnded)
                 return;
             for (int i = 0; i < 4; i++)
-                addSpawnWithoutRespawn(RegenerationCoffin, new Location(_deadTumor.getLoc().x, _deadTumor.getLoc().y, _deadTumor.getLoc().z, Location.getRandomHeading()), 250);
+                addSpawnWithoutRespawn(RegenerationCoffin, Location.of(deadTumor.getLoc().x, deadTumor.getLoc().y, deadTumor.getLoc().z, true), 250);
         }
     }
 

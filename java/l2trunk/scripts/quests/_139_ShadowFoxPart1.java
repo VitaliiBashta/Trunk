@@ -5,7 +5,6 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _139_ShadowFoxPart1 extends Quest {
     // NPC
@@ -33,8 +32,7 @@ public final class _139_ShadowFoxPart1 extends Quest {
 
     @Override
     public String onFirstTalk(NpcInstance npc, Player player) {
-        QuestState qs = player.getQuestState(_138_TempleChampionPart2.class);
-        if (qs != null && qs.isCompleted() && player.getQuestState(getClass()) == null)
+        if (player.isQuestCompleted(_138_TempleChampionPart2.class) && player.getQuestState(this) == null)
             newQuestState(player, STARTED);
         return "";
     }
@@ -45,15 +43,15 @@ public final class _139_ShadowFoxPart1 extends Quest {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("30896-11.htm")) {
+        } else if ("30896-11.htm".equalsIgnoreCase(event)) {
             st.setCond(2);
             st.setState(STARTED);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("30896-14.htm")) {
-            st.takeItems(FRAGMENT, -1);
-            st.takeItems(CHEST, -1);
-            st.set("talk", "1");
-        } else if (event.equalsIgnoreCase("30896-16.htm")) {
+        } else if ("30896-14.htm".equalsIgnoreCase(event)) {
+            st.takeItems(FRAGMENT);
+            st.takeItems(CHEST);
+            st.set("talk", 1);
+        } else if ("30896-16.htm".equalsIgnoreCase(event)) {
             st.playSound(SOUND_FINISH);
             st.giveItems(ADENA_ID, 14050);
             st.addExpAndSp(30000, 2000);
@@ -69,7 +67,7 @@ public final class _139_ShadowFoxPart1 extends Quest {
         int npcId = npc.getNpcId();
         if (npcId == MIA)
             if (cond == 0) {
-                if (st.getPlayer().getLevel() >= 37)
+                if (st.player.getLevel() >= 37)
                     htmltext = "30896-01.htm";
                 else
                     htmltext = "30896-00.htm";
@@ -86,14 +84,13 @@ public final class _139_ShadowFoxPart1 extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int cond = st.getCond();
         if (cond == 2) {
-            st.giveItems(FRAGMENT, 1);
+            st.giveItems(FRAGMENT);
             st.playSound(SOUND_ITEMGET);
             if (Rnd.chance(10))
-                st.giveItems(CHEST, 1);
+                st.giveItems(CHEST);
         }
-        return null;
     }
 }

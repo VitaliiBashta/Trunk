@@ -10,8 +10,8 @@ public class StopMoveToLocationInVehicle extends L2GameServerPacket {
     private final Location _loc;
 
     public StopMoveToLocationInVehicle(Player player) {
-        _boatObjectId = player.getBoat().getObjectId();
-        _playerObjectId = player.getObjectId();
+        _boatObjectId = player.getBoat().objectId();
+        _playerObjectId = player.objectId();
         _loc = player.getInBoatPosition();
         _heading = player.getHeading();
     }

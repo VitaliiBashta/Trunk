@@ -4,7 +4,6 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _329_CuriosityOfDwarf extends Quest {
     private final int GOLEM_HEARTSTONE = 1346;
@@ -43,7 +42,7 @@ public final class _329_CuriosityOfDwarf extends Quest {
         if (id == CREATED)
             st.setCond(0);
         if (st.getCond() == 0) {
-            if (st.getPlayer().getLevel() >= 33)
+            if (st.player.getLevel() >= 33)
                 htmltext = "trader_rolento_q0329_02.htm";
             else {
                 htmltext = "trader_rolento_q0329_01.htm";
@@ -64,25 +63,24 @@ public final class _329_CuriosityOfDwarf extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int n = Rnd.get(1, 100);
         if (npcId == 20085) {
             if (n < 5) {
-                st.giveItems(GOLEM_HEARTSTONE, 1);
+                st.giveItems(GOLEM_HEARTSTONE);
                 st.playSound(SOUND_ITEMGET);
             } else if (n < 58) {
-                st.giveItems(BROKEN_HEARTSTONE, 1);
+                st.giveItems(BROKEN_HEARTSTONE);
                 st.playSound(SOUND_ITEMGET);
             }
         } else if (npcId == 20083)
             if (n < 6) {
-                st.giveItems(GOLEM_HEARTSTONE, 1);
+                st.giveItems(GOLEM_HEARTSTONE);
                 st.playSound(SOUND_ITEMGET);
             } else if (n < 56) {
-                st.giveItems(BROKEN_HEARTSTONE, 1);
+                st.giveItems(BROKEN_HEARTSTONE);
                 st.playSound(SOUND_ITEMGET);
             }
-        return null;
     }
 }

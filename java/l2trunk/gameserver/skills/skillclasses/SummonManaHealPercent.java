@@ -2,6 +2,7 @@ package l2trunk.gameserver.skills.skillclasses;
 
 import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
@@ -29,7 +30,7 @@ public final class SummonManaHealPercent extends Skill {
 
                 if (addToMp > 0)
                     target.setCurrentMp(target.getCurrentMp() + addToMp);
-                if (target.isPlayer())
+                if (target instanceof Player)
                     if (activeChar != target)
                         target.sendPacket(new SystemMessage2(SystemMsg.S2_MP_HAS_BEEN_RESTORED_BY_C1).addString(activeChar.getName()).addInteger(Math.round(addToMp)));
                     else

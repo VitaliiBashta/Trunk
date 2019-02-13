@@ -52,10 +52,10 @@ public final class _051_OFullesSpecialBait extends Quest {
         int id = st.getState();
         if (npcId == OFulle)
             if (id == CREATED) {
-                if (st.getPlayer().getLevel() < 36) {
+                if (st.player.getLevel() < 36) {
                     htmltext = "fisher_ofulle_q0051_0103.htm";
                     st.exitCurrentQuest(true);
-                } else if (st.getPlayer().getSkillLevel(FishSkill) >= 11)
+                } else if (st.player.getSkillLevel(FishSkill) >= 11)
                     htmltext = "fisher_ofulle_q0051_0101.htm";
                 else {
                     htmltext = "fisher_ofulle_q0051_0102.htm";
@@ -71,17 +71,16 @@ public final class _051_OFullesSpecialBait extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         if (npcId == FetteredSoul && st.getCond() == 1)
             if (st.getQuestItemsCount(LostBaitIngredient) < 100 && Rnd.chance(30)) {
-                st.giveItems(LostBaitIngredient, 1);
+                st.giveItems(LostBaitIngredient);
                 if (st.getQuestItemsCount(LostBaitIngredient) == 100) {
                     st.playSound(SOUND_MIDDLE);
                     st.setCond(2);
                 } else
                     st.playSound(SOUND_ITEMGET);
             }
-        return null;
     }
 }

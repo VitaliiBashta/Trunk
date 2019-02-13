@@ -5,6 +5,7 @@ import l2trunk.gameserver.model.base.ClassId;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
+import l2trunk.gameserver.utils.Location;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -200,61 +201,71 @@ public final class _226_TestOfHealer extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("1")) {
-            htmltext = "30473-04.htm";
-            if (!st.getPlayer().getVarB("dd3")) {
-                st.giveItems(7562, 45);
-                st.getPlayer().setVar("dd3", "1", -1);
-            }
-            st.setCond(COND1);
-            st.setState(STARTED);
-            st.playSound(SOUND_ACCEPT);
-            st.giveItems(REPORT_OF_PERRIN_ID, 1);
-        } else if (event.equalsIgnoreCase("30473_1"))
-            htmltext = "30473-08.htm";
-        else if (event.equalsIgnoreCase("30473_2")) {
-            htmltext = "30473-09.htm";
-            st.takeItems(GOLDEN_STATUE_ID, -1);
-            st.giveItems(ADENA_ID, 233490);
-            st.giveItems(MARK_OF_HEALER_ID, 1);
-            st.addExpAndSp(738283, 50662);
-            st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(false);
-        } else if (event.equalsIgnoreCase("30428_1")) {
-            htmltext = "30428-02.htm";
-            st.setCond(COND2);
-            st.addSpawn(27134, -93254, 147559, -2679);
-        } else if (event.equalsIgnoreCase("30658_1"))
-            if (st.getQuestItemsCount(ADENA_ID) >= 100000) {
-                htmltext = "30658-02.htm";
-                st.takeItems(ADENA_ID, 100000);
-                st.giveItems(PICTURE_OF_WINDY_ID, 1);
-                st.setCond(COND7);
-            } else
-                htmltext = "30658-05.htm";
-        else if (event.equalsIgnoreCase("30658_2")) {
-            st.setCond(COND6);
-            htmltext = "30658-03.htm";
-        } else if (event.equalsIgnoreCase("30660-03.htm")) {
-            st.takeItems(PICTURE_OF_WINDY_ID, 1);
-            st.giveItems(WINDYS_PEBBLES_ID, 1);
-            st.setCond(COND8);
-        } else if (event.equalsIgnoreCase("30674_1")) {
-            htmltext = "30674-02.htm";
-            st.setCond(COND11);
-            st.takeItems(ORDER_OF_SORIUS_ID, 1);
-            st.addSpawn(27122);
-            st.addSpawn(27122);
-            st.addSpawn(27123);
-            st.playSound(SOUND_BEFORE_BATTLE);
-        } else if (event.equalsIgnoreCase("30665_1")) {
-            htmltext = "30665-02.htm";
-            st.takeItems(SECRET_LETTER1_ID, 1);
-            st.takeItems(SECRET_LETTER2_ID, 1);
-            st.takeItems(SECRET_LETTER3_ID, 1);
-            st.takeItems(SECRET_LETTER4_ID, 1);
-            st.giveItems(CRISTINAS_LETTER_ID, 1);
-            st.setCond(COND22);
+        switch (event) {
+            case "1":
+                htmltext = "30473-04.htm";
+                if (!st.player.isVarSet("dd3")) {
+                    st.giveItems(7562, 45);
+                    st.player.setVar("dd3", 1);
+                }
+                st.setCond(COND1);
+                st.setState(STARTED);
+                st.playSound(SOUND_ACCEPT);
+                st.giveItems(REPORT_OF_PERRIN_ID);
+                break;
+            case "30473_1":
+                htmltext = "30473-08.htm";
+                break;
+            case "30473_2":
+                htmltext = "30473-09.htm";
+                st.takeItems(GOLDEN_STATUE_ID);
+                st.giveItems(ADENA_ID, 233490);
+                st.giveItems(MARK_OF_HEALER_ID);
+                st.addExpAndSp(738283, 50662);
+                st.playSound(SOUND_FINISH);
+                st.exitCurrentQuest(false);
+                break;
+            case "30428_1":
+                htmltext = "30428-02.htm";
+                st.setCond(COND2);
+                st.addSpawn(27134, Location.of(-93254, 147559, -2679));
+                break;
+            case "30658_1":
+                if (st.getQuestItemsCount(ADENA_ID) >= 100000) {
+                    htmltext = "30658-02.htm";
+                    st.takeItems(ADENA_ID, 100000);
+                    st.giveItems(PICTURE_OF_WINDY_ID);
+                    st.setCond(COND7);
+                } else
+                    htmltext = "30658-05.htm";
+                break;
+            case "30658_2":
+                st.setCond(COND6);
+                htmltext = "30658-03.htm";
+                break;
+            case "30660-03.htm":
+                st.takeItems(PICTURE_OF_WINDY_ID, 1);
+                st.giveItems(WINDYS_PEBBLES_ID);
+                st.setCond(COND8);
+                break;
+            case "30674_1":
+                htmltext = "30674-02.htm";
+                st.setCond(COND11);
+                st.takeItems(ORDER_OF_SORIUS_ID, 1);
+                st.addSpawn(27122);
+                st.addSpawn(27122);
+                st.addSpawn(27123);
+                st.playSound(SOUND_BEFORE_BATTLE);
+                break;
+            case "30665_1":
+                htmltext = "30665-02.htm";
+                st.takeItems(SECRET_LETTER1_ID, 1);
+                st.takeItems(SECRET_LETTER2_ID, 1);
+                st.takeItems(SECRET_LETTER3_ID, 1);
+                st.takeItems(SECRET_LETTER4_ID, 1);
+                st.giveItems(CRISTINAS_LETTER_ID);
+                st.setCond(COND22);
+                break;
         }
         return htmltext;
     }
@@ -270,8 +281,8 @@ public final class _226_TestOfHealer extends Quest {
         int cond = st.getCond();
         if (npcId == Bandellos) {
             if (cond == 0) {
-                if (st.getPlayer().getClassId() == ClassId.knight || st.getPlayer().getClassId() == ClassId.cleric || st.getPlayer().getClassId() == ClassId.oracle || st.getPlayer().getClassId() == ClassId.elvenKnight)
-                    if (st.getPlayer().getLevel() >= 39)
+                if (st.player.getClassId() == ClassId.knight || st.player.getClassId() == ClassId.cleric || st.player.getClassId() == ClassId.oracle || st.player.getClassId() == ClassId.elvenKnight)
+                    if (st.player.getLevel() >= 39)
                         htmltext = "30473-03.htm";
                     else
                         htmltext = "30473-01.htm";
@@ -281,13 +292,12 @@ public final class _226_TestOfHealer extends Quest {
                 }
             } else if (cond == COND23) {
                 if (st.getQuestItemsCount(GOLDEN_STATUE_ID) == 0) {
-                    htmltext = "30473-06.htm";
-                    st.giveItems(MARK_OF_HEALER_ID, 1);
+                    st.giveItems(MARK_OF_HEALER_ID);
                     htmltext = "30690-08.htm";
-                    if (!st.getPlayer().getVarB("prof2.3")) {
+                    if (!st.player.isVarSet("prof2.3")) {
                         st.addExpAndSp(738283, 50662);
                         st.giveItems(ADENA_ID, 133490);
-                        st.getPlayer().setVar("prof2.3", "1", -1);
+                        st.player.setVar("prof2.3", 1);
                     }
                     st.playSound(SOUND_FINISH);
                     st.exitCurrentQuest(false);
@@ -329,8 +339,8 @@ public final class _226_TestOfHealer extends Quest {
                 htmltext = "30658-04.htm";
             else if (cond == COND8) {
                 htmltext = "30658-06.htm";
-                st.giveItems(GOLDEN_STATUE_ID, 1);
-                st.takeItems(WINDYS_PEBBLES_ID, 1);
+                st.giveItems(GOLDEN_STATUE_ID);
+                st.takeItems(WINDYS_PEBBLES_ID);
                 st.setCond(COND9);
             } else if (cond == COND6) {
                 st.setCond(COND9);
@@ -345,7 +355,7 @@ public final class _226_TestOfHealer extends Quest {
         } else if (npcId == Sorius) {
             if (cond == COND9) {
                 htmltext = "30327-01.htm";
-                st.giveItems(ORDER_OF_SORIUS_ID, 1);
+                st.giveItems(ORDER_OF_SORIUS_ID);
                 st.setCond(COND10);
             } else if (cond > COND9 && cond < COND22)
                 htmltext = "30327-02.htm";
@@ -406,13 +416,12 @@ public final class _226_TestOfHealer extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         Integer[] d = DROPLIST.get(npc.getNpcId());
         if (st.getCond() == d[0] && (d[2] == 0 || st.getQuestItemsCount(d[2]) == 0)) {
             if (d[2] != 0)
-                st.giveItems(d[2], 1);
+                st.giveItems(d[2]);
             st.setCond(d[1]);
         }
-        return null;
     }
 }

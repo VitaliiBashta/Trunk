@@ -111,7 +111,6 @@ public final class GameServer {
 
         LOG.info("===============[Loading Scripts]==================");
         Scripts.INSTANCE.load();
-        BalancerConfig.LoadConfig();
         GeoEngine.load();
         Strings.reload();
         GameTimeController.INSTANCE.init();
@@ -158,7 +157,7 @@ public final class GameServer {
         SevenSigns.INSTANCE.init();
         SevenSignsFestival.INSTANCE.restoreFestivalData();
         SevenSigns.INSTANCE.updateFestivalScore();
-        AutoSpawnManager.getInstance();
+        AutoSpawnManager.INSTANCE();
         SevenSigns.INSTANCE.spawnSevenSignsNPC();
         LOG.info("===================[Loading Olympiad System]=======================");
         if (Config.ENABLE_OLYMPIAD) {

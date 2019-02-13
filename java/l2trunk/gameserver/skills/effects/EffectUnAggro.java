@@ -4,7 +4,7 @@ import l2trunk.gameserver.model.Effect;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.stats.Env;
 
-public class EffectUnAggro extends Effect {
+public final class EffectUnAggro extends Effect {
     public EffectUnAggro(Env env, EffectTemplate template) {
         super(env, template);
     }
@@ -12,19 +12,15 @@ public class EffectUnAggro extends Effect {
     @Override
     public void onStart() {
         super.onStart();
-        if (effected.isNpc())
+        if (effected instanceof NpcInstance)
             ((NpcInstance) effected).setUnAggred(true);
     }
 
     @Override
     public void onExit() {
         super.onExit();
-        if (effected.isNpc())
+        if (effected instanceof NpcInstance)
             ((NpcInstance) effected).setUnAggred(false);
     }
 
-    @Override
-    public boolean onActionTime() {
-        return false;
-    }
 }

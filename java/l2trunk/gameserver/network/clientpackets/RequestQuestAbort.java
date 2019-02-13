@@ -6,17 +6,17 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
 public final class RequestQuestAbort extends L2GameClientPacket {
-    private int questID;
+    private int _questID;
 
     @Override
     protected void readImpl() {
-        questID = readD();
+        _questID = readD();
     }
 
     @Override
     protected void runImpl() {
         Player activeChar = getClient().getActiveChar();
-        Quest quest = QuestManager.getQuest(questID);
+        Quest quest = QuestManager.getQuest(_questID);
         if (activeChar == null || quest == null || activeChar.isBlocked())
             return;
 

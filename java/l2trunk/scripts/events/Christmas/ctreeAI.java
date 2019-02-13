@@ -64,7 +64,6 @@ public final class ctreeAI extends DefaultAI {
         if (actor == null)
             return true;
         World.getAroundPlayers(actor, RANGE, RANGE)
-                .filter(Objects::nonNull)
                 .filter(player -> player.getEffectList().getEffectsBySkillId(ORIGINAL_EFFECT_ID) == null)
                 .forEach(player -> actor.doCast(treeEffect, player, true));
         return false;

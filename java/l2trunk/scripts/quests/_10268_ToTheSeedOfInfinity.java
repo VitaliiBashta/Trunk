@@ -3,7 +3,6 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _10268_ToTheSeedOfInfinity extends Quest {
     private final static int Keucereus = 32548;
@@ -37,7 +36,7 @@ public final class _10268_ToTheSeedOfInfinity extends Quest {
         switch (id) {
             case CREATED:
                 if (npcId == Keucereus)
-                    if (st.getPlayer().getLevel() < 75)
+                    if (st.player.getLevel() < 75)
                         htmltext = "32548-00.htm";
                     else
                         htmltext = "32548-01.htm";

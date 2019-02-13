@@ -36,7 +36,7 @@ public final class SellListProcure extends L2GameServerPacket {
 
         _sellList.keySet().forEach(item -> {
             writeH(item.getTemplate().getType1());
-            writeD(item.getObjectId());
+            writeD(item.objectId());
             writeD(item.getItemId());
             writeQ(_sellList.get(item));
             writeH(item.getTemplate().getType2ForPackets());

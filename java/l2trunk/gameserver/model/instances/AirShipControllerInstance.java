@@ -1,8 +1,8 @@
 package l2trunk.gameserver.model.instances;
 
-import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.World;
+import l2trunk.gameserver.model.entity.boat.AirShip;
 import l2trunk.gameserver.model.entity.boat.Boat;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
@@ -45,7 +45,7 @@ public class AirShipControllerInstance extends NpcInstance {
         if (!canBypassCheck(player, this))
             return;
 
-        if (command.equalsIgnoreCase("board")) {
+        if ("board".equalsIgnoreCase(command)) {
             SystemMsg msg = canBoard(player);
             if (msg != null) {
                 player.sendPacket(msg);
@@ -58,7 +58,7 @@ public class AirShipControllerInstance extends NpcInstance {
                 return;
             }
 
-            if (player.getBoat() != null && player.getBoat().getObjectId() != boat.getObjectId()) {
+            if (player.getBoat() != null && player.getBoat().objectId() != boat.objectId()) {
                 player.sendPacket(SystemMsg.YOU_HAVE_ALREADY_BOARDED_ANOTHER_AIRSHIP);
                 return;
             }
@@ -71,7 +71,7 @@ public class AirShipControllerInstance extends NpcInstance {
 
     Boat getDockedAirShip() {
         return World.getAroundCharacters(this, 1000, 500)
-                .filter(GameObject::isAirShip)
+                .filter(creature -> creature instanceof AirShip)
                 .map(cha -> (Boat) cha)
                 .filter(Boat::isDocked)
                 .findFirst().orElse(null);

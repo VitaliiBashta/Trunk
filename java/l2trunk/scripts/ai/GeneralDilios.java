@@ -2,6 +2,7 @@ package l2trunk.scripts.ai;
 
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ai.DefaultAI;
+import l2trunk.gameserver.model.instances.MonsterInstance;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.SocialAction;
 import l2trunk.gameserver.scripts.Functions;
@@ -36,8 +37,8 @@ public final class GeneralDilios extends DefaultAI {
                 Functions.npcSay(actor, diliosText.get(j));
                 actor.getAroundNpc(1500, 100)
                         .filter(guard -> guard.getNpcId() == GUARD_ID)
-                        .filter(guard -> !guard.isMonster())
-                        .forEach(guard -> guard.broadcastPacket(new SocialAction(guard.getObjectId(), 4)));
+                        .filter(guard -> !(guard instanceof MonsterInstance))
+                        .forEach(guard -> guard.broadcastPacket(new SocialAction(guard.objectId(), 4)));
             }
         }
         return false;

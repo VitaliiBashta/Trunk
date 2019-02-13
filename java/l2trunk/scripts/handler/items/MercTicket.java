@@ -25,7 +25,7 @@ import java.util.Set;
 
 public final class MercTicket extends ScriptItemHandler implements ScriptFile {
     @Override
-    public boolean useItem(Playable playable, ItemInstance item, boolean ctrl) {
+    public boolean useItem(Player player, ItemInstance item, boolean ctrl) {
         return false;
     }
 
@@ -68,7 +68,7 @@ public final class MercTicket extends ScriptItemHandler implements ScriptFile {
             return;
         }
 
-        item = player.getInventory().removeItemByObjectId(item.getObjectId(), 1, "MercTicket");
+        item = player.getInventory().removeItemByObjectId(item.objectId(), 1, "MercTicket");
         if (item == null) {
             player.sendActionFailed();
             return;
@@ -87,29 +87,25 @@ public final class MercTicket extends ScriptItemHandler implements ScriptFile {
     }
 
     @Override
-    public boolean pickupItem(Playable playable, ItemInstance item) {
-        if (!playable.isPlayer())
-            return false;
+    public boolean pickupItem(Player player, ItemInstance item) {
+            if (!player.hasPrivilege(Privilege.CS_FS_MERCENARIES) || player.getClan().getCastle() == 0) {
+                player.sendPacket(SystemMsg.YOU_DO_NOT_HAVE_THE_AUTHORITY_TO_CANCEL_MERCENARY_POSITIONING);
+                return false;
+            }
 
-        Player player = (Player) playable;
-        if (!player.hasPrivilege(Privilege.CS_FS_MERCENARIES) || player.getClan().getCastle() == 0) {
-            player.sendPacket(SystemMsg.YOU_DO_NOT_HAVE_THE_AUTHORITY_TO_CANCEL_MERCENARY_POSITIONING);
-            return false;
-        }
+            Castle castle = player.getCastle();
+            if (!castle.getSpawnMerchantTickets().contains(item)) {
+                player.sendPacket(SystemMsg.THIS_IS_NOT_A_MERCENARY_OF_A_CASTLE_THAT_YOU_OWN_AND_SO_YOU_CANNOT_CANCEL_ITS_POSITIONING);
+                return false;
+            }
 
-        Castle castle = player.getCastle();
-        if (!castle.getSpawnMerchantTickets().contains(item)) {
-            player.sendPacket(SystemMsg.THIS_IS_NOT_A_MERCENARY_OF_A_CASTLE_THAT_YOU_OWN_AND_SO_YOU_CANNOT_CANCEL_ITS_POSITIONING);
-            return false;
-        }
-
-        if (castle.getSiegeEvent().isInProgress()) {
-            player.sendPacket(SystemMsg.A_MERCENARY_CAN_BE_ASSIGNED_TO_A_POSITION_FROM_THE_BEGINNING_OF_THE_SEAL_VALIDATION_PERIOD_UNTIL_THE_TIME_WHEN_A_SIEGE_STARTS, ActionFail.STATIC);
-            return false;
-        }
-        castle.getSpawnMerchantTickets().remove(item);
-        CastleHiredGuardDAO.INSTANCE.delete(castle, item);
-        return true;
+            if (castle.getSiegeEvent().isInProgress()) {
+                player.sendPacket(SystemMsg.A_MERCENARY_CAN_BE_ASSIGNED_TO_A_POSITION_FROM_THE_BEGINNING_OF_THE_SEAL_VALIDATION_PERIOD_UNTIL_THE_TIME_WHEN_A_SIEGE_STARTS, ActionFail.STATIC);
+                return false;
+            }
+            castle.getSpawnMerchantTickets().remove(item);
+            CastleHiredGuardDAO.INSTANCE.delete(castle, item);
+            return true;
     }
 
     @Override

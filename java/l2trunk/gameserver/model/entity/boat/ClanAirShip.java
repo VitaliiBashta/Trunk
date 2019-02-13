@@ -1,7 +1,5 @@
 package l2trunk.gameserver.model.entity.boat;
 
-import l2trunk.commons.lang.reference.HardReference;
-import l2trunk.commons.lang.reference.HardReferences;
 import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.data.BoatHolder;
@@ -31,7 +29,7 @@ public final class ClanAirShip extends AirShip {
     private int _currentFuel;
     private AirshipDock dock;
     private AirshipDock.AirshipPlatform platform;
-    private HardReference<Player> _driverRef = HardReferences.emptyRef();
+    private Player driver = null;
     private boolean customMove;
     private Future<?> _deleteTask = null;
 
@@ -68,10 +66,10 @@ public final class ClanAirShip extends AirShip {
         BoatWayEvent departWay = new BoatWayEvent(this);
 
         platform.getArrivalPoints().forEach(p ->
-            arrivalWay.addObject(BoatWayEvent.BOAT_POINTS, p));
+                arrivalWay.addObject(BoatWayEvent.BOAT_POINTS, p));
 
         platform.getDepartPoints().forEach(p ->
-            departWay.addObject(BoatWayEvent.BOAT_POINTS, p));
+                departWay.addObject(BoatWayEvent.BOAT_POINTS, p));
 
         arrivalWay.addOnTimeAction(0, new StartStopAction(StartStopAction.EVENT, true));
         departWay.addOnTimeAction(300, new StartStopAction(StartStopAction.EVENT, true));
@@ -168,7 +166,7 @@ public final class ClanAirShip extends AirShip {
     }
 
     public Player getDriver() {
-        return _driverRef.get();
+        return driver;
     }
 
     public void setDriver(Player player) {
@@ -176,7 +174,7 @@ public final class ClanAirShip extends AirShip {
             if (clan != player.getClan())
                 return;
 
-            if (player.getTargetId() != controlKey.getObjectId()) {
+            if (player.getTargetId() != controlKey.objectId()) {
                 player.sendPacket(SystemMsg.YOU_MUST_TARGET_THE_ONE_YOU_WISH_TO_CONTROL);
                 return;
             }
@@ -239,7 +237,7 @@ public final class ClanAirShip extends AirShip {
                 return;
             }
 
-            _driverRef = player.getRef();
+            driver = player;
 
             player.setLockedTarget(true);
             player.unEquipWeapon();
@@ -247,7 +245,7 @@ public final class ClanAirShip extends AirShip {
         } else {
             Player oldDriver = getDriver();
 
-            _driverRef = HardReferences.emptyRef();
+            driver = null;
 
             if (oldDriver != null) {
                 oldDriver.setLockedTarget(false);
@@ -268,7 +266,7 @@ public final class ClanAirShip extends AirShip {
         clan.setAirshipFuel(_currentFuel);
         clan.updateClanInDB();
 
-        IdFactory.getInstance().releaseId(controlKey.getObjectId());
+        IdFactory.getInstance().releaseId(controlKey.objectId());
         BoatHolder.getInstance().removeBoat(this);
 
         super.onDelete();
@@ -305,10 +303,6 @@ public final class ClanAirShip extends AirShip {
         return dock != null && !isMoving;
     }
 
-    @Override
-    public boolean isClanAirShip() {
-        return true;
-    }
 
     @Override
     public List<L2GameServerPacket> deletePacketList() {

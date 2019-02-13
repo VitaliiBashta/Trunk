@@ -4,7 +4,6 @@ import l2trunk.gameserver.model.base.ClassId;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _223_TestOfChampion extends Quest {
     /**
@@ -237,53 +236,64 @@ public final class _223_TestOfChampion extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equals("1")) {
-            htmltext = "30624-06.htm";
-            st.setCond(COND1);
-            st.setState(STARTED);
-            if (!st.getPlayer().getVarB("dd3")) {
-                st.giveItems(7562, 72);
-                st.getPlayer().setVar("dd3", "1", -1);
-            }
-            st.playSound(SOUND_ACCEPT);
-            st.giveItems(ASCALONS_LETTER1, 1);
-        } else if (event.equals("30624_1"))
-            htmltext = "30624-05.htm";
-        else if (event.equals("30624_2")) {
-            htmltext = "30624-10.htm";
-            st.setCond(COND5);
-            st.takeItems(MASONS_LETTER, -1);
-            st.giveItems(ASCALONS_LETTER2, 1);
-        } else if (event.equals("30624_3")) {
-            htmltext = "30624-14.htm";
-            st.setCond(COND9);
-            st.takeItems(GROOTS_LETTER, -1);
-            st.giveItems(ASCALONS_LETTER3, 1);
-        } else if (event.equals("30625_1"))
-            htmltext = "30625-02.htm";
-        else if (event.equals("30625_2")) {
-            htmltext = "30625-03.htm";
-            st.setCond(COND2);
-            st.takeItems(ASCALONS_LETTER1, -1);
-            st.giveItems(IRON_ROSE_RING, 1);
-        } else if (event.equals("30093_1")) {
-            htmltext = "30093-02.htm";
-            st.setCond(COND6);
-            st.takeItems(ASCALONS_LETTER2, -1);
-            st.giveItems(WHITE_ROSE_INSIGNIA, 1);
-        } else if (event.equals("30196_1"))
-            htmltext = "30196-02.htm";
-        else if (event.equals("30196_2")) {
-            htmltext = "30196-03.htm";
-            st.setCond(COND10);
-            st.takeItems(ASCALONS_LETTER3, -1);
-            st.giveItems(MOUENS_ORDER1, 1);
-        } else if (event.equals("30196_3")) {
-            htmltext = "30196-06.htm";
-            st.setCond(COND12);
-            st.takeItems(MOUENS_ORDER1, -1);
-            st.takeItems(ROAD_RATMAN_HEAD, -1);
-            st.giveItems(MOUENS_ORDER2, 1);
+        switch (event) {
+            case "1":
+                htmltext = "30624-06.htm";
+                st.setCond(COND1);
+                st.setState(STARTED);
+                if (!st.player.isVarSet("dd3")) {
+                    st.giveItems(7562, 72);
+                    st.player.setVar("dd3", 1);
+                }
+                st.playSound(SOUND_ACCEPT);
+                st.giveItems(ASCALONS_LETTER1);
+                break;
+            case "30624_1":
+                htmltext = "30624-05.htm";
+                break;
+            case "30624_2":
+                htmltext = "30624-10.htm";
+                st.setCond(COND5);
+                st.takeItems(MASONS_LETTER);
+                st.giveItems(ASCALONS_LETTER2);
+                break;
+            case "30624_3":
+                htmltext = "30624-14.htm";
+                st.setCond(COND9);
+                st.takeItems(GROOTS_LETTER);
+                st.giveItems(ASCALONS_LETTER3);
+                break;
+            case "30625_1":
+                htmltext = "30625-02.htm";
+                break;
+            case "30625_2":
+                htmltext = "30625-03.htm";
+                st.setCond(COND2);
+                st.takeItems(ASCALONS_LETTER1);
+                st.giveItems(IRON_ROSE_RING);
+                break;
+            case "30093_1":
+                htmltext = "30093-02.htm";
+                st.setCond(COND6);
+                st.takeItems(ASCALONS_LETTER2);
+                st.giveItems(WHITE_ROSE_INSIGNIA);
+                break;
+            case "30196_1":
+                htmltext = "30196-02.htm";
+                break;
+            case "30196_2":
+                htmltext = "30196-03.htm";
+                st.setCond(COND10);
+                st.takeItems(ASCALONS_LETTER3);
+                st.giveItems(MOUENS_ORDER1);
+                break;
+            case "30196_3":
+                htmltext = "30196-06.htm";
+                st.setCond(COND12);
+                st.takeItems(MOUENS_ORDER1);
+                st.takeItems(ROAD_RATMAN_HEAD);
+                st.giveItems(MOUENS_ORDER2);
+                break;
         }
         return htmltext;
     }
@@ -299,12 +309,12 @@ public final class _223_TestOfChampion extends Quest {
         String htmltext = "noquest";
         if (npcId == Ascalon) {
             if (cond == 0) {
-                ClassId class_id = st.getPlayer().getClassId();
+                ClassId class_id = st.player.getClassId();
                 if (class_id != ClassId.warrior && class_id != ClassId.orcRaider) {
                     st.exitCurrentQuest(true);
                     return "30624-01.htm";
                 }
-                if (st.getPlayer().getLevel() < 39) {
+                if (st.player.getLevel() < 39) {
                     st.exitCurrentQuest(true);
                     return "30624-02.htm";
                 }
@@ -327,12 +337,12 @@ public final class _223_TestOfChampion extends Quest {
                 htmltext = "30624-16.htm";
             else if (cond == COND14) {
                 htmltext = "30624-17.htm";
-                st.takeItems(MOUENS_LETTER, -1);
-                st.giveItems(MARK_OF_CHAMPION, 1);
-                if (!st.getPlayer().getVarB("prof2.3")) {
+                st.takeItems(MOUENS_LETTER);
+                st.giveItems(MARK_OF_CHAMPION);
+                if (!st.player.isVarSet("prof2.3")) {
                     st.addExpAndSp(RewardExp, RewardSP);
                     st.giveItems(ADENA_ID, RewardAdena);
-                    st.getPlayer().setVar("prof2.3", "1", -1);
+                    st.player.setVar("prof2.3", 1);
                 }
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest(false);
@@ -346,9 +356,9 @@ public final class _223_TestOfChampion extends Quest {
                 htmltext = "30625-04.htm";
             else if (cond == COND3) {
                 htmltext = "30625-05.htm";
-                st.takeItems(BLOODY_AXE_HEAD, -1);
-                st.takeItems(IRON_ROSE_RING, -1);
-                st.giveItems(MASONS_LETTER, 1);
+                st.takeItems(BLOODY_AXE_HEAD);
+                st.takeItems(IRON_ROSE_RING);
+                st.giveItems(MASONS_LETTER);
                 st.setCond(COND4);
             } else if (cond == COND4)
                 htmltext = "30625-06.htm";
@@ -382,20 +392,20 @@ public final class _223_TestOfChampion extends Quest {
                 htmltext = "30196-07.htm";
             else if (cond == COND13) {
                 htmltext = "30196-08.htm";
-                st.takeItems(MOUENS_ORDER2, -1);
-                st.takeItems(LETO_LIZARDMAN_FANG, -1);
-                st.giveItems(MOUENS_LETTER, 1);
+                st.takeItems(MOUENS_ORDER2);
+                st.takeItems(LETO_LIZARDMAN_FANG);
+                st.giveItems(MOUENS_LETTER);
                 st.setCond(COND14);
-            } else if (cond == COND13)
+            } else if (cond == COND14)
                 htmltext = "30196-09.htm";
         return htmltext;
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int cond = st.getCond();
         if (cond == 0)
-            return null;
+            return;
 
         int npcId = npc.getNpcId();
         for (int[] drop : DROPLIST)
@@ -404,12 +414,10 @@ public final class _223_TestOfChampion extends Quest {
 
                 for (int[] drop2 : DROPLIST)
                     if (drop2[0] == cond && st.getQuestItemsCount(drop2[3]) < drop2[5])
-                        return null;
+                        return;
 
                 st.setCond(cond + 1);
-                return null;
+                return;
             }
-
-        return null;
     }
 }

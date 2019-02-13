@@ -126,9 +126,9 @@ public final class CommandChannel implements PlayerGroup {
         commandChannelParties.forEach(party -> party.sendPacket(gsp));
     }
 
-    @Override
+
     public void sendMessage(String message) {
-        commandChannelParties.forEach(party -> party.sendMessage(message));
+        commandChannelParties.forEach(party -> party.getMembers().forEach(m -> m.sendMessage(message)));
     }
 
     @Override
@@ -164,7 +164,7 @@ public final class CommandChannel implements PlayerGroup {
         return commandChannelLeader;
     }
 
-    @Override
+
     public List<Player> getMembers() {
         return commandChannelParties.stream()
                 .flatMap(players -> players.getMembers().stream())
@@ -200,7 +200,6 @@ public final class CommandChannel implements PlayerGroup {
         return reflection;
     }
 
-    @Override
     public CommandChannel setReflection(Reflection reflection) {
         this.reflection = reflection;
         return this;

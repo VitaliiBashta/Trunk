@@ -24,26 +24,26 @@ public final class TameControl extends Skill {
         if (isSSPossible())
             activeChar.unChargeShots(isMagic());
 
-        if (!activeChar.isPlayer())
-            return;
+        if (activeChar instanceof Player) {
+            Player player = (Player)activeChar;
+            if (player.getTrainedBeasts() == null)
+                return;
 
-        Player player = activeChar.getPlayer();
-        if (player.getTrainedBeasts() == null)
-            return;
+            if (type == 0)
+                targets.stream()
+                        .filter(target -> target instanceof TamedBeastInstance)
+                        .filter(target -> player.getTrainedBeasts().get(target.objectId()) != null)
+                        .map(target -> (TamedBeastInstance) target)
+                        .forEach(t -> t.despawnWithDelay(1000));
+            if (type == 1) // Приказать бежать за хозяином.
+                player.getTrainedBeasts().values().forEach(tamedBeast ->
+                        tamedBeast.getAI().setIntention(CtrlIntention.AI_INTENTION_FOLLOW, player, Config.FOLLOW_RANGE));
+            else if (type == 3) // Использовать особое умение
+                player.getTrainedBeasts().values().forEach(TamedBeastInstance::buffOwner);
+            else if (type == 4) // Отпустить всех зверей.
+                player.getTrainedBeasts().values().forEach(TamedBeastInstance::doDespawn);
+        }
 
-        if (type == 0)
-            targets.stream()
-                    .filter(target -> target instanceof TamedBeastInstance)
-                    .filter(target -> player.getTrainedBeasts().get(target.getObjectId()) != null)
-                    .map(target -> (TamedBeastInstance) target)
-                    .forEach(t -> t.despawnWithDelay(1000));
-        if (type == 1) // Приказать бежать за хозяином.
-            player.getTrainedBeasts().values().forEach(tamedBeast ->
-                    tamedBeast.getAI().setIntention(CtrlIntention.AI_INTENTION_FOLLOW, player, Config.FOLLOW_RANGE));
-        else if (type == 3) // Использовать особое умение
-            player.getTrainedBeasts().values().forEach(TamedBeastInstance::buffOwner);
-        else if (type == 4) // Отпустить всех зверей.
-            player.getTrainedBeasts().values().forEach(TamedBeastInstance::doDespawn);
     }
 
 }

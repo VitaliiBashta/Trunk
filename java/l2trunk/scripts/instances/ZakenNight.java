@@ -33,7 +33,7 @@ public final class ZakenNight extends Reflection {
         public void runImpl() {
 
             Location rndLoc = Rnd.get(zakenspawn);
-            r.addSpawnWithoutRespawn(Zaken, rndLoc, 0);
+            r.addSpawnWithoutRespawn(Zaken, rndLoc);
             for (int i = 0; i < 4; i++) {
                 r.addSpawnWithoutRespawn(20845, rndLoc, 200);
                 r.addSpawnWithoutRespawn(20847, rndLoc, 200);

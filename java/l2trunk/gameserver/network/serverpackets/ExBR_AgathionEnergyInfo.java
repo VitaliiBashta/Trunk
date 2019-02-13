@@ -20,7 +20,7 @@ public final class ExBR_AgathionEnergyInfo extends L2GameServerPacket {
         for (ItemInstance item : _itemList) {
             if (item.getTemplate().getAgathionEnergy() == 0)
                 continue;
-            writeD(item.getObjectId());
+            writeD(item.objectId());
             writeD(item.getItemId());
             writeD(0x200000);
             writeD(item.getAgathionEnergy());//current energy

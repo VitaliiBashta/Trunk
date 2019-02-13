@@ -2,9 +2,7 @@ package l2trunk.scripts.npc.model;
 
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.model.Player;
-import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.instances.NpcInstance;
-import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.ItemFunctions;
 
@@ -30,16 +28,16 @@ public final class RignosInstance extends NpcInstance {
                 return;
 
             altUseSkill(SKILL_EVENT_TIMER,5, player);
-            ItemFunctions.removeItem(player, RACE_STAMP, ItemFunctions.getItemCount(player, RACE_STAMP), true, "RignosInstance");
+            ItemFunctions.removeItem(player, RACE_STAMP, player.inventory.getCountOf(RACE_STAMP), "RignosInstance");
             _raceTask = ThreadPoolManager.INSTANCE.schedule(() -> _raceTask = null, 30 * 60 * 1000L);
         } else if (command.equalsIgnoreCase("endRace")) {
             if (_raceTask == null)
                 return;
 
-            long count = ItemFunctions.getItemCount(player, RACE_STAMP);
+            long count = player.inventory.getCountOf(RACE_STAMP);
             if (count >= 4) {
-                ItemFunctions.removeItem(player, RACE_STAMP, count, true, "RignosInstance");
-                ItemFunctions.addItem(player, SECRET_KEY, 1, true, "RignosInstance");
+                ItemFunctions.removeItem(player, RACE_STAMP, count, "RignosInstance");
+                ItemFunctions.addItem(player, SECRET_KEY, 1, "RignosInstance");
                 player.getEffectList().stopEffect(SKILL_EVENT_TIMER);
                 _raceTask.cancel(false);
                 _raceTask = null;
@@ -50,7 +48,7 @@ public final class RignosInstance extends NpcInstance {
 
     @Override
     public void showChatWindow(Player player, int val) {
-        if (ItemFunctions.getItemCount(player, RACE_STAMP) >= 4)
+        if (player.haveItem(RACE_STAMP,4))
             showChatWindow(player, "race_start001a.htm");
         else if (player.getLevel() >= 78 && _raceTask == null)
             showChatWindow(player, "race_start001.htm");

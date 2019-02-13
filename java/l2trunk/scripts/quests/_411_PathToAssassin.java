@@ -45,21 +45,21 @@ public final class _411_PathToAssassin extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("1")) {
-            if (st.getPlayer().getLevel() >= 18 && st.getPlayer().getClassId().id == 0x1f && st.getQuestItemsCount(IRON_HEART_ID) < 1) {
+        if ("1".equals(event)) {
+            if (st.player.getLevel() >= 18 && st.player.getClassId().id == 0x1f && st.getQuestItemsCount(IRON_HEART_ID) < 1) {
                 st.setCond(1);
                 st.setState(STARTED);
                 st.playSound(SOUND_ACCEPT);
                 st.giveItems(SHILENS_CALL_ID);
                 htmltext = "triskel_q0411_05.htm";
-            } else if (st.getPlayer().getClassId().id != 0x1f) {
-                if (st.getPlayer().getClassId().id == 0x23)
+            } else if (st.player.getClassId().id != 0x1f) {
+                if (st.player.getClassId().id == 0x23)
                     htmltext = "triskel_q0411_02a.htm";
                 else {
                     htmltext = "triskel_q0411_02.htm";
                     st.exitCurrentQuest(true);
                 }
-            } else if (st.getPlayer().getLevel() < 18) {
+            } else if (st.player.getLevel() < 18) {
                 htmltext = "triskel_q0411_03.htm";
                 st.exitCurrentQuest(true);
             } else if (st.getQuestItemsCount(IRON_HEART_ID) > 0)
@@ -67,13 +67,13 @@ public final class _411_PathToAssassin extends Quest {
         } else if (event.equalsIgnoreCase("30419_1")) {
             htmltext = "arkenia_q0411_05.htm";
             st.takeItems(SHILENS_CALL_ID);
-            st.giveItems(ARKENIAS_LETTER_ID, 1);
+            st.giveItems(ARKENIAS_LETTER_ID);
             st.setCond(2);
             st.playSound(SOUND_MIDDLE);
         } else if (event.equalsIgnoreCase("30382_1")) {
             htmltext = "guard_leikan_q0411_03.htm";
             st.takeItems(ARKENIAS_LETTER_ID);
-            st.giveItems(LEIKANS_NOTE_ID, 1);
+            st.giveItems(LEIKANS_NOTE_ID);
             st.setCond(3);
             st.playSound(SOUND_MIDDLE);
         }
@@ -94,10 +94,10 @@ public final class _411_PathToAssassin extends Quest {
             } else if (cond == 7) {
                 htmltext = "triskel_q0411_06.htm";
                 st.takeItems(ARKENIA_RECOMMEND_ID);
-                if (st.getPlayer().getClassId().getLevel() == 1) {
+                if (st.player.getClassId().occupation() == 0) {
                     st.giveItems(IRON_HEART_ID);
-                    if (!st.getPlayer().getVarB("prof1")) {
-                        st.getPlayer().setVar("prof1", "1", -1);
+                    if (!st.player.isVarSet("prof1")) {
+                        st.player.setVar("prof1", 1);
                         st.addExpAndSp(228064, 16455);
                         st.giveItems(ADENA_ID, 81900);
                     }
@@ -142,9 +142,9 @@ public final class _411_PathToAssassin extends Quest {
                 htmltext = "guard_leikan_q0411_06.htm";
             } else if (cond == 4 && st.getQuestItemsCount(ONYX_BEASTS_MOLAR_ID) > 9) {
                 htmltext = "guard_leikan_q0411_07.htm";
-                st.takeItems(ONYX_BEASTS_MOLAR_ID, -1);
-                st.takeItems(LEIKANS_NOTE_ID, -1);
-                st.giveItems(LEIKANS_KNIFE_ID, 1);
+                st.takeItems(ONYX_BEASTS_MOLAR_ID);
+                st.takeItems(LEIKANS_NOTE_ID);
+                st.giveItems(LEIKANS_KNIFE_ID);
                 st.setCond(5);
                 st.playSound(SOUND_MIDDLE);
             } else if (cond > 4 && cond < 7 && st.getQuestItemsCount(SHILENS_TEARS_ID) < 1) {
@@ -158,24 +158,23 @@ public final class _411_PathToAssassin extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         if (npcId == CALPICO) {
             if (cond == 5 && st.getQuestItemsCount(LEIKANS_KNIFE_ID) > 0 && st.getQuestItemsCount(SHILENS_TEARS_ID) < 1) {
-                st.giveItems(SHILENS_TEARS_ID, 1);
+                st.giveItems(SHILENS_TEARS_ID);
                 st.playSound(SOUND_MIDDLE);
                 st.setCond(6);
             }
         } else if (npcId == MOONSTONE_BEAST)
             if (cond == 3 && st.getQuestItemsCount(LEIKANS_NOTE_ID) > 0 && st.getQuestItemsCount(ONYX_BEASTS_MOLAR_ID) < 10) {
-                st.giveItems(ONYX_BEASTS_MOLAR_ID, 1);
+                st.giveItems(ONYX_BEASTS_MOLAR_ID);
                 if (st.getQuestItemsCount(ONYX_BEASTS_MOLAR_ID) > 9) {
                     st.playSound(SOUND_MIDDLE);
                     st.setCond(4);
                 } else
                     st.playSound(SOUND_ITEMGET);
             }
-        return null;
     }
 }

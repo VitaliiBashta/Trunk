@@ -4,7 +4,6 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _652_AnAgedExAdventurer extends Quest {
     //NPC
@@ -45,7 +44,7 @@ public final class _652_AnAgedExAdventurer extends Quest {
         int cond = st.getCond();
         if (npcId == Tantan) {
             if (cond == 0)
-                if (st.getPlayer().getLevel() < 46) {
+                if (st.player.getLevel() < 46) {
                     htmltext = "retired_oldman_tantan_q0652_01a.htm";
                     st.exitCurrentQuest(true);
                 } else
@@ -54,7 +53,7 @@ public final class _652_AnAgedExAdventurer extends Quest {
             htmltext = "sara_q0652_01.htm";
             st.giveItems(ADENA_ID, 10000, true);
             if (Rnd.chance(50))
-                st.giveItems(ScrollEnchantArmorD, 1, false);
+                st.giveItems(ScrollEnchantArmorD);
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(true);
         }

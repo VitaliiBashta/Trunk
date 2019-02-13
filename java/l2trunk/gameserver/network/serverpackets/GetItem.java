@@ -13,7 +13,7 @@ public class GetItem extends L2GameServerPacket {
     private final Location _loc;
 
     public GetItem(ItemInstance item, int playerId) {
-        _itemObjId = item.getObjectId();
+        _itemObjId = item.objectId();
         _loc = item.getLoc();
         _playerId = playerId;
     }

@@ -8,9 +8,8 @@ import java.util.Map.Entry;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-import java.util.stream.Collectors;
 
-public class AggroList {
+public final class AggroList {
     private final NpcInstance npc;
     private final Map<Integer, AggroInfo> hateList = new HashMap<>();
     /**
@@ -34,8 +33,8 @@ public class AggroList {
         try {
             AggroInfo ai;
 
-            if ((ai = hateList.get(attacker.getObjectId())) == null)
-                hateList.put(attacker.getObjectId(), ai = new AggroInfo(attacker));
+            if ((ai = hateList.get(attacker.objectId())) == null)
+                hateList.put(attacker.objectId(), ai = new AggroInfo(attacker));
 
             ai.damage += damage;
             ai.hate += aggro;
@@ -49,7 +48,7 @@ public class AggroList {
     public AggroInfo get(Creature attacker) {
         readLock.lock();
         try {
-            return hateList.get(attacker.getObjectId());
+            return hateList.get(attacker.objectId());
         } finally {
             readLock.unlock();
         }
@@ -59,11 +58,11 @@ public class AggroList {
         writeLock.lock();
         try {
             if (!onlyHate) {
-                hateList.remove(attacker.getObjectId());
+                hateList.remove(attacker.objectId());
                 return;
             }
 
-            AggroInfo ai = hateList.get(attacker.getObjectId());
+            AggroInfo ai = hateList.get(attacker.objectId());
             if (ai != null)
                 ai.hate = 0;
         } finally {
@@ -101,13 +100,13 @@ public class AggroList {
         }
     }
 
-    public List<Creature> getHateList() {
+    public List<Playable> getHateList() {
         List<AggroInfo> hated;
 
         readLock.lock();
         try {
             if (hateList.isEmpty())
-                return Collections.emptyList();
+                return List.of();
             hated = new ArrayList<>(hateList.values());
         } finally {
             readLock.unlock();
@@ -115,39 +114,31 @@ public class AggroList {
 
         hated.sort(new HateComparator());
         if (hated.get(0).hate == 0)
-            return Collections.emptyList();
+            return List.of();
 
-        List<Creature> hateList = new ArrayList<>();
-        for (AggroInfo element : hated) {
-            if (element.hate == 0)
-                continue;
-            World.getAroundCharacters(npc)
-                    .filter(cha -> cha.getObjectId() == element.attackerId)
-                    .findFirst().ifPresent(hateList::add);
-        }
+        List<Playable> hateList = new ArrayList<>();
+        hated.stream()
+                .filter(element -> element.hate != 0)
+                .forEach(element -> World.getAroundPlayables(npc)
+                        .filter(cha -> cha.objectId() == element.attackerId)
+                        .findFirst().ifPresent(hateList::add));
+
         return hateList;
     }
 
-    public Creature getMostHated() {
+    public Playable getMostHated() {
         List<AggroInfo> hated = getAggroSortedInfos();
         if (hated == null) return null;
 
         hated.sort(new HateComparator());
         if (hated.get(0).hate == 0)
             return null;
+        else
+            return World.getAroundPlayables(npc)
+                    .filter(cha -> cha.objectId() == hated.get(0).attackerId)
+                    .filter(cha -> !cha.isDead())
+                    .findFirst().orElse(null);
 
-        loop:
-        for (AggroInfo ai : hated) {
-            if (ai.hate == 0)
-                continue;
-            for (Creature cha : World.getAroundCharacters(npc).collect(Collectors.toList()))
-                if (cha.getObjectId() == ai.attackerId) {
-                    if (cha.isDead())
-                        continue loop;
-                    return cha;
-                }
-        }
-        return null;
     }
 
     public Creature getRandomHated() {
@@ -161,21 +152,16 @@ public class AggroList {
         if (hated.get(0).hate == 0)
             return null;
 
-        ArrayList<Creature> randomHated = new ArrayList<>();
+        List<Creature> randomHated = new ArrayList<>();
 
         Creature mostHated;
-        loop:
-        for (AggroInfo aHated : hated) {
-            if (aHated.hate == 0)
-                continue;
-            for (Creature cha : World.getAroundCharacters(npc).collect(Collectors.toList()))
-                if (cha.getObjectId() == aHated.attackerId) {
-                    if (cha.isDead())
-                        continue loop;
-                    randomHated.add(cha);
-                    break;
-                }
-        }
+        hated.stream()
+                .filter(aHated -> aHated.hate != 0)
+                .forEach(aHated -> World.getAroundCharacters(npc)
+                        .filter(cha -> cha.objectId() == aHated.attackerId)
+                        .filter(cha -> !cha.isDead())
+                        .findFirst().ifPresent(randomHated::add));
+
 
         if (randomHated.isEmpty())
             mostHated = null;
@@ -198,11 +184,11 @@ public class AggroList {
         return hated;
     }
 
-    public Creature getTopDamager() {
+    public Playable getTopDamager() {
         List<AggroInfo> hated = getAggroSortedInfos();
         if (hated == null) return null;
 
-        Creature topDamager =null;
+        Playable topDamager = null;
 
         // Ady - For raids I add a custom sorting maxDealer function. Because its not for single damager, but add up all the party's damage
         if (npc.isRaid()) {
@@ -214,17 +200,17 @@ public class AggroList {
                 if (ai.damage == 0)
                     continue;
 
-                World.getAroundCharacters(npc)
-                .filter(cha ->                    cha.getObjectId() == ai.attackerId)
-                    .filter(cha -> cha.getPlayer() != null)
-                    .findFirst().ifPresent(cha -> {
+                World.getAroundPlayables(npc)
+                        .filter(cha -> cha.objectId() == ai.attackerId)
+                        .filter(cha -> cha.getPlayer() != null)
+                        .findFirst().ifPresent(cha -> {
                     if (cha.getPlayer().getParty() != null) {
                         int partyId1 = cha.getPlayer().getParty().getLeader().getStoredId();
                         if (!parties.containsKey(partyId1))
                             parties.put(partyId1, 0);
                         parties.put(partyId1, parties.get(partyId1) + ai.damage);
                     } else {
-                        parties.put(cha.getPlayer().getObjectId(), ai.damage);
+                        parties.put(cha.getPlayer().objectId(), ai.damage);
                     }
                 });
             }
@@ -249,12 +235,12 @@ public class AggroList {
                 topDamagePlayer = null;
                 int topDamage = 0;
                 for (Player player : party.getMembers()) {
-                    if (hateList.get(player.getObjectId()) == null)
+                    if (hateList.get(player.objectId()) == null)
                         continue;
 
-                    if (hateList.get(player.getObjectId()).damage > topDamage) {
+                    if (hateList.get(player.objectId()).damage > topDamage) {
                         topDamagePlayer = player;
-                        topDamage = hateList.get(player.getObjectId()).damage;
+                        topDamage = hateList.get(player.objectId()).damage;
                     }
                 }
 
@@ -270,9 +256,9 @@ public class AggroList {
         for (AggroInfo ai : hated) {
             if (ai.damage == 0)
                 continue;
-            topDamager = World.getAroundCharacters(npc)
-            .filter(cha -> cha.getObjectId() == ai.attackerId)
-            .findFirst().orElse(null);
+            topDamager = World.getAroundPlayables(npc)
+                    .filter(cha -> cha.objectId() == ai.attackerId)
+                    .findFirst().orElse(null);
         }
 
         return topDamager;
@@ -289,7 +275,7 @@ public class AggroList {
                 if (ai.damage == 0 && ai.hate == 0)
                     continue;
                 World.getAroundCharacters(npc)
-                        .filter(c -> c.getObjectId() == ai.attackerId)
+                        .filter(c -> c.objectId() == ai.attackerId)
                         .findFirst().ifPresent(c -> aggroMap.put(c, new HateInfo(c, ai)));
             }
         } finally {
@@ -310,7 +296,7 @@ public class AggroList {
                     .filter(ai -> ai.damage != 0)
                     .filter(ai -> ai.hate != 0)
                     .forEach(ai -> World.getAroundPlayables(npc)
-                            .filter(attacker -> attacker.getObjectId() == ai.attackerId)
+                            .filter(attacker -> attacker.objectId() == ai.attackerId)
                             .findFirst().ifPresent(attacker -> aggroMap.put(attacker, new HateInfo(attacker, ai))));
         } finally {
             readLock.unlock();
@@ -344,7 +330,7 @@ public class AggroList {
         final int attackerId;
 
         AggroInfo(Creature attacker) {
-            attackerId = attacker.getObjectId();
+            attackerId = attacker.objectId();
         }
     }
 

@@ -5,7 +5,6 @@ import l2trunk.gameserver.ai.Fighter;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.SocialAction;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -25,19 +24,19 @@ public final class DrillSergeant extends Fighter {
         if (System.currentTimeMillis() > waitTimeout) {
             waitTimeout = System.currentTimeMillis() + Rnd.get(10, 30) * 1000L;
             Stream<NpcInstance> around = actor.getAroundNpc(700, 100).filter(mob -> recruits.contains(mob.getNpcId()));
-            actor.broadcastPacket(new SocialAction(actor.getObjectId(), 7));
+            actor.broadcastPacket(new SocialAction(actor.objectId(), 7));
             switch (Rnd.get(1, 3)) {
                 case 1:
                     around.forEach(mob ->
-                            mob.broadcastPacket(new SocialAction(mob.getObjectId(), 7)));
+                            mob.broadcastPacket(new SocialAction(mob.objectId(), 7)));
                     break;
                 case 2:
                     around.forEach(mob ->
-                            mob.broadcastPacket(new SocialAction(mob.getObjectId(), 4)));
+                            mob.broadcastPacket(new SocialAction(mob.objectId(), 4)));
                     break;
                 case 3:
                     around.forEach(mob ->
-                            mob.broadcastPacket(new SocialAction(mob.getObjectId(), 5)));
+                            mob.broadcastPacket(new SocialAction(mob.objectId(), 5)));
                     break;
             }
         }

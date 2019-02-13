@@ -45,7 +45,7 @@ public enum GmEventManager {
         Reflection r = new Reflection();
         r.init(iz);
 
-        _instanceId = r.getId();
+        _instanceId = r.id;
         if (_instanceId < 1) {
             gameMaster.sendMessage("An error ocurred while creating the initial instance for the event");
             return;
@@ -159,17 +159,17 @@ public enum GmEventManager {
             return;
 
         // Si ya esta registrado, no hacemos nada
-        if (_participants.containsKey(player.getObjectId()))
+        if (_participants.containsKey(player.objectId()))
             return;
 
         // Chequeamos que el pj cumpla con los requisitos impuestos para registrarse en el evento
         if (player.getLevel() < _minLvl) {
-            player.sendMessage("You have not enough level to register to this event");
+            player.sendMessage("You have not enough occupation to register to this event");
             return;
         }
 
         if (player.getLevel() > _maxLvl) {
-            player.sendMessage("Your level is too high to be able to register to this event");
+            player.sendMessage("Your occupation is too high to be able to register to this event");
             return;
         }
 
@@ -236,7 +236,7 @@ public enum GmEventManager {
         }
 
         // Salvamos la ubicacion del pj actual y lo registramos al evento
-        _participants.put(player.getObjectId(), new GmEventParticipant(player, player.getLoc()));
+        _participants.put(player.objectId(), new GmEventParticipant(player, player.getLoc()));
 
         // Lo transportamos hacia la ubicacion del evento
         player.teleToLocation(_location, _instanceId);
@@ -247,7 +247,7 @@ public enum GmEventManager {
 
     public void unregisterOfEvent(Player player) {
         // Si el pj apreta desregistrarse, pero no esta anotado aunque esta en la zona del evento, lo enviamos a la ciudad. Esto puede pasar si se desloguea y cuando vuelve ya termino
-        if (!_participants.containsKey(player.getObjectId()) && player.getReflectionId() == _instanceId) {
+        if (!_participants.containsKey(player.objectId()) && player.getReflectionId() == _instanceId) {
             player.teleToLocation(TeleportUtils.getRestartLocation(player, RestartType.TO_VILLAGE), 0);
             return;
         }
@@ -257,14 +257,14 @@ public enum GmEventManager {
             return;
 
         // Si no esta registrado, no hacemos nada
-        if (!_participants.containsKey(player.getObjectId()))
+        if (!_participants.containsKey(player.objectId()))
             return;
 
         // Lo transportamos nuevamente a donde el pj se registro al evento
-        player.teleToLocation(_participants.get(player.getObjectId()).getInitialLoc(), 0);
+        player.teleToLocation(_participants.get(player.objectId()).getInitialLoc(), 0);
 
         // Quitamos al pj del evento
-        _participants.remove(player.getObjectId());
+        _participants.remove(player.objectId());
 
         // Le enviamos el mensaje
         player.sendMessage("You have succesfully unregistered from the event");
@@ -292,10 +292,10 @@ public enum GmEventManager {
         if (getEventStatus() != StateEnum.ACTIVE || player == null)
             return false;
 
-        if (_participants.containsKey(player.getObjectId())) {
+        if (_participants.containsKey(player.objectId())) {
             // Si el pj esta anotado pero no esta en la instancia esta, lo desanotamos, porque seguro se salio
             if (player.getReflectionId() != _instanceId) {
-                _participants.remove(player.getObjectId());
+                _participants.remove(player.objectId());
                 return false;
             }
 

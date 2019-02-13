@@ -22,7 +22,6 @@ public final class EvasProtector extends DefaultAI {
         if (refl != null)
             if (skill.skillType == Skill.SkillType.HEAL)
                 refl.notifyProtectorHealed(actor);
-        super.onEvtSeeSpell(skill, caster);
     }
 
     @Override

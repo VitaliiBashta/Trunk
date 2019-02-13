@@ -236,16 +236,16 @@ public final class _348_ArrogantSearch extends Quest {
 //work alone
 
                 st.setCond(4);
-                st.takeItems(SHELL_OF_MONSTERS, -1);
+                st.takeItems(SHELL_OF_MONSTERS);
                 htmltext = "30864-04c.htm";
-                st.set("companions", "0");
+                st.set("companions", 0);
                 break;
             case "30864_04b":
 //work with friends
 
                 st.setCond(3);
-                st.set("companions", "1");
-                st.takeItems(SHELL_OF_MONSTERS, -1);
+                st.set("companions", 1);
+                st.takeItems(SHELL_OF_MONSTERS);
                 htmltext = "not yet implemented";
                 break;
         }
@@ -259,9 +259,9 @@ public final class _348_ArrogantSearch extends Quest {
             htmltext = "30864-10.htm";
         }
         if (event.equals("30864-10b.htm")) {
-            if (st.getQuestItemsCount(BLOODED_FABRIC) > 1) {
-                long count = st.takeItems(BLOODED_FABRIC, -1);
-                st.giveItems(ADENA_ID, count * 5000, true); // с потолка
+            if (st.haveQuestItem(BLOODED_FABRIC)) {
+                st.giveItems(ADENA_ID, st.getQuestItemsCount(BLOODED_FABRIC) * 5000, true); // с потолка
+                st.takeItems(BLOODED_FABRIC);
                 htmltext = "30864-10.htm";
             } else
                 htmltext = "30864-11.htm";
@@ -287,7 +287,7 @@ public final class _348_ArrogantSearch extends Quest {
                 //else, start the quest normally
                 {
                     st.setCond(0);
-                    if (st.getPlayer().getLevel() < 60) {
+                    if (st.player.getLevel() < 60) {
                         htmltext = "30864-01.htm";//not qualified
                         st.exitCurrentQuest(true);
                     } else if (cond == 0) {
@@ -356,12 +356,12 @@ public final class _348_ArrogantSearch extends Quest {
                 if (st.getQuestItemsCount(ARK_OWNERS.get(npcId)[0]) == 1) {
                     st.takeItems(ARK_OWNERS.get(npcId)[0], 1);
                     htmltext = ARK_OWNERS_TEXT.get(npcId)[0];
-                    st.getPlayer().sendPacket(new RadarControl(0, 1, new Location(ARK_OWNERS.get(npcId)[2], ARK_OWNERS.get(npcId)[3], ARK_OWNERS.get(npcId)[4])));
+                    st.player.sendPacket(new RadarControl(0, 1, new Location(ARK_OWNERS.get(npcId)[2], ARK_OWNERS.get(npcId)[3], ARK_OWNERS.get(npcId)[4])));
                 }
                 // do not have letter and do not have the item
                 else if (st.getQuestItemsCount(ARK_OWNERS.get(npcId)[1]) < 1) {
                     htmltext = ARK_OWNERS_TEXT.get(npcId)[1];
-                    st.getPlayer().sendPacket(new RadarControl(0, 1, new Location(ARK_OWNERS.get(npcId)[2], ARK_OWNERS.get(npcId)[3], ARK_OWNERS.get(npcId)[4])));
+                    st.player.sendPacket(new RadarControl(0, 1, new Location(ARK_OWNERS.get(npcId)[2], ARK_OWNERS.get(npcId)[3], ARK_OWNERS.get(npcId)[4])));
                 } else
                     //have the item (done)
                     htmltext = ARK_OWNERS_TEXT.get(npcId)[2];
@@ -396,7 +396,7 @@ public final class _348_ArrogantSearch extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         Integer[] drop = DROPS.get(npcId);
         if (drop != null) {
@@ -406,19 +406,16 @@ public final class _348_ArrogantSearch extends Quest {
             int chance = drop[3];
             int take = drop[4];
             if (st.getCond() >= cond && st.getQuestItemsCount(item) < max && (take == 0 || st.getQuestItemsCount(take) > 0) && Rnd.chance(chance)) {
-                st.giveItems(item, 1);
+                st.giveItems(item);
                 st.playSound(SOUND_ITEMGET);
                 if (take != 0)
                     st.takeItems(take, 1);
                 if (BLOODED_FABRIC == item && st.getQuestItemsCount(BLOODED_FABRIC) >= 30) {
-                    QuestState FatesWhisper = st.getPlayer().getQuestState(_234_FatesWhisper.class);
+                    QuestState FatesWhisper = st.player.getQuestState(_234_FatesWhisper.class);
                     if (FatesWhisper != null && FatesWhisper.getCond() == 8)
                         FatesWhisper.set("cond", 9);
                 }
             }
         }
-        if (npcId == ANGEL_KILLER)
-            return "Ha, that was fun! If you wish to find the key, search the corpse";
-        return null;
     }
 }

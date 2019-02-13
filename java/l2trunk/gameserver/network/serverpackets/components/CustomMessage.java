@@ -3,7 +3,6 @@ package l2trunk.gameserver.network.serverpackets.components;
 import l2trunk.gameserver.data.StringHolder;
 import l2trunk.gameserver.data.xml.holder.ItemHolder;
 import l2trunk.gameserver.model.Creature;
-import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.tables.SkillTable;
@@ -11,28 +10,28 @@ import l2trunk.gameserver.templates.item.ItemTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class CustomMessage {
+public final class CustomMessage {
     private static final Logger _log = LoggerFactory.getLogger(CustomMessage.class);
 
-    private String _text;
+    private String text;
     private int mark = 0;
 
     public CustomMessage(String text) {
-        _text = text;
+        this.text = text;
     }
 
-    public CustomMessage(String address, Player player, Object... args) {
-        _text = StringHolder.INSTANCE.getNotNull(player, address);
+    public CustomMessage(String address, Object... args) {
+        text = StringHolder.INSTANCE.getNotNull(address);
         add(args);
     }
 
     public CustomMessage addNumber(long number) {
-        _text = _text.replace("{" + mark + "}", String.valueOf(number));
+        text = text.replace("{" + mark + "}", String.valueOf(number));
         mark++;
         return this;
     }
 
-    private CustomMessage add(Object... args) {
+    private void add(Object... args) {
         for (Object arg : args)
             if (arg instanceof String)
                 addString((String) arg);
@@ -53,17 +52,16 @@ public class CustomMessage {
                 Thread.dumpStack();
             }
 
-        return this;
     }
 
     public CustomMessage addString(String str) {
-        _text = _text.replace("{" + mark + "}", str);
+        text = text.replace("{" + mark + "}", str);
         mark++;
         return this;
     }
 
     private CustomMessage addSkillName(Skill skill) {
-        _text = _text.replace("{" + mark + "}", skill.name);
+        text = text.replace("{" + mark + "}", skill.name);
         mark++;
         return this;
     }
@@ -73,7 +71,7 @@ public class CustomMessage {
     }
 
     public CustomMessage addItemName(ItemTemplate item) {
-        _text = _text.replace("{" + mark + "}", item.getName());
+        text = text.replace("{" + mark + "}", item.getName());
         mark++;
         return this;
     }
@@ -82,18 +80,18 @@ public class CustomMessage {
         return addItemName(ItemHolder.getTemplate(itemId));
     }
 
-    private CustomMessage addItemName(ItemInstance item) {
-        return addItemName(item.getTemplate());
+    private void addItemName(ItemInstance item) {
+        addItemName(item.getTemplate());
     }
 
     private CustomMessage addCharName(Creature cha) {
-        _text = _text.replace("{" + mark + "}", cha.getName());
+        text = text.replace("{" + mark + "}", cha.getName());
         mark++;
         return this;
     }
 
     @Override
     public String toString() {
-        return _text;
+        return text;
     }
 }

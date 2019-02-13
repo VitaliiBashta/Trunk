@@ -41,7 +41,7 @@ public final class _621_EggDelivery extends Quest {
     private static void takeEgg(QuestState st, int setcond) {
         st.setCond(setcond);
         st.takeItems(BoiledEgg, 1);
-        st.giveItems(FeeOfBoiledEgg, 1);
+        st.giveItems(FeeOfBoiledEgg);
         st.playSound(SOUND_MIDDLE);
     }
 
@@ -51,35 +51,35 @@ public final class _621_EggDelivery extends Quest {
         int cond = st.getCond();
         long BoiledEgg_count = st.getQuestItemsCount(BoiledEgg);
 
-        if (event.equalsIgnoreCase("jeremy_q0621_0104.htm") && _state == CREATED) {
-            st.takeItems(BoiledEgg, -1);
-            st.takeItems(FeeOfBoiledEgg, -1);
+        if ("jeremy_q0621_0104.htm".equalsIgnoreCase(event) && _state == CREATED) {
+            st.takeItems(BoiledEgg);
+            st.takeItems(FeeOfBoiledEgg);
             st.setState(STARTED);
             st.setCond(1);
             st.giveItems(BoiledEgg, 5);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("pulin_q0621_0201.htm") && cond == 1 && BoiledEgg_count > 0)
+        } else if ("pulin_q0621_0201.htm".equalsIgnoreCase(event) && cond == 1 && BoiledEgg_count > 0)
             takeEgg(st, 2);
-        else if (event.equalsIgnoreCase("naff_q0621_0301.htm") && cond == 2 && BoiledEgg_count > 0)
+        else if ("naff_q0621_0301.htm".equalsIgnoreCase(event) && cond == 2 && BoiledEgg_count > 0)
             takeEgg(st, 3);
-        else if (event.equalsIgnoreCase("crocus_q0621_0401.htm") && cond == 3 && BoiledEgg_count > 0)
+        else if ("crocus_q0621_0401.htm".equalsIgnoreCase(event) && cond == 3 && BoiledEgg_count > 0)
             takeEgg(st, 4);
-        else if (event.equalsIgnoreCase("kuber_q0621_0501.htm") && cond == 4 && BoiledEgg_count > 0)
+        else if ("kuber_q0621_0501.htm".equalsIgnoreCase(event) && cond == 4 && BoiledEgg_count > 0)
             takeEgg(st, 5);
-        else if (event.equalsIgnoreCase("beolin_q0621_0601.htm") && cond == 5 && BoiledEgg_count > 0)
+        else if ("beolin_q0621_0601.htm".equalsIgnoreCase(event) && cond == 5 && BoiledEgg_count > 0)
             takeEgg(st, 6);
-        else if (event.equalsIgnoreCase("jeremy_q0621_0701.htm") && cond == 6 && st.getQuestItemsCount(FeeOfBoiledEgg) >= 5)
+        else if ("jeremy_q0621_0701.htm".equalsIgnoreCase(event) && cond == 6 && st.getQuestItemsCount(FeeOfBoiledEgg) >= 5)
             st.setCond(7);
-        else if (event.equalsIgnoreCase("brewer_valentine_q0621_0801.htm") && cond == 7 && st.getQuestItemsCount(FeeOfBoiledEgg) >= 5) {
-            st.takeItems(BoiledEgg, -1);
-            st.takeItems(FeeOfBoiledEgg, -1);
+        else if ("brewer_valentine_q0621_0801.htm".equalsIgnoreCase(event) && cond == 7 && st.getQuestItemsCount(FeeOfBoiledEgg) >= 5) {
+            st.takeItems(BoiledEgg);
+            st.takeItems(FeeOfBoiledEgg);
             if (Rnd.chance(Tateossian_CHANCE)) {
                 if (Rnd.chance(40))
-                    st.giveItems(RecipeSealedTateossianRing, 1);
+                    st.giveItems(RecipeSealedTateossianRing);
                 else if (Rnd.chance(40))
-                    st.giveItems(RecipeSealedTateossianEarring, 1);
+                    st.giveItems(RecipeSealedTateossianEarring);
                 else
-                    st.giveItems(RecipeSealedTateossianNecklace, 1);
+                    st.giveItems(RecipeSealedTateossianNecklace);
             } else {
                 st.giveItems(ADENA_ID, 18800);
                 st.giveItems(HastePotion, 1, true);
@@ -98,7 +98,7 @@ public final class _621_EggDelivery extends Quest {
         if (st.getState() == CREATED) {
             if (npcId != JEREMY)
                 return htmltext;
-            if (st.getPlayer().getLevel() >= 68) {
+            if (st.player.getLevel() >= 68) {
                 st.setCond(0);
                 return "jeremy_q0621_0101.htm";
             }

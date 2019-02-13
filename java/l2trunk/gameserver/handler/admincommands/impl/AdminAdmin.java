@@ -62,7 +62,7 @@ public final class AdminAdmin implements IAdminCommandHandler {
                         activeChar.sendEtcStatusUpdate();
                     } else {
                         if (Config.SAVE_GM_EFFECTS)
-                            activeChar.setVar("gm_silence", "true", -1);
+                            activeChar.setVar("gm_silence");
                         activeChar.setMessageRefusal(true);
                         activeChar.sendPacket(SystemMsg.MESSAGE_REFUSAL_MODE);
                         activeChar.sendEtcStatusUpdate();
@@ -70,10 +70,10 @@ public final class AdminAdmin implements IAdminCommandHandler {
                     break;
                 case admin_tradeoff:
                     try {
-                        if (wordList[1].equalsIgnoreCase("on")) {
+                        if ("on".equalsIgnoreCase(wordList[1])) {
                             activeChar.setTradeRefusal(true);
                             Functions.sendDebugMessage(activeChar, "tradeoff enabled");
-                        } else if (wordList[1].equalsIgnoreCase("off")) {
+                        } else if ("off".equalsIgnoreCase(wordList[1])) {
                             activeChar.setTradeRefusal(false);
                             Functions.sendDebugMessage(activeChar, "tradeoff disabled");
                         }
@@ -108,13 +108,13 @@ public final class AdminAdmin implements IAdminCommandHandler {
                         Functions.sendDebugMessage(activeChar, "You must specify state");
                         return false;
                     }
-                    if (!target.isNpc()) {
+                    if (target instanceof NpcInstance) {
+                        ((NpcInstance) target).setNpcState(state);
+                        break;
+                    } else {
                         Functions.sendDebugMessage(activeChar, "You must target an NPC");
                         return false;
                     }
-                    NpcInstance npc = (NpcInstance) target;
-                    npc.setNpcState(state);
-                    break;
                 case admin_setareanpcstate:
                     try {
                         final String val = fullString.substring(15).trim();
@@ -177,66 +177,67 @@ public final class AdminAdmin implements IAdminCommandHandler {
                         Functions.sendDebugMessage(activeChar, "Only player target is allowed");
                         return false;
                     }
-                    if (!ob.isPlayer()) {
+                    if (ob instanceof Player) {
+                        Player pl = (Player) ob;
+                        List<String> strings = new ArrayList<>();
+                        strings.add("==========TARGET STATS:");
+                        strings.add("==Magic Resist: " + pl.calcStat(Stats.MAGIC_RESIST, null, null));
+                        strings.add("==Magic Power: " + pl.calcStat(Stats.MAGIC_POWER, 1));
+                        strings.add("==Skill Power: " + pl.calcStat(Stats.SKILL_POWER, 1));
+                        strings.add("==cast Break Rate: " + pl.calcStat(Stats.CAST_INTERRUPT, 1));
+
+                        strings.add("==========Powers:");
+                        strings.add("==Bleed: " + pl.calcStat(Stats.BLEED_POWER, 1));
+                        strings.add("==Poison: " + pl.calcStat(Stats.POISON_POWER, 1));
+                        strings.add("==Stun: " + pl.calcStat(Stats.STUN_POWER, 1));
+                        strings.add("==Root: " + pl.calcStat(Stats.ROOT_POWER, 1));
+                        strings.add("==Mental: " + pl.calcStat(Stats.MENTAL_POWER, 1));
+                        strings.add("==Sleep: " + pl.calcStat(Stats.SLEEP_POWER, 1));
+                        strings.add("==Paralyze: " + pl.calcStat(Stats.PARALYZE_POWER, 1));
+                        strings.add("==Cancel: " + pl.calcStat(Stats.CANCEL_POWER, 1));
+                        strings.add("==Debuff: " + pl.calcStat(Stats.DEBUFF_POWER, 1));
+
+                        strings.add("==========PvP Stats:");
+                        strings.add("==Phys Attack Dmg: " + pl.calcStat(Stats.PVP_PHYS_DMG_BONUS, 1));
+                        strings.add("==Phys Skill Dmg: " + pl.calcStat(Stats.PVP_PHYS_SKILL_DMG_BONUS, 1));
+                        strings.add("==Magic Skill Dmg: " + pl.calcStat(Stats.PVP_MAGIC_SKILL_DMG_BONUS, 1));
+                        strings.add("==Phys Attack Def: " + pl.calcStat(Stats.PVP_PHYS_DEFENCE_BONUS, 1));
+                        strings.add("==Phys Skill Def: " + pl.calcStat(Stats.PVP_PHYS_SKILL_DEFENCE_BONUS, 1));
+                        strings.add("==Magic Skill Def: " + pl.calcStat(Stats.PVP_MAGIC_SKILL_DEFENCE_BONUS, 1));
+
+                        strings.add("==========Reflects:");
+                        strings.add("==Phys Dmg Chance: " + pl.calcStat(Stats.REFLECT_AND_BLOCK_DAMAGE_CHANCE, null, null));
+                        strings.add("==Phys Skill Dmg Chance: " + pl.calcStat(Stats.REFLECT_AND_BLOCK_PSKILL_DAMAGE_CHANCE, null, null));
+                        strings.add("==Magic Skill Dmg Chance: " + pl.calcStat(Stats.REFLECT_AND_BLOCK_MSKILL_DAMAGE_CHANCE, null, null));
+                        strings.add("==Counterattack: Phys Dmg Chance: " + pl.calcStat(Stats.REFLECT_DAMAGE_PERCENT, null, null));
+                        strings.add("==Counterattack: Phys Skill Dmg Chance: " + pl.calcStat(Stats.REFLECT_PSKILL_DAMAGE_PERCENT, null, null));
+                        strings.add("==Counterattack: Magic Skill Dmg Chance: " + pl.calcStat(Stats.REFLECT_MSKILL_DAMAGE_PERCENT, null, null));
+
+                        strings.add("==========MP Consume Rate:");
+                        strings.add("==Magic Skills: " + pl.calcStat(Stats.MP_MAGIC_SKILL_CONSUME, 1));
+                        strings.add("==Phys Skills: " + pl.calcStat(Stats.MP_PHYSICAL_SKILL_CONSUME, 1));
+                        strings.add("==Music: " + pl.calcStat(Stats.MP_DANCE_SKILL_CONSUME, 1));
+
+                        strings.add("==========Shield:");
+                        strings.add("==Shield Defence: " + pl.calcStat(Stats.SHIELD_DEFENCE, null, null));
+                        strings.add("==Shield Defence Rate: " + pl.calcStat(Stats.SHIELD_RATE, null, null));
+                        strings.add("==Shield Defence Angle: " + pl.calcStat(Stats.SHIELD_ANGLE, null, null));
+
+                        strings.add("==========Etc:");
+                        strings.add("==Fatal Blow Rate: " + pl.calcStat(Stats.FATALBLOW_RATE, null, null));
+                        strings.add("==Phys Skill Evasion Rate: " + pl.calcStat(Stats.PSKILL_EVASION, null, null));
+                        strings.add("==Counterattack Rate: " + pl.calcStat(Stats.COUNTER_ATTACK, null, null));
+                        strings.add("==Pole Attack Angle: " + pl.calcStat(Stats.POLE_ATTACK_ANGLE, null, null));
+                        strings.add("==Pole Target Count: " + pl.calcStat(Stats.POLE_TARGET_COUNT, 1));
+                        strings.add("==========DONE.");
+
+                        strings.forEach(s ->
+                                Functions.sendDebugMessage(activeChar, s));
+                        break;
+                    } else {
                         Functions.sendDebugMessage(activeChar, "Only player target is allowed");
                         return false;
                     }
-                    Player pl = ob.getPlayer();
-                    List<String> strings = new ArrayList<>();
-                    strings.add("==========TARGET STATS:");
-                    strings.add("==Magic Resist: " + pl.calcStat(Stats.MAGIC_RESIST, null, null));
-                    strings.add("==Magic Power: " + pl.calcStat(Stats.MAGIC_POWER, 1));
-                    strings.add("==Skill Power: " + pl.calcStat(Stats.SKILL_POWER, 1));
-                    strings.add("==cast Break Rate: " + pl.calcStat(Stats.CAST_INTERRUPT, 1));
-
-                    strings.add("==========Powers:");
-                    strings.add("==Bleed: " + pl.calcStat(Stats.BLEED_POWER, 1));
-                    strings.add("==Poison: " + pl.calcStat(Stats.POISON_POWER, 1));
-                    strings.add("==Stun: " + pl.calcStat(Stats.STUN_POWER, 1));
-                    strings.add("==Root: " + pl.calcStat(Stats.ROOT_POWER, 1));
-                    strings.add("==Mental: " + pl.calcStat(Stats.MENTAL_POWER, 1));
-                    strings.add("==Sleep: " + pl.calcStat(Stats.SLEEP_POWER, 1));
-                    strings.add("==Paralyze: " + pl.calcStat(Stats.PARALYZE_POWER, 1));
-                    strings.add("==Cancel: " + pl.calcStat(Stats.CANCEL_POWER, 1));
-                    strings.add("==Debuff: " + pl.calcStat(Stats.DEBUFF_POWER, 1));
-
-                    strings.add("==========PvP Stats:");
-                    strings.add("==Phys Attack Dmg: " + pl.calcStat(Stats.PVP_PHYS_DMG_BONUS, 1));
-                    strings.add("==Phys Skill Dmg: " + pl.calcStat(Stats.PVP_PHYS_SKILL_DMG_BONUS, 1));
-                    strings.add("==Magic Skill Dmg: " + pl.calcStat(Stats.PVP_MAGIC_SKILL_DMG_BONUS, 1));
-                    strings.add("==Phys Attack Def: " + pl.calcStat(Stats.PVP_PHYS_DEFENCE_BONUS, 1));
-                    strings.add("==Phys Skill Def: " + pl.calcStat(Stats.PVP_PHYS_SKILL_DEFENCE_BONUS, 1));
-                    strings.add("==Magic Skill Def: " + pl.calcStat(Stats.PVP_MAGIC_SKILL_DEFENCE_BONUS, 1));
-
-                    strings.add("==========Reflects:");
-                    strings.add("==Phys Dmg Chance: " + pl.calcStat(Stats.REFLECT_AND_BLOCK_DAMAGE_CHANCE, null, null));
-                    strings.add("==Phys Skill Dmg Chance: " + pl.calcStat(Stats.REFLECT_AND_BLOCK_PSKILL_DAMAGE_CHANCE, null, null));
-                    strings.add("==Magic Skill Dmg Chance: " + pl.calcStat(Stats.REFLECT_AND_BLOCK_MSKILL_DAMAGE_CHANCE, null, null));
-                    strings.add("==Counterattack: Phys Dmg Chance: " + pl.calcStat(Stats.REFLECT_DAMAGE_PERCENT, null, null));
-                    strings.add("==Counterattack: Phys Skill Dmg Chance: " + pl.calcStat(Stats.REFLECT_PSKILL_DAMAGE_PERCENT, null, null));
-                    strings.add("==Counterattack: Magic Skill Dmg Chance: " + pl.calcStat(Stats.REFLECT_MSKILL_DAMAGE_PERCENT, null, null));
-
-                    strings.add("==========MP Consume Rate:");
-                    strings.add("==Magic Skills: " + pl.calcStat(Stats.MP_MAGIC_SKILL_CONSUME, 1));
-                    strings.add("==Phys Skills: " + pl.calcStat(Stats.MP_PHYSICAL_SKILL_CONSUME, 1));
-                    strings.add("==Music: " + pl.calcStat(Stats.MP_DANCE_SKILL_CONSUME, 1));
-
-                    strings.add("==========Shield:");
-                    strings.add("==Shield Defence: " + pl.calcStat(Stats.SHIELD_DEFENCE, null, null));
-                    strings.add("==Shield Defence Rate: " + pl.calcStat(Stats.SHIELD_RATE, null, null));
-                    strings.add("==Shield Defence Angle: " + pl.calcStat(Stats.SHIELD_ANGLE, null, null));
-
-                    strings.add("==========Etc:");
-                    strings.add("==Fatal Blow Rate: " + pl.calcStat(Stats.FATALBLOW_RATE, null, null));
-                    strings.add("==Phys Skill Evasion Rate: " + pl.calcStat(Stats.PSKILL_EVASION, null, null));
-                    strings.add("==Counterattack Rate: " + pl.calcStat(Stats.COUNTER_ATTACK, null, null));
-                    strings.add("==Pole Attack Angle: " + pl.calcStat(Stats.POLE_ATTACK_ANGLE, null, null));
-                    strings.add("==Pole Target Count: " + pl.calcStat(Stats.POLE_TARGET_COUNT, 1));
-                    strings.add("==========DONE.");
-
-                    strings.forEach(s ->
-                        Functions.sendDebugMessage(activeChar, s));
-                    break;
                 case admin_uievent:
                     if (wordList.length < 5) {
                         Functions.sendDebugMessage(activeChar, "USAGE: //uievent isHide doIncrease startTime endTime Text");
@@ -295,12 +296,13 @@ public final class AdminAdmin implements IAdminCommandHandler {
                     break;
                 case admin_forcenpcinfo:
                     GameObject obj2 = activeChar.getTarget();
-                    if (!obj2.isNpc()) {
+                    if (obj2 instanceof NpcInstance) {
+                        ((NpcInstance) obj2).broadcastCharInfo();
+                        break;
+                    } else {
                         Functions.sendDebugMessage(activeChar, "Only NPC target is allowed");
                         return false;
                     }
-                    ((NpcInstance) obj2).broadcastCharInfo();
-                    break;
                 case admin_loc:
                     Functions.sendDebugMessage(activeChar, "Coords: X:" + activeChar.getLoc().x + " Y:" + activeChar.getLoc().y + " Z:" + activeChar.getLoc().z + " H:" + activeChar.getLoc().h);
                     break;
@@ -350,11 +352,9 @@ public final class AdminAdmin implements IAdminCommandHandler {
                             .forEach(player -> player.ask(new ConfirmDlg(SystemMsg.S1, 60000).addString("Would you like teleport to Admin Recall?"), new AnswerGathTeleInvitation(player, activeChar)));
                     break;
                 case admin_openme:
-                    activeChar.setGMVisible(true);
                     activeChar.sendMessage("You are GM visible. Now you can accept petition.");
                     break;
                 case admin_closeme:
-                    activeChar.setGMVisible(false);
                     activeChar.sendMessage("You are Invisible. Now you can't accept petition.");
                     break;
             }
@@ -446,7 +446,5 @@ public final class AdminAdmin implements IAdminCommandHandler {
             gathTele(_player, _target);
         }
 
-        public void sayNo() {
-        }
     }
 }

@@ -35,11 +35,11 @@ public final class GMViewCharacterInfo extends L2GameServerPacket {
 
     public GMViewCharacterInfo(final Player cha) {
         _loc = cha.getLoc();
-        obj_id = cha.getObjectId();
+        obj_id = cha.objectId();
         _name = cha.getName();
         _race = cha.getRace().ordinal();
         sex = cha.isMale() ? 0: 1;
-        class_id = cha.getClassId().id();
+        class_id = cha.getClassId().id;
         level = cha.getLevel();
         _exp = cha.getExp();
         _str = cha.getSTR();
@@ -84,7 +84,7 @@ public final class GMViewCharacterInfo extends L2GameServerPacket {
         Clan clan = cha.getClan();
         Alliance alliance = clan == null ? null : clan.getAlliance();
         //
-        clan_id = clan == null ? 0 : clan.getClanId();
+        clan_id = clan == null ? 0 : clan.clanId();
         clan_crest_id = clan == null ? 0 : clan.getCrestId();
         //
         ally_id = alliance == null ? 0 : alliance.getAllyId();
@@ -101,7 +101,7 @@ public final class GMViewCharacterInfo extends L2GameServerPacket {
         running = cha.isRunning() ? 0x01 : 0x00;
         pledge_class = cha.getPledgeClass();
         noble = cha.isNoble() ? 1 : 0; //0x01: symbol on char menu ctrl+I
-        hero = ((cha.isHero()) || (cha.isFakeHero()) ? 1 : 0); //0x01: Hero Aura and symbol
+        hero = (cha.isHero() ? 1 : 0); //0x01: Hero Aura and symbol
         name_color = cha.getVisibleNameColor();
         title_color = cha.getVisibleTitleColor();
         attackElement = cha.getAttackElement();

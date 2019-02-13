@@ -26,7 +26,7 @@ public final class BoatWayEvent extends GlobalEvent {
     private final Boat _boat;
 
     public BoatWayEvent(ClanAirShip boat) {
-        super(boat.getObjectId(), "ClanAirShip");
+        super(boat.objectId(), "ClanAirShip");
         _ticketId = 0;
         _boat = boat;
         _returnLoc = null;
@@ -35,11 +35,11 @@ public final class BoatWayEvent extends GlobalEvent {
     public BoatWayEvent(StatsSet set) {
         super(set);
         _ticketId = set.getInteger("ticketId", 0);
-        _returnLoc = Location.parseLoc(set.getString("return_point"));
+        _returnLoc = Location.of(set.getString("return_point"));
         String className = set.getString("class", null);
         if (className != null) {
             _boat = BoatHolder.getInstance().initBoat(getName(), className);
-            Location loc = Location.parseLoc(set.getString("spawn_point"));
+            Location loc = Location.of(set.getString("spawn_point"));
             _boat.setLoc(loc, true);
             _boat.setHeading(loc.h);
         } else {
@@ -96,7 +96,7 @@ public final class BoatWayEvent extends GlobalEvent {
         if (bp.isTeleport())
             _boat.teleportShip(bp);
         else
-            _boat.moveToLocation(bp.getX(), bp.getY(), bp.getZ(), 0, false);
+            _boat.moveToLocation(bp, 0, false);
     }
 
     @Override

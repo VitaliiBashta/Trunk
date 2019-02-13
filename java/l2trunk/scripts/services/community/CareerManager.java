@@ -24,7 +24,7 @@ public final class CareerManager implements ScriptFile, ICommunityBoardHandler {
     private static final Logger _log = LoggerFactory.getLogger(CareerManager.class);
 
     private static void changeClass(Player player, int classId) {
-        if (player.getClassId().getLevel() == 3)
+        if (player.getClassId().occupation() == 2)
             player.sendPacket(SystemMsg.CONGRATULATIONS__YOUVE_COMPLETED_YOUR_THIRDCLASS_TRANSFER_QUEST); // ??? 3 ?????
         else
             player.sendPacket(SystemMsg.CONGRATULATIONS__YOUVE_COMPLETED_A_CLASS_TRANSFER); // ??? 1 ? 2 ?????
@@ -45,9 +45,6 @@ public final class CareerManager implements ScriptFile, ICommunityBoardHandler {
         return true;
     }
 
-    /**
-     * @return Returns true if the player can transfer to the selected class
-     */
     private static boolean checkIfCanTransferToClass(Player player, int newClassId) {
         if (player == null)
             return false;
@@ -67,7 +64,7 @@ public final class CareerManager implements ScriptFile, ICommunityBoardHandler {
                 if (cid == ClassId.inspector)
                     return false;
 
-                if (cid.childOf(currentClassId) && cid.level() == currentClassId.level() + 1)
+                if (cid.childOf(currentClassId) && cid.occupation() == currentClassId.occupation() + 1)
                     return true;
 
             }
@@ -117,7 +114,7 @@ public final class CareerManager implements ScriptFile, ICommunityBoardHandler {
 
             final int price = Integer.parseInt(st.nextToken());
             ItemTemplate item = ItemHolder.getTemplate(Config.CLASS_MASTERS_PRICE_ITEM);
-            ItemInstance pay = activeChar.getInventory().getItemByItemId(item.getItemId());
+            ItemInstance pay = activeChar.getInventory().getItemByItemId(item.itemId());
             if (pay != null && pay.getCount() >= price) {
                 activeChar.getInventory().destroyItem(pay, price, "Class Changer");
                 changeClass(activeChar, classId);
@@ -129,7 +126,7 @@ public final class CareerManager implements ScriptFile, ICommunityBoardHandler {
             }
         } else if (command.startsWith("_bbscareer;")) {
             ClassId classId = activeChar.getClassId();
-            int jobLevel = classId.getLevel();
+            int jobLevel = classId.occupation()+1;
             int level = activeChar.getLevel();
             StringBuilder html = new StringBuilder();
             html.append("<br>");
@@ -146,8 +143,8 @@ public final class CareerManager implements ScriptFile, ICommunityBoardHandler {
                 for (ClassId cid : ClassId.values()) {
                     if (cid == ClassId.inspector)
                         continue;
-                    if (cid.childOf(classId) && cid.level() == classId.level() + 1)
-                        html.append("<td><center><button value=\"").append(cid.name()).append("\" action=\"bypass _bbscareer;classmaster;change_class;").append(cid.id()).append(";").append(Config.CLASS_MASTERS_PRICE_LIST[jobLevel]).append("\" width=150 height=25 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></center></td>");
+                    if (cid.childOf(classId) && cid.occupation() == classId.occupation() + 1)
+                        html.append("<td><center><button value=\"").append(cid.name()).append("\" action=\"bypass _bbscareer;classmaster;change_class;").append(cid.id).append(";").append(Config.CLASS_MASTERS_PRICE_LIST[jobLevel]).append("\" width=150 height=25 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></center></td>");
 
                 }
                 html.append("</tr></table></center>");

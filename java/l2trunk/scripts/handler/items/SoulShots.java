@@ -23,21 +23,12 @@ public final class SoulShots extends ScriptItemHandler implements ScriptFile {
     private static final List<Integer> _skillIds = List.of(2039, 2150, 2151, 2152, 2153, 2154);
 
     @Override
-    public boolean pickupItem(Playable playable, ItemInstance item) {
-        return true;
-    }
-
-    @Override
     public void onLoad() {
         ItemHandler.INSTANCE.registerItemHandler(this);
     }
 
     @Override
-    public boolean useItem(Playable playable, ItemInstance item, boolean ctrl) {
-        if (playable == null || !playable.isPlayer())
-            return false;
-        Player player = (Player) playable;
-
+    public boolean useItem(Player player, ItemInstance item, boolean ctrl) {
         WeaponTemplate weaponItem = player.getActiveWeaponItem();
 
         ItemInstance weaponInst = player.getActiveWeaponInstance();

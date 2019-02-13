@@ -13,7 +13,7 @@ public class ExCubeGameChangeTeam extends L2GameServerPacket {
     private final boolean _fromRedTeam;
 
     public ExCubeGameChangeTeam(Player player, boolean fromRedTeam) {
-        _objectId = player.getObjectId();
+        _objectId = player.objectId();
         _fromRedTeam = fromRedTeam;
     }
 

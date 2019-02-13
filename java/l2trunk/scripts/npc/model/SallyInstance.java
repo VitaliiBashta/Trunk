@@ -17,8 +17,7 @@ public final class SallyInstance extends NpcInstance {
             return;
 
         if ("ask_about_rare_plants".equals(command)) {
-            QuestState qs = player.getQuestState(_250_WatchWhatYouEat.class);
-            if (qs != null && qs.isCompleted())
+            if (player.isQuestCompleted(_250_WatchWhatYouEat.class))
                 showChatWindow(player, 3);
             else
                 showChatWindow(player, 2);

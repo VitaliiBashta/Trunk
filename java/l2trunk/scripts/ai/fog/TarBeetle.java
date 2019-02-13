@@ -68,7 +68,7 @@ public final class TarBeetle extends DefaultAI {
 
     private void CancelTarget(NpcInstance actor) {
         if (TAR_BEETLE != actor.getDisplayId()) {
-            World.getAroundPlayers(actor)
+            World.getAroundPlayers(actor).stream()
                     .filter(p -> p.getTarget() == actor)
                     .forEach(p -> {
                         p.setTarget(null);
@@ -123,7 +123,7 @@ public final class TarBeetle extends DefaultAI {
     private void addEffect(NpcInstance actor, Player player) {
         Optional<Effect> effect = player.getEffectList().getEffectsBySkillId(6142).findFirst();
         if (effect.isPresent()) {
-            int level = effect.get().getSkill().level;
+            int level = effect.get().skill.level;
             if (level < 3) {
                 effect.get().exit();
                 SkillTable.INSTANCE.getInfo(6142, level + 1).getEffects(actor, player);

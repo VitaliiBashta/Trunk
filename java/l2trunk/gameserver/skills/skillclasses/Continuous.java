@@ -3,14 +3,13 @@ package l2trunk.gameserver.skills.skillclasses;
 import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Skill;
+import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.stats.Stats;
 import l2trunk.gameserver.stats.conditions.ConditionTargetRelation;
-
-import java.util.List;
-import java.util.Objects;
 
 public final class Continuous extends Skill {
 
@@ -19,16 +18,12 @@ public final class Continuous extends Skill {
     }
 
     @Override
-    public boolean checkCondition(Creature activeChar, Creature target, boolean forceUse, boolean dontMove, boolean first) {
+    public boolean checkCondition(Player player, Creature target, boolean forceUse, boolean dontMove, boolean first) {
         // Player holding a cursed weapon can't be buffed and can't buff
         if (skillType == Skill.SkillType.BUFF && target != null) {
-            if (target != activeChar)
-                if (target.isCursedWeaponEquipped() || activeChar.isCursedWeaponEquipped())
-                    return false;
-
-            if (target.isPlayable() && activeChar.isPlayable() && !target.getPlayer().equals(activeChar)) {
+            if (target instanceof Playable  && !target.getPlayer().equals(player)) {
                 Player pTarget = target.getPlayer();
-                if (pTarget.getVarB("antigrief", false) && !pTarget.isInOlympiadMode() && ConditionTargetRelation.getRelation(activeChar, pTarget) != ConditionTargetRelation.Relation.Friend)
+                if (pTarget.isVarSet("antigrief") && !pTarget.isInOlympiadMode() && ConditionTargetRelation.getRelation(player, pTarget) != ConditionTargetRelation.Relation.Friend)
                     return false;
             }
 
@@ -37,45 +32,38 @@ public final class Continuous extends Skill {
             }
 
         }
-
-        return super.checkCondition(activeChar, target, forceUse, dontMove, first);
+        return super.checkCondition(player, target, forceUse, dontMove, first);
     }
 
     @Override
-    public void useSkill(Creature activeChar, List<Creature> targets) {
-        targets.stream()
-                .filter(Objects::nonNull)
-                .forEach(t -> {
-                    boolean reflected = t.checkReflectSkill(activeChar, this);
-                    Creature realTarget = reflected ? activeChar : t;
+    public void useSkill(Creature activeChar, Creature t) {
 
-                    double mult = 0.01 * realTarget.calcStat(Stats.DEATH_VULNERABILITY, activeChar, this);
-                    double lethal1 = this.lethal1 * mult;
-                    double lethal2 = this.lethal2 * mult;
+        boolean reflected = t.checkReflectSkill(activeChar, this);
+        Creature realTarget = reflected ? activeChar : t;
 
-                    if (lethal1 > 0 && Rnd.chance(lethal1)) {
-                        if (realTarget.isPlayer()) {
-                            realTarget.reduceCurrentHp(realTarget.getCurrentCp(), activeChar, this, true, true, false, true, false, false, true);
-                            realTarget.sendPacket(SystemMsg.LETHAL_STRIKE);
-                            activeChar.sendPacket(SystemMsg.YOUR_LETHAL_STRIKE_WAS_SUCCESSFUL);
-                        } else if (realTarget.isNpc() && !realTarget.isLethalImmune()) {
-                            realTarget.reduceCurrentHp(realTarget.getCurrentHp() / 2, activeChar, this, true, true, false, true, false, false, true);
-                            activeChar.sendPacket(SystemMsg.YOUR_LETHAL_STRIKE_WAS_SUCCESSFUL);
-                        }
-                    } else if (lethal2 > 0 && Rnd.chance(lethal2))
-                        if (realTarget.isPlayer()) {
-                            realTarget.reduceCurrentHp(realTarget.getCurrentHp() + realTarget.getCurrentCp() - 1, activeChar, this, true, true, false, true, false, false, true);
-                            realTarget.sendPacket(SystemMsg.LETHAL_STRIKE);
-                            activeChar.sendPacket(SystemMsg.YOUR_LETHAL_STRIKE_WAS_SUCCESSFUL);
-                        } else if (realTarget.isNpc() && !realTarget.isLethalImmune()) {
-                            realTarget.reduceCurrentHp(realTarget.getCurrentHp() - 1, activeChar, this, true, true, false, true, false, false, true);
-                            activeChar.sendPacket(SystemMsg.YOUR_LETHAL_STRIKE_WAS_SUCCESSFUL);
-                        }
+        double mult = 0.01 * realTarget.calcStat(Stats.DEATH_VULNERABILITY, activeChar, this);
+        double lethal1 = this.lethal1 * mult;
+        double lethal2 = this.lethal2 * mult;
 
-                    getEffects(activeChar, t, activateRate > 0, false, reflected);
-                });
+        if (lethal1 > 0 && Rnd.chance(lethal1)) {
+            if (realTarget instanceof Player) {
+                realTarget.reduceCurrentHp(realTarget.getCurrentCp(), activeChar, this, true, true, false, true, false, false, true);
+                realTarget.sendPacket(SystemMsg.LETHAL_STRIKE);
+                activeChar.sendPacket(SystemMsg.YOUR_LETHAL_STRIKE_WAS_SUCCESSFUL);
+            } else if (realTarget instanceof NpcInstance && !realTarget.isLethalImmune()) {
+                realTarget.reduceCurrentHp(realTarget.getCurrentHp() / 2, activeChar, this, true, true, false, true, false, false, true);
+                activeChar.sendPacket(SystemMsg.YOUR_LETHAL_STRIKE_WAS_SUCCESSFUL);
+            }
+        } else if (lethal2 > 0 && Rnd.chance(lethal2))
+            if (realTarget instanceof Player) {
+                realTarget.reduceCurrentHp(realTarget.getCurrentHp() + realTarget.getCurrentCp() - 1, activeChar, this, true, true, false, true, false, false, true);
+                realTarget.sendPacket(SystemMsg.LETHAL_STRIKE);
+                activeChar.sendPacket(SystemMsg.YOUR_LETHAL_STRIKE_WAS_SUCCESSFUL);
+            } else if (realTarget instanceof NpcInstance && !realTarget.isLethalImmune()) {
+                realTarget.reduceCurrentHp(realTarget.getCurrentHp() - 1, activeChar, this, true, true, false, true, false, false, true);
+                activeChar.sendPacket(SystemMsg.YOUR_LETHAL_STRIKE_WAS_SUCCESSFUL);
+            }
 
-        if (isSSPossible())
-            activeChar.unChargeShots(isMagic());
+        getEffects(activeChar, t, activateRate > 0, false, reflected);
     }
 }

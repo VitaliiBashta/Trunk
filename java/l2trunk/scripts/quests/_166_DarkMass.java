@@ -5,7 +5,6 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _166_DarkMass extends Quest {
     private final int UNDRES_LETTER_ID = 1088;
@@ -43,9 +42,9 @@ public final class _166_DarkMass extends Quest {
 
         if (npcId == 30130) {
             if (id == CREATED) {
-                if (st.getPlayer().getRace() != Race.darkelf && st.getPlayer().getRace() != Race.human)
+                if (st.player.getRace() != Race.darkelf && st.player.getRace() != Race.human)
                     htmltext = "30130-00.htm";
-                else if (st.getPlayer().getLevel() >= 2) {
+                else if (st.player.getLevel() >= 2) {
                     htmltext = "30130-03.htm";
                     return htmltext;
                 } else {
@@ -56,14 +55,14 @@ public final class _166_DarkMass extends Quest {
                 htmltext = "30130-05.htm";
             else if (cond == 2) {
                 htmltext = "30130-06.htm";
-                st.takeItems(UNDRES_LETTER_ID, -1);
-                st.takeItems(CEREMONIAL_DAGGER_ID, -1);
-                st.takeItems(DREVIANT_WINE_ID, -1);
-                st.takeItems(GARMIELS_SCRIPTURE_ID, -1);
+                st.takeItems(UNDRES_LETTER_ID);
+                st.takeItems(CEREMONIAL_DAGGER_ID);
+                st.takeItems(DREVIANT_WINE_ID);
+                st.takeItems(GARMIELS_SCRIPTURE_ID);
                 st.giveItems(ADENA_ID, 2966);
-                st.getPlayer().addExpAndSp(5672, 446);
-                if (st.getPlayer().getClassId().getLevel() == 1 && !st.getPlayer().getVarB("ng1"))
-                    st.getPlayer().sendPacket(new ExShowScreenMessage("  Delivery duty complete.\nGo find the Newbie Guide."));
+                st.player.addExpAndSp(5672, 446);
+                if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("ng1"))
+                    st.player.sendPacket(new ExShowScreenMessage("  Delivery duty complete.\nGo find the Newbie Guide."));
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest(false);
             }
@@ -89,7 +88,7 @@ public final class _166_DarkMass extends Quest {
     }
 
     private void giveItem(QuestState st, int item) {
-        st.giveItems(item, 1);
+        st.giveItems(item);
         if (st.getQuestItemsCount(CEREMONIAL_DAGGER_ID) >= 1 && st.getQuestItemsCount(DREVIANT_WINE_ID) >= 1 && st.getQuestItemsCount(GARMIELS_SCRIPTURE_ID) >= 1)
             st.setCond(2);
     }

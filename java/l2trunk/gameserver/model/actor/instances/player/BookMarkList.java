@@ -6,7 +6,6 @@ import l2trunk.gameserver.instancemanager.ReflectionManager;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Zone.ZoneType;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
-import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +17,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import static l2trunk.gameserver.utils.ItemFunctions.removeItem;
 
 public final class BookMarkList {
     private static final List<ZoneType> FORBIDDEN_ZONES = List.of(
@@ -41,9 +42,6 @@ public final class BookMarkList {
     }
 
     private static boolean checkFirstConditions(Player player) {
-        if (player == null)
-            return false;
-
         if (player.getActiveWeaponFlagAttachment() != null) {
             player.sendPacket(Msg.YOU_CANNOT_TELEPORT_WHILE_IN_POSSESSION_OF_A_WARD);
             return false;
@@ -81,9 +79,6 @@ public final class BookMarkList {
     }
 
     private static boolean checkTeleportConditions(Player player) {
-        if (player == null)
-            return false;
-
         if (player.isAlikeDead()) {
             player.sendPacket(Msg.YOU_CANNOT_USE_MY_TELEPORTS_WHILE_YOU_ARE_DEAD);
             return false;
@@ -101,20 +96,17 @@ public final class BookMarkList {
     }
 
     private static boolean checkTeleportLocation(Player player, Location loc) {
-        return checkTeleportLocation(player, loc.x, loc.y, loc.z);
+        return checkTeleportLocation(player, loc.z);
     }
 
-    private static boolean checkTeleportLocation(Player player, int x, int y, int z) {
+    private static boolean checkTeleportLocation(Player player, int z) {
         if (player == null)
             return false;
 
-        if (FORBIDDEN_ZONES.stream()
+        return FORBIDDEN_ZONES.stream()
                 .map(player::getZone)
-                .anyMatch(Objects::nonNull)) {
-            player.sendPacket(Msg.YOU_CANNOT_USE_MY_TELEPORTS_TO_REACH_THIS_AREA);
-            return false;
-        }
-        return true;
+                .peek(zone -> player.sendPacket(Msg.YOU_CANNOT_USE_MY_TELEPORTS_TO_REACH_THIS_AREA))
+                .noneMatch(Objects::nonNull);
     }
 
     public int getCapacity() {
@@ -161,9 +153,8 @@ public final class BookMarkList {
         if (!checkTeleportLocation(owner, bookmark.loc))
             return;
 
-        //TODO YOU_CANNOT_USE_MY_TELEPORTS_IN_THIS_AREA // Вы находитесь в локации, на которой возврат к флагу недоступен.
 
-        if (Functions.removeItem(owner, 13016, 1, "BookMarkTeleport") != 1) {
+        if (removeItem(owner, 13016, 1, "BookMarkTeleport") != 1) {
             owner.sendPacket(SystemMsg.YOU_CANNOT_BOOKMARK_THIS_LOCATION_BECAUSE_YOU_DO_NOT_HAVE_A_MY_TELEPORT_FLAG);
             return;
         }
@@ -184,7 +175,7 @@ public final class BookMarkList {
             return false;
         }
 
-        if (Functions.removeItem(owner, 20033, 1, "BookMarkLocationAdd") != 1) {
+        if (removeItem(owner, 20033, 1, "BookMarkLocationAdd") != 1) {
             owner.sendPacket(Msg.YOU_CANNOT_BOOKMARK_THIS_LOCATION_BECAUSE_YOU_DO_NOT_HAVE_A_MY_TELEPORT_FLAG);
             return false;
         }
@@ -197,13 +188,13 @@ public final class BookMarkList {
     public void store() {
         try (Connection con = DatabaseFactory.getInstance().getConnection()) {
             PreparedStatement statement = con.prepareStatement("DELETE FROM `character_bookmarks` WHERE char_Id=?");
-            statement.setInt(1, owner.getObjectId());
+            statement.setInt(1, owner.objectId());
             statement.execute();
 
             statement = con.prepareStatement("INSERT INTO `character_bookmarks` VALUES(?,?,?,?,?,?,?,?);");
             int slotId = 0;
             for (BookMark bookmark : elementData) {
-                statement.setInt(1, owner.getObjectId());
+                statement.setInt(1, owner.objectId());
                 statement.setInt(2, ++slotId);
                 statement.setString(3, bookmark.getName());
                 statement.setString(4, bookmark.getAcronym());
@@ -224,7 +215,7 @@ public final class BookMarkList {
             return;
         }
 
-        try (PreparedStatement statement = con.prepareStatement("SELECT * FROM `character_bookmarks` WHERE `char_Id`=" + owner.getObjectId() + " ORDER BY `idx` LIMIT " + capacity);
+        try (PreparedStatement statement = con.prepareStatement("SELECT * FROM `character_bookmarks` WHERE `char_Id`=" + owner.objectId() + " ORDER BY `idx` LIMIT " + capacity);
              ResultSet rs = statement.executeQuery()) {
             elementData.clear();
             while (rs.next()) {

@@ -24,10 +24,6 @@ public final class PlayerVar {
         }
     }
 
-    public boolean hasExpired() {
-        return task == null || task.isDone();
-    }
-
     long getTimeToExpire() {
         return expire_time - System.currentTimeMillis();
     }
@@ -63,8 +59,7 @@ public final class PlayerVar {
                     return;
                 var.owner.setBlock(false);
                 var.owner.stopAbnormalEffect(AbnormalEffect.HOLD_1);
-                if (var.owner.isPlayable())
-                    var.owner.getPlayer().unsetVar("Para");
+                var.owner.unsetVar("Para");
             }
         }
 

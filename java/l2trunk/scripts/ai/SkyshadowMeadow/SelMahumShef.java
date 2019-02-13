@@ -6,6 +6,7 @@ import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.Fighter;
 import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.World;
+import l2trunk.gameserver.model.instances.MonsterInstance;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.scripts.Functions;
@@ -32,7 +33,7 @@ public final class SelMahumShef extends Fighter {
             }
 
             actor.getAroundNpc(150, 150)
-                    .filter(GameObject::isMonster)
+                    .filter(n -> n instanceof MonsterInstance)
                     .filter(npc -> npc.getNpcId() == 18927)
                     .forEach(npc -> {
                         if (_firstTime) {

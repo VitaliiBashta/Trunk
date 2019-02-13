@@ -4,9 +4,7 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-import java.util.List;
 import java.util.StringTokenizer;
 
 public final class _10289_FadeToBlack extends Quest {
@@ -14,13 +12,12 @@ public final class _10289_FadeToBlack extends Quest {
     private static final int Anays = 25701;
     private static final int MarkofSplendor = 15527;
     private static final int MarkofDarkness = 15528;
-    private static final List<Integer> marks = List.of(MarkofSplendor,MarkofDarkness);
 
     public _10289_FadeToBlack() {
         super(PARTY_ALL);
         addStartNpc(Greymore);
         addKillId(Anays);
-        addQuestItem(marks);
+        addQuestItem(MarkofSplendor, MarkofDarkness);
     }
 
     @Override
@@ -30,7 +27,7 @@ public final class _10289_FadeToBlack extends Quest {
             st.setState(STARTED);
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
-        } else if ("showmark".equalsIgnoreCase(event)) {
+        } else if (event.equalsIgnoreCase("showmark")) {
             if (st.getCond() == 2 && st.getQuestItemsCount(MarkofDarkness) > 0)
                 htmltext = "greymore_q10289_06.htm";
             else if (st.getCond() == 3 && st.getQuestItemsCount(MarkofSplendor) > 0)
@@ -123,7 +120,8 @@ public final class _10289_FadeToBlack extends Quest {
                     break;
             }
             htmltext = "greymore_q10289_09.htm";
-            st.takeItems(marks);
+            st.takeItems(MarkofSplendor);
+            st.takeItems(MarkofDarkness);
             st.exitCurrentQuest(false);
         }
         return htmltext;
@@ -135,8 +133,7 @@ public final class _10289_FadeToBlack extends Quest {
         int cond = st.getCond();
         if (npc.getNpcId() == Greymore) {
             if (cond == 0) {
-                QuestState qs = st.getPlayer().getQuestState(_10288_SecretMission.class);
-                if (st.getPlayer().getLevel() >= 82 && qs != null && qs.isCompleted())
+                if (st.player.getLevel() >= 82 && st.player.isQuestCompleted(_10288_SecretMission.class))
                     htmltext = "greymore_q10289_01.htm";
                 else {
                     htmltext = "greymore_q10289_00.htm";
@@ -151,7 +148,7 @@ public final class _10289_FadeToBlack extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int cond = st.getCond();
         if (cond == 1) {
             if (npc.getNpcId() == Anays) {
@@ -164,7 +161,6 @@ public final class _10289_FadeToBlack extends Quest {
                 }
             }
         }
-        return null;
     }
 
 }

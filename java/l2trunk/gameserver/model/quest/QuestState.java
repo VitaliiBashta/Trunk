@@ -6,6 +6,7 @@ import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.cache.ImagesCache;
 import l2trunk.gameserver.data.htm.HtmCache;
 import l2trunk.gameserver.data.xml.holder.ItemHolder;
+import l2trunk.gameserver.instancemanager.QuestManager;
 import l2trunk.gameserver.instancemanager.SpawnManager;
 import l2trunk.gameserver.listener.actor.OnDeathListener;
 import l2trunk.gameserver.listener.actor.OnKillListener;
@@ -15,7 +16,6 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.network.serverpackets.*;
 import l2trunk.gameserver.templates.item.ItemTemplate;
-import l2trunk.gameserver.templates.spawn.PeriodOfDay;
 import l2trunk.gameserver.utils.AddonsConfig;
 import l2trunk.gameserver.utils.ItemFunctions;
 import l2trunk.gameserver.utils.Location;
@@ -23,28 +23,28 @@ import l2trunk.scripts.quests._255_Tutorial;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static l2trunk.commons.lang.NumberUtils.toInt;
+import static l2trunk.commons.lang.NumberUtils.toLong;
+import static l2trunk.gameserver.model.quest.Quest.SOUND_ITEMGET;
 
 public final class QuestState {
     public static final String VAR_COND = "cond";
     private static final int RESTART_HOUR = 6;
     private static final int RESTART_MINUTES = 30;
     private static final Logger _log = LoggerFactory.getLogger(QuestState.class);
-    private final Player player;
-    private final Quest quest;
+    public final Player player;
+    public final Quest quest;
     private final Map<String, String> vars = new ConcurrentHashMap<>();
     private final Map<String, QuestTimer> timers = new ConcurrentHashMap<>();
     private int state;
-    private Integer cond = null;
-    private OnKillListener onKillListener = null;
+    private Integer _cond = null;
+    private OnKillListener _onKillListener = null;
 
     /**
      * Constructor<?> of the QuestState : save the quest in the list of quests of the player.<BR/><BR/>
@@ -71,15 +71,13 @@ public final class QuestState {
         quest.notifyCreate(this);
     }
 
+
     /**
      * Add XP and SP as quest reward
      * <br><br>
      * Метод учитывает рейты!
-     * 3-ий параметр true/false показывает является ли квест на профессию
-     * и рейты учитываются в завимисомти от параметра RateQuestsRewardOccupationChange
      */
     public void addExpAndSp(long exp, long sp) {
-        Player player = getPlayer();
         if (player == null)
             return;
         if (exp > 0)
@@ -88,11 +86,6 @@ public final class QuestState {
             player.addExpAndSp(0, (long) (sp * getRateQuestsReward()));
     }
 
-    /**
-     * Add player to get notification of characters death
-     *
-     * @param player : L2Character of the character to get notification of death
-     */
     public void addNotifyOfDeath(Player player, boolean withPet) {
         OnDeathListenerImpl listener = new OnDeathListenerImpl();
         player.addListener(listener);
@@ -104,26 +97,24 @@ public final class QuestState {
     }
 
     public void addPlayerOnKillListener() {
-        if (onKillListener != null)
+        if (_onKillListener != null)
             throw new IllegalArgumentException("Cant add twice kill listener to player");
 
-        onKillListener = new PlayerOnKillListenerImpl();
-        player.addListener(onKillListener);
+        _onKillListener = new PlayerOnKillListenerImpl();
+        player.addListener(_onKillListener);
     }
 
     public void removePlayerOnKillListener() {
-        if (onKillListener != null)
-            player.removeListener(onKillListener);
+        if (_onKillListener != null)
+            player.removeListener(_onKillListener);
     }
 
     public void addRadar(Location loc) {
-        Player player = getPlayer();
         if (player != null)
             player.addRadar(loc);
     }
 
     public void addRadarWithMap(Location location) {
-        Player player = getPlayer();
         if (player != null)
             player.addRadarWithMap(location);
     }
@@ -132,7 +123,6 @@ public final class QuestState {
      * Используется для однодневных квестов
      */
     public void exitCurrentQuest(Quest quest) {
-        Player player = getPlayer();
         exitCurrentQuest(true);
         quest.newQuestState(player, Quest.DELAYED);
         QuestState qs = player.getQuestState(quest);
@@ -142,10 +132,9 @@ public final class QuestState {
     /**
      * Destroy element used by quest when quest is exited
      */
-    public QuestState exitCurrentQuest(boolean repeatable) {
-        Player player = getPlayer();
+    public void exitCurrentQuest(boolean repeatable) {
         if (player == null)
-            return this;
+            return;
 
         removePlayerOnKillListener();
         // Clean drops
@@ -156,13 +145,12 @@ public final class QuestState {
                 continue;
             long count = item.getCount();
             // If player has the item in inventory, destroy it (if not gold)
-            player.getInventory().destroyItemByItemId(itemId, count, "Exiting Quest " + quest.getName());
-            player.getWarehouse().destroyItemByItemId(itemId, count, "WH " + player.toString(), "Exiting Quest " + quest.getName());//TODO [G1ta0] analyze this
+            player.getInventory().destroyItemByItemId(itemId, count, "Exiting Quest " + quest.name);
         }
 
         // If quest is repeatable, delete quest from list of quest of the player and from database (quest CAN be created again => repeatable)
         if (repeatable) {
-            player.removeQuestState(quest.questId);
+            player.removeQuestState(quest.name);
             Quest.deleteQuestInDb(this);
             vars.clear();
         } else { // Otherwise, delete variables for quest and update database (quest CANNOT be created again => not repeatable)
@@ -173,7 +161,6 @@ public final class QuestState {
             Quest.updateQuestInDb(this); // FIXME: оно вроде не нужно?
         }
         player.sendPacket(new QuestList(player));
-        return this;
     }
 
     public void abortQuest() {
@@ -209,29 +196,25 @@ public final class QuestState {
             return 0;
         return toInt(val);
     }
+    public long getLong(String var) {
+        String val = get(var);
+        if (val == null)
+            return 0;
+        return toLong(val);
+    }
+
 
     public int getItemEquipped(int loc) {
-        return getPlayer().getInventory().getPaperdollItemId(loc);
+        return player.getInventory().getPaperdollItemId(loc);
     }
 
-    public Player getPlayer() {
-        return player;
-    }
-
-    public Quest getQuest() {
-        return quest;
-    }
-
-    public boolean checkQuestItemsCount(List<Integer> itemIds) {
-        Player player = getPlayer();
+    public boolean haveAllItems(List<Integer> itemIds) {
         if (player == null)
             return false;
-        return itemIds.stream()
-                .allMatch(itemId -> player.getInventory().getCountOf(itemId) > 0);
+        return itemIds.stream().allMatch(player::haveItem);
     }
 
     public long getSumQuestItemsCount(List<Integer> itemIds) {
-        Player player = getPlayer();
         if (player == null)
             return 0;
         return itemIds.stream()
@@ -241,6 +224,16 @@ public final class QuestState {
 
     public long getQuestItemsCount(int itemId) {
         return player == null ? 0 : player.getInventory().getCountOf(itemId);
+    }
+
+    public void giveItemIfNotHave(int itemId) {
+        giveItemIfNotHave(itemId, 1);
+        playSound(SOUND_ITEMGET);
+    }
+
+    public void giveItemIfNotHave(int itemId, int limit) {
+        if (getQuestItemsCount(itemId) < limit)
+            giveItems(itemId);
     }
 
     public long getQuestItemsCount(List<Integer> itemsIds) {
@@ -257,8 +250,51 @@ public final class QuestState {
         return getQuestItemsCount(itemId) >= count;
     }
 
+    public boolean haveAllQuestItems(Collection<Integer> itemIds) {
+        return itemIds.stream().allMatch(this::haveQuestItem);
+    }
+
+    public boolean haveAllQuestItems(int... itemIds) {
+        return IntStream.of(itemIds)
+                .mapToObj(this::haveQuestItem)
+                .allMatch(i -> i);
+    }
+
+    public boolean haveAnyQuestItems(int... itemIds) {
+        return IntStream.of(itemIds)
+                .mapToObj(this::haveQuestItem)
+                .anyMatch(i -> i);
+    }
+
+
+    public boolean haveQuestItem(int itemId) {
+        return player.haveItem(itemId);
+    }
+
     public int getState() {
         return state == Quest.DELAYED ? Quest.CREATED : state;
+    }
+
+    /**
+     * Return state of the quest after its initialization.<BR><BR>
+     * <U><I>Actions :</I></U>
+     * <LI>Remove drops from previous state</LI>
+     * <LI>Set new state of the quest</LI>
+     * <LI>Add drop for new state</LI>
+     * <LI>Update information in database</LI>
+     * <LI>Send packet QuestList to client</LI>
+     */
+    public void setState(int state) {
+        if (player == null)
+            return;
+
+        this.state = state;
+
+        if (quest.isVisible() && isStarted())
+            player.sendPacket(new ExShowQuestMark(quest.id));
+
+        Quest.updateQuestInDb(this);
+        player.sendPacket(new QuestList(player));
     }
 
     public String getStateName() {
@@ -277,7 +313,6 @@ public final class QuestState {
     }
 
     public void giveItems(int itemId, long count, boolean rate) {
-        Player player = getPlayer();
         if (player == null)
             return;
 
@@ -287,12 +322,11 @@ public final class QuestState {
         if (rate)
             count = (long) (count * getRateQuestsReward());
 
-        ItemFunctions.addItem(player, itemId, count, true, "Quest " + quest.getName());
+        ItemFunctions.addItem(player, itemId, count, "Quest " + quest.name);
         player.sendChanges();
     }
 
     public void giveItems(int itemId, long count, Element element, int power) {
-        Player player = getPlayer();
         if (player == null)
             return;
 
@@ -311,15 +345,18 @@ public final class QuestState {
                 item.setAttributeElement(element, power);
 
             // Add items to player's inventory
-            player.getInventory().addItem(item, "Quest " + quest.getName());
+            player.inventory.addItem(item, "Quest " + quest.name);
         }
 
-        player.sendPacket(SystemMessage2.obtainItems(template.getItemId(), count, 0));
+        player.sendPacket(SystemMessage2.obtainItems(template.itemId(), count, 0));
         player.sendChanges();
     }
 
+    public void dropItem(NpcInstance npc, int itemId) {
+        dropItem(npc, itemId, 1);
+    }
+
     public void dropItem(NpcInstance npc, int itemId, long count) {
-        Player player = getPlayer();
         if (player == null)
             return;
 
@@ -365,7 +402,6 @@ public final class QuestState {
         int dropmult = 1;
         calcChance *= getRateQuestsDrop();
         if (quest.getParty() > Quest.PARTY_NONE) {
-            Player player = getPlayer();
             if (player.getParty() != null)
                 calcChance *= Config.ALT_PARTY_BONUS.get(player.getParty().getMemberCountInRange(player, Config.ALT_PARTY_DISTRIBUTION_RANGE) - 1) / 100.;
         }
@@ -397,6 +433,10 @@ public final class QuestState {
      * <br><br>
      * Ни один из передаваемых параметров не должен быть равен 0
      *
+     * @param itemId id вещи
+     * @param min    минимальное количество при рейтах 1х
+     * @param max    максимальное количество при рейтах 1х
+     * @param limit  максимум таких вещей
      * @return true если после выполнения количество достигло лимита
      */
     public boolean rollAndGive(int itemId, int min, int max, int limit, double calcChance) {
@@ -410,7 +450,7 @@ public final class QuestState {
             if (count > 0) {
                 giveItems(itemId, count, false);
                 if (count + alreadyCount < limit)
-                    playSound(Quest.SOUND_ITEMGET);
+                    playSound(SOUND_ITEMGET);
                 else {
                     playSound(Quest.SOUND_MIDDLE);
                     return true;
@@ -428,11 +468,6 @@ public final class QuestState {
      * нужно набить определенное количество предметов не осуществляется.
      * <br><br>
      * Ни один из передаваемых параметров не должен быть равен 0
-     *
-     * @param itemId     id вещи
-     * @param min        минимальное количество при рейтах 1х
-     * @param max        максимальное количество при рейтах 1х
-     * @param calcChance
      */
     public void rollAndGive(int itemId, int min, int max, double calcChance) {
         if (calcChance <= 0 || min <= 0 || max <= 0 || itemId <= 0)
@@ -440,7 +475,7 @@ public final class QuestState {
         int count = rollDrop(min, max, calcChance);
         if (count > 0) {
             giveItems(itemId, count, false);
-            playSound(Quest.SOUND_ITEMGET);
+            playSound(SOUND_ITEMGET);
         }
     }
 
@@ -453,45 +488,27 @@ public final class QuestState {
      * <br><br>
      * Ни один из передаваемых параметров не должен быть равен 0
      *
-     * @param itemId     id вещи
-     * @param count      количество при рейтах 1х
-     * @param calcChance
+     * @param itemId id вещи
+     * @param count  количество при рейтах 1х
      */
-    public boolean rollAndGive(int itemId, int count, double calcChance) {
+    public void rollAndGive(int itemId, int count, double calcChance) {
         if (calcChance <= 0 || count <= 0 || itemId <= 0)
-            return false;
+            return;
         int countToDrop = rollDrop(count, calcChance);
         if (countToDrop > 0) {
             giveItems(itemId, countToDrop, false);
-            playSound(Quest.SOUND_ITEMGET);
-            return true;
+            playSound(SOUND_ITEMGET);
         }
-        return false;
     }
 
-    /**
-     * Return true if quest completed, false otherwise
-     *
-     * @return boolean
-     */
     public boolean isCompleted() {
         return getState() == Quest.COMPLETED;
     }
 
-    /**
-     * Return true if quest started, false otherwise
-     *
-     * @return boolean
-     */
     public boolean isStarted() {
         return getState() == Quest.STARTED;
     }
 
-    /**
-     * Return true if quest created, false otherwise
-     *
-     * @return boolean
-     */
     public boolean isCreated() {
         return getState() == Quest.CREATED;
     }
@@ -501,15 +518,15 @@ public final class QuestState {
         if (npc != null)
             npc.doDie(null);
         else
-            _log.warn("Attemp to kill object that is not npc in quest " + quest.questId);
+            _log.warn("Attemp to kill object that is not npc in quest " + quest.id);
     }
 
-    public String set(String var, String val) {
-        return set(var, val, true);
+    public void set(String var, String val) {
+        set(var, val, true);
     }
 
-    public String set(String var, int intval) {
-        return set(var, String.valueOf(intval), true);
+    public void set(String var, long intval) {
+        set(var, String.valueOf(intval), true);
     }
 
     /**
@@ -520,9 +537,8 @@ public final class QuestState {
      * @param var   : String pointing out the name of the variable for quest
      * @param val   : String pointing out the value of the variable for quest
      * @param store : Сохраняет в базу и если var это cond обновляет список квестов игрока.
-     * @return String (equal to parameter "val")
      */
-    public String set(String var, String val, boolean store) {
+    public void set(String var, String val, boolean store) {
         if (val == null)
             val = "";
 
@@ -531,73 +547,41 @@ public final class QuestState {
         if (store)
             Quest.updateQuestVarInDb(this, var, val);
 
-        return val;
     }
 
-    /**
-     * Return state of the quest after its initialization.<BR><BR>
-     * <U><I>Actions :</I></U>
-     * <LI>Remove drops from previous state</LI>
-     * <LI>Set new state of the quest</LI>
-     * <LI>Add drop for new state</LI>
-     * <LI>Update information in database</LI>
-     * <LI>Send packet QuestList to client</LI>
-     */
-    public Object setState(int state) {
-        Player player = getPlayer();
+    public void setStateAndNotSave(int state) {
         if (player == null)
-            return null;
+            return;
 
         this.state = state;
 
         if (quest.isVisible() && isStarted())
-            player.sendPacket(new ExShowQuestMark(quest.questId));
-
-        Quest.updateQuestInDb(this);
-        player.sendPacket(new QuestList(player));
-        return state;
-    }
-
-    public Object setStateAndNotSave(int state) {
-        Player player = getPlayer();
-        if (player == null)
-            return null;
-
-        this.state = state;
-
-        if (quest.isVisible() && isStarted())
-            player.sendPacket(new ExShowQuestMark(quest.questId));
+            player.sendPacket(new ExShowQuestMark(quest.id));
 
         player.sendPacket(new QuestList(player));
-        return state;
     }
 
     public void playSound(String sound) {
-        Player player = getPlayer();
         if (player != null)
             player.sendPacket(new PlaySound(sound));
     }
 
     public void playTutorialVoice(String voice) {
-        Player player = getPlayer();
         if (player != null)
             player.sendPacket(new PlaySound(PlaySound.Type.VOICE, voice, 0, 0, player.getLoc()));
     }
 
-    private void onTutorialClientEvent(int number) {
-        Player player = getPlayer();
+    private void onTutorialClientEvent() {
         if (player != null)
-            player.sendPacket(new TutorialEnableClientEvent(number));
+            player.sendPacket(new TutorialEnableClientEvent(0));
     }
 
     public void showQuestionMark(int number) {
-        Player player = getPlayer();
         if (player != null)
             player.sendPacket(new TutorialShowQuestionMark(number));
     }
 
     public void showTutorialPage(String html) {
-        Player player = getPlayer();
         if (player == null)
             return;
         String text = HtmCache.INSTANCE.getNotNull("quests/_255_Tutorial/" + html, player);
@@ -605,11 +589,12 @@ public final class QuestState {
     }
 
     public void closeTutorial() {
-        onTutorialClientEvent(0);
+        onTutorialClientEvent();
         if (player != null) {
             player.sendPacket(TutorialCloseHtml.STATIC);
             player.deleteQuickVar("watchingTutorial");
-            player.processQuestEvent(_255_Tutorial.class, "onTutorialClose", null);
+            Quest q = QuestManager.getQuest(_255_Tutorial.class);
+            player.processQuestEvent(q, "onTutorialClose", null);
         }
     }
 
@@ -648,14 +633,14 @@ public final class QuestState {
     public void startQuestTimer(String name, long time, NpcInstance npc) {
         QuestTimer timer = new QuestTimer(name, time, npc);
         timer.setQuestState(this);
-        QuestTimer oldTimer = getTimers().put(name, timer);
+        QuestTimer oldTimer = timers.put(name, timer);
         if (oldTimer != null)
             oldTimer.stop();
         timer.start();
     }
 
     public boolean isRunningQuestTimer(String name) {
-        return getTimers().get(name) != null;
+        return timers.get(name) != null;
     }
 
     public boolean cancelQuestTimer(String name) {
@@ -666,7 +651,7 @@ public final class QuestState {
     }
 
     QuestTimer removeQuestTimer(String name) {
-        QuestTimer timer = getTimers().remove(name);
+        QuestTimer timer = timers.remove(name);
         if (timer != null)
             timer.setQuestState(null);
         return timer;
@@ -677,7 +662,7 @@ public final class QuestState {
     }
 
     public void stopQuestTimers() {
-        getTimers().values().forEach(timer -> {
+        timers.values().forEach(timer -> {
             timer.setQuestState(null);
             timer.stop();
         });
@@ -692,13 +677,12 @@ public final class QuestState {
         return timers;
     }
 
-    public void takeItems(List<Integer> itemIds) {
-        itemIds.forEach(id -> takeItems(id, -1));
+    public void takeItems(Collection<Integer> itemsIds) {
+        itemsIds.forEach(this::takeItems);
     }
 
-    public QuestState takeItems(int itemId) {
+    public void takeItems(int itemId) {
         takeItems(itemId, -1);
-        return this;
     }
 
     /**
@@ -707,44 +691,42 @@ public final class QuestState {
      * @param itemId : id удаляемого предмета
      * @param count  : число удаляемых предметов<br>
      *               Если count передать -1, то будут удалены все указанные предметы.
-     * @return Количество удаленных предметов
      */
-    public long takeItems(int itemId, long count) {
-        Player player = getPlayer();
-        if (player == null)
-            return 0;
-
+    public void takeItems(int itemId, long count) {
+        if (player == null || count == 0)
+            return;
         // Get object item from player's inventory list
         ItemInstance item = player.getInventory().getItemByItemId(itemId);
         if (item == null)
-            return 0;
+            return;
         // Tests on count value in order not to have negative value
         if (count < 0 || count > item.getCount())
             count = item.getCount();
 
         // Destroy the quantity of items wanted
-        player.getInventory().destroyItemByItemId(itemId, count, "Quest " + quest.getName());
+        player.getInventory().destroyItemByItemId(itemId, count, "Quest " + quest.name);
         // Send message of destruction to client
         player.sendPacket(SystemMessage2.removeItems(itemId, count));
-
-        return count;
     }
 
-    /**
-     * Remove the variable of quest from the list of variables for the quest.<BR><BR>
-     * <U><I>Concept : </I></U>
-     * Remove the variable of quest represented by "var" from the class variable FastMap "vars" and from the database.
-     *
-     * @param var : String designating the variable for the quest to be deleted
-     * @return String pointing out the previous value associated with the variable "var"
-     */
-    public String unset(String var) {
+    private void takeAllItems(int itemId) {
+        takeItems(itemId, -1);
+    }
+
+    public void takeAllItems(Integer... itemsIds) {
+        takeAllItems(List.of(itemsIds));
+    }
+
+    private void takeAllItems(Collection<Integer> itemsIds) {
+        itemsIds.forEach(this::takeAllItems);
+    }
+
+    public void unset(String var) {
         if (var == null)
-            return null;
+            return;
         String old = vars.remove(var);
         if (old != null)
             Quest.deleteQuestVarInDb(this, var);
-        return old;
     }
 
     private boolean checkPartyMember(Player member, int state, int maxrange, GameObject rangefrom) {
@@ -758,65 +740,48 @@ public final class QuestState {
 
     private List<Player> getPartyMembers(int state, int maxrange, GameObject rangefrom) {
         List<Player> result = List.of();
-        Party party = getPlayer().getParty();
+        Party party = player.getParty();
         if (party == null) {
-            if (checkPartyMember(getPlayer(), state, maxrange, rangefrom))
-                result = List.of(getPlayer());
+            if (checkPartyMember(player, state, maxrange, rangefrom))
+                result = List.of(player);
             return result;
         }
 
         result = party.getMembers().stream().filter(m -> checkPartyMember(m, state, maxrange, rangefrom))
-                .map(m -> getPlayer())
                 .collect(Collectors.toList());
         return result;
     }
 
     public Player getRandomPartyMember(int state, int maxrangefromplayer) {
-        return getRandomPartyMember(state, maxrangefromplayer, getPlayer());
-    }
-
-    private Player getRandomPartyMember(int state, int maxrange, GameObject rangefrom) {
-        List<Player> list = getPartyMembers(state, maxrange, rangefrom);
+        List<Player> list = getPartyMembers(state, maxrangefromplayer, player);
         if (list.size() == 0)
             return null;
         return Rnd.get(list);
     }
+
 
     /**
      * Add spawn for player instance
      * Return object id of newly spawned npc
      */
     public NpcInstance addSpawn(int npcId) {
-        return addSpawn(npcId, getPlayer().getX(), getPlayer().getY(), getPlayer().getZ(), 0, 0, 0);
+        return addSpawn(npcId, player.getLoc(), 0, 0);
     }
 
     public NpcInstance addSpawn(int npcId, int despawnDelay) {
-        return addSpawn(npcId, getPlayer().getX(), getPlayer().getY(), getPlayer().getZ(), 0, 0, despawnDelay);
+        return addSpawn(npcId, player.getLoc(), 0, despawnDelay);
     }
 
-    public NpcInstance addSpawn(int npcId, int x, int y, int z) {
-        return addSpawn(npcId, x, y, z, 0, 0, 0);
+    public NpcInstance addSpawn(int npcId, Location loc) {
+        return addSpawn(npcId, loc, 0, 0);
     }
 
-    /**
-     * Add spawn for player instance
-     * Will despawn after the spawn length expires
-     * Return object id of newly spawned npc
-     */
-    public NpcInstance addSpawn(int npcId, int x, int y, int z, int despawnDelay) {
-        return addSpawn(npcId, x, y, z, 0, 0, despawnDelay);
-    }
-
-    /**
-     * Add spawn for player instance
-     * Return object id of newly spawned npc
-     */
-    public NpcInstance addSpawn(int npcId, int x, int y, int z, int heading, int randomOffset, int despawnDelay) {
-        return quest.addSpawn(npcId, x, y, z, heading, randomOffset, despawnDelay);
+    public NpcInstance addSpawn(int npcId, Location loc, int randomOffset, int despawnDelay) {
+        return quest.addSpawn(npcId, loc, randomOffset, despawnDelay);
     }
 
     public NpcInstance findTemplate(int npcId) {
-        return SpawnManager.INSTANCE.getSpawners(PeriodOfDay.NONE.name()).stream()
+        return SpawnManager.INSTANCE.getSpawners("NONE").stream()
                 .filter(Objects::nonNull)
                 .filter(spawn -> spawn.getCurrentNpcId() == npcId)
                 .map(Spawner::getLastSpawn)
@@ -830,7 +795,7 @@ public final class QuestState {
     }
 
     public int getCond() {
-        if (cond == null) {
+        if (_cond == null) {
             int val = getInt(VAR_COND);
             if ((val & 0x80000000) != 0) {
                 val &= 0x7fffffff;
@@ -842,22 +807,22 @@ public final class QuestState {
                     }
                 }
             }
-            cond = val;
+            _cond = val;
         }
 
-        return cond;
+        return _cond;
     }
 
-    public String setCond(int newCond) {
-        return setCond(newCond, true);
+    public void setCond(int newCond) {
+        setCond(newCond, true);
     }
 
-    public String setCond(int newCond, boolean store) {
+    public void setCond(int newCond, boolean store) {
         if (newCond == getCond())
-            return String.valueOf(newCond);
+            return;
 
         int oldCond = getInt(VAR_COND);
-        cond = newCond;
+        _cond = newCond;
 
         if ((oldCond & 0x80000000) != 0) {
             // уже используется второй формат
@@ -873,17 +838,15 @@ public final class QuestState {
         }
 
         final String sVal = String.valueOf(newCond);
-        final String result = set(VAR_COND, sVal, false);
+        set(VAR_COND, sVal, false);
         if (store)
             Quest.updateQuestVarInDb(this, VAR_COND, sVal);
 
-        final Player player = getPlayer();
         if (player != null) {
             player.sendPacket(new QuestList(player));
             if (newCond != 0 && quest.isVisible() && isStarted())
-                player.sendPacket(new ExShowQuestMark(quest.questId));
+                player.sendPacket(new ExShowQuestMark(quest.id));
         }
-        return result;
     }
 
     /**
@@ -896,7 +859,7 @@ public final class QuestState {
             reDo.add(Calendar.DATE, 1);
         reDo.set(Calendar.HOUR_OF_DAY, RESTART_HOUR);
         reDo.set(Calendar.MINUTE, RESTART_MINUTES);
-        set("restartTime", String.valueOf(reDo.getTimeInMillis()));
+        set("restartTime", reDo.getTimeInMillis());
     }
 
     /**
@@ -906,12 +869,11 @@ public final class QuestState {
      * @return boolean
      */
     public boolean isNowAvailable() {
-        String val = get("restartTime");
-        if (val == null)
+        long val = getLong("restartTime");
+        if (val == 0)
             return true;
 
-        long restartTime = Long.parseLong(val);
-        return restartTime <= System.currentTimeMillis();
+        return val <= System.currentTimeMillis();
     }
 
     public class OnDeathListenerImpl implements OnDeathListener {
@@ -930,7 +892,7 @@ public final class QuestState {
     private class PlayerOnKillListenerImpl implements OnKillListener {
         @Override
         public void onKill(Creature actor, Creature victim) {
-            if (!victim.isPlayer())
+            if (!(victim instanceof Player))
                 return;
 
             Player actorPlayer = (Player) actor;

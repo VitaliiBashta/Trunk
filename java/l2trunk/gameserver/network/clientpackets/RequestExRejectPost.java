@@ -59,7 +59,7 @@ public class RequestExRejectPost extends L2GameClientPacket {
             return;
         }
 
-        Mail mail = MailDAO.getInstance().getReceivedMailByMailId(activeChar.getObjectId(), postId);
+        Mail mail = MailDAO.getInstance().getReceivedMailByMailId(activeChar.objectId(), postId);
         if (mail != null) {
             if (mail.getType() != Mail.SenderType.NORMAL || mail.getAttachments().isEmpty()) {
                 activeChar.sendActionFailed();

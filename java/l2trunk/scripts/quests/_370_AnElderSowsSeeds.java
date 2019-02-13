@@ -24,8 +24,7 @@ public final class _370_AnElderSowsSeeds extends Quest {
 
         addStartNpc(CASIAN);
 
-        for (int npcId : MOBS)
-            addKillId(npcId);
+        addKillId(MOBS);
 
         addQuestItem(SPB_PAGE);
     }
@@ -34,11 +33,11 @@ public final class _370_AnElderSowsSeeds extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
 
-        if (event.equalsIgnoreCase("30612-1.htm")) {
+        if ("30612-1.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("30612-6.htm")) {
+        } else if ("30612-6.htm".equalsIgnoreCase(event)) {
             long mincount = CHAPTERS.stream().min(Integer::compareTo).orElse(0);
             if (mincount > 0) {
                 CHAPTERS.forEach(itemId -> st.takeItems(itemId, mincount));
@@ -47,7 +46,7 @@ public final class _370_AnElderSowsSeeds extends Quest {
                 htmltext = "30612-8.htm";
             } else
                 htmltext = "30612-4.htm";
-        } else if (event.equalsIgnoreCase("30612-9.htm")) {
+        } else if ("30612-9.htm".equalsIgnoreCase(event)) {
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(true);
         }
@@ -61,7 +60,7 @@ public final class _370_AnElderSowsSeeds extends Quest {
         int cond = st.getCond();
 
         if (st.getState() == CREATED) {
-            if (st.getPlayer().getLevel() < 28) {
+            if (st.player.getLevel() < 28) {
                 htmltext = "30612-0a.htm";
                 st.exitCurrentQuest(true);
             } else
@@ -73,14 +72,13 @@ public final class _370_AnElderSowsSeeds extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getState() != STARTED)
-            return null;
+            return;
 
         if (Rnd.chance(Math.min((int) (15 * st.getRateQuestsReward()), 100))) {
-            st.giveItems(SPB_PAGE, 1);
+            st.giveItems(SPB_PAGE);
             st.playSound(SOUND_ITEMGET);
         }
-        return null;
     }
 }

@@ -18,19 +18,19 @@ import static l2trunk.gameserver.model.Zone.ZoneType.no_restart;
 import static l2trunk.gameserver.model.Zone.ZoneType.no_summon;
 
 public final class Call extends Skill {
-    private final boolean _party;
+    private final boolean party;
 
     public Call(StatsSet set) {
         super(set);
-        _party = set.getBool("party", false);
+        party = set.getBool("party", false);
     }
 
     public static SystemMessage canSummonHere(Player activeChar) {
         if (activeChar.isAlikeDead() || activeChar.isInOlympiadMode() || activeChar.isInObserverMode() || activeChar.isFlying() || activeChar.isFestivalParticipant())
             return Msg.NOTHING_HAPPENED;
 
-        if (activeChar.getPlayer().isJailed()) {
-            activeChar.getPlayer().sendMessage("You cannot escape from Jail!");
+        if (activeChar.isJailed()) {
+            activeChar.sendMessage("You cannot escape from Jail!");
             return Msg.NOTHING_HAPPENED;
         }
 
@@ -51,74 +51,76 @@ public final class Call extends Skill {
         return null;
     }
 
-    public static SystemMessage canBeSummoned(Creature player, Creature target) {
-        if ((target == null) || (!target.isPlayer()) || (target.getPlayer().isTerritoryFlagEquipped()) || (target.isFlying()) || (target.isInObserverMode()) || (target.getPlayer().isFestivalParticipant()) || (!target.getPlayer().getPlayerAccess().UseTeleport)) {
+    public static SystemMessage canBeSummoned(Creature cha, Creature target) {
+        if (target instanceof Player) {
+            Player playerTarget = (Player) target;
+            if ((!playerTarget.isTerritoryFlagEquipped()) && (!playerTarget.isFlying()) && (!playerTarget.isInObserverMode()) && (!playerTarget.isFestivalParticipant()) && (playerTarget.getPlayerAccess().UseTeleport)) {
+                if (playerTarget.isInOlympiadMode()) {
+                    return Msg.YOU_CANNOT_SUMMON_PLAYERS_WHO_ARE_CURRENTLY_PARTICIPATING_IN_THE_GRAND_OLYMPIAD;
+                }
+                if ((playerTarget.isInZoneBattle()) || (playerTarget.isInZone(Zone.ZoneType.SIEGE)) || (playerTarget.isInZone(no_restart)) || (playerTarget.isInZone(no_summon)) || (playerTarget.getReflection() != ReflectionManager.DEFAULT) || (playerTarget.isInBoat())) {
+                    return Msg.YOUR_TARGET_IS_IN_AN_AREA_WHICH_BLOCKS_SUMMONING;
+                }
+
+                if (playerTarget.isAlikeDead()) {
+                    return new SystemMessage(SystemMessage.S1_IS_DEAD_AT_THE_MOMENT_AND_CANNOT_BE_SUMMONED).addString(playerTarget.getName());
+                }
+
+                if ((playerTarget.getPvpFlag() != 0) || (playerTarget.isInCombat())) {
+                    return new SystemMessage(SystemMessage.S1_IS_ENGAGED_IN_COMBAT_AND_CANNOT_BE_SUMMONED).addString(target.getName());
+                }
+
+                if (playerTarget.isJailed()) {
+                    playerTarget.sendMessage("You cannot escape from Jail!");
+                    return Msg.YOUR_TARGET_IS_IN_AN_AREA_WHICH_BLOCKS_SUMMONING;
+                }
+
+                if ((playerTarget.getPvpFlag() != 0) || (playerTarget.isInCombat())) {
+                    return new SystemMessage(1843).addString(target.getName());
+                }
+
+                if ((playerTarget.getPrivateStoreType() != Player.STORE_PRIVATE_NONE) || (playerTarget.isProcessingRequest())) {
+                    return new SystemMessage(SystemMessage.S1_IS_CURRENTLY_TRADING_OR_OPERATING_A_PRIVATE_STORE_AND_CANNOT_BE_SUMMONED).addString(target.getName());
+                }
+                if (cha instanceof Player) {
+                    Player caster = (Player) cha;
+
+                    if (caster.getReflection() != ReflectionManager.DEFAULT) {
+                        InstantZone iz = caster.getReflection().getInstancedZone();
+                        if ((iz != null) && ((playerTarget.getLevel() < iz.getMinLevel()) || (playerTarget.getLevel() > iz.getMaxLevel()))) {
+                            return Msg.INVALID_TARGET;
+                        }
+                    }
+                }
+                return null;
+            } else {
+                return Msg.INVALID_TARGET;
+            }
+        } else {
             return Msg.INVALID_TARGET;
         }
-        if (target.isInOlympiadMode()) {
-            return Msg.YOU_CANNOT_SUMMON_PLAYERS_WHO_ARE_CURRENTLY_PARTICIPATING_IN_THE_GRAND_OLYMPIAD;
-        }
-        if ((target.isInZoneBattle()) || (target.isInZone(Zone.ZoneType.SIEGE)) || (target.isInZone(Zone.ZoneType.no_restart)) || (target.isInZone(Zone.ZoneType.no_summon)) || (target.getReflection() != ReflectionManager.DEFAULT) || (target.isInBoat())) {
-            return Msg.YOUR_TARGET_IS_IN_AN_AREA_WHICH_BLOCKS_SUMMONING;
-        }
-
-        if (target.isAlikeDead()) {
-            return new SystemMessage(SystemMessage.S1_IS_DEAD_AT_THE_MOMENT_AND_CANNOT_BE_SUMMONED).addString(target.getName());
-        }
-
-        if ((target.getPvpFlag() != 0) || (target.isInCombat())) {
-            return new SystemMessage(SystemMessage.S1_IS_ENGAGED_IN_COMBAT_AND_CANNOT_BE_SUMMONED).addString(target.getName());
-        }
-
-        if (target.getPlayer().isJailed()) {
-            target.getPlayer().sendMessage("You cannot escape from Jail!");
-            return Msg.YOUR_TARGET_IS_IN_AN_AREA_WHICH_BLOCKS_SUMMONING;
-        }
-
-        if ((target.getPvpFlag() != 0) || (target.isInCombat())) {
-            return new SystemMessage(1843).addString(target.getName());
-        }
-        Player pTarget = (Player) target;
-
-        if ((pTarget.getPrivateStoreType() != Player.STORE_PRIVATE_NONE) || (pTarget.isProcessingRequest())) {
-            return new SystemMessage(SystemMessage.S1_IS_CURRENTLY_TRADING_OR_OPERATING_A_PRIVATE_STORE_AND_CANNOT_BE_SUMMONED).addString(target.getName());
-        }
-        if (player.isPlayer()) {
-            Player caster = (Player) player;
-
-            if (caster.getReflection() != ReflectionManager.DEFAULT) {
-                InstantZone iz = player.getReflection().getInstancedZone();
-                if ((iz != null) && ((pTarget.getLevel() < iz.getMinLevel()) || (pTarget.getLevel() > iz.getMaxLevel()))) {
-                    return Msg.INVALID_TARGET;
-                }
-            }
-        }
-        return null;
     }
 
     @Override
-    public boolean checkCondition(Creature activeChar, Creature target, boolean forceUse, boolean dontMove, boolean first) {
-        if (activeChar.isPlayer()) {
-            if (_party && ((Player) activeChar).getParty() == null)
+    public boolean checkCondition(Player activeChar, Creature target, boolean forceUse, boolean dontMove, boolean first) {
+        if (party && activeChar.getParty() == null)
+            return false;
 
+        SystemMessage msg = canSummonHere(activeChar);
+        if (msg != null) {
+            activeChar.sendPacket(msg);
+            return false;
+        }
+
+        // This check is only for a single target
+        if (!party) {
+            if (activeChar == target)
                 return false;
 
-            SystemMessage msg = canSummonHere((Player) activeChar);
+            msg = canBeSummoned(activeChar, target);
             if (msg != null) {
                 activeChar.sendPacket(msg);
                 return false;
-            }
-
-            // This check is only for a single target
-            if (!_party) {
-                if (activeChar == target)
-                    return false;
-
-                msg = canBeSummoned(activeChar, target);
-                if (msg != null) {
-                    activeChar.sendPacket(msg);
-                    return false;
-                }
             }
         }
 
@@ -127,26 +129,26 @@ public final class Call extends Skill {
 
     @Override
     public void useSkill(Creature activeChar, List<Creature> targets) {
-        if (!activeChar.isPlayer())
+        if (!(activeChar instanceof Player))
             return;
-
-        SystemMessage msg = canSummonHere((Player) activeChar);
+        Player player = (Player) activeChar;
+        SystemMessage msg = canSummonHere(player);
         if (msg != null) {
-            activeChar.sendPacket(msg);
+            player.sendPacket(msg);
             return;
         }
 
-        if (_party) {
-            if (((Player) activeChar).getParty() != null)
-                for (Player target : ((Player) activeChar).getParty().getMembers())
-                    if (!target.equals(activeChar) && canBeSummoned(activeChar, target) == null && !target.isTerritoryFlagEquipped()) {
+        if (party) {
+            if (player.getParty() != null)
+                for (Player target : player.getParty().getMembers())
+                    if (!target.equals(player) && canBeSummoned(player, target) == null && !target.isTerritoryFlagEquipped()) {
                         target.stopMove();
-                        target.teleToLocation(Location.findPointToStay(activeChar, 100, 150), activeChar.getGeoIndex());
-                        getEffects(activeChar, target, activateRate > 0, false);
+                        target.teleToLocation(Location.findPointToStay(player, 100, 150), player.getGeoIndex());
+                        getEffects(player, target, activateRate > 0, false);
                     }
 
             if (isSSPossible())
-                activeChar.unChargeShots(isMagic());
+                player.unChargeShots(isMagic());
             return;
         }
 

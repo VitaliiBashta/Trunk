@@ -68,7 +68,7 @@ public final class _367_ElectrifyingRecharge extends Quest {
         int _state = st.getState();
 
         if (_state == CREATED) {
-            if (st.getPlayer().getLevel() < 37) {
+            if (st.player.getLevel() < 37) {
                 htmltext = "30673-02.htm";
                 st.exitCurrentQuest(true);
             } else {
@@ -92,11 +92,11 @@ public final class _367_ElectrifyingRecharge extends Quest {
     }
 
     @Override
-    public String onAttack(NpcInstance npc, QuestState qs) {
+    public void onAttack(NpcInstance npc, QuestState qs) {
         if (qs.getState() != STARTED)
-            return null;
+            return ;
         if (qs.getQuestItemsCount(Broken_Titan_Lamp) > 0)
-            return null;
+            return ;
 
         if (Rnd.chance(uplight_chance))
             for (int Titan_Lamp_id = Titan_Lamp_First; Titan_Lamp_id < Titan_Lamp_Last; Titan_Lamp_id++)
@@ -109,13 +109,11 @@ public final class _367_ElectrifyingRecharge extends Quest {
                         qs.playSound(SOUND_MIDDLE);
                     } else
                         qs.playSound(SOUND_ITEMGET);
-                    npc.doCast(4072, 4, qs.getPlayer(), true);
-                    return null;
+                    npc.doCast(4072, 4, qs.player, true);
+                    return ;
                 } else if (Rnd.chance(broke_chance))
                     if (takeAllLamps(qs))
-                        qs.giveItems(Broken_Titan_Lamp, 1);
+                        qs.giveItems(Broken_Titan_Lamp);
 
-        return null;
     }
-
 }

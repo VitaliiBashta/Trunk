@@ -95,7 +95,7 @@ public final class _355_FamilyHonor extends Quest {
         long count = st.getQuestItemsCount(GALFREDOS_BUST);
         if (npcId == GALIBREDO) {
             if (cond == 0)
-                if (st.getPlayer().getLevel() >= 36)
+                if (st.player.getLevel() >= 36)
                     htmltext = "galicbredo_q0355_02.htm";
                 else {
                     htmltext = "galicbredo_q0355_01.htm";
@@ -120,15 +120,14 @@ public final class _355_FamilyHonor extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getCond() == 1) {
             if (Rnd.chance(CHANCE_FOR_GALFREDOS_BUST)) {
-                st.giveItems(GALFREDOS_BUST, 1);
+                st.giveItems(GALFREDOS_BUST);
                 st.playSound(SOUND_ITEMGET);
             }
             if (Rnd.chance(CHANCE_FOR_GODDESS_BUST))
-                st.giveItems(BUST_OF_ANCIENT_GODDESS, 1);
+                st.giveItems(BUST_OF_ANCIENT_GODDESS);
         }
-        return null;
     }
 }

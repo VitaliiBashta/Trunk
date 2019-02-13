@@ -1,6 +1,5 @@
 package l2trunk.gameserver.skills.effects;
 
-import l2trunk.commons.lang.reference.HardReference;
 import l2trunk.gameserver.listener.actor.OnCurrentHpDamageListener;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Effect;
@@ -14,7 +13,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public final class EffectCurseOfLifeFlow extends Effect {
-    private final Map<Integer, HardReference<? extends Creature>> _damageList = new HashMap<>();
+    private final Map<Integer, Creature> _damageList = new HashMap<>();
     private CurseOfLifeFlowListener _listener;
 
     public EffectCurseOfLifeFlow(Env env, EffectTemplate template) {
@@ -40,8 +39,8 @@ public final class EffectCurseOfLifeFlow extends Effect {
         if (effected.isDead())
             return false;
 
-        for (Map.Entry<Integer, HardReference<? extends Creature>> dmg : _damageList.entrySet()) {
-            Creature damager = dmg.getValue().get();
+        for (Map.Entry<Integer, Creature> dmg : _damageList.entrySet()) {
+            Creature damager = dmg.getValue();
             if (damager == null || damager.isDead() || damager.isCurrentHpFull())
                 continue;
 
@@ -67,12 +66,11 @@ public final class EffectCurseOfLifeFlow extends Effect {
         public void onCurrentHpDamage(Creature actor, double damage, Creature attacker, Skill skill) {
             if (attacker == actor || attacker == effected)
                 return;
-            HardReference<? extends Creature> ref = attacker.getRef();
-            Optional<Map.Entry<Integer, HardReference<? extends Creature>>> findDamager = _damageList.entrySet().stream().filter(entry -> entry.getValue() != ref).findAny();
+            Optional<Map.Entry<Integer, Creature>> findDamager = _damageList.entrySet().stream().filter(entry -> entry.getValue() != attacker).findAny();
             if (findDamager.isPresent()) {
                 Integer old_damage = findDamager.get().getKey();
                 _damageList.remove(old_damage);
-                _damageList.put(old_damage == 0 ? (int) damage : old_damage + (int) damage, ref);
+                _damageList.put(old_damage == 0 ? (int) damage : old_damage + (int) damage, attacker);
             }
         }
     }

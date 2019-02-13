@@ -47,7 +47,7 @@ public abstract class Residence implements JdbcEntity {
     private final List<Location> ownerRestartPoints = new ArrayList<>();
     private final List<Location> otherRestartPoints = new ArrayList<>();
     private final List<Location> chaosRestartPoints = new ArrayList<>();
-    Clan _owner;
+    Clan owner;
     private Zone zone;
     private SiegeEvent<?, ?> _siegeEvent;
     // rewards
@@ -96,11 +96,11 @@ public abstract class Residence implements JdbcEntity {
     }
 
     public int getOwnerId() {
-        return _owner == null ? 0 : _owner.getClanId();
+        return owner == null ? 0 : owner.clanId();
     }
 
     public Clan getOwner() {
-        return _owner;
+        return owner;
     }
 
     public Zone getZone() {
@@ -322,7 +322,7 @@ public abstract class Residence implements JdbcEntity {
     }
 
     public void startCycleTask() {
-        if (_owner == null)
+        if (owner == null)
             return;
 
         long ownedTime = getOwnDate().getTimeInMillis();
@@ -364,7 +364,7 @@ public abstract class Residence implements JdbcEntity {
         chaosRestartPoints.add(loc);
     }
 
-    Location getBanishPoint() {
+    private Location getBanishPoint() {
         if (banishPoints.isEmpty())
             return null;
         return Rnd.get(banishPoints);

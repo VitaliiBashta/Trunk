@@ -91,7 +91,7 @@ public final class _358_IllegitimateChildOfAGoddess extends Quest {
         String htmltext = defaulttext;
         int id = st.getState();
         if (id == CREATED) {
-            if (st.getPlayer().getLevel() < 63) {
+            if (st.player.getLevel() < 63) {
                 st.exitCurrentQuest(true);
                 htmltext = "30862-1.htm";
             } else
@@ -105,10 +105,10 @@ public final class _358_IllegitimateChildOfAGoddess extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         long count = st.getQuestItemsCount(SN_SCALE);
         if (count < REQUIRED && Rnd.chance(DROP_RATE)) {
-            st.giveItems(SN_SCALE, 1);
+            st.giveItems(SN_SCALE);
             if (count + 1 == REQUIRED) {
                 st.setState(STARTED);
                 st.playSound(SOUND_MIDDLE);
@@ -116,6 +116,5 @@ public final class _358_IllegitimateChildOfAGoddess extends Quest {
             } else
                 st.playSound(SOUND_ITEMGET);
         }
-        return null;
     }
 }

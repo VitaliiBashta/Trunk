@@ -23,7 +23,7 @@ public class Say2 extends NpcStringContainer {
     }
 
     public Say2(Creature creature, ChatType type, String text) {
-        this(creature.getObjectId(), type, creature.getName(), NpcString.NONE, text);
+        this(creature.objectId(), type, creature.getName(), NpcString.NONE, text);
     }
 
     public Say2(int objectId, ChatType type, String charName, String text) {

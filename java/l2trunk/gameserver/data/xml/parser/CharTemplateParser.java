@@ -39,18 +39,17 @@ public enum CharTemplateParser {
 
             for (Iterator template = element.elementIterator(); template.hasNext(); ) {
                 Element templat = (org.dom4j.Element) template.next();
-                if (templat.getName().equalsIgnoreCase("set"))
+                if ("set".equalsIgnoreCase(templat.getName()))
                     set.set(templat.attributeValue("name"), templat.attributeValue("value"));
-                else if (templat.getName().equalsIgnoreCase("item")) {
+                else if ("item".equalsIgnoreCase(templat.getName())) {
                     int itemId = toInt(templat.attributeValue("id"));
-                    int count = toInt(templat.attributeValue("count"));
                     boolean equipable = false;
                     int shortcat = -1;
                     if (templat.attributeValue("equipable") != null)
                         equipable = Boolean.parseBoolean(templat.attributeValue("equipable"));
                     if (templat.attributeValue("shortcut") != null)
                         shortcat = toInt(templat.attributeValue("shortcut"));
-                    items.add(new CreateItem(itemId, count, equipable, shortcat));
+                    items.add(new CreateItem(itemId, equipable, shortcat));
                 }
             }
             CharTemplateHolder.addTemplate(classId, set, items);

@@ -19,10 +19,7 @@ public final class SeducedInvestigatorInstance extends MonsterInstance {
 
     @Override
     public boolean isAutoAttackable(Creature attacker) {
-        Player player = attacker.getPlayer();
-        if (player == null)
-            return false;
-        return !player.isPlayable();
+        return false;
     }
 
     @Override

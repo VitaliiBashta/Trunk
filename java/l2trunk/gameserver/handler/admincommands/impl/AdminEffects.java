@@ -16,7 +16,7 @@ import l2trunk.gameserver.utils.Util;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static l2trunk.commons.lang.NumberUtils.toInt;
 
@@ -55,7 +55,7 @@ public final class AdminEffects implements IAdminCommandHandler {
                 break;
             case admin_gmspeed:
                 val = toInt(wordList[1], 0);
-                int sh_level = activeChar.getEffectList().getEffectsBySkillId(7029).map(e -> e.getSkill().level).findFirst().orElse(0);
+                int sh_level = activeChar.getEffectList().getEffectsBySkillId(7029).map(e -> e.skill.level).findFirst().orElse(0);
 
                 if (val == 0) {
                     if (sh_level != 0) {
@@ -64,7 +64,7 @@ public final class AdminEffects implements IAdminCommandHandler {
                     activeChar.unsetVar("gm_gmspeed");
                 } else if ((val >= 1) && (val <= 4)) {
                     if (Config.SAVE_GM_EFFECTS) {
-                        activeChar.setVar("gm_gmspeed", String.valueOf(val), -1);
+                        activeChar.setVar("gm_gmspeed", val);
                     }
                     if (val != sh_level) {
                         if (sh_level != 0) {
@@ -80,7 +80,7 @@ public final class AdminEffects implements IAdminCommandHandler {
                 handleInvul(activeChar, activeChar);
                 if (activeChar.isInvul()) {
                     if (Config.SAVE_GM_EFFECTS)
-                        activeChar.setVar("gm_invul", "true", -1);
+                        activeChar.setVar("gm_invul");
                 } else
                     activeChar.unsetVar("gm_invul");
                 break;
@@ -102,24 +102,20 @@ public final class AdminEffects implements IAdminCommandHandler {
                 break;
             case admin_para_everybody:
             case admin_para:
-                List<Creature> targets = new ArrayList<>();
+                Stream<Player> targets;
                 int minutes = -1;
                 String reason = null;
                 if (command == Commands.admin_para_everybody) {
-                    GameObjectsStorage.getAllPlayersStream()
+                    targets = GameObjectsStorage.getAllPlayersStream()
                             .filter(Player::isOnline)
                             .filter(p -> p.getNetConnection() != null)
-                            .filter(p -> !p.isGM())
-                            .forEach(targets::add);
+                            .filter(p -> !p.isGM());
 
                 } else if (wordList.length == 2) {
                     int radius = toInt(wordList[1]);
-                    targets.addAll(World.getAroundPlayables(activeChar, radius, 500));
-                } else if (target == null || !target.isCreature()) {
-                    activeChar.sendPacket(SystemMsg.INVALID_TARGET);
-                    return false;
-                } else {
-                    targets.add((Creature) activeChar.getTarget());
+                    targets = World.getAroundPlayers(activeChar, radius, 500);
+                } else if (target instanceof Player) {
+                    targets = Stream.of((Player) target);
                     if (wordList.length >= 3) {
                         minutes = toInt(wordList[1]);
                         StringBuilder reasonBuilder = new StringBuilder();
@@ -127,81 +123,80 @@ public final class AdminEffects implements IAdminCommandHandler {
                             reasonBuilder.append(wordList[i]).append(' ');
                         reason = reasonBuilder.toString();
                     }
+                } else {
+                    activeChar.sendPacket(SystemMsg.INVALID_TARGET);
+                    return false;
                 }
 
-                IStaticPacket packet = new Say2(activeChar.getObjectId(), ChatType.TELL, "Paralyze", "You are paralyzed for " + minutes + " minutes! Reason: " + reason);
-                for (Creature c : targets) {
-                    if (c.isBlocked())
-                        continue;
-                    c.startAbnormalEffect(AbnormalEffect.HOLD_1);
-                    c.abortAttack(true, false);
-                    c.abortCast(true, false);
-                    c.setBlock(true);
+                IStaticPacket packet = new Say2(activeChar.objectId(), ChatType.TELL, "Paralyze", "You are paralyzed for " + minutes + " minutes! Reason: " + reason);
+                int min = minutes;
+                String r = reason;
+                targets.filter(c -> !c.isBlocked())
+                        .forEach(c -> {
+                            c.startAbnormalEffect(AbnormalEffect.HOLD_1);
+                            c.abortAttack(true, false);
+                            c.abortCast(true, false);
+                            c.setBlock(true);
 
-                    if (minutes > 0 && c.isPlayable()) {
-                        c.getPlayer().setVar("Para", reason, System.currentTimeMillis() + minutes * 60000L);
-                        c.sendPacket(packet);
-                    }
-                }
-                activeChar.sendMessage("Target" + (targets.size() > 1 ? "s" : "") + " blocked!");
+                            if (min > 0) {
+                                c.setVar("Para", r, System.currentTimeMillis() + min * 60000L);
+                                c.sendPacket(packet);
+                            }
+                        });
+                activeChar.sendMessage("All Targets blocked!");
                 break;
             case admin_unpara_everybody:
             case admin_unpara:
-                targets = new ArrayList<>();
                 if (command == Commands.admin_unpara_everybody) {
-                    GameObjectsStorage.getAllPlayersStream()
+                    targets = GameObjectsStorage.getAllPlayersStream()
                             .filter(Player::isOnline)
                             .filter(p -> p.getNetConnection() != null)
-                            .filter(p -> !p.isGM())
-                            .forEach(targets::add);
+                            .filter(p -> !p.isGM());
                 } else if (wordList.length > 1) {
                     int radius = toInt(wordList[1]);
-                    targets.addAll(World.getAroundPlayables(activeChar, radius, 500));
-                } else if (target == null || !target.isCreature()) {
+                    targets = World.getAroundPlayers(activeChar, radius, 500);
+                } else if (target instanceof Player) {
+                    targets = Stream.of((Player) target);
+                } else {
                     activeChar.sendPacket(SystemMsg.INVALID_TARGET);
                     return false;
-                } else {
-                    targets.add((Creature) activeChar.getTarget());
                 }
-                for (Creature c : targets) {
-                    if (!c.isBlocked())
-                        continue;
-                    c.setBlock();
-                    c.stopAbnormalEffect(AbnormalEffect.HOLD_1);
-                    if (c.isPlayable())
-                        c.getPlayer().unsetVar("Para");
-                }
+                targets.filter(Player::isBlocked)
+                        .forEach(c -> {
+                            c.setBlock();
+                            c.stopAbnormalEffect(AbnormalEffect.HOLD_1);
+                            c.unsetVar("Para");
+                        });
+
                 activeChar.sendMessage("Targets unblocked");
                 break;
             case admin_flag:
-                targets = new ArrayList<>();
+                Stream<Player> players ;
                 if (wordList.length > 1) {
                     int radius = toInt(wordList[1]);
-                    targets = World.getAroundPlayers(activeChar, radius, 500).collect(Collectors.toList());
-                } else if (target == null || !target.isPlayer()) {
+                    players = World.getAroundPlayers(activeChar, radius, 500);
+                } else if (target instanceof Player) {
+                    players = Stream.of((Player) target);
+                } else {
                     activeChar.sendPacket(SystemMsg.INVALID_TARGET);
                     return false;
-                } else {
-                    targets.add((Player) activeChar.getTarget());
                 }
-                targets.forEach(c -> c.getPlayer().startPvPFlag(c.getPlayer()));
+                players.forEach(c -> c.startPvPFlag(c));
 
                 activeChar.sendMessage("Targets flagged");
                 break;
             case admin_unflag:
-                targets = new ArrayList<>();
                 if (wordList.length > 1) {
                     int radius = toInt(wordList[1]);
-                    targets = World.getAroundPlayers(activeChar, radius, 500).collect(Collectors.toList());
-                } else if (target == null || !target.isPlayer()) {
+                    players = World.getAroundPlayers(activeChar, radius, 500);
+                } else if (target instanceof Player) {
+                    players =Stream.of((Player) target);
+                } else {
                     activeChar.sendPacket(SystemMsg.INVALID_TARGET);
                     return false;
-                } else {
-                    targets.add((Creature) activeChar.getTarget());
                 }
-                for (Creature c : targets) {
-                    c.getPlayer().stopPvPFlag();
-                }
+                players.forEach(Player::stopPvPFlag);
+
                 activeChar.sendMessage("Targets unflagged");
                 break;
             case admin_changename:
@@ -211,28 +206,29 @@ public final class AdminEffects implements IAdminCommandHandler {
                 }
                 if (target == null)
                     target = activeChar;
-                if (!target.isCreature()) {
+                if (target instanceof Creature) {
+                    String oldName = target.getName();
+                    String newName = Util.joinStrings(" ", wordList, 1);
+
+                    ((Creature) target).setName(newName);
+                    ((Creature) target).broadcastCharInfo();
+
+                    activeChar.sendMessage("Changed name from " + oldName + " to " + newName + ".");
+                    break;
+                } else {
                     activeChar.sendPacket(SystemMsg.INVALID_TARGET);
                     return false;
                 }
-                String oldName = target.getName();
-                String newName = Util.joinStrings(" ", wordList, 1);
-
-                ((Creature) target).setName(newName);
-                ((Creature) target).broadcastCharInfo();
-
-                activeChar.sendMessage("Changed name from " + oldName + " to " + newName + ".");
-                break;
             case admin_setinvul:
-                if (target == null || !target.isPlayer()) {
+                if (!(target instanceof Player)) {
                     activeChar.sendPacket(SystemMsg.INVALID_TARGET);
                     return false;
                 }
                 handleInvul(activeChar, (Player) target);
                 break;
             case admin_getinvul:
-                if (target != null && target.isCreature())
-                    activeChar.sendMessage("Target " + target.getName() + "(object ID: " + target.getObjectId() + ") is " + (!((Creature) target).isInvul() ? "NOT " : "") + "invul");
+                if (target instanceof Creature)
+                    activeChar.sendMessage("Target " + target.getName() + "(object ID: " + target.objectId() + ") is " + (!((Creature) target).isInvul() ? "NOT " : "") + "invul");
                 break;
             case admin_social:
                 if (wordList.length < 2)
@@ -245,9 +241,9 @@ public final class AdminEffects implements IAdminCommandHandler {
                         return false;
                     }
                 if (target == null || target == activeChar)
-                    activeChar.broadcastPacket(new SocialAction(activeChar.getObjectId(), val));
-                else if (target.isCreature())
-                    ((Creature) target).broadcastPacket(new SocialAction(target.getObjectId(), val));
+                    activeChar.broadcastPacket(new SocialAction(activeChar.objectId(), val));
+                else if (target instanceof Creature)
+                    ((Creature) target).broadcastPacket(new SocialAction(target.objectId(), val));
                 break;
             case admin_abnormal:
                 try {
@@ -263,21 +259,19 @@ public final class AdminEffects implements IAdminCommandHandler {
 
                 if (ae == AbnormalEffect.NULL) {
                     effectTarget.startAbnormalEffect(AbnormalEffect.NULL);
-                    effectTarget.sendMessage("Abnormal effects clearned by admin.");
-                    if (effectTarget != activeChar)
-                        effectTarget.sendMessage("Abnormal effects clearned.");
+                    if (effectTarget instanceof Player) ((Player)effectTarget).sendMessage("Abnormal effects clearned by admin.");
                 } else {
                     effectTarget.startAbnormalEffect(ae);
-                    effectTarget.sendMessage("Admin added abnormal effect: " + ae.getName());
+                    if (effectTarget instanceof Player) ((Player)effectTarget).sendMessage("Admin added abnormal effect: " + ae.getName());
                     if (effectTarget != activeChar)
-                        effectTarget.sendMessage("Added abnormal effect: " + ae.getName());
+                        if (effectTarget instanceof Player) ((Player)effectTarget).sendMessage("Added abnormal effect: " + ae.getName());
                 }
                 break;
             case admin_liston:
-                activeChar.setVar("gmOnList", 1, -1);
+                activeChar.setVar("gmOnList");
                 break;
             case admin_listoff:
-                activeChar.setVar("gmOnList", 0, -1);
+                activeChar.unsetVar("gmOnList");
                 break;
             case admin_transform:
                 try {

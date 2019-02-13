@@ -7,14 +7,12 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.scripts.Functions;
 
-import java.util.Arrays;
 import java.util.List;
 
 public final class RateBonus extends Functions {
     private static final List<Integer> PKS = List.of(1, 2, 5, 10, 25, 50, 100, 250, 500, 1000);
 
     public void list() {
-        Player player = getSelf();
         if (!Config.SERVICES_WASH_PK_ENABLED) {
             show(HtmCache.INSTANCE.getNotNull("npcdefault.htm", player), player);
             return;
@@ -45,7 +43,6 @@ public final class RateBonus extends Functions {
     }
 
     public void get(String[] param) {
-        Player player = getSelf();
         if (!Config.SERVICES_WASH_PK_ENABLED) {
             show(HtmCache.INSTANCE.getNotNull("npcdefault.htm", player), player);
             return;

@@ -62,56 +62,64 @@ public final class _408_PathToElvenwizard extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("1")) {
-            if (st.getPlayer().getClassId().id != 0x19) {
-                if (st.getPlayer().getClassId().id == 0x1a)
-                    htmltext = "rogellia_q0408_02a.htm";
-                else
-                    htmltext = "rogellia_q0408_03.htm";
-            } else if (st.getPlayer().getLevel() < 18)
-                htmltext = "rogellia_q0408_04.htm";
-            else if (st.getQuestItemsCount(ETERNITY_DIAMOND_ID) > 0)
-                htmltext = "rogellia_q0408_05.htm";
-            else {
-                st.setState(STARTED);
-                st.setCond(1);
-                st.playSound(SOUND_ACCEPT);
-                st.giveItems(FERTILITY_PERIDOT_ID);
-                htmltext = "rogellia_q0408_06.htm";
-            }
-        } else if (event.equalsIgnoreCase("408_1")) {
-            if (st.getQuestItemsCount(MAGICAL_POWERS_RUBY_ID) > 0)
-                htmltext = "rogellia_q0408_10.htm";
-            else if (st.getQuestItemsCount(MAGICAL_POWERS_RUBY_ID) < 1 && st.getQuestItemsCount(FERTILITY_PERIDOT_ID) > 0) {
-                st.giveItems(ROGELLIAS_LETTER_ID, 1);
-                htmltext = "rogellia_q0408_07.htm";
-            }
-        } else if (event.equalsIgnoreCase("408_4")) {
-            if (st.getQuestItemsCount(ROGELLIAS_LETTER_ID) > 0) {
-                st.takeItems(ROGELLIAS_LETTER_ID);
-                st.giveItems(CHARM_OF_GRAIN_ID);
-                htmltext = "grain_q0408_02.htm";
-            }
-        } else if (event.equalsIgnoreCase("408_2")) {
-            if (st.getQuestItemsCount(PURE_AQUAMARINE_ID) > 0)
-                htmltext = "rogellia_q0408_13.htm";
-            else if (st.getQuestItemsCount(PURE_AQUAMARINE_ID) < 1 && st.getQuestItemsCount(FERTILITY_PERIDOT_ID) > 0) {
-                st.giveItems(APPETIZING_APPLE_ID);
-                htmltext = "rogellia_q0408_14.htm";
-            }
-        } else if (event.equalsIgnoreCase("408_5")) {
-            if (st.getQuestItemsCount(APPETIZING_APPLE_ID) > 0) {
-                st.takeItems(APPETIZING_APPLE_ID);
-                st.giveItems(SAP_OF_WORLD_TREE_ID);
-                htmltext = "thalya_q0408_02.htm";
-            }
-        } else if (event.equalsIgnoreCase("408_3"))
-            if (st.getQuestItemsCount(NOBILITY_AMETHYST_ID) > 0)
-                htmltext = "rogellia_q0408_17.htm";
-            else if (st.getQuestItemsCount(NOBILITY_AMETHYST_ID) < 1 && st.getQuestItemsCount(FERTILITY_PERIDOT_ID) > 0) {
-                st.giveItems(IMMORTAL_LOVE_ID, 1);
-                htmltext = "rogellia_q0408_18.htm";
-            }
+        switch (event) {
+            case "1":
+                if (st.player.getClassId().id != 0x19) {
+                    if (st.player.getClassId().id == 0x1a)
+                        htmltext = "rogellia_q0408_02a.htm";
+                    else
+                        htmltext = "rogellia_q0408_03.htm";
+                } else if (st.player.getLevel() < 18)
+                    htmltext = "rogellia_q0408_04.htm";
+                else if (st.getQuestItemsCount(ETERNITY_DIAMOND_ID) > 0)
+                    htmltext = "rogellia_q0408_05.htm";
+                else {
+                    st.setState(STARTED);
+                    st.setCond(1);
+                    st.playSound(SOUND_ACCEPT);
+                    st.giveItems(FERTILITY_PERIDOT_ID);
+                    htmltext = "rogellia_q0408_06.htm";
+                }
+                break;
+            case "408_1":
+                if (st.getQuestItemsCount(MAGICAL_POWERS_RUBY_ID) > 0)
+                    htmltext = "rogellia_q0408_10.htm";
+                else if (st.getQuestItemsCount(MAGICAL_POWERS_RUBY_ID) < 1 && st.getQuestItemsCount(FERTILITY_PERIDOT_ID) > 0) {
+                    st.giveItems(ROGELLIAS_LETTER_ID);
+                    htmltext = "rogellia_q0408_07.htm";
+                }
+                break;
+            case "408_4":
+                if (st.getQuestItemsCount(ROGELLIAS_LETTER_ID) > 0) {
+                    st.takeItems(ROGELLIAS_LETTER_ID);
+                    st.giveItems(CHARM_OF_GRAIN_ID);
+                    htmltext = "grain_q0408_02.htm";
+                }
+                break;
+            case "408_2":
+                if (st.getQuestItemsCount(PURE_AQUAMARINE_ID) > 0)
+                    htmltext = "rogellia_q0408_13.htm";
+                else if (st.getQuestItemsCount(PURE_AQUAMARINE_ID) < 1 && st.getQuestItemsCount(FERTILITY_PERIDOT_ID) > 0) {
+                    st.giveItems(APPETIZING_APPLE_ID);
+                    htmltext = "rogellia_q0408_14.htm";
+                }
+                break;
+            case "408_5":
+                if (st.getQuestItemsCount(APPETIZING_APPLE_ID) > 0) {
+                    st.takeItems(APPETIZING_APPLE_ID);
+                    st.giveItems(SAP_OF_WORLD_TREE_ID);
+                    htmltext = "thalya_q0408_02.htm";
+                }
+                break;
+            case "408_3":
+                if (st.getQuestItemsCount(NOBILITY_AMETHYST_ID) > 0)
+                    htmltext = "rogellia_q0408_17.htm";
+                else if (st.getQuestItemsCount(NOBILITY_AMETHYST_ID) < 1 && st.getQuestItemsCount(FERTILITY_PERIDOT_ID) > 0) {
+                    st.giveItems(IMMORTAL_LOVE_ID);
+                    htmltext = "rogellia_q0408_18.htm";
+                }
+                break;
+        }
         return htmltext;
     }
 
@@ -152,10 +160,10 @@ public final class _408_PathToElvenwizard extends Quest {
                     st.takeItems(NOBILITY_AMETHYST_ID, st.getQuestItemsCount(NOBILITY_AMETHYST_ID));
                     st.takeItems(FERTILITY_PERIDOT_ID, st.getQuestItemsCount(FERTILITY_PERIDOT_ID));
                     htmltext = "rogellia_q0408_24.htm";
-                    if (st.getPlayer().getClassId().getLevel() == 1) {
-                        st.giveItems(ETERNITY_DIAMOND_ID, 1);
-                        if (!st.getPlayer().getVarB("prof1")) {
-                            st.getPlayer().setVar("prof1", "1", -1);
+                    if (st.player.getClassId().occupation() == 0) {
+                        st.giveItems(ETERNITY_DIAMOND_ID);
+                        if (!st.player.isVarSet("prof1")) {
+                            st.player.setVar("prof1");
                             st.addExpAndSp(295862, 17964);
                             st.giveItems(ADENA_ID, 81900);
                         }
@@ -205,12 +213,12 @@ public final class _408_PathToElvenwizard extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         if (npcId == PINCER_SPIDER) {
             if (cond > 0 && st.getQuestItemsCount(CHARM_OF_GRAIN_ID) > 0 && st.getQuestItemsCount(RED_DOWN_ID) < 5 && Rnd.chance(70)) {
-                st.giveItems(RED_DOWN_ID, 1);
+                st.giveItems(RED_DOWN_ID);
                 if (st.getQuestItemsCount(RED_DOWN_ID) < 5)
                     st.playSound(SOUND_ITEMGET);
                 else
@@ -218,7 +226,7 @@ public final class _408_PathToElvenwizard extends Quest {
             }
         } else if (npcId == DRYAD_ELDER) {
             if (cond > 0 && st.getQuestItemsCount(SAP_OF_WORLD_TREE_ID) > 0 && st.getQuestItemsCount(GOLD_LEAVES_ID) < 5 && Rnd.chance(40)) {
-                st.giveItems(GOLD_LEAVES_ID, 1);
+                st.giveItems(GOLD_LEAVES_ID);
                 if (st.getQuestItemsCount(GOLD_LEAVES_ID) < 5)
                     st.playSound(SOUND_ITEMGET);
                 else
@@ -232,6 +240,5 @@ public final class _408_PathToElvenwizard extends Quest {
                 else
                     st.playSound(SOUND_MIDDLE);
             }
-        return null;
     }
 }

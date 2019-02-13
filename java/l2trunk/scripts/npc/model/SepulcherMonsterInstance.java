@@ -208,7 +208,7 @@ public final class SepulcherMonsterInstance extends MonsterInstance {
 
     private boolean hasPartyAKey(Player player) {
         return player.getParty().getMembers().stream()
-                .anyMatch(m -> ItemFunctions.getItemCount(m, HALLS_KEY) > 0);
+                .anyMatch(m -> m.haveItem(HALLS_KEY));
     }
 
     @Override

@@ -6,7 +6,7 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.stats.Env;
 import l2trunk.gameserver.stats.Stats;
 
-public class EffectManaHealPercent extends Effect {
+public final class EffectManaHealPercent extends Effect {
     private final boolean _ignoreMpEff;
 
     public EffectManaHealPercent(Env env, EffectTemplate template) {
@@ -16,9 +16,7 @@ public class EffectManaHealPercent extends Effect {
 
     @Override
     public boolean checkCondition() {
-        if (effected.isHealBlocked())
-            return false;
-        return super.checkCondition();
+        return !effected.isHealBlocked();
     }
 
     @Override
@@ -29,17 +27,12 @@ public class EffectManaHealPercent extends Effect {
             return;
 
         double mp = calc() * effected.getMaxMp() / 100.;
-        double newMp = mp * (!_ignoreMpEff ? effected.calcStat(Stats.MANAHEAL_EFFECTIVNESS, 100., effector, getSkill()) : 100.) / 100.;
+        double newMp = mp * (!_ignoreMpEff ? effected.calcStat(Stats.MANAHEAL_EFFECTIVNESS, 100., effector, skill) : 100.) / 100.;
         double addToMp = Math.max(0, Math.min(newMp, effected.calcStat(Stats.MP_LIMIT, null, null) * effected.getMaxMp() / 100. - effected.getCurrentMp()));
 
         effected.sendPacket(new SystemMessage2(SystemMsg.S1_MP_HAS_BEEN_RESTORED).addInteger(Math.round(addToMp)));
 
         if (addToMp > 0)
             effected.setCurrentMp(addToMp + effected.getCurrentMp());
-    }
-
-    @Override
-    public boolean onActionTime() {
-        return false;
     }
 }

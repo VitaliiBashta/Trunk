@@ -40,10 +40,10 @@ public class RequestSetPledgeCrestLarge extends L2GameClientPacket {
             int crestId = 0;
 
             if (_data != null) {
-                crestId = CrestCache.savePledgeCrestLarge(clan.getClanId(), _data);
+                crestId = CrestCache.savePledgeCrestLarge(clan.clanId(), _data);
                 activeChar.sendPacket(SystemMsg.THE_CLAN_CREST_WAS_SUCCESSFULLY_REGISTERED);
             } else if (clan.hasCrestLarge())
-                CrestCache.removePledgeCrestLarge(clan.getClanId());
+                CrestCache.removePledgeCrestLarge(clan.clanId());
 
             clan.setCrestLargeId(crestId);
             clan.broadcastClanStatus(false, true, false);

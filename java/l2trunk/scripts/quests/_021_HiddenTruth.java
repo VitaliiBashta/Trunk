@@ -6,13 +6,10 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.Functions;
-import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Location;
+import l2trunk.gameserver.utils.NpcUtils;
 
 public final class _021_HiddenTruth extends Quest {
-    public static final int DARIN = 30048;
-    public static final int ROXXY = 30006;
-    public static final int BAULRO = 30033;
 
     // ~~~~~~~~ npcId list: ~~~~~~~~
     private static final int MysteriousWizard = 31522;
@@ -34,26 +31,6 @@ public final class _021_HiddenTruth extends Quest {
     private NpcInstance GhostofvonHellmannsPage;
     private NpcInstance GhostofvonHellmann;
 
-    private void spawnGhostofvonHellmannsPage() {
-        GhostofvonHellmannsPage = Functions.spawn(new Location(51462, -54539, -3176), GhostofvonHellmannsPageId);
-    }
-
-    private void despawnGhostofvonHellmannsPage() {
-        if (GhostofvonHellmannsPage != null)
-            GhostofvonHellmannsPage.deleteMe();
-        GhostofvonHellmannsPage = null;
-    }
-
-    private void spawnGhostofvonHellmann() {
-        GhostofvonHellmann = Functions.spawn(Location.findPointToStay(new Location(51432, -54570, -3136), 50, ReflectionManager.DEFAULT.getGeoIndex()), GhostofvonHellmannId);
-    }
-
-    private void despawnGhostofvonHellmann() {
-        if (GhostofvonHellmann != null)
-            GhostofvonHellmann.deleteMe();
-        GhostofvonHellmann = null;
-    }
-
     public _021_HiddenTruth() {
         super(false);
 
@@ -67,6 +44,26 @@ public final class _021_HiddenTruth extends Quest {
         addTalkId(Dominic);
         addTalkId(Benedict);
         addTalkId(Innocentin);
+    }
+
+    private void spawnGhostofvonHellmannsPage() {
+        GhostofvonHellmannsPage = NpcUtils.spawnSingle(GhostofvonHellmannsPageId,new Location(51462, -54539, -3176) );
+    }
+
+    private void despawnGhostofvonHellmannsPage() {
+        if (GhostofvonHellmannsPage != null)
+            GhostofvonHellmannsPage.deleteMe();
+        GhostofvonHellmannsPage = null;
+    }
+
+    private void spawnGhostofvonHellmann() {
+        GhostofvonHellmann = NpcUtils.spawnSingle(GhostofvonHellmannId,Location.findPointToStay(new Location(51432, -54570, -3136), 50, ReflectionManager.DEFAULT.getGeoIndex()) );
+    }
+
+    private void despawnGhostofvonHellmann() {
+        if (GhostofvonHellmann != null)
+            GhostofvonHellmann.deleteMe();
+        GhostofvonHellmann = null;
     }
 
     @Override
@@ -116,7 +113,7 @@ public final class _021_HiddenTruth extends Quest {
 
         if (npcId == MysteriousWizard) {
             if (cond == 0) {
-                if (st.getPlayer().getLevel() > 54)
+                if (st.player.getLevel() > 54)
                     htmltext = "31522-01.htm";
                 else {
                     htmltext = "31522-03.htm";
@@ -167,7 +164,7 @@ public final class _021_HiddenTruth extends Quest {
                     htmltext = "31348-02.htm";
                     st.setCond(7);
                 } else {
-                    st.set("AGRIPEL", "1");
+                    st.set("AGRIPEL", 1);
                     htmltext = "31348-0" + Rnd.get(3) + ".htm";
                 }
             } else if (cond == 7)
@@ -178,7 +175,7 @@ public final class _021_HiddenTruth extends Quest {
                     htmltext = "31350-02.htm";
                     st.setCond(7);
                 } else {
-                    st.set("DOMINIC", "1");
+                    st.set("DOMINIC", 1);
                     htmltext = "31350-0" + Rnd.get(3) + ".htm";
                 }
             } else if (cond == 7)
@@ -189,7 +186,7 @@ public final class _021_HiddenTruth extends Quest {
                     htmltext = "31349-02.htm";
                     st.setCond(7);
                 } else {
-                    st.set("BENEDICT", "1");
+                    st.set("BENEDICT", 1);
                     htmltext = "31349-0" + Rnd.get(3) + ".htm";
                 }
             } else if (cond == 7)

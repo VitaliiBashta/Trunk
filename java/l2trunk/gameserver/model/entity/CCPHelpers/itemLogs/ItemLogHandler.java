@@ -35,7 +35,7 @@ public class ItemLogHandler {
 
     public void addLog(Player player, ItemInstance itemLost, long count, ItemActionType actionType) {
         SingleItemLog[] lostItems = new SingleItemLog[1];
-        lostItems[0] = new SingleItemLog(itemLost.getItemId(), count, itemLost.getEnchantLevel(), itemLost.getObjectId());
+        lostItems[0] = new SingleItemLog(itemLost.getItemId(), count, itemLost.getEnchantLevel(), itemLost.objectId());
         addLog(player, lostItems, actionType);
     }
 
@@ -43,7 +43,7 @@ public class ItemLogHandler {
         SingleItemLog[] lostItems = new SingleItemLog[itemsLost.size()];
         for (int i = 0; i < itemsLost.size(); i++) {
             ItemInstance itemLost = itemsLost.get(i);
-            lostItems[i] = new SingleItemLog(itemLost.getItemId(), itemLost.getCount(), itemLost.getEnchantLevel(), itemLost.getObjectId());
+            lostItems[i] = new SingleItemLog(itemLost.getItemId(), itemLost.getCount(), itemLost.getEnchantLevel(), itemLost.objectId());
         }
         addLog(player, lostItems, actionType);
     }
@@ -52,7 +52,7 @@ public class ItemLogHandler {
         SingleItemLog[] lostItems = new SingleItemLog[itemsLost.size()];
         for (int i = 0; i < itemsLost.size(); i++) {
             ItemInstance itemLost = itemsLost.get(i);
-            lostItems[i] = new SingleItemLog(itemLost.getItemId(), itemLost.getCount(), itemLost.getEnchantLevel(), itemLost.getObjectId());
+            lostItems[i] = new SingleItemLog(itemLost.getItemId(), itemLost.getCount(), itemLost.getEnchantLevel(), itemLost.objectId());
             lostItems[i].setReceiverName(receiverName);
         }
 
@@ -71,7 +71,7 @@ public class ItemLogHandler {
     private SingleItemLog[] getAdenaItemLog(Player oldOwner, Player newOwner, long count, boolean lost) {
         SingleItemLog[] lostItems = new SingleItemLog[1];
         ItemInstance item = oldOwner.getInventory().getItemByItemId(57);
-        lostItems[0] = new SingleItemLog(57, count, 0, item == null ? -1 : item.getObjectId());
+        lostItems[0] = new SingleItemLog(57, count, 0, item == null ? -1 : item.objectId());
         lostItems[0].setReceiverName(newOwner.getName());
         return lostItems;
     }
@@ -123,13 +123,13 @@ public class ItemLogHandler {
     private void addLog(Player player, SingleItemLog[] lostItems, SingleItemLog[] receivedItems, ItemActionType actionType) {
         long time = System.currentTimeMillis();
 
-        ItemActionLog actionLog = new ItemActionLog(getNextActionId(), player.getObjectId(), actionType, time, lostItems, receivedItems);
+        ItemActionLog actionLog = new ItemActionLog(getNextActionId(), player.objectId(), actionType, time, lostItems, receivedItems);
 
         ItemLogList.getInstance().addLogs(actionLog);
     }
 
     public void onPickUp(Player player, ItemInstance item) {
-        ItemLogList.getInstance().fillReceiver(item.getObjectId(), player.getName());
+        ItemLogList.getInstance().fillReceiver(item.objectId(), player.getName());
     }
 
     private int getNextActionId() {

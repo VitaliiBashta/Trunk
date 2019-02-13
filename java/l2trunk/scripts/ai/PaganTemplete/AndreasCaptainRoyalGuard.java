@@ -26,7 +26,7 @@ public final class AndreasCaptainRoyalGuard extends Fighter {
             new Location(-17029, -39617, -10724),
             new Location(-15729, -42001, -10724));
     private static int NUMBER_OF_DEATH = 0;
-    private boolean _tele = true;
+    private boolean tele = true;
     private boolean _talk = true;
 
     public AndreasCaptainRoyalGuard(NpcInstance actor) {
@@ -41,9 +41,9 @@ public final class AndreasCaptainRoyalGuard extends Fighter {
 
         World.getAroundPlayers(actor, 500, 500)
                 .filter(Player::isInParty)
-                .filter(player -> player.getParty().size() > 9 && _tele)
+                .filter(player -> player.getParty().size() > 7 && tele)
                 .forEach(player -> {
-                    _tele = false;
+                    tele = false;
                     player.teleToLocation(Rnd.get(locs));
                 });
         return true;
@@ -84,7 +84,7 @@ public final class AndreasCaptainRoyalGuard extends Fighter {
 //             door3.openMe(actor, false);
 //             door4.openMe(actor, false);
         }
-        _tele = true;
+        tele = true;
         super.onEvtDead(killer);
     }
 }

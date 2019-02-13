@@ -140,7 +140,7 @@ public abstract class DuelEvent extends GlobalEvent implements Iterable<DuelSnap
             return SystemMsg.INVALID_TARGET;
 
         DuelEvent duelEvent = target.getEvent(DuelEvent.class);
-        if (duelEvent == null || duelEvent != this)
+        if (duelEvent != this)
             return SystemMsg.INVALID_TARGET;
 
         return null;
@@ -152,19 +152,19 @@ public abstract class DuelEvent extends GlobalEvent implements Iterable<DuelSnap
             return false;
 
         DuelEvent duelEvent = target.getEvent(DuelEvent.class);
-        return duelEvent != null && duelEvent == this;
+        return duelEvent == this;
     }
 
     @Override
     public void onAddEvent(GameObject o) {
-        if (o.isPlayer())
-            o.getPlayer().addListener(_playerExitListener);
+        if (o instanceof Player)
+            ((Player) o).addListener(_playerExitListener);
     }
 
     @Override
     public void onRemoveEvent(GameObject o) {
-        if (o.isPlayer())
-            o.getPlayer().removeListener(_playerExitListener);
+        if (o instanceof Player)
+            ((Player) o).removeListener(_playerExitListener);
     }
 
     @Override

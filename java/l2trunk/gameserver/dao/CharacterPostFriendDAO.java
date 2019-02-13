@@ -27,7 +27,7 @@ public class CharacterPostFriendDAO {
     public static Map<Integer, String> select(Player player, Connection con) {
         Map<Integer, String> set = new HashMap<>();
         try (PreparedStatement statement = con.prepareStatement(SELECT_SQL_QUERY)) {
-            statement.setInt(1, player.getObjectId());
+            statement.setInt(1, player.objectId());
             try (ResultSet rset = statement.executeQuery()) {
                 while (rset.next()) {
                     if ((rset.getInt(1) <= 0) || (rset.getString(2) == null))
@@ -44,7 +44,7 @@ public class CharacterPostFriendDAO {
     public static void delete(Player player, int val) {
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement(DELETE_SQL_QUERY)) {
-            statement.setInt(1, player.getObjectId());
+            statement.setInt(1, player.objectId());
             statement.setInt(2, val);
             statement.execute();
         } catch (SQLException e) {
@@ -55,7 +55,7 @@ public class CharacterPostFriendDAO {
     public void insert(Player player, int val) {
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement(INSERT_SQL_QUERY)) {
-            statement.setInt(1, player.getObjectId());
+            statement.setInt(1, player.objectId());
             statement.setInt(2, val);
             statement.execute();
         } catch (SQLException e) {

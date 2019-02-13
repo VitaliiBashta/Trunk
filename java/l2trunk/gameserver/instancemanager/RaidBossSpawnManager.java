@@ -80,10 +80,10 @@ public enum RaidBossSpawnManager {
                         500
                 );
 
-                player.sendPacket(new ShowMiniMap(player, 0));
+                player.sendPacket(new ShowMiniMap(0));
                 break;
             case UNDEFINED:
-                player.sendMessage(new CustomMessage("l2trunk.gameserver.model.instances.L2AdventurerInstance.BossNotInGame", player).addNumber(bossId));
+                player.sendMessage(new CustomMessage("l2trunk.gameserver.model.instances.L2AdventurerInstance.BossNotInGame").addNumber(bossId));
                 break;
         }
     }

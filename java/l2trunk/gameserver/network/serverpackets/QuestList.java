@@ -46,9 +46,9 @@ public final class QuestList extends L2GameServerPacket {
 
     public QuestList(Player player) {
         questlist = player.getAllQuestsStates().stream()
-                .filter(quest -> quest.getQuest().isVisible())
+                .filter(quest -> quest.quest.isVisible())
                 .filter(QuestState::isStarted)
-                .collect(Collectors.toMap(k -> k.getQuest().questId, v -> v.getInt(QuestState.VAR_COND)));
+                .collect(Collectors.toMap(k -> k.quest.id, v -> v.getInt(QuestState.VAR_COND)));
     }
 
     @Override

@@ -5,7 +5,6 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.listener.actor.OnDeathListener;
 import l2trunk.gameserver.model.Creature;
-import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.Reflection;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.QuestState;
@@ -54,7 +53,7 @@ public final class HeartInfinityDefence extends Reflection {
         spawnByGroup("soi_hoi_defence_tumors");
         spawnByGroup("soi_hoi_defence_wards");
         getDoor(14240102).openMe();
-        preawakenedEchmus = addSpawnWithoutRespawn(29161, new Location(-179534, 208510, -15496, 16342), 0);
+        preawakenedEchmus = addSpawnWithoutRespawn(29161, new Location(-179534, 208510, -15496, 16342));
         coffinSpawnTask = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new RunnableImpl() {
             @Override
             public void runImpl() {
@@ -78,7 +77,7 @@ public final class HeartInfinityDefence extends Reflection {
         wagonSpawnTask = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new RunnableImpl() {
             @Override
             public void runImpl() {
-                addSpawnWithoutRespawn(SoulWagon, new Location(-179544, 207400, -15496), 0);
+                addSpawnWithoutRespawn(SoulWagon, new Location(-179544, 207400, -15496));
             }
         }, 1000L, wagonRespawnTime);
         startTime = System.currentTimeMillis();
@@ -86,7 +85,7 @@ public final class HeartInfinityDefence extends Reflection {
     }
 
     private void spawnCoffin(NpcInstance tumor) {
-        addSpawnWithoutRespawn(RegenerationCoffin, new Location(tumor.getLoc().x, tumor.getLoc().y, tumor.getLoc().z, Location.getRandomHeading()), 250);
+        addSpawnWithoutRespawn(RegenerationCoffin, tumor, 250);
     }
 
     private void handleTumorHp(double percent) {
@@ -106,7 +105,7 @@ public final class HeartInfinityDefence extends Reflection {
             Functions.npcShout(preawakenedEchmus, NpcString.BRING_MORE_MORE_SOULS);
             getPlayers().forEach(p ->
                     p.sendPacket(new ExShowScreenMessage(NpcString.THE_SOUL_COFFIN_HAS_AWAKENED_EKIMUS, 8000, ExShowScreenMessage.ScreenMessageAlign.MIDDLE_CENTER, false, 1, -1, false, String.valueOf(maxCoffins - coffinsCreated))));
-            addSpawnWithoutRespawn(EchmusCoffin, getZone("[soi_hoi_attack_echmusroom]").getTerritory().getRandomLoc(getGeoIndex()), 0);
+            addSpawnWithoutRespawn(EchmusCoffin, getZone("[soi_hoi_attack_echmusroom]").getTerritory().getRandomLoc(getGeoIndex()));
         }
     }
 
@@ -152,27 +151,27 @@ public final class HeartInfinityDefence extends Reflection {
     private class DeathListener implements OnDeathListener {
         @Override
         public void onDeath(Creature self, Creature killer) {
-            if (!self.isNpc())
-                return;
-            if (self.getNpcId() == AliveTumor) {
-                ((NpcInstance) self).dropItem(killer.getPlayer(), 13797, Rnd.get(2, 5));
-                final NpcInstance deadTumor = addSpawnWithoutRespawn(DeadTumor, self.getLoc(), 0);
-                wagonRespawnTime += 10000L;
-                self.deleteMe();
-                getPlayers().forEach(p ->
-                        p.sendPacket(new ExShowScreenMessage(NpcString.THE_TUMOR_INSIDE_S1_HAS_BEEN_DESTROYED_NTHE_SPEED_THAT_EKIMUS_CALLS_OUT_HIS_PREY_HAS_SLOWED_DOWN, 8000, ExShowScreenMessage.ScreenMessageAlign.MIDDLE_CENTER, false, 1, -1, false, "#" + NpcString.HEART_OF_IMMORTALITY.getId())));
-                ThreadPoolManager.INSTANCE.schedule(new RunnableImpl() {
-                    @Override
-                    public void runImpl() {
-                        deadTumor.deleteMe();
-                        addSpawnWithoutRespawn(AliveTumor, deadTumor.getLoc(), 0);
-                        wagonRespawnTime -= 10000L;
-                        handleTumorHp(0.25);
-                        invokeDeathListener();
-                        getPlayers().forEach(p ->
-                            p.sendPacket(new ExShowScreenMessage(NpcString.THE_TUMOR_INSIDE_S1_HAS_COMPLETELY_REVIVED_, 8000, ExShowScreenMessage.ScreenMessageAlign.MIDDLE_CENTER, false, 1, -1, false, "#" + NpcString.HALL_OF_EROSION.getId())));
-                    }
-                }, tumorRespawnTime);
+            if (self instanceof NpcInstance) {
+                if (self.getNpcId() == AliveTumor) {
+                    ((NpcInstance) self).dropItem(killer.getPlayer(), 13797, Rnd.get(2, 5));
+                    final NpcInstance deadTumor = addSpawnWithoutRespawn(DeadTumor, self);
+                    wagonRespawnTime += 10000L;
+                    self.deleteMe();
+                    getPlayers().forEach(p ->
+                            p.sendPacket(new ExShowScreenMessage(NpcString.THE_TUMOR_INSIDE_S1_HAS_BEEN_DESTROYED_NTHE_SPEED_THAT_EKIMUS_CALLS_OUT_HIS_PREY_HAS_SLOWED_DOWN, 8000, ExShowScreenMessage.ScreenMessageAlign.MIDDLE_CENTER, false, 1, -1, false, "#" + NpcString.HEART_OF_IMMORTALITY.getId())));
+                    ThreadPoolManager.INSTANCE.schedule(new RunnableImpl() {
+                        @Override
+                        public void runImpl() {
+                            deadTumor.deleteMe();
+                            addSpawnWithoutRespawn(AliveTumor, deadTumor);
+                            wagonRespawnTime -= 10000L;
+                            handleTumorHp(0.25);
+                            invokeDeathListener();
+                            getPlayers().forEach(p ->
+                                    p.sendPacket(new ExShowScreenMessage(NpcString.THE_TUMOR_INSIDE_S1_HAS_COMPLETELY_REVIVED_, 8000, ExShowScreenMessage.ScreenMessageAlign.MIDDLE_CENTER, false, 1, -1, false, "#" + NpcString.HALL_OF_EROSION.getId())));
+                        }
+                    }, tumorRespawnTime);
+                }
             }
         }
     }

@@ -2,18 +2,15 @@ package l2trunk.scripts.ai.dragonvalley;
 
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.Creature;
-import l2trunk.gameserver.model.Skill;
+import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.NpcInstance;
-import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.Location;
 
-import java.util.Arrays;
 import java.util.List;
 
 public final class Knoriks extends Patrollers {
     private static final int KNORIKS_ACTIVATE_SKILL_CHANGE = 5;        // chance for activate skill
     private static final int KNORIKS_SKILL_DBUFF = 6744;    // dbuff id (Dark Storm)
-    private static int SEARCH_RADIUS = 600;        // search around players
 
     public Knoriks(NpcInstance actor) {
         super(actor);
@@ -63,26 +60,18 @@ public final class Knoriks extends Patrollers {
                 new Location(154440, 121208, -3808));
     }
 
-    public static int getKNORIKS_SEARCH_RADIUS() {
-        return SEARCH_RADIUS;
-    }
-
-    public static void setKNORIKS_SEARCH_RADIUS(int kNORIKS_SEARCH_RADIUS) {
-        SEARCH_RADIUS = kNORIKS_SEARCH_RADIUS;
-    }
-
     @Override
     public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
 
         super.onEvtAttacked(attacker, damage);
 
-        if (!attacker.isPlayer())
-            return;
+        if (attacker instanceof Player) {
+            if (actor.isDead() || !Rnd.chance(KNORIKS_ACTIVATE_SKILL_CHANGE))
+                return;
 
-        if (actor.isDead() || !Rnd.chance(KNORIKS_ACTIVATE_SKILL_CHANGE))
-            return;
+            actor.doCast(KNORIKS_SKILL_DBUFF, attacker, false);
+        }
 
-        actor.doCast(KNORIKS_SKILL_DBUFF, attacker, false);
     }
 }

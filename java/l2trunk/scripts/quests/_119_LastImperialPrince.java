@@ -3,7 +3,6 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _119_LastImperialPrince extends Quest {
     // NPC
@@ -53,8 +52,8 @@ public final class _119_LastImperialPrince extends Quest {
         int cond = st.getCond();
 
         // confirm that quest can be executed.
-        if (st.getPlayer().getLevel() < 74) {
-            htmltext = "<html><body>Quest for characters level 74 and above.</body></html>";
+        if (st.player.getLevel() < 74) {
+            htmltext = "<html><body>Quest for characters occupation 74 and above.</body></html>";
             st.exitCurrentQuest(true);
             return htmltext;
         } else if (st.getQuestItemsCount(BROOCH) < 1) {

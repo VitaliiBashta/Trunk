@@ -48,12 +48,9 @@ public final class _340_SubjugationofLizardmen extends Quest {
         DROPLIST.put(LANGK_LIZARDMAN_LIEUTENANT, new Drop(3, 1, 12).addItem(HOLY_SYMBOL).addItem(ROSARY));
 
         addKillId(SERPENT_DEMON_BIFRONS);
-        for (int kill_id : DROPLIST.keySet())
-            addKillId(kill_id);
+        addKillId(DROPLIST.keySet());
 
-        addQuestItem(TRADE_CARGO);
-        addQuestItem(HOLY_SYMBOL);
-        addQuestItem(ROSARY);
+        addQuestItem(TRADE_CARGO,HOLY_SYMBOL,ROSARY);
     }
 
     @Override
@@ -100,7 +97,7 @@ public final class _340_SubjugationofLizardmen extends Quest {
         if (_state == CREATED) {
             if (npcId != WEITSZ)
                 return "noquest";
-            if (st.getPlayer().getLevel() < 17) {
+            if (st.player.getLevel() < 17) {
                 st.exitCurrentQuest(true);
                 return "30385-1.htm";
             }
@@ -149,31 +146,29 @@ public final class _340_SubjugationofLizardmen extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState qs) {
+    public void onKill(NpcInstance npc, QuestState qs) {
         if (qs.getState() != STARTED)
-            return null;
+            return;
         int npcId = npc.getNpcId();
         if (npcId == SERPENT_DEMON_BIFRONS) {
             qs.addSpawn(CHEST_OF_BIFRONS);
-            return null;
+            return;
         }
 
         Drop _drop = DROPLIST.get(npcId);
         if (_drop == null)
-            return null;
+            return;
         int cond = qs.getCond();
 
         for (int item_id : _drop.itemList) {
             long _count = qs.getQuestItemsCount(item_id);
             if (cond == _drop.condition && _count < _drop.maxcount && Rnd.chance(_drop.chance)) {
-                qs.giveItems(item_id, 1);
+                qs.giveItems(item_id);
                 if (_count + 1 == _drop.maxcount)
                     qs.playSound(SOUND_MIDDLE);
                 else
                     qs.playSound(SOUND_ITEMGET);
             }
         }
-
-        return null;
     }
 }

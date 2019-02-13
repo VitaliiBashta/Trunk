@@ -18,7 +18,7 @@ public class MagicAndSkillList extends L2GameServerPacket {
     private final int _unk2;
 
     public MagicAndSkillList(Creature cha, int unk1, int unk2) {
-        _chaId = cha.getObjectId();
+        _chaId = cha.objectId();
         _unk1 = unk1;
         _unk2 = unk2;
     }

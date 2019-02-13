@@ -44,7 +44,7 @@ public final class FrintezzaGatekeeperInstance extends NpcInstance {
 
     private static boolean checkReqiredItem(Player leader, Iterable<Player> allPlayers) {
         for (Player playerToJoin : allPlayers) {
-            if (playerToJoin.getInventory().getCountOf(QUEST_ITEM_ID) < 1) {
+            if (!playerToJoin.haveItem(QUEST_ITEM_ID)) {
                 if (!leader.equals(playerToJoin))
                     leader.sendMessage(playerToJoin.getName() + " doesn't have required item!");
                 playerToJoin.sendMessage("You don't have required item!");
@@ -57,7 +57,7 @@ public final class FrintezzaGatekeeperInstance extends NpcInstance {
 
     private static void deleteRequiredItems(Iterable<Player> players) {
         players.forEach(player ->
-                ItemFunctions.removeItem(player, QUEST_ITEM_ID, 1, true, "FrintezzaGatekeeper"));
+                ItemFunctions.removeItem(player, QUEST_ITEM_ID, 1, "FrintezzaGatekeeper"));
     }
 
     @Override

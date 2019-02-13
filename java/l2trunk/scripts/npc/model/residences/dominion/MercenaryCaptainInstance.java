@@ -30,7 +30,7 @@ public class MercenaryCaptainInstance extends NpcInstance {
             int certification = Integer.parseInt(tokenizer.nextToken());
             int multisell = Integer.parseInt(tokenizer.nextToken());
 
-            if (player.getInventory().getCountOf(certification) > 0)
+            if (player.haveItem(certification))
                 MultiSellHolder.INSTANCE.SeparateAndSend(multisell, player, getCastle().getTaxRate());
             else
                 showChatWindow(player, 25);
@@ -40,13 +40,13 @@ public class MercenaryCaptainInstance extends NpcInstance {
 
     @Override
     public String getHtmlPath(int npcId, int val, Player player) {
-        if (player.getLevel() < 40 || player.getClassId().getLevel() <= 2)
+        if (player.getLevel() < 40 || player.getClassId().occupation() <= 1)
             val = 26;
         else {
             Castle castle = getCastle();
             Dominion dominion = getDominion();
 
-            if (castle.getOwner() != null && player.getClan() == castle.getOwner() || dominion.getLordObjectId() == player.getObjectId()) {
+            if (castle.getOwner() != null && player.getClan() == castle.getOwner() || dominion.getLordObjectId() == player.objectId()) {
                 if (castle.getSiegeEvent().isInProgress() || dominion.getSiegeEvent().isInProgress())
                     val = 21;
                 else

@@ -67,7 +67,7 @@ public final class Suppressor extends Fighter {
         if (_firstTimeAttacked) {
             _firstTimeAttacked = false;
             if (Rnd.chance(5)) {
-                Functions.npcSay(actor, Rnd.get(MsgText), ChatType.NPC_ALL, 5000);
+                Functions.npcSay(actor, Rnd.get(MsgText), ChatType.NPC_ALL, 5000,"");
             }
         }
         super.onEvtAttacked(attacker, damage);

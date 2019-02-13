@@ -29,7 +29,7 @@ public final class CharacterGroupReuseDAO {
         long curTime = System.currentTimeMillis();
 
         try (PreparedStatement statement = con.prepareStatement(SELECT_SQL_QUERY)) {
-            statement.setInt(1, player.getObjectId());
+            statement.setInt(1, player.objectId());
 
             try (ResultSet rset = statement.executeQuery()) {
                 while (rset.next()) {
@@ -49,7 +49,7 @@ public final class CharacterGroupReuseDAO {
         }
 
         try (PreparedStatement statement = con.prepareStatement(DELETE_SQL_QUERY)) {
-            statement.setInt(1, player.getObjectId());
+            statement.setInt(1, player.objectId());
             statement.execute();
         } catch (SQLException e) {
             _log.error("CharacterGroupReuseDAO.getBonuses(L2Player) 2:", e);
@@ -59,7 +59,7 @@ public final class CharacterGroupReuseDAO {
     public void insert(Player player) {
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement(DELETE_SQL_QUERY)) {
-            statement.setInt(1, player.getObjectId());
+            statement.setInt(1, player.objectId());
             statement.execute();
 
             Collection<Map.Entry<Integer, TimeStamp>> reuses = player.getSharedGroupReuses();
@@ -72,7 +72,7 @@ public final class CharacterGroupReuseDAO {
                     int group = entry.getKey();
                     TimeStamp timeStamp = entry.getValue();
                     if (timeStamp.hasNotPassed()) {
-                        String sb = "(" + player.getObjectId() + "," +
+                        String sb = "(" + player.objectId() + "," +
                                 group + "," +
                                 timeStamp.id + "," +
                                 timeStamp.endTime() + "," +

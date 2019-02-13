@@ -12,19 +12,15 @@ public final class EffectVitalityStop extends Effect {
     @Override
     public void onStart() {
         super.onStart();
-        Player player = effected.getPlayer();
-        player.VitalityStop(true);
+        if (effected instanceof Player)
+            ((Player)effected).VitalityStop(true);
     }
 
     @Override
     public void onExit() {
         super.onExit();
-        Player player = effected.getPlayer();
-        player.VitalityStop(false);
+        if (effected instanceof Player)
+            ((Player)effected).VitalityStop(false);
     }
 
-    @Override
-    public boolean onActionTime() {
-        return false;
-    }
 }

@@ -45,7 +45,7 @@ public class RequestConfirmGemStone extends L2GameClientPacket {
             return;
         }
 
-        int gemstoneItemId = gemstoneItem.getTemplate().getItemId();
+        int gemstoneItemId = gemstoneItem.getTemplate().itemId();
         if (gemstoneItemId != GEMSTONE_D && gemstoneItemId != GEMSTONE_C && gemstoneItemId != GEMSTONE_B) {
             activeChar.sendPacket(SystemMsg.THIS_IS_NOT_A_SUITABLE_ITEM);
             return;

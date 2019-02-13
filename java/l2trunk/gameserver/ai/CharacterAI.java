@@ -68,7 +68,7 @@ public class CharacterAI extends AbstractAI {
     @Override
     public void onEvtArrivedBlocked(Location blocked_at_pos) {
         Creature actor = getActor();
-        if (actor.isPlayer()) {
+        if (actor instanceof Player) {
             // Приводит к застреванию в стенах:
             //if (actor.isInRange(blocked_at_pos, 1000))
             //	actor.setLoc(blocked_at_pos, true);
@@ -97,14 +97,14 @@ public class CharacterAI extends AbstractAI {
         if (getAttackTarget() == object)
             setAttackTarget(null);
 
-        if (actor.getTargetId() == object.getObjectId())
+        if (actor.getTargetId() == object.objectId())
             actor.setTarget(null);
 
         if (actor.getFollowTarget() == object)
             actor.setFollowTarget(null);
 
-        if (actor.getPet() != null)
-            actor.getPet().getAI().notifyEvent(CtrlEvent.EVT_FORGET_OBJECT, object);
+        if (actor instanceof Player && ((Player)actor).getPet() != null)
+            ((Player)actor).getPet().getAI().notifyEvent(CtrlEvent.EVT_FORGET_OBJECT, object);
     }
 
     @Override
@@ -130,8 +130,6 @@ public class CharacterAI extends AbstractAI {
         if (damage > 0) {
             notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker, 2);
         }
-
-
     }
 
     @Override

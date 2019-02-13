@@ -12,7 +12,7 @@ public final class OptionDataHolder {
     private static final Map<Integer, OptionDataTemplate> templates = new HashMap<>();
 
     public static void addTemplate(OptionDataTemplate template) {
-        templates.put(template.getId(), template);
+        templates.put(template.id, template);
     }
 
     public static OptionDataTemplate getTemplate(int id) {
@@ -69,19 +69,19 @@ public final class OptionDataHolder {
                     if (option.getTriggerList().isEmpty())
                         continue;
 
-                    if (!options.containsKey(option.getTriggerList().get(0).getSkillId()) || options.get(option.getTriggerList().get(0).getSkillId()).getTriggerList().get(0).getSkillLevel() < option.getTriggerList().get(0).getSkillLevel())
-                        options.put(option.getTriggerList().get(0).getSkillId(), option);
+                    if (!options.containsKey(option.getTriggerList().get(0).id) || options.get(option.getTriggerList().get(0).id).getTriggerList().get(0).level < option.getTriggerList().get(0).level)
+                        options.put(option.getTriggerList().get(0).id, option);
                 }
                 break;
             }
             case STATS: {
                 for (OptionDataTemplate option : templates.values()) {
-                    switch (option.getId()) {
+                    switch (option.id) {
                         case 16341: // +1 STR
                         case 16342: // +1 CON
                         case 16343: // +1 INT
                         case 16344: // +1 MEN
-                            options.put(option.getId(), option);
+                            options.put(option.id, option);
                             break;
                     }
                 }

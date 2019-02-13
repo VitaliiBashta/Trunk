@@ -252,13 +252,13 @@ public final class _335_TheSongOfTheHunter extends Quest {
         addKillId(q_blood_crystal_lizardmen);
 
         for (Integer[][] ItemsCond : Items_1st_Circle) {
-            addQuestItem(List.of(ItemsCond[0]));
+            addQuestItem(ItemsCond[0]);
             for (int i = 2; i < ItemsCond.length; i++)
                 addKillId(ItemsCond[i][0]);
         }
 
         for (Integer[][] ItemsCond : Items_2nd_Circle) {
-            addQuestItem(List.of(ItemsCond[0]));
+            addQuestItem(ItemsCond[0]);
             for (int i = 2; i < ItemsCond.length; i++)
                 addKillId(ItemsCond[i][0]);
         }
@@ -323,7 +323,7 @@ public final class _335_TheSongOfTheHunter extends Quest {
         final int grade_c = 12;
         final int grade_b = 6;
         final int grade_a = 3;
-        if (st.get("list") == null || st.get("list").isEmpty()) {
+        if (st.getInt("list") ==0) {
             long Laurel_Leaf_Pin_count = st.getQuestItemsCount(Laurel_Leaf_Pin);
             int[] list = new int[5];
             if (Laurel_Leaf_Pin_count < 4) {
@@ -368,7 +368,7 @@ public final class _335_TheSongOfTheHunter extends Quest {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            st.set("list", String.valueOf(packedlist));
+            st.set("list", packedlist);
         }
     }
 
@@ -427,9 +427,9 @@ public final class _335_TheSongOfTheHunter extends Quest {
             if (st.getQuestItemsCount(_1st_Circle_Hunter_License) == 0 && st.getQuestItemsCount(_2nd_Circle_Hunter_License) == 0)
                 return null;
             if (st.getQuestItemsCount(Cybellins_Dagger) == 0)
-                st.giveItems(Cybellins_Dagger);
+                st.giveItems(Cybellins_Dagger, 1);
             if (st.getQuestItemsCount(Cybellins_Request) == 0)
-                st.giveItems(Cybellins_Request);
+                st.giveItems(Cybellins_Request, 1);
             st.takeItems(q_blood_crystal);
             st.playSound(SOUND_MIDDLE);
             st.giveItems(q_blood_crystal.get(1), 1);
@@ -446,15 +446,15 @@ public final class _335_TheSongOfTheHunter extends Quest {
         } else if (event.equalsIgnoreCase("30745_05b.htm") && _state == STARTED) {
             if (st.getQuestItemsCount(Laurel_Leaf_Pin) > 0)
                 st.takeItems(Laurel_Leaf_Pin, 1);
-            Requests1.forEach(r -> {
+            for (Request r : Requests1) {
                 st.takeItems(r.request_id);
                 st.takeItems(r.request_item);
-            });
-            Requests2.forEach(r -> {
+            }
+            for (Request r : Requests2) {
                 st.takeItems(r.request_id);
                 st.takeItems(r.request_item);
-            });
-        } else if (event.equalsIgnoreCase("30745-list1") && _state == STARTED) {
+            }
+        } else if ("30745-list1".equalsIgnoreCase(event) && _state == STARTED) {
             GenList(st);
             return FormatList(st, Requests1);
         } else if ("30745-list2".equalsIgnoreCase(event) && _state == STARTED) {
@@ -470,7 +470,7 @@ public final class _335_TheSongOfTheHunter extends Quest {
             }
             if (!isValidRequest(request_id))
                 return null;
-            st.giveItems(request_id);
+            st.giveItems(request_id, 1);
             return "30745-" + request_id + ".htm";
         }
 
@@ -485,7 +485,7 @@ public final class _335_TheSongOfTheHunter extends Quest {
         if (_state == CREATED) {
             if (npcId != Grey)
                 return "noquest";
-            if (st.getPlayer().getLevel() < 35) {
+            if (st.player.getLevel() < 35) {
                 st.exitCurrentQuest(true);
                 return "30744_01.htm";
             }
@@ -509,7 +509,7 @@ public final class _335_TheSongOfTheHunter extends Quest {
                 return "30744_06.htm";
             }
             if (st.getQuestItemsCount(_1st_Circle_Hunter_License) > 0) {
-                if (st.getPlayer().getLevel() < 45)
+                if (st.player.getLevel() < 45)
                     return "30744_07.htm";
                 if (st.getQuestItemsCount(_2nd_Test_Instructions) == 0)
                     return "30744_08.htm";
@@ -554,7 +554,7 @@ public final class _335_TheSongOfTheHunter extends Quest {
             if (st.getQuestItemsCount(_1st_Circle_Hunter_License) > 0) {
                 Request request = GetCurrentRequest(st, Requests1);
                 if (request == null) {
-                    if (st.getPlayer().getLevel() < 45)
+                    if (st.player.getLevel() < 45)
                         return "30745_01b.htm";
                     return st.getQuestItemsCount(_2nd_Test_Instructions) > 0 ? "30745_03.htm" : "30745_03a.htm";
                 }
@@ -572,9 +572,9 @@ public final class _335_TheSongOfTheHunter extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getState() != STARTED)
-            return null;
+            return;
         int npcId = npc.getNpcId();
 
         Integer[][][] Items_Circle = null;
@@ -593,11 +593,11 @@ public final class _335_TheSongOfTheHunter extends Quest {
                 long Markas_Head_count = st.getQuestItemsCount(Markas_Head);
                 if (npcId == Breka_Orc_Warrior) {
                     if (Hakas_Head_count == 0 && Rnd.chance(10))
-                        st.addSpawn(Breka_Overlord_Haka, npc.getX(), npc.getY(), npc.getZ(), npc.getHeading(), 100, 300000);
+                        st.addSpawn(Breka_Overlord_Haka, npc.getLoc(), 100, 300000);
                     else if (Jakas_Head_count == 0 && Rnd.chance(10))
-                        st.addSpawn(Breka_Overlord_Jaka, npc.getX(), npc.getY(), npc.getZ(), npc.getHeading(), 100, 300000);
+                        st.addSpawn(Breka_Overlord_Jaka, npc.getLoc(), 100, 300000);
                     else if (Markas_Head_count == 0 && Rnd.chance(10))
-                        st.addSpawn(Breka_Overlord_Marka, npc.getX(), npc.getY(), npc.getZ(), npc.getHeading(), 100, 300000);
+                        st.addSpawn(Breka_Overlord_Marka, npc.getLoc(), 100, 300000);
                 } else if (npcId == Breka_Overlord_Haka) {
                     if (Hakas_Head_count == 0)
                         st.rollAndGive(Hakas_Head, 1, 1, 1, 100);
@@ -609,7 +609,7 @@ public final class _335_TheSongOfTheHunter extends Quest {
                         st.rollAndGive(Markas_Head, 1, 1, 1, 100);
                 } else if (npcId == Windsus)
                     if (st.getQuestItemsCount(Windsus_Aleph_Skin) == 0 && Rnd.chance(10))
-                        st.addSpawn(Windsus_Aleph, npc.getX(), npc.getY(), npc.getZ(), npc.getHeading(), 100, 300000);
+                        st.addSpawn(Windsus_Aleph, npc.getLoc(), 100, 300000);
             } else if (st.getQuestItemsCount(_2nd_Test_Instructions) > 0) {
                 long Athus_Head_count = st.getQuestItemsCount(Athus_Head);
                 long Lankas_Head_count = st.getQuestItemsCount(Lankas_Head);
@@ -618,15 +618,15 @@ public final class _335_TheSongOfTheHunter extends Quest {
                 long Kalaths_Head_count = st.getQuestItemsCount(Kalaths_Head);
                 if (npcId == Tarlk_Bugbear_Warrior) {
                     if (Athus_Head_count == 0 && Rnd.chance(10))
-                        st.addSpawn(Tarlk_Raider_Athu, npc.getX(), npc.getY(), npc.getZ(), npc.getHeading(), 100, 300000);
+                        st.addSpawn(Tarlk_Raider_Athu, npc.getLoc(), 100, 300000);
                     else if (Lankas_Head_count == 0 && Rnd.chance(10))
-                        st.addSpawn(Tarlk_Raider_Lanka, npc.getX(), npc.getY(), npc.getZ(), npc.getHeading(), 100, 300000);
+                        st.addSpawn(Tarlk_Raider_Lanka, npc.getLoc(), 100, 300000);
                     else if (Triskas_Head_count == 0 && Rnd.chance(10))
-                        st.addSpawn(Tarlk_Raider_Triska, npc.getX(), npc.getY(), npc.getZ(), npc.getHeading(), 100, 300000);
+                        st.addSpawn(Tarlk_Raider_Triska, npc.getLoc(), 100, 300000);
                     else if (Moturas_Head_count == 0 && Rnd.chance(10))
-                        st.addSpawn(Tarlk_Raider_Motura, npc.getX(), npc.getY(), npc.getZ(), npc.getHeading(), 100, 300000);
+                        st.addSpawn(Tarlk_Raider_Motura, npc.getLoc(), 100, 300000);
                     else if (Kalaths_Head_count == 0 && Rnd.chance(10))
-                        st.addSpawn(Tarlk_Raider_Kalath, npc.getX(), npc.getY(), npc.getZ(), npc.getHeading(), 100, 300000);
+                        st.addSpawn(Tarlk_Raider_Kalath, npc.getLoc(), 100, 300000);
                 } else if (npcId == Tarlk_Raider_Athu) {
                     if (Athus_Head_count == 0)
                         st.rollAndGive(Athus_Head, 1, 1, 1, 100);
@@ -645,8 +645,8 @@ public final class _335_TheSongOfTheHunter extends Quest {
             }
         }
 
-        if (st.getQuestItemsCount(_1st_Circle_Hunter_License) > 0 || st.getQuestItemsCount(_2nd_Circle_Hunter_License) > 0) {
-            if (st.getQuestItemsCount(Cybellins_Request) > 0 && st.getPlayer().getActiveWeaponItem() != null && st.getPlayer().getActiveWeaponItem().getItemId() == Cybellins_Dagger) {
+        if (st.haveAnyQuestItems(_1st_Circle_Hunter_License,_2nd_Circle_Hunter_License) ) {
+            if (st.haveQuestItem(Cybellins_Request)  && st.player.getActiveWeaponItem() != null && st.player.getActiveWeaponItem().itemId() == Cybellins_Dagger) {
                 int Blood_Crystal_Level = Get_Blood_Crystal_Level(st);
                 if (Blood_Crystal_Level > 0 && Blood_Crystal_Level < 10)
                     for (int lizardmen_id : q_blood_crystal_lizardmen)
@@ -654,7 +654,7 @@ public final class _335_TheSongOfTheHunter extends Quest {
                             if (Rnd.chance(50)) {
                                 st.takeItems(q_blood_crystal.get(Blood_Crystal_Level));
                                 st.playSound(Blood_Crystal_Level < 6 ? SOUND_MIDDLE : SOUND_JACKPOT);
-                                st.giveItems(q_blood_crystal.get(Blood_Crystal_Level + 1));
+                                st.giveItems(q_blood_crystal.get(Blood_Crystal_Level + 1), 1);
                             } else {
                                 st.takeItems(q_blood_crystal);
                                 st.giveItems(q_blood_crystal.get(0));
@@ -671,7 +671,7 @@ public final class _335_TheSongOfTheHunter extends Quest {
                 if (request.spawnlist.containsKey(npcId) && st.getQuestItemsCount(request.request_item) < request.request_count) {
                     int[] spawn_n_chance = request.spawnlist.get(npcId);
                     if (Rnd.chance(spawn_n_chance[1])) {
-                        st.addSpawn(spawn_n_chance[0], npc.getX(), npc.getY(), npc.getZ(), npc.getHeading(), 100, 300000);
+                        st.addSpawn(spawn_n_chance[0], npc.getLoc(), 100, 300000);
                         if (spawn_n_chance[0] == 27149)
                             Functions.npcSay(npc, "Show me the pretty sparkling things! They're all mine!");
                     }
@@ -681,11 +681,9 @@ public final class _335_TheSongOfTheHunter extends Quest {
 
         if ((npcId == 27160 || npcId == 27162 || npcId == 27164) && Rnd.chance(50)) {
             Functions.npcSay(npc, "We'll take the property of the ancient empire!");
-            st.addSpawn(27150, npc.getX(), npc.getY(), npc.getZ(), npc.getHeading(), 100, 300000); // b_legion_stormtrooper
-            st.addSpawn(27150, npc.getX(), npc.getY(), npc.getZ(), npc.getHeading(), 100, 300000); // b_legion_stormtrooper
+            st.addSpawn(27150, npc.getLoc(), 100, 300000); // b_legion_stormtrooper
+            st.addSpawn(27150, npc.getLoc(), 100, 300000); // b_legion_stormtrooper
         }
-
-        return null;
     }
 
     public static class Request {

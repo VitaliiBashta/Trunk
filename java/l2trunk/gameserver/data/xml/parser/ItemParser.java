@@ -110,7 +110,7 @@ public enum ItemParser /*extends StatParser<ItemHolder>*/ {
                                 LOG.info("Skill not found(" + id + "," + level + ") for item:" + set.getObject("item_id") + "; element:" + itemElement);
                             }
                         }
-                    } else if (subName.equalsIgnoreCase("enchant4_skill")) {
+                    } else if ("enchant4_skill".equalsIgnoreCase(subName)) {
                         int id = toInt(subElement.attributeValue("id"));
                         int level = toInt(subElement.attributeValue("level"));
 
@@ -118,7 +118,7 @@ public enum ItemParser /*extends StatParser<ItemHolder>*/ {
                         if (skill != null) {
                             template.setEnchant4Skill(skill);
                         }
-                    } else if (subName.equalsIgnoreCase("cond")) {
+                    } else if ("cond".equalsIgnoreCase(subName)) {
                         Condition condition = StatParser.parseFirstCond(subElement);
                         if (condition != null) {
                             int msgId = StatParser.parseNumber(subElement.attributeValue("msgId")).intValue();
@@ -126,7 +126,7 @@ public enum ItemParser /*extends StatParser<ItemHolder>*/ {
 
                             template.setCondition(condition);
                         }
-                    } else if (subName.equalsIgnoreCase("attributes")) {
+                    } else if ("attributes".equalsIgnoreCase(subName)) {
                         int[] attributes = new int[6];
                         for (Iterator<Element> nextIterator = subElement.elementIterator(); nextIterator.hasNext(); ) {
                             Element nextElement = nextIterator.next();
@@ -163,7 +163,7 @@ public enum ItemParser /*extends StatParser<ItemHolder>*/ {
                                         if (optionData == null) {
                                             LOG.error("Not found option_data for id: " + optionElement.attributeValue("id") + "; item_id: " + set.get("item_id"));
                                         } else {
-                                            options[(i++)] = optionData.getId();
+                                            options[(i++)] = optionData.id;
                                         }
                                     }
                                     template.addEnchantOptions(val, options);
@@ -175,9 +175,5 @@ public enum ItemParser /*extends StatParser<ItemHolder>*/ {
             }
             ItemHolder.addItem(template);
         }
-    }
-
-    protected Object getTableValue(String name) {
-        return null;
     }
 }

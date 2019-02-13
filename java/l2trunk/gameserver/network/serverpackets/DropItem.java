@@ -20,7 +20,7 @@ public class DropItem extends L2GameServerPacket {
      */
     public DropItem(ItemInstance item, int playerId) {
         _playerId = playerId;
-        item_obj_id = item.getObjectId();
+        item_obj_id = item.objectId();
         item_id = item.getItemId();
         _loc = item.getLoc();
         _stackable = item.isStackable() ? 1 : 0;

@@ -26,7 +26,7 @@ public final class ThroneofDestruction extends DefaultAI {
         Reflection ref = actor.getReflection();
         if (checkAllDestroyed()) {
             ref.openDoor(DOOR);
-            ref.addSpawnWithoutRespawn(TIAT_NPC_ID, TIAT_LOC, 0);
+            ref.addSpawnWithoutRespawn(TIAT_NPC_ID, TIAT_LOC);
         }
         super.onEvtDead(killer);
     }

@@ -38,7 +38,7 @@ public final class SelMahumRecruit extends Fighter {
 
         if (_wait_timeout < System.currentTimeMillis()) {
             _wait_timeout = (System.currentTimeMillis() + Rnd.get(150, 200) * 1000);
-            actor.broadcastPacket(new SocialAction(actor.getObjectId(), 1));
+            actor.broadcastPacket(new SocialAction(actor.objectId(), 1));
         }
 
         if (arm == null || arm.isEmpty()) {

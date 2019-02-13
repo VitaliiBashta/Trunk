@@ -25,7 +25,7 @@ public final class TriggerInfo extends Skill.AddedSkill {
 
     public boolean checkCondition(Creature actor, Creature target, Creature aimTarget, Skill owner, double damage) {
         // Скилл проверяется и кастуется на aimTarget
-        if (getSkill().checkTarget(actor, aimTarget, aimTarget, false, false) != null)
+        if (skill.checkTarget(actor, aimTarget, aimTarget, false, false) != null)
             return false;
 
         Env env = new Env();

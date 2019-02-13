@@ -19,7 +19,6 @@ import l2trunk.gameserver.model.items.Inventory;
 import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.model.items.attachment.FlagItemAttachment;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
-import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage.ScreenMessageAlign;
 import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
@@ -274,13 +273,13 @@ public final class TerritoryWardObject implements SpawnableObject, FlagItemAttac
 
     private class OnZoneEnterLeaveListenerImpl implements OnZoneEnterLeaveListener {
         @Override
-        public void onZoneEnter(Zone zone, Creature actor) {
+        public void onZoneEnter(Zone zone, Player actor) {
         }
 
         @Override
-        public void onZoneLeave(Zone zone, Creature actor) {
-            if (_wardItemInstance != null && actor.isPlayer() && _wardItemInstance.getOwnerId() == actor.getObjectId()) {
-                checkZoneForTerr(actor.getPlayer());
+        public void onZoneLeave(Zone zone, Player player) {
+            if (_wardItemInstance != null && _wardItemInstance.getOwnerId() == player.objectId()) {
+                checkZoneForTerr(player);
             }
         }
     }
@@ -291,7 +290,7 @@ public final class TerritoryWardObject implements SpawnableObject, FlagItemAttac
             if (_wardNpcInstance != null) {
                 _wardNpcInstance.teleToLocation(location);
                 DominionSiegeRunnerEvent runnerEvent = EventHolder.getEvent(EventType.MAIN_EVENT, 1);
-                runnerEvent.broadcastTo(new ExShowScreenMessage("Territory Ward returned to the castle!", 3000,  false));
+                runnerEvent.broadcastTo(new ExShowScreenMessage("Territory Ward returned to the castle!", 3000, false));
             }
         }
     }

@@ -2,13 +2,10 @@ package l2trunk.gameserver.skills.skillclasses;
 
 import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.model.Creature;
-import l2trunk.gameserver.model.GameObject;
+import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.instances.TrapInstance;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
-
-import java.util.List;
-import java.util.Objects;
 
 public final class DefuseTrap extends Skill {
     public DefuseTrap(StatsSet set) {
@@ -16,25 +13,20 @@ public final class DefuseTrap extends Skill {
     }
 
     @Override
-    public boolean checkCondition(Creature activeChar, Creature target, boolean forceUse, boolean dontMove, boolean first) {
-        if (target == null || !target.isTrap()) {
-            activeChar.sendPacket(SystemMsg.INVALID_TARGET);
-            return false;
+    public boolean checkCondition(Player player, Creature target, boolean forceUse, boolean dontMove, boolean first) {
+        if (target instanceof TrapInstance) {
+            return super.checkCondition(player, target, forceUse, dontMove, first);
         }
-
-        return super.checkCondition(activeChar, target, forceUse, dontMove, first);
+        player.sendPacket(SystemMsg.INVALID_TARGET);
+        return false;
     }
 
     @Override
-    public void useSkill(Creature activeChar, List<Creature> targets) {
-        targets.stream()
-                .filter(Objects::nonNull)
-                .filter(GameObject::isTrap)
-                .map(trap -> (TrapInstance) trap)
-                .filter(trap -> trap.getLevel() <= power)
-                .forEach(GameObject::deleteMe);
-        if (isSSPossible()) {
-            activeChar.unChargeShots(isMagic());
+    public void useSkill(Creature activeChar, Creature target) {
+        if (target instanceof TrapInstance) {
+            TrapInstance trap = (TrapInstance) target;
+            if (trap.getLevel() <= power)
+                trap.deleteMe();
         }
     }
 }

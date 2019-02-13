@@ -63,22 +63,17 @@ public final class _027_ChestCaughtWithABaitOfWind extends Quest {
         int id = st.getState();
         if (npcId == Lanosco) {
             if (id == CREATED) {
-                if (st.getPlayer().getLevel() < 27) {
+                if (st.player.getLevel() < 27) {
                     htmltext = "fisher_lanosco_q0027_0101.htm";
                     st.exitCurrentQuest(true);
                 } else {
-                    QuestState LanoscosSpecialBait = st.getPlayer().getQuestState(_050_LanoscosSpecialBait.class);
-                    if (LanoscosSpecialBait != null)
-                        if (LanoscosSpecialBait.isCompleted())
-                            htmltext = "fisher_lanosco_q0027_0101.htm";
-                        else {
-                            htmltext = "fisher_lanosco_q0027_0102.htm";
-                            st.exitCurrentQuest(true);
-                        }
+                    if (st.player.isQuestCompleted(_050_LanoscosSpecialBait.class))
+                        htmltext = "fisher_lanosco_q0027_0101.htm";
                     else {
-                        htmltext = "fisher_lanosco_q0027_0103.htm";
+                        htmltext = "fisher_lanosco_q0027_0102.htm";
                         st.exitCurrentQuest(true);
                     }
+
                 }
             } else if (cond == 1) {
                 htmltext = "fisher_lanosco_q0027_0105.htm";
@@ -92,10 +87,5 @@ public final class _027_ChestCaughtWithABaitOfWind extends Quest {
             else
                 htmltext = "blueprint_seller_shaling_q0027_0302.htm";
         return htmltext;
-    }
-
-    @Override
-    public String onKill(NpcInstance npc, QuestState st) {
-        return null;
     }
 }

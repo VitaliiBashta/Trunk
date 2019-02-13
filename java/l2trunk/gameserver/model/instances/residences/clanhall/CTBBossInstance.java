@@ -2,6 +2,7 @@ package l2trunk.gameserver.model.instances.residences.clanhall;
 
 import l2trunk.commons.lang.StringUtils;
 import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.entity.events.impl.ClanHallTeamBattleEvent;
@@ -33,8 +34,8 @@ public abstract class CTBBossInstance extends MonsterInstance {
     @Override
     public boolean isAttackable(Creature attacker) {
         CTBSiegeClanObject clan = _matchTeamObject.getSiegeClan();
-        if (clan != null && attacker.isPlayable()) {
-            Player player = attacker.getPlayer();
+        if (clan != null && attacker instanceof Playable) {
+            Player player = ((Playable)attacker).getPlayer();
             return player.getClan() != clan.getClan();
         }
         return true;

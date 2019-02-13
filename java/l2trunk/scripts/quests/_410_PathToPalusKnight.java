@@ -52,14 +52,14 @@ public final class _410_PathToPalusKnight extends Quest {
             htmltext = "master_virgil_q0410_06.htm";
             st.giveItems(PALLUS_TALISMAN_ID, 1);
         } else if (event.equalsIgnoreCase("410_1")) {
-            if (st.getPlayer().getLevel() >= 18 && st.getPlayer().getClassId().id() == 0x1f && st.getQuestItemsCount(GAZE_OF_ABYSS_ID) == 0)
+            if (st.player.getLevel() >= 18 && st.player.getClassId().id == 0x1f && st.getQuestItemsCount(GAZE_OF_ABYSS_ID) == 0)
                 htmltext = "master_virgil_q0410_05.htm";
-            else if (st.getPlayer().getClassId().id() != 0x1f) {
-                if (st.getPlayer().getClassId().id() == 0x20)
+            else if (st.player.getClassId().id != 0x1f) {
+                if (st.player.getClassId().id == 0x20)
                     htmltext = "master_virgil_q0410_02a.htm";
                 else
                     htmltext = "master_virgil_q0410_03.htm";
-            } else if (st.getPlayer().getLevel() < 18)
+            } else if (st.player.getLevel() < 18)
                 htmltext = "master_virgil_q0410_02.htm";
             else if (st.getQuestItemsCount(GAZE_OF_ABYSS_ID) == 1)
                 htmltext = "master_virgil_q0410_04.htm";
@@ -98,17 +98,16 @@ public final class _410_PathToPalusKnight extends Quest {
                     htmltext = "master_virgil_q0410_07.htm";
                 else if (st.getQuestItemsCount(LYCANTHROPE_SKULL_ID) > 0 && st.getQuestItemsCount(LYCANTHROPE_SKULL_ID) < 13)
                     htmltext = "master_virgil_q0410_08.htm";
-                else if (st.getQuestItemsCount(LYCANTHROPE_SKULL_ID) > 12)
+                else if (st.haveQuestItem(LYCANTHROPE_SKULL_ID, 12))
                     htmltext = "master_virgil_q0410_09.htm";
-            } else if (st.getQuestItemsCount(COFFIN_ETERNAL_REST_ID) > 0) {
+            } else if (st.haveQuestItem(COFFIN_ETERNAL_REST_ID)) {
                 htmltext = "master_virgil_q0410_11.htm";
-                st.takeItems(COFFIN_ETERNAL_REST_ID, -1);
-                if (st.getPlayer().getClassId().getLevel() == 1) {
+                st.takeItems(COFFIN_ETERNAL_REST_ID);
+                if (st.player.getClassId().occupation() == 0) {
                     st.giveItems(GAZE_OF_ABYSS_ID, 1);
-                    if (!st.getPlayer().getVarB("prof1")) {
-                        st.getPlayer().setVar("prof1", "1", -1);
+                    if (!st.player.isVarSet("prof1")) {
+                        st.player.setVar("prof1", 1);
                         st.addExpAndSp(228064, 16455);
-                        //FIXME [G1ta0] дать адены, только если первый чар на акке
                         st.giveItems(ADENA_ID, 81900);
                     }
                 }
@@ -130,12 +129,12 @@ public final class _410_PathToPalusKnight extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         if (npcId == LYCANTHROPE) {
             if (cond == 1 && st.getQuestItemsCount(PALLUS_TALISMAN_ID) > 0 && st.getQuestItemsCount(LYCANTHROPE_SKULL_ID) < 13) {
-                st.giveItems(LYCANTHROPE_SKULL_ID, 1);
+                st.giveItems(LYCANTHROPE_SKULL_ID);
                 if (st.getQuestItemsCount(LYCANTHROPE_SKULL_ID) > 12) {
                     st.playSound(SOUND_MIDDLE);
                     st.setCond(2);
@@ -144,14 +143,14 @@ public final class _410_PathToPalusKnight extends Quest {
             }
         } else if (npcId == POISON_SPIDER) {
             if (cond == 4 && st.getQuestItemsCount(MORTE_TALISMAN_ID) > 0 && st.getQuestItemsCount(PREDATOR_CARAPACE_ID) < 1) {
-                st.giveItems(PREDATOR_CARAPACE_ID, 1);
+                st.giveItems(PREDATOR_CARAPACE_ID);
                 st.playSound(SOUND_MIDDLE);
                 if (st.getQuestItemsCount(TRIMDEN_SILK_ID) > 4)
                     st.setCond(5);
             }
         } else if (npcId == ARACHNID_TRACKER)
             if (cond == 4 && st.getQuestItemsCount(MORTE_TALISMAN_ID) > 0 && st.getQuestItemsCount(TRIMDEN_SILK_ID) < 5) {
-                st.giveItems(TRIMDEN_SILK_ID, 1);
+                st.giveItems(TRIMDEN_SILK_ID);
                 if (st.getQuestItemsCount(TRIMDEN_SILK_ID) > 4) {
                     st.playSound(SOUND_MIDDLE);
                     if (st.getQuestItemsCount(PREDATOR_CARAPACE_ID) > 0)
@@ -159,6 +158,5 @@ public final class _410_PathToPalusKnight extends Quest {
                 } else
                     st.playSound(SOUND_ITEMGET);
             }
-        return null;
     }
 }

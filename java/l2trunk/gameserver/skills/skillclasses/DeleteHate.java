@@ -9,36 +9,27 @@ import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 
-import java.util.List;
-
 public final class DeleteHate extends Skill {
     public DeleteHate(StatsSet set) {
         super(set);
     }
 
     @Override
-    public void useSkill(Creature activeChar, List<Creature> targets) {
-        for (Creature target : targets)
-            if (target != null) {
+    public void useSkill(Creature activeChar, Creature target) {
+        if (target != null && !target.isRaid()) {
+            if (activateRate > 0) {
+                if (activeChar instanceof Player && ((Player) activeChar).isGM())
+                    ((Player)activeChar).sendMessage(new CustomMessage("l2trunk.gameserver.skills.Formulas.Chance").addString(name).addNumber(activateRate));
 
-                if (target.isRaid())
-                    continue;
-
-                if (getActivateRate() > 0) {
-                    if (activeChar.isPlayer() && ((Player) activeChar).isGM())
-                        activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.skills.Formulas.Chance", (Player) activeChar).addString(name).addNumber(getActivateRate()));
-
-                    if (!Rnd.chance(getActivateRate()))
-                        return;
-                }
-
-                if (target.isNpc()) {
-                    NpcInstance npc = (NpcInstance) target;
-                    npc.getAggroList().clear(false);
-                    npc.getAI().setIntention(CtrlIntention.AI_INTENTION_ACTIVE);
-                }
-
-                getEffects(activeChar, target );
+                if (!Rnd.chance(activateRate))
+                    return;
+            } else if (target instanceof NpcInstance) {
+                NpcInstance npc = (NpcInstance) target;
+                npc.getAggroList().clear(false);
+                npc.getAI().setIntention(CtrlIntention.AI_INTENTION_ACTIVE);
             }
+
+            getEffects(activeChar, target);
+        }
     }
 }

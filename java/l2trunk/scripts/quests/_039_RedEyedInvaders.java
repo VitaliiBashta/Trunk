@@ -75,7 +75,7 @@ public final class _039_RedEyedInvaders extends Quest {
         int cond = st.getCond();
         if (npcId == 30334) {
             if (cond == 0) {
-                if (st.getPlayer().getLevel() < 20) {
+                if (st.player.getLevel() < 20) {
                     htmltext = "guard_babenco_q0039_0102.htm";
                     st.exitCurrentQuest(true);
                 } else htmltext = "guard_babenco_q0039_0101.htm";
@@ -96,14 +96,14 @@ public final class _039_RedEyedInvaders extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         if (cond == 2) {
             if ((npcId == 20919 || npcId == 20920) && st.getQuestItemsCount(BBN) <= 99)
-                st.giveItems(BBN, 1);
+                st.giveItems(BBN);
             else if (npcId == 20921 && st.getQuestItemsCount(RBN) <= 99)
-                st.giveItems(RBN, 1);
+                st.giveItems(RBN);
             st.playSound(SOUND_ITEMGET);
             if (st.getQuestItemsCount(BBN) + st.getQuestItemsCount(RBN) == 200) {
                 st.setCond(3);
@@ -113,15 +113,14 @@ public final class _039_RedEyedInvaders extends Quest {
 
         if (cond == 4) {
             if ((npcId == 20920 || npcId == 20921) && st.getQuestItemsCount(IP) <= 29)
-                st.giveItems(IP, 1);
+                st.giveItems(IP);
             else if (npcId == 20925 && st.getQuestItemsCount(GML) <= 29)
-                st.giveItems(GML, 1);
+                st.giveItems(GML);
             st.playSound(SOUND_ITEMGET);
             if (st.getQuestItemsCount(IP) + st.getQuestItemsCount(GML) == 60) {
                 st.setCond(5);
                 st.playSound(SOUND_MIDDLE);
             }
         }
-        return null;
     }
 }

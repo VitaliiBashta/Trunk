@@ -4,7 +4,6 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _644_GraveRobberAnnihilation extends Quest {
     //NPC
@@ -29,9 +28,9 @@ public final class _644_GraveRobberAnnihilation extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("karuda_q0644_0103.htm")) {
-            st.takeItems(ORC_GOODS, -1);
-            if (st.getPlayer().getLevel() < 20) {
+        if ("karuda_q0644_0103.htm".equalsIgnoreCase(event)) {
+            st.takeItems(ORC_GOODS);
+            if (st.player.getLevel() < 20) {
                 htmltext = "karuda_q0644_0102.htm";
                 st.exitCurrentQuest(true);
             } else {
@@ -41,28 +40,28 @@ public final class _644_GraveRobberAnnihilation extends Quest {
             }
         }
         if (st.getCond() == 2 && st.getQuestItemsCount(ORC_GOODS) >= 120) {
-            if (event.equalsIgnoreCase("varn")) {
-                st.takeItems(ORC_GOODS, -1);
+            if ("varn".equalsIgnoreCase(event)) {
+                st.takeItems(ORC_GOODS);
                 st.giveItems(1865, 30, true);
                 htmltext = null;
-            } else if (event.equalsIgnoreCase("an_s")) {
-                st.takeItems(ORC_GOODS, -1);
+            } else if ("an_s".equalsIgnoreCase(event)) {
+                st.takeItems(ORC_GOODS);
                 st.giveItems(1867, 40, true);
                 htmltext = null;
-            } else if (event.equalsIgnoreCase("an_b")) {
-                st.takeItems(ORC_GOODS, -1);
+            } else if ("an_b".equalsIgnoreCase(event)) {
+                st.takeItems(ORC_GOODS);
                 st.giveItems(1872, 40, true);
                 htmltext = null;
-            } else if (event.equalsIgnoreCase("char")) {
-                st.takeItems(ORC_GOODS, -1);
+            } else if ("char".equalsIgnoreCase(event)) {
+                st.takeItems(ORC_GOODS);
                 st.giveItems(1871, 30, true);
                 htmltext = null;
             } else if (event.equalsIgnoreCase("coal")) {
-                st.takeItems(ORC_GOODS, -1);
+                st.takeItems(ORC_GOODS);
                 st.giveItems(1870, 30, true);
                 htmltext = null;
             } else if (event.equalsIgnoreCase("i_o")) {
-                st.takeItems(ORC_GOODS, -1);
+                st.takeItems(ORC_GOODS);
                 st.giveItems(1869, 30, true);
                 htmltext = null;
             }
@@ -93,14 +92,13 @@ public final class _644_GraveRobberAnnihilation extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getCond() == 1 && Rnd.chance(90)) {
-            st.giveItems(ORC_GOODS, 1, false);
+            st.giveItems(ORC_GOODS);
             if (st.getQuestItemsCount(ORC_GOODS) >= 120) {
                 st.setCond(2);
                 st.setState(STARTED);
             }
         }
-        return null;
     }
 }

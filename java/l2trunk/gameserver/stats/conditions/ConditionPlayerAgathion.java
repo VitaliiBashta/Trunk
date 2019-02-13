@@ -12,10 +12,12 @@ public final class ConditionPlayerAgathion extends Condition {
 
     @Override
     protected boolean testImpl(Env env) {
-        if (!env.character.isPlayer())
+        if (env.character instanceof Player) {
+            if (((Player) env.character).getAgathionId() > 0 && _agathionId == -1)
+                return true;
+            return ((Player) env.character).getAgathionId() == _agathionId;
+        } else {
             return false;
-        if (((Player) env.character).getAgathionId() > 0 && _agathionId == -1)
-            return true;
-        return ((Player) env.character).getAgathionId() == _agathionId;
+        }
     }
 }

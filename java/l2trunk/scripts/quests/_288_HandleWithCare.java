@@ -53,18 +53,21 @@ public final class _288_HandleWithCare extends Quest {
                 switch (Rnd.get(1, 4)) {
                     case 1:
                         st.giveItems(959);
+                        st.giveItems(9557);
                         break;
                     case 2:
                         st.giveItems(960);
+                        st.giveItems(9557);
                         break;
                     case 3:
                         st.giveItems(960, 2);
+                        st.giveItems(9557);
                         break;
                     case 4:
                         st.giveItems(960, 3);
+                        st.giveItems(9557);
                         break;
                 }
-                st.giveItems(9557);
                 htmltext = "ankumi_q288_06.htm";
                 st.exitCurrentQuest(true);
             } else {
@@ -82,7 +85,7 @@ public final class _288_HandleWithCare extends Quest {
         int cond = st.getCond();
         if (npcId == Ankumi) {
             if (cond == 0) {
-                if (st.getPlayer().getLevel() >= 82)
+                if (st.player.getLevel() >= 82)
                     htmltext = "ankumi_q288_01.htm";
                 else {
                     htmltext = "ankumi_q288_00.htm";

@@ -3,7 +3,6 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _249_PoisonedPlainsOfTheLizardmen extends Quest {
     private static final int MOUEN = 30196;
@@ -44,7 +43,7 @@ public final class _249_PoisonedPlainsOfTheLizardmen extends Quest {
         if (npcId == MOUEN) {
             switch (st.getState()) {
                 case CREATED:
-                    if (st.getPlayer().getLevel() >= 82)
+                    if (st.player.getLevel() >= 82)
                         htmltext = "30196-01.htm";
                     else
                         htmltext = "30196-00.htm";

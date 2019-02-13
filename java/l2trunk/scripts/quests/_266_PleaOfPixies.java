@@ -5,7 +5,6 @@ import l2trunk.gameserver.model.base.Race;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _266_PleaOfPixies extends Quest {
     private static final int PREDATORS_FANG = 1334;
@@ -28,7 +27,7 @@ public final class _266_PleaOfPixies extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("pixy_murika_q0266_03.htm")) {
+        if ("pixy_murika_q0266_03.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
@@ -38,12 +37,12 @@ public final class _266_PleaOfPixies extends Quest {
 
     @Override
     public String onTalk(NpcInstance npc, QuestState st) {
-        String htmltext = "noquest";
+        String htmltext;
         if (st.getCond() == 0) {
-            if (st.getPlayer().getRace() != Race.elf) {
+            if (st.player.getRace() != Race.elf) {
                 htmltext = "pixy_murika_q0266_00.htm";
                 st.exitCurrentQuest(true);
-            } else if (st.getPlayer().getLevel() < 3) {
+            } else if (st.player.getLevel() < 3) {
                 htmltext = "pixy_murika_q0266_01.htm";
                 st.exitCurrentQuest(true);
             } else
@@ -51,11 +50,11 @@ public final class _266_PleaOfPixies extends Quest {
         } else if (st.getQuestItemsCount(PREDATORS_FANG) < 100)
             htmltext = "pixy_murika_q0266_04.htm";
         else {
-            st.takeItems(PREDATORS_FANG, -1);
+            st.takeItems(PREDATORS_FANG);
             int n = Rnd.get(100);
             if (n < 2) {
-                st.giveItems(EMERALD, 1);
-                st.giveItems(REC_SPIRITSHOT, 1);
+                st.giveItems(EMERALD);
+                st.giveItems(REC_SPIRITSHOT);
                 st.playSound(SOUND_JACKPOT);
             } else if (n < 20) {
                 st.giveItems(BLUE_ONYX, 1);
@@ -72,9 +71,8 @@ public final class _266_PleaOfPixies extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getCond() == 1)
             st.rollAndGive(PREDATORS_FANG, 1, 1, 100, 60 + npc.getLevel() * 5);
-        return null;
     }
 }

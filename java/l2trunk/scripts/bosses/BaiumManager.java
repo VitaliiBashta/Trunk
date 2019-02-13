@@ -258,7 +258,7 @@ public final class BaiumManager extends Functions implements ScriptFile, OnDeath
 
         baium.startImmobilized();
         baium.broadcastPacket(new PlaySound(PlaySound.Type.MUSIC, "BS02_A", 1, 0, baium.getLoc()));
-        baium.broadcastPacket(new SocialAction(baium.getObjectId(), 2));
+        baium.broadcastPacket(new SocialAction(baium.objectId(), 2));
 
         _socialTask = ThreadPoolManager.INSTANCE.schedule(new Social(baium, 3), 15000);
 
@@ -341,9 +341,9 @@ public final class BaiumManager extends Functions implements ScriptFile, OnDeath
 
     @Override
     public void onDeath(Creature actor, Creature killer) {
-        if (actor.isPlayer() && state != null && state.getState() == State.ALIVE && zone != null && zone.checkIfInZone(actor))
+        if (actor instanceof Player && state != null && state.getState() == State.ALIVE && zone != null && zone.checkIfInZone(actor))
             checkAnnihilated();
-        else if (actor.isNpc() && actor.getNpcId() == BAIUM)
+        else if ( actor.getNpcId() == BAIUM)
             onBaiumDie(actor);
     }
 
@@ -381,7 +381,7 @@ public final class BaiumManager extends Functions implements ScriptFile, OnDeath
 
         @Override
         public void runImpl() {
-            SocialAction sa = new SocialAction(_npc.getObjectId(), _action);
+            SocialAction sa = new SocialAction(_npc.objectId(), _action);
             _npc.broadcastPacket(sa);
         }
     }

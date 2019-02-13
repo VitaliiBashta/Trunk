@@ -5,7 +5,6 @@ import l2trunk.gameserver.model.base.Race;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _219_TestimonyOfFate extends Quest {
     //NPC
@@ -266,51 +265,51 @@ public final class _219_TestimonyOfFate extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("30476-05.htm")) {
+        if ("30476-05.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-            st.giveItems(KairasLetter, 1);
-            if (!st.getPlayer().getVarB("dd2")) {
+            st.giveItems(KairasLetter);
+            if (!st.player.isVarSet("dd2")) {
                 st.giveItems(7562, 72);
-                st.getPlayer().setVar("dd2", "1", -1);
+                st.player.setVar("dd2", 1);
             }
-        } else if (event.equalsIgnoreCase("30114-04.htm")) {
+        } else if ("30114-04.htm".equalsIgnoreCase(event)) {
             st.takeItems(AldersSkull2, 1);
-            st.giveItems(AldersReceipt, 1);
+            st.giveItems(AldersReceipt);
             st.setCond(12);
             st.setState(STARTED);
-        } else if (event.equalsIgnoreCase("30476-12.htm")) {
-            if (st.getPlayer().getLevel() >= 38) {
-                st.takeItems(RevelationsManuscript, -1);
-                st.giveItems(KairasRecommendation, 1);
+        } else if ("30476-12.htm".equalsIgnoreCase(event)) {
+            if (st.player.getLevel() >= 38) {
+                st.takeItems(RevelationsManuscript);
+                st.giveItems(KairasRecommendation);
                 st.setCond(15);
                 st.setState(STARTED);
             } else {
                 htmltext = "30476-13.htm";
-                st.takeItems(RevelationsManuscript, -1);
-                st.giveItems(KairasInstructions, 1);
+                st.takeItems(RevelationsManuscript);
+                st.giveItems(KairasInstructions);
                 st.setCond(14);
                 st.setState(STARTED);
             }
-        } else if (event.equalsIgnoreCase("30419-02.htm")) {
-            st.takeItems(ThifiellsLetter, -1);
-            st.giveItems(ArkeniasNote, 1);
+        } else if ("30419-02.htm".equalsIgnoreCase(event)) {
+            st.takeItems(ThifiellsLetter);
+            st.giveItems(ArkeniasNote);
             st.setCond(17);
             st.setState(STARTED);
-        } else if (event.equalsIgnoreCase("31845-02.htm"))
-            st.giveItems(PixyGarnet, 1);
-        else if (event.equalsIgnoreCase("31850-02.htm"))
-            st.giveItems(BlightTreantSeed, 1);
-        else if (event.equalsIgnoreCase("30419-05.htm")) {
-            st.takeItems(ArkeniasNote, -1);
-            st.takeItems(RedFairyDust, -1);
-            st.takeItems(BlightTreantSap, -1);
-            st.giveItems(ArkeniasLetter, 1);
+        } else if ("31845-02.htm".equalsIgnoreCase(event))
+            st.giveItems(PixyGarnet);
+        else if ("31850-02.htm".equalsIgnoreCase(event))
+            st.giveItems(BlightTreantSeed);
+        else if ("30419-05.htm".equalsIgnoreCase(event)) {
+            st.takeItems(ArkeniasNote);
+            st.takeItems(RedFairyDust);
+            st.takeItems(BlightTreantSap);
+            st.giveItems(ArkeniasLetter);
             st.setCond(18);
             st.setState(STARTED);
         }
-        if (event.equalsIgnoreCase("AldersSpirit_Fail")) {
+        if ("AldersSpirit_Fail".equalsIgnoreCase(event)) {
             NpcInstance isQuest = GameObjectsStorage.getByNpcId(AldersSpirit);
             if (isQuest != null)
                 isQuest.deleteMe();
@@ -330,9 +329,9 @@ public final class _219_TestimonyOfFate extends Quest {
                 htmltext = "completed";
                 st.exitCurrentQuest(true);
             } else if (cond == 0) {
-                if (st.getPlayer().getRace() == Race.darkelf && st.getPlayer().getLevel() >= 37)
+                if (st.player.getRace() == Race.darkelf && st.player.getLevel() >= 37)
                     htmltext = "30476-03.htm";
-                else if (st.getPlayer().getRace() == Race.darkelf) {
+                else if (st.player.getRace() == Race.darkelf) {
                     htmltext = "30476-02.htm";
                     st.exitCurrentQuest(true);
                 } else {
@@ -344,9 +343,8 @@ public final class _219_TestimonyOfFate extends Quest {
             else if (cond == 9 || cond == 10) {
                 NpcInstance AldersSpiritObject = GameObjectsStorage.getByNpcId(AldersSpirit);
                 if (AldersSpiritObject == null) {
-                    st.takeItems(AldersSkull1, -1);
-                    if (st.getQuestItemsCount(AldersSkull2) == 0)
-                        st.giveItems(AldersSkull2, 1);
+                    st.takeItems(AldersSkull1);
+                    st.giveItemIfNotHave(AldersSkull2);
                     htmltext = "30476-09.htm";
                     st.setCond(10);
                     st.setState(STARTED);
@@ -357,10 +355,10 @@ public final class _219_TestimonyOfFate extends Quest {
             } else if (cond == 13)
                 htmltext = "30476-11.htm";
             else if (cond == 14) {
-                if (st.getQuestItemsCount(KairasInstructions) != 0 && st.getPlayer().getLevel() < 38)
+                if (st.haveQuestItem(KairasInstructions)  && st.player.getLevel() < 38)
                     htmltext = "30476-14.htm";
-                else if (st.getQuestItemsCount(KairasInstructions) != 0 && st.getPlayer().getLevel() >= 38) {
-                    st.giveItems(KairasRecommendation, 1);
+                else if (st.haveQuestItem(KairasInstructions)  && st.player.getLevel() >= 38) {
+                    st.giveItems(KairasRecommendation);
                     st.takeItems(KairasInstructions, 1);
                     htmltext = "30476-15.htm";
                     st.setCond(15);
@@ -370,17 +368,17 @@ public final class _219_TestimonyOfFate extends Quest {
                 htmltext = "30476-16.htm";
             else if (cond == 16 || cond == 17)
                 htmltext = "30476-17.htm";
-            else if (st.getQuestItemsCount(MetheussFuneralJar) > 0 || st.getQuestItemsCount(KasandrasRemains) > 0)
+            else if (st.haveAnyQuestItems(MetheussFuneralJar,KasandrasRemains) )
                 htmltext = "30476-07.htm";
-            else if (st.getQuestItemsCount(HerbalismTextbook) > 0 || st.getQuestItemsCount(IxiasList) > 0)
+            else if (st.haveAnyQuestItems(HerbalismTextbook,IxiasList) )
                 htmltext = "30476-08.htm";
-            else if (st.getQuestItemsCount(AldersSkull2) > 0 || st.getQuestItemsCount(AldersReceipt) > 0)
+            else if (st.haveAnyQuestItems(AldersSkull2,AldersReceipt) )
                 htmltext = "30476-10.htm";
         } else if (npcId == Metheus) {
             if (cond == 1) {
                 htmltext = "30614-01.htm";
-                st.takeItems(KairasLetter, -1);
-                st.giveItems(MetheussFuneralJar, 1);
+                st.takeItems(KairasLetter);
+                st.giveItems(MetheussFuneralJar);
                 st.setCond(2);
                 st.setState(STARTED);
             } else if (cond == 2)
@@ -397,27 +395,27 @@ public final class _219_TestimonyOfFate extends Quest {
                 htmltext = "30614-05.htm";
                 st.setCond(9);
                 st.setState(STARTED);
-            } else if (st.getQuestItemsCount(HerbalismTextbook) > 0 || st.getQuestItemsCount(IxiasList) > 0)
+            } else if (st.haveAnyQuestItems(HerbalismTextbook,IxiasList) )
                 htmltext = "30614-04.htm";
-            else if (st.getQuestItemsCount(AldersSkull1) > 0 || st.getQuestItemsCount(AldersSkull2) > 0 || st.getQuestItemsCount(AldersReceipt) > 0 || st.getQuestItemsCount(RevelationsManuscript) > 0 || st.getQuestItemsCount(KairasInstructions) > 0 || st.getQuestItemsCount(KairasRecommendation) > 0)
+            else if (st.haveAnyQuestItems(AldersSkull1,AldersSkull2,AldersReceipt,RevelationsManuscript,KairasInstructions,KairasRecommendation) )
                 htmltext = "30614-06.htm";
         } else if (npcId == Ixia) {
             if (cond == 5) {
-                st.takeItems(HerbalismTextbook, -1);
-                st.giveItems(IxiasList, 1);
+                st.takeItems(HerbalismTextbook);
+                st.giveItems(IxiasList);
                 htmltext = "30463-01.htm";
                 st.setCond(6);
                 st.setState(STARTED);
             } else if (cond == 6)
                 htmltext = "30463-02.htm";
             else if (cond == 7 && st.getQuestItemsCount(MedusasIchor) >= 10 && st.getQuestItemsCount(MarshSpiderFluids) >= 10 && st.getQuestItemsCount(DeadSeekerDung) >= 10 && st.getQuestItemsCount(TyrantsBlood) >= 10 && st.getQuestItemsCount(NightshadeRoot) >= 10) {
-                st.takeItems(MedusasIchor, -1);
-                st.takeItems(MarshSpiderFluids, -1);
-                st.takeItems(DeadSeekerDung, -1);
-                st.takeItems(TyrantsBlood, -1);
-                st.takeItems(NightshadeRoot, -1);
-                st.takeItems(IxiasList, -1);
-                st.giveItems(Belladonna, 1);
+                st.takeItems(MedusasIchor);
+                st.takeItems(MarshSpiderFluids);
+                st.takeItems(DeadSeekerDung);
+                st.takeItems(TyrantsBlood);
+                st.takeItems(NightshadeRoot);
+                st.takeItems(IxiasList);
+                st.giveItems(Belladonna);
                 htmltext = "30463-03.htm";
                 st.setCond(8);
                 st.setState(STARTED);
@@ -427,7 +425,7 @@ public final class _219_TestimonyOfFate extends Quest {
                 st.setCond(6);
             } else if (cond == 8)
                 htmltext = "30463-04.htm";
-            else if (st.getQuestItemsCount(AldersSkull1) > 0 || st.getQuestItemsCount(AldersSkull2) > 0 || st.getQuestItemsCount(AldersReceipt) > 0 || st.getQuestItemsCount(RevelationsManuscript) > 0 || st.getQuestItemsCount(KairasInstructions) > 0 || st.getQuestItemsCount(KairasRecommendation) > 0)
+            else if (st.haveAnyQuestItems(AldersSkull1,AldersSkull2,AldersReceipt,RevelationsManuscript,KairasInstructions,KairasRecommendation) )
                 htmltext = "30463-05.htm";
         } else if (npcId == AldersSpirit) {
             htmltext = "30613-02.htm";
@@ -442,12 +440,12 @@ public final class _219_TestimonyOfFate extends Quest {
                 htmltext = "30114-01.htm";
             else if (cond == 12)
                 htmltext = "30114-05.htm";
-            else if (st.getQuestItemsCount(RevelationsManuscript) > 0 || st.getQuestItemsCount(KairasInstructions) > 0 || st.getQuestItemsCount(KairasRecommendation) > 0)
+            else if (st.haveAnyQuestItems(RevelationsManuscript,KairasInstructions,KairasRecommendation) )
                 htmltext = "30114-06.htm";
         } else if (npcId == Norman) {
             if (cond == 12) {
-                st.takeItems(AldersReceipt, -1);
-                st.giveItems(RevelationsManuscript, 1);
+                st.takeItems(AldersReceipt);
+                st.giveItems(RevelationsManuscript);
                 htmltext = "30210-01.htm";
                 st.setCond(13);
                 st.setState(STARTED);
@@ -455,9 +453,9 @@ public final class _219_TestimonyOfFate extends Quest {
                 htmltext = "30210-02.htm";
         } else if (npcId == Thifiell) {
             if (cond == 15) {
-                st.takeItems(KairasRecommendation, -1);
-                st.giveItems(ThifiellsLetter, 1);
-                st.giveItems(PalusCharm, 1);
+                st.takeItems(KairasRecommendation);
+                st.giveItems(ThifiellsLetter);
+                st.giveItems(PalusCharm);
                 htmltext = "30358-01.htm";
                 st.setCond(16);
                 st.setState(STARTED);
@@ -466,14 +464,14 @@ public final class _219_TestimonyOfFate extends Quest {
             else if (cond == 17)
                 htmltext = "30358-03.htm";
             else if (cond == 18) {
-                if (!st.getPlayer().getVarB("prof2.2")) {
+                if (!st.player.isVarSet("prof2.2")) {
                     st.addExpAndSp(682735, 45562);
                     st.giveItems(ADENA_ID, 123854);
-                    st.getPlayer().setVar("prof2.2", "1", -1);
+                    st.player.setVar("prof2.2", 1);
                 }
-                st.takeItems(ArkeniasLetter, -1);
-                st.takeItems(PalusCharm, -1);
-                st.giveItems(MarkofFate, 1);
+                st.takeItems(ArkeniasLetter);
+                st.takeItems(PalusCharm);
+                st.giveItems(MarkofFate);
                 htmltext = "30358-04.htm";
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest(true);
@@ -484,7 +482,7 @@ public final class _219_TestimonyOfFate extends Quest {
             else if (cond == 17) {
                 if (st.getQuestItemsCount(RedFairyDust) < 1 || st.getQuestItemsCount(BlightTreantSap) < 1)
                     htmltext = "30419-03.htm";
-                else if (st.getQuestItemsCount(RedFairyDust) >= 1 && st.getQuestItemsCount(BlightTreantSap) >= 1)
+                else if (st.haveAllQuestItems(RedFairyDust,BlightTreantSap))
                     htmltext = "30419-04.htm";
             } else if (cond == 18)
                 htmltext = "30419-06.htm";
@@ -494,37 +492,37 @@ public final class _219_TestimonyOfFate extends Quest {
             else if (st.getQuestItemsCount(RedFairyDust) == 0 && st.getQuestItemsCount(PixyGarnet) > 0 && (st.getQuestItemsCount(GrandissSkull) < 10 || st.getQuestItemsCount(KarulBugbearSkull) < 10 || st.getQuestItemsCount(BrekaOverlordSkull) < 10 || st.getQuestItemsCount(LetoOverlordSkull) < 10))
                 htmltext = "31845-03.htm";
             else if (st.getQuestItemsCount(RedFairyDust) == 0 && st.getQuestItemsCount(PixyGarnet) > 0 && st.getQuestItemsCount(GrandissSkull) >= 10 && st.getQuestItemsCount(KarulBugbearSkull) >= 10 && st.getQuestItemsCount(BrekaOverlordSkull) >= 10 && st.getQuestItemsCount(LetoOverlordSkull) >= 10) {
-                st.takeItems(GrandissSkull, -1);
-                st.takeItems(KarulBugbearSkull, -1);
-                st.takeItems(BrekaOverlordSkull, -1);
-                st.takeItems(LetoOverlordSkull, -1);
-                st.takeItems(PixyGarnet, -1);
-                st.giveItems(RedFairyDust, 1);
+                st.takeItems(GrandissSkull);
+                st.takeItems(KarulBugbearSkull);
+                st.takeItems(BrekaOverlordSkull);
+                st.takeItems(LetoOverlordSkull);
+                st.takeItems(PixyGarnet);
+                st.giveItems(RedFairyDust);
                 htmltext = "31845-04.htm";
-            } else if (st.getQuestItemsCount(RedFairyDust) != 0)
+            } else if (st.haveQuestItem(RedFairyDust))
                 htmltext = "31845-05.htm";
         } else if (npcId == BlightTreant && cond == 17)
             if (st.getQuestItemsCount(BlightTreantSap) == 0 && st.getQuestItemsCount(BlightTreantSeed) == 0)
                 htmltext = "31850-01.htm";
-            else if (st.getQuestItemsCount(BlightTreantSap) == 0 && st.getQuestItemsCount(BlightTreantSeed) > 0 && st.getQuestItemsCount(BlackWillowLeaf) == 0)
+            else if (st.getQuestItemsCount(BlightTreantSap) == 0 && st.haveQuestItem(BlightTreantSeed) && st.getQuestItemsCount(BlackWillowLeaf) == 0)
                 htmltext = "31850-03.htm";
-            else if (st.getQuestItemsCount(BlightTreantSap) == 0 && st.getQuestItemsCount(BlightTreantSeed) > 0 && st.getQuestItemsCount(BlackWillowLeaf) > 0) {
-                st.takeItems(BlackWillowLeaf, -1);
-                st.takeItems(BlightTreantSeed, -1);
-                st.giveItems(BlightTreantSap, 1);
+            else if (st.getQuestItemsCount(BlightTreantSap) == 0 && st.haveQuestItem(BlightTreantSeed)  && st.getQuestItemsCount(BlackWillowLeaf) > 0) {
+                st.takeItems(BlackWillowLeaf);
+                st.takeItems(BlightTreantSeed);
+                st.giveItems(BlightTreantSap);
                 htmltext = "31850-04.htm";
-            } else if (st.getQuestItemsCount(BlightTreantSap) > 0)
+            } else if (st.haveQuestItem(BlightTreantSap) )
                 htmltext = "31850-05.htm";
         return htmltext;
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         for (int[] aDROPLIST_COND : DROPLIST_COND)
             if (cond == aDROPLIST_COND[0] && npcId == aDROPLIST_COND[2])
-                if (aDROPLIST_COND[3] == 0 || st.getQuestItemsCount(aDROPLIST_COND[3]) > 0)
+                if (aDROPLIST_COND[3] == 0 || st.haveQuestItem(aDROPLIST_COND[3]))
                     if (aDROPLIST_COND[5] == 0)
                         st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[6]);
                     else if (st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[7], aDROPLIST_COND[5], aDROPLIST_COND[6]))
@@ -542,6 +540,5 @@ public final class _219_TestimonyOfFate extends Quest {
             st.setCond(7);
             st.setState(STARTED);
         }
-        return null;
     }
 }

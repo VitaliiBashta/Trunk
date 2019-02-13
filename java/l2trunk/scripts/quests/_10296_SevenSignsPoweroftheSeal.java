@@ -30,13 +30,13 @@ public final class _10296_SevenSignsPoweroftheSeal extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        Player player = st.getPlayer();
+        Player player = st.player;
         String htmltext = event;
-        if (event.equalsIgnoreCase("eris_q10296_3.htm")) {
+        if ("eris_q10296_3.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("start_scene")) {
+        } else if ("start_scene".equalsIgnoreCase(event)) {
             st.setCond(2);
             teleportElcardia(player, hiddenLoc);
             ThreadPoolManager.INSTANCE.schedule(() -> {
@@ -45,18 +45,18 @@ public final class _10296_SevenSignsPoweroftheSeal extends Quest {
             }, 60500L);
             player.showQuestMovie(ExStartScenePlayer.SCENE_SSQ2_BOSS_OPENING);
             return null;
-        } else if (event.equalsIgnoreCase("teleport_back")) {
+        } else if ("teleport_back".equalsIgnoreCase(event)) {
             player.teleToLocation(new Location(76736, -241021, -10832));
             teleportElcardia(player);
             return null;
-        } else if (event.equalsIgnoreCase("elcardiahome_q10296_3.htm")) {
+        } else if ("elcardiahome_q10296_3.htm".equalsIgnoreCase(event)) {
             st.setCond(4);
-        } else if (event.equalsIgnoreCase("hardin_q10296_3.htm")) {
+        } else if ("hardin_q10296_3.htm".equalsIgnoreCase(event)) {
             st.setCond(5);
-        } else if (event.equalsIgnoreCase("enter_instance")) {
+        } else if ("enter_instance".equalsIgnoreCase(event)) {
             enterInstance(player);
             return null;
-        } else if (event.equalsIgnoreCase("franz_q10296_3.htm")) {
+        } else if ("franz_q10296_3.htm".equalsIgnoreCase(event)) {
             if (player.getLevel() >= 81) {
                 st.addExpAndSp(225000000, 22500000);
                 st.giveItems(17265, 1);
@@ -74,14 +74,13 @@ public final class _10296_SevenSignsPoweroftheSeal extends Quest {
         String htmltext = "noquest";
         int npcId = npc.getNpcId();
         int cond = st.getCond();
-        Player player = st.getPlayer();
+        Player player = st.player;
         if (player.getBaseClassId() != player.getActiveClassId())
             return "no_subclass_allowed.htm";
 
         if (npcId == Eris) {
             if (cond == 0) {
-                QuestState qs = player.getQuestState(_10295_SevenSignsSolinasTomb.class);
-                if (player.getLevel() >= 81 && qs != null && qs.isCompleted())
+                if (player.getLevel() >= 81 &&player.isQuestCompleted(_10295_SevenSignsSolinasTomb.class))
                     htmltext = "eris_q10296_1.htm";
                 else {
                     htmltext = "eris_q10296_0.htm";
@@ -126,18 +125,17 @@ public final class _10296_SevenSignsPoweroftheSeal extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         if (npcId == EtisEtina) {
             st.set("EtisKilled", 1);
-            st.getPlayer().getReflection().getNpcs()
+            st.player.getReflection().getNpcs()
                     .filter(n -> n.getNpcId() == ElcardiaInzone1)
                     .forEach(n -> n.teleToLocation(new Location(120664, -86968, -3392)));
-            ThreadPoolManager.INSTANCE.schedule(() -> teleportElcardia(st.getPlayer()), 60500L);
-            st.getPlayer().showQuestMovie(ExStartScenePlayer.SCENE_SSQ2_BOSS_CLOSING);
+            ThreadPoolManager.INSTANCE.schedule(() -> teleportElcardia(st.player), 60500L);
+            st.player.showQuestMovie(ExStartScenePlayer.SCENE_SSQ2_BOSS_CLOSING);
 
         }
-        return null;
     }
 
     private void teleportElcardia(Player player) {

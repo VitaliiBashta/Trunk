@@ -19,8 +19,8 @@ public final class EffectTemplate extends StatTemplate {
     public static final String NO_STACK = "none";
     public static final String HP_RECOVER_CAST = "HpRecoverCast";
     private static final Logger _log = LoggerFactory.getLogger(EffectTemplate.class);
-    public final double _value;
-    public final int _count;
+    public final double value;
+    public final int count;
     public final EffectType effecttype;
     public final String stackType;
     public final String stackType2;
@@ -43,8 +43,8 @@ public final class EffectTemplate extends StatTemplate {
     private Condition _attachCond;
 
     public EffectTemplate(StatsSet set) {
-        _value = set.getDouble("value");
-        _count = set.getInteger("count", 1) < 0 ? Integer.MAX_VALUE : set.getInteger("count", 1);
+        value = set.getDouble("value");
+        count = set.getInteger("count", 1) < 0 ? Integer.MAX_VALUE : set.getInteger("count", 1);
         _period = Math.min(Integer.MAX_VALUE, 1000 * (set.getInteger("time", 1) < 0 ? Integer.MAX_VALUE : set.getInteger("time", 1)));
         _abnormalEffect = set.getEnum("abnormal", AbnormalEffect.class);
         _abnormalEffect2 = set.getEnum("abnormal2", AbnormalEffect.class);
@@ -82,7 +82,7 @@ public final class EffectTemplate extends StatTemplate {
     }
 
     public int getCount() {
-        return _count;
+        return count;
     }
 
     public long getPeriod() {

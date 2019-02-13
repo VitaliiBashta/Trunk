@@ -5,7 +5,6 @@ import l2trunk.gameserver.model.base.Race;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _275_BlackWingedSpies extends Quest {
     // NPCs
@@ -45,11 +44,11 @@ public final class _275_BlackWingedSpies extends Quest {
         int _state = st.getState();
 
         if (_state == CREATED) {
-            if (st.getPlayer().getRace() != Race.orc) {
+            if (st.player.getRace() != Race.orc) {
                 st.exitCurrentQuest(true);
                 return "neruga_chief_tantus_q0275_00.htm";
             }
-            if (st.getPlayer().getLevel() < 11) {
+            if (st.player.getLevel() < 11) {
                 st.exitCurrentQuest(true);
                 return "neruga_chief_tantus_q0275_01.htm";
             }
@@ -95,22 +94,21 @@ public final class _275_BlackWingedSpies extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState qs) {
+    public void onKill(NpcInstance npc, QuestState qs) {
         if (qs.getState() != STARTED)
-            return null;
+            return;
         int npcId = npc.getNpcId();
         long Darkwing_Bat_Fang_count = qs.getQuestItemsCount(Darkwing_Bat_Fang);
 
         if (npcId == Darkwing_Bat && Darkwing_Bat_Fang_count < 70) {
             if (Darkwing_Bat_Fang_count > 10 && Darkwing_Bat_Fang_count < 65 && Rnd.chance(Varangkas_Parasite_Chance)) {
                 spawn_Varangkas_Tracker(qs);
-                return null;
+                return ;
             }
             give_Darkwing_Bat_Fang(qs, 1);
         } else if (npcId == Varangkas_Tracker && Darkwing_Bat_Fang_count < 70 && qs.getQuestItemsCount(Varangkas_Parasite) > 0) {
             qs.takeItems(Varangkas_Parasite, -1);
             give_Darkwing_Bat_Fang(qs, 5);
         }
-        return null;
     }
 }

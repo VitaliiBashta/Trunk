@@ -72,7 +72,8 @@ public final class Tiat extends Fighter {
         }
         if (System.currentTimeMillis() - _lastFactionNotifyTime > _minFactionNotifyInterval) {
             _lastFactionNotifyTime = System.currentTimeMillis();
-            World.getAroundNpc(actor).filter(npc -> (TIAT_MINION_IDS.contains(npc.getNpcId())))
+            World.getAroundNpc(actor)
+                    .filter(npc -> (TIAT_MINION_IDS.contains(npc.getNpcId())))
                     .forEach(npc -> npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker, 30000));
             if (Rnd.chance(15) && !_notUsedTransform)
                 actor.broadcastPacket(new ExShowScreenMessage(Rnd.get(TIAT_TEXT), 4000, ScreenMessageAlign.MIDDLE_CENTER, false));

@@ -1,7 +1,6 @@
 package l2trunk.gameserver.model;
 
 import l2trunk.commons.threading.RunnableImpl;
-import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.CtrlIntention;
@@ -24,6 +23,7 @@ import l2trunk.gameserver.stats.Stats;
 import l2trunk.gameserver.taskmanager.DecayTaskManager;
 import l2trunk.gameserver.templates.item.WeaponTemplate;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
+import l2trunk.gameserver.utils.Location;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,24 +34,24 @@ import java.util.concurrent.ScheduledFuture;
 public abstract class Summon extends Playable {
     private static final int SUMMON_DISAPPEAR_RANGE = 2500;
 
-    private final Player _owner;
+    public final Player owner;
     protected long _exp = 0;
     protected int _sp = 0;
     private int _spawnAnimation = 2;
     private int _maxLoad, _spsCharged;
-    private boolean _follow = true, depressed = false, _ssCharged = false;
+    private boolean follow = true, depressed = false, _ssCharged = false;
     private Future<?> _updateEffectIconsTask;
     private ScheduledFuture<?> _broadcastCharInfoTask;
     private Future<?> _petInfoTask;
 
     protected Summon(int objectId, NpcTemplate template, Player owner) {
         super(objectId, template);
-        _owner = owner;
+        this.owner = owner;
         template.getSkills().values().stream()
                 .mapToInt(s->s.id)
                 .forEach(this::addSkill);
 
-        setXYZ(owner.getX() + Rnd.get(-100, 100), owner.getY() + Rnd.get(-100, 100), owner.getZ());
+        setLoc(Location.findPointToStay(owner, 100));
     }
 
     @Override
@@ -60,7 +60,6 @@ public abstract class Summon extends Playable {
 
         _spawnAnimation = 0;
 
-        Player owner = getPlayer();
         Party party = owner.getParty();
         if (party != null) {
             party.sendPacket(owner, new ExPartyPetWindowAdd(this));
@@ -115,12 +114,11 @@ public abstract class Summon extends Playable {
             return;
         }
 
-        Player owner = getPlayer();
 
         if (player.getTarget() != this) {
             player.setTarget(this);
             if (player.getTarget() == this) {
-                player.sendPacket(new MyTargetSelected(getObjectId(), 0), makeStatusUpdate(StatusUpdate.CUR_HP, StatusUpdate.MAX_HP, StatusUpdate.CUR_MP, StatusUpdate.MAX_MP));
+                player.sendPacket(new MyTargetSelected(objectId(), 0), makeStatusUpdate(StatusUpdate.CUR_HP, StatusUpdate.MAX_HP, StatusUpdate.CUR_MP, StatusUpdate.MAX_MP));
             } else {
                 player.sendPacket(ActionFail.STATIC);
             }
@@ -187,7 +185,6 @@ public abstract class Summon extends Playable {
 
     @Override
     public int getBuffLimit() {
-        Player owner = getPlayer();
         return (int) calcStat(Stats.BUFF_LIMIT, owner.getBuffLimit());
     }
 
@@ -200,8 +197,6 @@ public abstract class Summon extends Playable {
         super.onDeath(killer);
 
         startDecay(8500L);
-
-        Player owner = getPlayer();
 
         if ((killer == null) || (killer == owner) || (killer == this) || isInZoneBattle() || killer.isInZoneBattle()) {
             return;
@@ -220,7 +215,7 @@ public abstract class Summon extends Playable {
             return;
         }
 
-        if (killer.isPlayer()) {
+        if (killer instanceof Player) {
             Player pk = (Player) killer;
 
             if (isInZone(ZoneType.SIEGE)) {
@@ -261,11 +256,7 @@ public abstract class Summon extends Playable {
 
     @Override
     public void broadcastStatusUpdate() {
-        if (!needStatusUpdate()) {
-            return;
-        }
-
-        Player owner = getPlayer();
+        if (!needStatusUpdate()) return;
 
         sendStatusUpdate();
 
@@ -279,19 +270,16 @@ public abstract class Summon extends Playable {
     }
 
     protected void sendStatusUpdate() {
-        Player owner = getPlayer();
         owner.sendPacket(new PetStatusUpdate(this));
     }
 
     @Override
     protected void onDelete() {
-        Player owner = getPlayer();
-
         Party party = owner.getParty();
         if (party != null) {
             party.sendPacket(owner, new ExPartyPetWindowDelete(this));
         }
-        owner.sendPacket(new PetDelete(getObjectId(), getSummonType()));
+        owner.sendPacket(new PetDelete(objectId(), getSummonType()));
         owner.setPet(null);
 
         stopDecay();
@@ -303,10 +291,7 @@ public abstract class Summon extends Playable {
     }
 
     public void saveEffects() {
-        Player owner = getPlayer();
-        if (owner == null) {
-            return;
-        }
+        if (owner == null) return;
 
         if (owner.isInOlympiadMode()) {
             getEffectList().stopAllEffects();
@@ -316,15 +301,13 @@ public abstract class Summon extends Playable {
     }
 
     public boolean isFollowMode() {
-        return _follow;
+        return follow;
     }
 
     public void setFollowMode(boolean state) {
-        Player owner = getPlayer();
+        follow = state;
 
-        _follow = state;
-
-        if (_follow) {
+        if (follow) {
             if (getAI().getIntention() == CtrlIntention.AI_INTENTION_ACTIVE) {
                 getAI().setIntention(CtrlIntention.AI_INTENTION_FOLLOW, owner, Config.FOLLOW_RANGE);
             }
@@ -352,7 +335,6 @@ public abstract class Summon extends Playable {
     }
 
     private void updateEffectIconsImpl() {
-        Player owner = getPlayer();
         PartySpelled ps = new PartySpelled(this, true);
         Party party = owner.getParty();
         if (party != null) {
@@ -372,7 +354,7 @@ public abstract class Summon extends Playable {
     }
 
     @Override
-    public void doPickupItem(final GameObject object) {
+    public void doPickupItem(final ItemInstance object) {
     }
 
     @Override
@@ -415,8 +397,6 @@ public abstract class Summon extends Playable {
 
     @Override
     public boolean unChargeShots(final boolean spirit) {
-        Player owner = getPlayer();
-
         if (spirit) {
             if (_spsCharged != 0) {
                 _spsCharged = 0;
@@ -467,12 +447,10 @@ public abstract class Summon extends Playable {
     }
 
     public boolean isInRange() {
-        Player owner = getPlayer();
         return getDistance(owner) < SUMMON_DISAPPEAR_RANGE;
     }
 
     public void teleportToOwner() {
-        Player owner = getPlayer();
         _spawnAnimation = 2;
 
         if (owner.isInOlympiadMode()) {
@@ -482,7 +460,7 @@ public abstract class Summon extends Playable {
             teleToLocation(owner.getLoc(), owner.getReflection());
         }
 
-        if (!isDead() && _follow) {
+        if (!isDead() && follow) {
             getAI().setIntention(CtrlIntention.AI_INTENTION_FOLLOW, owner, Config.FOLLOW_RANGE);
         }
         _spawnAnimation = 0;
@@ -498,8 +476,6 @@ public abstract class Summon extends Playable {
     }
 
     private void broadcastCharInfoImpl() {
-        Player owner = getPlayer();
-
         World.getAroundPlayers(this)
                 .forEach(player -> {
                     if (player == owner) {
@@ -511,7 +487,6 @@ public abstract class Summon extends Playable {
     }
 
     private void sendPetInfoImpl() {
-        Player owner = getPlayer();
         owner.sendPacket(new PetInfo(this).update(1));
     }
 
@@ -541,31 +516,26 @@ public abstract class Summon extends Playable {
 
     @Override
     public void startPvPFlag(Creature target) {
-        Player owner = getPlayer();
         owner.startPvPFlag(target);
     }
 
     @Override
     public int getPvpFlag() {
-        Player owner = getPlayer();
         return owner.getPvpFlag();
     }
 
-    @Override
     public int getKarma() {
-        Player owner = getPlayer();
         return owner.getKarma();
     }
 
     @Override
     public TeamType getTeam() {
-        Player owner = getPlayer();
         return owner.getTeam();
     }
 
     @Override
     public Player getPlayer() {
-        return _owner;
+        return owner;
     }
 
     public abstract double getExpPenalty();
@@ -586,13 +556,11 @@ public abstract class Summon extends Playable {
     @Override
     public List<L2GameServerPacket> addPacketList(Player forPlayer, Creature dropper) {
         List<L2GameServerPacket> list = new ArrayList<>();
-        Player owner = getPlayer();
-
         if (owner == forPlayer) {
             list.add(new PetInfo(this));
             list.add(new PartySpelled(this, true));
 
-            if (isPet()) {
+            if (this instanceof PetInstance) {
                 list.add(new PetItemList((PetInstance) this));
             }
         } else {
@@ -608,7 +576,7 @@ public abstract class Summon extends Playable {
         }
 
         if (isInCombat()) {
-            list.add(new AutoAttackStart(getObjectId()));
+            list.add(new AutoAttackStart(objectId()));
         }
 
         if (isMoving || isFollow) {
@@ -620,37 +588,33 @@ public abstract class Summon extends Playable {
     @Override
     public void startAttackStanceTask() {
         startAttackStanceTask0();
-        Player player = getPlayer();
-        if (player != null) {
-            player.startAttackStanceTask0();
+        if (owner != null) {
+            owner.startAttackStanceTask0();
         }
     }
 
     @Override
     public <E extends GlobalEvent> E getEvent(Class<E> eventClass) {
-        Player player = getPlayer();
-        if (player != null) {
-            return player.getEvent(eventClass);
-        } else {
+        if (owner == null) {
             return super.getEvent(eventClass);
+        } else {
+            return owner.getEvent(eventClass);
         }
     }
 
     @Override
     public Set<GlobalEvent> getEvents() {
-        Player player = getPlayer();
-        if (player != null) {
-            return player.getEvents();
-        } else {
+        if (owner == null) {
             return super.getEvents();
+        } else {
+            return owner.getEvents();
         }
     }
 
     @Override
     public void sendReuseMessage(Skill skill) {
-        Player player = getPlayer();
-        if ((player != null) && isSkillDisabled(skill)) {
-            player.sendPacket(SystemMsg.THAT_PET_SERVITOR_SKILL_CANNOT_BE_USED_BECAUSE_IT_IS_RECHARGING);
+        if ((owner != null) && isSkillDisabled(skill)) {
+            owner.sendPacket(SystemMsg.THAT_PET_SERVITOR_SKILL_CANNOT_BE_USED_BECAUSE_IT_IS_RECHARGING);
         }
     }
 

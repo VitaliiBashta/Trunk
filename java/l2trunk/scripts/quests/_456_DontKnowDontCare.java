@@ -106,7 +106,7 @@ public final class _456_DontKnowDontCare extends Quest {
             switch (st.getState()) {
                 case CREATED:
                     if (st.isNowAvailable()) {
-                        if (st.getPlayer().getLevel() >= 80)
+                        if (st.player.getLevel() >= 80)
                             htmltext = "sepsoul_q456_01.htm";
                         else {
                             htmltext = "sepsoul_q456_00.htm";

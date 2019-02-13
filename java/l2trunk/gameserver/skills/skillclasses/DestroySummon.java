@@ -4,6 +4,7 @@ import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.Summon;
+import l2trunk.gameserver.model.instances.SummonInstance;
 import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.stats.Formulas;
@@ -16,23 +17,18 @@ public final class DestroySummon extends Skill {
     }
 
     @Override
-    public void useSkill(Creature activeChar, List<Creature> targets) {
-        for (Creature target : targets)
-            if (target != null) {
-
-                if (getActivateRate() > 0 && !Formulas.calcSkillSuccess(activeChar, target, this, getActivateRate())) {
-                    activeChar.sendPacket(new SystemMessage2(SystemMsg.C1_HAS_RESISTED_YOUR_S2).addString(target.getName()).addSkillName(id, level));
-                    continue;
+    public void useSkill(Creature activeChar, Creature target) {
+        if (target != null) {
+            if (activateRate <= 0 || Formulas.calcSkillSuccess(activeChar, target, this, activateRate)) {
+                if (target instanceof SummonInstance) {
+                    ((SummonInstance) target).saveEffects();
+                    ((SummonInstance) target).unSummon();
+                    getEffects(activeChar, target, activateRate > 0, false);
                 }
-
-                if (target.isSummon()) {
-                    ((Summon) target).saveEffects();
-                    ((Summon) target).unSummon();
-                    getEffects(activeChar, target, getActivateRate() > 0, false);
-                }
+            } else {
+                activeChar.sendPacket(new SystemMessage2(SystemMsg.C1_HAS_RESISTED_YOUR_S2).addString(target.getName()).addSkillName(id, level));
             }
 
-        if (isSSPossible())
-            activeChar.unChargeShots(isMagic());
+        }
     }
 }

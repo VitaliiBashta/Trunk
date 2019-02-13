@@ -9,8 +9,6 @@ public final class _614_SlayTheEnemyCommander extends Quest {
     private static final int DURAI = 31377;
     private static final int KETRAS_COMMANDER_TAYR = 25302;
 
-    private static final int MARK_OF_VARKA_ALLIANCE4 = 7224;
-    private static final int MARK_OF_VARKA_ALLIANCE5 = 7225;
     private static final int HEAD_OF_TAYR = 7241;
     private static final int FEATHER_OF_WISDOM = 7230;
 
@@ -24,16 +22,16 @@ public final class _614_SlayTheEnemyCommander extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("quest_accept")) {
+        if ("quest_accept".equalsIgnoreCase(event)) {
             htmltext = "elder_ashas_barka_durai_q0614_0104.htm";
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("614_3"))
-            if (st.getQuestItemsCount(HEAD_OF_TAYR) >= 1) {
+        } else if ("614_3".equals(event))
+            if (st.haveQuestItem(HEAD_OF_TAYR) ) {
                 htmltext = "elder_ashas_barka_durai_q0614_0201.htm";
-                st.takeItems(HEAD_OF_TAYR, -1);
-                st.giveItems(FEATHER_OF_WISDOM, 1);
+                st.takeItems(HEAD_OF_TAYR);
+                st.giveItems(FEATHER_OF_WISDOM);
                 st.addExpAndSp(0, 10000);
                 st.unset("cond");
                 st.playSound(SOUND_FINISH);
@@ -48,8 +46,8 @@ public final class _614_SlayTheEnemyCommander extends Quest {
         String htmltext = "noquest";
         int cond = st.getCond();
         if (cond == 0) {
-            if (st.getPlayer().getLevel() >= 75) {
-                if (st.getQuestItemsCount(MARK_OF_VARKA_ALLIANCE4) == 1 || st.getQuestItemsCount(MARK_OF_VARKA_ALLIANCE5) == 1)
+            if (st.player.getLevel() >= 75) {
+                if (st.player.getVarka() >3)
                     htmltext = "elder_ashas_barka_durai_q0614_0101.htm";
                 else {
                     htmltext = "elder_ashas_barka_durai_q0614_0102.htm";
@@ -67,12 +65,11 @@ public final class _614_SlayTheEnemyCommander extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getCond() == 1) {
-            st.giveItems(HEAD_OF_TAYR, 1);
+            st.giveItems(HEAD_OF_TAYR);
             st.setCond(2);
             st.playSound(SOUND_ITEMGET);
         }
-        return null;
     }
 }

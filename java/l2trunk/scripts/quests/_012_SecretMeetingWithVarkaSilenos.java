@@ -3,7 +3,6 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _012_SecretMeetingWithVarkaSilenos extends Quest {
     private final int CADMON = 31296;
@@ -49,7 +48,7 @@ public final class _012_SecretMeetingWithVarkaSilenos extends Quest {
         int cond = st.getCond();
         if (npcId == CADMON) {
             if (cond == 0) {
-                if (st.getPlayer().getLevel() >= 74)
+                if (st.player.getLevel() >= 74)
                     htmltext = "guard_cadmon_q0012_0101.htm";
                 else {
                     htmltext = "guard_cadmon_q0012_0103.htm";

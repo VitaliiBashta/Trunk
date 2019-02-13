@@ -26,8 +26,8 @@ public class PartyRoomInfo extends L2GameServerPacket {
         writeC(0x9d);
         writeD(_id); // room id
         writeD(_maxMembers); //max members
-        writeD(_minLevel); //min level
-        writeD(_maxLevel); //max level
+        writeD(_minLevel); //min occupation
+        writeD(_maxLevel); //max occupation
         writeD(_lootDist); //loot distribution 1-Random 2-Random includ. etc
         writeD(_location); //location
         writeS(_title); // room name

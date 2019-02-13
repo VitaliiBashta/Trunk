@@ -16,7 +16,7 @@ public final class EffectCombatPointHealOverTime extends Effect {
 
         double addToCp = Math.max(0, Math.min(calc(), effected.calcStat(Stats.CP_LIMIT, null, null) * effected.getMaxCp() / 100. - effected.getCurrentCp()));
         if (addToCp > 0)
-            effected.setCurrentCp(effected.getCurrentCp() + addToCp);
+            effected.addCp(addToCp);
 
         return true;
     }

@@ -6,7 +6,7 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.stats.Env;
 import l2trunk.gameserver.stats.Stats;
 
-public class EffectHeal extends Effect {
+public final class EffectHeal extends Effect {
     private final boolean _ignoreHpEff;
 
     public EffectHeal(Env env, EffectTemplate template) {
@@ -16,9 +16,7 @@ public class EffectHeal extends Effect {
 
     @Override
     public boolean checkCondition() {
-        if (effected.isHealBlocked())
-            return false;
-        return super.checkCondition();
+        return !effected.isHealBlocked();
     }
 
     @Override
@@ -29,17 +27,12 @@ public class EffectHeal extends Effect {
             return;
 
         double hp = calc();
-        double newHp = hp * (!_ignoreHpEff ? effected.calcStat(Stats.HEAL_EFFECTIVNESS, 100., effector, getSkill()) : 100.) / 100.;
+        double newHp = hp * (!_ignoreHpEff ? effected.calcStat(Stats.HEAL_EFFECTIVNESS, 100., effector, skill) : 100.) / 100.;
         double addToHp = Math.max(0, Math.min(newHp, effected.calcStat(Stats.HP_LIMIT, null, null) * effected.getMaxHp() / 100. - effected.getCurrentHp()));
 
         if (addToHp > 0) {
             effected.sendPacket(new SystemMessage2(SystemMsg.S1_HP_HAS_BEEN_RESTORED).addInteger(Math.round(addToHp)));
             effected.setCurrentHp(addToHp + effected.getCurrentHp(), false);
         }
-    }
-
-    @Override
-    public boolean onActionTime() {
-        return false;
     }
 }

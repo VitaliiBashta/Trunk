@@ -3,15 +3,7 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * User: Keiichi
- * Date: 05.10.2008
- * Time: 19:45:18
- * Info: Один из 2х квестов для прохода на остров Hellbound.
- * Info: Пройдя его ведьма Galate открывает ТП до локации (xyz = -11095, 236440, -3232)
- */
 public final class _130_PathToHellbound extends Quest {
     // NPC's
     private static final int CASIAN = 30612;
@@ -49,7 +41,7 @@ public final class _130_PathToHellbound extends Quest {
 
         if (event.equals("galate_q0130_07.htm") && cond == 3) {
             st.playSound(SOUND_FINISH);
-            st.takeItems(CASIAN_BLUE_CRY, -1);
+            st.takeItems(CASIAN_BLUE_CRY);
             st.exitCurrentQuest(false);
         }
 
@@ -65,7 +57,7 @@ public final class _130_PathToHellbound extends Quest {
 
         if (npcId == CASIAN) {
             if (cond == 0)
-                if (st.getPlayer().getLevel() >= 78)
+                if (st.player.getLevel() >= 78)
                     htmltext = "sage_kasian_q0130_01.htm";
                 else {
                     htmltext = "sage_kasian_q0130_02.htm";

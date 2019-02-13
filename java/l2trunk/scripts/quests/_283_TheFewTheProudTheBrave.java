@@ -5,7 +5,6 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _283_TheFewTheProudTheBrave extends Quest {
     //NPCs
@@ -31,21 +30,21 @@ public final class _283_TheFewTheProudTheBrave extends Quest {
             st.setState(STARTED);
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("subelder_perwan_q0283_0203.htm") && _state == STARTED) {
+        } else if ("subelder_perwan_q0283_0203.htm".equalsIgnoreCase(event) && _state == STARTED) {
             long count = st.getQuestItemsCount(CRIMSON_SPIDER_CLAW);
             if (count > 0) {
-                st.takeItems(CRIMSON_SPIDER_CLAW, -1);
+                st.takeItems(CRIMSON_SPIDER_CLAW);
                 st.giveItems(ADENA_ID, 45 * count);
 
-                if (st.getPlayer().getClassId().getLevel() == 1 && !st.getPlayer().getVarB("p1q4")) {
-                    st.getPlayer().setVar("p1q4", "1", -1);
-                    st.getPlayer().sendPacket(new ExShowScreenMessage("Now go find the Newbie Guide."));
+                if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("p1q4")) {
+                    st.player.setVar("p1q4", 1);
+                    st.player.sendPacket(new ExShowScreenMessage("Now go find the Newbie Guide."));
                 }
 
                 st.playSound(SOUND_MIDDLE);
             }
         } else if (event.equalsIgnoreCase("subelder_perwan_q0283_0204.htm") && _state == STARTED) {
-            st.takeItems(CRIMSON_SPIDER_CLAW, -1);
+            st.takeItems(CRIMSON_SPIDER_CLAW);
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(true);
         }
@@ -60,7 +59,7 @@ public final class _283_TheFewTheProudTheBrave extends Quest {
         int _state = st.getState();
 
         if (_state == CREATED) {
-            if (st.getPlayer().getLevel() >= 15) {
+            if (st.player.getLevel() >= 15) {
                 htmltext = "subelder_perwan_q0283_0101.htm";
                 st.setCond(0);
             } else {
@@ -74,14 +73,13 @@ public final class _283_TheFewTheProudTheBrave extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState qs) {
+    public void onKill(NpcInstance npc, QuestState qs) {
         if (qs.getState() != STARTED)
-            return null;
+            return;
 
         if (Rnd.chance(CRIMSON_SPIDER_CLAW_CHANCE)) {
-            qs.giveItems(CRIMSON_SPIDER_CLAW, 1);
+            qs.giveItems(CRIMSON_SPIDER_CLAW);
             qs.playSound(SOUND_ITEMGET);
         }
-        return null;
     }
 }

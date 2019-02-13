@@ -139,7 +139,7 @@ public class MerchantInstance extends NpcInstance {
         if (getReflection() == ReflectionManager.GIRAN_HARBOR || getReflection() == ReflectionManager.PARNASSUS) {
             String var = player.getVar("backCoords");
             if (var != null && !var.isEmpty()) {
-                Location loc = Location.parseLoc(var);
+                Location loc = Location.of(var);
 
                 DomainArea domain = MapRegionHolder.getInstance().getRegionData(DomainArea.class, loc);
                 if (domain != null)

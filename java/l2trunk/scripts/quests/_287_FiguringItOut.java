@@ -4,9 +4,7 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-import java.util.Arrays;
 import java.util.List;
 
 public final class _287_FiguringItOut extends Quest {
@@ -25,19 +23,19 @@ public final class _287_FiguringItOut extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("laki_q287_03.htm")) {
+        if ("laki_q287_03.htm".equalsIgnoreCase(event)) {
             st.setState(STARTED);
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("request_spitter")) {
-            if (st.getQuestItemsCount(VialofTantaBlood) >= 500) {
+        } else if ("request_spitter".equalsIgnoreCase(event)) {
+            if (st.haveQuestItem(VialofTantaBlood, 500)) {
                 st.takeItems(VialofTantaBlood, 500);
                 switch (Rnd.get(1, 5)) {
                     case 1:
-                        st.giveItems(10381, 1);
+                        st.giveItems(10381);
                         break;
                     case 2:
-                        st.giveItems(10405, 1);
+                        st.giveItems(10405);
                         break;
                     case 3:
                         st.giveItems(10405, 4);
@@ -52,8 +50,8 @@ public final class _287_FiguringItOut extends Quest {
                 htmltext = "laki_q287_07.htm";
             } else
                 htmltext = "laki_q287_06.htm";
-        } else if (event.equalsIgnoreCase("request_moirai")) {
-            if (st.getQuestItemsCount(VialofTantaBlood) >= 100) {
+        } else if ("request_moirai".equalsIgnoreCase(event)) {
+            if (st.haveQuestItem(VialofTantaBlood,100)) {
                 st.takeItems(VialofTantaBlood, 100);
                 switch (Rnd.get(1, 16)) {
                     case 1:
@@ -108,9 +106,9 @@ public final class _287_FiguringItOut extends Quest {
                 htmltext = "laki_q287_07.htm";
             } else
                 htmltext = "laki_q287_10.htm";
-        } else if (event.equalsIgnoreCase("continue"))
+        } else if ("continue".equalsIgnoreCase(event))
             htmltext = "laki_q287_08.htm";
-        else if (event.equalsIgnoreCase("quit")) {
+        else if ("quit".equalsIgnoreCase(event)) {
             htmltext = "laki_q287_09.htm";
             st.exitCurrentQuest(true);
         }
@@ -124,8 +122,7 @@ public final class _287_FiguringItOut extends Quest {
         int cond = st.getCond();
         if (npcId == Laki) {
             if (cond == 0) {
-                QuestState qs = st.getPlayer().getQuestState(_250_WatchWhatYouEat.class);
-                if (st.getPlayer().getLevel() >= 82 && qs != null && qs.isCompleted())
+                if (st.player.getLevel() >= 82 && st.player.isQuestCompleted(_250_WatchWhatYouEat.class))
                     htmltext = "laki_q287_01.htm";
                 else {
                     htmltext = "laki_q287_00.htm";
@@ -133,20 +130,19 @@ public final class _287_FiguringItOut extends Quest {
                 }
             } else if (cond == 1 && st.getQuestItemsCount(VialofTantaBlood) < 100)
                 htmltext = "laki_q287_04.htm";
-            else if (cond == 1 && st.getQuestItemsCount(VialofTantaBlood) >= 100)
+            else if (cond == 1 && st.haveQuestItem(VialofTantaBlood, 100))
                 htmltext = "laki_q287_05.htm";
         }
         return htmltext;
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         if (cond == 1) {
             if (TantaClan.contains(npcId) && Rnd.chance(60))
                 st.giveItems(VialofTantaBlood, 1, true);
         }
-        return null;
     }
 }

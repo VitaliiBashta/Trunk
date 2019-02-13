@@ -2,6 +2,7 @@ package l2trunk.scripts.npc.model.residences.fortress.siege;
 
 import l2trunk.gameserver.listener.actor.OnDeathListener;
 import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.events.impl.FortressSiegeEvent;
 import l2trunk.gameserver.model.entity.events.objects.DoorObject;
 import l2trunk.gameserver.model.entity.events.objects.SiegeClanObject;
@@ -64,10 +65,11 @@ public class MercenaryCaptionInstance extends MonsterInstance {
 
     @Override
     public boolean isAutoAttackable(Creature attacker) {
+        Player player = (Player) attacker;
         FortressSiegeEvent event = getEvent(FortressSiegeEvent.class);
         if (event == null)
             return false;
-        SiegeClanObject object = event.getSiegeClan(FortressSiegeEvent.DEFENDERS, attacker.getClan());
+        SiegeClanObject object = event.getSiegeClan(FortressSiegeEvent.DEFENDERS, player.getClan());
         return object != null;
     }
 
@@ -81,11 +83,8 @@ public class MercenaryCaptionInstance extends MonsterInstance {
     @Override
     public void onDecay() {
         super.onDecay();
-
-        Fortress f = getFortress();
-        FortressSiegeEvent event = f.getSiegeEvent();
-        List<DoorObject> objects = event.getObjects(FortressSiegeEvent.ENTER_DOORS);
-        for (DoorObject d : objects)
-            d.getDoor().removeListener(_doorDeathListener);
+        List<DoorObject> objects = getFortress().getSiegeEvent().getObjects(FortressSiegeEvent.ENTER_DOORS);
+        objects.forEach(d ->
+            d.getDoor().removeListener(_doorDeathListener));
     }
 }

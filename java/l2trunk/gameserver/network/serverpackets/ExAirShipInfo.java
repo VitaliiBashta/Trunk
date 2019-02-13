@@ -16,16 +16,16 @@ public class ExAirShipInfo extends L2GameServerPacket {
     private int _controlKey;
 
     public ExAirShipInfo(AirShip ship) {
-        _objId = ship.getObjectId();
+        _objId = ship.objectId();
         _loc = ship.getLoc();
         _speed1 = ship.getRunSpeed();
         _speed2 = ship.getRotationSpeed();
-        if (ship.isClanAirShip()) {
+        if (ship instanceof ClanAirShip) {
             _fuel = ((ClanAirShip) ship).getCurrentFuel();
             _maxFuel = ((ClanAirShip) ship).getMaxFuel();
             Player driver = ((ClanAirShip) ship).getDriver();
-            _driverObjId = driver == null ? 0 : driver.getObjectId();
-            _controlKey = ((ClanAirShip) ship).getControlKey().getObjectId();
+            _driverObjId = driver == null ? 0 : driver.objectId();
+            _controlKey = ((ClanAirShip) ship).getControlKey().objectId();
         }
     }
 

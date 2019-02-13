@@ -11,7 +11,7 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
 public class SiegeFlagInstance extends NpcInstance {
-    private SiegeClanObject _owner;
+    private SiegeClanObject owner;
     private long _lastAnnouncedAttackedTime = 0;
 
     public SiegeFlagInstance(int objectId, NpcTemplate template) {
@@ -21,21 +21,21 @@ public class SiegeFlagInstance extends NpcInstance {
 
     @Override
     public String getName() {
-        return _owner.getClan().getName();
+        return owner.getClan().getName();
     }
 
     @Override
     public Clan getClan() {
-        return _owner.getClan();
+        return owner.getClan();
     }
 
     public void setClan(SiegeClanObject owner) {
-        _owner = owner;
+        this.owner = owner;
     }
 
     @Override
     public String getTitle() {
-        return StringUtils.EMPTY;
+        return "";
     }
 
     @Override
@@ -44,7 +44,7 @@ public class SiegeFlagInstance extends NpcInstance {
         if (player == null || isInvul())
             return false;
         Clan clan = player.getClan();
-        return clan == null || _owner.getClan() != clan;
+        return clan == null || owner.getClan() != clan;
     }
 
     @Override
@@ -54,7 +54,7 @@ public class SiegeFlagInstance extends NpcInstance {
 
     @Override
     protected void onDeath(Creature killer) {
-        _owner.setFlag(null);
+        owner.setFlag(null);
         super.onDeath(killer);
     }
 
@@ -62,7 +62,7 @@ public class SiegeFlagInstance extends NpcInstance {
     protected void onReduceCurrentHp(final double damage, final Creature attacker, Skill skill, final boolean awake, final boolean standUp, boolean directHp) {
         if (System.currentTimeMillis() - _lastAnnouncedAttackedTime > 120000) {
             _lastAnnouncedAttackedTime = System.currentTimeMillis();
-            _owner.getClan().broadcastToOnlineMembers(SystemMsg.YOUR_BASE_IS_BEING_ATTACKED);
+            owner.getClan().broadcastToOnlineMembers(SystemMsg.YOUR_BASE_IS_BEING_ATTACKED);
         }
 
         super.onReduceCurrentHp(damage, attacker, skill, awake, standUp, directHp);

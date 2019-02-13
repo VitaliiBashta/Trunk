@@ -4,6 +4,8 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
+import java.util.List;
+
 public final class _413_PathToShillienOracle extends Quest {
     //npc
     private final int SIDRA = 30330;
@@ -26,12 +28,8 @@ public final class _413_PathToShillienOracle extends Quest {
     private final int ANDARIEL_BOOK_ID = 1269;
     private final int ORB_OF_ABYSS_ID = 1270;
     //ASHEN_BONES_DROP [moblist]
-    private final int[] ASHEN_BONES_DROP = {
-            ZOMBIE_SOLDIER,
-            ZOMBIE_WARRIOR,
-            SHIELD_SKELETON,
-            SKELETON_INFANTRYMAN
-    };
+    private final List<Integer> ASHEN_BONES_DROP = List.of(
+            ZOMBIE_SOLDIER, ZOMBIE_WARRIOR, SHIELD_SKELETON, SKELETON_INFANTRYMAN);
 
     public _413_PathToShillienOracle() {
         super(false);
@@ -43,8 +41,7 @@ public final class _413_PathToShillienOracle extends Quest {
 
         addKillId(DARK_SUCCUBUS);
 
-        for (int i : ASHEN_BONES_DROP)
-            addKillId(i);
+        addKillId(ASHEN_BONES_DROP);
 
         addQuestItem(ASHEN_BONES_ID);
 
@@ -60,40 +57,47 @@ public final class _413_PathToShillienOracle extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("1")) {
-            htmltext = "master_sidra_q0413_06.htm";
-            st.setCond(1);
-            st.setState(STARTED);
-            st.playSound(SOUND_ACCEPT);
-            st.giveItems(SIDRAS_LETTER1_ID, 1);
-        } else if (event.equalsIgnoreCase("413_1")) {
-            if (st.getPlayer().getLevel() >= 18 && st.getPlayer().getClassId().id() == 0x26 && st.getQuestItemsCount(ORB_OF_ABYSS_ID) < 1)
-                htmltext = "master_sidra_q0413_05.htm";
-            else if (st.getPlayer().getClassId().id() != 0x26) {
-                if (st.getPlayer().getClassId().id() == 0x2a)
-                    htmltext = "master_sidra_q0413_02a.htm";
-                else
-                    htmltext = "master_sidra_q0413_03.htm";
-            } else if (st.getPlayer().getLevel() < 18 && st.getPlayer().getClassId().id() == 0x26)
-                htmltext = "master_sidra_q0413_02.htm";
-            else if (st.getPlayer().getLevel() >= 18 && st.getPlayer().getClassId().id() == 0x26 && st.getQuestItemsCount(ORB_OF_ABYSS_ID) > 0)
-                htmltext = "master_sidra_q0413_04.htm";
-        } else if (event.equalsIgnoreCase("30377_1")) {
-            htmltext = "magister_talbot_q0413_02.htm";
-            st.takeItems(SIDRAS_LETTER1_ID, -1);
-            st.giveItems(BLANK_SHEET1_ID, 5);
-            st.playSound(SOUND_ITEMGET);
-            st.setCond(2);
-        } else if (event.equalsIgnoreCase("30375_1"))
-            htmltext = "priest_adonius_q0413_02.htm";
-        else if (event.equalsIgnoreCase("30375_2"))
-            htmltext = "priest_adonius_q0413_03.htm";
-        else if (event.equalsIgnoreCase("30375_3")) {
-            htmltext = "priest_adonius_q0413_04.htm";
-            st.takeItems(PRAYER_OF_ADON_ID, -1);
-            st.giveItems(PENITENTS_MARK_ID, 1);
-            st.playSound(SOUND_ITEMGET);
-            st.setCond(5);
+        switch (event) {
+            case "1":
+                htmltext = "master_sidra_q0413_06.htm";
+                st.setCond(1);
+                st.setState(STARTED);
+                st.playSound(SOUND_ACCEPT);
+                st.giveItems(SIDRAS_LETTER1_ID);
+                break;
+            case "413_1":
+                if (st.player.getLevel() >= 18 && st.player.getClassId().id == 0x26 && st.getQuestItemsCount(ORB_OF_ABYSS_ID) < 1)
+                    htmltext = "master_sidra_q0413_05.htm";
+                else if (st.player.getClassId().id != 0x26) {
+                    if (st.player.getClassId().id == 0x2a)
+                        htmltext = "master_sidra_q0413_02a.htm";
+                    else
+                        htmltext = "master_sidra_q0413_03.htm";
+                } else if (st.player.getLevel() < 18)
+                    htmltext = "master_sidra_q0413_02.htm";
+                else if (st.getQuestItemsCount(ORB_OF_ABYSS_ID) > 0)
+                    htmltext = "master_sidra_q0413_04.htm";
+                break;
+            case "30377_1":
+                htmltext = "magister_talbot_q0413_02.htm";
+                st.takeItems(SIDRAS_LETTER1_ID);
+                st.giveItems(BLANK_SHEET1_ID, 5);
+                st.playSound(SOUND_ITEMGET);
+                st.setCond(2);
+                break;
+            case "30375_1":
+                htmltext = "priest_adonius_q0413_02.htm";
+                break;
+            case "30375_2":
+                htmltext = "priest_adonius_q0413_03.htm";
+                break;
+            case "30375_3":
+                htmltext = "priest_adonius_q0413_04.htm";
+                st.takeItems(PRAYER_OF_ADON_ID);
+                st.giveItems(PENITENTS_MARK_ID);
+                st.playSound(SOUND_ITEMGET);
+                st.setCond(5);
+                break;
         }
         return htmltext;
     }
@@ -110,17 +114,16 @@ public final class _413_PathToShillienOracle extends Quest {
                 htmltext = "master_sidra_q0413_07.htm";
             else if (cond == 2 | cond == 3)
                 htmltext = "master_sidra_q0413_08.htm";
-            else if (cond > 3 && cond < 7)
+            else if (cond < 7)
                 htmltext = "master_sidra_q0413_09.htm";
             else if (cond == 7 && st.getQuestItemsCount(ANDARIEL_BOOK_ID) > 0 && st.getQuestItemsCount(GARMIEL_BOOK_ID) > 0) {
                 htmltext = "master_sidra_q0413_10.htm";
                 st.exitCurrentQuest(true);
-                if (st.getPlayer().getClassId().getLevel() == 1) {
-                    st.giveItems(ORB_OF_ABYSS_ID, 1);
-                    if (!st.getPlayer().getVarB("prof1")) {
-                        st.getPlayer().setVar("prof1", "1", -1);
+                if (st.player.getClassId().occupation() == 0) {
+                    st.giveItems(ORB_OF_ABYSS_ID);
+                    if (!st.player.isVarSet("prof1")) {
+                        st.player.setVar("prof1", 1);
                         st.addExpAndSp(228064, 16455);
-                        //FIXME [G1ta0] дать адены, только если первый чар на акке
                         st.giveItems(ADENA_ID, 81900);
                     }
                 }
@@ -136,9 +139,9 @@ public final class _413_PathToShillienOracle extends Quest {
                     htmltext = "magister_talbot_q0413_04.htm";
             } else if (cond == 3 && st.getQuestItemsCount(BLOODY_RUNE1_ID) > 4) {
                 htmltext = "magister_talbot_q0413_05.htm";
-                st.takeItems(BLOODY_RUNE1_ID, -1);
-                st.giveItems(GARMIEL_BOOK_ID, 1);
-                st.giveItems(PRAYER_OF_ADON_ID, 1);
+                st.takeItems(BLOODY_RUNE1_ID);
+                st.giveItems(GARMIEL_BOOK_ID);
+                st.giveItems(PRAYER_OF_ADON_ID);
                 st.playSound(SOUND_ITEMGET);
                 st.setCond(4);
             } else if (cond > 3 && cond < 7)
@@ -154,9 +157,9 @@ public final class _413_PathToShillienOracle extends Quest {
                 htmltext = "priest_adonius_q0413_06.htm";
             else if (cond == 6 && st.getQuestItemsCount(ASHEN_BONES_ID) > 9) {
                 htmltext = "priest_adonius_q0413_07.htm";
-                st.takeItems(ASHEN_BONES_ID, -1);
-                st.takeItems(PENITENTS_MARK_ID, -1);
-                st.giveItems(ANDARIEL_BOOK_ID, 1);
+                st.takeItems(ASHEN_BONES_ID);
+                st.takeItems(PENITENTS_MARK_ID);
+                st.giveItems(ANDARIEL_BOOK_ID);
                 st.playSound(SOUND_ITEMGET);
                 st.setCond(7);
             } else if (cond == 7 && st.getQuestItemsCount(ANDARIEL_BOOK_ID) > 0)
@@ -165,28 +168,26 @@ public final class _413_PathToShillienOracle extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         if (npcId == DARK_SUCCUBUS)
             if (cond == 2 && st.getQuestItemsCount(BLANK_SHEET1_ID) > 0) {
-                st.giveItems(BLOODY_RUNE1_ID, 1);
-                st.takeItems(BLANK_SHEET1_ID, 1);
+                st.giveItems(BLOODY_RUNE1_ID);
+                st.takeItems(BLANK_SHEET1_ID);
                 if (st.getQuestItemsCount(BLANK_SHEET1_ID) < 1) {
                     st.playSound(SOUND_MIDDLE);
                     st.setCond(3);
                 } else
                     st.playSound(SOUND_ITEMGET);
             }
-        for (int i : ASHEN_BONES_DROP)
-            if (npcId == i && cond == 5 && st.getQuestItemsCount(ASHEN_BONES_ID) < 10) {
-                st.giveItems(ASHEN_BONES_ID, 1);
+        if (ASHEN_BONES_DROP.contains(npcId) && cond == 5 && st.getQuestItemsCount(ASHEN_BONES_ID) < 10) {
+                st.giveItems(ASHEN_BONES_ID);
                 if (st.getQuestItemsCount(ASHEN_BONES_ID) > 9) {
                     st.playSound(SOUND_MIDDLE);
                     st.setCond(6);
                 } else
                     st.playSound(SOUND_ITEMGET);
             }
-        return null;
     }
 }

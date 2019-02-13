@@ -29,6 +29,9 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.ScheduledFuture;
 
+import static l2trunk.commons.lang.NumberUtils.toInt;
+import static l2trunk.gameserver.utils.ItemFunctions.addItem;
+
 public final class Viktorina extends Functions implements ScriptFile, IVoicedCommandHandler, OnPlayerEnterListener {
     private static final Logger _log = LoggerFactory.getLogger(Viktorina.class);
     private static final ArrayList<Player> playerList = new ArrayList<>();
@@ -135,23 +138,23 @@ public final class Viktorina extends Functions implements ScriptFile, IVoicedCom
     private void announseViktorina(String text) {
         Say2 cs = new Say2(0, ChatType.TELL, "quiz", text);
         GameObjectsStorage.getAllPlayersStream()
-                .filter(player -> ("on".equals(player.getVar("viktorina"))))
+                .filter(player -> player.isVarSet("viktorina"))
                 .forEach(player -> player.sendPacket(cs));
     }
 
     private void checkPlayers() {
         Say2 cs = new Say2(0, ChatType.TELL, "Quiz ", " to refuse to participate in a quiz type .voff, a reference type .vhelp");
         GameObjectsStorage.getAllPlayersStream()
-                .filter(p -> p.getVar("viktorina") == null)
+                .filter(p -> !p.isVarSet("viktorina"))
                 .forEach(p -> {
                     p.sendPacket(cs);
-                    p.setVar("viktorina", "on", -1);
+                    p.setVar("viktorina");
                 });
     }
 
     private void viktorinaSay(Player player, String text) {
         Say2 cs = new Say2(0, ChatType.TELL, "Quiz", text);
-        if (player.getVar("viktorina").equals("on"))
+        if (player.isVarSet("viktorina"))
             player.sendPacket(cs);
     }
 
@@ -268,20 +271,12 @@ public final class Viktorina extends Functions implements ScriptFile, IVoicedCom
      * @param player
      */
     private void help(Player player) {
-        int schet;
-        int first;
         int vq;
         int va;
         String vstatus;
-        if (player.getVar("viktorinaschet") == null)
-            schet = 0;
-        else
-            schet = Integer.parseInt(player.getVar("viktorinaschet"));
+          int  schet = player.getVarInt("viktorinaschet");
 
-        if (player.getVar("viktorinafirst") == null)
-            first = 0;
-        else
-            first = Integer.parseInt(player.getVar("viktorinafirst"));
+          int first = player.getVarInt("viktorinafirst");
 
         if (ServerVariables.getString("viktorinaq", "0") == "0") {
             ServerVariables.set("viktorinaq", 0);
@@ -295,7 +290,7 @@ public final class Viktorina extends Functions implements ScriptFile, IVoicedCom
         } else
             va = Integer.parseInt(ServerVariables.getString("viktorinaa"));
 
-        if (player.getVar("viktorina") == "on")
+        if (player.isVarSet("viktorina"))
             vstatus = "<font color=\"#00FF00\">You are participating in \"Quiz\"</font><br>";
         else
             vstatus = "<font color=\"#FF0000\">You are not in \"Quiz\"</font><br>";
@@ -412,12 +407,12 @@ public final class Viktorina extends Functions implements ScriptFile, IVoicedCom
                 viktorinaSay(player, "Возможно вопрос не был задан,или же время ответа истекло");
         }
         if (command.equals("von")) {
-            player.setVar("viktorina", "on", -1);
+            player.setVar("viktorina");
             player.sendMessage("You take part in the Quiz!");
             player.sendMessage("Wait receipts you issue a PM!");
         }
         if (command.equals("voff")) {
-            player.setVar("viktorina", "off", -1);
+            player.unsetVar("viktorina");
             player.sendMessage("Refused to participate in the Quiz!");
             player.sendMessage("Until next time!");
         }
@@ -450,23 +445,13 @@ public final class Viktorina extends Functions implements ScriptFile, IVoicedCom
         }
 
         parseReward();
-        int schet;
-        int first;
         for (Player player : playerList) {
-            if (player.getVar("viktorinaschet") == null)
-                schet = 0;
-            else
-                schet = Integer.parseInt(player.getVar("viktorinaschet"));
-            if (player.getVar("viktorinafirst") == null)
-                first = 0;
-            else
-                first = Integer.parseInt(player.getVar("viktorinafirst"));
             if (player == playerList.get(0)) {
                 giveItemByChance(player, true);
-                player.setVar("viktorinafirst", "" + (first + 1) + "", -1);
+                player.incVar("viktorinafirst");
             } else
                 giveItemByChance(player, false);
-            player.setVar("viktorinaschet", "" + (schet + 1) + "", -1);
+            player.incVar("viktorinaschet");
         }
     }
 
@@ -516,15 +501,15 @@ public final class Viktorina extends Functions implements ScriptFile, IVoicedCom
      */
     private boolean giveItemByChance(Player player, boolean first) {
         int chancesumm = 0;
-        int productId = 0;
+        int productId;
         int chance = Rnd.get(0, 100);
-        int count = 0;
+        int count;
         for (RewardList items : _items) {
             chancesumm = chancesumm + items.getChance();
             if (first == items.getFirst() && chancesumm > chance) {
                 productId = items.getProductId();
                 count = items.getCount();
-                addItem(player, productId, count, false, "Viktorina");
+                addItem(player, productId, count, "Viktorina");
                 if (count > 1)
                     player.sendPacket(new SystemMessage(SystemMessage.YOU_HAVE_EARNED_S2_S1S).addItemName(productId).addNumber(count));
                 else
@@ -541,9 +526,8 @@ public final class Viktorina extends Functions implements ScriptFile, IVoicedCom
         return status;
     }
 
-    @SuppressWarnings("static-access")
     private void setStatus(boolean status) {
-        this.status = status;
+        Viktorina.status = status;
     }
 
     private String getName(int char_id) {

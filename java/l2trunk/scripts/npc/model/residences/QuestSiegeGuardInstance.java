@@ -24,8 +24,10 @@ public final class QuestSiegeGuardInstance extends SiegeGuardInstance {
     @Override
     public void onDeath(Creature lastAttacker) {
         super.onDeath(lastAttacker);
+        if (!(lastAttacker instanceof Playable))
+            return;
 
-        Player killer = lastAttacker.getPlayer();
+        Player killer = ((Playable) lastAttacker).getPlayer();
         if (killer == null)
             return;
 

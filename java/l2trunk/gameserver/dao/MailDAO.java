@@ -81,7 +81,7 @@ public final class MailDAO implements JdbcDAO<Integer, Mail> {
 
                 for (ItemInstance item : mail.getAttachments()) {
                     statement.setInt(1, mail.getMessageId());
-                    statement.setInt(2, item.getObjectId());
+                    statement.setInt(2, item.objectId());
                     statement.addBatch();
                 }
 

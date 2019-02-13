@@ -16,18 +16,14 @@ public final class TeleToFantasyIsle extends Functions {
             new Location(-59716, -57864, -2032));
 
     public void toFantasyIsle() {
-        Player player = getSelf();
-
         if (!NpcInstance.canBypassCheck(player, player.getLastNpc()))
             return;
 
-        player.setVar("backCoords", player.getLoc().toXYZString(), -1);
+        player.setVar("backCoords", player.getLoc().toXYZString());
         player.teleToLocation(Rnd.get(POINTS));
     }
 
     public void fromFantasyIsle() {
-        Player player = getSelf();
-        NpcInstance npc = getNpc();
         if (player == null || npc == null)
             return;
 
@@ -39,12 +35,10 @@ public final class TeleToFantasyIsle extends Functions {
             teleOut();
             return;
         }
-        player.teleToLocation(Location.parseLoc(var));
+        player.teleToLocation(Location.of(var));
     }
 
     private void teleOut() {
-        Player player = getSelf();
-        NpcInstance npc = getNpc();
         if (npc == null || !npc.isInRange(player, 1000L))
             return;
 

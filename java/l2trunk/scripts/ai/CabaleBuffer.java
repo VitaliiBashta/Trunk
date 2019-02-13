@@ -74,13 +74,12 @@ public final class CabaleBuffer extends DefaultAI {
         if (_buffVar + buffDelay < System.currentTimeMillis()) {
             _buffVar = System.currentTimeMillis();
             World.getAroundPlayers(actor, 300, 200)
-                    .filter(Objects::nonNull)
                     .forEach(player -> {
                         int playerCabal = SevenSigns.INSTANCE.getPlayerCabal(player);
                         int i0 = Rnd.get(100);
                         int i1 = Rnd.get(10000);
                         if (playerCabal == winningCabal && actor.getNpcId() == SevenSigns.ORATOR_NPC_ID) {
-                            if (player.isMageClass()) {
+                            if (player.getClassId().isMage) {
                                 if (player.getEffectList().getEffectsBySkillId(ORATOR_MAGE_SKILL_ID).count() <= 0) {
                                     if (i1 < 1)
                                         Functions.npcSay(actor, NpcString.I_BESTOW_UPON_YOU_A_BLESSING);

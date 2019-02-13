@@ -27,7 +27,7 @@ public final class _905_RefinedDragonBlood extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("sepsoul_q905_05.htm")) {
+        if ("sepsoul_q905_05.htm".equalsIgnoreCase(event)) {
             st.setState(STARTED);
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
@@ -37,15 +37,11 @@ public final class _905_RefinedDragonBlood extends Quest {
 
             StringTokenizer tokenizer = new StringTokenizer(event);
             tokenizer.nextToken();
-            switch (tokenizer.nextToken()) {
-                case "1":
-                    st.giveItems(21903, 1);
-                    break;
-                case "2":
-                    st.giveItems(21904, 1);
-                    break;
-                default:
-                    break;
+            String s = tokenizer.nextToken();
+            if ("1".equals(s)) {
+                st.giveItems(21903);
+            } else if ("2".equals(s)) {
+                st.giveItems(21904);
             }
             htmltext = "sepsoul_q905_08.htm";
             st.setState(COMPLETED);
@@ -64,7 +60,7 @@ public final class _905_RefinedDragonBlood extends Quest {
             switch (st.getState()) {
                 case CREATED:
                     if (st.isNowAvailable()) {
-                        if (st.getPlayer().getLevel() >= 83)
+                        if (st.player.getLevel() >= 83)
                             htmltext = "sepsoul_q905_01.htm";
                         else {
                             htmltext = "sepsoul_q905_00.htm";
@@ -86,19 +82,18 @@ public final class _905_RefinedDragonBlood extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int cond = st.getCond();
         if (cond == 1) {
             if (AntharasDragonsBlue.contains(npc.getNpcId())) {
                 if (st.getQuestItemsCount(UnrefinedBlueDragonBlood) < 10 && Rnd.chance(70))
-                    st.giveItems(UnrefinedBlueDragonBlood, 1);
+                    st.giveItems(UnrefinedBlueDragonBlood);
             } else if (AntharasDragonsRed.contains(npc.getNpcId())) {
                 if (st.getQuestItemsCount(UnrefinedRedDragonBlood) < 10 && Rnd.chance(70))
-                    st.giveItems(UnrefinedRedDragonBlood, 1);
+                    st.giveItems(UnrefinedRedDragonBlood);
             }
             if (st.getQuestItemsCount(UnrefinedBlueDragonBlood) >= 10 && st.getQuestItemsCount(UnrefinedRedDragonBlood) >= 10)
                 st.setCond(2);
         }
-        return null;
     }
 }

@@ -38,7 +38,7 @@ public final class Alliance {
     }
 
     private int getLeaderId() {
-        return leader != null ? leader.getClanId() : 0;
+        return leader != null ? leader.clanId() : 0;
     }
 
     public Clan getLeader() {
@@ -47,7 +47,7 @@ public final class Alliance {
 
     private void setLeader(Clan leader) {
         this.leader = leader;
-        members.put(leader.getClanId(), leader);
+        members.put(leader.clanId(), leader);
     }
 
     public String getAllyLeaderName() {
@@ -55,14 +55,14 @@ public final class Alliance {
     }
 
     public void addAllyMember(Clan member, boolean storeInDb) {
-        members.put(member.getClanId(), member);
+        members.put(member.clanId(), member);
 
         if (storeInDb)
             storeNewMemberInDatabase(member);
     }
 
     public void removeAllyMember(int id) {
-        if (leader != null && leader.getClanId() == id)
+        if (leader != null && leader.clanId() == id)
             return;
         Clan exMember = members.remove(id);
         if (exMember == null) {
@@ -158,7 +158,7 @@ public final class Alliance {
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement("UPDATE clan_data SET ally_id=? WHERE clan_id=?")) {
             statement.setInt(1,allyId);
-            statement.setInt(2, member.getClanId());
+            statement.setInt(2, member.clanId());
             statement.execute();
         } catch (SQLException e) {
             _log.warn("error while saving new alliance member to db ", e);
@@ -168,7 +168,7 @@ public final class Alliance {
     private void removeMemberInDatabase(Clan member) {
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement("UPDATE clan_data SET ally_id=0 WHERE clan_id=?")) {
-            statement.setInt(1, member.getClanId());
+            statement.setInt(1, member.clanId());
             statement.execute();
         } catch (SQLException e) {
             _log.warn("Error while removing ally member in db ", e);
@@ -197,7 +197,7 @@ public final class Alliance {
                 while (rset.next()) {
                     member = ClanTable.INSTANCE.getClan(rset.getInt("clan_id"));
                     if (member != null)
-                        if (member.getClanId() == leaderId)
+                        if (member.clanId() == leaderId)
                             setLeader(member);
                         else
                             addAllyMember(member, false);

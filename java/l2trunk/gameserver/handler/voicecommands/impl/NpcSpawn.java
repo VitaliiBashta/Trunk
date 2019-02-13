@@ -25,7 +25,7 @@ public final class NpcSpawn extends Functions implements IVoicedCommandHandler {
     @Override
     public boolean useVoicedCommand(String command, Player activeChar, String target) {
 
-        if (activeChar.getClan() == null || activeChar.getClanHall() == null || activeChar.getClan().getLeaderId() != activeChar.getObjectId()) {
+        if (activeChar.getClan() == null || activeChar.getClanHall() == null || activeChar.getClan().getLeaderId() != activeChar.objectId()) {
             activeChar.sendMessage("Only clan leaders owning a clanhall can use that command.");
             return false;
         }
@@ -40,7 +40,7 @@ public final class NpcSpawn extends Functions implements IVoicedCommandHandler {
         }
 
         if (target.isEmpty()) {// No variables, then display main html
-            NpcHtmlMessage html = new NpcHtmlMessage(activeChar.getObjectId());
+            NpcHtmlMessage html = new NpcHtmlMessage(activeChar.objectId());
             html.setFile("custom/npcspawn.htm");// i think thats a what to set there?
             activeChar.sendPacket(html);
             return true;

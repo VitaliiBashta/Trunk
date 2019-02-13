@@ -3,7 +3,6 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _10267_JourneyToGracia extends Quest {
     private final static int Orven = 30857;
@@ -25,17 +24,17 @@ public final class _10267_JourneyToGracia extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("30857-06.htm")) {
+        if ("30857-06.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-            st.giveItems(Letter, 1);
-        } else if (event.equalsIgnoreCase("32564-02.htm")) {
+            st.giveItems(Letter);
+        } else if ("32564-02.htm".equalsIgnoreCase(event)) {
             st.setCond(2);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("32548-02.htm")) {
+        } else if ("32548-02.htm".equalsIgnoreCase(event)) {
             st.giveItems(ADENA_ID, 92500);
-            st.takeItems(Letter, -1);
+            st.takeItems(Letter);
             st.addExpAndSp(75480, 7570);
             st.unset("cond");
             st.exitCurrentQuest(false);
@@ -58,7 +57,7 @@ public final class _10267_JourneyToGracia extends Quest {
                 htmltext = "30857-0a.htm";
         } else if (id == CREATED) {
             if (npcId == Orven)
-                if (st.getPlayer().getLevel() < 75)
+                if (st.player.getLevel() < 75)
                     htmltext = "30857-00.htm";
                 else
                     htmltext = "30857-01.htm";

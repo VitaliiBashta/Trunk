@@ -78,7 +78,7 @@ public class RequestEnchantItemAttribute extends L2GameClientPacket {
             return;
         }
 
-        if (itemToEnchant.isStackable() || (stone = inventory.getItemByObjectId(stone.getObjectId())) == null) {
+        if (itemToEnchant.isStackable() || (stone = inventory.getItemByObjectId(stone.objectId())) == null) {
             activeChar.sendActionFailed();
             return;
         }
@@ -106,7 +106,7 @@ public class RequestEnchantItemAttribute extends L2GameClientPacket {
         }
 
         // Запрет на заточку чужих вещей, баг может вылезти на серверных лагах
-        if (itemToEnchant.getOwnerId() != activeChar.getObjectId()) {
+        if (itemToEnchant.getOwnerId() != activeChar.objectId()) {
             activeChar.sendPacket(Msg.INAPPROPRIATE_ENCHANT_CONDITIONS, ActionFail.STATIC);
             return;
         }

@@ -103,7 +103,7 @@ public class AdminAugmentation implements IAdminCommandHandler {
                         return false;
                     }
 
-                    final Player target = activeChar.getTarget().getPlayer();
+                    final Player target = (Player)activeChar.getTarget();
 
                     // Chequeamos que el target este en las condiciones correctas por las dudas
                     if (target.isInStoreMode() || target.isProcessingRequest() || target.isInTrade()) {
@@ -139,7 +139,7 @@ public class AdminAugmentation implements IAdminCommandHandler {
                     target.sendPacket(new InventoryUpdate().addModifiedItem(targetItem));
 
                     for (ShortCut sc : target.getAllShortCuts()) {
-                        if (sc.getId() == targetItem.getObjectId() && sc.getType() == ShortCut.TYPE_ITEM)
+                        if (sc.getId() == targetItem.objectId() && sc.getType() == ShortCut.TYPE_ITEM)
                             target.sendPacket(new ShortCutRegister(target, sc));
                     }
                     target.sendChanges();
@@ -212,11 +212,11 @@ public class AdminAugmentation implements IAdminCommandHandler {
             if (page != _page)
                 continue;
 
-            skill = (!augm.getTriggerList().isEmpty() ? augm.getTriggerList().get(0).getSkill() : (!augm.getSkills().isEmpty() ? augm.getSkills().get(0) : null));
+            skill = (!augm.getTriggerList().isEmpty() ? augm.getTriggerList().get(0).skill : (!augm.getSkills().isEmpty() ? augm.getSkills().get(0) : null));
 
             augmentationsHtm.append("<table valign=top border=0 ").append(lastColor ? "bgcolor=131210" : "").append(">");
             augmentationsHtm.append("<tr>");
-            augmentationsHtm.append("<td valign=top align=center width=34 background=").append(skill != null ? skill.icon : "icon.skill5041").append("><button action=\"bypass -h admin_augmentation setaug ").append(augm.getId()).append("\" width=32 height=32 back=\"L2UI_CT1.ItemWindow_DF_Frame_Down\" fore=\"L2UI_CT1.ItemWindow_DF_Frame\"></td>");
+            augmentationsHtm.append("<td valign=top align=center width=34 background=").append(skill != null ? skill.icon : "icon.skill5041").append("><button action=\"bypass -h admin_augmentation setaug ").append(augm.id()).append("\" width=32 height=32 back=\"L2UI_CT1.ItemWindow_DF_Frame_Down\" fore=\"L2UI_CT1.ItemWindow_DF_Frame\"></td>");
             augmentationsHtm.append("<td width=8></td>");
             augmentationsHtm.append("<td width=220>");
             augmentationsHtm.append("<table cellspacing=-2 valign=top>");
@@ -226,7 +226,7 @@ public class AdminAugmentation implements IAdminCommandHandler {
                 // Stats harcoded
                 augmentationsHtm.append("<tr><td width=100><font color=ae9978>+1</font> ");
 
-                switch (augm.getId()) {
+                switch (augm.id) {
                     case 16341: // +1 STR
                         augmentationsHtm.append("STR");
                         break;
@@ -240,7 +240,7 @@ public class AdminAugmentation implements IAdminCommandHandler {
                         augmentationsHtm.append("MEN");
                         break;
                     default:
-                        augmentationsHtm.append(augm.getId());
+                        augmentationsHtm.append(augm.id);
                         break;
                 }
 

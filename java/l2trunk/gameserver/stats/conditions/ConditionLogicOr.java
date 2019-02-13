@@ -6,19 +6,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class ConditionLogicOr extends Condition {
-    public List<Condition> _conditions = new ArrayList<>();
+    public List<Condition> conditions = new ArrayList<>();
 
     public void add(Condition condition) {
         if (condition == null)
             return;
-        _conditions.add(condition);
+        conditions.add(condition);
     }
 
     @Override
     protected boolean testImpl(Env env) {
-        for (Condition c : _conditions)
-            if (c.test(env))
-                return true;
-        return false;
+        return conditions.stream()
+                .anyMatch(c -> c.test(env));
     }
 }

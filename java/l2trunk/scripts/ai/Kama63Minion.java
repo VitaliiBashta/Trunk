@@ -64,7 +64,7 @@ public final class Kama63Minion extends Fighter {
             return null;
 
         return World.getAroundNpc(minion)
-                .filter(npc -> npc.getNpcId() == Kama63Minion.BOSS_ID)
+                .filter(npc -> npc.getNpcId() == BOSS_ID)
                 .findFirst().orElse(null);
     }
 

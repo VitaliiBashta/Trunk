@@ -30,25 +30,18 @@ public final class TullyWorkshopZone implements ScriptFile {
         final Location TullyFloor5LocationPoint = new Location(-10952, 272536, -9062);
 
         @Override
-        public void onZoneEnter(Zone zone, Creature cha) {
-            Player player = cha.getPlayer();
-            if (player == null)
-                return;
-            if (zone.isActive()) {
-                if (zone.getName().equalsIgnoreCase("[tully1]"))
-                    player.teleToLocation(TullyFloor2LocationPoint);
-                else if (zone.getName().equalsIgnoreCase("[tully2]"))
-                    player.teleToLocation(TullyFloor4LocationPoint);
-                else if (zone.getName().equalsIgnoreCase("[tully3]"))
-                    player.teleToLocation(TullyFloor3LocationPoint);
-                else if (zone.getName().equalsIgnoreCase("[tully4]"))
-                    player.teleToLocation(TullyFloor5LocationPoint);
+        public void onZoneEnter(Zone zone, Player player) {
+                if (zone.isActive()) {
+                    if (zone.getName().equalsIgnoreCase("[tully1]"))
+                        player.teleToLocation(TullyFloor2LocationPoint);
+                    else if (zone.getName().equalsIgnoreCase("[tully2]"))
+                        player.teleToLocation(TullyFloor4LocationPoint);
+                    else if (zone.getName().equalsIgnoreCase("[tully3]"))
+                        player.teleToLocation(TullyFloor3LocationPoint);
+                    else if (zone.getName().equalsIgnoreCase("[tully4]"))
+                        player.teleToLocation(TullyFloor5LocationPoint);
 
-            }
-        }
-
-        @Override
-        public void onZoneLeave(Zone zone, Creature cha) {
+                }
         }
     }
 }

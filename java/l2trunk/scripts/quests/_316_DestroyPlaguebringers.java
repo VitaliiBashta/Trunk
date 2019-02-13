@@ -33,11 +33,11 @@ public final class _316_DestroyPlaguebringers extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         int _state = st.getState();
-        if (event.equalsIgnoreCase("elliasin_q0316_04.htm") && _state == CREATED && st.getPlayer().getRace() == Race.elf && st.getPlayer().getLevel() >= 18) {
+        if ("elliasin_q0316_04.htm".equalsIgnoreCase(event) && _state == CREATED && st.player.getRace() == Race.elf && st.player.getLevel() >= 18) {
             st.setState(STARTED);
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("elliasin_q0316_08.htm") && _state == STARTED) {
+        } else if ("elliasin_q0316_08.htm".equalsIgnoreCase(event) && _state == STARTED) {
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(true);
         }
@@ -52,10 +52,10 @@ public final class _316_DestroyPlaguebringers extends Quest {
         int _state = st.getState();
 
         if (_state == CREATED) {
-            if (st.getPlayer().getRace() != Race.elf) {
+            if (st.player.getRace() != Race.elf) {
                 htmltext = "elliasin_q0316_00.htm";
                 st.exitCurrentQuest(true);
-            } else if (st.getPlayer().getLevel() < 18) {
+            } else if (st.player.getLevel() < 18) {
                 htmltext = "elliasin_q0316_02.htm";
                 st.exitCurrentQuest(true);
             } else {
@@ -66,8 +66,8 @@ public final class _316_DestroyPlaguebringers extends Quest {
             long Reward = st.getQuestItemsCount(Wererats_Fang) * 60 + st.getQuestItemsCount(Varool_Foulclaws_Fang) * 10000L;
             if (Reward > 0) {
                 htmltext = "elliasin_q0316_07.htm";
-                st.takeItems(Wererats_Fang, -1);
-                st.takeItems(Varool_Foulclaws_Fang, -1);
+                st.takeItems(Wererats_Fang);
+                st.takeItems(Varool_Foulclaws_Fang);
                 st.giveItems(ADENA_ID, Reward);
                 st.playSound(SOUND_MIDDLE);
             } else
@@ -78,18 +78,16 @@ public final class _316_DestroyPlaguebringers extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState qs) {
+    public void onKill(NpcInstance npc, QuestState qs) {
         if (qs.getState() != STARTED)
-            return null;
+            return;
 
-        if (npc.getNpcId() == Varool_Foulclaw && qs.getQuestItemsCount(Varool_Foulclaws_Fang) == 0 && Rnd.chance(Varool_Foulclaws_Fang_Chance)) {
-            qs.giveItems(Varool_Foulclaws_Fang, 1);
+        if (npc.getNpcId() == Varool_Foulclaw  && Rnd.chance(Varool_Foulclaws_Fang_Chance)) {
+            qs.giveItemIfNotHave(Varool_Foulclaws_Fang);
             qs.playSound(SOUND_ITEMGET);
         } else if (Rnd.chance(Wererats_Fang_Chance)) {
-            qs.giveItems(Wererats_Fang, 1);
+            qs.giveItems(Wererats_Fang);
             qs.playSound(SOUND_ITEMGET);
         }
-
-        return null;
     }
 }

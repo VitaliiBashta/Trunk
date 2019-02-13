@@ -21,11 +21,6 @@ public final class HolyWater extends SimpleItemHandler implements ScriptFile {
 
 
     @Override
-    public boolean pickupItem(Playable playable, ItemInstance item) {
-        return true;
-    }
-
-    @Override
     public void onLoad() {
         ItemHandler.INSTANCE.registerItemHandler(this);
     }

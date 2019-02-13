@@ -49,51 +49,41 @@ public final class ItemFunctions {
         return item;
     }
 
-    public static void addItem(Playable playable, int itemId, long count, String log) {
-        addItem(playable, itemId, count, true, log);
+    public static void addItem(Player player, int itemId, long count) {
+        addItem(player, itemId, count, "");
     }
 
-    public static void addItem(Playable playable, int itemId, long count, boolean notify, String log) {
-        if (playable == null || count < 1)
-            return;
-
-        Player player = playable.getPlayer();
-
+    public static void addItem(Player player, int itemId, long count, String log) {
         ItemTemplate t = ItemHolder.getTemplate(itemId);
-        if (t.isStackable())
-            player.getInventory().addItem(itemId, count, log);
+        if (t.stackable())
+            player.inventory.addItem(itemId, count, log);
         else
             for (int i = 0; i < count; i++)
-                player.getInventory().addItem(itemId, 1, log);
+                player.inventory.addItem(itemId, 1, log);
 
-        if (notify)
-            player.sendPacket(SystemMessage2.obtainItems(itemId, count, 0));
+        player.sendPacket(SystemMessage2.obtainItems(itemId, count, 0));
     }
 
-    public static long getItemCount(Playable playable, int itemId) {
-        if (playable == null)
-            return 0;
-        Playable player = playable.getPlayer();
-        return player.getInventory().getCountOf(itemId);
-    }
 
-    public static long removeItem(Playable playable, int itemId, long count, boolean notify, String log) {
+//    public static long removeItem(Player player, int itemId, long count, String log) {
+//        return removeItem(player, itemId, count, log);
+//    }
+
+    public static long removeItem(Player player, int itemId, long count, String log) {
         long removed = 0;
-        if (playable == null || count < 1)
+        if (player == null || count < 1)
             return removed;
 
-        Player player = playable.getPlayer();
-
         ItemTemplate t = ItemHolder.getTemplate(itemId);
-        if (t.isStackable()) {
-            if (player.getInventory().destroyItemByItemId(itemId, count, log))
+        if (t.stackable()) {
+            if (player.inventory.destroyItemByItemId(itemId, count, log))
                 removed = count;
         } else
             for (long i = 0; i < count; i++)
-                if (player.getInventory().destroyItemByItemId(itemId, 1, log))
+                if (player.inventory.destroyItemByItemId(itemId, log))
                     removed++;
 
-        if (removed > 0 && notify)
+        if (removed > 0 )
             player.sendPacket(SystemMessage2.removeItems(itemId, removed));
 
         return removed;
@@ -189,7 +179,7 @@ public final class ItemFunctions {
 
     public static boolean checkIfCanPickup(Playable playable, ItemInstance item) {
         Player player = playable.getPlayer();
-        return item.getDropTimeOwner() <= System.currentTimeMillis() || item.getDropPlayers().contains(player.getObjectId());
+        return item.getDropTimeOwner() <= System.currentTimeMillis() || item.getDropPlayers().contains(player.objectId());
     }
 
     public static boolean canAddItem(Player player, ItemInstance item) {

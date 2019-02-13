@@ -35,7 +35,7 @@ public final class _268_TracesOfEvil extends Quest {
     public String onTalk(NpcInstance npc, QuestState st) {
         String htmltext;
         if (st.getCond() == 0)
-            if (st.getPlayer().getLevel() < 15) {
+            if (st.player.getLevel() < 15) {
                 htmltext = "trader_kunai_q0268_02.htm";
                 st.exitCurrentQuest(true);
             } else
@@ -52,8 +52,8 @@ public final class _268_TracesOfEvil extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
-        st.giveItems(CONTAMINATED, 1);
+    public void onKill(NpcInstance npc, QuestState st) {
+        st.giveItems(CONTAMINATED);
         if (st.getQuestItemsCount(CONTAMINATED) <= 29)
             st.playSound(SOUND_ITEMGET);
         else if (st.getQuestItemsCount(CONTAMINATED) >= 30) {
@@ -61,6 +61,5 @@ public final class _268_TracesOfEvil extends Quest {
             st.setCond(2);
             st.setState(STARTED);
         }
-        return null;
     }
 }

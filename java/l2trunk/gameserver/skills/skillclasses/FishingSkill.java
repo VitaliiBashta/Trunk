@@ -24,9 +24,7 @@ public final class FishingSkill extends Skill {
     }
 
     @Override
-    public boolean checkCondition(Creature activeChar, Creature target, boolean forceUse, boolean dontMove, boolean first) {
-        Player player = (Player) activeChar;
-
+    public boolean checkCondition(Player player, Creature target, boolean forceUse, boolean dontMove, boolean first) {
         if (player.getSkillLevel(SKILL_FISHING_MASTERY) == -1)
             return false;
 
@@ -37,12 +35,12 @@ public final class FishingSkill extends Skill {
         }
 
         if (player.isInBoat()) {
-            activeChar.sendPacket(SystemMsg.YOU_CANNOT_FISH_WHILE_RIDING_AS_A_PASSENGER_OF_A_BOAT__ITS_AGAINST_THE_RULES);
+            player.sendPacket(SystemMsg.YOU_CANNOT_FISH_WHILE_RIDING_AS_A_PASSENGER_OF_A_BOAT__ITS_AGAINST_THE_RULES);
             return false;
         }
 
         if (player.getPrivateStoreType() != Player.STORE_PRIVATE_NONE) {
-            activeChar.sendPacket(SystemMsg.YOU_CANNOT_FISH_WHILE_USING_A_RECIPE_BOOK_PRIVATE_MANUFACTURE_OR_PRIVATE_STORE);
+            player.sendPacket(SystemMsg.YOU_CANNOT_FISH_WHILE_USING_A_RECIPE_BOOK_PRIVATE_MANUFACTURE_OR_PRIVATE_STORE);
             return false;
         }
 
@@ -96,13 +94,12 @@ public final class FishingSkill extends Skill {
 
         player.getFishing().setFishLoc(new Location(x, y, z));
 
-        return super.checkCondition(activeChar, target, forceUse, dontMove, first);
+        return super.checkCondition(player, target, forceUse, dontMove, first);
     }
 
-    @SuppressWarnings("unused")
     @Override
     public void useSkill(Creature caster, List<Creature> targets) {
-        if (caster == null || !caster.isPlayer())
+        if (!(caster instanceof Player))
             return;
 
         Player player = (Player) caster;
@@ -115,8 +112,6 @@ public final class FishingSkill extends Skill {
         Zone zone = player.getZone(ZoneType.FISHING);
         if (zone == null)
             return;
-
-        int distributionId = zone.getParams().getInteger("distribution_id");
 
         int lureId = lure.getItemId();
 

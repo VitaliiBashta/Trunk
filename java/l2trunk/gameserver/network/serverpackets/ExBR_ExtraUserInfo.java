@@ -8,7 +8,7 @@ public final class ExBR_ExtraUserInfo extends L2GameServerPacket {
     private final int _lectureMark;
 
     public ExBR_ExtraUserInfo(Player cha) {
-        _objectId = cha.getObjectId();
+        _objectId = cha.objectId();
         _effect3 = cha.getAbnormalEffect3();
         _lectureMark = cha.getLectureMark();
     }

@@ -57,15 +57,15 @@ public final class _129_PailakaDevilsLegacy extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        Player player = st.getPlayer();
-        if (event.equalsIgnoreCase("Enter")) {
+        Player player = st.player;
+        if ("Enter".equalsIgnoreCase(event)) {
             enterInstance(player);
             return null;
         } else if (event.equalsIgnoreCase("32498-02.htm")) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("32498-05.htm")) {
+        } else if ("32498-05.htm".equalsIgnoreCase(event)) {
             st.setCond(2);
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("32501-03.htm")) {
@@ -82,7 +82,7 @@ public final class _129_PailakaDevilsLegacy extends Quest {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         int id = st.getState();
-        Player player = st.getPlayer();
+        Player player = st.player;
         if (npcId == DISURVIVOR) {
             if (cond == 0)
                 if (player.getLevel() < 61 || player.getLevel() > 67) {
@@ -102,13 +102,13 @@ public final class _129_PailakaDevilsLegacy extends Quest {
             else
                 htmltext = "32501-04.htm";
         } else if (npcId == DADVENTURER) {
-            if (st.getQuestItemsCount(SWORD) > 0 && st.getQuestItemsCount(KDROP) == 0)
+            if (st.haveQuestItem(SWORD)  && st.getQuestItemsCount(KDROP) == 0)
                 htmltext = "32508-01.htm";
             if (st.getQuestItemsCount(ENCHSWORD) > 0 && st.getQuestItemsCount(ADROP) == 0)
                 htmltext = "32508-01.htm";
-            if (st.getQuestItemsCount(SWORD) == 0 && st.getQuestItemsCount(KDROP) > 0)
+            if (st.getQuestItemsCount(SWORD) == 0 && st.haveQuestItem(KDROP) )
                 htmltext = "32508-05.htm";
-            if (st.getQuestItemsCount(ENCHSWORD) == 0 && st.getQuestItemsCount(ADROP) > 0)
+            if (st.getQuestItemsCount(ENCHSWORD) == 0 && st.haveQuestItem(ADROP) )
                 htmltext = "32508-05.htm";
             if (st.getQuestItemsCount(SWORD) == 0 && st.getQuestItemsCount(ENCHSWORD) == 0)
                 htmltext = "32508-05.htm";
@@ -116,27 +116,27 @@ public final class _129_PailakaDevilsLegacy extends Quest {
                 htmltext = "32508-01.htm";
             if (player.getPet() != null)
                 htmltext = "32508-04.htm";
-            if (st.getQuestItemsCount(SWORD) > 0 && st.getQuestItemsCount(KDROP) > 0) {
+            if (st.haveQuestItem(SWORD,KDROP) ) {
                 st.takeItems(SWORD, 1);
                 st.takeItems(KDROP, 1);
-                st.giveItems(ENCHSWORD, 1);
+                st.giveItems(ENCHSWORD);
                 htmltext = "32508-02.htm";
             }
-            if (st.getQuestItemsCount(ENCHSWORD) > 0 && st.getQuestItemsCount(ADROP) > 0) {
+            if (st.haveAllQuestItems(ENCHSWORD,ADROP) ) {
                 st.takeItems(ENCHSWORD, 1);
                 st.takeItems(ADROP, 1);
-                st.giveItems(LASTSWORD, 1);
+                st.giveItems(LASTSWORD);
                 htmltext = "32508-03.htm";
             }
-            if (st.getQuestItemsCount(LASTSWORD) > 0)
+            if (st.haveQuestItem(LASTSWORD) )
                 htmltext = "32508-03.htm";
         } else if (npcId == DADVENTURER2)
             if (cond == 4) {
                 if (player.getPet() != null)
                     htmltext = "32511-03.htm";
                 else {
-                    st.giveItems(ScrollOfEscape, 1);
-                    st.giveItems(PBRACELET, 1);
+                    st.giveItems(ScrollOfEscape);
+                    st.giveItems(PBRACELET);
                     st.addExpAndSp(10810000, 950000);
                     st.setCond(5);
                     st.setState(COMPLETED);
@@ -152,28 +152,24 @@ public final class _129_PailakaDevilsLegacy extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
-        Player player = st.getPlayer();
+    public void onKill(NpcInstance npc, QuestState st) {
+        Player player = st.player;
         int npcId = npc.getNpcId();
         int refId = player.getReflectionId();
         if (npcId == KAMS && st.getQuestItemsCount(KDROP) == 0)
-            st.giveItems(KDROP, 1);
+            st.giveItems(KDROP);
         else if (npcId == ALKASO && st.getQuestItemsCount(ADROP) == 0)
-            st.giveItems(ADROP, 1);
+            st.giveItems(ADROP);
         else if (npcId == LEMATAN) {
             st.setCond(4);
             st.playSound(SOUND_MIDDLE);
-            addSpawnToInstance(DADVENTURER2, new Location(84990, -208376, -3342, 55000), 0, refId);
+            addSpawnToInstance(DADVENTURER2, new Location(84990, -208376, -3342, 55000), refId);
         } else if (Pailaka2nd.contains(npcId)) {
             if (Rnd.get(100) < 80)
                 st.dropItem(npc, Rnd.get(HERBS), Rnd.get(1, 2));
         } else if (npcId == CHEST)
             if (Rnd.get(100) < 80)
                 st.dropItem(npc, Rnd.get(CHESTDROP), Rnd.get(1, 10));
-        // TODO вернуть когда будут работать двери
-        //else
-        //	dropItem(npc, KEY, 1);
-        return null;
     }
 
     private void enterInstance(Player player) {

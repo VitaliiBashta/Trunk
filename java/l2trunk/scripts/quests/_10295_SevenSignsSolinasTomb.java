@@ -13,12 +13,6 @@ import l2trunk.gameserver.utils.Location;
 
 import java.util.List;
 
-/**
- * @author pchayka
- * <p/>
- * TODO: спавн минионов
- * TODO: включение и отключение свечения у Контроллеров Границ
- */
 public final class _10295_SevenSignsSolinasTomb extends Quest {
     private static final int ErisEvilThoughts = 32792;
     private static final int ElcardiaInzone1 = 32787;
@@ -66,7 +60,7 @@ public final class _10295_SevenSignsSolinasTomb extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        Player player = st.getPlayer();
+        Player player = st.player;
         String htmltext = event;
         if ("eris_q10295_5.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
@@ -157,13 +151,12 @@ public final class _10295_SevenSignsSolinasTomb extends Quest {
         String htmltext = "noquest";
         int npcId = npc.getNpcId();
         int cond = st.getCond();
-        Player player = st.getPlayer();
+        Player player = st.player;
         if (player.getBaseClassId() != player.getActiveClassId())
             return "no_subclass_allowed.htm";
         if (npcId == ErisEvilThoughts) {
             if (cond == 0) {
-                QuestState qs = player.getQuestState(_10294_SevenSignsMonasteryofSilence.class);
-                if (player.getLevel() >= 81 && qs != null && qs.isCompleted())
+                if (player.getLevel() >= 81 && player.isQuestCompleted(_10294_SevenSignsMonasteryofSilence.class))
                     htmltext = "eris_q10295_1.htm";
                 else {
                     htmltext = "eris_q10295_0a.htm";
@@ -225,9 +218,9 @@ public final class _10295_SevenSignsSolinasTomb extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
-        Player player = st.getPlayer();
+        Player player = st.player;
         if (SolinaGuardians.contains(npcId) && checkGuardians(player, SolinaGuardians)) {
             player.showQuestMovie(ExStartScenePlayer.SCENE_SSQ2_SOLINA_TOMB_CLOSING);
             player.broadcastPacket(new EventTrigger(21100100, false));
@@ -251,7 +244,6 @@ public final class _10295_SevenSignsSolinasTomb extends Quest {
                     break;
             }
         }
-        return null;
     }
 
     private void teleportElcardia(Player player) {
@@ -264,7 +256,7 @@ public final class _10295_SevenSignsSolinasTomb extends Quest {
         player.getReflection().getNpcs()
                 .filter(n -> n.getNpcId() == mobId)
                 .forEach(n -> n.getEffectList().getAllEffects().stream()
-                        .filter(e -> e.getSkill().id == 6371)
+                        .filter(e -> e.skill.id == 6371)
                         .forEach(Effect::exit));
     }
 

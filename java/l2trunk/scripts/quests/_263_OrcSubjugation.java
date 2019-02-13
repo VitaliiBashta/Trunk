@@ -5,7 +5,6 @@ import l2trunk.gameserver.model.base.Race;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _263_OrcSubjugation extends Quest {
     // NPC
@@ -34,11 +33,11 @@ public final class _263_OrcSubjugation extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equals("sentry_kayleen_q0263_03.htm")) {
+        if ("sentry_kayleen_q0263_03.htm".equals(event)) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equals("sentry_kayleen_q0263_06.htm")) {
+        } else if ("sentry_kayleen_q0263_06.htm".equals(event)) {
             st.setCond(0);
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(true);
@@ -51,13 +50,13 @@ public final class _263_OrcSubjugation extends Quest {
         String htmltext = "noquest";
         int cond = st.getCond();
         if (cond == 0) {
-            if (st.getPlayer().getLevel() >= 8 && st.getPlayer().getRace() == Race.darkelf) {
+            if (st.player.getLevel() >= 8 && st.player.getRace() == Race.darkelf) {
                 htmltext = "sentry_kayleen_q0263_02.htm";
                 return htmltext;
-            } else if (st.getPlayer().getRace() != Race.darkelf) {
+            } else if (st.player.getRace() != Race.darkelf) {
                 htmltext = "sentry_kayleen_q0263_00.htm";
                 st.exitCurrentQuest(true);
-            } else if (st.getPlayer().getLevel() < 8) {
+            } else {
                 htmltext = "sentry_kayleen_q0263_01.htm";
                 st.exitCurrentQuest(true);
             }
@@ -67,27 +66,26 @@ public final class _263_OrcSubjugation extends Quest {
             else if (st.getQuestItemsCount(ORC_AMULET) + st.getQuestItemsCount(ORC_NECKLACE) >= 10) {
                 htmltext = "sentry_kayleen_q0263_05.htm";
                 st.giveItems(ADENA_ID, st.getQuestItemsCount(ORC_AMULET) * 20 + st.getQuestItemsCount(ORC_NECKLACE) * 30 + 1100);
-                st.takeItems(ORC_AMULET, -1);
-                st.takeItems(ORC_NECKLACE, -1);
+                st.takeItems(ORC_AMULET);
+                st.takeItems(ORC_NECKLACE);
             } else {
                 htmltext = "sentry_kayleen_q0263_05.htm";
                 st.giveItems(ADENA_ID, st.getQuestItemsCount(ORC_AMULET) * 20 + st.getQuestItemsCount(ORC_NECKLACE) * 30);
-                st.takeItems(ORC_AMULET, -1);
-                st.takeItems(ORC_NECKLACE, -1);
+                st.takeItems(ORC_AMULET);
+                st.takeItems(ORC_NECKLACE);
             }
         return htmltext;
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         if (st.getCond() == 1 && Rnd.chance(60)) {
             if (npcId == BALOR_ORC_ARCHER)
-                st.giveItems(ORC_AMULET, 1);
+                st.giveItems(ORC_AMULET);
             else if (npcId == BALOR_ORC_FIGHTER || npcId == BALOR_ORC_FIGHTER_LEADER || npcId == BALOR_ORC_LIEUTENANT)
-                st.giveItems(ORC_NECKLACE, 1);
+                st.giveItems(ORC_NECKLACE);
             st.playSound(SOUND_ITEMGET);
         }
-        return null;
     }
 }

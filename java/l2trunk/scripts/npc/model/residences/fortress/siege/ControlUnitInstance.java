@@ -65,7 +65,7 @@ public final class ControlUnitInstance extends NpcInstance {
         }
 
         if (allPowerDisabled) {
-            if (player.getInventory().getCountOf(ITEM_ID) > 0)
+            if (player.haveItem(ITEM_ID) )
                 return COND_CAN_OPEN;
             else
                 return COND_NO_ITEM;

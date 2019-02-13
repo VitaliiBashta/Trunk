@@ -10,26 +10,24 @@ public final class EffectTransformation extends Effect {
 
     public EffectTransformation(Env env, EffectTemplate template) {
         super(env, template);
-        int id = (int) template._value;
+        int id = (int) template.value;
         isFlyingTransform = template.getParam().getBool("isFlyingTransform", id == 8 || id == 9 || id == 260); // TODO сделать через параметр
     }
 
     @Override
     public boolean checkCondition() {
-        if (!effected.isPlayer())
-            return false;
-        if (isFlyingTransform && effected.getX() > -166168)
-            return false;
-        return super.checkCondition();
+        if (effected instanceof Player) {
+            return !isFlyingTransform || effected.getX() <= -166168;
+        } else return false;
     }
 
     @Override
     public void onStart() {
         super.onStart();
         Player player = (Player) effected;
-        player.setTransformationTemplate(getSkill().npcId);
-        if (getSkill() instanceof Transformation)
-            player.setTransformationName(((Transformation) getSkill()).transformationName);
+        player.setTransformationTemplate(skill.npcId);
+        if (skill instanceof Transformation)
+            player.setTransformationName(((Transformation) skill).transformationName);
 
         int id = (int) calc();
         if (isFlyingTransform) {
@@ -51,10 +49,10 @@ public final class EffectTransformation extends Effect {
     public void onExit() {
         super.onExit();
 
-        if (effected.isPlayer()) {
+        if (effected instanceof Player) {
             Player player = (Player) effected;
 
-            if (getSkill() instanceof Transformation)
+            if (skill instanceof Transformation)
                 player.setTransformationName(null);
 
             if (isFlyingTransform) {
@@ -68,10 +66,5 @@ public final class EffectTransformation extends Effect {
             } else
                 player.setTransformation(0);
         }
-    }
-
-    @Override
-    public boolean onActionTime() {
-        return false;
     }
 }

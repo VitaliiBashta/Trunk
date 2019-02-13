@@ -6,6 +6,7 @@ import l2trunk.gameserver.instancemanager.QuestManager;
 import l2trunk.gameserver.listener.actor.player.OnPlayerEnterListener;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.GameObjectsStorage;
+import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.actor.listener.PlayerListenerList;
 import l2trunk.gameserver.model.entity.events.impl.DominionSiegeEvent;
@@ -92,10 +93,9 @@ public final class SuppliesSafe extends DefaultAI {
                         questState.abortQuest();
                 });
 
-
-        Player player = killer.getPlayer();
-        if (player == null)
+        if (!(killer instanceof Playable))
             return;
+        Player player = ((Playable)killer).getPlayer();
 
         if (player.getParty() == null) {
             DominionSiegeEvent siegeEvent2 = player.getEvent(DominionSiegeEvent.class);

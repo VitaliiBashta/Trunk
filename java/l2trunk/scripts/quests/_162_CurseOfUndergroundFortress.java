@@ -5,7 +5,6 @@ import l2trunk.gameserver.model.base.Race;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _162_CurseOfUndergroundFortress extends Quest {
     private final int BONE_FRAGMENT3 = 1158;
@@ -47,9 +46,9 @@ public final class _162_CurseOfUndergroundFortress extends Quest {
         String htmltext = "noquest";
         int cond = st.getCond();
         if (cond == 0) {
-            if (st.getPlayer().getRace() == Race.darkelf)
+            if (st.player.getRace() == Race.darkelf)
                 htmltext = "30147-00.htm";
-            else if (st.getPlayer().getLevel() >= 12)
+            else if (st.player.getLevel() >= 12)
                 htmltext = "30147-02.htm";
             else {
                 htmltext = "30147-01.htm";
@@ -59,11 +58,11 @@ public final class _162_CurseOfUndergroundFortress extends Quest {
             htmltext = "30147-05.htm";
         else if (cond == 2 && st.getQuestItemsCount(ELF_SKULL) + st.getQuestItemsCount(BONE_FRAGMENT3) >= 13) {
             htmltext = "30147-06.htm";
-            st.giveItems(BONE_SHIELD, 1);
+            st.giveItems(BONE_SHIELD);
             st.addExpAndSp(22652, 1004);
             st.giveItems(ADENA_ID, 24000);
-            st.takeItems(ELF_SKULL, -1);
-            st.takeItems(BONE_FRAGMENT3, -1);
+            st.takeItems(ELF_SKULL);
+            st.takeItems(BONE_FRAGMENT3);
             st.setCond(0);
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(false);
@@ -72,24 +71,23 @@ public final class _162_CurseOfUndergroundFortress extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         if ((npcId == 20463 || npcId == 20464 || npcId == 20504) && cond == 1 && Rnd.chance(25) && st.getQuestItemsCount(BONE_FRAGMENT3) < 10) {
-            st.giveItems(BONE_FRAGMENT3, 1);
-            if (st.getQuestItemsCount(BONE_FRAGMENT3) == 10)
+            st.giveItems(BONE_FRAGMENT3);
+            if (st.haveQuestItem(BONE_FRAGMENT3, 10))
                 st.playSound(SOUND_MIDDLE);
             else
                 st.playSound(SOUND_ITEMGET);
         } else if ((npcId == 20033 || npcId == 20345 || npcId == 20371) && cond == 1 && Rnd.chance(25) && st.getQuestItemsCount(ELF_SKULL) < 3) {
-            st.giveItems(ELF_SKULL, 1);
-            if (st.getQuestItemsCount(ELF_SKULL) == 3)
+            st.giveItems(ELF_SKULL);
+            if (st.haveQuestItem(ELF_SKULL, 3))
                 st.playSound(SOUND_MIDDLE);
             else
                 st.playSound(SOUND_ITEMGET);
         }
         if (st.getQuestItemsCount(BONE_FRAGMENT3) == 10 && st.getQuestItemsCount(ELF_SKULL) == 3)
             st.setCond(2);
-        return null;
     }
 }

@@ -97,8 +97,8 @@ public class CCMatchingRoom extends MatchingRoom {
         else return MatchingRoom.WAIT_PARTY;
     }
 
-    @Override
-    public CCMatchingRoom setReflection(Reflection reflection) {
-        return this;
-    }
+
+//    public CCMatchingRoom setReflection(Reflection reflection) {
+//        return this;
+//    }
 }

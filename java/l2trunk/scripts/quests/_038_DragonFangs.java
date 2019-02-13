@@ -109,7 +109,7 @@ public final class _038_DragonFangs extends Quest {
         String htmltext = "noquest";
         int cond = st.getCond();
         if (npcId == LUIS && cond == 0)
-            if (st.getPlayer().getLevel() < 19) {
+            if (st.player.getLevel() < 19) {
                 htmltext = "guard_luis_q0038_0102.htm";
                 st.exitCurrentQuest(true);
             } else htmltext = "guard_luis_q0038_0101.htm";
@@ -137,13 +137,13 @@ public final class _038_DragonFangs extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         boolean chance = Rnd.chance(CHANCE_FOR_QUEST_ITEMS);
         int cond = st.getCond();
         if (npcId == 20357 || npcId == 21100)
             if (cond == 1 && chance && st.getQuestItemsCount(FEATHER_ORNAMENT) < 100) {
-                st.giveItems(FEATHER_ORNAMENT, 1);
+                st.giveItems(FEATHER_ORNAMENT);
                 if (st.getQuestItemsCount(FEATHER_ORNAMENT) == 100) {
                     st.playSound(SOUND_MIDDLE);
                     st.setCond(2);
@@ -159,6 +159,5 @@ public final class _038_DragonFangs extends Quest {
                 } else
                     st.playSound(SOUND_ITEMGET);
             }
-        return null;
     }
 }

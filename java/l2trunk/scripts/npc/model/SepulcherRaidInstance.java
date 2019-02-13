@@ -6,13 +6,13 @@ import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.RaidBossInstance;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
-import l2trunk.scripts.bosses.FourSepulchersManager;
 import l2trunk.scripts.bosses.FourSepulchersSpawn;
 import l2trunk.scripts.quests._620_FourGoblets;
 
 import java.util.concurrent.Future;
+
+import static l2trunk.gameserver.utils.ItemFunctions.addItem;
 
 public final class SepulcherRaidInstance extends RaidBossInstance {
     public int mysteriousBoxId = 0;
@@ -45,7 +45,6 @@ public final class SepulcherRaidInstance extends RaidBossInstance {
     }
 
     private void giveCup(Player player) {
-        Class<_620_FourGoblets> questId = FourSepulchersManager.FOUR_GOBLETS;
         int cupId = 0;
         int oldBrooch = 7262;
 
@@ -66,14 +65,14 @@ public final class SepulcherRaidInstance extends RaidBossInstance {
 
         if (player.getParty() != null)
             for (Player mem : player.getParty().getMembers()) {
-                QuestState qs = mem.getQuestState(questId);
+                QuestState qs = mem.getQuestState(_620_FourGoblets.class);
                 if (qs != null && (qs.isStarted() || qs.isCompleted()) && mem.getInventory().getItemByItemId(oldBrooch) == null && player.isInRange(mem, 700))
-                    Functions.addItem(mem, cupId, 1, "SepulcherRaidInstance");
+                    addItem(mem, cupId, 1);
             }
         else {
-            QuestState qs = player.getQuestState(questId);
+            QuestState qs = player.getQuestState(_620_FourGoblets.class);
             if (qs != null && (qs.isStarted() || qs.isCompleted()) && player.getInventory().getItemByItemId(oldBrooch) == null)
-                Functions.addItem(player, cupId, 1, "SepulcherRaidInstance");
+                addItem(player, cupId, 1);
         }
     }
 

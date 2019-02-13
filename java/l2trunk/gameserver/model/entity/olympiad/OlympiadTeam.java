@@ -44,7 +44,7 @@ public class OlympiadTeam {
     public void addDamage(Player player, double damage) {
         _damage += damage;
 
-        TeamMember member = members.get(player.getObjectId());
+        TeamMember member = members.get(player.objectId());
         member.addDamage(damage);
     }
 

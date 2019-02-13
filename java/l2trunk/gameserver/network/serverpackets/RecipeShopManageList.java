@@ -16,7 +16,7 @@ public final class RecipeShopManageList extends L2GameServerPacket {
     private final boolean isDwarven;
 
     public RecipeShopManageList(Player seller, boolean isDwarvenCraft) {
-        sellerId = seller.getObjectId();
+        sellerId = seller.objectId();
         adena = seller.getAdena();
         isDwarven = isDwarvenCraft;
         if (isDwarven)

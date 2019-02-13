@@ -46,7 +46,7 @@ public final class YehanBrother extends Fighter {
             removeInvul(actor);
         if (_spawnTimer + 40000 < System.currentTimeMillis()) {
             _spawnTimer = System.currentTimeMillis();
-            NpcInstance mob = actor.getReflection().addSpawnWithoutRespawn(Rnd.get(MINIONS), Location.findAroundPosition(actor, 300), 0);
+            NpcInstance mob = actor.getReflection().addSpawnWithoutRespawn(Rnd.get(MINIONS), Location.findAroundPosition(actor, 300));
             mob.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, actor.getAggressionTarget(), 1000);
         }
         super.thinkAttack();
@@ -54,7 +54,7 @@ public final class YehanBrother extends Fighter {
 
     private void removeInvul(NpcInstance npc) {
         npc.getEffectList().getAllEffects().stream()
-                .filter(e -> e.getSkill().id == 6371)
+                .filter(e -> e.skill.id == 6371)
                 .forEach(Effect::exit);
     }
 }

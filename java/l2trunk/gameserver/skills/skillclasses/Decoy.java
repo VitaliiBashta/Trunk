@@ -23,29 +23,21 @@ public final class Decoy extends Skill {
 
     @Override
 
-    public boolean checkCondition(Creature activeChar, Creature target, boolean forceUse, boolean dontMove, boolean first) {
-        if (activeChar.isAlikeDead() || !activeChar.isPlayer() || activeChar != target) // only TARGET_SELF
+    public boolean checkCondition(Player player, Creature target, boolean forceUse, boolean dontMove, boolean first) {
+        if (player.isAlikeDead() || player != target) // only TARGET_SELF
             return false;
 
         if (npcId == 0)
             return false;
 
-        if (activeChar.isInObserverMode())
+        if (player.isInObserverMode())
             return false;
-
-		/* need correct
-		if (activeChar.getPet() != null || activeChar.getPlayer().isMounted())
-		{
-			activeChar.getPlayer().sendPacket(Msg.YOU_ALREADY_HAVE_A_PET);
-			return false;
-		}
-		 */
-        return super.checkCondition(activeChar, target, forceUse, dontMove, first);
+        return super.checkCondition(player, target, forceUse, dontMove, first);
     }
 
     @Override
     public void useSkill(Creature caster, List<Creature> targets) {
-        Player activeChar = caster.getPlayer();
+        Player activeChar = (Player)caster;
 
         NpcTemplate DecoyTemplate = NpcHolder.getTemplate(npcId);
         DecoyInstance decoy = new DecoyInstance(IdFactory.getInstance().getNextId(), DecoyTemplate, activeChar, lifeTime);

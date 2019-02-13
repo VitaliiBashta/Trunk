@@ -6,7 +6,7 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.stats.Env;
 import l2trunk.gameserver.stats.Stats;
 
-public class EffectHealCPPercent extends Effect {
+public final class EffectHealCPPercent extends Effect {
     private final boolean _ignoreCpEff;
 
     public EffectHealCPPercent(Env env, EffectTemplate template) {
@@ -16,9 +16,7 @@ public class EffectHealCPPercent extends Effect {
 
     @Override
     public boolean checkCondition() {
-        if (effected.isHealBlocked())
-            return false;
-        return super.checkCondition();
+        return !effected.isHealBlocked();
     }
 
     @Override
@@ -29,17 +27,12 @@ public class EffectHealCPPercent extends Effect {
             return;
 
         double cp = calc() * effected.getMaxCp() / 100.;
-        double newCp = cp * (!_ignoreCpEff ? effected.calcStat(Stats.CPHEAL_EFFECTIVNESS, 100., effector, getSkill()) : 100.) / 100.;
+        double newCp = cp * (!_ignoreCpEff ? effected.calcStat(Stats.CPHEAL_EFFECTIVNESS, 100., effector, skill) : 100.) / 100.;
         double addToCp = Math.max(0, Math.min(newCp, effected.calcStat(Stats.CP_LIMIT, null, null) * effected.getMaxCp() / 100. - effected.getCurrentCp()));
 
         effected.sendPacket(new SystemMessage2(SystemMsg.S1_CP_HAS_BEEN_RESTORED).addInteger((long) addToCp));
 
-        if (addToCp > 0)
-            effected.setCurrentCp(addToCp + effected.getCurrentCp());
+            effected.addCp(addToCp);
     }
 
-    @Override
-    public boolean onActionTime() {
-        return false;
-    }
 }

@@ -51,7 +51,7 @@ public enum ExchangeItemParser {
                 String name = element.attributeValue("name");
                 String icon = element.attributeValue("icon");
 
-                list.add(new Variant(number, id, name, icon));
+                list.add(Variant.of(number, id, name, icon));
             }
         }
         return list;

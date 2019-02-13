@@ -31,15 +31,15 @@ public final class AdminClientSupport implements IAdminCommandHandler {
                     return false;
 
 
-                if (target == null || !target.isPlayer())
+                if (!(target instanceof Player))
                     return false;
                 Skill skill = SkillTable.INSTANCE.getInfo(toInt(wordList[1]), toInt(wordList[2]));
                 if (skill == null) {
-                    player.sendMessage("Too big level, max:" + SkillTable.INSTANCE.getMaxLevel(toInt(wordList[1])));
+                    player.sendMessage("Too big occupation, max:" + SkillTable.INSTANCE.getMaxLevel(toInt(wordList[1])));
                     return false;
                 }
-                target.getPlayer().addSkill(skill, true);
-                target.getPlayer().sendPacket(new SystemMessage2(SystemMsg.YOU_HAVE_EARNED_S1_SKILL).addSkillName(skill.id, skill.level));
+                ((Player)target).addSkill(skill, true);
+                ((Player)target).sendPacket(new SystemMessage2(SystemMsg.YOU_HAVE_EARNED_S1_SKILL).addSkillName(skill.id, skill.level));
                 break;
             case admin_summon:
                 if (wordList.length != 3)
@@ -65,25 +65,25 @@ public final class AdminClientSupport implements IAdminCommandHandler {
                     if (target == null)
                         target = player;
 
-                    if (!target.isPlayer())
+                    if (!(target instanceof Player))
                         return false;
 
                     ItemTemplate template = ItemHolder.getTemplate(id);
                     if (template == null)
                         return false;
 
-                    if (template.isStackable()) {
+                    if (template.stackable()) {
                         ItemInstance item = ItemFunctions.createItem(id);
                         item.setCount(count);
 
-                        target.getPlayer().getInventory().addItem(item, "admin_summon");
-                        target.getPlayer().sendPacket(SystemMessage2.obtainItems(item));
+                        ((Player)target).getInventory().addItem(item, "admin_summon");
+                        ((Player)target).sendPacket(SystemMessage2.obtainItems(item));
                     } else {
                         for (int i = 0; i < count; i++) {
                             ItemInstance item = ItemFunctions.createItem(id);
 
-                            target.getPlayer().getInventory().addItem(item, "admin_summon");
-                            target.getPlayer().sendPacket(SystemMessage2.obtainItems(item));
+                            ((Player)target).getInventory().addItem(item, "admin_summon");
+                            ((Player)target).sendPacket(SystemMessage2.obtainItems(item));
                         }
                     }
                 }

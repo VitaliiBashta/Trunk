@@ -58,7 +58,7 @@ public final class BleedingFly extends Mystic {
 
     private void spawn_leechs(NpcInstance actor, Creature attacker) {
         for (int i = 0; i < 3; i++) {
-            NpcInstance n = NpcUtils.spawnSingle(parasitic_leech, (actor.getX() + Rnd.get(-100, 100)), (actor.getY() + Rnd.get(-100, 100)), actor.getZ());
+            NpcInstance n = NpcUtils.spawnSingle(parasitic_leech, (actor.getLoc().randomOffset(100)), actor.getZ());
             n.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker, 2);
             leech_list.add(n);
         }

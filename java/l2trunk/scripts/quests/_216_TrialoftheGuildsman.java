@@ -231,9 +231,9 @@ public final class _216_TrialoftheGuildsman extends Quest {
             st.playSound(SOUND_ACCEPT);
             st.giveItems(VALKONS_RECOMMEND, 1);
             st.takeItems(ADENA_ID, 2000);
-            if (!st.getPlayer().getVarB("dd1")) {
+            if (!st.player.isVarSet("dd1")) {
                 st.giveItems(DIMENSION_DIAMOND, 85);
-                st.getPlayer().setVar("dd1", "1", -1);
+                st.player.setVar("dd1", 1);
             }
         } else if (event.equalsIgnoreCase("valkon_q0216_07c.htm"))
             st.setCond(3);
@@ -244,41 +244,41 @@ public final class _216_TrialoftheGuildsman extends Quest {
                 htmltext = "valkon_q0216_09a.htm";
             else
                 htmltext = "valkon_q0216_09b.htm";
-            st.takeItems(JOURNEYMAN_RING, -1);
-            st.takeItems(ALLTRANS_INSTRUCTIONS, -1);
-            st.takeItems(RP_JOURNEYMAN_RING, -1);
-            st.giveItems(MARK_OF_GUILDSMAN, 1);
-            if (!st.getPlayer().getVarB("prof2.1")) {
+            st.takeItems(JOURNEYMAN_RING);
+            st.takeItems(ALLTRANS_INSTRUCTIONS);
+            st.takeItems(RP_JOURNEYMAN_RING);
+            st.giveItems(MARK_OF_GUILDSMAN);
+            if (!st.player.isVarSet("prof2.1")) {
                 st.addExpAndSp(514739, 33384);
                 st.giveItems(57, 93803);
-                st.getPlayer().setVar("prof2.1", "1", -1);
+                st.player.setVar("prof2.1", 1);
             }
             st.exitCurrentQuest(true);
             st.playSound(SOUND_FINISH);
-        } else if (event.equalsIgnoreCase("blacksmith_alltran_q0216_03.htm")) {
-            st.takeItems(VALKONS_RECOMMEND, -1);
-            st.takeItems(MANDRAGORA_BERRY, -1);
-            st.giveItems(ALLTRANS_INSTRUCTIONS, 1);
-            st.giveItems(RP_JOURNEYMAN_RING, 1);
-            st.giveItems(ALLTRANS_RECOMMEND1, 1);
-            st.giveItems(ALLTRANS_RECOMMEND2, 1);
+        } else if ("blacksmith_alltran_q0216_03.htm".equalsIgnoreCase(event)) {
+            st.takeItems(VALKONS_RECOMMEND);
+            st.takeItems(MANDRAGORA_BERRY);
+            st.giveItems(ALLTRANS_INSTRUCTIONS);
+            st.giveItems(RP_JOURNEYMAN_RING);
+            st.giveItems(ALLTRANS_RECOMMEND1);
+            st.giveItems(ALLTRANS_RECOMMEND2);
             st.setCond(5);
-        } else if (event.equalsIgnoreCase("warehouse_keeper_norman_q0216_04.htm")) {
-            st.takeItems(ALLTRANS_RECOMMEND1, -1);
-            st.giveItems(NORMANS_INSTRUCTIONS, 1);
-            st.giveItems(NORMANS_RECEIPT, 1);
-        } else if (event.equalsIgnoreCase("warehouse_keeper_norman_q0216_10.htm")) {
-            st.takeItems(DUNINGS_KEY, -1);
-            st.takeItems(NORMANS_INSTRUCTIONS, -1);
-            st.giveItems(NORMANS_LIST, 1);
-        } else if (event.equalsIgnoreCase("blacksmith_duning_q0216_02.htm")) {
-            st.takeItems(NORMANS_RECEIPT, -1);
-            st.giveItems(DUNINGS_INSTRUCTIONS, 1);
-        } else if (event.equalsIgnoreCase("blacksmith_pinter_q0216_04.htm")) {
-            st.takeItems(ALLTRANS_RECOMMEND2, -1);
-            st.giveItems(PINTERS_INSTRUCTIONS, 1);
+        } else if ("warehouse_keeper_norman_q0216_04.htm".equalsIgnoreCase(event)) {
+            st.takeItems(ALLTRANS_RECOMMEND1);
+            st.giveItems(NORMANS_INSTRUCTIONS);
+            st.giveItems(NORMANS_RECEIPT);
+        } else if ("warehouse_keeper_norman_q0216_10.htm".equalsIgnoreCase(event)) {
+            st.takeItems(DUNINGS_KEY);
+            st.takeItems(NORMANS_INSTRUCTIONS);
+            st.giveItems(NORMANS_LIST);
+        } else if ("blacksmith_duning_q0216_02.htm".equalsIgnoreCase(event)) {
+            st.takeItems(NORMANS_RECEIPT);
+            st.giveItems(DUNINGS_INSTRUCTIONS);
+        } else if ("blacksmith_pinter_q0216_04.htm".equalsIgnoreCase(event)) {
+            st.takeItems(ALLTRANS_RECOMMEND2);
+            st.giveItems(PINTERS_INSTRUCTIONS);
 
-            if (st.getPlayer().getClassId().id() == 0x38) {
+            if (st.player.getClassId().id == 0x38) {
                 htmltext = "blacksmith_pinter_q0216_05.htm";
                 st.giveItems(RP_AMBER_BEAD, 1);
             }
@@ -299,8 +299,8 @@ public final class _216_TrialoftheGuildsman extends Quest {
                 htmltext = "completed";
                 st.exitCurrentQuest(true);
             } else if (cond == 0) {
-                if (st.getPlayer().getClassId().id() == 0x36 || st.getPlayer().getClassId().id() == 0x38) {
-                    if (st.getPlayer().getLevel() >= 35)
+                if (st.player.getClassId().id == 0x36 || st.player.getClassId().id == 0x38) {
+                    if (st.player.getLevel() >= 35)
                         htmltext = "valkon_q0216_03.htm";
                     else {
                         htmltext = "valkon_q0216_02.htm";
@@ -362,7 +362,7 @@ public final class _216_TrialoftheGuildsman extends Quest {
                 htmltext = "blacksmith_duning_q0216_01.htm";
         } else if (npcId == PINTER && cond >= 5)
             if (st.getQuestItemsCount(ALLTRANS_INSTRUCTIONS) > 0 && st.getQuestItemsCount(ALLTRANS_RECOMMEND2) > 0)
-                if (st.getPlayer().getLevel() < 36)
+                if (st.player.getLevel() < 36)
                     htmltext = "blacksmith_pinter_q0216_01.htm";
                 else
                     htmltext = "blacksmith_pinter_q0216_02.htm";
@@ -385,7 +385,7 @@ public final class _216_TrialoftheGuildsman extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         for (int[] aDROPLIST_COND : DROPLIST_COND)
@@ -395,7 +395,7 @@ public final class _216_TrialoftheGuildsman extends Quest {
                         st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[6]);
                     else if (st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[7], aDROPLIST_COND[5], aDROPLIST_COND[6])) {
                         if (aDROPLIST_COND[4] == DUNINGS_KEY)
-                            st.takeItems(DUNINGS_INSTRUCTIONS, -1);
+                            st.takeItems(DUNINGS_INSTRUCTIONS);
                         if (aDROPLIST_COND[1] != cond && aDROPLIST_COND[1] != 0) {
                             st.setCond(aDROPLIST_COND[1]);
                             st.setState(STARTED);
@@ -404,14 +404,14 @@ public final class _216_TrialoftheGuildsman extends Quest {
         if (cond == 5 && (npcId == 20079 || npcId == 20080 || npcId == 20081))
             if (Rnd.chance(33) && st.getQuestItemsCount(ALLTRANS_INSTRUCTIONS) > 0 && st.getQuestItemsCount(PINTERS_INSTRUCTIONS) > 0) {
                 long count = st.getQuestItemsCount(AMBER_BEAD) + st.getQuestItemsCount(AMBER_LUMP) * 5;
-                if (count < 70 && st.getPlayer().getClassId().id() == 0x36) {
+                if (count < 70 && st.player.getClassId().id == 0x36) {
                     st.giveItems(AMBER_BEAD, 5);
                     if (st.getQuestItemsCount(AMBER_BEAD) == 70)
                         st.playSound(SOUND_MIDDLE);
                     else
                         st.playSound(SOUND_ITEMGET);
                 }
-                if (count < 70 && st.getPlayer().getClassId().id() == 0x38) {
+                if (count < 70 && st.player.getClassId().id == 0x38) {
                     st.giveItems(AMBER_LUMP, 5);
                     if (((MonsterInstance) npc).isSpoiled())
                         st.giveItems(AMBER_LUMP, 5);
@@ -422,6 +422,5 @@ public final class _216_TrialoftheGuildsman extends Quest {
                         st.playSound(SOUND_ITEMGET);
                 }
             }
-        return null;
     }
 }

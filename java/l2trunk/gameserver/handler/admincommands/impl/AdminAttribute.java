@@ -99,46 +99,47 @@ public class AdminAttribute implements IAdminCommandHandler {
     }
 
     @Override
-    public boolean useAdminCommand(@SuppressWarnings("rawtypes") Enum comm, String[] wordList, String fullString, Player activeChar) {
+    public boolean useAdminCommand( Enum comm, String[] wordList, String fullString, Player activeChar) {
         if (!activeChar.getPlayerAccess().CanEditChar)
             return false;
 
         GameObject target = activeChar.getTarget();
         if (target == null)
             target = activeChar;
-        if (!target.isPlayer()) {
+        if (target instanceof Player) {
+            Player targetPlayer = (Player) target;
+
+            int armorType = wordList.length > 1 ? Integer.parseInt(wordList[1]) : -1;
+
+            if (armorType == -1 || targetPlayer.getInventory().getPaperdollItem(armorType) == null) {
+                showMainPage(activeChar);
+                return true;
+            }
+
+            int element = wordList.length > 2 ? Integer.parseInt(wordList[2]) : -2;
+            int newValue = wordList.length > 3 ? Integer.parseInt(wordList[3]) : 0;
+
+            if (element == -2) {
+                showDetailsPage(activeChar, targetPlayer, armorType);
+                return true;
+            }
+
+
+            try {
+                setEnchant(activeChar, targetPlayer, newValue, element, armorType);
+            } catch (StringIndexOutOfBoundsException e) {
+                activeChar.sendMessage("Please specify a new enchant value.");
+            } catch (NumberFormatException e) {
+                activeChar.sendMessage("Please specify a valid new enchant value.");
+            }
+
+            // show the enchant menu after an action
+            showDetailsPage(activeChar, targetPlayer, armorType);
+            return true;
+        } else {
             activeChar.sendMessage("Wrong target type.");
             return false;
         }
-        Player targetPlayer = target.getPlayer();
-
-        int armorType = wordList.length > 1 ? Integer.parseInt(wordList[1]) : -1;
-
-        if (armorType == -1 || wordList.length < 2 || targetPlayer.getInventory().getPaperdollItem(armorType) == null) {
-            showMainPage(activeChar);
-            return true;
-        }
-
-        int element = wordList.length > 2 ? Integer.parseInt(wordList[2]) : -2;
-        int newValue = wordList.length > 3 ? Integer.parseInt(wordList[3]) : 0;
-
-        if (element == -2) {
-            showDetailsPage(activeChar, targetPlayer, armorType);
-            return true;
-        }
-
-
-        try {
-            setEnchant(activeChar, targetPlayer, newValue, element, armorType);
-        } catch (StringIndexOutOfBoundsException e) {
-            activeChar.sendMessage("Please specify a new enchant value.");
-        } catch (NumberFormatException e) {
-            activeChar.sendMessage("Please specify a valid new enchant value.");
-        }
-
-        // show the enchant menu after an action
-        showDetailsPage(activeChar, targetPlayer, armorType);
-        return true;
     }
 
     private void setEnchant(Player activeChar, Player target, int value, int element, int armorType) {
@@ -164,54 +165,52 @@ public class AdminAttribute implements IAdminCommandHandler {
                 break;
         }
 
-        int curEnchant = 0;
+        int curEnchant;
 
         ItemInstance item = target.getInventory().getPaperdollItem(armorType);
         curEnchant = item.getEnchantLevel();
-        if (item != null) {
-            if (item.isWeapon()) {
-                item.setAttributeElement(El, value);
-                target.getInventory().equipItem(item);
-                target.sendPacket(new InventoryUpdate().addModifiedItem(item));
-                target.broadcastUserInfo(true);
-            }
-            if (item.isArmor()) {
-                if (!canEnchantArmorAttribute(element, item)) {
-                    target.sendMessage("Unable to insert an attribute in the armor, not the conditions.");
-                    return;
-                }
-
-                target.getInventory().unEquipItem(item);
-                item.setAttributeElement(El, value);
-                target.getInventory().equipItem(item);
-                target.sendPacket(new InventoryUpdate().addModifiedItem(item));
-                target.broadcastUserInfo(true);
-            }
-            String elementName = "";
-            switch (element) {
-                case 0:
-                    elementName = "Fire";
-                    break;
-                case 1:
-                    elementName = "Water";
-                    break;
-                case 2:
-                    elementName = "Wind";
-                    break;
-                case 3:
-                    elementName = "Earth";
-                    break;
-                case 4:
-                    elementName = "Holy";
-                    break;
-                case 5:
-                    elementName = "Dark";
-                    break;
-            }
-
-            activeChar.sendMessage("You have changed attribute " + elementName + " on " + value + " in " + item.getName() + " +" + curEnchant + ".");
-            target.sendMessage("Admin has changed the value of the attribute " + elementName + " on " + value + " in " + item.getName() + " +" + curEnchant + ".");
+        if (item.isWeapon()) {
+            item.setAttributeElement(El, value);
+            target.getInventory().equipItem(item);
+            target.sendPacket(new InventoryUpdate().addModifiedItem(item));
+            target.broadcastUserInfo(true);
         }
+        if (item.isArmor()) {
+            if (!canEnchantArmorAttribute(element, item)) {
+                target.sendMessage("Unable to insert an attribute in the armor, not the conditions.");
+                return;
+            }
+
+            target.getInventory().unEquipItem(item);
+            item.setAttributeElement(El, value);
+            target.getInventory().equipItem(item);
+            target.sendPacket(new InventoryUpdate().addModifiedItem(item));
+            target.broadcastUserInfo(true);
+        }
+        String elementName = "";
+        switch (element) {
+            case 0:
+                elementName = "Fire";
+                break;
+            case 1:
+                elementName = "Water";
+                break;
+            case 2:
+                elementName = "Wind";
+                break;
+            case 3:
+                elementName = "Earth";
+                break;
+            case 4:
+                elementName = "Holy";
+                break;
+            case 5:
+                elementName = "Dark";
+                break;
+        }
+
+        activeChar.sendMessage("You have changed attribute " + elementName + " on " + value + " in " + item.getName() + " +" + curEnchant + ".");
+        target.sendMessage("Admin has changed the value of the attribute " + elementName + " on " + value + " in " + item.getName() + " +" + curEnchant + ".");
     }
 
     private boolean canEnchantArmorAttribute(int attr, ItemInstance item) {

@@ -4,15 +4,16 @@ import l2trunk.gameserver.Config;
 import l2trunk.gameserver.model.Zone.ZoneType;
 import l2trunk.gameserver.model.entity.Reflection;
 import l2trunk.gameserver.model.instances.NpcInstance;
+import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.network.serverpackets.L2GameServerPacket;
 import l2trunk.gameserver.utils.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public final class World {
@@ -44,8 +45,6 @@ public final class World {
     private static final int REGIONS_Z = (MAP_MAX_Z >> SHIFT_BY_Z) + OFFSET_Z;
 
     private static final WorldRegion[][][] worldRegions = new WorldRegion[REGIONS_X + 1][REGIONS_Y + 1][REGIONS_Z + 1];
-
-    private static native void prepareWorld();
 
     public static void init() {
         _log.info("L2World: Creating regions: [" + (REGIONS_X + 1) + "][" + (REGIONS_Y + 1) + "][" + (REGIONS_Z + 1) + "].");
@@ -79,7 +78,7 @@ public final class World {
         return z;
     }
 
-    public static int validCoordX(int x) {
+    static int validCoordX(int x) {
         if (x < MAP_MIN_X)
             x = MAP_MIN_X + 1;
         else if (x > MAP_MAX_X)
@@ -87,7 +86,7 @@ public final class World {
         return x;
     }
 
-    public static int validCoordY(int y) {
+    static int validCoordY(int y) {
         if (y < MAP_MIN_Y)
             y = MAP_MIN_Y + 1;
         else if (y > MAP_MAX_Y)
@@ -95,7 +94,7 @@ public final class World {
         return y;
     }
 
-    public static int validCoordZ(int z) {
+    static int validCoordZ(int z) {
         if (z < MAP_MIN_Z)
             z = MAP_MIN_Z + 1;
         else if (z > MAP_MAX_Z)
@@ -141,18 +140,17 @@ public final class World {
      * @param z координата на карте регионов
      * @return Регион, соответствующий координатам
      */
-    private static WorldRegion getRegion(int x, int y, int z) {
+    private synchronized static WorldRegion getRegion(int x, int y, int z) {
         WorldRegion[][][] regions = getRegions();
         WorldRegion region;
         region = regions[x][y][z];
         if (region == null)
-            synchronized (regions) {
-                region = regions[x][y][z];
-                if (region == null)
-                    region = regions[x][y][z] = new WorldRegion(x, y, z);
-            }
+            region = regions[x][y][z];
+        if (region == null)
+            region = regions[x][y][z] = new WorldRegion(x, y, z);
         return region;
     }
+
 
     /**
      * Находит игрока по имени
@@ -165,12 +163,6 @@ public final class World {
         return GameObjectsStorage.getPlayer(name);
     }
 
-    /**
-     * Находит игрока по objectId
-     *
-     * @param objId
-     * @return найденый игрок или null если игрока нет
-     */
     public static Player getPlayer(int objId) {
         return GameObjectsStorage.getPlayer(objId);
     }
@@ -182,8 +174,8 @@ public final class World {
      * @param object  обьект для проверки
      * @param dropper - если это L2ItemInstance, то будет анимация дропа с перса
      */
-    public static void addVisibleObject(GameObject object, Creature dropper) {
-        if (object == null || !object.isVisible() || object.isInObserverMode())
+    static void addVisibleObject(GameObject object, Creature dropper) {
+        if (object == null || !object.isVisible() || (object instanceof Player && ((Player) object).isInObserverMode()))
             return;
 
         WorldRegion region = getRegion(object);
@@ -192,17 +184,16 @@ public final class World {
         if (currentRegion == region)
             return;
 
-        if (currentRegion == null) // Новый обьект (пример - игрок вошел в мир, заспаунился моб, дропнули вещь)
-        {
+        if (currentRegion == null) {// Новый обьект (пример - игрок вошел в мир, заспаунился моб, дропнули вещь)
             // Добавляем обьект в список видимых
             object.setCurrentRegion(region);
             region.addObject(object);
 
             // Показываем обьект в текущем и соседних регионах
             // Если обьект игрок, показываем ему все обьекты в текущем и соседних регионах
-            for (int x = validX(region.getX() - 1); x <= validX(region.getX() + 1); x++)
-                for (int y = validY(region.getY() - 1); y <= validY(region.getY() + 1); y++)
-                    for (int z = validZ(region.getZ() - 1); z <= validZ(region.getZ() + 1); z++)
+            for (int x = validX(region.x - 1); x <= validX(region.x + 1); x++)
+                for (int y = validY(region.y - 1); y <= validY(region.y + 1); y++)
+                    for (int z = validZ(region.z - 1); z <= validZ(region.z + 1); z++)
                         getRegion(x, y, z).addToPlayers(object, dropper);
         } else// Обьект уже существует, перешел из одного региона в другой
         {
@@ -211,23 +202,23 @@ public final class World {
             region.addObject(object); // Добавляем обьект в список видимых
 
             // Убираем обьект из старых соседей.
-            for (int x = validX(currentRegion.getX() - 1); x <= validX(currentRegion.getX() + 1); x++)
-                for (int y = validY(currentRegion.getY() - 1); y <= validY(currentRegion.getY() + 1); y++)
-                    for (int z = validZ(currentRegion.getZ() - 1); z <= validZ(currentRegion.getZ() + 1); z++)
-                        if (!isNeighbour(region.getX(), region.getY(), region.getZ(), x, y, z))
+            for (int x = validX(currentRegion.x - 1); x <= validX(currentRegion.x + 1); x++)
+                for (int y = validY(currentRegion.y - 1); y <= validY(currentRegion.y + 1); y++)
+                    for (int z = validZ(currentRegion.z - 1); z <= validZ(currentRegion.z + 1); z++)
+                        if (!isNeighbour(region.x, region.y, region.z, x, y, z))
                             getRegion(x, y, z).removeFromPlayers(object);
 
             // Показываем обьект, но в отличие от первого случая - только для новых соседей.
-            for (int x = validX(region.getX() - 1); x <= validX(region.getX() + 1); x++)
-                for (int y = validY(region.getY() - 1); y <= validY(region.getY() + 1); y++)
-                    for (int z = validZ(region.getZ() - 1); z <= validZ(region.getZ() + 1); z++)
-                        if (!isNeighbour(currentRegion.getX(), currentRegion.getY(), currentRegion.getZ(), x, y, z))
+            for (int x = validX(region.x - 1); x <= validX(region.x + 1); x++)
+                for (int y = validY(region.y - 1); y <= validY(region.y + 1); y++)
+                    for (int z = validZ(region.z - 1); z <= validZ(region.z + 1); z++)
+                        if (!isNeighbour(currentRegion.x, currentRegion.y, currentRegion.z, x, y, z))
                             getRegion(x, y, z).addToPlayers(object, dropper);
         }
     }
 
-    public static void removeVisibleObject(GameObject object) {
-        if (object == null || object.isVisible() || object.isInObserverMode())
+    static void removeVisibleObject(GameObject object) {
+        if (object == null || object.isVisible() || (object instanceof Player && ((Player) object).isInObserverMode()))
             return;
 
         WorldRegion currentRegion;
@@ -237,341 +228,121 @@ public final class World {
         object.setCurrentRegion(null);
         currentRegion.removeObject(object);
 
-        for (int x = validX(currentRegion.getX() - 1); x <= validX(currentRegion.getX() + 1); x++)
-            for (int y = validY(currentRegion.getY() - 1); y <= validY(currentRegion.getY() + 1); y++)
-                for (int z = validZ(currentRegion.getZ() - 1); z <= validZ(currentRegion.getZ() + 1); z++)
+        for (int x = validX(currentRegion.x - 1); x <= validX(currentRegion.x + 1); x++)
+            for (int y = validY(currentRegion.y - 1); y <= validY(currentRegion.y + 1); y++)
+                for (int z = validZ(currentRegion.z - 1); z <= validZ(currentRegion.z + 1); z++)
                     getRegion(x, y, z).removeFromPlayers(object);
     }
 
+    private static Stream<GameObject> getAroundObjects(GameObject object) {
+        WorldRegion currentRegion = object.getCurrentRegion();
+        if (currentRegion == null)
+            return Stream.empty();
+        List<GameObject> result = new ArrayList<>(128);
+        for (int x = validX(currentRegion.x - 1); x <= validX(currentRegion.x + 1); x++)
+            for (int y = validY(currentRegion.y - 1); y <= validY(currentRegion.y + 1); y++)
+                for (int z = validZ(currentRegion.z - 1); z <= validZ(currentRegion.z + 1); z++)
+                    getRegion(x, y, z).getObjects().stream()
+                            .filter(Objects::nonNull)
+                            .filter(obj -> obj.objectId() != object.objectId())
+                            .filter(obj -> obj.getReflectionId() == object.getReflectionId())
+                            .forEach(result::add);
+        return result.stream();
+    }
+
     public static GameObject getAroundObjectById(GameObject object, int objId) {
-        WorldRegion currentRegion = object.getCurrentRegion();
-        if (currentRegion == null)
-            return null;
-
-        for (int x = validX(currentRegion.getX() - 1); x <= validX(currentRegion.getX() + 1); x++)
-            for (int y = validY(currentRegion.getY() - 1); y <= validY(currentRegion.getY() + 1); y++)
-                for (int z = validZ(currentRegion.getZ() - 1); z <= validZ(currentRegion.getZ() + 1); z++)
-                    for (GameObject obj : getRegion(x, y, z)) {
-                        if (obj.getObjectId() == objId) {
-                            return obj;
-                        }
-                    }
-
-        return null;
+        return getAroundObjects(object)
+                .filter(obj -> obj.objectId() == objId)
+                .findFirst().orElse(null);
     }
 
-    public static Stream<GameObject> getAroundObjects(GameObject object) {
-        WorldRegion currentRegion = object.getCurrentRegion();
-        if (currentRegion == null)
-            return Stream.empty();
-
-        int oid = object.getObjectId();
-        int rid = object.getReflectionId();
-
-        List<GameObject> result = new ArrayList<>(128);
-
-        for (int x = validX(currentRegion.getX() - 1); x <= validX(currentRegion.getX() + 1); x++)
-            for (int y = validY(currentRegion.getY() - 1); y <= validY(currentRegion.getY() + 1); y++)
-                for (int z = validZ(currentRegion.getZ() - 1); z <= validZ(currentRegion.getZ() + 1); z++)
-                    for (GameObject obj : getRegion(x, y, z)) {
-                        if (obj.getObjectId() == oid || obj.getReflectionId() != rid)
-                            continue;
-
-                        result.add(obj);
-                    }
-
-        return result.stream();
+    public static Stream<ItemInstance> getAroundItems(GameObject object, int radius, int height) {
+        return getAroundObjects(object, radius, height)
+                .filter(o -> o instanceof ItemInstance)
+                .map(o -> (ItemInstance) o);
     }
 
-    public static Stream<GameObject> getAroundObjects(GameObject object, int radius, int height) {
-        WorldRegion currentRegion = object.getCurrentRegion();
-        if (currentRegion == null)
-            return Stream.empty();
-
-        int oid = object.getObjectId();
-        int rid = object.getReflectionId();
-        int ox = object.getX();
-        int oy = object.getY();
-        int oz = object.getZ();
-        int sqrad = radius * radius;
-
-        List<GameObject> result = new ArrayList<>(128);
-
-        for (int x = validX(currentRegion.getX() - 1); x <= validX(currentRegion.getX() + 1); x++)
-            for (int y = validY(currentRegion.getY() - 1); y <= validY(currentRegion.getY() + 1); y++)
-                for (int z = validZ(currentRegion.getZ() - 1); z <= validZ(currentRegion.getZ() + 1); z++)
-                    for (GameObject obj : getRegion(x, y, z)) {
-                        if (obj.getObjectId() == oid || obj.getReflectionId() != rid)
-                            continue;
-                        if (Math.abs(obj.getZ() - oz) > height)
-                            continue;
-                        int dx = Math.abs(obj.getX() - ox);
-                        if (dx > radius)
-                            continue;
-                        int dy = Math.abs(obj.getY() - oy);
-                        if (dy > radius)
-                            continue;
-                        if (dx * dx + dy * dy > sqrad)
-                            continue;
-
-                        result.add(obj);
-                    }
-
-        return result.stream();
+    private static Stream<GameObject> getAroundObjects(GameObject object, int radius, int height) {
+        return getAroundObjects(object)
+                .filter(obj -> Math.abs(obj.getZ() - object.getZ()) <= height)
+                .filter(obj -> distance(obj, object) <= radius);
     }
 
     public static Stream<Creature> getAroundCharacters(GameObject object) {
-        WorldRegion currentRegion = object.getCurrentRegion();
-        if (currentRegion == null)
-            return Stream.empty();
-
-        int oid = object.getObjectId();
-        int rid = object.getReflectionId();
-
-        List<Creature> result = new ArrayList<>(64);
-
-        for (int x = validX(currentRegion.getX() - 1); x <= validX(currentRegion.getX() + 1); x++)
-            for (int y = validY(currentRegion.getY() - 1); y <= validY(currentRegion.getY() + 1); y++)
-                for (int z = validZ(currentRegion.getZ() - 1); z <= validZ(currentRegion.getZ() + 1); z++)
-                    for (GameObject obj : getRegion(x, y, z)) {
-                        if (!obj.isCreature() || obj.getObjectId() == oid || obj.getReflectionId() != rid)
-                            continue;
-
-                        result.add((Creature) obj);
-                    }
-
-        return result.stream();
+        return getAroundObjects(object)
+                .filter(obj -> obj instanceof Creature)
+                .map(obj -> (Creature) obj);
     }
 
     public static Stream<Creature> getAroundCharacters(GameObject object, int radius, int height) {
-        WorldRegion currentRegion = object.getCurrentRegion();
-        if (currentRegion == null)
-            return Stream.empty();
-
-        int oid = object.getObjectId();
-        int rid = object.getReflectionId();
-        int ox = object.getX();
-        int oy = object.getY();
-        int oz = object.getZ();
-        int sqrad = radius * radius;
-
-        List<Creature> result = new ArrayList<>(64);
-
-        for (int x = validX(currentRegion.getX() - 1); x <= validX(currentRegion.getX() + 1); x++)
-            for (int y = validY(currentRegion.getY() - 1); y <= validY(currentRegion.getY() + 1); y++)
-                for (int z = validZ(currentRegion.getZ() - 1); z <= validZ(currentRegion.getZ() + 1); z++)
-                    for (GameObject obj : getRegion(x, y, z)) {
-                        if (!obj.isCreature() || obj.getObjectId() == oid || obj.getReflectionId() != rid)
-                            continue;
-                        if (Math.abs(obj.getZ() - oz) > height)
-                            continue;
-                        int dx = Math.abs(obj.getX() - ox);
-                        if (dx > radius)
-                            continue;
-                        int dy = Math.abs(obj.getY() - oy);
-                        if (dy > radius)
-                            continue;
-                        if (dx * dx + dy * dy > sqrad)
-                            continue;
-
-                        result.add((Creature) obj);
-                    }
-        return result.stream();
+        return getAroundObjects(object, radius, height)
+                .filter(obj -> obj instanceof Creature)
+                .map(obj -> (Creature) obj);
     }
 
     public static Stream<NpcInstance> getAroundNpc(GameObject object) {
-        WorldRegion currentRegion = object.getCurrentRegion();
-        if (currentRegion == null)
-            return Stream.empty();
-
-        int oid = object.getObjectId();
-        int rid = object.getReflectionId();
-
-        List<NpcInstance> result = new ArrayList<>(64);
-
-        for (int x = validX(currentRegion.getX() - 1); x <= validX(currentRegion.getX() + 1); x++)
-            for (int y = validY(currentRegion.getY() - 1); y <= validY(currentRegion.getY() + 1); y++)
-                for (int z = validZ(currentRegion.getZ() - 1); z <= validZ(currentRegion.getZ() + 1); z++)
-                    for (GameObject obj : getRegion(x, y, z)) {
-                        if (!obj.isNpc() || obj.getObjectId() == oid || obj.getReflectionId() != rid)
-                            continue;
-
-                        result.add((NpcInstance) obj);
-                    }
-        return result.stream();
+        return getAroundObjects(object)
+                .filter(obj -> obj instanceof NpcInstance)
+                .map(obj -> (NpcInstance) obj);
     }
 
     public static Stream<NpcInstance> getAroundNpc(GameObject object, int radius, int height) {
-        WorldRegion currentRegion = object.getCurrentRegion();
-        if (currentRegion == null)
-            return Stream.empty();
-
-        int oid = object.getObjectId();
-        int rid = object.getReflectionId();
-        int ox = object.getX();
-        int oy = object.getY();
-        int oz = object.getZ();
-        int sqrad = radius * radius;
-
-        List<NpcInstance> result = new ArrayList<>(64);
-
-        for (int x = validX(currentRegion.getX() - 1); x <= validX(currentRegion.getX() + 1); x++)
-            for (int y = validY(currentRegion.getY() - 1); y <= validY(currentRegion.getY() + 1); y++)
-                for (int z = validZ(currentRegion.getZ() - 1); z <= validZ(currentRegion.getZ() + 1); z++)
-                    for (GameObject obj : getRegion(x, y, z)) {
-                        if (!obj.isNpc() || obj.getObjectId() == oid || obj.getReflectionId() != rid)
-                            continue;
-                        if (Math.abs(obj.getZ() - oz) > height)
-                            continue;
-                        int dx = Math.abs(obj.getX() - ox);
-                        if (dx > radius)
-                            continue;
-                        int dy = Math.abs(obj.getY() - oy);
-                        if (dy > radius)
-                            continue;
-                        if (dx * dx + dy * dy > sqrad)
-                            continue;
-                        result.add((NpcInstance) obj);
-                    }
-        return result.stream();
+        return getAroundObjects(object, radius, height)
+                .filter(obj -> obj instanceof NpcInstance)
+                .map(obj -> (NpcInstance) obj);
     }
 
-    static Stream<Playable> getAroundPlayables(GameObject object) {
-        WorldRegion currentRegion = object.getCurrentRegion();
-        if (currentRegion == null)
-            return Stream.empty();
-
-        int oid = object.getObjectId();
-        int rid = object.getReflectionId();
-
-        List<Playable> result = new ArrayList<>(64);
-
-        for (int x = validX(currentRegion.getX() - 1); x <= validX(currentRegion.getX() + 1); x++)
-            for (int y = validY(currentRegion.getY() - 1); y <= validY(currentRegion.getY() + 1); y++)
-                for (int z = validZ(currentRegion.getZ() - 1); z <= validZ(currentRegion.getZ() + 1); z++)
-                    for (GameObject obj : getRegion(x, y, z)) {
-                        if (!obj.isPlayable() || obj.getObjectId() == oid || obj.getReflectionId() != rid)
-                            continue;
-
-                        result.add((Playable) obj);
-                    }
-        return result.stream();
+    private static int distance(GameObject o1, GameObject o2) {
+        return (int) Math.sqrt(
+                Math.pow(o1.getX() - o2.getX(), 2)
+                        + Math.pow(o1.getY() - o2.getY(), 2));
     }
 
-    public static List<Playable> getAroundPlayables(GameObject object, int radius, int height) {
-        WorldRegion currentRegion = object.getCurrentRegion();
-        if (currentRegion == null)
-            return Collections.emptyList();
-
-        int oid = object.getObjectId();
-        int rid = object.getReflectionId();
-        int ox = object.getX();
-        int oy = object.getY();
-        int oz = object.getZ();
-        int sqrad = radius * radius;
-
-        List<Playable> result = new ArrayList<>(64);
-
-        for (int x = validX(currentRegion.getX() - 1); x <= validX(currentRegion.getX() + 1); x++)
-            for (int y = validY(currentRegion.getY() - 1); y <= validY(currentRegion.getY() + 1); y++)
-                for (int z = validZ(currentRegion.getZ() - 1); z <= validZ(currentRegion.getZ() + 1); z++)
-                    for (GameObject obj : getRegion(x, y, z)) {
-                        if (!obj.isPlayable() || obj.getObjectId() == oid || obj.getReflectionId() != rid)
-                            continue;
-                        if (Math.abs(obj.getZ() - oz) > height)
-                            continue;
-                        int dx = Math.abs(obj.getX() - ox);
-                        if (dx > radius)
-                            continue;
-                        int dy = Math.abs(obj.getY() - oy);
-                        if (dy > radius)
-                            continue;
-                        if (dx * dx + dy * dy > sqrad)
-                            continue;
-
-                        result.add((Playable) obj);
-                    }
-        return result;
+    public static Stream<Playable> getAroundPlayables(GameObject object) {
+        return getAroundObjects(object)
+                .filter(obj -> obj instanceof Playable)
+                .map(obj -> (Playable) obj);
     }
 
-    public static Stream<Player> getAroundPlayers(GameObject object) {
-        WorldRegion currentRegion = object.getCurrentRegion();
-        if (currentRegion == null)
-            return Stream.empty();
+    public static Stream<Playable> getAroundPlayables(GameObject object, int radius, int height) {
+        return getAroundObjects(object, radius, height)
+                .filter(obj -> obj instanceof Playable)
+                .map(obj -> (Playable) obj);
+    }
 
-        int oid = object.getObjectId();
-        int rid = object.getReflectionId();
-
-        List<Player> result = new ArrayList<>(64);
-
-        for (int x = validX(currentRegion.getX() - 1); x <= validX(currentRegion.getX() + 1); x++)
-            for (int y = validY(currentRegion.getY() - 1); y <= validY(currentRegion.getY() + 1); y++)
-                for (int z = validZ(currentRegion.getZ() - 1); z <= validZ(currentRegion.getZ() + 1); z++)
-                    for (GameObject obj : getRegion(x, y, z)) {
-                        if (!obj.isPlayer() || obj.getObjectId() == oid || obj.getReflectionId() != rid)
-                            continue;
-
-                        result.add((Player) obj);
-                    }
-        return result.stream();
+    public static List<Player> getAroundPlayers(GameObject object) {
+        return getAroundObjects(object)
+                .filter(obj -> obj instanceof Player)
+                .map(obj -> (Player) obj)
+                .collect(Collectors.toList());
     }
 
     public static Stream<Player> getAroundPlayers(GameObject object, int radius, int height) {
-        WorldRegion currentRegion = object.getCurrentRegion();
-        if (currentRegion == null)
-            return Stream.empty();
-
-        int oid = object.getObjectId();
-        int rid = object.getReflectionId();
-        int ox = object.getX();
-        int oy = object.getY();
-        int oz = object.getZ();
-        int sqrad = radius * radius;
-
-        List<Player> result = new ArrayList<>(64);
-
-        for (int x = validX(currentRegion.getX() - 1); x <= validX(currentRegion.getX() + 1); x++)
-            for (int y = validY(currentRegion.getY() - 1); y <= validY(currentRegion.getY() + 1); y++)
-                for (int z = validZ(currentRegion.getZ() - 1); z <= validZ(currentRegion.getZ() + 1); z++)
-                    for (GameObject obj : getRegion(x, y, z)) {
-                        if (!obj.isPlayer() || obj.getObjectId() == oid || obj.getReflectionId() != rid)
-                            continue;
-                        if (Math.abs(obj.getZ() - oz) > height)
-                            continue;
-                        int dx = Math.abs(obj.getX() - ox);
-                        if (dx > radius)
-                            continue;
-                        int dy = Math.abs(obj.getY() - oy);
-                        if (dy > radius)
-                            continue;
-                        if (dx * dx + dy * dy > sqrad)
-                            continue;
-
-                        result.add((Player) obj);
-                    }
-        return result.stream();
+        return getAroundObjects(object, radius, height)
+                .filter(obj -> obj instanceof Player)
+                .map(obj -> (Player) obj);
     }
 
     private static boolean isNeighborsEmpty(WorldRegion region) {
-        for (int x = validX(region.getX() - 1); x <= validX(region.getX() + 1); x++)
-            for (int y = validY(region.getY() - 1); y <= validY(region.getY() + 1); y++)
-                for (int z = validZ(region.getZ() - 1); z <= validZ(region.getZ() + 1); z++)
+        for (int x = validX(region.x - 1); x <= validX(region.x + 1); x++)
+            for (int y = validY(region.y - 1); y <= validY(region.y + 1); y++)
+                for (int z = validZ(region.z - 1); z <= validZ(region.z + 1); z++)
                     if (!getRegion(x, y, z).isEmpty())
                         return false;
         return true;
     }
 
     public static void activate(WorldRegion currentRegion) {
-        for (int x = validX(currentRegion.getX() - 1); x <= validX(currentRegion.getX() + 1); x++)
-            for (int y = validY(currentRegion.getY() - 1); y <= validY(currentRegion.getY() + 1); y++)
-                for (int z = validZ(currentRegion.getZ() - 1); z <= validZ(currentRegion.getZ() + 1); z++)
+        for (int x = validX(currentRegion.x - 1); x <= validX(currentRegion.x + 1); x++)
+            for (int y = validY(currentRegion.y - 1); y <= validY(currentRegion.y + 1); y++)
+                for (int z = validZ(currentRegion.z - 1); z <= validZ(currentRegion.z + 1); z++)
                     getRegion(x, y, z).setActive(true);
     }
 
     static void deactivate(WorldRegion currentRegion) {
-        for (int x = validX(currentRegion.getX() - 1); x <= validX(currentRegion.getX() + 1); x++)
-            for (int y = validY(currentRegion.getY() - 1); y <= validY(currentRegion.getY() + 1); y++)
-                for (int z = validZ(currentRegion.getZ() - 1); z <= validZ(currentRegion.getZ() + 1); z++)
+        for (int x = validX(currentRegion.x - 1); x <= validX(currentRegion.x + 1); x++)
+            for (int y = validY(currentRegion.y - 1); y <= validY(currentRegion.y + 1); y++)
+                for (int z = validZ(currentRegion.z - 1); z <= validZ(currentRegion.z + 1); z++)
                     if (isNeighborsEmpty(getRegion(x, y, z)))
                         getRegion(x, y, z).setActive(false);
     }
@@ -583,19 +354,8 @@ public final class World {
         WorldRegion currentRegion = player.isInObserverMode() ? player.getObserverRegion() : player.getCurrentRegion();
         if (currentRegion == null)
             return;
-
-        int oid = player.getObjectId();
-        int rid = player.getReflectionId();
-
-        for (int x = validX(currentRegion.getX() - 1); x <= validX(currentRegion.getX() + 1); x++)
-            for (int y = validY(currentRegion.getY() - 1); y <= validY(currentRegion.getY() + 1); y++)
-                for (int z = validZ(currentRegion.getZ() - 1); z <= validZ(currentRegion.getZ() + 1); z++)
-                    for (GameObject obj : getRegion(x, y, z)) {
-                        if (obj.getObjectId() == oid || obj.getReflectionId() != rid)
-                            continue;
-
-                        player.sendPacket(player.addVisibleObject(obj, null));
-                    }
+        getAroundObjects(player)
+                .forEach(obj -> player.sendPacket(player.addVisibleObject(obj, null)));
     }
 
     /**
@@ -606,18 +366,8 @@ public final class World {
         if (currentRegion == null)
             return;
 
-        int oid = player.getObjectId();
-        int rid = player.getReflectionId();
-
-        for (int x = validX(currentRegion.getX() - 1); x <= validX(currentRegion.getX() + 1); x++)
-            for (int y = validY(currentRegion.getY() - 1); y <= validY(currentRegion.getY() + 1); y++)
-                for (int z = validZ(currentRegion.getZ() - 1); z <= validZ(currentRegion.getZ() + 1); z++)
-                    for (GameObject obj : getRegion(x, y, z)) {
-                        if (obj.getObjectId() == oid || obj.getReflectionId() != rid)
-                            continue;
-
-                        player.sendPacket(player.removeVisibleObject(obj, null));
-                    }
+        getAroundObjects(player)
+                .forEach(obj -> player.sendPacket(player.removeVisibleObject(obj, null)));
     }
 
     /**
@@ -628,21 +378,21 @@ public final class World {
         if (currentRegion == null)
             return;
 
-        int oid = object.getObjectId();
+        int oid = object.objectId();
         int rid = object.getReflectionId();
 
         Player p;
         List<L2GameServerPacket> d = null;
 
-        for (int x = validX(currentRegion.getX() - 1); x <= validX(currentRegion.getX() + 1); x++)
-            for (int y = validY(currentRegion.getY() - 1); y <= validY(currentRegion.getY() + 1); y++)
-                for (int z = validZ(currentRegion.getZ() - 1); z <= validZ(currentRegion.getZ() + 1); z++)
-                    for (GameObject obj : getRegion(x, y, z)) {
-                        if (!obj.isPlayer() || obj.getObjectId() == oid || obj.getReflectionId() != rid || obj.getPlayer().isGM())
-                            continue;
+        for (int x = validX(currentRegion.x - 1); x <= validX(currentRegion.x + 1); x++)
+            for (int y = validY(currentRegion.y - 1); y <= validY(currentRegion.y + 1); y++)
+                for (int z = validZ(currentRegion.z - 1); z <= validZ(currentRegion.z + 1); z++)
+                    for (GameObject obj : getRegion(x, y, z).getObjects()) {
+                        if (obj instanceof Player && obj.objectId() != oid && obj.getReflectionId() == rid && !((Player) obj).isGM()) {
+                            p = (Player) obj;
+                            p.sendPacket(p.removeVisibleObject(object, d == null ? d = object.deletePacketList() : d));
+                        }
 
-                        p = (Player) obj;
-                        p.sendPacket(p.removeVisibleObject(object, d == null ? d = object.deletePacketList() : d));
                     }
     }
 
@@ -659,12 +409,11 @@ public final class World {
                 for (int z = validZ(regionZ(territory.getZmin())); z <= validZ(regionZ(territory.getZmax())); z++) {
                     WorldRegion region = getRegion(x, y, z);
                     region.addZone(zone);
-                    for (GameObject obj : region) {
-                        if (!obj.isCreature() || obj.getReflection() != reflection)
-                            continue;
-
-                        ((Creature) obj).updateZones();
-                    }
+                    region.getObjects().stream()
+                            .filter(obj -> obj.getReflection() == reflection)
+                            .filter(obj -> obj instanceof Creature)
+                            .map(obj -> (Creature) obj)
+                            .forEach(Creature::updateZones);
                 }
     }
 
@@ -681,11 +430,11 @@ public final class World {
                 for (int z = validZ(regionZ(territory.getZmin())); z <= validZ(regionZ(territory.getZmax())); z++) {
                     WorldRegion region = getRegion(x, y, z);
                     region.removeZone(zone);
-                    for (GameObject obj : region) {
-                        if (!obj.isCreature() || obj.getReflection() != reflection)
-                            continue;
+                    for (GameObject obj : region.getObjects()) {
+                        if (obj instanceof Creature && obj.getReflection() == reflection) {
+                            ((Creature) obj).updateZones();
+                        }
 
-                        ((Creature) obj).updateZones();
                     }
                 }
     }
@@ -708,80 +457,4 @@ public final class World {
                 .anyMatch(zone -> zone.checkIfInZone(loc, reflection));
     }
 
-    /**
-     * Возвращает статистку по регионам
-     *
-     * @return int[], где<br>
-     * [0] количество активных регионов<br>
-     * [1] количество неактивных регионов<br>
-     * [2] количество неинициализированных регионов<br>
-     * <p>
-     * [10] количество объектов<br>
-     * [11] количество персонажей<br>
-     * [12] количество игроков<br>
-     * [13] количество игроков в оффлайн-режиме<br>
-     * [14] количество NPC<br>
-     * [15] количество активных NPC<br>
-     * [16] количество монстров<br>
-     * [17] количество минионов<br>
-     * [18] количество саммонов/петов<br>
-     * [19] количество дверей<br>
-     * [20] количество вещей<br>
-     */
-    public static int[] getStats() {
-        WorldRegion region;
-        int[] ret = new int[32];
-
-        for (int x = 0; x <= REGIONS_X; x++)
-            for (int y = 0; y <= REGIONS_Y; y++)
-                for (int z = 0; z <= REGIONS_Z; z++) {
-                    ret[0]++;
-
-                    region = worldRegions[x][y][z];
-
-                    if (region != null) {
-                        if (region.isActive())
-                            ret[1]++;
-                        else
-                            ret[2]++;
-
-                        for (GameObject obj : region) {
-                            ret[10]++;
-
-                            if (obj.isCreature()) {
-                                ret[11]++;
-
-                                if (obj.isPlayer()) {
-                                    ret[12]++;
-                                    Player p = (Player) obj;
-
-                                } else if (obj.isNpc()) {
-                                    ret[14]++;
-
-                                    if (obj.isMonster()) {
-                                        ret[16]++;
-                                        if (obj.isMinion())
-                                            ret[17]++;
-                                    }
-
-                                    NpcInstance npc = (NpcInstance) obj;
-                                    if (npc.hasAI()) {
-                                        if (npc.getAI().isActive())
-                                            ret[15]++;
-                                    }
-                                } else if (obj.isPlayable()) {
-                                    ret[18]++;
-                                } else if (obj.isDoor()) {
-                                    ret[19]++;
-                                }
-                            } else if (obj.isItem()) {
-                                ret[20]++;
-                            }
-                        }
-                    } else
-                        ret[3]++;
-
-                }
-        return ret;
-    }
 }

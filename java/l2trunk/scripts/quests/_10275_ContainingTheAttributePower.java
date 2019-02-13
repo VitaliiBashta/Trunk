@@ -7,12 +7,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.items.Inventory;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.tables.SkillTable;
-
-import java.util.List;
-
-import static l2trunk.commons.lang.NumberUtils.toInt;
 
 public final class _10275_ContainingTheAttributePower extends Quest {
     private final static int Holly = 30839;
@@ -27,8 +22,6 @@ public final class _10275_ContainingTheAttributePower extends Quest {
     private final static int SoulPieceWater = 13861;
     private final static int SoulPieceAir = 13862;
 
-    private static final List<Integer> items = List.of(
-    0,10521,10522,10523,10524,10525,10526);
     public _10275_ContainingTheAttributePower() {
         super(false);
 
@@ -48,33 +41,33 @@ public final class _10275_ContainingTheAttributePower extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
 
-        Player player = st.getPlayer();
+        Player player = st.player;
 
-        if ("30839-02.htm".equalsIgnoreCase(event) || "31307-02.htm".equalsIgnoreCase(event)) {
+        if (event.equalsIgnoreCase("30839-02.htm") || event.equalsIgnoreCase("31307-02.htm")) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-        } else if ("30839-05.htm".equalsIgnoreCase(event)) {
+        } else if (event.equalsIgnoreCase("30839-05.htm")) {
             st.setCond(2);
             st.playSound(SOUND_MIDDLE);
-        } else if ("31307-05.htm".equalsIgnoreCase(event)) {
+        } else if (event.equalsIgnoreCase("31307-05.htm")) {
             st.setCond(7);
             st.playSound(SOUND_MIDDLE);
-        } else if ("32325-03.htm".equalsIgnoreCase(event)) {
+        } else if (event.equalsIgnoreCase("32325-03.htm")) {
             st.setCond(3);
             st.giveItems(YinSword, 1, Element.FIRE, 10);
             st.playSound(SOUND_MIDDLE);
-        } else if ("32326-03.htm".equalsIgnoreCase(event)) {
+        } else if (event.equalsIgnoreCase("32326-03.htm")) {
             st.setCond(8);
             st.giveItems(YangSword, 1, Element.EARTH, 10);
             st.playSound(SOUND_MIDDLE);
-        } else if ("32325-06.htm".equalsIgnoreCase(event)) {
+        } else if (event.equalsIgnoreCase("32325-06.htm")) {
             if (st.getQuestItemsCount(YinSword) > 0) {
                 st.takeItems(YinSword, 1);
                 htmltext = "32325-07.htm";
             }
             st.giveItems(YinSword, 1, Element.FIRE, 10);
-        } else if ("32326-06.htm".equalsIgnoreCase(event)) {
+        } else if (event.equalsIgnoreCase("32326-06.htm")) {
             if (st.getQuestItemsCount(YangSword) > 0) {
                 st.takeItems(YangSword, 1);
                 htmltext = "32326-07.htm";
@@ -91,14 +84,36 @@ public final class _10275_ContainingTheAttributePower extends Quest {
             st.giveItems(YangSword, 1, Element.EARTH, 10);
             st.playSound(SOUND_MIDDLE);
         } else {
-            int item = items.get(toInt(event));
+            int item = 0;
+
+            switch (event) {
+                case "1":
+                    item = 10521;
+                    break;
+                case "2":
+                    item = 10522;
+                    break;
+                case "3":
+                    item = 10523;
+                    break;
+                case "4":
+                    item = 10524;
+                    break;
+                case "5":
+                    item = 10525;
+                    break;
+                case "6":
+                    item = 10526;
+                    break;
+            }
+
             if (item > 0) {
                 st.giveItems(item, 2, true);
                 st.addExpAndSp(202160, 20375);
                 st.exitCurrentQuest(false);
                 st.playSound(SOUND_FINISH);
                 if (npc != null)
-                    htmltext = str(npc.getNpcId()) + "-1" + event + ".htm";
+                    htmltext = npc.getNpcId() + "-1" + event + ".htm";
                 else
                     htmltext = null;
             }
@@ -120,7 +135,7 @@ public final class _10275_ContainingTheAttributePower extends Quest {
             else if (npcId == Weber)
                 htmltext = "31307-0a.htm";
         } else if (id == CREATED)
-            if (st.getPlayer().getLevel() >= 76)
+            if (st.player.getLevel() >= 76)
                 if (npcId == Holly)
                     htmltext = "30839-01.htm";
                 else
@@ -166,16 +181,16 @@ public final class _10275_ContainingTheAttributePower extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getState() != STARTED)
-            return null;
+            return;
 
         int cond = st.getCond();
         int npcId = npc.getNpcId();
 
         if (npcId == Air) {
             if (st.getItemEquipped(Inventory.PAPERDOLL_RHAND) == YangSword && (cond == 8 || cond == 10) && st.getQuestItemsCount(SoulPieceAir) < 6 && Rnd.chance(30)) {
-                st.giveItems(SoulPieceAir, 1, false);
+                st.giveItems(SoulPieceAir);
                 if (st.getQuestItemsCount(SoulPieceAir) >= 6) {
                     st.setCond(cond + 1);
                     st.playSound(SOUND_MIDDLE);
@@ -183,13 +198,11 @@ public final class _10275_ContainingTheAttributePower extends Quest {
             }
         } else if (npcId == Water)
             if (st.getItemEquipped(Inventory.PAPERDOLL_RHAND) == YinSword && (cond == 3 || cond == 5) && st.getQuestItemsCount(SoulPieceWater) < 6 && Rnd.chance(30)) {
-                st.giveItems(SoulPieceWater, 1, false);
+                st.giveItems(SoulPieceWater);
                 if (st.getQuestItemsCount(SoulPieceWater) >= 6) {
                     st.setCond(cond + 1);
                     st.playSound(SOUND_MIDDLE);
                 }
             }
-
-        return null;
     }
 }

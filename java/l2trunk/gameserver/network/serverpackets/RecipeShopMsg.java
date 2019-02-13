@@ -7,7 +7,7 @@ public class RecipeShopMsg extends L2GameServerPacket {
     private final String _storeName;
 
     public RecipeShopMsg(Player player) {
-        _objectId = player.getObjectId();
+        _objectId = player.objectId();
         _storeName = player.getManufactureName();
     }
 

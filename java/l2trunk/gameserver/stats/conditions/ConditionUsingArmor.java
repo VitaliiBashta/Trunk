@@ -4,18 +4,16 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.stats.Env;
 import l2trunk.gameserver.templates.item.ArmorTemplate.ArmorType;
 
-public class ConditionUsingArmor extends Condition {
-    private final ArmorType _armor;
+public final class ConditionUsingArmor extends Condition {
+    private final ArmorType armor;
 
     public ConditionUsingArmor(ArmorType armor) {
-        _armor = armor;
+        this.armor = armor;
     }
 
     @Override
     protected boolean testImpl(Env env) {
-        if (env.character.isPlayer() && ((Player) env.character).isWearingArmor(_armor))
-            return true;
+        return env.character instanceof Player && ((Player) env.character).isWearingArmor(armor);
 
-        return false;
     }
 }

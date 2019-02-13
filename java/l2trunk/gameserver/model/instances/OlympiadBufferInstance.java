@@ -27,11 +27,11 @@ public final class OlympiadBufferInstance extends NpcInstance {
 
         if (this != player.getTarget()) {
             player.setTarget(this);
-            MyTargetSelected my = new MyTargetSelected(getObjectId(), player.getLevel() - getLevel());
+            MyTargetSelected my = new MyTargetSelected(objectId(), player.getLevel() - getLevel());
             player.sendPacket(my);
             player.sendPacket(new ValidateLocation(this));
         } else {
-            MyTargetSelected my = new MyTargetSelected(getObjectId(), player.getLevel() - getLevel());
+            MyTargetSelected my = new MyTargetSelected(objectId(), player.getLevel() - getLevel());
             player.sendPacket(my);
             if (!isInRange(player, INTERACTION_DISTANCE))
                 player.getAI().setIntentionInteract(CtrlIntention.AI_INTENTION_INTERACT, this);

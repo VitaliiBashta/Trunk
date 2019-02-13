@@ -3,13 +3,11 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _651_RunawayYouth extends Quest {
     //Npc
     private static final int IVAN = 32014;
     private static final int BATIDAE = 31989;
-    private NpcInstance _npc;
 
     //Items
     private static final int SOE = 736;
@@ -24,7 +22,7 @@ public final class _651_RunawayYouth extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("runaway_boy_ivan_q0651_03.htm")) {
+        if ("runaway_boy_ivan_q0651_03.htm".equalsIgnoreCase(event)) {
             if (st.getQuestItemsCount(SOE) > 0) {
                 st.setCond(1);
                 st.setState(STARTED);
@@ -35,11 +33,11 @@ public final class _651_RunawayYouth extends Quest {
                 //Каст СОЕ и изчезновение НПЦ
                 st.startQuestTimer("ivan_timer", 20000);
             }
-        } else if (event.equalsIgnoreCase("runaway_boy_ivan_q0651_05.htm")) {
+        } else if ("runaway_boy_ivan_q0651_05.htm".equalsIgnoreCase(event)) {
             st.exitCurrentQuest(true);
             st.playSound(SOUND_GIVEUP);
-        } else if (event.equalsIgnoreCase("ivan_timer")) {
-            _npc.deleteMe();
+        } else if ("ivan_timer".equalsIgnoreCase(event)) {
+            npc.deleteMe();
             htmltext = null;
         }
         return htmltext;
@@ -51,7 +49,7 @@ public final class _651_RunawayYouth extends Quest {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         if (npcId == IVAN && cond == 0) {
-            if (st.getPlayer().getLevel() >= 26)
+            if (st.player.getLevel() >= 26)
                 htmltext = "runaway_boy_ivan_q0651_01.htm";
             else {
                 htmltext = "runaway_boy_ivan_q0651_01a.htm";

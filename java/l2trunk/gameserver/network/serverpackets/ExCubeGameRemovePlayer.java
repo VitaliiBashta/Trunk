@@ -13,7 +13,7 @@ public class ExCubeGameRemovePlayer extends L2GameServerPacket {
     private final boolean _isRedTeam;
 
     public ExCubeGameRemovePlayer(Player player, boolean isRedTeam) {
-        _objectId = player.getObjectId();
+        _objectId = player.objectId();
         _isRedTeam = isRedTeam;
     }
 

@@ -9,15 +9,16 @@ import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
 import l2trunk.gameserver.network.serverpackets.Say2;
 import l2trunk.gameserver.network.serverpackets.components.ChatType;
-import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
-import l2trunk.gameserver.utils.ItemFunctions;
 import l2trunk.gameserver.utils.PositionUtils;
 import l2trunk.scripts.bosses.FourSepulchersManager;
 import l2trunk.scripts.bosses.FourSepulchersSpawn;
 import l2trunk.scripts.bosses.FourSepulchersSpawn.GateKeeper;
 
 import java.util.concurrent.Future;
+
+import static l2trunk.gameserver.utils.ItemFunctions.addItem;
+import static l2trunk.gameserver.utils.ItemFunctions.removeItem;
 
 public final class SepulcherNpcInstance extends NpcInstance {
     private final static String HTML_FILE_PATH = "SepulcherNpc/";
@@ -89,8 +90,8 @@ public final class SepulcherNpcInstance extends NpcInstance {
             case 31465:
             case 31466:
             case 31467:
-                if (player.isInParty() && !hasPartyAKey(player.getParty().getLeader())) {
-                    Functions.addItem(player.getParty().getLeader(), HALLS_KEY, 1, "SepulcherNpcInstance");
+                if (player.isInParty() && !hasPartyAKey(player)) {
+                    addItem(player, HALLS_KEY, 1);
                     doDie(player);
                 }
                 return;
@@ -130,9 +131,9 @@ public final class SepulcherNpcInstance extends NpcInstance {
                     player.getParty().getMembers().stream()
                             .filter(mem -> mem.getInventory().getItemByItemId(HALLS_KEY) != null)
                             .forEach(mem ->
-                                    Functions.removeItem(mem, HALLS_KEY, hallsKey.getCount(), "SepulcherNpcInstance"));
+                                    removeItem(mem, HALLS_KEY, hallsKey.getCount(), "SepulcherNpcInstance"));
             } else
-                Functions.removeItem(player, HALLS_KEY, hallsKey.getCount(), "SepulcherNpcInstance");
+                removeItem(player, HALLS_KEY, hallsKey.getCount(), "SepulcherNpcInstance");
 
         } else
             super.onBypassFeedback(player, command);
@@ -167,7 +168,7 @@ public final class SepulcherNpcInstance extends NpcInstance {
 
     private boolean hasPartyAKey(Player player) {
         return player.getParty().getMembers().stream()
-                .anyMatch(m -> (ItemFunctions.getItemCount(m, HALLS_KEY) > 0));
+                .anyMatch(m -> m.haveItem(HALLS_KEY));
     }
 
     private class CloseNextDoor extends RunnableImpl {

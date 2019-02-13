@@ -5,7 +5,6 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
 public final class GuradsOfDawnInstance extends NpcInstance {
-
     public GuradsOfDawnInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
     }
@@ -16,7 +15,7 @@ public final class GuradsOfDawnInstance extends NpcInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, String filename) {
+    public void showChatWindow(Player player, String filename, Object... replace) {
         //
     }
 

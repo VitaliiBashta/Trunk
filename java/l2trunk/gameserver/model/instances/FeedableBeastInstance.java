@@ -27,7 +27,6 @@ public class FeedableBeastInstance extends MonsterInstance {
     private static final Map<Integer, growthInfo> growthCapableMobs = new HashMap<>();
     private static final List<Integer> tamedBeasts = new ArrayList<>();
     private static final List<Integer> feedableBeasts = new ArrayList<>();
-    private static final Logger _log = LoggerFactory.getLogger(NpcInstance.class);
     private static final Map<Integer, Integer> feedInfo = new ConcurrentHashMap<>();
 
     static {
@@ -144,7 +143,7 @@ public class FeedableBeastInstance extends MonsterInstance {
 
     private void spawnNext(Player player, int growthLevel, int food, int skill_id) {
         int npcId = getNpcId();
-        int nextNpcId = 0;
+        int nextNpcId;
 
         int tameChance = growthCapableMobs.get(npcId).tameinfo[1];
         if (isBlessed(skill_id))
@@ -162,7 +161,7 @@ public class FeedableBeastInstance extends MonsterInstance {
             return;
 
         // remove the feedinfo of the mob that got despawned, if any
-        feedInfo.remove(getObjectId());
+        feedInfo.remove(objectId());
 
         // despawn the old mob
         if (growthCapableMobs.get(npcId).growth_level == 0)
@@ -202,7 +201,7 @@ public class FeedableBeastInstance extends MonsterInstance {
         else {
             // spawn the new mob
             MonsterInstance nextNpc = spawn(nextNpcId, getX(), getY(), getZ());
-            feedInfo.put(nextNpc.getObjectId(), player.getObjectId()); // register the player in the feedinfo for the mob that just spawned
+            feedInfo.put(nextNpc.objectId(), player.objectId()); // register the player in the feedinfo for the mob that just spawned
             player.setObjectTarget(nextNpc);
             ThreadPoolManager.INSTANCE.schedule(new AggrPlayer(nextNpc, player), 3000);
         }
@@ -210,7 +209,7 @@ public class FeedableBeastInstance extends MonsterInstance {
 
     @Override
     protected void onDeath(Creature killer) {
-        feedInfo.remove(getObjectId());
+        feedInfo.remove(objectId());
         super.onDeath(killer);
     }
 
@@ -233,7 +232,7 @@ public class FeedableBeastInstance extends MonsterInstance {
 
         int food = isGoldenSpice(skillId) ? 0 : 1;
 
-        int objectId = getObjectId();
+        int objectId = objectId();
         // display the social action of the beast eating the food.
         broadcastPacket(new SocialAction(objectId, 2));
 
@@ -249,10 +248,10 @@ public class FeedableBeastInstance extends MonsterInstance {
             if (growthLevel > 0)
                 // check if this is the same player as the one who raised it from growth 0.
                 // if no, then do not allow a chance to raise the pet (food gets consumed but has no effect).
-                if (feedInfo.get(objectId) != null && feedInfo.get(objectId) != player.getObjectId())
+                if (feedInfo.get(objectId) != null && feedInfo.get(objectId) != player.objectId())
                     return;
 
-            // Polymorph the mob, with a certain chance, given its current growth level
+            // Polymorph the mob, with a certain chance, given its current growth occupation
             if (Rnd.chance(growthCapableMobs.get(npcId).growth_chance))
                 spawnNext(player, growthLevel, food, skillId);
         } else if (Rnd.chance(60))

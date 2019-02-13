@@ -19,62 +19,44 @@ import java.util.StringTokenizer;
 
 
 public final class ClassMasterInstance extends MerchantInstance {
-    /**
-     * L2Mythras
-     */
-    private static final long serialVersionUID = -6206315361251464210L;
-
     public ClassMasterInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
     }
 
     private String makeMessage(Player player) {
         ClassId classId = player.getClassId();
-        int jobLevelTemp = 0;
-        switch (classId.getLevel()) {
-            case 1:
-                jobLevelTemp = 1;
-                break;
-            case 2:
-                jobLevelTemp = 2;
-                break;
-            case 3:
-                jobLevelTemp = 3;
-                break;
-            default:
-                jobLevelTemp = 0;
-                break;
-        }
-        int jobLevel = classId.getLevel();
+        int jobLevelTemp =classId.occupation();
+
+        int jobLevel = classId.occupation();
         int level = player.getLevel();
 
         StringBuilder html = new StringBuilder();
         if (Config.ALLOW_CLASS_MASTERS_LIST.isEmpty() || !Config.ALLOW_CLASS_MASTERS_LIST.contains(jobLevelTemp))
-            jobLevel = 4;
+            jobLevel = 3;
 
-        if ((level >= 20 && jobLevel == 1 || level >= 40 && jobLevel == 2 || level >= 76 && jobLevel == 3) && Config.ALLOW_CLASS_MASTERS_LIST.contains(jobLevelTemp)) {
+        if ((level >= 20 && jobLevel == 0 || level >= 40 && jobLevel == 1 || level >= 76 && jobLevel == 2) && Config.ALLOW_CLASS_MASTERS_LIST.contains(jobLevelTemp)) {
             ItemTemplate item = ItemHolder.getTemplate(Config.CLASS_MASTERS_PRICE_ITEM);
             if (Config.CLASS_MASTERS_PRICE_LIST[jobLevel] > 0)
                 html.append("Price: ").append(Util.formatAdena(Config.CLASS_MASTERS_PRICE_LIST[jobLevel])).append(" ").append(item.getName()).append("<br1>");
             for (ClassId cid : ClassId.VALUES) {
                 // Inspector is heir trooper and warder, but to replace it as a profession can not be
                 // As this subclass. Inherited from their parents in order to obtain skills.
-                if (cid == ClassId.inspector)
-                    continue;
-                if (cid.childOf(classId) && cid.getLevel() == classId.getLevel() + 1)
-                    html.append("<a action=\"bypass -h npc_").append(getObjectId()).append("_change_class ").append(cid.id()).append(" ").append(Config.CLASS_MASTERS_PRICE_LIST[jobLevel]).append("\">").append(HtmlUtils.htmlClassName(cid.id())).append("</a><br>");
+                if (cid != ClassId.inspector) {
+                    if (cid.childOf(classId) && cid.occupation() == classId.occupation() +1)
+                        html.append("<a action=\"bypass -h npc_").append(objectId()).append("_change_class ").append(cid.id).append(" ").append(Config.CLASS_MASTERS_PRICE_LIST[jobLevel]).append("\">").append(HtmlUtils.htmlClassName(cid.id)).append("</a><br>");
+                }
             }
             player.sendPacket(new NpcHtmlMessage(player, this).setHtml(html.toString()));
         } else
             switch (jobLevel) {
                 case 1:
-                    html.append("Come back here when you reached level 20 to change your class.");
+                    html.append("Come back here when you reached occupation 20 to change your class.");
                     break;
                 case 2:
-                    html.append("Come back here when you reached level 40 to change your class.");
+                    html.append("Come back here when you reached occupation 40 to change your class.");
                     break;
                 case 3:
-                    html.append("Come back here when you reached level 76 to change your class.");
+                    html.append("Come back here when you reached occupation 76 to change your class.");
                     break;
                 case 0:
                     html.append("There is no class changes for you any more.");
@@ -101,7 +83,7 @@ public final class ClassMasterInstance extends MerchantInstance {
             return;
 
         StringTokenizer st = new StringTokenizer(command);
-        if (st.nextToken().equals("change_class")) {
+        if ("change_class".equals(st.nextToken())) {
             int val = Integer.parseInt(st.nextToken());
             long price = Long.parseLong(st.nextToken());
             if (player.getInventory().destroyItemByItemId(Config.CLASS_MASTERS_PRICE_ITEM, price, "ClassMasterInstance"))
@@ -115,13 +97,13 @@ public final class ClassMasterInstance extends MerchantInstance {
     }
 
     private void changeClass(Player player, int val) {
-        if (player.getClassId().getLevel() == 3)
+        if (player.getClassId().occupation() == 2)
             player.sendPacket(Msg.YOU_HAVE_COMPLETED_THE_QUEST_FOR_3RD_OCCUPATION_CHANGE_AND_MOVED_TO_ANOTHER_CLASS_CONGRATULATIONS); // ??? 3 ?????
         else
             player.sendPacket(Msg.CONGRATULATIONS_YOU_HAVE_TRANSFERRED_TO_A_NEW_CLASS); // ??? 1 ? 2 ?????
 
         player.setClassId(val, false, false);
-        player.broadcastPacket(new SocialAction(player.getObjectId(), SocialAction.VICTORY));
+        player.broadcastPacket(new SocialAction(player.objectId(), SocialAction.VICTORY));
         final MagicSkillUse msu = new MagicSkillUse(player,  2527,  0, 500);
         player.broadcastPacket(msu);
         player.broadcastCharInfo();

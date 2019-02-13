@@ -3,7 +3,6 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _239_WontYouJoinUs extends Quest {
     private static final int Athenia = 32643;
@@ -25,11 +24,11 @@ public final class _239_WontYouJoinUs extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("32643-03.htm")) {
+        if ("32643-03.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.setState(STARTED);
         }
-        if (event.equalsIgnoreCase("32643-07.htm")) {
+        if ("32643-07.htm".equalsIgnoreCase(event)) {
             st.takeItems(DestroyedMachinePiece);
             st.setCond(3);
         }
@@ -45,7 +44,7 @@ public final class _239_WontYouJoinUs extends Quest {
 
         if (npcId == Athenia)
             if (id == CREATED) {
-                if (st.getPlayer().getLevel() < 82 || !st.getPlayer().isQuestCompleted(_237_WindsOfChange.class))
+                if (st.player.getLevel() < 82 || !st.player.isQuestCompleted(_237_WindsOfChange.class))
                     return "32643-00.htm";
                 if (st.getQuestItemsCount(CertificateOfSupport) == 0)
                     return "32643-12.htm";
@@ -72,17 +71,16 @@ public final class _239_WontYouJoinUs extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int cond = st.getCond();
         if (cond == 1 && npc.getNpcId() == WasteLandfillMachine) {
-            st.giveItems(DestroyedMachinePiece, 1);
+            st.giveItems(DestroyedMachinePiece);
             if (st.getQuestItemsCount(DestroyedMachinePiece) >= 10)
                 st.setCond(2);
         } else if (cond == 3 && (npc.getNpcId() == Suppressor || npc.getNpcId() == Exterminator)) {
-            st.giveItems(EnchantedGolemFragment, 1);
+            st.giveItems(EnchantedGolemFragment);
             if (st.getQuestItemsCount(EnchantedGolemFragment) >= 20)
                 st.setCond(4);
         }
-        return null;
     }
 }

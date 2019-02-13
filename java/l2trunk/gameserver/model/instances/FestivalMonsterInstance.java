@@ -1,10 +1,7 @@
 package l2trunk.gameserver.model.instances;
 
 import l2trunk.gameserver.ai.CtrlEvent;
-import l2trunk.gameserver.model.Creature;
-import l2trunk.gameserver.model.Party;
-import l2trunk.gameserver.model.Player;
-import l2trunk.gameserver.model.World;
+import l2trunk.gameserver.model.*;
 import l2trunk.gameserver.model.entity.SevenSignsFestival.SevenSignsFestival;
 import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.model.reward.RewardList;
@@ -16,7 +13,7 @@ import l2trunk.gameserver.utils.ItemFunctions;
 import java.util.Map;
 
 
-public class FestivalMonsterInstance extends MonsterInstance {
+public final class FestivalMonsterInstance extends MonsterInstance {
     private int _bonusMultiplier = 1;
 
     public FestivalMonsterInstance(int objectId, NpcTemplate template) {
@@ -33,7 +30,7 @@ public class FestivalMonsterInstance extends MonsterInstance {
     protected void onSpawn() {
         super.onSpawn();
 
-        World.getAroundPlayers(this)
+        World.getAroundPlayers(this).stream()
                 .filter(p -> !p.isDead())
                 .findAny().ifPresent(p -> getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, p, 1));
     }
@@ -50,24 +47,23 @@ public class FestivalMonsterInstance extends MonsterInstance {
 
         if (entry.getKey() != RewardType.RATED_GROUPED)
             return;
-        if (!topDamager.isPlayable())
-            return;
+        if (topDamager instanceof Playable) {
+            Party associatedParty = topDamager.getPlayer().getParty();
 
-        Player topDamagerPlayer = topDamager.getPlayer();
-        Party associatedParty = topDamagerPlayer.getParty();
+            if (associatedParty == null)
+                return;
 
-        if (associatedParty == null)
-            return;
+            Player partyLeader = associatedParty.getLeader();
+            if (partyLeader == null)
+                return;
 
-        Player partyLeader = associatedParty.getLeader();
-        if (partyLeader == null)
-            return;
+            ItemInstance bloodOfferings = ItemFunctions.createItem(SevenSignsFestival.FESTIVAL_BLOOD_OFFERING);
 
-        ItemInstance bloodOfferings = ItemFunctions.createItem(SevenSignsFestival.FESTIVAL_BLOOD_OFFERING);
+            bloodOfferings.setCount(_bonusMultiplier);
+            partyLeader.getInventory().addItem(bloodOfferings, "FestivalMonster Offerings");
+            partyLeader.sendPacket(SystemMessage2.obtainItems(SevenSignsFestival.FESTIVAL_BLOOD_OFFERING, _bonusMultiplier, 0));
+        }
 
-        bloodOfferings.setCount(_bonusMultiplier);
-        partyLeader.getInventory().addItem(bloodOfferings, "FestivalMonster Offerings");
-        partyLeader.sendPacket(SystemMessage2.obtainItems(SevenSignsFestival.FESTIVAL_BLOOD_OFFERING, _bonusMultiplier, 0));
     }
 
     @Override

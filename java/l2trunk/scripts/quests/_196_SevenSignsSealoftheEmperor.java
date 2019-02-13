@@ -11,7 +11,6 @@ import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.ExStartScenePlayer;
 import l2trunk.gameserver.network.serverpackets.SystemMessage;
 import l2trunk.gameserver.scripts.Functions;
-import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.ReflectionUtils;
 
@@ -50,17 +49,17 @@ public final class _196_SevenSignsSealoftheEmperor extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        Player player = st.getPlayer();
+        Player player = st.player;
         String htmltext = event;
         Reflection ref = player.getReflection();
 
-        if (event.equalsIgnoreCase("iasonheine_q196_1d.htm")) {
+        if ("iasonheine_q196_1d.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
         } else if ("iasonheine_q196_2.htm".equalsIgnoreCase(event)) {
             if (GameObjectsStorage.getAllByNpcId(MerchantofMammon, false).count() ==0) {
-                MerchantofMammonSpawn = st.addSpawn(MerchantofMammon, 109763, 219944, -3512, 16384, 0, 120 * 1000);
+                MerchantofMammonSpawn = st.addSpawn(MerchantofMammon, Location.of(109763, 219944, -3512, 16384), 0, 120 * 1000);
                 Functions.npcSay(MerchantofMammonSpawn, "Who dares summon the Merchant of Mammon?!");
             }
         } else if (event.equalsIgnoreCase("merchantofmammon_q196_2.htm")) {
@@ -108,7 +107,7 @@ public final class _196_SevenSignsSealoftheEmperor extends Quest {
         else if (event.equalsIgnoreCase("iasonheine_q196_6.htm")) {
             st.setCond(6);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("wood_q196_2.htm"))
+        } else if ("wood_q196_2.htm".equalsIgnoreCase(event))
             if (player.getBaseClassId() == player.getActiveClassId()) {
                 st.addExpAndSp(25000000, 2500000);
                 st.setState(COMPLETED);
@@ -123,12 +122,11 @@ public final class _196_SevenSignsSealoftheEmperor extends Quest {
     public String onTalk(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
-        Player player = st.getPlayer();
+        Player player = st.player;
         String htmltext = "noquest";
         if (npcId == IasonHeine) {
-            QuestState qs = player.getQuestState(_195_SevenSignsSecretRitualofthePriests.class);
             if (cond == 0) {
-                if (player.getLevel() >= 79 && qs != null && qs.isCompleted())
+                if (player.getLevel() >= 79 && player.isQuestCompleted(_195_SevenSignsSecretRitualofthePriests.class))
                     htmltext = "iasonheine_q196_1.htm";
                 else {
                     htmltext = "iasonheine_q196_0.htm";
@@ -199,13 +197,13 @@ public final class _196_SevenSignsSealoftheEmperor extends Quest {
         @Override
         public void runImpl() {
             if (reflection != null) {
-                reflection.addSpawnWithoutRespawn(32715, new Location(-83175, 217021, -7504, 49151), 0); //Lilith
-                reflection.addSpawnWithoutRespawn(32718, new Location(-83179, 216479, -7504, 16384), 0); //Anakim
-                reflection.addSpawnWithoutRespawn(32717, new Location(-83222, 217055, -7504, 49151), 0); //liliths_shadow_guard_ssq
-                reflection.addSpawnWithoutRespawn(32716, new Location(-83127, 217056, -7504, 49151), 0); //liliths_agent_wizard_ssq
-                reflection.addSpawnWithoutRespawn(32719, new Location(-83227, 216443, -7504, 16384), 0); //anakims_holly_ssq
-                reflection.addSpawnWithoutRespawn(32721, new Location(-83179, 216432, -7504, 16384), 0); //anakims_sacred_ssq
-                reflection.addSpawnWithoutRespawn(32720, new Location(-83134, 216443, -7504, 16384), 0); //anakims_divine_ssq
+                reflection.addSpawnWithoutRespawn(32715, new Location(-83175, 217021, -7504, 49151)); //Lilith
+                reflection.addSpawnWithoutRespawn(32718, new Location(-83179, 216479, -7504, 16384)); //Anakim
+                reflection.addSpawnWithoutRespawn(32717, new Location(-83222, 217055, -7504, 49151)); //liliths_shadow_guard_ssq
+                reflection.addSpawnWithoutRespawn(32716, new Location(-83127, 217056, -7504, 49151)); //liliths_agent_wizard_ssq
+                reflection.addSpawnWithoutRespawn(32719, new Location(-83227, 216443, -7504, 16384)); //anakims_holly_ssq
+                reflection.addSpawnWithoutRespawn(32721, new Location(-83179, 216432, -7504, 16384)); //anakims_sacred_ssq
+                reflection.addSpawnWithoutRespawn(32720, new Location(-83134, 216443, -7504, 16384)); //anakims_divine_ssq
             }
         }
     }

@@ -54,21 +54,17 @@ public final class DoorObject implements SpawnableObject, InitableObject {
         return door.getDoorId();
     }
 
-    public int getUpgradeValue() {
-        return door.getUpgradeHp();
-    }
-
     public void setUpgradeValue(GlobalEvent event, int val) {
         door.setUpgradeHp(val);
         refreshObject(event);
     }
 
     public void open(GlobalEvent e) {
-        door.openMe(null, !e.isInProgress());
+        door.openMe(!e.isInProgress());
     }
 
     public void close(GlobalEvent e) {
-        door.closeMe(null, !e.isInProgress());
+        door.closeMe(!e.isInProgress());
     }
 
     public DoorInstance getDoor() {

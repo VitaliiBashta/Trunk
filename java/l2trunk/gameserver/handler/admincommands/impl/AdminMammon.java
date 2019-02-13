@@ -78,7 +78,7 @@ public class AdminMammon implements IAdminCommandHandler {
                         if (teleportIndex == index)
                             activeChar.teleToLocation(npc.getLoc());
                     } else
-                        activeChar.sendMessage(index + " - " + npc.getName() + " (" + npc.getObjectId() + "): " + npc.getLoc());
+                        activeChar.sendMessage(index + " - " + npc.getName() + " (" + npc.objectId() + "): " + npc.getLoc());
                 }
             }
         }

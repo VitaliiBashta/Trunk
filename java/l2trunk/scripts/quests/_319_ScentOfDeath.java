@@ -69,7 +69,7 @@ public final class _319_ScentOfDeath extends Quest {
             cond = st.getCond();
         if (npcId == MINALESS)
             if (cond == 0)
-                if (st.getPlayer().getLevel() < 11) {
+                if (st.player.getLevel() < 11) {
                     htmltext = "mina_q0319_02.htm";
                     st.exitCurrentQuest(true);
                 } else
@@ -78,9 +78,9 @@ public final class _319_ScentOfDeath extends Quest {
                 htmltext = "mina_q0319_05.htm";
             else if (cond == 2 && st.getQuestItemsCount(ZombieSkin) >= 5) {
                 htmltext = "mina_q0319_06.htm";
-                st.takeItems(ZombieSkin, -1);
+                st.takeItems(ZombieSkin);
                 st.giveItems(ADENA_ID, 3350);
-                st.giveItems(HealingPotion, 1);
+                st.giveItems(HealingPotion);
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest(true);
             } else {
@@ -91,12 +91,12 @@ public final class _319_ScentOfDeath extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         for (int[] aDROPLIST_COND : DROPLIST_COND)
             if (cond == aDROPLIST_COND[0] && npcId == aDROPLIST_COND[2])
-                if (aDROPLIST_COND[3] == 0 || st.getQuestItemsCount(aDROPLIST_COND[3]) > 0)
+                if (aDROPLIST_COND[3] == 0 || st.haveQuestItem(aDROPLIST_COND[3]))
                     if (aDROPLIST_COND[5] == 0)
                         st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[6]);
                     else if (st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[7], aDROPLIST_COND[5], aDROPLIST_COND[6]))
@@ -104,7 +104,6 @@ public final class _319_ScentOfDeath extends Quest {
                             st.setCond(aDROPLIST_COND[1]);
                             st.setState(STARTED);
                         }
-        return null;
     }
 
 }

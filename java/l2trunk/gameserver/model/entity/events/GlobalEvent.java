@@ -21,7 +21,6 @@ import l2trunk.gameserver.network.serverpackets.L2GameServerPacket;
 import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.IStaticPacket;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
-import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.taskmanager.actionrunner.ActionRunner;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.TimeUtils;
@@ -32,6 +31,8 @@ import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Stream;
+
+import static l2trunk.gameserver.utils.ItemFunctions.addItem;
 
 public abstract class GlobalEvent {
     public static final Logger LOG = LoggerFactory.getLogger(GlobalEvent.class);
@@ -143,10 +144,6 @@ public abstract class GlobalEvent {
         }
 
         callActions(actions);
-    }
-
-    public int[] timeActions() {
-        return onTimeActions.keySet().stream().mapToInt(Number::intValue).toArray();
     }
 
     // ===============================================================================================================
@@ -402,7 +399,7 @@ public abstract class GlobalEvent {
             }
             player.addFame((int) count, toString());
         } else {
-            Functions.addItem(player, itemId, count, getName() + " Global Event");
+            addItem(player, itemId, count);
         }
     }
 
@@ -432,7 +429,7 @@ public abstract class GlobalEvent {
         if (banishedItems.isEmpty())
             banishedItems = new HashMap<>();//CHashIntObjectMap<ItemInstance>();
 
-        banishedItems.put(item.getObjectId(), item);
+        banishedItems.put(item.objectId(), item);
     }
 
     public void removeBanishItems() {
@@ -445,12 +442,12 @@ public abstract class GlobalEvent {
             if (item != null) {
                 if (item.getOwnerId() > 0) {
                     GameObject object = GameObjectsStorage.findObject(item.getOwnerId());
-                    if (object != null && object.isPlayable()) {
-                        if (object.isSummon())
-                            ((Summon) object).getInventory().destroyItem(item, "removeBanishItems");
+                    if (object instanceof Playable) {
+                        if (object instanceof Summon)
+                            ((Summon) object).owner.getInventory().destroyItem(item, "removeBanishItems");
                         else
-                            object.getPlayer().getInventory().destroyItem(item, "removeBanishItems");
-                        object.getPlayer().sendPacket(SystemMessage2.removeItems(item));
+                            ((Player) object).getInventory().destroyItem(item, "removeBanishItems");
+                        ((Playable) object).sendPacket(SystemMessage2.removeItems(item));
                     }
                 }
                 item.delete();

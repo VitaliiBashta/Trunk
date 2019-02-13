@@ -74,7 +74,7 @@ public final class _343_UndertheShadowoftheIvoryTower extends Quest {
             else if (event.equalsIgnoreCase("30934-03.htm"))
                 if (orbs >= 10) {
                     st.takeItems(ORB, 10);
-                    st.set("playing", "1");
+                    st.set("playing", 1);
                 } else
                     htmltext = "noorbs.htm";
         } else if (event.equalsIgnoreCase("30934-04.htm")) {
@@ -140,7 +140,7 @@ public final class _343_UndertheShadowoftheIvoryTower extends Quest {
                         st.giveItems(ORB, 150);
                         htmltext = "30935-07.htm";
                     } else {
-                        st.set("toss", String.valueOf(toss + 1));
+                        st.set("toss", toss + 1);
                         htmltext = "30935-04.htm";
                     }
                 } else {
@@ -202,7 +202,7 @@ public final class _343_UndertheShadowoftheIvoryTower extends Quest {
         if (npcId == CEMA) {
             if (id != STARTED) {
                 for (int i : AllowClass)
-                    if (st.getPlayer().getClassId().id() == i && st.getPlayer().getLevel() >= 40)
+                    if (st.player.getClassId().id == i && st.player.getLevel() >= 40)
                         htmltext = "30834-01.htm";
                 if (!htmltext.equals("30834-01.htm")) {
                     htmltext = "30834-07.htm";
@@ -222,11 +222,10 @@ public final class _343_UndertheShadowoftheIvoryTower extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (Rnd.chance(CHANCE)) {
-            st.giveItems(ORB, 1);
+            st.giveItems(ORB);
             st.playSound(SOUND_ITEMGET);
         }
-        return null;
     }
 }

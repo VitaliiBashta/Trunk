@@ -30,31 +30,31 @@ public final class ResidenceFunction {
     private static final String A = "";
     private static final Logger _log = LoggerFactory.getLogger(ResidenceFunction.class);
     private static final Object[][][] buffs_template = {{
-            // level 0 - no buff
+            // occupation 0 - no buff
     },
             {
-                    // level 1
+                    // occupation 1
                     {SkillTable.INSTANCE.getInfo(4342, 1), A},
                     {SkillTable.INSTANCE.getInfo(4343, 1), A},
                     {SkillTable.INSTANCE.getInfo(4344, 1), A},
                     {SkillTable.INSTANCE.getInfo(4346, 1), A},
                     {SkillTable.INSTANCE.getInfo(4345, 1), W},},
             {
-                    // level 2
+                    // occupation 2
                     {SkillTable.INSTANCE.getInfo(4342, 2), A},
                     {SkillTable.INSTANCE.getInfo(4343, 3), A},
                     {SkillTable.INSTANCE.getInfo(4344, 3), A},
                     {SkillTable.INSTANCE.getInfo(4346, 4), A},
                     {SkillTable.INSTANCE.getInfo(4345, 3), W},},
             {
-                    // level 3
+                    // occupation 3
                     {SkillTable.INSTANCE.getInfo(4342, 2), A},
                     {SkillTable.INSTANCE.getInfo(4343, 3), A},
                     {SkillTable.INSTANCE.getInfo(4344, 3), A},
                     {SkillTable.INSTANCE.getInfo(4346, 4), A},
                     {SkillTable.INSTANCE.getInfo(4345, 3), W},},
             {
-                    // level 4
+                    // occupation 4
                     {SkillTable.INSTANCE.getInfo(4342, 2), A},
                     {SkillTable.INSTANCE.getInfo(4343, 3), A},
                     {SkillTable.INSTANCE.getInfo(4344, 3), A},
@@ -65,7 +65,7 @@ public final class ResidenceFunction {
                     {SkillTable.INSTANCE.getInfo(4350, 1), W},
                     {SkillTable.INSTANCE.getInfo(4348, 2), A},},
             {
-                    // level 5
+                    // occupation 5
                     {SkillTable.INSTANCE.getInfo(4342, 2), A},
                     {SkillTable.INSTANCE.getInfo(4343, 3), A},
                     {SkillTable.INSTANCE.getInfo(4344, 3), A},
@@ -81,10 +81,10 @@ public final class ResidenceFunction {
                     {SkillTable.INSTANCE.getInfo(4358, 1), W},
                     {SkillTable.INSTANCE.getInfo(4354, 1), W},},
             {
-                    // level 6 - unused
+                    // occupation 6 - unused
             },
             {
-                    // level 7
+                    // occupation 7
                     {SkillTable.INSTANCE.getInfo(4342, 2), A},
                     {SkillTable.INSTANCE.getInfo(4343, 3), A},
                     {SkillTable.INSTANCE.getInfo(4344, 3), A},
@@ -100,7 +100,7 @@ public final class ResidenceFunction {
                     {SkillTable.INSTANCE.getInfo(4358, 3), W},
                     {SkillTable.INSTANCE.getInfo(4354, 4), W},},
             {
-                    // level 8
+                    // occupation 8
                     {SkillTable.INSTANCE.getInfo(4342, 2), A},
                     {SkillTable.INSTANCE.getInfo(4343, 3), A},
                     {SkillTable.INSTANCE.getInfo(4344, 3), A},
@@ -121,34 +121,34 @@ public final class ResidenceFunction {
                     {SkillTable.INSTANCE.getInfo(4359, 1), W},
                     {SkillTable.INSTANCE.getInfo(4360, 1), W},},
             {
-                    // level 9 - unused
+                    // occupation 9 - unused
             },
             {
-                    // level 10 - unused
+                    // occupation 10 - unused
             },
             {
-                    // level 11
+                    // occupation 11
                     {SkillTable.INSTANCE.getInfo(4342, 3), A},
                     {SkillTable.INSTANCE.getInfo(4343, 4), A},
                     {SkillTable.INSTANCE.getInfo(4344, 4), A},
                     {SkillTable.INSTANCE.getInfo(4346, 5), A},
                     {SkillTable.INSTANCE.getInfo(4345, 4), W},},
             {
-                    // level 12
+                    // occupation 12
                     {SkillTable.INSTANCE.getInfo(4342, 4), A},
                     {SkillTable.INSTANCE.getInfo(4343, 6), A},
                     {SkillTable.INSTANCE.getInfo(4344, 6), A},
                     {SkillTable.INSTANCE.getInfo(4346, 8), A},
                     {SkillTable.INSTANCE.getInfo(4345, 6), W},},
             {
-                    // level 13
+                    // occupation 13
                     {SkillTable.INSTANCE.getInfo(4342, 4), A},
                     {SkillTable.INSTANCE.getInfo(4343, 6), A},
                     {SkillTable.INSTANCE.getInfo(4344, 6), A},
                     {SkillTable.INSTANCE.getInfo(4346, 8), A},
                     {SkillTable.INSTANCE.getInfo(4345, 6), W},},
             {
-                    // level 14
+                    // occupation 14
                     {SkillTable.INSTANCE.getInfo(4342, 4), A},
                     {SkillTable.INSTANCE.getInfo(4343, 6), A},
                     {SkillTable.INSTANCE.getInfo(4344, 6), A},
@@ -159,7 +159,7 @@ public final class ResidenceFunction {
                     {SkillTable.INSTANCE.getInfo(4350, 5), W},
                     {SkillTable.INSTANCE.getInfo(4348, 8), A},},
             {
-                    // level 15
+                    // occupation 15
                     {SkillTable.INSTANCE.getInfo(4342, 4), A},
                     {SkillTable.INSTANCE.getInfo(4343, 6), A},
                     {SkillTable.INSTANCE.getInfo(4344, 6), A},
@@ -175,10 +175,10 @@ public final class ResidenceFunction {
                     {SkillTable.INSTANCE.getInfo(4358, 4), W},
                     {SkillTable.INSTANCE.getInfo(4354, 5), W},},
             {
-                    // level 16 - unused
+                    // occupation 16 - unused
             },
             {
-                    // level 17
+                    // occupation 17
                     {SkillTable.INSTANCE.getInfo(4342, 4), A},
                     {SkillTable.INSTANCE.getInfo(4343, 6), A},
                     {SkillTable.INSTANCE.getInfo(4344, 6), A},
@@ -194,7 +194,7 @@ public final class ResidenceFunction {
                     {SkillTable.INSTANCE.getInfo(4358, 6), W},
                     {SkillTable.INSTANCE.getInfo(4354, 8), W},},
             {
-                    // level 18
+                    // occupation 18
                     {SkillTable.INSTANCE.getInfo(4342, 4), A},
                     {SkillTable.INSTANCE.getInfo(4343, 6), A},
                     {SkillTable.INSTANCE.getInfo(4344, 6), A},

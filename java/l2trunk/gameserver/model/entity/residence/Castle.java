@@ -115,7 +115,7 @@ public final class Castle extends Residence {
 
         Clan oldOwner = null;
         // Если этим замком уже кто-то владел, отбираем у него замок
-        if (getOwnerId() > 0 && (newOwner == null || newOwner.getClanId() != getOwnerId())) {
+        if (getOwnerId() > 0 && (newOwner == null || newOwner.clanId() != getOwnerId())) {
             // Удаляем замковые скилы у старого владельца
             removeSkills();
             getDominion().changeOwner(null);
@@ -138,7 +138,7 @@ public final class Castle extends Residence {
                 }
 
                 // Проверяем членов старого клана владельца, снимаем короны замков и корону лорда с лидера
-                for (Player clanMember : oldOwner.getOnlineMembers(0))
+                for (Player clanMember : oldOwner.getOnlineMembers())
                     if (clanMember != null && clanMember.getInventory() != null)
                         clanMember.getInventory().validateItems();
 
@@ -178,12 +178,12 @@ public final class Castle extends Residence {
         _productionNext = new ArrayList<>();
         _isNextPeriodApproved = false;
 
-        _owner = ClanDataDAO.INSTANCE.getOwner(this);
+        owner = ClanDataDAO.INSTANCE.getOwner(this);
         CastleHiredGuardDAO.INSTANCE.load(this);
     }
 
     private void updateOwnerInDB(Clan clan) {
-        _owner = clan; // Update owner id property
+        owner = clan; // Update owner id property
 
         try (Connection con = DatabaseFactory.getInstance().getConnection()) {
             PreparedStatement statement = con.prepareStatement("UPDATE clan_data SET hasCastle=0 WHERE hasCastle=? LIMIT 1");
@@ -305,7 +305,7 @@ public final class Castle extends Residence {
         update();
 
         if (activeChar != null)
-            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.model.entity.Castle.OutOfControl.CastleTaxChangetTo", activeChar).addString(getName()).addNumber(taxPercent));
+            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.model.entity.Castle.OutOfControl.CastleTaxChangetTo").addString(getName()).addNumber(taxPercent));
     }
 
     public double getTaxRate() {

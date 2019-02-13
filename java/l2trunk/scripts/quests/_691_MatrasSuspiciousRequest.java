@@ -3,7 +3,6 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _691_MatrasSuspiciousRequest extends Quest {
     // NPC
@@ -49,25 +48,25 @@ public final class _691_MatrasSuspiciousRequest extends Quest {
 
     @Override
     public String onTalk(NpcInstance npc, QuestState st) {
-        String htmltext = "noquest";
+        String htmltext;
         int cond = st.getCond();
         if (cond == 0) {
-            if (st.getPlayer().getLevel() >= 76)
+            if (st.player.getLevel() >= 76)
                 htmltext = "32245-01.htm";
             else
                 htmltext = "32245-00.htm";
             st.exitCurrentQuest(true);
-        } else if (st.getQuestItemsCount(RED_STONE) < RED_STONES_COUNT)
-            htmltext = "32245-03.htm";
-        else
+        } else if (st.haveQuestItem(RED_STONE, RED_STONES_COUNT)) {
             htmltext = "32245-04.htm";
+        } else {
+            htmltext = "32245-03.htm";
+        }
 
         return htmltext;
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         st.rollAndGive(RED_STONE, 1, 1, RED_STONES_COUNT, npc.getNpcId() == LABYRINTH_CAPTAIN ? 50 : 30);
-        return null;
     }
 }

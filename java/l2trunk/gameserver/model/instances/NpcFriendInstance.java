@@ -23,14 +23,14 @@ public final class NpcFriendInstance extends MerchantInstance {
     public void onAction(Player player, boolean shift) {
         if (this != player.getTarget()) {
             player.setTarget(this);
-            player.sendPacket(new MyTargetSelected(getObjectId(), player.getLevel() - getLevel()), new ValidateLocation(this));
+            player.sendPacket(new MyTargetSelected(objectId(), player.getLevel() - getLevel()), new ValidateLocation(this));
             if (isAutoAttackable(player))
                 player.sendPacket(makeStatusUpdate(StatusUpdate.CUR_HP, StatusUpdate.MAX_HP));
             player.sendActionFailed();
             return;
         }
 
-        player.sendPacket(new MyTargetSelected(getObjectId(), player.getLevel() - getLevel()));
+        player.sendPacket(new MyTargetSelected(objectId(), player.getLevel() - getLevel()));
 
         if (Events.onAction(player, this, shift))
             return;
@@ -232,10 +232,8 @@ public final class NpcFriendInstance extends MerchantInstance {
                 showChatWindow(player, "npc_friend/" + getNpcId() + "-havenotitems.htm");
         } else if (command.startsWith("Chat")) {
             int val = Integer.parseInt(command.substring(5));
-            String fname = "";
-            fname = "npc_friend/" + getNpcId() + "-" + val + ".htm";
-            if (!fname.equals(""))
-                showChatWindow(player, fname);
+            String fname = "npc_friend/" + getNpcId() + "-" + val + ".htm";
+            showChatWindow(player, fname);
         } else if (command.startsWith("Buy")) {
             int val = Integer.parseInt(command.substring(4));
             showShopWindow(player, val, false);

@@ -76,7 +76,7 @@ public final class RimPailaka extends Reflection {
 
     private void sendWave(ExShowScreenMessage message, int guideId, int folowwerID) {
         getPlayers().forEach(player -> player.sendPacket(message));
-        addSpawnWithoutRespawn(guideId, MINIONS_LOC, 0);
+        addSpawnWithoutRespawn(guideId, MINIONS_LOC);
         for (int i = 0; i < 10; i++)
             addSpawnWithoutRespawn(folowwerID, MINIONS_LOC, 400);
     }
@@ -84,10 +84,10 @@ public final class RimPailaka extends Reflection {
     public class InvestigatorsSpawn extends RunnableImpl {
         @Override
         public void runImpl() {
-            addSpawnWithoutRespawn(SeducedKnight, KNIGHT_LOC, 0);
-            addSpawnWithoutRespawn(SeducedRanger, RANGER_LOC, 0);
-            addSpawnWithoutRespawn(SeducedMage, MAGE_LOC, 0);
-            addSpawnWithoutRespawn(SeducedWarrior, WARRIOR_LOC, 0);
+            addSpawnWithoutRespawn(SeducedKnight, KNIGHT_LOC);
+            addSpawnWithoutRespawn(SeducedRanger, RANGER_LOC);
+            addSpawnWithoutRespawn(SeducedMage, MAGE_LOC);
+            addSpawnWithoutRespawn(SeducedWarrior, WARRIOR_LOC);
         }
     }
 

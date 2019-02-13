@@ -59,7 +59,7 @@ public final class MultiSellIngredient implements Cloneable {
     }
 
     public boolean isStackable() {
-        return itemId <= 0 || ItemHolder.getTemplate(itemId).isStackable();
+        return itemId <= 0 || ItemHolder.getTemplate(itemId).stackable();
     }
 
     public int getItemEnchant() {

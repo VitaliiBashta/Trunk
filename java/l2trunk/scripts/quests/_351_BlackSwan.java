@@ -33,21 +33,21 @@ public final class _351_BlackSwan extends Quest {
         if (event.equalsIgnoreCase("30916-03.htm")) {
             st.setState(STARTED);
             st.setCond(1);
-            st.giveItems(ORDER_OF_GOSTA, 1);
+            st.giveItems(ORDER_OF_GOSTA);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("30969-02a.htm") && amount > 0) {
+        } else if ("30969-02a.htm".equalsIgnoreCase(event) && amount > 0) {
             htmltext = "30969-02.htm";
             st.giveItems(ADENA_ID, amount * 30, false);
-            st.takeItems(LIZARD_FANG, -1);
-        } else if (event.equalsIgnoreCase("30969-03a.htm") && amount2 > 0) {
+            st.takeItems(LIZARD_FANG);
+        } else if ("30969-03a.htm".equalsIgnoreCase(event) && amount2 > 0) {
             htmltext = "30969-03.htm";
             st.setCond(2);
             st.giveItems(ADENA_ID, amount2 * 500, false);
             st.giveItems(BILL_OF_IASON_HEINE, amount2, false);
-            st.takeItems(BARREL_OF_LEAGUE, -1);
-        } else if (event.equalsIgnoreCase("30969-01.htm") && st.getCond() == 2)
+            st.takeItems(BARREL_OF_LEAGUE);
+        } else if ("30969-01.htm".equalsIgnoreCase(event) && st.getCond() == 2)
             htmltext = "30969-04.htm";
-        else if (event.equalsIgnoreCase("5")) {
+        else if ("5".equals(event)) {
             st.exitCurrentQuest(true);
             st.playSound(SOUND_FINISH);
             htmltext = "";
@@ -62,7 +62,7 @@ public final class _351_BlackSwan extends Quest {
         int cond = st.getCond();
         if (npcId == Gosta)
             if (cond == 0) {
-                if (st.getPlayer().getLevel() >= 32)
+                if (st.player.getLevel() >= 32)
                     htmltext = "30916-01.htm";
                 else {
                     htmltext = "30916-00.htm";
@@ -82,10 +82,9 @@ public final class _351_BlackSwan extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
-        double mod = Experience.penaltyModifier(st.calculateLevelDiffForDrop(npc.getLevel(), st.getPlayer().getLevel()), 9);
+    public void onKill(NpcInstance npc, QuestState st) {
+        double mod = Experience.penaltyModifier(st.calculateLevelDiffForDrop(npc.getLevel(), st.player.getLevel()), 9);
         st.rollAndGive(LIZARD_FANG, 1, CHANCE * mod);
         st.rollAndGive(BARREL_OF_LEAGUE, 1, CHANCE2 * mod);
-        return null;
     }
 }

@@ -21,8 +21,4 @@ public final class EffectImmobilize extends Effect {
         effected.stopImmobilized();
     }
 
-    @Override
-    public boolean onActionTime() {
-        return false;
-    }
 }

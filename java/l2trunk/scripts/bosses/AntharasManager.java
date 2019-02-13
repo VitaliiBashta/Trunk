@@ -4,7 +4,6 @@ import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.ThreadPoolManager;
-import l2trunk.gameserver.cache.Msg;
 import l2trunk.gameserver.listener.actor.OnDeathListener;
 import l2trunk.gameserver.model.*;
 import l2trunk.gameserver.model.actor.listener.CharListenerList;
@@ -17,10 +16,7 @@ import l2trunk.gameserver.network.serverpackets.SocialAction;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.scripts.ScriptFile;
-import l2trunk.gameserver.utils.Location;
-import l2trunk.gameserver.utils.Log;
-import l2trunk.gameserver.utils.ReflectionUtils;
-import l2trunk.gameserver.utils.TimeUtils;
+import l2trunk.gameserver.utils.*;
 import l2trunk.scripts.bosses.EpicBossState.State;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +35,7 @@ public final class AntharasManager extends Functions implements ScriptFile, OnDe
     private static final int ANTHARAS_STRONG = 29068;
     private static final int PORTAL_STONE = 3865;
     private static final Location TELEPORT_POSITION = new Location(179892, 114915, -7704);
-    private static final Location _teleportCubeLocation = new Location(177615, 114941, -7709, 0);
+    private static final Location _teleportCubeLocation = new Location(177615, 114941, -7709);
     private static final Location _antharasLocation = new Location(181911, 114835, -7678, 32542);
     private static final List<NpcInstance> _spawnedMinions = new ArrayList<>();
     private static final int FWA_LIMITUNTILSLEEP = 15 * 60000;
@@ -92,7 +88,7 @@ public final class AntharasManager extends Functions implements ScriptFile, OnDe
         _state.update();
 
         _entryLocked = false;
-        _teleCube = Functions.spawn(_teleportCubeLocation, _teleportCubeId);
+        _teleCube = NpcUtils.spawnSingle(_teleportCubeId,_teleportCubeLocation );
         Log.add("Antharas died", "bosses");
     }
 
@@ -215,9 +211,9 @@ public final class AntharasManager extends Functions implements ScriptFile, OnDe
 
     @Override
     public void onDeath(Creature self, Creature killer) {
-        if (self.isPlayer() && _state != null && _state.getState() == State.ALIVE && zone != null && zone.checkIfInZone(self.getX(), self.getY()))
+        if (self instanceof Player && _state != null && _state.getState() == State.ALIVE && zone != null && zone.checkIfInZone(self.getX(), self.getY()))
             checkAnnihilated();
-        else if (self.isNpc() && self.getNpcId() == ANTHARAS_STRONG)
+        else if (self instanceof NpcInstance && self.getNpcId() == ANTHARAS_STRONG)
             ThreadPoolManager.INSTANCE.schedule(new AntharasSpawn(8), 10);
     }
 
@@ -257,7 +253,7 @@ public final class AntharasManager extends Functions implements ScriptFile, OnDe
             _entryLocked = true;
             switch (taskId) {
                 case 1:
-                    _antharas = (BossInstance) Functions.spawn(_antharasLocation, ANTHARAS_STRONG);
+                    _antharas = (BossInstance) NpcUtils.spawnSingle(ANTHARAS_STRONG,_antharasLocation );
                     _antharas.setAggroRange(0);
                     _state.setRespawnDate(getRespawnInterval());
                     _state.setState(State.ALIVE);
@@ -266,17 +262,18 @@ public final class AntharasManager extends Functions implements ScriptFile, OnDe
                     break;
                 case 2:
                     // set camera.
-                    for (Player pc : players)
-                        if (pc.getDistance(_antharas) <= _distance) {
-                            pc.enterMovieMode();
-                            pc.specialCamera(_antharas, 700, 13, -19, 0, 20000, 0, 0, 0, 0);
-                        } else
-                            pc.leaveMovieMode();
+                    players.forEach(pc -> {
+                                if (pc.getDistance(_antharas) <= _distance) {
+                                    pc.enterMovieMode();
+                                    pc.specialCamera(_antharas, 700, 13, -19, 0, 20000, 0, 0, 0, 0);
+                                } else
+                                    pc.leaveMovieMode();
+                            });
                     _socialTask = ThreadPoolManager.INSTANCE.schedule(new AntharasSpawn(3), 3000);
                     break;
                 case 3:
                     // do social.
-                    _antharas.broadcastPacket(new SocialAction(_antharas.getObjectId(), 1));
+                    _antharas.broadcastPacket(new SocialAction(_antharas.objectId(), 1));
 
                     // set camera.
                     players.forEach(pc -> {
@@ -289,7 +286,7 @@ public final class AntharasManager extends Functions implements ScriptFile, OnDe
                     _socialTask = ThreadPoolManager.INSTANCE.schedule(new AntharasSpawn(4), 10000);
                     break;
                 case 4:
-                    _antharas.broadcastPacket(new SocialAction(_antharas.getObjectId(), 2));
+                    _antharas.broadcastPacket(new SocialAction(_antharas.objectId(), 2));
                     // set camera.
                     for (Player pc : players)
                         if (pc.getDistance(_antharas) <= _distance) {
@@ -325,7 +322,7 @@ public final class AntharasManager extends Functions implements ScriptFile, OnDe
                         pc.leaveMovieMode();
 
                     broadcastScreenMessage(NpcString.ANTHARAS_YOU_CANNOT_HOPE_TO_DEFEAT_ME);
-                    _antharas.broadcastPacket(new PlaySound(PlaySound.Type.MUSIC, "BS02_A", 1, _antharas.getObjectId(), _antharas.getLoc()));
+                    _antharas.broadcastPacket(new PlaySound(PlaySound.Type.MUSIC, "BS02_A", 1, _antharas.objectId(), _antharas.getLoc()));
                     _antharas.setAggroRange(_antharas.getTemplate().aggroRange);
                     _antharas.setRunning();
                     _antharas.moveToLocation(new Location(179011, 114871, -7704), 0, false);

@@ -27,21 +27,21 @@ public final class _008_AnAdventureBegins extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("jasmine_q0008_0104.htm")) {
+        if ("jasmine_q0008_0104.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("sentry_roseline_q0008_0201.htm")) {
-            st.giveItems(ROSELYNS_NOTE, 1);
+        } else if ("sentry_roseline_q0008_0201.htm".equalsIgnoreCase(event)) {
+            st.giveItems(ROSELYNS_NOTE);
             st.setCond(2);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("harne_q0008_0301.htm")) {
-            st.takeItems(ROSELYNS_NOTE, -1);
+        } else if ("harne_q0008_0301.htm".equalsIgnoreCase(event)) {
+            st.takeItems(ROSELYNS_NOTE);
             st.setCond(3);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("jasmine_q0008_0401.htm")) {
-            st.giveItems(SCROLL_OF_ESCAPE_GIRAN, 1);
-            st.giveItems(MARK_OF_TRAVELER, 1);
+        } else if ("jasmine_q0008_0401.htm".equalsIgnoreCase(event)) {
+            st.giveItems(SCROLL_OF_ESCAPE_GIRAN);
+            st.giveItems(MARK_OF_TRAVELER);
             st.setCond(0);
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(false);
@@ -55,8 +55,8 @@ public final class _008_AnAdventureBegins extends Quest {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         if (npcId == JASMINE) {
-            if (cond == 0 && st.getPlayer().getRace() == Race.darkelf)
-                if (st.getPlayer().getLevel() >= 3)
+            if (cond == 0 && st.player.getRace() == Race.darkelf)
+                if (st.player.getLevel() >= 3)
                     htmltext = "jasmine_q0008_0101.htm";
                 else {
                     htmltext = "jasmine_q0008_0102.htm";
@@ -81,8 +81,4 @@ public final class _008_AnAdventureBegins extends Quest {
         return htmltext;
     }
 
-    @Override
-    public String onKill(NpcInstance npc, QuestState st) {
-        return null;
-    }
 }

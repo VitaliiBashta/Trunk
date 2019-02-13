@@ -3,6 +3,7 @@ package l2trunk.scripts.ai;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.DefaultAI;
 import l2trunk.gameserver.model.GameObject;
+import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.tables.SkillTable;
@@ -34,7 +35,7 @@ public final class TotemSummon extends DefaultAI {
         if (_timer < System.currentTimeMillis()) {
             _timer = System.currentTimeMillis() + 15000L;
             getActor().getAroundCharacters(450, 200)
-                    .filter(GameObject::isPlayable)
+                    .filter(c -> c instanceof Playable)
                     .filter(c -> !c.isDead())
                     .forEach(c -> c.altOnMagicUseTimer(c, getBuffId(getActor().getNpcId())));
         }

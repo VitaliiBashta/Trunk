@@ -23,9 +23,9 @@ public final class BirthDayCakeInstance extends NpcInstance {
         super.onSpawn();
 
         _castTask = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(() ->
-                World.getAroundPlayers(BirthDayCakeInstance.this, 500, 100)
+                World.getAroundPlayers(this, 500, 100)
                 .filter(player -> player.getEffectList().getEffectsBySkillId(SKILL) == null)
-                .forEach(player -> SkillTable.INSTANCE.getInfo(SKILL).getEffects(BirthDayCakeInstance.this, player)), 1000L, 1000L);
+                .forEach(player -> SkillTable.INSTANCE.getInfo(SKILL).getEffects(this, player)), 1000L, 1000L);
     }
 
     @Override

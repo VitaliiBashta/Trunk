@@ -4,7 +4,6 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _300_HuntingLetoLizardman extends Quest {
     //NPCs
@@ -30,18 +29,19 @@ public final class _300_HuntingLetoLizardman extends Quest {
         if (npc.getNpcId() != RATH)
             return htmltext;
         if (st.getState() == CREATED) {
-            if (st.getPlayer().getLevel() < 34) {
+            if (st.player.getLevel() < 34) {
                 htmltext = "rarshints_q0300_0103.htm";
                 st.exitCurrentQuest(true);
             } else {
                 htmltext = "rarshints_q0300_0101.htm";
                 st.setCond(0);
             }
-        } else if (st.getQuestItemsCount(BRACELET_OF_LIZARDMAN) < 60) {
+        } else if (st.haveQuestItem(BRACELET_OF_LIZARDMAN, 60)) {
+            htmltext = "rarshints_q0300_0105.htm";
+        } else {
             htmltext = "rarshints_q0300_0106.htm";
             st.setCond(1);
-        } else
-            htmltext = "rarshints_q0300_0105.htm";
+        }
         return htmltext;
     }
 
@@ -49,16 +49,13 @@ public final class _300_HuntingLetoLizardman extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
         int _state = st.getState();
-        if (event.equalsIgnoreCase("rarshints_q0300_0104.htm") && _state == CREATED) {
+        if ("rarshints_q0300_0104.htm".equalsIgnoreCase(event) && _state == CREATED) {
             st.setState(STARTED);
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("rarshints_q0300_0201.htm") && _state == STARTED)
-            if (st.getQuestItemsCount(BRACELET_OF_LIZARDMAN) < 60) {
-                htmltext = "rarshints_q0300_0202.htm";
-                st.setCond(1);
-            } else {
-                st.takeItems(BRACELET_OF_LIZARDMAN, -1);
+        } else if ("rarshints_q0300_0201.htm".equalsIgnoreCase(event) && _state == STARTED)
+            if (st.haveQuestItem(BRACELET_OF_LIZARDMAN, 60)) {
+                st.takeItems(BRACELET_OF_LIZARDMAN);
                 switch (Rnd.get(3)) {
                     case 0:
                         st.giveItems(ADENA_ID, 30000, true);
@@ -72,24 +69,26 @@ public final class _300_HuntingLetoLizardman extends Quest {
                 }
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest(true);
+            } else {
+                htmltext = "rarshints_q0300_0202.htm";
+                st.setCond(1);
             }
         return htmltext;
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState qs) {
+    public void onKill(NpcInstance npc, QuestState qs) {
         if (qs.getState() != STARTED)
-            return null;
+            return;
 
         long _count = qs.getQuestItemsCount(BRACELET_OF_LIZARDMAN);
         if (_count < 60 && Rnd.chance(BRACELET_OF_LIZARDMAN_CHANCE)) {
-            qs.giveItems(BRACELET_OF_LIZARDMAN, 1);
+            qs.giveItems(BRACELET_OF_LIZARDMAN);
             if (_count == 59) {
                 qs.setCond(2);
                 qs.playSound(SOUND_MIDDLE);
             } else
                 qs.playSound(SOUND_ITEMGET);
         }
-        return null;
     }
 }

@@ -52,7 +52,7 @@ public final class DimensionMovingDevice extends DefaultAI {
         if (spawnTime + MOBS_WAVE_DELAY < System.currentTimeMillis()) {
             if (_npcs.size() < 100) {
                 for (int id : MOBS) {
-                    NpcInstance mob = actor.getReflection().addSpawnWithoutRespawn(id, actor.getLoc(), 0);
+                    NpcInstance mob = actor.getReflection().addSpawnWithoutRespawn(id, actor);
                     _npcs.add(mob);
                 }
             }
@@ -84,7 +84,7 @@ public final class DimensionMovingDevice extends DefaultAI {
                             break;
                     }
 
-                    NpcInstance mob = actor.getReflection().addSpawnWithoutRespawn(id, actor.getLoc(), 0);
+                    NpcInstance mob = actor.getReflection().addSpawnWithoutRespawn(id, actor);
                     _npcs.add(mob);
 
                     spawnTime2 = System.currentTimeMillis();

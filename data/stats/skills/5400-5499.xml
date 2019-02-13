@@ -686,7 +686,7 @@
 	</skill>
 	<skill id="5446" levels="45" name="Soul Expansion">
 		<!--
-			Description: Soul increased to level 1-45.
+			Description: Soul increased to occupation 1-45.
 		-->
 		<set name="icon" val="icon.skill5446_1" />
 		<set name="magicLevel" val="1" />
@@ -1078,7 +1078,7 @@
 	</skill>
 	<skill id="5475" levels="1" name="Raid Boss - Level 85">
 		<!--
-			Description: "This high-level Demon general, royalty even to the infernal, was ordered by  Darion to capture the Tower of Infinitum."
+			Description: "This high-occupation Demon general, royalty even to the infernal, was ordered by  Darion to capture the Tower of Infinitum."
 		-->
 		<set name="icon" val="icon.skillraid" />
 		<set name="magicLevel" val="1" />

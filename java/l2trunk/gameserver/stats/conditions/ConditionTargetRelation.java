@@ -1,8 +1,10 @@
 package l2trunk.gameserver.stats.conditions;
 
 import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.base.TeamType;
+import l2trunk.gameserver.model.instances.MonsterInstance;
 import l2trunk.gameserver.stats.Env;
 
 public class ConditionTargetRelation extends Condition {
@@ -13,13 +15,13 @@ public class ConditionTargetRelation extends Condition {
     }
 
     public static Relation getRelation(Creature activeChar, Creature aimingTarget) {
-        if (activeChar.isPlayable() && activeChar.getPlayer() != null) {
-            if (aimingTarget.isMonster())
+        if (activeChar instanceof Playable) {
+            if (aimingTarget instanceof MonsterInstance)
                 return Relation.Enemy;
-            Player player = activeChar.getPlayer();
+            Player player = ((Playable)activeChar).getPlayer();
 
-            if (aimingTarget.isPlayable() && aimingTarget.getPlayer() != null) {
-                Player target = aimingTarget.getPlayer();
+            if (aimingTarget instanceof Playable) {
+                Player target = ((Playable)aimingTarget).getPlayer();
 
                 if (player.getParty() != null && target.getParty() != null && player.getParty() == target.getParty())
                     return Relation.Friend;
@@ -59,6 +61,6 @@ public class ConditionTargetRelation extends Condition {
     public enum Relation {
         Neutral,
         Friend,
-        Enemy;
+        Enemy
     }
 }

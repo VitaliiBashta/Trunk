@@ -28,7 +28,7 @@ public class SiegeClanObject implements Serializable {
     }
 
     public int getObjectId() {
-        return _clan.getClanId();
+        return _clan.clanId();
     }
 
     public Clan getClan() {
@@ -68,12 +68,12 @@ public class SiegeClanObject implements Serializable {
 
     public void setEvent(boolean start, SiegeEvent event) {
         if (start) {
-            for (Player player : _clan.getOnlineMembers(0)) {
+            for (Player player : _clan.getOnlineMembers()) {
                 player.addEvent(event);
                 player.broadcastCharInfo();
             }
         } else {
-            for (Player player : _clan.getOnlineMembers(0)) {
+            for (Player player : _clan.getOnlineMembers()) {
                 player.removeEvent(event);
                 player.getEffectList().stopEffect(Skill.SKILL_BATTLEFIELD_DEATH_SYNDROME);
                 player.broadcastCharInfo();

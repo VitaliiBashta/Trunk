@@ -67,7 +67,7 @@ public final class CastleSiegeInfo extends L2GameServerPacket {
         _ownerObjectId = residence.getOwnerId();
         Clan owner = residence.getOwner();
         if (owner != null) {
-            _isLeader = player.isGM() || owner.getLeaderId(Clan.SUBUNIT_MAIN_CLAN) == player.getObjectId();
+            _isLeader = player.isGM() || owner.getLeaderId(Clan.SUBUNIT_MAIN_CLAN) == player.objectId();
             _ownerName = owner.getName();
             _leaderName = owner.getLeaderName(Clan.SUBUNIT_MAIN_CLAN);
             Alliance ally = owner.getAlliance();

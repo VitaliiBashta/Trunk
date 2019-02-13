@@ -65,7 +65,7 @@ public final class _043_HelpTheSister extends Quest {
         String htmltext = "noquest";
         int id = st.getState();
         if (id == CREATED) {
-            if (st.getPlayer().getLevel() >= 26)
+            if (st.player.getLevel() >= 26)
                 htmltext = "pet_manager_cooper_q0043_0101.htm";
             else {
                 st.exitCurrentQuest(true);
@@ -75,10 +75,11 @@ public final class _043_HelpTheSister extends Quest {
             int cond = st.getCond();
             if (npcId == COOPER) {
                 if (cond == 1) {
-                    if (st.getQuestItemsCount(CRAFTED_DAGGER) == 0)
-                        htmltext = "pet_manager_cooper_q0043_0106.htm";
-                    else
+                    if (st.haveQuestItem(CRAFTED_DAGGER)) {
                         htmltext = "pet_manager_cooper_q0043_0105.htm";
+                    } else {
+                        htmltext = "pet_manager_cooper_q0043_0106.htm";
+                    }
                 } else if (cond == 2)
                     htmltext = "pet_manager_cooper_q0043_0204.htm";
                 else if (cond == 3)
@@ -88,19 +89,19 @@ public final class _043_HelpTheSister extends Quest {
                 else if (cond == 5)
                     htmltext = "pet_manager_cooper_q0043_0401.htm";
             } else if (npcId == GALLADUCCI)
-                if (cond == 4 && st.getQuestItemsCount(MAP) > 0)
+                if (cond == 4 && st.haveQuestItem(MAP))
                     htmltext = "galladuchi_q0043_0301.htm";
         }
         return htmltext;
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int cond = st.getCond();
         if (cond == 2) {
             long pieces = st.getQuestItemsCount(MAP_PIECE);
             if (pieces < MAX_COUNT) {
-                st.giveItems(MAP_PIECE, 1);
+                st.giveItems(MAP_PIECE);
                 if (pieces < MAX_COUNT - 1)
                     st.playSound(SOUND_ITEMGET);
                 else {
@@ -109,6 +110,5 @@ public final class _043_HelpTheSister extends Quest {
                 }
             }
         }
-        return null;
     }
 }

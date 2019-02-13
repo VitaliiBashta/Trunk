@@ -4,9 +4,7 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-import java.util.Arrays;
 import java.util.List;
 
 public final class _278_HomeSecurity extends Quest {
@@ -23,7 +21,7 @@ public final class _278_HomeSecurity extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("tunatun_q278_03.htm")) {
+        if ("tunatun_q278_03.htm".equalsIgnoreCase(event)) {
             st.setState(STARTED);
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
@@ -38,7 +36,7 @@ public final class _278_HomeSecurity extends Quest {
         int cond = st.getCond();
         if (npcId == Tunatun) {
             if (cond == 0) {
-                if (st.getPlayer().getLevel() >= 82)
+                if (st.player.getLevel() >= 82)
                     htmltext = "tunatun_q278_01.htm";
                 else {
                     htmltext = "tunatun_q278_00.htm";
@@ -50,15 +48,47 @@ public final class _278_HomeSecurity extends Quest {
                 if (st.getQuestItemsCount(SelMahumMane) >= 300) {
                     htmltext = "tunatun_q278_05.htm";
                     st.takeItems(SelMahumMane);
-                    int rnd = Rnd.get(1, 13);
-                    if (rnd < 11)
-                        st.giveItems(960, rnd);
-                    else if (rnd ==11)
-                        st.giveItems(9553);
-                    else if (rnd ==12)
-                        st.giveItems(9553, 2);
-                    else if (rnd ==13)
-                        st.giveItems(959);
+                    switch (Rnd.get(1, 13)) {
+                        case 1:
+                            st.giveItems(960);
+                            break;
+                        case 2:
+                            st.giveItems(960, 2);
+                            break;
+                        case 3:
+                            st.giveItems(960, 3);
+                            break;
+                        case 4:
+                            st.giveItems(960, 4);
+                            break;
+                        case 5:
+                            st.giveItems(960, 5);
+                            break;
+                        case 6:
+                            st.giveItems(960, 6);
+                            break;
+                        case 7:
+                            st.giveItems(960, 7);
+                            break;
+                        case 8:
+                            st.giveItems(960, 8);
+                            break;
+                        case 9:
+                            st.giveItems(960, 9);
+                            break;
+                        case 10:
+                            st.giveItems(960, 10);
+                            break;
+                        case 11:
+                            st.giveItems(9553, 1);
+                            break;
+                        case 12:
+                            st.giveItems(9553, 2);
+                            break;
+                        case 13:
+                            st.giveItems(959);
+                            break;
+                    }
                     st.playSound(SOUND_FINISH);
                     st.exitCurrentQuest(true);
                 } else
@@ -69,7 +99,7 @@ public final class _278_HomeSecurity extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         if (cond == 1)
@@ -78,6 +108,5 @@ public final class _278_HomeSecurity extends Quest {
                 if (st.getQuestItemsCount(SelMahumMane) >= 300)
                     st.setCond(2);
             }
-        return null;
     }
 }

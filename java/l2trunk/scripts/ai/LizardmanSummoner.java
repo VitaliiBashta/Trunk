@@ -3,6 +3,7 @@ package l2trunk.scripts.ai;
 import l2trunk.gameserver.ai.CtrlEvent;
 import l2trunk.gameserver.ai.Mystic;
 import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.model.SimpleSpawner;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.PositionUtils;
@@ -26,7 +27,7 @@ public final class LizardmanSummoner extends Mystic {
 
     @Override
     public void onEvtAttacked(Creature attacker, int damage) {
-        if (!spawnedMobs && attacker.isPlayable()) {
+        if (!spawnedMobs && attacker instanceof Playable) {
             NpcInstance actor = getActor();
             for (int i = 0; i < SPAWN_COUNT; i++) {
                 SimpleSpawner sp = new SimpleSpawner(TANTA_LIZARDMAN_SCOUT);

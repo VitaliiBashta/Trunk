@@ -6,7 +6,7 @@ public class Recipe {
      */
     private final int _id;
     /**
-     * The crafting level needed to use this l2fecipeList
+     * The crafting occupation needed to use this l2fecipeList
      */
     private final int _level;
     /**
@@ -83,7 +83,7 @@ public class Recipe {
     }
 
     /**
-     * Return the crafting level needed to use this l2fecipeList.<BR><BR>
+     * Return the crafting occupation needed to use this l2fecipeList.<BR><BR>
      */
     public int getLevel() {
         return _level;

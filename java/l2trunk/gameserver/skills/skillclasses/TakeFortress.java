@@ -19,16 +19,13 @@ public final class TakeFortress extends Skill {
     }
 
     @Override
-    public boolean checkCondition(Creature activeChar, Creature target, boolean forceUse, boolean dontMove, boolean first) {
-        if (!super.checkCondition(activeChar, target, forceUse, dontMove, first))
+    public boolean checkCondition(Player player, Creature target, boolean forceUse, boolean dontMove, boolean first) {
+        if (!super.checkCondition(player, target, forceUse, dontMove, first))
             return false;
 
-        if (activeChar == null || !activeChar.isPlayer())
-            return false;
-
-        GameObject flagPole = activeChar.getTarget();
+        GameObject flagPole = player.getTarget();
         if (!(flagPole instanceof StaticObjectInstance) || ((StaticObjectInstance) flagPole).getType() != 3) {
-            activeChar.sendPacket(SystemMsg.THE_TARGET_IS_NOT_A_FLAGPOLE_SO_A_FLAG_CANNOT_BE_DISPLAYED);
+            player.sendPacket(SystemMsg.THE_TARGET_IS_NOT_A_FLAGPOLE_SO_A_FLAG_CANNOT_BE_DISPLAYED);
             return false;
         }
 
@@ -37,31 +34,30 @@ public final class TakeFortress extends Skill {
                     .filter(Creature::isCastingNow)
                     .filter(ch -> ch.getCastingSkill() == this)
                     .peek(ch ->
-                            activeChar.sendPacket(SystemMsg.A_FLAG_IS_ALREADY_BEING_DISPLAYED_ANOTHER_FLAG_CANNOT_BE_DISPLAYED))
+                            player.sendPacket(SystemMsg.A_FLAG_IS_ALREADY_BEING_DISPLAYED_ANOTHER_FLAG_CANNOT_BE_DISPLAYED))
                     .findFirst().isPresent())
                 return false;
         }
 
-        Player player = (Player) activeChar;
         if (player.getClan() == null) {
-            activeChar.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addSkillName(this));
+            player.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addSkillName(this));
             return false;
         }
 
         FortressSiegeEvent siegeEvent = player.getEvent(FortressSiegeEvent.class);
         if (siegeEvent == null) {
-            activeChar.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addSkillName(this));
+            player.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addSkillName(this));
             return false;
         }
 
         if (player.isMounted()) {
-            activeChar.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addSkillName(this));
+            player.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addSkillName(this));
             return false;
         }
 
         ItemAttachment attach = player.getActiveWeaponFlagAttachment();
         if (!(attach instanceof FortressCombatFlagObject) || ((FortressCombatFlagObject) attach).getEvent() != siegeEvent) {
-            activeChar.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addSkillName(this));
+            player.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addSkillName(this));
             return false;
         }
 

@@ -3,7 +3,6 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _156_MillenniumLove extends Quest {
     private final int LILITHS_LETTER = 1022;
@@ -30,21 +29,21 @@ public final class _156_MillenniumLove extends Quest {
         String htmltext = event;
         switch (event) {
             case "30368-06.htm":
-                st.giveItems(LILITHS_LETTER);
+                st.giveItems(LILITHS_LETTER, 1);
                 st.setCond(1);
                 st.setState(STARTED);
                 st.playSound(SOUND_ACCEPT);
                 break;
             case "156_1":
-                st.takeItems(LILITHS_LETTER);
+                st.takeItems(LILITHS_LETTER, -1);
                 if (st.getQuestItemsCount(THEONS_DIARY) == 0) {
-                    st.giveItems(THEONS_DIARY);
+                    st.giveItems(THEONS_DIARY, 1);
                     st.setCond(2);
                 }
                 htmltext = "30369-03.htm";
                 break;
             case "156_2":
-                st.takeItems(LILITHS_LETTER);
+                st.takeItems(LILITHS_LETTER, -1);
                 st.playSound(SOUND_FINISH);
                 htmltext = "30369-04.htm";
                 st.exitCurrentQuest(false);
@@ -60,7 +59,7 @@ public final class _156_MillenniumLove extends Quest {
         int cond = st.getCond();
         if (npcId == 30368) {
             if (cond == 0) {
-                if (st.getPlayer().getLevel() >= 15)
+                if (st.player.getLevel() >= 15)
                     htmltext = "30368-02.htm";
                 else {
                     htmltext = "30368-05.htm";
@@ -69,8 +68,8 @@ public final class _156_MillenniumLove extends Quest {
             } else if (cond == 1 && st.getQuestItemsCount(LILITHS_LETTER) == 1)
                 htmltext = "30368-07.htm";
             else if (cond == 2 && st.getQuestItemsCount(THEONS_DIARY) == 1) {
-                st.takeItems(THEONS_DIARY, -1);
-                if (st.getPlayer().getClassId().isMage)
+                st.takeItems(THEONS_DIARY);
+                if (st.player.getClassId().isMage)
                     st.giveItems(GR_COMP_PACKAGE_SPS);
                 else
                     st.giveItems(GR_COMP_PACKAGE_SS);

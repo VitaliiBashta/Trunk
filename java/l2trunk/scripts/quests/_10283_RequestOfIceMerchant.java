@@ -4,6 +4,7 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
+import l2trunk.gameserver.utils.Location;
 
 public final class _10283_RequestOfIceMerchant extends Quest {
     // NPC's
@@ -37,7 +38,7 @@ public final class _10283_RequestOfIceMerchant extends Quest {
                 st.playSound(SOUND_MIDDLE);
             }
         } else if (npcId == KIER && event.equalsIgnoreCase("spawn")) {
-            addSpawn(JINIA, 104322, -107669, -3680, 44954, 0, 60000);
+            addSpawn(JINIA, new Location(104322, -107669, -3680, 44954), 0, 60000);
             return null;
         } else if (npcId == JINIA && event.equalsIgnoreCase("32760-04.htm")) {
             st.giveItems(57, 190000);
@@ -56,8 +57,7 @@ public final class _10283_RequestOfIceMerchant extends Quest {
         if (npcId == RAFFORTY) {
             switch (st.getState()) {
                 case CREATED:
-                    QuestState _prev = st.getPlayer().getQuestState(_115_TheOtherSideOfTruth.class);
-                    if (_prev != null && _prev.isCompleted() && st.getPlayer().getLevel() >= 82)
+                    if (st.player.isQuestCompleted(_115_TheOtherSideOfTruth.class) && st.player.getLevel() >= 82)
                         htmltext = "32020-01.htm";
                     else {
                         htmltext = "32020-00.htm";

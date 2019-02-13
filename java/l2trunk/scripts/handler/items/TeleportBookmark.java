@@ -15,11 +15,6 @@ public final class TeleportBookmark extends SimpleItemHandler implements ScriptF
     private static final int ITEM_IDS = 13015;
 
     @Override
-    public boolean pickupItem(Playable playable, ItemInstance item) {
-        return true;
-    }
-
-    @Override
     public void onLoad() {
         ItemHandler.INSTANCE.registerItemHandler(this);
     }

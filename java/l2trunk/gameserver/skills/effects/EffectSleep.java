@@ -23,8 +23,4 @@ public final class EffectSleep extends Effect {
         effected.stopSleeping();
     }
 
-    @Override
-    public boolean onActionTime() {
-        return false;
-    }
 }

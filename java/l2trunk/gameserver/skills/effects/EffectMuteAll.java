@@ -3,7 +3,7 @@ package l2trunk.gameserver.skills.effects;
 import l2trunk.gameserver.model.Effect;
 import l2trunk.gameserver.stats.Env;
 
-public class EffectMuteAll extends Effect {
+public final class EffectMuteAll extends Effect {
     public EffectMuteAll(Env env, EffectTemplate template) {
         super(env, template);
     }
@@ -23,8 +23,4 @@ public class EffectMuteAll extends Effect {
         effected.stopPMuted();
     }
 
-    @Override
-    public boolean onActionTime() {
-        return false;
-    }
 }

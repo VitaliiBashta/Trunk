@@ -5,48 +5,30 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class _611_AllianceWithVarkaSilenos extends Quest {
+import static l2trunk.scripts.quests._605_AllianceWithKetraOrcs.*;
+
+public final class _611_AllianceWithVarkaSilenos extends Quest {
     // Items
-    private static final int MARK_OF_VARKA_ALLIANCE1 = 7221;
-    private static final int MARK_OF_VARKA_ALLIANCE2 = 7222;
-    private static final int MARK_OF_VARKA_ALLIANCE3 = 7223;
-    private static final int MARK_OF_VARKA_ALLIANCE4 = 7224;
-    private static final int MARK_OF_VARKA_ALLIANCE5 = 7225;
+    public static final List<Integer> VARKA_MARKS = List.of(7221, 7222, 7223, 7224, 7225);
     private static final int KB_SOLDIER = 7226;
     private static final int KB_CAPTAIN = 7227;
     private static final int KB_GENERAL = 7228;
     private static final int TOTEM_OF_VALOR = 7229;
     private static final int TOTEM_OF_WISDOM = 7230;
     //hunt for soldier
-    private static final int RAIDER = 21327;
-    private static final int FOOTMAN = 21324;
-    private static final int SCOUT = 21328;
-    private static final int WAR_HOUND = 21325;
-    private static final int SHAMAN = 21329;
+    static final List<Integer> KETRA_SOILDERS = List.of(21327, 21324, 21328, 21325, 21329);
     //hunt for captain
-    private static final int SEER = 21338;
-    private static final int WARRIOR = 21331;
-    private static final int LIEUTENANT = 21332;
-    private static final int ELITE_SOLDIER = 21335;
-    private static final int MEDIUM = 21334;
-    private static final int COMMAND = 21343;
-    private static final int ELITE_GUARD = 21344;
-    private static final int WHITE_CAPTAIN = 21336;
+    static final List<Integer> KETRA_CAPTAINS = List.of(
+            21338, 21331, 21332, 21335, 21334, 21343, 21344, 21336);
     //hunt for general
-    private static final int BATTALION_COMMANDER_SOLDIER = 21340;
-    private static final int GENERAL = 21339;
-    private static final int GREAT_SEER = 21342;
-    private static final int KETRA_PROPHET = 21347;
-    private static final int DISCIPLE_OF_PROPHET = 21375;
-    private static final int PROPHET_GUARDS = 21348;
-    private static final int PROPHET_AIDE = 21349;
-    private static final int HEAD_SHAMAN = 21345;
-    private static final int HEAD_GUARDS = 21346;
+    static final List<Integer> KETRA_GENERALS = List.of(
+            21340, 21339, 21342, 21347, 21375,
+            21348, 21349, 21345, 21346);
     //Varka mobs
-    private final List<Integer> VARKA_NPC_LIST = List.of(
-            21350, 21351, 21353, 21354, 21355, 21357, 21358, 21360, 21361, 21362,
-            21364, 21365, 21366, 21368, 21369, 21370, 21371, 21372, 21373, 21374);
+    static final List<Integer> VARKA_NPC_LIST = List.of(VARKA_SOLDIERS,VARKA_CAPTAINS,VARKA_GENERALS).stream()
+            .flatMap(List::stream).collect(Collectors.toList());
 
     public _611_AllianceWithVarkaSilenos() {
         super(true);
@@ -57,31 +39,13 @@ public class _611_AllianceWithVarkaSilenos extends Quest {
         addKillId(VARKA_NPC_LIST);
 
         //hunt for soldier
-        addKillId(RAIDER);
-        addKillId(FOOTMAN);
-        addKillId(SCOUT);
-        addKillId(WAR_HOUND);
-        addKillId(SHAMAN);
+        addKillId(KETRA_SOILDERS);
 
         //hunt for captain
-        addKillId(SEER);
-        addKillId(WARRIOR);
-        addKillId(LIEUTENANT);
-        addKillId(ELITE_SOLDIER);
-        addKillId(MEDIUM);
-        addKillId(COMMAND);
-        addKillId(ELITE_GUARD);
-        addKillId(WHITE_CAPTAIN);
+        addKillId(KETRA_CAPTAINS);
 
         //hunt for general
-        addKillId(BATTALION_COMMANDER_SOLDIER);
-        addKillId(GENERAL);
-        addKillId(GREAT_SEER);
-        addKillId(KETRA_PROPHET);
-        addKillId(PROPHET_AIDE);
-        addKillId(PROPHET_GUARDS);
-        addKillId(HEAD_SHAMAN);
-        addKillId(HEAD_GUARDS);
+        addKillId(KETRA_GENERALS);
 
         addQuestItem(KB_SOLDIER);
         addQuestItem(KB_CAPTAIN);
@@ -89,38 +53,18 @@ public class _611_AllianceWithVarkaSilenos extends Quest {
     }
 
     private static void takeAllMarks(QuestState st) {
-        st.takeItems(MARK_OF_VARKA_ALLIANCE1);
-        st.takeItems(MARK_OF_VARKA_ALLIANCE2);
-        st.takeItems(MARK_OF_VARKA_ALLIANCE3);
-        st.takeItems(MARK_OF_VARKA_ALLIANCE4);
-        st.takeItems(MARK_OF_VARKA_ALLIANCE5);
+        st.takeItems(VARKA_MARKS);
     }
 
-    private static void checkMarks(QuestState st) {
-        if (st.getCond() == 0)
-            return;
-        if (st.getQuestItemsCount(MARK_OF_VARKA_ALLIANCE5) > 0)
-            st.setCond(6);
-        else if (st.getQuestItemsCount(MARK_OF_VARKA_ALLIANCE4) > 0)
-            st.setCond(5);
-        else if (st.getQuestItemsCount(MARK_OF_VARKA_ALLIANCE3) > 0)
-            st.setCond(4);
-        else if (st.getQuestItemsCount(MARK_OF_VARKA_ALLIANCE2) > 0)
-            st.setCond(3);
-        else if (st.getQuestItemsCount(MARK_OF_VARKA_ALLIANCE1) > 0)
-            st.setCond(2);
-        else
-            st.setCond(1);
-    }
 
-    private static boolean CheckNextLevel(QuestState st, int soilder_count, int capitan_count, int general_count, int other_item, boolean take) {
+    private static boolean checkNextLevel(QuestState st, int soilder_count, int capitan_count, int general_count, int other_item, boolean take) {
         if (soilder_count > 0 && st.getQuestItemsCount(KB_SOLDIER) < soilder_count)
             return false;
         if (capitan_count > 0 && st.getQuestItemsCount(KB_CAPTAIN) < capitan_count)
             return false;
         if (general_count > 0 && st.getQuestItemsCount(KB_GENERAL) < general_count)
             return false;
-        if (other_item > 0 && st.getQuestItemsCount(other_item) < 1)
+        if (other_item > 0 && !st.haveQuestItem(other_item))
             return false;
 
         if (take) {
@@ -131,8 +75,8 @@ public class _611_AllianceWithVarkaSilenos extends Quest {
             if (general_count > 0)
                 st.takeItems(KB_GENERAL, general_count);
             if (other_item > 0)
-                st.takeItems(other_item, 1);
-            takeAllMarks(st);
+                st.takeItems(other_item);
+            st.takeItems(VARKA_MARKS);
         }
         return true;
     }
@@ -141,139 +85,132 @@ public class _611_AllianceWithVarkaSilenos extends Quest {
     public void onAbort(QuestState st) {
         takeAllMarks(st);
         st.setCond(0);
-        st.getPlayer().updateKetraVarka();
+        st.player.updateKetraVarka();
         st.playSound(SOUND_MIDDLE);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("herald_naran_q0611_04.htm")) {
+        if ("herald_naran_q0611_04.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
             return event;
         }
 
-        checkMarks(st);
+        checkMarks(st, VARKA_MARKS);
         int cond = st.getCond();
 
-        if (event.equalsIgnoreCase("herald_naran_q0611_12.htm") && cond == 1 && CheckNextLevel(st, 100, 0, 0, 0, true)) {
-            st.giveItems(MARK_OF_VARKA_ALLIANCE1);
+        if ("herald_naran_q0611_12.htm".equalsIgnoreCase(event) && cond == 1 && checkNextLevel(st, 100, 0, 0, 0, true)) {
+            st.giveItems(VARKA_MARKS.get(0));
             st.setCond(2);
-            st.getPlayer().updateKetraVarka();
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("herald_naran_q0611_15.htm") && cond == 2 && CheckNextLevel(st, 200, 100, 0, 0, true)) {
-            st.giveItems(MARK_OF_VARKA_ALLIANCE2);
+        } else if ("herald_naran_q0611_15.htm".equalsIgnoreCase(event) && cond == 2 && checkNextLevel(st, 200, 100, 0, 0, true)) {
+            st.giveItems(VARKA_MARKS.get(1));
             st.setCond(3);
-            st.getPlayer().updateKetraVarka();
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("herald_naran_q0611_18.htm") && cond == 3 && CheckNextLevel(st, 300, 200, 100, 0, true)) {
-            st.giveItems(MARK_OF_VARKA_ALLIANCE3);
+        } else if ("herald_naran_q0611_18.htm".equalsIgnoreCase(event) && cond == 3 && checkNextLevel(st, 300, 200, 100, 0, true)) {
+            st.giveItems(VARKA_MARKS.get(2));
             st.setCond(4);
-            st.getPlayer().updateKetraVarka();
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("herald_naran_q0611_21.htm") && cond == 4 && CheckNextLevel(st, 300, 300, 200, TOTEM_OF_VALOR, true)) {
-            st.giveItems(MARK_OF_VARKA_ALLIANCE4);
+        } else if ("herald_naran_q0611_21.htm".equalsIgnoreCase(event) && cond == 4 && checkNextLevel(st, 300, 300, 200, TOTEM_OF_VALOR, true)) {
+            st.giveItems(VARKA_MARKS.get(3));
             st.setCond(5);
-            st.getPlayer().updateKetraVarka();
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("herald_naran_q0611_23.htm") && cond == 5 && CheckNextLevel(st, 400, 400, 200, TOTEM_OF_WISDOM, true)) {
-            st.giveItems(MARK_OF_VARKA_ALLIANCE5);
+        } else if ("herald_naran_q0611_23.htm".equalsIgnoreCase(event) && cond == 5 && checkNextLevel(st, 400, 400, 200, TOTEM_OF_WISDOM, true)) {
+            st.giveItems(VARKA_MARKS.get(4));
             st.setCond(6);
-            st.getPlayer().updateKetraVarka();
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("herald_naran_q0611_26.htm")) {
+        } else if ("herald_naran_q0611_26.htm".equalsIgnoreCase(event)) {
             takeAllMarks(st);
             st.setCond(0);
-            st.getPlayer().updateKetraVarka();
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(true);
         }
+        st.player.updateKetraVarka();
         return event;
     }
 
     @Override
     public String onTalk(NpcInstance npc, QuestState st) {
-        if (st.getPlayer().getKetra() > 0) {
+        if (st.player.getKetra() > 0) {
             st.exitCurrentQuest(true);
             return "herald_naran_q0611_02.htm";
         }
         int npcId = npc.getNpcId();
-        checkMarks(st);
+        checkMarks(st, VARKA_MARKS);
         if (st.getState() == CREATED)
             st.setCond(0);
         int cond = st.getCond();
         if (npcId == 31378) {
             if (cond == 0) {
-                if (st.getPlayer().getLevel() < 74) {
+                if (st.player.getLevel() < 74) {
                     st.exitCurrentQuest(true);
                     return "herald_naran_q0611_03.htm";
                 }
                 return "herald_naran_q0611_01.htm";
             }
-            if (cond == 1)
-                return CheckNextLevel(st, 100, 0, 0, 0, false) ? "herald_naran_q0611_11.htm" : "herald_naran_q0611_10.htm";
-            if (cond == 2)
-                return CheckNextLevel(st, 200, 100, 0, 0, false) ? "herald_naran_q0611_14.htm" : "herald_naran_q0611_13.htm";
-            if (cond == 3)
-                return CheckNextLevel(st, 300, 200, 100, 0, false) ? "herald_naran_q0611_17.htm" : "herald_naran_q0611_16.htm";
-            if (cond == 4)
-                return CheckNextLevel(st, 300, 300, 200, TOTEM_OF_VALOR, false) ? "herald_naran_q0611_20.htm" : "herald_naran_q0611_19.htm";
-            if (cond == 5)
-                return CheckNextLevel(st, 400, 400, 200, TOTEM_OF_WISDOM, false) ? "herald_naran_q0611_27.htm" : "herald_naran_q0611_22.htm";
-            if (cond == 6)
-                return "herald_naran_q0611_24.htm";
+            switch (cond) {
+                case 1:
+                    return checkNextLevel(st, 100, 0, 0, 0, false) ? "herald_naran_q0611_11.htm" : "herald_naran_q0611_10.htm";
+                case 2:
+                    return checkNextLevel(st, 200, 100, 0, 0, false) ? "herald_naran_q0611_14.htm" : "herald_naran_q0611_13.htm";
+                case 3:
+                    return checkNextLevel(st, 300, 200, 100, 0, false) ? "herald_naran_q0611_17.htm" : "herald_naran_q0611_16.htm";
+                case 4:
+                    return checkNextLevel(st, 300, 300, 200, TOTEM_OF_VALOR, false) ? "herald_naran_q0611_20.htm" : "herald_naran_q0611_19.htm";
+                case 5:
+                    return checkNextLevel(st, 400, 400, 200, TOTEM_OF_WISDOM, false) ? "herald_naran_q0611_27.htm" : "herald_naran_q0611_22.htm";
+                case 6:
+                    return "herald_naran_q0611_24.htm";
+            }
         }
         return "noquest";
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         if (VARKA_NPC_LIST.contains(npcId))
-            if (st.getQuestItemsCount(MARK_OF_VARKA_ALLIANCE5) > 0) {
+            if (st.haveQuestItem(VARKA_MARKS.get(4))) {
+                st.takeItems(VARKA_MARKS);
+                st.giveItems(VARKA_MARKS.get(3));
+                st.player.updateKetraVarka();
+                checkMarks(st, VARKA_MARKS);
+            } else if (st.haveQuestItem(VARKA_MARKS.get(3))) {
                 takeAllMarks(st);
-                st.giveItems(MARK_OF_VARKA_ALLIANCE4, 1);
-                st.getPlayer().updateKetraVarka();
-                checkMarks(st);
-            } else if (st.getQuestItemsCount(MARK_OF_VARKA_ALLIANCE4) > 0) {
+                st.giveItems(VARKA_MARKS.get(2));
+                st.player.updateKetraVarka();
+                checkMarks(st, VARKA_MARKS);
+            } else if (st.haveQuestItem(VARKA_MARKS.get(2))) {
                 takeAllMarks(st);
-                st.giveItems(MARK_OF_VARKA_ALLIANCE3, 1);
-                st.getPlayer().updateKetraVarka();
-                checkMarks(st);
-            } else if (st.getQuestItemsCount(MARK_OF_VARKA_ALLIANCE3) > 0) {
+                st.giveItems(VARKA_MARKS.get(1));
+                st.player.updateKetraVarka();
+                checkMarks(st, VARKA_MARKS);
+            } else if (st.haveQuestItem(VARKA_MARKS.get(1))) {
                 takeAllMarks(st);
-                st.giveItems(MARK_OF_VARKA_ALLIANCE2, 1);
-                st.getPlayer().updateKetraVarka();
-                checkMarks(st);
-            } else if (st.getQuestItemsCount(MARK_OF_VARKA_ALLIANCE2) > 0) {
+                st.giveItems(VARKA_MARKS.get(0));
+                st.player.updateKetraVarka();
+                checkMarks(st, VARKA_MARKS);
+            } else if (st.haveQuestItem(VARKA_MARKS.get(0))) {
                 takeAllMarks(st);
-                st.giveItems(MARK_OF_VARKA_ALLIANCE1, 1);
-                st.getPlayer().updateKetraVarka();
-                checkMarks(st);
-            } else if (st.getQuestItemsCount(MARK_OF_VARKA_ALLIANCE1) > 0) {
-                takeAllMarks(st);
-                st.getPlayer().updateKetraVarka();
-                checkMarks(st);
-            } else if (st.getPlayer().getVarka() > 0) {
-                st.getPlayer().updateKetraVarka();
+                st.player.updateKetraVarka();
+                checkMarks(st, VARKA_MARKS);
+            } else if (st.player.getVarka() > 0) {
+                st.player.updateKetraVarka();
                 st.exitCurrentQuest(true);
-                return "herald_naran_q0611_26.htm";
+                return;
             }
 
-        if (st.getQuestItemsCount(MARK_OF_VARKA_ALLIANCE5) > 0)
-            return null;
+        if (st.haveQuestItem(VARKA_MARKS.get(4)))
+            return;
 
         int cond = st.getCond();
-        if (npcId == RAIDER || npcId == FOOTMAN || npcId == SCOUT || npcId == WAR_HOUND || npcId == SHAMAN) {
-            if (cond > 0)
-                st.rollAndGive(KB_SOLDIER, 1, 60);
-        } else if (npcId == SEER || npcId == WARRIOR || npcId == LIEUTENANT || npcId == ELITE_SOLDIER || npcId == MEDIUM || npcId == COMMAND || npcId == ELITE_GUARD || npcId == WHITE_CAPTAIN) {
-            if (cond > 1)
-                st.rollAndGive(KB_CAPTAIN, 1, 70);
-        } else if (npcId == BATTALION_COMMANDER_SOLDIER || npcId == GENERAL || npcId == GREAT_SEER || npcId == KETRA_PROPHET || npcId == DISCIPLE_OF_PROPHET || npcId == PROPHET_GUARDS || npcId == HEAD_SHAMAN || npcId == HEAD_GUARDS)
-            if (cond > 2)
-                st.rollAndGive(KB_GENERAL, 1, 80);
-        return null;
+        if (KETRA_SOILDERS.contains(npcId) && cond > 0)
+            st.rollAndGive(KB_SOLDIER, 1, 60);
+        if (KETRA_CAPTAINS.contains(npcId) && cond > 1)
+            st.rollAndGive(KB_CAPTAIN, 1, 70);
+        if (KETRA_GENERALS.contains(npcId) && cond > 2)
+            st.rollAndGive(KB_GENERAL, 1, 80);
     }
 }

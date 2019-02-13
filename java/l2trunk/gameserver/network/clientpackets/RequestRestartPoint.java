@@ -71,70 +71,70 @@ public final class RequestRestartPoint extends L2GameClientPacket {
 
     @Override
     protected void runImpl() {
-        Player activeChar = getClient().getActiveChar();
+        Player player = getClient().getActiveChar();
 
-        if (_restartType == null || activeChar == null)
+        if (_restartType == null || player == null)
             return;
 
-        if (activeChar.isFakeDeath()) {
-            activeChar.breakFakeDeath();
+        if (player.isFakeDeath()) {
+            player.breakFakeDeath();
             return;
         }
 
-        if (!activeChar.isDead() && !activeChar.isGM()) {
-            activeChar.sendActionFailed();
+        if (!player.isDead() && !player.isGM()) {
+            player.sendActionFailed();
             return;
         }
 
         // Ady - If the player is in a Gm Event check if it can resurrect
-        if (!GmEventManager.INSTANCE.canResurrect(activeChar)) {
+        if (!GmEventManager.INSTANCE.canResurrect(player)) {
             return;
         }
 
-        if (activeChar.isFestivalParticipant()) {
-            activeChar.doRevive();
+        if (player.isFestivalParticipant()) {
+            player.doRevive();
             return;
         }
 
         switch (_restartType) {
             case AGATHION:
-                if (activeChar.isAgathionResAvailable())
-                    activeChar.doRevive(100);
+                if (player.isAgathionResAvailable())
+                    player.doRevive(100);
                 else
-                    activeChar.sendPacket(ActionFail.STATIC, new Die(activeChar));
+                    player.sendPacket(ActionFail.STATIC, new Die(player));
                 break;
             case FIXED:
-                if (activeChar.getPlayerAccess().ResurectFixed)
-                    activeChar.doRevive(100);
-                else if (ItemFunctions.removeItem(activeChar, 13300, 1, true, "RequestRestartPoint") == 1) {
-                    activeChar.sendPacket(SystemMsg.YOU_HAVE_USED_THE_FEATHER_OF_BLESSING_TO_RESURRECT);
-                    activeChar.doRevive(100);
-                } else if (ItemFunctions.removeItem(activeChar, 10649, 1, true, "RequestRestartPoint") == 1) {
-                    activeChar.sendPacket(SystemMsg.YOU_HAVE_USED_THE_FEATHER_OF_BLESSING_TO_RESURRECT);
-                    activeChar.doRevive(100);
+                if (player.getPlayerAccess().ResurectFixed)
+                    player.doRevive(100);
+                else if (ItemFunctions.removeItem(player, 13300, 1, "RequestRestartPoint") == 1) {
+                    player.sendPacket(SystemMsg.YOU_HAVE_USED_THE_FEATHER_OF_BLESSING_TO_RESURRECT);
+                    player.doRevive(100);
+                } else if (ItemFunctions.removeItem(player, 10649, 1, "RequestRestartPoint") == 1) {
+                    player.sendPacket(SystemMsg.YOU_HAVE_USED_THE_FEATHER_OF_BLESSING_TO_RESURRECT);
+                    player.doRevive(100);
                 } else
-                    activeChar.sendPacket(ActionFail.STATIC, new Die(activeChar));
+                    player.sendPacket(ActionFail.STATIC, new Die(player));
                 break;
             default:
                 Location loc = null;
-                Reflection ref = activeChar.getReflection();
+                Reflection ref = player.getReflection();
 
                 if (ref == ReflectionManager.DEFAULT)
-                    for (GlobalEvent e : activeChar.getEvents())
-                        loc = e.getRestartLoc(activeChar, _restartType);
+                    for (GlobalEvent e : player.getEvents())
+                        loc = e.getRestartLoc(player, _restartType);
 
                 if (loc == null)
-                    loc = defaultLoc(_restartType, activeChar);
+                    loc = defaultLoc(_restartType, player);
 
                 if (loc != null) {
-                    Pair<Integer, OnAnswerListener> ask = activeChar.getAskListener(false);
+                    Pair<Integer, OnAnswerListener> ask = player.getAskListener(false);
                     if (ask != null && ask.getValue() instanceof ReviveAnswerListener && !((ReviveAnswerListener) ask.getValue()).isForPet())
-                        activeChar.getAskListener(true);
+                        player.getAskListener(true);
 
-                    activeChar.setPendingRevive(true);
-                    activeChar.teleToLocation(loc, ReflectionManager.DEFAULT);
+                    player.setPendingRevive(true);
+                    player.teleToLocation(loc, ReflectionManager.DEFAULT);
                 } else
-                    activeChar.sendPacket(ActionFail.STATIC, new Die(activeChar));
+                    player.sendPacket(ActionFail.STATIC, new Die(player));
                 break;
         }
     }

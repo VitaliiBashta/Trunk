@@ -137,7 +137,7 @@ public enum HandysBlockCheckerManager {
 				player.sendPacket(new SystemMessage(SystemMessageId.COLISEUM_OLYMPIAD_KRATEIS_APPLICANTS_CANNOT_PARTICIPATE));
 			}
 			 */
-            if (_registrationPenalty.contains(player.getObjectId())) {
+            if (_registrationPenalty.contains(player.objectId())) {
                 player.sendPacket(new SystemMessage2(SystemMsg.YOU_CANNOT_MAKE_ANOTHER_REQUEST_FOR_10_SECONDS_AFTER_CANCELLING_A_MATCH_REGISTRATION));
                 return false;
             }
@@ -172,7 +172,7 @@ public enum HandysBlockCheckerManager {
             if (teamSize == 0)
                 holder.getEvent().endEventAbnormally();
 
-            Integer objId = player.getObjectId();
+            Integer objId = player.objectId();
             if (!_registrationPenalty.contains(objId))
                 _registrationPenalty.add(objId);
             schedulePenaltyRemoval(objId);
@@ -264,8 +264,8 @@ public enum HandysBlockCheckerManager {
             return bluePlayers;
         }
 
-        public ArrayList<Player> getAllPlayers() {
-            ArrayList<Player> all = new ArrayList<>(12);
+        public List<Player> getAllPlayers() {
+            List<Player> all = new ArrayList<>(12);
             all.addAll(redPlayers);
             all.addAll(bluePlayers);
             return all;

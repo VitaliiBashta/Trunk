@@ -51,7 +51,7 @@ public final class _024_InhabitantsOfTheForestOfTheDead extends Quest {
 
         if (npcId == DORIAN) {
             if (cond == 0) {
-                QuestState LidiasHeart = qs.getPlayer().getQuestState(_023_LidiasHeart.class);
+                QuestState LidiasHeart = qs.player.getQuestState(_023_LidiasHeart.class);
                 if (LidiasHeart != null)
                     if (LidiasHeart.isCompleted())
                         htmltext = "31389-01.htm";
@@ -87,15 +87,15 @@ public final class _024_InhabitantsOfTheForestOfTheDead extends Quest {
                     qs.setCond(7);
                 } else
                     htmltext = "31532-05.htm";
-            else if (cond == 8 && qs.getQuestItemsCount(LIDIA_HAIR_PIN) != 0)
+            else if (cond == 8 && qs.haveQuestItem(LIDIA_HAIR_PIN))
                 htmltext = "31532-10.htm";
             qs.takeItems(LIDIA_HAIR_PIN, -1);
         } else if (npcId == MYSTERIOUS_WIZARD) {
-            if (cond == 10 && qs.getQuestItemsCount(SUSPICIOUS_TOTEM_DOLL) != 0)
+            if (cond == 10 && qs.haveQuestItem(SUSPICIOUS_TOTEM_DOLL))
                 htmltext = "31522-01.htm";
             else if (cond == 11 && !qs.isRunningQuestTimer("To talk with Mystik") && qs.getQuestItemsCount(SUSPICIOUS_TOTEM_DOLL1) == 0)
                 htmltext = "31522-09.htm";
-            else if (cond == 11 && qs.getQuestItemsCount(SUSPICIOUS_TOTEM_DOLL1) != 0)
+            else if (cond == 11 && qs.haveQuestItem(SUSPICIOUS_TOTEM_DOLL1))
                 htmltext = "31522-22.htm";
         }
         return htmltext;
@@ -104,44 +104,45 @@ public final class _024_InhabitantsOfTheForestOfTheDead extends Quest {
     @Override
     public String onEvent(String event, QuestState qs, NpcInstance npc) {
         if (event.startsWith("seePlayer")) {
-            if (qs.takeItems(SILVER_CROSS_OF_EINHASAD, -1) > 0) {
-                qs.giveItems(BROKEN_SILVER_CROSS_OF_EINHASAD, 1);
+            if (qs.haveQuestItem(SILVER_CROSS_OF_EINHASAD)) {
+                qs.takeItems(SILVER_CROSS_OF_EINHASAD);
+                qs.giveItems(BROKEN_SILVER_CROSS_OF_EINHASAD);
                 qs.playSound(SOUND_HORROR2);
                 qs.setCond(4);
             }
             event = null;
-        } else if (event.equalsIgnoreCase("31389-03.htm")) {
-            qs.giveItems(FLOWER_BOUQUET, 1);
+        } else if ("31389-03.htm".equalsIgnoreCase(event)) {
+            qs.giveItems(FLOWER_BOUQUET);
             qs.setCond(1);
             qs.setState(STARTED);
             qs.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("31531-02.htm")) {
-            qs.takeItems(FLOWER_BOUQUET, -1);
+        } else if ("31531-02.htm".equalsIgnoreCase(event)) {
+            qs.takeItems(FLOWER_BOUQUET);
             qs.setCond(2);
-        } else if (event.equalsIgnoreCase("31389-13.htm")) {
-            qs.giveItems(SILVER_CROSS_OF_EINHASAD, 1);
+        } else if ("31389-13.htm".equalsIgnoreCase(event)) {
+            qs.giveItems(SILVER_CROSS_OF_EINHASAD);
             qs.setCond(3);
-        } else if (event.equalsIgnoreCase("31389-19.htm"))
+        } else if ("31389-19.htm".equalsIgnoreCase(event))
             qs.setCond(5);
-        else if (event.equalsIgnoreCase("31532-04.htm")) {
+        else if ("31532-04.htm".equalsIgnoreCase(event)) {
             qs.setCond(6);
             qs.startQuestTimer("Lidias Letter", 7000);
-        } else if (event.equalsIgnoreCase("Lidias Letter"))
+        } else if ("Lidias Letter".equalsIgnoreCase(event))
             return "lidias_letter.htm";
-        else if (event.equalsIgnoreCase("31532-06.htm"))
-            qs.takeItems(LIDIA_HAIR_PIN, -1);
-        else if (event.equalsIgnoreCase("31532-19.htm"))
+        else if ("31532-06.htm".equalsIgnoreCase(event))
+            qs.takeItems(LIDIA_HAIR_PIN);
+        else if ("31532-19.htm".equalsIgnoreCase(event))
             qs.setCond(9);
-        else if (event.equalsIgnoreCase("31522-03.htm"))
-            qs.takeItems(SUSPICIOUS_TOTEM_DOLL, -1);
-        else if (event.equalsIgnoreCase("31522-08.htm")) {
+        else if ("31522-03.htm".equalsIgnoreCase(event))
+            qs.takeItems(SUSPICIOUS_TOTEM_DOLL);
+        else if ("31522-08.htm".equalsIgnoreCase(event)) {
             qs.setCond(11);
             qs.startQuestTimer("To talk with Mystik", 600000);
-        } else if (event.equalsIgnoreCase("31522-21.htm")) {
-            qs.giveItems(SUSPICIOUS_TOTEM_DOLL1, 1);
+        } else if ("31522-21.htm".equalsIgnoreCase(event)) {
+            qs.giveItems(SUSPICIOUS_TOTEM_DOLL1);
             qs.startQuestTimer("html", 5);
             return "Congratulations! You are completed this quest!" + " \n The Quest \"Hiding Behind the Truth\"" + " become available.\n Show Suspicious Totem Doll to " + " Priest Benedict.";
-        } else if (event.equalsIgnoreCase("html")) {
+        } else if ("html".equalsIgnoreCase(event)) {
             qs.playSound(SOUND_FINISH);
             qs.addExpAndSp(242105, 22529);
             qs.exitCurrentQuest(false);
@@ -151,29 +152,19 @@ public final class _024_InhabitantsOfTheForestOfTheDead extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState qs) {
-        if (qs == null)
-            return null;
+    public void onKill(NpcInstance npc, QuestState qs) {
+        if (qs == null || qs.getState() != STARTED)
+            return;
 
-        if (qs.getState() != STARTED)
-            return null;
-
-        int npcId = npc.getNpcId();
-        int cond = qs.getCond();
-
-        if (MOBS.contains(npcId))
-            if (cond == 9 && Rnd.chance(70)) {
-                qs.giveItems(SUSPICIOUS_TOTEM_DOLL, 1);
+        if (qs.getCond() == 9 && MOBS.contains(npc.getNpcId()) && Rnd.chance(70)) {
+                qs.giveItems(SUSPICIOUS_TOTEM_DOLL);
                 qs.playSound(SOUND_MIDDLE);
                 qs.setCond(10);
             }
-
-        return null;
     }
 
     @Override
     public void onAbort(QuestState st) {
-        if (st.getQuestItemsCount(LIDIA_HAIR_PIN) == 0)
-            st.giveItems(LIDIA_HAIR_PIN, 1);
+        st.giveItemIfNotHave(LIDIA_HAIR_PIN);
     }
 }

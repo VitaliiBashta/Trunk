@@ -386,12 +386,12 @@ public final class Util {
     }
 
     public static String getFullClassName(ClassId classIndex) {
-        return classIndex.getName();
+        return classIndex.name;
     }
 
     public static String getFullClassName(int classId) {
-        return Stream.of(ClassId.values()).filter(e -> e.id() == classId)
-                .map(ClassId::getName)
+        return Stream.of(ClassId.values()).filter(e -> e.id == classId)
+                .map(cls -> cls.name)
                 .findFirst().orElse("Unknown");
     }
 
@@ -586,7 +586,7 @@ public final class Util {
                 }
                 break;
             default:
-                if (player.getInventory().getCountOf(itemid) >= count) {
+                if (player.haveItem(itemid, count)) {
                     if (player.getInventory().destroyItemByItemId(itemid, count, "deleted")) {
                         check = true;
                     }

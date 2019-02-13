@@ -7,6 +7,8 @@ import l2trunk.gameserver.ai.CtrlIntention;
 import l2trunk.gameserver.ai.Mystic;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.instances.NpcInstance;
+import l2trunk.gameserver.model.instances.PetInstance;
+import l2trunk.gameserver.model.instances.SummonInstance;
 import l2trunk.gameserver.utils.NpcUtils;
 
 public final class Necromancer extends Mystic {
@@ -24,7 +26,7 @@ public final class Necromancer extends Mystic {
 
         actor.getAggroList().addDamageHate(attacker, 0, damage);
 
-        if (damage > 0 && (attacker.isSummon() || attacker.isPet())) {
+        if (damage > 0 && (attacker instanceof SummonInstance || attacker instanceof PetInstance)) {
             actor.getAggroList().addDamageHate(attacker.getPlayer(), 0, actor.getParameter("searchingMaster", false) ? damage : 1);
         }
 

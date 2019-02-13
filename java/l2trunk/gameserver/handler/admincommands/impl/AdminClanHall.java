@@ -37,7 +37,7 @@ public class AdminClanHall implements IAdminCommandHandler {
             case admin_clanhallset:
                 GameObject target = activeChar.getTarget();
                 Player player = activeChar;
-                if (target != null && target.isPlayer())
+                if (target instanceof Player)
                     player = (Player) target;
                 if (player.getClan() == null)
                     activeChar.sendPacket(SystemMsg.THAT_IS_AN_INCORRECT_TARGET);
@@ -125,7 +125,7 @@ public class AdminClanHall implements IAdminCommandHandler {
         replyMSG.append("</table>");
         replyMSG.append("<br>");
         replyMSG.append("<table><tr>");
-        replyMSG.append("<td><button value=\"teleport self\" action=\"bypass -h admin_clanhallteleportself " + clanhall.getId() + " \" width=80 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td></tr>");
+        replyMSG.append("<td><button value=\"teleport player\" action=\"bypass -h admin_clanhallteleportself " + clanhall.getId() + " \" width=80 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td></tr>");
         replyMSG.append("</table>");
         replyMSG.append("</center>");
         replyMSG.append("</body></html>");

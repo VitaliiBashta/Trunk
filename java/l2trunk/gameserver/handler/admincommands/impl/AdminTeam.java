@@ -30,15 +30,15 @@ public class AdminTeam implements IAdminCommandHandler {
             activeChar.sendMessage("You have changed Team");
         } else {
             GameObject object = activeChar.getTarget();
-            if (object == null || !object.isCreature()) {
+            if (!(object instanceof Creature)) {
                 activeChar.sendPacket(SystemMsg.INVALID_TARGET);
                 return false;
             }
 
             ((Creature) object).setTeam(team);
 
-            if (object.isPlayer()) {
-                Player pObject = object.getPlayer();
+            if (object instanceof Player) {
+                Player pObject = (Player)object;
                 if (pObject.isHero())
                     if (team != TeamType.NONE)
                         Hero.removeSkills(pObject);

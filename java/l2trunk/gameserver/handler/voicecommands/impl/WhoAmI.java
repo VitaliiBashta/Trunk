@@ -27,7 +27,7 @@ public class WhoAmI implements IVoicedCommandHandler {
 
     @Override
     public boolean useVoicedCommand(String command, Player player, String args) {
-        Player playerToShow = player.isGM() && player.getTarget() != null && player.getTarget().isPlayer() ? player.getTarget().getPlayer() : player;
+        Player playerToShow = player.isGM() && player.getTarget() != null && player.getTarget() instanceof Player ? (Player)player.getTarget(): player;
 
         // TODO [G1ta0] add reflective
         // TODO [G1ta0] may want to show the stats according to the purpose

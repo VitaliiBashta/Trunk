@@ -138,7 +138,7 @@ public final class _195_SevenSignsSecretRitualofthePriests extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        Player player = st.getPlayer();
+        Player player = st.player;
         String htmltext = event;
         Reflection ref = player.getReflection();
         if ("claudiaathebaldt_q195_2.htm".equalsIgnoreCase(event)) {
@@ -147,7 +147,7 @@ public final class _195_SevenSignsSecretRitualofthePriests extends Quest {
             st.playSound(SOUND_ACCEPT);
         } else if ("john_q195_2.htm".equalsIgnoreCase(event)) {
             st.setCond(2);
-            st.giveItems(GuardsoftheDawnIdentityCard, 1);
+            st.giveItems(GuardsoftheDawnIdentityCard);
             st.playSound(SOUND_MIDDLE);
         } else if ("raymond_q195_3.htm".equalsIgnoreCase(event)) {
             if (player.getTransformation() != 0 || player.isMounted()) {
@@ -233,14 +233,13 @@ public final class _195_SevenSignsSecretRitualofthePriests extends Quest {
     public String onTalk(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
-        Player player = st.getPlayer();
+        Player player = st.player;
         String htmltext = "noquest";
         if (player.getBaseClassId() != player.getActiveClassId())
             return "subclass_forbidden.htm";
         if (npcId == ClaudiaAthebaldt) {
-            QuestState qs = player.getQuestState(_194_SevenSignsMammonsContract.class);
             if (cond == 0)
-                if (player.getLevel() >= 79 && qs != null && qs.isCompleted())
+                if (player.getLevel() >= 79 && player.isQuestCompleted(_194_SevenSignsMammonsContract.class))
                     htmltext = "claudiaathebaldt_q195_1.htm";
                 else {
                     htmltext = "claudiaathebaldt_q195_0.htm";
@@ -256,7 +255,7 @@ public final class _195_SevenSignsSecretRitualofthePriests extends Quest {
         } else if (npcId == Raymond) {
             if (cond == 2)
                 htmltext = "raymond_q195_1.htm";
-            else if (cond == 3 && st.getQuestItemsCount(EmperorShunaimansContract) >= 1)
+            else if (cond == 3 && st.haveQuestItem(EmperorShunaimansContract))
                 htmltext = "raymond_q195_4.htm";
             else if (cond == 3)
                 htmltext = "raymond_q195_4a.htm";
@@ -288,23 +287,23 @@ public final class _195_SevenSignsSecretRitualofthePriests extends Quest {
             // adding walkers spawn
             synchronized (guardsOfDawn1) {
                 for (Location[] spawn : guardsOfDawn1) {
-                    NpcInstance guard = newInstance.addSpawnWithoutRespawn(18835, spawn[0], 0);
+                    NpcInstance guard = newInstance.addSpawnWithoutRespawn(18835, spawn[0]);
                     guard.setAI(new GuardofDawn(guard, spawn[1], spawn[2]));
                 }
                 for (Location[] spawn : guardsOfDawn1stationary) {
-                    NpcInstance guard = newInstance.addSpawnWithoutRespawn(18835, spawn[0], 0);
+                    NpcInstance guard = newInstance.addSpawnWithoutRespawn(18835, spawn[0]);
                     guard.setAI(new GuardofDawnStat(guard, spawn[1]));
                 }
                 for (Location[] spawn : guardsOfDawnFemale) {
-                    NpcInstance guard = newInstance.addSpawnWithoutRespawn(27352, spawn[0], 0);
+                    NpcInstance guard = newInstance.addSpawnWithoutRespawn(27352, spawn[0]);
                     guard.setAI(new GuardofDawnFemale(guard, spawn[1]));
                 }
                 for (Location[] spawn : guardsOfDawn2) {
-                    NpcInstance guard = newInstance.addSpawnWithoutRespawn(18834, spawn[0], 0);
+                    NpcInstance guard = newInstance.addSpawnWithoutRespawn(18834, spawn[0]);
                     guard.setAI(new GuardofDawn(guard, spawn[1], spawn[2]));
                 }
                 for (Location[] spawn : guardsOfDawn2stationary) {
-                    NpcInstance guard = newInstance.addSpawnWithoutRespawn(18834, spawn[0], 0);
+                    NpcInstance guard = newInstance.addSpawnWithoutRespawn(18834, spawn[0]);
                     guard.setAI(new GuardofDawnStat(guard, spawn[1]));
                 }
             }

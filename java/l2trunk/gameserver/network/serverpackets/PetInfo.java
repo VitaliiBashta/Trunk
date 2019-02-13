@@ -2,6 +2,7 @@ package l2trunk.gameserver.network.serverpackets;
 
 import l2trunk.gameserver.model.Summon;
 import l2trunk.gameserver.model.base.TeamType;
+import l2trunk.gameserver.model.instances.PetInstance;
 import l2trunk.gameserver.tables.PetDataTable;
 import l2trunk.gameserver.utils.Location;
 
@@ -53,7 +54,7 @@ public final class PetInfo extends L2GameServerPacket {
 
     public PetInfo(Summon summon) {
         _type = summon.getSummonType();
-        obj_id = summon.getObjectId();
+        obj_id = summon.objectId();
         npc_id = summon.getTemplate().npcId;
         _loc = summon.getLoc();
         MAtkSpd = summon.getMAtkSpd();
@@ -80,7 +81,7 @@ public final class PetInfo extends L2GameServerPacket {
         exp = summon.getExp();
         exp_this_lvl = summon.getExpForThisLevel();
         exp_next_lvl = summon.getExpForNextLevel();
-        curLoad = summon.isPet() ? summon.getInventory().getTotalWeight() : 0;
+        curLoad = summon instanceof PetInstance ? summon.getInventory().getTotalWeight() : 0;
         maxLoad = summon.getMaxLoad();
         PAtk = summon.getPAtk(null);
         PDef = summon.getPDef(null);
@@ -92,7 +93,7 @@ public final class PetInfo extends L2GameServerPacket {
         _abnormalEffect = summon.getAbnormalEffect();
         _abnormalEffect2 = summon.getAbnormalEffect2();
         // В режиме трансформации значек mount/dismount не отображается
-        if (summon.getPlayer().getTransformation() != 0)
+        if (summon.owner.getTransformation() != 0)
             rideable = 0; //not rideable
         else
             rideable = PetDataTable.isMountable(npc_id) ? 1 : 0;

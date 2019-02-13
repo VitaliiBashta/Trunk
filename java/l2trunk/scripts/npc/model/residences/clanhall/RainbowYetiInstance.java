@@ -71,7 +71,7 @@ public final class RainbowYetiInstance extends NpcInstance {
         World.getAroundPlayers(this, 750, 100)
                 .filter(player -> {
                     CMGSiegeClanObject siegeClanObject = event.getSiegeClan(ClanHallMiniGameEvent.ATTACKERS, player.getClan());
-                    return (siegeClanObject == null || !siegeClanObject.getPlayers().contains(player.getObjectId()));
+                    return (siegeClanObject == null || !siegeClanObject.getPlayers().contains(player.objectId()));
                 })
                 .forEach(player ->
                         player.teleToLocation(event.getResidence().getOtherRestartPoint()));

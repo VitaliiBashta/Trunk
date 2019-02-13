@@ -8,7 +8,6 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.Reflection;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
-import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.ReflectionUtils;
@@ -17,6 +16,9 @@ import l2trunk.scripts.quests._132_MatrasCuriosity;
 
 import java.util.Map;
 import java.util.StringTokenizer;
+
+import static l2trunk.gameserver.utils.ItemFunctions.addItem;
+import static l2trunk.gameserver.utils.ItemFunctions.removeItem;
 
 public final class CaravanTraderInstance extends NpcInstance {
     private static final int NativeTreasure = 9684;
@@ -58,8 +60,8 @@ public final class CaravanTraderInstance extends NpcInstance {
             showDialog(player, getHtmlPath(getNpcId(), val, player));
         } else if (command.startsWith("give_treasures")) //Jude
         {
-            if (player.getInventory().getCountOf(NativeTreasure) >= 40) {
-                Functions.removeItem(player, NativeTreasure, 40, "CaravanTraderInstance");
+            if (player.inventory.getCountOf(NativeTreasure) >= 40) {
+                removeItem(player, NativeTreasure, 40, "CaravanTraderInstance");
                 ServerVariables.set("HB_judesBoxes", true);
                 showDialog(player, getHtmlPath(getNpcId(), 3, player));
             } else {
@@ -67,13 +69,13 @@ public final class CaravanTraderInstance extends NpcInstance {
             }
         } else if (command.startsWith("buy_holy_water")) //Bernarde
         {
-            if (player.getInventory().getCountOf(HolyWater) >= 1) {
+            if (player.haveItem(HolyWater)) {
                 showDialog(player, getHtmlPath(getNpcId(), 10, player));
                 return;
             }
-            if (player.getInventory().getCountOf(DarionsBadge) >= 5) {
-                Functions.removeItem(player, DarionsBadge, 5, "CaravanTraderInstance");
-                Functions.addItem(player, HolyWater, 1, "CaravanTraderInstance");
+            if (player.haveItem(DarionsBadge, 5)) {
+                removeItem(player, DarionsBadge, 5, "CaravanTraderInstance");
+                addItem(player, HolyWater, 1);
                 showDialog(player, getHtmlPath(getNpcId(), 6, player));
             } else {
                 showDialog(player, getHtmlPath(getNpcId(), 3, player));
@@ -81,7 +83,7 @@ public final class CaravanTraderInstance extends NpcInstance {
         } else if (command.startsWith("one_treasure")) //Bernarde
         {
             if (player.getInventory().getCountOf(NativeTreasure) >= 1 && !ServerVariables.getBool("HB_bernardBoxes", false)) {
-                Functions.removeItem(player, NativeTreasure, 1, "CaravanTraderInstance");
+                removeItem(player, NativeTreasure, 1, "CaravanTraderInstance");
                 ServerVariables.set("HB_bernardBoxes", true);
                 showDialog(player, getHtmlPath(getNpcId(), 8, player));
             } else {
@@ -94,10 +96,9 @@ public final class CaravanTraderInstance extends NpcInstance {
                 showDialog(player, getHtmlPath(getNpcId(), 3, player));
                 return;
             }
-            if (player.getInventory().getCountOf(DarionsBadge) >= 20) //trade mark
-            {
-                Functions.removeItem(player, DarionsBadge, 20, "CaravanTraderInstance");
-                Functions.addItem(player, FirstMark, 1, "CaravanTraderInstance");
+            if (player.haveItem(DarionsBadge, 20)) {//trade mark
+                removeItem(player, DarionsBadge, 20, "CaravanTraderInstance");
+                addItem(player, FirstMark, 1);
                 showDialog(player, getHtmlPath(getNpcId(), 4, player));
             } else
             // not enough badges
@@ -124,7 +125,7 @@ public final class CaravanTraderInstance extends NpcInstance {
                     showDialog(player, getHtmlPath(getNpcId(), 2, player));
                     return;
                 }
-                Functions.removeItem(player, DarionsBadge, val, "CaravanTraderInstance");
+                removeItem(player, DarionsBadge, val, "CaravanTraderInstance");
                 HellboundManager.addConfidence(val * 10L);
                 showDialog(player, getHtmlPath(getNpcId(), 3, player));
             } catch (NumberFormatException nfe) {
@@ -133,8 +134,8 @@ public final class CaravanTraderInstance extends NpcInstance {
         else if (command.startsWith("buy_magic_bottle")) // Kief
         {
             if (player.getInventory().getCountOf(ScorpionPoisonStinger) >= 20 && hasProperMark(player, 1)) {
-                Functions.removeItem(player, ScorpionPoisonStinger, 20, "CaravanTraderInstance");
-                Functions.addItem(player, MagicBottle, 1, "CaravanTraderInstance");
+                removeItem(player, ScorpionPoisonStinger, 20, "CaravanTraderInstance");
+                addItem(player, MagicBottle, 1);
                 showDialog(player, getHtmlPath(getNpcId(), 6, player));
             } else
             // not enough
@@ -153,7 +154,7 @@ public final class CaravanTraderInstance extends NpcInstance {
                             showDialog(player, getHtmlPath(getNpcId(), 2, player));
                             return;
                         }
-                        Functions.removeItem(player, LifeForce, 10, "CaravanTraderInstance");
+                        removeItem(player, LifeForce, 10, "CaravanTraderInstance");
                         HellboundManager.addConfidence(100);
                         showDialog(player, getHtmlPath(getNpcId(), 3, player));
                         break;
@@ -162,7 +163,7 @@ public final class CaravanTraderInstance extends NpcInstance {
                             showDialog(player, getHtmlPath(getNpcId(), 2, player));
                             return;
                         }
-                        Functions.removeItem(player, DimLifeForce, 5, "CaravanTraderInstance");
+                        removeItem(player, DimLifeForce, 5, "CaravanTraderInstance");
                         HellboundManager.addConfidence(100);
                         showDialog(player, getHtmlPath(getNpcId(), 3, player));
                         break;
@@ -171,7 +172,7 @@ public final class CaravanTraderInstance extends NpcInstance {
                             showDialog(player, getHtmlPath(getNpcId(), 2, player));
                             return;
                         }
-                        Functions.removeItem(player, ContainedLifeForce, 1, "CaravanTraderInstance");
+                        removeItem(player, ContainedLifeForce, 1, "CaravanTraderInstance");
                         HellboundManager.addConfidence(50);
                         showDialog(player, getHtmlPath(getNpcId(), 3, player));
                         break;
@@ -190,18 +191,18 @@ public final class CaravanTraderInstance extends NpcInstance {
                 }
                 switch (val) {
                     case 1:
-                        Functions.removeItem(player, DarionsBadge, 10, "CaravanTraderInstance");
-                        Functions.addItem(player, NativeHelmet, 1, "CaravanTraderInstance");
+                        removeItem(player, DarionsBadge, 10, "CaravanTraderInstance");
+                        addItem(player, NativeHelmet, 1);
                         showDialog(player, getHtmlPath(getNpcId(), 4, player));
                         break;
                     case 2:
-                        Functions.removeItem(player, DarionsBadge, 10, "CaravanTraderInstance");
-                        Functions.addItem(player, NativeTunic, 1, "CaravanTraderInstance");
+                        removeItem(player, DarionsBadge, 10, "CaravanTraderInstance");
+                        addItem(player, NativeTunic, 1);
                         showDialog(player, getHtmlPath(getNpcId(), 4, player));
                         break;
                     case 3:
-                        Functions.removeItem(player, DarionsBadge, 10, "CaravanTraderInstance");
-                        Functions.addItem(player, NativePants, 1, "CaravanTraderInstance");
+                        removeItem(player, DarionsBadge, 10, "CaravanTraderInstance");
+                        addItem(player, NativePants, 1);
                         showDialog(player, getHtmlPath(getNpcId(), 4, player));
                         break;
                 }
@@ -210,10 +211,10 @@ public final class CaravanTraderInstance extends NpcInstance {
         else if (command.startsWith("get_second")) // Hude
         {
             if (player.getInventory().getCountOf(FirstMark) >= 1 && player.getInventory().getCountOf(MarkOfBetrayal) >= 30 && player.getInventory().getCountOf(ScorpionPoisonStinger) >= 60) {
-                Functions.removeItem(player, FirstMark, 1, "CaravanTraderInstance");
-                Functions.removeItem(player, MarkOfBetrayal, 30, "CaravanTraderInstance");
-                Functions.removeItem(player, ScorpionPoisonStinger, 60, "CaravanTraderInstance");
-                Functions.addItem(player, SecondMark, 1, "CaravanTraderInstance");
+                removeItem(player, FirstMark, 1, "CaravanTraderInstance");
+                removeItem(player, MarkOfBetrayal, 30, "CaravanTraderInstance");
+                removeItem(player, ScorpionPoisonStinger, 60, "CaravanTraderInstance");
+                addItem(player, SecondMark, 1);
                 showDialog(player, getHtmlPath(getNpcId(), 3, player));
             } else {
                 showDialog(player, getHtmlPath(getNpcId(), 4, player));
@@ -224,11 +225,11 @@ public final class CaravanTraderInstance extends NpcInstance {
         } else if (command.startsWith("get_third")) // Hude
         {
             if (player.getInventory().getCountOf(SecondMark) >= 1 && player.getInventory().getCountOf(LifeForce) >= 56 && player.getInventory().getCountOf(ContainedLifeForce) >= 14) {
-                Functions.removeItem(player, SecondMark, 1, "CaravanTraderInstance");
-                Functions.removeItem(player, LifeForce, 56, "CaravanTraderInstance");
-                Functions.removeItem(player, ContainedLifeForce, 14, "CaravanTraderInstance");
-                Functions.addItem(player, ThirdMark, 1, "CaravanTraderInstance");
-                Functions.addItem(player, 9994, 1, "CaravanTraderInstance"); // Hellbound Map
+                removeItem(player, SecondMark, 1, "CaravanTraderInstance");
+                removeItem(player, LifeForce, 56, "CaravanTraderInstance");
+                removeItem(player, ContainedLifeForce, 14, "CaravanTraderInstance");
+                addItem(player, ThirdMark, 1);
+                addItem(player, 9994, 1); // Hellbound Map
                 showDialog(player, getHtmlPath(getNpcId(), 6, player));
             } else {
                 showDialog(player, getHtmlPath(getNpcId(), 4, player));
@@ -238,8 +239,8 @@ public final class CaravanTraderInstance extends NpcInstance {
             MultiSellHolder.INSTANCE.SeparateAndSend(250980013, player, 0);
         } else if (command.startsWith("try_open_door")) // Traitor
         {
-            if (player.getInventory().getCountOf(MarkOfBetrayal) >= 10) {
-                Functions.removeItem(player, MarkOfBetrayal, 10, "CaravanTraderInstance");
+            if (player.inventory.getCountOf(MarkOfBetrayal) >= 10) {
+                removeItem(player, MarkOfBetrayal, 10, "CaravanTraderInstance");
                 ReflectionUtils.getDoor(19250003).openMe();
                 ReflectionUtils.getDoor(19250004).openMe();
                 ThreadPoolManager.INSTANCE.schedule(() -> {
@@ -252,7 +253,7 @@ public final class CaravanTraderInstance extends NpcInstance {
         } else if (command.startsWith("supply_badges")) // Native Slave
         {
             if (player.getInventory().getCountOf(DarionsBadge) >= 5) {
-                Functions.removeItem(player, DarionsBadge, 5, "CaravanTraderInstance");
+                removeItem(player, DarionsBadge, 5, "CaravanTraderInstance");
                 HellboundManager.addConfidence(20);
                 showDialog(player, getHtmlPath(getNpcId(), 2, player));
             } else {
@@ -375,11 +376,11 @@ public final class CaravanTraderInstance extends NpcInstance {
                     htmlpath = getHtmlPath(getNpcId(), 0, player);
                 else if (!hasProperMark(player, 1))
                     htmlpath = getHtmlPath(getNpcId(), 1, player);
-                else if (player.getInventory().getCountOf(FirstMark) > 0)
+                else if (player.haveItem(FirstMark) )
                     htmlpath = getHtmlPath(getNpcId(), 2, player);
-                else if (player.getInventory().getCountOf(SecondMark) > 0)
+                else if (player.haveItem(SecondMark) )
                     htmlpath = getHtmlPath(getNpcId(), 5, player);
-                else if (player.getInventory().getCountOf(ThirdMark) > 0)
+                else if (player.haveItem(ThirdMark))
                     htmlpath = getHtmlPath(getNpcId(), 8, player);
                 break;
             case 32364: // Traitor
@@ -423,7 +424,7 @@ public final class CaravanTraderInstance extends NpcInstance {
         }
         NpcHtmlMessage html = new NpcHtmlMessage(player, this);
         html.setFile(htmlpath);
-        html.replace("%objectId%", String.valueOf(getObjectId()));
+        html.replace("%objectId%", String.valueOf(objectId()));
         html.replace("%npcname%", getName());
         player.sendPacket(html);
     }
@@ -441,26 +442,26 @@ public final class CaravanTraderInstance extends NpcInstance {
     private void showDialog(Player player, String path) {
         NpcHtmlMessage html = new NpcHtmlMessage(player, this);
         html.setFile(path);
-        html.replace("%objectId%", String.valueOf(getObjectId()));
+        html.replace("%objectId%", String.valueOf(objectId()));
         player.sendPacket(html);
     }
 
     private boolean hasProperMark(Player player, int mark) {
         switch (mark) {
             case 1:
-                if (player.getInventory().getCountOf(FirstMark) != 0 || player.getInventory().getCountOf(SecondMark) != 0 || player.getInventory().getCountOf(ThirdMark) != 0 || player.getInventory().getCountOf(ForthMark) != 0)
+                if (player.haveAnyItem(FirstMark,SecondMark,ThirdMark,ForthMark))
                     return true;
                 break;
             case 2:
-                if (player.getInventory().getCountOf(SecondMark) != 0 || player.getInventory().getCountOf(ThirdMark) != 0 || player.getInventory().getCountOf(ForthMark) != 0)
+                if (player.haveAnyItem(SecondMark,ThirdMark,ForthMark) )
                     return true;
                 break;
             case 3:
-                if (player.getInventory().getCountOf(ThirdMark) != 0 || player.getInventory().getCountOf(ForthMark) != 0)
+                if (player.haveAnyItem(ThirdMark,ForthMark))
                     return true;
                 break;
             case 4:
-                if (player.getInventory().getCountOf(ForthMark) != 0)
+                if (player.haveItem(ForthMark) )
                     return true;
                 break;
             default:

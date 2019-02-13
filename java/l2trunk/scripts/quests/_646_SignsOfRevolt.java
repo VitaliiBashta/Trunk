@@ -6,7 +6,6 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _646_SignsOfRevolt extends Quest {
     // NPCs
@@ -72,7 +71,7 @@ public final class _646_SignsOfRevolt extends Quest {
         int _state = st.getState();
 
         if (_state == CREATED) {
-            if (st.getPlayer().getLevel() < 40) {
+            if (st.player.getLevel() < 40) {
                 htmltext = "torant_q0646_0102.htm";
                 st.exitCurrentQuest(true);
             } else {
@@ -86,21 +85,20 @@ public final class _646_SignsOfRevolt extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState qs) {
+    public void onKill(NpcInstance npc, QuestState qs) {
         Player player = qs.getRandomPartyMember(STARTED, Config.ALT_PARTY_DISTRIBUTION_RANGE);
         if (player == null)
-            return null;
-        QuestState st = player.getQuestState(qs.getQuest());
+            return;
+        QuestState st = player.getQuestState(qs.quest);
 
         long CURSED_DOLL_COUNT = st.getQuestItemsCount(CURSED_DOLL);
         if (CURSED_DOLL_COUNT < 180 && Rnd.chance(CURSED_DOLL_Chance)) {
-            st.giveItems(CURSED_DOLL, 1);
+            st.giveItems(CURSED_DOLL);
             if (CURSED_DOLL_COUNT == 179) {
                 st.playSound(SOUND_MIDDLE);
                 st.setCond(2);
             } else
                 st.playSound(SOUND_ITEMGET);
         }
-        return null;
     }
 }

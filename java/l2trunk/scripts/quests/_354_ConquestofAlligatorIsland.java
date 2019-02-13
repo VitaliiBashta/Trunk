@@ -101,7 +101,7 @@ public final class _354_ConquestofAlligatorIsland extends Quest {
         String htmltext;
         int cond = st.getCond();
         if (cond < 1) {
-            if (st.getPlayer().getLevel() < 38)
+            if (st.player.getLevel() < 38)
                 htmltext = "30895-00.htm";
             else
                 htmltext = "30895-01.htm";
@@ -112,19 +112,17 @@ public final class _354_ConquestofAlligatorIsland extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (Rnd.chance(CHANCE)) {
             st.giveItems(ALLIGATOR_TOOTH);
             st.playSound(SOUND_ITEMGET);
         }
         if (Rnd.chance(CHANCE2) && st.getQuestItemsCount(TORN_MAP_FRAGMENT) < 10) {
-            st.giveItems(TORN_MAP_FRAGMENT, 1);
+            st.giveItems(TORN_MAP_FRAGMENT);
             if (st.getQuestItemsCount(TORN_MAP_FRAGMENT) < 10)
                 st.playSound(SOUND_ITEMGET);
             else
                 st.playSound(SOUND_MIDDLE);
         }
-
-        return null;
     }
 }

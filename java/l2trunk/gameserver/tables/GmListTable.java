@@ -22,7 +22,7 @@ public final class GmListTable {
     public static List<Player> getAllVisibleGMs() {
         return GameObjectsStorage.getAllPlayersStream()
                 .filter(Player::isGM)
-                .filter(player -> player.getVarInt("gmOnList", 1) == 1)
+                .filter(player -> player.isVarSet("gmOnList"))
                 .collect(Collectors.toList());
     }
 

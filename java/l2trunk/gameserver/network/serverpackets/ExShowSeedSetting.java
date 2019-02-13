@@ -17,7 +17,7 @@ import java.util.List;
 public final class ExShowSeedSetting extends L2GameServerPacket {
     private final int _manorId;
     private final int _count;
-    private final long[] _seedData; // data to send, size:_count*12
+    private final long[] _seedData; // data to send, size:count*12
 
     public ExShowSeedSetting(int manorId) {
         _manorId = manorId;
@@ -64,7 +64,7 @@ public final class ExShowSeedSetting extends L2GameServerPacket {
 
         for (int i = 0; i < _count; i++) {
             writeD((int) _seedData[i * 12 + 0]); // seed id
-            writeD((int) _seedData[i * 12 + 1]); // level
+            writeD((int) _seedData[i * 12 + 1]); // occupation
 
             writeC(1);
             writeD((int) _seedData[i * 12 + 2]); // reward 1 id

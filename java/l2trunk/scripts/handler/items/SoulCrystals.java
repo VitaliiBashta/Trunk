@@ -4,6 +4,7 @@ import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.cache.Msg;
 import l2trunk.gameserver.data.xml.holder.SoulCrystalHolder;
 import l2trunk.gameserver.handler.items.ItemHandler;
+import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Skill;
@@ -32,54 +33,45 @@ public final class SoulCrystals extends ScriptItemHandler implements ScriptFile 
     }
 
     @Override
-    public boolean pickupItem(Playable playable, ItemInstance item) {
-        return true;
-    }
-
-    @Override
     public void onLoad() {
         ItemHandler.INSTANCE.registerItemHandler(this);
     }
 
     @Override
-    public boolean useItem(Playable playable, ItemInstance item, boolean ctrl) {
-        if (playable == null || !playable.isPlayer())
-            return false;
-        Player player = playable.getPlayer();
+    public boolean useItem(Player player, ItemInstance item, boolean ctrl) {
+            if (player.isActionsDisabled()) {
+                player.sendActionFailed();
+                return false;
+            }
+            GameObject target = player.getTarget();
+            if (target instanceof MonsterInstance) {
+                MonsterInstance monster = (MonsterInstance) target;
 
-        if (player.getTarget() == null || !player.getTarget().isMonster()) {
-            player.sendPacket(Msg.INVALID_TARGET, ActionFail.STATIC);
-            return false;
-        }
+                // u can use soul crystal only when monster hp goes to <50%
+                if (monster.getCurrentHpPercents() >= 50) {
+                    player.sendPacket(Msg.THE_SOUL_CRYSTAL_WAS_NOT_ABLE_TO_ABSORB_A_SOUL, ActionFail.STATIC);
+                    return false;
+                }
 
-        if (playable.isActionsDisabled()) {
-            player.sendActionFailed();
-            return false;
-        }
+                // Soul Crystal Casting section
+                Skill soulCrystal = SkillTable.INSTANCE.getInfo(2096);
+                player.broadcastPacket(new MagicSkillUse(player, soulCrystal));
+                player.sendPacket(new SetupGauge(player, SetupGauge.BLUE, soulCrystal.hitTime));
+                // End Soul Crystal Casting section
 
-        MonsterInstance target = (MonsterInstance) player.getTarget();
-
-        // u can use soul crystal only when target hp goes to <50%
-        if (target.getCurrentHpPercents() >= 50) {
-            player.sendPacket(Msg.THE_SOUL_CRYSTAL_WAS_NOT_ABLE_TO_ABSORB_A_SOUL, ActionFail.STATIC);
-            return false;
-        }
-
-        // Soul Crystal Casting section
-        Skill soulCrystal = SkillTable.INSTANCE.getInfo(2096);
-        player.broadcastPacket(new MagicSkillUse(player, soulCrystal));
-        player.sendPacket(new SetupGauge(player, SetupGauge.BLUE, soulCrystal.hitTime));
-        // End Soul Crystal Casting section
-
-        // Continue execution later
-        player._skillTask = ThreadPoolManager.INSTANCE.schedule(() -> {
-            player.sendActionFailed();
-            player.clearCastVars();
-            if (player.isDead())
-                return;
-            target.addAbsorber(player);
-        }, soulCrystal.hitTime);
-        return true;
+                // Continue execution later
+                player.skillTask = ThreadPoolManager.INSTANCE.schedule(() -> {
+                    player.sendActionFailed();
+                    player.clearCastVars();
+                    if (player.isDead())
+                        return;
+                    monster.addAbsorber(player);
+                }, soulCrystal.hitTime);
+                return true;
+            } else {
+                player.sendPacket(Msg.INVALID_TARGET, ActionFail.STATIC);
+                return false;
+            }
     }
 
     @Override

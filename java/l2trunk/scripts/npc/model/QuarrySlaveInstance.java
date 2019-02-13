@@ -3,6 +3,7 @@ package l2trunk.scripts.npc.model;
 import l2trunk.gameserver.instancemanager.HellboundManager;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Player;
+import l2trunk.gameserver.model.instances.MonsterInstance;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
@@ -16,7 +17,7 @@ public final class QuarrySlaveInstance extends NpcInstance {
 
     @Override
     public boolean isAutoAttackable(Creature attacker) {
-        return attacker.isMonster();
+        return attacker instanceof MonsterInstance;
     }
 
     @Override

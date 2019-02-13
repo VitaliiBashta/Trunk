@@ -6,7 +6,8 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
+
+import java.util.List;
 
 public final class _690_JudesRequest extends Quest {
     // NPC's
@@ -18,25 +19,11 @@ public final class _690_JudesRequest extends Quest {
     // Chance
     private static final int EVIL_WEAPON_CHANCE = 30;
     // Reward Recipe's
-    private static final int ISawsword = 10373;
-    private static final int IDisperser = 10374;
-    private static final int ISpirit = 10375;
-    private static final int IHeavyArms = 10376;
-    private static final int ITrident = 10377;
-    private static final int IHammer = 10378;
-    private static final int IHand = 10379;
-    private static final int IHall = 10380;
-    private static final int ISpitter = 10381;
+    private static final List<Integer> recipes = List.of(
+            10373, 10374, 10375, 10376, 10377, 10378, 10379, 10380, 10381);
     // Reward Piece's
-    private static final int ISawswordP = 10397;
-    private static final int IDisperserP = 10398;
-    private static final int ISpiritP = 10399;
-    private static final int IHeavyArmsP = 10400;
-    private static final int ITridentP = 10401;
-    private static final int IHammerP = 10402;
-    private static final int IHandP = 10403;
-    private static final int IHallP = 10404;
-    private static final int ISpitterP = 10405;
+    private static final List<Integer> pieces = List.of(
+    10397,10398,10399,10400,10401,10402, 10403,10404,10405);
 
     public _690_JudesRequest() {
         super(true);
@@ -49,7 +36,7 @@ public final class _690_JudesRequest extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("jude_q0690_03.htm")) {
+        if ("jude_q0690_03.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
@@ -57,8 +44,8 @@ public final class _690_JudesRequest extends Quest {
         return event;
     }
 
-    private void giveReward(QuestState st, int item_id, long count) {
-        st.giveItems(item_id, count);
+    private void giveReward(QuestState st, int item_id) {
+        st.giveItems(item_id);
     }
 
     @Override
@@ -66,57 +53,21 @@ public final class _690_JudesRequest extends Quest {
         String htmltext = "noquest";
         int cond = st.getCond();
         if (cond == 0) {
-            if (st.getPlayer().getLevel() >= 78)
+            if (st.player.getLevel() >= 78)
                 htmltext = "jude_q0690_01.htm";
             else
                 htmltext = "jude_q0690_02.htm";
             st.exitCurrentQuest(true);
         } else if (cond == 1 && st.getQuestItemsCount(EVIL_WEAPON) >= 5) {
-            int reward = Rnd.get(8);
             if (st.getQuestItemsCount(EVIL_WEAPON) >= 100) {
-                if (reward == 0)
-                    giveReward(st, ISawsword, 1);
-                else if (reward == 1)
-                    giveReward(st, IDisperser, 1);
-                else if (reward == 2)
-                    giveReward(st, ISpirit, 1);
-                else if (reward == 3)
-                    giveReward(st, IHeavyArms, 1);
-                else if (reward == 4)
-                    giveReward(st, ITrident, 1);
-                else if (reward == 5)
-                    giveReward(st, IHammer, 1);
-                else if (reward == 6)
-                    giveReward(st, IHand, 1);
-                else if (reward == 7)
-                    giveReward(st, IHall, 1);
-                else if (reward == 8)
-                    giveReward(st, ISpitter, 1);
+                st.giveItems(Rnd.get(recipes));
 
                 st.playSound(SOUND_FINISH);
                 st.takeItems(EVIL_WEAPON, 100);
                 htmltext = "jude_q0690_07.htm";
 
-            } else if (st.getQuestItemsCount(EVIL_WEAPON) > 0 && st.getQuestItemsCount(EVIL_WEAPON) < 100) {
-                if (reward == 0)
-                    st.giveItems(ISawswordP, 1);
-                else if (reward == 1)
-                    st.giveItems(IDisperserP, 1);
-                else if (reward == 2)
-                    st.giveItems(ISpiritP, 1);
-                else if (reward == 3)
-                    st.giveItems(IHeavyArmsP, 1);
-                else if (reward == 4)
-                    st.giveItems(ITridentP, 1);
-                else if (reward == 5)
-                    st.giveItems(IHammerP, 1);
-                else if (reward == 6)
-                    st.giveItems(IHandP, 1);
-                else if (reward == 7)
-                    st.giveItems(IHallP, 1);
-                else if (reward == 8)
-                    st.giveItems(ISpitterP, 1);
-
+            } else if (st.getQuestItemsCount(EVIL_WEAPON) > 4 && st.getQuestItemsCount(EVIL_WEAPON) < 100) {
+                    st.giveItems(Rnd.get(pieces));
                 st.playSound(SOUND_FINISH);
                 st.takeItems(EVIL_WEAPON, 5);
                 htmltext = "jude_q0690_09.htm";
@@ -127,19 +78,18 @@ public final class _690_JudesRequest extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         Player player = st.getRandomPartyMember(STARTED, Config.ALT_PARTY_DISTRIBUTION_RANGE);
 
         if (st.getState() != STARTED)
-            return null;
+            return;
 
         if (player != null) {
-            QuestState sts = player.getQuestState(st.getQuest());
+            QuestState sts = player.getQuestState(st.quest);
             if (sts != null && Rnd.chance(EVIL_WEAPON_CHANCE)) {
-                st.giveItems(EVIL_WEAPON, 1);
+                st.giveItems(EVIL_WEAPON);
                 st.playSound(SOUND_ITEMGET);
             }
         }
-        return null;
     }
 }

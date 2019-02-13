@@ -15,6 +15,8 @@ import l2trunk.gameserver.utils.Location;
 
 import java.util.List;
 
+import static l2trunk.gameserver.utils.ItemFunctions.addItem;
+
 public final class WorkshopServantInstance extends NpcInstance {
     private static final List<Integer> medals = List.of(
             10427,            //Tully's Platinum Medal
@@ -43,7 +45,7 @@ public final class WorkshopServantInstance extends NpcInstance {
                     return;
                 }
 
-            Functions.addItem(player, Rnd.get(medals), 1, "WorkshopServantInstance");
+            addItem(player, Rnd.get(medals), 1);
             player.sendPacket(new NpcHtmlMessage(player, this).setHtml("Ingenious Contraption:<br><br>The medal for access to Anomic Founrdy has been given."));
 
         } else if (command.startsWith("requestteleport"))

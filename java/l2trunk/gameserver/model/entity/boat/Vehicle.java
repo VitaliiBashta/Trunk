@@ -65,8 +65,4 @@ public final class Vehicle extends Boat {
         //
     }
 
-    @Override
-    public boolean isVehicle() {
-        return true;
-    }
 }

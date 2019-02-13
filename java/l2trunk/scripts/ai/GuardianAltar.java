@@ -6,7 +6,10 @@ import l2trunk.gameserver.ai.DefaultAI;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.SimpleSpawner;
+import l2trunk.gameserver.model.Summon;
 import l2trunk.gameserver.model.instances.NpcInstance;
+import l2trunk.gameserver.model.instances.PetInstance;
+import l2trunk.gameserver.model.instances.SummonInstance;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.Location;
 
@@ -32,7 +35,7 @@ public final class GuardianAltar extends DefaultAI {
 
         Player player = attacker.getPlayer();
 
-        if (Rnd.chance(40) && player.getInventory().destroyItemByItemId(14848, 1L, "GuardianAltar")) {
+        if (Rnd.chance(40) && player.getInventory().destroyItemByItemId(14848,  "GuardianAltar")) {
             if (actor.getAroundNpc(1500, 300)
                     .filter(npc -> npc.getNpcId() == 18808)
                     .peek(npc -> Functions.npcSay(actor, "I can sense the presence of Dark Shaman already!"))
@@ -43,7 +46,7 @@ public final class GuardianAltar extends DefaultAI {
             SimpleSpawner sp = new SimpleSpawner(DarkShamanVarangka);
             sp.setLoc(Location.findPointToStay(actor, 400, 420));
             NpcInstance npc = sp.doSpawn(true);
-            if (attacker.isPet() || attacker.isSummon())
+            if (attacker instanceof Summon)
                 npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker, Rnd.get(2, 100));
             npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker.getPlayer(), Rnd.get(1, 100));
 
@@ -56,7 +59,7 @@ public final class GuardianAltar extends DefaultAI {
                 SimpleSpawner sp = new SimpleSpawner(22702);
                 sp.setLoc(Location.findPointToStay(actor, 150, 160));
                 NpcInstance npc = sp.doSpawn(true);
-                if (attacker.isPet() || attacker.isSummon())
+                if (attacker instanceof Summon)
                     npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker, Rnd.get(2, 100));
                 npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker.getPlayer(), Rnd.get(1, 100));
             }

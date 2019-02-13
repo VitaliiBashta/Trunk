@@ -22,7 +22,7 @@ public class AdminPSPoints implements IAdminCommandHandler {
                 try {
                     String targetName = wordList[1];
                     Player obj = World.getPlayer(targetName);
-                    if (obj != null && obj.isPlayer()) {
+                    if (obj != null) {
                         //int add = (obj.getNetConnection().getPointG() + Integer.parseInt(wordList[2]));
                         //obj.getNetConnection().setPointG(add);
                         activeChar.sendMessage("Option Removed");
@@ -36,7 +36,7 @@ public class AdminPSPoints implements IAdminCommandHandler {
                 try {
                     String targetName = wordList[1];
                     Player obj = World.getPlayer(targetName);
-                    if (obj != null && obj.isPlayer()) {
+                    if (obj != null) {
                         activeChar.sendMessage("Option Removed");
                     } else
                         activeChar.sendMessage("Player " + targetName + " not found");

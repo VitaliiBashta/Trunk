@@ -13,7 +13,6 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.utils.Location;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public final class Recall extends Skill {
@@ -72,128 +71,122 @@ public final class Recall extends Skill {
     }
 
     @Override
-    public boolean checkCondition(Creature activeChar, Creature target, boolean forceUse, boolean dontMove, boolean first) {
+    public boolean checkCondition(Player player, Creature target, boolean forceUse, boolean dontMove, boolean first) {
         // BSOE the clan hall / lock only works if you have one
         if (hitTime == 200) {
-            Player player = activeChar.getPlayer();
             if (clanhall) {
                 if (player.getClan() == null || player.getClan().getHasHideout() == 0) {
-                    activeChar.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addItemName(itemConsumeId.get(0)));
+                    player.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addItemName(itemConsumeId.get(0)));
                     return false;
                 }
             } else if (castle) {
                 if (player.getClan() == null || player.getClan().getCastle() == 0) {
-                    activeChar.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addItemName(itemConsumeId.get(0)));
+                    player.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addItemName(itemConsumeId.get(0)));
                     return false;
                 }
             } else if (fortress)
                 if (player.getClan() == null || player.getClan().getHasFortress() == 0) {
-                    activeChar.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addItemName(itemConsumeId.get(0)));
+                    player.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addItemName(itemConsumeId.get(0)));
                     return false;
                 }
         }
 
-        if (activeChar.isPlayer()) {
-            Player p = (Player) activeChar;
-            if (p.getActiveWeaponFlagAttachment() != null) {
-                activeChar.sendPacket(SystemMsg.YOU_CANNOT_TELEPORT_WHILE_IN_POSSESSION_OF_A_WARD);
-                return false;
-            }
-            if (p.isInDuel() || p.getTeam() != TeamType.NONE) {
-                activeChar.sendMessage(new CustomMessage("common.RecallInDuel", p));
-                return false;
-            }
-            if (p.isInOlympiadMode()) {
-                activeChar.sendPacket(SystemMsg.YOU_CANNOT_USE_THAT_SKILL_IN_A_GRAND_OLYMPIAD_MATCH);
-                return false;
-            }
-
-            if (targetType == SkillTargetType.TARGET_PARTY && activeChar.getReflection() != ReflectionManager.DEFAULT) {
-                activeChar.sendMessage("This skill cannot be used inside instanced zones!");
-                return false;
-            }
-
-            if (p.isJailed()) {
-                p.sendMessage("You cannot escape from Jail!");
-                return false;
-            }
+        if (player.getActiveWeaponFlagAttachment() != null) {
+            player.sendPacket(SystemMsg.YOU_CANNOT_TELEPORT_WHILE_IN_POSSESSION_OF_A_WARD);
+            return false;
         }
-
-        if (activeChar.isInZone(ZoneType.no_escape) || townId > 0 && activeChar.getReflection() != null && activeChar.getReflection().getCoreLoc() != null) {
-            if (activeChar.isPlayer())
-                activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.skills.skillclasses.Recall.Here", (Player) activeChar));
+        if (player.isInDuel() || player.getTeam() != TeamType.NONE) {
+            player.sendMessage(new CustomMessage("common.RecallInDuel"));
+            return false;
+        }
+        if (player.isInOlympiadMode()) {
+            player.sendPacket(SystemMsg.YOU_CANNOT_USE_THAT_SKILL_IN_A_GRAND_OLYMPIAD_MATCH);
             return false;
         }
 
-        return super.checkCondition(activeChar, target, forceUse, dontMove, first);
+        if (targetType == SkillTargetType.TARGET_PARTY && player.getReflection() != ReflectionManager.DEFAULT) {
+            player.sendMessage("This skill cannot be used inside instanced zones!");
+            return false;
+        }
+
+        if (player.isJailed()) {
+            player.sendMessage("You cannot escape from Jail!");
+            return false;
+        }
+
+        if (player.isInZone(ZoneType.no_escape) || townId > 0 && player.getReflection() != null && player.getReflection().getCoreLoc() != null) {
+            player.sendMessage(new CustomMessage("l2trunk.gameserver.skills.skillclasses.Recall.Here"));
+            return false;
+        }
+
+        return super.checkCondition(player, target, forceUse, dontMove, first);
     }
 
     @Override
-    public void useSkill(final Creature activeChar, List<Creature> targets) {
-        for (final Creature target : targets)
-            if (target != null) {
-                final Player pcTarget = target.getPlayer();
-                if (pcTarget == null)
-                    continue;
-                if (!pcTarget.getPlayerAccess().UseTeleport)
-                    continue;
-                if (pcTarget.getActiveWeaponFlagAttachment() != null) {
-                    activeChar.sendPacket(SystemMsg.YOU_CANNOT_TELEPORT_WHILE_IN_POSSESSION_OF_A_WARD);
-                    continue;
-                }
-                if (pcTarget.isFestivalParticipant()) {
-                    activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.skills.skillclasses.Recall.Festival", (Player) activeChar));
-                    continue;
-                }
-                if (pcTarget.isInOlympiadMode()) {
-                    activeChar.sendPacket(SystemMsg.YOU_CANNOT_SUMMON_PLAYERS_WHO_ARE_CURRENTLY_PARTICIPATING_IN_THE_GRAND_OLYMPIAD);
-                    return;
-                }
-                if (pcTarget.isInObserverMode()) {
-                    activeChar.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addSkillName(id, level));
-                    return;
-                }
-
-                if (pcTarget.isJailed()) {
-                    pcTarget.sendMessage("You cannot escape from Jail!");
-                    return;
-                }
-                if (pcTarget.isInDuel() || pcTarget.getTeam() != TeamType.NONE) {
-                    activeChar.sendMessage(new CustomMessage("common.RecallInDuel", (Player) activeChar));
-                    return;
-                }
-                if (isItemHandler) {
-                    if (specialScrolls.containsKey(itemConsumeId.get(0))) {
-                        pcTarget.teleToLocation(specialScrolls.get(itemConsumeId.get(0)));
-                        return;
-                    }
-
-                }
-                if (loc != null) {
-                    pcTarget.teleToLocation(loc);
-                    return;
-                }
-
-                if (towns.containsKey(townId)) {
-                    pcTarget.teleToLocation(towns.get(townId), 0);
-                    return;
-                }
-
-                if (castle) {// To castle
-                    pcTarget.teleToCastle();
-                    return;
-                }
-                if (clanhall) { // to clanhall
-                    pcTarget.teleToClanhall();
-                    return;
-                }
-                if (fortress) { // To fortress
-                    pcTarget.teleToFortress();
-                    return;
-                }
-                pcTarget.teleToClosestTown();
-            }
+    public void useSkill(final Creature activeChar, Creature target) {
         if (isSSPossible())
             activeChar.unChargeShots(isMagic());
+        if (!(activeChar instanceof Player))
+            return;
+        Player player = (Player) activeChar;
+        if (target instanceof Player) {
+            final Player pcTarget = (Player) target;
+            if (pcTarget.getPlayerAccess().UseTeleport) {
+                if (pcTarget.getActiveWeaponFlagAttachment() == null) {
+                    if (!pcTarget.isFestivalParticipant()) {
+                        if (!pcTarget.isInOlympiadMode()) {
+                            if (!pcTarget.isInObserverMode()) {
+                                if (!pcTarget.isJailed()) {
+                                    if (!pcTarget.isInDuel() && pcTarget.getTeam() == TeamType.NONE) {
+                                        if (isItemHandler) {
+                                            if (specialScrolls.containsKey(itemConsumeId.get(0))) {
+                                                pcTarget.teleToLocation(specialScrolls.get(itemConsumeId.get(0)));
+                                                return;
+                                            }
+
+                                        }
+                                        if (loc == null) {
+                                            if (!towns.containsKey(townId)) {
+                                                if (castle) {// To castle
+                                                    pcTarget.teleToCastle();
+                                                    return;
+                                                } else if (clanhall) { // to clanhall
+                                                    pcTarget.teleToClanhall();
+                                                    return;
+                                                } else if (fortress) { // To fortress
+                                                    pcTarget.teleToFortress();
+                                                    return;
+                                                }
+                                                pcTarget.teleToClosestTown();
+                                            } else {
+                                                pcTarget.teleToLocation(towns.get(townId), 0);
+                                            }
+
+                                        } else {
+                                            pcTarget.teleToLocation(loc);
+                                        }
+
+                                    } else {
+                                        player.sendMessage(new CustomMessage("common.RecallInDuel"));
+                                    }
+                                } else {
+                                    pcTarget.sendMessage("You cannot escape from Jail!");
+                                }
+                            } else {
+                                player.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addSkillName(id, level));
+                            }
+
+                        } else {
+                            activeChar.sendPacket(SystemMsg.YOU_CANNOT_SUMMON_PLAYERS_WHO_ARE_CURRENTLY_PARTICIPATING_IN_THE_GRAND_OLYMPIAD);
+                        }
+                    } else {
+                        player.sendMessage(new CustomMessage("l2trunk.gameserver.skills.skillclasses.Recall.Festival"));
+                    }
+                } else {
+                    activeChar.sendPacket(SystemMsg.YOU_CANNOT_TELEPORT_WHILE_IN_POSSESSION_OF_A_WARD);
+                }
+            }
+        }
+
     }
 }

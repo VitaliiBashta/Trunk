@@ -15,7 +15,7 @@ public class TradeUpdate extends L2GameServerPacket {
     protected final void writeImpl() {
         writeC(0x81);
         writeH(1);
-        writeH(_amount > 0 && _item.getItem().isStackable() ? 3 : 2);
+        writeH(_amount > 0 && _item.getItem().stackable() ? 3 : 2);
         writeH(_item.getItem().getType1());
         writeD(_item.getObjectId());
         writeD(_item.getItemId());

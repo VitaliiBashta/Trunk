@@ -711,7 +711,7 @@
 	</skill>
 	<skill id="22041" levels="2" name="Rune of Crystal Form Level 3" >
 		<!--
-		      Description: One's Grade Penalty decreases by 3,5 level.
+		      Description: One's Grade Penalty decreases by 3,5 occupation.
 		-->
 		<table name="#power">3 5</table>
 		<set name="icon" val="br_cashtex.skill.br_cash_rune_of_rp_buff_3" />

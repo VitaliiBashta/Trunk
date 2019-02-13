@@ -31,7 +31,7 @@ public final class _714_PathToBecomingALordSchuttgart extends Quest {
         Castle castle = ResidenceHolder.getResidence(ShuttgartCastle);
         if (castle.getOwner() == null)
             return "Castle has no lord";
-        Player castleOwner = castle.getOwner().getLeader().getPlayer();
+        Player castleOwner = castle.getOwner().getLeader().player();
 
         switch (event) {
             case "august_q714_03.htm":
@@ -49,7 +49,7 @@ public final class _714_PathToBecomingALordSchuttgart extends Quest {
                 st.setCond(5);
                 break;
             case "august_q714_08.htm":
-                Functions.npcSay(npc, NpcString.S1_HAS_BECOME_THE_LORD_OF_THE_TOWN_OF_SCHUTTGART, st.getPlayer().getName());
+                Functions.npcSay(npc, NpcString.S1_HAS_BECOME_THE_LORD_OF_THE_TOWN_OF_SCHUTTGART, st.player.getName());
                 castle.getDominion().changeOwner(castleOwner.getClan());
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest(true);
@@ -66,12 +66,12 @@ public final class _714_PathToBecomingALordSchuttgart extends Quest {
         Castle castle = ResidenceHolder.getResidence(ShuttgartCastle);
         if (castle.getOwner() == null)
             return "Castle has no lord";
-        Player castleOwner = castle.getOwner().getLeader().getPlayer();
+        Player castleOwner = castle.getOwner().getLeader().player();
 
         if (npcId == August) {
             if (cond == 0) {
-                if (castleOwner == st.getPlayer()) {
-                    if (castle.getDominion().getLordObjectId() != st.getPlayer().getObjectId())
+                if (castleOwner == st.player) {
+                    if (castle.getDominion().getLordObjectId() != st.player.objectId())
                         htmltext = "august_q714_01.htm";
                     else {
                         htmltext = "august_q714_00.htm";
@@ -93,12 +93,9 @@ public final class _714_PathToBecomingALordSchuttgart extends Quest {
             if (cond == 2) {
                 htmltext = "newyear_q714_01.htm";
             } else if (cond == 3) {
-                QuestState q1 = st.getPlayer().getQuestState(_114_ResurrectionOfAnOldManager.class);
-                QuestState q2 = st.getPlayer().getQuestState(_120_PavelsResearch.class);
-                QuestState q3 = st.getPlayer().getQuestState(_121_PavelTheGiants.class);
-                if (q3 != null && q3.isCompleted()) {
-                    if (q1 != null && q1.isCompleted()) {
-                        if (q2 != null && q2.isCompleted()) {
+                if (st.player.isQuestCompleted(_121_PavelTheGiants.class)) {
+                    if (st.player.isQuestCompleted(_114_ResurrectionOfAnOldManager.class)) {
+                        if (st.player.isQuestCompleted(_120_PavelsResearch.class)) {
                             st.setCond(4);
                             htmltext = "newyear_q714_04.htm";
                         } else
@@ -123,14 +120,13 @@ public final class _714_PathToBecomingALordSchuttgart extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getCond() == 5) {
             if (st.getQuestItemsCount(GolemShard) < 300)
                 st.giveItems(GolemShard);
             if (st.getQuestItemsCount(GolemShard) >= 300)
                 st.setCond(6);
         }
-        return null;
     }
 
 }

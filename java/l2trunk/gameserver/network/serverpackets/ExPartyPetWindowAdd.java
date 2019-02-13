@@ -8,8 +8,8 @@ public final class ExPartyPetWindowAdd extends L2GameServerPacket {
     private final String name;
 
     public ExPartyPetWindowAdd(Summon summon) {
-        summonId = summon.getObjectId();
-        ownerId = summon.getPlayer().getObjectId();
+        summonId = summon.objectId();
+        ownerId = summon.owner.objectId();
         npcId = summon.getTemplate().npcId + 1000000;
         type = summon.getSummonType();
         name = summon.getName();

@@ -57,7 +57,7 @@ public final class _10271_TheEnvelopingDarkness extends Quest {
         String htmltext = "noquest";
         int npcId = npc.getNpcId();
         int cond = st.getCond();
-        Player player = st.getPlayer();
+        Player player = st.player;
         QuestState ToTheSeedOfDestruction = player.getQuestState(_10269_ToTheSeedOfDestruction.class);
 
         if (npcId == Orbyu) {

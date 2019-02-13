@@ -58,7 +58,7 @@ public final class _264_KeenClaws extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("paint_q0264_03.htm")) {
+        if ("paint_q0264_03.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
@@ -73,7 +73,7 @@ public final class _264_KeenClaws extends Quest {
         int cond = st.getCond();
         if (npcId == Payne)
             if (cond == 0) {
-                if (st.getPlayer().getLevel() >= 3)
+                if (st.player.getLevel() >= 3)
                     htmltext = "paint_q0264_02.htm";
                 else {
                     st.exitCurrentQuest(true);
@@ -82,24 +82,24 @@ public final class _264_KeenClaws extends Quest {
             } else if (cond == 1)
                 htmltext = "paint_q0264_04.htm";
             else if (cond == 2) {
-                st.takeItems(WolfClaw, -1);
+                st.takeItems(WolfClaw);
                 int n = Rnd.get(17);
                 if (n == 0) {
-                    st.giveItems(WoodenHelmet, 1);
+                    st.giveItems(WoodenHelmet);
                     st.playSound(SOUND_JACKPOT);
                 } else if (n < 2)
                     st.giveItems(ADENA_ID, 1000);
                 else if (n < 5)
-                    st.giveItems(LeatherSandals, 1);
+                    st.giveItems(LeatherSandals);
                 else if (n < 8) {
-                    st.giveItems(Stockings, 1);
+                    st.giveItems(Stockings);
                     st.giveItems(ADENA_ID, 50);
                 } else if (n < 11)
-                    st.giveItems(HealingPotion, 1);
+                    st.giveItems(HealingPotion);
                 else if (n < 14)
-                    st.giveItems(ShortGloves, 1);
+                    st.giveItems(ShortGloves);
                 else
-                    st.giveItems(ClothShoes, 1);
+                    st.giveItems(ClothShoes);
                 htmltext = "paint_q0264_05.htm";
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest(true);
@@ -108,12 +108,12 @@ public final class _264_KeenClaws extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         for (int[] aDROPLIST_COND : DROPLIST_COND)
             if (cond == aDROPLIST_COND[0] && npcId == aDROPLIST_COND[2])
-                if (aDROPLIST_COND[3] == 0 || st.getQuestItemsCount(aDROPLIST_COND[3]) > 0)
+                if (aDROPLIST_COND[3] == 0 || st.haveQuestItem(aDROPLIST_COND[3]))
                     if (aDROPLIST_COND[5] == 0)
                         st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[6]);
                     else if (st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[7], aDROPLIST_COND[5], aDROPLIST_COND[6]))
@@ -121,6 +121,5 @@ public final class _264_KeenClaws extends Quest {
                             st.setCond(aDROPLIST_COND[1]);
                             st.setState(STARTED);
                         }
-        return null;
     }
 }

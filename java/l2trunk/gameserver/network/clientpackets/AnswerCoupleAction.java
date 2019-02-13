@@ -59,7 +59,7 @@ public class AnswerCoupleAction extends L2GameClientPacket {
             return;
         }
 
-        if (requestor.getObjectId() != _charObjId || requestor.getRequest() != request) {
+        if (requestor.objectId() != _charObjId || requestor.getRequest() != request) {
             request.cancel();
             activeChar.sendActionFailed();
             return;

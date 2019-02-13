@@ -13,16 +13,14 @@ import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
-import java.util.List;
-
 public final class Sowing extends Skill {
     public Sowing(StatsSet set) {
         super(set);
     }
 
     @Override
-    public void useSkill(Creature activeChar, List<Creature> targets) {
-        if (!activeChar.isPlayer())
+    public void useSkill(Creature activeChar, Creature target) {
+        if (!(activeChar instanceof Player))
             return;
 
         Player player = (Player) activeChar;
@@ -30,49 +28,47 @@ public final class Sowing extends Skill {
         boolean altSeed = ItemHolder.getTemplate(seedId).isAltSeed();
 
         // remove seed from inventory
-        if (!player.getInventory().destroyItemByItemId(seedId, 1L, "Sowing")) {
-            activeChar.sendActionFailed();
+        if (!player.getInventory().destroyItemByItemId(seedId, "Sowing")) {
+            player.sendActionFailed();
             return;
         }
 
         player.sendPacket(SystemMessage2.removeItems(seedId, 1L));
 
-        for (Creature target : targets)
-            if (target != null) {
-                MonsterInstance monster = (MonsterInstance) target;
-                if (monster.isSeeded())
-                    continue;
+        if (target instanceof MonsterInstance) {
+            MonsterInstance monster = (MonsterInstance) target;
+            if (!monster.isSeeded()) {// обработка
+                double successRate = Config.MANOR_SOWING_BASIC_SUCCESS;
 
-                // обработка
-                double SuccessRate = Config.MANOR_SOWING_BASIC_SUCCESS;
-
-                double diffPlayerTarget = Math.abs(activeChar.getLevel() - target.getLevel());
-                double diffSeedTarget = Math.abs(Manor.INSTANCE.getSeedLevel(seedId) - target.getLevel());
+                double diffPlayerTarget = Math.abs(player.getLevel() - monster.getLevel());
+                double diffSeedTarget = Math.abs(Manor.INSTANCE.getSeedLevel(seedId) - monster.getLevel());
 
                 // Штраф, на разницу уровней между мобом и игроком
                 // 5% на каждый уровень при разнице >5 - по умолчанию
                 if (diffPlayerTarget > Config.MANOR_DIFF_PLAYER_TARGET)
-                    SuccessRate -= (diffPlayerTarget - Config.MANOR_DIFF_PLAYER_TARGET) * Config.MANOR_DIFF_PLAYER_TARGET_PENALTY;
+                    successRate -= (diffPlayerTarget - Config.MANOR_DIFF_PLAYER_TARGET) * Config.MANOR_DIFF_PLAYER_TARGET_PENALTY;
 
                 // Штраф, на разницу уровней между семечкой и мобом
                 // 5% на каждый уровень при разнице >5 - по умолчанию
                 if (diffSeedTarget > Config.MANOR_DIFF_SEED_TARGET)
-                    SuccessRate -= (diffSeedTarget - Config.MANOR_DIFF_SEED_TARGET) * Config.MANOR_DIFF_SEED_TARGET_PENALTY;
+                    successRate -= (diffSeedTarget - Config.MANOR_DIFF_SEED_TARGET) * Config.MANOR_DIFF_SEED_TARGET_PENALTY;
 
                 if (altSeed)
-                    SuccessRate *= Config.MANOR_SOWING_ALT_BASIC_SUCCESS / Config.MANOR_SOWING_BASIC_SUCCESS;
+                    successRate *= Config.MANOR_SOWING_ALT_BASIC_SUCCESS / Config.MANOR_SOWING_BASIC_SUCCESS;
 
                 // Минимальный шанс успеха всегда 1%
-                if (SuccessRate < 1)
-                    SuccessRate = 1;
+                if (successRate < 1)
+                    successRate = 1;
 
                 if (player.isGM())
-                    activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.skills.skillclasses.Sowing.Chance", player).addNumber((long) SuccessRate));
+                    player.sendMessage(new CustomMessage("l2trunk.gameserver.skills.skillclasses.Sowing.Chance").addNumber((long) successRate));
 
-                if (Rnd.chance(SuccessRate) && monster.setSeeded(player, seedId, altSeed))
-                    activeChar.sendPacket(SystemMsg.THE_SEED_WAS_SUCCESSFULLY_SOWN);
+                if (Rnd.chance(successRate) && monster.setSeeded(player, seedId, altSeed))
+                    player.sendPacket(SystemMsg.THE_SEED_WAS_SUCCESSFULLY_SOWN);
                 else
-                    activeChar.sendPacket(SystemMsg.THE_SEED_WAS_NOT_SOWN);
+                    player.sendPacket(SystemMsg.THE_SEED_WAS_NOT_SOWN);
             }
+
+        }
     }
 }

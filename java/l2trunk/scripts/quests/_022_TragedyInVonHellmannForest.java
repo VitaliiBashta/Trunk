@@ -6,6 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.Location;
+import l2trunk.gameserver.utils.NpcUtils;
 
 import java.util.List;
 
@@ -53,11 +54,11 @@ public final class _022_TragedyInVonHellmannForest extends Quest {
     }
 
     private void spawnGhostOfPriest(QuestState st) {
-        GhostOfPriestInstance = Functions.spawn(Location.findPointToStay(st.getPlayer(), 50, 100), GhostOfPriest);
+        GhostOfPriestInstance = NpcUtils.spawnSingle(GhostOfPriest,Location.findPointToStay(st.player, 50, 100) );
     }
 
     private void spawnSoulOfWell(QuestState st) {
-        SoulOfWellInstance = Functions.spawn(Location.findPointToStay(st.getPlayer(), 50, 100), SoulOfWell);
+        SoulOfWellInstance = NpcUtils.spawnSingle(SoulOfWell,Location.findPointToStay(st.player, 50, 100) );
     }
 
     private void despawnGhostOfPriest() {
@@ -127,9 +128,9 @@ public final class _022_TragedyInVonHellmannForest extends Quest {
         String htmltext = "noquest";
         if (npcId == Tifaren) {
             if (cond == 0) {
-                QuestState hiddenTruth = st.getPlayer().getQuestState(_021_HiddenTruth.class);
+                QuestState hiddenTruth = st.player.getQuestState(_021_HiddenTruth.class);
                 if (hiddenTruth != null) {
-                    if (hiddenTruth.isCompleted())
+                    if (st.player.isQuestCompleted(_021_HiddenTruth.class))
                         htmltext = "31334-01.htm";
                     else
                         htmltext = "<html><head><body>You not complite quest Hidden Truth...</body></html>";
@@ -140,7 +141,7 @@ public final class _022_TragedyInVonHellmannForest extends Quest {
             else if (cond == 4)
                 htmltext = "31334-06.htm";
             else if (cond == 5) {
-                if (st.getQuestItemsCount(LostSkullOfElf) != 0)
+                if (st.haveAnyQuestItems(LostSkullOfElf))
                     htmltext = "31334-07.htm";
                 else {
                     st.setCond(4);
@@ -233,22 +234,21 @@ public final class _022_TragedyInVonHellmannForest extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         if (Mobs.contains(npcId))
             if (cond == 4 && Rnd.chance(99)) {
-                st.giveItems(LostSkullOfElf, 1);
+                st.giveItems(LostSkullOfElf);
                 st.playSound(SOUND_MIDDLE);
                 st.setCond(5);
             }
         if (npcId == SoulOfWell)
             if (cond == 10) {
                 st.setCond(9);
-                st.takeItems(JewelOfAdventurerGreen, -1);
-                st.takeItems(JewelOfAdventurerRed, -1);
+                st.takeItems(JewelOfAdventurerGreen);
+                st.takeItems(JewelOfAdventurerRed);
                 st.cancelQuestTimer("attack_timer");
             }
-        return null;
     }
 }

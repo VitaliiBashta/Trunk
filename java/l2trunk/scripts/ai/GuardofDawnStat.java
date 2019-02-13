@@ -6,7 +6,6 @@ import l2trunk.gameserver.geodata.GeoEngine;
 import l2trunk.gameserver.model.*;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.Functions;
-import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.Location;
 
 import java.util.Objects;
@@ -31,16 +30,16 @@ public final class GuardofDawnStat extends DefaultAI {
         return true;
     }
 
-    private boolean checkAroundPlayers(NpcInstance actor) {
-        return World.getAroundPlayables(actor, AGGRORANGE, AGGRORANGE).stream()
+    private void checkAroundPlayers(NpcInstance actor) {
+        World.getAroundPlayers(actor, AGGRORANGE, AGGRORANGE)
                 .filter(Objects::nonNull)
                 .filter(this::canSeeInSilentMove)
                 .filter(this::canSeeInHide)
-                .filter(GameObject::isPlayer)
                 .filter(Playable::isSilentMoving)
                 .filter(target -> !target.isInvul())
                 .filter(target -> GeoEngine.canSeeTarget(actor, target, false))
-                .peek(target -> {
+                .findFirst()
+                .ifPresent(target -> {
                     actor.doCast(skill, target, true);
                     Functions.npcSay(actor, "Intruder alert!! We have been infiltrated!");
                     noCheckPlayers = true;
@@ -48,7 +47,7 @@ public final class GuardofDawnStat extends DefaultAI {
                         target.teleToLocation(loc);
                         noCheckPlayers = false;
                     }, 3000);
-                }).findFirst().isPresent();
+                });
     }
 
     @Override

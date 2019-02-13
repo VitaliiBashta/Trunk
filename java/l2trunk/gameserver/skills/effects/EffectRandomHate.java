@@ -4,6 +4,7 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.AggroList;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Effect;
+import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.model.instances.MonsterInstance;
 import l2trunk.gameserver.stats.Env;
 
@@ -16,7 +17,7 @@ public final class EffectRandomHate extends Effect {
 
     @Override
     public boolean checkCondition() {
-        return effected.isMonster() && Rnd.chance(template.chance(100));
+        return effected instanceof MonsterInstance && Rnd.chance(template.chance(100));
     }
 
     @Override
@@ -27,7 +28,7 @@ public final class EffectRandomHate extends Effect {
             return;
 
         AggroList.AggroInfo mostAggroInfo = monster.getAggroList().get(mostHated);
-        List<Creature> hateList = monster.getAggroList().getHateList();
+        List<Playable> hateList = monster.getAggroList().getHateList();
         hateList.remove(mostHated);
 
         if (!hateList.isEmpty()) {
@@ -44,8 +45,4 @@ public final class EffectRandomHate extends Effect {
         return true;
     }
 
-    @Override
-    protected boolean onActionTime() {
-        return false;
-    }
 }

@@ -26,7 +26,7 @@ public final class _154_SacrificeToSea extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
         if (event.equals("1")) {
-            st.set("id", "0");
+            st.set("id", 0);
             htmltext = "30312-04.htm";
             st.setCond(1);
             st.setState(STARTED);
@@ -43,11 +43,11 @@ public final class _154_SacrificeToSea extends Quest {
         if (id == CREATED) {
             st.setState(STARTED);
             st.setCond(0);
-            st.set("id", "0");
+            st.set("id", 0);
         }
         if (npcId == 30312 && st.getCond() == 0) {
             if (st.getCond() < 15) {
-                if (st.getPlayer().getLevel() >= 2) {
+                if (st.player.getLevel() >= 2) {
                     htmltext = "30312-03.htm";
                     return htmltext;
                 }
@@ -61,7 +61,7 @@ public final class _154_SacrificeToSea extends Quest {
             htmltext = "completed";
         else if (npcId == 30312 && st.getCond() == 1 && st.getQuestItemsCount(FOX_FUR_YARN_ID) == 0 && st.getQuestItemsCount(MAIDEN_DOLL_ID) == 0 && st.getQuestItemsCount(FOX_FUR_ID) < 10)
             htmltext = "30312-05.htm";
-        else if (npcId == 30312 && st.getCond() == 1 && st.getQuestItemsCount(FOX_FUR_ID) >= 10)
+        else if (npcId == 30312 && st.getCond() == 1 && st.haveQuestItem(FOX_FUR_ID, 10))
             htmltext = "30312-08.htm";
         else if (npcId == 30051 && st.getCond() == 1 && st.getQuestItemsCount(FOX_FUR_ID) < 10 && st.getQuestItemsCount(FOX_FUR_ID) > 0)
             htmltext = "30051-01.htm";
@@ -69,26 +69,26 @@ public final class _154_SacrificeToSea extends Quest {
             htmltext = "30051-02.htm";
             st.giveItems(FOX_FUR_YARN_ID, 1);
             st.takeItems(FOX_FUR_ID, st.getQuestItemsCount(FOX_FUR_ID));
-        } else if (npcId == 30051 && st.getCond() == 1 && st.getQuestItemsCount(FOX_FUR_YARN_ID) >= 1)
+        } else if (npcId == 30051 && st.getCond() == 1 && st.haveQuestItem(FOX_FUR_YARN_ID, 1))
             htmltext = "30051-03.htm";
         else if (npcId == 30051 && st.getCond() == 1 && st.getQuestItemsCount(MAIDEN_DOLL_ID) == 1)
             htmltext = "30051-04.htm";
-        else if (npcId == 30312 && st.getCond() == 1 && st.getQuestItemsCount(FOX_FUR_YARN_ID) >= 1)
+        else if (npcId == 30312 && st.getCond() == 1 && st.haveQuestItem(FOX_FUR_YARN_ID))
             htmltext = "30312-06.htm";
-        else if (npcId == 30055 && st.getCond() == 1 && st.getQuestItemsCount(FOX_FUR_YARN_ID) >= 1) {
+        else if (npcId == 30055 && st.getCond() == 1 && st.haveQuestItem(FOX_FUR_YARN_ID)) {
             htmltext = "30055-01.htm";
-            st.giveItems(MAIDEN_DOLL_ID, 1);
-            st.takeItems(FOX_FUR_YARN_ID, st.getQuestItemsCount(FOX_FUR_YARN_ID));
-        } else if (npcId == 30055 && st.getCond() == 1 && st.getQuestItemsCount(MAIDEN_DOLL_ID) >= 1)
+            st.giveItems(MAIDEN_DOLL_ID);
+            st.takeItems(FOX_FUR_YARN_ID);
+        } else if (npcId == 30055 && st.getCond() == 1 && st.haveQuestItem(MAIDEN_DOLL_ID) )
             htmltext = "30055-02.htm";
         else if (npcId == 30055 && st.getCond() == 1 && st.getQuestItemsCount(FOX_FUR_YARN_ID) == 0 && st.getQuestItemsCount(MAIDEN_DOLL_ID) == 0)
             htmltext = "30055-03.htm";
-        else if (npcId == 30312 && st.getCond() == 1 && st.getQuestItemsCount(MAIDEN_DOLL_ID) >= 1)
+        else if (npcId == 30312 && st.getCond() == 1 && st.haveQuestItem(MAIDEN_DOLL_ID))
             if (st.getInt("id") != 154) {
-                st.set("id", "154");
+                st.set("id", 154);
                 htmltext = "30312-07.htm";
-                st.takeItems(MAIDEN_DOLL_ID, st.getQuestItemsCount(MAIDEN_DOLL_ID));
-                st.giveItems(MYSTICS_EARRING_ID, 1);
+                st.takeItems(MAIDEN_DOLL_ID);
+                st.giveItems(MYSTICS_EARRING_ID);
                 st.addExpAndSp(1000, 0);
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest(false);
@@ -97,9 +97,8 @@ public final class _154_SacrificeToSea extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState st) {
+    public void onKill(NpcInstance npc, QuestState st) {
         if (st.getCond() == 1 && st.getQuestItemsCount(FOX_FUR_YARN_ID) == 0)
             st.rollAndGive(FOX_FUR_ID, 1, 1, 10, 14);
-        return null;
     }
 }

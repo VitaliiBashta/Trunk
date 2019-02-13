@@ -27,8 +27,8 @@ public class ExMpccRoomInfo extends L2GameServerPacket {
         //
         writeD(_index); //index
         writeD(_memberSize); // member size 1-50
-        writeD(_minLevel); //min level
-        writeD(_maxLevel); //max level
+        writeD(_minLevel); //min occupation
+        writeD(_maxLevel); //max occupation
         writeD(_lootType); //loot type
         writeD(_locationId); //location id as party room
         writeS(_topic); //topic

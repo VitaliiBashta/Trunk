@@ -126,9 +126,9 @@ public final class PlayerAI extends PlayableAI {
         //
         int heading = actor.calcHeading(target.getX(), target.getY());
         actor.setHeading(heading);
-        actor.broadcastPacket(new ExRotation(actor.getObjectId(), heading));
+        actor.broadcastPacket(new ExRotation(actor.objectId(), heading));
         //
-        actor.broadcastPacket(new SocialAction(actor.getObjectId(), socialId));
+        actor.broadcastPacket(new SocialAction(actor.objectId(), socialId));
     }
 
     @Override
@@ -163,7 +163,7 @@ public final class PlayerAI extends PlayableAI {
     public void cast(Skill skill, Creature target, boolean forceUse, boolean dontMove) {
         Player actor = getActor();
 
-        if (!skill.altUse() && !skill.isToggle() && !(skill.skillType == SkillType.CRAFT && Config.ALLOW_TALK_WHILE_SITTING))
+        if (!skill.isAltUse && !skill.isToggle() && !(skill.skillType == SkillType.CRAFT && Config.ALLOW_TALK_WHILE_SITTING))
             // Если в этот момент встаем, то использовать скилл когда встанем
             if (actor.getSittingTask()) {
                 setNextAction(nextAction.CAST, skill, target, forceUse, dontMove);

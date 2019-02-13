@@ -139,8 +139,8 @@ public final class RequestBuyItem extends L2GameClientPacket {
                 ti.setCount(count);
                 ti.setOwnersPrice(price);
 
-                weight = SafeMath.addAndCheck(weight, SafeMath.mulAndCheck(count, ti.getItem().getWeight()));
-                if (!ti.getItem().isStackable() || activeChar.getInventory().getItemByItemId(itemId) == null)
+                weight = SafeMath.addAndCheck(weight, SafeMath.mulAndCheck(count, ti.getItem().weight()));
+                if (!ti.getItem().stackable() || activeChar.getInventory().getItemByItemId(itemId) == null)
                     slots++;
 
                 buyList.add(ti);

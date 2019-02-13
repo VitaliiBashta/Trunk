@@ -26,6 +26,7 @@ public final class Furnace extends Fighter {
     private static final List<Integer> Balance =List.of(
             22800, 22800, 22800, 22800, 22800, 22800, 22798, 22798, 22798,
             22798, 22798, 22798, 22799, 22799, 22799, 22799, 22799, 22799);
+    private static final List<Integer> allMobs = List.of(22798,22799,22800);
     private long _lastAttackTime = 0;
 
     public Furnace(NpcInstance actor) {
@@ -72,7 +73,7 @@ public final class Furnace extends Fighter {
     private void unSpawnMob() {
         NpcInstance actor = getActor();
         World.getAroundNpc(actor, 500, 100)
-                .filter(npc -> (npc.getNpcId() == 22799 || npc.getNpcId() == 22798 || npc.getNpcId() == 22800))
+                .filter(npc -> allMobs.contains(npc.getNpcId()))
                 .forEach(GameObject::decayMe);
     }
 

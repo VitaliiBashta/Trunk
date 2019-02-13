@@ -1,5 +1,7 @@
 package l2trunk.gameserver.network.serverpackets;
 
+import l2trunk.commons.lang.Pair;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,40 +44,30 @@ public final class StatusUpdate extends L2GameServerPacket {
     public final static int MAX_CP = 0x22;
 
     private final int _objectId;
-    private final List<Attribute> _attributes = new ArrayList<>();
+    private final List<Pair<Integer,Integer>> attributes = new ArrayList<>();
 
     public StatusUpdate(int objectId) {
         _objectId = objectId;
     }
 
-    public StatusUpdate addAttribute(int id, int level) {
-        _attributes.add(new Attribute(id, level));
-        return this;
+    public void addAttribute(int id, int level) {
+        attributes.add(Pair.of(id, level));
     }
 
     @Override
     protected final void writeImpl() {
         writeC(0x18);
         writeD(_objectId);
-        writeD(_attributes.size());
+        writeD(attributes.size());
 
-        for (Attribute temp : _attributes) {
-            writeD(temp.id);
-            writeD(temp.value);
-        }
+        attributes.forEach(attr-> {
+            writeD(attr.getKey());
+            writeD(attr.getValue());
+        });
     }
 
     public boolean hasAttributes() {
-        return !_attributes.isEmpty();
+        return !attributes.isEmpty();
     }
 
-    class Attribute {
-        final int id;
-        final int value;
-
-        Attribute(int id, int value) {
-            this.id = id;
-            this.value = value;
-        }
-    }
 }

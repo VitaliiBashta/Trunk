@@ -77,7 +77,7 @@ public final class _134_TempleMissionary extends Quest {
         if (_state == CREATED) {
             if (npcId != Glyvka)
                 return "noquest";
-            if (st.getPlayer().getLevel() < 35) {
+            if (st.player.getLevel() < 35) {
                 st.exitCurrentQuest(true);
                 return "glyvka_q0134_02.htm";
             }
@@ -93,9 +93,9 @@ public final class _134_TempleMissionary extends Quest {
             if (cond == 5) {
                 if (st.getInt("Report") == 1)
                     return "glyvka_q0134_09.htm";
-                if (st.getQuestItemsCount(Roukes_Report) > 0) {
-                    st.takeItems(Roukes_Report, -1);
-                    st.set("Report", "1");
+                if (st.haveQuestItem(Roukes_Report)) {
+                    st.takeItems(Roukes_Report);
+                    st.set("Report", 1);
                     return "glyvka_q0134_08.htm";
                 }
                 return "noquest";
@@ -109,21 +109,21 @@ public final class _134_TempleMissionary extends Quest {
             if (cond == 5)
                 return "scroll_seller_rouke_q0134_10.htm";
             if (cond == 3) {
-                long Tools = st.getQuestItemsCount(Giants_Experimental_Tool_Fragment) / 10;
-                if (Tools < 1)
+                long tools = st.getQuestItemsCount(Giants_Experimental_Tool_Fragment) / 10;
+                if (tools < 1)
                     return "scroll_seller_rouke_q0134_04.htm";
-                st.takeItems(Giants_Experimental_Tool_Fragment, Tools * 10);
-                st.giveItems(Giants_Experimental_Tool, Tools);
+                st.takeItems(Giants_Experimental_Tool_Fragment, tools * 10);
+                st.giveItems(Giants_Experimental_Tool, tools);
                 return "scroll_seller_rouke_q0134_05.htm";
             }
             if (cond == 4) {
                 if (st.getInt("Report") == 1)
                     return "scroll_seller_rouke_q0134_07.htm";
                 if (st.getQuestItemsCount(Giants_Technology_Report) > 2) {
-                    st.takeItems(Giants_Experimental_Tool_Fragment, -1);
-                    st.takeItems(Giants_Experimental_Tool, -1);
-                    st.takeItems(Giants_Technology_Report, -1);
-                    st.set("Report", "1");
+                    st.takeItems(Giants_Experimental_Tool_Fragment);
+                    st.takeItems(Giants_Experimental_Tool);
+                    st.takeItems(Giants_Technology_Report);
+                    st.set("Report", 1);
                     return "scroll_seller_rouke_q0134_06.htm";
                 }
                 return "noquest";
@@ -134,10 +134,10 @@ public final class _134_TempleMissionary extends Quest {
     }
 
     @Override
-    public String onKill(NpcInstance npc, QuestState qs) {
+    public void onKill(NpcInstance npc, QuestState qs) {
         if (qs.getState() == STARTED && qs.getCond() == 3)
             if (npc.getNpcId() == Cruma_Marshlands_Traitor) {
-                qs.giveItems(Giants_Technology_Report, 1);
+                qs.giveItems(Giants_Technology_Report);
                 if (qs.getQuestItemsCount(Giants_Technology_Report) < 3)
                     qs.playSound(SOUND_ITEMGET);
                 else {
@@ -146,12 +146,11 @@ public final class _134_TempleMissionary extends Quest {
                 }
             } else if (qs.getQuestItemsCount(Giants_Experimental_Tool) < 1) {
                 if (Rnd.chance(Giants_Experimental_Tool_Fragment_chance))
-                    qs.giveItems(Giants_Experimental_Tool_Fragment, 1);
+                    qs.giveItems(Giants_Experimental_Tool_Fragment);
             } else {
                 qs.takeItems(Giants_Experimental_Tool, 1);
                 if (Rnd.chance(Cruma_Marshlands_Traitor_spawnchance))
-                    qs.addSpawn(Cruma_Marshlands_Traitor, qs.getPlayer().getX(), qs.getPlayer().getY(), qs.getPlayer().getZ(), 0, 100, 900000);
+                    qs.addSpawn(Cruma_Marshlands_Traitor,  900000);
             }
-        return null;
     }
 }

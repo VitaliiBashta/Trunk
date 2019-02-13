@@ -7,16 +7,12 @@ public final class ClanWarehouse extends Warehouse {
     private final Clan owner;
 
     public ClanWarehouse(Clan clan) {
-        super(clan.getClanId());
+        super(clan.clanId());
         owner = clan;
     }
 
-    public boolean destroyItem(ItemInstance item, long count, String log) {
-        return destroyItem(item, count, owner.toString(), log);
-    }
-
-    public boolean destroyItem(ItemInstance item, String log) {
-        return destroyItem(item, owner.toString(), log);
+    public void destroyItem(ItemInstance item, String log) {
+         destroyItem(item, owner.toString(), log);
     }
 
     public boolean destroyItemByItemId(int itemId, long count, String log) {
@@ -27,21 +23,8 @@ public final class ClanWarehouse extends Warehouse {
         return destroyItemByObjectId(objectId, count, owner.toString(), log);
     }
 
-
     public ItemInstance addItem(int itemId, long count, String log) {
         return addItem(itemId, count, owner.toString(), log);
-    }
-
-    public ItemInstance removeItem(ItemInstance item, long count, String log) {
-        return removeItem(item, count, owner.toString(), log);
-    }
-
-    public ItemInstance removeItem(ItemInstance item, String log) {
-        return removeItem(item, owner.toString(), log);
-    }
-
-    public ItemInstance removeItemByObjectId(int objectId, long count, String log) {
-        return removeItemByObjectId(objectId, count, owner.toString(), log);
     }
 
     @Override

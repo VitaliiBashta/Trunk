@@ -5,13 +5,14 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
 import l2trunk.gameserver.network.serverpackets.SystemMessage;
-import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.Util;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static l2trunk.gameserver.utils.ItemFunctions.addItem;
 
 public final class PriestOfBlessingInstance extends NpcInstance {
     private static final List<Hourglass> hourglassList = new ArrayList<>();
@@ -77,8 +78,7 @@ public final class PriestOfBlessingInstance extends NpcInstance {
         long _remaining_time;
         long _reuse_time = 20 * 60 * 60 * 1000;
         long _curr_time = System.currentTimeMillis();
-        String _last_use_time = player.getVar(var);
-        //TODO: Тупая заглушка, для ограничения покупки итема на одном аккаунте
+        long _last_use_time = player.getVarLong(var);
         if (isGlobalVar) {
             Map<Integer, String> chars = player.getAccountChars();
             if (chars != null) {
@@ -90,19 +90,19 @@ public final class PriestOfBlessingInstance extends NpcInstance {
                             use_time = Long.parseLong(val);
                 }
                 if (use_time > 0)
-                    _last_use_time = String.valueOf(use_time);
+                    _last_use_time = use_time;
             }
         }
 
-        if (_last_use_time != null)
-            _remaining_time = _curr_time - Long.parseLong(_last_use_time);
+        if (player.isVarSet(var))
+            _remaining_time = _curr_time - _last_use_time;
         else
             _remaining_time = _reuse_time;
 
         if (_remaining_time >= _reuse_time) {
             if (player.reduceAdena(price, true, "PriestOfBlessingInstance")) {
-                Functions.addItem(player, itemId, 1, "PriestOfBlessingInstance");
-                player.setVar(var, String.valueOf(_curr_time), -1);
+                addItem(player, itemId, 1);
+                player.setVar(var, _curr_time);
             } else
                 player.sendPacket(new SystemMessage(SystemMessage._2_UNITS_OF_THE_ITEM_S1_IS_REQUIRED).addItemName(57).addNumber(price));
         } else {
@@ -113,8 +113,8 @@ public final class PriestOfBlessingInstance extends NpcInstance {
             else if (minutes > 0)
                 player.sendPacket(new SystemMessage(SystemMessage.THERE_ARE_S1_MINUTES_REMAINING_UNTIL_THE_TIME_WHEN_THE_ITEM_CAN_BE_PURCHASED).addNumber(minutes));
             else if (player.reduceAdena(price, true, "PriestOfBlessingInstance")) {
-                Functions.addItem(player, itemId, 1, "PriestOfBlessingInstance");
-                player.setVar(var, String.valueOf(_curr_time), -1);
+                addItem(player, itemId, 1);
+                player.setVar(var, _curr_time);
             } else
                 player.sendPacket(new SystemMessage(SystemMessage._2_UNITS_OF_THE_ITEM_S1_IS_REQUIRED).addItemName(57).addNumber(price));
         }

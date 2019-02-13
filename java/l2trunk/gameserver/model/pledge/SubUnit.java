@@ -21,13 +21,13 @@ import java.util.TreeMap;
 public final class SubUnit {
     private static final Logger LOG = LoggerFactory.getLogger(SubUnit.class);
 
-    private final Map<Integer, Skill> _skills = new TreeMap<>();
-    private final Map<Integer, UnitMember> _members = new HashMap<>();
+    private final Map<Integer, Skill> skills = new TreeMap<>();
+    private final Map<Integer, UnitMember> members = new HashMap<>();
 
-    private final int type;
+    public final int type;
     private final Clan clan;
-    private int _leaderObjectId;
-    private UnitMember _leader;
+    private int leaderObjectId;
+    private UnitMember leader;
     private String name;
 
     public SubUnit(Clan c, int type, UnitMember leader, String name) {
@@ -41,7 +41,7 @@ public final class SubUnit {
     public SubUnit(Clan c, int type, int leader, String name) {
         clan = c;
         this.type = type;
-        _leaderObjectId = leader;
+        leaderObjectId = leader;
         this.name = name;
     }
 
@@ -50,14 +50,14 @@ public final class SubUnit {
              PreparedStatement statement = con.prepareStatement("UPDATE characters SET clanid=0, pledge_type=?, pledge_rank=0, lvl_joined_academy=0, apprentice=0, title='', leaveclan=? WHERE obj_Id=?")) {
             statement.setInt(1, Clan.SUBUNIT_NONE);
             statement.setLong(2, System.currentTimeMillis() / 1000);
-            statement.setInt(3, member.getObjectId());
+            statement.setInt(3, member.objectId());
             statement.execute();
         } catch (SQLException e) {
             LOG.error("Exception while removing Member from Sub Unit", e);
         }
     }
 
-    public int getType() {
+    public int type() {
         return type;
     }
 
@@ -66,22 +66,22 @@ public final class SubUnit {
     }
 
     public UnitMember getLeader() {
-        return _leader;
+        return leader;
     }
 
-    public boolean isUnitMember(int obj) {
-        return _members.containsKey(obj);
+    boolean isUnitMember(int obj) {
+        return members.containsKey(obj);
     }
 
     public void addUnitMember(UnitMember member) {
-        _members.put(member.getObjectId(), member);
+        members.put(member.objectId(), member);
     }
 
     public UnitMember getUnitMember(int obj) {
         if (obj == 0) {
             return null;
         }
-        return _members.get(obj);
+        return members.get(obj);
     }
 
     public UnitMember getUnitMember(String obj) {
@@ -91,7 +91,7 @@ public final class SubUnit {
     }
 
     public void removeUnitMember(int objectId) {
-        UnitMember m = _members.remove(objectId);
+        UnitMember m = members.remove(objectId);
         if (m == null) {
             return;
         }
@@ -116,7 +116,7 @@ public final class SubUnit {
             return;
         }
 
-        UnitMember m = _members.remove(objectId);
+        UnitMember m = members.remove(objectId);
         if (m == null) {
             return;
         }
@@ -125,28 +125,28 @@ public final class SubUnit {
         newUnit.addUnitMember(m);
 
         if (m.getPowerGrade() > 5)
-            m.setPowerGrade(clan.getAffiliationRank(m.getPledgeType()));
+            m.setPowerGrade(Clan.getAffiliationRank(m.getPledgeType()));
     }
 
     public int getLeaderObjectId() {
-        return _leader == null ? 0 : _leader.getObjectId();
+        return leader == null ? 0 : leader.objectId();
     }
 
     public int size() {
-        return _members.size();
+        return members.size();
     }
 
     public Collection<UnitMember> getUnitMembers() {
-        return _members.values();
+        return members.values();
     }
 
     public void setLeader(UnitMember newLeader, boolean updateDB) {
-        final UnitMember old = _leader;
+        final UnitMember old = leader;
         if (old != null)   // обновляем старого мембера
             old.setLeaderOf(Clan.SUBUNIT_NONE);
 
-        _leader = newLeader;
-        _leaderObjectId = newLeader == null ? 0 : newLeader.getObjectId();
+        leader = newLeader;
+        leaderObjectId = newLeader == null ? 0 : newLeader.objectId();
 
         if (newLeader != null) {
             newLeader.setLeaderOf(type);
@@ -156,7 +156,7 @@ public final class SubUnit {
             try (Connection con = DatabaseFactory.getInstance().getConnection();
                  PreparedStatement statement = con.prepareStatement("UPDATE clan_subpledges SET leader_id=? WHERE clan_id=? and type=?")) {
                 statement.setInt(1, getLeaderObjectId());
-                statement.setInt(2, clan.getClanId());
+                statement.setInt(2, clan.clanId());
                 statement.setInt(3, type);
                 statement.execute();
             } catch (SQLException e) {
@@ -171,7 +171,7 @@ public final class SubUnit {
             try (Connection con = DatabaseFactory.getInstance().getConnection();
                  PreparedStatement statement = con.prepareStatement("UPDATE clan_subpledges SET name=? WHERE clan_id=? and type=?")) {
                 statement.setString(1, this.name);
-                statement.setInt(2, clan.getClanId());
+                statement.setInt(2, clan.clanId());
                 statement.setInt(3, type);
                 statement.execute();
             } catch (SQLException e) {
@@ -181,14 +181,14 @@ public final class SubUnit {
     }
 
     public String getLeaderName() {
-        return _leader == null ? StringUtils.EMPTY : _leader.getName();
+        return leader == null ? StringUtils.EMPTY : leader.getName();
     }
 
     public Skill addSkill(Skill newSkill, boolean store) {
         Skill oldSkill = null;
         if (newSkill != null) {
             // Replace oldSkill by newSkill or Add the newSkill
-            oldSkill = _skills.put(newSkill.id, newSkill);
+            oldSkill = skills.put(newSkill.id, newSkill);
 
             if (store) {
                 try (Connection con = DatabaseFactory.getInstance().getConnection()) {
@@ -197,12 +197,12 @@ public final class SubUnit {
                         statement = con.prepareStatement("UPDATE clan_subpledges_skills SET skill_level=? WHERE skill_id=? AND clan_id=? AND type=?");
                         statement.setInt(1, newSkill.level);
                         statement.setInt(2, oldSkill.id);
-                        statement.setInt(3, clan.getClanId());
+                        statement.setInt(3, clan.clanId());
                         statement.setInt(4, type);
                         statement.execute();
                     } else {
                         statement = con.prepareStatement("INSERT INTO clan_subpledges_skills (clan_id,type,skill_id,skill_level) VALUES (?,?,?,?)");
-                        statement.setInt(1, clan.getClanId());
+                        statement.setInt(1, clan.clanId());
                         statement.setInt(2, type);
                         statement.setInt(3, newSkill.id);
                         statement.setInt(4, newSkill.level);
@@ -216,7 +216,7 @@ public final class SubUnit {
             ExSubPledgeSkillAdd packet = new ExSubPledgeSkillAdd(type, newSkill.id, newSkill.level);
             for (UnitMember temp : clan)
                 if (temp.isOnline()) {
-                    Player player = temp.getPlayer();
+                    Player player = temp.player();
                     if (player != null) {
                         player.sendPacket(packet);
                         if (player.getPledgeType() == type)
@@ -229,17 +229,17 @@ public final class SubUnit {
     }
 
     void addSkillsQuietly(Player player) {
-        _skills.values().forEach(skill -> addSkill(player, skill));
+        skills.values().forEach(skill -> addSkill(player, skill));
     }
 
     public void enableSkills(Player player) {
-        for (Skill skill : _skills.values())
+        for (Skill skill : skills.values())
             if (skill.minRank <= player.getPledgeClass())
                 player.removeUnActiveSkill(skill);
     }
 
     void disableSkills(Player player) {
-        for (Skill skill : _skills.values())
+        for (Skill skill : skills.values())
             player.addUnActiveSkill(skill);
     }
 
@@ -252,7 +252,7 @@ public final class SubUnit {
     }
 
     public Collection<Skill> getSkills() {
-        return _skills.values();
+        return skills.values();
     }
 
     public void restore() {
@@ -270,7 +270,7 @@ public final class SubUnit {
                              "LEFT JOIN `character_subclasses` `s` ON (`s`.`char_obj_id` = `c`.`obj_Id` AND `s`.`isBase` = '1') " + //
                              "WHERE `c`.`clanid`=? AND `c`.`pledge_type`=? ORDER BY `c`.`lastaccess` DESC")) {
 
-            statement.setInt(1, clan.getClanId());
+            statement.setInt(1, clan.clanId());
             statement.setInt(2, type);
             ResultSet rset = statement.executeQuery();
 
@@ -282,26 +282,26 @@ public final class SubUnit {
 
             if (type != Clan.SUBUNIT_ACADEMY) {
                 SubUnit mainClan = clan.getSubUnit(Clan.SUBUNIT_MAIN_CLAN);
-                UnitMember leader = mainClan.getUnitMember(_leaderObjectId);
+                UnitMember leader = mainClan.getUnitMember(leaderObjectId);
                 if (leader != null)
                     setLeader(leader, false);
                 else if (type == Clan.SUBUNIT_MAIN_CLAN)
                     LOG.error("Clan " + name + " have no leader!");
             }
         } catch (SQLException e) {
-            LOG.warn("Error while restoring clan members for clan: " + clan.getClanId(), e);
+            LOG.warn("Error while restoring clan members for clan: " + clan.clanId(), e);
         }
     }
 
     void restartMembers() {
-        _members.clear();
+        members.clear();
         restore();
     }
 
     void restoreSkills() {
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement("SELECT skill_id,skill_level FROM clan_subpledges_skills WHERE clan_id=? AND type=?")) {
-            statement.setInt(1, clan.getClanId());
+            statement.setInt(1, clan.clanId());
             statement.setInt(2, type);
             ResultSet rset = statement.executeQuery();
 
@@ -311,7 +311,7 @@ public final class SubUnit {
 
                 Skill skill = SkillTable.INSTANCE.getInfo(id, level);
 
-                _skills.put(skill.id, skill);
+                skills.put(skill.id, skill);
             }
         } catch (SQLException e) {
             LOG.error("Exception while restoring Sub Unit Skills", e);
@@ -319,7 +319,7 @@ public final class SubUnit {
     }
 
     public int getSkillLevel(int id, int def) {
-        Skill skill = _skills.get(id);
+        Skill skill = skills.get(id);
         return skill == null ? def : skill.level;
     }
 
