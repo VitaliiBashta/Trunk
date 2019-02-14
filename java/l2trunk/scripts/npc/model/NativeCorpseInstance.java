@@ -13,9 +13,6 @@ public final class NativeCorpseInstance extends NpcInstance {
     public void showChatWindow(Player player, int val) {
     }
 
-    @Override
-    public void showChatWindow(Player player, String filename) {
-    }
 
     @Override
     public void onRandomAnimation() {

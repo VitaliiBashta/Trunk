@@ -5,16 +5,16 @@ import l2trunk.gameserver.model.Player;
 import java.util.List;
 
 public final class Henna {
-    private final int symbolId;
-    private final int dyeId;
-    private final long price;
-    private final long drawCount;
-    private final int statINT;
-    private final int statSTR;
-    private final int statCON;
-    private final int statMEN;
-    private final int statDEX;
-    private final int statWIT;
+    public final int symbolId;
+    public final int dyeId;
+    public final long price;
+    public final long drawCount;
+    public final int statINT;
+    public final int statSTR;
+    public final int statCON;
+    public final int statMEN;
+    public final int statDEX;
+    public final int statWIT;
     private final List<Integer> classes;
 
     public Henna(int symbolId, int dyeId, long price, long drawCount, int wit, int statINT, int con, int str, int dex, int men, List<Integer> classes) {
@@ -41,14 +41,6 @@ public final class Henna {
 
     public long getPrice() {
         return price;
-    }
-
-    public int getStatINT() {
-        return statINT;
-    }
-
-    public int getStatSTR() {
-        return statSTR;
     }
 
     public int getStatCON() {

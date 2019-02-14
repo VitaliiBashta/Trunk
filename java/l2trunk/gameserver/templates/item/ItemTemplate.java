@@ -154,7 +154,7 @@ public abstract class ItemTemplate extends StatTemplate {
     int type1; // needed for item list (inventory)
     int _type2; // different lists for armor, weapon, etc
     int bodyPart;
-    private List<Skill> skills;
+    private final List<Skill> skills =new ArrayList<>() ;
     private Map<Integer, AugmentationInfo> _augmentationInfos = new HashMap<>();//Containers.emptyIntObjectMap();
     private int flags;
     private Skill enchant4Skill = null; // skill that activates when item is enchanted +4 (for duals)
@@ -193,8 +193,7 @@ public abstract class ItemTemplate extends StatTemplate {
             }
         }
 
-        funcTemplates = List.of();
-        skills = new ArrayList<>();
+        funcTemplates = new ArrayList<>();
     }
 
     /**
@@ -592,11 +591,6 @@ public abstract class ItemTemplate extends StatTemplate {
         return isEnchantable();
     }
 
-    /**
-     * Returns if item is equipable
-     *
-     * @return boolean
-     */
     public boolean isEquipable() {
         return (getItemType() == EtcItemType.BAIT) || (getItemType() == EtcItemType.ARROW) || (getItemType() == EtcItemType.BOLT) || !((getBodyPart() == 0) || (this instanceof EtcItemTemplate));
     }

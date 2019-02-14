@@ -1,5 +1,6 @@
 package l2trunk.scripts.services.community;
 
+import l2trunk.commons.lang.Pair;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.data.htm.HtmCache;
 import l2trunk.gameserver.data.xml.holder.ItemHolder;
@@ -54,7 +55,7 @@ public final class CommunityDropCalculator implements ScriptFile, ICommunityBoar
     private static String replaceItemsByNamePage(String html, String itemName, int page) {
         String newHtml = html;
 
-        List<ItemTemplate> itemsByName = ItemHolder.getItemsByNameContainingString(itemName, true);
+        List<ItemTemplate> itemsByName = ItemHolder.getItemsByNameContainingString(itemName);
         itemsByName.sort(new ItemComparator(itemName));
 
         int itemIndex = 0;
@@ -275,8 +276,8 @@ public final class CommunityDropCalculator implements ScriptFile, ICommunityBoar
     }
 
     private static String getDropCount(Player player, NpcTemplate monster, int itemId, boolean drop) {
-        long[] counts = CalculateRewardChances.getDropCounts(player, monster, drop, itemId);
-        String formattedCounts = "[" + counts[0] + "..." + counts[1] + ']';
+        Pair<Long,Long> counts = CalculateRewardChances.getDropCounts(player, monster, drop, itemId);
+        String formattedCounts = "[" + counts.getKey() + "..." + counts.getValue() + ']';
         if (formattedCounts.length() > 20)
             formattedCounts = "</font><font color=c47e0f>" + formattedCounts;
         return formattedCounts;
@@ -418,8 +419,8 @@ public final class CommunityDropCalculator implements ScriptFile, ICommunityBoar
 
         @Override
         public int compare(CalculateRewardChances.NpcTemplateDrops o1, CalculateRewardChances.NpcTemplateDrops o2) {
-            BigDecimal maxDrop1 = BigDecimal.valueOf(CalculateRewardChances.getDropCounts(player, o1.template, o1.dropNoSpoil, itemId)[1]);
-            BigDecimal maxDrop2 = BigDecimal.valueOf(CalculateRewardChances.getDropCounts(player, o2.template, o2.dropNoSpoil, itemId)[1]);
+            BigDecimal maxDrop1 = BigDecimal.valueOf(CalculateRewardChances.getDropCounts(player, o1.template, o1.dropNoSpoil, itemId).getValue());
+            BigDecimal maxDrop2 = BigDecimal.valueOf(CalculateRewardChances.getDropCounts(player, o2.template, o2.dropNoSpoil, itemId).getValue());
             BigDecimal chance1 = new BigDecimal(CalculateRewardChances.getDropChance(player, o1.template, o1.dropNoSpoil, itemId));
             BigDecimal chance2 = new BigDecimal(CalculateRewardChances.getDropChance(player, o2.template, o2.dropNoSpoil, itemId));
 
@@ -446,7 +447,7 @@ public final class CommunityDropCalculator implements ScriptFile, ICommunityBoar
             if (o2.name().equalsIgnoreCase(search))
                 return -1;
 
-            return o2.name().compareTo(o2.name());
+            return o2.name.compareTo(o2.name);
         }
     }
 }

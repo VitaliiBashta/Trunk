@@ -35,7 +35,7 @@ public final class NpcTemplate extends CharTemplate {
     public int rhand;
     public int lhand;
     public double rateHp;
-    public int displayId;
+    public final int displayId;
     public final boolean isRaid = false;
     private StatsSet AIParams;
     private int castleId;

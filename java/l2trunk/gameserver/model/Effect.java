@@ -282,8 +282,8 @@ public abstract class Effect extends RunnableImpl implements Comparable<Effect>,
         else if (setState(STARTED, SUSPENDED) || setState(ACTING, SUSPENDED)) {
             synchronized (this) {
                 if (inUse) {
-                    inUse =false;
-                    active= false;
+                    inUse = false;
+                    active = false;
                     onExit();
                 }
             }
@@ -439,9 +439,8 @@ public abstract class Effect extends RunnableImpl implements Comparable<Effect>,
                     removeNext();
                 }
                 exit();
-            } else
-            // если новый короче то зашедулить старый
-            {
+            } else {
+                // если новый короче то зашедулить старый
                 suspend();
                 newEffect.scheduleNext(this);
             }
@@ -510,13 +509,9 @@ public abstract class Effect extends RunnableImpl implements Comparable<Effect>,
 
     @Override
     public boolean isFuncEnabled() {
-        return isInUse();
+        return inUse;
     }
 
-    @Override
-    public boolean overrideLimits() {
-        return false;
-    }
 
     public boolean isOffensive() {
         return template.isOffensive(skill.isOffensive);

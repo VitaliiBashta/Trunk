@@ -69,23 +69,18 @@ public final class Calculator {
     public void calc(Env env) {
         base = env.value;
 
-        boolean overrideLimits = false;
         for (Func func : functions) {
             if (func != null) {
-                if (func.owner instanceof FuncOwner) {
-                    if (!((FuncOwner) func.owner).isFuncEnabled())
-                        continue;
-                    if (((FuncOwner) func.owner).overrideLimits())
-                        overrideLimits = true;
+                if (!(func.owner instanceof FuncOwner) || ((FuncOwner) func.owner).isFuncEnabled()) {
+
+                    if (func.getCondition() == null || func.getCondition().test(env))
+                        func.calc(env);
                 }
-                if (func.getCondition() == null || func.getCondition().test(env))
-                    func.calc(env);
             }
 
         }
 
-        if (!overrideLimits)
-            env.value = stat.validate(env.value);
+        env.value = stat.validate(env.value);
 
         if (env.value != last) {
             this.last = env.value;

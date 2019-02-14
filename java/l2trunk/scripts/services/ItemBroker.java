@@ -483,7 +483,7 @@ public final class ItemBroker extends Functions {
         player.sendPacket(rc);
 
         if (player.isVarSet(Player.NO_TRADERS_VAR)) {
-            player.sendPacket(new CharInfo(trader, player));
+            player.sendPacket(new CharInfo(trader));
             if (trader.getPrivateStoreType() == Player.STORE_PRIVATE_BUY)
                 player.sendPacket(new PrivateStoreMsgBuy(trader));
             else if (trader.getPrivateStoreType() == Player.STORE_PRIVATE_SELL || trader.getPrivateStoreType() == Player.STORE_PRIVATE_SELL_PACKAGE)

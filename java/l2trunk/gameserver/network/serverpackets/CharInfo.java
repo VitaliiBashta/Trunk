@@ -62,15 +62,7 @@ public final class CharInfo extends L2GameServerPacket {
     private boolean _invis, _isPartyRoomLeader, _isFlying;
     private TeamType _team;
 
-    public CharInfo(Player cha, Player forPlayer) {
-        this((Creature) cha, forPlayer);
-    }
-
-    public CharInfo(DecoyInstance cha, Player forPlayer) {
-        this((Creature) cha, forPlayer);
-    }
-
-    private CharInfo(Creature cha, Player forPlayer) {
+    public CharInfo(DecoyInstance cha) {
         if (cha == null) {
             _log.error("CharInfo: cha is null!");
             Thread.dumpStack();
@@ -79,12 +71,19 @@ public final class CharInfo extends L2GameServerPacket {
 
         if (cha.isInvisible())
             _invis = true;
+    }
 
-        if (cha.isDeleted())
+    public CharInfo(Player player) {
+        if (player == null) {
+            _log.error("CharInfo: player is null!");
+            Thread.dumpStack();
             return;
+        }
 
-        Player player = cha.getPlayer();
-        if (player == null)
+        if (player.isInvisible())
+            _invis = true;
+
+        if (player.isDeleted())
             return;
 
         if (player.isInBoat()) {
@@ -95,9 +94,9 @@ public final class CharInfo extends L2GameServerPacket {
         }
 
         if (_loc == null)
-            _loc = cha.getLoc();
+            _loc = player.getLoc();
 
-        _objId = cha.objectId();
+        _objId = player.objectId();
 
         // Cursed weapon and transformation to hide the name of the TV and all the other markings
         if (player.getTransformationName() != null || (player.getReflection() == ReflectionManager.GIRAN_HARBOR || player.getReflection() == ReflectionManager.PARNASSUS) && player.getPrivateStoreType() != Player.STORE_PRIVATE_NONE) {
@@ -200,7 +199,7 @@ public final class CharInfo extends L2GameServerPacket {
         _team = player.getTeam();
 
         _noble = player.isNoble() ? 1 : 0; // 0x01: symbol on char menu ctrl+I
-        _hero = player.isHero() || player.isHeroAura() || player.isGM() && Config.GM_HERO_AURA ? 1 : 0; // 0x01: Hero Aura
+        _hero = player.isHero() ? 1 : 0; // 0x01: Hero Aura
         _fishing = player.isFishing() ? 1 : 0;
         _fishLoc = player.getFishLoc();
         _nameColor = player.getVisibleNameColor(); // New C5

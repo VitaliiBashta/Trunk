@@ -5,24 +5,24 @@ import l2trunk.gameserver.stats.Stats;
 import l2trunk.gameserver.stats.funcs.FuncTemplate;
 
 public final class WeaponTemplate extends ItemTemplate {
-    private final int _soulShotCount;
-    private final int _spiritShotCount;
-    private final int _kamaelConvert;
-    private final int _rndDam;
-    private final int _atkReuse;
-    private final int _mpConsume;
-    private int _critical;
+    private final int soulShotCount;
+    private final int spiritShotCount;
+    private final int kamaelConvert;
+    private final int rndDam;
+    private final int atkReuse;
+    private final int mpConsume;
+    private int critical;
 
     public WeaponTemplate(StatsSet set) {
         super(set);
         type = set.getEnum("type", WeaponType.class);
-        _soulShotCount = set.getInteger("soulshots", 0);
-        _spiritShotCount = set.getInteger("spiritshots", 0);
-        _kamaelConvert = set.getInteger("kamael_convert", 0);
+        soulShotCount = set.getInteger("soulshots", 0);
+        spiritShotCount = set.getInteger("spiritshots", 0);
+        kamaelConvert = set.getInteger("kamael_convert", 0);
 
-        _rndDam = set.getInteger("rnd_dam", 0);
-        _atkReuse = set.getInteger("atk_reuse", type == WeaponType.BOW ? 1500 : type == WeaponType.CROSSBOW ? 820 : 0);
-        _mpConsume = set.getInteger("mp_consume", 0);
+        rndDam = set.getInteger("rnd_dam", 0);
+        atkReuse = set.getInteger("atk_reuse", type == WeaponType.BOW ? 1500 : type == WeaponType.CROSSBOW ? 820 : 0);
+        mpConsume = set.getInteger("mp_consume", 0);
 
         if (getItemType() == WeaponType.NONE) {
             type1 = TYPE1_SHIELD_ARMOR;
@@ -74,7 +74,7 @@ public final class WeaponTemplate extends ItemTemplate {
      * @return int
      */
     public int getSoulShotCount() {
-        return _soulShotCount;
+        return soulShotCount;
     }
 
     /**
@@ -83,11 +83,11 @@ public final class WeaponTemplate extends ItemTemplate {
      * @return int
      */
     public int getSpiritShotCount() {
-        return _spiritShotCount;
+        return spiritShotCount;
     }
 
     public int getCritical() {
-        return _critical;
+        return critical;
     }
 
     /**
@@ -96,7 +96,7 @@ public final class WeaponTemplate extends ItemTemplate {
      * @return int
      */
     public int getRandomDamage() {
-        return _rndDam;
+        return rndDam;
     }
 
     /**
@@ -105,7 +105,7 @@ public final class WeaponTemplate extends ItemTemplate {
      * @return int
      */
     public int getAttackReuseDelay() {
-        return _atkReuse;
+        return atkReuse;
     }
 
     /**
@@ -114,7 +114,7 @@ public final class WeaponTemplate extends ItemTemplate {
      * @return int
      */
     public int getMpConsume() {
-        return _mpConsume;
+        return mpConsume;
     }
 
     /**
@@ -137,13 +137,13 @@ public final class WeaponTemplate extends ItemTemplate {
     public void attachFunc(FuncTemplate f) {
         //TODO для параметров set с дп,может считать стат с L2ItemInstance? (VISTALL)
         if (f.stat == Stats.CRITICAL_BASE && f.order == 0x08) {
-            _critical = (int) Math.round(f.value / 10);
+            critical = (int) Math.round(f.value / 10);
         }
         super.attachFunc(f);
     }
 
     public int getKamaelConvert() {
-        return _kamaelConvert;
+        return kamaelConvert;
     }
 
     public enum WeaponType implements ItemType {
@@ -168,27 +168,27 @@ public final class WeaponTemplate extends ItemTemplate {
 
         public final static WeaponType[] VALUES = values();
 
-        private final long _mask;
-        private final String _name;
-        private final Stats _defence;
+        private final long mask;
+        private final String name;
+        private final Stats defence;
 
         WeaponType(int id, String name, Stats defence) {
-            _mask = 1L << id;
-            _name = name;
-            _defence = defence;
+            mask = 1L << id;
+            this.name = name;
+            this.defence = defence;
         }
 
         public long mask() {
-            return _mask;
+            return mask;
         }
 
         public Stats getDefence() {
-            return _defence;
+            return defence;
         }
 
         @Override
         public String toString() {
-            return _name;
+            return name;
         }
     }
 }

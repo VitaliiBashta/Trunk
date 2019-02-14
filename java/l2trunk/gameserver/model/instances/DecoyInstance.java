@@ -108,10 +108,10 @@ public final class DecoyInstance extends NpcInstance {
     @Override
     public List<L2GameServerPacket> addPacketList(Player forPlayer, Creature dropper) {
         if (!isInCombat())
-            return List.of(new CharInfo(this, forPlayer));
+            return List.of(new CharInfo(this));
         else {
             List<L2GameServerPacket> list = new ArrayList<>(2);
-            list.add(new CharInfo(this, forPlayer));
+            list.add(new CharInfo(this));
             list.add(new AutoAttackStart(objectId));
             return list;
         }

@@ -120,7 +120,7 @@ public final class CalculateRewardChances {
                     drop = true;
             }
         }
-        return new Pair<>(drop, spoil);
+        return Pair.of(drop, spoil);
     }
 
     private static boolean rewardListContainsItemId(RewardList list, int itemId) {
@@ -252,7 +252,7 @@ public final class CalculateRewardChances {
         TypeGroupData info = getGroupAndData(npc, dropNoSpoil, itemId);
 
         if (info == null)
-            return new Pair<>(0L, 0L);
+            return Pair.of(0L, 0L);
 
         double mod = Experience.penaltyModifier((long) NpcInstance.calculateLevelDiffForDrop(npc.level, player.getLevel(), false), 9.0);
         double baseRate = 1.0;
@@ -279,7 +279,7 @@ public final class CalculateRewardChances {
         if (itemId == ItemTemplate.ITEM_ID_ADENA)
             minDrop *= (long) imult;
         long maxDrop = (long) ((double) info.data.getMaxDrop() * Math.ceil(imult));
-        return new Pair<>(minDrop, maxDrop);
+        return Pair.of(minDrop, maxDrop);
     }
 
     private static TypeGroupData getGroupAndData(NpcTemplate npc, boolean dropNoSpoil, int itemId) {

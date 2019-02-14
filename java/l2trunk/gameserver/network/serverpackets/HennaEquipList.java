@@ -8,7 +8,7 @@ import l2trunk.gameserver.templates.Henna;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class HennaEquipList extends L2GameServerPacket {
+public final class HennaEquipList extends L2GameServerPacket {
     private final int _emptySlots;
     private final long _adena;
     private final List<Henna> hennas;
@@ -18,7 +18,7 @@ public class HennaEquipList extends L2GameServerPacket {
         _emptySlots = player.getHennaEmptySlots();
 
         hennas = HennaHolder.generateStream(player)
-                .filter(element -> player.getInventory().getItemByItemId(element.getDyeId()) != null)
+                .filter(element -> player.haveItem(element.dyeId))
                 .collect(Collectors.toList());
     }
 
@@ -30,13 +30,13 @@ public class HennaEquipList extends L2GameServerPacket {
         writeD(_emptySlots);
         if (hennas.size() != 0) {
             writeD(hennas.size());
-            for (Henna henna : hennas) {
-                writeD(henna.getSymbolId()); //symbolid
-                writeD(henna.getDyeId()); //itemid of dye
-                writeQ(henna.getDrawCount());
-                writeQ(henna.getPrice());
+            hennas.forEach(henna -> {
+                writeD(henna.symbolId); //symbolid
+                writeD(henna.dyeId); //itemid of dye
+                writeQ(henna.drawCount);
+                writeQ(henna.price);
                 writeD(1); //meet the requirement or not
-            }
+            });
         } else {
             writeD(0x01);
             writeD(0x00);

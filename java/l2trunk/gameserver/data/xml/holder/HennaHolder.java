@@ -16,7 +16,7 @@ public final class HennaHolder {
     }
 
     public static void addHenna(Henna h) {
-        hennas.put(h.getSymbolId(), h);
+        hennas.put(h.symbolId, h);
     }
 
     public static Henna getHenna(int symbolId) {
@@ -29,7 +29,7 @@ public final class HennaHolder {
     }
 
     public static boolean isHenna(int itemId) {
-        return hennas.entrySet().stream().anyMatch(h -> h.getValue().getDyeId() == itemId);
+        return hennas.values().stream().anyMatch(h -> h.dyeId == itemId);
     }
 
     public static int size() {

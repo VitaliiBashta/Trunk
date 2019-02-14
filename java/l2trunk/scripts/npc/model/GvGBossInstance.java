@@ -14,10 +14,6 @@ public final class GvGBossInstance extends MonsterInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, String filename) {
-    }
-
-    @Override
     public boolean canChampion() {
         return false;
     }

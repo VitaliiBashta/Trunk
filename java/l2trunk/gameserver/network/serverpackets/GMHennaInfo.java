@@ -3,10 +3,11 @@ package l2trunk.gameserver.network.serverpackets;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.templates.Henna;
 
-//ccccccdd[dd]
-public class GMHennaInfo extends L2GameServerPacket {
-    private final Henna[] _hennas = new Henna[3];
-    private final int _count;
+import java.util.ArrayList;
+import java.util.List;
+
+public final class GMHennaInfo extends L2GameServerPacket {
+    private final List<Henna> hennas = new ArrayList<>();
     private final int _str;
     private final int _con;
     private final int _dex;
@@ -22,13 +23,11 @@ public class GMHennaInfo extends L2GameServerPacket {
         _wit = cha.getHennaStatWIT();
         _men = cha.getHennaStatMEN();
 
-        int j = 0;
         for (int i = 0; i < 3; i++) {
             Henna h = cha.getHenna(i + 1);
             if (h != null)
-                _hennas[j++] = h;
+                hennas.add(h);
         }
-        _count = j;
     }
 
     @Override
@@ -42,10 +41,10 @@ public class GMHennaInfo extends L2GameServerPacket {
         writeC(_dex);
         writeC(_wit);
         writeD(3);
-        writeD(_count);
-        for (int i = 0; i < _count; i++) {
-            writeD(_hennas[i].getSymbolId());
-            writeD(_hennas[i].getSymbolId());
-        }
+        writeD(hennas.size());
+        hennas.forEach(henna ->  {
+            writeD(henna.symbolId);
+            writeD(henna.symbolId);
+        });
     }
 }

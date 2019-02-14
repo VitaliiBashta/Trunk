@@ -199,10 +199,8 @@ public final class Player extends Playable implements PlayerGroup {
 
 
     private final MacroList _macroses = new MacroList(this);
-    /**
-     * hennas
-     */
-    private final Henna[] _henna = new Henna[3];
+
+    private final List<Henna> _henna = new ArrayList<>(3);
     private final AtomicBoolean _isLogout = new AtomicBoolean();
     private final Set<Integer> activeSoulShots = new CopyOnWriteArraySet<>();
     private final AtomicInteger observerMode = new AtomicInteger(0);
@@ -235,7 +233,7 @@ public final class Player extends Playable implements PlayerGroup {
     public boolean _autoCp;
     public boolean _autoHp;
     public boolean entering = true;
-    public Location _stablePoint = null;
+    public Location stablePoint = null;
     boolean sittingTaskLaunched;
     private int incorrectValidateCount = 0;
     private int _telemode = 0;
@@ -1024,7 +1022,7 @@ public final class Player extends Playable implements PlayerGroup {
         getListeners().onExit();
 
         if (isFlying() && !checkLandingState()) {
-            _stablePoint = TeleportUtils.getRestartLocation(this, RestartType.TO_VILLAGE);
+            stablePoint = TeleportUtils.getRestartLocation(this, RestartType.TO_VILLAGE);
         }
 
         if (isCastingNow()) {
@@ -1066,8 +1064,8 @@ public final class Player extends Playable implements PlayerGroup {
             observerMode.set(OBSERVER_NONE);
         }
 
-        if (_stablePoint != null) {
-            teleToLocation(_stablePoint);
+        if (stablePoint != null) {
+            teleToLocation(stablePoint);
         }
 
         Summon pet = getPet();
@@ -1139,7 +1137,7 @@ public final class Player extends Playable implements PlayerGroup {
 
         if (ref != ReflectionManager.DEFAULT) {
             if (ref.getReturnLoc() != null) {
-                _stablePoint = ref.getReturnLoc();
+                stablePoint = ref.getReturnLoc();
             }
 
             ref.removeObject(this);
@@ -2636,7 +2634,7 @@ public final class Player extends Playable implements PlayerGroup {
         L2GameServerPacket dominion = getEvent(DominionSiegeEvent.class) != null ? new ExDominionWarStart(this) : null;
         World.getAroundPlayers(this)
                 .forEach(p -> {
-                    p.sendPacket(isPolymorphed() ? new NpcInfoPoly(this) : new CharInfo(this, p), exCi);
+                    p.sendPacket(isPolymorphed() ? new NpcInfoPoly(this) : new CharInfo(this), exCi);
                     p.sendPacket(RelationChanged.update(p, this, p));
                     if (dominion != null) {
                         p.sendPacket(dominion);
@@ -3480,9 +3478,9 @@ public final class Player extends Playable implements PlayerGroup {
                 }
 
                 if (killer instanceof Playable && isInFlyingTransform()) {
-                    ((Playable)killer).getPlayer().inventory.addItem(item, Log.Pickup);
+                    ((Playable) killer).getPlayer().inventory.addItem(item, Log.Pickup);
 
-                    ((Playable)killer).getPlayer().sendPacket(SystemMessage2.obtainItems(item));
+                    ((Playable) killer).getPlayer().sendPacket(SystemMessage2.obtainItems(item));
                 } else {
                     item.dropToTheGround(this, Location.findAroundPosition(this, Config.KARMA_RANDOM_DROP_LOCATION_LIMIT));
                 }
@@ -3711,7 +3709,7 @@ public final class Player extends Playable implements PlayerGroup {
 
         List<L2GameServerPacket> list = new ArrayList<>();
         if (forPlayer.objectId() != objectId()) {
-            list.add(isPolymorphed() ? new NpcInfoPoly(this) : new CharInfo(this, forPlayer));
+            list.add(isPolymorphed() ? new NpcInfoPoly(this) : new CharInfo(this));
         }
 
         list.add(new ExBR_ExtraUserInfo(this));
@@ -4367,14 +4365,14 @@ public final class Player extends Playable implements PlayerGroup {
                 statement.setInt(1, getFace());
                 statement.setInt(2, getHairStyle());
                 statement.setInt(3, getHairColor());
-                if (_stablePoint == null) {
+                if (stablePoint == null) {
                     statement.setInt(4, getX());
                     statement.setInt(5, getY());
                     statement.setInt(6, getZ());
                 } else {
-                    statement.setInt(4, _stablePoint.x);
-                    statement.setInt(5, _stablePoint.y);
-                    statement.setInt(6, _stablePoint.z);
+                    statement.setInt(4, stablePoint.x);
+                    statement.setInt(5, stablePoint.y);
+                    statement.setInt(6, stablePoint.z);
                 }
                 statement.setInt(7, getKarma());
                 statement.setInt(8, getPvpKills());
@@ -4677,8 +4675,9 @@ public final class Player extends Playable implements PlayerGroup {
             statement.setInt(2, getActiveClassId());
 
             try (ResultSet rset = statement.executeQuery()) {
+                _henna.clear();
                 for (int i = 0; i < 3; i++) {
-                    _henna[i] = null;
+                    _henna.add(null);
                 }
 
                 while (rset.next()) {
@@ -4692,7 +4691,7 @@ public final class Player extends Playable implements PlayerGroup {
                     if (symbol_id != 0) {
                         final Henna tpl = HennaHolder.getHenna(symbol_id);
                         if (tpl != null) {
-                            _henna[slot - 1] = tpl;
+                            _henna.set(slot - 1, tpl);
                         }
                     }
                 }
@@ -4709,7 +4708,7 @@ public final class Player extends Playable implements PlayerGroup {
     public int getHennaEmptySlots() {
         int totalSlots = 1 + getClassId().occupation();
         for (int i = 0; i < 3; i++) {
-            if (_henna[i] != null) {
+            if (_henna.get(i) != null) {
                 totalSlots--;
             }
         }
@@ -4726,24 +4725,22 @@ public final class Player extends Playable implements PlayerGroup {
      * Remove a Henna of the L2Player, save update in the character_hennas table of the database and send Server->Client HennaInfo/UserInfo packet to this L2Player.<BR>
      * <BR>
      *
-     * @param slot
-     * @return
      */
-    public boolean removeHenna(int slot) {
+    public void removeHenna(int slot) {
         if ((slot < 1) || (slot > 3)) {
-            return false;
+            return;
         }
 
         slot--;
 
-        if (_henna[slot] == null) {
-            return false;
+        if (_henna.get(slot) == null) {
+            return;
         }
 
-        final Henna henna = _henna[slot];
-        final int dyeID = henna.getDyeId();
+        final Henna henna = _henna.get(slot);
+        final int dyeID = henna.dyeId;
 
-        _henna[slot] = null;
+        _henna.set(slot, null);
 
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement("DELETE FROM character_hennas where char_obj_id=? and slot=? and class_index=?")) {
@@ -4766,25 +4763,21 @@ public final class Player extends Playable implements PlayerGroup {
         // Add the recovered dyes to the player's inventory and notify them.
         ItemFunctions.addItem(this, dyeID, henna.getDrawCount() / 2, "removeHenna");
 
-        return true;
     }
 
     /**
      * Add a Henna to the L2Player, save update in the character_hennas table of the database and send Server->Client HennaInfo/UserInfo packet to this L2Player.<BR>
-     *
-     * @param henna
-     * @return
      */
-    public boolean addHenna(Henna henna) {
+    public void addHenna(Henna henna) {
         if (getHennaEmptySlots() == 0) {
             sendPacket(SystemMsg.NO_SLOT_EXISTS_TO_DRAW_THE_SYMBOL);
-            return false;
+            return;
         }
 
         // int slot = 0;
         for (int i = 0; i < 3; i++) {
-            if (_henna[i] == null) {
-                _henna[i] = henna;
+            if (_henna.get(i) == null) {
+                _henna.set(i, henna);
 
                 // Calculate Henna modifiers of this L2Player
                 recalcHennaStats();
@@ -4803,11 +4796,10 @@ public final class Player extends Playable implements PlayerGroup {
                 sendPacket(new HennaInfo(this));
                 sendUserInfo(true);
 
-                return true;
+                return;
             }
         }
 
-        return false;
     }
 
     /**
@@ -4822,47 +4814,31 @@ public final class Player extends Playable implements PlayerGroup {
         hennaDEX = 0;
 
         for (int i = 0; i < 3; i++) {
-            Henna henna = _henna[i];
-            if (henna == null) {
-                continue;
+            Henna henna = _henna.get(i);
+            if (henna != null && henna.isForThisClass(this)) {
+                hennaINT += henna.statINT;
+                hennaSTR += henna.statSTR;
+                hennaMEN += henna.statMEN;
+                hennaCON += henna.statCON;
+                hennaWIT += henna.statWIT;
+                hennaDEX += henna.statDEX;
             }
-            if (!henna.isForThisClass(this)) {
-                continue;
-            }
-
-            hennaINT += henna.getStatINT();
-            hennaSTR += henna.getStatSTR();
-            hennaMEN += henna.getStatMEN();
-            hennaCON += henna.getStatCON();
-            hennaWIT += henna.getStatWIT();
-            hennaDEX += henna.getStatDEX();
         }
 
-        if (hennaINT > Config.HENNA_STATS) {
-            hennaINT = Config.HENNA_STATS;
-        }
-        if (hennaSTR > Config.HENNA_STATS) {
-            hennaSTR = Config.HENNA_STATS;
-        }
-        if (hennaMEN > Config.HENNA_STATS) {
-            hennaMEN = Config.HENNA_STATS;
-        }
-        if (hennaCON > Config.HENNA_STATS) {
-            hennaCON = Config.HENNA_STATS;
-        }
-        if (hennaWIT > Config.HENNA_STATS) {
-            hennaWIT = Config.HENNA_STATS;
-        }
-        if (hennaDEX > Config.HENNA_STATS) {
-            hennaDEX = Config.HENNA_STATS;
-        }
+        hennaINT = Math.min(Config.HENNA_STATS, hennaINT);
+        hennaSTR = Math.min(Config.HENNA_STATS, hennaSTR);
+        hennaMEN = Math.min(Config.HENNA_STATS, hennaMEN);
+        hennaCON = Math.min(Config.HENNA_STATS, hennaCON);
+        hennaWIT = Math.min(Config.HENNA_STATS, hennaWIT);
+        hennaDEX = Math.min(Config.HENNA_STATS, hennaDEX);
+
     }
 
     public Henna getHenna(final int slot) {
         if ((slot < 1) || (slot > 3)) {
             return null;
         }
-        return _henna[slot - 1];
+        return _henna.get(slot - 1);
     }
 
     public int getHennaStatINT() {
@@ -6736,9 +6712,9 @@ public final class Player extends Playable implements PlayerGroup {
 
         inventory.refreshEquip();
         inventory.validateItems();
-
+        _henna.clear();
         for (int i = 0; i < 3; i++) {
-            _henna[i] = null;
+            _henna.add(null);
         }
 
         restoreHenna();
@@ -9415,6 +9391,10 @@ public final class Player extends Playable implements PlayerGroup {
                 str.append(k).append(",").append(v).append(";"));
 
         setVar("achievements", str.toString());
+    }
+
+    public boolean haveAllItems(int... itemIds) {
+        return Arrays.stream(itemIds).allMatch(this::haveItem);
     }
 
     public boolean haveAnyItem(int... itemIds) {

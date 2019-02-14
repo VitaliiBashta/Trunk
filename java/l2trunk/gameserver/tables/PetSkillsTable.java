@@ -60,7 +60,7 @@ public enum PetSkillsTable {
         for (SkillLearn temp : skills) {
             if (temp.id() != skillId)
                 continue;
-            if (temp.level() == 0) {
+            if (temp.level == 0) {
                 if (cha.getLevel() < 70) {
                     lvl = cha.getLevel() / 10;
                     if (lvl <= 0)
@@ -74,8 +74,8 @@ public enum PetSkillsTable {
                     lvl = maxLvl;
                 break;
             } else if (temp.getMinLevel() <= cha.getLevel())
-                if (temp.level() > lvl)
-                    lvl = temp.level();
+                if (temp.level > lvl)
+                    lvl = temp.level;
         }
         return lvl;
     }

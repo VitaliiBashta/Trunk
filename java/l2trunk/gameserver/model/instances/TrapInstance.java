@@ -131,10 +131,6 @@ public final class TrapInstance extends NpcInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, String filename) {
-    }
-
-    @Override
     public void onBypassFeedback(Player player, String command) {
     }
 

@@ -16,10 +16,6 @@ public final class MobInvulInstance extends MonsterInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, String filename) {
-    }
-
-    @Override
     public void reduceCurrentHp(double i, Creature attacker, Skill skill, boolean awake, boolean standUp, boolean directHp, boolean canReflect, boolean transferDamage, boolean isDot, boolean sendMessage) {
     }
 

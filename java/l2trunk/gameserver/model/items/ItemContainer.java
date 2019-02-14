@@ -60,6 +60,7 @@ public abstract class ItemContainer {
                 .findFirst().orElse(null);
     }
 
+    @Deprecated
     public synchronized ItemInstance getItemByItemId(int itemId) {
         return items.stream()
                 .filter(item -> item.getItemId() == itemId)

@@ -493,17 +493,6 @@ public final class FourSepulchersSpawn extends Functions {
         return false;
     }
 
-//    static class NpcLocation extends Location {
-//        int npcId;
-//
-//        NpcLocation() {
-//        }
-//
-//        NpcLocation(int x, int y, int z, int heading, int npcId) {
-//            super(x, y, z, heading);
-//            this.npcId = npcId;
-//        }
-//    }
 
     public static class GateKeeper extends Location {
         public final DoorInstance door;

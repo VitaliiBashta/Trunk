@@ -5,16 +5,12 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.templates.Henna;
 
-public class RequestHennaEquip extends L2GameClientPacket {
-    private int _symbolId;
+public final class RequestHennaEquip extends L2GameClientPacket {
+    private int symbolId;
 
-    /**
-     * packet type id 0x6F
-     * format:		cd
-     */
     @Override
     protected void readImpl() {
-        _symbolId = readD();
+        symbolId = readD();
     }
 
     @Override
@@ -23,17 +19,16 @@ public class RequestHennaEquip extends L2GameClientPacket {
         if (player == null)
             return;
 
-        Henna temp = HennaHolder.getHenna(_symbolId);
+        Henna temp = HennaHolder.getHenna(symbolId);
         if (temp == null || !temp.isForThisClass(player)) {
             player.sendPacket(SystemMsg.THE_SYMBOL_CANNOT_BE_DRAWN);
             return;
         }
 
-        long adena = player.getAdena();
-        long countDye = player.getInventory().getCountOf(temp.getDyeId());
+        long countDye = player.getInventory().getCountOf(temp.dyeId);
 
-        if (countDye >= temp.getDrawCount() && adena >= temp.getPrice()) {
-            if (player.consumeItem(temp.getDyeId(), temp.getDrawCount()) && player.reduceAdena(temp.getPrice(), "RequestHennaEquip")) {
+        if (countDye >= temp.drawCount && player.haveAdena( temp.price)) {
+            if (player.consumeItem(temp.dyeId, temp.drawCount) && player.reduceAdena(temp.price, "RequestHennaEquip")) {
                 player.sendPacket(SystemMsg.THE_SYMBOL_HAS_BEEN_ADDED);
                 player.addHenna(temp);
             }

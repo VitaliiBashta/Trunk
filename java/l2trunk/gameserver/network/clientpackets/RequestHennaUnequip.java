@@ -26,8 +26,8 @@ public class RequestHennaUnequip extends L2GameClientPacket {
             if (henna == null)
                 continue;
 
-            if (henna.getSymbolId() == _symbolId) {
-                long price = henna.getPrice() / 5;
+            if (henna.symbolId == _symbolId) {
+                long price = henna.price / 5;
                 if (player.getAdena() < price) {
                     player.sendPacket(SystemMsg.YOU_DO_NOT_HAVE_ENOUGH_ADENA);
                     break;

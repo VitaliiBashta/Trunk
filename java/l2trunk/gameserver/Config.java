@@ -257,12 +257,6 @@ public final class Config {
     public static boolean ALT_DEBUG_PVE_ENABLED;
     public static double CRAFT_MASTERWORK_CHANCE;
     public static double CRAFT_DOUBLECRAFT_CHANCE;
-    public static boolean AUTO_LOOT;
-    public static boolean AUTO_LOOT_FROM_RAIDS;
-    /**
-     * Auto-loot for/from players with karma also?
-     */
-    public static boolean AUTO_LOOT_PK;
     /**
      * Clan name template
      */
@@ -1494,7 +1488,6 @@ public final class Config {
         ANNOUNCE_MAMMON_SPAWN = otherSettings.getProperty("AnnounceMammonSpawn", true);
 
         GM_NAME_COLOUR = Integer.decode("0x" + otherSettings.getProperty("GMNameColour", "FFFFFF"));
-        GM_HERO_AURA = otherSettings.getProperty("GMHeroAura", false);
         NORMAL_NAME_COLOUR = Integer.decode("0x" + otherSettings.getProperty("NormalNameColour", "FFFFFF"));
         CLANLEADER_NAME_COLOUR = Integer.decode("0x" + otherSettings.getProperty("ClanleaderNameColour", "FFFFFF"));
 
@@ -1642,8 +1635,6 @@ public final class Config {
         ALLOW_PET_ATTACK_MASTER = altSettings.getProperty("allowPetAttackMaster", true);
         ALT_SHOW_REUSE_MSG = altSettings.getProperty("AltShowSkillReuseMessage", true);
         ALT_DELETE_SA_BUFFS = altSettings.getProperty("AltDeleteSABuffs", false);
-        AUTO_LOOT_FROM_RAIDS = altSettings.getProperty("AutoLootFromRaids", false);
-        AUTO_LOOT_PK = altSettings.getProperty("AutoLootPK", false);
         ALT_GAME_KARMA_PLAYER_CAN_SHOP = altSettings.getProperty("AltKarmaPlayerCanShop", false);
         CRAFT_MASTERWORK_CHANCE = altSettings.getProperty("CraftMasterworkChance", 3.);
         CRAFT_DOUBLECRAFT_CHANCE = altSettings.getProperty("CraftDoubleCraftChance", 3.);

@@ -2,7 +2,7 @@ package l2trunk.gameserver.model;
 
 public final class SkillLearn implements Comparable<SkillLearn> {
     public final int id;
-    private final int level;
+    public final int level;
     private final int minLevel;
     private final int cost;
     private final int itemId;
@@ -50,9 +50,9 @@ public final class SkillLearn implements Comparable<SkillLearn> {
 
     @Override
     public int compareTo(SkillLearn o) {
-        if (id() == o.id())
-            return getLevel() - o.getLevel();
+        if (id == o.id)
+            return level - o.level;
         else
-            return id() - o.id();
+            return id - o.id;
     }
 }

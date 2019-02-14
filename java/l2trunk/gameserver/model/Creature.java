@@ -216,7 +216,6 @@ public abstract class Creature extends GameObject {
 //        return objectId;
     }
 
-    @Deprecated
     public Player getPlayer() {
 //        throw new UnsupportedOperationException("gameObject " + name() + " cannot have player !");
         return null;

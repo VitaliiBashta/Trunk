@@ -196,8 +196,8 @@ public final class UserInfo extends L2GameServerPacket {
         maxCp = player.getMaxCp();
         curCp = (int) player.getCurrentCp();
         _team = player.getTeam();
-        noble = player.isNoble() || player.isGM() && Config.GM_HERO_AURA ? 1 : 0; //0x01: symbol on char menu ctrl+I
-        hero = player.isHero() || player.isHeroAura() || player.isGM() && Config.GM_HERO_AURA ? 1 : 0; //0x01: Hero Aura and symbol
+        noble = player.isNoble() ? 1 : 0; //0x01: symbol on char menu ctrl+I
+        hero = player.isHero()  ? 1 : 0; //0x01: Hero Aura and symbol
         //fishing = _cha.isFishing() ? 1 : 0; // Fishing Mode
         _fishLoc = player.getFishLoc();
         name_color = player.getVisibleNameColor();

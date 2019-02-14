@@ -7,14 +7,14 @@ import l2trunk.gameserver.templates.Henna;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HennaUnequipList extends L2GameServerPacket {
-    private final int _emptySlots;
-    private final long _adena;
+public final class HennaUnequipList extends L2GameServerPacket {
+    private final int emptySlots;
+    private final long adena;
     private final List<Henna> availHenna = new ArrayList<>(3);
 
     public HennaUnequipList(Player player) {
-        _adena = player.getAdena();
-        _emptySlots = player.getHennaEmptySlots();
+        adena = player.getAdena();
+        emptySlots = player.getHennaEmptySlots();
         for (int i = 1; i <= 3; i++)
             if (player.getHenna(i) != null)
                 availHenna.add(player.getHenna(i));
@@ -24,15 +24,15 @@ public class HennaUnequipList extends L2GameServerPacket {
     protected final void writeImpl() {
         writeC(0xE6);
 
-        writeQ(_adena);
-        writeD(_emptySlots);
+        writeQ(adena);
+        writeD(emptySlots);
         writeD(availHenna.size());
-        for (Henna henna : availHenna) {
-            writeD(henna.getSymbolId()); //symbolid
-            writeD(henna.getDyeId()); //itemid of dye
-            writeQ(henna.getDrawCount());
-            writeQ(henna.getPrice());
+        availHenna.forEach(henna -> {
+            writeD(henna.symbolId); //symbolid
+            writeD(henna.dyeId); //itemid of dye
+            writeQ(henna.drawCount);
+            writeQ(henna.price);
             writeD(1); //meet the requirement or not
-        }
+        });
     }
 }
