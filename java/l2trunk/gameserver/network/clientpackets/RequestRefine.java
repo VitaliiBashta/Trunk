@@ -163,7 +163,7 @@ public final class RequestRefine extends L2GameClientPacket {
                     break;
             }
 
-        // check if the lifestone is appropriate for this player
+        // check if the lifestone is appropriate for this getPlayer
         switch (lifeStoneLevel) {
             case 1:
                 if (player.getLevel() < 46)

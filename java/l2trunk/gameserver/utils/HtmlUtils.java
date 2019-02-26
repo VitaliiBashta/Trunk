@@ -36,12 +36,12 @@ public final class HtmlUtils {
     }
 
     public static String htmlNpcString(int id, Object... params) {
-        String replace = "<fstring";
+        StringBuilder replace = new StringBuilder("<fstring");
         if (params.length > 0)
             for (int i = 0; i < params.length; i++)
-                replace += " p" + (i + 1) + "=\"" + String.valueOf(params[i]) + "\"";
-        replace += ">" + id + "</fstring>";
-        return replace;
+                replace.append(" p").append(i + 1).append("=\"").append(params[i]).append("\"");
+        replace.append(">").append(id).append("</fstring>");
+        return replace.toString();
     }
 
     public static String htmlButton(String value, String action, int width) {
@@ -83,15 +83,15 @@ public final class HtmlUtils {
     private static String getGauge(int width, long current, long max, boolean displayAsPercentage, String backgroundImage, String image, long imageHeight, long top) {
         current = Math.min(current, max);
         final StringBuilder sb = new StringBuilder();
-        sb.append("<table width=" + String.valueOf(width) + " cellpadding=0 cellspacing=0><tr><td background=\"" + backgroundImage + "\">");
-        sb.append("<img src=\"" + image + "\" width=" + String.valueOf((long) (((double) current / max) * width)) + " height=" + String.valueOf(imageHeight) + ">");
-        sb.append("</td></tr><tr><td align=center><table cellpadding=0 cellspacing=" + String.valueOf(top) + "><tr><td>");
+        sb.append("<table width=" + width + " cellpadding=0 cellspacing=0><tr><td background=\"" + backgroundImage + "\">");
+        sb.append("<img src=\"" + image + "\" width=" + (long) (((double) current / max) * width) + " height=" + imageHeight + ">");
+        sb.append("</td></tr><tr><td align=center><table cellpadding=0 cellspacing=" + top + "><tr><td>");
         if (displayAsPercentage) {
             sb.append("<table cellpadding=0 cellspacing=2><tr><td>" + String.format("%.2f%%", ((double) current / max) * 100) + "</td></tr></table>");
         } else {
             final String tdWidth = String.valueOf((width - 10) / 2);
-            sb.append("<table cellpadding=0 cellspacing=0><tr><td width=" + tdWidth + " align=right>" + String.valueOf(current) + "</td>");
-            sb.append("<td width=10 align=center>/</td><td width=" + tdWidth + ">" + String.valueOf(max) + "</td></tr></table>");
+            sb.append("<table cellpadding=0 cellspacing=0><tr><td width=" + tdWidth + " align=right>" + current + "</td>");
+            sb.append("<td width=10 align=center>/</td><td width=" + tdWidth + ">" + max + "</td></tr></table>");
         }
         sb.append("</td></tr></table></td></tr></table>");
         return sb.toString();

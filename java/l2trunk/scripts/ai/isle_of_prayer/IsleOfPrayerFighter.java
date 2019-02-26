@@ -12,9 +12,11 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.MonsterInstance;
 import l2trunk.gameserver.model.instances.NpcInstance;
 
+import java.util.List;
+
 public final class IsleOfPrayerFighter extends Fighter {
     private boolean _penaltyMobsNotSpawned = true;
-    private static final int PENALTY_MOBS[] = {18364, 18365, 18366};
+    private static final List<Integer> PENALTY_MOBS = List.of(18364, 18365, 18366);
     private static final int YELLOW_CRYSTAL = 9593;
     private static final int GREEN_CRYSTAL = 9594;
 
@@ -30,7 +32,7 @@ public final class IsleOfPrayerFighter extends Fighter {
             if (party != null && party.size() > 2) {
                 _penaltyMobsNotSpawned = false;
                 for (int i = 0; i < 2; i++) {
-                    MonsterInstance npc = new MonsterInstance(IdFactory.getInstance().getNextId(), NpcHolder.getTemplate(PENALTY_MOBS[Rnd.get(PENALTY_MOBS.length)]));
+                    MonsterInstance npc = new MonsterInstance(IdFactory.getInstance().getNextId(), NpcHolder.getTemplate(Rnd.get(PENALTY_MOBS)));
                     npc.setSpawnedLoc(((MonsterInstance) actor).getMinionPosition());
                     npc.setReflection(actor.getReflection());
                     npc.setFullHpMp();

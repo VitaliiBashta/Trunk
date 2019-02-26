@@ -5,6 +5,8 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
+import java.util.stream.IntStream;
+
 public final class _638_SeekersOfTheHolyGrail extends Quest {
     private static final int DROP_CHANCE = 5; // For x1 mobs
     private static final int INNOCENTIN = 31328;
@@ -16,20 +18,19 @@ public final class _638_SeekersOfTheHolyGrail extends Quest {
         super(true);
         addStartNpc(INNOCENTIN);
         addQuestItem(TOTEM);
-        for (int i = 22137; i <= 22176; i++)
-            addKillId(i);
+        addKillId(IntStream.rangeClosed(22137, 22176).toArray());
         addKillId(22194);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equals("highpriest_innocentin_q0638_03.htm")) {
+        if ("highpriest_innocentin_q0638_03.htm".equals(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equals("highpriest_innocentin_q0638_09.htm")) {
+        } else if ("highpriest_innocentin_q0638_09.htm".equals(event)) {
             st.playSound(SOUND_GIVEUP);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
         return event;
     }

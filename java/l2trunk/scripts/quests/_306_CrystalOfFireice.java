@@ -15,7 +15,7 @@ public final class _306_CrystalOfFireice extends Quest {
     private static final int Undine_Elder = 20113;
     private static final int Salamander_Noble = 20114;
     private static final int Undine_Noble = 20115;
-    //Quest Items
+    //Quest items
     private static final int Flame_Shard = 1020;
     private static final int Ice_Shard = 1021;
     //Chances
@@ -26,26 +26,20 @@ public final class _306_CrystalOfFireice extends Quest {
     public _306_CrystalOfFireice() {
         super(false);
         addStartNpc(Katerina);
-        addKillId(Salamander);
-        addKillId(Undine);
-        addKillId(Salamander_Elder);
-        addKillId(Undine_Elder);
-        addKillId(Salamander_Noble);
-        addKillId(Undine_Noble);
-        addQuestItem(Flame_Shard);
-        addQuestItem(Ice_Shard);
+        addKillId(Salamander,Undine,Salamander_Elder,Undine_Elder,Salamander_Noble,Undine_Noble);
+        addQuestItem(Flame_Shard,Ice_Shard);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         int _state = st.getState();
         if ("katrine_q0306_04.htm".equalsIgnoreCase(event) && _state == CREATED) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if ("katrine_q0306_08.htm".equalsIgnoreCase(event) && _state == STARTED) {
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
 
         return event;
@@ -61,7 +55,7 @@ public final class _306_CrystalOfFireice extends Quest {
         if (_state == CREATED) {
             if (st.player.getLevel() < 17) {
                 htmltext = "katrine_q0306_02.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else {
                 htmltext = "katrine_q0306_03.htm";
                 st.setCond(0);

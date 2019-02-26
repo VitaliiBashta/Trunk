@@ -22,7 +22,6 @@ public final class _133_ThatsBloodyHot extends Quest {
         super(false);
 
         addStartNpc(KANIS);
-        addTalkId(KANIS);
         addTalkId(GALATE);
     }
 
@@ -32,13 +31,13 @@ public final class _133_ThatsBloodyHot extends Quest {
 
         if (event.equals("priest_kanis_q0133_04.htm") && cond == 0) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         }
 
         if (event.equals("priest_kanis_q0133_12.htm") && cond == 1) {
             st.setCond(2);
-            st.giveItems(CRYSTAL_SAMPLE, 1);
+            st.giveItems(CRYSTAL_SAMPLE);
         }
 
         if (event.equals("Galate_q0133_06.htm") && cond == 2) {
@@ -46,7 +45,7 @@ public final class _133_ThatsBloodyHot extends Quest {
             st.takeItems(CRYSTAL_SAMPLE, -1);
             st.giveItems(ADENA_ID, 254247);
             st.addExpAndSp(331457, 32524);
-            st.exitCurrentQuest(false);
+            st.finish();
         }
 
         return event;
@@ -69,7 +68,7 @@ public final class _133_ThatsBloodyHot extends Quest {
                             htmltext = "priest_kanis_q0133_01.htm";
                     } else
                         htmltext = "priest_kanis_q0133_03.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             }
         } else if (id == STARTED)

@@ -401,8 +401,6 @@ public final class PcInventory extends Inventory {
 
     @Override
     public void restore() {
-        final int ownerId = getOwnerId();
-
         writeLock();
         try {
 
@@ -446,7 +444,7 @@ public final class PcInventory extends Inventory {
 
         actor.sendPacket(new InventoryUpdate().addNewItem(item));
         if (item.getTemplate().getAgathionEnergy() > 0) {
-            actor.sendPacket(new ExBR_AgathionEnergyInfo(1, Collections.singletonList(item)));
+            actor.sendPacket(new ExBR_AgathionEnergyInfo(1, List.of(item)));
         }
     }
 
@@ -456,7 +454,7 @@ public final class PcInventory extends Inventory {
 
         actor.sendPacket(new InventoryUpdate().addModifiedItem(item));
         if (item.getTemplate().getAgathionEnergy() > 0) {
-            actor.sendPacket(new ExBR_AgathionEnergyInfo(1, Collections.singletonList(item)));
+            actor.sendPacket(new ExBR_AgathionEnergyInfo(1, List.of(item)));
         }
     }
 

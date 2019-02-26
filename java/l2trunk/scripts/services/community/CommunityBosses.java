@@ -161,7 +161,7 @@ public final class CommunityBosses implements ScriptFile, ICommunityBoardHandler
      *
      * @param player      that clicked button
      * @param buttonIndex 1: Showing Location of the boss. 2: Showing Drops
-     * @param bossId      Id of the boss that player was looking into
+     * @param bossId      Id of the boss that getPlayer was looking into
      */
     private static void manageButtons(Player player, int buttonIndex, int bossId) {
         switch (buttonIndex) {
@@ -282,7 +282,7 @@ public final class CommunityBosses implements ScriptFile, ICommunityBoardHandler
     }
 
     /**
-     * Getting List of Bosses that player is looking for(including sort and search)
+     * Getting List of Bosses that getPlayer is looking for(including sort and search)
      *
      * @param sort   Type of sorting he want to use
      * @param search word that he is looking for
@@ -300,7 +300,7 @@ public final class CommunityBosses implements ScriptFile, ICommunityBoardHandler
     }
 
     /**
-     * Getting List of Bosses that player is looking for(including search)
+     * Getting List of Bosses that getPlayer is looking for(including search)
      *
      * @param search String that boss Name needs to contains(can be Empty)
      * @return MapMap of Bosses
@@ -444,9 +444,9 @@ public final class CommunityBosses implements ScriptFile, ICommunityBoardHandler
             StatsSet set2 = base.get(b);
             switch (sorting) {
                 case NAME_ASC:
-                    return temp1.name().compareTo(temp2.name());
+                    return temp1.name.compareTo(temp2.name);
                 case NAME_DESC:
-                    return temp2.name().compareTo(temp1.name());
+                    return temp2.name.compareTo(temp1.name);
                 case LEVEL_ASC:
                     return Integer.compare(temp1.level, temp2.level);
                 case LEVEL_DESC:

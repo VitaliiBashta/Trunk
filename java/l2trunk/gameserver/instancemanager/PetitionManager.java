@@ -69,7 +69,7 @@ public final class PetitionManager implements IPetitionHandler {
         // Petition consultation with <Player> underway.
         Player petitioner = currPetition.getPetitioner();
         if (petitioner == null) {
-            respondingAdmin.sendMessage("Invalid player for petition: " + petitionId + " for object id: " + currPetition.getPetitionerObjId());
+            respondingAdmin.sendMessage("Invalid getPlayer for petition: " + petitionId + " for object id: " + currPetition.getPetitionerObjId());
             return false;
         }
 
@@ -245,7 +245,7 @@ public final class PetitionManager implements IPetitionHandler {
     }
 
     public boolean sendActivePetitionMessage(Player player, String messageText) {
-        // if (!isPlayerInConsultation(player))
+        // if (!isPlayerInConsultation(getPlayer))
         // return false;
 
         Say2 cs;
@@ -349,7 +349,7 @@ public final class PetitionManager implements IPetitionHandler {
 
         NpcHtmlMessage html = new NpcHtmlMessage(0);
         html.setFile("admin/petition.htm");
-        html.replace("%petition%", String.valueOf(currPetition.getId()));
+        html.replace("%petition%", currPetition.getId());
         html.replace("%time%", dateFormat.format(new Date(currPetition.getSubmitTime())));
         html.replace("%type%", currPetition.getTypeAsString());
         html.replace("%petitioner%", (currPetition.getPetitioner() != null ? currPetition.getPetitioner().getName() : "Offline"));

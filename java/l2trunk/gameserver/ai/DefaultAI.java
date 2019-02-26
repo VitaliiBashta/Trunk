@@ -33,11 +33,11 @@ import java.util.stream.Stream;
 
 public class DefaultAI extends CharacterAI {
     protected static final Logger _log = LoggerFactory.getLogger(DefaultAI.class);
-    private static final int TaskDefaultWeight = 10000;
+    private static final int TASK_DEFAULT_WEIGHT = 10000;
     public static String namechar;
     protected final List<Skill> damSkills;
     protected final List<Skill> healSkills;
-    protected final Comparator<Creature> _nearestTargetComparator;
+    private final Comparator<Creature> nearestTargetComparator;
     /**
      * Список заданий
      */
@@ -89,7 +89,7 @@ public class DefaultAI extends CharacterAI {
         _stunSkills = npc.getTemplate().getStunSkills();
         healSkills = npc.getTemplate().getHealSkills();
 
-        _nearestTargetComparator = new NearestTargetComparator(actor);
+        nearestTargetComparator = new NearestTargetComparator(actor);
 
         // Preload some AI params
         MAX_PURSUE_RANGE = actor.getParameter("MaxPursueRange", actor.isRaid() ? Config.MAX_PURSUE_RANGE_RAID : npc.isUnderground() ? Config.MAX_PURSUE_UNDERGROUND_RANGE : Config.MAX_PURSUE_RANGE);
@@ -457,7 +457,7 @@ public class DefaultAI extends CharacterAI {
 
                     // Only sort if there is actually a target to attack
                     if (!aggroList.isEmpty()) {
-                        aggroList.sort(_nearestTargetComparator);
+                        aggroList.sort(nearestTargetComparator);
 
                         for (Playable target : aggroList) {
                             if (target == null || target.isAlikeDead())
@@ -468,7 +468,7 @@ public class DefaultAI extends CharacterAI {
 
 							if ((target.SummonInstance() || target.PetInstance()))
 							{
-								actor.getAggroList().addDamageHate(target.player(), 0, 1);
+								actor.getAggroList().addDamageHate(target.getPlayer(), 0, 1);
 							}
 
 							startRunningTask(AI_TASK_ATTACK_DELAY);
@@ -1228,7 +1228,7 @@ public class DefaultAI extends CharacterAI {
                 targets.add(cha);
             }
             if (!targets.isEmpty()) {
-                target = targets.get(Rnd.get(targets.size()));
+                target = Rnd.get(targets);
             }
         }
 
@@ -1492,7 +1492,7 @@ public class DefaultAI extends CharacterAI {
         Creature target;
         Location loc;
         boolean pathfind;
-        int weight = TaskDefaultWeight;
+        int weight = TASK_DEFAULT_WEIGHT;
 
         @Override
         public int compareTo(Task o) {
@@ -1501,7 +1501,7 @@ public class DefaultAI extends CharacterAI {
         }
     }
 
-    static class NearestTargetComparator implements Comparator<Creature> {
+    private static class NearestTargetComparator implements Comparator<Creature> {
         private final Creature actor;
 
         NearestTargetComparator(Creature actor) {
@@ -1510,11 +1510,7 @@ public class DefaultAI extends CharacterAI {
 
         @Override
         public int compare(Creature o1, Creature o2) {
-            double diff = actor.getDistance3DNoRoot(o1) - actor.getDistance3DNoRoot(o2);
-            if (diff < 0.0) {
-                return -1;
-            }
-            return diff > 0.0 ? 1 : 0;
+            return  (int)(actor.getDistance3DNoRoot(o1) - actor.getDistance3DNoRoot(o2));
         }
     }
 

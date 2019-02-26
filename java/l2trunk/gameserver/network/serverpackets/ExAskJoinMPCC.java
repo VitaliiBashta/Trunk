@@ -1,7 +1,7 @@
 package l2trunk.gameserver.network.serverpackets;
 
 /**
- * Asks the player to join a Command Channel
+ * Asks the getPlayer to join a Command Channel
  */
 public final class ExAskJoinMPCC extends L2GameServerPacket {
     private final String requestorName;

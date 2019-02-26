@@ -37,7 +37,6 @@ import l2trunk.scripts.handler.admincommands.AdminBosses;
 import l2trunk.scripts.handler.items.BeastShot;
 import l2trunk.scripts.handler.items.Extractable;
 import l2trunk.scripts.handler.items.FishItem;
-import l2trunk.scripts.scriptconfig.ScriptConfig;
 import l2trunk.scripts.services.*;
 import l2trunk.scripts.services.community.*;
 import l2trunk.scripts.services.petevolve.*;
@@ -113,12 +112,12 @@ public enum Scripts {
 //        if (caller != null)
 ////            try {
 ////                Field field;
-////                if ((field = FieldUtils.getField(o.getClass(), "player")) != null) {
+////                if ((field = FieldUtils.getField(o.getClass(), "getPlayer")) != null) {
 ////
 ////                    FieldUtils.writeField(field, o, caller.getRef());
 ////                }
 //                if (o instanceof Functions) {
-//                    ((Functions)o).player = caller.getRef();
+//                    ((Functions)o).getPlayer = caller.getRef();
 //                }
 ////            } catch (IllegalAccessException e) {
 ////                LOG.error("Scripts: Failed setting field for " + o.getClass().getName(), e);
@@ -190,7 +189,6 @@ public enum Scripts {
         functions.put("events.TrickOfTrans.TrickOfTrans", new TrickOfTrans());
         functions.put("events.Viktorina.Viktorina", new Viktorina());
         functions.put("handler.bypass.TeleToFantasyIsle", new TeleToFantasyIsle());
-        functions.put("scriptconfig.ScriptConfig", new ScriptConfig());
         functions.put("services.Augmentation", new Augmentation());
         functions.put("services.Birthday", new Birthday());
         functions.put("services.BuyWashPk", new BuyWashPk());
@@ -339,7 +337,6 @@ public enum Scripts {
         scripts.put("handler.voicecommands.Epics", new l2trunk.scripts.handler.voicecommands.Epics());
         scripts.put("handler.voicecommands.Quiz", new l2trunk.scripts.handler.voicecommands.Quiz());
 
-        scripts.put("scriptconfig.ScriptConfig", new ScriptConfig());
         scripts.put("services.community.CareerManager", new CareerManager());
         scripts.put("services.community.CommunityAuctionHouse", new l2trunk.scripts.services.community.CommunityAuctionHouse());
         scripts.put("services.community.CommunityBoard", new l2trunk.scripts.services.community.CommunityBoard());

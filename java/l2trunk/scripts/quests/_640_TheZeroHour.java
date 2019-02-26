@@ -29,7 +29,7 @@ public final class _640_TheZeroHour extends Quest  {
 
         if ("merc_kahmun_q0640_0103.htm".equals(event) && cond == 0) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         }
 
@@ -37,7 +37,7 @@ public final class _640_TheZeroHour extends Quest  {
             htmltext = "merc_kahmun_q0640_0107.htm";
             st.takeItems(STAKATO_QUEENS_FANG);
             st.giveItems(KAHMANS_SUPPLY_BOX);
-            st.exitCurrentQuest(false);
+            st.finish();
         }
 
         return htmltext;

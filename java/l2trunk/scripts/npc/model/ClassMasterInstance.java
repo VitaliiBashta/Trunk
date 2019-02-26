@@ -17,6 +17,8 @@ import l2trunk.gameserver.utils.Util;
 
 import java.util.StringTokenizer;
 
+import static l2trunk.commons.lang.NumberUtils.toInt;
+
 
 public final class ClassMasterInstance extends MerchantInstance {
     public ClassMasterInstance(int objectId, NpcTemplate template) {
@@ -84,7 +86,7 @@ public final class ClassMasterInstance extends MerchantInstance {
 
         StringTokenizer st = new StringTokenizer(command);
         if ("change_class".equals(st.nextToken())) {
-            int val = Integer.parseInt(st.nextToken());
+            ClassId val = ClassId.getById(toInt(st.nextToken()));
             long price = Long.parseLong(st.nextToken());
             if (player.getInventory().destroyItemByItemId(Config.CLASS_MASTERS_PRICE_ITEM, price, "ClassMasterInstance"))
                 changeClass(player, val);
@@ -96,7 +98,7 @@ public final class ClassMasterInstance extends MerchantInstance {
             super.onBypassFeedback(player, command);
     }
 
-    private void changeClass(Player player, int val) {
+    private void changeClass(Player player, ClassId val) {
         if (player.getClassId().occupation() == 2)
             player.sendPacket(Msg.YOU_HAVE_COMPLETED_THE_QUEST_FOR_3RD_OCCUPATION_CHANGE_AND_MOVED_TO_ANOTHER_CLASS_CONGRATULATIONS); // ??? 3 ?????
         else

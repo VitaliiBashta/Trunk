@@ -41,10 +41,10 @@ public final class _10295_SevenSignsSolinasTomb extends Quest {
     private static final List<Integer> TombGuardians = List.of(18956, 18957, 18958, 18959);
 
     static {
-        Location[] minions1 = {new Location(55672, -252120, -6760), new Location(55752, -252120, -6760), new Location(55656, -252216, -6760), new Location(55736, -252216, -6760)};
-        Location[] minions2 = {new Location(55672, -252728, -6760), new Location(55752, -252840, -6760), new Location(55768, -252840, -6760), new Location(55752, -252712, -6760)};
-        Location[] minions3 = {new Location(56504, -252840, -6760), new Location(56504, -252728, -6760), new Location(56392, -252728, -6760), new Location(56408, -252840, -6760)};
-        Location[] minions4 = {new Location(56520, -252232, -6760), new Location(56520, -252104, -6760), new Location(56424, -252104, -6760), new Location(56440, -252216, -6760)};
+        Location[] minions1 = {Location.of(55672, -252120, -6760), Location.of(55752, -252120, -6760), Location.of(55656, -252216, -6760), Location.of(55736, -252216, -6760)};
+        Location[] minions2 = {Location.of(55672, -252728, -6760), Location.of(55752, -252840, -6760), Location.of(55768, -252840, -6760), Location.of(55752, -252712, -6760)};
+        Location[] minions3 = {Location.of(56504, -252840, -6760), Location.of(56504, -252728, -6760), Location.of(56392, -252728, -6760), Location.of(56408, -252840, -6760)};
+        Location[] minions4 = {Location.of(56520, -252232, -6760), Location.of(56520, -252104, -6760), Location.of(56424, -252104, -6760), Location.of(56440, -252216, -6760)};
     }
 
     public _10295_SevenSignsSolinasTomb() {
@@ -64,14 +64,14 @@ public final class _10295_SevenSignsSolinasTomb extends Quest {
         String htmltext = event;
         if ("eris_q10295_5.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("teleport_in".equalsIgnoreCase(event)) {
-            player.teleToLocation(new Location(45512, -249832, -6760));
+            player.teleToLocation(Location.of(45512, -249832, -6760));
             teleportElcardia(player);
             return null;
         } else if ("teleport_out".equalsIgnoreCase(event)) {
-            player.teleToLocation(new Location(120664, -86968, -3392));
+            player.teleToLocation(Location.of(120664, -86968, -3392));
             teleportElcardia(player);
             return null;
         } else if ("use_staff".equalsIgnoreCase(event)) {
@@ -123,7 +123,7 @@ public final class _10295_SevenSignsSolinasTomb extends Quest {
             else
                 htmltext = "atlar_q10295_0.htm";
         } else if ("teleport_solina".equalsIgnoreCase(event)) {
-            player.teleToLocation(new Location(56033, -252944, -6760));
+            player.teleToLocation(Location.of(56033, -252944, -6760));
             teleportElcardia(player);
             return null;
         } else if ("tombsaintess_q10295_2.htm".equalsIgnoreCase(event)) {
@@ -132,7 +132,7 @@ public final class _10295_SevenSignsSolinasTomb extends Quest {
             else
                 htmltext = "tombsaintess_q10295_3.htm";
         } else if ("teleport_realtomb".equalsIgnoreCase(event)) {
-            player.teleToLocation(new Location(56081, -250391, -6760));
+            player.teleToLocation(Location.of(56081, -250391, -6760));
             teleportElcardia(player);
             player.showQuestMovie(ExStartScenePlayer.SCENE_SSQ2_ELYSS_NARRATION);
             return null;
@@ -160,7 +160,7 @@ public final class _10295_SevenSignsSolinasTomb extends Quest {
                     htmltext = "eris_q10295_1.htm";
                 else {
                     htmltext = "eris_q10295_0a.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1)
                 htmltext = "eris_q10295_6.htm";
@@ -170,9 +170,9 @@ public final class _10295_SevenSignsSolinasTomb extends Quest {
                 if (player.getLevel() >= 81) {
                     htmltext = "eris_q10295_8.htm";
                     st.addExpAndSp(125000000, 12500000);
-                    st.setState(COMPLETED);
+                    st.complete();
                     st.playSound(SOUND_FINISH);
-                    st.exitCurrentQuest(false);
+                    st.finish();
                 } else
                     htmltext = "eris_q10295_0.htm";
             }

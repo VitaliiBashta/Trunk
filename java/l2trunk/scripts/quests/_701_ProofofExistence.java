@@ -35,7 +35,7 @@ public final class _701_ProofofExistence extends Quest {
 
         if (event.equals("artius_q701_2.htm") && cond == 0) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if (event.equals("ex_mons") && cond == 1) {
             if (st.getQuestItemsCount(DeadmansRemains) >= 1) {
@@ -66,7 +66,7 @@ public final class _701_ProofofExistence extends Quest {
                     htmltext = "artius_q701_1.htm";
                 else {
                     htmltext = "artius_q701_0.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1)
                 if (st.haveAnyQuestItems(DeadmansRemains,BansheeQueensEye))

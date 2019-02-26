@@ -29,8 +29,6 @@ public final class _660_AidingtheFloranVillage extends Quest {
         super(false);
 
         addStartNpc(MARIA);
-
-        addTalkId(MARIA);
         addTalkId(ALEX);
 
         addKillId(CARSED_SEER, PLAIN_WATCMAN, ROUGH_HEWN_ROCK_GOLEM, DELU_LIZARDMAN_SHAMAN,
@@ -47,7 +45,7 @@ public final class _660_AidingtheFloranVillage extends Quest {
         long SHARD = st.getQuestItemsCount(ROUGHLY_HEWN_ROCK_GOLEM_SHARD);
         if ("30608-04.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("30291-05.htm".equalsIgnoreCase(event)) {
             if (EYES + SCALE + SHARD >= 45) {
@@ -132,7 +130,7 @@ public final class _660_AidingtheFloranVillage extends Quest {
             } else
                 htmltext = "30291-14.htm";
         } else if ("30291-06.htm".equalsIgnoreCase(event)) {
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             st.playSound(SOUND_FINISH);
         }
         return htmltext;
@@ -146,7 +144,7 @@ public final class _660_AidingtheFloranVillage extends Quest {
         if (npcId == MARIA && cond < 1) {
             if (st.player.getLevel() < 30) {
                 htmltext = "30608-01.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else
                 htmltext = "30608-02.htm";
         } else if (npcId == MARIA && cond == 1)

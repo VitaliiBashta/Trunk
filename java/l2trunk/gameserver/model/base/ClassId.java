@@ -3,7 +3,7 @@ package l2trunk.gameserver.model.base;
 import java.util.List;
 
 /**
- * This class defines all classes (ex : human fighter, darkFighter...) that a player can chose.<BR><BR>
+ * This class defines all classes (ex : human fighter, darkFighter...) that a getPlayer can chose.<BR><BR>
  * <p>
  * Data :<BR><BR>
  * <li>id : The Identifier of the class</li>
@@ -192,6 +192,9 @@ public enum ClassId {
         type2 = classType2;
     }
 
+    public static ClassId getById(int id) {
+        return VALUES.stream().filter(cls -> cls.id == id).findFirst().orElse(null);
+    }
     public final boolean childOf(ClassId cid) {
         if (parent == null) return false;
 
@@ -217,10 +220,6 @@ public enum ClassId {
             return 0;
 
         return 1 + parent.occupation();
-    }
-
-    public final ClassId parent() {
-        return parent;
     }
 
     public ClassType2 getType2() {

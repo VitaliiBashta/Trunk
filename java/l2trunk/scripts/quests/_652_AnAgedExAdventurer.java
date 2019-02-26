@@ -25,13 +25,13 @@ public final class _652_AnAgedExAdventurer extends Quest {
         String htmltext;
         if (event.equalsIgnoreCase("retired_oldman_tantan_q0652_03.htm") && st.getQuestItemsCount(SoulshotCgrade) >= 100) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.takeItems(SoulshotCgrade, 100);
             st.playSound(SOUND_ACCEPT);
             htmltext = "retired_oldman_tantan_q0652_04.htm";
         } else {
             htmltext = "retired_oldman_tantan_q0652_03.htm";
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             st.playSound(SOUND_GIVEUP);
         }
         return htmltext;
@@ -46,7 +46,7 @@ public final class _652_AnAgedExAdventurer extends Quest {
             if (cond == 0)
                 if (st.player.getLevel() < 46) {
                     htmltext = "retired_oldman_tantan_q0652_01a.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else
                     htmltext = "retired_oldman_tantan_q0652_01.htm";
         } else if (npcId == Sara && cond == 1) {
@@ -55,7 +55,7 @@ public final class _652_AnAgedExAdventurer extends Quest {
             if (Rnd.chance(50))
                 st.giveItems(ScrollEnchantArmorD);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
         return htmltext;
     }

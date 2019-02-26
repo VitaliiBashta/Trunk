@@ -25,9 +25,8 @@ public final class AsamahInstance extends NpcInstance {
 
         if ("buyTrap".equals(command)) {
             String htmltext;
-            QuestState ElrokianHuntersProof = player.getQuestState(_111_ElrokianHuntersProof.class);
 
-            if (player.getLevel() >= 75 && ElrokianHuntersProof != null && ElrokianHuntersProof.isCompleted() && player.getAdena() > 1_000_000) {
+            if (player.getLevel() >= 75 && player.isQuestCompleted(_111_ElrokianHuntersProof.class) && player.getAdena() > 1_000_000) {
                 if (player.haveItem( ElrokianTrap))
                     htmltext = getNpcId() + "-alreadyhave.htm";
                 else {

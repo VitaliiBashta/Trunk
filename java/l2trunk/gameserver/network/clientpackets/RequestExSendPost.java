@@ -303,6 +303,6 @@ public final class RequestExSendPost extends L2GameClientPacket {
         }
 
 
-        ItemLogHandler.getInstance().addLog(activeChar, attachments, this.recieverName, ItemActionType.MAIL);
+        ItemLogHandler.INSTANCE.addLog(activeChar, attachments, this.recieverName, ItemActionType.MAIL);
     }
 }

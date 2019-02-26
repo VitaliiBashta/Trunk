@@ -94,7 +94,7 @@ public final class ServerList extends L2LoginServerPacket {
         for (Integer serverId : _servers.keySet()) {
             server = _servers.get(serverId);
             writeC(server.serverId);
-            writeC(server.playerSize); // acc player size
+            writeC(server.playerSize); // acc getPlayer size
             writeC(server.deleteChars.length);
             for (int t : server.deleteChars)
                 writeD((int) (t - System.currentTimeMillis() / 1000L));

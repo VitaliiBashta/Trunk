@@ -56,9 +56,9 @@ public final class PartyVsPartyDuelEvent extends DuelEvent {
 
                     // Alexander - Add to the stats the won and lost duel for each part
 //					for (DuelSnapshotObject d : winners)
-//						d.player().addPlayerStats(Ranking.STAT_TOP_DUELS_WIN);
+//						d.getPlayer().addPlayerStats(Ranking.STAT_TOP_DUELS_WIN);
 //					for (DuelSnapshotObject d : lossers)
-//						d.player().addPlayerStats(Ranking.STAT_TOP_DUELS_LOST);
+//						d.getPlayer().addPlayerStats(Ranking.STAT_TOP_DUELS_LOST);
                 } else
                     sendPacket(SystemMsg.THE_DUEL_HAS_ENDED_IN_A_TIE);
                 break;

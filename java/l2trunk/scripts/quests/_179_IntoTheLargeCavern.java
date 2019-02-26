@@ -67,7 +67,7 @@ public final class _179_IntoTheLargeCavern extends Quest implements OnDeathListe
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("32138-06.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("EnterNornilsGarden".equalsIgnoreCase(event)) {
             if (st.getCond() != 1 || st.player.getRace() != Race.kamael)
@@ -86,16 +86,16 @@ public final class _179_IntoTheLargeCavern extends Quest implements OnDeathListe
             htmltext = "32138-01.htm";
             if (player.getLevel() < 17) {
                 htmltext = "32138-02.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else if (player.getLevel() > 20 || player.getClassId().occupation() > 0) {
                 htmltext = "32138-02a.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else if (!player.isQuestCompleted(_178_IconicTrinity.class)) {
                 htmltext = "32138-03.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else if (player.getRace() != Race.kamael) {
                 htmltext = "32138-04.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else
             htmltext = "32138-07.htm";
@@ -107,9 +107,9 @@ public final class _179_IntoTheLargeCavern extends Quest implements OnDeathListe
         World world = worlds.get(npc.getReflectionId());
         if (world != null && world.status == 0) {
             world.status = 1;
-            addSpawnToInstance(GardenGuard3, new Location(-110016, 74512, -12533, 0), world.instanceId);
-            addSpawnToInstance(GardenGuard2, new Location(-109729, 74913, -12533, 0), world.instanceId);
-            addSpawnToInstance(GardenGuard2, new Location(-109981, 74899, -12533, 0), world.instanceId);
+            addSpawnToInstance(GardenGuard3, Location.of(-110016, 74512, -12533, 0), world.instanceId);
+            addSpawnToInstance(GardenGuard2, Location.of(-109729, 74913, -12533, 0), world.instanceId);
+            addSpawnToInstance(GardenGuard2, Location.of(-109981, 74899, -12533, 0), world.instanceId);
         }
     }
 

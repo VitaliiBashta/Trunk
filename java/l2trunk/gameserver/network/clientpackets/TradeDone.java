@@ -84,8 +84,7 @@ public final class TradeDone extends L2GameClientPacket {
         request.confirm(parthner1);
         parthner2.sendPacket(new SystemMessage2(SystemMsg.C1_HAS_CONFIRMED_THE_TRADE).addString(parthner1.getName()), TradePressOtherOk.STATIC);
 
-        if (!request.isConfirmed(parthner2)) // Check for dual confirmation
-        {
+        if (!request.isConfirmed(parthner2)){ // Check for dual confirmation
             parthner1.sendActionFailed();
             return;
         }
@@ -106,7 +105,7 @@ public final class TradeDone extends L2GameClientPacket {
                     return;
 
                 weight = SafeMath.addAndCheck(weight, SafeMath.mulAndCheck(ti.getCount(), ti.getItem().weight()));
-                if (!ti.getItem().stackable() || parthner2.getInventory().getItemByItemId(ti.getItemId()) == null)
+                if (!ti.getItem().stackable() || !parthner2.haveItem(ti.getItemId()))
                     slots++;
             }
 
@@ -129,7 +128,7 @@ public final class TradeDone extends L2GameClientPacket {
                     return;
 
                 weight = SafeMath.addAndCheck(weight, SafeMath.mulAndCheck(ti.getCount(), ti.getItem().weight()));
-                if (!ti.getItem().stackable() || parthner1.getInventory().getItemByItemId(ti.getItemId()) == null)
+                if (!ti.getItem().stackable() || !parthner1.haveItem(ti.getItemId()))
                     slots++;
             }
 
@@ -158,7 +157,7 @@ public final class TradeDone extends L2GameClientPacket {
             parthner1.sendPacket(SystemMsg.YOUR_TRADE_WAS_SUCCESSFUL);
             parthner2.sendPacket(SystemMsg.YOUR_TRADE_WAS_SUCCESSFUL);
 
-            ItemLogHandler.getInstance().addLog(parthner1, parthner2, tradeList2, tradeList1, ItemActionType.TRADE);
+            ItemLogHandler.INSTANCE.addLog(parthner1, parthner2, tradeList2, tradeList1, ItemActionType.TRADE);
 
             success = true;
         } finally {

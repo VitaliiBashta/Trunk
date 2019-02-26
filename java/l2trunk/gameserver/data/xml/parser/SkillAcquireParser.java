@@ -4,12 +4,15 @@ import l2trunk.commons.data.xml.ParserUtil;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.data.xml.holder.SkillAcquireHolder;
 import l2trunk.gameserver.model.SkillLearn;
+import l2trunk.gameserver.model.base.ClassId;
 import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.util.*;
+
+import static l2trunk.commons.lang.NumberUtils.toInt;
 
 public enum SkillAcquireParser {
     INSTANCE;
@@ -49,7 +52,7 @@ public enum SkillAcquireParser {
             Element nxt = iterator.next();
             for (Iterator<Element> classIterator = nxt.elementIterator("class"); classIterator.hasNext(); ) {
                 Element classElement = classIterator.next();
-                int classId = Integer.parseInt(classElement.attributeValue("id"));
+                ClassId classId = ClassId.getById(toInt(classElement.attributeValue("id")));
                 List<SkillLearn> learns = parseSkillLearn(classElement);
                 SkillAcquireHolder.addAllTransferLearns(classId, learns);
             }

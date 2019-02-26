@@ -273,7 +273,7 @@ public abstract class Residence implements JdbcEntity {
 
         if (function.getEndTimeInMillis() > System.currentTimeMillis())
             ThreadPoolManager.INSTANCE.schedule(() -> startAutoTaskForFunction(function), function.getEndTimeInMillis() - System.currentTimeMillis());
-        else if (function.isInDebt() && clan.getAdenaCount() >= function.getLease()) // if player didn't pay before add extra fee
+        else if (function.isInDebt() && clan.getAdenaCount() >= function.getLease()) // if getPlayer didn't pay before add extra fee
         {
             clan.getWarehouse().destroyItemByItemId(ItemTemplate.ITEM_ID_ADENA, function.getLease(), "Residence Functions Auto Task");
             function.updateRentTime(false);

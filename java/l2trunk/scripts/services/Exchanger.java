@@ -288,7 +288,7 @@ public final class Exchanger extends Functions {
         html.replace("%cost%", Util.formatPay(player, change.getCostCount(), change.getCostId()));
         html.replace("%new_name%", variant.name);
         html.replace("%new_icon%", variant.icon);
-        html.replace("%new_id%", String.valueOf(id));
+        html.replace("%new_id%", id);
         html.replace("%is_upgrade%", (isUpgrade ? 1 : 0));
 
         player.sendPacket(html);

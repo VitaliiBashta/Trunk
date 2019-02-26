@@ -424,7 +424,7 @@ public final class CaravanTraderInstance extends NpcInstance {
         }
         NpcHtmlMessage html = new NpcHtmlMessage(player, this);
         html.setFile(htmlpath);
-        html.replace("%objectId%", String.valueOf(objectId()));
+        html.replace("%objectId%", objectId());
         html.replace("%npcname%", getName());
         player.sendPacket(html);
     }
@@ -442,7 +442,7 @@ public final class CaravanTraderInstance extends NpcInstance {
     private void showDialog(Player player, String path) {
         NpcHtmlMessage html = new NpcHtmlMessage(player, this);
         html.setFile(path);
-        html.replace("%objectId%", String.valueOf(objectId()));
+        html.replace("%objectId%", objectId());
         player.sendPacket(html);
     }
 

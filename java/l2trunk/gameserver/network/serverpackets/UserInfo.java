@@ -89,7 +89,7 @@ public final class UserInfo extends L2GameServerPacket {
             title = player.getVisibleTitle();
         }
 
-//		if (player.getPlayerAccess().GodMode && player.isInvisible())
+//		if (getPlayer.getPlayerAccess().GodMode && getPlayer.isInvisible())
 //			title += "[I]";
         if (player.isPolymorphed())
             if (NpcHolder.getTemplate(player.getPolyId()) != null)
@@ -143,7 +143,7 @@ public final class UserInfo extends L2GameServerPacket {
         vehicle_obj_id = player.isInBoat() ? player.getBoat().objectId() : 0x00;
         _race = player.getRace().ordinal();
         sex = player.isMale()? 1:0;
-        base_class = player.getBaseClassId();
+        base_class = player.getClassId().id;
         level = player.getLevel();
         _exp = player.getExp();
         _expPercent = Experience.getExpPercent(player.getLevel(), player.getExp());
@@ -321,7 +321,7 @@ public final class UserInfo extends L2GameServerPacket {
         writeD(mount_id);
         writeH(InventoryLimit);
         writeD(class_id);
-        writeD(0x00); // special effects? circles around player...
+        writeD(0x00); // special effects? circles around getPlayer...
         writeD(maxCp);
         writeD(curCp);
         writeC(_enchant);

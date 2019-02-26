@@ -92,7 +92,7 @@ public final class RequestSellItem extends L2GameClientPacket {
                 if (activeChar.isBBSUse())
                     activeChar.setIsBBSUse(false);
 
-                ItemLogHandler.getInstance().addLog(activeChar, item, count, ItemActionType.SOLD_TO_NPC);
+                ItemLogHandler.INSTANCE.addLog(activeChar, item, count, ItemActionType.SOLD_TO_NPC);
             }
         } catch (ArithmeticException ae) {
             activeChar.sendPacket(SystemMsg.YOU_HAVE_EXCEEDED_THE_QUANTITY_THAT_CAN_BE_INPUTTED);

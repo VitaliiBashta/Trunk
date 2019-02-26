@@ -25,9 +25,9 @@ public class ConditionTargetRelation extends Condition {
 
                 if (player.getParty() != null && target.getParty() != null && player.getParty() == target.getParty())
                     return Relation.Friend;
-                //		if (player.getClan() != null && target.getClan() != null && player.getClan() == target.getClan())
+                //		if (getPlayer.getClan() != null && target.getClan() != null && getPlayer.getClan() == target.getClan())
                 //		     return Relation.Friend;
-                //		if (player.getAlliance() != null && target.getAlliance() != null && player.getAlliance() == target.getAlliance())
+                //		if (getPlayer.getAlliance() != null && target.getAlliance() != null && getPlayer.getAlliance() == target.getAlliance())
                 //		     return Relation.Friend;
                 if (player.isInOlympiadMode() && player.isOlympiadCompStarted() && player.getOlympiadSide() == target.getOlympiadSide())
 

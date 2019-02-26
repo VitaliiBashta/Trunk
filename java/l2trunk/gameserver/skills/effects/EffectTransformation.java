@@ -36,7 +36,7 @@ public final class EffectTransformation extends Effect {
                 player.getPet().unSummon();
             player.decayMe();
             player.setFlying(true);
-            player.setLoc(player.getLoc().changeZ(300)); // Немного поднимаем чара над землей
+            player.setLoc(player.getLoc().addZ(300)); // Немного поднимаем чара над землей
 
             player.setTransformation(id);
             if (isVisible)

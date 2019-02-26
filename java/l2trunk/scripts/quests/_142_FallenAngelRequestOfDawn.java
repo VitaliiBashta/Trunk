@@ -13,7 +13,7 @@ public final class _142_FallenAngelRequestOfDawn extends Quest {
     private final static int ROCK = 32368;
     private final static int NpcAngel = 32369;
 
-    // Items
+    // items
     private final static int CRYPT = 10351;
     private final static int FRAGMENT = 10352;
     private final static int BLOOD = 10353;
@@ -43,25 +43,25 @@ public final class _142_FallenAngelRequestOfDawn extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("start")) {
+        if ("start".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
-            st.setState(STARTED);
+            st.start();
             htmltext = "stained_rock_q0142_03.htm";
-        } else if (event.equalsIgnoreCase("warehouse_chief_natools_q0142_10.htm")) {
+        } else if ("warehouse_chief_natools_q0142_10.htm".equalsIgnoreCase(event)) {
             st.setCond(2);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_MIDDLE);
-            st.giveItems(CRYPT, 1);
-        } else if (event.equalsIgnoreCase("bishop_raimund_q0142_05.htm")) {
+            st.giveItems(CRYPT);
+        } else if ("bishop_raimund_q0142_05.htm".equalsIgnoreCase(event)) {
             st.setCond(3);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("sage_kasian_q0142_10.htm")) {
+        } else if ("sage_kasian_q0142_10.htm".equalsIgnoreCase(event)) {
             st.setCond(4);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("stained_rock_q0142_05.htm"))
+        } else if ("stained_rock_q0142_05.htm".equalsIgnoreCase(event))
             if (GameObjectsStorage.getByNpcId(NpcAngel) != null)
                 htmltext = "stained_rock_q0142_03.htm";
             else if (GameObjectsStorage.getByNpcId(FallenAngel) != null)
@@ -85,12 +85,12 @@ public final class _142_FallenAngelRequestOfDawn extends Quest {
                 htmltext = "warehouse_chief_natools_q0142_11.htm";
         } else if (npcId == RAYMOND) {
             if (cond == 2)
-                if (st.getInt("talk") == 1)
+                if (st.isSet("talk"))
                     htmltext = "bishop_raimund_q0142_02a.htm";
                 else {
                     htmltext = "bishop_raimund_q0142_02.htm";
                     st.takeItems(CRYPT);
-                    st.set("talk", 1);
+                    st.set("talk");
                 }
             else if (cond == 3)
                 htmltext = "bishop_raimund_q0142_06.htm";
@@ -98,7 +98,7 @@ public final class _142_FallenAngelRequestOfDawn extends Quest {
                 htmltext = "bishop_raimund_q0142_07.htm";
                 st.playSound(SOUND_FINISH);
                 st.giveItems(ADENA_ID, 92676);
-                st.exitCurrentQuest(false);
+                st.finish();
             }
         } else if (npcId == CASIAN) {
             if (cond == 3)
@@ -110,9 +110,9 @@ public final class _142_FallenAngelRequestOfDawn extends Quest {
                 htmltext = "stained_rock_q0142_01.htm";
             else if (cond == 5) {
                 htmltext = "stained_rock_q0142_02.htm";
-                if (st.getInt("talk") != 1) {
+                if (!st.isSet("talk")) {
                     st.takeItems(BLOOD);
-                    st.set("talk", 1);
+                    st.set("talk");
                 }
             } else
                 htmltext = "stained_rock_q0142_06.htm";
@@ -125,15 +125,15 @@ public final class _142_FallenAngelRequestOfDawn extends Quest {
         if (npc.getNpcId() == FallenAngel) {
             if (cond == 5) {
                 st.setCond(6);
-                st.setState(STARTED);
+                st.start();
                 st.playSound(SOUND_MIDDLE);
                 st.giveItems(BLOOD);
             }
-        } else if (cond == 4 && st.getQuestItemsCount(FRAGMENT) < 30) {
+        } else if (cond == 4 && !st.haveQuestItem(FRAGMENT, 30)) {
             st.rollAndGive(FRAGMENT, 1, 1, 30, 20);
-            if (st.getQuestItemsCount(FRAGMENT) >= 30) {
+            if (st.haveQuestItem(FRAGMENT,30)) {
                 st.setCond(5);
-                st.setState(STARTED);
+                st.start();
             }
         }
     }

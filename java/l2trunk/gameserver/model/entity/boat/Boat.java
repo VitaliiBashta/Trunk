@@ -156,7 +156,7 @@ public abstract class Boat extends Creature {
 
     public abstract L2GameServerPacket startPacket();
 
-    public abstract L2GameServerPacket validateLocationPacket(Player player);
+    public abstract void validateLocationPacket(Player player);
 
     protected abstract L2GameServerPacket checkLocationPacket();
 
@@ -279,7 +279,7 @@ public abstract class Boat extends Creature {
     @Override
     public List<L2GameServerPacket> addPacketList(Player forPlayer, Creature dropper) {
         if (!isMoving) {
-            return Collections.singletonList(infoPacket());
+            return List.of(infoPacket());
         } else {
             List<L2GameServerPacket> list = new ArrayList<>(2);
             list.add(infoPacket());

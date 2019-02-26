@@ -1,5 +1,6 @@
 package l2trunk.scripts.quests;
 
+import l2trunk.gameserver.model.base.ClassId;
 import l2trunk.gameserver.utils.Location;
 
 import java.util.List;
@@ -9,15 +10,14 @@ public final class _073_SagaOfTheDuelist extends SagasSuperclass {
         super(false);
 
         NPC = List.of(30849, 31624, 31226, 31331, 31639, 31646, 31647, 31653, 31654, 31655, 31656, 31277, 31537);
-        Items = List.of(7080, 7537, 7081, 7488, 7271, 7302, 7333, 7364, 7395, 7426, 7096, 7546);
-        Mob = List.of(27289, 27222, 27281);
-        classid = 88;
-        prevclass = 0x02;
+        items = List.of(7080, 7537, 7081, 7488, 7271, 7302, 7333, 7364, 7395, 7426, 7096, 7546);
+        mob = List.of(27289, 27222, 27281);
+        classid = ClassId.duelist;
         locs = List.of(
-                new Location(164650, -74121, -2871),
-                new Location(47429, -56923, -2383),
-                new Location(47391, -56929, -2370));
-        Text = List.of(
+                Location.of(164650, -74121, -2871),
+                Location.of(47429, -56923, -2383),
+                Location.of(47391, -56929, -2370));
+        text = List.of(
                 "PLAYERNAME! Pursued to here! However, I jumped out of the Banshouren boundaries! You look at the giant as the sign of power!",
                 "... Oh ... good! So it was ... let's begin!",
                 "I do not have the patience ..! I have been a giant force ...! Cough chatter ah ah ah!",

@@ -20,28 +20,28 @@ public final class _026_TiredOfWaiting extends Quest {
     }
 
     @Override
-    public String onEvent(String event, QuestState qs, NpcInstance npc) {
+    public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
         if ("quest_accept".equalsIgnoreCase(event)) {
             htmltext = "isael_q0026_05.htm";
-            qs.setCond(1);
-            qs.setState(STARTED);
-            qs.playSound(SOUND_ACCEPT);
+            st.setCond(1);
+            st.start();
+            st.playSound(SOUND_ACCEPT);
         } else if ("LARGE_DRAGON_BONE".equalsIgnoreCase(event)) {
             htmltext = "kitzka_q0026_03.htm";
-            qs.giveItems(LARGE_DRAGON_BONE);
-            qs.playSound(SOUND_FINISH);
-            qs.exitCurrentQuest(false);
+            st.giveItems(LARGE_DRAGON_BONE);
+            st.playSound(SOUND_FINISH);
+            st.finish();
         } else if ("WILL_OF_ANTHARAS".equalsIgnoreCase(event)) {
             htmltext = "kitzka_q0026_04.htm";
-            qs.giveItems(WILL_OF_ANTHARAS);
-            qs.playSound(SOUND_FINISH);
-            qs.exitCurrentQuest(false);
+            st.giveItems(WILL_OF_ANTHARAS);
+            st.playSound(SOUND_FINISH);
+            st.finish();
         } else if ("SEALED_BLOOD_CRYSTAL".equalsIgnoreCase(event)) {
             htmltext = "kitzka_q0026_05.htm";
-            qs.giveItems(SEALED_BLOOD_CRYSTAL);
-            qs.playSound(SOUND_FINISH);
-            qs.exitCurrentQuest(false);
+            st.giveItems(SEALED_BLOOD_CRYSTAL);
+            st.playSound(SOUND_FINISH);
+            st.finish();
         }
         return htmltext;
     }
@@ -58,7 +58,7 @@ public final class _026_TiredOfWaiting extends Quest {
                         htmltext = "isael_q0026_02.htm";
                     else {
                         htmltext = "isael_q0026_01.htm";
-                        st.exitCurrentQuest(true);
+                        st.exitCurrentQuest();
                     }
                 } else if (cond == 1)
                     htmltext = "isael_q0026_03.htm";

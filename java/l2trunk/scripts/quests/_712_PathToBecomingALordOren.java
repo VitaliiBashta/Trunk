@@ -38,7 +38,7 @@ public final class _712_PathToBecomingALordOren extends Quest {
         Player castleOwner = castle.getOwner().getLeader().player;
         switch (event) {
             case "brasseur_q712_03.htm":
-                st.setState(STARTED);
+                st.start();
                 st.setCond(1);
                 st.playSound(SOUND_ACCEPT);
                 break;
@@ -48,13 +48,13 @@ public final class _712_PathToBecomingALordOren extends Quest {
             case "marty_q712_02.htm":
                 if (isLordAvailable(3, st)) {
                     castleOwner.getQuestState(this).setCond(4);
-                    st.setState(STARTED);
+                    st.start();
                 }
                 break;
             case "valleria_q712_02.htm":
                 if (isLordAvailable(4, st)) {
                     castleOwner.getQuestState(this).setCond(5);
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
                 break;
             case "croop_q712_05.htm":
@@ -67,7 +67,7 @@ public final class _712_PathToBecomingALordOren extends Quest {
                 Functions.npcSay(npc, NpcString.S1_HAS_BECOME_THE_LORD_OF_THE_TOWN_OF_OREN, st.player.getName());
                 castle.getDominion().changeOwner(castleOwner.getClan());
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 break;
         }
         return event;
@@ -90,11 +90,11 @@ public final class _712_PathToBecomingALordOren extends Quest {
                         htmltext = "brasseur_q712_01.htm";
                     else {
                         htmltext = "brasseur_q712_00.htm";
-                        st.exitCurrentQuest(true);
+                        st.exitCurrentQuest();
                     }
                 } else {
                     htmltext = "brasseur_q712_00a.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1) {
                 st.setCond(2);

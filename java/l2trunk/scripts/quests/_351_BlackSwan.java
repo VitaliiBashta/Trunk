@@ -19,8 +19,7 @@ public final class _351_BlackSwan extends Quest {
     public _351_BlackSwan() {
         super(false);
         addStartNpc(Gosta);
-        addTalkId(Heine);
-        addTalkId(Ferris);
+        addTalkId(Heine,Ferris);
         addKillId(20784, 20785, 21639, 21640, 21642, 21643);
         addQuestItem(ORDER_OF_GOSTA, LIZARD_FANG, BARREL_OF_LEAGUE);
     }
@@ -30,8 +29,8 @@ public final class _351_BlackSwan extends Quest {
         String htmltext = event;
         long amount = st.getQuestItemsCount(LIZARD_FANG);
         long amount2 = st.getQuestItemsCount(BARREL_OF_LEAGUE);
-        if (event.equalsIgnoreCase("30916-03.htm")) {
-            st.setState(STARTED);
+        if ("30916-03.htm".equalsIgnoreCase(event)) {
+            st.start();
             st.setCond(1);
             st.giveItems(ORDER_OF_GOSTA);
             st.playSound(SOUND_ACCEPT);
@@ -48,7 +47,7 @@ public final class _351_BlackSwan extends Quest {
         } else if ("30969-01.htm".equalsIgnoreCase(event) && st.getCond() == 2)
             htmltext = "30969-04.htm";
         else if ("5".equals(event)) {
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             st.playSound(SOUND_FINISH);
             htmltext = "";
         }
@@ -66,7 +65,7 @@ public final class _351_BlackSwan extends Quest {
                     htmltext = "30916-01.htm";
                 else {
                     htmltext = "30916-00.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond >= 1)
                 htmltext = "30916-04.htm";

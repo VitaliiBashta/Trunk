@@ -1573,7 +1573,7 @@
 		<set name="operateType" val="OP_PASSIVE" />
 	</skill>
 	<skill id="972" levels="1" name="Snipe">
-		<!-- For 2 minutes, increases accuracy by 6, P. Atk. by 199, bow's range by 200 and critical attack rate by 20% when using bow. The player cannot move while the effect lasts. -->
+		<!-- For 2 minutes, increases accuracy by 6, P. Atk. by 199, bow's range by 200 and critical attack rate by 20% when using bow. The getPlayer cannot move while the effect lasts. -->
 		<set name="icon" val="icon.skill0313" />
 		<set name="reuseDelay" val="75000" />
 		<set name="magicLevel" val="74" />

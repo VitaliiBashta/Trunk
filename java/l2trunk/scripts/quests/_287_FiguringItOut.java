@@ -24,7 +24,7 @@ public final class _287_FiguringItOut extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
         if ("laki_q287_03.htm".equalsIgnoreCase(event)) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if ("request_spitter".equalsIgnoreCase(event)) {
@@ -110,7 +110,7 @@ public final class _287_FiguringItOut extends Quest {
             htmltext = "laki_q287_08.htm";
         else if ("quit".equalsIgnoreCase(event)) {
             htmltext = "laki_q287_09.htm";
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
         return htmltext;
     }
@@ -126,7 +126,7 @@ public final class _287_FiguringItOut extends Quest {
                     htmltext = "laki_q287_01.htm";
                 else {
                     htmltext = "laki_q287_00.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1 && st.getQuestItemsCount(VialofTantaBlood) < 100)
                 htmltext = "laki_q287_04.htm";

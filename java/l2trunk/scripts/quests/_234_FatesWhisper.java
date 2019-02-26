@@ -147,20 +147,9 @@ public final class _234_FatesWhisper extends Quest {
         super(true);
 
         addStartNpc(REORIN);
-        addTalkId(CLIFF);
-        addTalkId(FERRIS);
-        addTalkId(ZENKIN);
-        addTalkId(KASPAR);
-        addTalkId(CABRIOCOFFER);
-        addTalkId(CHEST_KERNON);
-        addTalkId(CHEST_GOLKONDA);
-        addTalkId(CHEST_HALLATE);
+        addTalkId(CLIFF,FERRIS,ZENKIN,KASPAR,CABRIOCOFFER,CHEST_KERNON,CHEST_GOLKONDA,CHEST_HALLATE);
 
-        addKillId(SHILLEN_MESSAGER);
-        addKillId(DEATH_LORD);
-        addKillId(KERNON);
-        addKillId(LONGHORN);
-        addKillId(GUARDIAN_ANGEL, SEAL_ANGEL);
+        addKillId(SHILLEN_MESSAGER,DEATH_LORD,KERNON,LONGHORN,GUARDIAN_ANGEL, SEAL_ANGEL);
         addAttackId(BAIUM);
 
         addQuestItem(REIRIAS_SOUL_ORB,
@@ -181,7 +170,7 @@ public final class _234_FatesWhisper extends Quest {
         int newweapon = 0;
         if (event.equalsIgnoreCase("31002-03.htm")) {
             st.setCond(COND1);
-            st.setState(STARTED);
+            st.start();
         } else if (event.equalsIgnoreCase("31002-05b.htm")) {
             st.takeItems(REIRIAS_SOUL_ORB, -1);
             st.setCond(COND2);
@@ -191,10 +180,8 @@ public final class _234_FatesWhisper extends Quest {
             st.giveItems(KERNONS_INFERNIUM_SCEPTER, 1, false);
         else if (event.equalsIgnoreCase("31029-02.htm"))
             st.giveItems(GOLCONDAS_INFERNIUM_SCEPTER, 1, false);
-        else if (event.equalsIgnoreCase("31002-06a.htm")) {
-            st.takeItems(HALLATES_INFERNIUM_SCEPTER, -1);
-            st.takeItems(KERNONS_INFERNIUM_SCEPTER, -1);
-            st.takeItems(GOLCONDAS_INFERNIUM_SCEPTER, -1);
+        else if ("31002-06a.htm".equalsIgnoreCase(event)) {
+            st.takeAllItems(HALLATES_INFERNIUM_SCEPTER,KERNONS_INFERNIUM_SCEPTER,GOLCONDAS_INFERNIUM_SCEPTER);
             st.setCond(COND3);
         } else if (event.equalsIgnoreCase("30182-01c.htm")) {
             st.takeItems(INFERNIUM_VARNISH, -1);
@@ -302,7 +289,7 @@ public final class _234_FatesWhisper extends Quest {
                 st.unset("oldweapon");
                 st.playSound(SOUND_FINISH);
                 htmltext = "make.htm";
-                st.exitCurrentQuest(false);
+                st.finish();
             } else
                 htmltext = "noweapon.htm";
         }
@@ -322,7 +309,7 @@ public final class _234_FatesWhisper extends Quest {
                     htmltext = "31002-02.htm";
                 else {
                     htmltext = "31002-01.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             else if (cond == COND1 && st.haveQuestItem(REIRIAS_SOUL_ORB) )
                 htmltext = "31002-05.htm";

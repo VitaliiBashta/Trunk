@@ -169,7 +169,7 @@ public class FeedableBeastInstance extends MonsterInstance {
         else
             deleteMe();
 
-        // if this is finally a trained mob, then despawn any other trained mobs that the player might have and initialize the Tamed Beast.
+        // if this is finally a trained mob, then despawn any other trained mobs that the getPlayer might have and initialize the Tamed Beast.
         if (tamedBeasts.contains(nextNpcId)) {
             if (player.getTrainedBeasts().size() >= 7)
                 return;
@@ -201,7 +201,7 @@ public class FeedableBeastInstance extends MonsterInstance {
         else {
             // spawn the new mob
             MonsterInstance nextNpc = spawn(nextNpcId, getX(), getY(), getZ());
-            feedInfo.put(nextNpc.objectId(), player.objectId()); // register the player in the feedinfo for the mob that just spawned
+            feedInfo.put(nextNpc.objectId(), player.objectId()); // register the getPlayer in the feedinfo for the mob that just spawned
             player.setObjectTarget(nextNpc);
             ThreadPoolManager.INSTANCE.schedule(new AggrPlayer(nextNpc, player), 3000);
         }
@@ -246,7 +246,7 @@ public class FeedableBeastInstance extends MonsterInstance {
             int growthLevel = growthCapableMobs.get(npcId).growth_level;
 
             if (growthLevel > 0)
-                // check if this is the same player as the one who raised it from growth 0.
+                // check if this is the same getPlayer as the one who raised it from growth 0.
                 // if no, then do not allow a chance to raise the pet (food gets consumed but has no effect).
                 if (feedInfo.get(objectId) != null && feedInfo.get(objectId) != player.objectId())
                     return;

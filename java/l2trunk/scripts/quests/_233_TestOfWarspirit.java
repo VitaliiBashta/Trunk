@@ -32,10 +32,10 @@ public final class _233_TestOfWarspirit extends Quest {
     private static final int Stenoa_Gorgon_Queen = 27108;
     private static final int Tamlin_Orc = 20601;
     private static final int Tamlin_Orc_Archer = 20602;
-    // Items
+    // items
     private static final int Dimensional_Diamond = 7562;
     private static final int MARK_OF_WARSPIRIT = 2879;
-    // Quest Items
+    // Quest items
     private static final int VENDETTA_TOTEM = 2880;
     private static final int TAMLIN_ORC_HEAD = 2881;
     private static final int WARSPIRIT_TOTEM = 2882;
@@ -83,111 +83,64 @@ public final class _233_TestOfWarspirit extends Quest {
             TONARS_RIB_BONE,
             TONARS_SPINE,
             TONARS_ARM_BONE,
-            TONARS_THIGH_BONE    );
+            TONARS_THIGH_BONE);
     private static final List<Integer> Medusa_Drops = List.of(
             HERMODTS_RIB_BONE,
             HERMODTS_SPINE,
             HERMODTS_THIGH_BONE,
-            HERMODTS_ARM_BONE    );
+            HERMODTS_ARM_BONE);
 
     public _233_TestOfWarspirit() {
         super(false);
         addStartNpc(Somak);
 
-        addTalkId(Vivyan);
-        addTalkId(Sarien);
-        addTalkId(Racoy);
-        addTalkId(Manakia);
-        addTalkId(Orim);
-        addTalkId(Ancestor_Martankus);
-        addTalkId(Pekiron);
+        addTalkId(Vivyan, Sarien, Racoy, Manakia, Orim, Ancestor_Martankus, Pekiron);
 
-        addKillId(Porta);
-        addKillId(Excuro);
-        addKillId(Mordeo);
-        addKillId(Noble_Ant);
-        addKillId(Noble_Ant_Leader);
-        addKillId(Leto_Lizardman_Shaman);
-        addKillId(Leto_Lizardman_Overlord);
-        addKillId(Medusa);
-        addKillId(Stenoa_Gorgon_Queen);
-        addKillId(Tamlin_Orc);
-        addKillId(Tamlin_Orc_Archer);
+        addKillId(Porta, Excuro, Mordeo, Noble_Ant, Noble_Ant_Leader, Leto_Lizardman_Shaman, Leto_Lizardman_Overlord,
+                Medusa, Stenoa_Gorgon_Queen, Tamlin_Orc, Tamlin_Orc_Archer);
 
-        addQuestItem(VENDETTA_TOTEM);
-        addQuestItem(TAMLIN_ORC_HEAD);
-        addQuestItem(WARSPIRIT_TOTEM);
-        addQuestItem(ORIMS_CONTRACT);
-        addQuestItem(PORTAS_EYE);
-        addQuestItem(EXCUROS_SCALE);
-        addQuestItem(MORDEOS_TALON);
-        addQuestItem(BRAKIS_REMAINS1);
-        addQuestItem(PEKIRONS_TOTEM);
-        addQuestItem(TONARS_SKULL);
-        addQuestItem(TONARS_RIB_BONE);
-        addQuestItem(TONARS_SPINE);
-        addQuestItem(TONARS_ARM_BONE);
-        addQuestItem(TONARS_THIGH_BONE);
-        addQuestItem(TONARS_REMAINS1);
-        addQuestItem(MANAKIAS_TOTEM);
-        addQuestItem(HERMODTS_SKULL);
-        addQuestItem(HERMODTS_RIB_BONE);
-        addQuestItem(HERMODTS_SPINE);
-        addQuestItem(HERMODTS_ARM_BONE);
-        addQuestItem(HERMODTS_THIGH_BONE);
-        addQuestItem(HERMODTS_REMAINS1);
-        addQuestItem(RACOYS_TOTEM);
-        addQuestItem(VIVIANTES_LETTER);
-        addQuestItem(INSECT_DIAGRAM_BOOK);
-        addQuestItem(KIRUNAS_SKULL);
-        addQuestItem(KIRUNAS_RIB_BONE);
-        addQuestItem(KIRUNAS_SPINE);
-        addQuestItem(KIRUNAS_ARM_BONE);
-        addQuestItem(KIRUNAS_THIGH_BONE);
-        addQuestItem(KIRUNAS_REMAINS1);
-        addQuestItem(BRAKIS_REMAINS2);
-        addQuestItem(TONARS_REMAINS2);
-        addQuestItem(HERMODTS_REMAINS2);
-        addQuestItem(KIRUNAS_REMAINS2);
+        addQuestItem(VENDETTA_TOTEM, TAMLIN_ORC_HEAD, WARSPIRIT_TOTEM, ORIMS_CONTRACT, PORTAS_EYE, EXCUROS_SCALE,
+                MORDEOS_TALON, BRAKIS_REMAINS1, PEKIRONS_TOTEM, TONARS_SKULL, TONARS_RIB_BONE, TONARS_SPINE,
+                TONARS_ARM_BONE, TONARS_THIGH_BONE, TONARS_REMAINS1, MANAKIAS_TOTEM, HERMODTS_SKULL,
+                HERMODTS_RIB_BONE, HERMODTS_SPINE, HERMODTS_ARM_BONE, HERMODTS_THIGH_BONE, HERMODTS_REMAINS1,
+                RACOYS_TOTEM, VIVIANTES_LETTER, INSECT_DIAGRAM_BOOK, KIRUNAS_SKULL, KIRUNAS_RIB_BONE,
+                KIRUNAS_SPINE, KIRUNAS_ARM_BONE, KIRUNAS_THIGH_BONE, KIRUNAS_REMAINS1,
+                BRAKIS_REMAINS2, TONARS_REMAINS2, HERMODTS_REMAINS2, KIRUNAS_REMAINS2);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        int _state = st.getState();
-        if ("30510-05.htm".equalsIgnoreCase(event) && _state == CREATED) {
+        int state = st.getState();
+        if ("30510-05.htm".equalsIgnoreCase(event) && state == CREATED) {
             if (!st.player.isVarSet("dd3")) {
                 st.giveItems(Dimensional_Diamond, 92);
-                st.player.setVar("dd3", 1);
+                st.player.setVar("dd3");
             }
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
-        } else if ("30630-04.htm".equalsIgnoreCase(event) && _state == STARTED)
+        } else if ("30630-04.htm".equalsIgnoreCase(event) && state == STARTED)
             st.giveItems(ORIMS_CONTRACT);
-        else if ("30682-02.htm".equalsIgnoreCase(event) && _state == STARTED)
+        else if ("30682-02.htm".equalsIgnoreCase(event) && state == STARTED)
             st.giveItems(PEKIRONS_TOTEM);
-        else if ("30515-02.htm".equalsIgnoreCase(event) && _state == STARTED)
+        else if ("30515-02.htm".equalsIgnoreCase(event) && state == STARTED)
             st.giveItems(MANAKIAS_TOTEM);
-        else if ("30507-02.htm".equalsIgnoreCase(event) && _state == STARTED)
+        else if ("30507-02.htm".equalsIgnoreCase(event) && state == STARTED)
             st.giveItems(RACOYS_TOTEM);
-        else if ("30030-04.htm".equalsIgnoreCase(event) && _state == STARTED)
+        else if ("30030-04.htm".equalsIgnoreCase(event) && state == STARTED)
             st.giveItems(VIVIANTES_LETTER);
-        else if ("30649-03.htm".equalsIgnoreCase(event) && _state == STARTED && st.haveQuestItem(WARSPIRIT_TOTEM) ) {
-            st.takeItems(WARSPIRIT_TOTEM);
-            st.takeItems(BRAKIS_REMAINS2);
-            st.takeItems(HERMODTS_REMAINS2);
-            st.takeItems(KIRUNAS_REMAINS2);
-            st.takeItems(TAMLIN_ORC_HEAD);
-            st.takeItems(TONARS_REMAINS2);
+        else if ("30649-03.htm".equalsIgnoreCase(event) && state == STARTED && st.haveQuestItem(WARSPIRIT_TOTEM)) {
+            st.takeAllItems(WARSPIRIT_TOTEM, BRAKIS_REMAINS2, HERMODTS_REMAINS2,
+                    KIRUNAS_REMAINS2, TAMLIN_ORC_HEAD, TONARS_REMAINS2);
             st.giveItems(MARK_OF_WARSPIRIT);
             if (!st.player.isVarSet("prof2.3")) {
                 st.addExpAndSp(447444, 30704);
                 st.giveItems(ADENA_ID, 1000000);
-                st.player.setVar("prof2.3", 1);
+                st.player.setVar("prof2.3");
             }
             st.playSound(SOUND_FINISH);
             st.unset("cond");
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
 
         return event;
@@ -195,8 +148,8 @@ public final class _233_TestOfWarspirit extends Quest {
 
     @Override
     public String onTalk(NpcInstance npc, QuestState st) {
-        if (st.getQuestItemsCount(MARK_OF_WARSPIRIT) > 0) {
-            st.exitCurrentQuest(true);
+        if (st.haveQuestItem(MARK_OF_WARSPIRIT)) {
+            st.exitCurrentQuest();
             return "completed";
         }
         int _state = st.getState();
@@ -205,15 +158,15 @@ public final class _233_TestOfWarspirit extends Quest {
             if (npcId != Somak)
                 return "noquest";
             if (st.player.getRace() != Race.orc) {
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 return "30510-01.htm";
             }
             if (st.player.getClassId().id != 0x32) {
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 return "30510-02.htm";
             }
             if (st.player.getLevel() < 39) {
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 return "30510-03.htm";
             }
             st.setCond(0);
@@ -224,7 +177,7 @@ public final class _233_TestOfWarspirit extends Quest {
             return "noquest";
 
         if (npcId == Somak) {
-            if (st.haveQuestItem(VENDETTA_TOTEM) ) {
+            if (st.haveQuestItem(VENDETTA_TOTEM)) {
                 if (st.getQuestItemsCount(TAMLIN_ORC_HEAD) < 13)
                     return "30510-08.htm";
                 st.takeItems(VENDETTA_TOTEM);
@@ -236,9 +189,9 @@ public final class _233_TestOfWarspirit extends Quest {
                 st.playSound(SOUND_MIDDLE);
                 return "30510-09.htm";
             }
-            if (st.haveQuestItem(WARSPIRIT_TOTEM) )
+            if (st.haveQuestItem(WARSPIRIT_TOTEM))
                 return "30510-10.htm";
-            if (st.getQuestItemsCount(BRAKIS_REMAINS1) == 0 || st.getQuestItemsCount(HERMODTS_REMAINS1) == 0 || st.getQuestItemsCount(KIRUNAS_REMAINS1) == 0 || st.getQuestItemsCount(TONARS_REMAINS1) == 0)
+            if (!st.haveAnyQuestItems(BRAKIS_REMAINS1, HERMODTS_REMAINS1, KIRUNAS_REMAINS1, TONARS_REMAINS1))
                 return "30510-06.htm";
             st.takeItems(BRAKIS_REMAINS1);
             st.takeItems(HERMODTS_REMAINS1);
@@ -261,13 +214,13 @@ public final class _233_TestOfWarspirit extends Quest {
                 st.playSound(SOUND_MIDDLE);
                 return "30630-06.htm";
             }
-            if (st.getQuestItemsCount(BRAKIS_REMAINS1) == 0 && st.getQuestItemsCount(BRAKIS_REMAINS2) == 0 && st.getQuestItemsCount(VENDETTA_TOTEM) == 0)
+            if (!st.haveAnyQuestItems(BRAKIS_REMAINS1, BRAKIS_REMAINS2, VENDETTA_TOTEM))
                 return "30630-01.htm";
             return "30630-07.htm";
         }
 
         if (npcId == Pekiron) {
-            if (st.haveQuestItem(PEKIRONS_TOTEM) ) {
+            if (st.haveQuestItem(PEKIRONS_TOTEM)) {
                 for (int drop_id : Leto_Lizardman_Drops)
                     if (st.getQuestItemsCount(drop_id) == 0)
                         return "30682-03.htm";
@@ -279,7 +232,7 @@ public final class _233_TestOfWarspirit extends Quest {
                 st.playSound(SOUND_MIDDLE);
                 return "30682-04.htm";
             }
-            if (st.getQuestItemsCount(TONARS_REMAINS1) == 0 && st.getQuestItemsCount(TONARS_REMAINS2) == 0 && st.getQuestItemsCount(VENDETTA_TOTEM) == 0)
+            if (!st.haveAnyQuestItems(TONARS_REMAINS1, TONARS_REMAINS2, VENDETTA_TOTEM))
                 return "30682-01.htm";
             return "30682-05.htm";
         }
@@ -300,14 +253,15 @@ public final class _233_TestOfWarspirit extends Quest {
                 st.playSound(SOUND_MIDDLE);
                 return "30515-04.htm";
             }
-            if (st.getQuestItemsCount(HERMODTS_REMAINS1) == 0 && st.getQuestItemsCount(HERMODTS_REMAINS2) == 0 && st.getQuestItemsCount(VENDETTA_TOTEM) == 0)
+            if (!st.haveAnyQuestItems(HERMODTS_REMAINS1, HERMODTS_REMAINS2, VENDETTA_TOTEM))
                 return "30515-01.htm";
-            if (st.getQuestItemsCount(RACOYS_TOTEM) == 0 && (st.getQuestItemsCount(KIRUNAS_REMAINS2) > 0 || st.getQuestItemsCount(WARSPIRIT_TOTEM) > 0 || st.getQuestItemsCount(BRAKIS_REMAINS2) > 0 || st.getQuestItemsCount(HERMODTS_REMAINS2) > 0 || st.getQuestItemsCount(TAMLIN_ORC_HEAD) > 0 || st.getQuestItemsCount(TONARS_REMAINS2) > 0))
+            if (st.getQuestItemsCount(RACOYS_TOTEM) == 0
+                    && (st.haveAnyQuestItems(KIRUNAS_REMAINS2, WARSPIRIT_TOTEM, BRAKIS_REMAINS2, HERMODTS_REMAINS2, TAMLIN_ORC_HEAD, TONARS_REMAINS2)))
                 return "30515-05.htm";
         }
 
         if (npcId == Racoy)
-            if (st.haveQuestItem(RACOYS_TOTEM) ) {
+            if (st.haveQuestItem(RACOYS_TOTEM)) {
                 if (st.getQuestItemsCount(INSECT_DIAGRAM_BOOK) == 0)
                     return st.getQuestItemsCount(VIVIANTES_LETTER) == 0 ? "30507-03.htm" : "30507-04.htm";
                 if (st.getQuestItemsCount(VIVIANTES_LETTER) == 0) {
@@ -324,31 +278,31 @@ public final class _233_TestOfWarspirit extends Quest {
                     return "30507-06.htm";
                 }
             } else {
-                if (st.getQuestItemsCount(KIRUNAS_REMAINS1) == 0 && st.getQuestItemsCount(KIRUNAS_REMAINS2) == 0 && st.getQuestItemsCount(VENDETTA_TOTEM) == 0)
+                if (!st.haveAnyQuestItems(KIRUNAS_REMAINS1, KIRUNAS_REMAINS2, VENDETTA_TOTEM))
                     return "30507-01.htm";
                 return "30507-07.htm";
             }
 
         if (npcId == Vivyan)
-            if (st.haveQuestItem(RACOYS_TOTEM) ) {
+            if (st.haveQuestItem(RACOYS_TOTEM)) {
                 if (st.getQuestItemsCount(INSECT_DIAGRAM_BOOK) == 0)
                     return st.getQuestItemsCount(VIVIANTES_LETTER) == 0 ? "30030-01.htm" : "30030-05.htm";
                 if (st.getQuestItemsCount(VIVIANTES_LETTER) == 0)
                     return "30030-06.htm";
-            } else if (st.getQuestItemsCount(KIRUNAS_REMAINS1) == 0 && st.getQuestItemsCount(KIRUNAS_REMAINS2) == 0 && st.getQuestItemsCount(VENDETTA_TOTEM) == 0)
+            } else if (!st.haveAnyQuestItems(KIRUNAS_REMAINS1, KIRUNAS_REMAINS2, VENDETTA_TOTEM))
                 return "30030-07.htm";
 
         if (npcId == Sarien)
-            if (st.haveQuestItem(RACOYS_TOTEM) ) {
+            if (st.haveQuestItem(RACOYS_TOTEM)) {
                 if (st.getQuestItemsCount(INSECT_DIAGRAM_BOOK) == 0 && st.haveQuestItem(VIVIANTES_LETTER)) {
                     st.takeItems(VIVIANTES_LETTER);
                     st.giveItems(INSECT_DIAGRAM_BOOK);
                     st.playSound(SOUND_MIDDLE);
                     return "30436-01.htm";
                 }
-                if (st.getQuestItemsCount(VIVIANTES_LETTER) == 0 && st.haveQuestItem(INSECT_DIAGRAM_BOOK) )
+                if (st.getQuestItemsCount(VIVIANTES_LETTER) == 0 && st.haveQuestItem(INSECT_DIAGRAM_BOOK))
                     return "30436-02.htm";
-            } else if (st.getQuestItemsCount(KIRUNAS_REMAINS1) == 0 && st.getQuestItemsCount(KIRUNAS_REMAINS2) == 0 && st.getQuestItemsCount(VENDETTA_TOTEM) == 0)
+            } else if (!st.haveAnyQuestItems(KIRUNAS_REMAINS1, KIRUNAS_REMAINS2, VENDETTA_TOTEM))
                 return "30436-03.htm";
 
         if (npcId == Ancestor_Martankus && st.haveQuestItem(WARSPIRIT_TOTEM))
@@ -367,10 +321,10 @@ public final class _233_TestOfWarspirit extends Quest {
         if (npcId == Porta && qs.getQuestItemsCount(ORIMS_CONTRACT) > 0 && qs.getQuestItemsCount(PORTAS_EYE) < 10) {
             qs.giveItems(PORTAS_EYE, 1);
             qs.playSound(qs.getQuestItemsCount(PORTAS_EYE) == 10 ? SOUND_MIDDLE : SOUND_ITEMGET);
-        } else if (npcId == Excuro && qs.getQuestItemsCount(ORIMS_CONTRACT) > 0 && qs.getQuestItemsCount(EXCUROS_SCALE) < 10) {
+        } else if (npcId == Excuro && qs.haveQuestItem(ORIMS_CONTRACT) && qs.getQuestItemsCount(EXCUROS_SCALE) < 10) {
             qs.giveItems(EXCUROS_SCALE, 1);
             qs.playSound(qs.getQuestItemsCount(EXCUROS_SCALE) == 10 ? SOUND_MIDDLE : SOUND_ITEMGET);
-        } else if (npcId == Mordeo && qs.getQuestItemsCount(ORIMS_CONTRACT) > 0 && qs.getQuestItemsCount(MORDEOS_TALON) < 10) {
+        } else if (npcId == Mordeo && qs.haveQuestItem(ORIMS_CONTRACT) && qs.getQuestItemsCount(MORDEOS_TALON) < 10) {
             qs.giveItems(MORDEOS_TALON, 1);
             qs.playSound(qs.getQuestItemsCount(MORDEOS_TALON) == 10 ? SOUND_MIDDLE : SOUND_ITEMGET);
         } else if ((npcId == Noble_Ant || npcId == Noble_Ant_Leader) && qs.getQuestItemsCount(RACOYS_TOTEM) > 0) {
@@ -384,7 +338,7 @@ public final class _233_TestOfWarspirit extends Quest {
                 qs.playSound(drops.size() == 1 ? SOUND_MIDDLE : SOUND_ITEMGET);
             }
             drops.clear();
-        } else if ((npcId == Leto_Lizardman_Shaman || npcId == Leto_Lizardman_Overlord) && qs.getQuestItemsCount(PEKIRONS_TOTEM) > 0) {
+        } else if ((npcId == Leto_Lizardman_Shaman || npcId == Leto_Lizardman_Overlord) && qs.haveQuestItem(PEKIRONS_TOTEM)) {
             List<Integer> drops = new ArrayList<>();
             for (int drop_id : Leto_Lizardman_Drops)
                 if (qs.getQuestItemsCount(drop_id) == 0)
@@ -404,7 +358,7 @@ public final class _233_TestOfWarspirit extends Quest {
                 qs.playSound(drops.size() == 1 && qs.getQuestItemsCount(HERMODTS_SKULL) > 0 ? SOUND_MIDDLE : SOUND_ITEMGET);
             }
             drops.clear();
-        } else if (npcId == Stenoa_Gorgon_Queen && qs.getQuestItemsCount(MANAKIAS_TOTEM) > 0 && qs.getQuestItemsCount(HERMODTS_SKULL) == 0 && Rnd.chance(30)) {
+        } else if (npcId == Stenoa_Gorgon_Queen && qs.haveQuestItem(MANAKIAS_TOTEM) && !qs.haveQuestItem(HERMODTS_SKULL) && Rnd.chance(30)) {
             qs.giveItems(HERMODTS_SKULL);
             boolean _allset = true;
             for (int drop_id : Medusa_Drops)
@@ -413,7 +367,7 @@ public final class _233_TestOfWarspirit extends Quest {
                     break;
                 }
             qs.playSound(_allset ? SOUND_MIDDLE : SOUND_ITEMGET);
-        } else if ((npcId == Tamlin_Orc || npcId == Tamlin_Orc_Archer) && qs.getQuestItemsCount(VENDETTA_TOTEM) > 0 && qs.getQuestItemsCount(TAMLIN_ORC_HEAD) < 13)
+        } else if ((npcId == Tamlin_Orc || npcId == Tamlin_Orc_Archer) && qs.haveQuestItem(VENDETTA_TOTEM) && !qs.haveQuestItem(TAMLIN_ORC_HEAD, 13))
             if (Rnd.chance(npcId == Tamlin_Orc ? 30 : 50)) {
                 qs.giveItems(TAMLIN_ORC_HEAD);
                 qs.playSound(qs.getQuestItemsCount(TAMLIN_ORC_HEAD) == 13 ? SOUND_MIDDLE : SOUND_ITEMGET);

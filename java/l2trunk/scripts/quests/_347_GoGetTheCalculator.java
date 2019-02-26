@@ -23,9 +23,7 @@ public final class _347_GoGetTheCalculator extends Quest {
 
         addStartNpc(BRUNON);
 
-        addTalkId(SILVERA);
-        addTalkId(SPIRON);
-        addTalkId(BALANKI);
+        addTalkId(SILVERA,SPIRON,BALANKI);
 
         addKillId(GEMSTONE_BEAST);
 
@@ -38,7 +36,7 @@ public final class _347_GoGetTheCalculator extends Quest {
         switch (event) {
             case "1":
                 st.setCond(1);
-                st.setState(STARTED);
+                st.start();
                 st.playSound(SOUND_ACCEPT);
                 htmltext = BRUNON + "-02.htm";
                 break;
@@ -49,7 +47,7 @@ public final class _347_GoGetTheCalculator extends Quest {
                         st.setCond(2);
                     else
                         st.setCond(4);
-                    st.setState(STARTED);
+                    st.start();
                     htmltext = BALANKI + "-02.htm";
                 } else
                     htmltext = BALANKI + "-03.htm";
@@ -60,7 +58,7 @@ public final class _347_GoGetTheCalculator extends Quest {
                     st.setCond(3);
                 else
                     st.setCond(4);
-                st.setState(STARTED);
+                st.start();
                 break;
             case "30532_2":
                 htmltext = SPIRON + "-02b.htm";
@@ -72,14 +70,14 @@ public final class _347_GoGetTheCalculator extends Quest {
                 st.giveItems(CALCULATOR);
                 st.takeItems(CALCULATOR_Q, 1);
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 htmltext = BRUNON + "-05.htm";
                 break;
             case "30526_2":
                 st.giveItems(ADENA_ID, 1000, true);
                 st.takeItems(CALCULATOR_Q);
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 htmltext = BRUNON + "-06.htm";
                 break;
         }
@@ -103,7 +101,7 @@ public final class _347_GoGetTheCalculator extends Quest {
             htmltext = SPIRON + "-01.htm";
         else if (npcId == SILVERA && cond == 4) {
             st.setCond(5);
-            st.setState(STARTED);
+            st.start();
             htmltext = SILVERA + "-01.htm";
         } else if (npcId == SILVERA && cond == 5 && st.getQuestItemsCount(GEMSTONE_BEAST_CRYSTAL) < 10)
             htmltext = SILVERA + "-02.htm";
@@ -113,7 +111,7 @@ public final class _347_GoGetTheCalculator extends Quest {
             st.giveItems(CALCULATOR_Q);
             st.playSound(SOUND_ITEMGET);
             st.setCond(6);
-            st.setState(STARTED);
+            st.start();
         }
         return htmltext;
     }

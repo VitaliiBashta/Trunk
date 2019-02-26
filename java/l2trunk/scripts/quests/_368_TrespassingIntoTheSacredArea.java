@@ -5,10 +5,12 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
+import java.util.stream.IntStream;
+
 public final class _368_TrespassingIntoTheSacredArea extends Quest {
     //NPCs
     private static final int RESTINA = 30926;
-    //Items
+    //items
     private static final int BLADE_STAKATO_FANG = 5881;
     //Chances
     private static final int BLADE_STAKATO_FANG_BASECHANCE = 10;
@@ -16,8 +18,7 @@ public final class _368_TrespassingIntoTheSacredArea extends Quest {
     public _368_TrespassingIntoTheSacredArea() {
         super(false);
         addStartNpc(RESTINA);
-        for (int Blade_Stakato_id = 20794; Blade_Stakato_id <= 20797; Blade_Stakato_id++)
-            addKillId(Blade_Stakato_id);
+        addKillId(IntStream.rangeClosed(20794, 20797).toArray());
     }
 
     @Override
@@ -28,7 +29,7 @@ public final class _368_TrespassingIntoTheSacredArea extends Quest {
         if (st.getState() == CREATED) {
             if (st.player.getLevel() < 36) {
                 htmltext = "30926-00.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else {
                 htmltext = "30926-01.htm";
                 st.setCond(0);
@@ -50,12 +51,12 @@ public final class _368_TrespassingIntoTheSacredArea extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         int _state = st.getState();
         if ("30926-02.htm".equalsIgnoreCase(event) && _state == CREATED) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if ("30926-05.htm".equalsIgnoreCase(event) && _state == STARTED) {
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
         return event;
     }
@@ -63,7 +64,7 @@ public final class _368_TrespassingIntoTheSacredArea extends Quest {
     @Override
     public void onKill(NpcInstance npc, QuestState qs) {
         if (qs.getState() != STARTED)
-            return ;
+            return;
 
         if (Rnd.chance(npc.getNpcId() - 20794 + BLADE_STAKATO_FANG_BASECHANCE)) {
             qs.giveItems(BLADE_STAKATO_FANG);

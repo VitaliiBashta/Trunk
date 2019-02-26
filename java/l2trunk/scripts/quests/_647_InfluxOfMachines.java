@@ -6,6 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
 public final class _647_InfluxOfMachines extends Quest {
     // Settings: drop chance in %
@@ -23,8 +24,7 @@ public final class _647_InfluxOfMachines extends Quest {
 
         addStartNpc(32069);
         addTalkId(32069);
-        for (int i = 22801; i < 22812; i++)
-            addKillId(i);
+        addKillId(IntStream.rangeClosed(22801, 22812).toArray());
 
         addQuestItem(BROKEN_GOLEM_FRAGMENT);
     }
@@ -35,15 +35,15 @@ public final class _647_InfluxOfMachines extends Quest {
         if ("quest_accept".equalsIgnoreCase(event)) {
             htmltext = "collecter_gutenhagen_q0647_0103.htm";
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("647_3".equalsIgnoreCase(event))
-            if (st.getQuestItemsCount(BROKEN_GOLEM_FRAGMENT) >= 500) {
+            if (st.haveQuestItem(BROKEN_GOLEM_FRAGMENT, 500)) {
                 st.takeItems(BROKEN_GOLEM_FRAGMENT);
                 st.giveItems(Rnd.get(RECIPES));
                 htmltext = "collecter_gutenhagen_q0647_0201.htm";
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else
                 htmltext = "collecter_gutenhagen_q0647_0106.htm";
         return htmltext;
@@ -59,7 +59,7 @@ public final class _647_InfluxOfMachines extends Quest {
                 htmltext = "collecter_gutenhagen_q0647_0101.htm";
             else {
                 htmltext = "collecter_gutenhagen_q0647_0102.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         else if (cond == 1 && count < 500)
             htmltext = "collecter_gutenhagen_q0647_0106.htm";

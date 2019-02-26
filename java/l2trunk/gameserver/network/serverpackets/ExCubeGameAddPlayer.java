@@ -5,9 +5,9 @@ import l2trunk.gameserver.model.Player;
 /**
  * Format: (chd) dddS
  * d: always -1
- * d: player team
- * d: player object id
- * S: player name
+ * d: getPlayer team
+ * d: getPlayer object id
+ * S: getPlayer name
  */
 public class ExCubeGameAddPlayer extends L2GameServerPacket {
     private final boolean _isRedTeam;

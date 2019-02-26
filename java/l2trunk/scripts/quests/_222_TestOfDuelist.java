@@ -8,7 +8,7 @@ import l2trunk.gameserver.model.quest.QuestState;
 public final class _222_TestOfDuelist extends Quest {
     //NPC
     private static final int Kaien = 30623;
-    //Quest Items
+    //Quest items
     private static final int OrderGludio = 2763;
     private static final int OrderDion = 2764;
     private static final int OrderGiran = 2765;
@@ -30,7 +30,7 @@ public final class _222_TestOfDuelist extends Quest {
     private static final int GrandisSkin = 2781;
     private static final int TimakOrcsBelt = 2782;
     private static final int LakinsMace = 2783;
-    //Items
+    //items
     private static final int MarkOfDuelist = 2762;
     //MOB
     private static final int Puncher = 20085;
@@ -206,7 +206,7 @@ public final class _222_TestOfDuelist extends Quest {
     public _222_TestOfDuelist() {
         super(false);
         addStartNpc(Kaien);
-        //Mob Drop
+        //mob Drop
         for (int[] aDROPLIST_COND : DROPLIST_COND) {
             addKillId(aDROPLIST_COND[2]);
             addQuestItem(aDROPLIST_COND[4]);
@@ -221,7 +221,7 @@ public final class _222_TestOfDuelist extends Quest {
             htmltext = "30623-05.htm";
         else if ("30623-07.htm".equalsIgnoreCase(event)) {
             st.setCond(2);
-            st.setState(STARTED);
+            st.start();
             st.giveItems(OrderGludio);
             st.giveItems(OrderDion);
             st.giveItems(OrderGiran);
@@ -229,7 +229,7 @@ public final class _222_TestOfDuelist extends Quest {
             st.giveItems(OrderAden);
             if (!st.player.isVarSet("dd3")) {
                 st.giveItems(7562, 72, false);
-                st.player.setVar("dd3", 1);
+                st.player.setVar("dd3");
             }
             st.playSound(SOUND_ACCEPT);
         } else if ("30623-16.htm".equalsIgnoreCase(event)) {
@@ -250,7 +250,7 @@ public final class _222_TestOfDuelist extends Quest {
             st.takeItems(OrderAden);
             st.giveItems(FinalOrder);
             st.setCond(4);
-            st.setState(STARTED);
+            st.start();
         }
         return htmltext;
     }
@@ -263,18 +263,18 @@ public final class _222_TestOfDuelist extends Quest {
         if (npcId == Kaien)
             if (st.getQuestItemsCount(MarkOfDuelist) != 0) {
                 htmltext = "completed";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else if (cond == 0) {
                 if (st.player.getClassId().id == 0x01 || st.player.getClassId().id == 0x2f || st.player.getClassId().id == 0x13 || st.player.getClassId().id == 0x20) {
                     if (st.player.getLevel() >= 39)
                         htmltext = "30623-03.htm";
                     else {
                         htmltext = "30623-01.htm";
-                        st.exitCurrentQuest(true);
+                        st.exitCurrentQuest();
                     }
                 } else {
                     htmltext = "30623-02.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 2)
                 htmltext = "30623-14.htm";
@@ -287,11 +287,11 @@ public final class _222_TestOfDuelist extends Quest {
                 if (!st.player.isVarSet("prof2.3")) {
                     st.addExpAndSp(474444, 30704);
                     st.giveItems(ADENA_ID, 80000);
-                    st.player.setVar("prof2.3", 1);
+                    st.player.setVar("prof2.3");
                 }
                 htmltext = "30623-18.htm";
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         return htmltext;
     }
@@ -308,14 +308,14 @@ public final class _222_TestOfDuelist extends Quest {
                     else if (st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[7], aDROPLIST_COND[5], aDROPLIST_COND[6]))
                         if (aDROPLIST_COND[1] != cond && aDROPLIST_COND[1] != 0) {
                             st.setCond(aDROPLIST_COND[1]);
-                            st.setState(STARTED);
+                            st.start();
                         }
         if (cond == 2 && st.getQuestItemsCount(PunchersShard) >= 10 && st.getQuestItemsCount(NobleAntsFeeler) >= 10 && st.getQuestItemsCount(DronesChitin) >= 10 && st.getQuestItemsCount(DeadSeekerFang) >= 10 && st.getQuestItemsCount(OverlordNecklace) >= 10 && st.getQuestItemsCount(FetteredSoulsChain) >= 10 && st.getQuestItemsCount(ChiefsAmulet) >= 10 && st.getQuestItemsCount(EnchantedEyeMeat) >= 10 && st.getQuestItemsCount(TamrinOrcsRing) >= 10 && st.getQuestItemsCount(TamrinOrcsArrow) >= 10) {
             st.setCond(3);
-            st.setState(STARTED);
+            st.start();
         } else if (cond == 4 && st.getQuestItemsCount(ExcurosSkin) >= 3 && st.getQuestItemsCount(KratorsShard) >= 3 && st.getQuestItemsCount(LakinsMace) >= 3 && st.getQuestItemsCount(GrandisSkin) >= 3 && st.getQuestItemsCount(TimakOrcsBelt) >= 3) {
             st.setCond(5);
-            st.setState(STARTED);
+            st.start();
         }
     }
 }

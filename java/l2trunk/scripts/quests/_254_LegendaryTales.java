@@ -39,8 +39,7 @@ public final class _254_LegendaryTales extends Quest {
                 mask = mask << 1;
             }
 
-            if ((var & mask) == 0) // этого босса еще не убивали
-            {
+            if ((var & mask) == 0) {// этого босса еще не убивали
                 String name = NpcHolder.getTemplate(i).name();
                 player.sendMessage(name);
             }
@@ -51,7 +50,7 @@ public final class _254_LegendaryTales extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
         if ("gilmore_q254_05.htm".equalsIgnoreCase(event)) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if (event.startsWith("gilmore_q254_09.htm")) {
@@ -61,8 +60,8 @@ public final class _254_LegendaryTales extends Quest {
             int i = toInt(tokenizer.nextToken()) + 1;
             st.giveItems(items.get(i));
             st.playSound(SOUND_FINISH);
-            st.setState(COMPLETED);
-            st.exitCurrentQuest(false);
+            st.complete();
+            st.finish();
             htmltext = "gilmore_q254_09.htm";
         }
 
@@ -79,7 +78,7 @@ public final class _254_LegendaryTales extends Quest {
                     htmltext = "gilmore_q254_01.htm";
                 else {
                     htmltext = "gilmore_q254_00.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1)
                 htmltext = "gilmore_q254_06.htm";

@@ -17,7 +17,7 @@ public final class _231_TestOfTheMaestro extends Quest {
     private static final int Toma = 30556;
     private static final int Lorain = 30673;
 
-    //Quest Items
+    //Quest items
     private static final int RecommendationOfBalanki = 2864;
     private static final int RecommendationOfFilaur = 2865;
     private static final int RecommendationOfArin = 2866;
@@ -34,7 +34,7 @@ public final class _231_TestOfTheMaestro extends Quest {
     private static final int BloodOfLeech = 2878;
     private static final int BrokenTeleportDevice = 2916;
 
-    // Items
+    // items
     private static final int DD = 7562;
     private static final int MarkOfMaestro = 2867;
 
@@ -93,17 +93,9 @@ public final class _231_TestOfTheMaestro extends Quest {
         super(false);
 
         addStartNpc(Lockirin);
-        addTalkId(Balanki);
-        addTalkId(Arin);
-        addTalkId(Filaur);
-        addTalkId(Spiron);
-        addTalkId(Croto);
-        addTalkId(Kamur);
-        addTalkId(Dubabah);
-        addTalkId(Toma);
-        addTalkId(Lorain);
+        addTalkId(Balanki,Arin,Filaur,Spiron,Croto,Kamur,Dubabah,Toma,Lorain);
 
-        // Mob Drop
+        // mob Drop
         for (int[] aDROPLIST_COND : DROPLIST_COND) {
             addKillId(aDROPLIST_COND[2]);
             addQuestItem(aDROPLIST_COND[4]);
@@ -123,7 +115,7 @@ public final class _231_TestOfTheMaestro extends Quest {
     }
 
     private void recommendationCount(QuestState st) {
-        if (st.getQuestItemsCount(RecommendationOfArin) != 0 && st.getQuestItemsCount(RecommendationOfFilaur) != 0 && st.getQuestItemsCount(RecommendationOfBalanki) != 0)
+        if (st.haveAllQuestItems(RecommendationOfArin,RecommendationOfFilaur,RecommendationOfBalanki))
             st.setCond(17);
     }
 
@@ -132,32 +124,32 @@ public final class _231_TestOfTheMaestro extends Quest {
         if (event.equalsIgnoreCase("30531-04.htm")) {
             if (!st.player.isVarSet("dd3")) {
                 st.giveItems(DD, 23);
-                st.player.setVar("dd3", 1);
+                st.player.setVar("dd3");
             }
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound("ItemSound.quest_accept");
-        } else if (event.equalsIgnoreCase("30533-02.htm")) {
+        } else if ("30533-02.htm".equalsIgnoreCase(event)) {
             st.setCond(2);
-            st.setState(STARTED);
-        } else if (event.equalsIgnoreCase("30671-02.htm")) {
+            st.start();
+        } else if ("30671-02.htm".equalsIgnoreCase(event)) {
             st.giveItems(PaintOfKamuru);
             st.setCond(3);
-            st.setState(STARTED);
-        } else if (event.equalsIgnoreCase("30556-05.htm")) {
+            st.start();
+        } else if ("30556-05.htm".equalsIgnoreCase(event)) {
             st.takeItems(PaintOfTeleportDevice);
             st.giveItems(BrokenTeleportDevice);
             st.setCond(9);
-            st.setState(STARTED);
+            st.start();
             st.player.teleToLocation(140352, -194133, -2028);
-        } else if (event.equalsIgnoreCase("30673-04.htm")) {
+        } else if ("30673-04.htm".equalsIgnoreCase(event)) {
             st.takeItems(BloodOfLeech);
             st.takeItems(StingerWaspNeedle);
             st.takeItems(MarshSpidersWeb);
             st.takeItems(IngredientsOfAntidote);
             st.giveItems(ReportOfCruma);
             st.setCond(15);
-            st.setState(STARTED);
+            st.start();
         }
         return event;
     }
@@ -170,18 +162,18 @@ public final class _231_TestOfTheMaestro extends Quest {
         if (npcId == Lockirin) {
             if (st.getQuestItemsCount(MarkOfMaestro) != 0) {
                 htmltext = "completed";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else if (cond == 0) {
                 if (st.player.getClassId().id == 0x38) {
                     if (st.player.getLevel() >= 39)
                         htmltext = "30531-03.htm";
                     else {
                         htmltext = "30531-01.htm";
-                        st.exitCurrentQuest(true);
+                        st.exitCurrentQuest();
                     }
                 } else {
                     htmltext = "30531-02.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond >= 1 && cond <= 16)
                 htmltext = "30531-05.htm";
@@ -189,15 +181,13 @@ public final class _231_TestOfTheMaestro extends Quest {
                 if (!st.player.isVarSet("prof2.3")) {
                     st.addExpAndSp(1029122, 70620);
                     st.giveItems(ADENA_ID, 186077);
-                    st.player.setVar("prof2.3", 1);
+                    st.player.setVar("prof2.3");
                 }
                 htmltext = "30531-06.htm";
-                st.takeItems(RecommendationOfBalanki);
-                st.takeItems(RecommendationOfFilaur);
-                st.takeItems(RecommendationOfArin);
+                st.takeAllItems(RecommendationOfBalanki,RecommendationOfFilaur,RecommendationOfArin);
                 st.giveItems(MarkOfMaestro);
                 st.playSound("ItemSound.quest_finish");
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (npcId == Balanki) {
             if ((cond == 1 || cond == 11 || cond == 16) && st.getQuestItemsCount(RecommendationOfBalanki) == 0)
@@ -210,15 +200,15 @@ public final class _231_TestOfTheMaestro extends Quest {
                 htmltext = "30533-04.htm";
                 st.setCond(7);
                 recommendationCount(st);
-                st.setState(STARTED);
+                st.start();
             } else if (cond == 7 || cond == 17)
                 htmltext = "30533-05.htm";
         } else if (npcId == Arin) {
             if ((cond == 1 || cond == 7 || cond == 16) && st.getQuestItemsCount(RecommendationOfArin) == 0) {
-                st.giveItems(PaintOfTeleportDevice, 1);
+                st.giveItems(PaintOfTeleportDevice);
                 htmltext = "30536-01.htm";
                 st.setCond(8);
-                st.setState(STARTED);
+                st.start();
             } else if (cond == 8)
                 htmltext = "30536-02.htm";
             else if (cond == 10) {
@@ -227,15 +217,15 @@ public final class _231_TestOfTheMaestro extends Quest {
                 htmltext = "30536-03.htm";
                 st.setCond(11);
                 recommendationCount(st);
-                st.setState(STARTED);
+                st.start();
             } else if (cond == 11 || cond == 17)
                 htmltext = "30536-04.htm";
         } else if (npcId == Filaur) {
             if ((cond == 1 || cond == 7 || cond == 11) && st.getQuestItemsCount(RecommendationOfFilaur) == 0) {
-                st.giveItems(ArchitectureOfCruma, 1);
+                st.giveItems(ArchitectureOfCruma);
                 htmltext = "30535-01.htm";
                 st.setCond(12);
-                st.setState(STARTED);
+                st.start();
             } else if (cond == 12)
                 htmltext = "30535-02.htm";
             else if (cond == 15) {
@@ -244,7 +234,7 @@ public final class _231_TestOfTheMaestro extends Quest {
                 st.setCond(16);
                 htmltext = "30535-03.htm";
                 recommendationCount(st);
-                st.setState(STARTED);
+                st.start();
             } else if (cond > 15)
                 htmltext = "30535-04.htm";
         } else if (npcId == Croto) {
@@ -253,12 +243,11 @@ public final class _231_TestOfTheMaestro extends Quest {
             else if (cond == 3)
                 htmltext = "30671-03.htm";
             else if (cond == 5) {
-                st.takeItems(NecklaceOfKamuru);
-                st.takeItems(PaintOfKamuru);
+                st.takeAllItems(NecklaceOfKamuru,PaintOfKamuru);
                 st.giveItems(LetterOfSolderDetachment);
                 htmltext = "30671-04.htm";
                 st.setCond(6);
-                st.setState(STARTED);
+                st.start();
             } else if (cond == 6)
                 htmltext = "30671-05.htm";
         } else if (npcId == Dubabah && cond == 3)
@@ -266,7 +255,7 @@ public final class _231_TestOfTheMaestro extends Quest {
         else if (npcId == Kamur && cond == 3) {
             htmltext = "30675-01.htm";
             st.setCond(4);
-            st.setState(STARTED);
+            st.start();
         } else if (npcId == Toma) {
             if (cond == 8)
                 htmltext = "30556-01.htm";
@@ -275,7 +264,7 @@ public final class _231_TestOfTheMaestro extends Quest {
                 st.giveItems(TeleportDevice, 5);
                 htmltext = "30556-06.htm";
                 st.setCond(10);
-                st.setState(STARTED);
+                st.start();
             } else if (cond == 10)
                 htmltext = "30556-07.htm";
         } else if (npcId == Lorain) {
@@ -307,11 +296,11 @@ public final class _231_TestOfTheMaestro extends Quest {
                     else if (st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[7], aDROPLIST_COND[5], aDROPLIST_COND[6]))
                         if (aDROPLIST_COND[1] != cond && aDROPLIST_COND[1] != 0) {
                             st.setCond(aDROPLIST_COND[1]);
-                            st.setState(STARTED);
+                            st.start();
                         }
         if (cond == 13 && st.getQuestItemsCount(BloodOfLeech) >= 10 && st.getQuestItemsCount(StingerWaspNeedle) >= 10 && st.getQuestItemsCount(MarshSpidersWeb) >= 10) {
             st.setCond(14);
-            st.setState(STARTED);
+            st.start();
         }
     }
 }

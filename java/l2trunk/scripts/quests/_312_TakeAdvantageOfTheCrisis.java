@@ -39,10 +39,10 @@ public final class _312_TakeAdvantageOfTheCrisis extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if (event.equalsIgnoreCase("30535-06.htm")) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("30535-09.htm")) {
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             st.playSound(SOUND_FINISH);
         } else {
             int id = Integer.parseInt(event);
@@ -76,7 +76,7 @@ public final class _312_TakeAdvantageOfTheCrisis extends Quest {
                     htmltext = "30535-01.htm";
                 else {
                     htmltext = "30535-00.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (id == STARTED)
                 if (st.haveAnyQuestItems(MINERAL_FRAGMENT))

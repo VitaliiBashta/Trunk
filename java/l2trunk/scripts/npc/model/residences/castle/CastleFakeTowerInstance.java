@@ -24,7 +24,7 @@ public class CastleFakeTowerInstance extends NpcInstance {
     }
 
     @Override
-    public void showChatWindow(Player player, String filename, Object... replace) {
+    public void showChatWindow(Player player, String filename) {
     }
 
     @Override

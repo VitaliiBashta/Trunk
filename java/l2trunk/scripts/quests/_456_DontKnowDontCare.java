@@ -47,7 +47,7 @@ public final class _456_DontKnowDontCare extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if (event.equalsIgnoreCase("sepsoul_q456_05.htm")) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("take_essense")) {
@@ -90,7 +90,7 @@ public final class _456_DontKnowDontCare extends Quest {
                 st.giveItems(Rnd.get(reward_attr_crystal),10);
             st.giveItems(gemstone_s, 10);
 
-            st.setState(COMPLETED);
+            st.complete();
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(this);
         }
@@ -110,7 +110,7 @@ public final class _456_DontKnowDontCare extends Quest {
                             htmltext = "sepsoul_q456_01.htm";
                         else {
                             htmltext = "sepsoul_q456_00.htm";
-                            st.exitCurrentQuest(true);
+                            st.exitCurrentQuest();
                         }
                     } else
                         htmltext = "sepsoul_q456_00a.htm";

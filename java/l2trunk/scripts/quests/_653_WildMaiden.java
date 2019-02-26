@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class _653_WildMaiden extends Quest {
-    // Items
+    // items
     private static final int SOE = 736;
     // Npc
     private final int SUKI = 32013;
@@ -22,8 +22,6 @@ public final class _653_WildMaiden extends Quest {
         super(false);
 
         addStartNpc(SUKI);
-
-        addTalkId(SUKI);
         addTalkId(GALIBREDO);
     }
 
@@ -50,7 +48,7 @@ public final class _653_WildMaiden extends Quest {
         if (event.equalsIgnoreCase("spring_girl_sooki_q0653_03.htm")) {
             if (st.getQuestItemsCount(SOE) > 0) {
                 st.setCond(1);
-                st.setState(STARTED);
+                st.start();
                 st.playSound(SOUND_ACCEPT);
                 st.takeItems(SOE, 1);
                 htmltext = "spring_girl_sooki_q0653_04a.htm";
@@ -59,7 +57,7 @@ public final class _653_WildMaiden extends Quest {
                 st.startQuestTimer("suki_timer", 20000);
             }
         } else if (event.equalsIgnoreCase("spring_girl_sooki_q0653_03.htm")) {
-            st.exitCurrentQuest(false);
+            st.finish();
             st.playSound(SOUND_GIVEUP);
         } else if ("suki_timer".equalsIgnoreCase(event)) {
             NpcInstance n = findNpc(player);
@@ -80,13 +78,13 @@ public final class _653_WildMaiden extends Quest {
                 htmltext = "spring_girl_sooki_q0653_01.htm";
             else {
                 htmltext = "spring_girl_sooki_q0653_01a.htm";
-                st.exitCurrentQuest(false);
+                st.finish();
             }
         } else if (npcId == GALIBREDO && st.getCond() == 1) {
             htmltext = "galicbredo_q0653_01.htm";
             st.giveItems(ADENA_ID, 2883);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(false);
+            st.finish();
         }
         return htmltext;
     }

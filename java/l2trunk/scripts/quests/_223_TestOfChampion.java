@@ -221,9 +221,7 @@ public final class _223_TestOfChampion extends Quest {
     public _223_TestOfChampion() {
         super(false);
         addStartNpc(Ascalon);
-        addTalkId(Groot);
-        addTalkId(Mouen);
-        addTalkId(Mason);
+        addTalkId(Groot,Mouen,Mason);
 
         addKillId(Harpy, Medusa, HarpyMatriarch, RoadScavenger, Windsus, //
                 LetoLizardman, LetoLizardmanArcher, LetoLizardmanSoldier, LetoLizardmanWarrior, LetoLizardmanShaman, LetoLizardmanOverlord, BloodyAxeElite);
@@ -240,10 +238,10 @@ public final class _223_TestOfChampion extends Quest {
             case "1":
                 htmltext = "30624-06.htm";
                 st.setCond(COND1);
-                st.setState(STARTED);
+                st.start();
                 if (!st.player.isVarSet("dd3")) {
                     st.giveItems(7562, 72);
-                    st.player.setVar("dd3", 1);
+                    st.player.setVar("dd3");
                 }
                 st.playSound(SOUND_ACCEPT);
                 st.giveItems(ASCALONS_LETTER1);
@@ -301,7 +299,7 @@ public final class _223_TestOfChampion extends Quest {
     @Override
     public String onTalk(NpcInstance npc, QuestState st) {
         if (st.getQuestItemsCount(MARK_OF_CHAMPION) > 0) {
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             return "completed";
         }
         int npcId = npc.getNpcId();
@@ -311,11 +309,11 @@ public final class _223_TestOfChampion extends Quest {
             if (cond == 0) {
                 ClassId class_id = st.player.getClassId();
                 if (class_id != ClassId.warrior && class_id != ClassId.orcRaider) {
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                     return "30624-01.htm";
                 }
                 if (st.player.getLevel() < 39) {
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                     return "30624-02.htm";
                 }
                 return class_id == ClassId.warrior ? "30624-03.htm" : "30624-04.htm";
@@ -342,10 +340,10 @@ public final class _223_TestOfChampion extends Quest {
                 if (!st.player.isVarSet("prof2.3")) {
                     st.addExpAndSp(RewardExp, RewardSP);
                     st.giveItems(ADENA_ID, RewardAdena);
-                    st.player.setVar("prof2.3", 1);
+                    st.player.setVar("prof2.3");
                 }
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(false);
+                st.finish();
             }
         } else if (cond == 0)
             return "noquest";

@@ -10,7 +10,7 @@ public final class _141_ShadowFoxPart3 extends Quest {
     // NPC
     private final static int NATOOLS = 30894;
 
-    // Items
+    // items
     private final static int REPORT = 10350;
 
     // Monsters
@@ -40,15 +40,15 @@ public final class _141_ShadowFoxPart3 extends Quest {
         String htmltext = event;
         if ("30894-02.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("30894-04.htm".equalsIgnoreCase(event)) {
             st.setCond(2);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_MIDDLE);
         } else if ("30894-15.htm".equalsIgnoreCase(event)) {
             st.setCond(4);
-            st.setState(STARTED);
+            st.start();
             st.unset("talk");
             st.playSound(SOUND_MIDDLE);
         } else if ("30894-18.htm".equalsIgnoreCase(event)) {
@@ -63,7 +63,7 @@ public final class _141_ShadowFoxPart3 extends Quest {
         } else if ("dawn".equalsIgnoreCase(event)) {
             Quest q1 = QuestManager.getQuest(_142_FallenAngelRequestOfDawn.class);
             if (q1 != null) {
-                st.exitCurrentQuest(false);
+                st.finish();
                 QuestState qs1 = q1.newQuestState(st.player, STARTED);
                 q1.notifyEvent("start", qs1, npc);
                 return null;
@@ -71,7 +71,7 @@ public final class _141_ShadowFoxPart3 extends Quest {
         } else if ("dusk".equalsIgnoreCase(event)) {
             Quest q1 = QuestManager.getQuest(_143_FallenAngelRequestOfDusk.class);
             if (q1 != null) {
-                st.exitCurrentQuest(false);
+                st.finish();
                 QuestState qs1 = q1.newQuestState(st.player, STARTED);
                 q1.notifyEvent("start", qs1, npc);
                 return null;

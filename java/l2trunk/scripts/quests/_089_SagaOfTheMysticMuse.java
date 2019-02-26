@@ -1,5 +1,6 @@
 package l2trunk.scripts.quests;
 
+import l2trunk.gameserver.model.base.ClassId;
 import l2trunk.gameserver.utils.Location;
 
 import java.util.List;
@@ -9,15 +10,14 @@ public final class _089_SagaOfTheMysticMuse extends SagasSuperclass {
         super(false);
 
         NPC = List.of(30174, 31627, 31283, 31283, 31643, 31646, 31648, 31651, 31654, 31655, 31658, 31283);
-        Items = List.of(7080, 7530, 7081, 7504, 7287, 7318, 7349, 7380, 7411, 7442, 7083, 0);
-        Mob = List.of(27251, 27238, 27255);
-        classid = 103;
-        prevclass = 0x1b;
+        items = List.of(7080, 7530, 7081, 7504, 7287, 7318, 7349, 7380, 7411, 7442, 7083, 0);
+        mob = List.of(27251, 27238, 27255);
+        classid = ClassId.mysticMuse;
         locs = List.of(
-                new Location(119518, -28658, -3811),
-                new Location(181227, 36703, -4816),
-                new Location(181215, 36676, -4812));
-        Text = List.of(
+                Location.of(119518, -28658, -3811),
+                Location.of(181227, 36703, -4816),
+                Location.of(181215, 36676, -4812));
+        text = List.of(
                 "PLAYERNAME! Pursued to here! However, I jumped out of the Banshouren boundaries! You look at the giant as the sign of power!",
                 "... Oh ... good! So it was ... let's begin!",
                 "I do not have the patience ..! I have been a giant force ...! Cough chatter ah ah ah!",

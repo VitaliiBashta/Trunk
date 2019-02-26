@@ -32,15 +32,15 @@ public final class _137_TempleChampionPart1 extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
 
-        if (event.equalsIgnoreCase("sylvain_q0137_04.htm")) {
+        if ("sylvain_q0137_04.htm".equalsIgnoreCase(event)) {
             st.takeItems(BadgeTempleExecutor);
             st.takeItems(BadgeTempleMissionary);
             st.setCond(1);
-            st.setState(STARTED);
-            st.set("talk", 0);
+            st.start();
+            st.unset("talk");
             st.playSound(SOUND_ACCEPT);
         } else if ("sylvain_q0137_08.htm".equalsIgnoreCase(event))
-            st.set("talk", 1);
+            st.set("talk");
         else if ("sylvain_q0137_10.htm".equalsIgnoreCase(event))
             st.set("talk", 2);
         else if ("sylvain_q0137_13.htm".equalsIgnoreCase(event)) {
@@ -51,7 +51,7 @@ public final class _137_TempleChampionPart1 extends Quest {
             st.giveItems(ADENA_ID, 69146);
             st.playSound(SOUND_FINISH);
             st.addExpAndSp(219975, 13047);
-            st.exitCurrentQuest(false);
+            st.finish();
         }
         return event;
     }
@@ -63,16 +63,16 @@ public final class _137_TempleChampionPart1 extends Quest {
         int cond = st.getCond();
         if (npcId == SYLVAIN)
             if (cond == 0) {
-                if (st.player.getLevel() >= 35 && st.getQuestItemsCount(BadgeTempleExecutor) > 0 && st.getQuestItemsCount(BadgeTempleMissionary) > 0)
+                if (st.player.getLevel() >= 35 && st.haveAllQuestItems(BadgeTempleExecutor,BadgeTempleMissionary))
                     htmltext = "sylvain_q0137_01.htm";
                 else {
                     htmltext = "sylvain_q0137_03.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1) {
-                if (st.getInt("talk") == 0)
+                if (!st.isSet("talk"))
                     htmltext = "sylvain_q0137_05.htm";
-                else if (st.getInt("talk") == 1)
+                else if (st.isSet("talk"))
                     htmltext = "sylvain_q0137_08.htm";
                 else if (st.getInt("talk") == 2)
                     htmltext = "sylvain_q0137_10.htm";
@@ -80,9 +80,9 @@ public final class _137_TempleChampionPart1 extends Quest {
                 htmltext = "sylvain_q0137_13.htm";
             else if (cond == 3 && st.haveQuestItem(FRAGMENT, 30)) {
                 htmltext = "sylvain_q0137_15.htm";
-                st.set("talk", 1);
+                st.set("talk");
                 st.takeItems(FRAGMENT);
-            } else if (cond == 3 && st.getInt("talk") == 1)
+            } else if (cond == 3 && st.isSet("talk"))
                 htmltext = "sylvain_q0137_16.htm";
         return htmltext;
     }
@@ -90,9 +90,9 @@ public final class _137_TempleChampionPart1 extends Quest {
     @Override
     public void onKill(NpcInstance npc, QuestState st) {
         if (st.getCond() == 2)
-            if (st.getQuestItemsCount(FRAGMENT) < 30) {
+            if (!st.haveQuestItem(FRAGMENT, 30)) {
                 st.giveItems(FRAGMENT);
-                if (st.getQuestItemsCount(FRAGMENT) >= 30) {
+                if (st.haveQuestItem(FRAGMENT, 30)) {
                     st.setCond(3);
                     st.playSound(SOUND_MIDDLE);
                 } else

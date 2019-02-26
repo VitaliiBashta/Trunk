@@ -8,8 +8,8 @@ import l2trunk.gameserver.model.Player;
  * d: blue points
  * d: red points
  * d: team
- * d: player object id
- * d: player points
+ * d: getPlayer object id
+ * d: getPlayer points
  */
 public class ExCubeGameExtendedChangePoints extends L2GameServerPacket {
     private final int _timeLeft;

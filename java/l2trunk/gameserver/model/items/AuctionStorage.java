@@ -1,31 +1,21 @@
 package l2trunk.gameserver.model.items;
 
 import l2trunk.commons.dao.JdbcEntityState;
-import l2trunk.gameserver.dao.ItemsDAO;
 import l2trunk.gameserver.model.items.ItemInstance.ItemLocation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.util.Collection;
 import java.util.stream.Collectors;
 
-public class AuctionStorage extends ItemContainer {
-    private static final Logger _log = LoggerFactory.getLogger(AuctionStorage.class);
-    private static final ItemsDAO _itemsDAO = ItemsDAO.INSTANCE;
-    private static AuctionStorage _instance;
+public final class AuctionStorage extends ItemContainer {
+    private static AuctionStorage instance;
 
     private AuctionStorage() {
         restore();
     }
 
     public static AuctionStorage getInstance() {
-        if (_instance == null)
-            _instance = new AuctionStorage();
-        return _instance;
-    }
-
-    private void deleteItemFromList(ItemInstance item) {
-        items.remove(item);
+        if (instance == null)
+            instance = new AuctionStorage();
+        return instance;
     }
 
     @Override
@@ -40,7 +30,7 @@ public class AuctionStorage extends ItemContainer {
 
         writeLock();
         try {
-            items.add(item);
+            getItems().add(item);
             result = item;
             item.setJdbcState(JdbcEntityState.CREATED);
             onAddItem(result);
@@ -51,14 +41,14 @@ public class AuctionStorage extends ItemContainer {
         return result;
     }
 
-    public ItemInstance addFullItem(ItemInstance item) {
+    public void addFullItem(ItemInstance item) {
         if (item == null)
-            return null;
+            return;
 
         if (item.getCount() < 1)
-            return null;
+            return;
 
-        ItemInstance result = null;
+        ItemInstance result;
 
         writeLock();
         try {
@@ -70,7 +60,6 @@ public class AuctionStorage extends ItemContainer {
             writeUnlock();
         }
 
-        return result;
     }
 
     @Override
@@ -106,33 +95,11 @@ public class AuctionStorage extends ItemContainer {
         return ItemLocation.AUCTION;
     }
 
-    public void updateItem(int objectId, int newOwnerId) {
-        writeLock();
-        try {
-            ItemInstance item;
-            if ((item = getItemByObjectId(objectId)) == null) {
-                _log.warn("item is null in auction storage, obj id:" + objectId);
-                return;
-            }
-
-            synchronized (item) {
-                item.setOwnerId(newOwnerId);
-                item.setLocation(ItemLocation.INVENTORY);
-                item.setJdbcState(JdbcEntityState.UPDATED);
-                _itemsDAO.update(item);
-                deleteItemFromList(item);
-            }
-
-        } finally {
-            writeUnlock();
-        }
-    }
-
     private void restore() {
         writeLock();
         try {
-            items.clear();
-            this.items.addAll( _itemsDAO.getItemsByLocation(ItemLocation.AUCTION).collect(Collectors.toList()));
+            getItems().clear();
+            getItems().addAll(ITEMS_DAO.getItemsByLocation(ItemLocation.AUCTION).collect(Collectors.toList()));
 
         } finally {
             writeUnlock();

@@ -70,7 +70,7 @@ public final class CharacterSelectionInfo extends L2GameServerPacket {
                         set.set("baseClassId", rset.getInt("class_id"));
                     if (rset.getInt("active") == 1) {
                         set.set("activeClassId", rset.getInt("class_id"));
-                        set.set("activeLevel", rset.getInt("occupation"));
+                        set.set("activeLevel", rset.getInt("level"));
                         set.set("activeMaxHp", rset.getInt("maxHp"));
                         set.set("activeMaxMp", rset.getInt("maxMp"));
                         set.set("activeCurHp", rset.getDouble("curHp"));

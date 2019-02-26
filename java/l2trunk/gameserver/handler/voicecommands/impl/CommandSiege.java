@@ -15,7 +15,7 @@ import java.util.List;
  */
 public final class CommandSiege implements IVoicedCommandHandler {
     /**
-     * Showing file command/siege.htm to the player
+     * Showing file command/siege.htm to the getPlayer
      *
      * @param activeChar Player that will receive the main Siege Page
      */
@@ -27,7 +27,7 @@ public final class CommandSiege implements IVoicedCommandHandler {
      * Shows Main Siege Page(@link #showMainPage) Also if target contains Castle Id, showing Siege Info of that Castle
      *
      * @param command    - "siege"
-     * @param activeChar - player using command
+     * @param activeChar - getPlayer using command
      * @param target     - Empty(if just clicked .siege) or just number of castle siege
      * @return always true
      */
@@ -44,7 +44,7 @@ public final class CommandSiege implements IVoicedCommandHandler {
 
     @Override
     public List<String> getVoicedCommandList() {
-        return Collections.singletonList("siege");
+        return List.of("siege");
     }
 
 }

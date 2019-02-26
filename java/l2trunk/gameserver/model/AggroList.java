@@ -219,7 +219,7 @@ public final class AggroList {
             final Map<Integer, Integer> orderedMap = new TreeMap<>(new PartyDamageComparator(parties));
             orderedMap.putAll(parties);
 
-            // Now choose player that did most damage in the party that did the most of the damage
+            // Now choose getPlayer that did most damage in the party that did the most of the damage
             Player topDamagePlayer;
             for (Entry<Integer, Integer> entry : orderedMap.entrySet()) {
                 final Party party = Party.getParties().get(entry.getValue());

@@ -5,9 +5,11 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
+import java.util.stream.IntStream;
+
 public final class _385_YokeOfThePast extends Quest {
-    private final int ANCIENT_SCROLL = 5902;
     private static final int BLANK_SCROLL = 5965;
+    private final int ANCIENT_SCROLL = 5902;
 
     public _385_YokeOfThePast() {
         super(true);
@@ -16,8 +18,8 @@ public final class _385_YokeOfThePast extends Quest {
             if (npcId != 31111 && npcId != 31112 && npcId != 31113)
                 addStartNpc(npcId);
 
-        for (int mobs = 21208; mobs < 21256; mobs++)
-            addKillId(mobs);
+
+        addKillId(IntStream.rangeClosed(21208, 21256).toArray());
 
         addQuestItem(ANCIENT_SCROLL);
     }
@@ -32,13 +34,13 @@ public final class _385_YokeOfThePast extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
         if (event.equalsIgnoreCase("enter_necropolis1_q0385_05.htm")) {
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
             st.setCond(1);
         } else if (event.equalsIgnoreCase("enter_necropolis1_q0385_09.htm")) {
             htmltext = "enter_necropolis1_q0385_10.htm";
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
         return htmltext;
     }
@@ -57,7 +59,7 @@ public final class _385_YokeOfThePast extends Quest {
         if (checkNPC(npcId) && st.getCond() == 0)
             if (st.player.getLevel() < 20) {
                 htmltext = "enter_necropolis1_q0385_02.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else
                 htmltext = "enter_necropolis1_q0385_01.htm";
         else if (st.getCond() == 1 && st.getQuestItemsCount(ANCIENT_SCROLL) == 0)
@@ -67,7 +69,7 @@ public final class _385_YokeOfThePast extends Quest {
             st.giveItems(BLANK_SCROLL, st.getQuestItemsCount(ANCIENT_SCROLL));
             st.takeItems(ANCIENT_SCROLL);
         } else
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         return htmltext;
     }
 }

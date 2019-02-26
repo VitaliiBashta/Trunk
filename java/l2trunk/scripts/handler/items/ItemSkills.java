@@ -3,19 +3,14 @@ package l2trunk.scripts.handler.items;
 import l2trunk.gameserver.data.xml.holder.ItemHolder;
 import l2trunk.gameserver.handler.items.ItemHandler;
 import l2trunk.gameserver.model.Creature;
-import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.scripts.ScriptFile;
-import l2trunk.gameserver.templates.item.ItemTemplate;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public final class ItemSkills extends ScriptItemHandler implements ScriptFile {
     private static List<Integer> itemIds;
@@ -23,14 +18,12 @@ public final class ItemSkills extends ScriptItemHandler implements ScriptFile {
 
     public ItemSkills() {
         Set<Integer> set = new HashSet<>();
-        for (ItemTemplate template : ItemHolder.getAllTemplates()) {
-            if (template == null)
-                continue;
+        ItemHolder.getAllTemplates().stream()
+                .filter(Objects::nonNull)
+                .forEach(template -> template.getAttachedSkills().stream()
+                        .filter(skill -> skill.isItemHandler)
+                        .forEach(skill -> set.add(template.itemId())));
 
-            for (Skill skill : template.getAttachedSkills())
-                if (skill.isItemHandler)
-                    set.add(template.itemId());
-        }
         itemIds = new ArrayList<>(set);
     }
 

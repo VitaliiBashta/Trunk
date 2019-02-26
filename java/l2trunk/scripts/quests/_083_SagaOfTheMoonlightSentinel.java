@@ -1,6 +1,6 @@
 package l2trunk.scripts.quests;
 
-import l2trunk.gameserver.scripts.ScriptFile;
+import l2trunk.gameserver.model.base.ClassId;
 import l2trunk.gameserver.utils.Location;
 
 import java.util.List;
@@ -10,15 +10,14 @@ public final class _083_SagaOfTheMoonlightSentinel extends SagasSuperclass {
         super(false);
 
         NPC = List.of(30702, 31627, 31604, 31640, 31634, 31646, 31648, 31652, 31654, 31655, 31658, 31641);
-        Items = List.of(7080, 7520, 7081, 7498, 7281, 7312, 7343, 7374, 7405, 7436, 7106, 0);
-        Mob = List.of(27297, 27232, 27306);
-        classid = 102;
-        prevclass = 0x18;
+        items = List.of(7080, 7520, 7081, 7498, 7281, 7312, 7343, 7374, 7405, 7436, 7106, 0);
+        mob = List.of(27297, 27232, 27306);
+        classid = ClassId.moonlightSentinel;
         locs = List.of(
-                new Location(161719, -92823, -1893),
-                new Location(181227, 36703, -4816),
-                new Location(181215, 36676, -4812));
-        Text = List.of(
+                Location.of(161719, -92823, -1893),
+                Location.of(181227, 36703, -4816),
+                Location.of(181215, 36676, -4812));
+        text = List.of(
                 "PLAYERNAME! Pursued to here! However, I jumped out of the Banshouren boundaries! You look at the giant as the sign of power!",
                 "... Oh ... good! So it was ... let's begin!",
                 "I do not have the patience ..! I have been a giant force ...! Cough chatter ah ah ah!",

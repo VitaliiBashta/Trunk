@@ -6,5 +6,7 @@ import l2trunk.gameserver.model.Creature;
 public interface OnKillListener extends CharListener {
     void onKill(Creature actor, Creature victim);
 
-    boolean ignorePetOrSummon();
+    default boolean ignorePetOrSummon() {
+        return true;
+    }
 }

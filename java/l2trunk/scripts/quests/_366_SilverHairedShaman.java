@@ -24,9 +24,7 @@ public final class _366_SilverHairedShaman extends Quest {
         super(false);
         addStartNpc(DIETER);
 
-        addKillId(SAIRON);
-        addKillId(SAIRONS_DOLL);
-        addKillId(SAIRONS_PUPPET);
+        addKillId(SAIRON,SAIRONS_DOLL,SAIRONS_PUPPET);
 
         addQuestItem(SAIRONS_SILVER_HAIR);
     }
@@ -35,12 +33,12 @@ public final class _366_SilverHairedShaman extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("30111-02.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("30111-quit.htm".equalsIgnoreCase(event)) {
             st.takeItems(SAIRONS_SILVER_HAIR);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
         return event;
     }
@@ -61,7 +59,7 @@ public final class _366_SilverHairedShaman extends Quest {
                     htmltext = "30111-01.htm";
                 else {
                     htmltext = "30111-00.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1 && !st.haveQuestItem(SAIRONS_SILVER_HAIR) )
                 htmltext = "30111-03.htm";

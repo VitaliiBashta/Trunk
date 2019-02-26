@@ -1,6 +1,6 @@
 package l2trunk.scripts.quests;
 
-import l2trunk.gameserver.scripts.ScriptFile;
+import l2trunk.gameserver.model.base.ClassId;
 import l2trunk.gameserver.utils.Location;
 
 import java.util.List;
@@ -10,15 +10,14 @@ public final class _099_SagaOfTheFortuneSeeker extends SagasSuperclass {
         super(false);
 
         NPC = List.of(31594, 31623, 31600, 31600, 31601, 31646, 31649, 31650, 31654, 31655, 31657, 31600);
-        Items = List.of(7080, 7608, 7081, 7514, 7297, 7328, 7359, 7390, 7421, 7452, 7109, 0);
-        Mob = List.of(27259, 27248, 27309);
-        classid = 117;
-        prevclass = 0x37;
+        items = List.of(7080, 7608, 7081, 7514, 7297, 7328, 7359, 7390, 7421, 7452, 7109, 0);
+        mob = List.of(27259, 27248, 27309);
+        classid = ClassId.fortuneSeeker;
         locs = List.of(
-                new Location(191046, -40640, -3042),
-                new Location(46066, -36396, -1685),
-                new Location(46087, -36372, -1685));
-        Text = List.of(
+                Location.of(191046, -40640, -3042),
+                Location.of(46066, -36396, -1685),
+                Location.of(46087, -36372, -1685));
+        text = List.of(
                 "PLAYERNAME! Pursued to here! However, I jumped out of the Banshouren boundaries! You look at the giant as the sign of power!",
                 "... Oh ... good! So it was ... let's begin!",
                 "I do not have the patience ..! I have been a giant force ...! Cough chatter ah ah ah!",

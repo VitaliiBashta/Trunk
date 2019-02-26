@@ -8,18 +8,18 @@ import l2trunk.gameserver.model.pledge.Clan;
 import java.util.HashSet;
 import java.util.Set;
 
-public class CMGSiegeClanObject extends SiegeClanObject {
+public final class CMGSiegeClanObject extends SiegeClanObject {
     private final Set<Integer> players = new HashSet<>();
-    private long _param;
+    private long param;
 
     public CMGSiegeClanObject(String type, Clan clan, long param, long date) {
         super(type, clan, param, date);
-        _param = param;
+        this.param = param;
     }
 
     public CMGSiegeClanObject(String type, Clan clan, long param) {
         super(type, clan, param);
-        _param = param;
+        this.param = param;
     }
 
     public void addPlayer(int objectId) {
@@ -28,11 +28,11 @@ public class CMGSiegeClanObject extends SiegeClanObject {
 
     @Override
     public long getParam() {
-        return _param;
+        return param;
     }
 
     public void setParam(long param) {
-        _param = param;
+        this.param = param;
     }
 
     @Override

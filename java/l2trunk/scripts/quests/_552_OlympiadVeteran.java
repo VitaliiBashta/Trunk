@@ -10,8 +10,6 @@ public final class _552_OlympiadVeteran extends Quest {
     // NPCs
     private static final int OLYMPIAD_MANAGER = 31688;
 
-    // Items
-    private static final int MEDAL_OF_GLORY = 21874;
     private static final int OLYMPIAD_CHEST = 17169;
     private static final int TEAM_CERTIFICATE = 17241;
     private static final int CLASS_FREE_CERTIFICATE = 17242;
@@ -61,7 +59,7 @@ public final class _552_OlympiadVeteran extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("olympiad_operator_q0552_03.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("olympiad_operator_q0552_07.htm".equalsIgnoreCase(event)) {
             int count = (int)st.getQuestItemsCount(TEAM_CERTIFICATE,CLASS_FREE_CERTIFICATE,CLASS_CERTIFICATE);
@@ -84,9 +82,8 @@ public final class _552_OlympiadVeteran extends Quest {
 
         switch (og.getType()) {
             case TEAM:
-                int count1 = qs.getInt("count1") + 1;
-                qs.set("count1", count1);
-                if (count1 == 5) {
+                qs.inc("count1");
+                if (qs.getInt("count1") == 5) {
                     qs.giveItems(TEAM_CERTIFICATE);
                     if (qs.getInt("count2") >= 5 && qs.getInt("count3") >= 5) {
                         qs.setCond(2);
@@ -96,9 +93,8 @@ public final class _552_OlympiadVeteran extends Quest {
                 }
                 break;
             case CLASSED:
-                int count2 = qs.getInt("count2") + 1;
-                qs.set("count2", count2);
-                if (count2 == 5) {
+                qs.inc("count2");
+                if (qs.getInt("count2") == 5) {
                     qs.giveItems(CLASS_CERTIFICATE);
                     if (qs.getInt("count1") >= 5 && qs.getInt("count3") >= 5) {
                         qs.setCond(2);
@@ -108,9 +104,8 @@ public final class _552_OlympiadVeteran extends Quest {
                 }
                 break;
             case NON_CLASSED:
-                int count3 = qs.getInt("count3") + 1;
-                qs.set("count3", count3);
-                if (count3 == 5) {
+                qs.inc("count3");
+                if (qs.getInt("count3") == 5) {
                     qs.giveItems(CLASS_FREE_CERTIFICATE);
                     if (qs.getInt("count1") >= 5 && qs.getInt("count2") >= 5) {
                         qs.setCond(2);

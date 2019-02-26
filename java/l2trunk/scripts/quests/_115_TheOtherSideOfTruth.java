@@ -14,7 +14,7 @@ public final class _115_TheOtherSideOfTruth extends Quest {
     private static final int Ice_Sculpture3 = 32078;
     private static final int Ice_Sculpture4 = 32079;
     //private static int Suspicious_Man = 32019;
-    // Quest Items
+    // Quest items
     private static final int Misas_Letter = 8079;
     private static final int Raffortys_Letter = 8080;
     private static final int Piece_of_Tablet = 8081;
@@ -23,81 +23,73 @@ public final class _115_TheOtherSideOfTruth extends Quest {
     public _115_TheOtherSideOfTruth() {
         super(false);
         addStartNpc(Rafforty);
-        addTalkId(Misa);
-        addTalkId(Kierre);
-        addTalkId(Ice_Sculpture1);
-        addTalkId(Ice_Sculpture2);
-        addTalkId(Ice_Sculpture3);
-        addTalkId(Ice_Sculpture4);
-        addQuestItem(Misas_Letter);
-        addQuestItem(Raffortys_Letter);
-        addQuestItem(Piece_of_Tablet);
-        addQuestItem(Report_Piece);
+        addTalkId(Misa,Kierre,Ice_Sculpture1,Ice_Sculpture2,Ice_Sculpture3,Ice_Sculpture4);
+        addQuestItem(Misas_Letter,Raffortys_Letter,Piece_of_Tablet,Report_Piece);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         int _state = st.getState();
-        if (event.equalsIgnoreCase("32020-02.htm") && _state == CREATED) {
-            st.setState(STARTED);
+        if ("32020-02.htm".equalsIgnoreCase(event) && _state == CREATED) {
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         }
         if (_state != STARTED)
             return event;
 
-        if (event.equalsIgnoreCase("32020-06.htm") || event.equalsIgnoreCase("32020-08a.htm")) {
+        if ("32020-06.htm".equalsIgnoreCase(event) || "32020-08a.htm".equalsIgnoreCase(event)) {
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
-        } else if (event.equalsIgnoreCase("32020-05.htm")) {
+            st.exitCurrentQuest();
+        } else if ("32020-05.htm".equalsIgnoreCase(event)) {
             st.setCond(3);
             st.takeItems(Misas_Letter, 1);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("32020-08.htm") || event.equalsIgnoreCase("32020-07a.htm")) {
+        } else if ("32020-08.htm".equalsIgnoreCase(event) || "32020-07a.htm".equalsIgnoreCase(event)) {
             st.setCond(4);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("32020-12.htm")) {
+        } else if ("32020-12.htm".equalsIgnoreCase(event)) {
             st.setCond(5);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("32018-04.htm")) {
+        } else if ("32018-04.htm".equalsIgnoreCase(event)) {
             st.setCond(7);
             st.takeItems(Raffortys_Letter, 1);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("Sculpture-04a.htm")) {
+        } else if ("Sculpture-04a.htm".equalsIgnoreCase(event)) {
             st.setCond(8);
             st.playSound(SOUND_MIDDLE);
-            if (st.getInt("32021") == 0 && st.getInt("32077") == 0)
-                st.giveItems(Piece_of_Tablet, 1);
+            if (!st.isSet("32021")  && !st.isSet("32077"))
+                st.giveItems(Piece_of_Tablet);
 
             //Functions.npcSay(st.addSpawn(Suspicious_Man, 117890, -126478, -2584, 0, 0, 300000), "This looks like the right place...");
 
             return "Sculpture-04.htm";
-        } else if (event.equalsIgnoreCase("32022-02.htm")) {
+        } else if ("32022-02.htm".equalsIgnoreCase(event)) {
             st.setCond(9);
-            st.giveItems(Report_Piece, 1);
+            st.giveItems(Report_Piece);
             st.playSound(SOUND_MIDDLE);
 
             //Functions.npcSay(st.addSpawn(Suspicious_Man, 104562, -107598, -3688, 0, 0, 300000), "We meet again.");
-        } else if (event.equalsIgnoreCase("32020-16.htm")) {
+        } else if ("32020-16.htm".equalsIgnoreCase(event)) {
             st.setCond(10);
             st.takeItems(Report_Piece, 1);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("32020-18.htm")) {
-            if (st.getQuestItemsCount(Piece_of_Tablet) > 0) {
+        } else if ("32020-18.htm".equalsIgnoreCase(event)) {
+            if (st.haveQuestItem(Piece_of_Tablet)) {
                 st.giveItems(ADENA_ID, 60044);
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(false);
+                st.finish();
             } else {
                 st.setCond(11);
                 st.playSound(SOUND_MIDDLE);
                 return "32020-19.htm";
             }
-        } else if (event.equalsIgnoreCase("32020-19.htm")) {
+        } else if ("32020-19.htm".equalsIgnoreCase(event)) {
             st.setCond(11);
             st.playSound(SOUND_MIDDLE);
         } else if (event.startsWith("32021") || event.startsWith("32077")) {
             if (event.contains("-pick")) {
-                st.set("talk", 1);
+                st.set("talk");
                 event = event.replace("-pick", "");
             }
             st.set(event, 1);
@@ -120,7 +112,7 @@ public final class _115_TheOtherSideOfTruth extends Quest {
                 st.setCond(0);
                 return "32020-01.htm";
             }
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             return "32020-00.htm";
         }
 
@@ -136,7 +128,7 @@ public final class _115_TheOtherSideOfTruth extends Quest {
                 return "32020-11.htm";
             else if (cond == 5) {
                 st.setCond(6);
-                st.giveItems(Raffortys_Letter, 1);
+                st.giveItems(Raffortys_Letter);
                 st.playSound(SOUND_MIDDLE);
                 return "32020-13.htm";
             } else if (cond == 6)
@@ -151,7 +143,7 @@ public final class _115_TheOtherSideOfTruth extends Quest {
                 st.giveItems(ADENA_ID, 115673);
                 st.addExpAndSp(493595, 40442);
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(false);
+                st.finish();
                 return "32020-18.htm";
             }
         } else if (npcId == Misa && _state == STARTED) {
@@ -173,15 +165,14 @@ public final class _115_TheOtherSideOfTruth extends Quest {
                 return "32022-03.htm";
         } else if ((npcId == Ice_Sculpture1 || npcId == Ice_Sculpture2 || npcId == Ice_Sculpture3 || npcId == Ice_Sculpture4) && _state == STARTED)
             if (cond == 7) {
-                String _npcId = String.valueOf(npcId);
-                int npcId_flag = st.getInt(_npcId);
+                boolean npcId_flag = st.isSet("" + npcId);
                 if (npcId == Ice_Sculpture1 || npcId == Ice_Sculpture2) {
-                    int talk_flag = st.getInt("talk");
-                    return npcId_flag == 1 ? "Sculpture-02.htm" : talk_flag == 1 ? "Sculpture-06.htm" : "Sculpture-03-" + _npcId + ".htm";
-                } else if (npcId_flag == 1)
+                    boolean talk_flag = st.isSet("talk");
+                    return npcId_flag ? "Sculpture-02.htm" : talk_flag ? "Sculpture-06.htm" : "Sculpture-03-" + npcId + ".htm";
+                } else if (npcId_flag)
                     return "Sculpture-02.htm";
                 else {
-                    st.set(_npcId, 1);
+                    st.set("" + npcId);
                     return "Sculpture-01.htm";
                 }
             } else if (cond == 8)

@@ -36,15 +36,15 @@ public final class _061_LawEnforcement extends Quest {
             case "ask":
                 if (st.player.getRace() != Race.kamael) {
                     htmltext = "grandmaste_piane_q0061_03.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else if (st.player.getClassId() != ClassId.inspector || st.player.getLevel() < 76) {
                     htmltext = "grandmaste_piane_q0061_02.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else
                     htmltext = "grandmaste_piane_q0061_04.htm";
                 break;
             case "accept":
-                st.setState(STARTED);
+                st.start();
                 st.setCond(COND1);
                 st.playSound(SOUND_ACCEPT);
                 htmltext = "grandmaste_piane_q0061_05.htm";
@@ -55,11 +55,11 @@ public final class _061_LawEnforcement extends Quest {
             case "subelder_aientburg_q0061_08.htm":
             case "subelder_aientburg_q0061_09.htm":
                 st.giveItems(ADENA_ID, 26000);
-                st.player.setClassId(ClassId.judicator.ordinal(), false, true);
+                st.player.setClassId(ClassId.judicator, false, true);
                 st.player.broadcastCharInfo();
                 st.player.broadcastPacket(new MagicSkillUse(st.player, 4339, 1, 6000));
                 st.player.broadcastPacket(new MagicSkillUse(npc, 4339, 1, 6000));
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 break;
         }
         return htmltext;

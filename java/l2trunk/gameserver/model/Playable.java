@@ -162,9 +162,9 @@ public abstract class Playable extends Creature {
         }
 
         // The prohibition to attack civilians in the siege NPC zone on TW. Otherwise way stuffed glasses.
-        // if (player.getTerritorySiege() > -1 && target.NpcInstance() && !(target instanceof L2TerritoryFlagInstance) && !(target.getAI() instanceof DefaultAI) && player.isInZone(ZoneType.Siege))
+        // if (getPlayer.getTerritorySiege() > -1 && target.NpcInstance() && !(target instanceof L2TerritoryFlagInstance) && !(target.getAI() instanceof DefaultAI) && getPlayer.isInZone(ZoneType.Siege))
         // {
-        // player.sendPacket(Msg.INVALID_TARGET);
+        // getPlayer.sendPacket(Msg.INVALID_TARGET);
         // return false;
         // }
 
@@ -198,7 +198,7 @@ public abstract class Playable extends Creature {
             return;
         }
 
-        if (this instanceof Summon && target instanceof Player && ((Player) target).equals(((Summon) this).owner) && !isBetray()) {
+        if (this instanceof Summon && target instanceof Player && target.equals(((Summon) this).owner) && !isBetray()) {
             player.sendMessage("Pet cannot hit its owner!");
             player.sendActionFailed();
             sendActionFailed();

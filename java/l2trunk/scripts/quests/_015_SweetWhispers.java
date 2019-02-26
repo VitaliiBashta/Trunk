@@ -10,22 +10,21 @@ public final class _015_SweetWhispers extends Quest {
 
         addStartNpc(31302);
 
-        addTalkId(31517);
-        addTalkId(31518);
+        addTalkId(31517,31518);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("trader_vladimir_q0015_0104.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("dark_necromancer_q0015_0201.htm".equalsIgnoreCase(event))
             st.setCond(2);
         else if ("dark_presbyter_q0015_0301.htm".equalsIgnoreCase(event)) {
             st.addExpAndSp(350531, 28204);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(false);
+            st.finish();
         }
         return event;
     }
@@ -41,7 +40,7 @@ public final class _015_SweetWhispers extends Quest {
                     htmltext = "trader_vladimir_q0015_0101.htm";
                 else {
                     htmltext = "trader_vladimir_q0015_0103.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             else if (cond >= 1)
                 htmltext = "trader_vladimir_q0015_0105.htm";

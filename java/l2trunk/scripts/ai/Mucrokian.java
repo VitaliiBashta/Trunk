@@ -10,15 +10,17 @@ import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.Location;
 
+import java.util.List;
+
 /**
  * Mucrokian (22650, 22651, 22652, 22653).
  * Кричат в чат перед атакой. Игнорируют атаку стражей и убегают.
  */
 public class Mucrokian extends Fighter {
 
-    private static final NpcString[] MsgText = {
+    private static final List<NpcString> MsgText = List.of(
             NpcString.PEUNGLUI_MUGLANEP_NAIA_WAGANAGEL_PEUTAGUN,
-            NpcString.PEUNGLUI_MUGLANEP};
+            NpcString.PEUNGLUI_MUGLANEP);
 
     public Mucrokian(NpcInstance actor) {
         super(actor);
@@ -40,7 +42,7 @@ public class Mucrokian extends Fighter {
                         }
                     }
                     if (Rnd.chance(10)) {
-                        Functions.npcSay(actor, Rnd.get(MsgText), ChatType.NPC_ALL, 5000,"");
+                        Functions.npcSay(actor, Rnd.get(MsgText), ChatType.NPC_ALL, 5000);
                     }
                 }
             }

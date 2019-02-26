@@ -36,7 +36,7 @@ public class AdminGmChat implements IAdminCommandHandler {
                     activeChar.addSnooped(player);
                     break;
                 } else {
-                    activeChar.sendMessage("Target must be a player.");
+                    activeChar.sendMessage("Target must be a getPlayer.");
                     return false;
                 }
             }
@@ -49,10 +49,10 @@ public class AdminGmChat implements IAdminCommandHandler {
                 if (target instanceof Player) {
                     Player player = (Player) target;
                     activeChar.removeSnooped(player);
-                    activeChar.sendMessage("stoped snooping player: " + target.getName());
+                    activeChar.sendMessage("stoped snooping getPlayer: " + target.getName());
                     break;
                 } else {
-                    activeChar.sendMessage("Target must be a player.");
+                    activeChar.sendMessage("Target must be a getPlayer.");
                     return false;
                 }
             }

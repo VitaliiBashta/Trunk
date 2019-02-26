@@ -16,8 +16,6 @@ public final class _110_ToThePrimevalIsle extends Quest {
         super(false);
 
         addStartNpc(ANTON);
-        addTalkId(ANTON);
-
         addTalkId(MARQUEZ);
     }
 
@@ -28,7 +26,7 @@ public final class _110_ToThePrimevalIsle extends Quest {
             htmltext = "scroll_seller_anton_q0110_05.htm";
             st.setCond(1);
             st.giveItems(ANCIENT_BOOK, 1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if (event.equals("2") && st.getQuestItemsCount(ANCIENT_BOOK) > 0) {
             htmltext = "marquez_q0110_05.htm";
@@ -36,10 +34,10 @@ public final class _110_ToThePrimevalIsle extends Quest {
             st.giveItems(ADENA_ID, 191678);
             st.addExpAndSp(251602, 25242);
             st.takeItems(ANCIENT_BOOK, -1);
-            st.exitCurrentQuest(false);
+            st.finish();
         } else if (event.equals("3")) {
             htmltext = "marquez_q0110_06.htm";
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
         return htmltext;
     }
@@ -54,7 +52,7 @@ public final class _110_ToThePrimevalIsle extends Quest {
             if (st.player.getLevel() >= 75)
                 htmltext = "scroll_seller_anton_q0110_01.htm";
             else {
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 htmltext = "scroll_seller_anton_q0110_02.htm";
             }
         else if (npcId == ANTON) {

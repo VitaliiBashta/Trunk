@@ -68,7 +68,7 @@ public final class AdminResidence implements IAdminCommandHandler, ScriptFile {
 
                         replyMSG.append("</td></tr>");
                     }
-                msg.replace("%residence_list%", replyMSG.toString());
+                msg.replace("%residence_list%", replyMSG);
                 activeChar.sendPacket(msg);
                 break;
             case admin_residence:
@@ -82,7 +82,7 @@ public final class AdminResidence implements IAdminCommandHandler, ScriptFile {
                 if (r instanceof Dominion) {
                     msg.setFile("admin/residence/dominion_siege_info.htm");
                     msg.replace("%residence%", HtmlUtils.htmlResidenceName(r.getId()));
-                    msg.replace("%id%", String.valueOf(r.getId()));
+                    msg.replace("%id%", r.getId());
                     msg.replace("%owner%", r.getOwner() == null ? "NPC" : r.getOwner().getName());
 
                     StringBuilder builder = new StringBuilder(100);
@@ -94,7 +94,7 @@ public final class AdminResidence implements IAdminCommandHandler, ScriptFile {
                     for (SiegeClanObject clan : clans)
                         builder.append("<tr>").append("<td>").append(clan.getClan().getName()).append("</td>").append("<td>").append(clan.getClan().getLeaderName()).append("</td>").append("<td>").append(SiegeEvent.DEFENDERS).append("</td>").append("</tr>");
 
-                    msg.replace("%clans%", builder.toString());
+                    msg.replace("%clans%", builder);
 
                     builder = new StringBuilder(100);
                     List<Integer> players = event.getObjects(DominionSiegeEvent.ATTACKER_PLAYERS);
@@ -108,16 +108,16 @@ public final class AdminResidence implements IAdminCommandHandler, ScriptFile {
                         Player player = GameObjectsStorage.getPlayer(i);
                         builder.append("<tr>").append("<td>").append(i).append("</td>").append("<td>").append(player == null ? "null" : player.getName()).append("</td>").append("<td>").append(DominionSiegeEvent.DEFENDER_PLAYERS).append("</td>").append("</tr>");
                     }
-                    msg.replace("%players%", builder.toString());
+                    msg.replace("%players%", builder);
                 } else {
                     msg.setFile("admin/residence/siege_info.htm");
                     msg.replace("%residence%", HtmlUtils.htmlResidenceName(r.getId()));
                     msg.replace("%id%", ""+r.getId());
                     msg.replace("%owner%", r.getOwner() == null ? "NPC" : r.getOwner().getName());
-                    msg.replace("%cycle%", String.valueOf(r.getCycle()));
-                    msg.replace("%paid_cycle%", String.valueOf(r.getPaidCycle()));
-                    msg.replace("%reward_count%", String.valueOf(r.getRewardCount()));
-                    msg.replace("%left_time%", String.valueOf(r.getCycleDelay()));
+                    msg.replace("%cycle%", r.getCycle());
+                    msg.replace("%paid_cycle%", r.getPaidCycle());
+                    msg.replace("%reward_count%", r.getRewardCount());
+                    msg.replace("%left_time%", r.getCycleDelay());
 
                     StringBuilder clans = new StringBuilder(100);
                     for (List<Object> objects : event.getObjects().values()) {
@@ -127,14 +127,14 @@ public final class AdminResidence implements IAdminCommandHandler, ScriptFile {
                                 .forEach(siegeClanObject ->
                                         clans.append("<tr>").append("<td>").append(siegeClanObject.getClan().getName()).append("</td>").append("<td>").append(siegeClanObject.getClan().getLeaderName()).append("</td>").append("<td>").append(siegeClanObject.getType()).append("</td>").append("</tr>"));
                     }
-                    msg.replace("%clans%", clans.toString());
+                    msg.replace("%clans%", clans);
                 }
 
-                msg.replace("%hour%", String.valueOf(r.getSiegeDate().get(Calendar.HOUR_OF_DAY)));
-                msg.replace("%minute%", String.valueOf(r.getSiegeDate().get(Calendar.MINUTE)));
-                msg.replace("%day%", String.valueOf(r.getSiegeDate().get(Calendar.DAY_OF_MONTH)));
-                msg.replace("%month%", String.valueOf(r.getSiegeDate().get(Calendar.MONTH) + 1));
-                msg.replace("%year%", String.valueOf(r.getSiegeDate().get(Calendar.YEAR)));
+                msg.replace("%hour%", r.getSiegeDate().get(Calendar.HOUR_OF_DAY));
+                msg.replace("%minute%", r.getSiegeDate().get(Calendar.MINUTE));
+                msg.replace("%day%", r.getSiegeDate().get(Calendar.DAY_OF_MONTH));
+                msg.replace("%month%", r.getSiegeDate().get(Calendar.MONTH) + 1);
+                msg.replace("%year%", r.getSiegeDate().get(Calendar.YEAR));
                 activeChar.sendPacket(msg);
                 break;
             case admin_set_owner:

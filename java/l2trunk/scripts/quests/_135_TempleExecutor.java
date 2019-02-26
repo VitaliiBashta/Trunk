@@ -19,7 +19,7 @@ public final class _135_TempleExecutor extends Quest {
     private final static List<Integer> mobs = List.of(
             20781, 21104, 21105, 21106, 21107);
 
-    // Quest Items
+    // Quest items
     private final static int Stolen_Cargo = 10328;
     private final static int Hate_Crystal = 10329;
     private final static int Old_Treasure_Map = 10330;
@@ -27,43 +27,37 @@ public final class _135_TempleExecutor extends Quest {
     private final static int Panos_Credentials = 10332;
     private final static int Alexs_Credentials = 10333;
 
-    // Items
+    // items
     private final static int Badge_Temple_Executor = 10334;
 
     public _135_TempleExecutor() {
         super(false);
 
         addStartNpc(Shegfield);
-        addTalkId(Alex);
-        addTalkId(Sonin);
-        addTalkId(Pano);
+        addTalkId(Alex,Sonin,Pano);
         addKillId(mobs);
-        addQuestItem(Stolen_Cargo);
-        addQuestItem(Hate_Crystal);
-        addQuestItem(Old_Treasure_Map);
-        addQuestItem(Sonins_Credentials);
-        addQuestItem(Panos_Credentials);
-        addQuestItem(Alexs_Credentials);
+        addQuestItem(Stolen_Cargo,Hate_Crystal,Old_Treasure_Map,
+                Sonins_Credentials,Panos_Credentials,Alexs_Credentials);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        int _state = st.getState();
-        if (event.equalsIgnoreCase("shegfield_q0135_03.htm") && _state == CREATED) {
+        int state = st.getState();
+        if ("shegfield_q0135_03.htm".equalsIgnoreCase(event) && state == CREATED) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("shegfield_q0135_13.htm") && _state == STARTED) {
+        } else if ("shegfield_q0135_13.htm".equalsIgnoreCase(event) && state == STARTED) {
             st.playSound(SOUND_FINISH);
             st.unset("Report");
             st.giveItems(ADENA_ID, 16924);
             st.addExpAndSp(30000, 2000);
-            st.giveItems(Badge_Temple_Executor, 1);
-            st.exitCurrentQuest(false);
-        } else if (event.equalsIgnoreCase("shegfield_q0135_04.htm") && _state == STARTED) {
+            st.giveItems(Badge_Temple_Executor);
+            st.finish();
+        } else if ("shegfield_q0135_04.htm".equalsIgnoreCase(event) && state == STARTED) {
             st.setCond(2);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("alankell_q0135_07.htm") && _state == STARTED) {
+        } else if ("alankell_q0135_07.htm".equalsIgnoreCase(event) && state == STARTED) {
             st.setCond(3);
             st.playSound(SOUND_MIDDLE);
         }
@@ -82,7 +76,7 @@ public final class _135_TempleExecutor extends Quest {
             if (npcId != Shegfield)
                 return "noquest";
             if (st.player.getLevel() < 35) {
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 return "shegfield_q0135_02.htm";
             }
             st.setCond(0);
@@ -95,13 +89,11 @@ public final class _135_TempleExecutor extends Quest {
             if (cond == 1)
                 return "shegfield_q0135_03.htm";
             if (cond == 5) {
-                if (st.getInt("Report") == 1)
+                if (st.isSet("Report"))
                     return "shegfield_q0135_09.htm";
                 if (st.haveAllQuestItems(Sonins_Credentials,Panos_Credentials,Alexs_Credentials) ) {
-                    st.takeItems(Panos_Credentials);
-                    st.takeItems(Sonins_Credentials);
-                    st.takeItems(Alexs_Credentials);
-                    st.set("Report", 1);
+                    st.takeAllItems(Panos_Credentials,Sonins_Credentials,Alexs_Credentials);
+                    st.set("Report");
                     return "shegfield_q0135_08.htm";
                 }
                 return "noquest";

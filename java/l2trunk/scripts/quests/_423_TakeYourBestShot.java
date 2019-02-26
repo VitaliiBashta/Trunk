@@ -27,9 +27,9 @@ public final class _423_TakeYourBestShot extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("johnny_q423_04.htm".equalsIgnoreCase(event))
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         else if ("johnny_q423_05.htm".equalsIgnoreCase(event)) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         }
@@ -47,7 +47,7 @@ public final class _423_TakeYourBestShot extends Quest {
                     htmltext = "johnny_q423_01.htm";
                 else {
                     htmltext = "johnny_q423_00.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1)
                 htmltext = "johnny_q423_06.htm";
@@ -59,7 +59,7 @@ public final class _423_TakeYourBestShot extends Quest {
             else if (cond == 2) {
                 htmltext = "batracos_q423_02.htm";
                 st.giveItems(SeerUgorosPass);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         }
         return htmltext;
@@ -71,7 +71,7 @@ public final class _423_TakeYourBestShot extends Quest {
         if (st.getCond() == 1) {
             if (TantaClan.contains(npcId) && Rnd.chance(2)) {
                 addSpawn(TantaGuard, st.player.getLoc(), 100, 120000);
-            } else if (npcId == TantaGuard && st.getQuestItemsCount(SeerUgorosPass) < 1)
+            } else if (npcId == TantaGuard && !st.haveQuestItem(SeerUgorosPass))
                 st.setCond(2);
         }
     }

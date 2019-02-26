@@ -39,8 +39,8 @@ public abstract class Dominion_KillSpecialUnitQuest extends Quest {
     protected abstract List<ClassId> getTargetClassIds();
 
     @Override
-    public void onKill(Player killed, QuestState qs) {
-        Player player = qs.player;
+    public void onKill(Player killed, QuestState st) {
+        Player player = st.player;
         if (player == null)
             return ;
 
@@ -54,14 +54,14 @@ public abstract class Dominion_KillSpecialUnitQuest extends Quest {
         if (!classIds.contains(killed.getClassId()))
             return ;
 
-        int max_kills = qs.getInt("max_kills");
+        int max_kills = st.getInt("max_kills");
         if (max_kills == 0) {
-            qs.setState(STARTED);
-            qs.setCond(1);
+            st.start();
+            st.setCond(1);
 
             max_kills = Rnd.get(getRandomMin(), getRandomMax());
-            qs.set("max_kills", max_kills);
-            qs.set("current_kills", 1);
+            st.set("max_kills", max_kills);
+            st.set("current_kills");
             if (player.getParty() == null)
                 player.sendPacket(new ExShowScreenMessage(startNpcString(), 2000, String.valueOf(max_kills)));
             else {
@@ -70,13 +70,13 @@ public abstract class Dominion_KillSpecialUnitQuest extends Quest {
                         member.sendPacket(new ExShowScreenMessage(startNpcString(), 2000, String.valueOf(max))));
             }
         } else {
-            int current_kills = qs.getInt("current_kills") + 1;
+            int current_kills = st.getInt("current_kills") + 1;
             if (current_kills >= max_kills) {
                 event1.addReward(player, DominionSiegeEvent.STATIC_BADGES, 10);
 
-                qs.setState(COMPLETED);
-                qs.addExpAndSp(534000, 51000);
-                qs.exitCurrentQuest(true);
+                st.complete();
+                st.addExpAndSp(534000, 51000);
+                st.exitCurrentQuest();
 
                 if (player.getParty() == null)
                     player.sendPacket(new ExShowScreenMessage(doneNpcString(), 2000));
@@ -85,7 +85,7 @@ public abstract class Dominion_KillSpecialUnitQuest extends Quest {
                         member.sendPacket(new ExShowScreenMessage(doneNpcString(), 2000));
 
             } else {
-                qs.set("current_kills", current_kills);
+                st.inc("current_kills");
                 if (player.getParty() == null)
                     player.sendPacket(new ExShowScreenMessage(progressNpcString(), 2000, String.valueOf(max_kills), String.valueOf(current_kills)));
                 else

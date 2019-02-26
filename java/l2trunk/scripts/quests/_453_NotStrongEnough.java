@@ -42,7 +42,7 @@ public final class _453_NotStrongEnough extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
         if (event.equalsIgnoreCase("klemis_q453_03.htm")) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("bistakon")) {
@@ -88,7 +88,7 @@ public final class _453_NotStrongEnough extends Quest {
                         htmltext = "klemis_q453_12.htm";
                         int rewardId = Rnd.get(Rewards);
                         st.giveItems(rewardId, 1);
-                        st.setState(COMPLETED);
+                        st.complete();
                         st.playSound(SOUND_FINISH);
                         st.exitCurrentQuest(this);
                     }

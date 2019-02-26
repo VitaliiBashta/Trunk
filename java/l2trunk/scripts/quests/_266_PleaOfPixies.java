@@ -29,7 +29,7 @@ public final class _266_PleaOfPixies extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("pixy_murika_q0266_03.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         }
         return event;
@@ -41,10 +41,10 @@ public final class _266_PleaOfPixies extends Quest {
         if (st.getCond() == 0) {
             if (st.player.getRace() != Race.elf) {
                 htmltext = "pixy_murika_q0266_00.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else if (st.player.getLevel() < 3) {
                 htmltext = "pixy_murika_q0266_01.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else
                 htmltext = "pixy_murika_q0266_02.htm";
         } else if (st.getQuestItemsCount(PREDATORS_FANG) < 100)
@@ -64,7 +64,7 @@ public final class _266_PleaOfPixies extends Quest {
             else
                 st.giveItems(GLASS_SHARD, 1);
             htmltext = "pixy_murika_q0266_05.htm";
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             st.playSound(SOUND_FINISH);
         }
         return htmltext;

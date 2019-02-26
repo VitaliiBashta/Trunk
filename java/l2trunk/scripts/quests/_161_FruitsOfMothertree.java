@@ -27,7 +27,7 @@ public final class _161_FruitsOfMothertree extends Quest {
             htmltext = "30362-04.htm";
             st.giveItems(ANDELLRIAS_LETTER_ID, 1);
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         }
         return htmltext;
@@ -39,7 +39,7 @@ public final class _161_FruitsOfMothertree extends Quest {
         String htmltext = "noquest";
         int id = st.getState();
         if (id == CREATED) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(0);
             st.set("id", 0);
         }
@@ -51,11 +51,11 @@ public final class _161_FruitsOfMothertree extends Quest {
                     return "30362-03.htm";
                 else {
                     htmltext = "30362-02.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else {
                 htmltext = "30362-02.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (npcId == 30362 && st.getCond() > 0) {
             if (st.haveQuestItem(ANDELLRIAS_LETTER_ID)  && !st.haveQuestItem(MOTHERTREE_FRUIT_ID) )
@@ -66,7 +66,7 @@ public final class _161_FruitsOfMothertree extends Quest {
                 st.addExpAndSp(1000, 0);
                 st.takeItems(MOTHERTREE_FRUIT_ID, 1);
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(false);
+                st.finish();
             }
         } else if (npcId == 30371 && st.getCond() == 1)
             if (st.getQuestItemsCount(ANDELLRIAS_LETTER_ID) == 1) {

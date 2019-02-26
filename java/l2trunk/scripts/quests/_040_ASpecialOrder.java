@@ -11,7 +11,7 @@ public final class _040_ASpecialOrder extends Quest {
     private static final int OFulle = 31572;
     private static final int Gesto = 30511;
 
-    // Items
+    // items
     private static final int FatOrangeFish = 6452;
     private static final int NimbleOrangeFish = 6450;
     private static final int OrangeUglyFish = 6451;
@@ -28,11 +28,9 @@ public final class _040_ASpecialOrder extends Quest {
         super(false);
         addStartNpc(Helvetia);
 
-        addQuestItem(FishChest);
-        addQuestItem(SeedJar);
+        addQuestItem(FishChest,SeedJar);
 
-        addTalkId(OFulle);
-        addTalkId(Gesto);
+        addTalkId(OFulle,Gesto);
     }
 
     @Override
@@ -42,12 +40,12 @@ public final class _040_ASpecialOrder extends Quest {
             int rand = Rnd.get(1, 2);
             if (rand == 1) {
                 st.setCond(2);
-                st.setState(STARTED);
+                st.start();
                 st.playSound(SOUND_ACCEPT);
                 htmltext = "Helvetia-gave-ofulle.htm";
             } else {
                 st.setCond(5);
-                st.setState(STARTED);
+                st.start();
                 st.playSound(SOUND_ACCEPT);
                 htmltext = "Helvetia-gave-gesto.htm";
             }
@@ -69,19 +67,19 @@ public final class _040_ASpecialOrder extends Quest {
                     htmltext = "Helvetia-1.htm";
                 else {
                     htmltext = "Helvetia-occupation.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             else if (cond == 2 || cond == 3 || cond == 5 || cond == 6)
                 htmltext = "Helvetia-whereismyfish.htm";
             else if (cond == 4) {
                 st.takeItems(FishChest);
                 st.giveItems(WondrousCubic);
-                st.exitCurrentQuest(false);
+                st.finish();
                 htmltext = "Helvetia-finish.htm";
             } else if (cond == 7) {
                 st.takeItems(SeedJar);
                 st.giveItems(WondrousCubic);
-                st.exitCurrentQuest(false);
+                st.finish();
                 htmltext = "Helvetia-finish.htm";
             }
         } else if (npcId == OFulle) {

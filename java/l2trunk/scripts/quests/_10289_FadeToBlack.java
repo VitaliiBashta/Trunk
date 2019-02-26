@@ -24,7 +24,7 @@ public final class _10289_FadeToBlack extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
         if ("greymore_q10289_03.htm".equalsIgnoreCase(event)) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("showmark")) {
@@ -122,7 +122,7 @@ public final class _10289_FadeToBlack extends Quest {
             htmltext = "greymore_q10289_09.htm";
             st.takeItems(MarkofSplendor);
             st.takeItems(MarkofDarkness);
-            st.exitCurrentQuest(false);
+            st.finish();
         }
         return htmltext;
     }
@@ -137,7 +137,7 @@ public final class _10289_FadeToBlack extends Quest {
                     htmltext = "greymore_q10289_01.htm";
                 else {
                     htmltext = "greymore_q10289_00.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1)
                 htmltext = "greymore_q10289_04.htm";

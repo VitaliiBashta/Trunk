@@ -51,8 +51,7 @@ public final class _602_ShadowofLight extends Quest {
 
         addStartNpc(ARGOS);
 
-        addKillId(21299);
-        addKillId(21304);
+        addKillId(21299,21304);
 
         addQuestItem(EYE_OF_DARKNESS);
     }
@@ -61,7 +60,7 @@ public final class _602_ShadowofLight extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("eye_of_argos_q0602_0104.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("eye_of_argos_q0602_0201.htm".equalsIgnoreCase(event)) {
             st.takeItems(EYE_OF_DARKNESS);
@@ -74,7 +73,7 @@ public final class _602_ShadowofLight extends Quest {
                         st.giveItems(REWARD[0], 3, true);
                 }
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
         return event;
     }
@@ -91,7 +90,7 @@ public final class _602_ShadowofLight extends Quest {
             if (cond == 0)
                 if (st.player.getLevel() < 68) {
                     htmltext = "eye_of_argos_q0602_0103.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else
                     htmltext = "eye_of_argos_q0602_0101.htm";
             else if (cond == 1)

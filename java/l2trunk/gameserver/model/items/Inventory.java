@@ -77,7 +77,7 @@ public abstract class Inventory extends ItemContainer {
     private static final Logger _log = LoggerFactory.getLogger(Inventory.class);
     final List<ItemInstance> paperdoll = Arrays.asList(new ItemInstance[PAPERDOLL_MAX]);
     final InventoryListenerList listeners = new InventoryListenerList();
-    private final int ownerId;
+    final int ownerId;
     private int _totalWeight;
     // used to quickly check for using of items of special type
     private long wearedMask;
@@ -145,17 +145,13 @@ public abstract class Inventory extends ItemContainer {
 
     protected abstract ItemLocation getEquipLocation();
 
-    int getOwnerId() {
-        return ownerId;
-    }
-
     void onRestoreItem(ItemInstance item) {
         _totalWeight += item.getTemplate().weight() * item.getCount();
     }
 
     @Override
     protected void onAddItem(ItemInstance item) {
-        item.setOwnerId(getOwnerId());
+        item.setOwnerId(ownerId);
         item.setLocation(getBaseLocation());
         item.setLocData(findSlot());
         if (item.getJdbcState().isSavable()) {
@@ -445,7 +441,7 @@ public abstract class Inventory extends ItemContainer {
                     pdollSlot = PAPERDOLL_DECO6;
                 break;
             default:
-                _log.warn("Requested invalid body slot: " + bodySlot + ", Item: " + item + ", ownerId: '" + getOwnerId() + "'");
+                _log.warn("Requested invalid body slot: " + bodySlot + ", Item: " + item + ", ownerId: '" + ownerId + "'");
                 return;
         }
 

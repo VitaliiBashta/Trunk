@@ -197,7 +197,7 @@ public final class PlayerAI extends PlayableAI {
                 return;
             }
 
-        // setBlock the player for 10 minutes to summon a pet after the resurrection.
+        // setBlock the getPlayer for 10 minutes to summon a pet after the resurrection.
         //actor.setPetSummonBlockedTime(System.currentTimeMillis() + 600 * 1000);
 
         super.cast(skill, target, forceUse, dontMove);

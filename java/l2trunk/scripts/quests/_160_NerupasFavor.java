@@ -56,7 +56,7 @@ public final class _160_NerupasFavor extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if (event.equals("30370-04.htm")) {
             st.setCond(COND1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
             st.giveItems(SILVERY_SPIDERSILK, 1);
         }
@@ -74,7 +74,7 @@ public final class _160_NerupasFavor extends Quest {
                     htmltext = "30370-00.htm";
                 else if (st.player.getLevel() < 3) {
                     htmltext = "30370-02.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else
                     htmltext = "30370-03.htm";
             } else if (cond == COND1)
@@ -85,7 +85,7 @@ public final class _160_NerupasFavor extends Quest {
                 st.addExpAndSp(1000, 0);
                 st.playSound(SOUND_FINISH);
                 htmltext = "30370-06.htm";
-                st.exitCurrentQuest(false);
+                st.finish();
             } else
                 htmltext = "30370-05.htm";
         } else if (npcId == UNOREN) {

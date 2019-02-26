@@ -50,7 +50,7 @@ public class AdminCancel implements IAdminCommandHandler {
                     activeChar.sendMessage("Apply Cancel within " + radius + " unit radius.");
                     return;
                 } catch (NumberFormatException e) {
-                    activeChar.sendMessage("Enter valid player name or radius");
+                    activeChar.sendMessage("Enter valid getPlayer name or radius");
                     return;
                 }
         }

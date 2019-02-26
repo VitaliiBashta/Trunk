@@ -13,7 +13,7 @@ public final class _10278_MutatedKaneusHeine extends Quest {
     private static final int BladeOtis = 18562;
     private static final int WeirdBunei = 18564;
 
-    // Items
+    // items
     private static final int Tissue1 = 13834;
     private static final int Tissue2 = 13835;
 
@@ -29,11 +29,11 @@ public final class _10278_MutatedKaneusHeine extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("30916-03.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("30907-02.htm".equalsIgnoreCase(event)) {
             st.giveItems(57, 180000);
-            st.exitCurrentQuest(false);
+            st.finish();
             st.playSound(SOUND_FINISH);
         }
         return event;

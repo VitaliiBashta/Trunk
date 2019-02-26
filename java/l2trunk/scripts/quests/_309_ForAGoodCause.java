@@ -37,9 +37,9 @@ public final class _309_ForAGoodCause extends Quest {
         String htmltext = event;
         if ("32647-05.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
         } else if ("32646-14.htm".equalsIgnoreCase(event)) {
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         } else if ("moirairec".equalsIgnoreCase(event)) {
             if (st.getQuestItemsCount(MucrokianHide) >= 180) {
                 st.takeItems(MucrokianHide, 180);

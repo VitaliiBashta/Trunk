@@ -444,7 +444,7 @@ public final class PetBabyInstance extends PetInstance {
                     Armor_Maintenance,
                     Weapon_Maintenance));
     private Future<?> actionTask;
-    private boolean _buffEnabled = true;
+    private boolean buffEnabled = true;
 
     public PetBabyInstance(int objectId, NpcTemplate template, Player owner, ItemInstance control, int _currentLevel, long exp) {
         super(objectId, template, owner, control, _currentLevel, exp);
@@ -597,12 +597,8 @@ public final class PetBabyInstance extends PetInstance {
             actionTask = ThreadPoolManager.INSTANCE.schedule(new ActionTask(), 5000);
     }
 
-    public boolean isBuffEnabled() {
-        return _buffEnabled;
-    }
-
     public void triggerBuff() {
-        _buffEnabled = !_buffEnabled;
+        buffEnabled = !buffEnabled;
     }
 
     @Override

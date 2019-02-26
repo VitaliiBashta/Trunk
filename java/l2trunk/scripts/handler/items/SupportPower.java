@@ -3,6 +3,7 @@ package l2trunk.scripts.handler.items;
 import l2trunk.gameserver.handler.items.ItemHandler;
 import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.model.Player;
+import l2trunk.gameserver.model.base.ClassId;
 import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.network.serverpackets.SkillList;
 import l2trunk.gameserver.network.serverpackets.SystemMessage;
@@ -32,12 +33,12 @@ public final class SupportPower extends ScriptItemHandler implements ScriptFile 
 
     @Override
     public List<Integer> getItemIds() {
-        return Collections.singletonList(ITEM_IDS);
+        return List.of(ITEM_IDS);
     }
 
     public boolean useItem(Player player, ItemInstance item, boolean ctrl) {
         int itemId = item.getItemId();
-        int classId = player.getBaseClassId();
+        ClassId classId = player.getBaseClassId();
 
         if (player.isInOlympiadMode()) {
             player.sendPacket(new SystemMessage(SystemMessage.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addItemName(itemId));

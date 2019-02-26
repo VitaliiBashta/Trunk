@@ -17,7 +17,7 @@ public final class _369_CollectorOfJewels extends Quest {
     private static final int Salamander_Rowin = 20612;
     private static final int Lakin_Salamander = 20609;
     private static final int Death_Fire = 20749;
-    // Quest Items
+    // Quest items
     private static final int FLARE_SHARD = 5882;
     private static final int FREEZING_SHARD = 5883;
 
@@ -26,14 +26,8 @@ public final class _369_CollectorOfJewels extends Quest {
     public _369_CollectorOfJewels() {
         super(false);
         addStartNpc(NELL);
-        addKillId(Roxide);
-        addKillId(Rowin_Undine);
-        addKillId(Lakin_Undine);
-        addKillId(Salamander_Rowin);
-        addKillId(Lakin_Salamander);
-        addKillId(Death_Fire);
-        addQuestItem(FLARE_SHARD);
-        addQuestItem(FREEZING_SHARD);
+        addKillId(Roxide,Rowin_Undine,Lakin_Undine,Salamander_Rowin,Lakin_Salamander,Death_Fire);
+        addQuestItem(FLARE_SHARD,FREEZING_SHARD);
 
         DROPLIST.put(Roxide, new int[]{
                 FREEZING_SHARD,
@@ -64,12 +58,12 @@ public final class _369_CollectorOfJewels extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if (event.equalsIgnoreCase("30376-03.htm") && st.getState() == CREATED) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("30376-08.htm") && st.getState() == STARTED) {
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
         return event;
     }
@@ -86,7 +80,7 @@ public final class _369_CollectorOfJewels extends Quest {
                 st.setCond(0);
                 return "30376-02.htm";
             }
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             return "30376-01.htm";
         }
 
@@ -117,7 +111,7 @@ public final class _369_CollectorOfJewels extends Quest {
                 htmltext = "30376-10.htm";
                 st.giveItems(ADENA_ID, 63500);
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         }
 

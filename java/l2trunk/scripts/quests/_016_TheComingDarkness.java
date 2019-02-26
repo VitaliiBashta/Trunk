@@ -30,7 +30,7 @@ public final class _016_TheComingDarkness extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
 
         if (event.equalsIgnoreCase("31517-02.htm")) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.giveItems(CRYSTAL_OF_SEAL, 5);
             st.playSound(SOUND_ACCEPT);
@@ -55,19 +55,19 @@ public final class _016_TheComingDarkness extends Quest {
             if (cond < 1) {
                 if (st.player.getLevel() < 61) {
                     htmltext = "31517-00.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else
                     htmltext = "31517-01.htm";
             } else if (cond < 6 && st.haveQuestItem(CRYSTAL_OF_SEAL) )
                 htmltext = "31517-02r.htm";
             else if (cond < 6 && st.getQuestItemsCount(CRYSTAL_OF_SEAL) < 1) {
                 htmltext = "31517-proeb.htm";
-                st.exitCurrentQuest(false);
+                st.finish();
             } else if (cond > 5 && st.getQuestItemsCount(CRYSTAL_OF_SEAL) < 1) {
                 htmltext = "31517-03.htm";
                 st.addExpAndSp(865187, 69172);
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(false);
+                st.finish();
             }
         for (Map.Entry<Integer, Integer> element : ALTAR_LIST.entrySet())
             if (npcId == element.getKey())

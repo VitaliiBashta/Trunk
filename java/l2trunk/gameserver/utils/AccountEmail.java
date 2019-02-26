@@ -104,7 +104,7 @@ public final class AccountEmail {
         if (!validateEmail(email, confirmEmail)) {
             player.sendMessage("This e-mail address is invalid. Please try again with a valid one.");
             player.sendMessage("It is important to use a valid e-mail address because it is the only thing to recognize you as the owner of this account.");
-            // Tutorial window still not closed so the player can set e-mail again.
+            // Tutorial window still not closed so the getPlayer can set e-mail again.
         } else {
             setEmail(player, email);
             player.sendMessage("Your e-mail has been successfully set to: " + email);

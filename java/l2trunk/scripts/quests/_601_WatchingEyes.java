@@ -60,9 +60,9 @@ public final class _601_WatchingEyes extends Quest {
         if ("eye_of_argos_q0601_0104.htm".equalsIgnoreCase(event))
             if (st.player.getLevel() < 71) {
                 htmltext = "eye_of_argos_q0601_0103.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else {
-                st.setState(STARTED);
+                st.start();
                 st.setCond(1);
                 st.playSound(SOUND_ACCEPT);
             }
@@ -85,7 +85,7 @@ public final class _601_WatchingEyes extends Quest {
             }
             st.takeItems(PROOF_OF_AVENGER, -1);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
         return htmltext;
     }

@@ -1,5 +1,6 @@
 package l2trunk.scripts.quests;
 
+import l2trunk.gameserver.model.base.ClassId;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
@@ -160,12 +161,8 @@ public final class _213_TrialOfSeeker extends Quest {
 
         addStartNpc(Dufner);
 
-        addTalkId(Dufner);
-        addTalkId(Terry);
-        addTalkId(Viktor);
-        addTalkId(Marina);
-        addTalkId(Brunon);
-        //Mob Drop
+        addTalkId(Terry,Viktor,Marina,Brunon);
+        //mob Drop
         for (int[] aDROPLIST_COND : DROPLIST_COND) addKillId(aDROPLIST_COND[2]);
 
         addQuestItem(DufnersLetter,
@@ -199,26 +196,26 @@ public final class _213_TrialOfSeeker extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("dufner_q0213_05a.htm")) {
+        if ("dufner_q0213_05a.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
             st.giveItems(DufnersLetter);
             if (!st.player.isVarSet("dd1")) {
                 st.giveItems(7562, 64, false);
-                st.player.setVar("dd1", 1);
+                st.player.setVar("dd1");
             }
         } else if ("terry_q0213_03.htm".equalsIgnoreCase(event)) {
             st.giveItems(Terrys1stOrder);
             st.takeItems(DufnersLetter);
             st.setCond(2);
-            st.setState(STARTED);
+            st.start();
         } else if ("terry_q0213_07.htm".equalsIgnoreCase(event)) {
             st.takeItems(Terrys1stOrder);
             st.takeItems(MysteriousRunestone);
             st.giveItems(Terrys2ndOrder);
             st.setCond(4);
-            st.setState(STARTED);
+            st.start();
         } else if ("terry_q0213_10.htm".equalsIgnoreCase(event)) {
             st.takeItems(Terrys2ndOrder);
             st.takeItems(OlMahumRunestone);
@@ -228,38 +225,38 @@ public final class _213_TrialOfSeeker extends Quest {
             st.giveItems(TerrysLetter);
             st.giveItems(TerrysBox);
             st.setCond(6);
-            st.setState(STARTED);
+            st.start();
         } else if ("trader_viktor_q0213_05.htm".equalsIgnoreCase(event)) {
             st.takeItems(TerrysLetter);
             st.giveItems(ViktorsLetter);
             st.setCond(7);
-            st.setState(STARTED);
+            st.start();
         } else if ("trader_viktor_q0213_11.htm".equalsIgnoreCase(event)) {
             st.takeItems(TerrysLetter);
             st.takeItems(TerrysBox);
             st.takeItems(HawkeyesLetter);
             st.giveItems(ViktorsRequest);
             st.setCond(9);
-            st.setState(STARTED);
+            st.start();
         } else if ("trader_viktor_q0213_15.htm".equalsIgnoreCase(event)) {
             st.takeItems(ViktorsRequest);
             st.takeItems(MedusaScales);
             st.giveItems(ShilensRunestone);
             st.giveItems(AnalysisRequest);
             st.setCond(11);
-            st.setState(STARTED);
+            st.start();
         } else if ("magister_marina_q0213_02.htm".equalsIgnoreCase(event)) {
             st.takeItems(ShilensRunestone);
             st.takeItems(AnalysisRequest);
             st.giveItems(MarinasLetter);
             st.setCond(12);
-            st.setState(STARTED);
+            st.start();
         } else if ("magister_marina_q0213_05.htm".equalsIgnoreCase(event)) {
             st.takeItems(ExperimentTools, 1);
             st.giveItems(AnalysisResult);
             st.setCond(14);
-            st.setState(STARTED);
-        } else if (event.equalsIgnoreCase("terry_q0213_18.htm")) {
+            st.start();
+        } else if ("terry_q0213_18.htm".equalsIgnoreCase(event)) {
             if (st.player.getLevel() < 36) {
                 htmltext = "terry_q0213_17.htm";
                 st.takeItems(AnalysisResult);
@@ -269,7 +266,7 @@ public final class _213_TrialOfSeeker extends Quest {
                 st.giveItems(ListOfHost);
                 st.takeItems(AnalysisResult);
                 st.setCond(16);
-                st.setState(STARTED);
+                st.start();
             }
         }
         return htmltext;
@@ -281,35 +278,37 @@ public final class _213_TrialOfSeeker extends Quest {
         String htmltext = "noquest";
         int cond = st.getCond();
         if (npcId == Dufner) {
-            if (st.getQuestItemsCount(MarkofSeeker) != 0) {
+            if (st.haveQuestItem(MarkofSeeker)) {
                 htmltext = "completed";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else if (cond == 0 && st.getQuestItemsCount(TerrysReport) == 0) {
-                if (st.player.getClassId().ordinal() == 0x07 || st.player.getClassId().ordinal() == 0x16 || st.player.getClassId().ordinal() == 0x23)
+                if (st.player.getClassId() == ClassId.rogue
+                        || st.player.getClassId() == ClassId.elvenScout
+                        || st.player.getClassId() == ClassId.assassin)
                     if (st.player.getLevel() < 35) {
                         htmltext = "dufner_q0213_02.htm";
-                        st.exitCurrentQuest(true);
+                        st.exitCurrentQuest();
                     } else
                         htmltext = "dufner_q0213_03.htm";
                 else {
                     htmltext = "dufner_q0213_00.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (st.getQuestItemsCount(DufnersLetter) == 1 && st.getQuestItemsCount(TerrysReport) == 0)
                 htmltext = "dufner_q0213_06.htm";
             else if (st.getQuestItemsCount(DufnersLetter) == 0 && st.getQuestItemsCount(TerrysReport) == 0)
                 htmltext = "dufner_q0213_07.htm";
-            else if (st.getQuestItemsCount(TerrysReport) != 0) {
+            else if (st.haveQuestItem(TerrysReport) ) {
                 if (!st.player.isVarSet("prof2.1")) {
                     st.addExpAndSp(514739, 33384);
                     st.giveItems(ADENA_ID, 93803);
-                    st.player.setVar("prof2.1", 1);
+                    st.player.setVar("prof2.1");
                 }
                 htmltext = "dufner_q0213_08.htm";
                 st.playSound(SOUND_FINISH);
-                st.takeItems(TerrysReport, -1);
-                st.giveItems(MarkofSeeker, 1);
-                st.exitCurrentQuest(true);
+                st.takeItems(TerrysReport);
+                st.giveItems(MarkofSeeker);
+                st.exitCurrentQuest();
             }
         } else if (npcId == Terry) {
             if (cond == 1)
@@ -335,7 +334,7 @@ public final class _213_TrialOfSeeker extends Quest {
                 st.giveItems(HawkeyesLetter, 1);
                 htmltext = "terry_q0213_12.htm";
                 st.setCond(8);
-                st.setState(STARTED);
+                st.start();
             } else if (cond == 8)
                 htmltext = "terry_q0213_13.htm";
             else if (cond > 8 && cond < 14)
@@ -350,7 +349,7 @@ public final class _213_TrialOfSeeker extends Quest {
                     st.takeItems(Terrys3rdOrder, -1);
                     st.giveItems(ListOfHost, 1);
                     st.setCond(16);
-                    st.setState(STARTED);
+                    st.start();
                 }
             } else if (cond == 15 || cond == 16) //15 конда пока нету, и хз как он получается
                 htmltext = "terry_q0213_22.htm";
@@ -397,7 +396,7 @@ public final class _213_TrialOfSeeker extends Quest {
                 st.takeItems(MarinasLetter, 1);
                 st.giveItems(ExperimentTools, 1);
                 st.setCond(13);
-                st.setState(STARTED);
+                st.start();
             } else if (cond == 13)
                 htmltext = "blacksmith_bronp_q0213_02.htm";
         return htmltext;
@@ -415,14 +414,14 @@ public final class _213_TrialOfSeeker extends Quest {
                     else if (st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[7], aDROPLIST_COND[5], aDROPLIST_COND[6]))
                         if (aDROPLIST_COND[1] != cond && aDROPLIST_COND[1] != 0) {
                             st.setCond(aDROPLIST_COND[1]);
-                            st.setState(STARTED);
+                            st.start();
                         }
         if (cond == 4 && st.getQuestItemsCount(OlMahumRunestone) != 0 && st.getQuestItemsCount(TurekRunestone) != 0 && st.getQuestItemsCount(AntRunestone) != 0 && st.getQuestItemsCount(TurakBugbearRunestone) != 0) {
             st.setCond(5);
-            st.setState(STARTED);
+            st.start();
         } else if (cond == 16 && st.getQuestItemsCount(AbyssRunestone1) != 0 && st.getQuestItemsCount(AbyssRunestone2) != 0 && st.getQuestItemsCount(AbyssRunestone3) != 0 && st.getQuestItemsCount(AbyssRunestone4) != 0) {
             st.setCond(17);
-            st.setState(STARTED);
+            st.start();
         }
     }
 }

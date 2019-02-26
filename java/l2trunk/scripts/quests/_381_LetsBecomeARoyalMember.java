@@ -28,12 +28,9 @@ public final class _381_LetsBecomeARoyalMember extends Quest {
         addStartNpc(SORINT);
         addTalkId(SANDRA);
 
-        addKillId(ANCIENT_GARGOYLE);
-        addKillId(VEGUS);
+        addKillId(ANCIENT_GARGOYLE,VEGUS);
 
-        addQuestItem(KAILS_COIN);
-        addQuestItem(COIN_ALBUM);
-        addQuestItem(CLOVER_COIN);
+        addQuestItem(KAILS_COIN,COIN_ALBUM,CLOVER_COIN);
     }
 
     @Override
@@ -42,16 +39,16 @@ public final class _381_LetsBecomeARoyalMember extends Quest {
         if ("warehouse_keeper_sorint_q0381_02.htm".equalsIgnoreCase(event))
             if (st.player.getLevel() >= 55 && st.haveQuestItem(MEMBERSHIP_1)) {
                 st.setCond(1);
-                st.setState(STARTED);
+                st.start();
                 st.playSound(SOUND_ACCEPT);
                 htmltext = "warehouse_keeper_sorint_q0381_03.htm";
             } else {
                 htmltext = "warehouse_keeper_sorint_q0381_02.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         else if ("sandra_q0381_02.htm".equalsIgnoreCase(event))
             if (st.getCond() == 1) {
-                st.set("id", 1);
+                st.set("id");
                 st.playSound(SOUND_ACCEPT);
             }
         return htmltext;
@@ -75,7 +72,7 @@ public final class _381_LetsBecomeARoyalMember extends Quest {
                     st.takeItems(COIN_ALBUM);
                     st.giveItems(ROYAL_MEMBERSHIP);
                     st.playSound(SOUND_FINISH);
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                     htmltext = "warehouse_keeper_sorint_q0381_06.htm";
                 } else if (album == 0)
                     htmltext = "warehouse_keeper_sorint_q0381_05.htm";
@@ -91,7 +88,7 @@ public final class _381_LetsBecomeARoyalMember extends Quest {
                 st.giveItems(COIN_ALBUM);
                 st.playSound(SOUND_ITEMGET);
                 htmltext = "sandra_q0381_04.htm";
-            } else if (st.getInt("id") == 0)
+            } else if (!st.isSet("id"))
                 htmltext = "sandra_q0381_01.htm";
             else
                 htmltext = "sandra_q0381_03.htm";
@@ -118,7 +115,7 @@ public final class _381_LetsBecomeARoyalMember extends Quest {
                 else
                     st.playSound(SOUND_ITEMGET);
             }
-        } else if (npcId == VEGUS && clover + album == 0 && st.getInt("id") != 0)
+        } else if (npcId == VEGUS && clover + album == 0 && st.isSet("id") )
             if (Rnd.chance(VEGUS_CHANCE)) {
                 st.giveItems(CLOVER_COIN);
                 if (coin > 0)

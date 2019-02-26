@@ -215,13 +215,13 @@ public enum FishingChampionShipManager {
             strBuilder.append("<td width=110 align=center>").append(getCurrentName(x)).append("</td>");
             strBuilder.append("<td width=80 align=center>").append(getCurrentFishLength(x)).append("</td></tr>");
         }
-        html.replace("%TABLE%", strBuilder.toString());
+        html.replace("%TABLE%", strBuilder);
         html.replace("%prizeItem%", ItemHolder.getTemplate(Config.ALT_FISH_CHAMPIONSHIP_REWARD_ITEM).getName());
-        html.replace("%prizeFirst%", String.valueOf(Config.ALT_FISH_CHAMPIONSHIP_REWARD_1));
-        html.replace("%prizeTwo%", String.valueOf(Config.ALT_FISH_CHAMPIONSHIP_REWARD_2));
-        html.replace("%prizeThree%", String.valueOf(Config.ALT_FISH_CHAMPIONSHIP_REWARD_3));
-        html.replace("%prizeFour%", String.valueOf(Config.ALT_FISH_CHAMPIONSHIP_REWARD_4));
-        html.replace("%prizeFive%", String.valueOf(Config.ALT_FISH_CHAMPIONSHIP_REWARD_5));
+        html.replace("%prizeFirst%", Config.ALT_FISH_CHAMPIONSHIP_REWARD_1);
+        html.replace("%prizeTwo%", Config.ALT_FISH_CHAMPIONSHIP_REWARD_2);
+        html.replace("%prizeThree%", Config.ALT_FISH_CHAMPIONSHIP_REWARD_3);
+        html.replace("%prizeFour%", Config.ALT_FISH_CHAMPIONSHIP_REWARD_4);
+        html.replace("%prizeFive%", Config.ALT_FISH_CHAMPIONSHIP_REWARD_5);
         pl.sendPacket(html);
     }
 
@@ -235,15 +235,15 @@ public enum FishingChampionShipManager {
             strBuilder.append("<td width=110 align=center>").append(getWinnerName(x)).append("</td>");
             strBuilder.append("<td width=80 align=center>").append(getFishLength(x)).append("</td></tr>");
         }
-        html.replace("%TABLE%", strBuilder.toString());
+        html.replace("%TABLE%", strBuilder);
         html.replace("%prizeItem%", ItemHolder.getTemplate(Config.ALT_FISH_CHAMPIONSHIP_REWARD_ITEM).getName());
-        html.replace("%prizeFirst%", String.valueOf(Config.ALT_FISH_CHAMPIONSHIP_REWARD_1));
-        html.replace("%prizeTwo%", String.valueOf(Config.ALT_FISH_CHAMPIONSHIP_REWARD_2));
-        html.replace("%prizeThree%", String.valueOf(Config.ALT_FISH_CHAMPIONSHIP_REWARD_3));
-        html.replace("%prizeFour%", String.valueOf(Config.ALT_FISH_CHAMPIONSHIP_REWARD_4));
-        html.replace("%prizeFive%", String.valueOf(Config.ALT_FISH_CHAMPIONSHIP_REWARD_5));
-        html.replace("%refresh%", String.valueOf(getTimeRemaining()));
-        html.replace("%objectId%", String.valueOf(npc.objectId()));
+        html.replace("%prizeFirst%", (Config.ALT_FISH_CHAMPIONSHIP_REWARD_1));
+        html.replace("%prizeTwo%", Config.ALT_FISH_CHAMPIONSHIP_REWARD_2);
+        html.replace("%prizeThree%", Config.ALT_FISH_CHAMPIONSHIP_REWARD_3);
+        html.replace("%prizeFour%", Config.ALT_FISH_CHAMPIONSHIP_REWARD_4);
+        html.replace("%prizeFive%", Config.ALT_FISH_CHAMPIONSHIP_REWARD_5);
+        html.replace("%refresh%", getTimeRemaining());
+        html.replace("%objectId%", npc.objectId());
         pl.sendPacket(html);
     }
 
@@ -271,7 +271,7 @@ public enum FishingChampionShipManager {
                 statement.close();
             }
         } catch (SQLException e) {
-            _log.warn("Exception: can't update player vitality: ", e);
+            _log.warn("Exception: can't update getPlayer vitality: ", e);
         }
     }
 

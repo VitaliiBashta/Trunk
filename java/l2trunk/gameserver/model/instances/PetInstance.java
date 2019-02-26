@@ -222,7 +222,7 @@ public class PetInstance extends Summon {
     }
 
     /**
-     * Remove the Pet from DB and its associated item from the player inventory
+     * Remove the Pet from DB and its associated item from the getPlayer inventory
      */
     private void destroyControlItem() {
         if (getControlItemObjId() == 0)
@@ -325,7 +325,7 @@ public class PetInstance extends Summon {
 
     @Override
     public int getAccuracy() {
-        return (int) calcStat(Stats.ACCURACY_COMBAT, petData.getAccuracy());
+        return (int) calcStat(Stats.ACCURACY_COMBAT, petData.accuracy);
     }
 
     @Override
@@ -354,7 +354,7 @@ public class PetInstance extends Summon {
 
     @Override
     public int getCriticalHit(Creature target, Skill skill) {
-        return (int) calcStat(Stats.CRITICAL_BASE, petData.getCritical(), target, skill);
+        return (int) calcStat(Stats.CRITICAL_BASE, petData.critical, target, skill);
     }
 
     @Override
@@ -368,17 +368,17 @@ public class PetInstance extends Summon {
 
     @Override
     public int getEvasionRate(Creature target) {
-        return (int) calcStat(Stats.EVASION_RATE, petData.getEvasion(), target, null);
+        return (int) calcStat(Stats.EVASION_RATE, petData.evasion, target, null);
     }
 
     @Override
     public long getExpForNextLevel() {
-        return PetDataTable.INSTANCE.getInfo(getNpcId(), level + 1).getExp();
+        return PetDataTable.INSTANCE.getInfo(getNpcId(), level + 1).exp;
     }
 
     @Override
     public long getExpForThisLevel() {
-        return PetDataTable.INSTANCE.getInfo(getNpcId(), level).getExp();
+        return PetDataTable.INSTANCE.getInfo(getNpcId(), level).exp;
     }
 
     private int getFoodId() {
@@ -418,12 +418,12 @@ public class PetInstance extends Summon {
     }
 
     private long getMaxExp() {
-        return PetDataTable.INSTANCE.getInfo(getNpcId(), Experience.getMaxLevel() + 1).getExp();
+        return PetDataTable.INSTANCE.getInfo(getNpcId(), Experience.getMaxLevel() + 1).exp;
     }
 
     @Override
     public int getMaxFed() {
-        return petData.getFeedMax();
+        return petData.feedMax;
     }
 
     @Override
@@ -438,26 +438,26 @@ public class PetInstance extends Summon {
 
     @Override
     public int getMaxHp() {
-        return (int) calcStat(Stats.MAX_HP, petData.getHP());
+        return (int) calcStat(Stats.MAX_HP, petData.hp);
     }
 
     @Override
     public int getMaxMp() {
-        return (int) calcStat(Stats.MAX_MP, petData.getMP());
+        return (int) calcStat(Stats.MAX_MP, petData.mp);
     }
 
     @Override
     public int getPAtk(Creature target) {
         // В базе указаны параметры, уже домноженные на этот модификатор, для удобства. Поэтому вычисляем и убираем его.
         double mod = BaseStats.STR.calcBonus(this) * getLevelMod();
-        return (int) calcStat(Stats.POWER_ATTACK, petData.getPAtk() / mod, target, null);
+        return (int) calcStat(Stats.POWER_ATTACK, petData.pAtk / mod, target, null);
     }
 
     @Override
     public int getPDef(Creature target) {
         // В базе указаны параметры, уже домноженные на этот модификатор, для удобства. Поэтому вычисляем и убираем его.
         double mod = getLevelMod();
-        return (int) calcStat(Stats.POWER_DEFENCE, petData.getPDef() / mod, target, null);
+        return (int) calcStat(Stats.POWER_DEFENCE, petData.pDef / mod, target, null);
     }
 
     @Override
@@ -466,29 +466,29 @@ public class PetInstance extends Summon {
         double ib = BaseStats.INT.calcBonus(this);
         double lvlb = getLevelMod();
         double mod = lvlb * lvlb * ib * ib;
-        return (int) calcStat(Stats.MAGIC_ATTACK, petData.getMAtk() / mod, target, skill);
+        return (int) calcStat(Stats.MAGIC_ATTACK, petData.mAtk / mod, target, skill);
     }
 
     @Override
     public int getMDef(Creature target, Skill skill) {
         // В базе указаны параметры, уже домноженные на этот модификатор, для удобства. Поэтому вычисляем и убираем его.
         double mod = BaseStats.MEN.calcBonus(this) * getLevelMod();
-        return (int) calcStat(Stats.MAGIC_DEFENCE, petData.getMDef() / mod, target, skill);
+        return (int) calcStat(Stats.MAGIC_DEFENCE, petData.mDef / mod, target, skill);
     }
 
     @Override
     public int getPAtkSpd() {
-        return (int) calcStat(Stats.POWER_ATTACK_SPEED, calcStat(Stats.ATK_BASE, petData.getAtkSpeed()));
+        return (int) calcStat(Stats.POWER_ATTACK_SPEED, calcStat(Stats.ATK_BASE, petData.atkSpeed));
     }
 
     @Override
     public int getMAtkSpd() {
-        return (int) calcStat(Stats.MAGIC_ATTACK_SPEED, petData.getCastSpeed());
+        return (int) calcStat(Stats.MAGIC_ATTACK_SPEED, petData.castSpeed);
     }
 
     @Override
     public int getRunSpeed() {
-        return getSpeed(petData.getSpeed());
+        return getSpeed(petData.speed);
     }
 
     @Override
@@ -561,7 +561,7 @@ public class PetInstance extends Summon {
             if (PetDataTable.isVitaminPet(getNpcId()))
                 feedTime = 10000;
             else
-                feedTime = Math.max(first ? 15000 : 1000, 60000 / (battleFeed ? petData.getFeedBattle() : petData.getFeedNormal()));
+                feedTime = Math.max(first ? 15000 : 1000, 60000 / (battleFeed ? petData.feedBattle : petData.feedNormal));
             _feedTask = ThreadPoolManager.INSTANCE.schedule(new FeedTask(), feedTime);
         }
     }

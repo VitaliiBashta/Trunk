@@ -630,7 +630,7 @@
 		<set name="hitTime" val="3000" />
 		<set name="isReuseDelayPermanent" val="true" />
 		<!-- <cond msgId="2292">
-			<player agathion="???"/>
+			<getPlayer agathion="???"/>
 		</cond> -->
 	</skill>
 	<skill id="23134" levels="1" name="Miss Chipao Agathion Special Skill - Decrease Weight" >
@@ -1045,7 +1045,7 @@
 	</skill>
 	<skill id="23155" levels="1" name="Reindeer Scratch" >
 		<!--  Automatically generated from The Gracia Epilogue client files.
-		      Description: "Raises affection occupation. For 10 minutes, raises physical critical rate by 30% and chance of magical critical rate by 2."
+		      Description: "Raises affection level. For 10 minutes, raises physical critical rate by 30% and chance of magical critical rate by 2."
 		      Target is set to TARGET_NONE, skillType  to NOTDONE for server compatability.
 		      created 16-12-2009  18:32
 		-->
@@ -1064,7 +1064,7 @@
 	</skill>
 	<skill id="23156" levels="1" name="Gift of Thanks" >
 		<!--  Automatically generated from The Gracia Epilogue client files.
-		      Description: Energy occupation is maintained for 10 minutes. Reuse delay is 2 hours.
+		      Description: Energy level is maintained for 10 minutes. Reuse delay is 2 hours.
 		      Target is set to TARGET_NONE, skillType  to NOTDONE for server compatability.
 		      created 16-12-2009  18:32
 		-->

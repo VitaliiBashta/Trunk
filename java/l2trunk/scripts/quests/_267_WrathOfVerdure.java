@@ -11,9 +11,9 @@ public final class _267_WrathOfVerdure extends Quest {
     private static final int Treant_Bremec = 31853;
     //Mobs
     private static final int Goblin_Raider = 20325;
-    //Quest Items
+    //Quest items
     private static final int Goblin_Club = 1335;
-    //Items
+    //items
     private static final int Silvery_Leaf = 1340;
     //Chances
     private static final int Goblin_Club_Chance = 50;
@@ -29,12 +29,12 @@ public final class _267_WrathOfVerdure extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         int _state = st.getState();
         if ("bri_mec_tran_q0267_03.htm".equalsIgnoreCase(event) && _state == CREATED && st.player.getRace() == Race.elf && st.player.getLevel() >= 4) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if ("bri_mec_tran_q0267_06.htm".equalsIgnoreCase(event) && _state == STARTED) {
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(false);
+            st.finish();
         }
         return event;
     }
@@ -48,10 +48,10 @@ public final class _267_WrathOfVerdure extends Quest {
         if (_state == CREATED) {
             if (st.player.getRace() != Race.elf) {
                 htmltext = "bri_mec_tran_q0267_00.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else if (st.player.getLevel() < 4) {
                 htmltext = "bri_mec_tran_q0267_01.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else {
                 htmltext = "bri_mec_tran_q0267_02.htm";
                 st.setCond(0);

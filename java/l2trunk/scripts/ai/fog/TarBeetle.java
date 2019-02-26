@@ -68,7 +68,7 @@ public final class TarBeetle extends DefaultAI {
 
     private void CancelTarget(NpcInstance actor) {
         if (TAR_BEETLE != actor.getDisplayId()) {
-            World.getAroundPlayers(actor).stream()
+            World.getAroundPlayers(actor)
                     .filter(p -> p.getTarget() == actor)
                     .forEach(p -> {
                         p.setTarget(null);

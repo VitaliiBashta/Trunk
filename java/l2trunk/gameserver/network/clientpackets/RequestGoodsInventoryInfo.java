@@ -17,6 +17,6 @@ public class RequestGoodsInventoryInfo extends L2GameClientPacket {
         Player player = getClient().getActiveChar();
         if (player == null)
             return;
-        //player.sendPacket(new ExGoodsInventoryInfo(player));
+        //getPlayer.sendPacket(new ExGoodsInventoryInfo(getPlayer));
     }
 }

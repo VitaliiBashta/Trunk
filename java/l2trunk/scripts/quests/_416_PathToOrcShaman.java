@@ -18,7 +18,7 @@ public final class _416_PathToOrcShaman extends Quest {
     private static final int SeerMoira = 31979;
     private static final int GandiTotemSpirit = 32057;
     private static final int LeopardCarcass = 32090;
-    //Quest Items
+    //Quest items
     private static final int FireCharm = 1616;
     private static final int KashaBearPelt = 1617;
     private static final int KashaBladeSpiderHusk = 1618;
@@ -34,7 +34,7 @@ public final class _416_PathToOrcShaman extends Quest {
     private static final int BoundDurkaSpirit = 1628;
     private static final int DurkaParasite = 1629;
     private static final int TotemSpiritBlood = 1630;
-    //Items
+    //items
     private static final int MaskOfMedium = 1631;
     //MOB
     private static final int KashaBear = 20479;
@@ -98,7 +98,7 @@ public final class _416_PathToOrcShaman extends Quest {
 
         addTalkId(HestuiTotemSpirit, SeerUmos, DudaMaraTotemSpirit, SeerMoira, GandiTotemSpirit, LeopardCarcass);
 
-        //Mob Drop
+        //mob Drop
         for (int[] aDROPLIST_COND : DROPLIST_COND) {
             addKillId(aDROPLIST_COND[2]);
             addQuestItem(aDROPLIST_COND[4]);
@@ -112,7 +112,7 @@ public final class _416_PathToOrcShaman extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("tataru_zu_hestui_q0416_06.htm".equalsIgnoreCase(event)) {
             st.giveItems(FireCharm, 1);
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if ("hestui_totem_spirit_q0416_03.htm".equalsIgnoreCase(event)) {
@@ -136,13 +136,13 @@ public final class _416_PathToOrcShaman extends Quest {
             if (st.player.getClassId().occupation() == 0) {
                 st.giveItems(MaskOfMedium);
                 if (!st.player.isVarSet("prof1")) {
-                    st.player.setVar("prof1", 1);
+                    st.player.setVar("prof1");
                     st.addExpAndSp(228064, 16455);
                     st.giveItems(ADENA_ID, 81900);
                 }
             }
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         } else if ("totem_spirit_gandi_q0416_02.htm".equalsIgnoreCase(event))
             st.setCond(14);
         else if ("dead_leopard_q0416_04.htm".equalsIgnoreCase(event))
@@ -163,17 +163,17 @@ public final class _416_PathToOrcShaman extends Quest {
         if (npcId == Hestui) {
             if (st.getQuestItemsCount(MaskOfMedium) != 0) {
                 htmltext = "seer_umos_q0416_04.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else if (cond == 0) {
                 if (st.player.getClassId().id != 0x31) {
                     if (st.player.getClassId().id == 0x32)
                         htmltext = "tataru_zu_hestui_q0416_02a.htm";
                     else
                         htmltext = "tataru_zu_hestui_q0416_02.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else if (st.player.getLevel() < 18) {
                     htmltext = "tataru_zu_hestui_q0416_03.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else
                     htmltext = "tataru_zu_hestui_q0416_01.htm";
             } else if (cond == 1)
@@ -237,13 +237,13 @@ public final class _416_PathToOrcShaman extends Quest {
                     if (st.player.getClassId().occupation() == 0) {
                         st.giveItems(MaskOfMedium);
                         if (!st.player.isVarSet("prof1")) {
-                            st.player.setVar("prof1", 1);
+                            st.player.setVar("prof1");
                             st.addExpAndSp(295862, 18194);
                             st.giveItems(ADENA_ID, 81900);
                         }
                     }
                     st.playSound(SOUND_FINISH);
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (npcId == GandiTotemSpirit) {
                 if (cond == 13)

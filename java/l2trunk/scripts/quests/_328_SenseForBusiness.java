@@ -17,26 +17,19 @@ public final class _328_SenseForBusiness extends Quest {
         super(false);
 
         addStartNpc(SARIEN);
-        addKillId(20055);
-        addKillId(20059);
-        addKillId(20067);
-        addKillId(20068);
-        addKillId(20070);
-        addKillId(20072);
-        addQuestItem(MONSTER_EYE_CARCASS);
-        addQuestItem(MONSTER_EYE_LENS);
-        addQuestItem(BASILISK_GIZZARD);
+        addKillId(20055,20059,20067,20068,20070,20072);
+        addQuestItem(MONSTER_EYE_CARCASS,MONSTER_EYE_LENS,BASILISK_GIZZARD);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("trader_salient_q0328_03.htm")) {
+        if ("trader_salient_q0328_03.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("trader_salient_q0328_06.htm")) {
+        } else if ("trader_salient_q0328_06.htm".equalsIgnoreCase(event)) {
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
         return event;
     }
@@ -53,7 +46,7 @@ public final class _328_SenseForBusiness extends Quest {
                 return htmltext;
             }
             htmltext = "trader_salient_q0328_01.htm";
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         } else {
             long carcass = st.getQuestItemsCount(MONSTER_EYE_CARCASS);
             long lenses = st.getQuestItemsCount(MONSTER_EYE_LENS);

@@ -206,10 +206,10 @@ public final class _226_TestOfHealer extends Quest {
                 htmltext = "30473-04.htm";
                 if (!st.player.isVarSet("dd3")) {
                     st.giveItems(7562, 45);
-                    st.player.setVar("dd3", 1);
+                    st.player.setVar("dd3");
                 }
                 st.setCond(COND1);
-                st.setState(STARTED);
+                st.start();
                 st.playSound(SOUND_ACCEPT);
                 st.giveItems(REPORT_OF_PERRIN_ID);
                 break;
@@ -223,7 +223,7 @@ public final class _226_TestOfHealer extends Quest {
                 st.giveItems(MARK_OF_HEALER_ID);
                 st.addExpAndSp(738283, 50662);
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(false);
+                st.finish();
                 break;
             case "30428_1":
                 htmltext = "30428-02.htm";
@@ -273,7 +273,7 @@ public final class _226_TestOfHealer extends Quest {
     @Override
     public String onTalk(NpcInstance npc, QuestState st) {
         if (st.getQuestItemsCount(MARK_OF_HEALER_ID) > 0) {
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             return "completed";
         }
         String htmltext = "noquest";
@@ -288,7 +288,7 @@ public final class _226_TestOfHealer extends Quest {
                         htmltext = "30473-01.htm";
                 else {
                     htmltext = "30473-02.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == COND23) {
                 if (st.getQuestItemsCount(GOLDEN_STATUE_ID) == 0) {
@@ -297,10 +297,10 @@ public final class _226_TestOfHealer extends Quest {
                     if (!st.player.isVarSet("prof2.3")) {
                         st.addExpAndSp(738283, 50662);
                         st.giveItems(ADENA_ID, 133490);
-                        st.player.setVar("prof2.3", 1);
+                        st.player.setVar("prof2.3");
                     }
                     st.playSound(SOUND_FINISH);
-                    st.exitCurrentQuest(false);
+                    st.finish();
                 } else
                     htmltext = "30473-07.htm";
             } else

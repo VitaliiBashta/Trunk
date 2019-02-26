@@ -20,13 +20,9 @@ public final class _623_TheFinestFood extends Quest {
 
         addTalkId(JEREMY);
 
-        addKillId(HOT_SPRINGS_BUFFALO);
-        addKillId(HOT_SPRINGS_FLAVA);
-        addKillId(HOT_SPRINGS_ANTELOPE);
+        addKillId(HOT_SPRINGS_BUFFALO,HOT_SPRINGS_FLAVA,HOT_SPRINGS_ANTELOPE);
 
-        addQuestItem(BUFFALO_MEAT);
-        addQuestItem(LEAF_OF_FLAVA);
-        addQuestItem(ANTELOPE_HORN);
+        addQuestItem(BUFFALO_MEAT,LEAF_OF_FLAVA,ANTELOPE_HORN);
     }
 
     @Override
@@ -35,17 +31,15 @@ public final class _623_TheFinestFood extends Quest {
         if ("quest_accept".equalsIgnoreCase(event)) {
             htmltext = "jeremy_q0623_0104.htm";
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("623_3".equalsIgnoreCase(event)) {
             htmltext = "jeremy_q0623_0201.htm";
-            st.takeItems(LEAF_OF_FLAVA);
-            st.takeItems(BUFFALO_MEAT);
-            st.takeItems(ANTELOPE_HORN);
+            st.takeAllItems(LEAF_OF_FLAVA,BUFFALO_MEAT,ANTELOPE_HORN);
             st.giveItems(ADENA_ID, 73000);
             st.addExpAndSp(230000, 18250);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
         return htmltext;
     }
@@ -67,7 +61,7 @@ public final class _623_TheFinestFood extends Quest {
                     htmltext = "jeremy_q0623_0101.htm";
                 else {
                     htmltext = "jeremy_q0623_0103.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1 && summ(st) < 300)
                 htmltext = "jeremy_q0623_0106.htm";

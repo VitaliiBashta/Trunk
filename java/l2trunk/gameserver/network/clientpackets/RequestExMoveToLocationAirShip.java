@@ -6,20 +6,20 @@ import l2trunk.gameserver.model.entity.boat.ClanAirShip;
 /**
  * Format: d d|dd
  */
-public class RequestExMoveToLocationAirShip extends L2GameClientPacket {
-    private int _moveType;
-    private int _param1, _param2;
+public final class RequestExMoveToLocationAirShip extends L2GameClientPacket {
+    private int moveType;
+    private int param1, param2;
 
     @Override
     protected void readImpl() {
-        _moveType = readD();
-        switch (_moveType) {
+        moveType = readD();
+        switch (moveType) {
             case 4: // AirShipTeleport
-                _param1 = readD() + 1;
+                param1 = readD() + 1;
                 break;
             case 0: // Free move
-                _param1 = readD();
-                _param2 = readD();
+                param1 = readD();
+                param2 = readD();
                 break;
             case 2: // Up
                 readD(); //?
@@ -40,24 +40,24 @@ public class RequestExMoveToLocationAirShip extends L2GameClientPacket {
 
         ClanAirShip airship = (ClanAirShip) player.getBoat();
         if (airship.getDriver() == player)
-            switch (_moveType) {
+            switch (moveType) {
                 case 4: // AirShipTeleport
-                    airship.addTeleportPoint(player, _param1);
+                    airship.addTeleportPoint(player, param1);
                     break;
                 case 0: // Free move
                     if (!airship.isCustomMove())
                         break;
-                    airship.moveToLocation(airship.getLoc().setX(_param1).setY(_param2), 0, false);
+                    airship.moveToLocation(airship.getLoc().setX(param1).setY(param2), 0, false);
                     break;
                 case 2: // Up
                     if (!airship.isCustomMove())
                         break;
-                    airship.moveToLocation(airship.getLoc().changeZ(100), 0, false);
+                    airship.moveToLocation(airship.getLoc().addZ(100), 0, false);
                     break;
                 case 3: // Down
                     if (!airship.isCustomMove())
                         break;
-                    airship.moveToLocation(airship.getLoc().changeZ(-100), 0, false);
+                    airship.moveToLocation(airship.getLoc().addZ(-100), 0, false);
                     break;
             }
     }

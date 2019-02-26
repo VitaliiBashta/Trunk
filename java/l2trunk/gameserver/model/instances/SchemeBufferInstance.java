@@ -189,7 +189,7 @@ public final class SchemeBufferInstance extends NpcInstance {
         } else if (player.isInCombat() && !Config.SCHEME_ALLOW_FLAG) {
             msg = "You cannot receive buffs while in combat.<br>Please, try again later.";
         }
-        // Ady - Block time that the player cannot use the community buffer
+        // Ady - Block time that the getPlayer cannot use the community buffer
         else if (player.getResurrectionBuffBlockedTime() > System.currentTimeMillis()) {
             msg = "You must wait 10 seconds after being resurrected to use the buffer.";
         }
@@ -975,15 +975,15 @@ public final class SchemeBufferInstance extends NpcInstance {
     }
 
     public static void onBypass(final Player player, String command) {
-		/*Creature npc = player;
-		if (!player.isInFightClub())
+		/*Creature npc = getPlayer;
+		if (!getPlayer.isInFightClub())
 		{
-			if (player.getTarget() != null)
+			if (getPlayer.getTarget() != null)
 			{
-				if (player.getTarget().NpcInstance() && player.getTarget() instanceof SchemeBufferInstance)
+				if (getPlayer.getTarget().NpcInstance() && getPlayer.getTarget() instanceof SchemeBufferInstance)
 				{
-					npc = ((Creature) player.getTarget());
-					if (!player.isInRange(npc, 240))
+					npc = ((Creature) getPlayer.getTarget());
+					if (!getPlayer.isInRange(npc, 240))
 						return;
 				}
 				else
@@ -1218,7 +1218,7 @@ public final class SchemeBufferInstance extends NpcInstance {
                     }
                 }
             }
-            //Functions.removeItem(player, CONSUMABLE_ID, cost, "Scheme Buffer");
+            //Functions.removeItem(getPlayer, CONSUMABLE_ID, cost, "Scheme Buffer");
 
             msg = buildHtml(eventParam3, player);
         } else if (eventParam0.equalsIgnoreCase("castBuffSet")) {
@@ -1433,7 +1433,7 @@ public final class SchemeBufferInstance extends NpcInstance {
                             npc2.broadcastPacket(new MagicSkillUse(npc2, player, buffs.get(i), levels.get(i)));
                         } else {
                             SkillTable.INSTANCE.getInfo(buffs.get(i), levels.get(i)).getEffects(player.getPet());
-                            // npc2.getPet().broadcastPacket(new MagicSkillUse(npc2, player.getPet(), buffs.get(i), levels.get(i), 0, 0));
+                            // npc2.getPet().broadcastPacket(new MagicSkillUse(npc2, getPlayer.getPet(), buffs.get(i), levels.get(i), 0, 0));
                         }
                         try {
                             Thread.sleep(5);
@@ -1500,11 +1500,11 @@ public final class SchemeBufferInstance extends NpcInstance {
 			final String HTML;
 			if (temp >= (MAX_SCHEME_BUFFS + MAX_SCHEME_DANCES))
 			{
-				HTML = getOptionList(player, toInt(scheme));
+				HTML = getOptionList(getPlayer, toInt(scheme));
 			}
 			else
 			{
-				HTML = viewAllSchemeBuffs(player, scheme, eventParam2);
+				HTML = viewAllSchemeBuffs(getPlayer, scheme, eventParam2);
 			}
 			msg = HTML;
 			*/

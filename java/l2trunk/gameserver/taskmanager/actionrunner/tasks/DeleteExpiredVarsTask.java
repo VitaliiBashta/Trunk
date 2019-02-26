@@ -15,7 +15,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DeleteExpiredVarsTask extends AutomaticTask {
+public final class DeleteExpiredVarsTask extends AutomaticTask {
     private static final Logger LOG = LoggerFactory.getLogger(DeleteExpiredVarsTask.class);
 
     public DeleteExpiredVarsTask() {
@@ -51,8 +51,4 @@ public class DeleteExpiredVarsTask extends AutomaticTask {
         }
     }
 
-    @Override
-    public long reCalcTime(boolean start) {
-        return System.currentTimeMillis() + 600000L;
-    }
 }

@@ -1,10 +1,12 @@
 package l2trunk.gameserver.stats;
 
-import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.stats.funcs.Func;
 import l2trunk.gameserver.stats.funcs.FuncOwner;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * A calculator is created to manage and dynamically calculate the effect of a character property (ex : MAX_HP, REGENERATE_HP_RATE...).
@@ -20,9 +22,13 @@ import java.util.*;
  */
 public final class Calculator {
     public final Stats stat;
-    private final List<Func> functions =new ArrayList<>();
+    private final List<Func> functions = new ArrayList<>();
     private double base;
     private double last;
+
+    public Calculator(Stats stat) {
+        this.stat = stat;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -38,16 +44,12 @@ public final class Calculator {
         return Objects.hash(stat, functions);
     }
 
-    public Calculator(Stats stat) {
-        this.stat = stat;
-    }
-
     /**
      * Add a Func to the Calculator.<BR><BR>
      */
     public void addFunc(Func f) {
         functions.add(f);
-        functions.sort( (Comparator.comparingInt(o -> o.order)));
+        functions.sort((Comparator.comparingInt(o -> o.order)));
 //        Collections.sort(functions);
     }
 

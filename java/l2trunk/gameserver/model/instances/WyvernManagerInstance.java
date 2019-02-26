@@ -10,7 +10,7 @@ import l2trunk.gameserver.templates.npc.NpcTemplate;
 import java.util.StringTokenizer;
 
 public final class WyvernManagerInstance extends NpcInstance {
-    public WyvernManagerInstance(int objectId, NpcTemplate template) {
+    WyvernManagerInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
     }
 
@@ -23,7 +23,7 @@ public final class WyvernManagerInstance extends NpcInstance {
         String actualCommand = st.nextToken();
         boolean condition = validateCondition(player);
 
-        if (actualCommand.equalsIgnoreCase("RideHelp")) {
+        if ("RideHelp".equalsIgnoreCase(actualCommand)) {
             NpcHtmlMessage html = new NpcHtmlMessage(player, this);
             html.setFile("wyvern/help_ride.htm");
             html.replace("%npcname%", "Wyvern Manager " + getName());
@@ -31,13 +31,13 @@ public final class WyvernManagerInstance extends NpcInstance {
             player.sendActionFailed();
         }
         if (condition) {
-            if (actualCommand.equalsIgnoreCase("RideWyvern") && player.isClanLeader())
+            if ("RideWyvern".equalsIgnoreCase(actualCommand) && player.isClanLeader())
                 if (!player.isRiding() || !PetDataTable.isStrider(player.getMountNpcId())) {
                     NpcHtmlMessage html = new NpcHtmlMessage(player, this);
                     html.setFile("wyvern/not_ready.htm");
                     html.replace("%npcname%", "Wyvern Manager " + getName());
                     player.sendPacket(html);
-                } else if (player.getInventory().getItemByItemId(1460) == null || player.getInventory().getItemByItemId(1460).getCount() < 25) {
+                } else if (!player.haveItem(1460, 25)) {
                     NpcHtmlMessage html = new NpcHtmlMessage(player, this);
                     html.setFile("wyvern/havenot_cry.htm");
                     html.replace("%npcname%", "Wyvern Manager " + getName());
@@ -70,7 +70,7 @@ public final class WyvernManagerInstance extends NpcInstance {
         }
         NpcHtmlMessage html = new NpcHtmlMessage(player, this);
         html.setFile("wyvern/lord_here.htm");
-        html.replace("%Char_name%", String.valueOf(player.getName()));
+        html.replace("%Char_name%", player.getName());
         html.replace("%npcname%", "Wyvern Manager " + getName());
         player.sendPacket(html);
         player.sendActionFailed();
@@ -89,9 +89,10 @@ public final class WyvernManagerInstance extends NpcInstance {
                     return true; // Owner
         residence = getClanHall();
         if (residence != null && residence.getId() > 0)
+            // Leader of clan
+            // Owner
             if (player.getClan() != null)
-                if (residence.getOwnerId() == player.getClanId() && player.isClanLeader()) // Leader of clan
-                    return true; // Owner
+                return residence.getOwnerId() == player.getClanId() && player.isClanLeader();
         return false;
     }
 }

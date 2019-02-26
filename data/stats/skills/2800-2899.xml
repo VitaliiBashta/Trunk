@@ -1452,7 +1452,7 @@
 	</skill>
 	<skill id="2893" levels="1" name="Solo Escape Petition" >
 		<!--  Automatically generated from The Gracia Final client files.
-		      Description: Energy is maintained for 10 minutes. Solo escape petition containing the wish for a solo player's escape
+		      Description: Energy is maintained for 10 minutes. Solo escape petition containing the wish for a solo getPlayer's escape
 		      Target is set to TARGET_NONE, skillType  to NOTDONE for server compatability.
 		      created 30-6-2009  11:35
 		-->

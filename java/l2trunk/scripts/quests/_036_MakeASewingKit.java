@@ -14,8 +14,6 @@ public final class _036_MakeASewingKit extends Quest {
         super(false);
 
         addStartNpc(30847);
-        addTalkId(30847);
-        addTalkId(30847);
 
         addKillId(20566);
 
@@ -28,7 +26,7 @@ public final class _036_MakeASewingKit extends Quest {
         int cond = st.getCond();
         if (event.equals("head_blacksmith_ferris_q0036_0104.htm") && cond == 0) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if (event.equals("head_blacksmith_ferris_q0036_0201.htm") && cond == 2) {
             st.takeItems(REINFORCED_STEEL, 5);
@@ -39,7 +37,7 @@ public final class _036_MakeASewingKit extends Quest {
                 st.takeItems(ARTISANS_FRAME, 10);
                 st.giveItems(SEWING_KIT, 1);
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else
                 htmltext = "head_blacksmith_ferris_q0036_0203.htm";
         return htmltext;
@@ -56,9 +54,9 @@ public final class _036_MakeASewingKit extends Quest {
                     if (fwear.getCond() == 6)
                         htmltext = "head_blacksmith_ferris_q0036_0101.htm";
                     else
-                        st.exitCurrentQuest(true);
+                        st.exitCurrentQuest();
                 } else
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
             } else
                 htmltext = "head_blacksmith_ferris_q0036_0103.htm";
         } else if (cond == 1 && st.getQuestItemsCount(REINFORCED_STEEL) < 5)

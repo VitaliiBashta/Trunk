@@ -112,7 +112,7 @@ public final class AdminSkill implements IAdminCommandHandler {
         }
         final Clan clan = target.getClan();
         if (clan == null) {
-            activeChar.sendMessage("[ERROR] This player is NOT in a clan!");
+            activeChar.sendMessage("[ERROR] This getPlayer is NOT in a clan!");
             return;
         }
         Skill skill;

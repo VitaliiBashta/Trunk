@@ -38,10 +38,10 @@ public final class _710_PathToBecomingALordGiran extends Quest {
         Castle castle = ResidenceHolder.getResidence(GiranCastle);
         if (castle.getOwner() == null)
             return "Castle has no lord";
-        Player castleOwner = castle.getOwner().getLeader().player();
+        Player castleOwner = castle.getOwner().getLeader().getPlayer();
         switch (event) {
             case "saul_q710_03.htm":
-                st.setState(STARTED);
+                st.start();
                 st.setCond(1);
                 st.playSound(SOUND_ACCEPT);
                 break;
@@ -55,7 +55,7 @@ public final class _710_PathToBecomingALordGiran extends Quest {
                 Functions.npcSay(npc, NpcString.S1_HAS_BECOME_THE_LORD_OF_THE_TOWN_OF_GIRAN, st.player.getName());
                 castle.getDominion().changeOwner(castleOwner.getClan());
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 break;
         }
         return event;
@@ -69,7 +69,7 @@ public final class _710_PathToBecomingALordGiran extends Quest {
         Castle castle = ResidenceHolder.getResidence(GiranCastle);
         if (castle.getOwner() == null)
             return "Castle has no lord";
-        Player castleOwner = castle.getOwner().getLeader().player();
+        Player castleOwner = castle.getOwner().getLeader().getPlayer();
         if (npcId == Saul) {
             if (cond == 0) {
                 if (castleOwner == st.player) {
@@ -77,11 +77,11 @@ public final class _710_PathToBecomingALordGiran extends Quest {
                         htmltext = "saul_q710_01.htm";
                     else {
                         htmltext = "saul_q710_00.htm";
-                        st.exitCurrentQuest(true);
+                        st.exitCurrentQuest();
                     }
                 } else {
                     htmltext = "saul_q710_00a.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1) {
                 st.setCond(2);

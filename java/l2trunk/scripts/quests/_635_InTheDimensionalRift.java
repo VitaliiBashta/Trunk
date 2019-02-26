@@ -7,40 +7,37 @@ import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.utils.Location;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
 public final class _635_InTheDimensionalRift extends Quest {
     private static final int DIMENSION_FRAGMENT = 7079;
 
     // Rift Posts should take you back to the place you came from
     private static final List<Location> COORD = List.of(
-            new Location(0,0,0),            // filler
-            new Location(-41572, 209731, -5087),    //Necropolis of Sacrifice
-            new Location(42950, 143934, -5381),     //Catacomb of the Heretic
-            new Location(45256, 123906, -5411),     //Pilgrim's Necropolis
-            new Location(46192, 170290, -4981),     //Catacomb of the Branded
-            new Location(111273, 174015, -5437),    //Necropolis of Worship
-            new Location(-20221, -250795, -8160),   //Catacomb of Apostate
-            new Location(-21726, 77385, -5171),     //Patriot's Necropolis
-            new Location(140405, 79679, -5427),     //Catacomb of the Witch
-            new Location(-52366, 79097, -4741),     //Necropolis of Devotion (ex Ascetics)
-            new Location(118311, 132797, -4829),    //Necropolis of Martyrdom
-            new Location(172185, -17602, -4901),    //Disciple's Necropolis
-            new Location(83000, 209213, -5439),     //Saint's Necropolis
-            new Location(-19500, 13508, -4901),     //Catacomb of Dark Omens
-            new Location(113865, 84543, -6541));    //Catacomb of the Forbidden Path
+            Location.of(0, 0, 0),            // filler
+            Location.of(-41572, 209731, -5087),    //Necropolis of Sacrifice
+            Location.of(42950, 143934, -5381),     //Catacomb of the Heretic
+            Location.of(45256, 123906, -5411),     //Pilgrim's Necropolis
+            Location.of(46192, 170290, -4981),     //Catacomb of the Branded
+            Location.of(111273, 174015, -5437),    //Necropolis of Worship
+            Location.of(-20221, -250795, -8160),   //Catacomb of Apostate
+            Location.of(-21726, 77385, -5171),     //Patriot's Necropolis
+            Location.of(140405, 79679, -5427),     //Catacomb of the Witch
+            Location.of(-52366, 79097, -4741),     //Necropolis of Devotion (ex Ascetics)
+            Location.of(118311, 132797, -4829),    //Necropolis of Martyrdom
+            Location.of(172185, -17602, -4901),    //Disciple's Necropolis
+            Location.of(83000, 209213, -5439),     //Saint's Necropolis
+            Location.of(-19500, 13508, -4901),     //Catacomb of Dark Omens
+            Location.of(113865, 84543, -6541));    //Catacomb of the Forbidden Path
 
     public _635_InTheDimensionalRift() {
         super(false);
 
-        for (int npcId = 31494; npcId < 31508; npcId++)
-            addStartNpc(npcId); // Dimensional Gate Keeper
+        addStartNpc(IntStream.rangeClosed(31494, 31508).toArray()); // Dimensional Gate Keeper
+        addStartNpc(IntStream.rangeClosed(31095, 31110).toArray()); // Gatekeeper Ziggurat
+        addStartNpc(IntStream.rangeClosed(31114, 31126).toArray()); // Gatekeeper Ziggurat
 
-        for (int npcId = 31095; npcId <= 31126; npcId++)
-            if (npcId != 31111 && npcId != 31112 && npcId != 31113)
-                addStartNpc(npcId); // Gatekeeper Ziggurat
-
-        for (int npcId = 31488; npcId < 31494; npcId++)
-            addTalkId(npcId); // Rift Post
+        addTalkId(IntStream.rangeClosed(31488, 31494).toArray()); // Rift Post
     }
 
     @Override
@@ -52,18 +49,18 @@ public final class _635_InTheDimensionalRift extends Quest {
             if (id > 0 || loc != null) {
                 if (isZiggurat(st.player.getLastNpc().getNpcId()) && !takeAdena(st)) {
                     htmltext = "Sorry...";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                     return htmltext;
                 }
-                st.setState(STARTED);
+                st.start();
                 st.setCond(1);
                 st.player.teleToLocation(-114790, -180576, -6781);
             } else {
                 htmltext = "What are you trying to do?";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         else if (event.equalsIgnoreCase("6.htm"))
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         return htmltext;
     }
 
@@ -75,9 +72,9 @@ public final class _635_InTheDimensionalRift extends Quest {
         String loc = st.get("loc");
         if (isZiggurat(npcId) || isKeeper(npcId)) {
             if (st.player.getLevel() < 20) {
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 htmltext = "1.htm";
-            } else if (st.getQuestItemsCount(DIMENSION_FRAGMENT) == 0) {
+            } else if (!st.haveQuestItem(DIMENSION_FRAGMENT)) {
                 if (isKeeper(npcId))
                     htmltext = "3.htm";
                 else
@@ -92,14 +89,14 @@ public final class _635_InTheDimensionalRift extends Quest {
         } else if (id > 0) {
             st.player.teleToLocation(COORD.get(id));
             htmltext = "7.htm";
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         } else if (loc != null) {
             st.player.teleToLocation(Location.of(loc));
             htmltext = "7.htm";
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         } else {
             htmltext = "Where are you from?";
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
         return htmltext;
     }

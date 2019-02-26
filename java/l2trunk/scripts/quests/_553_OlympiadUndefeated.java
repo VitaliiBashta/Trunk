@@ -11,7 +11,7 @@ public final class _553_OlympiadUndefeated extends Quest {
     // NPCs
     private static final int OLYMPIAD_MANAGER = 31688;
 
-    // Items
+    // items
     private static final int MEDAL_OF_GLORY = 21874;
     private static final int OLYMPIAD_CHEST = 17169;
     private static final int WINS_CONFIRMATION1 = 17244;
@@ -64,7 +64,7 @@ public final class _553_OlympiadUndefeated extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("olympiad_operator_q0553_03.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         }
         if ("olympiad_operator_q0553_07.htm".equalsIgnoreCase(event)) {

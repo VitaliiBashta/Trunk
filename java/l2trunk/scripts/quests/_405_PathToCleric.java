@@ -33,14 +33,9 @@ public final class _405_PathToCleric extends Quest {
 
         addStartNpc(ZIGAUNT);
 
-        addTalkId(GALLINT);
-        addTalkId(VIVYAN);
-        addTalkId(SIMPLON);
-        addTalkId(PRAGA);
-        addTalkId(LIONEL);
+        addTalkId(GALLINT,VIVYAN,SIMPLON,PRAGA,LIONEL);
 
-        addKillId(RUIN_ZOMBIE);
-        addKillId(RUIN_ZOMBIE_LEADER);
+        addKillId(RUIN_ZOMBIE,RUIN_ZOMBIE_LEADER);
 
         addQuestItem(LEMONIELLS_COVENANT,
                 LETTER_OF_ORDER2,
@@ -62,10 +57,10 @@ public final class _405_PathToCleric extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("1"))
+        if ("1".equals(event))
             if (st.player.getLevel() >= 18 && st.player.getClassId().id == 0x0a && st.getQuestItemsCount(MARK_OF_FAITH) < 1) {
                 st.setCond(1);
-                st.setState(STARTED);
+                st.start();
                 st.playSound(SOUND_ACCEPT);
                 st.giveItems(LETTER_OF_ORDER1);
                 htmltext = "gigon_q0405_05.htm";
@@ -76,7 +71,7 @@ public final class _405_PathToCleric extends Quest {
                     htmltext = "gigon_q0405_02.htm";
             } else if (st.player.getLevel() < 18)
                 htmltext = "gigon_q0405_03.htm";
-            else if (st.getQuestItemsCount(MARK_OF_FAITH) > 0)
+            else if (st.haveQuestItem(MARK_OF_FAITH))
                 htmltext = "gigon_q0405_04.htm";
         return htmltext;
     }
@@ -87,20 +82,17 @@ public final class _405_PathToCleric extends Quest {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         if (npcId == ZIGAUNT) {
-            if (st.getQuestItemsCount(MARK_OF_FAITH) > 0) {
+            if (st.haveQuestItem(MARK_OF_FAITH)) {
                 htmltext = "gigon_q0405_04.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
             if (cond < 1 && st.getQuestItemsCount(MARK_OF_FAITH) < 1)
                 htmltext = "gigon_q0405_01.htm";
-            else if (cond == 1 | cond == 2 && st.getQuestItemsCount(LETTER_OF_ORDER1) > 0) {
+            else if (cond == 1 | cond == 2 && st.haveQuestItem(LETTER_OF_ORDER1)) {
                 if (st.getQuestItemsCount(BOOK_OF_VIVI) > 0 && st.getQuestItemsCount(BOOK_OF_SIMLON) > 2 && st.getQuestItemsCount(BOOK_OF_PRAGA) > 0) {
                     htmltext = "gigon_q0405_08.htm";
-                    st.takeItems(BOOK_OF_PRAGA, -1);
-                    st.takeItems(BOOK_OF_VIVI, -1);
-                    st.takeItems(BOOK_OF_SIMLON, -1);
-                    st.takeItems(LETTER_OF_ORDER1, -1);
-                    st.giveItems(LETTER_OF_ORDER2, 1);
+                    st.takeAllItems(BOOK_OF_PRAGA,BOOK_OF_VIVI,BOOK_OF_SIMLON,LETTER_OF_ORDER1);
+                    st.giveItems(LETTER_OF_ORDER2);
                     st.setCond(3);
                 } else
                     htmltext = "gigon_q0405_06.htm";
@@ -111,33 +103,33 @@ public final class _405_PathToCleric extends Quest {
                 st.takeItems(LEMONIELLS_COVENANT);
                 st.takeItems(LETTER_OF_ORDER2);
                 if (!st.player.isVarSet("q405"))
-                    st.player.setVar("q405", 1);
-                st.exitCurrentQuest(true);
+                    st.player.setVar("q405");
+                st.exitCurrentQuest();
                 if (st.player.getClassId().occupation() == 0) {
                     st.giveItems(MARK_OF_FAITH);
                     if (!st.player.isVarSet("prof1")) {
-                        st.player.setVar("prof1", 1);
+                        st.player.setVar("prof1");
                         st.addExpAndSp(295862, 17964);
                         st.giveItems(ADENA_ID, 81900);
                     }
                 }
                 st.playSound(SOUND_FINISH);
             }
-        } else if (npcId == SIMPLON && cond == 1 && st.getQuestItemsCount(LETTER_OF_ORDER1) > 0) {
+        } else if (npcId == SIMPLON && cond == 1 && st.haveQuestItem(LETTER_OF_ORDER1) ) {
             if (st.getQuestItemsCount(BOOK_OF_SIMLON) < 1) {
                 htmltext = "trader_simplon_q0405_01.htm";
                 st.giveItems(BOOK_OF_SIMLON, 3);
                 checkBooks(st);
             } else if (st.getQuestItemsCount(BOOK_OF_SIMLON) > 2)
                 htmltext = "trader_simplon_q0405_02.htm";
-        } else if (npcId == VIVYAN && cond == 1 && st.getQuestItemsCount(LETTER_OF_ORDER1) > 0) {
+        } else if (npcId == VIVYAN && cond == 1 && st.haveQuestItem(LETTER_OF_ORDER1) ) {
             if (st.getQuestItemsCount(BOOK_OF_VIVI) < 1) {
                 htmltext = "vivi_q0405_01.htm";
-                st.giveItems(BOOK_OF_VIVI, 1);
+                st.giveItems(BOOK_OF_VIVI);
                 checkBooks(st);
             } else if (st.getQuestItemsCount(BOOK_OF_VIVI) > 0)
                 htmltext = "vivi_q0405_02.htm";
-        } else if (npcId == PRAGA && cond == 1 && st.getQuestItemsCount(LETTER_OF_ORDER1) > 0) {
+        } else if (npcId == PRAGA && cond == 1 && st.haveQuestItem(LETTER_OF_ORDER1) ) {
             if (st.getQuestItemsCount(BOOK_OF_PRAGA) < 1 && st.getQuestItemsCount(NECKLACE_OF_MOTHER) < 1) {
                 htmltext = "guard_praga_q0405_01.htm";
                 st.giveItems(NECKLACE_OF_MOTHER, 1);
@@ -145,32 +137,32 @@ public final class _405_PathToCleric extends Quest {
                 htmltext = "guard_praga_q0405_02.htm";
             else if (st.getQuestItemsCount(BOOK_OF_PRAGA) < 1 && st.getQuestItemsCount(NECKLACE_OF_MOTHER) > 0 && st.getQuestItemsCount(PENDANT_OF_MOTHER) > 0) {
                 htmltext = "guard_praga_q0405_03.htm";
-                st.takeItems(NECKLACE_OF_MOTHER, -1);
-                st.takeItems(PENDANT_OF_MOTHER, -1);
-                st.giveItems(BOOK_OF_PRAGA, 1);
+                st.takeItems(NECKLACE_OF_MOTHER);
+                st.takeItems(PENDANT_OF_MOTHER);
+                st.giveItems(BOOK_OF_PRAGA);
                 checkBooks(st);
-            } else if (st.getQuestItemsCount(BOOK_OF_PRAGA) > 0)
+            } else if (st.haveQuestItem(BOOK_OF_PRAGA))
                 htmltext = "guard_praga_q0405_04.htm";
         } else if (npcId == LIONEL) {
             if (st.getQuestItemsCount(LETTER_OF_ORDER2) < 1)
                 htmltext = "lemoniell_q0405_02.htm";
             else if (cond == 3 && st.getQuestItemsCount(LETTER_OF_ORDER2) == 1 && st.getQuestItemsCount(BOOK_OF_LEMONIELL) < 1 && st.getQuestItemsCount(LEMONIELLS_COVENANT) < 1 && st.getQuestItemsCount(CERTIFICATE_OF_GALLINT) < 1) {
                 htmltext = "lemoniell_q0405_01.htm";
-                st.giveItems(BOOK_OF_LEMONIELL, 1);
+                st.giveItems(BOOK_OF_LEMONIELL);
                 st.setCond(4);
             } else if (cond == 4 && st.getQuestItemsCount(LETTER_OF_ORDER2) == 1 && st.getQuestItemsCount(BOOK_OF_LEMONIELL) > 0 && st.getQuestItemsCount(LEMONIELLS_COVENANT) < 1 && st.getQuestItemsCount(CERTIFICATE_OF_GALLINT) < 1)
                 htmltext = "lemoniell_q0405_03.htm";
             else if (st.getQuestItemsCount(LETTER_OF_ORDER2) == 1 && st.getQuestItemsCount(BOOK_OF_LEMONIELL) < 1 && st.getQuestItemsCount(LEMONIELLS_COVENANT) < 1 && st.getQuestItemsCount(CERTIFICATE_OF_GALLINT) > 0) {
                 htmltext = "lemoniell_q0405_04.htm";
-                st.takeItems(CERTIFICATE_OF_GALLINT, -1);
-                st.giveItems(LEMONIELLS_COVENANT, 1);
+                st.takeItems(CERTIFICATE_OF_GALLINT);
+                st.giveItems(LEMONIELLS_COVENANT);
                 st.setCond(6);
-            } else if (st.getQuestItemsCount(LETTER_OF_ORDER2) == 1 && st.getQuestItemsCount(BOOK_OF_LEMONIELL) < 1 && st.getQuestItemsCount(LEMONIELLS_COVENANT) > 0 && st.getQuestItemsCount(CERTIFICATE_OF_GALLINT) < 1)
+            } else if (st.haveQuestItem(LETTER_OF_ORDER2)  && st.getQuestItemsCount(BOOK_OF_LEMONIELL) < 1 && st.getQuestItemsCount(LEMONIELLS_COVENANT) > 0 && st.getQuestItemsCount(CERTIFICATE_OF_GALLINT) < 1)
                 htmltext = "lemoniell_q0405_05.htm";
-        } else if (npcId == GALLINT && st.getQuestItemsCount(LETTER_OF_ORDER2) > 0)
-            if (cond == 4 && st.getQuestItemsCount(BOOK_OF_LEMONIELL) > 0 && st.getQuestItemsCount(CERTIFICATE_OF_GALLINT) < 1) {
+        } else if (npcId == GALLINT && st.haveQuestItem(LETTER_OF_ORDER2) )
+            if (cond == 4 && st.haveQuestItem(BOOK_OF_LEMONIELL)  && !st.haveQuestItem(CERTIFICATE_OF_GALLINT) ) {
                 htmltext = "gallin_q0405_01.htm";
-                st.takeItems(BOOK_OF_LEMONIELL, -1);
+                st.takeItems(BOOK_OF_LEMONIELL);
                 st.giveItems(CERTIFICATE_OF_GALLINT, 1);
                 st.setCond(5);
             } else if (cond == 5 && st.getQuestItemsCount(BOOK_OF_LEMONIELL) < 1 && st.getQuestItemsCount(CERTIFICATE_OF_GALLINT) > 0)
@@ -183,7 +175,7 @@ public final class _405_PathToCleric extends Quest {
         int npcId = npc.getNpcId();
         if (npcId == RUIN_ZOMBIE | npcId == RUIN_ZOMBIE_LEADER)
             if (st.getCond() == 1 && st.getQuestItemsCount(PENDANT_OF_MOTHER) < 1) {
-                st.giveItems(PENDANT_OF_MOTHER, 1);
+                st.giveItems(PENDANT_OF_MOTHER);
                 st.playSound(SOUND_MIDDLE);
             }
     }

@@ -12,7 +12,7 @@ public final class _006_StepIntoTheFuture extends Quest {
     private static final int Windawood = 30311;
     //Quest Item
     private static final int BaulrosLetter = 7571;
-    //Items
+    //items
     private static final int ScrollOfEscapeGiran = 7126;
     private static final int MarkOfTraveler = 7570;
 
@@ -20,8 +20,7 @@ public final class _006_StepIntoTheFuture extends Quest {
         super(false);
         addStartNpc(Roxxy);
 
-        addTalkId(Baulro);
-        addTalkId(Windawood);
+        addTalkId(Baulro,Windawood);
 
         addQuestItem(BaulrosLetter);
     }
@@ -30,7 +29,7 @@ public final class _006_StepIntoTheFuture extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if (event.equalsIgnoreCase("rapunzel_q0006_0104.htm")) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("baul_q0006_0201.htm")) {
             st.giveItems(BaulrosLetter);
@@ -45,7 +44,7 @@ public final class _006_StepIntoTheFuture extends Quest {
             st.giveItems(MarkOfTraveler);
             st.unset("cond");
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(false);
+            st.finish();
         }
         return event;
     }
@@ -61,7 +60,7 @@ public final class _006_StepIntoTheFuture extends Quest {
                     htmltext = "rapunzel_q0006_0101.htm";
                 else {
                     htmltext = "rapunzel_q0006_0102.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             else if (cond == 1)
                 htmltext = "rapunzel_q0006_0105.htm";

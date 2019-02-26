@@ -21,19 +21,14 @@ public final class _126_IntheNameofEvilPart2 extends Quest {
         super(false);
 
         addStartNpc(Asamah);
-        addTalkId(Mushika);
-        addTalkId(UluKaimu);
-        addTalkId(BaluKaimu);
-        addTalkId(ChutaKaimu);
-        addTalkId(WarriorGrave);
-        addTalkId(ShilenStoneStatue);
+        addTalkId(Mushika,UluKaimu,BaluKaimu,ChutaKaimu,WarriorGrave,ShilenStoneStatue);
         addQuestItem(BONEPOWDER, EPITAPH);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("asamah_q126_4.htm".equalsIgnoreCase(event)) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
             st.takeItems(EPITAPH);
@@ -110,8 +105,8 @@ public final class _126_IntheNameofEvilPart2 extends Quest {
             st.giveItems(ADENA_ID, 460483);
             st.addExpAndSp(1015973, 102802);
             st.playSound(SOUND_FINISH);
-            st.setState(COMPLETED);
-            st.exitCurrentQuest(false);
+            st.complete();
+            st.finish();
         }
 
         return event;
@@ -129,7 +124,7 @@ public final class _126_IntheNameofEvilPart2 extends Quest {
                     htmltext = "asamah_q126_1.htm";
                 else {
                     htmltext = "asamah_q126_0.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1)
                 htmltext = "asamah_q126_4.htm";

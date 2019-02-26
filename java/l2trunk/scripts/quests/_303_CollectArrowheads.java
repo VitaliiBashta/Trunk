@@ -23,7 +23,7 @@ public final class _303_CollectArrowheads extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("minx_q0303_04.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         }
         return event;
@@ -39,17 +39,17 @@ public final class _303_CollectArrowheads extends Quest {
                 htmltext = "minx_q0303_03.htm";
             else {
                 htmltext = "minx_q0303_02.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         else if (st.getQuestItemsCount(ORCISH_ARROWHEAD) < 10)
             htmltext = "minx_q0303_05.htm";
         else {
-            st.takeItems(ORCISH_ARROWHEAD, -1);
+            st.takeItems(ORCISH_ARROWHEAD);
             st.giveItems(ADENA_ID, 1000);
             st.addExpAndSp(2000, 0);
             htmltext = "minx_q0303_06.htm";
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(false);
+            st.finish();
         }
         return htmltext;
     }
@@ -58,7 +58,7 @@ public final class _303_CollectArrowheads extends Quest {
     public void onKill(NpcInstance npc, QuestState st) {
         if (st.getQuestItemsCount(ORCISH_ARROWHEAD) < 10) {
             st.giveItems(ORCISH_ARROWHEAD);
-            if (st.getQuestItemsCount(ORCISH_ARROWHEAD) == 10) {
+            if (st.haveQuestItem(ORCISH_ARROWHEAD, 10)) {
                 st.setCond(2);
                 st.playSound(SOUND_MIDDLE);
             } else

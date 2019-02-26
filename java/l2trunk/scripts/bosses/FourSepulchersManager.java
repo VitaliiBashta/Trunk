@@ -157,7 +157,7 @@ public final class FourSepulchersManager extends Functions implements ScriptFile
                 return;
             }
 
-            if (mem.getInventory().getItemByItemId(ENTRANCE_PASS) == null) {
+            if (!mem.haveItem(ENTRANCE_PASS)) {
                 showHtmlFile(player, npcId + "-SE.htm", npc, mem);
                 return;
             }
@@ -183,8 +183,8 @@ public final class FourSepulchersManager extends Functions implements ScriptFile
         Location loc = FourSepulchersSpawn._startHallSpawns.get(npcId);
         for (Player member : player.getParty().getMembers()) {
             member.teleToLocation(Location.findPointToStay(member, loc, 0, 80));
-            removeItem(member, ENTRANCE_PASS, 1, "FourSepulchersManager");
-            if (member.getInventory().getItemByItemId(ANTIQUE_BROOCH) == null)
+            removeItem(member, ENTRANCE_PASS,  "FourSepulchersManager");
+            if (!member.haveItem(ANTIQUE_BROOCH))
                 addItem(member, USED_PASS, 1);
             removeItem(member, CHAPEL_KEY, 999999, "FourSepulchersManager");
         }

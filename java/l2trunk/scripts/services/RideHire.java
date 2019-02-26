@@ -61,7 +61,7 @@ public final class RideHire extends Functions {
 
         int npc_id;
 
-        switch (Integer.parseInt(args[0])) {
+        switch (toInt(args[0])) {
             case 1:
                 npc_id = PetDataTable.WYVERN_ID;
                 break;

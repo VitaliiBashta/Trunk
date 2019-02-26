@@ -11,13 +11,13 @@ import java.util.List;
  * d: always -1
  * d: blue players number
  * [
- * d: player object id
- * S: player name
+ * d: getPlayer object id
+ * S: getPlayer name
  * ]
  * d: blue players number
  * [
- * d: player object id
- * S: player name
+ * d: getPlayer object id
+ * S: getPlayer name
  * ]
  */
 public class ExCubeGameTeamList extends L2GameServerPacket {

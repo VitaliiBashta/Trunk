@@ -34,10 +34,10 @@ public final class _269_InventionAmbition extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("inventor_maru_q0269_04.htm".equals(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("inventor_maru_q0269_07.htm".equals(event)) {
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             st.playSound(SOUND_FINISH);
         }
         return event;
@@ -50,7 +50,7 @@ public final class _269_InventionAmbition extends Quest {
         if (st.getState() == CREATED)
             if (st.player.getLevel() < 18) {
                 htmltext = "inventor_maru_q0269_02.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else
                 htmltext = "inventor_maru_q0269_01.htm";
         else if (count > 0) {

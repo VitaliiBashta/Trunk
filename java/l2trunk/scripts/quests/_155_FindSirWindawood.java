@@ -13,7 +13,6 @@ public final class _155_FindSirWindawood extends Quest {
 
         addStartNpc(30042);
 
-        addTalkId(30042);
         addTalkId(30311);
 
         addQuestItem(OFFICIAL_LETTER);
@@ -24,7 +23,7 @@ public final class _155_FindSirWindawood extends Quest {
         if (event.equals("30042-04.htm")) {
             st.giveItems(OFFICIAL_LETTER);
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         }
         return event;
@@ -42,7 +41,7 @@ public final class _155_FindSirWindawood extends Quest {
                     return htmltext;
                 }
                 htmltext = "30042-02.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else if (cond == 1 && st.getQuestItemsCount(OFFICIAL_LETTER) == 1)
                 htmltext = "30042-05.htm";
         } else if (npcId == 30311 && cond == 1 && st.getQuestItemsCount(OFFICIAL_LETTER) == 1) {
@@ -51,7 +50,7 @@ public final class _155_FindSirWindawood extends Quest {
             st.giveItems(HASTE_POTION);
             st.setCond(0);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(false);
+            st.finish();
         }
         return htmltext;
     }

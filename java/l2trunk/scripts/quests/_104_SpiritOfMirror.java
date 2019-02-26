@@ -30,7 +30,7 @@ public final class _104_SpiritOfMirror extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if (event.equalsIgnoreCase("gallin_q0104_03.htm")) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
             st.giveItems(GALLINS_OAK_WAND, 3);
         }
@@ -46,25 +46,25 @@ public final class _104_SpiritOfMirror extends Quest {
             if (cond == 0)
                 if (st.player.getRace() != Race.human) {
                     htmltext = "gallin_q0104_00.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else if (st.player.getLevel() >= 10) {
                     htmltext = "gallin_q0104_02.htm";
                     return htmltext;
                 } else {
                     htmltext = "gallin_q0104_06.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
-            else if (cond == 1 && st.getQuestItemsCount(GALLINS_OAK_WAND) >= 1 && (st.getQuestItemsCount(WAND_SPIRITBOUND1) == 0 || st.getQuestItemsCount(WAND_SPIRITBOUND2) == 0 || st.getQuestItemsCount(WAND_SPIRITBOUND3) == 0))
+            else if (cond == 1 && st.haveQuestItem(GALLINS_OAK_WAND)  && (st.getQuestItemsCount(WAND_SPIRITBOUND1) == 0 || st.getQuestItemsCount(WAND_SPIRITBOUND2) == 0 || st.getQuestItemsCount(WAND_SPIRITBOUND3) == 0))
                 htmltext = "gallin_q0104_04.htm";
             else if (cond == 3 && st.getQuestItemsCount(WAND_SPIRITBOUND1) >= 1 && st.getQuestItemsCount(WAND_SPIRITBOUND2) >= 1 && st.getQuestItemsCount(WAND_SPIRITBOUND3) >= 1) {
-                st.takeItems(List.of(WAND_SPIRITBOUND1, WAND_SPIRITBOUND2, WAND_SPIRITBOUND3));
+                st.takeAllItems(WAND_SPIRITBOUND1, WAND_SPIRITBOUND2, WAND_SPIRITBOUND3);
 
                 st.giveItems(WAND_OF_ADEPT);
                 st.giveItems(ADENA_ID, 16866, false);
                 st.player.addExpAndSp(39750, 3407);
 
                 if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("p1q3")) {
-                    st.player.setVar("p1q3", 1); // flag for helper
+                    st.player.setVar("p1q3"); // flag for helper
                     st.player.sendPacket(new ExShowScreenMessage("Now go find the Newbie Guide."));
                     st.giveItems(1060, 100); // healing potion
                     for (int item = 4412; item <= 4417; item++)
@@ -79,20 +79,20 @@ public final class _104_SpiritOfMirror extends Quest {
                 }
 
                 htmltext = "gallin_q0104_05.htm";
-                st.exitCurrentQuest(false);
+                st.finish();
                 st.playSound(SOUND_FINISH);
             }
         } else if ((npcId == 30041 || npcId == 30043 || npcId == 30045) && cond == 1) {
-            if (npcId == 30041 && st.getInt("id1") == 0)
-                st.set("id1", 1);
+            if (npcId == 30041 && !st.isSet("id1") )
+                st.set("id1");
             htmltext = "arnold_q0104_01.htm";
-            if (npcId == 30043 && st.getInt("id2") == 0)
-                st.set("id2", 1);
+            if (npcId == 30043 && !st.isSet("id2"))
+                st.set("id2");
             htmltext = "johnson_q0104_01.htm";
-            if (npcId == 30045 && st.getInt("id3") == 0)
-                st.set("id3", 1);
+            if (npcId == 30045 && !st.isSet("id3") )
+                st.set("id3");
             htmltext = "ken_q0104_01.htm";
-            if (st.getInt("id1") + st.getInt("id2") + st.getInt("id3") == 3) {
+            if (st.isSet("id1") && st.isSet("id2") && st.isSet("id3")) {
                 st.setCond(2);
                 st.unset("id1");
                 st.unset("id2");
@@ -109,12 +109,12 @@ public final class _104_SpiritOfMirror extends Quest {
 
         if ((cond == 1 || cond == 2) && st.player.getActiveWeaponInstance() != null && st.player.getActiveWeaponInstance().getItemId() == GALLINS_OAK_WAND) {
             ItemInstance weapon = st.player.getActiveWeaponInstance();
+            boolean haveAllitems = st.haveAllQuestItems(WAND_SPIRITBOUND1,WAND_SPIRITBOUND2,WAND_SPIRITBOUND3);
             if (npcId == 27003 && st.getQuestItemsCount(WAND_SPIRITBOUND1) == 0) {
                 if (st.player.getInventory().destroyItem(weapon, 1L, "_104_SpiritOfMirror")) {
                     st.giveItems(WAND_SPIRITBOUND1);
                     st.player.sendPacket(CACHE_SYSMSG_GALLINS_OAK_WAND);
-                    long Collect = st.getQuestItemsCount(WAND_SPIRITBOUND1) + st.getQuestItemsCount(WAND_SPIRITBOUND2) + st.getQuestItemsCount(WAND_SPIRITBOUND3);
-                    if (Collect == 3) {
+                    if (haveAllitems) {
                         st.setCond(3);
                         st.playSound(SOUND_MIDDLE);
                     } else
@@ -124,8 +124,7 @@ public final class _104_SpiritOfMirror extends Quest {
                 if (st.player.getInventory().destroyItem(weapon, 1L, "_104_SpiritOfMirror")) {
                     st.giveItems(WAND_SPIRITBOUND2);
                     st.player.sendPacket(CACHE_SYSMSG_GALLINS_OAK_WAND);
-                    long Collect = st.getQuestItemsCount(WAND_SPIRITBOUND1) + st.getQuestItemsCount(WAND_SPIRITBOUND2) + st.getQuestItemsCount(WAND_SPIRITBOUND3);
-                    if (Collect == 3) {
+                    if (haveAllitems ) {
                         st.setCond(3);
                         st.playSound(SOUND_MIDDLE);
                     } else
@@ -135,8 +134,7 @@ public final class _104_SpiritOfMirror extends Quest {
                 if (st.player.getInventory().destroyItem(weapon, 1L, "_104_SpiritOfMirror")) {
                     st.giveItems(WAND_SPIRITBOUND3);
                     st.player.sendPacket(CACHE_SYSMSG_GALLINS_OAK_WAND);
-                    long Collect = st.getQuestItemsCount(WAND_SPIRITBOUND1) + st.getQuestItemsCount(WAND_SPIRITBOUND2) + st.getQuestItemsCount(WAND_SPIRITBOUND3);
-                    if (Collect == 3) {
+                    if (haveAllitems ) {
                         st.setCond(3);
                         st.playSound(SOUND_MIDDLE);
                     } else

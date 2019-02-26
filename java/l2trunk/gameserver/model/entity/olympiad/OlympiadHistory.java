@@ -2,14 +2,15 @@ package l2trunk.gameserver.model.entity.olympiad;
 
 import l2trunk.gameserver.data.StringHolder;
 import l2trunk.gameserver.model.Player;
+import l2trunk.gameserver.model.base.ClassId;
 import l2trunk.gameserver.utils.TimeUtils;
 
 public final class OlympiadHistory {
     public final int objectId1;
     public final int objectId2;
 
-    public final int classId1;
-    public final int classId2;
+    public final ClassId classId1;
+    public final ClassId classId2;
 
     public final String name1;
     public final String name2;
@@ -19,7 +20,7 @@ public final class OlympiadHistory {
     public final int gameStatus; // 1 - выиграл 1, 2 выиграл 2, 0 - "устали"
     public final int gameType;
 
-    public OlympiadHistory(int objectId1, int objectId2, int classId1, int classId2, String name1, String name2, long gameStartTime, int gameTime, int gameStatus, int gameType) {
+    public OlympiadHistory(int objectId1, int objectId2, ClassId classId1, ClassId classId2, String name1, String name2, long gameStartTime, int gameTime, int gameStatus, int gameType) {
         this.objectId1 = objectId1;
         this.objectId2 = objectId2;
 
@@ -45,7 +46,7 @@ public final class OlympiadHistory {
         else
             main = StringHolder.INSTANCE.getNotNull("hero.history.loss");
 
-        main = main.replace("%classId%", String.valueOf(team == 1 ? classId2 : classId1));
+        main = main.replace("%classId%", String.valueOf(team == 1 ? classId2.id : classId1.id));
         main = main.replace("%name%", team == 1 ? name2 : name1);
         main = main.replace("%date%", TimeUtils.toSimpleFormat(gameStartTime));
         int m = gameTime / 60;

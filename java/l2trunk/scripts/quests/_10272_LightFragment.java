@@ -21,24 +21,18 @@ public final class _10272_LightFragment extends Quest {
     private static final int DestroyedLightFragmentPowder = 13854;
     private static final int SacredLightFragment = 13855;
 
-    private static final Location LELIKIA_POSITION = new Location(-170936, 247768, 1102);
-    private static final Location BASE_POSITION = new Location(-185032, 242824, 1553);
+    private static final Location LELIKIA_POSITION = Location.of(-170936, 247768, 1102);
+    private static final Location BASE_POSITION = Location.of(-185032, 242824, 1553);
 
     public _10272_LightFragment() {
         super(true);
 
         addStartNpc(Orbyu);
-        addTalkId(Orbyu);
-        addTalkId(Artius);
-        addTalkId(Lelikia);
-        addTalkId(Ginby);
-        addTalkId(Lekon);
+        addTalkId(Orbyu,Artius,Lelikia,Ginby,Lekon);
 
         addKillId(22552, 22541, 22550, 22551, 22596, 22544, 22540, 22547, 22542, 22543, 22539, 22546, 22548, 22536, 22538, 22537);
 
-        addQuestItem(DestroyedDarknessFragmentPowder);
-        addQuestItem(DestroyedLightFragmentPowder);
-        addQuestItem(SacredLightFragment);
+        addQuestItem(DestroyedDarknessFragmentPowder,DestroyedLightFragmentPowder,SacredLightFragment);
     }
 
     @Override
@@ -48,7 +42,7 @@ public final class _10272_LightFragment extends Quest {
 
         if ("orbyu_q10272_2.htm".equalsIgnoreCase(event) && cond == 0) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("artius_q10272_2.htm".equalsIgnoreCase(event)) {
             st.setCond(2);
@@ -91,8 +85,8 @@ public final class _10272_LightFragment extends Quest {
         } else if ("artius_q10272_12.htm".equalsIgnoreCase(event)) {
             st.giveItems(ADENA_ID, 556980);
             st.addExpAndSp(1009016, 91363);
-            st.setState(COMPLETED);
-            st.exitCurrentQuest(false);
+            st.complete();
+            st.finish();
             st.playSound(SOUND_FINISH);
         }
         return htmltext;
@@ -110,7 +104,7 @@ public final class _10272_LightFragment extends Quest {
                     htmltext = "orbyu_q10272_1.htm";
                 else {
                     htmltext = "orbyu_q10272_0.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 4)
                 htmltext = "orbyu_q10271_4.htm";

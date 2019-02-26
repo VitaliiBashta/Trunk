@@ -163,7 +163,7 @@ public class AdminEnchant implements IAdminCommandHandler {
                 "</tr></table>" +
                 "<br><br><br>" +
                 "<table cellpadding=0 cellspacing=-2 width=260><tr>" +
-                "<td align=center><font name=\"hs12\" color=\"LEVEL\">Equip for player:</font></td>" +
+                "<td align=center><font name=\"hs12\" color=\"LEVEL\">Equip for getPlayer:</font></td>" +
                 "<td align=center><font name=\"hs12\" color=\"00FF00\">" + player.getName() + "</font></td>" +
                 "</tr></table>" +
                 "<br><br><br>" +

@@ -8,7 +8,7 @@ import l2trunk.gameserver.model.quest.QuestState;
 public final class _170_DangerousSeduction extends Quest {
     //NPC
     private static final int Vellior = 30305;
-    //Quest Items
+    //Quest items
     private static final int NightmareCrystal = 1046;
     //MOB
     private static final int Merkenis = 27022;
@@ -25,7 +25,7 @@ public final class _170_DangerousSeduction extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("30305-04.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         }
         return event;
@@ -40,10 +40,10 @@ public final class _170_DangerousSeduction extends Quest {
             if (cond == 0) {
                 if (st.player.getRace() != Race.darkelf) {
                     htmltext = "30305-00.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else if (st.player.getLevel() < 21) {
                     htmltext = "30305-02.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else
                     htmltext = "30305-03.htm";
             } else if (cond == 1)
@@ -54,7 +54,7 @@ public final class _170_DangerousSeduction extends Quest {
                 st.addExpAndSp(38607, 4018);
                 htmltext = "30305-06.htm";
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(false);
+                st.finish();
             }
         return htmltext;
     }
@@ -68,7 +68,7 @@ public final class _170_DangerousSeduction extends Quest {
                 st.giveItems(NightmareCrystal);
             st.playSound(SOUND_MIDDLE);
             st.setCond(2);
-            st.setState(STARTED);
+            st.start();
         }
     }
 }

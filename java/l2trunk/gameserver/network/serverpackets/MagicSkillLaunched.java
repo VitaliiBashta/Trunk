@@ -4,9 +4,10 @@ import l2trunk.gameserver.model.Creature;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 
-public class MagicSkillLaunched extends L2GameServerPacket {
+public final class MagicSkillLaunched extends L2GameServerPacket {
     private final int _casterId;
     private final int _skillId;
     private final int _skillLevel;
@@ -16,7 +17,7 @@ public class MagicSkillLaunched extends L2GameServerPacket {
         _casterId = casterId;
         _skillId = skillId;
         _skillLevel = skillLevel;
-        _targets = Collections.singletonList(target);
+        _targets = List.of(target);
     }
 
     public MagicSkillLaunched(int casterId, int skillId, int skillLevel, Collection<Creature> targets) {

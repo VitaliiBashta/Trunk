@@ -20,7 +20,7 @@ import l2trunk.gameserver.templates.PlayerTemplate;
 import l2trunk.gameserver.templates.item.WeaponTemplate;
 import l2trunk.gameserver.templates.item.WeaponTemplate.WeaponType;
 
-public class StatFunctions {
+public final class StatFunctions {
     private static final int[] ACCURACY_LEVEL_BONUS = {0,
             1, 2, 3, 4, 5, 6, 7, 8, 9, 10, //  1-10
             11, 12, 13, 14, 15, 16, 17, 18, 18, 20, // 11-20

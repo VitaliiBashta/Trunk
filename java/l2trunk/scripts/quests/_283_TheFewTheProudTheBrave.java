@@ -11,7 +11,7 @@ public final class _283_TheFewTheProudTheBrave extends Quest {
     private static final int PERWAN = 32133;
     //Mobs
     private static final int CRIMSON_SPIDER = 22244;
-    //Quest Items
+    //Quest items
     private static final int CRIMSON_SPIDER_CLAW = 9747;
     //Chances
     private static final int CRIMSON_SPIDER_CLAW_CHANCE = 34;
@@ -25,28 +25,28 @@ public final class _283_TheFewTheProudTheBrave extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        int _state = st.getState();
-        if (event.equalsIgnoreCase("subelder_perwan_q0283_0103.htm") && _state == CREATED) {
-            st.setState(STARTED);
+        int state = st.getState();
+        if ("subelder_perwan_q0283_0103.htm".equalsIgnoreCase(event) && state == CREATED) {
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
-        } else if ("subelder_perwan_q0283_0203.htm".equalsIgnoreCase(event) && _state == STARTED) {
+        } else if ("subelder_perwan_q0283_0203.htm".equalsIgnoreCase(event) && state == STARTED) {
             long count = st.getQuestItemsCount(CRIMSON_SPIDER_CLAW);
             if (count > 0) {
                 st.takeItems(CRIMSON_SPIDER_CLAW);
                 st.giveItems(ADENA_ID, 45 * count);
 
                 if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("p1q4")) {
-                    st.player.setVar("p1q4", 1);
+                    st.player.setVar("p1q4");
                     st.player.sendPacket(new ExShowScreenMessage("Now go find the Newbie Guide."));
                 }
 
                 st.playSound(SOUND_MIDDLE);
             }
-        } else if (event.equalsIgnoreCase("subelder_perwan_q0283_0204.htm") && _state == STARTED) {
+        } else if (event.equalsIgnoreCase("subelder_perwan_q0283_0204.htm") && state == STARTED) {
             st.takeItems(CRIMSON_SPIDER_CLAW);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
         return event;
     }
@@ -64,7 +64,7 @@ public final class _283_TheFewTheProudTheBrave extends Quest {
                 st.setCond(0);
             } else {
                 htmltext = "subelder_perwan_q0283_0102.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (_state == STARTED)
             htmltext = st.getQuestItemsCount(CRIMSON_SPIDER_CLAW) > 0 ? "subelder_perwan_q0283_0105.htm" : "subelder_perwan_q0283_0106.htm";

@@ -30,35 +30,10 @@ public final class _224_TestOfSagittarius extends Quest {
     public _224_TestOfSagittarius() {
         super(false);
         addStartNpc(30702);
-        addTalkId(30514);
-        addTalkId(30626);
-        addTalkId(30653);
-        addTalkId(30702);
-        addTalkId(30717);
+        addTalkId(30514,30626,30653,30702,30717);
 
-        addKillId(20230);
-        addKillId(20232);
-        addKillId(20233);
-        addKillId(20234);
-        addKillId(20269);
-        addKillId(20270);
-        addKillId(27090);
-        addKillId(20551);
-        addKillId(20563);
-        addKillId(20577);
-        addKillId(20578);
-        addKillId(20579);
-        addKillId(20580);
-        addKillId(20581);
-        addKillId(20582);
-        addKillId(20079);
-        addKillId(20080);
-        addKillId(20081);
-        addKillId(20082);
-        addKillId(20084);
-        addKillId(20086);
-        addKillId(20089);
-        addKillId(20090);
+        addKillId(20230,20232,20233,20234,20269,20270,27090,20551,20563,20577,20578,
+                20579,20580,20581,20582,20079,20080,20081,20082,20084,20086,20089,20090);
 
         addQuestItem(HUNTERS_RUNE2_ID,
                 CRESCENT_MOON_BOW_ID,
@@ -83,10 +58,10 @@ public final class _224_TestOfSagittarius extends Quest {
             case "1":
                 htmltext = "30702-04.htm";
                 st.setCond(1);
-                st.setState(STARTED);
+                st.start();
                 if (!st.player.isVarSet("dd3")) {
                     st.giveItems(7562, 96);
-                    st.player.setVar("dd3", 1);
+                    st.player.setVar("dd3");
                 }
                 st.playSound(SOUND_ACCEPT);
                 st.giveItems(BERNARDS_INTRODUCTION_ID);
@@ -125,17 +100,17 @@ public final class _224_TestOfSagittarius extends Quest {
 
     @Override
     public String onTalk(NpcInstance npc, QuestState st) {
-        if (st.getQuestItemsCount(MARK_OF_SAGITTARIUS_ID) > 0) {
-            st.exitCurrentQuest(true);
+        if (st.haveQuestItem(MARK_OF_SAGITTARIUS_ID)) {
+            st.exitCurrentQuest();
             return "completed";
         }
         int npcId = npc.getNpcId();
         String htmltext = "noquest";
         int id = st.getState();
         if (id == CREATED) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(0);
-            st.set("id", 0);
+            st.unset("id");
         }
         if (npcId == 30702 && st.getCond() == 0) {
             if (st.player.getClassId().id == 0x07 || st.player.getClassId().id == 0x16 || st.player.getClassId().id == 0x23) {
@@ -143,76 +118,71 @@ public final class _224_TestOfSagittarius extends Quest {
                     htmltext = "30702-03.htm";
                 else {
                     htmltext = "30702-01.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else {
                 htmltext = "30702-02.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
-        } else if (npcId == 30702 && st.getCond() == 1 && st.getQuestItemsCount(BERNARDS_INTRODUCTION_ID) > 0)
+        } else if (npcId == 30702 && st.getCond() == 1 && st.haveQuestItem(BERNARDS_INTRODUCTION_ID) )
             htmltext = "30702-05.htm";
-        else if (npcId == 30626 && st.getCond() == 1 && st.getQuestItemsCount(BERNARDS_INTRODUCTION_ID) > 0)
+        else if (npcId == 30626 && st.getCond() == 1 && st.haveQuestItem(BERNARDS_INTRODUCTION_ID) )
             htmltext = "30626-01.htm";
-        else if (npcId == 30626 && st.getCond() == 2 && st.getQuestItemsCount(LETTER_OF_HAMIL1_ID) > 0)
+        else if (npcId == 30626 && st.getCond() == 2 && st.haveQuestItem(LETTER_OF_HAMIL1_ID) )
             htmltext = "30626-04.htm";
         else if (npcId == 30626 && st.getCond() == 4 && st.getQuestItemsCount(HUNTERS_RUNE1_ID) == 10)
             htmltext = "30626-05.htm";
-        else if (npcId == 30626 && st.getCond() == 5 && st.getQuestItemsCount(LETTER_OF_HAMIL2_ID) > 0)
+        else if (npcId == 30626 && st.getCond() == 5 && st.haveQuestItem(LETTER_OF_HAMIL2_ID) )
             htmltext = "30626-08.htm";
         else if (npcId == 30626 && st.getCond() == 8) {
             htmltext = "30626-09.htm";
             st.giveItems(LETTER_OF_HAMIL3_ID, 1);
             st.setCond(9);
-        } else if (npcId == 30626 && st.getCond() == 9 && st.getQuestItemsCount(LETTER_OF_HAMIL3_ID) > 0)
+        } else if (npcId == 30626 && st.getCond() == 9 && st.haveQuestItem(LETTER_OF_HAMIL3_ID) )
             htmltext = "30626-10.htm";
-        else if (npcId == 30626 && st.getCond() == 12 && st.getQuestItemsCount(CRESCENT_MOON_BOW_ID) > 0) {
+        else if (npcId == 30626 && st.getCond() == 12 && st.haveQuestItem(CRESCENT_MOON_BOW_ID)) {
             htmltext = "30626-11.htm";
             st.setCond(13);
         } else if (npcId == 30626 && st.getCond() == 13)
             htmltext = "30626-12.htm";
-        else if (npcId == 30626 && st.getCond() == 14 && st.getQuestItemsCount(TALISMAN_OF_KADESH_ID) > 0) {
+        else if (npcId == 30626 && st.getCond() == 14 && st.haveQuestItem(TALISMAN_OF_KADESH_ID) ) {
             htmltext = "30626-13.htm";
-            st.takeItems(CRESCENT_MOON_BOW_ID);
-            st.takeItems(TALISMAN_OF_KADESH_ID);
-            st.takeItems(BLOOD_OF_LIZARDMAN_ID);
+            st.takeAllItems(CRESCENT_MOON_BOW_ID,TALISMAN_OF_KADESH_ID,BLOOD_OF_LIZARDMAN_ID);
             st.giveItems(MARK_OF_SAGITTARIUS_ID);
             if (!st.player.isVarSet("prof2.3")) {
                 st.addExpAndSp(RewardExp, RewardSP);
                 st.giveItems(ADENA_ID, RewardAdena);
-                st.player.setVar("prof2.3", 1);
+                st.player.setVar("prof2.3");
             }
             st.playSound(SOUND_FINISH);
             st.unset("cond");
-            st.exitCurrentQuest(false);
-        } else if (npcId == 30653 && st.getCond() == 2 && st.getQuestItemsCount(LETTER_OF_HAMIL1_ID) > 0)
+            st.finish();
+        } else if (npcId == 30653 && st.getCond() == 2 && st.haveQuestItem(LETTER_OF_HAMIL1_ID))
             htmltext = "30653-01.htm";
         else if (npcId == 30653 && st.getCond() == 3)
             htmltext = "30653-03.htm";
-        else if (npcId == 30514 && st.getCond() == 5 && st.getQuestItemsCount(LETTER_OF_HAMIL2_ID) > 0)
+        else if (npcId == 30514 && st.getCond() == 5 && st.haveQuestItem(LETTER_OF_HAMIL2_ID) )
             htmltext = "30514-01.htm";
         else if (npcId == 30514 && st.getCond() == 6)
             htmltext = "30514-03.htm";
-        else if (npcId == 30514 && st.getCond() == 7 && st.getQuestItemsCount(TALISMAN_OF_SNAKE_ID) > 0) {
+        else if (npcId == 30514 && st.getCond() == 7 && st.haveQuestItem(TALISMAN_OF_SNAKE_ID)) {
             htmltext = "30514-04.htm";
-            st.takeItems(TALISMAN_OF_SNAKE_ID, st.getQuestItemsCount(TALISMAN_OF_SNAKE_ID));
+            st.takeItems(TALISMAN_OF_SNAKE_ID);
             st.setCond(8);
         } else if (npcId == 30514 && st.getCond() == 8)
             htmltext = "30514-05.htm";
-        else if (npcId == 30717 && st.getCond() == 9 && st.getQuestItemsCount(LETTER_OF_HAMIL3_ID) > 0) {
+        else if (npcId == 30717 && st.getCond() == 9 && st.haveQuestItem(LETTER_OF_HAMIL3_ID) ) {
             htmltext = "30717-01.htm";
-            st.takeItems(LETTER_OF_HAMIL3_ID, st.getQuestItemsCount(LETTER_OF_HAMIL3_ID));
+            st.takeItems(LETTER_OF_HAMIL3_ID);
             st.setCond(10);
         } else if (npcId == 30717 && st.getCond() == 10)
             htmltext = "30717-03.htm";
         else if (npcId == 30717 && st.getCond() == 12)
             htmltext = "30717-04.htm";
-        else if (npcId == 30717 && st.getCond() == 11 && st.getQuestItemsCount(STAKATO_CHITIN_ID) > 0 && st.getQuestItemsCount(MITHRIL_CLIP_ID) > 0 && st.getQuestItemsCount(ST_BOWSTRING_ID) > 0 && st.getQuestItemsCount(MANASHENS_HORN_ID) > 0) {
+        else if (npcId == 30717 && st.getCond() == 11 && st.haveAllQuestItems(STAKATO_CHITIN_ID,MITHRIL_CLIP_ID,ST_BOWSTRING_ID,MANASHENS_HORN_ID) ) {
             htmltext = "30717-02.htm";
-            st.takeItems(MITHRIL_CLIP_ID, st.getQuestItemsCount(MITHRIL_CLIP_ID));
-            st.takeItems(STAKATO_CHITIN_ID, st.getQuestItemsCount(STAKATO_CHITIN_ID));
-            st.takeItems(ST_BOWSTRING_ID, st.getQuestItemsCount(ST_BOWSTRING_ID));
-            st.takeItems(MANASHENS_HORN_ID, st.getQuestItemsCount(MANASHENS_HORN_ID));
-            st.giveItems(CRESCENT_MOON_BOW_ID, 1);
+            st.takeAllItems(MITHRIL_CLIP_ID,STAKATO_CHITIN_ID,ST_BOWSTRING_ID,MANASHENS_HORN_ID);
+            st.giveItems(CRESCENT_MOON_BOW_ID);
             st.giveItems(WOODEN_ARROW_ID, 10);
             st.setCond(12);
         }
@@ -234,8 +204,8 @@ public final class _224_TestOfSagittarius extends Quest {
         } else if (npcId == 20269 || npcId == 20270) {
             if (st.getCond() == 6 && st.getQuestItemsCount(HUNTERS_RUNE2_ID) < 10 && Rnd.chance(50)) {
                 st.giveItems(HUNTERS_RUNE2_ID);
-                if (st.getQuestItemsCount(HUNTERS_RUNE2_ID) == 10) {
-                    st.takeItems(HUNTERS_RUNE2_ID, 10);
+                if (st.haveQuestItem(HUNTERS_RUNE2_ID, 10)) {
+                    st.takeItems(HUNTERS_RUNE2_ID);
                     st.giveItems(TALISMAN_OF_SNAKE_ID);
                     st.setCond(7);
                     st.playSound(SOUND_MIDDLE);
@@ -243,7 +213,7 @@ public final class _224_TestOfSagittarius extends Quest {
                     st.playSound(SOUND_ITEMGET);
             }
         } else if (npcId == 20230 || npcId == 20232 || npcId == 20234) {
-            if (st.getQuestItemsCount(MITHRIL_CLIP_ID) > 0 && st.getQuestItemsCount(MANASHENS_HORN_ID) > 0 && st.getQuestItemsCount(STAKATO_CHITIN_ID) > 0) {
+            if (st.haveAllQuestItems(MITHRIL_CLIP_ID,MANASHENS_HORN_ID,STAKATO_CHITIN_ID)) {
                 st.setCond(11);
             }
         } else if (npcId == 20563) {

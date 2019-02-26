@@ -36,7 +36,7 @@ public final class _194_SevenSignsMammonsContract extends Quest {
         Player player = st.player;
         if ("sirgustavathebaldt_q194_2.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("sirgustavathebaldt_q194_2c.htm".equalsIgnoreCase(event)) {
             st.setCond(2);
@@ -102,8 +102,8 @@ public final class _194_SevenSignsMammonsContract extends Quest {
         } else if (event.equalsIgnoreCase("claudiaathebaldt_q194_2.htm")) {
             if (player.getBaseClassId() == player.getActiveClassId()) {
                 st.addExpAndSp(25000000, 2500000);
-                st.setState(COMPLETED);
-                st.exitCurrentQuest(false);
+                st.complete();
+                st.finish();
                 st.playSound(SOUND_FINISH);
             } else
                 return "subclass_forbidden.htm";
@@ -154,7 +154,7 @@ public final class _194_SevenSignsMammonsContract extends Quest {
                 htmltext = "sirgustavathebaldt_q194_4.htm";
             } else {
                 htmltext = "sirgustavathebaldt_q194_0.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (npcId == Colin) {
             if (cond == 3) {
@@ -175,7 +175,7 @@ public final class _194_SevenSignsMammonsContract extends Quest {
             else if (cond == 12)
                 htmltext = "colin_q194_14.htm";
 
-                //if player has lost transformation - sarcasticly giving him it again
+                //if getPlayer has lost transformation - sarcasticly giving him it again
             else if (cond == 4 && player.getTransformation() == 0)
                 htmltext = "colin_q194_11.htm";
             else if (cond == 7 && player.getTransformation() == 0)

@@ -31,9 +31,9 @@ public class RequestOustPledgeMember extends L2GameClientPacket {
             return;
         }
 
-        Player memberPlayer = member.player();
+        Player memberPlayer = member.getPlayer();
 
-        if (member.isOnline() && member.player().isInCombat()) {
+        if (member.isOnline() && member.getPlayer().isInCombat()) {
             activeChar.sendPacket(SystemMsg.A_CLAN_MEMBER_MAY_NOT_BE_DISMISSED_DURING_COMBAT);
             return;
         }

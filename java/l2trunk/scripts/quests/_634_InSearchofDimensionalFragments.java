@@ -5,19 +5,19 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
+import java.util.stream.IntStream;
+
 public final class _634_InSearchofDimensionalFragments extends Quest {
     private static final int DIMENSION_FRAGMENT_ID = 7079;
 
     public _634_InSearchofDimensionalFragments() {
         super(true);
 
-        for (int npcId = 31494; npcId < 31508; npcId++) {
-            addTalkId(npcId);
-            addStartNpc(npcId);
-        }
+        int[] npcs = IntStream.rangeClosed(31494, 31508).toArray();
+            addTalkId(npcs);
+            addStartNpc(npcs);
 
-        for (int mobs = 21208; mobs < 21256; mobs++)
-            addKillId(mobs);
+        addKillId(IntStream.rangeClosed(21208, 21256).toArray());
     }
 
     @Override
@@ -25,13 +25,13 @@ public final class _634_InSearchofDimensionalFragments extends Quest {
         String htmltext = event;
         if ("quest_accept".equalsIgnoreCase(event)) {
             htmltext = "dimension_keeper_1_q0634_03.htm";
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
             st.setCond(1);
         } else if ("634_2".equalsIgnoreCase(event)) {
             htmltext = "dimension_keeper_1_q0634_06.htm";
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
         return htmltext;
     }
@@ -45,7 +45,7 @@ public final class _634_InSearchofDimensionalFragments extends Quest {
                 htmltext = "dimension_keeper_1_q0634_01.htm";
             else {
                 htmltext = "dimension_keeper_1_q0634_02.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (id == STARTED)
             htmltext = "dimension_keeper_1_q0634_04.htm";

@@ -67,7 +67,7 @@ public final class Viktorina extends Functions implements ScriptFile, IVoicedCom
         if (chat.equalsIgnoreCase(answer) && isQuestionStatus()) {
             if (!playerList.contains(player))
                 playerList.add(player);
-            _log.info("Viktorina: player - " + player.getName() + " gave the correct answer. Was added to the list.");
+            _log.info("Viktorina: getPlayer - " + player.getName() + " gave the correct answer. Was added to the list.");
         }
     }
 
@@ -406,26 +406,26 @@ public final class Viktorina extends Functions implements ScriptFile, IVoicedCom
             if (!isQuestionStatus())
                 viktorinaSay(player, "Возможно вопрос не был задан,или же время ответа истекло");
         }
-        if (command.equals("von")) {
+        if ("von".equals(command)) {
             player.setVar("viktorina");
             player.sendMessage("You take part in the Quiz!");
             player.sendMessage("Wait receipts you issue a PM!");
         }
-        if (command.equals("voff")) {
+        if ("voff".equals(command)) {
             player.unsetVar("viktorina");
             player.sendMessage("Refused to participate in the Quiz!");
             player.sendMessage("Until next time!");
         }
-        if (command.equals("vhelp")) {
+        if ("vhelp".equals(command)) {
             help(player);
         }
-        if (command.equals("vtop")) {
+        if ("vtop".equals(command)) {
             top(player);
         }
-        if (command.equals("v")) {
+        if ("v".equals(command)) {
             viktorinaSay(player, question);
         }
-        if (command.equals("vo") && player.isGM()) {
+        if ("vo".equals(command) && player.isGM()) {
             viktorinaSay(player, answer);
         }
         return true;
@@ -541,7 +541,7 @@ public final class Viktorina extends Functions implements ScriptFile, IVoicedCom
             name = rset.getString("char_name");
             //return name;
         } catch (SQLException e) {
-            _log.info("AAA! HAZARD, I can not find a player with such a obj_Id:" + e.getMessage());
+            _log.info("AAA! HAZARD, I can not find a getPlayer with such a obj_Id:" + e.getMessage());
         }
         return name;
     }

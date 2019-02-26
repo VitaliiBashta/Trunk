@@ -29,7 +29,7 @@ public final class _031_SecretBuriedInTheSwamp extends Quest {
         int cond = st.getCond();
         if (event.equals("31555-1.htm")) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if (event.equals("31665-1.htm") && cond == 1) {
             st.setCond(2);
@@ -51,7 +51,7 @@ public final class _031_SecretBuriedInTheSwamp extends Quest {
             st.addExpAndSp(490000, 45880);
             st.giveItems(ADENA_ID, 120000);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(false);
+            st.finish();
         }
         return event;
     }
@@ -67,7 +67,7 @@ public final class _031_SecretBuriedInTheSwamp extends Quest {
                     htmltext = "31555-0.htm";
                 else {
                     htmltext = "31555-0a.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1)
                 htmltext = "31555-2.htm";

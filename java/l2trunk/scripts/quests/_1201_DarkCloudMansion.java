@@ -25,7 +25,7 @@ import java.util.Map;
 public final class _1201_DarkCloudMansion extends Quest {
     private static final int INCSTANCED_ZONE_ID = 9;
 
-    // Items
+    // items
     private static final int CC = 9690; // Contaminated Crystal
 
     // NPC
@@ -148,7 +148,7 @@ public final class _1201_DarkCloudMansion extends Quest {
         int npcId = npc.getNpcId();
         Player player = st.player;
         if (npcId == YIYEN) {
-            st.setState(STARTED);
+            st.start();
             enterInstance(player);
             return null;
         }
@@ -160,7 +160,7 @@ public final class _1201_DarkCloudMansion extends Quest {
                 player.sendPacket(new SystemMessage(SystemMessage.THIS_DUNGEON_WILL_EXPIRE_IN_S1_MINUTES).addNumber(2));
                 player.getReflection().startCollapseTimer(2 * 60 * 1000L);
                 player.setReflection(0);
-                player.teleToLocation(new Location(139968, 150367, -3111));
+                player.teleToLocation(Location.of(139968, 150367, -3111));
                 if (!world.rewarded.contains(player.getStoredId())) {
                     st.giveItems(CC);
                     world.rewarded.add(player.getStoredId());
@@ -226,7 +226,7 @@ public final class _1201_DarkCloudMansion extends Quest {
 
     private void endInstance(World world) {
         world.status = 9;
-        addSpawnToInstance(SOTruth, new Location(148911, 181940, -6117, 16383), world.instanceId);
+        addSpawnToInstance(SOTruth, Location.of(148911, 181940, -6117, 16383), world.instanceId);
         world.StartRoom = null;
         world.Hall = null;
         world.SecondRoom = null;
@@ -258,30 +258,30 @@ public final class _1201_DarkCloudMansion extends Quest {
         world.StartRoom = new Room();
         world.StartRoom.npclist = new HashMap<>();
         NpcInstance newNpc;
-        newNpc = addSpawnToInstance(BM.get(0), new Location(146817, 180335, -6117), world.instanceId);
+        newNpc = addSpawnToInstance(BM.get(0), Location.of(146817, 180335, -6117), world.instanceId);
         world.StartRoom.npclist.put(newNpc, false);
-        newNpc = addSpawnToInstance(BM.get(0), new Location(146741, 180589, -6117), world.instanceId);
+        newNpc = addSpawnToInstance(BM.get(0), Location.of(146741, 180589, -6117), world.instanceId);
         world.StartRoom.npclist.put(newNpc, false);
     }
 
     private void spawnHall(World world) {
         world.Hall = new Room();
         world.Hall.npclist = new HashMap<>();
-        NpcInstance newNpc = addSpawnToInstance(BM.get(1), new Location(147217, 180112, -6117), world.instanceId);
+        NpcInstance newNpc = addSpawnToInstance(BM.get(1), Location.of(147217, 180112, -6117), world.instanceId);
         world.Hall.npclist.put(newNpc, false);
-        newNpc = addSpawnToInstance(BM.get(2), new Location(147217, 180209, -6117), world.instanceId);
+        newNpc = addSpawnToInstance(BM.get(2), Location.of(147217, 180209, -6117), world.instanceId);
         world.Hall.npclist.put(newNpc, false);
-        newNpc = addSpawnToInstance(BM.get(1), new Location(148521, 180112, -6117), world.instanceId);
+        newNpc = addSpawnToInstance(BM.get(1), Location.of(148521, 180112, -6117), world.instanceId);
         world.Hall.npclist.put(newNpc, false);
-        newNpc = addSpawnToInstance(BM.get(0), new Location(148521, 180209, -6117), world.instanceId);
+        newNpc = addSpawnToInstance(BM.get(0), Location.of(148521, 180209, -6117), world.instanceId);
         world.Hall.npclist.put(newNpc, false);
-        newNpc = addSpawnToInstance(BM.get(1), new Location(148525, 180910, -6117), world.instanceId);
+        newNpc = addSpawnToInstance(BM.get(1), Location.of(148525, 180910, -6117), world.instanceId);
         world.Hall.npclist.put(newNpc, false);
-        newNpc = addSpawnToInstance(BM.get(2), new Location(148435, 180910, -6117), world.instanceId);
+        newNpc = addSpawnToInstance(BM.get(2), Location.of(148435, 180910, -6117), world.instanceId);
         world.Hall.npclist.put(newNpc, false);
-        newNpc = addSpawnToInstance(BM.get(1), new Location(147242, 180910, -6117), world.instanceId);
+        newNpc = addSpawnToInstance(BM.get(1), Location.of(147242, 180910, -6117), world.instanceId);
         world.Hall.npclist.put(newNpc, false);
-        newNpc = addSpawnToInstance(BM.get(2), new Location(147242, 180819, -6117), world.instanceId);
+        newNpc = addSpawnToInstance(BM.get(2), Location.of(147242, 180819, -6117), world.instanceId);
         world.Hall.npclist.put(newNpc, false);
     }
 
@@ -296,13 +296,13 @@ public final class _1201_DarkCloudMansion extends Quest {
         ReflectionManager.INSTANCE.get(world.instanceId).openDoor(D2);
         world.FirstRoom = new Room();
         world.FirstRoom.npclist = new HashMap<>();
-        NpcInstance newNpc = addSpawnToInstance(HG[1], new Location(147842, 179837, -6117), world.instanceId);
+        NpcInstance newNpc = addSpawnToInstance(HG[1], Location.of(147842, 179837, -6117), world.instanceId);
         world.FirstRoom.npclist.put(newNpc, false);
-        newNpc = addSpawnToInstance(HG[0], new Location(147711, 179708, -6117), world.instanceId);
+        newNpc = addSpawnToInstance(HG[0], Location.of(147711, 179708, -6117), world.instanceId);
         world.FirstRoom.npclist.put(newNpc, false);
-        newNpc = addSpawnToInstance(HG[1], new Location(147842, 179552, -6117), world.instanceId);
+        newNpc = addSpawnToInstance(HG[1], Location.of(147842, 179552, -6117), world.instanceId);
         world.FirstRoom.npclist.put(newNpc, false);
-        newNpc = addSpawnToInstance(HG[0], new Location(147964, 179708, -6117), world.instanceId);
+        newNpc = addSpawnToInstance(HG[0], Location.of(147964, 179708, -6117), world.instanceId);
         world.FirstRoom.npclist.put(newNpc, false);
     }
 
@@ -312,7 +312,7 @@ public final class _1201_DarkCloudMansion extends Quest {
     }
 
     private void runSecondRoom(World world) {
-        addSpawnToInstance(SOFaith, new Location(147818, 179643, -6117), world.instanceId);
+        addSpawnToInstance(SOFaith, Location.of(147818, 179643, -6117), world.instanceId);
         NpcInstance newNpc;
         world.status = 4;
         ReflectionManager.INSTANCE.get(world.instanceId).openDoor(D3);
@@ -320,22 +320,22 @@ public final class _1201_DarkCloudMansion extends Quest {
         world.SecondRoom.monolith = new ArrayList<>();
         int i = Rnd.get(order.length);
         world.SecondRoom.monolithOrder = new int[]{1, 0, 0, 0, 0, 0, 0};
-        newNpc = addSpawnToInstance(BSM, new Location(147800, 181150, -6117), world.instanceId);
+        newNpc = addSpawnToInstance(BSM, Location.of(147800, 181150, -6117), world.instanceId);
         world.SecondRoom.monolith.add(new int[]{newNpc.getStoredId(), order[i][0], 0});
-        newNpc = addSpawnToInstance(BSM, new Location(147900, 181215, -6117), world.instanceId);
+        newNpc = addSpawnToInstance(BSM, Location.of(147900, 181215, -6117), world.instanceId);
         world.SecondRoom.monolith.add(new int[]{newNpc.getStoredId(), order[i][1], 0});
-        newNpc = addSpawnToInstance(BSM, new Location(147900, 181345, -6117), world.instanceId);
+        newNpc = addSpawnToInstance(BSM, Location.of(147900, 181345, -6117), world.instanceId);
         world.SecondRoom.monolith.add(new int[]{newNpc.getStoredId(), order[i][2], 0});
-        newNpc = addSpawnToInstance(BSM, new Location(147800, 181410, -6117), world.instanceId);
+        newNpc = addSpawnToInstance(BSM, Location.of(147800, 181410, -6117), world.instanceId);
         world.SecondRoom.monolith.add(new int[]{newNpc.getStoredId(), order[i][3], 0});
-        newNpc = addSpawnToInstance(BSM, new Location(147700, 181345, -6117), world.instanceId);
+        newNpc = addSpawnToInstance(BSM, Location.of(147700, 181345, -6117), world.instanceId);
         world.SecondRoom.monolith.add(new int[]{newNpc.getStoredId(), order[i][4], 0});
-        newNpc = addSpawnToInstance(BSM, new Location(147700, 181215, -6117), world.instanceId);
+        newNpc = addSpawnToInstance(BSM, Location.of(147700, 181215, -6117), world.instanceId);
         world.SecondRoom.monolith.add(new int[]{newNpc.getStoredId(), order[i][5], 0});
     }
 
     private void runHall3(World world) {
-        addSpawnToInstance(SOAdversity, new Location(147808, 181281, -6117, 16383), world.instanceId);
+        addSpawnToInstance(SOAdversity, Location.of(147808, 181281, -6117, 16383), world.instanceId);
         world.status = 5;
         spawnHall(world);
     }
@@ -345,17 +345,17 @@ public final class _1201_DarkCloudMansion extends Quest {
         ReflectionManager.INSTANCE.get(world.instanceId).openDoor(D4);
         world.ThirdRoom = new Room();
         world.ThirdRoom.npclist = new HashMap<>();
-        NpcInstance newNpc = addSpawnToInstance(BM.get(1), new Location(148765, 180450, -6117), world.instanceId);
+        NpcInstance newNpc = addSpawnToInstance(BM.get(1), Location.of(148765, 180450, -6117), world.instanceId);
         world.ThirdRoom.npclist.put(newNpc, false);
-        newNpc = addSpawnToInstance(BM.get(2), new Location(148865, 180190, -6117), world.instanceId);
+        newNpc = addSpawnToInstance(BM.get(2), Location.of(148865, 180190, -6117), world.instanceId);
         world.ThirdRoom.npclist.put(newNpc, false);
-        newNpc = addSpawnToInstance(BM.get(1), new Location(148995, 180190, -6117), world.instanceId);
+        newNpc = addSpawnToInstance(BM.get(1), Location.of(148995, 180190, -6117), world.instanceId);
         world.ThirdRoom.npclist.put(newNpc, false);
-        newNpc = addSpawnToInstance(BM.get(0), new Location(149090, 180450, -6117), world.instanceId);
+        newNpc = addSpawnToInstance(BM.get(0), Location.of(149090, 180450, -6117), world.instanceId);
         world.ThirdRoom.npclist.put(newNpc, false);
-        newNpc = addSpawnToInstance(BM.get(1), new Location(148995, 180705, -6117), world.instanceId);
+        newNpc = addSpawnToInstance(BM.get(1), Location.of(148995, 180705, -6117), world.instanceId);
         world.ThirdRoom.npclist.put(newNpc, false);
-        newNpc = addSpawnToInstance(BM.get(2), new Location(148865, 180705, -6117), world.instanceId);
+        newNpc = addSpawnToInstance(BM.get(2), Location.of(148865, 180705, -6117), world.instanceId);
         world.ThirdRoom.npclist.put(newNpc, false);
     }
 
@@ -381,7 +381,7 @@ public final class _1201_DarkCloudMansion extends Quest {
         for (int x = 148660; x <= 149160; x += 125) {
             yy = 0;
             for (int y = 179280; y >= 178530; y -= 125) {
-                NpcInstance newNpc = addSpawnToInstance(SC, new Location(x, y, -6115, 16215), world.instanceId);
+                NpcInstance newNpc = addSpawnToInstance(SC, Location.of(x, y, -6115, 16215), world.instanceId);
                 newNpc.setAI(new CharacterAI(newNpc));
                 if (templist[yy][xx] == 0) {
                     newNpc.setBusy(true); // Используется здесь для определения "ненастощих" статуй.
@@ -400,7 +400,7 @@ public final class _1201_DarkCloudMansion extends Quest {
         world.status = 8;
         ReflectionManager.INSTANCE.get(world.instanceId).openDoor(D6);
         world.FifthRoom = new Room();
-        addSpawnToInstance(SOAdventure, new Location(148910, 178397, -6117, 16383), world.instanceId);
+        addSpawnToInstance(SOAdventure, Location.of(148910, 178397, -6117, 16383), world.instanceId);
         spawnBelethSample(world);
     }
 
@@ -411,7 +411,7 @@ public final class _1201_DarkCloudMansion extends Quest {
         world.FifthRoom.belethOrder.add(beleth);
         int idx = 0;
         for (int x = 148720; x <= 149110; x += 65) {
-            NpcInstance newNpc = addSpawnToInstance(BS.get(idx), new Location(x, 182145, -6117, 48810), world.instanceId);
+            NpcInstance newNpc = addSpawnToInstance(BS.get(idx), Location.of(x, 182145, -6117, 48810), world.instanceId);
             world.FifthRoom.npclist2.add(new int[]{newNpc.getStoredId(), idx, beleth[idx]});
             idx += 1;
         }
@@ -431,7 +431,7 @@ public final class _1201_DarkCloudMansion extends Quest {
         int id = golems[i][0];
         int x = golems[i][1];
         int y = golems[i][2];
-        addSpawnToInstance(id, new Location(x, y, -6117), world.instanceId);
+        addSpawnToInstance(id, Location.of(x, y, -6117), world.instanceId);
     }
 
     private void checkStone(NpcInstance npc, int[] order, int[] npcObj, World world) {

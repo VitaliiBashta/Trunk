@@ -36,7 +36,7 @@ public final class AccessoryListener implements OnEquipListener {
         if (item.isAccessory() || item.getTemplate().isTalisman() || item.getTemplate().isBracelet())
             player.sendUserInfo(true);
             // TODO [G1ta0] отладить отображение аксессуаров
-            //player.sendPacket(new ItemList(player, false));
+            //getPlayer.sendPacket(new ItemList(getPlayer, false));
         else
             player.broadcastCharInfo();
     }
@@ -51,7 +51,7 @@ public final class AccessoryListener implements OnEquipListener {
         if (item.isAccessory() || item.getTemplate().isTalisman() || item.getTemplate().isBracelet())
             player.sendUserInfo(true);
             // TODO [G1ta0] отладить отображение аксессуаров
-            //player.sendPacket(new ItemList(player, false));
+            //getPlayer.sendPacket(new ItemList(getPlayer, false));
         else
             player.broadcastCharInfo();
     }

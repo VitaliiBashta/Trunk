@@ -24,17 +24,17 @@ public final class _252_GoodSmell extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("stan_q252_03.htm".equalsIgnoreCase(event)) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if ("stan_q252_06.htm".equalsIgnoreCase(event)) {
             st.takeItems(SelMahumDiary);
             st.takeItems(SelMahumCookbookPage);
-            st.setState(COMPLETED);
+            st.complete();
             st.giveItems(57, 147656);
             st.addExpAndSp(716238, 78324);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(false);
+            st.finish();
         }
         return event;
     }

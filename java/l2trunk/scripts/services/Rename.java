@@ -2,21 +2,16 @@ package l2trunk.scripts.services;
 
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.cache.Msg;
-import l2trunk.gameserver.dao.CharacterDAO;
 import l2trunk.gameserver.database.mysql;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.SubClass;
 import l2trunk.gameserver.model.base.ClassId;
-import l2trunk.gameserver.model.base.PlayerClass;
 import l2trunk.gameserver.model.entity.events.impl.SiegeEvent;
-import l2trunk.gameserver.model.entity.olympiad.Olympiad;
 import l2trunk.gameserver.model.pledge.Clan;
 import l2trunk.gameserver.model.pledge.SubUnit;
 import l2trunk.gameserver.network.clientpackets.CharacterCreate;
 import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
-import l2trunk.gameserver.network.serverpackets.Say2;
 import l2trunk.gameserver.network.serverpackets.SystemMessage;
-import l2trunk.gameserver.network.serverpackets.components.ChatType;
 import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.scripts.Functions;
@@ -24,8 +19,6 @@ import l2trunk.gameserver.tables.ClanTable;
 import l2trunk.gameserver.utils.Log;
 import l2trunk.gameserver.utils.Util;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map.Entry;
 
 import static l2trunk.gameserver.utils.ItemFunctions.removeItem;
@@ -68,7 +61,7 @@ public final class Rename extends Functions {
             return;
         }
 
-        if (CharacterCreate.isValid(newName) && !Config.SERVICES_CHANGE_NICK_ALLOW_SYMBOL) {
+        if (CharacterCreate.isValid(newName)) {
             player.sendMessage(new CustomMessage("scripts.services.Rename.incorrectinput"));
             return;
         }
@@ -84,8 +77,8 @@ public final class Rename extends Functions {
         append += "<table>";
 
         for (SubClass s : player.getSubClasses().values())
-            if (!s.isBase() && s.getClassId() != ClassId.inspector.id && s.getClassId() != ClassId.judicator.id)
-                append += "<tr><td><button value=\"" + new CustomMessage("scripts.services.Separate.Button").addString(ClassId.VALUES.get(s.getClassId()).toString()) + "\" action=\"bypass -h scripts_services.Rename:separate " + s.getClassId() + " $name\" width=200 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td></tr>";
+            if (!s.isBase() && s.getClassId() != ClassId.inspector && s.getClassId() != ClassId.judicator)
+                append += "<tr><td><button value=\"" + new CustomMessage("scripts.services.Separate.Button").addString(s.getClassId().name) + "\" action=\"bypass -h scripts_services.Rename:separate " + s.getClassId() + " $name\" width=200 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td></tr>";
 
         append += "</table>";
         show(append, player);
@@ -131,7 +124,7 @@ public final class Rename extends Functions {
             return;
         }
 
-        int classtomove = Integer.parseInt(param[0]);
+        ClassId classtomove = ClassId.getById(Integer.parseInt(param[0]));
         int newcharid = 0;
         for (Entry<Integer, String> e : player.getAccountChars().entrySet())
             if (e.getValue().equalsIgnoreCase(param[1]))
@@ -142,8 +135,8 @@ public final class Rename extends Functions {
             return;
         }
 
-        if (mysql.simple_get_int("occupation", "character_subclasses", "char_obj_id=" + newcharid + " AND occupation > 1") > 1) {
-            show("The aim should be occupation 1.", player);
+        if (mysql.simple_get_int("level", "character_subclasses", "char_obj_id=" + newcharid + " AND level > 1") > 1) {
+            show("The aim should be level 1.", player);
             return;
         }
 
@@ -169,163 +162,6 @@ public final class Rename extends Functions {
         removeItem(player, Config.SERVICES_CHANGE_BASE_ITEM, Config.SERVICES_CHANGE_BASE_PRICE, "Rename$separate");
         player.logout();
         Log.add("Character " + player + " base changed to " + player, "services");
-    }
-
-    public void changebase_page() {
-        if (player == null)
-            return;
-        if (!Config.SERVICES_CHANGE_BASE_ENABLED) {
-            show("Service is disabled.", player);
-            return;
-        }
-        if (!player.isInPeaceZone()) {
-            show("You need to be in a peaceful area to use this service.", player);
-            return;
-        }
-
-        if (player.isHero()) {
-            player.sendMessage("Not available for heroes.");
-            return;
-        }
-
-        String append = "Changing the base class:";
-        append += "<br>";
-        append += "<font color=\"LEVEL\">" + new CustomMessage("scripts.services.BaseChange.Price").addString(Util.formatAdena(Config.SERVICES_CHANGE_BASE_PRICE)).addItemName(Config.SERVICES_CHANGE_BASE_ITEM) + "</font>";
-        append += "<table>";
-
-        List<SubClass> possible = new ArrayList<>();
-        if (player.getActiveClass().isBase()) {
-            possible.addAll(player.getSubClasses().values());
-            possible.remove(player.getSubClasses().get(player.getBaseClassId()));
-
-            for (SubClass s : player.getSubClasses().values())
-                for (SubClass s2 : player.getSubClasses().values())
-                    if (s != s2 && !PlayerClass.areClassesComportable(PlayerClass.values()[s.getClassId()], PlayerClass.values()[s2.getClassId()]) || s2.getLevel() < 75)
-                        possible.remove(s2);
-        }
-
-        if (possible.isEmpty())
-            append += "<tr><td width=300>" + new CustomMessage("scripts.services.BaseChange.NotPossible") + "</td></tr>";
-        else
-            for (SubClass s : possible)
-                append += "<tr><td><button value=\"" + new CustomMessage("scripts.services.BaseChange.Button").addString(ClassId.VALUES.get(s.getClassId()).toString()) + "\" action=\"bypass -h scripts_services.Rename:changebase " + s.getClassId() + "\" width=200 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td></tr>";
-        append += "</table>";
-        show(append, player);
-    }
-
-    public void changebase(String[] param) {
-        if (player == null)
-            return;
-        if (!Config.SERVICES_CHANGE_BASE_ENABLED) {
-            show("Service is disabled.", player);
-            return;
-        }
-        if (!player.isInPeaceZone()) {
-            show("You need to be in a peaceful area to use this service.", player);
-            return;
-        }
-
-        if (!player.getActiveClass().isBase()) {
-            show("You must be on the main class to use this service.", player);
-            return;
-        }
-
-        if (player.isHero()) {
-            show("Not available for heroes.", player);
-            return;
-        }
-
-        if (!player.haveItem(Config.SERVICES_CHANGE_BASE_ITEM, Config.SERVICES_CHANGE_BASE_PRICE)) {
-            if (Config.SERVICES_CHANGE_BASE_ITEM == 57)
-                player.sendPacket(Msg.YOU_DO_NOT_HAVE_ENOUGH_ADENA);
-            else
-                player.sendPacket(SystemMsg.INCORRECT_ITEM_COUNT);
-            return;
-        }
-
-        int target = Integer.parseInt(param[0]);
-        SubClass newBase = player.getSubClasses().get(target);
-
-        player.getActiveClass().setBase(false);
-        player.getActiveClass().setCertification(newBase.getCertification());
-
-        newBase.setCertification(0);
-        player.getActiveClass().setExp(player.getExp());
-        player.checkSkills();
-
-        newBase.setBase(true);
-
-        player.setBaseClass(target);
-
-        player.setHairColor(0);
-        player.setHairStyle(0);
-        player.setFace(0);
-        Olympiad.unRegisterNoble(player);
-        removeItem(player, Config.SERVICES_CHANGE_BASE_ITEM, Config.SERVICES_CHANGE_BASE_PRICE, "Rename$changeBase");
-        player.logout();
-        //Log.add("Character " + player + " base changed to " + target, "services");
-    }
-
-    public void rename() {
-        if (player == null)
-            return;
-
-        player.sendMessage("Incorrect name, try again!");
-    }
-
-    public void rename(String[] args) {
-        if (player == null)
-            return;
-
-        if (!Config.SERVICES_CHANGE_NICK_ENABLED) {
-            show("Service is disabled.", player);
-            return;
-        }
-        if (player.isHero()) {
-            player.sendMessage("Not available for heroes!");
-            return;
-        }
-
-        if (args.length != 1) {
-            player.sendMessage("Incorrect name, try again!");
-            return;
-        }
-
-        if (player.getEvent(SiegeEvent.class) != null) {
-            player.sendMessage("Your name can't be changed while Siege is in progress!");
-            return;
-        }
-
-        String name = args[0];
-
-        if (name.isEmpty() || !Util.isMatchingRegexp(name, Config.CLAN_NAME_TEMPLATE)) {
-            player.sendMessage("Incorrect name, try again!");
-            return;
-        }
-
-        if (CharacterCreate.isValid(name) && !Config.SERVICES_CHANGE_NICK_ALLOW_SYMBOL) {
-            player.sendMessage("Incorrect name, try again!");
-            return;
-        }
-
-        if (!player.getName().endsWith("V") && !player.haveItem(Config.SERVICES_CHANGE_NICK_ITEM, Config.SERVICES_CHANGE_NICK_PRICE)) {
-            if (Config.SERVICES_CHANGE_NICK_ITEM == 57)
-                player.sendPacket(Msg.YOU_DO_NOT_HAVE_ENOUGH_ADENA);
-            else
-                player.sendMessage("You dont have " + Config.SERVICES_CHANGE_NICK_PRICE + " Donator Coins!");
-            return;
-        }
-
-        if (CharacterDAO.getObjectIdByName(name) > 0) {
-            player.sendMessage("Name allready exist, try another name!");
-            return;
-        }
-
-        removeItem(player, Config.SERVICES_CHANGE_NICK_ITEM, Config.SERVICES_CHANGE_NICK_PRICE, "Rename$rename");
-
-        String oldName = player.getName();
-        player.reName(name, true);
-        player.sendPacket(new Say2(player.objectId(), ChatType.CRITICAL_ANNOUNCE, "Rename", "You changed name from " + oldName + " to " + name + "!"));
     }
 
     public void rename_clan_page() {
@@ -372,8 +208,8 @@ public final class Rename extends Functions {
             return;
         }
 
-        if (!player.haveItem( Config.SERVICES_CHANGE_CLAN_NAME_ITEM, Config.SERVICES_CHANGE_CLAN_NAME_PRICE)) {
-                player.sendPacket(SystemMsg.INCORRECT_ITEM_COUNT);
+        if (!player.haveItem(Config.SERVICES_CHANGE_CLAN_NAME_ITEM, Config.SERVICES_CHANGE_CLAN_NAME_PRICE)) {
+            player.sendPacket(SystemMsg.INCORRECT_ITEM_COUNT);
             return;
         }
         show(new CustomMessage("scripts.services.Rename.changedname").addString(player.getClan().getName()).addString(param[0]), player);

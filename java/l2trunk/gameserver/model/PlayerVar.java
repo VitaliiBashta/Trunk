@@ -10,8 +10,8 @@ public final class PlayerVar {
     private final Player owner;
     private final String name;
     private final long expire_time;
-    private String value;
-    private ScheduledFuture<?> task;
+    private final String value;
+    private final ScheduledFuture<?> task;
 
     PlayerVar(Player owner, String name, String value, long expire_time) {
         this.owner = owner;
@@ -21,7 +21,8 @@ public final class PlayerVar {
 
         if (expire_time > 0) {
             task = ThreadPoolManager.INSTANCE.schedule(new PlayerVarExpireTask(this), expire_time - System.currentTimeMillis());
-        }
+        } else
+            task = null;
     }
 
     long getTimeToExpire() {
@@ -32,9 +33,9 @@ public final class PlayerVar {
         return value;
     }
 
-    public void setValue(String val) {
-        value = val;
-    }
+//    public void setValue(String val) {
+//        value = val;
+//    }
 
     boolean getValueBoolean() {
         return value.equals("1") || Boolean.valueOf(value);
@@ -47,10 +48,10 @@ public final class PlayerVar {
     }
 
     private static class PlayerVarExpireTask extends RunnableImpl {
-        private final PlayerVar _pv;
+        private final PlayerVar playerVar;
 
         private PlayerVarExpireTask(PlayerVar pv) {
-            _pv = pv;
+            playerVar = pv;
         }
 
         private static void onUnsetVar(PlayerVar var) {
@@ -65,12 +66,8 @@ public final class PlayerVar {
 
         @Override
         public void runImpl() {
-            Player pc = _pv.owner;
-            if (pc == null) {
-                return;
-            }
-            pc.unsetVar(_pv.name);
-            onUnsetVar(_pv);
+            playerVar.owner.unsetVar(playerVar.name);
+            onUnsetVar(playerVar);
         }
     }
 }

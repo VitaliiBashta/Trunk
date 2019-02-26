@@ -10,15 +10,16 @@ import l2trunk.gameserver.model.pledge.Clan;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.Functions;
-import l2trunk.gameserver.utils.Location;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.IntStream;
 
 public final class _503_PursuitClanAmbition extends Quest {
-    // Items
+    // items
 
     // first part
     private static final int G_Let_Martien = 3866;
@@ -45,7 +46,7 @@ public final class _503_PursuitClanAmbition extends Quest {
             Mi_Drake_Eggs,
             Bl_Wyrm_Eggs,
             Drake_Eggs,
-            Th_Wyrm_Eggs    );
+            Th_Wyrm_Eggs);
 
     // NPCs
     private final int Gustaf = 30760;
@@ -77,27 +78,14 @@ public final class _503_PursuitClanAmbition extends Quest {
 
         addStartNpc(Gustaf);
 
-        addTalkId(Martien);
-        addTalkId(Athrea);
-        addTalkId(Kalis);
-        addTalkId(Fritz);
-        addTalkId(Lutz);
-        addTalkId(Kurtz);
-        addTalkId(Kusto);
-        addTalkId(Balthazar);
-        addTalkId(Rodemai);
-        addTalkId(Coffer);
-        addTalkId(Cleo);
+        addTalkId(Martien, Athrea, Kalis, Fritz, Lutz, Kurtz, Kusto, Balthazar, Rodemai, Coffer, Cleo);
 
         addKillId(ThunderWyrm1, ThunderWyrm2, Drake1, Drake2, BlitzWyrm, SpitefulSoulLeader, GraveGuard, GraveKeymaster, ImperialGravekeeper);
 
         addAttackId(ImperialGravekeeper);
 
-        for (int i = 3839; i <= 3848; i++)
-            addQuestItem(i);
-
-        for (int i = 3866; i <= 3869; i++)
-            addQuestItem(i);
+        addQuestItem(IntStream.rangeClosed(3839, 3848).toArray());
+        addQuestItem(IntStream.rangeClosed(3866, 3869).toArray());
 
         addQuestItem(Recipe_Spiteful_Soul_Energy, Spiteful_Soul_Energy, Spiteful_Soul_Vengeance);
     }
@@ -145,7 +133,7 @@ public final class _503_PursuitClanAmbition extends Quest {
         Clan clan = player.getClan();
         if (clan == null)
             return null;
-        return clan.getLeader().player();
+        return clan.getLeader().getPlayer();
     }
 
     // returns leaders quest cond, if he is offline will read out of database :)
@@ -254,26 +242,24 @@ public final class _503_PursuitClanAmbition extends Quest {
 
     private String exit503(boolean completed, QuestState st) {
         if (completed) {
-            st.giveItems(Proof_Aspiration, 1);
+            st.giveItems(Proof_Aspiration);
             st.addExpAndSp(0, 250000);
             st.unset("cond");
             st.unset("Fritz");
             st.unset("Lutz");
             st.unset("Kurtz");
             st.unset("ImpGraveKeeper");
-            st.exitCurrentQuest(false);
+            st.finish();
         } else
-            st.exitCurrentQuest(true);
-        st.takeItems(Scepter_Judgement, -1);
+            st.exitCurrentQuest();
+        st.takeItems(Scepter_Judgement);
         try {
             List<Player> members = st.player.getClan().getOnlineMembers();
-            for (Player player : members) {
-                if (player == null)
-                    continue;
-                QuestState qs = player.getQuestState(this);
-                if (qs != null)
-                    qs.exitCurrentQuest(true);
-            }
+            members.stream()
+                    .filter(Objects::nonNull)
+                    .map(player -> player.getQuestState(this))
+                    .filter(Objects::nonNull)
+                    .forEach(QuestState::exitCurrentQuest);
             offlineMemberExit(st);
         } catch (Exception e) {
             return "You dont have any members in your Clan, so you can't finish the Pursuit of Aspiration";
@@ -285,28 +271,28 @@ public final class _503_PursuitClanAmbition extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
         // Events Gustaf
-        if (event.equalsIgnoreCase("30760-08.htm")) {
+        if ("30760-08.htm".equalsIgnoreCase(event)) {
             st.giveItems(G_Let_Martien);
             st.setCond(1);
-            st.set("Fritz", 1);
-            st.set("Lutz", 1);
-            st.set("Kurtz", 1);
-            st.set("ImpGraveKeeper", 1);
-            st.setState(STARTED);
-        } else if (event.equalsIgnoreCase("30760-12.htm")) {
+            st.set("Fritz");
+            st.set("Lutz");
+            st.set("Kurtz");
+            st.set("ImpGraveKeeper");
+            st.start();
+        } else if ("30760-12.htm".equalsIgnoreCase(event)) {
             st.giveItems(G_Let_Balthazar);
             st.setCond(4);
-        } else if (event.equalsIgnoreCase("30760-16.htm")) {
+        } else if ("30760-16.htm".equalsIgnoreCase(event)) {
             st.giveItems(G_Let_Rodemai);
             st.setCond(7);
-        } else if (event.equalsIgnoreCase("30760-20.htm"))
+        } else if ("30760-20.htm".equalsIgnoreCase(event))
             exit503(true, st);
-        else if (event.equalsIgnoreCase("30760-22.htm"))
+        else if ("30760-22.htm".equalsIgnoreCase(event))
             st.setCond(13);
-        else if (event.equalsIgnoreCase("30760-23.htm"))
+        else if ("30760-23.htm".equalsIgnoreCase(event))
             exit503(true, st);
             // Events Martien
-        else if (event.equalsIgnoreCase("30645-03.htm")) {
+        else if ("30645-03.htm".equalsIgnoreCase(event)) {
             st.takeItems(G_Let_Martien);
             st.setCond(2);
             suscribe_members(st);
@@ -314,8 +300,8 @@ public final class _503_PursuitClanAmbition extends Quest {
             members.forEach(player -> newQuestState(player, STARTED));
         }
         // Events Kurtz
-        else if (event.equalsIgnoreCase("30763-03.htm")) {
-            if (st.getInt("Kurtz") == 1) {
+        else if ("30763-03.htm".equalsIgnoreCase(event)) {
+            if (st.isSet("Kurtz")) {
                 htmltext = "30763-02.htm";
                 st.giveItems(Mi_Drake_Eggs, 6);
                 st.giveItems(Brooch);
@@ -324,8 +310,7 @@ public final class _503_PursuitClanAmbition extends Quest {
         }
         // Events Lutz
         else if ("30762-03.htm".equalsIgnoreCase(event)) {
-            int lutz = st.getInt("Lutz");
-            if (lutz == 1) {
+            if (st.isSet("Lutz")) {
                 htmltext = "30762-02.htm";
                 st.giveItems(Mi_Drake_Eggs, 4);
                 st.giveItems(Bl_Wyrm_Eggs, 3);
@@ -336,8 +321,7 @@ public final class _503_PursuitClanAmbition extends Quest {
         }
         // Events Fritz
         else if ("30761-03.htm".equalsIgnoreCase(event)) {
-            int fritz = st.getInt("Fritz");
-            if (fritz == 1) {
+            if (st.isSet("Fritz")) {
                 htmltext = "30761-02.htm";
                 st.giveItems(Bl_Wyrm_Eggs, 3);
                 st.set("Fritz", 2);
@@ -406,7 +390,7 @@ public final class _503_PursuitClanAmbition extends Quest {
         if (id == CREATED && npcId == Gustaf) {
             if (st.player.getClan() != null) // has Clan
             {
-                if (isLeader) // check if player is clan leader
+                if (isLeader) // check if getPlayer is clan leader
                 {
                     int clanLevel = st.player.getClan().getLevel();
                     if (st.getQuestItemsCount(Proof_Aspiration) > 0) // if he has the proof
@@ -414,7 +398,7 @@ public final class _503_PursuitClanAmbition extends Quest {
                     // what to do now
                     {
                         htmltext = "30760-03.htm";
-                        st.exitCurrentQuest(true);
+                        st.exitCurrentQuest();
                     } else if (clanLevel > 3) // if clanLevel > 3 you can take this quest,
                         // because repeatable
                         htmltext = "30760-04.htm";
@@ -422,34 +406,34 @@ public final class _503_PursuitClanAmbition extends Quest {
                     // if clanLevel < 4 you cant take it
                     {
                         htmltext = "30760-02.htm";
-                        st.exitCurrentQuest(true);
+                        st.exitCurrentQuest();
                     }
                 } else
-                // player isnt a leader
+                // getPlayer isnt a leader
                 {
                     htmltext = "30760-04t.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else
             // no Clan
             {
                 htmltext = "30760-01.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
             return htmltext;
-        } else if (st.player.getClan() != null && st.player.getClan().getLevel() == 5) // player has occupation 5 clan already
+        } else if (st.player.getClan() != null && st.player.getClan().getLevel() == 5) // getPlayer has occupation 5 clan already
             return "completed";
         else
             // ######## Leader Area ######
             if (isLeader) {
                 if (st.getCond() == 0)
                     st.setCond(1);
-                if (st.getInt("Kurtz") == 0)
-                    st.set("Kurtz", 1);
-                if (st.getInt("Lutz") == 0)
-                    st.set("Lutz", 1);
-                if (st.getInt("Fritz") == 0)
-                    st.set("Fritz", 1);
+                if (!st.isSet("Kurtz"))
+                    st.set("Kurtz");
+                if (!st.isSet("Lutz"))
+                    st.set("Lutz");
+                if (!st.isSet("Fritz"))
+                    st.set("Fritz");
                 int cond = st.getCond();
                 int kurtz = st.getInt("Kurtz");
                 int lutz = st.getInt("Lutz");
@@ -510,10 +494,10 @@ public final class _503_PursuitClanAmbition extends Quest {
                         else
                             htmltext = "30764-02.htm";
                     else if (cond == 5)
-                        if (st.getQuestItemsCount(Spiteful_Soul_Energy) > 9) {
+                        if (st.haveQuestItem(Spiteful_Soul_Energy, 10)) {
                             htmltext = "30764-08.htm";
-                            st.takeItems(Spiteful_Soul_Energy, -1);
-                            st.takeItems(Brooch, -1);
+                            st.takeItems(Spiteful_Soul_Energy);
+                            st.takeItems(Brooch);
                             st.setCond(6);
                         } else
                             htmltext = "30764-07.htm";

@@ -96,7 +96,7 @@ public class AdminMenu implements IAdminCommandHandler {
         }
 
         if (player.objectId() == activeChar.objectId())
-            activeChar.sendMessage("You cannot player teleport.");
+            activeChar.sendMessage("You cannot getPlayer teleport.");
         else {
             activeChar.teleToLocation(player.getLoc());
             activeChar.sendMessage("You have teleported to character " + player.getName() + ".");

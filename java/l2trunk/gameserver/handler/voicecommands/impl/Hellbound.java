@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class Hellbound extends Functions implements IVoicedCommandHandler {
-    private static final List<String> _commandList = Collections.singletonList("hellbound");
+    private static final List<String> _commandList = List.of("hellbound");
 
     @Override
     public List<String> getVoicedCommandList() {

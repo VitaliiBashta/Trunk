@@ -365,7 +365,7 @@ public final class Frintezza extends Reflection {
         /**
          * returns the chosen symphony for Frintezza to play
          * If the minions are injured he has 40% to play a healing song
-         * If they are all dead, he will only play harmful player symphonies
+         * If they are all dead, he will only play harmful getPlayer symphonies
          */
         private int getSong() {
             if (minionsNeedHeal())

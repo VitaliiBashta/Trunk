@@ -25,14 +25,14 @@ public final class _113_StatusOfTheBeaconTower extends Quest {
         if (event.equalsIgnoreCase("seer_moirase_q0113_0104.htm")) {
             st.setCond(1);
             st.giveItems(BOX, 1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("torant_q0113_0201.htm")) {
             st.giveItems(ADENA_ID, 154800);
             st.addExpAndSp(619300, 44200);
             st.takeItems(BOX, 1);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(false);
+            st.finish();
         }
         return event;
     }
@@ -51,7 +51,7 @@ public final class _113_StatusOfTheBeaconTower extends Quest {
                     htmltext = "seer_moirase_q0113_0101.htm";
                 else {
                     htmltext = "seer_moirase_q0113_0103.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1)
                 htmltext = "seer_moirase_q0113_0105.htm";

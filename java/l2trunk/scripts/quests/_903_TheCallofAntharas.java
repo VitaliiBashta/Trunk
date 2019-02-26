@@ -23,14 +23,14 @@ public final class _903_TheCallofAntharas extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if (event.equalsIgnoreCase("theodric_q903_03.htm")) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("theodric_q903_06.htm")) {
             st.takeItems(BehemothDragonLeather);
             st.takeItems(TaraskDragonsLeatherFragment);
             st.giveItems(21897); // Scroll: Antharas Call
-            st.setState(COMPLETED);
+            st.complete();
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(this);
         }
@@ -53,7 +53,7 @@ public final class _903_TheCallofAntharas extends Quest {
                                 htmltext = "theodric_q903_00b.htm";
                         } else {
                             htmltext = "theodric_q903_00.htm";
-                            st.exitCurrentQuest(true);
+                            st.exitCurrentQuest();
                         }
                     } else
                         htmltext = "theodric_q903_00a.htm";

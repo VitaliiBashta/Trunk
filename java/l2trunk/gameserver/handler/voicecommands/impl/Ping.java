@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.List;
 
 public final class Ping extends Functions implements IVoicedCommandHandler {
-    private static final List<String> COMMANDS = Collections.singletonList("ping");
+    private static final List<String> COMMANDS = List.of("ping");
 
     @Override
     public boolean useVoicedCommand(String command, Player activeChar, String target) {

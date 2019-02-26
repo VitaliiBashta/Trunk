@@ -17,10 +17,7 @@ public final class _165_ShilensHunt extends Quest {
 
         addTalkId(30348);
 
-        addKillId(20456);
-        addKillId(20529);
-        addKillId(20532);
-        addKillId(20536);
+        addKillId(20456,20529,20532,20536);
 
         addQuestItem(DARK_BEZOAR);
     }
@@ -30,7 +27,7 @@ public final class _165_ShilensHunt extends Quest {
         String htmltext = event;
         if (event.equals("1")) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
             htmltext = "30348-03.htm";
         }
@@ -50,7 +47,7 @@ public final class _165_ShilensHunt extends Quest {
                 return htmltext;
             } else {
                 htmltext = "30348-01.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (cond == 1 || st.getQuestItemsCount(DARK_BEZOAR) < 13)
             htmltext = "30348-04.htm";
@@ -60,7 +57,7 @@ public final class _165_ShilensHunt extends Quest {
             st.giveItems(LESSER_HEALING_POTION, 5);
             st.addExpAndSp(1000, 0);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
         return htmltext;
     }

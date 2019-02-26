@@ -135,7 +135,7 @@ public enum Manor {
         final CropProcure cs = ResidenceHolder.getResidence(Castle.class, castle).getCropProcure(CastleManorManager.PERIOD_CURRENT).get(cropId);
         return seeds.values().stream()
                 .filter(seed -> seed.getCrop() == cropId)
-                .map(seed -> cs.getPrice() / getCropBasicPrice(seed.getReward(type)))
+                .map(seed -> cs.price / getCropBasicPrice(seed.getReward(type)))
                 .findFirst().orElse(-1L);
     }
 

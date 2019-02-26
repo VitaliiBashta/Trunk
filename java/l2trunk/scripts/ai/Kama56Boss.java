@@ -46,12 +46,12 @@ public final class Kama56Boss extends Fighter {
 
         _nextOrderTime = now + 30000;
 
-        if (!World.getAroundPlayers(actor).isEmpty()) {
+        if (World.getAroundPlayers(actor).count()>0) {
             lastMinionsTarget = null;
             return;
         }
 
-        List<Player> alive = World.getAroundPlayers(actor).stream()
+        List<Player> alive = World.getAroundPlayers(actor)
                 .filter(p -> !p.isAlikeDead())
                 .collect(Collectors.toList());
         if (alive.isEmpty()) {

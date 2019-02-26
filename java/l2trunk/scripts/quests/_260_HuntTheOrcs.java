@@ -24,12 +24,12 @@ public final class _260_HuntTheOrcs extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("sentinel_rayjien_q0260_03.htm".equals(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("sentinel_rayjien_q0260_06.htm".equals(event)) {
             st.setCond(0);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
         return event;
     }
@@ -46,10 +46,10 @@ public final class _260_HuntTheOrcs extends Quest {
                     return htmltext;
                 } else if (st.player.getRace() != Race.elf) {
                     htmltext = "sentinel_rayjien_q0260_00.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else {
                     htmltext = "sentinel_rayjien_q0260_01.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1 && (st.haveAnyQuestItems(ORC_AMULET,ORC_NECKLACE))) {
                 htmltext = "sentinel_rayjien_q0260_05.htm";
@@ -67,7 +67,7 @@ public final class _260_HuntTheOrcs extends Quest {
                 st.takeItems(ORC_NECKLACE);
 
                 if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("p1q2")) {
-                    st.player.setVar("p1q2", 1);
+                    st.player.setVar("p1q2");
                     st.player.sendPacket(new ExShowScreenMessage("Acquisition of Soulshot for beginners complete.\n                  Go find the Newbie Guide."));
                     QuestState qs = st.player.getQuestState(_255_Tutorial.class);
                     if (qs != null && qs.getInt("Ex") != 10) {

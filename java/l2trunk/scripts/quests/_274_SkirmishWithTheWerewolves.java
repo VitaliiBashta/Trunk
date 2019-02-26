@@ -17,8 +17,7 @@ public final class _274_SkirmishWithTheWerewolves extends Quest {
         super(false);
         addStartNpc(30569);
 
-        addKillId(20363);
-        addKillId(20364);
+        addKillId(20363,20364);
 
         addQuestItem(MARAKU_WEREWOLF_HEAD);
     }
@@ -27,7 +26,7 @@ public final class _274_SkirmishWithTheWerewolves extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if (event.equals("prefect_brukurse_q0274_03.htm")) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         }
         return event;
@@ -41,10 +40,10 @@ public final class _274_SkirmishWithTheWerewolves extends Quest {
         if (id == CREATED)
             if (st.player.getRace() != Race.orc) {
                 htmltext = "prefect_brukurse_q0274_00.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else if (st.player.getLevel() < 9) {
                 htmltext = "prefect_brukurse_q0274_01.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else if (st.getQuestItemsCount(NECKLACE_OF_VALOR) > 0 || st.getQuestItemsCount(NECKLACE_OF_COURAGE) > 0) {
                 htmltext = "prefect_brukurse_q0274_02.htm";
                 return htmltext;
@@ -63,7 +62,7 @@ public final class _274_SkirmishWithTheWerewolves extends Quest {
                     st.takeItems(MARAKU_WOLFMEN_TOTEM, -1);
                 }
                 htmltext = "prefect_brukurse_q0274_05.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 st.playSound(SOUND_FINISH);
             }
         return htmltext;

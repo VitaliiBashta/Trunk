@@ -702,7 +702,7 @@ public enum SevenSigns {
                 sevenDat.set("dawn_contribution_score", 0);
             }
 
-            // Reset the player's cabal and seal information
+            // Reset the getPlayer's cabal and seal information
             sevenDat.set("cabal", CABAL_NULL);
             sevenDat.set("seal", SEAL_NULL);
             _signsPlayerData.put(charObjId, sevenDat);
@@ -711,7 +711,7 @@ public enum SevenSigns {
     }
 
     /**
-     * Tests whether the specified player has joined a cabal in the past.
+     * Tests whether the specified getPlayer has joined a cabal in the past.
      *
      * @return boolean hasRegistered
      */
@@ -720,17 +720,17 @@ public enum SevenSigns {
     }
 
     /**
-     * Used to specify cabal-related details for the specified player. This method
-     * checks to see if the player has registered before and will update the database
+     * Used to specify cabal-related details for the specified getPlayer. This method
+     * checks to see if the getPlayer has registered before and will update the database
      * if necessary.
      * <BR>
-     * Returns the cabal ID the player has joined.
+     * Returns the cabal ID the getPlayer has joined.
      */
     public int setPlayerInfo(int charObjId, int chosenCabal, int chosenSeal) {
         StatsSet currPlayer;
         if (hasRegisteredBefore(charObjId)) {
             // If the seal validation period has passed,
-            // cabal information was removed and so "re-register" player
+            // cabal information was removed and so "re-register" getPlayer
             currPlayer = _signsPlayerData.get(charObjId);
             currPlayer.set("cabal", chosenCabal);
             currPlayer.set("seal", chosenSeal);
@@ -754,7 +754,7 @@ public enum SevenSigns {
 
             _signsPlayerData.put(charObjId, currPlayer);
 
-            // Update data in database, as we have a new player signing up.
+            // Update data in database, as we have a new getPlayer signing up.
             try (Connection con = DatabaseFactory.getInstance().getConnection();
                  PreparedStatement statement = con.prepareStatement("INSERT INTO seven_signs (char_obj_id, cabal, seal) VALUES (?,?,?)")) {
                 statement.setInt(1, charObjId);
@@ -778,7 +778,7 @@ public enum SevenSigns {
                 break;
         }
 
-        // Increasing Seal total score for the player chosen Seal.
+        // Increasing Seal total score for the getPlayer chosen Seal.
         if (currPlayer.getInteger("cabal") == CABAL_DAWN)
             _signsDawnSealTotals.put(chosenSeal, _signsDawnSealTotals.get(chosenSeal) + 1);
         else
@@ -790,7 +790,7 @@ public enum SevenSigns {
     }
 
     /**
-     * Returns the amount of ancient adena the specified player can claim, if any.<BR>
+     * Returns the amount of ancient adena the specified getPlayer can claim, if any.<BR>
      * If removeReward = True, all the ancient adena owed to them is removed, then
      * DB is updated.
      *
@@ -820,7 +820,7 @@ public enum SevenSigns {
     }
 
     /**
-     * Used to add the specified player's seal stone contribution points
+     * Used to add the specified getPlayer's seal stone contribution points
      * to the current total for their cabal. Returns the point score the
      * contribution was worth.
      * <p>
@@ -892,7 +892,7 @@ public enum SevenSigns {
     }
 
     /**
-     * Send info on the current Seven Signs period to the specified player.
+     * Send info on the current Seven Signs period to the specified getPlayer.
      */
     public void sendCurrentPeriodMsg(Player player) {
         switch (_activePeriod) {

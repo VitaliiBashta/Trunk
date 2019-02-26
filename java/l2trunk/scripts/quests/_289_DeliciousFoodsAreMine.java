@@ -27,7 +27,7 @@ public final class _289_DeliciousFoodsAreMine extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
         if (event.equalsIgnoreCase("stan_q289_03.htm")) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
             st.giveItems(FoulFruit, 500);
@@ -37,7 +37,7 @@ public final class _289_DeliciousFoodsAreMine extends Quest {
             htmltext = "stan_q289_11.htm";
         } else if (event.equalsIgnoreCase("quit")) {
             htmltext = "stan_q289_12.htm";
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         } else if (event.equalsIgnoreCase("icarus")) {
             if (st.getQuestItemsCount(FullBarrelofSoup) < 500)
                 htmltext = "stan_q289_07.htm";
@@ -141,7 +141,7 @@ public final class _289_DeliciousFoodsAreMine extends Quest {
                     htmltext = "stan_q289_01.htm";
                 else {
                     htmltext = "stan_q289_00.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1 && (st.getQuestItemsCount(FullBarrelofSoup) + (st.getQuestItemsCount(EmptySoupBarrel) * 2)) < 100)
                 htmltext = "stan_q289_04.htm";

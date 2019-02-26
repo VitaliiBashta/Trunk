@@ -35,7 +35,7 @@ public final class _370_AnElderSowsSeeds extends Quest {
 
         if ("30612-1.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("30612-6.htm".equalsIgnoreCase(event)) {
             long mincount = CHAPTERS.stream().min(Integer::compareTo).orElse(0);
@@ -48,7 +48,7 @@ public final class _370_AnElderSowsSeeds extends Quest {
                 htmltext = "30612-4.htm";
         } else if ("30612-9.htm".equalsIgnoreCase(event)) {
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
         return htmltext;
     }
@@ -62,7 +62,7 @@ public final class _370_AnElderSowsSeeds extends Quest {
         if (st.getState() == CREATED) {
             if (st.player.getLevel() < 28) {
                 htmltext = "30612-0a.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else
                 htmltext = "30612-0.htm";
         } else if (cond == 1)

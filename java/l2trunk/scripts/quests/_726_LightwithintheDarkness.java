@@ -38,14 +38,14 @@ public final class _726_LightwithintheDarkness extends Quest {
 
         if (event.equals("dcw_q726_4.htm") && cond == 0) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if (event.equals("reward") && cond == 1 && player.isVarSet("q726")) {
             player.unsetVar("q726");
             player.unsetVar("q726done");
             st.giveItems(KnightsEpaulette, 152);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             return null;
         }
         return event;
@@ -59,18 +59,18 @@ public final class _726_LightwithintheDarkness extends Quest {
         QuestState qs727 = player.getQuestState(_727_HopewithintheDarkness.class);
 
         if (!check(st.player)) {
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             return "dcw_q726_1a.htm";
         }
         if (qs727 != null) {
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             return "dcw_q726_1b.htm";
         } else if (cond == 0) {
             if (st.player.getLevel() >= 70)
                 htmltext = "dcw_q726_1.htm";
             else {
                 htmltext = "dcw_q726_0.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (cond == 1)
             if (player.isVarSet("q726done"))

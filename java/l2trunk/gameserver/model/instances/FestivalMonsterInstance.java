@@ -30,14 +30,14 @@ public final class FestivalMonsterInstance extends MonsterInstance {
     protected void onSpawn() {
         super.onSpawn();
 
-        World.getAroundPlayers(this).stream()
+        World.getAroundPlayers(this)
                 .filter(p -> !p.isDead())
                 .findAny().ifPresent(p -> getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, p, 1));
     }
 
     /**
      * Actions:
-     * <li>Check if the killing object is a player, and then find the party they belong to.</li>
+     * <li>Check if the killing object is a getPlayer, and then find the party they belong to.</li>
      * <li>Add a blood offering item to the leader of the party.</li>
      * <li>Update the party leader's inventory to show the new item addition.</li>
      */

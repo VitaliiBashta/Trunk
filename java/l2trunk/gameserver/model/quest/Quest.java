@@ -18,7 +18,6 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.ExNpcQuestHtmlMessage;
 import l2trunk.gameserver.network.serverpackets.ExQuestNpcLogList;
 import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
-import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.HtmlUtils;
 import l2trunk.gameserver.utils.Location;
@@ -45,6 +44,7 @@ public class Quest {
     public final static int CREATED = 1;
     public final static int STARTED = 2;
     public final static int COMPLETED = 3;
+    public static final int ADENA_ID = 57;
     protected static final String SOUND_ACCEPT = "ItemSound.quest_accept";
     protected static final String SOUND_FINISH = "ItemSound.quest_finish";
     protected static final String SOUND_GIVEUP = "ItemSound.quest_giveup";
@@ -61,10 +61,9 @@ public class Quest {
     protected static final String SOUND_ARMOR_WOOD_3 = "ItemSound.armor_wood_3";
     protected static final String SOUND_ITEM_DROP_EQUIP_ARMOR_CLOTH = "ItemSound.item_drop_equip_armor_cloth";
     protected static final String NO_QUEST_DIALOG = "no-quest";
-    public static final int ADENA_ID = 57;
     protected static final int PARTY_ONE = 1;
     final static int DELAYED = 4;
-    private static final Logger _log = LoggerFactory.getLogger(Quest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Quest.class);
     public final String name;
     public final int id;
     private final int party;
@@ -100,7 +99,7 @@ public class Quest {
     }
 
     /**
-     * Insert in the database the quest for the player.
+     * Insert in the database the quest for the getPlayer.
      *
      * @param qs    : QuestState pointing out the state of the quest
      * @param var   : String designating the name of the variable for the quest
@@ -119,14 +118,14 @@ public class Quest {
             statement.setString(4, value);
             statement.executeUpdate();
         } catch (SQLException e) {
-            _log.error("Could not insert char quest:", e);
+            LOG.error("Could not insert char quest:", e);
         }
     }
 
     /**
-     * Delete the player's quest from database.
+     * Delete the getPlayer's quest from database.
      *
-     * @param qs : QuestState pointing out the player's quest
+     * @param qs : QuestState pointing out the getPlayer's quest
      */
     static void deleteQuestInDb(QuestState qs) {
         try (Connection con = DatabaseFactory.getInstance().getConnection();
@@ -135,7 +134,7 @@ public class Quest {
             statement.setString(2, qs.quest.name);
             statement.executeUpdate();
         } catch (SQLException e) {
-            _log.error("could not delete char quest", e);
+            LOG.error("could not delete char quest", e);
         }
     }
 
@@ -147,7 +146,7 @@ public class Quest {
             statement.setString(3, var);
             statement.executeUpdate();
         } catch (SQLException e) {
-            _log.error("Could not delete char quest", e);
+            LOG.error("Could not delete char quest", e);
         }
     }
 
@@ -168,8 +167,7 @@ public class Quest {
                     String questName = rset.getString("name");
                     String state = rset.getString("value");
 
-                    if ("Start".equalsIgnoreCase(state)) // невзятый квест
-                    {
+                    if ("Start".equalsIgnoreCase(state)) {// невзятый квест
                         invalidQuestData.setInt(1, player.objectId());
                         invalidQuestData.setString(2, questName);
                         invalidQuestData.executeUpdate();
@@ -180,18 +178,18 @@ public class Quest {
                     Quest q = QuestManager.getQuest(questName);
                     if (q == null) {
                         if (!Config.DONTLOADQUEST)
-                            _log.warn("Unknown quest " + questName + " for player " + player.getName());
+                            LOG.warn("Unknown quest " + questName + " for getPlayer " + player.getName());
                         continue;
                     }
 
-                    // Create a new QuestState for the player that will be added to the player's list of quests
+                    // Create a new QuestState for the getPlayer that will be added to the getPlayer's list of quests
                     new QuestState(q, player, getStateId(state));
                 }
             }
         } catch (SQLException e) {
-            _log.error("Error while restoring Quest States ", e);
+            LOG.error("Error while restoring Quest States ", e);
         }
-        // Get list of quests owned by the player from the DB in order to add variables used in the quest.
+        // Get list of quests owned by the getPlayer from the DB in order to add variables used in the quest.
         try (PreparedStatement statement = con.prepareStatement("SELECT name,var,value FROM character_quests WHERE char_id=?")) {
             statement.setInt(1, player.objectId());
             try (ResultSet rset = statement.executeQuery()) {
@@ -211,32 +209,18 @@ public class Quest {
                 }
             }
         } catch (SQLException e) {
-            _log.error("Error while restoring Quest States ", e);
+            LOG.error("Error while restoring Quest States ", e);
         }
-    }
-
-    static String getStateName(int state) {
-        switch (state) {
-            case CREATED:
-                return "Start";
-            case STARTED:
-                return "Started";
-            case COMPLETED:
-                return "Completed";
-            case DELAYED:
-                return "Delayed";
-        }
-        return "Start";
     }
 
     private static int getStateId(String state) {
-        if (state.equalsIgnoreCase("Start"))
+        if ("Start".equalsIgnoreCase(state))
             return CREATED;
-        else if (state.equalsIgnoreCase("Started"))
+        else if ("Started".equalsIgnoreCase(state))
             return STARTED;
-        else if (state.equalsIgnoreCase("Completed"))
+        else if ("Completed".equalsIgnoreCase(state))
             return COMPLETED;
-        else if (state.equalsIgnoreCase("Delayed"))
+        else if ("Delayed".equalsIgnoreCase(state))
             return DELAYED;
         return CREATED;
     }
@@ -249,18 +233,19 @@ public class Quest {
         return npc;
     }
 
-    protected void addQuestItem(Integer... ids) {
-        addQuestItem(List.of(ids));
+    protected void addQuestItem(Collection<Integer> ids) {
+        ids.forEach(this::addQuestItem);
     }
 
-    protected void addQuestItem(Collection<Integer> ids) {
-        questItems = ids.stream()
-                .filter(id -> id != 0)
-                .peek(id -> {
-                    if (questItems.contains(id))
-                        _log.warn("Item " + ItemHolder.getTemplate(id) + " multiple times in quest drop in " + name);
-                })
-                .collect(Collectors.toSet());
+    protected void addQuestItem(int... ids) {
+        Arrays.stream(ids).forEach(this::addQuestItem);
+    }
+
+    protected void addQuestItem(int id) {
+        if (id < 1) return;
+        if (questItems.contains(id))
+            LOG.warn("Item " + ItemHolder.getTemplate(id) + " multiple times in quest drop in " + name);
+        questItems.add(id);
     }
 
     public Set<Integer> getItems() {
@@ -298,26 +283,21 @@ public class Quest {
             if (t != null)
                 t.addQuestEvent(eventType, this);
         } catch (RuntimeException e) {
-            _log.error("Error while adding Event Id. Npc ID:" + npcId + " event Type:" + eventType, e);
+            LOG.error("Error while adding Event Id. Npc ID:" + npcId + " event Type:" + eventType, e);
         }
     }
 
-    /**
-     * Add this quest to the list of quests that the passed mob will respond to
-     * for Kill Events.<BR>
-     */
-    protected void addKillId(List<Integer> killIds) {
-        killIds.forEach(killid -> addEventId(killid, QuestEventType.MOB_KILLED_WITH_QUEST));
+    protected void addKillId(Collection<Integer> killIds) {
+        killIds.forEach(this::addKillId);
+    }
+
+    protected void addKillId(int... killIds) {
+        Arrays.stream(killIds).forEach(this::addKillId);
+
     }
 
     protected void addKillId(int killid) {
         addEventId(killid, QuestEventType.MOB_KILLED_WITH_QUEST);
-    }
-
-    protected void addKillId(int... killIds) {
-        for (int killid : killIds) {
-            addKillId(killid);
-        }
     }
 
 
@@ -364,23 +344,13 @@ public class Quest {
         return done;
     }
 
-    protected void addKillId(Collection<Integer> killIds) {
-        killIds.forEach(this::addKillId);
+
+    protected void addSkillUseId(int... npcIds) {
+        Arrays.stream(npcIds).forEach(npcId -> addEventId(npcId, QuestEventType.MOB_TARGETED_BY_SKILL));
     }
 
-    /**
-     * Add this quest to the list of quests that the passed npc will respond to
-     * for Skill-Use Events.<BR>
-     * <BR>
-     *
-     * @param npcId : ID of the NPC
-     */
-    protected void addSkillUseId(int npcId) {
-        addEventId(npcId, QuestEventType.MOB_TARGETED_BY_SKILL);
-    }
-
-    protected void addStartNpc(Integer... npcIds) {
-        addStartNpc(List.of(npcIds));
+    protected void addStartNpc(int... npcIds) {
+        Arrays.stream(npcIds).forEach(this::addStartNpc);
     }
 
     protected void addStartNpc(Collection<Integer> npcIds) {
@@ -396,16 +366,15 @@ public class Quest {
      * Add the quest to the NPC's first-talk (default action dialog)
      */
     protected void addFirstTalkId(int... npcIds) {
-        for (int npcId : npcIds)
-            addEventId(npcId, QuestEventType.NPC_FIRST_TALK);
+        Arrays.stream(npcIds).forEach(npcId -> addEventId(npcId, QuestEventType.NPC_FIRST_TALK));
     }
 
-    public void addTalkId(Integer talkId) {
+    public void addTalkId(int talkId) {
         addEventId(talkId, QuestEventType.QUEST_TALK);
     }
 
-    public void addTalkId(Integer... talkIds) {
-        addTalkId(List.of(talkIds));
+    public void addTalkId(int... talkIds) {
+        Arrays.stream(talkIds).forEach(this::addTalkId);
     }
 
     public void addTalkId(Collection<Integer> talkIds) {
@@ -542,7 +511,7 @@ public class Quest {
         showResult(npc, qs.player, null);
     }
 
-    void notifyCreate(QuestState qs) {
+    final void notifyCreate(QuestState qs) {
         try {
             onCreate(qs);
         } catch (RuntimeException e) {
@@ -590,16 +559,11 @@ public class Quest {
         return true;
     }
 
-    /**
-     * Show message error to player who has an access occupation greater than 0
-     *
-     * @param player : L2Player
-     * @param t      : Throwable
-     */
     private void showError(Player player, Throwable t) {
-        _log.error("Quest Error!", t);
-        if (player != null && player.isGM()) {
-            String res = "<html><body><title>Script error</title>" + LogUtils.dumpStack(t).replace("\n", "<br>") + "</body></html>";
+        LOG.error("Quest Error!", t);
+        if (player.isGM()) {
+            String res = "<html><body><title>Script error</title>"
+                    + LogUtils.dumpStack(t).replace("\n", "<br>") + "</body></html>";
             showResult(null, player, res);
         }
     }
@@ -609,7 +573,9 @@ public class Quest {
             return;
 
         GameObject target = player.getTarget();
-        NpcHtmlMessage npcReply = showQuestInfo ? new ExNpcQuestHtmlMessage(target == null ? 5 : target.objectId(), id) : new NpcHtmlMessage(target == null ? 5 : target.objectId());
+        NpcHtmlMessage npcReply = showQuestInfo
+                ? new ExNpcQuestHtmlMessage(target == null ? 5 : target.objectId(), id)
+                : new NpcHtmlMessage(target == null ? 5 : target.objectId());
         npcReply.setFile("quests/" + getClass().getSimpleName() + "/" + fileName);
 
         player.sendPacket(npcReply);
@@ -638,7 +604,7 @@ public class Quest {
     }
 
     /**
-     * Show a message to player.<BR><BR>
+     * Show a message to getPlayer.<BR><BR>
      * <U><I>Concept : </I></U><BR>
      * 3 cases are managed according to the value of the parameter "res" :<BR>
      * <LI><U>"res" ends with string ".html" :</U> an HTML is opened in order to be shown in a dialog box</LI>
@@ -647,7 +613,7 @@ public class Quest {
      * <LI><U>"res" is empty string :</U> show default message</LI>
      * <LI><U>otherwise :</U> the message hold in "res" is shown in chat box</LI>
      *
-     * @param res : String pointing out the message to show at the player
+     * @param res : String pointing out the message to show at the getPlayer
      */
     private boolean showResult(NpcInstance npc, Player player, String res) {
         return showResult(npc, player, res, false);
@@ -668,7 +634,9 @@ public class Quest {
         else if (res.endsWith(".htm"))
             showHtmlFile(player, res, showQuestInfo);
         else {
-            NpcHtmlMessage npcReply = showQuestInfo ? new ExNpcQuestHtmlMessage(npc == null ? 5 : npc.objectId(), id) : new NpcHtmlMessage(npc == null ? 5 : npc.objectId());
+            NpcHtmlMessage npcReply = showQuestInfo
+                    ? new ExNpcQuestHtmlMessage(npc == null ? 5 : npc.objectId(), id)
+                    : new NpcHtmlMessage(npc == null ? 5 : npc.objectId());
             npcReply.setHtml(res);
             player.sendPacket(npcReply);
         }
@@ -715,30 +683,45 @@ public class Quest {
     }
 
     protected NpcInstance addSpawn(int npcId, Location loc, int randomOffset, int despawnDelay) {
-        NpcInstance result = NpcUtils.spawnSingle(npcId,randomOffset > 50 ? Location.findPointToStay(loc, 0, randomOffset, ReflectionManager.DEFAULT.getGeoIndex()) : loc );
+        NpcInstance result = NpcUtils.spawnSingle(npcId, randomOffset > 50
+                ? Location.findPointToStay(loc, 0, randomOffset, ReflectionManager.DEFAULT.getGeoIndex())
+                : loc);
         if (despawnDelay > 0 && result != null)
             ThreadPoolManager.INSTANCE.schedule(new DeSpawnScheduleTimerTask(result), despawnDelay);
         return result;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Quest)) return false;
+        Quest quest = (Quest) o;
+        return id == quest.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
     public boolean isVisible() {
         return true;
     }
 
-    public class DeSpawnScheduleTimerTask extends RunnableImpl {
-        NpcInstance _npc;
+    private class DeSpawnScheduleTimerTask extends RunnableImpl {
+        NpcInstance npc;
 
         DeSpawnScheduleTimerTask(NpcInstance npc) {
-            _npc = npc;
+            this.npc = npc;
         }
 
         @Override
         public void runImpl() {
-            if (_npc != null)
-                if (_npc.getSpawn() != null)
-                    _npc.getSpawn().deleteAll();
+            if (npc != null)
+                if (npc.getSpawn() != null)
+                    npc.getSpawn().deleteAll();
                 else
-                    _npc.deleteMe();
+                    npc.deleteMe();
         }
     }
 }

@@ -19,10 +19,7 @@ public final class _125_InTheNameOfEvilPart1 extends Quest {
         super(false);
 
         addStartNpc(Mushika);
-        addTalkId(Karakawei);
-        addTalkId(UluKaimu);
-        addTalkId(BaluKaimu);
-        addTalkId(ChutaKaimu);
+        addTalkId(Karakawei,UluKaimu,BaluKaimu,ChutaKaimu);
         addQuestItem(OrClaw, DienBone);
         addKillId(22742, 22743, 22744, 22745);
     }
@@ -32,7 +29,7 @@ public final class _125_InTheNameOfEvilPart1 extends Quest {
         String htmltext = event;
         if (event.equalsIgnoreCase("32114-05.htm")) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("32114-07.htm")) {
             st.setCond(2);
@@ -74,7 +71,7 @@ public final class _125_InTheNameOfEvilPart1 extends Quest {
                     htmltext = "32114.htm";
                 else {
                     htmltext = "32114-0.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1)
                 htmltext = "32114-05.htm";
@@ -82,8 +79,8 @@ public final class _125_InTheNameOfEvilPart1 extends Quest {
                 htmltext = "32114-08.htm";
                 st.addExpAndSp(859195, 86603);
                 st.playSound(SOUND_FINISH);
-                st.setState(COMPLETED);
-                st.exitCurrentQuest(false);
+                st.complete();
+                st.finish();
             }
         } else if (npcId == Karakawei) {
             if (cond == 2)

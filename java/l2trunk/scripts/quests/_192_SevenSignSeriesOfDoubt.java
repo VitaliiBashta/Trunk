@@ -33,7 +33,7 @@ public final class _192_SevenSignSeriesOfDoubt extends Quest{
         String htmltext = event;
         if ("30676-03.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("8".equalsIgnoreCase(event)) {
             st.setCond(2);
@@ -61,8 +61,8 @@ public final class _192_SevenSignSeriesOfDoubt extends Quest{
                 htmltext = "<html><body>Only characters who are <font color=\"LEVEL\">occupation 79</font> or higher may complete this quest.</body></html>";
             else if (player.getBaseClassId() == player.getActiveClassId()) {
                 st.addExpAndSp(25000000, 2500000);
-                st.setState(COMPLETED);
-                st.exitCurrentQuest(false);
+                st.complete();
+                st.finish();
                 st.playSound(SOUND_FINISH);
             } else
                 return "subclass_forbidden.htm";
@@ -94,7 +94,7 @@ public final class _192_SevenSignSeriesOfDoubt extends Quest{
                 htmltext = "30676-13.htm";
             else if (player.getLevel() < 79) {
                 htmltext = "30676-00.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (npcId == HECTOR) {
             if (cond == 3)

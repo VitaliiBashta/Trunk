@@ -66,7 +66,7 @@ public enum RaidBossSpawnManager {
 
                 Location loc = spawn.getCurrentSpawnRange().getRandomLoc(spawn.getReflection().getGeoIndex());
 
-                /*player.sendPacket(new RadarControl(2, 2, loc), new RadarControl(0, 1, loc));*/
+                /*getPlayer.sendPacket(new RadarControl(2, 2, loc), new RadarControl(0, 1, loc));*/
                 final Player _player = player;
                 final Location loc1 = loc;
                 new java.util.Timer().schedule(

@@ -19,9 +19,9 @@ public final class _662_AGameOfCards extends Quest {
             20672, 20673, 20674, 20955, 20962, 20961, 20959, 20958, 20966, 20965, 20968,
             20973, 20972, 21278, 21279, 21280, 21286, 21287, 21288, 21520, 21526, 21530,
             21535, 21508, 21510, 21513, 21515);
-    // Quest Items
+    // Quest items
     private final static int RED_GEM = 8765;
-    // Items
+    // items
     private final static int Enchant_Weapon_S = 959;
     private final static int Enchant_Weapon_A = 729;
     private final static int Enchant_Weapon_B = 947;
@@ -46,11 +46,11 @@ public final class _662_AGameOfCards extends Quest {
         int _state = st.getState();
         if ("30845_02.htm".equalsIgnoreCase(event) && _state == CREATED) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("30845_07.htm".equalsIgnoreCase(event) && _state == STARTED) {
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         } else if ("30845_03.htm".equalsIgnoreCase(event) && _state == STARTED && st.getQuestItemsCount(RED_GEM) >= 50)
             return "30845_04.htm";
         else if ("30845_10.htm".equalsIgnoreCase(event) && _state == STARTED) {
@@ -86,7 +86,7 @@ public final class _662_AGameOfCards extends Quest {
         int _state = st.getState();
         if (_state == CREATED) {
             if (st.player.getLevel() < 61) {
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 return "30845_00.htm";
             }
             st.setCond(0);

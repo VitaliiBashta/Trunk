@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class PollCommand implements IVoicedCommandHandler {
-    private static final List<String> COMMANDS = Collections.singletonList("poll");
+    private static final List<String> COMMANDS = List.of("poll");
 
     @Override
     public boolean useVoicedCommand(String command, Player activeChar, String target) {

@@ -14,10 +14,10 @@ public final class _621_EggDelivery extends Quest {
     private static final int CROCUS = 31545;
     private static final int KUBER = 31546;
     private static final int BEOLIN = 31547;
-    //Quest Items
+    //Quest items
     private static final int BoiledEgg = 7206;
     private static final int FeeOfBoiledEgg = 7196;
-    //Items
+    //items
     private static final int HastePotion = 734;
     private static final int RecipeSealedTateossianRing = 6849;
     private static final int RecipeSealedTateossianEarring = 6847;
@@ -28,14 +28,8 @@ public final class _621_EggDelivery extends Quest {
     public _621_EggDelivery() {
         super(false);
         addStartNpc(JEREMY);
-        addTalkId(VALENTINE);
-        addTalkId(PULIN);
-        addTalkId(NAFF);
-        addTalkId(CROCUS);
-        addTalkId(KUBER);
-        addTalkId(BEOLIN);
-        addQuestItem(BoiledEgg);
-        addQuestItem(FeeOfBoiledEgg);
+        addTalkId(VALENTINE,PULIN,NAFF,CROCUS,KUBER,BEOLIN);
+        addQuestItem(BoiledEgg,FeeOfBoiledEgg);
     }
 
     private static void takeEgg(QuestState st, int setcond) {
@@ -54,7 +48,7 @@ public final class _621_EggDelivery extends Quest {
         if ("jeremy_q0621_0104.htm".equalsIgnoreCase(event) && _state == CREATED) {
             st.takeItems(BoiledEgg);
             st.takeItems(FeeOfBoiledEgg);
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.giveItems(BoiledEgg, 5);
             st.playSound(SOUND_ACCEPT);
@@ -86,7 +80,7 @@ public final class _621_EggDelivery extends Quest {
             }
 
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
         return event;
     }
@@ -102,7 +96,7 @@ public final class _621_EggDelivery extends Quest {
                 st.setCond(0);
                 return "jeremy_q0621_0101.htm";
             }
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             return "jeremy_q0621_0103.htm";
         }
 

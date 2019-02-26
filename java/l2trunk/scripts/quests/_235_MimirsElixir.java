@@ -34,10 +34,8 @@ public final class _235_MimirsElixir extends Quest {
         addStartNpc(LADD);
 
         addTalkId(JOAN);
-        addTalkId(LADD);
 
-        addKillId(Chimera_Piece);
-        addKillId(Bloody_Guardian);
+        addKillId(Chimera_Piece,Bloody_Guardian);
     }
 
     @Override
@@ -45,7 +43,7 @@ public final class _235_MimirsElixir extends Quest {
         String htmltext = event;
         if ("1".equals(event)) {
             st.takeItems(STAR_OF_DESTINY);
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             htmltext = "30721-02a.htm";
         } else if ("30718_1".equals(event)) {
@@ -62,7 +60,7 @@ public final class _235_MimirsElixir extends Quest {
             return "completed";
 
         if (st.player.getRace() == Race.kamael) {
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             return "<html><body>I'm sorry, but I am not allowed to offer this quest to Kamael. Talk to Hierarch Kekropus.</body></html>";
         }
 
@@ -72,7 +70,7 @@ public final class _235_MimirsElixir extends Quest {
         if (npcId == LADD) {
             if (id == CREATED) {
                 if (st.player.getLevel() < MINLEVEL) {
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                     return "30721-01.htm";
                 }
                 if (st.haveQuestItem(STAR_OF_DESTINY)) {
@@ -84,7 +82,7 @@ public final class _235_MimirsElixir extends Quest {
                     st.setCond(0);
                     return "30721-02.htm";
                 }
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 return "30721-01a.htm";
             }
             // was asked to get pure silver but has not done so yet. Repeat: get pure silver
@@ -119,7 +117,7 @@ public final class _235_MimirsElixir extends Quest {
                 // st.takeItems(MIMIRS_ELIXIR,-1) #disabled for compatibility with the way java expects things at Grand Master.
                 st.giveItems(SCROLL_ENCHANT_WEAPON_A, 1, true);
                 st.unset("cond");
-                st.exitCurrentQuest(false);
+                st.finish();
             }
 
         } else if (npcId == JOAN)

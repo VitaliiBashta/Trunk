@@ -400,7 +400,7 @@ public final class RequestEnchantItem extends L2GameClientPacket {
 
                 // Alexander - Add a failed enchant to the stats
 //				if (chance < 100)
-//					player.addPlayerStats(Ranking.STAT_TOP_ENCHANTS_FAILED);
+//					getPlayer.addPlayerStats(Ranking.STAT_TOP_ENCHANTS_FAILED);
             }
         } finally {
             inventory.writeUnlock();

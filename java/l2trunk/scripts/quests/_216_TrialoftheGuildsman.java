@@ -188,15 +188,9 @@ public final class _216_TrialoftheGuildsman extends Quest {
         super(false);
 
         addStartNpc(VALKON);
-        addTalkId(VALKON);
-        addTalkId(NORMAN);
-        addTalkId(ALTRAN);
-        addTalkId(PINTER);
-        addTalkId(DUNING);
+        addTalkId(VALKON,NORMAN,ALTRAN,PINTER,DUNING);
 
-        addKillId(20079);
-        addKillId(20080);
-        addKillId(20081);
+        addKillId(20079,20080,20081);
 
         for (int[] aDROPLIST_COND : DROPLIST_COND) addKillId(aDROPLIST_COND[2]);
 
@@ -225,22 +219,22 @@ public final class _216_TrialoftheGuildsman extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("valkon_q0216_06.htm")) {
+        if ("valkon_q0216_06.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
-            st.giveItems(VALKONS_RECOMMEND, 1);
+            st.giveItems(VALKONS_RECOMMEND);
             st.takeItems(ADENA_ID, 2000);
             if (!st.player.isVarSet("dd1")) {
                 st.giveItems(DIMENSION_DIAMOND, 85);
-                st.player.setVar("dd1", 1);
+                st.player.setVar("dd1");
             }
-        } else if (event.equalsIgnoreCase("valkon_q0216_07c.htm"))
+        } else if ("valkon_q0216_07c.htm".equalsIgnoreCase(event))
             st.setCond(3);
-        else if (event.equalsIgnoreCase("valkon_q0216_05.htm") && st.getQuestItemsCount(ADENA_ID) < 2000)
+        else if ("valkon_q0216_05.htm".equalsIgnoreCase(event) && st.getQuestItemsCount(ADENA_ID) < 2000)
             htmltext = "valkon_q0216_05a.htm";
-        else if (event.equalsIgnoreCase("30103_3") || event.equalsIgnoreCase("30103_4")) {
-            if (event.equalsIgnoreCase("30103_3"))
+        else if ("30103_3".equalsIgnoreCase(event) || "30103_4".equalsIgnoreCase(event)) {
+            if ("30103_3".equalsIgnoreCase(event))
                 htmltext = "valkon_q0216_09a.htm";
             else
                 htmltext = "valkon_q0216_09b.htm";
@@ -251,9 +245,9 @@ public final class _216_TrialoftheGuildsman extends Quest {
             if (!st.player.isVarSet("prof2.1")) {
                 st.addExpAndSp(514739, 33384);
                 st.giveItems(57, 93803);
-                st.player.setVar("prof2.1", 1);
+                st.player.setVar("prof2.1");
             }
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             st.playSound(SOUND_FINISH);
         } else if ("blacksmith_alltran_q0216_03.htm".equalsIgnoreCase(event)) {
             st.takeItems(VALKONS_RECOMMEND);
@@ -297,18 +291,18 @@ public final class _216_TrialoftheGuildsman extends Quest {
         if (npcId == VALKON) {
             if (st.getQuestItemsCount(MARK_OF_GUILDSMAN) > 0) {
                 htmltext = "completed";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else if (cond == 0) {
                 if (st.player.getClassId().id == 0x36 || st.player.getClassId().id == 0x38) {
                     if (st.player.getLevel() >= 35)
                         htmltext = "valkon_q0216_03.htm";
                     else {
                         htmltext = "valkon_q0216_02.htm";
-                        st.exitCurrentQuest(true);
+                        st.exitCurrentQuest();
                     }
                 } else {
                     htmltext = "valkon_q0216_01.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 2 && st.getQuestItemsCount(VALKONS_RECOMMEND) > 0)
                 htmltext = "valkon_q0216_07.htm";
@@ -398,7 +392,7 @@ public final class _216_TrialoftheGuildsman extends Quest {
                             st.takeItems(DUNINGS_INSTRUCTIONS);
                         if (aDROPLIST_COND[1] != cond && aDROPLIST_COND[1] != 0) {
                             st.setCond(aDROPLIST_COND[1]);
-                            st.setState(STARTED);
+                            st.start();
                         }
                     }
         if (cond == 5 && (npcId == 20079 || npcId == 20080 || npcId == 20081))

@@ -29,7 +29,7 @@ public final class _035_FindGlitteringJewelry extends Quest {
         int cond = st.getCond();
         if (event.equals("30091-1.htm") && cond == 0) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if (event.equals("30879-1.htm") && cond == 1)
             st.setCond(2);
@@ -46,7 +46,7 @@ public final class _035_FindGlitteringJewelry extends Quest {
                 st.takeItems(THONS, 150);
                 st.giveItems(JEWEL_BOX, 1);
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else
                 htmltext = "30091-hvnmat-bug.htm";
         return htmltext;
@@ -64,10 +64,10 @@ public final class _035_FindGlitteringJewelry extends Quest {
                     if (fwear != null && fwear.getCond() == 6)
                         htmltext = "30091-0.htm";
                     else
-                        st.exitCurrentQuest(true);
+                        st.exitCurrentQuest();
                 } else {
                     htmltext = "30091-6.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1)
                 htmltext = "30091-1r.htm";

@@ -100,7 +100,7 @@ public final class _649_ALooterandaRailroadMan extends Quest {
 
         addStartNpc(OBI);
 
-        //Mob Drop
+        //mob Drop
         for (int[] aDROPLIST_COND : DROPLIST_COND) addKillId(aDROPLIST_COND[2]);
         addQuestItem(THIEF_GUILD_MARK);
     }
@@ -111,7 +111,7 @@ public final class _649_ALooterandaRailroadMan extends Quest {
         if (event.equalsIgnoreCase("quest_accept")) {
             htmltext = "railman_obi_q0649_0103.htm";
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("649_3"))
             if (st.getQuestItemsCount(THIEF_GUILD_MARK) == 200) {
@@ -119,7 +119,7 @@ public final class _649_ALooterandaRailroadMan extends Quest {
                 st.takeItems(THIEF_GUILD_MARK, -1);
                 st.giveItems(ADENA_ID, 21698, true);
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else
             //Проверка сработает если игрок во время диалога удалит марки
             {
@@ -141,7 +141,7 @@ public final class _649_ALooterandaRailroadMan extends Quest {
             if (cond == 0)
                 if (st.player.getLevel() < 30) {
                     htmltext = "railman_obi_q0649_0102.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else
                     htmltext = "railman_obi_q0649_0101.htm";
             else if (cond == 1)
@@ -167,7 +167,7 @@ public final class _649_ALooterandaRailroadMan extends Quest {
                     else if (st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[7], aDROPLIST_COND[5], aDROPLIST_COND[6]))
                         if (aDROPLIST_COND[1] != cond && aDROPLIST_COND[1] != 0) {
                             st.setCond(aDROPLIST_COND[1]);
-                            st.setState(STARTED);
+                            st.start();
                         }
     }
 

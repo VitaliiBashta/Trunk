@@ -201,11 +201,9 @@ public final class _348_ArrogantSearch extends Quest {
 
         addTalkId(ARK_GUARDIANS_CORPSE);
 
-        ARK_OWNERS.keySet().forEach(this::addTalkId);
-
-        ARKS.keySet().forEach(this::addTalkId);
-
-        DROPS.keySet().forEach(this::addKillId);
+        addTalkId(ARK_OWNERS.keySet());
+        addTalkId(ARKS.keySet());
+        addKillId(DROPS.keySet());
 
         addQuestItem(HANELLINS_FIRST_LETTER,
                 HANELLINS_SECOND_LETTER,
@@ -238,22 +236,22 @@ public final class _348_ArrogantSearch extends Quest {
                 st.setCond(4);
                 st.takeItems(SHELL_OF_MONSTERS);
                 htmltext = "30864-04c.htm";
-                st.set("companions", 0);
+                st.unset("companions");
                 break;
             case "30864_04b":
 //work with friends
 
                 st.setCond(3);
-                st.set("companions", 1);
+                st.set("companions");
                 st.takeItems(SHELL_OF_MONSTERS);
                 htmltext = "not yet implemented";
                 break;
         }
-        if (event.equals("30864-09a.htm")) {
+        if ("30864-09a.htm".equals(event)) {
             st.setCond(29);
             st.giveItems(WHITE_FABRIC_2, 10);
         }
-        if (event.equals("30864-10a.htm")) {
+        if ("30864-10a.htm".equals(event)) {
             if (st.getQuestItemsCount(WHITE_FABRIC_2) < 10)
                 st.giveItems(WHITE_FABRIC_2, 10 - st.getQuestItemsCount(WHITE_FABRIC_2));
             htmltext = "30864-10.htm";
@@ -277,21 +275,21 @@ public final class _348_ArrogantSearch extends Quest {
         int cond = st.getCond();
         if (npcId == HANELLIN) {
             if (id == CREATED)
-            // if the quest was completed and the player still has a blooded fabric
+            // if the quest was completed and the getPlayer still has a blooded fabric
             // tell them the "secret" that they can use it in order to visit Baium.
             {
-                if (st.getQuestItemsCount(BLOODED_FABRIC) >= 1) {
+                if (st.haveQuestItem(BLOODED_FABRIC)) {
                     htmltext = "30864-Baium.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else
                 //else, start the quest normally
                 {
                     st.setCond(0);
                     if (st.player.getLevel() < 60) {
                         htmltext = "30864-01.htm";//not qualified
-                        st.exitCurrentQuest(true);
+                        st.exitCurrentQuest();
                     } else if (cond == 0) {
-                        st.setState(STARTED);
+                        st.start();
                         st.setCond(1);
                         htmltext = "30864-02.htm";// Successful start: begin the dialog which will set cond=2
                     }
@@ -301,33 +299,31 @@ public final class _348_ArrogantSearch extends Quest {
             else if (cond == 1)
                 htmltext = "30864-02.htm";// begin the dialog which will set cond=2
                 // Has returned before getting the powerstone
-            else if (cond == 2 && st.getQuestItemsCount(SHELL_OF_MONSTERS) == 0)
+            else if (cond == 2 && !st.haveQuestItem(SHELL_OF_MONSTERS))
                 htmltext = "30864-03a.htm";// go get the titan's powerstone
             else if (cond == 2)
                 htmltext = "30864-04.htm";// Ask "work alone or in group?"...only alone is implemented in v0.1
             else if (cond == 4) {
                 st.setCond(5);
-                st.giveItems(HANELLINS_FIRST_LETTER, 1);
-                st.giveItems(HANELLINS_SECOND_LETTER, 1);
-                st.giveItems(HANELLINS_THIRD_LETTER, 1);
+                st.giveItems(HANELLINS_FIRST_LETTER);
+                st.giveItems(HANELLINS_SECOND_LETTER);
+                st.giveItems(HANELLINS_THIRD_LETTER);
                 htmltext = "30864-05.htm";// Go get the 3 sacred relics
-            } else if (cond == 5 && st.getQuestItemsCount(BOOK_OF_SAINT) + st.getQuestItemsCount(BLOOD_OF_SAINT) + st.getQuestItemsCount(BRANCH_OF_SAINT) < 3)
+            } else if (cond == 5 && !st.haveAllQuestItems(BOOK_OF_SAINT,BLOOD_OF_SAINT,BRANCH_OF_SAINT))
                 htmltext = "30864-05.htm";// Repeat: Go get the 3 sacred relics
             else if (cond == 5) {
                 htmltext = "30864-06.htm";// All relics collected!...Get me antidotes & greater healing
-                st.takeItems(BOOK_OF_SAINT, -1);
-                st.takeItems(BLOOD_OF_SAINT, -1);
-                st.takeItems(BRANCH_OF_SAINT, -1);
+                st.takeAllItems(BOOK_OF_SAINT,BLOOD_OF_SAINT,BRANCH_OF_SAINT);
                 st.setCond(22);
-            } else if (cond == 22 && st.getQuestItemsCount(ANTIDOTE) < 5 && st.getQuestItemsCount(HEALING_POTION) < 1)
+            } else if (cond == 22 && !st.haveQuestItem(ANTIDOTE, 5) && !st.haveQuestItem(HEALING_POTION) )
                 htmltext = "30864-06a.htm";// where are my antidotes & greater healing
             else if (cond == 22) {
                 st.takeItems(ANTIDOTE, 5);
                 st.takeItems(HEALING_POTION, 1);
-                if (st.getInt("companions") == 0) {
+                if (!st.isSet("companions") ) {
                     st.setCond(25);
                     htmltext = "30864-07.htm";// go get platinum tribe blood...
-                    st.giveItems(WHITE_FABRIC_1, 1);
+                    st.giveItems(WHITE_FABRIC_1);
                 } else {
                     st.setCond(23);
                     htmltext = "not implemented yet";
@@ -341,7 +337,7 @@ public final class _348_ArrogantSearch extends Quest {
                 if (st.getQuestItemsCount(WHITE_FABRIC_2) < 1)
                     st.giveItems(WHITE_FABRIC_2, 1);
                 htmltext = "30864-07a.htm";
-            } else if (cond == 25 && st.getQuestItemsCount(BLOODED_FABRIC) > 0 || cond == 28) {
+            } else if (cond == 25 && st.haveQuestItem(BLOODED_FABRIC) || cond == 28) {
                 // затычка, инфу искать надо, пропущен 1 конд с доставкой тряпок
                 if (cond != 28)
                     st.setCond(28);
@@ -356,12 +352,12 @@ public final class _348_ArrogantSearch extends Quest {
                 if (st.getQuestItemsCount(ARK_OWNERS.get(npcId)[0]) == 1) {
                     st.takeItems(ARK_OWNERS.get(npcId)[0], 1);
                     htmltext = ARK_OWNERS_TEXT.get(npcId)[0];
-                    st.player.sendPacket(new RadarControl(0, 1, new Location(ARK_OWNERS.get(npcId)[2], ARK_OWNERS.get(npcId)[3], ARK_OWNERS.get(npcId)[4])));
+                    st.player.sendPacket(new RadarControl(0, 1, Location.of(ARK_OWNERS.get(npcId)[2], ARK_OWNERS.get(npcId)[3], ARK_OWNERS.get(npcId)[4])));
                 }
                 // do not have letter and do not have the item
                 else if (st.getQuestItemsCount(ARK_OWNERS.get(npcId)[1]) < 1) {
                     htmltext = ARK_OWNERS_TEXT.get(npcId)[1];
-                    st.player.sendPacket(new RadarControl(0, 1, new Location(ARK_OWNERS.get(npcId)[2], ARK_OWNERS.get(npcId)[3], ARK_OWNERS.get(npcId)[4])));
+                    st.player.sendPacket(new RadarControl(0, 1, Location.of(ARK_OWNERS.get(npcId)[2], ARK_OWNERS.get(npcId)[3], ARK_OWNERS.get(npcId)[4])));
                 } else
                     //have the item (done)
                     htmltext = ARK_OWNERS_TEXT.get(npcId)[2];
@@ -372,11 +368,11 @@ public final class _348_ArrogantSearch extends Quest {
                         st.addSpawn(ARKS.get(npcId)[1], 120000);
                     return ARKS_TEXT.get(npcId)[0];
                 }
-                // if the player already has openned the chest and has its content, show "chest empty"
+                // if the getPlayer already has openned the chest and has its content, show "chest empty"
                 else if (st.getQuestItemsCount(ARKS.get(npcId)[2]) == 1)
                     htmltext = ARKS_TEXT.get(npcId)[2];
                 else
-                // the player has the key and doesn't have the contents, give the contents
+                // the getPlayer has the key and doesn't have the contents, give the contents
                 {
                     htmltext = ARKS_TEXT.get(npcId)[1];
                     st.takeItems(ARKS.get(npcId)[0], 1);
@@ -410,7 +406,7 @@ public final class _348_ArrogantSearch extends Quest {
                 st.playSound(SOUND_ITEMGET);
                 if (take != 0)
                     st.takeItems(take, 1);
-                if (BLOODED_FABRIC == item && st.getQuestItemsCount(BLOODED_FABRIC) >= 30) {
+                if (BLOODED_FABRIC == item && st.haveQuestItem(BLOODED_FABRIC, 30)) {
                     QuestState FatesWhisper = st.player.getQuestState(_234_FatesWhisper.class);
                     if (FatesWhisper != null && FatesWhisper.getCond() == 8)
                         FatesWhisper.set("cond", 9);

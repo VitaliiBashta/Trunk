@@ -29,7 +29,7 @@ public final class _457_LostAndFound extends Quest {
         Player player = st.player;
         if (event.equalsIgnoreCase("lost_villager_q0457_06.htm")) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
             DefaultAI.namechar = player.getName();
             if (DefaultAI.namechar != null) {

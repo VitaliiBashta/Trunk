@@ -47,9 +47,9 @@ public class ManagerInstance extends ResidenceManager {
 
                 long leftTime = (REWARD_CYCLE - (3600 - fortress.getCycleDelay()) - fortress.getPaidCycle() * 3600) / 60;
 
-                html.replace("%rent_cost%", String.valueOf(Fortress.CASTLE_FEE));
-                html.replace("%next_hour%", String.valueOf(leftTime / 60));
-                html.replace("%next_min%", String.valueOf(leftTime % 60));
+                html.replace("%rent_cost%", Fortress.CASTLE_FEE);
+                html.replace("%next_hour%", leftTime / 60);
+                html.replace("%next_min%", leftTime % 60);
             } else
                 html.setFile("residence2/fortress/fortress_steward023.htm");
 

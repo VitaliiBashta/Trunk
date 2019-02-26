@@ -141,7 +141,7 @@
 	</skill>
 	<skill id="1403" levels="1" name="Summon Friend">
 		<!--.
-			Description: Summons party members to your location. The player being summoned must possess a Summoning Crystal.
+			Description: Summons party members to your location. The getPlayer being summoned must possess a Summoning Crystal.
 			Summoning Crystall потребляется у призываемого, после подтверждения. Хардкодед.
 		-->
 		<set name="magicType" val="MAGIC" />
@@ -159,7 +159,7 @@
 	</skill>
 	<skill id="1404" levels="1" name="Word of Invitation">
 		<!--.
-			Description: Summons party members to your location. The player being summoned must possess a Summoning Crystal. Consumes 3 Spirit Ore.
+			Description: Summons party members to your location. The getPlayer being summoned must possess a Summoning Crystal. Consumes 3 Spirit Ore.
 			Summoning Crystall потребляется у призываемого, после подтверждения. Хардкодед.
 		-->
 		<set name="magicType" val="MAGIC" />

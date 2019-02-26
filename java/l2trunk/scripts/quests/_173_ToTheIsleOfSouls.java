@@ -15,9 +15,7 @@ public final class _173_ToTheIsleOfSouls extends Quest {
         super(false);
 
         addStartNpc(30097);
-        addTalkId(30094);
-        addTalkId(30090);
-        addTalkId(30116);
+        addTalkId(30094,30090,30116);
 
         addQuestItem(GALLADUCCIS_ORDER_DOCUMENT_ID_1,
                 MAGIC_SWORD_HILT_ID);
@@ -29,7 +27,7 @@ public final class _173_ToTheIsleOfSouls extends Quest {
         switch (event) {
             case "1":
                 st.setCond(1);
-                st.setState(STARTED);
+                st.start();
                 st.playSound(SOUND_ACCEPT);
                 st.giveItems(GALLADUCCIS_ORDER_DOCUMENT_ID_1, 1);
                 htmltext = "30097-03.htm";
@@ -46,7 +44,7 @@ public final class _173_ToTheIsleOfSouls extends Quest {
                 st.giveItems(SCROLL_OF_ESCAPE_KAMAEL_VILLAGE, 1);
                 htmltext = "30097-12.htm";
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(false);
+                st.finish();
                 break;
         }
         return htmltext;
@@ -62,7 +60,7 @@ public final class _173_ToTheIsleOfSouls extends Quest {
                 htmltext = "30097-02.htm";
             else {
                 htmltext = "30097-01.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (npcId == 30097 && st.getCond() == 1)
             htmltext = "30097-04.htm";

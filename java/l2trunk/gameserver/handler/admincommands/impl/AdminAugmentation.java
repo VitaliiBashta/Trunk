@@ -120,13 +120,10 @@ public class AdminAugmentation implements IAdminCommandHandler {
                     // Unequip item
                     target.getInventory().unEquipItem(targetItem);
 
-                    // El augmentation principal viene como parametro seleccionado
                     final int augId = Integer.parseInt(st.nextToken());
 
-                    // El segundo augmentation vamos a obtenerlo aleatoriamente
                     final int secAugId = AugmentationData.getInstance().generateRandomSecondaryAugmentation();
 
-                    // Ahora augmentamos el item con el nuevo id pasado
                     final int aug = ((augId << 16) + secAugId);
 
                     targetItem.setAugmentationId(aug);
@@ -254,12 +251,11 @@ public class AdminAugmentation implements IAdminCommandHandler {
             lastColor = !lastColor;
         }
 
-        adminReply.replace("%pages%", pagesHtm.toString());
-        adminReply.replace("%augs%", augmentationsHtm.toString());
+        adminReply.replace("%pages%", pagesHtm);
+        adminReply.replace("%augs%", augmentationsHtm);
         player.sendPacket(adminReply);
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
     public Enum[] getAdminCommandEnum() {
         return Commands.values();

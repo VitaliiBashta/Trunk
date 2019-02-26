@@ -9,7 +9,7 @@ public final class _691_MatrasSuspiciousRequest extends Quest {
     private final static int MATRAS = 32245;
     private final static int LABYRINTH_CAPTAIN = 22368;
 
-    // Items
+    // items
     private final static int RED_STONE = 10372;
     private final static int RED_STONES_COUNT = 744;
     private final static int DYNASTIC_ESSENCE_II = 10413;
@@ -32,16 +32,16 @@ public final class _691_MatrasSuspiciousRequest extends Quest {
     }
 
     @Override
-    public String onEvent(String event, QuestState qs, NpcInstance npc) {
-        if (event.equalsIgnoreCase("32245-03.htm")) {
-            qs.setCond(1);
-            qs.setState(STARTED);
-            qs.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("32245-05.htm")) {
-            qs.takeItems(RED_STONE, RED_STONES_COUNT);
-            qs.giveItems(DYNASTIC_ESSENCE_II, 1, false);
-            qs.playSound(SOUND_FINISH);
-            qs.exitCurrentQuest(true);
+    public String onEvent(String event, QuestState st, NpcInstance npc) {
+        if ("32245-03.htm".equalsIgnoreCase(event)) {
+            st.setCond(1);
+            st.start();
+            st.playSound(SOUND_ACCEPT);
+        } else if ("32245-05.htm".equalsIgnoreCase(event)) {
+            st.takeItems(RED_STONE, RED_STONES_COUNT);
+            st.giveItems(DYNASTIC_ESSENCE_II);
+            st.playSound(SOUND_FINISH);
+            st.exitCurrentQuest();
         }
         return event;
     }
@@ -55,7 +55,7 @@ public final class _691_MatrasSuspiciousRequest extends Quest {
                 htmltext = "32245-01.htm";
             else
                 htmltext = "32245-00.htm";
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         } else if (st.haveQuestItem(RED_STONE, RED_STONES_COUNT)) {
             htmltext = "32245-04.htm";
         } else {

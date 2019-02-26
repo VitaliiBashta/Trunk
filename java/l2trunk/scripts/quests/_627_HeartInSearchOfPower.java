@@ -4,6 +4,8 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
+import java.util.stream.IntStream;
+
 public class _627_HeartInSearchOfPower extends Quest {
     //NPC
     private static final int M_NECROMANCER = 31518;
@@ -25,11 +27,9 @@ public class _627_HeartInSearchOfPower extends Quest {
 
         addStartNpc(31518);
 
-        addTalkId(31518);
         addTalkId(31519);
 
-        for (int mobs = 21520; mobs <= 21541; mobs++)
-            addKillId(mobs);
+        addKillId(IntStream.rangeClosed(21520, 21541).toArray());
 
         addQuestItem(GEM_OF_SUBMISSION);
     }
@@ -40,7 +40,7 @@ public class _627_HeartInSearchOfPower extends Quest {
         switch (event) {
             case "dark_necromancer_q0627_0104.htm":
                 st.setCond(1);
-                st.setState(STARTED);
+                st.start();
                 st.playSound(SOUND_ACCEPT);
                 break;
             case "dark_necromancer_q0627_0201.htm":
@@ -84,7 +84,7 @@ public class _627_HeartInSearchOfPower extends Quest {
                         break;
                 }
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 break;
         }
         return htmltext;
@@ -101,7 +101,7 @@ public class _627_HeartInSearchOfPower extends Quest {
                     htmltext = "dark_necromancer_q0627_0101.htm";
                 else {
                     htmltext = "dark_necromancer_q0627_0103.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             else if (cond == 1)
                 htmltext = "dark_necromancer_q0627_0106.htm";

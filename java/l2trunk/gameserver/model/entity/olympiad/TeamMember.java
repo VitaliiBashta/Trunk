@@ -7,6 +7,7 @@ import l2trunk.gameserver.model.Effect;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.Summon;
+import l2trunk.gameserver.model.base.ClassId;
 import l2trunk.gameserver.model.base.TeamType;
 import l2trunk.gameserver.model.entity.Hero;
 import l2trunk.gameserver.model.entity.Reflection;
@@ -31,8 +32,8 @@ public final class TeamMember {
     private final CompType _type;
     private final int _side;
     private final String _name;
-    private String _clanName = "";
-    private int _classId;
+    private String clanName = "";
+    private ClassId classId;
     private double _damage;
     private boolean _isDead;
     private Player player;
@@ -49,8 +50,8 @@ public final class TeamMember {
         if (this.player == null)
             return;
 
-        _clanName = player.getClan() == null ? StringUtils.EMPTY : player.getClan().getName();
-        _classId = player.getActiveClassId();
+        clanName = player.getClan() == null ? StringUtils.EMPTY : player.getClan().getName();
+        classId = player.getActiveClassId();
 
         player.setOlympiadSide(side);
         player.setOlympiadGame(game);
@@ -65,7 +66,7 @@ public final class TeamMember {
     }
 
     public StatsSet getStat() {
-        return Olympiad._nobles.get(_objId);
+        return Olympiad.nobles.get(_objId);
     }
 
     public void incGameCount() {
@@ -94,27 +95,25 @@ public final class TeamMember {
             // TODO: Снести подробный лог после исправления беспричинного отъёма очков.
             Player player = this.player;
             if (player == null)
-                Log.add("Olympiad info: " + _name + " crashed coz player == null", "olympiad");
+                Log.add("Olympiad info: " + _name + " crashed coz getPlayer == null", "olympiad");
             else {
                 if (player.isLogoutStarted())
-                    Log.add("Olympiad info: " + _name + " crashed coz player.isLogoutStarted()", "olympiad");
+                    Log.add("Olympiad info: " + _name + " crashed coz getPlayer.isLogoutStarted()", "olympiad");
                 if (!player.isOnline())
-                    Log.add("Olympiad info: " + _name + " crashed coz !player.isOnline()", "olympiad");
+                    Log.add("Olympiad info: " + _name + " crashed coz !getPlayer.isOnline()", "olympiad");
                 if (!player.isConnected())
-                    Log.add("Olympiad info: " + _name + " crashed coz !player.isOnline()", "olympiad");
+                    Log.add("Olympiad info: " + _name + " crashed coz !getPlayer.isOnline()", "olympiad");
                 if (player.getOlympiadGame() == null)
-                    Log.add("Olympiad info: " + _name + " crashed coz player.getOlympiadGame() == null", "olympiad");
+                    Log.add("Olympiad info: " + _name + " crashed coz getPlayer.getOlympiadGame() == null", "olympiad");
                 if (player.getOlympiadObserveGame() != null)
-                    Log.add("Olympiad info: " + _name + " crashed coz player.getOlympiadObserveGame() != null", "olympiad");
+                    Log.add("Olympiad info: " + _name + " crashed coz getPlayer.getOlympiadObserveGame() != null", "olympiad");
             }
         }
     }
 
     public boolean checkPlayer() {
         Player player = this.player;
-        if (player == null || player.isLogoutStarted() || player.getOlympiadGame() == null || player.isInObserverMode())
-            return false;
-        return true;
+        return player != null && !player.isLogoutStarted() && player.getOlympiadGame() != null && !player.isInObserverMode();
     }
 
     public void portPlayerToArena() {
@@ -220,7 +219,7 @@ public final class TeamMember {
         if (player.isHero())
             Hero.removeSkills(player);
 
-        // Abort casting if player casting
+        // Abort casting if getPlayer casting
         if (player.isCastingNow())
             player.abortCast(true, true);
 
@@ -356,11 +355,11 @@ public final class TeamMember {
     }
 
     public String getClanName() {
-        return _clanName;
+        return clanName;
     }
 
-    public int getClassId() {
-        return _classId;
+    public ClassId getClassId() {
+        return classId;
     }
 
     public int getObjectId() {

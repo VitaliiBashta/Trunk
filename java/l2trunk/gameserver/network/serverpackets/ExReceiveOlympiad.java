@@ -1,6 +1,7 @@
 package l2trunk.gameserver.network.serverpackets;
 
 import l2trunk.gameserver.Config;
+import l2trunk.gameserver.model.base.ClassId;
 import l2trunk.gameserver.model.base.TeamType;
 import l2trunk.gameserver.model.entity.olympiad.Olympiad;
 import l2trunk.gameserver.model.entity.olympiad.OlympiadGame;
@@ -93,7 +94,7 @@ public abstract class ExReceiveOlympiad extends L2GameServerPacket {
             addPlayer(team, member.getName(), member.getClanName(), member.getClassId(), points, gameResultPoints, (int) member.getDamage());
         }
 
-        void addPlayer(TeamType team, String name, String clanName, int classId, int points, int resultPoints, int damage) {
+        void addPlayer(TeamType team, String name, String clanName, ClassId classId, int points, int resultPoints, int damage) {
             switch (team) {
                 case RED:
                     _teamOne.add(new PlayerInfo(name, clanName, classId, points, resultPoints, damage));
@@ -112,38 +113,39 @@ public abstract class ExReceiveOlympiad extends L2GameServerPacket {
             writeD(1);
             writeD(_teamOne.size());
             for (PlayerInfo playerInfo : _teamOne) {
-                writeS(playerInfo._name);
-                writeS(playerInfo._clanName);
+                writeS(playerInfo.name);
+                writeS(playerInfo.clanName);
                 writeD(0x00);
-                writeD(playerInfo._classId);
-                writeD(playerInfo._damage);
-                writeD(playerInfo._currentPoints);
-                writeD(playerInfo._gamePoints);
+                writeD(playerInfo.classId.id);
+                writeD(playerInfo.damage);
+                writeD(playerInfo.currentPoints);
+                writeD(playerInfo.gamePoints);
             }
             writeD(2);
             writeD(_teamTwo.size());
             for (PlayerInfo playerInfo : _teamTwo) {
-                writeS(playerInfo._name);
-                writeS(playerInfo._clanName);
+                writeS(playerInfo.name);
+                writeS(playerInfo.clanName);
                 writeD(0x00);
-                writeD(playerInfo._classId);
-                writeD(playerInfo._damage);
-                writeD(playerInfo._currentPoints);
-                writeD(playerInfo._gamePoints);
+                writeD(playerInfo.classId.id);
+                writeD(playerInfo.damage);
+                writeD(playerInfo.currentPoints);
+                writeD(playerInfo.gamePoints);
             }
         }
 
         private static class PlayerInfo {
-            private final String _name, _clanName;
-            private final int _classId, _currentPoints, _gamePoints, _damage;
+            private final String name, clanName;
+            private final ClassId classId;
+            private final int currentPoints, gamePoints, damage;
 
-            PlayerInfo(String name, String clanName, int classId, int currentPoints, int gamePoints, int damage) {
-                _name = name;
-                _clanName = clanName;
-                _classId = classId;
-                _currentPoints = currentPoints;
-                _gamePoints = gamePoints;
-                _damage = damage;
+            PlayerInfo(String name, String clanName, ClassId classId, int currentPoints, int gamePoints, int damage) {
+                this.name = name;
+                this.clanName = clanName;
+                this.classId = classId;
+                this.currentPoints = currentPoints;
+                this.gamePoints = gamePoints;
+                this.damage = damage;
             }
         }
     }

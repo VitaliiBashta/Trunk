@@ -44,7 +44,7 @@ public class AdminRes implements IAdminCommandHandler {
                     activeChar.sendMessage("Resurrected within " + radius + " unit radius.");
                     return;
                 } catch (NumberFormatException e) {
-                    activeChar.sendMessage("Enter valid player name or radius");
+                    activeChar.sendMessage("Enter valid getPlayer name or radius");
                     return;
                 }
         }

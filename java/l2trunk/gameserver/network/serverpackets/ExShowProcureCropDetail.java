@@ -36,7 +36,7 @@ public final class ExShowProcureCropDetail extends L2GameServerPacket {
             CropProcure crop = castleCrops.get(manorId);
             writeD(manorId); // manor name
             writeQ(crop.getAmount()); // buy residual
-            writeQ(crop.getPrice()); // buy price
+            writeQ(crop.price); // buy price
             writeC(crop.getReward()); // reward type
         });
     }

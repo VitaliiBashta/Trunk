@@ -20,10 +20,7 @@ public final class _039_RedEyedInvaders extends Quest {
 
         addTalkId(30332);
 
-        addKillId(20919);
-        addKillId(20920);
-        addKillId(20921);
-        addKillId(20925);
+        addKillId(20919,20920,20921,20925);
 
         addQuestItem(BBN, IP, RBN, GML);
     }
@@ -34,7 +31,7 @@ public final class _039_RedEyedInvaders extends Quest {
         switch (event) {
             case "guard_babenco_q0039_0104.htm":
                 st.setCond(1);
-                st.setState(STARTED);
+                st.start();
                 st.playSound(SOUND_ACCEPT);
                 break;
             case "captain_bathia_q0039_0201.htm":
@@ -60,7 +57,7 @@ public final class _039_RedEyedInvaders extends Quest {
                     st.addExpAndSp(62366, 2783);
                     st.setCond(0);
                     st.playSound(SOUND_FINISH);
-                    st.exitCurrentQuest(false);
+                    st.finish();
                 } else
                     htmltext = "captain_bathia_q0039_0304.htm";
                 break;
@@ -77,7 +74,7 @@ public final class _039_RedEyedInvaders extends Quest {
             if (cond == 0) {
                 if (st.player.getLevel() < 20) {
                     htmltext = "guard_babenco_q0039_0102.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else htmltext = "guard_babenco_q0039_0101.htm";
             } else if (cond == 1)
                 htmltext = "guard_babenco_q0039_0105.htm";

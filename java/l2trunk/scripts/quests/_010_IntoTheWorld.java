@@ -6,47 +6,45 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
 public final class _010_IntoTheWorld extends Quest {
-    private final int VERY_EXPENSIVE_NECKLACE = 7574;
-    private final int SCROLL_OF_ESCAPE_GIRAN = 7126;
-    private final int MARK_OF_TRAVELER = 7570;
+    private static final int VERY_EXPENSIVE_NECKLACE = 7574;
+    private static final int SCROLL_OF_ESCAPE_GIRAN = 7126;
+    private static final int MARK_OF_TRAVELER = 7570;
 
-    private final int BALANKI = 30533;
-    private final int REED = 30520;
-    private final int GERALD = 30650;
+    private static final int BALANKI = 30533;
+    private static final int REED = 30520;
+    private static final int GERALD = 30650;
 
     public _010_IntoTheWorld() {
         super(false);
 
         addStartNpc(BALANKI);
 
-        addTalkId(BALANKI);
-        addTalkId(REED);
-        addTalkId(GERALD);
+        addTalkId(REED, GERALD);
 
         addQuestItem(VERY_EXPENSIVE_NECKLACE);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("elder_balanki_q0010_0104.htm")) {
+        if ("elder_balanki_q0010_0104.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("warehouse_chief_reed_q0010_0201.htm")) {
-            st.giveItems(VERY_EXPENSIVE_NECKLACE, 1);
+        } else if ("warehouse_chief_reed_q0010_0201.htm".equalsIgnoreCase(event)) {
+            st.giveItems(VERY_EXPENSIVE_NECKLACE);
             st.setCond(2);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("gerald_priest_of_earth_q0010_0301.htm")) {
-            st.takeItems(VERY_EXPENSIVE_NECKLACE, -1);
+        } else if ("gerald_priest_of_earth_q0010_0301.htm".equalsIgnoreCase(event)) {
+            st.takeItems(VERY_EXPENSIVE_NECKLACE);
             st.setCond(3);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("warehouse_chief_reed_q0010_0401.htm")) {
+        } else if ("warehouse_chief_reed_q0010_0401.htm".equalsIgnoreCase(event)) {
             st.setCond(4);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("elder_balanki_q0010_0501.htm")) {
-            st.giveItems(SCROLL_OF_ESCAPE_GIRAN, 1);
-            st.giveItems(MARK_OF_TRAVELER, 1);
-            st.exitCurrentQuest(false);
+        } else if ("elder_balanki_q0010_0501.htm".equalsIgnoreCase(event)) {
+            st.giveItems(SCROLL_OF_ESCAPE_GIRAN);
+            st.giveItems(MARK_OF_TRAVELER);
+            st.finish();
             st.playSound(SOUND_FINISH);
         }
         return event;
@@ -63,7 +61,7 @@ public final class _010_IntoTheWorld extends Quest {
                     htmltext = "elder_balanki_q0010_0101.htm";
                 else {
                     htmltext = "elder_balanki_q0010_0102.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1)
                 htmltext = "elder_balanki_q0010_0105.htm";
@@ -79,7 +77,7 @@ public final class _010_IntoTheWorld extends Quest {
             else if (cond == 4)
                 htmltext = "warehouse_chief_reed_q0010_0402.htm";
         } else if (npcId == GERALD)
-            if (cond == 2 && st.haveQuestItem(VERY_EXPENSIVE_NECKLACE) )
+            if (cond == 2 && st.haveQuestItem(VERY_EXPENSIVE_NECKLACE))
                 htmltext = "gerald_priest_of_earth_q0010_0201.htm";
             else if (cond == 3)
                 htmltext = "gerald_priest_of_earth_q0010_0302.htm";

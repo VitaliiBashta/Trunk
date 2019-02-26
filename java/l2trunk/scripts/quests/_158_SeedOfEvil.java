@@ -22,9 +22,9 @@ public final class _158_SeedOfEvil extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
         if ("1".equals(event)) {
-            st.set("id", 0);
+            st.unset("id");
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
             htmltext = "30031-04.htm";
         }
@@ -37,8 +37,8 @@ public final class _158_SeedOfEvil extends Quest {
         String htmltext = "noquest";
         int id = st.getState();
         if (id == CREATED) {
-            st.setState(STARTED);
-            st.set("id", 0);
+            st.start();
+            st.unset("id");
         }
         if (npcId == 30031 && st.getCond() == 0) {
             if (st.getCond() < 15) {
@@ -47,30 +47,30 @@ public final class _158_SeedOfEvil extends Quest {
                     return htmltext;
                 }
                 htmltext = "30031-02.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else {
                 htmltext = "30031-02.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (npcId == 30031 && st.getCond() == 0)
             htmltext = "completed";
-        else if (npcId == 30031 && st.getCond() != 0 && st.getQuestItemsCount(CLAY_TABLET_ID) == 0)
+        else if (npcId == 30031 && st.getCond() != 0 && !st.haveQuestItem(CLAY_TABLET_ID))
             htmltext = "30031-05.htm";
-        else if (npcId == 30031 && st.getCond() != 0 && st.getQuestItemsCount(CLAY_TABLET_ID) != 0) {
-            st.takeItems(CLAY_TABLET_ID, st.getQuestItemsCount(CLAY_TABLET_ID));
+        else if (npcId == 30031 && st.getCond() != 0 && st.haveQuestItem(CLAY_TABLET_ID)) {
+            st.takeItems(CLAY_TABLET_ID);
             st.playSound(SOUND_FINISH);
             st.giveItems(ADENA_ID, 1495);
             st.addExpAndSp(17818, 927);
             st.giveItems(ENCHANT_ARMOR_D);
             htmltext = "30031-06.htm";
-            st.exitCurrentQuest(false);
+            st.finish();
         }
         return htmltext;
     }
 
     @Override
     public void onKill(NpcInstance npc, QuestState st) {
-        if (st.getQuestItemsCount(CLAY_TABLET_ID) == 0) {
+        if (!st.haveQuestItem(CLAY_TABLET_ID)) {
             st.giveItems(CLAY_TABLET_ID);
             st.playSound(SOUND_MIDDLE);
             st.setCond(2);

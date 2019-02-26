@@ -1,5 +1,6 @@
 package l2trunk.scripts.quests;
 
+import l2trunk.gameserver.model.base.ClassId;
 import l2trunk.gameserver.utils.Location;
 
 import java.util.List;
@@ -9,15 +10,14 @@ public final class _077_SagaOfTheDominator extends SagasSuperclass {
         super(false);
 
         NPC = List.of(31336, 31624, 31371, 31290, 31636, 31646, 31648, 31653, 31654, 31655, 31656, 31290);
-        Items = List.of(7080, 7539, 7081, 7492, 7275, 7306, 7337, 7368, 7399, 7430, 7100, 0);
-        Mob = List.of(27294, 27226, 27262);
-        classid = 115;
-        prevclass = 0x33;
+        items = List.of(7080, 7539, 7081, 7492, 7275, 7306, 7337, 7368, 7399, 7430, 7100, 0);
+        mob = List.of(27294, 27226, 27262);
+        classid = ClassId.dominator;
         locs = List.of(
-                new Location(164650, -74121, -2871),
-                new Location(47429, -56923, -2383),
-                new Location(47391, -56929, -2370));
-        Text = List.of(
+                Location.of(164650, -74121, -2871),
+                Location.of(47429, -56923, -2383),
+                Location.of(47391, -56929, -2370));
+        text = List.of(
                 "PLAYERNAME! Pursued to here! However, I jumped out of the Banshouren boundaries! You look at the giant as the sign of power!",
                 "... Oh ... good! So it was ... let's begin!",
                 "I do not have the patience ..! I have been a giant force ...! Cough chatter ah ah ah!",

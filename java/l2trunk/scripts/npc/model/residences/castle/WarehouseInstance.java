@@ -38,7 +38,7 @@ public class WarehouseInstance extends NpcInstance {
         }
 
         if (player.getEnchantScroll() != null) {
-            Log.add("Player " + player.getName() + " trying to use enchant exploit[CastleWarehouse], ban this player!", "illegal-actions");
+            Log.add("Player " + player.getName() + " trying to use enchant exploit[CastleWarehouse], ban this getPlayer!", "illegal-actions");
             player.kick();
             return;
         }
@@ -72,7 +72,7 @@ public class WarehouseInstance extends NpcInstance {
 
             NpcHtmlMessage html = new NpcHtmlMessage(player, this);
             html.setFile(filename);
-            html.replace("%total_items%", String.valueOf(getCastle().getRewardCount()));
+            html.replace("%total_items%", getCastle().getRewardCount());
             player.sendPacket(html);
         } else if (command.equalsIgnoreCase("ExchangeBloodAlli")) {
             if (!player.isClanLeader()) {

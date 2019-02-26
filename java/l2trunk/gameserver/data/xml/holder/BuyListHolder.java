@@ -22,7 +22,6 @@ import java.util.Map;
 
 public enum BuyListHolder {
     INSTANCE;
-    private static BuyListHolder _instance;
     private final Logger _log = LoggerFactory.getLogger(BuyListHolder.class);
     private final Map<Integer, NpcTradeList> lists = new HashMap<>();
 

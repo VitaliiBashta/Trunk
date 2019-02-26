@@ -5,7 +5,7 @@ import l2trunk.gameserver.model.Player;
 /**
  * Format: ch ddcdc
  * <p>
- * Args: player, points to add, type of period (default 1), type of points (1-double, 2-integer), time left to the end of period
+ * Args: getPlayer, points to add, type of period (default 1), type of points (1-double, 2-integer), time left to the end of period
  */
 public class ExPCCafePointInfo extends L2GameServerPacket {
     private final int _mAddPoint;

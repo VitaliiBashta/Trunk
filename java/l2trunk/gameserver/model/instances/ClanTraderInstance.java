@@ -63,7 +63,7 @@ public final class ClanTraderInstance extends NpcInstance {
             } else
                 html.setFile("default/" + getNpcId() + "-ExchangeFailed.htm");
 
-            html.replace("%objectId%", String.valueOf(objectId()));
+            html.replace("%objectId%", objectId());
             player.sendPacket(html);
         } else
             super.onBypassFeedback(player, command);

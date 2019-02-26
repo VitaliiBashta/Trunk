@@ -27,7 +27,7 @@ public final class _151_CureforFeverDisease extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("30050-03.htm".equals(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         }
         return event;
@@ -47,7 +47,7 @@ public final class _151_CureforFeverDisease extends Quest {
                     htmltext = "30050-02.htm";
                 else {
                     htmltext = "30050-01.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1 && st.getQuestItemsCount(POISON_SAC) == 0 && st.getQuestItemsCount(FEVER_MEDICINE) == 0)
                 htmltext = "30050-04.htm";
@@ -60,21 +60,21 @@ public final class _151_CureforFeverDisease extends Quest {
                 st.player.addExpAndSp(13106, 613);
 
                 if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("p1q4")) {
-                    st.player.setVar("p1q4", 1);
+                    st.player.setVar("p1q4");
                     st.player.sendPacket(new ExShowScreenMessage("Now go find the Newbie Guide."));
                 }
 
                 htmltext = "30050-06.htm";
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(false);
+                st.finish();
             }
         } else if (npcId == 30032)
-            if (cond == 2 && st.getQuestItemsCount(POISON_SAC) > 0) {
+            if (cond == 2 && st.haveQuestItem(POISON_SAC) ) {
                 st.giveItems(FEVER_MEDICINE);
                 st.takeItems(POISON_SAC);
                 st.setCond(3);
                 htmltext = "30032-01.htm";
-            } else if (cond == 3 && st.getQuestItemsCount(FEVER_MEDICINE) > 0)
+            } else if (cond == 3 && st.haveQuestItem(FEVER_MEDICINE) )
                 htmltext = "30032-02.htm";
         return htmltext;
     }

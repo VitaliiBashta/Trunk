@@ -26,7 +26,7 @@ public final class _166_DarkMass extends Quest {
             htmltext = "30130-04.htm";
             st.giveItems(UNDRES_LETTER_ID, 1);
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         }
         return htmltext;
@@ -49,7 +49,7 @@ public final class _166_DarkMass extends Quest {
                     return htmltext;
                 } else {
                     htmltext = "30130-02.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1)
                 htmltext = "30130-05.htm";
@@ -64,7 +64,7 @@ public final class _166_DarkMass extends Quest {
                 if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("ng1"))
                     st.player.sendPacket(new ExShowScreenMessage("  Delivery duty complete.\nGo find the Newbie Guide."));
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(false);
+                st.finish();
             }
         } else if (npcId == 30135) {
             if (cond == 1 && st.getQuestItemsCount(CEREMONIAL_DAGGER_ID) == 0) {

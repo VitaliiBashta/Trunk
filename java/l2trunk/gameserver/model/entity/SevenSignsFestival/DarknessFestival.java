@@ -161,7 +161,7 @@ public final class DarknessFestival extends Reflection {
             Player player = getParty().getLeader();
             ItemInstance bloodOfferings = player.getInventory().getItemByItemId(SevenSignsFestival.FESTIVAL_BLOOD_OFFERING);
             long offeringCount = bloodOfferings == null ? 0 : bloodOfferings.getCount();
-            // Check if the player collected any blood offerings during the festival.
+            // Check if the getPlayer collected any blood offerings during the festival.
             if (player.getInventory().destroyItem(bloodOfferings, "DarknessFestival")) {
                 long offeringScore = offeringCount * SevenSignsFestival.FESTIVAL_OFFERING_VALUE;
                 boolean isHighestScore = SevenSignsFestival.INSTANCE.setFinalScore(getParty(), _cabal, _levelRange, offeringScore);

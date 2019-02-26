@@ -26,11 +26,11 @@ public final class _147_PathToBecomingAnEliteMercenary extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("gludio_merc_cap_q0147_04b.htm")) {
-            st.giveItems(13766, 1);
-        } else if (event.equalsIgnoreCase("gludio_merc_cap_q0147_07.htm")) {
+        if ("gludio_merc_cap_q0147_04b.htm".equalsIgnoreCase(event)) {
+            st.giveItems(13766);
+        } else if ("gludio_merc_cap_q0147_07.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         }
         return event;
@@ -53,7 +53,7 @@ public final class _147_PathToBecomingAnEliteMercenary extends Quest {
 
             if (player.getLevel() < 40 || player.getClassId().occupation() < 2)
                 htmlText = "gludio_merc_cap_q0147_03.htm";
-            else if (st.getQuestItemsCount(13766) < 1)
+            else if (!st.haveQuestItem(13766) )
                 htmlText = "gludio_merc_cap_q0147_04a.htm";
             else
                 htmlText = "gludio_merc_cap_q0147_04.htm";
@@ -63,9 +63,9 @@ public final class _147_PathToBecomingAnEliteMercenary extends Quest {
             htmlText = "gludio_merc_cap_q0147_09.htm";
             st.takeItems(13766);
             st.giveItems(13767);
-            st.setState(COMPLETED);
+            st.complete();
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(false);
+            st.finish();
         }
 
         return htmlText;
@@ -125,7 +125,6 @@ public final class _147_PathToBecomingAnEliteMercenary extends Quest {
 
     @Override
     public void onCreate(QuestState qs) {
-        super.onCreate(qs);
         qs.addPlayerOnKillListener();
     }
 

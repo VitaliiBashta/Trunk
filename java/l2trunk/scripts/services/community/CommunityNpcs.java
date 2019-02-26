@@ -58,50 +58,6 @@ public class CommunityNpcs implements ScriptFile, ICommunityBoardHandler {
                     100 //, 250, 500, 1000
             };
 
-    private static void changeNick(Player player, String newName) {
-        if (player == null)
-            return;
-        if (!Config.SERVICES_CHANGE_NICK_ENABLED) {
-            player.sendMessage("Service is disabled.");
-            return;
-        }
-        if (player.isHero()) {
-            player.sendMessage("Not available for heroes.");
-            return;
-        }
-
-        if (player.getEvent(SiegeEvent.class) != null) {
-            player.sendMessage(new CustomMessage("scripts.services.Rename.SiegeNow"));
-            return;
-        }
-
-        if (CharacterCreate.isValid(newName) && !Config.SERVICES_CHANGE_NICK_ALLOW_SYMBOL) {
-            player.sendMessage(new CustomMessage("scripts.services.Rename.incorrectinput"));
-            return;
-        }
-
-        if (player.getInventory().getCountOf(Config.SERVICES_CHANGE_NICK_ITEM) < Config.SERVICES_CHANGE_NICK_PRICE) {
-            if (Config.SERVICES_CHANGE_NICK_ITEM == ItemTemplate.ITEM_ID_ADENA)
-                player.sendPacket(Msg.YOU_DO_NOT_HAVE_ENOUGH_ADENA);
-            else
-                player.sendPacket(SystemMsg.INCORRECT_ITEM_COUNT);
-            return;
-        }
-
-        if (CharacterDAO.getObjectIdByName(newName) > 0) {
-            player.sendMessage(new CustomMessage("scripts.services.Rename.Thisnamealreadyexists"));
-            return;
-        }
-
-        player.getInventory().destroyItemByItemId(Config.SERVICES_CHANGE_NICK_ITEM, Config.SERVICES_CHANGE_NICK_PRICE, "Nick Change");
-
-        String oldName = player.getName();
-        player.reName(newName, true);
-        Log.add("Character " + oldName + " renamed to " + newName, "renames");
-        player.sendMessage(new CustomMessage("scripts.services.Rename.changedname").addString(oldName).addString(newName));
-        player.sendPacket(new HideBoard());
-    }
-
     private static void changeClanName(Player player, String newName) {
         if (player == null)
             return;
@@ -166,10 +122,10 @@ public class CommunityNpcs implements ScriptFile, ICommunityBoardHandler {
 
     private static void addNewSubPage(Player player, String raceName) {
         Race race = Race.valueOf(raceName);
-        Set<PlayerClass> allSubs = VillageMasterInstance.getAllAvailableSubs(player, true);
+        Set<ClassId> allSubs = VillageMasterInstance.getAllAvailableSubs(player, true);
         allSubs = getSubsByRace(allSubs, race);
 
-        PlayerClass[] arraySubs = new PlayerClass[allSubs.size()];
+        ClassId[] arraySubs = new ClassId[allSubs.size()];
         arraySubs = allSubs.toArray(arraySubs);
 
         String[] replacements = new String[FIELDS_IN_SUB_SELECT_PAGE * 2];
@@ -178,8 +134,8 @@ public class CommunityNpcs implements ScriptFile, ICommunityBoardHandler {
             if (arraySubs.length <= i)
                 replacements[i * 2 + 1] = "<br>";
             else {
-                PlayerClass playerClass = arraySubs[i];
-                replacements[i * 2 + 1] = "<button value=\"Add " + playerClass.name() + "\" action=\"bypass _bbsAddNewSub_" + playerClass.ordinal() + "\" width=200 height=30 back=\"L2UI_CT1.OlympiadWnd_DF_Fight1None_Down\" fore=\"L2UI_ct1.OlympiadWnd_DF_Fight1None\">";
+                ClassId playerClass = arraySubs[i];
+                replacements[i * 2 + 1] = "<button value=\"Add " + playerClass.name() + "\" action=\"bypass _bbsAddNewSub_" + playerClass.id + "\" width=200 height=30 back=\"L2UI_CT1.OlympiadWnd_DF_Fight1None_Down\" fore=\"L2UI_ct1.OlympiadWnd_DF_Fight1None\">";
             }
         }
         sendFileToPlayer(player, "smallNpcs/subclassChanger_select.htm", true, replacements);
@@ -223,7 +179,7 @@ public class CommunityNpcs implements ScriptFile, ICommunityBoardHandler {
         sendFileToPlayer(player, "smallNpcs/subclassChanger_select.htm", true, replacements);
     }
 
-    private static void changeSub(Player player, int subId) {
+    private static void changeSub(Player player, ClassId subId) {
         if (!canChangeClass(player))
             return;
 
@@ -233,13 +189,13 @@ public class CommunityNpcs implements ScriptFile, ICommunityBoardHandler {
         player.sendPacket(new HideBoard());
     }
 
-    private static void addNewSub(Player player, int subclassId) {
+    private static void addNewSub(Player player, ClassId subclassId) {
         if (!canChangeClass(player))
             return;
 
-        int subToRemove = player.getQuickVarI("SubToRemove");
+        ClassId subToRemove = ClassId.getById(player.getQuickVarI("SubToRemove"));
         boolean added;
-        if (subToRemove > 0) {
+        if (subToRemove != null ) {
             added = player.modifySubClass(subToRemove, subclassId);
         } else
             added = VillageMasterInstance.addNewSubclass(player, subclassId);
@@ -252,9 +208,9 @@ public class CommunityNpcs implements ScriptFile, ICommunityBoardHandler {
         player.sendPacket(new HideBoard());
     }
 
-    private static Set<PlayerClass> getSubsByRace(Set<PlayerClass> allSubs, Race race) {
-        for (PlayerClass sub : allSubs)
-            if (!sub.isOfRace(race))
+    private static Set<ClassId> getSubsByRace(Set<ClassId> allSubs, Race race) {
+        for (ClassId sub : allSubs)
+            if (sub.race !=race)
                 allSubs.remove(sub);
         return allSubs;
     }
@@ -263,7 +219,7 @@ public class CommunityNpcs implements ScriptFile, ICommunityBoardHandler {
         if (!canChangeClass(player))
             return;
 
-        if (player.getBaseClassId() == player.getClassId().id) {
+        if (player.getBaseClassId() == player.getClassId()) {
             sendFileToPlayer(player, "smallNpcs/subclassChanger_back.htm", true);
             return;
         }
@@ -403,7 +359,7 @@ public class CommunityNpcs implements ScriptFile, ICommunityBoardHandler {
 
     @Override
     public void onBypassCommand(Player player, String bypass) {
-        //Checking if all required images were sent to the player, if not - not allowing to pass
+        //Checking if all required images were sent to the getPlayer, if not - not allowing to pass
         if (!AutoImageSenderManager.wereAllImagesSent(player)) {
             player.sendPacket(new Say2(player.objectId(), ChatType.CRITICAL_ANNOUNCE, "CB", "Community wasn't loaded yet, try again in few seconds."));
             return;
@@ -413,7 +369,7 @@ public class CommunityNpcs implements ScriptFile, ICommunityBoardHandler {
         String cmd = st.nextToken();
         String folder = "";
         String file = "";
-        int subclassId = 0;
+        ClassId subclassId ;
         if (!cmd.equals("bbsNewSubPage") && !cmd.equals("bbsAddNewSub"))
             player.deleteQuickVar("SubToRemove");
 
@@ -442,7 +398,7 @@ public class CommunityNpcs implements ScriptFile, ICommunityBoardHandler {
         }
 
         if ("bbsAddNewSub".equals(cmd)) {
-            subclassId = Integer.parseInt(st.nextToken());
+            subclassId = ClassId.getById(Integer.parseInt(st.nextToken()));
             addNewSub(player, subclassId);
             return;
         }
@@ -453,7 +409,7 @@ public class CommunityNpcs implements ScriptFile, ICommunityBoardHandler {
         }
 
         if ("bbsChangeSubTo".equals(cmd)) {
-            subclassId = Integer.parseInt(st.nextToken());
+            subclassId = ClassId.getById(Integer.parseInt(st.nextToken()));
             changeSub(player, subclassId);
             return;
         }
@@ -464,8 +420,8 @@ public class CommunityNpcs implements ScriptFile, ICommunityBoardHandler {
         }
 
         if ("bbsSelectCancelSub".equals(cmd)) {
-            subclassId = Integer.parseInt(st.nextToken());
-            player.addQuickVar("SubToRemove", subclassId);
+            subclassId = ClassId.getById(Integer.parseInt(st.nextToken()));
+            player.addQuickVar("SubToRemove", subclassId.id);
             sendFileToPlayer(player, "smallNpcs/subclassChanger_add.htm", true);
             return;
         }
@@ -528,13 +484,6 @@ public class CommunityNpcs implements ScriptFile, ICommunityBoardHandler {
             return;
         }
 
-        if ("changeNick".equals(cmd)) {
-            if (st.hasMoreTokens()) {
-                String newName = st.nextToken().trim();
-                changeNick(player, newName);
-            }
-            return;
-        }
 
         if ("changeClanName".equals(cmd)) {
             if (st.hasMoreTokens()) {

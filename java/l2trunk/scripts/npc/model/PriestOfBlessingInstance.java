@@ -64,10 +64,10 @@ public final class PriestOfBlessingInstance extends NpcInstance {
             Hourglass hg = getHourglass(player);
             NpcHtmlMessage html = new NpcHtmlMessage(player, this);
             html.setFile(getHtmlPath(getNpcId(), val, player));
-            html.replace("%price%", String.valueOf(hg.itemPrice));
+            html.replace("%price%", hg.itemPrice);
             html.replace("%priceBreak%", Util.formatAdena(hg.itemPrice));
-            html.replace("%minLvl%", String.valueOf(hg.minLevel));
-            html.replace("%maxLvl%", String.valueOf(hg.maxLevel));
+            html.replace("%minLvl%", hg.minLevel);
+            html.replace("%maxLvl%", hg.maxLevel);
             player.sendPacket(html);
             return;
         }

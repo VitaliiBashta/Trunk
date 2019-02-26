@@ -23,9 +23,7 @@ public final class _002_WhatWomenWant extends Quest {
         super(false);
         addStartNpc(ARUJIEN);
 
-        addTalkId(MIRABEL);
-        addTalkId(HERBIEL);
-        addTalkId(GREENIS);
+        addTalkId(MIRABEL,HERBIEL,GREENIS);
 
         addQuestItem(GREENIS_LETTER, ARUJIENS_LETTER3, ARUJIENS_LETTER1, ARUJIENS_LETTER2, POETRY_BOOK);
     }
@@ -38,7 +36,7 @@ public final class _002_WhatWomenWant extends Quest {
                 htmltext = "arujien_q0002_04.htm";
                 st.giveItems(ARUJIENS_LETTER1);
                 st.setCond(1);
-                st.setState(STARTED);
+                st.start();
                 st.playSound(SOUND_ACCEPT);
                 break;
             case "2_1":
@@ -51,12 +49,12 @@ public final class _002_WhatWomenWant extends Quest {
             case "2_2":
                 htmltext = "arujien_q0002_09.htm";
                 st.takeItems(ARUJIENS_LETTER3);
-                st.giveItems(ADENA_ID, 2300, true);
+                st.giveItems(ADENA_ID, 2300);
                 st.player.addExpAndSp(4254, 335);
                 if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("ng1"))
                     st.player.sendPacket(new ExShowScreenMessage("  Delivery duty complete.\nGo find the Newbie Guide."));
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(false);
+                st.finish();
                 break;
         }
         return htmltext;
@@ -75,7 +73,7 @@ public final class _002_WhatWomenWant extends Quest {
                     htmltext = "arujien_q0002_02.htm";
                 else {
                     htmltext = "arujien_q0002_01.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1 && st.getQuestItemsCount(ARUJIENS_LETTER1) > 0)
                 htmltext = "arujien_q0002_05.htm";
@@ -95,7 +93,7 @@ public final class _002_WhatWomenWant extends Quest {
                 if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("ng1"))
                     st.player.sendPacket(new ExShowScreenMessage("  Delivery duty complete.\nGo find the Newbie Guide."));
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(false);
+                st.finish();
             }
         } else if (npcId == MIRABEL) {
             if (cond == 1 && st.getQuestItemsCount(ARUJIENS_LETTER1) > 0) {

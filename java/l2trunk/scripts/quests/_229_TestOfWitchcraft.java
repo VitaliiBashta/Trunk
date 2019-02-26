@@ -187,23 +187,12 @@ public final class _229_TestOfWitchcraft extends Quest {
 
         addStartNpc(Orim);
 
-        addTalkId(Alexandria);
-        addTalkId(Iker);
-        addTalkId(Kaira);
-        addTalkId(Lara);
-        addTalkId(Roderik);
-        addTalkId(Nestle);
-        addTalkId(Leopold);
-        addTalkId(Vasper);
-        addTalkId(Vadin);
-        addTalkId(Evert);
-        addTalkId(Endrigo);
+        addTalkId(Alexandria,Iker,Kaira,Lara,Roderik,Nestle,Leopold,Vasper,Vadin,Evert,Endrigo);
 
-        //Mob Drop
+        //mob Drop
         for (int[] aDROPLIST_COND : DROPLIST_COND) addKillId(aDROPLIST_COND[2]);
 
-        addKillId(SkeletalMercenary);
-        addKillId(DrevanulPrinceZeruel);
+        addKillId(SkeletalMercenary,DrevanulPrinceZeruel);
 
         addQuestItem(OrimsDiagram,
                 OrimsInstructions,
@@ -239,31 +228,31 @@ public final class _229_TestOfWitchcraft extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("30630-08.htm")) {
+        if ("30630-08.htm".equalsIgnoreCase(event)) {
             st.playSound(SOUND_ACCEPT);
             st.giveItems(OrimsDiagram, 1);
             if (!st.player.isVarSet("dd3")) {
                 st.giveItems(7562, 104);
-                st.player.setVar("dd3", 1);
+                st.player.setVar("dd3");
             }
             st.setCond(1);
-            st.setState(STARTED);
-        } else if (event.equalsIgnoreCase("30098-03.htm")) {
-            st.giveItems(AlexandriasBook, 1);
+            st.start();
+        } else if ("30098-03.htm".equalsIgnoreCase(event)) {
+            st.giveItems(AlexandriasBook);
             st.takeItems(OrimsDiagram, 1);
             st.setCond(2);
-            st.setState(STARTED);
-        } else if (event.equalsIgnoreCase("30110-03.htm"))
-            st.giveItems(IkersList, 1);
-        else if (event.equalsIgnoreCase("30476-02.htm"))
-            st.giveItems(Aklantoth_2stGem, 1);
+            st.start();
+        } else if ("30110-03.htm".equalsIgnoreCase(event))
+            st.giveItems(IkersList);
+        else if ("30476-02.htm".equalsIgnoreCase(event))
+            st.giveItems(Aklantoth_2stGem);
         else if (event.equalsIgnoreCase("30063-02.htm"))
-            st.giveItems(LarasMemo, 1);
+            st.giveItems(LarasMemo);
         else if (event.equalsIgnoreCase("30314-02.htm"))
-            st.giveItems(NestlesMemo, 1);
+            st.giveItems(NestlesMemo);
         else if (event.equalsIgnoreCase("30435-02.htm")) {
             st.takeItems(NestlesMemo, 1);
-            st.giveItems(LeopoldsJournal, 1);
+            st.giveItems(LeopoldsJournal);
         } else if (event.equalsIgnoreCase("30630-14.htm")) {
             NpcInstance isQuest = GameObjectsStorage.getByNpcId(DrevanulPrinceZeruel);
             if (isQuest != null && !isQuest.isDead())
@@ -276,43 +265,41 @@ public final class _229_TestOfWitchcraft extends Quest {
                 st.takeItems(Aklantoth_4stGem, 1);
                 st.takeItems(Aklantoth_5stGem, 1);
                 st.takeItems(Aklantoth_6stGem, 1);
-                if (st.getQuestItemsCount(Brimstone_1st) == 0)
-                    st.giveItems(Brimstone_1st, 1);
+                st.giveItemIfNotHave(Brimstone_1st);
                 st.setCond(4);
-                st.set("id", 1);
+                st.set("id");
                 st.startQuestTimer("DrevanulPrinceZeruel_Fail", 300000);
                 NpcInstance Zeruel = st.addSpawn(DrevanulPrinceZeruel);
                 if (Zeruel != null) {
                     Zeruel.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, st.player, 1);
                 }
             }
-        } else if (event.equalsIgnoreCase("30630-16.htm")) {
+        } else if ("30630-16.htm".equalsIgnoreCase(event)) {
             htmltext = "30630-16.htm";
-            st.takeItems(Brimstone_1st, -1);
-            st.giveItems(OrimsInstructions, 1);
-            st.giveItems(Orims1stLetter, 1);
-            st.giveItems(Orims2stLetter, 1);
+            st.takeItems(Brimstone_1st);
+            st.giveItems(OrimsInstructions);
+            st.giveItems(Orims1stLetter);
+            st.giveItems(Orims2stLetter);
             st.setCond(6);
-        } else if (event.equalsIgnoreCase("30110-08.htm")) {
+        } else if ("30110-08.htm".equalsIgnoreCase(event)) {
             st.takeItems(Orims2stLetter, 1);
-            st.giveItems(SoultrapCrystal, 1);
-            st.giveItems(IkersAmulet, 1);
-            if (st.getQuestItemsCount(SwordOfBinding) > 0) {
+            st.giveItems(SoultrapCrystal);
+            st.giveItems(IkersAmulet);
+            if (st.haveQuestItem(SwordOfBinding)) {
                 st.setCond(7);
-                st.setState(STARTED);
+                st.start();
             }
-        } else if (event.equalsIgnoreCase("30417-03.htm")) {
+        } else if ("30417-03.htm".equalsIgnoreCase(event)) {
             st.takeItems(Orims1stLetter, 1);
-            st.giveItems(SirVaspersLetter, 1);
-        } else if (event.equalsIgnoreCase("30633-02.htm")) {
+            st.giveItems(SirVaspersLetter);
+        } else if ("30633-02.htm".equalsIgnoreCase(event)) {
             NpcInstance isQuest = GameObjectsStorage.getByNpcId(DrevanulPrinceZeruel);
             if (isQuest != null)
                 htmltext = "30633-fail.htm";
             else {
                 st.set("id", 2);
                 st.setCond(9);
-                if (st.getQuestItemsCount(Brimstone_2nd) == 0)
-                    st.giveItems(Brimstone_2nd);
+                st.giveItemIfNotHave(Brimstone_2nd);
                 st.addSpawn(DrevanulPrinceZeruel);
                 st.startQuestTimer("DrevanulPrinceZeruel_Fail", 300000);
                 NpcInstance Zeruel = GameObjectsStorage.getByNpcId(DrevanulPrinceZeruel);
@@ -330,11 +317,11 @@ public final class _229_TestOfWitchcraft extends Quest {
             if (!st.player.isVarSet("prof2.3")) {
                 st.addExpAndSp(1029122, 70620);
                 st.giveItems(ADENA_ID, 186077);
-                st.player.setVar("prof2.3", 1);
+                st.player.setVar("prof2.3");
             }
-            st.giveItems(MarkOfWitchcraft, 1);
+            st.giveItems(MarkOfWitchcraft);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
         if (event.equalsIgnoreCase("DrevanulPrinceZeruel_Fail")) {
             NpcInstance isQuest = GameObjectsStorage.getByNpcId(DrevanulPrinceZeruel);
@@ -352,25 +339,25 @@ public final class _229_TestOfWitchcraft extends Quest {
         if (npcId == Orim) {
             if (st.getQuestItemsCount(MarkOfWitchcraft) != 0) {
                 htmltext = "completed";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else if (cond == 0) {
                 if (st.player.getClassId().id == 0x0b || st.player.getClassId().id == 0x04 || st.player.getClassId().id == 0x20)
                     if (st.player.getLevel() < 39) {
                         htmltext = "30630-02.htm";
-                        st.exitCurrentQuest(true);
+                        st.exitCurrentQuest();
                     } else if (st.player.getClassId().id == 0x0b)
                         htmltext = "30630-03.htm";
                     else
                         htmltext = "30630-05.htm";
                 else {
                     htmltext = "30630-01.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1)
                 htmltext = "30630-09.htm";
             else if (cond == 2)
                 htmltext = "30630-10.htm";
-            else if (cond == 3 || st.getInt("id") == 1)
+            else if (cond == 3 || st.isSet("id"))
                 htmltext = "30630-11.htm";
             else if (cond == 5)
                 htmltext = "30630-15.htm";
@@ -380,9 +367,9 @@ public final class _229_TestOfWitchcraft extends Quest {
                 htmltext = "30630-18.htm";
                 st.setCond(8);
             } else if (cond == 10)
-                if (st.getQuestItemsCount(ZeruelBindCrystal) != 0)
+                if (st.haveQuestItem(ZeruelBindCrystal))
                     htmltext = "30630-19.htm";
-                else if (st.getQuestItemsCount(PurgatoryKey) != 0)
+                else if (st.haveQuestItem(PurgatoryKey))
                     htmltext = "30630-20.htm";
                 else
                     htmltext = "30630-21.htm";
@@ -395,19 +382,21 @@ public final class _229_TestOfWitchcraft extends Quest {
                 htmltext = "30098-05.htm";
         } else if (npcId == Iker) {
             if (cond == 2) {
-                if (st.getQuestItemsCount(Aklantoth_1stGem) == 0 && st.getQuestItemsCount(IkersList) == 0)
+                if (st.haveQuestItem(Aklantoth_1stGem) || st.haveQuestItem(IkersList)) {
+                    if (st.haveQuestItem(IkersList) && (st.getQuestItemsCount(DireWyrmFang) < 20 || st.getQuestItemsCount(LetoLizardmanCharm) < 20 || st.getQuestItemsCount(EnchantedGolemHeartstone) < 20))
+                        htmltext = "30110-04.htm";
+                    else if (st.getQuestItemsCount(Aklantoth_1stGem) == 0 && st.getQuestItemsCount(IkersList) > 0) {
+                        st.takeItems(IkersList);
+                        st.takeItems(DireWyrmFang);
+                        st.takeItems(LetoLizardmanCharm);
+                        st.takeItems(EnchantedGolemHeartstone);
+                        st.giveItems(Aklantoth_1stGem);
+                        htmltext = "30110-05.htm";
+                    } else if (st.getQuestItemsCount(Aklantoth_1stGem) == 1)
+                        htmltext = "30110-06.htm";
+                } else {
                     htmltext = "30110-01.htm";
-                else if (st.getQuestItemsCount(IkersList) > 0 && (st.getQuestItemsCount(DireWyrmFang) < 20 || st.getQuestItemsCount(LetoLizardmanCharm) < 20 || st.getQuestItemsCount(EnchantedGolemHeartstone) < 20))
-                    htmltext = "30110-04.htm";
-                else if (st.getQuestItemsCount(Aklantoth_1stGem) == 0 && st.getQuestItemsCount(IkersList) > 0) {
-                    st.takeItems(IkersList, -1);
-                    st.takeItems(DireWyrmFang, -1);
-                    st.takeItems(LetoLizardmanCharm, -1);
-                    st.takeItems(EnchantedGolemHeartstone, -1);
-                    st.giveItems(Aklantoth_1stGem, 1);
-                    htmltext = "30110-05.htm";
-                } else if (st.getQuestItemsCount(Aklantoth_1stGem) == 1)
-                    htmltext = "30110-06.htm";
+                }
             } else if (cond == 6)
                 htmltext = "30110-07.htm";
             else if (cond == 10)
@@ -416,10 +405,8 @@ public final class _229_TestOfWitchcraft extends Quest {
                 htmltext = "30110-09.htm";
         } else if (npcId == Kaira) {
             if (cond == 2)
-                if (st.getQuestItemsCount(Aklantoth_2stGem) == 0)
-                    htmltext = "30476-01.htm";
-                else
-                    htmltext = "30476-03.htm";
+                if (st.haveQuestItem(Aklantoth_2stGem)) htmltext = "30476-03.htm";
+                else htmltext = "30476-01.htm";
             else if (cond > 2)
                 htmltext = "30476-04.htm";
         } else if (npcId == Lara) {
@@ -432,15 +419,15 @@ public final class _229_TestOfWitchcraft extends Quest {
                     htmltext = "30063-04.htm";
             } else if (cond > 2)
                 htmltext = "30063-05.htm";
-        } else if (npcId == Roderik && cond == 2 && st.getQuestItemsCount(LarasMemo) > 0)
+        } else if (npcId == Roderik && cond == 2 && st.haveQuestItem(LarasMemo))
             htmltext = "30631-01.htm";
         else if (npcId == Nestle && cond == 2)
-            if (st.getQuestItemsCount(Aklantoth_1stGem) > 0 && st.getQuestItemsCount(Aklantoth_2stGem) > 0 && st.getQuestItemsCount(Aklantoth_3stGem) > 0)
+            if (st.haveAllQuestItems(Aklantoth_1stGem, Aklantoth_2stGem, Aklantoth_3stGem))
                 htmltext = "30314-01.htm";
             else
                 htmltext = "30314-04.htm";
         else if (npcId == Leopold) {
-            if (cond == 2 && st.getQuestItemsCount(NestlesMemo) > 0) {
+            if (cond == 2 && st.haveQuestItem(NestlesMemo)) {
                 if (st.getQuestItemsCount(Aklantoth_4stGem) + st.getQuestItemsCount(Aklantoth_5stGem) + st.getQuestItemsCount(Aklantoth_6stGem) == 0)
                     htmltext = "30435-01.htm";
                 else
@@ -449,17 +436,17 @@ public final class _229_TestOfWitchcraft extends Quest {
                 htmltext = "30435-05.htm";
         } else if (npcId == Vasper) {
             if (cond == 6) {
-                if (st.getQuestItemsCount(SirVaspersLetter) > 0 || st.getQuestItemsCount(VadinsCrucifix) > 0)
+                if (st.haveAnyQuestItems(SirVaspersLetter, VadinsCrucifix))
                     htmltext = "30417-04.htm";
                 else if (st.getQuestItemsCount(VadinsSanctions) == 0)
                     htmltext = "30417-01.htm";
-                else if (st.getQuestItemsCount(VadinsSanctions) != 0) {
+                else if (st.haveQuestItem(VadinsSanctions)) {
                     htmltext = "30417-05.htm";
                     st.takeItems(VadinsSanctions, 1);
-                    st.giveItems(SwordOfBinding, 1);
-                    if (st.getQuestItemsCount(SoultrapCrystal) > 0) {
+                    st.giveItems(SwordOfBinding);
+                    if (st.haveQuestItem(SoultrapCrystal)) {
                         st.setCond(7);
-                        st.setState(STARTED);
+                        st.start();
                     }
                 }
             } else if (cond == 7)
@@ -469,15 +456,15 @@ public final class _229_TestOfWitchcraft extends Quest {
                 if (st.getQuestItemsCount(SirVaspersLetter) != 0) {
                     htmltext = "30188-01.htm";
                     st.takeItems(SirVaspersLetter, 1);
-                    st.giveItems(VadinsCrucifix, 1);
-                } else if (st.getQuestItemsCount(VadinsCrucifix) > 0 && st.getQuestItemsCount(TamlinOrcAmulet) < 20)
+                    st.giveItems(VadinsCrucifix);
+                } else if (st.haveQuestItem(VadinsCrucifix) && st.getQuestItemsCount(TamlinOrcAmulet) < 20)
                     htmltext = "30188-02.htm";
                 else if (st.getQuestItemsCount(TamlinOrcAmulet) >= 20) {
                     htmltext = "30188-03.htm";
-                    st.takeItems(TamlinOrcAmulet, -1);
-                    st.takeItems(VadinsCrucifix, -1);
-                    st.giveItems(VadinsSanctions, 1);
-                } else if (st.getQuestItemsCount(VadinsSanctions) > 0)
+                    st.takeItems(TamlinOrcAmulet);
+                    st.takeItems(VadinsCrucifix);
+                    st.giveItems(VadinsSanctions);
+                } else if (st.haveQuestItem(VadinsSanctions))
                     htmltext = "30188-04.htm";
             } else if (cond == 7)
                 htmltext = "30188-05.htm";
@@ -505,7 +492,7 @@ public final class _229_TestOfWitchcraft extends Quest {
                     else if (st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[7], aDROPLIST_COND[5], aDROPLIST_COND[6]))
                         if (aDROPLIST_COND[1] != cond && aDROPLIST_COND[1] != 0) {
                             st.setCond(aDROPLIST_COND[1]);
-                            st.setState(STARTED);
+                            st.start();
                         }
                 }
         if (cond == 2 && st.getQuestItemsCount(LeopoldsJournal) > 0 && npcId == SkeletalMercenary) {
@@ -519,7 +506,7 @@ public final class _229_TestOfWitchcraft extends Quest {
                 st.takeItems(LeopoldsJournal);
                 st.playSound(SOUND_MIDDLE);
                 st.setCond(3);
-                st.setState(STARTED);
+                st.start();
             }
         } else if (cond == 4 && npcId == DrevanulPrinceZeruel) {
             st.cancelQuestTimer("DrevanulPrinceZeruel_Fail");
@@ -528,7 +515,7 @@ public final class _229_TestOfWitchcraft extends Quest {
                 isQuest.deleteMe();
             st.setCond(5);
             st.unset("id");
-            st.setState(STARTED);
+            st.start();
         } else if (cond == 9 && npcId == DrevanulPrinceZeruel) {
             if (st.getItemEquipped(Inventory.PAPERDOLL_RHAND) == SwordOfBinding) {
                 st.takeItems(Brimstone_2nd, 1);
@@ -538,7 +525,7 @@ public final class _229_TestOfWitchcraft extends Quest {
                 st.playSound(SOUND_MIDDLE);
                 st.unset("id");
                 st.setCond(10);
-                st.setState(STARTED);
+                st.start();
                 return;
             }
             st.cancelQuestTimer("DrevanulPrinceZeruel_Fail");

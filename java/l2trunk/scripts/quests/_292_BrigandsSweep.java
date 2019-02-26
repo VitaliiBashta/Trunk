@@ -16,7 +16,7 @@ public final class _292_BrigandsSweep extends Quest {
     private static final int GoblinBrigandLieutenant = 20324;
     private static final int GoblinSnooper = 20327;
     private static final int GoblinLord = 20528;
-    // Quest Items
+    // Quest items
     private static final int GoblinNecklace = 1483;
     private static final int GoblinPendant = 1484;
     private static final int GoblinLordPendant = 1485;
@@ -83,24 +83,21 @@ public final class _292_BrigandsSweep extends Quest {
         super(false);
         addStartNpc(Spiron);
         addTalkId(Balanki);
-        //Mob Drop
-        for (int[] aDROPLIST_COND : DROPLIST_COND) addKillId(aDROPLIST_COND[2]);
-        addQuestItem(SuspiciousMemo);
-        addQuestItem(SuspiciousContract);
-        addQuestItem(GoblinNecklace);
-        addQuestItem(GoblinPendant);
-        addQuestItem(GoblinLordPendant);
+        //mob Drop
+        for (int[] aDROPLIST_COND : DROPLIST_COND)
+            addKillId(aDROPLIST_COND[2]);
+        addQuestItem(SuspiciousMemo,SuspiciousContract,GoblinNecklace,GoblinPendant,GoblinLordPendant);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("elder_spiron_q0292_03.htm")) {
+        if ("elder_spiron_q0292_03.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("elder_spiron_q0292_06.htm")) {
+        } else if ("elder_spiron_q0292_06.htm".equalsIgnoreCase(event)) {
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
         return event;
     }
@@ -114,10 +111,10 @@ public final class _292_BrigandsSweep extends Quest {
             if (cond == 0) {
                 if (st.player.getRace() != Race.dwarf) {
                     htmltext = "elder_spiron_q0292_00.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else if (st.player.getLevel() < 5) {
                     htmltext = "elder_spiron_q0292_01.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else
                     htmltext = "elder_spiron_q0292_02.htm";
             } else if (cond == 1) {
@@ -161,7 +158,7 @@ public final class _292_BrigandsSweep extends Quest {
                     else if (st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[7], aDROPLIST_COND[5], aDROPLIST_COND[6]))
                         if (aDROPLIST_COND[1] != cond && aDROPLIST_COND[1] != 0) {
                             st.setCond(aDROPLIST_COND[1]);
-                            st.setState(STARTED);
+                            st.start();
                         }
         if (st.getQuestItemsCount(SuspiciousContract) == 0 && Rnd.chance(Chance))
             if (st.getQuestItemsCount(SuspiciousMemo) < 3) {

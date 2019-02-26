@@ -23,12 +23,8 @@ public final class _618_IntoTheFlame extends Quest {
 
         addStartNpc(KLEIN);
         addTalkId(HILDA);
-        addKillId(21274, 21275, 21276, 21278);
-        addKillId(21282, 21283, 21284, 21286);
-        addKillId(21290, 21291, 21292, 21294);
-        addQuestItem(VACUALITE_ORE);
-        addQuestItem(VACUALITE);
-        addQuestItem(FLOATING_STONE);
+        addKillId(21274, 21275, 21276, 21278,21282, 21283, 21284, 21286,21290, 21291, 21292, 21294);
+        addQuestItem(VACUALITE_ORE,VACUALITE,FLOATING_STONE);
     }
 
     @Override
@@ -36,13 +32,13 @@ public final class _618_IntoTheFlame extends Quest {
         String htmltext = event;
         int cond = st.getCond();
         if ("watcher_valakas_klein_q0618_0104.htm".equalsIgnoreCase(event) && cond == 0) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if ("watcher_valakas_klein_q0618_0401.htm".equalsIgnoreCase(event))
             if (st.getQuestItemsCount(VACUALITE) > 0 && cond == 4) {
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 st.giveItems(FLOATING_STONE);
             } else
                 htmltext = "watcher_valakas_klein_q0618_0104.htm";
@@ -69,7 +65,7 @@ public final class _618_IntoTheFlame extends Quest {
             if (cond == 0) {
                 if (st.player.getLevel() < 60) {
                     htmltext = "watcher_valakas_klein_q0618_0103.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else
                     htmltext = "watcher_valakas_klein_q0618_0101.htm";
             } else if (cond == 4 && st.getQuestItemsCount(VACUALITE) > 0)

@@ -233,7 +233,7 @@ abstract class DocumentBase {
                 return parseLogicOr(n);
             case "not":
                 return parseLogicNot(n);
-            case "player":
+            case "getPlayer":
                 return parsePlayerCondition(n);
             case "target":
                 return parseTargetCondition(n);
@@ -408,7 +408,7 @@ abstract class DocumentBase {
         }
 
         if (cond == null)
-            LOG.error("Unrecognized <player> condition in " + file);
+            LOG.error("Unrecognized <getPlayer> condition in " + file);
         return cond;
     }
 
@@ -426,7 +426,7 @@ abstract class DocumentBase {
                 case "pvp":
                     cond = joinAnd(cond, new ConditionTargetPlayable(Boolean.valueOf(nodeValue)));
                     break;
-                case "player":
+                case "getPlayer":
                     cond = joinAnd(cond, new ConditionTargetPlayer(Boolean.valueOf(nodeValue)));
                     break;
                 case "summon":

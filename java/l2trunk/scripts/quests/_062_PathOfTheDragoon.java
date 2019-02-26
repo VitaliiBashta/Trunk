@@ -23,21 +23,15 @@ public final class _062_PathOfTheDragoon extends Quest {
         super(false);
 
         addStartNpc(Gwain);
-        addTalkId(Gwain);
-        addTalkId(Shubain);
-        addKillId(FelimLizardmanWarrior);
-        addKillId(VenomousSpider);
-        addKillId(TumranBugbear);
-        addQuestItem(FelimHead);
-        addQuestItem(VenomousSpiderLeg);
-        addQuestItem(ShubainsRecommendation);
-        addQuestItem(TumranBugbearHeart);
+        addTalkId(Gwain,Shubain);
+        addKillId(FelimLizardmanWarrior,VenomousSpider,TumranBugbear);
+        addQuestItem(FelimHead,VenomousSpiderLeg,ShubainsRecommendation,TumranBugbearHeart);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("master_tbwain_q0062_06.htm".equals(event)) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if ("master_shubain_q0062_02.htm".equals(event))
@@ -55,10 +49,10 @@ public final class _062_PathOfTheDragoon extends Quest {
             if (id == CREATED) {
                 if (st.player.getClassId() != ClassId.maleSoldier) {
                     htmltext = "master_tbwain_q0062_02.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else if (st.player.getLevel() < 18) {
                     htmltext = "master_tbwain_q0062_03.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else
                     htmltext = "master_tbwain_q0062_01.htm";
             } else if (cond == 4) {
@@ -76,7 +70,7 @@ public final class _062_PathOfTheDragoon extends Quest {
                     }
                 }
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 htmltext = "master_tbwain_q0062_10.htm";
             }
         } else if (npcId == Shubain)

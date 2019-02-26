@@ -21,7 +21,7 @@ import java.util.*;
  * ----------------------------------
  *
  */
-public class StrTable {
+public final class StrTable {
     private final Map<Integer, Map<String, String>> rows = new HashMap<>();
     private final Map<String, Integer> columns = new LinkedHashMap<>();
     private final List<String> titles = new ArrayList<>();
@@ -29,10 +29,6 @@ public class StrTable {
     public StrTable(String title) {
         if (title != null)
             titles.add(title);
-    }
-
-    public StrTable() {
-        this(null);
     }
 
     private static StringBuilder right(StringBuilder result, String s, int sz) {

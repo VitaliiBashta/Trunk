@@ -28,11 +28,7 @@ public final class _357_WarehouseKeepersAmbition extends Quest {
         super(false);
         addStartNpc(SILVA);
 
-        addKillId(MOB1);
-        addKillId(MOB2);
-        addKillId(MOB3);
-        addKillId(MOB4);
-        addKillId(MOB5);
+        addKillId(MOB1,MOB2,MOB3,MOB4,MOB5);
 
         addQuestItem(JADE_CRYSTAL);
     }
@@ -42,7 +38,7 @@ public final class _357_WarehouseKeepersAmbition extends Quest {
         String htmltext = event;
         if (event.equalsIgnoreCase("warehouse_keeper_silva_q0357_04.htm")) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("warehouse_keeper_silva_q0357_08.htm")) {
             long count = st.getQuestItemsCount(JADE_CRYSTAL);
@@ -56,7 +52,7 @@ public final class _357_WarehouseKeepersAmbition extends Quest {
                 htmltext = "warehouse_keeper_silva_q0357_06.htm";
         } else if (event.equalsIgnoreCase("warehouse_keeper_silva_q0357_11.htm")) {
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
         return htmltext;
     }
@@ -72,7 +68,7 @@ public final class _357_WarehouseKeepersAmbition extends Quest {
                 htmltext = "warehouse_keeper_silva_q0357_02.htm";
             else {
                 htmltext = "warehouse_keeper_silva_q0357_01.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (jade == 0)
             htmltext = "warehouse_keeper_silva_q0357_06.htm";

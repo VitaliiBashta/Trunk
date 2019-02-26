@@ -36,7 +36,7 @@ public class DeleteExpiredMailTask extends AutomaticTask {
                         player.sendPacket(SystemMsg.THE_MAIL_HAS_ARRIVED);
                     }
                 } else {
-                    // TODO [G1ta0] return things to the player's inventory
+                    // TODO [G1ta0] return things to the getPlayer's inventory
                     mail.setExpireTime(expireTime + 86400);
                     mail.setJdbcState(JdbcEntityState.UPDATED);
                     mail.update();
@@ -47,8 +47,4 @@ public class DeleteExpiredMailTask extends AutomaticTask {
         }
     }
 
-    @Override
-    public long reCalcTime(boolean start) {
-        return System.currentTimeMillis() + 600000L;
-    }
 }

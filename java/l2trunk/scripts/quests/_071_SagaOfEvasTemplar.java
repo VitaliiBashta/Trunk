@@ -1,6 +1,6 @@
 package l2trunk.scripts.quests;
 
-import l2trunk.gameserver.scripts.ScriptFile;
+import l2trunk.gameserver.model.base.ClassId;
 import l2trunk.gameserver.utils.Location;
 
 import java.util.List;
@@ -10,15 +10,14 @@ public final class _071_SagaOfEvasTemplar extends SagasSuperclass {
         super(false);
 
         NPC = List.of(30852, 31624, 31278, 30852, 31638, 31646, 31648, 31651, 31654, 31655, 31658, 31281);
-        Items = List.of(7080, 7535, 7081, 7486, 7269, 7300, 7331, 7362, 7393, 7424, 7094, 6482);
-        Mob = List.of(27287, 27220, 27279);
-        classid = 99;
-        prevclass = 0x14;
+        items = List.of(7080, 7535, 7081, 7486, 7269, 7300, 7331, 7362, 7393, 7424, 7094, 6482);
+        mob = List.of(27287, 27220, 27279);
+        classid = ClassId.evaTemplar;
         locs = List.of(
-                new Location(119518, -28658, -3811),
-                new Location(181215, 36676, -4812),
-                new Location(181227, 36703, -4816));
-        Text = List.of(
+                Location.of(119518, -28658, -3811),
+                Location.of(181215, 36676, -4812),
+                Location.of(181227, 36703, -4816));
+        text = List.of(
                 "PLAYERNAME! Pursued to here! However, I jumped out of the Banshouren boundaries! You look at the giant as the sign of power!",
                 "... Oh ... good! So it was ... let's begin!",
                 "I do not have the patience ..! I have been a giant force ...! Cough chatter ah ah ah!",

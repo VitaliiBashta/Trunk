@@ -305,9 +305,9 @@ public final class glitmedal extends Functions implements ScriptFile, OnDeathLis
         } else if (player.haveItem( Badge_of_Rabbit)) {
             if (player.haveItem(EVENT_GLITTMEDAL, 10))
                 if (isTalker == 1) {
-                    removeItem(player, Badge_of_Rabbit, 1, "gamea");
+                    removeItem(player, Badge_of_Rabbit,  "gamea");
                     removeItem(player, EVENT_GLITTMEDAL, 10, "gamea");
-                    addItem(player, Badge_of_Hyena, 1);
+                    addItem(player, Badge_of_Hyena);
                     show("scripts/events/glitmedal/event_col_agent2_q0996_22.htm", player);
                     return;
                 } else if (isTalker == 0) {

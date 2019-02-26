@@ -41,9 +41,7 @@ public final class _605_AllianceWithKetraOrcs extends Quest {
         //hunt for general
         addKillId(VARKA_GENERALS);
 
-        addQuestItem(VB_SOLDIER);
-        addQuestItem(VB_CAPTAIN);
-        addQuestItem(VB_GENERAL);
+        addQuestItem(VB_SOLDIER,VB_CAPTAIN,VB_GENERAL);
     }
 
     private static boolean checkNextLevel(QuestState st, int soilder_count, int capitan_count, int general_count, int other_item, boolean take) {
@@ -87,7 +85,7 @@ public final class _605_AllianceWithKetraOrcs extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("first-2.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
             return event;
         }
@@ -119,7 +117,7 @@ public final class _605_AllianceWithKetraOrcs extends Quest {
             st.takeItems(KETRA_MARKS);
             st.setCond(0);
             st.playSound(SOUND_MIDDLE);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
         st.player.updateKetraVarka();
         return event;
@@ -128,7 +126,7 @@ public final class _605_AllianceWithKetraOrcs extends Quest {
     @Override
     public String onTalk(NpcInstance npc, QuestState st) {
         if (st.player.getVarka() > 0) {
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             return "isvarka.htm";
         }
         checkMarks(st, KETRA_MARKS);
@@ -139,7 +137,7 @@ public final class _605_AllianceWithKetraOrcs extends Quest {
         if (npcId == 31371) {
             if (cond == 0) {
                 if (st.player.getLevel() < 74) {
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                     return "no-occupation.htm";
                 }
                 return "first.htm";
@@ -174,7 +172,7 @@ public final class _605_AllianceWithKetraOrcs extends Quest {
             }
             if (st.player.getKetra() > 0) {
                 st.player.updateKetraVarka();
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 return;
             }
         }

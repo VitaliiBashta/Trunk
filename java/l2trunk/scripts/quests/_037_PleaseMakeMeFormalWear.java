@@ -33,7 +33,7 @@ public final class _037_PleaseMakeMeFormalWear extends Quest {
         switch (event) {
             case "quest_accept":
                 st.setCond(1);
-                st.setState(STARTED);
+                st.start();
                 st.playSound(SOUND_ACCEPT);
                 htmltext = "trader_alexis_q0037_0104.htm";
                 break;
@@ -68,7 +68,7 @@ public final class _037_PleaseMakeMeFormalWear extends Quest {
                     st.unset("cond");
                     htmltext = "leikar_q0037_0801.htm";
                     st.playSound(SOUND_FINISH);
-                    st.exitCurrentQuest(false);
+                    st.finish();
                 } else
                     htmltext = "leikar_q0037_0802.htm";
                 break;
@@ -109,7 +109,7 @@ public final class _037_PleaseMakeMeFormalWear extends Quest {
                     htmltext = "trader_alexis_q0037_0101.htm";
                 else {
                     htmltext = "trader_alexis_q0037_0103.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1)
                 htmltext = "trader_alexis_q0037_0105.htm";

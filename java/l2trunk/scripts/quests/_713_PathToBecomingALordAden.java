@@ -31,11 +31,11 @@ public final class _713_PathToBecomingALordAden extends Quest {
         Castle castle = ResidenceHolder.getResidence(AdenCastle);
         if (castle.getOwner() == null)
             return "Castle has no lord";
-        Player castleOwner = castle.getOwner().getLeader().player();
+        Player castleOwner = castle.getOwner().getLeader().getPlayer();
 
         switch (event) {
             case "logan_q713_02.htm":
-                st.setState(STARTED);
+                st.start();
                 st.setCond(1);
                 st.playSound(SOUND_ACCEPT);
                 break;
@@ -46,7 +46,7 @@ public final class _713_PathToBecomingALordAden extends Quest {
                 Functions.npcSay(npc, NpcString.S1_HAS_BECOME_THE_LORD_OF_THE_TOWN_OF_ADEN, st.player.getName());
                 castle.getDominion().changeOwner(castleOwner.getClan());
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 break;
         }
         return event;
@@ -60,7 +60,7 @@ public final class _713_PathToBecomingALordAden extends Quest {
         Castle castle = ResidenceHolder.getResidence(AdenCastle);
         if (castle.getOwner() == null)
             return "Castle has no lord";
-        Player castleOwner = castle.getOwner().getLeader().player();
+        Player castleOwner = castle.getOwner().getLeader().getPlayer();
 
         if (npcId == Logan) {
             if (cond == 0) {
@@ -69,11 +69,11 @@ public final class _713_PathToBecomingALordAden extends Quest {
                         htmltext = "logan_q713_01.htm";
                     else {
                         htmltext = "logan_q713_00.htm";
-                        st.exitCurrentQuest(true);
+                        st.exitCurrentQuest();
                     }
                 } else {
                     htmltext = "logan_q713_00a.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1)
                 htmltext = "logan_q713_03.htm";

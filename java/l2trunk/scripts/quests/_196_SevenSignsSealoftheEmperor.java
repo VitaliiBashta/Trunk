@@ -55,7 +55,7 @@ public final class _196_SevenSignsSealoftheEmperor extends Quest {
 
         if ("iasonheine_q196_1d.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("iasonheine_q196_2.htm".equalsIgnoreCase(event)) {
             if (GameObjectsStorage.getAllByNpcId(MerchantofMammon, false).count() ==0) {
@@ -110,8 +110,8 @@ public final class _196_SevenSignsSealoftheEmperor extends Quest {
         } else if ("wood_q196_2.htm".equalsIgnoreCase(event))
             if (player.getBaseClassId() == player.getActiveClassId()) {
                 st.addExpAndSp(25000000, 2500000);
-                st.setState(COMPLETED);
-                st.exitCurrentQuest(false);
+                st.complete();
+                st.finish();
                 st.playSound(SOUND_FINISH);
             } else
                 return "subclass_forbidden.htm";
@@ -130,7 +130,7 @@ public final class _196_SevenSignsSealoftheEmperor extends Quest {
                     htmltext = "iasonheine_q196_1.htm";
                 else {
                     htmltext = "iasonheine_q196_0.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1)
                 htmltext = "iasonheine_q196_1a.htm";
@@ -197,13 +197,13 @@ public final class _196_SevenSignsSealoftheEmperor extends Quest {
         @Override
         public void runImpl() {
             if (reflection != null) {
-                reflection.addSpawnWithoutRespawn(32715, new Location(-83175, 217021, -7504, 49151)); //Lilith
-                reflection.addSpawnWithoutRespawn(32718, new Location(-83179, 216479, -7504, 16384)); //Anakim
-                reflection.addSpawnWithoutRespawn(32717, new Location(-83222, 217055, -7504, 49151)); //liliths_shadow_guard_ssq
-                reflection.addSpawnWithoutRespawn(32716, new Location(-83127, 217056, -7504, 49151)); //liliths_agent_wizard_ssq
-                reflection.addSpawnWithoutRespawn(32719, new Location(-83227, 216443, -7504, 16384)); //anakims_holly_ssq
-                reflection.addSpawnWithoutRespawn(32721, new Location(-83179, 216432, -7504, 16384)); //anakims_sacred_ssq
-                reflection.addSpawnWithoutRespawn(32720, new Location(-83134, 216443, -7504, 16384)); //anakims_divine_ssq
+                reflection.addSpawnWithoutRespawn(32715, Location.of(-83175, 217021, -7504, 49151)); //Lilith
+                reflection.addSpawnWithoutRespawn(32718, Location.of(-83179, 216479, -7504, 16384)); //Anakim
+                reflection.addSpawnWithoutRespawn(32717, Location.of(-83222, 217055, -7504, 49151)); //liliths_shadow_guard_ssq
+                reflection.addSpawnWithoutRespawn(32716, Location.of(-83127, 217056, -7504, 49151)); //liliths_agent_wizard_ssq
+                reflection.addSpawnWithoutRespawn(32719, Location.of(-83227, 216443, -7504, 16384)); //anakims_holly_ssq
+                reflection.addSpawnWithoutRespawn(32721, Location.of(-83179, 216432, -7504, 16384)); //anakims_sacred_ssq
+                reflection.addSpawnWithoutRespawn(32720, Location.of(-83134, 216443, -7504, 16384)); //anakims_divine_ssq
             }
         }
     }

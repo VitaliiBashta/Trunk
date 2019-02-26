@@ -9,11 +9,11 @@ import java.util.List;
 public final class _326_VanquishRemnants extends Quest {
     //NPC
     private static final int Leopold = 30435;
-    //Quest Items
+    //Quest items
     private static final int RedCrossBadge = 1359;
     private static final int BlueCrossBadge = 1360;
     private static final int BlackCrossBadge = 1361;
-    //Items
+    //items
     private static final int BlackLionMark = 1369;
 
     //Drop Cond
@@ -25,7 +25,7 @@ public final class _326_VanquishRemnants extends Quest {
         super(false);
         addStartNpc(Leopold);
         addTalkId(Leopold);
-        //Mob Drop
+        //mob Drop
         addKillId(RedCrossBadges);
         addKillId(BlueCrossBadges);
         addKillId(BlackCrossBadges);
@@ -36,11 +36,11 @@ public final class _326_VanquishRemnants extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("leopold_q0326_03.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("leopold_q0326_03.htm".equalsIgnoreCase(event)) {
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
         return event;
     }
@@ -53,7 +53,7 @@ public final class _326_VanquishRemnants extends Quest {
         if (npcId == Leopold)
             if (st.player.getLevel() < 21) {
                 htmltext = "leopold_q0326_01.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else if (cond == 0)
                 htmltext = "leopold_q0326_02.htm";
             else if (cond == 1 && st.getQuestItemsCount(RedCrossBadge) == 0 && st.getQuestItemsCount(BlueCrossBadge) == 0 && st.getQuestItemsCount(BlackCrossBadge) == 0)

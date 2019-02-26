@@ -95,7 +95,7 @@ public final class ClanHallAuctionEvent extends SiegeEvent<ClanHall, AuctionSieg
             // message send out, we will return all the money
             SystemMessage2 msg = new SystemMessage2(SystemMsg.THE_CLAN_HALL_WHICH_WAS_PUT_UP_FOR_AUCTION_HAS_BEEN_AWARDED_TO_S1_CLAN).addString(winnerSiegeClan.getClan().getName());
             for (AuctionSiegeClanObject $siegeClan : siegeClanObjects) {
-                Player player = $siegeClan.getClan().getLeader().player();
+                Player player = $siegeClan.getClan().getLeader().getPlayer();
                 if (player != null)
                     player.sendPacket(msg);
                 else
@@ -129,7 +129,7 @@ public final class ClanHallAuctionEvent extends SiegeEvent<ClanHall, AuctionSieg
             getResidence().startCycleTask();
         } else {
             if (oldOwner != null) {
-                Player player = oldOwner.getLeader().player();
+                Player player = oldOwner.getLeader().getPlayer();
                 if (player != null)
                     player.sendPacket(SystemMsg.THE_CLAN_HALL_WHICH_HAD_BEEN_PUT_UP_FOR_AUCTION_WAS_NOT_SOLD_AND_THEREFORE_HAS_BEEN_RELISTED);
                 else

@@ -79,7 +79,7 @@ public enum SevenSignsFestival {
     }
 
     /**
-     * Returns the maximum allowed player occupation for the given festival type.
+     * Returns the maximum allowed getPlayer occupation for the given festival type.
      */
     public static int getMaxLevelForFestival(int festivalId) {
         switch (festivalId) {
@@ -424,7 +424,7 @@ public enum SevenSignsFestival {
             _duskFestivalScores.put(festivalId, offeringScore);
         }
         StatsSet currFestData = getHighestScoreData(oracle, festivalId);
-        // Check if this is the highest score for this occupation range so far for the player's cabal.
+        // Check if this is the highest score for this occupation range so far for the getPlayer's cabal.
         if (offeringScore > thisCabalHighScore) {
             // If the current score is greater than that for the other cabal, then they already have the points from this festival.
             //if (thisCabalHighScore > otherCabalHighScore)
@@ -465,8 +465,8 @@ public enum SevenSignsFestival {
 
     /**
      * Calculate and return the proportion of the accumulated bonus for the festival
-     * where the player was in the winning party, if the winning party's cabal won the event.
-     * The accumulated bonus is then updated, with the player's share deducted.
+     * where the getPlayer was in the winning party, if the winning party's cabal won the event.
+     * The accumulated bonus is then updated, with the getPlayer's share deducted.
      *
      * @return playerBonus (the share of the bonus for the party)
      */

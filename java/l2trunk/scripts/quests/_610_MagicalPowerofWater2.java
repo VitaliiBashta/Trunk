@@ -44,7 +44,7 @@ public final class _610_MagicalPowerofWater2 extends Quest {
         if ("quest_accept".equalsIgnoreCase(event)) {
             htmltext = "shaman_asefa_q0610_0104.htm";
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("610_1".equals(event)) {
             if (ServerVariables.getLong(getClass().getSimpleName(), 0) + 3 * 60 * 60 * 1000 > System.currentTimeMillis())
@@ -62,7 +62,7 @@ public final class _610_MagicalPowerofWater2 extends Quest {
                 st.giveItems(Rnd.get(Reward_First, Reward_Last), 5, true);
                 st.playSound(SOUND_FINISH);
                 htmltext = "shaman_asefa_q0610_0301.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else
                 htmltext = "shaman_asefa_q0610_0302.htm";
         return htmltext;
@@ -81,11 +81,11 @@ public final class _610_MagicalPowerofWater2 extends Quest {
                         htmltext = "shaman_asefa_q0610_0101.htm";
                     else {
                         htmltext = "shaman_asefa_q0610_0102.htm";
-                        st.exitCurrentQuest(true);
+                        st.exitCurrentQuest();
                     }
                 } else {
                     htmltext = "shaman_asefa_q0610_0103.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1)
                 htmltext = "shaman_asefa_q0610_0105.htm";

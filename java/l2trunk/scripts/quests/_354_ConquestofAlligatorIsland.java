@@ -6,6 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
 import java.util.List;
+import java.util.Map;
 
 public final class _354_ConquestofAlligatorIsland extends Quest {
     private static final int PIRATES_TREASURE_MAP = 5915;
@@ -23,28 +24,18 @@ public final class _354_ConquestofAlligatorIsland extends Quest {
     //items
     private final int ALLIGATOR_TOOTH = 5863;
     private final int TORN_MAP_FRAGMENT = 5864;
-    private final List<Integer> RANDOM_REWARDS_IDS = List.of(
-            736,             //SoE
-            1061,            //Healing Potion
-            734,             //Haste Potion
-            735,             //Alacrity Potion
-            1878,            //Braided Hemp
-            1875,            //Stone of Purity
-            1879,            //Cokes
-            1880,            //Steel
-            956,             //Enchant Armor D
-            955);           //Enchant Weapon D
-    private final List<Integer> RANDOM_REWARDS_COUNT = List.of(
-            15,            //SoE
-            20,            //Healing Potion
-            10,            //Haste Potion
-            5,            //Alacrity Potion
-            25,            //Braided Hemp
-            10,            //Stone of Purity
-            10,            //Cokes
-            10,            //Steel
-            1,            //Enchant Armor D
-            1);           //Enchant Weapon D
+    private final Map<Integer, Integer> RANDOM_REWARDS_IDS = Map.of(
+            736, 15,          //SoE
+            1061, 20,       //Healing Potion
+            734, 10, //Haste Potion
+            735, 5,           //Alacrity Potion
+            1878, 25,         //Braided Hemp
+            1875, 10,          //Stone of Purity
+            1879, 10,         //Cokes
+            1880, 10,    //Steel
+            956, 1,         //Enchant Armor D
+            955, 1);           //Enchant Weapon D
+
 
     public _354_ConquestofAlligatorIsland() {
         super(false);
@@ -60,15 +51,15 @@ public final class _354_ConquestofAlligatorIsland extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
         long amount = st.getQuestItemsCount(ALLIGATOR_TOOTH);
-        if (event.equalsIgnoreCase("30895-00a.htm"))
-            st.exitCurrentQuest(true);
-        else if (event.equalsIgnoreCase("1")) {
-            st.setState(STARTED);
+        if ("30895-00a.htm".equalsIgnoreCase(event))
+            st.exitCurrentQuest();
+        else if ("1".equals(event)) {
+            st.start();
             st.setCond(1);
             htmltext = "30895-02.htm";
             st.playSound(SOUND_ACCEPT);
         } else if ("30895-06.htm".equalsIgnoreCase(event)) {
-            if (st.getQuestItemsCount(TORN_MAP_FRAGMENT) > 9)
+            if (st.haveQuestItem(TORN_MAP_FRAGMENT, 10))
                 htmltext = "30895-07.htm";
         } else if ("30895-05.htm".equalsIgnoreCase(event)) {
             if (amount > 0)
@@ -76,8 +67,8 @@ public final class _354_ConquestofAlligatorIsland extends Quest {
                     st.giveItems(ADENA_ID, amount * 300);
                     st.takeItems(ALLIGATOR_TOOTH);
                     st.playSound(SOUND_ITEMGET);
-                    int random = Rnd.get(RANDOM_REWARDS_IDS.size());
-                    st.giveItems(RANDOM_REWARDS_IDS.get(random), RANDOM_REWARDS_COUNT.get(random));
+                    int random = Rnd.get(RANDOM_REWARDS_IDS.keySet());
+                    st.giveItems(random, RANDOM_REWARDS_IDS.get(random));
                     htmltext = "30895-05b.htm";
                 } else {
                     st.giveItems(ADENA_ID, amount * 100);
@@ -90,7 +81,7 @@ public final class _354_ConquestofAlligatorIsland extends Quest {
             st.takeItems(TORN_MAP_FRAGMENT, -1);
             st.playSound(SOUND_ITEMGET);
         } else if ("30895-09.htm".equalsIgnoreCase(event)) {
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             st.playSound(SOUND_FINISH);
         }
         return htmltext;

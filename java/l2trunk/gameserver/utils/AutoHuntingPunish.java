@@ -44,7 +44,7 @@ public class AutoHuntingPunish {
     }
 
     /**
-     * @return true if the player punishment has
+     * @return true if the getPlayer punishment has
      * expired
      */
     public boolean canWalk() {
@@ -55,7 +55,7 @@ public class AutoHuntingPunish {
     }
 
     /**
-     * @return true if the player punishment has
+     * @return true if the getPlayer punishment has
      * expired
      */
     public boolean canTalk() {
@@ -66,7 +66,7 @@ public class AutoHuntingPunish {
     }
 
     /**
-     * @return true if the player punishment has
+     * @return true if the getPlayer punishment has
      * expired
      */
     public boolean canJoinParty() {
@@ -77,7 +77,7 @@ public class AutoHuntingPunish {
     }
 
     /**
-     * @return true if the player punishment has
+     * @return true if the getPlayer punishment has
      * expired
      */
     public boolean canPerformAction() {

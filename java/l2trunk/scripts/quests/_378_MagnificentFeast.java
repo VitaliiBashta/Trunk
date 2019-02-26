@@ -10,7 +10,7 @@ import java.util.Map;
 public final class _378_MagnificentFeast extends Quest {
     // NPCs
     private static final int RANSPO = 30594;
-    // Items
+    // items
     private static final int WINE_15 = 5956;
     private static final int WINE_30 = 5957;
     private static final int WINE_60 = 5958;
@@ -82,7 +82,7 @@ public final class _378_MagnificentFeast extends Quest {
 
         if ("quest_accept".equalsIgnoreCase(event) && _state == CREATED) {
             htmltext = "warehouse_chief_ranspo_q0378_03.htm";
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if ("378_1".equals(event) && _state == STARTED) {
@@ -155,7 +155,7 @@ public final class _378_MagnificentFeast extends Quest {
         if (_state == CREATED) {
             if (st.player.getLevel() < 20) {
                 htmltext = "warehouse_chief_ranspo_q0378_01.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else {
                 htmltext = "warehouse_chief_ranspo_q0378_02.htm";
                 st.setCond(0);
@@ -175,7 +175,7 @@ public final class _378_MagnificentFeast extends Quest {
                 if (reward[2] > 0)
                     st.giveItems(ADENA_ID, reward[2]);
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else
                 htmltext = "warehouse_chief_ranspo_q0378_19.htm";
         }

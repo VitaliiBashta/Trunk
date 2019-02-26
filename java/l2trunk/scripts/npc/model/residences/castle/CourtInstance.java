@@ -45,7 +45,7 @@ public class CourtInstance extends NpcInstance {
             }
             if (command.startsWith("gotoleader")) {
                 if (player.getClan() != null) {
-                    Player clanLeader = player.getClan().getLeader().player();
+                    Player clanLeader = player.getClan().getLeader().getPlayer();
                     if (clanLeader == null)
                         return;
 
@@ -81,7 +81,7 @@ public class CourtInstance extends NpcInstance {
 
         NpcHtmlMessage html = new NpcHtmlMessage(player, this);
         html.setFile(filename);
-        html.replace("%objectId%", String.valueOf(objectId()));
+        html.replace("%objectId%", objectId());
         html.replace("%npcname%", getName());
         player.sendPacket(html);
     }

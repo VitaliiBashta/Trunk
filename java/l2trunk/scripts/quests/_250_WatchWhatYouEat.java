@@ -7,7 +7,7 @@ import l2trunk.gameserver.model.quest.QuestState;
 public final class _250_WatchWhatYouEat extends Quest {
     // NPCs
     private static final int SALLY = 32743;
-    // Mobs - Items
+    // Mobs - items
     private static final int[][] MOBS = {
             {
                     18864,
@@ -37,7 +37,7 @@ public final class _250_WatchWhatYouEat extends Quest {
 
         if (npc.getNpcId() == SALLY) {
             if (event.equalsIgnoreCase("32743-03.htm")) {
-                st.setState(STARTED);
+                st.start();
                 st.setCond(1);
                 st.playSound(SOUND_ACCEPT);
             } else if (event.equalsIgnoreCase("32743-end.htm")) {
@@ -45,7 +45,7 @@ public final class _250_WatchWhatYouEat extends Quest {
                 st.giveItems(57, 135661, true);
                 st.addExpAndSp(698334, 76369);
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(false);
+                st.finish();
             }
         }
         return event;

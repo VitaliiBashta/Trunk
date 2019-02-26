@@ -68,7 +68,7 @@ public final class AuctionedDoormanInstance extends NpcInstance {
                     html.setFile("merchant/territorystatus.htm");
                     html.replace("%npcname%", getName());
                     html.replace("%castlename%", HtmlUtils.htmlResidenceName(castle.getId()));
-                    html.replace("%taxpercent%", String.valueOf(castle.getTaxPercent()));
+                    html.replace("%taxpercent%", castle.getTaxPercent());
                     html.replace("%clanname%", playerClan.getName());
                     html.replace("%clanleadername%", playerClan.getLeaderName());
                     player.sendPacket(html);

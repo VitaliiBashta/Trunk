@@ -63,7 +63,7 @@ public enum ResidenceParser {
         for (Iterator<Element> iterator = rootElement.elementIterator(); iterator.hasNext(); ) {
             Element element = iterator.next();
             String nodeName = element.getName();
-            int level = element.attributeValue("occupation") == null ? 0 : toInt(element.attributeValue("occupation"));
+            int level = element.attributeValue("level") == null ? 0 : toInt(element.attributeValue("level"));
             int lease = (int) ((element.attributeValue("lease") == null ? 0 : toInt(element.attributeValue("lease"))) * Config.RESIDENCE_LEASE_FUNC_MULTIPLIER);
             int npcId = element.attributeValue("npcId") == null ? 0 : toInt(element.attributeValue("npcId"));
             int listId = element.attributeValue("listId") == null ? 0 : toInt(element.attributeValue("listId"));

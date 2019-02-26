@@ -26,7 +26,7 @@ public final class AdminDisconnect implements IAdminCommandHandler {
                     // Обработка по таргету
                     GameObject target = activeChar.getTarget();
                     if (target == null) {
-                        activeChar.sendMessage("Select character or specify player name.");
+                        activeChar.sendMessage("Select character or specify getPlayer name.");
                         break;
                     }
                     if (target instanceof Player) {

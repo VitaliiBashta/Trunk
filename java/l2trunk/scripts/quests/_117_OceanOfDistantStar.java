@@ -12,7 +12,7 @@ public final class _117_OceanOfDistantStar extends Quest {
     private static final int Obi = 32052;
     private static final int GhostEngineer2 = 32054;
     private static final int Box = 32076;
-    //Quest Items
+    //Quest items
     private static final int BookOfGreyStar = 8495;
     private static final int EngravedHammer = 8488;
     //Mobs
@@ -24,23 +24,18 @@ public final class _117_OceanOfDistantStar extends Quest {
 
         addStartNpc(Abey);
 
-        addTalkId(GhostEngineer);
-        addTalkId(Obi);
-        addTalkId(Box);
-        addTalkId(GhostEngineer2);
+        addTalkId(GhostEngineer, Obi, Box, GhostEngineer2);
 
-        addKillId(BanditWarrior);
-        addKillId(BanditInspector);
+        addKillId(BanditWarrior, BanditInspector);
 
-        addQuestItem(BookOfGreyStar,
-                EngravedHammer);
+        addQuestItem(BookOfGreyStar, EngravedHammer);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if (event.equalsIgnoreCase("railman_abu_q0117_0104.htm")) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("ghost_of_railroadman2_q0117_0201.htm"))
             st.setCond(2);
@@ -65,7 +60,7 @@ public final class _117_OceanOfDistantStar extends Quest {
             st.giveItems(ADENA_ID, 17647, true);
             st.addExpAndSp(107387, 7369);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(false);
+            st.finish();
         }
         return event;
     }
@@ -84,7 +79,7 @@ public final class _117_OceanOfDistantStar extends Quest {
                     htmltext = "railman_abu_q0117_0101.htm";
                 else {
                     htmltext = "railman_abu_q0117_0103.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 3)
                 htmltext = "railman_abu_q0117_0301.htm";
@@ -121,7 +116,7 @@ public final class _117_OceanOfDistantStar extends Quest {
                 st.playSound(SOUND_ITEMGET);
             }
             st.setCond(8);
-            st.setState(STARTED);
+            st.start();
         }
     }
 }

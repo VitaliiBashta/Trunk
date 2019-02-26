@@ -11,7 +11,7 @@ import java.util.List;
 
 
 public final class _383_SearchingForTreasure extends Quest {
-    // Items
+    // items
     private static final int PIRATES_TREASURE_MAP = 5915;
 
     // NPC
@@ -59,7 +59,7 @@ public final class _383_SearchingForTreasure extends Quest {
         String htmltext = event;
         if ("30890-03.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
         } else if ("30890-07.htm".equalsIgnoreCase(event)) {
             if (st.haveQuestItem(PIRATES_TREASURE_MAP) ) {
                 st.setCond(2);
@@ -71,7 +71,7 @@ public final class _383_SearchingForTreasure extends Quest {
                 st.playSound(SOUND_ACCEPT);
             } else {
                 htmltext = "You don't have required items";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if ("30890-02b.htm".equalsIgnoreCase(event)) {
             if (st.haveQuestItem(PIRATES_TREASURE_MAP) ) {
@@ -79,7 +79,7 @@ public final class _383_SearchingForTreasure extends Quest {
                 st.playSound("ItemSound.quest_finish");
             } else
                 htmltext = "You don't have required items";
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         } else if ("31148-02.htm".equalsIgnoreCase(event))
             if (st.haveQuestItem(1661) ) {
                 st.takeItems(1661, 1);
@@ -102,7 +102,7 @@ public final class _383_SearchingForTreasure extends Quest {
                                 }
                     }
                 st.playSound("ItemSound.quest_finish");
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else
                 htmltext = "31148-03.htm";
         return htmltext;
@@ -118,11 +118,11 @@ public final class _383_SearchingForTreasure extends Quest {
                     htmltext = "30890-01.htm";
                 else {
                     htmltext = "30890-00.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else {
                 htmltext = "30890-01a.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (npcId == ESPEN)
             htmltext = "30890-03a.htm";

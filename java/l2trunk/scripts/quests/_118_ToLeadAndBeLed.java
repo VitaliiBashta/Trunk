@@ -45,7 +45,7 @@ public final class _118_ToLeadAndBeLed extends Quest {
         switch (event) {
             case "30298-02.htm":
                 st.setCond(1);
-                st.setState(STARTED);
+                st.start();
                 st.playSound(SOUND_ACCEPT);
                 break;
             case "30298-05a.htm":
@@ -80,15 +80,15 @@ public final class _118_ToLeadAndBeLed extends Quest {
         int _state = st.getState();
         if (_state == CREATED) {
             if (st.player.getLevel() < 19) {
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 return "30298-00.htm";
             }
             if (st.player.getClanId() == 0) {
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 return "30298-00a.htm";
             }
             if (st.player.getSponsor() == 0) {
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 return "30298-00b.htm";
             }
             st.setCond(0);
@@ -144,7 +144,7 @@ public final class _118_ToLeadAndBeLed extends Quest {
             }
             st.unset("cond");
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(false);
+            st.finish();
             return "30298-09.htm";
         }
 

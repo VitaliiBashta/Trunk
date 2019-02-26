@@ -11,7 +11,7 @@ public final class _352_HelpRoodRaiseANewPet extends Quest {
     //Mobs
     private static final int Lienrik = 20786;
     private static final int Lienrik_Lad = 20787;
-    //Quest Items
+    //Quest items
     private static final int LIENRIK_EGG1 = 5860;
     private static final int LIENRIK_EGG2 = 5861;
     //Chances
@@ -21,22 +21,20 @@ public final class _352_HelpRoodRaiseANewPet extends Quest {
     public _352_HelpRoodRaiseANewPet() {
         super(false);
         addStartNpc(Rood);
-        addKillId(Lienrik);
-        addKillId(Lienrik_Lad);
-        addQuestItem(LIENRIK_EGG1);
-        addQuestItem(LIENRIK_EGG2);
+        addKillId(Lienrik,Lienrik_Lad);
+        addQuestItem(LIENRIK_EGG1,LIENRIK_EGG2);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         int _state = st.getState();
         if (event.equalsIgnoreCase("31067-04.htm") && _state == CREATED) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("31067-09.htm") && _state == STARTED) {
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
         return event;
     }
@@ -51,7 +49,7 @@ public final class _352_HelpRoodRaiseANewPet extends Quest {
         if (_state == CREATED) {
             if (st.player.getLevel() < 39) {
                 htmltext = "31067-00.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else {
                 htmltext = "31067-01.htm";
                 st.setCond(0);

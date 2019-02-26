@@ -25,7 +25,7 @@ public final class _240_ImTheOnlyOneYouCanTrust extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("32640-3.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         }
         return event;
@@ -43,13 +43,13 @@ public final class _240_ImTheOnlyOneYouCanTrust extends Quest {
                 htmltext = "32640-1.htm";
             else {
                 htmltext = "32640-0.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (cond == 1)
             htmltext = "32640-8.htm";
         else if (cond == 2) {
             st.addExpAndSp(589542, 36800);
-            st.exitCurrentQuest(false);
+            st.finish();
             st.playSound(SOUND_FINISH);
             htmltext = "32640-9.htm";
         }

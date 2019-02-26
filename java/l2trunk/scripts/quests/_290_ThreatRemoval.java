@@ -25,7 +25,7 @@ public final class _290_ThreatRemoval extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
         if (event.equalsIgnoreCase("pinaps_q290_02.htm")) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("pinaps_q290_05.htm")) {
@@ -55,7 +55,7 @@ public final class _290_ThreatRemoval extends Quest {
             htmltext = "pinaps_q290_06.htm";
         } else if (event.equalsIgnoreCase("quit")) {
             htmltext = "pinaps_q290_07.htm";
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
         return htmltext;
     }
@@ -70,7 +70,7 @@ public final class _290_ThreatRemoval extends Quest {
                     htmltext = "pinaps_q290_01.htm";
                 else {
                     htmltext = "pinaps_q290_00.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1 && st.getQuestItemsCount(SelMahumIDTag) < 400)
                 htmltext = "pinaps_q290_03.htm";

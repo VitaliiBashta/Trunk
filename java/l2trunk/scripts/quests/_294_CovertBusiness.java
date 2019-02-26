@@ -20,17 +20,16 @@ public final class _294_CovertBusiness extends Quest {
         addStartNpc(Keef);
         addTalkId(Keef);
 
-        addKillId(BarbedBat);
-        addKillId(BladeBat);
+        addKillId(BarbedBat,BladeBat);
 
         addQuestItem(BatFang);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("elder_keef_q0294_03.htm")) {
+        if ("elder_keef_q0294_03.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         }
         return event;
@@ -44,13 +43,13 @@ public final class _294_CovertBusiness extends Quest {
         if (id == CREATED) {
             if (st.player.getRace() != Race.dwarf) {
                 htmltext = "elder_keef_q0294_00.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else if (st.player.getLevel() >= 10) {
                 htmltext = "elder_keef_q0294_02.htm";
                 return htmltext;
             } else {
                 htmltext = "elder_keef_q0294_01.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (st.getQuestItemsCount(BatFang) < 100)
             htmltext = "elder_keef_q0294_04.htm";
@@ -64,7 +63,7 @@ public final class _294_CovertBusiness extends Quest {
             }
             st.addExpAndSp(0, 600);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
 
         return htmltext;

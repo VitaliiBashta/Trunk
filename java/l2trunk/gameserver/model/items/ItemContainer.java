@@ -25,7 +25,6 @@ public abstract class ItemContainer {
     private final Lock writeLock = lock.writeLock();
 
 
-
     public int getSize() {
         return items.size();
     }
@@ -60,7 +59,6 @@ public abstract class ItemContainer {
                 .findFirst().orElse(null);
     }
 
-    @Deprecated
     public synchronized ItemInstance getItemByItemId(int itemId) {
         return items.stream()
                 .filter(item -> item.getItemId() == itemId)
@@ -77,6 +75,10 @@ public abstract class ItemContainer {
         return items.stream()
                 .filter(i -> i.getItemId() == itemId)
                 .count();
+    }
+
+    public final synchronized boolean isItemPresent(int itemId) {
+        return items.stream().anyMatch(i -> i.getItemId() == itemId);
     }
 
     /**
@@ -301,8 +303,6 @@ public abstract class ItemContainer {
     /**
      * Уничтожить вещь из списка, либо снизить количество по идентификатору objectId
      *
-     * @param objectId
-     * @param count    - количество для удаления
      * @return true, если количество было снижено или вещь была уничтожена
      */
     public boolean destroyItemByObjectId(int objectId, long count, String owner, String log) {
@@ -322,9 +322,6 @@ public abstract class ItemContainer {
 
     /**
      * Уничтожить вещь из списка, либо снизить количество по идентификатору itemId
-     *
-     * @param itemId
-     * @param count  - количество для удаления
      * @return true, если количество было снижено или вещь была уничтожена
      */
     public boolean destroyItemByItemId(int itemId, long count, String owner, String log) {

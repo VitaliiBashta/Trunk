@@ -26,24 +26,23 @@ public final class _609_MagicalPowerofWater1 extends Quest {
     public _609_MagicalPowerofWater1() {
         super(false);
         addStartNpc(WAHKAN);
-        addTalkId(ASEFA);
-        addTalkId(UDANS_MARDUI_BOX);
+        addTalkId(ASEFA,UDANS_MARDUI_BOX);
         addAttackId(VARKA_NPC_LIST);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equals("quest_accept")) {
+        if ("quest_accept".equals(event)) {
             htmltext = "herald_wakan_q0609_02.htm";
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equals("609_1"))
+        } else if ("609_1".equals(event))
             if (st.getCond() == 2)
-                if (st.getQuestItemsCount(THIEF_KEY) < 1)
+                if (!st.haveQuestItem(THIEF_KEY))
                     htmltext = "udans_box_q0609_02.htm";
-                else if (st.getInt("proval") == 1) {
+                else if (st.isSet("proval")) {
                     htmltext = "udans_box_q0609_04.htm";
                     st.takeItems(THIEF_KEY, 1);
                 } else {
@@ -60,7 +59,6 @@ public final class _609_MagicalPowerofWater1 extends Quest {
         String htmltext = "noquest";
         int npcId = npc.getNpcId();
         int cond = st.getCond();
-        int proval = st.getInt("proval");
         if (npcId == WAHKAN) {
             if (cond == 0)
                 if (st.player.getLevel() >= 74)
@@ -69,15 +67,15 @@ public final class _609_MagicalPowerofWater1 extends Quest {
                             htmltext = "herald_wakan_q0609_01.htm";
                         else {
                             htmltext = "completed";
-                            st.exitCurrentQuest(true);
+                            st.exitCurrentQuest();
                         }
                     } else {
                         htmltext = "herald_wakan_q0609_01a.htm";
-                        st.exitCurrentQuest(true);
+                        st.exitCurrentQuest();
                     }
                 else {
                     htmltext = "herald_wakan_q0609_01b.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             else if (cond == 1)
                 htmltext = "herald_wakan_q0609_03.htm";
@@ -85,17 +83,17 @@ public final class _609_MagicalPowerofWater1 extends Quest {
             if (cond == 1) {
                 htmltext = "shaman_asefa_q0609_01.htm";
                 st.setCond(2);
-            } else if (cond == 2 && proval == 1) {
+            } else if (cond == 2 && st.isSet("proval")) {
                 htmltext = "shaman_asefa_q0609_03.htm";
                 npc.doCast(4548, st.player, true);
-                st.set("proval", 0);
+                st.unset("proval");
             } else if (cond == 3 && st.haveQuestItem(STOLEN_GREEN_TOTEM) ) {
                 htmltext = "shaman_asefa_q0609_04.htm";
                 st.takeItems(STOLEN_GREEN_TOTEM);
                 st.giveItems(GREEN_TOTEM);
                 st.giveItems(DIVINE_STONE_OF_WISDOM);
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (npcId == UDANS_MARDUI_BOX && cond == 2)
             htmltext = "udans_box_q0609_01.htm";
@@ -104,9 +102,9 @@ public final class _609_MagicalPowerofWater1 extends Quest {
 
     @Override
     public void onAttack(NpcInstance npc, QuestState st) {
-        if (st.getCond() == 2 && st.getInt("proval") == 0) {
+        if (st.getCond() == 2 && !st.isSet("proval")) {
             npc.doCast(4547, st.player, true);
-            st.set("proval", 1);
+            st.set("proval");
         }
     }
 }

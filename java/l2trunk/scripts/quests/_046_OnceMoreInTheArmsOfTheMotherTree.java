@@ -20,12 +20,8 @@ public final class _046_OnceMoreInTheArmsOfTheMotherTree extends Quest {
 
         addStartNpc(30097);
 
-        addTalkId(30097);
 
-        addTalkId(30097);
-        addTalkId(30094);
-        addTalkId(30090);
-        addTalkId(30116);
+        addTalkId(30097,30094,30090,30116);
 
         addQuestItem(GALLADUCCIS_ORDER_DOCUMENT_ID_1,
                 GALLADUCCIS_ORDER_DOCUMENT_ID_2,
@@ -41,7 +37,7 @@ public final class _046_OnceMoreInTheArmsOfTheMotherTree extends Quest {
         switch (event) {
             case "1":
                 st.setCond(1);
-                st.setState(STARTED);
+                st.start();
                 st.playSound(SOUND_ACCEPT);
                 st.giveItems(GALLADUCCIS_ORDER_DOCUMENT_ID_1, 1);
                 htmltext = "galladuchi_q0046_0104.htm";
@@ -82,7 +78,7 @@ public final class _046_OnceMoreInTheArmsOfTheMotherTree extends Quest {
                 htmltext = "galladuchi_q0046_0701.htm";
                 st.setCond(0);
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(false);
+                st.finish();
                 break;
         }
         return htmltext;
@@ -96,10 +92,10 @@ public final class _046_OnceMoreInTheArmsOfTheMotherTree extends Quest {
         if (id == CREATED) {
             if (st.player.getRace() != Race.elf || st.getQuestItemsCount(MARK_OF_TRAVELER_ID) == 0) {
                 htmltext = "galladuchi_q0046_0102.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else if (st.player.getLevel() < 3) {
                 htmltext = "galladuchi_q0046_0103.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else
                 htmltext = "galladuchi_q0046_0101.htm";
         } else if (npcId == 30097 && st.getCond() == 1)

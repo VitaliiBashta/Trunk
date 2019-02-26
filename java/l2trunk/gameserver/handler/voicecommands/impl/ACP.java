@@ -33,7 +33,7 @@ public final class ACP implements IVoicedCommandHandler {
 
     @Override
     public boolean useVoicedCommand(String command, Player activeChar, String target) {
-        // Check if player exists in the world
+        // Check if getPlayer exists in the world
         if (activeChar == null) {
             return false;
         }

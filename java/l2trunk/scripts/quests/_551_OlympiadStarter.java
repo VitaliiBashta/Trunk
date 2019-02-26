@@ -10,7 +10,7 @@ public final class _551_OlympiadStarter extends Quest {
     // NPCs
     private static final int OLYMPIAD_MANAGER = 31688;
 
-    // Items
+    // items
     private static final int MEDAL_OF_GLORY = 21874;
     private static final int OLYMPIAD_CHEST = 17169;
     private static final int OLYMPIAD_CERT1 = 17238;
@@ -63,7 +63,7 @@ public final class _551_OlympiadStarter extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("olympiad_operator_q0551_03.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("olympiad_operator_q0551_07.htm".equalsIgnoreCase(event)) {
             if (st.getQuestItemsCount(OLYMPIAD_CERT3) > 0) {

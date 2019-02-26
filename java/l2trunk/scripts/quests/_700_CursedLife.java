@@ -42,7 +42,7 @@ public final class _700_CursedLife extends Quest {
 
         if (event.equals("orbyu_q700_2.htm") && cond == 0) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if (event.equals("ex_bones") && cond == 1)
             if (st.haveAnyQuestItems(SwallowedSkull,SwallowedSternum,SwallowedBones)) {
@@ -70,7 +70,7 @@ public final class _700_CursedLife extends Quest {
                     htmltext = "orbyu_q700_1.htm";
                 else {
                     htmltext = "orbyu_q700_0.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1)
                 if (st.haveAnyQuestItems(SwallowedSkull,SwallowedSternum,SwallowedBones) )

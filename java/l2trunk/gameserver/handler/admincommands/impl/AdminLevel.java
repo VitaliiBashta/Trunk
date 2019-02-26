@@ -73,7 +73,7 @@ public class AdminLevel implements IAdminCommandHandler {
                 pTarget.updateStats();
                 return;
             }
-            long exp_add = PetDataTable.INSTANCE.getInfo(((PetInstance) target).getNpcId(), level).getExp() - ((PetInstance) target).getExp();
+            long exp_add = PetDataTable.INSTANCE.getInfo(((PetInstance) target).getNpcId(), level).exp - ((PetInstance) target).getExp();
             ((PetInstance) target).addExpAndSp(exp_add, 0);
         } else {
             activeChar.sendPacket(SystemMsg.INVALID_TARGET);

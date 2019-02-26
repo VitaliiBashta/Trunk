@@ -58,20 +58,19 @@ public final class TakeFlag extends Skill {
     }
 
     @Override
-    public void useSkill(Creature activeChar, List<Creature> targets) {
-        for (Creature target : targets)
+    public void useSkill(Creature activeChar, Creature target) {
             if (target != null) {
                 Player player = (Player) activeChar;
                 DominionSiegeEvent siegeEvent1 = player.getEvent(DominionSiegeEvent.class);
                 if (siegeEvent1 == null)
-                    continue;
-                if (!(target instanceof SiegeFlagInstance) || target.getNpcId() != 36590 || target.getClan() != player.getClan())
-                    continue;
+                    return;
+                if (!(target instanceof SiegeFlagInstance) || target.getNpcId() != 36590 || ((SiegeFlagInstance)target).getClan() != player.getClan())
+                    return;
                 if (!(player.getActiveWeaponFlagAttachment() instanceof TerritoryWardObject))
-                    continue;
+                    return;
                 DominionSiegeEvent siegeEvent2 = target.getEvent(DominionSiegeEvent.class);
                 if (siegeEvent2 == null || siegeEvent1 != siegeEvent2)
-                    continue;
+                    return;
 
                 // текущая територия, к которой пойдет Вард
                 Dominion dominion = siegeEvent1.getResidence();

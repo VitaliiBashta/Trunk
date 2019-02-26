@@ -31,9 +31,9 @@ public abstract class Spawner extends EventOwner implements Cloneable {
     int respawnDelayRandom;
     List<NpcInstance> spawned;
     Reflection reflection = ReflectionManager.DEFAULT;
-    private int _respawnTime;
+    private int respawnTime;
     private boolean doRespawn;
-    private NpcInstance _lastSpawn;
+    private NpcInstance lastSpawn;
 
     public void decreaseScheduledCount() {
         if (scheduledCount > 0)
@@ -67,15 +67,15 @@ public abstract class Spawner extends EventOwner implements Cloneable {
     }
 
     public int getRespawnTime() {
-        return _respawnTime;
+        return respawnTime;
     }
 
     public void setRespawnTime(int respawnTime) {
-        _respawnTime = respawnTime;
+        this.respawnTime = respawnTime;
     }
 
     public NpcInstance getLastSpawn() {
-        return _lastSpawn;
+        return lastSpawn;
     }
 
     public Spawner setAmount(int amount) {
@@ -89,7 +89,7 @@ public abstract class Spawner extends EventOwner implements Cloneable {
         stopRespawn();
         spawned.forEach(GameObject::deleteMe);
         spawned.clear();
-        _respawnTime = 0;
+        respawnTime = 0;
         scheduledCount = 0;
         currentCount = 0;
     }
@@ -168,7 +168,7 @@ public abstract class Spawner extends EventOwner implements Cloneable {
         NpcInstance tmp = template.getNewInstance();
 
         if (!spawn)
-            spawn = _respawnTime <= System.currentTimeMillis() / 1000 + MIN_RESPAWN_DELAY;
+            spawn = respawnTime <= System.currentTimeMillis() / 1000 + MIN_RESPAWN_DELAY;
 
         return initNpc(tmp, spawn, set);
     }
@@ -186,7 +186,7 @@ public abstract class Spawner extends EventOwner implements Cloneable {
         mob.setSpawnedLoc(newLoc);
 
         // Является ли моб "подземным" мобом?
-        mob.setUnderground(GeoEngine.getHeight(newLoc, getReflection().getGeoIndex()) < GeoEngine.getHeight(newLoc.clone().changeZ(5000), getReflection().getGeoIndex()));
+        mob.setUnderground(GeoEngine.getHeight(newLoc, getReflection().getGeoIndex()) < GeoEngine.getHeight(newLoc.clone().addZ(5000), getReflection().getGeoIndex()));
 
         getEvents().forEach(mob::addEvent);
 
@@ -208,11 +208,11 @@ public abstract class Spawner extends EventOwner implements Cloneable {
             // Update the current number of SpawnTask in progress or stand by of this L2Spawn
             scheduledCount++;
 
-            SpawnTaskManager.INSTANCE.addSpawnTask(mob, _respawnTime * 1000L - System.currentTimeMillis());
+            SpawnTaskManager.INSTANCE.addSpawnTask(mob, respawnTime * 1000L - System.currentTimeMillis());
         }
 
         spawned.add(mob);
-        _lastSpawn = mob;
+        lastSpawn = mob;
         return mob;
     }
 
@@ -232,7 +232,7 @@ public abstract class Spawner extends EventOwner implements Cloneable {
             long delay = (long) (template.isRaid ? Config.ALT_RAID_RESPAWN_MULTIPLIER * getRespawnDelayWithRnd() : getRespawnDelayWithRnd()) * 1000L;
             delay = Math.max(1000, delay - deadTime);
 
-            _respawnTime = (int) ((System.currentTimeMillis() + delay) / 1000);
+            respawnTime = (int) ((System.currentTimeMillis() + delay) / 1000);
 
             SpawnTaskManager.INSTANCE.addSpawnTask(spawnedNpc, delay);
         }

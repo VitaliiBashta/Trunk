@@ -21,8 +21,6 @@ public final class _659_IdRatherBeCollectingFairyBreath extends Quest {
 
         addStartNpc(GALATEA);
         addTalkId(GALATEA);
-        addTalkId(GALATEA);
-        addTalkId(GALATEA);
         addKillId(MOBS);
     }
 
@@ -30,7 +28,7 @@ public final class _659_IdRatherBeCollectingFairyBreath extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("high_summoner_galatea_q0659_0103.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("high_summoner_galatea_q0659_0203.htm".equalsIgnoreCase(event)) {
             long count = st.getQuestItemsCount(FAIRY_BREATH);
@@ -44,7 +42,7 @@ public final class _659_IdRatherBeCollectingFairyBreath extends Quest {
                 st.giveItems(ADENA_ID, reward);
             }
         } else if ("high_summoner_galatea_q0659_0204.htm".equalsIgnoreCase(event))
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         return event;
     }
 
@@ -59,7 +57,7 @@ public final class _659_IdRatherBeCollectingFairyBreath extends Quest {
         if (npcId == GALATEA)
             if (st.player.getLevel() < 26) {
                 htmltext = "high_summoner_galatea_q0659_0102.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else if (cond == 0)
                 htmltext = "high_summoner_galatea_q0659_0101.htm";
             else if (cond == 1)

@@ -356,7 +356,7 @@ public enum Hero {
             } else
                 html.replace("%buttnext%", "");
 
-            html.replace("%list%", fList.toString());
+            html.replace("%list%", fList);
 
             activeChar.sendPacket(html);
         }

@@ -1,6 +1,6 @@
 package l2trunk.scripts.quests;
 
-import l2trunk.gameserver.scripts.ScriptFile;
+import l2trunk.gameserver.model.base.ClassId;
 import l2trunk.gameserver.utils.Location;
 
 import java.util.List;
@@ -10,15 +10,14 @@ public final class _100_SagaOfTheMaestro extends SagasSuperclass {
         super(false);
 
         NPC = List.of(31592, 31273, 31597, 31597, 31596, 31646, 31648, 31653, 31654, 31655, 31656, 31597);
-        Items = List.of(7080, 7607, 7081, 7515, 7298, 7329, 7360, 7391, 7422, 7453, 7108, 0);
-        Mob = List.of(27260, 27249, 27308);
-        classid = 118;
-        prevclass = 0x39;
+        items = List.of(7080, 7607, 7081, 7515, 7298, 7329, 7360, 7391, 7422, 7453, 7108, 0);
+        mob = List.of(27260, 27249, 27308);
+        classid = ClassId.maestro;
         locs = List.of(
-                new Location(164650, -74121, -2871),
-                new Location(47429, -56923, -2383),
-                new Location(47391, -56929, -2370));
-        Text = List.of(
+                Location.of(164650, -74121, -2871),
+                Location.of(47429, -56923, -2383),
+                Location.of(47391, -56929, -2370));
+        text = List.of(
                 "PLAYERNAME! Pursued to here! However, I jumped out of the Banshouren boundaries! You look at the giant as the sign of power!",
                 "... Oh ... good! So it was ... let's begin!",
                 "I do not have the patience ..! I have been a giant force ...! Cough chatter ah ah ah!",

@@ -105,9 +105,9 @@ public final class Util extends Functions {
             }
         }
 
-        // Synerge - Epidos cube on teleport should add allowed player to beleth zone, so other players cannot exploit it
+        // Synerge - Epidos cube on teleport should add allowed getPlayer to beleth zone, so other players cannot exploit it
         //	if (npcId == 32376)
-        //		BelethManager._allowedPlayers.add(player.objectId());
+        //		BelethManager._allowedPlayers.add(getPlayer.objectId());
 
         Location pos = Location.findPointToStay(loc, 50, 100, player.getGeoIndex());
 
@@ -445,7 +445,7 @@ public final class Util extends Functions {
         if (!checkCertificationCondition(75, SubClass.CERTIFICATION_75))
             return;
 
-        ClassId cl = ClassId.VALUES.get(clzz.getClassId());
+        ClassId cl = clzz.getClassId();
         if (cl.getType2() == null)
             return;
 
@@ -471,7 +471,7 @@ public final class Util extends Functions {
         if (!checkCertificationCondition(80, SubClass.CERTIFICATION_80))
             return;
 
-        ClassId cl = ClassId.VALUES.get(clzz.getClassId());
+        ClassId cl = clzz.getClassId();
         if (cl.getType2() == null)
             return;
 

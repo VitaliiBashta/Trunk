@@ -12,7 +12,7 @@ public final class _364_JovialAccordion extends Quest {
     private static final int SABRIN = 30060;
     private static final int BEER_CHEST = 30960;
     private static final int CLOTH_CHEST = 30961;
-    //Items
+    //items
     private static final int KEY_1 = 4323;
     private static final int KEY_2 = 4324;
     private static final int BEER = 4321;
@@ -21,13 +21,8 @@ public final class _364_JovialAccordion extends Quest {
     public _364_JovialAccordion() {
         super(false);
         addStartNpc(BARBADO);
-        addTalkId(SWAN);
-        addTalkId(SABRIN);
-        addTalkId(BEER_CHEST);
-        addTalkId(CLOTH_CHEST);
-        addQuestItem(KEY_1);
-        addQuestItem(KEY_2);
-        addQuestItem(BEER);
+        addTalkId(SWAN,SABRIN,BEER_CHEST,CLOTH_CHEST);
+        addQuestItem(KEY_1,KEY_2,BEER);
     }
 
     @Override
@@ -38,7 +33,7 @@ public final class _364_JovialAccordion extends Quest {
             if (npcId != BARBADO)
                 return htmltext;
             st.setCond(0);
-            st.set("ok", 0);
+            st.unset("ok");
         }
 
         int cond = st.getCond();
@@ -49,7 +44,7 @@ public final class _364_JovialAccordion extends Quest {
                 htmltext = "30959-03.htm";
                 st.giveItems(ECHO);
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else if (cond > 0)
                 htmltext = "30959-02.htm";
         } else if (npcId == SWAN) {
@@ -58,13 +53,13 @@ public final class _364_JovialAccordion extends Quest {
             else if (cond == 3)
                 htmltext = "30957-05.htm";
             else if (cond == 2)
-                if (st.getInt("ok") == 1 && st.getQuestItemsCount(KEY_1) == 0) {
+                if (st.isSet("ok")  && !st.haveQuestItem(KEY_1)) {
                     st.setCond(3);
                     htmltext = "30957-04.htm";
                 } else
                     htmltext = "30957-03.htm";
         } else if (npcId == SABRIN && cond == 2 && st.haveQuestItem(BEER)) {
-            st.set("ok", 1);
+            st.set("ok");
             st.takeItems(BEER);
             htmltext = "30060-01.htm";
         } else if (npcId == BEER_CHEST && cond == 2)
@@ -82,7 +77,7 @@ public final class _364_JovialAccordion extends Quest {
         int cond = st.getCond();
         if ("30959-02.htm".equalsIgnoreCase(event) && _state == CREATED && cond == 0) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("30957-02.htm".equalsIgnoreCase(event) && _state == STARTED && cond == 1) {
             st.setCond(2);

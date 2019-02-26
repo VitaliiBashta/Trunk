@@ -13,7 +13,7 @@ public final class _10277_MutatedKaneusDion extends Quest {
     private static final int CrimsonHatuOtis = 18558;
     private static final int SeerFlouros = 18559;
 
-    // Items
+    // items
     private static final int Tissue1 = 13832;
     private static final int Tissue2 = 13833;
 
@@ -29,11 +29,11 @@ public final class _10277_MutatedKaneusDion extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("30071-03.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("30461-02.htm".equalsIgnoreCase(event)) {
             st.giveItems(57, 120000);
-            st.exitCurrentQuest(false);
+            st.finish();
             st.playSound(SOUND_FINISH);
         }
         return event;

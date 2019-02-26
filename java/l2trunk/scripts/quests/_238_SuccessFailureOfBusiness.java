@@ -26,7 +26,7 @@ public final class _238_SuccessFailureOfBusiness extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("32641-03.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
         }
         if ("32641-06.htm".equalsIgnoreCase(event)) {
             st.takeItems(BrokenPieveOfMagicForce);
@@ -45,7 +45,7 @@ public final class _238_SuccessFailureOfBusiness extends Quest {
         if (npcId == Helvetica)
             if (id == CREATED) {
                 if (st.player.getLevel() < 82 || !st.player.isQuestCompleted(_237_WindsOfChange.class)) {
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                     htmltext = "32641-00.htm";
                 } else if (st.haveQuestItem(VicinityOfTheFieldOfSilenceResearchCenter)) {
                     htmltext = "32641-01.htm";
@@ -65,8 +65,8 @@ public final class _238_SuccessFailureOfBusiness extends Quest {
                 st.takeItems(GuardianSpiritFragment);
                 st.giveItems(ADENA_ID, 283346);
                 st.addExpAndSp(1319736, 103553);
-                st.setState(COMPLETED);
-                st.exitCurrentQuest(false);
+                st.complete();
+                st.finish();
                 htmltext = "32641-08.htm";
             }
 

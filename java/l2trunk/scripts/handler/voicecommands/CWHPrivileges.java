@@ -42,7 +42,7 @@ public final class CWHPrivileges implements IVoicedCommandHandler, ScriptFile {
                 if (param.length > 0)
                     if ("allowwh".equalsIgnoreCase(param[0]) && param.length > 1) {
                         UnitMember cm = activeChar.getClan().getAnyMember(param[1]);
-                        if (cm != null && cm.player() != null) // цель онлайн
+                        if (cm != null && cm.getPlayer() != null) // цель онлайн
                         {
                             if (cm.player.isVarSet("canWhWithdraw")) {
                                 cm.player.unsetVar("canWhWithdraw");

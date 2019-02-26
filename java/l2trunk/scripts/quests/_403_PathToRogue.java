@@ -9,6 +9,7 @@ import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.Functions;
 
 import java.util.List;
+import java.util.Map;
 
 public final class _403_PathToRogue extends Quest {
     //npc
@@ -35,32 +36,13 @@ public final class _403_PathToRogue extends Quest {
     private final int NETIS_BOW_ID = 1181;
     private final int NETIS_DAGGER_ID = 1182;
     //MobsTable {MOB_ID,CHANCE}
-    private final int[][] MobsTable = {
-            {
-                    TRACKER_SKELETON,
-                    2
-            },
-            {
-                    TRACKER_SKELETON_LEADER,
-                    3
-            },
-            {
-                    SKELETON_SCOUT,
-                    2
-            },
-            {
-                    SKELETON_BOWMAN,
-                    2
-            },
-            {
-                    RUIN_SPARTOI,
-                    8
-            },
-            {
-                    RAGING_SPARTOI,
-                    8
-            }
-    };
+    private final Map<Integer, Integer> MobsTable = Map.of(
+            TRACKER_SKELETON, 20,
+            TRACKER_SKELETON_LEADER, 30,
+            SKELETON_SCOUT, 20,
+            SKELETON_BOWMAN, 20,
+            RUIN_SPARTOI, 80,
+            RAGING_SPARTOI, 80);
 
     private final List<Integer> STOLEN_ITEM = List.of(
             STOLEN_JEWELRY_ID,
@@ -78,10 +60,8 @@ public final class _403_PathToRogue extends Quest {
         addKillId(CATS_EYE_BANDIT);
         addAttackId(CATS_EYE_BANDIT);
 
-        for (int[] element : MobsTable) {
-            addKillId(element[0]);
-            addAttackId(element[0]);
-        }
+        addKillId(MobsTable.keySet());
+        addAttackId(MobsTable.keySet());
 
         addQuestItem(STOLEN_ITEM);
         addQuestItem(NETIS_BOW_ID,
@@ -112,7 +92,7 @@ public final class _403_PathToRogue extends Quest {
                 break;
             case "1":
                 st.setCond(1);
-                st.setState(STARTED);
+                st.start();
                 st.giveItems(BEZIQUES_LETTER_ID);
                 htmltext = "captain_bezique_q0403_06.htm";
                 st.playSound(SOUND_ACCEPT);
@@ -143,28 +123,28 @@ public final class _403_PathToRogue extends Quest {
                 if (st.player.getClassId().occupation() == 0) {
                     st.giveItems(BEZIQUES_RECOMMENDATION_ID);
                     if (!st.player.isVarSet("prof1")) {
-                        st.player.setVar("prof1", 1);
+                        st.player.setVar("prof1");
                         st.addExpAndSp(228064, 16455);
                         st.giveItems(ADENA_ID, 81900);
                     }
                 }
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 st.playSound(SOUND_FINISH);
             } else if (cond == 1 && st.getQuestItemsCount(HORSESHOE_OF_LIGHT_ID) < 1 && st.haveQuestItem(BEZIQUES_LETTER_ID))
                 htmltext = "captain_bezique_q0403_07.htm";
-            else if (cond == 4 && st.haveQuestItem(HORSESHOE_OF_LIGHT_ID) ) {
+            else if (cond == 4 && st.haveQuestItem(HORSESHOE_OF_LIGHT_ID)) {
                 htmltext = "captain_bezique_q0403_08.htm";
                 st.takeItems(HORSESHOE_OF_LIGHT_ID, 1);
                 st.giveItems(WANTED_BILL_ID);
                 st.setCond(5);
-            } else if (cond > 1 && st.haveQuestItem(NETIS_BOW_ID)  && st.haveQuestItem(NETIS_DAGGER_ID)  && st.getQuestItemsCount(WANTED_BILL_ID) < 1)
+            } else if (cond > 1 && st.haveQuestItem(NETIS_BOW_ID) && st.haveQuestItem(NETIS_DAGGER_ID) && st.getQuestItemsCount(WANTED_BILL_ID) < 1)
                 htmltext = "captain_bezique_q0403_10.htm";
             else if (cond == 5 && st.haveQuestItem(WANTED_BILL_ID))
                 htmltext = "captain_bezique_q0403_11.htm";
             else
                 htmltext = "captain_bezique_q0403_01.htm";
         } else if (npcId == NETI)
-            if (cond == 1 && st.haveQuestItem(BEZIQUES_LETTER_ID) )
+            if (cond == 1 && st.haveQuestItem(BEZIQUES_LETTER_ID))
                 htmltext = "neti_q0403_01.htm";
             else if (cond == 2 | cond == 3 && st.getQuestItemsCount(SPATOIS_BONES_ID) < 10) {
                 htmltext = "neti_q0403_06.htm";
@@ -174,7 +154,7 @@ public final class _403_PathToRogue extends Quest {
                 st.takeItems(SPATOIS_BONES_ID);
                 st.giveItems(HORSESHOE_OF_LIGHT_ID);
                 st.setCond(4);
-            } else if (cond == 4 && st.haveQuestItem(HORSESHOE_OF_LIGHT_ID) )
+            } else if (cond == 4 && st.haveQuestItem(HORSESHOE_OF_LIGHT_ID))
                 htmltext = "neti_q0403_08.htm";
         return htmltext;
     }
@@ -183,13 +163,12 @@ public final class _403_PathToRogue extends Quest {
     public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
-        int netis_cond = st.getInt("netis_cond");
-        if (netis_cond == 1 && st.getItemEquipped(Inventory.PAPERDOLL_RHAND) == NETIS_BOW_ID || st.getItemEquipped(Inventory.PAPERDOLL_RHAND) == NETIS_DAGGER_ID) {
+        if (st.isSet("netis_cond") && st.getItemEquipped(Inventory.PAPERDOLL_RHAND) == NETIS_BOW_ID || st.getItemEquipped(Inventory.PAPERDOLL_RHAND) == NETIS_DAGGER_ID) {
             Functions.npcSay(npc, "I must do something about this shameful incident...");
             switch (cond) {
                 case 2:
-                    for (int[] element : MobsTable)
-                        if (npcId == element[0] && Rnd.chance(10 * element[1]) && st.getQuestItemsCount(SPATOIS_BONES_ID) < 10) {
+                    MobsTable.forEach((k, v) -> {
+                        if (npcId == k && Rnd.chance(v) && !st.haveQuestItem(SPATOIS_BONES_ID, 10)) {
                             st.giveItems(SPATOIS_BONES_ID);
                             if (st.haveQuestItem(SPATOIS_BONES_ID, 10)) {
                                 st.playSound(SOUND_MIDDLE);
@@ -197,19 +176,18 @@ public final class _403_PathToRogue extends Quest {
                             } else
                                 st.playSound(SOUND_ITEMGET);
                         }
+                    });
                     break;
                 case 5:
                     if (npcId == CATS_EYE_BANDIT)
-                        if (st.getQuestItemsCount(WANTED_BILL_ID) > 0) {
+                        if (st.haveQuestItem(WANTED_BILL_ID)) {
                             int n = Rnd.get(4);
-                            if (st.getQuestItemsCount(STOLEN_ITEM.get(n)) == 0) {
+                            if (!st.haveQuestItem(STOLEN_ITEM.get(n))) {
                                 st.giveItems(STOLEN_ITEM.get(n));
-                                if (st.getQuestItemsCount(STOLEN_JEWELRY_ID) + st.getQuestItemsCount(STOLEN_TOMES_ID) + st.getQuestItemsCount(STOLEN_RING_ID) + st.getQuestItemsCount(STOLEN_NECKLACE_ID) < 4)
-                                    st.playSound(SOUND_ITEMGET);
-                                else {
+                                if (st.haveAllQuestItems(STOLEN_ITEM)) {
                                     st.playSound(SOUND_MIDDLE);
                                     st.setCond(6);
-                                }
+                                } else st.playSound(SOUND_ITEMGET);
                             }
                         }
                     break;
@@ -219,11 +197,10 @@ public final class _403_PathToRogue extends Quest {
 
     @Override
     public void onAttack(NpcInstance npc, QuestState st) {
-        int netis_cond = st.getInt("netis_cond");
         if (st.getItemEquipped(Inventory.PAPERDOLL_RHAND) != NETIS_BOW_ID && st.getItemEquipped(Inventory.PAPERDOLL_RHAND) != NETIS_DAGGER_ID)
-            st.set("netis_cond", 0);
-        else if (netis_cond == 0) {
-            st.set("netis_cond", 1);
+            st.unset("netis_cond");
+        else if (!st.isSet("netis_cond")) {
+            st.set("netis_cond");
             Functions.npcSay(npc, "You childish fool, do you think you can catch me?");
         }
     }

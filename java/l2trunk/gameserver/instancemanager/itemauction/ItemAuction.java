@@ -337,10 +337,10 @@ public final class ItemAuction {
     }
 
     /**
-     * Returns the last bid for the given player or -1 if he did not made one yet.
+     * Returns the last bid for the given getPlayer or -1 if he did not made one yet.
      *
-     * @param player The player that made the bid
-     * @return The last bid the player made or -1
+     * @param player The getPlayer that made the bid
+     * @return The last bid the getPlayer made or -1
      */
     public long getLastBid(Player player) {
         ItemAuctionBid bid = getBidFor(player.objectId());

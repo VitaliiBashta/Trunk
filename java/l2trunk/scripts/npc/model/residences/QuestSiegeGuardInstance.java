@@ -14,6 +14,7 @@ import l2trunk.gameserver.templates.npc.NpcTemplate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public final class QuestSiegeGuardInstance extends SiegeGuardInstance {
@@ -33,7 +34,7 @@ public final class QuestSiegeGuardInstance extends SiegeGuardInstance {
 
         Map<Playable, AggroList.HateInfo> aggroMap = getAggroList().getPlayableMap();
 
-        List<Quest> quests = getTemplate().getEventQuests(QuestEventType.MOB_KILLED_WITH_QUEST);
+        Set<Quest> quests = getTemplate().getEventQuests(QuestEventType.MOB_KILLED_WITH_QUEST);
         if (!quests.isEmpty()) {
             final List<Player> players = new ArrayList<>(); // массив с игроками, которые могут быть заинтересованы в квестах
             if (isRaid() && Config.ALT_NO_LASTHIT) {// Для альта на ластхит берем всех игроков вокруг

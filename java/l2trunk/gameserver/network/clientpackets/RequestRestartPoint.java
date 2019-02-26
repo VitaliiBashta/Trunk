@@ -86,7 +86,7 @@ public final class RequestRestartPoint extends L2GameClientPacket {
             return;
         }
 
-        // Ady - If the player is in a Gm Event check if it can resurrect
+        // Ady - If the getPlayer is in a Gm Event check if it can resurrect
         if (!GmEventManager.INSTANCE.canResurrect(player)) {
             return;
         }

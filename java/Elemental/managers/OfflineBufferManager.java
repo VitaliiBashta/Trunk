@@ -51,9 +51,9 @@ public enum OfflineBufferManager {
                     }
                     title = new StringBuilder(title.toString().trim());
 
-                    // Check if the player already has an active store, just in case
+                    // Check if the getPlayer already has an active store, just in case
                     if (buffStores.containsKey(player.objectId())) {
-                        //player.sendMessage("This buffer already exists. Cheater?");
+                        //getPlayer.sendMessage("This buffer already exists. Cheater?");
                         break;
                     }
 
@@ -63,13 +63,13 @@ public enum OfflineBufferManager {
                         break;
                     }
 
-                    // Check if the player can set a store
+                    // Check if the getPlayer can set a store
                     if (!Config.BUFF_STORE_ALLOWED_CLASS_LIST.contains(player.getClassId().id)) {
                         player.sendMessage("Your profession is not allowed to set an Buff Store.");
                         break;
                     }
 
-                    // Check all the conditions to see if the player can open a private store
+                    // Check all the conditions to see if the getPlayer can open a private store
                     if (!TradeHelper.checksIfCanOpenStore(player, Player.STORE_PRIVATE_BUFF)) {
                         break;
                     }
@@ -116,7 +116,7 @@ public enum OfflineBufferManager {
                         if (skill.isHeroic)
                             continue;
 
-                        // Not only player skills
+                        // Not only getPlayer skills
                         if (skill.targetType == SkillTargetType.TARGET_SELF)
                             continue;
 
@@ -149,7 +149,7 @@ public enum OfflineBufferManager {
                     // Add the buffer data to the array
                     buffStores.put(player.objectId(), buffer);
 
-                    // Sit the player, put it on store and and change the colors and titles
+                    // Sit the getPlayer, put it on store and and change the colors and titles
                     player.sitDown(null);
 
                     player.setVisibleTitleColor(Config.BUFF_STORE_TITLE_COLOR);
@@ -183,7 +183,7 @@ public enum OfflineBufferManager {
                 // Remove the buffer from the array
                 buffStores.remove(player.objectId());
 
-                // Stand the player and put the original colors and title back
+                // Stand the getPlayer and put the original colors and title back
                 player.setPrivateStoreType(Player.STORE_PRIVATE_NONE);
                 player.standUp();
 
@@ -200,23 +200,23 @@ public enum OfflineBufferManager {
             case "bufflist": {
                 try {
                     final int playerId = toInt(st.nextToken());
-                    final boolean isPlayer = (!st.hasMoreTokens() || st.nextToken().equalsIgnoreCase("player"));
+                    final boolean isPlayer = (!st.hasMoreTokens() || st.nextToken().equalsIgnoreCase("getPlayer"));
                     final int page = (st.hasMoreTokens() ? toInt(st.nextToken()) : 0);
 
                     // Check if the buffer exists
                     final BufferData buffer = buffStores.get(playerId);
                     if (buffer == null) {
-                        //player.sendMessage("This buffer doesn't exists. Cheater?");
+                        //getPlayer.sendMessage("This buffer doesn't exists. Cheater?");
                         break;
                     }
 
-                    // Check if the player is in the right distance from the buffer
+                    // Check if the getPlayer is in the right distance from the buffer
                     if (Util.calculateDistance(player, buffer.owner, true) > MAX_INTERACT_DISTANCE) {
-                        //player.sendMessage("Too far. Cheater?");
+                        //getPlayer.sendMessage("Too far. Cheater?");
                         break;
                     }
 
-                    // Check if the player has a summon before buffing
+                    // Check if the getPlayer has a summon before buffing
                     if (!isPlayer && player.getPet() == null) {
                         player.sendMessage("You don't have any active summon right now.");
 
@@ -235,30 +235,30 @@ public enum OfflineBufferManager {
             case "purchasebuff": {
                 try {
                     final int playerId = toInt(st.nextToken());
-                    final boolean isPlayer = (!st.hasMoreTokens() || st.nextToken().equalsIgnoreCase("player"));
+                    final boolean isPlayer = (!st.hasMoreTokens() || st.nextToken().equalsIgnoreCase("getPlayer"));
                     final int buffId = toInt(st.nextToken());
                     final int page = (st.hasMoreTokens() ? toInt(st.nextToken()) : 0);
 
                     // Check if the buffer exists
                     final BufferData buffer = buffStores.get(playerId);
                     if (buffer == null) {
-                        //player.sendMessage("This buffer doesn't exists. Cheater?");
+                        //getPlayer.sendMessage("This buffer doesn't exists. Cheater?");
                         break;
                     }
 
                     // Check if the buffer has this buff
                     if (!buffer.buffs.containsKey(buffId)) {
-                        //player.sendMessage("This buff doesn't exists. Cheater?");
+                        //getPlayer.sendMessage("This buff doesn't exists. Cheater?");
                         break;
                     }
 
-                    // Check if the player is in the right distance from the buffer
+                    // Check if the getPlayer is in the right distance from the buffer
                     if (Util.calculateDistance(player, buffer.owner, true) > MAX_INTERACT_DISTANCE) {
-                        //player.sendMessage("Too far. Cheater?");
+                        //getPlayer.sendMessage("Too far. Cheater?");
                         break;
                     }
 
-                    // Check if the player has a summon before buffing
+                    // Check if the getPlayer has a summon before buffing
                     if (!isPlayer && player.getPet() == null) {
                         player.sendMessage("You don't have any active summon right now.");
 
@@ -289,7 +289,7 @@ public enum OfflineBufferManager {
                     // Clan Members of the buffer dont have to pay anything
                     final int buffPrice = player.getClanId() == buffer.owner.getClanId() && player.getClanId() != 0 ? 0 : buffer.buffPrice;
 
-                    // Check if the player has enough adena to purchase this buff
+                    // Check if the getPlayer has enough adena to purchase this buff
                     if (buffPrice > 0 && player.getAdena() < buffPrice) {
                         player.sendMessage("You don't have enough adena to purchase a buff.");
                         break;
@@ -329,7 +329,7 @@ public enum OfflineBufferManager {
     }
 
     /**
-     * Sends the to the player the buffer store window with all the buffs and info
+     * Sends the to the getPlayer the buffer store window with all the buffs and info
      */
     private void showStoreWindow(Player player, BufferData buffer, boolean isForPlayer, int page) {
         final NpcHtmlMessage html = new NpcHtmlMessage(0);
@@ -369,7 +369,7 @@ public enum OfflineBufferManager {
             buffList.append("<table height=35 border=0 cellspacing=2 cellpadding=0 bgcolor=").append(changeColor ? "171612" : "23221e").append(">");
             buffList.append("<tr>");
             buffList.append("<td width=5></td>");
-            buffList.append("<td width=30 align=center background=").append(buff.icon).append("><button value=\"\" action=\"bypass -h BuffStore purchasebuff ").append(buffer.owner.objectId()).append(" ").append(isForPlayer ? "player" : "summon").append(" ").append(buff.id).append(" ").append(currentPage).append("\" width=32 height=32 back=L2UI_CT1.ItemWindow_DF_Frame_Down fore=L2UI_CT1.ItemWindow_DF_Frame></td>");
+            buffList.append("<td width=30 align=center background=").append(buff.icon).append("><button value=\"\" action=\"bypass -h BuffStore purchasebuff ").append(buffer.owner.objectId()).append(" ").append(isForPlayer ? "getPlayer" : "summon").append(" ").append(buff.id).append(" ").append(currentPage).append("\" width=32 height=32 back=L2UI_CT1.ItemWindow_DF_Frame_Down fore=L2UI_CT1.ItemWindow_DF_Frame></td>");
             buffList.append("<td width=12></td>");
             if (buff.level > baseMaxLvl) {
                 // Buffs encantados
@@ -407,12 +407,12 @@ public enum OfflineBufferManager {
         final String previousPageButton;
         final String nextPageButton;
         if (currentPage > 0)
-            previousPageButton = "<button value=\"\" width=15 height=15 action=\"bypass -h BuffStore bufflist " + buffer.owner.objectId() + " " + (isForPlayer ? "player" : "summon") + " " + (currentPage - 1) + "\" back=L2UI_CT1.ItemWindow_DF_Frame_Down fore=L2UI_CT1.ItemWindow_DF_Frame>";
+            previousPageButton = "<button value=\"\" width=15 height=15 action=\"bypass -h BuffStore bufflist " + buffer.owner.objectId() + " " + (isForPlayer ? "getPlayer" : "summon") + " " + (currentPage - 1) + "\" back=L2UI_CT1.ItemWindow_DF_Frame_Down fore=L2UI_CT1.ItemWindow_DF_Frame>";
         else
             previousPageButton = "<button value=\"\" width=15 height=15 action=\"\" back=L2UI_CT1.ItemWindow_DF_Frame_Down fore=L2UI_CT1.ItemWindow_DF_Frame>";
 
         if (currentPage < maxPage)
-            nextPageButton = "<button value=\"\" width=15 height=15 action=\"bypass -h BuffStore bufflist " + buffer.owner.objectId() + " " + (isForPlayer ? "player" : "summon") + " " + (currentPage + 1) + "\" back=L2UI_CT1.ItemWindow_DF_Frame_Down fore=L2UI_CT1.ItemWindow_DF_Frame>";
+            nextPageButton = "<button value=\"\" width=15 height=15 action=\"bypass -h BuffStore bufflist " + buffer.owner.objectId() + " " + (isForPlayer ? "getPlayer" : "summon") + " " + (currentPage + 1) + "\" back=L2UI_CT1.ItemWindow_DF_Frame_Down fore=L2UI_CT1.ItemWindow_DF_Frame>";
         else
             nextPageButton = "<button value=\"\" width=15 height=15 action=\"\" back=L2UI_CT1.ItemWindow_DF_Frame_Down fore=L2UI_CT1.ItemWindow_DF_Frame>";
 
@@ -424,7 +424,7 @@ public enum OfflineBufferManager {
         html.replace("%buffPrice%", Util.convertToLineagePriceFormat(buffer.buffPrice));
         html.replace("%target%", (isForPlayer ? "Player" : "Summon"));
         html.replace("%page%", currentPage);
-        html.replace("%buffs%", buffList.toString());
+        html.replace("%buffs%", buffList);
         html.replace("%previousPageButton%", previousPageButton);
         html.replace("%nextPageButton%", nextPageButton);
         html.replace("%pageCount%", (currentPage + 1) + "/" + (maxPage + 1));

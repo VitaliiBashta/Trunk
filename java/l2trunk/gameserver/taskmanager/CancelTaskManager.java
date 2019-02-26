@@ -19,30 +19,23 @@ public enum CancelTaskManager {
         ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new ManageTasks(), 0, 500);
     }
 
-    public void addNewCancelTask(Playable playable, List<Effect> buffs) {
-        int buffCancelTime = 45;
-        playable.getPlayer().sendMessage("You will get your buffs back in " + buffCancelTime + " secs.");
-
-        taskTimes.add(new DispelClass((System.currentTimeMillis() + (buffCancelTime * 1000)), playable, buffs));
-    }
-
     public void cancelPlayerTasks(Playable playable) {
         for (DispelClass task : taskTimes)
-            if (task != null && task._cancelled.equals(playable)) {
+            if (task != null && task.cancelled.equals(playable)) {
                 taskTimes.add(task);
                 return;
             }
     }
 
     private class DispelClass {
-        final Playable _cancelled;
-        final List<Effect> _effects;
-        final long _time;
+        final Playable cancelled;
+        final List<Effect> effects;
+        final long time;
 
         private DispelClass(long time, Playable character, List<Effect> effects) {
-            _time = time;
-            _cancelled = character;
-            _effects = effects;
+            this.time = time;
+            cancelled = character;
+            this.effects = effects;
         }
     }
 
@@ -53,11 +46,11 @@ public enum CancelTaskManager {
             List<DispelClass> toRemove = new ArrayList<>();
 
             for (DispelClass task : taskTimes) {
-                if (task._time > current)
+                if (task.time > current)
                     continue;
 
-                for (Effect effect : task._effects) {
-                    task._cancelled.getEffectList().addEffect(effect);
+                for (Effect effect : task.effects) {
+                    task.cancelled.getEffectList().addEffect(effect);
                     try {
                         Thread.sleep(10);
                     } catch (InterruptedException e) {
@@ -65,12 +58,12 @@ public enum CancelTaskManager {
                     }
                 }
 
-                task._cancelled.updateStats();
-                task._cancelled.updateEffectIcons();
+                task.cancelled.updateStats();
+                task.cancelled.updateEffectIcons();
 
                 toRemove.add(task);
 
-                task._cancelled.sendPacket(new ExShowScreenMessage("Cancelled buffs returned!", 2000, ScreenMessageAlign.TOP_LEFT, false));
+                task.cancelled.sendPacket(new ExShowScreenMessage("Cancelled buffs returned!", 2000, ScreenMessageAlign.TOP_LEFT, false));
             }
 
             toRemove.forEach(taskTimes::remove);

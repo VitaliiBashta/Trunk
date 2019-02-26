@@ -50,8 +50,8 @@ public class Reflection {
     private String name = "";
     private InstantZone instance;
     private int geoIndex;
-    private Location _resetLoc; // место, к которому кидает при использовании SoE/unstuck, иначе выбрасывает в основной мир
-    private Location _returnLoc; // если не прописано reset, но прописан return, то телепортит туда, одновременно перемещая в основной мир
+    private Location resetLoc; // место, к которому кидает при использовании SoE/unstuck, иначе выбрасывает в основной мир
+    private Location returnLoc; // если не прописано reset, но прописан return, то телепортит туда, одновременно перемещая в основной мир
     private Location teleportLoc; // точка входа
     private int _collapseIfEmptyTime;
 
@@ -127,19 +127,19 @@ public class Reflection {
     }
 
     public Location getCoreLoc() {
-        return _resetLoc;
+        return resetLoc;
     }
 
     public void setCoreLoc(Location l) {
-        _resetLoc = l;
+        resetLoc = l;
     }
 
     public Location getReturnLoc() {
-        return _returnLoc;
+        return returnLoc;
     }
 
     public void setReturnLoc(Location l) {
-        _returnLoc = l;
+        returnLoc = l;
     }
 
     public Location getTeleportLoc() {

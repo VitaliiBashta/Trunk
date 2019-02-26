@@ -31,11 +31,11 @@ public final class _714_PathToBecomingALordSchuttgart extends Quest {
         Castle castle = ResidenceHolder.getResidence(ShuttgartCastle);
         if (castle.getOwner() == null)
             return "Castle has no lord";
-        Player castleOwner = castle.getOwner().getLeader().player();
+        Player castleOwner = castle.getOwner().getLeader().getPlayer();
 
         switch (event) {
             case "august_q714_03.htm":
-                st.setState(STARTED);
+                st.start();
                 st.setCond(1);
                 st.playSound(SOUND_ACCEPT);
                 break;
@@ -52,7 +52,7 @@ public final class _714_PathToBecomingALordSchuttgart extends Quest {
                 Functions.npcSay(npc, NpcString.S1_HAS_BECOME_THE_LORD_OF_THE_TOWN_OF_SCHUTTGART, st.player.getName());
                 castle.getDominion().changeOwner(castleOwner.getClan());
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 break;
         }
         return event;
@@ -66,7 +66,7 @@ public final class _714_PathToBecomingALordSchuttgart extends Quest {
         Castle castle = ResidenceHolder.getResidence(ShuttgartCastle);
         if (castle.getOwner() == null)
             return "Castle has no lord";
-        Player castleOwner = castle.getOwner().getLeader().player();
+        Player castleOwner = castle.getOwner().getLeader().getPlayer();
 
         if (npcId == August) {
             if (cond == 0) {
@@ -75,11 +75,11 @@ public final class _714_PathToBecomingALordSchuttgart extends Quest {
                         htmltext = "august_q714_01.htm";
                     else {
                         htmltext = "august_q714_00.htm";
-                        st.exitCurrentQuest(true);
+                        st.exitCurrentQuest();
                     }
                 } else {
                     htmltext = "august_q714_00a.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1)
                 htmltext = "august_q714_04.htm";

@@ -10,7 +10,7 @@ public final class _362_BardsMandolin extends Quest {
     private static final int NANARIN = 30956;
     private static final int GALION = 30958;
     private static final int WOODROW = 30837;
-    //Items
+    //items
     private static final int SWANS_FLUTE = 4316;
     private static final int SWANS_LETTER = 4317;
     private static final int Musical_Score__Theme_of_Journey = 4410;
@@ -18,11 +18,8 @@ public final class _362_BardsMandolin extends Quest {
     public _362_BardsMandolin() {
         super(false);
         addStartNpc(SWAN);
-        addTalkId(NANARIN);
-        addTalkId(GALION);
-        addTalkId(WOODROW);
-        addQuestItem(SWANS_FLUTE);
-        addQuestItem(SWANS_LETTER);
+        addTalkId(NANARIN,GALION,WOODROW);
+        addQuestItem(SWANS_FLUTE,SWANS_LETTER);
     }
 
     @Override
@@ -70,13 +67,13 @@ public final class _362_BardsMandolin extends Quest {
         int cond = st.getCond();
         if ("30957_2.htm".equalsIgnoreCase(event) && _state == CREATED && cond == 0) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("30957_5.htm".equalsIgnoreCase(event) && _state == STARTED && cond == 5) {
             st.giveItems(ADENA_ID, 10000);
             st.giveItems(Musical_Score__Theme_of_Journey);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
         return event;
     }

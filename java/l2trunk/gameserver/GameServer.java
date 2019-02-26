@@ -14,7 +14,6 @@ import l2trunk.gameserver.data.xml.holder.EventHolder;
 import l2trunk.gameserver.data.xml.holder.ItemHolder;
 import l2trunk.gameserver.data.xml.holder.ResidenceHolder;
 import l2trunk.gameserver.data.xml.holder.StaticObjectHolder;
-import l2trunk.gameserver.data.xml.parser.ClassesStatsBalancerParser;
 import l2trunk.gameserver.database.DatabaseFactory;
 import l2trunk.gameserver.database.LoginDatabaseFactory;
 import l2trunk.gameserver.geodata.GeoEngine;
@@ -166,10 +165,6 @@ public final class GameServer {
         }
         LOG.info("===================[Olympiad System Loaded]=======================");
         PetitionManager.getInstance();
-        CursedWeaponsManager.INSTANCE.log();
-//        ItemHandler.INSTANCE.toString();
-        LOG.info("======================[Loading BALANCER]==========================");
-        ClassesStatsBalancerParser.getInstance();
         LOG.info("======================[Loading BALANCER]==========================");
         printSection("Admin Commands");
         AdminCommandHandler.INSTANCE.log();
@@ -221,7 +216,7 @@ public final class GameServer {
         _selectorThreads = new ArrayList<>();
         for (int i = 0; i < Config.GAME_PORT.size(); i++) {
             try {
-                _selectorThreads.add( new SelectorThread<>(Config.SELECTOR_CONFIG, gph, gph, gph, null));
+                _selectorThreads.add(new SelectorThread<>(Config.SELECTOR_CONFIG, gph, gph, gph, null));
                 _selectorThreads.get(i).openServerSocket(serverAddr, Config.GAME_PORT.get(i));
                 _selectorThreads.get(i).start();
             } catch (IOException ioe) {

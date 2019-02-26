@@ -180,9 +180,9 @@
 	<skill id="3608" levels="2" name="Apella Heavy Armor Set">
 		<!--
 			Description:
-			Lvl1: Increases Max. CP/CP Recovery Power, and decreases Experience penalty when killed by a skilled player. When being attacked, magic resistance is increased, and Critical damage hitting rate is decreased.
+			Lvl1: Increases Max. CP/CP Recovery Power, and decreases Experience penalty when killed by a skilled getPlayer. When being attacked, magic resistance is increased, and Critical damage hitting rate is decreased.
 			      Maximum CP +1035, CP recovery speed is increased by 40%. There is a 10% probability that magic defense power is increased by 5% and critical damage is decreased by 3 if the damage inflicted by PC is more than 50.
-			Lvl2: Increases Max. CP/CP Recovery power, and decreases Experience penalty when killed by MP consumption of skills and a player .  When being attacked, magic resistance and Critical rate are increased, and Critical damage hitting rate is decreased.
+			Lvl2: Increases Max. CP/CP Recovery power, and decreases Experience penalty when killed by MP consumption of skills and a getPlayer .  When being attacked, magic resistance and Critical rate are increased, and Critical damage hitting rate is decreased.
 			      Maximum CP +1116, CP recovery speed is increased by 40%, and when the PC receives more than 50 damage, there is a 10% probability that magic defense power is increased by 5%, the critical damage is decreased by 3, and the critical strike probability is increased by 2.621
 		-->
 		<table name="#maxCP">1035 1116</table>
@@ -209,9 +209,9 @@
 	<skill id="3609" levels="2" name="Apella Light Armor Set">
 		<!--
 			Description:
-			Lvl1: Increases Max. CP/CP Recovery Power, and decreases Experience penalty when killed by a player. When being attacked, Evasion is increased, and received Critical damage is decreased.
+			Lvl1: Increases Max. CP/CP Recovery Power, and decreases Experience penalty when killed by a getPlayer. When being attacked, Evasion is increased, and received Critical damage is decreased.
 			      Maximum CP +1035, CP recover speed is increased by 40%. There is a 10% probability that evasion is increased by 2 and critical damage is decreased by 86 if the damage inflicted by PC is more than 50.
-			Lvl2: Increases Max. CP/CP Recovery power, and decreases Experience penalty when killed by MP consumption of skills and a player .  When being attacked, evasion and attack speed are increased, and received Critical damage is decreased.
+			Lvl2: Increases Max. CP/CP Recovery power, and decreases Experience penalty when killed by MP consumption of skills and a getPlayer .  When being attacked, evasion and attack speed are increased, and received Critical damage is decreased.
 			      Maximum CP +1116, CP recovery speed is increased by 40%, and when the PC receives more than 50 damage, there is a 10% probability that evasion is increased by 2 and critical damage is decreased by 86. Increased Atk. Spd. by 2.5%.\0	a,	a,	0	0	6	a,When all set items are enchanted by 6 or higher, M. Def. and Evasion will increase.
 		-->
 		<table name="#maxCP">1035 1116</table>
@@ -238,9 +238,9 @@
 	<skill id="3610" levels="2" name="Apella Robe Set">
 		<!--
 			Description:
-			Lvl1: Increases Max. CP/CP Recovery Power, and decreases Experience penalty when killed by a player. When being attacked, evasion and defense power are increased.
+			Lvl1: Increases Max. CP/CP Recovery Power, and decreases Experience penalty when killed by a getPlayer. When being attacked, evasion and defense power are increased.
 			      Maximum CP +1035, CP recovery speed is increased by 40%. There is a 10% probability that Speed is increased by 10 and defense power is increased by 5% if the damage inflicted by PC is more than 50.
-			Lvl2: Increases Max. CP/CP Recovery power, and decreases Experience penalty when killed by MP consumption of skills and a player . When being attacked, Speed, defense power and magic power are increased.
+			Lvl2: Increases Max. CP/CP Recovery power, and decreases Experience penalty when killed by MP consumption of skills and a getPlayer . When being attacked, Speed, defense power and magic power are increased.
 			      Maximum CP +1116, CP recovery speed is increased by 40%. Has a 10% chance to increase Speed by 10, increase P. Def. by 5% and increase M. Atk. by 6 if the damage inflicted by a PC is more than 50.
 		-->
 		<table name="#maxCP">1035 1116</table>
@@ -1211,7 +1211,7 @@
 	</skill>
 	<skill id="3661" levels="1" name="PvP Armor - Heal">
 		<!--
-		      Description: Adds an effect when Major Heal is used upon a player.
+		      Description: Adds an effect when Major Heal is used upon a getPlayer.
 		-->
 		<set name="icon" val="icon.skill1011" />
 		<set name="magicLevel" val="80" />

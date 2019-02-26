@@ -10,7 +10,7 @@ public final class _415_PathToOrcMonk extends Quest {
     private static final int Rosheek = 30590;
     private static final int Kasman = 30501;
     private static final int Toruku = 30591;
-    //Quest Items
+    //Quest items
     private static final int Pomegranate = 1593;
     private static final int KashaBearClaw = 1600;
     private static final int KashaBladeSpiderTalon = 1601;
@@ -33,7 +33,7 @@ public final class _415_PathToOrcMonk extends Quest {
     private static final int FelimLizardmanTooth = 1612;
     private static final int IronWillScroll = 1613;
     private static final int TorukusLetter = 1614;
-    //Items
+    //items
     private static final int KhavatariTotem = 1615;
     //MOB
     private static final int KashaBear = 20479;
@@ -123,11 +123,9 @@ public final class _415_PathToOrcMonk extends Quest {
 
         addStartNpc(Urutu);
 
-        addTalkId(Rosheek);
-        addTalkId(Kasman);
-        addTalkId(Toruku);
+        addTalkId(Rosheek,Kasman,Toruku);
 
-        //Mob Drop
+        //mob Drop
         for (int[] aDROPLIST_COND : DROPLIST_COND) {
             addKillId(aDROPLIST_COND[2]);
             addQuestItem(aDROPLIST_COND[4]);
@@ -154,7 +152,7 @@ public final class _415_PathToOrcMonk extends Quest {
         if ("gantaki_zu_urutu_q0415_06.htm".equalsIgnoreCase(event)) {
             st.giveItems(Pomegranate);
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         }
         return event;
@@ -168,17 +166,17 @@ public final class _415_PathToOrcMonk extends Quest {
         if (npcId == Urutu) {
             if (st.getQuestItemsCount(KhavatariTotem) != 0) {
                 htmltext = "gantaki_zu_urutu_q0415_04.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else if (cond == 0) {
                 if (st.player.getClassId().id != 0x2c) {
                     if (st.player.getClassId().id == 0x2f)
                         htmltext = "gantaki_zu_urutu_q0415_02a.htm";
                     else
                         htmltext = "gantaki_zu_urutu_q0415_02.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else if (st.player.getLevel() < 18) {
                     htmltext = "gantaki_zu_urutu_q0415_03.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else
                     htmltext = "gantaki_zu_urutu_q0415_01.htm";
             } else if (cond == 1)
@@ -190,7 +188,7 @@ public final class _415_PathToOrcMonk extends Quest {
                 st.giveItems(GantakisLetterOfRecommendation, 1);
                 htmltext = "gantaki_zu_urutu_q0415_09.htm";
                 st.setCond(9);
-                st.setState(STARTED);
+                st.start();
             } else if (cond == 9)
                 htmltext = "gantaki_zu_urutu_q0415_10.htm";
             else if (cond >= 10)
@@ -201,7 +199,7 @@ public final class _415_PathToOrcMonk extends Quest {
                 st.giveItems(LeatherPouch1st, 1);
                 htmltext = "khavatari_rosheek_q0415_01.htm";
                 st.setCond(2);
-                st.setState(STARTED);
+                st.start();
             } else if (cond == 2)
                 htmltext = "khavatari_rosheek_q0415_02.htm";
             else if (cond == 3) {
@@ -209,7 +207,7 @@ public final class _415_PathToOrcMonk extends Quest {
                 st.takeItems(LeatherPouchFull1st, -1);
                 st.giveItems(LeatherPouch2st, 1);
                 st.setCond(4);
-                st.setState(STARTED);
+                st.start();
             } else if (cond == 4)
                 htmltext = "khavatari_rosheek_q0415_04.htm";
             else if (cond == 5) {
@@ -217,7 +215,7 @@ public final class _415_PathToOrcMonk extends Quest {
                 st.giveItems(LeatherPouch3st, 1);
                 htmltext = "khavatari_rosheek_q0415_05.htm";
                 st.setCond(6);
-                st.setState(STARTED);
+                st.start();
             } else if (cond == 6)
                 htmltext = "khavatari_rosheek_q0415_06.htm";
             else if (cond == 7) {
@@ -226,7 +224,7 @@ public final class _415_PathToOrcMonk extends Quest {
                 st.giveItems(RosheeksLetter);
                 htmltext = "khavatari_rosheek_q0415_07.htm";
                 st.setCond(8);
-                st.setState(STARTED);
+                st.start();
             } else if (cond == 8)
                 htmltext = "khavatari_rosheek_q0415_08.htm";
             else if (cond == 9)
@@ -237,7 +235,7 @@ public final class _415_PathToOrcMonk extends Quest {
                 st.giveItems(Fig);
                 htmltext = "prefect_kasman_q0415_01.htm";
                 st.setCond(10);
-                st.setState(STARTED);
+                st.start();
             } else if (cond == 10)
                 htmltext = "prefect_kasman_q0415_02.htm";
             else if (cond == 11 || cond == 12)
@@ -250,13 +248,13 @@ public final class _415_PathToOrcMonk extends Quest {
                 if (st.player.getClassId().occupation() == 0) {
                     st.giveItems(KhavatariTotem);
                     if (!st.player.isVarSet("prof1")) {
-                        st.player.setVar("prof1", 1);
+                        st.player.setVar("prof1");
                         st.addExpAndSp(228064, 16455);
                         st.giveItems(ADENA_ID, 81900);
                     }
                 }
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (npcId == Toruku)
             if (cond == 10) {
@@ -264,7 +262,7 @@ public final class _415_PathToOrcMonk extends Quest {
                 st.giveItems(LeatherPouch4st, 1);
                 htmltext = "khavatari_toruku_q0415_01.htm";
                 st.setCond(11);
-                st.setState(STARTED);
+                st.start();
             } else if (cond == 11)
                 htmltext = "khavatari_toruku_q0415_02.htm";
             else if (cond == 12) {
@@ -273,7 +271,7 @@ public final class _415_PathToOrcMonk extends Quest {
                 st.giveItems(TorukusLetter, 1);
                 htmltext = "khavatari_toruku_q0415_03.htm";
                 st.setCond(13);
-                st.setState(STARTED);
+                st.start();
             } else if (cond == 13)
                 htmltext = "khavatari_toruku_q0415_04.htm";
         return htmltext;
@@ -291,7 +289,7 @@ public final class _415_PathToOrcMonk extends Quest {
                     else if (st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[7], aDROPLIST_COND[5], aDROPLIST_COND[6]))
                         if (aDROPLIST_COND[1] != cond && aDROPLIST_COND[1] != 0) {
                             st.setCond(aDROPLIST_COND[1]);
-                            st.setState(STARTED);
+                            st.start();
                         }
         if (cond == 3 && st.getQuestItemsCount(LeatherPouchFull1st) == 0) {
             st.takeItems(KashaBearClaw);
@@ -313,7 +311,7 @@ public final class _415_PathToOrcMonk extends Quest {
             st.takeItems(LeatherPouch4st);
             st.giveItems(LeatherPouchFull4st);
             st.setCond(12);
-            st.setState(STARTED);
+            st.start();
         }
     }
 }

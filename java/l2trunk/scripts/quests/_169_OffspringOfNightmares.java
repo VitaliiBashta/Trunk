@@ -37,7 +37,7 @@ public final class _169_OffspringOfNightmares extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("30145-04.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("30145-08.htm".equalsIgnoreCase(event)) {
             st.takeItems(CrackedSkull);
@@ -47,12 +47,12 @@ public final class _169_OffspringOfNightmares extends Quest {
             st.player.addExpAndSp(17475, 818);
 
             if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("p1q4")) {
-                st.player.setVar("p1q4", 1);
+                st.player.setVar("p1q4");
                 st.player.sendPacket(new ExShowScreenMessage("Now go find the Newbie Guide."));
             }
 
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(false);
+            st.finish();
         }
         return event;
     }
@@ -66,12 +66,12 @@ public final class _169_OffspringOfNightmares extends Quest {
             if (cond == 0) {
                 if (st.player.getRace() != Race.darkelf) {
                     htmltext = "30145-00.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else if (st.player.getLevel() >= 15)
                     htmltext = "30145-03.htm";
                 else {
                     htmltext = "30145-02.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1) {
                 if (st.getQuestItemsCount(CrackedSkull) == 0)
@@ -90,7 +90,7 @@ public final class _169_OffspringOfNightmares extends Quest {
                 st.giveItems(PerfectSkull);
                 st.playSound(SOUND_MIDDLE);
                 st.setCond(2);
-                st.setState(STARTED);
+                st.start();
             }
             if (Rnd.chance(70)) {
                 st.giveItems(CrackedSkull);

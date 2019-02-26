@@ -43,9 +43,11 @@ public final class DrakeBosses extends Fighter {
                     QuestState qs;
                     Map<Playable, HateInfo> aggro = getActor().getAggroList().getPlayableMap();
                     for (Player pl : pg) {
-                        if (pl != null && !pl.isDead() && aggro.containsKey(pl) && (getActor().isInRangeZ(pl, Config.ALT_PARTY_DISTRIBUTION_RANGE) || getActor().isInRangeZ(killer, Config.ALT_PARTY_DISTRIBUTION_RANGE)))
-                            ;
-                        {
+                        if (pl != null && !pl.isDead() && aggro.containsKey(pl)) {
+                            if (!getActor().isInRangeZ(pl, Config.ALT_PARTY_DISTRIBUTION_RANGE)) {
+                                getActor().isInRangeZ(killer, Config.ALT_PARTY_DISTRIBUTION_RANGE);
+                            }
+
                             qs = pl.getQuestState(_456_DontKnowDontCare.class);
                             if (qs != null && qs.getCond() == 1)
                                 qs.set("RaidKilled", corpse.objectId());

@@ -29,7 +29,7 @@ public enum DecayTaskManager {
         decayTasks.remove(actor);
     }
 
-    class DecayScheduler implements Runnable {
+    private class DecayScheduler implements Runnable {
         @Override
         public void run() {
             final long current = System.currentTimeMillis();

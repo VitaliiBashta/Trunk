@@ -29,9 +29,9 @@ public final class _106_ForgottenTruth extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if (event.equals("tetrarch_thifiell_q0106_05.htm")) {
-            st.giveItems(ONYX_TALISMAN1, 1);
+            st.giveItems(ONYX_TALISMAN1);
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         }
         return event;
@@ -46,12 +46,12 @@ public final class _106_ForgottenTruth extends Quest {
             if (cond == 0) {
                 if (st.player.getRace() != Race.darkelf) {
                     htmltext = "tetrarch_thifiell_q0106_00.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else if (st.player.getLevel() >= 10)
                     htmltext = "tetrarch_thifiell_q0106_03.htm";
                 else {
                     htmltext = "tetrarch_thifiell_q0106_02.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond > 0 && (st.getQuestItemsCount(ONYX_TALISMAN1) > 0 || st.getQuestItemsCount(ONYX_TALISMAN2) > 0) && st.getQuestItemsCount(KARTAS_TRANSLATION) == 0)
                 htmltext = "tetrarch_thifiell_q0106_06.htm";
@@ -68,7 +68,7 @@ public final class _106_ForgottenTruth extends Quest {
                 st.player.addExpAndSp(24195, 2074);
 
                 if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("p1q3")) {
-                    st.player.setVar("p1q3", 1); // flag for helper
+                    st.player.setVar("p1q3"); // flag for helper
                     st.player.sendPacket(new ExShowScreenMessage("Now go find the Newbie Guide."));
                     st.giveItems(1060, 100); // healing potion
                     for (int item = 4412; item <= 4417; item++)
@@ -82,7 +82,7 @@ public final class _106_ForgottenTruth extends Quest {
                     }
                 }
 
-                st.exitCurrentQuest(false);
+                st.finish();
                 st.playSound(SOUND_FINISH);
             }
         } else if (npcId == 30133)

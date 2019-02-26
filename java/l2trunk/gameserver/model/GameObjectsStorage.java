@@ -47,12 +47,11 @@ public final class GameObjectsStorage {
         Creature o = objects.get(objId);
         if (o instanceof Player) return (Player) o;
         return null;
-//        throw new IllegalArgumentException("no player with id:" + objId);
+//        throw new IllegalArgumentException("no getPlayer with id:" + objId);
     }
 
     public static Stream<Player> getAllPlayersStream() {
         return objects.values().stream()
-                .filter(Objects::nonNull)
                 .filter(o -> o instanceof Player)
                 .map(o -> (Player) o);
     }

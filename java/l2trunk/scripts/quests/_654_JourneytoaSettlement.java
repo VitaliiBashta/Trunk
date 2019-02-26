@@ -13,7 +13,7 @@ public final class _654_JourneytoaSettlement extends Quest {
     private static final int CanyonAntelope = 21294;
     private static final int CanyonAntelopeSlave = 21295;
 
-    // Items
+    // items
     private static final int AntelopeSkin = 8072;
 
     // Rewards
@@ -31,7 +31,7 @@ public final class _654_JourneytoaSettlement extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("printessa_spirit_q0654_03.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         }
         if ("printessa_spirit_q0654_04.htm".equalsIgnoreCase(event))
@@ -39,7 +39,7 @@ public final class _654_JourneytoaSettlement extends Quest {
         if ("printessa_spirit_q0654_07.htm".equalsIgnoreCase(event)) {
             st.giveItems(FrintezzasMagicForceFieldRemovalScroll, 5);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
         return event;
     }
@@ -47,17 +47,13 @@ public final class _654_JourneytoaSettlement extends Quest {
     @Override
     public String onTalk(NpcInstance npc, QuestState st) {
         String htmltext = "noquest";
-        QuestState q = st.player.getQuestState(_119_LastImperialPrince.class);
-        if (q == null)
+        if (!st.player.isQuestCompleted(_119_LastImperialPrince.class)) {
+            st.exitCurrentQuest();
             return htmltext;
+        }
         if (st.player.getLevel() < 74) {
-            htmltext = "printessa_spirit_q0654_02.htm";
-            st.exitCurrentQuest(true);
-            return htmltext;
-        } else if (!q.isCompleted()) {
-            htmltext = "noquest";
-            st.exitCurrentQuest(true);
-            return htmltext;
+            st.exitCurrentQuest();
+            return "printessa_spirit_q0654_02.htm";
         }
 
         int cond = st.getCond();

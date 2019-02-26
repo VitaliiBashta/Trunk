@@ -6,10 +6,7 @@ import l2trunk.gameserver.Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -21,7 +18,7 @@ public final class OlympiadManager extends RunnableImpl {
     private void sleep(long time) {
         try {
             Thread.sleep(time);
-        } catch (InterruptedException e) {
+        } catch (InterruptedException ignored) {
         }
     }
 
@@ -31,7 +28,7 @@ public final class OlympiadManager extends RunnableImpl {
             return;
 
         while (Olympiad.inCompPeriod()) {
-            if (Olympiad._nobles.isEmpty()) {
+            if (Olympiad.nobles.isEmpty()) {
                 sleep(60000);
                 continue;
             }
@@ -82,10 +79,10 @@ public final class OlympiadManager extends RunnableImpl {
 
     private void prepareBattles(CompType type, List<Integer> list) {
         boolean firstGameLaunched = false;
-        NobleSelector<Integer> selector = new NobleSelector<>(list.size());
-        for (Integer noble : list)
-            if (noble != null)
-                selector.add(noble, Olympiad.getNoblePoints(noble));
+        NobleSelector selector = new NobleSelector(list.size());
+        list.stream()
+                .filter(Objects::nonNull)
+                .forEach(noble -> selector.add(noble, Olympiad.getNoblePoints(noble)));
 
         for (int i = 0; i < Olympiad.STADIUMS.length; i++) {
             try {
@@ -147,7 +144,7 @@ public final class OlympiadManager extends RunnableImpl {
         return olympiadInstances;
     }
 
-    private List<Integer> nextOpponents(NobleSelector<Integer> selector, CompType type) {
+    private List<Integer> nextOpponents(NobleSelector selector, CompType type) {
         List<Integer> opponents = new ArrayList<>();
         Integer noble;
 
@@ -167,8 +164,7 @@ public final class OlympiadManager extends RunnableImpl {
         if (list.isEmpty())
             return null;
         List<Integer> opponents = new CopyOnWriteArrayList<>();
-        List<List<Integer>> a = new ArrayList<>();
-        a.addAll(list);
+        List<List<Integer>> a = new ArrayList<>(list);
 
         for (int i = 0; i < type.getMinSize(); i++) {
             if (a.size() < 1)

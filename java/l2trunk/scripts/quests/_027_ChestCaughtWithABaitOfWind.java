@@ -8,9 +8,9 @@ public final class _027_ChestCaughtWithABaitOfWind extends Quest {
     // NPC List
     private static final int Lanosco = 31570;
     private static final int Shaling = 31434;
-    //Quest Items
+    //Quest items
     private static final int StrangeGolemBlueprint = 7625;
-    //Items
+    //items
     private static final int BigBlueTreasureChest = 6500;
     private static final int BlackPearlRing = 880;
 
@@ -28,7 +28,7 @@ public final class _027_ChestCaughtWithABaitOfWind extends Quest {
         switch (event) {
             case "fisher_lanosco_q0027_0104.htm":
                 st.setCond(1);
-                st.setState(STARTED);
+                st.start();
                 st.playSound(SOUND_ACCEPT);
                 break;
             case "fisher_lanosco_q0027_0201.htm":
@@ -45,10 +45,10 @@ public final class _027_ChestCaughtWithABaitOfWind extends Quest {
                     st.takeItems(StrangeGolemBlueprint, -1);
                     st.giveItems(BlackPearlRing, 1);
                     st.playSound(SOUND_FINISH);
-                    st.exitCurrentQuest(false);
+                    st.finish();
                 } else {
                     htmltext = "blueprint_seller_shaling_q0027_0302.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
                 break;
         }
@@ -65,13 +65,13 @@ public final class _027_ChestCaughtWithABaitOfWind extends Quest {
             if (id == CREATED) {
                 if (st.player.getLevel() < 27) {
                     htmltext = "fisher_lanosco_q0027_0101.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else {
                     if (st.player.isQuestCompleted(_050_LanoscosSpecialBait.class))
                         htmltext = "fisher_lanosco_q0027_0101.htm";
                     else {
                         htmltext = "fisher_lanosco_q0027_0102.htm";
-                        st.exitCurrentQuest(true);
+                        st.exitCurrentQuest();
                     }
 
                 }

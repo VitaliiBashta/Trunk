@@ -78,10 +78,10 @@ public final class ArmorSet {
     }
 
     /**
-     * Checks if player have equipped all items from set (not checking shield)
+     * Checks if getPlayer have equipped all items from set (not checking shield)
      *
      * @param player whose inventory is being checked
-     * @return True if player equips whole set
+     * @return True if getPlayer equips whole set
      */
     public boolean containAll(Player player) {
         Inventory inv = player.getInventory();

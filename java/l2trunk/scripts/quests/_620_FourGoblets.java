@@ -35,11 +35,10 @@ public final class _620_FourGoblets extends Quest {
 
     public _620_FourGoblets() {
         super(false);
-        List<Integer> startNPCs = List.of(NAMELESS_SPIRIT, CONQ_SM, EMPER_SM, SAGES_SM, JUDGE_SM, GHOST_CHAMBERLAIN_1, GHOST_CHAMBERLAIN_2);
 
-        addStartNpc(startNPCs);
+        addStartNpc(NAMELESS_SPIRIT, CONQ_SM, EMPER_SM, SAGES_SM, JUDGE_SM, GHOST_CHAMBERLAIN_1, GHOST_CHAMBERLAIN_2);
 
-        addTalkId(List.of(GHOST_OF_WIGOTH_1, GHOST_OF_WIGOTH_2));
+        addTalkId(GHOST_OF_WIGOTH_1, GHOST_OF_WIGOTH_2);
 
         addQuestItem(Sealed_Box, GRAVE_PASS);
         addQuestItem(GOBLETS);
@@ -70,12 +69,12 @@ public final class _620_FourGoblets extends Quest {
         if (event.equalsIgnoreCase("accept")) {
             if (cond == 0) {
                 if (st.player.getLevel() >= 74) {
-                    st.setState(STARTED);
+                    st.start();
                     st.playSound(SOUND_ACCEPT);
                     st.setCond(1);
                     return "31453-13.htm";
                 }
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 return "31453-12.htm";
             }
         } else if (event.startsWith("openBoxes "))
@@ -90,7 +89,7 @@ public final class _620_FourGoblets extends Quest {
             return "31453-16.htm";
         } else if ("13".equals(event)) {
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             return "31453-18.htm";
         } else if (event.equals("14")) {
             if (cond == 2)
@@ -170,7 +169,7 @@ public final class _620_FourGoblets extends Quest {
                     htmltext = "31453-1.htm";
                 else {
                     htmltext = "31453-12.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             else if (cond == 1)
                 if (st.haveAllItems(GOBLETS))

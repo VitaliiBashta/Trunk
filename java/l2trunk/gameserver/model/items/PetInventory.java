@@ -50,8 +50,6 @@ public final class PetInventory extends Inventory {
 
     @Override
     public void restore() {
-        final int ownerId = getOwnerId();
-
         writeLock();
         try {
 

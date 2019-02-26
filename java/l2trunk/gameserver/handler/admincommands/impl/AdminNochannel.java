@@ -8,7 +8,9 @@ import l2trunk.gameserver.utils.AdminFunctions;
 import l2trunk.gameserver.utils.ItemFunctions;
 import l2trunk.gameserver.utils.Util;
 
-public class AdminNochannel implements IAdminCommandHandler {
+import static l2trunk.commons.lang.NumberUtils.toInt;
+
+public final class AdminNochannel implements IAdminCommandHandler {
     @Override
     public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
         Commands command = (Commands) comm;
@@ -24,7 +26,7 @@ public class AdminNochannel implements IAdminCommandHandler {
 
             penaltyCount = activeChar.getVarInt("penaltyChatCount");
 
-            long LastBanChatDayTime =  activeChar.getVarLong("LastBanChatDayTime");
+            long LastBanChatDayTime = activeChar.getVarLong("LastBanChatDayTime");
 
             if (LastBanChatDayTime != 0) {
                 if (System.currentTimeMillis() - LastBanChatDayTime < 1000 * 60 * 60 * 24) {
@@ -43,7 +45,7 @@ public class AdminNochannel implements IAdminCommandHandler {
                         if (penaltyCount > 0) // У модератора был штраф за нарушения
                         {
                             activeChar.sendMessage("Fine for violation: " + penaltyCount + " " + item.getName());
-                            activeChar.setVar("penaltyChatCount",  Math.max(0, penaltyCount - add_count)); // Уменьшаем штраф
+                            activeChar.setVar("penaltyChatCount", Math.max(0, penaltyCount - add_count)); // Уменьшаем штраф
                             add_count -= penaltyCount; // Вычитаем штраф из бонуса
                         }
 
@@ -51,7 +53,7 @@ public class AdminNochannel implements IAdminCommandHandler {
                             ItemFunctions.addItem(activeChar, activeChar.getPlayerAccess().BanChatBonusId, add_count, "AdminNoChannel");
                     }
                     activeChar.setVar("LastBanChatDayTime", System.currentTimeMillis());
-                    activeChar.setVar("banChatCount", 0);
+                    activeChar.unsetVar("banChatCount");
                     banChatCount = 0;
                 }
             } else
@@ -67,18 +69,14 @@ public class AdminNochannel implements IAdminCommandHandler {
                 }
                 int timeval = 30; // if no args, then 30 min default.
                 if (wordList.length > 2)
-                    try {
-                        timeval = Integer.parseInt(wordList[2]);
-                    } catch (Exception E) {
-                        timeval = 30;
-                    }
+                    timeval = toInt(wordList[2], 30);
 
                 String msg = AdminFunctions.banChat(activeChar, null, wordList[1], timeval, wordList.length > 3 ? Util.joinStrings(" ", wordList, 3) : null);
                 activeChar.sendMessage(msg);
 
                 if (banChatCountPerDay > -1 && msg.startsWith("You are banned from chat")) {
                     banChatCount++;
-                    activeChar.setVar("banChatCount",  banChatCount);
+                    activeChar.setVar("banChatCount", banChatCount);
                     activeChar.sendMessage("You have left " + (banChatCountPerDay - banChatCount) + " Bans chat.");
                 }
             }

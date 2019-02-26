@@ -7,7 +7,6 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public final class _371_ShriekOfGhosts extends Quest {
@@ -18,12 +17,12 @@ public final class _371_ShriekOfGhosts extends Quest {
     private static final int Hallates_Warrior = 20818;
     private static final int Hallates_Knight = 20820;
     private static final int Hallates_Commander = 20824;
-    // Items
+    // items
     private static final int Ancient_Porcelain__Excellent = 6003;
     private static final int Ancient_Porcelain__High_Quality = 6004;
     private static final int Ancient_Porcelain__Low_Quality = 6005;
     private static final int Ancient_Porcelain__Lowest_Quality = 6006;
-    // Quest Items
+    // Quest items
     private static final int Ancient_Ash_Urn = 5903;
     private static final int Ancient_Porcelain = 6002;
     // Chances
@@ -33,7 +32,10 @@ public final class _371_ShriekOfGhosts extends Quest {
     private static final int Ancient_Porcelain__Low_Quality_Chance = 46; //    32% 4000a  (50%)
     private static final int Ancient_Porcelain__Lowest_Quality_Chance = 84; // 38% 2640a  (33%)
     //                                                                   16% chance of nothing
-    private final Map<Integer, Integer> common_chances = new HashMap<>();
+    private final Map<Integer, Integer> common_chances = Map.of(
+            Hallates_Warrior, 71,
+            Hallates_Knight, 74,
+            Hallates_Commander, 82);
 
     public _371_ShriekOfGhosts() {
         super(true);
@@ -41,15 +43,10 @@ public final class _371_ShriekOfGhosts extends Quest {
         addStartNpc(REVA);
         addTalkId(PATRIN);
 
-        addKillId(Hallates_Warrior);
-        addKillId(Hallates_Knight);
-        addKillId(Hallates_Commander);
+        addKillId(Hallates_Warrior, Hallates_Knight, Hallates_Commander);
 
         addQuestItem(Ancient_Ash_Urn);
 
-        common_chances.put(Hallates_Warrior, 71);
-        common_chances.put(Hallates_Knight, 74);
-        common_chances.put(Hallates_Commander, 82);
     }
 
     @Override
@@ -57,7 +54,7 @@ public final class _371_ShriekOfGhosts extends Quest {
         String htmltext = event;
         int _state = st.getState();
         if (event.equalsIgnoreCase("30867-03.htm") && _state == CREATED) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("30867-10.htm") && _state == STARTED) {
@@ -66,7 +63,7 @@ public final class _371_ShriekOfGhosts extends Quest {
                 st.takeItems(Ancient_Ash_Urn, -1);
                 st.giveItems(ADENA_ID, Ancient_Ash_Urn_count * 1000L);
             }
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         } else if (event.equalsIgnoreCase("30867-TRADE") && _state == STARTED) {
             long Ancient_Ash_Urn_count = st.getQuestItemsCount(Ancient_Ash_Urn);
             if (Ancient_Ash_Urn_count > 0) {
@@ -115,10 +112,10 @@ public final class _371_ShriekOfGhosts extends Quest {
                 st.setCond(0);
             } else {
                 htmltext = "30867-01.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (_state == STARTED && npcId == REVA)
-            htmltext = st.haveQuestItem(Ancient_Porcelain)  ? "30867-05.htm" : "30867-04.htm";
+            htmltext = st.haveQuestItem(Ancient_Porcelain) ? "30867-05.htm" : "30867-04.htm";
         else if (_state == STARTED && npcId == PATRIN)
             htmltext = "30929-01.htm";
 
@@ -132,11 +129,11 @@ public final class _371_ShriekOfGhosts extends Quest {
             return;
         QuestState st = player.getQuestState(this);
 
-        Integer _chance = common_chances.get(npc.getNpcId());
-        if (_chance == null)
+        Integer chance = common_chances.get(npc.getNpcId());
+        if (chance == null)
             return;
 
-        if (Rnd.chance(_chance)) {
+        if (Rnd.chance(chance)) {
             st.giveItems(Rnd.chance(Urn_Chance) ? Ancient_Ash_Urn : Ancient_Porcelain);
             st.playSound(SOUND_ITEMGET);
         }

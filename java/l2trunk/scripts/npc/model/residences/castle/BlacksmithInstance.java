@@ -95,7 +95,7 @@ public class BlacksmithInstance extends NpcInstance {
                     filename = "castle/blacksmith/castleblacksmith-" + val + ".htm";
 
         html.setFile(filename);
-        html.replace("%castleid%", Integer.toString(getCastle().getId()));
+        html.replace("%castleid%", getCastle().getId());
         player.sendPacket(html);
     }
 

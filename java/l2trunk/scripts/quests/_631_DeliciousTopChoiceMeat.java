@@ -138,16 +138,16 @@ public final class _631_DeliciousTopChoiceMeat extends Quest {
         String htmltext = event;
         if (event.equalsIgnoreCase("beast_herder_tunatun_q0631_0104.htm")) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("beast_herder_tunatun_q0631_0201.htm")) {
-            if (st.getQuestItemsCount(PRIME_MEAT) >= 120) {
-                st.takeItems(PRIME_MEAT, -1);
+        } else if ("beast_herder_tunatun_q0631_0201.htm".equalsIgnoreCase(event)) {
+            if (st.haveQuestItem(PRIME_MEAT, 120)) {
+                st.takeItems(PRIME_MEAT);
                 int[] reward = REWARDS[Rnd.get(0, REWARDS.length - 1)];
                 int count = Rnd.get(reward[1], reward[2]);
                 st.giveItems(reward[0], Math.round(count * st.getRateQuestsReward()));
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else {
                 htmltext = "beast_herder_tunatun_q0631_0202.htm";
                 st.setCond(1);
@@ -163,17 +163,18 @@ public final class _631_DeliciousTopChoiceMeat extends Quest {
         if (cond < 1) {
             if (st.player.getLevel() < 82) {
                 htmltext = "beast_herder_tunatun_q0631_0103.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else
                 htmltext = "beast_herder_tunatun_q0631_0101.htm";
         } else if (cond == 1)
             htmltext = "beast_herder_tunatun_q0631_0106.htm";
         else if (cond == 2) {
-            if (st.getQuestItemsCount(PRIME_MEAT) < 120) {
+            if (st.haveQuestItem(PRIME_MEAT, 120))
+                htmltext = "beast_herder_tunatun_q0631_0105.htm";
+            else {
                 htmltext = "beast_herder_tunatun_q0631_0106.htm";
                 st.setCond(1);
-            } else
-                htmltext = "beast_herder_tunatun_q0631_0105.htm";
+            }
         }
         return htmltext;
     }
@@ -182,12 +183,10 @@ public final class _631_DeliciousTopChoiceMeat extends Quest {
     public void onKill(NpcInstance npc, QuestState st) {
         if (st.getCond() == 1 && Rnd.chance(MEAT_DROP_CHANCE)) {
             st.giveItems(PRIME_MEAT, 1, true);
-            if (st.getQuestItemsCount(PRIME_MEAT) < 120)
-                st.playSound(SOUND_ITEMGET);
-            else {
+            if (st.haveQuestItem(PRIME_MEAT, 120)) {
                 st.playSound(SOUND_MIDDLE);
                 st.setCond(2);
-            }
+            } else st.playSound(SOUND_ITEMGET);
         }
     }
 }

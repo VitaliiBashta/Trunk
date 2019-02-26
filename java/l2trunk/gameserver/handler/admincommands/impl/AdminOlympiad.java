@@ -109,7 +109,7 @@ public class AdminOlympiad implements IAdminCommandHandler {
 
                     Hero.INSTANCE.computeNewHeroes(heroesToBe);
 
-                    activeChar.sendMessage("Hero status added to player " + player.getName());
+                    activeChar.sendMessage("Hero status added to getPlayer " + player.getName());
                     break;
                 }
                 case admin_olympiad_stop_period: {

@@ -1,6 +1,6 @@
 package l2trunk.scripts.quests;
 
-import l2trunk.gameserver.scripts.ScriptFile;
+import l2trunk.gameserver.model.base.ClassId;
 import l2trunk.gameserver.utils.Location;
 
 import java.util.List;
@@ -10,15 +10,14 @@ public final class _076_SagaOfTheGrandKhavatari extends SagasSuperclass {
         super(false);
 
         NPC = List.of(31339, 31624, 31589, 31290, 31637, 31646, 31647, 31652, 31654, 31655, 31659, 31290);
-        Items = List.of(7080, 7539, 7081, 7491, 7274, 7305, 7336, 7367, 7398, 7429, 7099, 0);
-        Mob = List.of(27293, 27226, 27284);
-        classid = 114;
-        prevclass = 0x30;
+        items = List.of(7080, 7539, 7081, 7491, 7274, 7305, 7336, 7367, 7398, 7429, 7099, 0);
+        mob = List.of(27293, 27226, 27284);
+        classid = ClassId.grandKhauatari;
         locs = List.of(
-                new Location(161719, -92823, -1893),
-                new Location(124355, 82155, -2803),
-                new Location(124376, 82127, -2796));
-        Text = List.of(
+                Location.of(161719, -92823, -1893),
+                Location.of(124355, 82155, -2803),
+                Location.of(124376, 82127, -2796));
+        text = List.of(
                 "PLAYERNAME! Pursued to here! However, I jumped out of the Banshouren boundaries! You look at the giant as the sign of power!",
                 "... Oh ... good! So it was ... let's begin!",
                 "I do not have the patience ..! I have been a giant force ...! Cough chatter ah ah ah!",

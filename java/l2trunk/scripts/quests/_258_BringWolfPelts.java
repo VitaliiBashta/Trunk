@@ -18,8 +18,7 @@ public final class _258_BringWolfPelts extends Quest {
         super(false);
 
         addStartNpc(30001);
-        addKillId(20120);
-        addKillId(20442);
+        addKillId(20120,20442);
 
         addQuestItem(WOLF_PELT);
     }
@@ -28,7 +27,7 @@ public final class _258_BringWolfPelts extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if (event.intern().equalsIgnoreCase("lector_q0258_03.htm")) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         }
         return event;
@@ -44,7 +43,7 @@ public final class _258_BringWolfPelts extends Quest {
                 return htmltext;
             }
             htmltext = "lector_q0258_01.htm";
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         } else if (cond == 1 && st.getQuestItemsCount(WOLF_PELT) >= 0 && st.getQuestItemsCount(WOLF_PELT) < 40)
             htmltext = "lector_q0258_05.htm";
         else if (cond == 2 && st.getQuestItemsCount(WOLF_PELT) >= 40) {
@@ -63,7 +62,7 @@ public final class _258_BringWolfPelts extends Quest {
                 st.giveItems(Tunic, 1);
             htmltext = "lector_q0258_06.htm";
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
         return htmltext;
     }

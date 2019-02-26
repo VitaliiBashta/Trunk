@@ -64,7 +64,7 @@ public final class _418_PathToArtisan extends Quest {
         super(false);
         addStartNpc(Silvera);
         addTalkId(Kluto, Pinter);
-        //Mob Drop
+        //mob Drop
         for (int[] aDROPLIST_COND : DROPLIST_COND) {
             addKillId(aDROPLIST_COND[2]);
             addQuestItem(aDROPLIST_COND[4]);
@@ -77,24 +77,24 @@ public final class _418_PathToArtisan extends Quest {
         if ("blacksmith_silvery_q0418_06.htm".equalsIgnoreCase(event)) {
             st.giveItems(SilverasRing);
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("blacksmith_kluto_q0418_04.htm".equalsIgnoreCase(event) || "blacksmith_kluto_q0418_07.htm".equalsIgnoreCase(event)) {
             st.giveItems(KlutosLetter);
             st.setCond(4);
-            st.setState(STARTED);
+            st.start();
         } else if ("blacksmith_pinter_q0418_03.htm".equalsIgnoreCase(event)) {
             st.takeItems(KlutosLetter);
             st.giveItems(FootprintOfThief);
             st.setCond(5);
-            st.setState(STARTED);
+            st.start();
         } else if ("blacksmith_pinter_q0418_06.htm".equalsIgnoreCase(event)) {
             st.takeItems(StolenSecretBox);
             st.takeItems(FootprintOfThief);
             st.giveItems(SecretBox);
             st.giveItems(PassCertificate2nd);
             st.setCond(7);
-            st.setState(STARTED);
+            st.start();
         } else if ("blacksmith_kluto_q0418_10.htm".equalsIgnoreCase(event) || "blacksmith_kluto_q0418_12.htm".equalsIgnoreCase(event)) {
             st.takeItems(PassCertificate1st);
             st.takeItems(PassCertificate2nd);
@@ -102,13 +102,13 @@ public final class _418_PathToArtisan extends Quest {
             if (st.player.getClassId().occupation() == 0) {
                 st.giveItems(FinalPassCertificate);
                 if (!st.player.isVarSet("prof1")) {
-                    st.player.setVar("prof1", 1);
+                    st.player.setVar("prof1");
                     st.addExpAndSp(228064, 16455);
                     st.giveItems(ADENA_ID, 81900);
                 }
             }
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
         return event;
     }
@@ -121,17 +121,17 @@ public final class _418_PathToArtisan extends Quest {
         if (npcId == Silvera) {
             if (st.haveQuestItem(FinalPassCertificate) ) {
                 htmltext = "blacksmith_silvery_q0418_04.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else if (cond == 0) {
                 if (st.player.getClassId().id != 0x35) {
                     if (st.player.getClassId().id == 0x38)
                         htmltext = "blacksmith_silvery_q0418_02a.htm";
                     else
                         htmltext = "blacksmith_silvery_q0418_02.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else if (st.player.getLevel() < 18) {
                     htmltext = "blacksmith_silvery_q0418_03.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else
                     htmltext = "blacksmith_silvery_q0418_01.htm";
             } else if (cond == 1)
@@ -176,11 +176,11 @@ public final class _418_PathToArtisan extends Quest {
                     else if (st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[7], aDROPLIST_COND[5], aDROPLIST_COND[6]))
                         if (aDROPLIST_COND[1] != cond && aDROPLIST_COND[1] != 0) {
                             st.setCond(aDROPLIST_COND[1]);
-                            st.setState(STARTED);
+                            st.start();
                         }
         if (cond == 1 && st.getQuestItemsCount(BoogleRatmanTooth) >= 10 && st.getQuestItemsCount(BoogleRatmanLeadersTooth) >= 2) {
             st.setCond(2);
-            st.setState(STARTED);
+            st.start();
         }
     }
 }

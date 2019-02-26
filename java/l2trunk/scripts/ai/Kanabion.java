@@ -69,7 +69,7 @@ public final class Kanabion extends Fighter {
         if (spawnPossible && nextId > 0) {
             Creature player = null;
             if (!(killer instanceof Player)){ // На оффе если убить саммоном или петом, то следующий канабион агрится не на пета, а на хозяина.
-                player = World.getAroundPlayers(actor).stream().findFirst().orElse(null);
+                player = World.getAroundPlayers(actor).findFirst().orElse(null);
             }
             if (player == null)
                 player = killer;

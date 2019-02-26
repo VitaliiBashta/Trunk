@@ -8,7 +8,7 @@ import l2trunk.gameserver.model.quest.QuestState;
 public final class _291_RevengeOfTheRedbonnet extends Quest {
     //NPC
     private static final int MaryseRedbonnet = 30553;
-    //Quest Items
+    //Quest items
     private final int BlackWolfPelt = 1482;
     //Item
     private static final int ScrollOfEscape = 736;
@@ -34,7 +34,7 @@ public final class _291_RevengeOfTheRedbonnet extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if (event.equalsIgnoreCase("marife_redbonnet_q0291_03.htm")) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         }
         return event;
@@ -48,7 +48,7 @@ public final class _291_RevengeOfTheRedbonnet extends Quest {
         if (cond == 0) {
             if (st.player.getLevel() < 4) {
                 htmltext = "marife_redbonnet_q0291_01.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else
                 htmltext = "marife_redbonnet_q0291_02.htm";
         } else if (cond == 1)
@@ -71,7 +71,7 @@ public final class _291_RevengeOfTheRedbonnet extends Quest {
             }
             htmltext = "marife_redbonnet_q0291_05.htm";
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
         return htmltext;
     }
@@ -85,7 +85,7 @@ public final class _291_RevengeOfTheRedbonnet extends Quest {
             else {
                 st.playSound(SOUND_MIDDLE);
                 st.setCond(2);
-                st.setState(STARTED);
+                st.start();
             }
         }
     }

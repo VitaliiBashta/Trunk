@@ -28,7 +28,7 @@ public final class _905_RefinedDragonBlood extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
         if ("sepsoul_q905_05.htm".equalsIgnoreCase(event)) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if (event.startsWith("sepsoul_q905_08.htm")) {
@@ -44,7 +44,7 @@ public final class _905_RefinedDragonBlood extends Quest {
                 st.giveItems(21904);
             }
             htmltext = "sepsoul_q905_08.htm";
-            st.setState(COMPLETED);
+            st.complete();
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(this);
         }
@@ -64,7 +64,7 @@ public final class _905_RefinedDragonBlood extends Quest {
                             htmltext = "sepsoul_q905_01.htm";
                         else {
                             htmltext = "sepsoul_q905_00.htm";
-                            st.exitCurrentQuest(true);
+                            st.exitCurrentQuest();
                         }
                     } else
                         htmltext = "sepsoul_q905_00a.htm";

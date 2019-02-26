@@ -20,7 +20,7 @@ public final class CommunityWarehouse implements ScriptFile, ICommunityBoardHand
 
     @Override
     public List<String> getBypassCommands() {
-        return Collections.singletonList("_bbswarehouse");
+        return List.of("_bbswarehouse");
     }
 
     @Override

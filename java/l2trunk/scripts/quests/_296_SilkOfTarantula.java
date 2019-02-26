@@ -19,12 +19,9 @@ public final class _296_SilkOfTarantula extends Quest {
         addStartNpc(30519);
         addTalkId(30548);
 
-        addKillId(20394);
-        addKillId(20403);
-        addKillId(20508);
+        addKillId(20394,20403,20508);
 
-        addQuestItem(TARANTULA_SPIDER_SILK);
-        addQuestItem(TARANTULA_SPINNERETTE);
+        addQuestItem(TARANTULA_SPIDER_SILK,TARANTULA_SPINNERETTE);
     }
 
     @Override
@@ -32,12 +29,12 @@ public final class _296_SilkOfTarantula extends Quest {
         String htmltext = event;
         if ("trader_mion_q0296_03.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("quit".equalsIgnoreCase(event)) {
             htmltext = "trader_mion_q0296_06.htm";
             st.takeItems(TARANTULA_SPINNERETTE);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             st.playSound(SOUND_FINISH);
         } else if ("exchange".equalsIgnoreCase(event))
             if (st.getQuestItemsCount(TARANTULA_SPINNERETTE) >= 1) {
@@ -66,7 +63,7 @@ public final class _296_SilkOfTarantula extends Quest {
                     }
                 } else {
                     htmltext = "trader_mion_q0296_01.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1)
                 if (st.haveQuestItem(TARANTULA_SPIDER_SILK)) {
@@ -76,7 +73,7 @@ public final class _296_SilkOfTarantula extends Quest {
                         st.takeItems(TARANTULA_SPIDER_SILK);
 
                         if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("p1q4")) {
-                            st.player.setVar("p1q4", 1);
+                            st.player.setVar("p1q4");
                             st.player.sendPacket(new ExShowScreenMessage("Now go find the Newbie Guide."));
                         }
                     }

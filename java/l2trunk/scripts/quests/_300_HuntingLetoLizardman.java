@@ -8,7 +8,7 @@ import l2trunk.gameserver.model.quest.QuestState;
 public final class _300_HuntingLetoLizardman extends Quest {
     //NPCs
     private static final int RATH = 30126;
-    //Items
+    //items
     private static final int BRACELET_OF_LIZARDMAN = 7139;
     private static final int ANIMAL_BONE = 1872;
     private static final int ANIMAL_SKIN = 1867;
@@ -31,7 +31,7 @@ public final class _300_HuntingLetoLizardman extends Quest {
         if (st.getState() == CREATED) {
             if (st.player.getLevel() < 34) {
                 htmltext = "rarshints_q0300_0103.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else {
                 htmltext = "rarshints_q0300_0101.htm";
                 st.setCond(0);
@@ -50,7 +50,7 @@ public final class _300_HuntingLetoLizardman extends Quest {
         String htmltext = event;
         int _state = st.getState();
         if ("rarshints_q0300_0104.htm".equalsIgnoreCase(event) && _state == CREATED) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if ("rarshints_q0300_0201.htm".equalsIgnoreCase(event) && _state == STARTED)
@@ -68,7 +68,7 @@ public final class _300_HuntingLetoLizardman extends Quest {
                         break;
                 }
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else {
                 htmltext = "rarshints_q0300_0202.htm";
                 st.setCond(1);

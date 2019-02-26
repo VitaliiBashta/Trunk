@@ -17,7 +17,7 @@ public final class wolfevolve extends Functions {
         if (player == null || npc == null)
             return;
         Summon pl_pet = player.getPet();
-        if (player.getInventory().getItemByItemId(WOLF_COLLAR) == null) {
+        if (!player.haveItem(WOLF_COLLAR)) {
             show("scripts/services/petevolve/no_item.htm", player, npc);
             return;
         }

@@ -2485,7 +2485,7 @@
 		</for>
 	</skill>
 	<skill id="390" levels="3" name="Clan Luck">
-		<!-- Decreases Exp. loss and the chance of other death penalties when killed by a monster or player. It only effects those who are of an Heir class or higher. -->
+		<!-- Decreases Exp. loss and the chance of other death penalties when killed by a monster or getPlayer. It only effects those who are of an Heir class or higher. -->
 		<set name="icon" val="icon.skill0390" />
 		<set name="magicLevel" val="1" />
 		<set name="target" val="TARGET_SELF" />

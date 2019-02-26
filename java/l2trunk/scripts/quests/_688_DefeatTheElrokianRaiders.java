@@ -31,18 +31,18 @@ public final class _688_DefeatTheElrokianRaiders extends Quest {
         String htmltext = event;
         long count = st.getQuestItemsCount(q_necklace_of_storming_party);
 
-        if (event.equalsIgnoreCase("quest_accept")) {
+        if ("quest_accept".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
             htmltext = "dindin_q0688_04.htm";
-        } else if (event.equalsIgnoreCase("reply_5")) {
+        } else if ("reply_5".equalsIgnoreCase(event)) {
             if (count >= 10) {
                 st.takeItems(q_necklace_of_storming_party);
                 st.giveItems(ADENA_ID, count * 3000);
                 htmltext = "dindin_q0688_07.htm";
             }
-        } else if (event.equalsIgnoreCase("reply_9")) {
+        } else if ("reply_9".equalsIgnoreCase(event)) {
             if (count < 100)
                 htmltext = "dindin_q0688_11.htm";
             else if (Rnd.get(1000) < 500) {
@@ -58,12 +58,12 @@ public final class _688_DefeatTheElrokianRaiders extends Quest {
             htmltext = "dindin_q0688_10.htm";
         else if (event.equalsIgnoreCase("reply_7")) {
             if (count >= 1) {
-                st.takeItems(q_necklace_of_storming_party, -1);
+                st.takeItems(q_necklace_of_storming_party);
                 st.giveItems(ADENA_ID, count * 3000);
             }
             htmltext = "dindin_q0688_09.htm";
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
         return htmltext;
     }
@@ -72,17 +72,16 @@ public final class _688_DefeatTheElrokianRaiders extends Quest {
     public String onTalk(NpcInstance npc, QuestState st) {
         String htmltext = "noquest";
         int cond = st.getCond();
-        long count = st.getQuestItemsCount(q_necklace_of_storming_party);
 
         if (cond == 0) {
             if (st.player.getLevel() >= 75)
                 htmltext = "dindin_q0688_01.htm";
             else {
                 htmltext = "dindin_q0688_02.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (cond == 1)
-            if (count >= 1)
+            if (st.haveQuestItem(q_necklace_of_storming_party) )
                 htmltext = "dindin_q0688_05.htm";
             else
                 htmltext = "dindin_q0688_06.htm";

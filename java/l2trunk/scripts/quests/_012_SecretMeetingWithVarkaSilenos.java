@@ -16,8 +16,7 @@ public final class _012_SecretMeetingWithVarkaSilenos extends Quest {
 
         addStartNpc(CADMON);
 
-        addTalkId(HELMUT);
-        addTalkId(NARAN_ASHANUK);
+        addTalkId(HELMUT,NARAN_ASHANUK);
 
         addQuestItem(MUNITIONS_BOX);
     }
@@ -26,7 +25,7 @@ public final class _012_SecretMeetingWithVarkaSilenos extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if (event.equalsIgnoreCase("guard_cadmon_q0012_0104.htm")) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("trader_helmut_q0012_0201.htm")) {
             st.giveItems(MUNITIONS_BOX, 1);
@@ -36,7 +35,7 @@ public final class _012_SecretMeetingWithVarkaSilenos extends Quest {
             st.takeItems(MUNITIONS_BOX, 1);
             st.addExpAndSp(233125, 18142);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(false);
+            st.finish();
         }
         return event;
     }
@@ -52,7 +51,7 @@ public final class _012_SecretMeetingWithVarkaSilenos extends Quest {
                     htmltext = "guard_cadmon_q0012_0101.htm";
                 else {
                     htmltext = "guard_cadmon_q0012_0103.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1)
                 htmltext = "guard_cadmon_q0012_0105.htm";

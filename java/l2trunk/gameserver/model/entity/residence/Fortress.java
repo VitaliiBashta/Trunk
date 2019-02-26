@@ -99,7 +99,7 @@ public final class Fortress extends Residence {
         update();
 
         if (clan != null)
-            clan.getAllMembers().stream().filter(UnitMember::isOnline).forEach(plr -> plr.player().getCounters().fortSiegesWon++);
+            clan.getAllMembers().stream().filter(UnitMember::isOnline).forEach(plr -> plr.getPlayer().getCounters().fortSiegesWon++);
     }
 
     @Override

@@ -8,7 +8,6 @@ import l2trunk.gameserver.database.DatabaseFactory;
 import l2trunk.gameserver.idfactory.IdFactory;
 import l2trunk.gameserver.model.GameObjectsStorage;
 import l2trunk.gameserver.model.Player;
-import l2trunk.gameserver.model.instances.SummonInstance;
 import l2trunk.gameserver.model.items.AuctionStorage;
 import l2trunk.gameserver.model.items.ItemAttributes;
 import l2trunk.gameserver.model.items.ItemInstance;
@@ -109,7 +108,7 @@ public final class AuctionManager {
     private void addAuctionToDatabase(Auction auction) {
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement("INSERT INTO auctions VALUES(?,?,?,?,?)")) {
-            statement.setInt(1, auction.getAuctionId());
+            statement.setInt(1, auction.auctionId());
             statement.setInt(2, auction.getSellerObjectId());
             statement.setString(3, auction.getSellerName());
             statement.setInt(4, auction.getItem().objectId());
@@ -155,7 +154,7 @@ public final class AuctionManager {
     private void deleteAuctionFromDatabase(Auction auction) {
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement("DELETE FROM auctions WHERE auction_id = ?")) {
-            statement.setInt(1, auction.getAuctionId());
+            statement.setInt(1, auction.auctionId());
             statement.execute();
         } catch (SQLException e) {
             _log.error("Error while deleting auction from database:", e);
@@ -183,7 +182,7 @@ public final class AuctionManager {
         if (!Config.ALLOW_AUCTION_OUTSIDE_TOWN && !seller.isInPeaceZone()) {
             sendMessage(seller, "You cannot delete auction outside town!");
         }
-        _auctions.remove(auction.getAuctionId());
+        _auctions.remove(auction.auctionId());
 
         PcInventory inventory = seller.getInventory();
         AuctionStorage storage = AuctionStorage.getInstance();
@@ -300,7 +299,7 @@ public final class AuctionManager {
                 inventory.addItem(item, "Auction Whole Bought");
 
                 deleteAuctionFromDatabase(auction);
-                _auctions.remove(auction.getAuctionId());
+                _auctions.remove(auction.auctionId());
                 wholeItemBought = true;
             } else {
                 ItemInstance newItem = copyItem(item, quantity);

@@ -1,6 +1,6 @@
 package l2trunk.scripts.quests;
 
-import l2trunk.gameserver.scripts.ScriptFile;
+import l2trunk.gameserver.model.base.ClassId;
 import l2trunk.gameserver.utils.Location;
 
 import java.util.List;
@@ -10,15 +10,14 @@ public final class _093_SagaOfTheSpectralMaster extends SagasSuperclass {
         super(false);
 
         NPC = List.of(30175, 31287, 31613, 30175, 31632, 31646, 31649, 31653, 31654, 31655, 31656, 31613);
-        Items = List.of(7080, 7606, 7081, 7508, 7291, 7322, 7353, 7384, 7415, 7446, 7112, 0);
-        Mob = List.of(27315, 27242, 27312);
-        classid = 111;
-        prevclass = 0x29;
+        items = List.of(7080, 7606, 7081, 7508, 7291, 7322, 7353, 7384, 7415, 7446, 7112, 0);
+        mob = List.of(27315, 27242, 27312);
+        classid = ClassId.spectralMaster;
         locs = List.of(
-                new Location(164650, -74121, -2871),
-                new Location(47429, -56923, -2383),
-                new Location(47391, -56929, -2370));
-        Text = List.of(
+                Location.of(164650, -74121, -2871),
+                Location.of(47429, -56923, -2383),
+                Location.of(47391, -56929, -2370));
+        text = List.of(
                 "PLAYERNAME! Pursued to here! However, I jumped out of the Banshouren boundaries! You look at the giant as the sign of power!",
                 "... Oh ... good! So it was ... let's begin!",
                 "I do not have the patience ..! I have been a giant force ...! Cough chatter ah ah ah!",

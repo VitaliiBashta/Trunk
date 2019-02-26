@@ -8,9 +8,9 @@ import l2trunk.gameserver.templates.item.ItemTemplate;
 import l2trunk.gameserver.templates.item.ItemType;
 import l2trunk.gameserver.templates.item.WeaponTemplate.WeaponType;
 
-public class FuncEnchant extends Func {
+public final class FuncEnchant extends Func {
     public FuncEnchant(Stats stat, int order, Object owner, double value) {
-        super(stat, order, owner);
+        super(stat, order, owner,value);
     }
 
     public static int valueToAdd(Stats stat, ItemInstance item) {

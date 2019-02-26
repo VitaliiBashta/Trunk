@@ -31,7 +31,7 @@ public final class _10284_AcquisionOfDivineSword extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("rafforty_q10284_02.htm".equalsIgnoreCase(event)) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if ("enterinstance".equalsIgnoreCase(event)) {
@@ -57,8 +57,8 @@ public final class _10284_AcquisionOfDivineSword extends Quest {
             st.giveItems(ADENA_ID, 296425);
             st.addExpAndSp(921805, 82230);
             st.playSound(SOUND_FINISH);
-            st.setState(COMPLETED);
-            st.exitCurrentQuest(false);
+            st.complete();
+            st.finish();
             st.player.getReflection().collapse();
             return null;
         }
@@ -76,7 +76,7 @@ public final class _10284_AcquisionOfDivineSword extends Quest {
                     htmltext = "rafforty_q10284_01.htm";
                 else {
                     htmltext = "rafforty_q10284_00.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1 || cond == 2)
                 htmltext = "rafforty_q10284_02.htm";

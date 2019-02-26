@@ -7,11 +7,10 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
 import l2trunk.gameserver.scripts.Functions;
 
-import java.util.Collections;
 import java.util.List;
 
 public final class VoiceGmEvent extends Functions implements IVoicedCommandHandler {
-    private static final List<String> VOICED_COMMANDS = Collections.singletonList("gmevent");
+    private static final List<String> VOICED_COMMANDS = List.of("gmevent");
 
     @Override
     public boolean useVoicedCommand(String command, Player activeChar, String args) {

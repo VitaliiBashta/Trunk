@@ -20,13 +20,13 @@ public final class _906_TheCallofValakas extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if (event.equalsIgnoreCase("klein_q906_04.htm")) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("klein_q906_07.htm")) {
             st.takeItems(LavasaurusAlphaFragment);
             st.giveItems(21895); // Scroll: Valakas Call
-            st.setState(COMPLETED);
+            st.complete();
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(this);
         }
@@ -48,7 +48,7 @@ public final class _906_TheCallofValakas extends Quest {
                                 htmltext = "klein_q906_00b.htm";
                         } else {
                             htmltext = "klein_q906_00.htm";
-                            st.exitCurrentQuest(true);
+                            st.exitCurrentQuest();
                         }
                     } else
                         htmltext = "klein_q906_00a.htm";

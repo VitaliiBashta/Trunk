@@ -22,7 +22,7 @@ public final class _277_GatekeepersOffering extends Quest {
             if (st.player.getLevel() >= 15) {
                 htmltext = "gatekeeper_tamil_q0277_03.htm";
                 st.setCond(1);
-                st.setState(STARTED);
+                st.start();
                 st.playSound(SOUND_ACCEPT);
             } else
                 htmltext = "gatekeeper_tamil_q0277_01.htm";
@@ -46,7 +46,7 @@ public final class _277_GatekeepersOffering extends Quest {
             st.takeItems(STARSTONE1_ID);
             st.giveItems(GATEKEEPER_CHARM_ID, 2);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
 
         return htmltext;

@@ -9,7 +9,7 @@ public final class _651_RunawayYouth extends Quest {
     private static final int IVAN = 32014;
     private static final int BATIDAE = 31989;
 
-    //Items
+    //items
     private static final int SOE = 736;
 
     public _651_RunawayYouth() {
@@ -25,7 +25,7 @@ public final class _651_RunawayYouth extends Quest {
         if ("runaway_boy_ivan_q0651_03.htm".equalsIgnoreCase(event)) {
             if (st.getQuestItemsCount(SOE) > 0) {
                 st.setCond(1);
-                st.setState(STARTED);
+                st.start();
                 st.playSound(SOUND_ACCEPT);
                 st.takeItems(SOE, 1);
                 htmltext = "runaway_boy_ivan_q0651_04.htm";
@@ -34,7 +34,7 @@ public final class _651_RunawayYouth extends Quest {
                 st.startQuestTimer("ivan_timer", 20000);
             }
         } else if ("runaway_boy_ivan_q0651_05.htm".equalsIgnoreCase(event)) {
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             st.playSound(SOUND_GIVEUP);
         } else if ("ivan_timer".equalsIgnoreCase(event)) {
             npc.deleteMe();
@@ -53,13 +53,13 @@ public final class _651_RunawayYouth extends Quest {
                 htmltext = "runaway_boy_ivan_q0651_01.htm";
             else {
                 htmltext = "runaway_boy_ivan_q0651_01a.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (npcId == BATIDAE && cond == 1) {
             htmltext = "fisher_batidae_q0651_01.htm";
             st.giveItems(ADENA_ID, Math.round(2883 * st.getRateQuestsReward()));
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
         return htmltext;
     }

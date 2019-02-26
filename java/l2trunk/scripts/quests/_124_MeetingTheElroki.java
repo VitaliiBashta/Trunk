@@ -18,41 +18,35 @@ public final class _124_MeetingTheElroki extends Quest {
         super(false);
 
         addStartNpc(Marquez);
-        addTalkId(Mushika);
-        addTalkId(Asamah);
-        addTalkId(Karakawei);
-        addTalkId(Mantarasa);
+        addTalkId(Mushika,Asamah,Karakawei,Mantarasa);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         int cond = st.getCond();
 
-        if (event.equals("marquez_q0124_03.htm"))
-            st.setState(STARTED);
-        else if (event.equals("marquez_q0124_04.htm") && cond == 0) {
+        if ("marquez_q0124_03.htm".equals(event))
+            st.start();
+        else if ("marquez_q0124_04.htm".equals(event) && cond == 0) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
-        }else         if (event.equals("marquez_q0124_06.htm") && cond == 1) {
+        } else if ("marquez_q0124_06.htm".equals(event) && cond == 1) {
             st.setCond(2);
             st.playSound(SOUND_ITEMGET);
-        }else
-        if (event.equals("mushika_q0124_03.htm") && cond == 2) {
+        } else if ("mushika_q0124_03.htm".equals(event) && cond == 2) {
             st.setCond(3);
             st.playSound(SOUND_ITEMGET);
-        }else
-        if (event.equals("asama_q0124_06.htm") && cond == 3) {
+        } else if ("asama_q0124_06.htm".equals(event) && cond == 3) {
             st.setCond(4);
             st.playSound(SOUND_ITEMGET);
-        }else
-        if (event.equals("shaman_caracawe_q0124_03.htm") && cond == 4)
-            st.set("id", 1);
-        if (event.equals("shaman_caracawe_q0124_05.htm") && cond == 4) {
+        } else if ("shaman_caracawe_q0124_03.htm".equals(event) && cond == 4)
+            st.set("id");
+        if ("shaman_caracawe_q0124_05.htm".equals(event) && cond == 4) {
             st.setCond(5);
             st.playSound(SOUND_ITEMGET);
         }
-        if (event.equals("egg_of_mantarasa_q0124_02.htm") && cond == 5) {
+        if ("egg_of_mantarasa_q0124_02.htm".equals(event) && cond == 5) {
             st.giveItems(Mushika_egg);
             st.setCond(6);
             st.playSound(SOUND_MIDDLE);
@@ -69,7 +63,7 @@ public final class _124_MeetingTheElroki extends Quest {
             if (cond == 0) {
                 if (st.player.getLevel() < 75) {
                     htmltext = "marquez_q0124_02.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else
                     htmltext = "marquez_q0124_01.htm";
             } else if (cond == 1)
@@ -87,14 +81,14 @@ public final class _124_MeetingTheElroki extends Quest {
                 st.addExpAndSp(301922, 30294);
                 st.giveItems(ADENA_ID, 100013);
                 st.playSound(SOUND_FINISH);
-                st.setState(COMPLETED);
-                st.exitCurrentQuest(false);
+                st.complete();
+                st.finish();
             }
         } else if (npcId == Karakawei) {
             if (cond == 4) {
                 htmltext = "shaman_caracawe_q0124_01.htm";
 
-                if (st.getInt("id") == 1)
+                if (st.isSet("id"))
                     htmltext = "shaman_caracawe_q0124_03.htm";
             }
         } else if (npcId == Mantarasa && cond == 5)

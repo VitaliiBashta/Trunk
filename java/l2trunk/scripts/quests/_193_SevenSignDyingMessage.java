@@ -45,7 +45,7 @@ public final class _193_SevenSignDyingMessage extends Quest {
         String htmltext = event;
         if ("30191-02.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
             st.giveItems(JacobsNecklace);
         } else if ("32569-05.htm".equalsIgnoreCase(event)) {
@@ -58,8 +58,8 @@ public final class _193_SevenSignDyingMessage extends Quest {
         } else if (event.equalsIgnoreCase("30760-02.htm")) {
             if (player.getBaseClassId() == player.getActiveClassId()) {
                 st.addExpAndSp(25000000, 2500000);
-                st.setState(COMPLETED);
-                st.exitCurrentQuest(false);
+                st.complete();
+                st.finish();
                 st.playSound(SOUND_FINISH);
             } else
                 return "subclass_forbidden.htm";
@@ -92,11 +92,11 @@ public final class _193_SevenSignDyingMessage extends Quest {
         if (npcId == Hollint) {
             if (id == CREATED) {
                 if (player.getLevel() < 79) {
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                     return "30191-00.htm";
                 }
                 if (player.isQuestCompleted(_192_SevenSignSeriesOfDoubt.class)) {
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                     return "noquest";
                 }
                 return "30191-01.htm";

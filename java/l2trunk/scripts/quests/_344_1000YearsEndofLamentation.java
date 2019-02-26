@@ -5,9 +5,11 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
+import java.util.stream.IntStream;
+
 public final class _344_1000YearsEndofLamentation extends Quest {
 
-    // Quest Items
+    // Quest items
     private static final int ARTICLES_DEAD_HEROES = 4269;
     private static final int OLD_KEY = 4270;
     private static final int OLD_HILT = 4271;
@@ -29,19 +31,11 @@ public final class _344_1000YearsEndofLamentation extends Quest {
         super(true);
         addStartNpc(GILMORE);
 
-        addTalkId(RODEMAI);
-        addTalkId(ORVEN);
-        addTalkId(GARVARENTZ);
-        addTalkId(KAIEN);
+        addTalkId(RODEMAI, ORVEN, GARVARENTZ, KAIEN);
 
-        for (int mob = 20236; mob < 20241; mob++)
-            addKillId(mob);
+        addKillId(IntStream.rangeClosed(20236, 20241).toArray());
 
-        addQuestItem(ARTICLES_DEAD_HEROES,
-                OLD_KEY,
-                OLD_HILT,
-                OLD_TOTEM,
-                CRUCIFIX);
+        addQuestItem(ARTICLES_DEAD_HEROES, OLD_KEY, OLD_HILT, OLD_TOTEM, CRUCIFIX);
     }
 
     @Override
@@ -52,15 +46,15 @@ public final class _344_1000YearsEndofLamentation extends Quest {
         int level = st.player.getLevel();
         if ("30754-04.htm".equalsIgnoreCase(event)) {
             if (level >= 48 && cond == 0) {
-                st.setState(STARTED);
+                st.start();
                 st.setCond(1);
                 st.playSound(SOUND_ACCEPT);
             } else {
                 htmltext = "noquest";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if ("30754-08.htm".equalsIgnoreCase(event)) {
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             st.playSound(SOUND_FINISH);
         } else if ("30754-06.htm".equalsIgnoreCase(event) && cond == 1) {
             if (amount == 0)
@@ -70,15 +64,13 @@ public final class _344_1000YearsEndofLamentation extends Quest {
                     st.giveItems(ADENA_ID, amount * 60);
                 else {
                     htmltext = "30754-10.htm";
-                    st.set("ok", 1);
-                    st.set("amount", (int)amount);
+                    st.set("ok");
+                    st.set("amount", (int) amount);
                 }
                 st.takeItems(ARTICLES_DEAD_HEROES);
             }
         } else if ("30754-11.htm".equalsIgnoreCase(event) && cond == 1)
-            if (st.getInt("ok") != 1)
-                htmltext = "noquest";
-            else {
+            if (st.isSet("ok")) {
                 int random = Rnd.get(100);
                 st.setCond(2);
                 st.unset("ok");
@@ -93,6 +85,8 @@ public final class _344_1000YearsEndofLamentation extends Quest {
                     st.giveItems(OLD_TOTEM);
                 } else
                     st.giveItems(CRUCIFIX);
+            } else {
+                htmltext = "noquest";
             }
         return htmltext;
     }
@@ -109,7 +103,7 @@ public final class _344_1000YearsEndofLamentation extends Quest {
                 htmltext = "30754-02.htm";
             else {
                 htmltext = "30754-01.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (npcId == GILMORE && cond == 1) {
             if (amount > 0)
@@ -159,7 +153,7 @@ public final class _344_1000YearsEndofLamentation extends Quest {
         boolean state = false;
         int chance = Rnd.get(100);
         if (npcId == ORVEN && st.haveQuestItem(CRUCIFIX)) {
-            st.set("mission", 1);
+            st.set("mission");
             st.takeItems(CRUCIFIX);
             state = true;
             if (chance < 50)
@@ -168,7 +162,7 @@ public final class _344_1000YearsEndofLamentation extends Quest {
                 st.giveItems(952, 5);
             else
                 st.giveItems(2437);
-        } else if (npcId == GARVARENTZ && st.haveQuestItem(OLD_TOTEM) ) {
+        } else if (npcId == GARVARENTZ && st.haveQuestItem(OLD_TOTEM)) {
             st.set("mission", 2);
             st.takeItems(OLD_TOTEM);
             state = true;

@@ -46,10 +46,10 @@ public final class ShortCutList {
             statement.setInt(5, shortcut.getId());
             statement.setInt(6, shortcut.getLevel());
             statement.setInt(7, shortcut.getCharacterType());
-            statement.setInt(8, player.getActiveClassId());
+            statement.setInt(8, player.getActiveClassId().id);
             statement.execute();
         } catch (SQLException e) {
-            _log.error("Could not store shortcuts player:" + player + " slot:" + shortcut.getSlot() + " page:" + shortcut.getPage() + " type:" + shortcut.getType() + " id:" + shortcut.getId() + " occupation:" + shortcut.getLevel() + " CharType:" + shortcut.getCharacterType(), e);
+            _log.error("Could not store shortcuts getPlayer:" + player + " slot:" + shortcut.getSlot() + " page:" + shortcut.getPage() + " type:" + shortcut.getType() + " id:" + shortcut.getId() + " occupation:" + shortcut.getLevel() + " CharType:" + shortcut.getCharacterType(), e);
         }
     }
 
@@ -59,7 +59,7 @@ public final class ShortCutList {
             statement.setInt(1, player.objectId());
             statement.setInt(2, shortcut.getSlot());
             statement.setInt(3, shortcut.getPage());
-            statement.setInt(4, player.getActiveClassId());
+            statement.setInt(4, player.getActiveClassId().id);
             statement.execute();
         } catch (SQLException e) {
             _log.error("Could not delete shortcuts:", e);
@@ -106,14 +106,14 @@ public final class ShortCutList {
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement("SELECT character_type, slot, page, type, shortcut_id, level FROM character_shortcuts WHERE object_id=? AND class_index=?")) {
             statement.setInt(1, player.objectId());
-            statement.setInt(2, player.getActiveClassId());
+            statement.setInt(2, player.getActiveClassId().id);
             ResultSet rset = statement.executeQuery();
             while (rset.next()) {
                 int slot = rset.getInt("slot");
                 int page = rset.getInt("page");
                 int type = rset.getInt("type");
                 int id = rset.getInt("shortcut_id");
-                int level = rset.getInt("occupation");
+                int level = rset.getInt("level");
                 int character_type = rset.getInt("character_type");
 
                 shortCuts.put(slot + page * 12, new ShortCut(slot, page, type, id, level, character_type));

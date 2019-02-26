@@ -590,7 +590,7 @@ public final class GeoEngine {
         /*
          * result.add(new Location(curr_x, curr_y, curr_z)); // The first point
          * Removed to fix the clicking bug when you click so fast in terrain and
-         * player get back.
+         * getPlayer get back.
          */
 
         steps = Math.ceil(steps);

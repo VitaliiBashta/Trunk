@@ -17,13 +17,9 @@ public final class _152_ShardsOfGolem extends Quest {
 
         addStartNpc(30035);
 
-        addTalkId(30035);
-        addTalkId(30035);
-        addTalkId(30283);
-        addTalkId(30035);
+        addTalkId(30035, 30283);
 
-        addKillId(20016);
-        addKillId(20101);
+        addKillId(20016, 20101);
 
         addQuestItem(HARRYS_RECEIPT1,
                 GOLEM_SHARD,
@@ -34,18 +30,15 @@ public final class _152_ShardsOfGolem extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equals("30035-04.htm")) {
+        if ("30035-04.htm".equals(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
-            if (st.getQuestItemsCount(HARRYS_RECEIPT1) == 0)
-                st.giveItems(HARRYS_RECEIPT1, 1);
-        } else if (event.equals("152_2")) {
-            st.takeItems(HARRYS_RECEIPT1, -1);
-            if (st.getQuestItemsCount(HARRYS_RECEIPT2) == 0) {
-                st.giveItems(HARRYS_RECEIPT2, 1);
-                st.setCond(2);
-            }
+            st.giveItemIfNotHave(HARRYS_RECEIPT1);
+        } else if ("152_2".equals(event)) {
+            st.takeItems(HARRYS_RECEIPT1);
+            st.giveItemIfNotHave(HARRYS_RECEIPT2);
+            st.setCond(2);
             htmltext = "30283-02.htm";
         }
         return htmltext;
@@ -63,12 +56,12 @@ public final class _152_ShardsOfGolem extends Quest {
                     return htmltext;
                 }
                 htmltext = "30035-02.htm";
-                st.exitCurrentQuest(true);
-            } else if (cond == 1 && st.haveQuestItem(HARRYS_RECEIPT1) )
+                st.exitCurrentQuest();
+            } else if (cond == 1 && st.haveQuestItem(HARRYS_RECEIPT1))
                 htmltext = "30035-05.htm";
-            else if (cond == 2 && st.haveQuestItem(HARRYS_RECEIPT2) )
+            else if (cond == 2 && st.haveQuestItem(HARRYS_RECEIPT2))
                 htmltext = "30035-05.htm";
-            else if (cond == 4 && st.haveQuestItem(TOOL_BOX) ) {
+            else if (cond == 4 && st.haveQuestItem(TOOL_BOX)) {
                 st.takeItems(TOOL_BOX);
                 st.takeItems(HARRYS_RECEIPT2);
                 st.setCond(0);
@@ -76,14 +69,14 @@ public final class _152_ShardsOfGolem extends Quest {
                 st.giveItems(WOODEN_BP);
                 st.addExpAndSp(5000, 0);
                 htmltext = "30035-06.htm";
-                st.exitCurrentQuest(false);
+                st.finish();
             }
         } else if (npcId == 30283) {
-            if (cond == 1 && st.haveQuestItem(HARRYS_RECEIPT1) )
+            if (cond == 1 && st.haveQuestItem(HARRYS_RECEIPT1))
                 htmltext = "30283-01.htm";
-            else if (cond == 2 && st.haveQuestItem(HARRYS_RECEIPT2)  && st.getQuestItemsCount(GOLEM_SHARD) < 5)
+            else if (cond == 2 && st.haveQuestItem(HARRYS_RECEIPT2) && st.getQuestItemsCount(GOLEM_SHARD) < 5)
                 htmltext = "30283-03.htm";
-            else if (cond == 3 && st.haveQuestItem(HARRYS_RECEIPT2)  && st.getQuestItemsCount(GOLEM_SHARD) == 5) {
+            else if (cond == 3 && st.haveQuestItem(HARRYS_RECEIPT2) && st.haveQuestItem(GOLEM_SHARD,5)) {
                 st.takeItems(GOLEM_SHARD);
                 if (st.getQuestItemsCount(TOOL_BOX) == 0) {
                     st.giveItems(TOOL_BOX);
@@ -91,7 +84,7 @@ public final class _152_ShardsOfGolem extends Quest {
                 }
                 htmltext = "30283-04.htm";
             }
-        } else if (cond == 4 && st.haveAllQuestItems(HARRYS_RECEIPT2,TOOL_BOX))
+        } else if (cond == 4 && st.haveAllQuestItems(HARRYS_RECEIPT2, TOOL_BOX))
             htmltext = "30283-05.htm";
         return htmltext;
     }
@@ -100,7 +93,7 @@ public final class _152_ShardsOfGolem extends Quest {
     public void onKill(NpcInstance npc, QuestState st) {
         if (st.getCond() == 2 && Rnd.chance(30) && st.getQuestItemsCount(GOLEM_SHARD) < 5) {
             st.giveItems(GOLEM_SHARD);
-            if (st.getQuestItemsCount(GOLEM_SHARD) == 5) {
+            if (st.haveQuestItem(GOLEM_SHARD,5)) {
                 st.setCond(3);
                 st.playSound(SOUND_MIDDLE);
             } else

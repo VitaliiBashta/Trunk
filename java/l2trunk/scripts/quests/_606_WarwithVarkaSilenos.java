@@ -31,7 +31,7 @@ public final class _606_WarwithVarkaSilenos extends Quest {
             case "quest_accept":
                 htmltext = "elder_kadun_zu_ketra_q0606_0104.htm";
                 st.setCond(1);
-                st.setState(STARTED);
+                st.start();
                 st.playSound(SOUND_ACCEPT);
                 break;
             case "606_3":
@@ -47,7 +47,7 @@ public final class _606_WarwithVarkaSilenos extends Quest {
                 htmltext = "elder_kadun_zu_ketra_q0606_0204.htm";
                 st.takeItems(VARKAS_MANE, -1);
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 break;
         }
         return htmltext;
@@ -62,7 +62,7 @@ public final class _606_WarwithVarkaSilenos extends Quest {
                 htmltext = "elder_kadun_zu_ketra_q0606_0101.htm";
             else {
                 htmltext = "elder_kadun_zu_ketra_q0606_0103.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (cond == 1 && st.getQuestItemsCount(VARKAS_MANE) == 0)
             htmltext = "elder_kadun_zu_ketra_q0606_0106.htm";

@@ -20,7 +20,7 @@ public final class _10291_FireDragonDestroyer extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("klein_q10291_04.htm".equalsIgnoreCase(event)) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
             st.giveItems(PoorNecklace);
@@ -51,8 +51,8 @@ public final class _10291_FireDragonDestroyer extends Quest {
                     st.giveItems(ADENA_ID, 126549);
                     st.addExpAndSp(717291, 77397);
                     st.playSound(SOUND_FINISH);
-                    st.setState(COMPLETED);
-                    st.exitCurrentQuest(false);
+                    st.complete();
+                    st.finish();
                 } else
                     htmltext = "klein_q10291_06.htm";
             }

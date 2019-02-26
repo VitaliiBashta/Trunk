@@ -15,13 +15,13 @@ import l2trunk.gameserver.tables.PetDataTable;
 import java.util.List;
 
 public final class UseItem extends L2GameClientPacket {
-    private int _objectId;
-    private boolean _ctrlPressed;
+    private int objectId;
+    private boolean ctrlPressed;
 
     @Override
     protected void readImpl() {
-        _objectId = readD();
-        _ctrlPressed = readD() == 1;
+        objectId = readD();
+        ctrlPressed = readD() == 1;
         System.currentTimeMillis();
     }
 
@@ -33,11 +33,11 @@ public final class UseItem extends L2GameClientPacket {
 
         activeChar.setActive();
 
-        ItemInstance item = activeChar.getInventory().getItemByObjectId(_objectId);
+        ItemInstance item = activeChar.getInventory().getItemByObjectId(objectId);
         if (item == null) {   // Support for GMs deleting items from alt+g inventory.
             item = GameObjectsStorage.getAllPlayersStream()
-                    .filter(player -> player.getInventory().getItemByObjectId(_objectId) != null)
-                    .map(player -> player.getInventory().getItemByObjectId(_objectId))
+                    .filter(player -> player.getInventory().getItemByObjectId(objectId) != null)
+                    .map(player -> player.getInventory().getItemByObjectId(objectId))
                     .findFirst().orElse(null);
         }
 
@@ -78,11 +78,6 @@ public final class UseItem extends L2GameClientPacket {
             return;
         }
 
-        if (activeChar.isInAwayingMode()) {
-            activeChar.sendMessage(new CustomMessage("Away.ActionFailed"));
-            return;
-        }
-
         if (!item.getTemplate().testCondition(activeChar, item))
             return;
 
@@ -117,7 +112,7 @@ public final class UseItem extends L2GameClientPacket {
         }
 
         if (activeChar.objectId() == item.getOwnerId()) {
-            boolean success = item.getTemplate().getHandler().useItem(activeChar, item, _ctrlPressed);
+            boolean success = item.getTemplate().getHandler().useItem(activeChar, item, ctrlPressed);
             if (success) {
                 long nextTimeUse = item.getTemplate().getReuseType().next(item);
                 if (nextTimeUse > System.currentTimeMillis()) {
@@ -134,7 +129,7 @@ public final class UseItem extends L2GameClientPacket {
             if (owner == null)
                 return;
 
-            boolean success = item.getTemplate().getHandler().useItem(owner, item, _ctrlPressed);
+            boolean success = item.getTemplate().getHandler().useItem(owner, item, ctrlPressed);
             if (success) {
                 long nextTimeUse = item.getTemplate().getReuseType().next(item);
                 if (nextTimeUse > System.currentTimeMillis()) {

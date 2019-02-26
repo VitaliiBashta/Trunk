@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 import static l2trunk.scripts.quests._605_AllianceWithKetraOrcs.*;
 
 public final class _611_AllianceWithVarkaSilenos extends Quest {
-    // Items
+    // items
     public static final List<Integer> VARKA_MARKS = List.of(7221, 7222, 7223, 7224, 7225);
     private static final int KB_SOLDIER = 7226;
     private static final int KB_CAPTAIN = 7227;
@@ -38,18 +38,11 @@ public final class _611_AllianceWithVarkaSilenos extends Quest {
 
         addKillId(VARKA_NPC_LIST);
 
-        //hunt for soldier
         addKillId(KETRA_SOILDERS);
-
-        //hunt for captain
         addKillId(KETRA_CAPTAINS);
-
-        //hunt for general
         addKillId(KETRA_GENERALS);
 
-        addQuestItem(KB_SOLDIER);
-        addQuestItem(KB_CAPTAIN);
-        addQuestItem(KB_GENERAL);
+        addQuestItem(KB_SOLDIER,KB_CAPTAIN,KB_GENERAL);
     }
 
     private static void takeAllMarks(QuestState st) {
@@ -93,7 +86,7 @@ public final class _611_AllianceWithVarkaSilenos extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("herald_naran_q0611_04.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
             return event;
         }
@@ -125,7 +118,7 @@ public final class _611_AllianceWithVarkaSilenos extends Quest {
             takeAllMarks(st);
             st.setCond(0);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
         st.player.updateKetraVarka();
         return event;
@@ -134,7 +127,7 @@ public final class _611_AllianceWithVarkaSilenos extends Quest {
     @Override
     public String onTalk(NpcInstance npc, QuestState st) {
         if (st.player.getKetra() > 0) {
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             return "herald_naran_q0611_02.htm";
         }
         int npcId = npc.getNpcId();
@@ -145,7 +138,7 @@ public final class _611_AllianceWithVarkaSilenos extends Quest {
         if (npcId == 31378) {
             if (cond == 0) {
                 if (st.player.getLevel() < 74) {
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                     return "herald_naran_q0611_03.htm";
                 }
                 return "herald_naran_q0611_01.htm";
@@ -198,7 +191,7 @@ public final class _611_AllianceWithVarkaSilenos extends Quest {
                 checkMarks(st, VARKA_MARKS);
             } else if (st.player.getVarka() > 0) {
                 st.player.updateKetraVarka();
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 return;
             }
 

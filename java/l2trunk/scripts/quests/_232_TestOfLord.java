@@ -38,11 +38,11 @@ public final class _232_TestOfLord extends Quest {
     private static final int Timak_Orc_Overlord = 20588;
     private static final int Ragna_Orc_Overlord = 20778;
     private static final int Ragna_Orc_Seer = 20779;
-    // Items
+    // items
     private static final int MARK_OF_LORD = 3390;
     private static final int BONE_ARROW = 1341;
     private static final int Dimensional_Diamond = 7562;
-    // Quest Items (Drop)
+    // Quest items (Drop)
     private static final int TIMAK_ORC_SKULL = 3403;
     private static final int BREKA_ORC_FANG = 3398;
     private static final int RAGNA_ORC_HEAD = 3414;
@@ -50,7 +50,7 @@ public final class _232_TestOfLord extends Quest {
     private static final int MARSH_SPIDER_FEELER = 3407;
     private static final int MARSH_SPIDER_FEET = 3408;
     private static final int CORNEA_OF_EN_MONSTEREYE = 3410;
-    // Quest Items
+    // Quest items
     private static final int ORDEAL_NECKLACE = 3391;
     private static final int VARKEES_CHARM = 3392;
     private static final int TANTUS_CHARM = 3393;
@@ -77,17 +77,7 @@ public final class _232_TestOfLord extends Quest {
         super(false);
         addStartNpc(Kakai);
 
-        addTalkId(Somak);
-        addTalkId(Manakia);
-        addTalkId(Jakal);
-        addTalkId(Sumari);
-        addTalkId(Varkees);
-        addTalkId(Tantus);
-        addTalkId(Hatos);
-        addTalkId(Takuna);
-        addTalkId(Chianta);
-        addTalkId(First_Orc);
-        addTalkId(Ancestor_Martankus);
+        addTalkId(Somak,Manakia,Jakal,Sumari,Varkees,Tantus,Hatos,Takuna,Chianta,First_Orc,Ancestor_Martankus);
 
         DROPLIST.put(Timak_Orc, new Drop(1, 10, 50).addItem(TIMAK_ORC_SKULL));
         DROPLIST.put(Timak_Orc_Archer, new Drop(1, 10, 55).addItem(TIMAK_ORC_SKULL));
@@ -102,7 +92,7 @@ public final class _232_TestOfLord extends Quest {
         DROPLIST.put(Marsh_Spider, new Drop(1, 10, 100).addItem(MARSH_SPIDER_FEELER).addItem(MARSH_SPIDER_FEET));
         DROPLIST.put(Enchanted_Monstereye, new Drop(1, 20, 90).addItem(CORNEA_OF_EN_MONSTEREYE));
 
-        DROPLIST.keySet().forEach(this::addKillId);
+        addKillId(DROPLIST.keySet());
 
         for (Drop drop : DROPLIST.values())
             for (int item_id : drop.itemList)
@@ -123,28 +113,28 @@ public final class _232_TestOfLord extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         int state = st.getState();
         if (state == CREATED) {
-            if (event.equalsIgnoreCase("30565-05.htm")) {
+            if ("30565-05.htm".equalsIgnoreCase(event)) {
                 st.giveItems(ORDEAL_NECKLACE);
                 if (!st.player.isVarSet("dd3")) {
                     st.giveItems(Dimensional_Diamond, 92);
-                    st.player.setVar("dd3", 1);
+                    st.player.setVar("dd3");
                 }
-                st.setState(STARTED);
+                st.start();
                 st.setCond(1);
                 st.playSound(SOUND_ACCEPT);
             }
         } else if (state == STARTED)
-            if (event.equalsIgnoreCase("30565-12.htm") && st.haveQuestItem(IMMORTAL_FLAME)) {
+            if ("30565-12.htm".equalsIgnoreCase(event) && st.haveQuestItem(IMMORTAL_FLAME)) {
                 st.takeItems(IMMORTAL_FLAME);
                 st.giveItems(MARK_OF_LORD);
                 if (!st.player.isVarSet("prof2.3")) {
                     st.addExpAndSp(434000, 60000);
                     st.giveItems(ADENA_ID, 100000);
-                    st.player.setVar("prof2.3", 1);
+                    st.player.setVar("prof2.3");
                 }
                 st.playSound(SOUND_FINISH);
                 st.unset("cond");
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else if ("30565-08.htm".equalsIgnoreCase(event)) {
                 st.takeItems(SWORD_INTO_SKULL);
                 st.takeItems(AXE_OF_CEREMONY);
@@ -156,25 +146,25 @@ public final class _232_TestOfLord extends Quest {
                 st.playSound(SOUND_MIDDLE);
                 st.setCond(3);
             } else if ("30566-02.htm".equalsIgnoreCase(event))
-                st.giveItems(VARKEES_CHARM, 1);
+                st.giveItems(VARKEES_CHARM);
             else if ("30567-02.htm".equalsIgnoreCase(event))
-                st.giveItems(TANTUS_CHARM, 1);
+                st.giveItems(TANTUS_CHARM);
             else if ("30558-02.htm".equalsIgnoreCase(event) && st.getQuestItemsCount(ADENA_ID) >= 1000) {
                 st.takeItems(ADENA_ID, 1000);
-                st.giveItems(NERUGA_AXE_BLADE, 1);
+                st.giveItems(NERUGA_AXE_BLADE);
                 st.playSound(SOUND_MIDDLE);
             } else if ("30568-02.htm".equalsIgnoreCase(event))
-                st.giveItems(HATOS_CHARM, 1);
+                st.giveItems(HATOS_CHARM);
             else if ("30641-02.htm".equalsIgnoreCase(event))
-                st.giveItems(TAKUNA_CHARM, 1);
+                st.giveItems(TAKUNA_CHARM);
             else if ("30642-02.htm".equalsIgnoreCase(event))
-                st.giveItems(CHIANTA_CHARM, 1);
-            else if ("30649-04.htm".equalsIgnoreCase(event) && st.getQuestItemsCount(BEAR_FANG_NECKLACE) > 0) {
+                st.giveItems(CHIANTA_CHARM);
+            else if ("30649-04.htm".equalsIgnoreCase(event) && st.haveQuestItem(BEAR_FANG_NECKLACE)) {
                 st.takeItems(BEAR_FANG_NECKLACE);
                 st.giveItems(MARTANKUS_CHARM);
                 st.playSound(SOUND_MIDDLE);
                 st.setCond(4);
-            } else if (event.equalsIgnoreCase("30649-07.htm")) {
+            } else if ("30649-07.htm".equalsIgnoreCase(event)) {
                 st.setCond(6);
                 spawn_First_Orc(st);
             }
@@ -184,8 +174,8 @@ public final class _232_TestOfLord extends Quest {
 
     @Override
     public String onTalk(NpcInstance npc, QuestState st) {
-        if (st.getQuestItemsCount(MARK_OF_LORD) > 0) {
-            st.exitCurrentQuest(true);
+        if (st.haveQuestItem(MARK_OF_LORD)) {
+            st.exitCurrentQuest();
             return "completed";
         }
         int _state = st.getState();
@@ -195,15 +185,15 @@ public final class _232_TestOfLord extends Quest {
             if (npcId != Kakai)
                 return "noquest";
             if (st.player.getRace() != Race.orc) {
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 return "30565-01.htm";
             }
             if (st.player.getClassId().id != 0x32) {
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 return "30565-02.htm";
             }
             if (st.player.getLevel() < 39) {
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 return "30565-03.htm";
             }
             st.setCond(0);
@@ -213,7 +203,7 @@ public final class _232_TestOfLord extends Quest {
         if (_state != STARTED || cond < 1)
             return "noquest";
 
-        long ORDEAL_NECKLACE_COUNT = st.getQuestItemsCount(ORDEAL_NECKLACE);
+        boolean HAVE_ORDEAL_NECKLACE = st.haveQuestItem(ORDEAL_NECKLACE);
         long HUGE_ORC_FANG_COUNT = st.getQuestItemsCount(HUGE_ORC_FANG);
         long SWORD_INTO_SKULL_COUNT = st.getQuestItemsCount(SWORD_INTO_SKULL);
         long AXE_OF_CEREMONY_COUNT = st.getQuestItemsCount(AXE_OF_CEREMONY);
@@ -235,7 +225,7 @@ public final class _232_TestOfLord extends Quest {
         long TAKUNA_CHARM_COUNT = st.getQuestItemsCount(TAKUNA_CHARM);
 
         if (npcId == Kakai) {
-            if (ORDEAL_NECKLACE_COUNT > 0)
+            if (HAVE_ORDEAL_NECKLACE)
                 return cond1Complete(st) ? "30565-07.htm" : "30565-06.htm";
             if (BEAR_FANG_NECKLACE_COUNT > 0)
                 return "30565-09.htm";
@@ -245,7 +235,7 @@ public final class _232_TestOfLord extends Quest {
                 return "30565-11.htm";
         }
 
-        if (npcId == Varkees && ORDEAL_NECKLACE_COUNT > 0) {
+        if (npcId == Varkees && HAVE_ORDEAL_NECKLACE) {
             if (HUGE_ORC_FANG_COUNT > 0)
                 return "30566-05.htm";
             if (VARKEES_CHARM_COUNT == 0)
@@ -263,18 +253,18 @@ public final class _232_TestOfLord extends Quest {
             return "30566-04.htm";
         }
 
-        if (npcId == Manakia && ORDEAL_NECKLACE_COUNT > 0)
+        if (npcId == Manakia && HAVE_ORDEAL_NECKLACE)
             if (VARKEES_CHARM_COUNT > 0 && HUGE_ORC_FANG_COUNT == 0) {
                 if (MANAKIAS_AMULET_COUNT == 0) {
                     if (MANAKIAS_ORDERS_COUNT == 0) {
-                        st.giveItems(MANAKIAS_ORDERS, 1);
+                        st.giveItems(MANAKIAS_ORDERS);
                         return "30515-01.htm";
                     }
                     if (BREKA_ORC_FANG_COUNT < 20)
                         return "30515-02.htm";
-                    st.takeItems(MANAKIAS_ORDERS, -1);
-                    st.takeItems(BREKA_ORC_FANG, -1);
-                    st.giveItems(MANAKIAS_AMULET, 1);
+                    st.takeItems(MANAKIAS_ORDERS);
+                    st.takeItems(BREKA_ORC_FANG);
+                    st.giveItems(MANAKIAS_AMULET);
                     st.playSound(SOUND_MIDDLE);
                     return "30515-03.htm";
                 } else if (MANAKIAS_ORDERS_COUNT == 0)

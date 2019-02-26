@@ -10,7 +10,7 @@ public final class _367_ElectrifyingRecharge extends Quest {
     private static final int LORAIN = 30673;
     //Mobs
     private static final int CATHEROK = 21035;
-    //Quest Items
+    //Quest items
     private static final int Titan_Lamp_First = 5875;
     private static final int Titan_Lamp_Last = 5879;
     private static final int Broken_Titan_Lamp = 5880;
@@ -47,7 +47,7 @@ public final class _367_ElectrifyingRecharge extends Quest {
         if (event.equalsIgnoreCase("30673-03.htm") && _state == CREATED) {
             takeAllLamps(st);
             st.giveItems(Titan_Lamp_First, 1);
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("30673-07.htm") && _state == STARTED) {
@@ -55,7 +55,7 @@ public final class _367_ElectrifyingRecharge extends Quest {
             st.giveItems(Titan_Lamp_First, 1);
         } else if (event.equalsIgnoreCase("30673-08.htm") && _state == STARTED) {
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
         return event;
     }
@@ -70,21 +70,21 @@ public final class _367_ElectrifyingRecharge extends Quest {
         if (_state == CREATED) {
             if (st.player.getLevel() < 37) {
                 htmltext = "30673-02.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else {
                 htmltext = "30673-01.htm";
                 st.setCond(0);
             }
         } else if (_state == STARTED)
-            if (st.getQuestItemsCount(Titan_Lamp_Last) > 0) {
+            if (st.haveQuestItem(Titan_Lamp_Last) ) {
                 htmltext = "30673-06.htm";
                 takeAllLamps(st);
-                st.giveItems(4553 + Rnd.get(12), 1);
+                st.giveItems(4553 + Rnd.get(12));
                 st.playSound(SOUND_MIDDLE);
-            } else if (st.getQuestItemsCount(Broken_Titan_Lamp) > 0) {
+            } else if (st.haveQuestItem(Broken_Titan_Lamp) ) {
                 htmltext = "30673-05.htm";
                 takeAllLamps(st);
-                st.giveItems(Titan_Lamp_First, 1);
+                st.giveItems(Titan_Lamp_First);
             } else
                 htmltext = "30673-04.htm";
 

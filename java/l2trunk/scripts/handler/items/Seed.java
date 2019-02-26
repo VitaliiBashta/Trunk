@@ -60,7 +60,7 @@ public final class Seed extends ScriptItemHandler implements ScriptFile {
         }
 
         int seedId = item.getItemId();
-        if (seedId == 0 || player.getInventory().getItemByItemId(item.getItemId()) == null) {
+        if (seedId == 0 || !player.haveItem(item.getItemId())) {
             player.sendPacket(SystemMsg.INCORRECT_ITEM_COUNT);
             return false;
         }

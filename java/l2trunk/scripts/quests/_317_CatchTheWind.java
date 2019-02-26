@@ -7,7 +7,7 @@ import l2trunk.gameserver.model.quest.QuestState;
 public final class _317_CatchTheWind extends Quest {
     //NPCs
     private static final int Rizraell = 30361;
-    //Quest Items
+    //Quest items
     private static final int WindShard = 1078;
     //Mobs
     private static final int Lirein = 20036;
@@ -40,7 +40,7 @@ public final class _317_CatchTheWind extends Quest {
     public _317_CatchTheWind() {
         super(false);
         addStartNpc(Rizraell);
-        //Mob Drop
+        //mob Drop
         for (int[] aDROPLIST_COND : DROPLIST_COND) addKillId(aDROPLIST_COND[2]);
         addQuestItem(WindShard);
     }
@@ -49,11 +49,11 @@ public final class _317_CatchTheWind extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if (event.equalsIgnoreCase("rizraell_q0317_04.htm")) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("rizraell_q0317_08.htm")) {
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
         return event;
     }
@@ -69,7 +69,7 @@ public final class _317_CatchTheWind extends Quest {
                     htmltext = "rizraell_q0317_03.htm";
                 else {
                     htmltext = "rizraell_q0317_02.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1) {
                 long count = st.getQuestItemsCount(WindShard);
@@ -95,7 +95,7 @@ public final class _317_CatchTheWind extends Quest {
                     else if (st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[7], aDROPLIST_COND[5], aDROPLIST_COND[6]))
                         if (aDROPLIST_COND[1] != cond && aDROPLIST_COND[1] != 0) {
                             st.setCond(aDROPLIST_COND[1]);
-                            st.setState(STARTED);
+                            st.start();
                         }
     }
 }

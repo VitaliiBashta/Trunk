@@ -8,25 +8,27 @@ import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.Location;
 
+import java.util.List;
+
 public final class Remy extends DefaultAI {
-    private static final Location[] points = {
-            new Location(-81926, 243894, -3712),
-            new Location(-82134, 243600, -3728),
-            new Location(-83165, 243987, -3728),
-            new Location(-84501, 243245, -3728),
-            new Location(-85100, 243285, -3728),
-            new Location(-86152, 242898, -3728),
-            new Location(-86288, 242962, -3720),
-            new Location(-86348, 243223, -3720),
-            new Location(-86522, 242762, -3720),
-            new Location(-86500, 242615, -3728),
-            new Location(-86123, 241606, -3728),
-            new Location(-85167, 240589, -3728),
-            new Location(-84323, 241245, -3728),
-            new Location(-83215, 241170, -3728),
-            new Location(-82364, 242944, -3728),
-            new Location(-81674, 243391, -3712),
-            new Location(-81926, 243894, -3712)};
+    private static final List<Location> points = List.of(
+           Location.of(-81926, 243894, -3712),
+           Location.of(-82134, 243600, -3728),
+           Location.of(-83165, 243987, -3728),
+           Location.of(-84501, 243245, -3728),
+           Location.of(-85100, 243285, -3728),
+           Location.of(-86152, 242898, -3728),
+           Location.of(-86288, 242962, -3720),
+           Location.of(-86348, 243223, -3720),
+           Location.of(-86522, 242762, -3720),
+           Location.of(-86500, 242615, -3728),
+           Location.of(-86123, 241606, -3728),
+           Location.of(-85167, 240589, -3728),
+           Location.of(-84323, 241245, -3728),
+           Location.of(-83215, 241170, -3728),
+           Location.of(-82364, 242944, -3728),
+           Location.of(-81674, 243391, -3712),
+           Location.of(-81926, 243894, -3712));
 
     private int current_point = -1;
     private long wait_timeout = 0;
@@ -85,13 +87,13 @@ public final class Remy extends DefaultAI {
             wait = false;
             current_point++;
 
-            if (current_point >= points.length)
+            if (current_point >= points.size())
                 current_point = 0;
 
             // Remy всегда бегает
             actor.setRunning();
 
-            addTaskMove(points[current_point], true);
+            addTaskMove(points.get(current_point), true);
             doTask();
             return true;
         }

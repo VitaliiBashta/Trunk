@@ -22,7 +22,7 @@ public final class _020_BringUpWithLove extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if (npc.getNpcId() == TUNATUN) {
             if (event.equalsIgnoreCase("31537-12.htm")) {
-                st.setState(STARTED);
+                st.start();
                 st.setCond(1);
                 st.playSound(SOUND_ACCEPT);
             } else if (event.equalsIgnoreCase("31537-03.htm")) {
@@ -35,7 +35,7 @@ public final class _020_BringUpWithLove extends Quest {
                 st.takeItems(JEWEL, -1);
                 st.giveItems(CRYSTAL, 1);
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(false);
+                st.finish();
             }
         }
         return event;

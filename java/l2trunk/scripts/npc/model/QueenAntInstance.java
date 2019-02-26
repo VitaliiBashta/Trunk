@@ -29,7 +29,7 @@ public final class QueenAntInstance extends BossInstance {
 
     public NpcInstance getLarva() {
         if (Larva == null) {
-            Larva = SpawnLarva(new Location(-21600, 179482, -5846, Rnd.get(0, 0xFFFF)));
+            Larva = SpawnLarva();
         }
         return Larva;
     }
@@ -53,16 +53,16 @@ public final class QueenAntInstance extends BossInstance {
         getLarva();
         broadcastPacketToOthers(new PlaySound(PlaySound.Type.MUSIC, "BS01_A", 1, 0, getLoc()));
 
-        // Synerge - On Queen Ant spawn teleport every player that is inside the zone to the closest town
+        // Synerge - On Queen Ant spawn teleport every getPlayer that is inside the zone to the closest town
         final Zone zone = getZone(ZoneType.epic);
         if (zone != null) {
             zone.getInsidePlayers().forEach(Player::teleToClosestTown);
         }
     }
 
-    private NpcInstance SpawnLarva(Location loc) {
+    private NpcInstance SpawnLarva() {
         SimpleSpawner sp = (SimpleSpawner) new SimpleSpawner(QueenAntInstance.Queen_Ant_Larva)
-                .setLoc(loc)
+                .setLoc(Location.of(-21600, 179482, -5846, Rnd.get(0, 0xFFFF)))
                 .setAmount(1)
                 .setRespawnDelay(0);
         _spawns.add(sp);

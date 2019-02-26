@@ -41,8 +41,8 @@ public final class ExBR_MiniGameLoadScores extends L2GameServerPacket {
     @Override
     protected void writeImpl() {
         writeEx(0xDD);
-        writeD(_place); // place of last big score of player
-        writeD(_score); // last big score of player
+        writeD(_place); // place of last big score of getPlayer
+        writeD(_score); // last big score of getPlayer
         writeD(0x00); //?
         writeD(_lastScore); //last score of list
         for (Map.Entry<Integer, List<Map.Entry<String, Integer>>> entry : _entries.entrySet())

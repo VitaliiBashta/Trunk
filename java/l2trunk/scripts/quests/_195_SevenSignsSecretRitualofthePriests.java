@@ -43,90 +43,90 @@ public final class _195_SevenSignsSecretRitualofthePriests extends Quest {
 
     // SPAWNS
     private static final Location[][] guardsOfDawn1 = { // ID: 18835
-            // Spawn Location, move End Location, teleport player Location
+            // Spawn Location, move End Location, teleport getPlayer Location
             //1st checkpoint
-            {new Location(-75208, 212600, -7320), new Location(-75208, 212248, -7320), new Location(-75992, 213416, -7148)},
-            {new Location(-74616, 212600, -7320), new Location(-74616, 212248, -7320), new Location(-75992, 213416, -7148)},
-            {new Location(-75064, 212136, -7320), new Location(-74824, 212136, -7320), new Location(-75992, 213416, -7148)},
-            {new Location(-74696, 211480, -7320), new Location(-74696, 211144, -7320), new Location(-75992, 213416, -7148)},
-            {new Location(-75272, 211144, -7320), new Location(-75272, 211480, -7320), new Location(-75992, 213416, -7148)},
+            {Location.of(-75208, 212600, -7320), Location.of(-75208, 212248, -7320), Location.of(-75992, 213416, -7148)},
+            {Location.of(-74616, 212600, -7320), Location.of(-74616, 212248, -7320), Location.of(-75992, 213416, -7148)},
+            {Location.of(-75064, 212136, -7320), Location.of(-74824, 212136, -7320), Location.of(-75992, 213416, -7148)},
+            {Location.of(-74696, 211480, -7320), Location.of(-74696, 211144, -7320), Location.of(-75992, 213416, -7148)},
+            {Location.of(-75272, 211144, -7320), Location.of(-75272, 211480, -7320), Location.of(-75992, 213416, -7148)},
             //2nd checkpoint
-            {new Location(-78088, 208504, -7704), new Location(-77304, 208504, -7704), new Location(-77688, 209112, -7608)},
-            {new Location(-77944, 207800, -7704), new Location(-77448, 207800, -7704), new Location(-77688, 209112, -7608)},
-            {new Location(-77688, 207544, -7704), new Location(-77688, 208024, -7704), new Location(-77688, 209112, -7608)},
-            {new Location(-77304, 207928, -7704), new Location(-76968, 207928, -7704), new Location(-77688, 209112, -7608)},
-            {new Location(-78104, 207928, -7704), new Location(-78424, 207928, -7704), new Location(-77688, 209112, -7608)},
-            {new Location(-77032, 207128, -7704), new Location(-77320, 207416, -7704), new Location(-77688, 209112, -7608)},};
+            {Location.of(-78088, 208504, -7704), Location.of(-77304, 208504, -7704), Location.of(-77688, 209112, -7608)},
+            {Location.of(-77944, 207800, -7704), Location.of(-77448, 207800, -7704), Location.of(-77688, 209112, -7608)},
+            {Location.of(-77688, 207544, -7704), Location.of(-77688, 208024, -7704), Location.of(-77688, 209112, -7608)},
+            {Location.of(-77304, 207928, -7704), Location.of(-76968, 207928, -7704), Location.of(-77688, 209112, -7608)},
+            {Location.of(-78104, 207928, -7704), Location.of(-78424, 207928, -7704), Location.of(-77688, 209112, -7608)},
+            {Location.of(-77032, 207128, -7704), Location.of(-77320, 207416, -7704), Location.of(-77688, 209112, -7608)},};
 
     private static final Location[][] guardsOfDawn1stationary = { // ID: 18835
             //1st checkpoint
-            {new Location(-74952, 211848, -7320, 16384), new Location(-75992, 213416, -7148)},
+            {Location.of(-74952, 211848, -7320, 16384), Location.of(-75992, 213416, -7148)},
             //2nd checkpoint
-            {new Location(-77208, 208312, -7704, 32768), new Location(-77688, 209112, -7608)},
-            {new Location(-78184, 208264, -7704, 32768), new Location(-77688, 209112, -7608)},
-            {new Location(-77240, 207528, -7704, 32768), new Location(-77688, 209112, -7608)},
-            {new Location(-78168, 207528, -7704, 32768), new Location(-77688, 209112, -7608)},
-            {new Location(-77544, 207080, -7704, 16384), new Location(-77688, 209112, -7608)},
-            {new Location(-78040, 207400, -7704, 49152), new Location(-77688, 209112, -7608)},
-            {new Location(-78408, 207144, -7704, 0), new Location(-77688, 209112, -7608)},};
+            {Location.of(-77208, 208312, -7704, 32768), Location.of(-77688, 209112, -7608)},
+            {Location.of(-78184, 208264, -7704, 32768), Location.of(-77688, 209112, -7608)},
+            {Location.of(-77240, 207528, -7704, 32768), Location.of(-77688, 209112, -7608)},
+            {Location.of(-78168, 207528, -7704, 32768), Location.of(-77688, 209112, -7608)},
+            {Location.of(-77544, 207080, -7704, 16384), Location.of(-77688, 209112, -7608)},
+            {Location.of(-78040, 207400, -7704, 49152), Location.of(-77688, 209112, -7608)},
+            {Location.of(-78408, 207144, -7704, 0), Location.of(-77688, 209112, -7608)},};
 
     private static final Location[][] guardsOfDawnFemale = { // ID: 27352
             //1st checkpoint
-            {new Location(-75272, 209976, -7416, 0), new Location(-75992, 213416, -7148)},
-            {new Location(-74616, 209976, -7416, 32768), new Location(-75992, 213416, -7148)},
+            {Location.of(-75272, 209976, -7416, 0), Location.of(-75992, 213416, -7148)},
+            {Location.of(-74616, 209976, -7416, 32768), Location.of(-75992, 213416, -7148)},
 
-            {new Location(-74280, 208792, -7512, 32768), new Location(-74952, 209320, -7480)},
-            {new Location(-74552, 206616, -7512, 49152), new Location(-74952, 209320, -7480)},
-            {new Location(-75448, 206712, -7512, 32768), new Location(-74952, 209320, -7480)},
+            {Location.of(-74280, 208792, -7512, 32768), Location.of(-74952, 209320, -7480)},
+            {Location.of(-74552, 206616, -7512, 49152), Location.of(-74952, 209320, -7480)},
+            {Location.of(-75448, 206712, -7512, 32768), Location.of(-74952, 209320, -7480)},
             //2nd checkpoint
-            {new Location(-77688, 208376, -7696, 16384), new Location(-77688, 209112, -7608)},
-            {new Location(-77688, 207224, -7696, 49152), new Location(-77688, 209112, -7608)},
-            {new Location(-76936, 207800, -7696, 32768), new Location(-77688, 209112, -7608)},
-            {new Location(-78488, 207800, -7696, 0), new Location(-77688, 209112, -7608)},
-            {new Location(-78936, 205416, -7918, 16384), new Location(-77688, 209112, -7608)},
-            {new Location(-79784, 205432, -7918, 49152), new Location(-77688, 209112, -7608)},
-            {new Location(-79784, 206280, -7918, 49152), new Location(-77688, 209112, -7608)},
-            {new Location(-78952, 206280, -7918, 49152), new Location(-77688, 209112, -7608)},
-            {new Location(-81544, 205464, -7984, 16384), new Location(-77688, 209112, -7608)},
-            {new Location(-81544, 206168, -7984, 49152), new Location(-77688, 209112, -7608)},};
+            {Location.of(-77688, 208376, -7696, 16384), Location.of(-77688, 209112, -7608)},
+            {Location.of(-77688, 207224, -7696, 49152), Location.of(-77688, 209112, -7608)},
+            {Location.of(-76936, 207800, -7696, 32768), Location.of(-77688, 209112, -7608)},
+            {Location.of(-78488, 207800, -7696, 0), Location.of(-77688, 209112, -7608)},
+            {Location.of(-78936, 205416, -7918, 16384), Location.of(-77688, 209112, -7608)},
+            {Location.of(-79784, 205432, -7918, 49152), Location.of(-77688, 209112, -7608)},
+            {Location.of(-79784, 206280, -7918, 49152), Location.of(-77688, 209112, -7608)},
+            {Location.of(-78952, 206280, -7918, 49152), Location.of(-77688, 209112, -7608)},
+            {Location.of(-81544, 205464, -7984, 16384), Location.of(-77688, 209112, -7608)},
+            {Location.of(-81544, 206168, -7984, 49152), Location.of(-77688, 209112, -7608)},};
 
     private static final Location[][] guardsOfDawn2 = { // ID: 18834
-            // Spawn Location, move End Location, teleport player Location
-            {new Location(-75464, 210216, -7416), new Location(-74456, 210216, -7416), new Location(-75992, 213416, -7148)},
-            {new Location(-74456, 209752, -7416), new Location(-75464, 209752, -7416), new Location(-75992, 213416, -7148)},
+            // Spawn Location, move End Location, teleport getPlayer Location
+            {Location.of(-75464, 210216, -7416), Location.of(-74456, 210216, -7416), Location.of(-75992, 213416, -7148)},
+            {Location.of(-74456, 209752, -7416), Location.of(-75464, 209752, -7416), Location.of(-75992, 213416, -7148)},
 
-            {new Location(-74472, 208344, -7512), new Location(-74216, 208344, -7512), new Location(-74952, 209320, -7480)},
-            {new Location(-74488, 207016, -7512), new Location(-74216, 207016, -7512), new Location(-74952, 209320, -7480)},
-            {new Location(-74216, 206472, -7512), new Location(-75672, 206456, -7512), new Location(-74952, 209320, -7480)},
-            {new Location(-74968, 206680, -7512), new Location(-74968, 206344, -7512), new Location(-74952, 209320, -7480)},
-            {new Location(-75688, 206968, -7512), new Location(-75416, 206968, -7512), new Location(-74952, 209320, -7480)},
-            {new Location(-75544, 208712, -7512), new Location(-75544, 208152, -7512), new Location(-74952, 209320, -7480)},
+            {Location.of(-74472, 208344, -7512), Location.of(-74216, 208344, -7512), Location.of(-74952, 209320, -7480)},
+            {Location.of(-74488, 207016, -7512), Location.of(-74216, 207016, -7512), Location.of(-74952, 209320, -7480)},
+            {Location.of(-74216, 206472, -7512), Location.of(-75672, 206456, -7512), Location.of(-74952, 209320, -7480)},
+            {Location.of(-74968, 206680, -7512), Location.of(-74968, 206344, -7512), Location.of(-74952, 209320, -7480)},
+            {Location.of(-75688, 206968, -7512), Location.of(-75416, 206968, -7512), Location.of(-74952, 209320, -7480)},
+            {Location.of(-75544, 208712, -7512), Location.of(-75544, 208152, -7512), Location.of(-74952, 209320, -7480)},
             //passage
-            {new Location(-76392, 207912, -7608), new Location(-76616, 207912, -7608), new Location(-74952, 209320, -7480)},
-            {new Location(-76616, 208248, -7608), new Location(-76392, 208248, -7608), new Location(-74952, 209320, -7480)},
-            {new Location(-76616, 208920, -7608), new Location(-76392, 208920, -7608), new Location(-74952, 209320, -7480)},
-            {new Location(-76952, 209432, -7608), new Location(-76952, 209208, -7608), new Location(-74952, 209320, -7480)},
-            {new Location(-77272, 209208, -7608), new Location(-77272, 209432, -7608), new Location(-74952, 209320, -7480)},
+            {Location.of(-76392, 207912, -7608), Location.of(-76616, 207912, -7608), Location.of(-74952, 209320, -7480)},
+            {Location.of(-76616, 208248, -7608), Location.of(-76392, 208248, -7608), Location.of(-74952, 209320, -7480)},
+            {Location.of(-76616, 208920, -7608), Location.of(-76392, 208920, -7608), Location.of(-74952, 209320, -7480)},
+            {Location.of(-76952, 209432, -7608), Location.of(-76952, 209208, -7608), Location.of(-74952, 209320, -7480)},
+            {Location.of(-77272, 209208, -7608), Location.of(-77272, 209432, -7608), Location.of(-74952, 209320, -7480)},
             //round chamber
-            {new Location(-78936, 205576, -7888), new Location(-78728, 205416, -7888), new Location(-77688, 209112, -7608)},
-            {new Location(-78904, 205256, -7888), new Location(-79096, 205416, -7888), new Location(-77688, 209112, -7608)},
-            {new Location(-79368, 205000, -7888), new Location(-79368, 205368, -7888), new Location(-77688, 209112, -7608)},
-            {new Location(-79784, 205592, -7888), new Location(-80008, 205448, -7888), new Location(-77688, 209112, -7608)},
-            {new Location(-78904, 206088, -7888), new Location(-78696, 206264, -7888), new Location(-77688, 209112, -7608)},
-            {new Location(-78936, 206488, -7888), new Location(-79128, 206312, -7888), new Location(-77688, 209112, -7608)},
-            {new Location(-79368, 206728, -7888), new Location(-79368, 206344, -7888), new Location(-77688, 209112, -7608)},
-            {new Location(-79992, 206280, -7888), new Location(-79800, 206104, -7888), new Location(-77688, 209112, -7608)},
+            {Location.of(-78936, 205576, -7888), Location.of(-78728, 205416, -7888), Location.of(-77688, 209112, -7608)},
+            {Location.of(-78904, 205256, -7888), Location.of(-79096, 205416, -7888), Location.of(-77688, 209112, -7608)},
+            {Location.of(-79368, 205000, -7888), Location.of(-79368, 205368, -7888), Location.of(-77688, 209112, -7608)},
+            {Location.of(-79784, 205592, -7888), Location.of(-80008, 205448, -7888), Location.of(-77688, 209112, -7608)},
+            {Location.of(-78904, 206088, -7888), Location.of(-78696, 206264, -7888), Location.of(-77688, 209112, -7608)},
+            {Location.of(-78936, 206488, -7888), Location.of(-79128, 206312, -7888), Location.of(-77688, 209112, -7608)},
+            {Location.of(-79368, 206728, -7888), Location.of(-79368, 206344, -7888), Location.of(-77688, 209112, -7608)},
+            {Location.of(-79992, 206280, -7888), Location.of(-79800, 206104, -7888), Location.of(-77688, 209112, -7608)},
             //secret library
-            {new Location(-81896, 205848, -7984), new Location(-81128, 205848, -7984), new Location(-77688, 209112, -7608)},};
+            {Location.of(-81896, 205848, -7984), Location.of(-81128, 205848, -7984), Location.of(-77688, 209112, -7608)},};
 
     private static final Location[][] guardsOfDawn2stationary = { // ID: 18834
-            {new Location(-74856, 213496, -7224, 16384), new Location(-75992, 213416, -7148)},
+            {Location.of(-74856, 213496, -7224, 16384), Location.of(-75992, 213416, -7148)},
 
-            {new Location(-75624, 208792, -7512, 0), new Location(-74952, 209320, -7480)},
-            {new Location(-75432, 208040, -7512, 16384), new Location(-74952, 209320, -7480)},
-            {new Location(-75672, 208040, -7512, 16384), new Location(-74952, 209320, -7480)},
-            {new Location(-74952, 207528, -7512, 16384), new Location(-74952, 209320, -7480)},
-            {new Location(-74968, 207704, -7512, 16384), new Location(-74952, 209320, -7480)},};
+            {Location.of(-75624, 208792, -7512, 0), Location.of(-74952, 209320, -7480)},
+            {Location.of(-75432, 208040, -7512, 16384), Location.of(-74952, 209320, -7480)},
+            {Location.of(-75672, 208040, -7512, 16384), Location.of(-74952, 209320, -7480)},
+            {Location.of(-74952, 207528, -7512, 16384), Location.of(-74952, 209320, -7480)},
+            {Location.of(-74968, 207704, -7512, 16384), Location.of(-74952, 209320, -7480)},};
 
     public _195_SevenSignsSecretRitualofthePriests() {
         super(false);
@@ -143,7 +143,7 @@ public final class _195_SevenSignsSecretRitualofthePriests extends Quest {
         Reflection ref = player.getReflection();
         if ("claudiaathebaldt_q195_2.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("john_q195_2.htm".equalsIgnoreCase(event)) {
             st.setCond(2);
@@ -183,7 +183,7 @@ public final class _195_SevenSignsSecretRitualofthePriests extends Quest {
             return null;
         } else if ("open_door".equalsIgnoreCase(event)) {
             if (ref != null && player.getTransformation() == 113 && st.getQuestItemsCount(GuardsoftheDawnIdentityCard) >= 1) {
-                if (npc.getLoc().equals(new Location(-75695, 213537, -7128, 0))) {
+                if (npc.getLoc().equals(Location.of(-75695, 213537, -7128, 0))) {
                     ref.openDoor(door1);
                     ref.openDoor(door2);
                     player.sendPacket(new SystemMessage(SystemMessage.BY_USING_THE_INVISIBLE_SKILL_SNEAK_INTO_THE_DAWN_S_DOCUMENT_STORAGE));
@@ -221,8 +221,8 @@ public final class _195_SevenSignsSecretRitualofthePriests extends Quest {
             if (player.getBaseClassId() == player.getActiveClassId()) {
                 st.takeItems(EmperorShunaimansContract, -1);
                 st.addExpAndSp(52518015, 5817677);
-                st.setState(COMPLETED);
-                st.exitCurrentQuest(false);
+                st.complete();
+                st.finish();
                 st.playSound(SOUND_FINISH);
             } else
                 return "subclass_forbidden.htm";
@@ -243,7 +243,7 @@ public final class _195_SevenSignsSecretRitualofthePriests extends Quest {
                     htmltext = "claudiaathebaldt_q195_1.htm";
                 else {
                     htmltext = "claudiaathebaldt_q195_0.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             else
                 htmltext = "claudiaathebaldt_q195_3.htm";

@@ -30,7 +30,7 @@ public final class _10273_GoodDayToFly extends Quest {
 
         if ("32557-06.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("32557-09.htm".equalsIgnoreCase(event)) {
             if (player.getTransformation() != 0) {
@@ -80,7 +80,7 @@ public final class _10273_GoodDayToFly extends Quest {
             st.takeItems(Mark);
             st.giveItems(13857);
             st.addExpAndSp(25160, 2525);
-            st.exitCurrentQuest(false);
+            st.finish();
             st.playSound(SOUND_FINISH);
         } else if (transform < 1)
             htmltext = "32557-07.htm";

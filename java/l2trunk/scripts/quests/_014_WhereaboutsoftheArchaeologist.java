@@ -20,15 +20,15 @@ public final class _014_WhereaboutsoftheArchaeologist extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if (event.equalsIgnoreCase("trader_liesel_q0014_0104.htm")) {
             st.setCond(1);
-            st.giveItems(LETTER_TO_ARCHAEOLOGIST, 1);
-            st.setState(STARTED);
+            st.giveItems(LETTER_TO_ARCHAEOLOGIST);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("explorer_ghost_a_q0014_0201.htm")) {
-            st.takeItems(LETTER_TO_ARCHAEOLOGIST, -1);
+            st.takeItems(LETTER_TO_ARCHAEOLOGIST);
             st.addExpAndSp(325881, 32524);
             st.giveItems(ADENA_ID, 136928);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(false);
+            st.finish();
             return "explorer_ghost_a_q0014_0201.htm";
         }
         return event;
@@ -45,7 +45,7 @@ public final class _014_WhereaboutsoftheArchaeologist extends Quest {
                     htmltext = "trader_liesel_q0014_0101.htm";
                 else {
                     htmltext = "trader_liesel_q0014_0103.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             else if (cond == 1)
                 htmltext = "trader_liesel_q0014_0104.htm";

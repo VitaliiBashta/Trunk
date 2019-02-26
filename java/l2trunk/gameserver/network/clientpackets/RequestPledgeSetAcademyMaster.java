@@ -60,7 +60,7 @@ public class RequestPledgeSetAcademyMaster extends L2GameClientPacket {
                     clan.broadcastToOnlineMembers(new SystemMessage2(SystemMsg.S2_CLAN_MEMBER_C1S_APPRENTICE_HAS_BEEN_REMOVED).addString(sponsor.getName()).addString(apprentice.getName()));
                 }
                 if (apprentice.isOnline())
-                    apprentice.player().broadcastCharInfo();
+                    apprentice.getPlayer().broadcastCharInfo();
                 activeChar.sendPacket(new PledgeReceiveMemberInfo(sponsor));
             }
         } else

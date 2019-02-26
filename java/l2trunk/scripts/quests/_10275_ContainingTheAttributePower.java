@@ -25,14 +25,11 @@ public final class _10275_ContainingTheAttributePower extends Quest {
     public _10275_ContainingTheAttributePower() {
         super(false);
 
-        addStartNpc(Holly);
-        addStartNpc(Weber);
+        addStartNpc(Holly,Weber);
 
-        addTalkId(Yin);
-        addTalkId(Yang);
+        addTalkId(Yin,Yang);
 
-        addKillId(Air);
-        addKillId(Water);
+        addKillId(Air,Water);
 
         addQuestItem(YinSword, YangSword, SoulPieceWater, SoulPieceAir);
     }
@@ -45,7 +42,7 @@ public final class _10275_ContainingTheAttributePower extends Quest {
 
         if (event.equalsIgnoreCase("30839-02.htm") || event.equalsIgnoreCase("31307-02.htm")) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("30839-05.htm")) {
             st.setCond(2);
@@ -110,7 +107,7 @@ public final class _10275_ContainingTheAttributePower extends Quest {
             if (item > 0) {
                 st.giveItems(item, 2, true);
                 st.addExpAndSp(202160, 20375);
-                st.exitCurrentQuest(false);
+                st.finish();
                 st.playSound(SOUND_FINISH);
                 if (npc != null)
                     htmltext = npc.getNpcId() + "-1" + event + ".htm";

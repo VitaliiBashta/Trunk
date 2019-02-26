@@ -14,10 +14,10 @@ public final class _622_DeliveryofSpecialLiquor extends Quest {
     private static final int CROCUS = 31545;
     private static final int KUBER = 31546;
     private static final int BEOLIN = 31547;
-    //Quest Items
+    //Quest items
     private static final int SpecialDrink = 7207;
     private static final int FeeOfSpecialDrink = 7198;
-    //Items
+    //items
     private static final int RecipeSealedTateossianRing = 6849;
     private static final int RecipeSealedTateossianEarring = 6847;
     private static final int RecipeSealedTateossianNecklace = 6851;
@@ -28,20 +28,14 @@ public final class _622_DeliveryofSpecialLiquor extends Quest {
     public _622_DeliveryofSpecialLiquor() {
         super(false);
         addStartNpc(JEREMY);
-        addTalkId(LIETTA);
-        addTalkId(PULIN);
-        addTalkId(NAFF);
-        addTalkId(CROCUS);
-        addTalkId(KUBER);
-        addTalkId(BEOLIN);
-        addQuestItem(SpecialDrink);
-        addQuestItem(FeeOfSpecialDrink);
+        addTalkId(LIETTA,PULIN,NAFF,CROCUS,KUBER,BEOLIN);
+        addQuestItem(SpecialDrink,FeeOfSpecialDrink);
     }
 
     private static void takeDrink(QuestState st, int setcond) {
         st.setCond(setcond);
         st.takeItems(SpecialDrink, 1);
-        st.giveItems(FeeOfSpecialDrink, 1);
+        st.giveItems(FeeOfSpecialDrink);
         st.playSound(SOUND_MIDDLE);
     }
 
@@ -52,7 +46,7 @@ public final class _622_DeliveryofSpecialLiquor extends Quest {
         long SpecialDrink_count = st.getQuestItemsCount(SpecialDrink);
 
         if (event.equalsIgnoreCase("jeremy_q0622_0104.htm") && _state == CREATED) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.takeItems(SpecialDrink, -1);
             st.takeItems(FeeOfSpecialDrink, -1);
@@ -86,7 +80,7 @@ public final class _622_DeliveryofSpecialLiquor extends Quest {
             }
 
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
 
         return event;
@@ -103,7 +97,7 @@ public final class _622_DeliveryofSpecialLiquor extends Quest {
                 st.setCond(0);
                 return "jeremy_q0622_0101.htm";
             }
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             return "jeremy_q0622_0103.htm";
         }
 

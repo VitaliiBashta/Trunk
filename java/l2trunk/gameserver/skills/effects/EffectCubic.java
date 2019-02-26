@@ -164,7 +164,7 @@ public final class EffectCubic extends Effect {
         player.broadcastPacket(new MagicSkillUse(player, skill.displayId, skill.getDisplayLevel(), skill.hitTime));
         player.disableSkill(skill, delay * 1000L);
         ThreadPoolManager.INSTANCE.schedule(() -> {
-            final List<Creature> targets = Collections.singletonList(player);
+            final List<Creature> targets = List.of(player);
             player.broadcastPacket(new MagicSkillLaunched(player.objectId(), skill.displayId, skill.getDisplayLevel(), targets));
             player.callSkill(skill, targets, false);
         }, skill.hitTime);

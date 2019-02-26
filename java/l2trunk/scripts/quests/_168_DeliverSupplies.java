@@ -14,14 +14,8 @@ public final class _168_DeliverSupplies extends Quest {
 
     public _168_DeliverSupplies() {
         super(false);
-
         addStartNpc(30349);
-
-        addTalkId(30349);
-        addTalkId(30355);
-        addTalkId(30357);
-        addTalkId(30360);
-
+        addTalkId(30355,30357,30360);
         addQuestItem(SENTRY_BLADE1_ID,
                 OLD_BRONZE_SWORD_ID,
                 JENNIES_LETTER_ID,
@@ -33,10 +27,10 @@ public final class _168_DeliverSupplies extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
 
         String htmltext = event;
-        if (event.equals("1")) {
-            st.set("id", 0);
+        if ("1".equals(event)) {
+            st.unset("id");
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
             htmltext = "30349-03.htm";
             st.giveItems(JENNIES_LETTER_ID);
@@ -58,11 +52,11 @@ public final class _168_DeliverSupplies extends Quest {
                     htmltext = "30349-02.htm";
                 else {
                     htmltext = "30349-01.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else {
                 htmltext = "30349-01.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (npcId == 30349 && cond == 1 && st.getQuestItemsCount(JENNIES_LETTER_ID) > 0)
             htmltext = "30349-04.htm";
@@ -78,20 +72,20 @@ public final class _168_DeliverSupplies extends Quest {
             st.unset("cond");
             st.playSound(SOUND_FINISH);
             st.giveItems(ADENA_ID, 820);
-            st.exitCurrentQuest(false);
+            st.finish();
         } else if (npcId == 30360 && cond == 1 && st.getQuestItemsCount(JENNIES_LETTER_ID) == 1) {
             htmltext = "30360-01.htm";
             st.takeItems(JENNIES_LETTER_ID, 1);
-            st.giveItems(SENTRY_BLADE1_ID, 1);
-            st.giveItems(SENTRY_BLADE2_ID, 1);
-            st.giveItems(SENTRY_BLADE3_ID, 1);
+            st.giveItems(SENTRY_BLADE1_ID);
+            st.giveItems(SENTRY_BLADE2_ID);
+            st.giveItems(SENTRY_BLADE3_ID);
             st.setCond(2);
         } else if (npcId == 30360 && (cond == 2 || cond == 3) && st.getQuestItemsCount(SENTRY_BLADE1_ID) + st.getQuestItemsCount(SENTRY_BLADE2_ID) + st.getQuestItemsCount(SENTRY_BLADE3_ID) > 0)
             htmltext = "30360-02.htm";
         else if (npcId == 30355 && cond == 3 && st.getQuestItemsCount(SENTRY_BLADE2_ID) == 1 && st.getQuestItemsCount(SENTRY_BLADE1_ID) == 0) {
             htmltext = "30355-01.htm";
             st.takeItems(SENTRY_BLADE2_ID, 1);
-            st.giveItems(OLD_BRONZE_SWORD_ID, 1);
+            st.giveItems(OLD_BRONZE_SWORD_ID);
             if (st.getQuestItemsCount(SENTRY_BLADE3_ID) == 0)
                 st.setCond(4);
         } else if (npcId == 30355 && (cond == 4 || cond == 3) && st.getQuestItemsCount(SENTRY_BLADE2_ID) == 0)
@@ -99,7 +93,7 @@ public final class _168_DeliverSupplies extends Quest {
         else if (npcId == 30357 && cond == 3 && st.getQuestItemsCount(SENTRY_BLADE3_ID) == 1 && st.getQuestItemsCount(SENTRY_BLADE1_ID) == 0) {
             htmltext = "30357-01.htm";
             st.takeItems(SENTRY_BLADE3_ID, 1);
-            st.giveItems(OLD_BRONZE_SWORD_ID, 1);
+            st.giveItems(OLD_BRONZE_SWORD_ID);
             if (st.getQuestItemsCount(SENTRY_BLADE2_ID) == 0)
                 st.setCond(4);
         } else if (npcId == 30357 && (cond == 4 || cond == 5) && st.getQuestItemsCount(SENTRY_BLADE3_ID) == 0)

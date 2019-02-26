@@ -22,7 +22,7 @@ public final class _060_GoodWorksReward extends Quest {
     private final static int Mark = 32487;
     // Mobs
     private final static int Pursuer = 27340;
-    // Items
+    // items
     private final static int Bloody_Cloth_Fragment = 10867;
     private final static int Helvetias_Antidote = 10868;
     // Texts
@@ -214,12 +214,9 @@ public final class _060_GoodWorksReward extends Quest {
     public _060_GoodWorksReward() {
         super(false);
         addStartNpc(Daeger);
-        addTalkId(Helvetia);
-        addTalkId(Black_Marketeer_of_Mammon);
-        addTalkId(Mark);
+        addTalkId(Helvetia,Black_Marketeer_of_Mammon,Mark);
         addKillId(Pursuer);
-        addQuestItem(Bloody_Cloth_Fragment);
-        addQuestItem(Helvetias_Antidote);
+        addQuestItem(Bloody_Cloth_Fragment,Helvetias_Antidote);
     }
 
     private boolean IsPursuerSpawned() {
@@ -233,7 +230,7 @@ public final class _060_GoodWorksReward extends Quest {
 
         if ("31435-03.htm".equalsIgnoreCase(event) && _state == CREATED) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("32487-02.htm".equalsIgnoreCase(event) && cond == 1 && !IsPursuerSpawned()) {
             NpcInstance n = st.addSpawn(Pursuer, Location.of(72590, 148100, -3320),0, 1800000);
@@ -278,7 +275,7 @@ public final class _060_GoodWorksReward extends Quest {
         } else if ("31092-05.htm".equalsIgnoreCase(event) && cond == 10) {
             st.giveItems(ADENA_ID, 3000000, false);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(false);
+            st.finish();
         } else if (event.startsWith("marks-") && cond == 10) {
             String ocup = event.replaceAll("marks-", "");
             int[] _marks = marks.get(ocup);
@@ -293,7 +290,7 @@ public final class _060_GoodWorksReward extends Quest {
             if (return_adena > 0)
                 st.giveItems(ADENA_ID, return_adena, false);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(false);
+            st.finish();
             return "31092-05.htm";
         }
 
@@ -312,7 +309,7 @@ public final class _060_GoodWorksReward extends Quest {
             if (npcId != Daeger)
                 return "noquest";
             if (st.player.getLevel() < 39 || st.player.getRace() == Race.kamael || st.player.getClassId().occupation() != 1) {
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 return "31435-00.htm";
             }
             st.setCond(0);

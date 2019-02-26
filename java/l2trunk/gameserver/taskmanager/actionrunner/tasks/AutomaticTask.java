@@ -12,14 +12,16 @@ public abstract class AutomaticTask extends ActionWrapper {
 
     protected abstract void doTask();
 
-    public abstract long reCalcTime(boolean start);
+    public final long reCalcTime() {
+        return System.currentTimeMillis() + 600_000L;
+    }
 
     @Override
     public void runImpl0() {
         try {
             doTask();
         } finally {
-            ActionRunner.INSTANCE.register(reCalcTime(false), this);
+            ActionRunner.INSTANCE.register(reCalcTime(), this);
         }
     }
 }

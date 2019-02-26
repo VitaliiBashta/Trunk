@@ -42,34 +42,10 @@ public final class _217_TestimonyOfTrust extends Quest {
 
         addStartNpc(30191);
 
-        addTalkId(30031);
-        addTalkId(30154);
-        addTalkId(30358);
-        addTalkId(30464);
-        addTalkId(30515);
-        addTalkId(30531);
-        addTalkId(30565);
-        addTalkId(30621);
-        addTalkId(30657);
+        addTalkId(30031, 30154, 30358, 30464, 30515, 30531, 30565, 30621, 30657);
 
-        addKillId(20013);
-        addKillId(20157);
-        addKillId(20019);
-        addKillId(20213);
-        addKillId(20230);
-        addKillId(20232);
-        addKillId(20234);
-        addKillId(20036);
-        addKillId(20044);
-        addKillId(27120);
-        addKillId(27121);
-        addKillId(20550);
-        addKillId(20553);
-        addKillId(20082);
-        addKillId(20084);
-        addKillId(20086);
-        addKillId(20087);
-        addKillId(20088);
+        addKillId(20013, 20157, 20019, 20213, 20230, 20232, 20234, 20036, 20044, 27120,
+                27121, 20550, 20553, 20082, 20084, 20086, 20087, 20088);
 
         addQuestItem(SCROLL_OF_DARKELF_TRUST_ID,
                 SCROLL_OF_ELF_TRUST_ID,
@@ -107,12 +83,12 @@ public final class _217_TestimonyOfTrust extends Quest {
             case "1":
                 if (!st.player.isVarSet("dd2")) {
                     st.giveItems(7562, 96);
-                    st.player.setVar("dd2", 1);
+                    st.player.setVar("dd2");
                 }
                 htmltext = "hollin_q0217_04.htm";
                 st.setCond(1);
                 st.set("id", 0);
-                st.setState(STARTED);
+                st.start();
                 st.playSound(SOUND_ACCEPT);
                 st.giveItems(LETTER_TO_ELF_ID);
                 st.giveItems(LETTER_TO_DARKELF_ID);
@@ -137,10 +113,11 @@ public final class _217_TestimonyOfTrust extends Quest {
                     htmltext = "cardinal_seresin_q0217_03.htm";
                     st.takeItems(LETTER_TO_SERESIN_ID, 1);
                     st.giveItems(LETTER_TO_ORC_ID);
-                    st.giveItems(LETTER_TO_DWARF_ID );
+                    st.giveItems(LETTER_TO_DWARF_ID);
                     st.setCond(12);
                 } else
-                    htmltext = "cardinal_seresin_q0217_02.htm"; break;
+                    htmltext = "cardinal_seresin_q0217_02.htm";
+                break;
             case "30565_1":
                 htmltext = "kakai_the_lord_of_flame_q0217_02.htm";
                 st.takeItems(LETTER_TO_ORC_ID, 1);
@@ -171,7 +148,7 @@ public final class _217_TestimonyOfTrust extends Quest {
     @Override
     public String onTalk(NpcInstance npc, QuestState st) {
         if (st.getQuestItemsCount(MARK_OF_TRUST_ID) > 0) {
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             return "completed";
         }
         String htmltext = "noquest";
@@ -184,23 +161,21 @@ public final class _217_TestimonyOfTrust extends Quest {
                         htmltext = "hollin_q0217_03.htm";
                     else {
                         htmltext = "hollin_q0217_01.htm";
-                        st.exitCurrentQuest(true);
+                        st.exitCurrentQuest();
                     }
                 else {
                     htmltext = "hollin_q0217_02.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
-            } else if (cond == 9 && st.getQuestItemsCount(SCROLL_OF_ELF_TRUST_ID) > 0 && st.getQuestItemsCount(SCROLL_OF_DARKELF_TRUST_ID) > 0) {
+            } else if (cond == 9 && st.haveAllQuestItems(SCROLL_OF_ELF_TRUST_ID, SCROLL_OF_DARKELF_TRUST_ID)) {
                 htmltext = "hollin_q0217_05.htm";
-                st.takeItems(SCROLL_OF_DARKELF_TRUST_ID, 1);
-                st.takeItems(SCROLL_OF_ELF_TRUST_ID, 1);
-                st.giveItems(LETTER_TO_SERESIN_ID, 1);
+                st.takeAllItems(SCROLL_OF_DARKELF_TRUST_ID, SCROLL_OF_ELF_TRUST_ID);
+                st.giveItems(LETTER_TO_SERESIN_ID);
                 st.setCond(10);
-            } else if (cond == 22 && st.getQuestItemsCount(SCROLL_OF_DWARF_TRUST_ID) > 0 && st.getQuestItemsCount(SCROLL_OF_ORC_TRUST_ID) > 0) {
+            } else if (cond == 22 && st.haveAllQuestItems(SCROLL_OF_DWARF_TRUST_ID, SCROLL_OF_ORC_TRUST_ID)) {
                 htmltext = "hollin_q0217_06.htm";
-                st.takeItems(SCROLL_OF_DWARF_TRUST_ID, 1);
-                st.takeItems(SCROLL_OF_ORC_TRUST_ID, 1);
-                st.giveItems(RECOMMENDATION_OF_HOLLIN_ID, 1);
+                st.takeAllItems(SCROLL_OF_DWARF_TRUST_ID, SCROLL_OF_ORC_TRUST_ID);
+                st.giveItems(RECOMMENDATION_OF_HOLLIN_ID);
                 st.setCond(23);
             } else if (cond == 19)
                 htmltext = "hollin_q0217_07.htm";
@@ -213,23 +188,19 @@ public final class _217_TestimonyOfTrust extends Quest {
                 htmltext = "ozzy_q0217_01.htm";
             else if (cond == 2 && st.getQuestItemsCount(ORDER_OF_OZZY_ID) > 0)
                 htmltext = "ozzy_q0217_04.htm";
-            else if (cond == 3 && st.getQuestItemsCount(BREATH_OF_WINDS_ID) > 0 && st.getQuestItemsCount(SEED_OF_VERDURE_ID) > 0) {
+            else if (cond == 3 && st.haveAllQuestItems(BREATH_OF_WINDS_ID, SEED_OF_VERDURE_ID)) {
                 htmltext = "ozzy_q0217_05.htm";
-                st.takeItems(BREATH_OF_WINDS_ID, 1);
-                st.takeItems(SEED_OF_VERDURE_ID, 1);
-                st.takeItems(ORDER_OF_OZZY_ID, 1);
-                st.giveItems(SCROLL_OF_ELF_TRUST_ID, 1);
+                st.takeAllItems(BREATH_OF_WINDS_ID, SEED_OF_VERDURE_ID, ORDER_OF_OZZY_ID);
+                st.giveItems(SCROLL_OF_ELF_TRUST_ID);
                 st.setCond(4);
             } else if (cond == 4)
                 htmltext = "ozzy_q0217_06.htm";
         } else if (npcId == 30358) {
             if (cond == 4 && st.getQuestItemsCount(LETTER_TO_DARKELF_ID) > 0)
                 htmltext = "tetrarch_thifiell_q0217_01.htm";
-            else if (cond == 8 && st.getQuestItemsCount(STAKATO_ICHOR_ID) + st.getQuestItemsCount(HONEY_DEW_ID) + st.getQuestItemsCount(BASILISK_PLASMA_ID) == 3) {
-                st.takeItems(BASILISK_PLASMA_ID, 1);
-                st.takeItems(STAKATO_ICHOR_ID, 1);
-                st.takeItems(HONEY_DEW_ID, 1);
-                st.giveItems(SCROLL_OF_DARKELF_TRUST_ID, 1);
+            else if (cond == 8 && st.haveAllQuestItems(STAKATO_ICHOR_ID, HONEY_DEW_ID, BASILISK_PLASMA_ID)) {
+                st.takeAllItems(BASILISK_PLASMA_ID, STAKATO_ICHOR_ID, HONEY_DEW_ID);
+                st.giveItems(SCROLL_OF_DARKELF_TRUST_ID);
                 st.setCond(9);
                 htmltext = "tetrarch_thifiell_q0217_03.htm";
             } else if (cond == 7)
@@ -237,20 +208,20 @@ public final class _217_TestimonyOfTrust extends Quest {
             else if (cond == 5)
                 htmltext = "tetrarch_thifiell_q0217_05.htm";
         } else if (npcId == 30464) {
-            if (cond == 5 && st.getQuestItemsCount(LETTER_OF_THIFIELL_ID) > 0) {
+            if (cond == 5 && st.haveQuestItem(LETTER_OF_THIFIELL_ID)) {
                 htmltext = "magister_clayton_q0217_01.htm";
                 st.takeItems(LETTER_OF_THIFIELL_ID, 1);
-                st.giveItems(ORDER_OF_CLAYTON_ID, 1);
+                st.giveItems(ORDER_OF_CLAYTON_ID);
                 st.setCond(6);
-            } else if (cond == 6 && st.getQuestItemsCount(ORDER_OF_CLAYTON_ID) > 0 && st.getQuestItemsCount(STAKATO_ICHOR_ID) + st.getQuestItemsCount(HONEY_DEW_ID) + st.getQuestItemsCount(BASILISK_PLASMA_ID) < 3)
+            } else if (cond == 6 && !st.haveAllQuestItems(ORDER_OF_CLAYTON_ID, STAKATO_ICHOR_ID, HONEY_DEW_ID, BASILISK_PLASMA_ID))
                 htmltext = "magister_clayton_q0217_02.htm";
-            else if (cond == 7 && st.getQuestItemsCount(ORDER_OF_CLAYTON_ID) > 0 && st.getQuestItemsCount(STAKATO_ICHOR_ID) + st.getQuestItemsCount(HONEY_DEW_ID) + st.getQuestItemsCount(BASILISK_PLASMA_ID) == 3) {
+            else if (cond == 7 && st.haveAllQuestItems(ORDER_OF_CLAYTON_ID, STAKATO_ICHOR_ID, HONEY_DEW_ID, BASILISK_PLASMA_ID)) {
                 st.takeItems(ORDER_OF_CLAYTON_ID, 1);
                 st.setCond(8);
                 htmltext = "magister_clayton_q0217_03.htm";
             }
         } else if (npcId == 30657) {
-            if ((cond == 10 || cond == 11) && st.getQuestItemsCount(LETTER_TO_SERESIN_ID) > 0 && st.player.getLevel() >= 38)
+            if ((cond == 10 || cond == 11) && st.haveQuestItem(LETTER_TO_SERESIN_ID) && st.player.getLevel() >= 38)
                 htmltext = "cardinal_seresin_q0217_01.htm";
             else if ((cond == 10 || cond == 11) && st.player.getLevel() < 38) {
                 htmltext = "cardinal_seresin_q0217_02.htm";
@@ -259,7 +230,7 @@ public final class _217_TestimonyOfTrust extends Quest {
             } else if (cond == 18)
                 htmltext = "cardinal_seresin_q0217_05.htm";
         } else if (npcId == 30565) {
-            if (cond == 12 && st.getQuestItemsCount(LETTER_TO_ORC_ID) > 0)
+            if (cond == 12 && st.haveQuestItem(LETTER_TO_ORC_ID))
                 htmltext = "kakai_the_lord_of_flame_q0217_01.htm";
             else if (cond == 13)
                 htmltext = "kakai_the_lord_of_flame_q0217_03.htm";
@@ -271,7 +242,7 @@ public final class _217_TestimonyOfTrust extends Quest {
             } else if (cond >= 17)
                 htmltext = "kakai_the_lord_of_flame_q0217_05.htm";
         } else if (npcId == 30515) {
-            if (cond == 13 && st.haveQuestItem(LETTER_TO_MANAKIA_ID) )
+            if (cond == 13 && st.haveQuestItem(LETTER_TO_MANAKIA_ID))
                 htmltext = "seer_manakia_q0217_01.htm";
             else if (cond == 14 && st.getQuestItemsCount(PARASITE_OF_LOTA_ID) < 10)
                 htmltext = "seer_manakia_q0217_03.htm";
@@ -305,18 +276,18 @@ public final class _217_TestimonyOfTrust extends Quest {
                 st.setCond(21);
             } else if (cond == 21)
                 htmltext = "maestro_nikola_q0217_05.htm";
-        } else if (npcId == 30031 && cond == 23 && st.getQuestItemsCount(RECOMMENDATION_OF_HOLLIN_ID) > 0) {
+        } else if (npcId == 30031 && cond == 23 && st.haveQuestItem(RECOMMENDATION_OF_HOLLIN_ID)) {
             htmltext = "quilt_q0217_01.htm";
             st.takeItems(RECOMMENDATION_OF_HOLLIN_ID);
             st.giveItems(MARK_OF_TRUST_ID);
             if (!st.player.isVarSet("prof2.2")) {
                 st.addExpAndSp(695149, 46391);
                 st.giveItems(ADENA_ID, RewardAdena);
-                st.player.setVar("prof2.2", 1);
+                st.player.setVar("prof2.2");
             }
             st.playSound(SOUND_FINISH);
             st.unset("cond");
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
         return htmltext;
     }
@@ -327,7 +298,7 @@ public final class _217_TestimonyOfTrust extends Quest {
         int cond = st.getCond();
         if (npcId == 20036 || npcId == 20044) {
             if (cond == 2 && !st.haveQuestItem(BREATH_OF_WINDS_ID)) {
-                st.set("id", st.getInt("id") + 1);
+                st.inc("id");
                 if (Rnd.chance(st.getInt("id") * 33)) {
                     st.addSpawn(27120);
                     st.playSound(SOUND_BEFORE_BATTLE);
@@ -335,15 +306,15 @@ public final class _217_TestimonyOfTrust extends Quest {
             }
         } else if (npcId == 20013 || npcId == 20019) {
             if (cond == 2 && !st.haveQuestItem(SEED_OF_VERDURE_ID)) {
-                st.set("id", st.getInt("id") + 1);
+                st.inc("id");
                 if (Rnd.chance(st.getInt("id") * 33)) {
                     st.addSpawn(27121);
                     st.playSound(SOUND_BEFORE_BATTLE);
                 }
             }
         } else if (npcId == 27120) {
-            if (cond == 2 && !st.haveQuestItem(BREATH_OF_WINDS_ID) )
-                if (st.haveQuestItem(SEED_OF_VERDURE_ID) ) {
+            if (cond == 2 && !st.haveQuestItem(BREATH_OF_WINDS_ID))
+                if (st.haveQuestItem(SEED_OF_VERDURE_ID)) {
                     st.giveItems(BREATH_OF_WINDS_ID);
                     st.setCond(3);
                     st.playSound(SOUND_MIDDLE);

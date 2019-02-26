@@ -16,8 +16,7 @@ public final class _011_SecretMeetingWithKetraOrcs extends Quest {
 
         addStartNpc(CADMON);
 
-        addTalkId(LEON);
-        addTalkId(WAHKAN);
+        addTalkId(LEON,WAHKAN);
 
         addQuestItem(MUNITIONS_BOX);
     }
@@ -26,7 +25,7 @@ public final class _011_SecretMeetingWithKetraOrcs extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if (event.equalsIgnoreCase("guard_cadmon_q0011_0104.htm")) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("trader_leon_q0011_0201.htm")) {
             st.giveItems(MUNITIONS_BOX, 1);
@@ -36,7 +35,7 @@ public final class _011_SecretMeetingWithKetraOrcs extends Quest {
             st.takeItems(MUNITIONS_BOX, 1);
             st.addExpAndSp(82045, 6047);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(false);
+            st.finish();
         }
         return event;
     }
@@ -52,7 +51,7 @@ public final class _011_SecretMeetingWithKetraOrcs extends Quest {
                     htmltext = "guard_cadmon_q0011_0101.htm";
                 else {
                     htmltext = "guard_cadmon_q0011_0103.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1)
                 htmltext = "guard_cadmon_q0011_0105.htm";

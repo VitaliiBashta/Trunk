@@ -36,9 +36,9 @@ public final class _308_ReedFieldMaintenance extends Quest {
         String htmltext = event;
         if (event.equalsIgnoreCase("32646-04.htm")) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
         } else if (event.equalsIgnoreCase("32646-11.htm"))
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         else if (event.equalsIgnoreCase("moirairec")) {
             if (st.getQuestItemsCount(MucrokianHide) >= 180) {
                 st.takeItems(MucrokianHide, 180);

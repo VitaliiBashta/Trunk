@@ -34,7 +34,7 @@ public final class _271_ProofOfValor extends Quest {
         addStartNpc(RUKAIN);
         addTalkId(RUKAIN);
 
-        //Mob Drop
+        //mob Drop
         for (int[] aDROPLIST_COND : DROPLIST_COND) addKillId(aDROPLIST_COND[2]);
 
         addQuestItem(KASHA_WOLF_FANG_ID);
@@ -48,7 +48,7 @@ public final class _271_ProofOfValor extends Quest {
             if (st.getQuestItemsCount(NECKLACE_OF_COURAGE_ID) > 0 || st.getQuestItemsCount(NECKLACE_OF_VALOR_ID) > 0)
                 htmltext = "praetorian_rukain_q0271_07.htm";
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
         }
         return htmltext;
     }
@@ -62,13 +62,13 @@ public final class _271_ProofOfValor extends Quest {
             if (cond == 0) {
                 if (st.player.getRace() != Race.orc) {
                     htmltext = "praetorian_rukain_q0271_00.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else if (st.player.getLevel() < 4) {
                     htmltext = "praetorian_rukain_q0271_01.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else if (st.haveQuestItem(NECKLACE_OF_COURAGE_ID)  || st.haveQuestItem(NECKLACE_OF_VALOR_ID) ) {
                     htmltext = "praetorian_rukain_q0271_06.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else
                     htmltext = "praetorian_rukain_q0271_02.htm";
             } else if (cond == 1)
@@ -83,11 +83,11 @@ public final class _271_ProofOfValor extends Quest {
                     st.giveItems(NECKLACE_OF_COURAGE_ID);
                 }
                 htmltext = "praetorian_rukain_q0271_05.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else if (cond == 2 && st.getQuestItemsCount(KASHA_WOLF_FANG_ID) < 50) {
                 htmltext = "praetorian_rukain_q0271_04.htm";
                 st.setCond(1);
-                st.setState(STARTED);
+                st.start();
             }
         return htmltext;
     }
@@ -104,7 +104,7 @@ public final class _271_ProofOfValor extends Quest {
                     else if (st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[7], aDROPLIST_COND[5], aDROPLIST_COND[6]))
                         if (aDROPLIST_COND[1] != cond && aDROPLIST_COND[1] != 0) {
                             st.setCond(aDROPLIST_COND[1]);
-                            st.setState(STARTED);
+                            st.start();
                         }
     }
 }

@@ -17,7 +17,7 @@ public final class _695_DefendtheHallofSuffering extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if (event.equalsIgnoreCase("tepios_q695_3.htm")) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         }
@@ -37,11 +37,11 @@ public final class _695_DefendtheHallofSuffering extends Quest {
                         htmltext = "tepios_q695_1.htm";
                     else {
                         htmltext = "tepios_q695_0a.htm";
-                        st.exitCurrentQuest(true);
+                        st.exitCurrentQuest();
                     }
                 } else {
                     htmltext = "tepios_q695_0.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1)
                 htmltext = "tepios_q695_4.htm";

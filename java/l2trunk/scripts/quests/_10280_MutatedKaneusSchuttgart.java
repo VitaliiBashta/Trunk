@@ -13,7 +13,7 @@ public final class _10280_MutatedKaneusSchuttgart extends Quest {
     private static final int VenomousStorace = 18571;
     private static final int KelBilette = 18573;
 
-    // Items
+    // items
     private static final int Tissue1 = 13838;
     private static final int Tissue2 = 13839;
 
@@ -29,11 +29,11 @@ public final class _10280_MutatedKaneusSchuttgart extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if (event.equalsIgnoreCase("31981-03.htm")) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("31972-02.htm")) {
             st.giveItems(57, 300000);
-            st.exitCurrentQuest(false);
+            st.finish();
             st.playSound(SOUND_FINISH);
         }
         return event;

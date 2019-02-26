@@ -39,10 +39,10 @@ public final class _716_PathToBecomingALordRune extends Quest {
         Castle castle = ResidenceHolder.getResidence(RuneCastle);
         if (castle.getOwner() == null)
             return "Castle has no lord";
-        Player castleOwner = castle.getOwner().getLeader().player();
+        Player castleOwner = castle.getOwner().getLeader().getPlayer();
         switch (event) {
             case "frederick_q716_03.htm":
-                st.setState(STARTED);
+                st.start();
                 st.setCond(1);
                 st.playSound(SOUND_ACCEPT);
                 break;
@@ -52,7 +52,7 @@ public final class _716_PathToBecomingALordRune extends Quest {
             case "frederick_q716_08.htm":
                 castleOwner.getQuestState(this).set("confidant", st.player.objectId());
                 castleOwner.getQuestState(this).setCond(5);
-                st.setState(STARTED);
+                st.start();
                 break;
             case "innocentin_q716_03.htm":
                 if (castleOwner != null && castleOwner != st.player && castleOwner.getQuestState(this) != null && castleOwner.getQuestState(this).getCond() == 5)
@@ -73,7 +73,7 @@ public final class _716_PathToBecomingALordRune extends Quest {
         Castle castle = ResidenceHolder.getResidence(RuneCastle);
         if (castle.getOwner() == null)
             return "Castle has no lord";
-        Player castleOwner = castle.getOwner().getLeader().player();
+        Player castleOwner = castle.getOwner().getLeader().getPlayer();
 
         if (npcId == Frederick) {
             if (cond == 0) {
@@ -82,7 +82,7 @@ public final class _716_PathToBecomingALordRune extends Quest {
                         htmltext = "frederick_q716_01.htm";
                     else {
                         htmltext = "frederick_q716_00.htm";
-                        st.exitCurrentQuest(true);
+                        st.exitCurrentQuest();
                     }
                 }
                 // Лидер клана в игре, говорящий не лидер, у лидера взят квест и пройден до стадии назначения поверенного
@@ -95,7 +95,7 @@ public final class _716_PathToBecomingALordRune extends Quest {
                     htmltext = "frederick_q716_00b.htm";
                 else {
                     htmltext = "frederick_q716_00a.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1) {
                 if (st.player.isQuestCompleted(_025_HidingBehindTheTruth.class) && st.player.isQuestCompleted(_021_HiddenTruth.class)) {
@@ -122,7 +122,7 @@ public final class _716_PathToBecomingALordRune extends Quest {
                 castle.getDominion().changeOwner(castleOwner.getClan());
                 htmltext = "frederick_q716_12.htm";
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (npcId == Agripel) {
             if (cond == 2)
@@ -151,10 +151,10 @@ public final class _716_PathToBecomingALordRune extends Quest {
     @Override
     public void onKill(NpcInstance npc, QuestState st) {
         Castle castle = ResidenceHolder.getResidence(RuneCastle);
-        Player castleOwner = castle.getOwner().getLeader().player();
+        Player castleOwner = castle.getOwner().getLeader().getPlayer();
         if (st.getState() == STARTED && st.getCond() == 0) {
             if (castleOwner != null && castleOwner != st.player && castleOwner.getQuestState(this) != null && castleOwner.getQuestState(this).getCond() == 7) {
-                castleOwner.getQuestState(this).set("paganCount", castleOwner.getQuestState(this).getInt("paganCount") + 1);
+                castleOwner.getQuestState(this).inc("paganCount");
             }
         }
     }

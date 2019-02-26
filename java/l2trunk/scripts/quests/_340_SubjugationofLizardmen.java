@@ -24,7 +24,7 @@ public final class _340_SubjugationofLizardmen extends Quest {
     private static final int LANGK_LIZARDMAN_SENTINEL = 21100;
     private static final int LANGK_LIZARDMAN_LIEUTENANT = 20357;
     private static final int SERPENT_DEMON_BIFRONS = 25146;
-    // Quest Items (Drop)
+    // Quest items (Drop)
     private static final int ROSARY = 4257;
     private static final int HOLY_SYMBOL = 4256;
     private static final int TRADE_CARGO = 4255;
@@ -35,9 +35,7 @@ public final class _340_SubjugationofLizardmen extends Quest {
     public _340_SubjugationofLizardmen() {
         super(false);
         addStartNpc(WEITSZ);
-        addTalkId(LEVIAN);
-        addTalkId(ADONIUS);
-        addTalkId(CHEST_OF_BIFRONS);
+        addTalkId(LEVIAN,ADONIUS,CHEST_OF_BIFRONS);
 
         DROPLIST.put(LANGK_LIZARDMAN, new Drop(1, 30, 30).addItem(TRADE_CARGO));
         DROPLIST.put(LANGK_LIZARDMAN_SCOUT, new Drop(1, 30, 33).addItem(TRADE_CARGO));
@@ -58,7 +56,7 @@ public final class _340_SubjugationofLizardmen extends Quest {
         int _state = st.getState();
         int cond = st.getCond();
         if (event.equalsIgnoreCase("30385-4.htm") && _state == CREATED) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("30385-6.htm") && _state == STARTED && cond == 1 && st.getQuestItemsCount(TRADE_CARGO) >= 30) {
@@ -79,12 +77,12 @@ public final class _340_SubjugationofLizardmen extends Quest {
         } else if (event.equalsIgnoreCase("30385-10.htm") && _state == STARTED && cond == 7) {
             st.giveItems(ADENA_ID, 14700);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(false);
+            st.finish();
         } else if (event.equalsIgnoreCase("30385-7.htm") && _state == STARTED && cond == 1 && st.getQuestItemsCount(TRADE_CARGO) >= 30) {
             st.takeItems(TRADE_CARGO, -1);
             st.giveItems(ADENA_ID, 4090);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(false);
+            st.finish();
         }
 
         return event;
@@ -98,7 +96,7 @@ public final class _340_SubjugationofLizardmen extends Quest {
             if (npcId != WEITSZ)
                 return "noquest";
             if (st.player.getLevel() < 17) {
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 return "30385-1.htm";
             }
             st.setCond(0);

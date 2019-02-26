@@ -23,16 +23,9 @@ public final class _10270_BirthOfTheSeed extends Quest {
         super(true);
 
         addStartNpc(PLENOS);
-        addTalkId(PLENOS);
-        addTalkId(ARTIUS);
-        addTalkId(LELIKIA);
-        addTalkId(GINBY);
-        addKillId(Yehan_Klodekus);
-        addKillId(Yehan_Klanikus);
-        addKillId(Cohemenes);
-        addQuestItem(Yehan_Klodekus_Badge);
-        addQuestItem(Yehan_Klanikus_Badge);
-        addQuestItem(Lich_Crystal);
+        addTalkId(PLENOS,ARTIUS,LELIKIA,GINBY);
+        addKillId(Yehan_Klodekus,Yehan_Klanikus,Cohemenes);
+        addQuestItem(Yehan_Klodekus_Badge,Yehan_Klanikus_Badge,Lich_Crystal);
     }
 
     @Override
@@ -42,7 +35,7 @@ public final class _10270_BirthOfTheSeed extends Quest {
 
         if (event.equals("take") && cond == 0) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
             htmltext = "plenos_q10270_2.htm";
         } else if (event.equals("took_mission") && cond == 1) {
@@ -69,7 +62,7 @@ public final class _10270_BirthOfTheSeed extends Quest {
             st.giveItems(ADENA_ID, 41677);
             st.addExpAndSp(251602, 25244);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(false);
+            st.finish();
         }
 
         return htmltext;
@@ -87,7 +80,7 @@ public final class _10270_BirthOfTheSeed extends Quest {
                     htmltext = "plenos_q10270_1.htm";
                 else {
                     htmltext = "plenos_q10270_1a.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
         } else if (npcId == ARTIUS) {
             if (cond == 1)

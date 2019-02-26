@@ -9,7 +9,7 @@ import java.util.Collections;
 import java.util.List;
 
 public final class Atod extends Functions implements IVoicedCommandHandler {
-    private static final List<String> COMMANDS = Collections.singletonList("openatod");
+    private static final List<String> COMMANDS = List.of("openatod");
 
     @Override
     public boolean useVoicedCommand(String command, Player activeChar, String params) {

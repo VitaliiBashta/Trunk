@@ -24,7 +24,7 @@ public final class _461_RumbleInTheBase extends Quest{
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if (event.equalsIgnoreCase("stan_q461_03.htm")) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         }
@@ -54,7 +54,7 @@ public final class _461_RumbleInTheBase extends Quest{
                         st.takeItems(ShoesStringofSelMahum);
                         st.takeItems(ShinySalmon);
                         st.addExpAndSp(224784, 342528);
-                        st.setState(COMPLETED);
+                        st.complete();
                         st.playSound(SOUND_FINISH);
                         st.exitCurrentQuest(this);
                     }

@@ -22,10 +22,10 @@ public final class AutoImageSenderManager {
 
     /**
      * Checking if <code>imageId</code> is sent automatically from this class, or it should be sent in real time
-     * If image is sent automatically and player didn't receive it yet, he needs to wait.
+     * If image is sent automatically and getPlayer didn't receive it yet, he needs to wait.
      *
      * @param imageId Id of requested Image
-     * @return should player wait for the Image Thread?
+     * @return should getPlayer wait for the Image Thread?
      */
     public static boolean isImageAutoSendable(int imageId) {
         return IMAGES_SENT_ORDER.contains(imageId);
@@ -42,7 +42,7 @@ public final class AutoImageSenderManager {
     }
 
     /**
-     * Starting a Thread which sends Images to every player that didn't receive them yet
+     * Starting a Thread which sends Images to every getPlayer that didn't receive them yet
      */
     public static void startSendingImages() {
         ThreadPoolManager.INSTANCE.schedule(new ImageSendThread(), DELAY_BETWEEN_PICTURE);
@@ -50,7 +50,7 @@ public final class AutoImageSenderManager {
 
     private static class ImageSendThread implements Runnable {
         /**
-         * If player didn't receive every Image yet, getting next Image Id to receive from {@link #IMAGES_SENT_ORDER} array
+         * If getPlayer didn't receive every Image yet, getting next Image Id to receive from {@link #IMAGES_SENT_ORDER} array
          *
          * @param player that will probably receive Image
          * @return next Image Id. In case all images loaded: -1

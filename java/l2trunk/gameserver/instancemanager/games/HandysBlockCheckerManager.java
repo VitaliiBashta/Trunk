@@ -21,7 +21,7 @@ import java.util.Map;
 public enum HandysBlockCheckerManager {
     INSTANCE;
     /*
-     * This class manage the player add/remove, team change and
+     * This class manage the getPlayer add/remove, team change and
      * event arena status, as the clearance of the participants
      * list or liberate the arena
      */
@@ -101,7 +101,7 @@ public enum HandysBlockCheckerManager {
     }
 
     /**
-     * Add the player to the specified arena (thorough the specified
+     * Add the getPlayer to the specified arena (thorough the specified
      * arena manager) and send the needed server ->  client packets
      */
     public boolean addPlayerToArena(Player player, int arenaId) {
@@ -131,10 +131,10 @@ public enum HandysBlockCheckerManager {
                 return false;
             }
 			/*
-			if (UnderGroundColiseum.INSTANCE().isRegisteredPlayer(player))
+			if (UnderGroundColiseum.INSTANCE().isRegisteredPlayer(getPlayer))
 			{
-				UngerGroundColiseum.INSTANCE().removeParticipant(player);
-				player.sendPacket(new SystemMessage(SystemMessageId.COLISEUM_OLYMPIAD_KRATEIS_APPLICANTS_CANNOT_PARTICIPATE));
+				UngerGroundColiseum.INSTANCE().removeParticipant(getPlayer);
+				getPlayer.sendPacket(new SystemMessage(SystemMessageId.COLISEUM_OLYMPIAD_KRATEIS_APPLICANTS_CANNOT_PARTICIPATE));
 			}
 			 */
             if (_registrationPenalty.contains(player.objectId())) {
@@ -155,7 +155,7 @@ public enum HandysBlockCheckerManager {
     }
 
     /**
-     * Will remove the specified player from the specified
+     * Will remove the specified getPlayer from the specified
      * team and arena and will send the needed packet to all
      * his team mates / enemy team mates
      */
@@ -180,7 +180,7 @@ public enum HandysBlockCheckerManager {
     }
 
     /**
-     * Will change the player from one team to other (if possible)
+     * Will change the getPlayer from one team to other (if possible)
      * and will send the needed packets
      */
     public void changePlayerToTeam(Player player, int arena, int team) {

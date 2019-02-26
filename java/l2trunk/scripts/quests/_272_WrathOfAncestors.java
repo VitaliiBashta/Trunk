@@ -41,7 +41,7 @@ public final class _272_WrathOfAncestors extends Quest {
     public _272_WrathOfAncestors() {
         super(false);
         addStartNpc(Livina);
-        //Mob Drop
+        //mob Drop
         for (int[] aDROPLIST_COND : DROPLIST_COND) addKillId(aDROPLIST_COND[2]);
         addQuestItem(GraveRobbersHead);
     }
@@ -51,7 +51,7 @@ public final class _272_WrathOfAncestors extends Quest {
         String htmltext = event;
         if (event.equals("1")) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
             htmltext = "seer_livina_q0272_03.htm";
         }
@@ -67,10 +67,10 @@ public final class _272_WrathOfAncestors extends Quest {
             if (cond == 0) {
                 if (st.player.getRace() != Race.orc) {
                     htmltext = "seer_livina_q0272_00.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else if (st.player.getLevel() < 5) {
                     htmltext = "seer_livina_q0272_01.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else {
                     htmltext = "seer_livina_q0272_02.htm";
                     return htmltext;
@@ -82,7 +82,7 @@ public final class _272_WrathOfAncestors extends Quest {
                 st.giveItems(ADENA_ID, 1500);
                 htmltext = "seer_livina_q0272_05.htm";
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         return htmltext;
     }
@@ -99,7 +99,7 @@ public final class _272_WrathOfAncestors extends Quest {
                     else if (st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[7], aDROPLIST_COND[5], aDROPLIST_COND[6]))
                         if (aDROPLIST_COND[1] != cond && aDROPLIST_COND[1] != 0) {
                             st.setCond(aDROPLIST_COND[1]);
-                            st.setState(STARTED);
+                            st.start();
                         }
     }
 }

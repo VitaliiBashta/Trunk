@@ -31,10 +31,7 @@ public final class _401_PathToWarrior extends Quest {
 
         addTalkId(SIMPLON);
 
-        addKillId(TRACKER_SKELETON);
-        addKillId(POISON_SPIDER);
-        addKillId(TRACKER_SKELETON_LD);
-        addKillId(ARACHNID_TRACKER);
+        addKillId(TRACKER_SKELETON,POISON_SPIDER,TRACKER_SKELETON_LD,ARACHNID_TRACKER);
 
         addQuestItem(SIMPLONS_LETTER_ID,
                 RUSTED_BRONZE_SWORD2_ID,
@@ -77,7 +74,7 @@ public final class _401_PathToWarrior extends Quest {
             case "1":
                 if (st.getQuestItemsCount(EINS_LETTER_ID) == 0) {
                     st.setCond(1);
-                    st.setState(STARTED);
+                    st.start();
                     st.playSound(SOUND_ACCEPT);
                     st.giveItems(EINS_LETTER_ID);
                     htmltext = "ein_q0401_06.htm";
@@ -100,7 +97,7 @@ public final class _401_PathToWarrior extends Quest {
         int id = st.getState();
         int cond = st.getCond();
         if (id == CREATED) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(0);
         }
         if (npcId == AURON && cond == 0)
@@ -116,35 +113,35 @@ public final class _401_PathToWarrior extends Quest {
                 htmltext = "trader_simplon_q0401_03.htm";
             else if (st.getQuestItemsCount(RUSTED_BRONZE_SWORD1_ID) < 10)
                 htmltext = "trader_simplon_q0401_04.htm";
-            else if (st.getQuestItemsCount(RUSTED_BRONZE_SWORD1_ID) >= 10) {
-                st.takeItems(WARRIOR_GUILD_MARK_ID, -1);
-                st.takeItems(RUSTED_BRONZE_SWORD1_ID, -1);
-                st.giveItems(RUSTED_BRONZE_SWORD2_ID, 1);
-                st.giveItems(SIMPLONS_LETTER_ID, 1);
+            else if (st.haveQuestItem(RUSTED_BRONZE_SWORD1_ID, 10)) {
+                st.takeItems(WARRIOR_GUILD_MARK_ID);
+                st.takeItems(RUSTED_BRONZE_SWORD1_ID);
+                st.giveItems(RUSTED_BRONZE_SWORD2_ID);
+                st.giveItems(SIMPLONS_LETTER_ID);
                 st.setCond(4);
                 htmltext = "trader_simplon_q0401_05.htm";
             }
-        } else if (npcId == SIMPLON && st.getQuestItemsCount(SIMPLONS_LETTER_ID) > 0)
+        } else if (npcId == SIMPLON && st.haveQuestItem(SIMPLONS_LETTER_ID) )
             htmltext = "trader_simplon_q0401_06.htm";
-        else if (npcId == AURON && st.getQuestItemsCount(SIMPLONS_LETTER_ID) > 0 && st.getQuestItemsCount(RUSTED_BRONZE_SWORD2_ID) > 0 && st.getQuestItemsCount(WARRIOR_GUILD_MARK_ID) == 0 && st.getQuestItemsCount(EINS_LETTER_ID) == 0)
+        else if (npcId == AURON && st.haveQuestItem(SIMPLONS_LETTER_ID)  && st.haveQuestItem(RUSTED_BRONZE_SWORD2_ID)  && st.getQuestItemsCount(WARRIOR_GUILD_MARK_ID) == 0 && st.getQuestItemsCount(EINS_LETTER_ID) == 0)
             htmltext = "ein_q0401_09.htm";
         else if (npcId == AURON && st.getQuestItemsCount(RUSTED_BRONZE_SWORD3_ID) > 0 && st.getQuestItemsCount(WARRIOR_GUILD_MARK_ID) == 0 && st.getQuestItemsCount(EINS_LETTER_ID) == 0)
             if (st.getQuestItemsCount(POISON_SPIDER_LEG2_ID) < 20)
                 htmltext = "ein_q0401_12.htm";
-            else if (st.getQuestItemsCount(POISON_SPIDER_LEG2_ID) > 19) {
+            else if (st.haveQuestItem(POISON_SPIDER_LEG2_ID, 19)) {
                 st.takeItems(POISON_SPIDER_LEG2_ID);
                 st.takeItems(RUSTED_BRONZE_SWORD3_ID);
                 if (st.player.getClassId().occupation() == 0) {
                     st.giveItems(MEDALLION_OF_WARRIOR_ID);
                     if (!st.player.isVarSet("prof1")) {
-                        st.player.setVar("prof1", 1);
+                        st.player.setVar("prof1");
                         st.addExpAndSp(228064, 16455);
                         st.giveItems(ADENA_ID, 81900);
                     }
                 }
                 htmltext = "ein_q0401_13.htm";
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         return htmltext;
     }

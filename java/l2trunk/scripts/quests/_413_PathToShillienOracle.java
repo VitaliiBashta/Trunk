@@ -36,22 +36,14 @@ public final class _413_PathToShillienOracle extends Quest {
 
         addStartNpc(SIDRA);
 
-        addTalkId(ADONIUS);
-        addTalkId(TALBOT);
+        addTalkId(ADONIUS,TALBOT);
 
         addKillId(DARK_SUCCUBUS);
 
         addKillId(ASHEN_BONES_DROP);
 
-        addQuestItem(ASHEN_BONES_ID);
-
-        addQuestItem(SIDRAS_LETTER1_ID);
-        addQuestItem(ANDARIEL_BOOK_ID);
-        addQuestItem(PENITENTS_MARK_ID);
-        addQuestItem(GARMIEL_BOOK_ID);
-        addQuestItem(PRAYER_OF_ADON_ID);
-        addQuestItem(BLANK_SHEET1_ID);
-        addQuestItem(BLOODY_RUNE1_ID);
+        addQuestItem(ASHEN_BONES_ID,SIDRAS_LETTER1_ID,ANDARIEL_BOOK_ID,PENITENTS_MARK_ID,GARMIEL_BOOK_ID,
+                PRAYER_OF_ADON_ID,BLANK_SHEET1_ID,BLOODY_RUNE1_ID);
     }
 
     @Override
@@ -61,7 +53,7 @@ public final class _413_PathToShillienOracle extends Quest {
             case "1":
                 htmltext = "master_sidra_q0413_06.htm";
                 st.setCond(1);
-                st.setState(STARTED);
+                st.start();
                 st.playSound(SOUND_ACCEPT);
                 st.giveItems(SIDRAS_LETTER1_ID);
                 break;
@@ -118,11 +110,11 @@ public final class _413_PathToShillienOracle extends Quest {
                 htmltext = "master_sidra_q0413_09.htm";
             else if (cond == 7 && st.getQuestItemsCount(ANDARIEL_BOOK_ID) > 0 && st.getQuestItemsCount(GARMIEL_BOOK_ID) > 0) {
                 htmltext = "master_sidra_q0413_10.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 if (st.player.getClassId().occupation() == 0) {
                     st.giveItems(ORB_OF_ABYSS_ID);
                     if (!st.player.isVarSet("prof1")) {
-                        st.player.setVar("prof1", 1);
+                        st.player.setVar("prof1");
                         st.addExpAndSp(228064, 16455);
                         st.giveItems(ADENA_ID, 81900);
                     }
@@ -130,14 +122,14 @@ public final class _413_PathToShillienOracle extends Quest {
                 st.playSound(SOUND_FINISH);
             }
         } else if (npcId == TALBOT) {
-            if (cond == 1 && st.getQuestItemsCount(SIDRAS_LETTER1_ID) > 0)
+            if (cond == 1 && st.haveQuestItem(SIDRAS_LETTER1_ID) )
                 htmltext = "magister_talbot_q0413_01.htm";
             else if (cond == 2) {
                 if (st.getQuestItemsCount(BLOODY_RUNE1_ID) < 1)
                     htmltext = "magister_talbot_q0413_03.htm";
-                else if (st.getQuestItemsCount(BLOODY_RUNE1_ID) > 0)
+                else if (st.haveQuestItem(BLOODY_RUNE1_ID) )
                     htmltext = "magister_talbot_q0413_04.htm";
-            } else if (cond == 3 && st.getQuestItemsCount(BLOODY_RUNE1_ID) > 4) {
+            } else if (cond == 3 && st.haveQuestItem(BLOODY_RUNE1_ID,5 )) {
                 htmltext = "magister_talbot_q0413_05.htm";
                 st.takeItems(BLOODY_RUNE1_ID);
                 st.giveItems(GARMIEL_BOOK_ID);

@@ -48,23 +48,23 @@ public final class TerritoryManagerInstance extends NpcInstance {
                 return;
             }
             if (player.consumeItem(badgeId, 100L)) {
-                QuestState qs = player.getQuestState(_234_FatesWhisper.class);
-                if (qs != null) {
-                    qs.exitCurrentQuest(true);
-                    qs.quest.newQuestState(player, Quest.COMPLETED);
+                QuestState st = player.getQuestState(_234_FatesWhisper.class);
+                if (st != null) {
+                    st.exitCurrentQuest();
+                    st.quest.newQuestState(player, Quest.COMPLETED);
                 }
 
                 if (player.getRace() == Race.kamael) {
-                    qs = player.getQuestState(_236_SeedsOfChaos.class);
-                    if (qs != null) {
-                        qs.exitCurrentQuest(true);
-                        qs.quest.newQuestState(player, Quest.COMPLETED);
+                    st = player.getQuestState(_236_SeedsOfChaos.class);
+                    if (st != null) {
+                        st.exitCurrentQuest();
+                        st.quest.newQuestState(player, Quest.COMPLETED);
                     }
                 } else {
-                    qs = player.getQuestState(_235_MimirsElixir.class);
-                    if (qs != null) {
-                        qs.exitCurrentQuest(true);
-                        qs.quest.newQuestState(player, Quest.COMPLETED);
+                    st = player.getQuestState(_235_MimirsElixir.class);
+                    if (st != null) {
+                        st.exitCurrentQuest();
+                        st.quest.newQuestState(player, Quest.COMPLETED);
                     }
                 }
 
@@ -88,9 +88,9 @@ public final class TerritoryManagerInstance extends NpcInstance {
 
             NpcHtmlMessage html = new NpcHtmlMessage(player, this, getHtmlPath(npcId, 5, player), 5);
             html.replace("%territory%", HtmlUtils.htmlResidenceName(dominion.getId()));
-            html.replace("%badges%", String.valueOf(rewards[0]));
-            html.replace("%adena%", String.valueOf(rewards[1]));
-            html.replace("%fame%", String.valueOf(rewards[2]));
+            html.replace("%badges%", rewards[0]);
+            html.replace("%adena%", rewards[1]);
+            html.replace("%fame%", rewards[2]);
             player.sendPacket(html);
         } else if ("recivelater".equalsIgnoreCase(command))
             showChatWindow(player, getHtmlPath(npcId, 6, player));

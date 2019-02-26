@@ -174,7 +174,7 @@ public final class AdminAdmin implements IAdminCommandHandler {
                 case admin_debug:
                     GameObject ob = activeChar.getTarget();
                     if (ob == null) {
-                        Functions.sendDebugMessage(activeChar, "Only player target is allowed");
+                        Functions.sendDebugMessage(activeChar, "Only getPlayer target is allowed");
                         return false;
                     }
                     if (ob instanceof Player) {
@@ -235,7 +235,7 @@ public final class AdminAdmin implements IAdminCommandHandler {
                                 Functions.sendDebugMessage(activeChar, s));
                         break;
                     } else {
-                        Functions.sendDebugMessage(activeChar, "Only player target is allowed");
+                        Functions.sendDebugMessage(activeChar, "Only getPlayer target is allowed");
                         return false;
                     }
                 case admin_uievent:

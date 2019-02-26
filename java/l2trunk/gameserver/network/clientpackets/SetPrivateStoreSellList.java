@@ -103,7 +103,7 @@ public class SetPrivateStoreSellList extends L2GameClientPacket {
                     if (item == null)
                         continue;
                     Auction auc = AuctionManager.getInstance().addNewStore(seller, item, ti.getOwnersPrice(), ti.getCount());
-                    ti.setAuctionId(auc.getAuctionId());
+                    ti.setAuctionId(auc.auctionId());
                 }
             }
         }

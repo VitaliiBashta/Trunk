@@ -9,6 +9,7 @@ import l2trunk.gameserver.model.World;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
+import l2trunk.scripts.quests._255_Tutorial;
 
 import java.util.Map;
 import java.util.Objects;
@@ -36,7 +37,7 @@ public final class AdminQuests implements IAdminCommandHandler {
                 qs.getStateName(),
                 fmtSetButton.sprintf(id, "STATE", "$new_val", char_name, "")));
         for (String key : vars.keySet())
-            if (!key.equalsIgnoreCase("<state>"))
+            if (!"<state>".equalsIgnoreCase(key))
                 replyMSG.append(fmtRow.sprintf(key + ": ",
                         vars.get(key),
                         fmtSetButton.sprintf(id, "VAR", key, "$new_val", char_name)));
@@ -58,7 +59,7 @@ public final class AdminQuests implements IAdminCommandHandler {
         StringBuilder replyMSG = new StringBuilder("<html><body><table width=260>");
         targetChar.getAllQuestsStates().stream()
                 .filter(Objects::nonNull)
-                .filter(qs -> qs.quest.id != 255)
+                .filter(qs -> qs.quest.getClass() != _255_Tutorial.class)
                 .forEach(qs -> replyMSG.append(fmtListRow.sprintf(qs.quest.id,
                         targetChar.getName(),
                         qs.quest.name,
@@ -108,27 +109,27 @@ public final class AdminQuests implements IAdminCommandHandler {
         return true;
     }
 
-    private boolean cmd_Clear(Quest _quest, String[] wordList, Player activeChar) {
+    private boolean cmd_Clear(Quest quest, String[] wordList, Player activeChar) {
         // quest id|name CLEAR [target]
         Player targetChar = getTargetChar(wordList, 3, activeChar);
-        QuestState qs = targetChar.getQuestState(_quest);
-        if (qs == null) {
-            activeChar.sendMessage("Player " + targetChar.getName() + " havn't Quest [" + _quest.name + "]");
+        QuestState st = targetChar.getQuestState(quest);
+        if (st == null) {
+            activeChar.sendMessage("Player " + targetChar.getName() + " havn't Quest [" + quest.name + "]");
             return false;
         }
-        qs.exitCurrentQuest(true);
+        st.exitCurrentQuest();
         return ShowQuestList(targetChar, activeChar);
     }
 
-    private boolean cmd_Show(Quest _quest, String[] wordList, Player activeChar) {
+    private boolean cmd_Show(Quest quest, String[] wordList, Player activeChar) {
         // quest id|name SHOW [target]
         Player targetChar = getTargetChar(wordList, 3, activeChar);
-        QuestState qs = targetChar.getQuestState(_quest);
-        if (qs == null) {
-            activeChar.sendMessage("Player " + targetChar.getName() + " havn't Quest [" + _quest.name + "]");
+        QuestState st = targetChar.getQuestState(quest);
+        if (st == null) {
+            activeChar.sendMessage("Player " + targetChar.getName() + " havn't Quest [" + quest.name + "]");
             return false;
         }
-        return ShowQuestState(qs, activeChar);
+        return ShowQuestState(st, activeChar);
     }
 
     private boolean cmd_Var(Quest _quest, String[] wordList, Player activeChar) {
@@ -170,7 +171,7 @@ public final class AdminQuests implements IAdminCommandHandler {
         if (qs == null) {
             activeChar.sendMessage("Init Quest [" + _quest.name + "] for " + targetChar.getName());
             qs = _quest.newQuestState(targetChar, state);
-            qs.set("cond", 1);
+            qs.set("cond");
         } else
             qs.setState(state);
 
@@ -182,7 +183,7 @@ public final class AdminQuests implements IAdminCommandHandler {
         if (wordListIndex >= 0 && wordList.length > wordListIndex) {
             Player player = World.getPlayer(wordList[wordListIndex]);
             if (player == null)
-                activeChar.sendMessage("Can't find player: " + wordList[wordListIndex]);
+                activeChar.sendMessage("Can't find getPlayer: " + wordList[wordListIndex]);
             return player;
         }
         // цель задана текущим таргетом

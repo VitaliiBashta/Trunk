@@ -20,7 +20,7 @@ public final class _297_GateKeepersFavor extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if (event.equalsIgnoreCase("gatekeeper_wirphy_q0297_03.htm")) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         }
         return event;
@@ -45,7 +45,7 @@ public final class _297_GateKeepersFavor extends Quest {
                 htmltext = "gatekeeper_wirphy_q0297_05.htm";
                 st.takeItems(STARSTONE);
                 st.giveItems(GATEKEEPER_TOKEN, 2);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 st.playSound(SOUND_FINISH);
             }
         return htmltext;

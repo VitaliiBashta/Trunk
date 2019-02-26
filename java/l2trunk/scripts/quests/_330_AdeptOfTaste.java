@@ -28,7 +28,7 @@ public final class _330_AdeptOfTaste extends Quest {
     private static final int Stinger_Wasp = 20229;
     private static final int Monster_Eye_Searcher = 20265;
     private static final int Monster_Eye_Gazer = 20266;
-    // Items
+    // items
     private static final int Ingredient_List = 1420;
     private static final int Sonias_Botany_Book = 1421;
     private static final int Red_Mandragora_Root = 1422;
@@ -78,39 +78,14 @@ public final class _330_AdeptOfTaste extends Quest {
         super(false);
 
         addStartNpc(Jonas);
-        addTalkId(Sonia);
-        addTalkId(Glyvka);
-        addTalkId(Rollant);
-        addTalkId(Jacob);
-        addTalkId(Pano);
-        addTalkId(Mirien);
+        addTalkId(Sonia,Glyvka,Rollant,Jacob,Pano,Mirien);
 
-        addKillId(Hobgoblin);
-        addKillId(Mandragora_Sprout);
-        addKillId(Mandragora_Sapling);
-        addKillId(Mandragora_Blossom);
-        addKillId(Bloody_Bee);
-        addKillId(Mandragora_Sprout2);
-        addKillId(Gray_Ant);
-        addKillId(Giant_Crimson_Ant);
-        addKillId(Stinger_Wasp);
-        addKillId(Monster_Eye_Searcher);
-        addKillId(Monster_Eye_Gazer);
+        addKillId(Hobgoblin,Mandragora_Sprout,Mandragora_Sapling,Mandragora_Blossom,Bloody_Bee,
+                Mandragora_Sprout2,Gray_Ant,Giant_Crimson_Ant,Stinger_Wasp,Monster_Eye_Searcher,Monster_Eye_Gazer);
 
-        addQuestItem(Ingredient_List);
-        addQuestItem(Sonias_Botany_Book);
-        addQuestItem(Red_Mandragora_Root);
-        addQuestItem(White_Mandragora_Root);
-        addQuestItem(Jacobs_Insect_Book);
-        addQuestItem(Nectar);
-        addQuestItem(Royal_Jelly);
-        addQuestItem(Panos_Contract);
-        addQuestItem(Hobgoblin_Amulet);
-        addQuestItem(Glyvkas_Botany_Book);
-        addQuestItem(Green_Marsh_Moss);
-        addQuestItem(Brown_Marsh_Moss);
-        addQuestItem(Rollants_Creature_Book);
-        addQuestItem(Body_of_Monster_Eye);
+        addQuestItem(Ingredient_List,Sonias_Botany_Book,Red_Mandragora_Root,White_Mandragora_Root,Jacobs_Insect_Book,
+               Nectar,Royal_Jelly,Panos_Contract,Hobgoblin_Amulet,Glyvkas_Botany_Book,Green_Marsh_Moss,Brown_Marsh_Moss,
+               Rollants_Creature_Book,Body_of_Monster_Eye);
 
         addQuestItem(ingredients);
         addQuestItem(spec_ingredients);
@@ -143,47 +118,46 @@ public final class _330_AdeptOfTaste extends Quest {
     }
 
     private static void Root2Sap(QuestState st, int sap_id) {
-        st.takeItems(Sonias_Botany_Book, -1);
-        st.takeItems(White_Mandragora_Root, -1);
-        st.takeItems(Red_Mandragora_Root, -1);
+        st.takeItems(Sonias_Botany_Book);
+        st.takeItems(White_Mandragora_Root);
+        st.takeItems(Red_Mandragora_Root);
         st.playSound(SOUND_MIDDLE);
-        st.giveItems(sap_id, 1);
+        st.giveItems(sap_id);
     }
 
     private static void Moss2Bundle(QuestState st, int bundle_id) {
-        st.takeItems(Glyvkas_Botany_Book, -1);
-        st.takeItems(Brown_Marsh_Moss, -1);
-        st.takeItems(Green_Marsh_Moss, -1);
+        st.takeItems(Glyvkas_Botany_Book);
+        st.takeItems(Brown_Marsh_Moss);
+        st.takeItems(Green_Marsh_Moss);
         st.playSound(SOUND_MIDDLE);
-        st.giveItems(bundle_id, 1);
+        st.giveItems(bundle_id);
     }
 
     private static void Nectar2Honey(QuestState st, int honey_id) {
-        st.takeItems(Jacobs_Insect_Book, -1);
-        st.takeItems(Nectar, -1);
-        st.takeItems(Royal_Jelly, -1);
+        st.takeItems(Jacobs_Insect_Book);
+        st.takeItems(Nectar);
+        st.takeItems(Royal_Jelly);
         st.playSound(SOUND_MIDDLE);
-        st.giveItems(honey_id, 1);
+        st.giveItems(honey_id);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        int _state = st.getState();
-        if (event.equalsIgnoreCase("30469_03.htm") && _state == CREATED) {
-            if (st.getQuestItemsCount(Ingredient_List) == 0)
-                st.giveItems(Ingredient_List, 1);
-            st.setState(STARTED);
+        int state = st.getState();
+        if ("30469_03.htm".equalsIgnoreCase(event) && state == CREATED) {
+            st.giveItemIfNotHave(Ingredient_List);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("30062_05.htm") && _state == STARTED) {
+        } else if ("30062_05.htm".equalsIgnoreCase(event) && state == STARTED) {
             if (st.getQuestItemsCount(White_Mandragora_Root) + st.getQuestItemsCount(Red_Mandragora_Root) < 40)
                 return null;
             Root2Sap(st, Red_Mandragora_Sap);
-        } else if (event.equalsIgnoreCase("30067_05.htm") && _state == STARTED) {
+        } else if ("30067_05.htm".equalsIgnoreCase(event) && state == STARTED) {
             if (st.getQuestItemsCount(Brown_Marsh_Moss) + st.getQuestItemsCount(Green_Marsh_Moss) < 20)
                 return null;
             Moss2Bundle(st, Green_Moss_Bundle);
-        } else if (event.equalsIgnoreCase("30073_05.htm") && _state == STARTED) {
+        } else if ("30073_05.htm".equalsIgnoreCase(event) && state == STARTED) {
             if (st.getQuestItemsCount(Nectar) < 20)
                 return null;
             Nectar2Honey(st, Honey);
@@ -201,7 +175,7 @@ public final class _330_AdeptOfTaste extends Quest {
             if (npcId != Jonas)
                 return "noquest";
             if (st.player.getLevel() < 24) {
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 return "30469_01.htm";
             }
             st.setCond(0);
@@ -214,10 +188,10 @@ public final class _330_AdeptOfTaste extends Quest {
         long ingredients_count = st.getQuestItemsCount(ingredients);
         long spec_ingredients_count = st.getQuestItemsCount(spec_ingredients);
         long all_ingredients_count = ingredients_count + spec_ingredients_count;
-        boolean Has_Ingredient_List = st.getQuestItemsCount(Ingredient_List) > 0;
+        boolean hasIngredientList = st.haveQuestItem(Ingredient_List) ;
 
         if (npcId == Jonas) {
-            if (Has_Ingredient_List) {
+            if (hasIngredientList) {
                 if (all_ingredients_count < 5)
                     return "30469_04.htm";
 
@@ -247,14 +221,14 @@ public final class _330_AdeptOfTaste extends Quest {
                             if (rewards.get(i - 1) > 0)
                                 st.giveItems(rewards.get(i - 1));
                             st.playSound(SOUND_FINISH);
-                            st.exitCurrentQuest(true);
+                            st.exitCurrentQuest();
                             return "30469_06t" + i + ".htm";
                         }
             }
         }
 
         if (npcId == Mirien) {
-            if (Has_Ingredient_List)
+            if (hasIngredientList)
                 return "30461_01.htm";
             if (all_ingredients_count == 0) {
                 if (st.getQuestItemsCount(Miriens_Reviews) > 0)
@@ -269,7 +243,7 @@ public final class _330_AdeptOfTaste extends Quest {
             }
         }
 
-        if (!(Has_Ingredient_List && all_ingredients_count < 5))
+        if (!(hasIngredientList && all_ingredients_count < 5))
             return "noquest";
 
         if (npcId == Sonia) {
@@ -318,23 +292,22 @@ public final class _330_AdeptOfTaste extends Quest {
                 if (!has_meat) {
                     if (st.getQuestItemsCount(Body_of_Monster_Eye) < 30)
                         return "30069_02.htm";
-                    st.takeItems(Rollants_Creature_Book, -1);
-                    st.takeItems(Body_of_Monster_Eye, -1);
+                    st.takeAllItems(Rollants_Creature_Book,Body_of_Monster_Eye);
                     st.playSound(SOUND_MIDDLE);
-                    st.giveItems(Meat_of_Monster_Eye, 1);
+                    st.giveItems(Meat_of_Monster_Eye);
                     return "30069_03.htm";
                 }
             } else if (has_meat)
                 return "30069_04.htm";
             else {
-                st.giveItems(Rollants_Creature_Book, 1);
+                st.giveItems(Rollants_Creature_Book);
                 return "30069_01.htm";
             }
         }
 
         if (npcId == Jacob) {
-            boolean has_honey = st.getQuestItemsCount(Honey) > 0 || st.getQuestItemsCount(Golden_Honey) > 0;
-            if (st.getQuestItemsCount(Jacobs_Insect_Book) > 0) {
+            boolean has_honey = st.haveAnyQuestItems(Honey,Golden_Honey) ;
+            if (st.haveQuestItem(Jacobs_Insect_Book)) {
                 if (!has_honey) {
                     if (st.getQuestItemsCount(Nectar) < 20)
                         return "30073_02.htm";
@@ -346,19 +319,18 @@ public final class _330_AdeptOfTaste extends Quest {
             } else if (has_honey)
                 return "30073_07.htm";
             else {
-                st.giveItems(Jacobs_Insect_Book, 1);
+                st.giveItems(Jacobs_Insect_Book);
                 return "30073_01.htm";
             }
         }
 
         if (npcId == Pano) {
-            boolean has_potato = st.getQuestItemsCount(Dionian_Potato) > 0;
-            if (st.getQuestItemsCount(Panos_Contract) > 0) {
+            boolean has_potato = st.haveQuestItem(Dionian_Potato);
+            if (st.haveQuestItem(Panos_Contract) ) {
                 if (!has_potato) {
                     if (st.getQuestItemsCount(Hobgoblin_Amulet) < 30)
                         return "30078_02.htm";
-                    st.takeItems(Panos_Contract);
-                    st.takeItems(Hobgoblin_Amulet);
+                    st.takeAllItems(Panos_Contract,Hobgoblin_Amulet);
                     st.playSound(SOUND_MIDDLE);
                     st.giveItems(Dionian_Potato);
                     return "30078_03.htm";
@@ -388,7 +360,7 @@ public final class _330_AdeptOfTaste extends Quest {
 
         if (npcId == Hobgoblin && st.getQuestItemsCount(Panos_Contract) > 0)
             st.rollAndGive(Hobgoblin_Amulet, 1, 1, 30, 100);
-        else if (npcId == Mandragora_Sprout && st.getQuestItemsCount(Sonias_Botany_Book) > 0)
+        else if (npcId == Mandragora_Sprout && st.haveQuestItem(Sonias_Botany_Book) )
             MandragoraDrop(st, 70, 77);
         else if (npcId == Mandragora_Sapling && st.getQuestItemsCount(Sonias_Botany_Book) > 0)
             MandragoraDrop(st, 77, 85);

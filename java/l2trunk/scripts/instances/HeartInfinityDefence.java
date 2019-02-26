@@ -121,7 +121,7 @@ public final class HeartInfinityDefence extends Reflection {
             if (win) {
                 QuestState qs = p.getQuestState(_698_BlocktheLordsEscape.class);
                 if (qs != null && qs.getCond() == 1)
-                    qs.set("defenceDone", 1);
+                    qs.set("defenceDone");
             }
             p.sendPacket(new ExShowScreenMessage(win ? NpcString.CONGRATULATIONS_YOU_HAVE_SUCCEEDED_AT_S1_S2_THE_INSTANCE_WILL_SHORTLY_EXPIRE : NpcString.YOU_HAVE_FAILED_AT_S1_S2, 8000, ExShowScreenMessage.ScreenMessageAlign.MIDDLE_CENTER, false, 1, -1, false, "#" + NpcString.HEART_OF_IMMORTALITY.getId(), "#" + NpcString.DEFEND.getId()));
         });

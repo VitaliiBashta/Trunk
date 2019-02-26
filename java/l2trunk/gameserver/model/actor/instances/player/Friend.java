@@ -25,7 +25,7 @@ public final class Friend {
     public void update(Player player, boolean set) {
         level = player.getLevel();
         name = player.getName();
-        classId = player.getActiveClassId();
+        classId = player.getActiveClassId().id;
         this.player = set ? player : null;
     }
 
@@ -40,7 +40,7 @@ public final class Friend {
 
     public int getClassId() {
         Player player = this.player;
-        return player == null ? classId : player.getActiveClassId();
+        return player == null ? classId : player.getActiveClassId().id;
     }
 
     public int getLevel() {

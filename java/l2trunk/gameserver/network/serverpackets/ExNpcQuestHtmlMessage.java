@@ -7,11 +7,11 @@ import l2trunk.gameserver.scripts.Functions;
 import java.util.regex.Matcher;
 
 public final class ExNpcQuestHtmlMessage extends NpcHtmlMessage {
-    private final int _questId;
+    private final int questId;
 
     public ExNpcQuestHtmlMessage(int npcObjId, int questId) {
         super(npcObjId);
-        _questId = questId;
+        this.questId = questId;
     }
 
     @Override
@@ -30,23 +30,22 @@ public final class ExNpcQuestHtmlMessage extends NpcHtmlMessage {
                 setHtml(content);
         }
 
-        for (int i = 0; i < _replaces.size(); i += 2)
-            _html = _html.replaceAll(_replaces.get(i), _replaces.get(i + 1));
+        replaces.forEach( (k,v) -> html = html.replaceAll(k,v));
 
-        if (_html == null)
+        if (html == null)
             return;
 
-        Matcher m = objectId.matcher(_html);
-        _html = m.replaceAll(String.valueOf(_npcObjId));
+        Matcher m = objectId.matcher(html);
+        html = m.replaceAll(String.valueOf(npcObjId));
 
-        _html = playername.matcher(_html).replaceAll(player.getName());
+        html = playername.matcher(html).replaceAll(player.getName());
 
         player.cleanBypasses(false);
-        _html = player.encodeBypasses(_html, false);
+        html = player.encodeBypasses(html, false);
 
         writeEx(0x8d);
-        writeD(_npcObjId);
-        writeS(_html);
-        writeD(_questId);
+        writeD(npcObjId);
+        writeS(html);
+        writeD(questId);
     }
 }

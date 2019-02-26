@@ -31,7 +31,7 @@ import static l2trunk.gameserver.utils.ItemFunctions.removeItem;
 public final class Heart extends Functions implements ScriptFile, OnDeathListener, OnPlayerEnterListener {
     private static final Logger LOG = LoggerFactory.getLogger(Heart.class);
     private static List<SimpleSpawner> SPAWNS;
-    private static final Map<Integer, Integer> Guesses = new HashMap<>();
+    private static final Map<Integer, Integer> GUESSES = new HashMap<>();
     private static final List<String> variants = List.of("Rock", "Scissors", "Paper");
     private static final int EVENT_MANAGER_ID = 31227; //Buzz the Cat
     private static final List<Integer> hearts = List.of(4209, 4210, 4211, 4212, 4213, 4214, 4215, 4216, 4217);
@@ -111,7 +111,7 @@ public final class Heart extends Functions implements ScriptFile, OnDeathListene
             return;
 
         if (!haveAllHearts(player)) {
-            if (var[0].equalsIgnoreCase("Quit"))
+            if ("Quit".equalsIgnoreCase(var[0]))
                 show("scripts/events/Heart/hearts_00b.htm", player);
             else
                 show("scripts/events/Heart/hearts_00a.htm", player);
@@ -169,10 +169,10 @@ public final class Heart extends Functions implements ScriptFile, OnDeathListene
                 addItem(player, Rnd.get(potions), 10);
                 break;
             case 2:
-                addItem(player, 1538, 1); // 1  Blessed Scroll of Escape
+                addItem(player, 1538); // 1  Blessed Scroll of Escape
                 break;
             case 3:
-                addItem(player, 3936, 1); // 1  Blessed Scroll of Resurrection
+                addItem(player, 3936); // 1  Blessed Scroll of Resurrection
                 break;
             case 4:
                 addItem(player, 951, 2); // 2  Scroll: Enchant Weapon (C)
@@ -187,7 +187,7 @@ public final class Heart extends Functions implements ScriptFile, OnDeathListene
                 addItem(player, 730, 3); // 3  Scroll: Enchant Armor (A)
                 break;
             case 8:
-                addItem(player, 729, 1); // 1  Scroll: Enchant Weapon (A)
+                addItem(player, 729); // 1  Scroll: Enchant Weapon (A)
                 break;
             case 9:
                 addItem(player, 960, 2); // 2  Scroll: Enchant Armor (S)
@@ -217,18 +217,18 @@ public final class Heart extends Functions implements ScriptFile, OnDeathListene
     }
 
     private int getGuesses(Player player) {
-        return Guesses.getOrDefault(player.objectId(), 0);
+        return GUESSES.getOrDefault(player.objectId(), 0);
     }
 
     private void incGuesses(Player player) {
         int val = 1;
-        if (Guesses.containsKey(player.objectId()))
-            val = Guesses.remove(player.objectId()) + 1;
-        Guesses.put(player.objectId(), val);
+        if (GUESSES.containsKey(player.objectId()))
+            val = GUESSES.remove(player.objectId()) + 1;
+        GUESSES.put(player.objectId(), val);
     }
 
     private void zeroGuesses(Player player) {
-        Guesses.remove(player.objectId());
+        GUESSES.remove(player.objectId());
     }
 
     private void takeHeartsSet(Player player) {

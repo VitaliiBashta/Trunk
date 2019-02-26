@@ -6,9 +6,10 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
 
-public final class _426_QuestforFishingShot extends Quest  {
+public final class _426_QuestforFishingShot extends Quest {
     private static final int SWEET_FLUID = 7586;
     private static final List<Integer> MOBS = List.of(
             20005, 20013, 20016, 20017, 20024, 20025, 20043, 20044, 20046, 20047, 20050, 20058, 20063,
@@ -39,27 +40,22 @@ public final class _426_QuestforFishingShot extends Quest  {
     public _426_QuestforFishingShot() {
         super(true);
 
-        for (int npcId = 31562; npcId <= 31579; npcId++)
-            addStartNpc(npcId);
+        addStartNpc(IntStream.rangeClosed(31562, 31575).toArray());
 
-        addStartNpc(31696);
-        addStartNpc(31697);
-        addStartNpc(31989);
-        addStartNpc(32007);
-        addStartNpc(32348);
+        addStartNpc(31696, 31697, 31989, 32007, 32348);
 
         addKillId(MOBS);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("4.htm")) {
-            st.setState(STARTED);
+        if ("4.htm".equalsIgnoreCase(event)) {
+            st.start();
             st.playSound(SOUND_ACCEPT);
             st.setCond(1);
-        } else if (event.equalsIgnoreCase("3.htm")) {
+        } else if ("3.htm".equalsIgnoreCase(event)) {
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
         return event;
     }

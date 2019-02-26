@@ -62,13 +62,13 @@ public final class _377_GiantsExploration2 extends Quest {
         String htmltext = event;
         if ("yes".equalsIgnoreCase(event)) {
             htmltext = "Starting.htm";
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if ("0".equalsIgnoreCase(event)) {
             htmltext = "ext_msg.htm";
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         } else if ("show".equalsIgnoreCase(event)) {
             htmltext = "no_items.htm";
             for (int[] i : EXCHANGE) {
@@ -103,11 +103,11 @@ public final class _377_GiantsExploration2 extends Quest {
         String htmltext = "noquest";
         int id = st.getState();
         if (st.getQuestItemsCount(DICT2) == 0)
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         else if (id == CREATED) {
             htmltext = "start.htm";
             if (st.player.getLevel() < 75) {
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 htmltext = "error_1.htm";
             }
         } else if (id == STARTED)

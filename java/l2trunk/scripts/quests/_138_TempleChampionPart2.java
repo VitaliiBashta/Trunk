@@ -51,7 +51,7 @@ public final class _138_TempleChampionPart2 extends Quest {
             st.addExpAndSp(187062, 11307);
             st.giveItems(ADENA_ID, 84593);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(false);
+            st.finish();
         } else if ("sylvain_q0138_06.htm".equalsIgnoreCase(event)) {
             st.setCond(2);
             st.playSound(SOUND_MIDDLE);
@@ -61,13 +61,13 @@ public final class _138_TempleChampionPart2 extends Quest {
         } else if ("pupina_q0138_11.htm".equalsIgnoreCase(event)) {
             st.setCond(6);
             st.playSound(SOUND_MIDDLE);
-            st.set("talk", 0);
+            st.unset("talk");
             st.giveItems(PUPINA_REC);
         } else if ("grandmaster_angus_q0138_03.htm".equalsIgnoreCase(event)) {
             st.setCond(4);
             st.playSound(SOUND_MIDDLE);
         } else if ("preacher_sla_q0138_03.htm".equalsIgnoreCase(event)) {
-            st.set("talk", 1);
+            st.set("talk");
             st.takeItems(PUPINA_REC);
         } else if ("preacher_sla_q0138_05.htm".equalsIgnoreCase(event)) {
             st.set("talk", 2);
@@ -124,9 +124,9 @@ public final class _138_TempleChampionPart2 extends Quest {
                 htmltext = "grandmaster_angus_q0138_06.htm";
         } else if (npcId == SLA)
             if (cond == 6) {
-                if (st.getInt("talk") == 0)
+                if (!st.isSet("talk") )
                     htmltext = "preacher_sla_q0138_02.htm";
-                else if (st.getInt("talk") == 1)
+                else if (st.isSet("talk") )
                     htmltext = "preacher_sla_q0138_03.htm";
                 else if (st.getInt("talk") == 2)
                     htmltext = "preacher_sla_q0138_05.htm";

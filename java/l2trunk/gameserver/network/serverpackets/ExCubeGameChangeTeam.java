@@ -5,8 +5,8 @@ import l2trunk.gameserver.model.Player;
 /**
  * Format: (chd) ddd
  * d: always -1
- * d: player team
- * d: player object id
+ * d: getPlayer team
+ * d: getPlayer object id
  */
 public class ExCubeGameChangeTeam extends L2GameServerPacket {
     private final int _objectId;

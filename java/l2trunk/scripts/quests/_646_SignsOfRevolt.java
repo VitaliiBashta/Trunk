@@ -15,11 +15,11 @@ public final class _646_SignsOfRevolt extends Quest {
     private static final int Ragna_Orc_Sorcerer = 22044; // Last in Range
     private static final int Guardian_of_the_Ghost_Town = 22047;
     private static final int Varangkas_Succubus = 22049;
-    // Items
+    // items
     private static final int Steel = 1880;
     private static final int Coarse_Bone_Powder = 1881;
     private static final int Leather = 1882;
-    // Quest Items
+    // Quest items
     private static final int CURSED_DOLL = 8087;
     // Chances
     private static final int CURSED_DOLL_Chance = 75;
@@ -29,29 +29,28 @@ public final class _646_SignsOfRevolt extends Quest {
         addStartNpc(TORRANT);
         for (int Ragna_Orc_id = Ragna_Orc; Ragna_Orc_id <= Ragna_Orc_Sorcerer; Ragna_Orc_id++)
             addKillId(Ragna_Orc_id);
-        addKillId(Guardian_of_the_Ghost_Town);
-        addKillId(Varangkas_Succubus);
+        addKillId(Guardian_of_the_Ghost_Town,Varangkas_Succubus);
         addQuestItem(CURSED_DOLL);
     }
 
-    private static String doReward(QuestState st, int reward_id, int _count) {
+    private static String doReward(QuestState st, int reward_id, int count) {
         if (st.getQuestItemsCount(CURSED_DOLL) < 180)
             return null;
-        st.takeItems(CURSED_DOLL, -1);
-        st.giveItems(reward_id, _count, true);
+        st.takeItems(CURSED_DOLL);
+        st.giveItems(reward_id, count, true);
         st.playSound(SOUND_FINISH);
-        st.exitCurrentQuest(true);
+        st.exitCurrentQuest();
         return "torant_q0646_0202.htm";
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         int _state = st.getState();
-        if (event.equalsIgnoreCase("torant_q0646_0103.htm") && _state == CREATED) {
-            st.setState(STARTED);
+        if ("torant_q0646_0103.htm".equalsIgnoreCase(event) && _state == CREATED) {
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("reward_adena") && _state == STARTED)
+        } else if ("reward_adena".equalsIgnoreCase(event) && _state == STARTED)
             return doReward(st, ADENA_ID, 21600);
         else if (event.equalsIgnoreCase("reward_cbp") && _state == STARTED)
             return doReward(st, Coarse_Bone_Powder, 12);
@@ -73,7 +72,7 @@ public final class _646_SignsOfRevolt extends Quest {
         if (_state == CREATED) {
             if (st.player.getLevel() < 40) {
                 htmltext = "torant_q0646_0102.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else {
                 htmltext = "torant_q0646_0101.htm";
                 st.setCond(0);

@@ -3,24 +3,20 @@ package l2trunk.gameserver.listener.actor.door.impl;
 import l2trunk.gameserver.listener.actor.door.OnOpenCloseListener;
 import l2trunk.gameserver.model.instances.DoorInstance;
 
-/**
- * @author VISTALL
- * @date 21:41/04.07.2011
- */
-public class MasterOnOpenCloseListenerImpl implements OnOpenCloseListener {
-    private final DoorInstance _door;
+public final class MasterOnOpenCloseListenerImpl implements OnOpenCloseListener {
+    private final DoorInstance door;
 
     public MasterOnOpenCloseListenerImpl(DoorInstance door) {
-        _door = door;
+        this.door = door;
     }
 
     @Override
     public void onOpen(DoorInstance doorInstance) {
-        _door.openMe();
+        door.openMe();
     }
 
     @Override
     public void onClose(DoorInstance doorInstance) {
-        _door.closeMe();
+        door.closeMe();
     }
 }

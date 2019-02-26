@@ -29,7 +29,7 @@ public final class EffectSymbol extends Effect {
     @Override
     public boolean checkCondition() {
         if (skill.targetType != Skill.SkillTargetType.TARGET_SELF) {
-            _log.error("Symbol skill with target != player, id = " + skill.id);
+            _log.error("Symbol skill with target != getPlayer, id = " + skill.id);
             return false;
         }
 

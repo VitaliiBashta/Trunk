@@ -10,7 +10,7 @@ public final class SubClass {
     public static final int CERTIFICATION_75 = 1 << 2;
     public static final int CERTIFICATION_80 = 1 << 3;
 
-    private int classId = 0;
+    private ClassId classId ;
     private long _exp = Experience.LEVEL[Config.ALT_GAME_START_LEVEL_TO_SUBCLASS], minExp = Experience.LEVEL[Config.ALT_GAME_START_LEVEL_TO_SUBCLASS], maxExp = Experience.LEVEL[Experience.LEVEL.length - 1];
     private int _sp = 0;
     private int level = Config.ALT_GAME_START_LEVEL_TO_SUBCLASS, certification;
@@ -21,11 +21,11 @@ public final class SubClass {
     public SubClass() {
     }
 
-    public int getClassId() {
+    public ClassId getClassId() {
         return classId;
     }
 
-    public void setClassId(int classId) {
+    public void setClassId(ClassId classId) {
         this.classId = classId;
     }
 
@@ -138,10 +138,10 @@ public final class SubClass {
 
     @Override
     public String toString() {
-        return ClassId.VALUES.get(classId).toString() + " " + level;
+        return classId.name + " " + level;
     }
 
     public String toStringCB() {
-        return ClassId.VALUES.get(classId).toString();
+        return classId.name;
     }
 }

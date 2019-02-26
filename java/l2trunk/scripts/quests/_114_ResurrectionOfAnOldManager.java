@@ -35,19 +35,12 @@ public final class _114_ResurrectionOfAnOldManager extends Quest {
 
         addStartNpc(YUMI);
 
-        addTalkId(WENDY);
-        addTalkId(BOX);
-        addTalkId(STONES);
-        addTalkId(NEWYEAR);
+        addTalkId(WENDY,BOX,STONES,NEWYEAR);
         addFirstTalkId(STONES);
 
         addKillId(GUARDIAN);
 
-        addQuestItem(DETECTOR);
-        addQuestItem(DETECTOR2);
-        addQuestItem(STARSTONE);
-        addQuestItem(LETTER);
-        addQuestItem(STARSTONE2);
+        addQuestItem(DETECTOR,DETECTOR2,STARSTONE,LETTER,STARSTONE2);
     }
 
     @Override
@@ -61,18 +54,18 @@ public final class _114_ResurrectionOfAnOldManager extends Quest {
             st.giveItems(STARSTONE2, 1);
             st.playSound(SOUND_MIDDLE);
         }
-        if (event.equalsIgnoreCase("collecter_yumi_q0114_04.htm")) {
-            st.setState(STARTED);
+        if ("collecter_yumi_q0114_04.htm".equalsIgnoreCase(event)) {
+            st.start();
             st.playSound(SOUND_ACCEPT);
             st.setCond(1);
             st.set("talk", 0);
-        } else if (event.equalsIgnoreCase("collecter_yumi_q0114_08.htm"))
-            st.set("talk", 1);
-        else if (event.equalsIgnoreCase("collecter_yumi_q0114_09.htm")) {
+        } else if ("collecter_yumi_q0114_08.htm".equalsIgnoreCase(event))
+            st.set("talk");
+        else if ("collecter_yumi_q0114_09.htm".equalsIgnoreCase(event)) {
             st.setCond(2);
             st.playSound(SOUND_MIDDLE);
-            st.set("talk", 0);
-        } else if (event.equalsIgnoreCase("collecter_yumi_q0114_12.htm")) {
+            st.unset("talk");
+        } else if ("collecter_yumi_q0114_12.htm".equalsIgnoreCase(event)) {
             choice = st.getInt("choice");
             if (choice == 1)
                 htmltext = "collecter_yumi_q0114_12.htm";
@@ -80,22 +73,22 @@ public final class _114_ResurrectionOfAnOldManager extends Quest {
                 htmltext = "collecter_yumi_q0114_13.htm";
             else if (choice == 3)
                 htmltext = "collecter_yumi_q0114_14.htm";
-        } else if (event.equalsIgnoreCase("collecter_yumi_q0114_15.htm"))
-            st.set("talk", 1);
-        else if (event.equalsIgnoreCase("collecter_yumi_q0114_23.htm"))
+        } else if ("collecter_yumi_q0114_15.htm".equalsIgnoreCase(event))
+            st.set("talk");
+        else if ("collecter_yumi_q0114_23.htm".equalsIgnoreCase(event))
             st.set("talk", 2);
-        else if (event.equalsIgnoreCase("collecter_yumi_q0114_26.htm")) {
+        else if ("collecter_yumi_q0114_26.htm".equalsIgnoreCase(event)) {
             st.setCond(6);
             st.playSound(SOUND_MIDDLE);
-            st.set("talk", 0);
-        } else if (event.equalsIgnoreCase("collecter_yumi_q0114_31.htm")) {
+            st.unset("talk");
+        } else if ("collecter_yumi_q0114_31.htm".equalsIgnoreCase(event)) {
             st.setCond(17);
             st.playSound(SOUND_MIDDLE);
             st.giveItems(DETECTOR);
-        } else if (event.equalsIgnoreCase("collecter_yumi_q0114_34.htm")) {
+        } else if ("collecter_yumi_q0114_34.htm".equalsIgnoreCase(event)) {
             st.takeItems(DETECTOR2, 1);
-            st.set("talk", 1);
-        } else if (event.equalsIgnoreCase("collecter_yumi_q0114_38.htm")) {
+            st.set("talk");
+        } else if ("collecter_yumi_q0114_38.htm".equalsIgnoreCase(event)) {
             choice = st.getInt("choice");
             if (choice > 1)
                 htmltext = "collecter_yumi_q0114_37.htm";
@@ -103,54 +96,54 @@ public final class _114_ResurrectionOfAnOldManager extends Quest {
             st.setCond(21);
             st.giveItems(LETTER);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("collecter_yumi_q0114_39.htm")) {
+        } else if ("collecter_yumi_q0114_39.htm".equalsIgnoreCase(event)) {
             st.setCond(20);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("pavel_atlanta_q0114_03.htm")) {
+        } else if ("pavel_atlanta_q0114_03.htm".equalsIgnoreCase(event)) {
             st.setCond(19);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("pavel_atlanta_q0114_07.htm")) {
+        } else if ("pavel_atlanta_q0114_07.htm".equalsIgnoreCase(event)) {
             st.playSound(SOUND_FINISH);
             st.addExpAndSp(1846611, 144270);
-            st.exitCurrentQuest(false);
-        } else if (event.equalsIgnoreCase("chaos_secretary_wendy_q0114_01.htm")) {
+            st.finish();
+        } else if ("chaos_secretary_wendy_q0114_01.htm".equalsIgnoreCase(event)) {
             if (st.getInt("talk") + st.getInt("talk1") == 2)
                 htmltext = "chaos_secretary_wendy_q0114_05.htm";
             else if (st.getInt("talk") + st.getInt("talk1") + st.getInt("talk2") == 6)
                 htmltext = "chaos_secretary_wendy_q0114_06a.htm";
-        } else if (event.equalsIgnoreCase("chaos_secretary_wendy_q0114_02.htm")) {
+        } else if ("chaos_secretary_wendy_q0114_02.htm".equalsIgnoreCase(event)) {
             if (st.getInt("talk") == 0)
                 st.set("talk", 1);
-        } else if (event.equalsIgnoreCase("chaos_secretary_wendy_q0114_03.htm")) {
+        } else if ("chaos_secretary_wendy_q0114_03.htm".equalsIgnoreCase(event)) {
             if (st.getInt("talk1") == 0)
                 st.set("talk1", 1);
-        } else if (event.equalsIgnoreCase("chaos_secretary_wendy_q0114_06.htm")) {
+        } else if ("chaos_secretary_wendy_q0114_06.htm".equalsIgnoreCase(event)) {
             st.setCond(3);
             st.playSound(SOUND_MIDDLE);
-            st.set("talk", 0);
+            st.unset("talk");
             st.set("choice", 1);
             st.unset("talk1");
-        } else if (event.equalsIgnoreCase("chaos_secretary_wendy_q0114_07.htm")) {
+        } else if ("chaos_secretary_wendy_q0114_07.htm".equalsIgnoreCase(event)) {
             st.setCond(4);
             st.playSound(SOUND_MIDDLE);
-            st.set("talk", 0);
+            st.unset("talk");
             st.set("choice", 2);
             st.unset("talk1");
-        } else if (event.equalsIgnoreCase("chaos_secretary_wendy_q0114_09.htm")) {
+        } else if ("chaos_secretary_wendy_q0114_09.htm".equalsIgnoreCase(event)) {
             st.setCond(5);
             st.playSound(SOUND_MIDDLE);
             st.set("talk", 0);
             st.set("choice", 3);
             st.unset("talk1");
-        } else if (event.equalsIgnoreCase("chaos_secretary_wendy_q0114_14ab.htm")) {
+        } else if ("chaos_secretary_wendy_q0114_14ab.htm".equalsIgnoreCase(event)) {
             st.setCond(7);
             st.playSound(SOUND_MIDDLE);
         } else if ("chaos_secretary_wendy_q0114_14b.htm".equalsIgnoreCase(event)) {
             st.setCond(10);
             st.playSound(SOUND_MIDDLE);
         } else if ("chaos_secretary_wendy_q0114_12c.htm".equalsIgnoreCase(event)) {
-            if (st.getInt("talk") == 0)
-                st.set("talk", 1);
+            if (!st.isSet("talk"))
+                st.set("talk");
         } else if ("chaos_secretary_wendy_q0114_15b.htm".equalsIgnoreCase(event)) {
             if (GUARDIAN_SPAWN == null || !st.player.knowsObject(GUARDIAN_SPAWN) || !GUARDIAN_SPAWN.isVisible()) {
                 GUARDIAN_SPAWN = st.addSpawn(GUARDIAN, Location.of(96977, -110625, -3280),0, 900000);
@@ -176,7 +169,7 @@ public final class _114_ResurrectionOfAnOldManager extends Quest {
         else if ("chaos_secretary_wendy_q0114_20a.htm".equalsIgnoreCase(event)) {
             if (st.getCond() == 7) {
                 st.setCond(8);
-                st.set("talk", 0);
+                st.unset("talk");
                 st.playSound(SOUND_MIDDLE);
             } else if (st.getCond() == 8) {
                 st.setCond(9);
@@ -193,12 +186,12 @@ public final class _114_ResurrectionOfAnOldManager extends Quest {
             st.playSound(SOUND_MIDDLE);
         } else if ("chaos_box2_q0114_01r.htm".equalsIgnoreCase(event)) {
             st.playSound(SOUND_ARMOR_WOOD_3);
-            st.set("talk", 1);
+            st.set("talk");
         } else if ("chaos_box2_q0114_03.htm".equalsIgnoreCase(event)) {
             st.setCond(14);
             st.giveItems(STARSTONE);
             st.playSound(SOUND_MIDDLE);
-            st.set("talk", 0);
+            st.unset("talk");
         }
         return htmltext;
     }
@@ -237,7 +230,7 @@ public final class _114_ResurrectionOfAnOldManager extends Quest {
                     htmltext = "collecter_yumi_q0114_02.htm";
                 else {
                     htmltext = "collecter_yumi_q0114_01.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1) {
                 if (talk == 0)

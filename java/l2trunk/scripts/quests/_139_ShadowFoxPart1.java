@@ -10,7 +10,7 @@ public final class _139_ShadowFoxPart1 extends Quest {
     // NPC
     private final static int MIA = 30896;
 
-    // Items
+    // items
     private final static int FRAGMENT = 10345;
     private final static int CHEST = 10346;
 
@@ -41,11 +41,11 @@ public final class _139_ShadowFoxPart1 extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if (event.equalsIgnoreCase("30896-03.htm")) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("30896-11.htm".equalsIgnoreCase(event)) {
             st.setCond(2);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_MIDDLE);
         } else if ("30896-14.htm".equalsIgnoreCase(event)) {
             st.takeItems(FRAGMENT);
@@ -55,7 +55,7 @@ public final class _139_ShadowFoxPart1 extends Quest {
             st.playSound(SOUND_FINISH);
             st.giveItems(ADENA_ID, 14050);
             st.addExpAndSp(30000, 2000);
-            st.exitCurrentQuest(false);
+            st.finish();
         }
         return event;
     }

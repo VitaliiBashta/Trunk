@@ -256,7 +256,7 @@ public class MonsterInstance extends NpcInstance {
             }
         }
 
-        // Alexander - We set that this player hit a monster. Used in the catpcha system to see if its fighting with mobs
+        // Alexander - We set that this getPlayer hit a monster. Used in the catpcha system to see if its fighting with mobs
         if (attacker instanceof Playable)
             attacker.getPlayer().setLastMonsterDamageTime();
 
@@ -277,18 +277,16 @@ public class MonsterInstance extends NpcInstance {
 
         Map<Playable, HateInfo> aggroMap = getAggroList().getPlayableMap();
 
-        List<Quest> quests = getTemplate().getEventQuests(QuestEventType.MOB_KILLED_WITH_QUEST);
+        Set<Quest> quests = getTemplate().getEventQuests(QuestEventType.MOB_KILLED_WITH_QUEST);
         if (!quests.isEmpty()) {
             List<Player> players = null; // массив с игроками, которые могут быть заинтересованы в квестах
-            if (isRaid() && Config.ALT_NO_LASTHIT) // Для альта на ластхит берем всех игроков вокруг
-            {
+            if (isRaid() && Config.ALT_NO_LASTHIT){ // Для альта на ластхит берем всех игроков вокруг
                 players = new ArrayList<>();
                 for (Playable pl : aggroMap.keySet())
                     if (!pl.isDead() && (isInRangeZ(pl, Config.ALT_PARTY_DISTRIBUTION_RANGE) || killer.isInRangeZ(pl, Config.ALT_PARTY_DISTRIBUTION_RANGE)))
                         if (!players.contains(pl.getPlayer())) // не добавляем дважды если есть пет
                             players.add(pl.getPlayer());
-            } else if (killer.getParty() != null) // если пати то собираем всех кто подходит
-            {
+            } else if (killer.getParty() != null) {// если пати то собираем всех кто подходит
                 players = new ArrayList<>(killer.getParty().size());
                 for (Player pl : killer.getParty().getMembers())
                     if (!pl.isDead() && (isInRangeZ(pl, Config.ALT_PARTY_DISTRIBUTION_RANGE) || killer.isInRangeZ(pl, Config.ALT_PARTY_DISTRIBUTION_RANGE)))
@@ -298,8 +296,7 @@ public class MonsterInstance extends NpcInstance {
             for (Quest quest : quests) {
                 Player toReward = killer;
                 if (quest.getParty() != Quest.PARTY_NONE && players != null)
-                    if (isRaid() || quest.getParty() == Quest.PARTY_ALL) // если цель рейд или квест для всей пати награждаем всех участников
-                    {
+                    if (isRaid() || quest.getParty() == Quest.PARTY_ALL){ // если цель рейд или квест для всей пати награждаем всех участников
                         for (Player pl : players) {
                             QuestState qs = pl.getQuestState(quest);
                             if (qs != null && !qs.isCompleted())
@@ -401,7 +398,7 @@ public class MonsterInstance extends NpcInstance {
         // Check the drop of a cursed weapon
         CursedWeaponsManager.INSTANCE.dropAttackable(this, killer);
 
-        if (!(topDamager instanceof Playable))
+        if (topDamager == null)
             return;
 
         for (Map.Entry<RewardType, RewardList> entry : getTemplate().getRewards().entrySet())
@@ -511,7 +508,7 @@ public class MonsterInstance extends NpcInstance {
         return isSeeded() && _seederId == player.objectId() && getDeadTime() < 20000L;
     }
 
-    public boolean isSeeded() {
+    public final boolean isSeeded() {
         return isSeeded;
     }
 

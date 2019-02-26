@@ -246,7 +246,7 @@ public final class CastleSiegeEvent extends SiegeEvent<Castle, SiegeClanObject> 
                 }
 
                 for (UnitMember member : ownerClan) {
-                    Player player = member.player();
+                    Player player = member.getPlayer();
                     if (player != null) {
                         player.getCounters().castleSiegesWon++;
                         player.sendPacket(PlaySound.SIEGE_VICTORY);
@@ -266,7 +266,7 @@ public final class CastleSiegeEvent extends SiegeEvent<Castle, SiegeClanObject> 
             if (id == 3 || id == 5 || id == 8) {
                 //ownerClan.incReputation(20000);
                 ownerClan.incReputation(Config.SIEGE_WINNER_REPUTATION_REWARD, false, "SiegeWinnerCustomReward");
-                Player leader = ownerClan.getLeader().player();
+                Player leader = ownerClan.getLeader().getPlayer();
                 if (leader != null && leader.isOnline()) {
                     leader.getInventory().addItem(24003, 1, "SiegeEvent");
                 }

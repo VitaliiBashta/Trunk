@@ -1,6 +1,7 @@
 package l2trunk.scripts.quests;
 
 import l2trunk.commons.util.Rnd;
+import l2trunk.gameserver.model.base.ClassId;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
@@ -30,22 +31,11 @@ public final class _212_TrialOfDuty extends Quest {
 
         addStartNpc(30109);
 
-        addTalkId(30109);
-        addTalkId(30109);
-
-        addTalkId(30109);
-        addTalkId(30116);
-        addTalkId(30311);
+        addTalkId(30109,30116,30311);
         for (int i = 30653; i < 30657; i++)
             addTalkId(i);
 
-        addKillId(20144);
-        addKillId(20190);
-        addKillId(20191);
-        addKillId(20200);
-        addKillId(20201);
-        addKillId(20270);
-        addKillId(27119);
+        addKillId(20144,20190,20191,20200,20201,20270,27119);
         for (int j = 20577; j < 20583; j++)
             addKillId(j);
 
@@ -69,12 +59,12 @@ public final class _212_TrialOfDuty extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         switch (event) {
             case "1":
-                st.setState(STARTED);
+                st.start();
                 st.playSound(SOUND_ACCEPT);
                 st.setCond(1);
                 if (!st.player.isVarSet("dd1")) {
                     st.giveItems(7562, 64);
-                    st.player.setVar("dd1", 1);
+                    st.player.setVar("dd1");
                 }
                 return "hannavalt_q0212_04.htm";
             case "30116_1":
@@ -94,7 +84,7 @@ public final class _212_TrialOfDuty extends Quest {
     @Override
     public String onTalk(NpcInstance npc, QuestState st) {
         if (st.getQuestItemsCount(MARK_OF_DUTY_ID) > 0) {
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             return "completed";
         }
         String htmltext = "noquest";
@@ -102,16 +92,18 @@ public final class _212_TrialOfDuty extends Quest {
         int id = st.getState();
         int cond = st.getCond();
         if (npcId == 30109 && id == CREATED) {
-            if (st.player.getClassId().ordinal() == 0x04 || st.player.getClassId().ordinal() == 0x13 || st.player.getClassId().ordinal() == 0x20)
+            if (st.player.getClassId() == ClassId.knight
+                    || st.player.getClassId() == ClassId.elvenKnight
+                    || st.player.getClassId() == ClassId.palusKnight)
                 if (st.player.getLevel() >= 35)
                     htmltext = "hannavalt_q0212_03.htm";
                 else {
                     htmltext = "hannavalt_q0212_01.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             else {
                 htmltext = "hannavalt_q0212_02.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (npcId == 30109) {
             if (cond == 18 && st.haveQuestItem(LETTER_OF_DUSTIN_ID) ) {
@@ -121,10 +113,10 @@ public final class _212_TrialOfDuty extends Quest {
                 if (!st.player.isVarSet("prof2.1")) {
                     st.addExpAndSp(RewardExp, RewardSP);
                     st.giveItems(ADENA_ID, RewardAdena);
-                    st.player.setVar("prof2.1", 1);
+                    st.player.setVar("prof2.1");
                 }
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(false);
+                st.finish();
             } else if (cond == 1)
                 htmltext = "hannavalt_q0212_04.htm";
         } else if (npcId == 30653) {

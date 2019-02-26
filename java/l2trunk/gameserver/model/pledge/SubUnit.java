@@ -216,7 +216,7 @@ public final class SubUnit {
             ExSubPledgeSkillAdd packet = new ExSubPledgeSkillAdd(type, newSkill.id, newSkill.level);
             for (UnitMember temp : clan)
                 if (temp.isOnline()) {
-                    Player player = temp.player();
+                    Player player = temp.getPlayer();
                     if (player != null) {
                         player.sendPacket(packet);
                         if (player.getPledgeType() == type)

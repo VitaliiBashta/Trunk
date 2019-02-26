@@ -62,6 +62,6 @@ public final class Escape implements IUserCommandHandler {
 
     @Override
     public final List<Integer> getUserCommandList() {
-        return Collections.singletonList(COMMAND_IDS);
+        return List.of(COMMAND_IDS);
     }
 }

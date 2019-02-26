@@ -280,7 +280,7 @@ public enum Achievements {
                         int achievementMaxLevel = 0;
 
                         for (Node i = z.getFirstChild(); i != null; i = i.getNextSibling()) {
-                            if ("occupation".equalsIgnoreCase(i.getNodeName())) {
+                            if ("level".equalsIgnoreCase(i.getNodeName())) {
                                 int level = Integer.valueOf(i.getAttributes().getNamedItem("id").getNodeValue());
                                 long pointsToComplete = Long.parseLong(i.getAttributes().getNamedItem("need").getNodeValue());
                                 int fame = Integer.valueOf(i.getAttributes().getNamedItem("fame").getNodeValue());

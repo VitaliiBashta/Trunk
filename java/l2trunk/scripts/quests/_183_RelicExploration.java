@@ -25,7 +25,7 @@ public final class _183_RelicExploration extends Quest {
         if ("30512-03.htm".equalsIgnoreCase(event)) {
             st.playSound(SOUND_ACCEPT);
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
         } else if ("30673-04.htm".equalsIgnoreCase(event)) {
             st.setCond(2);
             st.playSound(SOUND_MIDDLE);
@@ -37,7 +37,7 @@ public final class _183_RelicExploration extends Quest {
                 QuestState qs1 = q1.newQuestState(player, STARTED);
                 q1.notifyEvent("30621-01.htm", qs1, npc);
                 st.playSound(SOUND_MIDDLE);
-                st.exitCurrentQuest(false);
+                st.finish();
             }
             return null;
         } else if (event.equalsIgnoreCase("Consideration")) {
@@ -47,7 +47,7 @@ public final class _183_RelicExploration extends Quest {
                 QuestState qs2 = q2.newQuestState(st.player, STARTED);
                 q2.notifyEvent("30621-01.htm", qs2, npc);
                 st.playSound(SOUND_MIDDLE);
-                st.exitCurrentQuest(false);
+                st.finish();
             }
             return null;
         }

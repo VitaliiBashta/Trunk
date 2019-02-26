@@ -15,7 +15,7 @@ public final class _225_TestOfTheSearcher extends Quest {
     private static final int Borys = 30729;
     private static final int Jax = 30730;
     private static final int Tree = 30627;
-    //Quest Items
+    //Quest items
     private static final int LuthersLetter = 2784;
     private static final int AlexsWarrant = 2785;
     private static final int Leirynns1stOrder = 2786;
@@ -41,7 +41,7 @@ public final class _225_TestOfTheSearcher extends Quest {
     private static final int RustedKey = 2806;
     private static final int TornMapPiece1st = 2801;
     private static final int TornMapPiece2st = 2802;
-    //Items
+    //items
     private static final int MarkOfSearcher = 2809;
     //MOB
     private static final int DeluLizardmanShaman = 20781;
@@ -88,18 +88,11 @@ public final class _225_TestOfTheSearcher extends Quest {
     public _225_TestOfTheSearcher() {
         super(false);
         addStartNpc(Luther);
-        addTalkId(Alex);
-        addTalkId(Leirynn);
-        addTalkId(Borys);
-        addTalkId(Tyra);
-        addTalkId(Jax);
-        addTalkId(Tree);
-        addTalkId(Chest);
-        //Mob Drop
-        addKillId(DeluChiefKalkis);
-        addKillId(RoadScavenger);
-        addKillId(HangmanTree);
-        for (int[] aDROPLIST_COND : DROPLIST_COND) addKillId(aDROPLIST_COND[2]);
+        addTalkId(Alex,Leirynn,Borys,Tyra,Jax,Tree,Chest);
+        //mob Drop
+        addKillId(DeluChiefKalkis, RoadScavenger, HangmanTree);
+        for (int[] aDROPLIST_COND : DROPLIST_COND)
+            addKillId(aDROPLIST_COND[2]);
         addQuestItem(DeluTotem,
                 RedSporeDust,
                 LuthersLetter,
@@ -128,52 +121,51 @@ public final class _225_TestOfTheSearcher extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("30690-05.htm")) {
-            st.giveItems(LuthersLetter, 1);
+        if ("30690-05.htm".equalsIgnoreCase(event)) {
+            st.giveItems(LuthersLetter);
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             if (!st.player.isVarSet("dd3")) {
                 st.giveItems(7562, 82);
-                st.player.setVar("dd3", 1);
+                st.player.setVar("dd3");
             }
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("30291-07.htm")) {
+        } else if ("30291-07.htm".equalsIgnoreCase(event)) {
             st.takeItems(LeirynnsReport);
             st.takeItems(StrangeMap);
             st.giveItems(LambertsMap);
             st.giveItems(AlexsLetter);
             st.giveItems(AlexsOrder);
             st.setCond(8);
-            st.setState(STARTED);
+            st.start();
         } else if ("30420-01a.htm".equalsIgnoreCase(event)) {
             st.takeItems(WineCatalog);
             st.giveItems(TyrasContract);
             st.setCond(10);
-            st.setState(STARTED);
+            st.start();
         } else if ("30730-01d.htm".equalsIgnoreCase(event)) {
             st.takeItems(OldOrder);
             st.giveItems(JaxsDiary);
             st.setCond(14);
-            st.setState(STARTED);
+            st.start();
         } else if ("30627-01a.htm".equalsIgnoreCase(event)) {
             NpcInstance isQuest = GameObjectsStorage.getByNpcId(Chest);
             if (isQuest == null) {
-                if (st.getQuestItemsCount(RustedKey) == 0)
-                    st.giveItems(RustedKey, 1);
+                st.giveItemIfNotHave(RustedKey);
                 st.addSpawn(Chest);
                 st.startQuestTimer("Chest", 300000);
                 st.setCond(17);
-                st.setState(STARTED);
+                st.start();
             } else {
                 if (!st.isRunningQuestTimer("Wait1"))
                     st.startQuestTimer("Wait1", 300000);
                 htmltext = "<html><head><body>Please wait 5 minutes</body></html>";
             }
-        } else if (event.equalsIgnoreCase("30628-01a.htm")) {
-            st.takeItems(RustedKey, -1);
+        } else if ("30628-01a.htm".equalsIgnoreCase(event)) {
+            st.takeItems(RustedKey);
             st.giveItems(GoldBar, 20);
             st.setCond(18);
-        } else if (event.equalsIgnoreCase("Wait1") || event.equalsIgnoreCase("Chest")) {
+        } else if ("Wait1".equalsIgnoreCase(event) || "Chest".equalsIgnoreCase(event)) {
             NpcInstance isQuest = GameObjectsStorage.getByNpcId(Chest);
             if (isQuest != null)
                 isQuest.deleteMe();
@@ -192,9 +184,9 @@ public final class _225_TestOfTheSearcher extends Quest {
         String htmltext = "noquest";
         int cond = st.getCond();
         if (npcId == Luther) {
-            if (st.getQuestItemsCount(MarkOfSearcher) != 0) {
+            if (st.haveQuestItem(MarkOfSearcher)) {
                 htmltext = "completed";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else if (cond == 0) {
                 if (st.player.getClassId().id == 0x07 || st.player.getClassId().id == 0x16 || st.player.getClassId().id == 0x23 || st.player.getClassId().id == 0x36) {
                     if (st.player.getLevel() >= 39) {
@@ -204,11 +196,11 @@ public final class _225_TestOfTheSearcher extends Quest {
                             htmltext = "30690-03.htm";
                     } else {
                         htmltext = "30690-02.htm";
-                        st.exitCurrentQuest(true);
+                        st.exitCurrentQuest();
                     }
                 } else {
                     htmltext = "30690-01.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1)
                 htmltext = "30690-06.htm";
@@ -219,20 +211,20 @@ public final class _225_TestOfTheSearcher extends Quest {
                 if (!st.player.isVarSet("prof2.3")) {
                     st.addExpAndSp(447444, 30704);
                     st.giveItems(ADENA_ID, 80093);
-                    st.player.setVar("prof2.3", 1);
+                    st.player.setVar("prof2.3");
                 }
-                st.takeItems(AlexsRecommend, -1);
-                st.giveItems(MarkOfSearcher, 1);
+                st.takeItems(AlexsRecommend);
+                st.giveItems(MarkOfSearcher);
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (npcId == Alex) {
             if (cond == 1) {
                 htmltext = "30291-01.htm";
-                st.takeItems(LuthersLetter, -1);
-                st.giveItems(AlexsWarrant, 1);
+                st.takeItems(LuthersLetter);
+                st.giveItems(AlexsWarrant);
                 st.setCond(2);
-                st.setState(STARTED);
+                st.start();
             } else if (cond == 2)
                 htmltext = "30291-02.htm";
             else if (cond > 2 && cond < 7)
@@ -244,41 +236,39 @@ public final class _225_TestOfTheSearcher extends Quest {
             else if (cond == 13 || cond == 14)
                 htmltext = "30291-09.htm";
             else if (cond == 18) {
-                st.takeItems(AlexsOrder, -1);
-                st.takeItems(CombinedMap, -1);
-                st.takeItems(GoldBar, -1);
-                st.giveItems(AlexsRecommend, 1);
+                st.takeAllItems(AlexsOrder, CombinedMap, GoldBar);
+                st.giveItems(AlexsRecommend);
                 htmltext = "30291-11.htm";
                 st.setCond(19);
-                st.setState(STARTED);
+                st.start();
             } else if (cond == 19)
                 htmltext = "30291-12.htm";
 
         } else if (npcId == Leirynn) {
             if (cond == 2) {
                 htmltext = "30728-01.htm";
-                st.takeItems(AlexsWarrant, -1);
-                st.giveItems(Leirynns1stOrder, 1);
+                st.takeItems(AlexsWarrant);
+                st.giveItems(Leirynns1stOrder);
                 st.setCond(3);
-                st.setState(STARTED);
+                st.start();
             } else if (cond == 3)
                 htmltext = "30728-02.htm";
             else if (cond == 4) {
                 htmltext = "30728-03.htm";
-                st.takeItems(DeluTotem, -1);
-                st.takeItems(Leirynns1stOrder, -1);
-                st.giveItems(Leirynns2ndOrder, 1);
+                st.takeItems(DeluTotem);
+                st.takeItems(Leirynns1stOrder);
+                st.giveItems(Leirynns2ndOrder);
                 st.setCond(5);
-                st.setState(STARTED);
+                st.start();
             } else if (cond == 5)
                 htmltext = "30728-04.htm";
             else if (cond == 6) {
-                st.takeItems(ChiefKalkisFang, -1);
-                st.takeItems(Leirynns2ndOrder, -1);
+                st.takeItems(ChiefKalkisFang);
+                st.takeItems(Leirynns2ndOrder);
                 st.giveItems(LeirynnsReport, 1);
                 htmltext = "30728-05.htm";
                 st.setCond(7);
-                st.setState(STARTED);
+                st.start();
             } else if (cond == 7)
                 htmltext = "30728-06.htm";
             else if (cond == 8)
@@ -289,7 +279,7 @@ public final class _225_TestOfTheSearcher extends Quest {
                 st.giveItems(WineCatalog, 1);
                 htmltext = "30729-01.htm";
                 st.setCond(9);
-                st.setState(STARTED);
+                st.start();
             } else if (cond == 9)
                 htmltext = "30729-02.htm";
             else if (cond == 12) {
@@ -298,7 +288,7 @@ public final class _225_TestOfTheSearcher extends Quest {
                 st.giveItems(OldOrder, 1);
                 htmltext = "30729-03.htm";
                 st.setCond(13);
-                st.setState(STARTED);
+                st.start();
             } else if (cond == 13)
                 htmltext = "30729-04.htm";
             else if (cond >= 8 && cond <= 14)
@@ -314,7 +304,7 @@ public final class _225_TestOfTheSearcher extends Quest {
                 st.giveItems(MalrukianWine, 1);
                 htmltext = "30420-03.htm";
                 st.setCond(12);
-                st.setState(STARTED);
+                st.start();
             } else if (cond == 12 || cond == 13)
                 htmltext = "30420-04.htm";
         } else if (npcId == Jax) {
@@ -330,7 +320,7 @@ public final class _225_TestOfTheSearcher extends Quest {
                 st.giveItems(CombinedMap, 1);
                 htmltext = "30730-03.htm";
                 st.setCond(16);
-                st.setState(STARTED);
+                st.start();
             } else if (cond == 16)
                 htmltext = "30730-04.htm";
         } else if (npcId == Tree) {
@@ -356,33 +346,31 @@ public final class _225_TestOfTheSearcher extends Quest {
                     else if (st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[7], aDROPLIST_COND[5], aDROPLIST_COND[6]))
                         if (aDROPLIST_COND[1] != cond && aDROPLIST_COND[1] != 0) {
                             st.setCond(aDROPLIST_COND[1]);
-                            st.setState(STARTED);
+                            st.start();
                         }
         if (cond == 5 && npcId == DeluChiefKalkis) {
-            if (st.getQuestItemsCount(StrangeMap) == 0)
-                st.giveItems(StrangeMap);
-            if (st.getQuestItemsCount(ChiefKalkisFang) == 0)
-                st.giveItems(ChiefKalkisFang);
+            st.giveItemIfNotHave(StrangeMap);
+            st.giveItemIfNotHave(ChiefKalkisFang);
             st.playSound(SOUND_MIDDLE);
             st.setCond(6);
-            st.setState(STARTED);
+            st.start();
         } else if (cond == 14) {
-            if (npcId == RoadScavenger && st.getQuestItemsCount(SoltsMap) == 0) {
+            if (npcId == RoadScavenger && !st.haveQuestItem(SoltsMap)) {
                 st.giveItems(TornMapPiece1st);
-                if (st.getQuestItemsCount(TornMapPiece1st) >= 4) {
+                if (st.haveQuestItem(TornMapPiece1st, 4)) {
                     st.takeItems(TornMapPiece1st);
                     st.giveItems(SoltsMap);
                 }
             } else if (npcId == HangmanTree && st.getQuestItemsCount(MakelsMap) == 0) {
                 st.giveItems(TornMapPiece2st);
-                if (st.getQuestItemsCount(TornMapPiece2st) >= 4) {
+                if (st.haveQuestItem(TornMapPiece2st, 4)) {
                     st.takeItems(TornMapPiece2st);
                     st.giveItems(MakelsMap);
                 }
             }
-            if (st.getQuestItemsCount(SoltsMap) != 0 && st.getQuestItemsCount(MakelsMap) != 0) {
+            if (st.haveAllQuestItems(SoltsMap, MakelsMap)) {
                 st.setCond(15);
-                st.setState(STARTED);
+                st.start();
             }
         }
     }

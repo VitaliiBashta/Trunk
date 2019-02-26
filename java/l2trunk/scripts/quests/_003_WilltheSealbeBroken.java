@@ -29,7 +29,7 @@ public final class _003_WilltheSealbeBroken extends Quest {
         if ("quest_accept".equalsIgnoreCase(event)) {
             htmltext = "redry_q0003_03.htm";
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         }
         return htmltext;
@@ -42,13 +42,13 @@ public final class _003_WilltheSealbeBroken extends Quest {
         if (id == CREATED)
             if (st.player.getRace() != Race.darkelf) {
                 htmltext = "redry_q0003_00.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else if (st.player.getLevel() >= 16) {
                 htmltext = "redry_q0003_02.htm";
                 return htmltext;
             } else {
                 htmltext = "redry_q0003_01.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         else if (id == STARTED)
             if (st.getQuestItemsCount(OnyxBeastEye) > 0 && st.getQuestItemsCount(TaintStone) > 0 && st.getQuestItemsCount(SuccubusBlood) > 0) {
@@ -58,7 +58,7 @@ public final class _003_WilltheSealbeBroken extends Quest {
                 st.takeItems(SuccubusBlood);
                 st.giveItems(956, 1, true);
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(false);
+                st.finish();
             } else
                 htmltext = "redry_q0003_04.htm";
         return htmltext;

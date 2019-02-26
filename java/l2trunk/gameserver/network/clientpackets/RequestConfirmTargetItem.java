@@ -46,7 +46,7 @@ public class RequestConfirmTargetItem extends L2GameClientPacket {
             return;
         }
 
-        // check if the player can augment
+        // check if the getPlayer can augment
         if (activeChar.isInStoreMode()) {
             activeChar.sendPacket(SystemMsg.YOU_CANNOT_AUGMENT_ITEMS_WHILE_A_PRIVATE_STORE_OR_PRIVATE_WORKSHOP_IS_IN_OPERATION);
             return;

@@ -24,7 +24,7 @@ public final class _626_ADarkTwilight extends Quest {
         String htmltext = event;
         if (event.equalsIgnoreCase("dark_presbyter_q0626_0104.htm")) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("dark_presbyter_q0626_0201.htm")) {
             if (st.getQuestItemsCount(BloodOfSaint) < 300)
@@ -33,12 +33,12 @@ public final class _626_ADarkTwilight extends Quest {
             st.takeItems(BloodOfSaint, -1);
             st.addExpAndSp(162773, 12500);
             htmltext = "dark_presbyter_q0626_0202.htm";
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         } else if (event.equalsIgnoreCase("rew_adena")) {
             st.takeItems(BloodOfSaint, -1);
             st.giveItems(ADENA_ID, 100000, true);
             htmltext = "dark_presbyter_q0626_0202.htm";
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
         return htmltext;
     }
@@ -52,7 +52,7 @@ public final class _626_ADarkTwilight extends Quest {
             if (cond == 0) {
                 if (st.player.getLevel() < 60) {
                     htmltext = "dark_presbyter_q0626_0103.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else
                     htmltext = "dark_presbyter_q0626_0101.htm";
             } else if (cond == 1)

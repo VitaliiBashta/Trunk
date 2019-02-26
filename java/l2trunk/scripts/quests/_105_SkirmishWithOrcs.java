@@ -39,14 +39,8 @@ public final class _105_SkirmishWithOrcs extends Quest {
 
         addStartNpc(Kendell);
 
-        addKillId(KabooChiefUoph);
-        addKillId(KabooChiefKracha);
-        addKillId(KabooChiefBatoh);
-        addKillId(KabooChiefTanukia);
-        addKillId(KabooChiefTurel);
-        addKillId(KabooChiefRoko);
-        addKillId(KabooChiefKamut);
-        addKillId(KabooChiefMurtika);
+        addKillId(KabooChiefUoph,KabooChiefKracha,KabooChiefBatoh,KabooChiefTanukia,KabooChiefTurel,
+                KabooChiefRoko,KabooChiefKamut,KabooChiefMurtika);
 
         addQuestItem(Kendells1stOrder,
                 Kendells2stOrder,
@@ -64,9 +58,9 @@ public final class _105_SkirmishWithOrcs extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if (event.equalsIgnoreCase("sentinel_kendnell_q0105_03.htm")) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
-            if (st.getQuestItemsCount(Kendells1stOrder) + st.getQuestItemsCount(Kendells2stOrder) + st.getQuestItemsCount(Kendells3stOrder) + st.getQuestItemsCount(Kendells4stOrder) == 0) {
+            if (!st.haveAnyQuestItems(Kendells1stOrder,Kendells2stOrder,Kendells3stOrder,Kendells4stOrder)) {
                 int n = Rnd.get(4);
                 if (n == 0)
                     st.giveItems(Kendells1stOrder);
@@ -88,20 +82,17 @@ public final class _105_SkirmishWithOrcs extends Quest {
         if (cond == 0) {
             if (st.player.getRace() != Race.elf) {
                 htmltext = "sentinel_kendnell_q0105_00.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else if (st.player.getLevel() < 10) {
                 htmltext = "sentinel_kendnell_q0105_10.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else
                 htmltext = "sentinel_kendnell_q0105_02.htm";
-        } else if (cond == 1 && st.getQuestItemsCount(Kendells1stOrder) + st.getQuestItemsCount(Kendells2stOrder) + st.getQuestItemsCount(Kendells3stOrder) + st.getQuestItemsCount(Kendells4stOrder) != 0)
+        } else if (cond == 1 && st.haveAnyQuestItems(Kendells1stOrder,Kendells2stOrder,Kendells3stOrder,Kendells4stOrder))
             htmltext = "sentinel_kendnell_q0105_05.htm";
         else if (cond == 2 && st.getQuestItemsCount(KabooChiefs1stTorque) != 0) {
             htmltext = "sentinel_kendnell_q0105_06.htm";
-            st.takeItems(Kendells1stOrder);
-            st.takeItems(Kendells2stOrder);
-            st.takeItems(Kendells3stOrder);
-            st.takeItems(Kendells4stOrder);
+            st.takeAllItems(Kendells1stOrder,Kendells2stOrder,Kendells3stOrder,Kendells4stOrder);
             st.takeItems(KabooChiefs1stTorque, 1);
             int n = Rnd.get(4);
             if (n == 0)
@@ -113,8 +104,8 @@ public final class _105_SkirmishWithOrcs extends Quest {
             else
                 st.giveItems(Kendells8stOrder);
             st.setCond(3);
-            st.setState(STARTED);
-        } else if (cond == 3 && st.getQuestItemsCount(Kendells5stOrder) + st.getQuestItemsCount(Kendells6stOrder) + st.getQuestItemsCount(Kendells7stOrder) + st.getQuestItemsCount(Kendells8stOrder) == 1)
+            st.start();
+        } else if (cond == 3 && st.haveAnyQuestItems(Kendells5stOrder,Kendells6stOrder,Kendells7stOrder,Kendells8stOrder))
             htmltext = "sentinel_kendnell_q0105_07.htm";
         else if (cond == 4 && st.getQuestItemsCount(KabooChiefs2stTorque) > 0) {
             htmltext = "sentinel_kendnell_q0105_08.htm";
@@ -133,7 +124,7 @@ public final class _105_SkirmishWithOrcs extends Quest {
             st.player.addExpAndSp(41478, 3555);
 
             if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("p1q3")) {
-                st.player.setVar("p1q3", 1); // flag for helper
+                st.player.setVar("p1q3"); // flag for helper
                 st.player.sendPacket(new ExShowScreenMessage("Now go find the Newbie Guide."));
                 st.giveItems(1060, 100); // healing potion
                 for (int item = 4412; item <= 4417; item++)
@@ -147,7 +138,7 @@ public final class _105_SkirmishWithOrcs extends Quest {
                 }
             }
 
-            st.exitCurrentQuest(false);
+            st.finish();
             st.playSound(SOUND_FINISH);
         }
         return htmltext;
@@ -168,7 +159,7 @@ public final class _105_SkirmishWithOrcs extends Quest {
                 st.giveItems(KabooChiefs1stTorque);
             if (st.getQuestItemsCount(KabooChiefs1stTorque) > 0) {
                 st.setCond(2);
-                st.setState(STARTED);
+                st.start();
                 st.playSound(SOUND_MIDDLE);
             }
         } else if (cond == 3 && st.getQuestItemsCount(KabooChiefs2stTorque) == 0) {
@@ -182,7 +173,7 @@ public final class _105_SkirmishWithOrcs extends Quest {
                 st.giveItems(KabooChiefs2stTorque);
             if (st.getQuestItemsCount(KabooChiefs2stTorque) > 0) {
                 st.setCond(4);
-                st.setState(STARTED);
+                st.start();
                 st.playSound(SOUND_MIDDLE);
             }
         }

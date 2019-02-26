@@ -13,8 +13,9 @@ import l2trunk.gameserver.utils.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,9 +28,9 @@ public class NpcHtmlMessage extends L2GameServerPacket {
     static final Pattern objectId = Pattern.compile("%objectId%");
     static final Pattern playername = Pattern.compile("%playername%");
     private static final Logger LOG = LoggerFactory.getLogger(NpcHtmlMessage.class);
-    final List<String> _replaces = new ArrayList<>();
-    int _npcObjId;
-    String _html;
+    final Map<String, String> replaces = new HashMap<>();
+    int npcObjId;
+    String html;
     String file = null;
     boolean have_appends = false;
 
@@ -64,11 +65,11 @@ public class NpcHtmlMessage extends L2GameServerPacket {
     public NpcHtmlMessage(Player player, NpcInstance npc, String filename, int val) {
         this(player, npc.getNpcId(), filename, val);
 
-        _npcObjId = npc.objectId();
+        npcObjId = npc.objectId();
 
         player.setLastNpc(npc);
 
-        replace("%npcId%", String.valueOf(npc.getNpcId()));
+        replace("%npcId%", npc.getNpcId());
         replace("%npcname%", npc.getName());
         replace("%nick%", player.getName());
         replace("%class%", player.getClassId().occupation());
@@ -77,23 +78,23 @@ public class NpcHtmlMessage extends L2GameServerPacket {
 
     public NpcHtmlMessage(Player player, NpcInstance npc) {
         if (npc == null) {
-            _npcObjId = 5;
+            npcObjId = 5;
             player.setLastNpc(null);
         } else {
-            _npcObjId = npc.objectId();
+            npcObjId = npc.objectId();
             player.setLastNpc(npc);
         }
     }
 
     public NpcHtmlMessage(int npcObjId) {
-        _npcObjId = npcObjId;
+        this.npcObjId = npcObjId;
     }
 
     public final NpcHtmlMessage setHtml(String text) {
         if (!text.contains("<html>")) {
             text = "<html><body>" + text + "</body></html>"; // <title>Message:</title> <br><br><br>
         }
-        _html = text;
+        html = text;
         return this;
     }
 
@@ -106,31 +107,36 @@ public class NpcHtmlMessage extends L2GameServerPacket {
         return this;
     }
 
-    public NpcHtmlMessage replace(String pattern, int value) {
-        return replace(pattern, String.valueOf(value));
+    public void replace(String pattern, double value) {
+        replace(pattern, (long) value);
+    }
+
+    public void replace(String pattern, long value) {
+        replace(pattern, String.valueOf(value));
+    }
+
+    public NpcHtmlMessage replace(String pattern, StringBuilder value) {
+        return replace(pattern, value.toString());
     }
 
     public NpcHtmlMessage replace(String pattern, String value) {
         if ((pattern == null) || (value == null)) {
             return this;
         }
-        _replaces.add(pattern);
-        _replaces.add(value);
+        replaces.put(pattern, value);
         return this;
     }
 
     // <fstring></fstring> npcstring-?.dat
-    public NpcHtmlMessage replaceNpcString(String pattern, NpcString npcString, Object... arg) {
+    public void replaceNpcString(String pattern, NpcString npcString, Object... arg) {
         if (pattern == null) {
-            return this;
+            return;
         }
         if (npcString.getSize() != arg.length) {
             throw new IllegalArgumentException("Not valid size of parameters: " + npcString);
         }
 
-        _replaces.add(pattern);
-        _replaces.add(HtmlUtils.htmlNpcString(npcString, arg));
-        return this;
+        replaces.put(pattern, HtmlUtils.htmlNpcString(npcString, arg));
     }
 
     @Override
@@ -150,30 +156,30 @@ public class NpcHtmlMessage extends L2GameServerPacket {
             }
         }
 
-        if (_html == null) {
+        if (html == null) {
             return;
         }
 
-        for (int i = 0; i < _replaces.size(); i += 2) {
-            _html = _html.replace(_replaces.get(i), _replaces.get(i + 1));
-        }
+        replaces.forEach((k, v) ->
+                html = html.replace(k, v));
 
-        Matcher m = objectId.matcher(_html);
-        _html = m.replaceAll(String.valueOf(_npcObjId));
 
-        _html = playername.matcher(_html).replaceAll(player.getName());
+        Matcher m = objectId.matcher(html);
+        html = m.replaceAll(String.valueOf(npcObjId));
+
+        html = playername.matcher(html).replaceAll(player.getName());
 
         // Alexander - Replace and send all images and crests of this html
-        _html = ImagesCache.sendUsedImages(_html, player);
-        if (_html.startsWith("CREST"))
-            _html = _html.substring(5);
+        html = ImagesCache.sendUsedImages(html, player);
+        if (html.startsWith("CREST"))
+            html = html.substring(5);
 
         player.cleanBypasses(false);
-        _html = player.encodeBypasses(_html, false);
+        html = player.encodeBypasses(html, false);
 
         writeC(0x19);
-        writeD(_npcObjId);
-        writeS(_html);
+        writeD(npcObjId);
+        writeS(html);
         writeD(0x00);
     }
 }

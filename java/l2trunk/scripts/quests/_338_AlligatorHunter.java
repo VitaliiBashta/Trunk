@@ -84,7 +84,7 @@ public final class _338_AlligatorHunter extends Quest {
     public _338_AlligatorHunter() {
         super(false);
         addStartNpc(Enverun);
-        //Mob Drop
+        //mob Drop
         for (int[] aDROPLIST_COND : DROPLIST_COND) addKillId(aDROPLIST_COND[2]);
         addQuestItem(AlligatorLeather);
     }
@@ -95,7 +95,7 @@ public final class _338_AlligatorHunter extends Quest {
         if (event.equalsIgnoreCase("30892-02.htm")) {
             st.playSound(SOUND_ACCEPT);
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
         } else if ("30892-02-afmenu.htm".equalsIgnoreCase(event)) {
             long AdenaCount = st.getQuestItemsCount(AlligatorLeather) * 40;
             st.takeItems(AlligatorLeather);
@@ -109,7 +109,7 @@ public final class _338_AlligatorHunter extends Quest {
             } else
                 htmltext = "30892-havent.htm";
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
         return htmltext;
     }
@@ -124,7 +124,7 @@ public final class _338_AlligatorHunter extends Quest {
                     htmltext = "30892-01.htm";
                 else {
                     htmltext = "30892-00.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (st.haveQuestItem(AlligatorLeather))
                 htmltext = "30892-menu.htm";
@@ -145,7 +145,7 @@ public final class _338_AlligatorHunter extends Quest {
                     else if (st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[7], aDROPLIST_COND[5], aDROPLIST_COND[6]))
                         if (aDROPLIST_COND[1] != cond && aDROPLIST_COND[1] != 0) {
                             st.setCond(aDROPLIST_COND[1]);
-                            st.setState(STARTED);
+                            st.start();
                         }
     }
 }

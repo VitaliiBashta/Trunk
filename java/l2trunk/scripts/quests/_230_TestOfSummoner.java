@@ -12,6 +12,8 @@ import l2trunk.gameserver.model.quest.QuestState;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public final class _230_TestOfSummoner extends Quest {
     private static final int MARK_OF_SUMMONER_ID = 3336;
@@ -112,9 +114,15 @@ public final class _230_TestOfSummoner extends Quest {
             }
             // Brynthea
     };
-    private static final Map<Integer, String> NAMES = new HashMap<>();
+    private static final Map<Integer, String> NAMES = Map.of(
+            27102, "Almors",
+            27103, "Camoniell",
+            27104, "Belthus",
+            27105, "Basilla",
+            27106, "Celestiel",
+            27107, "Brynthea");
     private static final Map<Integer, Integer[]> DROPLIST_LARA = new HashMap<>();
-    private static final String[] STATS = {
+    private static final List<String> STATS = List.of(
             "cond",
             "step",
             "Lara_Part",
@@ -124,8 +132,7 @@ public final class _230_TestOfSummoner extends Quest {
             "Celestiel",
             "Camoniell",
             "Basilla",
-            "Almors"
-    };
+            "Almors");
     private static final int[][] LISTS = {
             {},
             // zero element filler
@@ -161,14 +168,6 @@ public final class _230_TestOfSummoner extends Quest {
             // List 5
     };
     private static final Map<Integer, List<Integer>> DROPLIST_SUMMON = new HashMap<>();
-    static {
-        NAMES.put(30635, "Almors");
-        NAMES.put(30636, "Camoniell");
-        NAMES.put(30637, "Belthus");
-        NAMES.put(30638, "Basilla");
-        NAMES.put(30639, "Celestiel");
-        NAMES.put(30640, "Brynthea");
-    }
 
     static {
         DROPLIST_LARA.put(20555, new Integer[]{
@@ -317,26 +316,17 @@ public final class _230_TestOfSummoner extends Quest {
                 CRYSTAL_OF_VICTORY6_ID)); // Silhoutte Tilfo
     }
 
-    static {
-        NAMES.put(27102, "Almors");
-        NAMES.put(27103, "Camoniell");
-        NAMES.put(27104, "Belthus");
-        NAMES.put(27105, "Basilla");
-        NAMES.put(27106, "Celestiel");
-        NAMES.put(27107, "Brynthea");
-    }
 
     public _230_TestOfSummoner() {
         super(false);
 
         addStartNpc(Galatea);
 
-            addTalkId(npc);
+        addTalkId(npc);
         addKillId(DROPLIST_LARA.keySet());
-            addKillId(DROPLIST_SUMMON.keySet());
-            addAttackId(DROPLIST_SUMMON.keySet());
-        for (int i = 3337; i <= 3389; i++)
-            addQuestItem(i);
+        addKillId(DROPLIST_SUMMON.keySet());
+        addAttackId(DROPLIST_SUMMON.keySet());
+        addQuestItem(IntStream.rangeClosed(3337, 3389).toArray());
     }
 
     @Override
@@ -344,15 +334,15 @@ public final class _230_TestOfSummoner extends Quest {
         String htmltext = event;
         if ("30634-08.htm".equalsIgnoreCase(event)) { // start part for Galatea
             for (String var : STATS) {
-                if ("Arcanas".equalsIgnoreCase(var) || var.equalsIgnoreCase("Lara_Part"))
+                if ("Arcanas".equalsIgnoreCase(var) || "Lara_Part".equalsIgnoreCase(var))
                     continue;
-                st.set(var, 1);
+                st.set(var);
             }
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
             if (!st.player.isVarSet("dd3")) {
-                st.giveItems(7562, 122, false);
-                st.player.setVar("dd3", 1);
+                st.giveItems(7562, 122);
+                st.player.setVar("dd3");
             }
         } else if ("30634-07.htm".equalsIgnoreCase(event))
             st.giveItems(GALATEAS_LETTER_ID);
@@ -368,7 +358,7 @@ public final class _230_TestOfSummoner extends Quest {
             st.giveItems(LISTS[random][0], 1, false);
             st.set("Lara_Part", random);
         } else if (event.equalsIgnoreCase("30635-02.htm")) { // Almors' Part, this is the same just other items below.. so just one time comments
-            if (st.getQuestItemsCount(BEGINNERS_ARCANA_ID) > 0) { // if( the player has more then one beginners' arcana he can start a fight against the masters summon
+            if (st.getQuestItemsCount(BEGINNERS_ARCANA_ID) > 0) { // if( the getPlayer has more then one beginners' arcana he can start a fight against the masters summon
                 htmltext = "30635-03.htm";
                 st.set("Almors", 2);
             }
@@ -380,7 +370,7 @@ public final class _230_TestOfSummoner extends Quest {
             st.takeItems(BEGINNERS_ARCANA_ID, 1);
         } // this takes one Beginner Arcana and set Beginner_Arcana stat -1
         else if ("30636-02.htm".equalsIgnoreCase(event)) { // Camoniell's Part
-            if (st.haveQuestItem(BEGINNERS_ARCANA_ID) ) {
+            if (st.haveQuestItem(BEGINNERS_ARCANA_ID)) {
                 htmltext = "30636-03.htm";
                 st.set("Camoniell", 2);
             }
@@ -390,7 +380,7 @@ public final class _230_TestOfSummoner extends Quest {
             st.takeItems(CRYSTAL_OF_DEFEAT2_ID);
             st.takeItems(BEGINNERS_ARCANA_ID, 1);
         } else if ("30637-02.htm".equalsIgnoreCase(event)) { // Belthus' Part
-            if (st.haveQuestItem(BEGINNERS_ARCANA_ID) ) {
+            if (st.haveQuestItem(BEGINNERS_ARCANA_ID)) {
                 htmltext = "30637-03.htm";
                 st.set("Belthus", 2);
             }
@@ -400,7 +390,7 @@ public final class _230_TestOfSummoner extends Quest {
             st.takeItems(CRYSTAL_OF_DEFEAT3_ID);
             st.takeItems(BEGINNERS_ARCANA_ID, 1);
         } else if ("30638-02.htm".equalsIgnoreCase(event)) { // Basilla's Part
-            if (st.haveQuestItem(BEGINNERS_ARCANA_ID) ) {
+            if (st.haveQuestItem(BEGINNERS_ARCANA_ID)) {
                 htmltext = "30638-03.htm";
                 st.set("Basilla", 2);
             }
@@ -410,9 +400,9 @@ public final class _230_TestOfSummoner extends Quest {
             st.takeItems(CRYSTAL_OF_DEFEAT4_ID);
             st.takeItems(BEGINNERS_ARCANA_ID, 1);
         } else if ("30639-02.htm".equalsIgnoreCase(event)) { // Celestiel's Part
-            if (st.haveQuestItem(BEGINNERS_ARCANA_ID) ) {
+            if (st.haveQuestItem(BEGINNERS_ARCANA_ID)) {
                 htmltext = "30639-03.htm";
-                st.set("Celestiel",2);
+                st.set("Celestiel", 2);
             }
         } else if ("30639-04.htm".equalsIgnoreCase(event)) {
             st.giveItems(CRYSTAL_OF_PROGRESS5_ID);
@@ -435,57 +425,48 @@ public final class _230_TestOfSummoner extends Quest {
 
     @Override
     public String onTalk(NpcInstance npc, QuestState st) {
-        if (st.getQuestItemsCount(MARK_OF_SUMMONER_ID) > 0) {
-            st.exitCurrentQuest(true);
+        if (st.haveQuestItem(MARK_OF_SUMMONER_ID)) {
+            st.exitCurrentQuest();
             return "completed";
         }
         String htmltext = "noquest";
         int npcId = npc.getNpcId();
         int id = st.getState();
         if (id == CREATED && npcId == 30634) { // start part, Galatea
-            for (String var : STATS)
-                st.set(var, 0);
+            STATS.forEach(st::unset);
             if (st.player.getClassId() == ClassId.wizard || st.player.getClassId() == ClassId.elvenWizard || st.player.getClassId() == ClassId.darkWizard)
                 if (st.player.getLevel() > 38) // conditions are ok, lets start
                     htmltext = "30634-03.htm";
                 else {
                     htmltext = "30634-02.htm"; // too young.. not now
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             else { // wrong class.. never
                 htmltext = "30634-01.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (id == STARTED) {
             int LaraPart = st.getInt("Lara_Part");
             int Arcanas = st.getInt("Arcanas");
-            int step = st.getInt("step"); // stats as int vars if( the player has state <Progress>
+            int step = st.getInt("step"); // stats as int vars if( the getPlayer has state <Progress>
             if (npcId == 30634) { // Start&&End Npc Galatea related stuff
                 if (step == 1) // step 1 means just started
                     htmltext = "30634-09.htm";
                 else if (step == 2) { // step 2 means already talkd with lara
-                    if (Arcanas == 6) { // finished all battles... the player is able to earn the marks
+                    if (Arcanas == 6) { // finished all battles... the getPlayer is able to earn the marks
                         htmltext = "30634-12.htm";
                         st.playSound(SOUND_FINISH);
-                        st.takeItems(LARS_LIST1_ID);
-                        st.takeItems(LARS_LIST2_ID);
-                        st.takeItems(LARS_LIST3_ID);
-                        st.takeItems(LARS_LIST4_ID);
-                        st.takeItems(LARS_LIST5_ID);
-                        st.takeItems(ALMORS_ARCANA_ID);
-                        st.takeItems(BASILLIA_ARCANA_ID);
-                        st.takeItems(CAMONIELL_ARCANA_ID);
-                        st.takeItems(CELESTIEL_ARCANA_ID);
-                        st.takeItems(BELTHUS_ARCANA_ID);
-                        st.takeItems(BRYNTHEA_ARCANA_ID);
+                        st.takeAllItems(LARS_LIST1_ID, LARS_LIST2_ID, LARS_LIST3_ID, LARS_LIST4_ID, LARS_LIST5_ID,
+                                ALMORS_ARCANA_ID, BASILLIA_ARCANA_ID, CAMONIELL_ARCANA_ID, CELESTIEL_ARCANA_ID,
+                                BELTHUS_ARCANA_ID, BRYNTHEA_ARCANA_ID);
                         st.giveItems(MARK_OF_SUMMONER_ID);
                         if (!st.player.isVarSet("prof2.3")) {
                             st.addExpAndSp(832247, 57110);
                             st.giveItems(ADENA_ID, 150480);
-                            st.player.setVar("prof2.3", 1);
+                            st.player.setVar("prof2.3");
                         }
                         st.playSound(SOUND_FINISH);
-                        st.exitCurrentQuest(true);
+                        st.exitCurrentQuest();
                     }
                 } else
                     // he lost something ))||didnt finished
@@ -507,19 +488,19 @@ public final class _230_TestOfSummoner extends Quest {
                         st.takeItems(LISTS[LaraPart][1]);
                         st.takeItems(LISTS[LaraPart][2]);
                         st.setCond(3);
-                        st.set("Lara_Part", 0);
+                        st.unset("Lara_Part");
                     }
                 }
             } else
                 for (int[] i : SUMMONERS)
                     if (i[0] == npcId) {
                         List<Integer> k = DROPLIST_SUMMON.get(npcId - 30635 + 27102);
-                        int SummonerStat = st.getInt(NAMES.get(i[0]));
+                        int summonerStat = st.getInt(NAMES.get(i[0]));
                         if (step > 1)
                             if (st.getQuestItemsCount(k.get(0)) > 0) // ready to fight... already take the mission to kill his pet
                                 htmltext = npcId + "-08.htm";
                             else if (st.getQuestItemsCount(k.get(1)) > 0) { // in battle...
-                                // this will add the player&&his pet to the list of notif(ied objects in onDeath Part
+                                // this will add the getPlayer&&his pet to the list of notif(ied objects in onDeath Part
                                 st.addNotifyOfDeath(st.player, true);
                                 htmltext = npcId + "-09.htm";
                             } else if (st.getQuestItemsCount(k.get(3)) > 0) // haha... your summon lose
@@ -530,12 +511,12 @@ public final class _230_TestOfSummoner extends Quest {
                                 htmltext = npcId + "-07.htm";
                                 st.takeItems(SUMMONERS[npcId - 30635][2]); // take crystal of victory
                                 st.giveItems(SUMMONERS[npcId - 30635][1]);// give arcana
-                                if (st.getQuestItemsCount(3354) + st.getQuestItemsCount(3355) + st.getQuestItemsCount(3356) + st.getQuestItemsCount(3357) + st.getQuestItemsCount(3358) + st.getQuestItemsCount(3359) >= 6)
+                                if (st.getQuestItemsCount(ALMORS_ARCANA_ID) + st.getQuestItemsCount(3355) + st.getQuestItemsCount(3356) + st.getQuestItemsCount(3357) + st.getQuestItemsCount(3358) + st.getQuestItemsCount(3359) >= 6)
                                     st.setCond(4);
                                 st.set(NAMES.get(i[0]), 7); // set 7, this mark that the players' summon won the battle
                                 st.set("Arcanas", Arcanas + 1);
                             } // set arcana stat +1, if( its 6... quest is finished&&he can earn the mark
-                            else if (SummonerStat == 7) // you already won the battle against my summon
+                            else if (summonerStat == 7) // you already won the battle against my summon
                                 htmltext = npcId + "-10.htm";
                             else
                                 htmltext = npcId + "-01.htm";
@@ -548,9 +529,9 @@ public final class _230_TestOfSummoner extends Quest {
     public void onDeath(Creature killer, Creature victim, QuestState st) {
         if (killer == null || victim == null)
             return; // WTF?
-        // if players summon dies, the crystal of defeat is given to the player and set stat to lose
+        // if players summon dies, the crystal of defeat is given to the getPlayer and set stat to lose
         int npcId = killer.getNpcId();
-        ////      if (deadPerson == st.player() or deadPerson = st.player().getPet()) and npcId in DROPLIST_SUMMON.keys() :
+        ////      if (deadPerson == st.getPlayer() or deadPerson = st.getPlayer().getPet()) and npcId in DROPLIST_SUMMON.keys() :
         if (victim == st.player || victim == st.player.getPet())
             if (npcId >= 27102 && npcId <= 27107) {
                 // var means the variable of the SummonerManager, the rest are all Crystalls wich mark the status
@@ -581,7 +562,7 @@ public final class _230_TestOfSummoner extends Quest {
             }
 
             if (st.getQuestItemsCount(i.get(2)) != 0)
-                return ;
+                return;
 
             Summon summon = st.player.getPet();
             if (summon == null || summon instanceof PetInstance) {
@@ -617,7 +598,7 @@ public final class _230_TestOfSummoner extends Quest {
             if (st.getInt(var) == 3) {
                 boolean isFoul = st.getQuestItemsCount(foul) == 0;
                 int isName = 1; // first entry in the droplist is a name (string).  Skip it.
-                for (Integer item : DROPLIST_SUMMON.get(npcId)) { // take all crystal of this summoner away from the player
+                for (Integer item : DROPLIST_SUMMON.get(npcId)) { // take all crystal of this summoner away from the getPlayer
                     if (isName != 1)
                         st.takeItems(item);
                     isName = 0;
@@ -629,7 +610,7 @@ public final class _230_TestOfSummoner extends Quest {
                     st.giveItems(victory, 1, false); // if he wons without cheating, set stat won and give victory crystal
                     st.playSound(SOUND_MIDDLE);
                 } else
-                    st.set(var, 5); // if the player cheats, give foul crystal and set stat to cheat
+                    st.set(var, 5); // if the getPlayer cheats, give foul crystal and set stat to cheat
             }
         }
     }

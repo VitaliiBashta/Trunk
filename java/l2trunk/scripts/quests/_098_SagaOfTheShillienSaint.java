@@ -1,5 +1,6 @@
 package l2trunk.scripts.quests;
 
+import l2trunk.gameserver.model.base.ClassId;
 import l2trunk.gameserver.utils.Location;
 
 import java.util.List;
@@ -9,15 +10,14 @@ public final class _098_SagaOfTheShillienSaint extends SagasSuperclass {
         super(false);
 
         NPC = List.of(31581, 31626, 31588, 31287, 31621, 31646, 31647, 31651, 31654, 31655, 31658, 31287);
-        Items = List.of(7080, 7525, 7081, 7513, 7296, 7327, 7358, 7389, 7420, 7451, 7090, 0);
-        Mob = List.of(27270, 27247, 27277);
-        classid = 112;
-        prevclass = 0x2B;
+        items = List.of(7080, 7525, 7081, 7513, 7296, 7327, 7358, 7389, 7420, 7451, 7090, 0);
+        mob = List.of(27270, 27247, 27277);
+        classid = ClassId.shillienSaint;
         locs = List.of(
-                new Location(119518, -28658, -3811),
-                new Location(181215, 36676, -4812),
-                new Location(181227, 36703, -4816));
-        Text = List.of(
+                Location.of(119518, -28658, -3811),
+                Location.of(181215, 36676, -4812),
+                Location.of(181227, 36703, -4816));
+        text = List.of(
                 "PLAYERNAME! Pursued to here! However, I jumped out of the Banshouren boundaries! You look at the giant as the sign of power!",
                 "... Oh ... good! So it was ... let's begin!",
                 "I do not have the patience ..! I have been a giant force ...! Cough chatter ah ah ah!",

@@ -2,60 +2,60 @@ package l2trunk.gameserver.model.entity.auction;
 
 import l2trunk.gameserver.model.items.ItemInstance;
 
-public class Auction {
-    private final int _auctionId;
-    private final int _sellerObjectId;
-    private final String _sellerName;
-    private final ItemInstance _item;
-    private final long _pricePerItem;
-    private final AuctionItemTypes _itemType;
-    private final boolean _privateStore;
-    private long _countToSell;
+public final class Auction {
+    private final int auctionId;
+    private final int sellerObjectId;
+    private final String sellerName;
+    private final ItemInstance item;
+    private final long pricePerItem;
+    private final AuctionItemTypes itemType;
+    private final boolean privateStore;
+    private long countToSell;
 
     public Auction(int id, int sellerObjectId, String sellerName, ItemInstance item, long pricePerItem, long countToSell, AuctionItemTypes itemType, boolean privateStore) {
-        _auctionId = id;
-        _sellerObjectId = sellerObjectId;
-        _sellerName = sellerName;
-        _item = item;
-        _pricePerItem = pricePerItem;
-        _countToSell = countToSell;
-        _itemType = itemType;
-        _privateStore = privateStore;
+        auctionId = id;
+        this.sellerObjectId = sellerObjectId;
+        this.sellerName = sellerName;
+        this.item = item;
+        this.pricePerItem = pricePerItem;
+        this.countToSell = countToSell;
+        this.itemType = itemType;
+        this.privateStore = privateStore;
     }
 
-    public int getAuctionId() {
-        return _auctionId;
+    public int auctionId() {
+        return auctionId;
     }
 
     public int getSellerObjectId() {
-        return _sellerObjectId;
+        return sellerObjectId;
     }
 
     public String getSellerName() {
-        return _sellerName;
+        return sellerName;
     }
 
     public ItemInstance getItem() {
-        return _item;
+        return item;
     }
 
     public void setCount(long count) {
-        _countToSell = count;
+        countToSell = count;
     }
 
     public long getCountToSell() {
-        return _countToSell;
+        return countToSell;
     }
 
     public long getPricePerItem() {
-        return _pricePerItem;
+        return pricePerItem;
     }
 
     public AuctionItemTypes getItemType() {
-        return _itemType;
+        return itemType;
     }
 
     public boolean isPrivateStore() {
-        return _privateStore;
+        return privateStore;
     }
 }

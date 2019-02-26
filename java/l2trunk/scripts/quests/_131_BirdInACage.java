@@ -21,8 +21,7 @@ public final class _131_BirdInACage extends Quest {
         addStartNpc(KANIS);
         addTalkId(PARME);
 
-        addQuestItem(KANIS_ECHO_CRY);
-        addQuestItem(PARMES_LETTER);
+        addQuestItem(KANIS_ECHO_CRY,PARMES_LETTER);
     }
 
     @Override
@@ -31,7 +30,7 @@ public final class _131_BirdInACage extends Quest {
 
         if (event.equals("priest_kanis_q0131_04.htm") && cond == 0) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if (event.equals("priest_kanis_q0131_12.htm") && cond == 1) {
             st.setCond(2);
@@ -49,7 +48,7 @@ public final class _131_BirdInACage extends Quest {
             st.playSound(SOUND_FINISH);
             st.takeItems(KANIS_ECHO_CRY, -1);
             st.addExpAndSp(250677, 25019);
-            st.exitCurrentQuest(false);
+            st.finish();
             if (HellboundManager.getHellboundLevel() == 0)
                 ServerVariables.set("HellboundConfidence", 1);
         } else if (event.equals("meet") && cond == 2)
@@ -70,7 +69,7 @@ public final class _131_BirdInACage extends Quest {
                     htmltext = "priest_kanis_q0131_01.htm";
                 else {
                     htmltext = "priest_kanis_q0131_02.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             else if (cond == 1)
                 htmltext = "priest_kanis_q0131_05.htm";

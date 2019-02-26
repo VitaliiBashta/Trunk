@@ -9,7 +9,7 @@ public final class _050_LanoscosSpecialBait extends Quest {
     // NPC
     private final int Lanosco = 31570;
     private final int SingingWind = 21026;
-    // Items
+    // items
     private static final int EssenceofWind = 7621;
     private static final int WindFishingLure = 7610;
     // Skill
@@ -31,7 +31,7 @@ public final class _050_LanoscosSpecialBait extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
         if (event.equals("fisher_lanosco_q0050_0104.htm")) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if (event.equals("fisher_lanosco_q0050_0201.htm"))
@@ -42,7 +42,7 @@ public final class _050_LanoscosSpecialBait extends Quest {
                 st.takeItems(EssenceofWind, -1);
                 st.giveItems(WindFishingLure, 4);
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(false);
+                st.finish();
             }
         return htmltext;
     }
@@ -57,12 +57,12 @@ public final class _050_LanoscosSpecialBait extends Quest {
             if (id == CREATED) {
                 if (st.player.getLevel() < 27) {
                     htmltext = "fisher_lanosco_q0050_0103.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else if (st.player.getSkillLevel(FishSkill) >= 8)
                     htmltext = "fisher_lanosco_q0050_0101.htm";
                 else {
                     htmltext = "fisher_lanosco_q0050_0102.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1 || cond == 2)
                 if (st.getQuestItemsCount(EssenceofWind) < 100) {

@@ -15,12 +15,12 @@ public final class _134_TempleMissionary extends Quest {
     private final static int Cruma_Marshlands_Traitor = 27339;
     private final static List<Integer> mobs = List.of(
             20157, 20229, 20230, 20231, 20232, 20233, 20234);
-    // Quest Items
+    // Quest items
     private final static int Giants_Experimental_Tool_Fragment = 10335;
     private final static int Giants_Experimental_Tool = 10336;
     private final static int Giants_Technology_Report = 10337;
     private final static int Roukes_Report = 10338;
-    // Items
+    // items
     private final static int Badge_Temple_Missionary = 10339;
     // Chances
     private final static int Giants_Experimental_Tool_Fragment_chance = 66;
@@ -32,36 +32,33 @@ public final class _134_TempleMissionary extends Quest {
         addTalkId(Rouke);
         addKillId(mobs);
         addKillId(Cruma_Marshlands_Traitor);
-        addQuestItem(Giants_Experimental_Tool_Fragment);
-        addQuestItem(Giants_Experimental_Tool);
-        addQuestItem(Giants_Technology_Report);
-        addQuestItem(Roukes_Report);
+        addQuestItem(Giants_Experimental_Tool_Fragment,Giants_Experimental_Tool,Giants_Technology_Report,Roukes_Report);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         int _state = st.getState();
-        if (event.equalsIgnoreCase("glyvka_q0134_03.htm") && _state == CREATED) {
+        if ("glyvka_q0134_03.htm".equalsIgnoreCase(event) && _state == CREATED) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("glyvka_q0134_06.htm") && _state == STARTED) {
+        } else if ("glyvka_q0134_06.htm".equalsIgnoreCase(event) && _state == STARTED) {
             st.setCond(2);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("glyvka_q0134_11.htm") && _state == STARTED && st.getCond() == 5) {
+        } else if ("glyvka_q0134_11.htm".equalsIgnoreCase(event) && _state == STARTED && st.getCond() == 5) {
             st.playSound(SOUND_FINISH);
             st.unset("Report");
             st.giveItems(ADENA_ID, 15100);
-            st.giveItems(Badge_Temple_Missionary, 1);
+            st.giveItems(Badge_Temple_Missionary);
             st.addExpAndSp(30000, 2000);
-            st.exitCurrentQuest(false);
-        } else if (event.equalsIgnoreCase("scroll_seller_rouke_q0134_03.htm") && _state == STARTED) {
+            st.finish();
+        } else if ("scroll_seller_rouke_q0134_03.htm".equalsIgnoreCase(event) && _state == STARTED) {
             st.setCond(3);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("scroll_seller_rouke_q0134_09.htm") && _state == STARTED && st.getInt("Report") == 1) {
+        } else if ("scroll_seller_rouke_q0134_09.htm".equalsIgnoreCase(event) && _state == STARTED && st.isSet("Report")) {
             st.setCond(5);
             st.playSound(SOUND_MIDDLE);
-            st.giveItems(Roukes_Report, 1);
+            st.giveItems(Roukes_Report);
             st.unset("Report");
         }
         return event;
@@ -78,7 +75,7 @@ public final class _134_TempleMissionary extends Quest {
             if (npcId != Glyvka)
                 return "noquest";
             if (st.player.getLevel() < 35) {
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 return "glyvka_q0134_02.htm";
             }
             st.setCond(0);
@@ -91,11 +88,11 @@ public final class _134_TempleMissionary extends Quest {
             if (cond == 1)
                 return "glyvka_q0134_03.htm";
             if (cond == 5) {
-                if (st.getInt("Report") == 1)
+                if (st.isSet("Report") )
                     return "glyvka_q0134_09.htm";
                 if (st.haveQuestItem(Roukes_Report)) {
                     st.takeItems(Roukes_Report);
-                    st.set("Report", 1);
+                    st.set("Report");
                     return "glyvka_q0134_08.htm";
                 }
                 return "noquest";
@@ -117,13 +114,13 @@ public final class _134_TempleMissionary extends Quest {
                 return "scroll_seller_rouke_q0134_05.htm";
             }
             if (cond == 4) {
-                if (st.getInt("Report") == 1)
+                if (st.isSet("Report"))
                     return "scroll_seller_rouke_q0134_07.htm";
                 if (st.getQuestItemsCount(Giants_Technology_Report) > 2) {
                     st.takeItems(Giants_Experimental_Tool_Fragment);
                     st.takeItems(Giants_Experimental_Tool);
                     st.takeItems(Giants_Technology_Report);
-                    st.set("Report", 1);
+                    st.set("Report");
                     return "scroll_seller_rouke_q0134_06.htm";
                 }
                 return "noquest";

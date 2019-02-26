@@ -29,14 +29,11 @@ public final class _032_AnObviousLie extends Quest {
         super(false);
 
         addStartNpc(MAXIMILIAN);
-        addTalkId(MAXIMILIAN);
-        addTalkId(GENTLER);
-        addTalkId(MIKI_THE_CAT);
+        addTalkId(MAXIMILIAN,GENTLER,MIKI_THE_CAT);
 
         addKillId(ALLIGATOR);
 
-        addQuestItem(MEDICINAL_HERB);
-        addQuestItem(MAP);
+        addQuestItem(MEDICINAL_HERB,MAP);
     }
 
     @Override
@@ -44,7 +41,7 @@ public final class _032_AnObviousLie extends Quest {
         String htmltext = event;
         if ("30120-1.htm".equals(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("30094-1.htm".equals(event)) {
             st.giveItems(MAP, 1);
@@ -86,7 +83,7 @@ public final class _032_AnObviousLie extends Quest {
                 st.unset("cond");
                 st.playSound(SOUND_FINISH);
                 htmltext = "30094-14.htm";
-                st.exitCurrentQuest(false);
+                st.finish();
             } else
                 htmltext = "You don't have enough materials";
         return htmltext;
@@ -103,7 +100,7 @@ public final class _032_AnObviousLie extends Quest {
                     htmltext = "30120-0.htm";
                 else {
                     htmltext = "30120-0a.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1)
                 htmltext = "30120-2.htm";

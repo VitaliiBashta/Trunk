@@ -18,9 +18,7 @@ public final class _008_AnAdventureBegins extends Quest {
 
         addStartNpc(JASMINE);
 
-        addTalkId(JASMINE);
-        addTalkId(ROSELYN);
-        addTalkId(HARNE);
+        addTalkId(ROSELYN,HARNE);
 
         addQuestItem(ROSELYNS_NOTE);
     }
@@ -29,7 +27,7 @@ public final class _008_AnAdventureBegins extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("jasmine_q0008_0104.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("sentry_roseline_q0008_0201.htm".equalsIgnoreCase(event)) {
             st.giveItems(ROSELYNS_NOTE);
@@ -44,7 +42,7 @@ public final class _008_AnAdventureBegins extends Quest {
             st.giveItems(MARK_OF_TRAVELER);
             st.setCond(0);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(false);
+            st.finish();
         }
         return event;
     }
@@ -60,7 +58,7 @@ public final class _008_AnAdventureBegins extends Quest {
                     htmltext = "jasmine_q0008_0101.htm";
                 else {
                     htmltext = "jasmine_q0008_0102.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             else if (cond == 1)
                 htmltext = "jasmine_q0008_0105.htm";

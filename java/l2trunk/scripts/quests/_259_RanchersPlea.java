@@ -27,9 +27,9 @@ public final class _259_RanchersPlea extends Quest {
         String htmltext = event;
         switch (event) {
             case "1":
-                st.set("id", 0);
+                st.unset("id");
                 st.setCond(1);
-                st.setState(STARTED);
+                st.start();
                 st.playSound(SOUND_ACCEPT);
                 htmltext = "edmond_q0259_03.htm";
                 break;
@@ -37,7 +37,7 @@ public final class _259_RanchersPlea extends Quest {
                 htmltext = "edmond_q0259_06.htm";
                 st.setCond(0);
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 break;
             case "30497_2":
                 htmltext = "edmond_q0259_07.htm";
@@ -92,10 +92,10 @@ public final class _259_RanchersPlea extends Quest {
                     return htmltext;
                 }
                 htmltext = "edmond_q0259_01.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else {
                 htmltext = "edmond_q0259_01.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (npcId == 30497 && st.getCond() == 1 && st.getQuestItemsCount(GIANT_SPIDER_SKIN_ID) < 1)
             htmltext = "edmond_q0259_04.htm";

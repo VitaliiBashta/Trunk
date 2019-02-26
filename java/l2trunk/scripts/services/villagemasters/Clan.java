@@ -1,6 +1,5 @@
 package l2trunk.scripts.services.villagemasters;
 
-import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.scripts.Functions;
 
 public final class Clan extends Functions {
@@ -23,7 +22,7 @@ public final class Clan extends Functions {
     public void CheckDissolveClan() {
         if (npc == null || player == null)
             return;
-        String htmltext = "clan-01.htm";
+        String htmltext;
         if (player.isClanLeader())
             htmltext = "clan-04.htm";
         else

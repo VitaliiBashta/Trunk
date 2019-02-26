@@ -53,15 +53,15 @@ public class FarmMessengerInstance extends NpcInstance {
                 return;
             }
 
-            QuestState questState = player.getQuestState(_655_AGrandPlanForTamingWildBeasts.class);
-            if (questState == null || questState.getQuestItemsCount(8293) != 1) {
+            QuestState st = player.getQuestState(_655_AGrandPlanForTamingWildBeasts.class);
+            if (st == null || st.getQuestItemsCount(8293) != 1) {
                 showChatWindow(player, "residence2/clanhall/farm_kel_mahum_messenger_27.htm");
                 return;
             }
 
-            questState.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             register(player);
-        } else if (command.equalsIgnoreCase("registerAsMember")) {
+        } else if ("registerAsMember".equalsIgnoreCase(command)) {
             CTBSiegeClanObject siegeClan = siegeEvent.getSiegeClan(ClanHallTeamBattleEvent.ATTACKERS, player.getClan());
             if (siegeClan == null) {
                 showChatWindow(player, "residence2/clanhall/farm_kel_mahum_messenger_7.htm");
@@ -141,7 +141,7 @@ public class FarmMessengerInstance extends NpcInstance {
                     msg.replace("%clan_" + i + "%", siegeClan.getClan().getName());
                 else
                     msg.replaceNpcString("%clan_" + i + "%", NpcString.__UNREGISTERED__);
-                msg.replace("%clan_count_" + i + "%", siegeClan == null ? StringUtils.EMPTY : String.valueOf(siegeClan.getPlayers().size()));
+                msg.replace("%clan_count_" + i + "%", siegeClan == null ? 0 : siegeClan.getPlayers().size());
             }
             player.sendPacket(msg);
         } else

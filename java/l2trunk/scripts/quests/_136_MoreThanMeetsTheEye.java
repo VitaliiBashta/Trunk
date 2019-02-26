@@ -78,9 +78,7 @@ public final class _136_MoreThanMeetsTheEye extends Quest {
         super(false);
 
         addStartNpc(HARDIN);
-        addTalkId(HARDIN);
-        addTalkId(ERRICKIN);
-        addTalkId(CLAYTON);
+        addTalkId(ERRICKIN,CLAYTON);
 
         addQuestItem(StabilizedEctoplasm,
                 HardinsInstructions,
@@ -93,28 +91,28 @@ public final class _136_MoreThanMeetsTheEye extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("hardin_q0136_08.htm")) {
+        if ("hardin_q0136_08.htm".equalsIgnoreCase(event)) {
             st.setCond(2);
-            st.set("id", 0);
-            st.setState(STARTED);
+            st.unset("id");
+            st.start();
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("magister_errickin_q0136_03.htm")) {
+        } else if ("magister_errickin_q0136_03.htm".equalsIgnoreCase(event)) {
             st.setCond(3);
-            st.setState(STARTED);
-        } else if (event.equalsIgnoreCase("hardin_q0136_16.htm")) {
-            st.giveItems(HardinsInstructions, 1);
+            st.start();
+        } else if ("hardin_q0136_16.htm".equalsIgnoreCase(event)) {
+            st.giveItems(HardinsInstructions);
             st.setCond(6);
-            st.setState(STARTED);
-        } else if (event.equalsIgnoreCase("magister_clayton_q0136_10.htm")) {
+            st.start();
+        } else if ("magister_clayton_q0136_10.htm".equalsIgnoreCase(event)) {
             st.setCond(7);
-            st.setState(STARTED);
-        } else if (event.equalsIgnoreCase("hardin_q0136_23.htm")) {
+            st.start();
+        } else if ("hardin_q0136_23.htm".equalsIgnoreCase(event)) {
             st.playSound(SOUND_FINISH);
-            st.giveItems(TransformSealbook, 1);
+            st.giveItems(TransformSealbook);
             st.giveItems(ADENA_ID, 67550, true);
             st.unset("id");
             st.unset("cond");
-            st.exitCurrentQuest(false);
+            st.finish();
         }
         return event;
     }
@@ -131,7 +129,7 @@ public final class _136_MoreThanMeetsTheEye extends Quest {
                     htmltext = "hardin_q0136_01.htm";
                 } else {
                     htmltext = "hardin_q0136_02.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 2 || cond == 3 || cond == 4)
                 htmltext = "hardin_q0136_09.htm";
@@ -149,19 +147,19 @@ public final class _136_MoreThanMeetsTheEye extends Quest {
                 htmltext = "magister_errickin_q0136_02.htm";
             else if (cond == 3)
                 htmltext = "magister_errickin_q0136_03.htm";
-            else if (cond == 4 && st.getQuestItemsCount(Ectoplasm) < 35 && st.getInt("id") == 0) {
+            else if (cond == 4 && st.getQuestItemsCount(Ectoplasm) < 35 && !st.isSet("id") ) {
                 st.setCond(3);
                 htmltext = "magister_errickin_q0136_03.htm";
-            } else if (cond == 4 && st.getInt("id") == 0) {
+            } else if (cond == 4 && !st.isSet("id")) {
                 st.takeItems(Ectoplasm, -1);
                 htmltext = "magister_errickin_q0136_05.htm";
-                st.set("id", 1);
-            } else if (cond == 4 && st.getInt("id") == 1) {
+                st.set("id");
+            } else if (cond == 4 && st.isSet("id")) {
                 htmltext = "magister_errickin_q0136_06.htm";
                 st.giveItems(StabilizedEctoplasm);
-                st.set("id", 0);
+                st.unset("id");
                 st.setCond(5);
-                st.setState(STARTED);
+                st.start();
             } else if (cond == 5)
                 htmltext = "magister_errickin_q0136_07.htm";
         } else if (npcId == CLAYTON)
@@ -178,7 +176,7 @@ public final class _136_MoreThanMeetsTheEye extends Quest {
                 st.takeItems(GlassJaguarCrystal);
                 st.giveItems(BlankSealbook);
                 st.setCond(9);
-                st.setState(STARTED);
+                st.start();
             } else if (cond == 9)
                 htmltext = "magister_clayton_q0136_14.htm";
         return htmltext;
@@ -216,7 +214,7 @@ public final class _136_MoreThanMeetsTheEye extends Quest {
                             st.playSound(SOUND_MIDDLE);
                             if (aDROPLIST_COND[1] != 0) {
                                 st.setCond(aDROPLIST_COND[1]);
-                                st.setState(STARTED);
+                                st.start();
                             }
                         } else
                             st.playSound(SOUND_ITEMGET);

@@ -203,7 +203,7 @@ public class RequestPrivateStoreBuySellList extends L2GameClientPacket {
                 seller.addAdena(totalCost, "Private Store Sell to " + buyer.toString());
                 buyer.saveTradeList();
 
-                ItemLogHandler.getInstance().addLog(seller, buyer, sellList, totalCost, ItemActionType.SOLD_IN_STORE, ItemActionType.BOUGHT_IN_STORE);
+                ItemLogHandler.INSTANCE.addLog(seller, buyer, sellList, totalCost, ItemActionType.SOLD_IN_STORE, ItemActionType.BOUGHT_IN_STORE);
             } finally {
                 seller.getInventory().writeUnlock();
                 buyer.getInventory().writeUnlock();

@@ -39,7 +39,7 @@ public final class OlympiadNobleDAO {
 //                if (tempId < 88) // Если это не 3-я профа, то исправляем со 2-й на 3-ю.
                 int classId = ClassId.VALUES.stream()
                         .filter(id -> id.occupation() == 3)
-                        .filter(id -> id.parent().id == tempId)
+                        .filter(id -> id.parent.id == tempId)
                         .mapToInt(id -> id.id).findFirst().orElse(tempId);
 
                 StatsSet statDat = new StatsSet();
@@ -56,7 +56,7 @@ public final class OlympiadNobleDAO {
                 statDat.set(Olympiad.GAME_NOCLASSES_COUNT, rset.getInt(Olympiad.GAME_NOCLASSES_COUNT));
                 statDat.set(Olympiad.GAME_TEAM_COUNT, rset.getInt(Olympiad.GAME_TEAM_COUNT));
 
-                Olympiad._nobles.put(charId, statDat);
+                Olympiad.nobles.put(charId, statDat);
             }
         } catch (SQLException e) {
             _log.error("OlympiadNobleDAO: getBonuses():", e);
@@ -66,7 +66,7 @@ public final class OlympiadNobleDAO {
     public static void replace(int nobleId) {
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement(REPLACE_SQL_QUERY);) {
-            StatsSet nobleInfo = Olympiad._nobles.get(nobleId);
+            StatsSet nobleInfo = Olympiad.nobles.get(nobleId);
 
             statement.setInt(1, nobleId);
             statement.setInt(2, nobleInfo.getInteger(Olympiad.CLASS_ID));

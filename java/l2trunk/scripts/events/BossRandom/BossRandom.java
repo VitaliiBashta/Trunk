@@ -33,7 +33,7 @@ public final class BossRandom extends Functions implements ScriptFile {
 
     public void OnDie(Creature self, Creature killer) {
         if (self.getNpcId() == BossId) {
-            Announcements.INSTANCE.announceToAll(self.getName() + " defeated, the player " + killer.getName() + " final blow!");
+            Announcements.INSTANCE.announceToAll(self.getName() + " defeated, the getPlayer " + killer.getName() + " final blow!");
             Announcements.INSTANCE.announceToAll("Peace zone in the island canceled.");
             ThreadPoolManager.INSTANCE.schedule(new spawnBossShedule(), BossEventInterval);
             _zone.setActive(false);

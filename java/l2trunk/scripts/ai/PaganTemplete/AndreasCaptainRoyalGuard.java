@@ -15,8 +15,8 @@ import java.util.List;
 /**
  * @author Grivesky
  * - AI for the monster Andreas Captain Royal Guard (22175).
- * - If you see a player in a range of 500 when its party composes more than 9 Membury.
- * - Then throw on a random coordinates of the first who saw the player.
+ * - If you see a getPlayer in a range of 500 when its party composes more than 9 Membury.
+ * - Then throw on a random coordinates of the first who saw the getPlayer.
  * - If the attack when HP is below 70%, throw a debuff and die.
  * - AI is tested and works.
  */

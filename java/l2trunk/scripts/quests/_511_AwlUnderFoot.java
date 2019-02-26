@@ -61,10 +61,10 @@ public final class _511_AwlUnderFoot extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("gludio_fort_a_campkeeper_q0511_03.htm".equalsIgnoreCase(event) || "gludio_fort_a_campkeeper_q0511_06.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("exit".equalsIgnoreCase(event)) {
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             return null;
         } else if ("enter".equalsIgnoreCase(event))
             if (st.getState() == CREATED || !check(st.player))
@@ -165,7 +165,7 @@ public final class _511_AwlUnderFoot extends Quest {
                     return null;
                 }
 
-                // Synerge - Add the player to the instance again
+                // Synerge - Add the getPlayer to the instance again
                 if (prison != null) {
                     Reflection r = ReflectionManager.INSTANCE.get(prison.getReflectionId());
                     if (r != null) {
@@ -229,7 +229,7 @@ public final class _511_AwlUnderFoot extends Quest {
         }
 
         void initSpawn(int npcId, boolean first) {
-            ThreadPoolManager.INSTANCE.schedule(() -> addSpawnToInstance(npcId, new Location(53304, 245992, -6576, 25958), _reflectionId), first ? 60000 : 180000);
+            ThreadPoolManager.INSTANCE.schedule(() -> addSpawnToInstance(npcId, Location.of(53304, 245992, -6576, 25958), _reflectionId), first ? 60000 : 180000);
         }
 
         int getReflectionId() {

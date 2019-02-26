@@ -45,7 +45,7 @@ public final class StatParser {
             return parseLogicNot(element);
         else if (name.equalsIgnoreCase("target"))
             return parseTargetCondition(element);
-        else if (name.equalsIgnoreCase("player"))
+        else if (name.equalsIgnoreCase("getPlayer"))
             return parsePlayerCondition(element);
         else if (name.equalsIgnoreCase("using"))
             return parseUsingCondition(element);

@@ -26,15 +26,9 @@ public final class _603_DaimontheWhiteEyedPart1 extends Quest {
 
         addStartNpc(EYE);
 
-        addTalkId(TABLE1);
-        addTalkId(TABLE2);
-        addTalkId(TABLE3);
-        addTalkId(TABLE4);
-        addTalkId(TABLE5);
+        addTalkId(TABLE1,TABLE2,TABLE3,TABLE4,TABLE5);
 
-        addKillId(BUFFALO);
-        addKillId(BANDERSNATCH);
-        addKillId(GRENDEL);
+        addKillId(BUFFALO,BANDERSNATCH,GRENDEL);
 
         addQuestItem(EVIL_SPIRIT);
     }
@@ -42,58 +36,57 @@ public final class _603_DaimontheWhiteEyedPart1 extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("31683-02.htm")) {
+        if ("31683-02.htm".equalsIgnoreCase(event)) {
             if (st.player.getLevel() < 73) {
                 htmltext = "31683-01a.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else {
                 st.setCond(1);
-                st.setState(STARTED);
+                st.start();
                 st.playSound("ItemSound.quest_accept");
             }
-        } else if (event.equalsIgnoreCase("31548-02.htm")) {
+        } else if ("31548-02.htm".equalsIgnoreCase(event)) {
             st.setCond(2);
-            st.setState(STARTED);
-            st.playSound("ItemSound.quest_middle");
-            st.giveItems(BROKEN_CRYSTAL, 1);
-        } else if (event.equalsIgnoreCase("31549-02.htm")) {
-            st.setCond(3);
-            st.setState(STARTED);
+            st.start();
             st.playSound("ItemSound.quest_middle");
             st.giveItems(BROKEN_CRYSTAL);
-        } else if (event.equalsIgnoreCase("31550-02.htm")) {
+        } else if ("31549-02.htm".equalsIgnoreCase(event)) {
+            st.setCond(3);
+            st.start();
+            st.playSound("ItemSound.quest_middle");
+            st.giveItems(BROKEN_CRYSTAL);
+        } else if ("31550-02.htm".equalsIgnoreCase(event)) {
             st.setCond(4);
-            st.setState(STARTED);
+            st.start();
             st.playSound("ItemSound.quest_middle");
-            st.giveItems(BROKEN_CRYSTAL, 1);
-        } else if (event.equalsIgnoreCase("31551-02.htm")) {
+            st.giveItems(BROKEN_CRYSTAL);
+        } else if ("31551-02.htm".equalsIgnoreCase(event)) {
             st.setCond(5);
-            st.setState(STARTED);
+            st.start();
             st.playSound("ItemSound.quest_middle");
-            st.giveItems(BROKEN_CRYSTAL, 1);
-        } else if (event.equalsIgnoreCase("31552-02.htm")) {
+            st.giveItems(BROKEN_CRYSTAL);
+        } else if ("31552-02.htm".equalsIgnoreCase(event)) {
             st.setCond(6);
-            st.setState(STARTED);
+            st.start();
             st.playSound("ItemSound.quest_middle");
-            st.giveItems(BROKEN_CRYSTAL, 1);
-        } else if (event.equalsIgnoreCase("31683-04.htm")) {
-            if (st.getQuestItemsCount(BROKEN_CRYSTAL) < 5)
-                htmltext = "31683-08.htm";
-            else {
+            st.giveItems(BROKEN_CRYSTAL);
+        } else if ("31683-04.htm".equalsIgnoreCase(event)) {
+            if (st.haveQuestItem(BROKEN_CRYSTAL, 5)) {
                 st.setCond(7);
-                st.setState(STARTED);
-                st.takeItems(BROKEN_CRYSTAL, -1);
+                st.start();
+                st.takeItems(BROKEN_CRYSTAL);
                 st.playSound("ItemSound.quest_middle");
+            } else {
+                htmltext = "31683-08.htm";
             }
-        } else if (event.equalsIgnoreCase("31683-07.htm"))
-            if (st.getQuestItemsCount(EVIL_SPIRIT) < 200)
-                htmltext = "31683-09.htm";
-            else {
-                st.takeItems(EVIL_SPIRIT, -1);
-                st.giveItems(U_SUMMON, 1);
+        } else if ("31683-07.htm".equalsIgnoreCase(event))
+            if (st.haveQuestItem(EVIL_SPIRIT, 200)) {
+                st.takeItems(EVIL_SPIRIT);
+                st.giveItems(U_SUMMON);
                 st.playSound("ItemSound.quest_finish");
-                st.exitCurrentQuest(true);
-            }
+                st.exitCurrentQuest();
+            } else
+                htmltext = "31683-09.htm";
         return htmltext;
     }
 
@@ -155,9 +148,9 @@ public final class _603_DaimontheWhiteEyedPart1 extends Quest {
     @Override
     public void onKill(NpcInstance npc, QuestState st) {
         st.rollAndGive(EVIL_SPIRIT, 1, 1, 200, 100);
-        if (st.getQuestItemsCount(EVIL_SPIRIT) == 200) {
+        if (st.haveQuestItem(EVIL_SPIRIT, 200)) {
             st.setCond(8);
-            st.setState(STARTED);
+            st.start();
         }
     }
 }

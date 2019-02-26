@@ -58,17 +58,17 @@ public final class _692_HowtoOpposeEvil extends Quest {
         if ("take_test".equalsIgnoreCase(event) && cond == 0) {
             if (st.player.isQuestCompleted(_10273_GoodDayToFly.class)) {
                 st.setCond(2);
-                st.setState(STARTED);
+                st.start();
                 st.playSound(SOUND_ACCEPT);
                 htmltext = "dilios_q692_4.htm";
             } else {
                 st.setCond(1);
-                st.setState(STARTED);
+                st.start();
                 st.playSound(SOUND_ACCEPT);
                 htmltext = "dilios_q692_3.htm";
             }
         } else if ("lekon_q692_2.htm".equalsIgnoreCase(event) && cond == 1)
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         else if ("kutran_q692_2.htm".equalsIgnoreCase(event) && cond == 2) {
             st.setCond(3);
             st.playSound(SOUND_MIDDLE);
@@ -139,7 +139,7 @@ public final class _692_HowtoOpposeEvil extends Quest {
                     htmltext = "dilios_q692_1.htm";
                 else {
                     htmltext = "dilios_q692_0.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
         } else if (npcId == Kutran) {
             if (cond == 2)

@@ -55,11 +55,6 @@ public final class TradeRequest extends L2GameClientPacket {
             return;
         }
 
-        if (activeChar.isInAwayingMode()) {
-            activeChar.sendMessage(new CustomMessage("Away.ActionFailed", new Object[0]));
-            return;
-        }
-
         if (activeChar.isProcessingRequest()) {
             activeChar.sendPacket(SystemMsg.WAITING_FOR_ANOTHER_REPLY);
             return;
@@ -112,13 +107,7 @@ public final class TradeRequest extends L2GameClientPacket {
             return;
         }
 
-        if (reciever.isInAwayingMode()) {
-            reciever.sendMessage(new CustomMessage("Away.ActionFailed", new Object[0]));
-            return;
-        }
-
-        if (activeChar.isGM() && activeChar.isInvisible())//Automatically starting trade if activeChar is GM in invisible mode
-        {
+        if (activeChar.isGM() && activeChar.isInvisible()) {//Automatically starting trade if activeChar is GM in invisible mode
             new Request(L2RequestType.TRADE, activeChar, reciever);
             reciever.setTradeList(new CopyOnWriteArrayList<>());
             reciever.sendPacket(new SystemMessage2(SystemMsg.YOU_BEGIN_TRADING_WITH_C1).addString(activeChar.getName()), new TradeStart(reciever, activeChar));

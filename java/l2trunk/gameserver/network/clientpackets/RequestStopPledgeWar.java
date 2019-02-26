@@ -44,7 +44,7 @@ public class RequestStopPledgeWar extends L2GameClientPacket {
         }
 
         for (UnitMember mbr : playerClan)
-            if (mbr.isOnline() && mbr.player().isInCombat()) {
+            if (mbr.isOnline() && mbr.getPlayer().isInCombat()) {
                 activeChar.sendPacket(SystemMsg.A_CEASEFIRE_DURING_A_CLAN_WAR_CAN_NOT_BE_CALLED_WHILE_MEMBERS_OF_YOUR_CLAN_ARE_ENGAGED_IN_BATTLE, ActionFail.STATIC);
                 return;
             }

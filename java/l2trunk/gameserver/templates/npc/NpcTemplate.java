@@ -20,11 +20,13 @@ import java.util.*;
 
 public final class NpcTemplate extends CharTemplate {
     public final String type;
-    private final Map<Integer, List<TeleportLocation>> teleportList = new HashMap<>();
-    private final Map<QuestEventType, List<Quest>> questEvents = new HashMap<>();
-    private final Map<Integer, Skill> skills = new HashMap<>();
     public final int npcId;
     public final String name;
+    public final int displayId;
+    public final boolean isRaid = false;
+    private final Map<Integer, List<TeleportLocation>> teleportList = new HashMap<>();
+    private final Map<QuestEventType, Set<Quest>> questEvents = new HashMap<>();
+    private final Map<Integer, Skill> skills = new HashMap<>();
     public String title;
     // не используется - public final String sex;
     public int level;
@@ -35,11 +37,9 @@ public final class NpcTemplate extends CharTemplate {
     public int rhand;
     public int lhand;
     public double rateHp;
-    public final int displayId;
-    public final boolean isRaid = false;
     private StatsSet AIParams;
     private int castleId;
-    private String _htmRoot;
+    private String htmRoot;
     private Faction faction = Faction.NONE;
     private int race = 0;
     private Map<RewardType, RewardList> _rewards = Collections.emptyMap();
@@ -74,7 +74,7 @@ public final class NpcTemplate extends CharTemplate {
         rhand = set.getInteger("rhand", 0);
         lhand = set.getInteger("lhand", 0);
         rateHp = set.getDouble("baseHpRate");
-        _htmRoot = set.getString("htm_root", null);
+        htmRoot = set.getString("htm_root", null);
         castleId = set.getInteger("castle_id", 0);
         AIParams = (StatsSet) set.getObject("aiParams", StatsSet.EMPTY);
         type = set.getString("type", null);
@@ -253,19 +253,16 @@ public final class NpcTemplate extends CharTemplate {
 
     public void addQuestEvent(QuestEventType EventType, Quest q) {
         if (questEvents.get(EventType) == null) {
-            List<Quest> newList = new ArrayList<>();
+            Set<Quest> newList = new HashSet<>();
             newList.add(q);
             questEvents.put(EventType, newList);
-        } else {
-            List<Quest> _quests = questEvents.get(EventType);
-            if (_quests.contains(q)) return;
-            _quests.add(q);
-        }
+        } else
+            questEvents.get(EventType).add(q);
     }
 
-    public List<Quest> getEventQuests(QuestEventType EventType) {
-        List<Quest> quests = questEvents.get(EventType);
-        return quests == null ? List.of() : quests;
+    public Set<Quest> getEventQuests(QuestEventType eventType) {
+        Set<Quest> quests = questEvents.get(eventType);
+        return quests == null ? Set.of() : quests;
     }
 
     public int getRace() {
@@ -306,12 +303,12 @@ public final class NpcTemplate extends CharTemplate {
         return castleId;
     }
 
-    public Map<QuestEventType, List<Quest>> getQuestEvents() {
+    public Map<QuestEventType, Set<Quest>> getQuestEvents() {
         return questEvents;
     }
 
     public String getHtmRoot() {
-        return _htmRoot;
+        return htmRoot;
     }
 
 }

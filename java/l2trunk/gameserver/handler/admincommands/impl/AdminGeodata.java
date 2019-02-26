@@ -80,7 +80,7 @@ public class AdminGeodata implements IAdminCommandHandler {
                     return false;
                 }
                 if ("on".equalsIgnoreCase(wordList[1]))
-                    activeChar.setVar("trace", 1);
+                    activeChar.setVar("trace");
                 else if ("off".equalsIgnoreCase(wordList[1]))
                     activeChar.unsetVar("trace");
                 else

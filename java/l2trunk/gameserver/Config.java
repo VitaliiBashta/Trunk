@@ -343,9 +343,6 @@ public final class Config {
     public static int MULTISELL_SIZE;
     public static boolean SERVICES_CHANGE_NICK_ENABLED;
     // global
-    public static boolean SERVICES_CHANGE_NICK_ALLOW_SYMBOL;
-    public static int SERVICES_CHANGE_NICK_PRICE;
-    public static int SERVICES_CHANGE_NICK_ITEM;
     public static boolean SERVICES_CHANGE_CLAN_NAME_ENABLED;
     public static int SERVICES_CHANGE_CLAN_NAME_PRICE;
     public static int SERVICES_CHANGE_CLAN_NAME_ITEM;
@@ -1459,7 +1456,7 @@ public final class Config {
         WAREHOUSE_SLOTS_CLAN = otherSettings.getProperty("MaximumWarehouseSlotsForClan", 200);
         FREIGHT_SLOTS = otherSettings.getProperty("MaximumFreightSlots", 10);
 
-        /* chance to enchant an item over safe occupation */
+        /* chance to enchant an item over safe level */
         SAFE_ENCHANT_LVL = otherSettings.getProperty("SafeEnchant", 0);
         SHOW_ENCHANT_EFFECT_RESULT = otherSettings.getProperty("ShowEnchantEffectResult", false);
 
@@ -1613,10 +1610,10 @@ public final class Config {
         ALLOW_SOUL_SPIRIT_SHOT_INFINITELY = itemsProperties.getProperty("AllowSoulSpiritShotInfinitely", false);
         ALLOW_ARROW_INFINITELY = itemsProperties.getProperty("AllowArrowInfinitely", false);
         ALLOW_START_ITEMS = itemsProperties.getProperty("AllowStartItems", false);
-        START_ITEMS_MAGE = itemsProperties.getProperty("StartItemsMageIds", Collections.singletonList(57));
-        START_ITEMS_MAGE_COUNT = itemsProperties.getProperty("StartItemsMageCount", Collections.singletonList(1));
-        START_ITEMS_FITHER = itemsProperties.getProperty("StartItemsFigtherIds", Collections.singletonList(57));
-        START_ITEMS_FITHER_COUNT = itemsProperties.getProperty("StartItemsFigtherCount", Collections.singletonList(1));
+        START_ITEMS_MAGE = itemsProperties.getProperty("StartItemsMageIds", List.of(57));
+        START_ITEMS_MAGE_COUNT = itemsProperties.getProperty("StartItemsMageCount", List.of(1));
+        START_ITEMS_FITHER = itemsProperties.getProperty("StartItemsFigtherIds", List.of(57));
+        START_ITEMS_FITHER_COUNT = itemsProperties.getProperty("StartItemsFigtherCount", List.of(1));
     }
 
 
@@ -2216,10 +2213,10 @@ public final class Config {
         CDItemsAllowMinMaxPlayerLvl = eventSettings.getProperty("CDItemsAllowMinMaxPlayerLvl", false);
         CDItemsAllowMinMaxMobLvl = eventSettings.getProperty("CDItemsAllowMinMaxMobLvl", false);
         CDItemsAllowOnlyRbDrops = eventSettings.getProperty("CDItemsAllowOnlyRbDrops", false);
-        CDItemsId = eventSettings.getProperty("CDItemsId", Collections.singletonList(57));
-        CDItemsCountDropMin = eventSettings.getProperty("CDItemsCountDropMin", Collections.singletonList(1));
-        CDItemsCountDropMax = eventSettings.getProperty("CDItemsCountDropMax", Collections.singletonList(1));
-        CustomDropItemsChance = eventSettings.getProperty("CustomDropItemsChance", Collections.singletonList(1));
+        CDItemsId = eventSettings.getProperty("CDItemsId", List.of(57));
+        CDItemsCountDropMin = eventSettings.getProperty("CDItemsCountDropMin", List.of(1));
+        CDItemsCountDropMax = eventSettings.getProperty("CDItemsCountDropMax", List.of(1));
+        CustomDropItemsChance = eventSettings.getProperty("CustomDropItemsChance", List.of(1));
         CDItemsMinPlayerLvl = eventSettings.getProperty("CDItemsMinPlayerLvl", 20);
         CDItemsMaxPlayerLvl = eventSettings.getProperty("CDItemsMaxPlayerLvl", 85);
         CDItemsMinMobLvl = eventSettings.getProperty("CDItemsMinMobLvl", 20);
@@ -2330,19 +2327,19 @@ public final class Config {
         BBS_FORGE_FOUNDATION_PRICE_ARMOR = forge.getProperty("FoundationPriceArmor", List.of(1, 1, 1, 1, 1, 2, 5, 10));
         BBS_FORGE_FOUNDATION_PRICE_WEAPON = forge.getProperty("FoundationPriceWeapon", List.of(1, 1, 1, 1, 1, 2, 5, 10));
         BBS_FORGE_FOUNDATION_PRICE_JEWEL = forge.getProperty("FoundationPriceJewel", List.of(1, 1, 1, 1, 1, 2, 5, 10));
-        BBS_FORGE_ENCHANT_MAX = forge.getProperty("MaxEnchant", Collections.singletonList(25));
-        BBS_FORGE_WEAPON_ENCHANT_LVL = forge.getProperty("WValue", Collections.singletonList(5));
-        BBS_FORGE_ARMOR_ENCHANT_LVL = forge.getProperty("AValue", Collections.singletonList(5));
-        BBS_FORGE_JEWELS_ENCHANT_LVL = forge.getProperty("JValue", Collections.singletonList(5));
-        BBS_FORGE_ENCHANT_PRICE_WEAPON = forge.getProperty("WPrice", Collections.singletonList(5));
-        BBS_FORGE_ENCHANT_PRICE_ARMOR = forge.getProperty("APrice", Collections.singletonList(5));
-        BBS_FORGE_ENCHANT_PRICE_JEWELS = forge.getProperty("JPrice", Collections.singletonList(5));
+        BBS_FORGE_ENCHANT_MAX = forge.getProperty("MaxEnchant", List.of(25));
+        BBS_FORGE_WEAPON_ENCHANT_LVL = forge.getProperty("WValue", List.of(5));
+        BBS_FORGE_ARMOR_ENCHANT_LVL = forge.getProperty("AValue", List.of(5));
+        BBS_FORGE_JEWELS_ENCHANT_LVL = forge.getProperty("JValue", List.of(5));
+        BBS_FORGE_ENCHANT_PRICE_WEAPON = forge.getProperty("WPrice", List.of(5));
+        BBS_FORGE_ENCHANT_PRICE_ARMOR = forge.getProperty("APrice", List.of(5));
+        BBS_FORGE_ENCHANT_PRICE_JEWELS = forge.getProperty("JPrice", List.of(5));
 
 
-        BBS_FORGE_ATRIBUTE_LVL_WEAPON = forge.getProperty("AtributeWeaponValue", Collections.singletonList(25));
-        BBS_FORGE_ATRIBUTE_PRICE_WEAPON = forge.getProperty("PriceForAtributeWeapon", Collections.singletonList(25));
-        BBS_FORGE_ATRIBUTE_LVL_ARMOR = forge.getProperty("AtributeArmorValue", Collections.singletonList(25));
-        BBS_FORGE_ATRIBUTE_PRICE_ARMOR = forge.getProperty("PriceForAtributeArmor", Collections.singletonList(25));
+        BBS_FORGE_ATRIBUTE_LVL_WEAPON = forge.getProperty("AtributeWeaponValue", List.of(25));
+        BBS_FORGE_ATRIBUTE_PRICE_WEAPON = forge.getProperty("PriceForAtributeWeapon", List.of(25));
+        BBS_FORGE_ATRIBUTE_LVL_ARMOR = forge.getProperty("AtributeArmorValue", List.of(25));
+        BBS_FORGE_ATRIBUTE_PRICE_ARMOR = forge.getProperty("PriceForAtributeArmor", List.of(25));
         BBS_FORGE_WEAPON_ATTRIBUTE_MAX = forge.getProperty("MaxWAttribute", 25);
         BBS_FORGE_ARMOR_ATTRIBUTE_MAX = forge.getProperty("MaxAAttribute", 25);
     }

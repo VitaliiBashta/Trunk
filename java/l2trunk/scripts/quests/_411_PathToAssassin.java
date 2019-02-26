@@ -27,11 +27,9 @@ public final class _411_PathToAssassin extends Quest {
 
         addStartNpc(TRISKEL);
 
-        addTalkId(LEIKAN);
-        addTalkId(ARKENIA);
+        addTalkId(LEIKAN,ARKENIA);
 
-        addKillId(MOONSTONE_BEAST);
-        addKillId(CALPICO);
+        addKillId(MOONSTONE_BEAST,CALPICO);
 
         addQuestItem(SHILENS_CALL_ID,
                 LEIKANS_NOTE_ID,
@@ -48,7 +46,7 @@ public final class _411_PathToAssassin extends Quest {
         if ("1".equals(event)) {
             if (st.player.getLevel() >= 18 && st.player.getClassId().id == 0x1f && st.getQuestItemsCount(IRON_HEART_ID) < 1) {
                 st.setCond(1);
-                st.setState(STARTED);
+                st.start();
                 st.playSound(SOUND_ACCEPT);
                 st.giveItems(SHILENS_CALL_ID);
                 htmltext = "triskel_q0411_05.htm";
@@ -57,11 +55,11 @@ public final class _411_PathToAssassin extends Quest {
                     htmltext = "triskel_q0411_02a.htm";
                 else {
                     htmltext = "triskel_q0411_02.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (st.player.getLevel() < 18) {
                 htmltext = "triskel_q0411_03.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else if (st.getQuestItemsCount(IRON_HEART_ID) > 0)
                 htmltext = "triskel_q0411_04.htm";
         } else if (event.equalsIgnoreCase("30419_1")) {
@@ -97,12 +95,12 @@ public final class _411_PathToAssassin extends Quest {
                 if (st.player.getClassId().occupation() == 0) {
                     st.giveItems(IRON_HEART_ID);
                     if (!st.player.isVarSet("prof1")) {
-                        st.player.setVar("prof1", 1);
+                        st.player.setVar("prof1");
                         st.addExpAndSp(228064, 16455);
                         st.giveItems(ADENA_ID, 81900);
                     }
                 }
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 st.playSound(SOUND_FINISH);
             } else if (cond == 2)
                 htmltext = "triskel_q0411_07.htm";

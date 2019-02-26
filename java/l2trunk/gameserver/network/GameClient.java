@@ -164,7 +164,7 @@ public final class GameClient extends MMOClient<MMOConnection<GameClient>> {
                 return null;
             } else {
                 oldPlayer.sendPacket(SystemMsg.ANOTHER_PERSON_HAS_LOGGED_IN_WITH_THE_SAME_ACCOUNT);
-                //Kicking real player that was on the char
+                //Kicking real getPlayer that was on the char
                 GameClient oldClient = oldPlayer.getNetConnection();
                 if (oldClient != null) {
                     oldClient.setActiveChar(null);

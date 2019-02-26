@@ -14,7 +14,7 @@ public final class _327_ReclaimTheLand extends Quest {
     private static final int Piotur = 30597;
     private static final int Iris = 30034;
     private static final int Asha = 30313;
-    // Quest Items
+    // Quest items
     private static final int TUREK_DOGTAG = 1846;
     private static final int TUREK_MEDALLION = 1847;
     private static final int CLAY_URN_FRAGMENT = 1848;
@@ -34,8 +34,7 @@ public final class _327_ReclaimTheLand extends Quest {
     public _327_ReclaimTheLand() {
         super(false);
         addStartNpc(Piotur);
-        addTalkId(Iris);
-        addTalkId(Asha);
+        addTalkId(Iris,Asha);
 
         DROPLIST.put(20495, new Drop(1, 0xFFFF, 13).addItem(TUREK_MEDALLION));
         DROPLIST.put(20496, new Drop(1, 0xFFFF, 9).addItem(TUREK_DOGTAG));
@@ -52,8 +51,7 @@ public final class _327_ReclaimTheLand extends Quest {
         for (int kill_id : DROPLIST.keySet())
             addKillId(kill_id);
 
-        addQuestItem(TUREK_MEDALLION);
-        addQuestItem(TUREK_DOGTAG);
+        addQuestItem(TUREK_MEDALLION,TUREK_DOGTAG);
     }
 
     private static boolean ExpReward(QuestState st, int item_id) {
@@ -73,12 +71,12 @@ public final class _327_ReclaimTheLand extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         int _state = st.getState();
         if (event.equalsIgnoreCase("piotur_q0327_03.htm") && _state == CREATED) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("piotur_q0327_06.htm") && _state == STARTED) {
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         } else if (event.equalsIgnoreCase("trader_acellopy_q0327_02.htm") && _state == STARTED && st.getQuestItemsCount(CLAY_URN_FRAGMENT) >= 5) {
             st.takeItems(CLAY_URN_FRAGMENT, 5);
             if (!Rnd.chance(Exchange_Chance))
@@ -134,7 +132,7 @@ public final class _327_ReclaimTheLand extends Quest {
             if (npcId != Piotur)
                 return "noquest";
             if (st.player.getLevel() < 25) {
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 return "piotur_q0327_01.htm";
             }
             st.setCond(0);

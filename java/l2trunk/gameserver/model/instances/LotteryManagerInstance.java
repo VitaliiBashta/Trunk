@@ -31,7 +31,7 @@ public final class LotteryManagerInstance extends NpcInstance {
                 int val = Integer.parseInt(command.substring(5));
                 showLotoWindow(player, val);
             } catch (NumberFormatException e) {
-                Log.debug("L2LotteryManagerInstance: bypass: " + command + "; player: " + player, e);
+                Log.debug("L2LotteryManagerInstance: bypass: " + command + "; getPlayer: " + player, e);
             }
         } else
             super.onBypassFeedback(player, command);
@@ -221,15 +221,15 @@ public final class LotteryManagerInstance extends NpcInstance {
             return;
         }
 
-        html.replace("%objectId%", String.valueOf(objectId()));
-        html.replace("%race%", "" + LotteryManager.INSTANCE.getId());
-        html.replace("%adena%", "" + LotteryManager.INSTANCE.getPrize());
-        html.replace("%ticket_price%", "" + Config.SERVICES_LOTTERY_TICKET_PRICE);
-        html.replace("%prize5%", "" + Config.SERVICES_LOTTERY_5_NUMBER_RATE * 100);
-        html.replace("%prize4%", "" + Config.SERVICES_LOTTERY_4_NUMBER_RATE * 100);
-        html.replace("%prize3%", "" + Config.SERVICES_LOTTERY_3_NUMBER_RATE * 100);
-        html.replace("%prize2%", "" + Config.SERVICES_LOTTERY_2_AND_1_NUMBER_PRIZE);
-        html.replace("%enddate%", "" + DateFormat.getDateInstance().format(LotteryManager.INSTANCE.getEndDate()));
+        html.replace("%objectId%", objectId());
+        html.replace("%race%",  LotteryManager.INSTANCE.getId());
+        html.replace("%adena%",  LotteryManager.INSTANCE.getPrize());
+        html.replace("%ticket_price%",  Config.SERVICES_LOTTERY_TICKET_PRICE);
+        html.replace("%prize5%",  Config.SERVICES_LOTTERY_5_NUMBER_RATE * 100);
+        html.replace("%prize4%",  Config.SERVICES_LOTTERY_4_NUMBER_RATE * 100);
+        html.replace("%prize3%",  Config.SERVICES_LOTTERY_3_NUMBER_RATE * 100);
+        html.replace("%prize2%",  Config.SERVICES_LOTTERY_2_AND_1_NUMBER_PRIZE);
+        html.replace("%enddate%", DateFormat.getDateInstance().format(LotteryManager.INSTANCE.getEndDate()));
 
         player.sendPacket(html);
         player.sendActionFailed();

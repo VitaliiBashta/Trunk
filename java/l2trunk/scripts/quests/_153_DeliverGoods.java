@@ -19,9 +19,7 @@ public final class _153_DeliverGoods extends Quest {
 
         addStartNpc(30041);
 
-        addTalkId(30002);
-        addTalkId(30003);
-        addTalkId(30054);
+        addTalkId(30002,30003,30054);
 
         addQuestItem(HEAVY_WOOD_BOX,
                 CLOTH_BUNDLE,
@@ -37,7 +35,7 @@ public final class _153_DeliverGoods extends Quest {
         String htmltext = event;
         if (event.equals("30041-04.htm")) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
             if (st.getQuestItemsCount(DELIVERY_LIST) == 0)
                 st.giveItems(DELIVERY_LIST, 1);
@@ -64,7 +62,7 @@ public final class _153_DeliverGoods extends Quest {
                     return htmltext;
                 }
                 htmltext = "30041-02.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else if (cond == 1 && st.getQuestItemsCount(JACKSONS_RECEIPT) + st.getQuestItemsCount(SILVIAS_RECEIPT) + st.getQuestItemsCount(RANTS_RECEIPT) == 0)
                 htmltext = "30041-05.htm";
             else if (cond == 1 && st.getQuestItemsCount(JACKSONS_RECEIPT) + st.getQuestItemsCount(SILVIAS_RECEIPT) + st.getQuestItemsCount(RANTS_RECEIPT) == 3) {
@@ -76,7 +74,7 @@ public final class _153_DeliverGoods extends Quest {
                 st.addExpAndSp(600, 0);
                 st.playSound(SOUND_FINISH);
                 htmltext = "30041-06.htm";
-                st.exitCurrentQuest(false);
+                st.finish();
             }
         } else if (npcId == 30002) {
             if (cond == 1 && st.getQuestItemsCount(HEAVY_WOOD_BOX) == 1) {

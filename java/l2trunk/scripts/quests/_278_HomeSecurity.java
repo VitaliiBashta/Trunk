@@ -22,7 +22,7 @@ public final class _278_HomeSecurity extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("tunatun_q278_03.htm".equalsIgnoreCase(event)) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         }
@@ -40,7 +40,7 @@ public final class _278_HomeSecurity extends Quest {
                     htmltext = "tunatun_q278_01.htm";
                 else {
                     htmltext = "tunatun_q278_00.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1)
                 htmltext = "tunatun_q278_04.htm";
@@ -90,7 +90,7 @@ public final class _278_HomeSecurity extends Quest {
                             break;
                     }
                     st.playSound(SOUND_FINISH);
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else
                     htmltext = "tunatun_q278_04.htm";
             }

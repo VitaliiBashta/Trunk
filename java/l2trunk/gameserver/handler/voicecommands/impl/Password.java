@@ -9,7 +9,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class Password extends Functions implements IVoicedCommandHandler {
-    private static final List<String> COMMANDS = Collections.singletonList("password");
+    private static final List<String> COMMANDS = List.of("password");
 
     @Override
     public boolean useVoicedCommand(String command, Player player, String args) {

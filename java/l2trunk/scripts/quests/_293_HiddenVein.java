@@ -15,7 +15,7 @@ public final class _293_HiddenVein extends Quest {
     private static final int Utuku_Orc = 20446;
     private static final int Utuku_Orc_Archer = 20447;
     private static final int Utuku_Orc_Grunt = 20448;
-    // Quest Items
+    // Quest items
     private static final int Chrysolite_Ore = 1488;
     private static final int Torn_Map_Fragment = 1489;
     private static final int Hidden_Ore_Map = 1490;
@@ -27,24 +27,20 @@ public final class _293_HiddenVein extends Quest {
         super(false);
         addStartNpc(Filaur);
         addTalkId(Chichirin);
-        addKillId(Utuku_Orc);
-        addKillId(Utuku_Orc_Archer);
-        addKillId(Utuku_Orc_Grunt);
-        addQuestItem(Chrysolite_Ore);
-        addQuestItem(Torn_Map_Fragment);
-        addQuestItem(Hidden_Ore_Map);
+        addKillId(Utuku_Orc,Utuku_Orc_Archer,Utuku_Orc_Grunt);
+        addQuestItem(Chrysolite_Ore,Torn_Map_Fragment,Hidden_Ore_Map);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         int _state = st.getState();
         if (event.equalsIgnoreCase("elder_filaur_q0293_03.htm") && _state == CREATED) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("elder_filaur_q0293_06.htm") && _state == STARTED) {
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(false);
+            st.finish();
         } else if (event.equalsIgnoreCase("chichirin_q0293_03.htm") && _state == STARTED) {
             if (st.getQuestItemsCount(Torn_Map_Fragment) < 4)
                 return "chichirin_q0293_02.htm";
@@ -64,11 +60,11 @@ public final class _293_HiddenVein extends Quest {
             if (npcId != Filaur)
                 return "noquest";
             if (st.player.getRace() != Race.dwarf) {
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 return "elder_filaur_q0293_00.htm";
             }
             if (st.player.getLevel() < 6) {
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 return "elder_filaur_q0293_01.htm";
             }
             st.setCond(0);
@@ -92,7 +88,7 @@ public final class _293_HiddenVein extends Quest {
             st.giveItems(ADENA_ID, reward);
 
             if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("p1q2")) {
-                st.player.setVar("p1q2", 1);
+                st.player.setVar("p1q2");
                 st.player.sendPacket(new ExShowScreenMessage("Acquisition of Soulshot for beginners complete.\n                  Go find the Newbie Guide."));
                 QuestState qs = st.player.getQuestState(_255_Tutorial.class);
                 if (qs != null && qs.getInt("Ex") != 10) {

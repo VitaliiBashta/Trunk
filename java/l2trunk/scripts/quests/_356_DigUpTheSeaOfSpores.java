@@ -20,8 +20,7 @@ public final class _356_DigUpTheSeaOfSpores extends Quest {
         super(false);
         addStartNpc(GAUEN);
 
-        addKillId(SPORE_ZOMBIE);
-        addKillId(ROTTING_TREE);
+        addKillId(SPORE_ZOMBIE,ROTTING_TREE);
 
         addQuestItem(CARNIVORE_SPORE, HERBIBOROUS_SPORE);
     }
@@ -34,17 +33,17 @@ public final class _356_DigUpTheSeaOfSpores extends Quest {
         if ("magister_gauen_q0356_06.htm".equalsIgnoreCase(event)) {
             if (st.player.getLevel() >= 43) {
                 st.setCond(1);
-                st.setState(STARTED);
+                st.start();
                 st.playSound(SOUND_ACCEPT);
             } else {
                 htmltext = "magister_gauen_q0356_01.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (("magister_gauen_q0356_20.htm".equalsIgnoreCase(event) || "magister_gauen_q0356_17.htm".equalsIgnoreCase(event)) && carn >= 50 && herb >= 50) {
             st.takeItems(CARNIVORE_SPORE, -1);
             st.takeItems(HERBIBOROUS_SPORE, -1);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             if ("magister_gauen_q0356_17.htm".equalsIgnoreCase(event))
                 st.giveItems(ADENA_ID, 44000);
             else
@@ -77,7 +76,7 @@ public final class _356_DigUpTheSeaOfSpores extends Quest {
                     st.playSound(SOUND_MIDDLE);
                     if (herb >= 50) {
                         st.setCond(3);
-                        st.setState(STARTED);
+                        st.start();
                     }
                 } else
                     st.playSound(SOUND_ITEMGET);
@@ -89,7 +88,7 @@ public final class _356_DigUpTheSeaOfSpores extends Quest {
                     st.playSound(SOUND_MIDDLE);
                     if (carn >= 50) {
                         st.setCond(3);
-                        st.setState(STARTED);
+                        st.start();
                     }
                 } else
                     st.playSound(SOUND_ITEMGET);

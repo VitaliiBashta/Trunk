@@ -27,7 +27,7 @@ public final class _607_ProveYourCourage extends Quest {
         if ("quest_accept".equals(event)) {
             htmltext = "elder_kadun_zu_ketra_q0607_0104.htm";
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("607_3".equals(event))
             if (st.haveQuestItem(HEAD_OF_SHADITH)) {
@@ -37,7 +37,7 @@ public final class _607_ProveYourCourage extends Quest {
                 st.addExpAndSp(0, 10000);
                 st.unset("cond");
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else
                 htmltext = "elder_kadun_zu_ketra_q0607_0106.htm";
         return htmltext;
@@ -53,11 +53,11 @@ public final class _607_ProveYourCourage extends Quest {
                     htmltext = "elder_kadun_zu_ketra_q0607_0101.htm";
                 else {
                     htmltext = "elder_kadun_zu_ketra_q0607_0102.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else {
                 htmltext = "elder_kadun_zu_ketra_q0607_0103.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (cond == 1 && st.getQuestItemsCount(HEAD_OF_SHADITH) == 0)
             htmltext = "elder_kadun_zu_ketra_q0607_0106.htm";

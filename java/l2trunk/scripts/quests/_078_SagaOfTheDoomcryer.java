@@ -1,5 +1,6 @@
 package l2trunk.scripts.quests;
 
+import l2trunk.gameserver.model.base.ClassId;
 import l2trunk.gameserver.utils.Location;
 
 import java.util.List;
@@ -9,15 +10,14 @@ public final class _078_SagaOfTheDoomcryer extends SagasSuperclass {
         super(false);
 
         NPC = List.of(31336, 31624, 31589, 31290, 31642, 31646, 31649, 31650, 31654, 31655, 31657, 31290);
-        Items = List.of(7080, 7539, 7081, 7493, 7276, 7307, 7338, 7369, 7400, 7431, 7101, 0);
-        Mob = List.of(27295, 27227, 27285);
-        classid = 116;
-        prevclass = 0x34;
+        items = List.of(7080, 7539, 7081, 7493, 7276, 7307, 7338, 7369, 7400, 7431, 7101, 0);
+        mob = List.of(27295, 27227, 27285);
+        classid = ClassId.doomcryer;
         locs = List.of(
-                new Location(191046, -40640, -3042),
-                new Location(46087, -36372, -1685),
-                new Location(46066, -36396, -1685));
-        Text = List.of(
+                Location.of(191046, -40640, -3042),
+                Location.of(46087, -36372, -1685),
+                Location.of(46066, -36396, -1685));
+        text = List.of(
                 "PLAYERNAME! Pursued to here! However, I jumped out of the Banshouren boundaries! You look at the giant as the sign of power!",
                 "... Oh ... good! So it was ... let's begin!",
                 "I do not have the patience ..! I have been a giant force ...! Cough chatter ah ah ah!",

@@ -169,7 +169,7 @@ public final class AdminPanel implements IAdminCommandHandler {
                 break;
 
             case admin_sit_down_party:
-//                target = activeChar.getTarget().player();
+//                target = activeChar.getTarget().getPlayer();
 
                 p = target.getParty();
 
@@ -228,15 +228,6 @@ public final class AdminPanel implements IAdminCommandHandler {
                 break;
             case admin_cppanel:
                 CppanelMainPage(activeChar);
-                break;
-            case admin_changevaluescppanel:
-                if (st.hasMoreTokens()) {
-                    int value = toInt(st.nextToken(), 0);
-                    ServerVariables.set("fake_players", value);
-
-                    activeChar.sendMessage("You put " + value + " fakeplayers on database.");
-                    CppanelMainPage(activeChar);
-                }
                 break;
             case admin_clanskills:
 
@@ -311,7 +302,7 @@ public final class AdminPanel implements IAdminCommandHandler {
             _player.setHero(true);
             Hero.addSkills(_player);
             _player.setVar("DonateHero", 1, System.currentTimeMillis() + expire);
-            GmListTable.broadcastMessageToGMs("GM " + activeChar.getName() + " set hero stat for player " + _playername + " for " + _time + " day(s)");
+            GmListTable.broadcastMessageToGMs("GM " + activeChar.getName() + " set hero stat for getPlayer " + _playername + " for " + _time + " day(s)");
             _player.sendMessage(activeChar.getName() + ", added you hero for " + days + " days.");
             activeChar.sendMessage("The hero status added to " + _player.getName() + " for " + days + " days.");
 
@@ -326,7 +317,7 @@ public final class AdminPanel implements IAdminCommandHandler {
         Hero.removeSkills(_player);
         _player.unsetVar("DonateHero");
 
-        GmListTable.broadcastMessageToGMs("GM " + activeChar.getName() + " remove hero stat of player " + _playername);
+        GmListTable.broadcastMessageToGMs("GM " + activeChar.getName() + " remove hero stat of getPlayer " + _playername);
         _player.sendMessage("Your hero status removed by admin.");
         activeChar.sendMessage("The hero status removed from: " + _player.getName());
 

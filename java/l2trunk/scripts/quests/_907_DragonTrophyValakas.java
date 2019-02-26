@@ -18,14 +18,14 @@ public final class _907_DragonTrophyValakas extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if (event.equalsIgnoreCase("klein_q907_04.htm")) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("klein_q907_07.htm")) {
             st.giveItems(MedalofGlory, 30);
-            st.setState(COMPLETED);
+            st.complete();
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
 
         return event;
@@ -45,7 +45,7 @@ public final class _907_DragonTrophyValakas extends Quest {
                             htmltext = "klein_q907_00b.htm";
                     } else {
                         htmltext = "klein_q907_00.htm";
-                        st.exitCurrentQuest(true);
+                        st.exitCurrentQuest();
                     }
                     break;
                 case STARTED:

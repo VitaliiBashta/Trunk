@@ -1,6 +1,7 @@
 package l2trunk.scripts.quests;
 
 import l2trunk.gameserver.model.Player;
+import l2trunk.gameserver.model.base.ClassId;
 import l2trunk.gameserver.utils.Location;
 
 import java.util.List;
@@ -10,15 +11,14 @@ public final class _068_SagaOfTheSoulHound extends SagasSuperclass {
         super(false);
 
         NPC = List.of(32138, 31272, 31269, 31317, 32235, 31646, 31648, 31652, 31654, 31655, 31657, 32241);
-        Items = List.of(7080, 9802, 7081, 9741, 9723, 9726, 9729, 9732, 9735, 9738, 9719, 0);
-        Mob = List.of(27327, 27329, 27328);
-        classid = 132; // see getClassId
-        prevclass = 128; // see getPrevClass
+        items = List.of(7080, 9802, 7081, 9741, 9723, 9726, 9729, 9732, 9735, 9738, 9719, 0);
+        mob = List.of(27327, 27329, 27328);
+        classid = ClassId.femaleSoulhound; // see getClassId
         locs = List.of(
-                new Location(161719, -92823, -1893),
-                new Location(46087, -36372, -1685),
-                new Location(46066, -36396, -1685));
-        Text = List.of(
+                Location.of(161719, -92823, -1893),
+                Location.of(46087, -36372, -1685),
+                Location.of(46066, -36396, -1685));
+        text = List.of(
                 "PLAYERNAME! Pursued to here! However, I jumped out of the Banshouren boundaries! You look at the giant as the sign of power!",
                 "... Oh ... good! So it was ... let's begin!",
                 "I do not have the patience ..! I have been a giant force ...! Cough chatter ah ah ah!",
@@ -40,13 +40,4 @@ public final class _068_SagaOfTheSoulHound extends SagasSuperclass {
         registerNPCs();
     }
 
-    @Override
-    protected int getClassId(Player player) {
-        return player.isMale()  ? 133 : 132;
-    }
-
-    @Override
-    protected int getPrevClass(Player player) {
-        return player.isMale()  ? 129 : 128;
-    }
 }

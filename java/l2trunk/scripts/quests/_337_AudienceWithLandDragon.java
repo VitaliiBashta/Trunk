@@ -199,36 +199,14 @@ public final class _337_AudienceWithLandDragon extends Quest {
 
         addStartNpc(GABRIELLE);
 
-        addTalkId(MOKE);
-        addTalkId(HELTON);
-        addTalkId(CHAKIRIS);
-        addTalkId(KAIENA);
-        addTalkId(GILMORE);
-        addTalkId(THEODRIC);
-        addTalkId(KENDRA);
-        addTalkId(ORVEN);
+        addTalkId(MOKE,HELTON,CHAKIRIS,KAIENA,GILMORE,THEODRIC,KENDRA,ORVEN);
 
-        addKillId(BLOOD_QUEEN);
-        addKillId(MARSH_STALKER);
-        addKillId(MARSH_DRAKE);
-        addKillId(SACRIFICE_OF_THE_SACRIFICED);
-        addKillId(HARIT_LIZARDMAN_SHAMAN);
-        addKillId(HARIT_LIZARDMAN_MATRIARCH);
-        addKillId(HARIT_LIZARDMAN_ZEALOT);
-        addKillId(HAMRUT);
-        addKillId(KRANROT);
-        addKillId(ABYSSAL_JEWEL_1);
-        addKillId(ABYSSAL_JEWEL_2);
-        addKillId(CAVE_KEEPER);
-        addKillId(CAVE_MAIDEN);
-        addKillId(ABYSSAL_JEWEL_3);
-        addKillId(JEWEL_GUARDIAN_MARA);
-        addKillId(JEWEL_GUARDIAN_MUSFEL);
-        addKillId(JEWEL_GUARDIAN_PYTON);
+        addKillId(BLOOD_QUEEN,MARSH_STALKER,MARSH_DRAKE,SACRIFICE_OF_THE_SACRIFICED,
+                HARIT_LIZARDMAN_SHAMAN,HARIT_LIZARDMAN_MATRIARCH,HARIT_LIZARDMAN_ZEALOT,HAMRUT,KRANROT,
+                ABYSSAL_JEWEL_1,ABYSSAL_JEWEL_2,CAVE_KEEPER,CAVE_MAIDEN,ABYSSAL_JEWEL_3,
+                JEWEL_GUARDIAN_MARA,JEWEL_GUARDIAN_MUSFEL,JEWEL_GUARDIAN_PYTON);
 
-        addAttackId(ABYSSAL_JEWEL_1);
-        addAttackId(ABYSSAL_JEWEL_2);
-        addAttackId(ABYSSAL_JEWEL_3);
+        addAttackId(ABYSSAL_JEWEL_1,ABYSSAL_JEWEL_2,ABYSSAL_JEWEL_3);
 
         addQuestItem(FEATHER_OF_GABRIELLE_ID,
                 HERALD_OF_SLAYER_ID,
@@ -251,10 +229,10 @@ public final class _337_AudienceWithLandDragon extends Quest {
         String htmltext = event;
         switch (event) {
             case "1":
-                st.set("step", 1);
+                st.set("step");
                 st.setCond(1);
                 st.set("guard", 0);
-                st.setState(STARTED);
+                st.start();
                 st.giveItems(FEATHER_OF_GABRIELLE_ID);
                 htmltext = "30753-02.htm";
                 st.playSound(SOUND_ACCEPT);
@@ -319,7 +297,7 @@ public final class _337_AudienceWithLandDragon extends Quest {
             if (cond == 0) {
                 if (st.player.getLevel() < 50) {
                     htmltext = "30753-00.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else
                     htmltext = "30753-01.htm";
             } else if (step < 9)
@@ -386,50 +364,54 @@ public final class _337_AudienceWithLandDragon extends Quest {
             else if (step == 9)
                 htmltext = "30705-03.htm";
         } else if (npcId == MOKE && cond == 2 && step < 13) {
-            if (st.getQuestItemsCount(MARA_FANG_ID) < 1 && st.getQuestItemsCount(FIRST_ABYSS_FRAGMENT_ID) < 1 && step == 10)
+            if (st.haveAnyQuestItems(MARA_FANG_ID,FIRST_ABYSS_FRAGMENT_ID)  || step != 10) {
+                if (st.haveAllQuestItems(MARA_FANG_ID,FIRST_ABYSS_FRAGMENT_ID)) {
+                    htmltext = "30498-03.htm";
+                    st.takeItems(MARA_FANG_ID);
+                    st.takeItems(FIRST_ABYSS_FRAGMENT_ID);
+                    st.giveItems(MARK_OF_WATCHMAN_ID);
+                    st.set("step", 12);
+                    st.playSound(SOUND_MIDDLE);
+                } else if (step == 11)
+                    htmltext = "30498-02.htm";
+                else if (step == 12)
+                    htmltext = "30498-03.htm";
+            } else {
                 htmltext = "30498-01.htm";
-            else if (st.haveAllQuestItems(MARA_FANG_ID,FIRST_ABYSS_FRAGMENT_ID)) {
-                htmltext = "30498-03.htm";
-                st.takeItems(MARA_FANG_ID);
-                st.takeItems(FIRST_ABYSS_FRAGMENT_ID);
-                st.giveItems(MARK_OF_WATCHMAN_ID);
-                st.set("step", 12);
-                st.playSound(SOUND_MIDDLE);
-            } else if (step == 11)
-                htmltext = "30498-02.htm";
-            else if (step == 12)
-                htmltext = "30498-03.htm";
+            }
         } else if (npcId == HELTON && cond == 2 && step > 11 && step < 15) {
-            if (st.getQuestItemsCount(MUSFEL_FANG_ID) < 1 && st.getQuestItemsCount(SECOND_ABYSS_FRAGMENT_ID) < 1 && step == 12)
+            if (st.haveAnyQuestItems(MUSFEL_FANG_ID,SECOND_ABYSS_FRAGMENT_ID)  || step != 12) {
+                if (st.haveAllQuestItems(MUSFEL_FANG_ID,SECOND_ABYSS_FRAGMENT_ID) ) {
+                    htmltext = "30678-03.htm";
+                    st.takeItems(MUSFEL_FANG_ID);
+                    st.takeItems(SECOND_ABYSS_FRAGMENT_ID);
+                    st.giveItems(MARK_OF_WATCHMAN_ID);
+                    st.set("step", 14);
+                    st.playSound(SOUND_MIDDLE);
+                } else if (step == 13)
+                    htmltext = "30678-02.htm";
+                else if (step == 14)
+                    htmltext = "30678-03.htm";
+            } else {
                 htmltext = "30678-01.htm";
-            else if (st.haveAllQuestItems(MUSFEL_FANG_ID,SECOND_ABYSS_FRAGMENT_ID) ) {
-                htmltext = "30678-03.htm";
-                st.takeItems(MUSFEL_FANG_ID);
-                st.takeItems(SECOND_ABYSS_FRAGMENT_ID);
-                st.giveItems(MARK_OF_WATCHMAN_ID);
-                st.set("step", 14);
-                st.playSound(SOUND_MIDDLE);
-            } else if (step == 13)
-                htmltext = "30678-02.htm";
-            else if (step == 14)
-                htmltext = "30678-03.htm";
+            }
         } else if (npcId == GILMORE && step < 17) {
             if (st.haveQuestItem(HERALD_OF_SLAYER_ID)  && cond == 3)
                 htmltext = "30754-01.htm";
             else if (cond == 4)
                 htmltext = "30754-02.htm";
         } else if (npcId == THEODRIC && cond == 4 && step == 16)
-            if (st.getQuestItemsCount(THIRD_ABYSS_FRAGMENT_ID) < 1)
-                htmltext = "30755-02.htm";
-            else {
+            if (st.haveQuestItem(THIRD_ABYSS_FRAGMENT_ID)) {
                 htmltext = "30755-01.htm";
                 st.takeItems(THIRD_ABYSS_FRAGMENT_ID);
                 st.unset("step");
                 st.unset("cond");
                 st.unset("guard");
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 st.giveItems(PORTAL_STONE_ID);
                 st.playSound(SOUND_FINISH);
+            } else {
+                htmltext = "30755-02.htm";
             }
         return htmltext;
     }
@@ -444,7 +426,7 @@ public final class _337_AudienceWithLandDragon extends Quest {
                 for (int j = 0; j < element[3]; j++)
                     st.addSpawn(element[2]);
                 st.playSound(SOUND_BEFORE_BATTLE);
-                st.set("guard", 1);
+                st.set("guard");
             }
 //        return null;
     }
@@ -466,8 +448,8 @@ public final class _337_AudienceWithLandDragon extends Quest {
                     st.addSpawn(element[2]);
                 st.playSound(SOUND_BEFORE_BATTLE);
             }
-            if (step == element[0] && npcId == element[1] && st.getInt("guard") == 1)
-                st.set("guard", 0);
+            if (step == element[0] && npcId == element[1] && st.isSet("guard"))
+                st.unset("guard");
         }
     }
 }

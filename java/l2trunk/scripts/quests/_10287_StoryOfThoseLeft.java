@@ -36,7 +36,7 @@ public final class _10287_StoryOfThoseLeft extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
         if ("rafforty_q10287_02.htm".equalsIgnoreCase(event)) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if ("enterinstance".equalsIgnoreCase(event)) {
@@ -59,8 +59,8 @@ public final class _10287_StoryOfThoseLeft extends Quest {
 
             st.giveItems(forgottenScrols.get(id + 1));
 
-            st.setState(COMPLETED);
-            st.exitCurrentQuest(false);
+            st.complete();
+            st.finish();
         }
 
         return htmltext;
@@ -77,7 +77,7 @@ public final class _10287_StoryOfThoseLeft extends Quest {
                     htmltext = "rafforty_q10287_01.htm";
                 else {
                     htmltext = "rafforty_q10287_00.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond >= 1 && cond < 5)
                 htmltext = "rafforty_q10287_02.htm";

@@ -21,23 +21,19 @@ public final class _001_LettersOfLove extends Quest {
         super(false);
 
         addStartNpc(DARIN);
-        addTalkId(ROXXY);
-        addTalkId(BAULRO);
-        addQuestItem(DARINGS_LETTER);
-        addQuestItem(ROXXY_KERCHIEF);
-        addQuestItem(DARINGS_RECEIPT);
-        addQuestItem(BAULS_POTION);
+        addTalkId(ROXXY,BAULRO);
+        addQuestItem(DARINGS_LETTER,ROXXY_KERCHIEF,DARINGS_RECEIPT,BAULS_POTION);
     }
 
     @Override
-    public String onEvent(String event, QuestState qs, NpcInstance npc) {
+    public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
         if ("quest_accept".equalsIgnoreCase(event)) {
             htmltext = "daring_q0001_06.htm";
-            qs.setCond(1);
-            qs.setState(STARTED);
-            qs.giveItems(DARINGS_LETTER);
-            qs.playSound(SOUND_ACCEPT);
+            st.setCond(1);
+            st.start();
+            st.giveItems(DARINGS_LETTER);
+            st.playSound(SOUND_ACCEPT);
         }
         return htmltext;
     }
@@ -54,7 +50,7 @@ public final class _001_LettersOfLove extends Quest {
                         htmltext = "daring_q0001_02.htm";
                     else {
                         htmltext = "daring_q0001_01.htm";
-                        st.exitCurrentQuest(true);
+                        st.exitCurrentQuest();
                     }
                 } else if (cond == 1)
                     htmltext = "daring_q0001_07.htm";
@@ -75,7 +71,7 @@ public final class _001_LettersOfLove extends Quest {
                     st.giveItems(ADENA_ID, (int) ((Config.RATE_QUESTS_REWARD - 1) * 1200 + 2466 * Config.RATE_QUESTS_REWARD), false); // T2
                     st.player.addExpAndSp(5672, 446);
                     st.playSound(SOUND_FINISH);
-                    st.exitCurrentQuest(false);
+                    st.finish();
                 }
                 break;
             case ROXXY:

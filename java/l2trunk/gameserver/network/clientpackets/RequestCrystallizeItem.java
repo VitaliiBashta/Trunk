@@ -76,7 +76,7 @@ public final class RequestCrystallizeItem extends L2GameClientPacket {
         int crystalAmount = item.getTemplate().getCrystalCount();
         int crystalId = item.getTemplate().getCrystalType().cry;
 
-        //can player crystallize?
+        //can getPlayer crystallize?
         int level = activeChar.getSkillLevel(Skill.SKILL_CRYSTALLIZE);
         if (level < 1 || crystalId - ItemTemplate.CRYSTAL_D + 1 > level) {
             activeChar.sendPacket(SystemMsg.CANNOT_CRYSTALLIZE_CRYSTALLIZATION_SKILL_LEVEL_TOO_LOW);
@@ -93,6 +93,6 @@ public final class RequestCrystallizeItem extends L2GameClientPacket {
         ItemFunctions.addItem(activeChar, crystalId, crystalAmount, "Crystalize");
         activeChar.sendChanges();
 
-        ItemLogHandler.getInstance().addLog(activeChar, item, 1L, ItemActionType.CRYSTALIZED);
+        ItemLogHandler.INSTANCE.addLog(activeChar, item, 1L, ItemActionType.CRYSTALIZED);
     }
 }

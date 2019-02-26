@@ -27,7 +27,7 @@ public final class _432_BirthdayPartySong extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
         if ("muzyko_q0432_0104.htm".equalsIgnoreCase(event)) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if ("muzyko_q0432_0201.htm".equalsIgnoreCase(event))
@@ -35,7 +35,7 @@ public final class _432_BirthdayPartySong extends Quest {
                 st.takeItems(RED_CRYSTALS);
                 st.giveItems(BIRTHDAY_ECHO_CRYSTAL, 25);
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else
                 htmltext = "muzyko_q0432_0202.htm";
         return htmltext;
@@ -52,7 +52,7 @@ public final class _432_BirthdayPartySong extends Quest {
                     htmltext = "muzyko_q0432_0101.htm";
                 else {
                     htmltext = "muzyko_q0432_0103.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (condition == 1)
                 htmltext = "muzyko_q0432_0106.htm";

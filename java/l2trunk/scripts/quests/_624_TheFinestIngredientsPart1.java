@@ -26,14 +26,9 @@ public final class _624_TheFinestIngredientsPart1 extends Quest {
 
         addStartNpc(JEREMY);
 
-        addKillId(HOT_SPRINGS_ATROX);
-        addKillId(HOT_SPRINGS_NEPENTHES);
-        addKillId(HOT_SPRINGS_ATROXSPAWN);
-        addKillId(HOT_SPRINGS_BANDERSNATCHLING);
+        addKillId(HOT_SPRINGS_ATROX, HOT_SPRINGS_NEPENTHES, HOT_SPRINGS_ATROXSPAWN, HOT_SPRINGS_BANDERSNATCHLING);
 
-        addQuestItem(TRUNK_OF_NEPENTHES);
-        addQuestItem(FOOT_OF_BANDERSNATCHLING);
-        addQuestItem(SECRET_SPICE);
+        addQuestItem(TRUNK_OF_NEPENTHES, FOOT_OF_BANDERSNATCHLING, SECRET_SPICE);
     }
 
     @Override
@@ -41,12 +36,12 @@ public final class _624_TheFinestIngredientsPart1 extends Quest {
         String htmltext = event;
         if ("jeremy_q0624_0104.htm".equalsIgnoreCase(event))
             if (st.player.getLevel() >= 73) {
-                st.setState(STARTED);
+                st.start();
                 st.setCond(1);
                 st.playSound(SOUND_ACCEPT);
             } else {
                 htmltext = "jeremy_q0624_0103.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         else if ("jeremy_q0624_0201.htm".equalsIgnoreCase(event))
             if (st.getQuestItemsCount(TRUNK_OF_NEPENTHES) == 50 && st.getQuestItemsCount(FOOT_OF_BANDERSNATCHLING) == 50 && st.getQuestItemsCount(SECRET_SPICE) == 50) {
@@ -57,7 +52,7 @@ public final class _624_TheFinestIngredientsPart1 extends Quest {
                 st.giveItems(SAUCE);
                 st.giveItems(CRYOLITE);
                 htmltext = "jeremy_q0624_0201.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else {
                 htmltext = "jeremy_q0624_0202.htm";
                 st.setCond(1);
@@ -95,7 +90,9 @@ public final class _624_TheFinestIngredientsPart1 extends Quest {
     }
 
     private void onKillCheck(QuestState st) {
-        if (st.getQuestItemsCount(TRUNK_OF_NEPENTHES) == 50 && st.getQuestItemsCount(FOOT_OF_BANDERSNATCHLING) == 50 && st.getQuestItemsCount(SECRET_SPICE) == 50) {
+        if (st.haveQuestItem(TRUNK_OF_NEPENTHES, 50)
+                && st.haveQuestItem(FOOT_OF_BANDERSNATCHLING, 50)
+                && st.haveQuestItem(SECRET_SPICE, 50)) {
             st.playSound(SOUND_MIDDLE);
             st.setCond(3);
         } else

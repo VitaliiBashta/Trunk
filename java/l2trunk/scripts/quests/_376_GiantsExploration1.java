@@ -103,14 +103,14 @@ public final class _376_GiantsExploration1 extends Quest {
         int cond = st.getCond();
         if ("yes".equalsIgnoreCase(event)) {
             htmltext = "Starting.htm";
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.giveItems(DICT1);
             st.playSound(SOUND_ACCEPT);
         } else if ("no".equalsIgnoreCase(event)) {
             htmltext = "ext_msg.htm";
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         } else if ("show".equalsIgnoreCase(event)) {
             htmltext = "no_items.htm";
             for (int i = 0; i < EXCHANGE.length; i = i + 2) {
@@ -130,7 +130,7 @@ public final class _376_GiantsExploration1 extends Quest {
         } else if ("myst".equalsIgnoreCase(event))
             if (st.getQuestItemsCount(MST_BK) > 0) {
                 if (cond == 1) {
-                    st.setState(STARTED);
+                    st.start();
                     st.setCond(2);
                     htmltext = "go_part2.htm";
                 } else if (cond == 2)
@@ -149,7 +149,7 @@ public final class _376_GiantsExploration1 extends Quest {
         if (npcId == HR_SOBLING) {
             if (id == CREATED) {
                 if (st.player.getLevel() < 75) {
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                     htmltext = "error_1.htm";
                 } else
                     htmltext = "start.htm";

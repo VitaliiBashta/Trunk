@@ -50,26 +50,9 @@ public final class _218_TestimonyOfLife extends Quest {
 
         addStartNpc(30460);
 
-        addTalkId(30154);
-        addTalkId(30300);
-        addTalkId(30371);
-        addTalkId(30375);
-        addTalkId(30419);
-        addTalkId(30460);
-        addTalkId(30655);
+        addTalkId(30154,30300,30371,30375,30419,30460,30655);
 
-        addKillId(20145);
-        addKillId(20176);
-        addKillId(20233);
-        addKillId(27077);
-        addKillId(20550);
-        addKillId(20581);
-        addKillId(20582);
-        addKillId(20082);
-        addKillId(20084);
-        addKillId(20086);
-        addKillId(20087);
-        addKillId(20088);
+        addKillId(20145,20176,20233,27077,20550,20581,20582,20082,20084,20086,20087,20088);
 
         addQuestItem(CAMOMILE_CHARM,
                 CARDIENS_LETTER,
@@ -106,12 +89,12 @@ public final class _218_TestimonyOfLife extends Quest {
             case "1":
                 htmltext = "30460-04.htm";
                 st.setCond(1);
-                st.setState(STARTED);
+                st.start();
                 st.playSound(SOUND_ACCEPT);
                 st.giveItems(CARDIENS_LETTER);
                 if (!st.player.isVarSet("dd2")) {
                     st.giveItems(7562, 102);
-                    st.player.setVar("dd2", 1);
+                    st.player.setVar("dd2");
                 }
                 break;
             case "30154_1":
@@ -211,7 +194,7 @@ public final class _218_TestimonyOfLife extends Quest {
     @Override
     public String onTalk(NpcInstance npc, QuestState st) {
         if (st.getQuestItemsCount(MARK_OF_LIFE) > 0) {
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             return "completed";
         }
         String htmltext = "noquest";
@@ -219,9 +202,9 @@ public final class _218_TestimonyOfLife extends Quest {
         int id = st.getState();
         int cond = st.getCond();
         if (id == CREATED) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(0);
-            st.set("id", 0);
+            st.unset("id");
         }
         if (npcId == 30460 && cond == 0) {
             if (cond < 15)
@@ -229,7 +212,7 @@ public final class _218_TestimonyOfLife extends Quest {
                     htmltext = "30460-01.htm";
                 else if (st.player.getLevel() < 37) {
                     htmltext = "30460-02.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else {
                     htmltext = "30460-03.htm";
                     st.setCond(1);
@@ -237,7 +220,7 @@ public final class _218_TestimonyOfLife extends Quest {
                 }
             else {
                 htmltext = "30460-03.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (npcId == 30460 && cond == 1 && st.getQuestItemsCount(CARDIENS_LETTER) == 1)
             htmltext = "30460-05.htm";
@@ -250,16 +233,16 @@ public final class _218_TestimonyOfLife extends Quest {
             if (!st.player.isVarSet("prof2.2")) {
                 st.addExpAndSp(RewardExp, RewardSP);
                 st.giveItems(ADENA_ID, RewardAdena);
-                st.player.setVar("prof2.2", 1);
+                st.player.setVar("prof2.2");
             }
             st.playSound(SOUND_FINISH);
             st.unset("cond");
-            st.exitCurrentQuest(false);
-        } else if (npcId == 30154 && cond == 1 && st.getQuestItemsCount(CARDIENS_LETTER) == 1)
+            st.finish();
+        } else if (npcId == 30154 && cond == 1 && st.haveQuestItem(CARDIENS_LETTER) )
             htmltext = "30154-01.htm";
-        else if (npcId == 30154 && cond == 1 && st.getQuestItemsCount(MOONFLOWER_CHARM) == 1 && st.getQuestItemsCount(WATER_OF_LIFE) == 0)
+        else if (npcId == 30154 && cond == 1 && st.haveQuestItem(MOONFLOWER_CHARM)  && st.getQuestItemsCount(WATER_OF_LIFE) == 0)
             htmltext = "30154-08.htm";
-        else if (npcId == 30154 && cond == 1 && st.getQuestItemsCount(MOONFLOWER_CHARM) > 0 && st.getQuestItemsCount(WATER_OF_LIFE) > 0) {
+        else if (npcId == 30154 && cond == 1 && st.haveQuestItem(MOONFLOWER_CHARM)  && st.getQuestItemsCount(WATER_OF_LIFE) > 0) {
             htmltext = "30154-09.htm";
             st.takeItems(WATER_OF_LIFE, 1);
             st.takeItems(MOONFLOWER_CHARM, 1);
@@ -272,7 +255,7 @@ public final class _218_TestimonyOfLife extends Quest {
             htmltext = "30371-04.htm";
         else if (npcId == 30371 && cond == 1 && st.getQuestItemsCount(MOONFLOWER_CHARM) > 0 && st.getQuestItemsCount(PUSHKINS_LIST) > 0)
             htmltext = "30371-05.htm";
-        else if (npcId == 30371 && cond == 1 && st.getQuestItemsCount(MOONFLOWER_CHARM) > 0 && st.getQuestItemsCount(PURE_MITHRIL_CUP) > 0) {
+        else if (npcId == 30371 && cond == 1 && st.haveAllQuestItems(MOONFLOWER_CHARM,PURE_MITHRIL_CUP)) {
             htmltext = "30371-06.htm";
             st.takeItems(PURE_MITHRIL_CUP, 1);
             st.giveItems(THALIAS_LETTER1, 1);
@@ -290,7 +273,7 @@ public final class _218_TestimonyOfLife extends Quest {
                 st.takeItems(THALIAS_INSTRUCTIONS, 1);
                 st.giveItems(THALIAS_LETTER2);
             }
-        } else if (npcId == 30371 && cond == 1 && st.getQuestItemsCount(MOONFLOWER_CHARM) > 0 && st.getQuestItemsCount(THALIAS_LETTER2) > 0)
+        } else if (npcId == 30371 && cond == 1 && st.haveQuestItem(MOONFLOWER_CHARM)  && st.getQuestItemsCount(THALIAS_LETTER2) > 0)
             htmltext = "30371-14.htm";
         else if (npcId == 30371 && cond == 1 && st.getQuestItemsCount(MOONFLOWER_CHARM) > 0 && st.getQuestItemsCount(ISAELS_INSTRUCTIONS) > 0)
             htmltext = "30371-15.htm";
@@ -335,8 +318,8 @@ public final class _218_TestimonyOfLife extends Quest {
         else if (npcId == 30375 && cond == 1 && st.getQuestItemsCount(MOONFLOWER_CHARM) > 0 && st.getQuestItemsCount(ADONIUS_LIST) > 0)
             if (st.getQuestItemsCount(SPIDER_ICHOR) >= 20 && st.getQuestItemsCount(HARPYS_DOWN) >= 20) {
                 htmltext = "30375-04.htm";
-                st.takeItems(SPIDER_ICHOR, st.getQuestItemsCount(SPIDER_ICHOR));
-                st.takeItems(HARPYS_DOWN, st.getQuestItemsCount(HARPYS_DOWN));
+                st.takeItems(SPIDER_ICHOR);
+                st.takeItems(HARPYS_DOWN);
                 st.takeItems(ADONIUS_LIST, 1);
                 st.giveItems(ANDARIEL_SCRIPTURE_COPY);
             } else
@@ -361,9 +344,9 @@ public final class _218_TestimonyOfLife extends Quest {
                 st.giveItems(TALINS_SPEAR);
             } else
                 htmltext = "30655-03.htm";
-        else if (npcId == 30655 && cond == 1 && st.getQuestItemsCount(TALINS_SPEAR) > 0 && st.getQuestItemsCount(ISAELS_LETTER) > 0)
+        else if (npcId == 30655 && cond == 1 && st.haveAllQuestItems(TALINS_SPEAR,ISAELS_LETTER))
             htmltext = "30655-05.htm";
-        else if (npcId == 30655 && cond == 1 && st.getQuestItemsCount(GRAIL_OF_PURITY) > 0 || st.getQuestItemsCount(WATER_OF_LIFE) > 0 || st.getQuestItemsCount(CAMOMILE_CHARM) > 0 && st.getQuestItemsCount(MOONFLOWER_CHARM) == 1)
+        else if (npcId == 30655 && cond == 1 && st.haveAnyQuestItems(GRAIL_OF_PURITY,WATER_OF_LIFE,CAMOMILE_CHARM)  && st.haveQuestItem(MOONFLOWER_CHARM))
             htmltext = "30655-06.htm";
         return htmltext;
     }
@@ -373,7 +356,7 @@ public final class _218_TestimonyOfLife extends Quest {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         if (npcId == 20550) {
-            st.set("id", 0);
+            st.unset("id");
             if (cond > 0 && st.getQuestItemsCount(MOONFLOWER_CHARM) == 1 && st.getQuestItemsCount(PUSHKINS_LIST) == 1 && st.getQuestItemsCount(PURE_MITHRIL_ORE) < 10)
                 if (Rnd.chance(50)) {
                     st.giveItems(PURE_MITHRIL_ORE);
@@ -383,7 +366,7 @@ public final class _218_TestimonyOfLife extends Quest {
                         st.playSound(SOUND_MIDDLE);
                 }
         } else if (npcId == 20176) {
-            st.set("id", 0);
+            st.unset("id");
             if (cond > 0 && st.getQuestItemsCount(MOONFLOWER_CHARM) == 1 && st.getQuestItemsCount(PUSHKINS_LIST) == 1 && st.getQuestItemsCount(WYRMS_TALON1) < 20)
                 if (Rnd.chance(50)) {
                     st.giveItems(WYRMS_TALON1);
@@ -393,7 +376,7 @@ public final class _218_TestimonyOfLife extends Quest {
                         st.playSound(SOUND_MIDDLE);
                 }
         } else if (npcId == 20082 || npcId == 20084 || npcId == 20086) {
-            st.set("id", 0);
+            st.unset("id");
             if (cond > 0 && st.getQuestItemsCount(MOONFLOWER_CHARM) == 1 && st.getQuestItemsCount(PUSHKINS_LIST) == 1 && st.getQuestItemsCount(ANT_SOLDIER_ACID) < 20)
                 if (Rnd.chance(80)) {
                     st.giveItems(ANT_SOLDIER_ACID);
@@ -403,7 +386,7 @@ public final class _218_TestimonyOfLife extends Quest {
                         st.playSound(SOUND_MIDDLE);
                 }
         } else if (npcId == 20087 || npcId == 20088) {
-            st.set("id", 0);
+            st.unset("id");
             if (cond > 0 && st.getQuestItemsCount(MOONFLOWER_CHARM) == 1 && st.getQuestItemsCount(PUSHKINS_LIST) == 1 && st.getQuestItemsCount(ANT_SOLDIER_ACID) < 20)
                 if (Rnd.chance(50)) {
                     st.giveItems(ANT_SOLDIER_ACID);
@@ -413,7 +396,7 @@ public final class _218_TestimonyOfLife extends Quest {
                         st.playSound(SOUND_MIDDLE);
                 }
         } else if (npcId == 20233) {
-            st.set("id", 0);
+            st.unset("id");
             if (cond > 0 && st.getQuestItemsCount(MOONFLOWER_CHARM) == 1 && st.getQuestItemsCount(ADONIUS_LIST) == 1 && st.getQuestItemsCount(SPIDER_ICHOR) < 20)
                 if (Rnd.chance(50)) {
                     st.giveItems(SPIDER_ICHOR);
@@ -423,7 +406,7 @@ public final class _218_TestimonyOfLife extends Quest {
                         st.playSound(SOUND_MIDDLE);
                 }
         } else if (npcId == 20145) {
-            st.set("id", 0);
+            st.unset("id");
             if (cond > 0 && st.getQuestItemsCount(MOONFLOWER_CHARM) == 1 && st.getQuestItemsCount(ADONIUS_LIST) == 1 && st.getQuestItemsCount(HARPYS_DOWN) < 20)
                 if (Rnd.chance(50)) {
                     st.giveItems(HARPYS_DOWN);
@@ -434,14 +417,14 @@ public final class _218_TestimonyOfLife extends Quest {
                 }
         } else if (npcId == 27077) {
             if (cond > 0 && st.getQuestItemsCount(MOONFLOWER_CHARM) == 1 && st.getItemEquipped(Inventory.PAPERDOLL_RHAND) == TALINS_SPEAR && st.getQuestItemsCount(GRAIL_OF_PURITY) == 1 && st.getQuestItemsCount(TEARS_OF_UNICORN) == 0)
-                if (st.getQuestItemsCount(TALINS_SPEAR) > 0) {
+                if (st.haveQuestItem(TALINS_SPEAR)) {
                     st.takeItems(GRAIL_OF_PURITY, 1);
                     st.takeItems(TALINS_SPEAR, 1);
                     st.giveItems(TEARS_OF_UNICORN);
                 }
         } else if (npcId == 20581 || npcId == 20582) {
-            st.set("id", 0);
-            if (cond > 0 && st.getQuestItemsCount(ISAELS_INSTRUCTIONS) == 1 && Rnd.chance(50))
+            st.unset("id");
+            if (cond > 0 && st.haveQuestItem(ISAELS_INSTRUCTIONS) && Rnd.chance(50))
                 if (st.getQuestItemsCount(TALINS_SPEAR_BLADE) == 0) {
                     st.giveItems(TALINS_SPEAR_BLADE);
                     st.playSound(SOUND_ITEMGET);

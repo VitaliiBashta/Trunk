@@ -40,7 +40,7 @@ public final class WorkshopServantInstance extends NpcInstance {
 
         if (command.startsWith("getmedals")) {
             for (int medal : medals)
-                if (player.getInventory().getItemByItemId(medal) != null) {
+                if (player.haveItem(medal)) {
                     player.sendPacket(new NpcHtmlMessage(player, this).setHtml("Ingenious Contraption:<br><br>You already have one of the medals. Cannot proceed."));
                     return;
                 }
@@ -101,7 +101,7 @@ public final class WorkshopServantInstance extends NpcInstance {
                     .peek(medal -> player.sendMessage("In order to enter the Anomic Foundry your party should be carrying all 5 medals of Tully"))
                     .findFirst().isPresent())
                 return;
-            party.teleport(new Location(25512, 247240, -2656));
+            party.teleport(Location.of(25512, 247240, -2656));
         } else
             super.onBypassFeedback(player, command);
     }

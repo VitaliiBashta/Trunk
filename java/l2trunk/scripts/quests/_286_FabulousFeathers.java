@@ -14,7 +14,7 @@ public final class _286_FabulousFeathers extends Quest {
     private static final int Shady_Muertos_Archer = 22254;
     private static final int Shady_Muertos_Commander = 22255;
     private static final int Shady_Muertos_Wizard = 22256;
-    //Quest Items
+    //Quest items
     private static final int Commanders_Feather = 9746;
     //Chances
     private static final int Commanders_Feather_Chance = 66;
@@ -22,11 +22,7 @@ public final class _286_FabulousFeathers extends Quest {
     public _286_FabulousFeathers() {
         super(false);
         addStartNpc(ERINU);
-        addKillId(Shady_Muertos_Captain);
-        addKillId(Shady_Muertos_Warrior);
-        addKillId(Shady_Muertos_Archer);
-        addKillId(Shady_Muertos_Commander);
-        addKillId(Shady_Muertos_Wizard);
+        addKillId(Shady_Muertos_Captain,Shady_Muertos_Warrior,Shady_Muertos_Archer,Shady_Muertos_Commander,Shady_Muertos_Wizard);
         addQuestItem(Commanders_Feather);
     }
 
@@ -34,14 +30,14 @@ public final class _286_FabulousFeathers extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         int _state = st.getState();
         if ("trader_erinu_q0286_0103.htm".equalsIgnoreCase(event) && _state == CREATED) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if ("trader_erinu_q0286_0201.htm".equalsIgnoreCase(event) && _state == STARTED) {
             st.takeItems(Commanders_Feather);
             st.giveItems(ADENA_ID, 4160);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
         return event;
     }
@@ -59,7 +55,7 @@ public final class _286_FabulousFeathers extends Quest {
                 st.setCond(0);
             } else {
                 htmltext = "trader_erinu_q0286_0102.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (_state == STARTED)
             htmltext = st.getQuestItemsCount(Commanders_Feather) >= 80 ? "trader_erinu_q0286_0105.htm" : "trader_erinu_q0286_0106.htm";

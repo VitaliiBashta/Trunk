@@ -33,12 +33,9 @@ public final class _024_InhabitantsOfTheForestOfTheDead extends Quest {
 
         addStartNpc(DORIAN);
 
-        addTalkId(TOMBSTONE);
-        addTalkId(MAID_OF_LIDIA);
-        addTalkId(MYSTERIOUS_WIZARD);
+        addTalkId(TOMBSTONE, MAID_OF_LIDIA, MYSTERIOUS_WIZARD);
 
-        for (int npcId : MOBS)
-            addKillId(npcId);
+        addKillId(MOBS);
 
         addQuestItem(SUSPICIOUS_TOTEM_DOLL);
     }
@@ -51,21 +48,17 @@ public final class _024_InhabitantsOfTheForestOfTheDead extends Quest {
 
         if (npcId == DORIAN) {
             if (cond == 0) {
-                QuestState LidiasHeart = qs.player.getQuestState(_023_LidiasHeart.class);
-                if (LidiasHeart != null)
-                    if (LidiasHeart.isCompleted())
-                        htmltext = "31389-01.htm";
-                    else
-                        htmltext = "31389-02.htm"; // Если 23 квест не пройден
+                if (qs.player.isQuestCompleted(_023_LidiasHeart.class))
+                    htmltext = "31389-01.htm";
                 else
                     htmltext = "31389-02.htm"; // Если 23 квест не пройден
-            } else if (cond == 1 && qs.getQuestItemsCount(FLOWER_BOUQUET) == 1)
+            } else if (cond == 1 && qs.haveQuestItem(FLOWER_BOUQUET))
                 htmltext = "31389-04.htm"; // Если букет еще в руках
             else if (cond == 2 && qs.getQuestItemsCount(FLOWER_BOUQUET) == 0)
                 htmltext = "31389-05.htm";
             else if (cond == 3 && qs.getQuestItemsCount(SILVER_CROSS_OF_EINHASAD) == 1)
                 htmltext = "31389-14.htm";
-            else if (cond == 4 && qs.getQuestItemsCount(BROKEN_SILVER_CROSS_OF_EINHASAD) > 0) {
+            else if (cond == 4 && qs.haveQuestItem(BROKEN_SILVER_CROSS_OF_EINHASAD)) {
                 htmltext = "31389-15.htm";
                 qs.takeItems(BROKEN_SILVER_CROSS_OF_EINHASAD, -1);
             } else if (cond == 7 && qs.getQuestItemsCount(LIDIA_HAIR_PIN) == 0) {
@@ -74,7 +67,7 @@ public final class _024_InhabitantsOfTheForestOfTheDead extends Quest {
                 qs.setCond(8);
             }
         } else if (npcId == TOMBSTONE) {
-            if (cond == 1 && qs.getQuestItemsCount(FLOWER_BOUQUET) == 1)
+            if (cond == 1 && qs.haveQuestItem(FLOWER_BOUQUET))
                 htmltext = "31531-01.htm";
             else if (cond == 2 && qs.getQuestItemsCount(FLOWER_BOUQUET) == 0)
                 htmltext = "31531-03.htm"; // Если букет уже оставлен
@@ -102,50 +95,50 @@ public final class _024_InhabitantsOfTheForestOfTheDead extends Quest {
     }
 
     @Override
-    public String onEvent(String event, QuestState qs, NpcInstance npc) {
+    public String onEvent(String event, QuestState st, NpcInstance npc) {
         if (event.startsWith("seePlayer")) {
-            if (qs.haveQuestItem(SILVER_CROSS_OF_EINHASAD)) {
-                qs.takeItems(SILVER_CROSS_OF_EINHASAD);
-                qs.giveItems(BROKEN_SILVER_CROSS_OF_EINHASAD);
-                qs.playSound(SOUND_HORROR2);
-                qs.setCond(4);
+            if (st.haveQuestItem(SILVER_CROSS_OF_EINHASAD)) {
+                st.takeItems(SILVER_CROSS_OF_EINHASAD);
+                st.giveItems(BROKEN_SILVER_CROSS_OF_EINHASAD);
+                st.playSound(SOUND_HORROR2);
+                st.setCond(4);
             }
             event = null;
         } else if ("31389-03.htm".equalsIgnoreCase(event)) {
-            qs.giveItems(FLOWER_BOUQUET);
-            qs.setCond(1);
-            qs.setState(STARTED);
-            qs.playSound(SOUND_ACCEPT);
+            st.giveItems(FLOWER_BOUQUET);
+            st.setCond(1);
+            st.start();
+            st.playSound(SOUND_ACCEPT);
         } else if ("31531-02.htm".equalsIgnoreCase(event)) {
-            qs.takeItems(FLOWER_BOUQUET);
-            qs.setCond(2);
+            st.takeItems(FLOWER_BOUQUET);
+            st.setCond(2);
         } else if ("31389-13.htm".equalsIgnoreCase(event)) {
-            qs.giveItems(SILVER_CROSS_OF_EINHASAD);
-            qs.setCond(3);
+            st.giveItems(SILVER_CROSS_OF_EINHASAD);
+            st.setCond(3);
         } else if ("31389-19.htm".equalsIgnoreCase(event))
-            qs.setCond(5);
+            st.setCond(5);
         else if ("31532-04.htm".equalsIgnoreCase(event)) {
-            qs.setCond(6);
-            qs.startQuestTimer("Lidias Letter", 7000);
+            st.setCond(6);
+            st.startQuestTimer("Lidias Letter", 7000);
         } else if ("Lidias Letter".equalsIgnoreCase(event))
             return "lidias_letter.htm";
         else if ("31532-06.htm".equalsIgnoreCase(event))
-            qs.takeItems(LIDIA_HAIR_PIN);
+            st.takeItems(LIDIA_HAIR_PIN);
         else if ("31532-19.htm".equalsIgnoreCase(event))
-            qs.setCond(9);
+            st.setCond(9);
         else if ("31522-03.htm".equalsIgnoreCase(event))
-            qs.takeItems(SUSPICIOUS_TOTEM_DOLL);
+            st.takeItems(SUSPICIOUS_TOTEM_DOLL);
         else if ("31522-08.htm".equalsIgnoreCase(event)) {
-            qs.setCond(11);
-            qs.startQuestTimer("To talk with Mystik", 600000);
+            st.setCond(11);
+            st.startQuestTimer("To talk with Mystik", 600000);
         } else if ("31522-21.htm".equalsIgnoreCase(event)) {
-            qs.giveItems(SUSPICIOUS_TOTEM_DOLL1);
-            qs.startQuestTimer("html", 5);
+            st.giveItems(SUSPICIOUS_TOTEM_DOLL1);
+            st.startQuestTimer("html", 5);
             return "Congratulations! You are completed this quest!" + " \n The Quest \"Hiding Behind the Truth\"" + " become available.\n Show Suspicious Totem Doll to " + " Priest Benedict.";
         } else if ("html".equalsIgnoreCase(event)) {
-            qs.playSound(SOUND_FINISH);
-            qs.addExpAndSp(242105, 22529);
-            qs.exitCurrentQuest(false);
+            st.playSound(SOUND_FINISH);
+            st.addExpAndSp(242105, 22529);
+            st.finish();
             return "31522-22.htm";
         }
         return event;
@@ -157,10 +150,10 @@ public final class _024_InhabitantsOfTheForestOfTheDead extends Quest {
             return;
 
         if (qs.getCond() == 9 && MOBS.contains(npc.getNpcId()) && Rnd.chance(70)) {
-                qs.giveItems(SUSPICIOUS_TOTEM_DOLL);
-                qs.playSound(SOUND_MIDDLE);
-                qs.setCond(10);
-            }
+            qs.giveItems(SUSPICIOUS_TOTEM_DOLL);
+            qs.playSound(SOUND_MIDDLE);
+            qs.setCond(10);
+        }
     }
 
     @Override

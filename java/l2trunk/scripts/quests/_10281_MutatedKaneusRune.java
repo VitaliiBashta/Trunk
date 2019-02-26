@@ -12,7 +12,7 @@ public final class _10281_MutatedKaneusRune extends Quest {
     // MOBs
     private static final int WhiteAllosce = 18577;
 
-    // Items
+    // items
     private static final int Tissue = 13840;
 
     public _10281_MutatedKaneusRune() {
@@ -27,11 +27,11 @@ public final class _10281_MutatedKaneusRune extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if (event.equalsIgnoreCase("31340-03.htm")) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("31335-02.htm")) {
             st.giveItems(57, 360000);
-            st.exitCurrentQuest(false);
+            st.finish();
             st.playSound(SOUND_FINISH);
         }
         return event;

@@ -28,7 +28,7 @@ public final class _052_WilliesSpecialBait extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
         if (event.equals("fisher_willeri_q0052_0104.htm")) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if (event.equals("fisher_willeri_q0052_0201.htm"))
@@ -39,7 +39,7 @@ public final class _052_WilliesSpecialBait extends Quest {
                 st.takeItems(EyeOfTarlkBasilisk);
                 st.giveItems(EarthFishingLure, 4);
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(false);
+                st.finish();
             }
         return htmltext;
     }
@@ -54,12 +54,12 @@ public final class _052_WilliesSpecialBait extends Quest {
             if (id == CREATED) {
                 if (st.player.getLevel() < 48) {
                     htmltext = "fisher_willeri_q0052_0103.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else if (st.player.getSkillLevel(FishSkill) >= 16)
                     htmltext = "fisher_willeri_q0052_0101.htm";
                 else {
                     htmltext = "fisher_willeri_q0052_0102.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1 || cond == 2)
                 if (st.getQuestItemsCount(EyeOfTarlkBasilisk) < 100) {

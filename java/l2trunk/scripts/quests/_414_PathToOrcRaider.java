@@ -30,20 +30,11 @@ public final class _414_PathToOrcRaider extends Quest {
 
         addStartNpc(KARUKIA);
 
-        addTalkId(KASMAN);
-        addTalkId(TAZEER);
+        addTalkId(KASMAN,TAZEER);
 
-        addKillId(GOBLIN_TOMB_RAIDER_LEADER);
-        addKillId(KURUKA_RATMAN_LEADER);
-        addKillId(UMBAR_ORC);
-        addKillId(TIMORA_ORC);
+        addKillId(GOBLIN_TOMB_RAIDER_LEADER,KURUKA_RATMAN_LEADER,UMBAR_ORC,TIMORA_ORC);
 
-        addQuestItem(KURUKA_RATMAN_TOOTH);
-        addQuestItem(GOBLIN_DWELLING_MAP);
-        addQuestItem(GREEN_BLOOD);
-        addQuestItem(HEAD_OF_BETRAYER);
-        addQuestItem(BETRAYER_UMBAR_REPORT);
-        addQuestItem(TIMORA_ORCS_HEAD);
+        addQuestItem(KURUKA_RATMAN_TOOTH,GOBLIN_DWELLING_MAP,GREEN_BLOOD,HEAD_OF_BETRAYER,BETRAYER_UMBAR_REPORT,TIMORA_ORCS_HEAD);
     }
 
     @Override
@@ -51,7 +42,7 @@ public final class _414_PathToOrcRaider extends Quest {
         String htmltext = event;
         if ("prefect_karukia_q0414_05.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.giveItems(GOBLIN_DWELLING_MAP);
             st.playSound(SOUND_ACCEPT);
         } else if ("to_Gludin".equalsIgnoreCase(event)) {
@@ -60,17 +51,17 @@ public final class _414_PathToOrcRaider extends Quest {
             st.takeItems(GOBLIN_DWELLING_MAP);
             st.playSound(SOUND_MIDDLE);
             st.giveItems(BETRAYER_UMBAR_REPORT);
-            st.addRadar(new Location(-74490, 83275, -3374));
+            st.addRadar(Location.of(-74490, 83275, -3374));
             st.setCond(3);
         } else if ("to_Schuttgart".equalsIgnoreCase(event)) {
             htmltext = "prefect_karukia_q0414_07b.htm";
             st.takeItems(KURUKA_RATMAN_TOOTH);
             st.takeItems(GOBLIN_DWELLING_MAP);
-            st.addRadar(new Location(90000, -143286, -1520));
+            st.addRadar(Location.of(90000, -143286, -1520));
             st.playSound(SOUND_MIDDLE);
             st.setCond(5);
         } else if ("prefect_tazar_q0414_02.htm".equalsIgnoreCase(event)) {
-            st.addRadar(new Location(57502, -117576, -3700));
+            st.addRadar(Location.of(57502, -117576, -3700));
             st.setCond(6);
             st.playSound(SOUND_MIDDLE);
         }
@@ -105,20 +96,20 @@ public final class _414_PathToOrcRaider extends Quest {
                 htmltext = "prefect_karukia_q0414_07.htm";
             else if (cond == 3 && st.getQuestItemsCount(BETRAYER_UMBAR_REPORT) > 0 && st.getQuestItemsCount(HEAD_OF_BETRAYER) < 2)
                 htmltext = "prefect_karukia_q0414_08.htm";
-            else if (cond == 4 && st.getQuestItemsCount(BETRAYER_UMBAR_REPORT) > 0 && st.getQuestItemsCount(HEAD_OF_BETRAYER) == 2)
+            else if (cond == 4 && st.haveQuestItem(BETRAYER_UMBAR_REPORT)  && st.haveQuestItem(HEAD_OF_BETRAYER, 2))
                 htmltext = "prefect_karukia_q0414_09.htm";
         } else if (npcId == KASMAN && cond > 0) {
-            if (cond == 3 && st.getQuestItemsCount(BETRAYER_UMBAR_REPORT) > 0 && st.getQuestItemsCount(HEAD_OF_BETRAYER) < 1)
+            if (cond == 3 && st.haveQuestItem(BETRAYER_UMBAR_REPORT)  && st.getQuestItemsCount(HEAD_OF_BETRAYER) < 1)
                 htmltext = "prefect_kasman_q0414_01.htm";
-            else if (cond == 3 && st.getQuestItemsCount(HEAD_OF_BETRAYER) > 0 && st.getQuestItemsCount(HEAD_OF_BETRAYER) < 2)
+            else if (cond == 3 && st.haveQuestItem(HEAD_OF_BETRAYER)  && st.getQuestItemsCount(HEAD_OF_BETRAYER) < 2)
                 htmltext = "prefect_kasman_q0414_02.htm";
             else if (cond == 4 && st.getQuestItemsCount(HEAD_OF_BETRAYER) > 1) {
                 htmltext = "prefect_kasman_q0414_03.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 if (st.player.getClassId().occupation() == 0) {
                     st.giveItems(MARK_OF_RAIDER);
                     if (!st.player.isVarSet("prof1")) {
-                        st.player.setVar("prof1", 1);
+                        st.player.setVar("prof1");
                         st.addExpAndSp(228064, 16455);
                         st.giveItems(ADENA_ID, 81900);
                     }
@@ -130,13 +121,13 @@ public final class _414_PathToOrcRaider extends Quest {
                 htmltext = "prefect_tazar_q0414_01b.htm";
             else if (cond == 6 && st.getQuestItemsCount(TIMORA_ORCS_HEAD) < 1)
                 htmltext = "prefect_tazar_q0414_03.htm";
-            else if (cond == 7 && st.getQuestItemsCount(TIMORA_ORCS_HEAD) > 0) {
+            else if (cond == 7 && st.haveQuestItem(TIMORA_ORCS_HEAD)) {
                 htmltext = "prefect_tazar_q0414_05.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 if (st.player.getClassId().occupation() == 0) {
                     st.giveItems(MARK_OF_RAIDER);
                     if (!st.player.isVarSet("prof1")) {
-                        st.player.setVar("prof1", 1);
+                        st.player.setVar("prof1");
                         st.addExpAndSp(228064, 16455);
                         st.giveItems(ADENA_ID, 81900);
                     }
@@ -179,10 +170,10 @@ public final class _414_PathToOrcRaider extends Quest {
             }
         } else if (npcId == UMBAR_ORC && cond == 3) {
             if (st.getQuestItemsCount(BETRAYER_UMBAR_REPORT) > 0 && st.getQuestItemsCount(HEAD_OF_BETRAYER) < 2) {
-                st.giveItems(HEAD_OF_BETRAYER, 1);
-                if (st.getQuestItemsCount(HEAD_OF_BETRAYER) > 1) {
+                st.giveItems(HEAD_OF_BETRAYER);
+                if (st.haveQuestItem(HEAD_OF_BETRAYER) ) {
                     st.setCond(4);
-                    st.addRadar(new Location(-80450, 153410, -3175));
+                    st.addRadar(Location.of(-80450, 153410, -3175));
                     st.playSound(SOUND_MIDDLE);
                 } else
                     st.playSound(SOUND_ITEMGET);
@@ -190,7 +181,7 @@ public final class _414_PathToOrcRaider extends Quest {
         } else if (npcId == TIMORA_ORC && cond == 6)
             if (st.getQuestItemsCount(TIMORA_ORCS_HEAD) < 1 && Rnd.chance(50)) {
                 st.giveItems(TIMORA_ORCS_HEAD);
-                st.addRadar(new Location(90000, -143286, -1520));
+                st.addRadar(Location.of(90000, -143286, -1520));
                 st.setCond(7);
                 st.playSound(SOUND_MIDDLE);
             }

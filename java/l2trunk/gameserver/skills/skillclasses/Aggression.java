@@ -10,15 +10,15 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import java.util.List;
 
 public final class Aggression extends Skill {
-    private final boolean _unaggring;
-    private final boolean _silent;
+    private final boolean unaggring;
+    private final boolean silent;
     private final boolean ignorePlayables;
     private final boolean autoAttack;
 
     public Aggression(StatsSet set) {
         super(set);
-        _unaggring = set.getBool("unaggroing", false);
-        _silent = set.getBool("silent", false);
+        unaggring = set.getBool("unaggroing", false);
+        silent = set.getBool("silent", false);
         ignorePlayables = set.getBool("ignorePlayables", false);
         autoAttack = set.getBool("autoAttack", false);
     }
@@ -34,12 +34,12 @@ public final class Aggression extends Skill {
             if (target != null) {
                 if (target.isAutoAttackable(activeChar)) {
                     if (target instanceof NpcInstance)
-                        if (_unaggring) {
+                        if (unaggring) {
                             if (activeChar instanceof Playable)
                                 ((NpcInstance) target).getAggroList().addDamageHate(activeChar, 0, -effect);
                         } else {
                             target.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, activeChar, effect);
-                            if (!_silent)
+                            if (!silent)
                                 target.getAI().notifyEvent(CtrlEvent.EVT_ATTACKED, activeChar, 0);
                         }
                     else if (!ignorePlayables && target instanceof Playable && !target.isDebuffImmune()) {

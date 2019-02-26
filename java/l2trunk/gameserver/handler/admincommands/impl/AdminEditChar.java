@@ -31,6 +31,9 @@ import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.stream.Collectors;
 
+import static l2trunk.commons.lang.NumberUtils.toInt;
+import static l2trunk.gameserver.model.base.ClassId.*;
+
 public final class AdminEditChar implements IAdminCommandHandler {
     public static void showCharacterList(Player activeChar, Player player) {
         if (player == null) {
@@ -123,7 +126,7 @@ public final class AdminEditChar implements IAdminCommandHandler {
             else if (fullString.startsWith("admin_setclass")) {
                 try {
                     String val = fullString.substring(15);
-                    int id = Integer.parseInt(val.trim());
+                    int id = toInt(val.trim());
                     GameObject target = tgt;
 
                     if (!(target instanceof Player)) {
@@ -134,7 +137,7 @@ public final class AdminEditChar implements IAdminCommandHandler {
                         return false;
                     }
                     Player player = (Player) target;
-                    player.setClassId(id, true, false);
+                    player.setClassId(ClassId.getById(id), true, false);
                     player.sendMessage("Your class has been changed by a GM");
                     player.broadcastCharInfo();
 
@@ -366,7 +369,7 @@ public final class AdminEditChar implements IAdminCommandHandler {
                 StringTokenizer st = new StringTokenizer(fullString);
                 if (st.countTokens() > 1) {
                     st.nextToken();
-                    int classId = Short.parseShort(st.nextToken());
+                    ClassId classId = ClassId.getById(toInt(st.nextToken()));
                     if (!player.addSubClass(classId, true, 0)) {
                         activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.model.instances.L2VillageMasterInstance.SubclassCouldNotBeAdded"));
                         return false;
@@ -609,7 +612,7 @@ public final class AdminEditChar implements IAdminCommandHandler {
                 player.setPvpKills(vals[4]);
 
             if (vals[5] != null)
-                player.setClassId(vals[5], true, false);
+                player.setClassId(ClassId.getById(vals[5]), true, false);
 
             editCharacter(activeChar); // Back to start
             player.broadcastCharInfo();
@@ -830,14 +833,14 @@ public final class AdminEditChar implements IAdminCommandHandler {
     private void setSubclass(final Player activeChar, final Player player) {
         StringBuilder content = new StringBuilder("<html><body>");
         NpcHtmlMessage html = new NpcHtmlMessage(5);
-        Set<PlayerClass> subsAvailable;
+        Set<ClassId> subsAvailable;
         subsAvailable = getAvailableSubClasses(player);
 
         if (subsAvailable != null && !subsAvailable.isEmpty()) {
             content.append("Add Subclass:<br>Which subclass do you wish to add?<br>");
 
-            for (PlayerClass subClass : subsAvailable)
-                content.append("<a action=\"bypass -h admin_setsubclass ").append(subClass.ordinal()).append("\">").append(formatClassForDisplay(subClass)).append("</a><br>");
+            for (ClassId subClass : subsAvailable)
+                content.append("<a action=\"bypass -h admin_setsubclass ").append(subClass.id).append("\">").append(formatClassForDisplay(subClass)).append("</a><br>");
         } else {
             activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.model.instances.L2VillageMasterInstance.NoSubAtThisTime"));
             return;
@@ -847,54 +850,55 @@ public final class AdminEditChar implements IAdminCommandHandler {
         activeChar.sendPacket(html);
     }
 
-    private Set<PlayerClass> getAvailableSubClasses(Player player) {
-        final int charClassId = player.getBaseClassId();
+    private Set<ClassId> getAvailableSubClasses(Player player) {
+        final ClassId charClassName = player.getClassId();
 
-        PlayerClass currClass = PlayerClass.values()[charClassId];// .valueOf(charClassName);
+        ClassId currClass = charClassName;
 
-        Set<PlayerClass> availSubs = currClass.getAvailableSubclasses();
+        Set<ClassId> availSubs = currClass.getAvailableSubclasses();
         if (availSubs == null)
             return null;
 
         // Из списка сабов удаляем мейн класс игрока
-        availSubs.remove(currClass);
+        availSubs.remove(charClassName);
 
-        for (PlayerClass availSub : availSubs) {
+        for (ClassId availSub : availSubs) {
             // Удаляем из списка возможных сабов, уже взятые сабы и их предков
             for (SubClass subClass : player.getSubClasses().values()) {
-                if (availSub.ordinal() == subClass.getClassId()) {
+                if (availSub == subClass.getClassId()) {
                     availSubs.remove(availSub);
                     continue;
                 }
 
                 // Удаляем из возможных сабов их родителей, если таковые есть у чара
-                ClassId parent = ClassId.VALUES.get(availSub.ordinal()).parent;
-                if (parent != null && parent.id == subClass.getClassId()) {
+                ClassId parent = availSub.parent;
+                if (parent != null && parent == subClass.getClassId()) {
                     availSubs.remove(availSub);
                     continue;
                 }
 
                 // Удаляем из возможных сабов родителей текущих сабклассов, иначе если взять саб berserker
                 // и довести до 3ей профы - doombringer, игроку будет предложен berserker вновь (дежавю)
-                ClassId subParent = ClassId.VALUES.get(subClass.getClassId()).parent();
-                if (subParent != null && subParent.id == availSub.ordinal())
+                ClassId subParent = subClass.getClassId().parent;
+                if (subParent != null && subParent == availSub)
                     availSubs.remove(availSub);
             }
 
             // Особенности саб классов камаэль
-            if (availSub.isOfRace(Race.kamael)) {
+            if (availSub.race == Race.kamael) {
                 // Для Soulbreaker-а и SoulHound не предлагаем Soulbreaker-а другого пола
-                if ((currClass == PlayerClass.MaleSoulHound || currClass == PlayerClass.FemaleSoulHound || currClass == PlayerClass.FemaleSoulbreaker || currClass == PlayerClass.MaleSoulbreaker) && (availSub == PlayerClass.FemaleSoulbreaker || availSub == PlayerClass.MaleSoulbreaker))
+                if ((currClass == ClassId.maleSoulhound || currClass == ClassId.femaleSoulhound || currClass == femaleSoulbreaker || currClass == maleSoulbreaker)
+                        && (availSub ==femaleSoulbreaker || availSub == maleSoulbreaker))
                     availSubs.remove(availSub);
 
                 // Для Berserker(doombringer) и Arbalester(trickster) предлагаем Soulbreaker-а только своего пола
-                if (currClass == PlayerClass.Berserker || currClass == PlayerClass.Doombringer || currClass == PlayerClass.Arbalester || currClass == PlayerClass.Trickster)
-                    if (player.isMale() && availSub == PlayerClass.MaleSoulbreaker || !player.isMale() && availSub == PlayerClass.FemaleSoulbreaker)
+                if (currClass == berserker || currClass == doombringer || currClass == arbalester || currClass == trickster)
+                    if (player.isMale() && availSub == maleSoulbreaker || !player.isMale() && availSub == femaleSoulbreaker)
                         availSubs.remove(availSub);
 
                 // Inspector доступен, только когда вкачаны 2 возможных первых саба камаэль(+ мейн класс):
                 // doombringer(berserker), soulhound(maleSoulbreaker, femaleSoulbreaker), trickster(arbalester)
-                if (availSub == PlayerClass.Inspector)
+                if (availSub == inspector)
                     // doombringer(berserker)
                     if (!(player.getSubClasses().containsKey(131) || player.getSubClasses().containsKey(127)))
                         availSubs.remove(availSub);
@@ -909,7 +913,7 @@ public final class AdminEditChar implements IAdminCommandHandler {
         return availSubs;
     }
 
-    private String formatClassForDisplay(PlayerClass className) {
+    private String formatClassForDisplay(ClassId className) {
         String classNameStr = className.toString();
         char[] charArray = classNameStr.toCharArray();
 

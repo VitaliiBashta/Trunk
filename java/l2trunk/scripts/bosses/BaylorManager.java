@@ -116,7 +116,7 @@ public final class BaylorManager extends Functions implements ScriptFile {
             setIntervalEndTask();
     }
 
-    // Teleporting player to baylor's lair.
+    // Teleporting getPlayer to baylor's lair.
     public synchronized static void entryToBaylorLair(Player pc) {
         currentReflection = pc.getReflectionId();
         zone.setReflection(pc.getReflection());

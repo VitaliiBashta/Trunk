@@ -35,11 +35,11 @@ public final class _174_SupplyCheck extends Quest {
     }
 
     @Override
-    public String onEvent(String event, QuestState qs, NpcInstance npc) {
-        if (event.equalsIgnoreCase("zerstorer_morsell_q0174_04.htm")) {
-            qs.setCond(1);
-            qs.setState(STARTED);
-            qs.playSound(SOUND_ACCEPT);
+    public String onEvent(String event, QuestState st, NpcInstance npc) {
+        if ("zerstorer_morsell_q0174_04.htm".equalsIgnoreCase(event)) {
+            st.setCond(1);
+            st.start();
+            st.playSound(SOUND_ACCEPT);
         }
         return event;
     }
@@ -53,7 +53,7 @@ public final class _174_SupplyCheck extends Quest {
         if (npcId == Marcela) {
             if (cond == 0) {
                 if (st.player.getLevel() == 1) {
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                     htmltext = "zerstorer_morsell_q0174_02.htm";
                 } else
                     htmltext = "zerstorer_morsell_q0174_01.htm";
@@ -80,7 +80,7 @@ public final class _174_SupplyCheck extends Quest {
                 st.player.addExpAndSp(5672, 446);
                 if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("ng1"))
                     st.player.sendPacket(new ExShowScreenMessage("  Delivery duty complete.\nGo find the Newbie Guide."));
-                st.exitCurrentQuest(false);
+                st.finish();
                 htmltext = "zerstorer_morsell_q0174_12.htm";
             }
 			/*
@@ -104,7 +104,7 @@ public final class _174_SupplyCheck extends Quest {
 
 			else if (cond == 8)
 			{
-				if (st.player().getClassId().isMage() && !st.player().getClassId().equalsOrChildOf(ClassId.orcMage))
+				if (st.getPlayer().getClassId().isMage() && !st.getPlayer().getClassId().equalsOrChildOf(ClassId.orcMage))
 				{
 					st.giveItems(LeatherTunic, 1);
 					st.giveItems(LeatherStockings, 1);
@@ -118,10 +118,10 @@ public final class _174_SupplyCheck extends Quest {
 				st.giveItems(LeatherShoes, 1);
 				st.giveItems(Gloves, 1);
 				st.giveItems(ADENA_ID, 2466, true);
-				st.player().addExpAndSp(5672, 446, false, false);
-				if (st.player().getClassId().occupation() == 1 && !st.player().isVarSet("ng1"))
-					st.player().sendPacket(new ExShowScreenMessage("  Delivery duty complete.\nGo find the Newbie Guide.", 5000, ScreenMessageAlign.TOP_CENTER, true));
-				st.exitCurrentQuest(false);
+				st.getPlayer().addExpAndSp(5672, 446, false, false);
+				if (st.getPlayer().getClassId().occupation() == 1 && !st.getPlayer().isVarSet("ng1"))
+					st.getPlayer().sendPacket(new ExShowScreenMessage("  Delivery duty complete.\nGo find the Newbie Guide.", 5000, ScreenMessageAlign.TOP_CENTER, true));
+				st.finish();
 				htmltext = "zerstorer_morsell_q0174_12.htm";
 			}
 			 */

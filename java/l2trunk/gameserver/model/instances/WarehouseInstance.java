@@ -30,7 +30,7 @@ public class WarehouseInstance extends NpcInstance {
             return;
 
         if (player.getEnchantScroll() != null) {
-            Log.add("Player " + player.getName() + " trying to use enchant exploit[Warehouse], ban this player!", "illegal-actions");
+            Log.add("Player " + player.getName() + " trying to use enchant exploit[Warehouse], ban this getPlayer!", "illegal-actions");
             player.setEnchantScroll(null);
             return;
         }

@@ -310,11 +310,10 @@ public final class World {
                 .map(obj -> (Playable) obj);
     }
 
-    public static List<Player> getAroundPlayers(GameObject object) {
+    public static Stream<Player> getAroundPlayers(GameObject object) {
         return getAroundObjects(object)
                 .filter(obj -> obj instanceof Player)
-                .map(obj -> (Player) obj)
-                .collect(Collectors.toList());
+                .map(obj -> (Player) obj);
     }
 
     public static Stream<Player> getAroundPlayers(GameObject object, int radius, int height) {

@@ -27,9 +27,9 @@ public final class _655_AGrandPlanForTamingWildBeasts extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("farm_messenger_q0655_06.htm")) {
+        if ("farm_messenger_q0655_06.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         }
         return event;

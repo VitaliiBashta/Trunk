@@ -22,7 +22,7 @@ public final class _10269_ToTheSeedOfDestruction extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if (event.equalsIgnoreCase("32548-05.htm")) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
             st.giveItems(Introduction, 1);
         }
@@ -50,7 +50,7 @@ public final class _10269_ToTheSeedOfDestruction extends Quest {
             htmltext = "32526-01.htm";
             st.giveItems(ADENA_ID, 29174);
             st.addExpAndSp(176121, 17671);
-            st.exitCurrentQuest(false);
+            st.finish();
             st.playSound(SOUND_FINISH);
         }
         return htmltext;

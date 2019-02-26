@@ -51,13 +51,13 @@ public class BanditMessagerInstance extends NpcInstance {
                 return;
             }
 
-            QuestState questState = player.getQuestState(_504_CompetitionForTheBanditStronghold.class);
-            if (questState == null || questState.getQuestItemsCount(5009) != 1) {
+            QuestState qs = player.getQuestState(_504_CompetitionForTheBanditStronghold.class);
+            if (qs == null || qs.getQuestItemsCount(5009) != 1) {
                 showChatWindow(player, "residence2/clanhall/agit_oel_mahum_messeger_24.htm");
                 return;
             }
 
-            questState.exitCurrentQuest(true);
+            qs.exitCurrentQuest();
             register(player);
         } else if (command.equalsIgnoreCase("registerByOffer")) {
             if (!checkCond(player, false))
@@ -158,7 +158,7 @@ public class BanditMessagerInstance extends NpcInstance {
                     msg.replace("%clan_" + i + "%", siegeClan.getClan().getName());
                 else
                     msg.replaceNpcString("%clan_" + i + "%", NpcString.__UNREGISTERED__);
-                msg.replace("%clan_count_" + i + "%", siegeClan == null ? StringUtils.EMPTY : String.valueOf(siegeClan.getPlayers().size()));
+                msg.replace("%clan_count_" + i + "%", siegeClan == null ? 0 : siegeClan.getPlayers().size());
             }
             player.sendPacket(msg);
         } else

@@ -41,7 +41,7 @@ public final class _10292_SevenSignsGirlOfDoubt extends Quest {
         Player player = st.player;
         if ("priest_wood_q10292_3.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("priest_wood_q10292_4.htm".equalsIgnoreCase(event))
             enterInstance(player);
@@ -83,7 +83,7 @@ public final class _10292_SevenSignsGirlOfDoubt extends Quest {
                         htmltext = "priest_wood_q10292_0.htm";
                     else {
                         htmltext = "priest_wood_q10292_0n.htm";
-                        st.exitCurrentQuest(true);
+                        st.exitCurrentQuest();
                     }
                 } else if (cond == 1)
                     htmltext = "priest_wood_q10292_3.htm";
@@ -117,8 +117,8 @@ public final class _10292_SevenSignsGirlOfDoubt extends Quest {
                 else if (cond == 8) {
                     htmltext = "elcadia_abyssal_saintess_q10292_10.htm";
                     st.addExpAndSp(10000000, 1000000);
-                    st.setState(COMPLETED);
-                    st.exitCurrentQuest(false);
+                    st.complete();
+                    st.finish();
                     st.playSound(SOUND_FINISH);
                 }
                 break;

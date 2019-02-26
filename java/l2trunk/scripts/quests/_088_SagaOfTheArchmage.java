@@ -1,6 +1,6 @@
 package l2trunk.scripts.quests;
 
-import l2trunk.gameserver.scripts.ScriptFile;
+import l2trunk.gameserver.model.base.ClassId;
 import l2trunk.gameserver.utils.Location;
 
 import java.util.List;
@@ -10,15 +10,14 @@ public final class _088_SagaOfTheArchmage extends SagasSuperclass {
         super(false);
 
         NPC = List.of(30176, 31627, 31282, 31282, 31590, 31646, 31647, 31650, 31654, 31655, 31657, 31282);
-        Items = List.of(7080, 7529, 7081, 7503, 7286, 7317, 7348, 7379, 7410, 7441, 7082, 0);
-        Mob = List.of(27250, 27237, 27254);
-        classid = 94;
-        prevclass = 0x0C;
+        items = List.of(7080, 7529, 7081, 7503, 7286, 7317, 7348, 7379, 7410, 7441, 7082, 0);
+        mob = List.of(27250, 27237, 27254);
+        classid = ClassId.archmage;
         locs = List.of(
-                new Location(191046, -40640, -3042),
-                new Location(46066, -36396, -1685),
-                new Location(46087, -36372, -1685));
-        Text = List.of(
+                Location.of(191046, -40640, -3042),
+                Location.of(46066, -36396, -1685),
+                Location.of(46087, -36372, -1685));
+        text = List.of(
                 "PLAYERNAME! Pursued to here! However, I jumped out of the Banshouren boundaries! You look at the giant as the sign of power!",
                 "... Oh ... good! So it was ... let's begin!",
                 "I do not have the patience ..! I have been a giant force ...! Cough chatter ah ah ah!",

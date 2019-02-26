@@ -24,7 +24,7 @@ public final class _10504_JewelOfAntharas extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("antharas_watchman_theodric_q10504_04.htm".equalsIgnoreCase(event)) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
             st.giveItems(CLEAR_CRYSTAL);
@@ -62,8 +62,8 @@ public final class _10504_JewelOfAntharas extends Quest {
                     st.takeItems(FILLED_CRYSTAL_ANTHARAS);
                     st.giveItems(JEWEL_OF_ANTHARAS);
                     st.playSound(SOUND_FINISH);
-                    st.setState(COMPLETED);
-                    st.exitCurrentQuest(false);
+                    st.complete();
+                    st.finish();
                 } else
                     htmltext = "antharas_watchman_theodric_q10504_06.htm";
             }

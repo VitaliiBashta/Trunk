@@ -5,7 +5,6 @@ import l2trunk.gameserver.instancemanager.ReflectionManager;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.NpcUtils;
 
@@ -36,18 +35,12 @@ public final class _021_HiddenTruth extends Quest {
 
         addStartNpc(MysteriousWizard);
 
-        addTalkId(Tombstone);
-        addTalkId(GhostofvonHellmannId);
-        addTalkId(GhostofvonHellmannsPageId);
-        addTalkId(BrokenBookshelf);
-        addTalkId(Agripel);
-        addTalkId(Dominic);
-        addTalkId(Benedict);
-        addTalkId(Innocentin);
+        addTalkId(Tombstone,GhostofvonHellmannId,GhostofvonHellmannsPageId,BrokenBookshelf,
+                Agripel,Dominic,Benedict,Innocentin);
     }
 
     private void spawnGhostofvonHellmannsPage() {
-        GhostofvonHellmannsPage = NpcUtils.spawnSingle(GhostofvonHellmannsPageId,new Location(51462, -54539, -3176) );
+        GhostofvonHellmannsPage = NpcUtils.spawnSingle(GhostofvonHellmannsPageId, Location.of(51462, -54539, -3176));
     }
 
     private void despawnGhostofvonHellmannsPage() {
@@ -57,7 +50,7 @@ public final class _021_HiddenTruth extends Quest {
     }
 
     private void spawnGhostofvonHellmann() {
-        GhostofvonHellmann = NpcUtils.spawnSingle(GhostofvonHellmannId,Location.findPointToStay(new Location(51432, -54570, -3136), 50, ReflectionManager.DEFAULT.getGeoIndex()) );
+        GhostofvonHellmann = NpcUtils.spawnSingle(GhostofvonHellmannId, Location.findPointToStay(Location.of(51432, -54570, -3136), 50, ReflectionManager.DEFAULT.getGeoIndex()));
     }
 
     private void despawnGhostofvonHellmann() {
@@ -69,37 +62,36 @@ public final class _021_HiddenTruth extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("31522-02.htm")) {
-            st.setState(STARTED);
+        if ("31522-02.htm".equalsIgnoreCase(event)) {
+            st.start();
             st.setCond(1);
-        } else if (event.equalsIgnoreCase("html"))
+        } else if ("html".equalsIgnoreCase(event))
             htmltext = "31328-05.htm";
-        else if (event.equalsIgnoreCase("31328-05.htm")) {
+        else if ("31328-05.htm".equalsIgnoreCase(event)) {
             st.unset("cond");
-            st.takeItems(CrossofEinhasad, -1);
-            if (st.getQuestItemsCount(CrossofEinhasadNextQuest) == 0)
-                st.giveItems(CrossofEinhasadNextQuest, 1);
+            st.takeItems(CrossofEinhasad);
+            st.giveItemIfNotHave(CrossofEinhasadNextQuest);
             st.addExpAndSp(131228, 11978);
             st.playSound(SOUND_FINISH);
             st.startQuestTimer("html", 1);
             htmltext = "Congratulations! You are completed this quest!<br>The Quest \"Tragedy In Von Hellmann Forest\" become available.<br>Show Cross of Einhasad to High Priest Tifaren.";
-            st.exitCurrentQuest(false);
-        } else if (event.equalsIgnoreCase("31523-03.htm")) {
+            st.finish();
+        } else if ("31523-03.htm".equalsIgnoreCase(event)) {
             st.playSound(SOUND_HORROR2);
             st.setCond(2);
             despawnGhostofvonHellmann();
             spawnGhostofvonHellmann();
-        } else if (event.equalsIgnoreCase("31524-06.htm")) {
+        } else if ("31524-06.htm".equalsIgnoreCase(event)) {
             st.setCond(3);
             despawnGhostofvonHellmannsPage();
             spawnGhostofvonHellmannsPage();
-        } else if (event.equalsIgnoreCase("31526-03.htm"))
+        } else if ("31526-03.htm".equalsIgnoreCase(event))
             st.playSound(SOUND_ITEM_DROP_EQUIP_ARMOR_CLOTH);
-        else if (event.equalsIgnoreCase("31526-08.htm")) {
+        else if ("31526-08.htm".equalsIgnoreCase(event)) {
             st.playSound(SOUND_ED_CHIMES05);
             st.setCond(5);
-        } else if (event.equalsIgnoreCase("31526-14.htm")) {
-            st.giveItems(CrossofEinhasad, 1);
+        } else if ("31526-14.htm".equalsIgnoreCase(event)) {
+            st.giveItems(CrossofEinhasad);
             st.setCond(6);
         }
         return htmltext;
@@ -117,7 +109,7 @@ public final class _021_HiddenTruth extends Quest {
                     htmltext = "31522-01.htm";
                 else {
                     htmltext = "31522-03.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1)
                 htmltext = "31522-05.htm";
@@ -158,42 +150,42 @@ public final class _021_HiddenTruth extends Quest {
                 st.playSound(SOUND_ED_CHIMES05);
             } else if (cond == 6)
                 htmltext = "31526-15.htm";
-        } else if (npcId == Agripel && st.getQuestItemsCount(CrossofEinhasad) >= 1) {
+        } else if (npcId == Agripel && st.haveQuestItem(CrossofEinhasad)) {
             if (cond == 6) {
-                if (st.getInt("DOMINIC") == 1 && st.getInt("BENEDICT") == 1) {
+                if (st.isSet("DOMINIC")  && st.isSet("BENEDICT")) {
                     htmltext = "31348-02.htm";
                     st.setCond(7);
                 } else {
-                    st.set("AGRIPEL", 1);
+                    st.set("AGRIPEL");
                     htmltext = "31348-0" + Rnd.get(3) + ".htm";
                 }
             } else if (cond == 7)
                 htmltext = "31348-03.htm";
-        } else if (npcId == Dominic && st.getQuestItemsCount(CrossofEinhasad) >= 1) {
+        } else if (npcId == Dominic && st.haveQuestItem(CrossofEinhasad)) {
             if (cond == 6) {
-                if (st.getInt("AGRIPEL") == 1 && st.getInt("BENEDICT") == 1) {
+                if (st.isSet("AGRIPEL")  && st.isSet("BENEDICT")) {
                     htmltext = "31350-02.htm";
                     st.setCond(7);
                 } else {
-                    st.set("DOMINIC", 1);
+                    st.set("DOMINIC");
                     htmltext = "31350-0" + Rnd.get(3) + ".htm";
                 }
             } else if (cond == 7)
                 htmltext = "31350-03.htm";
-        } else if (npcId == Benedict && st.getQuestItemsCount(CrossofEinhasad) >= 1) {
+        } else if (npcId == Benedict && st.haveQuestItem(CrossofEinhasad)) {
             if (cond == 6) {
-                if (st.getInt("AGRIPEL") == 1 && st.getInt("DOMINIC") == 1) {
+                if (st.isSet("AGRIPEL")  && st.isSet("DOMINIC")) {
                     htmltext = "31349-02.htm";
                     st.setCond(7);
                 } else {
-                    st.set("BENEDICT", 1);
+                    st.set("BENEDICT");
                     htmltext = "31349-0" + Rnd.get(3) + ".htm";
                 }
             } else if (cond == 7)
                 htmltext = "31349-03.htm";
         } else if (npcId == Innocentin)
             if (cond == 7) {
-                if (st.getQuestItemsCount(CrossofEinhasad) != 0)
+                if (st.haveQuestItem(CrossofEinhasad))
                     htmltext = "31328-01.htm";
             } else if (cond == 0)
                 htmltext = "31328-06.htm";

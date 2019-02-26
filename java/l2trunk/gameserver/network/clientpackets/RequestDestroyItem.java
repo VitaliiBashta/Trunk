@@ -141,6 +141,6 @@ public final class RequestDestroyItem extends L2GameClientPacket {
 
         activeChar.sendChanges();
 
-        ItemLogHandler.getInstance().addLog(activeChar, item, count, ItemActionType.DESTROYED_ON_PURPOSE);
+        ItemLogHandler.INSTANCE.addLog(activeChar, item, count, ItemActionType.DESTROYED_ON_PURPOSE);
     }
 }

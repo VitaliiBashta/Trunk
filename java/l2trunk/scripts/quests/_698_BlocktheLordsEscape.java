@@ -27,19 +27,19 @@ public final class _698_BlocktheLordsEscape extends Quest {
         if (npcId == TEPIOS)
             if (st.getState() == CREATED) {
                 if (player.getLevel() < 75 || player.getLevel() > 85) {
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                     return "tepios_q698_0.htm";
                 }
                 if (SoIManager.getCurrentStage() != 5) {
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                     return "tepios_q698_0a.htm";
                 }
                 return "tepios_q698_1.htm";
-            } else if (st.getCond() == 1 && st.getInt("defenceDone") == 1) {
+            } else if (st.getCond() == 1 && st.isSet("defenceDone") ) {
                 htmltext = "tepios_q698_5.htm";
                 st.giveItems(VesperNobleEnhanceStone, (int) Config.RATE_QUESTS_REWARD * Rnd.get(5, 8));
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else
                 return "tepios_q698_4.htm";
         return htmltext;
@@ -49,7 +49,7 @@ public final class _698_BlocktheLordsEscape extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
 
         if (event.equalsIgnoreCase("tepios_q698_3.htm")) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         }

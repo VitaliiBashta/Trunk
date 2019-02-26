@@ -14,7 +14,7 @@ public final class _227_TestOfTheReformer extends Quest {
     private static final int Kakan = 30669;
     private static final int Nyakuri = 30670;
     private static final int Ramus = 30667;
-    //Quest Items
+    //Quest items
     private static final int BookOfReform = 2822;
     private static final int LetterOfIntroduction = 2823;
     private static final int SlasLetter = 2824;
@@ -34,7 +34,7 @@ public final class _227_TestOfTheReformer extends Quest {
     private static final int BoneFragment4 = 2837;
     private static final int BoneFragment5 = 2838;
     //private static final int BoneFragment6 = 2839;
-    //Items
+    //items
     private static final int MarkOfReformer = 2821;
     //MOB
     private static final int NamelessRevenant = 27099;
@@ -107,19 +107,9 @@ public final class _227_TestOfTheReformer extends Quest {
     public _227_TestOfTheReformer() {
         super(false);
         addStartNpc(Pupina);
-        addTalkId(Sla);
-        addTalkId(Katari);
-        addTalkId(OlMahumPilgrimNPC);
-        addTalkId(Kakan);
-        addTalkId(Nyakuri);
-        addTalkId(Ramus);
-        //Mob Drop
-        addKillId(NamelessRevenant);
-        addKillId(Aruraune);
-        addKillId(OlMahumInspector);
-        addKillId(OlMahumBetrayer);
-        addKillId(CrimsonWerewolf);
-        addKillId(KrudelLizardman);
+        addTalkId(Sla,Katari,OlMahumPilgrimNPC,Kakan,Nyakuri,Ramus);
+        //mob Drop
+        addKillId(NamelessRevenant,Aruraune,OlMahumInspector,OlMahumBetrayer,CrimsonWerewolf,KrudelLizardman);
         for (int[] aDROPLIST_COND : DROPLIST_COND) {
             addKillId(aDROPLIST_COND[2]);
             addQuestItem(aDROPLIST_COND[4]);
@@ -146,26 +136,26 @@ public final class _227_TestOfTheReformer extends Quest {
             st.giveItems(BookOfReform);
             if (!st.player.isVarSet("dd3")) {
                 st.giveItems(7562, 60);
-                st.player.setVar("dd3", 1);
+                st.player.setVar("dd3");
             }
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("30118-06.htm".equalsIgnoreCase(event)) {
             st.takeItems(HugeNail);
             st.takeItems(BookOfReform);
             st.giveItems(LetterOfIntroduction);
             st.setCond(4);
-            st.setState(STARTED);
+            st.start();
         } else if ("30666-04.htm".equalsIgnoreCase(event)) {
             st.takeItems(LetterOfIntroduction);
             st.giveItems(SlasLetter);
             st.setCond(5);
-            st.setState(STARTED);
+            st.start();
         } else if ("30669-03.htm".equalsIgnoreCase(event)) {
             if (GameObjectsStorage.getByNpcId(CrimsonWerewolf) == null) {
                 st.setCond(12);
-                st.setState(STARTED);
+                st.start();
                 st.addSpawn(CrimsonWerewolf);
                 st.startQuestTimer("Wait4", 300000);
             } else {
@@ -176,7 +166,7 @@ public final class _227_TestOfTheReformer extends Quest {
         } else if ("30670-03.htm".equalsIgnoreCase(event)) {
             if (GameObjectsStorage.getByNpcId(KrudelLizardman) == null) {
                 st.setCond(15);
-                st.setState(STARTED);
+                st.start();
                 st.addSpawn(KrudelLizardman);
                 st.startQuestTimer("Wait5", 300000);
             } else {
@@ -232,18 +222,18 @@ public final class _227_TestOfTheReformer extends Quest {
         if (npcId == Pupina) {
             if (st.haveQuestItem(MarkOfReformer) ) {
                 htmltext = "completed";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else if (cond == 0) {
                 if (st.player.getClassId().id == 0x0f || st.player.getClassId().id == 0x2a) {
                     if (st.player.getLevel() >= 39)
                         htmltext = "30118-03.htm";
                     else {
                         htmltext = "30118-01.htm";
-                        st.exitCurrentQuest(true);
+                        st.exitCurrentQuest();
                     }
                 } else {
                     htmltext = "30118-02.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 3)
                 htmltext = "30118-05.htm";
@@ -259,7 +249,7 @@ public final class _227_TestOfTheReformer extends Quest {
                 st.giveItems(Greetings, 3);
                 htmltext = "30666-06.htm";
                 st.setCond(11);
-                st.setState(STARTED);
+                st.start();
             } else if (cond == 20) {
                 st.takeItems(KatarisLetter);
                 st.takeItems(KakansLetter);
@@ -269,11 +259,11 @@ public final class _227_TestOfTheReformer extends Quest {
                 if (!st.player.isVarSet("prof2.3")) {
                     st.addExpAndSp(626422, 42986);
                     st.giveItems(ADENA_ID, 113264);
-                    st.player.setVar("prof2.3", 1);
+                    st.player.setVar("prof2.3");
                 }
                 htmltext = "30666-07.htm";
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (npcId == Katari) {
             if (cond == 5 || cond == 6) {
@@ -283,7 +273,7 @@ public final class _227_TestOfTheReformer extends Quest {
                     st.takeItems(SlasLetter, -1);
                     htmltext = "30668-01.htm";
                     st.setCond(6);
-                    st.setState(STARTED);
+                    st.start();
                     st.addSpawn(OlMahumPilgrimNPC);
                     st.addSpawn(OlMahumInspector);
                     st.startQuestTimer("Wait2", 300000);
@@ -307,14 +297,14 @@ public final class _227_TestOfTheReformer extends Quest {
                 st.giveItems(KatarisLetter);
                 htmltext = "30668-03.htm";
                 st.setCond(10);
-                st.setState(STARTED);
+                st.start();
             }
         } else if (npcId == OlMahumPilgrimNPC) {
             if (cond == 7) {
                 st.giveItems(OlMahumMoney);
                 htmltext = "30732-01.htm";
                 st.setCond(8);
-                st.setState(STARTED);
+                st.start();
                 NpcInstance isQuest = GameObjectsStorage.getByNpcId(OlMahumInspector);
                 if (isQuest != null)
                     isQuest.deleteMe();
@@ -331,7 +321,7 @@ public final class _227_TestOfTheReformer extends Quest {
                 st.giveItems(KakansLetter);
                 htmltext = "30669-04.htm";
                 st.setCond(14);
-                st.setState(STARTED);
+                st.start();
             }
         } else if (npcId == Nyakuri) {
             if (cond == 14 || cond == 15)
@@ -341,7 +331,7 @@ public final class _227_TestOfTheReformer extends Quest {
                 st.giveItems(NyakurisLetter);
                 htmltext = "30670-04.htm";
                 st.setCond(17);
-                st.setState(STARTED);
+                st.start();
             }
         } else if (npcId == Ramus)
             if (cond == 17) {
@@ -349,7 +339,7 @@ public final class _227_TestOfTheReformer extends Quest {
                 st.giveItems(UndeadList);
                 htmltext = "30667-01.htm";
                 st.setCond(18);
-                st.setState(STARTED);
+                st.start();
             } else if (cond == 19) {
                 st.takeItems(BoneFragment1);
                 st.takeItems(BoneFragment2);
@@ -360,7 +350,7 @@ public final class _227_TestOfTheReformer extends Quest {
                 st.giveItems(RamussLetter);
                 htmltext = "30667-03.htm";
                 st.setCond(20);
-                st.setState(STARTED);
+                st.start();
             }
         return htmltext;
     }
@@ -377,17 +367,17 @@ public final class _227_TestOfTheReformer extends Quest {
                     else if (st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[7], aDROPLIST_COND[5], aDROPLIST_COND[6]))
                         if (aDROPLIST_COND[1] != cond && aDROPLIST_COND[1] != 0) {
                             st.setCond(aDROPLIST_COND[1]);
-                            st.setState(STARTED);
+                            st.start();
                         }
         if (cond == 18 && st.haveAllQuestItems(BoneFragment1,BoneFragment2, BoneFragment3, BoneFragment4,BoneFragment5)) {
             st.setCond(19);
-            st.setState(STARTED);
+            st.start();
         } else if (npcId == NamelessRevenant && (cond == 1 || cond == 2)) {
                 st.giveItemIfNotHave(RippedDiary, 6);
             if (GameObjectsStorage.getByNpcId(Aruraune) == null) {
                 st.takeItems(RippedDiary);
                 st.setCond(2);
-                st.setState(STARTED);
+                st.start();
                 st.addSpawn(Aruraune);
                 st.startQuestTimer("Wait1", 300000);
             } else if (!st.isRunningQuestTimer("Wait1"))
@@ -399,7 +389,7 @@ public final class _227_TestOfTheReformer extends Quest {
             if (cond == 2) {
                 st.giveItemIfNotHave(HugeNail);
                 st.setCond(3);
-                st.setState(STARTED);
+                st.start();
                 st.cancelQuestTimer("Wait1");
             }
         } else if (npcId == OlMahumInspector) {
@@ -409,7 +399,7 @@ public final class _227_TestOfTheReformer extends Quest {
             st.cancelQuestTimer("Wait2");
             if (cond == 6) {
                 st.setCond(7);
-                st.setState(STARTED);
+                st.start();
             }
         } else if (npcId == OlMahumBetrayer) {
             NpcInstance isQuest = GameObjectsStorage.getByNpcId(OlMahumBetrayer);
@@ -420,7 +410,7 @@ public final class _227_TestOfTheReformer extends Quest {
                 if (st.getQuestItemsCount(LetterOfBetrayer) == 0)
                     st.giveItems(LetterOfBetrayer);
                 st.setCond(9);
-                st.setState(STARTED);
+                st.start();
             }
         } else if (npcId == CrimsonWerewolf) {
             NpcInstance isQuest = GameObjectsStorage.getByNpcId(CrimsonWerewolf);
@@ -429,7 +419,7 @@ public final class _227_TestOfTheReformer extends Quest {
             st.cancelQuestTimer("Wait4");
             if (cond == 12) {
                 st.setCond(13);
-                st.setState(STARTED);
+                st.start();
             }
         } else if (npcId == KrudelLizardman) {
             NpcInstance isQuest = GameObjectsStorage.getByNpcId(KrudelLizardman);
@@ -438,7 +428,7 @@ public final class _227_TestOfTheReformer extends Quest {
             st.cancelQuestTimer("Wait5");
             if (cond == 15) {
                 st.setCond(16);
-                st.setState(STARTED);
+                st.start();
             }
         }
     }

@@ -23,7 +23,7 @@ public final class _10286_ReunionWithSirra extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("rafforty_q10286_02.htm".equalsIgnoreCase(event)) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if ("enterinstance".equalsIgnoreCase(event)) {
@@ -32,7 +32,7 @@ public final class _10286_ReunionWithSirra extends Quest {
             return null;
         } else if ("sirraspawn".equalsIgnoreCase(event)) {
             st.setCond(3);
-            NpcInstance sirra = st.player.getReflection().addSpawnWithoutRespawn(SIRRA, new Location(-23848, -8744, -5413, 49152));
+            NpcInstance sirra = st.player.getReflection().addSpawnWithoutRespawn(SIRRA, Location.of(-23848, -8744, -5413, 49152));
             Functions.npcSay(sirra, "You are so enthusiastic in the road and that's all you do? Ha ha ha ...");
             return null;
         } else if ("sirra_q10286_04.htm".equalsIgnoreCase(event)) {
@@ -59,7 +59,7 @@ public final class _10286_ReunionWithSirra extends Quest {
                     htmltext = "rafforty_q10286_01.htm";
                 else {
                     htmltext = "rafforty_q10286_00.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1 || cond == 2 || cond == 3 || cond == 4)
                 htmltext = "rafforty_q10286_03.htm";
@@ -81,8 +81,8 @@ public final class _10286_ReunionWithSirra extends Quest {
             else if (cond == 7) {
                 htmltext = "jinia2_q10286_05.htm";
                 st.addExpAndSp(2152200, 181070);
-                st.setState(COMPLETED);
-                st.exitCurrentQuest(false);
+                st.complete();
+                st.finish();
             }
         }
         return htmltext;

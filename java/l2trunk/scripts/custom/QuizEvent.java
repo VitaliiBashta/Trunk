@@ -121,7 +121,7 @@ public final class QuizEvent {
         ThreadPoolManager.INSTANCE.schedule(_task, 5000);
     }
 
-    // Add a player and its answer
+    // Add a getPlayer and its answer
     public static void setAnswer(Player player, int answer) {
         if (_players.containsKey(player))
             player.sendMessage("You already choosen an aswer!: " + _players.get(player));

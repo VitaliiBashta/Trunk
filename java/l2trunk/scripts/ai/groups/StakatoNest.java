@@ -122,14 +122,14 @@ public final class StakatoNest extends Fighter {
 			/*
 			case CANNIBALISTIC_STAKATO_CHIEF:
 			if (killer.isPlayer())
-			if (killer.player().getParty() != null)
+			if (killer.getPlayer().getParty() != null)
 			{
-				List<L2Player> party = killer.player().getParty().getMembers();
+				List<L2Player> party = killer.getPlayer().getParty().getMembers();
 				for (L2Player member : party)
 					giveCocoon(member);
 			}
 			else
-				giveCocoon(killer.player());
+				giveCocoon(killer.getPlayer());
 			break;
 			 */
             case QUEEN_SHYEED:
@@ -185,12 +185,12 @@ public final class StakatoNest extends Fighter {
     }
 
 	/*
-		private void giveCocoon(L2Player player)
+		private void giveCocoon(L2Player getPlayer)
 		{
 			if (Rnd.chance(20))
-				player.getInventory().addItem(LARGE_STAKATO_COCOON, 1);
+				getPlayer.getInventory().addItem(LARGE_STAKATO_COCOON, 1);
 			else
-				player.getInventory().addItem(SMALL_STAKATO_COCOON, 1);
+				getPlayer.getInventory().addItem(SMALL_STAKATO_COCOON, 1);
 		}
 	 */
 

@@ -22,9 +22,15 @@ import l2trunk.gameserver.stats.funcs.FuncEnchant;
 import l2trunk.gameserver.templates.item.WeaponTemplate;
 import l2trunk.gameserver.utils.PositionUtils;
 
-public class Formulas {
-    private static final int[] DEFENDER_JEWELRY_SLOTS =
-            {Inventory.PAPERDOLL_LEAR, Inventory.PAPERDOLL_REAR, Inventory.PAPERDOLL_LFINGER, Inventory.PAPERDOLL_RFINGER, Inventory.PAPERDOLL_NECK};
+import java.util.List;
+
+public final class Formulas {
+    private static final List<Integer> DEFENDER_JEWELRY_SLOTS = List.of(
+            Inventory.PAPERDOLL_LEAR,
+            Inventory.PAPERDOLL_REAR,
+            Inventory.PAPERDOLL_LFINGER,
+            Inventory.PAPERDOLL_RFINGER,
+            Inventory.PAPERDOLL_NECK);
 
     public static double calcHpRegen(Creature cha) {
         double init = cha instanceof Player ? ((cha.getLevel() <= 10 ? 1.5 + (cha.getLevel() / 20.) : 1.4 + (cha.getLevel() / 10.)) * cha.getLevelMod()) : cha.getTemplate().baseHpReg;
@@ -892,7 +898,7 @@ public class Formulas {
 
         Player pAttacker = attacker.getPlayer();
 
-        // if the player's occupation is lower than 2 or more mobs 78 + levels, its
+        // if the getPlayer's occupation is lower than 2 or more mobs 78 + levels, its
         // damage is reduced by mob
         int diff = defender.getLevel() - (pAttacker != null ? pAttacker.getLevel() : attacker.getLevel());
         if (attacker instanceof Playable && defender instanceof MonsterInstance && (defender.getLevel() >= 78) && (diff > 2)) {

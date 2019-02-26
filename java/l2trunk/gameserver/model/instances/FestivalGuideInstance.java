@@ -111,13 +111,13 @@ public final class FestivalGuideInstance extends NpcInstance {
                         return;
                     }
 
-                    // Check if the player is in a formed party already.
+                    // Check if the getPlayer is in a formed party already.
                     if (playerParty == null || playerParty.size() < Config.FESTIVAL_MIN_PARTY_SIZE) {
                         showChatWindow(player, 2, "buffPrice", false);
                         return;
                     }
 
-                    // Check if the player is the party leader.
+                    // Check if the getPlayer is the party leader.
                     if (!playerParty.isLeader(player)) {
                         showChatWindow(player, 2, "c", false);
                         return;
@@ -247,12 +247,12 @@ public final class FestivalGuideInstance extends NpcInstance {
         NpcHtmlMessage html = new NpcHtmlMessage(player, this);
         html.setFile(filename);
         html.replace("%festivalType%", SevenSignsFestival.getFestivalName(_festivalType));
-        html.replace("%min%", String.valueOf(Config.FESTIVAL_MIN_PARTY_SIZE));
+        html.replace("%min%", Config.FESTIVAL_MIN_PARTY_SIZE);
         // If the stats or bonus table is required, construct them.
         if (val == 1) {
-            html.replace("%price1%", String.valueOf((long) Math.floor(SevenSignsFestival.getStoneCount(_festivalType, 6362) * Config.FESTIVAL_RATE_PRICE)));
-            html.replace("%price2%", String.valueOf((long) Math.floor(SevenSignsFestival.getStoneCount(_festivalType, 6361) * Config.FESTIVAL_RATE_PRICE)));
-            html.replace("%price3%", String.valueOf((long) Math.floor(SevenSignsFestival.getStoneCount(_festivalType, 6360) * Config.FESTIVAL_RATE_PRICE)));
+            html.replace("%price1%",(long) Math.floor(SevenSignsFestival.getStoneCount(_festivalType, 6362) * Config.FESTIVAL_RATE_PRICE));
+            html.replace("%price2%", (long) Math.floor(SevenSignsFestival.getStoneCount(_festivalType, 6361) * Config.FESTIVAL_RATE_PRICE));
+            html.replace("%price3%", (long) Math.floor(SevenSignsFestival.getStoneCount(_festivalType, 6360) * Config.FESTIVAL_RATE_PRICE));
         }
         if (val == 5)
             html.replace("%statsTable%", getStatsTable());

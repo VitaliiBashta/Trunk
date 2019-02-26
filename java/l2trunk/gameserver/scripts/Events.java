@@ -28,7 +28,7 @@ public final class Events {
                 return act.OnActionShift_PetInstance(player,obj);
             }
             return false;
-            //            return Strings.parseBoolean(Scripts.INSTANCE.callScripts(player, handler.className, handler.methodName, new Object[]{player, obj}));
+            //            return Strings.parseBoolean(Scripts.INSTANCE.callScripts(getPlayer, handler.className, handler.methodName, new Object[]{getPlayer, obj}));
         } else {
             handler = Scripts.onAction.get(obj.getL2ClassShortName());
                 if ((handler == null) && obj instanceof DoorInstance ) {

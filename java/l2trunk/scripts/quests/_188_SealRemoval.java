@@ -32,7 +32,7 @@ public final class _188_SealRemoval extends Quest {
         } else if (event.equalsIgnoreCase("dorothy_the_locksmith_q0188_03.htm")) {
             st.giveItems(ADENA_ID, 98583);
             st.addExpAndSp(285935, 18711);
-            st.exitCurrentQuest(false);
+            st.finish();
             st.playSound(SOUND_FINISH);
         }
         return event;

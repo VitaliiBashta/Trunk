@@ -1,5 +1,7 @@
 package l2trunk.gameserver.model.base;
 
+import static l2trunk.gameserver.model.base.ClassId.*;
+
 public enum AcquireType {
     NORMAL,
     FISHING,
@@ -14,29 +16,29 @@ public enum AcquireType {
 
     public static final AcquireType[] VALUES = AcquireType.values();
 
-    public static AcquireType transferType(int classId) {
+    public static AcquireType transferType(ClassId classId) {
         switch (classId) {
-            case 97:
+            case cardinal:
                 return TRANSFER_CARDINAL;
-            case 105:
+            case evaSaint:
                 return TRANSFER_EVA_SAINTS;
-            case 112:
+            case shillienSaint:
                 return TRANSFER_SHILLIEN_SAINTS;
         }
 
         return null;
     }
 
-    public int transferClassId() {
+    public ClassId transferClassId() {
         switch (this) {
             case TRANSFER_CARDINAL:
-                return 97;
+                return cardinal;
             case TRANSFER_EVA_SAINTS:
-                return 105;
+                return evaSaint;
             case TRANSFER_SHILLIEN_SAINTS:
-                return 112;
+                return shillienSaint;
         }
 
-        return 0;
+        return null;
     }
 }

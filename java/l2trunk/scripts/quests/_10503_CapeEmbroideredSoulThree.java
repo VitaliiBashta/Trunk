@@ -8,7 +8,7 @@ import l2trunk.gameserver.model.quest.QuestState;
 public final class _10503_CapeEmbroideredSoulThree extends Quest {
     // NPC's
     private static final int OLF_ADAMS = 32612;
-    // Mob's
+    // mob's
     private static final int FRINTEZZA = 29047;
     // Quest Item's
     private static final int SOUL_FRINTEZZA = 21724;
@@ -27,7 +27,7 @@ public final class _10503_CapeEmbroideredSoulThree extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if (event.equalsIgnoreCase("olf_adams_q10503_02.htm")) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         }
         return event;
@@ -42,7 +42,7 @@ public final class _10503_CapeEmbroideredSoulThree extends Quest {
                 htmltext = "olf_adams_q10503_01.htm";
             else {
                 htmltext = "olf_adams_q10503_00.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (cond == 1)
             htmltext = "olf_adams_q10503_03.htm";
@@ -55,7 +55,7 @@ public final class _10503_CapeEmbroideredSoulThree extends Quest {
                 st.giveItems(CLOAK_FRINTEZZA);
                 st.playSound(SOUND_FINISH);
                 htmltext = "olf_adams_q10503_04.htm";
-                st.exitCurrentQuest(false);
+                st.finish();
             }
         return htmltext;
     }

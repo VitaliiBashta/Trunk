@@ -205,7 +205,7 @@ public final class GMViewCharacterInfo extends L2GameServerPacket {
         writeH(rec_left);
         writeH(rec_have); //Blue value for name (0 = white, 255 = pure blue)
         writeD(class_id);
-        writeD(0x00); // special effects? circles around player...
+        writeD(0x00); // special effects? circles around getPlayer...
         writeD(maxCp);
         writeD(curCp);
         writeC(running); //changes the Speed display on Status Window

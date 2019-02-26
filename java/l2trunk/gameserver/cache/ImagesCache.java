@@ -168,17 +168,17 @@ public final class ImagesCache {
     }
 
     /**
-     * Sending All Images that are needed to open HTML to the player
+     * Sending All Images that are needed to open HTML to the getPlayer
      *
      * @param html   page that may contain images
      * @param player that will receive images
-     * @return Returns true if images were sent to the player
+     * @return Returns true if images were sent to the getPlayer
      */
     public static String sendUsedImages(String html, Player player) {
         if (!Config.ALLOW_SENDING_IMAGES)
             return html;
 
-        // We must also replace all the crests_1 on the html to fit the current player serverid, or he wont be able to see the images
+        // We must also replace all the crests_1 on the html to fit the current getPlayer serverid, or he wont be able to see the images
         html = html.replaceAll("Crest.crest_1_", "Crest.crest_" + +player.getNetConnection().getServerId() + "_");
 
         // We must first replace all the images to crests format, things like %image:serverImage% to Crest.crest_1_32423
@@ -203,7 +203,7 @@ public final class ImagesCache {
                 lastIndex = end;
                 int imageId = Integer.parseInt(html.substring(start, end));
 
-                // Checking if images are sent automatically(then player needs to wait for sending Thread) or in real time
+                // Checking if images are sent automatically(then getPlayer needs to wait for sending Thread) or in real time
                 if (!AutoImageSenderManager.isImageAutoSendable(imageId)) {
                     sendImageToPlayer(player, imageId);
                     hasSentImages = true;
@@ -219,7 +219,7 @@ public final class ImagesCache {
     }
 
     /**
-     * Sending Image as PledgeCrest to a player If image was already sent once to the player, it's skipping this part Saved images data is in player Quick Vars as Key: "Image"+imageId Value: true
+     * Sending Image as PledgeCrest to a getPlayer If image was already sent once to the getPlayer, it's skipping this part Saved images data is in getPlayer Quick Vars as Key: "Image"+imageId Value: true
      *
      * @param player  that will receive image
      * @param imageId Id of the image

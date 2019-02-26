@@ -30,7 +30,7 @@ public final class _237_WindsOfChange extends Quest {
         if (event.equalsIgnoreCase("30899-06.htm")) {
             st.giveItems(FlauensLetter, 1);
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
         } else if (event.equalsIgnoreCase("30969-05.htm"))
             st.setCond(2);
         else if (event.equalsIgnoreCase("30897-03.htm"))
@@ -48,15 +48,15 @@ public final class _237_WindsOfChange extends Quest {
             st.giveItems(ADENA_ID, 213876);
             st.addExpAndSp(892773, 60012);
             st.giveItems(VicinityOfTheFieldOfSilenceResearchCenter, 1);
-            st.setState(COMPLETED);
-            st.exitCurrentQuest(false);
+            st.complete();
+            st.finish();
         } else if (event.equalsIgnoreCase("32643-02.htm")) {
             st.takeItems(LetterToAthenia, -1);
             st.giveItems(ADENA_ID, 213876);
             st.addExpAndSp(892773, 60012);
             st.giveItems(CertificateOfSupport, 1);
-            st.setState(COMPLETED);
-            st.exitCurrentQuest(false);
+            st.complete();
+            st.finish();
         }
         return event;
     }
@@ -71,7 +71,7 @@ public final class _237_WindsOfChange extends Quest {
         if (npcId == Flauen) {
             if (id == CREATED) {
                 if (st.player.getLevel() < 82) {
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                     htmltext = "30899-00.htm";
                 } else
                     htmltext = "30899-01.htm";

@@ -28,7 +28,7 @@ public final class _116_BeyondtheHillsofWinter extends Quest {
         String htmltext = event;
         if (event.equalsIgnoreCase("elder_filaur_q0116_0104.htm")) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("elder_filaur_q0116_0201.htm")) {
             if (st.getQuestItemsCount(Bandage) >= 20 && st.getQuestItemsCount(Energy_Stone) >= 5 && st.getQuestItemsCount(Thief_Key) >= 10) {
@@ -37,7 +37,7 @@ public final class _116_BeyondtheHillsofWinter extends Quest {
                 st.takeItems(Thief_Key, 10);
                 st.giveItems(Supplying_Goods_for_Railroad_Worker, 1);
                 st.setCond(2);
-                st.setState(STARTED);
+                st.start();
             } else
                 htmltext = "elder_filaur_q0116_0104.htm";
         } else if (event.equalsIgnoreCase("materials")) {
@@ -45,13 +45,13 @@ public final class _116_BeyondtheHillsofWinter extends Quest {
             st.takeItems(Supplying_Goods_for_Railroad_Worker, 1);
             st.giveItems(SSD, 1740);
             st.addExpAndSp(82792, 4981);
-            st.exitCurrentQuest(false);
+            st.finish();
         } else if (event.equalsIgnoreCase("adena")) {
             htmltext = "railman_obi_q0116_0302.htm";
             st.takeItems(Supplying_Goods_for_Railroad_Worker, 1);
             st.giveItems(ADENA_ID, 17387);
             st.addExpAndSp(82792, 4981);
-            st.exitCurrentQuest(false);
+            st.finish();
         }
         return htmltext;
     }
@@ -68,7 +68,7 @@ public final class _116_BeyondtheHillsofWinter extends Quest {
             if (cond == 0) {
                 if (st.player.getLevel() < 30) {
                     htmltext = "elder_filaur_q0116_0103.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else
                     htmltext = "elder_filaur_q0116_0101.htm";
             } else if (cond == 1)

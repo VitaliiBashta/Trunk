@@ -24,7 +24,7 @@ public class OlympiadHistoryDAO {
     }
 
     public Map<Boolean, List<OlympiadHistory>> select() {
-        Map<Boolean, List<OlympiadHistory>> map = null;
+        Map<Boolean, List<OlympiadHistory>> map;
 
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement(SELECT_SQL_QUERY)) {

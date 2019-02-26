@@ -37,7 +37,7 @@ public final class StaticObjectTemplate {
     public StaticObjectInstance newInstance() {
         StaticObjectInstance instance = new StaticObjectInstance(IdFactory.getInstance().getNextId(), this);
 
-        instance.spawnMe(new Location(x, y, z));
+        instance.spawnMe(Location.of(x, y, z));
 
         return instance;
     }

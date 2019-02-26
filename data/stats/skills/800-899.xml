@@ -1251,7 +1251,7 @@
 	</skill>
 	<skill id="857" levels="1" name="Human Mercenary" >
 		<!--  Automatically generated from The Gracia Final client files.
-		      Description: Transforms player into a human mercenary.
+		      Description: Transforms getPlayer into a human mercenary.
 		      Target is set to TARGET_NONE, skillType  to NOTDONE for server compatability.
 		      created 16-4-2009  22:35
 		-->
@@ -1266,7 +1266,7 @@
 	</skill>
 	<skill id="858" levels="1" name="Elf Mercenary" >
 		<!--  Automatically generated from The Gracia Final client files.
-		      Description: Transforms player into an Elf mercenary.
+		      Description: Transforms getPlayer into an Elf mercenary.
 		      Target is set to TARGET_NONE, skillType  to NOTDONE for server compatability.
 		      created 16-4-2009  22:35
 		-->
@@ -1281,7 +1281,7 @@
 	</skill>
 	<skill id="859" levels="1" name="Dark Elf Mercenary" >
 		<!--  Automatically generated from The Gracia Final client files.
-		      Description: Transforms player into a Dark Elf mercenary.
+		      Description: Transforms getPlayer into a Dark Elf mercenary.
 		      Target is set to TARGET_NONE, skillType  to NOTDONE for server compatability.
 		      created 16-4-2009  22:35
 		-->
@@ -1296,7 +1296,7 @@
 	</skill>
 	<skill id="860" levels="1" name="Orc Mercenary" >
 		<!--  Automatically generated from The Gracia Final client files.
-		      Description: Transforms player into an Orc mercenary.
+		      Description: Transforms getPlayer into an Orc mercenary.
 		      Target is set to TARGET_NONE, skillType  to NOTDONE for server compatability.
 		      created 16-4-2009  22:35
 		-->
@@ -1311,7 +1311,7 @@
 	</skill>
 	<skill id="861" levels="1" name="Dwarf Mercenary" >
 		<!--  Automatically generated from The Gracia Final client files.
-		      Description: Transforms player into a Dwarf mercenary.
+		      Description: Transforms getPlayer into a Dwarf mercenary.
 		      Target is set to TARGET_NONE, skillType  to NOTDONE for server compatability.
 		      created 16-4-2009  22:35
 		-->
@@ -1326,7 +1326,7 @@
 	</skill>
 	<skill id="862" levels="1" name="Kamael Mercenary" >
 		<!--  Automatically generated from The Gracia Final client files.
-		      Description: Transforms player into a Kamael mercenary.
+		      Description: Transforms getPlayer into a Kamael mercenary.
 		      Target is set to TARGET_NONE, skillType  to NOTDONE for server compatability.
 		      created 16-4-2009  22:35
 		-->
@@ -1341,7 +1341,7 @@
 	</skill>
 	<skill id="863" levels="1" name="Royal Guard Captain" >
 		<!--  Automatically generated from The Gracia Final client files.
-		      Description: Transforms player into a Royal Guard Captain.
+		      Description: Transforms getPlayer into a Royal Guard Captain.
 		      Target is set to TARGET_NONE, skillType  to NOTDONE for server compatability.
 		      created 16-4-2009  22:35
 		-->
@@ -1356,7 +1356,7 @@
 	</skill>
 	<skill id="864" levels="1" name="Archer Captain" >
 		<!--  Automatically generated from The Gracia Final client files.
-		      Description: Transforms player into an Archer Captain.
+		      Description: Transforms getPlayer into an Archer Captain.
 		      Target is set to TARGET_NONE, skillType  to NOTDONE for server compatability.
 		      created 16-4-2009  22:35
 		-->
@@ -1371,7 +1371,7 @@
 	</skill>
 	<skill id="865" levels="1" name="Magic Leader" >
 		<!--  Automatically generated from The Gracia Final client files.
-		      Description: Transforms player into a Magic Leader.
+		      Description: Transforms getPlayer into a Magic Leader.
 		      Target is set to TARGET_NONE, skillType  to NOTDONE for server compatability.
 		      created 16-4-2009  22:35
 		-->
@@ -1386,7 +1386,7 @@
 	</skill>
 	<skill id="866" levels="1" name="Kamael Guard Captain" >
 		<!--  Automatically generated from The Gracia Final client files.
-		      Description: Transforms player into a Kamael guard captain.
+		      Description: Transforms getPlayer into a Kamael guard captain.
 		      Target is set to TARGET_NONE, skillType  to NOTDONE for server compatability.
 		      created 16-4-2009  22:35
 		-->
@@ -1401,7 +1401,7 @@
 	</skill>
 	<skill id="867" levels="1" name="Knight of Dawn" >
 		<!--  Automatically generated from The Gracia Final client files.
-		      Description: Transforms player into a Knight of Dawn.
+		      Description: Transforms getPlayer into a Knight of Dawn.
 		      Target is set to TARGET_NONE, skillType  to NOTDONE for server compatability.
 		      created 16-4-2009  22:35
 		-->
@@ -1416,7 +1416,7 @@
 	</skill>
 	<skill id="868" levels="1" name="Fortress Captain" >
 		<!--  Automatically generated from The Gracia Final client files.
-		      Description: Transforms player into a Fortress Captain.
+		      Description: Transforms getPlayer into a Fortress Captain.
 		      Target is set to TARGET_NONE, skillType  to NOTDONE for server compatability.
 		      created 16-4-2009  22:35
 		-->
@@ -1634,7 +1634,7 @@
 	</skill>
 	<skill id="880" levels="1" name="Knight of Dawn Ultimate Defense" >
 		<!--  Automatically generated from The Gracia Final client files.
-		      Description: Instantly and drastically increases tolerance to P. Def./M. Def. weakening and buff cancelling attacks. The player cannot move while the effect lasts. Effect 2.
+		      Description: Instantly and drastically increases tolerance to P. Def./M. Def. weakening and buff cancelling attacks. The getPlayer cannot move while the effect lasts. Effect 2.
 		      Target is set to TARGET_NONE, skillType  to NOTDONE for server compatability.
 		      created 16-4-2009  22:35
 		-->

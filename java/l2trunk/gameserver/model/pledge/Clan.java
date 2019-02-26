@@ -108,7 +108,7 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
     private ClanWarehouse warehouse;
     private int _whBonus = -1;
     private String notice = "";
-    private int _reputation = 0;
+    private int reputation = 0;
     private int _siegeKills = 0;
     // Recruitment
     private boolean recruting = false;
@@ -145,7 +145,7 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
                 clan.setHasFortress(clanData.getInt("hasFortress"));
                 clan.setHasHideout(clanData.getInt("hasHideout"));
                 clan.setAllyId(clanData.getInt("ally_id"));
-                clan._reputation = clanData.getInt("reputation_score");
+                clan.reputation = clanData.getInt("reputation_score");
                 clan.setExpelledMemberTime(clanData.getLong("expelled_member") * 1000L);
                 clan.setLeavedAllyTime(clanData.getLong("leaved_ally") * 1000L);
                 clan.setDissolvedAllyTime(clanData.getLong("dissolved_ally") * 1000L);
@@ -170,10 +170,10 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
         clan.restoreSubPledges();
         clan.restoreClanRecruitment();
 
-        for (SubUnit unit : clan.subUnits.values()) {
+        clan.subUnits.values().forEach(unit -> {
             unit.restore();
             unit.restoreSkills();
-        }
+        });
 
         clan.restoreRankPrivs();
         clan.setCrestId(CrestCache.getPledgeCrestId(clanId));
@@ -367,7 +367,7 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
 
         for (final UnitMember temp : this)
             if (temp != null && temp.isOnline() && temp.objectId() != exclude)
-                result.add(temp.player());
+                result.add(temp.getPlayer());
 
         return result;
     }
@@ -377,7 +377,7 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
 
         for (final UnitMember temp : this)
             if (temp != null && temp.isOnline())
-                result.add(temp.player());
+                result.add(temp.getPlayer());
 
         return result;
     }
@@ -527,19 +527,19 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
     public void broadcastToOnlineMembers(IStaticPacket... packets) {
         for (UnitMember member : this)
             if (member.isOnline())
-                member.player().sendPacket(packets);
+                member.getPlayer().sendPacket(packets);
     }
 
     public void broadcastToOnlineMembers(L2GameServerPacket... packets) {
         for (UnitMember member : this)
             if (member.isOnline())
-                member.player().sendPacket(packets);
+                member.getPlayer().sendPacket(packets);
     }
 
     public void broadcastToOtherOnlineMembers(L2GameServerPacket packet, Player player) {
         for (UnitMember member : this)
-            if (member.isOnline() && member.player() != player)
-                member.player().sendPacket(packet);
+            if (member.isOnline() && member.getPlayer() != player)
+                member.getPlayer().sendPacket(packet);
     }
 
     @Override
@@ -639,14 +639,14 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
         for (UnitMember member : this)
             if (member.isOnline()) {
                 if (updateList) {
-                    member.player().sendPacket(PledgeShowMemberListDeleteAll.STATIC);
-                    member.player().sendPacket(listAll);
+                    member.getPlayer().sendPacket(PledgeShowMemberListDeleteAll.STATIC);
+                    member.getPlayer().sendPacket(listAll);
                 }
-                member.player().sendPacket(update);
+                member.getPlayer().sendPacket(update);
                 if (needUserInfo)
-                    member.player().broadcastCharInfo();
+                    member.getPlayer().broadcastCharInfo();
                 if (relation)
-                    member.player().broadcastRelationChanged();
+                    member.getPlayer().broadcastRelationChanged();
             }
     }
 
@@ -678,24 +678,24 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
     /* ============================ clan skills stuff ============================ */
 
     public int getReputationScore() {
-        return _reputation;
+        return reputation;
     }
 
     private void setReputationScore(int rep) {
-        if (_reputation >= 0 && rep < 0) {
+        if (reputation >= 0 && rep < 0) {
             broadcastToOnlineMembers(Msg.SINCE_THE_CLAN_REPUTATION_SCORE_HAS_DROPPED_TO_0_OR_LOWER_YOUR_CLAN_SKILLS_WILL_BE_DE_ACTIVATED);
             for (UnitMember member : this)
-                if (member.isOnline() && member.player() != null)
-                    disableSkills(member.player());
-        } else if (_reputation < 0 && rep >= 0) {
+                if (member.isOnline() && member.getPlayer() != null)
+                    disableSkills(member.getPlayer());
+        } else if (reputation < 0 && rep >= 0) {
             broadcastToOnlineMembers(Msg.THE_CLAN_SKILL_WILL_BE_ACTIVATED_BECAUSE_THE_CLANS_REPUTATION_SCORE_HAS_REACHED_TO_0_OR_HIGHER);
             for (UnitMember member : this)
-                if (member.isOnline() && member.player() != null)
-                    enableSkills(member.player());
+                if (member.isOnline() && member.getPlayer() != null)
+                    enableSkills(member.getPlayer());
         }
 
-        if (_reputation != rep) {
-            _reputation = rep;
+        if (reputation != rep) {
+            reputation = rep;
             broadcastToOnlineMembers(new PledgeShowInfoUpdate(this));
         }
 
@@ -709,8 +709,8 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
         if (rate && Math.abs(inc) <= Config.RATE_CLAN_REP_SCORE_MAX_AFFECTED)
             inc = (int) Math.round(inc * Config.RATE_CLAN_REP_SCORE);
 
-        setReputationScore(_reputation + inc);
-        Log.add(getName() + "|" + inc + "|" + _reputation + "|" + source, "clan_reputation");
+        setReputationScore(reputation + inc);
+        Log.add(getName() + "|" + inc + "|" + reputation + "|" + source, "clan_reputation");
 
         // Synerge - Add the new reputation to the stats
         // if (inc > 0)
@@ -723,7 +723,7 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
         if (level < 5)
             return 0;
 
-        setReputationScore(_reputation + inc);
+        setReputationScore(reputation + inc);
 
         // Synerge - Add the new reputation to the stats
         // if (inc > 0)
@@ -755,7 +755,7 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
     }
 
     public final Collection<Skill> getAllSkills() {
-        if (_reputation < 0)
+        if (reputation < 0)
             return List.of();
 
         return skills.values();
@@ -797,7 +797,7 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
             PledgeSkillList p2 = new PledgeSkillList(this);
             for (UnitMember temp : this) {
                 if (temp.isOnline()) {
-                    Player player = temp.player();
+                    Player player = temp.getPlayer();
                     if (player != null) {
                         addSkill(player, newSkill);
                         player.sendPacket(p, p2, new SkillList(player));
@@ -845,7 +845,7 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
     private void addSkill(Player player, Skill skill) {
         if (skill.minPledgeClass <= player.getPledgeClass()) {
             player.addSkill(skill, false);
-            if (_reputation < 0 || player.isInOlympiadMode())
+            if (reputation < 0 || player.isInOlympiadMode())
                 player.addUnActiveSkill(skill);
         }
     }
@@ -854,7 +854,7 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
         skills.remove(skill);
         PledgeSkillListAdd p = new PledgeSkillListAdd(skill, 0);
         for (UnitMember temp : this) {
-            Player player = temp.player();
+            Player player = temp.getPlayer();
             if (player != null && player.isOnline()) {
                 player.removeSkill(skill);
                 player.sendPacket(p, new SkillList(player));
@@ -864,7 +864,7 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
 
     public void broadcastSkillListToOnlineMembers() {
         for (UnitMember temp : this) {
-            Player player = temp.player();
+            Player player = temp.getPlayer();
             if (player != null && player.isOnline()) {
                 player.sendPacket(new PledgeSkillList(this));
                 player.sendPacket(new SkillList(player));
@@ -1255,18 +1255,17 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
 
     public void updatePrivsForRank(int rank) {
         for (UnitMember member : this)
-            if (member.isOnline() && member.player() != null && member.player().getPowerGrade() == rank) {
-                if (member.player().isClanLeader())
+            if (member.isOnline() && member.getPlayer() != null && member.getPlayer().getPowerGrade() == rank) {
+                if (member.getPlayer().isClanLeader())
                     continue;
-                member.player().sendUserInfo();
+                member.getPlayer().sendUserInfo();
             }
     }
 
     public RankPrivs getRankPrivs(int rank) {
         if (rank < RANK_FIRST || rank > RANK_LAST) {
             _log.warn("Requested invalid rank value: " + rank);
-            Thread.dumpStack();
-            return null;
+            throw new IllegalArgumentException("Requested invalid rank value: " + rank);
         }
         if (privs.get(rank) == null) {
             _log.warn("Request of rank before init: " + rank);
@@ -1366,10 +1365,6 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
     public int getSkillLevel(int id, int def) {
         Skill skill = skills.get(id);
         return skill == null ? def : skill.level;
-    }
-
-    public int getSkillLevel(int id) {
-        return getSkillLevel(id, -1);
     }
 
     public int getWarDominion() {

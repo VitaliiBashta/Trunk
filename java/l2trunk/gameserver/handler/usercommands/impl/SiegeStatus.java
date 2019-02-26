@@ -32,9 +32,9 @@ public final class SiegeStatus implements IUserCommandHandler {
         NpcHtmlMessage msg = new NpcHtmlMessage(5);
         msg.setFile("siege_status.htm");
         msg.replace("%name%", player.getName());
-        msg.replace("%kills%", String.valueOf(0));
-        msg.replace("%deaths%", String.valueOf(0));
-        msg.replace("%type%", String.valueOf(0));
+        msg.replace("%kills%", 0);
+        msg.replace("%deaths%", 0);
+        msg.replace("%type%", 0);
 
         player.sendPacket(msg);
         return true;
@@ -42,6 +42,6 @@ public final class SiegeStatus implements IUserCommandHandler {
 
     @Override
     public List<Integer> getUserCommandList() {
-        return Collections.singletonList(COMMANDS);
+        return List.of(COMMANDS);
     }
 }

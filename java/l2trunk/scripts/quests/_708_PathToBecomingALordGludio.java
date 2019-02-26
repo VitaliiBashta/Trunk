@@ -41,7 +41,7 @@ public final class _708_PathToBecomingALordGludio extends Quest {
         Player castleOwner = castle.getOwner().getLeader().player;
         switch (event) {
             case "sayres_q708_03.htm":
-                st.setState(STARTED);
+                st.start();
                 st.setCond(1);
                 st.playSound(SOUND_ACCEPT);
                 break;
@@ -52,7 +52,7 @@ public final class _708_PathToBecomingALordGludio extends Quest {
                 if (isLordAvailable(2, st)) {
                     castleOwner.getQuestState(this).set("confidant", st.player.objectId());
                     castleOwner.getQuestState(this).setCond(3);
-                    st.setState(STARTED);
+                    st.start();
                 } else
                     htmltext = "sayres_q708_05a.htm";
                 break;
@@ -83,7 +83,7 @@ public final class _708_PathToBecomingALordGludio extends Quest {
                 Functions.npcSay(npc, NpcString.S1_HAS_BECOME_THE_LORD_OF_THE_TOWN_OF_GLUDIO, st.player.getName());
                 castle.getDominion().changeOwner(castleOwner.getClan());
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 break;
         }
         return htmltext;
@@ -105,7 +105,7 @@ public final class _708_PathToBecomingALordGludio extends Quest {
                         htmltext = "sayres_q708_01.htm";
                     else {
                         htmltext = "sayres_q708_00.htm";
-                        st.exitCurrentQuest(true);
+                        st.exitCurrentQuest();
                     }
                 } else if (isLordAvailable(2, st)) {
                     if (castleOwner.isInRangeZ(npc, 200))
@@ -116,7 +116,7 @@ public final class _708_PathToBecomingALordGludio extends Quest {
                     htmltext = "sayres_q708_08a.htm";
                 else {
                     htmltext = "sayres_q708_00a.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1) {
                 htmltext = "sayres_q708_04.htm";
@@ -172,7 +172,7 @@ public final class _708_PathToBecomingALordGludio extends Quest {
     private boolean isLordAvailable(int cond, QuestState st) {
         Castle castle = ResidenceHolder.getResidence(GludioCastle);
         Clan owner = castle.getOwner();
-        Player castleOwner = castle.getOwner().getLeader().player();
+        Player castleOwner = castle.getOwner().getLeader().getPlayer();
         if (owner != null)
             return castleOwner != null && castleOwner != st.player && owner == st.player.getClan() && castleOwner.getQuestState(this) != null && castleOwner.getQuestState(this).getCond() == cond;
         return false;

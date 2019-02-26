@@ -28,7 +28,7 @@ public final class _053_LinnaeusSpecialBait extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
         if (event.equals("fisher_linneaus_q0053_0104.htm")) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if (event.equals("fisher_linneaus_q0053_0201.htm"))
@@ -39,7 +39,7 @@ public final class _053_LinnaeusSpecialBait extends Quest {
                 st.takeItems(HeartOfCrimsonDrake, -1);
                 st.giveItems(FlameFishingLure, 4);
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(false);
+                st.finish();
             }
         return htmltext;
     }
@@ -54,12 +54,12 @@ public final class _053_LinnaeusSpecialBait extends Quest {
             if (id == CREATED) {
                 if (st.player.getLevel() < 60) {
                     htmltext = "fisher_linneaus_q0053_0103.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else if (st.player.getSkillLevel(FishSkill) >= 21)
                     htmltext = "fisher_linneaus_q0053_0101.htm";
                 else {
                     htmltext = "fisher_linneaus_q0053_0102.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1 || cond == 2)
                 if (st.getQuestItemsCount(HeartOfCrimsonDrake) < 100) {

@@ -41,7 +41,7 @@ public final class _455_WingsofSand extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
         if ("sepsoul_q455_05.htm".equalsIgnoreCase(event)) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if (event.startsWith("sepsoul_q455_08.htm")) {
@@ -65,7 +65,7 @@ public final class _455_WingsofSand extends Quest {
                     break;
             }
             htmltext = "sepsoul_q455_08.htm";
-            st.setState(COMPLETED);
+            st.complete();
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(this);
         } else if (event.startsWith("sepsoul_q455_11.htm")) {
@@ -92,7 +92,7 @@ public final class _455_WingsofSand extends Quest {
                 st.giveItems(Rnd.get(reward_ench_scroll));
 
             htmltext = "sepsoul_q455_11.htm";
-            st.setState(COMPLETED);
+            st.complete();
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(this);
         }
@@ -112,7 +112,7 @@ public final class _455_WingsofSand extends Quest {
                             htmltext = "sepsoul_q455_01.htm";
                         else {
                             htmltext = "sepsoul_q455_00.htm";
-                            st.exitCurrentQuest(true);
+                            st.exitCurrentQuest();
                         }
                     } else
                         htmltext = "sepsoul_q455_00a.htm";

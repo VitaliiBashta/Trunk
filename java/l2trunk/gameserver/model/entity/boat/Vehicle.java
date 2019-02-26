@@ -16,8 +16,8 @@ public final class Vehicle extends Boat {
     }
 
     @Override
-    public L2GameServerPacket validateLocationPacket(Player player) {
-        return new ValidateLocationInVehicle(player);
+    public void validateLocationPacket(Player player) {
+        new ValidateLocationInVehicle(player);
     }
 
     @Override

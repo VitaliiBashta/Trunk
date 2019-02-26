@@ -27,7 +27,7 @@ public final class _452_FindingtheLostSoldiers extends Quest {
 
         if (npc.getNpcId() == JAKAN) {
             if (event.equalsIgnoreCase("32773-3.htm")) {
-                st.setState(STARTED);
+                st.start();
                 st.setCond(1);
                 st.playSound(SOUND_ACCEPT);
             }

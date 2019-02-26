@@ -62,7 +62,7 @@ public final class ClanAirShipControllerInstance extends AirShipControllerInstan
             }
 
             if (dockedAirShip != null) {
-                Functions.npcSay(this, NpcString.IN_AIR_HARBOR_ALREADY_AIRSHIP_DOCKED_PLEASE_WAIT_AND_TRY_AGAIN, ChatType.SHOUT, 5000, "");
+                Functions.npcSay(this, NpcString.IN_AIR_HARBOR_ALREADY_AIRSHIP_DOCKED_PLEASE_WAIT_AND_TRY_AGAIN, ChatType.SHOUT, 5000);
                 return;
             }
 
@@ -79,7 +79,7 @@ public final class ClanAirShipControllerInstance extends AirShipControllerInstan
             dockedShip.spawnMe(_platform.getSpawnLoc());
             dockedShip.startDepartTask();
 
-            Functions.npcSay(this, NpcString.AIRSHIP_IS_SUMMONED_IS_DEPART_IN_5_MINUTES, ChatType.SHOUT, 5000, "");
+            Functions.npcSay(this, NpcString.AIRSHIP_IS_SUMMONED_IS_DEPART_IN_5_MINUTES, ChatType.SHOUT, 5000);
         } else if ("register".equalsIgnoreCase(command)) {
             if (player.getClan() == null || !player.isClanLeader() || player.getClan().getLevel() < 5) {
                 player.sendPacket(SystemMsg.IN_ORDER_TO_ACQUIRE_AN_AIRSHIP_THE_CLANS_LEVEL_MUST_BE_LEVEL_5_OR_HIGHER);

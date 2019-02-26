@@ -12,7 +12,7 @@ public final class _648_AnIceMerchantsDream extends Quest {
     // NPCs
     private static final int Rafforty = 32020;
     private static final int Ice_Shelf = 32023;
-    // Items
+    // items
     private static final int Silver_Hemocyte = 8057;
     private static final int Silver_Ice_Crystal = 8077;
     private static final int Black_Ice_Crystal = 8078;
@@ -24,8 +24,7 @@ public final class _648_AnIceMerchantsDream extends Quest {
 
     public _648_AnIceMerchantsDream() {
         super(true);
-        addStartNpc(Rafforty);
-        addStartNpc(Ice_Shelf);
+        addStartNpc(Rafforty,Ice_Shelf);
         for (int i = 22080; i <= 22098; i++)
             if (i != 22095)
                 addKillId(i);
@@ -35,12 +34,12 @@ public final class _648_AnIceMerchantsDream extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         int _state = st.getState();
         if ("repre_q0648_04.htm".equalsIgnoreCase(event) && _state == CREATED) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if ("repre_q0648_22.htm".equalsIgnoreCase(event) && _state == STARTED) {
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
         if (_state != STARTED)
             return event;
@@ -51,8 +50,8 @@ public final class _648_AnIceMerchantsDream extends Quest {
         if ("repre_q0648_14.htm".equalsIgnoreCase(event)) {
             long reward = Silver_Ice_Crystal_Count * 300 + Black_Ice_Crystal_Count * 1200;
             if (reward > 0) {
-                st.takeItems(Silver_Ice_Crystal, -1);
-                st.takeItems(Black_Ice_Crystal, -1);
+                st.takeItems(Silver_Ice_Crystal);
+                st.takeItems(Black_Ice_Crystal);
                 st.giveItems(ADENA_ID, reward);
             } else
                 return "repre_q0648_15.htm";
@@ -103,7 +102,7 @@ public final class _648_AnIceMerchantsDream extends Quest {
                     st.setCond(0);
                     return "repre_q0648_03.htm";
                 }
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 return "repre_q0648_01.htm";
             }
             if (npcId == Ice_Shelf)

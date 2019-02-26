@@ -49,6 +49,10 @@ public final class ItemFunctions {
         return item;
     }
 
+    public static void addItem(Player player, int itemId) {
+        addItem(player, itemId, 1);
+    }
+
     public static void addItem(Player player, int itemId, long count) {
         addItem(player, itemId, count, "");
     }
@@ -64,10 +68,9 @@ public final class ItemFunctions {
         player.sendPacket(SystemMessage2.obtainItems(itemId, count, 0));
     }
 
-
-//    public static long removeItem(Player player, int itemId, long count, String log) {
-//        return removeItem(player, itemId, count, log);
-//    }
+    public static long removeItem(Player player, int itemId, String log) {
+        return removeItem(player, itemId, 1, log);
+    }
 
     public static long removeItem(Player player, int itemId, long count, String log) {
         long removed = 0;
@@ -83,7 +86,7 @@ public final class ItemFunctions {
                 if (player.inventory.destroyItemByItemId(itemId, log))
                     removed++;
 
-        if (removed > 0 )
+        if (removed > 0)
             player.sendPacket(SystemMessage2.removeItems(itemId, removed));
 
         return removed;

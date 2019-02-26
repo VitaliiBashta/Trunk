@@ -31,7 +31,7 @@ public class OlympiadTeam {
         if (player != null)
             player_name = player.getName();
         else {
-            StatsSet noble = Olympiad._nobles.get(obj_id);
+            StatsSet noble = Olympiad.nobles.get(obj_id);
             if (noble != null)
                 player_name = noble.getString(Olympiad.CHAR_NAME, "");
         }

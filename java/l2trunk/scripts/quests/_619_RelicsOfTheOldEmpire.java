@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 public final class _619_RelicsOfTheOldEmpire extends Quest {
-    // Items
+    // items
     private static final int Entrance_Pass_to_the_Sepulcher = 7075;
     private static final int Broken_Relic_Part = 7254;
     // NPCs
@@ -159,11 +159,11 @@ public final class _619_RelicsOfTheOldEmpire extends Quest {
         switch (event) {
             case "explorer_ghost_a_q0619_03.htm":
                 if (st.player.getLevel() < 74) {
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                     return "explorer_ghost_a_q0619_02.htm";
                 }
                 st.setCond(1);
-                st.setState(STARTED);
+                st.start();
                 st.playSound(SOUND_ACCEPT);
                 break;
             case "explorer_ghost_a_q0619_09.htm":
@@ -174,7 +174,7 @@ public final class _619_RelicsOfTheOldEmpire extends Quest {
                 return "explorer_ghost_a_q0619_09.htm";
             case "explorer_ghost_a_q0619_10.htm":
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 break;
         }
         return event;
@@ -184,7 +184,7 @@ public final class _619_RelicsOfTheOldEmpire extends Quest {
     public String onTalk(NpcInstance npc, QuestState st) {
         if (st.getState() == CREATED) {
             if (st.player.getLevel() < 74) {
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 return "explorer_ghost_a_q0619_02.htm";
             }
             st.setCond(0);

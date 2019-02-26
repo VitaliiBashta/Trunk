@@ -95,7 +95,7 @@ public class GeoMove {
         List<Location> result = new ArrayList<>((int) steps + 1);
         /**
          * result.add(new Location(begin.x, begin.y, begin.z)); // The first point
-         * Removed to fix the clicking bug when you click so fast in terrain and player get back.
+         * Removed to fix the clicking bug when you click so fast in terrain and getPlayer get back.
          */
 
         for (int i = 0; i < steps; i++) {

@@ -21,11 +21,7 @@ public final class RequestAddExpandQuestAlarm extends L2GameClientPacket {
         if (player == null)
             return;
 
-        Quest quest = QuestManager.getQuest(questId);
-        if (quest == null)
-            return;
-
-        QuestState state = player.getQuestState(quest);
+        QuestState state = player.getQuestState(QuestManager.getQuest(questId));
         if (state == null)
             return;
 

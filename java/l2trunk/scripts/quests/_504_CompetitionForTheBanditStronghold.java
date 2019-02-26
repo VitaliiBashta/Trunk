@@ -30,11 +30,7 @@ public final class _504_CompetitionForTheBanditStronghold extends Quest {
 
         addStartNpc(MESSENGER);
         addTalkId(MESSENGER);
-        addKillId(TARLK_BUGBEAR);
-        addKillId(TARLK_BUGBEAR_WARRIOR);
-        addKillId(TARLK_BUGBEAR_HIGH_WARRIOR);
-        addKillId(TARLK_BASILISK);
-        addKillId(ELDER_TARLK_BASILISK);
+        addKillId(TARLK_BUGBEAR,TARLK_BUGBEAR_WARRIOR,TARLK_BUGBEAR_HIGH_WARRIOR,TARLK_BASILISK,ELDER_TARLK_BASILISK);
         addQuestItem(CONTEST_CERTIFICATE, AMULET, ALIANCE_TROPHEY);
     }
 
@@ -42,7 +38,7 @@ public final class _504_CompetitionForTheBanditStronghold extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("azit_messenger_q0504_02.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.giveItems(CONTEST_CERTIFICATE);
             st.playSound(SOUND_ACCEPT);
         }

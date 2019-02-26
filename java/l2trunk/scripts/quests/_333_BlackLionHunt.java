@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
 public final class _333_BlackLionHunt extends Quest {
-    //Technical relatet Items
+    //Technical relatet items
     private final int BLACK_LION_MARK = 1369;
 
     //Drops
@@ -85,7 +85,7 @@ public final class _333_BlackLionHunt extends Quest {
     //--AllowToDrop --> if you will that the mob can drop, set allowToDrop==1. This is because not all mobs are really like official.
     //--ChanceForPartItem --> set the dropchance for Ash in % for the mob with the npcId in same Line.
     //--ChanceForBox --> set the dropchance for Boxes in % to the mob with the npcId in same Line.
-    //--PartItem --> this defines wich Item should this Mob drop, because 4 Parts.. 4 Different Items.
+    //--PartItem --> this defines wich Item should this mob drop, because 4 Parts.. 4 Different items.
     private final int[][] DROPLIST = {
             //Execturion Ground - Part 1
             {
@@ -287,15 +287,12 @@ public final class _333_BlackLionHunt extends Quest {
 
         addStartNpc(Sophya);
 
-        addTalkId(Redfoot);
-        addTalkId(Rupio);
-        addTalkId(Undrias);
-        addTalkId(Lockirin);
-        addTalkId(Morgan);
+        addTalkId(Redfoot,Rupio,Undrias,Lockirin,Morgan);
 
         for (int[] aDROPLIST : DROPLIST) addKillId(aDROPLIST[0]);
 
-        addQuestItem(LIONS_CLAW, LIONS_EYE, GUILD_COIN, UNDEAD_ASH, BLOODY_AXE_INSIGNIAS, DELU_FANG, STAKATO_TALONS, SOPHIAS_LETTER1, SOPHIAS_LETTER2, SOPHIAS_LETTER3, SOPHIAS_LETTER4);
+        addQuestItem(LIONS_CLAW, LIONS_EYE, GUILD_COIN, UNDEAD_ASH, BLOODY_AXE_INSIGNIAS, DELU_FANG, STAKATO_TALONS,
+                SOPHIAS_LETTER1, SOPHIAS_LETTER2, SOPHIAS_LETTER3, SOPHIAS_LETTER4);
     }
 
     private void giveRewards(QuestState st, int item, long count) {
@@ -308,31 +305,31 @@ public final class _333_BlackLionHunt extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         int part = st.getInt("part");
-        if (event.equalsIgnoreCase("start")) {
+        if ("start".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
             return "30735-01.htm";
-        } else if (event.equalsIgnoreCase("p1_t")) {
-            st.set("part", 1);
+        } else if ("p1_t".equalsIgnoreCase(event)) {
+            st.set("part");
             st.giveItems(SOPHIAS_LETTER1);
             return "30735-02.htm";
-        } else if (event.equalsIgnoreCase("p2_t")) {
+        } else if ("p2_t".equalsIgnoreCase(event)) {
             st.set("part", 2);
             st.giveItems(SOPHIAS_LETTER2);
             return "30735-03.htm";
-        } else if (event.equalsIgnoreCase("p3_t")) {
+        } else if ("p3_t".equalsIgnoreCase(event)) {
             st.set("part", 3);
             st.giveItems(SOPHIAS_LETTER3);
             return "30735-04.htm";
-        } else if (event.equalsIgnoreCase("p4_t")) {
+        } else if ("p4_t".equalsIgnoreCase(event)) {
             st.set("part", 4);
             st.giveItems(SOPHIAS_LETTER4);
             return "30735-05.htm";
-        } else if (event.equalsIgnoreCase("exit")) {
-            st.exitCurrentQuest(true);
+        } else if ("exit".equalsIgnoreCase(event)) {
+            st.exitCurrentQuest();
             return "30735-exit.htm";
-        } else if (event.equalsIgnoreCase("continue")) {
+        } else if ("continue".equalsIgnoreCase(event)) {
             long claw = st.getQuestItemsCount(LIONS_CLAW) / 10;
             long check_eye = st.getQuestItemsCount(LIONS_EYE);
             if (claw > 0) {
@@ -386,14 +383,14 @@ public final class _333_BlackLionHunt extends Quest {
                 order = SOPHIAS_LETTER4;
             else
                 order = 0;
-            st.set("part", 0);
+            st.unset("part");
             if (order > 0)
                 st.takeItems(order, 1);
             return "30735-07.htm";
         } else if ("f_info".equalsIgnoreCase(event)) {
             int text = st.getInt("text");
             if (text < 4) {
-                st.set("text", text + 1);
+                st.inc("text");
                 return "red_foor_text_" + Rnd.get(1, 19) + ".htm";
             }
             return "red_foor-01.htm";
@@ -574,16 +571,16 @@ public final class _333_BlackLionHunt extends Quest {
         String htmltext = "noquest";
         if (cond == 0) {
             st.setCond(0);
-            st.set("part", 0);
-            st.set("text", 0);
+            st.unset("part");
+            st.unset("text");
             if (npcId == Sophya) {
                 if (st.haveQuestItem(BLACK_LION_MARK)) {
                     if (st.player.getLevel() > 24)
                         return "30735-17.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                     return "30735-18.htm";
                 }
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 return "30735-19.htm";
             }
         } else {

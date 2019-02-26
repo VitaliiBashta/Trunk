@@ -76,9 +76,9 @@ public final class FindParty extends Functions implements IVoicedCommandHandler 
         } else if (command.startsWith("invite")) {
             Player playerToInvite = null;
             if (activeChar.isInParty() && !activeChar.getParty().isLeader(activeChar) && activeChar.getParty().isFull())
-                playerToInvite = GameObjectsStorage.getPlayer(target); // Possibly this is a player invite request within the party.
+                playerToInvite = GameObjectsStorage.getPlayer(target); // Possibly this is a getPlayer invite request within the party.
 
-            if (playerToInvite != null) // A party member asks the party leader to invite specified player.
+            if (playerToInvite != null) // A party member asks the party leader to invite specified getPlayer.
             {
                 Say2 packetLeader = new Say2(activeChar.objectId(), ChatType.PARTY, "[Party Request]", "Please invite " + playerToInvite.getName() + " to the party. \b\tType=1 \tID=" + playerToInvite.objectId() + " \tColor=0 \tUnderline=0 \tTitle=\u001B\u001B\b");
                 Say2 packet = new Say2(activeChar.objectId(), ChatType.PARTY, "[Party Request]", "Please invite " + playerToInvite.getName() + " to the party.");
@@ -168,7 +168,7 @@ public final class FindParty extends Functions implements IVoicedCommandHandler 
                         player.sendMessage("Party leader is offline.");
                     } else// if (partyLeader.isInParty())
                     {
-                        //requestParty(partyLeader, player);
+                        //requestParty(partyLeader, getPlayer);
                         long delay = System.currentTimeMillis() - player.getQuickVarL("partyrequestsent");
                         if (delay < PARTY_REQUEST_DELAY) {
                             player.sendMessage("You can send a request every " + PARTY_REQUEST_DELAY / 1000 + " seconds. " + (PARTY_REQUEST_DELAY - delay) / 1000 + " seconds remaining until you can try again.");

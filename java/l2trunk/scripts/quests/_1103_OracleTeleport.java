@@ -6,6 +6,8 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.utils.Location;
 
+import java.util.stream.IntStream;
+
 public final class _1103_OracleTeleport extends Quest {
     private static final int GLUDIN_DAWN = 31078;
     private static final int GLUDIN_DUSK = 31085;
@@ -32,23 +34,16 @@ public final class _1103_OracleTeleport extends Quest {
 
     private static final Location DAWN_LOCATION = Location.of(-80157, 111344, -4901);
     private static final Location DUSK_LOCATION = Location.of(-81261, 86531, -5157);
+
     public _1103_OracleTeleport() {
         super(false);
 
-        for (int i = 31078; i <= 31091; i++)
-            addStartNpc(i);
+        addStartNpc(IntStream.rangeClosed(31078, 31091).toArray());
 
-        for (int i = 31168; i <= 31170; i++)
-            addStartNpc(i);
+        addStartNpc(31168, 31169, 31170, 31692);
+        addStartNpc(IntStream.rangeClosed(31693, 31999).toArray());
 
-        for (int i = 31692; i <= 31696; i++)
-            addStartNpc(i);
-
-        for (int i = 31997; i <= 31999; i++)
-            addStartNpc(i);
-
-        for (int j = 31127; j <= 31142; j++)
-            addStartNpc(j);
+        addStartNpc(IntStream.rangeClosed(31127, 31142).toArray());
     }
 
     @Override
@@ -64,7 +59,7 @@ public final class _1103_OracleTeleport extends Quest {
         String htmltext = "Started.htm";
         if (npcId == GLUDIN_DAWN) {
             player.teleToLocation(DAWN_LOCATION);
-            player.setVar("id", 1);
+            player.setVar("id");
             return htmltext;
         }
 
@@ -133,7 +128,7 @@ public final class _1103_OracleTeleport extends Quest {
 
         if (npcId == GLUDIN_DUSK) {
             player.teleToLocation(DUSK_LOCATION);
-            player.setVar("id", 1);
+            player.setVar("id");
             return htmltext;
         }
 

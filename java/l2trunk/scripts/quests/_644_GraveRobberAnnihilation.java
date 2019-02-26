@@ -15,11 +15,7 @@ public final class _644_GraveRobberAnnihilation extends Quest {
         super(true);
         addStartNpc(KARUDA);
 
-        addKillId(22003);
-        addKillId(22004);
-        addKillId(22005);
-        addKillId(22006);
-        addKillId(22008);
+        addKillId(22003,22004,22005,22006,22008);
 
         addQuestItem(ORC_GOODS);
 
@@ -32,10 +28,10 @@ public final class _644_GraveRobberAnnihilation extends Quest {
             st.takeItems(ORC_GOODS);
             if (st.player.getLevel() < 20) {
                 htmltext = "karuda_q0644_0102.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else {
                 st.setCond(1);
-                st.setState(STARTED);
+                st.start();
                 st.playSound(SOUND_ACCEPT);
             }
         }
@@ -56,18 +52,18 @@ public final class _644_GraveRobberAnnihilation extends Quest {
                 st.takeItems(ORC_GOODS);
                 st.giveItems(1871, 30, true);
                 htmltext = null;
-            } else if (event.equalsIgnoreCase("coal")) {
+            } else if ("coal".equalsIgnoreCase(event)) {
                 st.takeItems(ORC_GOODS);
                 st.giveItems(1870, 30, true);
                 htmltext = null;
-            } else if (event.equalsIgnoreCase("i_o")) {
+            } else if ("i_o".equalsIgnoreCase(event)) {
                 st.takeItems(ORC_GOODS);
                 st.giveItems(1869, 30, true);
                 htmltext = null;
             }
             if (htmltext == null) {
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         }
         return htmltext;
@@ -82,7 +78,7 @@ public final class _644_GraveRobberAnnihilation extends Quest {
         else if (cond == 1)
             htmltext = "karuda_q0644_0106.htm";
         else if (cond == 2)
-            if (st.getQuestItemsCount(ORC_GOODS) >= 120)
+            if (st.haveQuestItem(ORC_GOODS, 120))
                 htmltext = "karuda_q0644_0105.htm";
             else {
                 st.setCond(1);
@@ -95,9 +91,9 @@ public final class _644_GraveRobberAnnihilation extends Quest {
     public void onKill(NpcInstance npc, QuestState st) {
         if (st.getCond() == 1 && Rnd.chance(90)) {
             st.giveItems(ORC_GOODS);
-            if (st.getQuestItemsCount(ORC_GOODS) >= 120) {
+            if (st.haveQuestItem(ORC_GOODS, 120)) {
                 st.setCond(2);
-                st.setState(STARTED);
+                st.start();
             }
         }
     }

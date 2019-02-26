@@ -25,10 +25,10 @@ public final class _236_SeedsOfChaos extends Quest {
     private final static List<Integer> SPLENDOR_MOBS = List.of(
             21520, 21521, 21522, 21523, 21524, 21525, 21526, 21527, 21528, 21529, 21530,
             21531, 21532, 21533, 21534, 21535, 21536, 21537, 21538, 21539, 21540, 21541);
-    // Items
+    // items
     private final static int STAR_OF_DESTINY = 5011;
     private final static int SCROLL_ENCHANT_WEAPON_A = 729;
-    // Quest Items
+    // Quest items
     private final static int SHINING_MEDALLION = 9743;
     private final static int BLACK_ECHO_CRYSTAL = 9745;
     // Chances
@@ -41,50 +41,41 @@ public final class _236_SeedsOfChaos extends Quest {
     public _236_SeedsOfChaos() {
         super(false);
         addStartNpc(KEKROPUS);
-        addTalkId(WIZARD);
-        addTalkId(KATENAR);
-        addTalkId(ROCK);
-        addTalkId(HARKILGAMED);
-        addTalkId(MAO);
-        addTalkId(RODENPICULA);
-        addTalkId(NORNIL);
+        addTalkId(WIZARD,KATENAR,ROCK,HARKILGAMED,MAO,RODENPICULA,NORNIL);
 
-        for (int kill_id : NEEDLE_STAKATO_DRONES)
-            addKillId(kill_id);
+        addKillId(NEEDLE_STAKATO_DRONES);
 
-        for (int kill_id : SPLENDOR_MOBS)
-            addKillId(kill_id);
+        addKillId(SPLENDOR_MOBS);
 
-        addQuestItem(SHINING_MEDALLION);
-        addQuestItem(BLACK_ECHO_CRYSTAL);
+        addQuestItem(SHINING_MEDALLION,BLACK_ECHO_CRYSTAL);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         int _state = st.getState();
         int cond = st.getCond();
-        if (event.equalsIgnoreCase("32138_02b.htm") && _state == CREATED) {
-            st.setState(STARTED);
+        if ("32138_02b.htm".equalsIgnoreCase(event) && _state == CREATED) {
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("31522_02.htm") && _state == STARTED && cond == 1)
+        } else if ("31522_02.htm".equalsIgnoreCase(event) && _state == STARTED && cond == 1)
             st.setCond(2);
-        else if (event.equalsIgnoreCase("32236_08.htm") && _state == STARTED && cond == 13)
+        else if ("32236_08.htm".equalsIgnoreCase(event) && _state == STARTED && cond == 13)
             st.setCond(14);
-        else if (event.equalsIgnoreCase("32138_09.htm") && _state == STARTED && cond == 14)
+        else if ("32138_09.htm".equalsIgnoreCase(event) && _state == STARTED && cond == 14)
             st.setCond(15);
-        else if (event.equalsIgnoreCase("32237_11.htm") && _state == STARTED && cond == 16)
+        else if ("32237_11.htm".equalsIgnoreCase(event) && _state == STARTED && cond == 16)
             st.setCond(17);
-        else if (event.equalsIgnoreCase("32239_12.htm") && _state == STARTED && cond == 17)
+        else if ("32239_12.htm".equalsIgnoreCase(event) && _state == STARTED && cond == 17)
             st.setCond(18);
-        else if (event.equalsIgnoreCase("32237_13.htm") && _state == STARTED && cond == 18)
+        else if ("32237_13.htm".equalsIgnoreCase(event) && _state == STARTED && cond == 18)
             st.setCond(19);
-        else if (event.equalsIgnoreCase("32239_14.htm") && _state == STARTED && cond == 19)
+        else if ("32239_14.htm".equalsIgnoreCase(event) && _state == STARTED && cond == 19)
             st.setCond(20);
-        else if (event.equalsIgnoreCase("31522_03b.htm") && _state == STARTED && st.haveQuestItem(BLACK_ECHO_CRYSTAL)) {
+        else if ("31522_03b.htm".equalsIgnoreCase(event) && _state == STARTED && st.haveQuestItem(BLACK_ECHO_CRYSTAL)) {
             st.takeItems(BLACK_ECHO_CRYSTAL);
-            st.set("echo", 1);
-        } else if (event.equalsIgnoreCase("31522-ready") && _state == STARTED && (cond == 3 || cond == 4) && st.getInt("echo") == 1) {
+            st.set("echo");
+        } else if ("31522-ready".equalsIgnoreCase(event) && _state == STARTED && (cond == 3 || cond == 4) && st.getInt("echo") == 1) {
             if (cond == 3)
                 st.setCond(4);
             if (!KATENAR_SPAWNED) {
@@ -93,7 +84,7 @@ public final class _236_SeedsOfChaos extends Quest {
                 KATENAR_SPAWNED = true;
             }
             return null;
-        } else if (event.equalsIgnoreCase("32238-harkil") && _state == STARTED && (cond == 5 || cond == 13)) {
+        } else if ("32238-harkil".equalsIgnoreCase(event) && _state == STARTED && (cond == 5 || cond == 13)) {
             if (!HARKILGAMED_SPAWNED) {
                 st.addSpawn(HARKILGAMED, 120000);
                 ThreadPoolManager.INSTANCE.schedule(() -> HARKILGAMED_SPAWNED = false, 120000);
@@ -113,7 +104,7 @@ public final class _236_SeedsOfChaos extends Quest {
         } else if ("32237_15.htm".equalsIgnoreCase(event) && _state == STARTED && cond == 20) {
             st.giveItems(SCROLL_ENCHANT_WEAPON_A, 1, true);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(false);
+            st.finish();
         }
 
         return event;
@@ -130,11 +121,11 @@ public final class _236_SeedsOfChaos extends Quest {
             if (npcId != KEKROPUS)
                 return "noquest";
             if (st.player.getRace() != Race.kamael) {
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 return "32138_00.htm";
             }
             if (st.player.getLevel() < 75) {
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 return "32138_01.htm";
             }
             if (st.haveQuestItem(STAR_OF_DESTINY)) {
@@ -146,7 +137,7 @@ public final class _236_SeedsOfChaos extends Quest {
                 st.setCond(0);
                 return "32138_02.htm";
             }
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             return "32138_01a.htm";
         }
 

@@ -66,7 +66,7 @@ public final class UnitMember {
         sex = player.isMale()? 0:1;
     }
 
-    public final Player player() {
+    public Player getPlayer() {
         return player;
     }
 
@@ -246,7 +246,7 @@ public final class UnitMember {
     }
 
     public boolean isClanLeader() {
-        Player player = player();
+        Player player = getPlayer();
         return player == null ? (leaderOf == Clan.SUBUNIT_MAIN_CLAN) : player.isClanLeader();
     }
 

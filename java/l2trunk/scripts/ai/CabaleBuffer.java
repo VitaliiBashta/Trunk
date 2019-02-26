@@ -58,9 +58,9 @@ public final class CabaleBuffer extends DefaultAI {
             Functions.npcSay(actor, actor.getNpcId() == SevenSigns.ORATOR_NPC_ID ? Rnd.get(oratorText) : Rnd.get(preacherText));
         }
         /*
-         * For each known player in range, cast either the positive or negative buff.
+         * For each known getPlayer in range, cast either the positive or negative buff.
          * <BR>
-         * The stats affected depend on the player type, either a fighter or a mystic.
+         * The stats affected depend on the getPlayer type, either a fighter or a mystic.
          * <BR>
          * Curse of Destruction (Loser)
          *  - Fighters: -25% Accuracy, -25% Effect Resistance

@@ -22,10 +22,8 @@ public final class _702_ATrapForRevenge extends Quest {
         super(true);
 
         addStartNpc(PLENOS);
-        addTalkId(PLENOS);
-        addTalkId(TENIUS);
-        addKillId(DRAK);
-        addKillId(MUTATED_DRAKE_WING);
+        addTalkId(PLENOS,TENIUS);
+        addKillId(DRAK,MUTATED_DRAKE_WING);
         addQuestItem(DRAKES_FLESH);
     }
 
@@ -36,7 +34,7 @@ public final class _702_ATrapForRevenge extends Quest {
 
         if (event.equals("take") && cond == 0) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
             htmltext = "plenos_q702_2.htm";
         } else if ("took_mission".equals(event) && cond == 1) {
@@ -56,7 +54,7 @@ public final class _702_ATrapForRevenge extends Quest {
 
             st.giveItems(ADENA_ID, 157200);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
 
         return htmltext;
@@ -77,7 +75,7 @@ public final class _702_ATrapForRevenge extends Quest {
                         htmltext = "plenos_q702_1a.htm";
                 } else {
                     htmltext = "plenos_q702_1b.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else
                 htmltext = "plenos_q702_1c.htm";

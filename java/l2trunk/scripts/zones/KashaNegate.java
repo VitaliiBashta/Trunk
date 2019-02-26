@@ -85,7 +85,7 @@ public final class KashaNegate implements ScriptFile {
             actor.setDisplayId(npcId);
             DeleteObject d = new DeleteObject(actor);
             L2GameServerPacket su = actor.makeStatusUpdate(StatusUpdate.CUR_HP, StatusUpdate.MAX_HP);
-            World.getAroundPlayers(actor).stream()
+            World.getAroundPlayers(actor)
                     .peek(p -> p.sendPacket(d, new NpcInfo(actor, p)))
                     .filter(p -> p.getTarget() == actor)
                     .forEach(p -> {

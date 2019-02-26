@@ -17,6 +17,6 @@ public final class Repair extends Functions implements IVoicedCommandHandler {
 
     @Override
     public List<String> getVoicedCommandList() {
-        return Collections.singletonList("repair");
+        return List.of("repair");
     }
 }

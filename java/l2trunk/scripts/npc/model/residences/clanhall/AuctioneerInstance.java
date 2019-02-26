@@ -109,7 +109,7 @@ public final class AuctioneerInstance extends NpcInstance {
                 b.append(out);
             }
 
-            msg.replace("%list%", b.toString());
+            msg.replace("%list%", b);
             if (events.size() > max) {
                 msg.replace("%next_button%", "<td>" + HtmlUtils.NEXT_BUTTON + "</td>");
                 msg.replace("%next_bypass%", "-h npc_%objectId%_list_all " + (page + 1));
@@ -120,7 +120,7 @@ public final class AuctioneerInstance extends NpcInstance {
                 msg.replace("%prev_button%", "<td>" + HtmlUtils.PREV_BUTTON + "</td>");
                 msg.replace("%prev_bypass%", "-h npc_%objectId%_list_all " + (page - 1));
             } else
-                msg.replace("%prev_button%", StringUtils.EMPTY);
+                msg.replace("%prev_button%", "");
 
             player.sendPacket(msg);
         }
@@ -166,30 +166,30 @@ public final class AuctioneerInstance extends NpcInstance {
 
             NpcHtmlMessage msg = new NpcHtmlMessage(player, this);
             msg.setFile(fileName);
-            msg.replace("%id%", String.valueOf(clanHall.getId()));
-            msg.replace("%bigger_size%", String.valueOf(attackers.size()));
-            msg.replace("%grade%", String.valueOf(clanHall.getGrade()));
-            msg.replace("%rental_fee%", String.valueOf(clanHall.getRentalFee()));
+            msg.replace("%id%", clanHall.getId());
+            msg.replace("%bigger_size%", attackers.size());
+            msg.replace("%grade%", clanHall.getGrade());
+            msg.replace("%rental_fee%", clanHall.getRentalFee());
 
             Clan owner = clanHall.getOwner();
 
-            msg.replace("%owner%", owner == null ? StringUtils.EMPTY : owner.getName());
-            msg.replace("%owner_leader%", owner == null ? StringUtils.EMPTY : owner.getLeaderName());
+            msg.replace("%owner%", owner == null ? "" : owner.getName());
+            msg.replace("%owner_leader%", owner == null ? "" : owner.getLeaderName());
             msg.replace("%description%", clanHall.getAuctionDescription());
-            msg.replace("%min_bid%", String.valueOf(clanHall.getAuctionMinBid()));
+            msg.replace("%min_bid%", clanHall.getAuctionMinBid());
 
             Calendar c = auctionEvent.getEndSiegeDate();
 
             msg.replace("%date%", DATE_FORMAT.format(c.getTimeInMillis()));
-            msg.replace("%hour%", String.valueOf(c.get(Calendar.HOUR_OF_DAY)));
+            msg.replace("%hour%", c.get(Calendar.HOUR_OF_DAY));
 
             int remainingTime = (int) ((c.getTimeInMillis() - System.currentTimeMillis()) / 60000L);
 
-            msg.replace("%remaining_hour%", String.valueOf(remainingTime / 60));
-            msg.replace("%remaining_minutes%", String.valueOf(remainingTime % 60));
+            msg.replace("%remaining_hour%", remainingTime/ 60);
+            msg.replace("%remaining_minutes%", remainingTime % 60);
 
             if (siegeClan != null)
-                msg.replace("%my_bid%", String.valueOf(siegeClan.getParam()));
+                msg.replace("%my_bid%", siegeClan.getParam());
 
             player.sendPacket(msg);
         }
@@ -219,7 +219,7 @@ public final class AuctioneerInstance extends NpcInstance {
 
             NpcHtmlMessage msg = new NpcHtmlMessage(player, this);
             msg.setFile("residence2/clanhall/auction_bidder_list.htm");
-            msg.replace("%id%", String.valueOf(id));
+            msg.replace("%id%", id);
 
             StringBuilder b = new StringBuilder();
             for (int i = min; i < max; i++) {
@@ -227,7 +227,7 @@ public final class AuctioneerInstance extends NpcInstance {
                 String t = BIDDER_IN_LIST.replace("%id%", String.valueOf(id)).replace("%clan_name%", siegeClan.getClan().getName()).replace("%date%", DATE_FORMAT.format(siegeClan.getDate()));
                 b.append(t);
             }
-            msg.replace("%list%", b.toString());
+            msg.replace("%list%", b);
 
             if (attackers.size() > max) {
                 msg.replace("%next_button%", "<td>" + HtmlUtils.NEXT_BUTTON + "</td>");
@@ -239,7 +239,7 @@ public final class AuctioneerInstance extends NpcInstance {
                 msg.replace("%prev_button%", "<td>" + HtmlUtils.PREV_BUTTON + "</td>");
                 msg.replace("%prev_bypass%", "-h npc_%objectId%_bidder_list " + id + " " + (page - 1));
             } else
-                msg.replace("%prev_button%", StringUtils.EMPTY);
+                msg.replace("%prev_button%", "");
 
             player.sendPacket(msg);
         }
@@ -267,9 +267,9 @@ public final class AuctioneerInstance extends NpcInstance {
 
             NpcHtmlMessage msg = new NpcHtmlMessage(player, this);
             msg.setFile("residence2/clanhall/auction_bid_start.htm");
-            msg.replace("%id%", String.valueOf(id));
-            msg.replace("%min_bid%", String.valueOf(minBid));
-            msg.replace("%clan_adena%", String.valueOf(player.getClan().getWarehouse().getCountOf(ItemTemplate.ITEM_ID_ADENA)));
+            msg.replace("%id%", id);
+            msg.replace("%min_bid%", minBid);
+            msg.replace("%clan_adena%",player.getClan().getWarehouse().getCountOf(ItemTemplate.ITEM_ID_ADENA));
 
             player.sendPacket(msg);
         }
@@ -308,14 +308,14 @@ public final class AuctioneerInstance extends NpcInstance {
 
             NpcHtmlMessage msg = new NpcHtmlMessage(player, this);
             msg.setFile("residence2/clanhall/auction_bid_confirm.htm");
-            msg.replace("%id%", String.valueOf(id));
-            msg.replace("%bid%", String.valueOf(bid));
-            msg.replace("%min_bid%", String.valueOf(minBid));
+            msg.replace("%id%", id);
+            msg.replace("%bid%", bid);
+            msg.replace("%min_bid%", minBid);
 
             Calendar c = auctionEvent.getEndSiegeDate();
 
             msg.replace("%date%", DATE_FORMAT.format(c.getTimeInMillis()));
-            msg.replace("%hour%", String.valueOf(c.get(Calendar.HOUR_OF_DAY)));
+            msg.replace("%hour%", c.get(Calendar.HOUR_OF_DAY));
 
             player.sendPacket(msg);
         }
@@ -405,9 +405,9 @@ public final class AuctioneerInstance extends NpcInstance {
             long returnVal = siegeClan.getParam() - (long) (siegeClan.getParam() * 0.1);
             NpcHtmlMessage msg = new NpcHtmlMessage(player, this);
             msg.setFile("residence2/clanhall/auction_bid_cancel.htm");
-            msg.replace("%id%", String.valueOf(id));
-            msg.replace("%bid%", String.valueOf(siegeClan.getParam()));
-            msg.replace("%return%", String.valueOf(returnVal));
+            msg.replace("%id%", id);
+            msg.replace("%bid%",siegeClan.getParam());
+            msg.replace("%return%", returnVal);
 
             player.sendPacket(msg);
         }
@@ -461,9 +461,9 @@ public final class AuctioneerInstance extends NpcInstance {
 
             NpcHtmlMessage msg = new NpcHtmlMessage(player, this);
             msg.setFile("residence2/clanhall/auction_clanhall_register_start.htm");
-            msg.replace("%id%", String.valueOf(player.getClan().getHasHideout()));
-            msg.replace("%adena%", String.valueOf(player.getClan().getWarehouse().getCountOf(ItemTemplate.ITEM_ID_ADENA)));
-            msg.replace("%deposit%", String.valueOf(clanHall.getDeposit()));
+            msg.replace("%id%",player.getClan().getHasHideout());
+            msg.replace("%adena%", player.getClan().getWarehouse().getCountOf(ItemTemplate.ITEM_ID_ADENA));
+            msg.replace("%deposit%", clanHall.getDeposit());
 
             player.sendPacket(msg);
         }
@@ -490,8 +490,8 @@ public final class AuctioneerInstance extends NpcInstance {
 
             NpcHtmlMessage msg = new NpcHtmlMessage(player, this);
             msg.setFile("residence2/clanhall/auction_clanhall_register_next.htm");
-            msg.replace("%min_bid%", String.valueOf(clanHall.getBaseMinBid()));
-            msg.replace("%last_bid%", String.valueOf(clanHall.getBaseMinBid()));  //TODO [VISTALL] get last bid
+            msg.replace("%min_bid%", clanHall.getBaseMinBid());
+            msg.replace("%last_bid%", clanHall.getBaseMinBid());
 
             player.sendPacket(msg);
         }
@@ -535,10 +535,10 @@ public final class AuctioneerInstance extends NpcInstance {
             NpcHtmlMessage msg = new NpcHtmlMessage(player, this);
             msg.setFile("residence2/clanhall/auction_clanhall_register_confirm.htm");
             msg.replace("%description%", comment);
-            msg.replace("%day%", String.valueOf(day));
-            msg.replace("%bid%", String.valueOf(bid));
-            msg.replace("%base_bid%", String.valueOf(clanHall.getBaseMinBid()));
-            msg.replace("%hour%", String.valueOf(cal.get(Calendar.HOUR_OF_DAY)));
+            msg.replace("%day%", day);
+            msg.replace("%bid%", bid);
+            msg.replace("%base_bid%", clanHall.getBaseMinBid());
+            msg.replace("%hour%", cal.get(Calendar.HOUR_OF_DAY));
             msg.replace("%date%", DATE_FORMAT.format(cal.getTimeInMillis()));
 
             player.sendPacket(msg);
@@ -546,7 +546,7 @@ public final class AuctioneerInstance extends NpcInstance {
         //=============================================================================================
         //							Confirms sale the Clan Hall
         //=============================================================================================
-        else if (actualCommand.equalsIgnoreCase("register_confirm")) {
+        else if ("register_confirm".equalsIgnoreCase(actualCommand)) {
             if (!firstChecks(player)) {
                 showChatWindow(player, 0);
                 return;
@@ -605,7 +605,7 @@ public final class AuctioneerInstance extends NpcInstance {
 
             NpcHtmlMessage msg = new NpcHtmlMessage(player, this);
             msg.setFile("residence2/clanhall/auction_clanhall_cancel_confirm.htm");
-            msg.replace("%deposit%", String.valueOf(clanHall.getDeposit()));
+            msg.replace("%deposit%", clanHall.getDeposit());
 
             player.sendPacket(msg);
         } else if (actualCommand.equals("cancel_confirm")) {

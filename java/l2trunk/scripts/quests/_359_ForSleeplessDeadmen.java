@@ -43,10 +43,7 @@ public final class _359_ForSleeplessDeadmen extends Quest {
         super(false);
         addStartNpc(ORVEN);
 
-        addKillId(DOOMSERVANT);
-        addKillId(DOOMGUARD);
-        addKillId(DOOMARCHER);
-        addKillId(DOOMTROOPER);
+        addKillId(DOOMSERVANT,DOOMGUARD,DOOMARCHER,DOOMTROOPER);
 
         addQuestItem(REMAINS);
     }
@@ -54,7 +51,7 @@ public final class _359_ForSleeplessDeadmen extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("30857-06.htm".equalsIgnoreCase(event)) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if ("30857-07.htm".equalsIgnoreCase(event)) {
@@ -66,16 +63,16 @@ public final class _359_ForSleeplessDeadmen extends Quest {
                 if (castleOwner != null && castleOwner != st.player && castleOwner.getClan() == st.player.getClan() && castleOwner.getQuestState(quest) != null && castleOwner.getQuestState(quest).getCond() == 2) {
                     if (castleOwner.getQuestState(quest).getInt("questsDone") != 0) {
                         if (castleOwner.getQuestState(quest).getInt("questsDone") < 5)
-                            castleOwner.getQuestState(quest).set("questsDone", castleOwner.getQuestState(quest).getInt("questsDone") + 1);
+                            castleOwner.getQuestState(quest).inc("questsDone");
                         else
                             castleOwner.getQuestState(quest).setCond(4);
                     } else
-                        castleOwner.getQuestState(quest).set("questsDone", 1);
+                        castleOwner.getQuestState(quest).set("questsDone");
 
                 }
             }
             //---------------
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             st.playSound(SOUND_FINISH);
         } else if ("30857-08.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
@@ -110,7 +107,7 @@ public final class _359_ForSleeplessDeadmen extends Quest {
         int cond = st.getCond();
         if (id == CREATED) {
             if (st.player.getLevel() < 60) {
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 htmltext = "30857-01.htm";
             } else
                 htmltext = "30857-02.htm";

@@ -14,8 +14,7 @@ public final class _431_WeddingMarch extends Quest {
 
         addStartNpc(MELODY_MAESTRO_KANTABILON);
 
-        addKillId(20786);
-        addKillId(20787);
+        addKillId(20786,20787);
 
         addQuestItem(SILVER_CRYSTAL);
     }
@@ -25,7 +24,7 @@ public final class _431_WeddingMarch extends Quest {
         String htmltext = event;
         if ("quest_accept".equalsIgnoreCase(event)) {
             htmltext = "muzyk_q0431_0104.htm";
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if ("431_3".equals(event))
@@ -34,7 +33,7 @@ public final class _431_WeddingMarch extends Quest {
                 st.takeItems(SILVER_CRYSTAL);
                 st.giveItems(WEDDING_ECHO_CRYSTAL, 25);
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else
                 htmltext = "muzyk_q0431_0202.htm";
         return htmltext;
@@ -50,7 +49,7 @@ public final class _431_WeddingMarch extends Quest {
             if (id != STARTED) {
                 if (st.player.getLevel() < 38) {
                     htmltext = "muzyk_q0431_0103.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else
                     htmltext = "muzyk_q0431_0101.htm";
             } else if (condition == 1)

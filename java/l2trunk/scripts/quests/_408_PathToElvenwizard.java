@@ -36,13 +36,9 @@ public final class _408_PathToElvenwizard extends Quest {
 
         addStartNpc(ROSELLA);
 
-        addTalkId(GREENIS);
-        addTalkId(THALIA);
-        addTalkId(NORTHWIND);
+        addTalkId(GREENIS,THALIA,NORTHWIND);
 
-        addKillId(DRYAD_ELDER);
-        addKillId(PINCER_SPIDER);
-        addKillId(SUKAR_WERERAT_LEADER);
+        addKillId(DRYAD_ELDER,PINCER_SPIDER,SUKAR_WERERAT_LEADER);
 
         addQuestItem(ROGELLIAS_LETTER_ID,
                 FERTILITY_PERIDOT_ID,
@@ -74,7 +70,7 @@ public final class _408_PathToElvenwizard extends Quest {
                 else if (st.getQuestItemsCount(ETERNITY_DIAMOND_ID) > 0)
                     htmltext = "rogellia_q0408_05.htm";
                 else {
-                    st.setState(STARTED);
+                    st.start();
                     st.setCond(1);
                     st.playSound(SOUND_ACCEPT);
                     st.giveItems(FERTILITY_PERIDOT_ID);
@@ -169,7 +165,7 @@ public final class _408_PathToElvenwizard extends Quest {
                         }
                     }
                     st.playSound(SOUND_FINISH);
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
         } else if (npcId == GREENIS && cond > 0) {
             if (st.getQuestItemsCount(ROGELLIAS_LETTER_ID) > 0)

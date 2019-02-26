@@ -56,7 +56,7 @@ public final class RequestActionUse extends L2GameClientPacket {
 
         boolean usePet = action.type == 1 || action.type == 2;
 
-        // dont do anything if player is dead or confused
+        // dont do anything if getPlayer is dead or confused
         if (!usePet && (activeChar.isOutOfControl() || activeChar.isActionsDisabled()) && !(activeChar.isFakeDeath() && actionId == 0)) {
             activeChar.sendActionFailed();
             return;

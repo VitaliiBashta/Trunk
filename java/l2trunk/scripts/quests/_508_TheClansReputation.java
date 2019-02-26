@@ -19,7 +19,7 @@ public final class _508_TheClansReputation extends Quest {
     // Quest NPC
     private static final int SIR_ERIC_RODEMAI = 30868;
 
-    // Quest Items
+    // Quest items
     private static final int NUCLEUS_OF_FLAMESTONE_GIANT = 8494; // Nucleus of Flamestone Giant : Nucleus obtained by defeating Flamestone Giant
     private static final int THEMIS_SCALE = 8277; // Themis' Scale : Obtain this scale by defeating Palibati Queen Themis.
     private static final int Hisilromes_Heart = 14883; // Heart obtained after defeating Shilen's Priest Hisilrome.
@@ -68,7 +68,7 @@ public final class _508_TheClansReputation extends Quest {
         String htmltext = event;
         if (event.equalsIgnoreCase("30868-0.htm") && cond == 0) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
         } else if (Util.isNumber(event)) {
             int evt = Integer.parseInt(event);
             st.set("raid", evt);
@@ -78,7 +78,7 @@ public final class _508_TheClansReputation extends Quest {
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("30868-7.htm")) {
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
         return htmltext;
     }
@@ -89,13 +89,13 @@ public final class _508_TheClansReputation extends Quest {
         Clan clan = st.player.getClan();
 
         if (clan == null) {
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             htmltext = "30868-0a.htm";
-        } else if (clan.getLeader().player() != st.player) {
-            st.exitCurrentQuest(true);
+        } else if (clan.getLeader().getPlayer() != st.player) {
+            st.exitCurrentQuest();
             htmltext = "30868-0a.htm";
         } else if (clan.getLevel() < 5) {
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             htmltext = "30868-0b.htm";
         } else {
             int cond = st.getCond();
@@ -127,7 +127,7 @@ public final class _508_TheClansReputation extends Quest {
     public void onKill(NpcInstance npc, QuestState st) {
         Player clan_leader;
         try {
-            clan_leader = st.player.getClan().getLeader().player();
+            clan_leader = st.player.getClan().getLeader().getPlayer();
         } catch (Exception E) {
             return;
         }

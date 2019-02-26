@@ -12,9 +12,7 @@ public final class _018_MeetingwiththeGoldenRam extends Quest {
 
         addStartNpc(31314);
 
-        addTalkId(31314);
-        addTalkId(31315);
-        addTalkId(31555);
+        addTalkId(31315,31555);
 
         addQuestItem(SUPPLY_BOX);
     }
@@ -24,7 +22,7 @@ public final class _018_MeetingwiththeGoldenRam extends Quest {
         switch (event) {
             case "warehouse_chief_donal_q0018_0104.htm":
                 st.setCond(1);
-                st.setState(STARTED);
+                st.start();
                 st.playSound(SOUND_ACCEPT);
                 break;
             case "freighter_daisy_q0018_0201.htm":
@@ -37,7 +35,7 @@ public final class _018_MeetingwiththeGoldenRam extends Quest {
                 st.addExpAndSp(126668, 11731);
                 st.giveItems(ADENA_ID, 40000);
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(false);
+                st.finish();
                 break;
         }
         return event;
@@ -54,7 +52,7 @@ public final class _018_MeetingwiththeGoldenRam extends Quest {
                     htmltext = "warehouse_chief_donal_q0018_0101.htm";
                 else {
                     htmltext = "warehouse_chief_donal_q0018_0103.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             else if (cond == 1)
                 htmltext = "warehouse_chief_donal_q0018_0105.htm";

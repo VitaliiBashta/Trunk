@@ -19,10 +19,10 @@ public final class _307_ControlDeviceoftheGiants extends Quest {
 
     private static final long HekatonPrimeRespawn = 12 * 3600 * 1000L;
 
-    private static final Location GorgolosLoc = new Location(186096, 61501, -4075, 0);
-    private static final Location LastTitanUtenusLoc = new Location(186730, 56456, -4555, 0);
-    private static final Location GiantMarpanakLoc = new Location(194057, 53722, -4259, 0);
-    private static final Location HekatonPrimeLoc = new Location(192328, 56120, -7651, 0);
+    private static final Location GorgolosLoc = Location.of(186096, 61501, -4075, 0);
+    private static final Location LastTitanUtenusLoc = Location.of(186730, 56456, -4555, 0);
+    private static final Location GiantMarpanakLoc = Location.of(194057, 53722, -4259, 0);
+    private static final Location HekatonPrimeLoc = Location.of(192328, 56120, -7651, 0);
 
     public _307_ControlDeviceoftheGiants() {
         super(true);
@@ -36,7 +36,7 @@ public final class _307_ControlDeviceoftheGiants extends Quest {
         String htmltext = event;
         if ("droph_q307_2.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
         } else if ("loc1".equalsIgnoreCase(event)) {
             htmltext = "droph_q307_2a_1.htm";
             RadarControl rc = new RadarControl(0, 1, GorgolosLoc);
@@ -76,7 +76,7 @@ public final class _307_ControlDeviceoftheGiants extends Quest {
                     htmltext = "droph_q307_1.htm";
                 else {
                     htmltext = "droph_q307_0.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1) {
                 if (st.getQuestItemsCount(CaveExplorationText1Sheet) >= 1 && st.getQuestItemsCount(CaveExplorationText2Sheet) >= 1 && st.getQuestItemsCount(CaveExplorationText3Sheet) >= 1)
@@ -90,7 +90,7 @@ public final class _307_ControlDeviceoftheGiants extends Quest {
                 htmltext = "droph_q307_5.htm";
                 st.giveItems(DrophsSupportItems);
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         return htmltext;
     }

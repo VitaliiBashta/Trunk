@@ -28,7 +28,7 @@ public final class _051_OFullesSpecialBait extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
         if (event.equals("fisher_ofulle_q0051_0104.htm")) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if (event.equals("fisher_ofulle_q0051_0201.htm"))
@@ -39,7 +39,7 @@ public final class _051_OFullesSpecialBait extends Quest {
                 st.takeItems(LostBaitIngredient, -1);
                 st.giveItems(IcyAirFishingLure, 4);
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(false);
+                st.finish();
             }
         return htmltext;
     }
@@ -54,12 +54,12 @@ public final class _051_OFullesSpecialBait extends Quest {
             if (id == CREATED) {
                 if (st.player.getLevel() < 36) {
                     htmltext = "fisher_ofulle_q0051_0103.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else if (st.player.getSkillLevel(FishSkill) >= 11)
                     htmltext = "fisher_ofulle_q0051_0101.htm";
                 else {
                     htmltext = "fisher_ofulle_q0051_0102.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1 || cond == 2)
                 if (st.getQuestItemsCount(LostBaitIngredient) < 100) {

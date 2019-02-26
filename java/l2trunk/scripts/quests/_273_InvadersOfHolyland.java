@@ -27,17 +27,17 @@ public final class _273_InvadersOfHolyland extends Quest {
         switch (event) {
             case "atuba_chief_varkees_q0273_03.htm":
                 st.setCond(1);
-                st.setState(STARTED);
+                st.start();
                 st.playSound(SOUND_ACCEPT);
                 break;
             case "atuba_chief_varkees_q0273_07.htm":
                 st.setCond(0);
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 break;
             case "atuba_chief_varkees_q0273_08.htm":
                 st.setCond(1);
-                st.setState(STARTED);
+                st.start();
                 st.playSound(SOUND_ACCEPT);
                 break;
         }
@@ -51,10 +51,10 @@ public final class _273_InvadersOfHolyland extends Quest {
         if (cond == 0) {
             if (st.player.getRace() != Race.orc) {
                 htmltext = "atuba_chief_varkees_q0273_00.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else if (st.player.getLevel() < 6) {
                 htmltext = "atuba_chief_varkees_q0273_01.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else {
                 htmltext = "atuba_chief_varkees_q0273_02.htm";
                 return htmltext;
@@ -64,11 +64,11 @@ public final class _273_InvadersOfHolyland extends Quest {
                 htmltext = "atuba_chief_varkees_q0273_04.htm";
             else {
                 long adena = 0;
-                if (st.getQuestItemsCount(BLACK_SOULSTONE) > 0) {
+                if (st.haveQuestItem(BLACK_SOULSTONE)) {
                     htmltext = "atuba_chief_varkees_q0273_05.htm";
                     adena += st.getQuestItemsCount(BLACK_SOULSTONE) * 5;
                 }
-                if (st.getQuestItemsCount(RED_SOULSTONE) > 0) {
+                if (st.haveQuestItem(RED_SOULSTONE) ) {
                     htmltext = "atuba_chief_varkees_q0273_06.htm";
                     adena += st.getQuestItemsCount(RED_SOULSTONE) * 50;
                 }
@@ -77,7 +77,7 @@ public final class _273_InvadersOfHolyland extends Quest {
                 st.giveItems(ADENA_ID, adena);
 
                 if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("p1q2")) {
-                    st.player.setVar("p1q2", 1);
+                    st.player.setVar("p1q2");
                     st.player.sendPacket(new ExShowScreenMessage("Acquisition of Soulshot for beginners complete.\n                  Go find the Newbie Guide."));
                     QuestState qs = st.player.getQuestState(_255_Tutorial.class);
                     if (qs != null && qs.getInt("Ex") != 10) {
@@ -93,7 +93,7 @@ public final class _273_InvadersOfHolyland extends Quest {
                     }
                 }
 
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 st.playSound(SOUND_FINISH);
             }
         return htmltext;

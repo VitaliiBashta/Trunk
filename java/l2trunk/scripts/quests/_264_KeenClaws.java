@@ -8,9 +8,9 @@ import l2trunk.gameserver.model.quest.QuestState;
 public final class _264_KeenClaws extends Quest {
     //NPC
     private static final int Payne = 30136;
-    //Quest Items
+    //Quest items
     private static final int WolfClaw = 1367;
-    //Items
+    //items
     private static final int LeatherSandals = 36;
     private static final int WoodenHelmet = 43;
     private static final int Stockings = 462;
@@ -50,8 +50,7 @@ public final class _264_KeenClaws extends Quest {
 
         addStartNpc(Payne);
 
-        addKillId(Goblin);
-        addKillId(AshenWolf);
+        addKillId(Goblin,AshenWolf);
 
         addQuestItem(WolfClaw);
     }
@@ -60,7 +59,7 @@ public final class _264_KeenClaws extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("paint_q0264_03.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         }
         return event;
@@ -76,7 +75,7 @@ public final class _264_KeenClaws extends Quest {
                 if (st.player.getLevel() >= 3)
                     htmltext = "paint_q0264_02.htm";
                 else {
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                     return "paint_q0264_01.htm";
                 }
             } else if (cond == 1)
@@ -102,7 +101,7 @@ public final class _264_KeenClaws extends Quest {
                     st.giveItems(ClothShoes);
                 htmltext = "paint_q0264_05.htm";
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         return htmltext;
     }
@@ -119,7 +118,7 @@ public final class _264_KeenClaws extends Quest {
                     else if (st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[7], aDROPLIST_COND[5], aDROPLIST_COND[6]))
                         if (aDROPLIST_COND[1] != cond && aDROPLIST_COND[1] != 0) {
                             st.setCond(aDROPLIST_COND[1]);
-                            st.setState(STARTED);
+                            st.start();
                         }
     }
 }

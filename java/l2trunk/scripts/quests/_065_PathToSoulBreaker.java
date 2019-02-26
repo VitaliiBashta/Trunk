@@ -43,23 +43,8 @@ public final class _065_PathToSoulBreaker extends Quest {
 
         addStartNpc(Vitus);
 
-        addTalkId(Vitus);
-        addTalkId(Kekropus);
-        addTalkId(Casca);
-        addTalkId(Holst);
-        addTalkId(Harlan);
-        addTalkId(Lucas);
-        addTalkId(Jacob);
-        addTalkId(Xaber);
-        addTalkId(Liam);
-        addTalkId(Vesa);
-        addTalkId(Zerom);
-        addTalkId(Felton);
-        addTalkId(Meldina);
-        addTalkId(Katenar);
-        addTalkId(Box);
-        addKillId(Guardian_Angel);
-        addKillId(Wyrm);
+        addTalkId(Vitus,Kekropus,Casca,Holst,Harlan,Lucas,Jacob,Xaber,Liam,Vesa,Zerom,Felton,Meldina,Katenar,Box);
+        addKillId(Guardian_Angel,Wyrm);
     }
 
     private void Despawn_Katenar() {
@@ -87,63 +72,63 @@ public final class _065_PathToSoulBreaker extends Quest {
         String htmltext = event;
         if ("32213-02.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             if (!st.player.isVarSet("dd1")) {
                 st.giveItems(DD, 47);
-                st.player.setVar("dd1", 1);
+                st.player.setVar("dd1");
             }
             st.playSound(SOUND_ACCEPT);
         }
         if ("32138-03.htm".equalsIgnoreCase(event)) {
             st.setCond(2);
-            st.setState(STARTED);
+            st.start();
         }
         if ("32139-01.htm".equalsIgnoreCase(event)) {
             st.setCond(3);
-            st.setState(STARTED);
+            st.start();
         }
         if ("32139-03.htm".equalsIgnoreCase(event)) {
             st.setCond(4);
-            st.setState(STARTED);
+            st.start();
         }
         if ("32199-01.htm".equalsIgnoreCase(event)) {
             st.setCond(5);
-            st.setState(STARTED);
+            st.start();
         }
         if ("30071-01.htm".equalsIgnoreCase(event)) {
             st.setCond(8);
-            st.setState(STARTED);
+            st.start();
         }
         if ("32214-01.htm".equalsIgnoreCase(event)) {
             st.setCond(11);
-            st.setState(STARTED);
+            st.start();
         }
         if ("30879-02.htm".equalsIgnoreCase(event)) {
             st.setCond(12);
-            st.setState(STARTED);
+            st.start();
         }
         if ("32332-01.htm".equalsIgnoreCase(event)) {
             st.cancelQuestTimer("Katenar_Fail");
             st.giveItems(Sealed_Doc);
             st.setCond(13);
             st.unset("id");
-            st.setState(STARTED);
+            st.start();
             Despawn_Katenar();
         }
         if ("32139-06.htm".equalsIgnoreCase(event)) {
             st.takeItems(Sealed_Doc);
             st.setCond(14);
-            st.setState(STARTED);
+            st.start();
         }
         if (event.equalsIgnoreCase("32138-05.htm")) {
             st.setCond(15);
-            st.setState(STARTED);
+            st.start();
         }
         if ("32138-09.htm".equalsIgnoreCase(event)) {
             st.takeItems(Wyrm_Heart, 10);
             st.giveItems(Kekropus_Rec);
             st.setCond(17);
-            st.setState(STARTED);
+            st.start();
         }
         if ("Guardian_Angel_Fail".equalsIgnoreCase(event)) {
             despawnGuardianAngel();
@@ -164,18 +149,18 @@ public final class _065_PathToSoulBreaker extends Quest {
         if (npcId == Vitus) {
             if (st.haveQuestItem(SB_Certificate) ) {
                 htmltext = "completed";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else if (cond == 0)
                 if (st.player.getClassId().id == 0x7e || st.player.getClassId().id == 0x7d) {
                     if (st.player.getLevel() >= 39)
                         htmltext = "32213.htm";
                     else {
                         htmltext = "32213-00a.htm";
-                        st.exitCurrentQuest(true);
+                        st.exitCurrentQuest();
                     }
                 } else {
                     htmltext = "32213-000.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             else if (cond == 17) {
                 htmltext = "32213-03.htm";
@@ -183,10 +168,10 @@ public final class _065_PathToSoulBreaker extends Quest {
                 if (!st.player.isVarSet("prof2.1")) {
                     st.addExpAndSp(196875, 13510);
                     st.giveItems(ADENA_ID, 35597);
-                    st.player.setVar("prof2.1", 1);
+                    st.player.setVar("prof2.1");
                 }
                 st.giveItems(SB_Certificate);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (npcId == Kekropus) {
             if (cond == 1)
@@ -216,7 +201,7 @@ public final class _065_PathToSoulBreaker extends Quest {
             if (cond == 6) {
                 htmltext = "30073.htm";
                 st.setCond(7);
-                st.setState(STARTED);
+                st.start();
             }
         } else if (npcId == Lucas) {
             if (cond == 7)
@@ -228,7 +213,7 @@ public final class _065_PathToSoulBreaker extends Quest {
             if (cond == 8) {
                 htmltext = "30076.htm";
                 st.setCond(9);
-                st.setState(STARTED);
+                st.start();
             }
         } else if (npcId == Zerom) {
             if (cond == 9)
@@ -237,7 +222,7 @@ public final class _065_PathToSoulBreaker extends Quest {
             if (cond == 9) {
                 htmltext = "30123.htm";
                 st.setCond(10);
-                st.setState(STARTED);
+                st.start();
             }
         } else if (npcId == Meldina) {
             if (cond == 10)
@@ -245,7 +230,7 @@ public final class _065_PathToSoulBreaker extends Quest {
         } else if (npcId == Box) {
             if (cond == 12) {
                 htmltext = "32243-01.htm";
-                if (World.getAroundPlayers(st.player).stream().anyMatch(cha -> cha.getRace() == Race.kamael))
+                if (World.getAroundPlayers(st.player).anyMatch(cha -> cha.getRace() == Race.kamael))
                     htmltext = "32243-02.htm";
 
                 if (!htmltext.equals("32243-02.htm")) {
@@ -266,7 +251,7 @@ public final class _065_PathToSoulBreaker extends Quest {
                 htmltext = "30879.htm";
             if (cond == 12)
                 htmltext = "30879.htm";
-        } else if (npcId == Katenar && st.getInt("id") == 1)
+        } else if (npcId == Katenar && st.isSet("id"))
             if (cond == 12)
                 htmltext = "32332.htm";
         return htmltext;
@@ -282,12 +267,12 @@ public final class _065_PathToSoulBreaker extends Quest {
             despawnGuardianAngel();
 
             if (cond == 12) {
-                if (World.getAroundPlayers(st.player).stream()
+                if (World.getAroundPlayers(st.player)
                         .anyMatch(cha -> cha.getRace() == Race.kamael))
                     return;
                 Despawn_Katenar();
 
-                st.set("id", 1);
+                st.set("id");
                 spawnKatenar(st);
                 st.startQuestTimer("Katenar_Fail", 120000);
                 if (Katenar_Spawn != null)
@@ -300,7 +285,7 @@ public final class _065_PathToSoulBreaker extends Quest {
                 st.playSound(SOUND_ITEMGET);
             else {
                 st.playSound(SOUND_MIDDLE);
-                st.setState(STARTED);
+                st.start();
                 st.setCond(16);
             }
         }

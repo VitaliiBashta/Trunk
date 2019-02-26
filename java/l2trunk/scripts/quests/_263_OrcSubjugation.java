@@ -35,12 +35,12 @@ public final class _263_OrcSubjugation extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("sentry_kayleen_q0263_03.htm".equals(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("sentry_kayleen_q0263_06.htm".equals(event)) {
             st.setCond(0);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
         return event;
     }
@@ -55,10 +55,10 @@ public final class _263_OrcSubjugation extends Quest {
                 return htmltext;
             } else if (st.player.getRace() != Race.darkelf) {
                 htmltext = "sentry_kayleen_q0263_00.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else {
                 htmltext = "sentry_kayleen_q0263_01.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (cond == 1)
             if (st.getQuestItemsCount(ORC_AMULET) == 0 && st.getQuestItemsCount(ORC_NECKLACE) == 0)

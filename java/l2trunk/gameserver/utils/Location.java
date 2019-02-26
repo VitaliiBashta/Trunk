@@ -46,9 +46,10 @@ public class Location extends Point3D implements SpawnRange {
         this(obj.getX(), obj.getY(), obj.getZ(), 0);
     }
 
-    public static Location of (GameObject obj) {
+    public static Location of(GameObject obj) {
         return new Location(obj);
     }
+
     public static Location of(int x, int y, int z, int heading) {
         return new Location(x, y, z, heading);
     }
@@ -139,11 +140,7 @@ public class Location extends Point3D implements SpawnRange {
                 return pos;
             }
         }
-        return new Location(x, y, z);
-    }
-
-    public static Location findAroundPosition(Location loc, int radius, int geoIndex) {
-        return findAroundPosition(loc.x, loc.y, loc.z, 0, radius, geoIndex);
+        return Location.of(x, y, z);
     }
 
     public static Location findAroundPosition(Location loc, int radiusmin, int radiusmax, int geoIndex) {
@@ -223,23 +220,16 @@ public class Location extends Point3D implements SpawnRange {
     }
 
     public static Location of() {
-        return of(0,0,0);
+        return of(0, 0, 0);
     }
 
     public Location randomOffset(int radius) {
-        int dx = Rnd.get( -radius, radius);
-        int dy = Rnd.get( -radius, radius);
+        int dx = Rnd.get(-radius, radius);
+        int dy = Rnd.get(-radius, radius);
         return Location.of(x + dx, y + dy, z, h);
     }
-    public Location addX(int dx) {
-        return new Location(this.x + dx, this.y, this.z, this.h);
-    }
 
-    public Location addY(int dy) {
-        return new Location(this.x, this.y + dy, this.z, this.h);
-    }
-
-    public Location changeZ(int zDiff) {
+    public Location addZ(int zDiff) {
         z += zDiff;
         return this;
     }

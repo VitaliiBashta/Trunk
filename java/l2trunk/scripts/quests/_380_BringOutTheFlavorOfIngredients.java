@@ -8,11 +8,11 @@ import l2trunk.gameserver.model.quest.QuestState;
 public final class _380_BringOutTheFlavorOfIngredients extends Quest {
     //NPCs
     private static final int Rollant = 30069;
-    //Quest Items
+    //Quest items
     private static final int RitronsFruit = 5895;
     private static final int MoonFaceFlower = 5896;
     private static final int LeechFluids = 5897;
-    //Items
+    //items
     private static final int Antidote = 1831;
     private static final int RitronsDessertRecipe = 5959;
     private static final int RitronJelly = 5960;
@@ -69,14 +69,14 @@ public final class _380_BringOutTheFlavorOfIngredients extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("rollant_q0380_05.htm")) {
-            st.setState(STARTED);
+        if ("rollant_q0380_05.htm".equalsIgnoreCase(event)) {
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("rollant_q0380_12.htm")) {
-            st.giveItems(RitronsDessertRecipe, 1);
+        } else if ("rollant_q0380_12.htm".equalsIgnoreCase(event)) {
+            st.giveItems(RitronsDessertRecipe);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
         return event;
     }
@@ -92,7 +92,7 @@ public final class _380_BringOutTheFlavorOfIngredients extends Quest {
                     htmltext = "rollant_q0380_02.htm";
                 else {
                     htmltext = "rollant_q0380_01.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1)
                 htmltext = "rollant_q0380_06.htm";
@@ -103,7 +103,7 @@ public final class _380_BringOutTheFlavorOfIngredients extends Quest {
                 st.takeItems(LeechFluids);
                 htmltext = "rollant_q0380_07.htm";
                 st.setCond(3);
-                st.setState(STARTED);
+                st.start();
             } else if (cond == 2)
                 htmltext = "rollant_q0380_06.htm";
             else if (cond == 3) {
@@ -124,7 +124,7 @@ public final class _380_BringOutTheFlavorOfIngredients extends Quest {
                 else {
                     htmltext = "rollant_q0380_14.htm";
                     st.playSound(SOUND_FINISH);
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             }
         }
@@ -143,11 +143,11 @@ public final class _380_BringOutTheFlavorOfIngredients extends Quest {
                     else if (st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[7], aDROPLIST_COND[5], aDROPLIST_COND[6]))
                         if (aDROPLIST_COND[1] != cond && aDROPLIST_COND[1] != 0) {
                             st.setCond(aDROPLIST_COND[1]);
-                            st.setState(STARTED);
+                            st.start();
                         }
         if (cond == 1 && st.getQuestItemsCount(RitronsFruit) >= 4 && st.getQuestItemsCount(MoonFaceFlower) >= 20 && st.getQuestItemsCount(LeechFluids) >= 10) {
             st.setCond(2);
-            st.setState(STARTED);
+            st.start();
         }
     }
 }

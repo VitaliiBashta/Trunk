@@ -23,7 +23,7 @@ public final class _176_StepsForHonor extends Quest {
         if (!isValidKill(killed, st.player))
             return;
         if (cond == 1 || cond == 3 || cond == 5 || cond == 7) {
-            st.set("kill", st.getInt("kill") + 1);
+            st.inc("kill");
             if (st.getInt("kill") >= calculatePlayersToKill(cond))
                 st.setCond(cond + 1);
         }
@@ -46,9 +46,9 @@ public final class _176_StepsForHonor extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("rapidus_q176_04.htm")) {
+        if ("rapidus_q176_04.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         }
         return event;
@@ -68,7 +68,7 @@ public final class _176_StepsForHonor extends Quest {
                         htmltext = "rapidus_q176_03.htm";
                     else {
                         htmltext = "rapidus_q176_02.htm";
-                        st.exitCurrentQuest(true);
+                        st.exitCurrentQuest();
                     }
                     break;
                 case 1:
@@ -100,8 +100,8 @@ public final class _176_StepsForHonor extends Quest {
                     break;
                 case 8:
                     htmltext = "rapidus_q176_13.htm";
-                    st.giveItems(14603, 1);
-                    st.exitCurrentQuest(false);
+                    st.giveItems(14603);
+                    st.finish();
                     st.playSound(SOUND_FINISH);
                     break;
             }
@@ -122,7 +122,6 @@ public final class _176_StepsForHonor extends Quest {
 
     @Override
     public void onCreate(QuestState qs) {
-        super.onCreate(qs);
         qs.addPlayerOnKillListener();
     }
 

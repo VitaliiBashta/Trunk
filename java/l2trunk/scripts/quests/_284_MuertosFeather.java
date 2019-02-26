@@ -87,7 +87,7 @@ public final class _284_MuertosFeather extends Quest {
         addStartNpc(Trevor);
 
         addTalkId(Trevor);
-        //Mob Drop
+        //mob Drop
         for (int[] aDROPLIST_COND : DROPLIST_COND) addKillId(aDROPLIST_COND[2]);
         addQuestItem(MuertosFeather);
     }
@@ -96,14 +96,14 @@ public final class _284_MuertosFeather extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if (event.equalsIgnoreCase("trader_treauvi_q0284_0103.htm")) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("trader_treauvi_q0284_0203.htm")) {
             long counts = st.getQuestItemsCount(MuertosFeather) * 45;
             st.takeItems(MuertosFeather, -1);
             st.giveItems(ADENA_ID, counts);
         } else if (event.equalsIgnoreCase("trader_treauvi_q0284_0204.htm"))
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         return event;
     }
 
@@ -115,7 +115,7 @@ public final class _284_MuertosFeather extends Quest {
         if (npcId == Trevor)
             if (st.player.getLevel() < 11) {
                 htmltext = "trader_treauvi_q0284_0102.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else if (cond == 0)
                 htmltext = "trader_treauvi_q0284_0101.htm";
             else if (cond == 1 && st.getQuestItemsCount(MuertosFeather) == 0)
@@ -137,7 +137,7 @@ public final class _284_MuertosFeather extends Quest {
                     else if (st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[7], aDROPLIST_COND[5], aDROPLIST_COND[6]))
                         if (aDROPLIST_COND[1] != cond && aDROPLIST_COND[1] != 0) {
                             st.setCond(aDROPLIST_COND[1]);
-                            st.setState(STARTED);
+                            st.start();
                         }
     }
 }

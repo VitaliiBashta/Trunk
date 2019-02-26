@@ -18,8 +18,7 @@ public final class _109_InSearchOfTheNest extends Quest {
     public _109_InSearchOfTheNest() {
         super(false);
         addStartNpc(PIERCE);
-        addTalkId(CORPSE);
-        addTalkId(KAHMAN);
+        addTalkId(CORPSE,KAHMAN);
 
         addQuestItem(MEMO);
     }
@@ -51,13 +50,13 @@ public final class _109_InSearchOfTheNest extends Quest {
 
         if (id == CREATED) {
             if (st.player.getLevel() >= 66 && npcId == PIERCE && (st.getQuestItemsCount(GOLDEN_BADGE_RECRUIT) > 0 || st.getQuestItemsCount(GOLDEN_BADGE_SOLDIER) > 0)) {
-                st.setState(STARTED);
+                st.start();
                 st.playSound(SOUND_ACCEPT);
                 st.setCond(1);
                 htmltext = "merc_cap_peace_q0109_0105.htm";
             } else {
                 htmltext = "merc_cap_peace_q0109_0103.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (id == STARTED)
             if (npcId == CORPSE) {
@@ -76,7 +75,7 @@ public final class _109_InSearchOfTheNest extends Quest {
                 htmltext = "merc_kahmun_q0109_0401.htm";
                 st.addExpAndSp(701500, 50000);
                 st.giveItems(ADENA_ID, 161500);
-                st.exitCurrentQuest(false);
+                st.finish();
                 st.playSound(SOUND_FINISH);
             }
         return htmltext;

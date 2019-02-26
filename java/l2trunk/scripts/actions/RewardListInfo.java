@@ -44,7 +44,7 @@ public class RewardListInfo {
         htmlMessage.replace("%npc_name%", npcTemplate.name());
 
         //@SuppressWarnings("unused")
-        //boolean icons = player.isVarSet("DroplistIcons");
+        //boolean icons = getPlayer.isVarSet("DroplistIcons");
 
         if (mod <= 0) {
             htmlMessage.setFile("actions/rewardlist_to_weak.htm");
@@ -77,7 +77,7 @@ public class RewardListInfo {
                 showListedRewards(builder, type, npcTemplate.getRewardList(type), player, npcTemplate);
             }
         }
-        htmlMessage.replace("%info%", builder.toString());
+        htmlMessage.replace("%info%", builder);
         player.sendPacket(htmlMessage);
     }
 

@@ -29,6 +29,8 @@ import l2trunk.gameserver.utils.Util;
 
 import java.util.*;
 
+import static l2trunk.commons.lang.NumberUtils.toInt;
+
 
 public final class _255_Tutorial extends Quest implements OnPlayerEnterListener {
 
@@ -125,20 +127,15 @@ public final class _255_Tutorial extends Quest implements OnPlayerEnterListener 
     }
 
     private static void addToTutorialQueue(Player player, String pageToCheck) {
-        Collection<String> tutorialsToSee = player.getQuickVarList("tutorialsToSee");
-        tutorialsToSee.add(pageToCheck);
         if (!player.containsQuickVar("tutorialsToSee")) {
-            player.addQuickVar("tutorialsToSee", tutorialsToSee);
+            player.addQuickVar("tutorialsToSee", pageToCheck);
         }
     }
 
     private static void onTutorialClose(QuestState st) {
         Player player = st.player;
         if (player.containsQuickVar("tutorialsToSee")) {
-            List<String> tutorialsToSee = player.getQuickVarList("tutorialsToSee");
-            String tutorialToSee = tutorialsToSee.remove(0);
-            if (tutorialsToSee.isEmpty())
-                player.deleteQuickVar("tutorialsToSee");
+            String tutorialToSee = player.getQuickVarS("tutorialsToSee");
             if ("checkChangeLog".equals(tutorialToSee)) checkChangeLog(st);
             else if ("checkClassMaster".equals(tutorialToSee)) checkClassMaster(st);
         }
@@ -222,7 +219,7 @@ public final class _255_Tutorial extends Quest implements OnPlayerEnterListener 
     }
 
     /**
-     * Checking if player have got occupation >= 20, >= 40 or >= 76 and still didn't change class
+     * Checking if getPlayer have got occupation >= 20, >= 40 or >= 76 and still didn't change class
      *
      * @param player   to check
      * @param jobLevel occupation of the class
@@ -252,13 +249,13 @@ public final class _255_Tutorial extends Quest implements OnPlayerEnterListener 
             String text = HtmCache.INSTANCE.getNotNull("enterworldSecondary.htm", player);
             st.showTutorialHTML(text);
             player.setBlock(true);
-            //player.startAbnormalEffect(AbnormalEffect.FIREROOT_STUN);
+            //getPlayer.startAbnormalEffect(AbnormalEffect.FIREROOT_STUN);
 
             return null;
         } else if ("ProposePass".equals(event)) {
             String text = HtmCache.INSTANCE.getNotNull("enterworldNoSecondary.htm", player);
             st.showTutorialHTML(text);
-            //player.startAbnormalEffect(AbnormalEffect.FIREROOT_STUN);
+            //getPlayer.startAbnormalEffect(AbnormalEffect.FIREROOT_STUN);
             return null;
         } else if (event.startsWith("TryPass")) {
             String pass = null;
@@ -276,7 +273,7 @@ public final class _255_Tutorial extends Quest implements OnPlayerEnterListener 
                 onEvent("UC", st, null);
                 player.sendMessage("Your password is correct!");
                 if (player.isBlocked()) {
-                    //player.stopAbnormalEffect(AbnormalEffect.FIREROOT_STUN);
+                    //getPlayer.stopAbnormalEffect(AbnormalEffect.FIREROOT_STUN);
                     player.broadcastPacket(new SocialAction(player.objectId(), SocialAction.VICTORY));
                     final MagicSkillUse msu = new MagicSkillUse(player, 23312, 0, 500);
                     player.broadcastPacket(msu);
@@ -318,7 +315,7 @@ public final class _255_Tutorial extends Quest implements OnPlayerEnterListener 
                 mail.save();
 
                 // Logout the character
-                //player.stopAbnormalEffect(AbnormalEffect.FIREROOT_STUN);
+                //getPlayer.stopAbnormalEffect(AbnormalEffect.FIREROOT_STUN);
                 player.logout();
 
                 return null;
@@ -335,7 +332,7 @@ public final class _255_Tutorial extends Quest implements OnPlayerEnterListener 
         } else if (event.startsWith("ChangeTo")) {
             StringTokenizer tokenizer = new StringTokenizer(event, ";");
             tokenizer.nextToken();
-            int newClassId = Integer.parseInt(tokenizer.nextToken());
+            ClassId newClassId = ClassId.getById(toInt(tokenizer.nextToken()));
             long price = Long.parseLong(tokenizer.nextToken());
 
             if (price < 0L)//Somebody cheating
@@ -344,7 +341,7 @@ public final class _255_Tutorial extends Quest implements OnPlayerEnterListener 
                 return null;
             }
 
-            if (!ClassId.VALUES.get(newClassId).equalsOrChildOf(ClassId.VALUES.get(player.getActiveClassId()))) {//Somebody cheating
+            if (!newClassId.equalsOrChildOf(player.getActiveClassId())) {//Somebody cheating
                 st.closeTutorial();
                 return null;
             }
@@ -430,10 +427,10 @@ public final class _255_Tutorial extends Quest implements OnPlayerEnterListener 
 
             // Level up event
             if (event_id == 40) {
-                // Synerge - On lvl 6 show a html for teleporting the player to other place
+                // Synerge - On lvl 6 show a html for teleporting the getPlayer to other place
                 if (player.getLevel() >= 6 && player.getVarInt("lvl") < 6 && st.getInt("firstexp") == 1) {
                     if (player.getClassId().occupation() == 0) {
-                        //player.setVar("lvl", "6");
+                        //getPlayer.setVar("lvl", "6");
                         st.set("firstexp", 2);
                         st.showTutorialHTML(HtmCache.INSTANCE.getNotNull("SpecialTutorial/Level6.htm", player));
                     }
@@ -453,7 +450,7 @@ public final class _255_Tutorial extends Quest implements OnPlayerEnterListener 
             else if (event_id == 41) {
                 // Synerge - When getting the first exp the tutorial should close
                 if (st.getInt("firstexp") < 1) {
-                    st.set("firstexp", 1);
+                    st.set("firstexp");
                     st.closeTutorial();
                 }
                 // Synerge - Player should get another html after the html7, when he kills a monster
@@ -481,7 +478,7 @@ public final class _255_Tutorial extends Quest implements OnPlayerEnterListener 
             st.showTutorialHTML(HtmCache.INSTANCE.getNotNull("SpecialTutorial/Level7.htm", player));
         }
         // Synerge - Gives the character a certain weapon id and equips it
-        else if (event.startsWith("GetWeaponD ") && player.getVarInt("weapon") < 1) {
+        else if (event.startsWith("GetWeaponD ") && !player.isVarSet("weapon")) {
             StringTokenizer tokenizer = new StringTokenizer(event, " ");
             tokenizer.nextToken();
             final int itemId = Integer.parseInt(tokenizer.nextToken());
@@ -494,7 +491,7 @@ public final class _255_Tutorial extends Quest implements OnPlayerEnterListener 
                 return null;
             }
 
-            player.setVar("weapon", 1);
+            player.setVar("weapon");
             player.getInventory().addItem(createditem, "SpecialTutorial");
 
             // Also give arrows if the weapon is a bow
@@ -504,7 +501,7 @@ public final class _255_Tutorial extends Quest implements OnPlayerEnterListener 
                 player.getInventory().addItem(arrows, "SpecialTutorial");
             }
 
-            // Unequip the current player's weapon
+            // Unequip the current getPlayer's weapon
             if (player.getActiveWeaponInstance() != null)
                 player.getInventory().unEquipItem(player.getActiveWeaponInstance());
 
@@ -518,11 +515,11 @@ public final class _255_Tutorial extends Quest implements OnPlayerEnterListener 
                 st.showTutorialHTML(HtmCache.INSTANCE.getNotNull("SpecialTutorial/Level21Armors.htm", player));
         }
         // Synerge - Gives the character a certain armor ids and equips it
-        else if (event.startsWith("GetArmorD ") && player.getVarInt("armor") < 1) {
+        else if (event.startsWith("GetArmorD ") && !player.isVarSet("armor")) {
             StringTokenizer tokenizer = new StringTokenizer(event, " ");
             tokenizer.nextToken();
 
-            player.setVar("armor", 1);
+            player.setVar("armor");
 
             // We have to give and equip each item that is sent through the bypass
             while (tokenizer.hasMoreTokens()) {
@@ -537,7 +534,7 @@ public final class _255_Tutorial extends Quest implements OnPlayerEnterListener 
 
                 player.getInventory().addItem(createditem, "SpecialTutorial");
 
-                // Unequip the current player's armor slot
+                // Unequip the current getPlayer's armor slot
                 player.getInventory().unEquipItemInBodySlot(createditem.getBodyPart());
 
                 // Equip the new item
@@ -548,7 +545,7 @@ public final class _255_Tutorial extends Quest implements OnPlayerEnterListener 
             st.showTutorialHTML(HtmCache.INSTANCE.getNotNull("SpecialTutorial/Level21Soulshots.htm", player));
         }
         // Synerge - Gives the character some shots
-        else if (event.startsWith("GetShotsD ") && player.getVarInt("shots") < 1) {
+        else if (event.startsWith("GetShotsD ") && !player.isVarSet("shots")) {
             StringTokenizer tokenizer = new StringTokenizer(event, " ");
             tokenizer.nextToken();
             final int itemId = Integer.parseInt(tokenizer.nextToken());
@@ -564,7 +561,7 @@ public final class _255_Tutorial extends Quest implements OnPlayerEnterListener 
 
             createditem.setCount(itemCount);
 
-            player.setVar("shots", 1);
+            player.setVar("shots");
             player.getInventory().addItem(createditem, "SpecialTutorial");
 
             // Add the soulshots to a new shortcut

@@ -316,11 +316,6 @@ public final class KrateisCubeEvent extends GlobalEvent {
         }
 
         @Override
-        public boolean ignorePetOrSummon() {
-            return true;
-        }
-
-        @Override
         public void onPlayerExit(Player player) {
             exitCube(player, false);
         }

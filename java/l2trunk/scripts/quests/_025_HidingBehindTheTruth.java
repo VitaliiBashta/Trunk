@@ -37,12 +37,7 @@ public final class _025_HidingBehindTheTruth extends Quest {
 
         addStartNpc(BENEDICT);
 
-        addTalkId(AGRIPEL);
-        addTalkId(BROKEN_BOOK_SHELF);
-        addTalkId(COFFIN);
-        addTalkId(MAID_OF_LIDIA);
-        addTalkId(MYSTERIOUS_WIZARD);
-        addTalkId(TOMBSTONE);
+        addTalkId(AGRIPEL,BROKEN_BOOK_SHELF,COFFIN,MAID_OF_LIDIA,MYSTERIOUS_WIZARD,TOMBSTONE);
 
         addKillId(TRIOLS_PAWN);
 
@@ -50,87 +45,87 @@ public final class _025_HidingBehindTheTruth extends Quest {
     }
 
     @Override
-    public String onEvent(String event, QuestState qs, NpcInstance npc) {
-        Player player = qs.player;
-        if (event.equalsIgnoreCase("StartQuest")) {
-            if (qs.getCond() == 0)
-                qs.setState(STARTED);
-            if (qs.player.isQuestCompleted(_024_InhabitantsOfTheForestOfTheDead.class)) {
-                qs.playSound(SOUND_ACCEPT);
-                if (qs.getQuestItemsCount(SUSPICIOUS_TOTEM_DOLL_1) == 0) {
-                    qs.setCond(2);
+    public String onEvent(String event, QuestState st, NpcInstance npc) {
+        Player player = st.player;
+        if ("StartQuest".equalsIgnoreCase(event)) {
+            if (st.getCond() == 0)
+                st.start();
+            if (st.player.isQuestCompleted(_024_InhabitantsOfTheForestOfTheDead.class)) {
+                st.playSound(SOUND_ACCEPT);
+                if (st.getQuestItemsCount(SUSPICIOUS_TOTEM_DOLL_1) == 0) {
+                    st.setCond(2);
                     return "31349-03a.htm";
                 }
                 return "31349-03.htm";
             } else {
-                qs.setCond(1);
+                st.setCond(1);
                 return "31349-02.htm";
             }
         } else if ("31349-10.htm".equalsIgnoreCase(event))
-            qs.setCond(4);
+            st.setCond(4);
         else if ("31348-08.htm".equalsIgnoreCase(event)) {
-            if (qs.getCond() == 4) {
-                qs.setCond(5);
-                qs.takeItems(SUSPICIOUS_TOTEM_DOLL_1);
-                qs.takeItems(SUSPICIOUS_TOTEM_DOLL_2);
-                qs.giveItemIfNotHave(GEMSTONE_KEY);
-            } else if (qs.getCond() == 5)
+            if (st.getCond() == 4) {
+                st.setCond(5);
+                st.takeItems(SUSPICIOUS_TOTEM_DOLL_1);
+                st.takeItems(SUSPICIOUS_TOTEM_DOLL_2);
+                st.giveItemIfNotHave(GEMSTONE_KEY);
+            } else if (st.getCond() == 5)
                 return "31348-08a.htm";
         } else if ("31522-04.htm".equalsIgnoreCase(event)) {
-            qs.setCond(6);
-                qs.giveItemIfNotHave(MAP_FOREST_OF_DEADMAN);
+            st.setCond(6);
+                st.giveItemIfNotHave(MAP_FOREST_OF_DEADMAN);
         } else if ("31534-07.htm".equalsIgnoreCase(event)) {
 
-            qs.addSpawn(TRIOLS_PAWN, player.getLoc());
-            qs.setCond(7);
+            st.addSpawn(TRIOLS_PAWN, player.getLoc());
+            st.setCond(7);
         } else if ("31534-11.htm".equalsIgnoreCase(event)) {
-            qs.set("id", 8);
-            qs.giveItems(CONTRACT);
+            st.set("id", 8);
+            st.giveItems(CONTRACT);
         } else if ("31532-07.htm".equalsIgnoreCase(event))
-            qs.setCond(11);
+            st.setCond(11);
         else if ("31531-02.htm".equalsIgnoreCase(event)) {
-            qs.setCond(12);
+            st.setCond(12);
 
             if (COFFIN_SPAWN != null)
                 COFFIN_SPAWN.deleteMe();
-            COFFIN_SPAWN = qs.addSpawn(COFFIN);
+            COFFIN_SPAWN = st.addSpawn(COFFIN);
 
-            qs.startQuestTimer("Coffin_Despawn", 120000);
+            st.startQuestTimer("Coffin_Despawn", 120000);
         } else if (event.equalsIgnoreCase("Coffin_Despawn")) {
             if (COFFIN_SPAWN != null)
                 COFFIN_SPAWN.deleteMe();
 
-            if (qs.getCond() == 12)
-                qs.setCond(11);
+            if (st.getCond() == 12)
+                st.setCond(11);
             return null;
         } else if ("Lidia_wait".equalsIgnoreCase(event)) {
-            qs.set("id", 14);
+            st.set("id", 14);
             return null;
         } else if ("31532-21.htm".equalsIgnoreCase(event))
-            qs.setCond(15);
+            st.setCond(15);
         else if ("31522-13.htm".equalsIgnoreCase(event))
-            qs.setCond(16);
+            st.setCond(16);
         else if ("31348-16.htm".equalsIgnoreCase(event))
-            qs.setCond(17);
+            st.setCond(17);
         else if ("31348-17.htm".equalsIgnoreCase(event))
-            qs.setCond(18);
+            st.setCond(18);
         else if ("31348-14.htm".equalsIgnoreCase(event))
-            qs.set("id", 16);
+            st.set("id", 16);
         else if ("End1".equalsIgnoreCase(event)) {
-            if (qs.getCond() != 17)
+            if (st.getCond() != 17)
                 return "31532-24.htm";
-            qs.giveItems(RING_OF_BLESSING, 2);
-            qs.giveItems(EARRING_OF_BLESSING);
-            qs.addExpAndSp(572277, 53750);
-            qs.exitCurrentQuest(false);
+            st.giveItems(RING_OF_BLESSING, 2);
+            st.giveItems(EARRING_OF_BLESSING);
+            st.addExpAndSp(572277, 53750);
+            st.finish();
             return "31532-25.htm";
         } else if ("End2".equalsIgnoreCase(event)) {
-            if (qs.getCond() != 18)
+            if (st.getCond() != 18)
                 return "31522-15a.htm";
-            qs.giveItems(NECKLACE_OF_BLESSING);
-            qs.giveItems(EARRING_OF_BLESSING);
-            qs.addExpAndSp(572277, 53750);
-            qs.exitCurrentQuest(false);
+            st.giveItems(NECKLACE_OF_BLESSING);
+            st.giveItems(EARRING_OF_BLESSING);
+            st.addExpAndSp(572277, 53750);
+            st.finish();
             return "31522-16.htm";
         }
         return event;

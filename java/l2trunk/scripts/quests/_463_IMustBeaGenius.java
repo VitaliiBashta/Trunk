@@ -31,11 +31,11 @@ public final class _463_IMustBeaGenius extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
         if (npc.getNpcId() == GUTENHAGEN) {
-            if (event.equalsIgnoreCase("collecter_gutenhagen_q0463_05.htm")) {
+            if ("collecter_gutenhagen_q0463_05.htm".equalsIgnoreCase(event)) {
                 st.playSound(SOUND_ACCEPT);
-                st.setState(STARTED);
+                st.start();
                 st.setCond(1);
-                // Generate random daily number for player
+                // Generate random daily number for getPlayer
                 int _number = Rnd.get(500, 600);
                 st.set("number", _number);
                 // Set drop for mobs

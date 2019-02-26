@@ -29,7 +29,7 @@ public final class _335_TheSongOfTheHunter extends Quest {
     private static final int Tarlk_Raider_Triska = 27146;
     private static final int Tarlk_Raider_Motura = 27147;
     private static final int Tarlk_Raider_Kalath = 27148;
-    // Items
+    // items
     private static final int Cybellins_Dagger = 3471;
     private static final int _1st_Circle_Hunter_License = 3692;
     private static final int _2nd_Circle_Hunter_License = 3693;
@@ -60,7 +60,7 @@ public final class _335_TheSongOfTheHunter extends Quest {
             3708, 3698, 3699, 3700, 3701, 3702, 3703, 3704, 3705, 3706, 3707);
     private static final List<Integer> q_blood_crystal_lizardmen = List.of(
             20578, 20579, 20580, 20581, 20582, 20641, 20642, 20643, 20644, 20645);
-    private static final Integer[][][] Items_1st_Circle = {
+    private static final int[][][] Items_1st_Circle = {
             {
                     {Guardian_Basilisk_Scale},
                     {40},
@@ -114,7 +114,7 @@ public final class _335_TheSongOfTheHunter extends Quest {
                     }
             }
     };
-    private static final Integer[][][] Items_2nd_Circle = {
+    private static final int[][][] Items_2nd_Circle = {
             {
                     {Timak_Orc_Totem},
                     {20},
@@ -238,70 +238,52 @@ public final class _335_TheSongOfTheHunter extends Quest {
         super(false);
 
         addStartNpc(Grey);
-        addTalkId(Cybellin);
-        addTalkId(Tor);
+        addTalkId(Cybellin, Tor);
 
-        addKillId(Breka_Overlord_Haka);
-        addKillId(Breka_Overlord_Jaka);
-        addKillId(Breka_Overlord_Marka);
-        addKillId(Tarlk_Raider_Athu);
-        addKillId(Tarlk_Raider_Lanka);
-        addKillId(Tarlk_Raider_Triska);
-        addKillId(Tarlk_Raider_Motura);
-        addKillId(Tarlk_Raider_Kalath);
+        addKillId(Breka_Overlord_Haka, Breka_Overlord_Jaka, Breka_Overlord_Marka, Tarlk_Raider_Athu, Tarlk_Raider_Lanka,
+                Tarlk_Raider_Triska, Tarlk_Raider_Motura, Tarlk_Raider_Kalath);
         addKillId(q_blood_crystal_lizardmen);
 
-        for (Integer[][] ItemsCond : Items_1st_Circle) {
+        for (int[][] ItemsCond : Items_1st_Circle) {
             addQuestItem(ItemsCond[0]);
             for (int i = 2; i < ItemsCond.length; i++)
                 addKillId(ItemsCond[i][0]);
         }
 
-        for (Integer[][] ItemsCond : Items_2nd_Circle) {
+        for (int[][] ItemsCond : Items_2nd_Circle) {
             addQuestItem(ItemsCond[0]);
             for (int i = 2; i < ItemsCond.length; i++)
                 addKillId(ItemsCond[i][0]);
         }
 
         for (Request r : Requests1) {
-            addQuestItem(r.request_id);
-            addQuestItem(r.request_item);
-            for (int id : r.droplist.keySet())
-                addKillId(id);
-            for (int id : r.spawnlist.keySet())
-                addKillId(id);
+            addQuestItem(r.request_id, r.request_item);
+            addKillId(r.droplist.keySet());
+            addKillId(r.spawnlist.keySet());
         }
 
         for (Request r : Requests2) {
-            addQuestItem(r.request_id);
-            addQuestItem(r.request_item);
-            for (int id : r.droplist.keySet())
-                addKillId(id);
-            for (int id : r.spawnlist.keySet())
-                addKillId(id);
+            addQuestItem(r.request_id,r.request_item);
+            addKillId(r.droplist.keySet());
+            addKillId(r.spawnlist.keySet());
         }
 
-        addQuestItem(_1st_Circle_Hunter_License);
-        addQuestItem(_2nd_Circle_Hunter_License);
-        addQuestItem(Laurel_Leaf_Pin);
-        addQuestItem(_1st_Test_Instructions);
-        addQuestItem(_2nd_Test_Instructions);
-        addQuestItem(Cybellins_Request);
-        addQuestItem(Cybellins_Dagger);
+        addQuestItem(_1st_Circle_Hunter_License, _2nd_Circle_Hunter_License, Laurel_Leaf_Pin, _1st_Test_Instructions,
+                _2nd_Test_Instructions, Cybellins_Request, Cybellins_Dagger);
         addQuestItem(q_blood_crystal);
     }
 
-    private static int CalcItemsConds(QuestState st, Integer[][][] ItemsConds) {
+    private static int CalcItemsConds(QuestState st, int[][][] ItemsConds) {
         int result = 0;
-        for (Integer[][] ItemsCond : ItemsConds)
+        for (int[][] ItemsCond : ItemsConds)
             if (st.getQuestItemsCount(ItemsCond[0]) >= ItemsCond[1][0])
                 result++;
         return result;
     }
 
-    private static void DelItemsConds(QuestState st, Integer[][][] ItemsConds) {
-        for (Integer[][] ItemsCond : ItemsConds)
-            st.takeItems(List.of(ItemsCond[0]));
+    private static void DelItemsConds(QuestState st, int[][][] ItemsConds) {
+        for (int[][] ItemsCond : ItemsConds)
+            st.takeAllItems(ItemsCond[0]);
     }
 
     private static int Get_Blood_Crystal_Level(QuestState st) {
@@ -323,7 +305,7 @@ public final class _335_TheSongOfTheHunter extends Quest {
         final int grade_c = 12;
         final int grade_b = 6;
         final int grade_a = 3;
-        if (st.getInt("list") ==0) {
+        if (!st.isSet("list")) {
             long Laurel_Leaf_Pin_count = st.getQuestItemsCount(Laurel_Leaf_Pin);
             int[] list = new int[5];
             if (Laurel_Leaf_Pin_count < 4) {
@@ -406,7 +388,7 @@ public final class _335_TheSongOfTheHunter extends Quest {
         if (event.equalsIgnoreCase("30744_03.htm") && _state == CREATED) {
             if (st.getQuestItemsCount(_1st_Test_Instructions) == 0)
                 st.giveItems(_1st_Test_Instructions, 1);
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("30744_09.htm") && _state == STARTED) {
@@ -422,7 +404,7 @@ public final class _335_TheSongOfTheHunter extends Quest {
                 event = "30744_17.htm";
             }
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         } else if (event.equalsIgnoreCase("30746_03.htm") && _state == STARTED) {
             if (st.getQuestItemsCount(_1st_Circle_Hunter_License) == 0 && st.getQuestItemsCount(_2nd_Circle_Hunter_License) == 0)
                 return null;
@@ -486,7 +468,7 @@ public final class _335_TheSongOfTheHunter extends Quest {
             if (npcId != Grey)
                 return "noquest";
             if (st.player.getLevel() < 35) {
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 return "30744_01.htm";
             }
             st.setCond(0);
@@ -577,13 +559,13 @@ public final class _335_TheSongOfTheHunter extends Quest {
             return;
         int npcId = npc.getNpcId();
 
-        Integer[][][] Items_Circle = null;
+        int[][][] Items_Circle = null;
         if (st.getQuestItemsCount(_1st_Test_Instructions) > 0)
             Items_Circle = Items_1st_Circle;
         else if (st.getQuestItemsCount(_2nd_Test_Instructions) > 0)
             Items_Circle = Items_2nd_Circle;
         if (Items_Circle != null) {
-            for (Integer[][] ItemsCond : Items_Circle)
+            for (int[][] ItemsCond : Items_Circle)
                 for (int i = 2; i < ItemsCond.length; i++)
                     if (npcId == ItemsCond[i][0])
                         st.rollAndGive(ItemsCond[0][0], 1, 1, ItemsCond[1][0], ItemsCond[i][1]);
@@ -645,8 +627,8 @@ public final class _335_TheSongOfTheHunter extends Quest {
             }
         }
 
-        if (st.haveAnyQuestItems(_1st_Circle_Hunter_License,_2nd_Circle_Hunter_License) ) {
-            if (st.haveQuestItem(Cybellins_Request)  && st.player.getActiveWeaponItem() != null && st.player.getActiveWeaponItem().itemId() == Cybellins_Dagger) {
+        if (st.haveAnyQuestItems(_1st_Circle_Hunter_License, _2nd_Circle_Hunter_License)) {
+            if (st.haveQuestItem(Cybellins_Request) && st.player.getActiveWeaponItem() != null && st.player.getActiveWeaponItem().itemId() == Cybellins_Dagger) {
                 int Blood_Crystal_Level = Get_Blood_Crystal_Level(st);
                 if (Blood_Crystal_Level > 0 && Blood_Crystal_Level < 10)
                     for (int lizardmen_id : q_blood_crystal_lizardmen)
@@ -721,10 +703,9 @@ public final class _335_TheSongOfTheHunter extends Quest {
         }
 
         boolean Complete(QuestState st) {
-            if (st.getQuestItemsCount(request_item) < request_count)
+            if (!st.haveQuestItem(request_item, request_count))
                 return false;
-            st.takeItems(request_id);
-            st.takeItems(request_item);
+            st.takeAllItems(request_id,request_item);
             st.playSound(SOUND_MIDDLE);
             st.giveItems(Laurel_Leaf_Pin);
             st.giveItems(ADENA_ID, reward_adena);

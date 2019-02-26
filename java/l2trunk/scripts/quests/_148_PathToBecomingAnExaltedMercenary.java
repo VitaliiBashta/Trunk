@@ -28,7 +28,7 @@ public final class _148_PathToBecomingAnExaltedMercenary extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("gludio_merc_cap_q0148_06.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         }
         return event;
@@ -61,9 +61,9 @@ public final class _148_PathToBecomingAnExaltedMercenary extends Quest {
             htmlText = "gludio_merc_cap_q0148_08.htm";
             st.takeItems(13767);
             st.giveItems(13768);
-            st.setState(COMPLETED);
+            st.complete();
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(false);
+            st.finish();
         }
 
         return htmlText;
@@ -131,7 +131,6 @@ public final class _148_PathToBecomingAnExaltedMercenary extends Quest {
 
     @Override
     public void onCreate(QuestState qs) {
-        super.onCreate(qs);
         qs.addPlayerOnKillListener();
     }
 

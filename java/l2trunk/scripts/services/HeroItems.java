@@ -1,8 +1,6 @@
 package l2trunk.scripts.services;
 
-import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.base.Race;
-import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.ItemFunctions;
 import org.slf4j.Logger;
@@ -24,7 +22,7 @@ public final class HeroItems extends Functions {
                     "6612",
                     "weapon_the_two_handed_sword_of_hero_i00",
                     "Infinity Cleaver",
-                    "Increases Max HP, Max CP, critical power and critical chance. Inflicts extra damage when a critical attack occurs and has possibility of reflecting the skill back on the player. Also enhances damage to target during PvP.",
+                    "Increases Max HP, Max CP, critical power and critical chance. Inflicts extra damage when a critical attack occurs and has possibility of reflecting the skill back on the getPlayer. Also enhances damage to target during PvP.",
                     "361/137",
                     "Two Handed Sword"},
             {
@@ -45,7 +43,7 @@ public final class HeroItems extends Functions {
                     "6615",
                     "weapon_the_hammer_of_hero_i00",
                     "Infinity Crusher",
-                    "Increases MaxHP, MaxCP, and Atk. Spd. Stuns a target when a critical attack occurs and has possibility of reflecting the skill back on the player. Also enhances damage to target during PvP.",
+                    "Increases MaxHP, MaxCP, and Atk. Spd. Stuns a target when a critical attack occurs and has possibility of reflecting the skill back on the getPlayer. Also enhances damage to target during PvP.",
                     "361/137",
                     "Blunt"},
             {
@@ -66,7 +64,7 @@ public final class HeroItems extends Functions {
                     "6618",
                     "weapon_the_fist_of_hero_i00",
                     "Infinity Fang",
-                    "Increases MaxHP, MaxMP, MaxCP and evasion. Stuns a target when a critical attack occurs and has possibility of reflecting the skill back on the player at a certain probability rate. Also enhances damage to target during PvP.",
+                    "Increases MaxHP, MaxMP, MaxCP and evasion. Stuns a target when a critical attack occurs and has possibility of reflecting the skill back on the getPlayer at a certain probability rate. Also enhances damage to target during PvP.",
                     "361/137",
                     "Dual Fist"},
             {
@@ -122,9 +120,9 @@ public final class HeroItems extends Functions {
             fileName += "monument_weapon_no_hero.htm";
             succ = false;
         } else {
-            for (String heroItem[] : HERO_ITEMS) {
+            for (String[] heroItem : HERO_ITEMS) {
                 int itemId = Integer.parseInt(heroItem[0]);
-                if (player.getInventory().getItemByItemId(itemId) != null || player.getWarehouse().getItemByItemId(itemId) != null) {
+                if (player.haveItem(itemId)  || player.getWarehouse().getItemByItemId(itemId) != null) {
                     fileName += "monument_weapon_have.htm";
                     succ = false;
                     break;
@@ -139,7 +137,7 @@ public final class HeroItems extends Functions {
 
         boolean isKamael = player.getRace() == Race.kamael;
         String htmltext = "";
-        if (val[0].equalsIgnoreCase("list")) {
+        if ("list".equalsIgnoreCase(val[0])) {
             htmltext = "<html><body><font color=\"LEVEL\">List of Hero Weapons:</font><table border=0 width=270><tr><td>";
             for (int i = isKamael ? 11 : 0; i < (isKamael ? HERO_ITEMS.length : HERO_ITEMS.length - 3); i++) {
                 htmltext += "<tr><td width=32 height=45 valign=top>";
@@ -191,7 +189,7 @@ public final class HeroItems extends Functions {
         String fileName = OLYMPIAD_HTML_PATH;
         if (player.isHero()) {
             boolean have = false;
-            for (String heroItem[] : HERO_ITEMS) {
+            for (String[] heroItem : HERO_ITEMS) {
                 int itemId = Integer.parseInt(heroItem[0]);
                 if (player.getInventory().getItemByItemId(itemId) != null || player.getWarehouse().getItemByItemId(itemId) != null) {
                     player.getInventory().destroyItemByItemId(itemId, -1, "HeroItems");
@@ -231,7 +229,7 @@ public final class HeroItems extends Functions {
     }
 
     public String getcloak() {
-        if (player == null||npc == null)
+        if (player == null || npc == null)
             return null;
 
         String fileName = OLYMPIAD_HTML_PATH;

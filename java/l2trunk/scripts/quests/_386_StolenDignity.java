@@ -11,7 +11,7 @@ import java.util.Map;
 public final class _386_StolenDignity extends Quest {
     // NPCs
     private final static int Romp = 30843;
-    // Items
+    // items
     private final static int Stolen_Infernium_Ore = 6363;
 
     private final static int Required_Stolen_Infernium_Ore = 100;
@@ -389,12 +389,12 @@ public final class _386_StolenDignity extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("warehouse_keeper_romp_q0386_05.htm".equalsIgnoreCase(event)) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if ("warehouse_keeper_romp_q0386_08.htm".equalsIgnoreCase(event)) {
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         } else if ("game".equalsIgnoreCase(event)) {
             if (st.getQuestItemsCount(Stolen_Infernium_Ore) < Required_Stolen_Infernium_Ore)
                 return "warehouse_keeper_romp_q0386_11.htm";
@@ -418,7 +418,7 @@ public final class _386_StolenDignity extends Quest {
     public String onTalk(NpcInstance npc, QuestState st) {
         if (st.getState() == CREATED) {
             if (st.player.getLevel() < 58) {
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 return "warehouse_keeper_romp_q0386_04.htm";
             }
             return "warehouse_keeper_romp_q0386_01.htm";

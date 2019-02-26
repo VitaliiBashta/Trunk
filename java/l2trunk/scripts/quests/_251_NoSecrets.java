@@ -24,7 +24,7 @@ public final class _251_NoSecrets extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if (event.equalsIgnoreCase("pinaps_q251_03.htm")) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         }
@@ -47,11 +47,11 @@ public final class _251_NoSecrets extends Quest {
                 st.takeItems(SelMahumTrainingDiary);
                 st.takeItems( SelMahumTrainingTimetable);
                 htmltext = "pinaps_q251_05.htm";
-                st.setState(COMPLETED);
+                st.complete();
                 st.giveItems(57, 313355);
                 st.addExpAndSp(56787, 160578);
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(false);
+                st.finish();
             }
         }
 

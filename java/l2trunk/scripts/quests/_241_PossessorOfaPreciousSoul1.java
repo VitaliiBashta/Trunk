@@ -18,22 +18,9 @@ public final class _241_PossessorOfaPreciousSoul1 extends Quest {
         super(false);
 
         addStartNpc(31739);
-        addTalkId(30753);
-        addTalkId(30754);
-        addTalkId(31042);
-        addTalkId(30692);
-        addTalkId(31742);
-        addTalkId(31744);
-        addTalkId(31336);
-        addTalkId(31743);
-        addTalkId(31740);
+        addTalkId(30753,30754,31042,30692,31742,31744,31336,31743,31740);
 
-        addKillId(21154);
-        addKillId(27113);
-        addKillId(20244);
-        addKillId(20245);
-        addKillId(21511);
-        addKillId(20669);
+        addKillId(21154,27113,20244,20245,21511,20669);
 
         addQuestItem(LEGENG_OF_SEVENTEEN,
                 MALRUK_SUCCUBUS_CLAW,
@@ -45,54 +32,54 @@ public final class _241_PossessorOfaPreciousSoul1 extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("31739-02.htm")) {
+        if ("31739-02.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("30753-02.htm"))
+        } else if ("30753-02.htm".equalsIgnoreCase(event))
             st.setCond(2);
-        else if (event.equalsIgnoreCase("30754-02.htm"))
+        else if ("30754-02.htm".equalsIgnoreCase(event))
             st.setCond(3);
-        else if (event.equalsIgnoreCase("31739-04.htm")) {
-            st.takeItems(LEGENG_OF_SEVENTEEN, -1);
+        else if ("31739-04.htm".equalsIgnoreCase(event)) {
+            st.takeItems(LEGENG_OF_SEVENTEEN);
             st.setCond(5);
-        } else if (event.equalsIgnoreCase("31042-02.htm"))
+        } else if ("31042-02.htm".equalsIgnoreCase(event))
             st.setCond(6);
-        else if (event.equalsIgnoreCase("31042-04.htm")) {
-            st.takeItems(MALRUK_SUCCUBUS_CLAW, -1);
+        else if ("31042-04.htm".equalsIgnoreCase(event)) {
+            st.takeItems(MALRUK_SUCCUBUS_CLAW);
             st.giveItems(ECHO_CRYSTAL, 1);
             st.setCond(8);
-        } else if (event.equalsIgnoreCase("31739-06.htm")) {
-            st.takeItems(ECHO_CRYSTAL, -1);
+        } else if ("31739-06.htm".equalsIgnoreCase(event)) {
+            st.takeItems(ECHO_CRYSTAL);
             st.setCond(9);
-        } else if (event.equalsIgnoreCase("30692-02.htm")) {
-            st.giveItems(FADED_POETRY_BOOK, 1);
+        } else if ("30692-02.htm".equalsIgnoreCase(event)) {
+            st.giveItems(FADED_POETRY_BOOK);
             st.setCond(10);
-        } else if (event.equalsIgnoreCase("31739-08.htm")) {
-            st.takeItems(FADED_POETRY_BOOK, -1);
+        } else if ("31739-08.htm".equalsIgnoreCase(event)) {
+            st.takeItems(FADED_POETRY_BOOK);
             st.setCond(11);
-        } else if (event.equalsIgnoreCase("31742-02.htm"))
+        } else if ("31742-02.htm".equalsIgnoreCase(event))
             st.setCond(12);
-        else if (event.equalsIgnoreCase("31744-02.htm"))
+        else if ("31744-02.htm".equalsIgnoreCase(event))
             st.setCond(13);
-        else if (event.equalsIgnoreCase("31336-02.htm"))
+        else if ("31336-02.htm".equalsIgnoreCase(event))
             st.setCond(14);
-        else if (event.equalsIgnoreCase("31336-04.htm")) {
-            st.takeItems(CRIMSON_MOSS, -1);
-            st.giveItems(MEDICINE, 1);
+        else if ("31336-04.htm".equalsIgnoreCase(event)) {
+            st.takeItems(CRIMSON_MOSS);
+            st.giveItems(MEDICINE);
             st.setCond(16);
-        } else if (event.equalsIgnoreCase("31743-02.htm")) {
-            st.takeItems(MEDICINE, -1);
+        } else if ("31743-02.htm".equalsIgnoreCase(event)) {
+            st.takeItems(MEDICINE);
             st.setCond(17);
-        } else if (event.equalsIgnoreCase("31742-04.htm"))
+        } else if ("31742-04.htm".equalsIgnoreCase(event))
             st.setCond(18);
-        else if (event.equalsIgnoreCase("31740-02.htm"))
+        else if ("31740-02.htm".equalsIgnoreCase(event))
             st.setCond(19);
-        else if (event.equalsIgnoreCase("31740-04.htm")) {
-            st.giveItems(VIRGILS_LETTER, 1);
+        else if ("31740-04.htm".equalsIgnoreCase(event)) {
+            st.giveItems(VIRGILS_LETTER);
             st.addExpAndSp(263043, 0);
             st.unset("cond");
-            st.exitCurrentQuest(false);
+            st.finish();
         }
         return event;
     }
@@ -111,19 +98,19 @@ public final class _241_PossessorOfaPreciousSoul1 extends Quest {
                     htmltext = "31739-01.htm";
                 else {
                     htmltext = "31739-00.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             else if (cond == 1)
                 htmltext = "31739-02r.htm";
-            else if (cond == 4 && st.getQuestItemsCount(LEGENG_OF_SEVENTEEN) >= 1)
+            else if (cond == 4 && st.haveQuestItem(LEGENG_OF_SEVENTEEN) )
                 htmltext = "31739-03.htm";
-            else if (cond < 8 && st.getQuestItemsCount(ECHO_CRYSTAL) < 1)
+            else if (cond < 8 && !st.haveQuestItem(ECHO_CRYSTAL) )
                 htmltext = "31739-04r.htm";
-            else if (cond == 8 && st.getQuestItemsCount(ECHO_CRYSTAL) == 1)
+            else if (cond == 8 && st.haveQuestItem(ECHO_CRYSTAL) )
                 htmltext = "31739-05.htm";
-            else if (cond < 10 && st.getQuestItemsCount(FADED_POETRY_BOOK) < 1)
+            else if (cond < 10 && !st.haveQuestItem(FADED_POETRY_BOOK) )
                 htmltext = "31739-06r.htm";
-            else if (cond == 10 && st.getQuestItemsCount(FADED_POETRY_BOOK) == 1)
+            else if (cond == 10 && st.haveQuestItem(FADED_POETRY_BOOK) )
                 htmltext = "31739-07.htm";
             else if (cond == 11)
                 htmltext = "31739-08r.htm";
@@ -135,19 +122,19 @@ public final class _241_PossessorOfaPreciousSoul1 extends Quest {
         } else if (npcId == 30754) {
             if (cond == 2)
                 htmltext = "30754-01.htm";
-            else if (cond == 3 && st.getQuestItemsCount(LEGENG_OF_SEVENTEEN) < 1)
+            else if (cond == 3 && !st.haveQuestItem(LEGENG_OF_SEVENTEEN) )
                 htmltext = "30754-02r.htm";
         } else if (npcId == 31042) {
             if (cond == 5)
                 htmltext = "31042-01.htm";
-            else if (cond == 6 && st.getQuestItemsCount(MALRUK_SUCCUBUS_CLAW) < 10)
+            else if (cond == 6 && !st.haveQuestItem(MALRUK_SUCCUBUS_CLAW, 10))
                 htmltext = "31042-02r.htm";
-            else if (cond == 7 && st.getQuestItemsCount(MALRUK_SUCCUBUS_CLAW) == 10)
+            else if (cond == 7 && st.haveQuestItem(MALRUK_SUCCUBUS_CLAW, 10))
                 htmltext = "31042-03.htm";
-            else if (cond == 8 && st.getQuestItemsCount(ECHO_CRYSTAL) >= 1)
+            else if (cond == 8 && st.haveQuestItem(ECHO_CRYSTAL) )
                 htmltext = "31042-04r.htm";
-            else if (cond == 8 && st.getQuestItemsCount(ECHO_CRYSTAL) == 0) {
-                st.giveItems(ECHO_CRYSTAL, 1);
+            else if (cond == 8 && !st.haveQuestItem(ECHO_CRYSTAL) ) {
+                st.giveItems(ECHO_CRYSTAL);
                 htmltext = "31042-04r.htm";
             }
         } else if (npcId == 30692) {
@@ -170,14 +157,14 @@ public final class _241_PossessorOfaPreciousSoul1 extends Quest {
         } else if (npcId == 31336) {
             if (cond == 13)
                 htmltext = "31336-01.htm";
-            else if (cond == 14 && st.getQuestItemsCount(CRIMSON_MOSS) < 5)
+            else if (cond == 14 && !st.haveQuestItem(CRIMSON_MOSS, 5))
                 htmltext = "31336-02r.htm";
-            else if (cond == 15 && st.getQuestItemsCount(CRIMSON_MOSS) >= 5)
+            else if (cond == 15 && st.haveQuestItem(CRIMSON_MOSS, 5))
                 htmltext = "31336-03.htm";
-            else if (cond == 16 && st.getQuestItemsCount(MEDICINE) >= 1)
+            else if (cond == 16 && st.haveQuestItem(MEDICINE) )
                 htmltext = "31336-04r.htm";
         } else if (npcId == 31743) {
-            if (cond == 16 && st.getQuestItemsCount(MEDICINE) >= 1)
+            if (cond == 16 && st.haveQuestItem(MEDICINE) )
                 htmltext = "31743-01.htm";
         } else if (npcId == 31740) {
             if (cond == 18)
@@ -199,16 +186,16 @@ public final class _241_PossessorOfaPreciousSoul1 extends Quest {
         if (cond == 3) {
             if (npcId == 21154 && Rnd.chance(10))
                 st.addSpawn(27113);
-            else if (npcId == 27113 && st.getQuestItemsCount(LEGENG_OF_SEVENTEEN) == 0) {
+            else if (npcId == 27113 && !st.haveQuestItem(LEGENG_OF_SEVENTEEN)) {
                 st.giveItems(LEGENG_OF_SEVENTEEN);
                 st.setCond(4);
                 st.playSound(SOUND_ITEMGET);
             }
         } else if (cond == 6) {
             if ((npcId == 20244 || npcId == 20245) && Rnd.chance(40)) {
-                if (st.getQuestItemsCount(MALRUK_SUCCUBUS_CLAW) <= 9)
+                if (!st.haveQuestItem(MALRUK_SUCCUBUS_CLAW,10))
                     st.giveItems(MALRUK_SUCCUBUS_CLAW);
-                if (st.getQuestItemsCount(MALRUK_SUCCUBUS_CLAW) == 10) {
+                if (st.haveQuestItem(MALRUK_SUCCUBUS_CLAW,10)) {
                     st.playSound(SOUND_MIDDLE);
                     st.setCond(7);
                 } else
@@ -216,9 +203,9 @@ public final class _241_PossessorOfaPreciousSoul1 extends Quest {
             }
         } else if (cond == 14)
             if (npcId == 20669 && Rnd.chance(50)) {
-                if (st.getQuestItemsCount(CRIMSON_MOSS) <= 4)
+                if (!st.haveQuestItem(CRIMSON_MOSS, 5))
                     st.giveItems(CRIMSON_MOSS);
-                if (st.getQuestItemsCount(CRIMSON_MOSS) == 5) {
+                if (st.haveQuestItem(CRIMSON_MOSS, 5)) {
                     st.playSound(SOUND_MIDDLE);
                     st.setCond(15);
                 } else

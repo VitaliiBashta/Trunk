@@ -220,9 +220,6 @@ public enum Stats {
         return value;
     }
 
-    public double init() {
-        return init;
-    }
 
     public double validate(double val) {
         if (val < min)

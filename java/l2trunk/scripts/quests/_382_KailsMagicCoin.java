@@ -39,11 +39,11 @@ public final class _382_KailsMagicCoin extends Quest {
         if ("head_blacksmith_vergara_q0382_03.htm".equalsIgnoreCase(event))
             if (st.player.getLevel() >= 55 && st.getQuestItemsCount(ROYAL_MEMBERSHIP) > 0) {
                 st.setCond(1);
-                st.setState(STARTED);
+                st.start();
                 st.playSound(SOUND_ACCEPT);
             } else {
                 htmltext = "head_blacksmith_vergara_q0382_01.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         else if ("list".equalsIgnoreCase(event)) {
             MultiSellHolder.INSTANCE.SeparateAndSend(382, st.player, 0);
@@ -58,7 +58,7 @@ public final class _382_KailsMagicCoin extends Quest {
         int cond = st.getCond();
         if (st.getQuestItemsCount(ROYAL_MEMBERSHIP) == 0 || st.player.getLevel() < 55) {
             htmltext = "head_blacksmith_vergara_q0382_01.htm";
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         } else if (cond == 0)
             htmltext = "head_blacksmith_vergara_q0382_02.htm";
         else

@@ -46,34 +46,12 @@ public final class _417_PathToScavenger extends Quest {
 
         addStartNpc(Pippi);
 
-        addTalkId(Raut);
-        addTalkId(Shari);
-        addTalkId(Mion);
-        addTalkId(Bronk);
-        addTalkId(Zimenf);
-        addTalkId(Toma);
-        addTalkId(Torai);
+        addTalkId(Raut,Shari,Mion,Bronk,Zimenf,Toma,Torai);
 
-        addKillId(HunterTarantula);
-        addKillId(HoneyBear);
-        addKillId(PlunderTarantula);
-        addKillId(HunterBear);
+        addKillId(HunterTarantula,HoneyBear,PlunderTarantula,HunterBear);
 
-        addQuestItem(CHALIS_PAY);
-        addQuestItem(ZIMENFS_PAY);
-        addQuestItem(BRONKS_PAY);
-        addQuestItem(PIPIS_LETTER);
-        addQuestItem(CHARIS_AXE);
-        addQuestItem(ZIMENFS_POTION);
-        addQuestItem(BRONKS_INGOT);
-        addQuestItem(MIONS_LETTER);
-        addQuestItem(HONEY_JAR);
-        addQuestItem(BEAR_PIC);
-        addQuestItem(BEAD_PARCEL);
-        addQuestItem(BEAD);
-        addQuestItem(TARANTULA_PIC);
-        addQuestItem(SUCCUBUS_UNDIES);
-        addQuestItem(ROUTS_TP_SCROLL);
+        addQuestItem(CHALIS_PAY,ZIMENFS_PAY,BRONKS_PAY,PIPIS_LETTER,CHARIS_AXE,ZIMENFS_POTION,BRONKS_INGOT,
+                MIONS_LETTER,HONEY_JAR,BEAR_PIC,BEAD_PARCEL,BEAD,TARANTULA_PIC,SUCCUBUS_UNDIES,ROUTS_TP_SCROLL);
     }
 
     @Override
@@ -82,10 +60,10 @@ public final class _417_PathToScavenger extends Quest {
         int cond = st.getCond();
         switch (event) {
             case "1":
-                st.set("id", 0);
-                if (st.player.getLevel() >= 18 && st.player.getClassId().id == 0x35 && st.getQuestItemsCount(RING_OF_RAVEN) == 0) {
+                st.unset("id");
+                if (st.player.getLevel() >= 18 && st.player.getClassId().id == 0x35 && !st.haveQuestItem(RING_OF_RAVEN)) {
                     st.setCond(1);
-                    st.setState(STARTED);
+                    st.start();
                     st.playSound(SOUND_ACCEPT);
                     st.giveItems(PIPIS_LETTER);
                     htmltext = "collector_pipi_q0417_05.htm";
@@ -96,11 +74,11 @@ public final class _417_PathToScavenger extends Quest {
                         htmltext = "collector_pipi_q0417_08.htm";
                 } else if (st.player.getLevel() < 18)
                     htmltext = "collector_pipi_q0417_02.htm";
-                else if (st.getQuestItemsCount(RING_OF_RAVEN) == 1)
+                else if (st.haveQuestItem(RING_OF_RAVEN))
                     htmltext = "collector_pipi_q0417_04.htm";
                 break;
             case "30519_1":
-                if (st.getQuestItemsCount(PIPIS_LETTER) > 0) {
+                if (st.haveQuestItem(PIPIS_LETTER) ) {
                     st.takeItems(PIPIS_LETTER, 1);
                     st.setCond(2);
                     int n = Rnd.get(3);
@@ -122,7 +100,7 @@ public final class _417_PathToScavenger extends Quest {
                 break;
             case "30519_3":
                 htmltext = "trader_mion_q0417_07.htm";
-                st.set("id", st.getInt("id") + 1);
+                st.inc("id");
                 break;
             case "30519_4":
                 int n = Rnd.get(2);
@@ -132,17 +110,17 @@ public final class _417_PathToScavenger extends Quest {
                     htmltext = "trader_mion_q0417_11.htm";
                 break;
             case "30519_5":
-                if (st.getQuestItemsCount(ZIMENFS_POTION, CHARIS_AXE, BRONKS_INGOT) > 0) {
+                if (st.haveAnyQuestItems(ZIMENFS_POTION, CHARIS_AXE, BRONKS_INGOT)) {
                     if (st.getInt("id") / 10 < 2) {
                         htmltext = "trader_mion_q0417_07.htm";
-                        st.set("id", st.getInt("id") + 1);
+                        st.inc("id");
                     } else if (st.getInt("id") / 10 >= 2 && cond == 0) {
                         htmltext = "trader_mion_q0417_09.htm";
                         if (st.getInt("id") / 10 < 3)
-                            st.set("id", st.getInt("id") + 1);
+                            st.inc("id");
                     } else if (st.getInt("id") / 10 >= 3 && cond > 0) {
                         htmltext = "trader_mion_q0417_10.htm";
-                        st.giveItems(MIONS_LETTER, 1);
+                        st.giveItems(MIONS_LETTER);
                         st.takeItems(CHARIS_AXE, 1);
                         st.takeItems(ZIMENFS_POTION, 1);
                         st.takeItems(BRONKS_INGOT, 1);
@@ -170,19 +148,19 @@ public final class _417_PathToScavenger extends Quest {
                     htmltext = "noquest";
                 break;
             case "30316_1":
-                if (st.getQuestItemsCount(BEAD_PARCEL) > 0) {
+                if (st.haveQuestItem(BEAD_PARCEL) ) {
                     htmltext = "raut_q0417_02.htm";
                     st.takeItems(BEAD_PARCEL, 1);
-                    st.giveItems(ROUTS_TP_SCROLL, 1);
+                    st.giveItems(ROUTS_TP_SCROLL);
                     st.setCond(10);
                 } else
                     htmltext = "noquest";
                 break;
             case "30316_2":
-                if (st.getQuestItemsCount(BEAD_PARCEL) > 0) {
+                if (st.haveQuestItem(BEAD_PARCEL) ) {
                     htmltext = "raut_q0417_03.htm";
                     st.takeItems(BEAD_PARCEL, 1);
-                    st.giveItems(ROUTS_TP_SCROLL, 1);
+                    st.giveItems(ROUTS_TP_SCROLL);
                     st.setCond(10);
                 } else
                     htmltext = "noquest";
@@ -191,10 +169,10 @@ public final class _417_PathToScavenger extends Quest {
                 htmltext = "torai_q0417_02.htm";
                 break;
             case "30557_2":
-                if (st.getQuestItemsCount(ROUTS_TP_SCROLL) > 0) {
+                if (st.haveQuestItem(ROUTS_TP_SCROLL)) {
                     htmltext = "torai_q0417_03.htm";
                     st.takeItems(ROUTS_TP_SCROLL, 1);
-                    st.giveItems(SUCCUBUS_UNDIES, 1);
+                    st.giveItems(SUCCUBUS_UNDIES);
                     st.setCond(11);
                 } else
                     htmltext = "noquest";
@@ -207,40 +185,40 @@ public final class _417_PathToScavenger extends Quest {
     public String onTalk(NpcInstance npc, QuestState st) {
         String htmltext = "noquest";
         int npcId = npc.getNpcId();
-        int id = st.getState();
+        int state = st.getState();
         int cond = st.getCond();
-        if (id == CREATED)
-            st.setState(STARTED);
+        if (state == CREATED)
+            st.start();
         if (npcId == Pippi) {
             if (cond == 0)
                 htmltext = "collector_pipi_q0417_01.htm";
-            else if (st.getQuestItemsCount(PIPIS_LETTER) > 0)
+            else if (st.haveQuestItem(PIPIS_LETTER) )
                 htmltext = "collector_pipi_q0417_06.htm";
-            else if (st.getQuestItemsCount(PIPIS_LETTER) == 0 && id == STARTED)
+            else if (!st.haveQuestItem(PIPIS_LETTER)  && state == STARTED)
                 htmltext = "collector_pipi_q0417_01.htm";
-            else if (st.getQuestItemsCount(PIPIS_LETTER) == 0)
+            else if (!st.haveQuestItem(PIPIS_LETTER))
                 htmltext = "collector_pipi_q0417_07.htm";
         } else if (cond == 0)
             return "noquest";
         else if (npcId == Mion) {
-            if (st.getQuestItemsCount(PIPIS_LETTER) > 0)
+            if (st.haveQuestItem(PIPIS_LETTER))
                 htmltext = "trader_mion_q0417_01.htm";
-            else if (st.getQuestItemsCount(CHARIS_AXE, BRONKS_INGOT, ZIMENFS_POTION) > 0 && st.getInt("id") / 10 == 0)
+            else if (st.haveAnyQuestItems(CHARIS_AXE, BRONKS_INGOT, ZIMENFS_POTION)  && st.getInt("id") / 10 == 0)
                 htmltext = "trader_mion_q0417_05.htm";
-            else if (st.getQuestItemsCount(CHARIS_AXE, BRONKS_INGOT, ZIMENFS_POTION) > 0 && st.getInt("id") / 10 > 0)
+            else if (st.haveAnyQuestItems(CHARIS_AXE, BRONKS_INGOT, ZIMENFS_POTION)  && st.getInt("id") / 10 > 0)
                 htmltext = "trader_mion_q0417_08.htm";
             else if (st.getQuestItemsCount(CHALIS_PAY, BRONKS_PAY, ZIMENFS_PAY) > 0 && st.getInt("id") < 50)
                 htmltext = "trader_mion_q0417_12.htm";
             else if (st.getQuestItemsCount(CHALIS_PAY, BRONKS_PAY, ZIMENFS_PAY) > 0 && st.getInt("id") >= 50) {
                 htmltext = "trader_mion_q0417_15.htm";
-                st.giveItems(MIONS_LETTER, 1);
-                st.takeItems(CHALIS_PAY, -1);
-                st.takeItems(ZIMENFS_PAY, -1);
-                st.takeItems(BRONKS_PAY, -1);
+                st.giveItems(MIONS_LETTER);
+                st.takeItems(CHALIS_PAY);
+                st.takeItems(ZIMENFS_PAY);
+                st.takeItems(BRONKS_PAY);
                 st.setCond(4);
-            } else if (st.getQuestItemsCount(MIONS_LETTER) > 0)
+            } else if (st.haveQuestItem(MIONS_LETTER) )
                 htmltext = "trader_mion_q0417_13.htm";
-            else if (st.getQuestItemsCount(BEAR_PIC) > 0 || st.getQuestItemsCount(TARANTULA_PIC) > 0 || st.getQuestItemsCount(BEAD_PARCEL) > 0 || st.getQuestItemsCount(ROUTS_TP_SCROLL) > 0 || st.getQuestItemsCount(SUCCUBUS_UNDIES) > 0)
+            else if (st.haveAnyQuestItems(BEAR_PIC,TARANTULA_PIC,BEAD_PARCEL,ROUTS_TP_SCROLL,SUCCUBUS_UNDIES) )
                 htmltext = "trader_mion_q0417_14.htm";
         } else if (npcId == Shari) {
             if (st.getQuestItemsCount(CHARIS_AXE) > 0) {
@@ -249,24 +227,24 @@ public final class _417_PathToScavenger extends Quest {
                 else
                     htmltext = "trader_chali_q0417_02.htm";
                 st.takeItems(CHARIS_AXE, 1);
-                st.giveItems(CHALIS_PAY, 1);
+                st.giveItems(CHALIS_PAY);
                 if (st.getInt("id") >= 50)
                     st.setCond(3);
                 st.set("id", st.getInt("id") + 10);
-            } else if (st.getQuestItemsCount(CHALIS_PAY) == 1)
+            } else if (st.haveQuestItem(CHALIS_PAY))
                 htmltext = "trader_chali_q0417_03.htm";
         } else if (npcId == Bronk) {
-            if (st.getQuestItemsCount(BRONKS_INGOT) == 1) {
+            if (st.haveQuestItem(BRONKS_INGOT)) {
                 if (st.getInt("id") < 20)
                     htmltext = "head_blacksmith_bronk_q0417_01.htm";
                 else
                     htmltext = "head_blacksmith_bronk_q0417_02.htm";
                 st.takeItems(BRONKS_INGOT, 1);
-                st.giveItems(BRONKS_PAY, 1);
+                st.giveItems(BRONKS_PAY);
                 if (st.getInt("id") >= 50)
                     st.setCond(3);
                 st.set("id", st.getInt("id") + 10);
-            } else if (st.getQuestItemsCount(BRONKS_PAY) == 1)
+            } else if (st.haveQuestItem(BRONKS_PAY))
                 htmltext = "head_blacksmith_bronk_q0417_03.htm";
         } else if (npcId == Zimenf) {
             if (st.getQuestItemsCount(ZIMENFS_POTION) == 1) {
@@ -313,21 +291,21 @@ public final class _417_PathToScavenger extends Quest {
                 htmltext = "raut_q0417_01.htm";
             else if (st.getQuestItemsCount(ROUTS_TP_SCROLL) == 1)
                 htmltext = "raut_q0417_04.htm";
-            else if (st.getQuestItemsCount(SUCCUBUS_UNDIES) == 1) {
+            else if (st.haveQuestItem(SUCCUBUS_UNDIES) ) {
                 htmltext = "raut_q0417_05.htm";
                 st.takeItems(SUCCUBUS_UNDIES, 1);
                 if (st.player.getClassId().occupation() == 0) {
-                    st.giveItems(RING_OF_RAVEN, 1);
+                    st.giveItems(RING_OF_RAVEN);
                     if (!st.player.isVarSet("prof1")) {
-                        st.player.setVar("prof1", 1);
+                        st.player.setVar("prof1");
                         st.addExpAndSp(228064, 16455);
                         st.giveItems(ADENA_ID, 81900);
                     }
                 }
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(false);
+                st.finish();
             }
-        } else if (npcId == Torai && st.getQuestItemsCount(ROUTS_TP_SCROLL) == 1)
+        } else if (npcId == Torai && st.haveQuestItem(ROUTS_TP_SCROLL))
             htmltext = "torai_q0417_01.htm";
         return htmltext;
     }
@@ -344,14 +322,14 @@ public final class _417_PathToScavenger extends Quest {
             if (cond && st.getQuestItemsCount(BEAR_PIC) == 1 && st.getQuestItemsCount(HONEY_JAR) < 5)
                 if (mob.isSpoiled()) {
                     st.giveItems(HONEY_JAR);
-                    if (st.getQuestItemsCount(HONEY_JAR) == 5) {
+                    if (st.haveQuestItem(HONEY_JAR, 5)) {
                         st.playSound(SOUND_MIDDLE);
                         st.setCond(6);
                     } else
                         st.playSound(SOUND_ITEMGET);
                 }
         } else if (npcId == HunterTarantula || npcId == PlunderTarantula)
-            if (cond && st.getQuestItemsCount(TARANTULA_PIC) == 1 && st.getQuestItemsCount(BEAD) < 20)
+            if (cond && st.haveQuestItem(TARANTULA_PIC) && st.getQuestItemsCount(BEAD) < 20)
                 if (mob.isSpoiled())
                     if (Rnd.chance(50)) {
                         st.giveItems(BEAD);

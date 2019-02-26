@@ -34,7 +34,7 @@ public final class _365_DevilsLegacy extends Quest {
         String htmltext = event;
         if (event.equalsIgnoreCase("30095-1.htm")) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("30095-5.htm")) {
             long count = st.getQuestItemsCount(TREASURE_CHEST);
@@ -46,7 +46,7 @@ public final class _365_DevilsLegacy extends Quest {
                 htmltext = "You don't have required items";
         } else if (event.equalsIgnoreCase("30095-6.htm")) {
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
         return htmltext;
     }
@@ -60,7 +60,7 @@ public final class _365_DevilsLegacy extends Quest {
                 htmltext = "30095-0.htm";
             else {
                 htmltext = "30095-0a.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (cond == 1)
             if (st.getQuestItemsCount(TREASURE_CHEST) == 0)

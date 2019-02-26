@@ -19,30 +19,20 @@ public final class _242_PossessorOfaPreciousSoul2 extends Quest {
 
         addStartNpc(31742);
 
-        addTalkId(31743);
-        addTalkId(31751);
-        addTalkId(31752);
-        addTalkId(30759);
-        addTalkId(30738);
-        addTalkId(31744);
-        addTalkId(31748);
-        addTalkId(PureWhiteUnicorn);
-        addTalkId(31746);
+        addTalkId(31743, 31751, 31752, 30759, 30738, 31744, 31748, 31746, PureWhiteUnicorn);
 
         addKillId(27317);
 
-        addQuestItem(ORB_OF_BINDING,
-                SORCERY_INGREDIENT,
-                BLONDE_STRAND);
+        addQuestItem(ORB_OF_BINDING, SORCERY_INGREDIENT, BLONDE_STRAND);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("31742-2.htm")) {
+        if ("31742-2.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.set("CoRObjId", 0);
+            st.unset("CoRObjId");
             st.takeItems(VIRGILS_LETTER_1_PART);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("31743-5.htm".equalsIgnoreCase(event)) {
             st.setCond(2);
@@ -67,9 +57,9 @@ public final class _242_PossessorOfaPreciousSoul2 extends Quest {
         } else if ("31748-2.htm".equalsIgnoreCase(event)) {
             st.takeItems(ORB_OF_BINDING);
             st.killNpcByObjectId(st.getInt("CoRObjId"));
-            st.set("talk", 0);
+            st.unset("talk");
             if (st.getInt("prog") < 4) {
-                st.set("prog", st.getInt("prog") + 1);
+                st.inc("prog");
                 st.playSound(SOUND_MIDDLE);
             }
             if (st.getInt("prog") >= 4) {
@@ -90,12 +80,11 @@ public final class _242_PossessorOfaPreciousSoul2 extends Quest {
         int cond = st.getCond();
         if (npcId == 31742) {
             if (cond == 0) {
-                QuestState previous = st.player.getQuestState(_241_PossessorOfaPreciousSoul1.class);
-                if (previous != null && previous.getState() == COMPLETED && st.player.getLevel() >= 60)
+                if (st.player.isQuestCompleted(_241_PossessorOfaPreciousSoul1.class) && st.player.getLevel() >= 60)
                     htmltext = "31742-1.htm";
                 else {
                     htmltext = "31742-0.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1)
                 htmltext = "31742-2r.htm";
@@ -113,7 +102,7 @@ public final class _242_PossessorOfaPreciousSoul2 extends Quest {
                 st.unset("prog");
                 st.unset("talk");
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(false);
+                st.finish();
             }
         } else if (npcId == 31744) {
             if (cond == 2)
@@ -125,10 +114,10 @@ public final class _242_PossessorOfaPreciousSoul2 extends Quest {
                 htmltext = "31751-1.htm";
             else if (cond == 4)
                 htmltext = "31751-2r.htm";
-            else if (cond == 5 && st.getQuestItemsCount(BLONDE_STRAND) == 1) {
+            else if (cond == 5 && st.haveQuestItem(BLONDE_STRAND)) {
                 st.setCond(6);
                 htmltext = "31751-3.htm";
-            } else if (cond == 6 && st.getQuestItemsCount(BLONDE_STRAND) == 1)
+            } else if (cond == 6 && st.haveQuestItem(BLONDE_STRAND))
                 htmltext = "31751-3r.htm";
         } else if (npcId == 31752) {
             if (cond == 4) {
@@ -139,7 +128,7 @@ public final class _242_PossessorOfaPreciousSoul2 extends Quest {
             } else
                 htmltext = "31752-n.htm";
         } else if (npcId == 30759) {
-            if (cond == 6 && st.getQuestItemsCount(BLONDE_STRAND) == 1)
+            if (cond == 6 && st.haveQuestItem(BLONDE_STRAND))
                 htmltext = "30759-1.htm";
             else if (cond == 7)
                 htmltext = "30759-2r.htm";
@@ -152,12 +141,12 @@ public final class _242_PossessorOfaPreciousSoul2 extends Quest {
                 htmltext = "30738-2r.htm";
         } else if (npcId == 31748) {
             if (cond == 9)
-                if (st.getQuestItemsCount(ORB_OF_BINDING) >= 1) {
+                if (st.haveQuestItem(ORB_OF_BINDING)) {
                     if (npc.objectId() != st.getInt("CoRObjId")) {
                         st.set("CoRObjId", npc.objectId());
-                        st.set("talk", 1);
+                        st.set("talk");
                         htmltext = "31748-1.htm";
-                    } else if (st.getInt("talk") == 1)
+                    } else if (st.isSet("talk"))
                         htmltext = "31748-1.htm";
                     else
                         htmltext = "noquest";
@@ -170,7 +159,7 @@ public final class _242_PossessorOfaPreciousSoul2 extends Quest {
                 htmltext = "31746-1.htm";
                 npc.doDie(npc);
                 if (PureWhiteUnicornSpawn == null || !st.player.knowsObject(PureWhiteUnicornSpawn) || !PureWhiteUnicornSpawn.isVisible())
-                    PureWhiteUnicornSpawn = st.addSpawn(PureWhiteUnicorn, npc.getLoc(),0, 120000);
+                    PureWhiteUnicornSpawn = st.addSpawn(PureWhiteUnicorn, npc.getLoc(), 0, 120000);
             } else
                 htmltext = "noquest";
         } else if (npcId == PureWhiteUnicorn)

@@ -2,7 +2,6 @@ package l2trunk.gameserver.tables;
 
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.database.DatabaseFactory;
-import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.PetData;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Summon;
@@ -14,10 +13,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public enum PetDataTable {
@@ -45,11 +41,6 @@ public enum PetDataTable {
     public final static int BABY_BUFFALO_ID = 12780;
     public final static int BABY_KOOKABURRA_ID = 12781;
     public final static int BABY_COUGAR_ID = 12782;
-    public final static int LIGHT_PURPLE_MANED_HORSE_ID = 13130;
-    public final static int AURA_BIRD_FALCON_ID = 13144;
-    public final static int AURA_BIRD_OWL_ID = 13145;
-    public final static int TAWNY_MANED_LION_ID = 13146;
-    public final static int STEAM_BEATLE_ID = 13147;
     public final static int GREAT_WOLF_ID = 16025;
     public final static int IMPROVED_BABY_BUFFALO_ID = 16034;
     public final static int IMPROVED_BABY_KOOKABURRA_ID = 16035;
@@ -105,58 +96,59 @@ public enum PetDataTable {
         }
     }
 
-    public static int getControlItemId(int npcId) {
+    private static Optional<L2Pet> getPet(int npcId) {
         return Arrays.stream(L2Pet.values())
-                .filter(pet -> (pet.getNpcId() == npcId))
+                .filter(pet -> (pet.npcId() == npcId))
+                .findFirst();
+
+    }
+
+    public static int getControlItemId(int npcId) {
+        return getPet(npcId)
                 .map(L2Pet::getControlItemId)
-                .findFirst().orElse(1);
+                .orElse(1);
     }
 
     private static int getFoodId(int npcId) {
-        for (L2Pet pet : L2Pet.values())
-            if (pet.getNpcId() == npcId)
-                return pet.getFoodId();
-        return 1;
+        return getPet(npcId)
+                .map(L2Pet::getFoodId)
+                .orElse(1);
     }
 
     public static boolean isMountable(int npcId) {
-        for (L2Pet pet : L2Pet.values())
-            if (pet.getNpcId() == npcId)
-                return pet.isMountable();
-        return false;
+        return getPet(npcId)
+                .map(L2Pet::isMountable)
+                .orElse(false);
     }
 
     public static int getMinLevel(int npcId) {
-        for (L2Pet pet : L2Pet.values())
-            if (pet.getNpcId() == npcId)
-                return pet.getMinLevel();
-        return 1;
+        return getPet(npcId)
+                .map(L2Pet::getMinLevel)
+                .orElse(1);
     }
 
     private static int getAddFed(int npcId) {
-        for (L2Pet pet : L2Pet.values())
-            if (pet.getNpcId() == npcId)
-                return pet.getAddFed();
-        return 1;
+        return getPet(npcId)
+                .map(L2Pet::getAddFed)
+                .orElse(1);
     }
 
     public static double getExpPenalty(int npcId) {
-        for (L2Pet pet : L2Pet.values())
-            if (pet.getNpcId() == npcId)
-                return pet.getExpPenalty();
-        return 0f;
+        return getPet(npcId)
+                .map(L2Pet::getExpPenalty)
+                .orElse(0d);
     }
 
     public static int getSoulshots(int npcId) {
         for (L2Pet pet : L2Pet.values())
-            if (pet.getNpcId() == npcId)
+            if (pet.npcId() == npcId)
                 return pet.getSoulshots();
         return 2;
     }
 
     public static int getSpiritshots(int npcId) {
         for (L2Pet pet : L2Pet.values())
-            if (pet.getNpcId() == npcId)
+            if (pet.npcId() == npcId)
                 return pet.getSpiritshots();
         return 2;
     }
@@ -164,7 +156,7 @@ public enum PetDataTable {
     public static int getSummonId(ItemInstance item) {
         return Arrays.stream(L2Pet.values())
                 .filter(pet -> pet.getControlItemId() == item.getItemId())
-                .map(L2Pet::getNpcId)
+                .map(L2Pet::npcId)
                 .findFirst().orElse(0);
     }
 
@@ -268,25 +260,6 @@ public enum PetDataTable {
         }
     }
 
-    public static boolean isMaguen(int id) {
-        switch (id) {
-            case ELITE_MAGUEN_ID:
-            case MAGUEN_ID:
-                return true;
-            default:
-                return false;
-        }
-    }
-
-    public static boolean isSinEater(int id) {
-        switch (id) {
-            case SIN_EATER_ID:
-                return true;
-            default:
-                return false;
-        }
-    }
-
     public static boolean isVitaminPet(int id) {
         switch (id) {
             case FOX_SHAMAN_ID:
@@ -331,36 +304,36 @@ public enum PetDataTable {
              PreparedStatement statement = con.prepareStatement("SELECT id, level, exp, hp, mp, patk, pdef, matk, mdef, acc, evasion, crit, speed, atk_speed, cast_speed, max_meal, battle_meal, normal_meal, loadMax, hpregen, mpregen FROM pet_data");
              ResultSet rset = statement.executeQuery()) {
             while (rset.next()) {
-                petData = new PetData();
-                petData.setID(rset.getInt("id"));
-                petData.setLevel(rset.getInt("occupation"));
-                petData.setExp(rset.getLong("exp"));
-                petData.setHP(rset.getInt("hp"));
-                petData.setMP(rset.getInt("mp"));
-                petData.setPAtk(rset.getInt("patk"));
-                petData.setPDef(rset.getInt("pdef"));
-                petData.setMAtk(rset.getInt("matk"));
-                petData.setMDef(rset.getInt("mdef"));
-                petData.setAccuracy(rset.getInt("acc"));
-                petData.setEvasion(rset.getInt("evasion"));
-                petData.setCritical(rset.getInt("crit"));
-                petData.setSpeed(rset.getInt("speed"));
-                petData.setAtkSpeed(rset.getInt("atk_speed"));
-                petData.setCastSpeed(rset.getInt("cast_speed"));
-                petData.setFeedMax(rset.getInt("max_meal"));
-                petData.setFeedBattle(rset.getInt("battle_meal"));
-                petData.setFeedNormal(rset.getInt("normal_meal"));
-                petData.setMaxLoad(rset.getInt("loadMax"));
-                petData.setHpRegen(rset.getInt("hpregen"));
-                petData.setMpRegen(rset.getInt("mpregen"));
 
-                petData.setControlItemId(getControlItemId(petData.getID()));
-                petData.setFoodId(getFoodId(petData.getID()));
-                petData.setMountable(isMountable(petData.getID()));
-                petData.setMinLevel(getMinLevel(petData.getID()));
-                petData.setAddFed(getAddFed(petData.getID()));
+                int id =rset.getInt("id");
+                int level =rset.getInt("level");
+                long exp =rset.getLong("exp");
+                int hp = rset.getInt("hp");
+                int mp = rset.getInt("mp");
+                int patk= rset.getInt("patk");
+                int pdef =rset.getInt("pdef");
+                int matk =rset.getInt("matk");
+                int mdef =rset.getInt("mdef");
+                int acc =rset.getInt("acc");
+                int evasion =rset.getInt("evasion");
+                int crit = rset.getInt("crit");
+                int speed = rset.getInt("speed");
+                int atkSpeed =rset.getInt("atk_speed");
+                int castSpeed = rset.getInt("cast_speed");
+                int maxMeal =rset.getInt("max_meal");
+                int feedBattle = rset.getInt("battle_meal");
+                int feedNormal =rset.getInt("normal_meal");
+                int maxLoad =rset.getInt("loadMax");
 
-                pets.put(petData.getID() * 100 + petData.getLevel(), petData);
+                petData = new PetData(id, level, exp, hp, mp, patk, pdef, matk, mdef,acc,evasion,
+                        crit,speed,atkSpeed,castSpeed, maxMeal, feedBattle, feedNormal, maxLoad);
+
+                petData.setFoodId(getFoodId(petData.id));
+                petData.setMountable(isMountable(petData.id));
+                petData.setMinLevel(getMinLevel(petData.id));
+                petData.setAddFed(getAddFed(petData.id));
+
+                pets.put(petData.id * 100 + petData.level, petData);
             }
         } catch (SQLException e) {
             _log.error("", e);
@@ -439,62 +412,62 @@ public enum PetDataTable {
         SUPER_KAT_THE_CAT_Z(SUPER_KAT_THE_CAT_Z_ID, 21916, Config.VITAMIN_SUPERPET_FOOD_ID, false, 55, 12, .01, 2, 2),
         SUPER_MEW_THE_CAT_Z(SUPER_MEW_THE_CAT_Z_ID, 21918, Config.VITAMIN_SUPERPET_FOOD_ID, false, 55, 12, .01, 2, 2);
 
-        private final int _npcId;
-        private final int _controlItemId;
-        private final int _foodId;
-        private final boolean _isMountable;
-        private final int _minLevel; // Level below which can not be omitted pet
-        private final int _addFed; // By what percentage increases strip of food at feeding
-        private final double _expPenalty;
-        private final int _soulshots;
-        private final int _spiritshots;
+        private final int npcId;
+        private final int controlItemId;
+        private final int foodId;
+        private final boolean isMountable;
+        private final int minLevel; // Level below which can not be omitted pet
+        private final int addFed; // By what percentage increases strip of food at feeding
+        private final double expPenalty;
+        private final int soulshots;
+        private final int spiritshots;
 
-        L2Pet(int npcId, int controlItemId, int foodId, boolean isMountabe, int minLevel, int addFed, double expPenalty, int soulshots, int spiritshots) {
-            _npcId = npcId;
-            _controlItemId = controlItemId;
-            _foodId = foodId;
-            _isMountable = isMountabe;
-            _minLevel = minLevel;
-            _addFed = addFed;
-            _expPenalty = expPenalty;
-            _soulshots = soulshots;
-            _spiritshots = spiritshots;
+        L2Pet(int npcId, int controlItemId, int foodId, boolean isMountable, int minLevel, int addFed, double expPenalty, int soulshots, int spiritshots) {
+            this.npcId = npcId;
+            this.controlItemId = controlItemId;
+            this.foodId = foodId;
+            this.isMountable = isMountable;
+            this.minLevel = minLevel;
+            this.addFed = addFed;
+            this.expPenalty = expPenalty;
+            this.soulshots = soulshots;
+            this.spiritshots = spiritshots;
         }
 
-        int getNpcId() {
-            return _npcId;
+        int npcId() {
+            return npcId;
         }
 
         public int getControlItemId() {
-            return _controlItemId;
+            return controlItemId;
         }
 
         int getFoodId() {
-            return _foodId;
+            return foodId;
         }
 
         boolean isMountable() {
-            return _isMountable;
+            return isMountable;
         }
 
         public int getMinLevel() {
-            return _minLevel;
+            return minLevel;
         }
 
         int getAddFed() {
-            return _addFed;
+            return addFed;
         }
 
         double getExpPenalty() {
-            return _expPenalty;
+            return expPenalty;
         }
 
         int getSoulshots() {
-            return _soulshots;
+            return soulshots;
         }
 
         int getSpiritshots() {
-            return _spiritshots;
+            return spiritshots;
         }
     }
 }

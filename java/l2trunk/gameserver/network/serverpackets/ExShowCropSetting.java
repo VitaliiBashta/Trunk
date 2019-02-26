@@ -32,7 +32,7 @@ public final class ExShowCropSetting extends L2GameServerPacket {
             CropProcure cropPr = c.getCrop(cr, CastleManorManager.PERIOD_CURRENT);
             if (cropPr != null) {
                 _cropData[i * 14 + 8] = cropPr.getStartAmount();
-                _cropData[i * 14 + 9] = cropPr.getPrice();
+                _cropData[i * 14 + 9] = cropPr.price;
                 _cropData[i * 14 + 10] = cropPr.getReward();
             } else {
                 _cropData[i * 14 + 8] = 0;
@@ -42,7 +42,7 @@ public final class ExShowCropSetting extends L2GameServerPacket {
             cropPr = c.getCrop(cr, CastleManorManager.PERIOD_NEXT);
             if (cropPr != null) {
                 _cropData[i * 14 + 11] = cropPr.getStartAmount();
-                _cropData[i * 14 + 12] = cropPr.getPrice();
+                _cropData[i * 14 + 12] = cropPr.price;
                 _cropData[i * 14 + 13] = cropPr.getReward();
             } else {
                 _cropData[i * 14 + 11] = 0;
@@ -61,7 +61,7 @@ public final class ExShowCropSetting extends L2GameServerPacket {
         writeD(_count); // size
 
         for (int i = 0; i < _count; i++) {
-            writeD((int) _cropData[i * 14 + 0]); // crop id
+            writeD((int) _cropData[i * 14]); // crop id
             writeD((int) _cropData[i * 14 + 1]); // seed occupation
 
             writeC(1);

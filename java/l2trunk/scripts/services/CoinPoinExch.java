@@ -17,7 +17,7 @@ public final class CoinPoinExch extends Functions {
         String append = "Currency exchange<br>";
         append += "<br>";
 
-        append += "Respected player!<br>";
+        append += "Respected getPlayer!<br>";
         append += "Here you can exchange:<br>";
         append += "Game Coin to balance Item Mall<br>";
         append += "Balance in the Item Mall for Game Coin.<br>";

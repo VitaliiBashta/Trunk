@@ -62,8 +62,8 @@ public class RequestRestart extends L2GameClientPacket {
             activeChar.sendPacket(RestartResponse.FAIL, ActionFail.STATIC);
             return;
         }
-        // Prevent player from restarting if they are a festival participant
-        // and it is in progress, otherwise notify party members that the player
+        // Prevent getPlayer from restarting if they are a festival participant
+        // and it is in progress, otherwise notify party members that the getPlayer
         // is not longer a participant.
         if (activeChar.isFestivalParticipant()) {
             if (SevenSignsFestival.INSTANCE.isFestivalInitialized()) {
@@ -76,12 +76,6 @@ public class RequestRestart extends L2GameClientPacket {
         if (PartyMatchingBBSManager.getInstance().partyMatchingPlayersList.contains(activeChar)) {
             PartyMatchingBBSManager.getInstance().partyMatchingPlayersList.remove(activeChar);
             PartyMatchingBBSManager.getInstance().partyMatchingDescriptionList.remove(activeChar.objectId());
-        }
-
-        if (activeChar.isInAwayingMode()) {
-            activeChar.sendMessage(new CustomMessage("Away.ActionFailed", new Object[0]));
-            activeChar.sendPacket(new IStaticPacket[]{RestartResponse.FAIL, ActionFail.STATIC});
-            return;
         }
 
         if (getClient() != null) {

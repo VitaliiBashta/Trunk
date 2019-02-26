@@ -37,7 +37,7 @@ public final class InstantZone {
     private final boolean _removedItemNecessity;
     private final int _giveItemId;
     private final int _givedItemCount;
-    private final int _requiredQuestId;
+    private final int requiredQuestId;
     private final boolean _setReuseUponEntry;
     private final StatsSet addParams;
     private final InstantZoneEntryType _entryType;
@@ -80,7 +80,7 @@ public final class InstantZone {
         _removedItemNecessity = removedItemNecessity;
         _giveItemId = giveItemId;
         _givedItemCount = givedItemCount;
-        _requiredQuestId = requiredQuestId;
+        this.requiredQuestId = requiredQuestId;
         _setReuseUponEntry = setReuseUponEntry;
         addParams = params;
 
@@ -141,9 +141,7 @@ public final class InstantZone {
     public Location getTeleportCoord() {
         if (teleportCoords == null || teleportCoords.size() == 0)
             return null;
-        if (teleportCoords.size() == 1)   // fast hack?
-            return teleportCoords.get(0);
-        return teleportCoords.get(Rnd.get(teleportCoords.size()));
+        return Rnd.get(teleportCoords);
     }
 
     public Location getReturnCoords() {
@@ -191,7 +189,7 @@ public final class InstantZone {
     }
 
     public int getRequiredQuestId() {
-        return _requiredQuestId;
+        return requiredQuestId;
     }
 
     public boolean getSetReuseUponEntry() {

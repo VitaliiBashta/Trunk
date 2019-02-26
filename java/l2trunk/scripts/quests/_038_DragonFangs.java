@@ -33,13 +33,9 @@ public final class _038_DragonFangs extends Quest {
 
         addStartNpc(LUIS);
 
-        addTalkId(IRIS);
-        addTalkId(ROHMER);
+        addTalkId(IRIS,ROHMER);
 
-        addKillId(LANGK_LIZARDMAN_LEADER);
-        addKillId(LANGK_LIZARDMAN_SHAMAN);
-        addKillId(LANGK_LIZARDMAN_SENTINEL);
-        addKillId(LANGK_LIZARDMAN_LIEUTENANT);
+        addKillId(LANGK_LIZARDMAN_LEADER,LANGK_LIZARDMAN_SHAMAN,LANGK_LIZARDMAN_SENTINEL,LANGK_LIZARDMAN_LIEUTENANT);
 
         addQuestItem(TOOTH_OF_TOTEM, LETTER_OF_IRIS, LETTER_OF_ROHMER, TOOTH_OF_DRAGON, FEATHER_ORNAMENT);
     }
@@ -49,7 +45,7 @@ public final class _038_DragonFangs extends Quest {
         int cond = st.getCond();
         if (event.equals("guard_luis_q0038_0104.htm"))
             if (cond == 0) {
-                st.setState(STARTED);
+                st.start();
                 st.setCond(1);
                 st.playSound(SOUND_ACCEPT);
             }
@@ -98,7 +94,7 @@ public final class _038_DragonFangs extends Quest {
                 }
                 st.addExpAndSp(435117, 23977);
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(false);
+                st.finish();
             }
         return event;
     }
@@ -111,7 +107,7 @@ public final class _038_DragonFangs extends Quest {
         if (npcId == LUIS && cond == 0)
             if (st.player.getLevel() < 19) {
                 htmltext = "guard_luis_q0038_0102.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else htmltext = "guard_luis_q0038_0101.htm";
         if (npcId == LUIS && cond == 1)
             htmltext = "guard_luis_q0038_0202.htm";

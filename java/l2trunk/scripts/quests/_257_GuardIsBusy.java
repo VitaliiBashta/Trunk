@@ -25,7 +25,7 @@ public final class _257_GuardIsBusy extends Quest {
         String htmltext = event;
         if ("gilbert_q0257_03.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
             st.takeItems(GLUDIO_LORDS_MARK);
             st.giveItems(GLUDIO_LORDS_MARK);
@@ -33,7 +33,7 @@ public final class _257_GuardIsBusy extends Quest {
             htmltext = "gilbert_q0257_05.htm";
             st.takeItems(GLUDIO_LORDS_MARK);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         } else if ("257_3".equals(event))
             htmltext = "gilbert_q0257_06.htm";
         return htmltext;
@@ -50,14 +50,14 @@ public final class _257_GuardIsBusy extends Quest {
                 return htmltext;
             }
             htmltext = "gilbert_q0257_01.htm";
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         } else if (cond == 1 && st.getQuestItemsCount(ORC_AMULET) < 1 && st.getQuestItemsCount(ORC_NECKLACE) < 1 && st.getQuestItemsCount(WEREWOLF_FANG) < 1)
             htmltext = "gilbert_q0257_04.htm";
-        else if (cond == 1 && (st.haveQuestItem(ORC_AMULET)  || st.haveQuestItem(ORC_NECKLACE)  || st.haveQuestItem(WEREWOLF_FANG) )) {
+        else if (cond == 1 && (st.haveAnyQuestItems(ORC_AMULET,ORC_NECKLACE,WEREWOLF_FANG) )) {
             st.giveItems(ADENA, 12 * st.getQuestItemsCount(ORC_AMULET) + 20 * st.getQuestItemsCount(ORC_NECKLACE) + 25 * st.getQuestItemsCount(WEREWOLF_FANG), false);
 
             if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("p1q2")) {
-                st.player.setVar("p1q2", 1);
+                st.player.setVar("p1q2");
                 st.player.sendPacket(new ExShowScreenMessage("Acquisition of Soulshot for beginners complete.\n                  Go find the Newbie Guide."));
                 QuestState qs = st.player.getQuestState(_255_Tutorial.class);
                 if (qs != null && qs.getInt("Ex") != 10) {

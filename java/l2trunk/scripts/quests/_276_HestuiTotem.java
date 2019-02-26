@@ -13,26 +13,24 @@ public final class _276_HestuiTotem extends Quest {
     //Mobs
     private static final int Kasha_Bear = 20479;
     private static final int Kasha_Bear_Totem_Spirit = 27044;
-    //Items
+    //items
     private static final int Leather_Pants = 29;
     private static final int Totem_of_Hestui = 1500;
-    //Quest Items
+    //Quest items
     private static final int Kasha_Parasite = 1480;
     private static final int Kasha_Crystal = 1481;
 
     public _276_HestuiTotem() {
         super(false);
         addStartNpc(Tanapi);
-        addKillId(Kasha_Bear);
-        addKillId(Kasha_Bear_Totem_Spirit);
-        addQuestItem(Kasha_Parasite);
-        addQuestItem(Kasha_Crystal);
+        addKillId(Kasha_Bear,Kasha_Bear_Totem_Spirit);
+        addQuestItem(Kasha_Parasite,Kasha_Crystal);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("seer_tanapi_q0276_03.htm".equalsIgnoreCase(event) && st.getState() == CREATED && st.player.getRace() == Race.orc && st.player.getLevel() >= 15) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         }
@@ -49,10 +47,10 @@ public final class _276_HestuiTotem extends Quest {
         if (_state == CREATED) {
             if (st.player.getRace() != Race.orc) {
                 htmltext = "seer_tanapi_q0276_00.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else if (st.player.getLevel() < 15) {
                 htmltext = "seer_tanapi_q0276_01.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else {
                 htmltext = "seer_tanapi_q0276_02.htm";
                 st.setCond(0);
@@ -69,12 +67,12 @@ public final class _276_HestuiTotem extends Quest {
                     st.giveItems(57, Math.round(ItemHolder.getTemplate(Totem_of_Hestui).referencePrice * (st.getRateQuestsReward() - 1) / 2), false);
 
                 if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("p1q4")) {
-                    st.player.setVar("p1q4", 1);
+                    st.player.setVar("p1q4");
                     st.player.sendPacket(new ExShowScreenMessage("Now go find the Newbie Guide."));
                 }
 
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else
                 htmltext = "seer_tanapi_q0276_04.htm";
 

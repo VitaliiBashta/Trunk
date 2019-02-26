@@ -97,7 +97,7 @@ public enum EffectType {
     AbsorbDamageToMp(EffectBuff.class, AbnormalEffect.S_ARCANE_SHIELD, false), // абсорбирует часть дамага в мп
     AbsorbDamageToSummon(EffectLDManaDamOverTime.class, null, true); // абсорбирует часть дамага к сумону
 
-    private final Constructor<? extends Effect> _constructor;
+    private final Constructor<? extends Effect> constructor;
     private final AbnormalEffect _abnormal;
     private final Stats _resistType;
     private final Stats _attributeType;
@@ -109,7 +109,7 @@ public enum EffectType {
 
     EffectType(Class<? extends Effect> clazz, AbnormalEffect abnormal, Stats resistType, Stats attributeType, boolean isRaidImmune) {
         try {
-            _constructor = clazz.getConstructor(Env.class, EffectTemplate.class);
+            constructor = clazz.getConstructor(Env.class, EffectTemplate.class);
         } catch (NoSuchMethodException e) {
             throw new Error(e);
         }
@@ -136,6 +136,6 @@ public enum EffectType {
     }
 
     public Effect makeEffect(Env env, EffectTemplate template) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException {
-        return _constructor.newInstance(env, template);
+        return constructor.newInstance(env, template);
     }
 }

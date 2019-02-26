@@ -24,12 +24,7 @@ public final class _023_LidiasHeart extends Quest {
 
         addStartNpc(Innocentin);
 
-        addTalkId(Innocentin);
-        addTalkId(BrokenBookshelf);
-        addTalkId(GhostofvonHellmann);
-        addTalkId(Tombstone);
-        addTalkId(Violet);
-        addTalkId(Box);
+        addTalkId(BrokenBookshelf,GhostofvonHellmann,Tombstone,Violet,Box);
     }
 
     @Override
@@ -40,7 +35,7 @@ public final class _023_LidiasHeart extends Quest {
                 st.giveItems(MapForestofDeadman);
                 st.giveItems(SilverKey);
                 st.setCond(1);
-                st.setState(STARTED);
+                st.start();
                 st.playSound(SOUND_ACCEPT);
                 break;
             case "31328-03.htm":
@@ -154,7 +149,7 @@ public final class _023_LidiasHeart extends Quest {
                     st.giveItems(ADENA_ID, 350000);
                     st.addExpAndSp(456893, 42112);
                     st.playSound(SOUND_FINISH);
-                    st.exitCurrentQuest(false);
+                    st.finish();
                 } else
                     htmltext = "You have no Silver Spear...";
         } else if (npcId == Box)

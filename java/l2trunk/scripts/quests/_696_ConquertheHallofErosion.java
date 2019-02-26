@@ -21,9 +21,9 @@ public final class _696_ConquertheHallofErosion extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("tepios_q696_3.htm")) {
+        if ("tepios_q696_3.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         }
         return event;
@@ -43,21 +43,21 @@ public final class _696_ConquertheHallofErosion extends Quest {
                         htmltext = "tepios_q696_1.htm";
                     else {
                         htmltext = "tepios_q696_6.htm";
-                        st.exitCurrentQuest(true);
+                        st.exitCurrentQuest();
                     }
                 } else {
                     htmltext = "tepios_q696_0.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1) {
-                if (st.getInt("cohemenesDone") != 0) {
-                    if (st.getQuestItemsCount(MARK_OF_KEUCEREUS_STAGE_2) < 1) {
+                if (st.isSet("cohemenesDone")) {
+                    if (!st.haveQuestItem(MARK_OF_KEUCEREUS_STAGE_2)) {
                         st.takeItems(MARK_OF_KEUCEREUS_STAGE_1);
                         st.giveItems(MARK_OF_KEUCEREUS_STAGE_2);
                     }
                     htmltext = "tepios_q696_5.htm";
                     st.playSound(SOUND_FINISH);
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else
                     htmltext = "tepios_q696_1a.htm";
             }

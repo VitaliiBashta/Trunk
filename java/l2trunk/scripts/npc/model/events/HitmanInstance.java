@@ -95,7 +95,7 @@ public class HitmanInstance extends NpcInstance {
                     sendResult(player, "Error!", "<center>You can`t order yourself.</center>");
                     break;
                 case 5:
-                    sendResult(player, "Completed!", "<center>You have successfully nominated the award for the player's head.</center>");
+                    sendResult(player, "Completed!", "<center>You have successfully nominated the award for the getPlayer's head.</center>");
                     break;
                 case 6:
                     sendResult(player, "Player is not Online!", "<center>Try again later!</center>");
@@ -170,7 +170,7 @@ public class HitmanInstance extends NpcInstance {
 
         } else
             sb.append("<br><center>Bids have not yet done</center>");
-        html.replace("%data%", sb.toString());
+        html.replace("%data%", sb);
         return html;
     }
 

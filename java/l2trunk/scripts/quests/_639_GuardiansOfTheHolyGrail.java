@@ -5,6 +5,8 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
+import java.util.stream.IntStream;
+
 public final class _639_GuardiansOfTheHolyGrail extends Quest {
 
     private static final int DROP_CHANCE = 10; // Для х1 мобов
@@ -26,13 +28,10 @@ public final class _639_GuardiansOfTheHolyGrail extends Quest {
     public _639_GuardiansOfTheHolyGrail() {
         super(true);
         addStartNpc(DOMINIC);
-        addTalkId(GREMORY);
-        addTalkId(GRAIL);
+        addTalkId(GREMORY, GRAIL);
         addQuestItem(SCRIPTURES);
-        for (int i = 22789; i <= 22800; i++)
-            addKillId(i);
-        addKillId(18909);
-        addKillId(18910);
+        addKillId(IntStream.rangeClosed(22789, 22800).toArray());
+        addKillId(18909, 18910);
     }
 
     @Override
@@ -40,12 +39,12 @@ public final class _639_GuardiansOfTheHolyGrail extends Quest {
         switch (event) {
             case "falsepriest_dominic_q0639_04.htm":
                 st.setCond(1);
-                st.setState(STARTED);
+                st.start();
                 st.playSound(SOUND_ACCEPT);
                 break;
             case "falsepriest_dominic_q0639_09.htm":
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 break;
             case "falsepriest_dominic_q0639_08.htm":
                 st.giveItems(ADENA_ID, st.getQuestItemsCount(SCRIPTURES) * 1625, false);
@@ -91,8 +90,8 @@ public final class _639_GuardiansOfTheHolyGrail extends Quest {
                     htmltext = "falsepriest_dominic_q0639_01.htm";
                 else
                     htmltext = "falsepriest_dominic_q0639_02.htm";
-                st.exitCurrentQuest(true);
-            } else if (st.haveQuestItem(SCRIPTURES) )
+                st.exitCurrentQuest();
+            } else if (st.haveQuestItem(SCRIPTURES))
                 htmltext = "falsepriest_dominic_q0639_05.htm";
             else
                 htmltext = "falsepriest_dominic_q0639_06.htm";

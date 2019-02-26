@@ -26,12 +26,12 @@ public final class _119_LastImperialPrince extends Quest {
         String htmltext = event;
         if (event.equalsIgnoreCase("31453-4.htm")) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("32009-2.htm")) {
             if (st.getQuestItemsCount(BROOCH) < 1) {
                 htmltext = "noquest";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (event.equalsIgnoreCase("32009-3.htm")) {
             st.setCond(2);
@@ -40,7 +40,7 @@ public final class _119_LastImperialPrince extends Quest {
             st.giveItems(ADENA_ID, AMOUNT, true);
             st.addExpAndSp(902439, 90067);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(false);
+            st.finish();
         }
         return htmltext;
     }
@@ -54,11 +54,11 @@ public final class _119_LastImperialPrince extends Quest {
         // confirm that quest can be executed.
         if (st.player.getLevel() < 74) {
             htmltext = "<html><body>Quest for characters occupation 74 and above.</body></html>";
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             return htmltext;
         } else if (st.getQuestItemsCount(BROOCH) < 1) {
             htmltext = "noquest";
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             return htmltext;
         }
 

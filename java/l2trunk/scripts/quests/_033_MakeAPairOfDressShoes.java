@@ -13,10 +13,7 @@ public final class _033_MakeAPairOfDressShoes extends Quest {
         super(false);
 
         addStartNpc(30838);
-        addTalkId(30838);
-        addTalkId(30838);
-        addTalkId(30164);
-        addTalkId(31520);
+        addTalkId(30164,31520);
     }
 
     @Override
@@ -25,7 +22,7 @@ public final class _033_MakeAPairOfDressShoes extends Quest {
         switch (event) {
             case "30838-1.htm":
                 st.setCond(1);
-                st.setState(STARTED);
+                st.start();
                 st.playSound(SOUND_ACCEPT);
                 break;
             case "31520-1.htm":
@@ -53,7 +50,7 @@ public final class _033_MakeAPairOfDressShoes extends Quest {
             case "30838-7.htm":
                 st.giveItems(DRESS_SHOES_BOX, 1);
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 break;
         }
         return htmltext;
@@ -71,7 +68,7 @@ public final class _033_MakeAPairOfDressShoes extends Quest {
                     if (fwear != null && fwear.getCond() == 7)
                         htmltext = "30838-0.htm";
                     else
-                        st.exitCurrentQuest(true);
+                        st.exitCurrentQuest();
                 } else
                     htmltext = "30838-00.htm";
             } else if (cond == 1)

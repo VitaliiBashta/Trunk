@@ -16,9 +16,7 @@ public final class _10283_RequestOfIceMerchant extends Quest {
         super(false);
 
         addStartNpc(RAFFORTY);
-        addTalkId(RAFFORTY);
-        addTalkId(KIER);
-        addTalkId(JINIA);
+        addTalkId(KIER,JINIA);
         addFirstTalkId(JINIA);
     }
 
@@ -30,7 +28,7 @@ public final class _10283_RequestOfIceMerchant extends Quest {
         int npcId = npc.getNpcId();
         if (npcId == RAFFORTY) {
             if (event.equalsIgnoreCase("32020-03.htm")) {
-                st.setState(STARTED);
+                st.start();
                 st.setCond(1);
                 st.playSound(SOUND_ACCEPT);
             } else if (event.equalsIgnoreCase("32020-07.htm")) {
@@ -38,13 +36,13 @@ public final class _10283_RequestOfIceMerchant extends Quest {
                 st.playSound(SOUND_MIDDLE);
             }
         } else if (npcId == KIER && event.equalsIgnoreCase("spawn")) {
-            addSpawn(JINIA, new Location(104322, -107669, -3680, 44954), 0, 60000);
+            addSpawn(JINIA, Location.of(104322, -107669, -3680, 44954), 0, 60000);
             return null;
         } else if (npcId == JINIA && event.equalsIgnoreCase("32760-04.htm")) {
             st.giveItems(57, 190000);
             st.addExpAndSp(627000, 50300);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(false);
+            st.finish();
             npc.deleteMe();
         }
         return event;
@@ -61,7 +59,7 @@ public final class _10283_RequestOfIceMerchant extends Quest {
                         htmltext = "32020-01.htm";
                     else {
                         htmltext = "32020-00.htm";
-                        st.exitCurrentQuest(true);
+                        st.exitCurrentQuest();
                     }
                     break;
                 case STARTED:

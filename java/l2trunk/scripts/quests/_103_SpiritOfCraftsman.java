@@ -23,14 +23,9 @@ public final class _103_SpiritOfCraftsman extends Quest {
 
         addStartNpc(30307);
 
-        addTalkId(30132);
-        addTalkId(30144);
+        addTalkId(30132,30144);
 
-        addKillId(20015);
-        addKillId(20020);
-        addKillId(20455);
-        addKillId(20517);
-        addKillId(20518);
+        addKillId(20015,20020,20455,20517,20518);
 
         addQuestItem(KAROYDS_LETTER_ID, CECKTINONS_VOUCHER1_ID, CECKTINONS_VOUCHER2_ID, BONE_FRAGMENT1_ID, SOUL_CATCHER_ID, PRESERVE_OIL_ID, ZOMBIE_HEAD_ID, STEELBENDERS_HEAD_ID);
     }
@@ -40,7 +35,7 @@ public final class _103_SpiritOfCraftsman extends Quest {
         if (event.equalsIgnoreCase("blacksmith_karoyd_q0103_05.htm")) {
             st.giveItems(KAROYDS_LETTER_ID, 1);
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         }
         return event;
@@ -61,7 +56,7 @@ public final class _103_SpiritOfCraftsman extends Quest {
                 return htmltext;
             } else {
                 htmltext = "blacksmith_karoyd_q0103_02.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (npcId == 30307 && st.getCond() == 0)
             htmltext = "completed";
@@ -113,7 +108,7 @@ public final class _103_SpiritOfCraftsman extends Quest {
                 st.player.addExpAndSp(46663, 3999);
 
                 if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("p1q3")) {
-                    st.player.setVar("p1q3", 1); // flag for helper
+                    st.player.setVar("p1q3"); // flag for helper
                     st.player.sendPacket(new ExShowScreenMessage("Now go find the Newbie Guide."));
                     st.giveItems(1060, 100); // healing potion
                     for (int item = 4412; item <= 4417; item++)
@@ -127,7 +122,7 @@ public final class _103_SpiritOfCraftsman extends Quest {
                     }
                 }
 
-                st.exitCurrentQuest(false);
+                st.finish();
                 st.playSound(SOUND_FINISH);
             }
         return htmltext;

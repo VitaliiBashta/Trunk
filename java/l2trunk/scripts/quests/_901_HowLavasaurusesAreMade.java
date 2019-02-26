@@ -38,28 +38,28 @@ public final class _901_HowLavasaurusesAreMade extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if (event.equalsIgnoreCase("blacksmith_rooney_q901_03.htm")) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if ("blacksmith_rooney_q901_12a.htm".equalsIgnoreCase(event)) {
             st.giveItems(TOTEM_OF_BODY);
             st.playSound(SOUND_FINISH);
-            st.setState(COMPLETED);
+            st.complete();
             st.exitCurrentQuest(this);
         } else if ("blacksmith_rooney_q901_12b.htm".equalsIgnoreCase(event)) {
             st.giveItems(TOTEM_OF_SPIRIT);
             st.playSound(SOUND_FINISH);
-            st.setState(COMPLETED);
+            st.complete();
             st.exitCurrentQuest(this);
         } else if ("blacksmith_rooney_q901_12c.htm".equalsIgnoreCase(event)) {
             st.giveItems(TOTEM_OF_FORTITUDE);
             st.playSound(SOUND_FINISH);
-            st.setState(COMPLETED);
+            st.complete();
             st.exitCurrentQuest(this);
         } else if ("blacksmith_rooney_q901_12d.htm".equalsIgnoreCase(event)) {
             st.giveItems(TOTEM_OF_COURAGE);
             st.playSound(SOUND_FINISH);
-            st.setState(COMPLETED);
+            st.complete();
             st.exitCurrentQuest(this);
         }
         return event;
@@ -82,7 +82,7 @@ public final class _901_HowLavasaurusesAreMade extends Quest {
             } else if (cond == 1)
                 htmltext = "blacksmith_rooney_q901_04.htm";
             else if (cond == 2) {
-                if (st.getInt("collect") == 1)
+                if (st.isSet("collect"))
                     htmltext = "blacksmith_rooney_q901_07.htm";
                 else {
                     if (st.haveQuestItem(LAVASAURUS_STONE_FRAGMENT, 10)
@@ -91,7 +91,7 @@ public final class _901_HowLavasaurusesAreMade extends Quest {
                             && st.haveQuestItem(LAVASAURUS_HORN_FRAGMENT, 10)) {
                         htmltext = "blacksmith_rooney_q901_05.htm";
                         st.takeItems(fragments);
-                        st.set("collect", 1);
+                        st.set("collect");
                     } else
                         htmltext = "blacksmith_rooney_q901_06.htm";
                 }

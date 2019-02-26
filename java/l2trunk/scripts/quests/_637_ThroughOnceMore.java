@@ -12,7 +12,7 @@ public final class _637_ThroughOnceMore extends Quest {
     //Npc
     private static final int FLAURON = 32010;
 
-    //Items
+    //items
     private final int VISITORSMARK = 8064;
     private final int NECROHEART = 8066;
     private static final int MARK = 8067;
@@ -31,7 +31,7 @@ public final class _637_ThroughOnceMore extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if (event.equals("falsepriest_flauron_q0637_04.htm")) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.takeItems(VISITORSMARK, 1);
             st.playSound(SOUND_ACCEPT);
         }
@@ -47,14 +47,14 @@ public final class _637_ThroughOnceMore extends Quest {
                 htmltext = "falsepriest_flauron_q0637_02.htm";
             else {
                 htmltext = "falsepriest_flauron_q0637_01.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (cond == 2 && st.getQuestItemsCount(NECROHEART) == 10) {
             htmltext = "falsepriest_flauron_q0637_05.htm";
             st.takeItems(NECROHEART, 10);
             st.giveItems(MARK);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         } else
             htmltext = "falsepriest_flauron_q0637_04.htm";
         return htmltext;

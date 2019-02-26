@@ -27,19 +27,19 @@ public final class _999_T1Tutorial extends Quest {
     private static final Map<Integer, Talk> talks = new HashMap<>();
 
     static {
-        events.put("32133_02", new Event("32133-03.htm", new Location(-119692, 44504, 380), DIPLOMA, 0x7b, SOULSHOT_NOVICE, 200, 0x7c, SOULSHOT_NOVICE, 200));
+        events.put("32133_02", new Event("32133-03.htm", Location.of(-119692, 44504, 380), DIPLOMA, 0x7b, SOULSHOT_NOVICE, 200, 0x7c, SOULSHOT_NOVICE, 200));
         events.put("30008_02", new Event("30008-03.htm", null, RECOMMENDATION_01, 0x00, SOULSHOT_NOVICE, 200, 0x00, 0, 0));
-        events.put("30008_04", new Event("30008-04.htm", new Location(-84081, 243277, -3723), 0, 0x00, 0, 0, 0, 0, 0));
+        events.put("30008_04", new Event("30008-04.htm", Location.of(-84081, 243277, -3723), 0, 0x00, 0, 0, 0, 0, 0));
         events.put("30017_02", new Event("30017-03.htm", null, RECOMMENDATION_02, 0x0a, SPIRITSHOT_NOVICE, 100, 0x00, 0, 0));
-        events.put("30017_04", new Event("30017-04.htm", new Location(-84081, 243277, -3723), 0, 0x0a, 0, 0, 0x00, 0, 0));
+        events.put("30017_04", new Event("30017-04.htm", Location.of(-84081, 243277, -3723), 0, 0x0a, 0, 0, 0x00, 0, 0));
         events.put("30370_02", new Event("30370-03.htm", null, LEAF_OF_MOTHERTREE, 0x19, SPIRITSHOT_NOVICE, 100, 0x12, SOULSHOT_NOVICE, 200));
-        events.put("30370_04", new Event("30370-04.htm", new Location(45491, 48359, -3086), 0, 0x19, 0, 0, 0x12, 0, 0));
+        events.put("30370_04", new Event("30370-04.htm", Location.of(45491, 48359, -3086), 0, 0x19, 0, 0, 0x12, 0, 0));
         events.put("30129_02", new Event("30129-03.htm", null, BLOOD_OF_JUNDIN, 0x26, SPIRITSHOT_NOVICE, 100, 0x1f, SOULSHOT_NOVICE, 200));
-        events.put("30129_04", new Event("30129-04.htm", new Location(12116, 16666, -4610), 0, 0x26, 0, 0, 0x1f, 0, 0));
+        events.put("30129_04", new Event("30129-04.htm", Location.of(12116, 16666, -4610), 0, 0x26, 0, 0, 0x1f, 0, 0));
         events.put("30528_02", new Event("30528-03.htm", null, LICENSE_OF_MINER, 0x35, SOULSHOT_NOVICE, 200, 0x00, 0, 0));
-        events.put("30528_04", new Event("30528-04.htm", new Location(115642, -178046, -941), 0, 0x35, 0, 0, 0x00, 0, 0));
+        events.put("30528_04", new Event("30528-04.htm", Location.of(115642, -178046, -941), 0, 0x35, 0, 0, 0x00, 0, 0));
         events.put("30573_02", new Event("30573-03.htm", null, VOUCHER_OF_FLAME, 0x31, SPIRITSHOT_NOVICE, 100, 0x2c, SOULSHOT_NOVICE, 200));
-        events.put("30573_04", new Event("30573-04.htm", new Location(-45067, -113549, -235), 0, 0x31, 0, 0, 0x2c, 0, 0));
+        events.put("30573_04", new Event("30573-04.htm", Location.of(-45067, -113549, -235), 0, 0x31, 0, 0, 0x2c, 0, 0));
     }
 
     static {
@@ -215,7 +215,7 @@ public final class _999_T1Tutorial extends Quest {
                     st.playTutorialVoice("tutorial_voice_009b");
                 else
                     st.playTutorialVoice("tutorial_voice_009a");
-                qs.set("Ex", 1);
+                qs.set("Ex");
             } else if (Ex == 3) {
                 st.playTutorialVoice("tutorial_voice_010a");
                 qs.set("Ex", 4);
@@ -229,14 +229,14 @@ public final class _999_T1Tutorial extends Quest {
             }
             return null;
         } else if ("isle".equalsIgnoreCase(event)) {
-            st.addRadar(new Location(-119692, 44504, 380));
+            st.addRadar(Location.of(-119692, 44504, 380));
             player.teleToLocation(-120050, 44500, 360);
             String title = npc == null ? "" : npc.getTitle() + " " + npc.getName();
             htmltext = "<html><body>" + title + "<br>Go to the <font color=\"LEVEL\">Isle of Souls</font> and meet the <font color=\"LEVEL\">Newbie Guide</font> there to learn a number of important tips. He will also give you an item to assist your development.<br>Follow the direction arrow above your head and it will lead you to the Newbie Guide. Good luck!</body></html>";
         } else {
             final Event e = events.get(event);
             htmltext = e.htm;
-            if (st.haveQuestItem(e.item)  && st.getInt("onlyone") == 0) {
+            if (st.haveQuestItem(e.item) && !st.isSet("onlyone")) {
                 st.addExpAndSp(0, 50);
                 st.startQuestTimer("TimerEx_GrandMaster", 60000);
                 st.takeItems(e.item, 1);
@@ -255,7 +255,7 @@ public final class _999_T1Tutorial extends Quest {
                     }
                 }
                 st.set("step", 3);
-                st.set("onlyone", 1);
+                st.set("onlyone");
             }
 
             if (e.radarLoc != null) {
@@ -281,7 +281,7 @@ public final class _999_T1Tutorial extends Quest {
         int Ex = qs.getInt("Ex");
         int npcId = npc.getNpcId();
         int step = st.getInt("step");
-        int onlyone = st.getInt("onlyone");
+        boolean onlyone = st.isSet("onlyone");
         int level = player.getLevel();
         boolean isMage = (player.getClassId().race != Race.orc) && player.getClassId().isMage;
 
@@ -289,26 +289,26 @@ public final class _999_T1Tutorial extends Quest {
         if (t == null)
             return "";
 
-        if ((level >= 10 || onlyone == 1) && t.npcTyp == 1)
+        if ((level >= 10 || onlyone ) && t.npcTyp == 1)
             htmltext = "30575-05.htm";
-        else if (onlyone == 0 && level < 10) {
+        else if (!onlyone  && level < 10) {
             if (player.getRace().ordinal() == t.raceId)
                 htmltext = t.htmlfiles[0];
             if (t.npcTyp == 1) {
                 if (step == 0 && Ex < 0) {
-                    qs.set("Ex", 0);
+                    qs.unset("Ex");
                     st.startQuestTimer("TimerEx_NewbieHelper", 30000);
                     if (isMage) {
-                        st.set("step", 1);
-                        st.setState(STARTED);
+                        st.set("step");
+                        st.start();
                     } else {
                         htmltext = "30530-01.htm";
-                        st.set("step", 1);
-                        st.setState(STARTED);
+                        st.set("step");
+                        st.start();
                     }
                 } else if (step == 1 && st.getQuestItemsCount(t.item) == 0 && Ex <= 2) {
-                    if (st.getQuestItemsCount(BLUE_GEM) > 0) {
-                        st.takeItems(BLUE_GEM, st.getQuestItemsCount(BLUE_GEM));
+                    if (st.haveQuestItem(BLUE_GEM)) {
+                        st.takeItems(BLUE_GEM);
                         st.giveItems(t.item);
                         st.set("step", 2);
                         qs.set("Ex", 3);
@@ -361,7 +361,7 @@ public final class _999_T1Tutorial extends Quest {
             st.showQuestionMark(3);
             qs.set("Ex", 2);
         }
-        if (Ex <= 2 && st.getQuestItemsCount(BLUE_GEM) < 1)
+        if (Ex <= 2 && !st.haveQuestItem(BLUE_GEM))
             ThreadPoolManager.INSTANCE.schedule(new DropGem(npc, st), 3000);
     }
 

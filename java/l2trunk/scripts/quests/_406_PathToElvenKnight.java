@@ -14,7 +14,7 @@ public final class _406_PathToElvenKnight extends Quest {
     private static final int TopazPiece = 1205;
     private static final int EmeraldPiece = 1206;
     private static final int KlutosMemo = 1276;
-    //Items
+    //items
     private static final int ElvenKnightBrooch = 1204;
     //MOB
     private static final int TrackerSkeleton = 20035;
@@ -94,7 +94,7 @@ public final class _406_PathToElvenKnight extends Quest {
         addStartNpc(Sorius);
         addTalkId(Kluto);
 
-        // Mob Drop
+        // mob Drop
         for (int[] aDROPLIST_COND : DROPLIST_COND) addKillId(aDROPLIST_COND[2]);
 
         addQuestItem(TopazPiece,
@@ -111,27 +111,27 @@ public final class _406_PathToElvenKnight extends Quest {
             if (st.player.getClassId().id == 0x12) {
                 if (st.haveQuestItem(ElvenKnightBrooch)) {
                     htmltext = "master_sorius_q0406_04.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else if (st.player.getLevel() < 18) {
                     htmltext = "master_sorius_q0406_03.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (st.player.getClassId().id == 0x13) {
                 htmltext = "master_sorius_q0406_02a.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else {
                 htmltext = "master_sorius_q0406_02.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if ("master_sorius_q0406_06.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("blacksmith_kluto_q0406_02.htm".equalsIgnoreCase(event)) {
             st.takeItems(SoriussLetter);
             st.giveItems(KlutosMemo);
             st.setCond(4);
-            st.setState(STARTED);
+            st.start();
         } else
             htmltext = "noquest";
 
@@ -157,7 +157,7 @@ public final class _406_PathToElvenKnight extends Quest {
                 st.giveItems(SoriussLetter);
                 htmltext = "master_sorius_q0406_09.htm";
                 st.setCond(3);
-                st.setState(STARTED);
+                st.start();
             } else if (cond == 3 || cond == 4 || cond == 5)
                 htmltext = "master_sorius_q0406_11.htm";
             else if (cond == 6) {
@@ -165,12 +165,12 @@ public final class _406_PathToElvenKnight extends Quest {
                 if (st.player.getClassId().occupation() == 0) {
                     st.giveItems(ElvenKnightBrooch);
                     if (!st.player.isVarSet("prof1")) {
-                        st.player.setVar("prof1", 1);
+                        st.player.setVar("prof1");
                         st.addExpAndSp(228064, 16455);
                         st.giveItems(ADENA_ID, 81900);
                     }
                 }
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 st.playSound(SOUND_FINISH);
                 htmltext = "master_sorius_q0406_10.htm";
             }
@@ -189,7 +189,7 @@ public final class _406_PathToElvenKnight extends Quest {
                 st.giveItems(KlutoBox);
                 htmltext = "blacksmith_kluto_q0406_05.htm";
                 st.setCond(6);
-                st.setState(STARTED);
+                st.start();
             } else if (cond == 6)
                 htmltext = "blacksmith_kluto_q0406_06.htm";
         return htmltext;
@@ -207,7 +207,7 @@ public final class _406_PathToElvenKnight extends Quest {
                     else if (st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[7], aDROPLIST_COND[5], aDROPLIST_COND[6]))
                         if (aDROPLIST_COND[1] != cond && aDROPLIST_COND[1] != 0) {
                             st.setCond(aDROPLIST_COND[1]);
-                            st.setState(STARTED);
+                            st.start();
                         }
     }
 }

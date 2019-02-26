@@ -33,22 +33,22 @@ public final class _197_SevenSignsTheSacredBookofSeal extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         Player player = st.player;
-        if (event.equalsIgnoreCase("wood_q197_2.htm")) {
+        if ("wood_q197_2.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("orven_q197_2.htm")) {
+        } else if ("orven_q197_2.htm".equalsIgnoreCase(event)) {
             st.setCond(2);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("leopard_q197_2.htm")) {
+        } else if ("leopard_q197_2.htm".equalsIgnoreCase(event)) {
             st.setCond(3);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("lawrence_q197_2.htm")) {
+        } else if ("lawrence_q197_2.htm".equalsIgnoreCase(event)) {
             NpcInstance mob = st.addSpawn(ShilensEvilThoughts, Location.of(152520, -57502, -3408), 0, 180000);
             Functions.npcSay(mob, "Shilen's power is endless!");
             mob.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, player, 100000);
-            st.set("evilthought", 1);
-        } else if (event.equalsIgnoreCase("lawrence_q197_4.htm")) {
+            st.set("evilthought");
+        } else if ("lawrence_q197_4.htm".equalsIgnoreCase(event)) {
             st.setCond(5);
             st.playSound(SOUND_MIDDLE);
         } else if ("sofia_q197_2.htm".equalsIgnoreCase(event)) {
@@ -60,8 +60,8 @@ public final class _197_SevenSignsTheSacredBookofSeal extends Quest {
                 st.takeItems(PieceofDoubt);
                 st.takeItems(MysteriousHandwrittenText);
                 st.addExpAndSp(25000000, 2500000);
-                st.setState(COMPLETED);
-                st.exitCurrentQuest(false);
+                st.complete();
+                st.finish();
                 st.playSound(SOUND_FINISH);
             } else
                 return "subclass_forbidden.htm";
@@ -80,7 +80,7 @@ public final class _197_SevenSignsTheSacredBookofSeal extends Quest {
                     htmltext = "wood_q197_1.htm";
                 else {
                     htmltext = "wood_q197_0.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 6)
                 htmltext = "wood_q197_3.htm";
@@ -98,7 +98,7 @@ public final class _197_SevenSignsTheSacredBookofSeal extends Quest {
                 htmltext = "leopard_q197_3.htm";
         } else if (npcId == Lawrence) {
             if (cond == 3) {
-                if (st.getInt("evilthought") == 1)
+                if (st.isSet("evilthought") )
                     htmltext = "lawrence_q197_0.htm";
                 else
                     htmltext = "lawrence_q197_1.htm";

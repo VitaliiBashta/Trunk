@@ -75,7 +75,7 @@ public final class CharInfo extends L2GameServerPacket {
 
     public CharInfo(Player player) {
         if (player == null) {
-            _log.error("CharInfo: player is null!");
+            _log.error("CharInfo: getPlayer is null!");
             Thread.dumpStack();
             return;
         }
@@ -172,7 +172,7 @@ public final class CharInfo extends L2GameServerPacket {
         _swimSpd = player.getSwimSpeed();
         _race = player.getBaseTemplate().race.ordinal();
         _sex = player.isMale() ? 1:0;
-        base_class = player.getBaseClassId();
+        base_class = player.getBaseClassId().id;
         pvp_flag = player.getPvpFlag();
         karma = player.getKarma();
 

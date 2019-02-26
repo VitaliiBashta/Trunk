@@ -14,22 +14,21 @@ public final class _10282_ToTheSeedOfAnnihilation extends Quest {
         super(false);
 
         addStartNpc(KBALDIR);
-        addTalkId(KBALDIR);
         addTalkId(KLEMIS);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("32733-07.htm")) {
+        if ("32733-07.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
-            st.giveItems(SOA_ORDERS, 1);
+            st.start();
+            st.giveItems(SOA_ORDERS);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("32734-02.htm")) {
+        } else if ("32734-02.htm".equalsIgnoreCase(event)) {
             st.unset("cond");
             st.addExpAndSp(1148480, 99110);
-            st.takeItems(SOA_ORDERS, -1);
-            st.exitCurrentQuest(false);
+            st.takeItems(SOA_ORDERS);
+            st.finish();
         }
         return event;
     }

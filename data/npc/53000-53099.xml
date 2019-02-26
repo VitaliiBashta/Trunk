@@ -128,10 +128,10 @@
 				<reward item_id="1540" min="1" max="10" chance="50.0" />	<!--Quick Healing Potion-->
 			</group>
 			<group chance="1.0">
-				<reward item_id="14168" min="1" max="1" chance="3.0" />	<!--High-Grade Life Stone - occupation 84-->
+				<reward item_id="14168" min="1" max="1" chance="3.0" />	<!--High-Grade Life Stone - level 84-->
 			</group>
 			<group chance="1.0">
-				<reward item_id="14169" min="1" max="1" chance="1.0" />	<!--Top-Grade Life Stone - occupation 84-->
+				<reward item_id="14169" min="1" max="1" chance="1.0" />	<!--Top-Grade Life Stone - level 84-->
 			</group>
 			<group chance="1.0">
 				<reward item_id="6408" min="1" max="1" chance="0.5" />	<!--Formal Wear-->
@@ -243,10 +243,10 @@
 				<reward item_id="1540" min="1" max="10" chance="50.0" />	<!--Quick Healing Potion-->
 			</group>
 			<group chance="1.0">
-				<reward item_id="14168" min="1" max="1" chance="3.0" />	<!--High-Grade Life Stone - occupation 84-->
+				<reward item_id="14168" min="1" max="1" chance="3.0" />	<!--High-Grade Life Stone - level 84-->
 			</group>
 			<group chance="1.0">
-				<reward item_id="14169" min="1" max="1" chance="1.0" />	<!--Top-Grade Life Stone - occupation 84-->
+				<reward item_id="14169" min="1" max="1" chance="1.0" />	<!--Top-Grade Life Stone - level 84-->
 			</group>
 			<group chance="1.0">
 				<reward item_id="6408" min="1" max="1" chance="0.5" />	<!--Formal Wear-->
@@ -359,10 +359,10 @@
 				<reward item_id="1540" min="1" max="10" chance="50.0" />	<!--Quick Healing Potion-->
 			</group>
 			<group chance="1.0">
-				<reward item_id="14168" min="1" max="1" chance="3.0" />	<!--High-Grade Life Stone - occupation 84-->
+				<reward item_id="14168" min="1" max="1" chance="3.0" />	<!--High-Grade Life Stone - level 84-->
 			</group>
 			<group chance="1.0">
-				<reward item_id="14169" min="1" max="1" chance="1.0" />	<!--Top-Grade Life Stone - occupation 84-->
+				<reward item_id="14169" min="1" max="1" chance="1.0" />	<!--Top-Grade Life Stone - level 84-->
 			</group>
 			<group chance="1.0">
 				<reward item_id="6408" min="1" max="1" chance="0.5" />	<!--Formal Wear-->

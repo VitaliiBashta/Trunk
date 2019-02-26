@@ -21,8 +21,8 @@ import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -122,16 +122,6 @@ public enum HellboundManager {
         doors.forEach(d -> ReflectionUtils.getDoor(d).closeMe());
 
         switch (getHellboundLevel()) {
-            case 0:
-                break;
-            case 1:
-                break;
-            case 2:
-                break;
-            case 3:
-                break;
-            case 4:
-                break;
             case 5:
                 ReflectionUtils.getDoor(NativeHell_native0131).openMe();
                 ReflectionUtils.getDoor(NativeHell_native0132).openMe();
@@ -207,11 +197,11 @@ public enum HellboundManager {
 
     private void getHellboundSpawn() {
         try {
-            File file = new File(Config.DATAPACK_ROOT + "/data/hellbound_spawnlist.xml");
+            Path file = Config.DATAPACK_ROOT.resolve("/data/hellbound_spawnlist.xml");
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             factory.setValidating(false);
             factory.setIgnoringComments(true);
-            Document doc1 = factory.newDocumentBuilder().parse(file);
+            Document doc1 = factory.newDocumentBuilder().parse(file.toFile());
 
             int counter = 0;
             for (Node n1 = doc1.getFirstChild(); n1 != null; n1 = n1.getNextSibling())

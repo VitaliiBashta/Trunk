@@ -26,7 +26,7 @@ public final class _239_WontYouJoinUs extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("32643-03.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
         }
         if ("32643-07.htm".equalsIgnoreCase(event)) {
             st.takeItems(DestroyedMachinePiece);
@@ -62,8 +62,8 @@ public final class _239_WontYouJoinUs extends Quest {
                 st.takeItems(EnchantedGolemFragment);
                 st.giveItems(ADENA_ID, 283346);
                 st.addExpAndSp(1319736, 103553);
-                st.setState(COMPLETED);
-                st.exitCurrentQuest(false);
+                st.complete();
+                st.finish();
                 return "32643-10.htm";
             }
 

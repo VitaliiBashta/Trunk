@@ -32,7 +32,7 @@ public final class _101_SwordOfSolidarity extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("roien_q0101_04.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
             st.giveItems(ROIENS_LETTER);
         } else if ("blacksmith_alltran_q0101_02.htm".equalsIgnoreCase(event)) {
@@ -47,7 +47,7 @@ public final class _101_SwordOfSolidarity extends Quest {
             st.player.addExpAndSp(25747, 2171);
 
             if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("p1q3")) {
-                st.player.setVar("p1q3", 1); // flag for helper
+                st.player.setVar("p1q3"); // flag for helper
                 st.player.sendPacket(new ExShowScreenMessage("Now go find the Newbie Guide."));
                 st.giveItems(1060, 100); // healing potion
                 for (int item = 4412; item <= 4417; item++)
@@ -61,7 +61,7 @@ public final class _101_SwordOfSolidarity extends Quest {
                 }
             }
 
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             st.playSound(SOUND_FINISH);
         }
         return event;
@@ -82,7 +82,7 @@ public final class _101_SwordOfSolidarity extends Quest {
                     return htmltext;
                 } else {
                     htmltext = "roien_q0101_08.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
 
             } else if (cond == 1 && st.getQuestItemsCount(ROIENS_LETTER) == 1)

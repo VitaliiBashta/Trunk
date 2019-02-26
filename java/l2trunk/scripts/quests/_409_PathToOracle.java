@@ -28,13 +28,9 @@ public final class _409_PathToOracle extends Quest {
 
         addStartNpc(MANUEL);
 
-        addTalkId(ALLANA);
-        addTalkId(PERRIN);
+        addTalkId(ALLANA,PERRIN);
 
-        addKillId(LIZARDMAN_WARRIOR);
-        addKillId(LIZARDMAN_SCOUT);
-        addKillId(LIZARDMAN);
-        addKillId(TAMIL);
+        addKillId(LIZARDMAN_WARRIOR,LIZARDMAN_SCOUT,LIZARDMAN,TAMIL);
 
         addQuestItem(MONEY_OF_SWINDLER_ID,
                 DAIRY_OF_ALLANA_ID,
@@ -59,7 +55,7 @@ public final class _409_PathToOracle extends Quest {
                     return  "father_manuell_q0409_04.htm";
                 else {
                     st.setCond(1);
-                    st.setState(STARTED);
+                    st.start();
                     st.playSound(SOUND_ACCEPT);
                     st.giveItems(CRYSTAL_MEDALLION_ID);
                     return  "father_manuell_q0409_05.htm";
@@ -103,13 +99,13 @@ public final class _409_PathToOracle extends Quest {
                     if (st.player.getClassId().occupation() == 0) {
                         st.giveItems(LEAF_OF_ORACLE_ID);
                         if (!st.player.isVarSet("prof1")) {
-                            st.player.setVar("prof1", 1);
+                            st.player.setVar("prof1");
                             st.addExpAndSp(228064, 16455);
                             st.giveItems(ADENA_ID, 81900);
                         }
                     }
                     st.playSound(SOUND_FINISH);
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else
                     htmltext = "father_manuell_q0409_07.htm";
         } else if (npcId == ALLANA) {

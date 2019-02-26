@@ -233,6 +233,6 @@ public final class TradeHelper {
 
         buyer.sendActionFailed();
 
-        ItemLogHandler.getInstance().addLog(seller, buyer, buyList, totalCost, ItemActionType.SOLD_IN_STORE, ItemActionType.BOUGHT_IN_STORE);
+        ItemLogHandler.INSTANCE.addLog(seller, buyer, buyList, totalCost, ItemActionType.SOLD_IN_STORE, ItemActionType.BOUGHT_IN_STORE);
     }
 }

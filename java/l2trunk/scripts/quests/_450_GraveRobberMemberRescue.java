@@ -32,7 +32,7 @@ public final class _450_GraveRobberMemberRescue extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if (event.equalsIgnoreCase("32650-05.htm")) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         }
         return event;
@@ -50,10 +50,10 @@ public final class _450_GraveRobberMemberRescue extends Quest {
             if (id == CREATED) {
                 if (player.getLevel() < 80) {
                     htmltext = "32650-00.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else if (!canEnter(player)) {
                     htmltext = "32650-09.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else
                     htmltext = "32650-01.htm";
             } else if (cond == 1) {
@@ -65,7 +65,7 @@ public final class _450_GraveRobberMemberRescue extends Quest {
                 htmltext = "32650-08.htm";
                 st.giveItems(ADENA_ID, 65000);
                 st.takeItems(EVIDENCE_OF_MIGRATION);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 st.playSound(SOUND_FINISH);
                 st.player.setVar(name, System.currentTimeMillis());
             }
@@ -74,7 +74,7 @@ public final class _450_GraveRobberMemberRescue extends Quest {
                 htmltext = "32651-01.htm";
                 st.giveItems(EVIDENCE_OF_MIGRATION);
                 st.playSound(SOUND_ITEMGET);
-                npc.moveToLocation(new Location(npc.getX() + 200, npc.getY() + 200, npc.getZ()), 0, false);
+                npc.moveToLocation(Location.of(npc.getX() + 200, npc.getY() + 200, npc.getZ()), 0, false);
 
                 ThreadPoolManager.INSTANCE.schedule(npc::deleteMe, 2500L);
 

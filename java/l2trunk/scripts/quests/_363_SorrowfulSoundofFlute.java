@@ -13,8 +13,6 @@ public final class _363_SorrowfulSoundofFlute extends Quest {
     private final int HOLVAS = 30058;
     //Mobs
 
-    //Quest Item
-    public final int MUSICAL_SCORE = 4420;
     private final int EVENT_CLOTHES = 4318;
     private final int NANARINS_FLUTE = 4319;
     private final int SABRINS_BLACK_BEER = 4320;
@@ -26,40 +24,37 @@ public final class _363_SorrowfulSoundofFlute extends Quest {
         super(false);
 
         addStartNpc(NANARIN);
-        addTalkId(NANARIN);
-        addTalkId(POITAN);
-        addTalkId(HOLVAS);
-        addTalkId(BARBADO);
+        addTalkId(NANARIN,POITAN,HOLVAS,BARBADO);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("30956_2.htm")) {
+        if ("30956_2.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
-            st.takeItems(EVENT_CLOTHES, -1);
-            st.takeItems(NANARINS_FLUTE, -1);
-            st.takeItems(SABRINS_BLACK_BEER, -1);
-        } else if (event.equalsIgnoreCase("30956_4.htm")) {
-            st.giveItems(NANARINS_FLUTE, 1);
+            st.takeItems(EVENT_CLOTHES);
+            st.takeItems(NANARINS_FLUTE);
+            st.takeItems(SABRINS_BLACK_BEER);
+        } else if ("30956_4.htm".equalsIgnoreCase(event)) {
+            st.giveItems(NANARINS_FLUTE);
             st.playSound(SOUND_MIDDLE);
             st.setCond(3);
-        } else if (event.equalsIgnoreCase("answer1")) {
-            st.giveItems(EVENT_CLOTHES, 1);
-            st.playSound(SOUND_MIDDLE);
-            st.setCond(3);
-            htmltext = "30956_6.htm";
-        } else if (event.equalsIgnoreCase("answer2")) {
-            st.giveItems(SABRINS_BLACK_BEER, 1);
+        } else if ("answer1".equalsIgnoreCase(event)) {
+            st.giveItems(EVENT_CLOTHES);
             st.playSound(SOUND_MIDDLE);
             st.setCond(3);
             htmltext = "30956_6.htm";
-        } else if (event.equalsIgnoreCase("30956_7.htm")) {
-            st.giveItems(Musical_Score, 1);
+        } else if ("answer2".equalsIgnoreCase(event)) {
+            st.giveItems(SABRINS_BLACK_BEER);
+            st.playSound(SOUND_MIDDLE);
+            st.setCond(3);
+            htmltext = "30956_6.htm";
+        } else if ("30956_7.htm".equalsIgnoreCase(event)) {
+            st.giveItems(Musical_Score);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
         return htmltext;
     }
@@ -73,7 +68,7 @@ public final class _363_SorrowfulSoundofFlute extends Quest {
             if (cond == 0) {
                 if (st.player.getLevel() < 15) {
                     htmltext = "30956-00.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else
                     htmltext = "30956_1.htm";
             } else if (cond == 1)
@@ -86,16 +81,16 @@ public final class _363_SorrowfulSoundofFlute extends Quest {
                 htmltext = "30956_5.htm";
         } else if (npcId == BARBADO) {
             if (cond == 3) {
-                if (st.getQuestItemsCount(EVENT_CLOTHES) > 0) {
-                    st.takeItems(EVENT_CLOTHES, -1);
+                if (st.haveQuestItem(EVENT_CLOTHES) ) {
+                    st.takeItems(EVENT_CLOTHES);
                     htmltext = "30959_2.htm";
-                    st.exitCurrentQuest(true);
-                } else if (st.getQuestItemsCount(SABRINS_BLACK_BEER) > 0) {
-                    st.takeItems(SABRINS_BLACK_BEER, -1);
+                    st.exitCurrentQuest();
+                } else if (st.haveQuestItem(SABRINS_BLACK_BEER) ) {
+                    st.takeItems(SABRINS_BLACK_BEER);
                     htmltext = "30959_2.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else {
-                    st.takeItems(NANARINS_FLUTE, -1);
+                    st.takeItems(NANARINS_FLUTE);
                     st.setCond(4);
                     st.playSound(SOUND_MIDDLE);
                     htmltext = "30959_1.htm";

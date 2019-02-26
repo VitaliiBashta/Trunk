@@ -34,7 +34,7 @@ public final class _270_TheOneWhoEndsSilence extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
         if ("greymore_q270_03.htm".equalsIgnoreCase(event)) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if ("showrags".equalsIgnoreCase(event)) {
@@ -102,7 +102,7 @@ public final class _270_TheOneWhoEndsSilence extends Quest {
                 htmltext = "greymore_q270_08.htm";
         } else if ("quit".equalsIgnoreCase(event)) {
             htmltext = "greymore_q270_10.htm";
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
         return htmltext;
     }
@@ -117,7 +117,7 @@ public final class _270_TheOneWhoEndsSilence extends Quest {
                     htmltext = "greymore_q270_01.htm";
                 else {
                     htmltext = "greymore_q270_00.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1)
                 htmltext = "greymore_q270_04.htm";

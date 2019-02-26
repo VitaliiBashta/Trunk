@@ -13,10 +13,10 @@ public final class _384_WarehouseKeepersPastime extends Quest {
     // NPCs
     private final static int Cliff = 30182;
     private final static int Baxt = 30685;
-    // Items
+    // items
     private final static int Warehouse_Keepers_Medal = 5964;
 
-    private final static Map<Integer, Integer> Medal_Chances = new HashMap<>();
+    private final static Map<Integer, Integer> MEDAL_CHANCES = new HashMap<>();
     private final static Map<Integer, Bingo> bingos = new HashMap<>();
 
     private final static int[][] Rewards_Win = {
@@ -147,35 +147,34 @@ public final class _384_WarehouseKeepersPastime extends Quest {
         addStartNpc(Cliff);
         addTalkId(Baxt);
 
-        Medal_Chances.put(20948, 18); //Bartal
-        Medal_Chances.put(20945, 12); //Cadeine
-        Medal_Chances.put(20946, 15); //Sanhidro
-        Medal_Chances.put(20947, 16); //Connabi
-        Medal_Chances.put(20635, 15); //Carinkain
-        Medal_Chances.put(20773, 61); //Conjurer Bat Lord
-        Medal_Chances.put(20774, 60); //Conjurer Bat
-        Medal_Chances.put(20760, 24); //Dragon Bearer Archer
-        Medal_Chances.put(20758, 24); //Dragon Bearer Chief
-        Medal_Chances.put(20759, 23); //Dragon Bearer Warrior
-        Medal_Chances.put(20242, 22); //Dustwind Gargoyle
-        Medal_Chances.put(20281, 22); //Dustwind Gargoyle (2)
-        Medal_Chances.put(20556, 14); //Giant Monstereye
-        Medal_Chances.put(20668, 21); //Grave Guard
-        Medal_Chances.put(20241, 22); //Hunter Gargoyle
-        Medal_Chances.put(20286, 22); //Hunter Gargoyle (2)
-        Medal_Chances.put(20950, 20); //Innersen
-        Medal_Chances.put(20949, 19); //Luminun
-        Medal_Chances.put(20942, 9); //Nightmare Guide
-        Medal_Chances.put(20943, 12); //Nightmare Keeper
-        Medal_Chances.put(20944, 11); //Nightmare Lord
-        Medal_Chances.put(20559, 14); //Rotting Golem
-        Medal_Chances.put(20243, 21); //Thunder Wyrm
-        Medal_Chances.put(20282, 21); //Thunder Wyrm (2)
-        Medal_Chances.put(20677, 34); //Tulben
-        Medal_Chances.put(20605, 15); //Weird Drake
+        MEDAL_CHANCES.put(20948, 18); //Bartal
+        MEDAL_CHANCES.put(20945, 12); //Cadeine
+        MEDAL_CHANCES.put(20946, 15); //Sanhidro
+        MEDAL_CHANCES.put(20947, 16); //Connabi
+        MEDAL_CHANCES.put(20635, 15); //Carinkain
+        MEDAL_CHANCES.put(20773, 61); //Conjurer Bat Lord
+        MEDAL_CHANCES.put(20774, 60); //Conjurer Bat
+        MEDAL_CHANCES.put(20760, 24); //Dragon Bearer Archer
+        MEDAL_CHANCES.put(20758, 24); //Dragon Bearer Chief
+        MEDAL_CHANCES.put(20759, 23); //Dragon Bearer Warrior
+        MEDAL_CHANCES.put(20242, 22); //Dustwind Gargoyle
+        MEDAL_CHANCES.put(20281, 22); //Dustwind Gargoyle (2)
+        MEDAL_CHANCES.put(20556, 14); //Giant Monstereye
+        MEDAL_CHANCES.put(20668, 21); //Grave Guard
+        MEDAL_CHANCES.put(20241, 22); //Hunter Gargoyle
+        MEDAL_CHANCES.put(20286, 22); //Hunter Gargoyle (2)
+        MEDAL_CHANCES.put(20950, 20); //Innersen
+        MEDAL_CHANCES.put(20949, 19); //Luminun
+        MEDAL_CHANCES.put(20942, 9); //Nightmare Guide
+        MEDAL_CHANCES.put(20943, 12); //Nightmare Keeper
+        MEDAL_CHANCES.put(20944, 11); //Nightmare Lord
+        MEDAL_CHANCES.put(20559, 14); //Rotting Golem
+        MEDAL_CHANCES.put(20243, 21); //Thunder Wyrm
+        MEDAL_CHANCES.put(20282, 21); //Thunder Wyrm (2)
+        MEDAL_CHANCES.put(20677, 34); //Tulben
+        MEDAL_CHANCES.put(20605, 15); //Weird Drake
 
-        for (int id : Medal_Chances.keySet())
-            addKillId(id);
+        addKillId(MEDAL_CHANCES.keySet());
     }
 
     @Override
@@ -184,11 +183,11 @@ public final class _384_WarehouseKeepersPastime extends Quest {
         long medals = st.getQuestItemsCount(Warehouse_Keepers_Medal);
         if (event.equalsIgnoreCase("30182-05.htm") && _state == CREATED) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ((event.equalsIgnoreCase("30182-08.htm") || event.equalsIgnoreCase("30685-08.htm")) && _state == STARTED) {
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(false);
+            st.finish();
         } else if (event.contains("-game") && _state == STARTED) {
             boolean big_game = event.contains("-big");
             int need_medals = big_game ? 100 : 10;
@@ -219,7 +218,7 @@ public final class _384_WarehouseKeepersPastime extends Quest {
             if (npcId != Cliff)
                 return "noquest";
             if (st.player.getLevel() < 40) {
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 return "30182-04.htm";
             }
             st.setCond(0);
@@ -241,7 +240,7 @@ public final class _384_WarehouseKeepersPastime extends Quest {
     public void onKill(NpcInstance npc, QuestState qs) {
         if (qs.getState() != STARTED)
             return;
-        Integer chance = Medal_Chances.get(npc.getNpcId());
+        Integer chance = MEDAL_CHANCES.get(npc.getNpcId());
         if (chance != null && Rnd.chance(chance * Config.RATE_QUESTS_REWARD)) {
             qs.giveItems(Warehouse_Keepers_Medal);
             qs.playSound(qs.getQuestItemsCount(Warehouse_Keepers_Medal) == 10 ? SOUND_MIDDLE : SOUND_ITEMGET);

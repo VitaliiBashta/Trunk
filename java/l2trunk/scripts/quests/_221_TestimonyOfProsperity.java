@@ -204,25 +204,8 @@ public final class _221_TestimonyOfProsperity extends Quest {
 
         addStartNpc(Parman);
 
-        addTalkId(Bright);
-        addTalkId(Emily);
-        addTalkId(Piotur);
-        addTalkId(Wilford);
-        addTalkId(Lilith);
-        addTalkId(Shari);
-        addTalkId(Mion);
-        addTalkId(Lockirin);
-        addTalkId(Spiron);
-        addTalkId(Balanki);
-        addTalkId(Keef);
-        addTalkId(Filaur);
-        addTalkId(Arin);
-        addTalkId(Redbonnet);
-        addTalkId(Bolter);
-        addTalkId(Torocco);
-        addTalkId(Toma);
-        addTalkId(Nikola);
-        addTalkId(BoxOfTitan);
+        addTalkId(Bright, Emily, Piotur, Wilford, Lilith, Shari, Mion, Lockirin, Spiron, Balanki,
+                Keef, Filaur, Arin, Redbonnet, Bolter, Torocco, Toma, Nikola, BoxOfTitan);
 
         for (int[] aDROPLIST_COND : DROPLIST_COND) addKillId(aDROPLIST_COND[2]);
 
@@ -268,30 +251,30 @@ public final class _221_TestimonyOfProsperity extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("30104-04.htm")) {
+        if ("30104-04.htm".equalsIgnoreCase(event)) {
             if (!st.player.isVarSet("dd2")) {
                 st.giveItems(7562, 50);
-                st.player.setVar("dd2", 1);
+                st.player.setVar("dd2");
             }
             st.playSound(SOUND_ACCEPT);
             st.giveItems(RingOfTestimony1st);
             st.setCond(1);
-            st.setState(STARTED);
-        } else if (event.equalsIgnoreCase("30466-03.htm"))
+            st.start();
+        } else if ("30466-03.htm".equalsIgnoreCase(event))
             st.giveItems(BrightsList);
-        else if (event.equalsIgnoreCase("30620-03.htm")) {
+        else if ("30620-03.htm".equalsIgnoreCase(event)) {
             st.takeItems(MandragoraBouquet);
             st.giveItems(EmilysRecipe);
             htmltext = "30620-03.htm";
             if (st.getQuestItemsCount(OldAccountBook) > 0 && st.getQuestItemsCount(BlessedSeed) > 0 && st.getQuestItemsCount(EmilysRecipe) > 0 && st.getQuestItemsCount(LilithsElvenWafer) > 0) {
                 st.setCond(2);
-                st.setState(STARTED);
+                st.start();
             }
         } else if (event.equalsIgnoreCase("30597-02.htm")) {
             st.giveItems(BlessedSeed, 1);
             if (st.getQuestItemsCount(OldAccountBook) > 0 && st.getQuestItemsCount(BlessedSeed) > 0 && st.getQuestItemsCount(EmilysRecipe) > 0 && st.getQuestItemsCount(LilithsElvenWafer) > 0) {
                 st.setCond(2);
-                st.setState(STARTED);
+                st.start();
             }
         } else if (event.equalsIgnoreCase("30005-04.htm"))
             st.giveItems(CrystalBrooch, 1);
@@ -300,7 +283,7 @@ public final class _221_TestimonyOfProsperity extends Quest {
             st.giveItems(LilithsElvenWafer, 1);
             if (st.getQuestItemsCount(OldAccountBook) > 0 && st.getQuestItemsCount(BlessedSeed) > 0 && st.getQuestItemsCount(EmilysRecipe) > 0 && st.getQuestItemsCount(LilithsElvenWafer) > 0) {
                 st.setCond(2);
-                st.setState(STARTED);
+                st.start();
             }
         } else if (event.equalsIgnoreCase("30531-03.htm")) {
             st.giveItems(CollectionLicense, 1);
@@ -325,29 +308,29 @@ public final class _221_TestimonyOfProsperity extends Quest {
             if (st.player.getLevel() < 38) {
                 st.giveItems(ParmansInstructions);
                 st.setCond(3);
-                st.setState(STARTED);
+                st.start();
             } else {
                 st.giveItems(ParmansLetter);
                 st.giveItems(RingOfTestimony2st);
                 htmltext = "30104-08.htm";
                 st.setCond(4);
-                st.setState(STARTED);
+                st.start();
             }
         } else if (event.equalsIgnoreCase("30621-04.htm")) {
             st.giveItems(ClayDough, 1);
             st.setCond(5);
-            st.setState(STARTED);
+            st.start();
         } else if (event.equalsIgnoreCase("30622-02.htm")) {
             st.takeItems(ClayDough, -1);
             st.giveItems(PatternOfKeyhole, 1);
             st.setCond(6);
-            st.setState(STARTED);
+            st.start();
         } else if (event.equalsIgnoreCase("30622-04.htm")) {
             st.takeItems(NikolasList, -1);
             st.takeItems(KeyOfTitan, 1);
             st.giveItems(MaphrTabletFragment, 1);
             st.setCond(9);
-            st.setState(STARTED);
+            st.start();
         }
         return htmltext;
     }
@@ -360,18 +343,18 @@ public final class _221_TestimonyOfProsperity extends Quest {
         if (npcId == Parman) {
             if (st.getQuestItemsCount(MarkOfProsperity) != 0) {
                 htmltext = "completed";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else if (cond == 0) {
                 if (st.player.getRace() == Race.dwarf) {
                     if (st.player.getLevel() >= 37)
                         htmltext = "30104-03.htm";
                     else {
                         htmltext = "30104-02.htm";
-                        st.exitCurrentQuest(true);
+                        st.exitCurrentQuest();
                     }
                 } else {
                     htmltext = "30104-01.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1)
                 htmltext = "30104-05.htm";
@@ -387,7 +370,7 @@ public final class _221_TestimonyOfProsperity extends Quest {
                     st.giveItems(RingOfTestimony2st);
                     st.giveItems(ParmansLetter);
                     st.setCond(4);
-                    st.setState(STARTED);
+                    st.start();
                 }
             } else if (cond == 4 && st.getQuestItemsCount(RingOfTestimony2st) > 0 && st.getQuestItemsCount(ParmansLetter) > 0 && st.getQuestItemsCount(MaphrTabletFragment) == 0)
                 htmltext = "30104-11.htm";
@@ -397,29 +380,25 @@ public final class _221_TestimonyOfProsperity extends Quest {
                 if (!st.player.isVarSet("prof2.2")) {
                     st.addExpAndSp(599979, 40040);
                     st.giveItems(57, 108841);
-                    st.player.setVar("prof2.2", 1);
+                    st.player.setVar("prof2.2");
                 }
                 st.takeItems(RingOfTestimony2st);
                 st.takeItems(MaphrTabletFragment);
                 st.giveItems(MarkOfProsperity);
                 htmltext = "30104-13.htm";
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (npcId == Lockirin) {
-            if (st.getQuestItemsCount(CollectionLicense) == 0)
+            if (!st.haveQuestItem(CollectionLicense))
                 htmltext = "30531-01.htm";
-            else if (st.getQuestItemsCount(CollectionLicense) > 0) {
-                if (st.getQuestItemsCount(ReceiptOfContribution1st) > 0 && st.getQuestItemsCount(ReceiptOfContribution2st) > 0 && st.getQuestItemsCount(ReceiptOfContribution3st) > 0 && st.getQuestItemsCount(ReceiptOfContribution4st) > 0 && st.getQuestItemsCount(ReceiptOfContribution5st) > 0) {
+            else if (st.haveQuestItem(CollectionLicense)) {
+                if (st.haveAllQuestItems(ReceiptOfContribution1st, ReceiptOfContribution2st, ReceiptOfContribution3st, ReceiptOfContribution4st, ReceiptOfContribution5st)) {
                     htmltext = "30531-05.htm";
-                    st.takeItems(CollectionLicense);
-                    st.takeItems(ReceiptOfContribution1st);
-                    st.takeItems(ReceiptOfContribution2st);
-                    st.takeItems(ReceiptOfContribution3st);
-                    st.takeItems(ReceiptOfContribution4st);
-                    st.takeItems(ReceiptOfContribution5st);
+                    st.takeAllItems(CollectionLicense, ReceiptOfContribution1st, ReceiptOfContribution2st, ReceiptOfContribution3st,
+                            ReceiptOfContribution4st, ReceiptOfContribution5st);
                     st.giveItems(OldAccountBook);
-                    if (st.getQuestItemsCount(OldAccountBook) > 0 && st.getQuestItemsCount(BlessedSeed) > 0 && st.getQuestItemsCount(EmilysRecipe) > 0 && st.getQuestItemsCount(LilithsElvenWafer) > 0)
+                    if (st.haveAllQuestItems(OldAccountBook, BlessedSeed, EmilysRecipe, LilithsElvenWafer))
                         st.setCond(2);
                 } else
                     htmltext = "30531-04.htm";
@@ -428,9 +407,9 @@ public final class _221_TestimonyOfProsperity extends Quest {
             else if (cond >= 1 && st.getQuestItemsCount(RingOfTestimony2st) > 0)
                 htmltext = "30531-07.htm";
         } else if (npcId == Spiron && cond == 1 && st.getQuestItemsCount(CollectionLicense) > 0) {
-            if (st.getQuestItemsCount(Lockirins1stNotice) > 0) {
+            if (st.haveQuestItem(Lockirins1stNotice)) {
                 htmltext = "30532-01.htm";
-                st.takeItems(Lockirins1stNotice, -1);
+                st.takeItems(Lockirins1stNotice);
             } else if (st.getQuestItemsCount(ReceiptOfContribution1st) == 0 && st.getQuestItemsCount(ContributionOfShari) == 0)
                 htmltext = "30532-02.htm";
             else if (st.getQuestItemsCount(ContributionOfShari) > 0) {
@@ -594,7 +573,7 @@ public final class _221_TestimonyOfProsperity extends Quest {
                 st.giveItems(RecipeTitanKey, 1);
                 htmltext = "30621-06.htm";
                 st.setCond(7);
-                st.setState(STARTED);
+                st.start();
             } else if (cond == 7)
                 htmltext = "30621-07.htm";
             else if (cond == 8 && st.getQuestItemsCount(KeyOfTitan) > 0)
@@ -621,11 +600,11 @@ public final class _221_TestimonyOfProsperity extends Quest {
                     else if (st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[7], aDROPLIST_COND[5], aDROPLIST_COND[6]))
                         if (aDROPLIST_COND[1] != cond && aDROPLIST_COND[1] != 0) {
                             st.setCond(aDROPLIST_COND[1]);
-                            st.setState(STARTED);
+                            st.start();
                         }
         if (cond == 7 && st.getQuestItemsCount(StakatoShell) >= 20 && st.getQuestItemsCount(ToadLordSac) >= 10 && st.getQuestItemsCount(SpiderThorn) >= 10) {
             st.setCond(8);
-            st.setState(STARTED);
+            st.start();
         }
     }
 }

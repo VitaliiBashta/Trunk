@@ -1,6 +1,6 @@
 package l2trunk.scripts.quests;
 
-import l2trunk.gameserver.scripts.ScriptFile;
+import l2trunk.gameserver.model.base.ClassId;
 import l2trunk.gameserver.utils.Location;
 
 import java.util.List;
@@ -10,15 +10,14 @@ public final class _069_SagaOfTheTrickster extends SagasSuperclass {
         super(false);
 
         NPC = List.of(32138, 31270, 31282, 32228, 32237, 31646, 31649, 31653, 31654, 31655, 31659, 31283);
-        Items = List.of(7080, 9761, 7081, 9742, 9724, 9727, 9730, 9733, 9736, 9739, 9718, 0);
-        Mob = List.of(27333, 27334, 27335);
-        classid = 134;
-        prevclass = 0x82;
+        items = List.of(7080, 9761, 7081, 9742, 9724, 9727, 9730, 9733, 9736, 9739, 9718, 0);
+        mob = List.of(27333, 27334, 27335);
+        classid = ClassId.trickster;
         locs = List.of(
-                new Location(164014, -74733, -3093),
-                new Location(124355, 82155, -2803),
-                new Location(124376, 82127, -2796));
-        Text = List.of(
+                Location.of(164014, -74733, -3093),
+                Location.of(124355, 82155, -2803),
+                Location.of(124376, 82127, -2796));
+        text = List.of(
                 "PLAYERNAME! Pursued to here! However, I jumped out of the Banshouren boundaries! You look at the giant as the sign of power!",
                 "... Oh ... good! So it was ... let's begin!",
                 "I do not have the patience ..! I have been a giant force ...! Cough chatter ah ah ah!",

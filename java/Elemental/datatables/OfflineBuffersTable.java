@@ -68,7 +68,7 @@ public enum OfflineBuffersTable {
                     // Add the buffer data to the manager
                     OfflineBufferManager.INSTANCE.getBuffStores().put(player.objectId(), buffer);
 
-                    // Sit the player, put it on store and and change the colors and titles
+                    // Sit the getPlayer, put it on store and and change the colors and titles
                     player.sitDown(null);
 
                     player.setVisibleTitleColor(Config.BUFF_STORE_TITLE_COLOR);

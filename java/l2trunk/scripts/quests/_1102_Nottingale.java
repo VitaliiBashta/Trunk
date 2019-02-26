@@ -18,29 +18,28 @@ public final class _1102_Nottingale extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
         Player player = st.player;
-        QuestState qs = player.getQuestState(_10273_GoodDayToFly.class);
-        if (qs == null || qs.getState() != COMPLETED) {
+        if (!player.isQuestCompleted(_10273_GoodDayToFly.class)) {
             player.sendPacket(new RadarControl(2, 2));
-            player.sendPacket(new RadarControl(0, 2, new Location(-184545, 243120, 1581)));
+            player.sendPacket(new RadarControl(0, 2, Location.of(-184545, 243120, 1581)));
             htmltext = "32627.htm";
-        } else if (event.equalsIgnoreCase("32627-3.htm")) {
+        } else if ("32627-3.htm".equalsIgnoreCase(event)) {
             player.sendPacket(new RadarControl(2, 2));
-            player.sendPacket(new RadarControl(0, 2, new Location(-192361, 254528, 3598)));
-        } else if (event.equalsIgnoreCase("32627-4.htm")) {
+            player.sendPacket(new RadarControl(0, 2, Location.of(-192361, 254528, 3598)));
+        } else if ("32627-4.htm".equalsIgnoreCase(event)) {
             player.sendPacket(new RadarControl(2, 2));
-            player.sendPacket(new RadarControl(0, 2, new Location(-174600, 219711, 4424)));
-        } else if (event.equalsIgnoreCase("32627-5.htm")) {
+            player.sendPacket(new RadarControl(0, 2, Location.of(-174600, 219711, 4424)));
+        } else if ("32627-5.htm".equalsIgnoreCase(event)) {
             player.sendPacket(new RadarControl(2, 2));
-            player.sendPacket(new RadarControl(0, 2, new Location(-181989, 208968, 4424)));
-        } else if (event.equalsIgnoreCase("32627-6.htm")) {
+            player.sendPacket(new RadarControl(0, 2, Location.of(-181989, 208968, 4424)));
+        } else if ("32627-6.htm".equalsIgnoreCase(event)) {
             player.sendPacket(new RadarControl(2, 2));
-            player.sendPacket(new RadarControl(0, 2, new Location(-252898, 235845, 5343)));
-        } else if (event.equalsIgnoreCase("32627-8.htm")) {
+            player.sendPacket(new RadarControl(0, 2, Location.of(-252898, 235845, 5343)));
+        } else if ("32627-8.htm".equalsIgnoreCase(event)) {
             player.sendPacket(new RadarControl(2, 2));
-            player.sendPacket(new RadarControl(0, 2, new Location(-212819, 209813, 4288)));
-        } else if (event.equalsIgnoreCase("32627-9.htm")) {
+            player.sendPacket(new RadarControl(0, 2, Location.of(-212819, 209813, 4288)));
+        } else if ("32627-9.htm".equalsIgnoreCase(event)) {
             player.sendPacket(new RadarControl(2, 2));
-            player.sendPacket(new RadarControl(0, 2, new Location(-246899, 251918, 4352)));
+            player.sendPacket(new RadarControl(0, 2, Location.of(-246899, 251918, 4352)));
         }
         return htmltext;
     }

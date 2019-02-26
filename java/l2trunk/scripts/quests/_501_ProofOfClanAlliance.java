@@ -18,6 +18,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public final class _501_ProofOfClanAlliance extends Quest {
     // Quest Npcs
@@ -26,7 +27,7 @@ public final class _501_ProofOfClanAlliance extends Quest {
     private static final int WITCH_ATHREA = 30758;
     private static final int WITCH_KALIS = 30759;
 
-    // Quest Items
+    // Quest items
     private static final int HERB_OF_HARIT = 3832;
     private static final int HERB_OF_VANOR = 3833;
     private static final int HERB_OF_OEL_MAHUM = 3834;
@@ -39,20 +40,10 @@ public final class _501_ProofOfClanAlliance extends Quest {
 
     // Quest mobs, drop, rates and prices
     private static final List<Integer> CHESTS = List.of(27173, 27174, 27175, 27176, 27177);
-    private static final int[][] MOBS = {
-            {
-                    20685,
-                    HERB_OF_VANOR
-            },
-            {
-                    20644,
-                    HERB_OF_HARIT
-            },
-            {
-                    20576,
-                    HERB_OF_OEL_MAHUM
-            }
-    };
+    private static final Map<Integer, Integer> MOBS = Map.of(
+            20685, HERB_OF_VANOR,
+            20644, HERB_OF_HARIT,
+            20576, HERB_OF_OEL_MAHUM);
 
     private static final int RATE = 35;
     // stackable items paid to retry chest game: (default 10k adena)
@@ -61,28 +52,23 @@ public final class _501_ProofOfClanAlliance extends Quest {
     public _501_ProofOfClanAlliance() {
         super(PARTY_NONE);
 
-        addStartNpc(SIR_KRISTOF_RODEMAI);
-        addStartNpc(STATUE_OF_OFFERING);
-        addStartNpc(WITCH_ATHREA);
+        addStartNpc(SIR_KRISTOF_RODEMAI, STATUE_OF_OFFERING, WITCH_ATHREA);
 
         addTalkId(WITCH_KALIS);
 
-        addQuestItem(SYMBOL_OF_LOYALTY);
-        addQuestItem(ANTIDOTE_RECIPE);
+        addQuestItem(SYMBOL_OF_LOYALTY, ANTIDOTE_RECIPE);
 
-        for (int[] i : MOBS) {
-            addKillId(i[0]);
-            addQuestItem(i[1]);
-        }
+        addKillId(MOBS.keySet());
+        addQuestItem(MOBS.values());
 
-        CHESTS.forEach(this::addKillId);
+        addKillId(CHESTS);
     }
 
     private QuestState getLeader(QuestState st) {
         Clan clan = st.player.getClan();
         QuestState leader = null;
-        if (clan != null && clan.getLeader() != null && clan.getLeader().player() != null)
-            leader = clan.getLeader().player().getQuestState(this);
+        if (clan != null && clan.getLeader() != null && clan.getLeader().getPlayer() != null)
+            leader = clan.getLeader().getPlayer().getQuestState(this);
         return leader;
     }
 
@@ -93,7 +79,7 @@ public final class _501_ProofOfClanAlliance extends Quest {
 
     private void removeQuestFromOfflineMembers(QuestState st) {
         if (st.player == null || st.player.getClan() == null) {
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             return;
         }
 
@@ -110,7 +96,7 @@ public final class _501_ProofOfClanAlliance extends Quest {
 
     private void removeQuestFromOnlineMembers(QuestState st, boolean leader) {
         if (st.player == null || st.player.getClan() == null) {
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             return;
         }
 
@@ -129,13 +115,13 @@ public final class _501_ProofOfClanAlliance extends Quest {
         }
         for (Player pl : st.player.getClan().getOnlineMembers(st.player.getClan().getLeaderId()))
             if (pl != null && pl.getQuestState(this) != null)
-                pl.getQuestState(this).exitCurrentQuest(true);
+                pl.getQuestState(this).exitCurrentQuest();
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if (st.player == null || st.player.getClan() == null) {
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             return "noquest";
         }
 
@@ -152,7 +138,7 @@ public final class _501_ProofOfClanAlliance extends Quest {
             // SIR_KRISTOF_RODEMAI
             if (event.equalsIgnoreCase("30756-03.htm")) {
                 st.setCond(1);
-                st.setState(STARTED);
+                st.start();
                 st.playSound(SOUND_ACCEPT);
             }
 
@@ -187,7 +173,7 @@ public final class _501_ProofOfClanAlliance extends Quest {
         /* ##### Members area ###### */
 
         // STATUE_OF_OFFERING
-        else if (event.equalsIgnoreCase("30757-04.htm")) {
+        else if ("30757-04.htm".equalsIgnoreCase(event)) {
             List<String> deadlist = new ArrayList<>(List.of(leader.get("dead_list").split(" ")));
             deadlist.add(st.player.getName());
             StringBuilder deadstr = new StringBuilder();
@@ -200,7 +186,7 @@ public final class _501_ProofOfClanAlliance extends Quest {
             st.giveItems(SYMBOL_OF_LOYALTY);
             st.playSound(SOUND_ACCEPT);
         } else if ("30757-05.htm".equalsIgnoreCase(event))
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
 
             // WITCH_ATHREA
         else if ("30758-03.htm".equalsIgnoreCase(event))
@@ -220,7 +206,7 @@ public final class _501_ProofOfClanAlliance extends Quest {
         int cond = st.getCond();
 
         if (st.player == null || st.player.getClan() == null) {
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             return htmltext;
         }
 
@@ -233,13 +219,13 @@ public final class _501_ProofOfClanAlliance extends Quest {
         int npcId = npc.getNpcId();
         if (npcId == SIR_KRISTOF_RODEMAI) {
             if (!st.player.isClanLeader()) {
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 return "30756-10.htm";
             } else if (st.player.getClan().getLevel() <= 2) {
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 return "30756-08.htm";
             } else if (st.player.getClan().getLevel() >= 4) {
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 return "30756-09.htm";
             } else if (st.getQuestItemsCount(VOUCHER_OF_FAITH) > 0) {
                 st.playSound(SOUND_FANFARE2);
@@ -247,14 +233,14 @@ public final class _501_ProofOfClanAlliance extends Quest {
                 st.giveItems(PROOF_OF_ALLIANCE, 1);
                 st.addExpAndSp(0, 120000);
                 htmltext = "30756-07.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else if (cond == 1 || cond == 2)
                 return "30756-06.htm";
             else if (st.getQuestItemsCount(PROOF_OF_ALLIANCE) == 0) {
                 st.setCond(0);
                 return "30756-01.htm";
             } else {
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 return htmltext;
             }
         } else if (npcId == WITCH_KALIS) {
@@ -263,7 +249,7 @@ public final class _501_ProofOfClanAlliance extends Quest {
                     return "30759-01.htm";
                 else if (cond == 2) {
                     htmltext = "30759-05.htm";
-                    if (st.getQuestItemsCount(SYMBOL_OF_LOYALTY) == 3) {
+                    if (st.haveQuestItem(SYMBOL_OF_LOYALTY, 3)) {
                         int deads = 0;
                         try {
                             deads = st.get("dead_list").split(" ").length;
@@ -273,14 +259,10 @@ public final class _501_ProofOfClanAlliance extends Quest {
                         }
                     }
                 } else if (cond == 3)
-                    if (st.getQuestItemsCount(HERB_OF_HARIT) > 0 && st.getQuestItemsCount(HERB_OF_VANOR) > 0 && st.getQuestItemsCount(HERB_OF_OEL_MAHUM) > 0 && st.getQuestItemsCount(BLOOD_OF_EVA) > 0 && st.getQuestItemsCount(ANTIDOTE_RECIPE) > 0) {
-                        st.takeItems(ANTIDOTE_RECIPE, 1);
-                        st.takeItems(HERB_OF_HARIT, 1);
-                        st.takeItems(HERB_OF_VANOR, 1);
-                        st.takeItems(HERB_OF_OEL_MAHUM, 1);
-                        st.takeItems(BLOOD_OF_EVA, 1);
-                        st.giveItems(POTION_OF_RECOVERY, 1);
-                        st.giveItems(VOUCHER_OF_FAITH, 1);
+                    if (st.haveAllQuestItems(HERB_OF_HARIT, HERB_OF_VANOR, HERB_OF_OEL_MAHUM, BLOOD_OF_EVA, ANTIDOTE_RECIPE)) {
+                        st.takeAllItems(ANTIDOTE_RECIPE, HERB_OF_HARIT, HERB_OF_VANOR, HERB_OF_OEL_MAHUM, BLOOD_OF_EVA);
+                        st.giveItems(POTION_OF_RECOVERY);
+                        st.giveItems(VOUCHER_OF_FAITH);
                         st.cancelQuestTimer("poison_timer");
                         removeQuestFromMembers(st, false);
                         st.player.stopImmobilized();
@@ -296,7 +278,7 @@ public final class _501_ProofOfClanAlliance extends Quest {
             if (st.player.isClanLeader())
                 return "30757-03.htm";
             else if (st.player.getLevel() <= 39) {
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 return "30757-02.htm";
             } else {
                 String[] dlist;
@@ -309,9 +291,6 @@ public final class _501_ProofOfClanAlliance extends Quest {
                     return "Who are you?";
                 }
                 if (deads < 3) {
-                    for (String str : dlist)
-                        if (st.player.getName().equalsIgnoreCase(str))
-                            return "you cannot die again!";
                     return "30757-01.htm";
                 }
             }
@@ -324,7 +303,7 @@ public final class _501_ProofOfClanAlliance extends Quest {
             try {
                 dlist = leader.get("dead_list").split(" ");
             } catch (Exception e) {
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 return "Who are you?";
             }
             boolean flag = false;
@@ -332,7 +311,7 @@ public final class _501_ProofOfClanAlliance extends Quest {
                 if (st.player.getName().equalsIgnoreCase(str))
                     flag = true;
             if (!flag) {
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 return "Who are you?";
             }
 
@@ -345,7 +324,7 @@ public final class _501_ProofOfClanAlliance extends Quest {
                 return "30758-09.htm";
             else if (game_state == 2) {
                 st.playSound(SOUND_FINISH);
-                st.giveItems(BLOOD_OF_EVA, 1);
+                st.giveItems(BLOOD_OF_EVA);
                 st.cancelQuestTimer("chest_timer");
                 stop_chest_game(st);
                 leader.set("chest_game", 3);
@@ -358,7 +337,7 @@ public final class _501_ProofOfClanAlliance extends Quest {
     @Override
     public void onKill(NpcInstance npc, QuestState st) {
         if (st.player == null || st.player.getClan() == null) {
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             return;
         }
 
@@ -377,15 +356,14 @@ public final class _501_ProofOfClanAlliance extends Quest {
         }
 
         // second part, herbs gathering
-        for (int[] m : MOBS)
-            if (npcId == m[0] && st.getInt(String.valueOf(m[1])) == 0)
+        MOBS.forEach((k, v) -> {
+            if (npcId == k && !st.isSet("" + v))
                 if (Rnd.chance(RATE)) {
-                    st.giveItems(m[1]);
-                    leader.set(String.valueOf(m[1]), 1);
+                    st.giveItems(v);
+                    leader.set("" + v);
                     st.playSound(SOUND_MIDDLE);
-                    return;
                 }
-
+        });
         // third part, chest game
         for (int i : CHESTS)
             if (npcId == i) {
@@ -414,7 +392,7 @@ public final class _501_ProofOfClanAlliance extends Quest {
 
     private void start_chest_game(QuestState st) {
         if (st.player == null || st.player.getClan() == null) {
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             return;
         }
 
@@ -452,7 +430,7 @@ public final class _501_ProofOfClanAlliance extends Quest {
     @Override
     public void onDeath(Creature npc, Creature pc, QuestState st) {
         if (st.player == null || st.player.getClan() == null) {
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             return;
         }
 

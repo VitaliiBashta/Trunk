@@ -42,7 +42,7 @@ public final class ExMpccRoomMember extends L2GameServerPacket {
         MpccRoomMemberInfo(Player member, int type) {
             this.objectId = member.objectId();
             this.name = member.getName();
-            this.classId = member.getClassId().ordinal();
+            this.classId = member.getClassId().id;
             this.level = member.getLevel();
             this.location = MatchingRoomManager.INSTANCE.getLocation(member);
             this.memberType = type;

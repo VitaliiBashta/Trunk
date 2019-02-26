@@ -29,12 +29,12 @@ public final class ArmorSetListener implements OnEquipListener {
 
         Player player = actor.getPlayer();
 
-        // checks if player wears chest item
+        // checks if getPlayer wears chest item
         ItemInstance chestItem = player.getInventory().getPaperdollItem(Inventory.PAPERDOLL_CHEST);
         if (chestItem == null)
             return;
 
-        // checks if there is armorSet for chest item that player wears
+        // checks if there is armorSet for chest item that getPlayer wears
         ArmorSet armorSet = ArmorSetsHolder.getArmorSet(chestItem.getItemId());
         if (armorSet == null)
             return;
@@ -80,7 +80,7 @@ public final class ArmorSetListener implements OnEquipListener {
             player.sendPacket(new SkillList(player));
             player.updateStats();
 
-            // Alexander - If the player has the complete set then enable dressme visual ids
+            // Alexander - If the getPlayer has the complete set then enable dressme visual ids
             if (player.getInventory().hasAllDressMeItemsEquipped()) {
                 player.getInventory().setMustShowDressMe(true);
                 player.broadcastUserInfo(true);
@@ -149,7 +149,7 @@ public final class ArmorSetListener implements OnEquipListener {
                 update = true;
             }
 
-            // Alexander - If the player has no longer the complete set then disable dressme visual ids
+            // Alexander - If the getPlayer has no longer the complete set then disable dressme visual ids
             if (player.getInventory().mustShowDressMe()) {
                 player.getInventory().setMustShowDressMe(false);
                 player.broadcastUserInfo(true);

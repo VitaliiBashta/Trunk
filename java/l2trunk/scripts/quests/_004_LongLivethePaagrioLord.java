@@ -38,7 +38,7 @@ public final class _004_LongLivethePaagrioLord extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if (event.equalsIgnoreCase("30578-03.htm")) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         }
         return event;
@@ -53,12 +53,12 @@ public final class _004_LongLivethePaagrioLord extends Quest {
             if (cond == 0) {
                 if (st.player.getRace() != Race.orc) {
                     htmltext = "30578-00.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else if (st.player.getLevel() >= 2)
                     htmltext = "30578-02.htm";
                 else {
                     htmltext = "30578-01.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1)
                 htmltext = "30578-04.htm";
@@ -71,7 +71,7 @@ public final class _004_LongLivethePaagrioLord extends Quest {
                 if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("ng1"))
                     st.player.sendPacket(new ExShowScreenMessage("  Delivery duty complete.\nGo find the Newbie Guide."));
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(false);
+                st.finish();
             }
         } else if (cond == 1)
             if (NPC_GIFTS.containsKey(npcId)) {

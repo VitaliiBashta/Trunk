@@ -37,7 +37,7 @@ public final class _191_VainConclusion extends Quest {
         } else if (event.equalsIgnoreCase("30512-02.htm")) {
             st.giveItems(ADENA_ID, 117327);
             st.addExpAndSp(309467, 20614);
-            st.exitCurrentQuest(false);
+            st.finish();
             st.playSound(SOUND_FINISH);
         }
 

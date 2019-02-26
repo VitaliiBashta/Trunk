@@ -13,9 +13,9 @@ public final class _299_GatherIngredientsforPie extends Quest {
     // Mobs
     private static final int Wasp_Worker = 20934;
     private static final int Wasp_Leader = 20935;
-    // Items
+    // items
     private static final int Varnish = 1865;
-    // Quest Items
+    // Quest items
     private static final int Fruit_Basket = 7136;
     private static final int Avellan_Spice = 7137;
     private static final int Honey_Pouch = 7138;
@@ -27,13 +27,9 @@ public final class _299_GatherIngredientsforPie extends Quest {
     public _299_GatherIngredientsforPie() {
         super(false);
         addStartNpc(Emily);
-        addTalkId(Lara);
-        addTalkId(Bright);
-        addKillId(Wasp_Worker);
-        addKillId(Wasp_Leader);
-        addQuestItem(Fruit_Basket);
-        addQuestItem(Avellan_Spice);
-        addQuestItem(Honey_Pouch);
+        addTalkId(Lara,Bright);
+        addKillId(Wasp_Worker,Wasp_Leader);
+        addQuestItem(Fruit_Basket,Avellan_Spice,Honey_Pouch);
     }
 
     @Override
@@ -42,7 +38,7 @@ public final class _299_GatherIngredientsforPie extends Quest {
         int cond = st.getCond();
 
         if (event.equalsIgnoreCase("emilly_q0299_0104.htm") && _state == CREATED) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("emilly_q0299_0201.htm") && _state == STARTED) {
@@ -70,7 +66,7 @@ public final class _299_GatherIngredientsforPie extends Quest {
             else
                 st.giveItems(ADENA_ID, 25000);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
 
         return event;
@@ -87,7 +83,7 @@ public final class _299_GatherIngredientsforPie extends Quest {
                 st.setCond(0);
                 return "emilly_q0299_0101.htm";
             }
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             return "emilly_q0299_0102.htm";
         }
 

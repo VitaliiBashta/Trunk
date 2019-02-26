@@ -296,7 +296,7 @@ public final class Say2C extends L2GameClientPacket {
                         if (game != null)
                             stream = game.getAllPlayers();
                     } else
-                        stream = World.getAroundPlayers(activeChar).stream();
+                        stream = World.getAroundPlayers(activeChar);
 
                     stream.filter(p -> p != activeChar)
                             .filter(p -> !p.isBlockAll())

@@ -5,11 +5,13 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
+import java.util.stream.IntStream;
+
 public final class _628_HuntGoldenRam extends Quest {
     //Npcs
     private static final int KAHMAN = 31554;
 
-    //Items
+    //items
     private static final int CHITIN = 7248; //Splinter Stakato Chitin
     private static final int CHITIN2 = 7249; //Needle Stakato Chitin
     private static final int RECRUIT = 7246; //Golden Ram Badge - Recruit
@@ -22,11 +24,9 @@ public final class _628_HuntGoldenRam extends Quest {
 
         addStartNpc(KAHMAN);
 
-        for (int npcId = 21508; npcId <= 21518; npcId++)
-            addKillId(npcId);
+        addKillId(IntStream.rangeClosed(21508, 21518).toArray());
 
-        addQuestItem(CHITIN);
-        addQuestItem(CHITIN2);
+        addQuestItem(CHITIN, CHITIN2);
     }
 
     @Override
@@ -42,7 +42,7 @@ public final class _628_HuntGoldenRam extends Quest {
             }
         } else if ("31554-07.htm".equalsIgnoreCase(event)) {
             st.playSound(SOUND_GIVEUP);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
         return htmltext;
     }
@@ -59,11 +59,11 @@ public final class _628_HuntGoldenRam extends Quest {
             if (st.player.getLevel() >= 66) {
                 htmltext = "31554-02.htm";
                 st.setCond(1);
-                st.setState(STARTED);
+                st.start();
                 st.playSound(SOUND_ACCEPT);
             } else {
                 htmltext = "31554-01.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (cond == 1) {
             if (chitin1 >= 100)
@@ -78,7 +78,7 @@ public final class _628_HuntGoldenRam extends Quest {
                 st.giveItems(SOLDIER);
                 st.player.updateRam();
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
             if (chitin1 == 0 && chitin2 == 0)
                 htmltext = "31554-04b.htm";
@@ -91,7 +91,7 @@ public final class _628_HuntGoldenRam extends Quest {
     @Override
     public void onKill(NpcInstance npc, QuestState st) {
         if (st.getState() != STARTED)
-            return ;
+            return;
         int npcId = npc.getNpcId();
         int cond = st.getCond();
 

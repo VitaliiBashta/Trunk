@@ -143,14 +143,7 @@ public final class _402_PathToKnight extends Quest {
 
         addStartNpc(SIR_KLAUS_VASPER);
 
-        addTalkId(BIOTIN);
-        addTalkId(LEVIAN);
-        addTalkId(GILBERT);
-        addTalkId(RAYMOND);
-        addTalkId(SIR_COLLIN_WINDAWOOD);
-        addTalkId(BATHIS);
-        addTalkId(BEZIQUE);
-        addTalkId(SIR_ARON_TANFORD);
+        addTalkId(BIOTIN,LEVIAN,GILBERT,RAYMOND,SIR_COLLIN_WINDAWOOD,BATHIS,BEZIQUE,SIR_ARON_TANFORD);
 
         for (int[] element : DROPLIST)
             addKillId(element[0]);
@@ -181,18 +174,18 @@ public final class _402_PathToKnight extends Quest {
         long church_mark1 = st.getQuestItemsCount(EINHASAD_CHURCH_MARK1);
         long church_mark2 = st.getQuestItemsCount(EINHASAD_CHURCH_MARK2);
         long church_mark3 = st.getQuestItemsCount(EINHASAD_CHURCH_MARK3);
-        if (event.equalsIgnoreCase("sir_karrel_vasper_q0402_02a.htm")) {
+        if ("sir_karrel_vasper_q0402_02a.htm".equalsIgnoreCase(event)) {
             if (classid != 0x00 || level < 18) {
                 htmltext = "sir_karrel_vasper_q0402_02.htm";
-                st.exitCurrentQuest(true);
-            } else if (st.getQuestItemsCount(SWORD_OF_RITUAL) > 0)
+                st.exitCurrentQuest();
+            } else if (st.haveQuestItem(SWORD_OF_RITUAL))
                 htmltext = "sir_karrel_vasper_q0402_04.htm";
             else
                 htmltext = "sir_karrel_vasper_q0402_05.htm";
         } else if ("sir_karrel_vasper_q0402_08.htm".equalsIgnoreCase(event)) {
             if (st.getCond() == 0 && classid == 0x00 && level >= 18) {
                 st.setCond(1);
-                st.setState(STARTED);
+                st.start();
                 st.playSound(SOUND_ACCEPT);
                 st.giveItems(MARK_OF_ESQUIRE);
             }
@@ -217,17 +210,17 @@ public final class _402_PathToKnight extends Quest {
         } else if ("sir_karrel_vasper_q0402_13.htm".equalsIgnoreCase(event) | "sir_karrel_vasper_q0402_14.htm".equalsIgnoreCase(event))
             if (squire > 0 && coin1 + coin2 + coin3 + coin4 + coin5 + coin6 >= 3) {
                 for (int i = 1162; i < 1179; i++)
-                    st.takeItems(i, -1);
+                    st.takeItems(i);
                 st.takeItems(MARK_OF_ESQUIRE);
                 if (st.player.getClassId().occupation() == 0) {
                     st.giveItems(SWORD_OF_RITUAL);
                     if (!st.player.isVarSet("prof1")) {
-                        st.player.setVar("prof1", 1);
+                        st.player.setVar("prof1");
                         st.addExpAndSp(228064, 16455);
                         st.giveItems(ADENA_ID, 81900);
                     }
                 }
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 st.playSound(SOUND_FINISH);
             }
         return htmltext;
@@ -269,7 +262,7 @@ public final class _402_PathToKnight extends Quest {
                     st.takeItems(MARK_OF_ESQUIRE, -1);
                     st.giveItems(SWORD_OF_RITUAL, 1);
                     st.unset("cond");
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                     st.playSound(SOUND_FINISH);
                 }
         } else if (npcId == BATHIS && cond == 1 && squire > 0) {
@@ -280,9 +273,9 @@ public final class _402_PathToKnight extends Quest {
                     htmltext = "captain_bathia_q0402_03.htm";
                 else {
                     htmltext = "captain_bathia_q0402_04.htm";
-                    st.takeItems(BUGBEAR_NECKLACE, -1);
+                    st.takeItems(BUGBEAR_NECKLACE);
                     st.takeItems(GLUDIO_GUARDS_MARK1, 1);
-                    st.giveItems(COIN_OF_LORDS1, 1);
+                    st.giveItems(COIN_OF_LORDS1);
                     st.playSound(SOUND_MIDDLE);
                 }
             } else htmltext = "captain_bathia_q0402_05.htm";
@@ -322,9 +315,9 @@ public final class _402_PathToKnight extends Quest {
                     htmltext = "levian_q0402_03.htm";
                 else {
                     htmltext = "levian_q0402_04.htm";
-                    st.takeItems(LIZARDMAN_TOTEM, -1);
+                    st.takeItems(LIZARDMAN_TOTEM);
                     st.takeItems(EINHASAD_CHURCH_MARK2, 1);
-                    st.giveItems(COIN_OF_LORDS4, 1);
+                    st.giveItems(COIN_OF_LORDS4);
                     st.playSound(SOUND_MIDDLE);
                 }
             } else htmltext = "levian_q0402_05.htm";
@@ -336,9 +329,9 @@ public final class _402_PathToKnight extends Quest {
                     htmltext = "gilbert_q0402_03.htm";
                 else {
                     htmltext = "gilbert_q0402_04.htm";
-                    st.takeItems(GIANT_SPIDER_HUSK, -1);
+                    st.takeItems(GIANT_SPIDER_HUSK);
                     st.takeItems(GLUDIO_GUARDS_MARK3, 1);
-                    st.giveItems(COIN_OF_LORDS5, 1);
+                    st.giveItems(COIN_OF_LORDS5);
                     st.playSound(SOUND_MIDDLE);
                 }
             } else htmltext = "gilbert_q0402_05.htm";

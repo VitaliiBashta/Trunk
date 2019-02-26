@@ -10,7 +10,7 @@ public final class _009_IntoTheCityOfHumans extends Quest {
     private final int PETUKAI = 30583;
     private final int TANAPI = 30571;
     private final int TAMIL = 30576;
-    //Items
+    //items
     private static final int SCROLL_OF_ESCAPE_GIRAN = 7126;
     //Quest Item
     private static final int MARK_OF_TRAVELER = 7570;
@@ -20,26 +20,24 @@ public final class _009_IntoTheCityOfHumans extends Quest {
 
         addStartNpc(PETUKAI);
 
-        addTalkId(PETUKAI);
-        addTalkId(TANAPI);
-        addTalkId(TAMIL);
+        addTalkId(TANAPI,TAMIL);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("centurion_petukai_q0009_0104.htm")) {
+        if ("centurion_petukai_q0009_0104.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("seer_tanapi_q0009_0201.htm")) {
+        } else if ("seer_tanapi_q0009_0201.htm".equalsIgnoreCase(event)) {
             st.setCond(2);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("gatekeeper_tamil_q0009_0301.htm")) {
-            st.giveItems(SCROLL_OF_ESCAPE_GIRAN, 1);
-            st.giveItems(MARK_OF_TRAVELER, 1);
+        } else if ("gatekeeper_tamil_q0009_0301.htm".equalsIgnoreCase(event)) {
+            st.giveItems(SCROLL_OF_ESCAPE_GIRAN);
+            st.giveItems(MARK_OF_TRAVELER);
             st.unset("cond");
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(false);
+            st.finish();
         }
         return event;
     }
@@ -55,7 +53,7 @@ public final class _009_IntoTheCityOfHumans extends Quest {
                     htmltext = "centurion_petukai_q0009_0101.htm";
                 else {
                     htmltext = "centurion_petukai_q0009_0102.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1)
                 htmltext = "centurion_petukai_q0009_0105.htm";

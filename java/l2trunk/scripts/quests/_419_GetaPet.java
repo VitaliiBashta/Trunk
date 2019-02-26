@@ -224,13 +224,10 @@ public final class _419_GetaPet extends Quest {
         super(false);
 
         addStartNpc(PET_MANAGER_MARTIN);
-        addTalkId(PET_MANAGER_MARTIN);
-        addTalkId(GK_BELLA);
-        addTalkId(MC_ELLIE);
-        addTalkId(GD_METTY);
+        addTalkId(GK_BELLA, MC_ELLIE, GD_METTY);
 
-        addQuestItem(ANIMAL_LOVERS_LIST1,ANIMAL_SLAYER_LIST2,ANIMAL_SLAYER_LIST3,ANIMAL_SLAYER_LIST4,ANIMAL_SLAYER_LIST5,ANIMAL_SLAYER_LIST6);
-        addQuestItem(SPIDER_LEG1,SPIDER_LEG2,SPIDER_LEG3,SPIDER_LEG4,SPIDER_LEG5,SPIDER_LEG6);
+        addQuestItem(ANIMAL_LOVERS_LIST1, ANIMAL_SLAYER_LIST2, ANIMAL_SLAYER_LIST3, ANIMAL_SLAYER_LIST4, ANIMAL_SLAYER_LIST5,
+                ANIMAL_SLAYER_LIST6, SPIDER_LEG1, SPIDER_LEG2, SPIDER_LEG3, SPIDER_LEG4, SPIDER_LEG5, SPIDER_LEG6);
 
         for (int[] aDROPLIST_COND : DROPLIST_COND) addKillId(aDROPLIST_COND[2]);
     }
@@ -287,7 +284,7 @@ public final class _419_GetaPet extends Quest {
             st.giveItems(WOLF_COLLAR);
             st.playSound(SOUND_FINISH);
             htmltext = "Completed.htm";
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
         return htmltext;
     }
@@ -299,7 +296,7 @@ public final class _419_GetaPet extends Quest {
         if (event.equalsIgnoreCase("details"))
             htmltext = "419_confirm.htm";
         else if ("agree".equalsIgnoreCase(event)) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             switch (st.player.getRace()) {
                 case human:
@@ -329,7 +326,7 @@ public final class _419_GetaPet extends Quest {
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("disagree")) {
             htmltext = "419_cancelled.htm";
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         } else if (StateId == 1) {
             if (event.equalsIgnoreCase("talk"))
                 htmltext = "419_talk.htm";
@@ -349,16 +346,16 @@ public final class _419_GetaPet extends Quest {
             if ("tryme".equalsIgnoreCase(event))
                 htmltext = check_questions(st);
             else if ("wrong".equalsIgnoreCase(event)) {
-                st.set("id", 1);
-                st.set("progress", 0);
+                st.set("id");
+                st.unset("progress");
                 st.unset("quiz");
                 st.unset("answers");
                 st.unset("question");
                 st.giveItems(ANIMAL_LOVERS_LIST1);
                 htmltext = "419_failed.htm";
             } else if ("right".equalsIgnoreCase(event)) {
-                st.set("answers", st.getInt("answers") + 1);
-                st.set("question", 0);
+                st.inc("answers");
+                st.unset("question");
                 htmltext = check_questions(st);
             }
         return htmltext;
@@ -374,7 +371,7 @@ public final class _419_GetaPet extends Quest {
             if (npcId == PET_MANAGER_MARTIN)
                 if (st.player.getLevel() < 15) {
                     htmltext = "419_low_level.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else
                     htmltext = "Start.htm";
         } else if (cond == 1)
@@ -419,7 +416,7 @@ public final class _419_GetaPet extends Quest {
                     if (st.getInt("progress") == 7) {
                         st.takeItems(ANIMAL_LOVERS_LIST1);
                         st.set("quiz", "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15");
-                        st.set("answers", 0);
+                        st.unset("answers");
                         st.set("id", 2);
                         htmltext = "Talked.htm";
                     } else
@@ -448,7 +445,7 @@ public final class _419_GetaPet extends Quest {
                     else if (st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[7], aDROPLIST_COND[5], aDROPLIST_COND[6]))
                         if (aDROPLIST_COND[1] != cond && aDROPLIST_COND[1] != 0) {
                             st.setCond(aDROPLIST_COND[1]);
-                            st.setState(STARTED);
+                            st.start();
                         }
     }
 }

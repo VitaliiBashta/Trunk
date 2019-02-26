@@ -5,6 +5,7 @@ import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.SkillLearn;
 import l2trunk.gameserver.model.base.AcquireType;
 import l2trunk.gameserver.model.base.ClassId;
+import l2trunk.gameserver.model.base.Race;
 import l2trunk.gameserver.model.pledge.Clan;
 import l2trunk.gameserver.model.pledge.SubUnit;
 import org.slf4j.Logger;
@@ -18,11 +19,11 @@ import java.util.stream.Stream;
 public final class SkillAcquireHolder {
     private static final Logger LOG = LoggerFactory.getLogger(SkillAcquireHolder.class);
     // классовые зависимости
-    private static final Map<Integer, List<SkillLearn>> NORMAL_SKILL_TREE = new HashMap<>();
-    private static final Map<Integer, List<SkillLearn>> TRANSFER_SKILL_TREE = new HashMap<>();
+    private static final Map<ClassId, List<SkillLearn>> NORMAL_SKILL_TREE = new HashMap<>();
+    private static final Map<ClassId, List<SkillLearn>> TRANSFER_SKILL_TREE = new HashMap<>();
     // расовые зависимости
-    private static final Map<Integer, List<SkillLearn>> FISHING_SKILL_TREE = new HashMap<>();
-    private static final Map<Integer, List<SkillLearn>> TRANSFORMATION_SKILL_TREE = new HashMap<>();
+    private static final Map<Race, List<SkillLearn>> FISHING_SKILL_TREE = new HashMap<>();
+    private static final Map<Race, List<SkillLearn>> TRANSFORMATION_SKILL_TREE = new HashMap<>();
     // без зависимостей
     private static final List<SkillLearn> CERTIFICATION_SKILL_TREE = new ArrayList<>();
     private static final List<SkillLearn> COLLECTION_SKILL_TREE = new ArrayList<>();
@@ -214,15 +215,15 @@ public final class SkillAcquireHolder {
                 skills = COLLECTION_SKILL_TREE;
                 break;
             case TRANSFORMATION:
-                skills = TRANSFORMATION_SKILL_TREE.get(player.getRace().ordinal());
+                skills = TRANSFORMATION_SKILL_TREE.get(player.getRace());
                 break;
             case FISHING:
-                skills = FISHING_SKILL_TREE.get(player.getRace().ordinal());
+                skills = FISHING_SKILL_TREE.get(player.getRace());
                 break;
             case TRANSFER_CARDINAL:
             case TRANSFER_EVA_SAINTS:
             case TRANSFER_SHILLIEN_SAINTS:
-                int transferId = type.transferClassId();
+                ClassId transferId = type.transferClassId();
                 if (player.getActiveClassId() != transferId)
                     return false;
 
@@ -265,14 +266,11 @@ public final class SkillAcquireHolder {
     public static List<SkillLearn> getSkillLearnListByItemId(Player player, int itemId) {
         List<SkillLearn> learns = NORMAL_SKILL_TREE.get(player.getActiveClassId());
         if (learns == null)
-            return Collections.emptyList();
+            return List.of();
 
-        List<SkillLearn> l = new ArrayList<>(1);
-        for (SkillLearn $i : learns)
-            if ($i.getItemId() == itemId)
-                l.add($i);
-
-        return l;
+        return learns.stream()
+                .filter(item -> item.getItemId() == itemId)
+                .collect(Collectors.toList());
     }
 
     public static List<Integer> getAllSpellbookIds() {
@@ -299,12 +297,12 @@ public final class SkillAcquireHolder {
                     continue;
                 }
 
-                NORMAL_SKILL_TREE.put(classId.id, temp);
+                NORMAL_SKILL_TREE.put(classId, temp);
 
                 classId = classId.parent;
 
                 while (classId != null) {
-                    List<SkillLearn> parentList = NORMAL_SKILL_TREE.get(classId.id);
+                    List<SkillLearn> parentList = NORMAL_SKILL_TREE.get(classId);
                     temp.addAll(parentList);
 
                     classId = classId.parent;
@@ -318,11 +316,11 @@ public final class SkillAcquireHolder {
         FISHING_SKILL_TREE.put(race, s);
     }
 
-    public static void addAllTransferLearns(int classId, List<SkillLearn> s) {
+    public static void addAllTransferLearns(ClassId classId, List<SkillLearn> s) {
         TRANSFER_SKILL_TREE.put(classId, s);
     }
 
-    public static void addAllTransformationLearns(int race, List<SkillLearn> s) {
+    public static void addAllTransformationLearns(Race race, List<SkillLearn> s) {
         TRANSFORMATION_SKILL_TREE.put(race, s);
     }
 

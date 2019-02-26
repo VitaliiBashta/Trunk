@@ -52,14 +52,14 @@ public final class _184_NikolasCooperationContract extends Quest {
                 st.giveItems(Certificate);
             st.giveItems(ADENA_ID, 72527);
             st.addExpAndSp(203717, 14032);
-            st.exitCurrentQuest(false);
+            st.finish();
             st.playSound(SOUND_FINISH);
-        } else if (event.equalsIgnoreCase("32366-02.htm")) {
+        } else if ("32366-02.htm".equalsIgnoreCase(event)) {
             NpcInstance alarm = st.addSpawn(Alarm, Location.of(16491, 113563, -9064));
-            st.set("step", 1);
+            st.set("step");
             st.playSound("ItemSound3.sys_siren");
             st.startQuestTimer("1", 60000, alarm);
-            Functions.npcSay(alarm, "Intruder Alert! The alarm will player-destruct in 1 minutes.");
+            Functions.npcSay(alarm, "Intruder Alert! The alarm will getPlayer-destruct in 1 minutes.");
         } else if ("32366-05.htm".equalsIgnoreCase(event)) {
             st.unset("step");
             st.playSound(SOUND_MIDDLE);
@@ -69,11 +69,11 @@ public final class _184_NikolasCooperationContract extends Quest {
             st.unset("step");
             st.playSound(SOUND_MIDDLE);
             st.setCond(4);
-            st.giveItems(Metal, 1);
+            st.giveItems(Metal);
         } else if ("32367-02.htm".equalsIgnoreCase(event))
-            st.set("pass", 0);
+            st.unset("pass");
         else if (event.startsWith("correct")) {
-            st.set("pass", st.getInt("pass" + 1));
+            st.inc("pass");
             htmltext = event.substring(8);
             if (htmltext.equals("32367-07.htm"))
                 if (st.getInt("pass") == 4) {
@@ -87,15 +87,15 @@ public final class _184_NikolasCooperationContract extends Quest {
                 } else
                     htmltext = "32367-06.htm";
         } else if ("1".equals(event)) {
-            Functions.npcSay(npc, "The alarm will player-destruct in 60 seconds. Enter passcode to override.");
+            Functions.npcSay(npc, "The alarm will getPlayer-destruct in 60 seconds. Enter passcode to override.");
             st.startQuestTimer("2", 30000, npc);
             return null;
         } else if ("2".equals(event)) {
-            Functions.npcSay(npc, "The alarm will player-destruct in 30 seconds. Enter passcode to override.");
+            Functions.npcSay(npc, "The alarm will getPlayer-destruct in 30 seconds. Enter passcode to override.");
             st.startQuestTimer("3", 20000, npc);
             return null;
         } else if ("3".equals(event)) {
-            Functions.npcSay(npc, "The alarm will player-destruct in 10 seconds. Enter passcode to override.");
+            Functions.npcSay(npc, "The alarm will getPlayer-destruct in 10 seconds. Enter passcode to override.");
             st.startQuestTimer("4", 10000, npc);
             return null;
         } else if ("4".equals(event)) {

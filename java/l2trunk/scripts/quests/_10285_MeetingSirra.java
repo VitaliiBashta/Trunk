@@ -32,7 +32,7 @@ public final class _10285_MeetingSirra extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if (event.equalsIgnoreCase("rafforty_q10285_03.htm")) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if ("enterinstance".equalsIgnoreCase(event)) {
@@ -46,7 +46,7 @@ public final class _10285_MeetingSirra extends Quest {
             st.setCond(4);
         else if ("sirraspawn".equalsIgnoreCase(event)) {
             st.setCond(5);
-            st.player.getReflection().addSpawnWithoutRespawn(SIRRA, new Location(-23848, -8744, -5413, 49152));
+            st.player.getReflection().addSpawnWithoutRespawn(SIRRA, Location.of(-23848, -8744, -5413, 49152));
             st.player.getAroundNpc(1000, 100)
                     .filter(sirra -> sirra.getNpcId() == SIRRA)
                     .forEach(sirra ->
@@ -86,7 +86,7 @@ public final class _10285_MeetingSirra extends Quest {
                     htmltext = "rafforty_q10285_01.htm";
                 else {
                     htmltext = "rafforty_q10285_00.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond >= 1 && cond < 7)
                 htmltext = "rafforty_q10285_03.htm";
@@ -94,9 +94,9 @@ public final class _10285_MeetingSirra extends Quest {
                 htmltext = "rafforty_q10285_04.htm";
                 st.giveItems(ADENA_ID, 283425);
                 st.addExpAndSp(939075, 83855);
-                st.setState(COMPLETED);
+                st.complete();
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(false);
+                st.finish();
             }
         } else if (npcId == JINIA) {
             if (cond == 2)
@@ -147,7 +147,7 @@ public final class _10285_MeetingSirra extends Quest {
         @Override
         public void runImpl() {
             if (_r != null) {
-                NpcInstance freya = _r.addSpawnWithoutRespawn(18847, new Location(114720, -117085, -11088, 15956));
+                NpcInstance freya = _r.addSpawnWithoutRespawn(18847, Location.of(114720, -117085, -11088, 15956));
                 ThreadPoolManager.INSTANCE.schedule(new FreyaMovie(_player, _r, freya), 2 * 60 * 1000L);
             }
         }

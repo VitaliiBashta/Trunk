@@ -20,10 +20,12 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import static l2trunk.commons.lang.NumberUtils.toInt;
+
 public final class CareerManager implements ScriptFile, ICommunityBoardHandler {
     private static final Logger _log = LoggerFactory.getLogger(CareerManager.class);
 
-    private static void changeClass(Player player, int classId) {
+    private static void changeClass(Player player, ClassId classId) {
         if (player.getClassId().occupation() == 2)
             player.sendPacket(SystemMsg.CONGRATULATIONS__YOUVE_COMPLETED_YOUR_THIRDCLASS_TRANSFER_QUEST); // ??? 3 ?????
         else
@@ -45,7 +47,7 @@ public final class CareerManager implements ScriptFile, ICommunityBoardHandler {
         return true;
     }
 
-    private static boolean checkIfCanTransferToClass(Player player, int newClassId) {
+    private static boolean checkIfCanTransferToClass(Player player, ClassId newClassId) {
         if (player == null)
             return false;
 
@@ -58,7 +60,7 @@ public final class CareerManager implements ScriptFile, ICommunityBoardHandler {
 
         if (level >= 76 && jobLevel == 3 && Config.ALLOW_CLASS_MASTERS_LIST.contains(jobLevel)) {
             for (ClassId cid : ClassId.values()) {
-                if (cid.id != newClassId)
+                if (cid != newClassId)
                     continue;
 
                 if (cid == ClassId.inspector)
@@ -103,12 +105,12 @@ public final class CareerManager implements ScriptFile, ICommunityBoardHandler {
             st.nextToken();
             st.nextToken();
             st.nextToken();
-            final int classId = Integer.parseInt(st.nextToken());
 
-            // Synerge - Check if the player can actually transfer to that class
+            final ClassId classId = ClassId.getById(toInt(st.nextToken()));
+
+            // Synerge - Check if the getPlayer can actually transfer to that class
             if (!checkIfCanTransferToClass(activeChar, classId)) {
-                // TODO: Cheater?
-                _log.warn("CareerManager: The player " + activeChar.getName() + " wanted to transfer to a class that he cannot to. Cheater?");
+                _log.warn("CareerManager: The getPlayer " + activeChar.getName() + " wanted to transfer to a class that he cannot to. Cheater?");
                 return;
             }
 

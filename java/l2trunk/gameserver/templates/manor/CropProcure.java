@@ -1,51 +1,45 @@
 package l2trunk.gameserver.templates.manor;
 
 public final class CropProcure {
-    private final int _rewardType;
-    private final int _cropId;
-    private final long _buy;
-    private long _buyResidual;
-    private long _price;
+    private final int rewardType;
+    public final int cropId;
+    private final long buy;
+    public final long price;
+    private long buyResidual;
 
     public CropProcure(int id) {
-        _cropId = id;
-        _buyResidual = 0;
-        _rewardType = 0;
-        _buy = 0;
-        _price = 0;
+        cropId = id;
+        buyResidual = 0;
+        rewardType = 0;
+        buy = 0;
+        price = 0;
     }
 
     public CropProcure(int id, long amount, int type, long buy, long price) {
-        _cropId = id;
-        _buyResidual = amount;
-        _rewardType = type;
-        _buy = buy;
-        _price = price;
-        if (_price < 0L)
-            _price = 0L;
+        cropId = id;
+        buyResidual = amount;
+        rewardType = type;
+        this.buy = buy;
+        this.price = price < 0 ? 0 : price;
     }
 
     public int getReward() {
-        return _rewardType;
-    }
-
-    public int getId() {
-        return _cropId;
+        return rewardType;
     }
 
     public long getAmount() {
-        return _buyResidual;
+        return buyResidual;
     }
 
     public void setAmount(long amount) {
-        _buyResidual = amount;
+        buyResidual = amount;
     }
 
     public long getStartAmount() {
-        return _buy;
+        return buy;
     }
 
-    public long getPrice() {
-        return _price;
+    public long price() {
+        return price;
     }
 }

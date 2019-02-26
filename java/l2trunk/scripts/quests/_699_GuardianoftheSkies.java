@@ -33,7 +33,7 @@ public final class _699_GuardianoftheSkies extends Quest {
 
         if (event.equals("quest_accept") && cond == 0) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
             htmltext = "engineer_recon_q0699_04.htm";
         } else if (event.equals("reply_2") && cond == 1)
@@ -41,7 +41,7 @@ public final class _699_GuardianoftheSkies extends Quest {
         else if (event.equals("reply_3") && cond == 1) {
             st.playSound(SOUND_FINISH);
             htmltext = "engineer_recon_q0699_09.htm";
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
         return htmltext;
     }
@@ -58,7 +58,7 @@ public final class _699_GuardianoftheSkies extends Quest {
                     htmltext = "engineer_recon_q0699_01.htm";
                 else {
                     htmltext = "engineer_recon_q0699_02.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1 && st.getQuestItemsCount(q_gold_feather_of_vulture) < 1)
                 htmltext = "engineer_recon_q0699_05.htm";

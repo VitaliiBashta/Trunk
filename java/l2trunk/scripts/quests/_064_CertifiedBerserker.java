@@ -53,31 +53,20 @@ public final class _064_CertifiedBerserker extends Quest {
 
         addStartNpc(ORKURUS);
 
-        addTalkId(ORKURUS);
-        addTalkId(TENAIN);
-        addTalkId(GORT);
-        addTalkId(ENTIEN);
-        addTalkId(HARKILGAMED);
+        addTalkId(ORKURUS,TENAIN,GORT,ENTIEN,HARKILGAMED);
 
-        addKillId(BREKA_ORC);
-        addKillId(BREKA_ORC_ARCHER);
-        addKillId(BREKA_ORC_SHAMAN);
-        addKillId(BREKA_ORC_OVERLORD);
-        addKillId(BREKA_ORC_WARRIOR);
-        addKillId(ROAD_SCAVENGER);
-        addKillId(DEAD_SEEKER);
-        addKillId(STAKATO);
-        addKillId(DIVINE);
+        addKillId(BREKA_ORC,BREKA_ORC_ARCHER,BREKA_ORC_SHAMAN,BREKA_ORC_OVERLORD,BREKA_ORC_WARRIOR,
+                ROAD_SCAVENGER,DEAD_SEEKER,STAKATO,DIVINE);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("32207-01a.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             if (!st.player.isVarSet("dd1")) {
                 st.giveItems(Dimenional_Diamonds, 48);
-                st.player.setVar("dd1", 1);
+                st.player.setVar("dd1");
             }
             st.playSound(SOUND_ACCEPT);
         } else if ("32215-01a.htm".equalsIgnoreCase(event))
@@ -100,11 +89,11 @@ public final class _064_CertifiedBerserker extends Quest {
             if (!st.player.isVarSet("prof2.1")) {
                 st.addExpAndSp(174503, 11973);
                 st.giveItems(ADENA_ID, 31552);
-                st.player.setVar("prof2.1", 1);
+                st.player.setVar("prof2.1");
             }
             st.giveItems(OrkurusRecommendation);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
         if ("HARKILGAMED_Fail".equalsIgnoreCase(event)) {
             DESPAWN_HARKILGAMED();
@@ -121,18 +110,18 @@ public final class _064_CertifiedBerserker extends Quest {
         if (npcId == ORKURUS) {
             if (st.getQuestItemsCount(OrkurusRecommendation) != 0) {
                 htmltext = "32207-00.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else if (cond == 0) {
                 if (st.player.getClassId().id == 0x7D) {
                     if (st.player.getLevel() >= 39)
                         htmltext = "32207-01.htm";
                     else {
                         htmltext = "32207-02.htm";
-                        st.exitCurrentQuest(true);
+                        st.exitCurrentQuest();
                     }
                 } else {
                     htmltext = "32207-02a.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 14) {
                 st.takeItems(T_REC, -1);

@@ -28,18 +28,12 @@ public final class _108_JumbleTumbleDiamondFuss extends Quest {
 
         addStartNpc(30523);
 
-        addTalkId(30516);
-        addTalkId(30521);
-        addTalkId(30522);
-        addTalkId(30526);
-        addTalkId(30529);
-        addTalkId(30555);
+        addTalkId(30516, 30521, 30522, 30526, 30529, 30555);
 
-        addKillId(20323);
-        addKillId(20324);
-        addKillId(20480);
+        addKillId(20323, 20324, 20480);
 
-        addQuestItem(GEM_BOX1, STAR_DIAMOND, GOUPHS_CONTRACT, REEPS_CONTRACT, ELVEN_WINE, BRONPS_CONTRACT, AQUAMARINE, CHRYSOBERYL, COAL_PIECE, BRONPS_DICE, BRONPS_LETTER, BERRY_TART, BAT_DIAGRAM);
+        addQuestItem(GEM_BOX1, STAR_DIAMOND, GOUPHS_CONTRACT, REEPS_CONTRACT, ELVEN_WINE,
+                BRONPS_CONTRACT, AQUAMARINE, CHRYSOBERYL, COAL_PIECE, BRONPS_DICE, BRONPS_LETTER, BERRY_TART, BAT_DIAGRAM);
     }
 
     @Override
@@ -47,18 +41,18 @@ public final class _108_JumbleTumbleDiamondFuss extends Quest {
         switch (event) {
             case "collector_gouph_q0108_03.htm":
                 st.setCond(1);
-                st.setState(STARTED);
-                st.giveItems(GOUPHS_CONTRACT, 1);
+                st.start();
+                st.giveItems(GOUPHS_CONTRACT);
                 st.playSound(SOUND_ACCEPT);
                 break;
             case "carrier_torocco_q0108_02.htm":
                 st.takeItems(REEPS_CONTRACT, 1);
-                st.giveItems(ELVEN_WINE, 1);
+                st.giveItems(ELVEN_WINE);
                 st.setCond(3);
                 break;
             case "blacksmith_bronp_q0108_02.htm":
                 st.takeItems(BRONPS_DICE, 1);
-                st.giveItems(BRONPS_CONTRACT, 1);
+                st.giveItems(BRONPS_CONTRACT);
                 st.setCond(5);
                 break;
         }
@@ -74,24 +68,24 @@ public final class _108_JumbleTumbleDiamondFuss extends Quest {
             if (cond == 0) {
                 if (st.player.getRace() != Race.dwarf) {
                     htmltext = "collector_gouph_q0108_00.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else if (st.player.getLevel() >= 10)
                     htmltext = "collector_gouph_q0108_02.htm";
                 else {
                     htmltext = "collector_gouph_q0108_01.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else {
-                if (cond > 1 && cond < 7 && (st.haveAnyQuestItems(REEPS_CONTRACT,ELVEN_WINE,BRONPS_DICE,BRONPS_CONTRACT) ))
+                if (cond > 1 && cond < 7 && (st.haveAnyQuestItems(REEPS_CONTRACT, ELVEN_WINE, BRONPS_DICE, BRONPS_CONTRACT)))
                     htmltext = "collector_gouph_q0108_05.htm";
-                else if (cond == 7 && st.getQuestItemsCount(GEM_BOX1) > 0) {
+                else if (cond == 7 && st.haveQuestItem(GEM_BOX1)) {
                     htmltext = "collector_gouph_q0108_06.htm";
                     st.takeItems(GEM_BOX1, 1);
                     st.giveItems(COAL_PIECE);
                     st.setCond(8);
-                } else if (cond > 7 && cond < 12 && (st.haveAnyQuestItems(BRONPS_LETTER,COAL_PIECE,BERRY_TART,BAT_DIAGRAM) ))
+                } else if (cond > 7 && cond < 12 && (st.haveAnyQuestItems(BRONPS_LETTER, COAL_PIECE, BERRY_TART, BAT_DIAGRAM)))
                     htmltext = "collector_gouph_q0108_07.htm";
-                else if (cond == 12 && st.haveAnyQuestItems(STAR_DIAMOND) ) {
+                else if (cond == 12 && st.haveQuestItem(STAR_DIAMOND)) {
                     htmltext = "collector_gouph_q0108_08.htm";
                     st.takeItems(STAR_DIAMOND, 1);
 
@@ -100,7 +94,7 @@ public final class _108_JumbleTumbleDiamondFuss extends Quest {
                     st.giveItems(ADENA_ID, 14666, false);
 
                     if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("p1q3")) {
-                        st.player.setVar("p1q3", 1); // flag for helper
+                        st.player.setVar("p1q3"); // flag for helper
                         st.player.sendPacket(new ExShowScreenMessage("Now go find the Newbie Guide."));
                         st.giveItems(1060, 100); // healing potion
                         for (int item = 4412; item <= 4417; item++)
@@ -110,30 +104,30 @@ public final class _108_JumbleTumbleDiamondFuss extends Quest {
                     }
 
                     st.playSound(SOUND_FINISH);
-                    st.exitCurrentQuest(false);
+                    st.finish();
                 }
             }
         } else if (npcId == 30516) {
-            if (cond == 1 && st.getQuestItemsCount(GOUPHS_CONTRACT) > 0) {
+            if (cond == 1 && st.haveQuestItem(GOUPHS_CONTRACT)) {
                 htmltext = "trader_reep_q0108_01.htm";
-                st.giveItems(REEPS_CONTRACT, 1);
+                st.giveItems(REEPS_CONTRACT);
                 st.takeItems(GOUPHS_CONTRACT, 1);
                 st.setCond(2);
             } else if (cond >= 2)
                 htmltext = "trader_reep_q0108_02.htm";
         } else if (npcId == 30555) {
-            if (cond == 2 && st.getQuestItemsCount(REEPS_CONTRACT) == 1)
+            if (cond == 2 && st.haveQuestItem(REEPS_CONTRACT))
                 htmltext = "carrier_torocco_q0108_01.htm";
-            else if (cond == 3 && st.getQuestItemsCount(ELVEN_WINE) > 0)
+            else if (cond == 3 && st.haveQuestItem(ELVEN_WINE))
                 htmltext = "carrier_torocco_q0108_03.htm";
             else if (cond == 7 && st.getQuestItemsCount(GEM_BOX1) == 1)
                 htmltext = "carrier_torocco_q0108_04.htm";
             else
                 htmltext = "carrier_torocco_q0108_05.htm";
         } else if (npcId == 30529) {
-            if (cond == 3 && st.getQuestItemsCount(ELVEN_WINE) > 0) {
+            if (cond == 3 && st.haveQuestItem(ELVEN_WINE)) {
                 st.takeItems(ELVEN_WINE, 1);
-                st.giveItems(BRONPS_DICE, 1);
+                st.giveItems(BRONPS_DICE);
                 htmltext = "miner_maron_q0108_01.htm";
                 st.setCond(4);
             } else if (cond == 4)

@@ -39,8 +39,7 @@ public final class _358_IllegitimateChildOfAGoddess extends Quest {
         super(true);
         addStartNpc(OLTLIN);
 
-        addKillId(MOB1);
-        addKillId(MOB2);
+        addKillId(MOB1,MOB2);
 
         addQuestItem(SN_SCALE);
     }
@@ -49,11 +48,11 @@ public final class _358_IllegitimateChildOfAGoddess extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
         if (event.equalsIgnoreCase("30862-5.htm")) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("30862-6.htm"))
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         else if (event.equalsIgnoreCase("30862-7.htm"))
             if (st.getQuestItemsCount(SN_SCALE) >= REQUIRED) {
                 st.takeItems(SN_SCALE, REQUIRED);
@@ -79,7 +78,7 @@ public final class _358_IllegitimateChildOfAGoddess extends Quest {
                         item = SNightMareShield60;
                     st.giveItems(item, 1);
                 }
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 st.playSound(SOUND_FINISH);
             } else
                 htmltext = "30862-4.htm";
@@ -92,7 +91,7 @@ public final class _358_IllegitimateChildOfAGoddess extends Quest {
         int id = st.getState();
         if (id == CREATED) {
             if (st.player.getLevel() < 63) {
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 htmltext = "30862-1.htm";
             } else
                 htmltext = "30862-2.htm";
@@ -110,7 +109,7 @@ public final class _358_IllegitimateChildOfAGoddess extends Quest {
         if (count < REQUIRED && Rnd.chance(DROP_RATE)) {
             st.giveItems(SN_SCALE);
             if (count + 1 == REQUIRED) {
-                st.setState(STARTED);
+                st.start();
                 st.playSound(SOUND_MIDDLE);
                 st.setCond(2);
             } else

@@ -51,7 +51,7 @@ public final class ExPartyRoomMember extends L2GameServerPacket {
         PartyRoomMemberInfo(Player member, int type) {
             objectId = member.objectId();
             name = member.getName();
-            classId = member.getClassId().ordinal();
+            classId = member.getClassId().id;
             level = member.getLevel();
             location = MatchingRoomManager.INSTANCE.getLocation(member);
             memberType = type;

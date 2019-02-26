@@ -347,7 +347,7 @@
 		<!--
 			Last modify:	13.09.2008
 
-			Description: Transfers some of the player's damage to the summoner. Consumes MP continuously.
+			Description: Transfers some of the getPlayer's damage to the summoner. Consumes MP continuously.
 		-->
 		<set name="icon" val="icon.skill_transform_etc" />
 		<set name="magicLevel" val="80" />
@@ -983,7 +983,7 @@
 			Last modify:	04.07.2008
 
 			Description:
-			Instantly and drastically increases tolerance to P. Def./M. Def, buff cancel attacks. The player cannot move while the effect lasts. Effect 2.
+			Instantly and drastically increases tolerance to P. Def./M. Def, buff cancel attacks. The getPlayer cannot move while the effect lasts. Effect 2.
 		-->
 		<set name="icon" val="icon.skill_transform_buff" />
 		<set name="reuseDelay" val="900000" />
@@ -1328,7 +1328,7 @@
 		<!--
 			Last modify:	27.07.2008
 
-			Description: Instantly and drastically increases tolerance to P. Def./M. Def, buff cancel attacks. The player cannot move while the effect lasts. Effect 2.
+			Description: Instantly and drastically increases tolerance to P. Def./M. Def, buff cancel attacks. The getPlayer cannot move while the effect lasts. Effect 2.
 		-->
 		<set name="icon" val="icon.skill_transform_buff" />
 		<set name="reuseDelay" val="900000" />

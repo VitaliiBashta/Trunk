@@ -46,7 +46,7 @@ public final class _350_EnhanceYourWeapon extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if (event.equalsIgnoreCase(Jurek + "-04.htm") || event.equalsIgnoreCase(Gideon + "-04.htm") || event.equalsIgnoreCase(Winonin + "-04.htm")) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         }
         if (event.equalsIgnoreCase(Jurek + "-09.htm") || event.equalsIgnoreCase(Gideon + "-09.htm") || event.equalsIgnoreCase(Winonin + "-09.htm"))
@@ -56,7 +56,7 @@ public final class _350_EnhanceYourWeapon extends Quest {
         if (event.equalsIgnoreCase(Jurek + "-11.htm") || event.equalsIgnoreCase(Gideon + "-11.htm") || event.equalsIgnoreCase(Winonin + "-11.htm"))
             st.giveItems(BLUE_SOUL_CRYSTAL0_ID, 1);
         if (event.equalsIgnoreCase("exit.htm"))
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         return event;
     }
 
@@ -73,7 +73,7 @@ public final class _350_EnhanceYourWeapon extends Quest {
         else {
             if (id == CREATED) {
                 st.setCond(1);
-                st.setState(STARTED);
+                st.start();
             }
             htmltext = npcId + "-03.htm";
         }
@@ -117,23 +117,21 @@ public final class _350_EnhanceYourWeapon extends Quest {
             case PARTY_RANDOM:
                 memberSize = players.size();
                 if (memberSize == 1)
-                    targets = Collections.singletonList(players.get(0));
+                    targets = List.of(players.get(0));
                 else {
                     int size = Rnd.get(memberSize);
-                    targets = new ArrayList<>(size);
                     List<PlayerResult> temp = new ArrayList<>(players);
                     Collections.shuffle(temp);
-                    for (int i = 0; i < size; i++)
-                        targets.add(temp.get(i));
+                    targets = temp.stream().limit(size).collect(Collectors.toList());
                 }
                 break;
             case PARTY_ONE:
                 memberSize = players.size();
                 if (memberSize == 1)
-                    targets = Collections.singletonList(players.get(0));
+                    targets = List.of(players.get(0));
                 else {
                     int rnd = Rnd.get(memberSize);
-                    targets = Collections.singletonList(players.get(rnd));
+                    targets = List.of(players.get(rnd));
                 }
                 break;
             default:

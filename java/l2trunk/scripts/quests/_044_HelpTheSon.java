@@ -24,9 +24,7 @@ public final class _044_HelpTheSon extends Quest {
 
         addTalkId(DRIKUS);
 
-        addKillId(MAILLE_GUARD);
-        addKillId(MAILLE_SCOUT);
-        addKillId(MAILLE_LIZARDMAN);
+        addKillId(MAILLE_GUARD,MAILLE_SCOUT,MAILLE_LIZARDMAN);
 
         addQuestItem(GEMSTONE_FRAGMENT);
     }
@@ -37,7 +35,7 @@ public final class _044_HelpTheSon extends Quest {
         if (event.equals("1")) {
             htmltext = "pet_manager_lundy_q0044_0104.htm";
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if (event.equals("3") && st.getQuestItemsCount(WORK_HAMMER) > 0) {
             htmltext = "pet_manager_lundy_q0044_0201.htm";
@@ -55,7 +53,7 @@ public final class _044_HelpTheSon extends Quest {
         } else if (event.equals("7")) {
             htmltext = "pet_manager_lundy_q0044_0501.htm";
             st.giveItems(PET_TICKET, 1);
-            st.exitCurrentQuest(false);
+            st.finish();
         }
         return htmltext;
     }
@@ -69,7 +67,7 @@ public final class _044_HelpTheSon extends Quest {
             if (st.player.getLevel() >= 24)
                 htmltext = "pet_manager_lundy_q0044_0101.htm";
             else {
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 htmltext = "pet_manager_lundy_q0044_0103.htm";
             }
         } else if (id == STARTED) {

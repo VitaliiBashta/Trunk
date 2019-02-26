@@ -32,7 +32,7 @@ public final class _661_TheHarvestGroundsSafe extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if (event.equalsIgnoreCase("warehouse_keeper_norman_q0661_0103.htm") || event.equalsIgnoreCase("warehouse_keeper_norman_q0661_0201.htm")) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("warehouse_keeper_norman_q0661_0205.htm")) {
@@ -54,7 +54,7 @@ public final class _661_TheHarvestGroundsSafe extends Quest {
             st.playSound(SOUND_MIDDLE);
         } else if (event.equalsIgnoreCase("warehouse_keeper_norman_q0661_0204.htm")) {
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(false);
+            st.finish();
         }
         return event;
     }
@@ -68,7 +68,7 @@ public final class _661_TheHarvestGroundsSafe extends Quest {
                 htmltext = "warehouse_keeper_norman_q0661_0101.htm";
             else {
                 htmltext = "warehouse_keeper_norman_q0661_0102.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         else if (cond == 1)
             if (st.haveAnyQuestItems(STING_OF_GIANT_POISON, TALON_OF_YOUNG_ARANEID,CLOUDY_GEM) )

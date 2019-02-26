@@ -42,11 +42,11 @@ public final class _604_DaimontheWhiteEyedPart2 extends Quest {
         NpcInstance isQuest = GameObjectsStorage.getByNpcId(DAIMON);
         if ("31683-02.htm".equalsIgnoreCase(event)) {
             if (st.player.getLevel() < 73) {
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 return "31683-00b.htm";
             }
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.takeItems(U_SUMMON, 1);
             st.giveItems(S_SUMMON);
             st.playSound(SOUND_ACCEPT);
@@ -63,49 +63,49 @@ public final class _604_DaimontheWhiteEyedPart2 extends Quest {
             isQuest.addListener(new DeathListener());
             st.playSound(SOUND_MIDDLE);
             st.setCond(2);
-            st.setState(STARTED);
+            st.start();
             st.player.sendMessage("Daimon the White-Eyed has spawned in 186320, -43904, -3175");
             st.startQuestTimer("DAIMON_Fail", 12000000);
         } else if ("31683-04.htm".equalsIgnoreCase(event)) {
             if (st.haveQuestItem(ESSENCE) )
                 return "list.htm";
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             return "31683-05.htm";
         } else if ("INT_MEN".equalsIgnoreCase(event)) {
             st.giveItems(INT_MEN, 5, true);
             st.takeItems(ESSENCE, 1);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             return null;
         } else if ("INT_WIT".equalsIgnoreCase(event)) {
             st.giveItems(INT_WIT, 5, true);
             st.takeItems(ESSENCE, 1);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             return null;
         } else if ("MEN_INT".equalsIgnoreCase(event)) {
             st.giveItems(MEN_INT, 5, true);
             st.takeItems(ESSENCE, 1);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             return null;
         } else if ("MEN_WIT".equalsIgnoreCase(event)) {
             st.giveItems(MEN_WIT, 5, true);
             st.takeItems(ESSENCE, 1);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             return null;
         } else if ("WIT_INT".equalsIgnoreCase(event)) {
             st.giveItems(WIT_INT, 5, true);
             st.takeItems(ESSENCE, 1);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             return null;
         } else if ("WIT_MEN".equalsIgnoreCase(event)) {
             st.giveItems(WIT_MEN, 5, true);
             st.takeItems(ESSENCE, 1);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             return null;
         } else if ("DAIMON_Fail".equalsIgnoreCase(event) && isQuest != null) {
             Functions.npcSay(isQuest, "Darkness could not have ray?");
@@ -152,7 +152,7 @@ public final class _604_DaimontheWhiteEyedPart2 extends Quest {
                     isQuest = st.addSpawn(DAIMON, Location.of(186320, -43904, -3175));
                     Functions.npcSay(isQuest, "Who called me?");
                     st.playSound(SOUND_MIDDLE);
-                    st.setState(STARTED);
+                    st.start();
                     st.player.sendMessage("Daimon the White-Eyed has spawned in 186320, -43904, -3175");
                     isQuest.addListener(new DeathListener());
                     st.startQuestTimer("DAIMON_Fail", 12000000);
@@ -175,7 +175,7 @@ public final class _604_DaimontheWhiteEyedPart2 extends Quest {
             st.takeItems(S_SUMMON, 1);
             st.giveItems(ESSENCE);
             st.setCond(3);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_MIDDLE);
         }
     }

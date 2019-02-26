@@ -26,7 +26,7 @@ public final class _279_TargetOfOpportunity extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("jerian_q279_04.htm".equalsIgnoreCase(event)) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if ("jerian_q279_07.htm".equalsIgnoreCase(event)) {
@@ -34,7 +34,7 @@ public final class _279_TargetOfOpportunity extends Quest {
             st.giveItems(15515);
             st.giveItems(15516);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
         return event;
     }
@@ -50,7 +50,7 @@ public final class _279_TargetOfOpportunity extends Quest {
                     htmltext = "jerian_q279_01.htm";
                 else {
                     htmltext = "jerian_q279_00.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1)
                 htmltext = "jerian_q279_05.htm";

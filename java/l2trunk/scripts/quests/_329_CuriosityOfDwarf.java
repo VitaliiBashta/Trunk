@@ -13,21 +13,19 @@ public final class _329_CuriosityOfDwarf extends Quest {
         super(false);
 
         addStartNpc(30437);
-        addKillId(20083);
-        addKillId(20085);
+        addKillId(20083,20085);
 
-        addQuestItem(BROKEN_HEARTSTONE);
-        addQuestItem(GOLEM_HEARTSTONE);
+        addQuestItem(BROKEN_HEARTSTONE,GOLEM_HEARTSTONE);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("trader_rolento_q0329_03.htm")) {
+        if ("trader_rolento_q0329_03.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("trader_rolento_q0329_06.htm")) {
-            st.exitCurrentQuest(true);
+        } else if ("trader_rolento_q0329_06.htm".equalsIgnoreCase(event)) {
+            st.exitCurrentQuest();
             st.playSound(SOUND_FINISH);
         }
         return event;
@@ -46,15 +44,14 @@ public final class _329_CuriosityOfDwarf extends Quest {
                 htmltext = "trader_rolento_q0329_02.htm";
             else {
                 htmltext = "trader_rolento_q0329_01.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else {
             heart = st.getQuestItemsCount(GOLEM_HEARTSTONE);
             broken = st.getQuestItemsCount(BROKEN_HEARTSTONE);
             if (broken + heart > 0) {
                 st.giveItems(ADENA_ID, 50 * broken + 1000 * heart);
-                st.takeItems(BROKEN_HEARTSTONE, -1);
-                st.takeItems(GOLEM_HEARTSTONE, -1);
+                st.takeAllItems(BROKEN_HEARTSTONE,GOLEM_HEARTSTONE);
                 htmltext = "trader_rolento_q0329_05.htm";
             } else
                 htmltext = "trader_rolento_q0329_04.htm";

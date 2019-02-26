@@ -157,7 +157,7 @@ public final class DocumentSkill extends DocumentBase {
             for (int i = 0; i < lastLvl; i++) {
                 currentSkill.sets.add(new StatsSet()
                         .set("skill_id", currentSkill.id)
-                        .set("occupation", i + 1)
+                        .set("level", i + 1)
                         .set("name", currentSkill.name)
                         .set("base_level", levels));
             }

@@ -588,10 +588,5 @@ public abstract class SiegeEvent<R extends Residence, S extends SiegeClanObject>
             }
 
         }
-
-        @Override
-        public boolean ignorePetOrSummon() {
-            return true;
-        }
     }
 }

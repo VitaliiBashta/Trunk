@@ -13,7 +13,7 @@ public final class _341_HuntingForWildBeasts extends Quest {
     private static final int Dion_Grizzly = 20203;
     private static final int Brown_Bear = 20310;
     private static final int Grizzly_Bear = 20335;
-    //Quest Items
+    //Quest items
     private static final int BEAR_SKIN = 4259;
     //Chances
     private static final int BEAR_SKIN_CHANCE = 40;
@@ -21,19 +21,16 @@ public final class _341_HuntingForWildBeasts extends Quest {
     public _341_HuntingForWildBeasts() {
         super(false);
         addStartNpc(PANO);
-        addKillId(Red_Bear);
-        addKillId(Dion_Grizzly);
-        addKillId(Brown_Bear);
-        addKillId(Grizzly_Bear);
+        addKillId(Red_Bear,Dion_Grizzly,Brown_Bear,Grizzly_Bear);
         addQuestItem(BEAR_SKIN);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("quest_accept") && st.getState() == CREATED) {
+        if ("quest_accept".equalsIgnoreCase(event) && st.getState() == CREATED) {
             htmltext = "pano_q0341_04.htm";
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         }
@@ -45,22 +42,22 @@ public final class _341_HuntingForWildBeasts extends Quest {
         String htmltext = "noquest";
         if (npc.getNpcId() != PANO)
             return htmltext;
-        int _state = st.getState();
-        if (_state == CREATED) {
+        int state = st.getState();
+        if (state == CREATED) {
             if (st.player.getLevel() >= 20) {
                 htmltext = "pano_q0341_01.htm";
                 st.setCond(0);
             } else {
                 htmltext = "pano_q0341_02.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
-        } else if (_state == STARTED)
-            if (st.getQuestItemsCount(BEAR_SKIN) >= 20) {
+        } else if (state == STARTED)
+            if (st.haveQuestItem(BEAR_SKIN, 20)) {
                 htmltext = "pano_q0341_05.htm";
                 st.takeItems(BEAR_SKIN);
                 st.giveItems(ADENA_ID, 3710);
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else
                 htmltext = "pano_q0341_06.htm";
 

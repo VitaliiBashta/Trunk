@@ -17,9 +17,7 @@ public final class _10271_TheEnvelopingDarkness extends Quest {
         super(false);
 
         addStartNpc(Orbyu);
-        addTalkId(Orbyu);
-        addTalkId(El);
-        addTalkId(MedibalsCorpse);
+        addTalkId(El,MedibalsCorpse);
         addQuestItem(InspectorMedibalsDocument);
     }
 
@@ -29,7 +27,7 @@ public final class _10271_TheEnvelopingDarkness extends Quest {
 
         if (event.equalsIgnoreCase("orbyu_q10271_3.htm") && cond == 0) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("el_q10271_2.htm")) {
             st.setCond(2);
@@ -41,12 +39,12 @@ public final class _10271_TheEnvelopingDarkness extends Quest {
         } else if (event.equalsIgnoreCase("el_q10271_4.htm")) {
             st.setCond(4);
             st.playSound(SOUND_MIDDLE);
-            st.takeItems(InspectorMedibalsDocument, -1);
-        } else if (event.equalsIgnoreCase("orbyu_q10271_5.htm")) {
+            st.takeItems(InspectorMedibalsDocument);
+        } else if ("orbyu_q10271_5.htm".equalsIgnoreCase(event)) {
             st.giveItems(ADENA_ID, 62516);
             st.addExpAndSp(377403, 37867);
-            st.setState(COMPLETED);
-            st.exitCurrentQuest(false);
+            st.complete();
+            st.finish();
             st.playSound(SOUND_FINISH);
         }
         return event;
@@ -58,26 +56,25 @@ public final class _10271_TheEnvelopingDarkness extends Quest {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         Player player = st.player;
-        QuestState ToTheSeedOfDestruction = player.getQuestState(_10269_ToTheSeedOfDestruction.class);
 
         if (npcId == Orbyu) {
             if (cond == 0) {
                 // OTHERS
                 int CC_MINIMUM = 36;
-                if (player.getLevel() >= 75 && ToTheSeedOfDestruction != null && ToTheSeedOfDestruction.isCompleted() && player.getParty() != null && player.getParty().getCommandChannel() != null && player.getParty().getCommandChannel().size() >= CC_MINIMUM)
+                if (player.getLevel() >= 75 && player.isQuestCompleted(_10269_ToTheSeedOfDestruction.class) && player.getParty() != null && player.getParty().getCommandChannel() != null && player.getParty().getCommandChannel().size() >= CC_MINIMUM)
                     htmltext = "orbyu_q10271_1.htm";
                 else {
                     htmltext = "orbyu_q10271_0.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 4)
                 htmltext = "orbyu_q10271_4.htm";
         } else if (npcId == El) {
             if (cond == 1)
                 htmltext = "el_q10271_1.htm";
-            else if (cond == 3 && st.getQuestItemsCount(InspectorMedibalsDocument) >= 1)
+            else if (cond == 3 && st.haveQuestItem(InspectorMedibalsDocument) )
                 htmltext = "el_q10271_3.htm";
-            else if (cond == 3 && st.getQuestItemsCount(InspectorMedibalsDocument) < 1)
+            else if (cond == 3 && !st.haveQuestItem(InspectorMedibalsDocument))
                 htmltext = "el_q10271_0.htm";
         } else if (npcId == MedibalsCorpse)
             if (cond == 2)

@@ -16,7 +16,7 @@ public final class ExBR_ExtraUserInfo extends L2GameServerPacket {
     @Override
     protected void writeImpl() {
         writeEx(0xDA);
-        writeD(_objectId); //object id of player
+        writeD(_objectId); //object id of getPlayer
         writeD(_effect3); // event effect id
         writeC(_lectureMark);
     }

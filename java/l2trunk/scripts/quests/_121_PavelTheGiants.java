@@ -21,7 +21,7 @@ public final class _121_PavelTheGiants extends Quest {
         if (event.equals("collecter_yumi_q0121_0201.htm")) {
             st.playSound(SOUND_FINISH);
             st.addExpAndSp(346320, 26069);
-            st.exitCurrentQuest(false);
+            st.finish();
         }
         return event;
     }
@@ -37,11 +37,11 @@ public final class _121_PavelTheGiants extends Quest {
             if (st.player.getLevel() >= 70) {
                 htmltext = "head_blacksmith_newyear_q0121_0101.htm";
                 st.setCond(1);
-                st.setState(STARTED);
+                st.start();
                 st.playSound(SOUND_ACCEPT);
             } else {
                 htmltext = "head_blacksmith_newyear_q0121_0103.htm";
-                st.exitCurrentQuest(false);
+                st.finish();
             }
         } else if (id == STARTED)
             if (npcId == YUMI && cond == 1)

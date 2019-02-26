@@ -684,8 +684,7 @@ public final class _373_SupplierOfReagents extends Quest {
     }
 
     private String render_urn(QuestState st, String[] page) {
-        String html = "noquest";
-        int stone = st.getInt("mixing");
+        String html;
         int ingredient = st.getInt("ingredient");
         int catalyst = st.getInt("catalyst");
         if (page == null) {
@@ -708,7 +707,7 @@ public final class _373_SupplierOfReagents extends Quest {
             } else
                 r_cata = "None";
             html = html.replace("INGR", r_ingr).replace("CATA", r_cata).replace("TEMP", temp);
-            if (stone != 0)
+            if ( st.isSet("mixing"))
                 html = html.replace("MACT", "Retrieve");
             else
                 html = html.replace("MACT", "Insert");
@@ -743,20 +742,20 @@ public final class _373_SupplierOfReagents extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("30166-4.htm")) {
+        if ("30166-4.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
-            st.set("ingredient", 0);
-            st.set("catalyst", 0);
-            st.set("i_qty", 0);
-            st.set("c_qty", 0);
-            st.set("temp", 0);
-            st.set("mixing", 0);
+            st.start();
+            st.unset("ingredient");
+            st.unset("catalyst");
+            st.unset("i_qty");
+            st.unset("c_qty");
+            st.unset("temp");
+            st.unset("mixing");
             st.giveItems(6317);
             st.giveItems(5904);
             st.playSound("ItemSound.quest_accept");
         } else if ("30166-5.htm".equalsIgnoreCase(event)) {
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             st.playSound("ItemSound.quest_finish");
         } else if ("urn".equalsIgnoreCase(event))
             htmltext = render_urn(st, null);
@@ -764,16 +763,16 @@ public final class _373_SupplierOfReagents extends Quest {
             String[] s_event = event.split("_");
             if (s_event[1].equals("M")) {
                 if (s_event[2].equals("Insert")) {
-                    if (st.getQuestItemsCount(MIXING_STONE1) != 0) {
-                        st.takeItems(MIXING_STONE1, -1);
-                        st.set("mixing", 1);
+                    if (st.haveQuestItem(MIXING_STONE1)) {
+                        st.takeItems(MIXING_STONE1);
+                        st.set("mixing");
                         htmltext = "31149-2.htm";
                     } else
                         htmltext = "You don't have a mixing stone.";
                 } else if (s_event[2].equals("Retrieve"))
-                    if (st.getInt("mixing") != 0) {
-                        st.set("mixing", 0);
-                        st.set("temp", 0);
+                    if (st.isSet("mixing")) {
+                        st.unset("mixing");
+                        st.unset("temp");
                         st.giveItems(MIXING_STONE1);
                         if (st.getInt("ingredient") > 0 || st.getInt("catalyst") > 0)
                             htmltext = "31149-2c.htm";
@@ -789,13 +788,13 @@ public final class _373_SupplierOfReagents extends Quest {
                 if (s_event[1].equals("I")) {
                     item = st.getInt("ingredient");
                     qty = st.getInt("i_qty");
-                    st.set("ingredient", 0);
-                    st.set("i_qty", 0);
+                    st.unset("ingredient");
+                    st.unset("i_qty");
                 } else if (s_event[1].equals("C")) {
                     item = st.getInt("catalyst");
                     qty = st.getInt("c_qty");
-                    st.set("catalyst", 0);
-                    st.set("c_qty", 0);
+                    st.unset("catalyst");
+                    st.unset("c_qty");
                 }
                 if (item > 0 && qty > 0) {
                     st.giveItems(item, qty);
@@ -832,18 +831,18 @@ public final class _373_SupplierOfReagents extends Quest {
             st.set("temp", toInt(event.split("_")[1]));
             htmltext = "31149-5a.htm";
         } else if ("31149-6.htm".equalsIgnoreCase(event))
-            if (st.getInt("mixing") > 0) {
+            if (st.isSet("mixing")) {
                 int temp = st.getInt("temp");
                 if (temp != 0) {
                     int ingredient = st.getInt("ingredient");
                     int catalyst = st.getInt("catalyst");
                     int iq = st.getInt("i_qty");
                     int cq = st.getInt("c_qty");
-                    st.set("ingredient", 0);
-                    st.set("i_qty", 0);
-                    st.set("catalyst", 0);
-                    st.set("c_qty", 0);
-                    st.set("temp", 0);
+                    st.unset("ingredient");
+                    st.unset("i_qty");
+                    st.unset("catalyst");
+                    st.unset("c_qty");
+                    st.unset("temp");
                     int item = 0;
                     for (int[] FORMULA : FORMULAS)
                         if (ingredient == FORMULA[1] && catalyst == FORMULA[3] && iq == FORMULA[2] && cq == FORMULA[4] || ingredient == FORMULA[3] && catalyst == FORMULA[1] && iq == FORMULA[4] && cq == FORMULA[2]) {
@@ -898,7 +897,7 @@ public final class _373_SupplierOfReagents extends Quest {
         if (npcId == WESLEY) {
             if (cond == 0) {
                 if (st.player.getLevel() < 57) {
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                     htmltext = "30166-2.htm";
                 } else
                     htmltext = "30166-1.htm";

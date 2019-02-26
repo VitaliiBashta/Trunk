@@ -405,7 +405,7 @@ public final class Util {
 
     public static String toProperCaseAll(String name) {
         StringTokenizer st = new StringTokenizer(name);
-        String newString = "";
+        String newString;
 
         newString = st.nextToken();
         name = newString.substring(0, 1).toUpperCase();

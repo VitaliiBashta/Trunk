@@ -31,10 +31,6 @@ public final class ResidenceDoor extends DoorAI {
                         door.openMe();
                 }
 
-                @Override
-                public void sayNo() {
-                    //
-                }
             });
         }
     }

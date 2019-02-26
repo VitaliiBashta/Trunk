@@ -16,9 +16,9 @@ public final class _280_TheFoodChain extends Quest {
     private static final int Dominant_Grey_Keltir = 22231;
     private static final int Black_Wolf = 22232;
     private static final int Dominant_Black_Wolf = 22233;
-    // Items
+    // items
     private static final List<Integer> REWARDS = List.of(28, 35, 116);
-    // Quest Items
+    // Quest items
     private static final int Grey_Keltir_Tooth = 9809;
     private static final int Black_Wolf_Tooth = 9810;
     // Chances
@@ -28,25 +28,20 @@ public final class _280_TheFoodChain extends Quest {
     public _280_TheFoodChain() {
         super(false);
         addStartNpc(BIXON);
-        addKillId(Young_Grey_Keltir);
-        addKillId(Grey_Keltir);
-        addKillId(Dominant_Grey_Keltir);
-        addKillId(Black_Wolf);
-        addKillId(Dominant_Black_Wolf);
-        addQuestItem(Grey_Keltir_Tooth);
-        addQuestItem(Black_Wolf_Tooth);
+        addKillId(Young_Grey_Keltir,Grey_Keltir,Dominant_Grey_Keltir,Black_Wolf,Dominant_Black_Wolf);
+        addQuestItem(Grey_Keltir_Tooth,Black_Wolf_Tooth);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         int _state = st.getState();
         if ("jager_bixon_q0280_03.htm".equalsIgnoreCase(event) && _state == CREATED) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if ("jager_bixon_q0280_09.htm".equalsIgnoreCase(event) && _state == STARTED) {
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         } else if (_state == STARTED) {
             long Grey_Keltir_Tooth_count = st.getQuestItemsCount(Grey_Keltir_Tooth);
             long Black_Wolf_Tooth_count = st.getQuestItemsCount(Black_Wolf_Tooth);
@@ -99,7 +94,7 @@ public final class _280_TheFoodChain extends Quest {
                 st.setCond(0);
                 return "jager_bixon_q0280_01.htm";
             }
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             return "jager_bixon_q0280_02.htm";
         } else if (_state == STARTED)
             return st.getQuestItemsCount(Grey_Keltir_Tooth) > 0 || st.getQuestItemsCount(Black_Wolf_Tooth) > 0 ? "jager_bixon_q0280_05.htm" : "jager_bixon_q0280_04.htm";

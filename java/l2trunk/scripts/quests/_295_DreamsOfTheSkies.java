@@ -26,7 +26,7 @@ public final class _295_DreamsOfTheSkies extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if (event.equalsIgnoreCase("elder_arin_q0295_03.htm")) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         }
         return event;
@@ -46,13 +46,13 @@ public final class _295_DreamsOfTheSkies extends Quest {
                 return htmltext;
             }
             htmltext = "elder_arin_q0295_01.htm";
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         } else if (cond == 1 || st.getQuestItemsCount(FLOATING_STONE) < 50)
             htmltext = "elder_arin_q0295_04.htm";
         else if (cond == 2 && st.getQuestItemsCount(FLOATING_STONE) == 50) {
             st.addExpAndSp(0, 500);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             if (st.getQuestItemsCount(RING_OF_FIREFLY) < 1) {
                 htmltext = "elder_arin_q0295_05.htm";
                 st.giveItems(RING_OF_FIREFLY, 1);

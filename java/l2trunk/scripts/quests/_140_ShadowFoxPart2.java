@@ -12,7 +12,7 @@ public final class _140_ShadowFoxPart2 extends Quest {
     private final static int KLUCK = 30895;
     private final static int XENOVIA = 30912;
 
-    // Items
+    // items
     private final static int CRYSTAL = 10347;
     private final static int OXYDE = 10348;
     private final static int CRYPT = 10349;
@@ -45,11 +45,11 @@ public final class _140_ShadowFoxPart2 extends Quest {
         String htmltext = event;
         if ("30895-02.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("30895-05.htm".equalsIgnoreCase(event)) {
             st.setCond(2);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_MIDDLE);
         } else if ("30895-09.htm".equalsIgnoreCase(event)) {
             st.playSound(SOUND_FINISH);
@@ -58,10 +58,10 @@ public final class _140_ShadowFoxPart2 extends Quest {
             Quest q = QuestManager.getQuest(_141_ShadowFoxPart3.class);
             if (q != null)
                 q.newQuestState(st.player, STARTED);
-            st.exitCurrentQuest(false);
+            st.finish();
         } else if ("30912-07.htm".equalsIgnoreCase(event)) {
             st.setCond(3);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_MIDDLE);
         } else if (event.equalsIgnoreCase("30912-09.htm")) {
             st.takeItems(CRYSTAL, 5);
@@ -70,7 +70,7 @@ public final class _140_ShadowFoxPart2 extends Quest {
                 if (st.getQuestItemsCount(OXYDE) >= 3) {
                     htmltext = "30912-09b.htm";
                     st.setCond(4);
-                    st.setState(STARTED);
+                    st.start();
                     st.playSound(SOUND_MIDDLE);
                     st.takeItems(CRYSTAL, -1);
                     st.takeItems(OXYDE, -1);
@@ -103,7 +103,7 @@ public final class _140_ShadowFoxPart2 extends Quest {
                 else {
                     htmltext = "30895-07.htm";
                     st.takeItems(CRYPT);
-                    st.set("talk", 1);
+                    st.set("talk");
                 }
         } else if (npcId == XENOVIA)
             if (cond == 2)

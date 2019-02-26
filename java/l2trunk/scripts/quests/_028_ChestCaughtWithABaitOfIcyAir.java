@@ -23,7 +23,7 @@ public final class _028_ChestCaughtWithABaitOfIcyAir extends Quest {
         String htmltext = event;
         switch (event) {
             case "fisher_ofulle_q0028_0104.htm":
-                st.setState(STARTED);
+                st.start();
                 st.setCond(1);
                 st.playSound(SOUND_ACCEPT);
                 break;
@@ -42,10 +42,10 @@ public final class _028_ChestCaughtWithABaitOfIcyAir extends Quest {
                     st.takeItems(KikisLetter, -1);
                     st.giveItems(ElvenRing, 1);
                     st.playSound(SOUND_FINISH);
-                    st.exitCurrentQuest(false);
+                    st.finish();
                 } else {
                     htmltext = "mineral_trader_kiki_q0028_0302.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
                 break;
         }
@@ -62,7 +62,7 @@ public final class _028_ChestCaughtWithABaitOfIcyAir extends Quest {
             if (id == CREATED) {
                 if (st.player.getLevel() < 36) {
                     htmltext = "fisher_ofulle_q0028_0101.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else {
                     QuestState OFullesSpecialBait = st.player.getQuestState(_051_OFullesSpecialBait.class);
                     if (OFullesSpecialBait != null) {
@@ -70,11 +70,11 @@ public final class _028_ChestCaughtWithABaitOfIcyAir extends Quest {
                             htmltext = "fisher_ofulle_q0028_0101.htm";
                         else {
                             htmltext = "fisher_ofulle_q0028_0102.htm";
-                            st.exitCurrentQuest(true);
+                            st.exitCurrentQuest();
                         }
                     } else {
                         htmltext = "fisher_ofulle_q0028_0103.htm";
-                        st.exitCurrentQuest(true);
+                        st.exitCurrentQuest();
                     }
                 }
             } else if (cond == 1) {

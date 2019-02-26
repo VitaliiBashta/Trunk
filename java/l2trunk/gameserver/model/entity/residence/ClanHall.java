@@ -3,18 +3,12 @@ package l2trunk.gameserver.model.entity.residence;
 import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.dao.ClanDataDAO;
 import l2trunk.gameserver.dao.ClanHallDAO;
-import l2trunk.gameserver.data.xml.holder.DoorHolder;
 import l2trunk.gameserver.database.DatabaseFactory;
 import l2trunk.gameserver.instancemanager.PlayerMessageStack;
-import l2trunk.gameserver.listener.zone.OnZoneEnterLeaveListener;
-import l2trunk.gameserver.model.Creature;
-import l2trunk.gameserver.model.Player;
-import l2trunk.gameserver.model.Zone;
 import l2trunk.gameserver.model.entity.events.impl.ClanHallAuctionEvent;
 import l2trunk.gameserver.model.pledge.Clan;
 import l2trunk.gameserver.model.pledge.UnitMember;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
-import l2trunk.gameserver.templates.DoorTemplate;
 import l2trunk.gameserver.templates.item.ItemTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -176,7 +170,7 @@ public final class ClanHall extends Residence {
                 UnitMember member = owner.getLeader();
 
                 if (member.isOnline()) {
-                    member.player().sendPacket(SystemMsg.THE_CLAN_HALL_FEE_IS_ONE_WEEK_OVERDUE_THEREFORE_THE_CLAN_HALL_OWNERSHIP_HAS_BEEN_REVOKED);
+                    member.getPlayer().sendPacket(SystemMsg.THE_CLAN_HALL_FEE_IS_ONE_WEEK_OVERDUE_THEREFORE_THE_CLAN_HALL_OWNERSHIP_HAS_BEEN_REVOKED);
                 } else {
                     PlayerMessageStack.getInstance().mailto(member.objectId(), SystemMsg.THE_CLAN_HALL_FEE_IS_ONE_WEEK_OVERDUE_THEREFORE_THE_CLAN_HALL_OWNERSHIP_HAS_BEEN_REVOKED.packet(null));
                 }

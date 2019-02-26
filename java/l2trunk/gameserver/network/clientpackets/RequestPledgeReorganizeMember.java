@@ -27,7 +27,7 @@ public final class RequestPledgeReorganizeMember extends L2GameClientPacket {
 
     @Override
     protected void runImpl() {
-        //_log.warn("Received RequestPledgeReorganizeMember("+_arg1+","+_arg2+","+_arg3+","+_arg4+") from player "+getClient().getActiveChar().name());
+        //_log.warn("Received RequestPledgeReorganizeMember("+_arg1+","+_arg2+","+_arg3+","+_arg4+") from getPlayer "+getClient().getActiveChar().name());
 
         Player activeChar = getClient().getActiveChar();
         if (activeChar == null)
@@ -126,8 +126,8 @@ public final class RequestPledgeReorganizeMember extends L2GameClientPacket {
             clan.broadcastToOnlineMembers(new PledgeShowMemberListUpdate(replacement));
 
             if (replacement.isOnline()) {
-                replacement.player().updatePledgeClass();
-                replacement.player().broadcastCharInfo();
+                replacement.getPlayer().updatePledgeClass();
+                replacement.getPlayer().broadcastCharInfo();
             }
         }
 
@@ -138,8 +138,8 @@ public final class RequestPledgeReorganizeMember extends L2GameClientPacket {
         clan.broadcastToOnlineMembers(new PledgeShowMemberListUpdate(subject));
 
         if (subject.isOnline()) {
-            subject.player().updatePledgeClass();
-            subject.player().broadcastCharInfo();
+            subject.getPlayer().updatePledgeClass();
+            subject.getPlayer().broadcastCharInfo();
         }
     }
 }

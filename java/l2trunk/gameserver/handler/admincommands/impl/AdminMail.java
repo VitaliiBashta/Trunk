@@ -60,7 +60,7 @@ public final class AdminMail implements IAdminCommandHandler {
                 } else if (target instanceof Player) {
                     targetToAdd = target.getName();
                 } else {
-                    activeChar.sendMessage("Target a player and use //add_mail or use //add_mail nick");
+                    activeChar.sendMessage("Target a getPlayer and use //add_mail or use //add_mail nick");
                     return false;
                 }
 
@@ -77,7 +77,7 @@ public final class AdminMail implements IAdminCommandHandler {
                 } else if (target instanceof Player) {
                     targetToRemove = target.getName();
                 } else {
-                    activeChar.sendMessage("Target a player and use //remove_mail or use //remove_mail nick");
+                    activeChar.sendMessage("Target a getPlayer and use //remove_mail or use //remove_mail nick");
                     return false;
                 }
                 List<String> currentNicks = mailNicks.containsKey(activeChar.objectId()) ? mailNicks.get(activeChar.objectId()) : new ArrayList<>();

@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class WhoAmI implements IVoicedCommandHandler {
-    private static final List<String> _commandList = Collections.singletonList("stats");
+    private static final List<String> _commandList = List.of("stats");
 
     @Override
     public List<String> getVoicedCommandList() {

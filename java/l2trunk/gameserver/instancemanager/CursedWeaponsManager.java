@@ -159,7 +159,7 @@ public enum CursedWeaponsManager {
                 int skillId = cw.getSkillId();
                 boolean foundedInItems = false;
 
-                // Delete all cursed weapons skills (we don`t care about same skill on multiply weapons, when player back, skill will appears again)
+                // Delete all cursed weapons skills (we don`t care about same skill on multiply weapons, when getPlayer back, skill will appears again)
                 statement1.setInt(1, skillId);
                 statement1.executeUpdate();
 
@@ -167,7 +167,7 @@ public enum CursedWeaponsManager {
                 ResultSet rset = statement2.executeQuery();
 
                 while (rset.next()) {
-                    // A player has the cursed weapon in his inventory ...
+                    // A getPlayer has the cursed weapon in his inventory ...
                     int playerId = rset.getInt("owner_id");
 
                     if (!foundedInItems) {
@@ -239,7 +239,7 @@ public enum CursedWeaponsManager {
         if (cw.isActivated()) {
             Player player = cw.getOnlineOwner();
             if (player != null) {
-                // Remove from player
+                // Remove from getPlayer
                 LOG.info("CursedWeaponsManager: " + cw.getName() + " being removed online from " + player + ".");
 
                 player.abortAttack(true, true);
@@ -382,7 +382,7 @@ public enum CursedWeaponsManager {
 
     public void doLogout(Player player) {
         cursedWeaponsMap.values().stream()
-                .filter(cw -> player.getInventory().getItemByItemId(cw.getItemId()) != null)
+                .filter(cw -> player.haveItem(cw.getItemId()))
                 .forEach(cw -> {
                     cw.setPlayer(null);
                     cw.setItem(null);

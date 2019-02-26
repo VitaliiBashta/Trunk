@@ -20,7 +20,7 @@ public final class _288_HandleWithCare extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
         if (event.equalsIgnoreCase("ankumi_q288_03.htm")) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("request_reward")) {
@@ -47,7 +47,7 @@ public final class _288_HandleWithCare extends Quest {
                         break;
                 }
                 htmltext = "ankumi_q288_06.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else if (st.getCond() == 3 && st.getQuestItemsCount(HighestGradeLizardScale) >= 1) {
                 st.takeItems(HighestGradeLizardScale);
                 switch (Rnd.get(1, 4)) {
@@ -69,10 +69,10 @@ public final class _288_HandleWithCare extends Quest {
                         break;
                 }
                 htmltext = "ankumi_q288_06.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else {
                 htmltext = "ankumi_q288_07.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         }
         return htmltext;
@@ -89,7 +89,7 @@ public final class _288_HandleWithCare extends Quest {
                     htmltext = "ankumi_q288_01.htm";
                 else {
                     htmltext = "ankumi_q288_00.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1)
                 htmltext = "ankumi_q288_04.htm";

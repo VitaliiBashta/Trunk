@@ -46,31 +46,28 @@ import static l2trunk.commons.lang.NumberUtils.toInt;
 import static l2trunk.commons.lang.NumberUtils.toLong;
 
 public abstract class Skill extends StatTemplate implements Cloneable, Comparable<Skill> {
-    // public static final int SKILL_CUBIC_MASTERY = 143;
+    public static final int SKILL_CUBIC_MASTERY = 143;
     public static final int SKILL_CRAFTING = 172;
     public static final int SKILL_POLEARM_MASTERY = 216;
     public static final int SKILL_CRYSTALLIZE = 248;
-    public static final int SKILL_WEAPON_MAGIC_MASTERY1 = 249;
-    public static final int SKILL_WEAPON_MAGIC_MASTERY2 = 250;
     public static final int SKILL_BLINDING_BLOW = 321;
     public static final int SKILL_BLUFF = 358;
     public static final int SKILL_SOUL_MASTERY = 467;
     public static final int SKILL_RECHARGE = 1013;
     public static final int SKILL_TRANSFER_PAIN = 1262;
     public static final int SKILL_MYSTIC_IMMUNITY = 1411;
-    static final int SKILL_RAID_BLESSING = 2168;
-    static final int SKILL_HINDER_STRIDER = 4258;
-    static final int SKILL_RAID_CURSE_ID = 4515;
-    public static final int SKILL_RAID_CURSE_MUTE = 4215;
     public static final int SKILL_EVENT_TIMER = 5239;
     public static final int SKILL_BATTLEFIELD_DEATH_SYNDROME = 5660;
     public static final int SKILL_SERVITOR_SHARE = 1557;
-    static final int SKILL_BETRAY = 1380;
     protected static final int SKILL_TRANSFORM_DISPEL = 619;
     protected static final int SKILL_FINAL_FLYING_FORM = 840;
     protected static final int SKILL_AURA_BIRD_FALCON = 841;
     protected static final int SKILL_AURA_BIRD_OWL = 842;
     protected static final int SKILL_FISHING_MASTERY = 1315;
+    static final int SKILL_RAID_BLESSING = 2168;
+    static final int SKILL_HINDER_STRIDER = 4258;
+    static final int SKILL_RAID_CURSE_ID = 4515;
+    static final int SKILL_BETRAY = 1380;
     private static final int SKILL_DETECTION = 933;
     private static final String OLYMPIAD_KEYS_START_WORD = "Olympiad";
     public final boolean isItemHandler;
@@ -186,7 +183,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
     protected Skill(StatsSet set) {
         // _set = set;
         id = set.getInteger("skill_id");
-        level = set.getInteger("occupation");
+        level = set.getInteger("level");
         displayId = set.getInteger("displayId", id);
         displayLevel = set.getInteger("displayLevel", level);
         baseLevel = set.getInteger("base_level");
@@ -360,7 +357,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
 
         hashCode = (id * 1023) + level;
 
-        //Custom values when player is in Olympiad
+        //Custom values when getPlayer is in Olympiad
         olympiadValues = new HashMap<>();
         for (Map.Entry<String, Object> entry : set.entrySet()) {
             if (entry.getKey().startsWith(OLYMPIAD_KEYS_START_WORD)) {
@@ -753,7 +750,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
     }
 
     public SystemMsg checkTarget(Creature activeChar, Creature target, Creature aimingTarget, boolean forceUse, boolean first) {
-        Summon pet = ((Player)activeChar).getPet();
+        Summon pet = ((Player) activeChar).getPet();
         if (id == Skill.SKILL_SERVITOR_SHARE) {
             if (!(pet instanceof SummonInstance)) {
                 return SystemMsg.THAT_IS_AN_INCORRECT_TARGET;
@@ -786,7 +783,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
         if (activeChar instanceof Player) {
             Player player = (Player) activeChar;
             // The prohibition to attack civilians in the siege NPC zone on TW. Otherwise way stuffed glasses.
-            //if (player.getTerritorySiege() > -1 && target.NpcInstance() && !(target instanceof L2TerritoryFlagInstance) && !(target.getAI() instanceof DefaultAI) && player.isInZone(ZoneType.Siege))
+            //if (getPlayer.getTerritorySiege() > -1 && target.NpcInstance() && !(target instanceof L2TerritoryFlagInstance) && !(target.getAI() instanceof DefaultAI) && getPlayer.isInZone(ZoneType.Siege))
             //	return Msg.INVALID_TARGET;
 
 
@@ -867,7 +864,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
                     if (isForceUse)
                         return null;
                     // DS: Removed. Protection from divorce to the flag with a spear
-					/*if (!forceUse && player.getPvpFlag() == 0 && pcTarget.getPvpFlag() != 0 && aimingTarget != target)
+					/*if (!forceUse && getPlayer.getPvpFlag() == 0 && pcTarget.getPvpFlag() != 0 && aimingTarget != target)
 						return SystemMsg.INVALID_TARGET;*/
                     if (pcTarget.getPvpFlag() != 0)
                         return null;
@@ -957,11 +954,11 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
             case TARGET_PET:
             case TARGET_PET_AURA:
 
-                target = activeChar instanceof Player? ((Player)activeChar).getPet(): null;
+                target = activeChar instanceof Player ? ((Player) activeChar).getPet() : null;
                 return (target != null) && (target.isDead() == isCorpse) ? target : null;
             case TARGET_OWNER:
-                if (activeChar instanceof Summon ) {
-                    target = ((Summon)activeChar).owner;
+                if (activeChar instanceof Summon) {
+                    target = ((Summon) activeChar).owner;
                 } else {
                     return null;
                 }
@@ -983,7 +980,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
                 if (target == null) return null;
                 Player player = activeChar.getPlayer();
                 Player ptarget = target.getPlayer();
-                // player or player pet.
+                // getPlayer or getPlayer pet.
                 if ((ptarget != null) && (ptarget == activeChar)) {
                     return target;
                 }
@@ -1016,7 +1013,8 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
             case TARGET_SIEGE:
                 return (target != null) && !target.isDead() && (target instanceof DoorInstance) ? target : null;
             default:
-                if (activeChar instanceof Player) ((Player)activeChar).sendMessage("Target type of skill is not currently handled");
+                if (activeChar instanceof Player)
+                    ((Player) activeChar).sendMessage("Target type of skill is not currently handled");
                 return null;
         }
     }
@@ -1034,7 +1032,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
         switch (targetType) {
             case TARGET_EVENT: {
                 if (activeChar instanceof Player) {
-                    Player player = (Player)activeChar;
+                    Player player = (Player) activeChar;
                     int playerArena = player.getBlockCheckerArena();
 
                     if (playerArena != -1) {
@@ -1068,7 +1066,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
             }
             case TARGET_COMMCHANNEL: {
                 if (activeChar instanceof Player) {
-                    Player player = (Player)activeChar;
+                    Player player = (Player) activeChar;
                     if (player.isInParty()) {
                         if (player.getParty().isInCommandChannel()) {
                             for (Player p : (player).getParty().getCommandChannel()) {
@@ -1094,7 +1092,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
                 break;
             }
             case TARGET_PET_AURA: {
-                addTargetsToList(targets, ((Player)activeChar).getPet(), activeChar, forceUse);
+                addTargetsToList(targets, ((Player) activeChar).getPet(), activeChar, forceUse);
                 break;
             }
             case TARGET_PARTY:
@@ -1111,8 +1109,8 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
                             .collect(Collectors.toList()));
                     break;
                 }
-                if (!(activeChar instanceof Player )) break;
-                Player player = (Player)activeChar;
+                if (!(activeChar instanceof Player)) break;
+                Player player = (Player) activeChar;
 
                 for (Player target : World.getAroundPlayers(player, skillRadius, 600).collect(Collectors.toList())) {
                     boolean check = false;
@@ -1319,7 +1317,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
                 targets.add(character);
 
                 if (et._applyOnSummon && character instanceof Player) {
-                    Summon summon = ((Player)character).getPet();
+                    Summon summon = ((Player) character).getPet();
                     if (summon instanceof SummonInstance && !isOffensive && !isToggle() && !isCubicSkill()) {
                         targets.add(summon);
                     }
@@ -1577,7 +1575,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
     }
 
     public final long getReuseDelay(Creature actor) {
-        if (actor instanceof Playable && ((Playable)actor).getPlayer().isInOlympiadMode())
+        if (actor instanceof Playable && ((Playable) actor).getPlayer().isInOlympiadMode())
             if (olympiadValues.containsKey("reuseDelay"))
                 return toLong(olympiadValues.get("reuseDelay"));
         return reuseDelay;
@@ -1663,7 +1661,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
     }
 
 
-    public  void useSkill(Creature activeChar, Creature target) {
+    public void useSkill(Creature activeChar, Creature target) {
         throw new UnsupportedOperationException(" useSkill(activeCahr, target) is not overidden in " + this.getClass());
     }
 
@@ -1973,92 +1971,6 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
 //            this.clazz = clazz;
         }
 
-//        public Skill makeSkill(StatsSet set) {
-//            if (clazz == Aggression.class) return new Aggression(set);
-//            if (clazz == AIeffects.class) return new AIeffects(set);
-//            if (clazz == Balance.class) return new Balance(set);
-//            if (clazz == BeastFeed.class) return new BeastFeed(set);
-//            if (clazz == Continuous.class) return new Continuous(set);
-//            if (clazz == BuffCharger.class) return new BuffCharger(set);
-//            if (clazz == Call.class) return new Call(set);
-//            if (clazz == ChainHeal.class) return new ChainHeal(set);
-//            if (clazz == Charge.class) return new Charge(set);
-//            if (clazz == ChargeSoul.class) return new ChargeSoul(set);
-//            if (clazz == ClanGate.class) return new ClanGate(set);
-//            if (clazz == CombatPointHeal.class) return new CombatPointHeal(set);
-//            if (clazz == Toggle.class) return new Toggle(set);
-//            if (clazz == CPDam.class) return new CPDam(set);
-//            if (clazz == Craft.class) return new Craft(set);
-//            if (clazz == DeathPenalty.class) return new DeathPenalty(set);
-//            if (clazz == Decoy.class) return new Decoy(set);
-//            if (clazz == DeleteHate.class) return new DeleteHate(set);
-//            if (clazz == DeleteHateOfMe.class) return new DeleteHateOfMe(set);
-//            if (clazz == DestroySummon.class) return new DestroySummon(set);
-//            if (clazz == DefuseTrap.class) return new DefuseTrap(set);
-//            if (clazz == DetectTrap.class) return new DetectTrap(set);
-//            if (clazz == Drain.class) return new Drain(set);
-//            if (clazz == DrainSoul.class) return new DrainSoul(set);
-//            if (clazz == l2trunk.gameserver.skills.skillclasses.Effect.class)
-//                return new l2trunk.gameserver.skills.skillclasses.Effect(set);
-//            if (clazz == EffectsFromSkills.class) return new EffectsFromSkills(set);
-//            if (clazz == EnergyReplenish.class) return new EnergyReplenish(set);
-//            if (clazz == ExtractStone.class) return new ExtractStone(set);
-//            if (clazz == FishingSkill.class) return new FishingSkill(set);
-//            if (clazz == Harvesting.class) return new Harvesting(set);
-//            if (clazz == Heal.class) return new Heal(set);
-//            if (clazz == HealPercent.class) return new HealPercent(set);
-//            if (clazz == SummonHealPercent.class) return new SummonHealPercent(set);
-//            if (clazz == InstantJump.class) return new InstantJump(set);
-//            if (clazz == KamaelWeaponExchange.class) return new KamaelWeaponExchange(set);
-//            if (clazz == LearnSkill.class) return new LearnSkill(set);
-//            if (clazz == LethalShot.class) return new LethalShot(set);
-//            if (clazz == ManaDam.class) return new ManaDam(set);
-//            if (clazz == ManaHeal.class) return new ManaHeal(set);
-//            if (clazz == ManaHealPercent.class) return new ManaHealPercent(set);
-//            if (clazz == SummonManaHealPercent.class) return new SummonManaHealPercent(set);
-//            if (clazz == MDam.class) return new MDam(set);
-//            if (clazz == Disablers.class) return new Disablers(set);
-//            if (clazz == NegateEffects.class) return new NegateEffects(set);
-//            if (clazz == NegateStats.class) return new NegateStats(set);
-//            if (clazz == PcBangPointsAdd.class) return new PcBangPointsAdd(set);
-//            if (clazz == PDam.class) return new PDam(set);
-//            if (clazz == PetSummon.class) return new PetSummon(set);
-//            if (clazz == ReelingPumping.class) return new ReelingPumping(set);
-//            if (clazz == Recall.class) return new Recall(set);
-//            if (clazz == Refill.class) return new Refill(set);
-//            if (clazz == Resurrect.class) return new Resurrect(set);
-//            if (clazz == Ride.class) return new Ride(set);
-//            if (clazz == SelfSacrifice.class) return new SelfSacrifice(set);
-//            if (clazz == ShiftAggression.class) return new ShiftAggression(set);
-//            if (clazz == Sowing.class) return new Sowing(set);
-//            if (clazz == SPHeal.class) return new SPHeal(set);
-//            if (clazz == Spoil.class) return new Spoil(set);
-//            if (clazz == StealBuff.class) return new StealBuff(set);
-//            if (clazz == Spawn.class) return new Spawn(set);
-//            if (clazz == CurseDivinity.class) return new CurseDivinity(set);
-//            if (clazz == l2trunk.gameserver.skills.skillclasses.Summon.class)
-//                return new l2trunk.gameserver.skills.skillclasses.Summon(set);
-//            if (clazz == SummonSiegeFlag.class) return new SummonSiegeFlag(set);
-//            if (clazz == SummonItem.class) return new SummonItem(set);
-//            if (clazz == Sweep.class) return new Sweep(set);
-//            if (clazz == TakeCastle.class) return new TakeCastle(set);
-//            if (clazz == TakeFortress.class) return new TakeFortress(set);
-//            if (clazz == TameControl.class) return new TameControl(set);
-//            if (clazz == TakeFlag.class) return new TakeFlag(set);
-//            if (clazz == TeleportNpc.class) return new TeleportNpc(set);
-//            if (clazz == Transformation.class) return new Transformation(set);
-//            if (clazz == Unlock.class) return new Unlock(set);
-//            if (clazz == VitalityHeal.class) return new VitalityHeal(set);
-//            return new Default(set);
-//
-////            try {
-////                Constructor<? extends Skill> c = clazz.getConstructor(StatsSet.class);
-////                return c.newInstance(set);
-////            } catch (IllegalAccessException | SecurityException | NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalArgumentException e) {
-////                _log.error("Error while making Skill", e);
-////                throw new RuntimeException(e);
-////            }
-//        }
 
         final boolean isPvM() {
             return this == DISCORD;

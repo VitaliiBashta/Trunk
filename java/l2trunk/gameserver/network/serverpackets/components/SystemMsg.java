@@ -298,7 +298,7 @@ public enum SystemMsg implements IStaticPacket {
     C1_IS_ALREADY_TRADING_WITH_ANOTHER_PERSON(143),
     // Message: That is an incorrect target.
     THAT_IS_AN_INCORRECT_TARGET(144),
-    // Message: That player is not online.
+    // Message: That getPlayer is not online.
     THAT_PLAYER_IS_NOT_ONLINE(145),
     // Message: You cannot discard something that far away from you.
     YOU_CANNOT_DISCARD_SOMETHING_THAT_FAR_AWAY_FROM_YOU(151),
@@ -314,7 +314,7 @@ public enum SystemMsg implements IStaticPacket {
     YOUR_ATTACK_HAS_FAILED(158),
     // Message: $c1 is a member of another party and cannot be invited.
     C1_IS_A_MEMBER_OF_ANOTHER_PARTY_AND_CANNOT_BE_INVITED(160),
-    // Message: That player is not currently online.
+    // Message: That getPlayer is not currently online.
     THAT_PLAYER_IS_NOT_CURRENTLY_ONLINE(161),
     // Message: You have moved too far away from the warehouse to perform that action.
     YOU_HAVE_MOVED_TOO_FAR_AWAY_FROM_THE_WAREHOUSE_TO_PERFORM_THAT_ACTION(162),
@@ -521,13 +521,13 @@ public enum SystemMsg implements IStaticPacket {
     YOU_CANNOT_DISSOLVE_A_CLAN_WHILE_OWNING_A_CLAN_HALL_OR_CASTLE(266),
     // Message: There are no requests to disperse.
     THERE_ARE_NO_REQUESTS_TO_DISPERSE(267),
-    // Message: That player already belongs to another clan.
+    // Message: That getPlayer already belongs to another clan.
     THAT_PLAYER_ALREADY_BELONGS_TO_ANOTHER_CLAN(268),
     // Message: You cannot dismiss yourself.
     YOU_CANNOT_DISMISS_YOURSELF(269),
     // Message: You have already surrendered.
     YOU_HAVE_ALREADY_SURRENDERED(270),
-    // Message: A player can only be granted a title if the clan is occupation 3 or above.
+    // Message: A getPlayer can only be granted a title if the clan is occupation 3 or above.
     A_PLAYER_CAN_ONLY_BE_GRANTED_A_TITLE_IF_THE_CLAN_IS_LEVEL_3_OR_ABOVE(271),
     // Message: A clan crest can only be registered when the clan's skill occupation is 3 or above.
     A_CLAN_CREST_CAN_ONLY_BE_REGISTERED_WHEN_THE_CLANS_SKILL_LEVEL_IS_3_OR_ABOVE(272),
@@ -591,13 +591,13 @@ public enum SystemMsg implements IStaticPacket {
     S1_HAS_DISAPPEARED(302),
     // Message: Clan member $s1 has logged into game.
     CLAN_MEMBER_S1_HAS_LOGGED_INTO_GAME(304),
-    // Message: The player declined to join your party.
+    // Message: The getPlayer declined to join your party.
     THE_PLAYER_DECLINED_TO_JOIN_YOUR_PARTY(305),
     // Message: You have failed to delete the character.
     YOU_HAVE_FAILED_TO_DELETE_THE_CHARACTER(306),
     // Message: You cannot trade with a warehouse keeper.
     YOU_CANNOT_TRADE_WITH_A_WAREHOUSE_KEEPER(307),
-    // Message: The player declined your clan invitation.
+    // Message: The getPlayer declined your clan invitation.
     THE_PLAYER_DECLINED_YOUR_CLAN_INVITATION(308),
     // Message: You have succeeded in expelling the clan member.
     YOU_HAVE_SUCCEEDED_IN_EXPELLING_THE_CLAN_MEMBER(309),
@@ -829,7 +829,7 @@ public enum SystemMsg implements IStaticPacket {
     BECAUSE_YOU_ARE_REGISTERED_AS_A_MINOR_YOUR_ACCOUNT_HAS_BEEN_SUSPENDED_AT_THE_REQUEST_OF_YOUR_PARENTS_OR_GUARDIAN(440),
     // Message: Per our company's User Agreement, the use of this account has been suspended. If you have any questions regarding your account please contact support at http://us.ncsol2f.com/support.
     PER_OUR_COMPANYS_USER_AGREEMENT_THE_USE_OF_THIS_ACCOUNT_HAS_BEEN_SUSPENDED(441),
-    // Message: Your account has been suspended, under Chapter 2, Section 7 of the Lineage II Service Use Agreement, for misappropriating payment under another player's account. For more information, please visit the Support Center on the NCsoft website (http://us.ncsol2f.com/support).
+    // Message: Your account has been suspended, under Chapter 2, Section 7 of the Lineage II Service Use Agreement, for misappropriating payment under another getPlayer's account. For more information, please visit the Support Center on the NCsoft website (http://us.ncsol2f.com/support).
     YOUR_ACCOUNT_HAS_BEEN_SUSPENDED_UNDER_CHAPTER_2_SECTION_7_OF_THE_LINEAGE_II_SERVICE_USE_AGREEMENT_FOR_MISAPPROPRIATING_PAYMENT_UNDER_ANOTHER_PLAYERS_ACCOUNT(442),
     // Message: Ownership of this account needs to be verified. For more information, Please submit a ticket at the Support Center on the NCsoft website (http://us.ncsol2f.com/support).
     OWNERSHIP_OF_THIS_ACCOUNT_NEEDS_TO_BE_VERIFIED(443),
@@ -909,7 +909,7 @@ public enum SystemMsg implements IStaticPacket {
     YOU_CANNOT_ADD_YOURSELF_TO_YOUR_OWN_FRIEND_LIST_(482),
     // Message: This function is inaccessible right now.  Please try again later.
     THIS_FUNCTION_IS_INACCESSIBLE_RIGHT_NOW(483),
-    // Message: This player is already registered on your friends list.
+    // Message: This getPlayer is already registered on your friends list.
     THIS_PLAYER_IS_ALREADY_REGISTERED_ON_YOUR_FRIENDS_LIST(484),
     // Message: No new friend invitations may be accepted.
     NO_NEW_FRIEND_INVITATIONS_MAY_BE_ACCEPTED(485),
@@ -1079,7 +1079,7 @@ public enum SystemMsg implements IStaticPacket {
     YOUR_FEAR_SPELL_FAILED(567),
     // Message: Cubic Summoning failed.
     CUBIC_SUMMONING_FAILED(568),
-    // Message: Caution -- this item's price greatly differs from non-player run shops. Do you wish to continue?
+    // Message: Caution -- this item's price greatly differs from non-getPlayer run shops. Do you wish to continue?
     CAUTION__THIS_ITEMS_PRICE_GREATLY_DIFFERS_FROM_NONPLAYER_RUN_SHOPS(569),
     // Message: How many  $s1(s) do you want to purchase?
     HOW_MANY__S1S_DO_YOU_WANT_TO_PURCHASE(570),
@@ -1493,7 +1493,7 @@ public enum SystemMsg implements IStaticPacket {
     THEYRE_OFF(824),
     // Message: Monster Race $s1 is finished!
     MONSTER_RACE_S1_IS_FINISHED(825),
-    // Message: First prize goes to the player in lane $s1. Second prize goes to the player in lane $s2.
+    // Message: First prize goes to the getPlayer in lane $s1. Second prize goes to the getPlayer in lane $s2.
     FIRST_PRIZE_GOES_TO_THE_PLAYER_IN_LANE_S1(826),
     // Message: You may not impose a setBlock on a GM.
     YOU_MAY_NOT_IMPOSE_A_BLOCK_ON_A_GM(827),
@@ -2429,7 +2429,7 @@ public enum SystemMsg implements IStaticPacket {
     THE_LEADER_OF_THE_PARTY_ROOM_HAS_CHANGED(1397),
     // Message: We are recruiting party members.
     WE_ARE_RECRUITING_PARTY_MEMBERS(1398),
-    // Message: Only the leader of the party can transfer party leadership to another player.
+    // Message: Only the leader of the party can transfer party leadership to another getPlayer.
     ONLY_THE_LEADER_OF_THE_PARTY_CAN_TRANSFER_PARTY_LEADERSHIP_TO_ANOTHER_PLAYER(1399),
     // Message: Please getBonuses the person you wish to make the party leader.
     PLEASE_SELECT_THE_PERSON_YOU_WISH_TO_MAKE_THE_PARTY_LEADER(1400),
@@ -3912,7 +3912,7 @@ public enum SystemMsg implements IStaticPacket {
     SUPPLY_S1(2332),
     // Message: You cannot receive the vitamin item because you have exceed your inventory weight/quantity limit.
     YOU_CANNOT_RECEIVE_THE_VITAMIN_ITEM_BECAUSE_YOU_HAVE_EXCEED_YOUR_INVENTORY_WEIGHTQUANTITY_LIMIT(2333),
-    // Message: Score that shows a player's individual fame. Fame can be obtained by participating in a territory war, castle siege, fortress siege, hideout siege, the Underground Coliseum, the Festival of Darkness and the Olympiad.
+    // Message: Score that shows a getPlayer's individual fame. Fame can be obtained by participating in a territory war, castle siege, fortress siege, hideout siege, the Underground Coliseum, the Festival of Darkness and the Olympiad.
     SCORE_THAT_SHOWS_A_PLAYERS_INDIVIDUAL_FAME(2334),
     // Message: There are no more vitamin items to be found.
     THERE_ARE_NO_MORE_VITAMIN_ITEMS_TO_BE_FOUND(2335),
@@ -3920,7 +3920,7 @@ public enum SystemMsg implements IStaticPacket {
     CP_SIPHON(2336),
     // Message: Your CP was drained because you were hit with a CP siphon skill.
     YOUR_CP_WAS_DRAINED_BECAUSE_YOU_WERE_HIT_WITH_A_CP_SIPHON_SKILL(2337),
-    // Message: If it's a draw, the player who first entered is first
+    // Message: If it's a draw, the getPlayer who first entered is first
     IF_ITS_A_DRAW_THE_PLAYER_WHO_FIRST_ENTERED_IS_FIRST(2338),
     // Message: Please place the item to be enchanted in the empty slot below.
     PLEASE_PLACE_THE_ITEM_TO_BE_ENCHANTED_IN_THE_EMPTY_SLOT_BELOW(2339),
@@ -3936,7 +3936,7 @@ public enum SystemMsg implements IStaticPacket {
     YOU_HAVE_BEEN_KILLED_BY_AN_ATTACK_FROM_C1(2344),
     // Message: You have attacked and killed $c1.
     YOU_HAVE_ATTACKED_AND_KILLED_C1(2345),
-    // Message: Your account may have been involved in identity thel2f. As such, it has been temporarily restricted. If this does not apply to you, you may obtain normal service by going through player-identification on the homepage. Please refer to the plaync homepage (www.plaync.co.kr) customer center (Lineage 2) clause 1:1 for more details.
+    // Message: Your account may have been involved in identity thel2f. As such, it has been temporarily restricted. If this does not apply to you, you may obtain normal service by going through getPlayer-identification on the homepage. Please refer to the plaync homepage (www.plaync.co.kr) customer center (Lineage 2) clause 1:1 for more details.
     YOUR_ACCOUNT_MAY_HAVE_BEEN_INVOLVED_IN_IDENTITY_THEFT(2346),
     // Message: $s1 seconds to game end!
     S1_SECONDS_TO_GAME_END(2347),
@@ -4140,7 +4140,7 @@ public enum SystemMsg implements IStaticPacket {
     YOUR_ACCOUNT_HAS_BEEN_SUSPENDED_FROM_ALL_GAME_SERVICES(2055),
     // Message:
     C1_RESISTED_C2S_MAGIC(2269),
-    // Message: Another player is probably controlling the target.
+    // Message: Another getPlayer is probably controlling the target.
     ANOTHER_PLAYER_IS_PROBABLY_CONTROLLING_THE_TARGET(2756),
     // Message: You have blocked $c1.
     YOU_HAVE_BLOCKED_C1(2057),

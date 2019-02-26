@@ -61,10 +61,10 @@ public final class _512_AwlUnderFoot extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if (event.equalsIgnoreCase("gludio_prison_keeper_q0512_03.htm") || event.equalsIgnoreCase("gludio_prison_keeper_q0512_05.htm")) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("exit".equalsIgnoreCase(event)) {
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             return null;
         } else if ("enter".equalsIgnoreCase(event))
             if (st.getState() == CREATED || !check(st.player))
@@ -160,7 +160,7 @@ public final class _512_AwlUnderFoot extends Quest {
                     return null;
                 }
 
-                // Synerge - Add the player to the instance again
+                // Synerge - Add the getPlayer to the instance again
                 if (prison != null) {
                     Reflection r = ReflectionManager.INSTANCE.get(prison.getReflectionId());
                     if (r != null) {
@@ -250,7 +250,7 @@ public final class _512_AwlUnderFoot extends Quest {
 
             @Override
             public void runImpl() {
-                addSpawnToInstance(_npcId, new Location(12152, -49272, -3008, 25958), _reflectionId);
+                addSpawnToInstance(_npcId, Location.of(12152, -49272, -3008, 25958), _reflectionId);
             }
         }
     }

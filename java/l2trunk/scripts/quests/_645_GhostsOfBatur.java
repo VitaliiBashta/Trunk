@@ -10,7 +10,7 @@ import java.util.List;
 public final class _645_GhostsOfBatur extends Quest {
     //Npc
     private static final int Karuda = 32017;
-    //Items
+    //items
     private static final int CursedBurialItems = 14861;
     //Mobs
     private static final List<Integer> MOBS = List.of(
@@ -28,7 +28,7 @@ public final class _645_GhostsOfBatur extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if (event.equalsIgnoreCase("karuda_q0645_0103.htm")) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         }
         return event;
@@ -41,7 +41,7 @@ public final class _645_GhostsOfBatur extends Quest {
         if (cond == 0) {
             if (st.player.getLevel() < 61) {
                 htmltext = "karuda_q0645_0102.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else
                 htmltext = "karuda_q0645_0101.htm";
         } else {

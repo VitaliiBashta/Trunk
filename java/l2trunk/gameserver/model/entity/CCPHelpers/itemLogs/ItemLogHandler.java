@@ -1,36 +1,20 @@
 package l2trunk.gameserver.model.entity.CCPHelpers.itemLogs;
 
-import l2trunk.gameserver.Config;
-import l2trunk.gameserver.database.DatabaseFactory;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.model.items.TradeItem;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 
-public class ItemLogHandler {
-    private static final Logger LOG = LoggerFactory.getLogger(ItemLogHandler.class);
+public enum ItemLogHandler {
+    INSTANCE;
     private static final SingleItemLog[] EMPTY_RECEIVED_ITEMS = new SingleItemLog[0];
     private final Object lock;
     private int lastActionId;
 
-    private ItemLogHandler() {
+    ItemLogHandler() {
         this.lastActionId = 0;
         this.lock = new Object();
-    }
-
-    public static ItemLogHandler getInstance() {
-        return ItemLogHandlerHolder.instance;
-    }
-
-    public void addLog(Player player, ItemInstance itemLost, ItemActionType actionType) {
-        addLog(player, itemLost, 1L, actionType);
     }
 
     public void addLog(Player player, ItemInstance itemLost, long count, ItemActionType actionType) {
@@ -59,16 +43,7 @@ public class ItemLogHandler {
         addLog(player, lostItems, actionType);
     }
 
-    public void addLog(Player player, List<TradeItem> items, boolean lost, ItemActionType actionType) {
-        SingleItemLog[] itemLogs = new SingleItemLog[items.size()];
-        for (int i = 0; i < items.size(); i++) {
-            TradeItem item = items.get(i);
-            itemLogs[i] = new SingleItemLog(item.getItemId(), item.getCount(), item.getEnchantLevel(), item.getObjectId());
-        }
-        addLog(player, itemLogs, actionType);
-    }
-
-    private SingleItemLog[] getAdenaItemLog(Player oldOwner, Player newOwner, long count, boolean lost) {
+    private SingleItemLog[] getAdenaItemLog(Player oldOwner, Player newOwner, long count) {
         SingleItemLog[] lostItems = new SingleItemLog[1];
         ItemInstance item = oldOwner.getInventory().getItemByItemId(57);
         lostItems[0] = new SingleItemLog(57, count, 0, item == null ? -1 : item.objectId());
@@ -83,7 +58,7 @@ public class ItemLogHandler {
             itemLogs[i] = new SingleItemLog(item.getItemId(), item.getCount(), item.getEnchantLevel(), item.getObjectId());
             itemLogs[i].setReceiverName(itemsWinner.getName());
         }
-        SingleItemLog[] adenaLogs = getAdenaItemLog(itemsWinner, adenaWinner, lostAdenaCount, true);
+        SingleItemLog[] adenaLogs = getAdenaItemLog(itemsWinner, adenaWinner, lostAdenaCount);
 
         addLog(itemsWinner, adenaLogs, itemLogs, itemsWinnerActionType);
 
@@ -128,10 +103,6 @@ public class ItemLogHandler {
         ItemLogList.getInstance().addLogs(actionLog);
     }
 
-    public void onPickUp(Player player, ItemInstance item) {
-        ItemLogList.getInstance().fillReceiver(item.objectId(), player.getName());
-    }
-
     private int getNextActionId() {
         int actionId;
         synchronized (this.lock) {
@@ -141,24 +112,4 @@ public class ItemLogHandler {
         return actionId;
     }
 
-    public void loadLastActionId() {
-        if (!Config.ENABLE_PLAYER_ITEM_LOGS)
-            return;
-        try (Connection con = DatabaseFactory.getInstance().getConnection();
-             PreparedStatement statement = con.prepareStatement("SELECT log_id FROM logs ORDER BY log_id DESC LIMIT 1");
-             ResultSet rset = statement.executeQuery()) {
-            if (rset.next()) {
-                int lastSavedActionId = rset.getInt("log_id");
-                synchronized (this.lock) {
-                    this.lastActionId = ((lastSavedActionId > 0 ? lastSavedActionId : 0) + 1);
-                }
-            }
-        } catch (SQLException e) {
-            LOG.error("Error while loading LastActionId: ", e);
-        }
-    }
-
-    private static class ItemLogHandlerHolder {
-        private static final ItemLogHandler instance = new ItemLogHandler();
-    }
 }

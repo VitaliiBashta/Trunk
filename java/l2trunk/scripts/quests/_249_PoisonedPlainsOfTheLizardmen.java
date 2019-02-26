@@ -12,8 +12,7 @@ public final class _249_PoisonedPlainsOfTheLizardmen extends Quest {
         super(false);
 
         addStartNpc(MOUEN);
-        addTalkId(MOUEN);
-        addTalkId(JOHNNY);
+        addTalkId(MOUEN,JOHNNY);
     }
 
     @Override
@@ -21,7 +20,7 @@ public final class _249_PoisonedPlainsOfTheLizardmen extends Quest {
 
         if (npc.getNpcId() == MOUEN) {
             if (event.equalsIgnoreCase("30196-03.htm")) {
-                st.setState(STARTED);
+                st.start();
                 st.setCond(1);
                 st.playSound(SOUND_ACCEPT);
             }
@@ -30,7 +29,7 @@ public final class _249_PoisonedPlainsOfTheLizardmen extends Quest {
             st.giveItems(57, 83056);
             st.addExpAndSp(477496, 58743);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(false);
+            st.finish();
         }
         return event;
     }

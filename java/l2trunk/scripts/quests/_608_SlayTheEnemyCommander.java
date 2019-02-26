@@ -28,7 +28,7 @@ public final class _608_SlayTheEnemyCommander extends Quest {
         if ("quest_accept".equalsIgnoreCase(event)) {
             htmltext = "elder_kadun_zu_ketra_q0608_0104.htm";
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("608_3".equals(event))
             if (st.haveQuestItem(HEAD_OF_MOS)) {
@@ -38,7 +38,7 @@ public final class _608_SlayTheEnemyCommander extends Quest {
                 st.addExpAndSp(0, 10000);
                 st.unset("cond");
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else
                 htmltext = "elder_kadun_zu_ketra_q0608_0106.htm";
         return htmltext;
@@ -54,11 +54,11 @@ public final class _608_SlayTheEnemyCommander extends Quest {
                     htmltext = "elder_kadun_zu_ketra_q0608_0101.htm";
                 else {
                     htmltext = "elder_kadun_zu_ketra_q0608_0102.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else {
                 htmltext = "elder_kadun_zu_ketra_q0608_0103.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (cond == 1 && !st.haveQuestItem(HEAD_OF_MOS) )
             htmltext = "elder_kadun_zu_ketra_q0608_0106.htm";

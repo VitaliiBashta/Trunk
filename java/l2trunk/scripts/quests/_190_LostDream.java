@@ -55,7 +55,7 @@ public final class _190_LostDream extends Quest {
                     htmltext = "head_blacksmith_kusto_q0190_08.htm";
                     st.giveItems(ADENA_ID, 109427);
                     st.addExpAndSp(309467, 20614);
-                    st.exitCurrentQuest(false);
+                    st.finish();
                     st.playSound(SOUND_FINISH);
                 }
             } else if (npcId == Juris) {

@@ -41,10 +41,10 @@ public final class _709_PathToBecomingALordDion extends Quest {
         Castle castle = ResidenceHolder.getResidence(DionCastle);
         if (castle.getOwner() == null)
             return "Castle has no lord";
-        Player castleOwner = castle.getOwner().getLeader().player();
+        Player castleOwner = castle.getOwner().getLeader().getPlayer();
         switch (event) {
             case "crosby_q709_03.htm":
-                st.setState(STARTED);
+                st.start();
                 st.setCond(1);
                 st.playSound(SOUND_ACCEPT);
                 break;
@@ -52,7 +52,7 @@ public final class _709_PathToBecomingALordDion extends Quest {
                 if (isLordAvailable(2, st)) {
                     castleOwner.getQuestState(this).set("confidant", st.player.objectId());
                     castleOwner.getQuestState(this).setCond(3);
-                    st.setState(STARTED);
+                    st.start();
                 } else
                     htmltext = "crosby_q709_05a.htm";
                 break;
@@ -78,7 +78,7 @@ public final class _709_PathToBecomingALordDion extends Quest {
                 Functions.npcSay(npc, NpcString.S1_HAS_BECOME_THE_LORD_OF_THE_TOWN_OF_DION, st.player.getName());
                 castle.getDominion().changeOwner(castleOwner.getClan());
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 break;
         }
         return htmltext;
@@ -100,7 +100,7 @@ public final class _709_PathToBecomingALordDion extends Quest {
                         htmltext = "crosby_q709_01.htm";
                     else {
                         htmltext = "crosby_q709_00.htm";
-                        st.exitCurrentQuest(true);
+                        st.exitCurrentQuest();
                     }
                 } else if (isLordAvailable(2, st)) {
                     if (castleOwner.isInRangeZ(npc, 200))
@@ -109,7 +109,7 @@ public final class _709_PathToBecomingALordDion extends Quest {
                         htmltext = "crosby_q709_05a.htm";
                 } else {
                     htmltext = "crosby_q709_00a.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1) {
                 st.setCond(2);

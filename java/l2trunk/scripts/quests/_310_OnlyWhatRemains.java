@@ -29,7 +29,7 @@ public final class _310_OnlyWhatRemains extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if (event.equalsIgnoreCase("32640-3.htm")) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         }
         return event;
@@ -47,7 +47,7 @@ public final class _310_OnlyWhatRemains extends Quest {
                 htmltext = "32640-1.htm";
             else {
                 htmltext = "32640-0.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (cond == 1)
             htmltext = "32640-8.htm";
@@ -55,7 +55,7 @@ public final class _310_OnlyWhatRemains extends Quest {
             st.takeItems(DIRTYBEAD, 500);
             st.giveItems(ACCELERATOR, 1);
             st.giveItems(JEWEL, 1);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             st.playSound(SOUND_FINISH);
             htmltext = "32640-9.htm";
         }

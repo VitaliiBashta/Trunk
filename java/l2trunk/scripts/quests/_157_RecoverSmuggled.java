@@ -24,13 +24,13 @@ public final class _157_RecoverSmuggled extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equals("1")) {
-            st.set("id", 0);
+        if ("1".equals(event)) {
+            st.unset("id");
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
             htmltext = "30005-05.htm";
-        } else if (event.equals("157_1")) {
+        } else if ("157_1".equals(event)) {
             htmltext = "30005-04.htm";
             return htmltext;
         }
@@ -44,7 +44,7 @@ public final class _157_RecoverSmuggled extends Quest {
         int id = st.getState();
         if (id == CREATED) {
             st.setCond(0);
-            st.set("id", 0);
+            st.unset("id");
         }
         if (npcId == 30005 && st.getCond() == 0) {
             if (st.getCond() < 15) {
@@ -52,20 +52,20 @@ public final class _157_RecoverSmuggled extends Quest {
                     htmltext = "30005-03.htm";
                 else {
                     htmltext = "30005-02.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else {
                 htmltext = "30005-02.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (npcId == 30005 && st.getCond() != 0 && st.getQuestItemsCount(ADAMANTITE_ORE_ID) < 20)
             htmltext = "30005-06.htm";
-        else if (npcId == 30005 && st.getCond() != 0 && st.getQuestItemsCount(ADAMANTITE_ORE_ID) >= 20) {
+        else if (npcId == 30005 && st.getCond() != 0 && st.haveQuestItem(ADAMANTITE_ORE_ID, 20)) {
             st.takeItems(ADAMANTITE_ORE_ID, st.getQuestItemsCount(ADAMANTITE_ORE_ID));
             st.playSound(SOUND_FINISH);
             st.giveItems(BUCKLER, 1);
             htmltext = "30005-07.htm";
-            st.exitCurrentQuest(false);
+            st.finish();
         }
         return htmltext;
     }
@@ -74,10 +74,10 @@ public final class _157_RecoverSmuggled extends Quest {
     public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         if (npcId == 20121) {
-            st.set("id", 0);
+            st.unset("id");
             if (st.getCond() != 0 && st.getQuestItemsCount(ADAMANTITE_ORE_ID) < 20 && Rnd.chance(14)) {
                 st.giveItems(ADAMANTITE_ORE_ID);
-                if (st.getQuestItemsCount(ADAMANTITE_ORE_ID) == 20)
+                if (st.haveQuestItem(ADAMANTITE_ORE_ID,20))
                     st.playSound(SOUND_MIDDLE);
                 else
                     st.playSound(SOUND_ITEMGET);

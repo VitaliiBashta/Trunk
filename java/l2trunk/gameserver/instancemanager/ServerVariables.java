@@ -77,14 +77,6 @@ public final class ServerVariables {
         return getVars().getLong(name, defult);
     }
 
-    public static double getFloat(String name) {
-        return getVars().getDouble(name);
-    }
-
-    public static double getFloat(String name, double defult) {
-        return getVars().getDouble(name, defult);
-    }
-
     public static String getString(String name) {
         return getVars().getString(name);
     }

@@ -37,9 +37,9 @@ public final class PlayerVsPlayerDuelEvent extends DuelEvent {
             return false;
         }
 
-        //if (player.isBusy() || target.isBusy())
+        //if (getPlayer.isBusy() || target.isBusy())
         //{
-        //	player.sendMessage(player.isLangRus() ? "Вы либо выбранный чар находится на олимпиаде!!!" : "You either char is selected for Olympiad!");
+        //	getPlayer.sendMessage(getPlayer.isLangRus() ? "Вы либо выбранный чар находится на олимпиаде!!!" : "You either char is selected for Olympiad!");
         //	return false;
         //}
 
@@ -102,9 +102,9 @@ public final class PlayerVsPlayerDuelEvent extends DuelEvent {
 
                 // Alexander - Add to the stats the won and lost duel for each part
 //				for (DuelSnapshotObject d : winners)
-//					d.player().addPlayerStats(Ranking.STAT_TOP_DUELS_WIN);
+//					d.getPlayer().addPlayerStats(Ranking.STAT_TOP_DUELS_WIN);
 //				for (DuelSnapshotObject d : lossers)
-//					d.player().addPlayerStats(Ranking.STAT_TOP_DUELS_LOST);
+//					d.getPlayer().addPlayerStats(Ranking.STAT_TOP_DUELS_LOST);
                 break;
         }
 

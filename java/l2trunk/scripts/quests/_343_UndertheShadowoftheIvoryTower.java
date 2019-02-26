@@ -8,18 +8,18 @@ import l2trunk.gameserver.model.quest.QuestState;
 import java.util.List;
 
 public final class _343_UndertheShadowoftheIvoryTower extends Quest {
-    //Mob
+    //mob
     private static final List<Integer> MOBS = List.of(
             20563, 20564, 20565, 20566);
     private static final int CHANCE = 50;
+    private static final int ECTOPLASM = 4365;
     //NPC
     private final int CEMA = 30834;
     private final int ICARUS = 30835;
     private final int MARSHA = 30934;
     private final int TRUMPIN = 30935;
-    //Items
+    //items
     private final int ORB = 4364;
-    private static final int ECTOPLASM = 4365;
     //Var
     private final int[] AllowClass = {
             0xb,
@@ -38,13 +38,9 @@ public final class _343_UndertheShadowoftheIvoryTower extends Quest {
         super(false);
 
         addStartNpc(CEMA);
-        addTalkId(CEMA);
-        addTalkId(ICARUS);
-        addTalkId(MARSHA);
-        addTalkId(TRUMPIN);
+        addTalkId(CEMA,ICARUS,MARSHA,TRUMPIN);
 
-        for (int i : MOBS)
-            addKillId(i);
+        addKillId(MOBS);
 
         addQuestItem(ORB);
     }
@@ -56,7 +52,7 @@ public final class _343_UndertheShadowoftheIvoryTower extends Quest {
         int random2 = Rnd.get(2);
         long orbs = st.getQuestItemsCount(ORB);
         if (event.equalsIgnoreCase("30834-03.htm")) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("30834-08.htm")) {
@@ -67,18 +63,18 @@ public final class _343_UndertheShadowoftheIvoryTower extends Quest {
                 htmltext = "30834-08.htm";
         } else if (event.equalsIgnoreCase("30834-09.htm")) {
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
-        } else if (event.equalsIgnoreCase("30934-02.htm") || event.equalsIgnoreCase("30934-03.htm")) {
+            st.exitCurrentQuest();
+        } else if ("30934-02.htm".equalsIgnoreCase(event) || "30934-03.htm".equalsIgnoreCase(event)) {
             if (orbs < 10)
                 htmltext = "noorbs.htm";
             else if (event.equalsIgnoreCase("30934-03.htm"))
                 if (orbs >= 10) {
                     st.takeItems(ORB, 10);
-                    st.set("playing", 1);
+                    st.set("playing");
                 } else
                     htmltext = "noorbs.htm";
         } else if (event.equalsIgnoreCase("30934-04.htm")) {
-            if (st.getInt("playing") > 0) {
+            if (st.isSet("playing")) {
                 if (random1 == 0) {
                     htmltext = "30934-05.htm";
                     st.giveItems(ORB, 10);
@@ -91,11 +87,11 @@ public final class _343_UndertheShadowoftheIvoryTower extends Quest {
                 st.unset("playing");
             } else {
                 htmltext = "Player is cheating";
-                st.takeItems(ORB, -1);
-                st.exitCurrentQuest(true);
+                st.takeItems(ORB);
+                st.exitCurrentQuest();
             }
-        } else if (event.equalsIgnoreCase("30934-05.htm")) {
-            if (st.getInt("playing") > 0) {
+        } else if ("30934-05.htm".equalsIgnoreCase(event)) {
+            if (st.isSet("playing")) {
                 if (random1 == 0) {
                     htmltext = "30934-04.htm";
                     st.giveItems(ORB, 20);
@@ -107,11 +103,11 @@ public final class _343_UndertheShadowoftheIvoryTower extends Quest {
                 st.unset("playing");
             } else {
                 htmltext = "Player is cheating";
-                st.takeItems(ORB, -1);
-                st.exitCurrentQuest(true);
+                st.takeItems(ORB);
+                st.exitCurrentQuest();
             }
-        } else if (event.equalsIgnoreCase("30934-06.htm")) {
-            if (st.getInt("playing") > 0) {
+        } else if ("30934-06.htm".equalsIgnoreCase(event)) {
+            if (st.isSet("playing")) {
                 if (random1 == 0) {
                     htmltext = "30934-04.htm";
                     st.giveItems(ORB, 20);
@@ -124,14 +120,14 @@ public final class _343_UndertheShadowoftheIvoryTower extends Quest {
                 st.unset("playing");
             } else {
                 htmltext = "Player is cheating";
-                st.takeItems(ORB, -1);
-                st.exitCurrentQuest(true);
+                st.takeItems(ORB);
+                st.exitCurrentQuest();
             }
-        } else if (event.equalsIgnoreCase("30935-02.htm") || event.equalsIgnoreCase("30935-03.htm")) {
+        } else if ("30935-02.htm".equalsIgnoreCase(event) || "30935-03.htm".equalsIgnoreCase(event)) {
             st.unset("toss");
             if (orbs < 10)
                 htmltext = "noorbs.htm";
-        } else if (event.equalsIgnoreCase("30935-05.htm")) {
+        } else if ("30935-05.htm".equalsIgnoreCase(event)) {
             if (orbs >= 10) {
                 if (random2 == 0) {
                     int toss = st.getInt("toss");
@@ -140,7 +136,7 @@ public final class _343_UndertheShadowoftheIvoryTower extends Quest {
                         st.giveItems(ORB, 150);
                         htmltext = "30935-07.htm";
                     } else {
-                        st.set("toss", toss + 1);
+                        st.inc("toss");
                         htmltext = "30935-04.htm";
                     }
                 } else {
@@ -149,7 +145,7 @@ public final class _343_UndertheShadowoftheIvoryTower extends Quest {
                 }
             } else
                 htmltext = "noorbs.htm";
-        } else if (event.equalsIgnoreCase("30935-06.htm")) {
+        } else if ("30935-06.htm".equalsIgnoreCase(event)) {
             if (orbs >= 10) {
                 int toss = st.getInt("toss");
                 st.unset("toss");
@@ -163,32 +159,32 @@ public final class _343_UndertheShadowoftheIvoryTower extends Quest {
                     st.giveItems(ORB, 150);
             } else
                 htmltext = "noorbs.htm";
-        } else if (event.equalsIgnoreCase("30835-02.htm"))
-            if (st.getQuestItemsCount(ECTOPLASM) > 0) {
+        } else if ("30835-02.htm".equalsIgnoreCase(event))
+            if (st.haveQuestItem(ECTOPLASM)) {
                 st.takeItems(ECTOPLASM, 1);
                 int random = Rnd.get(1000);
                 if (random <= 119)
-                    st.giveItems(955, 1);
+                    st.giveItems(955);
                 else if (random <= 169)
-                    st.giveItems(951, 1);
+                    st.giveItems(951);
                 else if (random <= 329)
                     st.giveItems(2511, Rnd.get(200) + 401);
                 else if (random <= 559)
                     st.giveItems(2510, Rnd.get(200) + 401);
                 else if (random <= 561)
-                    st.giveItems(316, 1);
+                    st.giveItems(316);
                 else if (random <= 578)
-                    st.giveItems(630, 1);
+                    st.giveItems(630);
                 else if (random <= 579)
-                    st.giveItems(188, 1);
+                    st.giveItems(188);
                 else if (random <= 581)
-                    st.giveItems(885, 1);
+                    st.giveItems(885);
                 else if (random <= 582)
-                    st.giveItems(103, 1);
+                    st.giveItems(103);
                 else if (random <= 584)
-                    st.giveItems(917, 1);
+                    st.giveItems(917);
                 else
-                    st.giveItems(736, 1);
+                    st.giveItems(736);
             } else
                 htmltext = "30835-03.htm";
         return htmltext;
@@ -204,11 +200,11 @@ public final class _343_UndertheShadowoftheIvoryTower extends Quest {
                 for (int i : AllowClass)
                     if (st.player.getClassId().id == i && st.player.getLevel() >= 40)
                         htmltext = "30834-01.htm";
-                if (!htmltext.equals("30834-01.htm")) {
+                if (!"30834-01.htm".equals(htmltext)) {
                     htmltext = "30834-07.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
-            } else if (st.getQuestItemsCount(ORB) > 0)
+            } else if (st.haveQuestItem(ORB))
                 htmltext = "30834-06.htm";
             else
                 htmltext = "30834-05.htm";

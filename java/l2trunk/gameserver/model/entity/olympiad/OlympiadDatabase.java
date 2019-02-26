@@ -80,8 +80,8 @@ public final class OlympiadDatabase {
             _log.error("Olympiad System: Couldn't calculate last period!", e);
         }
 
-        for (Integer nobleId : Olympiad._nobles.keySet()) {
-            StatsSet nobleInfo = Olympiad._nobles.get(nobleId);
+        for (Integer nobleId : Olympiad.nobles.keySet()) {
+            StatsSet nobleInfo = Olympiad.nobles.get(nobleId);
             int points = nobleInfo.getInteger(Olympiad.POINTS);
             int compDone = nobleInfo.getInteger(Olympiad.COMP_DONE);
             nobleInfo.set(Olympiad.POINTS, Config.OLYMPIAD_POINTS_DEFAULT);
@@ -186,9 +186,9 @@ public final class OlympiadDatabase {
     }
 
     public static synchronized void saveNobleData() {
-        if (Olympiad._nobles == null)
+        if (Olympiad.nobles == null)
             return;
-        for (Integer nobleId : Olympiad._nobles.keySet())
+        for (Integer nobleId : Olympiad.nobles.keySet())
             saveNobleData(nobleId);
     }
 

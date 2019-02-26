@@ -195,13 +195,13 @@ public final class RequestBypassToServer extends L2GameClientPacket {
                     }
 
                     if (receiver.isInJail() || activeChar.isInJail()) {
-                        activeChar.sendMessage("You cannot invite a player while is in Jail.");
+                        activeChar.sendMessage("You cannot invite a getPlayer while is in Jail.");
                         return;
                     }
 
                     if (receiver.isInOlympiadMode() || activeChar.isInOlympiadMode()) {
                         if ((receiver.isInOlympiadMode() != activeChar.isInOlympiadMode()) || (receiver.getOlympiadGame().getId() != activeChar.getOlympiadGame().getId()) || (receiver.getOlympiadSide() != activeChar.getOlympiadSide())) {
-                            activeChar.sendMessage("You cannot invite this player to join your party right now.");
+                            activeChar.sendMessage("You cannot invite this getPlayer to join your party right now.");
                             return;
                         }
                     }
@@ -214,7 +214,7 @@ public final class RequestBypassToServer extends L2GameClientPacket {
                         receiver.joinParty(newparty);
                     } else {
                         if (activeChar.getParty().isInDimensionalRift()) {
-                            activeChar.sendMessage("You cannot invite a player when you are in the Dimensional Rift.");
+                            activeChar.sendMessage("You cannot invite a getPlayer when you are in the Dimensional Rift.");
                         } else {
                             Party plparty = activeChar.getParty();
                             receiver.joinParty(plparty);

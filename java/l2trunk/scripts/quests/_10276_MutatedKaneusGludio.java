@@ -13,7 +13,7 @@ public final class _10276_MutatedKaneusGludio extends Quest {
     private static final int TomlanKamos = 18554;
     private static final int OlAriosh = 18555;
 
-    // Items
+    // items
     private static final int Tissue1 = 13830;
     private static final int Tissue2 = 13831;
 
@@ -29,11 +29,11 @@ public final class _10276_MutatedKaneusGludio extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("30332-03.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("30344-02.htm".equalsIgnoreCase(event)) {
             st.giveItems(57, 60000);
-            st.exitCurrentQuest(false);
+            st.finish();
             st.playSound(SOUND_FINISH);
         }
         return event;

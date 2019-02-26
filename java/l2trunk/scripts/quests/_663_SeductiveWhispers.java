@@ -18,9 +18,9 @@ public final class _663_SeductiveWhispers extends Quest {
     private final static List<Integer> mobs = List.of(
             20674, 20678, 20954, 20955, 20956, 20957, 20958, 20959, 20960, 20961,
             20962, 20974, 20975, 20976, 20996, 20997, 20998, 20999, 21001, 21002,
-            21006, 21007, 21008, 21009, 21010);    // Quest Items
+            21006, 21007, 21008, 21009, 21010);    // Quest items
     private final static int Spirit_Bead = 8766;
-    // Items
+    // items
     private final static int Enchant_Weapon_D = 955;
     private final static int Enchant_Weapon_C = 951;
     private final static int Enchant_Weapon_B = 947;
@@ -81,47 +81,47 @@ public final class _663_SeductiveWhispers extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        int _state = st.getState();
-        long Spirit_Bead_Count = st.getQuestItemsCount(Spirit_Bead);
-        if (event.equalsIgnoreCase("30846_04.htm") && _state == CREATED) {
+        int state = st.getState();
+        long spiritBeadCount = st.getQuestItemsCount(Spirit_Bead);
+        if ("30846_04.htm".equalsIgnoreCase(event) && state == CREATED) {
             st.setCond(1);
-            st.set("round", 0);
-            st.setState(STARTED);
+            st.unset("round");
+            st.start();
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("30846_07.htm") && _state == STARTED)
+        } else if ("30846_07.htm".equalsIgnoreCase(event) && state == STARTED)
             return Dialog_Rewards;
-        else if (event.equalsIgnoreCase("30846_09.htm") && _state == STARTED) {
+        else if ("30846_09.htm".equalsIgnoreCase(event) && state == STARTED) {
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
-        } else if (event.equalsIgnoreCase("30846_08.htm") && _state == STARTED) {
-            if (Spirit_Bead_Count < 1)
+            st.exitCurrentQuest();
+        } else if ("30846_08.htm".equalsIgnoreCase(event) && state == STARTED) {
+            if (spiritBeadCount < 1)
                 return "30846_11.htm";
             st.takeItems(Spirit_Bead, 1);
             if (!Rnd.chance(WinChance))
                 return "30846_08a.htm";
-        } else if (event.equalsIgnoreCase("30846_10.htm") && _state == STARTED) {
-            st.set("round", 0);
-            if (Spirit_Bead_Count < 50)
+        } else if ("30846_10.htm".equalsIgnoreCase(event) && state == STARTED) {
+            st.unset("round");
+            if (spiritBeadCount < 50)
                 return "30846_11.htm";
-        } else if (event.equalsIgnoreCase("30846_12.htm") && _state == STARTED) {
+        } else if ("30846_12.htm".equalsIgnoreCase(event) && state == STARTED) {
             int round = st.getInt("round");
             if (round == 0) {
-                if (Spirit_Bead_Count < 50)
+                if (spiritBeadCount < 50)
                     return "30846_11.htm";
                 st.takeItems(Spirit_Bead, 50);
             }
             if (!Rnd.chance(WinChance)) {
-                st.set("round", 0);
+                st.unset("round");
                 return event;
             }
             LevelRewards current_reward = rewards.get(round);
             int next_round = round + 1;
-            boolean LastLevel = next_round == rewards.size();
-            String dialog = LastLevel ? Dialog_WinGame : Dialog_WinLevel;
+            boolean lastLevel = next_round == rewards.size();
+            String dialog = lastLevel ? Dialog_WinGame : Dialog_WinLevel;
             dialog = dialog.replaceFirst("%level%", String.valueOf(next_round));
             dialog = dialog.replaceFirst("%prize%", current_reward.toString());
 
-            if (LastLevel) {
+            if (lastLevel) {
                 next_round = 0;
                 current_reward.giveRewards(st);
                 st.playSound(SOUND_JACKPOT);
@@ -129,9 +129,9 @@ public final class _663_SeductiveWhispers extends Quest {
 
             st.set("round", next_round);
             return dialog;
-        } else if (event.equalsIgnoreCase("30846_13.htm") && _state == STARTED) {
+        } else if ("30846_13.htm".equalsIgnoreCase(event) && state == STARTED) {
             int round = st.getInt("round") - 1;
-            st.set("round", 0);
+            st.unset("round");
             if (round < 0 || round >= rewards.size())
                 return "30846_13a.htm";
             rewards.get(round).giveRewards(st);
@@ -147,7 +147,7 @@ public final class _663_SeductiveWhispers extends Quest {
         int _state = st.getState();
         if (_state == CREATED) {
             if (st.player.getLevel() < 50) {
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 return "30846_00.htm";
             }
             st.setCond(0);
@@ -168,8 +168,8 @@ public final class _663_SeductiveWhispers extends Quest {
         private final Map<List<Integer>, Integer> rewards = new HashMap<>();
         private String txt;
 
-        LevelRewards(String _txt) {
-            txt = _txt;
+        LevelRewards(String txt) {
+            this.txt = txt;
         }
 
         LevelRewards add(int item_id, int count) {

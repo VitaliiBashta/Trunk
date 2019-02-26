@@ -15,25 +15,25 @@ import java.util.TreeMap;
  * dd[dddc[d]c[d]dQQcQ] - Gracia Final
  */
 public class ExShowSellCropList extends L2GameServerPacket {
-    private final Map<Integer, ItemInstance> _cropsItems;
-    private final Map<Integer, CropProcure> _castleCrops;
+    private final Map<Integer, ItemInstance> cropsItems;
+    private final Map<Integer, CropProcure> castleCrops;
     private int _manorId = 1;
 
     public ExShowSellCropList(Player player, int manorId, List<CropProcure> crops) {
         _manorId = manorId;
-        _castleCrops = new TreeMap<>();
-        _cropsItems = new TreeMap<>();
+        castleCrops = new TreeMap<>();
+        cropsItems = new TreeMap<>();
 
         List<Integer> allCrops = Manor.INSTANCE.getAllCrops();
         for (int cropId : allCrops) {
             ItemInstance item = player.getInventory().getItemByItemId(cropId);
             if (item != null)
-                _cropsItems.put(cropId, item);
+                cropsItems.put(cropId, item);
         }
 
         for (CropProcure crop : crops)
-            if (_cropsItems.containsKey(crop.getId()) && crop.getAmount() > 0)
-                _castleCrops.put(crop.getId(), crop);
+            if (cropsItems.containsKey(crop.cropId) && crop.getAmount() > 0)
+                castleCrops.put(crop.cropId, crop);
 
     }
 
@@ -42,12 +42,12 @@ public class ExShowSellCropList extends L2GameServerPacket {
         writeEx(0x2c);
 
         writeD(_manorId); // manor id
-        writeD(_cropsItems.size()); // size
+        writeD(cropsItems.size()); // size
 
-        for (ItemInstance item : _cropsItems.values()) {
+        for (ItemInstance item : cropsItems.values()) {
             writeD(item.objectId()); // Object id
             writeD(item.getItemId()); // crop id
-            writeD(Manor.INSTANCE.getSeedLevelByCrop(item.getItemId())); // seed occupation
+            writeD(Manor.INSTANCE.getSeedLevelByCrop(item.getItemId())); // seed level
 
             writeC(1);
             writeD(Manor.INSTANCE.getRewardItem(item.getItemId(), 1)); // reward 1 id
@@ -55,11 +55,11 @@ public class ExShowSellCropList extends L2GameServerPacket {
             writeC(1);
             writeD(Manor.INSTANCE.getRewardItem(item.getItemId(), 2)); // reward 2 id
 
-            if (_castleCrops.containsKey(item.getItemId())) {
-                CropProcure crop = _castleCrops.get(item.getItemId());
+            if (castleCrops.containsKey(item.getItemId())) {
+                CropProcure crop = castleCrops.get(item.getItemId());
                 writeD(_manorId); // manor
                 writeQ(crop.getAmount()); // buy residual
-                writeQ(crop.getPrice()); // buy price
+                writeQ(crop.price); // buy price
                 writeC(crop.getReward()); // reward
             } else {
                 writeD(0xFFFFFFFF); // manor

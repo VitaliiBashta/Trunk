@@ -92,9 +92,9 @@ public enum OlympiadHistoryManager {
                     allStatLoss++;
             }
         }
-        html.replace("%wins%", String.valueOf(allStatWinner));
-        html.replace("%ties%", String.valueOf(allStatTie));
-        html.replace("%losses%", String.valueOf(allStatLoss));
+        html.replace("%wins%", allStatWinner);
+        html.replace("%ties%", allStatTie);
+        html.replace("%losses%", allStatLoss);
 
         int min = perpage * (page - 1);
         int max = perpage * page;
@@ -138,9 +138,9 @@ public enum OlympiadHistoryManager {
             html.replace("%buttnext%", HtmlUtils.NEXT_BUTTON);
             html.replace("%next_bypass%", "_match?class=" + targetClassId + "&page=" + (page + 1));
         } else
-            html.replace("%buttnext%", StringUtils.EMPTY);
+            html.replace("%buttnext%", "");
 
-        html.replace("%list%", b.toString());
+        html.replace("%list%", b);
 
         player.sendPacket(html);
     }

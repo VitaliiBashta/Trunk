@@ -63,18 +63,18 @@ public enum InstantZoneParser {
             Map<Integer, InstantZone.DoorInfo> doors =  new ConcurrentHashMap<>();
             Map<String, InstantZone.ZoneInfo> zones =  new ConcurrentHashMap<>();
             Map<String, InstantZone.SpawnInfo2> spawns2 = new ConcurrentHashMap<>();
-            instanceId = Integer.parseInt(element.attributeValue("id"));
+            instanceId = toInt(element.attributeValue("id"));
             name = element.attributeValue("name");
 
             String n = element.attributeValue("timelimit");
             if (n != null)
-                timelimit = Integer.parseInt(n);
+                timelimit = toInt(n);
 
             n = element.attributeValue("collapseIfEmpty");
-            collapseIfEmpty = Integer.parseInt(n);
+            collapseIfEmpty = toInt(n);
 
             n = element.attributeValue("maxChannels");
-            maxChannels = Integer.parseInt(n);
+            maxChannels = toInt(n);
 
             n = element.attributeValue("dispelBuffs");
             dispelBuffs = Boolean.parseBoolean(n);
@@ -86,24 +86,24 @@ public enum InstantZoneParser {
             for (Iterator<Element> subIterator = element.elementIterator(); subIterator.hasNext(); ) {
                 Element subElement = subIterator.next();
 
-                if ("occupation".equalsIgnoreCase(subElement.getName())) {
+                if ("level".equalsIgnoreCase(subElement.getName())) {
                     if (Config.ALLOW_INSTANCES_LEVEL_MANUAL) {
                         minLevel = Config.INSTANCES_LEVEL_MIN;
                         maxLevel = Config.INSTANCES_LEVEL_MAX;
                     } else {
-                        minLevel = Integer.parseInt(subElement.attributeValue("min"));
-                        maxLevel = Integer.parseInt(subElement.attributeValue("max"));
+                        minLevel = toInt(subElement.attributeValue("min"));
+                        maxLevel = toInt(subElement.attributeValue("max"));
                     }
                 } else if ("collapse".equalsIgnoreCase(subElement.getName())) {
                     onPartyDismiss = Boolean.parseBoolean(subElement.attributeValue("on-party-dismiss"));
-                    timer = Integer.parseInt(subElement.attributeValue("timer"));
+                    timer = toInt(subElement.attributeValue("timer"));
                 } else if ("party".equalsIgnoreCase(subElement.getName())) {
                     if (Config.ALLOW_INSTANCES_PARTY_MANUAL) {
                         minParty = Config.INSTANCES_PARTY_MIN;
                         maxParty = Config.INSTANCES_PARTY_MAX;
                     } else {
-                        minParty = Integer.parseInt(subElement.attributeValue("min"));
-                        maxParty = Integer.parseInt(subElement.attributeValue("max"));
+                        minParty = toInt(subElement.attributeValue("min"));
+                        maxParty = toInt(subElement.attributeValue("max"));
                     }
                 } else if ("return".equalsIgnoreCase(subElement.getName()))
                     ret = Location.of(subElement.attributeValue("loc"));
@@ -112,22 +112,22 @@ public enum InstantZoneParser {
                         teleportLocs = new ArrayList<>(1);
                     teleportLocs.add(Location.of(subElement.attributeValue("loc")));
                 } else if ("remove".equalsIgnoreCase(subElement.getName())) {
-                    removedItemId = Integer.parseInt(subElement.attributeValue("itemId"));
-                    removedItemCount = Integer.parseInt(subElement.attributeValue("count"));
+                    removedItemId = toInt(subElement.attributeValue("itemId"));
+                    removedItemCount = toInt(subElement.attributeValue("count"));
                     removedItemNecessity = Boolean.parseBoolean(subElement.attributeValue("necessary"));
                 } else if ("give".equalsIgnoreCase(subElement.getName())) {
-                    giveItemId = Integer.parseInt(subElement.attributeValue("itemId"));
-                    givedItemCount = Integer.parseInt(subElement.attributeValue("count"));
+                    giveItemId = toInt(subElement.attributeValue("itemId"));
+                    givedItemCount = toInt(subElement.attributeValue("count"));
                 } else if ("quest".equalsIgnoreCase(subElement.getName())) {
-                    requiredQuestId = Integer.parseInt(subElement.attributeValue("id"));
+                    requiredQuestId = toInt(subElement.attributeValue("id"));
                 } else if ("reuse".equalsIgnoreCase(subElement.getName())) {
                     resetReuse = new SchedulingPattern(subElement.attributeValue("resetReuse"));
-                    sharedReuseGroup = Integer.parseInt(subElement.attributeValue("sharedReuseGroup"));
+                    sharedReuseGroup = toInt(subElement.attributeValue("sharedReuseGroup"));
                     setReuseUponEntry = Boolean.parseBoolean(subElement.attributeValue("setUponEntry"));
                 } else if ("geodata".equalsIgnoreCase(subElement.getName())) {
                     String[] rxy = subElement.attributeValue("map").split("_");
-                    mapx = Integer.parseInt(rxy[0]);
-                    mapy = Integer.parseInt(rxy[1]);
+                    mapx = toInt(rxy[0]);
+                    mapy = toInt(rxy[1]);
                 } else if ("doors".equalsIgnoreCase(subElement.getName())) {
                     for (Element e : subElement.elements()) {
                         boolean opened = e.attributeValue("opened") != null && Boolean.parseBoolean(e.attributeValue("opened"));
@@ -162,13 +162,13 @@ public enum InstantZoneParser {
                             String[] mobs = e.attributeValue("mobId").split(" ");
 
                             String respawnNode = e.attributeValue("respawn");
-                            respawn = respawnNode != null ? Integer.parseInt(respawnNode) : 0;
+                            respawn = respawnNode != null ? toInt(respawnNode) : 0;
 
                             String respawnRndNode = e.attributeValue("respawnRnd");
-                            respawnRnd = respawnRndNode != null ? Integer.parseInt(respawnRndNode) : 0;
+                            respawnRnd = respawnRndNode != null ? toInt(respawnRndNode) : 0;
 
                             String countNode = e.attributeValue("count");
-                            count = countNode != null ? Integer.parseInt(countNode) : 1;
+                            count = countNode != null ? toInt(countNode) : 1;
 
                             List<Location> coords = new ArrayList<>();
                             spawnType = 0;

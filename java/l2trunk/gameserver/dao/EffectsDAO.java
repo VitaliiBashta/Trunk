@@ -118,7 +118,7 @@ public enum EffectsDAO {
 
     private int getId(Playable playable) {
         if (playable instanceof Player) {
-            return  ((Player) playable).getActiveClassId();
+            return  ((Player) playable).getActiveClassId().id;
         } else if (playable instanceof SummonInstance) {
             return ((SummonInstance) playable).getEffectIdentifier() + SUMMON_SKILL_OFFSET;
         }

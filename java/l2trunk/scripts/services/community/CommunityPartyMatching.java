@@ -51,7 +51,7 @@ public final class CommunityPartyMatching extends Functions implements ScriptFil
 
     @Override
     public List<String> getBypassCommands() {
-        return Collections.singletonList("_partymatching");
+        return List.of("_partymatching");
     }
 
     @Override
@@ -162,16 +162,10 @@ public final class CommunityPartyMatching extends Functions implements ScriptFil
         return html;
     }
 
-    private boolean containsClass(List<ClassId> group, int clazz) {
-        return group.stream()
-                .anyMatch(cls -> cls.id == clazz);
-    }
-
     private boolean isClassTestPassed(Player player, int classSortType) {
-
         for (ClassId clazz : getNeededClasses(classSortType)) {
             for (SubClass sub : player.getSubClasses().values()) {
-                if (clazz.id == sub.getClassId())
+                if (clazz == sub.getClassId())
                     return true;
             }
         }
@@ -203,7 +197,7 @@ public final class CommunityPartyMatching extends Functions implements ScriptFil
         int maxLevel = 0;
 
         for (SubClass sub : player.getSubClasses().values()) {
-            if (containsClass(group, sub.getClassId())) {
+            if (group.contains(sub.getClassId())) {
                 if (Experience.getLevel(sub.getExp()) > maxLevel)
                     maxLevel = Experience.getLevel(sub.getExp());
             }

@@ -25,7 +25,7 @@ public final class _614_SlayTheEnemyCommander extends Quest {
         if ("quest_accept".equalsIgnoreCase(event)) {
             htmltext = "elder_ashas_barka_durai_q0614_0104.htm";
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("614_3".equals(event))
             if (st.haveQuestItem(HEAD_OF_TAYR) ) {
@@ -35,7 +35,7 @@ public final class _614_SlayTheEnemyCommander extends Quest {
                 st.addExpAndSp(0, 10000);
                 st.unset("cond");
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else
                 htmltext = "elder_ashas_barka_durai_q0614_0106.htm";
         return htmltext;
@@ -51,11 +51,11 @@ public final class _614_SlayTheEnemyCommander extends Quest {
                     htmltext = "elder_ashas_barka_durai_q0614_0101.htm";
                 else {
                     htmltext = "elder_ashas_barka_durai_q0614_0102.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else {
                 htmltext = "elder_ashas_barka_durai_q0614_0103.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (cond == 1 && st.getQuestItemsCount(HEAD_OF_TAYR) == 0)
             htmltext = "elder_ashas_barka_durai_q0614_0106.htm";

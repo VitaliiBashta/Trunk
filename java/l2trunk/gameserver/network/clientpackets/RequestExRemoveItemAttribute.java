@@ -12,18 +12,15 @@ import l2trunk.gameserver.network.serverpackets.ExShowBaseAttributeCancelWindow;
 import l2trunk.gameserver.network.serverpackets.InventoryUpdate;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
-/**
- * @author SYS
- */
-public class RequestExRemoveItemAttribute extends L2GameClientPacket {
+public final class RequestExRemoveItemAttribute extends L2GameClientPacket {
     // Format: chd
-    private int _objectId;
-    private int _attributeId;
+    private int objectId;
+    private int attributeId;
 
     @Override
     protected void readImpl() {
-        _objectId = readD();
-        _attributeId = readD();
+        objectId = readD();
+        attributeId = readD();
     }
 
     @Override
@@ -38,7 +35,7 @@ public class RequestExRemoveItemAttribute extends L2GameClientPacket {
         }
 
         PcInventory inventory = activeChar.getInventory();
-        ItemInstance itemToUnnchant = inventory.getItemByObjectId(_objectId);
+        ItemInstance itemToUnnchant = inventory.getItemByObjectId(objectId);
 
         if (itemToUnnchant == null) {
             activeChar.sendActionFailed();
@@ -46,7 +43,7 @@ public class RequestExRemoveItemAttribute extends L2GameClientPacket {
         }
 
         ItemAttributes set = itemToUnnchant.getAttributes();
-        Element element = Element.getElementById(_attributeId);
+        Element element = Element.getElementById(attributeId);
 
         if (element == Element.NONE || set.getValue(element) <= 0) {
             activeChar.sendPacket(new ExBaseAttributeCancelResult(false, itemToUnnchant, element), ActionFail.STATIC);

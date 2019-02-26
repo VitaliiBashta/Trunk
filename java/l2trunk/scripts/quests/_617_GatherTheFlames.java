@@ -23,8 +23,7 @@ public final class _617_GatherTheFlames extends Quest {
     public _617_GatherTheFlames() {
         super(true);
 
-        addStartNpc(VULCAN);
-        addStartNpc(HILDA);
+        addStartNpc(VULCAN,HILDA);
         addKillId(mobs);
     }
 
@@ -34,20 +33,20 @@ public final class _617_GatherTheFlames extends Quest {
         {
             if (st.player.getLevel() < 74)
                 return "warsmith_vulcan_q0617_02.htm";
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
             st.setCond(1);
         } else if ("blacksmith_hilda_q0617_03.htm".equalsIgnoreCase(event)) //HILDA
         {
             if (st.player.getLevel() < 74)
                 return "blacksmith_hilda_q0617_02.htm";
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
             st.setCond(1);
         } else if ("warsmith_vulcan_q0617_08.htm".equalsIgnoreCase(event)) {
             st.playSound(SOUND_FINISH);
             st.takeItems(TORCH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         } else if ("warsmith_vulcan_q0617_07.htm".equalsIgnoreCase(event)) {
             if (st.getQuestItemsCount(TORCH) < 1000)
                 return "warsmith_vulcan_q0617_05.htm";
@@ -67,7 +66,7 @@ public final class _617_GatherTheFlames extends Quest {
             if (cond == 0) {
                 if (st.player.getLevel() < 74) {
                     htmltext = "warsmith_vulcan_q0617_02.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else
                     htmltext = "warsmith_vulcan_q0617_01.htm";
             } else

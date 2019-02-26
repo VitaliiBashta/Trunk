@@ -24,7 +24,7 @@ public final class _130_PathToHellbound extends Quest {
 
         if (event.equals("sage_kasian_q0130_05.htm") && cond == 0) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         }
 
@@ -42,7 +42,7 @@ public final class _130_PathToHellbound extends Quest {
         if (event.equals("galate_q0130_07.htm") && cond == 3) {
             st.playSound(SOUND_FINISH);
             st.takeItems(CASIAN_BLUE_CRY);
-            st.exitCurrentQuest(false);
+            st.finish();
         }
 
         return event;
@@ -61,7 +61,7 @@ public final class _130_PathToHellbound extends Quest {
                     htmltext = "sage_kasian_q0130_01.htm";
                 else {
                     htmltext = "sage_kasian_q0130_02.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             if (cond == 2)
                 htmltext = "sage_kasian_q0130_07.htm";

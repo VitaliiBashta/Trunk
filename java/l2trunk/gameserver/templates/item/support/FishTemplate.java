@@ -31,7 +31,7 @@ public final class FishTemplate {
         _cheatingProb = map.getDouble("cheating_prob");
 
         _itemId = map.getInteger("item_id");
-        _level = map.getInteger("occupation");
+        _level = map.getInteger("level");
         _hp = map.getInteger("hp");
         _maxLength = map.getInteger("max_length");
         _startCombatTime = map.getInteger("start_combat_time");

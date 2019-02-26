@@ -27,31 +27,31 @@ public final class _902_ReclaimOurEra extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("mathias_q902_04.htm")) {
-            st.setState(STARTED);
+        if ("mathias_q902_04.htm".equalsIgnoreCase(event)) {
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("mathias_q902_05.htm")) {
+        } else if ("mathias_q902_05.htm".equalsIgnoreCase(event)) {
             st.setCond(2);
-        } else if (event.equalsIgnoreCase("mathias_q902_06.htm")) {
+        } else if ("mathias_q902_06.htm".equalsIgnoreCase(event)) {
             st.setCond(3);
-        } else if (event.equalsIgnoreCase("mathias_q902_07.htm")) {
+        } else if ("mathias_q902_07.htm".equalsIgnoreCase(event)) {
             st.setCond(4);
-        } else if (event.equalsIgnoreCase("mathias_q902_09.htm")) {
-            if (st.getQuestItemsCount(ShatteredBones) > 0) {
+        } else if ("mathias_q902_09.htm".equalsIgnoreCase(event)) {
+            if (st.haveQuestItem(ShatteredBones) ) {
                 st.takeItems(ShatteredBones);
                 st.giveItems(21750);
                 st.giveItems(ADENA_ID, 134038);
-            } else if (st.getQuestItemsCount(CannibalisticStakatoLeaderClaw) > 0) {
+            } else if (st.haveQuestItem(CannibalisticStakatoLeaderClaw)) {
                 st.takeItems(CannibalisticStakatoLeaderClaw);
                 st.giveItems(21750, 3);
                 st.giveItems(ADENA_ID, 210119);
-            } else if (st.getQuestItemsCount(AnaisScroll) > 0) {
+            } else if (st.haveQuestItem(AnaisScroll) ) {
                 st.takeItems(AnaisScroll);
                 st.giveItems(21750, 3);
                 st.giveItems(ADENA_ID, 348155);
             }
-            st.setState(COMPLETED);
+            st.complete();
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(this);
         }
@@ -71,7 +71,7 @@ public final class _902_ReclaimOurEra extends Quest {
                             htmltext = "mathias_q902_01.htm";
                         else {
                             htmltext = "mathias_q902_00.htm";
-                            st.exitCurrentQuest(true);
+                            st.exitCurrentQuest();
                         }
                     } else
                         htmltext = "mathias_q902_00a.htm";

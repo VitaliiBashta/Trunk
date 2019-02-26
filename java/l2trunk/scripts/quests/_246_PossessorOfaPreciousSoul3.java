@@ -5,6 +5,8 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
+import java.util.stream.IntStream;
+
 public final class _246_PossessorOfaPreciousSoul3 extends Quest {
     private static final int CARADINES_LETTER_2_PART = 7678;
     private static final int RING_OF_GODDESS_WATERBINDER = 7591;
@@ -19,14 +21,10 @@ public final class _246_PossessorOfaPreciousSoul3 extends Quest {
 
         addStartNpc(31740);
 
-        addTalkId(31741);
-        addTalkId(30721);
+        addTalkId(31741, 30721);
 
-        addKillId(21541);
-        addKillId(21544);
-        addKillId(25325);
-        for (int i = 21535; i <= 21540; i++)
-            addKillId(i);
+        addKillId(21541, 21544, 25325);
+        addKillId(IntStream.rangeClosed(21535, 21540).toArray());
 
         addQuestItem(RING_OF_GODDESS_WATERBINDER,
                 NECKLACE_OF_GODDESS_EVERGREEN,
@@ -40,7 +38,7 @@ public final class _246_PossessorOfaPreciousSoul3 extends Quest {
             case "caradine_q0246_0104.htm":
                 st.setCond(1);
                 st.takeItems(CARADINES_LETTER_2_PART, 1);
-                st.setState(STARTED);
+                st.start();
                 st.playSound(SOUND_ACCEPT);
                 break;
             case "ossian_q0246_0201.htm":
@@ -60,17 +58,17 @@ public final class _246_PossessorOfaPreciousSoul3 extends Quest {
                 st.giveItems(CARADINES_LETTER);
                 st.addExpAndSp(719843, 0);
                 st.unset("cond");
-                st.exitCurrentQuest(false);
+                st.finish();
                 break;
             case "ossian_q0246_0301rb.htm":
                 st.setCond(4);
                 st.playSound(SOUND_MIDDLE);
-                st.set("staff_select", 0);
+                st.unset("staff_select");
                 break;
             case "ossian_q0246_0301mb.htm":
                 st.setCond(4);
                 st.playSound(SOUND_MIDDLE);
-                st.set("staff_select", 1);
+                st.set("staff_select");
                 break;
         }
         return event;
@@ -91,7 +89,7 @@ public final class _246_PossessorOfaPreciousSoul3 extends Quest {
                     htmltext = "caradine_q0246_0101.htm";
                 else {
                     htmltext = "caradine_q0246_0102.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1)
                 htmltext = "caradine_q0246_0105.htm";
@@ -100,13 +98,13 @@ public final class _246_PossessorOfaPreciousSoul3 extends Quest {
                 htmltext = "ossian_q0246_0101.htm";
             else if ((cond == 2 || cond == 3) && (st.getQuestItemsCount(RING_OF_GODDESS_WATERBINDER) < 1 || st.getQuestItemsCount(NECKLACE_OF_GODDESS_EVERGREEN) < 1))
                 htmltext = "ossian_q0246_0203.htm";
-            else if (cond == 3 && st.haveAllQuestItems(RING_OF_GODDESS_WATERBINDER,NECKLACE_OF_GODDESS_EVERGREEN))
+            else if (cond == 3 && st.haveAllQuestItems(RING_OF_GODDESS_WATERBINDER, NECKLACE_OF_GODDESS_EVERGREEN))
                 htmltext = "ossian_q0246_0202.htm";
             else if (cond == 4)
                 htmltext = "ossian_q0246_0301.htm";
             else if (cond == 5 && st.getQuestItemsCount(STAFF_OF_GODDESS_RAIN_SONG) < 1)
                 htmltext = "ossian_q0246_0402.htm";
-            else if (cond == 5 && st.haveAllQuestItems(RING_OF_GODDESS_WATERBINDER,NECKLACE_OF_GODDESS_EVERGREEN,STAFF_OF_GODDESS_RAIN_SONG))
+            else if (cond == 5 && st.haveAllQuestItems(RING_OF_GODDESS_WATERBINDER, NECKLACE_OF_GODDESS_EVERGREEN, STAFF_OF_GODDESS_RAIN_SONG))
                 htmltext = "ossian_q0246_0303.htm";
             else if (cond == 6)
                 htmltext = "ossian_q0246_0403.htm";
@@ -120,7 +118,7 @@ public final class _246_PossessorOfaPreciousSoul3 extends Quest {
     @Override
     public void onKill(NpcInstance npc, QuestState st) {
         if (!st.player.isSubClassActive())
-            return ;
+            return;
 
         int npcId = npc.getNpcId();
         int cond = st.getCond();
@@ -128,14 +126,14 @@ public final class _246_PossessorOfaPreciousSoul3 extends Quest {
             if (Rnd.chance(80)) {
                 if (npcId == 21541 && st.getQuestItemsCount(RING_OF_GODDESS_WATERBINDER) == 0) {
                     st.giveItems(RING_OF_GODDESS_WATERBINDER);
-                    if (st.haveAllQuestItems(RING_OF_GODDESS_WATERBINDER,NECKLACE_OF_GODDESS_EVERGREEN)) {
+                    if (st.haveAllQuestItems(RING_OF_GODDESS_WATERBINDER, NECKLACE_OF_GODDESS_EVERGREEN)) {
                         st.setCond(3);
                         st.playSound(SOUND_MIDDLE);
                     } else
                         st.playSound(SOUND_ITEMGET);
                 } else if (npcId == 21544 && st.getQuestItemsCount(NECKLACE_OF_GODDESS_EVERGREEN) == 0) {
                     st.giveItems(NECKLACE_OF_GODDESS_EVERGREEN);
-                    if (st.haveAllQuestItems(RING_OF_GODDESS_WATERBINDER,NECKLACE_OF_GODDESS_EVERGREEN)) {
+                    if (st.haveAllQuestItems(RING_OF_GODDESS_WATERBINDER, NECKLACE_OF_GODDESS_EVERGREEN)) {
                         st.setCond(3);
                         st.playSound(SOUND_MIDDLE);
                     } else
@@ -143,11 +141,11 @@ public final class _246_PossessorOfaPreciousSoul3 extends Quest {
                 }
             }
         } else if (cond == 4) {
-            if (npcId == 25325 && st.getInt("staff_select") == 0 && st.getQuestItemsCount(STAFF_OF_GODDESS_RAIN_SONG) == 0) {
-                st.giveItems(STAFF_OF_GODDESS_RAIN_SONG, 1);
+            if (npcId == 25325 && !st.isSet("staff_select") && !st.haveQuestItem(STAFF_OF_GODDESS_RAIN_SONG)) {
+                st.giveItems(STAFF_OF_GODDESS_RAIN_SONG);
                 st.setCond(5);
                 st.playSound(SOUND_MIDDLE);
-            } else if (npcId >= 21535 && npcId <= 21540 && st.getInt("staff_select") == 1 && st.getQuestItemsCount(STAFF_OF_GODDES) < 100) {
+            } else if (npcId >= 21535 && npcId <= 21540 && st.isSet("staff_select") && st.getQuestItemsCount(STAFF_OF_GODDES) < 100) {
                 st.giveItems(STAFF_OF_GODDES);
                 if (st.haveQuestItem(STAFF_OF_GODDES, 100)) {
                     st.takeItems(STAFF_OF_GODDES);

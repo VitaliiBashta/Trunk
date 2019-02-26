@@ -5,10 +5,7 @@ import l2trunk.commons.lang.Pair;
 import l2trunk.gameserver.cache.Msg;
 import l2trunk.gameserver.listener.actor.player.OnAnswerListener;
 import l2trunk.gameserver.listener.actor.player.impl.ReviveAnswerListener;
-import l2trunk.gameserver.model.Creature;
-import l2trunk.gameserver.model.Player;
-import l2trunk.gameserver.model.Skill;
-import l2trunk.gameserver.model.Zone;
+import l2trunk.gameserver.model.*;
 import l2trunk.gameserver.model.base.BaseStats;
 import l2trunk.gameserver.model.base.TeamType;
 import l2trunk.gameserver.model.entity.events.GlobalEvent;
@@ -64,7 +61,7 @@ public final class Resurrect extends Skill {
             boolean playerInSiegeZone = player.isInZone(Zone.ZoneType.SIEGE);
             boolean targetInSiegeZone = target.isInZone(Zone.ZoneType.SIEGE);
             boolean playerClan = player.getClan() != null;
-            boolean targetClan = target.getClan() != null;
+            boolean targetClan = pcTarget.getClan() != null;
 
             if ((playerInSiegeZone) || (targetInSiegeZone)) {
                 if ((!targetClan) || (!playerClan)) {

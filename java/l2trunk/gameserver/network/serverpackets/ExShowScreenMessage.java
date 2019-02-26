@@ -2,7 +2,7 @@ package l2trunk.gameserver.network.serverpackets;
 
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 
-public class ExShowScreenMessage extends NpcStringContainer {
+public final class ExShowScreenMessage extends NpcStringContainer {
     public static final int SYSMSG_TYPE = 0;
     private static final int STRING_TYPE = 1;
     private final int type, sysMessageId;
@@ -21,9 +21,6 @@ public class ExShowScreenMessage extends NpcStringContainer {
         this(text, time, ScreenMessageAlign.TOP_CENTER, big_font, 1, -1, false);
     }
 
-//    public ExShowScreenMessage(String text, int time, ScreenMessageAlign text_align, boolean big_font) {
-//        this(text, time, text_align, big_font, 1, -1, false);
-//    }
 
     public ExShowScreenMessage(String text, int time, ScreenMessageAlign text_align, boolean big_font) {
         this(text, time, text_align, big_font, 1, -1, false);
@@ -50,11 +47,6 @@ public class ExShowScreenMessage extends NpcStringContainer {
 
     public ExShowScreenMessage(NpcString npcString, int time, ScreenMessageAlign text_align, boolean big_font, String... params) {
         this(npcString, time, text_align, big_font, STRING_TYPE, -1, false, params);
-    }
-
-
-    public ExShowScreenMessage(NpcString npcString, int time, ScreenMessageAlign text_align, boolean big_font, boolean showEffect, String... params) {
-        this(npcString, time, text_align, big_font, STRING_TYPE, -1, showEffect, params);
     }
 
     public ExShowScreenMessage(NpcString npcString, int time, ScreenMessageAlign textAlign, boolean bigFont, int type, int systemMsg, boolean showEffect, String... params) {

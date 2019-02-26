@@ -19,11 +19,11 @@ public final class _10268_ToTheSeedOfInfinity extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("32548-05.htm")) {
+        if ("32548-05.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
-            st.giveItems(Introduction, 1);
+            st.giveItems(Introduction);
         }
         return event;
     }
@@ -48,7 +48,7 @@ public final class _10268_ToTheSeedOfInfinity extends Quest {
                     htmltext = "32530-01.htm";
                     st.giveItems(ADENA_ID, 16671);
                     st.addExpAndSp(100640, 10098);
-                    st.exitCurrentQuest(false);
+                    st.finish();
                     st.playSound(SOUND_FINISH);
                 }
                 break;

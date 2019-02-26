@@ -16,7 +16,7 @@ public class DropItem extends L2GameServerPacket {
      * Constructor<?> of the DropItem server packet
      *
      * @param item     : L2ItemInstance designating the item
-     * @param playerId : int designating the player ID who dropped the item
+     * @param playerId : int designating the getPlayer ID who dropped the item
      */
     public DropItem(ItemInstance item, int playerId) {
         _playerId = playerId;

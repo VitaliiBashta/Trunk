@@ -328,9 +328,9 @@ public class NpcInstance extends Creature {
         // Alexander - Add a new mob kill to the stats
 //		if (killer != null && killer.isPlayable() && MonsterInstance() && !isRaid())
 //		{
-//			// Only consider player with max 9 lvls of difference
-//			if (killer.player().occupation() <= occupation() + 9)
-//				killer.player().addPlayerStats(Ranking.STAT_TOP_MOBS_KILLS);
+//			// Only consider getPlayer with max 9 lvls of difference
+//			if (killer.getPlayer().occupation() <= occupation() + 9)
+//				killer.getPlayer().addPlayerStats(Ranking.STAT_TOP_MOBS_KILLS);
 //		}
 
         super.onDeath(killer);
@@ -820,7 +820,7 @@ public class NpcInstance extends Creature {
             showBusyWindow(player);
         } else if (isHasChatWindow()) {
             boolean flag = false;
-            List<Quest> qlst = getTemplate().getEventQuests(QuestEventType.NPC_FIRST_TALK);
+            Set<Quest> qlst = getTemplate().getEventQuests(QuestEventType.NPC_FIRST_TALK);
             for (Quest element : qlst) {
                 QuestState qs = player.getQuestState(element);
                 if (((qs == null) || !qs.isCompleted()) && element.notifyFirstTalk(this, player)) {
@@ -866,8 +866,7 @@ public class NpcInstance extends Creature {
                 Quest q = QuestManager.getQuest(questName);
                 if (q != null) {
                     // check for start point
-                    List<Quest> qlst = getTemplate().getEventQuests(QuestEventType.QUEST_START);
-                    for (Quest element : qlst) {
+                    for (Quest element : getTemplate().getEventQuests(QuestEventType.QUEST_START)) {
                         if (element == q) {
                             qs = q.newQuestState(player, Quest.CREATED);
                             if (qs.quest.notifyTalk(this, qs)) {
@@ -905,7 +904,7 @@ public class NpcInstance extends Creature {
                 Castle castle = getCastle(player);
                 if ((castle != null) && (castle.getId() > 0)) {
                     html.replace("%castlename%", HtmlUtils.htmlResidenceName(castle.getId()));
-                    html.replace("%taxpercent%", String.valueOf(castle.getTaxPercent()));
+                    html.replace("%taxpercent%", castle.getTaxPercent());
 
                     if (castle.getOwnerId() > 0) {
                         Clan clan = ClanTable.INSTANCE.getClan(castle.getOwnerId());
@@ -922,7 +921,7 @@ public class NpcInstance extends Creature {
                     }
                 } else {
                     html.replace("%castlename%", "Open");
-                    html.replace("%taxpercent%", "0");
+                    html.replace("%taxpercent%", 0);
 
                     html.replace("%clanname%", "No");
                     html.replace("%clanleadername%", getName());
@@ -1117,7 +1116,7 @@ public class NpcInstance extends Creature {
                         sb.append(" ").append(tl.getCastleId());
                     }
                     sb.append(" ").append((long) (tl.getPrice() * pricemod)).append(" @811;F;").append(tl.getName()).append("|").append(tl.getStringName());
-                    // sb.append(" ").append((long) (tl.getPrice() * pricemod)).append(" @811;F;").append(tl.name()).append("|").append(HtmlUtils.htmlNpcString(tl.name()));
+                    // sb.append(" ").append((long) (tl.price() * pricemod)).append(" @811;F;").append(tl.name()).append("|").append(HtmlUtils.htmlNpcString(tl.name()));
                     if ((tl.getPrice() * pricemod) > 0) {
                         sb.append(" - ").append((long) (tl.getPrice() * pricemod)).append(" ").append(HtmlUtils.htmlItemName(ItemTemplate.ITEM_ID_ADENA));
                     }
@@ -1138,7 +1137,6 @@ public class NpcInstance extends Creature {
     private void showQuestWindow(Player player) {
         // collect awaiting quests and start points
         Set<Quest> options = player.getQuestsForEvent(this, QuestEventType.QUEST_TALK)
-                .filter(x -> x.quest.id > 0)
                 .map(qs -> qs.quest)
                 .collect(Collectors.toSet());
 
@@ -1243,13 +1241,13 @@ public class NpcInstance extends Creature {
         player.sendPacket(packet);
     }
 
-    public void showChatWindow(Player player, String filename, Object... replace) {
+    public void showChatWindow(Player player, String filename) {
+        showChatWindow(player, filename, Map.of());
+    }
+
+    public void showChatWindow(Player player, String filename, Map<String, String> replaces) {
         NpcHtmlMessage packet = new NpcHtmlMessage(player, this, filename, 0);
-        if ((replace.length % 2) == 0) {
-            for (int i = 0; i < replace.length; i += 2) {
-                packet.replace(String.valueOf(replace[i]), String.valueOf(replace[i + 1]));
-            }
-        }
+        replaces.forEach(packet::replace);
         player.sendPacket(packet);
     }
 
@@ -1324,7 +1322,7 @@ public class NpcInstance extends Creature {
             return;
         }
 
-        if (!(getTemplate().canTeach(classId) || getTemplate().canTeach(classId.parent()))) {
+        if (!(getTemplate().canTeach(classId) || getTemplate().canTeach(classId.parent))) {
             if (this instanceof WarehouseInstance) {
                 showChatWindow(player, "warehouse/" + getNpcId() + "-noteach.htm");
             } else if (this instanceof TrainerInstance) {

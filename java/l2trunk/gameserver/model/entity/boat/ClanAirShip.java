@@ -277,7 +277,6 @@ public final class ClanAirShip extends AirShip {
         return platform == null ? null : platform.getOustLoc();
     }
 
-    @Override
     public Clan getClan() {
         return clan;
     }

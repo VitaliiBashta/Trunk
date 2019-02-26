@@ -14,7 +14,7 @@ public final class BuffStoreVoiced extends Functions implements IVoicedCommandHa
     @Override
     public boolean useVoicedCommand(String command, Player activeChar, String params) {
         try {
-            // Check if the player can set a store
+            // Check if the getPlayer can set a store
             if (!Config.BUFF_STORE_ALLOWED_CLASS_LIST.contains(activeChar.getClassId().id)) {
                 activeChar.sendMessage("Your profession is not allowed to set an Buff Store");
                 return false;

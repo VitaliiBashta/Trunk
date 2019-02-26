@@ -28,7 +28,7 @@ public final class _159_ProtectHeadsprings extends Quest {
         String htmltext = event;
         if (event.equals("1")) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
             if (st.getQuestItemsCount(HYACINTH_CHARM1_ID) == 0) {
                 st.giveItems(HYACINTH_CHARM1_ID, 1);
@@ -45,13 +45,13 @@ public final class _159_ProtectHeadsprings extends Quest {
         if (cond == 0) {
             if (st.player.getRace() != Race.elf) {
                 htmltext = "30154-00.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else if (st.player.getLevel() >= 12) {
                 htmltext = "30154-03.htm";
                 return htmltext;
             } else {
                 htmltext = "30154-02.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (cond == 1)
             htmltext = "30154-05.htm";
@@ -69,7 +69,7 @@ public final class _159_ProtectHeadsprings extends Quest {
             st.giveItems(ADENA_ID, 18250);
             st.playSound(SOUND_FINISH);
             htmltext = "30154-08.htm";
-            st.exitCurrentQuest(false);
+            st.finish();
         }
         return htmltext;
     }

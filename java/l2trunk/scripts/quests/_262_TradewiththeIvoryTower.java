@@ -28,7 +28,7 @@ public final class _262_TradewiththeIvoryTower extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if (event.equals("vollodos_q0262_03.htm")) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         }
         return event;
@@ -44,7 +44,7 @@ public final class _262_TradewiththeIvoryTower extends Quest {
                 return htmltext;
             }
             htmltext = "vollodos_q0262_01.htm";
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         } else if (cond == 1 && st.getQuestItemsCount(FUNGUS_SAC) < 10)
             htmltext = "vollodos_q0262_04.htm";
         else if (cond == 2 && st.haveQuestItem(FUNGUS_SAC, 10)) {

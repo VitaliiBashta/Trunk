@@ -25,7 +25,7 @@ public final class _198_SevenSignsEmbryo extends Quest {
 
     private static final int izId = 113;
 
-    private final Location setcloc = new Location(-23734, -9184, -5384, 0);
+    private final Location setcloc = Location.of(-23734, -9184, -5384, 0);
 
     public _198_SevenSignsEmbryo() {
         super(false);
@@ -41,7 +41,7 @@ public final class _198_SevenSignsEmbryo extends Quest {
         Player player = st.player;
         if ("wood_q198_2.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("wood_q198_3.htm".equalsIgnoreCase(event)) {
             enterInstance(player);
@@ -77,7 +77,7 @@ public final class _198_SevenSignsEmbryo extends Quest {
                     htmltext = "wood_q198_1.htm";
                 else {
                     htmltext = "wood_q198_0.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1 || cond == 2)
                 htmltext = "wood_q198_2a.htm";
@@ -86,9 +86,9 @@ public final class _198_SevenSignsEmbryo extends Quest {
                     st.addExpAndSp(315108090, 34906059);
                     st.giveItems(DawnsBracelet);
                     st.giveItems(AncientAdena, 1500000);
-                    st.setState(COMPLETED);
+                    st.complete();
                     st.playSound(SOUND_FINISH);
-                    st.exitCurrentQuest(false);
+                    st.finish();
                     htmltext = "wood_q198_4.htm";
                 } else
                     htmltext = "subclass_forbidden.htm";

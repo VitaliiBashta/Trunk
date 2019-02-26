@@ -30,10 +30,7 @@ public final class _355_FamilyHonor extends Quest {
         addTalkId(PATRIN);
 
         // TIMAK ORC TROOPS
-        addKillId(20767);
-        addKillId(20768);
-        addKillId(20769);
-        addKillId(20770);
+        addKillId(20767,20768,20769,20770);
     }
 
     @Override
@@ -44,7 +41,7 @@ public final class _355_FamilyHonor extends Quest {
                 return htmltext;
             case "galicbredo_q0355_04.htm":
                 st.setCond(1);
-                st.setState(STARTED);
+                st.start();
                 st.playSound(SOUND_ACCEPT);
                 break;
             case "galicbredo_q0355_07.htm":
@@ -81,7 +78,7 @@ public final class _355_FamilyHonor extends Quest {
                 break;
             case "galicbredo_q0355_09.htm":
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 break;
         }
         return htmltext;
@@ -99,7 +96,7 @@ public final class _355_FamilyHonor extends Quest {
                     htmltext = "galicbredo_q0355_02.htm";
                 else {
                     htmltext = "galicbredo_q0355_01.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             else if (cond == 1)
                 if (count > 0) {

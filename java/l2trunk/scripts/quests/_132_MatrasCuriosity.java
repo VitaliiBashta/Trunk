@@ -29,8 +29,7 @@ public final class _132_MatrasCuriosity extends Quest {
 
         addStartNpc(Matras);
 
-        addKillId(Ranku);
-        addKillId(Demon_Prince);
+        addKillId(Ranku,Demon_Prince);
 
         addQuestItem(Rankus_Blueprint,
                 Demon_Princes_Blueprint);
@@ -41,7 +40,7 @@ public final class _132_MatrasCuriosity extends Quest {
         String htmltext = event;
         if ("32245-02.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
             if (st.player.isVarSet("q132_Rough_Ore_is_given"))
                 htmltext = "32245-02a.htm";
@@ -50,7 +49,7 @@ public final class _132_MatrasCuriosity extends Quest {
             }
         } else if ("32245-04.htm".equalsIgnoreCase(event)) {
             st.setCond(3);
-            st.setState(STARTED);
+            st.start();
             st.startQuestTimer("talk_timer", 10000);
         } else if ("talk_timer".equalsIgnoreCase(event))
             htmltext = "Matras wishes to talk to you.";
@@ -63,7 +62,7 @@ public final class _132_MatrasCuriosity extends Quest {
             st.giveItems(Rough_Ore_of_Darkness);
             st.giveItems(Rough_Ore_of_Divinity);
             st.giveItems(ADENA_ID, 31210);
-            st.exitCurrentQuest(false);
+            st.finish();
             return null;
         }
         return htmltext;
@@ -96,7 +95,7 @@ public final class _132_MatrasCuriosity extends Quest {
             if (npc.getNpcId() == Demon_Prince ) st.giveItemIfNotHave(Demon_Princes_Blueprint);
             if (st.haveAllQuestItems(Rankus_Blueprint,Demon_Princes_Blueprint)) {
                 st.setCond(2);
-                st.setState(STARTED);
+                st.start();
             }
         }
     }

@@ -30,7 +30,7 @@ public final class _451_LuciensAltar extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if (event.equalsIgnoreCase("30537-03.htm")) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.giveItems(REPLENISHED_BEAD, 5);
             st.playSound(SOUND_ACCEPT);
         }
@@ -48,10 +48,10 @@ public final class _451_LuciensAltar extends Quest {
             if (cond == 0) {
                 if (player.getLevel() < 80) {
                     htmltext = "30537-00.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else if (!canEnter(player)) {
                     htmltext = "30537-06.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else
                     htmltext = "30537-01.htm";
             } else if (cond == 1)
@@ -60,7 +60,7 @@ public final class _451_LuciensAltar extends Quest {
                 htmltext = "30537-05.htm";
                 st.giveItems(ADENA_ID, 127690);
                 st.takeItems(DISCHARGED_BEAD, -1);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 st.playSound(SOUND_FINISH);
                 st.player.setVar(name, System.currentTimeMillis());
             }
@@ -68,23 +68,23 @@ public final class _451_LuciensAltar extends Quest {
             if (npcId == ALTAR_1 && st.getInt("Altar1") < 1) {
                 htmltext = "recharge.htm";
                 onAltarCheck(st);
-                st.set("Altar1", 1);
+                st.set("Altar1");
             } else if (npcId == ALTAR_2 && st.getInt("Altar2") < 1) {
                 htmltext = "recharge.htm";
                 onAltarCheck(st);
-                st.set("Altar2", 1);
+                st.set("Altar2");
             } else if (npcId == ALTAR_3 && st.getInt("Altar3") < 1) {
                 htmltext = "recharge.htm";
                 onAltarCheck(st);
-                st.set("Altar3", 1);
+                st.set("Altar3");
             } else if (npcId == ALTAR_4 && st.getInt("Altar4") < 1) {
                 htmltext = "recharge.htm";
                 onAltarCheck(st);
-                st.set("Altar4", 1);
+                st.set("Altar4");
             } else if (npcId == ALTAR_5 && st.getInt("Altar5") < 1) {
                 htmltext = "recharge.htm";
                 onAltarCheck(st);
-                st.set("Altar5", 1);
+                st.set("Altar5");
             } else
                 htmltext = "findother.htm";
         return htmltext;

@@ -20,7 +20,7 @@ import javax.xml.bind.annotation.*;
  * &lt;complexType name="crystalType">
  *   &lt;simpleContent>
  *     &lt;extension base="&lt;http://www.w3.org/2001/XMLSchema>string">
- *       &lt;attribute name="occupation" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *       &lt;attribute name="level" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="item_id" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="next_item_id" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="cursed_next_item_id" type="{http://www.w3.org/2001/XMLSchema}string" />
@@ -39,7 +39,7 @@ public class CrystalType {
 
     @XmlValue
     protected String value;
-    @XmlAttribute(name = "occupation")
+    @XmlAttribute(name = "level")
     protected String level;
     @XmlAttribute(name = "item_id")
     protected String itemId;

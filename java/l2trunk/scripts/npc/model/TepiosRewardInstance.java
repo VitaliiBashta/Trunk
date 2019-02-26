@@ -80,12 +80,12 @@ public final class TepiosRewardInstance extends NpcInstance {
                                 // 29 мин - 60 мин
                             else ItemFunctions.addItem(p, Rnd.get(SUPPLIES6_10), 1, "TepiosRewardInstance");
                         }
-                        QuestState qs = p.getQuestState(_694_BreakThroughTheHallOfSuffering.class);
+                        QuestState st = p.getQuestState(_694_BreakThroughTheHallOfSuffering.class);
                         QuestState qs2 = p.getQuestState(_695_DefendtheHallofSuffering.class);
-                        if (qs != null && getReflection().getInstancedZoneId() == 115)
-                            qs.exitCurrentQuest(true);
+                        if (st != null && getReflection().getInstancedZoneId() == 115)
+                            st.exitCurrentQuest();
                         if (qs2 != null && getReflection().getInstancedZoneId() == 116)
-                            qs2.exitCurrentQuest(true);
+                            qs2.exitCurrentQuest();
                     });
             _gotReward = true;
             showChatWindow(player, 2);

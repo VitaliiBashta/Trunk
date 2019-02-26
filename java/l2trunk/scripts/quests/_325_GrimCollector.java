@@ -26,20 +26,9 @@ public final class _325_GrimCollector extends Quest {
 
         addStartNpc(30336);
 
-        addTalkId(30336);
-        addTalkId(30342);
-        addTalkId(30434);
+        addTalkId(30336,30342,30434);
 
-        addKillId(20026);
-        addKillId(20029);
-        addKillId(20035);
-        addKillId(20042);
-        addKillId(20045);
-        addKillId(20457);
-        addKillId(20458);
-        addKillId(20051);
-        addKillId(20514);
-        addKillId(20515);
+        addKillId(20026,20029,20035,20042,20045,20457,20458,20051,20514,20515);
 
         addQuestItem(items);
         addQuestItem(ANATOMY_DIAGRAM);
@@ -62,7 +51,7 @@ public final class _325_GrimCollector extends Quest {
         String htmltext = event;
         if ("guard_curtiz_q0325_03.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("samed_q0325_03.htm".equalsIgnoreCase(event))
             st.giveItems(ANATOMY_DIAGRAM);
@@ -73,7 +62,7 @@ public final class _325_GrimCollector extends Quest {
             }
             st.takeItems(ANATOMY_DIAGRAM);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         } else if ("samed_q0325_07.htm".equalsIgnoreCase(event) && pieces(st) > 0) {
             st.giveItems(ADENA_ID, 30 * st.getQuestItemsCount(ZOMBIE_HEAD) + 20 * st.getQuestItemsCount(ZOMBIE_HEART) + 20 * st.getQuestItemsCount(ZOMBIE_LIVER) + 50 * st.getQuestItemsCount(SKULL) + 15 * st.getQuestItemsCount(RIB_BONE) + 10 * st.getQuestItemsCount(SPINE) + 10 * st.getQuestItemsCount(ARM_BONE) + 10 * st.getQuestItemsCount(THIGH_BONE) + 2000 * st.getQuestItemsCount(COMPLETE_SKELETON));
             takeQuestItems(st);
@@ -115,7 +104,7 @@ public final class _325_GrimCollector extends Quest {
                 return htmltext;
             }
             htmltext = "guard_curtiz_q0325_01.htm";
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         } else if (npcId == 30336 && cond > 0)
             if (st.getQuestItemsCount(ANATOMY_DIAGRAM) == 0)
                 htmltext = "guard_curtiz_q0325_04.htm";

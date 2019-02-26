@@ -35,14 +35,6 @@ public enum CharacterControlPanel {
                 activeChar.setVar("NoExp");
             }
         }
-        // Auto Shoulshots
-        else if ("soulshot".equalsIgnoreCase(param[0])) {
-            if (activeChar.isVarSet("soulshot")) {
-                activeChar.unsetVar("soulshot");
-            } else {
-                activeChar.setVar("soulshot");
-            }
-        }
         // Show Online Players
         else if ("online".equalsIgnoreCase(param[0])) {
             activeChar.sendMessage(CCPSmallCommands.showOnlineCount());
@@ -64,11 +56,11 @@ public enum CharacterControlPanel {
                 activeChar.setNotShowTraders();
                 activeChar.unsetVar(Player.NO_TRADERS_VAR);
 
-                World.getAroundPlayers(activeChar).stream()
+                World.getAroundPlayers(activeChar)
                         .filter(p -> p.getPrivateStoreType() != Player.STORE_PRIVATE_NONE)
                         .forEach(p -> p.broadcastUserInfo(true));
             } else {
-                List<L2GameServerPacket> pls = World.getAroundPlayers(activeChar).stream()
+                List<L2GameServerPacket> pls = World.getAroundPlayers(activeChar)
                         .filter(p -> p.getPrivateStoreType() != Player.STORE_PRIVATE_NONE)
                         .map(DeleteObject::new)
                         .collect(Collectors.toList());
@@ -153,7 +145,6 @@ public enum CharacterControlPanel {
         currentPage = currentPage.replaceFirst("%online%", CCPSmallCommands.showOnlineCount());
         currentPage = currentPage.replaceFirst("%antigrief%", getONOFF(activeChar.isVarSet("antigrief")));
         currentPage = currentPage.replaceFirst("%noe%", getONOFF(activeChar.isVarSet("NoExp")));
-        currentPage = currentPage.replaceFirst("%soulshot%", getONOFF(activeChar.isVarSet("soulshot")));
         currentPage = currentPage.replaceFirst("%notraders%", getONOFF(activeChar.isVarSet("notraders")));
         currentPage = currentPage.replaceFirst("%notShowBuffAnim%", getONOFF(activeChar.isVarSet("notShowBuffAnim")));
         currentPage = currentPage.replaceFirst("%blocktrade%", getONOFF(activeChar.getTradeRefusal()));

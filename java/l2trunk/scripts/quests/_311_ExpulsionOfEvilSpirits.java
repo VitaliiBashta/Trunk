@@ -37,13 +37,13 @@ public final class _311_ExpulsionOfEvilSpirits extends Quest {
         String htmltext = event;
         if ("chairen_q311_03.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("continue".equalsIgnoreCase(event))
             htmltext = "chairen_q311_04b.htm";
         else if ("quit".equalsIgnoreCase(event)) {
             htmltext = "chairen_q311_04a.htm";
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         } else if ("soulores".equalsIgnoreCase(event)) {
             if (st.getQuestItemsCount(SoulCoreContainingEvilSpirit) >= 10) {
                 st.takeItems(SoulCoreContainingEvilSpirit, 10);
@@ -136,7 +136,7 @@ public final class _311_ExpulsionOfEvilSpirits extends Quest {
                     htmltext = "chairen_q311_01.htm";
                 else {
                     htmltext = "chairen_q311_00.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (id == STARTED) {
                 if (st.getQuestItemsCount(RagnaOrcAmulet) >= 1)

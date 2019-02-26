@@ -25,7 +25,7 @@ public final class _268_TracesOfEvil extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if (event.equals("trader_kunai_q0268_03.htm")) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         }
         return event;
@@ -37,7 +37,7 @@ public final class _268_TracesOfEvil extends Quest {
         if (st.getCond() == 0)
             if (st.player.getLevel() < 15) {
                 htmltext = "trader_kunai_q0268_02.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else
                 htmltext = "trader_kunai_q0268_01.htm";
         else if (st.getQuestItemsCount(CONTAMINATED) >= 30) {
@@ -45,7 +45,7 @@ public final class _268_TracesOfEvil extends Quest {
             st.giveItems(ADENA_ID, 2474);
             st.addExpAndSp(8738, 409);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         } else
             htmltext = "trader_kunai_q0268_04.htm";
         return htmltext;
@@ -59,7 +59,7 @@ public final class _268_TracesOfEvil extends Quest {
         else if (st.getQuestItemsCount(CONTAMINATED) >= 30) {
             st.playSound(SOUND_MIDDLE);
             st.setCond(2);
-            st.setState(STARTED);
+            st.start();
         }
     }
 }

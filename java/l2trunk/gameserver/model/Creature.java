@@ -217,7 +217,7 @@ public abstract class Creature extends GameObject {
     }
 
     public Player getPlayer() {
-//        throw new UnsupportedOperationException("gameObject " + name() + " cannot have player !");
+//        throw new UnsupportedOperationException("gameObject " + name() + " cannot have getPlayer !");
         return null;
     }
 
@@ -365,7 +365,7 @@ public abstract class Creature extends GameObject {
                 return damage;
 
             Creature effector = effect.effector;
-            // on dead char, not online player - do not give ABSORB, and not for himself
+            // on dead char, not online getPlayer - do not give ABSORB, and not for himself
             if (effector == this || effector.isDead() || !isInRange(effector, 1200))
                 return damage;
 
@@ -779,7 +779,7 @@ public abstract class Creature extends GameObject {
         }
         Env env = new Env(this, target, skill);
         if (stat == null) {
-            _log.warn("FIX ME FAST(!) My name IS " + getName() + " and I'm a player?(" + (this instanceof Player) + ") my target is " + target.getName() + " skill:" + skill.name + "");
+            _log.warn("FIX ME FAST(!) My name IS " + getName() + " and I'm a getPlayer?(" + (this instanceof Player) + ") my target is " + target.getName() + " skill:" + skill.name + "");
             return 0;
         }
         env.value = stat.init;
@@ -3461,7 +3461,7 @@ public abstract class Creature extends GameObject {
 
             player.getListeners().onTeleport(Location.of(x, y, z), r);
 
-            // Alexander - Send a teleport event to the tutorial for the player
+            // Alexander - Send a teleport event to the tutorial for the getPlayer
             Quest q = QuestManager.getQuest(_255_Tutorial.class);
             player.processQuestEvent(q, "CE42", null);
 
@@ -3720,11 +3720,11 @@ public abstract class Creature extends GameObject {
     public int getAccessLevel() {
         return 0;
     }
-
-    @Deprecated
-    public Clan getClan() {
-        return null;
-    }
+//
+//    @Deprecated
+//    public Clan getClan() {
+//        return null;
+//    }
 //
 //    public double getRateAdena() {
 //        return 1.;

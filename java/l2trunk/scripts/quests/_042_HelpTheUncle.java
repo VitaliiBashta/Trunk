@@ -23,11 +23,9 @@ public final class _042_HelpTheUncle extends Quest {
 
         addStartNpc(WATERS);
 
-        addTalkId(WATERS);
-        addTalkId(SOPHYA);
+        addTalkId(WATERS,SOPHYA);
 
-        addKillId(MONSTER_EYE_DESTROYER);
-        addKillId(MONSTER_EYE_GAZER);
+        addKillId(MONSTER_EYE_DESTROYER,MONSTER_EYE_GAZER);
     }
 
     @Override
@@ -36,7 +34,7 @@ public final class _042_HelpTheUncle extends Quest {
         if (event.equals("1")) {
             htmltext = "pet_manager_waters_q0042_0104.htm";
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if (event.equals("3") && st.getQuestItemsCount(TRIDENT) > 0) {
             htmltext = "pet_manager_waters_q0042_0201.htm";
@@ -55,7 +53,7 @@ public final class _042_HelpTheUncle extends Quest {
             htmltext = "pet_manager_waters_q0042_0501.htm";
             st.giveItems(PET_TICKET, 1);
             st.unset("cond");
-            st.exitCurrentQuest(false);
+            st.finish();
         }
         return htmltext;
     }
@@ -71,7 +69,7 @@ public final class _042_HelpTheUncle extends Quest {
                 htmltext = "pet_manager_waters_q0042_0101.htm";
             else {
                 htmltext = "pet_manager_waters_q0042_0103.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (id == STARTED)
             if (npcId == WATERS) {

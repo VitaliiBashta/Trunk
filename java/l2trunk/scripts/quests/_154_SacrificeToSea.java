@@ -15,8 +15,7 @@ public final class _154_SacrificeToSea extends Quest {
 
         addStartNpc(30312);
 
-        addTalkId(30051);
-        addTalkId(30055);
+        addTalkId(30051,30055);
 
         addKillId(20481, 20544, 20545);
         addQuestItem(FOX_FUR_ID, FOX_FUR_YARN_ID, MAIDEN_DOLL_ID);
@@ -26,10 +25,10 @@ public final class _154_SacrificeToSea extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
         if (event.equals("1")) {
-            st.set("id", 0);
+            st.unset("id");
             htmltext = "30312-04.htm";
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         }
         return htmltext;
@@ -41,9 +40,9 @@ public final class _154_SacrificeToSea extends Quest {
         String htmltext = "noquest";
         int id = st.getState();
         if (id == CREATED) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(0);
-            st.set("id", 0);
+            st.unset("id");
         }
         if (npcId == 30312 && st.getCond() == 0) {
             if (st.getCond() < 15) {
@@ -52,10 +51,10 @@ public final class _154_SacrificeToSea extends Quest {
                     return htmltext;
                 }
                 htmltext = "30312-02.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else {
                 htmltext = "30312-02.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (npcId == 30312 && st.getCond() == 0)
             htmltext = "completed";
@@ -91,7 +90,7 @@ public final class _154_SacrificeToSea extends Quest {
                 st.giveItems(MYSTICS_EARRING_ID);
                 st.addExpAndSp(1000, 0);
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(false);
+                st.finish();
             }
         return htmltext;
     }

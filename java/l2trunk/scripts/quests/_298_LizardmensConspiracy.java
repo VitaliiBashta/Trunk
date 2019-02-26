@@ -5,6 +5,8 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
+import java.util.Map;
+
 public final class _298_LizardmensConspiracy extends Quest {
     //	npc
     private final int PRAGA = 30333;
@@ -21,50 +23,29 @@ public final class _298_LizardmensConspiracy extends Quest {
     private final int SHINING_GEM = 7183;
     private final int SHINING_RED_GEM = 7184;
     //MobsTable {MOB_ID, ITEM_ID}
-    private final int[][] MobsTable = {
-            {
-                    MAILLE_LIZARDMAN_WARRIOR,
-                    SHINING_GEM
-            },
-            {
-                    MAILLE_LIZARDMAN_SHAMAN,
-                    SHINING_GEM
-            },
-            {
-                    MAILLE_LIZARDMAN_MATRIARCH,
-                    SHINING_GEM
-            },
-            //{ GIANT_ARANEID, SHINING_RED_GEM },
-            {
-                    POISON_ARANEID,
-                    SHINING_RED_GEM
-            },
-            {
-                    KING_OF_THE_ARANEID,
-                    SHINING_RED_GEM
-            }
-    };
+    private final Map<Integer, Integer> MobsTable = Map.of(
+            MAILLE_LIZARDMAN_WARRIOR, SHINING_GEM,
+            MAILLE_LIZARDMAN_SHAMAN, SHINING_GEM,
+            MAILLE_LIZARDMAN_MATRIARCH, SHINING_GEM,
+            POISON_ARANEID, SHINING_RED_GEM,
+            KING_OF_THE_ARANEID, SHINING_RED_GEM);
 
     public _298_LizardmensConspiracy() {
         super(false);
 
         addStartNpc(PRAGA);
 
-        addTalkId(PRAGA);
         addTalkId(ROHMER);
 
-        for (int[] element : MobsTable)
-            addKillId(element[0]);
+        addKillId(MobsTable.keySet());
 
-        addQuestItem(REPORT,
-                SHINING_GEM,
-                SHINING_RED_GEM);
+        addQuestItem(REPORT, SHINING_GEM, SHINING_RED_GEM);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("guard_praga_q0298_0104.htm")) {
-            st.setState(STARTED);
+        if ("guard_praga_q0298_0104.htm".equalsIgnoreCase(event)) {
+            st.start();
             st.setCond(1);
             st.giveItems(REPORT);
             st.playSound(SOUND_ACCEPT);
@@ -76,7 +57,7 @@ public final class _298_LizardmensConspiracy extends Quest {
             st.takeItems(SHINING_GEM);
             st.takeItems(SHINING_RED_GEM);
             st.addExpAndSp(0, 42000);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             st.playSound(SOUND_FINISH);
         }
         return event;
@@ -91,7 +72,7 @@ public final class _298_LizardmensConspiracy extends Quest {
             if (cond < 1)
                 if (st.player.getLevel() < 25) {
                     htmltext = "guard_praga_q0298_0102.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else
                     htmltext = "guard_praga_q0298_0101.htm";
             if (cond == 1)
@@ -114,18 +95,19 @@ public final class _298_LizardmensConspiracy extends Quest {
         int npcId = npc.getNpcId();
         int rand = Rnd.get(10);
         if (st.getCond() == 2)
-            for (int[] element : MobsTable)
-                if (npcId == element[0])
-                    if (rand < 6 && st.getQuestItemsCount(element[1]) < 50) {
-                        if (rand < 2 && element[1] == SHINING_GEM)
-                            st.giveItems(element[1], 2);
+                if (MobsTable.containsKey(npcId)) {
+                    Integer item = MobsTable.get(npcId);
+                    if (rand < 6 && st.getQuestItemsCount(item) < 50) {
+                        if (rand < 2 && item == SHINING_GEM)
+                            st.giveItems(item, 2);
                         else
-                            st.giveItems(element[1]);
+                            st.giveItems(item);
                         if (st.getQuestItemsCount(SHINING_GEM) + st.getQuestItemsCount(SHINING_RED_GEM) > 99) {
                             st.setCond(3);
                             st.playSound(SOUND_MIDDLE);
                         } else
                             st.playSound(SOUND_ITEMGET);
                     }
+                }
     }
 }

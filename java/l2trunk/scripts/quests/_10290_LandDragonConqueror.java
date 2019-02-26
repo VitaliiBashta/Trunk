@@ -20,7 +20,7 @@ public final class _10290_LandDragonConqueror extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("theodric_q10290_04.htm".equalsIgnoreCase(event)) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
             st.giveItems(ShabbyNecklace);
@@ -51,8 +51,8 @@ public final class _10290_LandDragonConqueror extends Quest {
                     st.giveItems(ADENA_ID, 131236);
                     st.addExpAndSp(702557, 76334);
                     st.playSound(SOUND_FINISH);
-                    st.setState(COMPLETED);
-                    st.exitCurrentQuest(false);
+                    st.complete();
+                    st.finish();
                 } else
                     htmltext = "theodric_q10290_06.htm";
             }

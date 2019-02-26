@@ -10,10 +10,10 @@ public final class _175_TheWayOfTheWarrior extends Quest {
     //NPC
     private static final int Kekropus = 32138;
     private static final int Perwan = 32133;
-    //Quest Items
+    //Quest items
     private static final int WolfTail = 9807;
     private static final int MuertosClaw = 9808;
-    //Items
+    //items
     private static final int WarriorsSword = 9720;
     //MOBs
     private static final int MountainWerewolf = 22235;
@@ -130,15 +130,14 @@ public final class _175_TheWayOfTheWarrior extends Quest {
 
         for (int[] aDROPLIST_COND : DROPLIST_COND) addKillId(aDROPLIST_COND[2]);
 
-        addQuestItem(WolfTail);
-        addQuestItem(MuertosClaw);
+        addQuestItem(WolfTail,MuertosClaw);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("32138-04.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("32138-08.htm".equalsIgnoreCase(event)) {
             st.takeItems(MuertosClaw);
@@ -148,7 +147,7 @@ public final class _175_TheWayOfTheWarrior extends Quest {
             st.player.addExpAndSp(20739, 1777);
 
             if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("p1q3")) {
-                st.player.setVar("p1q3", 1); // flag for helper
+                st.player.setVar("p1q3"); // flag for helper
                 st.player.sendPacket(new ExShowScreenMessage("Now go find the Newbie Guide."));
                 st.giveItems(1060, 100); // healing potion
                 for (int item = 4412; item <= 4417; item++)
@@ -158,7 +157,7 @@ public final class _175_TheWayOfTheWarrior extends Quest {
             }
 
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(false);
+            st.finish();
         }
         return event;
     }
@@ -172,10 +171,10 @@ public final class _175_TheWayOfTheWarrior extends Quest {
             if (cond == 0) {
                 if (st.player.getRace() != Race.kamael) {
                     htmltext = "32138-00.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else if (st.player.getLevel() < 10) {
                     htmltext = "32138-01.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
 
                 } else
                     htmltext = "32138-02.htm";
@@ -183,27 +182,27 @@ public final class _175_TheWayOfTheWarrior extends Quest {
                 htmltext = "32138-04.htm";
             else if (cond == 4) {
                 st.setCond(5);
-                st.setState(STARTED);
+                st.start();
                 htmltext = "32138-05.htm";
             } else if (cond == 6) {
                 st.setCond(7);
-                st.setState(STARTED);
+                st.start();
                 htmltext = "32138-06.htm";
             } else if (cond == 8)
                 htmltext = "32138-07.htm";
         } else if (npcId == Perwan)
             if (cond == 1) {
                 st.setCond(2);
-                st.setState(STARTED);
+                st.start();
                 htmltext = "32133-01.htm";
             } else if (cond == 3) {
                 st.takeItems(WolfTail, -1);
                 st.setCond(4);
-                st.setState(STARTED);
+                st.start();
                 htmltext = "32133-02.htm";
             } else if (cond == 5) {
                 st.setCond(6);
-                st.setState(STARTED);
+                st.start();
                 htmltext = "32133-03.htm";
             }
         return htmltext;
@@ -221,7 +220,7 @@ public final class _175_TheWayOfTheWarrior extends Quest {
                     else if (st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[7], aDROPLIST_COND[5], aDROPLIST_COND[6]))
                         if (aDROPLIST_COND[1] != cond && aDROPLIST_COND[1] != 0) {
                             st.setCond(aDROPLIST_COND[1]);
-                            st.setState(STARTED);
+                            st.start();
                         }
     }
 }

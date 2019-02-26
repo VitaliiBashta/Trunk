@@ -8,7 +8,7 @@ import l2trunk.gameserver.templates.npc.NpcTemplate;
 
 import java.util.StringTokenizer;
 
-public class FameManagerInstance extends NpcInstance {
+public final class FameManagerInstance extends NpcInstance {
     public FameManagerInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
     }
@@ -21,7 +21,7 @@ public class FameManagerInstance extends NpcInstance {
         StringTokenizer st = new StringTokenizer(command, " ");
         String actualCommand = st.nextToken();
         NpcHtmlMessage html = new NpcHtmlMessage(player, this);
-        if (actualCommand.equalsIgnoreCase("PK_Count")) {
+        if ("PK_Count".equalsIgnoreCase(actualCommand)) {
             if (player.getFame() >= 5000) {
                 if (player.getPkKills() > 0) {
                     player.addFame(-5000, "PK_Count");
@@ -31,7 +31,7 @@ public class FameManagerInstance extends NpcInstance {
                     html.setFile("default/" + getNpcId() + "-nohavepk.htm");
             } else
                 html.setFile("default/" + getNpcId() + "-nofame.htm");
-            html.replace("%objectId%", String.valueOf(objectId()));
+            html.replace("%objectId%", objectId());
             player.sendPacket(html);
         } else if (actualCommand.equalsIgnoreCase("CRP")) {
             if (player.getClan() == null || player.getClassId().occupation() < 2 || player.getClan().getLevel() < 5)
@@ -45,7 +45,7 @@ public class FameManagerInstance extends NpcInstance {
                 player.sendPacket(Msg.ACQUIRED_50_CLAN_FAME_POINTS);
                 html.setFile("default/" + getNpcId() + "-okclancrp.htm");
             }
-            html.replace("%objectId%", String.valueOf(objectId()));
+            html.replace("%objectId%", objectId());
             player.sendPacket(html);
         } else
             super.onBypassFeedback(player, command);

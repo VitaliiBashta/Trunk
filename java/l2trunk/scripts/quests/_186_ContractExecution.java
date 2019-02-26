@@ -45,7 +45,7 @@ public final class _186_ContractExecution extends Quest {
         } else if (event.equalsIgnoreCase("blueprint_seller_luka_q0186_06.htm")) {
             st.giveItems(ADENA_ID, 105083);
             st.addExpAndSp(285935, 18711);
-            st.exitCurrentQuest(false);
+            st.finish();
             st.playSound(SOUND_FINISH);
         }
         return event;

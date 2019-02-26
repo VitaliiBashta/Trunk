@@ -4,7 +4,6 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.NpcUtils;
 
@@ -39,11 +38,7 @@ public final class _022_TragedyInVonHellmannForest extends Quest {
 
         addStartNpc(Tifaren);
 
-        addTalkId(Tifaren);
-        addTalkId(GhostOfPriest);
-        addTalkId(Innocentin);
-        addTalkId(GhostOfAdventurer);
-        addTalkId(Well);
+        addTalkId(Tifaren,GhostOfPriest,Innocentin,GhostOfAdventurer,Well);
 
         addKillId(SoulOfWell);
 
@@ -54,11 +49,11 @@ public final class _022_TragedyInVonHellmannForest extends Quest {
     }
 
     private void spawnGhostOfPriest(QuestState st) {
-        GhostOfPriestInstance = NpcUtils.spawnSingle(GhostOfPriest,Location.findPointToStay(st.player, 50, 100) );
+        GhostOfPriestInstance = NpcUtils.spawnSingle(GhostOfPriest, Location.findPointToStay(st.player, 50, 100));
     }
 
     private void spawnSoulOfWell(QuestState st) {
-        SoulOfWellInstance = NpcUtils.spawnSingle(SoulOfWell,Location.findPointToStay(st.player, 50, 100) );
+        SoulOfWellInstance = NpcUtils.spawnSingle(SoulOfWell, Location.findPointToStay(st.player, 50, 100));
     }
 
     private void despawnGhostOfPriest() {
@@ -75,7 +70,7 @@ public final class _022_TragedyInVonHellmannForest extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
         if (event.equalsIgnoreCase("31334-03.htm")) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(3);
             st.takeItems(CrossOfEinhasad, -1);
         } else if (event.equalsIgnoreCase("31334-06.htm"))
@@ -128,13 +123,9 @@ public final class _022_TragedyInVonHellmannForest extends Quest {
         String htmltext = "noquest";
         if (npcId == Tifaren) {
             if (cond == 0) {
-                QuestState hiddenTruth = st.player.getQuestState(_021_HiddenTruth.class);
-                if (hiddenTruth != null) {
-                    if (st.player.isQuestCompleted(_021_HiddenTruth.class))
-                        htmltext = "31334-01.htm";
-                    else
-                        htmltext = "<html><head><body>You not complite quest Hidden Truth...</body></html>";
-                } else
+                if (st.player.isQuestCompleted(_021_HiddenTruth.class))
+                    htmltext = "31334-01.htm";
+                else
                     htmltext = "<html><head><body>You not complite quest Hidden Truth...</body></html>";
             } else if (cond == 3)
                 return "31334-04.htm";
@@ -184,7 +175,7 @@ public final class _022_TragedyInVonHellmannForest extends Quest {
             } else if (cond == 18) {
                 htmltext = "31328-17.htm";
                 st.addExpAndSp(345966, 31578);
-                st.exitCurrentQuest(false);
+                st.finish();
             }
         } else if (npcId == GhostOfAdventurer) {
             if (cond == 8) {

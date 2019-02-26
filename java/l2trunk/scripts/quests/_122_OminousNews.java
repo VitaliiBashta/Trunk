@@ -21,14 +21,14 @@ public final class _122_OminousNews extends Quest {
         htmltext = event;
         if (htmltext.equalsIgnoreCase("seer_moirase_q0122_0104.htm") && cond == 0) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if (htmltext.equalsIgnoreCase("karuda_q0122_0201.htm"))
             if (cond == 1) {
                 st.giveItems(ADENA_ID, 8923);
                 st.addExpAndSp(45151, 2310); // награда соответствует Т2
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(false);
+                st.finish();
             } else
                 htmltext = "noquest";
         return htmltext;
@@ -45,7 +45,7 @@ public final class _122_OminousNews extends Quest {
                     htmltext = "seer_moirase_q0122_0101.htm";
                 else {
                     htmltext = "seer_moirase_q0122_0103.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else
                 htmltext = "seer_moirase_q0122_0104.htm";

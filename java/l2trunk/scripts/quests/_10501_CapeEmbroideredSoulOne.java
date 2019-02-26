@@ -8,7 +8,7 @@ import l2trunk.gameserver.model.quest.QuestState;
 public final class _10501_CapeEmbroideredSoulOne extends Quest {
     // NPC's
     private static final int OLF_ADAMS = 32612;
-    // Mob's
+    // mob's
     private static final int ZAKEN_HIGH = 29181;
     // Quest Item's
     private static final int SOUL_ZAKEN = 21722;
@@ -27,7 +27,7 @@ public final class _10501_CapeEmbroideredSoulOne extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("olf_adams_q10501_02.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         }
         return event;
@@ -42,7 +42,7 @@ public final class _10501_CapeEmbroideredSoulOne extends Quest {
                 htmltext = "olf_adams_q10501_01.htm";
             else {
                 htmltext = "olf_adams_q10501_00.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (cond == 1)
             htmltext = "olf_adams_q10501_03.htm";
@@ -52,7 +52,7 @@ public final class _10501_CapeEmbroideredSoulOne extends Quest {
                 st.giveItems(CLOAK_OF_ZAKEN);
                 st.playSound(SOUND_FINISH);
                 htmltext = "olf_adams_q10501_04.htm";
-                st.exitCurrentQuest(false);
+                st.finish();
             } else {
                 st.setCond(1);
                 htmltext = "olf_adams_q10501_03.htm";

@@ -1,6 +1,5 @@
 package l2trunk.scripts.quests;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
@@ -18,7 +17,7 @@ public final class _10294_SevenSignsMonasteryofSilence extends Quest {
     private static final int ErisEvilThoughts = 32792;
     private static final int ElcardiaInzone1 = 32787;
     private static final int RelicGuard = 32803;
-    private static final List<Integer> RelicWatcher = List.of(32804,32805,32806, 32807);
+    private static final List<Integer> RelicWatcher = List.of(32804, 32805, 32806, 32807);
     private static final int YellowRelicWatcher = RelicWatcher.get(0);
     private static final int GreenRelicWatcher = RelicWatcher.get(1);
     private static final int BlueRelicWatcher = RelicWatcher.get(2);
@@ -64,13 +63,13 @@ public final class _10294_SevenSignsMonasteryofSilence extends Quest {
         String htmltext = event;
         if (event.equalsIgnoreCase("elcardia_q10294_4.htm")) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("eris_q10294_3.htm")) {
+        } else if ("eris_q10294_3.htm".equalsIgnoreCase(event)) {
             st.setCond(2);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("teleport_deeper")) {
-            player.teleToLocation(new Location(85937, -249618, -8320));
+        } else if ("teleport_deeper".equalsIgnoreCase(event)) {
+            player.teleToLocation( Location.of(85937, -249618, -8320));
             teleportElcardia(player);
             return null;
         } else if (event.startsWith("watcher_teleport")) {
@@ -79,20 +78,20 @@ public final class _10294_SevenSignsMonasteryofSilence extends Quest {
             Location loc = null;
             switch (Integer.parseInt(tokenizer.nextToken())) {
                 case 1: //yellow
-                    if (st.getInt("yellow") == 0)
-                        loc = new Location(82434, -249546, -8320);
+                    if (!st.isSet("yellow"))
+                        loc = Location.of(82434, -249546, -8320);
                     break;
                 case 2: //green
-                    if (st.getInt("green") == 0)
-                        loc = new Location(88536, -249784, -8320);
+                    if (!st.isSet("green"))
+                        loc =  Location.of(88536, -249784, -8320);
                     break;
                 case 3: //blue
-                    if (st.getInt("blue") == 0)
-                        loc = new Location(85672, -246872, -8320);
+                    if (!st.isSet("blue") )
+                        loc = Location.of(85672, -246872, -8320);
                     break;
                 case 4: //red
-                    if (st.getInt("red") == 0)
-                        loc = new Location(85896, -252664, -8320);
+                    if (!st.isSet("red") )
+                        loc = Location.of(85896, -252664, -8320);
                     break;
                 default:
                     break;
@@ -103,21 +102,21 @@ public final class _10294_SevenSignsMonasteryofSilence extends Quest {
                 return null;
             } else
                 htmltext = "movingdevice_q10294_0.htm";
-        } else if (event.equalsIgnoreCase("teleport_deeper_out")) {
-            player.teleToLocation(new Location(120600, -86952, -3392));
+        } else if ("teleport_deeper_out".equalsIgnoreCase(event)) {
+            player.teleToLocation(Location.of(120600, -86952, -3392));
             teleportElcardia(player);
             return null;
-        } else if (event.equalsIgnoreCase("readingdesk_q10294_yellowtrue2.htm")) {
-            if (st.getInt("yellow") == 0) {
+        } else if ("readingdesk_q10294_yellowtrue2.htm".equalsIgnoreCase(event)) {
+            if (!st.isSet("yellow")) {
                 npc.setNpcState(1);
-                st.set("yellow", 1);
+                st.set("yellow");
                 proccessComplete(st);
             } else
                 htmltext = "readingdesk_q10294_0.htm";
         } else if ("readingdesk_q10294_greentrue2.htm".equalsIgnoreCase(event)) {
-            if (st.getInt("green") == 0) {
+            if (!st.isSet("green")) {
                 npc.setNpcState(1);
-                st.set("green", 1);
+                st.set("green");
                 st.player.getReflection().addSpawnWithoutRespawn(JudevanEtinasEvilThoughts, Location.of(87704, -249496, -8320, 49152));
                 for (int i = 0; i < 3; i++)
                     st.player.getReflection().addSpawnWithoutRespawn(SolinaLayrother, Location.findPointToStay(st.player, 300));
@@ -125,58 +124,61 @@ public final class _10294_SevenSignsMonasteryofSilence extends Quest {
             } else
                 htmltext = "readingdesk_q10294_0.htm";
         } else if ("readingdesk_q10294_bluetrue2.htm".equalsIgnoreCase(event)) {
-            if (st.getInt("blue") == 0) {
+            if (!st.isSet("blue")) {
                 npc.setNpcState(1);
-                st.set("blue", 1);
-                st.player.getReflection().addSpawnWithoutRespawn(SolinasEvilThoughts, new Location(86680, -246728, -8320));
+                st.set("blue");
+                st.player.getReflection().addSpawnWithoutRespawn(SolinasEvilThoughts, Location.of(86680, -246728, -8320));
                 proccessComplete(st);
             } else
                 htmltext = "readingdesk_q10294_0.htm";
         } else if ("readingdesk_q10294_redtrue2.htm".equalsIgnoreCase(event)) {
-            if (st.getInt("red") == 0) {
+            if (!st.isSet("red")) {
                 npc.setNpcState(1);
-                st.set("red", 1);
-                st.player.getReflection().addSpawnWithoutRespawn(JudevanEtinasEvilThoughts2, new Location(84840, -252392, -8320, 49152));
+                st.set("red");
+                st.player.getReflection().addSpawnWithoutRespawn(JudevanEtinasEvilThoughts2, Location.of(84840, -252392, -8320, 49152));
                 proccessComplete(st);
             } else
                 htmltext = "readingdesk_q10294_0.htm";
-        } else if (event.equalsIgnoreCase("teleport_to_guardian")) {
-            if (npc.getNpcId() == YellowRelicWatcher && st.getInt("yellow") != 0 || npc.getNpcId() == GreenRelicWatcher && st.getInt("green") != 0 || npc.getNpcId() == BlueRelicWatcher && st.getInt("blue") != 0 || npc.getNpcId() == RedRelicWatcher && st.getInt("red") != 0)
+        } else if ("teleport_to_guardian".equalsIgnoreCase(event)) {
+            if (npc.getNpcId() == YellowRelicWatcher && st.isSet("yellow")
+                    || npc.getNpcId() == GreenRelicWatcher && st.isSet("green")
+                    || npc.getNpcId() == BlueRelicWatcher && st.isSet("blue")
+                    || npc.getNpcId() == RedRelicWatcher && st.isSet("red"))
                 htmltext = "relicwatcher_q10294_4.htm";
             else {
-                player.teleToLocation(new Location(85937, -249618, -8320));
+                player.teleToLocation(Location.of(85937, -249618, -8320));
                 teleportElcardia(player);
                 return null;
             }
-        } else if (event.equalsIgnoreCase("take_test")) {
+        } else if ("take_test".equalsIgnoreCase(event)) {
             if (npc.getNpcId() == YellowRelicWatcher) {
-                if (st.getInt("yellow") != 0)
+                if (st.isSet("yellow") )
                     htmltext = "relicwatcher_q10294_yellowtest.htm";
 
             } else if (npc.getNpcId() == GreenRelicWatcher) {
-                if (st.getInt("green") != 0)
+                if (st.isSet("green") )
                     htmltext = "relicwatcher_q10294_greentest.htm";
 
             } else if (npc.getNpcId() == BlueRelicWatcher) {
-                if (st.getInt("blue") != 0)
+                if (st.isSet("blue") )
                     htmltext = "relicwatcher_q10294_bluetest.htm";
 
             } else if (npc.getNpcId() == RedRelicWatcher) {
-                if (st.getInt("red") != 0)
+                if (st.isSet("red"))
                     htmltext = "relicwatcher_q10294_redtest.htm";
 
             }
-        } else if (event.equalsIgnoreCase("false_answer")) {
+        } else if ("false_answer".equalsIgnoreCase(event)) {
             htmltext = "relicwatcher_q10294_falseanswer.htm";
-        } else if (event.equalsIgnoreCase("true_answer")) {
-            player.teleToLocation(new Location(85937, -249618, -8320));
+        } else if ("true_answer".equalsIgnoreCase(event)) {
+            player.teleToLocation(Location.of(85937, -249618, -8320));
             teleportElcardia(player);
             return null;
-        } else if (event.equalsIgnoreCase("eris_q10294_9.htm")) {
+        } else if ("eris_q10294_9.htm".equalsIgnoreCase(event)) {
             st.addExpAndSp(25000000, 2500000);
-            st.setState(COMPLETED);
+            st.complete();
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(false);
+            st.finish();
         }
         return htmltext;
     }
@@ -195,7 +197,7 @@ public final class _10294_SevenSignsMonasteryofSilence extends Quest {
                     htmltext = "elcardia_q10294_1.htm";
                 else {
                     htmltext = "elcardia_q10294_0.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1)
                 htmltext = "elcardia_q10294_5.htm";
@@ -258,7 +260,7 @@ public final class _10294_SevenSignsMonasteryofSilence extends Quest {
     }
 
     private boolean checkComplete(QuestState st) {
-        return st.getInt("yellow") != 0 && st.getInt("green") != 0 && st.getInt("blue") != 0 && st.getInt("red") != 0;
+        return st.isSet("yellow")  && st.isSet("green")  && st.isSet("blue")  && st.isSet("red");
     }
 
     private void proccessComplete(QuestState st) {

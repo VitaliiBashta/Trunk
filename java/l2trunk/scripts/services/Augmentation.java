@@ -206,7 +206,7 @@ public final class Augmentation extends Functions {
         NpcHtmlMessage adminReply = new NpcHtmlMessage(0);
         adminReply.setFile("scripts/services/Augmentations/list.htm");
         String template = HtmCache.INSTANCE.getNotNull("scripts/services/Augmentations/template.htm", player);
-        String block = "";
+        String block;
         StringBuilder list = new StringBuilder();
         StringBuilder pagesHtm = new StringBuilder();
         int maxPage = (int) Math.ceil(augmentations.size() / 7.0D);
@@ -217,9 +217,9 @@ public final class Augmentation extends Functions {
 
         for (int i = Math.max(maxPage - _page < 3 ? maxPage - MAX_PAGES_PER_PAGE : _page - 3, 1); i <= maxPage; i++) {
             if (i == _page)
-                pagesHtm.append("<td background=L2UI_ct1.button_df><button action=\"\" value=\"" + i + "\" width=38 height=20 back=\"\" fore=\"\"></td>");
+                pagesHtm.append("<td background=L2UI_ct1.button_df><button action=\"\" value=\"").append(i).append("\" width=38 height=20 back=\"\" fore=\"\"></td>");
             else
-                pagesHtm.append("<td><button action=\"bypass -h scripts_services.Augmentation:run page " + i + " " + (_filter.ordinal() + 1) + "\" value=\"" + i + "\" width=34 height=20 back=L2UI_ct1.button_df fore=L2UI_ct1.button_df></td>");
+                pagesHtm.append("<td><button action=\"bypass -h scripts_services.Augmentation:run page ").append(i).append(" ").append(_filter.ordinal() + 1).append("\" value=\"").append(i).append("\" width=34 height=20 back=L2UI_ct1.button_df fore=L2UI_ct1.button_df></td>");
             count++;
             if (count >= 6)
                 break;
@@ -271,8 +271,8 @@ public final class Augmentation extends Functions {
             list.append(block);
             lastColor = !lastColor;
         }
-        adminReply.replace("%pages%", pagesHtm.toString());
-        adminReply.replace("%augs%", list.toString());
+        adminReply.replace("%pages%", pagesHtm);
+        adminReply.replace("%augs%", list);
         player.sendPacket(adminReply);
     }
 

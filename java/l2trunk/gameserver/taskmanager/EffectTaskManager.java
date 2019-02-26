@@ -31,7 +31,4 @@ public final class EffectTaskManager extends SteppingRunnableQueueManager {
         return MANAGERS.get(randomizer++ & MANAGERS.size() - 1);
     }
 
-    public CharSequence getStats(int num) {
-        return MANAGERS.get(num).getStats();
-    }
 }

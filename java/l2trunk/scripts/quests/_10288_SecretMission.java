@@ -7,41 +7,38 @@ import l2trunk.gameserver.model.quest.QuestState;
 
 public final class _10288_SecretMission extends Quest {
     // NPC's
-    private static final int _dominic = 31350;
-    private static final int _aquilani = 32780;
-    private static final int _greymore = 32757;
-    // Items
-    private static final int _letter = 15529;
+    private static final int DOMINIC = 31350;
+    private static final int AQUILANI = 32780;
+    private static final int GREYMORE = 32757;
+    // items
+    private static final int LETTER = 15529;
 
     public _10288_SecretMission() {
         super(false);
 
-        addStartNpc(_dominic);
-        addStartNpc(_aquilani);
-        addTalkId(_dominic);
-        addTalkId(_greymore);
-        addTalkId(_aquilani);
-        addFirstTalkId(_aquilani);
+        addStartNpc(DOMINIC, AQUILANI);
+        addTalkId(DOMINIC, GREYMORE, AQUILANI);
+        addFirstTalkId(AQUILANI);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         int npcId = npc.getNpcId();
-        if (npcId == _dominic) {
-            if (event.equalsIgnoreCase("31350-05.htm")) {
-                st.setState(STARTED);
+        if (npcId == DOMINIC) {
+            if ("31350-05.htm".equalsIgnoreCase(event)) {
+                st.start();
                 st.setCond(1);
-                st.giveItems(_letter, 1);
+                st.giveItems(LETTER);
                 st.playSound(SOUND_ACCEPT);
             }
-        } else if (npcId == _greymore && event.equalsIgnoreCase("32757-03.htm")) {
+        } else if (npcId == GREYMORE && "32757-03.htm".equalsIgnoreCase(event)) {
             st.unset("cond");
-            st.takeItems(_letter, -1);
+            st.takeItems(LETTER);
             st.giveItems(57, 106583);
             st.addExpAndSp(417788, 46320);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(false);
-        } else if (npcId == _aquilani) {
+            st.finish();
+        } else if (npcId == AQUILANI) {
             if (st.getState() == STARTED) {
                 if (event.equalsIgnoreCase("32780-05.htm")) {
                     st.setCond(2);
@@ -59,7 +56,7 @@ public final class _10288_SecretMission extends Quest {
     public String onTalk(NpcInstance npc, QuestState st) {
         String htmltext = "noquest";
         int npcId = npc.getNpcId();
-        if (npcId == _dominic) {
+        if (npcId == DOMINIC) {
             switch (st.getState()) {
                 case CREATED:
                     if (st.player.getLevel() >= 82)
@@ -77,12 +74,12 @@ public final class _10288_SecretMission extends Quest {
                     htmltext = "31350-08.htm";
                     break;
             }
-        } else if (npcId == _aquilani) {
+        } else if (npcId == AQUILANI) {
             if (st.getCond() == 1)
                 htmltext = "32780-03.htm";
             else if (st.getCond() == 2)
                 htmltext = "32780-06.htm";
-        } else if (npcId == _greymore && st.getCond() == 2)
+        } else if (npcId == GREYMORE && st.getCond() == 2)
             htmltext = "32757-01.htm";
 
         return htmltext;
@@ -95,7 +92,7 @@ public final class _10288_SecretMission extends Quest {
             newQuestState(player, CREATED);
             st = player.getQuestState(this);
         }
-        if (npc.getNpcId() == _aquilani) {
+        if (npc.getNpcId() == AQUILANI) {
             if (st.getState() == COMPLETED)
                 return "32780-01.htm";
             else

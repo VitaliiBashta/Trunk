@@ -145,7 +145,7 @@ public final class CommunityAuctionHouse implements ScriptFile, ICommunityBoardH
                 //New auction button clicked
                 if (buttonClicked.equals("0")) {
                     ItemInstance item = player.getInventory().getItemByObjectId(currentObjectId);
-                    //If player didnt fill textboxes
+                    //If getPlayer didnt fill textboxes
                     boolean error = false;
 
                     String[] vars = new String[2];//{quantity, salePrice}
@@ -175,10 +175,10 @@ public final class CommunityAuctionHouse implements ScriptFile, ICommunityBoardH
                         Collection<Auction> auctions = AuctionManager.getInstance().getMyAuctions(player.objectId());
                         for (Auction a : auctions) {
                             if (a.getItem() == null)
-                                _log.error("Auction bugged! Item:null itemId:" + currentObjectId + " auctionId:" + a.getAuctionId() + " Count:" + a.getCountToSell() + " Price:" + a.getPricePerItem() + " Seller:" + a.getSellerName() + "[" + a.getSellerObjectId() + "] store:" + a.isPrivateStore());
+                                _log.error("Auction bugged! Item:null itemId:" + currentObjectId + " auctionId:" + a.auctionId() + " Count:" + a.getCountToSell() + " Price:" + a.getPricePerItem() + " Seller:" + a.getSellerName() + "[" + a.getSellerObjectId() + "] store:" + a.isPrivateStore());
                             else
-                                _log.error("Auction bugged! Item:" + a.getItem().getName() + " itemId:" + currentObjectId + " playerInv:" + player.getInventory().getItemByObjectId(player.objectId()) + " auctionId:" + a.getAuctionId() + " Count:" + a.getCountToSell() + " Price:" + a.getPricePerItem() + " Seller:" + a.getSellerName() + "[" + a.getSellerObjectId() + "] store:" + a.isPrivateStore());
-                            AuctionManager.getInstance().removeStore(player, a.getAuctionId());
+                                _log.error("Auction bugged! Item:" + a.getItem().getName() + " itemId:" + currentObjectId + " playerInv:" + player.getInventory().getItemByObjectId(player.objectId()) + " auctionId:" + a.auctionId() + " Count:" + a.getCountToSell() + " Price:" + a.getPricePerItem() + " Seller:" + a.getSellerName() + "[" + a.getSellerObjectId() + "] store:" + a.isPrivateStore());
+                            AuctionManager.getInstance().removeStore(player, a.auctionId());
                         }
                     } else {
                         if (!player.hasDialogAskActive()) {
@@ -248,7 +248,7 @@ public final class CommunityAuctionHouse implements ScriptFile, ICommunityBoardH
 
             builder.append("<tr><td width=280 height=25><table border=0 width=280 height=30><tr>");
 
-            builder.append("<td width=32 background=" + item.getTemplate().getIcon() + "><button value=\"\" action=\"bypass _bbsAuction_ %page% _ %type% _ %grade% _ %search% _ %itemSort% _ %gradeSort% _ %quantitySort% _ %priceSort% _ 0 _ ").append(auction.getAuctionId()).append("\" width=32 height=32 back=\"L2UI_CT1.ItemWindow_DF_Frame_Down\" fore=\"L2UI_CT1.ItemWindow_DF_Frame\"></td>");
+            builder.append("<td width=32 background=" + item.getTemplate().getIcon() + "><button value=\"\" action=\"bypass _bbsAuction_ %page% _ %type% _ %grade% _ %search% _ %itemSort% _ %gradeSort% _ %quantitySort% _ %priceSort% _ 0 _ ").append(auction.auctionId()).append("\" width=32 height=32 back=\"L2UI_CT1.ItemWindow_DF_Frame_Down\" fore=\"L2UI_CT1.ItemWindow_DF_Frame\"></td>");
             builder.append(getItemName(item, 248, 25, auction.isPrivateStore()));
             builder.append("</tr></table></td><td width=40 height=30><center>");
             if (item.getCrystalType() != Grade.NONE)

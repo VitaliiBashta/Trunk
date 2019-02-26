@@ -46,8 +46,8 @@ public class AirShip extends Boat {
     }
 
     @Override
-    public L2GameServerPacket validateLocationPacket(Player player) {
-        return new ExValidateLocationInAirShip(player);
+    public void validateLocationPacket(Player player) {
+        new ExValidateLocationInAirShip(player);
     }
 
     @Override

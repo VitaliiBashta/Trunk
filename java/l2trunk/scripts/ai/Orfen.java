@@ -62,7 +62,7 @@ public final class Orfen extends Fighter {
             if (canUseSkill(r_skill, attacker, -1))
                 addTaskAttack(attacker, r_skill.id, r_skill.level);
         } else if (paralyze.size() > 0 && Rnd.chance(20)) {
-            Skill r_skill = paralyze.get(Rnd.get(paralyze.size()));
+            Skill r_skill = Rnd.get(paralyze);
             if (canUseSkill(r_skill, attacker, -1))
                 addTaskAttack(attacker, r_skill.id, r_skill.level);
         }

@@ -56,7 +56,7 @@ public final class Special extends SimpleItemHandler implements ScriptFile {
         switch (itemId) {
             //Coin - PrimeShop Points adder
             case 4356:
-                return use4356(player, ctrl);
+                return use4356(player);
             //Key of Enigma
             case 8060:
                 return use8060(player, ctrl);
@@ -88,10 +88,10 @@ public final class Special extends SimpleItemHandler implements ScriptFile {
                 return use21107(player, ctrl);
             //Wondrous Cubic 1 time use
             case 21106:
-                return use21106(player, ctrl);
+                return use21106(player);
             //Soul Magic Box
             case 20630:
-                return use20630(player, ctrl);
+                return use20630(player);
             case 21899:
                 return use21899(player, ctrl);
             case 21900:
@@ -113,17 +113,16 @@ public final class Special extends SimpleItemHandler implements ScriptFile {
     }
 
     //Coin - PrimeShop Points adder
-    private boolean use4356(Player player, boolean ctrl) {
+    private boolean use4356(Player player) {
         if (player == null) {
             return false;
         }
-        int rnd = Rnd.get(1, 5);
         player.sendMessage("Not Working");
         return true;
     }
 
     // Wondrous Cubic 1 time use
-    private boolean use21106(Player player, boolean ctrl) {
+    private boolean use21106(Player player) {
         removeItem(player, 21106, 1, "use21106");
 
         int chance = Rnd.get(100);
@@ -306,7 +305,7 @@ public final class Special extends SimpleItemHandler implements ScriptFile {
         return false;
     }
 
-    private boolean use20630(Player player, boolean ctrl) {
+    private boolean use20630(Player player) {
         addItem(player, 20602, 1);
         addItem(player, 20603, 1);
         return true;
@@ -418,7 +417,7 @@ public final class Special extends SimpleItemHandler implements ScriptFile {
             addItem(player, 15538, 1);
             Quest q = QuestManager.getQuest(_464_Oath.class);
             QuestState st = q.newQuestState(player, Quest.CREATED);
-            st.setState(Quest.STARTED);
+            st.start();
             st.setCond(1);
         } else {
             player.sendMessage(new CustomMessage("Quest._464_Oath.QuestCannotBeTaken"));

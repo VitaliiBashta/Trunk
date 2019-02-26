@@ -25,15 +25,9 @@ public final class _102_SeaofSporesFever extends Quest {
 
         addStartNpc(30284);
 
-        addTalkId(30156);
-        addTalkId(30217);
-        addTalkId(30219);
-        addTalkId(30221);
-        addTalkId(30284);
-        addTalkId(30285);
+        addTalkId(30156,30217,30219,30221,30284,30285);
 
-        addKillId(20013);
-        addKillId(20019);
+        addKillId(20013,20019);
 
         addQuestItem(ALBERRYUS_LETTER, EVERGREEN_AMULET, DRYAD_TEARS, COBS_MEDICINE1, COBS_MEDICINE2, COBS_MEDICINE3, COBS_MEDICINE4, COBS_MEDICINE5, ALBERRYUS_LIST);
     }
@@ -47,7 +41,7 @@ public final class _102_SeaofSporesFever extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("alberryus_q0102_02.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.giveItems(ALBERRYUS_LETTER);
             st.playSound(SOUND_ACCEPT);
         }
@@ -63,13 +57,13 @@ public final class _102_SeaofSporesFever extends Quest {
             if (cond == 0) {
                 if (st.player.getRace() != Race.elf) {
                     htmltext = "alberryus_q0102_00.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else if (st.player.getLevel() >= 12) {
                     htmltext = "alberryus_q0102_07.htm";
                     return htmltext;
                 } else {
                     htmltext = "alberryus_q0102_08.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
 
             } else if (cond == 1 && st.getQuestItemsCount(ALBERRYUS_LETTER) == 1)
@@ -94,7 +88,7 @@ public final class _102_SeaofSporesFever extends Quest {
                     st.giveItems(SWORD_OF_SENTINEL);
 
                 if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("p1q3")) {
-                    st.player.setVar("p1q3", 1); // flag for helper
+                    st.player.setVar("p1q3"); // flag for helper
                     st.player.sendPacket(new ExShowScreenMessage("Now go find the Newbie Guide."));
                     st.giveItems(1060, 100); // healing potion
                     for (int item = 4412; item <= 4417; item++)
@@ -110,7 +104,7 @@ public final class _102_SeaofSporesFever extends Quest {
 
                 htmltext = "alberryus_q0102_06.htm";
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(false);
+                st.finish();
             }
         } else if (npcId == 30156) {
             if (cond == 1 && st.getQuestItemsCount(ALBERRYUS_LETTER) == 1) {

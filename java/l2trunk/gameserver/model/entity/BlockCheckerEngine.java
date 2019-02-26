@@ -44,7 +44,7 @@ public final class BlockCheckerEngine {
     private static final byte DEFAULT_ARENA = -1;
     private final List<String> zoneNames = List.of(
             "[block_checker_1]", "[block_checker_2]", "[block_checker_3]", "[block_checker_4]");
-    // Maps to hold player of each team and his points
+    // Maps to hold getPlayer of each team and his points
     private final Map<Player, Integer> _redTeamPoints = new ConcurrentHashMap<>();
     private final Map<Player, Integer> _blueTeamPoints = new ConcurrentHashMap<>();
     // All blocks
@@ -84,7 +84,7 @@ public final class BlockCheckerEngine {
     }
 
     /**
-     * Updates the player holder before the event starts
+     * Updates the getPlayer holder before the event starts
      * to synchronize all info
      */
     public void updatePlayersOnStart(ArenaParticipantsHolder holder) {
@@ -135,7 +135,7 @@ public final class BlockCheckerEngine {
     }
 
     /**
-     * Returns the player points
+     * Returns the getPlayer points
      *
      * @param player
      * @param isRed
@@ -152,7 +152,7 @@ public final class BlockCheckerEngine {
     }
 
     /**
-     * Increases player points for his teams
+     * Increases getPlayer points for his teams
      */
     public synchronized void increasePlayerPoints(Player player, int team) {
         if (player == null)
@@ -227,7 +227,7 @@ public final class BlockCheckerEngine {
     }
 
     /**
-     * This inner class set ups all player
+     * This inner class set ups all getPlayer
      * and arena parameters to start the event
      */
     public class StartEvent extends RunnableImpl {
@@ -246,14 +246,14 @@ public final class BlockCheckerEngine {
         }
 
         /**
-         * Will set up all player parameters and
+         * Will set up all getPlayer parameters and
          * port them to their respective location
          * based on their teams
          */
         private void setUpPlayers() {
             // Set current arena as being used
             HandysBlockCheckerManager.INSTANCE.setArenaBeingUsed(arena);
-            // Initialize packets avoiding create a new one per player
+            // Initialize packets avoiding create a new one per getPlayer
             _redPoints = _spawns.size() / 2;
             _bluePoints = _spawns.size() / 2;
             final ExCubeGameChangePoints initialPoints = new ExCubeGameChangePoints(300, _bluePoints, _redPoints);
@@ -281,7 +281,7 @@ public final class BlockCheckerEngine {
                 int x = _arenaCoordinates[arena][tc];
                 int y = _arenaCoordinates[arena][tc + 1];
                 player.teleToLocation(x, y, _zCoord);
-                // Set the player team
+                // Set the getPlayer team
                 if (isRed) {
                     _redTeamPoints.put(player, 0);
                     player.setTeam(TeamType.RED);
@@ -294,7 +294,7 @@ public final class BlockCheckerEngine {
                 if (player.getPet() != null)
                     player.getPet().unSummon();
 
-                // Give the player start up effects
+                // Give the getPlayer start up effects
                 // Freeze
                 _freeze.getEffects(player);
                 // Tranformation
@@ -302,7 +302,7 @@ public final class BlockCheckerEngine {
                     _transformationRed.getEffects(player);
                 else
                     _transformationBlue.getEffects(player);
-                // Set the current player arena
+                // Set the current getPlayer arena
                 player.setBlockCheckerArena((byte) arena);
                 // Send needed packets
                 player.sendPacket(initialPoints);
@@ -327,7 +327,7 @@ public final class BlockCheckerEngine {
             _isStarted = true;
             // Spawn the blocks
             ThreadPoolManager.INSTANCE.execute(new SpawnRound(16, 1));
-            // Start up player parameters
+            // Start up getPlayer parameters
             setUpPlayers();
             // Set the started time
             _startedTime = System.currentTimeMillis() + 300000;
@@ -445,7 +445,7 @@ public final class BlockCheckerEngine {
     }
 
     /**
-     * This class erase all event parameters on player
+     * This class erase all event parameters on getPlayer
      * and port them back near Handy. Also, unspawn
      * blocks, runs a garbage collector and set as free
      * the used arena
@@ -475,7 +475,7 @@ public final class BlockCheckerEngine {
                 if (item == null)
                     continue;
 
-                // a player has it, it will be deleted later
+                // a getPlayer has it, it will be deleted later
                 if (!item.isVisible() || item.getOwnerId() != 0)
                     continue;
 

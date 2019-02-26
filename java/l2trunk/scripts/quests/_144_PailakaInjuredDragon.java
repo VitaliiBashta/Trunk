@@ -101,7 +101,7 @@ public final class _144_PailakaInjuredDragon extends Quest {
             int[] skill = BUFFS[Integer.parseInt(event.split("buff")[1])];
             if (st.getInt("spells") < 4) {
                 makeBuff(npc, player, skill[0], skill[1]);
-                st.set("spells", st.getInt("spells") + 1);
+                st.inc("spells");
                 htmltext = "32509-06.htm";
                 return htmltext;
             }
@@ -121,7 +121,7 @@ public final class _144_PailakaInjuredDragon extends Quest {
             st.set("spells", 0);
             st.set("stage", 1);
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("32499-05.htm".equalsIgnoreCase(event)) {
             st.setCond(2);
@@ -149,7 +149,7 @@ public final class _144_PailakaInjuredDragon extends Quest {
             if (cond == 0) {
                 if (player.getLevel() < 73 || player.getLevel() > 77) {
                     htmltext = "32499-no.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else
                     return "32499-01.htm";
             } else if (id == COMPLETED)
@@ -176,10 +176,10 @@ public final class _144_PailakaInjuredDragon extends Quest {
                 htmltext = "32509-07.htm";
             if (st.getQuestItemsCount(STAGE1) == 0 && st.getQuestItemsCount(STAGE2) == 0)
                 htmltext = "32509-01.htm";
-            if (st.getQuestItemsCount(SPEAR) > 0 && st.getQuestItemsCount(STAGE1) > 0) {
+            if (st.haveAllQuestItems(SPEAR,STAGE1) ) {
                 st.takeItems(SPEAR, 1);
                 st.takeItems(STAGE1, 1);
-                st.giveItems(ENCHSPEAR, 1);
+                st.giveItems(ENCHSPEAR);
                 htmltext = "32509-02.htm";
             }
             if (st.getQuestItemsCount(ENCHSPEAR) > 0 && st.getQuestItemsCount(STAGE2) > 0) {
@@ -188,7 +188,7 @@ public final class _144_PailakaInjuredDragon extends Quest {
                 st.giveItems(LASTSPEAR);
                 htmltext = "32509-03.htm";
             }
-            if (st.getQuestItemsCount(LASTSPEAR) > 0)
+            if (st.haveQuestItem(LASTSPEAR) )
                 htmltext = "32509-03.htm";
         } else if (npcId == KOSUPPORTER2)
             if (cond == 4) {
@@ -196,9 +196,9 @@ public final class _144_PailakaInjuredDragon extends Quest {
                 st.giveItems(PSHIRT, 1);
                 st.addExpAndSp(28000000, 2850000);
                 st.setCond(5);
-                st.setState(COMPLETED);
+                st.complete();
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(false);
+                st.finish();
                 player.setVitality(Config.VITALITY_LEVELS.get(4));
                 player.getReflection().startCollapseTimer(60000);
                 htmltext = "32512-01.htm";
@@ -216,7 +216,7 @@ public final class _144_PailakaInjuredDragon extends Quest {
         switch (npcId) {
             case VSWARRIOR1:
             case VSWARRIOR2:
-                if (st.getInt("stage") == 1)
+                if (st.isSet("stage"))
                     st.set("stage", 2);
                 break;
             case VSCOMMAO1:
@@ -267,7 +267,7 @@ public final class _144_PailakaInjuredDragon extends Quest {
                 break;
             case VSGMAG1:
             case VSGMAG2:
-                if (st.getInt("stage") == 1) {
+                if (st.isSet("stage")) {
                     player.teleToLocation(122789, -45692, -3036);
                     return ;
                 } else if (st.getInt("stage") == 2) {
@@ -277,7 +277,7 @@ public final class _144_PailakaInjuredDragon extends Quest {
                 break;
             case VSHGAPG1:
             case VSHGAPG2:
-                if (st.getInt("stage") == 1) {
+                if (st.isSet("stage") ) {
                     player.teleToLocation(122789, -45692, -3036);
                     return ;
                 } else if (st.getInt("stage") == 2) {
@@ -289,7 +289,7 @@ public final class _144_PailakaInjuredDragon extends Quest {
                 }
                 break;
             case LATANA:
-                if (st.getInt("stage") == 1) {
+                if (st.isSet("stage") ) {
                     player.teleToLocation(122789, -45692, -3036);
                     return ;
                 } else if (st.getInt("stage") == 2) {

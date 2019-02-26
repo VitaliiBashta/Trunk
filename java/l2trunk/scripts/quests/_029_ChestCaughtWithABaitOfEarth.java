@@ -24,7 +24,7 @@ public final class _029_ChestCaughtWithABaitOfEarth extends Quest {
         String htmltext = event;
         switch (event) {
             case "fisher_willeri_q0029_0104.htm":
-                st.setState(STARTED);
+                st.start();
                 st.setCond(1);
                 st.playSound(SOUND_ACCEPT);
                 break;
@@ -43,10 +43,10 @@ public final class _029_ChestCaughtWithABaitOfEarth extends Quest {
                     st.takeItems(SmallGlassBox, -1);
                     st.giveItems(PlatedLeatherGloves, 1);
                     st.playSound(SOUND_FINISH);
-                    st.exitCurrentQuest(false);
+                    st.finish();
                 } else {
                     htmltext = "magister_anabel_q0029_0302.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
                 break;
         }
@@ -63,7 +63,7 @@ public final class _029_ChestCaughtWithABaitOfEarth extends Quest {
             if (id == CREATED) {
                 if (st.player.getLevel() < 48) {
                     htmltext = "fisher_willeri_q0029_0102.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else {
                     QuestState WilliesSpecialBait = st.player.getQuestState(_052_WilliesSpecialBait.class);
                     if (WilliesSpecialBait != null) {
@@ -71,11 +71,11 @@ public final class _029_ChestCaughtWithABaitOfEarth extends Quest {
                             htmltext = "fisher_willeri_q0029_0101.htm";
                         else {
                             htmltext = "fisher_willeri_q0029_0102.htm";
-                            st.exitCurrentQuest(true);
+                            st.exitCurrentQuest();
                         }
                     } else {
                         htmltext = "fisher_willeri_q0029_0103.htm";
-                        st.exitCurrentQuest(true);
+                        st.exitCurrentQuest();
                     }
                 }
             } else if (cond == 1) {

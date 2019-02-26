@@ -103,7 +103,7 @@ public final class CommunityDropCalculator implements ScriptFile, ICommunityBoar
             CalculateRewardChances.NpcTemplateDrops drops = templates.size() > npcIndex ? templates.get(npcIndex) : null;
             NpcTemplate npc = templates.size() > npcIndex ? templates.get(npcIndex).template : null;
 
-            newHtml = newHtml.replace("%monsterName" + i + '%', npc != null ? getName(npc.name()) : "<br>");
+            newHtml = newHtml.replace("%monsterName" + i + '%', npc != null ? getName(npc.name) : "<br>");
             newHtml = newHtml.replace("%monsterLevel" + i + '%', npc != null ? String.valueOf(npc.level) : "<br>");
             newHtml = newHtml.replace("%monsterAggro" + i + '%', npc != null ? Boolean.toString(npc.aggroRange > 0) : "<br>");
             newHtml = newHtml.replace("%monsterType" + i + '%', npc != null ? drops.dropNoSpoil ? "Drop" : "Spoil" : "<br>");
@@ -142,7 +142,7 @@ public final class CommunityDropCalculator implements ScriptFile, ICommunityBoar
         newHtml = newHtml.replace("%itemChosenId%", String.valueOf(player.getQuickVarI("DCItemId")));
         newHtml = newHtml.replace("%monsterPage%", String.valueOf(player.getQuickVarI("DCMonstersPage")));
         newHtml = newHtml.replace("%monsterId%", String.valueOf(monsterId));
-        newHtml = newHtml.replace("%monsterName%", getName(template.name()));
+        newHtml = newHtml.replace("%monsterName%", getName(template.name));
         newHtml = newHtml.replace("%monsterLevel%", String.valueOf(template.level));
         newHtml = newHtml.replace("%monsterAggro%", Util.boolToString(template.aggroRange > 0));
         if (itemId > 0) {
@@ -205,7 +205,7 @@ public final class CommunityDropCalculator implements ScriptFile, ICommunityBoar
     private static void showDropMonsterDetailsByName(Player player, int monsterId) {
         String html = HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + "bbs_dropMonsterDetailsByName.htm", player);
         html = replaceMonsterDetails(player, html, monsterId);
-//		if (!canTeleToMonster(player, monsterId, false))
+//		if (!canTeleToMonster(getPlayer, monsterId, false))
 //			html = html.replace("%goToNpc%", "<br>");
 //		else
 //			html = html.replace("%goToNpc%", "<button value=\"Go to Npc\" action=\"bypass _dropMonsterDetailsByName_" + monsterId + "_3\" width=200 height=30 back=\"L2UI_CT1.OlympiadWnd_DF_Fight1None_Down\" fore=\"L2UI_ct1" + ".OlympiadWnd_DF_Fight1None\">");

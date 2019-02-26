@@ -85,7 +85,7 @@ public final class _128_PailakaSongofIceandFire extends Quest {
             return null;
         } else if ("32497-04.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("32500-06.htm".equalsIgnoreCase(event)) {
             st.setCond(2);
@@ -104,7 +104,7 @@ public final class _128_PailakaSongofIceandFire extends Quest {
             } else {
                 htmltext = "32507-01.htm";
             }
-            addSpawnToInstance(PAPION, new Location(-53903, 181484, -4555, 30456), refId);
+            addSpawnToInstance(PAPION, Location.of(-53903, 181484, -4555, 30456), refId);
         } else if ("32507-07.htm".equalsIgnoreCase(event)) {
             st.setCond(7);
             st.playSound(SOUND_MIDDLE);
@@ -117,14 +117,14 @@ public final class _128_PailakaSongofIceandFire extends Quest {
             } else {
                 htmltext = "32507-04.htm";
             }
-            addSpawnToInstance(GARGOS, new Location(-61354, 183624, -4821, 63613), refId);
+            addSpawnToInstance(GARGOS, Location.of(-61354, 183624, -4821, 63613), refId);
         } else if ("32510-02.htm".equalsIgnoreCase(event)) {
             st.giveItems(PailakaRing);
             st.giveItems(PailakaEarring);
             st.giveItems(ScrollofEscape);
             st.addExpAndSp(810000, 50000);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(false);
+            st.finish();
             player.setVitality(Config.VITALITY_LEVELS.get(4));
             player.getReflection().startCollapseTimer(60000);
         }
@@ -144,7 +144,7 @@ public final class _128_PailakaSongofIceandFire extends Quest {
                     return "32497-01.htm";
                 } else {
                     htmltext = "32497-no.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             else if (id == COMPLETED)
                 htmltext = "32497-no.htm";
@@ -190,7 +190,7 @@ public final class _128_PailakaSongofIceandFire extends Quest {
         int cond = st.getCond();
         int refId = player.getReflectionId();
         if (MOBS.contains(npcId)) {
-            if (Rnd.get(100) < 50)
+            if (Rnd.chance( 50))
                 st.dropItem(npc, Rnd.get(HPHERBS));
             if (Rnd.get(100) < 50)
                 st.dropItem(npc, Rnd.get(MPHERBS));
@@ -205,7 +205,7 @@ public final class _128_PailakaSongofIceandFire extends Quest {
             st.giveItems(TempleBookofSecrets4);
             st.setCond(5);
             st.playSound(SOUND_MIDDLE);
-            addSpawnToInstance(KINSUS, new Location(-61404, 181351, -4815, 63953), refId);
+            addSpawnToInstance(KINSUS, Location.of(-61404, 181351, -4815, 63953), refId);
         } else if (npcId == KINSUS && cond == 5) {
             st.takeItems(TempleBookofSecrets4);
             st.giveItems(EssenceofFire);

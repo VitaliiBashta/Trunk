@@ -6,8 +6,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ItemAttributes implements Serializable {
-    private static final long serialVersionUID = 401594188363005415L;
+public final class ItemAttributes implements Serializable {
 
     private int fire;
     private int water;

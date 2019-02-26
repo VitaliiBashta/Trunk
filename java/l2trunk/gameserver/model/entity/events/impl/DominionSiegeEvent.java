@@ -214,9 +214,9 @@ public class DominionSiegeEvent extends SiegeEvent<Dominion, SiegeClanObject> {
 
     private void questUpdate(Player player, boolean start) {
         if (start) {
-            QuestState sakeQuestState = _forSakeQuest.newQuestState(player, Quest.CREATED);
-            sakeQuestState.setState(Quest.STARTED);
-            sakeQuestState.setCond(1);
+            QuestState st = _forSakeQuest.newQuestState(player, Quest.CREATED);
+            st.start();
+            st.setCond(1);
 
             Quest protectCatapultQuest = QuestManager.getQuest(_729_ProtectTheTerritoryCatapult.class);
             if (protectCatapultQuest == null)
@@ -527,9 +527,6 @@ public class DominionSiegeEvent extends SiegeEvent<Dominion, SiegeClanObject> {
                 owner.getLeader().player.sendPacket(SystemMsg.THE_CASTLE_GATE_HAS_BEEN_DESTROYED);
         }
     }
-    //========================================================================================================================================================================
-    //                                                                   Getters/Setters
-    //========================================================================================================================================================================
 
     public class KillListener implements OnKillListener {
         @Override
@@ -554,11 +551,6 @@ public class DominionSiegeEvent extends SiegeEvent<Dominion, SiegeClanObject> {
                     q.notifyKill(((Player) victim), questState);
                 }
             }
-        }
-
-        @Override
-        public boolean ignorePetOrSummon() {
-            return true;
         }
     }
 }

@@ -27,8 +27,8 @@ public final class CCPCWHPrivilages {
                 if ("allowwh".equalsIgnoreCase(param[0]) && param.length > 1) {
                     UnitMember cm = activeChar.getClan().getAnyMember(param[1]);
                     if (cm != null && cm.player != null) {
-                        if (cm.player.getVarObject("canWhWithdraw") == null) {
-                            cm.player.setVar("canWhWithdraw", 1);
+                        if (!cm.player.isVarSet("canWhWithdraw")) {
+                            cm.player.setVar("canWhWithdraw");
                             activeChar.sendMessage("Privilege given successfully");
                         }
                     } else if (cm != null) {
@@ -40,9 +40,9 @@ public final class CCPCWHPrivilages {
                     return "cfgClan.htm";
                 } else if (param[0].equalsIgnoreCase("blockwh") && param.length > 1) {
                     UnitMember cm = activeChar.getClan().getAnyMember(param[1]);
-                    if (cm != null && cm.player() != null) {
-                        if (cm.player().getVarObject("canWhWithdraw") != null) {
-                            cm.player().unsetVar("canWhWithdraw");
+                    if (cm != null && cm.getPlayer() != null) {
+                        if (cm.getPlayer().isVarSet("canWhWithdraw")) {
+                            cm.getPlayer().unsetVar("canWhWithdraw");
                             activeChar.sendMessage("Privilege removed successfully");
                         }
                     } else if (cm != null) {

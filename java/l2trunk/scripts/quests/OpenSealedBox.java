@@ -67,15 +67,15 @@ public final class OpenSealedBox {
     }
 
     private boolean canGiveReward() {
-        int FreeInvSlots = st.player.getInventoryLimit() - st.player.getInventory().getSize();
+        int freeInvSlots = st.player.getInventoryLimit() - st.player.getInventory().getSize();
 
         for (Integer itemId : rewards.keySet()) {
             ItemInstance item = st.player.getInventory().getItemByItemId(itemId);
             if (item == null || !item.isStackable())
-                FreeInvSlots--;
+                freeInvSlots--;
         }
 
-        return FreeInvSlots > 0;
+        return freeInvSlots > 0;
     }
 
     private abstract static class RewardGroup {

@@ -33,7 +33,7 @@ public final class _643_RiseAndFallOfTheElrokiTribe extends Quest {
         long count = st.getQuestItemsCount(BONES_OF_A_PLAINS_DINOSAUR);
         if ("singsing_q0643_05.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("shaman_caracawe_q0643_06.htm".equalsIgnoreCase(event)) {
             if (count >= 300) {
@@ -46,7 +46,7 @@ public final class _643_RiseAndFallOfTheElrokiTribe extends Quest {
         else if ("Quit".equalsIgnoreCase(event)) {
             htmltext = null;
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
         return htmltext;
     }
@@ -60,7 +60,7 @@ public final class _643_RiseAndFallOfTheElrokiTribe extends Quest {
                 htmltext = "singsing_q0643_01.htm";
             else {
                 htmltext = "singsing_q0643_04.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (st.getState() == STARTED)
             if (npcId == 32106) {

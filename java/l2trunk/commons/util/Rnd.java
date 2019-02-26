@@ -3,7 +3,9 @@ package l2trunk.commons.util;
 import org.apache.commons.math3.random.MersenneTwister;
 import org.apache.commons.math3.random.RandomGenerator;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
 public final class Rnd {
@@ -25,16 +27,12 @@ public final class Rnd {
         return rnd().nextInt(n);
     }
 
-    private static long get(long n) {
-        return (long) (rnd().nextDouble() * n);
-    }
-
     public static int get(int min, int max) {
         return min + get(max - min + 1);
     }
 
     public static long get(long min, long max) {
-        return min + get(max - min + 1);
+        return min + (long) rnd().nextDouble() * (max - min + 1);
     }
 
     public static int nextInt() {
@@ -43,10 +41,6 @@ public final class Rnd {
 
     public static float nextFloat() {
         return rnd().nextFloat();
-    }
-
-    public static boolean nextBoolean() {
-        return rnd().nextBoolean();
     }
 
     public static boolean chance(int chance) {
@@ -64,14 +58,16 @@ public final class Rnd {
         return list[get(list.length)];
     }
 
-    public static <E> E get(List<E> list) {
+    public static <E> E get(Collection<E> list) {
         if (list.size() == 0)
             throw new IllegalArgumentException("can't get random from emprty list: ");
 
-        return list.get(get(list.size()));
+        return list.stream()
+                .skip((int) (list.size() * nextFloat()))
+                .findFirst().orElseGet(() -> list.iterator().next());
     }
 
-    static final class ThreadLocalGeneratorHolder extends ThreadLocal<RandomGenerator> {
+    private static final class ThreadLocalGeneratorHolder extends ThreadLocal<RandomGenerator> {
         @Override
         public RandomGenerator initialValue() {
             return new MersenneTwister(seedUniquifier.getAndIncrement() + System.nanoTime());

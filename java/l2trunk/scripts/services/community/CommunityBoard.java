@@ -86,7 +86,7 @@ public final class CommunityBoard implements ScriptFile, ICommunityBoardHandler 
         String cmd = st.nextToken();
         String html = "";
         if ("bbshome".equals(cmd)) {
-            //Checking if all required images were sent to the player, if not - not allowing to pass
+            //Checking if all required images were sent to the getPlayer, if not - not allowing to pass
             if (!AutoImageSenderManager.wereAllImagesSent(player)) {
                 player.sendPacket(new Say2(player.objectId(), ChatType.CRITICAL_ANNOUNCE, "CB", "Community wasn't loaded yet, try again in few seconds."));
                 return;
@@ -124,7 +124,7 @@ public final class CommunityBoard implements ScriptFile, ICommunityBoardHandler 
             if (bypass.equals("_bbspage:information")) {
                 html = HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + "pages/information.htm", player);
                 html = html.replaceFirst("%nick%", String.valueOf(player.getName()));
-                html = html.replaceFirst("%prof%", String.valueOf(player.getActiveClass().toStringCB()));
+                html = html.replaceFirst("%prof%", player.getActiveClass().toStringCB());
                 html = html.replaceFirst("%lvl%", String.valueOf(player.getLevel()));
                 html = html.replaceFirst("%clan%", player.getClan() != null ? String.valueOf(player.getClan().getName()) : "<font color=\"FF0000\">No</font>");
                 html = html.replaceFirst("%noobl%", player.isNoble() ? "Yes" : "<font color=\"FF0000\">Need Subclass lvl 76</font>");

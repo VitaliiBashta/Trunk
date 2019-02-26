@@ -33,7 +33,7 @@ public final class _454_CompletelyLost extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("wounded_soldier_q454_02.htm".equalsIgnoreCase(event)) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if ("wounded_soldier_q454_03.htm".equalsIgnoreCase(event)) {
@@ -56,7 +56,7 @@ public final class _454_CompletelyLost extends Quest {
                             htmltext = "wounded_soldier_q454_01.htm";
                         else {
                             htmltext = "wounded_soldier_q454_00.htm";
-                            st.exitCurrentQuest(true);
+                            st.exitCurrentQuest();
                         }
                     } else
                         htmltext = "wounded_soldier_q454_00a.htm";
@@ -79,7 +79,7 @@ public final class _454_CompletelyLost extends Quest {
                     soldier.doDie(null);
                     soldier.endDecayTask();
                     giveReward(st);
-                    st.setState(COMPLETED);
+                    st.complete();
                     st.playSound(SOUND_FINISH);
                     st.exitCurrentQuest(this);
                 } else

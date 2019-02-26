@@ -29,14 +29,14 @@ public final class _421_LittleWingAdventures extends Quest {
     private static final int Fairy_Tree_of_Twilight = 27187;
     private static final int Fairy_Tree_of_Abyss = 27188;
     private static final int Soul_of_Tree_Guardian = 27189;
-    // Items
+    // items
     private static final int Dragonflute_of_Wind = L2Pet.HATCHLING_WIND.getControlItemId();
     private static final int Dragonflute_of_Star = L2Pet.HATCHLING_STAR.getControlItemId();
     private static final int Dragonflute_of_Twilight = L2Pet.HATCHLING_TWILIGHT.getControlItemId();
     private static final int Dragon_Bugle_of_Wind = L2Pet.STRIDER_WIND.getControlItemId();
     private static final int Dragon_Bugle_of_Star = L2Pet.STRIDER_STAR.getControlItemId();
     private static final int Dragon_Bugle_of_Twilight = L2Pet.STRIDER_TWILIGHT.getControlItemId();
-    // Quest Items
+    // Quest items
     private static final int Fairy_Leaf = 4325;
 
     private static final int Min_Fairy_Tree_Attaks = 110;
@@ -45,14 +45,8 @@ public final class _421_LittleWingAdventures extends Quest {
         super(false);
         addStartNpc(Cronos);
         addTalkId(Mimyu);
-        addKillId(Fairy_Tree_of_Wind);
-        addKillId(Fairy_Tree_of_Star);
-        addKillId(Fairy_Tree_of_Twilight);
-        addKillId(Fairy_Tree_of_Abyss);
-        addAttackId(Fairy_Tree_of_Wind);
-        addAttackId(Fairy_Tree_of_Star);
-        addAttackId(Fairy_Tree_of_Twilight);
-        addAttackId(Fairy_Tree_of_Abyss);
+        addKillId(Fairy_Tree_of_Wind,Fairy_Tree_of_Star,Fairy_Tree_of_Twilight,Fairy_Tree_of_Abyss);
+        addAttackId(Fairy_Tree_of_Wind,Fairy_Tree_of_Star,Fairy_Tree_of_Twilight,Fairy_Tree_of_Abyss);
         addQuestItem(Fairy_Leaf);
     }
 
@@ -107,23 +101,23 @@ public final class _421_LittleWingAdventures extends Quest {
         int cond = st.getCond();
 
         if (event.equalsIgnoreCase("30610_05.htm") && _state == CREATED) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
-        } else if ((event.equalsIgnoreCase("30747_03.htm") || event.equalsIgnoreCase("30747_04.htm")) && _state == STARTED && cond == 1) {
+        } else if (("30747_03.htm".equalsIgnoreCase(event) || "30747_04.htm".equalsIgnoreCase(event)) && _state == STARTED && cond == 1) {
             if (dragonflute == null)
                 return "noquest";
             if (dragonflute.objectId() != dragonflute_id) {
                 if (Rnd.chance(10)) {
                     st.takeItems(dragonflute.getItemId(), 1);
                     st.playSound(SOUND_FINISH);
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
                 return "30747_00.htm";
             }
             if (!HatchlingSummoned(st, false))
-                return event.equalsIgnoreCase("30747_04.htm") ? "30747_04a.htm" : "30747_02.htm";
-            if (event.equalsIgnoreCase("30747_04.htm")) {
+                return "30747_04.htm".equalsIgnoreCase(event) ? "30747_04a.htm" : "30747_02.htm";
+            if ("30747_04.htm".equalsIgnoreCase(event)) {
                 st.setCond(2);
                 st.takeItems(Fairy_Leaf, -1);
                 st.giveItems(Fairy_Leaf, 4);
@@ -146,15 +140,15 @@ public final class _421_LittleWingAdventures extends Quest {
             if (npcId != Cronos)
                 return "noquest";
             if (st.player.getLevel() < 45) {
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 return "30610_01.htm";
             }
             if (dragonflute == null) {
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 return "30610_02.htm";
             }
             if (dragonflute.getEnchantLevel() < 55) {
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 return "30610_03.htm";
             }
             st.setCond(0);
@@ -172,7 +166,7 @@ public final class _421_LittleWingAdventures extends Quest {
         }
 
         if (npcId == Mimyu) {
-            if (st.getQuestItemsCount(Dragon_Bugle_of_Wind) + st.getQuestItemsCount(Dragon_Bugle_of_Star) + st.getQuestItemsCount(Dragon_Bugle_of_Twilight) > 0)
+            if (st.haveAnyQuestItems(Dragon_Bugle_of_Wind,Dragon_Bugle_of_Star,Dragon_Bugle_of_Twilight))
                 return "30747_00b.htm";
             if (dragonflute == null)
                 return "noquest";
@@ -181,9 +175,9 @@ public final class _421_LittleWingAdventures extends Quest {
             if (cond == 2) {
                 if (!HatchlingSummoned(st, false))
                     return "30747_09.htm";
-                if (st.getQuestItemsCount(Fairy_Leaf) == 0) {
+                if (!st.haveQuestItem(Fairy_Leaf)) {
                     st.playSound(SOUND_FINISH);
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                     return "30747_11.htm";
                 }
                 return "30747_10.htm";
@@ -191,20 +185,20 @@ public final class _421_LittleWingAdventures extends Quest {
             if (cond == 3) {
                 if (dragonflute.objectId() != dragonflute_id)
                     return "30747_00a.htm";
-                if (st.getQuestItemsCount(Fairy_Leaf) > 0) {
+                if (st.haveQuestItem(Fairy_Leaf)) {
                     st.playSound(SOUND_FINISH);
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                     return "30747_11.htm";
                 }
                 if (!(CheckTree(st, Fairy_Tree_of_Wind) && CheckTree(st, Fairy_Tree_of_Star) && CheckTree(st, Fairy_Tree_of_Twilight) && CheckTree(st, Fairy_Tree_of_Abyss))) {
                     st.playSound(SOUND_FINISH);
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                     return "30747_11.htm";
                 }
-                if (st.getInt("welldone") == 0) {
+                if (!st.isSet("welldone")) {
                     if (!HatchlingSummoned(st, false))
                         return "30747_09.htm";
-                    st.set("welldone", 1);
+                    st.set("welldone");
                     return "30747_12.htm";
                 }
                 if (HatchlingSummoned(st, false) || st.player.getPet() != null)
@@ -216,7 +210,7 @@ public final class _421_LittleWingAdventures extends Quest {
                 st.player.sendPacket(new InventoryUpdate().addModifiedItem(dragonflute));
 
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 return "30747_13.htm";
             }
         }

@@ -43,7 +43,7 @@ public final class _319_ScentOfDeath extends Quest {
 
         addStartNpc(MINALESS);
         addTalkId(MINALESS);
-        //Mob Drop
+        //mob Drop
         for (int[] aDROPLIST_COND : DROPLIST_COND) addKillId(aDROPLIST_COND[2]);
 
         addQuestItem(ZombieSkin);
@@ -53,7 +53,7 @@ public final class _319_ScentOfDeath extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if (event.equalsIgnoreCase("mina_q0319_04.htm")) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         }
         return event;
@@ -71,7 +71,7 @@ public final class _319_ScentOfDeath extends Quest {
             if (cond == 0)
                 if (st.player.getLevel() < 11) {
                     htmltext = "mina_q0319_02.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else
                     htmltext = "mina_q0319_03.htm";
             else if (cond == 1)
@@ -82,7 +82,7 @@ public final class _319_ScentOfDeath extends Quest {
                 st.giveItems(ADENA_ID, 3350);
                 st.giveItems(HealingPotion);
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else {
                 htmltext = "mina_q0319_05.htm";
                 st.setCond(1);
@@ -102,7 +102,7 @@ public final class _319_ScentOfDeath extends Quest {
                     else if (st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[7], aDROPLIST_COND[5], aDROPLIST_COND[6]))
                         if (aDROPLIST_COND[1] != cond && aDROPLIST_COND[1] != 0) {
                             st.setCond(aDROPLIST_COND[1]);
-                            st.setState(STARTED);
+                            st.start();
                         }
     }
 

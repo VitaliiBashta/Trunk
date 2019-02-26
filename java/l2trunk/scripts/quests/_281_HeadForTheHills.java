@@ -8,7 +8,7 @@ import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
 import java.util.Map;
 
 public final class _281_HeadForTheHills extends Quest {
-    //Items
+    //items
     private static final int ScrollOfEscape = 736;
     //NPC
     private final int Marcela = 32173;
@@ -45,7 +45,7 @@ public final class _281_HeadForTheHills extends Quest {
         if (event.equalsIgnoreCase("zerstorer_morsell_q0281_03.htm")) {
             if (st.getCond() == 0) {
                 st.setCond(1);
-                st.setState(STARTED);
+                st.start();
                 st.playSound(SOUND_ACCEPT);
             }
         } else if ("adena".equalsIgnoreCase(event)) {
@@ -62,14 +62,14 @@ public final class _281_HeadForTheHills extends Quest {
             } else
                 htmltext = "zerstorer_morsell_q0281_04.htm";
         } else if (event.equalsIgnoreCase("zerstorer_morsell_q0281_09.htm"))
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
 
         return htmltext;
     }
 
     private void tryGiveOneTimeRevard(QuestState st) {
         if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("p1q2")) {
-            st.player.setVar("p1q2", 1);
+            st.player.setVar("p1q2");
             st.player.sendPacket(new ExShowScreenMessage("Acquisition of Soulshot for beginners complete.\n                  Go find the Newbie Guide."));
             QuestState qs = st.player.getQuestState(_255_Tutorial.class);
             if (qs != null && qs.getInt("Ex") != 10) {
@@ -97,7 +97,7 @@ public final class _281_HeadForTheHills extends Quest {
         if (npcId == Marcela)
             if (st.player.getLevel() < 6) {
                 htmltext = "zerstorer_morsell_q0281_02.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else if (cond == 0)
                 htmltext = "zerstorer_morsell_q0281_01.htm";
             else if (cond == 1 && st.haveQuestItem(HillsOfGoldMonsterClaw))

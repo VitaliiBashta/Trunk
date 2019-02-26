@@ -16,8 +16,7 @@ public final class _10267_JourneyToGracia extends Quest {
 
         addStartNpc(Orven);
 
-        addTalkId(Keucereus);
-        addTalkId(Papiku);
+        addTalkId(Keucereus,Papiku);
 
         addQuestItem(Letter);
     }
@@ -26,7 +25,7 @@ public final class _10267_JourneyToGracia extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("30857-06.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
             st.giveItems(Letter);
         } else if ("32564-02.htm".equalsIgnoreCase(event)) {
@@ -37,7 +36,7 @@ public final class _10267_JourneyToGracia extends Quest {
             st.takeItems(Letter);
             st.addExpAndSp(75480, 7570);
             st.unset("cond");
-            st.exitCurrentQuest(false);
+            st.finish();
             st.playSound(SOUND_FINISH);
         }
         return event;

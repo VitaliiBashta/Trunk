@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class CWHPrivileges extends Functions implements IVoicedCommandHandler {
-    private static final List<String> _commandList = Collections.singletonList("clan");
+    private static final List<String> _commandList = List.of("clan");
 
     @Override
     public boolean useVoicedCommand(String command, Player activeChar, String args) {

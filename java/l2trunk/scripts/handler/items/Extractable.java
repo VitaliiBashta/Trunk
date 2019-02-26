@@ -133,13 +133,12 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
             21674, 21675, 21676, 21677, 21678, 21679, 21680, 21681, 21682, 21683,
             21684, 21685, 21686, 21747, 21748, 21749, 21752, 21753, 22000, 22001,
             22002, 22003, 22004, 22005, 22087, 22088, 22187, 37004);
-    private static final int[] SOI_books = {14209, // Forgotten Scroll - Hide
+    private static final List<Integer> SOI_books = List.of(14209, // Forgotten Scroll - Hide
             14212, // Forgotten Scroll - Enlightenment - Wizard
             14213, // Forgotten Scroll - Enlightenment - Healer
             10554, // Forgotten Scroll - Anti-Magic Armor
             14208, // Forgotten Scroll - Final Secret
-            10577 // Forgotten Scroll - Excessive Loyalty
-    };
+            10577); // Forgotten Scroll - Excessive Loyalty
 
     private static Map<Integer, Integer> singleRewardItem = new HashMap<>();
 
@@ -284,7 +283,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
                 for (int i = 0; i < items.length; i++)
                     if (Rnd.chance(chances[i]))
                         successfulItems.add(i);
-            int[] item = items[successfulItems.get(Rnd.get(successfulItems.size()))];
+            int[] item = items[Rnd.get(successfulItems)];
             if (item.length < 2)
                 return false;
 
@@ -1265,7 +1264,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
             addItem(player, 8627, 6); // 6 Elixir of Life (S-Grade)
             addItem(player, 8633, 6); // 6 Elixir of Mental Strength (S-Grade)
         } else if (rnd <= 95)
-            addItem(player, SOI_books[Rnd.get(SOI_books.length)], 1);
+            addItem(player, Rnd.get(SOI_books), 1);
         else
             addItem(player, 14027, 1); // Collection Agathion Summon Bracelet
     }
@@ -1281,7 +1280,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
             addItem(player, 8627, 5); // 5 Elixir of Life (S-Grade)
             addItem(player, 8633, 5); // 5 Elixir of Mental Strength (S-Grade)
         } else if (rnd <= 95)
-            addItem(player, SOI_books[Rnd.get(SOI_books.length)], 1);
+            addItem(player, Rnd.get(SOI_books), 1);
         else
             addItem(player, 14027, 1); // Collection Agathion Summon Bracelet
     }
@@ -1297,7 +1296,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
             addItem(player, 8627, 4); // 4 Elixir of Life (S-Grade)
             addItem(player, 8633, 4); // 4 Elixir of Mental Strength (S-Grade)
         } else if (rnd <= 95)
-            addItem(player, SOI_books[Rnd.get(SOI_books.length)], 1);
+            addItem(player, Rnd.get(SOI_books), 1);
         else
             addItem(player, 14027, 1); // Collection Agathion Summon Bracelet
     }
@@ -1685,7 +1684,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
         for (int i = 10533; i <= 10543; i++)
             talismans.add(i);
 
-        addItem(player, talismans.get(Rnd.get(talismans.size())), 1);
+        addItem(player, Rnd.get(talismans), 1);
     }
 
     //(Not In Use)
@@ -1695,13 +1694,13 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // (Not In Use)
     private void use54(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {13025, 1, 3}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         72.0
@@ -1712,13 +1711,13 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // Shiny Agathion 7 Day Pack (Event)
     private void use55(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {14102, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0
@@ -1729,13 +1728,13 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // Sobbing Agathion 7 Day Pack (Event)
     private void use56(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {14103, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0
@@ -1746,13 +1745,13 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     //(Not In Use)
     private void use136(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {14075, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0
@@ -1763,13 +1762,13 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     //(Not In Use)
     private void use137(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {14076, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0
@@ -1780,13 +1779,13 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     //(Not In Use)
     private void use138(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {14077, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0
@@ -1797,13 +1796,13 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // Sudden Agathion 7 Day Pack
     private void use139(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {14093, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0
@@ -1814,13 +1813,13 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // Shiny Agathion 7 Day Pack
     private void use140(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {14094, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0
@@ -1831,13 +1830,13 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // Sobbing Agathion 7 Day Pack
     private void use141(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {14095, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0
@@ -1848,13 +1847,13 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     //(Not In Use)
     private void use163(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {13026, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0
@@ -1865,13 +1864,13 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // Sudden Agathion 7 Day Pack (Event)
     private void use170(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {14101, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0
@@ -1882,14 +1881,14 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // Five-Year Anniversary Gift Box (10 Honey Rice Cake Set)
     private void use5906(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {13420, 10, 10},
                         {13419, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0,
@@ -1901,14 +1900,14 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // Five-Year Anniversary Gift Box (9 Honey Rice Cake Set)
     private void use5907(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {13420, 9, 9},
                         {13419, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0,
@@ -1920,14 +1919,14 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // Five-Year Anniversary Gift Box (8 Honey Rice Cake Set)
     private void use5909(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {13420, 8, 8},
                         {13419, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0,
@@ -1939,14 +1938,14 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // Five-Year Anniversary Gift Box (7 Honey Rice Cake Set)
     private void use5910(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {13420, 7, 7},
                         {13419, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0,
@@ -1958,14 +1957,14 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // Five-Year Anniversary Gift Box (6 Honey Rice Cake Set)
     private void use5912(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {13420, 6, 6},
                         {13419, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0,
@@ -1977,14 +1976,14 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // Five-Year Anniversary Gift Box (3 Honey Wheat Cake Set)
     private void use5913(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {13420, 3, 3},
                         {13419, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0,
@@ -1996,7 +1995,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // Old Box
     private void use8547(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {8034, 1, 3},
@@ -2004,7 +2003,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
                         {2133, 1, 7}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         85.0,
@@ -2017,7 +2016,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // Box of Cheerleading Gear Used to encourage victory.
     private void use8551(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {8552, 1, 1},
@@ -2033,7 +2032,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
                         {5582, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         25.0,
@@ -2054,14 +2053,14 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // Event Gift Box
     private void use8570(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {8592, 1, 1},
                         {1539, 1, 10}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         50.0,
@@ -2073,14 +2072,14 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // Event Gift Box
     private void use8571(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {8592, 1, 1},
                         {1539, 1, 10}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         50.0,
@@ -2092,7 +2091,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // Event Gift Box
     private void use8572(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {1539, 1, 20},
@@ -2105,7 +2104,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
                         {4648, 1, 10}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         87.0,
@@ -2123,7 +2122,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // Event Gift Box
     private void use8573(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {1539, 1, 20},
@@ -2136,7 +2135,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
                         {4649, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         90.70,
@@ -2153,7 +2152,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // Event Gift Box
     private void use8574(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {1539, 1, 20},
@@ -2166,7 +2165,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
                         {4661, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         93.0,
@@ -2184,7 +2183,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // Event Gift Box
     private void use8575(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {1539, 1, 20},
@@ -2197,7 +2196,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
                         {4661, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         93.0,
@@ -2215,14 +2214,14 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // No Grade Item Set Box (Warrior Use)
     private void use8966(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {1835, 1000, 1000},
                         {8622, 10, 10}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0,
@@ -2234,14 +2233,14 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // D Grade Item Set Box (Warrior Use)
     private void use8967(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {1463, 1000, 1000},
                         {8623, 10, 10}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0,
@@ -2253,14 +2252,14 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // C Grade Item Set Box (Warrior Use)
     private void use8968(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {1464, 1000, 1000},
                         {8624, 10, 10}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0,
@@ -2272,14 +2271,14 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // B Grade Item Set Box (Warrior Use)
     private void use8969(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {1465, 500, 500},
                         {8625, 7, 7}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0,
@@ -2291,14 +2290,14 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // A Grade Item Set Box (Warrior Use)
     private void use8970(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {1466, 300, 300},
                         {8626, 7, 7}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0,
@@ -2310,14 +2309,14 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // A, S Grade Item Set Box (Warrior Use)
     private void use8971(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {1466, 300, 300},
                         {8627, 5, 5}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0,
@@ -2329,14 +2328,14 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // Composite Bow and Wooden Arrow
     private void use9104(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {8980, 1, 1},
                         {17, 1000, 1000}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0,
@@ -2348,14 +2347,14 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // Gastraphetes and Bone Arrow
     private void use9105(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {8989, 1, 1},
                         {1341, 1000, 1000}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0,
@@ -2367,14 +2366,14 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // Akat Long Bow and Steel Arrow
     private void use9106(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {8997, 1, 1},
                         {1342, 1000, 1000}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0,
@@ -2386,14 +2385,14 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // Dark Elven Long Bow and Silver Arrow
     private void use9107(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {9008, 1, 1},
                         {1343, 1000, 1000}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0,
@@ -2405,14 +2404,14 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // Carnage Bow and Mithril Arrow
     private void use9108(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {9016, 1, 1},
                         {1344, 1000, 1000}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0,
@@ -2424,14 +2423,14 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // Soul Bow and Mithril Arrow
     private void use9109(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {9027, 1, 1},
                         {1344, 1000, 1000}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0,
@@ -2443,7 +2442,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // No Grade Shadow Armor Set Box (Heavy Armor Use)
     private void use9110(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {9030, 1, 1},
@@ -2454,7 +2453,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
                         {9036, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0,
@@ -2470,7 +2469,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // D-Grade Shadow Armor Set Box (Heavy Armor Use)
     private void use9111(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {9040, 1, 1},
@@ -2481,7 +2480,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
                         {9053, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0,
@@ -2497,7 +2496,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // C-Grade Shadow Armor Set Box (Heavy Armor Use)
     private void use9112(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {9054, 1, 1},
@@ -2507,7 +2506,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
                         {9028, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0,
@@ -2522,7 +2521,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // B-Grade Shadow Armor Set Box (Heavy Armor Use)
     private void use9113(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {9067, 1, 1},
@@ -2533,7 +2532,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
                         {9072, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0,
@@ -2549,7 +2548,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // Low A-Grade Shadow Armor Set Box (Heavy Armor Use)
     private void use9114(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {9081, 1, 1},
@@ -2560,7 +2559,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
                         {9086, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0,
@@ -2576,7 +2575,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // High A-Grade Shadow Armor Set Box (Heavy Armor Use)
     private void use9115(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {9094, 1, 1},
@@ -2586,7 +2585,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
                         {9029, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0,
@@ -2601,7 +2600,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // No Grade Shadow Armor Set Box (Light Armor Use)
     private void use9116(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {9032, 1, 1},
@@ -2611,7 +2610,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
                         {9039, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0,
@@ -2626,7 +2625,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // D-Grade Shadow Armor Set Box (Light Armor Use)
     private void use9117(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {9045, 1, 1},
@@ -2636,7 +2635,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
                         {9053, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0,
@@ -2651,7 +2650,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // C-Grade Shadow Armor Set Box (Light Armor Use
     private void use9118(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {9058, 1, 1},
@@ -2661,7 +2660,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
                         {9066, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0,
@@ -2676,7 +2675,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // B-Grade Shadow Armor Set Box (Light Armor Use)
     private void use9119(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {9073, 1, 1},
@@ -2686,7 +2685,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
                         {9069, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0,
@@ -2701,7 +2700,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // Low A-Grade Shadow Armor Set Box (Light Armor Use)
     private void use9120(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {9087, 1, 1},
@@ -2711,7 +2710,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
                         {9083, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0,
@@ -2726,7 +2725,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // High A-Grade Shadow Armor Set Box (Light Armor Use
     private void use9121(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {9098, 1, 1},
@@ -2735,7 +2734,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
                         {9095, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0,
@@ -2749,7 +2748,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // No Grade Shadow Armor Set Box (Robe Use)
     private void use9122(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {9034, 1, 1},
@@ -2760,7 +2759,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
                         {9039, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0,
@@ -2776,7 +2775,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // D-Grade Shadow Armor Set Box (Robe Use)
     private void use9123(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {9049, 1, 1},
@@ -2787,7 +2786,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
                         {9044, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0,
@@ -2803,7 +2802,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // C-Grade Shadow Armor Set Box (Robe Use)
     private void use9124(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {9062, 1, 1},
@@ -2814,7 +2813,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
                         {9056, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0,
@@ -2830,7 +2829,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // B-Grade Shadow Armor Set Box (Robe Use)
     private void use9125(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {9077, 1, 1},
@@ -2841,7 +2840,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
                         {9070, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0,
@@ -2857,7 +2856,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // Low A-Grade Shadow Armor Set Box (Robe Use)
     private void use9126(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {9091, 1, 1},
@@ -2867,7 +2866,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
                         {9083, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0,
@@ -2882,7 +2881,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // High A-Grade Shadow Armor Set Box (Robe Use)
     private void use9127(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {9101, 1, 1},
@@ -2892,7 +2891,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
                         {9129, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0,
@@ -2907,14 +2906,14 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // No Grade Item Set Box (Magic Use)
     private void use9130(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {2509, 1000, 1000},
                         {8622, 10, 10}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0,
@@ -2926,14 +2925,14 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // D Grade Item Set Box (Magic Use)
     private void use9131(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {2510, 1000, 1000},
                         {8623, 10, 10}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0,
@@ -2945,14 +2944,14 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // C Grade Item Set Box (Magic Use)
     private void use9132(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {2511, 1000, 1000},
                         {8624, 10, 10}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0,
@@ -2964,14 +2963,14 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // B Grade Item Set Box (Magic Use)
     private void use9133(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {2512, 500, 500},
                         {8625, 7, 7}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0,
@@ -2983,14 +2982,14 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // A Grade Item Set Box (Magic Use)
     private void use9134(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {2513, 300, 300},
                         {8626, 7, 7}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0,
@@ -3002,14 +3001,14 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // A, S Grade Item Set Box (Magic Use
     private void use9135(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {2513, 300, 300},
                         {8627, 5, 5}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0,
@@ -3021,13 +3020,13 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // Pirate's Booty
     private void use9144(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {9143, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         50.0
@@ -3038,13 +3037,13 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // White Seed of Evil Lump
     private void use10205(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {9597, 2, 2}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0
@@ -3055,13 +3054,13 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // Black Seed of Evil Lump
     private void use10206(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {9598, 2, 2}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0
@@ -3072,7 +3071,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // 1st Place Treasure Sack
     private void use10254(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {6373, 1, 1},
@@ -3097,7 +3096,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
                         {5914, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         1.19,
@@ -3127,13 +3126,13 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // My teleport Spellbook 1-Sheet Pack
     private void use13079(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {13015, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0
@@ -3144,13 +3143,13 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // My teleport Scroll 30-Sheet Pack
     private void use13080(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {13016, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0
@@ -3173,18 +3172,18 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
               100.0
              };
 
-          capsulate(player, items, chances); */
+          capsulate(getPlayer, items, chances); */
     }
 
     // Agathion of Love 30-Day Pack
     private void use13083(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {13023, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0
@@ -3195,13 +3194,13 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // Pumpkin Transformation Stick 30-Day Pack
     private void use13084(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {12800, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0
@@ -3212,7 +3211,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // Kamaloka Entrance Pass 3-Sheet Pack
     private void use13085(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {13010, 5, 5},
@@ -3220,7 +3219,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
                         {13012, 5, 5}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0,
@@ -3233,13 +3232,13 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     //Kat the Cat Hat 30-Day Pack
     private void use13086(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {12782, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0
@@ -3250,13 +3249,13 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     //Feline Queen Hat 30-Day Pack
     private void use13087(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {12783, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0
@@ -3267,13 +3266,13 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     //Monster Eye Hat 30-Day Pack
     private void use13088(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {12786, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0
@@ -3284,13 +3283,13 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     //Brown Bear Hat 30-Day Pack
     private void use13089(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {12787, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0
@@ -3301,13 +3300,13 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     //Fungus Hat 30-Day Pack
     private void use13090(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {12788, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0
@@ -3318,13 +3317,13 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     //Skull Hat 30-Day Pack
     private void use13091(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {12789, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0
@@ -3335,13 +3334,13 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     //Ornithomimus Hat 30-Day Pack
     private void use13092(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {12790, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0
@@ -3352,13 +3351,13 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     //Feline King Hat 30-Day Pack
     private void use13093(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {12791, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0
@@ -3369,13 +3368,13 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     //Kai the Cat Hat 30-Day Pack
     private void use13094(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {12792, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0
@@ -3386,14 +3385,14 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     //OX Stick 30-Day Pack
     private void use13095(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {12793, 1, 1},
                         {12794, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0,
@@ -3405,7 +3404,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     //Rock-Paper-Scissors Stick 30-Day Pack
     private void use13096(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {12795, 1, 1},
@@ -3413,7 +3412,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
                         {12797, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0,
@@ -3426,13 +3425,13 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     //Purple Maned Horse Bracelet Pack
     private void use13097(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {13022, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0
@@ -3443,13 +3442,13 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     //Color Name 3-Sheet Pack
     private void use13098(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {13021, 3, 3}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         100.0
@@ -6286,7 +6285,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // Transformation Scroll Box by (CosMOsiS)
     private void use15437(Player player, boolean ctrl) { /* by CosMOsiS*/
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {10131, 1, 1},
@@ -6294,7 +6293,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
                         {10133, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         33.00,
@@ -6368,7 +6367,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // Halloween Toy Chest by (CosMOsiS)
     private void use15434(Player player, boolean ctrl) { /* by CosMOsiS*/
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {15443, 1, 1},
@@ -6378,7 +6377,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
                         {15447, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         20.00,
@@ -6393,7 +6392,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // Shiny Halloween Toy Chest by (CosMOsiS)
     private void use15435(Player player, boolean ctrl) { /* by CosMOsiS*/
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {15450, 1, 1},
@@ -6403,7 +6402,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
                         {15449, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         20.00,
@@ -6475,7 +6474,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     private void use17082(Player player, boolean ctrl) {
 
-        //addItem(player, 10296, 1);
+        //addItem(getPlayer, 10296, 1);
     }
 
     private void use17066(Player player, boolean ctrl) {
@@ -6554,7 +6553,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 //
         };
 //
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         ////chances
                         100.0
@@ -6663,14 +6662,14 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
     private void use14768(Player player, boolean ctrl) {
 
         addItem(player, 14770, 1, "use14768");
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {14774, 1, 1}
 
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         80.0
@@ -6682,7 +6681,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     private void use14767(Player player, boolean ctrl) {
 
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {14769, 1, 1},
@@ -6692,7 +6691,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         50.0,
@@ -6707,7 +6706,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     private void use14766(Player player, boolean ctrl) {
 
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {14769, 5, 5},
@@ -6719,7 +6718,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         10.0,
@@ -6744,7 +6743,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     private void use14729(Player player, boolean ctrl) {
 
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {14733, 1, 1},
@@ -6757,7 +6756,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         35.1,
@@ -7236,14 +7235,14 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     private void use20097(Player player, boolean ctrl) {
 
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {20098, 1, 1},
                         {20099, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         20.00,
@@ -7729,14 +7728,14 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     private void use20629(Player player, boolean ctrl) {
 
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {20590, 1, 1},
                         {9207, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         40.00,
@@ -7809,7 +7808,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     private void use14638(Player player, boolean ctrl) {
 
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {57, 697000, 697000},
@@ -7819,7 +7818,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
                         {9629, 2, 2},
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         60.00,
@@ -7834,7 +7833,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     private void use14637(Player player, boolean ctrl) {
 
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {57, 626000, 626000},
@@ -7842,7 +7841,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
                         {9629, 4, 4}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         70.00,
@@ -7855,7 +7854,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     private void use14636(Player player, boolean ctrl) {
 
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {57, 605000, 605000},
@@ -7863,7 +7862,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
                         {9630, 3, 3}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         80.00,
@@ -7876,7 +7875,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     private void use14635(Player player, boolean ctrl) {
 
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {57, 583000, 583000},
@@ -7884,7 +7883,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
                         {9628, 2, 2}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         90.00,
@@ -8127,7 +8126,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     private void use14677(Player player, boolean ctrl) {
 
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {14700, 3, 3},
@@ -8149,7 +8148,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
                         {14681, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         40.0,
@@ -8176,7 +8175,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     private void use14676(Player player, boolean ctrl) {
 
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {14700, 3, 3},
@@ -8198,7 +8197,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
                         {14681, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         40.0,
@@ -8460,7 +8459,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     private void use20277(Player player, boolean ctrl) {
 
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {20268, 1, 1},
@@ -8468,7 +8467,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
                         {20267, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         33.00,
@@ -8481,7 +8480,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     private void use20271(Player player, boolean ctrl) {
 
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {20255, 1, 1},
@@ -8498,7 +8497,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
                         {20270, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         8.34,
@@ -8522,7 +8521,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
     private void use15278(Player player, boolean ctrl) {
 
         addItem(player, 14739, 1, "Extractable");
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {9156, 1, 1},
@@ -8531,7 +8530,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
                         {14706, 1, 1},
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         5.0,
@@ -9242,7 +9241,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
     }
 
     private void use20739(Player player, boolean ctrl) { /* by 4ipolino*/
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {20364, 1, 1},
@@ -9250,7 +9249,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
                         {20366, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         33.00,
@@ -9319,14 +9318,14 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     private void use14530(Player player, boolean ctrl) {
 
-        //addItem(player, 13300, 3);
+        //addItem(getPlayer, 13300, 3);
         addItem(player, 13383, 3);
         addItem(player, 13308, 1);
         addItem(player, 13316, 1);
     }
 
     private void use13799(Player player, boolean ctrl) { /* by 4ipolino*/
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {9628, 1, 2},
@@ -9334,7 +9333,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
                         {9630, 1, 2}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         60.0,
@@ -9347,7 +9346,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
     }
 
     private void use13428(Player player, boolean ctrl) { /* by 4ipolino*/
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {10260, 1, 1},
@@ -9363,7 +9362,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
                         {10270, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         9.0,
@@ -9384,7 +9383,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
     }
 
     private void use13427(Player player, boolean ctrl) { /* by 4ipolino*/
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {10260, 2, 2},
@@ -9400,7 +9399,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
                         {10270, 2, 2}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         9.0,
@@ -9421,7 +9420,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
     }
 
     private void use13426(Player player, boolean ctrl) { /* by 4ipolino*/
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {9546, 1, 1},
@@ -9432,7 +9431,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
                         {9551, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         16.6,
@@ -9448,7 +9447,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
     }
 
     private void use13425(Player player, boolean ctrl) { /* by 4ipolino*/
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {7122, 1, 1},
@@ -9467,7 +9466,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
                         {7135, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         7.14,
@@ -9491,7 +9490,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
     }
 
     private void use13424(Player player, boolean ctrl) { /* by 4ipolino*/
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {10260, 3, 3},
@@ -9507,7 +9506,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
                         {10270, 3, 3}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         9.0,
@@ -9527,7 +9526,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
     }
 
     private void use13423(Player player, boolean ctrl) { /* by 4ipolino*/
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {9546, 2, 2},
@@ -9538,7 +9537,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
                         {9551, 2, 2}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         2.16,
@@ -9553,7 +9552,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
     }
 
     private void use13422(Player player, boolean ctrl) { /* by 4ipolino*/
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {7122, 2, 2},
@@ -9572,7 +9571,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
                         {7135, 2, 2}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         7.14,
@@ -9674,7 +9673,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     private void use13368(Player player, boolean ctrl) {
 
-        //addItem(player, 13300, 1);
+        //addItem(getPlayer, 13300, 1);
     }
 
     private void use13367(Player player, boolean ctrl) {
@@ -9805,7 +9804,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     private void use13343(Player player, boolean ctrl) {
 
-        //addItem(player, 13300, 3);
+        //addItem(getPlayer, 13300, 3);
     }
 
     private void use13342(Player player, boolean ctrl) {
@@ -10238,7 +10237,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
         addItem(player, 13421, 10);
         addItem(player, 22000, 1);
         addItem(player, 22003, 1);
-        //addItem(player, 10649, 3);
+        //addItem(getPlayer, 10649, 3);
     }
 
     private void use20397(Player player, boolean ctrl) {
@@ -10731,7 +10730,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     private void use13279(Player player, boolean ctrl) {
 
-        //addItem(player, 10649, 1);
+        //addItem(getPlayer, 10649, 1);
     }
 
     private void use13276(Player player, boolean ctrl) {
@@ -10845,7 +10844,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     private void use13106(Player player, boolean ctrl) {
 
-        //addItem(player, 10649, 3);
+        //addItem(getPlayer, 10649, 3);
     }
 
     private void use13105(Player player, boolean ctrl) {
@@ -10867,7 +10866,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     //6th Place Treasure Sack
     private void use10259(Player player, boolean ctrl) { /* by 4ipolino*/
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {10260, 3, 3},
@@ -10883,7 +10882,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
                         {10270, 3, 3}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         9.00,
@@ -10911,7 +10910,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     //4th Place Treasure Sack
     private void use10257(Player player, boolean ctrl) { /* by 4ipolino*/
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {951, 1, 1},
@@ -10923,7 +10922,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
                         {10139, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         3.01,
@@ -10940,7 +10939,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // 3rd Place Treasure Sack
     private void use10256(Player player, boolean ctrl) { /* by 4ipolino*/
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {729, 1, 1},
@@ -10954,7 +10953,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
                         {3936, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         0.51,
@@ -10973,7 +10972,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // 2nd Place Treasure Sack
     private void use10255(Player player, boolean ctrl) {
-        int items[][] = new int[][]
+        int[][] items = new int[][]
                 {
                         // itemId, min, max
                         {9625, 1, 1},
@@ -10989,7 +10988,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
                         {960, 1, 1}
                 };
 
-        double chances[] = new double[]
+        double[] chances = new double[]
                 {
                         // chance
                         2.20,

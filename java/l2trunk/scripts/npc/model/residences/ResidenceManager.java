@@ -250,10 +250,10 @@ public abstract class ResidenceManager extends MerchantInstance {
                         support_list.append("<br>");
                 }
                 html.replace("%magicList%", support_list.toString());
-                html.replace("%mp%", String.valueOf(Math.round(getCurrentMp())));
+                html.replace("%mp%", Math.round(getCurrentMp()));
                 html.replace("%all%", Config.ALT_CH_ALL_BUFFS ? "<a action=\"bypass -h npc_%objectId%_support all\">Give all</a><br1><a action=\"bypass -h npc_%objectId%_support allW\">Give warrior</a><br1><a action=\"bypass -h npc_%objectId%_support allM\">Give mystic</a><br>" : "");
                 sendHtmlMessage(player, html);
-            } else if (val.equalsIgnoreCase("back"))
+            } else if ("back".equalsIgnoreCase(val))
                 showChatWindow(player, 0);
             else {
                 NpcHtmlMessage html = new NpcHtmlMessage(player, this);
@@ -282,11 +282,11 @@ public abstract class ResidenceManager extends MerchantInstance {
                 if (st.countTokens() >= 1) {
                     val = st.nextToken();
                     boolean success = true;
-                    if (val.equalsIgnoreCase("hp"))
+                    if ("hp".equalsIgnoreCase(val))
                         success = getResidence().updateFunctions(ResidenceFunction.RESTORE_HP, Integer.valueOf(st.nextToken()));
-                    else if (val.equalsIgnoreCase("mp"))
+                    else if ("mp".equalsIgnoreCase(val))
                         success = getResidence().updateFunctions(ResidenceFunction.RESTORE_MP, Integer.valueOf(st.nextToken()));
-                    else if (val.equalsIgnoreCase("exp"))
+                    else if ("exp".equalsIgnoreCase(val))
                         success = getResidence().updateFunctions(ResidenceFunction.RESTORE_EXP, Integer.valueOf(st.nextToken()));
                     if (!success)
                         player.sendPacket(SystemMsg.THERE_IS_NOT_ENOUGH_ADENA_IN_THE_CLAN_HALL_WAREHOUSE);
@@ -310,11 +310,11 @@ public abstract class ResidenceManager extends MerchantInstance {
                         broadcastDecoInfo();
                 }
                 showManageOther(player);
-            } else if (val.equalsIgnoreCase("deco")) {
+            } else if ("deco".equalsIgnoreCase(val)) {
                 if (st.countTokens() >= 1) {
                     val = st.nextToken();
                     boolean success = true;
-                    if (val.equalsIgnoreCase("platform"))
+                    if ("platform".equalsIgnoreCase(val))
                         success = getResidence().updateFunctions(ResidenceFunction.PLATFORM, Integer.valueOf(st.nextToken()));
                     else if (val.equalsIgnoreCase("curtain"))
                         success = getResidence().updateFunctions(ResidenceFunction.CURTAIN, Integer.valueOf(st.nextToken()));
@@ -376,7 +376,7 @@ public abstract class ResidenceManager extends MerchantInstance {
         if (skill.getMpConsume() > getCurrentMp()) {
             NpcHtmlMessage html = new NpcHtmlMessage(player, this);
             html.setFile("residence/NeedCoolTime.htm");
-            html.replace("%mp%", String.valueOf(Math.round(getCurrentMp())));
+            html.replace("%mp%", Math.round(getCurrentMp()));
             sendHtmlMessage(player, html);
             return false;
         }
@@ -393,7 +393,7 @@ public abstract class ResidenceManager extends MerchantInstance {
         boolean proc = type == ResidenceFunction.RESTORE_HP || type == ResidenceFunction.RESTORE_MP || type == ResidenceFunction.RESTORE_EXP;
         if (getResidence().isFunctionActive(type)) {
             html.replace("%" + replace1 + "%", getResidence().getFunction(type).getLevel() + (proc ? "%" : ""));
-            html.replace("%" + replace1 + "Price%", String.valueOf(getResidence().getFunction(type).getLease()));
+            html.replace("%" + replace1 + "Price%", getResidence().getFunction(type).getLease());
             html.replace("%" + replace1 + "Date%", TimeUtils.toSimpleFormat(getResidence().getFunction(type).getEndTimeInMillis()));
         } else {
             html.replace("%" + replace1 + "%", "0");

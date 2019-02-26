@@ -5,7 +5,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
 public final class _636_TruthBeyond extends Quest {
-    //Items
+    //items
     private static final int MARK = 8067;
     private static final int VISITORSMARK = 8064;
     //Npc
@@ -23,12 +23,12 @@ public final class _636_TruthBeyond extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("priest_eliyah_q0636_05.htm".equals(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("falsepriest_flauron_q0636_02.htm".equals(event)) {
             st.playSound(SOUND_FINISH);
             st.giveItems(VISITORSMARK, 1);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
         return event;
     }
@@ -44,7 +44,7 @@ public final class _636_TruthBeyond extends Quest {
                     htmltext = "priest_eliyah_q0636_01.htm";
                 else {
                     htmltext = "priest_eliyah_q0636_03.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else
                 htmltext = "priest_eliyah_q0636_06.htm";

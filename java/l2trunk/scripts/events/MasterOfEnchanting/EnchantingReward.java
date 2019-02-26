@@ -1,6 +1,5 @@
 package l2trunk.scripts.events.MasterOfEnchanting;
 
-import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.items.Inventory;
 import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.network.serverpackets.SystemMessage;
@@ -8,7 +7,6 @@ import l2trunk.gameserver.scripts.Functions;
 
 import static l2trunk.gameserver.utils.ItemFunctions.addItem;
 import static l2trunk.gameserver.utils.ItemFunctions.removeItem;
-
 
 public final class EnchantingReward extends Functions {
     private static final int MASTER_YOGI_STAFF = 13539;
@@ -26,8 +24,8 @@ public final class EnchantingReward extends Functions {
     private static int[] SOUL_CRYSTALL = new int[]{9570, 9571, 9572};
 
     public void buy_staff() {
-        if (!player.haveItem(MASTER_YOGI_STAFF) && player.haveAdena( STAFF_PRICE)) {
-            player.reduceAdena( STAFF_PRICE, "MasterOfEnchanting");
+        if (!player.haveItem(MASTER_YOGI_STAFF) && player.haveAdena(STAFF_PRICE)) {
+            player.reduceAdena(STAFF_PRICE, "MasterOfEnchanting");
             addItem(player, MASTER_YOGI_STAFF, 1, "Yogi");
             show("scripts/events/MasterOfEnchanting/32599-staffbuyed.htm", player);
         } else {
@@ -36,24 +34,24 @@ public final class EnchantingReward extends Functions {
     }
 
     public void buy_scroll_lim() {
-        long _reuse_time = TIMED_SCROLL_HOURS * 60 * 60 * 1000;
-        long _curr_time = System.currentTimeMillis();
+        long reuseTime = TIMED_SCROLL_HOURS * 60 * 60 * 1000;
+        long currTime = System.currentTimeMillis();
         long _remaining_time;
         if (player.isVarSet("MasterOfEnch"))
-            _remaining_time = _curr_time - player.getVarLong("MasterOfEnch");
+            _remaining_time = currTime - player.getVarLong("MasterOfEnch");
         else
-            _remaining_time = _reuse_time;
-        if (_remaining_time >= _reuse_time) {
+            _remaining_time = reuseTime;
+        if (_remaining_time >= reuseTime) {
             if (player.haveAdena(TIMED_SCROLL_PRICE)) {
                 player.reduceAdena(TIMED_SCROLL_PRICE, "MasterOfEnchanting");
-                addItem(player, MASTER_YOGI_SCROLL, 1);
-                player.setVar("MasterOfEnch", _curr_time);
+                addItem(player, MASTER_YOGI_SCROLL);
+                player.setVar("MasterOfEnch", currTime);
                 show("scripts/events/MasterOfEnchanting/32599-scroll24.htm", player);
             } else
                 show("scripts/events/MasterOfEnchanting/32599-s24-no.htm", player);
         } else {
-            int hours = (int) (_reuse_time - _remaining_time) / 3600000;
-            int minutes = (int) (_reuse_time - _remaining_time) % 3600000 / 60000;
+            int hours = (int) (reuseTime - _remaining_time) / 3600000;
+            int minutes = (int) (reuseTime - _remaining_time) % 3600000 / 60000;
             if (hours > 0) {
                 SystemMessage sm = new SystemMessage(SystemMessage.THERE_ARE_S1_HOURSS_AND_S2_MINUTES_REMAINING_UNTIL_THE_TIME_WHEN_THE_ITEM_CAN_BE_PURCHASED);
                 sm.addNumber(hours);
@@ -68,7 +66,7 @@ public final class EnchantingReward extends Functions {
             } else if (player.getAdena() >= TIMED_SCROLL_PRICE) {
                 player.reduceAdena(TIMED_SCROLL_PRICE, "MasterOfEnchanting");
                 addItem(player, MASTER_YOGI_SCROLL, 1);
-                player.setVar("MasterOfEnch", _curr_time);
+                player.setVar("MasterOfEnch", currTime);
                 show("scripts/events/MasterOfEnchanting/32599-scroll24.htm", player);
             } else
                 show("scripts/events/MasterOfEnchanting/32599-s24-no.htm", player);
@@ -77,7 +75,7 @@ public final class EnchantingReward extends Functions {
 
     public void buy_scroll_1() {
         if (player.haveAdena(ONE_SCROLL_PRICE)) {
-            player.reduceAdena( ONE_SCROLL_PRICE, "MasterOfEnchanting");
+            player.reduceAdena(ONE_SCROLL_PRICE, "MasterOfEnchanting");
             addItem(player, MASTER_YOGI_SCROLL, 1);
             show("scripts/events/MasterOfEnchanting/32599-scroll-ok.htm", player);
         } else {
@@ -86,7 +84,7 @@ public final class EnchantingReward extends Functions {
     }
 
     public void buy_scroll_10() {
-        if (player.haveAdena( TEN_SCROLLS_PRICE)) {
+        if (player.haveAdena(TEN_SCROLLS_PRICE)) {
             player.reduceAdena(TEN_SCROLLS_PRICE, "MasterOfEnchanting");
             addItem(player, MASTER_YOGI_SCROLL, 10);
             show("scripts/events/MasterOfEnchanting/32599-scroll-ok.htm", player);

@@ -83,8 +83,8 @@ public class RaidBossInstance extends MonsterInstance {
                 player.updateRaidKills();
             }
 
-            if (player.getClan() != null && player.getClan().getLeader().isOnline() && player.getClan().getLeader().player().getQuestState(_508_TheClansReputation.class) != null) {
-                    QuestState st = player.getClan().getLeader().player().getQuestState(_508_TheClansReputation.class);
+            if (player.getClan() != null && player.getClan().getLeader().isOnline() && player.getClan().getLeader().getPlayer().getQuestState(_508_TheClansReputation.class) != null) {
+                    QuestState st = player.getClan().getLeader().getPlayer().getQuestState(_508_TheClansReputation.class);
                     st.quest.onKill(this, st);
                 }
         }

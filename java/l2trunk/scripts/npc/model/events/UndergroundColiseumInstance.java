@@ -89,9 +89,9 @@ public class UndergroundColiseumInstance extends NpcInstance {
             }
             /*
              * TODO раскомментировать
-             * if(player.getParty().size() < 7)
+             * if(getPlayer.getParty().size() < 7)
              * {
-             * showChatWindow(player, 3);
+             * showChatWindow(getPlayer, 3);
              * return;
              * }
              */
@@ -163,7 +163,7 @@ public class UndergroundColiseumInstance extends NpcInstance {
              * if(UnderGroundColliseumManager.INSTANCE().getColiseumByLevelLimit(getMaxLevel()).getPreviusWinners() != null)
              * {
              * filename = "Coliseum/"+ 7 + "htm";
-             * html = new NpcHtmlMessage(player, this, filename, 7);
+             * html = new NpcHtmlMessage(getPlayer, this, filename, 7);
              * html.replace("winner", UnderGroundColliseumManager.INSTANCE().getColiseumByLevelLimit(getMaxLevel()).getPreviusWinners().getLeader().name());
              * }
              * else

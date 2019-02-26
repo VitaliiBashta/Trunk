@@ -1,5 +1,6 @@
 package l2trunk.scripts.quests;
 
+import l2trunk.gameserver.model.base.ClassId;
 import l2trunk.gameserver.utils.Location;
 
 import java.util.List;
@@ -9,18 +10,17 @@ public final class _086_SagaOfTheHierophant extends SagasSuperclass {
         super(false);
 
         NPC = List.of(30191, 31626, 31588, 31280, 31591, 31646, 31648, 31652, 31654, 31655, 31659, 31280);
-        Items = List.of(7080, 7523, 7081, 7501, 7284, 7315, 7346, 7377, 7408, 7439, 7089, 0);
-        Mob = List.of(27269, 27235, 27275);
-        classid = 98;
-        prevclass = 0x11;
+        items = List.of(7080, 7523, 7081, 7501, 7284, 7315, 7346, 7377, 7408, 7439, 7089, 0);
+        mob = List.of(27269, 27235, 27275);
+        classid = ClassId.hierophant;
 
         locs = List.of(
-                new Location(161719, -92823, -1893),
-                new Location(124355, 82155, -2803),
-                new Location(124376, 82127, -2796));
+                Location.of(161719, -92823, -1893),
+                Location.of(124355, 82155, -2803),
+                Location.of(124376, 82127, -2796));
 
 
-        Text = List.of(
+        text = List.of(
                 "PLAYERNAME! Pursued to here! However, I jumped out of the Banshouren boundaries! You look at the giant as the sign of power!",
                 "... Oh ... good! So it was ... let's begin!",
                 "I do not have the patience ..! I have been a giant force ...! Cough chatter ah ah ah!",

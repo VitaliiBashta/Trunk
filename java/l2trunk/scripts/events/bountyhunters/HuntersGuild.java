@@ -99,7 +99,7 @@ public final class HuntersGuild extends Functions implements ScriptFile, IVoiced
         int mobcount = target.level + Rnd.get(25, 50);
         player.setVar("bhMonstersId", target.getNpcId());
         player.setVar("bhMonstersNeeded", mobcount);
-        player.setVar("bhMonstersKilled", 0);
+        player.unsetVar("bhMonstersKilled");
 
         int fails = player.getVarInt("bhfails") * 5;
         int success = player.getVarInt("bhsuccess") * 5;

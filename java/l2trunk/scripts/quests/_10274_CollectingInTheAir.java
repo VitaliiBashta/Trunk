@@ -26,7 +26,7 @@ public final class _10274_CollectingInTheAir extends Quest {
         if (event.equalsIgnoreCase("32557-03.htm")) {
             st.setCond(1);
             st.giveItems(StarStoneExtractionScroll, 8);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         }
         return event;
@@ -48,7 +48,7 @@ public final class _10274_CollectingInTheAir extends Quest {
             st.takeItems(List.of(ExtractedCoarseRedStarStone, ExtractedCoarseBlueStarStone, ExtractedCoarseGreenStarStone));
             st.giveItems(ExpertTextStarStoneExtractionSkillLevel1);
             st.addExpAndSp(25160, 2525);
-            st.exitCurrentQuest(false);
+            st.finish();
             st.playSound(SOUND_FINISH);
         } else
             htmltext = "32557-04.htm";

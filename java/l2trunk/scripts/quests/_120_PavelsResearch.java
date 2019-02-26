@@ -31,116 +31,107 @@ public final class _120_PavelsResearch extends Quest {
 
         addQuestItem(Report, Report2, Enigma, Flower, Heart, Necklace);
 
-        addTalkId(BookShelf);
-        addTalkId(Stones);
-        addTalkId(Weather1);
-        addTalkId(Weather2);
-        addTalkId(Weather3);
-        addTalkId(Wendy);
-        addTalkId(Yumi);
+        addTalkId(BookShelf,Stones,Weather1,Weather2,Weather3,Wendy,Yumi);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("32041-03.htm")) {
+        if ("32041-03.htm".equalsIgnoreCase(event)) {
             st.setCond(3);
             st.playSound("ItemSound.quest_middle");
-        } else if (event.equalsIgnoreCase("32041-04.htm")) {
+        } else if ("32041-04.htm".equalsIgnoreCase(event)) {
             st.setCond(4);
             st.playSound("ItemSound.quest_middle");
-        } else if (event.equalsIgnoreCase("32041-12.htm")) {
+        } else if ("32041-12.htm".equalsIgnoreCase(event)) {
             st.setCond(8);
             st.playSound("ItemSound.quest_middle");
-        } else if (event.equalsIgnoreCase("32041-16.htm")) {
+        } else if ("32041-16.htm".equalsIgnoreCase(event)) {
             st.setCond(16);
-            st.giveItems(Enigma, 1);
+            st.giveItems(Enigma);
             st.playSound("ItemSound.quest_middle");
-        } else if (event.equalsIgnoreCase("32041-22.htm")) {
+        } else if ("32041-22.htm".equalsIgnoreCase(event)) {
             st.setCond(17);
-            st.takeItems(Enigma, 1);
+            st.takeItems(Enigma);
             st.playSound("ItemSound.quest_middle");
-        } else if (event.equalsIgnoreCase("32041-32.htm")) {
+        } else if ("32041-32.htm".equalsIgnoreCase(event)) {
 
             st.takeItems(Necklace, 1);
-            st.giveItems(EarPhoenix, 1);
+            st.giveItems(EarPhoenix);
             st.giveItems(ADENA_ID, 783720);
             st.addExpAndSp(3447315, 272615);
-            st.exitCurrentQuest(false);
+            st.finish();
             st.playSound(SOUND_FINISH);
-        } else if (event.equalsIgnoreCase("32042-06.htm")) {
+        } else if ("32042-06.htm".equalsIgnoreCase(event)) {
             if (st.getCond() == 10)
-                if (st.getInt("talk") + st.getInt("talk1") == 2) {
+                if (st.isSet("talk") &&  st.isSet("talk1")) {
                     st.setCond(11);
-                    st.set("talk", 0);
-                    st.set("talk1", 0);
+                    st.unset("talk");
+                    st.unset("talk1");
                     st.playSound("ItemSound.quest_middle");
                 } else
                     htmltext = "32042-03.htm";
-        } else if (event.equalsIgnoreCase("32042-10.htm")) {
-            if (st.getInt("talk") + st.getInt("talk1") + st.getInt("talk2") == 3)
+        } else if ("32042-10.htm".equalsIgnoreCase(event)) {
+            if (st.isSet("talk") && st.isSet("talk1") && st.isSet("talk2") )
                 htmltext = "32042-14.htm";
-        } else if (event.equalsIgnoreCase("32042-11.htm")) {
-            if (st.getInt("talk") == 0)
-                st.set("talk", 1);
-        } else if (event.equalsIgnoreCase("32042-12.htm")) {
-            if (st.getInt("talk1") == 0)
-                st.set("talk1", 1);
-        } else if (event.equalsIgnoreCase("32042-13.htm")) {
-            if (st.getInt("talk2") == 0)
-                st.set("talk2", 1);
-        } else if (event.equalsIgnoreCase("32042-15.htm")) {
+        } else if ("32042-11.htm".equalsIgnoreCase(event)) {
+                st.set("talk");
+        } else if ("32042-12.htm".equalsIgnoreCase(event)) {
+                st.set("talk1");
+        } else if ("32042-13.htm".equalsIgnoreCase(event)) {
+                st.set("talk2");
+        } else if ("32042-15.htm".equalsIgnoreCase(event)) {
             st.setCond(12);
-            st.set("talk", 0);
-            st.set("talk1", 0);
-            st.set("talk2", 0);
+            st.unset("talk");
+            st.unset("talk1");
+            st.unset("talk2");
             st.playSound("ItemSound.quest_middle");
-        } else if (event.equalsIgnoreCase("32043-06.htm")) {
+        } else if ("32043-06.htm".equalsIgnoreCase(event)) {
             if (st.getCond() == 17)
-                if (st.getInt("talk") + st.getInt("talk1") == 2) {
+                if (st.isSet("talk") && st.isSet("talk1") ) {
                     st.setCond(18);
-                    st.set("talk", 0);
-                    st.set("talk1", 0);
+                    st.unset("talk");
+                    st.unset("talk1");
                     st.playSound("ItemSound.quest_middle");
                 } else
                     htmltext = "32043-03.htm";
-        } else if (event.equalsIgnoreCase("32043-15.htm")) {
-            if (st.getInt("talk") + st.getInt("talk1") == 2)
+        } else if ("32043-15.htm".equalsIgnoreCase(event)) {
+            if (st.isSet("talk") && st.isSet("talk1"))
                 htmltext = "32043-29.htm";
-        } else if (event.equalsIgnoreCase("32043-18.htm")) {
-            if (st.getInt("talk") == 1)
+        } else if ("32043-18.htm".equalsIgnoreCase(event)) {
+            if (st.isSet("talk") )
                 htmltext = "32043-21.htm";
-        } else if (event.equalsIgnoreCase("32043-20.htm")) {
-            st.set("talk", 1);
+        } else if ("32043-20.htm".equalsIgnoreCase(event)) {
+            st.set("talk");
             st.playSound("AmbSound.ed_drone_02");
-        } else if (event.equalsIgnoreCase("32043-28.htm"))
-            st.set("talk1", 1);
-        else if (event.equalsIgnoreCase("32043-30.htm")) {
+        } else if ("32043-28.htm".equalsIgnoreCase(event))
+            st.set("talk1");
+        else if ("32043-30.htm".equalsIgnoreCase(event)) {
             st.setCond(19);
-            st.set("talk", 0);
-            st.set("talk1", 0);
-        } else if (event.equalsIgnoreCase("32044-06.htm")) {
+            st.unset("talk");
+            st.unset("talk1");
+        } else if ("32044-06.htm".equalsIgnoreCase(event)) {
             if (st.getCond() == 20)
-                if (st.getInt("talk") + st.getInt("talk1") == 2) {
+                if (st.isSet("talk") && st.isSet("talk1")) {
                     st.setCond(21);
-                    st.set("talk", 0);
-                    st.set("talk1", 0);
+                    st.unset("talk");
+                    st.unset("talk1");
                     st.playSound("ItemSound.quest_middle");
                 } else
                     htmltext = "32044-03.htm";
-        } else if (event.equalsIgnoreCase("32044-08.htm")) {
-            if (st.getInt("talk") + st.getInt("talk1") == 2)
+        } else if ("32044-08.htm".equalsIgnoreCase(event)) {
+            if (st.isSet("talk") && st.isSet("talk1"))
                 htmltext = "32044-11.htm";
-        } else if (event.equalsIgnoreCase("32044-09.htm")) {
-            if (st.getInt("talk") == 0)
-                st.set("talk", 1);
-        } else if (event.equalsIgnoreCase("32044-10.htm")) {
-            if (st.getInt("talk1") == 0)
-                st.set("talk1", 1);
+        } else if ("32044-09.htm".equalsIgnoreCase(event)) {
+            if (!st.isSet("talk"))
+                st.set("talk");
+        } else if ("32044-10.htm".equalsIgnoreCase(event)) {
+            if (!st.isSet("talk1"))
+                st.set("talk1");
         } else if ("32044-17.htm".equalsIgnoreCase(event)) {
             st.setCond(22);
-            st.set("talk", 0);
-            st.set("talk1", 0);
+            st.unset("talk");
+            st.unset("talk1");
             st.playSound("ItemSound.quest_middle");
         } else if ("32045-02.htm".equalsIgnoreCase(event)) {
             st.setCond(15);
@@ -149,75 +140,75 @@ public final class _120_PavelsResearch extends Quest {
             Player player = st.player;
             if (player != null)
                 npc.broadcastPacket(new MagicSkillUse(npc, player, 5073, 5, 1500, 0));
-        } else if (event.equalsIgnoreCase("32046-04.htm") || event.equalsIgnoreCase("32046-05.htm"))
-            st.exitCurrentQuest(true);
-        else if (event.equalsIgnoreCase("32046-06.htm")) {
+        } else if ("32046-04.htm".equalsIgnoreCase(event) || "32046-05.htm".equalsIgnoreCase(event))
+            st.exitCurrentQuest();
+        else if ("32046-06.htm".equalsIgnoreCase(event)) {
             if (st.player.getLevel() >= 50) {
                 st.playSound("ItemSound.quest_accept");
                 st.setCond(1);
-                st.setState(STARTED);
+                st.start();
             } else {
                 htmltext = "32046-00.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
-        } else if (event.equalsIgnoreCase("32046-08.htm")) {
+        } else if ("32046-08.htm".equalsIgnoreCase(event)) {
             st.setCond(2);
             st.playSound("ItemSound.quest_middle");
-        } else if (event.equalsIgnoreCase("32046-12.htm")) {
+        } else if ("32046-12.htm".equalsIgnoreCase(event)) {
             st.setCond(6);
             st.playSound("ItemSound.quest_middle");
-            st.giveItems(Flower, 1);
-        } else if (event.equalsIgnoreCase("32046-22.htm")) {
+            st.giveItems(Flower);
+        } else if ("32046-22.htm".equalsIgnoreCase(event)) {
             st.setCond(10);
             st.playSound("ItemSound.quest_middle");
-        } else if (event.equalsIgnoreCase("32046-29.htm")) {
+        } else if ("32046-29.htm".equalsIgnoreCase(event)) {
             st.setCond(13);
             st.playSound("ItemSound.quest_middle");
-        } else if (event.equalsIgnoreCase("32046-35.htm")) {
+        } else if ("32046-35.htm".equalsIgnoreCase(event)) {
             st.setCond(20);
             st.playSound("ItemSound.quest_middle");
-        } else if (event.equalsIgnoreCase("32046-38.htm")) {
+        } else if ("32046-38.htm".equalsIgnoreCase(event)) {
             st.setCond(23);
             st.playSound("ItemSound.quest_middle");
-            st.giveItems(Heart, 1);
-        } else if (event.equalsIgnoreCase("32047-06.htm")) {
+            st.giveItems(Heart);
+        } else if ("32047-06.htm".equalsIgnoreCase(event)) {
             st.setCond(5);
             st.playSound("ItemSound.quest_middle");
-        } else if (event.equalsIgnoreCase("32047-10.htm")) {
+        } else if ("32047-10.htm".equalsIgnoreCase(event)) {
             st.setCond(7);
             st.playSound("ItemSound.quest_middle");
             st.takeItems(Flower, 1);
-        } else if (event.equalsIgnoreCase("32047-15.htm")) {
+        } else if ("32047-15.htm".equalsIgnoreCase(event)) {
             st.setCond(9);
             st.playSound("ItemSound.quest_middle");
-        } else if (event.equalsIgnoreCase("32047-18.htm")) {
+        } else if ("32047-18.htm".equalsIgnoreCase(event)) {
             st.setCond(14);
             st.playSound("ItemSound.quest_middle");
-        } else if (event.equalsIgnoreCase("32047-26.htm")) {
+        } else if ("32047-26.htm".equalsIgnoreCase(event)) {
             st.setCond(24);
             st.playSound("ItemSound.quest_middle");
             st.takeItems(Heart, 1);
-        } else if (event.equalsIgnoreCase("32047-32.htm")) {
+        } else if ("32047-32.htm".equalsIgnoreCase(event)) {
             st.setCond(25);
             st.playSound("ItemSound.quest_middle");
             st.giveItems(Necklace);
-        } else if (event.equalsIgnoreCase("w1_1")) {
-            st.set("talk", 1);
+        } else if ("w1_1".equalsIgnoreCase(event)) {
+            st.set("talk");
             htmltext = "32042-04.htm";
-        } else if (event.equalsIgnoreCase("w1_2")) {
-            st.set("talk1", 1);
+        } else if ("w1_2".equalsIgnoreCase(event)) {
+            st.set("talk1");
             htmltext = "32042-05.htm";
-        } else if (event.equalsIgnoreCase("w2_1")) {
-            st.set("talk", 1);
+        } else if ("w2_1".equalsIgnoreCase(event)) {
+            st.set("talk");
             htmltext = "32043-04.htm";
-        } else if (event.equalsIgnoreCase("w2_2")) {
-            st.set("talk1", 1);
+        } else if ("w2_2".equalsIgnoreCase(event)) {
+            st.set("talk1");
             htmltext = "32043-05.htm";
-        } else if (event.equalsIgnoreCase("w3_1")) {
-            st.set("talk", 1);
+        } else if ("w3_1".equalsIgnoreCase(event)) {
+            st.set("talk");
             htmltext = "32044-04.htm";
-        } else if (event.equalsIgnoreCase("w3_2")) {
-            st.set("talk1", 1);
+        } else if ("w3_2".equalsIgnoreCase(event)) {
+            st.set("talk1");
             htmltext = "32044-05.htm";
         }
         return htmltext;
@@ -237,7 +228,7 @@ public final class _120_PavelsResearch extends Quest {
                     htmltext = "32046-01.htm";
                 else {
                     htmltext = "32046-00.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1)
                 htmltext = "32046-06.htm";
@@ -302,10 +293,10 @@ public final class _120_PavelsResearch extends Quest {
             else if (cond == 15)
                 htmltext = "32041-14.htm";
             else if (cond == 16) {
-                if (st.getQuestItemsCount(Report2) == 0)
-                    htmltext = "32041-17.htm";
-                else
+                if (st.haveQuestItem(Report2))
                     htmltext = "32041-18.htm";
+                else
+                    htmltext = "32041-17.htm";
             } else if (cond == 17)
                 htmltext = "32041-22.htm";
             else if (cond == 25)
@@ -314,7 +305,7 @@ public final class _120_PavelsResearch extends Quest {
             if (cond == 10)
                 htmltext = "32042-01.htm";
             else if (cond == 11) {
-                if (st.getInt("talk") + st.getInt("talk1") + st.getInt("talk2") == 3)
+                if (st.isSet("talk") && st.isSet("talk1") &&  st.isSet("talk2"))
                     htmltext = "32042-14.htm";
                 else
                     htmltext = "32042-06.htm";

@@ -29,11 +29,9 @@ public final class _407_PathToElvenScout extends Quest {
 
         addStartNpc(REISA);
 
-        addTalkId(MORETTI);
-        addTalkId(PIPPEN);
+        addTalkId(MORETTI,PIPPEN);
 
-        addKillId(OL_MAHUM_SENTRY);
-        addKillId(OL_MAHUM_PATROL);
+        addKillId(OL_MAHUM_SENTRY,OL_MAHUM_PATROL);
     }
 
     @Override
@@ -44,24 +42,24 @@ public final class _407_PathToElvenScout extends Quest {
                 if (st.player.getLevel() >= 18) {
                     if (st.getQuestItemsCount(REORIA_RECOMMENDATION_ID) > 0) {
                         htmltext = "master_reoria_q0407_04.htm";
-                        st.exitCurrentQuest(true);
+                        st.exitCurrentQuest();
                     } else {
                         htmltext = "master_reoria_q0407_05.htm";
                         st.giveItems(REORIA_LETTER2_ID, 1);
                         st.setCond(1);
-                        st.setState(STARTED);
+                        st.start();
                         st.playSound(SOUND_ACCEPT);
                     }
                 } else {
                     htmltext = "master_reoria_q0407_03.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (st.player.getClassId().id == 0x16) {
                 htmltext = "master_reoria_q0407_02a.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else {
                 htmltext = "master_reoria_q0407_02.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if ("30337_1".equals(event)) {
             st.takeItems(REORIA_LETTER2_ID, 1);
@@ -92,13 +90,13 @@ public final class _407_PathToElvenScout extends Quest {
                 if (st.player.getClassId().occupation() == 0) {
                     st.giveItems(REORIA_RECOMMENDATION_ID);
                     if (!st.player.isVarSet("prof1")) {
-                        st.player.setVar("prof1", 1);
+                        st.player.setVar("prof1");
                         st.addExpAndSp(228064, 16455);
                         st.giveItems(ADENA_ID, 81900);
                     }
                 }
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (npcId == MORETTI) {
             if (cond == 1)

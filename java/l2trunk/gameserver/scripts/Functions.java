@@ -132,7 +132,7 @@ public class Functions {
                 });
     }
 
-    public static void npcShoutCustomMessage(NpcInstance npc, String address, Object... replacements) {
+    public static void npcShoutCustomMessage(NpcInstance npc, String address) {
         if (npc == null)
             return;
 
@@ -147,37 +147,18 @@ public class Functions {
                     int ty = MapUtils.regionY(p);
 
                     if (tx >= rx - offset && tx <= rx + offset && ty >= ry - offset && ty <= ry + offset || npc.isInRange(p, Config.CHAT_RANGE))
-                        p.sendPacket(new NpcSay(npc, ChatType.SHOUT, new CustomMessage(address, replacements).toString()));
+                        p.sendPacket(new NpcSay(npc, ChatType.SHOUT, new CustomMessage(address).toString()));
                 });
     }
 
-    public static void npcSay(NpcInstance npc, NpcString address, ChatType type, int range, String replacements) {
+    public static void npcSay(NpcInstance npc, NpcString address, ChatType type, int range) {
         if (npc == null)
             return;
         World.getAroundPlayers(npc, range, Math.max(range / 2, 200))
                 .filter(player -> player.getReflection() == npc.getReflection())
                 .forEach(player ->
-                        player.sendPacket(new NpcSay(npc, type, address, replacements)));
+                        player.sendPacket(new NpcSay(npc, type, address, "")));
     }
-
-//    @Deprecated
-//    public static void addItem(Playable playable, int itemId, long count, String log) {
-//        ItemFunctions.addItem(playable, itemId, count, true, log);
-//    }
-
-//    @Deprecated
-//    protected static void addItem(Playable playable, int itemId, long count, boolean mess, String log) {
-//        ItemFunctions.addItem(playable, itemId, count, mess, log);
-//    }
-
-//    @Deprecated
-//    public static long getItemCount(Player player, int itemId) {
-//        return ItemFunctions.getItemCount(player, itemId);
-//    }
-
-//    public static long removeItem(Player playable, int itemId, long count, String log) {
-//        return ItemFunctions.removeItem(playable, itemId, count, true, log);
-//    }
 
     protected static boolean ride(Player player, int pet) {
         if (player.isMounted())
@@ -192,7 +173,7 @@ public class Functions {
         return true;
     }
 
-    public static void unRide(Player player) {
+    protected static void unRide(Player player) {
         if (player.isMounted())
             player.setMount(0, 0, 0);
     }

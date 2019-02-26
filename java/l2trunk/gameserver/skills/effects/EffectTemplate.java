@@ -35,12 +35,12 @@ public final class EffectTemplate extends StatTemplate {
     public final AbnormalEffect _abnormalEffect2;
     public final AbnormalEffect _abnormalEffect3;
     private final long _period; // in milliseconds
-    private final Boolean _isSaveable;
-    private final Boolean _isCancelable;
-    private final Boolean _isOffensive;
+    private final Boolean isSaveable;
+    private final Boolean isCancelable;
+    private final Boolean isOffensive;
     private final StatsSet param;
     private final int chance;
-    private Condition _attachCond;
+    private Condition attachCond;
 
     public EffectTemplate(StatsSet set) {
         value = set.getDouble("value");
@@ -56,9 +56,9 @@ public final class EffectTemplate extends StatTemplate {
         _applyOnSummon = set.getBool("applyOnSummon", true);
         _cancelOnAction = set.getBool("cancelOnAction", false);
         _isReflectable = set.getBool("isReflectable", true);
-        _isSaveable = set.isSet("isSaveable") ? set.getBool("isSaveable") : null;
-        _isCancelable = set.isSet("isCancelable") ? set.getBool("isCancelable") : null;
-        _isOffensive = set.isSet("isOffensive") ? set.getBool("isOffensive") : null;
+        isSaveable = set.isSet("isSaveable") ? set.getBool("isSaveable") : null;
+        isCancelable = set.isSet("isCancelable") ? set.getBool("isCancelable") : null;
+        isOffensive = set.isSet("isOffensive") ? set.getBool("isOffensive") : null;
         displayId = set.getInteger("displayId", 0);
         displayLevel = set.getInteger("displayLevel", 0);
         effecttype = set.getEnum("name", EffectType.class);
@@ -67,7 +67,7 @@ public final class EffectTemplate extends StatTemplate {
     }
 
     public Effect getEffect(Env env) {
-        if (_attachCond != null && !_attachCond.test(env))
+        if (attachCond != null && !attachCond.test(env))
             return null;
         try {
             return effecttype.makeEffect(env, this);
@@ -78,7 +78,7 @@ public final class EffectTemplate extends StatTemplate {
     }
 
     public void attachCond(Condition c) {
-        _attachCond = c;
+        attachCond = c;
     }
 
     public int getCount() {
@@ -108,14 +108,14 @@ public final class EffectTemplate extends StatTemplate {
     }
 
     public boolean isSaveable(boolean def) {
-        return _isSaveable != null ? _isSaveable : def;
+        return isSaveable != null ? isSaveable : def;
     }
 
     public boolean isCancelable(boolean def) {
-        return _isCancelable != null ? _isCancelable : def;
+        return isCancelable != null ? isCancelable : def;
     }
 
     public boolean isOffensive(boolean def) {
-        return _isOffensive != null ? _isOffensive : def;
+        return isOffensive != null ? isOffensive : def;
     }
 }

@@ -25,7 +25,7 @@ public final class RequestExRqItemLink extends L2GameClientPacket {
                 Player player = getClient().getActiveChar();
                 String varName = "DisabledAnnounce" + objectId;
                 if (!player.containsQuickVar(varName)) {
-                    player.addQuickVar(varName, "true");
+                    player.addQuickVar(varName, true);
                     player.sendMessage("Announcement Disabled!");
                 }
             }

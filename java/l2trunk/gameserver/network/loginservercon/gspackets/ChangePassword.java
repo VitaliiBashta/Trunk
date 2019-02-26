@@ -3,7 +3,7 @@ package l2trunk.gameserver.network.loginservercon.gspackets;
 import l2trunk.gameserver.network.loginservercon.SendablePacket;
 
 
-public class ChangePassword extends SendablePacket {
+public final class ChangePassword extends SendablePacket {
     private final String account;
     private final String oldPass;
     private final String newPass;

@@ -17,8 +17,7 @@ public final class _650_ABrokenDream extends Quest {
         super(false);
         addStartNpc(RailroadEngineer);
 
-        addKillId(ForgottenCrewman);
-        addKillId(VagabondOfTheRuins);
+        addKillId(ForgottenCrewman,VagabondOfTheRuins);
     }
 
     @Override
@@ -26,13 +25,13 @@ public final class _650_ABrokenDream extends Quest {
         String htmltext = event;
         if ("quest_accept".equalsIgnoreCase(event)) {
             htmltext = "ghost_of_railroadman_q0650_0103.htm";
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
             st.setCond(1);
         } else if ("650_4".equalsIgnoreCase(event)) {
             htmltext = "ghost_of_railroadman_q0650_0205.htm";
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             st.unset("cond");
         }
         return htmltext;
@@ -47,17 +46,17 @@ public final class _650_ABrokenDream extends Quest {
             if (OceanOfDistantStar != null) {
                 if (OceanOfDistantStar.isCompleted()) {
                     if (st.player.getLevel() < 39) {
-                        st.exitCurrentQuest(true);
+                        st.exitCurrentQuest();
                         htmltext = "ghost_of_railroadman_q0650_0102.htm";
                     } else
                         htmltext = "ghost_of_railroadman_q0650_0101.htm";
                 } else {
                     htmltext = "ghost_of_railroadman_q0650_0104.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else {
                 htmltext = "ghost_of_railroadman_q0650_0104.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (cond == 1)
             htmltext = "ghost_of_railroadman_q0650_0202.htm";

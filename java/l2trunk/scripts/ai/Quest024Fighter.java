@@ -24,7 +24,6 @@ public final class Quest024Fighter extends Fighter {
                     .forEach(questState ->
                             q.notifyEvent("seePlayer", questState, getActor()));
 
-
         return super.thinkActive();
     }
 }

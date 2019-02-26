@@ -12,7 +12,7 @@ public final class _324_SweetestVenom extends Quest {
     private static final int Prowler = 20034;
     private static final int Venomous_Spider = 20038;
     private static final int Arachnid_Tracker = 20043;
-    //Items
+    //items
     private static final int VENOM_SAC = 1077;
     //Chances
     private static final int VENOM_SAC_BASECHANCE = 60;
@@ -20,9 +20,7 @@ public final class _324_SweetestVenom extends Quest {
     public _324_SweetestVenom() {
         super(false);
         addStartNpc(ASTARON);
-        addKillId(Prowler);
-        addKillId(Venomous_Spider);
-        addKillId(Arachnid_Tracker);
+        addKillId(Prowler,Venomous_Spider,Arachnid_Tracker);
         addQuestItem(VENOM_SAC);
     }
 
@@ -39,7 +37,7 @@ public final class _324_SweetestVenom extends Quest {
                 st.setCond(0);
             } else {
                 htmltext = "astaron_q0324_02.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (_state == STARTED) {
             long _count = st.getQuestItemsCount(VENOM_SAC);
@@ -48,7 +46,7 @@ public final class _324_SweetestVenom extends Quest {
                 st.takeItems(VENOM_SAC);
                 st.giveItems(ADENA_ID, 5810);
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else
                 htmltext = "astaron_q0324_05.htm";
         }
@@ -58,7 +56,7 @@ public final class _324_SweetestVenom extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if (event.equalsIgnoreCase("astaron_q0324_04.htm") && st.getState() == CREATED) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         }

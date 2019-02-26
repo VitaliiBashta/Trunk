@@ -13,7 +13,7 @@ public final class _228_TestOfMagus extends Quest {
     private static final int Sylph = 30412;
     private static final int Undine = 30413;
     private static final int Snake = 30409;
-    //Quest Items
+    //Quest items
     private static final int RukalsLetter = 2841;
     private static final int ParinasLetter = 2842;
     private static final int LilacCharm = 2843;
@@ -37,7 +37,7 @@ public final class _228_TestOfMagus extends Quest {
     private static final int EnchantedMonsterEyeShell = 2853;
     private static final int EnchantedStoneGolemPowder = 2854;
     private static final int EnchantedIronGolemScrap = 2855;
-    //Items
+    //items
     private static final int MarkOfMagus = 2840;
     //MOB
     private static final int SingingFlowerPhantasm = 27095;
@@ -216,12 +216,7 @@ public final class _228_TestOfMagus extends Quest {
 
         addStartNpc(Rukal);
 
-        addTalkId(Parina);
-        addTalkId(Casian);
-        addTalkId(Sylph);
-        addTalkId(Snake);
-        addTalkId(Undine);
-        addTalkId(Salamander);
+        addTalkId(Parina,Casian,Sylph,Snake,Undine,Salamander);
 
         for (int[] aDROPLIST_COND : DROPLIST_COND) addKillId(aDROPLIST_COND[2]);
 
@@ -253,7 +248,7 @@ public final class _228_TestOfMagus extends Quest {
     private void checkBooks(QuestState st) {
         if (st.getQuestItemsCount(ToneOfWater) != 0 && st.getQuestItemsCount(ToneOfFire) != 0 && st.getQuestItemsCount(ToneOfWind) != 0 && st.getQuestItemsCount(ToneOfEarth) != 0) {
             st.setCond(6);
-            st.setState(STARTED);
+            st.start();
         }
     }
 
@@ -262,23 +257,23 @@ public final class _228_TestOfMagus extends Quest {
         if (event.equalsIgnoreCase("30629-04.htm")) {
             st.giveItems(RukalsLetter, 1);
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             if (!st.player.isVarSet("dd3")) {
                 st.giveItems(7562, 122);
-                st.player.setVar("dd3", 1);
+                st.player.setVar("dd3");
             }
             st.playSound(SOUND_ACCEPT);
         } else if ("30391-02.htm".equalsIgnoreCase(event)) {
             st.takeItems(RukalsLetter);
             st.giveItems(ParinasLetter);
             st.setCond(2);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_MIDDLE);
         } else if ("30612-02.htm".equalsIgnoreCase(event)) {
             st.takeItems(ParinasLetter);
             st.giveItems(LilacCharm);
             st.setCond(3);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_MIDDLE);
         } else if ("30629-10.htm".equalsIgnoreCase(event)) {
             st.takeItems(LilacCharm);
@@ -287,7 +282,7 @@ public final class _228_TestOfMagus extends Quest {
             st.takeItems(GoldenSeed3st);
             st.giveItems(ScoreOfElements);
             st.setCond(5);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_MIDDLE);
         } else if ("30412-02.htm".equalsIgnoreCase(event)) {
             st.giveItems(SylphCharm);
@@ -305,20 +300,20 @@ public final class _228_TestOfMagus extends Quest {
         String htmltext = "noquest";
         int cond = st.getCond();
         if (npcId == Rukal) {
-            if (st.getQuestItemsCount(MarkOfMagus) != 0) {
+            if (st.haveQuestItem(MarkOfMagus) ) {
                 htmltext = "completed";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else if (cond == 0) {
                 if (st.player.getClassId().id == 0x0b || st.player.getClassId().id == 0x1a || st.player.getClassId().id == 0x27) {
                     if (st.player.getLevel() >= 39)
                         htmltext = "30629-03.htm";
                     else {
                         htmltext = "30629-02.htm";
-                        st.exitCurrentQuest(true);
+                        st.exitCurrentQuest();
                     }
                 } else {
                     htmltext = "30629-01.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1)
                 htmltext = "30629-05.htm";
@@ -331,20 +326,16 @@ public final class _228_TestOfMagus extends Quest {
             else if (cond == 5)
                 htmltext = "30629-11.htm";
             else if (cond == 6) {
-                st.takeItems(ScoreOfElements, -1);
-                st.takeItems(ToneOfWater, -1);
-                st.takeItems(ToneOfFire, -1);
-                st.takeItems(ToneOfWind, -1);
-                st.takeItems(ToneOfEarth, -1);
-                st.giveItems(MarkOfMagus, 1);
+                st.takeAllItems(ScoreOfElements,ToneOfWater,ToneOfFire,ToneOfWind,ToneOfEarth);
+                st.giveItems(MarkOfMagus);
                 htmltext = "30629-12.htm";
                 if (!st.player.isVarSet("prof2.3")) {
                     st.addExpAndSp(1029122, 70620);
                     st.giveItems(ADENA_ID, 186077);
-                    st.player.setVar("prof2.3", 1);
+                    st.player.setVar("prof2.3");
                 }
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (npcId == Parina) {
             if (cond == 1)
@@ -368,14 +359,13 @@ public final class _228_TestOfMagus extends Quest {
             if (st.getQuestItemsCount(ToneOfFire) == 0) {
                 if (st.getQuestItemsCount(SalamanderCharm) == 0) {
                     htmltext = "30411-01.htm";
-                    st.giveItems(SalamanderCharm, 1);
+                    st.giveItems(SalamanderCharm);
                     st.playSound(SOUND_MIDDLE);
                 } else if (st.getQuestItemsCount(FlameCrystal) < 5)
                     htmltext = "30411-02.htm";
                 else {
-                    st.takeItems(SalamanderCharm, -1);
-                    st.takeItems(FlameCrystal, -1);
-                    st.giveItems(ToneOfFire, 1);
+                    st.takeAllItems(SalamanderCharm,FlameCrystal);
+                    st.giveItems(ToneOfFire);
                     htmltext = "30411-03.htm";
                     checkBooks(st);
                     st.playSound(SOUND_MIDDLE);
@@ -389,11 +379,8 @@ public final class _228_TestOfMagus extends Quest {
                 else if (st.getQuestItemsCount(HarpysFeather) < 20 || st.getQuestItemsCount(WyrmsWingbone) < 10 || st.getQuestItemsCount(WindsusMane) < 10)
                     htmltext = "30412-03.htm";
                 else {
-                    st.takeItems(SylphCharm, -1);
-                    st.takeItems(HarpysFeather, -1);
-                    st.takeItems(WyrmsWingbone, -1);
-                    st.takeItems(WindsusMane, -1);
-                    st.giveItems(ToneOfWind, 1);
+                    st.takeAllItems(SylphCharm,HarpysFeather,WyrmsWingbone,WindsusMane);
+                    st.giveItems(ToneOfWind);
                     htmltext = "30412-04.htm";
                     checkBooks(st);
                     st.playSound(SOUND_MIDDLE);
@@ -407,11 +394,8 @@ public final class _228_TestOfMagus extends Quest {
                 else if (st.getQuestItemsCount(EnchantedMonsterEyeShell) < 10 || st.getQuestItemsCount(EnchantedStoneGolemPowder) < 10 || st.getQuestItemsCount(EnchantedIronGolemScrap) < 10)
                     htmltext = "30409-04.htm";
                 else {
-                    st.takeItems(SerpentCharm, -1);
-                    st.takeItems(EnchantedMonstereye, -1);
-                    st.takeItems(EnchantedStoneGolemPowder, -1);
-                    st.takeItems(EnchantedIronGolemScrap, -1);
-                    st.giveItems(ToneOfEarth, 1);
+                    st.takeAllItems(SerpentCharm,EnchantedMonstereye,EnchantedStoneGolemPowder,EnchantedIronGolemScrap);
+                    st.giveItems(ToneOfEarth);
                     htmltext = "30409-05.htm";
                     checkBooks(st);
                     st.playSound(SOUND_MIDDLE);
@@ -451,11 +435,11 @@ public final class _228_TestOfMagus extends Quest {
                     else if (st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[7], aDROPLIST_COND[5], aDROPLIST_COND[6]))
                         if (aDROPLIST_COND[1] != cond && aDROPLIST_COND[1] != 0) {
                             st.setCond(aDROPLIST_COND[1]);
-                            st.setState(STARTED);
+                            st.start();
                         }
         if (cond == 3 && st.getQuestItemsCount(GoldenSeed1st) != 0 && st.getQuestItemsCount(GoldenSeed2st) != 0 && st.getQuestItemsCount(GoldenSeed3st) != 0) {
             st.setCond(4);
-            st.setState(STARTED);
+            st.start();
         }
     }
 }

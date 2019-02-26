@@ -96,7 +96,7 @@ public final class _464_Oath extends Quest {
             st.addExpAndSp(Rnd.get(15450, 1200000), Rnd.get(15000, 200000));
             st.takeItems(BookofSilence2);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
         return htmltext;
     }

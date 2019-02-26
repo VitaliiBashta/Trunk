@@ -35,7 +35,7 @@ public final class _10293_SevenSignsForbiddenBook extends Quest {
         Player player = st.player;
         if (event.equalsIgnoreCase("elcardia_q10293_3.htm")) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("enter_library")) {
             enterInstance(player);
@@ -53,12 +53,12 @@ public final class _10293_SevenSignsForbiddenBook extends Quest {
             st.setCond(6);
             st.playSound(SOUND_MIDDLE);
         } else if (event.equalsIgnoreCase("teleport_in")) {
-            Location loc = new Location(37348, -50383, -1168);
+            Location loc = Location.of(37348, -50383, -1168);
             st.player.teleToLocation(loc);
             teleportElcardia(player);
             return null;
         } else if (event.equalsIgnoreCase("teleport_out")) {
-            Location loc = new Location(37205, -49753, -1128);
+            Location loc = Location.of(37205, -49753, -1128);
             st.player.teleToLocation(loc);
             teleportElcardia(player);
             return null;
@@ -68,8 +68,8 @@ public final class _10293_SevenSignsForbiddenBook extends Quest {
             st.playSound(SOUND_MIDDLE);
         } else if (event.equalsIgnoreCase("elcardia_q10293_7.htm")) {
             st.addExpAndSp(15000000, 1500000);
-            st.setState(COMPLETED);
-            st.exitCurrentQuest(false);
+            st.complete();
+            st.finish();
             st.playSound(SOUND_FINISH);
         }
         return event;
@@ -90,7 +90,7 @@ public final class _10293_SevenSignsForbiddenBook extends Quest {
                         htmltext = "elcardia_q10293_1.htm";
                     else {
                         htmltext = "elcardia_q10293_0.htm";
-                        st.exitCurrentQuest(true);
+                        st.exitCurrentQuest();
                     }
                 } else if (cond >= 1 && cond < 8)
                     htmltext = "elcardia_q10293_4.htm";

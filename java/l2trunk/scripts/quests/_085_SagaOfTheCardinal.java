@@ -1,5 +1,6 @@
 package l2trunk.scripts.quests;
 
+import l2trunk.gameserver.model.base.ClassId;
 import l2trunk.gameserver.utils.Location;
 
 import java.util.List;
@@ -9,15 +10,14 @@ public final class _085_SagaOfTheCardinal extends SagasSuperclass {
         super(false);
 
         NPC = List.of(30191, 31626, 31588, 31280, 31644, 31646, 31647, 31651, 31654, 31655, 31658, 31280);
-        Items = List.of(7080, 7522, 7081, 7500, 7283, 7314, 7345, 7376, 7407, 7438, 7087, 0);
-        Mob = List.of(27267, 27234, 27274);
-        classid = 97;
-        prevclass = 0x10;
+        items = List.of(7080, 7522, 7081, 7500, 7283, 7314, 7345, 7376, 7407, 7438, 7087, 0);
+        mob = List.of(27267, 27234, 27274);
+        classid = ClassId.cardinal;
         locs = List.of(
-                new Location(119518, -28658, -3811),
-                new Location(181215, 36676, -4812),
-                new Location(181227, 36703, -4816));
-        Text = List.of(
+                Location.of(119518, -28658, -3811),
+                Location.of(181215, 36676, -4812),
+                Location.of(181227, 36703, -4816));
+        text = List.of(
                 "PLAYERNAME! Pursued to here! However, I jumped out of the Banshouren boundaries! You look at the giant as the sign of power!",
                 "... Oh ... good! So it was ... let's begin!",
                 "I do not have the patience ..! I have been a giant force ...! Cough chatter ah ah ah!",

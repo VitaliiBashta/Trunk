@@ -27,11 +27,11 @@ public final class _510_AClansReputation extends Quest {
         if (event.equals("31331-3.htm")) {
             if (cond == 0) {
                 st.setCond(1);
-                st.setState(STARTED);
+                st.start();
             }
         } else if (event.equals("31331-6.htm")) {
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
         return event;
     }
@@ -42,10 +42,10 @@ public final class _510_AClansReputation extends Quest {
         Player player = st.player;
         Clan clan = player.getClan();
         if (player.getClan() == null || !player.isClanLeader()) {
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             htmltext = "31331-0.htm";
         } else if (player.getClan().getLevel() < 5) {
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             htmltext = "31331-0.htm";
         } else {
             int cond = st.getCond();
@@ -73,7 +73,7 @@ public final class _510_AClansReputation extends Quest {
     @Override
     public void onKill(NpcInstance npc, QuestState st) {
         if (!st.player.isClanLeader())
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         else if (st.getState() == STARTED) {
             int npcId = npc.getNpcId();
             if (npcId >= 22215 && npcId <= 22218) {

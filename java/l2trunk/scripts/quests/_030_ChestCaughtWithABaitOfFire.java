@@ -23,7 +23,7 @@ public final class _030_ChestCaughtWithABaitOfFire extends Quest {
         String htmltext = event;
         switch (event) {
             case "fisher_linneaus_q0030_0104.htm":
-                st.setState(STARTED);
+                st.start();
                 st.setCond(1);
                 st.playSound(SOUND_ACCEPT);
                 break;
@@ -37,14 +37,14 @@ public final class _030_ChestCaughtWithABaitOfFire extends Quest {
                     htmltext = "fisher_linneaus_q0030_0202.htm";
                 break;
             case "bard_rukal_q0030_0301.htm":
-                if (st.haveAnyQuestItems(RukalsMusicalScore) ) {
+                if (st.haveAnyQuestItems(RukalsMusicalScore)) {
                     st.takeItems(RukalsMusicalScore);
                     st.giveItems(NecklaceOfProtection);
                     st.playSound(SOUND_FINISH);
-                    st.exitCurrentQuest(false);
+                    st.finish();
                 } else {
                     htmltext = "bard_rukal_q0030_0302.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
                 break;
         }
@@ -61,19 +61,13 @@ public final class _030_ChestCaughtWithABaitOfFire extends Quest {
             if (id == CREATED) {
                 if (st.player.getLevel() < 60) {
                     htmltext = "fisher_linneaus_q0030_0102.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else {
-                    QuestState LinnaeusSpecialBait = st.player.getQuestState(_053_LinnaeusSpecialBait.class);
-                    if (LinnaeusSpecialBait != null) {
-                        if (LinnaeusSpecialBait.isCompleted())
-                            htmltext = "fisher_linneaus_q0030_0101.htm";
-                        else {
-                            htmltext = "fisher_linneaus_q0030_0102.htm";
-                            st.exitCurrentQuest(true);
-                        }
-                    } else {
-                        htmltext = "fisher_linneaus_q0030_0103.htm";
-                        st.exitCurrentQuest(true);
+                    if (st.player.isQuestCompleted(_053_LinnaeusSpecialBait.class))
+                        htmltext = "fisher_linneaus_q0030_0101.htm";
+                    else {
+                        htmltext = "fisher_linneaus_q0030_0102.htm";
+                        st.exitCurrentQuest();
                     }
                 }
             } else if (cond == 1) {

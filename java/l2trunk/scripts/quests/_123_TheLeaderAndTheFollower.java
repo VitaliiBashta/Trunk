@@ -42,7 +42,7 @@ public final class _123_TheLeaderAndTheFollower extends Quest {
         switch (event) {
             case "31961-03.htm":
                 st.setCond(1);
-                st.setState(STARTED);
+                st.start();
                 st.playSound(SOUND_ACCEPT);
                 break;
             case "31961-05.htm":
@@ -121,7 +121,7 @@ public final class _123_TheLeaderAndTheFollower extends Quest {
             st.setCond(0);
             st.playSound(SOUND_FINISH);
             htmltext = "<html><body>OK!</body></html>";
-            st.exitCurrentQuest(false);
+            st.finish();
         }
         return htmltext;
     }

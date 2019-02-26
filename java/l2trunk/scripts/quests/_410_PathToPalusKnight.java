@@ -29,9 +29,7 @@ public final class _410_PathToPalusKnight extends Quest {
 
         addTalkId(KALINTA);
 
-        addKillId(POISON_SPIDER);
-        addKillId(ARACHNID_TRACKER);
-        addKillId(LYCANTHROPE);
+        addKillId(POISON_SPIDER,ARACHNID_TRACKER,LYCANTHROPE);
 
         addQuestItem(PALLUS_TALISMAN_ID,
                 VIRGILS_LETTER_ID,
@@ -45,14 +43,14 @@ public final class _410_PathToPalusKnight extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("1")) {
+        if ("1".equals(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
             htmltext = "master_virgil_q0410_06.htm";
-            st.giveItems(PALLUS_TALISMAN_ID, 1);
-        } else if (event.equalsIgnoreCase("410_1")) {
-            if (st.player.getLevel() >= 18 && st.player.getClassId().id == 0x1f && st.getQuestItemsCount(GAZE_OF_ABYSS_ID) == 0)
+            st.giveItems(PALLUS_TALISMAN_ID);
+        } else if ("410_1".equals(event)) {
+            if (st.player.getLevel() >= 18 && st.player.getClassId().id == 0x1f && !st.haveQuestItem(GAZE_OF_ABYSS_ID))
                 htmltext = "master_virgil_q0410_05.htm";
             else if (st.player.getClassId().id != 0x1f) {
                 if (st.player.getClassId().id == 0x20)
@@ -61,25 +59,25 @@ public final class _410_PathToPalusKnight extends Quest {
                     htmltext = "master_virgil_q0410_03.htm";
             } else if (st.player.getLevel() < 18)
                 htmltext = "master_virgil_q0410_02.htm";
-            else if (st.getQuestItemsCount(GAZE_OF_ABYSS_ID) == 1)
+            else if (st.haveQuestItem(GAZE_OF_ABYSS_ID) )
                 htmltext = "master_virgil_q0410_04.htm";
-        } else if (event.equalsIgnoreCase("30329_2")) {
+        } else if ("30329_2".equals(event)) {
             htmltext = "master_virgil_q0410_10.htm";
-            st.takeItems(PALLUS_TALISMAN_ID, -1);
-            st.takeItems(LYCANTHROPE_SKULL_ID, -1);
-            st.giveItems(VIRGILS_LETTER_ID, 1);
+            st.takeItems(PALLUS_TALISMAN_ID);
+            st.takeItems(LYCANTHROPE_SKULL_ID);
+            st.giveItems(VIRGILS_LETTER_ID);
             st.setCond(3);
-        } else if (event.equalsIgnoreCase("30422_1")) {
+        } else if ("30422_1".equals(event)) {
             htmltext = "kalinta_q0410_02.htm";
-            st.takeItems(VIRGILS_LETTER_ID, -1);
+            st.takeItems(VIRGILS_LETTER_ID);
             st.giveItems(MORTE_TALISMAN_ID);
             st.setCond(4);
-        } else if (event.equalsIgnoreCase("30422_2")) {
+        } else if ("30422_2".equals(event)) {
             htmltext = "kalinta_q0410_06.htm";
-            st.takeItems(MORTE_TALISMAN_ID, -1);
-            st.takeItems(TRIMDEN_SILK_ID, -1);
-            st.takeItems(PREDATOR_CARAPACE_ID, -1);
-            st.giveItems(COFFIN_ETERNAL_REST_ID, 1);
+            st.takeItems(MORTE_TALISMAN_ID);
+            st.takeItems(TRIMDEN_SILK_ID);
+            st.takeItems(PREDATOR_CARAPACE_ID);
+            st.giveItems(COFFIN_ETERNAL_REST_ID);
             st.setCond(6);
         }
         return htmltext;
@@ -93,10 +91,10 @@ public final class _410_PathToPalusKnight extends Quest {
         if (npcId == VIRGIL) {
             if (cond < 1)
                 htmltext = "master_virgil_q0410_01.htm";
-            else if (st.getQuestItemsCount(PALLUS_TALISMAN_ID) > 0) {
-                if (st.getQuestItemsCount(LYCANTHROPE_SKULL_ID) < 1)
+            else if (st.haveQuestItem(PALLUS_TALISMAN_ID) ) {
+                if (!st.haveQuestItem(LYCANTHROPE_SKULL_ID))
                     htmltext = "master_virgil_q0410_07.htm";
-                else if (st.getQuestItemsCount(LYCANTHROPE_SKULL_ID) > 0 && st.getQuestItemsCount(LYCANTHROPE_SKULL_ID) < 13)
+                else if (st.haveQuestItem(LYCANTHROPE_SKULL_ID)  && st.getQuestItemsCount(LYCANTHROPE_SKULL_ID) < 13)
                     htmltext = "master_virgil_q0410_08.htm";
                 else if (st.haveQuestItem(LYCANTHROPE_SKULL_ID, 12))
                     htmltext = "master_virgil_q0410_09.htm";
@@ -106,24 +104,24 @@ public final class _410_PathToPalusKnight extends Quest {
                 if (st.player.getClassId().occupation() == 0) {
                     st.giveItems(GAZE_OF_ABYSS_ID, 1);
                     if (!st.player.isVarSet("prof1")) {
-                        st.player.setVar("prof1", 1);
+                        st.player.setVar("prof1");
                         st.addExpAndSp(228064, 16455);
                         st.giveItems(ADENA_ID, 81900);
                     }
                 }
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 st.playSound(SOUND_FINISH);
-            } else if (st.getQuestItemsCount(MORTE_TALISMAN_ID) > 0 | st.getQuestItemsCount(VIRGILS_LETTER_ID) > 0)
+            } else if (st.haveAnyQuestItems(MORTE_TALISMAN_ID,VIRGILS_LETTER_ID))
                 htmltext = "master_virgil_q0410_12.htm";
         } else if (npcId == KALINTA && cond > 0)
-            if (st.getQuestItemsCount(VIRGILS_LETTER_ID) > 0)
+            if (st.haveQuestItem(VIRGILS_LETTER_ID) )
                 htmltext = "kalinta_q0410_01.htm";
-            else if (st.getQuestItemsCount(MORTE_TALISMAN_ID) > 0)
+            else if (st.haveQuestItem(MORTE_TALISMAN_ID))
                 if (st.getQuestItemsCount(TRIMDEN_SILK_ID) < 1 && st.getQuestItemsCount(PREDATOR_CARAPACE_ID) < 1)
                     htmltext = "kalinta_q0410_03.htm";
                 else if (st.getQuestItemsCount(TRIMDEN_SILK_ID) < 1 | st.getQuestItemsCount(PREDATOR_CARAPACE_ID) < 1)
                     htmltext = "kalinta_q0410_04.htm";
-                else if (st.getQuestItemsCount(TRIMDEN_SILK_ID) > 4 && st.getQuestItemsCount(PREDATOR_CARAPACE_ID) > 0)
+                else if (st.haveQuestItem(TRIMDEN_SILK_ID, 4) && st.haveQuestItem(PREDATOR_CARAPACE_ID) )
                     htmltext = "kalinta_q0410_05.htm";
         return htmltext;
     }

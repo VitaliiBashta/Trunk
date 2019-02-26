@@ -10,7 +10,7 @@ public final class _313_CollectSpores extends Quest {
     private final int Herbiel = 30150;
     //Mobs
     private final int SporeFungus = 20509;
-    //Quest Items
+    //Quest items
     private final int SporeSac = 1118;
 
     public _313_CollectSpores() {
@@ -26,7 +26,7 @@ public final class _313_CollectSpores extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("green_q0313_05.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         }
         return event;
@@ -41,7 +41,7 @@ public final class _313_CollectSpores extends Quest {
                 htmltext = "green_q0313_03.htm";
             else {
                 htmltext = "green_q0313_02.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (cond == 1)
             htmltext = "green_q0313_06.htm";
@@ -54,7 +54,7 @@ public final class _313_CollectSpores extends Quest {
                 st.giveItems(ADENA_ID, 3500, true);
                 st.playSound(SOUND_FINISH);
                 htmltext = "green_q0313_07.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         return htmltext;
     }
@@ -70,7 +70,7 @@ public final class _313_CollectSpores extends Quest {
             else {
                 st.playSound(SOUND_MIDDLE);
                 st.setCond(2);
-                st.setState(STARTED);
+                st.start();
             }
         }
     }

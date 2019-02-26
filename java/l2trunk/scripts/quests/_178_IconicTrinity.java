@@ -12,39 +12,37 @@ public final class _178_IconicTrinity extends Quest {
     private static final int IconOfThePast = 32255;
     private static final int IconOfThePresent = 32256;
     private static final int IconOfTheFuture = 32257;
-    //Items
+    //items
     private static final int EnchantD = 956;
 
     public _178_IconicTrinity() {
         super(false);
 
         addStartNpc(Kekropus);
-        addTalkId(IconOfThePast);
-        addTalkId(IconOfThePresent);
-        addTalkId(IconOfTheFuture);
+        addTalkId(IconOfThePast,IconOfThePresent,IconOfTheFuture);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("32138-02.htm")) {
+        if ("32138-02.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("32255-03.htm") || event.equalsIgnoreCase("32256-03.htm") || event.equalsIgnoreCase("32257-03.htm"))
             st.set("id", "");
         else if (event.equalsIgnoreCase("32255-09.htm")) {
             st.set("id", "");
             st.setCond(2);
-            st.setState(STARTED);
-        } else if (event.equalsIgnoreCase("32256-09.htm")) {
+            st.start();
+        } else if ("32256-09.htm".equalsIgnoreCase(event)) {
             st.set("id", "");
             st.setCond(3);
-            st.setState(STARTED);
-        } else if (event.equalsIgnoreCase("32257-06.htm")) {
+            st.start();
+        } else if ("32257-06.htm".equalsIgnoreCase(event)) {
             st.set("id", "");
             st.setCond(4);
-            st.setState(STARTED);
+            st.start();
         } else if (event.length() == 1) {
             int cond = st.getCond();
             int len = 0;
@@ -56,15 +54,15 @@ public final class _178_IconicTrinity extends Quest {
                 len = st.get("id").length();
             }
             if (!event.equals("0") && len == 4 && (cond == 1 || cond == 2) || len == 5 && cond == 3) {
-                if (cond == 1 && st.get("id") != null && st.get("id").equalsIgnoreCase("CRTR"))
+                if (cond == 1 && st.get("id") != null && "CRTR".equalsIgnoreCase(st.get("id")))
                     htmltext = "32255-04.htm";
-                else if (cond == 2 && st.get("id") != null && st.get("id").equalsIgnoreCase("CNCL"))
+                else if (cond == 2 && st.get("id") != null && "CNCL".equalsIgnoreCase(st.get("id")))
                     htmltext = "32256-04.htm";
-                else if (cond == 3 && st.get("id") != null && st.get("id").equalsIgnoreCase("CHAOS"))
+                else if (cond == 3 && st.get("id") != null && "CHAOS".equalsIgnoreCase(st.get("id")))
                     htmltext = "32257-04.htm";
                 else {
                     htmltext = "<html><body>Quest Failed</body></html>";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else {
                 if (cond == 1)
@@ -89,7 +87,7 @@ public final class _178_IconicTrinity extends Quest {
             st.giveItems(EnchantD, 1, true);
             st.addExpAndSp(20123, 976);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(false);
+            st.finish();
         }
         if (event.equalsIgnoreCase("32255-07.htm") || event.equalsIgnoreCase("32255-09.htm") || event.equalsIgnoreCase("32256-07.htm") || event.equalsIgnoreCase("32256-08.htm") || event.equalsIgnoreCase("32256-09.htm") || event.equalsIgnoreCase("32257-06.htm")) {
             htmltext = HtmCache.INSTANCE.getNotNull("quests/_178_IconicTrinity/" + event, st.player);
@@ -108,10 +106,10 @@ public final class _178_IconicTrinity extends Quest {
             if (cond == 0) {
                 if (st.player.getRace() != Race.kamael) {
                     htmltext = "32138-05.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else if (st.player.getLevel() < 17) {
                     htmltext = "32138-00.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else
                     htmltext = "32138-01.htm";
             } else if (cond == 4)

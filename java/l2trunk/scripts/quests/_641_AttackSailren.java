@@ -24,12 +24,7 @@ public final class _641_AttackSailren extends Quest {
 
         addStartNpc(STATUE);
 
-        addKillId(VEL1);
-        addKillId(VEL2);
-        addKillId(VEL3);
-        addKillId(VEL4);
-        addKillId(VEL5);
-        addKillId(PTE);
+        addKillId(VEL1,VEL2,VEL3,VEL4,VEL5,PTE);
 
         addQuestItem(FRAGMENTS);
     }
@@ -38,13 +33,13 @@ public final class _641_AttackSailren extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("statue_of_shilen_q0641_05.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("statue_of_shilen_q0641_08.htm".equalsIgnoreCase(event)) {
             st.playSound(SOUND_FINISH);
             st.takeItems(FRAGMENTS);
             st.giveItems(GAZKH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             st.unset("cond");
         }
         return event;
@@ -60,7 +55,7 @@ public final class _641_AttackSailren extends Quest {
             else if (st.player.getLevel() >= 77)
                 htmltext = "statue_of_shilen_q0641_01.htm";
             else
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
         } else if (cond == 1)
             htmltext = "statue_of_shilen_q0641_05.htm";
         else if (cond == 2)
@@ -70,12 +65,12 @@ public final class _641_AttackSailren extends Quest {
 
     @Override
     public void onKill(NpcInstance npc, QuestState st) {
-        if (st.getQuestItemsCount(FRAGMENTS) < 30) {
+        if (!st.haveQuestItem(FRAGMENTS, 30)) {
             st.giveItems(FRAGMENTS);
-            if (st.getQuestItemsCount(FRAGMENTS) == 30) {
+            if (st.haveQuestItem(FRAGMENTS, 30)) {
                 st.playSound(SOUND_MIDDLE);
                 st.setCond(2);
-                st.setState(STARTED);
+                st.start();
             } else
                 st.playSound(SOUND_ITEMGET);
         }

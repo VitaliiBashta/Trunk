@@ -33,16 +33,8 @@ public final class _063_PathToWarder extends Quest {
         super(false);
 
         addStartNpc(Sione);
-        addTalkId(Sione);
-        addTalkId(Gobie);
-        addTalkId(Bathis);
-        addTalkId(Tobias);
-        addKillId(Patrol);
-        addKillId(Novice);
-        addKillId(Tak);
-        addKillId(Maille);
-        addKillId(Maille_scout);
-        addKillId(Maille_guard);
+        addTalkId(Sione,Gobie,Bathis,Tobias);
+        addKillId(Patrol,Novice,Tak,Maille,Maille_scout,Maille_guard);
         addQuestItem(OlMahumOrganizationChart,
                 OlMahumOrders,
                 TaksCapturedSoul,
@@ -52,7 +44,7 @@ public final class _063_PathToWarder extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if (event.equals("master_sione_q0063_06.htm")) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         }
@@ -98,10 +90,10 @@ public final class _063_PathToWarder extends Quest {
             if (state == CREATED) {
                 if (st.player.getClassId() != ClassId.femaleSoldier) {
                     htmltext = "master_sione_q0063_04.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else if (st.player.getLevel() < 18) {
                     htmltext = "master_sione_q0063_02.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else
                     htmltext = "master_sione_q0063_05.htm";
             } else {
@@ -147,13 +139,13 @@ public final class _063_PathToWarder extends Quest {
                     if (st.player.getClassId().occupation() == 0) {
                         st.giveItems(SteelrazorEvaluation);
                         if (!st.player.isVarSet("prof1")) {
-                            st.player.setVar("prof1", 1);
+                            st.player.setVar("prof1");
                             st.addExpAndSp(160267, 11023);
                             st.giveItems(ADENA_ID, 81900);
                         }
                     }
                     st.playSound(SOUND_FINISH);
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                     htmltext = "master_gobie_q0063_20.htm";
                 } else
                     htmltext = "master_gobie_q0063_19.htm";

@@ -19,7 +19,7 @@ public final class _697_DefendtheHallofErosion extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("tepios_q697_3.htm".equalsIgnoreCase(event)) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         }
@@ -36,22 +36,22 @@ public final class _697_DefendtheHallofErosion extends Quest {
         if (npcId == TEPIOS) {
             if (cond == 0) {
                 if (player.getLevel() < 75) {
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                     return "tepios_q697_0.htm";
                 }
                 if (SoIManager.getCurrentStage() != 4) {
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                     return "tepios_q697_0a.htm";
                 }
                 htmltext = "tepios_q697_1.htm";
-            } else if (cond == 1 && st.getInt("defenceDone") == 0)
+            } else if (cond == 1 && !st.isSet("defenceDone") )
                 htmltext = "tepios_q697_4.htm";
-            else if (cond == 1 && st.getInt("defenceDone") != 0) {
+            else if (cond == 1 && st.isSet("defenceDone")) {
                 st.giveItems(VesperNobleEnhanceStone, Rnd.get(12, 20));
                 htmltext = "tepios_q697_5.htm";
                 st.playSound(SOUND_FINISH);
                 st.unset("defenceDone");
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
 
         }

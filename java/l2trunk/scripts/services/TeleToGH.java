@@ -29,7 +29,7 @@ public final class TeleToGH extends Functions implements ScriptFile {
         if (!Config.SERVICES_GIRAN_HARBOR_ENABLED)
             return;
 
-        ReflectionManager.GIRAN_HARBOR.setCoreLoc(new Location(47416, 186568, -3480));
+        ReflectionManager.GIRAN_HARBOR.setCoreLoc( Location.of(47416, 186568, -3480));
 
         // spawn wh keeper
         SimpleSpawner spawn = new SimpleSpawner(30086);

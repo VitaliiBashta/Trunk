@@ -29,7 +29,7 @@ public final class _612_WarwithKetraOrcs extends Quest {
         if (event.equalsIgnoreCase("quest_accept")) {
             htmltext = "elder_ashas_barka_durai_q0612_0104.htm";
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("elder_ashas_barka_durai_q0612_0202.htm".equalsIgnoreCase(event)) {
             long ec = st.getQuestItemsCount(MOLAR_OF_KETRA_ORC) / 5;
@@ -41,7 +41,7 @@ public final class _612_WarwithKetraOrcs extends Quest {
         } else if ("elder_ashas_barka_durai_q0612_0204.htm".equalsIgnoreCase(event)) {
             st.takeItems(MOLAR_OF_KETRA_ORC);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
         return htmltext;
     }
@@ -55,7 +55,7 @@ public final class _612_WarwithKetraOrcs extends Quest {
                 htmltext = "elder_ashas_barka_durai_q0612_0101.htm";
             else {
                 htmltext = "elder_ashas_barka_durai_q0612_0103.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (cond == 1 && st.getQuestItemsCount(MOLAR_OF_KETRA_ORC) == 0)
             htmltext = "elder_ashas_barka_durai_q0612_0106.htm";

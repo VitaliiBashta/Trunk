@@ -156,7 +156,7 @@ public final class _336_CoinOfMagic extends Quest {
             Kookaburra2, Kookaburra3, Kookaburra4,
             Antelope2, Antelope3, Antelope4,
             Bandersnatch2, Bandersnatch3, Bandersnatch4,
-             Buffalo2, Buffalo3, Buffalo4,
+            Buffalo2, Buffalo3, Buffalo4,
             ClawsofSplendor, WisdomofSplendor, PunishmentofSplendor, WailingofSplendor,
             HungeredCorpse, BloodyGhost, NihilInvader, DarkGuard);
 
@@ -165,18 +165,8 @@ public final class _336_CoinOfMagic extends Quest {
         addStartNpc(SORINT);
 
         addTalkId(
-                SORINT,
-                BERNARD,
-                PAGE,
-                HAGGER,
-                STAN,
-                RALFORD,
-                FERRIS,
-                COLLOB,
-                PANO,
-                DUNING,
-                LORAIN
-        );
+                SORINT, BERNARD, PAGE, HAGGER, STAN, RALFORD,
+                FERRIS, COLLOB, PANO, DUNING, LORAIN);
 
         addKillId(BLOOD_MEDUSA_DROP);
         addKillId(GOLD_WYVERN_DROP);
@@ -184,14 +174,10 @@ public final class _336_CoinOfMagic extends Quest {
 
         addKillId(UNKNOWN);
 
-        addKillId(HaritLizardmanMatriarch);
-        addKillId(HaritLizardmanShaman);
+        addKillId(HaritLizardmanMatriarch, HaritLizardmanShaman);
 
-        addQuestItem(COIN_DIAGRAM,
-                KALDIS_COIN,
-                MEMBERSHIP_1,
-                MEMBERSHIP_2,
-                MEMBERSHIP_3);
+        addQuestItem(COIN_DIAGRAM, KALDIS_COIN,
+                MEMBERSHIP_1, MEMBERSHIP_2, MEMBERSHIP_3);
     }
 
     @Override
@@ -212,12 +198,12 @@ public final class _336_CoinOfMagic extends Quest {
         } else if ("30702-02.htm".equalsIgnoreCase(event))
             st.setCond(2);
         else if ("30232-05.htm".equalsIgnoreCase(event)) {
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
             st.giveItems(COIN_DIAGRAM, 1);
             st.setCond(1);
         } else if ("30232-04.htm".equalsIgnoreCase(event) || "30232-18a.htm".equalsIgnoreCase(event)) {
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             st.playSound(SOUND_GIVEUP);
         } else if ("raise".equalsIgnoreCase(event))
             htmltext = promote(st);
@@ -267,11 +253,11 @@ public final class _336_CoinOfMagic extends Quest {
             if (id == CREATED) {
                 if (st.player.getLevel() < 40) {
                     htmltext = "30232-01.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else
                     htmltext = "30232-02.htm";
-            } else if (st.haveQuestItem(COIN_DIAGRAM) ) {
-                if (st.haveQuestItem(KALDIS_COIN) ) {
+            } else if (st.haveQuestItem(COIN_DIAGRAM)) {
+                if (st.haveQuestItem(KALDIS_COIN)) {
                     st.takeItems(KALDIS_COIN);
                     st.takeItems(COIN_DIAGRAM);
                     st.giveItems(MEMBERSHIP_3);

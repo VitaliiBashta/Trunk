@@ -20,7 +20,7 @@ public final class _625_TheFinestIngredientsPart2 extends Quest {
     private static final int Yetis_Table = 31542;
     // Mobs
     private static final int RB_Icicle_Emperor_Bumbalump = 25296;
-    // Items
+    // items
     private static final int Soy_Sauce_Jar = 7205;
     private static final int Food_for_Bumbalump = 7209;
     private static final int Special_Yeti_Meat = 7210;
@@ -45,16 +45,16 @@ public final class _625_TheFinestIngredientsPart2 extends Quest {
         int cond = st.getCond();
         if (event.equalsIgnoreCase("jeremy_q0625_0104.htm") && _state == CREATED) {
             if (st.getQuestItemsCount(Soy_Sauce_Jar) == 0) {
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 return "jeremy_q0625_0102.htm";
             }
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.takeItems(Soy_Sauce_Jar, 1);
             st.giveItems(Food_for_Bumbalump, 1);
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("jeremy_q0625_0301.htm") && _state == STARTED && cond == 3) {
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
             if (st.getQuestItemsCount(Special_Yeti_Meat) == 0)
                 return "jeremy_q0625_0302.htm";
             st.takeItems(Special_Yeti_Meat, 1);
@@ -82,11 +82,11 @@ public final class _625_TheFinestIngredientsPart2 extends Quest {
             if (npcId != Jeremy)
                 return "noquest";
             if (st.player.getLevel() < 73) {
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 return "jeremy_q0625_0103.htm";
             }
             if (st.getQuestItemsCount(Soy_Sauce_Jar) == 0) {
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 return "jeremy_q0625_0102.htm";
             }
             st.setCond(0);
@@ -151,7 +151,7 @@ public final class _625_TheFinestIngredientsPart2 extends Quest {
             if (BumbalumpSpawned())
                 return;
             spawn = (SimpleSpawner) new SimpleSpawner(RB_Icicle_Emperor_Bumbalump)
-                    .setLoc(new Location(158240, -121536, -2253, Rnd.get(0, 0xFFFF)))
+                    .setLoc(Location.of(158240, -121536, -2253, Rnd.get(0, 0xFFFF)))
                     .setAmount(1)
                     .stopRespawn();
             spawn.doSpawn(true);

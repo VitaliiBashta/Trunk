@@ -27,6 +27,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public enum CastleManorManager {
     INSTANCE;
@@ -42,7 +43,6 @@ public enum CastleManorManager {
     private static final int NEXT_PERIOD_APPROVE_MIN = Config.MANOR_APPROVE_MIN; //
     private static final int MANOR_REFRESH = Config.MANOR_REFRESH_TIME; // 20:00
     private static final int MANOR_REFRESH_MIN = Config.MANOR_REFRESH_MIN; //
-    private static CastleManorManager _instance;
     private boolean underMaintenance;
     private boolean disabled;
 
@@ -51,8 +51,6 @@ public enum CastleManorManager {
     }
 
     private void load() {
-        PreparedStatement statement;
-        ResultSet rs;
         try (Connection con = DatabaseFactory.getInstance().getConnection()) {
             List<Castle> castleList = ResidenceHolder.getResidenceList(Castle.class);
             for (Castle castle : castleList) {
@@ -62,9 +60,9 @@ public enum CastleManorManager {
                 List<CropProcure> procureNext = new ArrayList<>();
 
                 // restore seed production info
-                statement = con.prepareStatement(CASTLE_MANOR_LOAD_PRODUCTION);
+                PreparedStatement statement = con.prepareStatement(CASTLE_MANOR_LOAD_PRODUCTION);
                 statement.setInt(1, castle.getId());
-                rs = statement.executeQuery();
+                ResultSet rs = statement.executeQuery();
                 while (rs.next()) {
                     int seedId = rs.getInt("seed_id");
                     long canProduce = rs.getLong("can_produce");
@@ -165,7 +163,7 @@ public enum CastleManorManager {
                         count = 1;
 
                     if (count >= 1) {
-                        int id = Manor.INSTANCE.getMatureCrop(crop.getId());
+                        int id = Manor.INSTANCE.getMatureCrop(crop.cropId);
                         ItemInstance item = cwh.addItem(id, count, "CastleManorPeriod");
                         Log.LogAddItem(clan, "Manor Period Start", item, count);
                     }
@@ -173,8 +171,8 @@ public enum CastleManorManager {
 
                 // reserved and not used money giving back to treasury
                 if (crop.getAmount() > 0) {
-                    c.addToTreasuryNoTax(crop.getAmount() * crop.getPrice(), false, false);
-                    Log.add(c.getName() + "|" + crop.getAmount() * crop.getPrice() + "|ManorManager|" + crop.getAmount() + "*" + crop.getPrice(), "treasury");
+                    c.addToTreasuryNoTax(crop.getAmount() * crop.price, false, false);
+                    Log.add(c.getName() + "|" + crop.getAmount() * crop.price + "|ManorManager|" + crop.getAmount() + "*" + crop.price, "treasury");
                 }
 
                 c.setCollectedShops(0);
@@ -248,10 +246,10 @@ public enum CastleManorManager {
     }
 
     private List<CropProcure> getNewCropsList(int castleId) {
-        List<CropProcure> crops = new ArrayList<>();
         List<Integer> cropsIds = Manor.INSTANCE.getCropsForCastle(castleId);
-        cropsIds.forEach(cr -> crops.add(new CropProcure(cr)));
-        return crops;
+        return cropsIds.stream()
+                .map(CropProcure::new)
+                .collect(Collectors.toList());
     }
 
     public boolean isUnderMaintenance() {
@@ -305,15 +303,13 @@ public enum CastleManorManager {
             int H = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
             int M = Calendar.getInstance().get(Calendar.MINUTE);
 
-            if (ServerVariables.getBool(var_name)) // 06:00 - 20:00
-            {
+            if (ServerVariables.getBool(var_name)) { // 06:00 - 20:00
                 if (H < NEXT_PERIOD_APPROVE || H > MANOR_REFRESH || H == MANOR_REFRESH && M >= MANOR_REFRESH_MIN) {
                     ServerVariables.set(var_name, false);
                     setUnderMaintenance(true);
                     _log.info("Manor System: Under maintenance mode started");
                 }
-            } else if (isUnderMaintenance()) // 20:00 - 20:06
-            {
+            } else if (isUnderMaintenance()) { // 20:00 - 20:06
                 if (H != MANOR_REFRESH || M >= MANOR_REFRESH_MIN + MAINTENANCE_PERIOD) {
                     setUnderMaintenance(false);
                     _log.info("Manor System: Next period started");

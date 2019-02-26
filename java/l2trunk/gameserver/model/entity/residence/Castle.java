@@ -36,9 +36,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 public final class Castle extends Residence {
-
-    private static final long serialVersionUID = 1L;
-
     private static final Logger _log = LoggerFactory.getLogger(Castle.class);
 
     private static final String CASTLE_MANOR_DELETE_PRODUCTION = "DELETE FROM castle_manor_production WHERE castle_id=?;";
@@ -53,13 +50,13 @@ public final class Castle extends Residence {
     private final NpcString npcStringName;
     private final Set<ItemInstance> _spawnMerchantTickets = new CopyOnWriteArraySet<>();
     private Dominion _dominion;
-    private List<CropProcure> _procure;
+    private List<CropProcure> procures;
     private List<SeedProduction> _production;
     private List<CropProcure> _procureNext;
     private List<SeedProduction> _productionNext;
     private boolean _isNextPeriodApproved;
     private int _TaxPercent;
-    private double _TaxRate;
+    private double taxRate;
     private long treasury;
     private long collectedShops;
     private long collectedSeed;
@@ -113,7 +110,7 @@ public final class Castle extends Residence {
             }
         }
 
-        Clan oldOwner = null;
+        Clan oldOwner;
         // Если этим замком уже кто-то владел, отбираем у него замок
         if (getOwnerId() > 0 && (newOwner == null || newOwner.clanId() != getOwnerId())) {
             // Удаляем замковые скилы у старого владельца
@@ -132,7 +129,7 @@ public final class Castle extends Residence {
                 if (amount > 0) {
                     ClanWarehouse warehouse = oldOwner.getWarehouse();
                     if (warehouse != null) {
-                        ItemInstance createdItem = warehouse.addItem(ItemTemplate.ITEM_ID_ADENA, amount, "Castle Change Owner");
+                        warehouse.addItem(ItemTemplate.ITEM_ID_ADENA, amount, "Castle Change Owner");
                         addToTreasuryNoTax(-amount, false, false);
                     }
                 }
@@ -172,7 +169,7 @@ public final class Castle extends Residence {
         getLastSiegeDate().setTimeInMillis(castleEntity.getLastSiegeDate());
         getOwnDate().setTimeInMillis(castleEntity.getOwnDate());
 
-        _procure = new ArrayList<>();
+        procures = new ArrayList<>();
         _production = new ArrayList<>();
         _procureNext = new ArrayList<>();
         _productionNext = new ArrayList<>();
@@ -212,7 +209,7 @@ public final class Castle extends Residence {
 
     public void setTaxPercent(int p) {
         _TaxPercent = Math.min(Math.max(0, p), 100);
-        _TaxRate = _TaxPercent / 100.0;
+        taxRate = _TaxPercent / 100.0;
     }
 
     public int getTaxPercent0() {
@@ -290,11 +287,10 @@ public final class Castle extends Residence {
     }
 
     public int getCropRewardType(int crop) {
-        int rw = 0;
-        for (CropProcure cp : _procure)
-            if (cp.getId() == crop)
-                rw = cp.getReward();
-        return rw;
+        return procures.stream()
+        .filter(cp -> cp.cropId == crop)
+            .mapToInt(CropProcure::getReward)
+        .findFirst().orElse(0);
     }
 
     // This method updates the castle tax rate
@@ -310,17 +306,13 @@ public final class Castle extends Residence {
 
     public double getTaxRate() {
         // Если печатью SEAL_STRIFE владеют DUSK то налог можно выставлять не более 5%
-        if (_TaxRate > 0.05 && SevenSigns.INSTANCE.getSealOwner(SevenSigns.SEAL_STRIFE) == SevenSigns.CABAL_DUSK)
-            _TaxRate = 0.05;
-        return _TaxRate;
+        if (taxRate > 0.05 && SevenSigns.INSTANCE.getSealOwner(SevenSigns.SEAL_STRIFE) == SevenSigns.CABAL_DUSK)
+            taxRate = 0.05;
+        return taxRate;
     }
 
     public long getTreasury() {
         return treasury;
-    }
-
-    public void setTreasury(long t) {
-        treasury = t;
     }
 
     public List<SeedProduction> getSeedProduction(int period) {
@@ -328,7 +320,7 @@ public final class Castle extends Residence {
     }
 
     public List<CropProcure> getCropProcure(int period) {
-        return period == CastleManorManager.PERIOD_CURRENT ? _procure : _procureNext;
+        return period == CastleManorManager.PERIOD_CURRENT ? procures : _procureNext;
     }
 
     public void setSeedProduction(List<SeedProduction> seed, int period) {
@@ -340,7 +332,7 @@ public final class Castle extends Residence {
 
     public void setCropProcure(List<CropProcure> crop, int period) {
         if (period == CastleManorManager.PERIOD_CURRENT)
-            _procure = crop;
+            procures = crop;
         else
             _procureNext = crop;
     }
@@ -354,7 +346,7 @@ public final class Castle extends Residence {
 
     public synchronized CropProcure getCrop(int cropId, int period) {
         for (CropProcure crop : getCropProcure(period))
-            if (crop.getId() == cropId)
+            if (crop.cropId == cropId)
                 return crop;
         return null;
     }
@@ -364,7 +356,7 @@ public final class Castle extends Residence {
         List<SeedProduction> production;
 
         if (period == CastleManorManager.PERIOD_CURRENT) {
-            procure = _procure;
+            procure = procures;
             production = _production;
         } else {
             procure = _procureNext;
@@ -377,7 +369,7 @@ public final class Castle extends Residence {
                 total += Manor.INSTANCE.getSeedBuyPrice(seed.getId()) * seed.getStartProduce();
         if (procure != null)
             for (CropProcure crop : procure)
-                total += crop.getPrice() * crop.getStartAmount();
+                total += crop.price * crop.getStartAmount();
         return total;
     }
 
@@ -391,7 +383,7 @@ public final class Castle extends Residence {
             if (_production != null) {
                 int count = 0;
                 String query = "INSERT INTO castle_manor_production VALUES ";
-                String values[] = new String[_production.size()];
+                String[] values = new String[_production.size()];
                 for (SeedProduction s : _production) {
                     values[count] = "(" + getId() + "," + s.getId() + "," + s.getCanProduce() + "," + s.getStartProduce() + "," + s.getPrice() + "," + CastleManorManager.PERIOD_CURRENT + ")";
                     count++;
@@ -408,7 +400,7 @@ public final class Castle extends Residence {
             if (_productionNext != null) {
                 int count = 0;
                 String query = "INSERT INTO castle_manor_production VALUES ";
-                String values[] = new String[_productionNext.size()];
+                String[] values = new String[_productionNext.size()];
                 for (SeedProduction s : _productionNext) {
                     values[count] = "(" + getId() + "," + s.getId() + "," + s.getCanProduce() + "," + s.getStartProduce() + "," + s.getPrice() + "," + CastleManorManager.PERIOD_NEXT + ")";
                     count++;
@@ -439,7 +431,7 @@ public final class Castle extends Residence {
             if (prod != null) {
                 int count = 0;
                 String query = "INSERT INTO castle_manor_production VALUES ";
-                String values[] = new String[prod.size()];
+                String[] values = new String[prod.size()];
                 for (SeedProduction s : prod) {
                     values[count] = "(" + getId() + "," + s.getId() + "," + s.getCanProduce() + "," + s.getStartProduce() + "," + s.getPrice() + "," + period + ")";
                     count++;
@@ -463,12 +455,12 @@ public final class Castle extends Residence {
             PreparedStatement statement = con.prepareStatement(CASTLE_MANOR_DELETE_PROCURE);
             statement.setInt(1, getId());
             statement.execute();
-            if (_procure != null) {
+            if (procures != null) {
                 int count = 0;
                 StringBuilder query = new StringBuilder("INSERT INTO castle_manor_procure VALUES ");
-                String values[] = new String[_procure.size()];
-                for (CropProcure cp : _procure) {
-                    values[count] = "(" + getId() + "," + cp.getId() + "," + cp.getAmount() + "," + cp.getStartAmount() + "," + cp.getPrice() + "," + cp.getReward() + "," + CastleManorManager.PERIOD_CURRENT + ")";
+                String[] values = new String[procures.size()];
+                for (CropProcure cp : procures) {
+                    values[count] = "(" + getId() + "," + cp.cropId + "," + cp.getAmount() + "," + cp.getStartAmount() + "," + cp.price + "," + cp.getReward() + "," + CastleManorManager.PERIOD_CURRENT + ")";
                     count++;
                 }
                 if (values.length > 0) {
@@ -482,9 +474,9 @@ public final class Castle extends Residence {
             if (_procureNext != null) {
                 int count = 0;
                 StringBuilder query = new StringBuilder("INSERT INTO castle_manor_procure VALUES ");
-                String values[] = new String[_procureNext.size()];
+                String[] values = new String[_procureNext.size()];
                 for (CropProcure cp : _procureNext) {
-                    values[count] = "(" + getId() + "," + cp.getId() + "," + cp.getAmount() + "," + cp.getStartAmount() + "," + cp.getPrice() + "," + cp.getReward() + "," + CastleManorManager.PERIOD_NEXT + ")";
+                    values[count] = "(" + getId() + "," + cp.cropId + "," + cp.getAmount() + "," + cp.getStartAmount() + "," + cp.price + "," + cp.getReward() + "," + CastleManorManager.PERIOD_NEXT + ")";
                     count++;
                 }
                 if (values.length > 0) {
@@ -513,10 +505,10 @@ public final class Castle extends Residence {
             if (proc != null) {
                 int count = 0;
                 String query = "INSERT INTO castle_manor_procure VALUES ";
-                String values[] = new String[proc.size()];
+                String[] values = new String[proc.size()];
 
                 for (CropProcure cp : proc) {
-                    values[count] = "(" + getId() + "," + cp.getId() + "," + cp.getAmount() + "," + cp.getStartAmount() + "," + cp.getPrice() + "," + cp.getReward() + "," + period + ")";
+                    values[count] = "(" + getId() + "," + cp.cropId + "," + cp.getAmount() + "," + cp.getStartAmount() + "," + cp.price + "," + cp.getReward() + "," + period + ")";
                     count++;
                 }
                 if (values.length > 0) {

@@ -67,7 +67,7 @@ public final class RankingCommunity implements ScriptFile, ICommunityBoardHandle
         String html = HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + "off.htm", player);
         ShowBoard.separateAndSend(html, player);
 
-        //Checking if all required images were sent to the player, if not - not allowing to pass
+        //Checking if all required images were sent to the getPlayer, if not - not allowing to pass
         if (!AutoImageSenderManager.wereAllImagesSent(player)) {
             player.sendPacket(new Say2(player.objectId(), ChatType.CRITICAL_ANNOUNCE, "CB", "Community wasn't loaded yet, try again in few seconds."));
             return;
@@ -111,7 +111,7 @@ public final class RankingCommunity implements ScriptFile, ICommunityBoardHandle
                     html = html.replace("<?clan_" + number + "?>", RankingManagerStats.RankingPkClan[number] == null ? "<font color=\"B59A75\">No Clan</font>" : RankingManagerStats.RankingPkClan[number]);
                     html = html.replace("<?class_" + number + "?>", Util.getFullClassName(RankingManagerStats.RankingPkClass[number]));
                     html = html.replace("<?on_" + number + "?>", RankingManagerStats.RankingPkOn[number] == 1 ? "<font color=\"66FF33\">Yes</font>" : "<font color=\"B59A75\">No</font>");
-                    html = html.replace("<?count_" + number + "?>", Integer.toString(RankingManagerStats.RankingPk[number]));
+                    html = html.replace("<?count_" + number + "?>", "" +RankingManagerStats.RankingPk[number]);
                 } else {
                     html = html.replace("<?name_" + number + "?>", "...");
                     html = html.replace("<?clan_" + number + "?>", "...");
@@ -130,7 +130,7 @@ public final class RankingCommunity implements ScriptFile, ICommunityBoardHandle
                     html = html.replace("<?clan_" + number + "?>", RankingManagerStats.RankingPvPClan[number] == null ? "<font color=\"B59A75\">No Clan</font>" : RankingManagerStats.RankingPvPClan[number]);
                     html = html.replace("<?class_" + number + "?>", Util.getFullClassName(RankingManagerStats.RankingPvPClass[number]));
                     html = html.replace("<?on_" + number + "?>", RankingManagerStats.RankingPvPOn[number] == 1 ? "<font color=\"66FF33\">Yes</font>" : "<font color=\"B59A75\">No</font>");
-                    html = html.replace("<?count_" + number + "?>", Integer.toString(RankingManagerStats.RankingPvP[number]));
+                    html = html.replace("<?count_" + number + "?>", ""+RankingManagerStats.RankingPvP[number]);
                 } else {
                     html = html.replace("<?name_" + number + "?>", "...");
                     html = html.replace("<?clan_" + number + "?>", "...");
@@ -148,7 +148,7 @@ public final class RankingCommunity implements ScriptFile, ICommunityBoardHandle
                     html = html.replace("<?clan_" + number + "?>", RankingManagerStats.RankingRaidClan[number] == null ? "<font color=\"B59A75\">No Clan</font>" : RankingManagerStats.RankingRaidClan[number]);
                     html = html.replace("<?class_" + number + "?>", Util.getFullClassName(RankingManagerStats.RankingRaidClass[number]));
                     html = html.replace("<?on_" + number + "?>", RankingManagerStats.RankingRaidOn[number] == 1 ? "<font color=\"66FF33\">Yes</font>" : "<font color=\"B59A75\">No</font>");
-                    html = html.replace("<?count_" + number + "?>", Integer.toString(RankingManagerStats.RankingRaid[number]));
+                    html = html.replace("<?count_" + number + "?>", ""+ RankingManagerStats.RankingRaid[number]);
                 } else {
                     html = html.replace("<?name_" + number + "?>", "...");
                     html = html.replace("<?clan_" + number + "?>", "...");

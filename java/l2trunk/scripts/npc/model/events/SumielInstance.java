@@ -13,10 +13,8 @@ import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.Location;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ScheduledFuture;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public final class SumielInstance extends NpcInstance {
@@ -132,8 +130,7 @@ public final class SumielInstance extends NpcInstance {
                             break;
                     }
 
-                    player.getInventory().getItemByItemId(15540);
-                    player.getInventory().destroyItemByItemId(15540, 1, "SumielInstance");
+                    player.getInventory().destroyItemByItemId(15540, "SumielInstance");
                     player.getInventory().addItem(15485, 1, "SumielInstance");
                     Functions.npcShout(this, NpcString.FURNFACE1);
                     i_ai1 = Rnd.get(9) + 1;

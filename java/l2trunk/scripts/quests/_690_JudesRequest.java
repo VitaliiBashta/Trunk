@@ -38,7 +38,7 @@ public final class _690_JudesRequest extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("jude_q0690_03.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         }
         return event;
@@ -57,7 +57,7 @@ public final class _690_JudesRequest extends Quest {
                 htmltext = "jude_q0690_01.htm";
             else
                 htmltext = "jude_q0690_02.htm";
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         } else if (cond == 1 && st.getQuestItemsCount(EVIL_WEAPON) >= 5) {
             if (st.getQuestItemsCount(EVIL_WEAPON) >= 100) {
                 st.giveItems(Rnd.get(recipes));

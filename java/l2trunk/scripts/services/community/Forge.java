@@ -51,7 +51,7 @@ public final class Forge implements ScriptFile, ICommunityBoardHandler {
 
     @Override
     public List<String> getBypassCommands() {
-        return Collections.singletonList("_bbsforge");
+        return List.of("_bbsforge");
     }
 
     @Override
@@ -68,14 +68,14 @@ public final class Forge implements ScriptFile, ICommunityBoardHandler {
         } else {
             if (command.equals("_bbsforge:augment")) {
                 onBypassCommand(player, "_bbsforge");
-                //player.addSessionVar("augmentation", Boolean.valueOf(true));
+                //getPlayer.addSessionVar("augmentation", Boolean.valueOf(true));
                 player.sendPacket(SystemMsg.SELECT_THE_ITEM_TO_BE_AUGMENTED);
                 player.sendPacket(ExShowVariationMakeWindow.STATIC);
                 return;
             }
             if (command.equals("_bbsforge:remove:augment")) {
                 onBypassCommand(player, "_bbsforge");
-                //player.addSessionVar("augmentation", Boolean.valueOf(true));
+                //getPlayer.addSessionVar("augmentation", Boolean.valueOf(true));
                 player.sendPacket(SystemMsg.SELECT_THE_ITEM_FROM_WHICH_YOU_WISH_TO_REMOVE_AUGMENTATION);
                 player.sendPacket(ExShowVariationCancelWindow.STATIC);
                 return;

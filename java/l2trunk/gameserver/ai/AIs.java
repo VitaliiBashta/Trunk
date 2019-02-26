@@ -32,7 +32,7 @@ import l2trunk.scripts.ai.selmahum.SelChef;
 import l2trunk.scripts.ai.selmahum.SelSquadLeader;
 import l2trunk.scripts.ai.suspiciousmerchant.*;
 
-public class AIs {
+public final class AIs {
     private AIs() {
     }
 
@@ -153,9 +153,6 @@ public class AIs {
                 return new l2trunk.scripts.ai.DeluLizardmanSpecialCommander(npc);
             case "ai.den_of_evil.HestuiGuard":
                 return new HestuiGuard(npc);
-//        case "ai.ResidenceDoor": return new  l2trunk.scripts.ai.door.ResidenceDoor(npc);
-//        case "ai.SiegeDoor": return new  l2trunk.scripts.ai.door.SiegeDoor(npc);
-//        case "ai.SSQDoor": return new  l2trunk.scripts.ai.door.SSQDoor(npc);
             case "ai.dragonvalley.BatwingDrake":
                 return new l2trunk.scripts.ai.dragonvalley.BatwingDrake(npc);
             case "ai.dragonvalley.DragonKnight":

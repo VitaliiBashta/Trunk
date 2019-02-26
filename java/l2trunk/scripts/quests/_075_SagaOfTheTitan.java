@@ -1,5 +1,6 @@
 package l2trunk.scripts.quests;
 
+import l2trunk.gameserver.model.base.ClassId;
 import l2trunk.gameserver.utils.Location;
 
 import java.util.List;
@@ -9,15 +10,14 @@ public final class _075_SagaOfTheTitan extends SagasSuperclass {
         super(false);
 
         NPC = List.of(31327, 31624, 31289, 31290, 31607, 31646, 31649, 31651, 31654, 31655, 31658, 31290);
-        Items = List.of(7080, 7539, 7081, 7490, 7273, 7304, 7335, 7366, 7397, 7428, 7098, 0);
-        Mob = List.of(27292, 27224, 27283);
-        classid = 113;
-        prevclass = 0x2E;
+        items = List.of(7080, 7539, 7081, 7490, 7273, 7304, 7335, 7366, 7397, 7428, 7098, 0);
+        mob = List.of(27292, 27224, 27283);
+        classid = ClassId.titan;
         locs = List.of(
-                new Location(119518, -28658, -3811),
-                new Location(181215, 36676, -4812),
-                new Location(181227, 36703, -4816));
-        Text = List.of(
+                Location.of(119518, -28658, -3811),
+                Location.of(181215, 36676, -4812),
+                Location.of(181227, 36703, -4816));
+        text = List.of(
                 "PLAYERNAME! Pursued to here! However, I jumped out of the Banshouren boundaries! You look at the giant as the sign of power!",
                 "... Oh ... good! So it was ... let's begin!",
                 "I do not have the patience ..! I have been a giant force ...! Cough chatter ah ah ah!",

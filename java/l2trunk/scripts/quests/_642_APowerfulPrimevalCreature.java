@@ -16,10 +16,10 @@ public final class _642_APowerfulPrimevalCreature extends Quest {
     private static final List<Integer> Dino = List.of(
             22196, 22197, 22198, 22199, 22200, 22201, 22202, 22203, 22204, 22205, 22218,
             22219, 22220, 22223, 22224, 22225, 22226, 22227, 22742, 22743, 22744, 22745);
-    // Items
+    // items
     private static final List<Integer> Rewards = List.of(
             8690, 8692, 8694, 8696, 8698, 8700, 8702, 8704, 8706, 8708, 8710);
-    // Quest Items
+    // Quest items
     private static final int Dinosaur_Tissue = 8774;
     private static final int Dinosaur_Egg = 8775;
     // Chances
@@ -31,8 +31,7 @@ public final class _642_APowerfulPrimevalCreature extends Quest {
         addStartNpc(Dinn);
         addKillId(Ancient_Egg);
         addKillId(Dino);
-        addQuestItem(Dinosaur_Tissue);
-        addQuestItem(Dinosaur_Egg);
+        addQuestItem(Dinosaur_Tissue,Dinosaur_Egg);
     }
 
     @Override
@@ -40,7 +39,7 @@ public final class _642_APowerfulPrimevalCreature extends Quest {
         int state = st.getState();
         long Dinosaur_Tissue_Count = st.getQuestItemsCount(Dinosaur_Tissue);
         if ("dindin_q0642_04.htm".equalsIgnoreCase(event) && state == CREATED) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if ("dindin_q0642_12.htm".equalsIgnoreCase(event) && state == STARTED) {
@@ -80,7 +79,7 @@ public final class _642_APowerfulPrimevalCreature extends Quest {
         int _state = st.getState();
         if (_state == CREATED) {
             if (st.player.getLevel() < 75) {
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 return "dindin_q0642_01a.htm";
             }
             st.setCond(0);

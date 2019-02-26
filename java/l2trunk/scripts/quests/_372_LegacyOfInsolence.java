@@ -6,6 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public final class _372_LegacyOfInsolence extends Quest {
@@ -23,49 +24,21 @@ public final class _372_LegacyOfInsolence extends Quest {
     private static final int PLATINUM_PRE = 21069;
     private static final int MESSENGER_A1 = 21062;
     private static final int MESSENGER_A2 = 21063;
-    // Items
+    // items
     private static final int Ancient_Red_Papyrus = 5966;
     private static final int Ancient_Blue_Papyrus = 5967;
     private static final int Ancient_Black_Papyrus = 5968;
     private static final int Ancient_White_Papyrus = 5969;
 
-    private static final int[] Revelation_of_the_Seals_Range = {
-            5972,
-            5978
-    };
-    private static final int[] Ancient_Epic_Chapter_Range = {
-            5979,
-            5983
-    };
-    private static final int[] Imperial_Genealogy_Range = {
-            5984,
-            5988
-    };
-    private static final int[] Blueprint_Tower_of_Insolence_Range = {
-            5989,
-            6001
-    };
+    private static final List<Integer> Revelation_of_the_Seals_Range = List.of(5972, 5978);
+    private static final List<Integer> Ancient_Epic_Chapter_Range = List.of(5979, 5983);
+    private static final List<Integer> Imperial_Genealogy_Range = List.of(5984, 5988);
+    private static final List<Integer> Blueprint_Tower_of_Insolence_Range = List.of(5989, 6001);
     // Rewards
-    private static final int[] Reward_Dark_Crystal = {
-            5368,
-            5392,
-            5426
-    };
-    private static final int[] Reward_Tallum = {
-            5370,
-            5394,
-            5428
-    };
-    private static final int[] Reward_Nightmare = {
-            5380,
-            5404,
-            5430
-    };
-    private static final int[] Reward_Majestic = {
-            5382,
-            5406,
-            5432
-    };
+    private static final List<Integer> Reward_Dark_Crystal = List.of(5368, 5392, 5426);
+    private static final List<Integer> Reward_Tallum = List.of(5370, 5394, 5428);
+    private static final List<Integer> Reward_Nightmare = List.of(5380, 5404, 5430);
+    private static final List<Integer> Reward_Majestic = List.of(5382, 5406, 5432);
     // Chances
     private static final int Three_Recipes_Reward_Chance = 1;
     private static final int Two_Recipes_Reward_Chance = 2;
@@ -77,18 +50,9 @@ public final class _372_LegacyOfInsolence extends Quest {
         super(true);
         addStartNpc(WALDERAL);
 
-        addTalkId(HOLLY);
-        addTalkId(DESMOND);
-        addTalkId(PATRIN);
-        addTalkId(CLAUDIA);
+        addTalkId(HOLLY,DESMOND,PATRIN,CLAUDIA);
 
-        addKillId(CORRUPT_SAGE);
-        addKillId(ERIN_EDIUNCE);
-        addKillId(HALLATE_INSP);
-        addKillId(PLATINUM_OVL);
-        addKillId(PLATINUM_PRE);
-        addKillId(MESSENGER_A1);
-        addKillId(MESSENGER_A2);
+        addKillId(CORRUPT_SAGE,ERIN_EDIUNCE,HALLATE_INSP,PLATINUM_OVL,PLATINUM_PRE,MESSENGER_A1,MESSENGER_A2);
 
         DROPLIST.put(CORRUPT_SAGE, new int[]{
                 Ancient_Red_Papyrus,
@@ -124,12 +88,12 @@ public final class _372_LegacyOfInsolence extends Quest {
         st.giveItems(recipe_id, 1);
     }
 
-    private static boolean check_and_reward(QuestState st, int[] items_range, int[] reward) {
-        for (int item_id = items_range[0]; item_id <= items_range[1]; item_id++)
+    private static boolean check_and_reward(QuestState st, List<Integer> items_range, List<Integer> reward) {
+        for (int item_id = items_range.get(0); item_id <= items_range.get(1); item_id++)
             if (st.getQuestItemsCount(item_id) < 1)
                 return false;
 
-        for (int item_id = items_range[0]; item_id <= items_range[1]; item_id++)
+        for (int item_id = items_range.get(0); item_id <= items_range.get(1); item_id++)
             st.takeItems(item_id, 1);
 
         if (Rnd.chance(Three_Recipes_Reward_Chance)) {
@@ -137,7 +101,7 @@ public final class _372_LegacyOfInsolence extends Quest {
                 giveRecipe(st, reward_item_id);
             st.playSound(SOUND_JACKPOT);
         } else if (Rnd.chance(Two_Recipes_Reward_Chance)) {
-            int ignore_reward_id = reward[Rnd.get(reward.length)];
+            int ignore_reward_id = Rnd.get(reward);
             for (int reward_item_id : reward)
                 if (reward_item_id != ignore_reward_id)
                     giveRecipe(st, reward_item_id);
@@ -145,7 +109,7 @@ public final class _372_LegacyOfInsolence extends Quest {
         } else if (Rnd.chance(Adena4k_Reward_Chance))
             st.giveItems(ADENA_ID, 4000, false);
         else
-            giveRecipe(st, reward[Rnd.get(reward.length)]);
+            giveRecipe(st, Rnd.get(reward));
 
         return true;
     }
@@ -155,32 +119,32 @@ public final class _372_LegacyOfInsolence extends Quest {
         String htmltext = event;
         int _state = st.getState();
         if (_state == CREATED) {
-            if (event.equalsIgnoreCase("30844-6.htm")) {
-                st.setState(STARTED);
+            if ("30844-6.htm".equalsIgnoreCase(event)) {
+                st.start();
                 st.setCond(1);
                 st.playSound(SOUND_ACCEPT);
-            } else if (event.equalsIgnoreCase("30844-9.htm"))
+            } else if ("30844-9.htm".equalsIgnoreCase(event))
                 st.setCond(2);
-            else if (event.equalsIgnoreCase("30844-7.htm")) {
+            else if ("30844-7.htm".equalsIgnoreCase(event)) {
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (_state == STARTED)
-            if (event.equalsIgnoreCase("30839-exchange"))
+            if ("30839-exchange".equalsIgnoreCase(event))
                 htmltext = check_and_reward(st, Imperial_Genealogy_Range, Reward_Dark_Crystal) ? "30839-2.htm" : "30839-3.htm";
-            else if (event.equalsIgnoreCase("30855-exchange"))
+            else if ("30855-exchange".equalsIgnoreCase(event))
                 htmltext = check_and_reward(st, Revelation_of_the_Seals_Range, Reward_Majestic) ? "30855-2.htm" : "30855-3.htm";
-            else if (event.equalsIgnoreCase("30929-exchange"))
+            else if ("30929-exchange".equalsIgnoreCase(event))
                 htmltext = check_and_reward(st, Ancient_Epic_Chapter_Range, Reward_Tallum) ? "30839-2.htm" : "30839-3.htm";
-            else if (event.equalsIgnoreCase("31001-exchange"))
+            else if ("31001-exchange".equalsIgnoreCase(event))
                 htmltext = check_and_reward(st, Revelation_of_the_Seals_Range, Reward_Nightmare) ? "30839-2.htm" : "30839-3.htm";
-            else if (event.equalsIgnoreCase("30844-DarkCrystal"))
+            else if ("30844-DarkCrystal".equalsIgnoreCase(event))
                 htmltext = check_and_reward(st, Blueprint_Tower_of_Insolence_Range, Reward_Dark_Crystal) ? "30844-11.htm" : "30844-12.htm";
-            else if (event.equalsIgnoreCase("30844-Tallum"))
+            else if ("30844-Tallum".equalsIgnoreCase(event))
                 htmltext = check_and_reward(st, Blueprint_Tower_of_Insolence_Range, Reward_Tallum) ? "30844-11.htm" : "30844-12.htm";
-            else if (event.equalsIgnoreCase("30844-Nightmare"))
+            else if ("30844-Nightmare".equalsIgnoreCase(event))
                 htmltext = check_and_reward(st, Blueprint_Tower_of_Insolence_Range, Reward_Nightmare) ? "30844-11.htm" : "30844-12.htm";
-            else if (event.equalsIgnoreCase("30844-Majestic"))
+            else if ("30844-Majestic".equalsIgnoreCase(event))
                 htmltext = check_and_reward(st, Blueprint_Tower_of_Insolence_Range, Reward_Majestic) ? "30844-11.htm" : "30844-12.htm";
 
         return htmltext;
@@ -199,7 +163,7 @@ public final class _372_LegacyOfInsolence extends Quest {
                 htmltext = "30844-4.htm";
             else {
                 htmltext = "30844-5.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (_state == STARTED)
             htmltext = npcId + "-1.htm";
@@ -210,11 +174,11 @@ public final class _372_LegacyOfInsolence extends Quest {
     @Override
     public void onKill(NpcInstance npc, QuestState qs) {
         if (qs.getState() != STARTED)
-            return ;
+            return;
 
         int[] drop = DROPLIST.get(npc.getNpcId());
         if (drop == null)
-            return ;
+            return;
 
         qs.rollAndGive(drop[0], 1, drop[1]);
     }

@@ -9,7 +9,6 @@ import l2trunk.gameserver.data.xml.holder.BuyListHolder;
 import l2trunk.gameserver.data.xml.holder.EventHolder;
 import l2trunk.gameserver.data.xml.holder.MultiSellHolder;
 import l2trunk.gameserver.data.xml.holder.ProductHolder;
-import l2trunk.gameserver.data.xml.parser.ClassesStatsBalancerParser;
 import l2trunk.gameserver.data.xml.parser.EventParser;
 import l2trunk.gameserver.data.xml.parser.NpcParser;
 import l2trunk.gameserver.database.DatabaseFactory;
@@ -32,7 +31,7 @@ import org.slf4j.LoggerFactory;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class AdminReload implements IAdminCommandHandler {
+public final class AdminReload implements IAdminCommandHandler {
     private static final Logger LOG = LoggerFactory.getLogger(AdminReload.class);
 
     @Override
@@ -106,7 +105,7 @@ public class AdminReload implements IAdminCommandHandler {
                 activeChar.sendMessage("Quest Help:");
                 activeChar.sendMessage("reload_qs_help - This Message.");
                 activeChar.sendMessage("reload_qs <selected target> - reload all quest states for target.");
-                activeChar.sendMessage("reload_qs <no target or target is not player> - reload quests for player.");
+                activeChar.sendMessage("reload_qs <no target or target is not getPlayer> - reload quests for getPlayer.");
                 activeChar.sendMessage("reload_qs all - reload quests for all players in world.");
                 activeChar.sendMessage("");
                 break;
@@ -168,11 +167,6 @@ public class AdminReload implements IAdminCommandHandler {
                 activeChar.sendMessage("Changelog reloaded!");
                 break;
             }
-            case admin_reload_balanceclasses: {
-                ClassesStatsBalancerParser.getInstance().reload();
-                activeChar.sendMessage("Balance Classes reloaded!");
-                break;
-            }
             case admin_reload_damageclasses: {
                 activeChar.sendMessage("Balance properties data have been reloaded.");
                 break;
@@ -218,7 +212,6 @@ public class AdminReload implements IAdminCommandHandler {
         admin_reload_im,
         admin_reload_events,
         admin_reload_changelog,
-        admin_reload_balanceclasses,
         admin_reload_damageclasses
     }
 }

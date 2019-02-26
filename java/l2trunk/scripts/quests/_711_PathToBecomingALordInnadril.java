@@ -30,11 +30,11 @@ public final class _711_PathToBecomingALordInnadril extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         Castle castle = ResidenceHolder.getResidence(InnadrilCastle);
-        Player castleOwner = castle.getOwner().getLeader().player();
+        Player castleOwner = castle.getOwner().getLeader().getPlayer();
         String htmltext = event;
         switch (event) {
             case "neurath_q711_03.htm":
-                st.setState(STARTED);
+                st.start();
                 st.setCond(1);
                 st.playSound(SOUND_ACCEPT);
                 break;
@@ -45,7 +45,7 @@ public final class _711_PathToBecomingALordInnadril extends Quest {
                 if (isLordAvailable(2, st)) {
                     castleOwner.getQuestState(this).set("confidant", st.player.objectId());
                     castleOwner.getQuestState(this).setCond(3);
-                    st.setState(STARTED);
+                    st.start();
                 } else
                     htmltext = "neurath_q711_07a.htm";
 
@@ -60,7 +60,7 @@ public final class _711_PathToBecomingALordInnadril extends Quest {
                 Functions.npcSay(npc, NpcString.S1_HAS_BECOME_THE_LORD_OF_THE_TOWN_OF_INNADRIL, st.player.getName());
                 castle.getDominion().changeOwner(castleOwner.getClan());
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 break;
         }
         return htmltext;
@@ -74,7 +74,7 @@ public final class _711_PathToBecomingALordInnadril extends Quest {
         Castle castle = ResidenceHolder.getResidence(InnadrilCastle);
         if (castle.getOwner() == null)
             return "Castle has no lord";
-        Player castleOwner = castle.getOwner().getLeader().player();
+        Player castleOwner = castle.getOwner().getLeader().getPlayer();
 
         if (npcId == Neurath) {
             if (cond == 0) {
@@ -83,7 +83,7 @@ public final class _711_PathToBecomingALordInnadril extends Quest {
                         htmltext = "neurath_q711_01.htm";
                     else {
                         htmltext = "neurath_q711_00.htm";
-                        st.exitCurrentQuest(true);
+                        st.exitCurrentQuest();
                     }
                 } else if (isLordAvailable(2, st)) {
                     if (castleOwner.isInRangeZ(npc, 200))
@@ -94,7 +94,7 @@ public final class _711_PathToBecomingALordInnadril extends Quest {
                     htmltext = "neurath_q711_00b.htm";
                 else {
                     htmltext = "neurath_q711_00a.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1)
                 htmltext = "neurath_q711_04.htm";
@@ -133,7 +133,7 @@ public final class _711_PathToBecomingALordInnadril extends Quest {
     public void onKill(NpcInstance npc, QuestState st) {
         if (st.getCond() == 5) {
             if (st.getInt("mobs") < 99)
-                st.set("mobs", st.getInt("mobs") + 1);
+                st.inc("mobs");
             else
                 st.setCond(6);
         }

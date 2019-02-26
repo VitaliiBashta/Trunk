@@ -85,7 +85,7 @@ public final class ServicesCommunity extends Functions implements ScriptFile, IC
 
 
     private boolean checkCondition(Player player) {
-        if (/*player.isInJail() ||*/player.getReflectionId() != 0 || player.isDead() || player.isAlikeDead() || player.isCastingNow() || player.isInCombat() || player.isAttackingNow() || player.isInOlympiadMode() || player.isFlying()) {
+        if (/*getPlayer.isInJail() ||*/player.getReflectionId() != 0 || player.isDead() || player.isAlikeDead() || player.isCastingNow() || player.isInCombat() || player.isAttackingNow() || player.isInOlympiadMode() || player.isFlying()) {
             player.sendMessage("Raising is not possible");
             return false;
         }

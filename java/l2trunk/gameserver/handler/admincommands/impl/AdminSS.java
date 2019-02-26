@@ -34,7 +34,7 @@ public class AdminSS implements IAdminCommandHandler {
             }
             case admin_ssq_cabal: {
                 if (wordList.length > 3) {
-                    int player = Integer.parseInt(wordList[1]); // player objectid
+                    int player = Integer.parseInt(wordList[1]); // getPlayer objectid
                     int cabal = Integer.parseInt(wordList[2]); // null dusk dawn
                     int seal = Integer.parseInt(wordList[3]); // null avarice gnosis strife
                     SevenSigns.INSTANCE.setPlayerInfo(player, cabal, seal);

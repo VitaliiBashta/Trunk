@@ -26,11 +26,11 @@ public final class _715_PathToBecomingALordGoddard extends Quest {
         Castle castle = ResidenceHolder.getResidence(GoddardCastle);
         if (castle.getOwner() == null)
             return "Castle has no lord";
-        Player castleOwner = castle.getOwner().getLeader().player();
+        Player castleOwner = castle.getOwner().getLeader().getPlayer();
 
         switch (event) {
             case "alfred_q715_03.htm":
-                st.setState(STARTED);
+                st.start();
                 st.setCond(1);
                 st.playSound(SOUND_ACCEPT);
                 break;
@@ -43,7 +43,7 @@ public final class _715_PathToBecomingALordGoddard extends Quest {
             case "alfred_q715_08.htm":
                 castle.getDominion().changeOwner(castleOwner.getClan());
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 break;
         }
         return event;
@@ -64,11 +64,11 @@ public final class _715_PathToBecomingALordGoddard extends Quest {
                     htmltext = "alfred_q715_01.htm";
                 else {
                     htmltext = "alfred_q715_00.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else {
                 htmltext = "alfred_q715_00a.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (cond == 1)
             htmltext = "alfred_q715_03.htm";

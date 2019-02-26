@@ -53,7 +53,7 @@ public final class Olympiad {
     private static final int TEAM_PARTY_SIZE = 3;
     private static final Logger _log = LoggerFactory.getLogger(Olympiad.class);
     private static final List<NpcInstance> _npcs = new ArrayList<>();
-    public static Map<Integer, StatsSet> _nobles;
+    public static Map<Integer, StatsSet> nobles;
     public static Map<Integer, Integer> _noblesRank;
     public static List<StatsSet> _heroesToBe;
     public static long _olympiadEnd;
@@ -72,7 +72,7 @@ public final class Olympiad {
     private static ScheduledFuture<?> _scheduledOlympiadEnd;
 
     public static void load() {
-        _nobles = new ConcurrentHashMap<>();
+        nobles = new ConcurrentHashMap<>();
         _currentCycle = ServerVariables.getInt("Olympiad_CurrentCycle", -1);
         _period = ServerVariables.getInt("Olympiad_Period", -1);
         _olympiadEnd = ServerVariables.getLong("Olympiad_End", -1);
@@ -152,7 +152,7 @@ public final class Olympiad {
             _log.info("Olympiad System: In " + numDays2 + " days, " + numHours2 + " hours and " + numMins2 + " mins.");
         }
 
-        _log.info("Olympiad System: Loaded " + _nobles.size() + " Noblesses");
+        _log.info("Olympiad System: Loaded " + nobles.size() + " Noblesses");
 
         if (_period == 0)
             init();
@@ -214,7 +214,7 @@ public final class Olympiad {
             return;
         }
 
-        StatsSet nobleInfo = _nobles.get(noble.objectId());
+        StatsSet nobleInfo = nobles.get(noble.objectId());
 
         if (!validPlayer(noble, noble, type)) {
             return;
@@ -278,7 +278,7 @@ public final class Olympiad {
             return false;
         }
 
-        if (validPlayer.getBaseClassId() != validPlayer.getClassId().id) {
+        if (validPlayer.getBaseClassId() != validPlayer.getClassId()) {
             sendPlayer.sendPacket(new SystemMessage2(SystemMsg.C1_DOES_NOT_MEET_THE_PARTICIPATION_REQUIREMENTS_SUBCLASS_CHARACTER_CANNOT_PARTICIPATE_IN_THE_OLYMPIAD).addName(validPlayer));
             return false;
         }
@@ -458,7 +458,7 @@ public final class Olympiad {
     public static synchronized void doWeekTasks() {
         if (_period == 1)
             return;
-        for (Map.Entry<Integer, StatsSet> entry : _nobles.entrySet()) {
+        for (Map.Entry<Integer, StatsSet> entry : nobles.entrySet()) {
             StatsSet set = entry.getValue();
             Player player = GameObjectsStorage.getPlayer(entry.getKey());
 
@@ -540,7 +540,7 @@ public final class Olympiad {
     public static synchronized int getNoblessePasses(Player player) {
         int objId = player.objectId();
 
-        StatsSet noble = _nobles.get(objId);
+        StatsSet noble = nobles.get(objId);
         if (noble == null)
             return 0;
 
@@ -598,28 +598,28 @@ public final class Olympiad {
      * Возвращает олимпийские очки за текущий период
      */
     public static synchronized int getNoblePoints(int objId) {
-        StatsSet noble = _nobles.get(objId);
+        StatsSet noble = nobles.get(objId);
         if (noble == null)
             return 0;
         return noble.getInteger(POINTS, 0);
     }
 
     public static synchronized int getCompetitionDone(int objId) {
-        StatsSet noble = _nobles.get(objId);
+        StatsSet noble = nobles.get(objId);
         if (noble == null)
             return 0;
         return noble.getInteger(COMP_DONE, 0);
     }
 
     public static synchronized int getCompetitionWin(int objId) {
-        StatsSet noble = _nobles.get(objId);
+        StatsSet noble = nobles.get(objId);
         if (noble == null)
             return 0;
         return noble.getInteger(COMP_WIN, 0);
     }
 
     public static synchronized int getCompetitionLoose(int objId) {
-        StatsSet noble = _nobles.get(objId);
+        StatsSet noble = nobles.get(objId);
         if (noble == null)
             return 0;
         return noble.getInteger(COMP_LOOSE, 0);
@@ -628,7 +628,7 @@ public final class Olympiad {
     public static synchronized int[] getWeekGameCounts(int objId) {
         int[] ar = new int[4];
 
-        StatsSet noble = _nobles.get(objId);
+        StatsSet noble = nobles.get(objId);
         if (noble == null)
             return ar;
 
@@ -653,7 +653,7 @@ public final class Olympiad {
     }
 
     public static void changeNobleName(int objId, String newName) {
-        StatsSet noble = _nobles.get(objId);
+        StatsSet noble = nobles.get(objId);
         if (noble == null)
             return;
         noble.set(CHAR_NAME, newName);
@@ -661,21 +661,21 @@ public final class Olympiad {
     }
 
     public static String getNobleName(int objId) {
-        StatsSet noble = _nobles.get(objId);
+        StatsSet noble = nobles.get(objId);
         if (noble == null)
             return null;
         return noble.getString(CHAR_NAME, "");
     }
 
     public static int getNobleClass(int objId) {
-        StatsSet noble = _nobles.get(objId);
+        StatsSet noble = nobles.get(objId);
         if (noble == null)
             return 0;
         return noble.getInteger(CLASS_ID, 0);
     }
 
     public static void manualSetNoblePoints(int objId, int points) {
-        StatsSet noble = _nobles.get(objId);
+        StatsSet noble = nobles.get(objId);
         if (noble == null)
             return;
         noble.set(POINTS, points);
@@ -683,21 +683,14 @@ public final class Olympiad {
     }
 
     public static synchronized boolean isNoble(int objId) {
-        return _nobles.get(objId) != null;
+        return nobles.get(objId) != null;
     }
 
     public static synchronized void addNoble(Player noble) {
-        if (!_nobles.containsKey(noble.objectId())) {
-            int classId = noble.getBaseClassId();
-            if (classId < 88 || classId >= 123 && classId <= 130) // Если это не 3-я профа, то исправляем со 2-й на 3-ю.
-                for (ClassId id : ClassId.VALUES)
-                    if (id.occupation() == 3 && id.parent.id == classId) {
-                        classId = id.id;
-                        break;
-                    }
+        if (!nobles.containsKey(noble.objectId())) {
 
             StatsSet statDat = new StatsSet();
-            statDat.set(CLASS_ID, classId);
+            statDat.set(CLASS_ID, noble.getBaseClassId().id);
             statDat.set(CHAR_NAME, noble.getName());
             statDat.set(POINTS, Config.OLYMPIAD_POINTS_DEFAULT);
             statDat.set(POINTS_PAST, 0);
@@ -709,13 +702,13 @@ public final class Olympiad {
             statDat.set(GAME_NOCLASSES_COUNT, 0);
             statDat.set(GAME_TEAM_COUNT, 0);
 
-            _nobles.put(noble.objectId(), statDat);
+            nobles.put(noble.objectId(), statDat);
             OlympiadDatabase.saveNobleData();
         }
     }
 
     public static synchronized void removeNoble(Player noble) {
-        _nobles.remove(noble.objectId());
+        nobles.remove(noble.objectId());
         OlympiadDatabase.saveNobleData();
     }
 

@@ -8,7 +8,7 @@ public final class _112_WalkOfFate extends Quest {
     //NPC
     private static final int Livina = 30572;
     private static final int Karuda = 32017;
-    //Items
+    //items
     private static final int EnchantD = 956;
 
     public _112_WalkOfFate() {
@@ -25,10 +25,10 @@ public final class _112_WalkOfFate extends Quest {
             st.giveItems(ADENA_ID, (long) (22308 + 6000 * (st.getRateQuestsReward() - 1)), true);
             st.giveItems(EnchantD);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(false);
+            st.finish();
         } else if ("seer_livina_q0112_0104.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         }
         return event;
@@ -45,7 +45,7 @@ public final class _112_WalkOfFate extends Quest {
                     htmltext = "seer_livina_q0112_0101.htm";
                 else {
                     htmltext = "seer_livina_q0112_0103.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1)
                 htmltext = "seer_livina_q0112_0105.htm";

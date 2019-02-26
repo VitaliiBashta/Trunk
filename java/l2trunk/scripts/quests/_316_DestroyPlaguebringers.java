@@ -13,7 +13,7 @@ public final class _316_DestroyPlaguebringers extends Quest {
     private static final int Sukar_Wererat = 20040;
     private static final int Sukar_Wererat_Leader = 20047;
     private static final int Varool_Foulclaw = 27020;
-    //Quest Items
+    //Quest items
     private static final int Wererats_Fang = 1042;
     private static final int Varool_Foulclaws_Fang = 1043;
     //Chances
@@ -23,23 +23,20 @@ public final class _316_DestroyPlaguebringers extends Quest {
     public _316_DestroyPlaguebringers() {
         super(false);
         addStartNpc(Ellenia);
-        addKillId(Sukar_Wererat);
-        addKillId(Sukar_Wererat_Leader);
-        addKillId(Varool_Foulclaw);
-        addQuestItem(Wererats_Fang);
-        addQuestItem(Varool_Foulclaws_Fang);
+        addKillId(Sukar_Wererat,Sukar_Wererat_Leader,Varool_Foulclaw);
+        addQuestItem(Wererats_Fang,Varool_Foulclaws_Fang);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         int _state = st.getState();
         if ("elliasin_q0316_04.htm".equalsIgnoreCase(event) && _state == CREATED && st.player.getRace() == Race.elf && st.player.getLevel() >= 18) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if ("elliasin_q0316_08.htm".equalsIgnoreCase(event) && _state == STARTED) {
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
         return event;
     }
@@ -54,10 +51,10 @@ public final class _316_DestroyPlaguebringers extends Quest {
         if (_state == CREATED) {
             if (st.player.getRace() != Race.elf) {
                 htmltext = "elliasin_q0316_00.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else if (st.player.getLevel() < 18) {
                 htmltext = "elliasin_q0316_02.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             } else {
                 htmltext = "elliasin_q0316_03.htm";
                 st.setCond(0);

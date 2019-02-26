@@ -35,7 +35,7 @@ public enum  ActionRunner {
 //    }
 
     private void register(AutomaticTask task) {
-        register(task.reCalcTime(true), task);
+        register(task.reCalcTime(), task);
     }
 
     public void register(long time, ActionWrapper wrapper) {

@@ -25,8 +25,7 @@ public final class _043_HelpTheSister extends Quest {
 
         addTalkId(GALLADUCCI);
 
-        addKillId(SPECTER);
-        addKillId(SORROW_MAIDEN);
+        addKillId(SPECTER,SORROW_MAIDEN);
     }
 
     @Override
@@ -35,7 +34,7 @@ public final class _043_HelpTheSister extends Quest {
         if (event.equals("1")) {
             htmltext = "pet_manager_cooper_q0043_0104.htm";
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if (event.equals("3") && st.getQuestItemsCount(CRAFTED_DAGGER) > 0) {
             htmltext = "pet_manager_cooper_q0043_0201.htm";
@@ -54,7 +53,7 @@ public final class _043_HelpTheSister extends Quest {
             htmltext = "pet_manager_cooper_q0043_0501.htm";
             st.giveItems(PET_TICKET);
             st.setCond(0);
-            st.exitCurrentQuest(false);
+            st.finish();
         }
         return htmltext;
     }
@@ -68,7 +67,7 @@ public final class _043_HelpTheSister extends Quest {
             if (st.player.getLevel() >= 26)
                 htmltext = "pet_manager_cooper_q0043_0101.htm";
             else {
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 htmltext = "pet_manager_cooper_q0043_0103.htm";
             }
         } else if (id == STARTED) {

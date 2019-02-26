@@ -11,10 +11,7 @@ public final class _017_LightAndDarkness extends Quest {
 
         addStartNpc(31517);
 
-        addTalkId(31508);
-        addTalkId(31509);
-        addTalkId(31510);
-        addTalkId(31511);
+        addTalkId(31508,31509,31510,31511);
 
         addQuestItem(7168);
     }
@@ -23,7 +20,7 @@ public final class _017_LightAndDarkness extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         switch (event) {
             case "dark_presbyter_q0017_04.htm":
-                st.setState(STARTED);
+                st.start();
                 st.setCond(1);
                 st.giveItems(7168, 4);
                 st.playSound(SOUND_ACCEPT);
@@ -63,23 +60,23 @@ public final class _017_LightAndDarkness extends Quest {
                     htmltext = "dark_presbyter_q0017_01.htm";
                 else {
                     htmltext = "dark_presbyter_q0017_03.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
-            else if (cond > 0 && cond < 5 && st.getQuestItemsCount(7168) > 0)
+            else if (cond > 0 && cond < 5 && st.haveQuestItem(7168))
                 htmltext = "dark_presbyter_q0017_05.htm";
-            else if (cond > 0 && cond < 5 && st.getQuestItemsCount(7168) == 0) {
+            else if (cond > 0 && cond < 5 && !st.haveQuestItem(7168) ) {
                 htmltext = "dark_presbyter_q0017_06.htm";
                 st.setCond(0);
-                st.exitCurrentQuest(false);
+                st.finish();
             } else if (cond == 5 && st.getQuestItemsCount(7168) == 0) {
                 htmltext = "dark_presbyter_q0017_07.htm";
                 st.addExpAndSp(697040, 54887);
                 st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(false);
+                st.finish();
             }
         } else if (npcId == 31508) {
             if (cond == 1)
-                if (st.getQuestItemsCount(7168) != 0)
+                if (st.haveQuestItem(7168) )
                     htmltext = "blessed_altar1_q0017_01.htm";
                 else
                     htmltext = "blessed_altar1_q0017_03.htm";

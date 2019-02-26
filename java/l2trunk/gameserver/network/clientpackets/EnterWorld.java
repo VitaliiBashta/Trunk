@@ -19,7 +19,6 @@ import l2trunk.gameserver.model.entity.CCPHelpers.CCPSecondaryPassword;
 import l2trunk.gameserver.model.entity.SevenSigns;
 import l2trunk.gameserver.model.entity.events.impl.ClanHallAuctionEvent;
 import l2trunk.gameserver.model.entity.residence.ClanHall;
-import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.model.mail.Mail;
 import l2trunk.gameserver.model.pledge.Clan;
 import l2trunk.gameserver.model.pledge.SubUnit;
@@ -36,15 +35,10 @@ import l2trunk.gameserver.skills.AbnormalEffect;
 import l2trunk.gameserver.templates.item.ItemTemplate;
 import l2trunk.gameserver.utils.*;
 import l2trunk.scripts.quests._255_Tutorial;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Calendar;
 
 public final class EnterWorld extends L2GameClientPacket {
-    private static final Object _lock = new Object();
-
-    private static final Logger LOG = LoggerFactory.getLogger(EnterWorld.class);
 
     private static void notifyClanMembers(Player activeChar) {
         Clan clan = activeChar.getClan();
@@ -97,13 +91,13 @@ public final class EnterWorld extends L2GameClientPacket {
 
         }
 			/*
-			else if (player.occupation() == 1 || Rnd.get(10) == 1)
+			else if (getPlayer.occupation() == 1 || Rnd.get(10) == 1)
 			{
-				player.processQuestEvent(q.name(), "ProposePass", null, false);
+				getPlayer.processQuestEvent(q.name(), "ProposePass", null, false);
 			}
 			else
 			{
-				player.processQuestEvent(q.name(), "UC", null, false);
+				getPlayer.processQuestEvent(q.name(), "UC", null, false);
 			}
 			*/
         player.processQuestEvent(q, "OpenClassMaster", null, false);
@@ -125,19 +119,6 @@ public final class EnterWorld extends L2GameClientPacket {
         if (activeChar == null || Config.AUTH_SERVER_GM_ONLY && !activeChar.isGM()) {
             client.closeNow(false);
             return;
-        }
-
-        int myObjectId = activeChar.objectId();
-        int myStoreId = activeChar.getStoredId();
-
-        synchronized (_lock) { // TODO [G1ta0] Th is for garbage, and why is it here?
-            GameObjectsStorage.getAllPlayersStream()
-                    .filter(cha -> myStoreId != cha.getStoredId())
-                    .filter(cha -> cha.objectId() == myObjectId)
-                    .forEach(cha -> {
-                        LOG.warn("Double EnterWorld for char: " + activeChar.getName());
-                        cha.kick();
-                    });
         }
 
         GameStats.incrementPlayerEnterGame();
@@ -343,7 +324,7 @@ public final class EnterWorld extends L2GameClientPacket {
 
         Pair<Integer, OnAnswerListener> entry = activeChar.getAskListener(false);
         if (entry != null && entry.getValue() instanceof ReviveAnswerListener)
-            sendPacket(new ConfirmDlg(SystemMsg.C1_IS_MAKING_AN_ATTEMPT_TO_RESURRECT_YOU_IF_YOU_CHOOSE_THIS_PATH_S2_EXPERIENCE_WILL_BE_RETURNED_FOR_YOU, 0).addString("Other player").addString("some"));
+            sendPacket(new ConfirmDlg(SystemMsg.C1_IS_MAKING_AN_ATTEMPT_TO_RESURRECT_YOU_IF_YOU_CHOOSE_THIS_PATH_S2_EXPERIENCE_WILL_BE_RETURNED_FOR_YOU, 0).addString("Other getPlayer").addString("some"));
 
         if (activeChar.isCursedWeaponEquipped())
             CursedWeaponsManager.INSTANCE.showUsageTime(activeChar, activeChar.getCursedWeaponEquippedId());
@@ -410,158 +391,6 @@ public final class EnterWorld extends L2GameClientPacket {
 
         activeChar.updateEffectIcons();
         activeChar.updateStats();
-
-        if (activeChar.isVarSet("soulshot")) {
-            ItemInstance item = activeChar.getActiveWeaponInstance();
-            if (item != null) {
-                switch (item.getCrystalType().cry) {
-                    case (ItemTemplate.CRYSTAL_NONE): {
-                        boolean bActive = false;
-                        ItemInstance shot = activeChar.getInventory().getItemByItemId(5789); // Beginner Soulshot
-                        if (shot != null) {
-                            activeChar.addAutoSoulShot(5789);
-                            activeChar.sendPacket(new ExAutoSoulShot(shot.getItemId(), true));
-                            activeChar.sendPacket(new SystemMessage2(SystemMsg.THE_AUTOMATIC_USE_OF_S1_HAS_BEEN_ACTIVATED).addString(shot.getName()));
-                            bActive = true;
-                        }
-                        shot = activeChar.getInventory().getItemByItemId(1835); // Soulshot no grade
-                        if (shot != null) {
-                            activeChar.addAutoSoulShot(1835);
-                            activeChar.sendPacket(new ExAutoSoulShot(shot.getItemId(), true));
-                            activeChar.sendPacket(new SystemMessage2(SystemMsg.THE_AUTOMATIC_USE_OF_S1_HAS_BEEN_ACTIVATED).addString(shot.getName()));
-                            bActive = true;
-                        }
-                        shot = activeChar.getInventory().getItemByItemId(5790); // Beginner spiritshot
-                        if (shot != null) {
-                            activeChar.addAutoSoulShot(5790);
-                            activeChar.sendPacket(new ExAutoSoulShot(shot.getItemId(), true));
-                            activeChar.sendPacket(new SystemMessage2(SystemMsg.THE_AUTOMATIC_USE_OF_S1_HAS_BEEN_ACTIVATED).addString(shot.getName()));
-                            bActive = true;
-                        }
-                        shot = activeChar.getInventory().getItemByItemId(2509); // Spiritshot no grade
-                        if (shot != null) {
-                            activeChar.addAutoSoulShot(2509);
-                            activeChar.sendPacket(new ExAutoSoulShot(shot.getItemId(), true));
-                            activeChar.sendPacket(new SystemMessage2(SystemMsg.THE_AUTOMATIC_USE_OF_S1_HAS_BEEN_ACTIVATED).addString(shot.getName()));
-                            bActive = true;
-                        }
-                        shot = activeChar.getInventory().getItemByItemId(3947); // Blessed spiritshot no grade
-                        if (shot != null) {
-                            activeChar.addAutoSoulShot(3947);
-                            activeChar.sendPacket(new ExAutoSoulShot(shot.getItemId(), true));
-                            activeChar.sendPacket(new SystemMessage2(SystemMsg.THE_AUTOMATIC_USE_OF_S1_HAS_BEEN_ACTIVATED).addString(shot.getName()));
-                            bActive = true;
-                        }
-                        if (bActive)
-                            activeChar.autoShot();
-
-                    }
-
-                    case (ItemTemplate.CRYSTAL_D): {
-                        boolean bActive = false;
-                        ItemInstance shot = activeChar.getInventory().getItemByItemId(1463); // Soulshot d
-                        if (shot != null) {
-                            activeChar.addAutoSoulShot(1463);
-                            activeChar.sendPacket(new ExAutoSoulShot(shot.getItemId(), true));
-                            activeChar.sendPacket(new SystemMessage2(SystemMsg.THE_AUTOMATIC_USE_OF_S1_HAS_BEEN_ACTIVATED).addString(shot.getName()));
-                            bActive = true;
-                        }
-                        shot = activeChar.getInventory().getItemByItemId(3948); // Blessed Spiritshot d
-                        if (shot != null) {
-                            activeChar.addAutoSoulShot(3948);
-                            activeChar.sendPacket(new ExAutoSoulShot(shot.getItemId(), true));
-                            activeChar.sendPacket(new SystemMessage2(SystemMsg.THE_AUTOMATIC_USE_OF_S1_HAS_BEEN_ACTIVATED).addString(shot.getName()));
-                            bActive = true;
-                        }
-                        if (bActive)
-                            activeChar.autoShot();
-                    }
-
-                    case (ItemTemplate.CRYSTAL_C): {
-                        boolean bActive = false;
-                        ItemInstance shot = activeChar.getInventory().getItemByItemId(1464); // Soulshot c
-                        if (shot != null) {
-                            activeChar.addAutoSoulShot(1464);
-                            activeChar.sendPacket(new ExAutoSoulShot(shot.getItemId(), true));
-                            activeChar.sendPacket(new SystemMessage2(SystemMsg.THE_AUTOMATIC_USE_OF_S1_HAS_BEEN_ACTIVATED).addString(shot.getName()));
-                            bActive = true;
-                        }
-                        shot = activeChar.getInventory().getItemByItemId(3949); // Blessed Spiritshot c
-                        if (shot != null) {
-                            activeChar.addAutoSoulShot(3949);
-                            activeChar.sendPacket(new ExAutoSoulShot(shot.getItemId(), true));
-                            activeChar.sendPacket(new SystemMessage2(SystemMsg.THE_AUTOMATIC_USE_OF_S1_HAS_BEEN_ACTIVATED).addString(shot.getName()));
-                            bActive = true;
-                        }
-                        if (bActive)
-                            activeChar.autoShot();
-
-                    }
-                    case (ItemTemplate.CRYSTAL_B): {
-                        boolean bActive = false;
-                        ItemInstance shot = activeChar.getInventory().getItemByItemId(1465); // Soulshot buffPrice
-                        if (shot != null) {
-                            activeChar.addAutoSoulShot(1465);
-                            activeChar.sendPacket(new ExAutoSoulShot(shot.getItemId(), true));
-                            activeChar.sendPacket(new SystemMessage2(SystemMsg.THE_AUTOMATIC_USE_OF_S1_HAS_BEEN_ACTIVATED).addString(shot.getName()));
-                            bActive = true;
-                        }
-                        shot = activeChar.getInventory().getItemByItemId(3950); // Blessed Spiritshot buffPrice
-                        if (shot != null) {
-                            activeChar.addAutoSoulShot(3950);
-                            activeChar.sendPacket(new ExAutoSoulShot(shot.getItemId(), true));
-                            activeChar.sendPacket(new SystemMessage2(SystemMsg.THE_AUTOMATIC_USE_OF_S1_HAS_BEEN_ACTIVATED).addString(shot.getName()));
-                            bActive = true;
-                        }
-                        if (bActive)
-                            activeChar.autoShot();
-
-
-                    }
-                    case (ItemTemplate.CRYSTAL_A): {
-                        boolean bActive = false;
-                        ItemInstance shot = activeChar.getInventory().getItemByItemId(1466); // Soulshot a
-                        if (shot != null) {
-                            activeChar.addAutoSoulShot(1466);
-                            activeChar.sendPacket(new ExAutoSoulShot(shot.getItemId(), true));
-                            activeChar.sendPacket(new SystemMessage2(SystemMsg.THE_AUTOMATIC_USE_OF_S1_HAS_BEEN_ACTIVATED).addString(shot.getName()));
-                            bActive = true;
-                        }
-                        shot = activeChar.getInventory().getItemByItemId(3951); // Blessed Spiritshot a
-                        if (shot != null) {
-                            activeChar.addAutoSoulShot(3951);
-                            activeChar.sendPacket(new ExAutoSoulShot(shot.getItemId(), true));
-                            activeChar.sendPacket(new SystemMessage2(SystemMsg.THE_AUTOMATIC_USE_OF_S1_HAS_BEEN_ACTIVATED).addString(shot.getName()));
-                            bActive = true;
-                        }
-                        if (bActive)
-                            activeChar.autoShot();
-
-                    }
-
-                    case (ItemTemplate.CRYSTAL_S): {
-                        boolean bActive = false;
-                        ItemInstance shot = activeChar.getInventory().getItemByItemId(1467); // Soulshot s
-                        if (shot != null) {
-                            activeChar.addAutoSoulShot(1467);
-                            activeChar.sendPacket(new ExAutoSoulShot(shot.getItemId(), true));
-                            activeChar.sendPacket(new SystemMessage2(SystemMsg.THE_AUTOMATIC_USE_OF_S1_HAS_BEEN_ACTIVATED).addString(shot.getName()));
-                            bActive = true;
-                        }
-                        shot = activeChar.getInventory().getItemByItemId(3952); // Blessed Spiritshot s
-                        if (shot != null) {
-                            activeChar.addAutoSoulShot(3952);
-                            activeChar.sendPacket(new ExAutoSoulShot(shot.getItemId(), true));
-                            activeChar.sendPacket(new SystemMessage2(SystemMsg.THE_AUTOMATIC_USE_OF_S1_HAS_BEEN_ACTIVATED).addString(shot.getName()));
-                            bActive = true;
-                        }
-                        if (bActive)
-                            activeChar.autoShot();
-
-                    }
-                }
-            }
-        }
 
         if (Config.ALT_PCBANG_POINTS_ENABLED)
             activeChar.sendPacket(new ExPCCafePointInfo(activeChar, 0, 1, 2, 12));

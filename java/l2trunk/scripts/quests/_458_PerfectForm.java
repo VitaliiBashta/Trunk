@@ -158,11 +158,11 @@ public final class _458_PerfectForm extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("kelleyia_q458_05.htm")) {
-            st.setState(STARTED);
+        if ("kelleyia_q458_05.htm".equalsIgnoreCase(event)) {
+            st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("request_1stresults")) {
+        } else if ("request_1stresults".equalsIgnoreCase(event)) {
             switch (st.getInt("normaloverhits")) {
                 case 1:
                     htmltext = "kelleyia_q458_08a.htm";
@@ -174,7 +174,7 @@ public final class _458_PerfectForm extends Quest {
                     htmltext = "kelleyia_q458_08c.htm";
                     break;
             }
-        } else if (event.equalsIgnoreCase("request_2ndresults")) {
+        } else if ("request_2ndresults".equalsIgnoreCase(event)) {
             switch (st.getInt("critoverhits")) {
                 case 1:
                     htmltext = "kelleyia_q458_09a.htm";
@@ -224,7 +224,7 @@ public final class _458_PerfectForm extends Quest {
             st.unset("normaloverhits");
             st.unset("critoverhits");
             st.unset("contoverhits");
-            st.setState(COMPLETED);
+            st.complete();
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(this);
         }

@@ -27,23 +27,20 @@ public final class _360_PlunderTheirSupplies extends Quest {
         super(false);
         addStartNpc(COLEMAN);
 
-        addKillId(TAIK_SEEKER);
-        addKillId(TAIK_LEADER);
+        addKillId(TAIK_SEEKER,TAIK_LEADER);
 
-        addQuestItem(SUPPLY_ITEM);
-        addQuestItem(SUSPICIOUS_DOCUMENT);
-        addQuestItem(RECIPE_OF_SUPPLY);
+        addQuestItem(SUPPLY_ITEM,SUSPICIOUS_DOCUMENT,RECIPE_OF_SUPPLY);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("guard_coleman_q0360_04.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("guard_coleman_q0360_10.htm".equalsIgnoreCase(event)) {
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         }
         return event;
     }

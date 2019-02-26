@@ -50,6 +50,6 @@ public final class OlympiadStat implements IUserCommandHandler {
 
     @Override
     public List<Integer> getUserCommandList() {
-        return Collections.singletonList(COMMAND_IDS);
+        return List.of(COMMAND_IDS);
     }
 }

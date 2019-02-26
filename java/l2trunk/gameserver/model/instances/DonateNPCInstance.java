@@ -68,10 +68,10 @@ public final class DonateNPCInstance extends NpcInstance {
             } else {
                 player.sendMessage("You don't have enough " + Config.DONATOR_NPC_ITEM_NAME + ".");
             }
-        } else if (command.equalsIgnoreCase("add_clan_reputation")) {
+        } else if ("add_clan_reputation".equalsIgnoreCase(command)) {
             html.setFile("default/" + getNpcId() + ".htm");
             html.replace("%donate_clanrep%", "" + Config.DONATOR_NPC_REP);
-            html.replace("%nick%", String.valueOf(player.getName()));
+            html.replace("%nick%", player.getName());
             player.sendPacket(html);
 
             if (player.getClan() != null) {
@@ -87,10 +87,10 @@ public final class DonateNPCInstance extends NpcInstance {
             } else {
                 player.sendMessage("Sorry, but you do not have clan!");
             }
-        } else if (command.equalsIgnoreCase("give_noblesse")) {
+        } else if ("give_noblesse".equalsIgnoreCase(command)) {
             html.setFile("default/" + getNpcId() + ".htm");
             html.replace("%donate_nobless%", "" + Config.DONATOR_NPC_COUNT_NOBLESS);
-            html.replace("%nick%", String.valueOf(player.getName().toString()));
+            html.replace("%nick%", player.getName());
             player.sendPacket(html);
 
             if (player.isNoble()) {

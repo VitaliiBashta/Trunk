@@ -46,11 +46,11 @@ public final class SignsPriestInstance extends NpcInstance {
         }
 
         // If castle ownage check is clan-based rather than ally-based,
-        // check if the player's clan has a castle and return the result.
+        // check if the getPlayer's clan has a castle and return the result.
         if (!Config.ALT_GAME_REQUIRE_CLAN_CASTLE) {
             int allyId = playerClan.getAllyId();
 
-            // The player's clan is not in an alliance, so return false.
+            // The getPlayer's clan is not in an alliance, so return false.
             if (allyId != 0) {
                 // Check if another clan in the same alliance owns a castle,
                 // by traversing the list of clans and act accordingly.
@@ -86,7 +86,7 @@ public final class SignsPriestInstance extends NpcInstance {
             String path;
             int cabal = SevenSigns.CABAL_NULL;
             int stoneType;
-            // int inventorySize = player.getInventory().getSize() + 1;
+            // int inventorySize = getPlayer.getInventory().getSize() + 1;
             ItemInstance ancientAdena = player.getInventory().getItemByItemId(SevenSigns.ANCIENT_ADENA_ID);
             long ancientAdenaAmount = ancientAdena == null ? 0 : ancientAdena.getCount();
             int val = Integer.parseInt(command.substring(11, 12).trim());
@@ -153,7 +153,7 @@ public final class SignsPriestInstance extends NpcInstance {
                                 }
                             } else
                                 /*
-                                 * If the player is trying to join the Lords of Dawn, check if they are carrying a Lord's certificate. If not then try to take the required amount of adena instead.
+                                 * If the getPlayer is trying to join the Lords of Dawn, check if they are carrying a Lord's certificate. If not then try to take the required amount of adena instead.
                                  */
                                 if (cabal == SevenSigns.CABAL_DAWN) {
                                     boolean allowJoinDawn = false;
@@ -341,7 +341,7 @@ public final class SignsPriestInstance extends NpcInstance {
                         }
                         player.teleToLocation(x, y, z);
                     } catch (Exception e) {
-                        _log.warn("SevenSigns: Error occurred while teleporting player: " + e);
+                        _log.warn("SevenSigns: Error occurred while teleporting getPlayer: " + e);
                     }
                     break;
                 case 17: // Exchange Seal Stones for Ancient Adena (Type Choice) - SevenSigns 17 x

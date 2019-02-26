@@ -19,7 +19,7 @@ import java.util.concurrent.ScheduledFuture;
 
 public final class AchievementNotification {
     private static AchievementNotification _instance;
-    private static Listener _listener;
+    private static KillListener listener;
     private ScheduledFuture<?> _globalNotification;
 
     private AchievementNotification(int intervalInMiliseconds) {
@@ -41,8 +41,8 @@ public final class AchievementNotification {
                     }
                 }), intervalInMiliseconds, intervalInMiliseconds);
 
-        _listener = new Listener();
-        CharListenerList.addGlobal(_listener);
+        listener = new KillListener();
+        CharListenerList.addGlobal(listener);
     }
 
     public static AchievementNotification getInstance() {
@@ -58,7 +58,7 @@ public final class AchievementNotification {
         }
     }
 
-    private static class Listener implements OnKillListener {
+    private static class KillListener implements OnKillListener {
         @Override
         public void onKill(Creature actor, Creature victim) {
             if (!Config.ENABLE_ACHIEVEMENTS)
@@ -145,9 +145,5 @@ public final class AchievementNotification {
             }
         }
 
-        @Override
-        public boolean ignorePetOrSummon() {
-            return true;
-        }
     }
 }

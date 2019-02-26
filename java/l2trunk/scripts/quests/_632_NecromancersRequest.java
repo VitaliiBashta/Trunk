@@ -39,7 +39,7 @@ public final class _632_NecromancersRequest extends Quest {
             case "632_4":
                 st.playSound(SOUND_FINISH);
                 htmltext = "shadow_hardin_q0632_0204.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
                 break;
             case "632_1":
                 htmltext = "shadow_hardin_q0632_0104.htm";
@@ -58,11 +58,11 @@ public final class _632_NecromancersRequest extends Quest {
                 if (st.player.getLevel() > 62) {
                     htmltext = "shadow_hardin_q0632_0104.htm";
                     st.setCond(1);
-                    st.setState(STARTED);
+                    st.start();
                     st.playSound(SOUND_ACCEPT);
                 } else {
                     htmltext = "shadow_hardin_q0632_0103.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
                 break;
         }

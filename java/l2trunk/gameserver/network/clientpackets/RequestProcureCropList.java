@@ -115,13 +115,13 @@ public final class RequestProcureCropList extends L2GameClientPacket {
                     return;
 
                 CropProcure crop = castle.getCrop(cropId, CastleManorManager.PERIOD_CURRENT);
-                if (crop == null || crop.getId() == 0 || crop.getPrice() == 0)
+                if (crop == null || crop.cropId == 0 || crop.price == 0)
                     return;
 
                 if (count > crop.getAmount())
                     return;
 
-                long price = SafeMath.mulAndCheck(count, crop.getPrice());
+                long price = SafeMath.mulAndCheck(count, crop.price);
                 long fee = 0;
                 if (currentManorId != 0 && manorId != currentManorId)
                     fee = price * 5 / 100; // 5% fee for selling to other manor
@@ -167,7 +167,7 @@ public final class RequestProcureCropList extends L2GameClientPacket {
                 int manorId = _manor[i];
                 long count = _itemQ[i];
 
-                // check if player have correct items count
+                // check if getPlayer have correct items count
                 ItemInstance item = activeChar.getInventory().getItemByObjectId(objId);
                 if (item == null || item.getCount() < count || item.getItemId() != cropId)
                     continue;
@@ -177,14 +177,14 @@ public final class RequestProcureCropList extends L2GameClientPacket {
                     continue;
 
                 CropProcure crop = castle.getCrop(cropId, CastleManorManager.PERIOD_CURRENT);
-                if (crop == null || crop.getId() == 0 || crop.getPrice() == 0)
+                if (crop == null || crop.cropId == 0 || crop.price == 0)
                     continue;
 
                 if (count > crop.getAmount())
                     continue;
 
                 int rewardItemId = Manor.INSTANCE.getRewardItem(cropId, crop.getReward());
-                long sellPrice = count * crop.getPrice();
+                long sellPrice = count * crop.price;
                 long rewardPrice = ItemHolder.getTemplate(rewardItemId).referencePrice;
 
                 if (rewardPrice == 0)
@@ -217,7 +217,7 @@ public final class RequestProcureCropList extends L2GameClientPacket {
                 }
 
                 crop.setAmount(crop.getAmount() - count);
-                castle.updateCrop(crop.getId(), crop.getAmount(), CastleManorManager.PERIOD_CURRENT);
+                castle.updateCrop(crop.cropId, crop.getAmount(), CastleManorManager.PERIOD_CURRENT);
                 castle.addToTreasuryNoTax(fee, false, false);
                 activeChar.getInventory().addItem(rewardItemId, rewardItemCount, "RequestProcureCropList");
 

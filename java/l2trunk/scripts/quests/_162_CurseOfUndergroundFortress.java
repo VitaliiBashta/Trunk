@@ -18,12 +18,7 @@ public final class _162_CurseOfUndergroundFortress extends Quest {
 
         addTalkId(30147);
 
-        addKillId(20033);
-        addKillId(20345);
-        addKillId(20371);
-        addKillId(20463);
-        addKillId(20464);
-        addKillId(20504);
+        addKillId(20033,20345,20371,20463,20464,20504);
 
         addQuestItem(ELF_SKULL,
                 BONE_FRAGMENT3);
@@ -32,9 +27,9 @@ public final class _162_CurseOfUndergroundFortress extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equals("30147-04.htm")) {
+        if ("30147-04.htm".equals(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
             htmltext = "30147-04.htm";
         }
@@ -52,20 +47,19 @@ public final class _162_CurseOfUndergroundFortress extends Quest {
                 htmltext = "30147-02.htm";
             else {
                 htmltext = "30147-01.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (cond == 1 && st.getQuestItemsCount(ELF_SKULL) + st.getQuestItemsCount(BONE_FRAGMENT3) < 13)
             htmltext = "30147-05.htm";
-        else if (cond == 2 && st.getQuestItemsCount(ELF_SKULL) + st.getQuestItemsCount(BONE_FRAGMENT3) >= 13) {
+        else if (cond == 2 && st.haveQuestItem(ELF_SKULL,3) && st.haveQuestItem(BONE_FRAGMENT3,10)) {
             htmltext = "30147-06.htm";
             st.giveItems(BONE_SHIELD);
             st.addExpAndSp(22652, 1004);
             st.giveItems(ADENA_ID, 24000);
-            st.takeItems(ELF_SKULL);
-            st.takeItems(BONE_FRAGMENT3);
+            st.takeAllItems(ELF_SKULL,BONE_FRAGMENT3);
             st.setCond(0);
             st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(false);
+            st.finish();
         }
         return htmltext;
     }
@@ -87,7 +81,7 @@ public final class _162_CurseOfUndergroundFortress extends Quest {
             else
                 st.playSound(SOUND_ITEMGET);
         }
-        if (st.getQuestItemsCount(BONE_FRAGMENT3) == 10 && st.getQuestItemsCount(ELF_SKULL) == 3)
+        if (st.haveQuestItem(BONE_FRAGMENT3,10) && st.haveQuestItem(ELF_SKULL, 3))
             st.setCond(2);
     }
 }

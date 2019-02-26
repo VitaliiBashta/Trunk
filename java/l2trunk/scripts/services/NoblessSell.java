@@ -40,23 +40,23 @@ public final class NoblessSell extends Functions {
     private void makeSubQuests() {
         if (player == null)
             return;
-        QuestState qs = player.getQuestState(_234_FatesWhisper.class);
-        if (qs != null) {
-            qs.exitCurrentQuest(true);
-            qs.quest.newQuestState(player, Quest.COMPLETED);
+        QuestState st = player.getQuestState(_234_FatesWhisper.class);
+        if (st != null) {
+            st.exitCurrentQuest();
+            st.quest.newQuestState(player, Quest.COMPLETED);
         }
 
         if (player.getRace() == Race.kamael) {
-            qs = player.getQuestState(_236_SeedsOfChaos.class);
-            if (qs != null) {
-                qs.exitCurrentQuest(true);
-                qs.quest.newQuestState(player, Quest.COMPLETED);
+            st = player.getQuestState(_236_SeedsOfChaos.class);
+            if (st != null) {
+                st.exitCurrentQuest();
+                st.quest.newQuestState(player, Quest.COMPLETED);
             }
         } else {
-            qs = player.getQuestState(_235_MimirsElixir.class);
-            if (qs != null) {
-                qs.exitCurrentQuest(true);
-                qs.quest.newQuestState(player, Quest.COMPLETED);
+            st = player.getQuestState(_235_MimirsElixir.class);
+            if (st != null) {
+                st.exitCurrentQuest();
+                st.quest.newQuestState(player, Quest.COMPLETED);
             }
         }
     }

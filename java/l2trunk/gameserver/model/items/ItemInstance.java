@@ -45,7 +45,6 @@ public final class ItemInstance extends GameObject implements JdbcEntity {
     public static final int CHARGED_SPIRITSHOT = 1;
     public static final int CHARGED_BLESSED_SPIRITSHOT = 2;
     static final int[] EMPTY_ENCHANT_OPTIONS = new int[3];
-    private static final int[] EMPTY_AUGMENTATIONS = new int[2];
     private static final int FLAG_NO_DROP = 1;
     private static final int FLAG_NO_TRADE = 1 << 1;
     private static final int FLAG_NO_TRANSFER = 1 << 2;
@@ -445,7 +444,7 @@ public final class ItemInstance extends GameObject implements JdbcEntity {
      * This function basically returns a set of functions from
      * L2Item/L2Armor/L2Weapon, but may add additional
      * functions, if this particular item instance is enhanched
-     * for a particular player.
+     * for a particular getPlayer.
      */
     public List<Func> getStatFuncs() {
         List<Func> result = new ArrayList<>();
@@ -810,7 +809,7 @@ public final class ItemInstance extends GameObject implements JdbcEntity {
         else
             dropMe(dropper, dropper.getLoc());
 
-        // Add drop to auto destroy item task from player items.
+        // Add drop to auto destroy item task from getPlayer items.
         if (Config.AUTODESTROY_PLAYER_ITEM_AFTER > 0 && attachment == null)
             ItemsAutoDestroy.INSTANCE.addItem(this, Config.AUTODESTROY_PLAYER_ITEM_AFTER * 1000L);
     }

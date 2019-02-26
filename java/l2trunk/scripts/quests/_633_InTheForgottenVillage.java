@@ -61,7 +61,7 @@ public final class _633_InTheForgottenVillage extends Quest {
         String htmltext = event;
         if ("quest_accept".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
             htmltext = "day_mina_q0633_0104.htm";
         }
@@ -69,7 +69,7 @@ public final class _633_InTheForgottenVillage extends Quest {
             st.takeItems(RIB_BONE);
             st.playSound(SOUND_FINISH);
             htmltext = "day_mina_q0633_0204.htm";
-            st.exitCurrentQuest(true);
+            st.exitCurrentQuest();
         } else if ("633_1".equals(event))
             htmltext = "day_mina_q0633_0201.htm";
         else if ("633_3".equals(event))
@@ -98,7 +98,7 @@ public final class _633_InTheForgottenVillage extends Quest {
                     htmltext = "day_mina_q0633_0101.htm";
                 else {
                     htmltext = "day_mina_q0633_0103.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else if (cond == 1)
                 htmltext = "day_mina_q0633_0106.htm";

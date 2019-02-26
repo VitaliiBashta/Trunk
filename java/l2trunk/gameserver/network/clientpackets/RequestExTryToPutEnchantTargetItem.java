@@ -157,8 +157,8 @@ public final class RequestExTryToPutEnchantTargetItem extends L2GameClientPacket
 
         if (enchantScroll == null) {
             doPutOld(player, itemToEnchant, scroll);
-            //player.sendPacket(ExPutEnchantTargetItemResult.FAIL);
-            //player.setEnchantScroll(null);
+            //getPlayer.sendPacket(ExPutEnchantTargetItemResult.FAIL);
+            //getPlayer.setEnchantScroll(null);
             return;
         }
 

@@ -27,7 +27,7 @@ public final class _247_PossessorOfaPreciousSoul4 extends Quest {
         int cond = st.getCond();
         if (cond == 0 && event.equals("caradine_q0247_03.htm")) {
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if (cond == 1) {
             if (event.equals("caradine_q0247_04.htm"))
@@ -57,7 +57,7 @@ public final class _247_PossessorOfaPreciousSoul4 extends Quest {
                         st.addExpAndSp(93836, 0);
                         st.playSound(SOUND_FINISH);
                         st.unset("cond");
-                        st.exitCurrentQuest(false);
+                        st.finish();
                         Olympiad.addNoble(st.player);
                         st.player.setNoble(true);
                         st.player.updatePledgeClass();
@@ -86,7 +86,7 @@ public final class _247_PossessorOfaPreciousSoul4 extends Quest {
             if (id == CREATED && previous != null && previous.getState() == COMPLETED) {
                 if (st.player.getLevel() < 75) {
                     htmltext = "caradine_q0247_02.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 } else
                     htmltext = "caradine_q0247_01.htm";
             } else if (cond == 1)

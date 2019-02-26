@@ -20,7 +20,7 @@ public class Logout extends L2GameClientPacket {
         activeChar.setOnlineTime(0L);
         activeChar.setUptime(0L);
 
-        // Dont allow leaving if player is fighting
+        // Dont allow leaving if getPlayer is fighting
         if (activeChar.isInCombat()) {
             activeChar.sendPacket(SystemMsg.YOU_CANNOT_EXIT_THE_GAME_WHILE_IN_COMBAT);
             activeChar.sendActionFailed();
@@ -68,11 +68,7 @@ public class Logout extends L2GameClientPacket {
             PartyMatchingBBSManager.getInstance().partyMatchingPlayersList.remove(activeChar);
             PartyMatchingBBSManager.getInstance().partyMatchingDescriptionList.remove(activeChar.objectId());
         }
-        if (activeChar.isInAwayingMode()) {
-            activeChar.sendMessage(new CustomMessage("Away.ActionFailed", new Object[0]));
-            activeChar.sendActionFailed();
-            return;
-        }
+
         // Ady - Support for offline buff stores
         if (activeChar.isInBuffStore())
             activeChar.offlineBuffStore();

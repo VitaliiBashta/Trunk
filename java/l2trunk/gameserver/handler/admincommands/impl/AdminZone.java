@@ -43,7 +43,7 @@ public class AdminZone implements IAdminCommandHandler {
             }
             case admin_vis_count: {
                 activeChar.sendMessage("Current region: " + activeChar.getCurrentRegion());
-                activeChar.sendMessage("Players count: " + World.getAroundPlayers(activeChar).size());
+                activeChar.sendMessage("Players count: " + World.getAroundPlayers(activeChar).count());
                 break;
             }
             case admin_pos: {

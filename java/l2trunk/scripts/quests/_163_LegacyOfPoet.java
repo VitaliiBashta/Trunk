@@ -18,11 +18,7 @@ public final class _163_LegacyOfPoet extends Quest {
         addStartNpc(30220);
 
         addTalkId(30220);
-
-        addTalkId(30220);
-
-        addKillId(20372);
-        addKillId(20373);
+        addKillId(20372,20373);
 
         addQuestItem(RUMIELS_POEM_1_ID,
                 RUMIELS_POEM_3_ID,
@@ -37,7 +33,7 @@ public final class _163_LegacyOfPoet extends Quest {
             st.set("id", 0);
             htmltext = "30220-07.htm";
             st.setCond(1);
-            st.setState(STARTED);
+            st.start();
             st.playSound(SOUND_ACCEPT);
         }
         return htmltext;
@@ -49,7 +45,7 @@ public final class _163_LegacyOfPoet extends Quest {
         String htmltext = "noquest";
         int id = st.getState();
         if (id == CREATED) {
-            st.setState(STARTED);
+            st.start();
             st.setCond(0);
             st.set("id", 0);
         }
@@ -62,11 +58,11 @@ public final class _163_LegacyOfPoet extends Quest {
                     return htmltext;
                 } else {
                     htmltext = "30220-02.htm";
-                    st.exitCurrentQuest(true);
+                    st.exitCurrentQuest();
                 }
             } else {
                 htmltext = "30220-02.htm";
-                st.exitCurrentQuest(true);
+                st.exitCurrentQuest();
             }
         } else if (npcId == 30220 && st.getCond() == 0)
             htmltext = "completed";
@@ -82,7 +78,7 @@ public final class _163_LegacyOfPoet extends Quest {
                     st.giveItems(ADENA_ID, 13890);
                     st.addExpAndSp(21643, 943);
                     st.playSound(SOUND_FINISH);
-                    st.exitCurrentQuest(false);
+                    st.finish();
                 }
             } else
                 htmltext = "30220-08.htm";

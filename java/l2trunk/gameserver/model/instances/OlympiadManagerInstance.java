@@ -32,7 +32,7 @@ public final class OlympiadManagerInstance extends NpcInstance {
             Olympiad.addOlympiadNpc(this);
     }
 
-    private static void CheckRank(Player player, int classId) {
+    private static void checkRank(Player player, int classId) {
         final int comp_matches_to_show = Config.OLYMPIAD_BATTLES_FOR_REWARD;
         int points, comp_done, pos = 0;
         String char_name;
@@ -41,7 +41,7 @@ public final class OlympiadManagerInstance extends NpcInstance {
 
         NpcHtmlMessage nhm = new NpcHtmlMessage(5);
         StringBuilder html = new StringBuilder();
-        html.append("<html><head><title>Grand Olympiad Ranking</title></head><body><center><font color=66cc00>Olympiad Ranking Online System</font></center><br><center>" + Class + "</center><br1><center><img src=\"L2UI.SquareWhite\" width=300 height=1><img src=\"L2UI.SquareBlank\" width=1 height=3></center><table width=300 border=0 bgcolor=\"000000\"><tr><td>Position</td><center><td>|</td></center><td><center>Name</center></td><center><td>|</td></center><td><center>Points</center></td><center><td>|</td></center><td><center>Fights</center></td></tr>");
+        html.append("<html><head><title>Grand Olympiad Ranking</title></head><body><center><font color=66cc00>Olympiad Ranking Online System</font></center><br><center>").append(Class).append("</center><br1><center><img src=\"L2UI.SquareWhite\" width=300 height=1><img src=\"L2UI.SquareBlank\" width=1 height=3></center><table width=300 border=0 bgcolor=\"000000\"><tr><td>Position</td><center><td>|</td></center><td><center>Name</center></td><center><td>|</td></center><td><center>Points</center></td><center><td>|</td></center><td><center>Fights</center></td></tr>");
 
         try (Connection con = L2DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement("SELECT characters.char_name,  olympiad_nobles.competitions_done, olympiad_nobles.olympiad_points  FROM olympiad_nobles, characters WHERE characters.obj_Id = olympiad_nobles.char_id AND olympiad_nobles.class_id AND class_id=? AND olympiad_nobles.competitions_done >= ? order by olympiad_points desc, competitions_done desc")) {
@@ -53,7 +53,7 @@ public final class OlympiadManagerInstance extends NpcInstance {
                 points = rset.getInt("olympiad_points");
                 comp_done = rset.getInt("competitions_done");
                 pos++;
-                html.append("<tr><td><center>" + pos + "</td><center><td></td></center><td><center>" + char_name + "</center></td><center><td></td></center><td><center>" + points + "</center></td><center><td></td></center><td><center>" + comp_done + "</center></td></tr>");
+                html.append("<tr><td><center>").append(pos).append("</td><center><td></td></center><td><center>").append(char_name).append("</center></td><center><td></td></center><td><center>").append(points).append("</center></td><center><td></td></center><td><center>").append(comp_done).append("</center></td></tr>");
             }
             html.append("</table></body></html>");
             nhm.setHtml(html.toString());
@@ -89,9 +89,9 @@ public final class OlympiadManagerInstance extends NpcInstance {
                         player.sendPacket(html.setFile(Olympiad.OLYMPIAD_HTML_PATH + "manager_noregister.htm"));
                     } else {
                         player.sendPacket(html.setFile(Olympiad.OLYMPIAD_HTML_PATH + "manager_register.htm"));
-                        html.replace("%1%", String.valueOf(Olympiad.getPeriod()));
-                        html.replace("%2%", String.valueOf(Olympiad.getCurrentCycle()));
-                        html.replace("%3%", String.valueOf(Olympiad.getCountOpponents()));
+                        html.replace("%1%", Olympiad.getPeriod());
+                        html.replace("%2%", Olympiad.getCurrentCycle());
+                        html.replace("%3%", Olympiad.getCountOpponents());
                         player.sendPacket(html);
                     }
                     break;
@@ -147,7 +147,7 @@ public final class OlympiadManagerInstance extends NpcInstance {
 
                         int index = 1;
                         for (String name : names) {
-                            reply.replace("%place" + index + "%", String.valueOf(index));
+                            reply.replace("%place" + index + "%", index);
                             reply.replace("%rank" + index + "%", name);
                             index++;
                             if (index > 10)
@@ -160,7 +160,7 @@ public final class OlympiadManagerInstance extends NpcInstance {
 
                         player.sendPacket(reply);
                     }
-                    // TODO Send player each class rank
+                    // TODO Send getPlayer each class rank
                     break;
                 case 3:
                     if (!Config.ENABLE_OLYMPIAD_SPECTATING)
@@ -188,7 +188,7 @@ public final class OlympiadManagerInstance extends NpcInstance {
 
                         int index = 1;
                         for (String name : names) {
-                            reply.replace("%place" + index + "%", String.valueOf(index));
+                            reply.replace("%place" + index + "%", index);
                             reply.replace("%rank" + index + "%", name);
                             index++;
                             if (index > 10)
@@ -210,27 +210,27 @@ public final class OlympiadManagerInstance extends NpcInstance {
         StringTokenizer st = new StringTokenizer(command, " ");
         String actualCommand = st.nextToken();
 
-        if (actualCommand.equalsIgnoreCase("openfile")) {
+        if ("openfile".equalsIgnoreCase(actualCommand)) {
             String name = st.nextToken();
             NpcHtmlMessage html = new NpcHtmlMessage(objectId());
             html.setFile("olympiad/ranks/" + name + ".htm");
-            html.replace("%objectId%", String.valueOf(objectId()));
+            html.replace("%objectId%", objectId());
             html.replace("%name%", player.getName());
             player.sendPacket(html);
-        } else if (actualCommand.equalsIgnoreCase("gofolder")) {
+        } else if ("gofolder".equalsIgnoreCase(actualCommand)) {
             String name = st.nextToken();
             NpcHtmlMessage html = new NpcHtmlMessage(objectId());
             html.setFile("olympiad/" + name + "/index.htm");
-            html.replace("%objectId%", String.valueOf(objectId()));
+            html.replace("%objectId%", objectId());
             html.replace("%name%", player.getName());
             player.sendPacket(html);
         } else if ("rank".equalsIgnoreCase(actualCommand)) {
             int val = toInt(st.nextToken());
-            CheckRank(player, val);
+            checkRank(player, val);
         } else if ("back".equalsIgnoreCase(actualCommand)) {
             NpcHtmlMessage html = new NpcHtmlMessage(objectId());
             html.setFile("olympiad/index.htm");
-            html.replace("%objectId%", String.valueOf(objectId()));
+            html.replace("%objectId%", objectId());
             html.replace("%name%", player.getName());
             player.sendPacket(html);
         } else
