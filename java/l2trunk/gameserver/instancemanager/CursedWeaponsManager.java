@@ -279,7 +279,7 @@ public enum CursedWeaponsManager {
             }
         } else // either this cursed weapon is in the inventory of someone who has another cursed weapon equipped,
             // OR this cursed weapon is on the ground.
-            if (cw.getPlayer() != null && cw.getPlayer().getInventory().getItemByItemId(cw.getItemId()) != null) {
+            if (cw.getPlayer() != null && cw.getPlayer().haveItem(cw.getItemId())) {
                 Player player = cw.getPlayer();
                 if (!cw.getPlayer().getInventory().destroyItemByItemId(cw.getItemId(),  "CursedWeapon"))
                     LOG.info("CursedWeaponsManager[453]: Error! Cursed weapon not found!!!");

@@ -236,7 +236,7 @@ public final class _065_PathToSoulBreaker extends Quest {
                 if (!htmltext.equals("32243-02.htm")) {
                     despawnGuardianAngel();
 
-                    st.set("id", 0);
+                    st.unset("id");
                     Spawn_Guardian_Angel(st);
                     st.startQuestTimer("Guardian_Angel_Fail", 120000);
                     // Натравим ангела

@@ -34,11 +34,9 @@ import java.util.List;
 
 import static l2trunk.commons.lang.NumberUtils.toInt;
 
-public final class AdminResidence implements IAdminCommandHandler, ScriptFile {
+public final class AdminResidence implements IAdminCommandHandler {
     @Override
-    public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
-        Commands command = (Commands) comm;
-
+    public boolean useAdminCommand(String comm, String[] wordList, String fullString, Player activeChar) {
         if (!activeChar.getPlayerAccess().CanEditNPC)
             return false;
 
@@ -48,8 +46,8 @@ public final class AdminResidence implements IAdminCommandHandler, ScriptFile {
         Calendar calendar;
         NpcHtmlMessage msg;
         final DominionSiegeRunnerEvent runnerEvent;
-        switch (command) {
-            case admin_residence_list:
+        switch (comm) {
+            case "admin_residence_list":
                 msg = new NpcHtmlMessage(5);
                 msg.setFile("admin/residence/residence_list.htm");
 
@@ -71,7 +69,7 @@ public final class AdminResidence implements IAdminCommandHandler, ScriptFile {
                 msg.replace("%residence_list%", replyMSG);
                 activeChar.sendPacket(msg);
                 break;
-            case admin_residence:
+            case "admin_residence":
                 if (wordList.length != 2)
                     return false;
                 r = ResidenceHolder.getResidence(toInt(wordList[1]));
@@ -112,7 +110,7 @@ public final class AdminResidence implements IAdminCommandHandler, ScriptFile {
                 } else {
                     msg.setFile("admin/residence/siege_info.htm");
                     msg.replace("%residence%", HtmlUtils.htmlResidenceName(r.getId()));
-                    msg.replace("%id%", ""+r.getId());
+                    msg.replace("%id%", "" + r.getId());
                     msg.replace("%owner%", r.getOwner() == null ? "NPC" : r.getOwner().getName());
                     msg.replace("%cycle%", r.getCycle());
                     msg.replace("%paid_cycle%", r.getPaidCycle());
@@ -137,7 +135,7 @@ public final class AdminResidence implements IAdminCommandHandler, ScriptFile {
                 msg.replace("%year%", r.getSiegeDate().get(Calendar.YEAR));
                 activeChar.sendPacket(msg);
                 break;
-            case admin_set_owner:
+            case "admin_set_owner":
                 if (wordList.length != 3)
                     return false;
                 r = ResidenceHolder.getResidence(toInt(wordList[1]));
@@ -168,7 +166,7 @@ public final class AdminResidence implements IAdminCommandHandler, ScriptFile {
                     event.reCalcNextTime(false);
                 }
                 break;
-            case admin_set_siege_time:
+            case "admin_set_siege_time":
                 r = ResidenceHolder.getResidence(toInt(wordList[1]));
                 if (r == null)
                     return false;
@@ -209,7 +207,7 @@ public final class AdminResidence implements IAdminCommandHandler, ScriptFile {
 
                 AdminCommandHandler.INSTANCE.useAdminCommandHandler(activeChar, "admin_residence " + r.getId());
                 break;
-            case admin_quick_siege_start:
+            case "admin_quick_siege_start":
                 r = ResidenceHolder.getResidence(toInt(wordList[1]));
                 if (r == null)
                     return false;
@@ -227,7 +225,7 @@ public final class AdminResidence implements IAdminCommandHandler, ScriptFile {
 
                 AdminCommandHandler.INSTANCE.useAdminCommandHandler(activeChar, "admin_residence " + r.getId());
                 break;
-            case admin_quick_siege_stop:
+            case "admin_quick_siege_stop":
                 r = ResidenceHolder.getResidence(toInt(wordList[1]));
                 if (r == null)
                     return false;
@@ -239,7 +237,7 @@ public final class AdminResidence implements IAdminCommandHandler, ScriptFile {
 
                 AdminCommandHandler.INSTANCE.useAdminCommandHandler(activeChar, "admin_residence " + r.getId());
                 break;
-            case admin_start_dominion_war:
+            case "admin_start_dominion_war":
                 calendar = Calendar.getInstance();
                 if (wordList.length >= 2)
                     calendar.set(Calendar.SECOND, -toInt(wordList[1]));
@@ -263,7 +261,7 @@ public final class AdminResidence implements IAdminCommandHandler, ScriptFile {
                 runnerEvent.getSiegeDate().setTimeInMillis(calendar.getTimeInMillis());
                 runnerEvent.registerActions();
                 break;
-            case admin_stop_dominion_war:
+            case "admin_stop_dominion_war":
                 runnerEvent = EventHolder.getEvent(EventType.MAIN_EVENT, 1);
                 runnerEvent.clearActions();
                 ThreadPoolManager.INSTANCE.execute(() -> {
@@ -279,9 +277,9 @@ public final class AdminResidence implements IAdminCommandHandler, ScriptFile {
                     runnerEvent.stopEvent();
                 });
                 break;
-            case admin_restart_dominion_one_time:
+            case "admin_restart_dominion_one_time":
                 timed = true;
-            case admin_restart_dominion_one:
+            case "admin_restart_dominion_one":
                 int castleId = toInt(wordList[1]);
 
                 runnerEvent = EventHolder.getEvent(EventType.MAIN_EVENT, 1);
@@ -304,7 +302,7 @@ public final class AdminResidence implements IAdminCommandHandler, ScriptFile {
                     ourDominion.getSiegeEvent().registerActions();
                 }
                 break;
-            case admin_backup_unit_info:
+            case "admin_backup_unit_info":
                 GameObject target = activeChar.getTarget();
                 if (!(target instanceof PowerControlUnitInstance) && !(target instanceof BackupPowerUnitInstance))
                     return false;
@@ -319,7 +317,7 @@ public final class AdminResidence implements IAdminCommandHandler, ScriptFile {
 
                 activeChar.sendMessage("Password: " + t.toString());
                 return true;
-            case admin_fortress_spawn_flags:
+            case "admin_fortress_spawn_flags":
                 if (wordList.length != 2)
                     return false;
                 Fortress fortress = ResidenceHolder.getResidence(Fortress.class, toInt(wordList[1]));
@@ -338,31 +336,23 @@ public final class AdminResidence implements IAdminCommandHandler, ScriptFile {
     }
 
     @Override
-    public Enum[] getAdminCommandEnum() {
-        return Commands.values();
-    }
-
-    @Override
-    public void onLoad() {
-        AdminCommandHandler.INSTANCE.registerAdminCommandHandler(this);
-    }
-
-    private enum Commands {
-        admin_residence_list,
-        admin_residence,
-        admin_set_owner,
-        admin_set_siege_time,
-        // dominion
-        admin_start_dominion_war,
-        admin_stop_dominion_war,
-        admin_restart_dominion_one_time,
-        admin_restart_dominion_one,
-        admin_set_dominion_time,
-        //
-        admin_quick_siege_start,
-        admin_quick_siege_stop,
-        // fortress
-        admin_backup_unit_info,
-        admin_fortress_spawn_flags
+    public List<String> getAdminCommands() {
+        return List.of(
+                "admin_residence_list",
+                "admin_residence",
+                "admin_set_owner",
+                "admin_set_siege_time",
+                // dominion
+                "admin_start_dominion_war",
+                "admin_stop_dominion_war",
+                "admin_restart_dominion_one_time",
+                "admin_restart_dominion_one",
+                "admin_set_dominion_time",
+                //
+                "admin_quick_siege_start",
+                "admin_quick_siege_stop",
+                // fortress
+                "admin_backup_unit_info",
+                "admin_fortress_spawn_flags");
     }
 }

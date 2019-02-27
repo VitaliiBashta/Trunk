@@ -8,75 +8,75 @@ import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.network.serverpackets.InventoryUpdate;
 import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
 
-public class AdminEnchant implements IAdminCommandHandler {
-    @Override
-    public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
-        Commands command = (Commands) comm;
+import java.util.List;
 
+public final class AdminEnchant implements IAdminCommandHandler {
+    @Override
+    public boolean useAdminCommand(String comm, String[] wordList, String fullString, Player activeChar) {
         if (!activeChar.getPlayerAccess().CanEditChar)
             return false;
 
         int armorType = -1;
 
-        switch (command) {
-            case admin_enchant:
+        switch (comm) {
+            case "admin_enchant":
                 showMainPage(activeChar);
                 return true;
-            case admin_seteh:
+            case "admin_seteh":
                 armorType = Inventory.PAPERDOLL_HEAD;
                 break;
-            case admin_setec:
+            case "admin_setec":
                 armorType = Inventory.PAPERDOLL_CHEST;
                 break;
-            case admin_seteg:
+            case "admin_seteg":
                 armorType = Inventory.PAPERDOLL_GLOVES;
                 break;
-            case admin_seteb:
+            case "admin_seteb":
                 armorType = Inventory.PAPERDOLL_FEET;
                 break;
-            case admin_setel:
+            case "admin_setel":
                 armorType = Inventory.PAPERDOLL_LEGS;
                 break;
-            case admin_setew:
+            case "admin_setew":
                 armorType = Inventory.PAPERDOLL_RHAND;
                 break;
-            case admin_setes:
+            case "admin_setes":
                 armorType = Inventory.PAPERDOLL_LHAND;
                 break;
-            case admin_setle:
+            case "admin_setle":
                 armorType = Inventory.PAPERDOLL_LEAR;
                 break;
-            case admin_setre:
+            case "admin_setre":
                 armorType = Inventory.PAPERDOLL_REAR;
                 break;
-            case admin_setlf:
+            case "admin_setlf":
                 armorType = Inventory.PAPERDOLL_LFINGER;
                 break;
-            case admin_setrf:
+            case "admin_setrf":
                 armorType = Inventory.PAPERDOLL_RFINGER;
                 break;
-            case admin_seten:
+            case "admin_seten":
                 armorType = Inventory.PAPERDOLL_NECK;
                 break;
-            case admin_setun:
+            case "admin_setun":
                 armorType = Inventory.PAPERDOLL_UNDER;
                 break;
-            case admin_setba:
+            case "admin_setba":
                 armorType = Inventory.PAPERDOLL_BACK;
                 break;
-            case admin_setha:
+            case "admin_setha":
                 armorType = Inventory.PAPERDOLL_HAIR;
                 break;
-            case admin_setdha:
+            case "admin_setdha":
                 armorType = Inventory.PAPERDOLL_HAIR;
                 break;
-            case admin_setlbr:
+            case "admin_setlbr":
                 armorType = Inventory.PAPERDOLL_LBRACELET;
                 break;
-            case admin_setrbr:
+            case "admin_setrbr":
                 armorType = Inventory.PAPERDOLL_RBRACELET;
                 break;
-            case admin_setbelt:
+            case "admin_setbelt":
                 armorType = Inventory.PAPERDOLL_BELT;
                 break;
 
@@ -206,30 +206,27 @@ public class AdminEnchant implements IAdminCommandHandler {
     }
 
     @Override
-    public Enum[] getAdminCommandEnum() {
-        return Commands.values();
-    }
-
-    private enum Commands {
-        admin_seteh, // 6
-        admin_setec, // 10
-        admin_seteg, // 9
-        admin_setel, // 11
-        admin_seteb, // 12
-        admin_setew, // 7
-        admin_setes, // 8
-        admin_setle, // 1
-        admin_setre, // 2
-        admin_setlf, // 4
-        admin_setrf, // 5
-        admin_seten, // 3
-        admin_setun, // 0
-        admin_setba,
-        admin_setha,
-        admin_setdha,
-        admin_setlbr,
-        admin_setrbr,
-        admin_setbelt,
-        admin_enchant
+    public List<String> getAdminCommands() {
+        return List.of(
+                "admin_seteh", // 6
+                "admin_setec", // 10
+                "admin_seteg", // 9
+                "admin_setel", // 11
+                "admin_seteb", // 12
+                "admin_setew", // 7
+                "admin_setes", // 8
+                "admin_setle", // 1
+                "admin_setre", // 2
+                "admin_setlf", // 4
+                "admin_setrf", // 5
+                "admin_seten", // 3
+                "admin_setun", // 0
+                "admin_setba",
+                "admin_setha",
+                "admin_setdha",
+                "admin_setlbr",
+                "admin_setrbr",
+                "admin_setbelt",
+                "admin_enchant");
     }
 }

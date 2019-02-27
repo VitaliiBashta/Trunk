@@ -14,7 +14,7 @@ public class AirShipControllerInstance extends NpcInstance {
     }
 
     private static SystemMsg canBoard(Player player) {
-        if (player.getTransformation() != 0)
+        if (player.isTrasformed() )
             return SystemMsg.YOU_CANNOT_BOARD_AN_AIRSHIP_WHILE_TRANSFORMED;
         if (player.isParalyzed())
             return SystemMsg.YOU_CANNOT_BOARD_AN_AIRSHIP_WHILE_PETRIFIED;

@@ -1589,7 +1589,15 @@ public class NpcInstance extends Creature {
         return false;
     }
 
-    public void setParameter(String str, Object val) {
+    public void setParameter(String str, boolean val) {
+        setParameter(str, "" + val);
+    }
+
+    public void setParameter(String str, double val) {
+        setParameter(str, "" + val);
+    }
+
+    public void setParameter(String str, String val) {
         if (parameters == StatsSet.EMPTY) {
             parameters = new StatsSet();
         }

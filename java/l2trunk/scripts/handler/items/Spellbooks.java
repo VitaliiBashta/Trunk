@@ -25,7 +25,7 @@ public final class Spellbooks extends ScriptItemHandler implements ScriptFile {
 
     @Override
     public void onLoad() {
-        ItemHandler.INSTANCE.registerItemHandler(this);
+//        ItemHandler.INSTANCE.registerItemHandler(this);
     }
 
     @Override

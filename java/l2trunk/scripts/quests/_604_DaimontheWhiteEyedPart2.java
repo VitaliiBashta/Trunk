@@ -55,7 +55,7 @@ public final class _604_DaimontheWhiteEyedPart2 extends Quest {
                 return "31541-04.htm";
             if (isQuest != null)
                 return "31541-03.htm";
-            if (ServerVariables.getLong(getClass().getSimpleName(), 0) + 3 * 60 * 60 * 1000 > System.currentTimeMillis())
+            if (ServerVariables.getLong(getClass().getSimpleName()) + 3 * 60 * 60 * 1000 > System.currentTimeMillis())
                 return "31541-05.htm";
             st.takeItems(S_SUMMON, 1);
             isQuest = st.addSpawn(DAIMON, Location.of(186320, -43904, -3175));
@@ -138,7 +138,7 @@ public final class _604_DaimontheWhiteEyedPart2 extends Quest {
             if (npcId == EYE)
                 htmltext = "31683-02a.htm";
             else if (npcId == ALTAR)
-                if (ServerVariables.getLong(getClass().getSimpleName(), 0) + 3 * 60 * 60 * 1000 > System.currentTimeMillis())
+                if (ServerVariables.getLong(getClass().getSimpleName()) + 3 * 60 * 60 * 1000 > System.currentTimeMillis())
                     htmltext = "31541-05.htm";
                 else
                     htmltext = "31541-01.htm";
@@ -146,7 +146,7 @@ public final class _604_DaimontheWhiteEyedPart2 extends Quest {
             if (npcId == ALTAR)
                 if (isQuest != null)
                     htmltext = "31541-03.htm";
-                else if (ServerVariables.getLong(getClass().getSimpleName(), 0) + 3 * 60 * 60 * 1000 > System.currentTimeMillis())
+                else if (ServerVariables.getLong(getClass().getSimpleName()) + 3 * 60 * 60 * 1000 > System.currentTimeMillis())
                     htmltext = "31541-05.htm";
                 else {
                     isQuest = st.addSpawn(DAIMON, Location.of(186320, -43904, -3175));

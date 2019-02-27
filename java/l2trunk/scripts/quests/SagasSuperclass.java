@@ -321,7 +321,7 @@ public abstract class SagasSuperclass extends Quest {
         } else if ("4-3".equals(event)) {
             st.giveItems(items.get(9));
             st.setCond(18);
-            st.set("Quest0", 0);
+            st.unset("Quest0");
             st.playSound(SOUND_MIDDLE);
             NpcInstance Mob_2 = FindMySpawn(player, NPC.get(4));
             if (Mob_2 != null) {

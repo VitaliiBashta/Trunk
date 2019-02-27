@@ -41,7 +41,7 @@ public enum HellboundManager {
     private final DeathListener _deathListener = new DeathListener();
 
     public static long getConfidence() {
-        return ServerVariables.getLong("HellboundConfidence", 0);
+        return ServerVariables.getLong("HellboundConfidence");
     }
 
     public static void setConfidence(long value) {
@@ -65,7 +65,7 @@ public enum HellboundManager {
     }
 
     private static int getHellboundLevelS() {
-        long confidence = ServerVariables.getLong("HellboundConfidence", 0);
+        long confidence = ServerVariables.getLong("HellboundConfidence");
         boolean judesBoxes = ServerVariables.getBool("HB_judesBoxes", false);
         boolean bernardBoxes = ServerVariables.getBool("HB_bernardBoxes", false);
         boolean derekKilled = ServerVariables.getBool("HB_derekKilled", false);

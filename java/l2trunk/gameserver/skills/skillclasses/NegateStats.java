@@ -29,7 +29,7 @@ public final class NegateStats extends Skill {
                 .collect(Collectors.toList());
 
         negateOffensive = set.getBool("negateDebuffs", false);
-        negateCount = set.getInteger("negateCount", 0);
+        negateCount = set.getInteger("negateCount");
     }
 
     @Override

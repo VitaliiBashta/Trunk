@@ -862,7 +862,7 @@ public final class ItemInstance extends GameObject implements JdbcEntity {
      * @param element
      * @return значение защиты
      */
-    private int getDefence(Element element) {
+    public int getDefence(Element element) {
         return isArmor() ? getAttributeElementValue(element, true) : 0;
     }
 

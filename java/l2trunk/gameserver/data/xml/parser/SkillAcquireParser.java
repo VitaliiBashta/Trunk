@@ -5,6 +5,7 @@ import l2trunk.gameserver.Config;
 import l2trunk.gameserver.data.xml.holder.SkillAcquireHolder;
 import l2trunk.gameserver.model.SkillLearn;
 import l2trunk.gameserver.model.base.ClassId;
+import l2trunk.gameserver.model.base.Race;
 import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +43,7 @@ public enum SkillAcquireParser {
             Element nxt = iterator.next();
             for (Iterator<Element> classIterator = nxt.elementIterator("race"); classIterator.hasNext(); ) {
                 Element classElement = classIterator.next();
-                int race = Integer.parseInt(classElement.attributeValue("id"));
+                Race race = Race.of(toInt(classElement.attributeValue("id")));
                 List<SkillLearn> learns = parseSkillLearn(classElement);
                 SkillAcquireHolder.addAllFishingLearns(race, learns);
             }
@@ -52,7 +53,7 @@ public enum SkillAcquireParser {
             Element nxt = iterator.next();
             for (Iterator<Element> classIterator = nxt.elementIterator("class"); classIterator.hasNext(); ) {
                 Element classElement = classIterator.next();
-                ClassId classId = ClassId.getById(toInt(classElement.attributeValue("id")));
+                ClassId classId = ClassId.getById(classElement.attributeValue("id"));
                 List<SkillLearn> learns = parseSkillLearn(classElement);
                 SkillAcquireHolder.addAllTransferLearns(classId, learns);
             }
@@ -76,7 +77,7 @@ public enum SkillAcquireParser {
             Element nxt = iterator.next();
             for (Iterator<Element> classIterator = nxt.elementIterator("race"); classIterator.hasNext(); ) {
                 Element classElement = classIterator.next();
-                int race = Integer.parseInt(classElement.attributeValue("id"));
+                Race race = Race.of(toInt(classElement.attributeValue("id")));
                 List<SkillLearn> learns = parseSkillLearn(classElement);
                 SkillAcquireHolder.addAllTransformationLearns(race, learns);
             }

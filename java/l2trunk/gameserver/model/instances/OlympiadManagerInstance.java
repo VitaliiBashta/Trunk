@@ -36,12 +36,11 @@ public final class OlympiadManagerInstance extends NpcInstance {
         final int comp_matches_to_show = Config.OLYMPIAD_BATTLES_FOR_REWARD;
         int points, comp_done, pos = 0;
         String char_name;
-        String Class = ClassId.VALUES.stream().filter(cls -> cls.id == classId)
-                .map(cls -> cls.name).findFirst().orElseThrow(() -> new IllegalArgumentException("not for class for id " + classId));
+        String className = ClassId.getById(classId).name;
 
         NpcHtmlMessage nhm = new NpcHtmlMessage(5);
         StringBuilder html = new StringBuilder();
-        html.append("<html><head><title>Grand Olympiad Ranking</title></head><body><center><font color=66cc00>Olympiad Ranking Online System</font></center><br><center>").append(Class).append("</center><br1><center><img src=\"L2UI.SquareWhite\" width=300 height=1><img src=\"L2UI.SquareBlank\" width=1 height=3></center><table width=300 border=0 bgcolor=\"000000\"><tr><td>Position</td><center><td>|</td></center><td><center>Name</center></td><center><td>|</td></center><td><center>Points</center></td><center><td>|</td></center><td><center>Fights</center></td></tr>");
+        html.append("<html><head><title>Grand Olympiad Ranking</title></head><body><center><font color=66cc00>Olympiad Ranking Online System</font></center><br><center>").append(className).append("</center><br1><center><img src=\"L2UI.SquareWhite\" width=300 height=1><img src=\"L2UI.SquareBlank\" width=1 height=3></center><table width=300 border=0 bgcolor=\"000000\"><tr><td>Position</td><center><td>|</td></center><td><center>Name</center></td><center><td>|</td></center><td><center>Points</center></td><center><td>|</td></center><td><center>Fights</center></td></tr>");
 
         try (Connection con = L2DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement("SELECT characters.char_name,  olympiad_nobles.competitions_done, olympiad_nobles.olympiad_points  FROM olympiad_nobles, characters WHERE characters.obj_Id = olympiad_nobles.char_id AND olympiad_nobles.class_id AND class_id=? AND olympiad_nobles.competitions_done >= ? order by olympiad_points desc, competitions_done desc")) {

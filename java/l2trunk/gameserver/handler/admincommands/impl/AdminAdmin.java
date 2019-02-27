@@ -18,26 +18,21 @@ import l2trunk.gameserver.stats.Stats;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.StringTokenizer;
 
 public final class AdminAdmin implements IAdminCommandHandler {
     private static final Logger _log = LoggerFactory.getLogger(AdminAdmin.class);
 
     @Override
-    public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
-        Commands command = (Commands) comm;
-        StringTokenizer st;
+    public boolean useAdminCommand(String comm, String[] wordList, String fullString, Player activeChar) {
 
         if (activeChar.getPlayerAccess().Menu) {
-            switch (command) {
-                case admin_admin:
+            switch (comm) {
+                case "admin_admin":
                     activeChar.sendPacket(new NpcHtmlMessage(5).setFile("admin/admin.htm"));
                     break;
-                case admin_play_sounds:
+                case "admin_play_sounds":
                     if (wordList.length == 1)
                         activeChar.sendPacket(new NpcHtmlMessage(5).setFile("admin/songs/songs.htm"));
                     else
@@ -46,13 +41,13 @@ public final class AdminAdmin implements IAdminCommandHandler {
                         } catch (StringIndexOutOfBoundsException e) {
                         }
                     break;
-                case admin_play_sound:
+                case "admin_play_sound":
                     try {
                         playAdminSound(activeChar, wordList[1]);
                     } catch (StringIndexOutOfBoundsException e) {
                     }
                     break;
-                case admin_silence:
+                case "admin_silence":
                     if (activeChar.getMessageRefusal()) // already in message refusal
                     // mode
                     {
@@ -68,7 +63,7 @@ public final class AdminAdmin implements IAdminCommandHandler {
                         activeChar.sendEtcStatusUpdate();
                     }
                     break;
-                case admin_tradeoff:
+                case "admin_tradeoff":
                     try {
                         if ("on".equalsIgnoreCase(wordList[1])) {
                             activeChar.setTradeRefusal(true);
@@ -84,7 +79,7 @@ public final class AdminAdmin implements IAdminCommandHandler {
                             Functions.sendDebugMessage(activeChar, "tradeoff currently disabled");
                     }
                     break;
-                case admin_show_html:
+                case "admin_show_html":
                     String html = wordList[1];
                     try {
                         if (html != null)
@@ -95,7 +90,7 @@ public final class AdminAdmin implements IAdminCommandHandler {
                         Functions.sendDebugMessage(activeChar, "Html page not found");
                     }
                     break;
-                case admin_setnpcstate:
+                case "admin_setnpcstate":
                     if (wordList.length < 2) {
                         Functions.sendDebugMessage(activeChar, "USAGE: //setnpcstate state");
                         return false;
@@ -115,7 +110,7 @@ public final class AdminAdmin implements IAdminCommandHandler {
                         Functions.sendDebugMessage(activeChar, "You must target an NPC");
                         return false;
                     }
-                case admin_setareanpcstate:
+                case "admin_setareanpcstate":
                     try {
                         final String val = fullString.substring(15).trim();
 
@@ -129,7 +124,7 @@ public final class AdminAdmin implements IAdminCommandHandler {
                         Functions.sendDebugMessage(activeChar, "Usage: //setareanpcstate [range] [state]");
                     }
                     break;
-                case admin_showmovie:
+                case "admin_showmovie":
                     if (wordList.length < 2) {
                         Functions.sendDebugMessage(activeChar, "USAGE: //showmovie id");
                         return false;
@@ -143,7 +138,7 @@ public final class AdminAdmin implements IAdminCommandHandler {
                     }
                     activeChar.showQuestMovie(id);
                     break;
-                case admin_setzoneinfo:
+                case "admin_setzoneinfo":
                     if (wordList.length < 2) {
                         Functions.sendDebugMessage(activeChar, "USAGE: //setzoneinfo id");
                         return false;
@@ -157,7 +152,7 @@ public final class AdminAdmin implements IAdminCommandHandler {
                     }
                     activeChar.broadcastPacket(new ExChangeClientEffectInfo(stateid));
                     break;
-                case admin_eventtrigger:
+                case "admin_eventtrigger":
                     if (wordList.length < 2) {
                         Functions.sendDebugMessage(activeChar, "USAGE: //eventtrigger id");
                         return false;
@@ -171,7 +166,7 @@ public final class AdminAdmin implements IAdminCommandHandler {
                     }
                     activeChar.broadcastPacket(new EventTrigger(triggerid, true));
                     break;
-                case admin_debug:
+                case "admin_debug":
                     GameObject ob = activeChar.getTarget();
                     if (ob == null) {
                         Functions.sendDebugMessage(activeChar, "Only getPlayer target is allowed");
@@ -238,7 +233,7 @@ public final class AdminAdmin implements IAdminCommandHandler {
                         Functions.sendDebugMessage(activeChar, "Only getPlayer target is allowed");
                         return false;
                     }
-                case admin_uievent:
+                case "admin_uievent":
                     if (wordList.length < 5) {
                         Functions.sendDebugMessage(activeChar, "USAGE: //uievent isHide doIncrease startTime endTime Text");
                         return false;
@@ -260,24 +255,24 @@ public final class AdminAdmin implements IAdminCommandHandler {
                     }
                     activeChar.broadcastPacket(new ExSendUIEvent(activeChar, hide, increase, startTime, endTime, text));
                     break;
-                case admin_opensod:
+                case "admin_opensod":
                     if (wordList.length < 1) {
                         Functions.sendDebugMessage(activeChar, "USAGE: //opensod minutes");
                         return false;
                     }
                     SoDManager.openSeed(Integer.parseInt(wordList[1]) * 60 * 1000L);
                     break;
-                case admin_closesod:
+                case "admin_closesod":
                     SoDManager.closeSeed();
                     break;
-                case admin_setsoistage:
+                case "admin_setsoistage":
                     if (wordList.length < 1) {
                         Functions.sendDebugMessage(activeChar, "USAGE: //setsoistage stage[1-5]");
                         return false;
                     }
                     SoIManager.setCurrentStage(Integer.parseInt(wordList[1]));
                     break;
-                case admin_soinotify:
+                case "admin_soinotify":
                     if (wordList.length < 1) {
                         Functions.sendDebugMessage(activeChar, "USAGE: //soinotify [1-3]");
                         return false;
@@ -294,7 +289,7 @@ public final class AdminAdmin implements IAdminCommandHandler {
                             break;
                     }
                     break;
-                case admin_forcenpcinfo:
+                case "admin_forcenpcinfo":
                     GameObject obj2 = activeChar.getTarget();
                     if (obj2 instanceof NpcInstance) {
                         ((NpcInstance) obj2).broadcastCharInfo();
@@ -303,30 +298,10 @@ public final class AdminAdmin implements IAdminCommandHandler {
                         Functions.sendDebugMessage(activeChar, "Only NPC target is allowed");
                         return false;
                     }
-                case admin_loc:
+                case "admin_loc":
                     Functions.sendDebugMessage(activeChar, "Coords: X:" + activeChar.getLoc().x + " Y:" + activeChar.getLoc().y + " Z:" + activeChar.getLoc().z + " H:" + activeChar.getLoc().h);
                     break;
-                case admin_locdump:
-                    st = new StringTokenizer(fullString, " ");
-                    try {
-                        st.nextToken();
-                        try {
-                            new File("dumps").mkdir();
-                            File f = new File("dumps/locdump.txt");
-                            if (!f.exists())
-                                f.createNewFile();
-                            Functions.sendDebugMessage(activeChar, "Coords: X:" + activeChar.getLoc().x + " Y:" + activeChar.getLoc().y + " Z:" + activeChar.getLoc().z + " H:" + activeChar.getLoc().h);
-                            FileWriter writer = new FileWriter(f, true);
-                            writer.write("Loc: " + activeChar.getLoc().x + ", " + activeChar.getLoc().y + ", " + activeChar.getLoc().z + "\n");
-                            writer.close();
-                        } catch (Exception e) {
-
-                        }
-                    } catch (Exception e) {
-                        // Case of wrong monster data
-                    }
-                    break;
-                case admin_undying:
+                case "admin_undying":
                     if (activeChar.isUndying()) {
                         activeChar.setUndying(false);
                         Functions.sendDebugMessage(activeChar, "Undying state has been disabled.");
@@ -335,10 +310,10 @@ public final class AdminAdmin implements IAdminCommandHandler {
                         Functions.sendDebugMessage(activeChar, "Undying state has been enabled.");
                     }
                     break;
-                case admin_garbage_collector:
+                case "admin_garbage_collector":
                     System.gc();
                     break;
-                case admin_show_memory:
+                case "admin_show_memory":
                     _log.info("=================================================");
                     String memUsage = String.valueOf(StatsUtils.getMemUsage());
                     for (String line : memUsage.split("\n")) {
@@ -346,15 +321,15 @@ public final class AdminAdmin implements IAdminCommandHandler {
                     }
                     _log.info("=================================================");
                     break;
-                case admin_gath_tele:
+                case "admin_gath_tele":
                     GameObjectsStorage.getAllPlayersStream()
                             .filter(player -> player != activeChar)
                             .forEach(player -> player.ask(new ConfirmDlg(SystemMsg.S1, 60000).addString("Would you like teleport to Admin Recall?"), new AnswerGathTeleInvitation(player, activeChar)));
                     break;
-                case admin_openme:
+                case "admin_openme":
                     activeChar.sendMessage("You are GM visible. Now you can accept petition.");
                     break;
-                case admin_closeme:
+                case "admin_closeme":
                     activeChar.sendMessage("You are Invisible. Now you can't accept petition.");
                     break;
             }
@@ -362,8 +337,8 @@ public final class AdminAdmin implements IAdminCommandHandler {
         }
 
         if (activeChar.getPlayerAccess().CanTeleport) {
-            switch (command) {
-                case admin_show_html:
+            switch (comm) {
+                case "admin_show_html":
                     String html = wordList[1];
                     try {
                         if (html != null)
@@ -389,48 +364,45 @@ public final class AdminAdmin implements IAdminCommandHandler {
         player.teleToLocation(target.getX() + 50, target.getY() + 15, target.getZ());
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
-    public Enum[] getAdminCommandEnum() {
-        return Commands.values();
+    public List<String> getAdminCommands() {
+        return List.of(
+                "admin_admin",
+                "admin_play_sounds",
+                "admin_play_sound",
+                "admin_silence",
+                "admin_tradeoff",
+                "admin_cfg",
+                "admin_config",
+                "admin_show_html",
+                "admin_setnpcstate",
+                "admin_setareanpcstate",
+                "admin_showmovie",
+                "admin_setzoneinfo",
+                "admin_eventtrigger",
+                "admin_debug",
+                "admin_uievent",
+                "admin_opensod",
+                "admin_closesod",
+                "admin_setsoistage",
+                "admin_soinotify",
+                "admin_forcenpcinfo",
+                "admin_loc",
+                "admin_locdump",
+                "admin_undying",
+                "admin_garbage_collector",
+                "admin_show_memory",
+                "admin_create_server_lag",
+                "admin_gath_tele",
+                "admin_openme",
+                "admin_closeme"
+        );
     }
 
     private void playAdminSound(Player activeChar, String sound) {
         activeChar.broadcastPacket(new PlaySound(sound));
         activeChar.sendPacket(new NpcHtmlMessage(5).setFile("admin/admin.htm"));
         activeChar.sendMessage("Playing " + sound + ".");
-    }
-
-    private enum Commands {
-        admin_admin,
-        admin_play_sounds,
-        admin_play_sound,
-        admin_silence,
-        admin_tradeoff,
-        admin_cfg,
-        admin_config,
-        admin_show_html,
-        admin_setnpcstate,
-        admin_setareanpcstate,
-        admin_showmovie,
-        admin_setzoneinfo,
-        admin_eventtrigger,
-        admin_debug,
-        admin_uievent,
-        admin_opensod,
-        admin_closesod,
-        admin_setsoistage,
-        admin_soinotify,
-        admin_forcenpcinfo,
-        admin_loc,
-        admin_locdump,
-        admin_undying,
-        admin_garbage_collector,
-        admin_show_memory,
-        admin_create_server_lag,
-        admin_gath_tele,
-        admin_openme,
-        admin_closeme
     }
 
     private class AnswerGathTeleInvitation implements OnAnswerListener {

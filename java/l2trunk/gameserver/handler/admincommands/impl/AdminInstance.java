@@ -1,6 +1,5 @@
 package l2trunk.gameserver.handler.admincommands.impl;
 
-import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.handler.admincommands.IAdminCommandHandler;
 import l2trunk.gameserver.instancemanager.ReflectionManager;
 import l2trunk.gameserver.instancemanager.SoDManager;
@@ -10,27 +9,24 @@ import l2trunk.gameserver.model.entity.Reflection;
 import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
 import l2trunk.gameserver.scripts.Functions;
 
-import java.io.File;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 
-public class AdminInstance implements IAdminCommandHandler {
+public final class AdminInstance implements IAdminCommandHandler {
     @Override
-    public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, final Player activeChar) {
-        Commands command = (Commands) comm;
+    public boolean useAdminCommand(String comm, String[] wordList, String fullString, final Player activeChar) {
         GameObject target = activeChar.getTarget();
         if (!activeChar.getPlayerAccess().CanTeleport)
             return false;
 
-        switch (command) {
-            case admin_instance:
+        switch (comm) {
+            case "admin_instance":
                 listOfInstances(activeChar);
                 break;
-            case admin_instance_id:
+            case "admin_instance_id":
                 if (wordList.length > 1)
                     listOfCharsForInstance(activeChar, wordList[1]);
                 break;
-            case admin_collapse:
+            case "admin_collapse":
                 Reflection r = activeChar.getReflection();
                 if (wordList.length > 1)
                     r = ReflectionManager.INSTANCE.get(Integer.parseInt(wordList[1]));
@@ -41,27 +37,27 @@ public class AdminInstance implements IAdminCommandHandler {
                 else
                     activeChar.sendMessage("Cannot collapse default reflection!");
                 break;
-            case admin_reset_reuse:
+            case "admin_reset_reuse":
                 if (wordList.length > 1 && target instanceof Player) {
                     Player p = (Player) target;
                     p.removeInstanceReuse(Integer.parseInt(wordList[1]));
                     Functions.sendDebugMessage(activeChar, "Instance reuse has been removed");
                 }
                 break;
-            case admin_reset_reuse_all:
+            case "admin_reset_reuse_all":
                 if (target instanceof Player) {
                     Player p = (Player) target;
                     p.removeAllInstanceReuses();
                     Functions.sendDebugMessage(activeChar, "All instance reuses has been removed");
                 }
                 break;
-            case admin_clean_files:
+            case "admin_clean_files":
                 break;
-            case admin_set_reuse:
+            case "admin_set_reuse":
                 if (activeChar.getReflection() != null)
                     activeChar.getReflection().setReenterTime(System.currentTimeMillis());
                 break;
-            case admin_addtiatkill:
+            case "admin_addtiatkill":
                 SoDManager.addTiatKill();
                 break;
         }
@@ -70,8 +66,16 @@ public class AdminInstance implements IAdminCommandHandler {
     }
 
     @Override
-    public Enum[] getAdminCommandEnum() {
-        return Commands.values();
+    public List<String> getAdminCommands() {
+        return List.of(
+                "admin_instance",
+                "admin_instance_id",
+                "admin_collapse",
+                "admin_reset_reuse",
+                "admin_reset_reuse_all",
+                "admin_set_reuse",
+                "admin_clean_files",
+                "admin_addtiatkill");
     }
 
     private void listOfInstances(Player activeChar) {
@@ -112,7 +116,7 @@ public class AdminInstance implements IAdminCommandHandler {
             replyMSG.append("</tr></table><br><br>");
 
             reflection.getPlayers().forEach(p ->
-                replyMSG.append("<a action=\"bypass -h admin_teleportto ").append(p.getName()).append(" \">").append(p.getName()).append("</a><br>"));
+                    replyMSG.append("<a action=\"bypass -h admin_teleportto ").append(p.getName()).append(" \">").append(p.getName()).append("</a><br>"));
         } else {
             replyMSG.append("Instance not active.<br>");
             replyMSG.append("<a action=\"bypass -h admin_instance\">Back to list.</a><br>");
@@ -124,14 +128,4 @@ public class AdminInstance implements IAdminCommandHandler {
         activeChar.sendPacket(adminReply);
     }
 
-    private enum Commands {
-        admin_instance,
-        admin_instance_id,
-        admin_collapse,
-        admin_reset_reuse,
-        admin_reset_reuse_all,
-        admin_set_reuse,
-        admin_clean_files,
-        admin_addtiatkill
-    }
 }

@@ -9,6 +9,8 @@ import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
 import l2trunk.gameserver.utils.ItemFunctions;
 
+import java.util.List;
+
 public final class AdminMasterwork implements IAdminCommandHandler {
     private static final int[] SLOTS_TO_MASTERWORK = {Inventory.PAPERDOLL_RHAND, Inventory.PAPERDOLL_LHAND, Inventory.PAPERDOLL_HEAD, Inventory.PAPERDOLL_LEGS, Inventory.PAPERDOLL_GLOVES, Inventory.PAPERDOLL_FEET};
 
@@ -57,39 +59,34 @@ public final class AdminMasterwork implements IAdminCommandHandler {
     }
 
     @Override
-    public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
-        Commands command = (Commands) comm;
+    public boolean useAdminCommand(String comm, String[] wordList, String fullString, Player activeChar) {
 
         if (!activeChar.getPlayerAccess().CanEditChar)
             return false;
 
         Player target;
         if (activeChar.getTarget() instanceof Player)
-            target = (Player)activeChar.getTarget();
+            target = (Player) activeChar.getTarget();
         else
             target = activeChar;
 
-        switch (command) {
-            case admin_masterwork:
-                showMainMasterwork(activeChar, target);
-                break;
-            case admin_create_masterwork:
-                int slot = Integer.parseInt(wordList[1]);
-                createMasterwork(activeChar, target, slot);
-                showMainMasterwork(activeChar, target);
-                break;
+        if ("admin_masterwork".equals(comm)) {
+            showMainMasterwork(activeChar, target);
+
+        } else if ("admin_create_masterwork".equals(comm)) {
+            int slot = Integer.parseInt(wordList[1]);
+            createMasterwork(activeChar, target, slot);
+            showMainMasterwork(activeChar, target);
+
         }
 
         return true;
     }
 
     @Override
-    public Enum[] getAdminCommandEnum() {
-        return Commands.values();
-    }
-
-    private enum Commands {
-        admin_masterwork,
-        admin_create_masterwork
+    public List<String> getAdminCommands() {
+        return List.of(
+                "admin_masterwork",
+                "admin_create_masterwork");
     }
 }

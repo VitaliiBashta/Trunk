@@ -87,7 +87,7 @@ public final class _217_TestimonyOfTrust extends Quest {
                 }
                 htmltext = "hollin_q0217_04.htm";
                 st.setCond(1);
-                st.set("id", 0);
+                st.unset("id");
                 st.start();
                 st.playSound(SOUND_ACCEPT);
                 st.giveItems(LETTER_TO_ELF_ID);
@@ -121,7 +121,7 @@ public final class _217_TestimonyOfTrust extends Quest {
             case "30565_1":
                 htmltext = "kakai_the_lord_of_flame_q0217_02.htm";
                 st.takeItems(LETTER_TO_ORC_ID, 1);
-                st.giveItems(LETTER_TO_MANAKIA_ID, 1);
+                st.giveItems(LETTER_TO_MANAKIA_ID);
                 st.setCond(13);
                 break;
             case "30515_1":
@@ -132,7 +132,7 @@ public final class _217_TestimonyOfTrust extends Quest {
             case "30531_1":
                 htmltext = "first_elder_lockirin_q0217_02.htm";
                 st.takeItems(LETTER_TO_DWARF_ID, 1);
-                st.giveItems(LETTER_TO_NICHOLA_ID, 1);
+                st.giveItems(LETTER_TO_NICHOLA_ID);
                 st.setCond(18);
                 break;
             case "30621_1":
@@ -147,7 +147,7 @@ public final class _217_TestimonyOfTrust extends Quest {
 
     @Override
     public String onTalk(NpcInstance npc, QuestState st) {
-        if (st.getQuestItemsCount(MARK_OF_TRUST_ID) > 0) {
+        if (st.haveQuestItem(MARK_OF_TRUST_ID)) {
             st.exitCurrentQuest();
             return "completed";
         }
@@ -184,7 +184,7 @@ public final class _217_TestimonyOfTrust extends Quest {
             else if (cond == 8)
                 htmltext = "hollin_q0217_09.htm";
         } else if (npcId == 30154) {
-            if (cond == 1 && st.getQuestItemsCount(LETTER_TO_ELF_ID) > 0)
+            if (cond == 1 && st.haveQuestItem(LETTER_TO_ELF_ID))
                 htmltext = "ozzy_q0217_01.htm";
             else if (cond == 2 && st.getQuestItemsCount(ORDER_OF_OZZY_ID) > 0)
                 htmltext = "ozzy_q0217_04.htm";
@@ -246,7 +246,7 @@ public final class _217_TestimonyOfTrust extends Quest {
                 htmltext = "seer_manakia_q0217_01.htm";
             else if (cond == 14 && st.getQuestItemsCount(PARASITE_OF_LOTA_ID) < 10)
                 htmltext = "seer_manakia_q0217_03.htm";
-            else if (cond == 15 && st.getQuestItemsCount(PARASITE_OF_LOTA_ID) == 10) {
+            else if (cond == 15 && st.haveQuestItem(PARASITE_OF_LOTA_ID, 10)) {
                 htmltext = "seer_manakia_q0217_04.htm";
                 st.takeItems(PARASITE_OF_LOTA_ID);
                 st.giveItems(LETTER_OF_MANAKIA_ID);

@@ -66,7 +66,7 @@ public final class SoIManager {
     private static long getOpenedTime() {
         if (getCurrentStage() != 3)
             return 0;
-        return ServerVariables.getLong("SoI_opened", 0) * 1000L - System.currentTimeMillis();
+        return ServerVariables.getLong("SoI_opened") * 1000L - System.currentTimeMillis();
     }
 
     public static boolean isSeedOpen() {

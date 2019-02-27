@@ -389,7 +389,6 @@ public class PetInstance extends Summon {
         return petData.getAddFed();
     }
 
-    @Override
     public final PetInventory getInventory() {
         return inventory;
     }

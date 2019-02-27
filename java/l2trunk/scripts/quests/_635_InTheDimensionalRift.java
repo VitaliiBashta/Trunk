@@ -59,7 +59,7 @@ public final class _635_InTheDimensionalRift extends Quest {
                 htmltext = "What are you trying to do?";
                 st.exitCurrentQuest();
             }
-        else if (event.equalsIgnoreCase("6.htm"))
+        else if ("6.htm".equalsIgnoreCase(event))
             st.exitCurrentQuest();
         return htmltext;
     }

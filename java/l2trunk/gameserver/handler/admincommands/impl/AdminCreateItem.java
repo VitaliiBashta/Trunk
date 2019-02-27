@@ -16,24 +16,23 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.utils.ItemFunctions;
 import l2trunk.gameserver.utils.Location;
 
+import java.util.List;
+
 import static l2trunk.commons.lang.NumberUtils.toInt;
 import static l2trunk.commons.lang.NumberUtils.toLong;
 
-public class AdminCreateItem implements IAdminCommandHandler {
-    @SuppressWarnings("rawtypes")
+public final class AdminCreateItem implements IAdminCommandHandler {
     @Override
-    public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
-        Commands command = (Commands) comm;
-
+    public boolean useAdminCommand(String comm, String[] wordList, String fullString, Player activeChar) {
         if (!activeChar.getPlayerAccess().UseGMShop)
             return false;
 
-        switch (command) {
-            case admin_itemcreate:
+        switch (comm) {
+            case "admin_itemcreate":
                 activeChar.sendPacket(new NpcHtmlMessage(5).setFile("admin/itemcreation.htm"));
                 break;
-            case admin_ci:
-            case admin_create_item:
+            case "admin_ci":
+            case "admin_create_item":
                 if (wordList.length < 2) {
                     activeChar.sendMessage("USAGE: create_item id [count]");
                     return false;
@@ -44,7 +43,7 @@ public class AdminCreateItem implements IAdminCommandHandler {
                 createItem(activeChar, item_id, item_count);
                 activeChar.sendPacket(new NpcHtmlMessage(5).setFile("admin/itemcreation.htm"));
                 break;
-            case admin_create_item_hwid:
+            case "admin_create_item_hwid":
                 if (wordList.length < 2) {
                     activeChar.sendMessage("USAGE: create_item id [count]");
                     return false;
@@ -61,7 +60,7 @@ public class AdminCreateItem implements IAdminCommandHandler {
                         });
                 activeChar.sendPacket(new NpcHtmlMessage(5).setFile("admin/itemcreation.htm"));
                 break;
-            case admin_create_item_char:
+            case "admin_create_item_char":
                 if (wordList.length < 2) {
                     activeChar.sendMessage("USAGE: create_item id [count]");
                     return false;
@@ -75,7 +74,7 @@ public class AdminCreateItem implements IAdminCommandHandler {
                         .forEach(player -> createItem(player, item_id, item_count));
                 activeChar.sendPacket(new NpcHtmlMessage(5).setFile("admin/itemcreation.htm"));
                 break;
-            case admin_create_item_target:
+            case "admin_create_item_target":
                 GameObject target = activeChar.getTarget();
                 if ((target instanceof Player || target instanceof PetInstance)) {
                     if (wordList.length < 2) {
@@ -92,7 +91,7 @@ public class AdminCreateItem implements IAdminCommandHandler {
                     activeChar.sendPacket(SystemMsg.INVALID_TARGET);
                     return false;
                 }
-            case admin_create_item_range:
+            case "admin_create_item_range":
                 if (wordList.length < 3) {
                     activeChar.sendMessage("USAGE: create_item_range id count range");
                     return false;
@@ -107,23 +106,23 @@ public class AdminCreateItem implements IAdminCommandHandler {
                         .count();
                 activeChar.sendMessage("You have rewarded " + rewardedCount + " players!");
                 break;
-            case admin_add_pp:
+            case "admin_add_pp":
                 target = activeChar.getTarget();
                 if (!(target instanceof Player)) {
                     activeChar.sendPacket(SystemMsg.INVALID_TARGET);
                     return false;
                 }
-                Player player = (Player)target;
+                Player player = (Player) target;
                 if (wordList.length < 2) {
                     activeChar.sendMessage("USAGE: add_pp [count]");
                     return false;
                 }
 
                 item_count = toInt(wordList[1]);
-                player.addPremiumPoints((int)item_count);
+                player.addPremiumPoints((int) item_count);
                 activeChar.sendPacket(new NpcHtmlMessage(5).setFile("admin/itemcreation.htm"));
                 break;
-            case admin_add_pcp:
+            case "admin_add_pcp":
                 target = activeChar.getTarget();
                 if (!(target instanceof Player)) {
                     activeChar.sendPacket(SystemMsg.INVALID_TARGET);
@@ -135,10 +134,10 @@ public class AdminCreateItem implements IAdminCommandHandler {
                 }
 
                 item_count = toInt(wordList[1]);
-                ((Player)target).addPcBangPoints((int) item_count, false);
+                ((Player) target).addPcBangPoints((int) item_count, false);
                 activeChar.sendPacket(new NpcHtmlMessage(5).setFile("admin/itemcreation.htm"));
                 break;
-            case admin_spreaditem:
+            case "admin_spreaditem":
                 int id = toInt(wordList[1]);
                 int num = wordList.length > 2 ? toInt(wordList[2]) : 1;
                 long count = wordList.length > 3 ? toLong(wordList[3]) : 1;
@@ -148,7 +147,7 @@ public class AdminCreateItem implements IAdminCommandHandler {
                     createditem.dropMe(activeChar, Location.findPointToStay(activeChar, 100));
                 }
                 break;
-            case admin_create_item_element:
+            case "admin_create_item_element":
                 if (wordList.length < 4) {
                     activeChar.sendMessage("USAGE: create_item_attribue [id] [element id] [value]");
                     return false;
@@ -178,10 +177,21 @@ public class AdminCreateItem implements IAdminCommandHandler {
         return true;
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
-    public Enum[] getAdminCommandEnum() {
-        return Commands.values();
+    public List<String> getAdminCommands() {
+        return List.of(
+                "admin_itemcreate",
+                "admin_create_item",
+                "admin_create_item_all",
+                "admin_create_item_hwid",
+                "admin_create_item_char",
+                "admin_create_item_target",
+                "admin_create_item_range",
+                "admin_ci",
+                "admin_spreaditem",
+                "admin_add_pp",
+                "admin_add_pcp",
+                "admin_create_item_element");
     }
 
     private ItemInstance createItem(Player activeChar, int itemId, long count) {
@@ -197,18 +207,4 @@ public class AdminCreateItem implements IAdminCommandHandler {
         return createditem;
     }
 
-    private enum Commands {
-        admin_itemcreate,
-        admin_create_item,
-        admin_create_item_all,
-        admin_create_item_hwid,
-        admin_create_item_char,
-        admin_create_item_target,
-        admin_create_item_range,
-        admin_ci,
-        admin_spreaditem,
-        admin_add_pp,
-        admin_add_pcp,
-        admin_create_item_element
-    }
 }

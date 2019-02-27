@@ -18,11 +18,11 @@ public final class Spawn extends Skill {
 
     public Spawn(StatsSet set) {
         super(set);
-        _npcId = set.getInteger("npcId", 0);
-        despawnDelay = set.getInteger("despawnDelay", 0);
+        _npcId = set.getInteger("npcId");
+        despawnDelay = set.getInteger("despawnDelay");
         set.getBool("isSummonSpawn", false);
         randomOffset = set.getBool("randomOffset", true);
-        set.getInteger("skillToCast", 0);
+        set.getInteger("skillToCast");
     }
 
     @Override

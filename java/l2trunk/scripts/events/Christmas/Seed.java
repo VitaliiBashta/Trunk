@@ -52,7 +52,7 @@ public final class Seed extends ScriptItemHandler implements ScriptFile {
         SimpleSpawner spawn = new SimpleSpawner(npcId)
                 .setLoc(player.getLoc());
         NpcInstance npc = spawn.doSpawn(false);
-        npc.setTitle(player.getName()); //FIXME Почему-то не устанавливается
+        npc.setTitle(player.getName());
         spawn.respawnNpc(npc);
 
         // АИ вещающее бафф регена устанавливается только для большой елки

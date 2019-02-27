@@ -8,6 +8,7 @@ import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.listener.zone.OnZoneEnterLeaveListener;
 import l2trunk.gameserver.model.base.Race;
 import l2trunk.gameserver.model.entity.Reflection;
+import l2trunk.gameserver.model.entity.residence.Residence;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.EventTrigger;
 import l2trunk.gameserver.network.serverpackets.L2GameServerPacket;
@@ -424,11 +425,7 @@ public final class Zone {
         _reflection = reflection;
     }
 
-    public void setParam(String name, String value) {
-        params.set(name, value);
-    }
-
-    public void setParam(String name, Object value) {
+    public void setParam(String name, Residence value) {
         params.set(name, value);
     }
 

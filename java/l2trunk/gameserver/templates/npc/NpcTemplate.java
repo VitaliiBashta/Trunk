@@ -71,12 +71,12 @@ public final class NpcTemplate extends CharTemplate {
         rewardSp = set.getInteger("rewardSp");
         rewardRp = set.getInteger("rewardRp");
         aggroRange = set.getInteger("aggroRange");
-        rhand = set.getInteger("rhand", 0);
-        lhand = set.getInteger("lhand", 0);
+        rhand = set.getInteger("rhand");
+        lhand = set.getInteger("lhand");
         rateHp = set.getDouble("baseHpRate");
         htmRoot = set.getString("htm_root", null);
-        castleId = set.getInteger("castle_id", 0);
-        AIParams = (StatsSet) set.getObject("aiParams", StatsSet.EMPTY);
+        castleId = set.getInteger("castle_id");
+        AIParams = set.getStats("aiParams");
         type = set.getString("type", null);
         aiName = set.getString("ai_type", null);
     }

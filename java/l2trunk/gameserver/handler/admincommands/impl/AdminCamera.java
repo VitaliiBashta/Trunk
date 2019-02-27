@@ -6,16 +6,17 @@ import l2trunk.gameserver.model.base.InvisibleType;
 import l2trunk.gameserver.network.serverpackets.CameraMode;
 import l2trunk.gameserver.network.serverpackets.SpecialCamera;
 
+import java.util.List;
+
 public final class AdminCamera implements IAdminCommandHandler {
     @Override
-    public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
-        Commands command = (Commands) comm;
+    public boolean useAdminCommand(String comm, String[] wordList, String fullString, Player activeChar) {
 
         if (!activeChar.getPlayerAccess().Menu)
             return false;
 
-        switch (command) {
-            case admin_freelook: {
+        switch (comm) {
+            case "admin_freelook": {
                 if (fullString.length() > 15)
                     fullString = fullString.substring(15);
                 else {
@@ -39,7 +40,7 @@ public final class AdminCamera implements IAdminCommandHandler {
 
                 break;
             }
-            case admin_cinematic: {
+            case "admin_cinematic": {
                 int id = Integer.parseInt(wordList[1]);
                 int dist = Integer.parseInt(wordList[2]);
                 int yaw = Integer.parseInt(wordList[3]);
@@ -53,14 +54,10 @@ public final class AdminCamera implements IAdminCommandHandler {
         return true;
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
-    public Enum[] getAdminCommandEnum() {
-        return Commands.values();
-    }
-
-    private enum Commands {
-        admin_freelook,
-        admin_cinematic
+    public List<String> getAdminCommands() {
+        return List.of(
+                "admin_freelook",
+                "admin_cinematic");
     }
 }

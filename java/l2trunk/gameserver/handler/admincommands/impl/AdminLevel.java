@@ -10,13 +10,13 @@ import l2trunk.gameserver.network.serverpackets.SystemMessage;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.tables.PetDataTable;
 
+import java.util.List;
+
 import static l2trunk.commons.lang.NumberUtils.toInt;
 
-public class AdminLevel implements IAdminCommandHandler {
+public final class AdminLevel implements IAdminCommandHandler {
     @Override
-    public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
-        Commands command = (Commands) comm;
-
+    public boolean useAdminCommand(String comm, String[] wordList, String fullString, Player activeChar) {
         if (!activeChar.getPlayerAccess().CanEditChar)
             return false;
 
@@ -27,21 +27,21 @@ public class AdminLevel implements IAdminCommandHandler {
         }
         int level;
 
-        switch (command) {
-            case admin_add_level:
-            case admin_addLevel:
+        switch (comm) {
+            case "admin_add_level":
+            case "admin_addLevel":
                 if (wordList.length < 2) {
-                    activeChar.sendMessage("USAGE: //addLevel occupation");
+                    activeChar.sendMessage("USAGE: //addLevel level");
                     return false;
                 }
                 level = toInt(wordList[1], 1);
 
                 setLevel(activeChar, target, level + ((Creature) target).getLevel());
                 break;
-            case admin_set_level:
-            case admin_setLevel:
+            case "admin_set_level":
+            case "admin_setLevel":
                 if (wordList.length < 2) {
-                    activeChar.sendMessage("USAGE: //setLevel occupation");
+                    activeChar.sendMessage("USAGE: //setLevel level");
                     return false;
                 }
                 level = toInt(wordList[1], 1);
@@ -81,14 +81,11 @@ public class AdminLevel implements IAdminCommandHandler {
     }
 
     @Override
-    public Enum[] getAdminCommandEnum() {
-        return Commands.values();
-    }
-
-    private enum Commands {
-        admin_add_level,
-        admin_addLevel,
-        admin_set_level,
-        admin_setLevel,
+    public List<String> getAdminCommands() {
+        return List.of(
+                "admin_add_level",
+                "admin_addLevel",
+                "admin_set_level",
+                "admin_setLevel");
     }
 }

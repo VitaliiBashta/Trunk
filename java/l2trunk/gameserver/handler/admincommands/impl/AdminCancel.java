@@ -4,21 +4,22 @@ import l2trunk.gameserver.handler.admincommands.IAdminCommandHandler;
 import l2trunk.gameserver.model.*;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
+import java.util.List;
+
 import static l2trunk.commons.lang.NumberUtils.toInt;
 
 public class AdminCancel implements IAdminCommandHandler {
     @Override
-    public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player player) {
-        Commands command = (Commands) comm;
+    public boolean useAdminCommand(String comm, String[] wordList, String fullString, Player player) {
 
         if (!player.getPlayerAccess().CanEditChar)
             return false;
 
-        switch (command) {
-            case admin_cancel:
+        switch (comm) {
+            case "admin_cancel":
                 handleCancel(player, wordList.length > 1 ? wordList[1] : null);
                 break;
-            case admin_cleanse:
+            case "admin_cleanse":
                 Playable target = player.getTarget() != null && player.getTarget() instanceof Playable ? (Playable) player.getTarget() : player;
                 target.getEffectList().getAllEffects().stream()
                         .filter(Effect::isOffensive)
@@ -32,8 +33,10 @@ public class AdminCancel implements IAdminCommandHandler {
     }
 
     @Override
-    public Enum[] getAdminCommandEnum() {
-        return Commands.values();
+    public List<String> getAdminCommands() {
+        return List.of(
+                "admin_cancel",
+                "admin_cleanse");
     }
 
     private void handleCancel(Player activeChar, String targetName) {
@@ -61,10 +64,5 @@ public class AdminCancel implements IAdminCommandHandler {
             ((Creature) obj).getEffectList().stopAllEffects();
         else
             activeChar.sendPacket(SystemMsg.INVALID_TARGET);
-    }
-
-    private enum Commands {
-        admin_cancel,
-        admin_cleanse
     }
 }

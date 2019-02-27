@@ -52,11 +52,11 @@ public final class _141_ShadowFoxPart3 extends Quest {
             st.unset("talk");
             st.playSound(SOUND_MIDDLE);
         } else if ("30894-18.htm".equalsIgnoreCase(event)) {
-            if (st.getInt("reward") != 1) {
+            if (!st.isSet("reward") ) {
                 st.playSound(SOUND_FINISH);
                 st.giveItems(ADENA_ID, 88888);
                 st.addExpAndSp(278005, 17058);
-                st.set("reward", 1);
+                st.set("reward");
                 htmltext = "getBonuses.htm";
             } else
                 htmltext = "getBonuses.htm";
@@ -94,12 +94,12 @@ public final class _141_ShadowFoxPart3 extends Quest {
         else if (cond == 2)
             htmltext = "30894-05.htm";
         else if (cond == 3) {
-            if (st.getInt("talk") == 1)
+            if (st.isSet("talk") )
                 htmltext = "30894-07.htm";
             else {
                 htmltext = "30894-06.htm";
                 st.takeItems(REPORT);
-                st.set("talk", 1);
+                st.set("talk");
             }
         } else if (cond == 4)
             htmltext = "30894-16.htm";

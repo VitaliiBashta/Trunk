@@ -15,18 +15,19 @@ import l2trunk.gameserver.templates.item.ItemTemplate;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.ItemFunctions;
 
+import java.util.List;
+
 import static l2trunk.commons.lang.NumberUtils.toInt;
 
 public final class AdminClientSupport implements IAdminCommandHandler {
     @Override
-    public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player player) {
+    public boolean useAdminCommand(String comm, String[] wordList, String fullString, Player player) {
         if (!player.getPlayerAccess().CanEditChar)
             return false;
 
-        Commands c = (Commands) comm;
         GameObject target = player.getTarget();
-        switch (c) {
-            case admin_setskill:
+        switch (comm) {
+            case "admin_setskill":
                 if (wordList.length != 3)
                     return false;
 
@@ -38,10 +39,10 @@ public final class AdminClientSupport implements IAdminCommandHandler {
                     player.sendMessage("Too big occupation, max:" + SkillTable.INSTANCE.getMaxLevel(toInt(wordList[1])));
                     return false;
                 }
-                ((Player)target).addSkill(skill, true);
-                ((Player)target).sendPacket(new SystemMessage2(SystemMsg.YOU_HAVE_EARNED_S1_SKILL).addSkillName(skill.id, skill.level));
+                ((Player) target).addSkill(skill, true);
+                ((Player) target).sendPacket(new SystemMessage2(SystemMsg.YOU_HAVE_EARNED_S1_SKILL).addSkillName(skill.id, skill.level));
                 break;
-            case admin_summon:
+            case "admin_summon":
                 if (wordList.length != 3)
                     return false;
 
@@ -76,14 +77,14 @@ public final class AdminClientSupport implements IAdminCommandHandler {
                         ItemInstance item = ItemFunctions.createItem(id);
                         item.setCount(count);
 
-                        ((Player)target).getInventory().addItem(item, "admin_summon");
-                        ((Player)target).sendPacket(SystemMessage2.obtainItems(item));
+                        ((Player) target).getInventory().addItem(item, "admin_summon");
+                        ((Player) target).sendPacket(SystemMessage2.obtainItems(item));
                     } else {
                         for (int i = 0; i < count; i++) {
                             ItemInstance item = ItemFunctions.createItem(id);
 
-                            ((Player)target).getInventory().addItem(item, "admin_summon");
-                            ((Player)target).sendPacket(SystemMessage2.obtainItems(item));
+                            ((Player) target).getInventory().addItem(item, "admin_summon");
+                            ((Player) target).sendPacket(SystemMessage2.obtainItems(item));
                         }
                     }
                 }
@@ -93,12 +94,9 @@ public final class AdminClientSupport implements IAdminCommandHandler {
     }
 
     @Override
-    public Enum[] getAdminCommandEnum() {
-        return Commands.values();
-    }
-
-    private enum Commands {
-        admin_setskill,
-        admin_summon
+    public List<String> getAdminCommands() {
+        return List.of(
+                "admin_setskill",
+                "admin_summon");
     }
 }

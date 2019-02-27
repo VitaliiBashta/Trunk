@@ -18,7 +18,7 @@ public final class _163_LegacyOfPoet extends Quest {
         addStartNpc(30220);
 
         addTalkId(30220);
-        addKillId(20372,20373);
+        addKillId(20372, 20373);
 
         addQuestItem(RUMIELS_POEM_1_ID,
                 RUMIELS_POEM_3_ID,
@@ -30,7 +30,7 @@ public final class _163_LegacyOfPoet extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
         if (event.equals("1")) {
-            st.set("id", 0);
+            st.unset("id");
             htmltext = "30220-07.htm";
             st.setCond(1);
             st.start();
@@ -47,7 +47,7 @@ public final class _163_LegacyOfPoet extends Quest {
         if (id == CREATED) {
             st.start();
             st.setCond(0);
-            st.set("id", 0);
+            st.unset("id");
         }
         if (npcId == 30220 && st.getCond() == 0) {
             if (st.getCond() < 15) {
@@ -67,14 +67,11 @@ public final class _163_LegacyOfPoet extends Quest {
         } else if (npcId == 30220 && st.getCond() == 0)
             htmltext = "completed";
         else if (npcId == 30220 && st.getCond() > 0)
-            if (st.getQuestItemsCount(RUMIELS_POEM_1_ID) == 1 && st.getQuestItemsCount(RUMIELS_POEM_3_ID) == 1 && st.getQuestItemsCount(RUMIELS_POEM_4_ID) == 1 && st.getQuestItemsCount(RUMIELS_POEM_5_ID) == 1) {
-                if (st.getInt("id") != 163) {
-                    st.set("id", 163);
+            if (st.haveAllQuestItems(RUMIELS_POEM_1_ID, RUMIELS_POEM_3_ID, RUMIELS_POEM_4_ID, RUMIELS_POEM_5_ID)) {
+                if (!st.isSet("id")) {
+                    st.set("id");
                     htmltext = "30220-09.htm";
-                    st.takeItems(RUMIELS_POEM_1_ID, 1);
-                    st.takeItems(RUMIELS_POEM_3_ID, 1);
-                    st.takeItems(RUMIELS_POEM_4_ID, 1);
-                    st.takeItems(RUMIELS_POEM_5_ID, 1);
+                    st.takeAllItems(RUMIELS_POEM_1_ID, RUMIELS_POEM_3_ID, RUMIELS_POEM_4_ID, RUMIELS_POEM_5_ID);
                     st.giveItems(ADENA_ID, 13890);
                     st.addExpAndSp(21643, 943);
                     st.playSound(SOUND_FINISH);
@@ -89,7 +86,7 @@ public final class _163_LegacyOfPoet extends Quest {
     public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         if (npcId == 20372 || npcId == 20373) {
-            st.set("id", 0);
+            st.unset("id");
             if (st.getCond() == 1) {
                 if (Rnd.chance(10) && st.getQuestItemsCount(RUMIELS_POEM_1_ID) == 0) {
                     st.giveItems(RUMIELS_POEM_1_ID);

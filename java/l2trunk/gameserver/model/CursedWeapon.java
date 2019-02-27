@@ -18,7 +18,7 @@ public final class CursedWeapon {
     private final String _name;
     private final int _itemId, _skillMaxLevel;
     private final int skillId;
-    private String _transformationName;
+    private String transformationName;
     private int _dropRate, _disapearChance;
     private int durationMin, durationMax, _durationLost;
     private int _transformationId, _transformationTemplateId;
@@ -176,7 +176,7 @@ public final class CursedWeapon {
 
         player.leaveParty();
         if (player.isMounted())
-            player.setMount(0, 0, 0);
+            player.dismount();
 
         this.item = item;
 
@@ -189,7 +189,7 @@ public final class CursedWeapon {
         player.setTransformation(0);
         player.setCursedWeaponEquippedId(_itemId);
         player.setTransformation(_transformationId);
-        player.setTransformationName(_transformationName);
+        player.setTransformationName(transformationName);
         player.setTransformationTemplate(_transformationTemplateId);
         player.setKarma(9999999);
         player.setPkKills(_nbKills);
@@ -242,7 +242,7 @@ public final class CursedWeapon {
     }
 
     public void setTransformationName(String name) {
-        _transformationName = name;
+        transformationName = name;
     }
 
     private void zeroOwner() {

@@ -3,7 +3,6 @@ package l2trunk.gameserver.network.serverpackets;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.instancemanager.CursedWeaponsManager;
 import l2trunk.gameserver.instancemanager.ReflectionManager;
-import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.base.TeamType;
 import l2trunk.gameserver.model.instances.DecoyInstance;
@@ -49,7 +48,7 @@ public final class CharInfo extends L2GameServerPacket {
     private int _mAtkSpd, _pAtkSpd;
     private int _runSpd, _walkSpd, _swimSpd, _flRunSpd, _flWalkSpd, _flyRunSpd, _flyWalkSpd;
     private Location _loc, _fishLoc;
-    private String _name, _title;
+    private String _name, title;
     private int _objId, _race, _sex, base_class, pvp_flag, karma, rec_have;
     private double speed_move, speed_atack, col_radius, col_height;
     private int hair_style, hair_color, face, _abnormalEffect, _abnormalEffect2;
@@ -101,7 +100,7 @@ public final class CharInfo extends L2GameServerPacket {
         // Cursed weapon and transformation to hide the name of the TV and all the other markings
         if (player.getTransformationName() != null || (player.getReflection() == ReflectionManager.GIRAN_HARBOR || player.getReflection() == ReflectionManager.PARNASSUS) && player.getPrivateStoreType() != Player.STORE_PRIVATE_NONE) {
             _name = player.getTransformationName() != null ? player.getTransformationName() : player.getVisibleName();
-            _title = "";
+            title = "";
             clan_id = 0;
             clan_crest_id = 0;
             ally_id = 0;
@@ -112,11 +111,11 @@ public final class CharInfo extends L2GameServerPacket {
         } else {
             _name = player.getVisibleName();
             if (player.getPrivateStoreType() != Player.STORE_PRIVATE_NONE && !player.isInBuffStore()) {
-                _title = "";
+                title = "";
             } else if (!player.isConnected() && !player.isInBuffStore()) {
-                _title = "";
+                title = "";
             } else {
-                _title = player.getVisibleTitle();
+                title = player.getVisibleTitle();
                 _title_color = player.getVisibleTitleColor();
             }
 
@@ -134,7 +133,7 @@ public final class CharInfo extends L2GameServerPacket {
         }
 
         if (_invis)
-            _title = "[Invizibil]";
+            title = "[Invisible]";
 
         if (player.isMounted()) {
             _enchant = 0;
@@ -212,7 +211,7 @@ public final class CharInfo extends L2GameServerPacket {
 
         //Minimalizing Lags in towns
         if (player.getPrivateStoreType() != Player.STORE_PRIVATE_NONE && !player.isInBuffStore()) {
-            _title = "";
+            title = "";
             clan_crest_id = 0;
             ally_crest_id = 0;
             //Weapon
@@ -296,7 +295,7 @@ public final class CharInfo extends L2GameServerPacket {
         writeD(hair_style);
         writeD(hair_color);
         writeD(face);
-        writeS(_title);
+        writeS(title);
         writeD(clan_id);
         writeD(clan_crest_id);
         writeD(ally_id);

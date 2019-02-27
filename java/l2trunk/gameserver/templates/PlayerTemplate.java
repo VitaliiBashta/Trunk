@@ -30,8 +30,8 @@ public final class PlayerTemplate extends CharTemplate {
 
     public PlayerTemplate(int id, StatsSet set, boolean isMale, List<CreateItem> items) {
         super(set);
-        classId = ClassId.VALUES.get(id);
-        race = Race.values()[set.getInteger("raceId")];
+        classId = ClassId.getById(id);
+        race = Race.of(set.getInteger("raceId"));
 
         spawnLoc.set(new Location(set.getInteger("spawnX"), set.getInteger("spawnY"), set.getInteger("spawnZ")));
 

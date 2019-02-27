@@ -71,7 +71,7 @@ public enum DoorParser {
                 int x = toInt(posElement.attributeValue("x"));
                 int y = toInt(posElement.attributeValue("y"));
                 int z = toInt(posElement.attributeValue("z"));
-                doorSet.set("pos", doorPos = new Location(x, y, z));
+                doorSet.set("pos", doorPos = Location.of(x, y, z));
 
                 Polygon shape = new Polygon();
                 int minz, maxz;

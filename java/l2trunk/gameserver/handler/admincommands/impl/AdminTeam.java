@@ -9,9 +9,9 @@ import l2trunk.gameserver.model.base.TeamType;
 import l2trunk.gameserver.model.entity.Hero;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
-public class AdminTeam implements IAdminCommandHandler {
+public final class AdminTeam implements IAdminCommandHandler {
     @Override
-    public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
+    public boolean useAdminCommand(String comm, String[] wordList, String fullString, Player activeChar) {
         TeamType team = TeamType.NONE;
         int range = -1;
         if (wordList.length >= 2) {
@@ -52,11 +52,7 @@ public class AdminTeam implements IAdminCommandHandler {
     }
 
     @Override
-    public Enum[] getAdminCommandEnum() {
-        return Commands.values();
-    }
-
-    private enum Commands {
-        admin_setteam
+    public  String getAdminCommand() {
+        return "admin_setteam";
     }
 }

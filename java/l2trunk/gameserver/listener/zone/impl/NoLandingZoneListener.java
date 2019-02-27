@@ -20,7 +20,7 @@ public final class NoLandingZoneListener implements OnZoneEnterLeaveListener {
                 if (residence == null || player.getClan() == null || residence.getOwner() != player.getClan()) {
                     player.stopMove();
                     player.sendPacket(SystemMsg.THIS_AREA_CANNOT_BE_ENTERED_WHILE_MOUNTED_ATOP_OF_A_WYVERN);
-                    player.setMount(0, 0, 0);
+                    player.dismount();
                 }
 
             }

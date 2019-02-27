@@ -11,16 +11,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public final class ServerVariables {
-    private static final Logger _log = LoggerFactory.getLogger(ServerVariables.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ServerVariables.class);
 
-    private static StatsSet server_vars = null;
+    private static StatsSet server_vars = new StatsSet();
 
-    private static StatsSet getVars() {
-        if (server_vars == null) {
-            server_vars = new StatsSet();
-            LoadFromDB();
-        }
-        return server_vars;
+    static {
+        LoadFromDB();
+    }
+
+    private ServerVariables() {
     }
 
     private static void LoadFromDB() {
@@ -30,14 +29,14 @@ public final class ServerVariables {
             while (rs.next())
                 server_vars.set(rs.getString("name"), rs.getString("value"));
         } catch (SQLException e) {
-            _log.error("Error while Loading Server Variables ", e);
+            LOG.error("Error while Loading Server Variables ", e);
         }
     }
 
     private static void SaveToDB(String name) {
         try (Connection con = DatabaseFactory.getInstance().getConnection()) {
             PreparedStatement statement;
-            String value = getVars().getString(name, "");
+            String value = server_vars.getString(name, "");
             if (value.isEmpty()) {
                 statement = con.prepareStatement("DELETE FROM server_variables WHERE name = ?");
                 statement.setString(1, name);
@@ -49,69 +48,69 @@ public final class ServerVariables {
                 statement.execute();
             }
         } catch (SQLException e) {
-            _log.error("Error while Saving Server Variables! ", e);
+            LOG.error("Error while Saving Server Variables! ", e);
         }
     }
 
     public static boolean getBool(String name) {
-        return getVars().getBool(name);
+        return server_vars.isSet(name);
     }
 
     public static boolean getBool(String name, boolean defult) {
-        return getVars().getBool(name, defult);
+        return server_vars.getBool(name, defult);
     }
 
     public static int getInt(String name) {
-        return getVars().getInteger(name);
+        return server_vars.getInteger(name);
     }
 
     public static int getInt(String name, int defult) {
-        return getVars().getInteger(name, defult);
+        return server_vars.getInteger(name, defult);
     }
 
     public static long getLong(String name) {
-        return getVars().getLong(name);
+        return server_vars.getLong(name);
     }
 
     public static long getLong(String name, long defult) {
-        return getVars().getLong(name, defult);
+        return server_vars.getLong(name, defult);
     }
 
     public static String getString(String name) {
-        return getVars().getString(name);
+        return server_vars.getString(name);
     }
 
     public static String getString(String name, String _default) {
-        return getVars().getString(name, _default);
+        return server_vars.getString(name, _default);
     }
 
     public static void set(String name, boolean value) {
-        getVars().set(name, value);
+        server_vars.set(name, value);
         SaveToDB(name);
     }
 
     public static void set(String name, int value) {
-        getVars().set(name, value);
+        server_vars.set(name, value);
         SaveToDB(name);
     }
 
     public static void set(String name, long value) {
-        getVars().set(name, value);
+        server_vars.set(name, value);
         SaveToDB(name);
     }
 
     public static void set(String name, double value) {
-        getVars().set(name, value);
+        server_vars.set(name, value);
         SaveToDB(name);
     }
 
     public static void set(String name, String value) {
-        getVars().set(name, value);
+        server_vars.set(name, value);
         SaveToDB(name);
     }
 
     public static void unset(String name) {
-        getVars().unset(name);
+        server_vars.unset(name);
         SaveToDB(name);
     }
 }

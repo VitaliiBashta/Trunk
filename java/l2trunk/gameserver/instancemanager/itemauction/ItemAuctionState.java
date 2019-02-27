@@ -1,22 +1,19 @@
-/*	*/
 package l2trunk.gameserver.instancemanager.itemauction;
-/*	*/
-/*	*/
 
-import l2trunk.commons.lang.ArrayUtils;
+import java.util.stream.Stream;
 
-/*	*/
-/*	*/ public enum ItemAuctionState
-        /*	*/ {
-    /*  5 */   CREATED, STARTED, FINISHED;
+public enum ItemAuctionState {
+    CREATED(0), STARTED(1), FINISHED(2);
 
-    /*	*/
-    /*	*/
-    public static ItemAuctionState stateForStateId(int stateId)
-    /*	*/ {
-        /* 13 */
-        return ((ItemAuctionState) ArrayUtils.valid(values(), stateId));
-        /*	*/
+    private int id;
+
+    ItemAuctionState(int id) {
+        this.id = id;
     }
-    /*	*/
+
+    public static ItemAuctionState of(int id) {
+        return Stream.of(values()).filter(v -> v.id == id).findFirst().orElse(null);
+
+    }
+
 }

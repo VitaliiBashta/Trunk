@@ -18,6 +18,7 @@ import l2trunk.gameserver.tables.ClanTable;
 import l2trunk.gameserver.templates.item.ItemTemplate.ItemClass;
 import l2trunk.gameserver.utils.Util;
 
+import java.util.List;
 import java.util.StringTokenizer;
 
 /**
@@ -25,7 +26,7 @@ import java.util.StringTokenizer;
  */
 public final class AdminPledge implements IAdminCommandHandler {
     @Override
-    public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
+    public boolean useAdminCommand(String comm, String[] wordList, String fullString, Player activeChar) {
         GameObject target1 = activeChar.getTarget();
         if (activeChar.getPlayerAccess() == null || !activeChar.getPlayerAccess().CanEditPledge || !(target1 instanceof Player))
             return false;
@@ -67,7 +68,7 @@ public final class AdminPledge implements IAdminCommandHandler {
                             activeChar.sendPacket(SystemMsg.THIS_NAME_ALREADY_EXISTS);
                             return false;
                         }
-                    } catch (Exception e) {
+                    } catch (Exception ignored) {
                     }
                     break;
                 case "setlevel":
@@ -80,14 +81,10 @@ public final class AdminPledge implements IAdminCommandHandler {
                         int level = Integer.parseInt(st.nextToken());
                         Clan clan = target.getClan();
 
-                        activeChar.sendMessage("You set occupation " + level + " for clan " + clan.getName());
+                        activeChar.sendMessage("You set level " + level + " for clan " + clan.getName());
                         clan.setLevel(level);
                         clan.updateClanInDB();
 
-				/*	if (occupation < CastleSiegeManager.getSiegeClanMinLevel())
-						SiegeUtils.removeSiegeSkills(target);
-					else
-						SiegeUtils.addSiegeSkills(target);   */
 
                         if (level == 5)
                             target.sendPacket(SystemMsg.NOW_THAT_YOUR_CLAN_LEVEL_IS_ABOVE_LEVEL_5_IT_CAN_ACCUMULATE_CLAN_REPUTATION_POINTS);
@@ -102,7 +99,7 @@ public final class AdminPledge implements IAdminCommandHandler {
                         }
 
                         return true;
-                    } catch (Exception e) {
+                    } catch (Exception ignored) {
                     }
                     break;
                 case "resetcreate":
@@ -137,7 +134,7 @@ public final class AdminPledge implements IAdminCommandHandler {
                         activeChar.sendPacket(SystemMsg.INVALID_TARGET);
                         return false;
                     }
-                    String newLeaderName = null;
+                    String newLeaderName;
                     if (st.hasMoreTokens())
                         newLeaderName = st.nextToken();
                     else
@@ -192,13 +189,10 @@ public final class AdminPledge implements IAdminCommandHandler {
     }
 
     @Override
-    public Enum[] getAdminCommandEnum() {
-        return Commands.values();
-    }
-
-    private enum Commands {
-        admin_pledge,
-        admin_restore_cwh,
-        admin_show_cwh
+    public List<String> getAdminCommands() {
+        return List.of(
+                "admin_pledge",
+                "admin_restore_cwh",
+                "admin_show_cwh");
     }
 }

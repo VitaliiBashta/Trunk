@@ -63,7 +63,7 @@ public final class DocumentSkill extends DocumentBase {
     }
 
     @Override
-    protected Object getTableValue(String name, int idx) {
+    protected String getTableValue(String name, int idx) {
         idx--;
         try {
             usedTables.add(name);
@@ -72,8 +72,8 @@ public final class DocumentSkill extends DocumentBase {
                 return a.get(idx);
             return a.get(a.size() - 1);
         } catch (RuntimeException e) {
-            LOG.error("Wrong occupation count in skill Id " + currentSkill.id + " table " + name + " occupation " + idx, e);
-            return 0;
+            LOG.error("Wrong level count in skill Id " + currentSkill.id + " table " + name + " level " + idx, e);
+            return "0";
         }
     }
 

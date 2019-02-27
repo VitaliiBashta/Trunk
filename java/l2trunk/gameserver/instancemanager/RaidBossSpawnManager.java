@@ -175,8 +175,8 @@ public enum RaidBossSpawnManager {
             statement.setInt(1, id);
             statement.setDouble(2, info.getDouble("current_hp"));
             statement.setDouble(3, info.getDouble("current_mp"));
-            statement.setInt(4, info.getInteger("respawn_delay", 0));
-            statement.setLong(5, info.getLong("date_of_death", 0L));
+            statement.setInt(4, info.getInteger("respawn_delay"));
+            statement.setLong(5, info.getLong("date_of_death"));
             statement.execute();
         } catch (SQLException e) {
             _log.warn("RaidBossSpawnManager: Couldnt update raidboss_status 2 table", e);
@@ -191,7 +191,7 @@ public enum RaidBossSpawnManager {
 
         StatsSet info = _storedInfo.get(npcId);
         if (info != null) {
-            spawnDat.setRespawnTime(info.getInteger("respawn_delay", 0));
+            spawnDat.setRespawnTime(info.getInteger("respawn_delay"));
         }
     }
 

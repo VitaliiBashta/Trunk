@@ -30,9 +30,9 @@ public final class _704_Missqueen extends Quest {
             } else
                 htmltext = "fail-01.htm";
         } else if (event.equals("31760-03.htm"))
-            if (st.getInt("m_scond") == 0 && st.player.getLevel() <= 25 && st.player.getLevel() >= 20 && st.player.getPkKills() == 0) {
+            if (!st.isSet("m_scond")  && st.player.getLevel() <= 25 && st.player.getLevel() >= 20 && st.player.getPkKills() == 0) {
                 st.giveItems(item_2);
-                st.set("m_scond", 1);
+                st.set("m_scond");
                 htmltext = "c_2.htm";
                 st.playSound(SOUND_ACCEPT);
             } else

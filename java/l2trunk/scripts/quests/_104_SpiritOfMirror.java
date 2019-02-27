@@ -8,8 +8,6 @@ import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
 import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 
-import java.util.List;
-
 public final class _104_SpiritOfMirror extends Quest {
     private static final int GALLINS_OAK_WAND = 748;
     private static final int WAND_SPIRITBOUND1 = 1135;
@@ -69,7 +67,7 @@ public final class _104_SpiritOfMirror extends Quest {
                     st.giveItems(1060, 100); // healing potion
                     for (int item = 4412; item <= 4417; item++)
                         st.giveItems(item, 10); // echo cry
-                    if (st.player.getClassId().isMage) {
+                    if (st.player.getClassId().isMage()) {
                         st.playTutorialVoice("tutorial_voice_027");
                         st.giveItems(5790, 3000); // newbie sps
                     } else {

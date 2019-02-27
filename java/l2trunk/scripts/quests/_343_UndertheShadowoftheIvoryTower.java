@@ -130,8 +130,7 @@ public final class _343_UndertheShadowoftheIvoryTower extends Quest {
         } else if ("30935-05.htm".equalsIgnoreCase(event)) {
             if (orbs >= 10) {
                 if (random2 == 0) {
-                    int toss = st.getInt("toss");
-                    if (toss == 4) {
+                    if (st.getInt("toss") == 4) {
                         st.unset("toss");
                         st.giveItems(ORB, 150);
                         htmltext = "30935-07.htm";

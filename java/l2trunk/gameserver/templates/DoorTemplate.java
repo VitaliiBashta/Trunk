@@ -11,8 +11,8 @@ import l2trunk.scripts.ai.door.SSQDoor;
 import l2trunk.scripts.ai.door.SiegeDoor;
 
 public final class DoorTemplate extends CharTemplate {
-    private final int _id;
     public final String name;
+    private final int _id;
     private final DoorType doortype;
     private final boolean _unlockable;
     private final boolean _isHPVisible;
@@ -37,16 +37,16 @@ public final class DoorTemplate extends CharTemplate {
         _isHPVisible = set.getBool("show_hp", false);
         _opened = set.getBool("opened", false);
         _targetable = set.getBool("targetable", true);
-        _loc = (Location) set.get("pos");
-        _polygon = (Polygon) set.get("shape");
-        key = set.getInteger("key", 0);
-        _openTime = set.getInteger("open_time", 0);
-        _rndTime = set.getInteger("random_time", 0);
-        _closeTime = set.getInteger("close_time", 0);
-        masterDoor = set.getInteger("master_door", 0);
-        _aiParams = (StatsSet) set.getObject("ai_params", StatsSet.EMPTY);
+        _loc = set.getLocation("pos");
+        _polygon = set.getPolygon("shape");
+        key = set.getInteger("key");
+        _openTime = set.getInteger("open_time");
+        _rndTime = set.getInteger("random_time");
+        _closeTime = set.getInteger("close_time");
+        masterDoor = set.getInteger("master_door");
+        _aiParams = set.getStats("ai_params");
 
-        classAI =set.getString("ai", "DoorAI");
+        classAI = set.getString("ai", "DoorAI");
     }
 
     public CharacterAI getNewAI(DoorInstance door) {

@@ -169,7 +169,7 @@ public enum ZoneParser {
                 }
 
                 if (territory == null || territory.getTerritories().isEmpty())
-                    LOG.error("Empty territory for zone: " + zoneDat.get("name"));
+                    LOG.error("Empty territory for zone: " + zoneDat.getString("name"));
                 ZoneTemplate template = new ZoneTemplate(zoneDat);
                 ZoneHolder.addTemplate(template);
             }

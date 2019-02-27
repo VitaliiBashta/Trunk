@@ -107,7 +107,7 @@ public final class _144_PailakaInjuredDragon extends Quest {
             }
             if (st.getInt("spells") == 4) {
                 makeBuff(npc, player, skill[0], skill[1]);
-                st.set("spells", 5);
+                st.inc("spells");
                 htmltext = "32509-05.htm";
                 return htmltext;
             }
@@ -118,8 +118,8 @@ public final class _144_PailakaInjuredDragon extends Quest {
                 htmltext = "32509-04.htm";
             return htmltext;
         } else if ("32499-02.htm".equalsIgnoreCase(event)) {
-            st.set("spells", 0);
-            st.set("stage", 1);
+            st.unset("spells");
+            st.set("stage");
             st.setCond(1);
             st.start();
             st.playSound(SOUND_ACCEPT);
@@ -131,9 +131,7 @@ public final class _144_PailakaInjuredDragon extends Quest {
             st.playSound(SOUND_MIDDLE);
             st.giveItems(SPEAR);
         } else if ("32512-02.htm".equalsIgnoreCase(event)) {
-            st.takeItems(SPEAR, 1);
-            st.takeItems(ENCHSPEAR, 1);
-            st.takeItems(LASTSPEAR, 1);
+            st.takeAllItems(SPEAR,ENCHSPEAR, LASTSPEAR);
         }
         return htmltext;
     }
@@ -166,25 +164,23 @@ public final class _144_PailakaInjuredDragon extends Quest {
         } else if (npcId == KOIO) {
             if (st.getQuestItemsCount(SPEAR) > 0 && st.getQuestItemsCount(STAGE1) == 0)
                 htmltext = "32509-01.htm";
-            if (st.getQuestItemsCount(ENCHSPEAR) > 0 && st.getQuestItemsCount(STAGE2) == 0)
+            if (st.haveQuestItem(ENCHSPEAR)  && st.getQuestItemsCount(STAGE2) == 0)
                 htmltext = "32509-01.htm";
             if (st.getQuestItemsCount(SPEAR) == 0 && st.getQuestItemsCount(STAGE1) > 0)
                 htmltext = "32509-07.htm";
-            if (st.getQuestItemsCount(ENCHSPEAR) == 0 && st.getQuestItemsCount(STAGE2) > 0)
+            if (st.getQuestItemsCount(ENCHSPEAR) == 0 && st.haveQuestItem(STAGE2) )
                 htmltext = "32509-07.htm";
             if (st.getQuestItemsCount(SPEAR) == 0 && st.getQuestItemsCount(ENCHSPEAR) == 0)
                 htmltext = "32509-07.htm";
             if (st.getQuestItemsCount(STAGE1) == 0 && st.getQuestItemsCount(STAGE2) == 0)
                 htmltext = "32509-01.htm";
             if (st.haveAllQuestItems(SPEAR,STAGE1) ) {
-                st.takeItems(SPEAR, 1);
-                st.takeItems(STAGE1, 1);
+                st.takeAllItems(SPEAR,STAGE1);
                 st.giveItems(ENCHSPEAR);
                 htmltext = "32509-02.htm";
             }
-            if (st.getQuestItemsCount(ENCHSPEAR) > 0 && st.getQuestItemsCount(STAGE2) > 0) {
-                st.takeItems(ENCHSPEAR, 1);
-                st.takeItems(STAGE2, 1);
+            if (st.haveAllQuestItems(ENCHSPEAR,STAGE2) ) {
+                st.takeAllItems(ENCHSPEAR, STAGE2);
                 st.giveItems(LASTSPEAR);
                 htmltext = "32509-03.htm";
             }

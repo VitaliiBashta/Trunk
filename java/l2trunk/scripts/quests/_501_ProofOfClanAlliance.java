@@ -143,17 +143,17 @@ public final class _501_ProofOfClanAlliance extends Quest {
             }
 
             // WITCH_KALIS
-            else if (event.equalsIgnoreCase("30759-03.htm")) {
+            else if ("30759-03.htm".equalsIgnoreCase(event)) {
                 st.setCond(2);
                 st.set("dead_list", " ");
-            } else if (event.equalsIgnoreCase("30759-07.htm")) {
-                st.takeItems(SYMBOL_OF_LOYALTY, -1);
-                st.giveItems(ANTIDOTE_RECIPE, 1);
+            } else if ("30759-07.htm".equalsIgnoreCase(event)) {
+                st.takeItems(SYMBOL_OF_LOYALTY);
+                st.giveItems(ANTIDOTE_RECIPE);
                 st.addNotifyOfDeath(st.player, false);
                 st.setCond(3);
-                st.set("chest_count", 0);
-                st.set("chest_game", 0);
-                st.set("chest_try", 0);
+                st.unset("chest_count");
+                st.unset("chest_game");
+                st.unset("chest_try");
                 st.startQuestTimer("poison_timer", 3600000);
                 st.player.altUseSkill(4082, st.player);
                 st.player.startImmobilized();
@@ -161,10 +161,10 @@ public final class _501_ProofOfClanAlliance extends Quest {
             }
 
         // Timers
-        if (event.equalsIgnoreCase("poison_timer")) {
+        if ("poison_timer".equalsIgnoreCase(event)) {
             removeQuestFromMembers(st, true);
             htmltext = "30759-09.htm";
-        } else if (event.equalsIgnoreCase("chest_timer")) {
+        } else if ("chest_timer".equalsIgnoreCase(event)) {
             htmltext = "";
             if (leader.getInt("chest_game") < 2)
                 stop_chest_game(st);
@@ -317,7 +317,7 @@ public final class _501_ProofOfClanAlliance extends Quest {
 
             int game_state = leader.getInt("chest_game");
             if (game_state == 0) {
-                if (leader.getInt("chest_try") == 0)
+                if (!leader.isSet("chest_try"))
                     return "30758-01.htm";
                 return "30758-05.htm";
             } else if (game_state == 1)
@@ -373,12 +373,8 @@ public final class _501_ProofOfClanAlliance extends Quest {
                 }
                 if (Rnd.chance(25)) {
                     Functions.npcSay(npc, "###### BINGO! ######");
-                    int count = leader.getInt("chest_count");
-                    if (count < 4) {
-                        count += 1;
-                        leader.set("chest_count", count);
-                    }
-                    if (count >= 4) {
+                    leader.inc("chest_count");
+                    if (leader.getInt("chest_count") >= 4) {
                         stop_chest_game(st);
                         leader.set("chest_game", 2);
                         leader.cancelQuestTimer("chest_timer");
@@ -402,16 +398,15 @@ public final class _501_ProofOfClanAlliance extends Quest {
             return;
         }
 
-        leader.set("chest_game", 1);
-        leader.set("chest_count", 0);
-        int attempts = leader.getInt("chest_try");
-        leader.set("chest_try", attempts + 1);
+        leader.set("chest_game");
+        leader.unset("chest_count");
+        leader.inc("chest_try");
 
         GameObjectsStorage.getAllByNpcId(CHESTS, false).forEach(GameObject::deleteMe);
 
         for (int n = 1; n <= 5; n++)
             for (int i : CHESTS)
-                leader.addSpawn(i, Location.of(102100, 103450, -3400, 0), 100, 60000);
+                leader.addSpawn(i, Location.of(102100, 103450, -3400), 100, 60000);
         leader.startQuestTimer("chest_timer", 60000);
     }
 
@@ -424,7 +419,7 @@ public final class _501_ProofOfClanAlliance extends Quest {
 
         GameObjectsStorage.getAllByNpcId(CHESTS, false).forEach(GameObject::deleteMe);
 
-        leader.set("chest_game", 0);
+        leader.unset("chest_game");
     }
 
     @Override

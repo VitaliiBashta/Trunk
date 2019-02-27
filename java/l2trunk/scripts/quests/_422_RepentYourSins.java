@@ -44,12 +44,12 @@ public final class _422_RepentYourSins extends Quest {
         super(false);
 
         addStartNpc(Black_Judge);
-        addTalkId(Katari,Piotur,Casian,Joan,Pushkin);
+        addTalkId(Katari, Piotur, Casian, Joan, Pushkin);
 
-        addKillId(SCAVENGER_WERERAT,TUREK_WARHOUND,TYRANT_KINGPIN,TRISALIM_TARANTULA);
+        addKillId(SCAVENGER_WERERAT, TUREK_WARHOUND, TYRANT_KINGPIN, TRISALIM_TARANTULA);
 
-        addQuestItem(SCAVENGER_WERERAT_SKULL,TUREK_WARHOUND_TAIL,TYRANT_KINGPIN_HEART,TRISALIM_TARANTULAS_VENOM_SAC,
-                MANUAL_OF_MANACLES,PENITENTS_MANACLES,PENITENTS_MANACLES1);
+        addQuestItem(SCAVENGER_WERERAT_SKULL, TUREK_WARHOUND_TAIL, TYRANT_KINGPIN_HEART, TRISALIM_TARANTULAS_VENOM_SAC,
+                MANUAL_OF_MANACLES, PENITENTS_MANACLES, PENITENTS_MANACLES1);
     }
 
     private int findPetLvl(QuestState st) {
@@ -116,15 +116,14 @@ public final class _422_RepentYourSins extends Quest {
                     if (st.player.getPkKills() <= Pk_remove) {
                         st.player.setPkKills(0);
                         st.playSound(SOUND_FINISH);
-                        if (st.getQuestItemsCount(PENITENTS_MANACLES2) < 1)
-                            st.giveItems(PENITENTS_MANACLES2);
+                        st.giveItemIfNotHave(PENITENTS_MANACLES2);
                         st.exitCurrentQuest();
                         return "black_judge_q0422_15.htm";
                     }
                     st.takeItems(PENITENTS_MANACLES, 1);
                     int Pk_new = st.player.getPkKills() - Pk_remove;
                     st.player.setPkKills(Pk_new);
-                    st.set("level", 0);
+                    st.unset("level");
                     return "black_judge_q0422_16.htm";
                 }
                 break;
@@ -265,7 +264,7 @@ public final class _422_RepentYourSins extends Quest {
                         return "blacksmith_pushkin_q0422_02.htm";
                     }
                 }
-                if (st.haveAnyQuestItems(PENITENTS_MANACLES1,PENITENTS_MANACLES,PENITENTS_MANACLES2))
+                if (st.haveAnyQuestItems(PENITENTS_MANACLES1, PENITENTS_MANACLES, PENITENTS_MANACLES2))
                     return "blacksmith_pushkin_q0422_03.htm";
             }
         return "noquest";

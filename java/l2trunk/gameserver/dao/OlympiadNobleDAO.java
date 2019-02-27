@@ -35,13 +35,7 @@ public final class OlympiadNobleDAO {
              PreparedStatement statement = con.prepareStatement(SELECT_SQL_QUERY);
              ResultSet rset = statement.executeQuery()) {
             while (rset.next()) {
-                int tempId = rset.getInt(Olympiad.CLASS_ID);
-//                if (tempId < 88) // Если это не 3-я профа, то исправляем со 2-й на 3-ю.
-                int classId = ClassId.VALUES.stream()
-                        .filter(id -> id.occupation() == 3)
-                        .filter(id -> id.parent.id == tempId)
-                        .mapToInt(id -> id.id).findFirst().orElse(tempId);
-
+                int classId = rset.getInt(Olympiad.CLASS_ID);
                 StatsSet statDat = new StatsSet();
                 int charId = rset.getInt(Olympiad.CHAR_ID);
                 statDat.set(Olympiad.CLASS_ID, classId);

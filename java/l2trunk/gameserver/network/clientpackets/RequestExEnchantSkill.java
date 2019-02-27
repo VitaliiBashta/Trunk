@@ -44,7 +44,7 @@ public final class RequestExEnchantSkill extends L2GameClientPacket {
             return;
         }
 
-        if ((activeChar.getTransformation() != 0) || (activeChar.isMounted()) || (Olympiad.isRegisteredInComp(activeChar)) || (activeChar.isInCombat())) {
+        if ((activeChar.isTrasformed()) || (activeChar.isMounted()) || (Olympiad.isRegisteredInComp(activeChar)) || (activeChar.isInCombat())) {
             activeChar.sendMessage("You must leave transformation mode first.");
             return;
         }

@@ -150,7 +150,7 @@ public final class OlympiadDatabase {
         if (Olympiad._period != 1)
             return;
 
-        Olympiad._heroesToBe = new ArrayList<>();
+        Olympiad.heroesToBe = new ArrayList<>();
 
         PreparedStatement statement;
         ResultSet rset;
@@ -171,7 +171,7 @@ public final class OlympiadDatabase {
                             hero.set(Olympiad.CHAR_ID, rset.getInt(Olympiad.CHAR_ID));
                             hero.set(Olympiad.CHAR_NAME, rset.getString(Olympiad.CHAR_NAME));
 
-                            Olympiad._heroesToBe.add(hero);
+                            Olympiad.heroesToBe.add(hero);
                         }
                     }
                 }

@@ -98,7 +98,7 @@ public final class _140_ShadowFoxPart2 extends Quest {
             else if (cond == 2 || cond == 3)
                 htmltext = "30895-06.htm";
             else if (cond == 4)
-                if (st.getInt("talk") == 1)
+                if (st.isSet("talk") )
                     htmltext = "30895-08.htm";
                 else {
                     htmltext = "30895-07.htm";

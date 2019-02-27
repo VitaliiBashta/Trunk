@@ -41,8 +41,8 @@ import l2trunk.gameserver.model.GameObjectTasks.*;
 import l2trunk.gameserver.model.Request.L2RequestType;
 import l2trunk.gameserver.model.Skill.AddedSkill;
 import l2trunk.gameserver.model.Zone.ZoneType;
-import l2trunk.gameserver.model.actor.instances.player.FriendList;
 import l2trunk.gameserver.model.actor.instances.player.*;
+import l2trunk.gameserver.model.actor.instances.player.FriendList;
 import l2trunk.gameserver.model.actor.listener.PlayerListenerList;
 import l2trunk.gameserver.model.actor.recorder.PlayerStatsChangeRecorder;
 import l2trunk.gameserver.model.base.*;
@@ -123,8 +123,8 @@ import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.sql.*;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -162,7 +162,6 @@ public final class Player extends Playable implements PlayerGroup {
     public final static int autoCp = 5592;
     public final static int autoHp = 1539;
     static final int RANK_BARON = 5;
-    private static final String NOT_CONNECTED = "<not connected>";
     private static final int RANK_WISEMAN = 4;
     private final static int OBSERVER_NONE = 0;
     private static final int RANK_VAGABOND = 0;
@@ -190,9 +189,9 @@ public final class Player extends Playable implements PlayerGroup {
     public final AntiFlood antiFlood = new AntiFlood();
     public final PcInventory inventory = new PcInventory(this);
     final Map<Integer, Skill> transformationSkills = new HashMap<>();
-    private final Warehouse _warehouse = new PcWarehouse(objectId);
+    private final Warehouse warehouse = new PcWarehouse(objectId);
     private final ItemContainer refund = new PcRefund(this);
-    private final PcFreight _freight = new PcFreight(objectId);
+    private final PcFreight freight = new PcFreight(objectId);
     /**
      * The table containing all l2fecipeList of the L2Player
      */
@@ -210,7 +209,7 @@ public final class Player extends Playable implements PlayerGroup {
 
     private final MacroList _macroses = new MacroList(this);
 
-    private final List<Henna> _henna = new ArrayList<>(3);
+    private final List<Henna> henna = new ArrayList<>(3);
     private final AtomicBoolean _isLogout = new AtomicBoolean();
     private final Set<Integer> activeSoulShots = new CopyOnWriteArraySet<>();
     private final AtomicInteger observerMode = new AtomicInteger(0);
@@ -227,7 +226,7 @@ public final class Player extends Playable implements PlayerGroup {
     private final Map<String, PlayerVar> user_variables = new ConcurrentHashMap<>();
     private final List<Player> snoopListener = new ArrayList<>();
     private final List<Player> snoopedPlayer = new ArrayList<>();
-    private final Map<Integer, TamedBeastInstance> _tamedBeasts = new ConcurrentHashMap<>();
+    private final Map<Integer, TamedBeastInstance> tamedBeasts = new ConcurrentHashMap<>();
     private final AtomicBoolean isActive = new AtomicBoolean();
     private final Map<Integer, Integer> _achievementLevels = new HashMap<>();
     private final Map<ClassId, SubClass> classlist = new HashMap<>(4);
@@ -322,7 +321,7 @@ public final class Player extends Playable implements PlayerGroup {
      * The L2Summon of the L2Player
      */
     private Summon summon = null;
-    private boolean _riding;
+    private boolean riding;
     private DecoyInstance _decoy = null;
     private Map<Integer, EffectCubic> cubics = null;
     private int _agathionId = 0;
@@ -374,7 +373,7 @@ public final class Player extends Playable implements PlayerGroup {
     private Future<?> _pcCafePointsTask;
     private int _zoneMask;
     private int transformationId;
-    private int _transformationTemplate;
+    private int transformationTemplate;
     private String transformationName;
     private int _pcBangPoints;
     private int _expandInventory = 0;
@@ -404,7 +403,7 @@ public final class Player extends Playable implements PlayerGroup {
     private Creature lastAttacker = null;
     private long lastAttackDate = 0L;
     private int raids;
-    private int _mountNpcId;
+    private int mountNpcId;
     private int _mountObjId;
     private int _mountLevel;
     private boolean _partyMatchingVisible = true;
@@ -613,13 +612,7 @@ public final class Player extends Playable implements PlayerGroup {
                 if (player.isVarSet("namecolor")) {
                     player.setNameColor(Integer.decode("0x" + player.getVar("namecolor")));
                 } else {
-                    if (player.isGM()) {
-                        player.setNameColor(Config.GM_NAME_COLOUR);
-                    } else if ((player.clan != null) && (player.clan.getLeaderId() == player.objectId())) {
-                        player.setNameColor(Config.CLANLEADER_NAME_COLOUR);
-                    } else {
                         player.setNameColor(Config.NORMAL_NAME_COLOUR);
-                    }
                 }
 
                 player._fistsWeaponItem = player.findFistsWeaponItem(classId);
@@ -759,8 +752,8 @@ public final class Player extends Playable implements PlayerGroup {
                 player.refreshExpertisePenalty();
                 player.refreshOverloaded();
 
-                player._warehouse.restore();
-                player._freight.restore();
+                player.warehouse.restore();
+                player.freight.restore();
 
                 player.restoreTradeList();
                 if (player.isVarSet("storemode")) {
@@ -894,7 +887,7 @@ public final class Player extends Playable implements PlayerGroup {
 
     public String getIP() {
         if (connection == null) {
-            return NOT_CONNECTED;
+            return "<not connected>";
         }
         return connection.getIpAddr();
     }
@@ -2367,7 +2360,7 @@ public final class Player extends Playable implements PlayerGroup {
         return null;
     }
 
-    @Override
+
     public PcInventory getInventory() {
         return inventory;
     }
@@ -2378,7 +2371,7 @@ public final class Player extends Playable implements PlayerGroup {
     }
 
     public PcFreight getFreight() {
-        return _freight;
+        return freight;
     }
 
     public void removeItemFromShortCut(final int objectId) {
@@ -2465,7 +2458,7 @@ public final class Player extends Playable implements PlayerGroup {
     }
 
     public Warehouse getWarehouse() {
-        return _warehouse;
+        return warehouse;
     }
 
     public ItemContainer getRefund() {
@@ -3908,7 +3901,7 @@ public final class Player extends Playable implements PlayerGroup {
         bookmarks.clear();
 
         inventory.clear();
-        _warehouse.clear();
+        warehouse.clear();
         summon = null;
         _arrowItem = null;
         _fistsWeaponItem = null;
@@ -4446,38 +4439,24 @@ public final class Player extends Playable implements PlayerGroup {
         return raids;
     }
 
-
-    public Skill addSkill(int skillId, int skillLvl, final boolean store) {
-        return addSkill(SkillTable.INSTANCE.getInfo(skillId, skillLvl), store);
+    public void addSkill(int skillId, int skillLvl, final boolean store) {
+        addSkill(SkillTable.INSTANCE.getInfo(skillId, skillLvl), store);
     }
 
-    public Skill addSkill(int skillId, final boolean store) {
-        return addSkill(skillId, 1, store);
+    public void addSkill(int skillId, final boolean store) {
+        addSkill(skillId, 1, store);
     }
 
-    public Skill addSkill(final Skill newSkill, final boolean store) {
-        if (newSkill == null) {
-            return null;
-        }
+    public void addSkill(final Skill newSkill, final boolean store) {
+        if (newSkill == null) return;
 
-        // Fix If the skill existed before, then we must transfer its reuse to the new occupation. Its a known exploit of enchant a skill to reset its reuse
+        // Fix If the skill existed before, then we must transfer its reuse to the new level. Its a known exploit of enchant a skill to reset its reuse
         if (getKnownSkill(newSkill.id) != null) {
             disableSkillByNewLvl(SkillTable.INSTANCE.getInfo(newSkill.id, getKnownSkill(newSkill.id).level).hashCode(),
                     SkillTable.INSTANCE.getInfo(newSkill.id, newSkill.level).hashCode());
         }
-        // Add a skill to the L2Player skills and its Func objects to the calculator set of the L2Player
-        Skill oldSkill = super.addSkill(newSkill.id, newSkill.level);
-
-        if (newSkill.equals(oldSkill)) {
-            return oldSkill;
-        }
-
         // Add or update a L2Player skill in the character_skills table of the database
-        if (store) {
-            storeSkill(newSkill);
-        }
-
-        return oldSkill;
+        if (store) storeSkill(newSkill);
     }
 
     /**
@@ -4670,7 +4649,7 @@ public final class Player extends Playable implements PlayerGroup {
     }
 
     /**
-     * Retrieve from the database all Henna of this L2Player, add them to _henna and calculate stats of the L2Player.<BR>
+     * Retrieve from the database all Henna of this L2Player, add them to henna and calculate stats of the L2Player.<BR>
      * <BR>
      */
     private void restoreHenna() {
@@ -4680,9 +4659,9 @@ public final class Player extends Playable implements PlayerGroup {
             statement.setInt(2, getActiveClassId().id);
 
             try (ResultSet rset = statement.executeQuery()) {
-                _henna.clear();
+                henna.clear();
                 for (int i = 0; i < 3; i++) {
-                    _henna.add(null);
+                    henna.add(null);
                 }
 
                 while (rset.next()) {
@@ -4696,7 +4675,7 @@ public final class Player extends Playable implements PlayerGroup {
                     if (symbol_id != 0) {
                         final Henna tpl = HennaHolder.getHenna(symbol_id);
                         if (tpl != null) {
-                            _henna.set(slot - 1, tpl);
+                            henna.set(slot - 1, tpl);
                         }
                     }
                 }
@@ -4713,7 +4692,7 @@ public final class Player extends Playable implements PlayerGroup {
     public int getHennaEmptySlots() {
         int totalSlots = 1 + getClassId().occupation();
         for (int i = 0; i < 3; i++) {
-            if (_henna.get(i) != null) {
+            if (henna.get(i) != null) {
                 totalSlots--;
             }
         }
@@ -4737,14 +4716,14 @@ public final class Player extends Playable implements PlayerGroup {
 
         slot--;
 
-        if (_henna.get(slot) == null) {
+        if (henna.get(slot) == null) {
             return;
         }
 
-        final Henna henna = _henna.get(slot);
+        final Henna henna = this.henna.get(slot);
         final int dyeID = henna.dyeId;
 
-        _henna.set(slot, null);
+        this.henna.set(slot, null);
 
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement("DELETE FROM character_hennas where char_obj_id=? and slot=? and class_index=?")) {
@@ -4780,8 +4759,8 @@ public final class Player extends Playable implements PlayerGroup {
 
         // int slot = 0;
         for (int i = 0; i < 3; i++) {
-            if (_henna.get(i) == null) {
-                _henna.set(i, henna);
+            if (this.henna.get(i) == null) {
+                this.henna.set(i, henna);
 
                 // Calculate Henna modifiers of this L2Player
                 recalcHennaStats();
@@ -4818,7 +4797,7 @@ public final class Player extends Playable implements PlayerGroup {
         hennaDEX = 0;
 
         for (int i = 0; i < 3; i++) {
-            Henna henna = _henna.get(i);
+            Henna henna = this.henna.get(i);
             if (henna != null && henna.isForThisClass(this)) {
                 hennaINT += henna.statINT;
                 hennaSTR += henna.statSTR;
@@ -4842,7 +4821,7 @@ public final class Player extends Playable implements PlayerGroup {
         if ((slot < 1) || (slot > 3)) {
             return null;
         }
-        return _henna.get(slot - 1);
+        return henna.get(slot - 1);
     }
 
     public int getHennaStatINT() {
@@ -4902,15 +4881,15 @@ public final class Player extends Playable implements PlayerGroup {
     }
 
     public boolean isMounted() {
-        return _mountNpcId > 0;
+        return mountNpcId > 0;
     }
 
     public final boolean isRiding() {
-        return _riding;
+        return riding;
     }
 
     private void setRiding(boolean mode) {
-        _riding = mode;
+        riding = mode;
     }
 
     public boolean checkLandingState() {
@@ -4932,17 +4911,14 @@ public final class Player extends Playable implements PlayerGroup {
     }
 
     public void setMount(int npcId, int obj_id, int level) {
-        if (isCursedWeaponEquipped()) {
+        if (isCursedWeaponEquipped())
             return;
-        }
 
         switch (npcId) {
             case 0: // Dismount
                 setFlying(false);
                 setRiding(false);
-                if (getTransformation() > 0) {
-                    setTransformation(0);
-                }
+                if (isTrasformed()) setTransformation(0);
                 removeSkill(325);
                 removeSkill(4289);
                 getEffectList().stopEffect(Skill.SKILL_HINDER_STRIDER);
@@ -4975,7 +4951,7 @@ public final class Player extends Playable implements PlayerGroup {
             unEquipWeapon();
         }
 
-        _mountNpcId = npcId;
+        mountNpcId = npcId;
         _mountObjId = obj_id;
         _mountLevel = level;
 
@@ -5006,7 +4982,7 @@ public final class Player extends Playable implements PlayerGroup {
     @Override
     public int getSpeed(int baseSpeed) {
         if (isMounted()) {
-            PetData petData = PetDataTable.INSTANCE.getInfo(_mountNpcId, _mountLevel);
+            PetData petData = PetDataTable.INSTANCE.getInfo(mountNpcId, _mountLevel);
             int speed = 187;
             if (petData != null) {
                 speed = petData.speed;
@@ -5022,7 +4998,7 @@ public final class Player extends Playable implements PlayerGroup {
     }
 
     public int getMountNpcId() {
-        return _mountNpcId;
+        return mountNpcId;
     }
 
     public int getMountObjId() {
@@ -5985,11 +5961,10 @@ public final class Player extends Playable implements PlayerGroup {
     }
 
     public void setNameColor(final int nameColor) {
-        if ((nameColor != Config.NORMAL_NAME_COLOUR) && (nameColor != Config.CLANLEADER_NAME_COLOUR) && (nameColor != Config.GM_NAME_COLOUR)) {
+        if ((nameColor != Config.NORMAL_NAME_COLOUR)) {
             setVar("namecolor", Integer.toHexString(nameColor));
-        } else if (nameColor == Config.NORMAL_NAME_COLOUR) {
+        } else
             unsetVar("namecolor");
-        }
         _nameColor = nameColor;
     }
 
@@ -6218,7 +6193,7 @@ public final class Player extends Playable implements PlayerGroup {
         } else if (Config.ALLOW_WATER && (_taskWater == null)) {
             int timeinwater = (int) (calcStat(Stats.BREATH, 86) * 1000L);
             sendPacket(new SetupGauge(this, SetupGauge.CYAN, timeinwater));
-            if ((getTransformation() > 0) && (getTransformationTemplate() > 0) && !isCursedWeaponEquipped()) {
+            if ((isTrasformed()) && (getTransformationTemplate() > 0) && !isCursedWeaponEquipped()) {
                 setTransformation(0);
             }
             _taskWater = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new WaterTask(this), timeinwater, 1000L);
@@ -6704,9 +6679,9 @@ public final class Player extends Playable implements PlayerGroup {
 
         inventory.refreshEquip();
         inventory.validateItems();
-        _henna.clear();
+        henna.clear();
         for (int i = 0; i < 3; i++) {
-            _henna.add(null);
+            henna.add(null);
         }
 
         restoreHenna();
@@ -7553,15 +7528,15 @@ public final class Player extends Playable implements PlayerGroup {
     }
 
     public Map<Integer, TamedBeastInstance> getTrainedBeasts() {
-        return _tamedBeasts;
+        return tamedBeasts;
     }
 
     public void addTrainedBeast(TamedBeastInstance tamedBeast) {
-        _tamedBeasts.put(tamedBeast.objectId(), tamedBeast);
+        tamedBeasts.put(tamedBeast.objectId(), tamedBeast);
     }
 
     public void removeTrainedBeast(int npcId) {
-        _tamedBeasts.remove(npcId);
+        tamedBeasts.remove(npcId);
     }
 
     public long getLastAttackPacket() {
@@ -7602,6 +7577,10 @@ public final class Player extends Playable implements PlayerGroup {
 
     boolean isInMountTransform() {
         return (transformationId == 106) || (transformationId == 109) || (transformationId == 110) || (transformationId == 20001);
+    }
+
+    public boolean isTrasformed() {
+        return transformationId != 0;
     }
 
     public int getTransformation() {
@@ -7701,18 +7680,16 @@ public final class Player extends Playable implements PlayerGroup {
     }
 
     public int getTransformationTemplate() {
-        return _transformationTemplate;
+        return transformationTemplate;
     }
 
     public void setTransformationTemplate(int template) {
-        _transformationTemplate = template;
+        transformationTemplate = template;
     }
 
     @Override
     public final Collection<Skill> getAllSkills() {
-        if (transformationId == 0) {
-            return super.getAllSkills();
-        }
+        if (transformationId == 0) return super.getAllSkills();
 
         Map<Integer, Skill> tempSkills = new HashMap<>();
         for (Skill s : super.getAllSkills()) {
@@ -8003,11 +7980,11 @@ public final class Player extends Playable implements PlayerGroup {
 
     @Override
     public double getColRadius() {
-        if (getTransformation() != 0) {
-            if (getTransformationTemplate() == 32) {
+        if (isTrasformed()) {
+            if (transformationTemplate == 32) {
                 setTransformation(0);
             } else {
-                final int template = getTransformationTemplate();
+                final int template = transformationTemplate;
                 if (template != 0) {
                     final NpcTemplate npcTemplate = NpcHolder.getTemplate(template);
                     if (npcTemplate != null) {
@@ -8029,11 +8006,11 @@ public final class Player extends Playable implements PlayerGroup {
 
     @Override
     public double getColHeight() {
-        if (getTransformation() != 0) {
-            if (getTransformationTemplate() == 32) {
+        if (isTrasformed()) {
+            if (transformationTemplate == 32) {
                 setTransformation(0);
             } else {
-                final int template = getTransformationTemplate();
+                final int template = transformationTemplate;
                 if (template != 0) {
                     final NpcTemplate npcTemplate = NpcHolder.getTemplate(template);
                     if (npcTemplate != null) {
@@ -8733,7 +8710,7 @@ public final class Player extends Playable implements PlayerGroup {
             sendPacket(new SystemMessage(SystemMessage.COUPLE_ACTION_CANNOT_C1_TARGET_IS_TELEPORTING).addName(target));
             return false;
         }
-        if (target.getTransformation() != 0) {
+        if (target.isTrasformed()) {
             sendPacket(new SystemMessage(SystemMessage.COUPLE_ACTION_CANNOT_C1_TARGET_IS_IN_TRANSFORM).addName(target));
             return false;
         }

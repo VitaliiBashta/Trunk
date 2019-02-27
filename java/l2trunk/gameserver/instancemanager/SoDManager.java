@@ -45,11 +45,11 @@ public final class SoDManager {
     }
 
     private static int getTiatKills() {
-        return ServerVariables.getInt("Tial_kills", 0);
+        return ServerVariables.getInt("Tial_kills");
     }
 
     private static long getOpenedTimeLimit() {
-        return ServerVariables.getLong("SoD_opened", 0) * 1000L - System.currentTimeMillis();
+        return ServerVariables.getLong("SoD_opened") * 1000L - System.currentTimeMillis();
     }
 
     private static Zone getZone() {

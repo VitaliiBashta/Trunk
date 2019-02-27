@@ -289,7 +289,7 @@ public final class ItemAuctionInstance {
                 return null;
             }
 
-            ItemAuctionState auctionState = ItemAuctionState.stateForStateId(auctionStateId);
+            ItemAuctionState auctionState = ItemAuctionState.of(auctionStateId);
             if (auctionState == null) {
                 _log.warn("ItemAuction: Invalid auctionStateId: " + auctionStateId + ", for auction: " + auctionId);
                 return null;

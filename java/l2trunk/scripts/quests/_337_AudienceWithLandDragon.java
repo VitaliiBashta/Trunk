@@ -231,7 +231,7 @@ public final class _337_AudienceWithLandDragon extends Quest {
             case "1":
                 st.set("step");
                 st.setCond(1);
-                st.set("guard", 0);
+                st.unset("guard");
                 st.start();
                 st.giveItems(FEATHER_OF_GABRIELLE_ID);
                 htmltext = "30753-02.htm";
@@ -271,8 +271,7 @@ public final class _337_AudienceWithLandDragon extends Quest {
                 st.set("step", 15);
                 st.setCond(3);
                 htmltext = "30753-06.htm";
-                st.takeItems(MARK_OF_WATCHMAN_ID);
-                st.takeItems(FEATHER_OF_GABRIELLE_ID);
+                st.takeAllItems(MARK_OF_WATCHMAN_ID,FEATHER_OF_GABRIELLE_ID);
                 st.giveItems(HERALD_OF_SLAYER_ID);
                 st.playSound(SOUND_MIDDLE);
                 break;

@@ -55,7 +55,7 @@ public final class Olympiad {
     private static final List<NpcInstance> _npcs = new ArrayList<>();
     public static Map<Integer, StatsSet> nobles;
     public static Map<Integer, Integer> _noblesRank;
-    public static List<StatsSet> _heroesToBe;
+    public static List<StatsSet> heroesToBe;
     public static long _olympiadEnd;
     public static long _validationEnd;
     public static int _period;

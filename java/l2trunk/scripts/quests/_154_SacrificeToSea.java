@@ -83,8 +83,8 @@ public final class _154_SacrificeToSea extends Quest {
         else if (npcId == 30055 && st.getCond() == 1 && st.getQuestItemsCount(FOX_FUR_YARN_ID) == 0 && st.getQuestItemsCount(MAIDEN_DOLL_ID) == 0)
             htmltext = "30055-03.htm";
         else if (npcId == 30312 && st.getCond() == 1 && st.haveQuestItem(MAIDEN_DOLL_ID))
-            if (st.getInt("id") != 154) {
-                st.set("id", 154);
+            if (!st.isSet("id")) {
+                st.set("id");
                 htmltext = "30312-07.htm";
                 st.takeItems(MAIDEN_DOLL_ID);
                 st.giveItems(MYSTICS_EARRING_ID);

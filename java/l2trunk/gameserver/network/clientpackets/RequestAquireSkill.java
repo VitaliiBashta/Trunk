@@ -142,7 +142,7 @@ public final class RequestAquireSkill extends L2GameClientPacket {
     protected void readImpl() {
         _id = readD();
         _level = readD();
-        _type = ArrayUtils.valid(AcquireType.VALUES, readD());
+        _type = AcquireType.VALUES.get(readD());
         if (_type == AcquireType.SUB_UNIT)
             _subUnit = readD();
     }
@@ -150,7 +150,7 @@ public final class RequestAquireSkill extends L2GameClientPacket {
     @Override
     protected void runImpl() {
         Player player = getClient().getActiveChar();
-        if (player == null || player.getTransformation() != 0 || _type == null)
+        if (player == null || player.isTrasformed() || _type == null)
             return;
 
         NpcInstance trainer = player.getLastNpc();

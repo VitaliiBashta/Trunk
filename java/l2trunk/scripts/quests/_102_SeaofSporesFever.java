@@ -82,7 +82,7 @@ public final class _102_SeaofSporesFever extends Quest {
                 st.giveItems(ADENA_ID, 6331);
                 st.player.addExpAndSp(30202, 1339);
 
-                if (st.player.getClassId().isMage)
+                if (st.player.getClassId().isMage())
                     st.giveItems(STAFF_OF_SENTINEL);
                 else
                     st.giveItems(SWORD_OF_SENTINEL);
@@ -93,7 +93,7 @@ public final class _102_SeaofSporesFever extends Quest {
                     st.giveItems(1060, 100); // healing potion
                     for (int item = 4412; item <= 4417; item++)
                         st.giveItems(item, 10); // echo cry
-                    if (st.player.getClassId().isMage) {
+                    if (st.player.getClassId().isMage()) {
                         st.playTutorialVoice("tutorial_voice_027");
                         st.giveItems(5790, 3000); // newbie sps
                     } else {

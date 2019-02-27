@@ -33,7 +33,7 @@ public final class CharacterCreate extends L2GameClientPacket {
     // cSdddddddddddd
     private String _name;
     private int _sex;
-    private int _classId;
+    private int classId;
     private int _hairStyle;
     private int _hairColor;
     private int _face;
@@ -57,7 +57,7 @@ public final class CharacterCreate extends L2GameClientPacket {
         _name = readS();
         readD(); // race
         _sex = readD();
-        _classId = readD();
+        classId = readD();
         readD(); // int
         readD(); // str
         readD(); // con
@@ -71,9 +71,6 @@ public final class CharacterCreate extends L2GameClientPacket {
 
     @Override
     protected void runImpl() {
-        for (ClassId cid : ClassId.VALUES)
-            if (cid.id == _classId && cid.occupation() != 0)
-                return;
         if (CharacterDAO.accountCharNumber(getClient().getLogin()) >= 8) {
             sendPacket(CharacterCreateFail.REASON_TOO_MANY_CHARACTERS);
             return;
@@ -96,7 +93,7 @@ public final class CharacterCreate extends L2GameClientPacket {
             return;
         }
 
-        Player newChar = Player.create(_classId, _sex, getClient().getLogin(), _name, _hairStyle, _hairColor, _face);
+        Player newChar = Player.create(classId, _sex, getClient().getLogin(), _name, _hairStyle, _hairColor, _face);
         if (newChar == null)
             return;
 
@@ -141,9 +138,9 @@ public final class CharacterCreate extends L2GameClientPacket {
                 newChar.getInventory().equipItem(item);
         }
 
-        ClassId nclassId = ClassId.VALUES.get(_classId);
+        ClassId nclassId = ClassId.getById(classId);
         if (Config.ALLOW_START_ITEMS) {
-            if (nclassId.isMage) {
+            if (nclassId.isMage()) {
                 for (int i = 0; i < Config.START_ITEMS_MAGE.size(); i++) {
                     ItemInstance item = ItemFunctions.createItem(Config.START_ITEMS_MAGE.get(i));
                     item.setCount(Config.START_ITEMS_MAGE_COUNT.get(i));

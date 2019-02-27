@@ -89,7 +89,7 @@ public final class _153_DeliverGoods extends Quest {
                 st.takeItems(CLOTH_BUNDLE, -1);
                 if (st.getQuestItemsCount(SILVIAS_RECEIPT) == 0) {
                     st.giveItems(SILVIAS_RECEIPT);
-                    if (st.player.getClassId().isMage)
+                    if (st.player.getClassId().isMage())
                         st.giveItems(2509, 3);
                     else
                         st.giveItems(1835, 6);

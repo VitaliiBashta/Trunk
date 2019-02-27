@@ -25,52 +25,50 @@ import static l2trunk.commons.lang.NumberUtils.toInt;
 public final class AdminSkill implements IAdminCommandHandler {
 
     @Override
-    public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
-        Commands command = (Commands) comm;
-
+    public boolean useAdminCommand(String comm, String[] wordList, String fullString, Player activeChar) {
         if (!activeChar.getPlayerAccess().CanEditChar)
             return false;
 
-        switch (command) {
-            case admin_show_skills:
+        switch (comm) {
+            case "admin_show_skills":
                 showSkillsPage(activeChar);
                 break;
-            case admin_show_effects:
+            case "admin_show_effects":
                 showEffects(activeChar);
                 break;
-            case admin_remove_skills:
+            case "admin_remove_skills":
                 removeSkillsPage(activeChar);
                 break;
-            case admin_skill_list:
+            case "admin_skill_list":
                 activeChar.sendPacket(new NpcHtmlMessage(5).setFile("admin/skills.htm"));
                 break;
-            case admin_skill_index:
+            case "admin_skill_index":
                 if (wordList.length > 1)
                     activeChar.sendPacket(new NpcHtmlMessage(5).setFile("admin/skills/" + wordList[1] + ".htm"));
                 break;
-            case admin_add_skill:
+            case "admin_add_skill":
                 adminAddSkill(activeChar, wordList);
                 break;
-            case admin_remove_skill:
+            case "admin_remove_skill":
                 adminRemoveSkill(activeChar, wordList);
                 break;
-            case admin_get_skills:
+            case "admin_get_skills":
                 adminGetSkills(activeChar);
                 break;
-            case admin_reset_skills:
+            case "admin_reset_skills":
                 adminResetSkills(activeChar);
                 break;
-            case admin_give_all_skills:
+            case "admin_give_all_skills":
                 adminGiveAllSkills(activeChar);
                 break;
-            case admin_debug_stats:
+            case "admin_debug_stats":
                 debug_stats(activeChar);
                 break;
-            case admin_give_all_clan_skills:
+            case "admin_give_all_clan_skills":
                 giveAllClanSkills(activeChar);
                 break;
-            case admin_remove_cooldown:
-            case admin_resetreuse:
+            case "admin_remove_cooldown":
+            case "admin_resetreuse":
                 Player target = activeChar;
                 if (activeChar.getTarget() instanceof Player)
                     target = (Player) activeChar.getTarget();
@@ -79,12 +77,12 @@ public final class AdminSkill implements IAdminCommandHandler {
                 target.sendPacket(new SkillCoolTime(activeChar));
                 activeChar.sendMessage("Rollback all skill reset.");
                 break;
-            case admin_buff:
+            case "admin_buff":
                 for (int i = 7041; i <= 7064; i++)
                     activeChar.addSkill(i);
                 activeChar.sendPacket(new SkillList(activeChar));
                 break;
-            case admin_people_having_effect:
+            case "admin_people_having_effect":
                 int skillId = toInt(wordList[1]);
                 GameObjectsStorage.getAllPlayersStream().forEach(player ->
                         player.getEffectList().getAllEffects().stream()
@@ -201,8 +199,25 @@ public final class AdminSkill implements IAdminCommandHandler {
     }
 
     @Override
-    public Enum[] getAdminCommandEnum() {
-        return Commands.values();
+    public List<String> getAdminCommands() {
+        return List.of(
+                "admin_show_skills",
+                "admin_remove_skills",
+                "admin_skill_list",
+                "admin_skill_index",
+                "admin_add_skill",
+                "admin_remove_skill",
+                "admin_get_skills",
+                "admin_reset_skills",
+                "admin_give_all_skills",
+                "admin_show_effects",
+                "admin_debug_stats",
+                "admin_remove_cooldown",
+                "admin_resetreuse",
+                "admin_people_having_effect",
+                "admin_buff",
+                "admin_give_all_clan_skills");
+
     }
 
     private void removeSkillsPage(Player activeChar) {
@@ -352,8 +367,8 @@ public final class AdminSkill implements IAdminCommandHandler {
             player.sendMessage("There is no point in doing it on your character.");
         else {
             Collection<Skill> skills = player.getAllSkills();
-            activeChar.getAllSkills().forEach(s ->                activeChar.removeSkill(s.id, true));
-            skills.forEach(s ->                activeChar.addSkill(s, true));
+            activeChar.getAllSkills().forEach(s -> activeChar.removeSkill(s.id, true));
+            skills.forEach(s -> activeChar.addSkill(s, true));
             activeChar.sendMessage("You now have all the skills of  " + player.getName() + ".");
         }
 
@@ -436,22 +451,4 @@ public final class AdminSkill implements IAdminCommandHandler {
         removeSkillsPage(activeChar);
     }
 
-    private enum Commands {
-        admin_show_skills,
-        admin_remove_skills,
-        admin_skill_list,
-        admin_skill_index,
-        admin_add_skill,
-        admin_remove_skill,
-        admin_get_skills,
-        admin_reset_skills,
-        admin_give_all_skills,
-        admin_show_effects,
-        admin_debug_stats,
-        admin_remove_cooldown,
-        admin_resetreuse,
-        admin_people_having_effect,
-        admin_buff,
-        admin_give_all_clan_skills
-    }
 }

@@ -124,7 +124,7 @@ public final class Rename extends Functions {
             return;
         }
 
-        ClassId classtomove = ClassId.getById(Integer.parseInt(param[0]));
+        ClassId classtomove = ClassId.getById(param[0]);
         int newcharid = 0;
         for (Entry<Integer, String> e : player.getAccountChars().entrySet())
             if (e.getValue().equalsIgnoreCase(param[1]))
@@ -157,7 +157,7 @@ public final class Rename extends Functions {
 
         mysql.set("UPDATE character_variables SET obj_id=" + newcharid + " WHERE obj_id=" + player.objectId() + " AND name like 'TransferSkills%'");
 
-        player.modifySubClass(classtomove, 0);
+        player.modifySubClass(classtomove, null);
 
         removeItem(player, Config.SERVICES_CHANGE_BASE_ITEM, Config.SERVICES_CHANGE_BASE_PRICE, "Rename$separate");
         player.logout();

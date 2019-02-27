@@ -8,10 +8,11 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.utils.ItemFunctions;
 
-public class AdminCursedWeapons implements IAdminCommandHandler {
+import java.util.List;
+
+public final class AdminCursedWeapons implements IAdminCommandHandler {
     @Override
-    public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
-        Commands command = (Commands) comm;
+    public boolean useAdminCommand(String comm, String[] wordList, String fullString, Player activeChar) {
 
         if (!activeChar.getPlayerAccess().Menu)
             return false;
@@ -19,12 +20,12 @@ public class AdminCursedWeapons implements IAdminCommandHandler {
         CursedWeaponsManager cwm = CursedWeaponsManager.INSTANCE;
 
         CursedWeapon cw = null;
-        switch (command) {
-            case admin_cw_remove:
-            case admin_cw_goto:
-            case admin_cw_add:
-            case admin_cw_drop:
-            case admin_cw_increase:
+        switch (comm) {
+            case "admin_cw_remove":
+            case "admin_cw_goto":
+            case "admin_cw_add":
+            case "admin_cw_drop":
+            case "admin_cw_increase":
                 if (wordList.length < 2) {
                     activeChar.sendMessage("Вы не указали id");
                     return false;
@@ -39,8 +40,8 @@ public class AdminCursedWeapons implements IAdminCommandHandler {
                 break;
         }
 
-        switch (command) {
-            case admin_cw_info:
+        switch (comm) {
+            case "admin_cw_info":
                 activeChar.sendMessage("======= Cursed Weapons: =======");
                 for (CursedWeapon c : cwm.getCursedWeapons()) {
                     activeChar.sendMessage("> " + c.getName() + " (" + c.getItemId() + ")");
@@ -58,16 +59,16 @@ public class AdminCursedWeapons implements IAdminCommandHandler {
                         activeChar.sendMessage("  Don't exist in the world.");
                 }
                 break;
-            case admin_cw_reload:
+            case "admin_cw_reload":
                 activeChar.sendMessage("Cursed weapons can't be reloaded.");
                 break;
-            case admin_cw_remove:
+            case "admin_cw_remove":
                 CursedWeaponsManager.INSTANCE.endOfLife(cw);
                 break;
-            case admin_cw_goto:
+            case "admin_cw_goto":
                 activeChar.teleToLocation(cw.getLoc());
                 break;
-            case admin_cw_add:
+            case "admin_cw_add":
                 if (cw.isActive())
                     activeChar.sendMessage("This cursed weapon is already active.");
                 else {
@@ -84,7 +85,7 @@ public class AdminCursedWeapons implements IAdminCommandHandler {
                     }
                 }
                 break;
-            case admin_cw_increase:
+            case "admin_cw_increase":
                 // Увеличивает кол-во убийств у цели-владельца проклятого оружия.
 
                 if (cw.isActive()) {
@@ -95,9 +96,7 @@ public class AdminCursedWeapons implements IAdminCommandHandler {
                     activeChar.sendMessage("No active cursed weapon.");
 
                 break;
-            case admin_cw_drop:
-                if (cw == null)
-                    return false;
+            case "admin_cw_drop":
                 if (cw.isActive())
                     activeChar.sendMessage("This cursed weapon is already active.");
                 else {
@@ -113,17 +112,14 @@ public class AdminCursedWeapons implements IAdminCommandHandler {
     }
 
     @Override
-    public Enum[] getAdminCommandEnum() {
-        return Commands.values();
-    }
-
-    private enum Commands {
-        admin_cw_info,
-        admin_cw_remove,
-        admin_cw_goto,
-        admin_cw_reload,
-        admin_cw_add,
-        admin_cw_drop,
-        admin_cw_increase
+    public List<String> getAdminCommands() {
+        return List.of(
+                "admin_cw_info",
+        "admin_cw_remove",
+        "admin_cw_goto",
+        "admin_cw_reload",
+        "admin_cw_add",
+        "admin_cw_drop",
+        "admin_cw_increase");
     }
 }

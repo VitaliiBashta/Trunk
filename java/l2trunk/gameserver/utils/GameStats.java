@@ -28,8 +28,8 @@ public final class GameStats {
     private static long _rouletteLastUpdate;
 
     static {
-        _taxSum.set(ServerVariables.getLong("taxsum", 0));
-        _rouletteSum.set(ServerVariables.getLong("rouletteSum", 0));
+        _taxSum.set(ServerVariables.getLong("taxsum"));
+        _rouletteSum.set(ServerVariables.getLong("rouletteSum"));
 
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement("SELECT (SELECT SUM(count) FROM items WHERE item_id=57) + (SELECT SUM(treasury) FROM castle) AS `count`");

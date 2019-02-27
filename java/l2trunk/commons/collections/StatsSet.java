@@ -1,6 +1,11 @@
 package l2trunk.commons.collections;
 
+import l2trunk.commons.geometry.Polygon;
 import l2trunk.commons.lang.NumberUtils;
+import l2trunk.gameserver.model.Territory;
+import l2trunk.gameserver.model.entity.residence.Residence;
+import l2trunk.gameserver.stats.StatTemplate;
+import l2trunk.gameserver.utils.Location;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -18,7 +23,36 @@ public class StatsSet {
         map = new HashMap<>(set.map);
     }
 
-    public StatsSet set(String key, Object value) {
+    public StatsSet set(String key, List<Location> value) {
+        map.put(key, value);
+        return this;
+    }
+
+    public StatsSet set(String key, Location value) {
+        map.put(key, value);
+        return this;
+    }
+    public StatsSet set(String key, StatsSet value) {
+        map.put(key, value);
+        return this;
+    }
+
+    public StatsSet set(String key, Polygon value) {
+        map.put(key, value);
+        return this;
+    }
+
+    public StatsSet set(String key, Territory value) {
+        map.put(key, value);
+        return this;
+    }
+
+    public StatsSet set(String key, Residence value) {
+        map.put(key, value);
+        return this;
+    }
+
+    public StatsSet set(String key, StatTemplate value) {
         map.put(key, value);
         return this;
     }
@@ -83,7 +117,7 @@ public class StatsSet {
         if (val instanceof String)
             return Boolean.parseBoolean((String) val);
         if (val instanceof Boolean)
-            return (Boolean) val;
+            return (boolean) val;
 
         return defaultValue;
     }
@@ -97,9 +131,10 @@ public class StatsSet {
             return toInt((String) val);
         if (val instanceof Boolean)
             return (Boolean) val ? 1 : 0;
-
-        throw new IllegalArgumentException("Integer value required, but found: " + val + "!");
+return 0;
+//        throw new IllegalArgumentException("Integer value required, but found: " + val + "!");
     }
+
 
     public int getInteger(String key, int defaultValue) {
         Object val = map.get(key);
@@ -148,8 +183,8 @@ public class StatsSet {
             return toLong((String) val);
         if (val instanceof Boolean)
             return (Boolean) val ? 1L : 0L;
-
-        throw new IllegalArgumentException("Long value required, but found: " + val + "!");
+        return 0;
+//        throw new IllegalArgumentException("Long value required, but found: " + val + "!");
     }
 
     public long getLong(String key, long defaultValue) {
@@ -161,19 +196,6 @@ public class StatsSet {
             return toLong((String) val);
         if (val instanceof Boolean)
             return (Boolean) val ? 1L : 0L;
-
-        return defaultValue;
-    }
-
-    public float getFloat(String key, final float defaultValue) {
-        final Object val = map.get(key);
-
-        if (val instanceof Number)
-            return ((Number) val).floatValue();
-        if (val instanceof String)
-            return Float.parseFloat((String) val);
-        if (val instanceof Boolean)
-            return (Boolean) val ? 1 : 0;
 
         return defaultValue;
     }
@@ -226,15 +248,6 @@ public class StatsSet {
         return map.get(key);
     }
 
-    public Object getObject(String key, Object defaultValue) {
-        Object val = map.get(key);
-
-        if (val != null)
-            return val;
-
-        return defaultValue;
-    }
-
     public <E extends Enum<E>> E getEnum(String name, Class<E> enumClass) {
         Object val = map.get(name);
 
@@ -261,8 +274,41 @@ public class StatsSet {
         return map.entrySet();
     }
 
-    public Object get(String key) {
-        return map.get(key);
+    public StatsSet getStats(String key) {
+        if (map.get(key) instanceof StatsSet)
+            return (StatsSet) map.get(key);
+        return StatsSet.EMPTY;
+    }
+
+    public Location getLocation(String key) {
+        if (map.get(key) instanceof Location)
+            return (Location) map.get(key);
+        return Location.of();
+    }
+
+    public Territory getTerritory(String key) {
+        if (map.get(key) instanceof Territory)
+            return (Territory) map.get(key);
+        return new Territory();
+    }
+
+    public Residence getResidence(String key) {
+        if (map.get(key) instanceof Residence)
+            return (Residence) map.get(key);
+        return null;
+    }
+
+    public Polygon getPolygon(String key) {
+        if (map.get(key) instanceof Polygon)
+            return (Polygon) map.get(key);
+        return null;
+    }
+
+    public List<Location> getLocations(String key) {
+        if (map.get(key) instanceof List<?>) {
+            return (List<Location>) map.get(key);
+        }
+        return List.of();
     }
 
     public boolean isEmpty() {

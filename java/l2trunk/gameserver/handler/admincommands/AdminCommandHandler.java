@@ -4,6 +4,9 @@ import l2trunk.gameserver.handler.admincommands.impl.*;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 import l2trunk.gameserver.utils.Log;
+import l2trunk.scripts.handler.admincommands.AdminBosses;
+import l2trunk.scripts.handler.admincommands.AdminEpic;
+import l2trunk.scripts.handler.admincommands.AdminResidence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,7 +56,6 @@ public enum AdminCommandHandler {
         registerAdminCommandHandler(new AdminPetition());
         registerAdminCommandHandler(new AdminPledge());
         registerAdminCommandHandler(new AdminPolymorph());
-        registerAdminCommandHandler(new AdminPSPoints());
         registerAdminCommandHandler(new AdminQuests());
         registerAdminCommandHandler(new AdminReload());
         registerAdminCommandHandler(new AdminRepairChar());
@@ -63,7 +65,6 @@ public enum AdminCommandHandler {
         registerAdminCommandHandler(new AdminShop());
         registerAdminCommandHandler(new AdminShutdown());
         registerAdminCommandHandler(new AdminSkill());
-        registerAdminCommandHandler(new AdminScripts());
         registerAdminCommandHandler(new AdminSpawn());
         registerAdminCommandHandler(new AdminSS());
         registerAdminCommandHandler(new AdminTarget());
@@ -73,6 +74,10 @@ public enum AdminCommandHandler {
         registerAdminCommandHandler(new AdminKill());
         registerAdminCommandHandler(new AdminMail());
         registerAdminCommandHandler(new AdminMasterwork());
+        registerAdminCommandHandler(new AdminBosses());
+        registerAdminCommandHandler(new AdminResidence());
+        registerAdminCommandHandler(new AdminEpic());
+
 
         // Ady
         registerAdminCommandHandler(new AdminAugmentation());
@@ -80,8 +85,7 @@ public enum AdminCommandHandler {
     }
 
     public void registerAdminCommandHandler(IAdminCommandHandler handler) {
-        for (Enum<?> e : handler.getAdminCommandEnum())
-            datatable.put(e.toString().toLowerCase(), handler);
+        handler.getAdminCommands().forEach(c -> datatable.put(c.toLowerCase(), handler));
     }
 
     public void useAdminCommandHandler(Player activeChar, String adminCommand) {
@@ -93,16 +97,11 @@ public enum AdminCommandHandler {
         String[] wordList = adminCommand.split(" ");
         IAdminCommandHandler handler = datatable.get(wordList[0]);
         if (handler != null) {
-            boolean success = false;
-                try {
-                    for (Enum<?> e : handler.getAdminCommandEnum())
-                        if (e.toString().equalsIgnoreCase(wordList[0])) {
-                            success = handler.useAdminCommand(e, wordList, adminCommand, activeChar);
-                            break;
-                        }
-            } catch (RuntimeException e) {
-                LOG.error("Error while using Admin Command! ", e);
-            }
+            boolean success = handler.getAdminCommands().stream()
+                    .filter(e -> e.equalsIgnoreCase(wordList[0]))
+                    .findFirst()
+                    .map(e -> handler.useAdminCommand(e, wordList, adminCommand, activeChar))
+                    .orElse(false);
 
             Log.LogCommand(activeChar, activeChar.getTarget(), adminCommand, success);
         }

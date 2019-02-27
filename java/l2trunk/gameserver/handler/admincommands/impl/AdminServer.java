@@ -9,6 +9,7 @@ import l2trunk.gameserver.model.*;
 import l2trunk.gameserver.model.instances.RaidBossInstance;
 import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
@@ -21,7 +22,7 @@ import static l2trunk.commons.lang.NumberUtils.toInt;
  * This class handles following admin commands: - help path = shows
  * admin/path file to char, should not be used by GM's directly
  */
-public class AdminServer implements IAdminCommandHandler {
+public final class AdminServer implements IAdminCommandHandler {
     // PUBLIC & STATIC so other classes from package can include it directly
     private static void showHelpPage(Player targetChar, String filename) {
         NpcHtmlMessage adminReply = new NpcHtmlMessage(5);
@@ -30,14 +31,13 @@ public class AdminServer implements IAdminCommandHandler {
     }
 
     @Override
-    public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
-        Commands command = (Commands) comm;
+    public boolean useAdminCommand(String comm, String[] wordList, String fullString, Player activeChar) {
 
         if (!activeChar.getPlayerAccess().Menu)
             return false;
 
-        switch (command) {
-            case admin_server:
+        switch (comm) {
+            case "admin_server":
                 try {
                     String val = fullString.substring(13);
                     showHelpPage(activeChar, val);
@@ -45,7 +45,7 @@ public class AdminServer implements IAdminCommandHandler {
                     // case of empty filename
                 }
                 break;
-            case admin_check_actor:
+            case "admin_check_actor":
                 GameObject obj = activeChar.getTarget();
                 if (obj == null) {
                     activeChar.sendMessage("target == null");
@@ -72,7 +72,7 @@ public class AdminServer implements IAdminCommandHandler {
 
                 activeChar.sendMessage("actor: " + actor);
                 break;
-            case admin_setvar:
+            case "admin_setvar":
                 if (wordList.length != 3) {
                     activeChar.sendMessage("Incorrect argument count!!!");
                     return false;
@@ -80,7 +80,7 @@ public class AdminServer implements IAdminCommandHandler {
                 ServerVariables.set(wordList[1], wordList[2]);
                 activeChar.sendMessage("Value changed.");
                 break;
-            case admin_set_ai_interval:
+            case "admin_set_ai_interval":
                 if (wordList.length != 2) {
                     activeChar.sendMessage("Incorrect argument count!!!");
                     return false;
@@ -94,9 +94,7 @@ public class AdminServer implements IAdminCommandHandler {
                             final CharacterAI char_ai = npc.getAI();
                             if (char_ai instanceof DefaultAI)
                                 try {
-                                    final java.lang.reflect.Field field = l2trunk.gameserver.ai.DefaultAI.class.getDeclaredField("AI_TASK_DELAY");
-                                    field.setAccessible(true);
-                                    field.set(char_ai, interval);
+                                    ((DefaultAI) char_ai).AI_TASK_ACTIVE_DELAY = interval;
 
                                     if (char_ai.isActive()) {
                                         char_ai.stopAITask();
@@ -111,25 +109,31 @@ public class AdminServer implements IAdminCommandHandler {
                         });
                 activeChar.sendMessage(" AI stopped, AI started");
                 break;
-            case admin_spawn2: // Игнорирует запрет на спавн рейдбоссов
+            case "admin_spawn2": // Игнорирует запрет на спавн рейдбоссов
                 StringTokenizer st = new StringTokenizer(fullString, " ");
-                    st.nextToken();
-                    String id = st.nextToken();
-                    int respawnTime = 30;
-                    int mobCount = 1;
-                    if (st.hasMoreTokens())
-                        mobCount = toInt(st.nextToken());
-                    if (st.hasMoreTokens())
-                        respawnTime = toInt(st.nextToken());
-                    spawnMonster(activeChar, id, respawnTime, mobCount);
+                st.nextToken();
+                String id = st.nextToken();
+                int respawnTime = 30;
+                int mobCount = 1;
+                if (st.hasMoreTokens())
+                    mobCount = toInt(st.nextToken());
+                if (st.hasMoreTokens())
+                    respawnTime = toInt(st.nextToken());
+                spawnMonster(activeChar, id, respawnTime, mobCount);
                 break;
         }
         return true;
     }
 
     @Override
-    public Enum[] getAdminCommandEnum() {
-        return Commands.values();
+    public List<String> getAdminCommands() {
+        return List.of(
+
+                "admin_server",
+                "admin_check_actor",
+                "admin_setvar",
+                "admin_set_ai_interval",
+                "admin_spawn2");
     }
 
     private void spawnMonster(Player activeChar, String monsterId, int respawnTime, int mobCount) {
@@ -146,7 +150,7 @@ public class AdminServer implements IAdminCommandHandler {
         } else {
             // First parameter wasn't just numbers so go by name not ID
             monsterId = monsterId.replace('_', ' ');
-            templateId = NpcHolder.getTemplateByName(monsterId).map(npc ->npc.npcId).findFirst().orElse(0);
+            templateId = NpcHolder.getTemplateByName(monsterId).map(npc -> npc.npcId).findFirst().orElse(0);
         }
 
 
@@ -161,11 +165,5 @@ public class AdminServer implements IAdminCommandHandler {
         activeChar.sendMessage("Created " + templateId + " on " + target.objectId() + ".");
     }
 
-    private enum Commands {
-        admin_server,
-        admin_check_actor,
-        admin_setvar,
-        admin_set_ai_interval,
-        admin_spawn2
-    }
+
 }

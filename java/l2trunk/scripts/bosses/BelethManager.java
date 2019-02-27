@@ -118,7 +118,7 @@ public final class BelethManager extends Functions implements ScriptFile {
         if (_indexedPlayers.size() < Config.MIN_PLAYERS_TO_SPAWN_BELETH || _taskStarted) // 18 players
             return false;
 
-        return ServerVariables.getLong("BelethKillTime", 0) <= System.currentTimeMillis();
+        return ServerVariables.getLong("BelethKillTime") <= System.currentTimeMillis();
     }
 
     public class ZoneListener implements OnZoneEnterLeaveListener {
@@ -395,9 +395,9 @@ public final class BelethManager extends Functions implements ScriptFile {
     private static NpcInstance _elpy = null;
 
     private static void checkElpySpawn() {
-        if (ServerVariables.getLong("BelethKillTime", 0) > System.currentTimeMillis() && _elpyThread == null) {
+        if (ServerVariables.getLong("BelethKillTime") > System.currentTimeMillis() && _elpyThread == null) {
             _elpyThread = ThreadPoolManager.INSTANCE.schedule(BelethManager::spawnElpy, (ServerVariables.getLong("BelethKillTime", 0) - System.currentTimeMillis()));
-        } else if (ServerVariables.getLong("BelethKillTime", 0) < System.currentTimeMillis() && _elpy == null) {
+        } else if (ServerVariables.getLong("BelethKillTime") < System.currentTimeMillis() && _elpy == null) {
             spawnElpy();
         }
     }

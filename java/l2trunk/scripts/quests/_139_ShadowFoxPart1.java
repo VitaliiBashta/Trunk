@@ -50,7 +50,7 @@ public final class _139_ShadowFoxPart1 extends Quest {
         } else if ("30896-14.htm".equalsIgnoreCase(event)) {
             st.takeItems(FRAGMENT);
             st.takeItems(CHEST);
-            st.set("talk", 1);
+            st.set("talk");
         } else if ("30896-16.htm".equalsIgnoreCase(event)) {
             st.playSound(SOUND_FINISH);
             st.giveItems(ADENA_ID, 14050);
@@ -74,9 +74,9 @@ public final class _139_ShadowFoxPart1 extends Quest {
             } else if (cond == 1)
                 htmltext = "30896-03.htm";
             else if (cond == 2)
-                if (st.getQuestItemsCount(FRAGMENT) >= 10 && st.getQuestItemsCount(CHEST) >= 1)
+                if (st.getQuestItemsCount(FRAGMENT) >= 10 && st.haveQuestItem(CHEST))
                     htmltext = "30896-13.htm";
-                else if (st.getInt("talk") == 1)
+                else if (st.isSet("talk") )
                     htmltext = "30896-14.htm";
                 else
                     htmltext = "30896-12.htm";

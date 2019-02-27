@@ -86,7 +86,7 @@ public final class ClassMasterInstance extends MerchantInstance {
 
         StringTokenizer st = new StringTokenizer(command);
         if ("change_class".equals(st.nextToken())) {
-            ClassId val = ClassId.getById(toInt(st.nextToken()));
+            ClassId val = ClassId.getById(st.nextToken());
             long price = Long.parseLong(st.nextToken());
             if (player.getInventory().destroyItemByItemId(Config.CLASS_MASTERS_PRICE_ITEM, price, "ClassMasterInstance"))
                 changeClass(player, val);

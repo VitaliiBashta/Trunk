@@ -85,7 +85,7 @@ public enum PetDataTable {
                 summon.unSummon();
 
             if (owner.isMounted() && owner.getMountObjId() == petObjectId)
-                owner.setMount(0, 0, 0);
+                owner.dismount();
 
             // if it's a pet control item, delete the pet
             statement = con.prepareStatement("DELETE FROM pets WHERE item_obj_id=?");

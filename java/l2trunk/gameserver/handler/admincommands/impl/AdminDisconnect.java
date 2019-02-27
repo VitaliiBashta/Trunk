@@ -9,18 +9,17 @@ import l2trunk.gameserver.model.World;
 import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
+import java.util.List;
 
 public final class AdminDisconnect implements IAdminCommandHandler {
     @Override
-    public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
-        Commands command = (Commands) comm;
-
+    public boolean useAdminCommand(String comm, String[] wordList, String fullString, Player activeChar) {
         if (!activeChar.getPlayerAccess().CanKick)
             return false;
 
-        switch (command) {
-            case admin_disconnect:
-            case admin_kick:
+        switch (comm) {
+            case "admin_disconnect":
+            case "admin_kick":
                 final Player player;
                 if (wordList.length == 1) {
                     // Обработка по таргету
@@ -50,7 +49,7 @@ public final class AdminDisconnect implements IAdminCommandHandler {
                 player.sendPacket(SystemMsg.YOU_HAVE_BEEN_DISCONNECTED_FROM_THE_SERVER_);
                 ThreadPoolManager.INSTANCE.schedule(player::kick, 500);
                 break;
-            case admin_kick_count:
+            case "admin_kick_count":
                 GameObjectsStorage.getAllPlayersStream()
                         .filter(Player::isOnline)
                         .filter(playerToKick -> playerToKick.getNetConnection() != null)
@@ -62,13 +61,10 @@ public final class AdminDisconnect implements IAdminCommandHandler {
     }
 
     @Override
-    public Enum[] getAdminCommandEnum() {
-        return Commands.values();
-    }
-
-    private enum Commands {
-        admin_disconnect,
-        admin_kick,
-        admin_kick_count
+    public List<String> getAdminCommands() {
+        return List.of(
+                "admin_disconnect",
+                "admin_kick",
+                "admin_kick_count");
     }
 }

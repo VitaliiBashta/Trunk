@@ -79,7 +79,7 @@ public final class Epics implements IVoicedCommandHandler, ScriptFile {
         }
         if (command.equals("epicBeleth")) {
             html = html.replace("%img%", "Btns.epic_29118");
-            html = html.replace("%respawn%", CommunityNpcs.convertRespawnDate(ServerVariables.getLong("BelethKillTime", 0L)));
+            html = html.replace("%respawn%", CommunityNpcs.convertRespawnDate(ServerVariables.getLong("BelethKillTime")));
             html = html.replace("%loc1%", "17896 282760 -9704 1000000");
             html = html.replace("%loc2%", "17928 283832 -9704 1000000");
             html = html.replace("%loc3%", "19320 283896 -9704 1000000");

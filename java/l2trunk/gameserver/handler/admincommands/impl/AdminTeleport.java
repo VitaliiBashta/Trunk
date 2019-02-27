@@ -22,34 +22,33 @@ import l2trunk.gameserver.utils.Util;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.util.List;
 
 import static l2trunk.commons.lang.NumberUtils.toInt;
 
 
 public final class AdminTeleport implements IAdminCommandHandler {
     @Override
-    public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
-        Commands command = (Commands) comm;
-
+    public boolean useAdminCommand(String comm, String[] wordList, String fullString, Player activeChar) {
         if (!activeChar.getPlayerAccess().CanTeleport)
             return false;
 
-        switch (command) {
-            case admin_show_moves:
+        switch (comm) {
+            case "admin_show_moves":
                 activeChar.sendPacket(new NpcHtmlMessage(5).setFile("admin/teleports.htm"));
                 break;
-            case admin_show_moves_other:
+            case "admin_show_moves_other":
                 activeChar.sendPacket(new NpcHtmlMessage(5).setFile("admin/tele/other.htm"));
                 break;
-            case admin_show_teleport:
+            case "admin_show_teleport":
                 showTeleportCharWindow(activeChar);
                 break;
-            case admin_teleport_to_character:
+            case "admin_teleport_to_character":
                 teleportToCharacter(activeChar, activeChar.getTarget());
                 break;
-            case admin_teleport_to:
-            case admin_teleportto:
-            case admin_goto:
+            case "admin_teleport_to":
+            case "admin_teleportto":
+            case "admin_goto":
                 if (wordList.length < 2) {
                     activeChar.sendMessage("USAGE: //teleportto charName");
                     return false;
@@ -62,16 +61,16 @@ public final class AdminTeleport implements IAdminCommandHandler {
                 }
                 teleportToCharacter(activeChar, cha);
                 break;
-            case admin_move_to:
-            case admin_moveto:
-            case admin_teleport:
+            case "admin_move_to":
+            case "admin_moveto":
+            case "admin_teleport":
                 if (wordList.length < 2) {
                     activeChar.sendMessage("USAGE: //teleport x y z [ref]");
                     return false;
                 }
                 activeChar.teleToLocation(Location.of(Util.joinStrings(" ", wordList, 1, 3)), (ArrayUtils.valid(wordList, 4) != null && !ArrayUtils.valid(wordList, 4).isEmpty() ? Integer.parseInt(wordList[4]) : 0));
                 break;
-            case admin_walk:
+            case "admin_walk":
                 if (wordList.length < 2) {
                     activeChar.sendMessage("USAGE: //walk x y z");
                     return false;
@@ -83,37 +82,37 @@ public final class AdminTeleport implements IAdminCommandHandler {
                     return false;
                 }
                 break;
-            case admin_gonorth:
-            case admin_gosouth:
-            case admin_goeast:
-            case admin_gowest:
-            case admin_goup:
-            case admin_godown:
+            case "admin_gonorth":
+            case "admin_gosouth":
+            case "admin_goeast":
+            case "admin_gowest":
+            case "admin_goup":
+            case "admin_godown":
                 int val = wordList.length < 2 ? 150 : toInt(wordList[1]);
                 int x = activeChar.getX();
                 int y = activeChar.getY();
                 int z = activeChar.getZ();
-                if (command == Commands.admin_goup)
+                if ("admin_goup".equals(comm))
                     z += val;
-                else if (command == Commands.admin_godown)
+                else if ("admin_godown".equals(comm))
                     z -= val;
-                else if (command == Commands.admin_goeast)
+                else if ("admin_goeast".equals(comm))
                     x += val;
-                else if (command == Commands.admin_gowest)
+                else if ("admin_gowest".equals(comm))
                     x -= val;
-                else if (command == Commands.admin_gosouth)
+                else if ("admin_gosouth".equals(comm))
                     y += val;
                 else y -= val;
 
                 activeChar.teleToLocation(x, y, z);
                 showTeleportWindow(activeChar);
                 break;
-            case admin_tele:
+            case "admin_tele":
                 showTeleportWindow(activeChar);
                 break;
-            case admin_teleto:
-            case admin_tele_to:
-            case admin_instant_move:
+            case "admin_teleto":
+            case "admin_tele_to":
+            case "admin_instant_move":
                 if (wordList.length > 1 && "r".equalsIgnoreCase(wordList[1]))
                     activeChar.setTeleMode(2);
                 else if (wordList.length > 1 && "end".equalsIgnoreCase(wordList[1]))
@@ -121,8 +120,8 @@ public final class AdminTeleport implements IAdminCommandHandler {
                 else
                     activeChar.setTeleMode(1);
                 break;
-            case admin_tonpc:
-            case admin_to_npc:
+            case "admin_tonpc":
+            case "admin_to_npc":
                 if (wordList.length < 2) {
                     activeChar.sendMessage("USAGE: //tonpc npcId|npcName");
                     return false;
@@ -139,7 +138,7 @@ public final class AdminTeleport implements IAdminCommandHandler {
                 }
                 activeChar.sendMessage("Npc " + npcName + " not found");
                 break;
-            case admin_toobject:
+            case "admin_toobject":
                 if (wordList.length < 2) {
                     activeChar.sendMessage("USAGE: //toobject objectId");
                     return false;
@@ -152,7 +151,7 @@ public final class AdminTeleport implements IAdminCommandHandler {
                 }
                 activeChar.sendMessage("Object " + target + " not found");
                 break;
-            case admin_autorecall:
+            case "admin_autorecall":
                 if (wordList.length < 2) {
                     activeChar.sendMessage("USAGE: //autorecall true | //autorecall false");
                     return false;
@@ -167,8 +166,8 @@ public final class AdminTeleport implements IAdminCommandHandler {
 
         String targetName = wordList.length == 2 ? wordList[1] : "";
         Player target = GameObjectsStorage.getPlayer(targetName.isEmpty() ? null : targetName);
-        switch (command) {
-            case admin_teleport_character:
+        switch (comm) {
+            case "admin_teleport_character":
                 if (wordList.length < 3) {
                     activeChar.sendMessage("USAGE: //teleport_character x y z");
                     return false;
@@ -176,7 +175,7 @@ public final class AdminTeleport implements IAdminCommandHandler {
                 activeChar.teleToLocation(Location.of(Util.joinStrings(" ", wordList, 1)));
                 showTeleportCharWindow(activeChar);
                 break;
-            case admin_recall:
+            case "admin_recall":
                 if (target != null) {
                     recall(activeChar, target);
                     return true;
@@ -189,28 +188,28 @@ public final class AdminTeleport implements IAdminCommandHandler {
                 } else
                     activeChar.sendMessage("->" + targetName + "<- is incorrect.");
                 break;
-            case admin_recallparty:
+            case "admin_recallparty":
                 if (target != null) {
                     recall(activeChar, target.isInParty() ? target.getParty().getMembers().toArray(new Player[0]) : new Player[]{target});
                     return true;
                 } else
                     activeChar.sendMessage("->" + targetName + "<- is incorrect.");
                 break;
-            case admin_recallcc:
+            case "admin_recallcc":
                 if (target != null) {
                     recall(activeChar, target.getPlayerGroup().getMembers().toArray(new Player[0]));
                     return true;
                 } else
                     activeChar.sendMessage("->" + targetName + "<- is incorrect.");
                 break;
-            case admin_recallinstance:
+            case "admin_recallinstance":
                 if (target != null && !target.getReflection().isDefault()) {
                     recall(activeChar, target.getReflection().getPlayers().toArray(Player[]::new));
                     return true;
                 } else
                     activeChar.sendMessage("->" + targetName + "<- is incorrect, or reflection is default.");
                 break;
-            case admin_recallserver:
+            case "admin_recallserver":
                 final Player[] targets = GameObjectsStorage.getAllPlayersStream()
                         .filter(plr -> (!plr.isInBuffStore()
                                 || !plr.isInStoreMode()
@@ -226,7 +225,7 @@ public final class AdminTeleport implements IAdminCommandHandler {
                 activeChar.sendMessage("Recalling " + targets.length + " players out of " + GameObjectsStorage.getAllPlayersCount() + " players. Ignored: Offline shops, instance, event, olympiad participants and jailed players.");
                 recall(activeChar, true, true, targets);
                 break;
-            case admin_setref: {
+            case "admin_setref": {
                 if (wordList.length < 2) {
                     activeChar.sendMessage("Usage: //setref <reflection>");
                     return false;
@@ -248,7 +247,7 @@ public final class AdminTeleport implements IAdminCommandHandler {
                 targetObj.spawnMe();
                 break;
             }
-            case admin_getref:
+            case "admin_getref":
                 if (target == null) {
                     activeChar.sendMessage("Player '" + wordList[1] + "' not found in world");
                     return false;
@@ -259,7 +258,7 @@ public final class AdminTeleport implements IAdminCommandHandler {
         if (!activeChar.getPlayerAccess().CanEditNPC)
             return false;
 
-        if (command == Commands.admin_recall_npc) {
+        if ("admin_recall_npc".equals(comm)) {
             recallNPC(activeChar);
         }
 
@@ -267,8 +266,42 @@ public final class AdminTeleport implements IAdminCommandHandler {
     }
 
     @Override
-    public Enum[] getAdminCommandEnum() {
-        return Commands.values();
+    public List<String> getAdminCommands() {
+        return List.of(
+                "admin_show_moves",
+                "admin_show_moves_other",
+                "admin_show_teleport",
+                "admin_teleport_to_character",
+                "admin_teleportto",
+                "admin_teleport_to",
+                "admin_move_to",
+                "admin_moveto",
+                "admin_teleport",
+                "admin_teleport_character",
+                "admin_recall",
+                "admin_recallparty",
+                "admin_recallcc",
+                "admin_recallinstance",
+                "admin_recallserver",
+                "admin_walk",
+                "admin_recall_npc",
+                "admin_gonorth",
+                "admin_gosouth",
+                "admin_goeast",
+                "admin_goto",
+                "admin_gowest",
+                "admin_goup",
+                "admin_godown",
+                "admin_tele",
+                "admin_teleto",
+                "admin_tele_to",
+                "admin_instant_move",
+                "admin_tonpc",
+                "admin_to_npc",
+                "admin_toobject",
+                "admin_setref",
+                "admin_getref",
+                "admin_autorecall");
     }
 
     private void showTeleportWindow(Player activeChar) {
@@ -395,40 +428,4 @@ public final class AdminTeleport implements IAdminCommandHandler {
             activeChar.sendMessage("Target is't npc.");
     }
 
-    private enum Commands {
-        admin_show_moves,
-        admin_show_moves_other,
-        admin_show_teleport,
-        admin_teleport_to_character,
-        admin_teleportto,
-        admin_teleport_to,
-        admin_move_to,
-        admin_moveto,
-        admin_teleport,
-        admin_teleport_character,
-        admin_recall,
-        admin_recallparty,
-        admin_recallcc,
-        admin_recallinstance,
-        admin_recallserver,
-        admin_walk,
-        admin_recall_npc,
-        admin_gonorth,
-        admin_gosouth,
-        admin_goeast,
-        admin_goto,
-        admin_gowest,
-        admin_goup,
-        admin_godown,
-        admin_tele,
-        admin_teleto,
-        admin_tele_to,
-        admin_instant_move,
-        admin_tonpc,
-        admin_to_npc,
-        admin_toobject,
-        admin_setref,
-        admin_getref,
-        admin_autorecall
-    }
 }

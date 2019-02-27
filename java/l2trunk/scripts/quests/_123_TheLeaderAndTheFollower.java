@@ -46,7 +46,7 @@ public final class _123_TheLeaderAndTheFollower extends Quest {
                 st.playSound(SOUND_ACCEPT);
                 break;
             case "31961-05.htm":
-                st.set("choose", 1);
+                st.set("choose");
                 st.setCond(3);
                 break;
             case "31961-06.htm":
@@ -58,9 +58,8 @@ public final class _123_TheLeaderAndTheFollower extends Quest {
                 st.setCond(5);
                 break;
             case "31961-08.htm":
-                int choose = st.getInt("choose");
                 int D_CRY_COUNT = D_CRY_COUNT_LIGHT_MAGIC;
-                if (choose == 1)
+                if (st.isSet("choose") )
                     D_CRY_COUNT = D_CRY_COUNT_HEAVY;
                 if (st.getQuestItemsCount(D_CRY) >= D_CRY_COUNT) {
                     st.setCond(7);

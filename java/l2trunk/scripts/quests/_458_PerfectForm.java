@@ -186,7 +186,7 @@ public final class _458_PerfectForm extends Quest {
                     htmltext = "kelleyia_q458_09c.htm";
                     break;
             }
-        } else if (event.equalsIgnoreCase("request_3rdresults")) {
+        } else if ("request_3rdresults".equalsIgnoreCase(event)) {
             switch (st.getInt("contoverhits")) {
                 case 1:
                     htmltext = "kelleyia_q458_10a.htm";
@@ -198,7 +198,7 @@ public final class _458_PerfectForm extends Quest {
                     htmltext = "kelleyia_q458_10c.htm";
                     break;
             }
-        } else if (event.equalsIgnoreCase("request_reward")) {
+        } else if ("request_reward".equalsIgnoreCase(event)) {
             int[] reward;
             switch (st.getInt("contoverhits")) {
                 case 1:

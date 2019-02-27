@@ -52,7 +52,7 @@ public final class _101_SwordOfSolidarity extends Quest {
                 st.giveItems(1060, 100); // healing potion
                 for (int item = 4412; item <= 4417; item++)
                     st.giveItems(item, 10); // echo cry
-                if (st.player.getClassId().isMage) {
+                if (st.player.getClassId().isMage()) {
                     st.playTutorialVoice("tutorial_voice_027");
                     st.giveItems(5790, 3000); // newbie sps
                 } else {

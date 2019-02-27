@@ -24,7 +24,7 @@ import java.util.Map;
 import static l2trunk.gameserver.utils.ItemFunctions.addItem;
 import static l2trunk.gameserver.utils.ItemFunctions.removeItem;
 
-public class Christmas extends Functions implements ScriptFile, OnDeathListener, OnPlayerEnterListener {
+public final class Christmas extends Functions implements ScriptFile, OnDeathListener, OnPlayerEnterListener {
     private static final int EVENT_MANAGER_ID = 31863;
     private static final int CTREE_ID = 13006;
     private static final Logger _log = LoggerFactory.getLogger(Christmas.class);

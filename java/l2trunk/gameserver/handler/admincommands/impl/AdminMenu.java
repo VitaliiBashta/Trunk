@@ -10,15 +10,12 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.utils.AdminFunctions;
 import l2trunk.gameserver.utils.Location;
 
+import java.util.List;
 import java.util.StringTokenizer;
 
-
-@SuppressWarnings("unused")
-public class AdminMenu implements IAdminCommandHandler {
+public final class AdminMenu implements IAdminCommandHandler {
     @Override
-    public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
-        Commands command = (Commands) comm;
-
+    public boolean useAdminCommand(String comm, String[] wordList, String fullString, Player activeChar) {
         if (!activeChar.getPlayerAccess().Menu)
             return false;
 
@@ -28,21 +25,21 @@ public class AdminMenu implements IAdminCommandHandler {
                 String playerName = data[1];
                 Player player = World.getPlayer(playerName);
                 if (player != null)
-                    teleportCharacter(player, new Location(Integer.parseInt(data[2]), Integer.parseInt(data[3]), Integer.parseInt(data[4])), activeChar);
+                    teleportCharacter(player, new Location(Integer.parseInt(data[2]), Integer.parseInt(data[3]), Integer.parseInt(data[4])));
             }
         } else if (fullString.startsWith("admin_recall_char_menu"))
             try {
                 String targetName = fullString.substring(23);
                 Player player = World.getPlayer(targetName);
-                teleportCharacter(player, activeChar.getLoc(), activeChar);
-            } catch (StringIndexOutOfBoundsException e) {
+                teleportCharacter(player, activeChar.getLoc());
+            } catch (StringIndexOutOfBoundsException ignored) {
             }
         else if (fullString.startsWith("admin_goto_char_menu"))
             try {
                 String targetName = fullString.substring(21);
                 Player player = World.getPlayer(targetName);
                 teleportToCharacter(activeChar, player);
-            } catch (StringIndexOutOfBoundsException e) {
+            } catch (StringIndexOutOfBoundsException ignored) {
             }
         else if (fullString.equals("admin_kill_menu")) {
             GameObject obj = activeChar.getTarget();
@@ -75,11 +72,19 @@ public class AdminMenu implements IAdminCommandHandler {
     }
 
     @Override
-    public Enum[] getAdminCommandEnum() {
-        return Commands.values();
+    public List<String> getAdminCommands() {
+        return List.of(
+                "admin_char_manage",
+                "admin_teleport_character_to_menu",
+                "admin_recall_char_menu",
+                "admin_goto_char_menu",
+                "admin_kick_menu",
+                "admin_kill_menu",
+                "admin_ban_menu",
+                "admin_unban_menu");
     }
 
-    private void teleportCharacter(Player player, Location loc, Player activeChar) {
+    private void teleportCharacter(Player player, Location loc) {
         if (player != null) {
             player.sendMessage("Admin is teleporting you.");
             player.teleToLocation(loc);
@@ -103,14 +108,4 @@ public class AdminMenu implements IAdminCommandHandler {
         }
     }
 
-    private enum Commands {
-        admin_char_manage,
-        admin_teleport_character_to_menu,
-        admin_recall_char_menu,
-        admin_goto_char_menu,
-        admin_kick_menu,
-        admin_kill_menu,
-        admin_ban_menu,
-        admin_unban_menu
-    }
 }

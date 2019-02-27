@@ -31,7 +31,6 @@ import l2trunk.gameserver.model.entity.boat.Boat;
 import l2trunk.gameserver.model.entity.olympiad.CompType;
 import l2trunk.gameserver.model.instances.*;
 import l2trunk.gameserver.model.items.ItemInstance;
-import l2trunk.gameserver.model.pledge.Clan;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestEventType;
 import l2trunk.gameserver.network.serverpackets.*;
@@ -220,11 +219,6 @@ public abstract class Creature extends GameObject {
 //        throw new UnsupportedOperationException("gameObject " + name() + " cannot have getPlayer !");
         return null;
     }
-
-
-//    public iHardReference<? extends Creature> getRef() {
-//        return reference;
-//    }
 
     boolean isAttackAborted() {
         return isAttackAborted;
@@ -430,22 +424,22 @@ public abstract class Creature extends GameObject {
         _blockedStats.addAll(stats);
     }
 
-    public Skill addSkill(int newSkillId) {
-        return addSkill(SkillTable.INSTANCE.getInfo(newSkillId));
+    public void addSkill(int newSkillId) {
+        addSkill(SkillTable.INSTANCE.getInfo(newSkillId));
     }
 
-    public Skill addSkill(int newSkillId, int lvl) {
-        return addSkill(SkillTable.INSTANCE.getInfo(newSkillId, lvl));
+    public void addSkill(int newSkillId, int lvl) {
+        addSkill(SkillTable.INSTANCE.getInfo(newSkillId, lvl));
     }
 
-    private Skill addSkill(Skill newSkill) {
+    private void addSkill(Skill newSkill) {
         if (newSkill == null)
-            return null;
+            return;
 
         Skill oldSkill = skills.get(newSkill.id);
 
         if (oldSkill != null && oldSkill.level == newSkill.level)
-            return newSkill;
+            return;
 
         // Replace oldSkill by newSkill or Add the newSkill
         skills.put(newSkill.id, newSkill);
@@ -467,8 +461,6 @@ public abstract class Creature extends GameObject {
 
         // Add Func objects of newSkill to the calculator set of the L2Character
         addStatFuncs(newSkill.getStatFuncs());
-
-        return oldSkill;
     }
 
     public List<Calculator> getCalculators() {

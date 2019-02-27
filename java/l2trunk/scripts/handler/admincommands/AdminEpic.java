@@ -1,36 +1,30 @@
 package l2trunk.scripts.handler.admincommands;
 
-import l2trunk.scripts.bosses.EpicBossState.State;
 import l2trunk.gameserver.data.htm.HtmCache;
 import l2trunk.gameserver.data.xml.holder.NpcHolder;
-import l2trunk.gameserver.handler.admincommands.AdminCommandHandler;
 import l2trunk.gameserver.handler.admincommands.IAdminCommandHandler;
 import l2trunk.gameserver.model.GameObjectsStorage;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
-import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.scripts.bosses.BaiumManager;
 import l2trunk.scripts.bosses.EpicBossState;
+import l2trunk.scripts.bosses.EpicBossState.State;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.StringTokenizer;
 
-public final class AdminEpic implements IAdminCommandHandler, ScriptFile {
-    private enum Commands {
-        admin_epic,
-        admin_epic_edit
-    }
+public final class AdminEpic implements IAdminCommandHandler {
 
     @Override
-    public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player player) {
-        Commands command = (Commands) comm;
+    public boolean useAdminCommand(String comm, String[] wordList, String fullString, Player player) {
         StringTokenizer st = new StringTokenizer(fullString);
-        switch (command) {
-            case admin_epic: {
+        switch (comm) {
+            case "admin_epic": {
                 st.nextToken();
 
                 if (st.hasMoreTokens())
@@ -40,7 +34,7 @@ public final class AdminEpic implements IAdminCommandHandler, ScriptFile {
 
                 break;
             }
-            case admin_epic_edit:
+            case "admin_epic_edit":
                 st.nextToken();
                 int boss = Integer.parseInt(st.nextToken());
                 EpicBossState state = EpicBossState.getState(boss);
@@ -92,7 +86,7 @@ public final class AdminEpic implements IAdminCommandHandler, ScriptFile {
                 }
 
                 state.update();
-                useAdminCommand(Commands.admin_epic, null, "admin_epic " + boss, player);
+                useAdminCommand("admin_epic", null, "admin_epic " + boss, player);
                 break;
         }
         return true;
@@ -154,17 +148,13 @@ public final class AdminEpic implements IAdminCommandHandler, ScriptFile {
             case INTERVAL:
                 return "<font color=\"FF3333\">Death</font>";
         }
-        return null;
+        return "";
     }
 
     @Override
-    public Enum[] getAdminCommandEnum() {
-        return Commands.values();
+    public List<String> getAdminCommands() {
+        return List.of(
+                "admin_epic",
+                "admin_epic_edit");
     }
-
-    @Override
-    public void onLoad() {
-        AdminCommandHandler.INSTANCE.registerAdminCommandHandler(this);
-    }
-
 }

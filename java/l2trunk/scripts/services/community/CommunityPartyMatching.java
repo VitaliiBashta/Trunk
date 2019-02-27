@@ -142,7 +142,7 @@ public final class CommunityPartyMatching extends Functions implements ScriptFil
 
             html += "<table bgcolor=" + getLineColor(i) + " width=760 border=0 cellpadding=0 cellspacing=0><tr>";
             html += "<td width=180><center><font color=" + getTextColor(i) + ">" + player.getName() + "</font></center></td>";
-            html += "<td width=130><center><font color=" + getTextColor(i) + ">" + Util.getFullClassName(player.getClassId()) + "</font></center></td>";
+            html += "<td width=130><center><font color=" + getTextColor(i) + ">" + player.getClassId().name + "</font></center></td>";
             html += "<td width=75><center><font color=" + getTextColor(i) + ">" + player.getLevel() + "</font></center></td>";
             html += "<td width=75><center><font color=" + getTextColor(i) + ">" + (player.getBaseClassId() == player.getActiveClassId() ? "Yes" : "No") + "</font></center></td>";
             html += "<td width=180><center><font color=" + getTextColor(i) + ">" + (player.getClan() != null ? player.getClan().getName() : "<br>") + "</font></center></td>";

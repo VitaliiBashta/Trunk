@@ -80,7 +80,7 @@ public final class _307_ControlDeviceoftheGiants extends Quest {
                 }
             } else if (cond == 1) {
                 if (st.getQuestItemsCount(CaveExplorationText1Sheet) >= 1 && st.getQuestItemsCount(CaveExplorationText2Sheet) >= 1 && st.getQuestItemsCount(CaveExplorationText3Sheet) >= 1)
-                    if (ServerVariables.getLong("HekatonPrimeRespawn", 0) < System.currentTimeMillis())
+                    if (ServerVariables.getLong("HekatonPrimeRespawn") < System.currentTimeMillis())
                         htmltext = "droph_q307_3.htm";
                     else
                         htmltext = "droph_q307_4.htm";

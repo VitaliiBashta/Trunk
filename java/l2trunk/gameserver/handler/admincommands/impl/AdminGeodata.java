@@ -8,27 +8,28 @@ import l2trunk.gameserver.model.World;
 import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 import l2trunk.gameserver.utils.GeodataUtils;
 
-public class AdminGeodata implements IAdminCommandHandler {
+import java.util.List;
+
+public final class AdminGeodata implements IAdminCommandHandler {
     @Override
-    public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
-        Commands command = (Commands) comm;
+    public boolean useAdminCommand(String comm, String[] wordList, String fullString, Player activeChar) {
 
         if (!activeChar.getPlayerAccess().CanReload)
             return false;
 
-        switch (command) {
-            case admin_geogrid: {
+        switch (comm) {
+            case "admin_geogrid": {
                 GeodataUtils.debugGrid(activeChar);
                 break;
             }
-            case admin_geo_z:
+            case "admin_geo_z":
                 activeChar.sendMessage("GeoEngine: Geo_Z = " + GeoEngine.getHeight(activeChar.getLoc(), activeChar.getReflectionId()) + " Loc_Z = " + activeChar.getZ());
                 break;
-            case admin_geo_type:
+            case "admin_geo_type":
                 int type = GeoEngine.getType(activeChar.getX(), activeChar.getY(), activeChar.getReflectionId());
                 activeChar.sendMessage("GeoEngine: Geo_Type = " + type);
                 break;
-            case admin_geo_nswe:
+            case "admin_geo_nswe":
                 String result = "";
                 byte nswe = GeoEngine.getNSWE(activeChar.getX(), activeChar.getY(), activeChar.getZ(), activeChar.getReflectionId());
                 if ((nswe & 8) == 0)
@@ -41,7 +42,7 @@ public class AdminGeodata implements IAdminCommandHandler {
                     result += " E";
                 activeChar.sendMessage("GeoEngine: Geo_NSWE -> " + nswe + "->" + result);
                 break;
-            case admin_geo_los:
+            case "admin_geo_los":
                 if (activeChar.getTarget() != null)
                     if (GeoEngine.canSeeTarget(activeChar, activeChar.getTarget(), false))
                         activeChar.sendMessage("GeoEngine: Can See Target");
@@ -50,7 +51,7 @@ public class AdminGeodata implements IAdminCommandHandler {
                 else
                     activeChar.sendMessage("None Target!");
                 break;
-            case admin_geo_load:
+            case "admin_geo_load":
                 if (wordList.length != 3)
                     activeChar.sendMessage("Usage: //geo_load <regionX> <regionY>");
                 else
@@ -66,7 +67,7 @@ public class AdminGeodata implements IAdminCommandHandler {
                         activeChar.sendMessage(new CustomMessage("common.Error"));
                     }
                 break;
-            case admin_geo_dump:
+            case "admin_geo_dump":
                 if (wordList.length > 2) {
                     GeoEngine.DumpGeodataFileMap(Byte.parseByte(wordList[1]), Byte.parseByte(wordList[2]));
                     activeChar.sendMessage("Geo square saved " + wordList[1] + "_" + wordList[2]);
@@ -74,7 +75,7 @@ public class AdminGeodata implements IAdminCommandHandler {
                 GeoEngine.DumpGeodataFile(activeChar.getX(), activeChar.getY());
                 activeChar.sendMessage("Actual geo square saved.");
                 break;
-            case admin_geo_trace:
+            case "admin_geo_trace":
                 if (wordList.length < 2) {
                     activeChar.sendMessage("Usage: //geo_trace on|off");
                     return false;
@@ -86,7 +87,7 @@ public class AdminGeodata implements IAdminCommandHandler {
                 else
                     activeChar.sendMessage("Usage: //geo_trace on|off");
                 break;
-            case admin_geo_map:
+            case "admin_geo_map":
                 int x = (activeChar.getX() - World.MAP_MIN_X >> 15) + Config.GEO_X_FIRST;
                 int y = (activeChar.getY() - World.MAP_MIN_Y >> 15) + Config.GEO_Y_FIRST;
 
@@ -98,19 +99,16 @@ public class AdminGeodata implements IAdminCommandHandler {
     }
 
     @Override
-    public Enum[] getAdminCommandEnum() {
-        return Commands.values();
-    }
-
-    private enum Commands {
-        admin_geo_z,
-        admin_geo_type,
-        admin_geo_nswe,
-        admin_geo_los,
-        admin_geo_load,
-        admin_geo_dump,
-        admin_geo_trace,
-        admin_geo_map,
-        admin_geogrid
+    public List<String> getAdminCommands() {
+        return List.of(
+                "admin_geo_z",
+                "admin_geo_type",
+                "admin_geo_nswe",
+                "admin_geo_los",
+                "admin_geo_load",
+                "admin_geo_dump",
+                "admin_geo_trace",
+                "admin_geo_map",
+                "admin_geogrid");
     }
 }

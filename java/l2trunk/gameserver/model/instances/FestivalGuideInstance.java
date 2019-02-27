@@ -221,7 +221,7 @@ public final class FestivalGuideInstance extends NpcInstance {
                         return;
 
                     if (playerParty.isLeader(player))
-                        ((DarknessFestival) r).collapse();
+                        r.collapse();
                     else if (playerParty.size() > Config.FESTIVAL_MIN_PARTY_SIZE)
                         player.leaveParty();
                     else
@@ -332,7 +332,7 @@ public final class FestivalGuideInstance extends NpcInstance {
             long accumScore = SevenSignsFestival.INSTANCE.getAccumulatedBonus(i);
             String festivalName = SevenSignsFestival.getFestivalName(i);
 
-            tableHtml.append("<tr><td align=\"center\" width=\"150\">" + festivalName + "</td><td align=\"center\" width=\"150\">" + accumScore + "</td></tr>");
+            tableHtml.append("<tr><td align=\"center\" width=\"150\">").append(festivalName).append("</td><td align=\"center\" width=\"150\">").append(accumScore).append("</td></tr>");
         }
 
         return tableHtml.toString();

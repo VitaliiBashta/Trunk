@@ -93,14 +93,14 @@ public final class DecoyInstance extends NpcInstance {
 
     @Override
     public double getColRadius() {
-        if (player.getTransformation() != 0 && player.getTransformationTemplate() != 0)
+        if (player.isTrasformed()  && player.getTransformationTemplate() != 0)
             return NpcHolder.getTemplate(player.getTransformationTemplate()).collisionRadius;
         return player.getBaseTemplate().collisionRadius;
     }
 
     @Override
     public double getColHeight() {
-        if (player.getTransformation() != 0 && player.getTransformationTemplate() != 0)
+        if (player.isTrasformed() && player.getTransformationTemplate() != 0)
             return NpcHolder.getTemplate(player.getTransformationTemplate()).collisionHeight;
         return player.getBaseTemplate().collisionHeight;
     }

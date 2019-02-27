@@ -26,7 +26,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
-public class AugmentationData {
+public final class AugmentationData {
     private static final Logger LOG = LoggerFactory.getLogger(AugmentationData.class);
     // stats
     @SuppressWarnings("unused")
@@ -68,13 +68,11 @@ public class AugmentationData {
     private static final int ACC_NECK_START = ACC_EAR_END + 1;
     private static final int ACC_NECK_SKILLS = 24;
     private static final int ACC_NECK_BLOCKSIZE = ACC_NECK_SKILLS + 4 * ACC_STAT_SUBBLOCKSIZE;
-    @SuppressWarnings("unused")
-    private static final int ACC_END = ACC_NECK_START + ACC_BLOCKS_NUM * ACC_NECK_BLOCKSIZE;
     private static final byte[] ACC_STATS1_MAP = new byte[ACC_STAT_SUBBLOCKSIZE];
     private static final byte[] ACC_STATS2_MAP = new byte[ACC_STAT_SUBBLOCKSIZE];
     private static AugmentationData _Instance;
     private final List<?>[] _augStats = new ArrayList[4];
-    private final List<?>[] _augAccStats = new ArrayList[4];
+    private final List<List<augmentationStat>> augAccStats = new ArrayList<>();
     private final List<?>[] _blueSkills = new ArrayList[10];
     private final List<?>[] _purpleSkills = new ArrayList[10];
     private final List<?>[] _redSkills = new ArrayList[10];
@@ -89,10 +87,10 @@ public class AugmentationData {
         _augStats[2] = new ArrayList<augmentationStat>();
         _augStats[3] = new ArrayList<augmentationStat>();
 
-        _augAccStats[0] = new ArrayList<augmentationStat>();
-        _augAccStats[1] = new ArrayList<augmentationStat>();
-        _augAccStats[2] = new ArrayList<augmentationStat>();
-        _augAccStats[3] = new ArrayList<augmentationStat>();
+        augAccStats.add(new ArrayList<>());
+        augAccStats.add(new ArrayList<>());
+        augAccStats.add(new ArrayList<>());
+        augAccStats.add(new ArrayList<>());
 
         // Lookup tables structure: STAT1 represent first stat, STAT2 - second.
         // If both values are the same - use solo stat, if different - combined.
@@ -150,7 +148,7 @@ public class AugmentationData {
 
         // Use size*4: since theres 4 blocks of stat-data with equivalent size
         LOG.info("AugmentationData: Loaded: " + _augStats[0].size() * 4 + " augmentation stats.");
-        LOG.info("AugmentationData: Loaded: " + _augAccStats[0].size() * 4 + " accessory augmentation stats.");
+        LOG.info("AugmentationData: Loaded: " + augAccStats.get(0).size() * 4 + " accessory augmentation stats.");
         for (int i = 0; i < 10; i++)
             LOG.info("AugmentationData: Loaded: " + _blueSkills[i].size() + " blue, " + _purpleSkills[i].size() + " purple and " + _redSkills[i].size() + " red skills for lifeStoneLevel " + i);
     }
@@ -356,7 +354,7 @@ public class AugmentationData {
                                     }
 
                                 // store this stat
-                                ((List<augmentationStat>) _augAccStats[(i - 1)]).add(new augmentationStat(Stats.valueOfXml(statName)));
+                                augAccStats.get(i - 1).add(new augmentationStat(Stats.valueOfXml(statName)));
                             }
             } catch (DOMException | FileNotFoundException | NumberFormatException | ParserConfigurationException | SAXException e) {
                 LOG.error("Error parsing jewel augmentation_stats" + i + ".xml.", e);

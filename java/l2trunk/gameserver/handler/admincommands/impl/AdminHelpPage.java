@@ -4,7 +4,7 @@ import l2trunk.gameserver.handler.admincommands.IAdminCommandHandler;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
 
-public class AdminHelpPage implements IAdminCommandHandler {
+public final class AdminHelpPage implements IAdminCommandHandler {
     public static void showHelpHtml(Player targetChar, String content) {
         NpcHtmlMessage adminReply = new NpcHtmlMessage(5);
         adminReply.setHtml(content);
@@ -12,31 +12,24 @@ public class AdminHelpPage implements IAdminCommandHandler {
     }
 
     @Override
-    public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
-        Commands command = (Commands) comm;
+    public boolean useAdminCommand(String comm, String[] wordList, String fullString, Player activeChar) {
 
         if (!activeChar.getPlayerAccess().Menu)
             return false;
 
-        switch (command) {
-            case admin_showhtml:
-                if (wordList.length != 2) {
-                    activeChar.sendMessage("Usage: //showhtml <file>");
-                    return false;
-                }
-                activeChar.sendPacket(new NpcHtmlMessage(5).setFile("admin/" + wordList[1]));
-                break;
+        if (wordList.length != 2) {
+            activeChar.sendMessage("Usage: //showhtml <file>");
+            return false;
         }
+        activeChar.sendPacket(new NpcHtmlMessage(5).setFile("admin/" + wordList[1]));
+
 
         return true;
     }
 
     @Override
-    public Enum[] getAdminCommandEnum() {
-        return Commands.values();
+    public String getAdminCommand() {
+        return "admin_showhtml";
     }
 
-    private enum Commands {
-        admin_showhtml
-    }
 }

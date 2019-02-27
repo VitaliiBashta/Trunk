@@ -11,25 +11,22 @@ import static l2trunk.commons.lang.NumberUtils.toInt;
 
 public final class AdminHeal implements IAdminCommandHandler {
     @Override
-    public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
-        Commands command = (Commands) comm;
+    public boolean useAdminCommand(String comm, String[] wordList, String fullString, Player activeChar) {
 
         if (!activeChar.getPlayerAccess().Heal)
             return false;
 
-        if (command == Commands.admin_heal) {
-            if (wordList.length == 1)
-                handleRes(activeChar);
-            else
-                handleRes(activeChar, wordList[1]);
-        }
+        if (wordList.length == 1)
+            handleRes(activeChar);
+        else
+            handleRes(activeChar, wordList[1]);
 
         return true;
     }
 
     @Override
-    public Enum[] getAdminCommandEnum() {
-        return Commands.values();
+    public String getAdminCommand() {
+        return "admin_heal";
     }
 
     private void handleRes(Player activeChar) {
@@ -66,7 +63,4 @@ public final class AdminHeal implements IAdminCommandHandler {
             activeChar.sendPacket(SystemMsg.INVALID_TARGET);
     }
 
-    private enum Commands {
-        admin_heal
-    }
 }

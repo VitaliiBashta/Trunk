@@ -38,7 +38,7 @@ public final class Transformation extends Skill {
         if (player.getActiveWeaponFlagAttachment() != null)
             return false;
 
-        if (player.getTransformation() != 0 && id != SKILL_TRANSFORM_DISPEL) {
+        if (player.isTrasformed() && id != SKILL_TRANSFORM_DISPEL) {
             // Для всех скилов кроме Transform Dispel
             activeChar.sendPacket(SystemMsg.YOU_ALREADY_POLYMORPHED_AND_CANNOT_POLYMORPH_AGAIN);
             return false;

@@ -15,7 +15,7 @@ public final class TameControl extends Skill {
 
     public TameControl(StatsSet set) {
         super(set);
-        type = set.getInteger("type", 0);
+        type = set.getInteger("type");
     }
 
     @Override

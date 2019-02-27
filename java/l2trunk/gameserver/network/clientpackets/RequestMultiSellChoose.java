@@ -24,7 +24,7 @@ import l2trunk.gameserver.utils.ItemFunctions;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RequestMultiSellChoose extends L2GameClientPacket {
+public final class RequestMultiSellChoose extends L2GameClientPacket {
     private int _listId;
     private int _entryId;
     private long _amount;

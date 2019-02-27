@@ -68,6 +68,6 @@ public final class _696_ConquertheHallofErosion extends Quest {
     @Override
     public void onKill(NpcInstance npc, QuestState st) {
         if (npc.getNpcId() == Cohemenes)
-            st.set("cohemenesDone", 1);
+            st.set("cohemenesDone");
     }
 }

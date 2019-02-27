@@ -408,7 +408,7 @@ public final class _419_GetaPet extends Quest {
                                 st.takeItems(ANIMAL_SLAYER_LIST6);
                                 st.takeItems(SPIDER_LEG6);
                         }
-                        st.set("id", 1);
+                        st.set("id");
                         st.giveItems(ANIMAL_LOVERS_LIST1);
                         htmltext = "Slayed.htm";
                     }

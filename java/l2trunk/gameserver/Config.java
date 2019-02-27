@@ -77,7 +77,6 @@ public final class Config {
     private static final Path ITEM_USE_FILE = CONFIG.resolve("UseItems.ini");
     private static final Path INSTANCES_FILE = CONFIG.resolve("instances.ini");
     private static final Path ITEMS_FILE = CONFIG.resolve("items.ini");
-    private static final Path ADV_IP_FILE = CONFIG.resolve("advipsystem.ini");
     private static final Path NPCBUFFER_CONFIG_FILE = CONFIG.resolve("npcbuffer.ini");
     private static final Path l2f_TEAM_CONFIG_FILE = CONFIG.resolve("DonatorManager.ini");
     private static final Path GM_PERSONAL_ACCESS_FILE = CONFIG.resolve("GMAccess.xml");
@@ -352,7 +351,6 @@ public final class Config {
     public static boolean SERVICES_EXCHANGE_BABY_PET_ENABLED;
     public static int SERVICES_EXCHANGE_BABY_PET_PRICE;
     public static int SERVICES_EXCHANGE_BABY_PET_ITEM;
-    public static boolean SERVICES_CHANGE_BASE_ENABLED;
     public static int SERVICES_CHANGE_BASE_PRICE;
     public static int SERVICES_CHANGE_BASE_ITEM;
     public static boolean SERVICES_SEPARATE_SUB_ENABLED;
@@ -677,18 +675,7 @@ public final class Config {
     public static int DEEPBLUE_DROP_MAXDIFF;
     public static int DEEPBLUE_DROP_RAID_MAXDIFF;
     public static boolean UNSTUCK_SKILL;
-    /**
-     * Percent CP is restore on respawn
-     */
-    public static double RESPAWN_RESTORE_CP;
-    /**
-     * Percent HP is restore on respawn
-     */
-    public static double RESPAWN_RESTORE_HP;
-    /**
-     * Percent MP is restore on respawn
-     */
-    public static double RESPAWN_RESTORE_MP;
+
     /**
      * Maximum number of available slots for pvt stores (sell/buy) - Dwarves
      */
@@ -713,10 +700,7 @@ public final class Config {
     public static boolean ACCEPT_ALTERNATE_ID;
     public static int REQUEST_ID;
     public static boolean ANNOUNCE_MAMMON_SPAWN;
-    public static int GM_NAME_COLOUR;
-    public static boolean GM_HERO_AURA;
     public static int NORMAL_NAME_COLOUR;
-    public static int CLANLEADER_NAME_COLOUR;
     public static boolean VIKTORINA_ENABLED;// false;
     public static boolean VIKTORINA_REMOVE_QUESTION;// false;;
     public static boolean VIKTORINA_REMOVE_QUESTION_NO_ANSWER;// = false;
@@ -1027,7 +1011,6 @@ public final class Config {
     public static boolean SAVE_GM_SPAWN;
     // Log items
     public static boolean ENABLE_PLAYER_ITEM_LOGS;
-    public static long PLAYER_ITEM_LOGS_MAX_TIME;
     public static boolean DEBUFF_PROTECTION_SYSTEM;
     public static int _coinID;
     public static boolean ALLOW_UPDATE_ANNOUNCER;
@@ -1074,7 +1057,6 @@ public final class Config {
      * telnet enabled
      */
     static boolean IS_TELNET_ENABLED;
-    private static boolean ADVIPSYSTEM;
 
     private static String CLASS_MASTERS_PRICE;
 
@@ -1117,7 +1099,6 @@ public final class Config {
 
         INTERNAL_HOSTNAME = serverSettings.getProperty("InternalHostname", "*");
         EXTERNAL_HOSTNAME = serverSettings.getProperty("ExternalHostname", "*");
-        ADVIPSYSTEM = serverSettings.getProperty("AdvIPSystem", false);
         REQUEST_ID = serverSettings.getProperty("RequestServerID", 0);
         ACCEPT_ALTERNATE_ID = serverSettings.getProperty("AcceptAlternateID", true);
 
@@ -1469,11 +1450,6 @@ public final class Config {
 
         UNSTUCK_SKILL = otherSettings.getProperty("UnstuckSkill", true);
 
-        /* Amount of HP, MP, and CP is restored */
-        RESPAWN_RESTORE_CP = otherSettings.getProperty("RespawnRestoreCP", 0.) / 100;
-        RESPAWN_RESTORE_HP = otherSettings.getProperty("RespawnRestoreHP", 65.) / 100;
-        RESPAWN_RESTORE_MP = otherSettings.getProperty("RespawnRestoreMP", 0.) / 100;
-
         /* Maximum number of available slots for pvt stores */
         MAX_PVTSTORE_SLOTS_DWARF = otherSettings.getProperty("MaxPvtStoreSlotsDwarf", 5);
         MAX_PVTSTORE_SLOTS_OTHER = otherSettings.getProperty("MaxPvtStoreSlotsOther", 4);
@@ -1484,9 +1460,7 @@ public final class Config {
 
         ANNOUNCE_MAMMON_SPAWN = otherSettings.getProperty("AnnounceMammonSpawn", true);
 
-        GM_NAME_COLOUR = Integer.decode("0x" + otherSettings.getProperty("GMNameColour", "FFFFFF"));
         NORMAL_NAME_COLOUR = Integer.decode("0x" + otherSettings.getProperty("NormalNameColour", "FFFFFF"));
-        CLANLEADER_NAME_COLOUR = Integer.decode("0x" + otherSettings.getProperty("ClanleaderNameColour", "FFFFFF"));
 
         GAME_POINT_ITEM_ID = otherSettings.getProperty("GamePointItemId", -1);
         STARTING_LVL = otherSettings.getProperty("StartingLvL", 0);
@@ -1499,7 +1473,6 @@ public final class Config {
         ENABLE_ACHIEVEMENTS = otherSettings.getProperty("EnableAchievements", true);
 
         ENABLE_PLAYER_ITEM_LOGS = otherSettings.getProperty("EnablePlayerItemLogs", false);
-        PLAYER_ITEM_LOGS_MAX_TIME = otherSettings.getProperty("PlayerItemLogsMaxTime", 172800000L);
 
 
         DEBUFF_PROTECTION_SYSTEM = otherSettings.getProperty("DebuffProtectionSystem", false);
@@ -1915,15 +1888,6 @@ public final class Config {
         SERVICES_EXCHANGE_BABY_PET_ENABLED = servicesSettings.getProperty("BabyPetExchangeEnabled", false);
         SERVICES_EXCHANGE_BABY_PET_PRICE = servicesSettings.getProperty("BabyPetExchangePrice", 100);
         SERVICES_EXCHANGE_BABY_PET_ITEM = servicesSettings.getProperty("BabyPetExchangeItem", 4037);
-
-
-        SERVICES_CHANGE_BASE_ENABLED = servicesSettings.getProperty("BaseChangeEnabled", false);
-        SERVICES_CHANGE_BASE_PRICE = servicesSettings.getProperty("BaseChangePrice", 100);
-        SERVICES_CHANGE_BASE_ITEM = servicesSettings.getProperty("BaseChangeItem", 4037);
-
-        SERVICES_SEPARATE_SUB_ENABLED = servicesSettings.getProperty("SeparateSubEnabled", false);
-        SERVICES_SEPARATE_SUB_PRICE = servicesSettings.getProperty("SeparateSubPrice", 100);
-        SERVICES_SEPARATE_SUB_ITEM = servicesSettings.getProperty("SeparateSubItem", 4037);
 
         SERVICES_CHANGE_NICK_COLOR_ENABLED = servicesSettings.getProperty("NickColorChangeEnabled", false);
         SERVICES_CHANGE_NICK_COLOR_PRICE = servicesSettings.getProperty("NickColorChangePrice", 100);
@@ -2373,9 +2337,6 @@ public final class Config {
         loadPvPmodConfig();
         loadHitmanSettings();
         loadVIKTORINAsettings();
-        if (ADVIPSYSTEM) {
-            ipsLoad();
-        }
         if (ALLOW_ADDONS_CONFIG) {
             AddonsConfig.load();
         }
@@ -2463,23 +2424,4 @@ public final class Config {
         return result;
     }
 
-    private static void ipsLoad() {
-        ExProperties ipsSettings = load(ADV_IP_FILE);
-
-        for (int i = 0; i < (ipsSettings.size()); i++) {
-            int channelId = (i + 2);
-
-            String channels = ipsSettings.getProperty("Channel" + channelId, "-1");
-            if (channels.equals("-1"))
-                continue;
-
-            AdvIP advip = new AdvIP();
-            advip.channelId = channelId;
-            advip.channelAdress = channels.split(";")[0];
-            advip.channelPort = toInt(channels.split(";")[1]);
-            GAMEIPS.add(advip);
-
-            _log.info("Added Proxy Channel: " + advip.channelId + " - " + advip.channelAdress + ":" + advip.channelPort);
-        }
-    }
 }

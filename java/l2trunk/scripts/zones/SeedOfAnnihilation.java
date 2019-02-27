@@ -56,7 +56,7 @@ public final class SeedOfAnnihilation extends Functions implements ScriptFile {
                 {-180758, 186739, -10556, 11632}}); // Cokrakon data
 
         int buffsNow;
-        long nextStatusChange = ServerVariables.getLong("SeedNextStatusChange", 0);
+        long nextStatusChange = ServerVariables.getLong("SeedNextStatusChange");
         if (nextStatusChange < System.currentTimeMillis()) {
             buffsNow = Rnd.get(ZONE_BUFFS_LIST.length);
             _seedsNextStatusChange = getNextSeedsStatusChangeTime();
@@ -115,7 +115,7 @@ public final class SeedOfAnnihilation extends Functions implements ScriptFile {
         if (!NpcInstance.canBypassCheck(player, npc))
             return;
 
-        if (player.getTransformation() != 0 || player.isMounted()) {
+        if (player.isTrasformed()  || player.isMounted()) {
             player.sendPacket(Msg.YOU_ALREADY_POLYMORPHED_AND_CANNOT_POLYMORPH_AGAIN);
             return;
         }

@@ -16,13 +16,13 @@ public final class WeaponTemplate extends ItemTemplate {
     public WeaponTemplate(StatsSet set) {
         super(set);
         type = set.getEnum("type", WeaponType.class);
-        soulShotCount = set.getInteger("soulshots", 0);
-        spiritShotCount = set.getInteger("spiritshots", 0);
-        kamaelConvert = set.getInteger("kamael_convert", 0);
+        soulShotCount = set.getInteger("soulshots");
+        spiritShotCount = set.getInteger("spiritshots");
+        kamaelConvert = set.getInteger("kamael_convert");
 
-        rndDam = set.getInteger("rnd_dam", 0);
+        rndDam = set.getInteger("rnd_dam");
         atkReuse = set.getInteger("atk_reuse", type == WeaponType.BOW ? 1500 : type == WeaponType.CROSSBOW ? 820 : 0);
-        mpConsume = set.getInteger("mp_consume", 0);
+        mpConsume = set.getInteger("mp_consume");
 
         if (getItemType() == WeaponType.NONE) {
             type1 = TYPE1_SHIELD_ARMOR;

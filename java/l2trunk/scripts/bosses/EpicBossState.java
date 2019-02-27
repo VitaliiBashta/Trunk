@@ -5,15 +5,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.*;
-import java.util.Collection;
+import java.util.*;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 public final class EpicBossState {
     private static final Logger LOG = LoggerFactory.getLogger(EpicBossState.class);
     // Synerge - Support for storing the bosses status here in a static array
-    private static final Map<Integer, EpicBossState> EPICS = new HashMap<>();
+    private static final Set<EpicBossState> EPICS = new HashSet<>();
     private int bossId;
     private long respawnDate;
     private State state;
@@ -21,15 +19,17 @@ public final class EpicBossState {
     public EpicBossState(int bossId) {
         this.bossId = bossId;
         load();
-        EPICS.put(bossId, this);
+        EPICS.add(this);
     }
 
     public static Collection<EpicBossState> getEpics() {
-        return EPICS.values();
+        return EPICS;
     }
 
     public static EpicBossState getState(int epicId) {
-        return EPICS.get(epicId);
+        return EPICS.stream()
+        .filter(e -> e.bossId == epicId)
+        .findFirst().orElse(null);
     }
 
     public int getBossId() {

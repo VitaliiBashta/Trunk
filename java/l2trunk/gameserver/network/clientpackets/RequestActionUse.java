@@ -62,15 +62,14 @@ public final class RequestActionUse extends L2GameClientPacket {
             return;
         }
 
-        if (activeChar.getTransformation() != 0 && action.transform > 0) // TODO разрешить для некоторых трансформ
-        {
+        if (activeChar.isTrasformed()  && action.transform > 0) {
             activeChar.sendActionFailed();
             return;
         }
 
         // Социальные действия
         if (action.type == 3) {
-            if (activeChar.isOutOfControl() || activeChar.getTransformation() != 0 || activeChar.isActionsDisabled() || activeChar.isSitting() || activeChar.getPrivateStoreType() != Player.STORE_PRIVATE_NONE || activeChar.isProcessingRequest()) {
+            if (activeChar.isOutOfControl() || activeChar.isTrasformed() || activeChar.isActionsDisabled() || activeChar.isSitting() || activeChar.getPrivateStoreType() != Player.STORE_PRIVATE_NONE || activeChar.isProcessingRequest()) {
                 activeChar.sendActionFailed();
                 return;
             }
@@ -214,7 +213,7 @@ public final class RequestActionUse extends L2GameClientPacket {
                     activeChar.sendActionFailed();
                     return;
                 }
-                if (activeChar.getTransformation() != 0) {
+                if (activeChar.isTrasformed()) {
                     activeChar.sendActionFailed();
                     return;
                 }
@@ -235,7 +234,7 @@ public final class RequestActionUse extends L2GameClientPacket {
                     activeChar.sendActionFailed();
                     return;
                 }
-                if (activeChar.getTransformation() != 0) {
+                if (activeChar.isTrasformed() ) {
                     activeChar.sendActionFailed();
                     return;
                 }
@@ -365,7 +364,7 @@ public final class RequestActionUse extends L2GameClientPacket {
                 pet.unSummon();
                 break;
             case 38: // Mount
-                if (activeChar.getTransformation() != 0)
+                if (activeChar.isTrasformed() )
                     activeChar.sendPacket(SystemMsg.YOU_CANNOT_BOARD_BECAUSE_YOU_DO_NOT_MEET_THE_REQUIREMENTS);
                 else if (pet == null || !pet.isMountable()) {
                     if (activeChar.isMounted()) {
@@ -374,7 +373,7 @@ public final class RequestActionUse extends L2GameClientPacket {
                             activeChar.sendPacket(SystemMsg.YOU_ARE_NOT_ALLOWED_TO_DISMOUNT_IN_THIS_LOCATION, ActionFail.STATIC);
                             return;
                         }
-                        activeChar.setMount(0, 0, 0);
+                        activeChar.dismount();
                     }
                 } else if (activeChar.isMounted() || activeChar.isInBoat())
                     activeChar.sendPacket(SystemMsg.YOU_CANNOT_BOARD_BECAUSE_YOU_DO_NOT_MEET_THE_REQUIREMENTS);

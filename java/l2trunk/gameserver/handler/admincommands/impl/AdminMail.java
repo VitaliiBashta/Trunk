@@ -46,14 +46,13 @@ public final class AdminMail implements IAdminCommandHandler {
     }
 
     @Override
-    public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
-        Commands command = (Commands) comm;
+    public boolean useAdminCommand(String comm, String[] wordList, String fullString, Player activeChar) {
         GameObject target = activeChar.getTarget();
         if (!activeChar.getPlayerAccess().CanAnnounce)
             return false;
 
-        switch (command) {
-            case admin_add_mail:
+        switch (comm) {
+            case "admin_add_mail":
                 String targetToAdd;
                 if (wordList.length > 1) {
                     targetToAdd = wordList[1];
@@ -70,7 +69,7 @@ public final class AdminMail implements IAdminCommandHandler {
                 activeChar.sendMessage("Player " + targetToAdd + " was added to the list!");
                 showList(activeChar);
                 break;
-            case admin_remove_mail:
+            case "admin_remove_mail":
                 String targetToRemove;
                 if (wordList.length > 1) {
                     targetToRemove = wordList[1];
@@ -92,12 +91,9 @@ public final class AdminMail implements IAdminCommandHandler {
     }
 
     @Override
-    public Enum[] getAdminCommandEnum() {
-        return Commands.values();
-    }
-
-    private enum Commands {
-        admin_add_mail,
-        admin_remove_mail
+    public List<String> getAdminCommands() {
+        return List.of(
+                "admin_add_mail",
+                "admin_remove_mail");
     }
 }

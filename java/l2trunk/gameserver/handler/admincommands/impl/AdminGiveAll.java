@@ -10,7 +10,7 @@ import static l2trunk.gameserver.utils.ItemFunctions.addItem;
 public final class AdminGiveAll implements IAdminCommandHandler {
 
     @Override
-    public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
+    public boolean useAdminCommand(String comm, String[] wordList, String fullString, Player activeChar) {
         if (wordList.length >= 3) {
             int _id = toInt(wordList[1]);
             int _count = toInt(wordList[2]);
@@ -26,11 +26,8 @@ public final class AdminGiveAll implements IAdminCommandHandler {
     }
 
     @Override
-    public Enum[] getAdminCommandEnum() {
-        return Commands.values();
+    public String getAdminCommand() {
+        return "admin_giveall";
     }
 
-    enum Commands {
-        admin_giveall
-    }
 }

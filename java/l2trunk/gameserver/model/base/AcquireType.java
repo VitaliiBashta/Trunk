@@ -1,5 +1,7 @@
 package l2trunk.gameserver.model.base;
 
+import java.util.List;
+
 import static l2trunk.gameserver.model.base.ClassId.*;
 
 public enum AcquireType {
@@ -14,7 +16,7 @@ public enum AcquireType {
     TRANSFER_EVA_SAINTS,
     TRANSFER_SHILLIEN_SAINTS;
 
-    public static final AcquireType[] VALUES = AcquireType.values();
+    public static final List<AcquireType> VALUES = List.of(AcquireType.values());
 
     public static AcquireType transferType(ClassId classId) {
         switch (classId) {

@@ -9,6 +9,7 @@ import l2trunk.gameserver.model.entity.residence.Castle;
 import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 
 import static l2trunk.commons.lang.NumberUtils.toInt;
@@ -26,8 +27,7 @@ import static l2trunk.commons.lang.NumberUtils.toInt;
  */
 public final class AdminManor implements IAdminCommandHandler {
     @Override
-    public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
-        Commands command = (Commands) comm;
+    public boolean useAdminCommand(String comm, String[] wordList, String fullString, Player activeChar) {
 
         if (!activeChar.getPlayerAccess().Menu)
             return false;
@@ -35,52 +35,62 @@ public final class AdminManor implements IAdminCommandHandler {
         StringTokenizer st = new StringTokenizer(fullString);
         fullString = st.nextToken();
 
-        if (fullString.equals("admin_manor"))
-            showMainPage(activeChar);
-        else if (fullString.equals("admin_manor_reset")) {
-            int castleId = toInt(st.nextToken());
+        switch (fullString) {
+            case "admin_manor":
+                showMainPage(activeChar);
+                break;
+            case "admin_manor_reset":
+                int castleId = toInt(st.nextToken());
 
-            if (castleId > 0) {
-                Castle castle = ResidenceHolder.getResidence(Castle.class, castleId);
-                castle.setCropProcure(new ArrayList<>(), CastleManorManager.PERIOD_CURRENT);
-                castle.setCropProcure(new ArrayList<>(), CastleManorManager.PERIOD_NEXT);
-                castle.setSeedProduction(new ArrayList<>(), CastleManorManager.PERIOD_CURRENT);
-                castle.setSeedProduction(new ArrayList<>(), CastleManorManager.PERIOD_NEXT);
-                castle.saveCropData();
-                castle.saveSeedData();
-                activeChar.sendMessage("Manor data for " + castle.getName() + " was nulled");
-            } else {
-                for (Castle castle : ResidenceHolder.getResidenceList(Castle.class)) {
+                if (castleId > 0) {
+                    Castle castle = ResidenceHolder.getResidence(Castle.class, castleId);
                     castle.setCropProcure(new ArrayList<>(), CastleManorManager.PERIOD_CURRENT);
                     castle.setCropProcure(new ArrayList<>(), CastleManorManager.PERIOD_NEXT);
                     castle.setSeedProduction(new ArrayList<>(), CastleManorManager.PERIOD_CURRENT);
                     castle.setSeedProduction(new ArrayList<>(), CastleManorManager.PERIOD_NEXT);
                     castle.saveCropData();
                     castle.saveSeedData();
+                    activeChar.sendMessage("Manor data for " + castle.getName() + " was nulled");
+                } else {
+                    for (Castle castle : ResidenceHolder.getResidenceList(Castle.class)) {
+                        castle.setCropProcure(new ArrayList<>(), CastleManorManager.PERIOD_CURRENT);
+                        castle.setCropProcure(new ArrayList<>(), CastleManorManager.PERIOD_NEXT);
+                        castle.setSeedProduction(new ArrayList<>(), CastleManorManager.PERIOD_CURRENT);
+                        castle.setSeedProduction(new ArrayList<>(), CastleManorManager.PERIOD_NEXT);
+                        castle.saveCropData();
+                        castle.saveSeedData();
+                    }
+                    activeChar.sendMessage("Manor data was nulled");
                 }
-                activeChar.sendMessage("Manor data was nulled");
-            }
-            showMainPage(activeChar);
-        } else if (fullString.equals("admin_manor_save")) {
-            CastleManorManager.INSTANCE.save();
-            activeChar.sendMessage("Manor System: all data saved");
-            showMainPage(activeChar);
-        } else if (fullString.equals("admin_manor_disable")) {
-            boolean mode = CastleManorManager.INSTANCE.isDisabled();
-            CastleManorManager.INSTANCE.setDisabled(!mode);
-            if (mode)
-                activeChar.sendMessage("Manor System: enabled");
-            else
-                activeChar.sendMessage("Manor System: disabled");
-            showMainPage(activeChar);
+                showMainPage(activeChar);
+                break;
+            case "admin_manor_save":
+                CastleManorManager.INSTANCE.save();
+                activeChar.sendMessage("Manor System: all data saved");
+                showMainPage(activeChar);
+                break;
+            case "admin_manor_disable":
+                boolean mode = CastleManorManager.INSTANCE.isDisabled();
+                CastleManorManager.INSTANCE.setDisabled(!mode);
+                if (mode)
+                    activeChar.sendMessage("Manor System: enabled");
+                else
+                    activeChar.sendMessage("Manor System: disabled");
+                showMainPage(activeChar);
+                break;
         }
 
         return true;
     }
 
     @Override
-    public Enum[] getAdminCommandEnum() {
-        return Commands.values();
+    public List<String> getAdminCommands() {
+        return List.of(
+            "admin_manor",
+            "admin_manor_reset",
+            "admin_manor_save",
+            "admin_manor_disable");
+
     }
 
     private void showMainPage(Player activeChar) {
@@ -120,10 +130,5 @@ public final class AdminManor implements IAdminCommandHandler {
         activeChar.sendPacket(adminReply);
     }
 
-    private enum Commands {
-        admin_manor,
-        admin_manor_reset,
-        admin_manor_save,
-        admin_manor_disable
-    }
+
 }

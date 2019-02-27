@@ -7,24 +7,25 @@ import l2trunk.gameserver.network.serverpackets.Say2;
 import l2trunk.gameserver.network.serverpackets.components.ChatType;
 import l2trunk.gameserver.tables.GmListTable;
 
-public class AdminGmChat implements IAdminCommandHandler {
+import java.util.List;
+
+public final class AdminGmChat implements IAdminCommandHandler {
     @Override
-    public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
-        Commands command = (Commands) comm;
+    public boolean useAdminCommand(String comm, String[] wordList, String fullString, Player activeChar) {
 
         if (!activeChar.getPlayerAccess().CanAnnounce)
             return false;
 
-        switch (command) {
-            case admin_gmchat:
+        switch (comm) {
+            case "admin_gmchat":
                 try {
-                    String text = fullString.replaceFirst(Commands.admin_gmchat.name(), "");
+                    String text = fullString.replaceFirst("admin_gmchat", "");
                     Say2 cs = new Say2(0, ChatType.ALLIANCE, activeChar.getName(), text);
                     GmListTable.broadcastToGMs(cs);
                 } catch (StringIndexOutOfBoundsException e) {
                 }
                 break;
-            case admin_snoop: {
+            case "admin_snoop": {
                 GameObject target = activeChar.getTarget();
                 if (target == null) {
                     activeChar.sendMessage("You must getBonuses a target.");
@@ -40,7 +41,7 @@ public class AdminGmChat implements IAdminCommandHandler {
                     return false;
                 }
             }
-            case admin_unsnoop: {
+            case "admin_unsnoop": {
                 GameObject target = activeChar.getTarget();
                 if (target == null) {
                     activeChar.sendMessage("You must getBonuses a target.");
@@ -61,13 +62,10 @@ public class AdminGmChat implements IAdminCommandHandler {
     }
 
     @Override
-    public Enum[] getAdminCommandEnum() {
-        return Commands.values();
-    }
-
-    private enum Commands {
-        admin_gmchat,
-        admin_snoop,
-        admin_unsnoop
+    public List<String> getAdminCommands() {
+        return List.of(
+                "admin_gmchat",
+                "admin_snoop",
+                "admin_unsnoop");
     }
 }

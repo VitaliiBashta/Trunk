@@ -187,7 +187,7 @@ public final class ClanAirShip extends AirShip {
                 return;
             }
 
-            if (player.getTransformation() != 0) {
+            if (player.isTrasformed()) {
                 player.sendPacket(SystemMsg.YOU_CANNOT_CONTROL_THE_HELM_WHILE_TRANSFORMED);
                 return;
             }

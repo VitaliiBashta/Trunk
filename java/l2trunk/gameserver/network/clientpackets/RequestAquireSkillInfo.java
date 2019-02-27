@@ -19,13 +19,13 @@ public final class RequestAquireSkillInfo extends L2GameClientPacket {
     protected void readImpl() {
         id = readD();
         level = readD();
-        type = ArrayUtils.valid(AcquireType.VALUES, readD());
+        type = AcquireType.VALUES.get(readD());
     }
 
     @Override
     protected void runImpl() {
         Player player = getClient().getActiveChar();
-        if (player == null || player.getTransformation() != 0 || SkillTable.INSTANCE.getInfo(id, level) == null || type == null)
+        if (player == null || player.isTrasformed() || SkillTable.INSTANCE.getInfo(id, level) == null || type == null)
             return;
 
         NpcInstance trainer = player.getLastNpc();

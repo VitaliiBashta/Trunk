@@ -1,7 +1,5 @@
 package l2trunk.commons.geometry;
 
-import l2trunk.commons.lang.ArrayUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 

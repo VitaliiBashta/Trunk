@@ -36,7 +36,7 @@ public final class RequestExEnchantSkillInfoDetail extends L2GameClientPacket {
         if (_skillId == 0)
             return;
 
-        if (activeChar.getTransformation() != 0) {
+        if (activeChar.isTrasformed()) {
             activeChar.sendMessage("You must leave transformation mode first.");
             return;
         }

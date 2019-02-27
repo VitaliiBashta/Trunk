@@ -36,7 +36,7 @@ public final class NewbieGuideInstance extends NpcInstance {
                         qs.unset("step");
 
                     player.setVar("NewGuidReward");
-                    boolean isMage = (player.getClassId().race != Race.orc) && player.getClassId().isMage;
+                    boolean isMage = (player.getClassId().race != Race.orc) && player.getClassId().isMage();
                     if (isMage) {
                         player.sendPacket(new PlaySound("tutorial_voice_027"));
                         addItem(player, 5790, 100); // Spiritshot

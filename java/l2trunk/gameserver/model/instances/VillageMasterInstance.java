@@ -257,7 +257,7 @@ public final class VillageMasterInstance extends NpcInstance {
             }
 
             // Sub class can not be obtained or changed while using the skill or character is in transformation
-            if (player.isActionsDisabled() || player.getTransformation() != 0) {
+            if (player.isActionsDisabled() || player.isTrasformed()) {
                 player.sendPacket(SystemMsg.SUBCLASSES_MAY_NOT_BE_CREATED_OR_CHANGED_WHILE_A_SKILL_IS_IN_USE);
                 return;
             }
@@ -297,10 +297,10 @@ public final class VillageMasterInstance extends NpcInstance {
                         continue;
                     }
                     if (classId != null) {
-                        newClassId = ClassId.getById(toInt(id));
+                        newClassId = ClassId.getById(id);
                         continue;
                     }
-                    classId = ClassId.getById(toInt(id));
+                    classId = ClassId.getById(id);
                 }
             } catch (NumberFormatException e) {
                 LOG.error("Error while creating Subclass page", e);
@@ -361,7 +361,7 @@ public final class VillageMasterInstance extends NpcInstance {
                 case 4: // Добавление сабкласса - обработка выбора из case 1
                     boolean added = addNewSubclass(player, classId);
                     if (added) {
-                        content.append("Add Subclass:<br>The subclass of <font color=\"LEVEL\">").append(HtmlUtils.htmlClassName(classId)).append("</font> has been added.");
+                        content.append("Add Subclass:<br>The subclass of <font color=\"LEVEL\">").append(HtmlUtils.htmlClassName(classId.id)).append("</font> has been added.");
                         player.sendPacket(SystemMsg.THE_NEW_SUBCLASS_HAS_BEEN_ADDED);
                     } else
                         html.setFile("villagemaster/SubClass_Fail.htm");
@@ -425,7 +425,7 @@ public final class VillageMasterInstance extends NpcInstance {
                             player.getInventory().getItemsByItemId(15309).forEach( pomander ->
                                 player.inventory.destroyItem(pomander, 1L, "holypomander"));
                         }
-                        content.append("Change Subclass:<br>Your subclass has been changed to <font color=\"LEVEL\">").append(HtmlUtils.htmlClassName(newClassId)).append("</font>.");
+                        content.append("Change Subclass:<br>Your subclass has been changed to <font color=\"LEVEL\">").append(HtmlUtils.htmlClassName(newClassId.id)).append("</font>.");
                         player.sendPacket(SystemMsg.THE_NEW_SUBCLASS_HAS_BEEN_ADDED);
                     } else {
                         player.sendMessage(new CustomMessage("l2trunk.gameserver.model.instances.L2VillageMasterInstance.SubclassCouldNotBeAdded"));
@@ -939,7 +939,7 @@ public final class VillageMasterInstance extends NpcInstance {
             if (availSub.race != Race.human && availSub.race !=Race.elf) {
                 if (availSub.race != npcRace)
                     availSubs.remove(availSub);
-            } else if (availSub.type != npcTeachType)
+            } else if (availSub.classType != npcTeachType)
                 availSubs.remove(availSub);
         }
         return availSubs;

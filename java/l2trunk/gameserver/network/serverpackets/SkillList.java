@@ -18,7 +18,7 @@ public final class SkillList extends L2GameServerPacket {
 
     public SkillList(Player p) {
         skills = new ArrayList<>(p.getAllSkills());
-        canEnchant = p.getTransformation() == 0;
+        canEnchant = !p.isTrasformed();
         activeChar = p;
     }
 

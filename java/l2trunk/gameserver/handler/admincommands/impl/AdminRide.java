@@ -4,16 +4,16 @@ import l2trunk.gameserver.handler.admincommands.IAdminCommandHandler;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.tables.PetDataTable;
 
-public class AdminRide implements IAdminCommandHandler {
-    @Override
-    public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
-        Commands command = (Commands) comm;
+import java.util.List;
 
+public final class AdminRide implements IAdminCommandHandler {
+    @Override
+    public boolean useAdminCommand(String comm, String[] wordList, String fullString, Player activeChar) {
         if (!activeChar.getPlayerAccess().Rider)
             return false;
 
-        switch (command) {
-            case admin_ride:
+        switch (comm) {
+            case "admin_ride":
                 if (activeChar.isMounted() || activeChar.getPet() != null) {
                     activeChar.sendMessage("Already Have a Pet or Mounted.");
                     return false;
@@ -24,25 +24,25 @@ public class AdminRide implements IAdminCommandHandler {
                 }
                 activeChar.setMount(Integer.parseInt(wordList[1]), 0, 85);
                 break;
-            case admin_ride_wyvern:
-            case admin_wr:
+            case "admin_ride_wyvern":
+            case "admin_wr":
                 if (activeChar.isMounted() || activeChar.getPet() != null) {
                     activeChar.sendMessage("Already Have a Pet or Mounted.");
                     return false;
                 }
                 activeChar.setMount(PetDataTable.WYVERN_ID, 0, 85);
                 break;
-            case admin_ride_strider:
-            case admin_sr:
+            case "admin_ride_strider":
+            case "admin_sr":
                 if (activeChar.isMounted() || activeChar.getPet() != null) {
                     activeChar.sendMessage("Already Have a Pet or Mounted.");
                     return false;
                 }
                 activeChar.setMount(PetDataTable.STRIDER_WIND_ID, 0, 85);
                 break;
-            case admin_unride:
-            case admin_ur:
-                activeChar.setMount(0, 0, 0);
+            case "admin_unride":
+            case "admin_ur":
+                activeChar.dismount();
                 break;
         }
 
@@ -50,17 +50,14 @@ public class AdminRide implements IAdminCommandHandler {
     }
 
     @Override
-    public Enum[] getAdminCommandEnum() {
-        return Commands.values();
-    }
-
-    private enum Commands {
-        admin_ride,
-        admin_ride_wyvern,
-        admin_ride_strider,
-        admin_unride,
-        admin_wr,
-        admin_sr,
-        admin_ur
+    public List<String> getAdminCommands() {
+        return List.of(
+                "admin_ride",
+                "admin_ride_wyvern",
+                "admin_ride_strider",
+                "admin_unride",
+                "admin_wr",
+                "admin_sr",
+                "admin_ur");
     }
 }

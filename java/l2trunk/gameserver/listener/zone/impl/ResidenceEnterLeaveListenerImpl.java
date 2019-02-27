@@ -14,7 +14,7 @@ public final class ResidenceEnterLeaveListenerImpl implements OnZoneEnterLeaveLi
 
     @Override
     public void onZoneEnter(Zone zone, Player player) {
-        Residence residence = (Residence) zone.getParams().get("residence");
+        Residence residence = zone.getParams().getResidence("residence");
 
         if (residence.getOwner() == null || residence.getOwner() != player.getClan())
             return;
@@ -34,7 +34,7 @@ public final class ResidenceEnterLeaveListenerImpl implements OnZoneEnterLeaveLi
 
     @Override
     public void onZoneLeave(Zone zone, Player actor) {
-        Residence residence = (Residence) zone.getParams().get("residence");
+        Residence residence = zone.getParams().getResidence("residence");
 
         actor.removeStatsOwner(residence);
     }

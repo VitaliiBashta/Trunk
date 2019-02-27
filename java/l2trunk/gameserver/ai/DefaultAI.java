@@ -47,7 +47,7 @@ public class DefaultAI extends CharacterAI {
     private final List<Skill> _buffSkills;
     private final List<Skill> _stunSkills;
     protected long AI_TASK_ATTACK_DELAY = Config.AI_TASK_ATTACK_DELAY;
-    protected long AI_TASK_ACTIVE_DELAY = Config.AI_TASK_ACTIVE_DELAY;
+    public long AI_TASK_ACTIVE_DELAY = Config.AI_TASK_ACTIVE_DELAY;
     protected int MAX_PURSUE_RANGE;
     protected ScheduledFuture<?> _aiTask;
     protected ScheduledFuture<?> madnessTask;

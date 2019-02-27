@@ -18,25 +18,18 @@ import java.util.List;
 
 public class AdminOlympiad implements IAdminCommandHandler {
     @Override
-    public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
-        Commands command = (Commands) comm;
-
+    public boolean useAdminCommand(String comm, String[] wordList, String fullString, Player activeChar) {
         if (activeChar.getPlayerAccess().CanGmEdit)
 
-            switch (command) {
-                case admin_oly_save: {
+            switch (comm) {
+                case "admin_oly_save": {
                     if (!Config.ENABLE_OLYMPIAD)
                         return false;
-
-                    try {
-                        OlympiadDatabase.save();
-                    } catch (Exception e) {
-
-                    }
+                    OlympiadDatabase.save();
                     activeChar.sendMessage("olympaid data saved.");
                     break;
                 }
-                case admin_add_oly_points: {
+                case "admin_add_oly_points": {
                     if (wordList.length < 3) {
                         activeChar.sendMessage("Command syntax: //add_oly_points <char_name> <point_to_add>");
                         activeChar.sendMessage("This command can be applied only for online players.");
@@ -66,7 +59,7 @@ public class AdminOlympiad implements IAdminCommandHandler {
                     activeChar.sendMessage("Old points: " + curPoints + ", new points: " + newPoints);
                     break;
                 }
-                case admin_oly_start: {
+                case "admin_oly_start": {
                     Olympiad._manager = new OlympiadManager();
                     Olympiad._inCompPeriod = true;
 
@@ -75,18 +68,14 @@ public class AdminOlympiad implements IAdminCommandHandler {
                     Announcements.INSTANCE.announceToAll(new SystemMessage2(SystemMsg.THE_OLYMPIAD_GAME_HAS_STARTED));
                     break;
                 }
-                case admin_oly_stop: {
+                case "admin_oly_stop": {
                     Olympiad._inCompPeriod = false;
                     Announcements.INSTANCE.announceToAll(new SystemMessage2(SystemMsg.THE_OLYMPIAD_GAME_HAS_ENDED));
-                    try {
-                        OlympiadDatabase.save();
-                    } catch (Exception e) {
-
-                    }
+                    OlympiadDatabase.save();
 
                     break;
                 }
-                case admin_add_hero: {
+                case "admin_add_hero": {
                     if (wordList.length < 2) {
                         activeChar.sendMessage("Command syntax: //add_hero <char_name>");
                         activeChar.sendMessage("This command can be applied only for online players.");
@@ -112,12 +101,12 @@ public class AdminOlympiad implements IAdminCommandHandler {
                     activeChar.sendMessage("Hero status added to getPlayer " + player.getName());
                     break;
                 }
-                case admin_olympiad_stop_period: {
+                case "admin_olympiad_stop_period": {
                     Olympiad.cancelPeriodTasks();
                     ThreadPoolManager.INSTANCE.execute(new OlympiadEndTask());
                     break;
                 }
-                case admin_olympiad_start_period: {
+                case "admin_olympiad_start_period": {
                     Olympiad.cancelPeriodTasks();
                     ThreadPoolManager.INSTANCE.execute(new ValidationTask());
                     break;
@@ -128,17 +117,14 @@ public class AdminOlympiad implements IAdminCommandHandler {
     }
 
     @Override
-    public Enum[] getAdminCommandEnum() {
-        return Commands.values();
-    }
-
-    private enum Commands {
-        admin_oly_save,
-        admin_add_oly_points,
-        admin_oly_start,
-        admin_add_hero,
-        admin_oly_stop,
-        admin_olympiad_stop_period,
-        admin_olympiad_start_period
+    public List<String> getAdminCommands() {
+        return List.of(
+                "admin_oly_save",
+                "admin_add_oly_points",
+                "admin_oly_start",
+                "admin_add_hero",
+                "admin_oly_stop",
+                "admin_olympiad_stop_period",
+                "admin_olympiad_start_period");
     }
 }

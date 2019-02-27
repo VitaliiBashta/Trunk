@@ -47,7 +47,7 @@ public final class _610_MagicalPowerofWater2 extends Quest {
             st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("610_1".equals(event)) {
-            if (ServerVariables.getLong(getClass().getSimpleName(), 0) + 3 * 60 * 60 * 1000 > System.currentTimeMillis())
+            if (ServerVariables.getLong(getClass().getSimpleName()) + 3 * 60 * 60 * 1000 > System.currentTimeMillis())
                 htmltext = "totem_of_barka_q0610_0204.htm";
             else if (st.haveQuestItem(GREEN_TOTEM) && isQuest == null) {
                 st.takeItems(GREEN_TOTEM, 1);
@@ -95,7 +95,7 @@ public final class _610_MagicalPowerofWater2 extends Quest {
                 htmltext = "shaman_asefa_q0610_0201.htm";
         } else if (npcId == VARKAS_HOLY_ALTAR)
             if (!npc.isBusy()) {
-                if (ServerVariables.getLong(getClass().getSimpleName(), 0) + 3 * 60 * 60 * 1000 > System.currentTimeMillis())
+                if (ServerVariables.getLong(getClass().getSimpleName()) + 3 * 60 * 60 * 1000 > System.currentTimeMillis())
                     htmltext = "totem_of_barka_q0610_0204.htm";
                 else if (cond == 1)
                     htmltext = "totem_of_barka_q0610_0101.htm";

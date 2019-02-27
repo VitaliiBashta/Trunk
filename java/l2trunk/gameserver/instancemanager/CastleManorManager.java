@@ -120,7 +120,7 @@ public enum CastleManorManager {
             periodApprove.set(Calendar.SECOND, 0);
             periodApprove.set(Calendar.MILLISECOND, 0);
             boolean isApproved = periodApprove.getTimeInMillis() < Calendar.getInstance().getTimeInMillis() && manorRefresh.getTimeInMillis() > Calendar.getInstance().getTimeInMillis();
-            ServerVariables.set(var_name, isApproved);
+            ServerVariables.set("ManorApproved", isApproved);
         }
 
         Calendar FirstDelay = Calendar.getInstance();
@@ -133,7 +133,7 @@ public enum CastleManorManager {
         underMaintenance = false;
         disabled = !Config.ALLOW_MANOR;
         List<Castle> castleList = ResidenceHolder.getResidenceList(Castle.class);
-        castleList.forEach(c -> c.setNextPeriodApproved(ServerVariables.getBool(var_name)));
+        castleList.forEach(c -> c.setNextPeriodApproved(ServerVariables.getBool("ManorApproved")));
     }
 
     private void setNextPeriod() {
@@ -303,7 +303,7 @@ public enum CastleManorManager {
             int H = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
             int M = Calendar.getInstance().get(Calendar.MINUTE);
 
-            if (ServerVariables.getBool(var_name)) { // 06:00 - 20:00
+            if (ServerVariables.getBool("ManorApproved")) { // 06:00 - 20:00
                 if (H < NEXT_PERIOD_APPROVE || H > MANOR_REFRESH || H == MANOR_REFRESH && M >= MANOR_REFRESH_MIN) {
                     ServerVariables.set(var_name, false);
                     setUnderMaintenance(true);

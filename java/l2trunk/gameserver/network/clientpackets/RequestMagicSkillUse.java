@@ -61,7 +61,7 @@ public final class RequestMagicSkillUse extends L2GameClientPacket {
                 return;
             }
 
-            if ((activeChar.getTransformation() != 0) && (!activeChar.getAllSkills().contains(skill))) {
+            if ((activeChar.isTrasformed()) && (!activeChar.getAllSkills().contains(skill))) {
                 activeChar.setMacroSkill(null);
                 return;
             }

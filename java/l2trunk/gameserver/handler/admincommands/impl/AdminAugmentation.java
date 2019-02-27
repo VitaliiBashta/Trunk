@@ -1,21 +1,3 @@
-/*
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA.
- *
- * http://www.gnu.org/copyleft/gpl.html
- */
 package l2trunk.gameserver.handler.admincommands.impl;
 
 import l2trunk.commons.dao.JdbcEntityState;
@@ -40,15 +22,14 @@ import java.util.StringTokenizer;
  * To manage a dynamic html showing all available weapons Enlargements
  * You can assign any augmentation is chosen to target weapon
  */
-public class AdminAugmentation implements IAdminCommandHandler {
+public final class AdminAugmentation implements IAdminCommandHandler {
     private static final int MAX_AUGMENTATIONS_PER_PAGE = 6;
     private static final int MAX_PAGES_PER_PAGE = 9;
     private static AugmentationFilter _filter = AugmentationFilter.NONE;
     private static int _page = 0;
 
-    @SuppressWarnings("rawtypes")
     @Override
-    public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
+    public boolean useAdminCommand(String comm, String[] wordList, String fullString, Player activeChar) {
         if (!activeChar.getPlayerAccess().CanEditChar)
             return false;
 
@@ -257,11 +238,8 @@ public class AdminAugmentation implements IAdminCommandHandler {
     }
 
     @Override
-    public Enum[] getAdminCommandEnum() {
-        return Commands.values();
+    public String getAdminCommand() {
+        return "admin_augmentation";
     }
 
-    private enum Commands {
-        admin_augmentation
-    }
 }

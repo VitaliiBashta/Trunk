@@ -291,9 +291,6 @@ public enum Scripts {
         scripts.put("events.TheFlowOfTheHorror.TheFlowOfTheHorror", new l2trunk.scripts.events.TheFlowOfTheHorror.TheFlowOfTheHorror());
         scripts.put("events.TrickOfTrans.TrickOfTrans", new TrickOfTrans());
         scripts.put("events.Viktorina.Viktorina", new l2trunk.scripts.events.Viktorina.Viktorina());
-        scripts.put("handler.admincommands.AdminBosses", new AdminBosses());
-        scripts.put("handler.admincommands.AdminEpic", new l2trunk.scripts.handler.admincommands.AdminEpic());
-        scripts.put("handler.admincommands.AdminResidence", new l2trunk.scripts.handler.admincommands.AdminResidence());
         scripts.put("handler.bypass.TeleToFantasyIsle", new l2trunk.scripts.handler.bypass.TeleToFantasyIsle());
         scripts.put("handler.items.AttributeStones", new l2trunk.scripts.handler.items.AttributeStones());
         scripts.put("handler.items.Battleground", new l2trunk.scripts.handler.items.Battleground());

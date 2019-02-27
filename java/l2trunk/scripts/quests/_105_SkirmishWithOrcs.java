@@ -115,7 +115,7 @@ public final class _105_SkirmishWithOrcs extends Quest {
             st.takeItems(Kendells8stOrder);
             st.takeItems(KabooChiefs2stTorque);
 
-            if (st.player.getClassId().isMage)
+            if (st.player.getClassId().isMage())
                 st.giveItems(RED_SUNSET_STAFF);
             else
                 st.giveItems(RED_SUNSET_SWORD);
@@ -129,7 +129,7 @@ public final class _105_SkirmishWithOrcs extends Quest {
                 st.giveItems(1060, 100); // healing potion
                 for (int item = 4412; item <= 4417; item++)
                     st.giveItems(item, 10); // echo cry
-                if (st.player.getClassId().isMage) {
+                if (st.player.getClassId().isMage()) {
                     st.playTutorialVoice("tutorial_voice_027");
                     st.giveItems(5790, 3000); // newbie sps
                 } else {

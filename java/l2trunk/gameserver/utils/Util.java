@@ -385,14 +385,8 @@ public final class Util {
         return text;
     }
 
-    public static String getFullClassName(ClassId classIndex) {
-        return classIndex.name;
-    }
-
     public static String getFullClassName(int classId) {
-        return Stream.of(ClassId.values()).filter(e -> e.id == classId)
-                .map(cls -> cls.name)
-                .findFirst().orElse("Unknown");
+        return ClassId.getById(classId).name;
     }
 
     public static String boolToString(boolean b) {

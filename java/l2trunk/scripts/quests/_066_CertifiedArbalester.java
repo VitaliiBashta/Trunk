@@ -404,7 +404,7 @@ public final class _066_CertifiedArbalester extends Quest {
             if (st.getInt("id") < 20)
                 st.inc("id");
             else if (Rnd.chance(25)) {
-                st.set("id", 0);
+                st.unset("id");
                 st.addSpawn(CrimsonLady);
             }
         } else if (cond == 19 && npcId == CrimsonLady) {

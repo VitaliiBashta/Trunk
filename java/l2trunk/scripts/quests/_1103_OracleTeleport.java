@@ -40,8 +40,8 @@ public final class _1103_OracleTeleport extends Quest {
 
         addStartNpc(IntStream.rangeClosed(31078, 31091).toArray());
 
-        addStartNpc(31168, 31169, 31170, 31692);
-        addStartNpc(IntStream.rangeClosed(31693, 31999).toArray());
+        addStartNpc(31168, 31169, 31170);
+        addStartNpc(IntStream.rangeClosed(31692, 31699).toArray());
 
         addStartNpc(IntStream.rangeClosed(31127, 31142).toArray());
     }

@@ -60,7 +60,7 @@ public final class _625_TheFinestIngredientsPart2 extends Quest {
             st.takeItems(Special_Yeti_Meat, 1);
             st.giveItems(Rnd.get(Reward_First, Reward_Last), 5, true);
         } else if (event.equalsIgnoreCase("yetis_table_q0625_0201.htm") && _state == STARTED && cond == 1) {
-            if (ServerVariables.getLong(_625_TheFinestIngredientsPart2.class.getSimpleName(), 0) + 3 * 60 * 60 * 1000 > System.currentTimeMillis())
+            if (ServerVariables.getLong(getClass().getSimpleName()) + 3 * 60 * 60 * 1000 > System.currentTimeMillis())
                 return "yetis_table_q0625_0204.htm";
             if (st.getQuestItemsCount(Food_for_Bumbalump) == 0)
                 return "yetis_table_q0625_0203.htm";
@@ -107,7 +107,7 @@ public final class _625_TheFinestIngredientsPart2 extends Quest {
         }
 
         if (npcId == Yetis_Table) {
-            if (ServerVariables.getLong(_625_TheFinestIngredientsPart2.class.getSimpleName(), 0) + 3 * 60 * 60 * 1000 > System.currentTimeMillis())
+            if (ServerVariables.getLong(getClass().getSimpleName()) + 3 * 60 * 60 * 1000 > System.currentTimeMillis())
                 return "yetis_table_q0625_0204.htm";
             if (cond == 1)
                 return "yetis_table_q0625_0101.htm";

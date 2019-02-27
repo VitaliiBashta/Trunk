@@ -259,7 +259,7 @@ public final class SkillAcquireHolder {
     }
 
     public static boolean isSkillPossible(Player player, Skill skill) {
-        return Stream.of(AcquireType.VALUES)
+        return AcquireType.VALUES.stream()
                 .anyMatch(aq -> isSkillPossible(player, skill, aq));
     }
 
@@ -308,11 +308,10 @@ public final class SkillAcquireHolder {
                     classId = classId.parent;
                 }
             }
-
         }
     }
 
-    public static void addAllFishingLearns(int race, List<SkillLearn> s) {
+    public static void addAllFishingLearns(Race race, List<SkillLearn> s) {
         FISHING_SKILL_TREE.put(race, s);
     }
 

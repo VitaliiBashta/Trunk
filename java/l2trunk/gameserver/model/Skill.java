@@ -237,9 +237,9 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
         common = set.getBool("common", false);
         isSaveable = set.getBool("isSaveable", true);
         coolTime = set.getInteger("coolTime", 0);
-        skillInterruptTime = set.getInteger("hitCancelTime", 0);
-        reuseDelay = set.getLong("reuseDelay", 0);
-        hitTime = set.getInteger("hitTime", 0);
+        skillInterruptTime = set.getInteger("hitCancelTime");
+        reuseDelay = set.getLong("reuseDelay");
+        hitTime = set.getInteger("hitTime");
         skillRadius = set.getInteger("skillRadius", 80);
         targetType = set.getEnum("target", SkillTargetType.class);
         magicType = set.getEnum("magicType", SkillMagicType.class, SkillMagicType.PHYSIC);
@@ -683,7 +683,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
 
         if (first && (itemConsume.get(0) > 0)) {
             for (int item : itemConsume) {
-                Inventory inv = ((Playable) player).getInventory();
+                Inventory inv = player.getInventory();
                 if (inv == null) {
                     inv = player.getInventory();
                 }
@@ -750,7 +750,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
     }
 
     public SystemMsg checkTarget(Creature activeChar, Creature target, Creature aimingTarget, boolean forceUse, boolean first) {
-        Summon pet = ((Player) activeChar).getPet();
+        Summon pet = activeChar instanceof Player ? ((Player) activeChar).getPet() : null;
         if (id == Skill.SKILL_SERVITOR_SHARE) {
             if (!(pet instanceof SummonInstance)) {
                 return SystemMsg.THAT_IS_AN_INCORRECT_TARGET;
@@ -782,10 +782,6 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
 
         if (activeChar instanceof Player) {
             Player player = (Player) activeChar;
-            // The prohibition to attack civilians in the siege NPC zone on TW. Otherwise way stuffed glasses.
-            //if (getPlayer.getTerritorySiege() > -1 && target.NpcInstance() && !(target instanceof L2TerritoryFlagInstance) && !(target.getAI() instanceof DefaultAI) && getPlayer.isInZone(ZoneType.Siege))
-            //	return Msg.INVALID_TARGET;
-
 
             if (target instanceof Player) {
                 Player pcTarget = (Player) target;
@@ -1961,14 +1957,14 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
         VITALITY_HEAL(VitalityHeal.class),
         IMPRISON(VitalityHeal.class);
 
-//        private final Class<? extends Skill> clazz;
+        private final Class<? extends Skill> clazz;
 
         SkillType() {
-//            clazz = Default.class;
+            clazz = Default.class;
         }
 
         SkillType(Class<? extends Skill> clazz) {
-//            this.clazz = clazz;
+            this.clazz = clazz;
         }
 
 
@@ -1976,7 +1972,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
             return this == DISCORD;
         }
 
-        boolean isAI() {
+        private boolean isAI() {
             switch (this) {
                 case AGGRESSION:
                 case AIEFFECTS:

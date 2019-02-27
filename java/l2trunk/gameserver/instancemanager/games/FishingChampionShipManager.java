@@ -65,7 +65,7 @@ public enum FishingChampionShipManager {
     }
 
     private void restoreData() {
-        _enddate = ServerVariables.getLong("fishChampionshipEnd", 0);
+        _enddate = ServerVariables.getLong("fishChampionshipEnd");
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement("SELECT `PlayerName`, `fishLength`, `rewarded` FROM fishing_championship");
              ResultSet rs = statement.executeQuery()) {

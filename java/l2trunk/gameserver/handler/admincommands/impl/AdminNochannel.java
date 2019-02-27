@@ -8,13 +8,13 @@ import l2trunk.gameserver.utils.AdminFunctions;
 import l2trunk.gameserver.utils.ItemFunctions;
 import l2trunk.gameserver.utils.Util;
 
+import java.util.List;
+
 import static l2trunk.commons.lang.NumberUtils.toInt;
 
 public final class AdminNochannel implements IAdminCommandHandler {
     @Override
-    public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
-        Commands command = (Commands) comm;
-
+    public boolean useAdminCommand(String comm, String[] wordList, String fullString, Player activeChar) {
         if (!activeChar.getPlayerAccess().CanBanChat)
             return false;
 
@@ -60,9 +60,9 @@ public final class AdminNochannel implements IAdminCommandHandler {
                 activeChar.setVar("LastBanChatDayTime", System.currentTimeMillis());
         }
 
-        switch (command) {
-            case admin_nochannel:
-            case admin_nc: {
+        switch (comm) {
+            case "admin_nochannel":
+            case "admin_nc": {
                 if (wordList.length < 2) {
                     activeChar.sendMessage("USAGE: //nochannel charName [period] [reason]");
                     return false;
@@ -85,12 +85,9 @@ public final class AdminNochannel implements IAdminCommandHandler {
     }
 
     @Override
-    public Enum[] getAdminCommandEnum() {
-        return Commands.values();
-    }
-
-    private enum Commands {
-        admin_nochannel,
-        admin_nc
+    public List<String> getAdminCommands() {
+        return List.of(
+                "admin_nochannel",
+                "admin_nc");
     }
 }

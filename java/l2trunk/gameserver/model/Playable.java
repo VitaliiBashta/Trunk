@@ -44,12 +44,9 @@ public abstract class Playable extends Creature {
         nonAggroTime = 0L;
     }
 
-//    @Override
-//    public iHardReference<? extends Playable> getRef() {
-//        return (iHardReference<? extends Playable>) super.getRef();
+//    public Inventory getInventory(){
+//        return null;
 //    }
-
-    public abstract Inventory getInventory();
 
     public abstract long getWearedMask();
 
@@ -586,11 +583,8 @@ public abstract class Playable extends Creature {
                 setCurrentMp(getMaxMp());
                 setFullCp();
             } else {
-                setCurrentHp(Math.max(1.0, getMaxHp() * Config.RESPAWN_RESTORE_HP), true);
+                setCurrentHp(Math.max(1.0, getMaxHp() * .65), true);
 
-                if (Config.RESPAWN_RESTORE_MP >= 0) {
-                    setCurrentMp(getMaxMp() * Config.RESPAWN_RESTORE_MP);
-                }
             }
 
             broadcastPacket(new Revive(this));

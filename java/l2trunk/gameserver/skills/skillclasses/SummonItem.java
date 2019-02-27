@@ -19,8 +19,8 @@ public final class SummonItem extends Skill {
     public SummonItem(final StatsSet set) {
         super(set);
 
-        itemId = set.getInteger("SummonItemId", 0);
-        minId = set.getInteger("SummonMinId", 0);
+        itemId = set.getInteger("SummonItemId");
+        minId = set.getInteger("SummonMinId");
         maxId = set.getInteger("SummonMaxId", minId);
         minCount = set.getLong("SummonMinCount");
         maxCount = set.getLong("SummonMaxCount", minCount);

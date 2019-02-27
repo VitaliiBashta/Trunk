@@ -13,17 +13,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-
-public class AdminZone implements IAdminCommandHandler {
+public final class AdminZone implements IAdminCommandHandler {
     @Override
-    public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
-        Commands command = (Commands) comm;
-
+    public boolean useAdminCommand(String comm, String[] wordList, String fullString, Player activeChar) {
         if (activeChar == null || !activeChar.getPlayerAccess().CanTeleport)
             return false;
 
-        switch (command) {
-            case admin_zone_check: {
+        switch (comm) {
+            case "admin_zone_check": {
                 activeChar.sendMessage("Current region: " + activeChar.getCurrentRegion());
                 activeChar.sendMessage("Zone list:");
                 List<Zone> zones = new ArrayList<>();
@@ -33,7 +30,7 @@ public class AdminZone implements IAdminCommandHandler {
 
                 break;
             }
-            case admin_region: {
+            case "admin_region": {
                 activeChar.sendMessage("Current region: " + activeChar.getCurrentRegion());
                 activeChar.sendMessage("Objects list:");
                 activeChar.getCurrentRegion().getObjects().stream()
@@ -41,17 +38,17 @@ public class AdminZone implements IAdminCommandHandler {
                         .forEach(o -> activeChar.sendMessage(o.toString()));
                 break;
             }
-            case admin_vis_count: {
+            case "admin_vis_count": {
                 activeChar.sendMessage("Current region: " + activeChar.getCurrentRegion());
                 activeChar.sendMessage("Players count: " + World.getAroundPlayers(activeChar).count());
                 break;
             }
-            case admin_pos: {
+            case "admin_pos": {
                 String pos = activeChar.getX() + ", " + activeChar.getY() + ", " + activeChar.getZ() + ", " + activeChar.getHeading() + " Geo [" + (activeChar.getX() - World.MAP_MIN_X >> 4) + ", " + (activeChar.getY() - World.MAP_MIN_Y >> 4) + "] Ref " + activeChar.getReflectionId();
                 activeChar.sendMessage("Pos: " + pos);
                 break;
             }
-            case admin_domain: {
+            case "admin_domain": {
                 DomainArea domain = MapRegionHolder.getInstance().getRegionData(DomainArea.class, activeChar);
                 Castle castle = domain != null ? ResidenceHolder.getResidence(Castle.class, domain.getId()) : null;
                 if (castle != null)
@@ -64,15 +61,12 @@ public class AdminZone implements IAdminCommandHandler {
     }
 
     @Override
-    public Enum[] getAdminCommandEnum() {
-        return Commands.values();
-    }
-
-    private enum Commands {
-        admin_zone_check,
-        admin_region,
-        admin_pos,
-        admin_vis_count,
-        admin_domain
+    public List<String> getAdminCommands() {
+        return List.of(
+                "admin_zone_check",
+                "admin_region",
+                "admin_pos",
+                "admin_vis_count",
+                "admin_domain");
     }
 }

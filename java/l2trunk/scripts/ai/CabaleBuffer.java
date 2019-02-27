@@ -9,7 +9,6 @@ import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.scripts.Functions;
 
 import java.util.List;
-import java.util.Objects;
 
 public final class CabaleBuffer extends DefaultAI {
     private static final int PREACHER_FIGHTER_SKILL_ID = 4361;
@@ -79,7 +78,7 @@ public final class CabaleBuffer extends DefaultAI {
                         int i0 = Rnd.get(100);
                         int i1 = Rnd.get(10000);
                         if (playerCabal == winningCabal && actor.getNpcId() == SevenSigns.ORATOR_NPC_ID) {
-                            if (player.getClassId().isMage) {
+                            if (player.getClassId().isMage()) {
                                 if (player.getEffectList().getEffectsBySkillId(ORATOR_MAGE_SKILL_ID).count() <= 0) {
                                     if (i1 < 1)
                                         Functions.npcSay(actor, NpcString.I_BESTOW_UPON_YOU_A_BLESSING);

@@ -349,11 +349,6 @@ public abstract class Summon extends Playable {
     }
 
     @Override
-    public PetInventory getInventory() {
-        return null;
-    }
-
-    @Override
     public void doPickupItem(final ItemInstance object) {
     }
 

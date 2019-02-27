@@ -25,22 +25,21 @@ public final class AdminPanel implements IAdminCommandHandler {
         int count = ServerVariables.getInt("fake_players");
 
         NpcHtmlMessage nhm = new NpcHtmlMessage(5);
-        StringBuilder html = new StringBuilder();
-        html.append("<html><head><title>CPPanel</title></head><body><center><br>");
-        html.append("<img src=\"L2UI_CH3.herotower_deco\" width=256 height=32>");
-        html.append("<br>");
-        html.append("Current FakePlayers: <font color=LEVEL>" + count + "</font><br>");
-        html.append("<br><br>");
-        html.append("Change FakePlayers Num: <edit var=\"value\" width=100 height=15><br>");
-        html.append("<button value=\"Do it!\" action=\"bypass -h admin_changevaluescppanel $value\" width=95 height=21 back=\"L2UI_ch3.bigbutton_down\" fore=\"L2UI_ch3.bigbutton\">");
-        html.append("<img src=\"L2UI_CH3.herotower_deco\" width=256 height=32></center></body></html>");
-        nhm.setHtml(html.toString());
+        String html = "<html><head><title>CPPanel</title></head><body><center><br>" +
+                "<img src=\"L2UI_CH3.herotower_deco\" width=256 height=32>" +
+                "<br>" +
+                "Current FakePlayers: <font color=LEVEL>" + count + "</font><br>" +
+                "<br><br>" +
+                "Change FakePlayers Num: <edit var=\"value\" width=100 height=15><br>" +
+                "<button value=\"Do it!\" action=\"bypass -h admin_changevaluescppanel $value\" width=95 height=21 back=\"L2UI_ch3.bigbutton_down\" fore=\"L2UI_ch3.bigbutton\">" +
+                "<img src=\"L2UI_CH3.herotower_deco\" width=256 height=32></center></body></html>";
+        nhm.setHtml(html);
         activeChar.sendPacket(nhm);
     }
 
     private static void clanSkillList(Player player) {
         NpcHtmlMessage nhm = new NpcHtmlMessage(5);
-        StringBuilder html = new StringBuilder("");
+        StringBuilder html = new StringBuilder();
         html.append("<html><head><title>Clan Skill Panel</title></head><body>");
         html.append("<center><table width=280 bgcolor=222120><tr><td><center>");
         html.append("<font name=\"hs12\" color=\"FF0032\">L2Mythras</font></center></td></tr></table>");
@@ -59,7 +58,7 @@ public final class AdminPanel implements IAdminCommandHandler {
 
             html.append("<tr>");
             html.append("<td width=230 align=left>");
-            html.append("<center><font color=878080>" + skill.name + "</font></center>");
+            html.append("<center><font color=878080>").append(skill.name).append("</font></center>");
             html.append("</td>");
             html.append("<td width=70>");
             html.append("<center>");
@@ -75,10 +74,8 @@ public final class AdminPanel implements IAdminCommandHandler {
     }
 
     @Override
-    public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
+    public boolean useAdminCommand(String comm, String[] wordList, String fullString, Player activeChar) {
         StringTokenizer st = new StringTokenizer(fullString);
-
-        Commands command = Commands.valueOf(st.nextToken());
 
         if (comm == null)
             return false;
@@ -87,31 +84,31 @@ public final class AdminPanel implements IAdminCommandHandler {
         String text = null;
         if (!(activeChar.getTarget() instanceof Player))
             return false;
-        final Player target = (Player)activeChar.getTarget();
+        final Player target = (Player) activeChar.getTarget();
         Player caster = null;
         Party p;
         final List<Player> world = GameObjectsStorage.getAllPlayersStream()
                 .collect(Collectors.toList());
 
-        switch (command) {
-            case admin_panel:
+        switch (comm) {
+            case "admin_panel":
                 html = new NpcHtmlMessage(5);
                 html.setFile("admin/panel/panel.htm");
                 activeChar.sendPacket(html);
                 break;
-            case admin_controlpanelchar:
+            case "admin_controlpanelchar":
                 html = new NpcHtmlMessage(5);
                 html.setFile("admin/panel/controlpanel.htm");
                 activeChar.sendPacket(html);
                 break;
 
-            case admin_effects:
+            case "admin_effects":
                 html = new NpcHtmlMessage(5);
                 html.setFile("admin/panel/effects.htm");
                 activeChar.sendPacket(html);
                 break;
 
-            case admin_imitate:
+            case "admin_imitate":
                 if (target == null) {
                     activeChar.sendMessage("Target incorrect");
                     return false;
@@ -129,7 +126,7 @@ public final class AdminPanel implements IAdminCommandHandler {
                 activeChar.sendPacket(html);
                 break;
 
-            case admin_sendexmsg:
+            case "admin_sendexmsg":
 
                 String text2 = fullString.substring(15);
                 if (!text2.isEmpty()) {
@@ -142,7 +139,7 @@ public final class AdminPanel implements IAdminCommandHandler {
                 activeChar.sendPacket(html);
 
                 break;
-            case admin_sendcsmsg:
+            case "admin_sendcsmsg":
 
                 text = fullString.substring(15);
 
@@ -158,17 +155,17 @@ public final class AdminPanel implements IAdminCommandHandler {
 
                 break;
 
-            case admin_sit_down:
+            case "admin_sit_down":
 
                 if (activeChar.getTarget() instanceof Player)
-                    ((Player)activeChar.getTarget()).sitDown(null);
+                    ((Player) activeChar.getTarget()).sitDown(null);
 
                 html = new NpcHtmlMessage(5);
                 html.setFile("admin/panel/controlpanel.htm");
                 activeChar.sendPacket(html);
                 break;
 
-            case admin_sit_down_party:
+            case "admin_sit_down_party":
 //                target = activeChar.getTarget().getPlayer();
 
                 p = target.getParty();
@@ -190,14 +187,14 @@ public final class AdminPanel implements IAdminCommandHandler {
                 activeChar.sendPacket(html);
                 break;
 
-            case admin_stand_up:
+            case "admin_stand_up":
                 target.standUp();
                 html = new NpcHtmlMessage(5);
                 html.setFile("admin/panel/controlpanel.htm");
                 activeChar.sendPacket(html);
                 break;
 
-            case admin_stand_up_party:
+            case "admin_stand_up_party":
                 p = target.getParty();
 
                 if (p == null) {
@@ -216,20 +213,20 @@ public final class AdminPanel implements IAdminCommandHandler {
                 html.setFile("admin/panel/controlpanel.htm");
                 activeChar.sendPacket(html);
                 break;
-            case admin_smallfirework:
+            case "admin_smallfirework":
                 world.forEach(pl -> pl.broadcastPacket(new MagicSkillUse(pl, 2023)));
 
                 break;
-            case admin_mediumfirework:
+            case "admin_mediumfirework":
                 world.forEach(pl -> pl.broadcastPacket(new MagicSkillUse(pl, 2024)));
                 break;
-            case admin_bigfirework:
+            case "admin_bigfirework":
                 world.forEach(pl -> pl.broadcastPacket(new MagicSkillUse(pl, 2025)));
                 break;
-            case admin_cppanel:
+            case "admin_cppanel":
                 CppanelMainPage(activeChar);
                 break;
-            case admin_clanskills:
+            case "admin_clanskills":
 
                 if (!st.hasMoreTokens()) {
                     clanSkillList(activeChar);
@@ -253,15 +250,15 @@ public final class AdminPanel implements IAdminCommandHandler {
                 }
                 clanSkillList(activeChar);
                 break;
-            case admin_lockshout:
+            case "admin_lockshout":
                 Say2C.LOCK_SHOUT_VOICE = !Say2C.LOCK_SHOUT_VOICE;
                 activeChar.sendMessage("Bool of Shout reversed to " + Say2C.LOCK_SHOUT_VOICE);
                 break;
-            case admin_lockhero:
+            case "admin_lockhero":
                 Say2C.LOCK_HERO_VOICE = !Say2C.LOCK_HERO_VOICE;
                 activeChar.sendMessage("Bool of Hero reversed to " + Say2C.LOCK_HERO_VOICE);
                 break;
-            case admin_cleanup:
+            case "admin_cleanup":
                 System.runFinalization();
                 System.gc();
                 System.out.println("Java Memory Cleanup.");
@@ -272,14 +269,14 @@ public final class AdminPanel implements IAdminCommandHandler {
 
     public String showItems(Playable target) {
         String items = "";
-
+        Player player = target.getPlayer();
         String lHand = "---";
-        if (target.getInventory().getPaperdollItem(Inventory.PAPERDOLL_LHAND) != null)
-            lHand = target.getInventory().getPaperdollItem(Inventory.PAPERDOLL_LHAND).getName() + " <button value=\"Augment it\" action=\"bypass -h admin_setaugmentonweapon 1 $id $lvl\" width=180 height=32 back=\"L2UI_CH3.refinegrade3_21\" fore=\"L2UI_CH3.refinegrade3_21\">";
+        if (player.getInventory().getPaperdollItem(Inventory.PAPERDOLL_LHAND) != null)
+            lHand = player.getInventory().getPaperdollItem(Inventory.PAPERDOLL_LHAND).getName() + " <button value=\"Augment it\" action=\"bypass -h admin_setaugmentonweapon 1 $id $lvl\" width=180 height=32 back=\"L2UI_CH3.refinegrade3_21\" fore=\"L2UI_CH3.refinegrade3_21\">";
 
         String rHand = "---";
-        if (target.getInventory().getPaperdollItem(Inventory.PAPERDOLL_RHAND) != null)
-            rHand = target.getInventory().getPaperdollItem(Inventory.PAPERDOLL_RHAND).getName() + " <button value=\"Augment it\" action=\"bypass -h admin_setaugmentonweapon 2 $id $lvl\" width=180 height=32 back=\"L2UI_CH3.refinegrade3_21\" fore=\"L2UI_CH3.refinegrade3_21\">";
+        if (player.getInventory().getPaperdollItem(Inventory.PAPERDOLL_RHAND) != null)
+            rHand = player.getInventory().getPaperdollItem(Inventory.PAPERDOLL_RHAND).getName() + " <button value=\"Augment it\" action=\"bypass -h admin_setaugmentonweapon 2 $id $lvl\" width=180 height=32 back=\"L2UI_CH3.refinegrade3_21\" fore=\"L2UI_CH3.refinegrade3_21\">";
 
         items += "</font><br><font color=\"FF00FF\"> LHand: </font><font color=\"LEVEL\">" + lHand +
                 "</font><br><font color=\"FF00FF\"> RHand: </font><font color=\"LEVEL\">" + rHand +
@@ -326,30 +323,28 @@ public final class AdminPanel implements IAdminCommandHandler {
 
 
     @Override
-    public Enum<?>[] getAdminCommandEnum() {
-        return Commands.values();
-    }
+    public List<String> getAdminCommands() {
+        return
+                List.of(
+                        "admin_panel",
+                        "admin_controlpanelchar",
+                        "admin_imitate",
+                        "admin_sendexmsg",
+                        "admin_sendcsmsg",
+                        "admin_sit_down",
+                        "admin_sit_down_party",
+                        "admin_stand_up",
+                        "admin_stand_up_party",
 
-    private enum Commands {
-        admin_panel,
-        admin_controlpanelchar,
-        admin_imitate,
-        admin_sendexmsg,
-        admin_sendcsmsg,
-        admin_sit_down,
-        admin_sit_down_party,
-        admin_stand_up,
-        admin_stand_up_party,
-
-        admin_effects,
-        admin_smallfirework,
-        admin_mediumfirework,
-        admin_bigfirework,
-        admin_cppanel,
-        admin_changevaluescppanel,
-        admin_lockshout,
-        admin_lockhero,
-        admin_cleanup,
-        admin_clanskills,
+                        "admin_effects",
+                        "admin_smallfirework",
+                        "admin_mediumfirework",
+                        "admin_bigfirework",
+                        "admin_cppanel",
+                        "admin_changevaluescppanel",
+                        "admin_lockshout",
+                        "admin_lockhero",
+                        "admin_cleanup",
+                        "admin_clanskills");
     }
 }

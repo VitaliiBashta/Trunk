@@ -1,15 +1,15 @@
 package l2trunk.gameserver.network.serverpackets;
 
-public class ShowXMasSeal extends L2GameServerPacket {
-    private final int _item;
+public final class ShowXMasSeal extends L2GameServerPacket {
+    private final int item;
 
     public ShowXMasSeal(int item) {
-        _item = item;
+        this.item = item;
     }
 
     @Override
     protected void writeImpl() {
         writeC(0xf8);
-        writeD(_item);
+        writeD(item);
     }
 }

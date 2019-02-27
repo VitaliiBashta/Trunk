@@ -30,7 +30,7 @@ public final class RequestExEnchantSkillSafe extends L2GameClientPacket {
         if (activeChar == null)
             return;
 
-        if (activeChar.getTransformation() != 0) {
+        if (activeChar.isTrasformed()) {
             activeChar.sendMessage("You must leave transformation mode first.");
             return;
         }

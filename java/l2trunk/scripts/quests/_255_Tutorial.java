@@ -332,7 +332,7 @@ public final class _255_Tutorial extends Quest implements OnPlayerEnterListener 
         } else if (event.startsWith("ChangeTo")) {
             StringTokenizer tokenizer = new StringTokenizer(event, ";");
             tokenizer.nextToken();
-            ClassId newClassId = ClassId.getById(toInt(tokenizer.nextToken()));
+            ClassId newClassId = ClassId.getById(tokenizer.nextToken());
             long price = Long.parseLong(tokenizer.nextToken());
 
             if (price < 0L)//Somebody cheating

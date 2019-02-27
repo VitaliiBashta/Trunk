@@ -49,7 +49,7 @@ public final class RideHire extends Functions {
             return;
         }
 
-        if (player.getTransformation() != 0) {
+        if (player.isTrasformed()) {
             show("Can't ride while in transformation mode.", player, npc);
             return;
         }

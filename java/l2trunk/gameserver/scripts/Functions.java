@@ -162,7 +162,7 @@ public class Functions {
 
     protected static boolean ride(Player player, int pet) {
         if (player.isMounted())
-            player.setMount(0, 0, 0);
+            player.dismount();
 
         if (player.getPet() != null) {
             player.sendPacket(SystemMsg.YOU_ALREADY_HAVE_A_PET);
@@ -175,7 +175,7 @@ public class Functions {
 
     protected static void unRide(Player player) {
         if (player.isMounted())
-            player.setMount(0, 0, 0);
+            player.dismount();
     }
 
     public static void unSummonPet(Player player, boolean onlyPets) {
@@ -211,7 +211,7 @@ public class Functions {
     }
 
     protected static boolean isActive(String name) {
-        return ServerVariables.getString(name, "off").equalsIgnoreCase("on");
+        return "on".equalsIgnoreCase(ServerVariables.getString(name, "off"));
     }
 
     protected static boolean setActive(String name, boolean active) {

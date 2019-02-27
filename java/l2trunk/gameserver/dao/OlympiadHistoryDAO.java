@@ -1,6 +1,7 @@
 package l2trunk.gameserver.dao;
 
 import l2trunk.gameserver.database.DatabaseFactory;
+import l2trunk.gameserver.model.base.ClassId;
 import l2trunk.gameserver.model.entity.olympiad.OlympiadHistory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,8 +38,8 @@ public class OlympiadHistoryDAO {
                     int objectId1 = rset.getInt("object_id_1");
                     int objectId2 = rset.getInt("object_id_2");
 
-                    int classId1 = rset.getInt("class_id_1");
-                    int classId2 = rset.getInt("class_id_2");
+                    ClassId classId1 = ClassId.getById(rset.getInt("class_id_1"));
+                    ClassId classId2 = ClassId.getById(rset.getInt("class_id_2"));
 
                     String name1 = rset.getString("name_1");
                     String name2 = rset.getString("name_2");
@@ -62,8 +63,8 @@ public class OlympiadHistoryDAO {
              PreparedStatement statement = con.prepareStatement(INSERT_SQL_QUERY)) {
             statement.setInt(1, history.objectId1);
             statement.setInt(2, history.objectId2);
-            statement.setInt(3, history.classId1);
-            statement.setInt(4, history.classId2);
+            statement.setInt(3, history.classId1.id);
+            statement.setInt(4, history.classId2.id);
             statement.setString(5, history.name1);
             statement.setString(6, history.name2);
             statement.setLong(7, history.gameStartTime);

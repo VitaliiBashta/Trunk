@@ -43,7 +43,7 @@ public final class RequestExMagicSkillUseGround extends L2GameClientPacket {
                 return;
 
             // В режиме трансформации доступны только скилы трансформы
-            if (activeChar.getTransformation() != 0 && !activeChar.getAllSkills().contains(skill))
+            if (activeChar.isTrasformed()  && !activeChar.getAllSkills().contains(skill))
                 return;
 
             if (!activeChar.isInRange(loc, skill.castRange)) {

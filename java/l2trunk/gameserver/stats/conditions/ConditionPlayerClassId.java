@@ -22,7 +22,7 @@ public final class ConditionPlayerClassId extends Condition {
         if (!(env.character instanceof Player))
             return false;
 
-        int playerClassId = ((Player) env.character).getActiveClassId();
+        int playerClassId = ((Player) env.character).getActiveClassId().id;
         return classIds.contains(playerClassId);
     }
 }

@@ -5,9 +5,9 @@ import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.World;
 
-public class AdminTarget implements IAdminCommandHandler {
+public final class AdminTarget implements IAdminCommandHandler {
     @Override
-    public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
+    public boolean useAdminCommand(String comm, String[] wordList, String fullString, Player activeChar) {
 
         if (!activeChar.getPlayerAccess().CanViewChar)
             return false;
@@ -22,16 +22,11 @@ public class AdminTarget implements IAdminCommandHandler {
         } catch (IndexOutOfBoundsException e) {
             activeChar.sendMessage("Please specify correct name.");
         }
-
         return true;
     }
 
     @Override
-    public Enum[] getAdminCommandEnum() {
-        return Commands.values();
-    }
-
-    private enum Commands {
-        admin_target
+    public String getAdminCommand() {
+        return "admin_target";
     }
 }

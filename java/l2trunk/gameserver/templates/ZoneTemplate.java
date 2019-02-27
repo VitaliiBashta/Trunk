@@ -24,7 +24,7 @@ public final class ZoneTemplate {
     private final boolean _isEnabled;
 
     private final List<Location> restartPoints;
-    private final List<Location> _PKrestartPoints;
+    private final List<Location> pkRestartPoints;
     private final long _restartTime;
 
     private final int _enteringMessageId;
@@ -85,11 +85,10 @@ public final class ZoneTemplate {
 
     private final boolean isEpicPvP;
 
-    @SuppressWarnings("unchecked")
     public ZoneTemplate(StatsSet set) {
         name = set.getString("name");
         type = ZoneType.valueOf(set.getString("type"));
-        territory = (Territory) set.get("territory");
+        territory = set.getTerritory("territory");
 
         _enteringMessageId = set.getInteger("entering_message_no", 0);
         _leavingMessageId = set.getInteger("leaving_message_no", 0);
@@ -108,7 +107,7 @@ public final class ZoneTemplate {
         skillProb = set.getInteger("skill_prob", 100);
         initialDelay = set.getInteger("initial_delay", 1);
         unitTick = set.getInteger("unit_tick", 1);
-        randomTick = set.getInteger("random_time", 0);
+        randomTick = set.getInteger("random_time");
 
         //Зона с бонусами
         moveBonus = set.getDouble("move_bonus", 0.);
@@ -116,19 +115,19 @@ public final class ZoneTemplate {
         _regenBonusMP = set.getDouble("mp_regen_bonus", 0.);
 
         //Зона с дамагом
-        _damageOnHP = set.getInteger("damage_on_hp", 0);
-        damageOnMP = set.getInteger("damage_on_mp", 0);
-        _damageMessageId = set.getInteger("message_no", 0);
+        _damageOnHP = set.getInteger("damage_on_hp");
+        damageOnMP = set.getInteger("damage_on_mp");
+        _damageMessageId = set.getInteger("message_no");
 
-        _eventId = set.getInteger("eventId", 0);
+        _eventId = set.getInteger("eventId");
 
         _isEnabled = set.getBool("enabled", true);
 
-        restartPoints = (List<Location>) set.get("restart_points");
-        _PKrestartPoints = (List<Location>) set.get("PKrestart_points");
-        _restartTime = set.getLong("restart_time", 0L);
+        restartPoints = set.getLocations("restart_points");
+        pkRestartPoints = set.getLocations("PKrestart_points");
+        _restartTime = set.getLong("restart_time");
 
-        s = (String) set.get("blocked_actions");
+        s = set.getString("blocked_actions");
         if (s != null)
             blockedActions = Arrays.asList(s.split(ExProperties.defaultDelimiter));
         else
@@ -137,7 +136,6 @@ public final class ZoneTemplate {
         isEpicPvP = set.getBool("epicPvP", false);
 
         _index = set.getInteger("index", 0);
-        int _taxById = set.getInteger("taxById", 0);
 
         params = set;
     }
@@ -246,7 +244,7 @@ public final class ZoneTemplate {
     }
 
     public List<Location> getPKRestartPoints() {
-        return _PKrestartPoints;
+        return pkRestartPoints;
     }
 
     public int getIndex() {

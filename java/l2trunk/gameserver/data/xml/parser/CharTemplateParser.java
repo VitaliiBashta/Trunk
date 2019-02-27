@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import static l2trunk.commons.lang.NumberUtils.toBoolean;
 import static l2trunk.commons.lang.NumberUtils.toInt;
 
 public enum CharTemplateParser {
@@ -23,7 +24,7 @@ public enum CharTemplateParser {
 
     public void load() {
         ParserUtil.INSTANCE.load(xml).forEach(this::readData);
-        LOG.info("loaded " + CharTemplateHolder.size() + " doors ");
+        LOG.info("loaded " + CharTemplateHolder.size() + " char templates ");
     }
 
     private void readData(Element rootElement) {
@@ -46,7 +47,7 @@ public enum CharTemplateParser {
                     boolean equipable = false;
                     int shortcat = -1;
                     if (templat.attributeValue("equipable") != null)
-                        equipable = Boolean.parseBoolean(templat.attributeValue("equipable"));
+                        equipable = toBoolean(templat.attributeValue("equipable"));
                     if (templat.attributeValue("shortcut") != null)
                         shortcat = toInt(templat.attributeValue("shortcut"));
                     items.add(new CreateItem(itemId, equipable, shortcat));

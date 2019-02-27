@@ -8,7 +8,6 @@ import l2trunk.gameserver.model.GameObjectsStorage;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.SubClass;
 import l2trunk.gameserver.model.base.ClassId;
-import l2trunk.gameserver.model.base.PlayerClass;
 import l2trunk.gameserver.model.base.Race;
 import l2trunk.gameserver.model.entity.Hero;
 import l2trunk.gameserver.model.entity.olympiad.Olympiad;
@@ -98,7 +97,7 @@ public final class AdminEditChar implements IAdminCommandHandler {
     }
 
     @Override
-    public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
+    public boolean useAdminCommand(String comm, String[] wordList, String fullString, Player activeChar) {
 
         GameObject tgt = activeChar.getTarget();
         if (activeChar.getPlayerAccess().CanRename)
@@ -354,7 +353,7 @@ public final class AdminEditChar implements IAdminCommandHandler {
                     activeChar.sendMessage("Specify a valid integer value.");
                     return false;
                 }
-                if (transformId != 0 && activeChar.getTransformation() != 0) {
+                if (transformId != 0 && activeChar.isTrasformed()) {
                     activeChar.sendPacket(SystemMsg.YOU_ALREADY_POLYMORPHED_AND_CANNOT_POLYMORPH_AGAIN);
                     return false;
                 }
@@ -369,7 +368,7 @@ public final class AdminEditChar implements IAdminCommandHandler {
                 StringTokenizer st = new StringTokenizer(fullString);
                 if (st.countTokens() > 1) {
                     st.nextToken();
-                    ClassId classId = ClassId.getById(toInt(st.nextToken()));
+                    ClassId classId = ClassId.getById(st.nextToken());
                     if (!player.addSubClass(classId, true, 0)) {
                         activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.model.instances.L2VillageMasterInstance.SubclassCouldNotBeAdded"));
                         return false;
@@ -472,8 +471,35 @@ public final class AdminEditChar implements IAdminCommandHandler {
     }
 
     @Override
-    public Enum[] getAdminCommandEnum() {
-        return Commands.values();
+    public List<String> getAdminCommands() {
+        return List.of(
+                "admin_edit_character",
+                "admin_character_actions",
+                "admin_current_player",
+                "admin_nokarma",
+                "admin_setkarma",
+                "admin_character_list",
+                "admin_show_characters",
+                "admin_find_character",
+                "admin_save_modifications",
+                "admin_rec",
+                "admin_settitle",
+                "admin_setclass",
+                "admin_setname",
+                "admin_setsex",
+                "admin_setcolor",
+                "admin_add_exp_sp_to_character",
+                "admin_add_exp_sp",
+                "admin_sethero",
+                "admin_setnoble",
+                "admin_trans",
+                "admin_setsubclass",
+                "admin_setfame",
+                "admin_addfame",
+                "admin_setbday",
+                "admin_give_item",
+                "admin_add_bang",
+                "admin_set_bang");
     }
 
     private void listCharacters(Player activeChar, int page) {
@@ -853,9 +879,7 @@ public final class AdminEditChar implements IAdminCommandHandler {
     private Set<ClassId> getAvailableSubClasses(Player player) {
         final ClassId charClassName = player.getClassId();
 
-        ClassId currClass = charClassName;
-
-        Set<ClassId> availSubs = currClass.getAvailableSubclasses();
+        Set<ClassId> availSubs = charClassName.getAvailableSubclasses();
         if (availSubs == null)
             return null;
 
@@ -887,12 +911,12 @@ public final class AdminEditChar implements IAdminCommandHandler {
             // Особенности саб классов камаэль
             if (availSub.race == Race.kamael) {
                 // Для Soulbreaker-а и SoulHound не предлагаем Soulbreaker-а другого пола
-                if ((currClass == ClassId.maleSoulhound || currClass == ClassId.femaleSoulhound || currClass == femaleSoulbreaker || currClass == maleSoulbreaker)
-                        && (availSub ==femaleSoulbreaker || availSub == maleSoulbreaker))
+                if ((charClassName == ClassId.maleSoulhound || charClassName == ClassId.femaleSoulhound || charClassName == femaleSoulbreaker || charClassName == maleSoulbreaker)
+                        && (availSub == femaleSoulbreaker || availSub == maleSoulbreaker))
                     availSubs.remove(availSub);
 
                 // Для Berserker(doombringer) и Arbalester(trickster) предлагаем Soulbreaker-а только своего пола
-                if (currClass == berserker || currClass == doombringer || currClass == arbalester || currClass == trickster)
+                if (charClassName == berserker || charClassName == doombringer || charClassName == arbalester || charClassName == trickster)
                     if (player.isMale() && availSub == maleSoulbreaker || !player.isMale() && availSub == femaleSoulbreaker)
                         availSubs.remove(availSub);
 
@@ -900,13 +924,14 @@ public final class AdminEditChar implements IAdminCommandHandler {
                 // doombringer(berserker), soulhound(maleSoulbreaker, femaleSoulbreaker), trickster(arbalester)
                 if (availSub == inspector)
                     // doombringer(berserker)
-                    if (!(player.getSubClasses().containsKey(131) || player.getSubClasses().containsKey(127)))
+                    if (!(player.getSubClasses().containsKey(doombringer) || player.getSubClasses().containsKey(berserker)))
                         availSubs.remove(availSub);
                         // soulhound(maleSoulbreaker, femaleSoulbreaker)
-                    else if (!(player.getSubClasses().containsKey(132) || player.getSubClasses().containsKey(133) || player.getSubClasses().containsKey(128) || player.getSubClasses().containsKey(129)))
+                    else if (!(player.getSubClasses().containsKey(maleSoulbreaker) || player.getSubClasses().containsKey(femaleSoulbreaker)
+                            || player.getSubClasses().containsKey(maleSoulhound) || player.getSubClasses().containsKey(femaleSoulhound)))
                         availSubs.remove(availSub);
                         // trickster(arbalester)
-                    else if (!(player.getSubClasses().containsKey(134) || player.getSubClasses().containsKey(130)))
+                    else if (!(player.getSubClasses().containsKey(arbalester) || player.getSubClasses().containsKey(trickster)))
                         availSubs.remove(availSub);
             }
         }
@@ -924,33 +949,4 @@ public final class AdminEditChar implements IAdminCommandHandler {
         return classNameStr;
     }
 
-    private enum Commands {
-        admin_edit_character,
-        admin_character_actions,
-        admin_current_player,
-        admin_nokarma,
-        admin_setkarma,
-        admin_character_list,
-        admin_show_characters,
-        admin_find_character,
-        admin_save_modifications,
-        admin_rec,
-        admin_settitle,
-        admin_setclass,
-        admin_setname,
-        admin_setsex,
-        admin_setcolor,
-        admin_add_exp_sp_to_character,
-        admin_add_exp_sp,
-        admin_sethero,
-        admin_setnoble,
-        admin_trans,
-        admin_setsubclass,
-        admin_setfame,
-        admin_addfame,
-        admin_setbday,
-        admin_give_item,
-        admin_add_bang,
-        admin_set_bang
-    }
 }

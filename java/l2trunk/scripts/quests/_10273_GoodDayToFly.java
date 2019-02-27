@@ -33,24 +33,24 @@ public final class _10273_GoodDayToFly extends Quest {
             st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("32557-09.htm".equalsIgnoreCase(event)) {
-            if (player.getTransformation() != 0) {
+            if (player.isTrasformed()) {
                 player.sendPacket(Msg.YOU_ALREADY_POLYMORPHED_AND_CANNOT_POLYMORPH_AGAIN);
                 return null;
             }
-            st.set("transform", 1);
+            st.set("transform");
             SkillTable.INSTANCE.getInfo(5982).getEffects(player);
         } else if ("32557-10.htm".equalsIgnoreCase(event)) {
-            if (player.getTransformation() != 0) {
+            if (player.isTrasformed()) {
                 player.sendPacket(Msg.YOU_ALREADY_POLYMORPHED_AND_CANNOT_POLYMORPH_AGAIN);
                 return null;
             }
             SkillTable.INSTANCE.getInfo(5983).getEffects(player);
-        } else if (event.equalsIgnoreCase("32557-13.htm")) {
-            if (player.getTransformation() != 0) {
+        } else if ("32557-13.htm".equalsIgnoreCase(event)) {
+            if (player.isTrasformed()) {
                 player.sendPacket(Msg.YOU_ALREADY_POLYMORPHED_AND_CANNOT_POLYMORPH_AGAIN);
                 return null;
             }
-            if (st.getInt("transform") == 1)
+            if (st.isSet("transform") )
                 SkillTable.INSTANCE.getInfo(5982).getEffects(player);
             else if (st.getInt("transform") == 2)
                 SkillTable.INSTANCE.getInfo(5983).getEffects(player);

@@ -61,7 +61,7 @@ public final class _156_MillenniumLove extends Quest {
                 htmltext = "30368-07.htm";
             else if (cond == 2 && st.haveQuestItem(THEONS_DIARY)) {
                 st.takeItems(THEONS_DIARY);
-                if (st.player.getClassId().isMage)
+                if (st.player.getClassId().isMage())
                     st.giveItems(GR_COMP_PACKAGE_SPS);
                 else
                     st.giveItems(GR_COMP_PACKAGE_SS);

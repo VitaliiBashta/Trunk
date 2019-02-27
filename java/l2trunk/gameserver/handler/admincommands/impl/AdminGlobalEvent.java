@@ -3,35 +3,22 @@ package l2trunk.gameserver.handler.admincommands.impl;
 import l2trunk.gameserver.handler.admincommands.IAdminCommandHandler;
 import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.Player;
-import l2trunk.gameserver.model.entity.events.GlobalEvent;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
-public class AdminGlobalEvent implements IAdminCommandHandler {
-    @SuppressWarnings("rawtypes")
+public final class AdminGlobalEvent implements IAdminCommandHandler {
     @Override
-    public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
-        Commands c = (Commands) comm;
-        switch (c) {
-            case admin_list_events:
-                GameObject object = activeChar.getTarget();
-                if (object == null)
-                    activeChar.sendPacket(SystemMsg.INVALID_TARGET);
-                else {
-                    for (GlobalEvent e : object.getEvents())
-                        activeChar.sendMessage("- " + e.toString());
-                }
-                break;
-        }
+    public boolean useAdminCommand(String comm, String[] wordList, String fullString, Player activeChar) {
+
+        GameObject object = activeChar.getTarget();
+        if (object == null)
+            activeChar.sendPacket(SystemMsg.INVALID_TARGET);
+        else object.getEvents().forEach(e ->
+                activeChar.sendMessage("- " + e.toString()));
         return false;
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
-    public Enum[] getAdminCommandEnum() {
-        return Commands.values();
-    }
-
-    private enum Commands {
-        admin_list_events
+    public String getAdminCommand() {
+        return "admin_list_events";
     }
 }

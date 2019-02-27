@@ -4,16 +4,16 @@ import l2trunk.gameserver.handler.admincommands.IAdminCommandHandler;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.SevenSigns;
 
-public class AdminSS implements IAdminCommandHandler {
-    @Override
-    public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
-        Commands command = (Commands) comm;
+import java.util.List;
 
+public final class AdminSS implements IAdminCommandHandler {
+    @Override
+    public boolean useAdminCommand(String comm, String[] wordList, String fullString, Player activeChar) {
         if (!activeChar.getPlayerAccess().Menu)
             return false;
 
-        switch (command) {
-            case admin_ssq_change: {
+        switch (comm) {
+            case "admin_ssq_change": {
                 if (wordList.length > 2) {
                     int period = Integer.parseInt(wordList[1]);
                     int minutes = Integer.parseInt(wordList[2]);
@@ -25,14 +25,14 @@ public class AdminSS implements IAdminCommandHandler {
                     SevenSigns.INSTANCE.changePeriod();
                 break;
             }
-            case admin_ssq_time: {
+            case "admin_ssq_time": {
                 if (wordList.length > 1) {
                     int time = Integer.parseInt(wordList[1]);
                     SevenSigns.INSTANCE.setTimeToNextPeriodChange(time);
                 }
                 break;
             }
-            case admin_ssq_cabal: {
+            case "admin_ssq_cabal": {
                 if (wordList.length > 3) {
                     int player = Integer.parseInt(wordList[1]); // getPlayer objectid
                     int cabal = Integer.parseInt(wordList[2]); // null dusk dawn
@@ -46,13 +46,10 @@ public class AdminSS implements IAdminCommandHandler {
     }
 
     @Override
-    public Enum[] getAdminCommandEnum() {
-        return Commands.values();
-    }
-
-    private enum Commands {
-        admin_ssq_change,
-        admin_ssq_time,
-        admin_ssq_cabal,
+    public List<String> getAdminCommands() {
+        return List.of(
+                "admin_ssq_change",
+                "admin_ssq_time",
+                "admin_ssq_cabal");
     }
 }

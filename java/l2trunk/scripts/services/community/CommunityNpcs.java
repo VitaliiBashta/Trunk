@@ -3,7 +3,6 @@ package l2trunk.scripts.services.community;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.cache.ImagesCache;
 import l2trunk.gameserver.cache.Msg;
-import l2trunk.gameserver.dao.CharacterDAO;
 import l2trunk.gameserver.data.htm.HtmCache;
 import l2trunk.gameserver.database.DatabaseFactory;
 import l2trunk.gameserver.handler.bbs.CommunityBoardManager;
@@ -14,7 +13,6 @@ import l2trunk.gameserver.listener.actor.player.OnAnswerListener;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.SubClass;
 import l2trunk.gameserver.model.base.ClassId;
-import l2trunk.gameserver.model.base.PlayerClass;
 import l2trunk.gameserver.model.base.Race;
 import l2trunk.gameserver.model.entity.events.impl.SiegeEvent;
 import l2trunk.gameserver.model.entity.olympiad.Olympiad;
@@ -22,7 +20,6 @@ import l2trunk.gameserver.model.instances.SchemeBufferInstance;
 import l2trunk.gameserver.model.instances.VillageMasterInstance;
 import l2trunk.gameserver.model.pledge.Clan;
 import l2trunk.gameserver.model.pledge.SubUnit;
-import l2trunk.gameserver.network.clientpackets.CharacterCreate;
 import l2trunk.gameserver.network.serverpackets.*;
 import l2trunk.gameserver.network.serverpackets.components.ChatType;
 import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
@@ -155,7 +152,7 @@ public class CommunityNpcs implements ScriptFile, ICommunityBoardHandler {
                 replacements[i * 2 + 1] = "<br>";
             else {
                 SubClass playerClass = availableSubs.get(i);
-                replacements[i * 2 + 1] = "<button value=\"Change To " + ClassId.values()[playerClass.getClassId()] + "\" action=\"bypass _bbsChangeSubTo_" + playerClass.getClassId() + "\" width=200 height=30 back=\"L2UI_CT1.OlympiadWnd_DF_Fight1None_Down\" fore=\"L2UI_ct1.OlympiadWnd_DF_Fight1None\">";
+                replacements[i * 2 + 1] = "<button value=\"Change To " + playerClass.getClassId().name + "\" action=\"bypass _bbsChangeSubTo_" + playerClass.getClassId() + "\" width=200 height=30 back=\"L2UI_CT1.OlympiadWnd_DF_Fight1None_Down\" fore=\"L2UI_ct1.OlympiadWnd_DF_Fight1None\">";
             }
         }
         sendFileToPlayer(player, "smallNpcs/subclassChanger_select.htm", true, replacements);
@@ -173,7 +170,7 @@ public class CommunityNpcs implements ScriptFile, ICommunityBoardHandler {
                 replacements[i * 2 + 1] = "<br>";
             else {
                 SubClass playerClass = subToChoose.get(i);
-                replacements[i * 2 + 1] = "<button value=\"Remove " + Util.getFullClassName(ClassId.values()[playerClass.getClassId()]) + "\" action=\"bypass _bbsSelectCancelSub_" + playerClass.getClassId() + "\" width=200 height=30 back=\"L2UI_CT1.OlympiadWnd_DF_Fight1None_Down\" fore=\"L2UI_ct1.OlympiadWnd_DF_Fight1None\">";
+                replacements[i * 2 + 1] = "<button value=\"Remove " + playerClass.getClassId().name + "\" action=\"bypass _bbsSelectCancelSub_" + playerClass.getClassId() + "\" width=200 height=30 back=\"L2UI_CT1.OlympiadWnd_DF_Fight1None_Down\" fore=\"L2UI_ct1.OlympiadWnd_DF_Fight1None\">";
             }
         }
         sendFileToPlayer(player, "smallNpcs/subclassChanger_select.htm", true, replacements);
@@ -195,7 +192,7 @@ public class CommunityNpcs implements ScriptFile, ICommunityBoardHandler {
 
         ClassId subToRemove = ClassId.getById(player.getQuickVarI("SubToRemove"));
         boolean added;
-        if (subToRemove != null ) {
+        if (subToRemove != null) {
             added = player.modifySubClass(subToRemove, subclassId);
         } else
             added = VillageMasterInstance.addNewSubclass(player, subclassId);
@@ -210,7 +207,7 @@ public class CommunityNpcs implements ScriptFile, ICommunityBoardHandler {
 
     private static Set<ClassId> getSubsByRace(Set<ClassId> allSubs, Race race) {
         for (ClassId sub : allSubs)
-            if (sub.race !=race)
+            if (sub.race != race)
                 allSubs.remove(sub);
         return allSubs;
     }
@@ -255,7 +252,7 @@ public class CommunityNpcs implements ScriptFile, ICommunityBoardHandler {
         }
 
         // Sub class can not be obtained or changed while using the skill or character is in transformation
-        if (player.isActionsDisabled() || player.getTransformation() != 0) {
+        if (player.isActionsDisabled() || player.isTrasformed()) {
             player.sendPacket(SystemMsg.SUBCLASSES_MAY_NOT_BE_CREATED_OR_CHANGED_WHILE_A_SKILL_IS_IN_USE);
             return false;
         }
@@ -369,7 +366,7 @@ public class CommunityNpcs implements ScriptFile, ICommunityBoardHandler {
         String cmd = st.nextToken();
         String folder = "";
         String file = "";
-        ClassId subclassId ;
+        ClassId subclassId;
         if (!cmd.equals("bbsNewSubPage") && !cmd.equals("bbsAddNewSub"))
             player.deleteQuickVar("SubToRemove");
 
@@ -398,7 +395,7 @@ public class CommunityNpcs implements ScriptFile, ICommunityBoardHandler {
         }
 
         if ("bbsAddNewSub".equals(cmd)) {
-            subclassId = ClassId.getById(Integer.parseInt(st.nextToken()));
+            subclassId = ClassId.getById(st.nextToken());
             addNewSub(player, subclassId);
             return;
         }
@@ -409,7 +406,7 @@ public class CommunityNpcs implements ScriptFile, ICommunityBoardHandler {
         }
 
         if ("bbsChangeSubTo".equals(cmd)) {
-            subclassId = ClassId.getById(Integer.parseInt(st.nextToken()));
+            subclassId = ClassId.getById(st.nextToken());
             changeSub(player, subclassId);
             return;
         }
@@ -420,7 +417,7 @@ public class CommunityNpcs implements ScriptFile, ICommunityBoardHandler {
         }
 
         if ("bbsSelectCancelSub".equals(cmd)) {
-            subclassId = ClassId.getById(Integer.parseInt(st.nextToken()));
+            subclassId = ClassId.getById(st.nextToken());
             player.addQuickVar("SubToRemove", subclassId.id);
             sendFileToPlayer(player, "smallNpcs/subclassChanger_add.htm", true);
             return;
@@ -475,7 +472,7 @@ public class CommunityNpcs implements ScriptFile, ICommunityBoardHandler {
             html = html.replace("%respawnAntharas%", convertRespawnDate(AntharasManager.getState().getRespawnDate()));
             html = html.replace("%respawnValakas%", convertRespawnDate(ValakasManager.getState().getRespawnDate()));
             html = html.replace("%respawnBaium%", convertRespawnDate(BaiumManager.getState().getRespawnDate()));
-            html = html.replace("%respawnBeleth%", convertRespawnDate(ServerVariables.getLong("BelethKillTime", 0L)));
+            html = html.replace("%respawnBeleth%", convertRespawnDate(ServerVariables.getLong("BelethKillTime")));
             html = html.replace("%respawnQueenAnt%", convertRespawnDate(RaidBossSpawnManager.INSTANCE.getRespawntime(29001) * 1000L));
             html = html.replace("%respawnOrfen%", convertRespawnDate(RaidBossSpawnManager.INSTANCE.getRespawntime(29014) * 1000L));
 

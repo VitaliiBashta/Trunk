@@ -257,7 +257,7 @@ public final class RankingCommunity implements ScriptFile, ICommunityBoardHandle
         int number = 0;
 
         try (Connection con = DatabaseFactory.getInstance().getConnection();
-             PreparedStatement statement = con.prepareStatement("SELECT char_name, class_id, clanid, online, pkkills FROM characters AS c LEFT JOIN character_subclasses AS cs ON (c.obj_Id=cs.char_obj_id) WHERE cs.isBase=1 AND accesslevel = 0 ORDER BY pkkills DESC LIMIT " + 10);
+             PreparedStatement statement = con.prepareStatement("SELECT char_name, class_id, clanid, online, pkkills FROM characters AS c LEFT JOIN character_subclasses AS cs ON (c.obj_Id=cs.char_obj_id) WHERE cs.isBase=1 AND accesslevel = 0 ORDER BY pkkills DESC LIMIT 10" );
              ResultSet rset = statement.executeQuery()) {
             while (rset.next()) {
                 if (!rset.getString("char_name").isEmpty()) {

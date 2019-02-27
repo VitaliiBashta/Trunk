@@ -150,7 +150,7 @@ public final class _195_SevenSignsSecretRitualofthePriests extends Quest {
             st.giveItems(GuardsoftheDawnIdentityCard);
             st.playSound(SOUND_MIDDLE);
         } else if ("raymond_q195_3.htm".equalsIgnoreCase(event)) {
-            if (player.getTransformation() != 0 || player.isMounted()) {
+            if (player.isTrasformed() || player.isMounted()) {
                 player.sendPacket(Msg.YOU_ALREADY_POLYMORPHED_AND_CANNOT_POLYMORPH_AGAIN);
                 return null;
             }
@@ -159,7 +159,7 @@ public final class _195_SevenSignsSecretRitualofthePriests extends Quest {
             SkillTable.INSTANCE.getInfo(6204).getEffects(player);
             st.setCond(3);
         } else if ("transformagain".equalsIgnoreCase(event)) {
-            if (player.getTransformation() != 0 || player.isMounted()) {
+            if (player.isTrasformed()  || player.isMounted()) {
                 player.sendPacket(Msg.YOU_ALREADY_POLYMORPHED_AND_CANNOT_POLYMORPH_AGAIN);
                 return null;
             }

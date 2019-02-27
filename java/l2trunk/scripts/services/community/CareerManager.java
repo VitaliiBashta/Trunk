@@ -106,7 +106,7 @@ public final class CareerManager implements ScriptFile, ICommunityBoardHandler {
             st.nextToken();
             st.nextToken();
 
-            final ClassId classId = ClassId.getById(toInt(st.nextToken()));
+            final ClassId classId = ClassId.getById(st.nextToken());
 
             // Synerge - Check if the getPlayer can actually transfer to that class
             if (!checkIfCanTransferToClass(activeChar, classId)) {

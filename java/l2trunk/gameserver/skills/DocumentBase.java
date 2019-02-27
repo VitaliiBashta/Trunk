@@ -34,6 +34,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
+import static l2trunk.commons.lang.NumberUtils.toBoolean;
+
 abstract class DocumentBase {
     private static final Logger LOG = LoggerFactory.getLogger(DocumentBase.class);
 
@@ -79,7 +81,7 @@ abstract class DocumentBase {
 
     protected abstract String getTableValue(String name);
 
-    protected abstract Object getTableValue(String name, int idx);
+    protected abstract String getTableValue(String name, int idx);
 
     void resetTable() {
         tables = new HashMap<>();
@@ -157,7 +159,7 @@ abstract class DocumentBase {
         template.attachFunc(new FuncTemplate(applyCond, name, stat, ord, val));
     }
 
-    private void attachEffect(Node n, Object template) {
+    private void attachEffect(Node n, StatTemplate template) {
         NamedNodeMap attrs = n.getAttributes();
         StatsSet set = new StatsSet();
 
@@ -191,9 +193,9 @@ abstract class DocumentBase {
             set.set("stackOrder", parseNumber(attrs.getNamedItem("stackOrder").getNodeValue()).intValue());
 
         if (attrs.getNamedItem("applyOnCaster") != null)
-            set.set("applyOnCaster", Boolean.valueOf(attrs.getNamedItem("applyOnCaster").getNodeValue()));
+            set.set("applyOnCaster", toBoolean(attrs.getNamedItem("applyOnCaster").getNodeValue()));
         if (attrs.getNamedItem("applyOnSummon") != null)
-            set.set("applyOnSummon", Boolean.valueOf(attrs.getNamedItem("applyOnSummon").getNodeValue()));
+            set.set("applyOnSummon", toBoolean(attrs.getNamedItem("applyOnSummon").getNodeValue()));
 
         if (attrs.getNamedItem("displayId") != null)
             set.set("displayId", parseNumber(attrs.getNamedItem("displayId").getNodeValue()).intValue());
@@ -202,11 +204,11 @@ abstract class DocumentBase {
         if (attrs.getNamedItem("chance") != null)
             set.set("chance", parseNumber(attrs.getNamedItem("chance").getNodeValue()).intValue());
         if (attrs.getNamedItem("cancelOnAction") != null)
-            set.set("cancelOnAction", Boolean.valueOf(attrs.getNamedItem("cancelOnAction").getNodeValue()));
+            set.set("cancelOnAction", toBoolean(attrs.getNamedItem("cancelOnAction").getNodeValue()));
         if (attrs.getNamedItem("isOffensive") != null)
-            set.set("isOffensive", Boolean.valueOf(attrs.getNamedItem("isOffensive").getNodeValue()));
+            set.set("isOffensive", toBoolean(attrs.getNamedItem("isOffensive").getNodeValue()));
         if (attrs.getNamedItem("isReflectable") != null)
-            set.set("isReflectable", Boolean.valueOf(attrs.getNamedItem("isReflectable").getNodeValue()));
+            set.set("isReflectable", toBoolean(attrs.getNamedItem("isReflectable").getNodeValue()));
 
         EffectTemplate lt = new EffectTemplate(set);
 
@@ -615,7 +617,7 @@ abstract class DocumentBase {
                     if (str.charAt(0) == '#')
                         value = value.replace(str, String.valueOf(getTableValue(str, level)));
             if (ch == '#') {
-                Object tableVal = getTableValue(value, level);
+                String tableVal = getTableValue(value, level);
                 Number parsedVal = parseNumber(tableVal.toString());
                 set.set(name, parsedVal == null ? tableVal : String.valueOf(parsedVal));
             } else if ((Character.isDigit(ch) || ch == '-') && !value.contains(" ") && !value.contains(";"))
@@ -623,7 +625,7 @@ abstract class DocumentBase {
             else
                 set.set(name, value);
         } catch (DOMException e) {
-            LOG.warn(n.getAttributes().getNamedItem("name") + " " + set.get("skill_id"), e);
+            LOG.warn(n.getAttributes().getNamedItem("name") + " " + set.getString("skill_id"), e);
         }
     }
 

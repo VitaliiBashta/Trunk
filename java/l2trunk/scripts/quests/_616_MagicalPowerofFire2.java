@@ -45,7 +45,7 @@ public final class _616_MagicalPowerofFire2 extends Quest {
             st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("616_1".equalsIgnoreCase(event))
-            if (ServerVariables.getLong(_616_MagicalPowerofFire2.class.getSimpleName(), 0) + 3 * 60 * 60 * 1000 > System.currentTimeMillis())
+            if (ServerVariables.getLong(getClass().getSimpleName()) + 3 * 60 * 60 * 1000 > System.currentTimeMillis())
                 htmltext = "totem_of_ketra_q0616_0204.htm";
             else if (st.getQuestItemsCount(RED_TOTEM) >= 1 && isQuest == null) {
                 st.takeItems(RED_TOTEM, 1);
@@ -95,7 +95,7 @@ public final class _616_MagicalPowerofFire2 extends Quest {
                     htmltext = "shaman_udan_q0616_0201.htm";
                 break;
             case KETRAS_HOLY_ALTAR:
-                if (ServerVariables.getLong(getClass().getSimpleName(), 0) + 3 * 60 * 60 * 1000 > System.currentTimeMillis())
+                if (ServerVariables.getLong(getClass().getSimpleName()) + 3 * 60 * 60 * 1000 > System.currentTimeMillis())
                     htmltext = "totem_of_ketra_q0616_0204.htm";
                 else if (npc.isBusy())
                     htmltext = "totem_of_ketra_q0616_0202.htm";

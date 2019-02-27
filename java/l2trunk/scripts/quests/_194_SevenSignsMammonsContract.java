@@ -51,7 +51,7 @@ public final class _194_SevenSignsMammonsContract extends Quest {
             st.takeItems(AthebaldtsIntroduction);
             st.setCond(4);
         } else if ("colin_q194_3a.htm".equalsIgnoreCase(event)) {
-            if (player.getTransformation() != 0 || player.isMounted()) {
+            if (player.isTrasformed() || player.isMounted()) {
                 player.sendPacket(Msg.YOU_ALREADY_POLYMORPHED_AND_CANNOT_POLYMORPH_AGAIN);
                 return null;
             }
@@ -66,7 +66,7 @@ public final class _194_SevenSignsMammonsContract extends Quest {
             st.takeItems(FrogKingsBead);
             st.playSound(SOUND_MIDDLE);
         } else if ("colin_q194_6.htm".equalsIgnoreCase(event)) {
-            if (player.getTransformation() != 0 || player.isMounted()) {
+            if (player.isTrasformed()  || player.isMounted()) {
                 player.sendPacket(Msg.YOU_ALREADY_POLYMORPHED_AND_CANNOT_POLYMORPH_AGAIN);
                 return null;
             }
@@ -83,7 +83,7 @@ public final class _194_SevenSignsMammonsContract extends Quest {
             st.takeItems(GrandmaTessCandyPouch);
             st.playSound(SOUND_MIDDLE);
         } else if ("colin_q194_9.htm".equalsIgnoreCase(event)) {
-            if (player.getTransformation() != 0 || player.isMounted()) {
+            if (player.isTrasformed() || player.isMounted()) {
                 player.sendPacket(Msg.YOU_ALREADY_POLYMORPHED_AND_CANNOT_POLYMORPH_AGAIN);
                 return null;
             }
@@ -107,22 +107,22 @@ public final class _194_SevenSignsMammonsContract extends Quest {
                 st.playSound(SOUND_FINISH);
             } else
                 return "subclass_forbidden.htm";
-        } else if (event.equalsIgnoreCase("colin_q194_11a.htm")) {
-            if (player.getTransformation() != 0 || player.isMounted()) {
+        } else if ("colin_q194_11a.htm".equalsIgnoreCase(event)) {
+            if (player.isTrasformed()  || player.isMounted()) {
                 player.sendPacket(Msg.YOU_ALREADY_POLYMORPHED_AND_CANNOT_POLYMORPH_AGAIN);
                 return null;
             }
             negateSpeedBuffs(player);
             SkillTable.INSTANCE.getInfo(6201).getEffects(player);
         } else if ("colin_q194_12a.htm".equalsIgnoreCase(event)) {
-            if (player.getTransformation() != 0 || player.isMounted()) {
+            if (player.isTrasformed() || player.isMounted()) {
                 player.sendPacket(Msg.YOU_ALREADY_POLYMORPHED_AND_CANNOT_POLYMORPH_AGAIN);
                 return null;
             }
             negateSpeedBuffs(player);
             SkillTable.INSTANCE.getInfo(6202).getEffects(player);
         } else if ("colin_q194_13a.htm".equalsIgnoreCase(event)) {
-            if (player.getTransformation() != 0 || player.isMounted()) {
+            if (player.isTrasformed()  || player.isMounted()) {
                 player.sendPacket(Msg.YOU_ALREADY_POLYMORPHED_AND_CANNOT_POLYMORPH_AGAIN);
                 return null;
             }
@@ -176,11 +176,11 @@ public final class _194_SevenSignsMammonsContract extends Quest {
                 htmltext = "colin_q194_14.htm";
 
                 //if getPlayer has lost transformation - sarcasticly giving him it again
-            else if (cond == 4 && player.getTransformation() == 0)
+            else if (cond == 4 && !player.isTrasformed())
                 htmltext = "colin_q194_11.htm";
-            else if (cond == 7 && player.getTransformation() == 0)
+            else if (cond == 7 && !player.isTrasformed() )
                 htmltext = "colin_q194_12.htm";
-            else if (cond == 10 && player.getTransformation() == 0)
+            else if (cond == 10 && !player.isTrasformed() )
                 htmltext = "colin_q194_13.htm";
             else if (cond == 4 || cond == 7 || cond == 10)
                 htmltext = "colin_q194_0a.htm";

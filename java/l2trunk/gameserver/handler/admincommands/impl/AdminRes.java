@@ -7,9 +7,9 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
 import static l2trunk.commons.lang.NumberUtils.toInt;
 
-public class AdminRes implements IAdminCommandHandler {
+public final class AdminRes implements IAdminCommandHandler {
     @Override
-    public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
+    public boolean useAdminCommand(String comm, String[] wordList, String fullString, Player activeChar) {
         if (!activeChar.getPlayerAccess().Res)
             return false;
 
@@ -22,8 +22,8 @@ public class AdminRes implements IAdminCommandHandler {
     }
 
     @Override
-    public Enum[] getAdminCommandEnum() {
-        return Commands.values();
+    public String getAdminCommand() {
+        return "admin_res";
     }
 
     private void handleRes(Player activeChar) {
@@ -74,7 +74,5 @@ public class AdminRes implements IAdminCommandHandler {
         target.setFullCp();
     }
 
-    private enum Commands {
-        admin_res
-    }
+
 }

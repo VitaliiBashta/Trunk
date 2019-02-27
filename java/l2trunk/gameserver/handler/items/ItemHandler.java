@@ -5,8 +5,6 @@ import l2trunk.gameserver.templates.item.ItemTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
-
 public enum ItemHandler {
     INSTANCE;
     private static final Logger LOG = LoggerFactory.getLogger(ItemHandler.class);
@@ -14,7 +12,7 @@ public enum ItemHandler {
     public void registerItemHandler(IItemHandler handler) {
         handler.getItemIds().forEach(itemId -> {
             ItemTemplate template = ItemHolder.getTemplate(itemId);
-             if (template.getHandler() != IItemHandler.NULL)
+            if (template.getHandler() != IItemHandler.NULL)
                 LOG.warn("Duplicate handler for item: " + itemId + "(" + template.getHandler().getClass()
                         + "," + handler.getClass() + ")");
             else

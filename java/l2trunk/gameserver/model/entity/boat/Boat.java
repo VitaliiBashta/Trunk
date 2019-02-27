@@ -73,7 +73,7 @@ public abstract class Boat extends Creature {
             return;
         }
 
-        if (player.getTransformation() != 0) {
+        if (player.isTrasformed() ) {
             player.sendPacket(SystemMsg.YOU_CANNOT_BOARD_A_SHIP_WHILE_YOU_ARE_POLYMORPHED, ActionFail.STATIC);
             return;
         }

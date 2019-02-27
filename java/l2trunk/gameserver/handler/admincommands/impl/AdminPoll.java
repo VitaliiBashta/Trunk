@@ -30,8 +30,7 @@ public final class AdminPoll implements IAdminCommandHandler {
     }
 
     @Override
-    public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
-        Commands command = (Commands) comm;
+    public boolean useAdminCommand(String comm, String[] wordList, String fullString, Player activeChar) {
 
         if (!activeChar.getPlayerAccess().CanEditChar || !Config.ENABLE_POLL_SYSTEM)
             return false;
@@ -40,13 +39,13 @@ public final class AdminPoll implements IAdminCommandHandler {
 
         String html = null;
 
-        switch (command) {
+        switch (comm) {
             //Main page
-            case admin_poll:
+            case "admin_poll":
 
                 if (currentPoll == null) {
                     //going to set question page
-                    return useAdminCommand(Commands.admin_poll_set_question, wordList, fullString, activeChar);
+                    return useAdminCommand("admin_poll_set_question", wordList, fullString, activeChar);
                 }
 
                 html = HtmCache.INSTANCE.getNotNull(MAIN_FOLDER + "admin_current_poll.htm", activeChar);
@@ -58,7 +57,7 @@ public final class AdminPoll implements IAdminCommandHandler {
 
                 break;
             //Setting question for the existing or new poll
-            case admin_poll_set_question:
+            case "admin_poll_set_question":
                 if (wordList.length == 1) {
                     html = getPageHtml("admin_new_poll.htm", activeChar);
                     break;
@@ -72,11 +71,11 @@ public final class AdminPoll implements IAdminCommandHandler {
                 } else {
                     currentPoll.setQuestion(question);
                     activeChar.sendMessage("Question changed!");
-                    return useAdminCommand(Commands.admin_poll, wordList, fullString, activeChar);
+                    return useAdminCommand("admin_poll", wordList, fullString, activeChar);
                 }
                 break;
             //Setting answers for new poll
-            case admin_poll_set_answers:
+            case "admin_poll_set_answers":
                 if (wordList.length == 1) {
                     html = getPageHtml("admin_new_poll_answers.htm", activeChar);
                     break;
@@ -102,7 +101,7 @@ public final class AdminPoll implements IAdminCommandHandler {
                 }
                 break;
             //Setting time for new or current poll
-            case admin_poll_set_time:
+            case "admin_poll_set_time":
                 if (wordList.length == 1) {
                     html = getPageHtml("admin_new_poll_time.htm", activeChar);
                     break;
@@ -113,35 +112,35 @@ public final class AdminPoll implements IAdminCommandHandler {
 
                     currentPoll.setEndTime(minutesToPollOver * 60 * 1000);
                     activeChar.sendMessage("End time has been changed!");
-                    return useAdminCommand(Commands.admin_poll, wordList, fullString, activeChar);
+                    return useAdminCommand("admin_poll", wordList, fullString, activeChar);
                 } catch (Exception e) {
                     html = getPageHtml("admin_new_poll_time.htm", activeChar);
                     activeChar.sendMessage("Try again!");
                 }
                 //Starting quietly(1) or with announce(2)
-            case admin_poll_start:
+            case "admin_poll_start":
                 try {
                     int type = toInt(wordList[1]);
                     PollEngine.INSTANCE.startPoll((type == 2), true);
                     activeChar.sendMessage("Voting started!");
                 } catch (Exception e) {
                     activeChar.sendMessage("Use just //poll");
-                    return useAdminCommand(Commands.admin_poll, wordList, fullString, activeChar);
+                    return useAdminCommand("admin_poll", wordList, fullString, activeChar);
                 }
                 break;
             //Ending poll quietly(1) or with announce(2)
-            case admin_poll_end:
+            case "admin_poll_end":
                 try {
                     int type = toInt(wordList[1]);
                     PollEngine.INSTANCE.stopPoll(type == 2);
                     activeChar.sendMessage("Voting finished!");
                 } catch (Exception e) {
                     activeChar.sendMessage("Use just //poll");
-                    return useAdminCommand(Commands.admin_poll, wordList, fullString, activeChar);
+                    return useAdminCommand("admin_poll", wordList, fullString, activeChar);
                 }
                 break;
             //Checking current answers
-            case admin_poll_current_answers:
+            case "admin_poll_current_answers":
                 if (currentPoll == null) {
                     html = getPageHtml("admin_new_poll_answers.htm", activeChar);
                     break;
@@ -149,37 +148,37 @@ public final class AdminPoll implements IAdminCommandHandler {
 
                 html = getPageHtml("admin_current_answers.htm", activeChar);
 
-                String answersText = "<table width=300>";
+                StringBuilder answersText = new StringBuilder("<table width=300>");
 
                 for (PollAnswer pollAnswer : currentPoll.getAnswers()) {
-                    answersText += "<tr>";
-                    answersText += "<td width=300>";
-                    answersText += pollAnswer.getAnswer();
-                    answersText += "</td></tr><tr><td width=300>";
-                    answersText += "<table width=300><tr><td><center>";
-                    answersText += "Votes: " + pollAnswer.getVotes();
-                    answersText += "</center></td><td><center>";
-                    answersText += getButton("Delete Answer", "admin_poll_delete_answer " + pollAnswer.getId());
-                    answersText += "</center></td></tr></table></td></tr>";
+                    answersText.append("<tr>");
+                    answersText.append("<td width=300>");
+                    answersText.append(pollAnswer.getAnswer());
+                    answersText.append("</td></tr><tr><td width=300>");
+                    answersText.append("<table width=300><tr><td><center>");
+                    answersText.append("Votes: ").append(pollAnswer.getVotes());
+                    answersText.append("</center></td><td><center>");
+                    answersText.append(getButton("Delete Answer", "admin_poll_delete_answer " + pollAnswer.getId()));
+                    answersText.append("</center></td></tr></table></td></tr>");
                 }
 
                 html += "</table><br><br><br>";
                 html += "<center>Add new answer<br>";
                 html += "<multiedit var=\"answer\" width=250 height=50>";
                 html += getButton("Add Answer", "admin_poll_add_new_answer $answer");
-                html = html.replace("%answers%", answersText);
+                html = html.replace("%answers%", answersText.toString());
                 break;
             //Deleting existing answer
-            case admin_poll_delete_answer:
+            case "admin_poll_delete_answer":
                 int answerId = toInt(wordList[1]);
 
                 currentPoll.deleteAnswer(answerId);
 
                 activeChar.sendMessage("Answer has been deleted!");
 
-                return useAdminCommand(Commands.admin_poll_current_answers, wordList, fullString, activeChar);
+                return useAdminCommand("admin_poll_current_answers", wordList, fullString, activeChar);
             //Adding new answer
-            case admin_poll_add_new_answer:
+            case "admin_poll_add_new_answer":
                 String answerTitle = fullString.substring("admin_poll_add_new_answer".length()).trim();
                 if (answerTitle.length() > 0) {
                     currentPoll.addAnswer(answerTitle);
@@ -187,9 +186,9 @@ public final class AdminPoll implements IAdminCommandHandler {
                     activeChar.sendMessage("Answer has been added!");
                 } else
                     activeChar.sendMessage("Fill the field!");
-                return useAdminCommand(Commands.admin_poll_current_answers, wordList, fullString, activeChar);
+                return useAdminCommand("admin_poll_current_answers", wordList, fullString, activeChar);
             //Deleting current poll if it isn't active
-            case admin_poll_delete:
+            case "admin_poll_delete":
                 if (PollEngine.INSTANCE.isActive()) {
                     activeChar.sendMessage("You cannot delete active Poll!");
                     break;
@@ -217,20 +216,17 @@ public final class AdminPoll implements IAdminCommandHandler {
     }
 
     @Override
-    public Enum[] getAdminCommandEnum() {
-        return Commands.values();
-    }
-
-    private enum Commands {
-        admin_poll,
-        admin_poll_set_question,
-        admin_poll_set_answers,
-        admin_poll_set_time,
-        admin_poll_start,
-        admin_poll_end,
-        admin_poll_current_answers,
-        admin_poll_delete_answer,
-        admin_poll_add_new_answer,
-        admin_poll_delete
+    public List<String> getAdminCommands() {
+        return List.of(
+                "admin_poll",
+                "admin_poll_set_question",
+                "admin_poll_set_answers",
+                "admin_poll_set_time",
+                "admin_poll_start",
+                "admin_poll_end",
+                "admin_poll_current_answers",
+                "admin_poll_delete_answer",
+                "admin_poll_add_new_answer",
+                "admin_poll_delete");
     }
 }

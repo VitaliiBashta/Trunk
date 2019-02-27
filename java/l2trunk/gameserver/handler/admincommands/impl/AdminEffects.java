@@ -14,7 +14,6 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.skills.AbnormalEffect;
 import l2trunk.gameserver.utils.Util;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -23,9 +22,7 @@ import static l2trunk.commons.lang.NumberUtils.toInt;
 
 public final class AdminEffects implements IAdminCommandHandler {
     @Override
-    public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
-        Commands command = (Commands) comm;
-
+    public boolean useAdminCommand(String comm, String[] wordList, String fullString, Player activeChar) {
         if (!activeChar.getPlayerAccess().GodMode)
             return false;
 
@@ -33,9 +30,9 @@ public final class AdminEffects implements IAdminCommandHandler {
         AbnormalEffect ae = AbnormalEffect.NULL;
         GameObject target = activeChar.getTarget();
 
-        switch (command) {
-            case admin_invis:
-            case admin_vis:
+        switch (comm) {
+            case "admin_invis":
+            case "admin_vis":
 
                 if (activeChar.isInvisible()) {
                     activeChar.setInvisibleType(InvisibleType.NONE);
@@ -53,7 +50,7 @@ public final class AdminEffects implements IAdminCommandHandler {
                     }
                 }
                 break;
-            case admin_gmspeed:
+            case "admin_gmspeed":
                 val = toInt(wordList[1], 0);
                 int sh_level = activeChar.getEffectList().getEffectsBySkillId(7029).map(e -> e.skill.level).findFirst().orElse(0);
 
@@ -76,7 +73,7 @@ public final class AdminEffects implements IAdminCommandHandler {
                     activeChar.sendMessage("USAGE: //gmspeed value=[0 1 2 3 4]");
                 }
                 break;
-            case admin_invul:
+            case "admin_invul":
                 handleInvul(activeChar, activeChar);
                 if (activeChar.isInvul()) {
                     if (Config.SAVE_GM_EFFECTS)
@@ -89,8 +86,8 @@ public final class AdminEffects implements IAdminCommandHandler {
         if (!activeChar.isGM())
             return false;
 
-        switch (command) {
-            case admin_earthquake:
+        switch (comm) {
+            case "admin_earthquake":
                 try {
                     int intensity = toInt(wordList[1]);
                     int duration = toInt(wordList[2]);
@@ -100,12 +97,12 @@ public final class AdminEffects implements IAdminCommandHandler {
                     return false;
                 }
                 break;
-            case admin_para_everybody:
-            case admin_para:
+            case "admin_para_everybody":
+            case "admin_para":
                 Stream<Player> targets;
                 int minutes = -1;
                 String reason = null;
-                if (command == Commands.admin_para_everybody) {
+                if ("admin_para_everybody".equals(comm)) {
                     targets = GameObjectsStorage.getAllPlayersStream()
                             .filter(Player::isOnline)
                             .filter(p -> p.getNetConnection() != null)
@@ -145,9 +142,9 @@ public final class AdminEffects implements IAdminCommandHandler {
                         });
                 activeChar.sendMessage("All Targets blocked!");
                 break;
-            case admin_unpara_everybody:
-            case admin_unpara:
-                if (command == Commands.admin_unpara_everybody) {
+            case "admin_unpara_everybody":
+            case "admin_unpara":
+                if ("admin_unpara_everybody".equals(comm)) {
                     targets = GameObjectsStorage.getAllPlayersStream()
                             .filter(Player::isOnline)
                             .filter(p -> p.getNetConnection() != null)
@@ -170,8 +167,8 @@ public final class AdminEffects implements IAdminCommandHandler {
 
                 activeChar.sendMessage("Targets unblocked");
                 break;
-            case admin_flag:
-                Stream<Player> players ;
+            case "admin_flag":
+                Stream<Player> players;
                 if (wordList.length > 1) {
                     int radius = toInt(wordList[1]);
                     players = World.getAroundPlayers(activeChar, radius, 500);
@@ -185,12 +182,12 @@ public final class AdminEffects implements IAdminCommandHandler {
 
                 activeChar.sendMessage("Targets flagged");
                 break;
-            case admin_unflag:
+            case "admin_unflag":
                 if (wordList.length > 1) {
                     int radius = toInt(wordList[1]);
                     players = World.getAroundPlayers(activeChar, radius, 500);
                 } else if (target instanceof Player) {
-                    players =Stream.of((Player) target);
+                    players = Stream.of((Player) target);
                 } else {
                     activeChar.sendPacket(SystemMsg.INVALID_TARGET);
                     return false;
@@ -199,7 +196,7 @@ public final class AdminEffects implements IAdminCommandHandler {
 
                 activeChar.sendMessage("Targets unflagged");
                 break;
-            case admin_changename:
+            case "admin_changename":
                 if (wordList.length < 2) {
                     activeChar.sendMessage("USAGE: //changename newName");
                     return false;
@@ -219,18 +216,18 @@ public final class AdminEffects implements IAdminCommandHandler {
                     activeChar.sendPacket(SystemMsg.INVALID_TARGET);
                     return false;
                 }
-            case admin_setinvul:
+            case "admin_setinvul":
                 if (!(target instanceof Player)) {
                     activeChar.sendPacket(SystemMsg.INVALID_TARGET);
                     return false;
                 }
                 handleInvul(activeChar, (Player) target);
                 break;
-            case admin_getinvul:
+            case "admin_getinvul":
                 if (target instanceof Creature)
                     activeChar.sendMessage("Target " + target.getName() + "(object ID: " + target.objectId() + ") is " + (!((Creature) target).isInvul() ? "NOT " : "") + "invul");
                 break;
-            case admin_social:
+            case "admin_social":
                 if (wordList.length < 2)
                     val = Rnd.get(1, 7);
                 else
@@ -245,7 +242,7 @@ public final class AdminEffects implements IAdminCommandHandler {
                 else if (target instanceof Creature)
                     ((Creature) target).broadcastPacket(new SocialAction(target.objectId(), val));
                 break;
-            case admin_abnormal:
+            case "admin_abnormal":
                 try {
                     if (wordList.length > 1)
                         ae = AbnormalEffect.getByName(wordList[1]);
@@ -259,21 +256,24 @@ public final class AdminEffects implements IAdminCommandHandler {
 
                 if (ae == AbnormalEffect.NULL) {
                     effectTarget.startAbnormalEffect(AbnormalEffect.NULL);
-                    if (effectTarget instanceof Player) ((Player)effectTarget).sendMessage("Abnormal effects clearned by admin.");
+                    if (effectTarget instanceof Player)
+                        ((Player) effectTarget).sendMessage("Abnormal effects clearned by admin.");
                 } else {
                     effectTarget.startAbnormalEffect(ae);
-                    if (effectTarget instanceof Player) ((Player)effectTarget).sendMessage("Admin added abnormal effect: " + ae.getName());
+                    if (effectTarget instanceof Player)
+                        ((Player) effectTarget).sendMessage("Admin added abnormal effect: " + ae.getName());
                     if (effectTarget != activeChar)
-                        if (effectTarget instanceof Player) ((Player)effectTarget).sendMessage("Added abnormal effect: " + ae.getName());
+                        if (effectTarget instanceof Player)
+                            ((Player) effectTarget).sendMessage("Added abnormal effect: " + ae.getName());
                 }
                 break;
-            case admin_liston:
+            case "admin_liston":
                 activeChar.setVar("gmOnList");
                 break;
-            case admin_listoff:
+            case "admin_listoff":
                 activeChar.unsetVar("gmOnList");
                 break;
-            case admin_transform:
+            case "admin_transform":
                 try {
                     val = toInt(wordList[1]);
                 } catch (Exception e) {
@@ -282,12 +282,12 @@ public final class AdminEffects implements IAdminCommandHandler {
                 }
                 activeChar.setTransformation(val);
                 break;
-            case admin_callskill:
+            case "admin_callskill":
                 id = toInt(wordList[1]);
                 lvl = toInt(wordList[2]);
                 activeChar.doCast(id, lvl, activeChar, true);
                 break;
-            case admin_showmovie:
+            case "admin_showmovie":
                 if (wordList.length < 2) {
                     activeChar.sendMessage("USAGE: //showmovie id");
                     return false;
@@ -317,33 +317,30 @@ public final class AdminEffects implements IAdminCommandHandler {
     }
 
     @Override
-    public Enum[] getAdminCommandEnum() {
-        return Commands.values();
-    }
-
-    private enum Commands {
-        admin_invis,
-        admin_vis,
-        admin_offline_vis,
-        admin_offline_invis,
-        admin_earthquake,
-        admin_para_everybody,
-        admin_para,
-        admin_unpara_everybody,
-        admin_unpara,
-        admin_flag,
-        admin_unflag,
-        admin_changename,
-        admin_gmspeed,
-        admin_invul,
-        admin_setinvul,
-        admin_getinvul,
-        admin_social,
-        admin_abnormal,
-        admin_transform,
-        admin_callskill,
-        admin_showmovie,
-        admin_liston,
-        admin_listoff
+    public List<String> getAdminCommands() {
+        return List.of(
+                "admin_invis",
+                "admin_vis",
+                "admin_offline_vis",
+                "admin_offline_invis",
+                "admin_earthquake",
+                "admin_para_everybody",
+                "admin_para",
+                "admin_unpara_everybody",
+                "admin_unpara",
+                "admin_flag",
+                "admin_unflag",
+                "admin_changename",
+                "admin_gmspeed",
+                "admin_invul",
+                "admin_setinvul",
+                "admin_getinvul",
+                "admin_social",
+                "admin_abnormal",
+                "admin_transform",
+                "admin_callskill",
+                "admin_showmovie",
+                "admin_liston",
+                "admin_listoff");
     }
 }

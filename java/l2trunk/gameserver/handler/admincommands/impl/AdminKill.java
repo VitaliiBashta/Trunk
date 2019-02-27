@@ -8,24 +8,24 @@ import l2trunk.gameserver.model.World;
 import l2trunk.gameserver.model.instances.DoorInstance;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
+import java.util.List;
+
 import static l2trunk.commons.lang.NumberUtils.toInt;
 
 public final class AdminKill implements IAdminCommandHandler {
     @Override
-    public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
-        Commands command = (Commands) comm;
-
+    public boolean useAdminCommand(String comm, String[] wordList, String fullString, Player activeChar) {
         if (!activeChar.getPlayerAccess().CanEditNPC)
             return false;
 
-        switch (command) {
-            case admin_kill:
+        switch (comm) {
+            case "admin_kill":
                 if (wordList.length == 1)
                     handleKill(activeChar);
                 else
                     handleKill(activeChar, wordList[1]);
                 break;
-            case admin_damage:
+            case "admin_damage":
                 handleDamage(activeChar, toInt(wordList[1], 1));
                 break;
         }
@@ -34,8 +34,10 @@ public final class AdminKill implements IAdminCommandHandler {
     }
 
     @Override
-    public Enum[] getAdminCommandEnum() {
-        return Commands.values();
+    public List<String> getAdminCommands() {
+        return List.of(
+                "admin_kill",
+                "admin_damage");
     }
 
     private void handleKill(Player activeChar) {
@@ -83,8 +85,4 @@ public final class AdminKill implements IAdminCommandHandler {
 
     }
 
-    private enum Commands {
-        admin_kill,
-        admin_damage,
-    }
 }

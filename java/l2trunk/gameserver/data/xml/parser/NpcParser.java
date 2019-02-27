@@ -181,7 +181,7 @@ public enum NpcParser {
 
                         int id = toInt(nextElement.attributeValue("id"));
 
-                        template.addTeachInfo(ClassId.VALUES.get(id));
+                        template.addTeachInfo(ClassId.getById(id));
                     }
                 } else if ("absorblist".equalsIgnoreCase(nodeName)) {
                     for (Iterator<org.dom4j.Element> nextIterator = secondElement.elementIterator(); nextIterator.hasNext(); ) {

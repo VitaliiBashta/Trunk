@@ -8,30 +8,32 @@ import l2trunk.gameserver.network.serverpackets.ExBuySellList;
 import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
 import l2trunk.gameserver.utils.GameStats;
 
-public class AdminShop implements IAdminCommandHandler {
-    @SuppressWarnings("rawtypes")
+import java.util.List;
+
+import static l2trunk.commons.lang.NumberUtils.toInt;
+
+public final class AdminShop implements IAdminCommandHandler {
     @Override
-    public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
-        Commands command = (Commands) comm;
+    public boolean useAdminCommand(String comm, String[] wordList, String fullString, Player activeChar) {
 
         if (!activeChar.getPlayerAccess().UseGMShop)
             return false;
 
-        switch (command) {
-            case admin_buy:
+        switch (comm) {
+            case "admin_buy":
                 try {
                     handleBuyRequest(activeChar, fullString.substring(10));
                 } catch (IndexOutOfBoundsException e) {
                     activeChar.sendMessage("Please specify buylist.");
                 }
                 break;
-            case admin_gmshop:
+            case "admin_gmshop":
                 activeChar.sendPacket(new NpcHtmlMessage(5).setFile("admin/gmshops.htm"));
                 break;
-            case admin_tax:
+            case "admin_tax":
                 activeChar.sendMessage("TaxSum: " + GameStats.getTaxSum());
                 break;
-            case admin_taxclear:
+            case "admin_taxclear":
                 GameStats.addTax(-GameStats.getTaxSum());
                 activeChar.sendMessage("TaxSum: " + GameStats.getTaxSum());
                 break;
@@ -41,18 +43,18 @@ public class AdminShop implements IAdminCommandHandler {
     }
 
     @Override
-    public Enum[] getAdminCommandEnum() {
-        return Commands.values();
+    public List<String> getAdminCommands() {
+        return List.of(
+                "admin_buy",
+                "admin_gmshop",
+                "admin_tax",
+                "admin_taxclear",
+                "admin_restore_offline_stores"
+        );
     }
 
     private void handleBuyRequest(Player activeChar, String command) {
-        int val = -1;
-
-        try {
-            val = Integer.parseInt(command);
-        } catch (Exception e) {
-
-        }
+        int val = toInt(command, -1);
 
         NpcTradeList list = BuyListHolder.INSTANCE.getBuyList(val);
 
@@ -62,11 +64,4 @@ public class AdminShop implements IAdminCommandHandler {
         activeChar.sendActionFailed();
     }
 
-    private enum Commands {
-        admin_buy,
-        admin_gmshop,
-        admin_tax,
-        admin_taxclear,
-        admin_restore_offline_stores
-    }
 }

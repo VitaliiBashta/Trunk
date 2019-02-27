@@ -30,21 +30,20 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 
 public final class AdminReload implements IAdminCommandHandler {
     private static final Logger LOG = LoggerFactory.getLogger(AdminReload.class);
 
     @Override
-    public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
-        Commands command = (Commands) comm;
-
+    public boolean useAdminCommand(String comm, String[] wordList, String fullString, Player activeChar) {
         if (!activeChar.getPlayerAccess().CanReload)
             return false;
 
-        switch (command) {
-            case admin_reload:
+        switch (comm) {
+            case "admin_reload":
                 break;
-            case admin_reload_config: {
+            case "admin_reload_config": {
                 try {
                     Config.load();
                 } catch (Exception e) {
@@ -54,7 +53,7 @@ public final class AdminReload implements IAdminCommandHandler {
                 activeChar.sendMessage("Config reloaded!");
                 break;
             }
-            case admin_reload_multisell: {
+            case "admin_reload_multisell": {
                 try {
                     MultiSellHolder.INSTANCE.reload();
                 } catch (Exception e) {
@@ -63,7 +62,7 @@ public final class AdminReload implements IAdminCommandHandler {
                 activeChar.sendMessage("Multisell list reloaded!");
                 break;
             }
-            case admin_reload_gmaccess: {
+            case "admin_reload_gmaccess": {
                 try {
                     Config.loadGMAccess();
                     GameObjectsStorage.getAllPlayersStream().forEach(player -> {
@@ -78,7 +77,7 @@ public final class AdminReload implements IAdminCommandHandler {
                 activeChar.sendMessage("GMAccess reloaded!");
                 break;
             }
-            case admin_reload_htm: {
+            case "admin_reload_htm": {
                 HtmCache.INSTANCE.clear();
                 if (Config.HTM_CACHE_MODE == 2) {
                     HtmCache.INSTANCE.reload();
@@ -86,7 +85,7 @@ public final class AdminReload implements IAdminCommandHandler {
                 activeChar.sendMessage("HtmCache reloaded!");
                 break;
             }
-            case admin_reload_qs: {
+            case "admin_reload_qs": {
                 if (fullString.endsWith("all"))
                     GameObjectsStorage.getAllPlayersStream().forEach(this::reloadQuestStates);
                 else {
@@ -100,7 +99,7 @@ public final class AdminReload implements IAdminCommandHandler {
                 }
                 break;
             }
-            case admin_reload_qs_help: {
+            case "admin_reload_qs_help": {
                 activeChar.sendMessage("");
                 activeChar.sendMessage("Quest Help:");
                 activeChar.sendMessage("reload_qs_help - This Message.");
@@ -110,64 +109,64 @@ public final class AdminReload implements IAdminCommandHandler {
                 activeChar.sendMessage("");
                 break;
             }
-            case admin_reload_skills: {
+            case "admin_reload_skills": {
                 ThreadPoolManager.INSTANCE.execute(SkillTable.INSTANCE::reload);
                 activeChar.sendMessage("Skills Reloaded!");
                 break;
             }
-            case admin_reload_npc: {
+            case "admin_reload_npc": {
                 NpcParser.INSTANCE.reload();
                 break;
             }
-            case admin_reload_spawn: {
+            case "admin_reload_spawn": {
                 ThreadPoolManager.INSTANCE.execute(SpawnManager.INSTANCE::reloadAll);
                 break;
             }
-            case admin_reload_fish: {
+            case "admin_reload_fish": {
                 FishTable.INSTANCE.reload();
                 break;
             }
-            case admin_reload_translit: {
+            case "admin_reload_translit": {
                 Strings.reload();
                 break;
             }
-            case admin_reload_shops: {
+            case "admin_reload_shops": {
                 BuyListHolder.INSTANCE.reload();
                 break;
             }
-            case admin_reload_static: {
+            case "admin_reload_static": {
                 //StaticObjectsTable.INSTANCE().reloadStaticObjects();
                 break;
             }
-            case admin_reload_pets: {
+            case "admin_reload_pets": {
                 PetDataTable.INSTANCE.reload();
                 break;
             }
-            case admin_reload_locale: {
+            case "admin_reload_locale": {
                 StringHolder.INSTANCE.reload();
                 break;
             }
-            case admin_reload_nobles: {
+            case "admin_reload_nobles": {
                 OlympiadNobleDAO.select();
                 OlympiadDatabase.loadNoblesRank();
                 break;
             }
-            case admin_reload_im: {
+            case "admin_reload_im": {
                 ProductHolder.getInstance().reload();
                 break;
             }
-            case admin_reload_events: {
+            case "admin_reload_events": {
                 EventHolder.clear();
                 EventParser.INSTANCE.load();
                 activeChar.sendMessage("Events Reloaded!");
                 break;
             }
-            case admin_reload_changelog: {
+            case "admin_reload_changelog": {
                 ChangeLogManager.INSTANCE.reloadChangeLog();
                 activeChar.sendMessage("Changelog reloaded!");
                 break;
             }
-            case admin_reload_damageclasses: {
+            case "admin_reload_damageclasses": {
                 activeChar.sendMessage("Balance properties data have been reloaded.");
                 break;
             }
@@ -187,31 +186,28 @@ public final class AdminReload implements IAdminCommandHandler {
     }
 
     @Override
-    public Enum[] getAdminCommandEnum() {
-        return Commands.values();
-    }
-
-    private enum Commands {
-        admin_reload,
-        admin_reload_config,
-        admin_reload_multisell,
-        admin_reload_gmaccess,
-        admin_reload_htm,
-        admin_reload_qs,
-        admin_reload_qs_help,
-        admin_reload_skills,
-        admin_reload_npc,
-        admin_reload_spawn,
-        admin_reload_fish,
-        admin_reload_translit,
-        admin_reload_shops,
-        admin_reload_static,
-        admin_reload_pets,
-        admin_reload_locale,
-        admin_reload_nobles,
-        admin_reload_im,
-        admin_reload_events,
-        admin_reload_changelog,
-        admin_reload_damageclasses
+    public List<String> getAdminCommands() {
+        return List.of(
+                "admin_reload",
+                "admin_reload_config",
+                "admin_reload_multisell",
+                "admin_reload_gmaccess",
+                "admin_reload_htm",
+                "admin_reload_qs",
+                "admin_reload_qs_help",
+                "admin_reload_skills",
+                "admin_reload_npc",
+                "admin_reload_spawn",
+                "admin_reload_fish",
+                "admin_reload_translit",
+                "admin_reload_shops",
+                "admin_reload_static",
+                "admin_reload_pets",
+                "admin_reload_locale",
+                "admin_reload_nobles",
+                "admin_reload_im",
+                "admin_reload_events",
+                "admin_reload_changelog",
+                "admin_reload_damageclasses");
     }
 }

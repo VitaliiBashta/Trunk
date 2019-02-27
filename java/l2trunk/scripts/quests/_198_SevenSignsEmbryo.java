@@ -49,7 +49,7 @@ public final class _198_SevenSignsEmbryo extends Quest {
                 st.unset("embryo");
         } else if ("franz_q198_3.htm".equalsIgnoreCase(event)) {
             NpcInstance embryo = player.getReflection().addSpawnWithoutRespawn(ShilensEvilThoughtsCapt, setcloc);
-            st.set("embryo", 1);
+            st.set("embryo");
             Functions.npcSay(npc, player.getName() + "! You should kill this monster! I'll try to help!");
             Functions.npcSay(embryo, "This is not yours.");
             embryo.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, player, 500);

@@ -59,7 +59,7 @@ public final class _106_ForgottenTruth extends Quest {
                 htmltext = "tetrarch_thifiell_q0106_07.htm";
                 st.takeItems(KARTAS_TRANSLATION);
 
-                if (st.player.getClassId().isMage)
+                if (st.player.getClassId().isMage())
                     st.giveItems(ELDRITCH_STAFF);
                 else
                     st.giveItems(ELDRITCH_DAGGER);
@@ -73,7 +73,7 @@ public final class _106_ForgottenTruth extends Quest {
                     st.giveItems(1060, 100); // healing potion
                     for (int item = 4412; item <= 4417; item++)
                         st.giveItems(item, 10); // echo cry
-                    if (st.player.getClassId().isMage) {
+                    if (st.player.getClassId().isMage()) {
                         st.playTutorialVoice("tutorial_voice_027");
                         st.giveItems(5790, 3000); // newbie sps
                     } else {

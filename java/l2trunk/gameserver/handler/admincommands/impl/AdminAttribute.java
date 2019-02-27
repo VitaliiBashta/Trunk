@@ -1,8 +1,5 @@
 package l2trunk.gameserver.handler.admincommands.impl;
 
-//import l2trunk.extensions.scripts.ScriptFile;
-//import l2trunk.gameserver.handler.AdminCommandHandler;
-
 import l2trunk.gameserver.data.htm.HtmCache;
 import l2trunk.gameserver.handler.admincommands.IAdminCommandHandler;
 import l2trunk.gameserver.model.GameObject;
@@ -14,7 +11,7 @@ import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
 
 import java.util.Map;
 
-public class AdminAttribute implements IAdminCommandHandler {
+public final class AdminAttribute implements IAdminCommandHandler {
     private static void showDetailsPage(Player player, Player target, int paperdoll) {
         ItemInstance item = target.getInventory().getPaperdollItem(paperdoll);
         String html = HtmCache.INSTANCE.getNullable("admin/attributeDetails.htm");
@@ -99,7 +96,7 @@ public class AdminAttribute implements IAdminCommandHandler {
     }
 
     @Override
-    public boolean useAdminCommand( Enum comm, String[] wordList, String fullString, Player activeChar) {
+    public boolean useAdminCommand(String comm, String[] wordList, String fullString, Player activeChar) {
         if (!activeChar.getPlayerAccess().CanEditChar)
             return false;
 
@@ -142,35 +139,16 @@ public class AdminAttribute implements IAdminCommandHandler {
         }
     }
 
-    private void setEnchant(Player activeChar, Player target, int value, int element, int armorType) {
-        Element El = Element.NONE;
-        switch (element) {
-            case 0:
-                El = Element.FIRE;
-                break;
-            case 1:
-                El = Element.WATER;
-                break;
-            case 2:
-                El = Element.WIND;
-                break;
-            case 3:
-                El = Element.EARTH;
-                break;
-            case 4:
-                El = Element.HOLY;
-                break;
-            case 5:
-                El = Element.UNHOLY;
-                break;
-        }
+    private void setEnchant(Player activeChar, Player target, int value, int elementId, int armorType) {
+        Element element = Element.getElementById(elementId);
+
 
         int curEnchant;
 
         ItemInstance item = target.getInventory().getPaperdollItem(armorType);
         curEnchant = item.getEnchantLevel();
         if (item.isWeapon()) {
-            item.setAttributeElement(El, value);
+            item.setAttributeElement(element, value);
             target.getInventory().equipItem(item);
             target.sendPacket(new InventoryUpdate().addModifiedItem(item));
             target.broadcastUserInfo(true);
@@ -182,13 +160,13 @@ public class AdminAttribute implements IAdminCommandHandler {
             }
 
             target.getInventory().unEquipItem(item);
-            item.setAttributeElement(El, value);
+            item.setAttributeElement(element, value);
             target.getInventory().equipItem(item);
             target.sendPacket(new InventoryUpdate().addModifiedItem(item));
             target.broadcastUserInfo(true);
         }
         String elementName = "";
-        switch (element) {
+        switch (elementId) {
             case 0:
                 elementName = "Fire";
                 break;
@@ -213,47 +191,17 @@ public class AdminAttribute implements IAdminCommandHandler {
         target.sendMessage("Admin has changed the value of the attribute " + elementName + " on " + value + " in " + item.getName() + " +" + curEnchant + ".");
     }
 
-    private boolean canEnchantArmorAttribute(int attr, ItemInstance item) {
-        switch (attr) {
-            case 0:
-                if (item.getDefenceWater() != 0)
-                    return false;
-                break;
-            case 1:
-                if (item.getDefenceFire() != 0)
-                    return false;
-                break;
-            case 2:
-                if (item.getDefenceEarth() != 0)
-                    return false;
-                break;
-            case 3:
-                if (item.getDefenceWind() != 0)
-                    return false;
-                break;
-            case 4:
-                if (item.getDefenceUnholy() != 0)
-                    return false;
-                break;
-            case 5:
-                if (item.getDefenceHoly() != 0)
-                    return false;
-                break;
-        }
-        return true;
+    private boolean canEnchantArmorAttribute(Element attr, ItemInstance item) {
+        return item.getDefence(Element.getReverseElement(attr)) == 0;
     }
 
     private void showMainPage(Player activeChar) {
         activeChar.sendPacket(new NpcHtmlMessage(5).setFile("admin/attribute.htm"));
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
-    public Enum[] getAdminCommandEnum() {
-        return Commands.values();
+    public String getAdminCommand() {
+        return "admin_attribute";
     }
 
-    private enum Commands {
-        admin_attribute
-    }
 }

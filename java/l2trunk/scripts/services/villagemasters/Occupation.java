@@ -248,7 +248,7 @@ public final class Occupation extends Functions {
 
     public void onChange30120(String[] args) {
         if (notMatch()) return;
-        ClassId newClass = getById(toInt(args[0]));
+        ClassId newClass = getById(args[0]);
         String htmltext = "No Quest";
         if (newClass == elder || newClass == bishop || newClass == prophet)
             htmltext = getHtml(newClass);
@@ -257,9 +257,9 @@ public final class Occupation extends Functions {
 
     public void onChange30500(String[] args) {
         if (notMatch()) return;
-        ClassId newClass = ClassId.getById(toInt(args[0]));
+        ClassId newClass = ClassId.getById(args[0]);
         String htmltext = "No Quest";
-        if (newClass == orcRaider || newClass == orcMonk || newClass == orcShaman) {
+        if (newClass.race == Race.orc && newClass.occupation() ==1) {
             htmltext = getHtml(newClass);
         }
         npc.showChatWindow(player, "villagemaster/30500/" + htmltext);
@@ -267,7 +267,7 @@ public final class Occupation extends Functions {
 
     public void onChange30290(String[] args) {
         if (notMatch()) return;
-        ClassId newClass = ClassId.getById(toInt(args[0]));
+        ClassId newClass = ClassId.getById(args[0]);
         String htmltext = "No Quest";
         if (newClass == palusKnight || newClass == assassin || newClass == darkWizard || newClass == shillienOracle) {
             htmltext = getHtml(newClass);
@@ -277,7 +277,7 @@ public final class Occupation extends Functions {
 
     public void onChange30513(String[] args) {
         if (notMatch()) return;
-        ClassId newClass = getById(toInt(args[0]));
+        ClassId newClass = getById(args[0]);
         String htmltext = "No Quest";
         if (newClass == tyrant || newClass == destroyer || newClass == overlord || newClass == warcryer)
             htmltext = getHtml(newClass);
@@ -286,7 +286,7 @@ public final class Occupation extends Functions {
 
     public void onChange30474(String[] args) {
         if (notMatch()) return;
-        ClassId newClass = ClassId.getById(toInt(args[0]));
+        ClassId newClass = ClassId.getById(args[0]);
         String htmltext = "No Quest";
         if (newClass == shillienKnight || newClass == bladedancer || newClass == shillienElder || newClass == abyssWalker
                 || newClass == phantomRanger || newClass == spellhowler || newClass == phantomSummoner)
@@ -296,7 +296,7 @@ public final class Occupation extends Functions {
 
     public void onChange32145(String[] args) {
         if (notMatch()) return;
-        ClassId newClass = ClassId.getById(toInt(args[0]));
+        ClassId newClass = ClassId.getById(args[0]);
         String htmltext = "04.htm";
         if (newClass == warder && player.getClassId() == newClass.parent)
             if (player.getLevel() >= 20 && player.haveItem(SteelrazorEvaluation)) {
@@ -309,7 +309,7 @@ public final class Occupation extends Functions {
 
     public void onChange32146(String[] args) {
         if (notMatch()) return;
-        ClassId newClass = ClassId.getById(toInt(args[0]));
+        ClassId newClass = ClassId.getById(args[0]);
         String htmltext = "04.htm";
         if (newClass == trooper)
             htmltext = getHtml(newClass);
@@ -318,10 +318,9 @@ public final class Occupation extends Functions {
 
     public void onChange32199(String[] args) {
         if (notMatch()) return;
-        ClassId newClass = getById(toInt(args[0]));
+        ClassId newClass = getById(args[0]);
         String htmltext = "02.htm";
-        if (newClass == arbalester || newClass == femaleSoulbreaker
-                || newClass == berserker || newClass == maleSoulbreaker) {
+        if (newClass.race == Race.kamael && newClass.occupation() ==2) {
             htmltext = getHtml(newClass);
         }
         npc.showChatWindow(player, "villagemaster/32199/" + htmltext);
@@ -656,7 +655,7 @@ public final class Occupation extends Functions {
 
     public void onChange30109(String[] args) {
         if (notMatch()) return;
-        ClassId newClass = ClassId.getById(toInt(args[0]));
+        ClassId newClass = ClassId.getById(args[0]);
         String htmltext = "No Quest";
         if (newClass == templeKnight || newClass == swordSinger
                 || newClass == paladin || newClass == darkAvenger
@@ -681,7 +680,7 @@ public final class Occupation extends Functions {
             htmltext = "39.htm";
         else if (classId == spellsinger || classId == elementalSummoner)
             htmltext = "39.htm";
-        else if ((player.getRace() == Race.elf || player.getRace() == Race.human) && classId.isMage)
+        else if ((player.getRace() == Race.elf || player.getRace() == Race.human) && classId.isMage())
             htmltext = "38.htm";
         else
             htmltext = "40.htm";
@@ -691,7 +690,7 @@ public final class Occupation extends Functions {
 
     public void onChange30115(String[] args) {
         if (notMatch()) return;
-        ClassId newClass = ClassId.getById(toInt(args[0]));
+        ClassId newClass = ClassId.getById(args[0]);
         String htmltext = "No Quest";
         if (newClass == spellsinger || newClass == elementalSummoner
                 || newClass == sorceror || newClass == necromancer || newClass == warlock)
@@ -712,7 +711,7 @@ public final class Occupation extends Functions {
             htmltext = "05.htm";
         else if (classId == elder || classId == bishop || classId == prophet)
             htmltext = "25.htm";
-        else if ((player.getRace() == Race.human || player.getRace() == Race.elf) && classId.isMage)
+        else if ((player.getRace() == Race.human || player.getRace() == Race.elf) && classId.isMage())
             htmltext = "24.htm";
         else
             htmltext = "26.htm";
@@ -735,7 +734,7 @@ public final class Occupation extends Functions {
     public void onChange30037(String[] args) {
         if (notMatch()) return;
 
-        ClassId newClass = getById(toInt(args[0]));
+        ClassId newClass = getById(args[0]);
         String htmltext = "33.htm";
         if (newClass == elvenWizard || newClass == oracle || newClass == wizard || newClass == cleric)
             htmltext = getHtml(newClass);
@@ -744,7 +743,7 @@ public final class Occupation extends Functions {
 
     public void onChange30066(String[] args) {
         if (notMatch()) return;
-        ClassId newclass = getById(toInt(args[0]));
+        ClassId newclass = getById(args[0]);
         String htmltext = "No Quest";
         if (newclass == elvenKnight || newclass == elvenScout
                 || newclass == warrior || newclass == knight || newclass == rogue) {
@@ -755,7 +754,7 @@ public final class Occupation extends Functions {
 
     public void onChange30511(String[] args) {
         if (notMatch()) return;
-        ClassId newClass = getById(toInt(args[0]));
+        ClassId newClass = getById(args[0]);
         String htmltext = "No Quest";
         if (newClass == bountyHunter)
             htmltext = getHtml(newClass);
@@ -764,7 +763,7 @@ public final class Occupation extends Functions {
 
     public void onChange30498(String[] args) {
         if (notMatch()) return;
-        ClassId newClass = ClassId.getById(toInt(args[0]));
+        ClassId newClass = ClassId.getById(args[0]);
         String htmltext = "No Quest";
         if (newClass == scavenger) htmltext = getHtml(newClass);
         npc.showChatWindow(player, "villagemaster/30498/" + htmltext);
@@ -772,7 +771,7 @@ public final class Occupation extends Functions {
 
     public void onChange30499(String[] args) {
         if (notMatch()) return;
-        ClassId newClass = ClassId.getById(toInt(args[0]));
+        ClassId newClass = ClassId.getById(args[0]);
         String htmltext = "No Quest";
         if (newClass == artisan) htmltext = getHtml(newClass);
         npc.showChatWindow(player, "villagemaster/30499/" + htmltext);
@@ -780,7 +779,7 @@ public final class Occupation extends Functions {
 
     public void onChange30512(String[] args) {
         if (notMatch()) return;
-        ClassId newClass = ClassId.getById(toInt(args[0]));
+        ClassId newClass = ClassId.getById(args[0]);
         String htmltext = "No Quest";
         if (newClass == warsmith)
             htmltext = getHtml(newClass);
@@ -790,7 +789,7 @@ public final class Occupation extends Functions {
 
     public void onChange30070(String[] args) {
         if (notMatch()) return;
-        ClassId newClass = getById(toInt(args[0]));
+        ClassId newClass = getById(args[0]);
         String htmltext = "No Quest";
         if (newClass == elvenWizard || newClass == oracle
                 || newClass == wizard || newClass == cleric) {

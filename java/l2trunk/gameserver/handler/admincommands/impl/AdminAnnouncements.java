@@ -5,7 +5,6 @@ import l2trunk.gameserver.handler.admincommands.IAdminCommandHandler;
 import l2trunk.gameserver.model.GameObjectsStorage;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
-import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage.ScreenMessageAlign;
 import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
 import l2trunk.gameserver.network.serverpackets.components.ChatType;
 
@@ -22,27 +21,26 @@ import java.util.List;
  */
 public final class AdminAnnouncements implements IAdminCommandHandler {
     @Override
-    public boolean useAdminCommand(@SuppressWarnings("rawtypes") Enum comm, String[] wordList, String fullString, Player activeChar) {
-        Commands command = (Commands) comm;
+    public boolean useAdminCommand(String comm, String[] wordList, String fullString, Player activeChar) {
 
         if (!activeChar.getPlayerAccess().CanAnnounce)
             return false;
 
-        switch (command) {
-            case admin_list_announcements:
+        switch (comm) {
+            case "admin_list_announcements":
                 listAnnouncements(activeChar);
                 break;
-            case admin_announce_menu:
+            case "admin_announce_menu":
                 if ((fullString.length() > 20) && (fullString.length() <= 3020)) {
                     Announcements.INSTANCE.announceToAll(fullString.substring(20));
                 }
                 listAnnouncements(activeChar);
                 break;
-            case admin_announce_announcements:
+            case "admin_announce_announcements":
                 GameObjectsStorage.getAllPlayersStream().forEach(Announcements.INSTANCE::showAnnouncements);
                 listAnnouncements(activeChar);
                 break;
-            case admin_add_announcement:
+            case "admin_add_announcement":
                 if (wordList.length < 3)
                     return false;
                 try {
@@ -56,33 +54,33 @@ public final class AdminAnnouncements implements IAdminCommandHandler {
                 } catch (Exception e) {
                 }
                 break;
-            case admin_del_announcement:
+            case "admin_del_announcement":
                 if (wordList.length != 2)
                     return false;
                 int val = Integer.parseInt(wordList[1]);
                 Announcements.INSTANCE.delAnnouncement(val);
                 listAnnouncements(activeChar);
                 break;
-            case admin_announce:
+            case "admin_announce":
                 Announcements.INSTANCE.announceToAll(fullString.substring(15));
                 break;
-            case admin_a:
+            case "admin_a":
                 String name = activeChar.getName();
                 Announcements.INSTANCE.announceToAll(fullString.substring(8) + " (" + name + ")");
                 break;
-            case admin_crit_announce:
-            case admin_c:
+            case "admin_crit_announce":
+            case "admin_c":
                 if (wordList.length < 2)
                     return false;
                 Announcements.INSTANCE.announceToAll(activeChar.getName() + ": " + fullString.replaceFirst("admin_crit_announce ", "").replaceFirst("admin_c ", ""), ChatType.CRITICAL_ANNOUNCE);
                 break;
-            case admin_cc:
+            case "admin_cc":
                 if (wordList.length < 2)
                     return false;
                 Announcements.INSTANCE.announceToAll(fullString.replaceFirst("admin_cc ", ""), ChatType.COMMANDCHANNEL_ALL);
                 break;
-            case admin_toscreen:
-            case admin_s:
+            case "admin_toscreen":
+            case "admin_s":
                 if (wordList.length < 2)
                     return false;
                 String text = activeChar.getName() + ": " + fullString.replaceFirst("admin_toscreen ", "").replaceFirst("admin_s ", "");
@@ -90,7 +88,7 @@ public final class AdminAnnouncements implements IAdminCommandHandler {
                 ExShowScreenMessage sm = new ExShowScreenMessage(text, time);
                 GameObjectsStorage.getAllPlayersStream().forEach(player -> player.sendPacket(sm));
                 break;
-            case admin_reload_announcements:
+            case "admin_reload_announcements":
                 Announcements.INSTANCE.loadAnnouncements();
                 listAnnouncements(activeChar);
                 activeChar.sendMessage("Announcements reloaded.");
@@ -144,25 +142,21 @@ public final class AdminAnnouncements implements IAdminCommandHandler {
         activeChar.sendPacket(adminReply);
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
-    public Enum[] getAdminCommandEnum() {
-        return Commands.values();
-    }
-
-    private enum Commands {
-        admin_list_announcements,
-        admin_announce_announcements,
-        admin_add_announcement,
-        admin_del_announcement,
-        admin_announce,
-        admin_a,
-        admin_announce_menu,
-        admin_crit_announce,
-        admin_c,
-        admin_cc,
-        admin_toscreen,
-        admin_s,
-        admin_reload_announcements
+    public List<String> getAdminCommands() {
+        return List.of(
+                "admin_list_announcements",
+                "admin_announce_announcements",
+                "admin_add_announcement",
+                "admin_del_announcement",
+                "admin_announce",
+                "admin_a",
+                "admin_announce_menu",
+                "admin_crit_announce",
+                "admin_c",
+                "admin_cc",
+                "admin_toscreen",
+                "admin_s",
+                "admin_reload_announcements");
     }
 }

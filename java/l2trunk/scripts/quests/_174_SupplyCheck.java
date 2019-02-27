@@ -66,7 +66,7 @@ public final class _174_SupplyCheck extends Quest {
             } else if (cond == 3)
                 htmltext = "zerstorer_morsell_q0174_07.htm";
             else if (cond == 4) {
-                if (st.player.getClassId().isMage && !st.player.getClassId().equalsOrChildOf(ClassId.orcMage)) {
+                if (st.player.getClassId().isMage() && !st.player.getClassId().equalsOrChildOf(ClassId.orcMage)) {
                     st.giveItems(LeatherTunic);
                     st.giveItems(LeatherStockings);
                 } else {
@@ -104,7 +104,7 @@ public final class _174_SupplyCheck extends Quest {
 
 			else if (cond == 8)
 			{
-				if (st.getPlayer().getClassId().isMage() && !st.getPlayer().getClassId().equalsOrChildOf(ClassId.orcMage))
+				if (st.getPlayer().getClassId().classType() && !st.getPlayer().getClassId().equalsOrChildOf(ClassId.orcMage))
 				{
 					st.giveItems(LeatherTunic, 1);
 					st.giveItems(LeatherStockings, 1);

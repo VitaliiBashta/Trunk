@@ -6,22 +6,21 @@ import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
-public class AdminPolymorph implements IAdminCommandHandler {
-    @Override
-    @SuppressWarnings("fallthrough")
-    public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
-        Commands command = (Commands) comm;
+import java.util.List;
 
+public final class AdminPolymorph implements IAdminCommandHandler {
+    @Override
+    public boolean useAdminCommand(String comm, String[] wordList, String fullString, Player activeChar) {
         if (!activeChar.getPlayerAccess().CanPolymorph)
             return false;
 
         GameObject target = activeChar.getTarget();
 
-        switch (command) {
-            case admin_polyself:
+        switch (comm) {
+            case "admin_polyself":
                 target = activeChar;
-            case admin_polymorph:
-            case admin_poly:
+            case "admin_polymorph":
+            case "admin_poly":
                 if (!(target instanceof Player)) {
                     activeChar.sendPacket(SystemMsg.INVALID_TARGET);
                     return false;
@@ -37,10 +36,10 @@ public class AdminPolymorph implements IAdminCommandHandler {
                     return false;
                 }
                 break;
-            case admin_unpolyself:
+            case "admin_unpolyself":
                 target = activeChar;
-            case admin_unpolymorph:
-            case admin_unpoly:
+            case "admin_unpolymorph":
+            case "admin_unpoly":
                 if (target instanceof Player) {
                     ((Player) target).setPolyId(0);
                     ((Player) target).broadcastCharInfo();
@@ -55,16 +54,13 @@ public class AdminPolymorph implements IAdminCommandHandler {
     }
 
     @Override
-    public Enum[] getAdminCommandEnum() {
-        return Commands.values();
-    }
-
-    private enum Commands {
-        admin_polyself,
-        admin_polymorph,
-        admin_poly,
-        admin_unpolyself,
-        admin_unpolymorph,
-        admin_unpoly
+    public List<String> getAdminCommands() {
+        return List.of(
+                "admin_polyself",
+                "admin_polymorph",
+                "admin_poly",
+                "admin_unpolyself",
+                "admin_unpolymorph",
+                "admin_unpoly");
     }
 }

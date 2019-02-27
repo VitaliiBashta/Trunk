@@ -352,7 +352,7 @@ public final class ExBasicActionList extends L2GameServerPacket {
     private final List<Integer> actions;
 
     public ExBasicActionList(Player activeChar) {
-        actions = activeChar.getTransformation() == 0 ? BasicActions : TransformationActions;
+        actions = activeChar.isTrasformed() ? TransformationActions : BasicActions;
     }
 
     @Override

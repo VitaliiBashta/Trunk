@@ -11,6 +11,7 @@ import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
 import l2trunk.scripts.quests._255_Tutorial;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -74,19 +75,14 @@ public final class AdminQuests implements IAdminCommandHandler {
     }
 
     @Override
-    public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
-        Commands command = (Commands) comm;
-
+    public boolean useAdminCommand(String comm, String[] wordList, String fullString, Player activeChar) {
         if (!activeChar.getPlayerAccess().CanEditCharAll)
             return false;
 
-        switch (command) {
-            case admin_quests:
-
-
+        switch (comm) {
+            case "admin_quests":
                 return ShowQuestList(getTargetChar(wordList, 1, activeChar), activeChar);
-
-            case admin_quest:
+            case "admin_quest":
                 if (wordList.length < 2) {
                     activeChar.sendMessage("USAGE: //quest name [SHOW|STATE|VAR|CLEAR] ...");
                     return true;
@@ -195,12 +191,9 @@ public final class AdminQuests implements IAdminCommandHandler {
     }
 
     @Override
-    public Enum[] getAdminCommandEnum() {
-        return Commands.values();
-    }
-
-    private enum Commands {
-        admin_quests,
-        admin_quest
+    public List<String> getAdminCommands() {
+        return List.of(
+                "admin_quests",
+                "admin_quest");
     }
 }

@@ -8,13 +8,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 
 public final class AdminRepairChar implements IAdminCommandHandler {
     @Override
-    public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
-        Commands command = (Commands) comm;
-
+    public boolean useAdminCommand(String comm, String[] wordList, String fullString, Player activeChar) {
         if (activeChar.getPlayerAccess() == null || !activeChar.getPlayerAccess().CanEditChar)
             return false;
 
@@ -57,12 +56,9 @@ public final class AdminRepairChar implements IAdminCommandHandler {
     }
 
     @Override
-    public Enum[] getAdminCommandEnum() {
-        return Commands.values();
-    }
-
-    private enum Commands {
-        admin_restore,
-        admin_repair
+    public List<String> getAdminCommands() {
+        return List.of(
+                "admin_restore",
+                "admin_repair");
     }
 }

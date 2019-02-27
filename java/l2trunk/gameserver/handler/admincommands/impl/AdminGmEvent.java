@@ -13,7 +13,7 @@ import static l2trunk.commons.lang.NumberUtils.toInt;
 
 public final class AdminGmEvent implements IAdminCommandHandler {
     @Override
-    public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
+    public boolean useAdminCommand(String comm, String[] wordList, String fullString, Player activeChar) {
         final StringTokenizer st = new StringTokenizer(fullString, " ");
         st.nextToken();
 
@@ -31,11 +31,11 @@ public final class AdminGmEvent implements IAdminCommandHandler {
                         return true;
                     }
 
-                    String eventName = st.nextToken();
+                    StringBuilder eventName = new StringBuilder(st.nextToken());
                     while (st.hasMoreTokens())
-                        eventName += " " + st.nextToken();
+                        eventName.append(" ").append(st.nextToken());
 
-                    GmEventManager.INSTANCE.createEvent(activeChar, eventName);
+                    GmEventManager.INSTANCE.createEvent(activeChar, eventName.toString());
                 } catch (Exception e) {
                     activeChar.sendMessage("Uso: //gmevent create [eventName]");
                 }
@@ -150,11 +150,8 @@ public final class AdminGmEvent implements IAdminCommandHandler {
     }
 
     @Override
-    public Enum[] getAdminCommandEnum() {
-        return Commands.values();
+    public String getAdminCommand() {
+        return "admin_gmevent";
     }
 
-    private enum Commands {
-        admin_gmevent
-    }
 }

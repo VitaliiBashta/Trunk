@@ -265,7 +265,7 @@ public final class _417_PathToScavenger extends Quest {
                 st.takeItems(MIONS_LETTER, 1);
                 st.giveItems(BEAR_PIC);
                 st.setCond(5);
-                st.set("id", 0);
+                st.unset("id");
             } else if (st.getQuestItemsCount(BEAR_PIC) == 1 && st.getQuestItemsCount(HONEY_JAR) < 5)
                 htmltext = "master_toma_q0417_02.htm";
             else if (st.getQuestItemsCount(BEAR_PIC) == 1 && st.getQuestItemsCount(HONEY_JAR) >= 5) {
@@ -274,7 +274,7 @@ public final class _417_PathToScavenger extends Quest {
                 st.takeItems(BEAR_PIC, 1);
                 st.giveItems(TARANTULA_PIC);
                 st.setCond(7);
-            } else if (st.getQuestItemsCount(TARANTULA_PIC) == 1 && st.getQuestItemsCount(BEAD) < 20)
+            } else if (st.haveQuestItem(TARANTULA_PIC)  && st.getQuestItemsCount(BEAD) < 20)
                 htmltext = "master_toma_q0417_04.htm";
             else if (st.getQuestItemsCount(TARANTULA_PIC) == 1 && st.getQuestItemsCount(BEAD) >= 20) {
                 htmltext = "master_toma_q0417_05.htm";
@@ -282,7 +282,7 @@ public final class _417_PathToScavenger extends Quest {
                 st.takeItems(TARANTULA_PIC, 1);
                 st.giveItems(BEAD_PARCEL);
                 st.setCond(9);
-            } else if (st.getQuestItemsCount(BEAD_PARCEL) > 0)
+            } else if (st.haveQuestItem(BEAD_PARCEL))
                 htmltext = "master_toma_q0417_06.htm";
             else if (st.getQuestItemsCount(ROUTS_TP_SCROLL) > 0 || st.getQuestItemsCount(SUCCUBUS_UNDIES) > 0)
                 htmltext = "master_toma_q0417_07.htm";

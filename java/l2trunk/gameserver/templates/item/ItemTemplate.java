@@ -176,13 +176,13 @@ public abstract class ItemTemplate extends StatTemplate {
         crystalType = set.getEnum("crystal_type", Grade.class, Grade.NONE); // default to none-grade
         durability = set.getInteger("durability", -1);
         temporal = set.getBool("temporal", false);
-        bodyPart = set.getInteger("bodypart", 0);
-        referencePrice = set.getInteger("price", 0);
-        _crystalCount = set.getInteger("crystal_count", 0);
+        bodyPart = set.getInteger("bodypart");
+        referencePrice = set.getInteger("price");
+        _crystalCount = set.getInteger("crystal_count");
         _reuseType = set.getEnum("reuse_type", ReuseType.class, ReuseType.NORMAL);
-        _reuseDelay = set.getInteger("reuse_delay", 0);
+        _reuseDelay = set.getInteger("reuse_delay");
         _reuseGroup = set.getInteger("delay_share_group", -itemId);
-        _agathionEnergy = set.getInteger("agathion_energy", 0);
+        _agathionEnergy = set.getInteger("agathion_energy");
         _masterwork = set.getBool("masterwork", false);
         masterworkConvert = set.getInteger("masterwork_convert", -1);
 

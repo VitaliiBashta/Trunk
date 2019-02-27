@@ -112,7 +112,7 @@ public final class PartyMatchingBBSManager extends Functions implements ICommuni
                 partyMatchingList.append("<table width=775 height=35 ").append((changeColor % 2) == 1 ? "" : "bgcolor=171612").append("><tr>");
                 partyMatchingList.append("<td fixwidth=200 align=center>").append(activeChar.getName()).append("</td>");
                 partyMatchingList.append("<td fixwidth=14 height=18><img src=\"L2UI_CH3.").append(getClassIcon(activeChar.getClassId().id)).append("\" width=12 height=12></td>");
-                partyMatchingList.append("<td fixwidth=125>").append(Util.getFullClassName(activeChar.getClassId())).append("</td>");
+                partyMatchingList.append("<td fixwidth=125>").append(activeChar.getClassId().name).append("</td>");
                 partyMatchingList.append("<td fixwidth=350>").append(partyMatchingDescriptionList.get(activeChar.objectId())).append("</td>");
                 partyMatchingList.append("<td fixwidth=80 align=right><button action=\"bypass -h partyMatchingInvite ").append(activeChar.getName()).append(" \" value=\"Invite\" width=80 height=27 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td>");
                 partyMatchingList.append("</tr></table>");

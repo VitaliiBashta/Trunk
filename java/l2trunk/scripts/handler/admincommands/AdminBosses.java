@@ -1,41 +1,20 @@
 package l2trunk.scripts.handler.admincommands;
 
-import l2trunk.gameserver.handler.admincommands.AdminCommandHandler;
 import l2trunk.gameserver.handler.admincommands.IAdminCommandHandler;
 import l2trunk.gameserver.instancemanager.ServerVariables;
 import l2trunk.gameserver.model.Player;
-import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.scripts.bosses.AntharasManager;
 import l2trunk.scripts.bosses.BaiumManager;
 import l2trunk.scripts.bosses.ValakasManager;
 
 import java.util.Calendar;
-import java.util.List;
 
-public final class AdminBosses implements IAdminCommandHandler, ScriptFile {
-    private enum Commands {
-        admin_epics_respawn
-    }
-
-    @Override
-    public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, final Player activeChar) {
-        Commands command = (Commands) comm;
-
-        if (!activeChar.getPlayerAccess().CanEditNPC)
-            return false;
-
-        if (command == Commands.admin_epics_respawn) {
-            getEpicsRespawn(activeChar);
-        }
-
-        return true;
-    }
-
+public final class AdminBosses implements IAdminCommandHandler {
     private static void getEpicsRespawn(Player activeChar) {
         activeChar.sendMessage("Antharas: " + convertRespawnDate(AntharasManager.getState().getRespawnDate()));
         activeChar.sendMessage("Valakas: " + convertRespawnDate(ValakasManager.getState().getRespawnDate()));
         activeChar.sendMessage("Baium: " + convertRespawnDate(BaiumManager.getState().getRespawnDate()));
-        activeChar.sendMessage("Beleth: " + convertRespawnDate(ServerVariables.getLong("BelethKillTime", 0L)));
+        activeChar.sendMessage("Beleth: " + convertRespawnDate(ServerVariables.getLong("BelethKillTime")));
     }
 
     private static String convertRespawnDate(long date) {
@@ -46,13 +25,18 @@ public final class AdminBosses implements IAdminCommandHandler, ScriptFile {
     }
 
     @Override
-    public Enum[] getAdminCommandEnum() {
-        return Commands.values();
+    public boolean useAdminCommand(String comm, String[] wordList, String fullString, final Player activeChar) {
+        if (!activeChar.getPlayerAccess().CanEditNPC)
+            return false;
+
+        getEpicsRespawn(activeChar);
+
+        return true;
     }
 
     @Override
-    public void onLoad() {
-        AdminCommandHandler.INSTANCE.registerAdminCommandHandler(this);
+    public String getAdminCommand() {
+        return "admin_epics_respawn";
     }
 
 }

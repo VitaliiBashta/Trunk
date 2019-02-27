@@ -84,7 +84,7 @@ public enum ItemParser /*extends StatParser<ItemHolder>*/ {
                     template = new EtcItemTemplate(set);
                 }
             } catch (RuntimeException e) {
-                LOG.warn("Fail create item: " + set.get("item_id"), e);
+                LOG.warn("Fail create item: " + set.getString("item_id"), e);
                 continue;
             }
 
@@ -107,7 +107,7 @@ public enum ItemParser /*extends StatParser<ItemHolder>*/ {
                             if (skill != null) {
                                 template.attachSkill(skill);
                             } else {
-                                LOG.info("Skill not found(" + id + "," + level + ") for item:" + set.getObject("item_id") + "; element:" + itemElement);
+                                LOG.info("Skill not found(" + id + "," + level + ") for item:" + set.getString("item_id") + "; element:" + itemElement);
                             }
                         }
                     } else if ("enchant4_skill".equalsIgnoreCase(subName)) {
@@ -161,7 +161,7 @@ public enum ItemParser /*extends StatParser<ItemHolder>*/ {
                                     for (Element optionElement : nextElement.elements()) {
                                         OptionDataTemplate optionData = OptionDataHolder.getTemplate(toInt(optionElement.attributeValue("id")));
                                         if (optionData == null) {
-                                            LOG.error("Not found option_data for id: " + optionElement.attributeValue("id") + "; item_id: " + set.get("item_id"));
+                                            LOG.error("Not found option_data for id: " + optionElement.attributeValue("id") + "; item_id: " + set.getString("item_id"));
                                         } else {
                                             options[(i++)] = optionData.id;
                                         }

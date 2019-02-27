@@ -12,24 +12,23 @@ import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 
-public class AdminShutdown implements IAdminCommandHandler {
+public final class AdminShutdown implements IAdminCommandHandler {
     @Override
-    public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
-        Commands command = (Commands) comm;
-
+    public boolean useAdminCommand(String comm, String[] wordList, String fullString, Player activeChar) {
         if (!activeChar.getPlayerAccess().CanRestart)
             return false;
 
         try {
-            switch (command) {
-                case admin_server_shutdown:
+            switch (comm) {
+                case "admin_server_shutdown":
                     Shutdown.getInstance().schedule(NumberUtils.toInt(wordList[1], -1), Shutdown.SHUTDOWN);
                     break;
-                case admin_server_restart:
+                case "admin_server_restart":
                     Shutdown.getInstance().schedule(NumberUtils.toInt(wordList[1], -1), Shutdown.RESTART);
                     break;
-                case admin_server_abort:
+                case "admin_server_abort":
                     Shutdown.getInstance().cancel();
                     break;
             }
@@ -41,8 +40,11 @@ public class AdminShutdown implements IAdminCommandHandler {
     }
 
     @Override
-    public Enum[] getAdminCommandEnum() {
-        return Commands.values();
+    public List<String> getAdminCommands() {
+        return List.of(
+                "admin_server_shutdown",
+                "admin_server_restart",
+                "admin_server_abort");
     }
 
     private void sendHtmlForm(Player activeChar) {
@@ -56,44 +58,38 @@ public class AdminShutdown implements IAdminCommandHandler {
         cal.set(Calendar.HOUR_OF_DAY, h);
         cal.set(Calendar.MINUTE, m);
 
-        StringBuilder replyMSG = new StringBuilder("<html><body>");
-        replyMSG.append("<table width=260><tr>");
-        replyMSG.append("<td width=40><button value=\"Main\" action=\"bypass -h admin_admin\" width=60 height=20 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td>");
-        replyMSG.append("<td width=150></td>");
-        replyMSG.append("<td width=40><button value=\"Back\" action=\"bypass -h admin_admin\" width=60 height=20 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td>");
-        replyMSG.append("</tr></table>");
-        replyMSG.append("<br>");
-        replyMSG.append("<table width=260><tr>");
-        replyMSG.append("<td width=180><center><font name=hs12 color=LEVEL>Server Management Menu</font></center></td>");
-        replyMSG.append("</tr></table>");
-        replyMSG.append("<br><br>");
-        replyMSG.append("<table>");
-        replyMSG.append("<tr><td>Players Online: " + "<font color=00FF00>" + GameObjectsStorage.getAllPlayersCount() + "</font></td></tr>");
-        replyMSG.append("<br>");
-        replyMSG.append("<tr><td>Used Memory: " + "<font color=FF0000>" + StatsUtils.getMemUsedMb() + "<font></td></tr>");
-        replyMSG.append("<br>");
-        replyMSG.append("<tr><td>Server Rates: " + Config.RATE_XP + "x|| " + Config.RATE_SP + "x|| " + Config.RATE_DROP_ADENA + "x|| " + Config.RATE_DROP_ITEMS + "x</td></tr>");
-        replyMSG.append("<br>");
-        replyMSG.append("<tr><td>Game Time: " + format.format(cal.getTime()) + "</td></tr>");
-        replyMSG.append("</table><br>");
-        replyMSG.append("<table width=270>");
-        replyMSG.append("<br>");
-        replyMSG.append("<tr><td><center>Seconds till: <edit var=\"shutdown_time\" width=100></center></td></tr>");
-        replyMSG.append("</table><br>");
-        replyMSG.append("<center><table><tr><td>");
-        replyMSG.append("<button value=\"Shutdown\" action=\"bypass -h admin_server_shutdown $shutdown_time\" width=90 height=20 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td><td>");
-        replyMSG.append("<button value=\"Restart\" action=\"bypass -h admin_server_restart $shutdown_time\" width=90 height=20 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td><td>");
-        replyMSG.append("<button value=\"Abort\" action=\"bypass -h admin_server_abort\" width=90 height=20 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\">");
-        replyMSG.append("</td></tr></table></center>");
-        replyMSG.append("</body></html>");
-
-        adminReply.setHtml(replyMSG.toString());
+        String replyMSG = "<html><body>" + "<table width=260><tr>" +
+                "<td width=40><button value=\"Main\" action=\"bypass -h admin_admin\" width=60 height=20 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td>" +
+                "<td width=150></td>" +
+                "<td width=40><button value=\"Back\" action=\"bypass -h admin_admin\" width=60 height=20 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td>" +
+                "</tr></table>" +
+                "<br>" +
+                "<table width=260><tr>" +
+                "<td width=180><center><font name=hs12 color=LEVEL>Server Management Menu</font></center></td>" +
+                "</tr></table>" +
+                "<br><br>" +
+                "<table>" +
+                "<tr><td>Players Online: " + "<font color=00FF00>" + GameObjectsStorage.getAllPlayersCount() + "</font></td></tr>" +
+                "<br>" +
+                "<tr><td>Used Memory: " + "<font color=FF0000>" + StatsUtils.getMemUsedMb() + "<font></td></tr>" +
+                "<br>" +
+                "<tr><td>Server Rates: " + Config.RATE_XP + "x|| " + Config.RATE_SP + "x|| " + Config.RATE_DROP_ADENA + "x|| " + Config.RATE_DROP_ITEMS + "x</td></tr>" +
+                "<br>" +
+                "<tr><td>Game Time: " + format.format(cal.getTime()) + "</td></tr>" +
+                "</table><br>" +
+                "<table width=270>" +
+                "<br>" +
+                "<tr><td><center>Seconds till: <edit var=\"shutdown_time\" width=100></center></td></tr>" +
+                "</table><br>" +
+                "<center><table><tr><td>" +
+                "<button value=\"Shutdown\" action=\"bypass -h admin_server_shutdown $shutdown_time\" width=90 height=20 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td><td>" +
+                "<button value=\"Restart\" action=\"bypass -h admin_server_restart $shutdown_time\" width=90 height=20 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td><td>" +
+                "<button value=\"Abort\" action=\"bypass -h admin_server_abort\" width=90 height=20 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\">" +
+                "</td></tr></table></center>" +
+                "</body></html>";
+        adminReply.setHtml(replyMSG);
         activeChar.sendPacket(adminReply);
     }
 
-    private enum Commands {
-        admin_server_shutdown,
-        admin_server_restart,
-        admin_server_abort
-    }
+
 }
