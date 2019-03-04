@@ -615,7 +615,9 @@ public class DefaultAI extends CharacterAI {
 
     @Override
     public void onEvtSpawn() {
-        setGlobalAggro(System.currentTimeMillis() + getActor().getParameter("globalAggro", 10000L));
+        long globalAggro = getActor().getParameter("globalAggro");
+        if (globalAggro == 0) globalAggro = 10000;
+        setGlobalAggro(System.currentTimeMillis() + globalAggro);
 
         setIntention(CtrlIntention.AI_INTENTION_ACTIVE);
     }

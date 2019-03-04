@@ -108,39 +108,39 @@ public final class glitmedal extends Functions implements ScriptFile, OnDeathLis
     private void spawnEventManagers() {
         // 1й эвент кот
         final List<Location> EVENT_MANAGERS1 = List.of(
-                new Location(147893, -56622, -2776, 0),
-                new Location(-81070, 149960, -3040, 0),
-                new Location(82882, 149332, -3464, 49000),
-                new Location(44176, -48732, -800, 33000),
-                new Location(147920, 25664, -2000, 16384),
-                new Location(117498, 76630, -2695, 38000),
-                new Location(111776, 221104, -3543, 16384),
-                new Location(-84516, 242971, -3730, 34000),
-                new Location(-13073, 122801, -3117, 0),
-                new Location(-44337, -113669, -224, 0),
-                new Location(11281, 15652, -4584, 25000),
-                new Location(44122, 50784, -3059, 57344),
-                new Location(80986, 54504, -1525, 32768),
-                new Location(114733, -178691, -821, 0),
-                new Location(18178, 145149, -3054, 7400));
+                Location.of(147893, -56622, -2776, 0),
+                Location.of(-81070, 149960, -3040, 0),
+                Location.of(82882, 149332, -3464, 49000),
+                Location.of(44176, -48732, -800, 33000),
+                Location.of(147920, 25664, -2000, 16384),
+                Location.of(117498, 76630, -2695, 38000),
+                Location.of(111776, 221104, -3543, 16384),
+                Location.of(-84516, 242971, -3730, 34000),
+                Location.of(-13073, 122801, -3117, 0),
+                Location.of(-44337, -113669, -224, 0),
+                Location.of(11281, 15652, -4584, 25000),
+                Location.of(44122, 50784, -3059, 57344),
+                Location.of(80986, 54504, -1525, 32768),
+                Location.of(114733, -178691, -821, 0),
+                Location.of(18178, 145149, -3054, 7400));
 
         // 2й эвент кот
         final List<Location> EVENT_MANAGERS2 = List.of(
-                new Location(147960, -56584, -2776, 0),
-                new Location(-81070, 149860, -3040, 0),
-                new Location(82798, 149332, -3464, 49000),
-                new Location(44176, -48688, -800, 33000),
-                new Location(147985, 25664, -2000, 16384),
-                new Location(117459, 76664, -2695, 38000),
-                new Location(111724, 221111, -3543, 16384),
-                new Location(-84516, 243015, -3730, 34000),
-                new Location(-13073, 122841, -3117, 0),
-                new Location(-44342, -113726, -240, 0),
-                new Location(11327, 15682, -4584, 25000),
-                new Location(44157, 50827, -3059, 57344),
-                new Location(80986, 54452, -1525, 32768),
-                new Location(114719, -178742, -821, 0),
-                new Location(18154, 145192, -3054, 7400));
+                Location.of(147960, -56584, -2776, 0),
+                Location.of(-81070, 149860, -3040, 0),
+                Location.of(82798, 149332, -3464, 49000),
+                Location.of(44176, -48688, -800, 33000),
+                Location.of(147985, 25664, -2000, 16384),
+                Location.of(117459, 76664, -2695, 38000),
+                Location.of(111724, 221111, -3543, 16384),
+                Location.of(-84516, 243015, -3730, 34000),
+                Location.of(-13073, 122841, -3117, 0),
+                Location.of(-44342, -113726, -240, 0),
+                Location.of(11327, 15682, -4584, 25000),
+                Location.of(44157, 50827, -3059, 57344),
+                Location.of(80986, 54452, -1525, 32768),
+                Location.of(114719, -178742, -821, 0),
+                Location.of(18154, 145192, -3054, 7400));
 
         SPAWNS = SpawnNPCs(EVENT_MANAGER_ID1, EVENT_MANAGERS1);
         SPAWNS.addAll(SpawnNPCs(EVENT_MANAGER_ID2, EVENT_MANAGERS2));

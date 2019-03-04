@@ -7,13 +7,13 @@ public enum EventType {
     BOAT_EVENT, //
     FUN_EVENT; //
 
-    private final int _step;
+    private final int step;
 
     EventType() {
-        _step = ordinal() * 1000;
+        step = ordinal() * 1000;
     }
 
     public int step() {
-        return _step;
+        return step;
     }
 }

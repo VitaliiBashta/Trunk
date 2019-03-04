@@ -39,7 +39,7 @@ public final class ServerList extends L2LoginServerPacket {
                     try {
                         addServer(localAdvIP.channelId, InetAddress.getByName(localAdvIP.channelAdress), localAdvIP.channelPort, gs, account);
 
-                        //_log.warn("Adding server: " + localAdvIP.channelAdress + ":" + localAdvIP.channelPort + ", id: " + localAdvIP.channelId);
+                        //LOG.warn("Adding server: " + localAdvIP.channelAdress + ":" + localAdvIP.channelPort + ", id: " + localAdvIP.channelId);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

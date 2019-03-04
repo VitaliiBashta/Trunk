@@ -29,8 +29,8 @@ public final class MasterOfEnchanting extends Functions implements ScriptFile, O
 
     private void spawnEventManagers() {
         final List<Location> EVENT_MANAGERS = List.of(
-                new Location(-119494, 44882, 360, 24576), //Kamael Village
-                new Location(86865, -142915, -1336, 26000));
+                Location.of(-119494, 44882, 360, 24576), //Kamael Village
+                Location.of(86865, -142915, -1336, 26000));
 
         _spawns = SpawnNPCs(EVENT_MANAGER_ID, EVENT_MANAGERS);
     }

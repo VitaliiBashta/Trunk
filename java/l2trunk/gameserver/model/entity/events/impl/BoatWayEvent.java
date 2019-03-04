@@ -23,29 +23,29 @@ public final class BoatWayEvent extends GlobalEvent {
 
     private final int _ticketId;
     private final Location _returnLoc;
-    private final Boat _boat;
+    private final Boat boat;
 
     public BoatWayEvent(ClanAirShip boat) {
         super(boat.objectId(), "ClanAirShip");
         _ticketId = 0;
-        _boat = boat;
+        this.boat = boat;
         _returnLoc = null;
     }
 
     public BoatWayEvent(StatsSet set) {
         super(set);
-        _ticketId = set.getInteger("ticketId", 0);
+        _ticketId = set.getInteger("ticketId");
         _returnLoc = Location.of(set.getString("return_point"));
-        String className = set.getString("class", null);
+        String className = set.getString("class");
         if (className != null) {
-            _boat = BoatHolder.getInstance().initBoat(getName(), className);
+            boat = BoatHolder.getInstance().initBoat(getName(), className);
             Location loc = Location.of(set.getString("spawn_point"));
-            _boat.setLoc(loc, true);
-            _boat.setHeading(loc.h);
+            boat.setLoc(loc, true);
+            boat.setHeading(loc.h);
         } else {
-            _boat = BoatHolder.getInstance().getBoat(getName());
+            boat = BoatHolder.getInstance().getBoat(getName());
         }
-        _boat.setWay(className != null ? 1 : 0, this);
+        boat.setWay(className != null ? 1 : 0, this);
     }
 
     @Override
@@ -54,15 +54,15 @@ public final class BoatWayEvent extends GlobalEvent {
 
     @Override
     public void startEvent() {
-        L2GameServerPacket startPacket = _boat.startPacket();
-        for (Player player : _boat.getPlayers()) {
+        L2GameServerPacket startPacket = boat.startPacket();
+        for (Player player : boat.getPlayers()) {
             if (_ticketId > 0) {
                 if (player.consumeItem(_ticketId, 1)) {
                     if (startPacket != null)
                         player.sendPacket(startPacket);
                 } else {
                     player.sendPacket(SystemMsg.YOU_DO_NOT_POSSESS_THE_CORRECT_TICKET_TO_BOARD_THE_BOAT);
-                    _boat.oustPlayer(player, _returnLoc, true);
+                    boat.oustPlayer(player, _returnLoc, true);
                 }
             } else {
                 if (startPacket != null)
@@ -76,27 +76,27 @@ public final class BoatWayEvent extends GlobalEvent {
     public void moveNext() {
         List<BoatPoint> points = getObjects(BOAT_POINTS);
 
-        if (_boat.getRunState() >= points.size()) {
-            _boat.trajetEnded(true);
+        if (boat.getRunState() >= points.size()) {
+            boat.trajetEnded(true);
             return;
         }
 
-        final BoatPoint bp = points.get(_boat.getRunState());
+        final BoatPoint bp = points.get(boat.getRunState());
 
         if (bp.getSpeed1() >= 0)
-            _boat.setMoveSpeed(bp.getSpeed1());
+            boat.setMoveSpeed(bp.getSpeed1());
         if (bp.getSpeed2() >= 0)
-            _boat.setRotationSpeed(bp.getSpeed2());
+            boat.setRotationSpeed(bp.getSpeed2());
 
-        if (_boat.getRunState() == 0)
-            _boat.broadcastCharInfo();
+        if (boat.getRunState() == 0)
+            boat.broadcastCharInfo();
 
-        _boat.setRunState(_boat.getRunState() + 1);
+        boat.setRunState(boat.getRunState() + 1);
 
         if (bp.isTeleport())
-            _boat.teleportShip(bp);
+            boat.teleportShip(bp);
         else
-            _boat.moveToLocation(bp, 0, false);
+            boat.moveToLocation(bp, 0, false);
     }
 
     @Override
@@ -112,15 +112,15 @@ public final class BoatWayEvent extends GlobalEvent {
     @Override
     public Stream<Player> broadcastPlayers(int range) {
         if (range <= 0) {
-            int rx = MapUtils.regionX(_boat);
-            int ry = MapUtils.regionY(_boat);
+            int rx = MapUtils.regionX(boat);
+            int ry = MapUtils.regionY(boat);
             int offset = Config.SHOUT_OFFSET;
 
             return GameObjectsStorage.getAllPlayersStream()
-                    .filter(p -> p.getReflection() == _boat.getReflection())
+                    .filter(p -> p.getReflection() == boat.getReflection())
                     .filter(p -> (MapUtils.regionX(p) >= rx - offset && MapUtils.regionX(p) <= rx + offset && MapUtils.regionY(p) >= ry - offset && MapUtils.regionY(p) <= ry + offset));
         } else
-            return World.getAroundPlayers(_boat, range, Math.max(range / 2, 200));
+            return World.getAroundPlayers(boat, range, Math.max(range / 2, 200));
     }
 
     @Override

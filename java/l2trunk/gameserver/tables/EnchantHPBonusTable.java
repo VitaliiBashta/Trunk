@@ -15,17 +15,16 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.StringTokenizer;
+import java.util.*;
 
-public class EnchantHPBonusTable {
-    private static final Logger _log = LoggerFactory.getLogger(EnchantHPBonusTable.class);
-    private static EnchantHPBonusTable _instance = new EnchantHPBonusTable();
-    private final Map<Integer, Integer[]> _armorHPBonus = new HashMap<>();
-    private int _onepieceFactor = 100;
+import static l2trunk.commons.lang.NumberUtils.toInt;
 
-    private EnchantHPBonusTable() {
+public final class EnchantHPBonusTable {
+    private static final Logger LOG = LoggerFactory.getLogger(EnchantHPBonusTable.class);
+    private static final Map<Integer, List<Integer>> armorHPBonus = new HashMap<>();
+    private static int onepieceFactor = 100;
+
+    public static void init() {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             factory.setValidating(false);
@@ -41,69 +40,59 @@ public class EnchantHPBonusTable {
                         if ("options".equalsIgnoreCase(d.getNodeName())) {
                             att = attrs.getNamedItem("onepiece_factor");
                             if (att == null) {
-                                _log.info("EnchantHPBonusTable: Missing onepiece_factor, skipping");
+                                LOG.info("EnchantHPBonusTable: Missing onepiece_factor, skipping");
                                 continue;
                             }
-                            _onepieceFactor = Integer.parseInt(att.getNodeValue());
+                            onepieceFactor = toInt(att.getNodeValue());
                         } else if ("enchant_bonus".equalsIgnoreCase(d.getNodeName())) {
                             Integer grade;
 
                             att = attrs.getNamedItem("grade");
                             if (att == null) {
-                                _log.info("EnchantHPBonusTable: Missing grade, skipping");
+                                LOG.info("EnchantHPBonusTable: Missing grade, skipping");
                                 continue;
                             }
                             grade = Integer.parseInt(att.getNodeValue());
 
                             att = attrs.getNamedItem("values");
                             if (att == null) {
-                                _log.info("EnchantHPBonusTable: Missing bonus id: " + grade + ", skipping");
+                                LOG.info("EnchantHPBonusTable: Missing bonus id: " + grade + ", skipping");
                                 continue;
                             }
                             StringTokenizer st = new StringTokenizer(att.getNodeValue(), ",");
                             int tokenCount = st.countTokens();
-                            Integer[] bonus = new Integer[tokenCount];
+                            List<Integer> bonus = new ArrayList<>();
                             for (int i = 0; i < tokenCount; i++) {
                                 Integer value = Integer.decode(st.nextToken().trim());
                                 if (value == null) {
-                                    _log.info("EnchantHPBonusTable: Bad Hp value!! grade: " + grade + " token: " + i);
+                                    LOG.info("EnchantHPBonusTable: Bad Hp value!! grade: " + grade + " token: " + i);
                                     value = 0;
                                 }
-                                bonus[i] = value;
+                                bonus.add(value);
                             }
-                            _armorHPBonus.put(grade, bonus);
+                            armorHPBonus.put(grade, bonus);
                         }
                     }
-            _log.info("EnchantHPBonusTable: Loaded bonuses for " + _armorHPBonus.size() + " grades.");
+            LOG.info("EnchantHPBonusTable: Loaded bonuses for " + armorHPBonus.size() + " grades.");
         } catch (DOMException | SAXException | ParserConfigurationException | NumberFormatException | IOException e) {
-            _log.warn("EnchantHPBonusTable: Lists could not be initialized.", e);
+            LOG.warn("EnchantHPBonusTable: Lists could not be initialized.", e);
         }
     }
 
-    public static EnchantHPBonusTable getInstance() {
-        if (_instance == null)
-            _instance = new EnchantHPBonusTable();
-        return _instance;
-    }
-
-    public void reload() {
-        _instance = new EnchantHPBonusTable();
-    }
-
-    public final int getHPBonus(ItemInstance item) {
-        final Integer[] values;
+    public static int getHPBonus(ItemInstance item) {
+        final List<Integer> bonuses;
 
         if (item.getEnchantLevel() == 0)
             return 0;
 
-        values = _armorHPBonus.get(item.getTemplate().getCrystalType().externalOrdinal);
+        bonuses = armorHPBonus.get(item.getTemplate().getCrystalType().externalOrdinal);
 
-        if (values == null || values.length == 0)
+        if (bonuses == null || bonuses.size() == 0)
             return 0;
 
-        int bonus = values[Math.min(item.getEnchantLevel(), values.length) - 1];
+        int bonus = bonuses.get(Math.min(item.getEnchantLevel(), bonuses.size()) - 1);
         if (item.getTemplate().getBodyPart() == ItemTemplate.SLOT_FULL_ARMOR)
-            bonus = (int) (bonus * _onepieceFactor / 100.0D);
+            bonus = (int) (bonus * onepieceFactor / 100.0D);
 
         return bonus;
     }

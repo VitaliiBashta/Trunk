@@ -1,29 +1,29 @@
 package l2trunk.gameserver.model;
 
-public class PremiumItem {
-    private final int _itemId;
-    private final String _sender;
-    private long _count;
+public final class PremiumItem {
+    private final int itemId;
+    private final String sender;
+    private long count;
 
     public PremiumItem(int itemid, long count, String sender) {
-        _itemId = itemid;
-        _count = count;
-        _sender = sender;
+        itemId = itemid;
+        this.count = count;
+        this.sender = sender;
     }
 
     public void updateCount(long newcount) {
-        _count = newcount;
+        count = newcount;
     }
 
     public int getItemId() {
-        return _itemId;
+        return itemId;
     }
 
     public long getCount() {
-        return _count;
+        return count;
     }
 
     public String getSender() {
-        return _sender;
+        return sender;
     }
 }

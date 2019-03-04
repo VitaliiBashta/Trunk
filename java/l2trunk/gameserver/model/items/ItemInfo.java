@@ -4,6 +4,9 @@ import l2trunk.gameserver.data.xml.holder.ItemHolder;
 import l2trunk.gameserver.model.base.Element;
 import l2trunk.gameserver.templates.item.ItemTemplate;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ItemInfo {
     private int ownerId;
     private int lastChange;
@@ -27,7 +30,7 @@ public class ItemInfo {
     private int defenceUnholy;
     private int equipSlot;
     private int temporalLifeTime;
-    private int[] enchantOptions = ItemInstance.EMPTY_ENCHANT_OPTIONS;
+    private List<Integer> enchantOptions = new ArrayList<>();
 
     private ItemTemplate item;
 
@@ -47,7 +50,7 @@ public class ItemInfo {
         this.shadowLifeTime = item.getShadowLifeTime();
         this.attackElement = item.getAttackElement().getId();
         this.attackElementValue = item.getAttackElementValue();
-        this.defenceFire = item.getDefenceFire();
+        this.defenceFire = item.getDefence(Element.FIRE);
         this.defenceWater = item.getDefenceWater();
         this.defenceWind = item.getDefenceWind();
         this.defenceEarth = item.getDefenceEarth();
@@ -203,7 +206,7 @@ public class ItemInfo {
         return getObjectId() == ((ItemInfo) obj).getObjectId();
     }
 
-    public int[] getEnchantOptions() {
+    public List<Integer> getEnchantOptions() {
         return enchantOptions;
     }
 

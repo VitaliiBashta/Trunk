@@ -8,6 +8,7 @@ import l2trunk.gameserver.templates.manor.CropProcure;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 public final class ExShowProcureCropDetail extends L2GameServerPacket {
     private final int cropId;
@@ -17,8 +18,7 @@ public final class ExShowProcureCropDetail extends L2GameServerPacket {
         this.cropId = cropId;
         castleCrops = new TreeMap<>();
 
-        List<Castle> castleList = ResidenceHolder.getResidenceList(Castle.class);
-        for (Castle c : castleList) {
+        for (Castle c : ResidenceHolder.getCastles()) {
             CropProcure cropItem = c.getCrop(this.cropId, CastleManorManager.PERIOD_CURRENT);
             if (cropItem != null && cropItem.getAmount() > 0)
                 castleCrops.put(c.getId(), cropItem);

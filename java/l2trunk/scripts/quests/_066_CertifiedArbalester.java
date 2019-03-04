@@ -5,6 +5,8 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
+import static l2trunk.gameserver.model.base.ClassId.warder;
+
 public final class _066_CertifiedArbalester extends Quest {
     //NPC
     private static final int Rindy = 32201;
@@ -276,11 +278,11 @@ public final class _066_CertifiedArbalester extends Quest {
         if (id != CREATED)
             cond = st.getCond();
         if (npcId == Rindy) {
-            if (st.getQuestItemsCount(KamaelInquisitorMark) > 0) {
+            if (st.haveQuestItem(KamaelInquisitorMark)) {
                 htmltext = "32201-00.htm";
                 st.exitCurrentQuest();
             } else if (cond == 0)
-                if (st.player.getClassId().id == 0x7e) {
+                if (st.player.getClassId() == warder) {
                     if (st.player.getLevel() >= 39) {
                         htmltext = "32201-03.htm";
                         st.setCond(1);
@@ -308,7 +310,7 @@ public final class _066_CertifiedArbalester extends Quest {
                     st.set("id");
                 } else if (st.isSet("id") )
                     htmltext = "30464-08.htm";
-                else if (!st.isSet("id")  && st.getQuestItemsCount(EnmityCrystal) < 30) {
+                else if (!st.isSet("id")  && !st.haveQuestItem(EnmityCrystal, 30)) {
                     htmltext = "30464-06.htm";
                     st.setCond(2);
                 }
@@ -408,7 +410,7 @@ public final class _066_CertifiedArbalester extends Quest {
                 st.addSpawn(CrimsonLady);
             }
         } else if (cond == 19 && npcId == CrimsonLady) {
-            st.giveItems(ResearchOnTheGiantsAndTheAncientRace, 1);
+            st.giveItems(ResearchOnTheGiantsAndTheAncientRace);
             st.setCond(20);
             st.start();
         }

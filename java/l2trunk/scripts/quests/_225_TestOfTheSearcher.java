@@ -5,6 +5,8 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
+import static l2trunk.gameserver.model.base.ClassId.*;
+
 public final class _225_TestOfTheSearcher extends Quest {
     //NPC
     private static final int Luther = 30690;
@@ -188,9 +190,9 @@ public final class _225_TestOfTheSearcher extends Quest {
                 htmltext = "completed";
                 st.exitCurrentQuest();
             } else if (cond == 0) {
-                if (st.player.getClassId().id == 0x07 || st.player.getClassId().id == 0x16 || st.player.getClassId().id == 0x23 || st.player.getClassId().id == 0x36) {
+                if (st.player.getClassId() == rogue || st.player.getClassId() == elvenScout || st.player.getClassId() == assassin || st.player.getClassId() == scavenger) {
                     if (st.player.getLevel() >= 39) {
-                        if (st.player.getClassId().id == 0x36)
+                        if (st.player.getClassId() == scavenger)
                             htmltext = "30690-04.htm";
                         else
                             htmltext = "30690-03.htm";
@@ -255,17 +257,15 @@ public final class _225_TestOfTheSearcher extends Quest {
                 htmltext = "30728-02.htm";
             else if (cond == 4) {
                 htmltext = "30728-03.htm";
-                st.takeItems(DeluTotem);
-                st.takeItems(Leirynns1stOrder);
+                st.takeAllItems(DeluTotem,Leirynns1stOrder);
                 st.giveItems(Leirynns2ndOrder);
                 st.setCond(5);
                 st.start();
             } else if (cond == 5)
                 htmltext = "30728-04.htm";
             else if (cond == 6) {
-                st.takeItems(ChiefKalkisFang);
-                st.takeItems(Leirynns2ndOrder);
-                st.giveItems(LeirynnsReport, 1);
+                st.takeAllItems(ChiefKalkisFang,Leirynns2ndOrder);
+                st.giveItems(LeirynnsReport);
                 htmltext = "30728-05.htm";
                 st.setCond(7);
                 st.start();
@@ -275,16 +275,15 @@ public final class _225_TestOfTheSearcher extends Quest {
                 htmltext = "30728-07.htm";
         } else if (npcId == Borys) {
             if (cond == 8) {
-                st.takeItems(AlexsLetter, -1);
-                st.giveItems(WineCatalog, 1);
+                st.takeItems(AlexsLetter);
+                st.giveItems(WineCatalog);
                 htmltext = "30729-01.htm";
                 st.setCond(9);
                 st.start();
             } else if (cond == 9)
                 htmltext = "30729-02.htm";
             else if (cond == 12) {
-                st.takeItems(WineCatalog, -1);
-                st.takeItems(MalrukianWine, -1);
+                st.takeAllItems(WineCatalog,MalrukianWine);
                 st.giveItems(OldOrder, 1);
                 htmltext = "30729-03.htm";
                 st.setCond(13);

@@ -26,29 +26,29 @@ import l2trunk.gameserver.templates.manor.SeedProduction;
  * d    // count
  * ]
  */
-public class RequestBuySeed extends L2GameClientPacket {
-    private int _count, _manorId;
-    private int[] _items;
-    private long[] _itemQ;
+public final class RequestBuySeed extends L2GameClientPacket {
+    private int count, manorId;
+    private int[] items;
+    private long[] itemQ;
 
     @Override
     protected void readImpl() {
-        _manorId = readD();
-        _count = readD();
+        manorId = readD();
+        count = readD();
 
-        if (_count * 12 > _buf.remaining() || _count > Short.MAX_VALUE || _count < 1) {
-            _count = 0;
+        if (count * 12 > buf.remaining() || count > Short.MAX_VALUE || count < 1) {
+            count = 0;
             return;
         }
 
-        _items = new int[_count];
-        _itemQ = new long[_count];
+        items = new int[count];
+        itemQ = new long[count];
 
-        for (int i = 0; i < _count; i++) {
-            _items[i] = readD();
-            _itemQ[i] = readQ();
-            if (_itemQ[i] < 1) {
-                _count = 0;
+        for (int i = 0; i < count; i++) {
+            items[i] = readD();
+            itemQ[i] = readQ();
+            if (itemQ[i] < 1) {
+                count = 0;
                 return;
             }
         }
@@ -57,7 +57,7 @@ public class RequestBuySeed extends L2GameClientPacket {
     @Override
     protected void runImpl() {
         Player activeChar = getClient().getActiveChar();
-        if (activeChar == null || _count == 0)
+        if (activeChar == null || count == 0)
             return;
 
         if (activeChar.isActionsDisabled()) {
@@ -93,7 +93,7 @@ public class RequestBuySeed extends L2GameClientPacket {
             return;
         }
 
-        Castle castle = ResidenceHolder.getResidence(Castle.class, _manorId);
+        Castle castle = ResidenceHolder.getCastle(manorId);
         if (castle == null)
             return;
 
@@ -102,9 +102,9 @@ public class RequestBuySeed extends L2GameClientPacket {
         long weight = 0;
 
         try {
-            for (int i = 0; i < _count; i++) {
-                int seedId = _items[i];
-                long count = _itemQ[i];
+            for (int i = 0; i < count; i++) {
+                int seedId = items[i];
+                long count = itemQ[i];
                 long price;
                 long residual;
 
@@ -155,9 +155,9 @@ public class RequestBuySeed extends L2GameClientPacket {
             castle.addToTreasuryNoTax(totalPrice, false, true);
 
             // Proceed the purchase
-            for (int i = 0; i < _count; i++) {
-                int seedId = _items[i];
-                long count = _itemQ[i];
+            for (int i = 0; i < count; i++) {
+                int seedId = items[i];
+                long count = itemQ[i];
 
                 // Update Castle Seeds Amount
                 SeedProduction seed = castle.getSeed(seedId, CastleManorManager.PERIOD_CURRENT);

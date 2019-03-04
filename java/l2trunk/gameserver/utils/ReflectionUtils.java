@@ -36,9 +36,9 @@ public final class ReflectionUtils {
         return enterReflection(invoker, new Reflection(), iz);
     }
 
-    public static Reflection enterReflection(Player invoker, Reflection r, int instancedZoneId) {
+    public static void enterReflection(Player invoker, Reflection r, int instancedZoneId) {
         InstantZone iz = InstantZoneHolder.getInstantZone(instancedZoneId);
-        return enterReflection(invoker, r, iz);
+        enterReflection(invoker, r, iz);
     }
 
     private static Reflection enterReflection(Player invoker, Reflection r, InstantZone iz) {

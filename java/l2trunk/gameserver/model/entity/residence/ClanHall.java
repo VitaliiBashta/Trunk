@@ -31,10 +31,10 @@ public final class ClanHall extends Residence {
 
     public ClanHall(StatsSet set) {
         super(set);
-        _grade = set.getInteger("grade", 0);
-        _rentalFee = set.getInteger("rental_fee", 0);
-        _minBid = set.getInteger("min_bid", 0);
-        _deposit = set.getInteger("deposit", 0);
+        _grade = set.getInteger("grade");
+        _rentalFee = set.getInteger("rental_fee");
+        _minBid = set.getInteger("min_bid");
+        _deposit = set.getInteger("deposit");
     }
 
     @Override

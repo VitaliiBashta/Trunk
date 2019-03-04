@@ -14,14 +14,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public final class Coliseum {
     private static final Logger _log = LoggerFactory.getLogger(Coliseum.class);
     private static Integer eventCycle = 0;
     private final int minlevel;
     private final int maxlevel;
-    private final ArrayList<Party> party_waiting_list = new ArrayList<>();
-    private final ArrayList<Party> party_inbattle_list = new ArrayList<>();
+    private final List<Party> party_waiting_list = new ArrayList<>();
+    private final List<Party> party_inbattle_list = new ArrayList<>();
     private Party previusWinners = null;
     private boolean isWaitingRoom1Free = true;
     private boolean isWaitingRoom2Free = true;
@@ -30,10 +31,10 @@ public final class Coliseum {
     private Party partyInRoom1 = null;
     private Party partyInRoom2 = null;
     private Zone zone;
-    private int _id = 0;
+    private int id = 0;
 
     public Coliseum() {
-        _id += 1;
+        id += 1;
         minlevel = 1;
         maxlevel = 85;
         try {
@@ -74,7 +75,7 @@ public final class Coliseum {
     }
 
     private int getId() {
-        return _id;
+        return id;
     }
 
     private void load() {
@@ -221,11 +222,11 @@ public final class Coliseum {
         return isInUse;
     }
 
-    public ArrayList<Party> getPartysInBattleGround() {
+    public List<Party> getPartysInBattleGround() {
         return party_inbattle_list;
     }
 
-    public ArrayList<Party> getWaitingPartys() {
+    public List<Party> getWaitingPartys() {
         return party_waiting_list;
     }
 

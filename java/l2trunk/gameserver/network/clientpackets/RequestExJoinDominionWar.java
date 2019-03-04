@@ -31,7 +31,7 @@ public final class RequestExJoinDominionWar extends L2GameClientPacket {
             return;
         }
 
-        Dominion dominion = ResidenceHolder.getResidence(Dominion.class, dominionId);
+        Dominion dominion = ResidenceHolder.getDominion(dominionId);
         if (dominion == null) {
             return;
         }
@@ -53,7 +53,7 @@ public final class RequestExJoinDominionWar extends L2GameClientPacket {
 
         int playerReg = 0;
         int clanReg = 0;
-        for (Dominion d : ResidenceHolder.getResidenceList(Dominion.class)) {
+        for (Dominion d : ResidenceHolder.getDominions()) {
             DominionSiegeEvent dominionSiegeEvent = d.getSiegeEvent();
             if (dominionSiegeEvent.getObjects(DominionSiegeEvent.DEFENDER_PLAYERS).contains(player.objectId())) {
                 playerReg = d.getId();

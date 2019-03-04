@@ -22,8 +22,8 @@ public final class AuctionedDoormanInstance extends NpcInstance {
     public AuctionedDoormanInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
 
-        doors = template.getAIParams().getIntegerList("doors", List.of());
-        elite = template.getAIParams().getBool("elite", false);
+        doors = template.getAiParams().getIntegerList("doors", List.of());
+        elite = template.getAiParams().isSet("elite");
     }
 
     @Override
@@ -63,7 +63,7 @@ public final class AuctionedDoormanInstance extends NpcInstance {
                 showChatWindow(player, elite ? "residence2/clanhall/WyvernAgitJanitorHi.htm" : "residence2/clanhall/AgitJanitorHi.htm", Map.of("%owner%", playerClan.getName()));
             else {
                 if (playerClan != null && playerClan.getCastle() > 0) {
-                    Castle castle = ResidenceHolder.getResidence(playerClan.getCastle());
+                    Castle castle = ResidenceHolder.getCastle(playerClan.getCastle());
                     NpcHtmlMessage html = new NpcHtmlMessage(player, this);
                     html.setFile("merchant/territorystatus.htm");
                     html.replace("%npcname%", getName());

@@ -1,6 +1,7 @@
 package l2trunk.gameserver.model.base;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static l2trunk.commons.lang.NumberUtils.toInt;
 import static l2trunk.gameserver.model.base.ClassType.*;
@@ -241,14 +242,11 @@ public enum ClassId {
     }
 
     private static Set<ClassId> getSet(Race race) {
-        Set<ClassId> allOf = new HashSet<>();
+        return Arrays.stream(ClassId.values())
+                .filter(playerClass -> race == null || playerClass.race == race)
+                .filter(playerClass -> playerClass.occupation() == 2)
+                .collect(Collectors.toSet());
 
-        for (ClassId playerClass : ClassId.values())
-            if (race == null || playerClass.race == race)
-                if (playerClass.occupation() == 2)
-                    allOf.add(playerClass);
-
-        return allOf;
     }
 
     public static ClassId getById(String id) {

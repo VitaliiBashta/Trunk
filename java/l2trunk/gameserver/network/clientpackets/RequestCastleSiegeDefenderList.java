@@ -19,7 +19,7 @@ public final class RequestCastleSiegeDefenderList extends L2GameClientPacket {
         if (player == null)
             return;
 
-        Castle castle = ResidenceHolder.getResidence(Castle.class, unitId);
+        Castle castle = ResidenceHolder.getCastle(unitId);
         if (castle == null)
             return;
 

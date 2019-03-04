@@ -40,7 +40,7 @@ public final class EffectDispelEffects extends Effect {
     public EffectDispelEffects(Env env, EffectTemplate template) {
         super(env, template);
         dispelType = template.getParam().getString("dispelType", "");
-        cancelRate = template.getParam().getInteger("cancelRate", 0);
+        cancelRate = template.getParam().getInteger("cancelRate");
         negateMin = template.getParam().getInteger("negateMin", 2);
         negateMax = template.getParam().getInteger("negateCount", 5);
         stackTypes = List.of(STACK_TYPE_SEPARATOR.split(template.getParam().getString("negateStackTypes", "")));

@@ -32,7 +32,6 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static l2trunk.commons.lang.NumberUtils.toInt;
 
@@ -252,10 +251,6 @@ public class Quest {
         return questItems;
     }
 
-    protected boolean isQuestItem(int id) {
-        return questItems.contains(id);
-    }
-
     public List<QuestNpcLogInfo> getNpcLogList(int cond) {
         return npcLogList.get(cond);
     }
@@ -264,8 +259,8 @@ public class Quest {
         attackIds.forEach(id -> addEventId(id, QuestEventType.ATTACKED_WITH_QUEST));
     }
 
-    protected void addAttackId(Integer... attackIds) {
-        Stream.of(attackIds)
+    protected void addAttackId(int... attackIds) {
+        Arrays.stream(attackIds)
                 .forEach(id -> addEventId(id, QuestEventType.ATTACKED_WITH_QUEST));
     }
 
@@ -328,16 +323,16 @@ public class Quest {
         boolean done = true;
         boolean find = false;
         for (QuestNpcLogInfo info : vars) {
-            int count = st.getInt(info.getVarName());
-            if (!find && info.getNpcIds().contains(npc.getNpcId())) {
+            int count = st.getInt(info.varName);
+            if (!find && info.npcIds.contains(npc.getNpcId())) {
                 find = true;
-                if (count < info.getMaxCount()) {
-                    st.set(info.getVarName(), ++count);
+                if (count < info.maxCount) {
+                    st.inc(info.varName);
                     player.sendPacket(new ExQuestNpcLogList(st));
                 }
             }
 
-            if (count != info.getMaxCount())
+            if (count != info.maxCount)
                 done = false;
         }
 

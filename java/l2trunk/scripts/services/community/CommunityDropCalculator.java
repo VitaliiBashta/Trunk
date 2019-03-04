@@ -178,7 +178,7 @@ public final class CommunityDropCalculator implements ScriptFile, ICommunityBoar
     private static String replaceMonstersByName(String html, String monsterName, int page) {
         String newHtml = html;
         List<NpcTemplate> npcTemplates = CalculateRewardChances.getNpcsContainingString(monsterName);
-        npcTemplates = sortMonsters(npcTemplates, monsterName);
+        sortMonsters(npcTemplates, monsterName);
 
         int npcIndex = 0;
 
@@ -299,9 +299,8 @@ public final class CommunityDropCalculator implements ScriptFile, ICommunityBoar
         return realChance + '%';
     }
 
-    private static List<NpcTemplate> sortMonsters(List<NpcTemplate> npcTemplates, String monsterName) {
+    private static void sortMonsters(List<NpcTemplate> npcTemplates, String monsterName) {
         npcTemplates.sort(new MonsterComparator(monsterName));
-        return npcTemplates;
     }
 
     @Override
@@ -442,9 +441,9 @@ public final class CommunityDropCalculator implements ScriptFile, ICommunityBoar
         public int compare(NpcTemplate o1, NpcTemplate o2) {
             if (o1.equals(o2))
                 return 0;
-            if (o1.name().equalsIgnoreCase(search))
+            if (o1.name.equalsIgnoreCase(search))
                 return 1;
-            if (o2.name().equalsIgnoreCase(search))
+            if (o2.name.equalsIgnoreCase(search))
                 return -1;
 
             return o2.name.compareTo(o2.name);

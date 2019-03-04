@@ -106,7 +106,7 @@ public enum SpawnTaskManager {
                                         _spawnTasksSize--;
                                 }
                             } catch (RuntimeException e) {
-                                _log.error("c", e);
+                                LOG.error("c", e);
                             }
                     }
 
@@ -119,7 +119,7 @@ public enum SpawnTaskManager {
                                     spawn.respawnNpc(work);
                             });
                 } catch (RuntimeException e) {
-                    _log.error("SpawnScheduler", e);
+                    LOG.error("SpawnScheduler", e);
                 }
         }
     }

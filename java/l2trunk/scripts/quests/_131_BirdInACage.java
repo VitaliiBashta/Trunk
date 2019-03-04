@@ -50,7 +50,7 @@ public final class _131_BirdInACage extends Quest {
             st.addExpAndSp(250677, 25019);
             st.finish();
             if (HellboundManager.getHellboundLevel() == 0)
-                ServerVariables.set("HellboundConfidence", 1);
+                ServerVariables.set("HellboundConfidence");
         } else if (event.equals("meet") && cond == 2)
             st.player.teleToLocation(153736, 142056, -9744);
 

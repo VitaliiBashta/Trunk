@@ -329,7 +329,7 @@ public final class ItemAuctionInstance {
                         throw new IllegalStateException("Could not set auction state: " + ItemAuctionState.STARTED.toString() + ", expected: " + state.toString());
                     }
 
-                    _log.info("ItemAuction: Auction " + auction.getAuctionId() + " has started for instance " + auction.getInstanceId());
+                    LOG.info("ItemAuction: Auction " + auction.getAuctionId() + " has started for instance " + auction.getInstanceId());
                     if (Config.ALT_ITEM_AUCTION_START_ANNOUNCE) {
                         Announcements.INSTANCE.announceByCustomMessage("l2trunk.gameserver.model.instances.L2ItemAuctionBrokerInstance.announce." + auction.getInstanceId());
                     }

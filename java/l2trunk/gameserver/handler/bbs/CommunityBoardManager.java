@@ -53,6 +53,6 @@ public final class CommunityBoardManager {
     }
 
     public static int getIntProperty(String name) {
-        return properties.getInteger(name, 0);
+        return properties.getInteger(name);
     }
 }

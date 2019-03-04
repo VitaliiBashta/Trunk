@@ -7,7 +7,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 public final class QuestManager {
-
     private static final Set<Quest> quests = new HashSet<>();
 
     public static Quest getQuest(String name) {

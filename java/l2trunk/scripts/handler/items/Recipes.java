@@ -3,7 +3,6 @@ package l2trunk.scripts.handler.items;
 import l2trunk.gameserver.cache.Msg;
 import l2trunk.gameserver.data.xml.holder.RecipeHolder;
 import l2trunk.gameserver.handler.items.ItemHandler;
-import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Recipe;
 import l2trunk.gameserver.model.Skill;
@@ -21,7 +20,7 @@ public final class Recipes extends ScriptItemHandler implements ScriptFile {
 
     public Recipes() {
         ITEM_IDS = RecipeHolder.getInstance().getRecipes()
-                .map(Recipe::getRecipeId)
+                .map(recipe -> recipe.recipeId)
                 .collect(Collectors.toList());
     }
 
@@ -33,14 +32,14 @@ public final class Recipes extends ScriptItemHandler implements ScriptFile {
     @Override
     public boolean useItem(Player player, ItemInstance item, boolean ctrl) {
         Recipe rp = RecipeHolder.getInstance().getRecipeByRecipeItem(item.getItemId());
-        if (rp.isDwarvenRecipe()) {
+        if (rp.isDwarvenCraft) {
             if (player.getDwarvenRecipeLimit() > 0) {
                 if (player.getDwarvenRecipeBook().size() >= player.getDwarvenRecipeLimit()) {
                     player.sendPacket(Msg.NO_FURTHER_RECIPES_MAY_BE_REGISTERED);
                     return false;
                 }
 
-                if (rp.getLevel() > player.getSkillLevel(Skill.SKILL_CRAFTING)) {
+                if (rp.level > player.getSkillLevel(Skill.SKILL_CRAFTING)) {
                     player.sendPacket(Msg.CREATE_ITEM_LEVEL_IS_TOO_LOW_TO_REGISTER_THIS_RECIPE);
                     return false;
                 }

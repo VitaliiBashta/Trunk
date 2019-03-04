@@ -37,7 +37,7 @@ public final class NpcTemplate extends CharTemplate {
     public int rhand;
     public int lhand;
     public double rateHp;
-    private StatsSet AIParams;
+    private StatsSet aiParams;
     private int castleId;
     private String htmRoot;
     private Faction faction = Faction.NONE;
@@ -74,11 +74,11 @@ public final class NpcTemplate extends CharTemplate {
         rhand = set.getInteger("rhand");
         lhand = set.getInteger("lhand");
         rateHp = set.getDouble("baseHpRate");
-        htmRoot = set.getString("htm_root", null);
+        htmRoot = set.getString("htm_root");
         castleId = set.getInteger("castle_id");
-        AIParams = set.getStats("aiParams");
-        type = set.getString("type", null);
-        aiName = set.getString("ai_type", null);
+        aiParams = set.getStats("aiParams");
+        type = set.getString("type");
+        aiName = set.getString("ai_type");
     }
 
     public NpcInstance getNewInstance(int id) {
@@ -291,8 +291,8 @@ public final class NpcTemplate extends CharTemplate {
         return name;
     }
 
-    public final StatsSet getAIParams() {
-        return AIParams;
+    public final StatsSet getAiParams() {
+        return aiParams;
     }
 
     public List<AbsorbInfo> getAbsorbInfo() {

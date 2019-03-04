@@ -95,30 +95,30 @@ public enum AbnormalEffect {
     E_VESPER_2("vesper2", 0x000040, false, true),
     E_VESPER_3("vesper3", 0x000080, false, true);
 
-    private final int _mask;
-    private final String _name;
-    private final boolean _special;
-    private final boolean _event;
+    private final int mask;
+    private final String name;
+    private final boolean special;
+    private final boolean event;
 
     AbnormalEffect(String name, int mask) {
-        _name = name;
-        _mask = mask;
-        _special = false;
-        _event = false;
+        this.name = name;
+        this.mask = mask;
+        special = false;
+        event = false;
     }
 
     AbnormalEffect(String name, int mask, boolean special) {
-        _name = name;
-        _mask = mask;
-        _special = special;
-        _event = false;
+        this.name = name;
+        this.mask = mask;
+        this.special = special;
+        event = false;
     }
 
     AbnormalEffect(String name, int mask, boolean special, boolean event) {
-        _name = name;
-        _mask = mask;
-        _special = special;
-        _event = event;
+        this.name = name;
+        this.mask = mask;
+        this.special = special;
+        this.event = event;
     }
 
     public static AbnormalEffect getByName(String name) {
@@ -130,18 +130,18 @@ public enum AbnormalEffect {
     }
 
     public final int getMask() {
-        return _mask;
+        return mask;
     }
 
     public final String getName() {
-        return _name;
+        return name;
     }
 
     public final boolean isSpecial() {
-        return _special;
+        return special;
     }
 
     public final boolean isEvent() {
-        return _event;
+        return event;
     }
 }

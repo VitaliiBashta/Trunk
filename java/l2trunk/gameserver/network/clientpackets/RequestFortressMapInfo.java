@@ -18,7 +18,7 @@ public final class RequestFortressMapInfo extends L2GameClientPacket {
         Player player = getClient().getActiveChar();
         if (player == null)
             return;
-        Fortress fortress = ResidenceHolder.getResidence(Fortress.class, fortressId);
+        Fortress fortress = ResidenceHolder.getFortress(fortressId);
         sendPacket(new ExShowFortressMapInfo(fortress));
     }
 }

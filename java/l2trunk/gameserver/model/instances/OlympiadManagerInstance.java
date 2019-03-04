@@ -120,7 +120,7 @@ public final class OlympiadManagerInstance extends NpcInstance {
                 case 3:
                 case 8:
                 default:
-                    //_log.warn("Olympiad System: Couldnt send packet for request " + val);
+                    //LOG.warn("Olympiad System: Couldnt send packet for request " + val);
                     break;
             }
         } else if (command.startsWith("Olympiad")) {
@@ -202,7 +202,7 @@ public final class OlympiadManagerInstance extends NpcInstance {
                     }
                     break;
                 default:
-                    //_log.warn("Olympiad System: Couldnt send packet for request " + val);
+                    //LOG.warn("Olympiad System: Couldnt send packet for request " + val);
                     break;
             }
         }

@@ -53,7 +53,7 @@ public final class KrateisCubeEvent extends GlobalEvent {
     private final int _minLevel;
     private final int _maxLevel;
     private final Calendar _calendar = Calendar.getInstance();
-    private final Listeners _listeners = new Listeners();
+    private final Listeners listeners = new Listeners();
     private KrateisCubeRunnerEvent _runnerEvent;
 
     public KrateisCubeEvent(StatsSet set) {
@@ -256,13 +256,13 @@ public final class KrateisCubeEvent extends GlobalEvent {
     @Override
     public void onAddEvent(GameObject o) {
         if (o instanceof Player)
-            ((Player) o).addListener(_listeners);
+            ((Player) o).addListener(listeners);
     }
 
     @Override
     public void onRemoveEvent(GameObject o) {
         if (o instanceof Player)
-            ((Player) o).removeListener(_listeners);
+            ((Player) o).removeListener(listeners);
     }
 
     @Override

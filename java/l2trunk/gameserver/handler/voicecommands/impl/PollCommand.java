@@ -7,9 +7,7 @@ import l2trunk.gameserver.model.entity.CCPHelpers.CCPPoll;
 import java.util.Collections;
 import java.util.List;
 
-public class PollCommand implements IVoicedCommandHandler {
-    private static final List<String> COMMANDS = List.of("poll");
-
+public final class PollCommand implements IVoicedCommandHandler {
     @Override
     public boolean useVoicedCommand(String command, Player activeChar, String target) {
         CCPPoll.bypass(activeChar, target.split(" "));
@@ -18,7 +16,7 @@ public class PollCommand implements IVoicedCommandHandler {
 
     @Override
     public List<String> getVoicedCommandList() {
-        return COMMANDS;
+        return List.of("poll");
     }
 
 }

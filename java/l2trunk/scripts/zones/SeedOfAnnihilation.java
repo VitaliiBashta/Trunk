@@ -64,7 +64,7 @@ public final class SeedOfAnnihilation extends Functions implements ScriptFile {
             ServerVariables.set("SeedNextStatusChange", _seedsNextStatusChange);
         } else {
             _seedsNextStatusChange = nextStatusChange;
-            buffsNow = ServerVariables.getInt("SeedBuffsList", 0);
+            buffsNow = ServerVariables.getInt("SeedBuffsList");
         }
         for (int i = 0; i < _regionsData.length; i++)
             _regionsData[i].activeBuff = ZONE_BUFFS_LIST[buffsNow][i];

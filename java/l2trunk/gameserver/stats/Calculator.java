@@ -50,7 +50,6 @@ public final class Calculator {
     public void addFunc(Func f) {
         functions.add(f);
         functions.sort((Comparator.comparingInt(o -> o.order)));
-//        Collections.sort(functions);
     }
 
 

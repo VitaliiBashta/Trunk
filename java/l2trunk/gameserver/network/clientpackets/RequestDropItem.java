@@ -8,16 +8,16 @@ import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.utils.Location;
 
-public class RequestDropItem extends L2GameClientPacket {
-    private int _objectId;
-    private long _count;
-    private Location _loc;
+public final class RequestDropItem extends L2GameClientPacket {
+    private int objectId;
+    private long count;
+    private Location loc;
 
     @Override
     protected void readImpl() {
-        _objectId = readD();
-        _count = readQ();
-        _loc = new Location(readD(), readD(), readD());
+        objectId = readD();
+        count = readQ();
+        loc = Location.of(readD(), readD(), readD());
     }
 
     @Override
@@ -26,7 +26,7 @@ public class RequestDropItem extends L2GameClientPacket {
         if (activeChar == null)
             return;
 
-        if (_count < 1 || _loc.isNull()) {
+        if (count < 1 || loc.isNull()) {
             activeChar.sendActionFailed();
             return;
         }
@@ -61,12 +61,12 @@ public class RequestDropItem extends L2GameClientPacket {
             return;
         }
 
-        if (!activeChar.isInRangeSq(_loc, 22500) || Math.abs(_loc.z - activeChar.getZ()) > 50) {
+        if (!activeChar.isInRangeSq(loc, 22500) || Math.abs(loc.z - activeChar.getZ()) > 50) {
             activeChar.sendPacket(SystemMsg.YOU_CANNOT_DISCARD_SOMETHING_THAT_FAR_AWAY_FROM_YOU);
             return;
         }
 
-        ItemInstance item = activeChar.getInventory().getItemByObjectId(_objectId);
+        ItemInstance item = activeChar.getInventory().getItemByObjectId(objectId);
         if (item == null) {
             activeChar.sendActionFailed();
             return;
@@ -82,6 +82,6 @@ public class RequestDropItem extends L2GameClientPacket {
             return;
         }
 
-        item.getTemplate().getHandler().dropItem(activeChar, item, _count, _loc);
+        item.getTemplate().getHandler().dropItem(activeChar, item, count, loc);
     }
 }

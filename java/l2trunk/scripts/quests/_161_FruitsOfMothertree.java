@@ -15,8 +15,7 @@ public final class _161_FruitsOfMothertree extends Quest {
         addStartNpc(30362);
         addTalkId(30371);
 
-        addQuestItem(MOTHERTREE_FRUIT_ID,
-                ANDELLRIAS_LETTER_ID);
+        addQuestItem(MOTHERTREE_FRUIT_ID, ANDELLRIAS_LETTER_ID);
     }
 
     @Override
@@ -58,7 +57,7 @@ public final class _161_FruitsOfMothertree extends Quest {
                 st.exitCurrentQuest();
             }
         } else if (npcId == 30362 && st.getCond() > 0) {
-            if (st.haveQuestItem(ANDELLRIAS_LETTER_ID)  && !st.haveQuestItem(MOTHERTREE_FRUIT_ID) )
+            if (st.haveQuestItem(ANDELLRIAS_LETTER_ID) && !st.haveQuestItem(MOTHERTREE_FRUIT_ID))
                 htmltext = "30362-05.htm";
             else if (st.haveQuestItem(MOTHERTREE_FRUIT_ID)) {
                 htmltext = "30362-06.htm";
@@ -70,13 +69,13 @@ public final class _161_FruitsOfMothertree extends Quest {
             }
         } else if (npcId == 30371 && st.getCond() == 1)
             if (st.haveQuestItem(ANDELLRIAS_LETTER_ID)) {
-                if (st.getInt("id") != 161) {
-                    st.set("id", 161);
+                if (!st.isSet("id")) {
+                    st.set("id");
                     htmltext = "30371-01.htm";
                     st.giveItems(MOTHERTREE_FRUIT_ID);
                     st.takeItems(ANDELLRIAS_LETTER_ID);
                 }
-            } else if (st.haveQuestItem(MOTHERTREE_FRUIT_ID) )
+            } else if (st.haveQuestItem(MOTHERTREE_FRUIT_ID))
                 htmltext = "30371-02.htm";
         return htmltext;
     }

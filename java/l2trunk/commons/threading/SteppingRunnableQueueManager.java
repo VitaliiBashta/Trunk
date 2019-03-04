@@ -16,17 +16,8 @@ import java.util.stream.Collectors;
 
 public abstract class SteppingRunnableQueueManager implements Runnable {
     private static final Logger _log = LoggerFactory.getLogger(SteppingRunnableQueueManager.class);
-    /**
-     * Field tickPerStepInMillis.
-     */
     private final long tickPerStepInMillis;
-    /**
-     * Field queue.
-     */
     private final List<SteppingScheduledFuture<?>> queue = new CopyOnWriteArrayList<>();
-    /**
-     * Field isRunning.
-     */
     private final AtomicBoolean isRunning = new AtomicBoolean();
 
     protected SteppingRunnableQueueManager(long tickPerStepInMillis) {
@@ -34,14 +25,6 @@ public abstract class SteppingRunnableQueueManager implements Runnable {
     }
 
 
-    /**
-     * Method scheduleAtFixedRate.
-     *
-     * @param r       Runnable
-     * @param initial long
-     * @param delay   long
-     * @return SteppingScheduledFuture<?>
-     */
     public SteppingScheduledFuture<?> scheduleAtFixedRate(Runnable r, long initial, long delay) {
         SteppingScheduledFuture<?> sr;
         long initialStepping = getStepping(initial);
@@ -68,14 +51,9 @@ public abstract class SteppingRunnableQueueManager implements Runnable {
             return;
         }
         try {
-            if (queue.isEmpty()) {
-                return;
-            }
-            for (SteppingScheduledFuture<?> sr : queue) {
-                if (!sr.isDone()) {
-                    sr.run();
-                }
-            }
+            queue.stream()
+                    .filter(sr -> !sr.isDone())
+                    .forEach(SteppingScheduledFuture::run);
         } finally {
             isRunning.set(false);
         }
@@ -158,11 +136,6 @@ public abstract class SteppingRunnableQueueManager implements Runnable {
             }
         }
 
-        /**
-         * Method isDone.
-         *
-         * @return boolean * @see java.util.concurrent.Future#isDone()
-         */
         @Override
         public boolean isDone() {
             return isCancelled || (!isPeriodic && (step == 0));

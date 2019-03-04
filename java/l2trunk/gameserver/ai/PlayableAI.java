@@ -260,7 +260,7 @@ public class PlayableAI extends CharacterAI {
                     break;
             }
         } catch (RuntimeException e) {
-            //_log.error("Error while Thinking", e);
+            //LOG.error("Error while Thinking", e);
         } finally {
             thinking--;
         }

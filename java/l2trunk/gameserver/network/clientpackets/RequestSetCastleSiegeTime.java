@@ -23,7 +23,7 @@ public final class RequestSetCastleSiegeTime extends L2GameClientPacket {
         if (player == null)
             return;
 
-        Castle castle = ResidenceHolder.getResidence(Castle.class, id);
+        Castle castle = ResidenceHolder.getCastle(id);
         if (castle == null)
             return;
 

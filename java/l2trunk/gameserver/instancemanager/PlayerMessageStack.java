@@ -9,19 +9,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PlayerMessageStack {
-    private static PlayerMessageStack _instance;
+public final class PlayerMessageStack {
+    private static PlayerMessageStack instance;
 
-    private final Map<Integer, List<L2GameServerPacket>> _stack = new HashMap<>();
+    private final Map<Integer, List<L2GameServerPacket>> stack = new HashMap<>();
 
     private PlayerMessageStack() {
         //TODO: загрузка из БД
     }
 
     public static PlayerMessageStack getInstance() {
-        if (_instance == null)
-            _instance = new PlayerMessageStack();
-        return _instance;
+        if (instance == null)
+            instance = new PlayerMessageStack();
+        return instance;
     }
 
     public void mailto(int char_obj_id, L2GameServerPacket message) {
@@ -31,29 +31,28 @@ public class PlayerMessageStack {
             return;
         }
 
-        synchronized (_stack) {
+        synchronized (stack) {
             List<L2GameServerPacket> messages;
-            if (_stack.containsKey(char_obj_id))
-                messages = _stack.remove(char_obj_id);
+            if (stack.containsKey(char_obj_id))
+                messages = stack.remove(char_obj_id);
             else
                 messages = new ArrayList<>();
             messages.add(message);
             //TODO: сохранение в БД
-            _stack.put(char_obj_id, messages);
+            stack.put(char_obj_id, messages);
         }
     }
 
-    public void CheckMessages(Player cha) {
+    public void checkMessages(Player cha) {
         List<L2GameServerPacket> messages;
-        synchronized (_stack) {
-            if (!_stack.containsKey(cha.objectId()))
+        synchronized (stack) {
+            if (!stack.containsKey(cha.objectId()))
                 return;
-            messages = _stack.remove(cha.objectId());
+            messages = stack.remove(cha.objectId());
         }
         if (messages == null || messages.size() == 0)
             return;
         //TODO: удаление из БД
-        for (L2GameServerPacket message : messages)
-            cha.sendPacket(message);
+        messages.forEach(cha::sendPacket);
     }
 }

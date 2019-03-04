@@ -147,7 +147,7 @@ public final class OlympiadDatabase {
     }
 
     public static synchronized void sortHerosToBe() {
-        if (Olympiad._period != 1)
+        if (Olympiad.period != 1)
             return;
 
         Olympiad.heroesToBe = new ArrayList<>();
@@ -193,28 +193,28 @@ public final class OlympiadDatabase {
     }
 
     public static synchronized void setNewOlympiadEnd() {
-        Announcements.INSTANCE.announceToAll(new SystemMessage(SystemMsg.ROUND_S1_OF_THE_GRAND_OLYMPIAD_GAMES_HAS_STARTED).addNumber(Olympiad._currentCycle));
+        Announcements.INSTANCE.announceToAll(new SystemMessage(SystemMsg.ROUND_S1_OF_THE_GRAND_OLYMPIAD_GAMES_HAS_STARTED).addNumber(Olympiad.currentCycle));
 
         Calendar currentTime = Calendar.getInstance();
         currentTime.set(Calendar.DAY_OF_MONTH, 1);
         currentTime.add(Calendar.MONTH, 1);
         currentTime.set(Calendar.HOUR_OF_DAY, 00);
         currentTime.set(Calendar.MINUTE, 00);
-        Olympiad._olympiadEnd = currentTime.getTimeInMillis();
+        Olympiad.olympiadEnd = currentTime.getTimeInMillis();
 
         Calendar nextChange = Calendar.getInstance();
-        Olympiad._nextWeeklyChange = nextChange.getTimeInMillis() + Config.ALT_OLY_WPERIOD;
+        Olympiad.nextWeeklyChange = nextChange.getTimeInMillis() + Config.ALT_OLY_WPERIOD;
 
         Olympiad._isOlympiadEnd = false;
-        Announcements.INSTANCE.announceToAll(new SystemMessage2(SystemMsg.OLYMPIAD_PERIOD_S1_HAS_STARTED).addInteger(Olympiad._currentCycle));
+        Announcements.INSTANCE.announceToAll(new SystemMessage2(SystemMsg.OLYMPIAD_PERIOD_S1_HAS_STARTED).addInteger(Olympiad.currentCycle));
     }
 
     public static void save() {
         saveNobleData();
-        ServerVariables.set("Olympiad_CurrentCycle", Olympiad._currentCycle);
-        ServerVariables.set("Olympiad_Period", Olympiad._period);
-        ServerVariables.set("Olympiad_End", Olympiad._olympiadEnd);
-        ServerVariables.set("Olympiad_ValdationEnd", Olympiad._validationEnd);
-        ServerVariables.set("Olympiad_NextWeeklyChange", Olympiad._nextWeeklyChange);
+        ServerVariables.set("Olympiad_CurrentCycle", Olympiad.currentCycle);
+        ServerVariables.set("Olympiad_Period", Olympiad.period);
+        ServerVariables.set("Olympiad_End", Olympiad.olympiadEnd);
+        ServerVariables.set("Olympiad_ValdationEnd", Olympiad.validationEnd);
+        ServerVariables.set("Olympiad_NextWeeklyChange", Olympiad.nextWeeklyChange);
     }
 }

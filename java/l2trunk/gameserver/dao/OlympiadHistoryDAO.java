@@ -12,7 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-public class OlympiadHistoryDAO {
+public final class OlympiadHistoryDAO {
     private static final String SELECT_SQL_QUERY = "SELECT * FROM olympiad_history ORDER BY game_start_time";
     private static final String DELETE_SQL_QUERY = "DELETE FROM olympiad_history WHERE old=1";
     private static final String UPDATE_SQL_QUERY = "UPDATE olympiad_history SET old=1";

@@ -6,11 +6,7 @@ import l2trunk.gameserver.network.serverpackets.PackageToList;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.WarehouseFunctions;
 
-/**
- * @author VISTALL
- * @date 20:32/16.05.2011
- */
-public class FreightSenderInstance extends MerchantInstance {
+public final class FreightSenderInstance extends MerchantInstance {
     public FreightSenderInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
     }
@@ -20,9 +16,9 @@ public class FreightSenderInstance extends MerchantInstance {
         if (!canBypassCheck(player, this))
             return;
 
-        if (command.equalsIgnoreCase("deposit_items"))
+        if ("deposit_items".equalsIgnoreCase(command))
             player.sendPacket(new PackageToList(player));
-        else if (command.equalsIgnoreCase("withdraw_items"))
+        else if ("withdraw_items".equalsIgnoreCase(command))
             WarehouseFunctions.showFreightWindow(player);
         else
             super.onBypassFeedback(player, command);

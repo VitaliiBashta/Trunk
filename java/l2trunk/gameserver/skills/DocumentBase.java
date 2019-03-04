@@ -192,10 +192,10 @@ abstract class DocumentBase {
         if (attrs.getNamedItem("stackOrder") != null)
             set.set("stackOrder", parseNumber(attrs.getNamedItem("stackOrder").getNodeValue()).intValue());
 
-        if (attrs.getNamedItem("applyOnCaster") != null)
-            set.set("applyOnCaster", toBoolean(attrs.getNamedItem("applyOnCaster").getNodeValue()));
-        if (attrs.getNamedItem("applyOnSummon") != null)
-            set.set("applyOnSummon", toBoolean(attrs.getNamedItem("applyOnSummon").getNodeValue()));
+        if (attrs.getNamedItem("applyOnCaster") != null &&toBoolean(attrs.getNamedItem("applyOnCaster").getNodeValue()))
+            set.set("applyOnCaster");
+        if (attrs.getNamedItem("applyOnSummon") != null && toBoolean(attrs.getNamedItem("applyOnSummon").getNodeValue()))
+            set.set("applyOnSummon");
 
         if (attrs.getNamedItem("displayId") != null)
             set.set("displayId", parseNumber(attrs.getNamedItem("displayId").getNodeValue()).intValue());
@@ -203,12 +203,12 @@ abstract class DocumentBase {
             set.set("displayLevel", parseNumber(attrs.getNamedItem("displayLevel").getNodeValue()).intValue());
         if (attrs.getNamedItem("chance") != null)
             set.set("chance", parseNumber(attrs.getNamedItem("chance").getNodeValue()).intValue());
-        if (attrs.getNamedItem("cancelOnAction") != null)
-            set.set("cancelOnAction", toBoolean(attrs.getNamedItem("cancelOnAction").getNodeValue()));
-        if (attrs.getNamedItem("isOffensive") != null)
-            set.set("isOffensive", toBoolean(attrs.getNamedItem("isOffensive").getNodeValue()));
-        if (attrs.getNamedItem("isReflectable") != null)
-            set.set("isReflectable", toBoolean(attrs.getNamedItem("isReflectable").getNodeValue()));
+        if (attrs.getNamedItem("cancelOnAction") != null && toBoolean(attrs.getNamedItem("cancelOnAction").getNodeValue()))
+            set.set("cancelOnAction");
+        if (attrs.getNamedItem("isOffensive") != null && toBoolean(attrs.getNamedItem("isOffensive").getNodeValue()) )
+            set.set("isOffensive");
+        if (attrs.getNamedItem("isReflectable") != null && toBoolean(attrs.getNamedItem("isReflectable").getNodeValue()))
+            set.set("isReflectable");
 
         EffectTemplate lt = new EffectTemplate(set);
 
@@ -618,7 +618,7 @@ abstract class DocumentBase {
                         value = value.replace(str, String.valueOf(getTableValue(str, level)));
             if (ch == '#') {
                 String tableVal = getTableValue(value, level);
-                Number parsedVal = parseNumber(tableVal.toString());
+                Number parsedVal = parseNumber(tableVal);
                 set.set(name, parsedVal == null ? tableVal : String.valueOf(parsedVal));
             } else if ((Character.isDigit(ch) || ch == '-') && !value.contains(" ") && !value.contains(";"))
                 set.set(name, String.valueOf(parseNumber(value)));

@@ -430,7 +430,7 @@ public enum SevenSignsFestival {
             //if (thisCabalHighScore > otherCabalHighScore)
             //	return false;
             // Update the highest scores and party list.
-            currFestData.set("date", String.valueOf(System.currentTimeMillis()));
+            currFestData.set("date", System.currentTimeMillis());
             currFestData.set("score", offeringScore);
             currFestData.set("members", implodeString(partyMemberIds));
             currFestData.set("names", implodeString(partyMembers));

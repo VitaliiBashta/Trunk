@@ -1,9 +1,14 @@
 package l2trunk.scripts.quests;
 
 import l2trunk.commons.util.Rnd;
+import l2trunk.gameserver.model.base.ClassId;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
+
+import java.util.stream.IntStream;
+
+import static l2trunk.gameserver.model.base.ClassId.fighter;
 
 public final class _402_PathToKnight extends Quest {
     //npc
@@ -143,7 +148,7 @@ public final class _402_PathToKnight extends Quest {
 
         addStartNpc(SIR_KLAUS_VASPER);
 
-        addTalkId(BIOTIN,LEVIAN,GILBERT,RAYMOND,SIR_COLLIN_WINDAWOOD,BATHIS,BEZIQUE,SIR_ARON_TANFORD);
+        addTalkId(BIOTIN, LEVIAN, GILBERT, RAYMOND, SIR_COLLIN_WINDAWOOD, BATHIS, BEZIQUE, SIR_ARON_TANFORD);
 
         for (int[] element : DROPLIST)
             addKillId(element[0]);
@@ -159,7 +164,7 @@ public final class _402_PathToKnight extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        int classid = st.player.getClassId().id;
+        ClassId classid = st.player.getClassId();
         int level = st.player.getLevel();
         long squire = st.getQuestItemsCount(MARK_OF_ESQUIRE);
         long coin1 = st.getQuestItemsCount(COIN_OF_LORDS1);
@@ -175,7 +180,7 @@ public final class _402_PathToKnight extends Quest {
         long church_mark2 = st.getQuestItemsCount(EINHASAD_CHURCH_MARK2);
         long church_mark3 = st.getQuestItemsCount(EINHASAD_CHURCH_MARK3);
         if ("sir_karrel_vasper_q0402_02a.htm".equalsIgnoreCase(event)) {
-            if (classid != 0x00 || level < 18) {
+            if (classid != fighter || level < 18) {
                 htmltext = "sir_karrel_vasper_q0402_02.htm";
                 st.exitCurrentQuest();
             } else if (st.haveQuestItem(SWORD_OF_RITUAL))
@@ -183,7 +188,7 @@ public final class _402_PathToKnight extends Quest {
             else
                 htmltext = "sir_karrel_vasper_q0402_05.htm";
         } else if ("sir_karrel_vasper_q0402_08.htm".equalsIgnoreCase(event)) {
-            if (st.getCond() == 0 && classid == 0x00 && level >= 18) {
+            if (st.getCond() == 0 && classid == fighter && level >= 18) {
                 st.setCond(1);
                 st.start();
                 st.playSound(SOUND_ACCEPT);
@@ -257,10 +262,9 @@ public final class _402_PathToKnight extends Quest {
                     htmltext = "sir_karrel_vasper_q0402_11.htm";
                 else if (coin1 + coin2 + coin3 + coin4 + coin5 + coin6 == 6) {
                     htmltext = "sir_karrel_vasper_q0402_12.htm";
-                    for (int i = 1162; i < 1179; i++)
-                        st.takeItems(i, -1);
-                    st.takeItems(MARK_OF_ESQUIRE, -1);
-                    st.giveItems(SWORD_OF_RITUAL, 1);
+                    st.takeAllItems(IntStream.rangeClosed(1162, 1178).toArray());
+                    st.takeItems(MARK_OF_ESQUIRE);
+                    st.giveItems(SWORD_OF_RITUAL);
                     st.unset("cond");
                     st.exitCurrentQuest();
                     st.playSound(SOUND_FINISH);
@@ -287,9 +291,9 @@ public final class _402_PathToKnight extends Quest {
                     htmltext = "bishop_raimund_q0402_04.htm";
                 else {
                     htmltext = "bishop_raimund_q0402_05.htm";
-                    st.takeItems(EINHASAD_CRUCIFIX, -1);
+                    st.takeItems(EINHASAD_CRUCIFIX);
                     st.takeItems(EINHASAD_CHURCH_MARK1, 1);
-                    st.giveItems(COIN_OF_LORDS2, 1);
+                    st.giveItems(COIN_OF_LORDS2);
                     st.playSound(SOUND_MIDDLE);
                 }
             } else htmltext = "bishop_raimund_q0402_06.htm";
@@ -343,7 +347,7 @@ public final class _402_PathToKnight extends Quest {
                     htmltext = "quilt_q0402_03.htm";
                 else {
                     htmltext = "quilt_q0402_04.htm";
-                    st.takeItems(HORRIBLE_SKULL, -1);
+                    st.takeItems(HORRIBLE_SKULL);
                     st.takeItems(EINHASAD_CHURCH_MARK3, 1);
                     st.giveItems(COIN_OF_LORDS6, 1);
                     st.playSound(SOUND_MIDDLE);

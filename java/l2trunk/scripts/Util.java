@@ -98,7 +98,7 @@ public final class Util extends Functions {
         int castleId = param.length > 4 ? toInt(param[3]) : 0;
 
         if (player.getReflection().isDefault()) {
-            Castle castle = castleId > 0 ? ResidenceHolder.getResidence(Castle.class, castleId) : null;
+            Castle castle = castleId > 0 ? ResidenceHolder.getCastle(castleId) : null;
             if (castle != null && castle.getSiegeEvent().isInProgress()) {
                 player.sendPacket(Msg.YOU_CANNOT_TELEPORT_TO_A_VILLAGE_THAT_IS_IN_A_SIEGE);
                 return;
@@ -196,7 +196,7 @@ public final class Util extends Functions {
         final boolean closeTutorial = param.length > 5;
 
         if (player.getReflection().isDefault()) {
-            Castle castle = castleId > 0 ? ResidenceHolder.getResidence(Castle.class, castleId) : null;
+            Castle castle = castleId > 0 ? ResidenceHolder.getCastle(castleId) : null;
             if (castle != null && castle.getSiegeEvent().isInProgress()) {
                 player.sendPacket(Msg.YOU_CANNOT_TELEPORT_TO_A_VILLAGE_THAT_IS_IN_A_SIEGE);
                 return;

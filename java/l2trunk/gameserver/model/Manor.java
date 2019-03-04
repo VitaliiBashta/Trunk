@@ -32,11 +32,11 @@ public enum Manor {
     }
 
     public List<Integer> getAllCrops() {
-        List<Integer> crops = new ArrayList<>();
-        for (SeedData seed : seeds.values())
-            if (!crops.contains(seed.getCrop()) && seed.getCrop() != 0 && !crops.contains(seed.getCrop()))
-                crops.add(seed.getCrop());
-        return crops;
+        return seeds.values().stream()
+                .filter(seed -> seed.getCrop() != 0)
+                .map(SeedData::getCrop)
+                .distinct()
+                .collect(Collectors.toList());
     }
 
     public Set<Integer> getAllSeeds() {
@@ -86,13 +86,6 @@ public enum Manor {
         return -1;
     }
 
-    public int getSeedMaxLevel(int seedId) {
-        SeedData seed = seeds.get(seedId);
-        if (seed != null)
-            return seed.getLevel() + 5;
-        return -1;
-    }
-
     public int getSeedLevelByCrop(int cropId) {
         for (SeedData seed : seeds.values())
             if (seed.getCrop() == cropId)
@@ -107,13 +100,6 @@ public enum Manor {
         return -1;
     }
 
-    public boolean isAlternative(int seedId) {
-        for (SeedData seed : seeds.values())
-            if (seed.getId() == seedId)
-                return seed.isAlternative();
-        return false;
-    }
-
     public int getCropType(int seedId) {
         SeedData seed = seeds.get(seedId);
         if (seed != null)
@@ -122,17 +108,14 @@ public enum Manor {
     }
 
     public synchronized int getRewardItem(int cropId, int type) {
-        for (SeedData seed : seeds.values())
-            if (seed.getCrop() == cropId)
-                return seed.getReward(type); // there can be several
-        // seeds with same crop, but
-        // reward should be the same for
-        // all
-        return -1;
+        return seeds.values().stream()
+                .filter(seed -> seed.getCrop() == cropId)
+                .map(seed -> seed.getReward(type))
+                .findFirst().orElse(-1);
     }
 
     public synchronized long getRewardAmountPerCrop(int castle, int cropId, int type) {
-        final CropProcure cs = ResidenceHolder.getResidence(Castle.class, castle).getCropProcure(CastleManorManager.PERIOD_CURRENT).get(cropId);
+        final CropProcure cs = ResidenceHolder.getCastle(castle).getCropProcure(CastleManorManager.PERIOD_CURRENT).get(cropId);
         return seeds.values().stream()
                 .filter(seed -> seed.getCrop() == cropId)
                 .map(seed -> cs.price / getCropBasicPrice(seed.getReward(type)))

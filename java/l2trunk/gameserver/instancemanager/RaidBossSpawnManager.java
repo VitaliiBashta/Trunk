@@ -211,7 +211,7 @@ public enum RaidBossSpawnManager {
             info.set("date_of_death", 0);
             info.set("last_killer", "");
             _storedInfo.put(bossId, info);
-        } else if (info.getInteger("current_hp", 0) <= 1) {
+        } else if (info.getInteger("current_hp") <= 1) {
             info.set("current_hp", raidboss.getMaxHp());
             info.set("current_mp", raidboss.getMaxMp());
         }

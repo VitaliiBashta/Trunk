@@ -86,9 +86,8 @@ public final class Territory implements Shape, SpawnRange {
         return this;
     }
 
-    public Territory addBanned(Shape shape) {
+    public void addBanned(Shape shape) {
         exclude.add(shape);
-        return this;
     }
 
     public List<Shape> getTerritories() {
@@ -98,7 +97,7 @@ public final class Territory implements Shape, SpawnRange {
     @Override
     public boolean isInside(int x, int y) {
         if (include.stream()
-                .anyMatch(i -> i.isInside(x, y)))
+                .anyMatch(shape -> shape.isInside(x, y)))
             return !isExcluded(x, y);
 
         return false;
@@ -114,12 +113,10 @@ public final class Territory implements Shape, SpawnRange {
                 || loc.z > this.max.z)
             return false;
 
-        Shape shape;
-        for (Shape anInclude : include) {
-            shape = anInclude;
-            if (shape.isInside(loc))
-                return !isExcluded(loc);
-        }
+        if (include.stream()
+                .anyMatch(shape -> shape.isInside(loc)))
+            return !isExcluded(loc);
+
         return false;
     }
 

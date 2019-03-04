@@ -32,11 +32,11 @@ public enum FishingChampionShipManager {
     private final List<String> _fishLength = new ArrayList<>();
     private final List<String> _winPlayersName = new ArrayList<>();
     private final List<String> _winFishLength = new ArrayList<>();
-    private final List<Fisher> _tmpPlayers = new ArrayList<>();
-    private final List<Fisher> _winPlayers = new ArrayList<>();
+    private final List<Fisher> tmpPlayers = new ArrayList<>();
+    private final List<Fisher> winPlayers = new ArrayList<>();
     private long _enddate = 0;
     private double _minFishLength = 0;
-    private boolean _needRefresh = true;
+    private boolean needRefresh = true;
 
     FishingChampionShipManager() {
         restoreData();
@@ -48,10 +48,6 @@ public enum FishingChampionShipManager {
         } else
             ThreadPoolManager.INSTANCE.schedule(new finishChamp(), _enddate - System.currentTimeMillis());
     }
-
-//    public static FishingChampionShipManager INSTANCE() {
-//        return _instance;
-//    }
 
     private void setEndOfChamp() {
         Calendar finishtime = Calendar.getInstance();
@@ -72,9 +68,9 @@ public enum FishingChampionShipManager {
             while (rs.next()) {
                 int rewarded = rs.getInt("rewarded");
                 if (rewarded == 0) // Текущий участник
-                    _tmpPlayers.add(new Fisher(rs.getString("PlayerName"), rs.getDouble("fishLength"), 0));
+                    tmpPlayers.add(new Fisher(rs.getString("PlayerName"), rs.getDouble("fishLength"), 0));
                 if (rewarded > 0) // Победитель прошлой недели
-                    _winPlayers.add(new Fisher(rs.getString("PlayerName"), rs.getDouble("fishLength"), rewarded));
+                    winPlayers.add(new Fisher(rs.getString("PlayerName"), rs.getDouble("fishLength"), rewarded));
             }
         } catch (SQLException e) {
             _log.warn("Exception: can't get fishing championship info: ", e);
@@ -91,9 +87,9 @@ public enum FishingChampionShipManager {
                 p1 += Rnd.get(1, diff);
         }
         double len = Rnd.get(100, 999) / 1000. + p1;
-        if (_tmpPlayers.size() < 5) {
-            for (Fisher fisher : _tmpPlayers)
-                if (fisher.getName().equalsIgnoreCase(pl.getName())) {
+        if (tmpPlayers.size() < 5) {
+            for (Fisher fisher : tmpPlayers)
+                if (fisher.name.equalsIgnoreCase(pl.getName())) {
                     if (fisher.getLength() < len) {
                         fisher.setLength(len);
                         pl.sendMessage(new CustomMessage("l2trunk.gameserver.instancemanager.games.FishingChampionShipManager.ResultImproveOn"));
@@ -101,12 +97,12 @@ public enum FishingChampionShipManager {
                     }
                     return;
                 }
-            _tmpPlayers.add(new Fisher(pl.getName(), len, 0));
+            tmpPlayers.add(new Fisher(pl.getName(), len, 0));
             pl.sendMessage(new CustomMessage("l2trunk.gameserver.instancemanager.games.FishingChampionShipManager.YouInAPrizeList"));
             recalculateMinLength();
         } else if (_minFishLength < len) {
-            for (Fisher fisher : _tmpPlayers)
-                if (fisher.getName().equalsIgnoreCase(pl.getName())) {
+            for (Fisher fisher : tmpPlayers)
+                if (fisher.name.equalsIgnoreCase(pl.getName())) {
                     if (fisher.getLength() < len) {
                         fisher.setLength(len);
                         pl.sendMessage(new CustomMessage("l2trunk.gameserver.instancemanager.games.FishingChampionShipManager.ResultImproveOn"));
@@ -116,13 +112,13 @@ public enum FishingChampionShipManager {
                 }
             Fisher minFisher = null;
             double minLen = 99999.;
-            for (Fisher fisher : _tmpPlayers)
+            for (Fisher fisher : tmpPlayers)
                 if (fisher.getLength() < minLen) {
                     minFisher = fisher;
                     minLen = minFisher.getLength();
                 }
-            _tmpPlayers.remove(minFisher);
-            _tmpPlayers.add(new Fisher(pl.getName(), len, 0));
+            tmpPlayers.remove(minFisher);
+            tmpPlayers.add(new Fisher(pl.getName(), len, 0));
             pl.sendMessage(new CustomMessage("l2trunk.gameserver.instancemanager.games.FishingChampionShipManager.YouInAPrizeList"));
             recalculateMinLength();
         }
@@ -130,7 +126,7 @@ public enum FishingChampionShipManager {
 
     private void recalculateMinLength() {
         double minLen = 99999.;
-        for (Fisher fisher : _tmpPlayers)
+        for (Fisher fisher : tmpPlayers)
             if (fisher.getLength() < minLen)
                 minLen = fisher.getLength();
         _minFishLength = minLen;
@@ -169,8 +165,8 @@ public enum FishingChampionShipManager {
         NpcHtmlMessage html = new NpcHtmlMessage(pl.objectId());
         html.setFile(filename);
         pl.sendPacket(html);
-        for (Fisher fisher : _winPlayers)
-            if (fisher._name.equalsIgnoreCase(pl.getName()))
+        for (Fisher fisher : winPlayers)
+            if (fisher.name.equalsIgnoreCase(pl.getName()))
                 if (fisher.getRewardType() != 2) {
                     int rewardCnt = 0;
                     for (int x = 0; x < _winPlayersName.size(); x++)
@@ -202,9 +198,9 @@ public enum FishingChampionShipManager {
     }
 
     public void showMidResult(Player pl) {
-        if (_needRefresh) {
+        if (needRefresh) {
             refreshResult();
-            ThreadPoolManager.INSTANCE.schedule(new needRefresh(), 60000);
+            ThreadPoolManager.INSTANCE.schedule(() -> needRefresh = true, 60000);
         }
         NpcHtmlMessage html = new NpcHtmlMessage(pl.objectId());
         String filename = "fisherman/championship/MidResult.htm";
@@ -254,17 +250,17 @@ public enum FishingChampionShipManager {
             statement.execute();
             statement.close();
 
-            for (Fisher fisher : _winPlayers) {
+            for (Fisher fisher : winPlayers) {
                 statement = con.prepareStatement("INSERT INTO fishing_championship(PlayerName,fishLength,rewarded) VALUES (?,?,?)");
-                statement.setString(1, fisher.getName());
+                statement.setString(1, fisher.name);
                 statement.setDouble(2, fisher.getLength());
                 statement.setInt(3, fisher.getRewardType());
                 statement.execute();
                 statement.close();
             }
-            for (Fisher fisher : _tmpPlayers) {
+            for (Fisher fisher : tmpPlayers) {
                 statement = con.prepareStatement("INSERT INTO fishing_championship(PlayerName,fishLength,rewarded) VALUES (?,?,?)");
-                statement.setString(1, fisher.getName());
+                statement.setString(1, fisher.name);
                 statement.setDouble(2, fisher.getLength());
                 statement.setInt(3, 0);
                 statement.execute();
@@ -276,103 +272,88 @@ public enum FishingChampionShipManager {
     }
 
     private synchronized void refreshResult() {
-        _needRefresh = false;
+        needRefresh = false;
         _playersName.clear();
         _fishLength.clear();
-        Fisher fisher1 = null;
-        Fisher fisher2 = null;
-        for (int x = 0; x <= _tmpPlayers.size() - 1; x++)
-            for (int y = 0; y <= _tmpPlayers.size() - 2; y++) {
-                fisher1 = _tmpPlayers.get(y);
-                fisher2 = _tmpPlayers.get(y + 1);
+        Fisher fisher1;
+        Fisher fisher2;
+        for (int x = 0; x <= tmpPlayers.size() - 1; x++)
+            for (int y = 0; y <= tmpPlayers.size() - 2; y++) {
+                fisher1 = tmpPlayers.get(y);
+                fisher2 = tmpPlayers.get(y + 1);
                 if (fisher1.getLength() < fisher2.getLength()) {
-                    _tmpPlayers.set(y, fisher2);
-                    _tmpPlayers.set(y + 1, fisher1);
+                    tmpPlayers.set(y, fisher2);
+                    tmpPlayers.set(y + 1, fisher1);
                 }
             }
-        for (int x = 0; x <= _tmpPlayers.size() - 1; x++) {
-            _playersName.add(_tmpPlayers.get(x)._name);
-            _fishLength.add(String.valueOf(_tmpPlayers.get(x).getLength()));
+        for (int x = 0; x <= tmpPlayers.size() - 1; x++) {
+            _playersName.add(tmpPlayers.get(x).name);
+            _fishLength.add(String.valueOf(tmpPlayers.get(x).getLength()));
         }
     }
 
     private void refreshWinResult() {
         _winPlayersName.clear();
         _winFishLength.clear();
-        Fisher fisher1 = null;
-        Fisher fisher2 = null;
-        for (int x = 0; x <= _winPlayers.size() - 1; x++)
-            for (int y = 0; y <= _winPlayers.size() - 2; y++) {
-                fisher1 = _winPlayers.get(y);
-                fisher2 = _winPlayers.get(y + 1);
+        Fisher fisher1;
+        Fisher fisher2;
+        for (int x = 0; x <= winPlayers.size() - 1; x++)
+            for (int y = 0; y <= winPlayers.size() - 2; y++) {
+                fisher1 = winPlayers.get(y);
+                fisher2 = winPlayers.get(y + 1);
                 if (fisher1.getLength() < fisher2.getLength()) {
-                    _winPlayers.set(y, fisher2);
-                    _winPlayers.set(y + 1, fisher1);
+                    winPlayers.set(y, fisher2);
+                    winPlayers.set(y + 1, fisher1);
                 }
             }
-        for (int x = 0; x <= _winPlayers.size() - 1; x++) {
-            _winPlayersName.add(_winPlayers.get(x)._name);
-            _winFishLength.add(String.valueOf(_winPlayers.get(x).getLength()));
+        for (int x = 0; x <= winPlayers.size() - 1; x++) {
+            _winPlayersName.add(winPlayers.get(x).name);
+            _winFishLength.add(String.valueOf(winPlayers.get(x).getLength()));
         }
     }
 
     private class finishChamp extends RunnableImpl {
         @Override
         public void runImpl() {
-            _winPlayers.clear();
-            for (Fisher fisher : _tmpPlayers) {
+            winPlayers.clear();
+            for (Fisher fisher : tmpPlayers) {
                 fisher.setRewardType(1);
-                _winPlayers.add(fisher);
+                winPlayers.add(fisher);
             }
-            _tmpPlayers.clear();
+            tmpPlayers.clear();
             refreshWinResult();
             setEndOfChamp();
             shutdown();
-            _log.info("Fishing Championship Manager : start new event period.");
+            LOG.info("Fishing Championship Manager : start new event period.");
             ThreadPoolManager.INSTANCE.schedule(new finishChamp(), _enddate - System.currentTimeMillis());
         }
     }
 
-    private class needRefresh extends RunnableImpl {
-        @Override
-        public void runImpl() {
-            _needRefresh = true;
-        }
-    }
-
     private class Fisher {
-        private double _length = 0.;
-        private String _name;
-        private int _reward = 0;
+        private final String name;
+        private double length;
+        private int reward;
 
         Fisher(String name, double length, int rewardType) {
-            setName(name);
-            setLength(length);
-            setRewardType(rewardType);
-        }
-
-        String getName() {
-            return _name;
-        }
-
-        void setName(String value) {
-            _name = value;
+            this.name = name;
+            this.length = length;
+            reward = rewardType;
         }
 
         int getRewardType() {
-            return _reward;
+            return reward;
         }
 
         void setRewardType(int value) {
-            _reward = value;
+            reward = value;
         }
 
         double getLength() {
-            return _length;
+            return length;
         }
 
         void setLength(double value) {
-            _length = value;
+            length = value;
         }
     }
 }

@@ -24,6 +24,7 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static l2trunk.commons.lang.NumberUtils.toInt;
 
@@ -75,7 +76,7 @@ public final class AuctioneerInstance extends NpcInstance {
             int page = toInt(tokenizer.nextToken());
 
             List<ClanHallAuctionEvent> events = new ArrayList<>();
-            for (ClanHall ch : ResidenceHolder.getResidenceList(ClanHall.class))
+            for (ClanHall ch : ResidenceHolder.getClanHalls())
                 if (ch.getSiegeEvent().getClass() == ClanHallAuctionEvent.class && ch.getSiegeEvent().isInProgress())
                     events.add(ch.getSiegeEvent());
 
@@ -127,25 +128,25 @@ public final class AuctioneerInstance extends NpcInstance {
         //=============================================================================================
         //		Displays the standard of Old Clan Hall (selection) if one of the Bidder єto - there is a button to cancel
         //=============================================================================================
-        else if (actualCommand.equalsIgnoreCase("info")) {
+        else if ("info".equalsIgnoreCase(actualCommand)) {
             String fileName;
 
             ClanHall clanHall;
             SiegeClanObject siegeClan = null;
             if (tokenizer.hasMoreTokens()) {
                 int id = toInt(tokenizer.nextToken());
-                clanHall = ResidenceHolder.getResidence(id);
+                clanHall = ResidenceHolder.getClanHall(id);
 
                 fileName = "residence2/clanhall/auction_clanhall_info_main.htm";
             } else {
-                clanHall = player.getClan() == null ? null : player.getClan().getHasHideout() > 0 ? ResidenceHolder.getResidence(player.getClan().getHasHideout()) : null;
+                clanHall = player.getClan() == null ? null : player.getClan().getHasHideout() > 0 ? ResidenceHolder.getClanHall(player.getClan().getHasHideout()) : null;
                 if (clanHall != null && clanHall.getSiegeEvent().getClass() == ClanHallAuctionEvent.class) {
                     if (clanHall.getSiegeEvent().isInProgress())
                         fileName = "residence2/clanhall/auction_clanhall_info_owner_sell.htm";
                     else
                         fileName = "residence2/clanhall/auction_clanhall_info_owner.htm";
                 } else {
-                    for (ClanHall ch : ResidenceHolder.getResidenceList(ClanHall.class))
+                    for (ClanHall ch : ResidenceHolder.getClanHalls())
                         if (ch.getSiegeEvent().getClass() == ClanHallAuctionEvent.class && (siegeClan = ch.getSiegeEvent().getSiegeClan(ClanHallAuctionEvent.ATTACKERS, player.getClan())) != null) {
                             clanHall = ch;
                             break;
@@ -196,11 +197,11 @@ public final class AuctioneerInstance extends NpcInstance {
         //=============================================================================================
         //						Auctioneer displays a list of auction
         //=============================================================================================
-        else if (actualCommand.equalsIgnoreCase("bidder_list")) {
+        else if ("bidder_list".equalsIgnoreCase(actualCommand)) {
             int id = toInt(tokenizer.nextToken());
             int page = toInt(tokenizer.nextToken());
 
-            ClanHall clanHall = ResidenceHolder.getResidence(id);
+            ClanHall clanHall = ResidenceHolder.getClanHall(id);
             ClanHallAuctionEvent auctionEvent = clanHall.getSiegeEvent();
             List<AuctionSiegeClanObject> attackers = auctionEvent.getObjects(ClanHallAuctionEvent.ATTACKERS);
 
@@ -254,7 +255,7 @@ public final class AuctioneerInstance extends NpcInstance {
 
             int id = toInt(tokenizer.nextToken());
 
-            ClanHall clanHall = ResidenceHolder.getResidence(id);
+            ClanHall clanHall = ResidenceHolder.getClanHall(id);
             ClanHallAuctionEvent auctionEvent = clanHall.getSiegeEvent();
 
             if (!auctionEvent.isInProgress())
@@ -292,7 +293,7 @@ public final class AuctioneerInstance extends NpcInstance {
                 }
             }
 
-            ClanHall clanHall = ResidenceHolder.getResidence(id);
+            ClanHall clanHall = ResidenceHolder.getClanHall(id);
             ClanHallAuctionEvent auctionEvent = clanHall.getSiegeEvent();
 
             if (!auctionEvent.isInProgress())
@@ -332,13 +333,13 @@ public final class AuctioneerInstance extends NpcInstance {
             final long bid = Long.parseLong(tokenizer.nextToken());
 
 
-            ClanHall clanHall = ResidenceHolder.getResidence(id);
+            ClanHall clanHall = ResidenceHolder.getClanHall(id);
             ClanHallAuctionEvent auctionEvent = clanHall.getSiegeEvent();
 
             if (!auctionEvent.isInProgress())
                 return;
 
-            for (ClanHall ch : ResidenceHolder.getResidenceList(ClanHall.class))
+            for (ClanHall ch : ResidenceHolder.getClanHalls())
                 if (clanHall != ch && ch.getSiegeEvent().getClass() == ClanHallAuctionEvent.class && ch.getSiegeEvent().isInProgress() && ch.getSiegeEvent().getSiegeClan(ClanHallAuctionEvent.ATTACKERS, player.getClan()) != null) {
                     player.sendPacket(SystemMsg.SINCE_YOU_HAVE_ALREADY_SUBMITTED_A_BID_YOU_ARE_NOT_ALLOWED_TO_PARTICIPATE_IN_ANOTHER_AUCTION_AT_THIS_TIME);
                     onBypassFeedback(player, "bid_start " + id);
@@ -392,7 +393,7 @@ public final class AuctioneerInstance extends NpcInstance {
             }
             int id = toInt(tokenizer.nextToken());
 
-            ClanHall clanHall = ResidenceHolder.getResidence(id);
+            ClanHall clanHall = ResidenceHolder.getClanHall(id);
             ClanHallAuctionEvent auctionEvent = clanHall.getSiegeEvent();
 
             if (!auctionEvent.isInProgress())
@@ -421,7 +422,7 @@ public final class AuctioneerInstance extends NpcInstance {
             }
             int id = toInt(tokenizer.nextToken());
 
-            ClanHall clanHall = ResidenceHolder.getResidence(id);
+            ClanHall clanHall = ResidenceHolder.getClanHall(id);
             ClanHallAuctionEvent auctionEvent = clanHall.getSiegeEvent();
 
             if (!auctionEvent.isInProgress())
@@ -449,7 +450,7 @@ public final class AuctioneerInstance extends NpcInstance {
                 return;
             }
 
-            ClanHall clanHall = ResidenceHolder.getResidence(player.getClan().getHasHideout());
+            ClanHall clanHall = ResidenceHolder.getClanHall(player.getClan().getHasHideout());
             if (clanHall.getSiegeEvent().getClass() != ClanHallAuctionEvent.class || clanHall.getSiegeEvent().isInProgress())
                 return;
 
@@ -476,7 +477,7 @@ public final class AuctioneerInstance extends NpcInstance {
                 return;
             }
 
-            ClanHall clanHall = ResidenceHolder.getResidence(player.getClan().getHasHideout());
+            ClanHall clanHall = ResidenceHolder.getClanHall(player.getClan().getHasHideout());
             if (clanHall.getSiegeEvent().getClass() != ClanHallAuctionEvent.class || clanHall.getSiegeEvent().isInProgress()) {
                 showChatWindow(player, 0);
                 return;
@@ -504,7 +505,7 @@ public final class AuctioneerInstance extends NpcInstance {
                 return;
             }
 
-            ClanHall clanHall = ResidenceHolder.getResidence(player.getClan().getHasHideout());
+            ClanHall clanHall = ResidenceHolder.getClanHall(player.getClan().getHasHideout());
             if (clanHall.getSiegeEvent().getClass() != ClanHallAuctionEvent.class || clanHall.getSiegeEvent().isInProgress()) {
                 showChatWindow(player, 0);
                 return;
@@ -552,7 +553,7 @@ public final class AuctioneerInstance extends NpcInstance {
                 return;
             }
 
-            ClanHall clanHall = ResidenceHolder.getResidence(player.getClan().getHasHideout());
+            ClanHall clanHall = ResidenceHolder.getClanHall(player.getClan().getHasHideout());
             if (clanHall.getSiegeEvent().getClass() != ClanHallAuctionEvent.class || clanHall.getSiegeEvent().isInProgress()) {
                 showChatWindow(player, 0);
                 return;
@@ -597,7 +598,7 @@ public final class AuctioneerInstance extends NpcInstance {
                 return;
             }
 
-            ClanHall clanHall = ResidenceHolder.getResidence(player.getClan().getHasHideout());
+            ClanHall clanHall = ResidenceHolder.getClanHall(player.getClan().getHasHideout());
             if (clanHall.getSiegeEvent().getClass() != ClanHallAuctionEvent.class || !clanHall.getSiegeEvent().isInProgress()) {
                 showChatWindow(player, 0);
                 return;
@@ -614,7 +615,7 @@ public final class AuctioneerInstance extends NpcInstance {
                 return;
             }
 
-            ClanHall clanHall = ResidenceHolder.getResidence(player.getClan().getHasHideout());
+            ClanHall clanHall = ResidenceHolder.getClanHall(player.getClan().getHasHideout());
             if (clanHall.getSiegeEvent().getClass() != ClanHallAuctionEvent.class || !clanHall.getSiegeEvent().isInProgress()) {
                 showChatWindow(player, 0);
                 return;

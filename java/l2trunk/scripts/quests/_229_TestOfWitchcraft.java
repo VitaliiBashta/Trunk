@@ -8,6 +8,8 @@ import l2trunk.gameserver.model.items.Inventory;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
+import static l2trunk.gameserver.model.base.ClassId.wizard;
+
 public final class _229_TestOfWitchcraft extends Quest {
     //NPC
     private static final int Orim = 30630;
@@ -345,7 +347,7 @@ public final class _229_TestOfWitchcraft extends Quest {
                     if (st.player.getLevel() < 39) {
                         htmltext = "30630-02.htm";
                         st.exitCurrentQuest();
-                    } else if (st.player.getClassId().id == 0x0b)
+                    } else if (st.player.getClassId() == wizard)
                         htmltext = "30630-03.htm";
                     else
                         htmltext = "30630-05.htm";
@@ -385,14 +387,11 @@ public final class _229_TestOfWitchcraft extends Quest {
                 if (st.haveQuestItem(Aklantoth_1stGem) || st.haveQuestItem(IkersList)) {
                     if (st.haveQuestItem(IkersList) && (st.getQuestItemsCount(DireWyrmFang) < 20 || st.getQuestItemsCount(LetoLizardmanCharm) < 20 || st.getQuestItemsCount(EnchantedGolemHeartstone) < 20))
                         htmltext = "30110-04.htm";
-                    else if (st.getQuestItemsCount(Aklantoth_1stGem) == 0 && st.getQuestItemsCount(IkersList) > 0) {
-                        st.takeItems(IkersList);
-                        st.takeItems(DireWyrmFang);
-                        st.takeItems(LetoLizardmanCharm);
-                        st.takeItems(EnchantedGolemHeartstone);
+                    else if (!st.haveQuestItem(Aklantoth_1stGem)  && st.haveQuestItem(IkersList)) {
+                        st.takeAllItems(IkersList,DireWyrmFang,LetoLizardmanCharm,EnchantedGolemHeartstone);
                         st.giveItems(Aklantoth_1stGem);
                         htmltext = "30110-05.htm";
-                    } else if (st.getQuestItemsCount(Aklantoth_1stGem) == 1)
+                    } else if (st.haveQuestItem(Aklantoth_1stGem) )
                         htmltext = "30110-06.htm";
                 } else {
                     htmltext = "30110-01.htm";
@@ -415,7 +414,7 @@ public final class _229_TestOfWitchcraft extends Quest {
                     htmltext = "30063-01.htm";
                 else if (st.getQuestItemsCount(LarasMemo) == 1 && st.getQuestItemsCount(Aklantoth_3stGem) == 0)
                     htmltext = "30063-03.htm";
-                else if (st.getQuestItemsCount(Aklantoth_3stGem) == 1)
+                else if (st.haveQuestItem(Aklantoth_3stGem))
                     htmltext = "30063-04.htm";
             } else if (cond > 2)
                 htmltext = "30063-05.htm";
@@ -428,7 +427,7 @@ public final class _229_TestOfWitchcraft extends Quest {
                 htmltext = "30314-04.htm";
         else if (npcId == Leopold) {
             if (cond == 2 && st.haveQuestItem(NestlesMemo)) {
-                if (st.getQuestItemsCount(Aklantoth_4stGem) + st.getQuestItemsCount(Aklantoth_5stGem) + st.getQuestItemsCount(Aklantoth_6stGem) == 0)
+                if (!st.haveAnyQuestItems(Aklantoth_4stGem,Aklantoth_5stGem,Aklantoth_6stGem))
                     htmltext = "30435-01.htm";
                 else
                     htmltext = "30435-04.htm";
@@ -438,7 +437,7 @@ public final class _229_TestOfWitchcraft extends Quest {
             if (cond == 6) {
                 if (st.haveAnyQuestItems(SirVaspersLetter, VadinsCrucifix))
                     htmltext = "30417-04.htm";
-                else if (st.getQuestItemsCount(VadinsSanctions) == 0)
+                else if (!st.haveQuestItem(VadinsSanctions))
                     htmltext = "30417-01.htm";
                 else if (st.haveQuestItem(VadinsSanctions)) {
                     htmltext = "30417-05.htm";
@@ -453,9 +452,9 @@ public final class _229_TestOfWitchcraft extends Quest {
                 htmltext = "30417-06.htm";
         } else if (npcId == Vadin) {
             if (cond == 6) {
-                if (st.getQuestItemsCount(SirVaspersLetter) != 0) {
+                if (st.haveQuestItem(SirVaspersLetter) ) {
                     htmltext = "30188-01.htm";
-                    st.takeItems(SirVaspersLetter, 1);
+                    st.takeItems(SirVaspersLetter);
                     st.giveItems(VadinsCrucifix);
                 } else if (st.haveQuestItem(VadinsCrucifix) && st.getQuestItemsCount(TamlinOrcAmulet) < 20)
                     htmltext = "30188-02.htm";

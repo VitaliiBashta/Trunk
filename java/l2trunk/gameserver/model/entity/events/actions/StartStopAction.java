@@ -6,16 +6,16 @@ import l2trunk.gameserver.model.entity.events.GlobalEvent;
 public class StartStopAction implements EventAction {
     public static final String EVENT = "event";
 
-    private final String _name;
-    private final boolean _start;
+    private final String name;
+    private final boolean start;
 
     public StartStopAction(String name, boolean start) {
-        _name = name;
-        _start = start;
+        this.name = name;
+        this.start = start;
     }
 
     @Override
     public void call(GlobalEvent event) {
-        event.action(_name, _start);
+        event.action(name, start);
     }
 }

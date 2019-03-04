@@ -36,7 +36,7 @@ public abstract class Residence implements JdbcEntity {
     private static final long CYCLE_TIME = 60 * 60 * 1000L; // 1 час
     private static final Logger _log = LoggerFactory.getLogger(Residence.class);
     final int id;
-    final Calendar _siegeDate = Calendar.getInstance();
+    final Calendar siegeDate = Calendar.getInstance();
     private final String name;
     private final List<ResidenceFunction> _functions = new ArrayList<>();
     private final List<Skill> skills = new ArrayList<>();
@@ -49,7 +49,7 @@ public abstract class Residence implements JdbcEntity {
     private final List<Location> chaosRestartPoints = new ArrayList<>();
     Clan owner;
     private Zone zone;
-    private SiegeEvent<?, ?> _siegeEvent;
+    private SiegeEvent<?, ?> siegeevent;
     // rewards
     private ScheduledFuture<?> cycleTask;
     private JdbcEntityState _jdbcEntityState = JdbcEntityState.CREATED;
@@ -80,18 +80,18 @@ public abstract class Residence implements JdbcEntity {
     }
 
     void initEvent() {
-        _siegeEvent = EventHolder.getEvent(EventType.SIEGE_EVENT, id);
+        siegeevent = EventHolder.getEvent(EventType.SIEGE_EVENT, id);
     }
 
     public <E extends SiegeEvent> E getSiegeEvent() {
-        return (E) _siegeEvent;
+        return (E) siegeevent;
     }
 
     public int getId() {
         return id;
     }
 
-    public String getName() {
+    public final String getName() {
         return name;
     }
 
@@ -116,7 +116,7 @@ public abstract class Residence implements JdbcEntity {
     }
 
     public Calendar getSiegeDate() {
-        return _siegeDate;
+        return siegeDate;
     }
 
     public Calendar getLastSiegeDate() {

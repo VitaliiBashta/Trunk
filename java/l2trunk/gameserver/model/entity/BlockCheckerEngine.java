@@ -318,7 +318,7 @@ public final class BlockCheckerEngine {
         public void runImpl() {
             // Wrong arena passed, stop event
             if (arena == -1) {
-                _log.error("Couldnt set up the arena Id for the Block Checker event, cancelling event...");
+                LOG.error("Couldnt set up the arena Id for the Block Checker event, cancelling event...");
                 return;
             }
             if (isStarted())

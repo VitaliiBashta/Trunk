@@ -4,6 +4,9 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
+import static l2trunk.gameserver.model.base.ClassId.darkFighter;
+import static l2trunk.gameserver.model.base.ClassId.palusKnight;
+
 public final class _410_PathToPalusKnight extends Quest {
     //npc
     private final int VIRGIL = 30329;
@@ -52,8 +55,8 @@ public final class _410_PathToPalusKnight extends Quest {
         } else if ("410_1".equals(event)) {
             if (st.player.getLevel() >= 18 && st.player.getClassId().id == 0x1f && !st.haveQuestItem(GAZE_OF_ABYSS_ID))
                 htmltext = "master_virgil_q0410_05.htm";
-            else if (st.player.getClassId().id != 0x1f) {
-                if (st.player.getClassId().id == 0x20)
+            else if (st.player.getClassId() != darkFighter) {
+                if (st.player.getClassId() == palusKnight)
                     htmltext = "master_virgil_q0410_02a.htm";
                 else
                     htmltext = "master_virgil_q0410_03.htm";
@@ -102,7 +105,7 @@ public final class _410_PathToPalusKnight extends Quest {
                 htmltext = "master_virgil_q0410_11.htm";
                 st.takeItems(COFFIN_ETERNAL_REST_ID);
                 if (st.player.getClassId().occupation() == 0) {
-                    st.giveItems(GAZE_OF_ABYSS_ID, 1);
+                    st.giveItems(GAZE_OF_ABYSS_ID);
                     if (!st.player.isVarSet("prof1")) {
                         st.player.setVar("prof1");
                         st.addExpAndSp(228064, 16455);

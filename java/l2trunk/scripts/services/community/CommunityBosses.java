@@ -75,7 +75,7 @@ public final class CommunityBosses implements ScriptFile, ICommunityBoardHandler
 
             boolean isAlive = isBossAlive(boss);
 
-            newHtml = newHtml.replace("<?name_" + i + "?>", temp.name());
+            newHtml = newHtml.replace("<?name_" + i + "?>", temp.name);
             newHtml = newHtml.replace("<?level_" + i + "?>", String.valueOf(temp.level));
             newHtml = newHtml.replace("<?status_" + i + "?>", isAlive ? "Alive" : getRespawnTime(boss));
             newHtml = newHtml.replace("<?status_color_" + i + "?>", getTextColor(isAlive));
@@ -242,14 +242,14 @@ public final class CommunityBosses implements ScriptFile, ICommunityBoardHandler
     }
 
     private static boolean isBossAlive(StatsSet set) {
-        return (long) set.getInteger("respawn_delay", 0) < System.currentTimeMillis() / TimeUnit.SECONDS.toMillis(1L);
+        return (long) set.getInteger("respawn_delay") < System.currentTimeMillis() / TimeUnit.SECONDS.toMillis(1L);
     }
 
     private static String getRespawnTime(StatsSet set) {
-        if (set.getInteger("respawn_delay", 0) < System.currentTimeMillis() / TimeUnit.SECONDS.toMillis(1L))
+        if (set.getInteger("respawn_delay") < System.currentTimeMillis() / TimeUnit.SECONDS.toMillis(1L))
             return "isAlive";
 
-        long delay = set.getInteger("respawn_delay", 0) - (System.currentTimeMillis() / TimeUnit.SECONDS.toMillis(1L));
+        long delay = set.getInteger("respawn_delay") - (System.currentTimeMillis() / TimeUnit.SECONDS.toMillis(1L));
 
         //System.out.println(delay);
         int hours = (int) (delay / 60 / 60);
@@ -277,8 +277,8 @@ public final class CommunityBosses implements ScriptFile, ICommunityBoardHandler
     private static String getTextColor(boolean alive) {
         if (alive)
             return "259a30";//"327b39";
-        else
-            return "b02e31";//"8f3d3f";
+
+        return "b02e31";//"8f3d3f";
     }
 
     /**
@@ -452,9 +452,9 @@ public final class CommunityBosses implements ScriptFile, ICommunityBoardHandler
                 case LEVEL_DESC:
                     return Integer.compare(temp2.level, temp1.level);
                 case STATUS_ASC:
-                    return Integer.compare(set1.getInteger("respawn_delay", 0), set2.getInteger("respawn_delay", 0));
+                    return Integer.compare(set1.getInteger("respawn_delay"), set2.getInteger("respawn_delay"));
                 case STATUS_DESC:
-                    return Integer.compare(set2.getInteger("respawn_delay", 0), set1.getInteger("respawn_delay", 0));
+                    return Integer.compare(set2.getInteger("respawn_delay"), set1.getInteger("respawn_delay"));
             }
             return 0;
         }

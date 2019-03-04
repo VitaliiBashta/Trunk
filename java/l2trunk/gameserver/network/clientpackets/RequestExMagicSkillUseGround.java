@@ -8,19 +8,14 @@ import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.Location;
 
 public final class RequestExMagicSkillUseGround extends L2GameClientPacket {
-    private final Location loc = new Location();
+    private Location loc;
     private int skillId;
     private boolean ctrlPressed;
     private boolean shiftPressed;
 
-    /**
-     * packet type id 0xd0
-     */
     @Override
     protected void readImpl() {
-        loc.x = readD();
-        loc.y = readD();
-        loc.z = readD();
+        loc= Location.of(readD(),readD(),readD());
         skillId = readD();
         ctrlPressed = readD() != 0;
         shiftPressed = readC() != 0;

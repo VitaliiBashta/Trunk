@@ -14,7 +14,7 @@ public final class CombatPointHeal extends Skill {
 
     public CombatPointHeal(StatsSet set) {
         super(set);
-        ignoreCpEff = set.getBool("ignoreCpEff", false);
+        ignoreCpEff = set.isSet("ignoreCpEff");
     }
 
     @Override

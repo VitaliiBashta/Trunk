@@ -11,20 +11,20 @@ public abstract class ActionWrapper extends RunnableImpl {
     private static final Logger _log = LoggerFactory.getLogger(ActionWrapper.class);
 
     private final String name;
-    private Future<?> _scheduledFuture;
+    private Future<?> scheduledFuture;
 
     protected ActionWrapper(String name) {
         this.name = name;
     }
 
     public void schedule(long time) {
-        _scheduledFuture = ThreadPoolManager.INSTANCE.schedule(this, time);
+        scheduledFuture = ThreadPoolManager.INSTANCE.schedule(this, time);
     }
 
     public void cancel() {
-        if (_scheduledFuture != null) {
-            _scheduledFuture.cancel(true);
-            _scheduledFuture = null;
+        if (scheduledFuture != null) {
+            scheduledFuture.cancel(true);
+            scheduledFuture = null;
         }
     }
 
@@ -39,7 +39,7 @@ public abstract class ActionWrapper extends RunnableImpl {
         } finally {
             ActionRunner.INSTANCE.remove(name, this);
 
-            _scheduledFuture = null;
+            scheduledFuture = null;
         }
     }
 

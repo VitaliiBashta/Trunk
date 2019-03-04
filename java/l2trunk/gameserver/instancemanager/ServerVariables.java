@@ -52,12 +52,8 @@ public final class ServerVariables {
         }
     }
 
-    public static boolean getBool(String name) {
+    public static boolean isSet(String name) {
         return server_vars.isSet(name);
-    }
-
-    public static boolean getBool(String name, boolean defult) {
-        return server_vars.getBool(name, defult);
     }
 
     public static int getInt(String name) {
@@ -84,22 +80,21 @@ public final class ServerVariables {
         return server_vars.getString(name, _default);
     }
 
-    public static void set(String name, boolean value) {
-        server_vars.set(name, value);
+    public static void set(String name) {
+        server_vars.set(name);
         SaveToDB(name);
     }
 
+    public static void inc(String name){
+        server_vars.inc(name);
+        SaveToDB(name);
+    }
     public static void set(String name, int value) {
         server_vars.set(name, value);
         SaveToDB(name);
     }
 
     public static void set(String name, long value) {
-        server_vars.set(name, value);
-        SaveToDB(name);
-    }
-
-    public static void set(String name, double value) {
         server_vars.set(name, value);
         SaveToDB(name);
     }

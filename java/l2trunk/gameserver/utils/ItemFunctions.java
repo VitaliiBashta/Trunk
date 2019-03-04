@@ -196,11 +196,11 @@ public final class ItemFunctions {
             return false;
         }
 
-        if (!item.getTemplate().getHandler().pickupItem(player, item))
-            return false;
+        if (item.getTemplate().getHandler().pickupItem(player, item)) {
+            PickableAttachment attachment = item.getAttachment() instanceof PickableAttachment ? (PickableAttachment) item.getAttachment() : null;
+            return attachment == null || attachment.canPickUp(player);
+        } else return false;
 
-        PickableAttachment attachment = item.getAttachment() instanceof PickableAttachment ? (PickableAttachment) item.getAttachment() : null;
-        return attachment == null || attachment.canPickUp(player);
     }
 
     public static boolean checkIfCanDiscard(Player player, ItemInstance item) {

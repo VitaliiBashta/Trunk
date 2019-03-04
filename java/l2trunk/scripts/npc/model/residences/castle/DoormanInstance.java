@@ -10,14 +10,14 @@ import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.ReflectionUtils;
 
 public final class DoormanInstance extends l2trunk.scripts.npc.model.residences.DoormanInstance {
-    private final Location[] _locs = new Location[2];
+    private final Location[] locs = new Location[2];
 
     public DoormanInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
-        for (int i = 0; i < _locs.length; i++) {
-            String loc = template.getAIParams().getString("tele_loc" + i, null);
+        for (int i = 0; i < locs.length; i++) {
+            String loc = template.getAiParams().getString("tele_loc" + i);
             if (loc != null)
-                _locs[i] = Location.of(loc);
+                locs[i] = Location.of(loc);
         }
     }
 
@@ -34,7 +34,7 @@ public final class DoormanInstance extends l2trunk.scripts.npc.model.residences.
                     doors.forEach(d -> ReflectionUtils.getDoor(d).closeMe());
                 else if (command.startsWith("tele")) {
                     int id = Integer.parseInt(command.substring(4, 5));
-                    Location loc = _locs[id];
+                    Location loc = locs[id];
                     if (loc != null)
                         player.teleToLocation(loc);
                 }
@@ -42,7 +42,7 @@ public final class DoormanInstance extends l2trunk.scripts.npc.model.residences.
             case COND_SIEGE:
                 if (command.startsWith("tele")) {
                     int id = Integer.parseInt(command.substring(4, 5));
-                    Location loc = _locs[id];
+                    Location loc = locs[id];
                     if (loc != null)
                         player.teleToLocation(loc);
                 } else

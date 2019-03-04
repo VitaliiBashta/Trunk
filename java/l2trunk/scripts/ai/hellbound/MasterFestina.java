@@ -18,33 +18,33 @@ import java.util.List;
 public final class MasterFestina extends Fighter {
     private final static int FOUNDRY_MYSTIC_ID = 22387;
     private final static int FOUNDRY_SPIRIT_GUARD_ID = 22389;
-    private final static Zone zone =ReflectionUtils.getZone("[tully2]");
-    private final static List<Location> _mysticSpawnPoints =List.of(
-            new Location(-11480, 273992, -11768),
-            new Location(-11128, 273992, -11864),
-            new Location(-10696, 273992, -11936),
-            new Location(-12552, 274920, -11752),
-            new Location(-12568, 275320, -11864),
-            new Location(-12568, 275784, -11936),
-            new Location(-13480, 273880, -11752),
-            new Location(-13880, 273880, -11864),
-            new Location(-14328, 273880, -11936),
-            new Location(-12456, 272968, -11752),
-            new Location(-12456, 272552, -11864),
-            new Location(-12456, 272120, -11936));
-    private final static List<Location> _spiritGuardSpawnPoints =List.of(
-            new Location(-12552, 272168, -11936),
-            new Location(-12552, 272520, -11872),
-            new Location(-12552, 272984, -11744),
-            new Location(-13432, 273960, -11736),
-            new Location(-13864, 273960, -11856),
-            new Location(-14296, 273976, -11936),
-            new Location(-12504, 275736, -11936),
-            new Location(-12472, 275288, -11856),
-            new Location(-12472, 274888, -11744),
-            new Location(-11544, 273912, -11752),
-            new Location(-11160, 273912, -11856),
-            new Location(-10728, 273896, -11936));
+    private final static Zone zone = ReflectionUtils.getZone("[tully2]");
+    private final static List<Location> _mysticSpawnPoints = List.of(
+            Location.of(-11480, 273992, -11768),
+            Location.of(-11128, 273992, -11864),
+            Location.of(-10696, 273992, -11936),
+            Location.of(-12552, 274920, -11752),
+            Location.of(-12568, 275320, -11864),
+            Location.of(-12568, 275784, -11936),
+            Location.of(-13480, 273880, -11752),
+            Location.of(-13880, 273880, -11864),
+            Location.of(-14328, 273880, -11936),
+            Location.of(-12456, 272968, -11752),
+            Location.of(-12456, 272552, -11864),
+            Location.of(-12456, 272120, -11936));
+    private final static List<Location> _spiritGuardSpawnPoints = List.of(
+            Location.of(-12552, 272168, -11936),
+            Location.of(-12552, 272520, -11872),
+            Location.of(-12552, 272984, -11744),
+            Location.of(-13432, 273960, -11736),
+            Location.of(-13864, 273960, -11856),
+            Location.of(-14296, 273976, -11936),
+            Location.of(-12504, 275736, -11936),
+            Location.of(-12472, 275288, -11856),
+            Location.of(-12472, 274888, -11744),
+            Location.of(-11544, 273912, -11752),
+            Location.of(-11160, 273912, -11856),
+            Location.of(-10728, 273896, -11936));
 
     private long _lastFactionNotifyTime = 0;
 

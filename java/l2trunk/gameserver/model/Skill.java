@@ -189,26 +189,26 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
         baseLevel = set.getInteger("base_level");
         name = set.getString("name");
         operateType = set.getEnum("operateType", SkillOpType.class);
-        isNewbie = set.getBool("isNewbie", false);
-        isSelfDispellable = set.getBool("isSelfDispellable", true);
-        ignoreSkillMastery = set.getBool("ignoreSkillMastery", false);
-        isPreservedOnDeath = set.getBool("isPreservedOnDeath", false);
-        isHeroic = set.getBool("isHeroic", false);
-        isAltUse = set.getBool("isAltUse", false);
-        mpConsume1 = set.getInteger("mpConsume1", 0);
-        mpConsume2 = set.getInteger("mpConsume2", 0);
-        energyConsume = set.getInteger("energyConsume", 0);
-        vitConsume = set.getInteger("vitConsume", 0);
-        hpConsume = set.getInteger("hpConsume", 0);
-        soulsConsume = set.getInteger("soulsConsume", 0);
-        isSoulBoost = set.getBool("soulBoost", false);
-        isChargeBoost = set.getBool("chargeBoost", false);
-        isProvoke = set.getBool("provoke", false);
-        isUsingWhileCasting = set.getBool("isUsingWhileCasting", false);
-        matak = set.getInteger("mAtk", 0);
+        isNewbie = set.isSet("isNewbie");
+        isSelfDispellable = set.isSet("isSelfDispellable");
+        ignoreSkillMastery = set.isSet("ignoreSkillMastery");
+        isPreservedOnDeath = set.isSet("isPreservedOnDeath");
+        isHeroic = set.isSet("isHeroic");
+        isAltUse = set.isSet("isAltUse");
+        mpConsume1 = set.getInteger("mpConsume1");
+        mpConsume2 = set.getInteger("mpConsume2");
+        energyConsume = set.getInteger("energyConsume");
+        vitConsume = set.getInteger("vitConsume");
+        hpConsume = set.getInteger("hpConsume");
+        soulsConsume = set.getInteger("soulsConsume");
+        isSoulBoost = set.isSet("soulBoost");
+        isChargeBoost = set.isSet("chargeBoost");
+        isProvoke = set.isSet("provoke");
+        isUsingWhileCasting = set.isSet("isUsingWhileCasting");
+        matak = set.getInteger("mAtk");
         isUseSS = Ternary.valueOf(set.getString("useSS", Ternary.DEFAULT.toString()).toUpperCase());
-        magicLevel = set.getInteger("magicLevel", 0);
-        castCount = set.getInteger("castCount", 0);
+        magicLevel = set.getInteger("magicLevel");
+        castCount = set.getInteger("castCount");
         castRange = set.getInteger("castRange", 40);
 
         String s1 = set.getString("itemConsumeCount", "");
@@ -230,13 +230,13 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
                     .collect(Collectors.toList());
         }
 
-        referenceItemId = set.getInteger("referenceItemId", 0);
-        referenceItemMpConsume = set.getInteger("referenceItemMpConsume", 0);
+        referenceItemId = set.getInteger("referenceItemId");
+        referenceItemMpConsume = set.getInteger("referenceItemMpConsume");
 
-        isItemHandler = set.getBool("isItemHandler", false);
-        common = set.getBool("common", false);
-        isSaveable = set.getBool("isSaveable", true);
-        coolTime = set.getInteger("coolTime", 0);
+        isItemHandler = set.isSet("isItemHandler");
+        common = set.isSet("common");
+        isSaveable = set.isSet("isSaveable");
+        coolTime = set.getInteger("coolTime");
         skillInterruptTime = set.getInteger("hitCancelTime");
         reuseDelay = set.getLong("reuseDelay");
         hitTime = set.getInteger("hitTime");
@@ -245,64 +245,64 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
         magicType = set.getEnum("magicType", SkillMagicType.class, SkillMagicType.PHYSIC);
         traitType = set.getEnum("trait", SkillTrait.class, null);
         saveVs = set.getEnum("saveVs", BaseStats.class, null);
-        hideStartMessage = set.getBool("isHideStartMessage", false);
-        hideUseMessage = set.getBool("isHideUseMessage", false);
-        isUndeadOnly = set.getBool("undeadOnly", false);
-        isCorpse = set.getBool("corpse", false);
-        power = set.getDouble("power", 0.);
-        powerPvP = set.getDouble("powerPvP", 0.);
-        powerPvE = set.getDouble("powerPvE", 0.);
-        effectPoint = set.getInteger("effectPoint", 0);
+        hideStartMessage = set.isSet("isHideStartMessage");
+        hideUseMessage = set.isSet("isHideUseMessage");
+        isUndeadOnly = set.isSet("undeadOnly");
+        isCorpse = set.isSet("corpse");
+        power = set.getDouble("power");
+        powerPvP = set.getDouble("powerPvP");
+        powerPvE = set.getDouble("powerPvE");
+        effectPoint = set.getInteger("effectPoint");
         NextAction nextAction1 = NextAction.valueOf(set.getString("nextAction", "DEFAULT").toUpperCase());
         skillType = SkillType.valueOf(set.getString("skillType"));
-        isSuicideAttack = set.getBool("isSuicideAttack", false);
-        isSkillTimePermanent = set.getBool("isSkillTimePermanent", false);
-        isReuseDelayPermanent = set.getBool("isReuseDelayPermanent", false);
-        deathlink = set.getBool("deathlink", false);
-        basedOnTargetDebuff = set.getBool("basedOnTargetDebuff", false);
-        isNotUsedByAI = set.getBool("isNotUsedByAI", false);
-        isIgnoreResists = set.getBool("isIgnoreResists", false);
-        isIgnoreInvul = set.getBool("isIgnoreInvul", false);
-        isTrigger = set.getBool("isTrigger", false);
-        isNotAffectedByMute = set.getBool("isNotAffectedByMute", false);
-        flyingTransformUsage = set.getBool("flyingTransformUsage", false);
-        canUseTeleport = set.getBool("canUseTeleport", true);
+        isSuicideAttack = set.isSet("isSuicideAttack");
+        isSkillTimePermanent = set.isSet("isSkillTimePermanent");
+        isReuseDelayPermanent = set.isSet("isReuseDelayPermanent");
+        deathlink = set.isSet("deathlink");
+        basedOnTargetDebuff = set.isSet("basedOnTargetDebuff");
+        isNotUsedByAI = set.isSet("isNotUsedByAI");
+        isIgnoreResists = set.isSet("isIgnoreResists");
+        isIgnoreInvul = set.isSet("isIgnoreInvul");
+        isTrigger = set.isSet("isTrigger");
+        isNotAffectedByMute = set.isSet("isNotAffectedByMute");
+        flyingTransformUsage = set.isSet("flyingTransformUsage");
+        canUseTeleport = set.isSet("canUseTeleport");
 
         element = Element.getElement(set.getString("element", "NONE"));
 
-        elementPower = set.getInteger("elementPower", 0);
+        elementPower = set.getInteger("elementPower");
 
         activateRate = set.getInteger("activateRate", -1);
         affectLimit = set.getIntegerList("affectLimit", List.of(0, 0));
-        levelModifier = set.getInteger("levelModifier", 1);
-        isCancelable = set.getBool("cancelable", true);
-        isReflectable = set.getBool("reflectable", true);
-        isShieldIgnore = set.getBool("shieldignore", false);
-        criticalRate = set.getInteger("criticalRate", 0);
-        isOverhit = set.getBool("overHit", false);
-        weaponsAllowed = set.getInteger("weaponsAllowed", 0);
-        minPledgeClass = set.getInteger("minPledgeClass", 0);
-        minRank = set.getInteger("minRank", 0);
+        levelModifier = set.isSet("levelModifier") ? set.getInteger("levelModifier") : 1;
+        isCancelable = set.isSet("cancelable");
+        isReflectable = set.isSet("reflectable");
+        isShieldIgnore = set.isSet("shieldignore");
+        criticalRate = set.getInteger("criticalRate");
+        isOverhit = set.isSet("overHit");
+        weaponsAllowed = set.getInteger("weaponsAllowed");
+        minPledgeClass = set.getInteger("minPledgeClass");
+        minRank = set.getInteger("minRank");
         isOffensive = set.getBool("isOffensive", skillType.isOffensive());
         isPvpSkill = set.getBool("isPvpSkill", skillType.isPvpSkill());
-        isFishingSkill = set.getBool("isFishingSkill", false);
+        isFishingSkill = set.isSet("isFishingSkill");
         isPvm = set.getBool("isPvm", skillType.isPvM());
-        isForceUse = set.getBool("isForceUse", false);
-        isBehind = set.getBool("behind", false);
-        symbolId = set.getInteger("symbolId", 0);
-        npcId = set.getInteger("npcId", 0);
+        isForceUse = set.isSet("isForceUse");
+        isBehind = set.isSet("behind");
+        symbolId = set.getInteger("symbolId");
+        npcId = set.getInteger("npcId");
         flyType = FlyType.valueOf(set.getString("flyType", "NONE").toUpperCase());
-        flyToBack = set.getBool("flyToBack", false);
+        flyToBack = set.isSet("flyToBack");
         flyRadius = set.getInteger("flyRadius", 200);
-        negateSkill = set.getInteger("negateSkill", 0);
+        negateSkill = set.getInteger("negateSkill");
         negatePower = set.getInteger("negatePower", Integer.MAX_VALUE);
-        numCharges = set.getInteger("num_charges", 0);
-        condCharges = set.getInteger("cond_charges", 0);
-        delayedEffect = set.getInteger("delayedEffect", 0);
-        cancelTarget = set.getInteger("cancelTarget", 0);
-        lethal1 = set.getDouble("lethal1", 0.);
-        lethal2 = set.getDouble("lethal2", 0.);
-        absorbPart = set.getDouble("absorbPart", 0.);
+        numCharges = set.getInteger("num_charges");
+        condCharges = set.getInteger("cond_charges");
+        delayedEffect = set.getInteger("delayedEffect");
+        cancelTarget = set.getInteger("cancelTarget");
+        lethal1 = set.getDouble("lethal1");
+        lethal2 = set.getDouble("lethal2");
+        absorbPart = set.getDouble("absorbPart");
         icon = set.getString("icon", "");
 
         StringTokenizer st = new StringTokenizer(set.getString("addSkills", ""), ";");
@@ -332,7 +332,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
         } else
             nextAction = NextAction.valueOf(set.getString("nextAction", "DEFAULT").toUpperCase());
 
-        String canLearn = set.getString("canLearn", null);
+        String canLearn = set.getString("canLearn");
         if (canLearn == null) {
             this.canLearn = null;
         } else {
@@ -343,7 +343,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
             }
         }
 
-        String teachers = set.getString("teachers", null);
+        String teachers = set.getString("teachers");
         if (teachers == null) {
             this.teachers = null;
         } else {
@@ -571,7 +571,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
 //                Constructor<? extends Skill> c = clazz.getConstructor(StatsSet.class);
 //                return c.newInstance(set);
 //            } catch (IllegalAccessException | SecurityException | NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalArgumentException e) {
-//                _log.error("Error while making Skill", e);
+//                LOG.error("Error while making Skill", e);
 //                throw new RuntimeException(e);
 //            }
     }
@@ -1308,11 +1308,11 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
                     continue;
                 }
 
-                Creature character = et.applyOnCaster || (et._isReflectable && skillReflected) ? effector : effected;
+                Creature character = et.applyOnCaster || (et.isReflectable && skillReflected) ? effector : effected;
                 List<Creature> targets = new ArrayList<>(1);
                 targets.add(character);
 
-                if (et._applyOnSummon && character instanceof Player) {
+                if (et.applyOnSummon && character instanceof Player) {
                     Summon summon = ((Player) character).getPet();
                     if (summon instanceof SummonInstance && !isOffensive && !isToggle() && !isCubicSkill()) {
                         targets.add(summon);
@@ -1367,7 +1367,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
                         }
                     }
 
-                    if (isReflectable && et._isReflectable && isOffensive && (target != effector) && !(effector instanceof TrapInstance)) {
+                    if (isReflectable && et.isReflectable && isOffensive && (target != effector) && !(effector instanceof TrapInstance)) {
                         if (Rnd.chance(target.calcStat(isMagic() ? Stats.REFLECT_MAGIC_DEBUFF : Stats.REFLECT_PHYSIC_DEBUFF, 0, effector, Skill.this))) {
                             target.sendPacket(new SystemMessage2(SystemMsg.YOU_COUNTERED_C1S_ATTACK).addName(effector));
                             effector.sendPacket(new SystemMessage2(SystemMsg.C1_DODGES_THE_ATTACK).addName(target));

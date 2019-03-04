@@ -122,39 +122,39 @@ public final class TrickOfTrans extends Functions implements ScriptFile, OnDeath
         private void spawnEventManagers() {
             // Эвент Менеджер
             final List<Location> EVENT_MANAGERS = List.of(
-                    new Location(147992, 28616, -2295, 0), // Aden
-                    new Location(81919, 148290, -3472, 51432), // Giran
-                    new Location(18293, 145208, -3081, 6470), // Dion
-                    new Location(-14694, 122699, -3122, 0), // Gludio
-                    new Location(-81634, 150275, -3155, 15863)); // Gludin
+                    Location.of(147992, 28616, -2295, 0), // Aden
+                    Location.of(81919, 148290, -3472, 51432), // Giran
+                    Location.of(18293, 145208, -3081, 6470), // Dion
+                    Location.of(-14694, 122699, -3122, 0), // Gludio
+                    Location.of(-81634, 150275, -3155, 15863)); // Gludin
 
             // Сундуки
             final List<Location> CHESTS = List.of(
-                    new Location(148081, 28614, -2274, 2059), // Aden
-                    new Location(147918, 28615, -2295, 31471), // Aden
-                    new Location(147998, 28534, -2274, 49152), // Aden
-                    new Location(148053, 28550, -2274, 55621), // Aden
-                    new Location(147945, 28563, -2274, 40159), // Aden
-                    new Location(82012, 148286, -3472, 61567), // Giran
-                    new Location(81822, 148287, -3493, 29413), // Giran
-                    new Location(81917, 148207, -3493, 49152), // Giran
-                    new Location(81978, 148228, -3472, 53988), // Giran
-                    new Location(81851, 148238, -3472, 40960), // Giran
-                    new Location(18343, 145253, -3096, 7449), // Dion
-                    new Location(18284, 145274, -3090, 19740), // Dion
-                    new Location(18351, 145186, -3089, 61312), // Dion
-                    new Location(18228, 145265, -3079, 21674), // Dion
-                    new Location(18317, 145140, -3078, 55285), // Dion
-                    new Location(-14584, 122694, -3122, 65082), // Gludio
-                    new Location(-14610, 122756, -3143, 13029), // Gludio
-                    new Location(-14628, 122627, -3122, 50632), // Gludio
-                    new Location(-14697, 122607, -3143, 48408), // Gludio
-                    new Location(-14686, 122787, -3122, 12416), // Gludio
-                    new Location(-81745, 150275, -3134, 32768), // Gludin
-                    new Location(-81520, 150275, -3134, 0), // Gludin
-                    new Location(-81628, 150379, -3134, 16025), // Gludin
-                    new Location(-81696, 150347, -3155, 22854), // Gludin
-                    new Location(-81559, 150332, -3134, 3356)); // Gludin
+                    Location.of(148081, 28614, -2274, 2059), // Aden
+                    Location.of(147918, 28615, -2295, 31471), // Aden
+                    Location.of(147998, 28534, -2274, 49152), // Aden
+                    Location.of(148053, 28550, -2274, 55621), // Aden
+                    Location.of(147945, 28563, -2274, 40159), // Aden
+                    Location.of(82012, 148286, -3472, 61567), // Giran
+                    Location.of(81822, 148287, -3493, 29413), // Giran
+                    Location.of(81917, 148207, -3493, 49152), // Giran
+                    Location.of(81978, 148228, -3472, 53988), // Giran
+                    Location.of(81851, 148238, -3472, 40960), // Giran
+                    Location.of(18343, 145253, -3096, 7449), // Dion
+                    Location.of(18284, 145274, -3090, 19740), // Dion
+                    Location.of(18351, 145186, -3089, 61312), // Dion
+                    Location.of(18228, 145265, -3079, 21674), // Dion
+                    Location.of(18317, 145140, -3078, 55285), // Dion
+                    Location.of(-14584, 122694, -3122, 65082), // Gludio
+                    Location.of(-14610, 122756, -3143, 13029), // Gludio
+                    Location.of(-14628, 122627, -3122, 50632), // Gludio
+                    Location.of(-14697, 122607, -3143, 48408), // Gludio
+                    Location.of(-14686, 122787, -3122, 12416), // Gludio
+                    Location.of(-81745, 150275, -3134, 32768), // Gludin
+                    Location.of(-81520, 150275, -3134, 0), // Gludin
+                    Location.of(-81628, 150379, -3134, 16025), // Gludin
+                    Location.of(-81696, 150347, -3155, 22854), // Gludin
+                    Location.of(-81559, 150332, -3134, 3356)); // Gludin
 
             EM_SPAWNS = SpawnNPCs(EVENT_MANAGER_ID, EVENT_MANAGERS);
             SpawnNPCs(CHESTS_ID, CHESTS, _ch_spawns, 300);

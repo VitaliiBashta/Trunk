@@ -217,7 +217,7 @@ public final class _222_TestOfDuelist extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("30623-04.htm") && st.player.getRace() == Race.orc)
+        if ("30623-04.htm".equalsIgnoreCase(event) && st.player.getRace() == Race.orc)
             htmltext = "30623-05.htm";
         else if ("30623-07.htm".equalsIgnoreCase(event)) {
             st.setCond(2);
@@ -233,21 +233,9 @@ public final class _222_TestOfDuelist extends Quest {
             }
             st.playSound(SOUND_ACCEPT);
         } else if ("30623-16.htm".equalsIgnoreCase(event)) {
-            st.takeItems(PunchersShard);
-            st.takeItems(NobleAntsFeeler);
-            st.takeItems(DronesChitin);
-            st.takeItems(DeadSeekerFang);
-            st.takeItems(OverlordNecklace);
-            st.takeItems(FetteredSoulsChain);
-            st.takeItems(ChiefsAmulet);
-            st.takeItems(EnchantedEyeMeat);
-            st.takeItems(TamrinOrcsRing);
-            st.takeItems(TamrinOrcsArrow);
-            st.takeItems(OrderGludio);
-            st.takeItems(OrderDion);
-            st.takeItems(OrderGiran);
-            st.takeItems(OrderOren);
-            st.takeItems(OrderAden);
+            st.takeAllItems(PunchersShard,NobleAntsFeeler,DronesChitin,DeadSeekerFang,OverlordNecklace,
+                    FetteredSoulsChain,ChiefsAmulet,EnchantedEyeMeat,TamrinOrcsRing,TamrinOrcsArrow,
+                    OrderGludio,OrderDion,OrderGiran,OrderOren,OrderAden);
             st.giveItems(FinalOrder);
             st.setCond(4);
             st.start();
@@ -261,7 +249,7 @@ public final class _222_TestOfDuelist extends Quest {
         String htmltext = "noquest";
         int cond = st.getCond();
         if (npcId == Kaien)
-            if (st.getQuestItemsCount(MarkOfDuelist) != 0) {
+            if (st.haveQuestItem(MarkOfDuelist)) {
                 htmltext = "completed";
                 st.exitCurrentQuest();
             } else if (cond == 0) {

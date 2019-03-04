@@ -123,7 +123,7 @@ public final class Zone {
     }
 
     public List<Location> getRestartPoints() {
-        return getTemplate().getRestartPoints();
+        return getTemplate().restartPoints;
     }
 
     private List<Location> getPKRestartPoints() {
@@ -164,11 +164,15 @@ public final class Zone {
         return objects.contains(cha);
     }
 
+    public final double findDistanceToZone(Location loc, boolean includeZAxis) {
+        return findDistanceToZone(loc.x, loc.y, loc.z, includeZAxis);
+    }
+
     public final double findDistanceToZone(GameObject obj, boolean includeZAxis) {
         return findDistanceToZone(obj.getX(), obj.getY(), obj.getZ(), includeZAxis);
     }
 
-    public final double findDistanceToZone(int x, int y, int z, boolean includeZAxis) {
+    private double findDistanceToZone(int x, int y, int z, boolean includeZAxis) {
         return PositionUtils.calculateDistance(x, y, z, (getTerritory().getXmax() + getTerritory().getXmin()) / 2, (getTerritory().getYmax() + getTerritory().getYmin()) / 2, (getTerritory().getZmax() + getTerritory().getZmin()) / 2, includeZAxis);
     }
 
@@ -189,7 +193,7 @@ public final class Zone {
             onZoneEnter(cha);
 
         if ((cha instanceof Player) && ((Player) cha).isGM()) {
-            ((Player)cha).sendMessage("Entered the zone " + getName());
+            ((Player) cha).sendMessage("Entered the zone " + getName());
         }
     }
 
@@ -237,7 +241,7 @@ public final class Zone {
             onZoneLeave(cha);
 
         if ((cha instanceof Player) && ((Player) cha).isGM()) {
-            ((Player)cha).sendMessage("Left the area " + getName());
+            ((Player) cha).sendMessage("Left the area " + getName());
         }
     }
 
@@ -390,7 +394,7 @@ public final class Zone {
 
     public Stream<NpcInstance> getInsideNpcs() {
         return objects.stream()
-                .filter(o ->o instanceof NpcInstance)
+                .filter(o -> o instanceof NpcInstance)
                 .map(o -> (NpcInstance) o);
 
     }

@@ -27,19 +27,19 @@ public final class _006_StepIntoTheFuture extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("rapunzel_q0006_0104.htm")) {
+        if ("rapunzel_q0006_0104.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.start();
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("baul_q0006_0201.htm")) {
+        } else if ("baul_q0006_0201.htm".equalsIgnoreCase(event)) {
             st.giveItems(BaulrosLetter);
             st.setCond(2);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("sir_collin_windawood_q0006_0301.htm")) {
+        } else if ("sir_collin_windawood_q0006_0301.htm".equalsIgnoreCase(event)) {
             st.takeItems(BaulrosLetter);
             st.setCond(3);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("rapunzel_q0006_0401.htm")) {
+        } else if ("rapunzel_q0006_0401.htm".equalsIgnoreCase(event)) {
             st.giveItems(ScrollOfEscapeGiran);
             st.giveItems(MarkOfTraveler);
             st.unset("cond");
@@ -54,6 +54,7 @@ public final class _006_StepIntoTheFuture extends Quest {
         String htmltext = "noquest";
         int npcId = npc.getNpcId();
         int cond = st.getCond();
+        boolean haveQuestItem = st.haveQuestItem(BaulrosLetter);
         if (npcId == Roxxy) {
             if (cond == 0)
                 if (st.player.getRace() == Race.human && st.player.getLevel() >= 3)
@@ -69,12 +70,12 @@ public final class _006_StepIntoTheFuture extends Quest {
         } else if (npcId == Baulro) {
             if (cond == 1)
                 htmltext = "baul_q0006_0101.htm";
-            else if (cond == 2 && st.getQuestItemsCount(BaulrosLetter) > 0)
+            else if (cond == 2 && haveQuestItem)
                 htmltext = "baul_q0006_0202.htm";
         } else if (npcId == Windawood)
-            if (cond == 2 && st.getQuestItemsCount(BaulrosLetter) > 0)
+            if (cond == 2 && haveQuestItem)
                 htmltext = "sir_collin_windawood_q0006_0201.htm";
-            else if (cond == 2 && st.getQuestItemsCount(BaulrosLetter) == 0)
+            else if (cond == 2)
                 htmltext = "sir_collin_windawood_q0006_0302.htm";
             else if (cond == 3)
                 htmltext = "sir_collin_windawood_q0006_0303.htm";

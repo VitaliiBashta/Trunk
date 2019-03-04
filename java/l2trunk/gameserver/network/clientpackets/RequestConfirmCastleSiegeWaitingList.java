@@ -31,7 +31,7 @@ public final class RequestConfirmCastleSiegeWaitingList extends L2GameClientPack
         if (player.getClan() == null)
             return;
 
-        Castle castle = ResidenceHolder.getResidence(Castle.class, unitId);
+        Castle castle = ResidenceHolder.getCastle(unitId);
 
         if (castle == null || player.getClan().getCastle() != castle.getId()) {
             player.sendActionFailed();

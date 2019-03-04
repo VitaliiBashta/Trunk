@@ -20,7 +20,7 @@ public final class RequestRecipeShopListSet extends L2GameClientPacket {
     @Override
     protected void readImpl() {
         count = readD();
-        if (count * 12 > _buf.remaining() || count > Short.MAX_VALUE || count < 1) {
+        if (count * 12 > buf.remaining() || count > Short.MAX_VALUE || count < 1) {
             count = 0;
             return;
         }

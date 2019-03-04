@@ -17,7 +17,7 @@ public final class MatchMassTeleporterInstance extends NpcInstance {
 
     public MatchMassTeleporterInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
-        _flagId = template.getAIParams().getInteger("flag");
+        _flagId = template.getAiParams().getInteger("flag");
     }
 
     @Override

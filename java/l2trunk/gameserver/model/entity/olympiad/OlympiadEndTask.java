@@ -21,7 +21,7 @@ public final class OlympiadEndTask extends RunnableImpl {
             return;
         }
 
-        Announcements.INSTANCE.announceToAll(new SystemMessage2(SystemMsg.OLYMPIAD_PERIOD_S1_HAS_ENDED).addInteger(Olympiad._currentCycle));
+        Announcements.INSTANCE.announceToAll(new SystemMessage2(SystemMsg.OLYMPIAD_PERIOD_S1_HAS_ENDED).addInteger(Olympiad.currentCycle));
         Announcements.INSTANCE.announceToAll("Olympiad Validation Period has began");
 
         Olympiad._isOlympiadEnd = true;
@@ -30,10 +30,10 @@ public final class OlympiadEndTask extends RunnableImpl {
         if (Olympiad._scheduledWeeklyTask != null)
             Olympiad._scheduledWeeklyTask.cancel(false);
 
-        Olympiad._validationEnd = Olympiad._olympiadEnd + Config.ALT_OLY_VPERIOD;
+        Olympiad.validationEnd = Olympiad.olympiadEnd + Config.ALT_OLY_VPERIOD;
 
         OlympiadDatabase.saveNobleData();
-        Olympiad._period = 1;
+        Olympiad.period = 1;
         Hero.INSTANCE.clearHeroes();
 
         try {

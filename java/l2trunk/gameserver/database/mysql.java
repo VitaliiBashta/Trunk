@@ -107,7 +107,7 @@ public abstract class mysql {
 //                    ret = rset.getObject(1);
 //
 //        } catch (SQLException e) {
-//            _log.warn("Could not execute query '" + query + "' ", e);
+//            LOG.warn("Could not execute query '" + query + "' ", e);
 //        }
 //        return ret;
 //    }

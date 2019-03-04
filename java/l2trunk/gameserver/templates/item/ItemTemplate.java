@@ -137,30 +137,30 @@ public abstract class ItemTemplate extends StatTemplate {
     private final Grade crystalType; // default to none-grade
     private final ItemClass clazz;
     public final int weight;
-    private final boolean _masterwork;
+    private final boolean masterwork;
     private final int masterworkConvert;
     private final int durability;
     public final int referencePrice;
-    private final int _crystalCount;
+    private final int crystalCount;
     public final boolean temporal;
     public final boolean stackable;
     private final boolean crystallizable;
-    private final ReuseType _reuseType;
-    private final int _reuseDelay;
-    private final int _reuseGroup;
-    private final int _agathionEnergy;
+    private final ReuseType reuseType;
+    private final int reuseDelay;
+    private final int reuseGroup;
+    private final int agathionEnergy;
     private final List<CapsuledItem> _capsuledItems = new ArrayList<>();
     ItemType type;
     int type1; // needed for item list (inventory)
     int _type2; // different lists for armor, weapon, etc
     int bodyPart;
     private final List<Skill> skills =new ArrayList<>() ;
-    private Map<Integer, AugmentationInfo> _augmentationInfos = new HashMap<>();//Containers.emptyIntObjectMap();
+    private Map<Integer, AugmentationInfo> augmentationInfos = new HashMap<>();
     private int flags;
     private Skill enchant4Skill = null; // skill that activates when item is enchanted +4 (for duals)
     private int[] _baseAttributes = new int[6];
-    private Map<Integer, int[]> _enchantOptions = new HashMap<>();//Containers.emptyIntObjectMap();
-    private Condition _condition;
+    private Map<Integer, List<Integer>> enchantOptions = new HashMap<>();
+    private Condition condition;
     private IItemHandler handler = IItemHandler.NULL;
 
     ItemTemplate(final StatsSet set) {
@@ -170,20 +170,20 @@ public abstract class ItemTemplate extends StatTemplate {
         addname = set.getString("add_name", "");
         icon = set.getString("icon", "");
         icon32 = "<img src=icon." + icon + " width=32 height=32>";
-        weight = set.getInteger("weight", 0);
-        crystallizable = set.getBool("crystallizable", false);
-        stackable = set.getBool("stackable", false);
+        weight = set.getInteger("weight");
+        crystallizable = set.isSet("crystallizable");
+        stackable = set.isSet("stackable");
         crystalType = set.getEnum("crystal_type", Grade.class, Grade.NONE); // default to none-grade
         durability = set.getInteger("durability", -1);
-        temporal = set.getBool("temporal", false);
+        temporal = set.isSet("temporal");
         bodyPart = set.getInteger("bodypart");
         referencePrice = set.getInteger("price");
-        _crystalCount = set.getInteger("crystal_count");
-        _reuseType = set.getEnum("reuse_type", ReuseType.class, ReuseType.NORMAL);
-        _reuseDelay = set.getInteger("reuse_delay");
-        _reuseGroup = set.getInteger("delay_share_group", -itemId);
-        _agathionEnergy = set.getInteger("agathion_energy");
-        _masterwork = set.getBool("masterwork", false);
+        crystalCount = set.getInteger("crystal_count");
+        reuseType = set.getEnum("reuse_type", ReuseType.class, ReuseType.NORMAL);
+        reuseDelay = set.getInteger("reuse_delay");
+        reuseGroup = set.getInteger("delay_share_group", -itemId);
+        agathionEnergy = set.getInteger("agathion_energy");
+        masterwork = set.isSet("masterwork");
         masterworkConvert = set.getInteger("masterwork_convert", -1);
 
         for (ItemFlags f : ItemFlags.VALUES) {
@@ -301,7 +301,7 @@ public abstract class ItemTemplate extends StatTemplate {
      * @return int
      */
     public final int getCrystalCount() {
-        return _crystalCount;
+        return crystalCount;
     }
 
     /**
@@ -411,10 +411,6 @@ public abstract class ItemTemplate extends StatTemplate {
 
     public boolean isCommonItem() {
         return name.startsWith("Common Item - ");
-    }
-
-    public boolean isSealedItem() {
-        return name.startsWith("Sealed");
     }
 
     public boolean isAltSeed() {
@@ -596,7 +592,7 @@ public abstract class ItemTemplate extends StatTemplate {
     }
 
     public boolean testCondition(Playable player, ItemInstance instance) {
-        if (_condition == null) {
+        if (condition == null) {
             return true;
         }
 
@@ -604,12 +600,12 @@ public abstract class ItemTemplate extends StatTemplate {
         env.character = player;
         env.item = instance;
 
-        boolean res = _condition.test(env);
-        if (!res && (_condition.getSystemMsg() != null)) {
-            if (_condition.getSystemMsg().size() > 0) {
-                player.sendPacket(new SystemMessage2(_condition.getSystemMsg()).addItemName(itemId()));
+        boolean res = condition.test(env);
+        if (!res && (condition.getSystemMsg() != null)) {
+            if (condition.getSystemMsg().size() > 0) {
+                player.sendPacket(new SystemMessage2(condition.getSystemMsg()).addItemName(itemId()));
             } else {
-                player.sendPacket(_condition.getSystemMsg());
+                player.sendPacket(condition.getSystemMsg());
             }
         }
 
@@ -617,7 +613,7 @@ public abstract class ItemTemplate extends StatTemplate {
     }
 
     public void setCondition(Condition condition) {
-        _condition = condition;
+        this.condition = condition;
     }
 
     private boolean isEnchantable() {
@@ -668,40 +664,36 @@ public abstract class ItemTemplate extends StatTemplate {
         return handler;
     }
 
-    public void setHandler(IItemHandler handler) {
+    public final void setHandler(IItemHandler handler) {
         this.handler = handler;
     }
 
-    public int getReuseDelay() {
-        return _reuseDelay;
+    public final int getReuseDelay() {
+        return reuseDelay;
     }
 
     public int getReuseGroup() {
-        return _reuseGroup;
+        return reuseGroup;
     }
 
     public int getDisplayReuseGroup() {
-        return _reuseGroup < 0 ? -1 : _reuseGroup;
+        return reuseGroup < 0 ? -1 : reuseGroup;
     }
 
     public int getAgathionEnergy() {
-        return _agathionEnergy;
+        return agathionEnergy;
     }
 
-    public void addEnchantOptions(int level, int[] options) {
-        if (_enchantOptions.isEmpty()) {
-            _enchantOptions = new HashMap<>();
-        }
-
-        _enchantOptions.put(level, options);
+    public void addEnchantOptions(int level, List<Integer> options) {
+        enchantOptions.put(level, options);
     }
 
-    public Map<Integer, int[]> getEnchantOptions() {
-        return _enchantOptions;
+    public Map<Integer, List<Integer>> getEnchantOptions() {
+        return enchantOptions;
     }
 
     public ReuseType getReuseType() {
-        return _reuseType;
+        return reuseType;
     }
 
     public boolean isShield() {
@@ -717,7 +709,7 @@ public abstract class ItemTemplate extends StatTemplate {
     }
 
     public boolean isMasterwork() {
-        return _masterwork;
+        return masterwork;
     }
 
     public int getMasterworkConvert() {
@@ -725,14 +717,14 @@ public abstract class ItemTemplate extends StatTemplate {
     }
 
     public void addAugmentationInfo(AugmentationInfo augmentationInfo) {
-        if (_augmentationInfos.isEmpty()) {
-            _augmentationInfos = new HashMap<>();
+        if (augmentationInfos.isEmpty()) {
+            augmentationInfos = new HashMap<>();
         }
-        _augmentationInfos.put(augmentationInfo.getMineralId(), augmentationInfo);
+        augmentationInfos.put(augmentationInfo.getMineralId(), augmentationInfo);
     }
 
     public Map<Integer, AugmentationInfo> getAugmentationInfos() {
-        return _augmentationInfos;
+        return augmentationInfos;
     }
 
     public enum ReuseType {
@@ -794,11 +786,7 @@ public abstract class ItemTemplate extends StatTemplate {
          * Dyes, lifestones
          */
         MISC,
-
         EXTRACTABLE,
-        /**
-         * All other
-         */
         OTHER
     }
 

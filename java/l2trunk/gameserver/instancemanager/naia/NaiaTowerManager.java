@@ -20,7 +20,7 @@ public final class NaiaTowerManager {
     private static final Map<Integer, List<Player>> _roomsDone = new HashMap<>();
     private static final Map<Integer, Long> _groupTimer = new HashMap<>();
     private static HashMap<Integer, Boolean> lockedRooms;
-    private static Map<Integer, List<NpcInstance>> _roomMobs;
+    private static Map<Integer, List<NpcInstance>> roomMobs;
     private static List<NpcInstance> _roomMobList;
     private static long _towerAccessible = 0;
     private static int _index = 0;
@@ -31,10 +31,10 @@ public final class NaiaTowerManager {
             for (int i = 18494; i <= 18505; i++)
                 lockedRooms.put(i, false);
 
-            _roomMobs = new HashMap<>();
+            roomMobs = new HashMap<>();
             for (int i = 18494; i <= 18505; i++) {
                 _roomMobList = new ArrayList<>();
-                _roomMobs.put(i, _roomMobList);
+                roomMobs.put(i, _roomMobList);
             }
 
             _log.info("Naia Tower Manager: Loaded 12 rooms");
@@ -123,15 +123,15 @@ public final class NaiaTowerManager {
     }
 
     public static void addMobsToRoom(int roomId, List<NpcInstance> mob) {
-        _roomMobs.put(roomId, mob);
+        roomMobs.put(roomId, mob);
     }
 
     public static List<NpcInstance> getRoomMobs(int roomId) {
-        return _roomMobs.get(roomId);
+        return roomMobs.get(roomId);
     }
 
     public static void removeRoomMobs(int roomId) {
-        _roomMobs.get(roomId).clear();
+        roomMobs.get(roomId).clear();
     }
 
     private static class GroupTowerTimer extends RunnableImpl {

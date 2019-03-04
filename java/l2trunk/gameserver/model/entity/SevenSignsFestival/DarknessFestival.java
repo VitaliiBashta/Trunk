@@ -26,7 +26,7 @@ public final class DarknessFestival extends Reflection {
     private final int _cabal;
     private int currentState = 0;
     private boolean _challengeIncreased = false;
-    private Future<?> _spawnTimerTask;
+    private Future<?> spawnTimerTask;
 
     public DarknessFestival(Party party, int cabal, int level) {
         super();
@@ -70,7 +70,7 @@ public final class DarknessFestival extends Reflection {
             case 0:
                 currentState = FESTIVAL_FIRST_SPAWN;
 
-                _spawnTimerTask = ThreadPoolManager.INSTANCE.schedule(() -> {
+                spawnTimerTask = ThreadPoolManager.INSTANCE.schedule(() -> {
                     spawnFestivalMonsters(0);
                     sendMessageToParticipants("Go!");
                     scheduleNext();
@@ -79,7 +79,7 @@ public final class DarknessFestival extends Reflection {
             case FESTIVAL_FIRST_SPAWN:
                 currentState = FESTIVAL_SECOND_SPAWN;
 
-                _spawnTimerTask = ThreadPoolManager.INSTANCE.schedule(new RunnableImpl() {
+                spawnTimerTask = ThreadPoolManager.INSTANCE.schedule(new RunnableImpl() {
                     @Override
                     public void runImpl() {
                         spawnFestivalMonsters(2);
@@ -91,7 +91,7 @@ public final class DarknessFestival extends Reflection {
             case FESTIVAL_SECOND_SPAWN:
                 currentState = FESTIVAL_CHEST_SPAWN;
 
-                _spawnTimerTask = ThreadPoolManager.INSTANCE.schedule(new RunnableImpl() {
+                spawnTimerTask = ThreadPoolManager.INSTANCE.schedule(new RunnableImpl() {
                     @Override
                     public void runImpl() {
                         spawnFestivalMonsters(3);
@@ -152,9 +152,9 @@ public final class DarknessFestival extends Reflection {
         if (isCollapseStarted())
             return;
 
-        if (_spawnTimerTask != null) {
-            _spawnTimerTask.cancel(false);
-            _spawnTimerTask = null;
+        if (spawnTimerTask != null) {
+            spawnTimerTask.cancel(false);
+            spawnTimerTask = null;
         }
 
         if (SevenSigns.INSTANCE.getCurrentPeriod() == SevenSigns.PERIOD_COMPETITION && getParty() != null) {

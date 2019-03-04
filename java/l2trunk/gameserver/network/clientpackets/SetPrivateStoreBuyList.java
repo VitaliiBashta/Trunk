@@ -24,7 +24,7 @@ public class SetPrivateStoreBuyList extends L2GameClientPacket {
     @Override
     protected void readImpl() {
         _count = readD();
-        if (_count * 40 > _buf.remaining() || _count > Short.MAX_VALUE || _count < 1) {
+        if (_count * 40 > buf.remaining() || _count > Short.MAX_VALUE || _count < 1) {
             _count = 0;
             return;
         }

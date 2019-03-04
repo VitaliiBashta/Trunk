@@ -39,7 +39,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
-public class DominionSiegeEvent extends SiegeEvent<Dominion, SiegeClanObject> {
+public final class DominionSiegeEvent extends SiegeEvent<Dominion, SiegeClanObject> {
     public static final int KILL_REWARD = 0;
     public static final int ONLINE_REWARD = 1;
     public static final int STATIC_BADGES = 2;
@@ -47,19 +47,19 @@ public class DominionSiegeEvent extends SiegeEvent<Dominion, SiegeClanObject> {
     public static final String ATTACKER_PLAYERS = "attacker_players";
     public static final String DEFENDER_PLAYERS = "defender_players";
     public static final String DISGUISE_PLAYERS = "disguise_players";
-    public static final String TERRITORY_NPC = "territory_npc";
+    static final String TERRITORY_NPC = "territory_npc";
     public static final String CATAPULT = "catapult";
     public static final String CATAPULT_DOORS = "catapult_doors";
     private static final Logger LOG = LoggerFactory.getLogger(DominionSiegeEvent.class);
     //
     private static final int REWARD_MAX = 3;
-    private final Map<Integer, int[]> _playersRewards = new ConcurrentHashMap<>();
+    private final Map<Integer, int[]> playersRewards = new ConcurrentHashMap<>();
     private DominionSiegeRunnerEvent _runnerEvent;
     private Quest _forSakeQuest;
 
     public DominionSiegeEvent(StatsSet set) {
         super(set);
-        _killListener = new KillListener();
+        killListener = new KillListener();
         _doorDeathListener = new DoorDeathListener();
     }
 
@@ -90,7 +90,7 @@ public class DominionSiegeEvent extends SiegeEvent<Dominion, SiegeClanObject> {
         List<DominionSiegeEvent> dominions = new ArrayList<>(9);
         for (Dominion d : registeredDominions)
             if (d.getSiegeDate().getTimeInMillis() != 0 && d != getResidence())
-                dominions.add(d.<DominionSiegeEvent>getSiegeEvent());
+                dominions.add(d.getSiegeEvent());
 
         SiegeClanObject ownerClan = new SiegeClanObject(DEFENDERS, getResidence().getOwner(), 0);
 
@@ -441,23 +441,21 @@ public class DominionSiegeEvent extends SiegeEvent<Dominion, SiegeClanObject> {
     //                                                                   Rewards
     //========================================================================================================================================================================
     public void setReward(int objectId, int type, int v) {
-        int val[] = _playersRewards.get(objectId);
-        if (val == null)
-            _playersRewards.put(objectId, val = new int[REWARD_MAX]);
+        int[] val = playersRewards.computeIfAbsent(objectId, k -> new int[REWARD_MAX]);
 
         val[type] = v;
     }
 
     public void addReward(Player player, int type, int v) {
-        int val[] = _playersRewards.get(player.objectId());
+        int[] val = playersRewards.get(player.objectId());
         if (val == null)
-            _playersRewards.put(player.objectId(), val = new int[REWARD_MAX]);
+            playersRewards.put(player.objectId(), val = new int[REWARD_MAX]);
 
         val[type] += v;
     }
 
     public int getReward(Player player, int type) {
-        int val[] = _playersRewards.get(player.objectId());
+        int[] val = playersRewards.get(player.objectId());
         if (val == null)
             return 0;
         else
@@ -465,18 +463,18 @@ public class DominionSiegeEvent extends SiegeEvent<Dominion, SiegeClanObject> {
     }
 
     public void clearReward(int objectId) {
-        if (_playersRewards.containsKey(objectId)) {
-            _playersRewards.remove(objectId);
+        if (playersRewards.containsKey(objectId)) {
+            playersRewards.remove(objectId);
             DominionRewardDAO.getInstance().delete(getResidence(), objectId);
         }
     }
 
     public Collection<Map.Entry<Integer, int[]>> getRewards() {
-        return _playersRewards.entrySet();
+        return playersRewards.entrySet();
     }
 
     public int[] calculateReward(Player player) {
-        int rewards[] = _playersRewards.get(player.objectId());
+        int[] rewards = playersRewards.get(player.objectId());
         if (rewards == null)
             return null;
 

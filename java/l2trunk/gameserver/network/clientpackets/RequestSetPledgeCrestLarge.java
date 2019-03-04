@@ -15,7 +15,7 @@ public class RequestSetPledgeCrestLarge extends L2GameClientPacket {
     @Override
     protected void readImpl() {
         _length = readD();
-        if (_length == CrestCache.LARGE_CREST_SIZE && _length == _buf.remaining()) {
+        if (_length == CrestCache.LARGE_CREST_SIZE && _length == buf.remaining()) {
             _data = new byte[_length];
             readB(_data);
         }

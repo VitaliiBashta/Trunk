@@ -12,7 +12,7 @@ public final class ExShowFortressInfo extends L2GameServerPacket {
     private final List<FortressInfo> infos;
 
     public ExShowFortressInfo() {
-        List<Fortress> forts = ResidenceHolder.getResidenceList(Fortress.class);
+        List<Fortress> forts = ResidenceHolder.getFortresses();
         infos = new ArrayList<>(forts.size());
         for (Fortress fortress : forts) {
             Clan owner = fortress.getOwner();

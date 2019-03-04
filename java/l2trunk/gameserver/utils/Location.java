@@ -12,6 +12,7 @@ import org.dom4j.Element;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import static l2trunk.commons.lang.NumberUtils.toInt;
 
@@ -335,6 +336,20 @@ public class Location extends Point3D implements SpawnRange {
     @Override
     public Location getRandomLoc(int ref) {
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Location)) return false;
+        if (!super.equals(o)) return false;
+        Location location = (Location) o;
+        return h == location.h;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(h);
     }
 
     public Location rnd(int min, int max, boolean change) {

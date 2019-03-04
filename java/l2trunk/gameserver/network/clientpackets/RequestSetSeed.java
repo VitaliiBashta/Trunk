@@ -22,15 +22,15 @@ import java.util.List;
  * ]
  */
 public final class RequestSetSeed extends L2GameClientPacket {
-    private int _count, _manorId;
+    private int _count, manorId;
 
     private long[] _items; // _size*3
 
     @Override
     protected void readImpl() {
-        _manorId = readD();
+        manorId = readD();
         _count = readD();
-        if (_count * 20 > _buf.remaining() || _count > Short.MAX_VALUE || _count < 1) {
+        if (_count * 20 > buf.remaining() || _count > Short.MAX_VALUE || _count < 1) {
             _count = 0;
             return;
         }
@@ -57,7 +57,7 @@ public final class RequestSetSeed extends L2GameClientPacket {
             return;
         }
 
-        Castle caslte = ResidenceHolder.getResidence(Castle.class, _manorId);
+        Castle caslte = ResidenceHolder.getCastle(manorId);
         if (caslte.getOwnerId() != activeChar.getClanId() // clan owns castle
                 || (activeChar.getClanPrivileges() & Clan.CP_CS_MANOR_ADMIN) != Clan.CP_CS_MANOR_ADMIN) // has manor rights
         {

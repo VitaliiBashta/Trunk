@@ -19,8 +19,8 @@ public class MessengerInstance extends NpcInstance {
     public MessengerInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
 
-        _siegeDialog = template.getAIParams().getString("siege_dialog");
-        _ownerDialog = template.getAIParams().getString("owner_dialog");
+        _siegeDialog = template.getAiParams().getString("siege_dialog");
+        _ownerDialog = template.getAiParams().getString("owner_dialog");
     }
 
     @Override

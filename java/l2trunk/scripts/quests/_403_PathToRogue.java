@@ -134,10 +134,10 @@ public final class _403_PathToRogue extends Quest {
                 htmltext = "captain_bezique_q0403_07.htm";
             else if (cond == 4 && st.haveQuestItem(HORSESHOE_OF_LIGHT_ID)) {
                 htmltext = "captain_bezique_q0403_08.htm";
-                st.takeItems(HORSESHOE_OF_LIGHT_ID, 1);
+                st.takeItems(HORSESHOE_OF_LIGHT_ID);
                 st.giveItems(WANTED_BILL_ID);
                 st.setCond(5);
-            } else if (cond > 1 && st.haveQuestItem(NETIS_BOW_ID) && st.haveQuestItem(NETIS_DAGGER_ID) && st.getQuestItemsCount(WANTED_BILL_ID) < 1)
+            } else if (cond > 1 && st.haveAllQuestItems(NETIS_BOW_ID,NETIS_DAGGER_ID) && st.getQuestItemsCount(WANTED_BILL_ID) < 1)
                 htmltext = "captain_bezique_q0403_10.htm";
             else if (cond == 5 && st.haveQuestItem(WANTED_BILL_ID))
                 htmltext = "captain_bezique_q0403_11.htm";

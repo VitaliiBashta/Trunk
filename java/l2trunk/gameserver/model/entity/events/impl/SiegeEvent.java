@@ -52,20 +52,20 @@ public abstract class SiegeEvent<R extends Residence, S extends SiegeClanObject>
     private static final String HOUR_OF_DAY = "hour_of_day";
     private static final String REGISTRATION = "registration";
     private static ScheduledFuture<?> _resultsThread = null;
-    final int _dayOfWeek;
-    final int _hourOfDay;
+    final int dayOfWeek;
+    final int hourOfDay;
     private final List<SummonInstance> siegeSummons = new ArrayList<>();
     R residence;
     Clan _oldOwner;
-    OnKillListener _killListener = new KillListener();
+    OnKillListener killListener = new KillListener();
     OnDeathListener _doorDeathListener = new DoorDeathListener();
     private boolean _isInProgress;
     private boolean _isRegistrationOver;
 
     public SiegeEvent(StatsSet set) {
         super(set);
-        _dayOfWeek = set.getInteger(DAY_OF_WEEK, 0);
-        _hourOfDay = set.getInteger(HOUR_OF_DAY, 0);
+        dayOfWeek = set.getInteger(DAY_OF_WEEK);
+        hourOfDay = set.getInteger(HOUR_OF_DAY);
     }
 
     static void showResults() {
@@ -127,8 +127,8 @@ public abstract class SiegeEvent<R extends Residence, S extends SiegeClanObject>
         final Calendar startSiegeDate = getResidence().getSiegeDate();
         if (onInit) {
             if (startSiegeDate.getTimeInMillis() <= System.currentTimeMillis()) {
-                startSiegeDate.set(Calendar.DAY_OF_WEEK, _dayOfWeek);
-                startSiegeDate.set(Calendar.HOUR_OF_DAY, _hourOfDay);
+                startSiegeDate.set(Calendar.DAY_OF_WEEK, dayOfWeek);
+                startSiegeDate.set(Calendar.HOUR_OF_DAY, hourOfDay);
 
                 validateSiegeDate(startSiegeDate, 1);
                 getResidence().setJdbcState(JdbcEntityState.UPDATED);
@@ -463,20 +463,20 @@ public abstract class SiegeEvent<R extends Residence, S extends SiegeClanObject>
 
     @Override
     public void onAddEvent(GameObject object) {
-        if (_killListener == null)
+        if (killListener == null)
             return;
 
         if (object instanceof Player)
-            ((Player) object).addListener(_killListener);
+            ((Player) object).addListener(killListener);
     }
 
     @Override
     public void onRemoveEvent(GameObject object) {
-        if (_killListener == null)
+        if (killListener == null)
             return;
 
         if (object instanceof Player)
-            ((Player) object).removeListener(_killListener);
+            ((Player) object).removeListener(killListener);
     }
 
     @Override

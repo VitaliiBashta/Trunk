@@ -217,7 +217,7 @@ public enum AutoSpawnManager {
 
                 // If there are no set co-ordinates, cancel the spawn task.
                 if (locationList.size() == 0) {
-                    _log.info("AutoSpawnHandler: No location co-ords specified for spawn instance (Object ID = " + objectId + ").");
+                    LOG.info("AutoSpawnHandler: No location co-ords specified for spawn instance (Object ID = " + objectId + ").");
                     return;
                 }
 
@@ -280,7 +280,7 @@ public enum AutoSpawnManager {
                     ThreadPoolManager.INSTANCE.schedule(rd, spawnInst.despawnDelay - 1000);
                 }
             } catch (RuntimeException e) {
-                _log.warn("AutoSpawnHandler: An error occurred while initializing spawn instance (Object ID = " +
+                LOG.warn("AutoSpawnHandler: An error occurred while initializing spawn instance (Object ID = " +
                         objectId + "): ", e);
             }
         }
@@ -303,7 +303,7 @@ public enum AutoSpawnManager {
                     spawnInst.removeAttackable(npcInst);
                 });
             } catch (RuntimeException e) {
-                _log.warn("AutoSpawnHandler: An error occurred while despawning spawn (Object ID = " + objectId + "): ", e);
+                LOG.warn("AutoSpawnHandler: An error occurred while despawning spawn (Object ID = " + objectId + "): ", e);
             }
         }
     }

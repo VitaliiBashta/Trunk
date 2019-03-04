@@ -40,7 +40,7 @@ public class SkillTreeTable {
         if (learn == null)
             return;
 
-        if (learn.getMinLevel() > player.getLevel() + 5) // Official +9 (Alexander)
+        if (learn.minLevel > player.getLevel() + 5) // Official +9 (Alexander)
         {
             player.removeSkill(skill.id, true);
 
@@ -50,7 +50,7 @@ public class SkillTreeTable {
                 SkillLearn learn2 = SkillAcquireHolder.getSkillLearn(player, skill.id, i, AcquireType.NORMAL);
                 if (learn2 == null)
                     continue;
-                if (learn2.getMinLevel() > player.getLevel() + 6) // Official +10 (Alexander)
+                if (learn2.minLevel > player.getLevel() + 6) // Official +10 (Alexander)
                     continue;
 
                 Skill newSkill = SkillTable.INSTANCE.getInfo(skill.id, i);

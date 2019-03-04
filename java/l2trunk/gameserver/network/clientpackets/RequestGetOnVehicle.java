@@ -5,8 +5,8 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.boat.Boat;
 import l2trunk.gameserver.utils.Location;
 
-public class RequestGetOnVehicle extends L2GameClientPacket {
-    private final Location _loc = new Location();
+public final class RequestGetOnVehicle extends L2GameClientPacket {
+    private  Location loc;
     private int _objectId;
 
     /**
@@ -15,9 +15,7 @@ public class RequestGetOnVehicle extends L2GameClientPacket {
     @Override
     protected void readImpl() {
         _objectId = readD();
-        _loc.x = readD();
-        _loc.y = readD();
-        _loc.z = readD();
+        loc = Location.of(readD(),readD(),readD());
     }
 
     @Override
@@ -31,6 +29,6 @@ public class RequestGetOnVehicle extends L2GameClientPacket {
             return;
 
         player.stablePoint = boat.getCurrentWay().getReturnLoc();
-        boat.addPlayer(player, _loc);
+        boat.addPlayer(player, loc);
     }
 }

@@ -1,6 +1,5 @@
 package l2trunk.gameserver.network.clientpackets;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Player;
@@ -21,7 +20,7 @@ public final class RequestPrivateStoreBuy extends L2GameClientPacket {
     protected void readImpl() {
         _sellerId = readD();
         _count = readD();
-        if (_count * 20 > _buf.remaining() || _count > Short.MAX_VALUE || _count < 1) {
+        if (_count * 20 > buf.remaining() || _count > Short.MAX_VALUE || _count < 1) {
             _count = 0;
             return;
         }

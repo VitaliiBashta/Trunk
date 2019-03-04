@@ -52,6 +52,7 @@ public final class _007_ATripBegins extends Quest {
         String htmltext = "noquest";
         int npcId = npc.getNpcId();
         int cond = st.getCond();
+        boolean haveQuestItem = st.haveQuestItem(ARIELS_RECOMMENDATION);
         if (npcId == MIRABEL) {
             if (cond == 0)
                 if (st.player.getRace() == Race.elf && st.player.getLevel() >= 3)
@@ -65,14 +66,14 @@ public final class _007_ATripBegins extends Quest {
             else if (cond == 3)
                 htmltext = "mint_q0007_0301.htm";
         } else if (npcId == ARIEL) {
-            if (cond == 1 && st.getQuestItemsCount(ARIELS_RECOMMENDATION) == 0)
+            if (cond == 1 && !haveQuestItem)
                 htmltext = "ariel_q0007_0101.htm";
             else if (cond == 2)
                 htmltext = "ariel_q0007_0202.htm";
         } else if (npcId == ASTERIOS)
-            if (cond == 2 && st.haveQuestItem(ARIELS_RECOMMENDATION))
+            if (cond == 2 && haveQuestItem)
                 htmltext = "ozzy_q0007_0201.htm";
-            else if (cond == 2 && st.getQuestItemsCount(ARIELS_RECOMMENDATION) == 0)
+            else if (cond == 2)
                 htmltext = "ozzy_q0007_0302.htm";
             else if (cond == 3)
                 htmltext = "ozzy_q0007_0303.htm";

@@ -12,39 +12,39 @@ import l2trunk.scripts.ai.door.SiegeDoor;
 
 public final class DoorTemplate extends CharTemplate {
     public final String name;
-    private final int _id;
+    private final int id;
     private final DoorType doortype;
-    private final boolean _unlockable;
-    private final boolean _isHPVisible;
-    private final boolean _opened;
-    private final boolean _targetable;
-    private final Polygon _polygon;
-    private final Location _loc;
+    private final boolean unlockable;
+    private final boolean isHPVisible;
+    private final boolean opened;
+    private final boolean targetable;
+    private final Polygon polygon;
+    private final Location loc;
     private final int key;
-    private final int _openTime;
-    private final int _rndTime;
-    private final int _closeTime;
+    private final int openTime;
+    private final int rndTime;
+    private final int closeTime;
     private final int masterDoor;
-    private final StatsSet _aiParams;
+    private final StatsSet aiParams;
     private String classAI;
 
     public DoorTemplate(StatsSet set) {
         super(set);
-        _id = set.getInteger("uid");
+        id = set.getInteger("uid");
         name = set.getString("name");
         doortype = set.getEnum("door_type", DoorType.class, DoorType.DOOR);
-        _unlockable = set.getBool("unlockable", false);
-        _isHPVisible = set.getBool("show_hp", false);
-        _opened = set.getBool("opened", false);
-        _targetable = set.getBool("targetable", true);
-        _loc = set.getLocation("pos");
-        _polygon = set.getPolygon("shape");
+        unlockable = set.isSet("unlockable");
+        isHPVisible = set.isSet("show_hp");
+        opened = set.isSet("opened");
+        targetable = set.isSet("targetable");
+        loc = set.getLocation("pos");
+        polygon = set.getPolygon("shape");
         key = set.getInteger("key");
-        _openTime = set.getInteger("open_time");
-        _rndTime = set.getInteger("random_time");
-        _closeTime = set.getInteger("close_time");
+        openTime = set.getInteger("open_time");
+        rndTime = set.getInteger("random_time");
+        closeTime = set.getInteger("close_time");
         masterDoor = set.getInteger("master_door");
-        _aiParams = set.getStats("ai_params");
+        aiParams = set.getStats("ai_params");
 
         classAI = set.getString("ai", "DoorAI");
     }
@@ -67,7 +67,7 @@ public final class DoorTemplate extends CharTemplate {
 
     @Override
     public int getNpcId() {
-        return _id;
+        return id;
     }
 
     public String getName() {
@@ -79,15 +79,15 @@ public final class DoorTemplate extends CharTemplate {
     }
 
     public boolean isUnlockable() {
-        return _unlockable;
+        return unlockable;
     }
 
     public boolean isHPVisible() {
-        return _isHPVisible;
+        return isHPVisible;
     }
 
     public Polygon getPolygon() {
-        return _polygon;
+        return polygon;
     }
 
     public int getKey() {
@@ -95,27 +95,27 @@ public final class DoorTemplate extends CharTemplate {
     }
 
     public boolean isOpened() {
-        return _opened;
+        return opened;
     }
 
     public Location getLoc() {
-        return _loc;
+        return loc;
     }
 
     public int getOpenTime() {
-        return _openTime;
+        return openTime;
     }
 
     public int getRandomTime() {
-        return _rndTime;
+        return rndTime;
     }
 
     public int getCloseTime() {
-        return _closeTime;
+        return closeTime;
     }
 
     public boolean isTargetable() {
-        return _targetable;
+        return targetable;
     }
 
     public int getMasterDoor() {
@@ -123,7 +123,7 @@ public final class DoorTemplate extends CharTemplate {
     }
 
     public StatsSet getAIParams() {
-        return _aiParams;
+        return aiParams;
     }
 
     public enum DoorType {

@@ -9,7 +9,7 @@ import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.Location;
 
 public class AirShipControllerInstance extends NpcInstance {
-    public AirShipControllerInstance(int objectID, NpcTemplate template) {
+    AirShipControllerInstance(int objectID, NpcTemplate template) {
         super(objectID, template);
     }
 

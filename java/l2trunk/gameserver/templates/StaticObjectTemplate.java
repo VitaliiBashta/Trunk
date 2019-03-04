@@ -27,7 +27,7 @@ public final class StaticObjectTemplate {
         x = set.getInteger("x");
         y = set.getInteger("y");
         z = set.getInteger("z");
-        spawn = set.getBool("spawn");
+        spawn = set.isSet("spawn");
     }
 
     public String getName() {

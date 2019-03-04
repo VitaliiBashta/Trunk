@@ -257,15 +257,15 @@ public final class Heart extends Functions implements ScriptFile, OnDeathListene
 
     private void spawnEventManagers() {
         final List<Location> EVENT_MANAGERS = List.of(
-                new Location(146936, 26654, -2208, 16384), // Aden
-                new Location(82168, 148842, -3464, 7806), // Giran
-                new Location(82204, 53259, -1488, 16384), // Oren
-                new Location(18924, 145782, -3088, 44034), // Dion
-                new Location(111794, 218967, -3536, 20780), // Heine
-                new Location(-14539, 124066, -3112, 50874), // Gludio
-                new Location(147271, -55573, -2736, 60304), // Goddard
-                new Location(87801, -143150, -1296, 28800), // Shuttgard
-                new Location(-80684, 149458, -3040, 16384)); // Gludin
+                Location.of(146936, 26654, -2208, 16384), // Aden
+                Location.of(82168, 148842, -3464, 7806), // Giran
+                Location.of(82204, 53259, -1488, 16384), // Oren
+                Location.of(18924, 145782, -3088, 44034), // Dion
+                Location.of(111794, 218967, -3536, 20780), // Heine
+                Location.of(-14539, 124066, -3112, 50874), // Gludio
+                Location.of(147271, -55573, -2736, 60304), // Goddard
+                Location.of(87801, -143150, -1296, 28800), // Shuttgard
+                Location.of(-80684, 149458, -3040, 16384)); // Gludin
 
         SPAWNS = SpawnNPCs(EVENT_MANAGER_ID, EVENT_MANAGERS);
     }

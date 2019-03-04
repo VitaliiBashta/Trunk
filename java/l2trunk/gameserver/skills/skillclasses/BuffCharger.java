@@ -12,7 +12,7 @@ public final class BuffCharger extends Skill {
 
     public BuffCharger(StatsSet set) {
         super(set);
-        target = set.getInteger("targetBuff", 0);
+        target = set.getInteger("targetBuff");
     }
 
     @Override

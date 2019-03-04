@@ -323,39 +323,39 @@ public final class _234_FatesWhisper extends Quest {
                 st.takeItems(REORINS_MOLD);
                 st.setCond(COND11);
                 htmltext = "31002-09.htm";
-            } else if (cond == COND11 && st.getQuestItemsCount(CRYSTAL_B) >= 984)
+            } else if (cond == COND11 && st.haveQuestItem(CRYSTAL_B, 984))
                 htmltext = "31002-10.htm";
             else if (cond == COND12)
                 htmltext = "a-grade.htm";
-        } else if (npcId == CABRIOCOFFER && cond == COND1 && st.getQuestItemsCount(REIRIAS_SOUL_ORB) == 0) {
+        } else if (npcId == CABRIOCOFFER && cond == COND1 && !st.haveQuestItem(REIRIAS_SOUL_ORB)) {
             st.giveItems(REIRIAS_SOUL_ORB, 1, false);
             htmltext = "31027-01.htm";
-        } else if (npcId == CHEST_HALLATE && cond == COND2 && st.getQuestItemsCount(HALLATES_INFERNIUM_SCEPTER) == 0)
+        } else if (npcId == CHEST_HALLATE && cond == COND2 && !st.haveQuestItem(HALLATES_INFERNIUM_SCEPTER) )
             htmltext = "31030-01.htm";
-        else if (npcId == CHEST_KERNON && cond == COND2 && st.getQuestItemsCount(KERNONS_INFERNIUM_SCEPTER) == 0)
+        else if (npcId == CHEST_KERNON && cond == COND2 && !st.haveQuestItem(KERNONS_INFERNIUM_SCEPTER) )
             htmltext = "31028-01.htm";
-        else if (npcId == CHEST_GOLKONDA && cond == COND2 && st.getQuestItemsCount(GOLCONDAS_INFERNIUM_SCEPTER) == 0)
+        else if (npcId == CHEST_GOLKONDA && cond == COND2 && !st.haveQuestItem(GOLCONDAS_INFERNIUM_SCEPTER))
             htmltext = "31029-01.htm";
-        else if (npcId == CLIFF && cond == COND3 && st.getQuestItemsCount(INFERNIUM_VARNISH) == 0)
+        else if (npcId == CLIFF && cond == COND3 && !st.haveQuestItem(INFERNIUM_VARNISH))
             htmltext = "30182-01.htm";
-        else if (npcId == FERRIS && cond == COND4 && st.getQuestItemsCount(REORINS_HAMMER) == 0) {
+        else if (npcId == FERRIS && cond == COND4 && !st.haveQuestItem(REORINS_HAMMER) ) {
             st.giveItems(REORINS_HAMMER, 1, false);
             htmltext = "30847-01.htm";
-        } else if (npcId == ZENKIN && st.getQuestItemsCount(REORINS_MOLD) == 0 && cond == COND5)
+        } else if (npcId == ZENKIN && !st.haveQuestItem(REORINS_MOLD) && cond == COND5)
             htmltext = "30178-01.htm";
         else if (npcId == KASPAR)
             if (cond == COND6)
                 htmltext = "30833-01.htm";
-            else if ((cond == COND7 || cond == COND9) && st.getQuestItemsCount(RED_PIPETTE_KNIFE) == 1) {
+            else if ((cond == COND7 || cond == COND9) && st.haveQuestItem(RED_PIPETTE_KNIFE)) {
                 st.setCond(COND10);
-                st.takeItems(RED_PIPETTE_KNIFE, -1);
-                st.giveItems(REORINS_MOLD, 1, false);
+                st.takeItems(RED_PIPETTE_KNIFE);
+                st.giveItems(REORINS_MOLD);
                 htmltext = "30833-03.htm";
             } else if (cond == COND9 || cond == COND8)
-                if (st.getQuestItemsCount(BLOODED_FABRIC) >= 30) {
+                if (st.haveQuestItem(BLOODED_FABRIC, 30)) {
                     st.setCond(COND10);
-                    st.takeItems(BLOODED_FABRIC, 30);
-                    st.giveItems(REORINS_MOLD, 1, false);
+                    st.takeItems(BLOODED_FABRIC);
+                    st.giveItems(REORINS_MOLD);
                     htmltext = "30833-03.htm";
                 } else if (st.getQuestItemsCount(BloodStainedCloth, BLOODED_FABRIC) >= 30) {
                     st.setCond(COND10);
@@ -409,7 +409,7 @@ public final class _234_FatesWhisper extends Quest {
         }
         if (cond == COND8 && (npcId == GUARDIAN_ANGEL || npcId == SEAL_ANGEL)) {
             long count = st.getQuestItemsCount(BloodStainedCloth);
-            if (st.getQuestItemsCount(WhiteCloth) > 0 && count < 30 && Rnd.chance(33)) {
+            if (st.haveQuestItem(WhiteCloth) && count < 30 && Rnd.chance(33)) {
                 st.giveItems(BloodStainedCloth);
                 if (count >= 29) {
                     st.takeItems(WhiteCloth);
@@ -423,11 +423,11 @@ public final class _234_FatesWhisper extends Quest {
     @Override
     public void onAttack(NpcInstance npc, QuestState st) {
         int cond = st.getCond();
-        if ((cond == COND7 || cond == COND9) && npc.getNpcId() == BAIUM && st.getQuestItemsCount(PIPETTE_KNIFE) >= 1 && st.getQuestItemsCount(RED_PIPETTE_KNIFE) == 0 && st.getItemEquipped(Inventory.PAPERDOLL_RHAND) == PIPETTE_KNIFE) {
+        if ((cond == COND7 || cond == COND9) && npc.getNpcId() == BAIUM && st.haveQuestItem(PIPETTE_KNIFE)  && !st.haveQuestItem(RED_PIPETTE_KNIFE)  && st.getItemEquipped(Inventory.PAPERDOLL_RHAND) == PIPETTE_KNIFE) {
             if (Rnd.chance(50))
                 Functions.npcSay(npc, "Who dares to try steal my blood?");
             st.takeItems(PIPETTE_KNIFE);
-            st.giveItems(RED_PIPETTE_KNIFE, 1, false);
+            st.giveItems(RED_PIPETTE_KNIFE);
             st.playSound(SOUND_ITEMGET);
         }
     }

@@ -52,8 +52,7 @@ public enum CastleManorManager {
 
     private void load() {
         try (Connection con = DatabaseFactory.getInstance().getConnection()) {
-            List<Castle> castleList = ResidenceHolder.getResidenceList(Castle.class);
-            for (Castle castle : castleList) {
+            for (Castle castle : ResidenceHolder.getCastles()) {
                 List<SeedProduction> production = new ArrayList<>();
                 List<SeedProduction> productionNext = new ArrayList<>();
                 List<CropProcure> procure = new ArrayList<>();
@@ -107,7 +106,7 @@ public enum CastleManorManager {
     }
 
     public void init() {
-        if (ServerVariables.getString(var_name, "").isEmpty()) {
+        if (!ServerVariables.isSet(var_name)) {
             Calendar manorRefresh = Calendar.getInstance();
             manorRefresh.set(Calendar.HOUR_OF_DAY, MANOR_REFRESH);
             manorRefresh.set(Calendar.MINUTE, MANOR_REFRESH_MIN);
@@ -120,7 +119,8 @@ public enum CastleManorManager {
             periodApprove.set(Calendar.SECOND, 0);
             periodApprove.set(Calendar.MILLISECOND, 0);
             boolean isApproved = periodApprove.getTimeInMillis() < Calendar.getInstance().getTimeInMillis() && manorRefresh.getTimeInMillis() > Calendar.getInstance().getTimeInMillis();
-            ServerVariables.set("ManorApproved", isApproved);
+            if (isApproved) ServerVariables.set("ManorApproved");
+            else ServerVariables.unset("ManorApproved");
         }
 
         Calendar FirstDelay = Calendar.getInstance();
@@ -132,89 +132,86 @@ public enum CastleManorManager {
 
         underMaintenance = false;
         disabled = !Config.ALLOW_MANOR;
-        List<Castle> castleList = ResidenceHolder.getResidenceList(Castle.class);
-        castleList.forEach(c -> c.setNextPeriodApproved(ServerVariables.getBool("ManorApproved")));
+        ResidenceHolder.getCastles().forEach(c -> c.setNextPeriodApproved(ServerVariables.isSet("ManorApproved")));
     }
 
     private void setNextPeriod() {
-        List<Castle> castleList = ResidenceHolder.getResidenceList(Castle.class);
-        for (Castle c : castleList) {
-            if (c.getOwnerId() <= 0)
-                continue;
+        for (Castle c : ResidenceHolder.getCastles()) {
+            if (c.getOwnerId() > 0) {
+                Clan clan = ClanTable.INSTANCE.getClan(c.getOwnerId());
+                if (clan != null) {
+                    ClanWarehouse cwh = clan.getWarehouse();
 
-            Clan clan = ClanTable.INSTANCE.getClan(c.getOwnerId());
-            if (clan == null)
-                continue;
+                    for (CropProcure crop : c.getCropProcure(PERIOD_CURRENT)) {
+                        if (crop.getStartAmount() == 0)
+                            continue;
 
-            ClanWarehouse cwh = clan.getWarehouse();
+                        // adding bought crops to clan warehouse
+                        if (crop.getStartAmount() > crop.getAmount()) {
+                            LOG.info("Manor System [" + c.getName() + "]: Start Amount of Crop " + crop.getStartAmount() + " " +
+                                    "> Amount of current " + crop.getAmount());
+                            long count = crop.getStartAmount() - crop.getAmount();
 
-            for (CropProcure crop : c.getCropProcure(PERIOD_CURRENT)) {
-                if (crop.getStartAmount() == 0)
-                    continue;
+                            count = count * 90 / 100;
+                            if (count < 1 && Rnd.get(99) < 90)
+                                count = 1;
 
-                // adding bought crops to clan warehouse
-                if (crop.getStartAmount() > crop.getAmount()) {
-                    LOG.info("Manor System [" + c.getName() + "]: Start Amount of Crop " + crop.getStartAmount() + " " +
-                            "> Amount of current " + crop.getAmount());
-                    long count = crop.getStartAmount() - crop.getAmount();
+                            if (count >= 1) {
+                                int id = Manor.INSTANCE.getMatureCrop(crop.cropId);
+                                ItemInstance item = cwh.addItem(id, count, "CastleManorPeriod");
+                                Log.LogAddItem(clan, "Manor Period Start", item, count);
+                            }
+                        }
 
-                    count = count * 90 / 100;
-                    if (count < 1 && Rnd.get(99) < 90)
-                        count = 1;
+                        // reserved and not used money giving back to treasury
+                        if (crop.getAmount() > 0) {
+                            c.addToTreasuryNoTax(crop.getAmount() * crop.price, false, false);
+                            Log.add(c.getName() + "|" + crop.getAmount() * crop.price + "|ManorManager|" + crop.getAmount() + "*" + crop.price, "treasury");
+                        }
 
-                    if (count >= 1) {
-                        int id = Manor.INSTANCE.getMatureCrop(crop.cropId);
-                        ItemInstance item = cwh.addItem(id, count, "CastleManorPeriod");
-                        Log.LogAddItem(clan, "Manor Period Start", item, count);
+                        c.setCollectedShops(0);
+                        c.setCollectedSeed(0);
                     }
+
+                    c.setSeedProduction(c.getSeedProduction(PERIOD_NEXT), PERIOD_CURRENT);
+                    c.setCropProcure(c.getCropProcure(PERIOD_NEXT), PERIOD_CURRENT);
+
+                    long manor_cost = c.getManorCost(PERIOD_CURRENT);
+                    if (c.getTreasury() < manor_cost) {
+                        c.setSeedProduction(getNewSeedsList(c.getId()), PERIOD_NEXT);
+                        c.setCropProcure(getNewCropsList(c.getId()), PERIOD_NEXT);
+                        Log.add(c.getName() + "|" + manor_cost + "|ManorManager Error@setNextPeriod", "treasury");
+                    } else {
+                        List<SeedProduction> production = new ArrayList<>();
+                        List<CropProcure> procure = new ArrayList<>();
+                        for (SeedProduction s : c.getSeedProduction(PERIOD_CURRENT)) {
+                            s.setCanProduce(s.getStartProduce());
+                            production.add(s);
+                        }
+                        for (CropProcure cr : c.getCropProcure(PERIOD_CURRENT)) {
+                            cr.setAmount(cr.getStartAmount());
+                            procure.add(cr);
+                        }
+                        c.setSeedProduction(production, PERIOD_NEXT);
+                        c.setCropProcure(procure, PERIOD_NEXT);
+                    }
+
+                    c.saveCropData();
+                    c.saveSeedData();
+
+                    // Sending notification to a clan leader
+                    PlayerMessageStack.getInstance().mailto(clan.getLeaderId(), new SystemMessage2(SystemMsg.THE_MANOR_INFORMATION_HAS_BEEN_UPDATED));
+
+                    c.setNextPeriodApproved(false);
                 }
 
-                // reserved and not used money giving back to treasury
-                if (crop.getAmount() > 0) {
-                    c.addToTreasuryNoTax(crop.getAmount() * crop.price, false, false);
-                    Log.add(c.getName() + "|" + crop.getAmount() * crop.price + "|ManorManager|" + crop.getAmount() + "*" + crop.price, "treasury");
-                }
-
-                c.setCollectedShops(0);
-                c.setCollectedSeed(0);
             }
 
-            c.setSeedProduction(c.getSeedProduction(PERIOD_NEXT), PERIOD_CURRENT);
-            c.setCropProcure(c.getCropProcure(PERIOD_NEXT), PERIOD_CURRENT);
-
-            long manor_cost = c.getManorCost(PERIOD_CURRENT);
-            if (c.getTreasury() < manor_cost) {
-                c.setSeedProduction(getNewSeedsList(c.getId()), PERIOD_NEXT);
-                c.setCropProcure(getNewCropsList(c.getId()), PERIOD_NEXT);
-                Log.add(c.getName() + "|" + manor_cost + "|ManorManager Error@setNextPeriod", "treasury");
-            } else {
-                List<SeedProduction> production = new ArrayList<>();
-                List<CropProcure> procure = new ArrayList<>();
-                for (SeedProduction s : c.getSeedProduction(PERIOD_CURRENT)) {
-                    s.setCanProduce(s.getStartProduce());
-                    production.add(s);
-                }
-                for (CropProcure cr : c.getCropProcure(PERIOD_CURRENT)) {
-                    cr.setAmount(cr.getStartAmount());
-                    procure.add(cr);
-                }
-                c.setSeedProduction(production, PERIOD_NEXT);
-                c.setCropProcure(procure, PERIOD_NEXT);
-            }
-
-            c.saveCropData();
-            c.saveSeedData();
-
-            // Sending notification to a clan leader
-            PlayerMessageStack.getInstance().mailto(clan.getLeaderId(), new SystemMessage2(SystemMsg.THE_MANOR_INFORMATION_HAS_BEEN_UPDATED));
-
-            c.setNextPeriodApproved(false);
         }
     }
 
     private void approveNextPeriod() {
-        List<Castle> castleList = ResidenceHolder.getResidenceList(Castle.class);
-        for (Castle c : castleList) {
+        for (Castle c : ResidenceHolder.getCastles()) {
             // Castle has no owner
             if (c.getOwnerId() <= 0)
                 continue;
@@ -238,11 +235,9 @@ public enum CastleManorManager {
     }
 
     private List<SeedProduction> getNewSeedsList(int castleId) {
-        List<SeedProduction> seeds = new ArrayList<>();
-        List<Integer> seedsIds = Manor.INSTANCE.getSeedsForCastle(castleId);
-        for (int sd : seedsIds)
-            seeds.add(new SeedProduction(sd));
-        return seeds;
+        return Manor.INSTANCE.getSeedsForCastle(castleId).stream()
+                .map(SeedProduction::new)
+                .collect(Collectors.toList());
     }
 
     private List<CropProcure> getNewCropsList(int castleId) {
@@ -277,25 +272,11 @@ public enum CastleManorManager {
     }
 
     public void save() {
-        List<Castle> castleList = ResidenceHolder.getResidenceList(Castle.class);
-        castleList.forEach(c -> {
+        ResidenceHolder.getCastles().forEach(c -> {
             c.saveSeedData();
             c.saveCropData();
         });
     }
-
-//    public String getOwner(int castleId) {
-//        try (Connection con = DatabaseFactory.INSTANCE().getConnection();
-//             PreparedStatement statement = con.prepareStatement("SELECT clan_id FROM clan_data WHERE hasCastle = ? LIMIT 1")) {
-//            statement.setInt(1, castleId);
-//            ResultSet rs = statement.executeQuery();
-//            if (rs.next())
-//                return ClanTable.INSTANCE.getClan(rs.getInt("clan_id")).toString();
-//        } catch (SQLException e) {
-//            LOG.error("Error while selecting Manor Owners", e);
-//        }
-//        return null;
-//    }
 
     private class ManorTask extends RunnableImpl {
         @Override
@@ -303,28 +284,28 @@ public enum CastleManorManager {
             int H = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
             int M = Calendar.getInstance().get(Calendar.MINUTE);
 
-            if (ServerVariables.getBool("ManorApproved")) { // 06:00 - 20:00
+            if (ServerVariables.isSet("ManorApproved")) { // 06:00 - 20:00
                 if (H < NEXT_PERIOD_APPROVE || H > MANOR_REFRESH || H == MANOR_REFRESH && M >= MANOR_REFRESH_MIN) {
-                    ServerVariables.set(var_name, false);
+                    ServerVariables.unset(var_name);
                     setUnderMaintenance(true);
-                    _log.info("Manor System: Under maintenance mode started");
+                    LOG.info("Manor System: Under maintenance mode started");
                 }
             } else if (isUnderMaintenance()) { // 20:00 - 20:06
                 if (H != MANOR_REFRESH || M >= MANOR_REFRESH_MIN + MAINTENANCE_PERIOD) {
                     setUnderMaintenance(false);
-                    _log.info("Manor System: Next period started");
+                    LOG.info("Manor System: Next period started");
                     if (isDisabled())
                         return;
                     setNextPeriod();
                     try {
                         save();
                     } catch (RuntimeException e) {
-                        _log.info("Manor System: Failed to save manor data: ", e);
+                        LOG.info("Manor System: Failed to save manor data: ", e);
                     }
                 }
             } else if (H > NEXT_PERIOD_APPROVE && H < MANOR_REFRESH || H == NEXT_PERIOD_APPROVE && M >= NEXT_PERIOD_APPROVE_MIN) {
-                ServerVariables.set(var_name, true);
-                _log.info("Manor System: Next period approved");
+                ServerVariables.set(var_name);
+                LOG.info("Manor System: Next period approved");
                 if (isDisabled())
                     return;
                 approveNextPeriod();

@@ -10,7 +10,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public enum CastleDamageZoneDAO {
@@ -21,12 +20,12 @@ public enum CastleDamageZoneDAO {
     private static final Logger _log = LoggerFactory.getLogger(CastleDoorUpgradeDAO.class);
 
     public List<String> load(Residence r) {
-        List<String> set = Collections.emptyList();
+        List<String> set = new ArrayList<>();
 
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement(SELECT_SQL_QUERY)) {
             statement.setInt(1, r.getId());
-            set = new ArrayList<>();
+
 
             try (ResultSet rset = statement.executeQuery()) {
                 while (rset.next())

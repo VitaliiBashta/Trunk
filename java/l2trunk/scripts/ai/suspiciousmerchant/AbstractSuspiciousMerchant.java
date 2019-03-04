@@ -44,7 +44,6 @@ public abstract class AbstractSuspiciousMerchant extends DefaultAI {
                 wait = true;
                 return true;
             }
-
             wait_timeout = 0;
             wait = false;
             current_point++;
@@ -56,9 +55,7 @@ public abstract class AbstractSuspiciousMerchant extends DefaultAI {
             doTask();
             return true;
         }
-
         return randomAnimation();
-
     }
 
     @Override

@@ -119,7 +119,7 @@ public final class KamalokaNightmare extends Reflection {
 
                         InstantZone iz = KamalokaNightmare.this.getInstancedZone();
                         if (iz != null) {
-                            String loc = iz.getAddParams().getString("pathfinder_loc", null);
+                            String loc = iz.getAddParams().getString("pathfinder_loc");
                             if (loc != null) {
                                 PathfinderInstance npc = new PathfinderInstance(IdFactory.getInstance().getNextId(), NpcHolder.getTemplate(PATHFINDER));
                                 npc.setSpawnedLoc(Location.of(loc));

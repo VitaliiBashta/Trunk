@@ -13,7 +13,7 @@ public final class Craft extends Skill {
 
     public Craft(StatsSet set) {
         super(set);
-        dwarven = set.getBool("isDwarven");
+        dwarven = set.isSet("isDwarven");
     }
 
     @Override

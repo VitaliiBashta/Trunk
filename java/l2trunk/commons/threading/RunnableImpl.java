@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public abstract class RunnableImpl implements Runnable {
-    protected static final Logger _log = LoggerFactory.getLogger(RunnableImpl.class);
+    protected static final Logger LOG = LoggerFactory.getLogger(RunnableImpl.class);
 
     protected abstract void runImpl();
 
@@ -13,7 +13,7 @@ public abstract class RunnableImpl implements Runnable {
         try {
             runImpl();
         } catch (Exception e) {
-            _log.warn("Exception: RunnableImpl.run()");
+            LOG.warn("Exception: RunnableImpl.run()");
             e.printStackTrace();
         }
     }

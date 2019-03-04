@@ -96,10 +96,10 @@ public class NpcInstance extends Creature {
     private Future<?> _animationTask;
     private boolean _isTargetable;
     private boolean _showName;
-    private Castle _nearestCastle;
+    private Castle nearestCastle;
     private Fortress _nearestFortress;
     private ClanHall _nearestClanHall;
-    private Dominion _nearestDominion;
+    private Dominion nearestDominion;
     private NpcString nameNpcString = NpcString.NONE;
     private NpcString _titleNpcString = NpcString.NONE;
     private Spawner spawn;
@@ -114,7 +114,7 @@ public class NpcInstance extends Creature {
 
     public NpcInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
-        setParameters(template.getAIParams());
+        setParameters(template.getAiParams());
 
         _hasRandomAnimation = !getParameter(NO_RANDOM_ANIMATION, false) && (Config.MAX_NPC_ANIMATION > 0);
         _hasRandomWalk = !getParameter(NO_RANDOM_WALK, false);
@@ -184,7 +184,7 @@ public class NpcInstance extends Creature {
         final AcquireSkillList asl = new AcquireSkillList(t, skills.size());
 
         for (SkillLearn s : skills) {
-            asl.addSkill(s.id, s.getLevel(), s.getLevel(), s.getCost(), 0);
+            asl.addSkill(s.id, s.level, s.level, s.cost);
         }
 
         if (skills.size() == 0) {
@@ -216,7 +216,7 @@ public class NpcInstance extends Creature {
         final AcquireSkillList asl = new AcquireSkillList(AcquireType.SUB_UNIT, learns.size());
 
         for (SkillLearn s : learns) {
-            asl.addSkill(s.id(), s.getLevel(), s.getLevel(), s.getCost(), 1, Clan.SUBUNIT_KNIGHT4);
+            asl.addSkill(s.id, s.level, s.level, s.cost, 1, Clan.SUBUNIT_KNIGHT4);
         }
 
         if (learns.size() == 0) {
@@ -238,11 +238,6 @@ public class NpcInstance extends Creature {
 
         return Math.max(charLevel - mobLevel - deepblue_maxdiff, 0);
     }
-
-//    @Override
-//    public iHardReference<NpcInstance> getRef() {
-//        return (iHardReference<NpcInstance>) super.getRef();
-//    }
 
     @Override
     public synchronized CharacterAI getAI() {
@@ -717,10 +712,10 @@ public class NpcInstance extends Creature {
         if (Config.SERVICES_OFFSHORE_NO_CASTLE_TAX && isInZone(ZoneType.offshore)) {
             return null;
         }
-        if (_nearestCastle == null) {
-            _nearestCastle = ResidenceHolder.getResidence(getTemplate().getCastleId());
+        if (nearestCastle == null) {
+            nearestCastle = ResidenceHolder.getCastle(getTemplate().getCastleId());
         }
-        return _nearestCastle;
+        return nearestCastle;
     }
 
     public Castle getCastle(Player player) {
@@ -729,7 +724,7 @@ public class NpcInstance extends Creature {
 
     public Fortress getFortress() {
         if (_nearestFortress == null) {
-            _nearestFortress = ResidenceHolder.findNearestResidence(Fortress.class, getX(), getY(), getZ(), getReflection(), 32768);
+            _nearestFortress = ResidenceHolder.findNearestResidence(Fortress.class, getLoc(), getReflection(), 32768);
         }
 
         return _nearestFortress;
@@ -737,7 +732,7 @@ public class NpcInstance extends Creature {
 
     protected ClanHall getClanHall() {
         if (_nearestClanHall == null) {
-            _nearestClanHall = ResidenceHolder.findNearestResidence(ClanHall.class, getX(), getY(), getZ(), getReflection(), 32768);
+            _nearestClanHall = ResidenceHolder.findNearestResidence(ClanHall.class, getLoc(), getReflection(), 32768);
         }
 
         return _nearestClanHall;
@@ -748,16 +743,16 @@ public class NpcInstance extends Creature {
             return null;
         }
 
-        if (_nearestDominion == null) {
+        if (nearestDominion == null) {
             if (getTemplate().getCastleId() == 0) {
                 return null;
             }
 
-            Castle castle = ResidenceHolder.getResidence(getTemplate().getCastleId());
-            _nearestDominion = castle.getDominion();
+            Castle castle = ResidenceHolder.getCastle(getTemplate().getCastleId());
+            nearestDominion = castle.getDominion();
         }
 
-        return _nearestDominion;
+        return nearestDominion;
     }
 
     @Override
@@ -1047,13 +1042,8 @@ public class NpcInstance extends Creature {
                     return;
                 }
 
-                boolean reset = false;
-                for (SkillLearn skill : skills) {
-                    if (player.getKnownSkill(skill.id()) != null) {
-                        reset = true;
-                        break;
-                    }
-                }
+                boolean reset = skills.stream()
+                        .anyMatch(skill -> player.getKnownSkill(skill.id) != null);
 
                 if (!reset) {
                     player.sendActionFailed();
@@ -1066,8 +1056,8 @@ public class NpcInstance extends Creature {
                 }
 
                 for (SkillLearn skill : skills) {
-                    if (player.removeSkill(skill.id(), true) != null) {
-                        ItemFunctions.addItem(player, skill.getItemId(), skill.getItemCount(), "RemoveTransferSkill");
+                    if (player.removeSkill(skill.id, true) != null) {
+                        ItemFunctions.addItem(player, skill.itemId, skill.itemCount, "RemoveTransferSkill");
                     }
                 }
             } else if (command.startsWith("ExitFromQuestInstance")) {
@@ -1344,11 +1334,11 @@ public class NpcInstance extends Creature {
         int counts = 0;
 
         for (SkillLearn s : skills) {
-            if (!s.isClicked()) {
-                Skill sk = SkillTable.INSTANCE.getInfo(s.id(), s.getLevel());
+            if (!s.isClicked) {
+                Skill sk = SkillTable.INSTANCE.getInfo(s.id, s.level);
                 if ((sk != null) && !sk.cantLearn(player.getClassId()) && sk.canTeachBy(npcId)) {
                     counts++;
-                    asl.addSkill(s.id(), s.getLevel(), s.getLevel(), s.getCost(), 0);
+                    asl.addSkill(s.id, s.level, s.level, s.cost);
                 }
 
             }
@@ -1609,8 +1599,8 @@ public class NpcInstance extends Creature {
         return parameters.getInteger(str, val);
     }
 
-    public long getParameter(String str, long val) {
-        return parameters.getLong(str, val);
+    public long getParameter(String str) {
+        return parameters.getLong(str);
     }
 
     public boolean getParameter(String str, boolean val) {

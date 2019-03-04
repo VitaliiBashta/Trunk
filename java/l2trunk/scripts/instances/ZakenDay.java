@@ -12,9 +12,9 @@ import java.util.List;
 public final class ZakenDay extends Reflection {
     private static final int Anchor = 32468;
     private static final List<Location> zakenTp = List.of(
-            new Location(55272, 219080, -2952),
-            new Location(55272, 219080, -3224),
-            new Location(55272, 219080, -3496));
+           Location.of(55272, 219080, -2952),
+           Location.of(55272, 219080, -3224),
+           Location.of(55272, 219080, -3496));
     private long _savedTime;
 
     @Override

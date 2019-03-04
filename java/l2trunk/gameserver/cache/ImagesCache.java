@@ -238,7 +238,7 @@ public final class ImagesCache {
         }
 //		else
 //		{
-//			_log.warn("Trying to send image that doesn't exist, id:" + imageId);
+//			LOG.warn("Trying to send image that doesn't exist, id:" + imageId);
 //		}
     }
 

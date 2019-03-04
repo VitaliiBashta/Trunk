@@ -787,7 +787,7 @@ public final class VillageMasterInstance extends NpcInstance {
             case 10:
                 // Upgrade to 11
                 if (clan.getReputationScore() >= Config.CLAN_LEVEL_11_COST && clan.getAllSize() >= Config.CLAN_LEVEL_11_REQUIREMEN) {
-                    Castle castle = ResidenceHolder.getResidence(clan.getCastle());
+                    Castle castle = ResidenceHolder.getCastle(clan.getCastle());
                     if (castle == null) {
                         player.sendMessage("Your clan has no 1st of the castle!");
                         increaseClanLevel = false;

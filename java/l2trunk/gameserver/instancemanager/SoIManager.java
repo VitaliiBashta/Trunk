@@ -13,32 +13,32 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 public final class SoIManager {
-    private static final Logger _log = LoggerFactory.getLogger(SoIManager.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SoIManager.class);
     private static final long SOI_OPEN_TIME = 24 * 60 * 60 * 1000L;
     private static final List<Location> openSeedTeleportLocs = List.of(
-            new Location(-179537, 209551, -15504),
-            new Location(-179779, 212540, -15520),
-            new Location(-177028, 211135, -15520),
-            new Location(-176355, 208043, -15520),
-            new Location(-179284, 205990, -15520),
-            new Location(-182268, 208218, -15520),
-            new Location(-182069, 211140, -15520),
-            new Location(-176036, 210002, -11948),
-            new Location(-176039, 208203, -11949),
-            new Location(-183288, 208205, -11939),
-            new Location(-183290, 210004, -11939),
-            new Location(-187776, 205696, -9536),
-            new Location(-186327, 208286, -9536),
-            new Location(-184429, 211155, -9536),
-            new Location(-182811, 213871, -9504),
-            new Location(-180921, 216789, -9536),
-            new Location(-177264, 217760, -9536),
-            new Location(-173727, 218169, -9536));
-    private static Zone _zone = null;
+            Location.of(-179537, 209551, -15504),
+            Location.of(-179779, 212540, -15520),
+            Location.of(-177028, 211135, -15520),
+            Location.of(-176355, 208043, -15520),
+            Location.of(-179284, 205990, -15520),
+            Location.of(-182268, 208218, -15520),
+            Location.of(-182069, 211140, -15520),
+            Location.of(-176036, 210002, -11948),
+            Location.of(-176039, 208203, -11949),
+            Location.of(-183288, 208205, -11939),
+            Location.of(-183290, 210004, -11939),
+            Location.of(-187776, 205696, -9536),
+            Location.of(-186327, 208286, -9536),
+            Location.of(-184429, 211155, -9536),
+            Location.of(-182811, 213871, -9504),
+            Location.of(-180921, 216789, -9536),
+            Location.of(-177264, 217760, -9536),
+            Location.of(-173727, 218169, -9536));
+    private static Zone zone = null;
 
     public static void init() {
-        _log.info("Seed of Infinity Manager: Loaded. Current stage is: " + getCurrentStage());
-        _zone = ReflectionUtils.getZone("[inner_undying01]");
+        LOG.info("Seed of Infinity Manager: Loaded. Current stage is: " + getCurrentStage());
+        zone = ReflectionUtils.getZone("[inner_undying01]");
         checkStageAndSpawn();
         if (isSeedOpen())
             openSeed(getOpenedTime());
@@ -56,11 +56,11 @@ public final class SoIManager {
         else if (isSeedOpen())
             closeSeed();
         ServerVariables.set("SoI_stage", stage);
-        setCohemenesCount(0);
-        setEkimusCount(0);
-        setHoEDefCount(0);
+        ServerVariables.unset("SoI_CohemenesCount");
+        ServerVariables.unset("SoI_EkimusCount");
+        ServerVariables.unset("SoI_hoedefkillcount");
         checkStageAndSpawn();
-        _log.info("Seed of Infinity Manager: Set to stage " + stage);
+        LOG.info("Seed of Infinity Manager: Set to stage " + stage);
     }
 
     private static long getOpenedTime() {
@@ -77,7 +77,7 @@ public final class SoIManager {
         if (time <= 0)
             return;
         ServerVariables.set("SoI_opened", (System.currentTimeMillis() + time) / 1000L);
-        _log.info("Seed of Infinity Manager: Opening the seed for " + Util.formatTime((int) time / 1000));
+        LOG.info("Seed of Infinity Manager: Opening the seed for " + Util.formatTime((int) time / 1000));
         spawnOpenedSeed();
         ReflectionUtils.getDoor(14240102).openMe();
 
@@ -88,7 +88,7 @@ public final class SoIManager {
     }
 
     private static void closeSeed() {
-        _log.info("Seed of Infinity Manager: Closing the seed.");
+        LOG.info("Seed of Infinity Manager: Closing the seed.");
         ServerVariables.unset("SoI_opened");
         //Despawning tumors / seeds
         SpawnManager.INSTANCE.despawn("soi_hos_middle_seeds");
@@ -96,8 +96,8 @@ public final class SoIManager {
         SpawnManager.INSTANCE.despawn("soi_hoi_middle_seeds");
         SpawnManager.INSTANCE.despawn("soi_all_middle_stable_tumor");
         ReflectionUtils.getDoor(14240102).closeMe();
-        getZone().getInsidePlayables().forEach(p ->
-                p.teleToLocation(getZone().getRestartPoints().get(0)));
+        zone.getInsidePlayables().forEach(p ->
+                p.teleToLocation(zone.getRestartPoints().get(0)));
     }
 
     private static void checkStageAndSpawn() {
@@ -122,14 +122,10 @@ public final class SoIManager {
         }
     }
 
-    private static Zone getZone() {
-        return _zone;
-    }
-
     public static void notifyCohemenesKill() {
         if (getCurrentStage() == 1) {
-            if (getCohemenesCount() < 9)
-                setCohemenesCount(getCohemenesCount() + 1);
+            if (ServerVariables.getInt("SoI_CohemenesCount") < 9)
+                ServerVariables.inc("SoI_CohemenesCount");
             else
                 setCurrentStage(2);
         }
@@ -137,8 +133,8 @@ public final class SoIManager {
 
     public static void notifyEkimusKill() {
         if (getCurrentStage() == 2) {
-            if (getEkimusCount() < 2)
-                setEkimusCount(getEkimusCount() + 1);
+            if (ServerVariables.getInt("SoI_EkimusCount") < 2)
+                ServerVariables.inc("SoI_EkimusCount");
             else
                 setCurrentStage(3);
         }
@@ -146,35 +142,11 @@ public final class SoIManager {
 
     public static void notifyHoEDefSuccess() {
         if (getCurrentStage() == 4) {
-            if (getHoEDefCount() < 9)
-                setHoEDefCount(getHoEDefCount() + 1);
+            if (ServerVariables.getInt("SoI_hoedefkillcount") < 9)
+                ServerVariables.inc("SoI_hoedefkillcount");
             else
                 setCurrentStage(5);
         }
-    }
-
-    private static int getCohemenesCount() {
-        return ServerVariables.getInt("SoI_CohemenesCount", 0);
-    }
-
-    private static void setCohemenesCount(int i) {
-        ServerVariables.set("SoI_CohemenesCount", i);
-    }
-
-    private static int getEkimusCount() {
-        return ServerVariables.getInt("SoI_EkimusCount", 0);
-    }
-
-    private static void setEkimusCount(int i) {
-        ServerVariables.set("SoI_EkimusCount", i);
-    }
-
-    private static int getHoEDefCount() {
-        return ServerVariables.getInt("SoI_hoedefkillcount", 0);
-    }
-
-    private static void setHoEDefCount(int i) {
-        ServerVariables.set("SoI_hoedefkillcount", i);
     }
 
     private static void spawnOpenedSeed() {

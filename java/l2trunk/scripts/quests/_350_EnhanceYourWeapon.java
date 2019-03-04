@@ -15,7 +15,6 @@ import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.templates.SoulCrystal;
 import l2trunk.gameserver.templates.npc.AbsorbInfo;
-import l2trunk.gameserver.templates.npc.NpcTemplate;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,32 +29,33 @@ public final class _350_EnhanceYourWeapon extends Quest {
     private static final int Jurek = 30115;
     private static final int Gideon = 30194;
     private static final int Winonin = 30856;
+
     public _350_EnhanceYourWeapon() {
         super(false);
-        addStartNpc(Jurek);
-        addStartNpc(Gideon);
-        addStartNpc(Winonin);
+        addStartNpc(Jurek, Gideon, Winonin);
 
-        for (NpcTemplate template : NpcHolder.getAll()) {
-            if (template != null && !template.getAbsorbInfo().isEmpty())
-                addKillId(template.npcId);
-        }
+        NpcHolder.getAll().stream()
+                .filter(template -> !template.getAbsorbInfo().isEmpty())
+                .map(template -> template.npcId)
+                .forEach(this::addKillId);
+
+
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase(Jurek + "-04.htm") || event.equalsIgnoreCase(Gideon + "-04.htm") || event.equalsIgnoreCase(Winonin + "-04.htm")) {
+        if ((Jurek + "-04.htm").equalsIgnoreCase(event) || (Gideon + "-04.htm").equalsIgnoreCase(event) || (Winonin + "-04.htm").equalsIgnoreCase(event)) {
             st.setCond(1);
             st.start();
             st.playSound(SOUND_ACCEPT);
         }
-        if (event.equalsIgnoreCase(Jurek + "-09.htm") || event.equalsIgnoreCase(Gideon + "-09.htm") || event.equalsIgnoreCase(Winonin + "-09.htm"))
-            st.giveItems(RED_SOUL_CRYSTAL0_ID, 1);
-        if (event.equalsIgnoreCase(Jurek + "-10.htm") || event.equalsIgnoreCase(Gideon + "-10.htm") || event.equalsIgnoreCase(Winonin + "-10.htm"))
-            st.giveItems(GREEN_SOUL_CRYSTAL0_ID, 1);
-        if (event.equalsIgnoreCase(Jurek + "-11.htm") || event.equalsIgnoreCase(Gideon + "-11.htm") || event.equalsIgnoreCase(Winonin + "-11.htm"))
-            st.giveItems(BLUE_SOUL_CRYSTAL0_ID, 1);
-        if (event.equalsIgnoreCase("exit.htm"))
+        if ((Jurek + "-09.htm").equalsIgnoreCase(event) || (Gideon + "-09.htm").equalsIgnoreCase(event) || (Winonin + "-09.htm").equalsIgnoreCase(event))
+            st.giveItems(RED_SOUL_CRYSTAL0_ID);
+        if ((Jurek + "-10.htm").equalsIgnoreCase(event) || (Gideon + "-10.htm").equalsIgnoreCase(event) || (Winonin + "-10.htm").equalsIgnoreCase(event))
+            st.giveItems(GREEN_SOUL_CRYSTAL0_ID);
+        if ((Jurek + "-11.htm").equalsIgnoreCase(event) || (Gideon + "-11.htm").equalsIgnoreCase(event) || (Winonin + "-11.htm").equalsIgnoreCase(event))
+            st.giveItems(BLUE_SOUL_CRYSTAL0_ID);
+        if ("exit.htm".equalsIgnoreCase(event))
             st.exitCurrentQuest();
         return event;
     }
@@ -65,7 +65,7 @@ public final class _350_EnhanceYourWeapon extends Quest {
         int npcId = npc.getNpcId();
         String htmltext;
         int id = st.getState();
-        if (st.getQuestItemsCount(RED_SOUL_CRYSTAL0_ID) == 0 && st.getQuestItemsCount(GREEN_SOUL_CRYSTAL0_ID) == 0 && st.getQuestItemsCount(BLUE_SOUL_CRYSTAL0_ID) == 0)
+        if (!st.haveAnyQuestItems(RED_SOUL_CRYSTAL0_ID, GREEN_SOUL_CRYSTAL0_ID, BLUE_SOUL_CRYSTAL0_ID))
             if (id == CREATED)
                 htmltext = npcId + "-01.htm";
             else
@@ -96,8 +96,8 @@ public final class _350_EnhanceYourWeapon extends Quest {
                 list.add(new PlayerResult(player)); // DS: у убившего двойной шанс, из ai
             }
 
-            for (AbsorbInfo info : npc.getTemplate().getAbsorbInfo())
-                calcAbsorb(list, (MonsterInstance) npc, info);
+            npc.getTemplate().getAbsorbInfo().forEach(info ->
+                    calcAbsorb(list, (MonsterInstance) npc, info));
 
             list.forEach(PlayerResult::send);
         }

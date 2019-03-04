@@ -30,7 +30,7 @@ public final class HelpBook extends ScriptItemHandler implements ScriptFile {
     public boolean useItem(Player player, ItemInstance item, boolean ctrl) {
         Functions.show("help/" + item.getItemId() + ".htm", player, null);
         if (item.getItemId() == 7063)
-            player.sendPacket(new RadarControl(0, 2, new Location(51995, -51265, -3104)));
+            player.sendPacket(new RadarControl(0, 2, Location.of(51995, -51265, -3104)));
         player.sendActionFailed();
         return true;
     }

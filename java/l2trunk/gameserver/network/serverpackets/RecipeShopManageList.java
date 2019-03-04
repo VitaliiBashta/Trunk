@@ -39,7 +39,7 @@ public final class RecipeShopManageList extends L2GameServerPacket {
         writeD(recipes.size());
         int i = 1;
         for (Recipe recipe : recipes) {
-            writeD(recipe.getId());
+            writeD(recipe.id);
             writeD(i++);
         }
         writeD(createList.size());

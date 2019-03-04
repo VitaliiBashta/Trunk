@@ -43,7 +43,7 @@ public final class AdminManor implements IAdminCommandHandler {
                 int castleId = toInt(st.nextToken());
 
                 if (castleId > 0) {
-                    Castle castle = ResidenceHolder.getResidence(Castle.class, castleId);
+                    Castle castle = ResidenceHolder.getCastle(castleId);
                     castle.setCropProcure(new ArrayList<>(), CastleManorManager.PERIOD_CURRENT);
                     castle.setCropProcure(new ArrayList<>(), CastleManorManager.PERIOD_NEXT);
                     castle.setSeedProduction(new ArrayList<>(), CastleManorManager.PERIOD_CURRENT);
@@ -52,7 +52,7 @@ public final class AdminManor implements IAdminCommandHandler {
                     castle.saveSeedData();
                     activeChar.sendMessage("Manor data for " + castle.getName() + " was nulled");
                 } else {
-                    for (Castle castle : ResidenceHolder.getResidenceList(Castle.class)) {
+                    for (Castle castle : ResidenceHolder.getCastles()) {
                         castle.setCropProcure(new ArrayList<>(), CastleManorManager.PERIOD_CURRENT);
                         castle.setCropProcure(new ArrayList<>(), CastleManorManager.PERIOD_NEXT);
                         castle.setSeedProduction(new ArrayList<>(), CastleManorManager.PERIOD_CURRENT);
@@ -101,7 +101,7 @@ public final class AdminManor implements IAdminCommandHandler {
         replyMSG.append("<table width=\"100%\">");
         replyMSG.append("<tr><td>Disabled: " + (CastleManorManager.INSTANCE.isDisabled() ? "yes" : "no") + "</td>");
         replyMSG.append("<td>Under Maintenance: " + (CastleManorManager.INSTANCE.isUnderMaintenance() ? "yes" : "no") + "</td></tr>");
-        replyMSG.append("<tr><td>Approved: " + (ServerVariables.getBool("ManorApproved") ? "yes" : "no") + "</td></tr>");
+        replyMSG.append("<tr><td>Approved: " + (ServerVariables.isSet("ManorApproved") ? "yes" : "no") + "</td></tr>");
         replyMSG.append("</table>");
 
         replyMSG.append("<center><table>");
@@ -114,7 +114,7 @@ public final class AdminManor implements IAdminCommandHandler {
         replyMSG.append("<br><center>Castle Information:<table width=\"100%\">");
         replyMSG.append("<tr><td></td><td>Current Period</td><td>Next Period</td></tr>");
 
-        ResidenceHolder.getResidenceList(Castle.class).forEach(c ->
+        ResidenceHolder.getCastles().forEach(c ->
                 replyMSG.append("<tr><td>")
                         .append(c.getName())
                         .append("</td>")

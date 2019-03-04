@@ -29,9 +29,6 @@ public enum OlympiadHistoryManager {
                 addHistory(entry.getKey(), history);
     }
 
-    /**
-     * Старую за преведущих 2 месяца удаляет, а за преведущий
-     */
     public void switchData() {
         _historyOld.clear();
 

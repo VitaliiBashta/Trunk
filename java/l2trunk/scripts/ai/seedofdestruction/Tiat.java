@@ -20,10 +20,10 @@ import java.util.List;
 
 public final class Tiat extends Fighter {
     private static final List<Location> TRAP_LOCS = List.of(
-            new Location(-252022, 210130, -11995, 16384),
-            new Location(-248782, 210130, -11995, 16384),
-            new Location(-248782, 206875, -11995, 16384),
-            new Location(-252022, 206875, -11995, 16384));
+           Location.of(-252022, 210130, -11995, 16384),
+           Location.of(-248782, 210130, -11995, 16384),
+           Location.of(-248782, 206875, -11995, 16384),
+           Location.of(-252022, 206875, -11995, 16384));
     private static final long COLLAPSE_BY_INACTIVITY_INTERVAL = 10 * 60 * 1000; // 10 мин
     private static final int TRAP_NPC_ID = 18696;
     private static final List<Integer> TIAT_MINION_IDS = List.of(29162, 22538, 22540, 22547, 22542, 22548);

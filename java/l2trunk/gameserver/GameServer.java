@@ -131,7 +131,7 @@ public final class GameServer {
         SkillTreeTable.getInstance();
         printSection("Augmentation Data");
         AugmentationData.getInstance();
-        EnchantHPBonusTable.getInstance();
+        EnchantHPBonusTable.init();
         PetSkillsTable.INSTANCE.load();
         printSection("Auctioneer");
         ItemAuctionManager.INSTANCE.init();
@@ -173,7 +173,7 @@ public final class GameServer {
         VoicedCommandHandler.INSTANCE.log();
         TaskManager.INSTANCE.init();
         LOG.info("======================[Loading Castels & Clan Halls]==========================");
-        ResidenceHolder.callInit();
+        ResidenceHolder.init();
         EventHolder.callInit();
         CastleManorManager.INSTANCE.init(); // schedule all manor related events
         printSection("");

@@ -66,10 +66,10 @@ public enum HellboundManager {
 
     private static int getHellboundLevelS() {
         long confidence = ServerVariables.getLong("HellboundConfidence");
-        boolean judesBoxes = ServerVariables.getBool("HB_judesBoxes", false);
-        boolean bernardBoxes = ServerVariables.getBool("HB_bernardBoxes", false);
-        boolean derekKilled = ServerVariables.getBool("HB_derekKilled", false);
-        boolean captainKilled = ServerVariables.getBool("HB_captainKilled", false);
+        boolean judesBoxes = ServerVariables.isSet("HB_judesBoxes");
+        boolean bernardBoxes = ServerVariables.isSet("HB_bernardBoxes");
+        boolean derekKilled = ServerVariables.isSet("HB_derekKilled");
+        boolean captainKilled = ServerVariables.isSet("HB_captainKilled");
 
         if (confidence < 1)
             return 0;
@@ -342,7 +342,7 @@ public enum HellboundManager {
                     switch (npcId) {
                         case 18465: // Derek
                             addConfidence(10000);
-                            ServerVariables.set("HB_derekKilled", true);
+                            ServerVariables.set("HB_derekKilled");
                             break;
                         case 22322: // Subjugated Native
                         case 22323: // Charmed Native
@@ -374,7 +374,7 @@ public enum HellboundManager {
                     // Outpost Captain
                     if (npcId == 18466) {
                         addConfidence(10000);
-                        ServerVariables.set("HB_captainKilled", true);
+                        ServerVariables.set("HB_captainKilled");
                     }
                     break;
                 }

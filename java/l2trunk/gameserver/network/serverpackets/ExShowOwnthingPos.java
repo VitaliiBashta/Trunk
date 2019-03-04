@@ -12,7 +12,7 @@ public final class ExShowOwnthingPos extends L2GameServerPacket {
     private final List<WardInfo> _wardList = new ArrayList<>(9);
 
     public ExShowOwnthingPos() {
-        for (Dominion dominion : ResidenceHolder.getResidenceList(Dominion.class)) {
+        for (Dominion dominion : ResidenceHolder.getDominions()) {
             if (dominion.getSiegeDate().getTimeInMillis() == 0)
                 continue;
             for (int dominionId : dominion.getFlags()) {

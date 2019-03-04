@@ -29,7 +29,7 @@ public final class _711_PathToBecomingALordInnadril extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        Castle castle = ResidenceHolder.getResidence(InnadrilCastle);
+        Castle castle = ResidenceHolder.getCastle(InnadrilCastle);
         Player castleOwner = castle.getOwner().getLeader().getPlayer();
         String htmltext = event;
         switch (event) {
@@ -71,7 +71,7 @@ public final class _711_PathToBecomingALordInnadril extends Quest {
         String htmltext = "noquest";
         int npcId = npc.getNpcId();
         int cond = st.getCond();
-        Castle castle = ResidenceHolder.getResidence(InnadrilCastle);
+        Castle castle = ResidenceHolder.getCastle(InnadrilCastle);
         if (castle.getOwner() == null)
             return "Castle has no lord";
         Player castleOwner = castle.getOwner().getLeader().getPlayer();
@@ -140,7 +140,7 @@ public final class _711_PathToBecomingALordInnadril extends Quest {
     }
 
     private boolean isLordAvailable(int cond, QuestState st) {
-        Castle castle = ResidenceHolder.getResidence(InnadrilCastle);
+        Castle castle = ResidenceHolder.getCastle(InnadrilCastle);
         Clan owner = castle.getOwner();
         Player castleOwner = castle.getOwner().getLeader().player;
         if (owner != null)

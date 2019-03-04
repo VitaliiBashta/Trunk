@@ -41,7 +41,7 @@ public final class _655_AGrandPlanForTamingWildBeasts extends Quest {
         int cond = st.getCond();
         Player player = st.player;
         Clan clan = player.getClan();
-        ClanHall clanhall = ResidenceHolder.getResidence(63);
+        ClanHall clanhall = ResidenceHolder.getClanHall(63);
 
         if (clanhall.getSiegeEvent().isRegistrationOver()) {
             htmlText = null;

@@ -16,8 +16,8 @@ public class RequestExMPCCAcceptJoin extends L2GameClientPacket {
      */
     @Override
     protected void readImpl() {
-        _response = _buf.hasRemaining() ? readD() : 0;
-        _unk = _buf.hasRemaining() ? readD() : 0;
+        _response = buf.hasRemaining() ? readD() : 0;
+        _unk = buf.hasRemaining() ? readD() : 0;
     }
 
     @Override

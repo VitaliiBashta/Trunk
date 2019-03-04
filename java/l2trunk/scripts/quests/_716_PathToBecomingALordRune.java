@@ -36,7 +36,7 @@ public final class _716_PathToBecomingALordRune extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        Castle castle = ResidenceHolder.getResidence(RuneCastle);
+        Castle castle = ResidenceHolder.getCastle(RuneCastle);
         if (castle.getOwner() == null)
             return "Castle has no lord";
         Player castleOwner = castle.getOwner().getLeader().getPlayer();
@@ -70,7 +70,7 @@ public final class _716_PathToBecomingALordRune extends Quest {
         String htmltext = "noquest";
         int npcId = npc.getNpcId();
         int cond = st.getCond();
-        Castle castle = ResidenceHolder.getResidence(RuneCastle);
+        Castle castle = ResidenceHolder.getCastle(RuneCastle);
         if (castle.getOwner() == null)
             return "Castle has no lord";
         Player castleOwner = castle.getOwner().getLeader().getPlayer();
@@ -150,7 +150,7 @@ public final class _716_PathToBecomingALordRune extends Quest {
 
     @Override
     public void onKill(NpcInstance npc, QuestState st) {
-        Castle castle = ResidenceHolder.getResidence(RuneCastle);
+        Castle castle = ResidenceHolder.getCastle(RuneCastle);
         Player castleOwner = castle.getOwner().getLeader().getPlayer();
         if (st.getState() == STARTED && st.getCond() == 0) {
             if (castleOwner != null && castleOwner != st.player && castleOwner.getQuestState(this) != null && castleOwner.getQuestState(this).getCond() == 7) {

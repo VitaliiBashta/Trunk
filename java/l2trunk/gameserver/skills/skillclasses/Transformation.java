@@ -20,9 +20,9 @@ public final class Transformation extends Skill {
 
     public Transformation(StatsSet set) {
         super(set);
-        useSummon = set.getBool("useSummon", false);
-        isDisguise = set.getBool("isDisguise", false);
-        transformationName = set.getString("transformationName", null);
+        useSummon = set.isSet("useSummon");
+        isDisguise = set.isSet("isDisguise");
+        transformationName = set.getString("transformationName");
     }
 
     @Override

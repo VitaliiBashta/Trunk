@@ -5,11 +5,11 @@ import l2trunk.gameserver.stats.Env;
 import l2trunk.gameserver.stats.Stats;
 
 public class EffectManaHealOverTime extends Effect {
-    private final boolean _ignoreMpEff;
+    private final boolean ignoreMpEff;
 
     public EffectManaHealOverTime(Env env, EffectTemplate template) {
         super(env, template);
-        _ignoreMpEff = template.getParam().getBool("ignoreMpEff", false);
+        ignoreMpEff = template.getParam().isSet("ignoreMpEff");
     }
 
     @Override
@@ -18,7 +18,7 @@ public class EffectManaHealOverTime extends Effect {
             return true;
 
         double mp = calc();
-        double newMp = mp * (!_ignoreMpEff ? effected.calcStat(Stats.MANAHEAL_EFFECTIVNESS, 100., effector, skill) : 100.) / 100.;
+        double newMp = mp * (!ignoreMpEff ? effected.calcStat(Stats.MANAHEAL_EFFECTIVNESS, 100., effector, skill) : 100.) / 100.;
         double addToMp = Math.max(0, Math.min(newMp, effected.calcStat(Stats.MP_LIMIT, null, null) * effected.getMaxMp() / 100. - effected.getCurrentMp()));
 
         if (addToMp > 0)

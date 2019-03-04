@@ -15,7 +15,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import static l2trunk.commons.lang.NumberUtils.toInt;
 
@@ -156,14 +158,13 @@ public enum ItemParser /*extends StatParser<ItemHolder>*/ {
                                 if (nextElement.getName().equalsIgnoreCase("level")) {
                                     int val = toInt(nextElement.attributeValue("val"));
 
-                                    int i = 0;
-                                    int[] options = new int[3];
+                                    List<Integer> options = new ArrayList<>();
                                     for (Element optionElement : nextElement.elements()) {
                                         OptionDataTemplate optionData = OptionDataHolder.getTemplate(toInt(optionElement.attributeValue("id")));
                                         if (optionData == null) {
                                             LOG.error("Not found option_data for id: " + optionElement.attributeValue("id") + "; item_id: " + set.getString("item_id"));
                                         } else {
-                                            options[(i++)] = optionData.id;
+                                            options.add(optionData.id);
                                         }
                                     }
                                     template.addEnchantOptions(val, options);

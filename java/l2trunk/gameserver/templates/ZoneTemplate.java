@@ -21,19 +21,19 @@ public final class ZoneTemplate {
 
     private final Territory territory;
 
-    private final boolean _isEnabled;
+    private final boolean isEnabled;
 
-    private final List<Location> restartPoints;
+    public final List<Location> restartPoints;
     private final List<Location> pkRestartPoints;
-    private final long _restartTime;
+    private final long restartTime;
 
-    private final int _enteringMessageId;
-    private final int _leavingMessageId;
+    private final int enteringMessageId;
+    private final int leavingMessageId;
 
     /**
      * Раса на которую применим эффект
      */
-    private final Race _affectRace;
+    private final Race affectRace;
 
     private final ZoneTarget target;
 
@@ -47,12 +47,12 @@ public final class ZoneTemplate {
      * Сообщение которое шлется при уроне от зоны (не скилла)
      * К примеру на осадах. Пока это только 686 (You have received $s1 damage from the fire of magic.)
      */
-    private final int _damageMessageId;
+    private final int damageMessageId;
 
     /**
      * Урон от зоны по хп
      */
-    private final int _damageOnHP;
+    private final int damageOnHP;
 
     /**
      * Урон от зоны по мп
@@ -68,18 +68,18 @@ public final class ZoneTemplate {
     /**
      * Бонус регенерации хп
      */
-    private final double _regenBonusHP;
+    private final double regenBonusHP;
 
     /**
      * Бонус регенерации мп
      */
-    private final double _regenBonusMP;
+    private final double regenBonusMP;
 
-    private final int _eventId;
+    private final int eventId;
 
     private final List<String> blockedActions;
 
-    private final int _index;
+    private final int index;
 
     private final StatsSet params;
 
@@ -90,14 +90,14 @@ public final class ZoneTemplate {
         type = ZoneType.valueOf(set.getString("type"));
         territory = set.getTerritory("territory");
 
-        _enteringMessageId = set.getInteger("entering_message_no", 0);
-        _leavingMessageId = set.getInteger("leaving_message_no", 0);
+        enteringMessageId = set.getInteger("entering_message_no");
+        leavingMessageId = set.getInteger("leaving_message_no");
 
         target = ZoneTarget.valueOf(set.getString("target", "pc"));
-        _affectRace = set.getString("affect_race", "all").equals("all") ? null : Race.valueOf(set.getString("affect_race"));
+        affectRace = set.getString("affect_race", "all").equals("all") ? null : Race.valueOf(set.getString("affect_race"));
 
         //Зона с эффектом
-        String s = set.getString("skill_name", null);
+        String s = set.getString("skill_name");
         Skill skill = null;
         if (s != null) {
             String[] sk = s.split("[\\s,;]+");
@@ -110,22 +110,22 @@ public final class ZoneTemplate {
         randomTick = set.getInteger("random_time");
 
         //Зона с бонусами
-        moveBonus = set.getDouble("move_bonus", 0.);
-        _regenBonusHP = set.getDouble("hp_regen_bonus", 0.);
-        _regenBonusMP = set.getDouble("mp_regen_bonus", 0.);
+        moveBonus = set.getDouble("move_bonus");
+        regenBonusHP = set.getDouble("hp_regen_bonus");
+        regenBonusMP = set.getDouble("mp_regen_bonus");
 
         //Зона с дамагом
-        _damageOnHP = set.getInteger("damage_on_hp");
+        damageOnHP = set.getInteger("damage_on_hp");
         damageOnMP = set.getInteger("damage_on_mp");
-        _damageMessageId = set.getInteger("message_no");
+        damageMessageId = set.getInteger("message_no");
 
-        _eventId = set.getInteger("eventId");
+        eventId = set.getInteger("eventId");
 
-        _isEnabled = set.getBool("enabled", true);
+        isEnabled = set.isSet("enabled");
 
         restartPoints = set.getLocations("restart_points");
         pkRestartPoints = set.getLocations("PKrestart_points");
-        _restartTime = set.getLong("restart_time");
+        restartTime = set.getLong("restart_time");
 
         s = set.getString("blocked_actions");
         if (s != null)
@@ -133,15 +133,15 @@ public final class ZoneTemplate {
         else
             blockedActions = List.of();
 
-        isEpicPvP = set.getBool("epicPvP", false);
+        isEpicPvP = set.isSet("epicPvP");
 
-        _index = set.getInteger("index", 0);
+        index = set.getInteger("index");
 
         params = set;
     }
 
     public boolean isEnabled() {
-        return _isEnabled;
+        return isEnabled;
     }
 
     public String getName() {
@@ -157,11 +157,11 @@ public final class ZoneTemplate {
     }
 
     public int getEnteringMessageId() {
-        return _enteringMessageId;
+        return enteringMessageId;
     }
 
     public int getLeavingMessageId() {
-        return _leavingMessageId;
+        return leavingMessageId;
     }
 
     public Skill getZoneSkill() {
@@ -189,7 +189,7 @@ public final class ZoneTemplate {
     }
 
     public Race getAffectRace() {
-        return _affectRace;
+        return affectRace;
     }
 
     public List<String> getBlockedActions() {
@@ -202,7 +202,7 @@ public final class ZoneTemplate {
      * @return SystemMessage ID
      */
     public int getDamageMessageId() {
-        return _damageMessageId;
+        return damageMessageId;
     }
 
     /**
@@ -211,7 +211,7 @@ public final class ZoneTemplate {
      * @return количество урона
      */
     public int getDamageOnHP() {
-        return _damageOnHP;
+        return damageOnHP;
     }
 
     /**
@@ -228,31 +228,23 @@ public final class ZoneTemplate {
     }
 
     public double getRegenBonusHP() {
-        return _regenBonusHP;
+        return regenBonusHP;
     }
 
     public double getRegenBonusMP() {
-        return _regenBonusMP;
+        return regenBonusMP;
     }
 
     public long getRestartTime() {
-        return _restartTime;
-    }
-
-    public List<Location> getRestartPoints() {
-        return restartPoints;
+        return restartTime;
     }
 
     public List<Location> getPKRestartPoints() {
         return pkRestartPoints;
     }
 
-    public int getIndex() {
-        return _index;
-    }
-
     public int getEventId() {
-        return _eventId;
+        return eventId;
     }
 
     public boolean isEpicPvP() {

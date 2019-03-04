@@ -28,7 +28,7 @@ public final class RecipeBookItemList extends L2GameServerPacket {
 
         writeD(recipes.size());
         recipes.forEach(recipe -> {
-            writeD(recipe.getId());
+            writeD(recipe.id);
             writeD(1); //??
         });
     }

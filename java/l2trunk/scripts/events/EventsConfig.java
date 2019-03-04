@@ -19,59 +19,59 @@ public final class EventsConfig extends Functions implements ScriptFile {
     private static ConcurrentHashMap<String, String> properties;
     
     public static final List<Location> EVENT_MANAGERS = List.of(
-            new Location(81921, 148921, -3467, 16384),
-            new Location(146405, 28360, -2269, 49648),
-            new Location(19319, 144919, -3103, 31135),
-            new Location(-82805, 149890, -3129, 16384),
-            new Location(-12347, 122549, -3104, 16384),
-            new Location(110642, 220165, -3655, 61898),
-            new Location(116619, 75463, -2721, 20881),
-            new Location(85513, 16014, -3668, 23681),
-            new Location(81999, 53793, -1496, 61621),
-            new Location(148159, -55484, -2734, 44315),
-            new Location(44185, -48502, -797, 27479),
-            new Location(86899, -143229, -1293, 8192));
+            Location.of(81921, 148921, -3467, 16384),
+            Location.of(146405, 28360, -2269, 49648),
+            Location.of(19319, 144919, -3103, 31135),
+            Location.of(-82805, 149890, -3129, 16384),
+            Location.of(-12347, 122549, -3104, 16384),
+            Location.of(110642, 220165, -3655, 61898),
+            Location.of(116619, 75463, -2721, 20881),
+            Location.of(85513, 16014, -3668, 23681),
+            Location.of(81999, 53793, -1496, 61621),
+            Location.of(148159, -55484, -2734, 44315),
+            Location.of(44185, -48502, -797, 27479),
+            Location.of(86899, -143229, -1293, 8192));
 
     public static final List<Location> CTREES = List.of(
-            new Location(81961, 148921, -3467, 0),
-            new Location(146445, 28360, -2269, 0),
-            new Location(19319, 144959, -3103, 0),
-            new Location(-82845, 149890, -3129, 0),
-            new Location(-12387, 122549, -3104, 0),
-            new Location(110602, 220165, -3655, 0),
-            new Location(116659, 75463, -2721, 0),
-            new Location(85553, 16014, -3668, 0),
-            new Location(81999, 53743, -1496, 0),
-            new Location(148199, -55484, -2734, 0),
-            new Location(44185, -48542, -797, 0),
-            new Location(86859, -143229, -1293, 0));
+            Location.of(81961, 148921, -3467, 0),
+            Location.of(146445, 28360, -2269, 0),
+            Location.of(19319, 144959, -3103, 0),
+            Location.of(-82845, 149890, -3129, 0),
+            Location.of(-12387, 122549, -3104, 0),
+            Location.of(110602, 220165, -3655, 0),
+            Location.of(116659, 75463, -2721, 0),
+            Location.of(85553, 16014, -3668, 0),
+            Location.of(81999, 53743, -1496, 0),
+            Location.of(148199, -55484, -2734, 0),
+            Location.of(44185, -48542, -797, 0),
+            Location.of(86859, -143229, -1293, 0));
 
     public static final List<Location> EVENT_MANAGERS_coffer_march8 = List.of(
-            new Location(-14823, 123567, -3143, 8192), // Gludio
-            new Location(-83159, 150914, -3155, 49152), // Gludin
-            new Location(18600, 145971, -3095, 40960), // Dion
-            new Location(82158, 148609, -3493, 60), // Giran
-            new Location(110992, 218753, -3568, 0), // Hiene
-            new Location(116339, 75424, -2738, 0), // Hunter Village
-            new Location(81140, 55218, -1551, 32768), // Oren
-            new Location(147148, 27401, -2231, 2300), // Aden
-            new Location(43532, -46807, -823, 31471), // Rune
-            new Location(87765, -141947, -1367, 6500), // Schuttgart
-            new Location(147154, -55527, -2807, 61300)); // Goddard
+            Location.of(-14823, 123567, -3143, 8192), // Gludio
+            Location.of(-83159, 150914, -3155, 49152), // Gludin
+            Location.of(18600, 145971, -3095, 40960), // Dion
+            Location.of(82158, 148609, -3493, 60), // Giran
+            Location.of(110992, 218753, -3568, 0), // Hiene
+            Location.of(116339, 75424, -2738, 0), // Hunter Village
+            Location.of(81140, 55218, -1551, 32768), // Oren
+            Location.of(147148, 27401, -2231, 2300), // Aden
+            Location.of(43532, -46807, -823, 31471), // Rune
+            Location.of(87765, -141947, -1367, 6500), // Schuttgart
+            Location.of(147154, -55527, -2807, 61300)); // Goddard
 
     public static final List<Location> EVENT_MANAGERS_harvest_meleons = List.of(
-            new Location(81921, 148921, -3467, 16384),
-            new Location(146405, 28360, -2269, 49648),
-            new Location(19319, 144919, -3103, 31135),
-            new Location(-82805, 149890, -3129, 33202),
-            new Location(-12347, 122549, -3104, 32603),
-            new Location(110642, 220165, -3655, 61898),
-            new Location(116619, 75463, -2721, 20881),
-            new Location(85513, 16014, -3668, 23681),
-            new Location(81999, 53793, -1496, 61621),
-            new Location(148159, -55484, -2734, 44315),
-            new Location(44185, -48502, -797, 27479),
-            new Location(86899, -143229, -1293, 22021));
+            Location.of(81921, 148921, -3467, 16384),
+            Location.of(146405, 28360, -2269, 49648),
+            Location.of(19319, 144919, -3103, 31135),
+            Location.of(-82805, 149890, -3129, 33202),
+            Location.of(-12347, 122549, -3104, 32603),
+            Location.of(110642, 220165, -3655, 61898),
+            Location.of(116619, 75463, -2721, 20881),
+            Location.of(85513, 16014, -3668, 23681),
+            Location.of(81999, 53793, -1496, 61621),
+            Location.of(148159, -55484, -2734, 44315),
+            Location.of(44185, -48502, -797, 27479),
+            Location.of(86899, -143229, -1293, 22021));
 
 
     @Override

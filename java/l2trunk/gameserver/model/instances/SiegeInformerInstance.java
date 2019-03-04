@@ -19,7 +19,7 @@ public final class SiegeInformerInstance extends NpcInstance {
             return;
 
         if (command.startsWith("siege_")) {
-            Castle castle = ResidenceHolder.getResidence(Castle.class, toInt(command.substring(6)));
+            Castle castle = ResidenceHolder.getCastle(toInt(command.substring(6)));
             if (castle != null)
                 player.sendPacket(new CastleSiegeInfo(castle, player));
         } else

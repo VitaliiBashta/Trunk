@@ -15,7 +15,7 @@ public final class ManaHealPercent extends Skill {
 
     public ManaHealPercent(StatsSet set) {
         super(set);
-        ignoreMpEff = set.getBool("ignoreMpEff", true);
+        ignoreMpEff = set.isSet("ignoreMpEff");
     }
 
     @Override

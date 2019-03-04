@@ -678,33 +678,33 @@ public enum SevenSigns {
             if (sevenDat.getInteger("cabal") == getCabalHighestScore())
                 switch (getCabalHighestScore()) {
                     case CABAL_DAWN:
-                        sevenDat.set("dawn_red_stones", 0);
-                        sevenDat.set("dawn_green_stones", 0);
-                        sevenDat.set("dawn_blue_stones", 0);
-                        sevenDat.set("dawn_contribution_score", 0);
+                        sevenDat.unset("dawn_red_stones");
+                        sevenDat.unset("dawn_green_stones");
+                        sevenDat.unset("dawn_blue_stones");
+                        sevenDat.unset("dawn_contribution_score");
                         break;
                     case CABAL_DUSK:
-                        sevenDat.set("dusk_red_stones", 0);
-                        sevenDat.set("dusk_green_stones", 0);
-                        sevenDat.set("dusk_blue_stones", 0);
-                        sevenDat.set("dusk_contribution_score", 0);
+                        sevenDat.unset("dusk_red_stones");
+                        sevenDat.unset("dusk_green_stones");
+                        sevenDat.unset("dusk_blue_stones");
+                        sevenDat.unset("dusk_contribution_score");
                         break;
                 }
             else if (sevenDat.getInteger("cabal") == CABAL_DAWN || sevenDat.getInteger("cabal") == CABAL_NULL) {
-                sevenDat.set("dusk_red_stones", 0);
-                sevenDat.set("dusk_green_stones", 0);
-                sevenDat.set("dusk_blue_stones", 0);
-                sevenDat.set("dusk_contribution_score", 0);
+                sevenDat.unset("dusk_red_stones");
+                sevenDat.unset("dusk_green_stones");
+                sevenDat.unset("dusk_blue_stones");
+                sevenDat.unset("dusk_contribution_score");
             } else if (sevenDat.getInteger("cabal") == CABAL_DUSK || sevenDat.getInteger("cabal") == CABAL_NULL) {
-                sevenDat.set("dawn_red_stones", 0);
-                sevenDat.set("dawn_green_stones", 0);
-                sevenDat.set("dawn_blue_stones", 0);
-                sevenDat.set("dawn_contribution_score", 0);
+                sevenDat.unset("dawn_red_stones");
+                sevenDat.unset("dawn_green_stones");
+                sevenDat.unset("dawn_blue_stones");
+                sevenDat.unset("dawn_contribution_score");
             }
 
             // Reset the getPlayer's cabal and seal information
-            sevenDat.set("cabal", CABAL_NULL);
-            sevenDat.set("seal", SEAL_NULL);
+            sevenDat.unset("cabal");
+            sevenDat.unset("seal");
             _signsPlayerData.put(charObjId, sevenDat);
         }
         // A database update should soon follow this!
@@ -1179,7 +1179,7 @@ public enum SevenSigns {
      */
     public class SevenSignsPeriodChange extends RunnableImpl {
         public void runImpl() {
-            _log.info("SevenSignsPeriodChange: old=" + _activePeriod);
+            LOG.info("SevenSignsPeriodChange: old=" + _activePeriod);
             int periodEnded = _activePeriod;
             _activePeriod++;
             switch (periodEnded) {
@@ -1208,7 +1208,7 @@ public enum SevenSigns {
                     RaidBossSpawnManager.INSTANCE.distributeRewards();
                     // Send message that Seal Validation has begun.
                     sendMessageToAll(SystemMessage.SEVEN_SIGNS_THE_SEAL_VALIDATION_PERIOD_HAS_BEGUN);
-                    _log.info("SevenSigns: The " + getCabalName(_previousWinner) + " have won the competition with " + getCurrentScore(_previousWinner) + " points!");
+                    LOG.info("SevenSigns: The " + getCabalName(_previousWinner) + " have won the competition with " + getCurrentScore(_previousWinner) + " points!");
                     break;
                 case PERIOD_SEAL_VALIDATION: // Reset for New Cycle
                     // Ensure a cycle restart when this period ends.
@@ -1229,22 +1229,22 @@ public enum SevenSigns {
             }
             // Make sure all Seven Signs data is saved for future use.
             saveSevenSignsData(0, true);
-            _log.info("SevenSignsPeriodChange: new=" + _activePeriod);
+            LOG.info("SevenSignsPeriodChange: new=" + _activePeriod);
             try {
-                _log.info("SevenSigns: Change Catacomb spawn...");
+                LOG.info("SevenSigns: Change Catacomb spawn...");
                 getListenerEngine().onPeriodChange();
                 SSQInfo ss = new SSQInfo();
                 GameObjectsStorage.getAllPlayersStream().forEach(player -> player.sendPacket(ss));
-                _log.info("SevenSigns: Spawning NPCs...");
+                LOG.info("SevenSigns: Spawning NPCs...");
                 spawnSevenSignsNPC();
-                _log.info("SevenSigns: The " + getCurrentPeriodName() + " period has begun!");
-                _log.info("SevenSigns: Calculating next period change time...");
+                LOG.info("SevenSigns: The " + getCurrentPeriodName() + " period has begun!");
+                LOG.info("SevenSigns: Calculating next period change time...");
                 setCalendarForNextPeriodChange();
-                _log.info("SevenSignsPeriodChange: time to next change=" + Util.formatTime((int) (getMilliToPeriodChange() / 1000L)));
+                LOG.info("SevenSignsPeriodChange: time to next change=" + Util.formatTime((int) (getMilliToPeriodChange() / 1000L)));
                 SevenSignsPeriodChange sspc = new SevenSignsPeriodChange();
                 _periodChange = ThreadPoolManager.INSTANCE.schedule(sspc, getMilliToPeriodChange());
             } catch (RuntimeException e) {
-                _log.error("Error on SevenSignsPeriodChange", e);
+                LOG.error("Error on SevenSignsPeriodChange", e);
             }
         }
     }

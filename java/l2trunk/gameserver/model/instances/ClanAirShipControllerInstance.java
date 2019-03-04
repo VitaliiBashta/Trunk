@@ -23,8 +23,8 @@ public final class ClanAirShipControllerInstance extends AirShipControllerInstan
 
     public ClanAirShipControllerInstance(int objectID, NpcTemplate template) {
         super(objectID, template);
-        int dockId = template.getAIParams().getInteger("dockId", 0);
-        int platformId = template.getAIParams().getInteger("platformId", 0);
+        int dockId = template.getAiParams().getInteger("dockId");
+        int platformId = template.getAiParams().getInteger("platformId");
         airshipDock = AirshipDockHolder.getDock(dockId);
         _platform = airshipDock.getPlatform(platformId);
     }
@@ -34,7 +34,7 @@ public final class ClanAirShipControllerInstance extends AirShipControllerInstan
         if (!canBypassCheck(player, this))
             return;
 
-        if (command.equalsIgnoreCase("summon")) {
+        if ("summon".equalsIgnoreCase(command)) {
             if (player.getClan() == null || player.getClan().getLevel() < 5) {
                 player.sendPacket(SystemMsg.IN_ORDER_TO_ACQUIRE_AN_AIRSHIP_THE_CLANS_LEVEL_MUST_BE_LEVEL_5_OR_HIGHER);
                 return;

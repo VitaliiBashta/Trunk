@@ -9,7 +9,6 @@ import java.util.regex.Pattern;
 
 public final class Strings {
     private static final Logger _log = LoggerFactory.getLogger(Strings.class);
-    private static String[] tr;
     private static String[] trb;
     private static String[] trcode;
 
@@ -40,7 +39,7 @@ public final class Strings {
 
     public static void reload() {
         String[] pairs = FileUtils.readFileToString(Config.DATAPACK_ROOT.resolve("data/translit.txt")).split("\n");
-        tr = new String[pairs.length * 2];
+        String[] tr = new String[pairs.length * 2];
         for (int i = 0; i < pairs.length; i++) {
             String[] ss = pairs[i].split(" +");
             tr[i * 2] = ss[0];
@@ -64,17 +63,6 @@ public final class Strings {
             trcode[i * 2 + 1] = ss[1];
         }
         _log.info("Loaded " + (tr.length + tr.length + trcode.length) + " translit entries.");
-    }
-
-    public static String fromTranslit(String s, int type) {
-        if (type == 1)
-            for (int i = 0; i < trb.length; i += 2)
-                s = s.replace(trb[i], trb[i + 1]);
-        else if (type == 2)
-            for (int i = 0; i < trcode.length; i += 2)
-                s = s.replace(trcode[i], trcode[i + 1]);
-
-        return s;
     }
 
     public static String replace(String str, String regex, int flags, String replace) {
@@ -108,7 +96,7 @@ public final class Strings {
      * @param startIdx - начальный индекс, если указать отрицательный то он отнимется от количества строк
      * @param maxCount - мескимум элементов, если 0 - вернутся пустая строка, если отрицательный то учитыватся не будет
      */
-    public static String joinStrings(String glueStr, String[] strings, int startIdx, int maxCount) {
+    static String joinStrings(String glueStr, String[] strings, int startIdx, int maxCount) {
         String result = "";
         if (startIdx < 0) {
             startIdx += strings.length;

@@ -9,11 +9,12 @@ import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public enum UnderGroundColliseumManager {
     INSTANCE;
     private final Logger LOG = LoggerFactory.getLogger(UnderGroundColliseumManager.class);
-    private HashMap<String, Coliseum> coliseums = new HashMap<>();
+    private Map<String, Coliseum> coliseums = new HashMap<>();
 
     UnderGroundColliseumManager() {
         List<Zone> zones = ReflectionUtils.getZonesByType(ZoneType.UnderGroundColiseum);

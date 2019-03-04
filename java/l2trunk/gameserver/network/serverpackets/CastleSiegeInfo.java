@@ -35,15 +35,15 @@ import java.util.List;
  * @reworked VISTALL
  */
 public final class CastleSiegeInfo extends L2GameServerPacket {
-    private final int _id;
-    private final int _ownerObjectId;
-    private long _startTime;
-    private int _allyId;
-    private boolean _isLeader;
-    private String _ownerName = "No owner";
-    private String _leaderName = StringUtils.EMPTY;
-    private String _allyName = StringUtils.EMPTY;
-    private List<Integer> _nextTimeMillis = new ArrayList<>();
+    private final int id;
+    private final int ownerObjectId;
+    private long startTime;
+    private int allyId;
+    private boolean isLeader;
+    private String ownerName = "No owner";
+    private String leaderName = StringUtils.EMPTY;
+    private String allyName = StringUtils.EMPTY;
+    private List<Integer> nextTimeMillis = new ArrayList<>();
 
     public CastleSiegeInfo(Castle castle, Player player) {
         this((Residence) castle, player);
@@ -51,29 +51,29 @@ public final class CastleSiegeInfo extends L2GameServerPacket {
         CastleSiegeEvent siegeEvent = castle.getSiegeEvent();
         long siegeTimeMillis = castle.getSiegeDate().getTimeInMillis();
         if (siegeTimeMillis == 0)
-            _nextTimeMillis = siegeEvent.getNextSiegeTimes();
+            nextTimeMillis = siegeEvent.getNextSiegeTimes();
         else
-            _startTime = (int) (siegeTimeMillis / 1000);
+            startTime = (int) (siegeTimeMillis / 1000);
     }
 
     public CastleSiegeInfo(ClanHall ch, Player player) {
         this((Residence) ch, player);
 
-        _startTime = (int) (ch.getSiegeDate().getTimeInMillis() / 1000);
+        startTime = (int) (ch.getSiegeDate().getTimeInMillis() / 1000);
     }
 
     private CastleSiegeInfo(Residence residence, Player player) {
-        _id = residence.getId();
-        _ownerObjectId = residence.getOwnerId();
+        id = residence.getId();
+        ownerObjectId = residence.getOwnerId();
         Clan owner = residence.getOwner();
         if (owner != null) {
-            _isLeader = player.isGM() || owner.getLeaderId(Clan.SUBUNIT_MAIN_CLAN) == player.objectId();
-            _ownerName = owner.getName();
-            _leaderName = owner.getLeaderName(Clan.SUBUNIT_MAIN_CLAN);
+            isLeader = player.isGM() || owner.getLeaderId(Clan.SUBUNIT_MAIN_CLAN) == player.objectId();
+            ownerName = owner.getName();
+            leaderName = owner.getLeaderName(Clan.SUBUNIT_MAIN_CLAN);
             Alliance ally = owner.getAlliance();
             if (ally != null) {
-                _allyId = ally.getAllyId();
-                _allyName = ally.getAllyName();
+                allyId = ally.getAllyId();
+                allyName = ally.getAllyName();
             }
         }
     }
@@ -81,16 +81,16 @@ public final class CastleSiegeInfo extends L2GameServerPacket {
     @Override
     protected void writeImpl() {
         writeC(0xC9);
-        writeD(_id);
-        writeD(_isLeader ? 0x01 : 0x00);
-        writeD(_ownerObjectId);
-        writeS(_ownerName); // Clan Name
-        writeS(_leaderName); // Clan Leader Name
-        writeD(_allyId); // Ally ID
-        writeS(_allyName); // Ally Name
+        writeD(id);
+        writeD(isLeader ? 0x01 : 0x00);
+        writeD(ownerObjectId);
+        writeS(ownerName); // Clan Name
+        writeS(leaderName); // Clan Leader Name
+        writeD(allyId); // Ally ID
+        writeS(allyName); // Ally Name
         writeD((int) (Calendar.getInstance().getTimeInMillis() / 1000));
-        writeD((int) _startTime);
-        if (_startTime == 0) // If zero is the cycle
-            writeDD(_nextTimeMillis);
+        writeD((int) startTime);
+        if (startTime == 0) // If zero is the cycle
+            writeDD(nextTimeMillis);
     }
 }

@@ -132,7 +132,7 @@ public final class DecoyInstance extends NpcInstance {
                 if (newTimeRemaining < 0)
                     unSummon();
             } catch (RuntimeException e) {
-                _log.error("Error on Decoy Lifetime End", e);
+                LOG.error("Error on Decoy Lifetime End", e);
             }
         }
     }
@@ -153,7 +153,7 @@ public final class DecoyInstance extends NpcInstance {
                 setTarget(DecoyInstance.this);
                 doCast(skillId, skillLvl, DecoyInstance.this, true);
             } catch (RuntimeException e) {
-                _log.error("Error while Changing Target to DecoyInstance", e);
+                LOG.error("Error while Changing Target to DecoyInstance", e);
             }
         }
     }

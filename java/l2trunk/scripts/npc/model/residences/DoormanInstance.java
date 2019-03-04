@@ -26,13 +26,13 @@ public abstract class DoormanInstance extends NpcInstance {
 
         setDialogs();
 
-        doors = template.getAIParams().getIntegerList("doors");
+        doors = template.getAiParams().getIntegerList("doors");
     }
 
     protected void setDialogs() {
-        _siegeDialog = getTemplate().getAIParams().getString("siege_dialog");
-        _mainDialog = getTemplate().getAIParams().getString("main_dialog");
-        _failDialog = getTemplate().getAIParams().getString("fail_dialog");
+        _siegeDialog = getTemplate().getAiParams().getString("siege_dialog");
+        _mainDialog = getTemplate().getAiParams().getString("main_dialog");
+        _failDialog = getTemplate().getAiParams().getString("fail_dialog");
     }
 
     @Override

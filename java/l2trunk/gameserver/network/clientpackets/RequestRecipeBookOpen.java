@@ -8,7 +8,7 @@ public class RequestRecipeBookOpen extends L2GameClientPacket {
 
     @Override
     protected void readImpl() {
-        if (_buf.hasRemaining())
+        if (buf.hasRemaining())
             isDwarvenCraft = readD() == 0;
     }
 

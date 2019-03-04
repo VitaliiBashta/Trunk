@@ -20,7 +20,7 @@ public final class Heal extends Skill {
 
     public Heal(StatsSet set) {
         super(set);
-        ignoreHpEff = set.getBool("ignoreHpEff", false);
+        ignoreHpEff = set.isSet("ignoreHpEff");
         staticPower = set.getBool("staticPower", isItemHandler);
     }
 

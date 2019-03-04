@@ -285,7 +285,7 @@ public enum LotteryManager {
         @Override
         public void runImpl() {
             if (Config.SERVICES_ALLOW_LOTTERY)
-                _log.info("Lottery: Stopping ticket sell for lottery #" + getId() + ".");
+                LOG.info("Lottery: Stopping ticket sell for lottery #" + getId() + ".");
             _isSellingTickets = false;
 
             Announcements.INSTANCE.announceToAll(new SystemMessage2(SystemMsg.LOTTERY_TICKET_SALES_HAVE_BEEN_TEMPORARILY_SUSPENDED));
@@ -300,7 +300,7 @@ public enum LotteryManager {
         @Override
         public void runImpl() {
             if (Config.SERVICES_ALLOW_LOTTERY)
-                _log.info("Lottery: Ending lottery #" + getId() + ".");
+                LOG.info("Lottery: Ending lottery #" + getId() + ".");
 
             int[] luckynums = new int[5];
             int luckynum = 0;
@@ -321,7 +321,7 @@ public enum LotteryManager {
             }
 
             if (Config.SERVICES_ALLOW_LOTTERY)
-                _log.info("Lottery: The lucky numbers are " + luckynums[0] + ", " + luckynums[1] + ", " + luckynums[2] + ", " + luckynums[3] + ", " + luckynums[4] + ".");
+                LOG.info("Lottery: The lucky numbers are " + luckynums[0] + ", " + luckynums[1] + ", " + luckynums[2] + ", " + luckynums[3] + ", " + luckynums[4] + ".");
 
             int enchant = 0;
             int type2 = 0;
@@ -333,7 +333,7 @@ public enum LotteryManager {
                     type2 += Math.pow(2, luckynums[i] - 17);
 
             if (Config.SERVICES_ALLOW_LOTTERY)
-                _log.info("Lottery: Encoded lucky numbers are " + enchant + ", " + type2);
+                LOG.info("Lottery: Encoded lucky numbers are " + enchant + ", " + type2);
 
             int count1 = 0;
             int count2 = 0;
@@ -379,7 +379,7 @@ public enum LotteryManager {
                         count4++;
                 }
             } catch (SQLException e) {
-                _log.warn("Lottery: Could restore lottery data: ", e);
+                LOG.warn("Lottery: Could restore lottery data: ", e);
             }
 
             int prize4 = count4 * Config.SERVICES_LOTTERY_2_AND_1_NUMBER_PRIZE;
@@ -404,7 +404,7 @@ public enum LotteryManager {
                 newprize = getPrize() + prize1 + prize2 + prize3;
 
             if (Config.SERVICES_ALLOW_LOTTERY)
-                _log.info("Lottery: Jackpot for next lottery is " + newprize + ".");
+                LOG.info("Lottery: Jackpot for next lottery is " + newprize + ".");
 
             SystemMessage2 sm;
             if (count1 > 0) {
@@ -434,7 +434,7 @@ public enum LotteryManager {
                 statement.setInt(8, getId());
                 statement.execute();
             } catch (SQLException e) {
-                _log.warn("Lottery: Could not store finished lottery data: ", e);
+                LOG.warn("Lottery: Could not store finished lottery data: ", e);
             }
 
             ThreadPoolManager.INSTANCE.schedule(new startLottery(), MINUTE);

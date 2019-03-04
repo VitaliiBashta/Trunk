@@ -4,36 +4,35 @@ import l2trunk.gameserver.model.quest.QuestNpcLogInfo;
 import l2trunk.gameserver.model.quest.QuestState;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 
 public final class ExQuestNpcLogList extends L2GameServerPacket {
-    private final int _questId;
-    private List<int[]> _logList = Collections.emptyList();
+    private final int questId;
+    private List<int[]> logList;
 
     public ExQuestNpcLogList(QuestState state) {
-        _questId = state.quest.id;
-        int cond = state.getCond();
-        List<QuestNpcLogInfo> vars = state.quest.getNpcLogList(cond);
+        logList = new ArrayList<>();
+        questId = state.quest.id;
+        List<QuestNpcLogInfo> vars = state.quest.getNpcLogList(state.getCond());
         if (vars == null)
             return;
 
-        _logList = new ArrayList<>(vars.size());
+        logList = new ArrayList<>(vars.size());
         for (QuestNpcLogInfo entry : vars) {
             int[] i = new int[2];
-            i[0] = entry.getNpcIds().get(0) + 1000000;
-            i[1] = state.getInt(entry.getVarName());
-            _logList.add(i);
+            i[0] = entry.npcIds.get(0) + 1000000;
+            i[1] = state.getInt(entry.varName);
+            logList.add(i);
         }
     }
 
     @Override
     protected void writeImpl() {
         writeEx(0xC5);
-        writeD(_questId);
-        writeC(_logList.size());
-        for (int[] values : _logList) {
+        writeD(questId);
+        writeC(logList.size());
+        for (int[] values : logList) {
             writeD(values[0]);
             writeC(0);      // npc index?
             writeD(values[1]);

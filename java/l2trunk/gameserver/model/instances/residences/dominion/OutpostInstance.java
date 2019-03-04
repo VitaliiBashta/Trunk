@@ -29,7 +29,7 @@ public final class OutpostInstance extends SiegeFlagInstance {
         c.setZmin(World.MAP_MIN_Z);
 
         StatsSet set = new StatsSet();
-        set.set("name", StringUtils.EMPTY);
+        set.set("name", "");
         set.set("type", Zone.ZoneType.dummy);
         set.set("territory", new Territory().add(c));
 

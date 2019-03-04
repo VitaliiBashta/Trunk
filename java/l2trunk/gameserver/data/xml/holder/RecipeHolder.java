@@ -1,9 +1,9 @@
 package l2trunk.gameserver.data.xml.holder;
 
 import l2trunk.commons.collections.StatsSet;
+import l2trunk.commons.lang.Pair;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.model.Recipe;
-import l2trunk.gameserver.model.RecipeComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -18,6 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
@@ -28,8 +29,8 @@ public final class RecipeHolder {
     private static final Logger LOG = LoggerFactory.getLogger(RecipeHolder.class);
     private static RecipeHolder instance;
 
-    private final ConcurrentHashMap<Integer, Recipe> listByRecipeId = new ConcurrentHashMap<>();
-    private final ConcurrentHashMap<Integer, Recipe> listByRecipeItem = new ConcurrentHashMap<>();
+    private final Map<Integer, Recipe> listByRecipeId = new ConcurrentHashMap<>();
+    private final Map<Integer, Recipe> listByRecipeItem = new ConcurrentHashMap<>();
 
     private RecipeHolder() {
         listByRecipeId.clear();
@@ -54,7 +55,7 @@ public final class RecipeHolder {
         Path file = Config.DATAPACK_ROOT.resolve("data/recipes.xml");
         if (Files.exists(file)) {
             Document doc = factory.newDocumentBuilder().parse(file.toFile());
-            List<RecipeComponent> recipePartList = new ArrayList<>();
+            List<Pair<Integer, Integer>> recipePartList = new ArrayList<>();
             for (Node n = doc.getFirstChild(); n != null; n = n.getNextSibling()) {
                 if ("list".equalsIgnoreCase(n.getNodeName())) {
                     for (Node d = n.getFirstChild(); d != null; d = d.getNextSibling()) {
@@ -112,7 +113,7 @@ public final class RecipeHolder {
                                 LOG.error("Missing itemId for recipe item id: " + id + ", skipping");
                                 continue;
                             }
-                            set.set("itemId", Short.parseShort(att.getNodeValue()));
+                            set.set("itemId", toInt(att.getNodeValue()));
 
                             att = attrs.getNamedItem("foundation");
                             if (att == null) {
@@ -147,13 +148,14 @@ public final class RecipeHolder {
                                 LOG.error("Missing type for recipe item id: " + id + ", skipping");
                                 continue;
                             }
-                            set.set("isDvarvenCraft", toBoolean(att.getNodeValue()));
+                            if (toBoolean(att.getNodeValue()))
+                                set.set("isDvarvenCraft");
 
                             for (Node c = d.getFirstChild(); c != null; c = c.getNextSibling()) {
                                 if ("recitem".equalsIgnoreCase(c.getNodeName())) {
                                     int rpItemId = toInt(c.getAttributes().getNamedItem("item").getNodeValue());
                                     int quantity = toInt(c.getAttributes().getNamedItem("icount").getNodeValue());
-                                    recipePartList.add(new RecipeComponent(rpItemId, quantity));
+                                    recipePartList.add(Pair.of(rpItemId, quantity));
                                 }
                             }
 
@@ -167,12 +169,10 @@ public final class RecipeHolder {
                             int foundation = set.getInteger("foundation");
                             long exp = set.getLong("exp");
                             long sp = set.getLong("sp");
-                            boolean isDvarvenCraft = set.getBool("isDvarvenCraft");
+                            boolean isDvarvenCraft = set.isSet("isDvarvenCraft");
 
                             Recipe recipeList = new Recipe(id, level, recipeId, recipeName, successRate, mpCost, itemId, foundation, count, exp, sp, isDvarvenCraft);
-                            for (RecipeComponent recipePart : recipePartList) {
-                                recipeList.addRecipe(recipePart);
-                            }
+                            recipePartList.forEach(recipeList::addRecipe);
                             listByRecipeId.put(id, recipeList);
                             listByRecipeItem.put(recipeId, recipeList);
                         }

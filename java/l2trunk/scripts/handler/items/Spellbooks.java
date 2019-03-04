@@ -1,8 +1,6 @@
 package l2trunk.scripts.handler.items;
 
 import l2trunk.gameserver.data.xml.holder.SkillAcquireHolder;
-import l2trunk.gameserver.handler.items.ItemHandler;
-import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.SkillLearn;
@@ -45,13 +43,13 @@ public final class Spellbooks extends ScriptItemHandler implements ScriptFile {
         boolean alreadyHas = true;
         boolean good = true;
         for (SkillLearn learn : list) {
-            if (player.getSkillLevel(learn.id()) != learn.getLevel()) {
+            if (player.getSkillLevel(learn.id) != learn.level) {
                 alreadyHas = false;
                 break;
             }
         }
         for (SkillLearn learn2 : list) {
-            if (item.getItemId() == 13728 && learn2.getItemId() != 13728) {
+            if (item.getItemId() == 13728 && learn2.itemId != 13728) {
                 good = false;
                 break;
             }
@@ -68,7 +66,7 @@ public final class Spellbooks extends ScriptItemHandler implements ScriptFile {
         // проверка по уровне
         boolean wrongLvl = false;
         for (SkillLearn learn : list) {
-            if (player.getLevel() < learn.getMinLevel())
+            if (player.getLevel() < learn.minLevel)
                 wrongLvl = true;
         }
 
@@ -81,7 +79,7 @@ public final class Spellbooks extends ScriptItemHandler implements ScriptFile {
             return false;
 
         for (SkillLearn skillLearn : list) {
-            Skill skill = SkillTable.INSTANCE.getInfo(skillLearn.id(), skillLearn.getLevel());
+            Skill skill = SkillTable.INSTANCE.getInfo(skillLearn.id, skillLearn.level);
             if (skill == null)
                 continue;
             player.sendPacket(new SystemMessage2(SystemMsg.YOU_HAVE_EARNED_S1_SKILL).addSkillName(skill.id, skill.level));

@@ -15,7 +15,7 @@ public final class EffectDamOverTime extends Effect {
 
     public EffectDamOverTime(Env env, EffectTemplate template) {
         super(env, template);
-        _percent = getTemplate().getParam().getBool("percent", false);
+        _percent = getTemplate().getParam().isSet("percent");
     }
 
     @Override

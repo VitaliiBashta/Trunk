@@ -36,7 +36,7 @@ public final class Summon extends Skill {
         super(set);
 
         _summonType = Enum.valueOf(SummonType.class, set.getString("summonType", "PET").toUpperCase());
-        expPenalty = set.getDouble("expPenalty", 0.f);
+        expPenalty = set.getDouble("expPenalty");
         itemConsumeIdInTime = set.getInteger("itemConsumeIdInTime");
         itemConsumeCountInTime = set.getInteger("itemConsumeCountInTime");
         itemConsumeDelay = set.getInteger("itemConsumeDelay", 240) * 1000;

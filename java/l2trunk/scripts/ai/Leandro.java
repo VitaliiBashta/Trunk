@@ -12,24 +12,24 @@ import java.util.List;
 
 public final class Leandro extends DefaultAI {
     private static final List<Location> points = List.of(
-            new Location(-82428, 245204, -3720),
-            new Location(-82422, 245448, -3704),
-            new Location(-82080, 245401, -3720),
-            new Location(-82108, 244974, -3720),
-            new Location(-83595, 244051, -3728),
-            new Location(-83898, 242776, -3728),
-            new Location(-85966, 241371, -3728),
-            new Location(-86079, 240868, -3720),
-            new Location(-86076, 240392, -3712),
-            new Location(-86519, 240706, -3712),
-            new Location(-86343, 241130, -3720),
-            new Location(-86519, 240706, -3712),
-            new Location(-86076, 240392, -3712),
-            new Location(-86079, 240868, -3720),
-            new Location(-85966, 241371, -3728),
-            new Location(-83898, 242776, -3728),
-            new Location(-83595, 244051, -3728),
-            new Location(-82108, 244974, -3720));
+           Location.of(-82428, 245204, -3720),
+           Location.of(-82422, 245448, -3704),
+           Location.of(-82080, 245401, -3720),
+           Location.of(-82108, 244974, -3720),
+           Location.of(-83595, 244051, -3728),
+           Location.of(-83898, 242776, -3728),
+           Location.of(-85966, 241371, -3728),
+           Location.of(-86079, 240868, -3720),
+           Location.of(-86076, 240392, -3712),
+           Location.of(-86519, 240706, -3712),
+           Location.of(-86343, 241130, -3720),
+           Location.of(-86519, 240706, -3712),
+           Location.of(-86076, 240392, -3712),
+           Location.of(-86079, 240868, -3720),
+           Location.of(-85966, 241371, -3728),
+           Location.of(-83898, 242776, -3728),
+           Location.of(-83595, 244051, -3728),
+           Location.of(-82108, 244974, -3720));
 
     private int current_point = -1;
     private long wait_timeout = 0;

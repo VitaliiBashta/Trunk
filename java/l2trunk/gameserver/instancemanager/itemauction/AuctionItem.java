@@ -21,8 +21,8 @@ public final class AuctionItem extends ItemInfo {
         setItemId(itemId);
         setCount(itemCount);
         setEquipped(altByItem);
-        setEnchantLevel(itemExtra.getInteger("enchant_level", 0));
-        setAugmentationId(itemExtra.getInteger("augmentation_id", 0));
+        setEnchantLevel(itemExtra.getInteger("enchant_level"));
+        setAugmentationId(itemExtra.getInteger("augmentation_id"));
     }
 
     public final int getAuctionItemId() {

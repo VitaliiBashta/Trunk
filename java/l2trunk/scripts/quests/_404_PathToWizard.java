@@ -4,6 +4,9 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
+import static l2trunk.gameserver.model.base.ClassId.mage;
+import static l2trunk.gameserver.model.base.ClassId.wizard;
+
 public final class _404_PathToWizard extends Quest {
     //npc
     private final int PARINA = 30391;
@@ -36,9 +39,9 @@ public final class _404_PathToWizard extends Quest {
 
         addStartNpc(PARINA);
 
-        addTalkId(EARTH_SNAKE,WASTELAND_LIZARDMAN,FLAME_SALAMANDER,WIND_SYLPH,WATER_UNDINE);
+        addTalkId(EARTH_SNAKE, WASTELAND_LIZARDMAN, FLAME_SALAMANDER, WIND_SYLPH, WATER_UNDINE);
 
-        addKillId(RED_BEAR,RATMAN_WARRIOR,WATER_SEER);
+        addKillId(RED_BEAR, RATMAN_WARRIOR, WATER_SEER);
 
         addQuestItem(KEY_OF_FLAME_ID,
                 MAP_OF_LUSTER_ID,
@@ -58,7 +61,7 @@ public final class _404_PathToWizard extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
         if (event.equals("1")) {
-            if (st.player.getClassId().id == 0x0a) {
+            if (st.player.getClassId() == mage) {
                 if (st.player.getLevel() >= 18) {
                     if (st.haveQuestItem(BEAD_OF_SEASON_ID))
                         htmltext = "parina_q0404_03.htm";
@@ -70,12 +73,12 @@ public final class _404_PathToWizard extends Quest {
                     }
                 } else
                     htmltext = "parina_q0404_02.htm";
-            } else if (st.player.getClassId().id == 0x0b)
+            } else if (st.player.getClassId() == wizard)
                 htmltext = "parina_q0404_02a.htm";
             else
                 htmltext = "parina_q0404_01.htm";
         } else if (event.equals("30410_1"))
-            if (st.getQuestItemsCount(WIND_FEATHER_ID) < 1) {
+            if (!st.haveQuestItem(WIND_FEATHER_ID)) {
                 htmltext = "lizardman_of_wasteland_q0404_03.htm";
                 st.giveItems(WIND_FEATHER_ID);
                 st.setCond(6);
@@ -91,14 +94,11 @@ public final class _404_PathToWizard extends Quest {
         if (npcId == PARINA) {
             if (cond == 0)
                 htmltext = "parina_q0404_04.htm";
-            else if (cond > 0 && st.getQuestItemsCount(FLAME_EARING_ID) < 1 | st.getQuestItemsCount(WIND_BANGEL_ID) < 1 | st.getQuestItemsCount(WATER_NECKLACE_ID) < 1 | st.getQuestItemsCount(EARTH_RING_ID) < 1)
+            else if (cond > 0 && !st.haveAllQuestItems(FLAME_EARING_ID, WIND_BANGEL_ID, WATER_NECKLACE_ID, EARTH_RING_ID))
                 htmltext = "parina_q0404_05.htm";
             else if (cond > 0 && st.haveAllQuestItems(FLAME_EARING_ID, WIND_BANGEL_ID, WATER_NECKLACE_ID, EARTH_RING_ID)) {
                 htmltext = "parina_q0404_06.htm";
-                st.takeItems(FLAME_EARING_ID);
-                st.takeItems(WIND_BANGEL_ID);
-                st.takeItems(WATER_NECKLACE_ID);
-                st.takeItems(EARTH_RING_ID);
+                st.takeAllItems(FLAME_EARING_ID, WIND_BANGEL_ID, WATER_NECKLACE_ID, EARTH_RING_ID);
                 if (st.player.getClassId().occupation() == 0) {
                     st.giveItemIfNotHave(BEAD_OF_SEASON_ID);
                     if (!st.player.isVarSet("prof1")) {
@@ -118,12 +118,11 @@ public final class _404_PathToWizard extends Quest {
             } else if (cond > 0 && st.haveQuestItem(MAP_OF_LUSTER_ID) && !st.haveQuestItem(KEY_OF_FLAME_ID))
                 htmltext = "flame_salamander_q0404_02.htm";
             else if (cond == 3 && st.haveAllQuestItems(MAP_OF_LUSTER_ID, KEY_OF_FLAME_ID)) {
-                st.takeItems(KEY_OF_FLAME_ID);
-                st.takeItems(MAP_OF_LUSTER_ID);
+                st.takeAllItems(KEY_OF_FLAME_ID, MAP_OF_LUSTER_ID);
                 st.giveItemIfNotHave(FLAME_EARING_ID);
                 htmltext = "flame_salamander_q0404_03.htm";
                 st.setCond(4);
-            } else if (cond > 0 && st.getQuestItemsCount(FLAME_EARING_ID) > 0)
+            } else if (cond > 0 && st.haveQuestItem(FLAME_EARING_ID))
                 htmltext = "flame_salamander_q0404_04.htm";
         } else if (npcId == WIND_SYLPH) {
             if (cond == 4 && st.haveQuestItem(FLAME_EARING_ID) && !st.haveQuestItem(BROKEN_BRONZE_MIRROR_ID) && !st.haveQuestItem(WIND_BANGEL_ID)) {
@@ -133,44 +132,40 @@ public final class _404_PathToWizard extends Quest {
             } else if (cond > 0 && st.haveQuestItem(BROKEN_BRONZE_MIRROR_ID) && !st.haveQuestItem(WIND_FEATHER_ID))
                 htmltext = "wind_sylph_q0404_02.htm";
             else if (cond > 0 && st.haveAllQuestItems(BROKEN_BRONZE_MIRROR_ID, WIND_FEATHER_ID)) {
-                st.takeItems(WIND_FEATHER_ID);
-                st.takeItems(BROKEN_BRONZE_MIRROR_ID);
+                st.takeAllItems(WIND_FEATHER_ID, BROKEN_BRONZE_MIRROR_ID);
                 st.giveItemIfNotHave(WIND_BANGEL_ID);
                 htmltext = "wind_sylph_q0404_03.htm";
                 st.setCond(7);
             } else if (cond > 0 && st.haveQuestItem(WIND_BANGEL_ID))
                 htmltext = "wind_sylph_q0404_04.htm";
         } else if (npcId == WASTELAND_LIZARDMAN) {
-            if (cond > 0 && st.getQuestItemsCount(BROKEN_BRONZE_MIRROR_ID) > 0 && st.getQuestItemsCount(WIND_FEATHER_ID) < 1)
+            if (cond > 0 && st.haveQuestItem(BROKEN_BRONZE_MIRROR_ID) && !st.haveQuestItem(WIND_FEATHER_ID))
                 htmltext = "lizardman_of_wasteland_q0404_01.htm";
             else if (cond > 0 && st.haveAllQuestItems(BROKEN_BRONZE_MIRROR_ID, WIND_FEATHER_ID))
                 htmltext = "lizardman_of_wasteland_q0404_04.htm";
         } else if (npcId == WATER_UNDINE) {
-            if (cond == 7 && st.getQuestItemsCount(WIND_BANGEL_ID) > 0 && st.getQuestItemsCount(RAMAS_DIARY_ID) < 1 && st.getQuestItemsCount(WATER_NECKLACE_ID) < 1) {
+            if (cond == 7 && st.haveQuestItem(WIND_BANGEL_ID) && st.getQuestItemsCount(RAMAS_DIARY_ID) < 1 && st.getQuestItemsCount(WATER_NECKLACE_ID) < 1) {
                 st.giveItems(RAMAS_DIARY_ID);
                 htmltext = "water_undine_q0404_01.htm";
                 st.setCond(8);
             } else if (cond > 0 && st.haveQuestItem(RAMAS_DIARY_ID) && st.getQuestItemsCount(SPARKLE_PEBBLE_ID) < 2)
                 htmltext = "water_undine_q0404_02.htm";
-            else if (cond == 9 && st.getQuestItemsCount(RAMAS_DIARY_ID) > 0 && st.getQuestItemsCount(SPARKLE_PEBBLE_ID) > 1) {
-                st.takeItems(SPARKLE_PEBBLE_ID);
-                st.takeItems(RAMAS_DIARY_ID);
-                if (st.getQuestItemsCount(WATER_NECKLACE_ID) < 1)
-                    st.giveItems(WATER_NECKLACE_ID);
+            else if (cond == 9 && st.haveQuestItem(RAMAS_DIARY_ID)  && st.haveQuestItem(SPARKLE_PEBBLE_ID,2)) {
+                st.takeAllItems(SPARKLE_PEBBLE_ID, RAMAS_DIARY_ID);
+                st.giveItemIfNotHave(WATER_NECKLACE_ID);
                 htmltext = "water_undine_q0404_03.htm";
                 st.setCond(10);
-            } else if (cond > 0 && st.getQuestItemsCount(WATER_NECKLACE_ID) > 0)
+            } else if (cond > 0 && st.haveQuestItem(WATER_NECKLACE_ID))
                 htmltext = "water_undine_q0404_04.htm";
         } else if (npcId == EARTH_SNAKE)
-            if (cond > 0 && st.haveQuestItem(WATER_NECKLACE_ID)  && !st.haveQuestItem(RUST_GOLD_COIN_ID)  && st.getQuestItemsCount(EARTH_RING_ID) < 1) {
-                st.giveItems(RUST_GOLD_COIN_ID, 1);
+            if (cond > 0 && st.haveQuestItem(WATER_NECKLACE_ID) && !st.haveQuestItem(RUST_GOLD_COIN_ID) && st.getQuestItemsCount(EARTH_RING_ID) < 1) {
+                st.giveItems(RUST_GOLD_COIN_ID);
                 htmltext = "earth_snake_q0404_01.htm";
                 st.setCond(11);
             } else if (cond > 0 && st.haveQuestItem(RUST_GOLD_COIN_ID) && !st.haveQuestItem(RED_SOIL_ID))
                 htmltext = "earth_snake_q0404_02.htm";
-            else if (cond == 12 && st.haveAllQuestItems(RUST_GOLD_COIN_ID,RED_SOIL_ID)) {
-                st.takeItems(RED_SOIL_ID);
-                st.takeItems(RUST_GOLD_COIN_ID);
+            else if (cond == 12 && st.haveAllQuestItems(RUST_GOLD_COIN_ID, RED_SOIL_ID)) {
+                st.takeAllItems(RED_SOIL_ID,RUST_GOLD_COIN_ID);
                 st.giveItemIfNotHave(EARTH_RING_ID);
                 htmltext = "earth_snake_q0404_04.htm";
                 st.setCond(13);
@@ -192,7 +187,7 @@ public final class _404_PathToWizard extends Quest {
         } else if (npcId == WATER_SEER) {
             if (cond == 8 && st.getQuestItemsCount(SPARKLE_PEBBLE_ID) < 2) {
                 st.giveItems(SPARKLE_PEBBLE_ID);
-                if (st.getQuestItemsCount(SPARKLE_PEBBLE_ID) == 2) {
+                if (st.haveQuestItem(SPARKLE_PEBBLE_ID, 2)) {
                     st.playSound(SOUND_MIDDLE);
                     st.setCond(9);
                 } else

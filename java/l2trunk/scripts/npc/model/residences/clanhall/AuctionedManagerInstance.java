@@ -16,8 +16,8 @@ public class AuctionedManagerInstance extends ManagerInstance {
 
     @Override
     protected void setDialogs() {
-        _mainDialog = getTemplate().getAIParams().getString("main_dialog", "residence2/clanhall/black001.htm");
-        _failDialog = getTemplate().getAIParams().getString("fail_dialog", "residence2/clanhall/black002.htm");
+        _mainDialog = getTemplate().getAiParams().getString("main_dialog", "residence2/clanhall/black001.htm");
+        _failDialog = getTemplate().getAiParams().getString("fail_dialog", "residence2/clanhall/black002.htm");
     }
 
     @Override

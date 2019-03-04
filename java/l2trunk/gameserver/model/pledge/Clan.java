@@ -327,9 +327,9 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
             warehouse.writeUnlock();
         }
         if (hasCastle != 0)
-            ResidenceHolder.getResidence(Castle.class, hasCastle).changeOwner(null);
+            ResidenceHolder.getCastle(hasCastle).changeOwner(null);
         if (hasFortress != 0)
-            ResidenceHolder.getResidence(Fortress.class, hasFortress).changeOwner(null);
+            ResidenceHolder.getFortress(hasFortress).changeOwner(null);
     }
 
     public void removeClanMember(int id) {

@@ -36,7 +36,6 @@ public final class CastleSiegeEvent extends SiegeEvent<Castle, SiegeClanObject> 
     public static final String DEFENDERS_WAITING = "defenders_waiting";
     public static final String DEFENDERS_REFUSED = "defenders_refused";
     public static final String CONTROL_TOWERS = "control_towers";
-    public static final String FLAME_TOWERS = "flame_towers";
     public static final String BOUGHT_ZONES = "bought_zones";
     private static final long DAY_IN_MILISECONDS = 86400000L;
     private static final String GUARDS = "guards";
@@ -458,8 +457,8 @@ public final class CastleSiegeEvent extends SiegeEvent<Castle, SiegeClanObject> 
 
     private void setNextSiegeTime() {
         final Calendar calendar = (Calendar) Config.CASTLE_VALIDATION_DATE.clone();
-        calendar.set(Calendar.DAY_OF_WEEK, _dayOfWeek);
-        calendar.set(Calendar.HOUR_OF_DAY, _hourOfDay);
+        calendar.set(Calendar.DAY_OF_WEEK, dayOfWeek);
+        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
         if (calendar.before(Config.CASTLE_VALIDATION_DATE)) {
             calendar.add(Calendar.WEEK_OF_YEAR, 1);
         }

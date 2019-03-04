@@ -23,7 +23,7 @@ public final class RequestSellItem extends L2GameClientPacket {
     protected void readImpl() {
         readD();
         _count = readD();
-        if (_count * 16 > _buf.remaining() || _count > Short.MAX_VALUE || _count < 1) {
+        if (_count * 16 > buf.remaining() || _count > Short.MAX_VALUE || _count < 1) {
             _count = 0;
             return;
         }

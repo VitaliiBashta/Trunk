@@ -91,7 +91,7 @@ public final class SuspiciousMerchantInstance extends NpcInstance {
             }
 
             // 1 рега возможна всего
-            for (Fortress fort : ResidenceHolder.getResidenceList(Fortress.class))
+            for (Fortress fort : ResidenceHolder.getFortresses())
                 if (fort.getSiegeEvent().getSiegeClan(FortressSiegeEvent.ATTACKERS, clan) != null) {
                     showChatWindow(player, "residence2/fortress/fortress_ordery006.htm");
                     return;
@@ -104,7 +104,7 @@ public final class SuspiciousMerchantInstance extends NpcInstance {
 
             // если у нас есть форт, запрещаем регатся на форт, если на носу осада своего форта(во избежания абуза, участия в 2 осадах)
             if (clan.getHasFortress() > 0) {
-                Fortress clanFortress = ResidenceHolder.getResidence(clan.getHasFortress());
+                Fortress clanFortress = ResidenceHolder.getFortress(clan.getHasFortress());
                 if (clanFortress.getSiegeDate().getTimeInMillis() > 0) {
                     showChatWindow(player, "residence2/fortress/fortress_ordery006.htm");
                     return;

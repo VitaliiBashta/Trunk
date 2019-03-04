@@ -579,11 +579,11 @@ public final class ItemBroker extends Functions {
                                 if (recipe == null)
                                     continue;
 
-                                ItemTemplate temp = ItemHolder.getTemplate(recipe.getItemId());
+                                ItemTemplate temp = ItemHolder.getTemplate(recipe.itemId);
                                 if (temp == null)
                                     continue;
                                 Map<Long, Item> oldItems = items.computeIfAbsent(temp.getName(), k -> new TreeMap<>());
-                                Item newItem = new Item(recipe.getItemId(), type, mitem.getCost(), recipe.getCount(), 0, temp.getName(), pl.objectId(), pl.getName(), pl.getLoc(), itemObjId, null, false);
+                                Item newItem = new Item(recipe.itemId, type, mitem.getCost(), recipe.count, 0, temp.getName(), pl.objectId(), pl.getName(), pl.getLoc(), itemObjId, null, false);
                                 long key = newItem.price * 100;
                                 while (key < newItem.price * 100 + 100 && oldItems.containsKey(key))
                                     key++;

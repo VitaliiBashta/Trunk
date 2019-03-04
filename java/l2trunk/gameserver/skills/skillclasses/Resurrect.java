@@ -18,11 +18,11 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import java.util.List;
 
 public final class Resurrect extends Skill {
-    private final boolean _canPet;
+    private final boolean canPet;
 
     public Resurrect(StatsSet set) {
         super(set);
-        _canPet = set.getBool("canPet", false);
+        canPet = set.isSet("canPet");
     }
 
     @Override
@@ -86,7 +86,7 @@ public final class Resurrect extends Skill {
                             player.sendPacket(Msg.SINCE_THE_MASTER_WAS_IN_THE_PROCESS_OF_BEING_RESURRECTED_THE_ATTEMPT_TO_RESURRECT_THE_PET_HAS_BEEN_CANCELLED);
                         return false;
                     }
-                    if ((!this._canPet) && (this.targetType != SkillTargetType.TARGET_PET)) {
+                    if ((!this.canPet) && (this.targetType != SkillTargetType.TARGET_PET)) {
                         player.sendPacket(SystemMsg.THAT_IS_AN_INCORRECT_TARGET);
                         return false;
                     }
@@ -139,7 +139,7 @@ public final class Resurrect extends Skill {
                     if (!e.canRessurect((Player) activeChar, target, true))
                         break Loop;
 
-                if (target instanceof PetInstance && _canPet) {
+                if (target instanceof PetInstance && canPet) {
                     if (((PetInstance)target).owner == activeChar)
                         ((PetInstance) target).doRevive(percent);
                     else

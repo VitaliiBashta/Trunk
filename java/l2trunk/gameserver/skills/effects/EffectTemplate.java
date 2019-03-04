@@ -18,7 +18,7 @@ import java.util.Objects;
 public final class EffectTemplate extends StatTemplate {
     public static final String NO_STACK = "none";
     public static final String HP_RECOVER_CAST = "HpRecoverCast";
-    private static final Logger _log = LoggerFactory.getLogger(EffectTemplate.class);
+    private static final Logger LOG = LoggerFactory.getLogger(EffectTemplate.class);
     public final double value;
     public final int count;
     public final EffectType effecttype;
@@ -28,13 +28,13 @@ public final class EffectTemplate extends StatTemplate {
     public final int displayId;
     public final int displayLevel;
     public final boolean applyOnCaster;
-    public final boolean _applyOnSummon;
-    public final boolean _cancelOnAction;
-    public final boolean _isReflectable;
-    public final AbnormalEffect _abnormalEffect;
-    public final AbnormalEffect _abnormalEffect2;
-    public final AbnormalEffect _abnormalEffect3;
-    private final long _period; // in milliseconds
+    public final boolean applyOnSummon;
+    public final boolean cancelOnAction;
+    public final boolean isReflectable;
+    public final AbnormalEffect abnormalEffect;
+    public final AbnormalEffect abnormalEffect2;
+    public final AbnormalEffect abnormalEffect3;
+    private final long period; // in milliseconds
     private final Boolean isSaveable;
     private final Boolean isCancelable;
     private final Boolean isOffensive;
@@ -45,22 +45,22 @@ public final class EffectTemplate extends StatTemplate {
     public EffectTemplate(StatsSet set) {
         value = set.getDouble("value");
         count = set.getInteger("count", 1) < 0 ? Integer.MAX_VALUE : set.getInteger("count", 1);
-        _period = Math.min(Integer.MAX_VALUE, 1000 * (set.getInteger("time", 1) < 0 ? Integer.MAX_VALUE : set.getInteger("time", 1)));
-        _abnormalEffect = set.getEnum("abnormal", AbnormalEffect.class);
-        _abnormalEffect2 = set.getEnum("abnormal2", AbnormalEffect.class);
-        _abnormalEffect3 = set.getEnum("abnormal3", AbnormalEffect.class);
+        period = Math.min(Integer.MAX_VALUE, 1000 * (set.getInteger("time", 1) < 0 ? Integer.MAX_VALUE : set.getInteger("time", 1)));
+        abnormalEffect = set.getEnum("abnormal", AbnormalEffect.class);
+        abnormalEffect2 = set.getEnum("abnormal2", AbnormalEffect.class);
+        abnormalEffect3 = set.getEnum("abnormal3", AbnormalEffect.class);
         stackType = set.getString("stackType", NO_STACK);
         stackType2 = set.getString("stackType2", NO_STACK);
         stackOrder = set.getInteger("stackOrder", stackType.equals(NO_STACK) && stackType2.equals(NO_STACK) ? 1 : 0);
-        applyOnCaster = set.getBool("applyOnCaster", false);
-        _applyOnSummon = set.getBool("applyOnSummon", true);
-        _cancelOnAction = set.getBool("cancelOnAction", false);
-        _isReflectable = set.getBool("isReflectable", true);
-        isSaveable = set.isSet("isSaveable") ? set.getBool("isSaveable") : null;
-        isCancelable = set.isSet("isCancelable") ? set.getBool("isCancelable") : null;
-        isOffensive = set.isSet("isOffensive") ? set.getBool("isOffensive") : null;
-        displayId = set.getInteger("displayId", 0);
-        displayLevel = set.getInteger("displayLevel", 0);
+        applyOnCaster = set.isSet("applyOnCaster");
+        applyOnSummon = set.isSet("applyOnSummon");
+        cancelOnAction = set.isSet("cancelOnAction");
+        isReflectable = set.isSet("isReflectable");
+        isSaveable = set.isSet("isSaveable") ? set.isSet("isSaveable") : null;
+        isCancelable = set.isSet("isCancelable") ? set.isSet("isCancelable") : null;
+        isOffensive = set.isSet("isOffensive") ? set.isSet("isOffensive") : null;
+        displayId = set.getInteger("displayId");
+        displayLevel = set.getInteger("displayLevel");
         effecttype = set.getEnum("name", EffectType.class);
         chance = set.getInteger("chance", Integer.MAX_VALUE);
         param = set;
@@ -72,7 +72,7 @@ public final class EffectTemplate extends StatTemplate {
         try {
             return effecttype.makeEffect(env, this);
         } catch (IllegalAccessException | IllegalArgumentException | InstantiationException | InvocationTargetException e) {
-            _log.error("Error while getting Effect ", e);
+            LOG.error("Error while getting Effect ", e);
         }
         return null;
     }
@@ -86,7 +86,7 @@ public final class EffectTemplate extends StatTemplate {
     }
 
     public long getPeriod() {
-        return _period;
+        return period;
     }
 
     public EffectType getEffectType() {

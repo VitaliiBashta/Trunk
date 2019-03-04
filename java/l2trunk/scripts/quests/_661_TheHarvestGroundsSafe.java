@@ -31,28 +31,24 @@ public final class _661_TheHarvestGroundsSafe extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("warehouse_keeper_norman_q0661_0103.htm") || event.equalsIgnoreCase("warehouse_keeper_norman_q0661_0201.htm")) {
+        if ("warehouse_keeper_norman_q0661_0103.htm".equalsIgnoreCase(event) || "warehouse_keeper_norman_q0661_0201.htm".equalsIgnoreCase(event)) {
             st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("warehouse_keeper_norman_q0661_0205.htm")) {
+        } else if ("warehouse_keeper_norman_q0661_0205.htm".equalsIgnoreCase(event)) {
             long STING = st.getQuestItemsCount(STING_OF_GIANT_POISON);
             long TALON = st.getQuestItemsCount(TALON_OF_YOUNG_ARANEID);
             long GEM = st.getQuestItemsCount(CLOUDY_GEM);
 
             if (STING + GEM + TALON >= 10) {
                 st.giveItems(ADENA_ID, STING * 50 + GEM * 60 + TALON * 70 + 2800);
-                st.takeItems(STING_OF_GIANT_POISON, -1);
-                st.takeItems(TALON_OF_YOUNG_ARANEID, -1);
-                st.takeItems(CLOUDY_GEM, -1);
+                st.takeAllItems(STING_OF_GIANT_POISON,TALON_OF_YOUNG_ARANEID, CLOUDY_GEM);
             } else {
                 st.giveItems(ADENA_ID, STING * 50 + GEM * 60 + TALON * 70);
-                st.takeItems(STING_OF_GIANT_POISON, -1);
-                st.takeItems(TALON_OF_YOUNG_ARANEID, -1);
-                st.takeItems(CLOUDY_GEM, -1);
+                st.takeAllItems(STING_OF_GIANT_POISON,TALON_OF_YOUNG_ARANEID,CLOUDY_GEM);
             }
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("warehouse_keeper_norman_q0661_0204.htm")) {
+        } else if ("warehouse_keeper_norman_q0661_0204.htm".equalsIgnoreCase(event)) {
             st.playSound(SOUND_FINISH);
             st.finish();
         }

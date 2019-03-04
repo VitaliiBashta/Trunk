@@ -12,38 +12,38 @@ import l2trunk.gameserver.model.Creature;
  * c: 00 if fish gets damage 02 if fish regens
  * d:
  */
-public class ExFishingHpRegen extends L2GameServerPacket {
-    private final int _time;
-    private final int _fishHP;
-    private final int _HPmode;
-    private final int _Anim;
-    private final int _GoodUse;
-    private final int _Penalty;
-    private final int _hpBarColor;
-    private final int char_obj_id;
+public final class ExFishingHpRegen extends L2GameServerPacket {
+    private final int time;
+    private final int fishHP;
+    private final int hPmode;
+    private final int anim;
+    private final int goodUse;
+    private final int penalty;
+    private final int hpBarColor;
+    private final int charObjId;
 
-    public ExFishingHpRegen(Creature character, int time, int fishHP, int HPmode, int GoodUse, int anim, int penalty, int hpBarColor) {
-        char_obj_id = character.objectId();
-        _time = time;
-        _fishHP = fishHP;
-        _HPmode = HPmode;
-        _GoodUse = GoodUse;
-        _Anim = anim;
-        _Penalty = penalty;
-        _hpBarColor = hpBarColor;
+    public ExFishingHpRegen(Creature character, int time, int fishHP, int hPmode, int GoodUse, int anim, int penalty, boolean hpBarColor) {
+        charObjId = character.objectId();
+        this.time = time;
+        this.fishHP = fishHP;
+        this.hPmode = hPmode;
+        goodUse = GoodUse;
+        this.anim = anim;
+        this.penalty = penalty;
+        this.hpBarColor = hpBarColor ? 1 : 0;
     }
 
     @Override
     protected final void writeImpl() {
         writeEx(0x28);
-        writeD(char_obj_id);
-        writeD(_time);
-        writeD(_fishHP);
-        writeC(_HPmode); // 0 = HP stop, 1 = HP raise
-        writeC(_GoodUse); // 0 = none, 1 = success, 2 = failed
-        writeC(_Anim); // Anim: 0 = none, 1 = reeling, 2 = pumping
-        writeD(_Penalty); // Penalty
-        writeC(_hpBarColor); // 0 = normal hp bar, 1 = purple hp bar
+        writeD(charObjId);
+        writeD(time);
+        writeD(fishHP);
+        writeC(hPmode); // 0 = HP stop, 1 = HP raise
+        writeC(goodUse); // 0 = none, 1 = success, 2 = failed
+        writeC(anim); // Anim: 0 = none, 1 = reeling, 2 = pumping
+        writeD(penalty); // Penalty
+        writeC(hpBarColor); // 0 = normal hp bar, 1 = purple hp bar
 
     }
 }

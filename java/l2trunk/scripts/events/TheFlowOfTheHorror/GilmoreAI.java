@@ -16,15 +16,15 @@ import java.util.List;
 
 public final class GilmoreAI extends Fighter {
     private static final List<Location> points_stage1 = List.of(
-            new Location(73195, 118483, -3722),
-            new Location(73535, 117945, -3754),
-            new Location(73446, 117334, -3752),
-            new Location(72847, 117311, -3711),
-            new Location(72296, 117720, -3694),
-            new Location(72463, 118401, -3694),
-            new Location(72912, 117895, -3723));
+            Location.of(73195, 118483, -3722),
+            Location.of(73535, 117945, -3754),
+            Location.of(73446, 117334, -3752),
+            Location.of(72847, 117311, -3711),
+            Location.of(72296, 117720, -3694),
+            Location.of(72463, 118401, -3694),
+            Location.of(72912, 117895, -3723));
 
-    private static final Location points_stage2 = new Location(73615, 117629, -3765);
+    private static final Location points_stage2 = Location.of(73615, 117629, -3765);
 
     private static final List<String> text_stage1 = List.of("Text1", "Text2", "Text3", "Text4", "Text5", "Text6", "Text7");
 

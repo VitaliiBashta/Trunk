@@ -13,8 +13,8 @@ public final class SummonItem extends Skill {
     private final int itemId;
     private final int minId;
     private final int maxId;
-    private final long minCount;
-    private final long maxCount;
+    private final int minCount;
+    private final int maxCount;
 
     public SummonItem(final StatsSet set) {
         super(set);
@@ -22,8 +22,10 @@ public final class SummonItem extends Skill {
         itemId = set.getInteger("SummonItemId");
         minId = set.getInteger("SummonMinId");
         maxId = set.getInteger("SummonMaxId", minId);
-        minCount = set.getLong("SummonMinCount");
-        maxCount = set.getLong("SummonMaxCount", minCount);
+        minCount = set.getInteger("SummonMinCount");
+        int maxCount1 = set.getInteger("SummonMaxCount");
+        if (maxCount1 < minCount) maxCount = minCount;
+        else maxCount =maxCount1;
     }
 
     @Override

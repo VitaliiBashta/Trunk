@@ -31,6 +31,6 @@ public class RequestRecipeItemDelete extends L2GameClientPacket {
         }
 
         activeChar.unregisterRecipe(_recipeId);
-        activeChar.sendPacket(new RecipeBookItemList(activeChar, rp.isDwarvenRecipe()));
+        activeChar.sendPacket(new RecipeBookItemList(activeChar, rp.isDwarvenCraft));
     }
 }

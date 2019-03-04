@@ -14,7 +14,6 @@ import l2trunk.gameserver.utils.ReflectionUtils;
 import l2trunk.gameserver.utils.Util;
 import l2trunk.scripts.quests._132_MatrasCuriosity;
 
-import java.util.Map;
 import java.util.StringTokenizer;
 
 import static l2trunk.gameserver.utils.ItemFunctions.addItem;
@@ -62,7 +61,7 @@ public final class CaravanTraderInstance extends NpcInstance {
         {
             if (player.inventory.getCountOf(NativeTreasure) >= 40) {
                 removeItem(player, NativeTreasure, 40, "CaravanTraderInstance");
-                ServerVariables.set("HB_judesBoxes", true);
+                ServerVariables.set("HB_judesBoxes");
                 showDialog(player, getHtmlPath(getNpcId(), 3, player));
             } else {
                 showDialog(player, getHtmlPath(getNpcId(), 4, player));
@@ -82,9 +81,9 @@ public final class CaravanTraderInstance extends NpcInstance {
             }
         } else if (command.startsWith("one_treasure")) //Bernarde
         {
-            if (player.getInventory().getCountOf(NativeTreasure) >= 1 && !ServerVariables.getBool("HB_bernardBoxes", false)) {
+            if (player.haveItem(NativeTreasure)  && !ServerVariables.isSet("HB_bernardBoxes")) {
                 removeItem(player, NativeTreasure, 1, "CaravanTraderInstance");
-                ServerVariables.set("HB_bernardBoxes", true);
+                ServerVariables.set("HB_bernardBoxes");
                 showDialog(player, getHtmlPath(getNpcId(), 8, player));
             } else {
                 showDialog(player, getHtmlPath(getNpcId(), 9, player));
@@ -316,7 +315,7 @@ public final class CaravanTraderInstance extends NpcInstance {
                     htmlpath = getHtmlPath(getNpcId(), 0, player);
                 else if (HellboundManager.getHellboundLevel() == 5)
                     htmlpath = getHtmlPath(getNpcId(), 5, player);
-                else if (!ServerVariables.getBool("HB_judesBoxes", false))
+                else if (!ServerVariables.isSet("HB_judesBoxes"))
                     htmlpath = getHtmlPath(getNpcId(), 1, player);
                 else
                     htmlpath = getHtmlPath(getNpcId(), 2, player);
@@ -328,7 +327,7 @@ public final class CaravanTraderInstance extends NpcInstance {
                     htmlpath = getHtmlPath(getNpcId(), 0, player);
                 else if (HellboundManager.getHellboundLevel() == 2)
                     htmlpath = getHtmlPath(getNpcId(), 1, player);
-                else if (HellboundManager.getHellboundLevel() == 3 && !ServerVariables.getBool("HB_bernardBoxes", false))
+                else if (HellboundManager.getHellboundLevel() == 3 && !ServerVariables.isSet("HB_bernardBoxes"))
                     htmlpath = getHtmlPath(getNpcId(), 2, player);
                 else if (HellboundManager.getHellboundLevel() >= 3)
                     htmlpath = getHtmlPath(getNpcId(), 7, player);

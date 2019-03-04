@@ -39,7 +39,7 @@ public final class RequestProcureCropList extends L2GameClientPacket {
     @Override
     protected void readImpl() {
         _count = readD();
-        if (_count * 20 > _buf.remaining() || _count > Short.MAX_VALUE || _count < 1) {
+        if (_count * 20 > buf.remaining() || _count > Short.MAX_VALUE || _count < 1) {
             _count = 0;
             return;
         }
@@ -110,7 +110,7 @@ public final class RequestProcureCropList extends L2GameClientPacket {
                 if (item == null || item.getCount() < count || item.getItemId() != cropId)
                     return;
 
-                Castle castle = ResidenceHolder.getResidence(Castle.class, manorId);
+                Castle castle = ResidenceHolder.getCastle(manorId);
                 if (castle == null)
                     return;
 
@@ -172,7 +172,7 @@ public final class RequestProcureCropList extends L2GameClientPacket {
                 if (item == null || item.getCount() < count || item.getItemId() != cropId)
                     continue;
 
-                Castle castle = ResidenceHolder.getResidence(Castle.class, manorId);
+                Castle castle = ResidenceHolder.getCastle(manorId);
                 if (castle == null)
                     continue;
 

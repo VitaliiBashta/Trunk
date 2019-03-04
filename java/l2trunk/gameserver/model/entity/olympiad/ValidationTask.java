@@ -18,8 +18,8 @@ public final class ValidationTask extends RunnableImpl {
         OlympiadDatabase.saveNobleData();
         if (Hero.INSTANCE.computeNewHeroes(Olympiad.heroesToBe))
             _log.warn("Olympiad: Error while computing new heroes!");
-        Olympiad._period = 0;
-        Olympiad._currentCycle++;
+        Olympiad.period = 0;
+        Olympiad.currentCycle++;
 
         OlympiadDatabase.cleanupNobles();
         OlympiadDatabase.loadNoblesRank();

@@ -50,7 +50,7 @@ public final class AdminZone implements IAdminCommandHandler {
             }
             case "admin_domain": {
                 DomainArea domain = MapRegionHolder.getInstance().getRegionData(DomainArea.class, activeChar);
-                Castle castle = domain != null ? ResidenceHolder.getResidence(Castle.class, domain.getId()) : null;
+                Castle castle = domain != null ? ResidenceHolder.getCastle(domain.getId()) : null;
                 if (castle != null)
                     activeChar.sendMessage("Domain: " + castle.getName());
                 else

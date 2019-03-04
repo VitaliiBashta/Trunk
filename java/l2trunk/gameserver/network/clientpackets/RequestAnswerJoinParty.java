@@ -14,7 +14,7 @@ public class RequestAnswerJoinParty extends L2GameClientPacket {
 
     @Override
     protected void readImpl() {
-        if (_buf.hasRemaining())
+        if (buf.hasRemaining())
             _response = readD();
         else
             _response = 0;

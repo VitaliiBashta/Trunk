@@ -53,7 +53,7 @@ public final class RequestExSendPost extends L2GameClientPacket {
         _body = readS(Short.MAX_VALUE); // body
 
         _count = readD(); // the number of attached items
-        if (_count * 12 + 4 > _buf.remaining() || _count > Short.MAX_VALUE || _count < 1) //TODO [G1ta0] audit
+        if (_count * 12 + 4 > buf.remaining() || _count > Short.MAX_VALUE || _count < 1) //TODO [G1ta0] audit
         {
             _count = 0;
             return;

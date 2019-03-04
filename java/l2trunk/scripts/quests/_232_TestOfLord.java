@@ -77,7 +77,7 @@ public final class _232_TestOfLord extends Quest {
         super(false);
         addStartNpc(Kakai);
 
-        addTalkId(Somak,Manakia,Jakal,Sumari,Varkees,Tantus,Hatos,Takuna,Chianta,First_Orc,Ancestor_Martankus);
+        addTalkId(Somak, Manakia, Jakal, Sumari, Varkees, Tantus, Hatos, Takuna, Chianta, First_Orc, Ancestor_Martankus);
 
         DROPLIST.put(Timak_Orc, new Drop(1, 10, 50).addItem(TIMAK_ORC_SKULL));
         DROPLIST.put(Timak_Orc_Archer, new Drop(1, 10, 55).addItem(TIMAK_ORC_SKULL));
@@ -94,15 +94,12 @@ public final class _232_TestOfLord extends Quest {
 
         addKillId(DROPLIST.keySet());
 
-        for (Drop drop : DROPLIST.values())
-            for (int item_id : drop.itemList)
-                if (!isQuestItem(item_id))
-                    addQuestItem(item_id);
-
-        addQuestItem(ORDEAL_NECKLACE,VARKEES_CHARM,TANTUS_CHARM,HATOS_CHARM,TAKUNA_CHARM,
-                CHIANTA_CHARM,MANAKIAS_ORDERS,MANAKIAS_AMULET,HUGE_ORC_FANG,SUMARIS_LETTER,
-               URUTU_BLADE,SWORD_INTO_SKULL,NERUGA_AXE_BLADE,AXE_OF_CEREMONY,HANDIWORK_SPIDER_BROOCH,
-                MONSTEREYE_WOODCARVING,BEAR_FANG_NECKLACE,MARTANKUS_CHARM,IMMORTAL_FLAME);
+//        DROPLIST.values().forEach(drop ->                addQuestItem(drop.itemList));
+        addQuestItem(TIMAK_ORC_SKULL,BREKA_ORC_FANG,RAGNA_CHIEF_NOTICE,MARSH_SPIDER_FEELER,MARSH_SPIDER_FEET,CORNEA_OF_EN_MONSTEREYE);
+        addQuestItem(ORDEAL_NECKLACE, VARKEES_CHARM, TANTUS_CHARM, HATOS_CHARM, TAKUNA_CHARM,
+                CHIANTA_CHARM, MANAKIAS_ORDERS, MANAKIAS_AMULET, HUGE_ORC_FANG, SUMARIS_LETTER,
+                URUTU_BLADE, SWORD_INTO_SKULL, NERUGA_AXE_BLADE, AXE_OF_CEREMONY, HANDIWORK_SPIDER_BROOCH,
+                MONSTEREYE_WOODCARVING, BEAR_FANG_NECKLACE, MARTANKUS_CHARM, IMMORTAL_FLAME);
     }
 
     private static void spawn_First_Orc(QuestState st) {
@@ -419,12 +416,7 @@ public final class _232_TestOfLord extends Quest {
     }
 
     private boolean cond1Complete(QuestState st) {
-        long HUGE_ORC_FANG_COUNT = st.getQuestItemsCount(HUGE_ORC_FANG);
-        long SWORD_INTO_SKULL_COUNT = st.getQuestItemsCount(SWORD_INTO_SKULL);
-        long AXE_OF_CEREMONY_COUNT = st.getQuestItemsCount(AXE_OF_CEREMONY);
-        long MONSTEREYE_WOODCARVING_COUNT = st.getQuestItemsCount(MONSTEREYE_WOODCARVING);
-        long HANDIWORK_SPIDER_BROOCH_COUNT = st.getQuestItemsCount(HANDIWORK_SPIDER_BROOCH);
-        return HUGE_ORC_FANG_COUNT > 0 && SWORD_INTO_SKULL_COUNT > 0 && AXE_OF_CEREMONY_COUNT > 0 && MONSTEREYE_WOODCARVING_COUNT > 0 && HANDIWORK_SPIDER_BROOCH_COUNT > 0;
+        return st.haveAllQuestItems(HUGE_ORC_FANG, SWORD_INTO_SKULL, AXE_OF_CEREMONY, MONSTEREYE_WOODCARVING, HANDIWORK_SPIDER_BROOCH);
     }
 
     @Override
@@ -433,30 +425,30 @@ public final class _232_TestOfLord extends Quest {
             return;
         int npcId = npc.getNpcId();
 
-        Drop _drop = DROPLIST.get(npcId);
-        if (_drop == null)
+        Drop drop = DROPLIST.get(npcId);
+        if (drop == null)
             return;
         int cond = qs.getCond();
 
-        for (int item_id : _drop.itemList) {
-            long ORDEAL_NECKLACE_COUNT = qs.getQuestItemsCount(ORDEAL_NECKLACE);
-            if (item_id == TIMAK_ORC_SKULL && !(ORDEAL_NECKLACE_COUNT > 0 && qs.getQuestItemsCount(HATOS_CHARM) > 0 && qs.getQuestItemsCount(SWORD_INTO_SKULL) == 0))
+        for (int item_id : drop.itemList) {
+            boolean haveNeckace = qs.haveQuestItem(ORDEAL_NECKLACE);
+            if (item_id == TIMAK_ORC_SKULL && !(haveNeckace  && qs.haveQuestItem(HATOS_CHARM) && qs.getQuestItemsCount(SWORD_INTO_SKULL) == 0))
                 continue;
 
-            if (item_id == BREKA_ORC_FANG && !(ORDEAL_NECKLACE_COUNT > 0 && qs.getQuestItemsCount(VARKEES_CHARM) > 0 && qs.getQuestItemsCount(MANAKIAS_ORDERS) > 0))
+            if (item_id == BREKA_ORC_FANG && !(haveNeckace  && qs.haveAllQuestItems(VARKEES_CHARM, MANAKIAS_ORDERS)))
                 continue;
 
-            if (npcId == Marsh_Spider && !(ORDEAL_NECKLACE_COUNT > 0 && qs.getQuestItemsCount(TAKUNA_CHARM) > 0))
+            if (npcId == Marsh_Spider && !(haveNeckace  && qs.haveQuestItem(TAKUNA_CHARM)))
                 continue;
 
-            if (npcId == Enchanted_Monstereye && !(ORDEAL_NECKLACE_COUNT > 0 && qs.getQuestItemsCount(CHIANTA_CHARM) > 0))
+            if (npcId == Enchanted_Monstereye && !(haveNeckace && qs.haveQuestItem(CHIANTA_CHARM)))
                 continue;
 
             long count = qs.getQuestItemsCount(item_id);
-            if (cond == _drop.condition && count < _drop.maxcount && Rnd.chance(_drop.chance)) {
+            if (cond == drop.condition && count < drop.maxcount && Rnd.chance(drop.chance)) {
                 qs.giveItems(item_id, 1);
-                if (count + 1 == _drop.maxcount) {
-                    if (cond == 4 && qs.getQuestItemsCount(RAGNA_ORC_HEAD) > 0 && qs.getQuestItemsCount(RAGNA_CHIEF_NOTICE) > 0)
+                if (count + 1 == drop.maxcount) {
+                    if (cond == 4 && qs.haveAllQuestItems(RAGNA_ORC_HEAD, RAGNA_CHIEF_NOTICE))
                         qs.setCond(5);
                     qs.playSound(SOUND_MIDDLE);
                 } else

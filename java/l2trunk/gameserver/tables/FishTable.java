@@ -11,13 +11,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public enum FishTable {
     INSTANCE;
     private static final Logger LOG = LoggerFactory.getLogger(FishTable.class);
 
-    private final Map<Integer, List<FishTemplate>> _fishes= new HashMap<>();
-    private final Map<Integer, List<RewardData>> fishRewards =new HashMap<>();
+    private final Map<Integer, List<FishTemplate>> fishes = new HashMap<>();
+    private final Map<Integer, List<RewardData>> fishRewards = new HashMap<>();
 
 
     public void init() {
@@ -39,7 +40,6 @@ public enum FishTable {
             while (resultSet.next()) {
                 int id = resultSet.getInt("id");
                 int lvl = resultSet.getInt("level");
-                String name = resultSet.getString("name");
                 int hp = resultSet.getInt("hp");
                 int hpreg = resultSet.getInt("hpregen");
                 int type = resultSet.getInt("fish_type");
@@ -49,9 +49,9 @@ public enum FishTable {
                 int wait_time = resultSet.getInt("wait_time");
                 int combat_time = resultSet.getInt("combat_time");
 
-                fish = new FishTemplate(id, lvl, name, hp, hpreg, type, group, fish_guts, guts_check_time, wait_time, combat_time);
-                if ((fishes = _fishes.get(group)) == null)
-                    _fishes.put(group, fishes = new ArrayList<>());
+                fish = new FishTemplate(id, lvl, hp, hpreg, type, group, fish_guts, guts_check_time, wait_time, combat_time);
+                if ((fishes = this.fishes.get(group)) == null)
+                    this.fishes.put(group, fishes = new ArrayList<>());
                 fishes.add(fish);
                 count++;
             }
@@ -91,22 +91,16 @@ public enum FishTable {
     }
 
     public List<FishTemplate> getFish(int group, int type, int lvl) {
-        List<FishTemplate> result = new ArrayList<>();
-
-        List<FishTemplate> fishs = _fishes.get(group);
+        List<FishTemplate> fishs = fishes.get(group);
         if (fishs == null) {
             LOG.warn("No fishes defined for group : " + group + "!");
             return null;
         }
 
-        for (FishTemplate f : fishs) {
-            if (f.getType() != type)
-                continue;
-            if (f.getLevel() != lvl)
-                continue;
-
-            result.add(f);
-        }
+        List<FishTemplate> result = fishs.stream()
+                .filter(f -> f.type == type)
+                .filter(f -> f.level == lvl)
+                .collect(Collectors.toList());
 
         if (result.isEmpty())
             LOG.warn("No fishes for group : " + group + " type: " + type + " occupation: " + lvl + "!");

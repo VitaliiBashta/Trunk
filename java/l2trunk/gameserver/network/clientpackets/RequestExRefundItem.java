@@ -18,7 +18,7 @@ public final class RequestExRefundItem extends L2GameClientPacket {
     protected void readImpl() {
         int listId = readD();
         _count = readD();
-        if (_count * 4 > _buf.remaining() || _count > Short.MAX_VALUE || _count < 1) {
+        if (_count * 4 > buf.remaining() || _count > Short.MAX_VALUE || _count < 1) {
             _count = 0;
             return;
         }

@@ -37,8 +37,8 @@ public final class NegateEffects extends Skill {
                 negateStackType.put(entry[0], entry.length > 1 ? Integer.decode(entry[1]) : Integer.MAX_VALUE);
             }
 
-        onlyPhysical = set.getBool("onlyPhysical", false);
-        negateDebuffs = set.getBool("negateDebuffs", true);
+        onlyPhysical = set.isSet("onlyPhysical");
+        negateDebuffs = set.isSet("negateDebuffs");
     }
 
     @Override

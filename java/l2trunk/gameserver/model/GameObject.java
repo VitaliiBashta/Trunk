@@ -353,13 +353,9 @@ public abstract class GameObject extends EventOwner {
         return distance > 0 ? distance : 0;
     }
 
-//    public int getHeading() {
+//    int getMoveSpeed() {
 //        return 0;
 //    }
-
-    int getMoveSpeed() {
-        return 0;
-    }
 
     public WorldRegion getCurrentRegion() {
         return currentRegion;
@@ -368,14 +364,6 @@ public abstract class GameObject extends EventOwner {
     void setCurrentRegion(WorldRegion region) {
         currentRegion = region;
     }
-
-//    public boolean isInObserverMode() {
-//        return false;
-//    }
-
-//    public boolean isInOlympiadMode() {
-//        return false;
-//    }
 
     public boolean isInBoat() {
         return false;

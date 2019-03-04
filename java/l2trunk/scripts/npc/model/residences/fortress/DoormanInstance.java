@@ -8,18 +8,14 @@ import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.ReflectionUtils;
 
-/**
- * @author VISTALL
- * @date 13:47/02.04.2011
- */
-public class DoormanInstance extends l2trunk.scripts.npc.model.residences.DoormanInstance {
-    private Location _loc;
+public final class DoormanInstance extends l2trunk.scripts.npc.model.residences.DoormanInstance {
+    private Location loc;
 
     public DoormanInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
-        String loc = template.getAIParams().getString("tele_loc", null);
+        String loc = template.getAiParams().getString("tele_loc");
         if (loc != null)
-            _loc = Location.of(loc);
+            this.loc = Location.of(loc);
     }
 
     @Override
@@ -36,7 +32,7 @@ public class DoormanInstance extends l2trunk.scripts.npc.model.residences.Doorma
                 break;
             case COND_SIEGE:
                 if (command.equalsIgnoreCase("tele"))
-                    player.teleToLocation(_loc);
+                    player.teleToLocation(loc);
                 break;
             case COND_FAIL:
                 player.sendPacket(new NpcHtmlMessage(player, this, _failDialog, 0));

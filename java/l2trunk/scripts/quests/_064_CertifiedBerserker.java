@@ -7,6 +7,8 @@ import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.NpcUtils;
 
+import static l2trunk.gameserver.model.base.ClassId.trooper;
+
 public final class _064_CertifiedBerserker extends Quest {
     // NPC
     private static final int ORKURUS = 32207;
@@ -112,7 +114,7 @@ public final class _064_CertifiedBerserker extends Quest {
                 htmltext = "32207-00.htm";
                 st.exitCurrentQuest();
             } else if (cond == 0) {
-                if (st.player.getClassId().id == 0x7D) {
+                if (st.player.getClassId() == trooper) {
                     if (st.player.getLevel() >= 39)
                         htmltext = "32207-01.htm";
                     else {
@@ -124,7 +126,7 @@ public final class _064_CertifiedBerserker extends Quest {
                     st.exitCurrentQuest();
                 }
             } else if (cond == 14) {
-                st.takeItems(T_REC, -1);
+                st.takeItems(T_REC);
                 htmltext = "32207-03.htm";
             }
 
@@ -135,7 +137,7 @@ public final class _064_CertifiedBerserker extends Quest {
                 htmltext = "32215-02.htm";
                 st.takeItems(BREKA_ORC_HEAD);
                 st.setCond(4);
-            } else if (cond > 1 && st.getQuestItemsCount(BREKA_ORC_HEAD) == 20) {
+            } else if (cond > 1 && st.haveQuestItem(BREKA_ORC_HEAD, 20)) {
                 htmltext = "32215-02.htm";
                 st.takeItems(BREKA_ORC_HEAD);
                 st.setCond(4);
@@ -165,8 +167,7 @@ public final class _064_CertifiedBerserker extends Quest {
                 htmltext = "32200-01.htm";
             } else if (cond == 10) {
                 st.setCond(11);
-                st.takeItems(REPORT1);
-                st.takeItems(REPORT2);
+                st.takeAllItems(REPORT1,REPORT2);
                 htmltext = "32200-02.htm";
             }
         } else if (npcId == HARKILGAMED)
@@ -184,13 +185,13 @@ public final class _064_CertifiedBerserker extends Quest {
             if (npcId == BREKA_ORC || npcId == BREKA_ORC_ARCHER || npcId == BREKA_ORC_SHAMAN || npcId == BREKA_ORC_OVERLORD || npcId == BREKA_ORC_WARRIOR)
                 if (st.getQuestItemsCount(BREKA_ORC_HEAD) <= 19) {
                     st.giveItems(BREKA_ORC_HEAD);
-                    if (st.getQuestItemsCount(BREKA_ORC_HEAD) == 20) {
+                    if (st.haveQuestItem(BREKA_ORC_HEAD, 20)) {
                         st.playSound(SOUND_MIDDLE);
                         st.setCond(3);
                     } else
                         st.playSound(SOUND_ITEMGET);
                 }
-        if (cond == 5 && npcId == ROAD_SCAVENGER && Rnd.chance(20) && st.getQuestItemsCount(MESSAGE_PLATE) == 0) {
+        if (cond == 5 && npcId == ROAD_SCAVENGER && Rnd.chance(20) && !st.haveQuestItem(MESSAGE_PLATE)) {
             st.giveItems(MESSAGE_PLATE);
             st.setCond(6);
             st.playSound(SOUND_MIDDLE);
@@ -200,7 +201,7 @@ public final class _064_CertifiedBerserker extends Quest {
                 st.giveItems(REPORT1);
             else if (npcId == STAKATO && st.getQuestItemsCount(REPORT2) == 0)
                 st.giveItems(REPORT2);
-            if (st.getQuestItemsCount(REPORT1) == 1 && st.getQuestItemsCount(REPORT2) == 1) {
+            if (st.haveAllQuestItems(REPORT1,REPORT2)) {
                 st.playSound(SOUND_MIDDLE);
                 st.setCond(10);
             } else

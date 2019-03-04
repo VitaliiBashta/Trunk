@@ -12,12 +12,12 @@ import java.util.List;
 public final class Lematan extends Fighter {
     private static final int LEMATAN_FOLLOWER = 18634;
     private static final List<Location> _position = List.of(
-            new Location(84840, -208488, -3336, 0),
-            new Location(85160, -208488, -3336, 0),
-            new Location(84696, -208744, -3336, 0),
-            new Location(85264, -208744, -3336, 0),
-            new Location(84840, -209000, -3336, 0),
-            new Location(85160, -209000, -3336, 0));
+           Location.of(84840, -208488, -3336),
+           Location.of(85160, -208488, -3336),
+           Location.of(84696, -208744, -3336),
+           Location.of(85264, -208744, -3336),
+           Location.of(84840, -209000, -3336),
+           Location.of(85160, -209000, -3336));
     private boolean _teleported = false;
 
     public Lematan(NpcInstance actor) {
@@ -37,9 +37,9 @@ public final class Lematan extends Fighter {
 
         if (actor.getCurrentHp() < (actor.getMaxHp() / 2) && !_teleported) {
             // мы на корабле но у нас половина ХП и мы не телепортнулись
-            actor.setSpawnedLoc(new Location(84984, -208744, -3336));
-            actor.teleToLocation(new Location(84984, -208744, -3336));
-            attacker.teleToLocation(new Location(85128, -208744, -3336));
+            actor.setSpawnedLoc(Location.of(84984, -208744, -3336));
+            actor.teleToLocation(Location.of(84984, -208744, -3336));
+            attacker.teleToLocation(Location.of(85128, -208744, -3336));
 
             _teleported = true;
 

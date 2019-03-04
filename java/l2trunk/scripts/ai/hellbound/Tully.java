@@ -15,18 +15,18 @@ import java.util.List;
 public final class Tully extends Fighter {
     // 32371
     private static final List<Location> locSD = List.of(
-            new Location(-12524, 273932, -9014, 49151),
-            new Location(-10831, 273890, -9040, 81895),
-            new Location(-10817, 273986, -9040, -16452),
-            new Location(-13773, 275119, -9040, 8428),
-            new Location(-11547, 271772, -9040, -19124));
+           Location.of(-12524, 273932, -9014, 49151),
+           Location.of(-10831, 273890, -9040, 81895),
+           Location.of(-10817, 273986, -9040, -16452),
+           Location.of(-13773, 275119, -9040, 8428),
+           Location.of(-11547, 271772, -9040, -19124));
 
     //22392
     private static final List<Location> locFTT = List.of(
-            new Location(-10832, 273808, -9040, 0),
-            new Location(-10816, 274096, -9040, 14964),
-            new Location(-13824, 275072, -9040, -24644),
-            new Location(-11504, 271952, -9040, 9328));
+           Location.of(-10832, 273808, -9040, 0),
+           Location.of(-10816, 274096, -9040, 14964),
+           Location.of(-13824, 275072, -9040, -24644),
+           Location.of(-11504, 271952, -9040, 9328));
     private static NpcInstance removableGhost = null;
     private boolean s = false;
 

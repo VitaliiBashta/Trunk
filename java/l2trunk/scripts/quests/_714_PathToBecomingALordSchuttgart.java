@@ -9,6 +9,8 @@ import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.scripts.Functions;
 
+import java.util.stream.IntStream;
+
 public final class _714_PathToBecomingALordSchuttgart extends Quest {
     private static final int August = 35555;
     private static final int Newyear = 31961;
@@ -21,14 +23,13 @@ public final class _714_PathToBecomingALordSchuttgart extends Quest {
         super(false);
         addStartNpc(August);
         addTalkId(Newyear, Yasheni);
-        for (int i = 22801; i < 22812; i++)
-            addKillId(i);
+        addKillId(IntStream.rangeClosed(22801, 22812).toArray());
         addQuestItem(GolemShard);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        Castle castle = ResidenceHolder.getResidence(ShuttgartCastle);
+        Castle castle = ResidenceHolder.getCastle(ShuttgartCastle);
         if (castle.getOwner() == null)
             return "Castle has no lord";
         Player castleOwner = castle.getOwner().getLeader().getPlayer();
@@ -63,7 +64,7 @@ public final class _714_PathToBecomingALordSchuttgart extends Quest {
         String htmltext = "noquest";
         int npcId = npc.getNpcId();
         int cond = st.getCond();
-        Castle castle = ResidenceHolder.getResidence(ShuttgartCastle);
+        Castle castle = ResidenceHolder.getCastle(ShuttgartCastle);
         if (castle.getOwner() == null)
             return "Castle has no lord";
         Player castleOwner = castle.getOwner().getLeader().getPlayer();
@@ -122,9 +123,8 @@ public final class _714_PathToBecomingALordSchuttgart extends Quest {
     @Override
     public void onKill(NpcInstance npc, QuestState st) {
         if (st.getCond() == 5) {
-            if (st.getQuestItemsCount(GolemShard) < 300)
-                st.giveItems(GolemShard);
-            if (st.getQuestItemsCount(GolemShard) >= 300)
+            st.giveItemIfNotHave(GolemShard, 300);
+            if (st.haveQuestItem(GolemShard, 300))
                 st.setCond(6);
         }
     }

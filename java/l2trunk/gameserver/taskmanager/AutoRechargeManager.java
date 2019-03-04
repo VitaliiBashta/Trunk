@@ -97,19 +97,19 @@ public final class AutoRechargeManager extends SteppingRunnableQueueManager {
                 if (player._autoCp && (current >= (msCpLastCheck + CP_CHECK_TIME))) {
                     runValidationAndConsume(TYPE_CP, Player.autoCp, 0.95);
                     msCpLastCheck = current;
-                    //_log.info("Checking CP");
+                    //LOG.info("Checking CP");
                 }
 
                 if (player._autoHp && (current >= (msHpLastCheck + HP_CHECK_TIME))) {
                     runValidationAndConsume(TYPE_HP, Player.autoHp, 0.70);
                     msHpLastCheck = current;
-                    //_log.info("Checking HP");
+                    //LOG.info("Checking HP");
                 }
 
                 if (player._autoMp && (current >= (msMpLastCheck + MP_CHECK_TIME))) {
                     runValidationAndConsume(TYPE_MP, Player.autoMp, 0.75);
                     msMpLastCheck = current;
-                    //_log.info("Checking MP");
+                    //LOG.info("Checking MP");
                 }
 
             }

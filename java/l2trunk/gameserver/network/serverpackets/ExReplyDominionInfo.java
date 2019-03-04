@@ -3,23 +3,17 @@ package l2trunk.gameserver.network.serverpackets;
 import l2trunk.gameserver.data.xml.holder.ResidenceHolder;
 import l2trunk.gameserver.model.entity.residence.Dominion;
 
-import java.util.ArrayList;
 import java.util.List;
-
+import java.util.stream.Collectors;
 
 public final class ExReplyDominionInfo extends L2GameServerPacket {
     private List<TerritoryInfo> dominionList;
 
     public ExReplyDominionInfo() {
-        List<Dominion> dominions = ResidenceHolder.getResidenceList(Dominion.class);
-        dominionList = new ArrayList<>(dominions.size());
-
-        for (Dominion dominion : dominions) {
-            if (dominion.getSiegeDate().getTimeInMillis() == 0)
-                continue;
-
-            dominionList.add(new TerritoryInfo(dominion.getId(), dominion.getName(), dominion.getOwner().getName(), dominion.getFlags(), (int) (dominion.getSiegeDate().getTimeInMillis() / 1000L)));
-        }
+        dominionList = ResidenceHolder.getDominions().stream()
+                .filter(dominion -> dominion.getSiegeDate().getTimeInMillis() != 0)
+                .map(TerritoryInfo::new)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -43,12 +37,12 @@ public final class ExReplyDominionInfo extends L2GameServerPacket {
         final List<Integer> flags;
         final int startTime;
 
-        TerritoryInfo(int id, String terr, String clan, List<Integer> flags, int startTime) {
-            this.id = id;
-            this.terr = terr;
-            this.clan = clan;
-            this.flags = flags;
-            this.startTime = startTime;
+        TerritoryInfo(Dominion dominion) {
+            id = dominion.getId();
+            terr = dominion.getName();
+            clan = dominion.getOwner().getName();
+            flags = dominion.getFlags();
+            startTime = (int) (dominion.getSiegeDate().getTimeInMillis() / 1000L);
         }
     }
 }

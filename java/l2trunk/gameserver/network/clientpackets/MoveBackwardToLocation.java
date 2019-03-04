@@ -24,7 +24,7 @@ public class MoveBackwardToLocation extends L2GameClientPacket {
         _originLoc.x = readD();
         _originLoc.y = readD();
         _originLoc.z = readD();
-        if (_buf.hasRemaining())
+        if (buf.hasRemaining())
             _moveMovement = readD();
     }
 

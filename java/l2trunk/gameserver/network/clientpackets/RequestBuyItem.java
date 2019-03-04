@@ -29,7 +29,7 @@ public final class RequestBuyItem extends L2GameClientPacket {
     protected void readImpl() {
         _listId = readD();
         _count = readD();
-        if (_count * 12 > _buf.remaining() || _count > Short.MAX_VALUE || _count < 1) {
+        if (_count * 12 > buf.remaining() || _count > Short.MAX_VALUE || _count < 1) {
             _count = 0;
             return;
         }

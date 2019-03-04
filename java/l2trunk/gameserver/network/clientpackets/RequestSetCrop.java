@@ -23,26 +23,26 @@ import java.util.List;
  * ]
  */
 public final class RequestSetCrop extends L2GameClientPacket {
-    private int _count, _manorId;
+    private int count, manorId;
 
-    private long[] _items; // _size*4
+    private long[] items; // _size*4
 
     @Override
     protected void readImpl() {
-        _manorId = readD();
-        _count = readD();
-        if (_count * 21 > _buf.remaining() || _count > Short.MAX_VALUE || _count < 1) {
-            _count = 0;
+        manorId = readD();
+        count = readD();
+        if (count * 21 > buf.remaining() || count > Short.MAX_VALUE || count < 1) {
+            count = 0;
             return;
         }
-        _items = new long[_count * 4];
-        for (int i = 0; i < _count; i++) {
-            _items[i * 4 + 0] = readD();
-            _items[i * 4 + 1] = readQ();
-            _items[i * 4 + 2] = readQ();
-            _items[i * 4 + 3] = readC();
-            if (_items[i * 4 + 0] < 1 || _items[i * 4 + 1] < 0 || _items[i * 4 + 2] < 0) {
-                _count = 0;
+        items = new long[count * 4];
+        for (int i = 0; i < count; i++) {
+            items[i * 4 + 0] = readD();
+            items[i * 4 + 1] = readQ();
+            items[i * 4 + 2] = readQ();
+            items[i * 4 + 3] = readC();
+            if (items[i * 4 + 0] < 1 || items[i * 4 + 1] < 0 || items[i * 4 + 2] < 0) {
+                count = 0;
                 return;
             }
         }
@@ -51,7 +51,7 @@ public final class RequestSetCrop extends L2GameClientPacket {
     @Override
     protected void runImpl() {
         Player activeChar = getClient().getActiveChar();
-        if (activeChar == null || _count == 0)
+        if (activeChar == null || count == 0)
             return;
 
         if (activeChar.getClan() == null) {
@@ -59,7 +59,7 @@ public final class RequestSetCrop extends L2GameClientPacket {
             return;
         }
 
-        Castle caslte = ResidenceHolder.getResidence(Castle.class, _manorId);
+        Castle caslte = ResidenceHolder.getCastle(manorId);
         if (caslte.getOwnerId() != activeChar.getClanId() // clan owns castle
                 || (activeChar.getClanPrivileges() & Clan.CP_CS_MANOR_ADMIN) != Clan.CP_CS_MANOR_ADMIN) // has manor rights
         {
@@ -67,12 +67,12 @@ public final class RequestSetCrop extends L2GameClientPacket {
             return;
         }
 
-        List<CropProcure> crops = new ArrayList<>(_count);
-        for (int i = 0; i < _count; i++) {
-            int id = (int) _items[i * 4];
-            long sales = _items[i * 4 + 1];
-            long price = _items[i * 4 + 2];
-            int type = (int) _items[i * 4 + 3];
+        List<CropProcure> crops = new ArrayList<>(count);
+        for (int i = 0; i < count; i++) {
+            int id = (int) items[i * 4];
+            long sales = items[i * 4 + 1];
+            long price = items[i * 4 + 2];
+            int type = (int) items[i * 4 + 3];
             if (id > 0) {
                 CropProcure s = CastleManorManager.INSTANCE.getNewCropProcure(id, sales, type, price, sales);
                 crops.add(s);

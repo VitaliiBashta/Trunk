@@ -32,6 +32,7 @@ public class StatsSet {
         map.put(key, value);
         return this;
     }
+
     public StatsSet set(String key, StatsSet value) {
         map.put(key, value);
         return this;
@@ -62,10 +63,6 @@ public class StatsSet {
         return this;
     }
 
-    public void set(String key, boolean value) {
-        map.put(key, value);
-    }
-
     public StatsSet set(String key, int value) {
         map.put(key, value);
         return this;
@@ -77,6 +74,11 @@ public class StatsSet {
 
     public void set(String key, long value) {
         map.put(key, value);
+    }
+
+    public StatsSet set(String key) {
+        set(key, 1);
+        return this;
     }
 
     public StatsSet set(String key, double value) {
@@ -106,7 +108,7 @@ public class StatsSet {
         if (val instanceof Boolean)
             return (Boolean) val;
 
-        throw new IllegalArgumentException("Boolean value required, but found: " + val + "!");
+        return false;
     }
 
     public boolean getBool(String key, boolean defaultValue) {
@@ -131,7 +133,7 @@ public class StatsSet {
             return toInt((String) val);
         if (val instanceof Boolean)
             return (Boolean) val ? 1 : 0;
-return 0;
+        return 0;
 //        throw new IllegalArgumentException("Integer value required, but found: " + val + "!");
     }
 
@@ -182,9 +184,8 @@ return 0;
         if (val instanceof String)
             return toLong((String) val);
         if (val instanceof Boolean)
-            return (Boolean) val ? 1L : 0L;
+            return (Boolean) val ? 1 : 0;
         return 0;
-//        throw new IllegalArgumentException("Long value required, but found: " + val + "!");
     }
 
     public long getLong(String key, long defaultValue) {
@@ -195,7 +196,7 @@ return 0;
         if (val instanceof String)
             return toLong((String) val);
         if (val instanceof Boolean)
-            return (Boolean) val ? 1L : 0L;
+            return (Boolean) val ? 1 : 0;
 
         return defaultValue;
     }
@@ -210,20 +211,7 @@ return 0;
         if (val instanceof Boolean)
             return (Boolean) val ? 1. : 0.;
 
-        throw new IllegalArgumentException("Double value required, but found: " + val + "!");
-    }
-
-    public double getDouble(String key, double defaultValue) {
-        Object val = map.get(key);
-
-        if (val instanceof Number)
-            return ((Number) val).doubleValue();
-        if (val instanceof String)
-            return toDouble((String) val);
-        if (val instanceof Boolean)
-            return (Boolean) val ? 1. : 0.;
-
-        return defaultValue;
+        return 0;
     }
 
     public String getString(String key) {
@@ -232,7 +220,8 @@ return 0;
         if (val != null)
             return val.toString();
 
-        throw new IllegalArgumentException("String value required, but not specified!");
+        return null;
+//        new IllegalArgumentException("String value required, but not specified!");
     }
 
     public String getString(String key, String defaultValue) {
@@ -313,5 +302,9 @@ return 0;
 
     public boolean isEmpty() {
         return map.isEmpty();
+    }
+
+    public void inc(String name) {
+        set(name, getInteger(name)+1);
     }
 }

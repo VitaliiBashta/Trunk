@@ -183,7 +183,7 @@ public final class _420_LittleWings extends Quest {
             st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
-        } else if (("30610-05.htm".equalsIgnoreCase(event) || event.equalsIgnoreCase("30610-12.htm")) && state == STARTED && cond == 1) {
+        } else if (("30610-05.htm".equalsIgnoreCase(event) || "30610-12.htm".equalsIgnoreCase(event)) && state == STARTED && cond == 1) {
             st.setCond(2);
             st.takeAllItems(Fairy_Stone, Deluxe_Fairy_Stone, Fairy_Stone_List, Deluxe_Fairy_Stone_List);
             st.giveItems(Fairy_Stone_List);
@@ -209,17 +209,17 @@ public final class _420_LittleWings extends Quest {
                 st.playSound(SOUND_MIDDLE);
             } else
                 return "30608-01a.htm";
-        } else if ("30711-03.htm".equalsIgnoreCase(event) && state == STARTED && cond == 3 && st.getQuestItemsCount(Fairy_Stone) + st.getQuestItemsCount(Deluxe_Fairy_Stone) > 0) {
+        } else if ("30711-03.htm".equalsIgnoreCase(event) && state == STARTED && cond == 3 && st.haveAnyQuestItems(Fairy_Stone,Deluxe_Fairy_Stone) ) {
             st.setCond(4);
             st.playSound(SOUND_MIDDLE);
             if (st.haveQuestItem(Deluxe_Fairy_Stone))
                 return st.isSet("broken") ? "30711-04a.htm" : "30711-03a.htm";
             if (st.isSet("broken"))
                 return "30711-04.htm";
-        } else if ("30747-02.htm".equalsIgnoreCase(event) && state == STARTED && cond == 4 && st.getQuestItemsCount(Fairy_Stone) > 0) {
+        } else if ("30747-02.htm".equalsIgnoreCase(event) && state == STARTED && cond == 4 && st.haveQuestItem(Fairy_Stone)) {
             st.takeItems(Fairy_Stone);
             st.set("takedStone");
-        } else if ("30747-02a.htm".equalsIgnoreCase(event) && state == STARTED && cond == 4 && st.getQuestItemsCount(Deluxe_Fairy_Stone) > 0) {
+        } else if ("30747-02a.htm".equalsIgnoreCase(event) && state == STARTED && cond == 4 && st.haveQuestItem(Deluxe_Fairy_Stone)) {
             st.takeItems(Deluxe_Fairy_Stone);
             st.set("takedStone", 2);
             st.giveItems(Fairy_Dust);

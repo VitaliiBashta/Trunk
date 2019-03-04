@@ -16,6 +16,9 @@ import l2trunk.gameserver.model.SubClass;
 import l2trunk.gameserver.model.actor.listener.CharListenerList;
 import l2trunk.gameserver.model.base.ClassId;
 import l2trunk.gameserver.model.entity.SevenSigns;
+import l2trunk.gameserver.model.entity.residence.Castle;
+import l2trunk.gameserver.model.entity.residence.ClanHall;
+import l2trunk.gameserver.model.entity.residence.Fortress;
 import l2trunk.gameserver.model.entity.residence.Residence;
 import l2trunk.gameserver.model.items.Inventory;
 import l2trunk.gameserver.model.items.PcInventory;
@@ -676,11 +679,11 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
         html = html.replace("%raidsKilled%", String.valueOf(0)); // NOT DONE
         html = html.replace("%epicsKilled%", String.valueOf(0)); // NOT DONE
 
-        Residence clanHall = ResidenceHolder.getResidence(clan.getHasHideout());
+        ClanHall clanHall = ResidenceHolder.getClanHall(clan.getHasHideout());
         html = html.replace("%clanHall%", (clanHall != null ? getResidenceName(clanHall) : "No"));
-        Residence castle = ResidenceHolder.getResidence(clan.getCastle());
+        Castle castle = ResidenceHolder.getCastle(clan.getCastle());
         html = html.replace("%castle%", (castle != null ? castle.getName() : "No"));
-        Residence fortress = ResidenceHolder.getResidence(clan.getHasFortress());
+        Fortress fortress = ResidenceHolder.getFortress(clan.getHasFortress());
         html = html.replace("%fortress%", (fortress != null ? getResidenceName(fortress) : "No"));
 
         int[] data = getMainClanPageData(clan);

@@ -6,11 +6,11 @@ import l2trunk.gameserver.utils.Location;
 
 public final class GreaterEvil extends Fighter {
     private static final Location[] path = {
-            new Location(28448, 243816, -3696),
-            new Location(27624, 245256, -3696),
-            new Location(27528, 246808, -3656),
-            new Location(28296, 247912, -3248),
-            new Location(25880, 246184, -3176)};
+            Location.of(28448, 243816, -3696),
+            Location.of(27624, 245256, -3696),
+            Location.of(27528, 246808, -3656),
+            Location.of(28296, 247912, -3248),
+            Location.of(25880, 246184, -3176)};
 
     private int current_point = 0;
 

@@ -4,15 +4,15 @@ import java.nio.ByteBuffer;
 
 public abstract class ReceivablePacket<T extends MMOClient> extends l2trunk.commons.net.nio.ReceivablePacket<T> {
     protected T client;
-    protected ByteBuffer _buf;
+    protected ByteBuffer buf;
 
     @Override
     protected ByteBuffer getByteBuffer() {
-        return _buf;
+        return buf;
     }
 
     void setByteBuffer(ByteBuffer buf) {
-        _buf = buf;
+        this.buf = buf;
     }
 
     @Override

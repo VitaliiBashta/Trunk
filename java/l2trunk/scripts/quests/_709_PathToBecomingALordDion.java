@@ -38,7 +38,7 @@ public final class _709_PathToBecomingALordDion extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        Castle castle = ResidenceHolder.getResidence(DionCastle);
+        Castle castle = ResidenceHolder.getCastle(DionCastle);
         if (castle.getOwner() == null)
             return "Castle has no lord";
         Player castleOwner = castle.getOwner().getLeader().getPlayer();
@@ -89,7 +89,7 @@ public final class _709_PathToBecomingALordDion extends Quest {
         String htmltext = "noquest";
         int npcId = npc.getNpcId();
         int cond = st.getCond();
-        Castle castle = ResidenceHolder.getResidence(DionCastle);
+        Castle castle = ResidenceHolder.getCastle(DionCastle);
         if (castle.getOwner() == null)
             return "Castle has no lord";
         Player castleOwner = castle.getOwner().getLeader().player;
@@ -168,7 +168,7 @@ public final class _709_PathToBecomingALordDion extends Quest {
     }
 
     private boolean isLordAvailable(int cond, QuestState st) {
-        Castle castle = ResidenceHolder.getResidence(DionCastle);
+        Castle castle = ResidenceHolder.getCastle(DionCastle);
         Clan owner = castle.getOwner();
         Player castleOwner = castle.getOwner().getLeader().player;
         if (owner != null)

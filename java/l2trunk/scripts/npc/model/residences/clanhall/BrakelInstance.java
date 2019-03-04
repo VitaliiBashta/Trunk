@@ -15,7 +15,7 @@ public final class BrakelInstance extends NpcInstance {
 
     @Override
     public void showChatWindow(Player player, int val) {
-        ClanHall clanhall = ResidenceHolder.getResidence(ClanHall.class, 21);
+        ClanHall clanhall = ResidenceHolder.getClanHall(21);
         if (clanhall == null)
             return;
         NpcHtmlMessage html = new NpcHtmlMessage(player, this);

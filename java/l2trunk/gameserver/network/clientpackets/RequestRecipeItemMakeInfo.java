@@ -5,8 +5,8 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Recipe;
 import l2trunk.gameserver.network.serverpackets.RecipeItemMakeInfo;
 
-public class RequestRecipeItemMakeInfo extends L2GameClientPacket {
-    private int _id;
+public final class RequestRecipeItemMakeInfo extends L2GameClientPacket {
+    private int id;
 
     /**
      * packet type id 0xB7
@@ -14,7 +14,7 @@ public class RequestRecipeItemMakeInfo extends L2GameClientPacket {
      */
     @Override
     protected void readImpl() {
-        _id = readD();
+        id = readD();
     }
 
     @Override
@@ -23,7 +23,7 @@ public class RequestRecipeItemMakeInfo extends L2GameClientPacket {
         if (activeChar == null)
             return;
 
-        Recipe recipeList = RecipeHolder.getInstance().getRecipeByRecipeId(_id);
+        Recipe recipeList = RecipeHolder.getInstance().getRecipeByRecipeId(id);
         if (recipeList == null) {
             activeChar.sendActionFailed();
             return;

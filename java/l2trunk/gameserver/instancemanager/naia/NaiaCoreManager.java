@@ -16,7 +16,7 @@ import java.util.List;
 
 public enum NaiaCoreManager {
     INSTANCE;
-    private static final Territory _coreTerritory = new Territory()
+    private static final Territory CORE_TERRITORY = new Territory()
             .add(new Polygon().add(-44789, 246305)
                     .add(-44130, 247452)
                     .add(-46092, 248606)
@@ -37,7 +37,7 @@ public enum NaiaCoreManager {
     private static final int teleCube = 32376;
     private static final int respawnDelay = 120; // 2min
     private static final long coreClearTime = 60 * 60 * 1000L; // 1hour
-    private static final Location spawnLoc = new Location(-45496, 246744, -14209);
+    private static final Location spawnLoc = Location.of(-45496, 246744, -14209);
     private static Zone _zone;
     private static boolean _active = false;
     private static boolean bossSpawned = false;
@@ -46,15 +46,16 @@ public enum NaiaCoreManager {
     List<Integer> epidoses = List.of(fireEpidos, waterEpidos, windEpidos, earthEpidos);
 
     private static void spawnToRoom(List<Integer> mobIds) {
-        for (int mobId : mobIds)
-            for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 10; i++)
+            for (int mobId : mobIds) {
                 SimpleSpawner sp = new SimpleSpawner(mobId);
-                sp.setLoc(Territory.getRandomLoc(NaiaCoreManager._coreTerritory).setH(Rnd.get(65535)));
+                sp.setLoc(Territory.getRandomLoc(NaiaCoreManager.CORE_TERRITORY).setH(Rnd.get(65535)));
                 sp.setRespawnDelay(respawnDelay, 30);
                 sp.setAmount(1);
                 sp.doSpawn(true);
                 sp.startRespawn();
             }
+
     }
 
     private boolean isActive() {

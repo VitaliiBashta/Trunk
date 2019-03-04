@@ -11,8 +11,8 @@ public final class _367_ElectrifyingRecharge extends Quest {
     //Mobs
     private static final int CATHEROK = 21035;
     //Quest items
-    private static final int Titan_Lamp_First = 5875;
-    private static final int Titan_Lamp_Last = 5879;
+    private static final int TITAN_LAMP_FIRST = 5875;
+    private static final int TITAN_LAMP_LAST = 5879;
     private static final int Broken_Titan_Lamp = 5880;
     //Chances
     private static final int broke_chance = 3;
@@ -22,38 +22,38 @@ public final class _367_ElectrifyingRecharge extends Quest {
         super(false);
         addStartNpc(LORAIN);
         addKillId(CATHEROK);
-        for (int Titan_Lamp_id = Titan_Lamp_First; Titan_Lamp_id <= Titan_Lamp_Last; Titan_Lamp_id++)
+        for (int Titan_Lamp_id = TITAN_LAMP_FIRST; Titan_Lamp_id <= TITAN_LAMP_LAST; Titan_Lamp_id++)
             addQuestItem(Titan_Lamp_id);
         addQuestItem(Broken_Titan_Lamp);
     }
 
     private static boolean takeAllLamps(QuestState st) {
         boolean result = false;
-        for (int Titan_Lamp_id = Titan_Lamp_First; Titan_Lamp_id <= Titan_Lamp_Last; Titan_Lamp_id++)
-            if (st.getQuestItemsCount(Titan_Lamp_id) > 0) {
+        for (int Titan_Lamp_id = TITAN_LAMP_FIRST; Titan_Lamp_id <= TITAN_LAMP_LAST; Titan_Lamp_id++)
+            if (st.haveQuestItem(Titan_Lamp_id)) {
                 result = true;
-                st.takeItems(Titan_Lamp_id, -1);
+                st.takeItems(Titan_Lamp_id);
             }
-        if (st.getQuestItemsCount(Broken_Titan_Lamp) > 0) {
+        if (st.haveQuestItem(Broken_Titan_Lamp)) {
             result = true;
-            st.takeItems(Broken_Titan_Lamp, -1);
+            st.takeItems(Broken_Titan_Lamp);
         }
         return result;
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        int _state = st.getState();
-        if (event.equalsIgnoreCase("30673-03.htm") && _state == CREATED) {
+        int state = st.getState();
+        if ("30673-03.htm".equalsIgnoreCase(event) && state == CREATED) {
             takeAllLamps(st);
-            st.giveItems(Titan_Lamp_First, 1);
+            st.giveItems(TITAN_LAMP_FIRST);
             st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("30673-07.htm") && _state == STARTED) {
+        } else if ("30673-07.htm".equalsIgnoreCase(event) && state == STARTED) {
             takeAllLamps(st);
-            st.giveItems(Titan_Lamp_First, 1);
-        } else if (event.equalsIgnoreCase("30673-08.htm") && _state == STARTED) {
+            st.giveItems(TITAN_LAMP_FIRST);
+        } else if ("30673-08.htm".equalsIgnoreCase(event) && state == STARTED) {
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest();
         }
@@ -76,7 +76,7 @@ public final class _367_ElectrifyingRecharge extends Quest {
                 st.setCond(0);
             }
         } else if (_state == STARTED)
-            if (st.haveQuestItem(Titan_Lamp_Last) ) {
+            if (st.haveQuestItem(TITAN_LAMP_LAST) ) {
                 htmltext = "30673-06.htm";
                 takeAllLamps(st);
                 st.giveItems(4553 + Rnd.get(12));
@@ -84,7 +84,7 @@ public final class _367_ElectrifyingRecharge extends Quest {
             } else if (st.haveQuestItem(Broken_Titan_Lamp) ) {
                 htmltext = "30673-05.htm";
                 takeAllLamps(st);
-                st.giveItems(Titan_Lamp_First);
+                st.giveItems(TITAN_LAMP_FIRST);
             } else
                 htmltext = "30673-04.htm";
 
@@ -95,16 +95,16 @@ public final class _367_ElectrifyingRecharge extends Quest {
     public void onAttack(NpcInstance npc, QuestState qs) {
         if (qs.getState() != STARTED)
             return ;
-        if (qs.getQuestItemsCount(Broken_Titan_Lamp) > 0)
+        if (qs.haveQuestItem(Broken_Titan_Lamp))
             return ;
 
         if (Rnd.chance(uplight_chance))
-            for (int Titan_Lamp_id = Titan_Lamp_First; Titan_Lamp_id < Titan_Lamp_Last; Titan_Lamp_id++)
-                if (qs.getQuestItemsCount(Titan_Lamp_id) > 0) {
+            for (int Titan_Lamp_id = TITAN_LAMP_FIRST; Titan_Lamp_id < TITAN_LAMP_LAST; Titan_Lamp_id++)
+                if (qs.haveQuestItem(Titan_Lamp_id)) {
                     int Titan_Lamp_Next = Titan_Lamp_id + 1;
                     takeAllLamps(qs);
-                    qs.giveItems(Titan_Lamp_Next, 1);
-                    if (Titan_Lamp_Next == Titan_Lamp_Last) {
+                    qs.giveItems(Titan_Lamp_Next);
+                    if (Titan_Lamp_Next == TITAN_LAMP_LAST) {
                         qs.setCond(2);
                         qs.playSound(SOUND_MIDDLE);
                     } else

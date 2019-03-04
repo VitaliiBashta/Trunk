@@ -233,7 +233,7 @@ public enum TaskManager {
                 statement.setInt(2, _id);
                 statement.executeUpdate();
             } catch (SQLException e) {
-                _log.warn("cannot updated the Global Task " + _id + ": " + e.getMessage());
+                LOG.warn("cannot updated the Global Task " + _id + ": " + e.getMessage());
             }
 
             if (_type == TYPE_SHEDULED || _type == TYPE_TIME)

@@ -63,7 +63,7 @@ public class WarehouseInstance extends NpcInstance {
                 WarehouseFunctions.showWithdrawWindowClan(player, val);
         } else if (command.equals("DepositC"))
             WarehouseFunctions.showDepositWindowClan(player);
-        else if (command.equalsIgnoreCase("CheckHonoraryItems")) {
+        else if ("CheckHonoraryItems".equalsIgnoreCase(command)) {
             String filename;
             if (!player.isClanLeader())
                 filename = "castle/warehouse/castlewarehouse-notcl.htm";

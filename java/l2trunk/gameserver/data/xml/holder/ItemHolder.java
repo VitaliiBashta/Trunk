@@ -7,11 +7,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public final class ItemHolder {
     private static final Map<Integer, ItemTemplate> items = new HashMap<>();
     private static final Logger LOG = LoggerFactory.getLogger(ItemHolder.class);
-    private static List<ItemTemplate> droppableTemplates;
+    private static Set<ItemTemplate> droppableTemplates;
 
     private ItemHolder() {
     }
@@ -20,7 +21,7 @@ public final class ItemHolder {
         items.put(template.itemId(), template);
     }
 
-    public static List<ItemTemplate> getDroppableTemplates() {
+    public static Set<ItemTemplate> getDroppableTemplates() {
         if (droppableTemplates == null) {
             droppableTemplates = CalculateRewardChances.getDroppableItems();
         }
@@ -44,12 +45,10 @@ public final class ItemHolder {
     }
 
     public static List<ItemTemplate> getItemsByNameContainingString(String name) {
-        Collection<ItemTemplate> toChooseFrom =  getDroppableTemplates() ;
-        List<ItemTemplate> templates = new ArrayList<>();
-        for (ItemTemplate template : toChooseFrom)
-            if (template != null && StringUtils.containsIgnoreCase(template.getName(), name))
-                templates.add(template);
-        return templates;
+        return  getDroppableTemplates().stream()
+        .filter(Objects::nonNull)
+            .filter(template -> StringUtils.containsIgnoreCase(template.getName(), name))
+        .collect(Collectors.toList());
     }
 
     public void clear() {

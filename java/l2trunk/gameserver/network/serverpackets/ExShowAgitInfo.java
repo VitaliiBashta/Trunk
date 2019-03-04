@@ -1,6 +1,5 @@
 package l2trunk.gameserver.network.serverpackets;
 
-import l2trunk.commons.lang.StringUtils;
 import l2trunk.gameserver.data.xml.holder.ResidenceHolder;
 import l2trunk.gameserver.model.entity.events.impl.ClanHallAuctionEvent;
 import l2trunk.gameserver.model.entity.events.impl.ClanHallMiniGameEvent;
@@ -10,13 +9,14 @@ import l2trunk.gameserver.tables.ClanTable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public final class ExShowAgitInfo extends L2GameServerPacket {
-    private List<AgitInfo> _clanHalls;
+    private List<AgitInfo> clanHalls;
 
     public ExShowAgitInfo() {
-        List<ClanHall> chs = ResidenceHolder.getResidenceList(ClanHall.class);
-        _clanHalls = new ArrayList<>(chs.size());
+        List<ClanHall> chs = ResidenceHolder.getClanHalls();
+        clanHalls = new ArrayList<>(chs.size());
 
         for (ClanHall clanHall : chs) {
             int ch_id = clanHall.getId();
@@ -29,17 +29,17 @@ public final class ExShowAgitInfo extends L2GameServerPacket {
                 getType = 1;
 
             Clan clan = ClanTable.INSTANCE.getClan(clanHall.getOwnerId());
-            String clan_name = clanHall.getOwnerId() == 0 || clan == null ? StringUtils.EMPTY : clan.getName();
-            String leader_name = clanHall.getOwnerId() == 0 || clan == null ? StringUtils.EMPTY : clan.getLeaderName();
-            _clanHalls.add(new AgitInfo(clan_name, leader_name, ch_id, getType));
+            String clan_name = clanHall.getOwnerId() == 0 || clan == null ? "" : clan.getName();
+            String leader_name = clanHall.getOwnerId() == 0 || clan == null ? "" : clan.getLeaderName();
+            clanHalls.add(new AgitInfo(clan_name, leader_name, ch_id, getType));
         }
     }
 
     @Override
     protected final void writeImpl() {
         writeEx(0x16);
-        writeD(_clanHalls.size());
-        for (AgitInfo info : _clanHalls) {
+        writeD(clanHalls.size());
+        for (AgitInfo info : clanHalls) {
             writeD(info.ch_id);
             writeS(info.clan_name);
             writeS(info.leader_name);
@@ -47,7 +47,7 @@ public final class ExShowAgitInfo extends L2GameServerPacket {
         }
     }
 
-    static class AgitInfo {
+    private static class AgitInfo {
         final String clan_name;
         final String leader_name;
         final int ch_id;

@@ -18,29 +18,26 @@ import java.util.stream.Collectors;
 
 public final class CalculateRewardChances {
     private static final double CORRECT_CHANCE_TRIES = 10000.0;
-    private static final Map<Integer, Integer[]> droplistsCountCache = new HashMap<>();
+    private static final Map<Integer, Pair<Integer, Integer>> droplistsCountCache = new HashMap<>();
     private static final Map<String, String> correctedChances = new HashMap<>();
 
     private CalculateRewardChances() {
     }
 
     public static List<NpcTemplate> getNpcsContainingString(String name) {
-        List<NpcTemplate> templates = new ArrayList<>();
-
-        for (NpcTemplate template : NpcHolder.getAll())
-            if (templateExists(template) && StringUtils.containsIgnoreCase(template.name(), name))
-                if (isDroppingAnything(template))
-                    templates.add(template);
-
-        return templates;
+        return NpcHolder.getAll().stream()
+                .filter(CalculateRewardChances::templateExists)
+                .filter(template -> StringUtils.containsIgnoreCase(template.name, name))
+                .filter(CalculateRewardChances::isDroppingAnything)
+                .collect(Collectors.toList());
     }
 
     public static int getDroplistsCountByItemId(int itemId, boolean drop) {
         if (droplistsCountCache.containsKey(itemId))
             if (drop)
-                return droplistsCountCache.get(itemId)[0];
+                return droplistsCountCache.get(itemId).getKey();
             else
-                return droplistsCountCache.get(itemId)[1];
+                return droplistsCountCache.get(itemId).getValue();
 
         int dropCount = 0;
         int spoilCount = 0;
@@ -56,7 +53,7 @@ public final class CalculateRewardChances {
                                     dropCount++;
             }
 
-        droplistsCountCache.put(itemId, new Integer[]{dropCount, spoilCount});
+        droplistsCountCache.put(itemId, Pair.of(dropCount, spoilCount));
 
         if (drop)
             return dropCount;
@@ -70,25 +67,14 @@ public final class CalculateRewardChances {
         return SpawnManager.INSTANCE.getSpawnedCountByNpc(template.getNpcId()) != 0;
     }
 
-    public static List<ItemTemplate> getDroppableItems() {
-        Set<ItemTemplate> items;
-        items = NpcHolder.getAll().stream()
+    public static Set<ItemTemplate> getDroppableItems() {
+        return NpcHolder.getAll().stream()
                 .filter(CalculateRewardChances::templateExists)
                 .flatMap(template -> template.getRewards().values().stream())
                 .flatMap(Collection::stream)
                 .flatMap(group -> group.getItems().stream())
                 .map(RewardData::getItem)
                 .collect(Collectors.toSet());
-
-
-//        NpcHolder.getAll().stream()
-//                .filter(CalculateRewardChances::templateExists)
-//                .forEach(template -> template.getRewards().values()
-//                        .forEach(rewardEntry ->
-//                                rewardEntry.forEach(group ->
-//                                        group.getItems().forEach(data ->
-//                                                items.add(data.getItem())))));
-        return new ArrayList<>(items);
     }
 
     /**

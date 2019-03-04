@@ -9,14 +9,14 @@ import l2trunk.gameserver.templates.manor.CropProcure;
 import java.util.List;
 
 public final class ExShowCropSetting extends L2GameServerPacket {
-    private final int _manorId;
+    private final int manorId;
     private final int _count;
     private final long[] _cropData; // data to send, size:count*14
 
     public ExShowCropSetting(int manorId) {
-        _manorId = manorId;
-        Castle c = ResidenceHolder.getResidence(Castle.class, _manorId);
-        List<Integer> crops = Manor.INSTANCE.getCropsForCastle(_manorId);
+        this.manorId = manorId;
+        Castle c = ResidenceHolder.getCastle(this.manorId);
+        List<Integer> crops = Manor.INSTANCE.getCropsForCastle(this.manorId);
         _count = crops.size();
         _cropData = new long[_count * 14];
         int i = 0;
@@ -57,7 +57,7 @@ public final class ExShowCropSetting extends L2GameServerPacket {
     public void writeImpl() {
         writeEx(0x2b); // SubId
 
-        writeD(_manorId); // manor id
+        writeD(manorId); // manor id
         writeD(_count); // size
 
         for (int i = 0; i < _count; i++) {

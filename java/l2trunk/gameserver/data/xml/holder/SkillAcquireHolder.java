@@ -13,8 +13,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 
 public final class SkillAcquireHolder {
     private static final Logger LOG = LoggerFactory.getLogger(SkillAcquireHolder.class);
@@ -44,16 +42,16 @@ public final class SkillAcquireHolder {
                 }
                 break;
             case TRANSFORMATION:
-                skills = TRANSFORMATION_SKILL_TREE.get(player.getRace().ordinal());
+                skills = TRANSFORMATION_SKILL_TREE.get(player.getRace());
                 if (skills == null) {
-                    LOG.info("skill tree for race " + player.getRace().ordinal() + " is not defined !");
+                    LOG.info("skill tree for race " + player.getRace() + " is not defined !");
                     return 0;
                 }
                 break;
             case FISHING:
-                skills = FISHING_SKILL_TREE.get(player.getRace().ordinal());
+                skills = FISHING_SKILL_TREE.get(player.getRace());
                 if (skills == null) {
-                    LOG.info("skill tree for race " + player.getRace().ordinal() + " is not defined !");
+                    LOG.info("skill tree for race " + player.getRace() + " is not defined !");
                     return 0;
                 }
                 break;
@@ -62,9 +60,9 @@ public final class SkillAcquireHolder {
         }
         int minlevel = 0;
         for (SkillLearn temp : skills)
-            if (temp.getMinLevel() > player.getLevel())
-                if (minlevel == 0 || temp.getMinLevel() < minlevel)
-                    minlevel = temp.getMinLevel();
+            if (temp.minLevel > player.getLevel())
+                if (minlevel == 0 || temp.minLevel < minlevel)
+                    minlevel = temp.minLevel;
         return minlevel;
     }
 
@@ -86,9 +84,9 @@ public final class SkillAcquireHolder {
                 skills = COLLECTION_SKILL_TREE;
                 return getAvaliableList(skills, player.getAllSkills(), player.getLevel());
             case TRANSFORMATION:
-                skills = TRANSFORMATION_SKILL_TREE.get(player.getRace().ordinal());
+                skills = TRANSFORMATION_SKILL_TREE.get(player.getRace());
                 if (skills == null) {
-                    LOG.info("skill tree for race " + player.getRace().ordinal() + " is not defined !");
+                    LOG.info("skill tree for race " + player.getRace() + " is not defined !");
                     return Collections.emptyList();
                 }
                 return getAvaliableList(skills, player.getAllSkills(), player.getLevel());
@@ -105,16 +103,16 @@ public final class SkillAcquireHolder {
                 else {
                     Map<Integer, SkillLearn> skillLearnMap = new TreeMap<>();
                     for (SkillLearn temp : skills)
-                        if (temp.getMinLevel() <= player.getLevel()) {
+                        if (temp.minLevel <= player.getLevel()) {
                             int knownLevel = player.getSkillLevel(temp.id);
                             if (knownLevel == -1)
-                                skillLearnMap.put(temp.id(), temp);
+                                skillLearnMap.put(temp.id, temp);
                         }
 
                     return skillLearnMap.values();
                 }
             case FISHING:
-                skills = FISHING_SKILL_TREE.get(player.getRace().ordinal());
+                skills = FISHING_SKILL_TREE.get(player.getRace());
                 if (skills == null) {
                     LOG.info("skill tree for race " + player.getRace().ordinal() + " is not defined !");
                     return Collections.emptyList();
@@ -144,18 +142,18 @@ public final class SkillAcquireHolder {
     private static Collection<SkillLearn> getAvaliableList(Collection<SkillLearn> skillLearns, Collection<Skill> skills, int level) {
         Map<Integer, SkillLearn> skillLearnMap = new TreeMap<>();
         for (SkillLearn temp : skillLearns)
-            if (temp.getMinLevel() <= level) {
+            if (temp.minLevel <= level) {
                 boolean knownSkill = false;
                 for (Skill skill : skills) {
                     if (knownSkill) continue;
-                    if (skill.id == temp.id()) {
+                    if (skill.id == temp.id) {
                         knownSkill = true;
-                        if (skill.level == temp.getLevel() - 1)
-                            skillLearnMap.put(temp.id(), temp);
+                        if (skill.level == temp.level - 1)
+                            skillLearnMap.put(temp.id, temp);
                     }
                 }
-                if (!knownSkill && temp.getLevel() == 1)
-                    skillLearnMap.put(temp.id(), temp);
+                if (!knownSkill && temp.level == 1)
+                    skillLearnMap.put(temp.id, temp);
             }
 
         return skillLearnMap.values();
@@ -171,7 +169,7 @@ public final class SkillAcquireHolder {
                 skills = COLLECTION_SKILL_TREE;
                 break;
             case TRANSFORMATION:
-                skills = TRANSFORMATION_SKILL_TREE.get(player.getRace().ordinal());
+                skills = TRANSFORMATION_SKILL_TREE.get(player.getRace());
                 break;
             case TRANSFER_CARDINAL:
             case TRANSFER_SHILLIEN_SAINTS:
@@ -179,7 +177,7 @@ public final class SkillAcquireHolder {
                 skills = TRANSFER_SKILL_TREE.get(player.getActiveClassId());
                 break;
             case FISHING:
-                skills = FISHING_SKILL_TREE.get(player.getRace().ordinal());
+                skills = FISHING_SKILL_TREE.get(player.getRace());
                 break;
             case CLAN:
                 skills = PLEDGE_SKILL_TREE;
@@ -198,7 +196,7 @@ public final class SkillAcquireHolder {
             return null;
 
         for (SkillLearn temp : skills)
-            if (temp.getLevel() == level && temp.id() == id)
+            if (temp.level == level && temp.id == id)
                 return temp;
 
         return null;
@@ -254,8 +252,8 @@ public final class SkillAcquireHolder {
 
     private static boolean isSkillPossible(Collection<SkillLearn> skills, Skill skill) {
         return skills.stream()
-                .filter(learn -> learn.id() == skill.id)
-                .anyMatch(learn -> learn.getLevel() <= skill.level);
+                .filter(learn -> learn.id == skill.id)
+                .anyMatch(learn -> learn.level <= skill.level);
     }
 
     public static boolean isSkillPossible(Player player, Skill skill) {
@@ -269,16 +267,16 @@ public final class SkillAcquireHolder {
             return List.of();
 
         return learns.stream()
-                .filter(item -> item.getItemId() == itemId)
+                .filter(item -> item.itemId == itemId)
                 .collect(Collectors.toList());
     }
 
     public static List<Integer> getAllSpellbookIds() {
         return NORMAL_SKILL_TREE.values().stream()
                 .flatMap(List::stream)
-                .filter(learn -> learn.getItemId() > 0)
-                .filter(SkillLearn::isClicked)
-                .map(SkillLearn::getItemId)
+                .filter(learn -> learn.itemId > 0)
+                .filter(skillLearn -> skillLearn.isClicked)
+                .map(skillLearn1 -> skillLearn1.itemId)
                 .collect(Collectors.toList());
     }
 
@@ -363,7 +361,7 @@ public final class SkillAcquireHolder {
                 skills = COLLECTION_SKILL_TREE;
                 return getAvaliableList(skills, player.getAllSkills(), level);
             case TRANSFORMATION:
-                skills = TRANSFORMATION_SKILL_TREE.get(player.getRace().ordinal());
+                skills = TRANSFORMATION_SKILL_TREE.get(player.getRace());
                 if (skills == null) {
                     LOG.info("skill tree for race " + player.getRace().ordinal() + " is not defined !");
                     return Collections.emptyList();
@@ -382,16 +380,16 @@ public final class SkillAcquireHolder {
                 else {
                     Map<Integer, SkillLearn> skillLearnMap = new TreeMap<>();
                     for (SkillLearn temp : skills)
-                        if (temp.getMinLevel() <= player.getLevel()) {
-                            int knownLevel = player.getSkillLevel(temp.id());
+                        if (temp.minLevel <= player.getLevel()) {
+                            int knownLevel = player.getSkillLevel(temp.id);
                             if (knownLevel == -1)
-                                skillLearnMap.put(temp.id(), temp);
+                                skillLearnMap.put(temp.id, temp);
                         }
 
                     return skillLearnMap.values();
                 }
             case FISHING:
-                skills = FISHING_SKILL_TREE.get(player.getRace().ordinal());
+                skills = FISHING_SKILL_TREE.get(player.getRace());
                 if (skills == null) {
                     LOG.info("skill tree for race " + player.getRace().ordinal() + " is not defined !");
                     return Collections.emptyList();

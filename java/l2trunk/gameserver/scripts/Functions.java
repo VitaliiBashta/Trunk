@@ -211,14 +211,14 @@ public class Functions {
     }
 
     protected static boolean isActive(String name) {
-        return "on".equalsIgnoreCase(ServerVariables.getString(name, "off"));
+        return ServerVariables.isSet(name);
     }
 
     protected static boolean setActive(String name, boolean active) {
         if (active == isActive(name))
             return false;
         if (active)
-            ServerVariables.set(name, "on");
+            ServerVariables.set(name);
         else
             ServerVariables.unset(name);
         return true;

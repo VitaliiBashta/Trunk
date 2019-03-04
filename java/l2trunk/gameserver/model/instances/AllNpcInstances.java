@@ -193,8 +193,8 @@ public final class AllNpcInstances {
                 return new l2trunk.scripts.npc.model.events.KrateisCubeMatchManagerInstance(id, template);
             case "events.SumielInstance":
                 return new l2trunk.scripts.npc.model.events.SumielInstance(id, template);
-//            case "events.UndergroundColiseumInstance":
-//                return  new l2trunk.scripts.npc.model.events.UndergroundColiseumInstance(id, template);
+            case "events.UndergroundColiseumInstance":
+                return  new l2trunk.scripts.npc.model.events.UndergroundColiseumInstance(id, template);
             case "FakeObeliskInstance":
                 return new l2trunk.scripts.npc.model.FakeObeliskInstance(id, template);
             case "FreightSenderInstance":

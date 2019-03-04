@@ -30,7 +30,7 @@ public enum ReflectionManager {
         // создаем в рефлекте все зоны, и все двери
         DEFAULT.init(DoorHolder.getDoors(), ZoneHolder.getZones());
 
-        JAIL.setCoreLoc(new Location(-114648, -249384, -2984));
+        JAIL.setCoreLoc(Location.of(-114648, -249384, -2984));
     }
 
     public synchronized Reflection get(int id) {

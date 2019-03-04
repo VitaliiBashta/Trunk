@@ -4,6 +4,8 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
+import static l2trunk.gameserver.model.base.ClassId.elvenKnight;
+
 public final class _406_PathToElvenKnight extends Quest {
     //NPC
     private static final int Sorius = 30327;
@@ -116,7 +118,7 @@ public final class _406_PathToElvenKnight extends Quest {
                     htmltext = "master_sorius_q0406_03.htm";
                     st.exitCurrentQuest();
                 }
-            } else if (st.player.getClassId().id == 0x13) {
+            } else if (st.player.getClassId() == elvenKnight) {
                 htmltext = "master_sorius_q0406_02a.htm";
                 st.exitCurrentQuest();
             } else {
@@ -147,11 +149,8 @@ public final class _406_PathToElvenKnight extends Quest {
             if (cond == 0)
                 htmltext = "master_sorius_q0406_01.htm";
             else if (cond == 1) {
-                if (st.haveQuestItem(TopazPiece)) {
-                    htmltext = "master_sorius_q0406_08.htm";
-                } else {
-                    htmltext = "master_sorius_q0406_07.htm";
-                }
+                if (st.haveQuestItem(TopazPiece)) htmltext = "master_sorius_q0406_08.htm";
+                else htmltext = "master_sorius_q0406_07.htm";
             } else if (cond == 2) {
                 st.takeItems(TopazPiece);
                 st.giveItems(SoriussLetter);
@@ -178,14 +177,13 @@ public final class _406_PathToElvenKnight extends Quest {
             if (cond == 3)
                 htmltext = "blacksmith_kluto_q0406_01.htm";
             else if (cond == 4) {
-                if (st.haveQuestItem(EmeraldPiece) ) {
+                if (st.haveQuestItem(EmeraldPiece)) {
                     htmltext = "blacksmith_kluto_q0406_04.htm";
                 } else {
                     htmltext = "blacksmith_kluto_q0406_03.htm";
                 }
             } else if (cond == 5) {
-                st.takeItems(EmeraldPiece);
-                st.takeItems(KlutosMemo);
+                st.takeAllItems(EmeraldPiece,KlutosMemo);
                 st.giveItems(KlutoBox);
                 htmltext = "blacksmith_kluto_q0406_05.htm";
                 st.setCond(6);

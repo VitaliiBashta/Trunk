@@ -10,6 +10,8 @@ import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
 import java.util.Collections;
 import java.util.List;
 
+import static l2trunk.commons.lang.NumberUtils.toInt;
+
 /**
  * Command .siege which allows players to Participate to Castle Sieges or check their starting dates.
  */
@@ -34,8 +36,7 @@ public final class CommandSiege implements IVoicedCommandHandler {
     @Override
     public boolean useVoicedCommand(String command, Player activeChar, String target) {
         if (!target.isEmpty()) {
-            int castleId = Integer.parseInt(target);
-            Castle castle = ResidenceHolder.getResidence(castleId);
+            Castle castle = ResidenceHolder.getCastle(toInt(target));
             activeChar.sendPacket(new CastleSiegeInfo(castle, activeChar));
         }
         showMainPage(activeChar);

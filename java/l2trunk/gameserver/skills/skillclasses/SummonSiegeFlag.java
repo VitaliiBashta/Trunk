@@ -21,13 +21,15 @@ import l2trunk.gameserver.stats.funcs.FuncMul;
 import java.util.List;
 
 public final class SummonSiegeFlag extends Skill {
-    private final FlagType _flagType;
-    private final double _advancedMult;
+    private final FlagType flagType;
+    private final double advancedMult;
 
     public SummonSiegeFlag(StatsSet set) {
         super(set);
-        _flagType = set.getEnum("flagType", FlagType.class);
-        _advancedMult = set.getDouble("advancedMultiplier", 1.);
+        flagType = set.getEnum("flagType", FlagType.class);
+        double temp = set.getDouble("advancedMultiplier");
+        if (temp == 0) advancedMult = 1;
+        else advancedMult = temp;
     }
 
     @Override
@@ -39,7 +41,7 @@ public final class SummonSiegeFlag extends Skill {
             return false;
 
 
-        switch (_flagType) {
+        switch (flagType) {
             case DESTROY:
                 //
                 break;
@@ -100,19 +102,19 @@ public final class SummonSiegeFlag extends Skill {
         if (siegeClan == null)
             return;
 
-        if (_flagType == FlagType.DESTROY) {
+        if (flagType == FlagType.DESTROY) {
             siegeClan.deleteFlag();
         } else {
             if (siegeClan.getFlag() != null)
                 return;
 
             // 35062/36590
-            SiegeFlagInstance flag = (SiegeFlagInstance) NpcHolder.getTemplate(_flagType == FlagType.OUTPOST ? 36590 : 35062).getNewInstance();
+            SiegeFlagInstance flag = (SiegeFlagInstance) NpcHolder.getTemplate(flagType == FlagType.OUTPOST ? 36590 : 35062).getNewInstance();
             flag.setClan(siegeClan);
             flag.addEvent(siegeEvent);
 
-            if (_flagType == FlagType.ADVANCED)
-                flag.addStatFunc(new FuncMul(Stats.MAX_HP, 0x50, flag, _advancedMult));
+            if (flagType == FlagType.ADVANCED)
+                flag.addStatFunc(new FuncMul(Stats.MAX_HP, 0x50, flag, advancedMult));
 
             flag.setFullHpMp();
             flag.setHeading(player.getHeading());

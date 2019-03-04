@@ -172,7 +172,7 @@ public class PathfinderInstance extends NpcInstance {
         StatsSet params = iz.getAddParams();
         String rewards = null;
         for (int i = rank; i >= 0; i--) {
-            rewards = params.getString("reward_lvl_" + i, null);
+            rewards = params.getString("reward_lvl_" + i);
             if (rewards != null)
                 break;
         }

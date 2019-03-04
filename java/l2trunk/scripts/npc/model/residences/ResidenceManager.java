@@ -36,13 +36,13 @@ public abstract class ResidenceManager extends MerchantInstance {
 
         setDialogs();
 
-        doors = template.getAIParams().getIntegerList("doors", Collections.emptyList());
+        doors = template.getAiParams().getIntegerList("doors", Collections.emptyList());
     }
 
     protected void setDialogs() {
-        _siegeDialog = getTemplate().getAIParams().getString("siege_dialog", "npcdefault.htm");
-        _mainDialog = getTemplate().getAIParams().getString("main_dialog", "npcdefault.htm");
-        _failDialog = getTemplate().getAIParams().getString("fail_dialog", "npcdefault.htm");
+        _siegeDialog = getTemplate().getAiParams().getString("siege_dialog", "npcdefault.htm");
+        _mainDialog = getTemplate().getAiParams().getString("main_dialog", "npcdefault.htm");
+        _failDialog = getTemplate().getAiParams().getString("fail_dialog", "npcdefault.htm");
     }
 
     protected abstract Residence getResidence();

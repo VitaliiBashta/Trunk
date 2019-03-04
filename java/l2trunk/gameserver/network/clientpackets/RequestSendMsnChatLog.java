@@ -7,7 +7,7 @@ public class RequestSendMsnChatLog extends L2GameClientPacket {
 
     @Override
     protected void runImpl() {
-        //_log.info.println(type() + " :: " + unk + " :: " + unk2 + " :: " + unk3);
+        //LOG.info.println(type() + " :: " + unk + " :: " + unk2 + " :: " + unk3);
     }
 
     /**

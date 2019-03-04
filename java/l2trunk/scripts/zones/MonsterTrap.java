@@ -48,9 +48,10 @@ public final class MonsterTrap implements ScriptFile {
 
             int reuse = zone.getParams().getInteger("reuse"); // В секундах
             int despawn = zone.getParams().getInteger("despawn", 5 * 60); // В секундах
-            boolean attackOnSpawn = zone.getParams().getBool("attackOnSpawn", true);
+            boolean attackOnSpawn = zone.getParams().isSet("attackOnSpawn");
             long currentMillis = System.currentTimeMillis();
-            long nextReuse = zone.getParams().getLong("nextReuse", currentMillis);
+            long nextReuse = zone.getParams().getLong("nextReuse");
+            if (nextReuse == 0) nextReuse =currentMillis;
             if (nextReuse > currentMillis)
                 return;
             zone.getParams().set("nextReuse", currentMillis + reuse * 1000L);

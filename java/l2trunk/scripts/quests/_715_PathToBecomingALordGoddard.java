@@ -23,7 +23,7 @@ public final class _715_PathToBecomingALordGoddard extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        Castle castle = ResidenceHolder.getResidence(GoddardCastle);
+        Castle castle = ResidenceHolder.getCastle(GoddardCastle);
         if (castle.getOwner() == null)
             return "Castle has no lord";
         Player castleOwner = castle.getOwner().getLeader().getPlayer();
@@ -53,7 +53,7 @@ public final class _715_PathToBecomingALordGoddard extends Quest {
     public String onTalk(NpcInstance npc, QuestState st) {
         String htmltext = "noquest";
         int cond = st.getCond();
-        Castle castle = ResidenceHolder.getResidence(GoddardCastle);
+        Castle castle = ResidenceHolder.getCastle(GoddardCastle);
         if (castle.getOwner() == null)
             return "Castle has no lord";
         Player castleOwner = castle.getOwner().getLeader().player;

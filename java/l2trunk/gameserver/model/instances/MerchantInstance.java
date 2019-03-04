@@ -143,7 +143,7 @@ public class MerchantInstance extends NpcInstance {
 
                 DomainArea domain = MapRegionHolder.getInstance().getRegionData(DomainArea.class, loc);
                 if (domain != null)
-                    return ResidenceHolder.getResidence(Castle.class, domain.getId());
+                    return ResidenceHolder.getCastle(domain.getId());
             }
 
             return super.getCastle();

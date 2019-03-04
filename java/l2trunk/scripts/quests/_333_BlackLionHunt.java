@@ -396,7 +396,7 @@ public final class _333_BlackLionHunt extends Quest {
             return "red_foor-01.htm";
         } else if ("f_give".equalsIgnoreCase(event)) {
             if (st.haveQuestItem(CARGO_BOX1)) {
-                if (st.getQuestItemsCount(ADENA_ID) >= OPEN_BOX_PRICE) {
+                if (st.haveQuestItem(ADENA_ID, OPEN_BOX_PRICE)) {
                     st.takeItems(CARGO_BOX1, 1);
                     st.takeItems(ADENA_ID, OPEN_BOX_PRICE);
                     int rand = Rnd.get(1, 162);
@@ -434,10 +434,10 @@ public final class _333_BlackLionHunt extends Quest {
                         st.giveItems(SILK_FROCK);
                         return "red_foor-12.htm";
                     } else if (rand < 131) {
-                        st.giveItems(PORCELAN_URN, 1);
+                        st.giveItems(PORCELAN_URN);
                         return "red_foor-13.htm";
                     } else if (rand < 132) {
-                        st.giveItems(IMPERIAL_DIAMOND, 1);
+                        st.giveItems(IMPERIAL_DIAMOND);
                         return "red_foor-13.htm";
                     } else if (rand < 147) {
                         int random_stat = Rnd.get(4);

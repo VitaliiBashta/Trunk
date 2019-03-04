@@ -34,7 +34,7 @@ public final class RequestPreviewItem extends L2GameClientPacket {
         int _unknow = readD();
         listId = readD();
         count = readD();
-        if (count * 4 > _buf.remaining() || count > Short.MAX_VALUE || count < 1) {
+        if (count * 4 > buf.remaining() || count > Short.MAX_VALUE || count < 1) {
             count = 0;
             return;
         }

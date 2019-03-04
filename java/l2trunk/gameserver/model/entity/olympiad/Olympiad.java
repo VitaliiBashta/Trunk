@@ -10,7 +10,6 @@ import l2trunk.gameserver.instancemanager.ServerVariables;
 import l2trunk.gameserver.model.GameObjectsStorage;
 import l2trunk.gameserver.model.Party;
 import l2trunk.gameserver.model.Player;
-import l2trunk.gameserver.model.base.ClassId;
 import l2trunk.gameserver.model.entity.Hero;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.SystemMessage2;
@@ -56,11 +55,11 @@ public final class Olympiad {
     public static Map<Integer, StatsSet> nobles;
     public static Map<Integer, Integer> _noblesRank;
     public static List<StatsSet> heroesToBe;
-    public static long _olympiadEnd;
-    public static long _validationEnd;
-    public static int _period;
-    public static long _nextWeeklyChange;
-    public static int _currentCycle;
+    public static long olympiadEnd;
+    public static long validationEnd;
+    public static int period;
+    public static long nextWeeklyChange;
+    public static int currentCycle;
     public static boolean _inCompPeriod;
     public static boolean _isOlympiadEnd;
     public static ScheduledFuture<?> _scheduledManagerTask;
@@ -73,24 +72,24 @@ public final class Olympiad {
 
     public static void load() {
         nobles = new ConcurrentHashMap<>();
-        _currentCycle = ServerVariables.getInt("Olympiad_CurrentCycle", -1);
-        _period = ServerVariables.getInt("Olympiad_Period", -1);
-        _olympiadEnd = ServerVariables.getLong("Olympiad_End", -1);
-        _validationEnd = ServerVariables.getLong("Olympiad_ValdationEnd", -1);
-        _nextWeeklyChange = ServerVariables.getLong("Olympiad_NextWeeklyChange", -1);
+        currentCycle = ServerVariables.getInt("Olympiad_CurrentCycle", -1);
+        period = ServerVariables.getInt("Olympiad_Period", -1);
+        olympiadEnd = ServerVariables.getLong("Olympiad_End", -1);
+        validationEnd = ServerVariables.getLong("Olympiad_ValdationEnd", -1);
+        nextWeeklyChange = ServerVariables.getLong("Olympiad_NextWeeklyChange", -1);
 
         ExProperties olympiadProperties = Config.load(Config.OLYMPIAD);
 
-        if (_currentCycle == -1)
-            _currentCycle = olympiadProperties.getProperty("CurrentCycle", 1);
-        if (_period == -1)
-            _period = olympiadProperties.getProperty("Period", 0);
-        if (_olympiadEnd == -1)
-            _olympiadEnd = olympiadProperties.getProperty("OlympiadEnd", 0L);
-        if (_validationEnd == -1)
-            _validationEnd = olympiadProperties.getProperty("ValdationEnd", 0L);
-        if (_nextWeeklyChange == -1)
-            _nextWeeklyChange = olympiadProperties.getProperty("NextWeeklyChange", 0L);
+        if (currentCycle == -1)
+            currentCycle = olympiadProperties.getProperty("CurrentCycle", 1);
+        if (period == -1)
+            period = olympiadProperties.getProperty("Period", 0);
+        if (olympiadEnd == -1)
+            olympiadEnd = olympiadProperties.getProperty("OlympiadEnd", 0L);
+        if (validationEnd == -1)
+            validationEnd = olympiadProperties.getProperty("ValdationEnd", 0L);
+        if (nextWeeklyChange == -1)
+            nextWeeklyChange = olympiadProperties.getProperty("NextWeeklyChange", 0L);
 
         initStadiums();
 
@@ -98,9 +97,9 @@ public final class Olympiad {
         OlympiadNobleDAO.select();
         OlympiadDatabase.loadNoblesRank();
 
-        switch (_period) {
+        switch (period) {
             case 0:
-                if (_olympiadEnd == 0 || _olympiadEnd < Calendar.getInstance().getTimeInMillis())
+                if (olympiadEnd == 0 || olympiadEnd < Calendar.getInstance().getTimeInMillis())
                     OlympiadDatabase.setNewOlympiadEnd();
                 else
                     _isOlympiadEnd = false;
@@ -110,12 +109,12 @@ public final class Olympiad {
                 _scheduledValdationTask = ThreadPoolManager.INSTANCE.schedule(new ValidationTask(), getMillisToValidationEnd());
                 break;
             default:
-                _log.warn("Olympiad System: Omg something went wrong in loading!! Period = " + _period);
+                _log.warn("Olympiad System: Omg something went wrong in loading!! Period = " + period);
                 return;
         }
 
         _log.info("Olympiad System: Loading Olympiad System....");
-        if (_period == 0)
+        if (period == 0)
             _log.info("Olympiad System: Currently in Olympiad Period");
         else
             _log.info("Olympiad System: Currently in Validation Period");
@@ -123,7 +122,7 @@ public final class Olympiad {
         _log.info("Olympiad System: Period Ends....");
 
         long milliToEnd;
-        if (_period == 0)
+        if (period == 0)
             milliToEnd = getMillisToOlympiadEnd();
         else
             milliToEnd = getMillisToValidationEnd();
@@ -137,7 +136,7 @@ public final class Olympiad {
 
         _log.info("Olympiad System: In " + numDays + " days, " + numHours + " hours and " + numMins + " mins.");
 
-        if (_period == 0) {
+        if (period == 0) {
             _log.info("Olympiad System: Next Weekly Change is in....");
 
             milliToEnd = getMillisToWeekChange();
@@ -154,7 +153,7 @@ public final class Olympiad {
 
         _log.info("Olympiad System: Loaded " + nobles.size() + " Noblesses");
 
-        if (_period == 0)
+        if (period == 0)
             init();
     }
 
@@ -172,7 +171,7 @@ public final class Olympiad {
     }
 
     public static void init() {
-        if (_period == 1)
+        if (period == 1)
             return;
 
         _compStart = Calendar.getInstance();
@@ -230,7 +229,7 @@ public final class Olympiad {
             return;
         }
 
-        int classId = nobleInfo.getInteger(CLASS_ID, 0);
+        int classId = nobleInfo.getInteger(CLASS_ID);
 
         // SoulHound hack
         if (classId == 133)
@@ -404,12 +403,12 @@ public final class Olympiad {
     }
 
     private static long getMillisToOlympiadEnd() {
-        return _olympiadEnd - System.currentTimeMillis();
+        return olympiadEnd - System.currentTimeMillis();
     }
 
     static long getMillisToValidationEnd() {
-        if (_validationEnd > System.currentTimeMillis())
-            return _validationEnd - System.currentTimeMillis();
+        if (validationEnd > System.currentTimeMillis())
+            return validationEnd - System.currentTimeMillis();
         return 10L;
     }
 
@@ -446,23 +445,23 @@ public final class Olympiad {
     }
 
     private static long getMillisToWeekChange() {
-        if (_nextWeeklyChange > Calendar.getInstance().getTimeInMillis())
-            return _nextWeeklyChange - Calendar.getInstance().getTimeInMillis();
+        if (nextWeeklyChange > Calendar.getInstance().getTimeInMillis())
+            return nextWeeklyChange - Calendar.getInstance().getTimeInMillis();
         return 10L;
     }
 
     protected static void reloadOlympiadEnd() {
-        _olympiadEnd = TimeUtils.getMilisecondsToNextDay(Config.ALT_OLY_DATE_END, 0, 1);
+        olympiadEnd = TimeUtils.getMilisecondsToNextDay(Config.ALT_OLY_DATE_END, 0, 1);
     }
 
     public static synchronized void doWeekTasks() {
-        if (_period == 1)
+        if (period == 1)
             return;
         for (Map.Entry<Integer, StatsSet> entry : nobles.entrySet()) {
             StatsSet set = entry.getValue();
             Player player = GameObjectsStorage.getPlayer(entry.getKey());
 
-            if (_period != 1)
+            if (period != 1)
                 set.set(POINTS, set.getInteger(POINTS) + Config.OLYMPIAD_POINTS_WEEKLY);
             set.set(GAME_CLASSES_COUNT, 0);
             set.set(GAME_NOCLASSES_COUNT, 0);
@@ -474,7 +473,7 @@ public final class Olympiad {
     }
 
     public static int getCurrentCycle() {
-        return _currentCycle;
+        return currentCycle;
     }
 
     public static synchronized void addSpectator(int id, Player spectator) {
@@ -601,28 +600,28 @@ public final class Olympiad {
         StatsSet noble = nobles.get(objId);
         if (noble == null)
             return 0;
-        return noble.getInteger(POINTS, 0);
+        return noble.getInteger(POINTS);
     }
 
     public static synchronized int getCompetitionDone(int objId) {
         StatsSet noble = nobles.get(objId);
         if (noble == null)
             return 0;
-        return noble.getInteger(COMP_DONE, 0);
+        return noble.getInteger(COMP_DONE);
     }
 
     public static synchronized int getCompetitionWin(int objId) {
         StatsSet noble = nobles.get(objId);
         if (noble == null)
             return 0;
-        return noble.getInteger(COMP_WIN, 0);
+        return noble.getInteger(COMP_WIN);
     }
 
     public static synchronized int getCompetitionLoose(int objId) {
         StatsSet noble = nobles.get(objId);
         if (noble == null)
             return 0;
-        return noble.getInteger(COMP_LOOSE, 0);
+        return noble.getInteger(COMP_LOOSE);
     }
 
     public static synchronized int[] getWeekGameCounts(int objId) {
@@ -632,10 +631,10 @@ public final class Olympiad {
         if (noble == null)
             return ar;
 
-        ar[0] = Config.GAME_MAX_LIMIT - noble.getInteger(GAME_CLASSES_COUNT, 0) - noble.getInteger(GAME_NOCLASSES_COUNT) - noble.getInteger(GAME_TEAM_COUNT, 0);
-        ar[1] = Config.GAME_CLASSES_COUNT_LIMIT - noble.getInteger(GAME_CLASSES_COUNT, 0);
-        ar[2] = Config.GAME_NOCLASSES_COUNT_LIMIT - noble.getInteger(GAME_NOCLASSES_COUNT, 0);
-        ar[3] = Config.GAME_TEAM_COUNT_LIMIT - noble.getInteger(GAME_TEAM_COUNT, 0);
+        ar[0] = Config.GAME_MAX_LIMIT - noble.getInteger(GAME_CLASSES_COUNT) - noble.getInteger(GAME_NOCLASSES_COUNT) - noble.getInteger(GAME_TEAM_COUNT);
+        ar[1] = Config.GAME_CLASSES_COUNT_LIMIT - noble.getInteger(GAME_CLASSES_COUNT);
+        ar[2] = Config.GAME_NOCLASSES_COUNT_LIMIT - noble.getInteger(GAME_NOCLASSES_COUNT);
+        ar[3] = Config.GAME_TEAM_COUNT_LIMIT - noble.getInteger(GAME_TEAM_COUNT);
 
         return ar;
     }
@@ -671,7 +670,7 @@ public final class Olympiad {
         StatsSet noble = nobles.get(objId);
         if (noble == null)
             return 0;
-        return noble.getInteger(CLASS_ID, 0);
+        return noble.getInteger(CLASS_ID);
     }
 
     public static void manualSetNoblePoints(int objId, int points) {
@@ -713,7 +712,7 @@ public final class Olympiad {
     }
 
     public static int getPeriod() {
-        return _period;
+        return period;
     }
 
     public static int getCountOpponents() {

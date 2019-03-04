@@ -2,7 +2,6 @@ package l2trunk.gameserver.network.serverpackets;
 
 import l2trunk.gameserver.data.xml.holder.ResidenceHolder;
 import l2trunk.gameserver.model.Player;
-import l2trunk.gameserver.model.entity.residence.Castle;
 import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.templates.manor.CropProcure;
 
@@ -11,15 +10,15 @@ import java.util.List;
 import java.util.Map;
 
 public final class SellListProcure extends L2GameServerPacket {
-    private final long _money;
+    private final long money;
     private final Map<ItemInstance, Long> _sellList = new HashMap<>();
-    private final int _castle;
+    private final int castle;
     private List<CropProcure> _procureList;
 
     public SellListProcure(Player player, int castleId) {
-        _money = player.getAdena();
-        _castle = castleId;
-        _procureList = ResidenceHolder.getResidence(Castle.class, _castle).getCropProcure(0);
+        money = player.getAdena();
+        castle = castleId;
+        _procureList = ResidenceHolder.getCastle(castle).getCropProcure(0);
         for (CropProcure c : _procureList) {
             ItemInstance item = player.getInventory().getItemByItemId(c.cropId);
             if (item != null && c.getAmount() > 0)
@@ -30,7 +29,7 @@ public final class SellListProcure extends L2GameServerPacket {
     @Override
     protected final void writeImpl() {
         writeC(0xef);
-        writeQ(_money);
+        writeQ(money);
         writeD(0x00); // lease ?
         writeH(_sellList.size()); // list size
 

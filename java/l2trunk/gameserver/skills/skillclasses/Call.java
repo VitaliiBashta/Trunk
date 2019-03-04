@@ -22,7 +22,7 @@ public final class Call extends Skill {
 
     public Call(StatsSet set) {
         super(set);
-        party = set.getBool("party", false);
+        party = set.isSet("party");
     }
 
     public static SystemMessage canSummonHere(Player activeChar) {

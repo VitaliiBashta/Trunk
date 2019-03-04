@@ -168,13 +168,13 @@ public final class Viktorina extends Functions implements ScriptFile, IVoicedCom
             return;
         }
         if (ServerVariables.getString("viktorinaq") == null)
-            ServerVariables.set("viktorinaq", 0);
+            ServerVariables.unset("viktorinaq");
         if (ServerVariables.getString("viktorinaa") == null)
-            ServerVariables.set("viktorinaa", 0);
+            ServerVariables.unset("viktorinaa");
         if (playerList.size() > 0) {
             announseViktorina(" correct answers: " + playerList.size() + ", The first answer: " + playerList.get(0).getName() + ", The correct answer: " + answer + "");
-            ServerVariables.set("viktorinaq", ServerVariables.getInt("viktorinaq") + 1);
-            ServerVariables.set("viktorinaa", ServerVariables.getInt("viktorinaa") + 1);
+            ServerVariables.inc("viktorinaq");
+            ServerVariables.inc("viktorinaa");
             if (Config.VIKTORINA_REMOVE_QUESTION)
                 questions.remove(index);
             _log.info("" + playerList.get(0).getName() + "|" + playerList.size() + "|" + question + "|" + answer, "Viktorina");
@@ -183,7 +183,7 @@ public final class Viktorina extends Functions implements ScriptFile, IVoicedCom
                 announseViktorina(" the correct answer had been received, the correct answer was:" + answer + "");
             if (!Config.VIKTORINA_REMOVE_QUESTION_NO_ANSWER)
                 announseViktorina(" the correct answer was received");
-            ServerVariables.set("viktorinaq", ServerVariables.getInt("viktorinaq") + 1);
+            ServerVariables.inc("viktorinaq");
             if (Config.VIKTORINA_REMOVE_QUESTION && Config.VIKTORINA_REMOVE_QUESTION_NO_ANSWER)
                 questions.remove(index);
         }
@@ -279,13 +279,13 @@ public final class Viktorina extends Functions implements ScriptFile, IVoicedCom
           int first = player.getVarInt("viktorinafirst");
 
         if (ServerVariables.getString("viktorinaq", "0") == "0") {
-            ServerVariables.set("viktorinaq", 0);
+            ServerVariables.unset("viktorinaq");
             vq = 0;
         } else
-            vq = Integer.parseInt(ServerVariables.getString("viktorinaq"));
+            vq = ServerVariables.getInt("viktorinaq");
 
         if (ServerVariables.getString("viktorinaa", "0") == "0") {
-            ServerVariables.set("viktorinaa", 0);
+            ServerVariables.unset("viktorinaa");
             va = 0;
         } else
             va = Integer.parseInt(ServerVariables.getString("viktorinaa"));
@@ -401,7 +401,7 @@ public final class Viktorina extends Functions implements ScriptFile, IVoicedCom
             if (args.equalsIgnoreCase(answer) && isQuestionStatus()) {
                 if (!playerList.contains(player))
                     playerList.add(player);
-                //_log.info("preprepls " + playerList + "");
+                //LOG.info("preprepls " + playerList + "");
             }
             if (!isQuestionStatus())
                 viktorinaSay(player, "Возможно вопрос не был задан,или же время ответа истекло");

@@ -12,37 +12,36 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public final class ExShowDominionRegistry extends L2GameServerPacket {
-    private final int _dominionId;
-    private final String _ownerClanName;
-    private final String _ownerLeaderName;
-    private final String _ownerAllyName;
-    private final int _clanReq;
-    private final int _mercReq;
-    private final int _warTime;
-    private final int _currentTime;
-    private final boolean _registeredAsPlayer;
-    private final boolean _registeredAsClan;
+    private final int dominionId;
+    private final String ownerClanName;
+    private final String ownerLeaderName;
+    private final String ownerAllyName;
+    private final int clanReq;
+    private final int mercReq;
+    private final int warTime;
+    private final int currentTime;
+    private final boolean registeredAsPlayer;
+    private final boolean registeredAsClan;
     private final List<TerritoryFlagsInfo> flags;
 
     public ExShowDominionRegistry(Player activeChar, Dominion dominion) {
-        _dominionId = dominion.getId();
+        dominionId = dominion.getId();
 
         Clan owner = dominion.getOwner();
         Alliance alliance = owner.getAlliance();
 
         DominionSiegeEvent siegeEvent = dominion.getSiegeEvent();
-        _ownerClanName = owner.getName();
-        _ownerLeaderName = owner.getLeaderName();
-        _ownerAllyName = alliance == null ? StringUtils.EMPTY : alliance.getAllyName();
-        _warTime = (int) (dominion.getSiegeDate().getTimeInMillis() / 1000L);
-        _currentTime = (int) (System.currentTimeMillis() / 1000L);
-        _mercReq = siegeEvent.getObjects(DominionSiegeEvent.DEFENDER_PLAYERS).size();
-        _clanReq = siegeEvent.getObjects(DominionSiegeEvent.DEFENDERS).size() + 1;
-        _registeredAsPlayer = siegeEvent.getObjects(DominionSiegeEvent.DEFENDER_PLAYERS).contains(activeChar.objectId());
-        _registeredAsClan = siegeEvent.getSiegeClan(DominionSiegeEvent.DEFENDERS, activeChar.getClan()) != null;
+        ownerClanName = owner.getName();
+        ownerLeaderName = owner.getLeaderName();
+        ownerAllyName = alliance == null ? StringUtils.EMPTY : alliance.getAllyName();
+        warTime = (int) (dominion.getSiegeDate().getTimeInMillis() / 1000L);
+        currentTime = (int) (System.currentTimeMillis() / 1000L);
+        mercReq = siegeEvent.getObjects(DominionSiegeEvent.DEFENDER_PLAYERS).size();
+        clanReq = siegeEvent.getObjects(DominionSiegeEvent.DEFENDERS).size() + 1;
+        registeredAsPlayer = siegeEvent.getObjects(DominionSiegeEvent.DEFENDER_PLAYERS).contains(activeChar.objectId());
+        registeredAsClan = siegeEvent.getSiegeClan(DominionSiegeEvent.DEFENDERS, activeChar.getClan()) != null;
 
-        List<Dominion> dominions = ResidenceHolder.getResidenceList(Dominion.class);
-        flags = dominions.stream()
+        flags = ResidenceHolder.getDominions().stream()
                 .map(d -> new TerritoryFlagsInfo(d.getId(), d.getFlags()))
                 .collect(Collectors.toList());
     }
@@ -51,16 +50,16 @@ public final class ExShowDominionRegistry extends L2GameServerPacket {
     protected void writeImpl() {
         writeEx(0x90);
 
-        writeD(_dominionId);
-        writeS(_ownerClanName);
-        writeS(_ownerLeaderName);
-        writeS(_ownerAllyName);
-        writeD(_clanReq); // Clan Request
-        writeD(_mercReq); // Merc Request
-        writeD(_warTime); // War Time
-        writeD(_currentTime); // Current Time
-        writeD(_registeredAsClan); // Состояние клановой кнопки: 0 - не подписал, 1 - подписан на эту территорию
-        writeD(_registeredAsPlayer); // Состояние персональной кнопки: 0 - не подписал, 1 - подписан на эту территорию
+        writeD(dominionId);
+        writeS(ownerClanName);
+        writeS(ownerLeaderName);
+        writeS(ownerAllyName);
+        writeD(clanReq); // Clan Request
+        writeD(mercReq); // Merc Request
+        writeD(warTime); // War Time
+        writeD(currentTime); // Current Time
+        writeD(registeredAsClan); // Состояние клановой кнопки: 0 - не подписал, 1 - подписан на эту территорию
+        writeD(registeredAsPlayer); // Состояние персональной кнопки: 0 - не подписал, 1 - подписан на эту территорию
         writeD(0x01);
         writeD(flags.size()); // Territory Count
         flags.forEach(cf -> {

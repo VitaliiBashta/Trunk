@@ -11,6 +11,9 @@ import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.NpcUtils;
 
+import static l2trunk.gameserver.model.base.ClassId.trooper;
+import static l2trunk.gameserver.model.base.ClassId.warder;
+
 public final class _065_PathToSoulBreaker extends Quest {
     private static final int Vitus = 32213;
     private static final int Kekropus = 32138;
@@ -151,7 +154,7 @@ public final class _065_PathToSoulBreaker extends Quest {
                 htmltext = "completed";
                 st.exitCurrentQuest();
             } else if (cond == 0)
-                if (st.player.getClassId().id == 0x7e || st.player.getClassId().id == 0x7d) {
+                if (st.player.getClassId() == trooper || st.player.getClassId() == warder) {
                     if (st.player.getLevel() >= 39)
                         htmltext = "32213.htm";
                     else {
@@ -164,7 +167,7 @@ public final class _065_PathToSoulBreaker extends Quest {
                 }
             else if (cond == 17) {
                 htmltext = "32213-03.htm";
-                st.takeItems(Kekropus_Rec, 1);
+                st.takeItems(Kekropus_Rec);
                 if (!st.player.isVarSet("prof2.1")) {
                     st.addExpAndSp(196875, 13510);
                     st.giveItems(ADENA_ID, 35597);
@@ -281,7 +284,7 @@ public final class _065_PathToSoulBreaker extends Quest {
         }
         if (cond == 15 && npcId == Wyrm && Rnd.chance(40)) {
             st.giveItems(Wyrm_Heart);
-            if (st.getQuestItemsCount(Wyrm_Heart) < 10)
+            if (!st.haveQuestItem(Wyrm_Heart,  10))
                 st.playSound(SOUND_ITEMGET);
             else {
                 st.playSound(SOUND_MIDDLE);

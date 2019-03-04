@@ -21,7 +21,7 @@ public final class RequestExDeleteSentPost extends L2GameClientPacket {
     @Override
     protected void readImpl() {
         count = readD(); // количество элементов для удаления
-        if (count * 4 > _buf.remaining() || count > Short.MAX_VALUE || count < 1) {
+        if (count * 4 > buf.remaining() || count > Short.MAX_VALUE || count < 1) {
             count = 0;
             return;
         }

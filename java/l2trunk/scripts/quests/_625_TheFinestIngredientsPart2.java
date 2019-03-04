@@ -139,7 +139,7 @@ public final class _625_TheFinestIngredientsPart2 extends Quest {
     private static class DeathListener implements OnDeathListener {
         @Override
         public void onDeath(Creature actor, Creature killer) {
-            ServerVariables.set(_625_TheFinestIngredientsPart2.class.getSimpleName(), String.valueOf(System.currentTimeMillis()));
+            ServerVariables.set(getClass().getSimpleName(), System.currentTimeMillis());
         }
     }
 

@@ -134,6 +134,7 @@ public final class QuestState {
     public void finish() {
         exitCurrentQuest(false);
     }
+
     /**
      * Destroy element used by quest when quest is exited
      */
@@ -143,15 +144,13 @@ public final class QuestState {
 
         removePlayerOnKillListener();
         // Clean drops
-        for (int itemId : quest.getItems()) {
-            // Get [item from] / [presence of the item in] the inventory of the getPlayer
-            ItemInstance item = player.inventory.getItemByItemId(itemId);
-            if (item != null && itemId != 57) {
-                long count = item.getCount();
-                // If getPlayer has the item in inventory, destroy it (if not gold)
-                player.inventory.destroyItemByItemId(itemId, count, "Exiting Quest " + quest.name);
-            }
-        }
+        quest.getItems().stream()
+                .filter(itemId -> itemId != 57)
+                .map(player.inventory::getItemByItemId)
+                .filter(Objects::nonNull)
+                .forEach(itemId ->
+                        player.inventory.destroyItemByItemId(itemId.getItemId(), player.inventory.getItemByItemId(itemId.getItemId()).getCount(), "Exiting Quest " + quest.name));
+
 
         // If quest is repeatable, delete quest from list of quest of the getPlayer and from database (quest CAN be created again => repeatable)
         if (repeatable) {
@@ -559,7 +558,7 @@ public final class QuestState {
     }
 
     public void set(String var, long intval) {
-        set(var, String.valueOf(intval));
+        set(var, "" + intval);
     }
 
     public void set(String var, String val) {

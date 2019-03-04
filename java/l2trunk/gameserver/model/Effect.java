@@ -58,7 +58,7 @@ public abstract class Effect extends RunnableImpl implements Comparable<Effect>,
     private boolean inUse = false;
     private Effect next = null;
     private boolean active = false;
-    private Future<?> _effectTask;
+    private Future<?> effectTask;
     private ActionDispelListener _listener;
 
     protected Effect(Env env, EffectTemplate template) {
@@ -203,15 +203,15 @@ public abstract class Effect extends RunnableImpl implements Comparable<Effect>,
     protected void onStart() {
         effected.addStatFuncs(getStatFuncs());
         effected.addTriggers(getTemplate());
-        if (getTemplate()._abnormalEffect != AbnormalEffect.NULL)
-            effected.startAbnormalEffect(getTemplate()._abnormalEffect);
+        if (getTemplate().abnormalEffect != AbnormalEffect.NULL)
+            effected.startAbnormalEffect(getTemplate().abnormalEffect);
         else if (getEffectType().getAbnormal() != null)
             effected.startAbnormalEffect(getEffectType().getAbnormal());
-        if (getTemplate()._abnormalEffect2 != AbnormalEffect.NULL)
-            effected.startAbnormalEffect(getTemplate()._abnormalEffect2);
-        if (getTemplate()._abnormalEffect3 != AbnormalEffect.NULL)
-            effected.startAbnormalEffect(getTemplate()._abnormalEffect3);
-        if (template._cancelOnAction)
+        if (getTemplate().abnormalEffect2 != AbnormalEffect.NULL)
+            effected.startAbnormalEffect(getTemplate().abnormalEffect2);
+        if (getTemplate().abnormalEffect3 != AbnormalEffect.NULL)
+            effected.startAbnormalEffect(getTemplate().abnormalEffect3);
+        if (template.cancelOnAction)
             effected.addListener(_listener = new ActionDispelListener());
         if (effected instanceof Player && !skill.canUseTeleport)
             ((Player) effected).getPlayerAccess().UseTeleport = false;
@@ -231,15 +231,15 @@ public abstract class Effect extends RunnableImpl implements Comparable<Effect>,
         effected.removeStatsOwner(this);
         effected.removeStatFuncs(getStatFuncs());
         effected.removeTriggers(getTemplate());
-        if (getTemplate()._abnormalEffect != AbnormalEffect.NULL)
-            effected.stopAbnormalEffect(getTemplate()._abnormalEffect);
+        if (getTemplate().abnormalEffect != AbnormalEffect.NULL)
+            effected.stopAbnormalEffect(getTemplate().abnormalEffect);
         else if (getEffectType().getAbnormal() != null)
             effected.stopAbnormalEffect(getEffectType().getAbnormal());
-        if (getTemplate()._abnormalEffect2 != AbnormalEffect.NULL)
-            effected.stopAbnormalEffect(getTemplate()._abnormalEffect2);
-        if (getTemplate()._abnormalEffect3 != AbnormalEffect.NULL)
-            effected.stopAbnormalEffect(getTemplate()._abnormalEffect3);
-        if (template._cancelOnAction)
+        if (getTemplate().abnormalEffect2 != AbnormalEffect.NULL)
+            effected.stopAbnormalEffect(getTemplate().abnormalEffect2);
+        if (getTemplate().abnormalEffect3 != AbnormalEffect.NULL)
+            effected.stopAbnormalEffect(getTemplate().abnormalEffect3);
+        if (template.cancelOnAction)
             effected.removeListener(_listener);
         if (effected instanceof Player && getStackType().equals(EffectTemplate.HP_RECOVER_CAST))
             effected.sendPacket(new ShortBuffStatusUpdate());
@@ -248,14 +248,14 @@ public abstract class Effect extends RunnableImpl implements Comparable<Effect>,
     }
 
     private void stopEffectTask() {
-        if (_effectTask != null)
-            _effectTask.cancel(false);
+        if (effectTask != null)
+            effectTask.cancel(false);
     }
 
     private void startEffectTask() {
-        if (_effectTask == null) {
+        if (effectTask == null) {
             _startTimeMillis = System.currentTimeMillis();
-            _effectTask = EffectTaskManager.getInstance().scheduleAtFixedRate(this, period, period);
+            effectTask = EffectTaskManager.getInstance().scheduleAtFixedRate(this, period, period);
         }
     }
 

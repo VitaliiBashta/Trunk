@@ -43,7 +43,7 @@ public abstract class GlobalEvent {
     private final List<EventAction> onStopActions = new ArrayList<>(0);
     private final List<EventAction> onInitActions = new ArrayList<>(0);
     // objects
-    private final Map<String, List<Object>> objects = new HashMap<>(0);
+    private final Map<String, List<? extends Object>> objects = new HashMap<>(0);
     private final int id;
     private final String name;
     private final String timerName;
@@ -98,8 +98,7 @@ public abstract class GlobalEvent {
     // ===============================================================================================================
 
     private void callActions(List<EventAction> actions) {
-        for (EventAction action : actions)
-            action.call(this);
+        actions.forEach(action -> action.call(this));
     }
 
     public void addOnStartActions(List<EventAction> start) {
@@ -136,7 +135,7 @@ public abstract class GlobalEvent {
             onTimeActions.put(time, new ArrayList<>(actions));
     }
 
-    public void timeActions(int time) {
+    void timeActions(int time) {
         List<EventAction> actions = onTimeActions.get(time);
         if (actions == null) {
             LOG.info("Undefined time : " + time);
@@ -167,9 +166,8 @@ public abstract class GlobalEvent {
     // Objects
     // ===============================================================================================================
 
-    @SuppressWarnings("unchecked")
     public <O> List<O> getObjects(String name) {
-        List<Object> objects = this.objects.get(name);
+        List<?> objects = this.objects.get(name);
         return objects == null ? List.of() : (List<O>) objects;
     }
 
@@ -178,11 +176,11 @@ public abstract class GlobalEvent {
         return objects.size() > 0 ? objects.get(0) : null;
     }
 
-    public void addObject(String name, Object object) {
+    public <T> void addObject(String name, T object) {
         if (object == null)
             return;
 
-        List<Object> list = objects.get(name);
+        List<T> list = (List<T>) objects.get(name);
         if (list != null) {
             list.add(object);
         } else {
@@ -196,30 +194,28 @@ public abstract class GlobalEvent {
         if (o == null)
             return;
 
-        List<Object> list = objects.get(name);
+        List<?> list = objects.get(name);
         if (list != null)
             list.remove(o);
     }
 
-    @SuppressWarnings("unchecked")
-    public <O> List<O> removeObjects(String name) {
-        List<Object> objects = this.objects.remove(name);
-        return objects == null ? List.of() : (List<O>) objects;
+    public <T> List<T> removeObjects(String name) {
+        List<?> objects = this.objects.remove(name);
+        return objects == null ? List.of() : (List<T>) objects;
     }
 
-    @SuppressWarnings("unchecked")
-    public void addObjects(String name, List objects) {
+    public <T> void addObjects(String name, List<T> objects) {
         if (objects.isEmpty())
             return;
 
-        List<Object> list = this.objects.get(name);
+        List<T> list = (List<T>) this.objects.get(name);
         if (list != null)
             list.addAll(objects);
         else
             this.objects.put(name, objects);
     }
 
-    public Map<String, List<Object>> getObjects() {
+    public Map<String, List<?>> getObjects() {
         return objects;
     }
 

@@ -7,11 +7,11 @@ import l2trunk.gameserver.stats.Env;
 import l2trunk.gameserver.stats.Stats;
 
 public final class EffectManaHealPercent extends Effect {
-    private final boolean _ignoreMpEff;
+    private final boolean ignoreMpEff;
 
     public EffectManaHealPercent(Env env, EffectTemplate template) {
         super(env, template);
-        _ignoreMpEff = template.getParam().getBool("ignoreMpEff", true);
+        ignoreMpEff = template.getParam().isSet("ignoreMpEff");
     }
 
     @Override
@@ -27,7 +27,7 @@ public final class EffectManaHealPercent extends Effect {
             return;
 
         double mp = calc() * effected.getMaxMp() / 100.;
-        double newMp = mp * (!_ignoreMpEff ? effected.calcStat(Stats.MANAHEAL_EFFECTIVNESS, 100., effector, skill) : 100.) / 100.;
+        double newMp = mp * (!ignoreMpEff ? effected.calcStat(Stats.MANAHEAL_EFFECTIVNESS, 100., effector, skill) : 100.) / 100.;
         double addToMp = Math.max(0, Math.min(newMp, effected.calcStat(Stats.MP_LIMIT, null, null) * effected.getMaxMp() / 100. - effected.getCurrentMp()));
 
         effected.sendPacket(new SystemMessage2(SystemMsg.S1_MP_HAS_BEEN_RESTORED).addInteger(Math.round(addToMp)));

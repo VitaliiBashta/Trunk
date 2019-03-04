@@ -4,6 +4,9 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
+import static l2trunk.gameserver.model.base.ClassId.assassin;
+import static l2trunk.gameserver.model.base.ClassId.darkFighter;
+
 public final class _411_PathToAssassin extends Quest {
     //npc
     private final int TRISKEL = 30416;
@@ -43,37 +46,41 @@ public final class _411_PathToAssassin extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if ("1".equals(event)) {
-            if (st.player.getLevel() >= 18 && st.player.getClassId().id == 0x1f && st.getQuestItemsCount(IRON_HEART_ID) < 1) {
-                st.setCond(1);
-                st.start();
-                st.playSound(SOUND_ACCEPT);
-                st.giveItems(SHILENS_CALL_ID);
-                htmltext = "triskel_q0411_05.htm";
-            } else if (st.player.getClassId().id != 0x1f) {
-                if (st.player.getClassId().id == 0x23)
-                    htmltext = "triskel_q0411_02a.htm";
-                else {
-                    htmltext = "triskel_q0411_02.htm";
+        switch (event) {
+            case "1":
+                if (st.player.getLevel() >= 18 && st.player.getClassId() == darkFighter && !st.haveQuestItem(IRON_HEART_ID)) {
+                    st.setCond(1);
+                    st.start();
+                    st.playSound(SOUND_ACCEPT);
+                    st.giveItems(SHILENS_CALL_ID);
+                    htmltext = "triskel_q0411_05.htm";
+                } else if (st.player.getClassId() != darkFighter) {
+                    if (st.player.getClassId() == assassin)
+                        htmltext = "triskel_q0411_02a.htm";
+                    else {
+                        htmltext = "triskel_q0411_02.htm";
+                        st.exitCurrentQuest();
+                    }
+                } else if (st.player.getLevel() < 18) {
+                    htmltext = "triskel_q0411_03.htm";
                     st.exitCurrentQuest();
-                }
-            } else if (st.player.getLevel() < 18) {
-                htmltext = "triskel_q0411_03.htm";
-                st.exitCurrentQuest();
-            } else if (st.getQuestItemsCount(IRON_HEART_ID) > 0)
-                htmltext = "triskel_q0411_04.htm";
-        } else if (event.equalsIgnoreCase("30419_1")) {
-            htmltext = "arkenia_q0411_05.htm";
-            st.takeItems(SHILENS_CALL_ID);
-            st.giveItems(ARKENIAS_LETTER_ID);
-            st.setCond(2);
-            st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("30382_1")) {
-            htmltext = "guard_leikan_q0411_03.htm";
-            st.takeItems(ARKENIAS_LETTER_ID);
-            st.giveItems(LEIKANS_NOTE_ID);
-            st.setCond(3);
-            st.playSound(SOUND_MIDDLE);
+                } else if (st.haveQuestItem(IRON_HEART_ID))
+                    htmltext = "triskel_q0411_04.htm";
+                break;
+            case "30419_1":
+                htmltext = "arkenia_q0411_05.htm";
+                st.takeItems(SHILENS_CALL_ID);
+                st.giveItems(ARKENIAS_LETTER_ID);
+                st.setCond(2);
+                st.playSound(SOUND_MIDDLE);
+                break;
+            case "30382_1":
+                htmltext = "guard_leikan_q0411_03.htm";
+                st.takeItems(ARKENIAS_LETTER_ID);
+                st.giveItems(LEIKANS_NOTE_ID);
+                st.setCond(3);
+                st.playSound(SOUND_MIDDLE);
+                break;
         }
         return htmltext;
     }
@@ -85,7 +92,7 @@ public final class _411_PathToAssassin extends Quest {
         int cond = st.getCond();
         if (npcId == TRISKEL) {
             if (cond < 1) {
-                if (st.getQuestItemsCount(IRON_HEART_ID) < 1)
+                if (!st.haveQuestItem(IRON_HEART_ID))
                     htmltext = "triskel_q0411_01.htm";
                 else
                     htmltext = "triskel_q0411_04.htm";
@@ -109,30 +116,29 @@ public final class _411_PathToAssassin extends Quest {
             else if (cond < 7)
                 if (cond < 5)
                     htmltext = "triskel_q0411_08.htm";
-                else if (st.getQuestItemsCount(SHILENS_TEARS_ID) < 1)
+                else if (!st.haveQuestItem(SHILENS_TEARS_ID))
                     htmltext = "triskel_q0411_09.htm";
                 else
                     htmltext = "triskel_q0411_10.htm";
         } else if (npcId == ARKENIA) {
-            if (cond == 1 && st.getQuestItemsCount(SHILENS_CALL_ID) > 0)
+            if (cond == 1 && st.haveQuestItem(SHILENS_CALL_ID) )
                 htmltext = "arkenia_q0411_01.htm";
-            else if (cond == 2 && st.getQuestItemsCount(ARKENIAS_LETTER_ID) > 0)
+            else if (cond == 2 && st.haveQuestItem(ARKENIAS_LETTER_ID) )
                 htmltext = "arkenia_q0411_07.htm";
-            else if (cond > 2 && cond < 5 && st.getQuestItemsCount(LEIKANS_NOTE_ID) > 0)
+            else if (cond > 2 && cond < 5 && st.haveQuestItem(LEIKANS_NOTE_ID) )
                 htmltext = "arkenia_q0411_10.htm";
-            else if (cond == 5 && st.getQuestItemsCount(LEIKANS_KNIFE_ID) > 0)
+            else if (cond == 5 && st.haveQuestItem(LEIKANS_KNIFE_ID) )
                 htmltext = "arkenia_q0411_11.htm";
-            else if (cond == 6 && st.getQuestItemsCount(SHILENS_TEARS_ID) > 0) {
+            else if (cond == 6 && st.haveQuestItem(SHILENS_TEARS_ID) ) {
                 htmltext = "arkenia_q0411_08.htm";
-                st.takeItems(SHILENS_TEARS_ID);
-                st.takeItems(LEIKANS_KNIFE_ID);
+                st.takeAllItems(SHILENS_TEARS_ID,LEIKANS_KNIFE_ID);
                 st.giveItems(ARKENIA_RECOMMEND_ID);
                 st.setCond(7);
                 st.playSound(SOUND_MIDDLE);
             } else if (cond == 7)
                 htmltext = "arkenia_q0411_09.htm";
         } else if (npcId == LEIKAN)
-            if (cond == 2 && st.getQuestItemsCount(ARKENIAS_LETTER_ID) > 0)
+            if (cond == 2 && st.haveQuestItem(ARKENIAS_LETTER_ID) )
                 htmltext = "guard_leikan_q0411_01.htm";
             else if (cond > 2 && cond < 4 && st.getQuestItemsCount(ONYX_BEASTS_MOLAR_ID) < 1) {
                 htmltext = "guard_leikan_q0411_05.htm";
@@ -140,8 +146,7 @@ public final class _411_PathToAssassin extends Quest {
                 htmltext = "guard_leikan_q0411_06.htm";
             } else if (cond == 4 && st.getQuestItemsCount(ONYX_BEASTS_MOLAR_ID) > 9) {
                 htmltext = "guard_leikan_q0411_07.htm";
-                st.takeItems(ONYX_BEASTS_MOLAR_ID);
-                st.takeItems(LEIKANS_NOTE_ID);
+                st.takeAllItems(ONYX_BEASTS_MOLAR_ID,LEIKANS_NOTE_ID);
                 st.giveItems(LEIKANS_KNIFE_ID);
                 st.setCond(5);
                 st.playSound(SOUND_MIDDLE);
@@ -149,7 +154,7 @@ public final class _411_PathToAssassin extends Quest {
                 htmltext = "guard_leikan_q0411_09.htm";
                 if (cond == 6)
                     st.setCond(5);
-            } else if (cond == 6 && st.getQuestItemsCount(SHILENS_TEARS_ID) > 0)
+            } else if (cond == 6 && st.haveQuestItem(SHILENS_TEARS_ID) )
                 htmltext = "guard_leikan_q0411_08.htm";
 
         return htmltext;

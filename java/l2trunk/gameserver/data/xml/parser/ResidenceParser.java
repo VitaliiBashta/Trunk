@@ -32,7 +32,7 @@ public enum ResidenceParser {
         LOG.info("Loaded " + ResidenceHolder.size() + " items ");
     }
 
-    private Residence getResidencebyName(String name, StatsSet set) {
+    private Residence  getResidencebyName(String name, StatsSet set) {
         switch (name) {
             case "Fortress":
                 return new Fortress(set);
@@ -58,7 +58,7 @@ public enum ResidenceParser {
         }
 
         Residence residence = getResidencebyName(impl, set);
-        ResidenceHolder.addResidence(residence);
+        ResidenceHolder.add(residence);
 
         for (Iterator<Element> iterator = rootElement.elementIterator(); iterator.hasNext(); ) {
             Element element = iterator.next();
@@ -173,7 +173,7 @@ public enum ResidenceParser {
             if (function != null)
                 function.addLease(level, lease);
         }
-        ResidenceHolder.buildFastLook();
+//        ResidenceHolder.buildFastLook();
     }
 
     private ResidenceFunction checkAndGetFunction(Residence residence, int type) {

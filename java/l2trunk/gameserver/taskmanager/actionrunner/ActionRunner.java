@@ -21,7 +21,7 @@ public enum  ActionRunner {
     private static final Logger LOG = LoggerFactory.getLogger(ActionRunner.class);
 //    private static final ActionRunner INSTANCE = new ActionRunner();
     private final Lock _lock = new ReentrantLock();
-    private final Map<String, List<ActionWrapper>> _futures = new HashMap<>();
+    private final Map<String, List<ActionWrapper>> futures = new HashMap<>();
 
     ActionRunner() {
         if (Config.ENABLE_OLYMPIAD)
@@ -53,21 +53,21 @@ public enum  ActionRunner {
     }
 
     private synchronized void addScheduled(String name, final ActionWrapper r, long diff) {
-        List<ActionWrapper> wrapperList = _futures.computeIfAbsent(name.toLowerCase(), k -> new ArrayList<>());
+        List<ActionWrapper> wrapperList = futures.computeIfAbsent(name.toLowerCase(), k -> new ArrayList<>());
         r.schedule(diff);
         wrapperList.add(r);
     }
 
     synchronized void remove(String name, ActionWrapper f) {
         final String lower = name.toLowerCase();
-        List<ActionWrapper> wrapperList = _futures.get(lower);
+        List<ActionWrapper> wrapperList = futures.get(lower);
         if (wrapperList == null)
             return;
 
         wrapperList.remove(f);
 
         if (wrapperList.isEmpty())
-            _futures.remove(lower);
+            futures.remove(lower);
     }
 
     public void clear(String name) {
@@ -75,12 +75,11 @@ public enum  ActionRunner {
 
         try {
             final String lower = name.toLowerCase();
-            List<ActionWrapper> wrapperList = _futures.remove(lower);
+            List<ActionWrapper> wrapperList = futures.remove(lower);
             if (wrapperList == null)
                 return;
 
-            for (ActionWrapper f : wrapperList)
-                f.cancel();
+            wrapperList.forEach(ActionWrapper::cancel);
 
             wrapperList.clear();
         } finally {
@@ -89,6 +88,6 @@ public enum  ActionRunner {
     }
 
     public synchronized void info() {
-        _futures.forEach((k, v) -> LOG.info("Name: " + k + "; size: " + v.size()));
+        futures.forEach((k, v) -> LOG.info("Name: " + k + "; size: " + v.size()));
     }
 }

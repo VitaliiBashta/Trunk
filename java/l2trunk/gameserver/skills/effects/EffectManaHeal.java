@@ -11,7 +11,7 @@ public final class EffectManaHeal extends Effect {
 
     public EffectManaHeal(Env env, EffectTemplate template) {
         super(env, template);
-        ignoreMpEff = template.getParam().getBool("ignoreMpEff", false);
+        ignoreMpEff = template.getParam().isSet("ignoreMpEff");
     }
 
     @Override

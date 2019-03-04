@@ -396,7 +396,7 @@ public final class BelethManager extends Functions implements ScriptFile {
 
     private static void checkElpySpawn() {
         if (ServerVariables.getLong("BelethKillTime") > System.currentTimeMillis() && _elpyThread == null) {
-            _elpyThread = ThreadPoolManager.INSTANCE.schedule(BelethManager::spawnElpy, (ServerVariables.getLong("BelethKillTime", 0) - System.currentTimeMillis()));
+            _elpyThread = ThreadPoolManager.INSTANCE.schedule(BelethManager::spawnElpy, (ServerVariables.getLong("BelethKillTime") - System.currentTimeMillis()));
         } else if (ServerVariables.getLong("BelethKillTime") < System.currentTimeMillis() && _elpy == null) {
             spawnElpy();
         }
@@ -408,7 +408,7 @@ public final class BelethManager extends Functions implements ScriptFile {
     }
 
     private static void spawnElpy() {
-        _elpy = NpcUtils.spawnSingle(25604,new Location(-45480, 246824, -14209, 49152) );
+        _elpy = NpcUtils.spawnSingle(25604, Location.of(-45480, 246824, -14209, 49152) );
     }
 
     @Override

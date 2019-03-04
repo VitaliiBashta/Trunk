@@ -41,7 +41,7 @@ public final class AntharasManager extends Functions implements ScriptFile, OnDe
     private static final int FWA_LIMITUNTILSLEEP = 15 * 60000;
     private static final int FWA_APPTIMEOFANTHARAS = 15 * 60000;
     // Models
-    private static BossInstance _antharas;
+    private static BossInstance antharas;
     private static NpcInstance _teleCube;
     // tasks.
     private static ScheduledFuture<?> _monsterSpawnTask;
@@ -115,8 +115,8 @@ public final class AntharasManager extends Functions implements ScriptFile, OnDe
         // eliminate players.
         banishForeigners();
 
-        if (_antharas != null)
-            _antharas.deleteMe();
+        if (antharas != null)
+            antharas.deleteMe();
         for (NpcInstance npc : _spawnedMinions)
             npc.deleteMe();
         if (_teleCube != null)
@@ -253,8 +253,8 @@ public final class AntharasManager extends Functions implements ScriptFile, OnDe
             _entryLocked = true;
             switch (taskId) {
                 case 1:
-                    _antharas = (BossInstance) NpcUtils.spawnSingle(ANTHARAS_STRONG,_antharasLocation );
-                    _antharas.setAggroRange(0);
+                    antharas = (BossInstance) NpcUtils.spawnSingle(ANTHARAS_STRONG,_antharasLocation );
+                    antharas.setAggroRange(0);
                     _state.setRespawnDate(getRespawnInterval());
                     _state.setState(State.ALIVE);
                     _state.update();
@@ -263,9 +263,9 @@ public final class AntharasManager extends Functions implements ScriptFile, OnDe
                 case 2:
                     // set camera.
                     players.forEach(pc -> {
-                                if (pc.getDistance(_antharas) <= _distance) {
+                                if (pc.getDistance(antharas) <= _distance) {
                                     pc.enterMovieMode();
-                                    pc.specialCamera(_antharas, 700, 13, -19, 0, 20000, 0, 0, 0, 0);
+                                    pc.specialCamera(antharas, 700, 13, -19, 0, 20000, 0, 0, 0, 0);
                                 } else
                                     pc.leaveMovieMode();
                             });
@@ -273,25 +273,25 @@ public final class AntharasManager extends Functions implements ScriptFile, OnDe
                     break;
                 case 3:
                     // do social.
-                    _antharas.broadcastPacket(new SocialAction(_antharas.objectId(), 1));
+                    antharas.broadcastPacket(new SocialAction(antharas.objectId(), 1));
 
                     // set camera.
                     players.forEach(pc -> {
-                        if (pc.getDistance(_antharas) <= _distance) {
+                        if (pc.getDistance(antharas) <= _distance) {
                             pc.enterMovieMode();
-                            pc.specialCamera(_antharas, 700, 13, 0, 6000, 20000, 0, 0, 0, 0);
+                            pc.specialCamera(antharas, 700, 13, 0, 6000, 20000, 0, 0, 0, 0);
                         } else
                             pc.leaveMovieMode();
                     });
                     _socialTask = ThreadPoolManager.INSTANCE.schedule(new AntharasSpawn(4), 10000);
                     break;
                 case 4:
-                    _antharas.broadcastPacket(new SocialAction(_antharas.objectId(), 2));
+                    antharas.broadcastPacket(new SocialAction(antharas.objectId(), 2));
                     // set camera.
                     for (Player pc : players)
-                        if (pc.getDistance(_antharas) <= _distance) {
+                        if (pc.getDistance(antharas) <= _distance) {
                             pc.enterMovieMode();
-                            pc.specialCamera(_antharas, 3700, 0, -3, 0, 10000, 0, 0, 0, 0);
+                            pc.specialCamera(antharas, 3700, 0, -3, 0, 10000, 0, 0, 0, 0);
                         } else
                             pc.leaveMovieMode();
                     _socialTask = ThreadPoolManager.INSTANCE.schedule(new AntharasSpawn(5), 200);
@@ -299,9 +299,9 @@ public final class AntharasManager extends Functions implements ScriptFile, OnDe
                 case 5:
                     // set camera.
                     for (Player pc : players)
-                        if (pc.getDistance(_antharas) <= _distance) {
+                        if (pc.getDistance(antharas) <= _distance) {
                             pc.enterMovieMode();
-                            pc.specialCamera(_antharas, 1100, 0, -3, 22000, 30000, 0, 0, 0, 0);
+                            pc.specialCamera(antharas, 1100, 0, -3, 22000, 30000, 0, 0, 0, 0);
                         } else
                             pc.leaveMovieMode();
                     _socialTask = ThreadPoolManager.INSTANCE.schedule(new AntharasSpawn(6), 10800);
@@ -309,9 +309,9 @@ public final class AntharasManager extends Functions implements ScriptFile, OnDe
                 case 6:
                     // set camera.
                     for (Player pc : players)
-                        if (pc.getDistance(_antharas) <= _distance) {
+                        if (pc.getDistance(antharas) <= _distance) {
                             pc.enterMovieMode();
-                            pc.specialCamera(_antharas, 1100, 0, -3, 300, 7000, 0, 0, 0, 0);
+                            pc.specialCamera(antharas, 1100, 0, -3, 300, 7000, 0, 0, 0, 0);
                         } else
                             pc.leaveMovieMode();
                     _socialTask = ThreadPoolManager.INSTANCE.schedule(new AntharasSpawn(7), 7000);
@@ -322,17 +322,17 @@ public final class AntharasManager extends Functions implements ScriptFile, OnDe
                         pc.leaveMovieMode();
 
                     broadcastScreenMessage(NpcString.ANTHARAS_YOU_CANNOT_HOPE_TO_DEFEAT_ME);
-                    _antharas.broadcastPacket(new PlaySound(PlaySound.Type.MUSIC, "BS02_A", 1, _antharas.objectId(), _antharas.getLoc()));
-                    _antharas.setAggroRange(_antharas.getTemplate().aggroRange);
-                    _antharas.setRunning();
-                    _antharas.moveToLocation(new Location(179011, 114871, -7704), 0, false);
+                    antharas.broadcastPacket(new PlaySound(PlaySound.Type.MUSIC, "BS02_A", 1, antharas.objectId(), antharas.getLoc()));
+                    antharas.setAggroRange(antharas.getTemplate().aggroRange);
+                    antharas.setRunning();
+                    antharas.moveToLocation(new Location(179011, 114871, -7704), 0, false);
                     _sleepCheckTask = ThreadPoolManager.INSTANCE.schedule(new CheckLastAttack(), 600000);
                     break;
                 case 8:
                     for (Player pc : players)
-                        if (pc.getDistance(_antharas) <= _distance) {
+                        if (pc.getDistance(antharas) <= _distance) {
                             pc.enterMovieMode();
-                            pc.specialCamera(_antharas, 1200, 20, -10, 0, 13000, 0, 0, 0, 0);
+                            pc.specialCamera(antharas, 1200, 20, -10, 0, 13000, 0, 0, 0, 0);
                         } else
                             pc.leaveMovieMode();
                     _socialTask = ThreadPoolManager.INSTANCE.schedule(new AntharasSpawn(9), 13000);

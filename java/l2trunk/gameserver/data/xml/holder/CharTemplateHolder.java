@@ -16,12 +16,12 @@ public final class CharTemplateHolder {
     }
 
     public static void addTemplate(int classId, StatsSet set, List<CreateItem> items) {
-        set.set("collision_radius", set.getInteger("male_collision_radius"));
-        set.set("collision_height", set.getInteger("male_collision_height"));
+        set.set("collision_radius", set.getDouble("male_collision_radius"));
+        set.set("collision_height", set.getDouble("male_collision_height"));
         TEMPLATES.put(classId, new PlayerTemplate(classId, set, true, items));
 
-        set.set("collision_radius", set.getInteger("female_collision_radius"));
-        set.set("collision_height", set.getInteger("female_collision_height"));
+        set.set("collision_radius", set.getDouble("female_collision_radius"));
+        set.set("collision_height", set.getDouble("female_collision_height"));
         TEMPLATES.put(classId | 0x100, new PlayerTemplate(classId, set, false, items));
     }
 

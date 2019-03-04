@@ -33,7 +33,7 @@ public final class TeleToGH extends Functions implements ScriptFile {
 
         // spawn wh keeper
         SimpleSpawner spawn = new SimpleSpawner(30086);
-        spawn.setLoc(new Location(48059, 186791, -3512, 42000))
+        spawn.setLoc(Location.of(48059, 186791, -3512, 42000))
                 .setAmount(1)
                 .setRespawnDelay(5)
                 .setReflection(ReflectionManager.GIRAN_HARBOR);
@@ -42,7 +42,7 @@ public final class TeleToGH extends Functions implements ScriptFile {
 
         // spawn grocery trader
         spawn = new SimpleSpawner(32169);
-        spawn.setLoc(new Location(48146, 186753, -3512, 42000))
+        spawn.setLoc(Location.of(48146, 186753, -3512, 42000))
                 .setAmount(1)
                 .setRespawnDelay(5)
                 .setReflection(ReflectionManager.GIRAN_HARBOR)
@@ -51,7 +51,7 @@ public final class TeleToGH extends Functions implements ScriptFile {
 
         // spawn gk
         spawn = new SimpleSpawner(13129);
-        spawn.setLoc(new Location(47984, 186832, -3445, 42000))
+        spawn.setLoc(Location.of(47984, 186832, -3445, 42000))
                 .setAmount(1)
                 .setRespawnDelay(5)
                 .setReflection(ReflectionManager.GIRAN_HARBOR)
@@ -60,7 +60,7 @@ public final class TeleToGH extends Functions implements ScriptFile {
 
         // spawn Orion the Cat
         spawn = new SimpleSpawner(31860);
-        spawn.setLoc(new Location(48129, 186828, -3512, 45452))
+        spawn.setLoc(Location.of(48129, 186828, -3512, 45452))
                 .setAmount(1)
                 .setRespawnDelay(5)
                 .setReflection(ReflectionManager.GIRAN_HARBOR)
@@ -69,7 +69,7 @@ public final class TeleToGH extends Functions implements ScriptFile {
 
         // spawn blacksmith (Pushkin)
         spawn = new SimpleSpawner(30300);
-        spawn.setLoc(new Location(48102, 186772, -3512, 42000))
+        spawn.setLoc(Location.of(48102, 186772, -3512, 42000))
                 .setAmount(1)
                 .setRespawnDelay(5)
                 .setReflection(ReflectionManager.GIRAN_HARBOR)
@@ -78,7 +78,7 @@ public final class TeleToGH extends Functions implements ScriptFile {
 
         // spawn Item Broker
         spawn = new SimpleSpawner(32320);
-        spawn.setLoc(new Location(47772, 186905, -3480, 42000))
+        spawn.setLoc(Location.of(47772, 186905, -3480, 42000))
                 .setAmount(1)
                 .setRespawnDelay(5)
                 .setReflection(ReflectionManager.GIRAN_HARBOR)
@@ -87,7 +87,7 @@ public final class TeleToGH extends Functions implements ScriptFile {
 
         // spawn Item Broker
         spawn = new SimpleSpawner(32320);
-        spawn.setLoc(new Location(46360, 187672, -3480, 42000))
+        spawn.setLoc(Location.of(46360, 187672, -3480, 42000))
                 .setAmount(1)
                 .setRespawnDelay(5)
                 .setReflection(ReflectionManager.GIRAN_HARBOR)
@@ -96,7 +96,7 @@ public final class TeleToGH extends Functions implements ScriptFile {
 
         // spawn Item Broker
         spawn = new SimpleSpawner(32320);
-        spawn.setLoc(new Location(49016, 185960, -3480, 42000))
+        spawn.setLoc(Location.of(49016, 185960, -3480, 42000))
                 .setAmount(1)
                 .setRespawnDelay(5)
                 .setReflection(ReflectionManager.GIRAN_HARBOR)
@@ -152,7 +152,7 @@ public final class TeleToGH extends Functions implements ScriptFile {
     private void teleOut() {
         if (npc == null || !npc.isInRange(player, 1000L))
             return;
-        player.teleToLocation(new Location(46776, 185784, -3528), 0);
+        player.teleToLocation(Location.of(46776, 185784, -3528), 0);
         show("I don't know from where you came here, but I can teleport you the another border side.", player, npc);
     }
 

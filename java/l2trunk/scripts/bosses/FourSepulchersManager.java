@@ -399,7 +399,7 @@ public final class FourSepulchersManager extends Functions implements ScriptFile
                     // looking for next shout time....
                     if (min % 5 == 0) //check if min can be divided by 5
                     {
-                        _log.info(Calendar.getInstance().getTime() + " Atk announce scheduled to " + min + " minute of this hour.");
+                        LOG.info(Calendar.getInstance().getTime() + " Atk announce scheduled to " + min + " minute of this hour.");
                         Calendar inter = Calendar.getInstance();
                         inter.set(Calendar.MINUTE, (int) min);
                         ThreadPoolManager.INSTANCE.schedule(new ManagerSay(), inter.getTimeInMillis() - Calendar.getInstance().getTimeInMillis());
@@ -436,7 +436,7 @@ public final class FourSepulchersManager extends Functions implements ScriptFile
             if (Calendar.getInstance().get(Calendar.MINUTE) > _newCycleMin && !_firstTimeRun)
                 time.set(Calendar.HOUR, Calendar.getInstance().get(Calendar.HOUR) + 1);
             time.set(Calendar.MINUTE, _newCycleMin);
-            _log.info("FourSepulchersManager: Entry time: " + time.getTime());
+            LOG.info("FourSepulchersManager: Entry time: " + time.getTime());
             if (_firstTimeRun)
                 _firstTimeRun = false; // cooldown phase ends event hour, so it will be not first run
 

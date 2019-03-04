@@ -15,6 +15,8 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static l2trunk.commons.lang.NumberUtils.toInt;
+
 public final class DeleteExpiredVarsTask extends AutomaticTask {
     private static final Logger LOG = LoggerFactory.getLogger(DeleteExpiredVarsTask.class);
 
@@ -33,7 +35,7 @@ public final class DeleteExpiredVarsTask extends AutomaticTask {
                 while (rs.next()) {
                     String name = rs.getString("name");
                     String obj_id = Strings.stripSlashes(rs.getString("obj_id"));
-                    varMap.put(Integer.parseInt(obj_id), name);
+                    varMap.put(toInt(obj_id), name);
                 }
             }
         } catch (NumberFormatException | SQLException e) {

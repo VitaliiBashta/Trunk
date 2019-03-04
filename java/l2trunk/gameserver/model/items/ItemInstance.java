@@ -44,14 +44,13 @@ public final class ItemInstance extends GameObject implements JdbcEntity {
     public static final int CHARGED_SOULSHOT = 1;
     public static final int CHARGED_SPIRITSHOT = 1;
     public static final int CHARGED_BLESSED_SPIRITSHOT = 2;
-    static final int[] EMPTY_ENCHANT_OPTIONS = new int[3];
     private static final int FLAG_NO_DROP = 1;
     private static final int FLAG_NO_TRADE = 1 << 1;
     private static final int FLAG_NO_TRANSFER = 1 << 2;
     private static final int FLAG_NO_CRYSTALLIZE = 1 << 3;
     private static final int FLAG_NO_ENCHANT = 1 << 4;
     private static final int FLAG_NO_DESTROY = 1 << 5;
-    private static final ItemsDAO _itemsDAO = ItemsDAO.INSTANCE;
+    private static final ItemsDAO ITEMS_DAO = ItemsDAO.INSTANCE;
     /**
      * ID of the owner
      */
@@ -67,9 +66,7 @@ public final class ItemInstance extends GameObject implements JdbcEntity {
     private long count;
 
     private int enchantLevel = -1;
-    /**
-     * Location of the item
-     */
+
     private ItemLocation loc;
     /**
      * Slot where item is stored
@@ -95,7 +92,7 @@ public final class ItemInstance extends GameObject implements JdbcEntity {
     /**
      * Аугментация вещи
      */
-    private int[] _enchantOptions = EMPTY_ENCHANT_OPTIONS;
+    private List<Integer> enchantOptions = new ArrayList<>();
     /**
      * Object L2Item associated to the item
      */
@@ -108,28 +105,22 @@ public final class ItemInstance extends GameObject implements JdbcEntity {
      * Item drop time for autodestroy task
      */
     private long timeToDeleteAfterDrop;
-    private Set<Integer> _dropPlayers = new HashSet<>();
+    private Set<Integer> dropPlayers = new HashSet<>();
     private long _dropTimeOwner;
     private int _chargedSoulshot = CHARGED_NONE;
     private int chargedSpiritshot = CHARGED_NONE;
     private boolean _chargedFishtshot = false;
-    private int _augmentationId;
-    private int _agathionEnergy;
-    private int[] _augmentations = new int[2];
+    private int augmentationId;
+    private int agathionEnergy;
+    private int[] augmentations = new int[2];
     private ItemAttachment attachment;
-    private JdbcEntityState _state = JdbcEntityState.CREATED;
-    private ScheduledFuture<?> _timerTask;
+    private JdbcEntityState state = JdbcEntityState.CREATED;
+    private ScheduledFuture<?> timerTask;
 
     public ItemInstance(int objectId) {
         super(objectId);
     }
 
-    /**
-     * Constructor<?> of the L2ItemInstance from the objectId and the itemId.
-     *
-     * @param objectId : int designating the ID of the object in the world
-     * @param itemId   : int designating the ID of the item
-     */
     public ItemInstance(int objectId, int itemId) {
         super(objectId);
         setItemId(itemId);
@@ -154,7 +145,6 @@ public final class ItemInstance extends GameObject implements JdbcEntity {
     public void setItemId(int id) {
         itemId = id;
         template = ItemHolder.getTemplate(id);
-        setCustomFlags(getCustomFlags());
     }
 
     public long getCount() {
@@ -188,9 +178,9 @@ public final class ItemInstance extends GameObject implements JdbcEntity {
             if (isEquipped() && player != null)
                 ItemEnchantOptionsListener.getInstance().onUnequip(getEquipSlot(), this, player);
 
-            int[] enchantOptions = template.getEnchantOptions().get(this.enchantLevel);
+            List<Integer> enchantOptions = template.getEnchantOptions().get(this.enchantLevel);
 
-            _enchantOptions = enchantOptions == null ? EMPTY_ENCHANT_OPTIONS : enchantOptions;
+            this.enchantOptions = enchantOptions == null ? new ArrayList<>() : enchantOptions;
 
             if (isEquipped() && player != null)
                 ItemEnchantOptionsListener.getInstance().onEquip(getEquipSlot(), this, player);
@@ -273,14 +263,14 @@ public final class ItemInstance extends GameObject implements JdbcEntity {
         return getLifeTime() - (int) (System.currentTimeMillis() / 1000L);
     }
 
-    public void startTimer(Runnable r) {
-        _timerTask = LazyPrecisionTaskManager.getInstance().scheduleAtFixedRate(r, 0, 60000L);
+    void startTimer(Runnable r) {
+        timerTask = LazyPrecisionTaskManager.getInstance().scheduleAtFixedRate(r, 0, 60000L);
     }
 
     void stopTimer() {
-        if (_timerTask != null) {
-            _timerTask.cancel(false);
-            _timerTask = null;
+        if (timerTask != null) {
+            timerTask.cancel(false);
+            timerTask = null;
         }
     }
 
@@ -386,14 +376,14 @@ public final class ItemInstance extends GameObject implements JdbcEntity {
 
     //	public boolean isAugmented()
 //	{
-//		return _augmentationId != 0;
+//		return augmentationId != 0;
 //	}
     public int getAugmentationId() {
-        return _augmentationId;
+        return augmentationId;
     }
 
     public void setAugmentationId(int val) {
-        _augmentationId = val;
+        augmentationId = val;
     }
 
     /**
@@ -612,13 +602,6 @@ public final class ItemInstance extends GameObject implements JdbcEntity {
         return attachment == null || (!(attachment instanceof FlagItemAttachment)) || ((FlagItemAttachment) attachment).canBeLost();
     }
 
-    /**
-     * Можно ли положить на клановый склад
-     *
-     * @param player
-     * @param privatewh
-     * @return
-     */
     public boolean canBeStored(Player player, boolean privatewh) {
         if ((customFlags & FLAG_NO_TRANSFER) == FLAG_NO_TRANSFER)
             return false;
@@ -742,10 +725,6 @@ public final class ItemInstance extends GameObject implements JdbcEntity {
         return template.isCommonItem();
     }
 
-    public boolean isAltSeed() {
-        return template.isAltSeed();
-    }
-
     public boolean isAdena() {
         return template.isAdena();
     }
@@ -767,9 +746,9 @@ public final class ItemInstance extends GameObject implements JdbcEntity {
         // activate non owner penalty
         if (lastAttacker != null) // lastAttacker в данном случае top damager
         {
-            _dropPlayers = new HashSet<>(1, 2);
+            dropPlayers = new HashSet<>(1, 2);
             for (Player player : lastAttacker.getPlayerGroup())
-                _dropPlayers.add(player.objectId());
+                dropPlayers.add(player.objectId());
 
             _dropTimeOwner = System.currentTimeMillis() + Config.NONOWNER_ITEM_PICKUP_DELAY + (fromNpc != null && fromNpc.isRaid() ? 285000 : 0);
         }
@@ -856,23 +835,8 @@ public final class ItemInstance extends GameObject implements JdbcEntity {
         return template.getItemClass();
     }
 
-    /**
-     * Возвращает защиту от элемента.
-     *
-     * @param element
-     * @return значение защиты
-     */
     public int getDefence(Element element) {
         return isArmor() ? getAttributeElementValue(element, true) : 0;
-    }
-
-    /**
-     * Возвращает защиту от элемента: огонь.
-     *
-     * @return значение защиты
-     */
-    public int getDefenceFire() {
-        return getDefence(Element.FIRE);
     }
 
     /**
@@ -978,17 +942,17 @@ public final class ItemInstance extends GameObject implements JdbcEntity {
 
     @Override
     public void save() {
-        _itemsDAO.save(this);
+        ITEMS_DAO.save(this);
     }
 
     @Override
     public void update() {
-        _itemsDAO.update(this);
+        ITEMS_DAO.update(this);
     }
 
     @Override
     public void delete() {
-        _itemsDAO.delete(this);
+        ITEMS_DAO.delete(this);
     }
 
     @Override
@@ -1035,12 +999,12 @@ public final class ItemInstance extends GameObject implements JdbcEntity {
 
     @Override
     public JdbcEntityState getJdbcState() {
-        return _state;
+        return state;
     }
 
     @Override
     public void setJdbcState(JdbcEntityState state) {
-        _state = state;
+        this.state = state;
     }
 
 
@@ -1058,19 +1022,19 @@ public final class ItemInstance extends GameObject implements JdbcEntity {
     }
 
     public int getAgathionEnergy() {
-        return _agathionEnergy;
+        return agathionEnergy;
     }
 
     public void setAgathionEnergy(int agathionEnergy) {
-        _agathionEnergy = agathionEnergy;
+        this.agathionEnergy = agathionEnergy;
     }
 
-    public int[] getEnchantOptions() {
-        return _enchantOptions;
+    public List<Integer> getEnchantOptions() {
+        return enchantOptions;
     }
 
     public Set<Integer> getDropPlayers() {
-        return _dropPlayers;
+        return dropPlayers;
     }
 
     public double getStatFunc(Stats stat) {
@@ -1089,16 +1053,16 @@ public final class ItemInstance extends GameObject implements JdbcEntity {
     }
 
     public int getAugmentationMineralId() {
-        return _augmentationId;
+        return augmentationId;
     }
 
     public void setAugmentation(int mineralId, int[] augmentations) {
-        _augmentationId = mineralId;
-        _augmentations = augmentations;
+        augmentationId = mineralId;
+        this.augmentations = augmentations;
     }
 
     public int[] getAugmentations() {
-        return _augmentations;
+        return augmentations;
     }
 
     /**

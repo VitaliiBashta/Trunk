@@ -104,7 +104,7 @@ public abstract class Creature extends GameObject {
      * при moveToLocation используется для хранения геокоординат в которые мы двигаемся для того что бы избежать повторного построения одного и того же пути при followToCharacter используется для хранения мировых координат в которых находилась последний раз преследуемая цель для отслеживания
      * необходимости перестраивания пути
      */
-    private final Location movingDestTempPos = new Location();
+    private final Location movingDestTempPos = Location.of();
     private final List<List<Location>> _targetRecorder = new ArrayList<>();
     private final List<Calculator> calculators = new ArrayList<>();
     private final Lock regenLock = new ReentrantLock();
@@ -163,7 +163,7 @@ public abstract class Creature extends GameObject {
      */
     private int abnormalEffects;
     private int abnormalEffects2;
-    private int _abnormalEffects3;
+    private int abnormalEffects3;
     private Map<Integer, Integer> skillMastery;
     private boolean fakeDeath;
     private boolean isblessedbynoblesse; // Восстанавливает все бафы после смерти
@@ -1355,9 +1355,9 @@ public abstract class Creature extends GameObject {
 
             double radian = PositionUtils.convertHeadingToRadian(target.getHeading());
             if (skill.flyToBack)
-                loc = new Location(target.getX() + (int) (Math.sin(radian) * 40), target.getY() - (int) (Math.cos(radian) * 40), target.getZ());
+                loc = Location.of(target.getX() + (int) (Math.sin(radian) * 40), target.getY() - (int) (Math.cos(radian) * 40), target.getZ());
             else
-                loc = new Location(target.getX() - (int) (Math.sin(radian) * 40), target.getY() + (int) (Math.cos(radian) * 40), target.getZ());
+                loc = Location.of(target.getX() - (int) (Math.sin(radian) * 40), target.getY() + (int) (Math.cos(radian) * 40), target.getZ());
 
             if (isFlying()) {
                 if (this instanceof Player && ((Player) this).isInFlyingTransform() && (loc.z <= 0 || loc.z >= 6000))
@@ -1479,7 +1479,7 @@ public abstract class Creature extends GameObject {
      * Return a map of 32 bits (0x00000000) containing all event effects
      */
     public int getAbnormalEffect3() {
-        return _abnormalEffects3;
+        return abnormalEffects3;
     }
 
     public int getAccuracy() {
@@ -1672,7 +1672,6 @@ public abstract class Creature extends GameObject {
         return getRunSpeed() * 1. / template.baseRunSpd;
     }
 
-    @Override
     public int getMoveSpeed() {
         if (isRunning())
             return getRunSpeed();
@@ -1902,11 +1901,11 @@ public abstract class Creature extends GameObject {
 
     private Location getIntersectionPoint(Creature target) {
         if (!PositionUtils.isFacing(this, target, 90))
-            return new Location(target.getX(), target.getY(), target.getZ());
+            return Location.of(target.getX(), target.getY(), target.getZ());
         double angle = PositionUtils.convertHeadingToDegree(target.getHeading()); // угол в градусах
         double radian = Math.toRadians(angle - 90); // угол в радианах
         double range = target.getMoveSpeed() / 2.; // расстояние, пройденное за 1 секунду, равно скорости. Берем половину.
-        return new Location((int) (target.getX() - range * Math.sin(radian)), (int) (target.getY() + range * Math.cos(radian)), target.getZ());
+        return Location.of((int) (target.getX() - range * Math.sin(radian)), (int) (target.getY() + range * Math.cos(radian)), target.getZ());
     }
 
     public Location applyOffset(Location point, int offset) {
@@ -1985,7 +1984,7 @@ public abstract class Creature extends GameObject {
         if (forestalling && follow != null && follow.isMoving)
             dest = getIntersectionPoint(follow);
         else
-            dest = new Location(x, y, z);
+            dest = Location.of(x, y, z);
 
         if (isInBoat() || this instanceof Boat || !Config.ALLOW_GEODATA) {
             applyOffset(dest, offset);
@@ -2136,14 +2135,14 @@ public abstract class Creature extends GameObject {
         moveLock.lock();
         try {
             offset = Math.max(offset, 0);
-            Location dst_geoloc = new Location(x_dest, y_dest, z_dest).world2geo();
+            Location dst_geoloc = Location.of(x_dest, y_dest, z_dest).world2geo();
             if (isMoving && !isFollow && movingDestTempPos.equals(dst_geoloc)) {
                 sendActionFailed();
                 return true;
             }
 
             if (isMovementDisabled()) {
-                getAI().setNextAction(nextAction.MOVE, new Location(x_dest, y_dest, z_dest), offset, pathfinding, false);
+                getAI().setNextAction(nextAction.MOVE, Location.of(x_dest, y_dest, z_dest), offset, pathfinding, false);
                 sendActionFailed();
                 return false;
             }
@@ -2402,7 +2401,10 @@ public abstract class Creature extends GameObject {
     }
 
     public synchronized Zone getZone(ZoneType type) {
-        return zones.stream().filter(z -> z.getType() == type).findFirst().orElseThrow(IllegalArgumentException::new);
+        return zones.stream()
+                .filter(z -> z.getType() == type)
+                .findFirst()
+                .orElse(null);
     }
 
     public Location getRestartPoint() {
@@ -3039,11 +3041,11 @@ public abstract class Creature extends GameObject {
         if (ae == AbnormalEffect.NULL) {
             abnormalEffects = AbnormalEffect.NULL.getMask();
             abnormalEffects2 = AbnormalEffect.NULL.getMask();
-            _abnormalEffects3 = AbnormalEffect.NULL.getMask();
+            abnormalEffects3 = AbnormalEffect.NULL.getMask();
         } else if (ae.isSpecial())
             abnormalEffects2 |= ae.getMask();
         else if (ae.isEvent())
-            _abnormalEffects3 |= ae.getMask();
+            abnormalEffects3 |= ae.getMask();
         else
             abnormalEffects |= ae.getMask();
         sendChanges();
@@ -3140,7 +3142,7 @@ public abstract class Creature extends GameObject {
         if (ae.isSpecial())
             abnormalEffects2 &= ~ae.getMask();
         if (ae.isEvent())
-            _abnormalEffects3 &= ~ae.getMask();
+            abnormalEffects3 &= ~ae.getMask();
         else
             abnormalEffects &= ~ae.getMask();
         sendChanges();
@@ -3433,7 +3435,7 @@ public abstract class Creature extends GameObject {
             setTarget(null);
         stopMove();
 
-        if (!(this instanceof Boat) && !isFlying() && !World.isWater(new Location(x, y, z), r))
+        if (!(this instanceof Boat) && !isFlying() && !World.isWater(Location.of(x, y, z), r))
             z = GeoEngine.getHeight(x, y, z, r.getGeoIndex());
 
         // TODO [G1ta0] убрать DimensionalRiftManager.teleToLocation
@@ -4023,7 +4025,7 @@ public abstract class Creature extends GameObject {
                 _startMoveTime = now;
                 _moveTask = ThreadPoolManager.INSTANCE.schedule(this, getMoveTickInterval());
             } catch (RuntimeException e) {
-                _log.error("Error in Creature Moving! ", e);
+                LOG.error("Error in Creature Moving! ", e);
             } finally {
                 moveLock.unlock();
             }

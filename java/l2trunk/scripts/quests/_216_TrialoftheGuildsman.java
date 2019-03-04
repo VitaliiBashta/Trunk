@@ -6,6 +6,9 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
+import static l2trunk.gameserver.model.base.ClassId.artisan;
+import static l2trunk.gameserver.model.base.ClassId.scavenger;
+
 public final class _216_TrialoftheGuildsman extends Quest {
     //NPC
     private static final int VALKON = 30103;
@@ -238,9 +241,7 @@ public final class _216_TrialoftheGuildsman extends Quest {
                 htmltext = "valkon_q0216_09a.htm";
             else
                 htmltext = "valkon_q0216_09b.htm";
-            st.takeItems(JOURNEYMAN_RING);
-            st.takeItems(ALLTRANS_INSTRUCTIONS);
-            st.takeItems(RP_JOURNEYMAN_RING);
+            st.takeAllItems(JOURNEYMAN_RING,ALLTRANS_INSTRUCTIONS,RP_JOURNEYMAN_RING);
             st.giveItems(MARK_OF_GUILDSMAN);
             if (!st.player.isVarSet("prof2.1")) {
                 st.addExpAndSp(514739, 33384);
@@ -250,8 +251,7 @@ public final class _216_TrialoftheGuildsman extends Quest {
             st.exitCurrentQuest();
             st.playSound(SOUND_FINISH);
         } else if ("blacksmith_alltran_q0216_03.htm".equalsIgnoreCase(event)) {
-            st.takeItems(VALKONS_RECOMMEND);
-            st.takeItems(MANDRAGORA_BERRY);
+            st.takeAllItems(VALKONS_RECOMMEND,MANDRAGORA_BERRY);
             st.giveItems(ALLTRANS_INSTRUCTIONS);
             st.giveItems(RP_JOURNEYMAN_RING);
             st.giveItems(ALLTRANS_RECOMMEND1);
@@ -262,8 +262,7 @@ public final class _216_TrialoftheGuildsman extends Quest {
             st.giveItems(NORMANS_INSTRUCTIONS);
             st.giveItems(NORMANS_RECEIPT);
         } else if ("warehouse_keeper_norman_q0216_10.htm".equalsIgnoreCase(event)) {
-            st.takeItems(DUNINGS_KEY);
-            st.takeItems(NORMANS_INSTRUCTIONS);
+            st.takeAllItems(DUNINGS_KEY,NORMANS_INSTRUCTIONS);
             st.giveItems(NORMANS_LIST);
         } else if ("blacksmith_duning_q0216_02.htm".equalsIgnoreCase(event)) {
             st.takeItems(NORMANS_RECEIPT);
@@ -272,9 +271,9 @@ public final class _216_TrialoftheGuildsman extends Quest {
             st.takeItems(ALLTRANS_RECOMMEND2);
             st.giveItems(PINTERS_INSTRUCTIONS);
 
-            if (st.player.getClassId().id == 0x38) {
+            if (st.player.getClassId() == artisan) {
                 htmltext = "blacksmith_pinter_q0216_05.htm";
-                st.giveItems(RP_AMBER_BEAD, 1);
+                st.giveItems(RP_AMBER_BEAD);
             }
         }
         return htmltext;
@@ -289,11 +288,11 @@ public final class _216_TrialoftheGuildsman extends Quest {
         if (id != CREATED)
             cond = st.getCond();
         if (npcId == VALKON) {
-            if (st.getQuestItemsCount(MARK_OF_GUILDSMAN) > 0) {
+            if (st.haveQuestItem(MARK_OF_GUILDSMAN)) {
                 htmltext = "completed";
                 st.exitCurrentQuest();
             } else if (cond == 0) {
-                if (st.player.getClassId().id == 0x36 || st.player.getClassId().id == 0x38) {
+                if (st.player.getClassId() == scavenger || st.player.getClassId() == artisan) {
                     if (st.player.getLevel() >= 35)
                         htmltext = "valkon_q0216_03.htm";
                     else {
@@ -304,42 +303,38 @@ public final class _216_TrialoftheGuildsman extends Quest {
                     htmltext = "valkon_q0216_01.htm";
                     st.exitCurrentQuest();
                 }
-            } else if (cond == 2 && st.getQuestItemsCount(VALKONS_RECOMMEND) > 0)
+            } else if (cond == 2 && st.haveQuestItem(VALKONS_RECOMMEND) )
                 htmltext = "valkon_q0216_07.htm";
-            else if (st.getQuestItemsCount(ALLTRANS_INSTRUCTIONS) > 0)
-                if (st.getQuestItemsCount(JOURNEYMAN_RING) < 7)
-                    htmltext = "valkon_q0216_08.htm";
-                else
+            else if (st.haveQuestItem(ALLTRANS_INSTRUCTIONS) )
+                if (st.haveQuestItem(JOURNEYMAN_RING, 7))
                     htmltext = "valkon_q0216_09.htm";
+                else
+                    htmltext = "valkon_q0216_08.htm";
         } else if (npcId == ALTRAN) {
-            if (cond == 1 && st.getQuestItemsCount(VALKONS_RECOMMEND) > 0) {
+            if (cond == 1 && st.haveQuestItem(VALKONS_RECOMMEND) ) {
                 htmltext = "blacksmith_alltran_q0216_01.htm";
                 st.setCond(2);
-            } else if (cond == 4 && st.getQuestItemsCount(VALKONS_RECOMMEND) > 0 && st.getQuestItemsCount(MANDRAGORA_BERRY) == 1)
+            } else if (cond == 4 && st.haveAllQuestItems(VALKONS_RECOMMEND,MANDRAGORA_BERRY) )
                 htmltext = "blacksmith_alltran_q0216_02.htm";
-            else if (cond < 6 && st.getQuestItemsCount(ALLTRANS_INSTRUCTIONS) == 1 && st.getQuestItemsCount(JOURNEYMAN_RING) < 7)
+            else if (cond < 6 && st.haveQuestItem(ALLTRANS_INSTRUCTIONS)  && !st.haveQuestItem(JOURNEYMAN_RING, 7))
                 htmltext = "blacksmith_alltran_q0216_04.htm";
-            else if (cond == 6 && st.getQuestItemsCount(JOURNEYMAN_RING) == 7)
+            else if (cond == 6 && st.haveQuestItem(JOURNEYMAN_RING, 7))
                 htmltext = "blacksmith_alltran_q0216_05.htm";
         } else if (npcId == NORMAN && cond >= 5) {
-            if (st.getQuestItemsCount(ALLTRANS_INSTRUCTIONS) == 1 && st.getQuestItemsCount(ALLTRANS_RECOMMEND1) == 1)
+            if (st.haveAllQuestItems(ALLTRANS_INSTRUCTIONS,ALLTRANS_RECOMMEND1) )
                 htmltext = "warehouse_keeper_norman_q0216_01.htm";
-            else if (st.getQuestItemsCount(ALLTRANS_INSTRUCTIONS) > 0 && st.getQuestItemsCount(NORMANS_INSTRUCTIONS) > 0 && st.getQuestItemsCount(NORMANS_RECEIPT) > 0)
+            else if (st.haveAllQuestItems(ALLTRANS_INSTRUCTIONS,NORMANS_INSTRUCTIONS,NORMANS_RECEIPT))
                 htmltext = "warehouse_keeper_norman_q0216_05.htm";
-            else if (st.getQuestItemsCount(ALLTRANS_INSTRUCTIONS) > 0 && st.getQuestItemsCount(NORMANS_INSTRUCTIONS) > 0 && st.getQuestItemsCount(DUNINGS_INSTRUCTIONS) > 0)
+            else if (st.haveAllQuestItems(ALLTRANS_INSTRUCTIONS,NORMANS_INSTRUCTIONS,DUNINGS_INSTRUCTIONS))
                 htmltext = "warehouse_keeper_norman_q0216_06.htm";
             else if (st.getQuestItemsCount(ALLTRANS_INSTRUCTIONS) > 0 && st.getQuestItemsCount(NORMANS_INSTRUCTIONS) > 0 && st.getQuestItemsCount(DUNINGS_KEY) >= 30)
                 htmltext = "warehouse_keeper_norman_q0216_07.htm";
-            else if (st.getQuestItemsCount(ALLTRANS_INSTRUCTIONS) > 0 && st.getQuestItemsCount(NORMANS_LIST) > 0) {
+            else if (st.haveAllQuestItems(ALLTRANS_INSTRUCTIONS,NORMANS_LIST) ) {
                 if (st.getQuestItemsCount(GRAY_BONE_POWDER) >= 70 && st.getQuestItemsCount(GRANITE_WHETSTONE) >= 70 && st.getQuestItemsCount(RED_PIGMENT) >= 70 && st.getQuestItemsCount(BRAIDED_YARN) >= 70) {
                     htmltext = "warehouse_keeper_norman_q0216_12.htm";
-                    st.takeItems(NORMANS_LIST, -1);
-                    st.takeItems(GRAY_BONE_POWDER, -1);
-                    st.takeItems(GRANITE_WHETSTONE, -1);
-                    st.takeItems(RED_PIGMENT, -1);
-                    st.takeItems(BRAIDED_YARN, -1);
+                    st.takeAllItems(NORMANS_LIST,GRAY_BONE_POWDER,GRANITE_WHETSTONE,RED_PIGMENT,BRAIDED_YARN);
                     st.giveItems(JOURNEYMAN_GEM, 7);
-                    if (st.getQuestItemsCount(JOURNEYMAN_DECO_BEADS) == 7 && st.getQuestItemsCount(JOURNEYMAN_GEM) == 7)
+                    if (st.haveQuestItem(JOURNEYMAN_DECO_BEADS, 7) && st.haveQuestItem(JOURNEYMAN_GEM, 7))
                         st.setCond(6);
                 } else
                     htmltext = "warehouse_keeper_norman_q0216_11.htm";
@@ -348,32 +343,29 @@ public final class _216_TrialoftheGuildsman extends Quest {
         } else if (npcId == DUNING && cond >= 5) {
             if (st.getQuestItemsCount(ALLTRANS_INSTRUCTIONS) > 0 && st.getQuestItemsCount(NORMANS_INSTRUCTIONS) > 0 && st.getQuestItemsCount(NORMANS_RECEIPT) > 0)
                 htmltext = "blacksmith_duning_q0216_01.htm";
-            else if (st.getQuestItemsCount(ALLTRANS_INSTRUCTIONS) > 0 && st.getQuestItemsCount(NORMANS_INSTRUCTIONS) > 0 && st.getQuestItemsCount(DUNINGS_INSTRUCTIONS) > 0)
+            else if (st.haveAllQuestItems(ALLTRANS_INSTRUCTIONS,NORMANS_INSTRUCTIONS,DUNINGS_INSTRUCTIONS))
                 htmltext = "blacksmith_duning_q0216_03.htm";
             else if (st.getQuestItemsCount(ALLTRANS_INSTRUCTIONS) > 0 && st.getQuestItemsCount(NORMANS_INSTRUCTIONS) > 0 && st.getQuestItemsCount(DUNINGS_KEY) == 30)
                 htmltext = "blacksmith_duning_q0216_04.htm";
             else if (st.getQuestItemsCount(NORMANS_RECEIPT) == 0 && st.getQuestItemsCount(DUNINGS_INSTRUCTIONS) == 0 && st.getQuestItemsCount(DUNINGS_KEY) == 0 && st.getQuestItemsCount(ALLTRANS_INSTRUCTIONS) == 1)
                 htmltext = "blacksmith_duning_q0216_01.htm";
         } else if (npcId == PINTER && cond >= 5)
-            if (st.getQuestItemsCount(ALLTRANS_INSTRUCTIONS) > 0 && st.getQuestItemsCount(ALLTRANS_RECOMMEND2) > 0)
+            if (st.haveAllQuestItems(ALLTRANS_INSTRUCTIONS,ALLTRANS_RECOMMEND2))
                 if (st.player.getLevel() < 36)
                     htmltext = "blacksmith_pinter_q0216_01.htm";
                 else
                     htmltext = "blacksmith_pinter_q0216_02.htm";
-            else if (st.getQuestItemsCount(ALLTRANS_INSTRUCTIONS) > 0 && st.getQuestItemsCount(PINTERS_INSTRUCTIONS) > 0)
-                if (st.getQuestItemsCount(AMBER_BEAD) < 70)
+            else if (st.haveAllQuestItems(ALLTRANS_INSTRUCTIONS,PINTERS_INSTRUCTIONS))
+                if (!st.haveQuestItem(AMBER_BEAD, 70))
                     htmltext = "blacksmith_pinter_q0216_06.htm";
                 else {
                     htmltext = "blacksmith_pinter_q0216_07.htm";
-                    st.takeItems(PINTERS_INSTRUCTIONS, -1);
-                    st.takeItems(AMBER_BEAD, -1);
-                    st.takeItems(RP_AMBER_BEAD, -1);
-                    st.takeItems(AMBER_LUMP, -1);
+                    st.takeAllItems(PINTERS_INSTRUCTIONS,AMBER_BEAD,RP_AMBER_BEAD,AMBER_LUMP);
                     st.giveItems(JOURNEYMAN_DECO_BEADS, 7);
-                    if (st.getQuestItemsCount(JOURNEYMAN_DECO_BEADS) == 7 && st.getQuestItemsCount(JOURNEYMAN_GEM) == 7)
+                    if (st.haveQuestItem(JOURNEYMAN_DECO_BEADS, 7) && st.haveQuestItem(JOURNEYMAN_GEM, 7))
                         st.setCond(6);
                 }
-            else if (st.getQuestItemsCount(ALLTRANS_INSTRUCTIONS) == 1 && st.getQuestItemsCount(PINTERS_INSTRUCTIONS) == 0 && (st.getQuestItemsCount(JOURNEYMAN_DECO_BEADS) > 0 || st.getQuestItemsCount(JOURNEYMAN_RING) > 0))
+            else if (st.haveQuestItem(ALLTRANS_INSTRUCTIONS)  && !st.haveQuestItem(PINTERS_INSTRUCTIONS) && (st.haveAnyQuestItems(JOURNEYMAN_DECO_BEADS,JOURNEYMAN_RING)))
                 htmltext = "blacksmith_pinter_q0216_08.htm";
         return htmltext;
     }
@@ -396,16 +388,16 @@ public final class _216_TrialoftheGuildsman extends Quest {
                         }
                     }
         if (cond == 5 && (npcId == 20079 || npcId == 20080 || npcId == 20081))
-            if (Rnd.chance(33) && st.getQuestItemsCount(ALLTRANS_INSTRUCTIONS) > 0 && st.getQuestItemsCount(PINTERS_INSTRUCTIONS) > 0) {
+            if (Rnd.chance(33) && st.haveAllQuestItems(ALLTRANS_INSTRUCTIONS,PINTERS_INSTRUCTIONS) ) {
                 long count = st.getQuestItemsCount(AMBER_BEAD) + st.getQuestItemsCount(AMBER_LUMP) * 5;
-                if (count < 70 && st.player.getClassId().id == 0x36) {
+                if (count < 70 && st.player.getClassId() == scavenger) {
                     st.giveItems(AMBER_BEAD, 5);
                     if (st.getQuestItemsCount(AMBER_BEAD) == 70)
                         st.playSound(SOUND_MIDDLE);
                     else
                         st.playSound(SOUND_ITEMGET);
                 }
-                if (count < 70 && st.player.getClassId().id == 0x38) {
+                if (count < 70 && st.player.getClassId() == artisan) {
                     st.giveItems(AMBER_LUMP, 5);
                     if (((MonsterInstance) npc).isSpoiled())
                         st.giveItems(AMBER_LUMP, 5);

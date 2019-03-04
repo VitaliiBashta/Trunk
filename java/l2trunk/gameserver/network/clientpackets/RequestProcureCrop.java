@@ -20,12 +20,9 @@ import l2trunk.gameserver.templates.manor.CropProcure;
 import java.util.Collections;
 import java.util.List;
 
-
-@SuppressWarnings("unused")
-// TODO
-public class RequestProcureCrop extends L2GameClientPacket {
+public final class RequestProcureCrop extends L2GameClientPacket {
     // format: cddb
-    private int _manorId;
+    private int manorId;
     private int _count;
     private int[] _items;
     private long[] _itemQ;
@@ -33,9 +30,9 @@ public class RequestProcureCrop extends L2GameClientPacket {
 
     @Override
     protected void readImpl() {
-        _manorId = readD();
+        manorId = readD();
         _count = readD();
-        if (_count * 16 > _buf.remaining() || _count > Short.MAX_VALUE || _count < 1) {
+        if (_count * 16 > buf.remaining() || _count > Short.MAX_VALUE || _count < 1) {
             _count = 0;
             return;
         }
@@ -86,7 +83,7 @@ public class RequestProcureCrop extends L2GameClientPacket {
             return;
         }
 
-        Castle castle = ResidenceHolder.getResidence(Castle.class, _manorId);
+        Castle castle = ResidenceHolder.getCastle(manorId);
         if (castle == null)
             return;
 

@@ -41,10 +41,10 @@ public final class Fortress extends Residence {
     private final List<Castle> _relatedCastles = new ArrayList<>(5);
     private final int[] _facilities = new int[FACILITY_MAX];
     // envoy
-    private int _state;
-    private int _castleId;
-    private int _supplyCount;
-    private long _supplySpawn;
+    private int state;
+    private int castleId;
+    private int supplyCount;
+    private long supplySpawn;
 
     public Fortress(StatsSet set) {
         super(set);
@@ -60,12 +60,12 @@ public final class Fortress extends Residence {
         // If a clan is owned by a castle / fortress, we getBonuses it.
         if (clan != null) {
             if (clan.getHasFortress() != 0) {
-                Fortress oldFortress = ResidenceHolder.getResidence(Fortress.class, clan.getHasFortress());
+                Fortress oldFortress = ResidenceHolder.getFortress(clan.getHasFortress());
                 if (oldFortress != null)
                     oldFortress.changeOwner(null);
             }
             if (clan.getCastle() != 0) {
-                Castle oldCastle = ResidenceHolder.getResidence(Castle.class, clan.getCastle());
+                Castle oldCastle = ResidenceHolder.getCastle(clan.getCastle());
                 if (oldCastle != null)
                     oldCastle.changeOwner(null);
             }
@@ -131,16 +131,16 @@ public final class Fortress extends Residence {
     }
 
     public void setFortState(int state, int castleId) {
-        _state = state;
-        _castleId = castleId;
+        this.state = state;
+        this.castleId = castleId;
     }
 
     public int getCastleId() {
-        return _castleId;
+        return castleId;
     }
 
     public int getContractState() {
-        return _state;
+        return state;
     }
 
     @Override
@@ -159,16 +159,16 @@ public final class Fortress extends Residence {
             setRewardCount(getRewardCount() + 1);
 
             if (getContractState() == CONTRACT_WITH_CASTLE) {
-                Castle castle = ResidenceHolder.getResidence(Castle.class, _castleId);
+                Castle castle = ResidenceHolder.getCastle(castleId);
                 if (castle.getOwner() == null || castle.getOwner().getReputationScore() < 2 || owner.getWarehouse().getCountOf(ItemTemplate.ITEM_ID_ADENA) > CASTLE_FEE) {
                     setSupplyCount(0);
                     setFortState(INDEPENDENT, 0);
                     clearFacility();
                 } else {
-                    if (_supplyCount < 6) {
+                    if (supplyCount < 6) {
                         castle.getOwner().incReputation(-2, false, "Fortress:chanceCycle():" + getId());
                         owner.getWarehouse().destroyItemByItemId(ItemTemplate.ITEM_ID_ADENA, CASTLE_FEE, "Fortress Cycle");
-                        _supplyCount++;
+                        supplyCount++;
                     }
                 }
             }
@@ -181,19 +181,19 @@ public final class Fortress extends Residence {
     }
 
     public int getSupplyCount() {
-        return _supplyCount;
+        return supplyCount;
     }
 
     public void setSupplyCount(int c) {
-        _supplyCount = c;
+        supplyCount = c;
     }
 
     public long getSupplySpawn() {
-        return _supplySpawn;
+        return supplySpawn;
     }
 
     public void setSupplySpawn(long c) {
-        _supplySpawn = c;
+        supplySpawn = c;
     }
 
     public int getFacilityLevel(int type) {

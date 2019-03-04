@@ -16,6 +16,8 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+import static l2trunk.commons.lang.NumberUtils.toInt;
+
 public enum OfflineBuffersTable {
     INSTANCE;
     private static final Logger _log = LoggerFactory.getLogger(OfflineBuffersTable.class);
@@ -55,7 +57,7 @@ public enum OfflineBuffersTable {
                             if (skills.next()) {
                                 final String[] skillIds = skills.getString("skillIds").split(",");
                                 for (String skillId : skillIds) {
-                                    final Skill skill = player.getKnownSkill(Integer.parseInt(skillId));
+                                    final Skill skill = player.getKnownSkill(toInt(skillId));
                                     if (skill == null)
                                         continue;
 

@@ -16,10 +16,10 @@ import org.slf4j.LoggerFactory;
 
 import java.util.StringTokenizer;
 
-public class UndergroundColiseumInstance extends NpcInstance {
+public final class UndergroundColiseumInstance extends NpcInstance {
     private static final Logger _log = LoggerFactory.getLogger(UndergroundColiseumInstance.class);
 
-    private UndergroundColiseumInstance(int objectId, NpcTemplate template) {
+    public UndergroundColiseumInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
     }
 
@@ -87,14 +87,7 @@ public class UndergroundColiseumInstance extends NpcInstance {
                 showChatWindow(player, 3);
                 return;
             }
-            /*
-             * TODO раскомментировать
-             * if(getPlayer.getParty().size() < 7)
-             * {
-             * showChatWindow(getPlayer, 3);
-             * return;
-             * }
-             */
+
             if (st.hasMoreTokens()) {
                 Coliseum coliseum = UnderGroundColliseumManager.INSTANCE.getColiseumByLevelLimit(getMaxLevel());
                 if (coliseum == null) {

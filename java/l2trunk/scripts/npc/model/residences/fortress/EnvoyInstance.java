@@ -26,21 +26,21 @@ public final class EnvoyInstance extends NpcInstance {
     private static final int COND_LEADER = 0;
     private static final int COND_FAIL = 1;
 
-    private final int _castleId;
-    private final String _mainDialog;
-    private final String _failDialog;
-    private final String _successContractDialog;
-    private final String _successIndependentDialog;
-    private final String _failContractDialog;
+    private final int castleId;
+    private final String mainDialog;
+    private final String failDialog;
+    private final String successContractDialog;
+    private final String successIndependentDialog;
+    private final String failContractDialog;
 
     public EnvoyInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
-        _castleId = template.getAIParams().getInteger("castle_id");
-        _mainDialog = template.getAIParams().getString("main_dialog");
-        _failDialog = template.getAIParams().getString("fail_dialog");
-        _successContractDialog = template.getAIParams().getString("success_contract_dialog");
-        _successIndependentDialog = template.getAIParams().getString("success_independent_dialog");
-        _failContractDialog = template.getAIParams().getString("fail_contract_dialog");
+        castleId = template.getAiParams().getInteger("castle_id");
+        mainDialog = template.getAiParams().getString("main_dialog");
+        failDialog = template.getAiParams().getString("fail_dialog");
+        successContractDialog = template.getAiParams().getString("success_contract_dialog");
+        successIndependentDialog = template.getAiParams().getString("success_independent_dialog");
+        failContractDialog = template.getAiParams().getString("fail_contract_dialog");
     }
 
     @Override
@@ -52,23 +52,23 @@ public final class EnvoyInstance extends NpcInstance {
             case COND_LEADER:
                 final int castleId, state;
                 final String fileName;
-                if (command.equalsIgnoreCase("yes")) {
-                    Residence castle = ResidenceHolder.getResidence(Castle.class, _castleId);
+                if ("yes".equalsIgnoreCase(command)) {
+                    Castle castle = ResidenceHolder.getCastle(this.castleId);
                     if (castle.getOwnerId() == 0) {
                         castleId = -1;
                         state = Fortress.NOT_DECIDED;
-                        fileName = _failContractDialog;
+                        fileName = failContractDialog;
                     } else {
                         castleId = castle.getId();
                         state = Fortress.CONTRACT_WITH_CASTLE;
-                        fileName = _successContractDialog;
+                        fileName = successContractDialog;
                     }
                 } else
                 //else if(command.equalsIgnoreCase("no"))
                 {
                     castleId = 0;
                     state = Fortress.INDEPENDENT;
-                    fileName = _successIndependentDialog;
+                    fileName = successIndependentDialog;
                 }
 
                 if (state != Fortress.NOT_DECIDED) {
@@ -84,7 +84,7 @@ public final class EnvoyInstance extends NpcInstance {
                 player.sendPacket(new NpcHtmlMessage(player, this, fileName, 0));
                 break;
             case COND_FAIL:
-                player.sendPacket(new NpcHtmlMessage(player, this, _failDialog, 0));
+                player.sendPacket(new NpcHtmlMessage(player, this, failDialog, 0));
                 break;
         }
     }
@@ -95,10 +95,10 @@ public final class EnvoyInstance extends NpcInstance {
         int cond = getCond(player);
         switch (cond) {
             case COND_LEADER:
-                filename = _mainDialog;
+                filename = mainDialog;
                 break;
             case COND_FAIL:
-                filename = _failDialog;
+                filename = failDialog;
                 break;
         }
         player.sendPacket(new NpcHtmlMessage(player, this, filename, val));

@@ -28,7 +28,7 @@ public final class NegateStats extends Skill {
                 .map(Stats::valueOfXml)
                 .collect(Collectors.toList());
 
-        negateOffensive = set.getBool("negateDebuffs", false);
+        negateOffensive = set.isSet("negateDebuffs");
         negateCount = set.getInteger("negateCount");
     }
 

@@ -308,7 +308,7 @@ public final class Player extends Playable implements PlayerGroup {
     private Party party;
     private Location _lastPartyPosition;
     private Clan clan;
-    private int _pledgeClass = 0, pledgeType = Clan.SUBUNIT_NONE, _powerGrade = 0, lvlJoinedAcademy = 0, apprentice = 0;
+    private int _pledgeClass = 0, pledgeType = Clan.SUBUNIT_NONE, powerGrade = 0, lvlJoinedAcademy = 0, apprentice = 0;
     /**
      * GM Stuff
      */
@@ -322,7 +322,7 @@ public final class Player extends Playable implements PlayerGroup {
      */
     private Summon summon = null;
     private boolean riding;
-    private DecoyInstance _decoy = null;
+    private DecoyInstance decoy = null;
     private Map<Integer, EffectCubic> cubics = null;
     private int _agathionId = 0;
     private Request _request;
@@ -347,7 +347,7 @@ public final class Player extends Playable implements PlayerGroup {
      * True if the L2Player is in a boat
      */
     private Boat boat;
-    private Location _inBoatPosition;
+    private Location inBoatPosition;
     private boolean isSitting;
     private StaticObjectInstance sittingObject;
     private boolean noble = false;
@@ -381,13 +381,13 @@ public final class Player extends Playable implements PlayerGroup {
     private int battlefieldChatId;
     private int lectureMark;
 
-    private InvisibleType _invisibleType = InvisibleType.NONE;
+    private InvisibleType invisibleType = InvisibleType.NONE;
 
     private List<String> bypasses = null, bypasses_bbs = null;
     private Map<Integer, String> postFriends = new HashMap<>();
     private boolean _notShowBuffAnim = false;
     private boolean debug = false;
-    private long _dropDisabled;
+    private long dropdisabled;
     private long _lastItemAuctionInfoRequest;
     private Pair<Integer, OnAnswerListener> _askDialog = null;
     private MatchingRoom _matchingRoom;
@@ -593,7 +593,7 @@ public final class Player extends Playable implements PlayerGroup {
                 if (clanId > 0) {
                     player.setClan(ClanTable.INSTANCE.getClan(clanId));
                     player.pledgeType = rset.getInt("pledge_type");
-                    player._powerGrade = rset.getInt("pledge_rank");
+                    player.powerGrade = rset.getInt("pledge_rank");
                     player.lvlJoinedAcademy = rset.getInt("lvl_joined_academy");
                     player.apprentice = rset.getInt("apprentice");
                 }
@@ -1128,9 +1128,9 @@ public final class Player extends Playable implements PlayerGroup {
 
         destroyAllTraps();
 
-        if (_decoy != null) {
-            _decoy.unSummon();
-            _decoy = null;
+        if (decoy != null) {
+            decoy.unSummon();
+            decoy = null;
         }
 
         stopPvPFlag();
@@ -1170,10 +1170,10 @@ public final class Player extends Playable implements PlayerGroup {
         if (recipe == null) {
             return;
         }
-        if (recipe.isDwarvenRecipe()) recipebook.put(recipe.getId(), recipe);
-        else commonrecipebook.put(recipe.getId(), recipe);
+        if (recipe.isDwarvenCraft) recipebook.put(recipe.id, recipe);
+        else commonrecipebook.put(recipe.id, recipe);
         if (saveDB) {
-            mysql.set("REPLACE INTO character_recipebook (char_id, id) VALUES(?,?)", objectId(), recipe.getId());
+            mysql.set("REPLACE INTO character_recipebook (char_id, id) VALUES(?,?)", objectId(), recipe.id);
         }
     }
 
@@ -2177,8 +2177,8 @@ public final class Player extends Playable implements PlayerGroup {
             while (skills.size() > unLearnable) {
                 unLearnable = 0;
                 for (SkillLearn s : skills) {
-                    Skill sk = SkillTable.INSTANCE.getInfo(s.id, s.getLevel());
-                    if ((sk == null) || sk.cantLearn(getClassId()) || (!Config.AUTO_LEARN_FORGOTTEN_SKILLS && s.isClicked())) {
+                    Skill sk = SkillTable.INSTANCE.getInfo(s.id, s.level);
+                    if ((sk == null) || sk.cantLearn(getClassId()) || (!Config.AUTO_LEARN_FORGOTTEN_SKILLS && s.isClicked)) {
                         unLearnable++;
                         continue;
                     }
@@ -2190,8 +2190,8 @@ public final class Player extends Playable implements PlayerGroup {
         } else {
             // Skills gives subscription-free does not need to be studied
             for (SkillLearn skill : SkillAcquireHolder.getAvailableSkills(this, AcquireType.NORMAL)) {
-                if ((skill.getCost() == 0) && (skill.getItemId() == 0)) {
-                    Skill sk = SkillTable.INSTANCE.getInfo(skill.id(), skill.getLevel());
+                if ((skill.cost == 0) && (skill.itemId == 0)) {
+                    Skill sk = SkillTable.INSTANCE.getInfo(skill.id, skill.level);
                     addSkill(sk, true);
                     if ((getAllShortCuts().size() > 0) && (sk.level > 1)) {
                         for (ShortCut sc : getAllShortCuts()) {
@@ -4025,7 +4025,7 @@ public final class Player extends Playable implements PlayerGroup {
         if (clan == null) {
             pledgeType = Clan.SUBUNIT_NONE;
             _pledgeClass = 0;
-            _powerGrade = 0;
+            powerGrade = 0;
             apprentice = 0;
             inventory.validateItems();
 
@@ -4050,17 +4050,17 @@ public final class Player extends Playable implements PlayerGroup {
 
     public ClanHall getClanHall() {
         int id = clan != null ? clan.getHasHideout() : 0;
-        return ResidenceHolder.getResidence(ClanHall.class, id);
+        return ResidenceHolder.getClanHall(id);
     }
 
     public Castle getCastle() {
         int id = clan != null ? clan.getCastle() : 0;
-        return ResidenceHolder.getResidence(Castle.class, id);
+        return ResidenceHolder.getCastle(id);
     }
 
     public Fortress getFortress() {
         int id = clan != null ? clan.getHasFortress() : 0;
-        return ResidenceHolder.getResidence(Fortress.class, id);
+        return ResidenceHolder.getFortress(id);
     }
 
     public Alliance getAlliance() {
@@ -5115,14 +5115,13 @@ public final class Player extends Playable implements PlayerGroup {
         return true;
     }
 
-    public boolean unChargeFishShot() {
+    public void unChargeFishShot() {
         ItemInstance weapon = getActiveWeaponInstance();
         if (weapon == null) {
-            return false;
+            return;
         }
         weapon.setChargedFishshot(false);
         autoShot();
-        return true;
     }
 
     public void autoShot() {
@@ -5171,11 +5170,11 @@ public final class Player extends Playable implements PlayerGroup {
 
     @Override
     public InvisibleType getInvisibleType() {
-        return _invisibleType;
+        return invisibleType;
     }
 
     public void setInvisibleType(InvisibleType vis) {
-        _invisibleType = vis;
+        invisibleType = vis;
     }
 
     public int getClanPrivileges() {
@@ -5185,10 +5184,10 @@ public final class Player extends Playable implements PlayerGroup {
         if (isClanLeader()) {
             return Clan.CP_ALL;
         }
-        if ((_powerGrade < 1) || (_powerGrade > 9)) {
+        if ((powerGrade < 1) || (powerGrade > 9)) {
             return 0;
         }
-        RankPrivs privs = clan.getRankPrivs(_powerGrade);
+        RankPrivs privs = clan.getRankPrivs(powerGrade);
         if (privs != null) {
             return privs.getPrivs();
         }
@@ -5933,11 +5932,11 @@ public final class Player extends Playable implements PlayerGroup {
     }
 
     public int getPowerGrade() {
-        return _powerGrade;
+        return powerGrade;
     }
 
     public void setPowerGrade(final int grade) {
-        _powerGrade = grade;
+        powerGrade = grade;
     }
 
     public int getApprentice() {
@@ -6332,11 +6331,11 @@ public final class Player extends Playable implements PlayerGroup {
     }
 
     public Location getInBoatPosition() {
-        return _inBoatPosition;
+        return inBoatPosition;
     }
 
     public void setInBoatPosition(Location loc) {
-        _inBoatPosition = loc;
+        inBoatPosition = loc;
     }
 
     public Map<ClassId, SubClass> getSubClasses() {
@@ -6539,7 +6538,7 @@ public final class Player extends Playable implements PlayerGroup {
         Collection<SkillLearn> skills = SkillAcquireHolder.getAvailableSkills(this, AcquireType.NORMAL);
         while (skills.size() > unLearnable) {
             for (final SkillLearn s : skills) {
-                final Skill sk = SkillTable.INSTANCE.getInfo(s.id(), s.getLevel());
+                final Skill sk = SkillTable.INSTANCE.getInfo(s.id, s.level);
                 if ((sk == null) || sk.cantLearn(newId)) {
                     if (countUnlearnable) {
                         unLearnable++;
@@ -7951,11 +7950,11 @@ public final class Player extends Playable implements PlayerGroup {
     }
 
     public DecoyInstance getDecoy() {
-        return _decoy;
+        return decoy;
     }
 
     public void setDecoy(DecoyInstance decoy) {
-        _decoy = decoy;
+        this.decoy = decoy;
     }
 
     public int getMountType() {
@@ -8363,11 +8362,11 @@ public final class Player extends Playable implements PlayerGroup {
     }
 
     public final void disableDrop(int time) {
-        _dropDisabled = System.currentTimeMillis() + time;
+        dropdisabled = System.currentTimeMillis() + time;
     }
 
     public final boolean isDropDisabled() {
-        return _dropDisabled > System.currentTimeMillis();
+        return dropdisabled > System.currentTimeMillis();
     }
 
     public ItemInstance getPetControlItem() {

@@ -32,7 +32,7 @@ public final class ExSendManorList extends L2GameServerPacket {
     @Override
     protected void writeImpl() {
         writeEx(0x22);
-        Collection<Castle> casltes = ResidenceHolder.getResidenceList(Castle.class);
+        Collection<Castle> casltes = ResidenceHolder.getCastles();
         writeD(casltes.size());
         casltes.forEach(castle -> {
             writeD(castle.getId());

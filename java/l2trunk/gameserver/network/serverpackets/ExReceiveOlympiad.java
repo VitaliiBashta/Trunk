@@ -89,7 +89,7 @@ public abstract class ExReceiveOlympiad extends L2GameServerPacket {
         }
 
         public void addPlayer(TeamType team, TeamMember member, int gameResultPoints) {
-            int points = Config.OLYMPIAD_OLDSTYLE_STAT ? 0 : member.getStat().getInteger(Olympiad.POINTS, 0);
+            int points = Config.OLYMPIAD_OLDSTYLE_STAT ? 0 : member.getStat().getInteger(Olympiad.POINTS);
 
             addPlayer(team, member.getName(), member.getClanName(), member.getClassId(), points, gameResultPoints, (int) member.getDamage());
         }

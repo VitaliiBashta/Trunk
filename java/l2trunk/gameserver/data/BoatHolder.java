@@ -14,19 +14,19 @@ public final class BoatHolder extends AbstractHolder {
     public static final CharTemplate TEMPLATE = new CharTemplate(CharTemplate.getEmptyStatsSet());
 
     private static final BoatHolder _instance = new BoatHolder();
-    private final Map<Integer, Boat> _boats = new HashMap<>();
+    private final Map<Integer, Boat> boats = new HashMap<>();
 
     public static BoatHolder getInstance() {
         return _instance;
     }
 
     public void spawnAll() {
-        LOG.info(String.format("loaded %d %s(s) count.", _boats.size(), getClass().getSimpleName()));
+        LOG.info(String.format("loaded %d %s(s) count.", boats.size(), getClass().getSimpleName()));
 
-        for (Boat boat : _boats.values()) {
+        boats.values().forEach(boat -> {
             boat.spawnMe();
             LOG.info("Spawning: " + boat.getName());
-        }
+        });
     }
 
     private Boat getBoatByname(String className, int id) {
@@ -48,7 +48,7 @@ public final class BoatHolder extends AbstractHolder {
     }
 
     public Boat getBoat(String name) {
-        return _boats.entrySet().stream()
+        return boats.entrySet().stream()
                 .filter(entry -> entry.getValue().getName().equals(name))
                 .findFirst()
                 .map(Map.Entry::getValue)
@@ -56,24 +56,24 @@ public final class BoatHolder extends AbstractHolder {
     }
 
     public Boat getBoat(int objectId) {
-        return _boats.get(objectId);
+        return boats.get(objectId);
     }
 
     public void addBoat(Boat boat) {
-        _boats.put(boat.objectId(), boat);
+        boats.put(boat.objectId(), boat);
     }
 
     public void removeBoat(Boat boat) {
-        _boats.remove(boat.objectId());
+        boats.remove(boat.objectId());
     }
 
     @Override
     public int size() {
-        return _boats.size();
+        return boats.size();
     }
 
     @Override
     public void clear() {
-        _boats.clear();
+        boats.clear();
     }
 }

@@ -118,7 +118,7 @@ public final class AdminResidence implements IAdminCommandHandler {
                     msg.replace("%left_time%", r.getCycleDelay());
 
                     StringBuilder clans = new StringBuilder(100);
-                    for (List<Object> objects : event.getObjects().values()) {
+                    for (List<?> objects : event.getObjects().values()) {
                         objects.stream()
                                 .filter(o -> o instanceof SiegeClanObject)
                                 .map(o -> (SiegeClanObject) o)
@@ -245,14 +245,14 @@ public final class AdminResidence implements IAdminCommandHandler {
                 runnerEvent = EventHolder.getEvent(EventType.MAIN_EVENT, 1);
                 runnerEvent.clearActions();
 
-                for (Fortress f : ResidenceHolder.getResidenceList(Fortress.class)) {
+                ResidenceHolder.getFortresses().forEach(f -> {
                     f.getSiegeEvent().clearActions();
                     if (f.getSiegeEvent().isInProgress())
                         f.getSiegeEvent().stopEvent();
 
                     f.getSiegeEvent().removeObjects(SiegeEvent.ATTACKERS);
                     SiegeClanDAO.INSTANCE.delete(f);
-                }
+                });
 
                 for (Dominion d : runnerEvent.getRegisteredDominions()) {
                     d.getSiegeEvent().clearActions();
@@ -265,7 +265,7 @@ public final class AdminResidence implements IAdminCommandHandler {
                 runnerEvent = EventHolder.getEvent(EventType.MAIN_EVENT, 1);
                 runnerEvent.clearActions();
                 ThreadPoolManager.INSTANCE.execute(() -> {
-                    for (Fortress f : ResidenceHolder.getResidenceList(Fortress.class)) {
+                    for (Fortress f : ResidenceHolder.getFortresses()) {
                         if (f.getSiegeEvent().isInProgress())
                             f.getSiegeEvent().stopEvent();
                     }
@@ -320,7 +320,7 @@ public final class AdminResidence implements IAdminCommandHandler {
             case "admin_fortress_spawn_flags":
                 if (wordList.length != 2)
                     return false;
-                Fortress fortress = ResidenceHolder.getResidence(Fortress.class, toInt(wordList[1]));
+                Fortress fortress = ResidenceHolder.getFortress(toInt(wordList[1]));
                 if (fortress == null)
                     return false;
                 FortressSiegeEvent siegeEvent = fortress.getSiegeEvent();

@@ -19,7 +19,7 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
  * @author VISTALL
  */
 public class RequestJoinCastleSiege extends L2GameClientPacket {
-    private int _id;
+    private int id;
     private boolean _isAttacker;
     private boolean _isJoining;
 
@@ -39,7 +39,7 @@ public class RequestJoinCastleSiege extends L2GameClientPacket {
 
         if (join) {
             Residence registeredCastle = null;
-            for (Residence residence : ResidenceHolder.getResidenceList(Castle.class)) {
+            for (Residence residence : ResidenceHolder.getCastles()) {
                 SiegeClanObject tempCastle = residence.getSiegeEvent().getSiegeClan(CastleSiegeEvent.ATTACKERS, playerClan);
 
                 if (tempCastle == null)
@@ -244,7 +244,7 @@ public class RequestJoinCastleSiege extends L2GameClientPacket {
 
     @Override
     protected void readImpl() {
-        _id = readD();
+        id = readD();
         _isAttacker = readD() == 1;
         _isJoining = readD() == 1;
     }
@@ -260,7 +260,7 @@ public class RequestJoinCastleSiege extends L2GameClientPacket {
             return;
         }
 
-        Residence residence = ResidenceHolder.getResidence(_id);
+        Residence residence = ResidenceHolder.getResidence(id);
 
         if (residence.getType() == ResidenceType.Castle)
             registerAtCastle(player, (Castle) residence, _isAttacker, _isJoining);

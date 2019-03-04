@@ -20,7 +20,7 @@ public final class Charge extends Skill {
     public Charge(StatsSet set) {
         super(set);
         charges = set.getInteger("charges", level);
-        fullCharge = set.getBool("fullCharge", false);
+        fullCharge = set.isSet("fullCharge");
     }
 
     @Override

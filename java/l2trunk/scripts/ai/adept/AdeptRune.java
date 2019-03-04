@@ -9,13 +9,13 @@ public final class AdeptRune extends Adept {
     public AdeptRune(NpcInstance actor) {
         super(actor);
         points = List.of(
-                new Location(45948, -48190, -792),
-                new Location(45253, -47988, -792),
-                new Location(43516, -48105, -792),
-                new Location(43318, -47420, -792),
-                new Location(43386, -46879, -792),
-                new Location(43318, -47420, -792),
-                new Location(43516, -48105, -792),
-                new Location(45253, -47988, -792));
+                Location.of(45948, -48190, -792),
+                Location.of(45253, -47988, -792),
+                Location.of(43516, -48105, -792),
+                Location.of(43318, -47420, -792),
+                Location.of(43386, -46879, -792),
+                Location.of(43318, -47420, -792),
+                Location.of(43516, -48105, -792),
+                Location.of(45253, -47988, -792));
     }
 }

@@ -6,11 +6,11 @@ import l2trunk.gameserver.model.Effect;
 import l2trunk.gameserver.stats.Env;
 
 public final class EffectRemoveTarget extends Effect {
-    private final boolean _doStopTarget;
+    private final boolean doStopTarget;
 
     public EffectRemoveTarget(Env env, EffectTemplate template) {
         super(env, template);
-        _doStopTarget = template.getParam().getBool("doStopTarget", false);
+        doStopTarget = template.getParam().isSet("doStopTarget");
     }
 
     @Override
@@ -19,7 +19,7 @@ public final class EffectRemoveTarget extends Effect {
             ((DefaultAI) effected.getAI()).setGlobalAggro(System.currentTimeMillis() + 3000L);
         }
         effected.setTarget(null);
-        if (_doStopTarget) {
+        if (doStopTarget) {
             effected.stopMove();
         }
         effected.abortAttack(true, true);

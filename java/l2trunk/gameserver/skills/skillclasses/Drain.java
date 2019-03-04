@@ -16,7 +16,7 @@ public final class Drain extends Skill {
 
     public Drain(StatsSet set) {
         super(set);
-        absorbAbs = set.getDouble("absorbAbs", 0.f);
+        absorbAbs = set.getDouble("absorbAbs");
     }
 
     @Override

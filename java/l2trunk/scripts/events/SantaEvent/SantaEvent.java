@@ -33,7 +33,7 @@ public final class SantaEvent extends Functions implements ScriptFile, OnDeathLi
     private static final int MAX_LEVEL_DIFFERENCE = 5;
 
     private static final int SANTA_NPC_ID = 105;
-    private static final Location SANTA_LOC = new Location(83608, 149192, -3400, 49524);
+    private static final Location SANTA_LOC = Location.of(83608, 149192, -3400, 49524);
 
     private static boolean isActive() {
         return Config.EVENT_SANTA_ALLOW;

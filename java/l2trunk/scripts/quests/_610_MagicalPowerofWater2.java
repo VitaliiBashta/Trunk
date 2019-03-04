@@ -112,7 +112,7 @@ public final class _610_MagicalPowerofWater2 extends Quest {
     private static class DeathListener implements OnDeathListener {
         @Override
         public void onDeath(Creature actor, Creature killer) {
-            ServerVariables.set(getClass().getSimpleName(), String.valueOf(System.currentTimeMillis()));
+            ServerVariables.set(getClass().getSimpleName(), System.currentTimeMillis());
         }
     }
 

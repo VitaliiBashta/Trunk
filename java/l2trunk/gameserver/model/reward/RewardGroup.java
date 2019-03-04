@@ -11,61 +11,47 @@ import java.util.Collections;
 import java.util.List;
 
 public final class RewardGroup /*implements Cloneable*/ {
-    private final List<RewardData> _items = new ArrayList<>();
-    private double _chance;
-    private boolean _isAdena = false; // Шанс фиксирован, растет только количество
-    private boolean _notRate = false; // Рейты вообще не применяются
-    private double _chanceSum;
+    private final List<RewardData> items = new ArrayList<>();
+    private double chance;
+    private boolean isAdena = false; // Шанс фиксирован, растет только количество
+    private boolean notRate = false; // Рейты вообще не применяются
+    private double chanceSum;
 
     public RewardGroup(double chance) {
-        _chance = chance;
+        this.chance = chance;
     }
 
     public boolean notRate() {
-        return _notRate;
+        return notRate;
     }
 
     public double getChance() {
-        return _chance;
+        return chance;
     }
 
     public void setChance(double chance) {
-        _chance = chance;
+        this.chance = chance;
     }
 
     public boolean isAdena() {
-        return _isAdena;
-    }
-
-    public void setIsAdena(boolean isAdena) {
-        _isAdena = isAdena;
+        return isAdena;
     }
 
     public void addData(RewardData item) {
         if (item.getItem().isAdena())
-            _isAdena = true;
-        _chanceSum += item.getChance();
-        item.setChanceInGroup(_chanceSum);
-        _items.add(item);
+            isAdena = true;
+        chanceSum += item.getChance();
+        item.setChanceInGroup(chanceSum);
+        items.add(item);
     }
 
     /**
      * Возвращает список вещей
      */
     public List<RewardData> getItems() {
-        return _items;
+        return items;
     }
 
-    /**
-     * Возвращает полностью независимую копию группы
-     */
-/*    @Override
-    public RewardGroup clone() {
-        RewardGroup ret = new RewardGroup(_chance);
-        for (RewardData i : _items)
-            ret.addData(i.clone());
-        return ret;
-    }*/
 
     /**
      * Функция используется в основном механизме расчета дропа, выбирает одну/несколько вещей из группы, в зависимости от рейтов
@@ -78,7 +64,7 @@ public final class RewardGroup /*implements Cloneable*/ {
             case SWEEP:
                 return rollItems(mod, Config.RATE_DROP_SPOIL, player.getRateSpoil());
             case RATED_GROUPED:
-                if (_isAdena) {
+                if (isAdena) {
                     // Ady - Support for adena multipliers in items and skills. Separated from drop multipliers
                     mod *= player.calcStat(Stats.ADENA_MULTIPLIER, 1., player, null);
                     return rollAdena(mod, Config.RATE_DROP_ADENA, player.getRateAdena());
@@ -101,24 +87,24 @@ public final class RewardGroup /*implements Cloneable*/ {
             return Collections.emptyList();
 
         double rate;
-        if (_notRate)
+        if (notRate)
             rate = Math.min(mod, 1.0);
         else
             rate = baseRate * playerRate * mod;
 
         double mult = Math.ceil(rate);
 
-        List<RewardItem> ret = new ArrayList<>((int) (mult * _items.size()));
+        List<RewardItem> ret = new ArrayList<>((int) (mult * items.size()));
         for (long n = 0; n < mult; n++)
-            if (Rnd.get(1, RewardList.MAX_CHANCE) <= _chance * Math.min(rate - n, 1.0))
-                rollFinal(_items, ret, 1., Math.max(_chanceSum, RewardList.MAX_CHANCE));
+            if (Rnd.get(1, RewardList.MAX_CHANCE) <= chance * Math.min(rate - n, 1.0))
+                rollFinal(items, ret, 1., Math.max(chanceSum, RewardList.MAX_CHANCE));
         return ret;
     }
 
     private List<RewardItem> rollAdena(double mod, double baseRate, double playerRate) {
-        double chance = _chance;
+        double chance = this.chance;
         if (mod > 10) {
-            mod *= _chance / RewardList.MAX_CHANCE;
+            mod *= this.chance / RewardList.MAX_CHANCE;
             chance = RewardList.MAX_CHANCE;
         }
 
@@ -130,8 +116,8 @@ public final class RewardGroup /*implements Cloneable*/ {
 
         double rate = baseRate * playerRate * mod;
 
-        List<RewardItem> ret = new ArrayList<>(_items.size());
-        rollFinal(_items, ret, rate, Math.max(_chanceSum, RewardList.MAX_CHANCE));
+        List<RewardItem> ret = new ArrayList<>(items.size());
+        rollFinal(items, ret, rate, Math.max(chanceSum, RewardList.MAX_CHANCE));
         for (RewardItem i : ret)
             i.isAdena = true;
 

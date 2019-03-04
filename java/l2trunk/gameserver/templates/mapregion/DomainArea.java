@@ -2,21 +2,21 @@ package l2trunk.gameserver.templates.mapregion;
 
 import l2trunk.gameserver.model.Territory;
 
-public class DomainArea implements RegionData {
-    private final int _id;
-    private final Territory _territory;
+public final class DomainArea implements RegionData {
+    private final int id;
+    private final Territory territory;
 
     public DomainArea(int id, Territory territory) {
-        _id = id;
-        _territory = territory;
+        this.id = id;
+        this.territory = territory;
     }
 
     public int getId() {
-        return _id;
+        return id;
     }
 
     @Override
     public Territory getTerritory() {
-        return _territory;
+        return territory;
     }
 }

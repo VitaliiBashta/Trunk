@@ -17,10 +17,10 @@ public final class Aggression extends Skill {
 
     public Aggression(StatsSet set) {
         super(set);
-        unaggring = set.getBool("unaggroing", false);
-        silent = set.getBool("silent", false);
-        ignorePlayables = set.getBool("ignorePlayables", false);
-        autoAttack = set.getBool("autoAttack", false);
+        unaggring = set.isSet("unaggroing");
+        silent = set.isSet("silent");
+        ignorePlayables = set.isSet("ignorePlayables");
+        autoAttack = set.isSet("autoAttack");
     }
 
     @Override

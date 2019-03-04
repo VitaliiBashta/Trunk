@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.World;
 import l2trunk.gameserver.templates.mapregion.RegionData;
 import l2trunk.gameserver.utils.Location;
 
-public final class MapRegionHolder  {
+public final class MapRegionHolder {
     private static final MapRegionHolder _instance = new MapRegionHolder();
     private static final RegionData[][][] map = new RegionData[World.WORLD_SIZE_X][World.WORLD_SIZE_Y][0];
 
@@ -32,6 +32,10 @@ public final class MapRegionHolder  {
             }
     }
 
+    public static int size() {
+        return World.WORLD_SIZE_X * World.WORLD_SIZE_Y;
+    }
+
     public <T extends RegionData> T getRegionData(Class<T> clazz, GameObject o) {
         return getRegionData(clazz, o.getLoc());
     }
@@ -42,19 +46,12 @@ public final class MapRegionHolder  {
 
     private <T extends RegionData> T getRegionData(Class<T> clazz, int x, int y, int z) {
         for (RegionData rd : map[regionX(x)][regionY(y)]) {
-            if (rd.getClass() != clazz)
-                continue;
-            if (rd.getTerritory().isInside(new Location(x, y, z)))
-                return (T) rd;
+            if (rd.getTerritory().isInside(Location.of(x, y, z))) {
+                if (rd.getClass() == clazz) {
+                    return (T) rd;
+                }
+            }
         }
         return null;
     }
-
-    public static int size() {
-        return World.WORLD_SIZE_X * World.WORLD_SIZE_Y;
     }
-
-    public void clear() {
-
-    }
-}

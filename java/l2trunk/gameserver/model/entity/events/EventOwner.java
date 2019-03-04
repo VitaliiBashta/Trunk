@@ -7,13 +7,10 @@ public abstract class EventOwner {
     private final Set<GlobalEvent> events = new CopyOnWriteArraySet<>();
 
     public <E extends GlobalEvent> E getEvent(Class<E> eventClass) {
-        for (GlobalEvent e : events) {
-            if (e.getClass() == eventClass)    // fast hack
-                return (E) e;
-            if (eventClass.isAssignableFrom(e.getClass()))    //FIXME [VISTALL]    какойто другой способ определить
-                return (E) e;
-        }
-        return null;
+        return  events.stream()
+        .filter(e -> eventClass.isAssignableFrom(e.getClass()))
+        .map(eventClass::cast)
+        .findFirst().orElse(null);
     }
 
     public void addEvent(GlobalEvent event) {

@@ -9,15 +9,15 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
 //FIXME item-API
 public final class RequestWithDrawPremiumItem extends L2GameClientPacket {
-    private int _itemNum;
-    private int _charId;
-    private long _itemcount;
+    private int itemNum;
+    private int charId;
+    private long itemcount;
 
     @Override
     protected void readImpl() {
-        _itemNum = readD();
-        _charId = readD();
-        _itemcount = readQ();
+        itemNum = readD();
+        charId = readD();
+        itemcount = readQ();
     }
 
     @Override
@@ -27,11 +27,11 @@ public final class RequestWithDrawPremiumItem extends L2GameClientPacket {
         if (activeChar == null) {
             return;
         }
-        if (_itemcount <= 0) {
+        if (itemcount <= 0) {
             return;
         }
 
-        if (activeChar.objectId() != _charId) {
+        if (activeChar.objectId() != charId) {
             // audit
             return;
         }
@@ -48,27 +48,27 @@ public final class RequestWithDrawPremiumItem extends L2GameClientPacket {
             return;
         }
 
-        PremiumItem _item = activeChar.getPremiumItemList().get(_itemNum);
-        if (_item == null) {
+        PremiumItem item = activeChar.getPremiumItemList().get(itemNum);
+        if (item == null) {
             return;
         }
-        boolean stackable = ItemHolder.getTemplate(_item.getItemId()).stackable();
-        if (_item.getCount() < _itemcount) {
+        boolean stackable = ItemHolder.getTemplate(item.getItemId()).stackable();
+        if (item.getCount() < itemcount) {
             return;
         }
         if (!stackable) {
-            for (int i = 0; i < _itemcount; i++) {
-                addItem(activeChar, _item.getItemId(), 1);
+            for (int i = 0; i < itemcount; i++) {
+                addItem(activeChar, item.getItemId(), 1);
             }
         } else {
-            addItem(activeChar, _item.getItemId(), _itemcount);
+            addItem(activeChar, item.getItemId(), itemcount);
         }
-        if (_itemcount < _item.getCount()) {
-            activeChar.getPremiumItemList().get(_itemNum).updateCount(_item.getCount() - _itemcount);
-            activeChar.updatePremiumItem(_itemNum, _item.getCount() - _itemcount);
+        if (itemcount < item.getCount()) {
+            activeChar.getPremiumItemList().get(itemNum).updateCount(item.getCount() - itemcount);
+            activeChar.updatePremiumItem(itemNum, item.getCount() - itemcount);
         } else {
-            activeChar.getPremiumItemList().remove(_itemNum);
-            activeChar.deletePremiumItem(_itemNum);
+            activeChar.getPremiumItemList().remove(itemNum);
+            activeChar.deletePremiumItem(itemNum);
         }
 
         if (activeChar.getPremiumItemList().isEmpty()) {

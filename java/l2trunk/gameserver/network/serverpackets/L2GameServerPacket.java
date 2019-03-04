@@ -65,15 +65,16 @@ public abstract class L2GameServerPacket extends SendablePacket<GameClient> impl
         writeD(item.getTemporalLifeTime());
         writeH(item.getAttackElement().getId());
         writeH(item.getAttackElementValue());
-        writeH(item.getDefenceFire());
+        writeH(item.getDefence(Element.FIRE));
         writeH(item.getDefenceWater());
         writeH(item.getDefenceWind());
         writeH(item.getDefenceEarth());
         writeH(item.getDefenceHoly());
         writeH(item.getDefenceUnholy());
-        writeH(item.getEnchantOptions()[0]);
-        writeH(item.getEnchantOptions()[1]);
-        writeH(item.getEnchantOptions()[2]);
+        item.getEnchantOptions().forEach(this::writeH);
+        for (int i = item.getEnchantOptions().size(); i < 3; i++) {
+            writeH(0);
+        }
     }
 
     void writeItemInfo(ItemInfo item) {
@@ -102,9 +103,10 @@ public abstract class L2GameServerPacket extends SendablePacket<GameClient> impl
         writeH(item.getDefenceEarth());
         writeH(item.getDefenceHoly());
         writeH(item.getDefenceUnholy());
-        writeH(item.getEnchantOptions()[0]);
-        writeH(item.getEnchantOptions()[1]);
-        writeH(item.getEnchantOptions()[2]);
+        item.getEnchantOptions().forEach(this::writeH);
+        for (int i = item.getEnchantOptions().size(); i < 3 ; i++) {
+            writeH(0);
+        }
     }
 
     void writeItemElements(MultiSellIngredient item) {

@@ -2,7 +2,6 @@ package l2trunk.gameserver.skills.skillclasses;
 
 import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.model.Creature;
-import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.instances.DoorInstance;
@@ -13,11 +12,11 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.stats.Stats;
 
 public class HealPercent extends Skill {
-    private final boolean _ignoreHpEff;
+    private final boolean ignoreHpEff;
 
     public HealPercent(StatsSet set) {
         super(set);
-        _ignoreHpEff = set.getBool("ignoreHpEff", true);
+        ignoreHpEff = set.isSet("ignoreHpEff");
     }
 
     @Override
@@ -38,7 +37,7 @@ public class HealPercent extends Skill {
                     getEffects(activeChar, target, activateRate > 0, false);
 
                     double hp = power * target.getMaxHp() / 100.;
-                    double newHp = hp * (!_ignoreHpEff ? target.calcStat(Stats.HEAL_EFFECTIVNESS, 100., activeChar, this) : 100.) / 100.;
+                    double newHp = hp * (!ignoreHpEff ? target.calcStat(Stats.HEAL_EFFECTIVNESS, 100., activeChar, this) : 100.) / 100.;
                     double addToHp = Math.max(0, Math.min(newHp, target.calcStat(Stats.HP_LIMIT, null, null) * target.getMaxHp() / 100. - target.getCurrentHp()));
 
                     if (addToHp > 0)

@@ -11,7 +11,7 @@ public final class EffectHeal extends Effect {
 
     public EffectHeal(Env env, EffectTemplate template) {
         super(env, template);
-        _ignoreHpEff = template.getParam().getBool("ignoreHpEff", false);
+        _ignoreHpEff = template.getParam().isSet("ignoreHpEff");
     }
 
     @Override

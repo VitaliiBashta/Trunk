@@ -31,7 +31,7 @@ public final class _198_SevenSignsEmbryo extends Quest {
         super(false);
 
         addStartNpc(Wood);
-        addTalkId(Wood, Franz, Jaina);
+        addTalkId(Franz, Jaina);
         addKillId(ShilensEvilThoughtsCapt);
         addQuestItem(PieceOfDoubt);
     }

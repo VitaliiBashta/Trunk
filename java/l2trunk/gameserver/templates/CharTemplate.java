@@ -62,36 +62,18 @@ public class CharTemplate {
         baseAttributeAttack = set.getIntegerList("baseAttributeAttack", EMPTY_ATTRIBUTES);
         baseAttributeDefence = set.getIntegerList("baseAttributeDefence", EMPTY_ATTRIBUTES);
         // Geometry
-        collisionRadius = set.getDouble("collision_radius", 5);
-        collisionHeight = set.getDouble("collision_height", 5);
+        collisionRadius = set.getDouble("collision_radius");
+        if (collisionRadius == 0) collisionRadius=5;
+        collisionHeight = set.getDouble("collision_height");
+        if (collisionHeight == 0) collisionHeight =5;
     }
 
     public static StatsSet getEmptyStatsSet() {
         return new StatsSet()
-                .set("baseSTR", 0)
-                .set("baseCON", 0)
-                .set("baseDEX", 0)
-                .set("baseINT", 0)
-                .set("baseWIT", 0)
-                .set("baseMEN", 0)
-                .set("baseHpMax", 0)
-                .set("baseCpMax", 0)
-                .set("baseMpMax", 0)
                 .set("baseHpReg", 3.e-3f)
-                .set("baseCpReg", 0)
                 .set("baseMpReg", 3.e-3f)
-                .set("basePAtk", 0)
-                .set("baseMAtk", 0)
                 .set("basePDef", 100)
-                .set("baseMDef", 100)
-                .set("basePAtkSpd", 0)
-                .set("baseMAtkSpd", 0)
-                .set("baseShldDef", 0)
-                .set("baseAtkRange", 0)
-                .set("baseShldRate", 0)
-                .set("baseCritRate", 0)
-                .set("baseRunSpd", 0)
-                .set("baseWalkSpd", 0);
+                .set("baseMDef", 100);
     }
 
     public int getNpcId() {

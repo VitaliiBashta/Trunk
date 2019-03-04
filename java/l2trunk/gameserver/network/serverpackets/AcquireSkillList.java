@@ -15,12 +15,12 @@ public final class AcquireSkillList extends L2GameServerPacket {
         this.type = type;
     }
 
-    public void addSkill(int id, int nextLevel, int maxLevel, int Cost, int requirements, int subUnit) {
-        skills.add(new AcruireSkill(id, nextLevel, maxLevel, Cost, requirements, subUnit));
+    public void addSkill(int id, int nextLevel, int maxLevel, int cost, int requirements, int subUnit) {
+        skills.add(new AcruireSkill(id, nextLevel, maxLevel, cost, requirements, subUnit));
     }
 
-    public void addSkill(int id, int nextLevel, int maxLevel, int Cost, int requirements) {
-        skills.add(new AcruireSkill(id, nextLevel, maxLevel, Cost, requirements, 0));
+    public void addSkill(int id, int nextLevel, int maxLevel, int cost) {
+        skills.add(new AcruireSkill(id, nextLevel, maxLevel, cost, 0, 0));
     }
 
     @Override

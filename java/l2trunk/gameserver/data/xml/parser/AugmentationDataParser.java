@@ -19,8 +19,8 @@ import static l2trunk.commons.lang.NumberUtils.toDouble;
 
 public enum AugmentationDataParser {
     INSTANCE;
-    private Path xml = Config.DATAPACK_ROOT.resolve("data/augmentation_data.xml");
     private final Logger LOG = LoggerFactory.getLogger(this.getClass().getName());
+    private Path xml = Config.DATAPACK_ROOT.resolve("data/augmentation_data.xml");
 
     public void load() {
         ParserUtil.INSTANCE.load(xml).forEach(this::readData);
@@ -28,7 +28,7 @@ public enum AugmentationDataParser {
     }
 
     private void readData(Element rootElement) {
-        Map<String, int[]> items = new HashMap<>();
+        Map<String, List<Integer>> items = new HashMap<>();
         Map<Integer, RndSelector<OptionGroup>[][]> variants = new HashMap<>();
         for (Iterator<Element> iterator = rootElement.elementIterator("item_group"); iterator.hasNext(); ) {
             Element element = iterator.next();
@@ -47,7 +47,7 @@ public enum AugmentationDataParser {
                     list.add(itemId);
                 }
             }
-            items.put(name, list.stream().mapToInt(Number::intValue).toArray());
+            items.put(name, list);
         }
         for (Iterator<Element> iterator = rootElement.elementIterator("variants"); iterator.hasNext(); ) {
             Element element = iterator.next();
@@ -78,10 +78,8 @@ public enum AugmentationDataParser {
                 AugmentationInfo augmentationInfo = new AugmentationInfo(mineralId, feeItemId, feeItemCount, cancelFee, rndSelectors);
                 AugmentationDataHolder.addAugmentationInfo(augmentationInfo);
 
-                int[] array = items.get(itemGroup);
-                for (int i : array) {
-                    ItemHolder.getTemplate(i).addAugmentationInfo(augmentationInfo);
-                }
+                items.get(itemGroup).forEach(i ->
+                        ItemHolder.getTemplate(i).addAugmentationInfo(augmentationInfo));
             }
         }
     }

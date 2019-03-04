@@ -50,7 +50,7 @@ public final class _307_ControlDeviceoftheGiants extends Quest {
             RadarControl rc = new RadarControl(0, 1, GiantMarpanakLoc);
             st.player.sendPacket(rc);
         } else if ("summon_rb".equalsIgnoreCase(event)) {
-            if (ServerVariables.getLong("HekatonPrimeRespawn", 0) < System.currentTimeMillis() && st.getQuestItemsCount(CaveExplorationText1Sheet) >= 1 && st.getQuestItemsCount(CaveExplorationText2Sheet) >= 1 && st.getQuestItemsCount(CaveExplorationText3Sheet) >= 1) {
+            if (ServerVariables.getLong("HekatonPrimeRespawn") < System.currentTimeMillis() && st.haveAllQuestItems(CaveExplorationText1Sheet,CaveExplorationText2Sheet,CaveExplorationText3Sheet)) {
                 st.takeItems(CaveExplorationText1Sheet, 1);
                 st.takeItems(CaveExplorationText2Sheet, 1);
                 st.takeItems(CaveExplorationText3Sheet, 1);

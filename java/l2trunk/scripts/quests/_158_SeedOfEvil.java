@@ -36,6 +36,7 @@ public final class _158_SeedOfEvil extends Quest {
         int npcId = npc.getNpcId();
         String htmltext = "noquest";
         int id = st.getState();
+        boolean haveQuestItem = st.haveQuestItem(CLAY_TABLET_ID);
         if (id == CREATED) {
             st.start();
             st.unset("id");
@@ -54,9 +55,9 @@ public final class _158_SeedOfEvil extends Quest {
             }
         } else if (npcId == 30031 && st.getCond() == 0)
             htmltext = "completed";
-        else if (npcId == 30031 && st.getCond() != 0 && !st.haveQuestItem(CLAY_TABLET_ID))
+        else if (npcId == 30031 && st.getCond() != 0 && !haveQuestItem)
             htmltext = "30031-05.htm";
-        else if (npcId == 30031 && st.getCond() != 0 && st.haveQuestItem(CLAY_TABLET_ID)) {
+        else if (npcId == 30031 && st.getCond() != 0 && haveQuestItem) {
             st.takeItems(CLAY_TABLET_ID);
             st.playSound(SOUND_FINISH);
             st.giveItems(ADENA_ID, 1495);
@@ -70,10 +71,8 @@ public final class _158_SeedOfEvil extends Quest {
 
     @Override
     public void onKill(NpcInstance npc, QuestState st) {
-        if (!st.haveQuestItem(CLAY_TABLET_ID)) {
-            st.giveItems(CLAY_TABLET_ID);
-            st.playSound(SOUND_MIDDLE);
-            st.setCond(2);
-        }
+        st.giveItemIfNotHave(CLAY_TABLET_ID);
+        st.playSound(SOUND_MIDDLE);
+        st.setCond(2);
     }
 }

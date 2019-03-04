@@ -24,7 +24,7 @@ public final class FuncEnchant extends Func {
             }
 
             case MAX_HP: {
-                return EnchantHPBonusTable.getInstance().getHPBonus(item);
+                return EnchantHPBonusTable.getHPBonus(item);
             }
 
             case MAGIC_ATTACK: {

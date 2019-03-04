@@ -1,42 +1,42 @@
 package l2trunk.gameserver.templates.manor;
 
-public class SeedProduction {
-    private final int _seedId;
-    private final long _price;
-    private long _residual;
-    private long _sales;
+public final class SeedProduction {
+    private final int seedId;
+    private final long price;
+    private long residual;
+    private long sales;
 
     public SeedProduction(int id) {
-        _seedId = id;
-        _sales = 0;
-        _price = 0;
-        _sales = 0;
+        seedId = id;
+        sales = 0;
+        price = 0;
+        sales = 0;
     }
 
     public SeedProduction(int id, long amount, long price, long sales) {
-        _seedId = id;
-        _residual = amount;
-        _price = price;
-        _sales = sales;
+        seedId = id;
+        residual = amount;
+        this.price = price;
+        this.sales = sales;
     }
 
     public int getId() {
-        return _seedId;
+        return seedId;
     }
 
     public long getCanProduce() {
-        return _residual;
+        return residual;
     }
 
     public void setCanProduce(long amount) {
-        _residual = amount;
+        residual = amount;
     }
 
     public long getPrice() {
-        return _price;
+        return price;
     }
 
     public long getStartProduce() {
-        return _sales;
+        return sales;
     }
 }

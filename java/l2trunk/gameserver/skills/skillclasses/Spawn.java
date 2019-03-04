@@ -11,18 +11,14 @@ import org.slf4j.LoggerFactory;
 
 public final class Spawn extends Skill {
     private static final Logger _log = LoggerFactory.getLogger(Spawn.class);
-    private final int _npcId;
     private final int despawnDelay;
     private final boolean randomOffset;
-    private NpcInstance _spawnNpc;
+    private NpcInstance spawnNpc;
 
     public Spawn(StatsSet set) {
         super(set);
-        _npcId = set.getInteger("npcId");
         despawnDelay = set.getInteger("despawnDelay");
-        set.getBool("isSummonSpawn", false);
-        randomOffset = set.getBool("randomOffset", true);
-        set.getInteger("skillToCast");
+        randomOffset = set.isSet("randomOffset");
     }
 
     @Override
@@ -41,14 +37,14 @@ public final class Spawn extends Skill {
 
     @Override
     public void useSkill(Creature caster, Creature targes) {
-        if (_npcId == 0) {
+        if (npcId == 0) {
             _log.warn("NPC ID not defined for skill ID:" + id);
             return;
         }
 
         if (caster instanceof Player && ((Player) caster).getBoat() != null) return;
 
-        SimpleSpawner spawn = new SimpleSpawner(_npcId);
+        SimpleSpawner spawn = new SimpleSpawner(npcId);
         spawn.setReflection(ReflectionManager.DEFAULT);
         Location loc1 = Location.findAroundPosition(caster, 20, 50);
         Location loc2 = new Location(caster.getX(), caster.getY(), caster.getZ() + 20, -1);
@@ -59,10 +55,10 @@ public final class Spawn extends Skill {
         }
         spawn.doSpawn(true);
         spawn.init();
-        _spawnNpc = spawn.getLastSpawn();
+        spawnNpc = spawn.getLastSpawn();
         if (despawnDelay > 0) ThreadPoolManager.INSTANCE.schedule(() -> {
-            if (_spawnNpc == null) return;
-            _spawnNpc.deleteMe();
+            if (spawnNpc == null) return;
+            spawnNpc.deleteMe();
         }, despawnDelay);
 
     }

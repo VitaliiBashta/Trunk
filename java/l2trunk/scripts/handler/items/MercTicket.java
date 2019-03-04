@@ -5,7 +5,6 @@ import l2trunk.gameserver.dao.CastleHiredGuardDAO;
 import l2trunk.gameserver.data.xml.holder.ResidenceHolder;
 import l2trunk.gameserver.handler.items.ItemHandler;
 import l2trunk.gameserver.instancemanager.ReflectionManager;
-import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Zone;
 import l2trunk.gameserver.model.entity.residence.Castle;
@@ -18,9 +17,7 @@ import l2trunk.gameserver.templates.item.support.MerchantGuard;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.PositionUtils;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public final class MercTicket extends ScriptItemHandler implements ScriptFile {
@@ -88,31 +85,30 @@ public final class MercTicket extends ScriptItemHandler implements ScriptFile {
 
     @Override
     public boolean pickupItem(Player player, ItemInstance item) {
-            if (!player.hasPrivilege(Privilege.CS_FS_MERCENARIES) || player.getClan().getCastle() == 0) {
-                player.sendPacket(SystemMsg.YOU_DO_NOT_HAVE_THE_AUTHORITY_TO_CANCEL_MERCENARY_POSITIONING);
-                return false;
-            }
+        if (!player.hasPrivilege(Privilege.CS_FS_MERCENARIES) || player.getClan().getCastle() == 0) {
+            player.sendPacket(SystemMsg.YOU_DO_NOT_HAVE_THE_AUTHORITY_TO_CANCEL_MERCENARY_POSITIONING);
+            return false;
+        }
 
-            Castle castle = player.getCastle();
-            if (!castle.getSpawnMerchantTickets().contains(item)) {
-                player.sendPacket(SystemMsg.THIS_IS_NOT_A_MERCENARY_OF_A_CASTLE_THAT_YOU_OWN_AND_SO_YOU_CANNOT_CANCEL_ITS_POSITIONING);
-                return false;
-            }
+        Castle castle = player.getCastle();
+        if (!castle.getSpawnMerchantTickets().contains(item)) {
+            player.sendPacket(SystemMsg.THIS_IS_NOT_A_MERCENARY_OF_A_CASTLE_THAT_YOU_OWN_AND_SO_YOU_CANNOT_CANCEL_ITS_POSITIONING);
+            return false;
+        }
 
-            if (castle.getSiegeEvent().isInProgress()) {
-                player.sendPacket(SystemMsg.A_MERCENARY_CAN_BE_ASSIGNED_TO_A_POSITION_FROM_THE_BEGINNING_OF_THE_SEAL_VALIDATION_PERIOD_UNTIL_THE_TIME_WHEN_A_SIEGE_STARTS, ActionFail.STATIC);
-                return false;
-            }
-            castle.getSpawnMerchantTickets().remove(item);
-            CastleHiredGuardDAO.INSTANCE.delete(castle, item);
-            return true;
+        if (castle.getSiegeEvent().isInProgress()) {
+            player.sendPacket(SystemMsg.A_MERCENARY_CAN_BE_ASSIGNED_TO_A_POSITION_FROM_THE_BEGINNING_OF_THE_SEAL_VALIDATION_PERIOD_UNTIL_THE_TIME_WHEN_A_SIEGE_STARTS, ActionFail.STATIC);
+            return false;
+        }
+        castle.getSpawnMerchantTickets().remove(item);
+        CastleHiredGuardDAO.INSTANCE.delete(castle, item);
+        return true;
     }
 
     @Override
-    public final List<Integer> getItemIds() {
+    public final Set<Integer> getItemIds() {
         Set<Integer> set = new HashSet<>(100);
-        List<Castle> castles = ResidenceHolder.getResidenceList(Castle.class);
-        castles.forEach(c -> set.addAll(c.getMerchantGuards().keySet()));
-        return new ArrayList<>(set);
+        ResidenceHolder.getCastles().forEach(c -> set.addAll(c.getMerchantGuards().keySet()));
+        return set;
     }
 }

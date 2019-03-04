@@ -13,16 +13,15 @@ import l2trunk.gameserver.templates.item.WeaponTemplate.WeaponType;
 import l2trunk.gameserver.utils.Strings;
 
 import java.text.NumberFormat;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-public class WhoAmI implements IVoicedCommandHandler {
-    private static final List<String> _commandList = List.of("stats");
+public final class WhoAmI implements IVoicedCommandHandler {
+    private static final List<String> COMMAND_LIST = List.of("stats");
 
     @Override
     public List<String> getVoicedCommandList() {
-        return _commandList;
+        return COMMAND_LIST;
     }
 
     @Override

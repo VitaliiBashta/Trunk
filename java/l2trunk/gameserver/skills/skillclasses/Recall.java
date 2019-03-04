@@ -59,15 +59,11 @@ public final class Recall extends Skill {
 
     public Recall(StatsSet set) {
         super(set);
-        townId = set.getInteger("townId", 0);
-        clanhall = set.getBool("clanhall", false);
-        castle = set.getBool("castle", false);
-        fortress = set.getBool("fortress", false);
-        String[] cords = set.getString("loc", "").split(";");
-        if (cords.length == 3)
-            loc = new Location(cords);
-        else
-            loc = null;
+        townId = set.getInteger("townId");
+        clanhall = set.isSet("clanhall");
+        castle = set.isSet("castle");
+        fortress = set.isSet("fortress");
+        loc = Location.of(set.getString("loc"));
     }
 
     @Override
@@ -146,7 +142,9 @@ public final class Recall extends Skill {
 
                                         }
                                         if (loc == null) {
-                                            if (!towns.containsKey(townId)) {
+                                            if (towns.containsKey(townId)) {
+                                                pcTarget.teleToLocation(towns.get(townId), 0);
+                                            } else {
                                                 if (castle) {// To castle
                                                     pcTarget.teleToCastle();
                                                     return;
@@ -158,8 +156,6 @@ public final class Recall extends Skill {
                                                     return;
                                                 }
                                                 pcTarget.teleToClosestTown();
-                                            } else {
-                                                pcTarget.teleToLocation(towns.get(townId), 0);
                                             }
 
                                         } else {

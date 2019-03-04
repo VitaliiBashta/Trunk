@@ -25,18 +25,18 @@ import java.util.List;
  * ]
  */
 public final class ExShowManorDefaultInfo extends L2GameServerPacket {
-    private List<Integer> _crops;
+    private List<Integer> list;
 
     public ExShowManorDefaultInfo() {
-        _crops = Manor.INSTANCE.getAllCrops();
+        list = Manor.INSTANCE.getAllCrops();
     }
 
     @Override
     protected void writeImpl() {
         writeEx(0x25);
         writeC(0);
-        writeD(_crops.size());
-        for (int cropId : _crops) {
+        writeD(list.size());
+        list.forEach(cropId -> {
             writeD(cropId); // crop Id
             writeD(Manor.INSTANCE.getSeedLevelByCrop(cropId)); // occupation
             writeD(Manor.INSTANCE.getSeedBasicPriceByCrop(cropId)); // seed price
@@ -45,6 +45,6 @@ public final class ExShowManorDefaultInfo extends L2GameServerPacket {
             writeD(Manor.INSTANCE.getRewardItem(cropId, 1)); // Rewrad 1 Type Item Id
             writeC(1); // rewrad 2 Type
             writeD(Manor.INSTANCE.getRewardItem(cropId, 2)); // Rewrad 2 Type Item Id
-        }
+        });
     }
 }

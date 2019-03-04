@@ -105,7 +105,7 @@ public final class _10292_SevenSignsGirlOfDoubt extends Quest {
                     htmltext = "elcadia_abyssal_saintess_q10292_2.htm";
                 else if (cond == 4) {
                     htmltext = "elcadia_abyssal_saintess_q10292_3.htm";
-                    st.takeItems(ELCARDIAS_MARK, -1);
+                    st.takeItems(ELCARDIAS_MARK);
                     st.playSound(SOUND_MIDDLE);
                     st.setCond(5);
                 } else if (cond == 5)
@@ -138,7 +138,7 @@ public final class _10292_SevenSignsGirlOfDoubt extends Quest {
         int cond = st.getCond();
 
         if (cond == 3 && MOBS_1.contains(npcId) && Rnd.chance(70)) {
-            st.giveItems(ELCARDIAS_MARK, 1);
+            st.giveItems(ELCARDIAS_MARK);
             if (st.getQuestItemsCount(ELCARDIAS_MARK) < 10)
                 st.playSound(SOUND_ITEMGET);
             else {

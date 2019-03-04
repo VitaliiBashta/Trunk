@@ -23,7 +23,7 @@ public final class AdminClanHall implements IAdminCommandHandler {
 
         ClanHall clanhall = null;
         if (wordList.length > 1)
-            clanhall = ResidenceHolder.getResidence(ClanHall.class, toInt(wordList[1]));
+            clanhall = ResidenceHolder.getClanHall(toInt(wordList[1]));
 
         if (clanhall == null) {
             showClanHallSelectPage(activeChar);

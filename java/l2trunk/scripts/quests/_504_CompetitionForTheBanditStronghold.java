@@ -51,7 +51,7 @@ public final class _504_CompetitionForTheBanditStronghold extends Quest {
         int cond = st.getCond();
         Player player = st.player;
         Clan clan = player.getClan();
-        ClanHall clanhall = ResidenceHolder.getResidence(35);
+        ClanHall clanhall = ResidenceHolder.getClanHall(35);
 
         if (clanhall.getSiegeEvent().isRegistrationOver()) {
             htmltext = null;

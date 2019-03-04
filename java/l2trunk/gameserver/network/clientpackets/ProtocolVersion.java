@@ -14,8 +14,8 @@ public final class ProtocolVersion extends L2GameClientPacket {
     protected void readImpl() {
         protocol = readD();
 
-        if ((_buf.remaining() > 260)) {
-            _buf.position(_buf.position() + 260);
+        if ((buf.remaining() > 260)) {
+            buf.position(buf.position() + 260);
         }
     }
 

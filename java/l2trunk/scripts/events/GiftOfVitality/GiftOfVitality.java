@@ -60,23 +60,23 @@ public final class GiftOfVitality extends Functions implements ScriptFile {
 
     private void spawnEventManagers() {
         final List<Location> EVENT_MANAGERS = List.of(
-                new Location(-119494, 44882, 360, 24576),  // Kamael Village
-                new Location(-82687, 243157, -3734, 4096),  // Talking Island Village
-                new Location(45538, 48357, -3056, 18000),   // Elven Village
-                new Location(9929, 16324, -4568, 62999),    // Dark Elven Village
-                new Location(115096, -178370, -880, 0),     // Dwarven Village
-                new Location(-45372, -114104, -240, 16384), // Orc Village
-                new Location(-83156, 150994, -3120, 0),     // Gludin
-                new Location(-13727, 122117, -2984, 16384), // Gludio
-                new Location(16111, 142850, -2696, 16000),  // Dion
-                new Location(111176, 220968, -3544, 16384), // Heine
-                new Location(82792, 149448, -3494, 0),      // Giran
-                new Location(81083, 56118, -1552, 32768),   // Oren
-                new Location(117016, 77240, -2688, 49151),  // Hunters Village
-                new Location(147016, 25928, -2038, 16384),  // Aden
-                new Location(43966, -47709, -792, 49999),   // Rune
-                new Location(148088, -55416, -2728, 49151), // Goddart
-                new Location(87080, -141336, -1344, 0));     // Schutgard
+                Location.of(-119494, 44882, 360, 24576),  // Kamael Village
+                Location.of(-82687, 243157, -3734, 4096),  // Talking Island Village
+                Location.of(45538, 48357, -3056, 18000),   // Elven Village
+                Location.of(9929, 16324, -4568, 62999),    // Dark Elven Village
+                Location.of(115096, -178370, -880, 0),     // Dwarven Village
+                Location.of(-45372, -114104, -240, 16384), // Orc Village
+                Location.of(-83156, 150994, -3120, 0),     // Gludin
+                Location.of(-13727, 122117, -2984, 16384), // Gludio
+                Location.of(16111, 142850, -2696, 16000),  // Dion
+                Location.of(111176, 220968, -3544, 16384), // Heine
+                Location.of(82792, 149448, -3494, 0),      // Giran
+                Location.of(81083, 56118, -1552, 32768),   // Oren
+                Location.of(117016, 77240, -2688, 49151),  // Hunters Village
+                Location.of(147016, 25928, -2038, 16384),  // Aden
+                Location.of(43966, -47709, -792, 49999),   // Rune
+                Location.of(148088, -55416, -2728, 49151), // Goddart
+                Location.of(87080, -141336, -1344, 0));     // Schutgard
 
         SPAWNER_LIST = SpawnNPCs(EVENT_MANAGER_ID, EVENT_MANAGERS);
     }

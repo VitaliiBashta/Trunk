@@ -14,8 +14,8 @@ public final class _634_InSearchofDimensionalFragments extends Quest {
         super(true);
 
         int[] npcs = IntStream.rangeClosed(31494, 31508).toArray();
-            addTalkId(npcs);
-            addStartNpc(npcs);
+        addTalkId(npcs);
+        addStartNpc(npcs);
 
         addKillId(IntStream.rangeClosed(21208, 21256).toArray());
     }
