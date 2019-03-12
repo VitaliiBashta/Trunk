@@ -47,16 +47,16 @@ public final class SeerUgoros extends Mystic {
         QuestState qs = killer.getPlayer().getQuestState(_288_HandleWithCare.class);
         if (qs != null && qs.getCond() == 1) {
             if (_weeds < 5) {
-                qs.giveItems(15497, 1);
+                qs.giveItems(15497);
                 qs.setCond(3);
             } else {
-                qs.giveItems(15498, 1);
+                qs.giveItems(15498);
                 qs.setCond(2);
             }
         }
         _weeds = 0;
         if (!getActor().getReflection().isDefault())
-            getActor().getReflection().addSpawnWithoutRespawn(32740, new Location(95688, 85688, -3757));
+            getActor().getReflection().addSpawnWithoutRespawn(32740, Location.of(95688, 85688, -3757));
         super.onEvtDead(killer);
     }
 }

@@ -260,8 +260,7 @@ public class Quest {
     }
 
     protected void addAttackId(int... attackIds) {
-        Arrays.stream(attackIds)
-                .forEach(id -> addEventId(id, QuestEventType.ATTACKED_WITH_QUEST));
+        Arrays.stream(attackIds).forEach(id -> addEventId(id, QuestEventType.ATTACKED_WITH_QUEST));
     }
 
     /**

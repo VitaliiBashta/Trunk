@@ -125,7 +125,7 @@ public final class _403_PathToRogue extends Quest {
                     if (!st.player.isVarSet("prof1")) {
                         st.player.setVar("prof1");
                         st.addExpAndSp(228064, 16455);
-                        st.giveItems(ADENA_ID, 81900);
+                        st.giveAdena(81900);
                     }
                 }
                 st.exitCurrentQuest();
@@ -137,7 +137,7 @@ public final class _403_PathToRogue extends Quest {
                 st.takeItems(HORSESHOE_OF_LIGHT_ID);
                 st.giveItems(WANTED_BILL_ID);
                 st.setCond(5);
-            } else if (cond > 1 && st.haveAllQuestItems(NETIS_BOW_ID,NETIS_DAGGER_ID) && st.getQuestItemsCount(WANTED_BILL_ID) < 1)
+            } else if (cond > 1 && st.haveAllQuestItems(NETIS_BOW_ID, NETIS_DAGGER_ID) && st.getQuestItemsCount(WANTED_BILL_ID) < 1)
                 htmltext = "captain_bezique_q0403_10.htm";
             else if (cond == 5 && st.haveQuestItem(WANTED_BILL_ID))
                 htmltext = "captain_bezique_q0403_11.htm";
@@ -168,14 +168,11 @@ public final class _403_PathToRogue extends Quest {
             switch (cond) {
                 case 2:
                     MobsTable.forEach((k, v) -> {
-                        if (npcId == k && Rnd.chance(v) && !st.haveQuestItem(SPATOIS_BONES_ID, 10)) {
-                            st.giveItems(SPATOIS_BONES_ID);
-                            if (st.haveQuestItem(SPATOIS_BONES_ID, 10)) {
+                        if (npcId == k && Rnd.chance(v))
+                            if (st.giveItemIfNotHave(SPATOIS_BONES_ID, 10)) {
                                 st.playSound(SOUND_MIDDLE);
                                 st.setCond(3);
-                            } else
-                                st.playSound(SOUND_ITEMGET);
-                        }
+                            }
                     });
                     break;
                 case 5:

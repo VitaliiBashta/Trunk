@@ -254,11 +254,11 @@ public final class AggroList {
             return null;
 
         for (AggroInfo ai : hated) {
-            if (ai.damage == 0)
-                continue;
-            topDamager = World.getAroundPlayables(npc)
-                    .filter(cha -> cha.objectId() == ai.attackerId)
-                    .findFirst().orElse(null);
+            if (ai.damage != 0) {
+                topDamager = World.getAroundPlayables(npc)
+                        .filter(cha -> cha.objectId() == ai.attackerId)
+                        .findFirst().orElse(null);
+            }
         }
 
         return topDamager;

@@ -108,7 +108,7 @@ public final class _413_PathToShillienOracle extends Quest {
                 htmltext = "master_sidra_q0413_08.htm";
             else if (cond < 7)
                 htmltext = "master_sidra_q0413_09.htm";
-            else if (cond == 7 && st.getQuestItemsCount(ANDARIEL_BOOK_ID) > 0 && st.getQuestItemsCount(GARMIEL_BOOK_ID) > 0) {
+            else if (cond == 7 && st.haveAllQuestItems(ANDARIEL_BOOK_ID,GARMIEL_BOOK_ID)) {
                 htmltext = "master_sidra_q0413_10.htm";
                 st.exitCurrentQuest();
                 if (st.player.getClassId().occupation() == 0) {
@@ -116,7 +116,7 @@ public final class _413_PathToShillienOracle extends Quest {
                     if (!st.player.isVarSet("prof1")) {
                         st.player.setVar("prof1");
                         st.addExpAndSp(228064, 16455);
-                        st.giveItems(ADENA_ID, 81900);
+                        st.giveAdena(81900);
                     }
                 }
                 st.playSound(SOUND_FINISH);
@@ -125,7 +125,7 @@ public final class _413_PathToShillienOracle extends Quest {
             if (cond == 1 && st.haveQuestItem(SIDRAS_LETTER1_ID) )
                 htmltext = "magister_talbot_q0413_01.htm";
             else if (cond == 2) {
-                if (st.getQuestItemsCount(BLOODY_RUNE1_ID) < 1)
+                if (!st.haveQuestItem(BLOODY_RUNE1_ID) )
                     htmltext = "magister_talbot_q0413_03.htm";
                 else if (st.haveQuestItem(BLOODY_RUNE1_ID) )
                     htmltext = "magister_talbot_q0413_04.htm";
@@ -141,20 +141,19 @@ public final class _413_PathToShillienOracle extends Quest {
             else if (cond == 7)
                 htmltext = "magister_talbot_q0413_07.htm";
         } else if (npcId == ADONIUS)
-            if (cond == 4 && st.getQuestItemsCount(PRAYER_OF_ADON_ID) > 0)
+            if (cond == 4 && st.haveQuestItem(PRAYER_OF_ADON_ID) )
                 htmltext = "priest_adonius_q0413_01.htm";
-            else if (cond == 5 && st.getQuestItemsCount(ASHEN_BONES_ID) < 1)
+            else if (cond == 5 && !st.haveQuestItem(ASHEN_BONES_ID) )
                 htmltext = "priest_adonius_q0413_05.htm";
             else if (cond == 5 && st.getQuestItemsCount(ASHEN_BONES_ID) < 10)
                 htmltext = "priest_adonius_q0413_06.htm";
             else if (cond == 6 && st.getQuestItemsCount(ASHEN_BONES_ID) > 9) {
                 htmltext = "priest_adonius_q0413_07.htm";
-                st.takeItems(ASHEN_BONES_ID);
-                st.takeItems(PENITENTS_MARK_ID);
+                st.takeAllItems(ASHEN_BONES_ID,PENITENTS_MARK_ID);
                 st.giveItems(ANDARIEL_BOOK_ID);
                 st.playSound(SOUND_ITEMGET);
                 st.setCond(7);
-            } else if (cond == 7 && st.getQuestItemsCount(ANDARIEL_BOOK_ID) > 0)
+            } else if (cond == 7 && st.haveQuestItem(ANDARIEL_BOOK_ID) )
                 htmltext = "priest_adonius_q0413_08.htm";
         return htmltext;
     }

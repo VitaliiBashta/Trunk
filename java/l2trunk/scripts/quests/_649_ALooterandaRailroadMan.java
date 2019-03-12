@@ -108,16 +108,16 @@ public final class _649_ALooterandaRailroadMan extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("quest_accept")) {
+        if ("quest_accept".equalsIgnoreCase(event)) {
             htmltext = "railman_obi_q0649_0103.htm";
             st.setCond(1);
             st.start();
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("649_3"))
-            if (st.getQuestItemsCount(THIEF_GUILD_MARK) == 200) {
+        } else if ("649_3".equals(event))
+            if (st.haveQuestItem(THIEF_GUILD_MARK,200)) {
                 htmltext = "railman_obi_q0649_0201.htm";
-                st.takeItems(THIEF_GUILD_MARK, -1);
-                st.giveItems(ADENA_ID, 21698, true);
+                st.takeItems(THIEF_GUILD_MARK);
+                st.giveAdena( 21698);
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest();
             } else

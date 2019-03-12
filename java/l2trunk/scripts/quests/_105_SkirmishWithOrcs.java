@@ -56,7 +56,7 @@ public final class _105_SkirmishWithOrcs extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("sentinel_kendnell_q0105_03.htm")) {
+        if ("sentinel_kendnell_q0105_03.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.start();
             st.playSound(SOUND_ACCEPT);
@@ -90,7 +90,7 @@ public final class _105_SkirmishWithOrcs extends Quest {
                 htmltext = "sentinel_kendnell_q0105_02.htm";
         } else if (cond == 1 && st.haveAnyQuestItems(Kendells1stOrder,Kendells2stOrder,Kendells3stOrder,Kendells4stOrder))
             htmltext = "sentinel_kendnell_q0105_05.htm";
-        else if (cond == 2 && st.getQuestItemsCount(KabooChiefs1stTorque) != 0) {
+        else if (cond == 2 && st.haveQuestItem(KabooChiefs1stTorque) ) {
             htmltext = "sentinel_kendnell_q0105_06.htm";
             st.takeAllItems(Kendells1stOrder,Kendells2stOrder,Kendells3stOrder,Kendells4stOrder);
             st.takeItems(KabooChiefs1stTorque, 1);
@@ -107,20 +107,16 @@ public final class _105_SkirmishWithOrcs extends Quest {
             st.start();
         } else if (cond == 3 && st.haveAnyQuestItems(Kendells5stOrder,Kendells6stOrder,Kendells7stOrder,Kendells8stOrder))
             htmltext = "sentinel_kendnell_q0105_07.htm";
-        else if (cond == 4 && st.getQuestItemsCount(KabooChiefs2stTorque) > 0) {
+        else if (cond == 4 && st.haveQuestItem(KabooChiefs2stTorque) ) {
             htmltext = "sentinel_kendnell_q0105_08.htm";
-            st.takeItems(Kendells5stOrder);
-            st.takeItems(Kendells6stOrder);
-            st.takeItems(Kendells7stOrder);
-            st.takeItems(Kendells8stOrder);
-            st.takeItems(KabooChiefs2stTorque);
+            st.takeAllItems(Kendells5stOrder,Kendells6stOrder,Kendells7stOrder,Kendells8stOrder,KabooChiefs2stTorque);
 
             if (st.player.getClassId().isMage())
                 st.giveItems(RED_SUNSET_STAFF);
             else
                 st.giveItems(RED_SUNSET_SWORD);
 
-            st.giveItems(ADENA_ID, 17599, false);
+            st.giveAdena( 17599);
             st.player.addExpAndSp(41478, 3555);
 
             if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("p1q3")) {
@@ -149,29 +145,29 @@ public final class _105_SkirmishWithOrcs extends Quest {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         if (cond == 1 && st.getQuestItemsCount(KabooChiefs1stTorque) == 0) {
-            if (npcId == KabooChiefUoph && st.getQuestItemsCount(Kendells1stOrder) > 0)
+            if (npcId == KabooChiefUoph && st.haveQuestItem(Kendells1stOrder) )
                 st.giveItems(KabooChiefs1stTorque);
-            else if (npcId == KabooChiefKracha && st.getQuestItemsCount(Kendells2stOrder) > 0)
+            else if (npcId == KabooChiefKracha && st.haveQuestItem(Kendells2stOrder) )
                 st.giveItems(KabooChiefs1stTorque);
-            else if (npcId == KabooChiefBatoh && st.getQuestItemsCount(Kendells3stOrder) > 0)
+            else if (npcId == KabooChiefBatoh && st.haveQuestItem(Kendells3stOrder))
                 st.giveItems(KabooChiefs1stTorque);
-            else if (npcId == KabooChiefTanukia && st.getQuestItemsCount(Kendells4stOrder) > 0)
+            else if (npcId == KabooChiefTanukia && st.haveQuestItem(Kendells4stOrder) )
                 st.giveItems(KabooChiefs1stTorque);
-            if (st.getQuestItemsCount(KabooChiefs1stTorque) > 0) {
+            if (st.haveQuestItem(KabooChiefs1stTorque)) {
                 st.setCond(2);
                 st.start();
                 st.playSound(SOUND_MIDDLE);
             }
-        } else if (cond == 3 && st.getQuestItemsCount(KabooChiefs2stTorque) == 0) {
-            if (npcId == KabooChiefTurel && st.getQuestItemsCount(Kendells5stOrder) > 0)
+        } else if (cond == 3 && !st.haveQuestItem(KabooChiefs2stTorque) ) {
+            if (npcId == KabooChiefTurel && st.haveQuestItem(Kendells5stOrder) )
                 st.giveItems(KabooChiefs2stTorque);
-            else if (npcId == KabooChiefRoko && st.getQuestItemsCount(Kendells6stOrder) > 0)
+            else if (npcId == KabooChiefRoko && st.haveQuestItem(Kendells6stOrder) )
                 st.giveItems(KabooChiefs2stTorque);
-            else if (npcId == KabooChiefKamut && st.getQuestItemsCount(Kendells7stOrder) > 0)
+            else if (npcId == KabooChiefKamut && st.haveQuestItem(Kendells7stOrder) )
                 st.giveItems(KabooChiefs2stTorque);
-            else if (npcId == KabooChiefMurtika && st.getQuestItemsCount(Kendells8stOrder) > 0)
+            else if (npcId == KabooChiefMurtika && st.haveQuestItem(Kendells8stOrder) )
                 st.giveItems(KabooChiefs2stTorque);
-            if (st.getQuestItemsCount(KabooChiefs2stTorque) > 0) {
+            if (st.haveQuestItem(KabooChiefs2stTorque)) {
                 st.setCond(4);
                 st.start();
                 st.playSound(SOUND_MIDDLE);

@@ -46,13 +46,13 @@ public final class _642_APowerfulPrimevalCreature extends Quest {
             if (Dinosaur_Tissue_Count == 0)
                 return "dindin_q0642_08a.htm";
             st.takeItems(Dinosaur_Tissue);
-            st.giveItems(ADENA_ID, Dinosaur_Tissue_Count * 3000, false);
+            st.giveItems(ADENA_ID, Dinosaur_Tissue_Count * 3000);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("0"))
+        } else if ("0".equals(event))
             return null;
         else if (state == STARTED) {
             int rew_id = toInt(event);
-            if (Dinosaur_Tissue_Count < 150 || st.getQuestItemsCount(Dinosaur_Egg) == 0)
+            if (Dinosaur_Tissue_Count < 150 || !st.haveQuestItem(Dinosaur_Egg))
                 return "dindin_q0642_08a.htm";
             if (Rewards.stream()
                     .filter(reward -> reward == rew_id)
@@ -89,7 +89,7 @@ public final class _642_APowerfulPrimevalCreature extends Quest {
             long Dinosaur_Tissue_Count = st.getQuestItemsCount(Dinosaur_Tissue);
             if (Dinosaur_Tissue_Count == 0)
                 return "dindin_q0642_08a.htm";
-            if (Dinosaur_Tissue_Count < 150 || st.getQuestItemsCount(Dinosaur_Egg) == 0)
+            if (Dinosaur_Tissue_Count < 150 || !st.haveQuestItem(Dinosaur_Egg))
                 return "dindin_q0642_07.htm";
             return "dindin_q0642_07a.htm";
         }

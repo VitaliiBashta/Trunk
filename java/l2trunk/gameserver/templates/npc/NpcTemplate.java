@@ -133,9 +133,6 @@ public final class NpcTemplate extends CharTemplate {
     }
 
     public void addAbsorbInfo(AbsorbInfo absorbInfo) {
-        if (this.absorbInfo.isEmpty())
-            this.absorbInfo = new ArrayList<>(1);
-
         this.absorbInfo.add(absorbInfo);
     }
 

@@ -170,7 +170,7 @@ public final class _065_PathToSoulBreaker extends Quest {
                 st.takeItems(Kekropus_Rec);
                 if (!st.player.isVarSet("prof2.1")) {
                     st.addExpAndSp(196875, 13510);
-                    st.giveItems(ADENA_ID, 35597);
+                    st.giveAdena( 35597);
                     st.player.setVar("prof2.1");
                 }
                 st.giveItems(SB_Certificate);

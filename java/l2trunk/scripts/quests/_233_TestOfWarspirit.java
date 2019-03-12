@@ -206,10 +206,7 @@ public final class _233_TestOfWarspirit extends Quest {
             if (st.haveQuestItem(ORIMS_CONTRACT)) {
                 if (st.getQuestItemsCount(PORTAS_EYE) < 10 || st.getQuestItemsCount(EXCUROS_SCALE) < 10 || st.getQuestItemsCount(MORDEOS_TALON) < 10)
                     return "30630-05.htm";
-                st.takeItems(ORIMS_CONTRACT);
-                st.takeItems(PORTAS_EYE);
-                st.takeItems(EXCUROS_SCALE);
-                st.takeItems(MORDEOS_TALON);
+                st.takeAllItems(ORIMS_CONTRACT,PORTAS_EYE,EXCUROS_SCALE,MORDEOS_TALON);
                 st.giveItems(BRAKIS_REMAINS1);
                 st.playSound(SOUND_MIDDLE);
                 return "30630-06.htm";
@@ -222,7 +219,7 @@ public final class _233_TestOfWarspirit extends Quest {
         if (npcId == Pekiron) {
             if (st.haveQuestItem(PEKIRONS_TOTEM)) {
                 for (int drop_id : Leto_Lizardman_Drops)
-                    if (st.getQuestItemsCount(drop_id) == 0)
+                    if (!st.haveQuestItem(drop_id))
                         return "30682-03.htm";
                 st.takeItems(PEKIRONS_TOTEM);
                 for (int drop_id : Leto_Lizardman_Drops)
@@ -239,13 +236,12 @@ public final class _233_TestOfWarspirit extends Quest {
 
         if (npcId == Manakia) {
             if (st.haveQuestItem(MANAKIAS_TOTEM)) {
-                if (st.getQuestItemsCount(HERMODTS_SKULL) == 0)
+                if (!st.haveQuestItem(HERMODTS_SKULL))
                     return "30515-03.htm";
                 for (int drop_id : Medusa_Drops)
-                    if (st.getQuestItemsCount(drop_id) == 0)
+                    if (!st.haveQuestItem(drop_id))
                         return "30515-03.htm";
-                st.takeItems(MANAKIAS_TOTEM);
-                st.takeItems(HERMODTS_SKULL);
+                st.takeAllItems(MANAKIAS_TOTEM,HERMODTS_SKULL);
                 for (int drop_id : Medusa_Drops)
                     if (st.getQuestItemsCount(drop_id) == 0)
                         st.takeItems(drop_id);
@@ -255,7 +251,7 @@ public final class _233_TestOfWarspirit extends Quest {
             }
             if (!st.haveAnyQuestItems(HERMODTS_REMAINS1, HERMODTS_REMAINS2, VENDETTA_TOTEM))
                 return "30515-01.htm";
-            if (st.getQuestItemsCount(RACOYS_TOTEM) == 0
+            if (!st.haveQuestItem(RACOYS_TOTEM)
                     && (st.haveAnyQuestItems(KIRUNAS_REMAINS2, WARSPIRIT_TOTEM, BRAKIS_REMAINS2, HERMODTS_REMAINS2, TAMLIN_ORC_HEAD, TONARS_REMAINS2)))
                 return "30515-05.htm";
         }
@@ -263,7 +259,7 @@ public final class _233_TestOfWarspirit extends Quest {
         if (npcId == Racoy)
             if (st.haveQuestItem(RACOYS_TOTEM)) {
                 if (st.getQuestItemsCount(INSECT_DIAGRAM_BOOK) == 0)
-                    return st.getQuestItemsCount(VIVIANTES_LETTER) == 0 ? "30507-03.htm" : "30507-04.htm";
+                    return st.haveQuestItem(VIVIANTES_LETTER) ? "30507-04.htm" : "30507-03.htm";
                 if (st.getQuestItemsCount(VIVIANTES_LETTER) == 0) {
                     for (int drop_id : Noble_Ant_Drops)
                         if (st.getQuestItemsCount(drop_id) == 0)
@@ -272,7 +268,7 @@ public final class _233_TestOfWarspirit extends Quest {
                     st.takeItems(INSECT_DIAGRAM_BOOK);
                     for (int drop_id : Noble_Ant_Drops)
                         if (st.getQuestItemsCount(drop_id) == 0)
-                            st.takeItems(drop_id, -1);
+                            st.takeItems(drop_id);
                     st.giveItems(KIRUNAS_REMAINS1);
                     st.playSound(SOUND_MIDDLE);
                     return "30507-06.htm";
@@ -334,7 +330,7 @@ public final class _233_TestOfWarspirit extends Quest {
                     drops.add(drop_id);
             if (drops.size() > 0 && Rnd.chance(30)) {
                 int drop_id = Rnd.get(drops);
-                qs.giveItems(drop_id, 1);
+                qs.giveItems(drop_id);
                 qs.playSound(drops.size() == 1 ? SOUND_MIDDLE : SOUND_ITEMGET);
             }
             drops.clear();

@@ -76,13 +76,13 @@ public enum NpcParser {
                         ai.set(eElement.attributeValue("name"), eElement.attributeValue("value"));
                     }
                     set.set("aiParams", ai);
-                } else if (firstElement.getName().equalsIgnoreCase("attributes")) {
+                } else if ("attributes".equalsIgnoreCase(firstElement.getName())) {
                     int[] attributeAttack = new int[6];
                     int[] attributeDefence = new int[6];
                     for (Iterator<org.dom4j.Element> eIterator = firstElement.elementIterator(); eIterator.hasNext(); ) {
                         org.dom4j.Element eElement = eIterator.next();
                         Element element;
-                        if (eElement.getName().equalsIgnoreCase("defence")) {
+                        if ("defence".equalsIgnoreCase(eElement.getName())) {
                             element = Element.getElement(eElement.attributeValue("attribute"));
                             attributeDefence[element.getId()] = toInt(eElement.attributeValue("value"));
                         } else if (eElement.getName().equalsIgnoreCase("attack")) {
@@ -101,7 +101,7 @@ public enum NpcParser {
             for (Iterator<org.dom4j.Element> secondIterator = npcElement.elementIterator(); secondIterator.hasNext(); ) {
                 org.dom4j.Element secondElement = secondIterator.next();
                 String nodeName = secondElement.getName();
-                if (nodeName.equalsIgnoreCase("faction")) {
+                if ("faction".equalsIgnoreCase(nodeName)) {
                     String factionId = secondElement.attributeValue("name");
                     Faction faction = new Faction(factionId);
                     int factionRange = toInt(secondElement.attributeValue("range"));
@@ -114,7 +114,6 @@ public enum NpcParser {
                     template.setFaction(faction);
                 } else if ("rewardlist".equalsIgnoreCase(nodeName)) {
                     RewardType type = RewardType.valueOf(secondElement.attributeValue("type"));
-                    boolean autoLoot = secondElement.attributeValue("auto_loot") != null && Boolean.parseBoolean(secondElement.attributeValue("auto_loot"));
                     RewardList list = new RewardList(type);
 
                     for (Iterator<org.dom4j.Element> nextIterator = secondElement.elementIterator(); nextIterator.hasNext(); ) {

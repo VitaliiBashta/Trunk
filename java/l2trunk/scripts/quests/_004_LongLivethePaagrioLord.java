@@ -36,7 +36,7 @@ public final class _004_LongLivethePaagrioLord extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("30578-03.htm")) {
+        if ("30578-03.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.start();
             st.playSound(SOUND_ACCEPT);
@@ -64,7 +64,7 @@ public final class _004_LongLivethePaagrioLord extends Quest {
                 htmltext = "30578-04.htm";
             else if (cond == 2) {
                 htmltext = "30578-06.htm";
-                    st.takeItems(NPC_GIFTS.values());
+                st.takeItems(NPC_GIFTS.values());
                 st.giveItems(4);
                 st.giveItems(ADENA_ID, (int) ((Config.RATE_QUESTS_REWARD - 1) * 590 + 1850 * Config.RATE_QUESTS_REWARD), false); // T2
                 st.player.addExpAndSp(4254, 335);
@@ -76,14 +76,14 @@ public final class _004_LongLivethePaagrioLord extends Quest {
         } else if (cond == 1)
             if (NPC_GIFTS.containsKey(npcId)) {
                 int item = NPC_GIFTS.get(npcId);
-                if (st.getQuestItemsCount(item) > 0)
+                if (st.haveQuestItem(item))
                     htmltext = npc + "-02.htm";
                 else {
                     st.giveItems(item);
                     htmltext = npc + "-01.htm";
                     int count = (int) NPC_GIFTS.values().stream()
-                            .mapToLong(st::getQuestItemsCount)
-                            .sum();
+                            .filter(st::haveQuestItem)
+                            .count();
                     if (count == 6) {
                         st.setCond(2);
                         st.playSound(SOUND_MIDDLE);

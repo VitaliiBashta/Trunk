@@ -58,7 +58,7 @@ public final class _300_HuntingLetoLizardman extends Quest {
                 st.takeItems(BRACELET_OF_LIZARDMAN);
                 switch (Rnd.get(3)) {
                     case 0:
-                        st.giveItems(ADENA_ID, 30000, true);
+                        st.giveAdena( 30000);
                         break;
                     case 1:
                         st.giveItems(ANIMAL_BONE, 50, true);

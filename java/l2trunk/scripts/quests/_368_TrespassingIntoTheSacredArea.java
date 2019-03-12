@@ -39,7 +39,7 @@ public final class _368_TrespassingIntoTheSacredArea extends Quest {
             if (_count > 0) {
                 htmltext = "30926-04.htm";
                 st.takeItems(BLADE_STAKATO_FANG);
-                st.giveItems(ADENA_ID, _count * 2250);
+                st.giveAdena( _count * 2250);
                 st.playSound(SOUND_MIDDLE);
             } else
                 htmltext = "30926-03.htm";

@@ -54,14 +54,14 @@ public final class _281_HeadForTheHills extends Quest {
             tryGiveOneTimeRevard(st);
             htmltext = "zerstorer_morsell_q0281_06.htm";
         } else if ("soe".equalsIgnoreCase(event)) {
-            if (st.getQuestItemsCount(HillsOfGoldMonsterClaw) >= 50) {
+            if (st.haveQuestItem(HillsOfGoldMonsterClaw, 50)) {
                 st.takeItems(HillsOfGoldMonsterClaw, 50);
-                st.giveItems(ScrollOfEscape, 5, false);
+                st.giveItems(ScrollOfEscape, 5);
                 tryGiveOneTimeRevard(st);
                 htmltext = "zerstorer_morsell_q0281_06.htm";
             } else
                 htmltext = "zerstorer_morsell_q0281_04.htm";
-        } else if (event.equalsIgnoreCase("zerstorer_morsell_q0281_09.htm"))
+        } else if ("zerstorer_morsell_q0281_09.htm".equalsIgnoreCase(event))
             st.exitCurrentQuest();
 
         return htmltext;

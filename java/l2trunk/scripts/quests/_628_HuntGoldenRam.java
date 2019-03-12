@@ -33,10 +33,10 @@ public final class _628_HuntGoldenRam extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
         if ("31554-03a.htm".equalsIgnoreCase(event)) {
-            if (st.getQuestItemsCount(CHITIN) >= 100 && st.getCond() == 1) {
+            if (st.haveQuestItem(CHITIN, 100) && st.getCond() == 1) {
                 st.setCond(2);
                 st.takeItems(CHITIN, 100);
-                st.giveItems(RECRUIT, 1);
+                st.giveItems(RECRUIT);
                 st.player.updateRam();
                 htmltext = "31554-04.htm";
             }
@@ -108,10 +108,10 @@ public final class _628_HuntGoldenRam extends Quest {
             if (Rnd.chance(CHANCE + (npcId - 21512) * 3)) {
                 st.giveItems(CHITIN2);
 
-                if (st.getQuestItemsCount(CHITIN2) < 100)
-                    st.playSound(SOUND_ITEMGET);
-                else
+                if (st.haveQuestItem(CHITIN2, 100))
                     st.playSound(SOUND_MIDDLE);
+                else
+                    st.playSound(SOUND_ITEMGET);
             }
     }
 }

@@ -159,7 +159,7 @@ public final class _422_RepentYourSins extends Quest {
                     st.giveItems(MANUAL_OF_MANACLES, 1);
                     return "black_judge_q0422_08.htm";
                 }
-                st.takeItems(PENITENTS_MANACLES2, -1);
+                st.takeItems(PENITENTS_MANACLES2);
                 if (st.getQuestItemsCount(PENITENTS_MANACLES) < 1)
                     st.giveItems(PENITENTS_MANACLES);
                 st.setCond(16);

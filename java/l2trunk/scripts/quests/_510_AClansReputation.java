@@ -7,6 +7,8 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.SystemMessage;
 
+import java.util.stream.IntStream;
+
 public final class _510_AClansReputation extends Quest {
     private static final int VALDIS = 31331;
     private static final int CLAW = 8767;
@@ -17,8 +19,7 @@ public final class _510_AClansReputation extends Quest {
 
         addStartNpc(VALDIS);
 
-        for (int npc = 22215; npc <= 22217; npc++)
-            addKillId(npc);
+        addKillId(IntStream.rangeClosed(22215, 22217).toArray());
     }
 
     @Override

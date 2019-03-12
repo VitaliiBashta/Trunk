@@ -23,16 +23,16 @@ public final class _011_SecretMeetingWithKetraOrcs extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("guard_cadmon_q0011_0104.htm")) {
+        if ("guard_cadmon_q0011_0104.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.start();
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("trader_leon_q0011_0201.htm")) {
-            st.giveItems(MUNITIONS_BOX, 1);
+        } else if ("trader_leon_q0011_0201.htm".equalsIgnoreCase(event)) {
+            st.giveItems(MUNITIONS_BOX);
             st.setCond(2);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("herald_wakan_q0011_0301.htm")) {
-            st.takeItems(MUNITIONS_BOX, 1);
+        } else if ("herald_wakan_q0011_0301.htm".equalsIgnoreCase(event)) {
+            st.takeItems(MUNITIONS_BOX);
             st.addExpAndSp(82045, 6047);
             st.playSound(SOUND_FINISH);
             st.finish();

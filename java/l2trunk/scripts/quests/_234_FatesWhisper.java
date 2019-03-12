@@ -191,39 +191,39 @@ public final class _234_FatesWhisper extends Quest {
         else if (event.equalsIgnoreCase("31002-08a.htm")) {
             st.takeItems(REORINS_HAMMER, -1);
             st.setCond(COND5);
-        } else if (event.equalsIgnoreCase("30178-01a.htm"))
+        } else if ("30178-01a.htm".equalsIgnoreCase(event))
             st.setCond(COND6);
-        else if (event.equalsIgnoreCase("30833-01a.htm"))
+        else if ("30833-01a.htm".equalsIgnoreCase(event))
             return Config.ALT_ALLOW_SUBCLASS_WITHOUT_BAIUM ? "30833-01a.htm" : "30833-01n.htm";
-        else if (event.equalsIgnoreCase("30833-01b.htm")) {
+        else if ("30833-01b.htm".equalsIgnoreCase(event)) {
             st.setCond(COND7);
-            st.giveItems(PIPETTE_KNIFE, 1, false);
-        } else if (event.equalsIgnoreCase("30833-01c.htm")) {
+            st.giveItems(PIPETTE_KNIFE);
+        } else if ("30833-01c.htm".equalsIgnoreCase(event)) {
             st.setCond(COND8);
-            st.giveItems(WhiteCloth, 30, false);
+            st.giveItems(WhiteCloth, 30);
         } else if ("Damaskus.htm".equalsIgnoreCase(event))
             oldweapon = Damaskus;
         else if ("Samurai.htm".equalsIgnoreCase(event))
             oldweapon = Samurai;
-        else if (event.equalsIgnoreCase("BOP.htm"))
+        else if ("BOP.htm".equalsIgnoreCase(event))
             oldweapon = BOP;
-        else if (event.equalsIgnoreCase("Lance.htm"))
+        else if ("Lance.htm".equalsIgnoreCase(event))
             oldweapon = Lance;
-        else if (event.equalsIgnoreCase("Battle.htm"))
+        else if ("Battle.htm".equalsIgnoreCase(event))
             oldweapon = Battle;
-        else if (event.equalsIgnoreCase("Staff.htm"))
+        else if ("Staff.htm".equalsIgnoreCase(event))
             oldweapon = Staff;
-        else if (event.equalsIgnoreCase("Demons.htm"))
+        else if ("Demons.htm".equalsIgnoreCase(event))
             oldweapon = Demons;
-        else if (event.equalsIgnoreCase("Bellion.htm"))
+        else if ("Bellion.htm".equalsIgnoreCase(event))
             oldweapon = Bellion;
-        else if (event.equalsIgnoreCase("Glory.htm"))
+        else if ("Glory.htm".equalsIgnoreCase(event))
             oldweapon = Glory;
-        else if (event.equalsIgnoreCase("WizTear.htm"))
+        else if ("WizTear.htm".equalsIgnoreCase(event))
             oldweapon = WizTear;
-        else if (event.equalsIgnoreCase("GuardianSword.htm"))
+        else if ("GuardianSword.htm".equalsIgnoreCase(event))
             oldweapon = GuardianSword;
-        else if (event.equalsIgnoreCase("Tallum"))
+        else if ("Tallum".equalsIgnoreCase(event))
             newweapon = Tallum;
         else if (event.equalsIgnoreCase("Infernal"))
             newweapon = Infernal;
@@ -247,11 +247,11 @@ public final class _234_FatesWhisper extends Quest {
             newweapon = Destroyer;
         else if (event.equalsIgnoreCase("Keshanberk"))
             newweapon = Keshanberk;
-        else if (event.equalsIgnoreCase("CABRIOCOFFER_Fail")) {
+        else if ("CABRIOCOFFER_Fail".equalsIgnoreCase(event)) {
             NpcInstance isQuest = GameObjectsStorage.getByNpcId(CABRIOCOFFER);
             if (isQuest != null)
                 isQuest.deleteMe();
-        } else if (event.equalsIgnoreCase("CHEST_HALLATE_Fail")) {
+        } else if ("CHEST_HALLATE_Fail".equalsIgnoreCase(event)) {
             NpcInstance isQuest = GameObjectsStorage.getByNpcId(CHEST_HALLATE);
             if (isQuest != null)
                 isQuest.deleteMe();
@@ -265,7 +265,7 @@ public final class _234_FatesWhisper extends Quest {
                 isQuest.deleteMe();
         }
         if (oldweapon != 0)
-            if (st.getQuestItemsCount(oldweapon) >= 1) {
+            if (st.haveQuestItem(oldweapon) ) {
                 if (st.getQuestItemsCount(CRYSTAL_B) >= 984) {
                     st.set("oldweapon", oldweapon);
                     st.takeItems(CRYSTAL_B, 984);

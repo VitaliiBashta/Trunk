@@ -12,6 +12,7 @@ import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.Location;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public final class _060_GoodWorksReward extends Quest {
@@ -27,11 +28,9 @@ public final class _060_GoodWorksReward extends Quest {
     private final static int Helvetias_Antidote = 10868;
     // Texts
     private final static PrintfFormat msgPursuer = new PrintfFormat("%s! I must kill you. Blame your own curiosity.");
-    private final static String diePursuer = "You are strong. This was a mistake.";
-    private final static String diePursuer_return = "You have good luck. I shall return.";
     private final static PrintfFormat Mammon_dialog = new PrintfFormat("<html><body>Black Marketeer of Mammon:<br>Forget about the money!<br>I will help you complete the class transfer, which is far more valuable! Which class would you like to be? Choose one.<br>%s</body></html>");
     private static final Map<Integer, String> profs = new HashMap<>();
-    private static final Map<String, int[]> marks = new HashMap<>();
+    private static final Map<String, List<Integer>> MARKS = new HashMap<>();
     private static int Last_Spawned_Pursuer = 0;
 
     static {
@@ -54,169 +53,45 @@ public final class _060_GoodWorksReward extends Quest {
         profs.put(54, "<a action=\"bypass -h Quest _060_GoodWorksReward marks-BH\">Bounty Hunter.</a>");
         profs.put(56, "<a action=\"bypass -h Quest _060_GoodWorksReward marks-WS\">Warsmith.</a>");
 
-        marks.put("AW", new int[]{
-                2673,
-                3172,
-                2809
-        });
-        marks.put("BD", new int[]{
-                2627,
-                3172,
-                2762
-        });
-        marks.put("BH", new int[]{
-                2809,
-                3119,
-                3238
-        });
-        marks.put("BS", new int[]{
-                2721,
-                2734,
-                2820
-        });
-        marks.put("DA", new int[]{
-                2633,
-                2734,
-                3307
-        });
-        marks.put("DT", new int[]{
-                2627,
-                3203,
-                3276
-        });
-        marks.put("EE", new int[]{
-                2721,
-                3140,
-                2820
-        });
-        marks.put("ES", new int[]{
-                2674,
-                3140,
-                3336
-        });
-        marks.put("GL", new int[]{
-                2627,
-                2734,
-                2762
-        });
-        marks.put("HK", new int[]{
-                2673,
-                2734,
-                3293
-        });
-        marks.put("NM", new int[]{
-                2674,
-                2734,
-                3307
-        });
-        marks.put("OL", new int[]{
-                2721,
-                3203,
-                3390
-        });
-        marks.put("PA", new int[]{
-                2633,
-                2734,
-                2820
-        });
-        marks.put("PP", new int[]{
-                2721,
-                2734,
-                2821
-        });
-        marks.put("PR", new int[]{
-                2673,
-                3172,
-                3293
-        });
-        marks.put("PS", new int[]{
-                2674,
-                3172,
-                3336
-        });
-        marks.put("PW", new int[]{
-                2673,
-                3140,
-                2809
-        });
-        marks.put("SC", new int[]{
-                2674,
-                2734,
-                2840
-        });
-        marks.put("SE", new int[]{
-                2721,
-                3172,
-                2821
-        });
-        marks.put("SH", new int[]{
-                2674,
-                3172,
-                2840
-        });
-        marks.put("SK", new int[]{
-                2633,
-                3172,
-                3307
-        });
-        marks.put("SP", new int[]{
-                2674,
-                3140,
-                2840
-        });
-        marks.put("SR", new int[]{
-                2673,
-                3140,
-                3293
-        });
-        marks.put("SS", new int[]{
-                2627,
-                3140,
-                2762
-        });
-        marks.put("TH", new int[]{
-                2673,
-                2734,
-                2809
-        });
-        marks.put("TK", new int[]{
-                2633,
-                3140,
-                2820
-        });
-        marks.put("TR", new int[]{
-                2627,
-                3203,
-                2762
-        });
-        marks.put("WA", new int[]{
-                2674,
-                2734,
-                3336
-        });
-        marks.put("WC", new int[]{
-                2721,
-                3203,
-                2879
-        });
-        marks.put("WL", new int[]{
-                2627,
-                2734,
-                3276
-        });
-        marks.put("WS", new int[]{
-                2867,
-                3119,
-                3238
-        });
+        MARKS.put("AW", List.of(2673, 3172, 2809));
+        MARKS.put("BD", List.of(2627, 3172, 2762));
+        MARKS.put("BH", List.of(2809, 3119, 3238));
+        MARKS.put("BS", List.of(2721, 2734, 2820));
+        MARKS.put("DA", List.of(2633, 2734, 3307));
+        MARKS.put("DT", List.of(2627, 3203, 3276));
+        MARKS.put("EE", List.of(2721, 3140, 2820));
+        MARKS.put("ES", List.of(2674, 3140, 3336));
+        MARKS.put("GL", List.of(2627, 2734, 2762));
+        MARKS.put("HK", List.of(2673, 2734, 3293));
+        MARKS.put("NM", List.of(2674, 2734, 3307));
+        MARKS.put("OL", List.of(2721, 3203, 3390));
+        MARKS.put("PA", List.of(2633, 2734, 2820));
+        MARKS.put("PP", List.of(2721, 2734, 2821));
+        MARKS.put("PR", List.of(2673, 3172, 3293));
+        MARKS.put("PS", List.of(2674, 3172, 3336));
+        MARKS.put("PW", List.of(2673, 3140, 2809));
+        MARKS.put("SC", List.of(2674, 2734, 2840));
+        MARKS.put("SE", List.of(2721, 3172, 2821));
+        MARKS.put("SH", List.of(2674, 3172, 2840));
+        MARKS.put("SK", List.of(2633, 3172, 3307));
+        MARKS.put("SP", List.of(2674, 3140, 2840));
+        MARKS.put("SR", List.of(2673, 3140, 3293));
+        MARKS.put("SS", List.of(2627, 3140, 2762));
+        MARKS.put("TH", List.of(2673, 2734, 2809));
+        MARKS.put("TK", List.of(2633, 3140, 2820));
+        MARKS.put("TR", List.of(2627, 3203, 2762));
+        MARKS.put("WA", List.of(2674, 2734, 3336));
+        MARKS.put("WC", List.of(2721, 3203, 2879));
+        MARKS.put("WL", List.of(2627, 2734, 3276));
+        MARKS.put("WS", List.of(2867, 3119, 3238));
     }
 
     public _060_GoodWorksReward() {
         super(false);
         addStartNpc(Daeger);
-        addTalkId(Helvetia,Black_Marketeer_of_Mammon,Mark);
+        addTalkId(Helvetia, Black_Marketeer_of_Mammon, Mark);
         addKillId(Pursuer);
-        addQuestItem(Bloody_Cloth_Fragment,Helvetias_Antidote);
+        addQuestItem(Bloody_Cloth_Fragment, Helvetias_Antidote);
     }
 
     private boolean IsPursuerSpawned() {
@@ -233,7 +108,7 @@ public final class _060_GoodWorksReward extends Quest {
             st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("32487-02.htm".equalsIgnoreCase(event) && cond == 1 && !IsPursuerSpawned()) {
-            NpcInstance n = st.addSpawn(Pursuer, Location.of(72590, 148100, -3320),0, 1800000);
+            NpcInstance n = st.addSpawn(Pursuer, Location.of(72590, 148100, -3320), 0, 1800000);
             Last_Spawned_Pursuer = n.getStoredId();
             n.setRunning();
             n.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, st.player, 100000);
@@ -242,7 +117,7 @@ public final class _060_GoodWorksReward extends Quest {
             st.setCond(4);
             st.playSound(SOUND_MIDDLE);
         } else if ("30081-03.htm".equalsIgnoreCase(event) && cond == 4) {
-            if (st.getQuestItemsCount(Bloody_Cloth_Fragment) < 1)
+            if (!st.haveQuestItem(Bloody_Cloth_Fragment))
                 return "30081-03a.htm";
             st.takeItems(Bloody_Cloth_Fragment);
             st.setCond(5);
@@ -261,7 +136,7 @@ public final class _060_GoodWorksReward extends Quest {
             st.setCond(7);
             st.playSound(SOUND_MIDDLE);
         } else if ("32487-06.htm".equalsIgnoreCase(event) && cond == 7) {
-            if (st.getQuestItemsCount(Helvetias_Antidote) < 1)
+            if (!st.haveQuestItem(Helvetias_Antidote))
                 return "32487-06a.htm";
             st.takeItems(Helvetias_Antidote);
             st.setCond(8);
@@ -273,22 +148,22 @@ public final class _060_GoodWorksReward extends Quest {
             if (profs.containsKey(st.player.getClassId().id))
                 return Mammon_dialog.sprintf(profs.get(st.player.getClassId().id));
         } else if ("31092-05.htm".equalsIgnoreCase(event) && cond == 10) {
-            st.giveItems(ADENA_ID, 3000000, false);
+            st.giveItems(ADENA_ID, 3000000);
             st.playSound(SOUND_FINISH);
             st.finish();
         } else if (event.startsWith("marks-") && cond == 10) {
             String ocup = event.replaceAll("marks-", "");
-            int[] _marks = marks.get(ocup);
-            if (_marks == null)
+            List<Integer> marks = MARKS.get(ocup);
+            if (marks == null)
                 return "Error id: " + ocup;
             int return_adena = 0;
-            for (int mark : _marks)
-                if (st.getQuestItemsCount(mark) > 0)
+            for (int mark : marks)
+                if (st.haveQuestItem(mark) )
                     return_adena += 1000000;
                 else
                     st.giveItems(mark);
             if (return_adena > 0)
-                st.giveItems(ADENA_ID, return_adena, false);
+                st.giveItems(ADENA_ID, return_adena);
             st.playSound(SOUND_FINISH);
             st.finish();
             return "31092-05.htm";
@@ -368,13 +243,13 @@ public final class _060_GoodWorksReward extends Quest {
         Last_Spawned_Pursuer = 0;
         if (qs.getState() == STARTED && qs.getCond() == 1) {
             if (Rnd.chance(50)) {
-                Functions.npcSay(npc, diePursuer_return);
-                return;
+                Functions.npcSay(npc, "You are strong. This was a mistake.");
+                qs.setCond(2);
+                qs.giveItems(Bloody_Cloth_Fragment);
+                qs.playSound(SOUND_MIDDLE);
+            } else {
+                Functions.npcSay(npc, "You have good luck. I shall return.");
             }
-            Functions.npcSay(npc, diePursuer);
-            qs.setCond(2);
-            qs.giveItems(Bloody_Cloth_Fragment);
-            qs.playSound(SOUND_MIDDLE);
         }
     }
 }

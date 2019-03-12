@@ -63,7 +63,7 @@ public final class _450_GraveRobberMemberRescue extends Quest {
                     htmltext = "32650-06.htm";
             } else if (cond == 2 && st.getQuestItemsCount(EVIDENCE_OF_MIGRATION) == 10) {
                 htmltext = "32650-08.htm";
-                st.giveItems(ADENA_ID, 65000);
+                st.giveAdena( 65000);
                 st.takeItems(EVIDENCE_OF_MIGRATION);
                 st.exitCurrentQuest();
                 st.playSound(SOUND_FINISH);

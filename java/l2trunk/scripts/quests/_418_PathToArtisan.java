@@ -96,15 +96,13 @@ public final class _418_PathToArtisan extends Quest {
             st.setCond(7);
             st.start();
         } else if ("blacksmith_kluto_q0418_10.htm".equalsIgnoreCase(event) || "blacksmith_kluto_q0418_12.htm".equalsIgnoreCase(event)) {
-            st.takeItems(PassCertificate1st);
-            st.takeItems(PassCertificate2nd);
-            st.takeItems(SecretBox);
+            st.takeAllItems(PassCertificate1st,PassCertificate2nd,SecretBox);
             if (st.player.getClassId().occupation() == 0) {
                 st.giveItems(FinalPassCertificate);
                 if (!st.player.isVarSet("prof1")) {
                     st.player.setVar("prof1");
                     st.addExpAndSp(228064, 16455);
-                    st.giveItems(ADENA_ID, 81900);
+                    st.giveAdena(81900);
                 }
             }
             st.playSound(SOUND_FINISH);
@@ -137,9 +135,7 @@ public final class _418_PathToArtisan extends Quest {
             } else if (cond == 1)
                 htmltext = "blacksmith_silvery_q0418_07.htm";
             else if (cond == 2) {
-                st.takeItems(BoogleRatmanTooth);
-                st.takeItems(BoogleRatmanLeadersTooth);
-                st.takeItems(SilverasRing);
+                st.takeAllItems(BoogleRatmanTooth,BoogleRatmanLeadersTooth,SilverasRing);
                 st.giveItems(PassCertificate1st);
                 htmltext = "blacksmith_silvery_q0418_08.htm";
                 st.setCond(3);

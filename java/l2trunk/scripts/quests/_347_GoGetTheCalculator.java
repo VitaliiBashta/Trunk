@@ -74,7 +74,7 @@ public final class _347_GoGetTheCalculator extends Quest {
                 htmltext = BRUNON + "-05.htm";
                 break;
             case "30526_2":
-                st.giveItems(ADENA_ID, 1000, true);
+                st.giveAdena( 1000);
                 st.takeItems(CALCULATOR_Q);
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest();
@@ -91,9 +91,9 @@ public final class _347_GoGetTheCalculator extends Quest {
         String htmltext = "noquest";
         if (npcId == BRUNON && cond == 0 && st.player.getLevel() >= 12)
             htmltext = BRUNON + "-01.htm";
-        else if (npcId == BRUNON && cond > 0 && st.getQuestItemsCount(CALCULATOR_Q) == 0)
+        else if (npcId == BRUNON && cond > 0 && !st.haveQuestItem(CALCULATOR_Q) )
             htmltext = BRUNON + "-03.htm";
-        else if (npcId == BRUNON && cond == 6 && st.getQuestItemsCount(CALCULATOR_Q) >= 1)
+        else if (npcId == BRUNON && cond == 6 && st.haveQuestItem(CALCULATOR_Q) )
             htmltext = BRUNON + "-04.htm";
         else if (npcId == BALANKI && (cond == 1 || cond == 3))
             htmltext = BALANKI + "-01.htm";
@@ -107,7 +107,7 @@ public final class _347_GoGetTheCalculator extends Quest {
             htmltext = SILVERA + "-02.htm";
         else if (npcId == SILVERA && cond == 5 && st.getQuestItemsCount(GEMSTONE_BEAST_CRYSTAL) >= 10) {
             htmltext = SILVERA + "-03.htm";
-            st.takeItems(GEMSTONE_BEAST_CRYSTAL, 10);
+            st.takeItems(GEMSTONE_BEAST_CRYSTAL);
             st.giveItems(CALCULATOR_Q);
             st.playSound(SOUND_ITEMGET);
             st.setCond(6);

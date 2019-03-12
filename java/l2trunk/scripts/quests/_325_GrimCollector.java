@@ -127,7 +127,7 @@ public final class _325_GrimCollector extends Quest {
     @Override
     public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
-        if (st.getQuestItemsCount(ANATOMY_DIAGRAM) == 0)
+        if (!st.haveQuestItem(ANATOMY_DIAGRAM) )
             return;
         int n = Rnd.get(100);
         if (npcId == 20026) {

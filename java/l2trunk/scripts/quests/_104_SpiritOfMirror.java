@@ -108,7 +108,7 @@ public final class _104_SpiritOfMirror extends Quest {
         if ((cond == 1 || cond == 2) && st.player.getActiveWeaponInstance() != null && st.player.getActiveWeaponInstance().getItemId() == GALLINS_OAK_WAND) {
             ItemInstance weapon = st.player.getActiveWeaponInstance();
             boolean haveAllitems = st.haveAllQuestItems(WAND_SPIRITBOUND1,WAND_SPIRITBOUND2,WAND_SPIRITBOUND3);
-            if (npcId == 27003 && st.getQuestItemsCount(WAND_SPIRITBOUND1) == 0) {
+            if (npcId == 27003 && !st.haveQuestItem(WAND_SPIRITBOUND1)) {
                 if (st.player.getInventory().destroyItem(weapon, 1L, "_104_SpiritOfMirror")) {
                     st.giveItems(WAND_SPIRITBOUND1);
                     st.player.sendPacket(CACHE_SYSMSG_GALLINS_OAK_WAND);

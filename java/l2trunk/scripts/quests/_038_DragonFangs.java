@@ -53,27 +53,27 @@ public final class _038_DragonFangs extends Quest {
             if (cond == 2) {
                 st.setCond(3);
                 st.takeItems(FEATHER_ORNAMENT, 100);
-                st.giveItems(TOOTH_OF_TOTEM, 1);
+                st.giveItems(TOOTH_OF_TOTEM);
                 st.playSound(SOUND_MIDDLE);
             }
         if (event.equals("iris_q0038_0301.htm"))
             if (cond == 3) {
                 st.setCond(4);
-                st.takeItems(TOOTH_OF_TOTEM, 1);
-                st.giveItems(LETTER_OF_IRIS, 1);
+                st.takeItems(TOOTH_OF_TOTEM);
+                st.giveItems(LETTER_OF_IRIS);
                 st.playSound(SOUND_MIDDLE);
             }
         if (event.equals("magister_roh_q0038_0401.htm"))
             if (cond == 4) {
                 st.setCond(5);
-                st.takeItems(LETTER_OF_IRIS, 1);
-                st.giveItems(LETTER_OF_ROHMER, 1);
+                st.takeItems(LETTER_OF_IRIS);
+                st.giveItems(LETTER_OF_ROHMER);
                 st.playSound(SOUND_MIDDLE);
             }
         if (event.equals("iris_q0038_0501.htm"))
             if (cond == 5) {
                 st.setCond(6);
-                st.takeItems(LETTER_OF_ROHMER, 1);
+                st.takeItems(LETTER_OF_ROHMER);
                 st.playSound(SOUND_MIDDLE);
             }
         if (event.equals("iris_q0038_0601.htm"))
@@ -81,15 +81,15 @@ public final class _038_DragonFangs extends Quest {
                 st.takeItems(TOOTH_OF_DRAGON, 50);
                 int luck = Rnd.get(3);
                 if (luck == 0) {
-                    st.giveItems(BLUE_BUCKSKIN_BOOTS, 1);
+                    st.giveItems(BLUE_BUCKSKIN_BOOTS);
                     st.giveItems(ADENA_ID, 1500);
                 }
                 if (luck == 1) {
-                    st.giveItems(BONE_HELMET, 1);
+                    st.giveItems(BONE_HELMET);
                     st.giveItems(ADENA_ID, 5200);
                 }
                 if (luck == 2) {
-                    st.giveItems(ASSAULT_BOOTS, 1);
+                    st.giveItems(ASSAULT_BOOTS);
                     st.giveItems(ADENA_ID, 1500);
                 }
                 st.addExpAndSp(435117, 23977);

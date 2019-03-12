@@ -22,7 +22,7 @@ public final class _702_ATrapForRevenge extends Quest {
         super(true);
 
         addStartNpc(PLENOS);
-        addTalkId(PLENOS,TENIUS);
+        addTalkId(TENIUS);
         addKillId(DRAK,MUTATED_DRAKE_WING);
         addQuestItem(DRAKES_FLESH);
     }
@@ -44,7 +44,7 @@ public final class _702_ATrapForRevenge extends Quest {
         } else if ("hand_over".equals(event) && cond == 2) {
             int rand = Rnd.get(1, 3);
             htmltext = "tenius_q702_6.htm";
-            st.takeItems(DRAKES_FLESH, -1);
+            st.takeItems(DRAKES_FLESH);
             if (rand == 1)
                 st.giveItems(LEONARD, 3);
             else if (rand == 2)
@@ -65,7 +65,7 @@ public final class _702_ATrapForRevenge extends Quest {
         String htmltext = "noquest";
         int npcId = npc.getNpcId();
         int cond = st.getCond();
-
+        boolean haveQuestItem = st.haveQuestItem(DRAKES_FLESH, 100);
         if (npcId == PLENOS) {
             if (cond == 0) {
                 if (st.player.getLevel() >= 78) {
@@ -83,9 +83,9 @@ public final class _702_ATrapForRevenge extends Quest {
         } else if (npcId == TENIUS)
             if (cond == 1)
                 htmltext = "tenius_q702_1.htm";
-            else if (cond == 2 && st.getQuestItemsCount(DRAKES_FLESH) < 100)
+            else if (cond == 2 && !haveQuestItem)
                 htmltext = "tenius_q702_4.htm";
-            else if (cond == 2 && st.getQuestItemsCount(DRAKES_FLESH) >= 100)
+            else if (cond == 2)
                 htmltext = "tenius_q702_5.htm";
         return htmltext;
     }
@@ -94,8 +94,8 @@ public final class _702_ATrapForRevenge extends Quest {
     public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
-        if (cond == 2 && (npcId == DRAK || npcId == MUTATED_DRAKE_WING) && st.getQuestItemsCount(DRAKES_FLESH) <= 100) {
-            st.giveItems(DRAKES_FLESH);
+        if (cond == 2 && (npcId == DRAK || npcId == MUTATED_DRAKE_WING)) {
+            st.giveItemIfNotHave(DRAKES_FLESH,100);
             st.playSound(SOUND_ITEMGET);
         }
     }

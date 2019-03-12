@@ -67,7 +67,7 @@ public final class _602_ShadowofLight extends Quest {
             int random = Rnd.get(100) + 1;
             for (int[] REWARD : REWARDS)
                 if (REWARD[4] <= random && random <= REWARD[5]) {
-                    st.giveItems(ADENA_ID, REWARD[1], true);
+                    st.giveAdena(REWARD[1]);
                     st.addExpAndSp(REWARD[2], REWARD[3]);
                     if (REWARD[0] != 0)
                         st.giveItems(REWARD[0], 3, true);

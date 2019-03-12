@@ -8,6 +8,7 @@ import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.scripts.bosses.FourSepulchersManager;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
 import static l2trunk.commons.lang.NumberUtils.toInt;
 
@@ -25,8 +26,7 @@ public final class _620_FourGoblets extends Quest {
     private static final int GHOST_CHAMBERLAIN_2 = 31920;
     // ITEMS
     private static final int GRAVE_PASS = 7261;
-    private static final List<Integer> GOBLETS = List.of(
-            7256, 7257, 7258, 7259);
+    private static final List<Integer> GOBLETS = List.of(7256, 7257, 7258, 7259);
     private static final int RELIC = 7254;
     // REWARDS
     private static final int ANTIQUE_BROOCH = 7262;
@@ -43,8 +43,7 @@ public final class _620_FourGoblets extends Quest {
         addQuestItem(Sealed_Box, GRAVE_PASS);
         addQuestItem(GOBLETS);
 
-        for (int id = 18120; id <= 18256; id++)
-            addKillId(id);
+        addKillId(IntStream.rangeClosed(18120, 18256).toArray());
     }
 
     private static String onOpenBoxes(QuestState st, String count) {
@@ -124,7 +123,7 @@ public final class _620_FourGoblets extends Quest {
         }
         // teleport to Pilgrims Temple
         else if (event.equals("17")) {
-            if (st.haveQuestItem(ANTIQUE_BROOCH) )
+            if (st.haveQuestItem(ANTIQUE_BROOCH))
                 st.player.teleToLocation(169590, -90218, -2914);
             else {
                 st.takeItems(GRAVE_PASS, 1);
@@ -148,7 +147,7 @@ public final class _620_FourGoblets extends Quest {
             int id = toInt(event);
             if (RCP_REWARDS.contains(id)) {
                 st.takeItems(RELIC, 1000);
-                st.giveItems(id, 1);
+                st.giveItems(id);
                 return "31454-17.htm";
             }
         }

@@ -28,7 +28,7 @@ public final class _451_LuciensAltar extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("30537-03.htm")) {
+        if ("30537-03.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.start();
             st.giveItems(REPLENISHED_BEAD, 5);
@@ -58,8 +58,8 @@ public final class _451_LuciensAltar extends Quest {
                 htmltext = "30537-04.htm";
             else if (cond == 2) {
                 htmltext = "30537-05.htm";
-                st.giveItems(ADENA_ID, 127690);
-                st.takeItems(DISCHARGED_BEAD, -1);
+                st.giveAdena( 127690);
+                st.takeItems(DISCHARGED_BEAD);
                 st.exitCurrentQuest();
                 st.playSound(SOUND_FINISH);
                 st.player.setVar(name, System.currentTimeMillis());

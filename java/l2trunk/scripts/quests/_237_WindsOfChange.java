@@ -27,34 +27,34 @@ public final class _237_WindsOfChange extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("30899-06.htm")) {
-            st.giveItems(FlauensLetter, 1);
+        if ("30899-06.htm".equalsIgnoreCase(event)) {
+            st.giveItems(FlauensLetter);
             st.setCond(1);
             st.start();
-        } else if (event.equalsIgnoreCase("30969-05.htm"))
+        } else if ("30969-05.htm".equalsIgnoreCase(event))
             st.setCond(2);
-        else if (event.equalsIgnoreCase("30897-03.htm"))
+        else if ("30897-03.htm".equalsIgnoreCase(event))
             st.setCond(3);
-        else if (event.equalsIgnoreCase("30925-03.htm"))
+        else if ("30925-03.htm".equalsIgnoreCase(event))
             st.setCond(4);
-        else if (event.equalsIgnoreCase("30969-09.htm")) {
-            st.giveItems(LetterToHelvetica, 1);
+        else if ("30969-09.htm".equalsIgnoreCase(event)) {
+            st.giveItems(LetterToHelvetica);
             st.setCond(5);
-        } else if (event.equalsIgnoreCase("30969-10.htm")) {
-            st.giveItems(LetterToAthenia, 1);
+        } else if ("30969-10.htm".equalsIgnoreCase(event)) {
+            st.giveItems(LetterToAthenia);
             st.setCond(6);
-        } else if (event.equalsIgnoreCase("32641-02.htm")) {
-            st.takeItems(LetterToHelvetica, -1);
-            st.giveItems(ADENA_ID, 213876);
+        } else if ("32641-02.htm".equalsIgnoreCase(event)) {
+            st.takeItems(LetterToHelvetica);
+            st.giveAdena(213876);
             st.addExpAndSp(892773, 60012);
-            st.giveItems(VicinityOfTheFieldOfSilenceResearchCenter, 1);
+            st.giveItems(VicinityOfTheFieldOfSilenceResearchCenter);
             st.complete();
             st.finish();
-        } else if (event.equalsIgnoreCase("32643-02.htm")) {
-            st.takeItems(LetterToAthenia, -1);
-            st.giveItems(ADENA_ID, 213876);
+        } else if ("32643-02.htm".equalsIgnoreCase(event)) {
+            st.takeItems(LetterToAthenia);
+            st.giveAdena( 213876);
             st.addExpAndSp(892773, 60012);
-            st.giveItems(CertificateOfSupport, 1);
+            st.giveItems(CertificateOfSupport);
             st.complete();
             st.finish();
         }

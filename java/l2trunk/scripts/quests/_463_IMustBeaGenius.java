@@ -22,7 +22,6 @@ public final class _463_IMustBeaGenius extends Quest {
         super(false);
 
         addStartNpc(GUTENHAGEN);
-        addTalkId(GUTENHAGEN);
         addQuestItem(CORPSE_LOG, COLLECTION);
         addKillId(MOBS);
     }
@@ -114,8 +113,8 @@ public final class _463_IMustBeaGenius extends Quest {
                     if (st.getCond() == 1)
                         htmltext = "collecter_gutenhagen_q0463_06.htm";
                     else if (st.getCond() == 2) {
-                        if (st.getQuestItemsCount(COLLECTION) > 0) {
-                            st.takeItems(COLLECTION, -1);
+                        if (st.haveQuestItem(COLLECTION) ) {
+                            st.takeItems(COLLECTION);
                             htmltext = "collecter_gutenhagen_q0463_08.htm";
                         } else
                             htmltext = "collecter_gutenhagen_q0463_08a.htm";
@@ -134,11 +133,11 @@ public final class _463_IMustBeaGenius extends Quest {
             if (_number > 0) {
                 st.giveItems(CORPSE_LOG, _number);
                 st.playSound(SOUND_ITEMGET);
-                Functions.npcSay(npc, NpcString.ATT__ATTACK__S1__RO__ROGUE__S2, st.player.getName() + String.valueOf(_number));
+                Functions.npcSay(npc, NpcString.ATT__ATTACK__S1__RO__ROGUE__S2, st.player.getName() + _number);
             } else if (_number < 0 && ((st.getQuestItemsCount(CORPSE_LOG) + _number) > 0)) {
                 st.takeItems(CORPSE_LOG, Math.abs(_number));
                 st.playSound(SOUND_ITEMGET);
-                Functions.npcSay(npc, NpcString.ATT__ATTACK__S1__RO__ROGUE__S2, st.player.getName()+ String.valueOf(_number));
+                Functions.npcSay(npc, NpcString.ATT__ATTACK__S1__RO__ROGUE__S2, st.player.getName()+ _number);
             }
 
             if (st.getQuestItemsCount(CORPSE_LOG) >= _day_number) {

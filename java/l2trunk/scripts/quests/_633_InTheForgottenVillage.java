@@ -76,7 +76,7 @@ public final class _633_InTheForgottenVillage extends Quest {
             if (st.getCond() == 2)
                 if (st.haveQuestItem(RIB_BONE, 200)) {
                     st.takeItems(RIB_BONE);
-                    st.giveItems(ADENA_ID, 25000);
+                    st.giveAdena( 25000);
                     st.addExpAndSp(305235, 0);
                     st.playSound(SOUND_FINISH);
                     st.setCond(1);

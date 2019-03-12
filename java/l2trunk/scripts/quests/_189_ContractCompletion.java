@@ -23,19 +23,19 @@ public final class _189_ContractCompletion extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("blueprint_seller_luka_q0189_03.htm")) {
+        if ("blueprint_seller_luka_q0189_03.htm".equalsIgnoreCase(event)) {
             st.playSound(SOUND_ACCEPT);
             st.setCond(1);
             st.giveItems(Metal);
-        } else if (event.equalsIgnoreCase("researcher_lorain_q0189_02.htm")) {
+        } else if ("researcher_lorain_q0189_02.htm".equalsIgnoreCase(event)) {
             st.playSound(SOUND_MIDDLE);
             st.setCond(2);
             st.takeItems(Metal);
-        } else if (event.equalsIgnoreCase("shegfield_q0189_03.htm")) {
+        } else if ("shegfield_q0189_03.htm".equalsIgnoreCase(event)) {
             st.setCond(3);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("head_blacksmith_kusto_q0189_02.htm")) {
-            st.giveItems(ADENA_ID, 121527);
+        } else if ("head_blacksmith_kusto_q0189_02.htm".equalsIgnoreCase(event)) {
+            st.giveAdena(121527);
             st.addExpAndSp(309467, 20614);
             st.finish();
             st.playSound(SOUND_FINISH);

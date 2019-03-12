@@ -78,12 +78,12 @@ public final class _601_WatchingEyes extends Quest {
                     break;
                 i++;
             }
-            st.giveItems(ADENA_ID, adena, true);
+            st.giveAdena(adena);
             if (item != 0) {
                 st.giveItems(item, 5, true);
                 st.addExpAndSp(120000, 10000);
             }
-            st.takeItems(PROOF_OF_AVENGER, -1);
+            st.takeItems(PROOF_OF_AVENGER);
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest();
         }
@@ -98,7 +98,7 @@ public final class _601_WatchingEyes extends Quest {
             htmltext = "eye_of_argos_q0601_0101.htm";
         else if (cond == 1)
             htmltext = "eye_of_argos_q0601_0106.htm";
-        else if (cond == 2 && st.getQuestItemsCount(PROOF_OF_AVENGER) == 100)
+        else if (cond == 2 && st.haveQuestItem(PROOF_OF_AVENGER, 100))
             htmltext = "eye_of_argos_q0601_0105.htm";
         else {
             htmltext = "eye_of_argos_q0601_0202.htm";

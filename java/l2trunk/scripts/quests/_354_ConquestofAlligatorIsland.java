@@ -64,21 +64,21 @@ public final class _354_ConquestofAlligatorIsland extends Quest {
         } else if ("30895-05.htm".equalsIgnoreCase(event)) {
             if (amount > 0)
                 if (amount > 99) {
-                    st.giveItems(ADENA_ID, amount * 300);
+                    st.giveAdena( amount * 300);
                     st.takeItems(ALLIGATOR_TOOTH);
                     st.playSound(SOUND_ITEMGET);
                     int random = Rnd.get(RANDOM_REWARDS_IDS.keySet());
                     st.giveItems(random, RANDOM_REWARDS_IDS.get(random));
                     htmltext = "30895-05b.htm";
                 } else {
-                    st.giveItems(ADENA_ID, amount * 100);
+                    st.giveAdena( amount * 100);
                     st.takeItems(ALLIGATOR_TOOTH);
                     st.playSound(SOUND_ITEMGET);
                     htmltext = "30895-05a.htm";
                 }
         } else if ("30895-08.htm".equalsIgnoreCase(event)) {
-            st.giveItems(PIRATES_TREASURE_MAP, 1);
-            st.takeItems(TORN_MAP_FRAGMENT, -1);
+            st.giveItems(PIRATES_TREASURE_MAP);
+            st.takeItems(TORN_MAP_FRAGMENT);
             st.playSound(SOUND_ITEMGET);
         } else if ("30895-09.htm".equalsIgnoreCase(event)) {
             st.exitCurrentQuest();

@@ -39,7 +39,7 @@ public final class _688_DefeatTheElrokianRaiders extends Quest {
         } else if ("reply_5".equalsIgnoreCase(event)) {
             if (count >= 10) {
                 st.takeItems(q_necklace_of_storming_party);
-                st.giveItems(ADENA_ID, count * 3000);
+                st.giveAdena(count * 3000);
                 htmltext = "dindin_q0688_07.htm";
             }
         } else if ("reply_9".equalsIgnoreCase(event)) {
@@ -47,19 +47,19 @@ public final class _688_DefeatTheElrokianRaiders extends Quest {
                 htmltext = "dindin_q0688_11.htm";
             else if (Rnd.get(1000) < 500) {
                 st.takeItems(q_necklace_of_storming_party, 100);
-                st.giveItems(ADENA_ID, 450000);
+                st.giveAdena(450000);
                 htmltext = "dindin_q0688_12.htm";
             } else {
                 st.takeItems(q_necklace_of_storming_party, 100);
-                st.giveItems(ADENA_ID, 150000);
+                st.giveAdena( 150000);
                 htmltext = "dindin_q0688_13.htm";
             }
-        } else if (event.equalsIgnoreCase("reply_8"))
+        } else if (event.equalsIgnoreCase("reply_8")) {
             htmltext = "dindin_q0688_10.htm";
-        else if (event.equalsIgnoreCase("reply_7")) {
+        } else if ("reply_7".equalsIgnoreCase(event)) {
             if (count >= 1) {
                 st.takeItems(q_necklace_of_storming_party);
-                st.giveItems(ADENA_ID, count * 3000);
+                st.giveAdena( count * 3000);
             }
             htmltext = "dindin_q0688_09.htm";
             st.playSound(SOUND_FINISH);

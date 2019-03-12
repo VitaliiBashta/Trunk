@@ -15,9 +15,7 @@ public final class _259_RanchersPlea extends Quest {
         super(false);
         addStartNpc(30497);
 
-        addKillId(20103,
-                20106,
-                20108);
+        addKillId(20103, 20106, 20108);
 
         addQuestItem(GIANT_SPIDER_SKIN_ID);
     }
@@ -47,17 +45,17 @@ public final class _259_RanchersPlea extends Quest {
                 break;
             case "30405_2":
                 htmltext = "marius_q0259_04.htm";
-                st.giveItems(HEALING_POTION_ID, 2, false);
+                st.giveItems(HEALING_POTION_ID, 2);
                 st.takeItems(GIANT_SPIDER_SKIN_ID, 10);
                 break;
             case "30405_3":
                 htmltext = "marius_q0259_05.htm";
-                st.giveItems(WOODEN_ARROW_ID, 50, false);
+                st.giveItems(WOODEN_ARROW_ID, 50);
                 st.takeItems(GIANT_SPIDER_SKIN_ID, 10);
                 break;
             case "30405_8":
                 htmltext = "marius_q0259_05a.htm";
-                st.giveItems(SSNG_ID, 60, false);
+                st.giveItems(SSNG_ID, 60);
                 st.takeItems(GIANT_SPIDER_SKIN_ID, 10);
                 break;
             case "30405_8a":
@@ -65,16 +63,16 @@ public final class _259_RanchersPlea extends Quest {
                 break;
             case "30405_9":
                 htmltext = "marius_q0259_05c.htm";
-                st.giveItems(SPSSNG_ID, 30, false);
+                st.giveItems(SPSSNG_ID, 30);
                 st.takeItems(GIANT_SPIDER_SKIN_ID, 10);
                 break;
             case "30405_9a":
                 htmltext = "marius_q0259_05d.htm";
                 break;
             case "30405_4":
-                if (st.getQuestItemsCount(GIANT_SPIDER_SKIN_ID) >= 10)
+                if (st.haveQuestItem(GIANT_SPIDER_SKIN_ID, 10))
                     htmltext = "marius_q0259_06.htm";
-                else if (st.getQuestItemsCount(GIANT_SPIDER_SKIN_ID) < 10)
+                else
                     htmltext = "marius_q0259_07.htm";
                 break;
         }
@@ -99,10 +97,10 @@ public final class _259_RanchersPlea extends Quest {
             }
         } else if (npcId == 30497 && st.getCond() == 1 && st.getQuestItemsCount(GIANT_SPIDER_SKIN_ID) < 1)
             htmltext = "edmond_q0259_04.htm";
-        else if (npcId == 30497 && st.getCond() == 1 && st.getQuestItemsCount(GIANT_SPIDER_SKIN_ID) >= 1) {
+        else if (npcId == 30497 && st.getCond() == 1 && st.haveQuestItem(GIANT_SPIDER_SKIN_ID) ) {
             htmltext = "edmond_q0259_05.htm";
-            st.giveItems(ADENA_ID, st.getQuestItemsCount(GIANT_SPIDER_SKIN_ID) * 25, false);
-            st.takeItems(GIANT_SPIDER_SKIN_ID, st.getQuestItemsCount(GIANT_SPIDER_SKIN_ID));
+            st.giveAdena(st.getQuestItemsCount(GIANT_SPIDER_SKIN_ID) * 25);
+            st.takeItems(GIANT_SPIDER_SKIN_ID);
         } else if (npcId == 30405 && st.getCond() == 1 && st.getQuestItemsCount(GIANT_SPIDER_SKIN_ID) < 10)
             htmltext = "marius_q0259_01.htm";
         else if (npcId == 30405 && st.getCond() == 1 && st.getQuestItemsCount(GIANT_SPIDER_SKIN_ID) >= 10)

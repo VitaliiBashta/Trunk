@@ -23,8 +23,8 @@ public final class DominionSiegeRunnerEvent extends GlobalEvent {
     private static final String REGISTRATION = "registration";
     private static final String BATTLEFIELD = "battlefield";
     private final BattlefieldChatTask _battlefieldChatTask = new BattlefieldChatTask();
-    private final Map<ClassId, Quest> _classQuests = new HashMap<>();
-    private final List<Quest> _breakQuests = new ArrayList<>();
+    private final Map<ClassId, Quest> classQuests = new HashMap<>();
+    private final List<Quest> breakQuests = new ArrayList<>();
     private final List<Dominion> registeredDominions = new ArrayList<>(9);
     private boolean _battlefieldChatActive;
     private Future<?> _battlefieldChatFuture;
@@ -217,19 +217,19 @@ public final class DominionSiegeRunnerEvent extends GlobalEvent {
     }
 
     public void addClassQuest(ClassId c, Quest quest) {
-        _classQuests.put(c, quest);
+        classQuests.put(c, quest);
     }
 
-    public Quest getClassQuest(ClassId c) {
-        return _classQuests.get(c);
+    Quest getClassQuest(ClassId c) {
+        return classQuests.get(c);
     }
 
     public void addBreakQuest(Quest q) {
-        _breakQuests.add(q);
+        breakQuests.add(q);
     }
 
-    public List<Quest> getBreakQuests() {
-        return _breakQuests;
+    List<Quest> getBreakQuests() {
+        return breakQuests;
     }
 
     //========================================================================================================================================================================

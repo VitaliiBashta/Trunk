@@ -117,26 +117,20 @@ public final class _330_AdeptOfTaste extends Quest {
             st.rollAndGive(Brown_Marsh_Moss, 1, 1, 20, 100);
     }
 
-    private static void Root2Sap(QuestState st, int sap_id) {
-        st.takeItems(Sonias_Botany_Book);
-        st.takeItems(White_Mandragora_Root);
-        st.takeItems(Red_Mandragora_Root);
+    private static void root2Sap(QuestState st, int sap_id) {
+        st.takeAllItems(Sonias_Botany_Book,White_Mandragora_Root,Red_Mandragora_Root);
         st.playSound(SOUND_MIDDLE);
         st.giveItems(sap_id);
     }
 
     private static void Moss2Bundle(QuestState st, int bundle_id) {
-        st.takeItems(Glyvkas_Botany_Book);
-        st.takeItems(Brown_Marsh_Moss);
-        st.takeItems(Green_Marsh_Moss);
+        st.takeAllItems(Glyvkas_Botany_Book,Brown_Marsh_Moss,Green_Marsh_Moss);
         st.playSound(SOUND_MIDDLE);
         st.giveItems(bundle_id);
     }
 
     private static void Nectar2Honey(QuestState st, int honey_id) {
-        st.takeItems(Jacobs_Insect_Book);
-        st.takeItems(Nectar);
-        st.takeItems(Royal_Jelly);
+        st.takeAllItems(Jacobs_Insect_Book,Nectar,Royal_Jelly);
         st.playSound(SOUND_MIDDLE);
         st.giveItems(honey_id);
     }
@@ -152,7 +146,7 @@ public final class _330_AdeptOfTaste extends Quest {
         } else if ("30062_05.htm".equalsIgnoreCase(event) && state == STARTED) {
             if (st.getQuestItemsCount(White_Mandragora_Root) + st.getQuestItemsCount(Red_Mandragora_Root) < 40)
                 return null;
-            Root2Sap(st, Red_Mandragora_Sap);
+            root2Sap(st, Red_Mandragora_Sap);
         } else if ("30067_05.htm".equalsIgnoreCase(event) && state == STARTED) {
             if (st.getQuestItemsCount(Brown_Marsh_Moss) + st.getQuestItemsCount(Green_Marsh_Moss) < 20)
                 return null;
@@ -203,7 +197,7 @@ public final class _330_AdeptOfTaste extends Quest {
 
                 spec_ingredients_count += Rnd.get(0, 1);
                 st.playSound(spec_ingredients_count == 4 ? SOUND_JACKPOT : SOUND_MIDDLE);
-                st.giveItems(Jonass_Steak_Dishes.get((int) spec_ingredients_count), 1);
+                st.giveItems(Jonass_Steak_Dishes.get((int) spec_ingredients_count));
                 spec_ingredients_count++;
                 return "30469_05t" + spec_ingredients_count + ".htm";
             }
@@ -217,7 +211,7 @@ public final class _330_AdeptOfTaste extends Quest {
                     for (int i = Miriens_Reviews.size(); i > 0; i--)
                         if (st.getQuestItemsCount(Miriens_Reviews.get(i - 1)) > 0) {
                             st.takeItems(Miriens_Reviews);
-                            st.giveItems(ADENA_ID, adena_rewards[i - 1]);
+                            st.giveAdena(adena_rewards[i - 1]);
                             if (rewards.get(i - 1) > 0)
                                 st.giveItems(rewards.get(i - 1));
                             st.playSound(SOUND_FINISH);
@@ -250,18 +244,18 @@ public final class _330_AdeptOfTaste extends Quest {
             boolean has_sap = st.getQuestItemsCount(Red_Mandragora_Sap) > 0 || st.getQuestItemsCount(White_Mandragora_Sap) > 0;
             if (st.getQuestItemsCount(Sonias_Botany_Book) > 0) {
                 if (!has_sap) {
-                    long Root_count = st.getQuestItemsCount(White_Mandragora_Root);
-                    if (Root_count >= 40) {
-                        Root2Sap(st, White_Mandragora_Sap);
+                    long rootCount = st.getQuestItemsCount(White_Mandragora_Root);
+                    if (rootCount >= 40) {
+                        root2Sap(st, White_Mandragora_Sap);
                         return "30062_06.htm";
                     }
-                    Root_count += st.getQuestItemsCount(Red_Mandragora_Root);
-                    return Root_count < 40 ? "30062_02.htm" : "30062_03.htm";
+                    rootCount += st.getQuestItemsCount(Red_Mandragora_Root);
+                    return rootCount < 40 ? "30062_02.htm" : "30062_03.htm";
                 }
             } else if (has_sap)
                 return "30062_07.htm";
             else {
-                st.giveItems(Sonias_Botany_Book, 1);
+                st.giveItems(Sonias_Botany_Book);
                 return "30062_01.htm";
             }
         }

@@ -173,7 +173,7 @@ public final class _378_MagnificentFeast extends Quest {
                 st.takeItems(Ritrons_Dessert_Recipe, 1);
                 st.giveItems(reward[0], reward[1]);
                 if (reward[2] > 0)
-                    st.giveItems(ADENA_ID, reward[2]);
+                    st.giveAdena(reward[2]);
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest();
             } else

@@ -36,21 +36,21 @@ public final class _357_WarehouseKeepersAmbition extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("warehouse_keeper_silva_q0357_04.htm")) {
+        if ("warehouse_keeper_silva_q0357_04.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.start();
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("warehouse_keeper_silva_q0357_08.htm")) {
+        } else if ("warehouse_keeper_silva_q0357_08.htm".equalsIgnoreCase(event)) {
             long count = st.getQuestItemsCount(JADE_CRYSTAL);
             if (count > 0) {
                 long reward = count * REWARD1;
                 if (count >= 100)
-                    reward = reward + REWARD2;
+                    reward +=  REWARD2;
                 st.takeItems(JADE_CRYSTAL);
-                st.giveItems(ADENA_ID, reward);
+                st.giveAdena( reward);
             } else
                 htmltext = "warehouse_keeper_silva_q0357_06.htm";
-        } else if (event.equalsIgnoreCase("warehouse_keeper_silva_q0357_11.htm")) {
+        } else if ("warehouse_keeper_silva_q0357_11.htm".equalsIgnoreCase(event)) {
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest();
         }

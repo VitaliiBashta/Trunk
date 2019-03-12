@@ -107,7 +107,7 @@ public final class _350_EnhanceYourWeapon extends Quest {
     private void calcAbsorb(List<PlayerResult> players, MonsterInstance npc, AbsorbInfo info) {
         int memberSize;
         List<PlayerResult> targets;
-        switch (info.getAbsorbType()) {
+        switch (info.absorbType) {
             case LAST_HIT:
                 targets = List.of(players.get(0));
                 break;
@@ -142,7 +142,7 @@ public final class _350_EnhanceYourWeapon extends Quest {
             if (target == null || !(target.getMessage() == null || target.getMessage() == SystemMsg.THE_SOUL_CRYSTAL_IS_REFUSING_TO_ABSORB_THE_SOUL))
                 continue;
             Player targetPlayer = target.player;
-            if (info.isSkill() && !npc.isAbsorbed(targetPlayer))
+            if (info.isSkill && !npc.isAbsorbed(targetPlayer))
                 continue;
             if (targetPlayer.getQuestState(_350_EnhanceYourWeapon.class) == null)
                 continue;
@@ -175,11 +175,11 @@ public final class _350_EnhanceYourWeapon extends Quest {
             }
 
             int nextItemId = 0;
-            if (info.getCursedChance() > 0 && soulCrystal.getCursedNextItemId() > 0)
-                nextItemId = Rnd.chance(info.getCursedChance()) ? soulCrystal.getCursedNextItemId() : 0;
+            if (info.cursedChance > 0 && soulCrystal.getCursedNextItemId() > 0)
+                nextItemId = Rnd.chance(info.cursedChance) ? soulCrystal.getCursedNextItemId() : 0;
 
             if (nextItemId == 0)
-                nextItemId = Rnd.chance(info.getChance()) ? soulCrystal.getNextItemId() : 0;
+                nextItemId = Rnd.chance(info.chance) ? soulCrystal.getNextItemId() : 0;
 
             if (nextItemId == 0) {
                 target.setMessage(SystemMsg.THE_SOUL_CRYSTAL_WAS_NOT_ABLE_TO_ABSORB_THE_SOUL);

@@ -28,19 +28,19 @@ public final class _028_ChestCaughtWithABaitOfIcyAir extends Quest {
                 st.playSound(SOUND_ACCEPT);
                 break;
             case "fisher_ofulle_q0028_0201.htm":
-                if (st.getQuestItemsCount(BigYellowTreasureChest) > 0) {
+                if (st.haveQuestItem(BigYellowTreasureChest)) {
                     st.setCond(2);
                     st.takeItems(BigYellowTreasureChest, 1);
-                    st.giveItems(KikisLetter, 1);
+                    st.giveItems(KikisLetter);
                     st.playSound(SOUND_MIDDLE);
                 } else
                     htmltext = "fisher_ofulle_q0028_0202.htm";
                 break;
             case "mineral_trader_kiki_q0028_0301.htm":
-                if (st.getQuestItemsCount(KikisLetter) == 1) {
+                if (st.haveQuestItem(KikisLetter) ) {
                     htmltext = "mineral_trader_kiki_q0028_0301.htm";
-                    st.takeItems(KikisLetter, -1);
-                    st.giveItems(ElvenRing, 1);
+                    st.takeItems(KikisLetter);
+                    st.giveItems(ElvenRing);
                     st.playSound(SOUND_FINISH);
                     st.finish();
                 } else {
@@ -79,7 +79,7 @@ public final class _028_ChestCaughtWithABaitOfIcyAir extends Quest {
                 }
             } else if (cond == 1) {
                 htmltext = "fisher_ofulle_q0028_0105.htm";
-                if (st.getQuestItemsCount(BigYellowTreasureChest) == 0)
+                if (!st.haveQuestItem(BigYellowTreasureChest))
                     htmltext = "fisher_ofulle_q0028_0106.htm";
             } else if (cond == 2)
                 htmltext = "fisher_ofulle_q0028_0203.htm";

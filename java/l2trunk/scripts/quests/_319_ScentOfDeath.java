@@ -79,7 +79,7 @@ public final class _319_ScentOfDeath extends Quest {
             else if (cond == 2 && st.getQuestItemsCount(ZombieSkin) >= 5) {
                 htmltext = "mina_q0319_06.htm";
                 st.takeItems(ZombieSkin);
-                st.giveItems(ADENA_ID, 3350);
+                st.giveAdena(3350);
                 st.giveItems(HealingPotion);
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest();

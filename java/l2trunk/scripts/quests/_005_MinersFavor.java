@@ -41,7 +41,7 @@ public final class _005_MinersFavor extends Quest {
         } else if ("blacksmith_bronp_q0005_02.htm".equalsIgnoreCase(event)) {
             st.takeItems(BOLTERS_SMELLY_SOCKS);
             st.giveItems(MINERS_PICK);
-            if (st.getQuestItemsCount(BOLTERS_LIST) > 0 && st.getQuestItemsCount(MINING_BOOTS) + st.getQuestItemsCount(MINERS_PICK) + st.getQuestItemsCount(BOOMBOOM_POWDER) + st.getQuestItemsCount(REDSTONE_BEER) == 4) {
+            if (st.haveAllQuestItems(BOLTERS_LIST,MINING_BOOTS,MINERS_PICK,BOOMBOOM_POWDER,REDSTONE_BEER)) {
                 st.setCond(2);
                 st.playSound(SOUND_MIDDLE);
             } else
@@ -78,16 +78,16 @@ public final class _005_MinersFavor extends Quest {
                 st.playSound(SOUND_FINISH);
                 st.finish();
             }
-        } else if (cond == 1 && st.getQuestItemsCount(BOLTERS_LIST) > 0) {
+        } else if (cond == 1 && st.haveQuestItem(BOLTERS_LIST)) {
             if (npcId == SHARI) {
-                if (st.getQuestItemsCount(BOOMBOOM_POWDER) == 0) {
+                if (!st.haveQuestItem(BOOMBOOM_POWDER)) {
                     htmltext = "trader_chali_q0005_01.htm";
                     st.giveItems(BOOMBOOM_POWDER);
                     st.playSound(SOUND_ITEMGET);
                 } else
                     htmltext = "trader_chali_q0005_02.htm";
             } else if (npcId == GARITA) {
-                if (st.getQuestItemsCount(MINING_BOOTS) == 0) {
+                if (!st.haveQuestItem(MINING_BOOTS)) {
                     htmltext = "trader_garita_q0005_01.htm";
                     st.giveItems(MINING_BOOTS, 1, false);
                     st.playSound(SOUND_ITEMGET);

@@ -53,15 +53,15 @@ public final class _638_SeekersOfTheHolyGrail extends Quest {
 
     private String tryRevard(QuestState st) {
         boolean ok = false;
-        while (st.getQuestItemsCount(TOTEM) >= 2000) {
+        while (st.haveQuestItem(TOTEM, 2000)) {
             st.takeItems(TOTEM, 2000);
             int rnd = Rnd.get(100);
             if (rnd < 40)
-                st.giveItems(ADENA_ID, 10728000, false);
+                st.giveAdena(10728000);
             else if (rnd < 85)
-                st.giveItems(EAS, 3, false);
+                st.giveItems(EAS, 3);
             else
-                st.giveItems(EWS, 3, false);
+                st.giveItems(EWS, 3);
             ok = true;
         }
         if (ok) {

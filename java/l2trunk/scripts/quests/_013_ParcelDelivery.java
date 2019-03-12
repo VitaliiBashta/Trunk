@@ -12,7 +12,7 @@ public final class _013_ParcelDelivery extends Quest {
 
         addStartNpc(31274);
 
-        addTalkId(31274,31539);
+        addTalkId(31539);
 
         addQuestItem(PACKAGE);
     }

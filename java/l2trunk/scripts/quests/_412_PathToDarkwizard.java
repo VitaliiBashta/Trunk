@@ -117,7 +117,7 @@ public final class _412_PathToDarkwizard extends Quest {
                     if (!st.player.isVarSet("prof1")) {
                         st.player.setVar("prof1");
                         st.addExpAndSp(228064, 16455);
-                        st.giveItems(ADENA_ID, 81900);
+                        st.giveAdena(81900);
                     }
                 }
                 st.exitCurrentQuest();

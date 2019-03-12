@@ -11,14 +11,13 @@ public final class _297_GateKeepersFavor extends Quest {
     public _297_GateKeepersFavor() {
         super(false);
         addStartNpc(30540);
-        addTalkId(30540);
         addKillId(20521);
         addQuestItem(STARSTONE);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("gatekeeper_wirphy_q0297_03.htm")) {
+        if ("gatekeeper_wirphy_q0297_03.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.start();
             st.playSound(SOUND_ACCEPT);
@@ -31,17 +30,18 @@ public final class _297_GateKeepersFavor extends Quest {
         String htmltext = "noquest";
         int npcId = npc.getNpcId();
         int cond = st.getCond();
+        boolean haveQuestItem = st.haveQuestItem(STARSTONE, 20);
         if (npcId == 30540)
             if (cond == 0) {
                 if (st.player.getLevel() >= 15)
                     htmltext = "gatekeeper_wirphy_q0297_02.htm";
                 else
                     htmltext = "gatekeeper_wirphy_q0297_01.htm";
-            } else if (cond == 1 && st.getQuestItemsCount(STARSTONE) < 20)
+            } else if (cond == 1 && !haveQuestItem)
                 htmltext = "gatekeeper_wirphy_q0297_04.htm";
-            else if (cond == 2 && st.getQuestItemsCount(STARSTONE) < 20)
+            else if (cond == 2 && !haveQuestItem)
                 htmltext = "gatekeeper_wirphy_q0297_04.htm";
-            else if (cond == 2 && st.getQuestItemsCount(STARSTONE) >= 20) {
+            else if (cond == 2) {
                 htmltext = "gatekeeper_wirphy_q0297_05.htm";
                 st.takeItems(STARSTONE);
                 st.giveItems(GATEKEEPER_TOKEN, 2);
@@ -54,7 +54,7 @@ public final class _297_GateKeepersFavor extends Quest {
     @Override
     public void onKill(NpcInstance npc, QuestState st) {
         st.rollAndGive(STARSTONE, 1, 1, 20, 33);
-        if (st.getQuestItemsCount(STARSTONE) >= 20)
+        if (st.haveQuestItem(STARSTONE, 20))
             st.setCond(2);
     }
 }

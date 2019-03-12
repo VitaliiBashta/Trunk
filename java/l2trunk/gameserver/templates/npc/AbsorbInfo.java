@@ -1,43 +1,24 @@
 package l2trunk.gameserver.templates.npc;
 
-import java.util.HashSet;
-import java.util.Set;
-
 public final class AbsorbInfo {
-    private final boolean skill;
-    private final AbsorbType absorbType;
-    private final int chance;
-    private final int cursedChance;
-    private final Set<Integer> levels;
+    public final boolean isSkill;
+    public final AbsorbType absorbType;
+    public final int chance;
+    public final int cursedChance;
+    private final int minLevel;
+    private final int maxLevel;
 
     public AbsorbInfo(boolean skill, AbsorbType absorbType, int chance, int cursedChance, int min, int max) {
-        this.skill = skill;
+        this.isSkill = skill;
         this.absorbType = absorbType;
         this.chance = chance;
         this.cursedChance = cursedChance;
-        levels = new HashSet<>(max - min);
-        for (int i = min; i <= max; i++)
-            levels.add(i);
+        this.minLevel = min;
+        this.maxLevel = max;
     }
 
-    public boolean isSkill() {
-        return skill;
-    }
-
-    public AbsorbType getAbsorbType() {
-        return absorbType;
-    }
-
-    public int getChance() {
-        return chance;
-    }
-
-    public int getCursedChance() {
-        return cursedChance;
-    }
-
-    public boolean canAbsorb(int le) {
-        return levels.contains(le);
+    public boolean canAbsorb(int lvl) {
+        return lvl >= minLevel && lvl <= maxLevel;
     }
 
     public enum AbsorbType {

@@ -98,10 +98,9 @@ public final class _405_PathToCleric extends Quest {
                     htmltext = "gigon_q0405_06.htm";
             } else if (cond < 6 && st.getQuestItemsCount(LETTER_OF_ORDER2) > 0)
                 htmltext = "gigon_q0405_07.htm";
-            else if (cond == 6 && st.getQuestItemsCount(LETTER_OF_ORDER2) > 0 && st.getQuestItemsCount(LEMONIELLS_COVENANT) > 0) {
+            else if (cond == 6 && st.haveAllQuestItems(LETTER_OF_ORDER2,LEMONIELLS_COVENANT)) {
                 htmltext = "gigon_q0405_09.htm";
-                st.takeItems(LEMONIELLS_COVENANT);
-                st.takeItems(LETTER_OF_ORDER2);
+                st.takeAllItems(LEMONIELLS_COVENANT,LETTER_OF_ORDER2);
                 if (!st.player.isVarSet("q405"))
                     st.player.setVar("q405");
                 st.exitCurrentQuest();
@@ -110,7 +109,7 @@ public final class _405_PathToCleric extends Quest {
                     if (!st.player.isVarSet("prof1")) {
                         st.player.setVar("prof1");
                         st.addExpAndSp(295862, 17964);
-                        st.giveItems(ADENA_ID, 81900);
+                        st.giveAdena(81900);
                     }
                 }
                 st.playSound(SOUND_FINISH);
@@ -132,19 +131,18 @@ public final class _405_PathToCleric extends Quest {
         } else if (npcId == PRAGA && cond == 1 && st.haveQuestItem(LETTER_OF_ORDER1) ) {
             if (st.getQuestItemsCount(BOOK_OF_PRAGA) < 1 && st.getQuestItemsCount(NECKLACE_OF_MOTHER) < 1) {
                 htmltext = "guard_praga_q0405_01.htm";
-                st.giveItems(NECKLACE_OF_MOTHER, 1);
-            } else if (st.getQuestItemsCount(BOOK_OF_PRAGA) < 1 && st.getQuestItemsCount(NECKLACE_OF_MOTHER) > 0 && st.getQuestItemsCount(PENDANT_OF_MOTHER) < 1)
+                st.giveItems(NECKLACE_OF_MOTHER);
+            } else if (!st.haveQuestItem(BOOK_OF_PRAGA) && st.haveQuestItem(NECKLACE_OF_MOTHER)  && !st.haveQuestItem(PENDANT_OF_MOTHER))
                 htmltext = "guard_praga_q0405_02.htm";
-            else if (st.getQuestItemsCount(BOOK_OF_PRAGA) < 1 && st.getQuestItemsCount(NECKLACE_OF_MOTHER) > 0 && st.getQuestItemsCount(PENDANT_OF_MOTHER) > 0) {
+            else if (!st.haveQuestItem(BOOK_OF_PRAGA) && st.haveAllQuestItems(NECKLACE_OF_MOTHER,PENDANT_OF_MOTHER)) {
                 htmltext = "guard_praga_q0405_03.htm";
-                st.takeItems(NECKLACE_OF_MOTHER);
-                st.takeItems(PENDANT_OF_MOTHER);
+                st.takeAllItems(NECKLACE_OF_MOTHER,PENDANT_OF_MOTHER);
                 st.giveItems(BOOK_OF_PRAGA);
                 checkBooks(st);
             } else if (st.haveQuestItem(BOOK_OF_PRAGA))
                 htmltext = "guard_praga_q0405_04.htm";
         } else if (npcId == LIONEL) {
-            if (st.getQuestItemsCount(LETTER_OF_ORDER2) < 1)
+            if (!st.haveQuestItem(LETTER_OF_ORDER2) )
                 htmltext = "lemoniell_q0405_02.htm";
             else if (cond == 3 && st.getQuestItemsCount(LETTER_OF_ORDER2) == 1 && st.getQuestItemsCount(BOOK_OF_LEMONIELL) < 1 && st.getQuestItemsCount(LEMONIELLS_COVENANT) < 1 && st.getQuestItemsCount(CERTIFICATE_OF_GALLINT) < 1) {
                 htmltext = "lemoniell_q0405_01.htm";
@@ -163,7 +161,7 @@ public final class _405_PathToCleric extends Quest {
             if (cond == 4 && st.haveQuestItem(BOOK_OF_LEMONIELL)  && !st.haveQuestItem(CERTIFICATE_OF_GALLINT) ) {
                 htmltext = "gallin_q0405_01.htm";
                 st.takeItems(BOOK_OF_LEMONIELL);
-                st.giveItems(CERTIFICATE_OF_GALLINT, 1);
+                st.giveItems(CERTIFICATE_OF_GALLINT);
                 st.setCond(5);
             } else if (cond == 5 && st.getQuestItemsCount(BOOK_OF_LEMONIELL) < 1 && st.getQuestItemsCount(CERTIFICATE_OF_GALLINT) > 0)
                 htmltext = "gallin_q0405_02.htm";
@@ -174,8 +172,8 @@ public final class _405_PathToCleric extends Quest {
     public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         if (npcId == RUIN_ZOMBIE | npcId == RUIN_ZOMBIE_LEADER)
-            if (st.getCond() == 1 && st.getQuestItemsCount(PENDANT_OF_MOTHER) < 1) {
-                st.giveItems(PENDANT_OF_MOTHER);
+            if (st.getCond() == 1) {
+                st.giveItemIfNotHave(PENDANT_OF_MOTHER);
                 st.playSound(SOUND_MIDDLE);
             }
     }

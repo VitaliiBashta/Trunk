@@ -18,129 +18,44 @@ public final class _458_PerfectForm extends Quest {
     private static final int COUNT = 10;
 
     // client  4    "1018879|1018886|1018893|1018900"    4    "10|10|10|10"
-    private static final List<Integer> GrownKookabura = List.of(
-            18879, 18878);
-    private static final List<Integer> GrownCougar = List.of(
-            18886, 18885);
-    private static final List<Integer> GrownBuffalo = List.of(
-            18893, 18892);
-    private static final List<Integer> GrownGrendel = List.of(
-            18900, 18899);
+    private static final List<Integer> GrownKookabura = List.of(18879, 18878);
+    private static final List<Integer> GrownCougar = List.of(18886, 18885);
+    private static final List<Integer> GrownBuffalo = List.of(18893, 18892);
+    private static final List<Integer> GrownGrendel = List.of(18900, 18899);
 
     private static final int[][][] Rewards = {
             {
-                    {
-                            10373,
-                            1
-                    },
-                    {
-                            10374,
-                            1
-                    },
-                    {
-                            10375,
-                            1
-                    },
-                    {
-                            10376,
-                            1
-                    },
-                    {
-                            10377,
-                            1
-                    },
-                    {
-                            10378,
-                            1
-                    },
-                    {
-                            10379,
-                            1
-                    },
-                    {
-                            10380,
-                            1
-                    },
-                    {
-                            10381,
-                            1
-                    }
+                    {10373, 1},
+                    {10374, 1},
+                    {10375, 1},
+                    {10376, 1},
+                    {10377, 1},
+                    {10378, 1},
+                    {10379, 1},
+                    {10380, 1},
+                    {10381, 1}
             },
             {
-                    {
-                            10397,
-                            5
-                    },
-                    {
-                            10398,
-                            5
-                    },
-                    {
-                            10399,
-                            5
-                    },
-                    {
-                            10400,
-                            5
-                    },
-                    {
-                            10401,
-                            5
-                    },
-                    {
-                            10402,
-                            5
-                    },
-                    {
-                            10403,
-                            5
-                    },
-                    {
-                            10404,
-                            5
-                    },
-                    {
-                            10405,
-                            5
-                    }
+                    {10397, 5},
+                    {10398, 5},
+                    {10399, 5},
+                    {10400, 5},
+                    {10401, 5},
+                    {10402, 5},
+                    {10403, 5},
+                    {10404, 5},
+                    {10405, 5}
             },
             {
-                    {
-                            10397,
-                            2
-                    },
-                    {
-                            10398,
-                            2
-                    },
-                    {
-                            10399,
-                            2
-                    },
-                    {
-                            10400,
-                            2
-                    },
-                    {
-                            10401,
-                            2
-                    },
-                    {
-                            10402,
-                            2
-                    },
-                    {
-                            10403,
-                            2
-                    },
-                    {
-                            10404,
-                            2
-                    },
-                    {
-                            10405,
-                            2
-                    }
+                    {10397, 2},
+                    {10398, 2},
+                    {10399, 2},
+                    {10400, 2},
+                    {10401, 2},
+                    {10402, 2},
+                    {10403, 2},
+                    {10404, 2},
+                    {10405, 2}
             }
     };
 

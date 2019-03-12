@@ -23,9 +23,9 @@ public final class _10270_BirthOfTheSeed extends Quest {
         super(true);
 
         addStartNpc(PLENOS);
-        addTalkId(PLENOS,ARTIUS,LELIKIA,GINBY);
-        addKillId(Yehan_Klodekus,Yehan_Klanikus,Cohemenes);
-        addQuestItem(Yehan_Klodekus_Badge,Yehan_Klanikus_Badge,Lich_Crystal);
+        addTalkId(PLENOS, ARTIUS, LELIKIA, GINBY);
+        addKillId(Yehan_Klodekus, Yehan_Klanikus, Cohemenes);
+        addQuestItem(Yehan_Klodekus_Badge, Yehan_Klanikus_Badge, Lich_Crystal);
     }
 
     @Override
@@ -43,9 +43,7 @@ public final class _10270_BirthOfTheSeed extends Quest {
             htmltext = "artius_q10270_3.htm";
             st.playSound(SOUND_MIDDLE);
         } else if (event.equals("hand_over") && cond == 2) {
-            st.takeItems(Yehan_Klodekus_Badge, -1);
-            st.takeItems(Yehan_Klanikus_Badge, -1);
-            st.takeItems(Lich_Crystal, -1);
+            st.takeAllItems(Yehan_Klodekus_Badge, Yehan_Klanikus_Badge, Lich_Crystal);
             htmltext = "artius_q10270_6.htm";
         } else if (event.equals("artius_q10270_7.htm") && cond == 2) {
             st.setCond(3);
@@ -73,7 +71,7 @@ public final class _10270_BirthOfTheSeed extends Quest {
         String htmltext = "noquest";
         int npcId = npc.getNpcId();
         int cond = st.getCond();
-
+        boolean haveAllQuestItems = st.haveAllQuestItems(Yehan_Klodekus_Badge, Yehan_Klanikus_Badge, Lich_Crystal);
         if (npcId == PLENOS) {
             if (cond == 0)
                 if (st.player.getLevel() >= 75)
@@ -85,9 +83,9 @@ public final class _10270_BirthOfTheSeed extends Quest {
         } else if (npcId == ARTIUS) {
             if (cond == 1)
                 htmltext = "artius_q10270_1.htm";
-            else if (cond == 2 && (st.getQuestItemsCount(Yehan_Klodekus_Badge) == 0 || st.getQuestItemsCount(Yehan_Klanikus_Badge) == 0 || st.getQuestItemsCount(Lich_Crystal) == 0))
+            else if (cond == 2 && !haveAllQuestItems)
                 htmltext = "artius_q10270_4.htm";
-            else if (cond == 2 && st.haveAllQuestItems(Yehan_Klodekus_Badge, Yehan_Klanikus_Badge, Lich_Crystal))
+            else if (cond == 2)
                 htmltext = "artius_q10270_5.htm";
             else if (cond == 3)
                 htmltext = "artius_q10270_8.htm";

@@ -504,27 +504,27 @@ public final class _333_BlackLionHunt extends Quest {
                 return pieces;
             return "rupio-07.htm";
         } else if ("l_give".equalsIgnoreCase(event)) {
-            if (st.getQuestItemsCount(COMPLETE_TABLET) > 0) {
+            if (st.haveQuestItem(COMPLETE_TABLET)) {
                 st.takeItems(COMPLETE_TABLET, 1);
-                st.giveItems(ADENA_ID, 30000);
+                st.giveAdena( 30000);
                 return "lockirin-01.htm";
             }
             return "lockirin-02.htm";
         } else if ("u_give".equalsIgnoreCase(event)) {
-            if (st.getQuestItemsCount(COMPLETE_STATUE) > 0) {
-                st.takeItems(COMPLETE_STATUE, 1);
-                st.giveItems(ADENA_ID, 30000);
+            if (st.haveQuestItem(COMPLETE_STATUE)) {
+                st.takeItems(COMPLETE_STATUE);
+                st.giveAdena( 30000);
                 return "undiras-01.htm";
             }
             return "undiras-02.htm";
-        } else if (event.equalsIgnoreCase("m_give")) {
-            if (st.getQuestItemsCount(CARGO_BOX1) > 0) {
+        } else if ("m_give".equalsIgnoreCase(event)) {
+            if (st.haveQuestItem(CARGO_BOX1)) {
                 long coins = st.getQuestItemsCount(GUILD_COIN);
                 long count = coins / 40;
                 if (count > 2)
                     count = 2;
-                st.giveItems(GUILD_COIN, 1);
-                st.giveItems(ADENA_ID, (1 + count) * 100);
+                st.giveItems(GUILD_COIN);
+                st.giveAdena((1 + count) * 100);
                 st.takeItems(CARGO_BOX1, 1);
                 int rand = Rnd.get(0, 3);
                 if (rand == 0)
@@ -616,27 +616,27 @@ public final class _333_BlackLionHunt extends Quest {
             } else if (npcId == Rupio) {
                 int count = 0;
                 for (int i = 3457; i <= 3460; i++)
-                    if (st.getQuestItemsCount(i) > 0)
+                    if (st.haveQuestItem(i))
                         count += 1;
                 for (int i = 3462; i <= 3465; i++)
-                    if (st.getQuestItemsCount(i) > 0)
+                    if (st.haveQuestItem(i) )
                         count += 1;
                 if (count > 0)
                     return "rupio-08.htm";
                 return "rupio-07.htm";
             } else if (npcId == Undrias) {
-                if (st.getQuestItemsCount(COMPLETE_STATUE) > 0)
+                if (st.haveQuestItem(COMPLETE_STATUE) )
                     return "undiras-04.htm";
                 int count = 0;
                 int i;
                 for (i = 3457; i <= 3460; i++)
-                    if (st.getQuestItemsCount(i) > 0)
+                    if (st.haveQuestItem(i) )
                         count += 1;
                 if (count > 0)
                     return "undiras-05.htm";
                 return "undiras-02.htm";
             } else if (npcId == Lockirin) {
-                if (st.getQuestItemsCount(COMPLETE_TABLET) > 0)
+                if (st.haveQuestItem(COMPLETE_TABLET))
                     return "lockirin-04.htm";
                 int count = 0;
                 int i;
@@ -647,7 +647,7 @@ public final class _333_BlackLionHunt extends Quest {
                     return "lockirin-05.htm";
                 return "lockirin-06.htm";
             } else if (npcId == Morgan) {
-                if (st.getQuestItemsCount(CARGO_BOX1) > 0)
+                if (st.haveQuestItem(CARGO_BOX1))
                     return "morgan-06.htm";
                 return "morgan-07.htm";
             }
@@ -681,7 +681,7 @@ public final class _333_BlackLionHunt extends Quest {
                     st.giveItems(partItem, npcId == 27152 ? 8 : 1);
                     st.playSound(SOUND_ITEMGET);
                     if (rand2 < chanceBox) {
-                        st.giveItems(CARGO_BOX1, 1);
+                        st.giveItems(CARGO_BOX1);
                         if (rand > chancePartItem)
                             st.playSound(SOUND_ITEMGET);
                     }

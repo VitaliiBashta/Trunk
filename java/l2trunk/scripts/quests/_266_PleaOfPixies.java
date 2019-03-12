@@ -18,10 +18,7 @@ public final class _266_PleaOfPixies extends Quest {
     public _266_PleaOfPixies() {
         super(false);
         addStartNpc(31852);
-        addKillId(20525,
-                20530,
-                20534,
-                20537);
+        addKillId(20525, 20530, 20534, 20537);
         addQuestItem(PREDATORS_FANG);
     }
 
@@ -57,12 +54,12 @@ public final class _266_PleaOfPixies extends Quest {
                 st.giveItems(REC_SPIRITSHOT);
                 st.playSound(SOUND_JACKPOT);
             } else if (n < 20) {
-                st.giveItems(BLUE_ONYX, 1);
-                st.giveItems(REC_LEATHER_BOOT, 1);
+                st.giveItems(BLUE_ONYX);
+                st.giveItems(REC_LEATHER_BOOT);
             } else if (n < 45)
-                st.giveItems(ONYX, 1);
+                st.giveItems(ONYX);
             else
-                st.giveItems(GLASS_SHARD, 1);
+                st.giveItems(GLASS_SHARD);
             htmltext = "pixy_murika_q0266_05.htm";
             st.exitCurrentQuest();
             st.playSound(SOUND_FINISH);

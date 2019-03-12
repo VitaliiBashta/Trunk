@@ -45,11 +45,11 @@ public final class _902_ReclaimOurEra extends Quest {
             } else if (st.haveQuestItem(CannibalisticStakatoLeaderClaw)) {
                 st.takeItems(CannibalisticStakatoLeaderClaw);
                 st.giveItems(21750, 3);
-                st.giveItems(ADENA_ID, 210119);
+                st.giveAdena( 210119);
             } else if (st.haveQuestItem(AnaisScroll) ) {
                 st.takeItems(AnaisScroll);
                 st.giveItems(21750, 3);
-                st.giveItems(ADENA_ID, 348155);
+                st.giveAdena( 348155);
             }
             st.complete();
             st.playSound(SOUND_FINISH);

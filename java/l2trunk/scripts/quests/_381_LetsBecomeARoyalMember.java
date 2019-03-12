@@ -28,9 +28,9 @@ public final class _381_LetsBecomeARoyalMember extends Quest {
         addStartNpc(SORINT);
         addTalkId(SANDRA);
 
-        addKillId(ANCIENT_GARGOYLE,VEGUS);
+        addKillId(ANCIENT_GARGOYLE, VEGUS);
 
-        addQuestItem(KAILS_COIN,COIN_ALBUM,CLOVER_COIN);
+        addQuestItem(KAILS_COIN, COIN_ALBUM, CLOVER_COIN);
     }
 
     @Override
@@ -60,28 +60,26 @@ public final class _381_LetsBecomeARoyalMember extends Quest {
 
         int cond = st.getCond();
         int npcId = npc.getNpcId();
-        long album = st.getQuestItemsCount(COIN_ALBUM);
+        boolean haveAlbum = st.haveQuestItem(COIN_ALBUM);
 
         if (npcId == SORINT) {
             if (cond == 0)
                 htmltext = "warehouse_keeper_sorint_q0381_01.htm";
             else if (cond == 1) {
-                long coin = st.getQuestItemsCount(KAILS_COIN);
-                if (coin > 0 && album > 0) {
-                    st.takeItems(KAILS_COIN);
-                    st.takeItems(COIN_ALBUM);
+                boolean haveCoin = st.haveQuestItem(KAILS_COIN);
+                if (haveCoin && haveAlbum) {
+                    st.takeAllItems(KAILS_COIN, COIN_ALBUM);
                     st.giveItems(ROYAL_MEMBERSHIP);
                     st.playSound(SOUND_FINISH);
                     st.exitCurrentQuest();
                     htmltext = "warehouse_keeper_sorint_q0381_06.htm";
-                } else if (album == 0)
+                } else if (!haveAlbum)
                     htmltext = "warehouse_keeper_sorint_q0381_05.htm";
-                else if (coin == 0)
-                    htmltext = "warehouse_keeper_sorint_q0381_04.htm";
+                else htmltext = "warehouse_keeper_sorint_q0381_04.htm";
             }
         } else {
             long clover = st.getQuestItemsCount(CLOVER_COIN);
-            if (album > 0)
+            if (haveAlbum)
                 htmltext = "sandra_q0381_05.htm";
             else if (clover > 0) {
                 st.takeItems(CLOVER_COIN);
@@ -103,22 +101,22 @@ public final class _381_LetsBecomeARoyalMember extends Quest {
             return;
         int npcId = npc.getNpcId();
 
-        long album = st.getQuestItemsCount(COIN_ALBUM);
-        long coin = st.getQuestItemsCount(KAILS_COIN);
-        long clover = st.getQuestItemsCount(CLOVER_COIN);
+        boolean haveAlbum = st.haveQuestItem(COIN_ALBUM);
+        boolean haveCoin = st.haveQuestItem(KAILS_COIN);
+        boolean haveClover = st.haveQuestItem(CLOVER_COIN);
 
-        if (npcId == ANCIENT_GARGOYLE && coin == 0) {
+        if (npcId == ANCIENT_GARGOYLE && !haveCoin ) {
             if (Rnd.chance(GARGOYLE_CHANCE)) {
                 st.giveItems(KAILS_COIN);
-                if (album > 0 || clover > 0)
+                if (haveAlbum  || haveClover)
                     st.playSound(SOUND_MIDDLE);
                 else
                     st.playSound(SOUND_ITEMGET);
             }
-        } else if (npcId == VEGUS && clover + album == 0 && st.isSet("id") )
+        } else if (npcId == VEGUS && !haveClover && !haveAlbum  && st.isSet("id"))
             if (Rnd.chance(VEGUS_CHANCE)) {
                 st.giveItems(CLOVER_COIN);
-                if (coin > 0)
+                if (haveCoin)
                     st.playSound(SOUND_MIDDLE);
                 else
                     st.playSound(SOUND_ITEMGET);

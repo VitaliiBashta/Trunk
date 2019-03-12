@@ -75,7 +75,7 @@ public final class _383_SearchingForTreasure extends Quest {
             }
         } else if ("30890-02b.htm".equalsIgnoreCase(event)) {
             if (st.haveQuestItem(PIRATES_TREASURE_MAP) ) {
-                st.giveItems(ADENA_ID, 1000);
+                st.giveAdena( 1000);
                 st.playSound("ItemSound.quest_finish");
             } else
                 htmltext = "You don't have required items";
@@ -83,7 +83,7 @@ public final class _383_SearchingForTreasure extends Quest {
         } else if ("31148-02.htm".equalsIgnoreCase(event))
             if (st.haveQuestItem(1661) ) {
                 st.takeItems(1661, 1);
-                st.giveItems(ADENA_ID, 500 + Rnd.get(5) * 300);
+                st.giveAdena( 500 + Rnd.get(5) * 300);
                 int count = 0;
                 while (count < 1)
                     for (rewardInfo reward : rewards) {

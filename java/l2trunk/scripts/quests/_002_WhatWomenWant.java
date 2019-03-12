@@ -75,15 +75,15 @@ public final class _002_WhatWomenWant extends Quest {
                     htmltext = "arujien_q0002_01.htm";
                     st.exitCurrentQuest();
                 }
-            } else if (cond == 1 && st.getQuestItemsCount(ARUJIENS_LETTER1) > 0)
+            } else if (cond == 1 && st.haveQuestItem(ARUJIENS_LETTER1) )
                 htmltext = "arujien_q0002_05.htm";
-            else if (cond == 2 && st.getQuestItemsCount(ARUJIENS_LETTER2) > 0)
+            else if (cond == 2 && st.haveQuestItem(ARUJIENS_LETTER2) )
                 htmltext = "arujien_q0002_06.htm";
-            else if (cond == 3 && st.getQuestItemsCount(ARUJIENS_LETTER3) > 0)
+            else if (cond == 3 && st.haveQuestItem(ARUJIENS_LETTER3) )
                 htmltext = "arujien_q0002_07.htm";
-            else if (cond == 4 && st.getQuestItemsCount(POETRY_BOOK) > 0)
+            else if (cond == 4 && st.haveQuestItem(POETRY_BOOK) )
                 htmltext = "arujien_q0002_11.htm";
-            else if (cond == 5 && st.getQuestItemsCount(GREENIS_LETTER) > 0) {
+            else if (cond == 5 && st.haveQuestItem(GREENIS_LETTER) ) {
                 htmltext = "arujien_q0002_09.htm";
                 st.takeItems(GREENIS_LETTER);
                 int MYSTICS_EARRING = 113;
@@ -96,7 +96,7 @@ public final class _002_WhatWomenWant extends Quest {
                 st.finish();
             }
         } else if (npcId == MIRABEL) {
-            if (cond == 1 && st.getQuestItemsCount(ARUJIENS_LETTER1) > 0) {
+            if (cond == 1 && st.haveQuestItem(ARUJIENS_LETTER1)) {
                 htmltext = "mint_q0002_01.htm";
                 st.takeItems(ARUJIENS_LETTER1);
                 st.giveItems(ARUJIENS_LETTER2);
@@ -105,7 +105,7 @@ public final class _002_WhatWomenWant extends Quest {
             } else if (cond == 2)
                 htmltext = "mint_q0002_02.htm";
         } else if (npcId == HERBIEL) {
-            if (cond == 2 && st.getQuestItemsCount(ARUJIENS_LETTER2) > 0) {
+            if (cond == 2 && st.haveQuestItem(ARUJIENS_LETTER2)) {
                 htmltext = "green_q0002_01.htm";
                 st.takeItems(ARUJIENS_LETTER2);
                 st.giveItems(ARUJIENS_LETTER3);
@@ -114,13 +114,13 @@ public final class _002_WhatWomenWant extends Quest {
             } else if (cond == 3)
                 htmltext = "green_q0002_02.htm";
         } else if (npcId == GREENIS)
-            if (cond == 4 && st.getQuestItemsCount(POETRY_BOOK) > 0) {
+            if (cond == 4 && st.haveQuestItem(POETRY_BOOK) ) {
                 htmltext = "grain_q0002_02.htm";
                 st.takeItems(POETRY_BOOK);
                 st.giveItems(GREENIS_LETTER);
                 st.setCond(5);
                 st.playSound(SOUND_MIDDLE);
-            } else if (cond == 5 && st.getQuestItemsCount(GREENIS_LETTER) > 0)
+            } else if (cond == 5 && st.haveQuestItem(GREENIS_LETTER))
                 htmltext = "grain_q0002_03.htm";
             else
                 htmltext = "grain_q0002_01.htm";

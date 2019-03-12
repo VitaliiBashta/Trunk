@@ -28,8 +28,7 @@ public final class _252_GoodSmell extends Quest {
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if ("stan_q252_06.htm".equalsIgnoreCase(event)) {
-            st.takeItems(SelMahumDiary);
-            st.takeItems(SelMahumCookbookPage);
+            st.takeAllItems(SelMahumDiary,SelMahumCookbookPage);
             st.complete();
             st.giveItems(57, 147656);
             st.addExpAndSp(716238, 78324);

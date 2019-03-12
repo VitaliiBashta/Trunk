@@ -92,19 +92,18 @@ public final class _338_AlligatorHunter extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("30892-02.htm")) {
+        long adenaCount = st.getQuestItemsCount(AlligatorLeather) * 40;
+        if ("30892-02.htm".equalsIgnoreCase(event)) {
             st.playSound(SOUND_ACCEPT);
             st.setCond(1);
             st.start();
         } else if ("30892-02-afmenu.htm".equalsIgnoreCase(event)) {
-            long AdenaCount = st.getQuestItemsCount(AlligatorLeather) * 40;
             st.takeItems(AlligatorLeather);
-            st.giveItems(ADENA_ID, AdenaCount);
+            st.giveAdena(adenaCount);
         } else if ("quit".equalsIgnoreCase(event)) {
             if (st.haveQuestItem(AlligatorLeather) ) {
-                long AdenaCount = st.getQuestItemsCount(AlligatorLeather) * 40;
                 st.takeItems(AlligatorLeather);
-                st.giveItems(ADENA_ID, AdenaCount);
+                st.giveAdena( adenaCount);
                 htmltext = "30892-havequit.htm";
             } else
                 htmltext = "30892-havent.htm";

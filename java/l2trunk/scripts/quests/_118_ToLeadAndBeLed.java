@@ -34,8 +34,7 @@ public final class _118_ToLeadAndBeLed extends Quest {
 
         addStartNpc(PINTER);
 
-        addKillId(MAILLE_LIZARDMAN);
-        addKillId(KING_OF_THE_ARANEID);
+        addKillId(MAILLE_LIZARDMAN,KING_OF_THE_ARANEID);
 
         addQuestItem(BLOOD_OF_MAILLE_LIZARDMAN, KING_OF_THE_ARANEID_LEG);
     }

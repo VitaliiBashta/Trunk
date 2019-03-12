@@ -100,16 +100,15 @@ public final class _369_CollectorOfJewels extends Quest {
                 return onTalk(npc, st);
             }
 
-            st.takeItems(FLARE_SHARD, -1);
-            st.takeItems(FREEZING_SHARD, -1);
+            st.takeAllItems(FLARE_SHARD,FREEZING_SHARD);
             if (cond == 2) {
                 htmltext = "30376-05.htm";
-                st.giveItems(ADENA_ID, 12500);
+                st.giveAdena( 12500);
                 st.playSound(SOUND_MIDDLE);
                 st.setCond(3);
             } else {
                 htmltext = "30376-10.htm";
-                st.giveItems(ADENA_ID, 63500);
+                st.giveAdena( 63500);
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest();
             }

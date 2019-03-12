@@ -160,7 +160,7 @@ public final class _408_PathToElvenwizard extends Quest {
                             if (!st.player.isVarSet("prof1")) {
                                 st.player.setVar("prof1");
                                 st.addExpAndSp(295862, 17964);
-                                st.giveItems(ADENA_ID, 81900);
+                                st.giveAdena( 81900);
                             }
                         }
                         st.playSound(SOUND_FINISH);

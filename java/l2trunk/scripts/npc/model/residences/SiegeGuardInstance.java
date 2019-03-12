@@ -32,7 +32,7 @@ public class SiegeGuardInstance extends NpcInstance {
         if (!(attacker instanceof Playable)) {
             return false;
         }
-        Player player = ((Playable)attacker).getPlayer();
+        Player player = ((Playable) attacker).getPlayer();
         SiegeEvent<?, ?> siegeEvent = getEvent(SiegeEvent.class);
         SiegeEvent<?, ?> siegeEvent2 = attacker.getEvent(SiegeEvent.class);
         Clan clan = player.getClan();
@@ -60,21 +60,19 @@ public class SiegeGuardInstance extends NpcInstance {
                 Clan clan = player.getClan();
                 SiegeEvent<?, ?> siegeEvent2 = killer.getEvent(SiegeEvent.class);
                 if (clan != null && siegeEvent == siegeEvent2 && siegeEvent.getSiegeClan(SiegeEvent.DEFENDERS, clan) == null) {
-                    Creature topdam = getAggroList().getTopDamager();
+                    Playable topdam = getAggroList().getTopDamager();
                     if (topdam == null)
-                        topdam = killer;
-
-                    for (Map.Entry<RewardType, RewardList> entry : getTemplate().getRewards().entrySet())
-                        rollRewards(entry, killer, topdam);
+                        topdam = player;
+                    Playable top = topdam;
+                    getTemplate().getRewards().values().forEach(list ->
+                            rollRewards(list, top));
                 }
             }
         }
         super.onDeath(killer);
     }
 
-    private void rollRewards(Map.Entry<RewardType, RewardList> entry, final Creature lastAttacker, Creature topDamager) {
-        RewardList list = entry.getValue();
-
+    private void rollRewards(RewardList list, Playable topDamager) {
         final Player activePlayer = topDamager.getPlayer();
 
         if (activePlayer == null)
@@ -87,7 +85,7 @@ public class SiegeGuardInstance extends NpcInstance {
         List<RewardItem> rewardItems = list.roll(activePlayer, mod, false, true);
 
         rewardItems.forEach(drop ->
-            dropItem(activePlayer, drop.itemId, drop.count));
+                dropItem(activePlayer, drop.itemId, drop.count));
     }
 
     @Override

@@ -227,16 +227,16 @@ public final class _501_ProofOfClanAlliance extends Quest {
             } else if (st.player.getClan().getLevel() >= 4) {
                 st.exitCurrentQuest();
                 return "30756-09.htm";
-            } else if (st.getQuestItemsCount(VOUCHER_OF_FAITH) > 0) {
+            } else if (st.haveQuestItem(VOUCHER_OF_FAITH)) {
                 st.playSound(SOUND_FANFARE2);
-                st.takeItems(VOUCHER_OF_FAITH, -1);
-                st.giveItems(PROOF_OF_ALLIANCE, 1);
+                st.takeItems(VOUCHER_OF_FAITH);
+                st.giveItems(PROOF_OF_ALLIANCE);
                 st.addExpAndSp(0, 120000);
                 htmltext = "30756-07.htm";
                 st.exitCurrentQuest();
             } else if (cond == 1 || cond == 2)
                 return "30756-06.htm";
-            else if (st.getQuestItemsCount(PROOF_OF_ALLIANCE) == 0) {
+            else if (!st.haveQuestItem(PROOF_OF_ALLIANCE)) {
                 st.setCond(0);
                 return "30756-01.htm";
             } else {
@@ -270,7 +270,7 @@ public final class _501_ProofOfClanAlliance extends Quest {
                         st.setCond(4);
                         st.playSound(SOUND_FINISH);
                         return "30759-08.htm";
-                    } else if (st.getQuestItemsCount(VOUCHER_OF_FAITH) == 0)
+                    } else if (!st.haveQuestItem(VOUCHER_OF_FAITH))
                         return "30759-10.htm";
             } else if (leader.getCond() == 3)
                 return "30759-11.htm";

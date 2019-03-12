@@ -22,12 +22,7 @@ public final class _263_OrcSubjugation extends Quest {
     public _263_OrcSubjugation() {
         super(false);
         addStartNpc(KAYLEEN);
-        addKillId(
-                BALOR_ORC_ARCHER,
-                BALOR_ORC_FIGHTER,
-                BALOR_ORC_FIGHTER_LEADER,
-                BALOR_ORC_LIEUTENANT
-        );
+        addKillId(BALOR_ORC_ARCHER, BALOR_ORC_FIGHTER, BALOR_ORC_FIGHTER_LEADER, BALOR_ORC_LIEUTENANT);
         addQuestItem(ORC_AMULET, ORC_NECKLACE);
     }
 

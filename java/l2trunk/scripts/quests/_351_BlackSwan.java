@@ -41,8 +41,8 @@ public final class _351_BlackSwan extends Quest {
         } else if ("30969-03a.htm".equalsIgnoreCase(event) && amount2 > 0) {
             htmltext = "30969-03.htm";
             st.setCond(2);
-            st.giveItems(ADENA_ID, amount2 * 500, false);
-            st.giveItems(BILL_OF_IASON_HEINE, amount2, false);
+            st.giveAdena(amount2 * 500);
+            st.giveItems(BILL_OF_IASON_HEINE, amount2);
             st.takeItems(BARREL_OF_LEAGUE);
         } else if ("30969-01.htm".equalsIgnoreCase(event) && st.getCond() == 2)
             htmltext = "30969-04.htm";

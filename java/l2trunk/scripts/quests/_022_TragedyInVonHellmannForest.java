@@ -8,6 +8,7 @@ import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.NpcUtils;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
 public final class _022_TragedyInVonHellmannForest extends Quest {
     private static final int LostSkullOfElf = 7142;
@@ -38,12 +39,11 @@ public final class _022_TragedyInVonHellmannForest extends Quest {
 
         addStartNpc(Tifaren);
 
-        addTalkId(Tifaren,GhostOfPriest,Innocentin,GhostOfAdventurer,Well);
+        addTalkId(Tifaren, GhostOfPriest, Innocentin, GhostOfAdventurer, Well);
 
         addKillId(SoulOfWell);
 
-        for (int npcId = 21547; npcId <= 21578; npcId++)
-            addKillId(npcId);
+        addKillId(Mobs);
 
         addQuestItem(LostSkullOfElf);
     }

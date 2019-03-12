@@ -40,12 +40,11 @@ public final class _356_DigUpTheSeaOfSpores extends Quest {
                 st.exitCurrentQuest();
             }
         } else if (("magister_gauen_q0356_20.htm".equalsIgnoreCase(event) || "magister_gauen_q0356_17.htm".equalsIgnoreCase(event)) && carn >= 50 && herb >= 50) {
-            st.takeItems(CARNIVORE_SPORE, -1);
-            st.takeItems(HERBIBOROUS_SPORE, -1);
+            st.takeAllItems(CARNIVORE_SPORE,HERBIBOROUS_SPORE);
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest();
             if ("magister_gauen_q0356_17.htm".equalsIgnoreCase(event))
-                st.giveItems(ADENA_ID, 44000);
+                st.giveAdena(44000);
             else
                 st.addExpAndSp(36000, 2600);
         }

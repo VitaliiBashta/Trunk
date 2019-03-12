@@ -231,15 +231,17 @@ public final class QuestState {
         return player == null ? 0 : player.getInventory().getCountOf(itemId);
     }
 
-    public void giveItemIfNotHave(int itemId) {
-        giveItemIfNotHave(itemId, 1);
+    public boolean giveItemIfNotHave(int itemId) {
+        return giveItemIfNotHave(itemId, 1);
     }
 
-    public void giveItemIfNotHave(int itemId, int limit) {
+    public boolean giveItemIfNotHave(int itemId, int limit) {
         if (getQuestItemsCount(itemId) < limit) {
             giveItems(itemId);
             playSound(SOUND_ITEMGET);
+            return false;
         }
+        return true;
     }
 
     public long getQuestItemsCount(List<Integer> itemsIds) {
@@ -325,6 +327,9 @@ public final class QuestState {
         return "Start";
     }
 
+    public void giveAdena(long count) {
+        giveItems(ItemTemplate.ITEM_ID_ADENA, count, true);
+    }
     public void giveItems(int itemId) {
         giveItems(itemId, 1);
     }
@@ -739,6 +744,10 @@ public final class QuestState {
 
     public void takeAllItems(int... itemsIds) {
         Arrays.stream(itemsIds).forEach(itemId -> takeItems(itemId, -1));
+    }
+
+    public void takeAllItems(Collection<Integer> itemsIds) {
+        itemsIds.forEach(itemId -> takeItems(itemId, -1));
     }
 
     public void unset(String var) {

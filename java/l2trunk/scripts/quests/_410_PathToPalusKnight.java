@@ -32,7 +32,7 @@ public final class _410_PathToPalusKnight extends Quest {
 
         addTalkId(KALINTA);
 
-        addKillId(POISON_SPIDER,ARACHNID_TRACKER,LYCANTHROPE);
+        addKillId(POISON_SPIDER, ARACHNID_TRACKER, LYCANTHROPE);
 
         addQuestItem(PALLUS_TALISMAN_ID,
                 VIRGILS_LETTER_ID,
@@ -62,7 +62,7 @@ public final class _410_PathToPalusKnight extends Quest {
                     htmltext = "master_virgil_q0410_03.htm";
             } else if (st.player.getLevel() < 18)
                 htmltext = "master_virgil_q0410_02.htm";
-            else if (st.haveQuestItem(GAZE_OF_ABYSS_ID) )
+            else if (st.haveQuestItem(GAZE_OF_ABYSS_ID))
                 htmltext = "master_virgil_q0410_04.htm";
         } else if ("30329_2".equals(event)) {
             htmltext = "master_virgil_q0410_10.htm";
@@ -94,10 +94,10 @@ public final class _410_PathToPalusKnight extends Quest {
         if (npcId == VIRGIL) {
             if (cond < 1)
                 htmltext = "master_virgil_q0410_01.htm";
-            else if (st.haveQuestItem(PALLUS_TALISMAN_ID) ) {
+            else if (st.haveQuestItem(PALLUS_TALISMAN_ID)) {
                 if (!st.haveQuestItem(LYCANTHROPE_SKULL_ID))
                     htmltext = "master_virgil_q0410_07.htm";
-                else if (st.haveQuestItem(LYCANTHROPE_SKULL_ID)  && st.getQuestItemsCount(LYCANTHROPE_SKULL_ID) < 13)
+                else if (!st.haveQuestItem(LYCANTHROPE_SKULL_ID, 12))
                     htmltext = "master_virgil_q0410_08.htm";
                 else if (st.haveQuestItem(LYCANTHROPE_SKULL_ID, 12))
                     htmltext = "master_virgil_q0410_09.htm";
@@ -109,22 +109,22 @@ public final class _410_PathToPalusKnight extends Quest {
                     if (!st.player.isVarSet("prof1")) {
                         st.player.setVar("prof1");
                         st.addExpAndSp(228064, 16455);
-                        st.giveItems(ADENA_ID, 81900);
+                        st.giveAdena(81900);
                     }
                 }
                 st.exitCurrentQuest();
                 st.playSound(SOUND_FINISH);
-            } else if (st.haveAnyQuestItems(MORTE_TALISMAN_ID,VIRGILS_LETTER_ID))
+            } else if (st.haveAnyQuestItems(MORTE_TALISMAN_ID, VIRGILS_LETTER_ID))
                 htmltext = "master_virgil_q0410_12.htm";
         } else if (npcId == KALINTA && cond > 0)
-            if (st.haveQuestItem(VIRGILS_LETTER_ID) )
+            if (st.haveQuestItem(VIRGILS_LETTER_ID))
                 htmltext = "kalinta_q0410_01.htm";
             else if (st.haveQuestItem(MORTE_TALISMAN_ID))
                 if (st.getQuestItemsCount(TRIMDEN_SILK_ID) < 1 && st.getQuestItemsCount(PREDATOR_CARAPACE_ID) < 1)
                     htmltext = "kalinta_q0410_03.htm";
                 else if (st.getQuestItemsCount(TRIMDEN_SILK_ID) < 1 | st.getQuestItemsCount(PREDATOR_CARAPACE_ID) < 1)
                     htmltext = "kalinta_q0410_04.htm";
-                else if (st.haveQuestItem(TRIMDEN_SILK_ID, 4) && st.haveQuestItem(PREDATOR_CARAPACE_ID) )
+                else if (st.haveQuestItem(TRIMDEN_SILK_ID, 4) && st.haveQuestItem(PREDATOR_CARAPACE_ID))
                     htmltext = "kalinta_q0410_05.htm";
         return htmltext;
     }
@@ -134,30 +134,23 @@ public final class _410_PathToPalusKnight extends Quest {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         if (npcId == LYCANTHROPE) {
-            if (cond == 1 && st.getQuestItemsCount(PALLUS_TALISMAN_ID) > 0 && st.getQuestItemsCount(LYCANTHROPE_SKULL_ID) < 13) {
-                st.giveItems(LYCANTHROPE_SKULL_ID);
-                if (st.getQuestItemsCount(LYCANTHROPE_SKULL_ID) > 12) {
+            if (cond == 1 && st.haveQuestItem(PALLUS_TALISMAN_ID)) {
+                st.giveItemIfNotHave(LYCANTHROPE_SKULL_ID, 13);
+                if (st.haveQuestItem(LYCANTHROPE_SKULL_ID, 13)) {
                     st.playSound(SOUND_MIDDLE);
                     st.setCond(2);
-                } else
-                    st.playSound(SOUND_ITEMGET);
+                }
             }
         } else if (npcId == POISON_SPIDER) {
-            if (cond == 4 && st.getQuestItemsCount(MORTE_TALISMAN_ID) > 0 && st.getQuestItemsCount(PREDATOR_CARAPACE_ID) < 1) {
-                st.giveItems(PREDATOR_CARAPACE_ID);
-                st.playSound(SOUND_MIDDLE);
-                if (st.getQuestItemsCount(TRIMDEN_SILK_ID) > 4)
-                    st.setCond(5);
-            }
+            if (cond == 4 && st.haveQuestItem(MORTE_TALISMAN_ID))
+                st.giveItemIfNotHave(PREDATOR_CARAPACE_ID);
         } else if (npcId == ARACHNID_TRACKER)
-            if (cond == 4 && st.getQuestItemsCount(MORTE_TALISMAN_ID) > 0 && st.getQuestItemsCount(TRIMDEN_SILK_ID) < 5) {
-                st.giveItems(TRIMDEN_SILK_ID);
-                if (st.getQuestItemsCount(TRIMDEN_SILK_ID) > 4) {
-                    st.playSound(SOUND_MIDDLE);
-                    if (st.getQuestItemsCount(PREDATOR_CARAPACE_ID) > 0)
-                        st.setCond(5);
-                } else
-                    st.playSound(SOUND_ITEMGET);
-            }
+            if (cond == 4 && st.haveQuestItem(MORTE_TALISMAN_ID))
+                st.giveItemIfNotHave(TRIMDEN_SILK_ID, 5);
+
+        if (st.haveQuestItem(PREDATOR_CARAPACE_ID) && st.haveQuestItem(TRIMDEN_SILK_ID, 5)) {
+            st.setCond(5);
+            st.playSound(SOUND_MIDDLE);
+        }
     }
 }

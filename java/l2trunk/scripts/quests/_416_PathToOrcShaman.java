@@ -111,14 +111,13 @@ public final class _416_PathToOrcShaman extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("tataru_zu_hestui_q0416_06.htm".equalsIgnoreCase(event)) {
-            st.giveItems(FireCharm, 1);
+            st.giveItems(FireCharm);
             st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if ("hestui_totem_spirit_q0416_03.htm".equalsIgnoreCase(event)) {
-            st.takeItems(HestuiMask, -1);
-            st.takeItems(FieryEgg2nd, -1);
-            st.giveItems(TotemSpiritClaw, 1);
+            st.takeAllItems(HestuiMask,FieryEgg2nd);
+            st.giveItems(TotemSpiritClaw);
             st.setCond(4);
         } else if ("tataru_zu_hestui_q0416_11.htm".equalsIgnoreCase(event)) {
             st.takeItems(TotemSpiritClaw);
@@ -138,7 +137,7 @@ public final class _416_PathToOrcShaman extends Quest {
                 if (!st.player.isVarSet("prof1")) {
                     st.player.setVar("prof1");
                     st.addExpAndSp(228064, 16455);
-                    st.giveItems(ADENA_ID, 81900);
+                    st.giveAdena( 81900);
                 }
             }
             st.playSound(SOUND_FINISH);
@@ -161,7 +160,7 @@ public final class _416_PathToOrcShaman extends Quest {
         String htmltext = "noquest";
         int cond = st.getCond();
         if (npcId == Hestui) {
-            if (st.getQuestItemsCount(MaskOfMedium) != 0) {
+            if (st.haveQuestItem(MaskOfMedium)) {
                 htmltext = "seer_umos_q0416_04.htm";
                 st.exitCurrentQuest();
             } else if (cond == 0) {
@@ -180,10 +179,7 @@ public final class _416_PathToOrcShaman extends Quest {
                 htmltext = "tataru_zu_hestui_q0416_07.htm";
             else if (cond == 2) {
                 htmltext = "tataru_zu_hestui_q0416_08.htm";
-                st.takeItems(KashaBearPelt);
-                st.takeItems(KashaBladeSpiderHusk);
-                st.takeItems(FieryEgg1st);
-                st.takeItems(FireCharm);
+                st.takeAllItems(KashaBearPelt,KashaBladeSpiderHusk,FieryEgg1st,FireCharm);
                 st.giveItems(HestuiMask);
                 st.giveItems(FieryEgg2nd);
                 st.setCond(3);
@@ -275,8 +271,8 @@ public final class _416_PathToOrcShaman extends Quest {
                 else if (cond == 9)
                     htmltext = "dudamara_totem_spirit_q0416_04.htm";
                 else if (cond == 10) {
-                    st.takeItems(BoundDurkaSpirit, -1);
-                    st.giveItems(TotemSpiritBlood, 1);
+                    st.takeItems(BoundDurkaSpirit);
+                    st.giveItems(TotemSpiritBlood);
                     htmltext = "dudamara_totem_spirit_q0416_05.htm";
                     st.setCond(11);
                 } else if (cond == 11)
@@ -297,7 +293,7 @@ public final class _416_PathToOrcShaman extends Quest {
                     else if (st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[7], aDROPLIST_COND[5], aDROPLIST_COND[6]))
                         if (aDROPLIST_COND[1] != cond && aDROPLIST_COND[1] != 0)
                             st.setCond(aDROPLIST_COND[1]);
-        if (st.getQuestItemsCount(KashaBearPelt) != 0 && st.getQuestItemsCount(KashaBladeSpiderHusk) != 0 && st.getQuestItemsCount(FieryEgg1st) != 0)
+        if (st.haveAllQuestItems(KashaBearPelt,KashaBladeSpiderHusk,FieryEgg1st))
             st.setCond(2);
         else if (cond == 9 && (npcId == VenomousSpider || npcId == ArachnidTracker)) {
             if (st.getQuestItemsCount(DurkaParasite) < 8) {
@@ -316,8 +312,7 @@ public final class _416_PathToOrcShaman extends Quest {
             GameObjectsStorage.getAllByNpcId(QuestMonsterDurkaSpirit, false)
                     .forEach(GameObject::deleteMe);
             if (cond == 9) {
-                st.takeItems(SpiritNet);
-                st.takeItems(DurkaParasite);
+                st.takeAllItems(SpiritNet,DurkaParasite);
                 st.giveItems(BoundDurkaSpirit);
                 st.playSound(SOUND_MIDDLE);
                 st.setCond(10);

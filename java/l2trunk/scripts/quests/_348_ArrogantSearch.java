@@ -8,6 +8,7 @@ import l2trunk.gameserver.network.serverpackets.RadarControl;
 import l2trunk.gameserver.utils.Location;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public final class _348_ArrogantSearch extends Quest {
@@ -52,7 +53,7 @@ public final class _348_ArrogantSearch extends Quest {
 
     //ARK: [key, summon, no-key text, openning-with-key text, already-openned text, content item]
     private final static Map<Integer, Integer[]> ARKS = new HashMap<>();
-    private final static Map<Integer, String[]> ARKS_TEXT = new HashMap<>();
+    private final static Map<Integer, List<String>> ARKS_TEXT = new HashMap<>();
     //npc: letter to take, item to check for, 1st time htm, return htm, completed part htm, [x,y,z of chest]
     private final static Map<Integer, Integer[]> ARK_OWNERS = new HashMap<>();
     private final static Map<Integer, String[]> ARK_OWNERS_TEXT = new HashMap<>();
@@ -75,21 +76,9 @@ public final class _348_ArrogantSearch extends Quest {
                 ARK_GUARDIAN_SHADOWFANG,
                 BRANCH_OF_SAINT
         });
-        ARKS_TEXT.put(HOLY_ARK_OF_SECRECY_1, new String[]{
-                "30977-01.htm",
-                "30977-02.htm",
-                "30977-03.htm"
-        });
-        ARKS_TEXT.put(HOLY_ARK_OF_SECRECY_2, new String[]{
-                "That doesn't belong to you.  Don't touch it!",
-                "30978-02.htm",
-                "30978-03.htm"
-        });
-        ARKS_TEXT.put(HOLY_ARK_OF_SECRECY_3, new String[]{
-                "Get off my sight, you infidels!",
-                "30979-02.htm",
-                "30979-03.htm"
-        });
+        ARKS_TEXT.put(HOLY_ARK_OF_SECRECY_1, List.of("30977-01.htm", "30977-02.htm", "30977-03.htm"));
+        ARKS_TEXT.put(HOLY_ARK_OF_SECRECY_2, List.of("That doesn't belong to you.  Don't touch it!", "30978-02.htm", "30978-03.htm"));
+        ARKS_TEXT.put(HOLY_ARK_OF_SECRECY_3, List.of("Get off my sight, you infidels!", "30979-02.htm", "30979-03.htm"));
 
         ARK_OWNERS.put(HARNE, new Integer[]{
                 HANELLINS_FIRST_LETTER,
@@ -309,18 +298,18 @@ public final class _348_ArrogantSearch extends Quest {
                 st.giveItems(HANELLINS_SECOND_LETTER);
                 st.giveItems(HANELLINS_THIRD_LETTER);
                 htmltext = "30864-05.htm";// Go get the 3 sacred relics
-            } else if (cond == 5 && !st.haveAllQuestItems(BOOK_OF_SAINT,BLOOD_OF_SAINT,BRANCH_OF_SAINT))
+            } else if (cond == 5 && !st.haveAllQuestItems(BOOK_OF_SAINT, BLOOD_OF_SAINT, BRANCH_OF_SAINT))
                 htmltext = "30864-05.htm";// Repeat: Go get the 3 sacred relics
             else if (cond == 5) {
                 htmltext = "30864-06.htm";// All relics collected!...Get me antidotes & greater healing
-                st.takeAllItems(BOOK_OF_SAINT,BLOOD_OF_SAINT,BRANCH_OF_SAINT);
+                st.takeAllItems(BOOK_OF_SAINT, BLOOD_OF_SAINT, BRANCH_OF_SAINT);
                 st.setCond(22);
-            } else if (cond == 22 && !st.haveQuestItem(ANTIDOTE, 5) && !st.haveQuestItem(HEALING_POTION) )
+            } else if (cond == 22 && !st.haveQuestItem(ANTIDOTE, 5) && !st.haveQuestItem(HEALING_POTION))
                 htmltext = "30864-06a.htm";// where are my antidotes & greater healing
             else if (cond == 22) {
                 st.takeItems(ANTIDOTE, 5);
                 st.takeItems(HEALING_POTION, 1);
-                if (!st.isSet("companions") ) {
+                if (!st.isSet("companions")) {
                     st.setCond(25);
                     htmltext = "30864-07.htm";// go get platinum tribe blood...
                     st.giveItems(WHITE_FABRIC_1);
@@ -330,12 +319,10 @@ public final class _348_ArrogantSearch extends Quest {
                     st.giveItems(WHITE_FABRIC_0, 3);
                 }
             } else if (cond == 25 && st.getQuestItemsCount(BLOODED_FABRIC) < 1) {
-                if (st.getQuestItemsCount(WHITE_FABRIC_1) < 1)
-                    st.giveItems(WHITE_FABRIC_1, 1);
+                st.giveItemIfNotHave(WHITE_FABRIC_1);
                 htmltext = "30864-07a.htm";
             } else if (cond == 26 && st.getQuestItemsCount(BLOODED_FABRIC) < 1) {
-                if (st.getQuestItemsCount(WHITE_FABRIC_2) < 1)
-                    st.giveItems(WHITE_FABRIC_2, 1);
+                st.giveItemIfNotHave(WHITE_FABRIC_2);
                 htmltext = "30864-07a.htm";
             } else if (cond == 25 && st.haveQuestItem(BLOODED_FABRIC) || cond == 28) {
                 // затычка, инфу искать надо, пропущен 1 конд с доставкой тряпок
@@ -349,7 +336,7 @@ public final class _348_ArrogantSearch extends Quest {
         else if (cond == 5)
             if (ARK_OWNERS.containsKey(npcId)) {
                 // first meeting...have the letter
-                if (st.getQuestItemsCount(ARK_OWNERS.get(npcId)[0]) == 1) {
+                if (st.haveQuestItem(ARK_OWNERS.get(npcId)[0])) {
                     st.takeItems(ARK_OWNERS.get(npcId)[0], 1);
                     htmltext = ARK_OWNERS_TEXT.get(npcId)[0];
                     st.player.sendPacket(new RadarControl(0, 1, Location.of(ARK_OWNERS.get(npcId)[2], ARK_OWNERS.get(npcId)[3], ARK_OWNERS.get(npcId)[4])));
@@ -363,28 +350,28 @@ public final class _348_ArrogantSearch extends Quest {
                     htmltext = ARK_OWNERS_TEXT.get(npcId)[2];
             } else if (ARKS.containsKey(npcId)) {
                 // if you do not have the key (first meeting)
-                if (st.getQuestItemsCount(ARKS.get(npcId)[0]) == 0) {
+                if (!st.haveQuestItem(ARKS.get(npcId)[0])) {
                     if (ARKS.get(npcId)[1] != 0)
                         st.addSpawn(ARKS.get(npcId)[1], 120000);
-                    return ARKS_TEXT.get(npcId)[0];
+                    return ARKS_TEXT.get(npcId).get(0);
                 }
                 // if the getPlayer already has openned the chest and has its content, show "chest empty"
                 else if (st.getQuestItemsCount(ARKS.get(npcId)[2]) == 1)
-                    htmltext = ARKS_TEXT.get(npcId)[2];
+                    htmltext = ARKS_TEXT.get(npcId).get(2);
                 else
                 // the getPlayer has the key and doesn't have the contents, give the contents
                 {
-                    htmltext = ARKS_TEXT.get(npcId)[1];
+                    htmltext = ARKS_TEXT.get(npcId).get(1);
                     st.takeItems(ARKS.get(npcId)[0], 1);
-                    st.giveItems(ARKS.get(npcId)[2], 1);
+                    st.giveItems(ARKS.get(npcId)[2]);
                 }
             } else if (npcId == ARK_GUARDIANS_CORPSE)
                 // if you do not have the key (first meeting)
-                if (st.getQuestItemsCount(FIRST_KEY_OF_ARK) == 0 && st.getInt("angelKillerIsDefeated") == 0) {
+                if (!st.haveQuestItem(FIRST_KEY_OF_ARK) && !st.isSet("angelKillerIsDefeated")) {
                     st.addSpawn(ANGEL_KILLER, 120000);
                     htmltext = "30980-01.htm";
-                } else if (st.getQuestItemsCount(FIRST_KEY_OF_ARK) == 0 && st.getInt("angelKillerIsDefeated") == 1) {
-                    st.giveItems(FIRST_KEY_OF_ARK, 1);
+                } else if (!st.haveQuestItem(FIRST_KEY_OF_ARK) && st.isSet("angelKillerIsDefeated")) {
+                    st.giveItems(FIRST_KEY_OF_ARK);
                     htmltext = "30980-02.htm";
                 } else
                     htmltext = "30980-03.htm";
@@ -407,9 +394,9 @@ public final class _348_ArrogantSearch extends Quest {
                 if (take != 0)
                     st.takeItems(take, 1);
                 if (BLOODED_FABRIC == item && st.haveQuestItem(BLOODED_FABRIC, 30)) {
-                    QuestState FatesWhisper = st.player.getQuestState(_234_FatesWhisper.class);
-                    if (FatesWhisper != null && FatesWhisper.getCond() == 8)
-                        FatesWhisper.set("cond", 9);
+                    QuestState fatesWhisper = st.player.getQuestState(_234_FatesWhisper.class);
+                    if (fatesWhisper != null && fatesWhisper.getCond() == 8)
+                        fatesWhisper.setCond(9);
                 }
             }
         }

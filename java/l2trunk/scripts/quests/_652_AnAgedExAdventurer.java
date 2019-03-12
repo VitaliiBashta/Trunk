@@ -51,7 +51,7 @@ public final class _652_AnAgedExAdventurer extends Quest {
                     htmltext = "retired_oldman_tantan_q0652_01.htm";
         } else if (npcId == Sara && cond == 1) {
             htmltext = "sara_q0652_01.htm";
-            st.giveItems(ADENA_ID, 10000, true);
+            st.giveAdena( 10000);
             if (Rnd.chance(50))
                 st.giveItems(ScrollEnchantArmorD);
             st.playSound(SOUND_FINISH);

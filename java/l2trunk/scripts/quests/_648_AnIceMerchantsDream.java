@@ -50,9 +50,8 @@ public final class _648_AnIceMerchantsDream extends Quest {
         if ("repre_q0648_14.htm".equalsIgnoreCase(event)) {
             long reward = Silver_Ice_Crystal_Count * 300 + Black_Ice_Crystal_Count * 1200;
             if (reward > 0) {
-                st.takeItems(Silver_Ice_Crystal);
-                st.takeItems(Black_Ice_Crystal);
-                st.giveItems(ADENA_ID, reward);
+                st.takeAllItems(Silver_Ice_Crystal,Black_Ice_Crystal);
+                st.giveAdena( reward);
             } else
                 return "repre_q0648_15.htm";
         } else if ("ice_lathe_q0648_06.htm".equalsIgnoreCase(event)) {

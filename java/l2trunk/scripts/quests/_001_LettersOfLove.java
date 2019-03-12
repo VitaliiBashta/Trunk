@@ -21,8 +21,8 @@ public final class _001_LettersOfLove extends Quest {
         super(false);
 
         addStartNpc(DARIN);
-        addTalkId(ROXXY,BAULRO);
-        addQuestItem(DARINGS_LETTER,ROXXY_KERCHIEF,DARINGS_RECEIPT,BAULS_POTION);
+        addTalkId(ROXXY, BAULRO);
+        addQuestItem(DARINGS_LETTER, ROXXY_KERCHIEF, DARINGS_RECEIPT, BAULS_POTION);
     }
 
     @Override
@@ -54,7 +54,7 @@ public final class _001_LettersOfLove extends Quest {
                     }
                 } else if (cond == 1)
                     htmltext = "daring_q0001_07.htm";
-                else if (cond == 2 && st.getQuestItemsCount(ROXXY_KERCHIEF) == 1) {
+                else if (cond == 2 && st.haveQuestItem(ROXXY_KERCHIEF)) {
                     htmltext = "daring_q0001_08.htm";
                     st.takeItems(ROXXY_KERCHIEF);
                     st.giveItems(DARINGS_RECEIPT);
@@ -62,7 +62,7 @@ public final class _001_LettersOfLove extends Quest {
                     st.playSound(SOUND_MIDDLE);
                 } else if (cond == 3)
                     htmltext = "daring_q0001_09.htm";
-                else if (cond == 4 && st.getQuestItemsCount(BAULS_POTION) == 1) {
+                else if (cond == 4 && st.haveQuestItem(BAULS_POTION)) {
                     htmltext = "daring_q0001_10.htm";
                     st.takeItems(BAULS_POTION);
                     st.giveItems(NECKLACE);
@@ -75,19 +75,19 @@ public final class _001_LettersOfLove extends Quest {
                 }
                 break;
             case ROXXY:
-                if (cond == 1 && st.getQuestItemsCount(ROXXY_KERCHIEF) == 0 && st.getQuestItemsCount(DARINGS_LETTER) > 0) {
+                if (cond == 1 && !st.haveQuestItem(ROXXY_KERCHIEF) && st.haveQuestItem(DARINGS_LETTER)) {
                     htmltext = "rapunzel_q0001_01.htm";
                     st.takeItems(DARINGS_LETTER);
                     st.giveItems(ROXXY_KERCHIEF);
                     st.setCond(2);
                     st.playSound(SOUND_MIDDLE);
-                } else if (cond == 2 && st.getQuestItemsCount(ROXXY_KERCHIEF) > 0)
+                } else if (cond == 2 && st.haveQuestItem(ROXXY_KERCHIEF))
                     htmltext = "rapunzel_q0001_02.htm";
-                else if (cond > 2 && (st.getQuestItemsCount(BAULS_POTION) > 0 || st.getQuestItemsCount(DARINGS_RECEIPT) > 0))
+                else if (cond > 2 && (st.haveAnyQuestItems(BAULS_POTION, DARINGS_RECEIPT)))
                     htmltext = "rapunzel_q0001_03.htm";
                 break;
             case BAULRO:
-                if (cond == 3 && st.getQuestItemsCount(DARINGS_RECEIPT) == 1) {
+                if (cond == 3 && st.haveQuestItem(DARINGS_RECEIPT)) {
                     htmltext = "baul_q0001_01.htm";
                     st.takeItems(DARINGS_RECEIPT);
                     st.giveItems(BAULS_POTION);

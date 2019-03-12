@@ -46,36 +46,31 @@ public final class _456_DontKnowDontCare extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("sepsoul_q456_05.htm")) {
+        if ("sepsoul_q456_05.htm".equalsIgnoreCase(event)) {
             st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("take_essense")) {
+        } else if ("take_essense".equalsIgnoreCase(event)) {
             if (st.getCond() == 1 && npc != null) {
                 switch (npc.getNpcId()) {
                     case DrakeLordCorpse:
-                        if (st.getQuestItemsCount(DrakeLordsEssence) < 1)
-                            st.giveItems(DrakeLordsEssence, 1);
+                        st.giveItemIfNotHave(DrakeLordsEssence);
                         break;
                     case BehemothLeaderCorpse:
-                        if (st.getQuestItemsCount(BehemothLeadersEssence) < 1)
-                            st.giveItems(BehemothLeadersEssence, 1);
+                        st.giveItemIfNotHave(BehemothLeadersEssence);
                         break;
                     case DragonBeastCorpse:
-                        if (st.getQuestItemsCount(DragonBeastsEssence) < 1)
-                            st.giveItems(DragonBeastsEssence, 1);
+                        st.giveItemIfNotHave(DragonBeastsEssence);
                         break;
                     default:
                         break;
                 }
-                if (st.getQuestItemsCount(DrakeLordsEssence) > 0 && st.getQuestItemsCount(BehemothLeadersEssence) > 0 && st.getQuestItemsCount(DragonBeastsEssence) > 0)
+                if (st.haveAllQuestItems(DrakeLordsEssence,BehemothLeadersEssence,DragonBeastsEssence))
                     st.setCond(2);
             }
             return null;
-        } else if (event.equalsIgnoreCase("sepsoul_q456_08.htm")) {
-            st.takeItems(DrakeLordsEssence);
-            st.takeItems(BehemothLeadersEssence);
-            st.takeItems(DragonBeastsEssence);
+        } else if ("sepsoul_q456_08.htm".equalsIgnoreCase(event)) {
+            st.takeAllItems(DrakeLordsEssence,BehemothLeadersEssence,DragonBeastsEssence);
 
             if (Rnd.chance(2))
                 st.giveItems(Rnd.get(weapons));
@@ -87,7 +82,7 @@ public final class _456_DontKnowDontCare extends Quest {
                 st.giveItems(Rnd.get(scrolls));
 
             if (Rnd.chance(80))
-                st.giveItems(Rnd.get(reward_attr_crystal),10);
+                st.giveItems(Rnd.get(reward_attr_crystal), 10);
             st.giveItems(gemstone_s, 10);
 
             st.complete();

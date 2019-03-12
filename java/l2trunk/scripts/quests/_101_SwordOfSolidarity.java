@@ -22,8 +22,7 @@ public final class _101_SwordOfSolidarity extends Quest {
         addStartNpc(30008);
         addTalkId(30283);
 
-        addKillId(20361);
-        addKillId(20362);
+        addKillId(20361,20362);
 
         addQuestItem(ALLTRANS_NOTE, HOWTOGO_RUINS, BROKEN_BLADE_TOP, BROKEN_BLADE_BOTTOM, ROIENS_LETTER, BROKEN_SWORD_HANDLE);
     }
@@ -85,41 +84,39 @@ public final class _101_SwordOfSolidarity extends Quest {
                     st.exitCurrentQuest();
                 }
 
-            } else if (cond == 1 && st.getQuestItemsCount(ROIENS_LETTER) == 1)
+            } else if (cond == 1 && st.haveQuestItem(ROIENS_LETTER) )
                 htmltext = "roien_q0101_05.htm";
             else if (cond >= 2 && st.getQuestItemsCount(ROIENS_LETTER) == 0 && st.getQuestItemsCount(ALLTRANS_NOTE) == 0) {
-                if (st.getQuestItemsCount(BROKEN_BLADE_TOP) > 0 && st.getQuestItemsCount(BROKEN_BLADE_BOTTOM) > 0)
+                if (st.haveAllQuestItems(BROKEN_BLADE_TOP,BROKEN_BLADE_BOTTOM) )
                     htmltext = "roien_q0101_12.htm";
                 if (st.getQuestItemsCount(BROKEN_BLADE_TOP) + st.getQuestItemsCount(BROKEN_BLADE_BOTTOM) <= 1)
                     htmltext = "roien_q0101_11.htm";
-                if (st.getQuestItemsCount(BROKEN_SWORD_HANDLE) > 0)
+                if (st.haveQuestItem(BROKEN_SWORD_HANDLE))
                     htmltext = "roien_q0101_07.htm";
-                if (st.getQuestItemsCount(HOWTOGO_RUINS) == 1)
+                if (st.haveQuestItem(HOWTOGO_RUINS) )
                     htmltext = "roien_q0101_10.htm";
-            } else if (cond == 4 && st.getQuestItemsCount(ALLTRANS_NOTE) > 0) {
+            } else if (cond == 4 && st.haveQuestItem(ALLTRANS_NOTE) ) {
                 htmltext = "roien_q0101_06.htm";
                 st.setCond(5);
                 st.takeItems(ALLTRANS_NOTE);
                 st.giveItems(BROKEN_SWORD_HANDLE);
             }
         } else if (npcId == 30283)
-            if (cond == 1 && st.getQuestItemsCount(ROIENS_LETTER) > 0)
+            if (cond == 1 && st.haveQuestItem(ROIENS_LETTER) )
                 htmltext = "blacksmith_alltran_q0101_01.htm";
-            else if (cond >= 2 && st.getQuestItemsCount(HOWTOGO_RUINS) == 1) {
+            else if (cond >= 2 && st.haveQuestItem(HOWTOGO_RUINS) ) {
                 if (st.getQuestItemsCount(BROKEN_BLADE_TOP) + st.getQuestItemsCount(BROKEN_BLADE_BOTTOM) == 1)
                     htmltext = "blacksmith_alltran_q0101_08.htm";
                 else if (st.getQuestItemsCount(BROKEN_BLADE_TOP) + st.getQuestItemsCount(BROKEN_BLADE_BOTTOM) == 0)
                     htmltext = "blacksmith_alltran_q0101_03.htm";
-                else if (st.getQuestItemsCount(BROKEN_BLADE_TOP) > 0 && st.getQuestItemsCount(BROKEN_BLADE_BOTTOM) > 0) {
+                else if (st.haveAllQuestItems(BROKEN_BLADE_TOP,BROKEN_BLADE_BOTTOM)) {
                     htmltext = "blacksmith_alltran_q0101_04.htm";
                     st.setCond(4);
-                    st.takeItems(HOWTOGO_RUINS);
-                    st.takeItems(BROKEN_BLADE_TOP);
-                    st.takeItems(BROKEN_BLADE_BOTTOM);
+                    st.takeAllItems(HOWTOGO_RUINS,BROKEN_BLADE_TOP,BROKEN_BLADE_BOTTOM);
                     st.giveItems(ALLTRANS_NOTE);
-                } else if (cond == 4 && st.getQuestItemsCount(ALLTRANS_NOTE) > 0)
+                } else if (cond == 4 && st.haveQuestItem(ALLTRANS_NOTE))
                     htmltext = "blacksmith_alltran_q0101_05.htm";
-            } else if (cond == 5 && st.getQuestItemsCount(BROKEN_SWORD_HANDLE) > 0)
+            } else if (cond == 5 && st.haveQuestItem(BROKEN_SWORD_HANDLE))
                 htmltext = "blacksmith_alltran_q0101_06.htm";
         return htmltext;
     }
@@ -127,15 +124,15 @@ public final class _101_SwordOfSolidarity extends Quest {
     @Override
     public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
-        if ((npcId == 20361 || npcId == 20362) && st.getQuestItemsCount(HOWTOGO_RUINS) > 0) {
+        if ((npcId == 20361 || npcId == 20362) && st.haveQuestItem(HOWTOGO_RUINS)) {
             if (st.getQuestItemsCount(BROKEN_BLADE_TOP) == 0 && Rnd.chance(60)) {
                 st.giveItems(BROKEN_BLADE_TOP);
                 st.playSound(SOUND_MIDDLE);
-            } else if (st.getQuestItemsCount(BROKEN_BLADE_BOTTOM) == 0 && Rnd.chance(60)) {
-                st.giveItems(BROKEN_BLADE_BOTTOM);
+            } else if (Rnd.chance(60)) {
+                st.giveItemIfNotHave(BROKEN_BLADE_BOTTOM);
                 st.playSound(SOUND_MIDDLE);
             }
-            if (st.getQuestItemsCount(BROKEN_BLADE_TOP) > 0 && st.getQuestItemsCount(BROKEN_BLADE_BOTTOM) > 0)
+            if (st.getQuestItemsCount(BROKEN_BLADE_TOP) > 0 && st.haveQuestItem(BROKEN_BLADE_BOTTOM))
                 st.setCond(3);
         }
     }

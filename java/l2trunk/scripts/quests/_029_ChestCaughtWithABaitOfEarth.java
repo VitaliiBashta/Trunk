@@ -29,19 +29,19 @@ public final class _029_ChestCaughtWithABaitOfEarth extends Quest {
                 st.playSound(SOUND_ACCEPT);
                 break;
             case "fisher_willeri_q0029_0201.htm":
-                if (st.getQuestItemsCount(SmallPurpleTreasureChest) > 0) {
+                if (st.haveQuestItem(SmallPurpleTreasureChest)) {
                     st.setCond(2);
                     st.playSound(SOUND_MIDDLE);
                     st.takeItems(SmallPurpleTreasureChest, 1);
-                    st.giveItems(SmallGlassBox, 1);
+                    st.giveItems(SmallGlassBox);
                 } else
                     htmltext = "fisher_willeri_q0029_0202.htm";
                 break;
             case "29_GiveGlassBox":
-                if (st.getQuestItemsCount(SmallGlassBox) == 1) {
+                if (st.haveQuestItem(SmallGlassBox)) {
                     htmltext = "magister_anabel_q0029_0301.htm";
-                    st.takeItems(SmallGlassBox, -1);
-                    st.giveItems(PlatedLeatherGloves, 1);
+                    st.takeItems(SmallGlassBox);
+                    st.giveItems(PlatedLeatherGloves);
                     st.playSound(SOUND_FINISH);
                     st.finish();
                 } else {

@@ -5,6 +5,8 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
+import java.util.stream.IntStream;
+
 public final class _626_ADarkTwilight extends Quest {
     //NPC
     private static final int Hierarch = 31517;
@@ -14,29 +16,28 @@ public final class _626_ADarkTwilight extends Quest {
     public _626_ADarkTwilight() {
         super(true);
         addStartNpc(Hierarch);
-        for (int npcId = 21520; npcId <= 21542; npcId++)
-            addKillId(npcId);
+        addKillId(IntStream.rangeClosed(21520, 21542).toArray());
         addQuestItem(BloodOfSaint);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("dark_presbyter_q0626_0104.htm")) {
+        if ("dark_presbyter_q0626_0104.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.start();
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("dark_presbyter_q0626_0201.htm")) {
-            if (st.getQuestItemsCount(BloodOfSaint) < 300)
+        } else if ("dark_presbyter_q0626_0201.htm".equalsIgnoreCase(event)) {
+            if (!st.haveQuestItem(BloodOfSaint, 300))
                 htmltext = "dark_presbyter_q0626_0203.htm";
-        } else if (event.equalsIgnoreCase("rew_exp")) {
-            st.takeItems(BloodOfSaint, -1);
+        } else if ("rew_exp".equalsIgnoreCase(event)) {
+            st.takeItems(BloodOfSaint);
             st.addExpAndSp(162773, 12500);
             htmltext = "dark_presbyter_q0626_0202.htm";
             st.exitCurrentQuest();
-        } else if (event.equalsIgnoreCase("rew_adena")) {
-            st.takeItems(BloodOfSaint, -1);
-            st.giveItems(ADENA_ID, 100000, true);
+        } else if ("rew_adena".equalsIgnoreCase(event)) {
+            st.takeItems(BloodOfSaint);
+            st.giveAdena(100000);
             htmltext = "dark_presbyter_q0626_0202.htm";
             st.exitCurrentQuest();
         }
@@ -66,7 +67,7 @@ public final class _626_ADarkTwilight extends Quest {
     public void onKill(NpcInstance npc, QuestState st) {
         if (st.getCond() == 1 && Rnd.chance(70)) {
             st.giveItems(BloodOfSaint);
-            if (st.getQuestItemsCount(BloodOfSaint) == 300)
+            if (st.haveQuestItem(BloodOfSaint, 300))
                 st.setCond(2);
         }
     }

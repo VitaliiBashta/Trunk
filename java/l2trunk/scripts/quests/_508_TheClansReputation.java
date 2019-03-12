@@ -66,7 +66,7 @@ public final class _508_TheClansReputation extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         int cond = st.getCond();
         String htmltext = event;
-        if (event.equalsIgnoreCase("30868-0.htm") && cond == 0) {
+        if ("30868-0.htm".equalsIgnoreCase(event) && cond == 0) {
             st.setCond(1);
             st.start();
         } else if (Util.isNumber(event)) {
@@ -76,7 +76,7 @@ public final class _508_TheClansReputation extends Quest {
             if (evt > 0)
                 st.addRadar(RADAR.get(evt));
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("30868-7.htm")) {
+        } else if ("30868-7.htm".equalsIgnoreCase(event)) {
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest();
         }
@@ -108,14 +108,14 @@ public final class _508_TheClansReputation extends Quest {
                     htmltext = "30868-0.htm";
                 } else {
                     int item = REWARDS_LIST.get(raid).getKey();
-                    long count = st.getQuestItemsCount(item);
-                    if (count == 0)
+                    boolean haveItem = st.haveQuestItem(item);
+                    if (!haveItem)
                         htmltext = "30868-" + raid + "a.htm";
-                    else if (count == 1) {
+                    else {
                         htmltext = "30868-" + raid + "buffPrice.htm";
                         int increasedPoints = clan.incReputation(REWARDS_LIST.get(raid).getValue(), true, "_508_TheClansReputation");
                         st.player.sendPacket(new SystemMessage(SystemMessage.YOU_HAVE_SUCCESSFULLY_COMPLETED_A_CLAN_QUEST_S1_POINTS_HAVE_BEEN_ADDED_TO_YOUR_CLAN_REPUTATION_SCORE).addNumber(increasedPoints));
-                        st.takeItems(item, 1);
+                        st.takeItems(item);
                     }
                 }
             }
@@ -141,8 +141,8 @@ public final class _508_TheClansReputation extends Quest {
 
         int raid = REWARDS_LIST.get(st.getInt("raid")).getKey();
         int item = REWARDS_LIST.get(st.getInt("raid")).getValue();
-        if (npc.getNpcId() == raid && st.getQuestItemsCount(item) == 0) {
-            st.giveItems(item);
+        if (npc.getNpcId() == raid) {
+            st.giveItemIfNotHave(item);
             st.playSound(SOUND_MIDDLE);
         }
     }

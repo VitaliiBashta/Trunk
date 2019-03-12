@@ -31,27 +31,27 @@ public final class _042_HelpTheUncle extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equals("1")) {
+        if ("1".equals(event)) {
             htmltext = "pet_manager_waters_q0042_0104.htm";
             st.setCond(1);
             st.start();
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equals("3") && st.getQuestItemsCount(TRIDENT) > 0) {
+        } else if ("3".equals(event) && st.haveQuestItem(TRIDENT) ) {
             htmltext = "pet_manager_waters_q0042_0201.htm";
             st.takeItems(TRIDENT, 1);
             st.setCond(2);
-        } else if (event.equals("4") && st.getQuestItemsCount(MAP_PIECE) >= MAX_COUNT) {
+        } else if ("4".equals(event) && st.haveQuestItem(MAP_PIECE, MAX_COUNT)) {
             htmltext = "pet_manager_waters_q0042_0301.htm";
-            st.takeItems(MAP_PIECE, MAX_COUNT);
-            st.giveItems(MAP, 1);
+            st.takeItems(MAP_PIECE);
+            st.giveItems(MAP);
             st.setCond(4);
-        } else if (event.equals("5") && st.getQuestItemsCount(MAP) > 0) {
+        } else if ("5".equals(event) && st.haveQuestItem(MAP)) {
             htmltext = "sophia_q0042_0401.htm";
-            st.takeItems(MAP, 1);
+            st.takeItems(MAP);
             st.setCond(5);
         } else if (event.equals("7")) {
             htmltext = "pet_manager_waters_q0042_0501.htm";
-            st.giveItems(PET_TICKET, 1);
+            st.giveItems(PET_TICKET);
             st.unset("cond");
             st.finish();
         }

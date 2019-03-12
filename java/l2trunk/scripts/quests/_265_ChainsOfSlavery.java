@@ -54,11 +54,8 @@ public final class _265_ChainsOfSlavery extends Quest {
         } else {
             long count = st.getQuestItemsCount(IMP_SHACKLES);
             if (count > 0)
-                if (count >= 10)
-                    st.giveItems(ADENA_ID, 13 * count + 500, true);
-                else
-                    st.giveItems(ADENA_ID, 13 * count, true);
-            st.takeItems(IMP_SHACKLES, -1);
+                st.giveAdena(13 * count + 500);
+            st.takeItems(IMP_SHACKLES);
             htmltext = "sentry_krpion_q0265_05.htm";
 
             if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("p1q2")) {

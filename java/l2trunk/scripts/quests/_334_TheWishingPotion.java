@@ -276,9 +276,9 @@ public final class _334_TheWishingPotion extends Quest {
                     st.addSpawn(GRIMA);
                     st.addSpawn(GRIMA);
                 } else if (WISH_CHANCE >= 66)
-                    st.giveItems(ADENA_ID, 10000);
+                    st.giveAdena( 10000);
                 else if (Rnd.chance(2))
-                    st.giveItems(ADENA_ID, ((Rnd.get(10) + 1) * 1_000_000L));
+                    st.giveAdena( ((Rnd.get(10) + 1) * 1_000_000L));
                 else {
                     st.addSpawn(GRIMA);
                     st.addSpawn(GRIMA);
@@ -355,7 +355,7 @@ public final class _334_TheWishingPotion extends Quest {
         } else if (npcId == TORAI) {
             if (st.haveQuestItem(FORBIDDEN_LOVE_SCROLL_ID)) {
                 st.takeItems(FORBIDDEN_LOVE_SCROLL_ID, 1);
-                st.giveItems(ADENA_ID, 500000);
+                st.giveAdena(500000);
                 htmltext = "30557-01.htm";
             }
         } else if (npcId == WISDOM_CHEST) {

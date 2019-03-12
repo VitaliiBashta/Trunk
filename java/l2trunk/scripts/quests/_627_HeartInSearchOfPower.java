@@ -60,27 +60,27 @@ public class _627_HeartInSearchOfPower extends Quest {
                 switch (event) {
                     case "627_11":
                         htmltext = "dark_necromancer_q0627_0402.htm";
-                        st.giveItems(ADENA_ID, 100000, true);
+                        st.giveAdena( 100000);
                         break;
                     case "627_12":
                         htmltext = "dark_necromancer_q0627_0402.htm";
                         st.giveItems(ASOFE, 13, true);
-                        st.giveItems(ADENA_ID, 6400, true);
+                        st.giveAdena( 6400);
                         break;
                     case "627_13":
                         htmltext = "dark_necromancer_q0627_0402.htm";
                         st.giveItems(THONS, 13, true);
-                        st.giveItems(ADENA_ID, 6400, true);
+                        st.giveAdena(6400);
                         break;
                     case "627_14":
                         htmltext = "dark_necromancer_q0627_0402.htm";
                         st.giveItems(ENRIA, 6, true);
-                        st.giveItems(ADENA_ID, 13600, true);
+                        st.giveAdena(13600);
                         break;
                     case "627_15":
                         htmltext = "dark_necromancer_q0627_0402.htm";
                         st.giveItems(MOLD_HARDENER, 3, true);
-                        st.giveItems(ADENA_ID, 17200, true);
+                        st.giveAdena(17200);
                         break;
                 }
                 st.playSound(SOUND_FINISH);
@@ -107,9 +107,9 @@ public class _627_HeartInSearchOfPower extends Quest {
                 htmltext = "dark_necromancer_q0627_0106.htm";
             else if (st.getQuestItemsCount(GEM_OF_SUBMISSION) == 300)
                 htmltext = "dark_necromancer_q0627_0105.htm";
-            else if (st.getQuestItemsCount(GEM_OF_SAINTS) > 0)
+            else if (st.haveQuestItem(GEM_OF_SAINTS))
                 htmltext = "dark_necromancer_q0627_0301.htm";
-        } else if (npcId == ENFEUX && st.getQuestItemsCount(SEAL_OF_LIGHT) > 0)
+        } else if (npcId == ENFEUX && st.haveQuestItem(SEAL_OF_LIGHT))
             htmltext = "enfeux_q0627_0201.htm";
         return htmltext;
     }

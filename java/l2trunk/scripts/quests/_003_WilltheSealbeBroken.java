@@ -9,7 +9,7 @@ import java.util.List;
 
 public final class _003_WilltheSealbeBroken extends Quest {
     private static final int StartNpc = 30141;
-    private final List<Integer> Monster = List.of(
+    private final List<Integer> MONSTERS = List.of(
             20031, 20041, 20046, 20048, 20052, 20057);
 
     private final int OnyxBeastEye = 1081;
@@ -19,7 +19,7 @@ public final class _003_WilltheSealbeBroken extends Quest {
     public _003_WilltheSealbeBroken() {
         super(false);
         addStartNpc(StartNpc);
-        addKillId(Monster);
+        addKillId(MONSTERS);
         addQuestItem(OnyxBeastEye, TaintStone, SuccubusBlood);
     }
 
@@ -51,11 +51,9 @@ public final class _003_WilltheSealbeBroken extends Quest {
                 st.exitCurrentQuest();
             }
         else if (id == STARTED)
-            if (st.getQuestItemsCount(OnyxBeastEye) > 0 && st.getQuestItemsCount(TaintStone) > 0 && st.getQuestItemsCount(SuccubusBlood) > 0) {
+            if (st.haveAllQuestItems(OnyxBeastEye,TaintStone,SuccubusBlood)) {
                 htmltext = "redry_q0003_06.htm";
-                st.takeItems(OnyxBeastEye);
-                st.takeItems(TaintStone);
-                st.takeItems(SuccubusBlood);
+                st.takeAllItems(OnyxBeastEye,TaintStone,SuccubusBlood);
                 st.giveItems(956, 1, true);
                 st.playSound(SOUND_FINISH);
                 st.finish();
@@ -69,17 +67,14 @@ public final class _003_WilltheSealbeBroken extends Quest {
         int npcId = npc.getNpcId();
         int id = st.getState();
         if (id == STARTED) {
-            if (npcId == Monster.get(0) && st.getQuestItemsCount(OnyxBeastEye) == 0) {
-                st.giveItems(OnyxBeastEye);
-                st.playSound(SOUND_ITEMGET);
-            } else if ((npcId == Monster.get(1) || npcId == Monster.get(2)) && st.getQuestItemsCount(TaintStone) == 0) {
-                st.giveItems(TaintStone);
-                st.playSound(SOUND_ITEMGET);
-            } else if ((npcId == Monster.get(3) || npcId == Monster.get(4) || npcId == Monster.get(5) && st.getQuestItemsCount(SuccubusBlood) == 0)) {
-                st.giveItems(SuccubusBlood);
-                st.playSound(SOUND_ITEMGET);
+            if (npcId == MONSTERS.get(0)) {
+                st.giveItemIfNotHave(OnyxBeastEye);
+            } else if ((npcId == MONSTERS.get(1) || npcId == MONSTERS.get(2)) ) {
+                st.giveItemIfNotHave(TaintStone);
+            } else if (npcId == MONSTERS.get(3) || npcId == MONSTERS.get(4) || npcId == MONSTERS.get(5)) {
+                st.giveItemIfNotHave(SuccubusBlood);
             }
-            if (st.getQuestItemsCount(OnyxBeastEye) > 0 && st.getQuestItemsCount(TaintStone) > 0 && st.getQuestItemsCount(SuccubusBlood) > 0) {
+            if (st.haveAllQuestItems(OnyxBeastEye,TaintStone,SuccubusBlood)) {
                 st.setCond(2);
                 st.playSound(SOUND_MIDDLE);
             }

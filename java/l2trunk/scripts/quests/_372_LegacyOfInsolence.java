@@ -107,7 +107,7 @@ public final class _372_LegacyOfInsolence extends Quest {
                     giveRecipe(st, reward_item_id);
             st.playSound(SOUND_JACKPOT);
         } else if (Rnd.chance(Adena4k_Reward_Chance))
-            st.giveItems(ADENA_ID, 4000, false);
+            st.giveAdena( 4000);
         else
             giveRecipe(st, Rnd.get(reward));
 

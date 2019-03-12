@@ -50,9 +50,9 @@ public final class _345_MethodToRaiseTheDead extends Quest {
                 htmltext = "dorothy_the_locksmith_q0345_07.htm";
                 break;
             case "3":
-                if (st.getQuestItemsCount(ADENA_ID) >= 1000) {
+                if (st.haveQuestItem(ADENA_ID, 1000)) {
                     st.takeItems(ADENA_ID, 1000);
-                    st.giveItems(POWDER_TO_SUMMON_DEAD_SOULS, 1);
+                    st.giveItems(POWDER_TO_SUMMON_DEAD_SOULS);
                     st.setCond(3);
                     htmltext = "magister_xenovia_q0345_03.htm";
                     st.playSound(SOUND_ITEMGET);
@@ -93,7 +93,7 @@ public final class _345_MethodToRaiseTheDead extends Quest {
             else if (cond == 7) {
                 htmltext = "dorothy_the_locksmith_q0345_14.htm";
                 st.setCond(1);
-                st.giveItems(ADENA_ID, amount * 238);
+                st.giveAdena(amount * 238);
                 st.giveItems(BILL_OF_IASON_HEINE, Rnd.get(7) + 1);
                 st.takeItems(USELESS_BONE_PIECES);
             }

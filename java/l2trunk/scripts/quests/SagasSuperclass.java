@@ -112,16 +112,16 @@ public abstract class SagasSuperclass extends Quest {
         }
     }
 
-    private void FinishQuest(QuestState st, Player player) {
+    private void finishQuest(QuestState st, Player player) {
         st.addExpAndSp(2586527, 0);
-        st.giveItems(ADENA_ID, 5000000);
+        st.giveAdena(5000000);
         st.giveItems(6622, 1, true);
         st.exitCurrentQuest();
         player.setClassId(getClassId(player), false, true);
         if (!player.isSubClassActive() && player.getBaseClassId() == getPrevClass(player))
             player.setBaseClass(getClassId(player));
         player.broadcastCharInfo();
-        Cast(st.findTemplate(NPC.get(0)), player, 4339);
+        cast(st.findTemplate(NPC.get(0)), player, 4339);
     }
 
     void registerNPCs() {
@@ -148,31 +148,32 @@ public abstract class SagasSuperclass extends Quest {
         return classid;
     }
 
-    ClassId getPrevClass(Player player) {
+    private ClassId getPrevClass(Player player) {
         return classid.parent;
     }
 
-    private void Cast(NpcInstance npc, Creature target, int skillId) {
+    private void cast(NpcInstance npc, Creature target, int skillId) {
         target.broadcastPacket(new MagicSkillUse(target, skillId, 1, 6000));
         target.broadcastPacket(new MagicSkillUse(npc, skillId, 1, 6000));
     }
 
-    private void AddSpawn(Player player, NpcInstance mob, int TimeToLive) {
+    private void addSpawn(Player player, NpcInstance mob, int TimeToLive) {
         synchronized (Spawn_List) {
             Spawn_List.add(new Spawn(mob, player.getStoredId(), TimeToLive));
         }
     }
 
-    private NpcInstance FindMySpawn(Player player, int npcId) {
+    private NpcInstance findMySpawn(Player player, int npcId) {
         if (npcId == 0 || player == null)
             return null;
         long charStoredId = player.getStoredId();
         synchronized (Spawn_List) {
-            for (Spawn spawn : Spawn_List)
-                if (spawn.charStoreId == charStoredId && spawn.npcId == npcId)
-                    return spawn.getNPC();
+            return  Spawn_List.stream()
+            .filter(spawn -> spawn.charStoreId == charStoredId)
+                    .filter(spawn ->  spawn.npcId == npcId)
+                .map(Spawn::getNPC)
+            .findFirst().orElse(null);
         }
-        return null;
     }
 
     private void DeleteSpawn(long charStoredId, int npcId) {
@@ -214,14 +215,14 @@ public abstract class SagasSuperclass extends Quest {
             st.giveItems(items.get(3), Rnd.get(1, 4)); // freya change
         else {
             st.takeItems(items.get(3), 20);
-            NpcInstance Archon = spawn(mob.get(1), st.player.getLoc());
-            AddSpawn(st.player, Archon, 600000);
-            int ArchonId = Archon.objectId();
+            NpcInstance archon = spawn(mob.get(1), st.player.getLoc());
+            addSpawn(st.player, archon, 600000);
+            int ArchonId = archon.objectId();
             st.set("Archon", ArchonId);
-            st.startQuestTimer("Archon Hellisha has despawned", 600000, Archon);
-            Archon.setRunning();
-            Archon.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, st.player, 100000);
-            AutoChat(Archon, text.get(13).replace("PLAYERNAME", st.player.getName()));
+            st.startQuestTimer("Archon Hellisha has despawned", 600000, archon);
+            archon.setRunning();
+            archon.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, st.player, 100000);
+            AutoChat(archon, text.get(13).replace("PLAYERNAME", st.player.getName()));
         }
     }
 
@@ -273,7 +274,7 @@ public abstract class SagasSuperclass extends Quest {
             if (player.getLevel() >= 76) {
                 htmltext = "0-07.htm";
                 st.takeItems(items.get(10));
-                FinishQuest(st, player);
+                finishQuest(st, player);
             } else {
                 st.takeItems(items.get(10));
                 st.playSound(SOUND_MIDDLE);
@@ -323,7 +324,7 @@ public abstract class SagasSuperclass extends Quest {
             st.setCond(18);
             st.unset("Quest0");
             st.playSound(SOUND_MIDDLE);
-            NpcInstance Mob_2 = FindMySpawn(player, NPC.get(4));
+            NpcInstance Mob_2 = findMySpawn(player, NPC.get(4));
             if (Mob_2 != null) {
                 AutoChat(Mob_2, text.get(13).replace("PLAYERNAME", player.getName()));
                 DeleteMySpawn(player, NPC.get(4));
@@ -334,19 +335,19 @@ public abstract class SagasSuperclass extends Quest {
         } else if ("5-1".equals(event)) {
             st.setCond(6);
             st.takeItems(items.get(4), 1);
-            Cast(st.findTemplate(NPC.get(5)), player, 4546);
+            cast(st.findTemplate(NPC.get(5)), player, 4546);
             st.playSound(SOUND_MIDDLE);
             htmltext = "5-02.htm";
         } else if ("6-1".equals(event)) {
             st.setCond(8);
             st.takeItems(items.get(5), 1);
-            Cast(st.findTemplate(NPC.get(6)), player, 4546);
+            cast(st.findTemplate(NPC.get(6)), player, 4546);
             st.playSound(SOUND_MIDDLE);
             htmltext = "6-03.htm";
         } else if ("7-1".equals(event)) {
-            if (FindMySpawn(player, mob.get(0)) == null) {
+            if (findMySpawn(player, mob.get(0)) == null) {
                 NpcInstance Mob_1 = spawn(mob.get(0), locs.get(0));
-                AddSpawn(player, Mob_1, 180000);
+                addSpawn(player, Mob_1, 180000);
                 st.startQuestTimer("Mob_0 Timer", 500L, Mob_1);
                 st.startQuestTimer("Mob_1 has despawned", 120000L, Mob_1);
                 htmltext = "7-02.htm";
@@ -355,23 +356,23 @@ public abstract class SagasSuperclass extends Quest {
         } else if ("7-2".equals(event)) {
             st.setCond(10);
             st.takeItems(items.get(6), 1);
-            Cast(st.findTemplate(NPC.get(7)), player, 4546);
+            cast(st.findTemplate(NPC.get(7)), player, 4546);
             st.playSound(SOUND_MIDDLE);
             htmltext = "7-06.htm";
         } else if ("8-1".equals(event)) {
             st.setCond(14);
             st.takeItems(items.get(7), 1);
-            Cast(st.findTemplate(NPC.get(8)), player, 4546);
+            cast(st.findTemplate(NPC.get(8)), player, 4546);
             st.playSound(SOUND_MIDDLE);
             htmltext = "8-02.htm";
         } else if ("9-1".equals(event)) {
             st.setCond(17);
             st.takeItems(items.get(8), 1);
-            Cast(st.findTemplate(NPC.get(9)), player, 4546);
+            cast(st.findTemplate(NPC.get(9)), player, 4546);
             st.playSound(SOUND_MIDDLE);
             htmltext = "9-03.htm";
         } else if ("10-1".equals(event)) {
-            if (!st.isSet("Quest0") || FindMySpawn(player, NPC.get(4)) == null) {
+            if (!st.isSet("Quest0") || findMySpawn(player, NPC.get(4)) == null) {
                 DeleteMySpawn(player, NPC.get(4));
                 DeleteMySpawn(player, mob.get(2));
                 st.set("Quest0");
@@ -379,8 +380,8 @@ public abstract class SagasSuperclass extends Quest {
 
                 NpcInstance NPC_4 = spawn(NPC.get(4), locs.get(2));
                 NpcInstance Mob_2 = spawn(mob.get(2), locs.get(1));
-                AddSpawn(player, Mob_2, 300000);
-                AddSpawn(player, NPC_4, 300000);
+                addSpawn(player, Mob_2, 300000);
+                addSpawn(player, NPC_4, 300000);
                 st.startQuestTimer("Mob_2 Timer", 1000, Mob_2);
                 st.startQuestTimer("Mob_2 despawn", 59000, Mob_2);
                 st.startQuestTimer("NPC_4 Timer", 500, NPC_4);
@@ -389,11 +390,11 @@ public abstract class SagasSuperclass extends Quest {
             } else if (st.getInt("Quest1") == 45)
                 htmltext = "10-03.htm";
             else if (st.isSet("Tab")) {
-                NpcInstance Mob_2 = FindMySpawn(player, NPC.get(4));
+                NpcInstance Mob_2 = findMySpawn(player, NPC.get(4));
                 if (Mob_2 == null || !st.player.knowsObject(Mob_2)) {
                     DeleteMySpawn(player, NPC.get(4));
                     Mob_2 = spawn(NPC.get(4), locs.get(2));
-                    AddSpawn(player, Mob_2, 300000);
+                    addSpawn(player, Mob_2, 300000);
                     st.set("Quest0");
                     st.unset("Quest1"); // На всякий случай
                     st.startQuestTimer("NPC_4 despawn", 180000, Mob_2);
@@ -403,17 +404,17 @@ public abstract class SagasSuperclass extends Quest {
         } else if ("10-2".equals(event)) {
             st.setCond(19);
             st.takeItems(items.get(9), 1);
-            Cast(st.findTemplate(NPC.get(10)), player, 4546);
+            cast(st.findTemplate(NPC.get(10)), player, 4546);
             st.playSound(SOUND_MIDDLE);
             htmltext = "10-06.htm";
         } else if ("11-9".equals(event)) {
             st.setCond(15);
             htmltext = "11-03.htm";
         } else if ("Mob_0 Timer".equalsIgnoreCase(event)) {
-            AutoChat(FindMySpawn(player, mob.get(0)), text.get(0).replace("PLAYERNAME", player.getName()));
+            AutoChat(findMySpawn(player, mob.get(0)), text.get(0).replace("PLAYERNAME", player.getName()));
             return null;
         } else if ("Mob_1 has despawned".equalsIgnoreCase(event)) {
-            AutoChat(FindMySpawn(player, mob.get(0)), text.get(1).replace("PLAYERNAME", player.getName()));
+            AutoChat(findMySpawn(player, mob.get(0)), text.get(1).replace("PLAYERNAME", player.getName()));
             DeleteMySpawn(player, mob.get(0));
             return null;
         } else if ("Archon Hellisha has despawned".equalsIgnoreCase(event)) {
@@ -421,8 +422,8 @@ public abstract class SagasSuperclass extends Quest {
             DeleteMySpawn(player, mob.get(1));
             return null;
         } else if ("Mob_2 Timer".equalsIgnoreCase(event)) {
-            NpcInstance NPC_4 = FindMySpawn(player, NPC.get(4));
-            NpcInstance Mob_2 = FindMySpawn(player, mob.get(2));
+            NpcInstance NPC_4 = findMySpawn(player, NPC.get(4));
+            NpcInstance Mob_2 = findMySpawn(player, mob.get(2));
             if (NPC_4.knowsObject(Mob_2)) {
                 NPC_4.setRunning();
                 NPC_4.getAI().setIntentionAttack(Mob_2);
@@ -433,7 +434,7 @@ public abstract class SagasSuperclass extends Quest {
                 st.startQuestTimer("Mob_2 Timer", 1000, npc);
             return null;
         } else if ("Mob_2 despawn".equalsIgnoreCase(event)) {
-            NpcInstance Mob_2 = FindMySpawn(player, mob.get(2));
+            NpcInstance Mob_2 = findMySpawn(player, mob.get(2));
             AutoChat(Mob_2, text.get(15).replace("PLAYERNAME", player.getName()));
             st.set("Quest0", 2);
             if (Mob_2 != null)
@@ -441,24 +442,24 @@ public abstract class SagasSuperclass extends Quest {
             DeleteMySpawn(player, mob.get(2));
             return null;
         } else if ("NPC_4 Timer".equalsIgnoreCase(event)) {
-            AutoChat(FindMySpawn(player, NPC.get(4)), text.get(7).replace("PLAYERNAME", player.getName()));
+            AutoChat(findMySpawn(player, NPC.get(4)), text.get(7).replace("PLAYERNAME", player.getName()));
             st.startQuestTimer("NPC_4 Timer 2", 1500, npc);
             if (st.getInt("Quest1") == 45)
                 st.unset("Quest1");
             return null;
         } else if ("NPC_4 Timer 2".equalsIgnoreCase(event)) {
-            AutoChat(FindMySpawn(player, NPC.get(4)), text.get(8).replace("PLAYERNAME", player.getName()));
+            AutoChat(findMySpawn(player, NPC.get(4)), text.get(8).replace("PLAYERNAME", player.getName()));
             st.startQuestTimer("NPC_4 Timer 3", 10000, npc);
             return null;
         } else if ("NPC_4 Timer 3".equalsIgnoreCase(event)) {
             if (!st.isSet("Quest0")) {
                 st.startQuestTimer("NPC_4 Timer 3", 13000, npc);
-                AutoChat(FindMySpawn(player, NPC.get(4)), text.get(Rnd.get(9, 10)).replace("PLAYERNAME", player.getName()));
+                AutoChat(findMySpawn(player, NPC.get(4)), text.get(Rnd.get(9, 10)).replace("PLAYERNAME", player.getName()));
             }
             return null;
         } else if ("NPC_4 despawn".equalsIgnoreCase(event)) {
             st.inc("Quest1");
-            NpcInstance NPC_4 = FindMySpawn(player, NPC.get(4));
+            NpcInstance NPC_4 = findMySpawn(player, NPC.get(4));
             if (st.getInt("Quest0") == 1 || st.getInt("Quest0") == 2 || st.getInt("Quest1") > 3) {
                 st.unset("Quest0");
                 AutoChat(NPC_4, text.get(Rnd.get(11, 12)).replace("PLAYERNAME", player.getName()));
@@ -511,7 +512,7 @@ public abstract class SagasSuperclass extends Quest {
                 if (st.haveQuestItem(7546)) {
                     htmltext = "tunatun_q72_02.htm";
                 } else {
-                    st.giveItems(7546, 1);
+                    st.giveItems(7546);
                     return null;
                 }
             }
@@ -548,7 +549,7 @@ public abstract class SagasSuperclass extends Quest {
                 htmltext = "3-01.htm";
         } else if (cond == 11 || cond == 12) {
             if (npcId == NPC.get(3))
-                if (st.getQuestItemsCount(items.get(2)) > 0)
+                if (st.haveQuestItem(items.get(2)))
                     htmltext = "3-05.htm";
                 else
                     htmltext = "3-04.htm";
@@ -588,7 +589,7 @@ public abstract class SagasSuperclass extends Quest {
                 if (player.getLevel() >= 76) {
                     htmltext = "0-09.htm";
                     if (getClassId(player).occupation() ==2)
-                        FinishQuest(st, player);
+                        finishQuest(st, player);
                 } else
                     htmltext = "0-010.htm";
         return htmltext;

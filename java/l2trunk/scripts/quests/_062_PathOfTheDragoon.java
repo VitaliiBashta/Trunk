@@ -59,14 +59,14 @@ public final class _062_PathOfTheDragoon extends Quest {
                 st.takeItems(ShubainsRecommendation);
                 st.setCond(5);
                 htmltext = "master_tbwain_q0062_08.htm";
-            } else if (cond == 5 && st.getQuestItemsCount(TumranBugbearHeart) > 0) {
+            } else if (cond == 5 && st.haveQuestItem(TumranBugbearHeart)) {
                 st.takeItems(TumranBugbearHeart);
                 if (st.player.getClassId().occupation() == 0) {
                     st.giveItems(GwainsRecommendation);
                     if (!st.player.isVarSet("prof1")) {
                         st.player.setVar("prof1");
                         st.addExpAndSp(160267, 11023);
-                        st.giveItems(ADENA_ID, 81900);
+                        st.giveAdena( 81900);
                     }
                 }
                 st.playSound(SOUND_FINISH);

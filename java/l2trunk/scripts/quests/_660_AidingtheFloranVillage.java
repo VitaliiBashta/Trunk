@@ -76,10 +76,10 @@ public final class _660_AidingtheFloranVillage extends Quest {
                     }
                 }
                 if (Rnd.chance(80)) {
-                    st.giveItems(ADENA_ID, 13000);
+                    st.giveAdena(13000);
                     st.giveItems(SCROLL_ENCANT_ARMOR);
                 } else
-                    st.giveItems(ADENA_ID, 1000);
+                    st.giveAdena( 1000);
                 st.playSound(SOUND_ITEMGET);
             } else
                 htmltext = "30291-14.htm";

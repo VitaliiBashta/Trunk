@@ -90,7 +90,7 @@ public final class _064_CertifiedBerserker extends Quest {
         } else if ("32207-03a.htm".equalsIgnoreCase(event)) {
             if (!st.player.isVarSet("prof2.1")) {
                 st.addExpAndSp(174503, 11973);
-                st.giveItems(ADENA_ID, 31552);
+                st.giveAdena( 31552);
                 st.player.setVar("prof2.1");
             }
             st.giveItems(OrkurusRecommendation);
@@ -110,7 +110,7 @@ public final class _064_CertifiedBerserker extends Quest {
         String htmltext = "noquest";
         int cond = st.getCond();
         if (npcId == ORKURUS) {
-            if (st.getQuestItemsCount(OrkurusRecommendation) != 0) {
+            if (st.haveQuestItem(OrkurusRecommendation)) {
                 htmltext = "32207-00.htm";
                 st.exitCurrentQuest();
             } else if (cond == 0) {

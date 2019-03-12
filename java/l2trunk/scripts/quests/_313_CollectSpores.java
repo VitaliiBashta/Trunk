@@ -51,7 +51,7 @@ public final class _313_CollectSpores extends Quest {
                 htmltext = "green_q0313_06.htm";
             } else {
                 st.takeItems(SporeSac);
-                st.giveItems(ADENA_ID, 3500, true);
+                st.giveAdena( 3500);
                 st.playSound(SOUND_FINISH);
                 htmltext = "green_q0313_07.htm";
                 st.exitCurrentQuest();
