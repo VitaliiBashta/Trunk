@@ -226,21 +226,21 @@ public final class AggroList {
                 if (party == null) {
                     // Single players, without party
                     topDamagePlayer = World.getPlayer((entry.getKey()));
-                    if (topDamagePlayer == null)
-                        continue;
+                    if (topDamagePlayer != null) {
+                        return topDamagePlayer;
+                    }
+                    continue;
 
-                    return topDamagePlayer;
                 }
 
                 topDamagePlayer = null;
                 int topDamage = 0;
                 for (Player player : party.getMembers()) {
-                    if (hateList.get(player.objectId()) == null)
-                        continue;
-
-                    if (hateList.get(player.objectId()).damage > topDamage) {
-                        topDamagePlayer = player;
-                        topDamage = hateList.get(player.objectId()).damage;
+                    if (hateList.get(player.objectId()) != null) {
+                        if (hateList.get(player.objectId()).damage > topDamage) {
+                            topDamagePlayer = player;
+                            topDamage = hateList.get(player.objectId()).damage;
+                        }
                     }
                 }
 

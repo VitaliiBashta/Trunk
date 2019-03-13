@@ -7,7 +7,6 @@ import l2trunk.gameserver.model.Party;
 import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.RaidBossInstance;
-import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.network.serverpackets.SystemMessage;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
@@ -34,7 +33,7 @@ public final class CannibalisticStakatoChiefInstance extends RaidBossInstance {
         Party party = pc.getParty();
         int itemId;
         if (party != null) {
-            for (Player partyMember : party.getMembers())
+            for (Player partyMember : party.getMembersStream())
                 if (pc.isInRange(partyMember, Config.ALT_PARTY_DISTRIBUTION_RANGE)) {
                     itemId = Rnd.get(ITEMS);
                     partyMember.sendPacket(new SystemMessage(SystemMessage.YOU_HAVE_OBTAINED_S1).addItemName(itemId));

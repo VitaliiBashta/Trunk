@@ -9,13 +9,13 @@ import java.util.Calendar;
 /**
  * Doing Weekly Task(giving points and new fight to all Noble Players)
  */
-class WeeklyTask implements Runnable {
-    private static final Logger _log = LoggerFactory.getLogger(WeeklyTask.class);
+public class WeeklyTask implements Runnable {
+    private static final Logger LOG = LoggerFactory.getLogger(WeeklyTask.class);
 
     @Override
     public void run() {
         Olympiad.doWeekTasks();
-        _log.info("Olympiad System: Added weekly points to nobles");
+        LOG.info("Olympiad System: Added weekly points to nobles");
 
         Calendar nextChange = Calendar.getInstance();
         Olympiad.nextWeeklyChange = nextChange.getTimeInMillis() + Config.ALT_OLY_WPERIOD;

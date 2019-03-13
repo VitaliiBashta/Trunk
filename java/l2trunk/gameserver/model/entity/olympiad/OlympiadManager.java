@@ -39,13 +39,13 @@ public final class OlympiadManager extends RunnableImpl {
                     prepareBattles(CompType.NON_CLASSED, Olympiad._nonClassBasedRegisters);
 
                 // Подготовка и запуск классовых боев
-                for (Map.Entry<Integer, List<Integer>> entry : Olympiad._classBasedRegisters.entrySet())
-                    if (entry.getValue().size() >= Config.CLASS_GAME_MIN)
-                        prepareBattles(CompType.CLASSED, entry.getValue());
+                for (List<Integer> battles : Olympiad.CLASS_BASED_REGISTERS.values())
+                    if (battles.size() >= Config.CLASS_GAME_MIN)
+                        prepareBattles(CompType.CLASSED, battles);
 
                 // Подготовка и запуск командных боев
-                if (Olympiad._teamBasedRegisters.size() >= Config.TEAM_GAME_MIN)
-                    prepareTeamBattles(CompType.TEAM, Olympiad._teamBasedRegisters.values());
+                if (Olympiad.TEAM_BASED_REGISTERS.size() >= Config.TEAM_GAME_MIN)
+                    prepareTeamBattles(CompType.TEAM, Olympiad.TEAM_BASED_REGISTERS.values());
 
                 sleep(30000);
             }
@@ -53,9 +53,9 @@ public final class OlympiadManager extends RunnableImpl {
             sleep(30000);
         }
 
-        Olympiad._classBasedRegisters.clear();
+        Olympiad.CLASS_BASED_REGISTERS.clear();
         Olympiad._nonClassBasedRegisters.clear();
-        Olympiad._teamBasedRegisters.clear();
+        Olympiad.TEAM_BASED_REGISTERS.clear();
 
         // when comp time finish wait for all games terminated before execute the cleanup code
         boolean allGamesTerminated = false;
@@ -188,8 +188,8 @@ public final class OlympiadManager extends RunnableImpl {
     }
 
     private void removeOpponent(Integer noble) {
-        Olympiad._classBasedRegisters.removeValue(noble);
+        Olympiad.CLASS_BASED_REGISTERS.removeValue(noble);
         Olympiad._nonClassBasedRegisters.remove(noble);
-        Olympiad._teamBasedRegisters.removeValue(noble);
+        Olympiad.TEAM_BASED_REGISTERS.removeValue(noble);
     }
 }

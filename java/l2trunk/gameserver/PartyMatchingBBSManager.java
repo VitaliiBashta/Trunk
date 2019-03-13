@@ -337,11 +337,6 @@ public final class PartyMatchingBBSManager extends Functions implements ICommuni
         parsecmd(bypass, player);
     }
 
-    @Override
-    public void onWriteCommand(Player player, String bypass, String arg1,
-                               String arg2, String arg3, String arg4, String arg5) {
-
-    }
 
     private static class SingletonHolder {
         static final PartyMatchingBBSManager _instance = new PartyMatchingBBSManager();

@@ -10,7 +10,7 @@ public final class ExMPCCShowPartyMemberInfo extends L2GameServerPacket {
     private final List<PartyMemberInfo> members;
 
     public ExMPCCShowPartyMemberInfo(Party party) {
-        members =  party.getMembers().stream()
+        members =  party.getMembersStream()
         .map(m -> new PartyMemberInfo(m.getName(), m.objectId(), m.getClassId().id))
         .collect(Collectors.toList());
     }

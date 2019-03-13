@@ -247,7 +247,7 @@ public final class _1201_DarkCloudMansion extends Quest {
             world.instanceId = newInstance.id;
             worlds.put(newInstance.id, world);
             runStartRoom(world);
-            player.getParty().getMembers().stream()
+            player.getParty().getMembersStream()
                     .filter(member -> member != player)
                     .forEach(member -> newQuestState(member, STARTED));
         }

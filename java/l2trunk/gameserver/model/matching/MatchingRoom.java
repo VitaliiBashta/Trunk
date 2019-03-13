@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Stream;
 
 public abstract class MatchingRoom implements PlayerGroup {
     public static final int PARTY_MATCHING = 0;
@@ -26,7 +27,7 @@ public abstract class MatchingRoom implements PlayerGroup {
     static final int UNION_PARTY = 4;
     static final int WAIT_PARTY = 5;
     static final int WAIT_NORMAL = 6;
-    final Player _leader;
+    final Player leader;
     private final int _id;
     private final PartyListenerImpl _listener = new PartyListenerImpl();
     private final List<Player> members = new CopyOnWriteArrayList<>();
@@ -37,7 +38,7 @@ public abstract class MatchingRoom implements PlayerGroup {
     private String _topic;
 
     MatchingRoom(Player leader, int minLevel, int maxLevel, int maxMemberSize, int lootType, String topic) {
-        _leader = leader;
+        this.leader = leader;
         _id = MatchingRoomManager.INSTANCE.addMatchingRoom(this);
         _minLevel = minLevel;
         _maxLevel = maxLevel;
@@ -205,7 +206,7 @@ public abstract class MatchingRoom implements PlayerGroup {
     }
 
     public int getLocationId() {
-        return MatchingRoomManager.INSTANCE.getLocation(_leader);
+        return MatchingRoomManager.INSTANCE.getLocation(leader);
     }
 
     public Collection<Player> getPlayers() {
@@ -232,17 +233,17 @@ public abstract class MatchingRoom implements PlayerGroup {
 
     @Override
     public Player getLeader() {
-        return _leader;
+        return leader;
     }
 
     @Override
     public boolean isLeader(Player player) {
-        return _leader == player;
+        return leader == player;
     }
 
 
-    public List<Player> getMembers() {
-        return members;
+    public Stream<Player> getMembersStream() {
+        return members.stream();
     }
 
     @Override

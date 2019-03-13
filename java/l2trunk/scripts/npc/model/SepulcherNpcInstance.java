@@ -128,7 +128,7 @@ public final class SepulcherNpcInstance extends NpcInstance {
                 // Moved here from switch-default
                 openNextDoor(getNpcId());
                 if (player.getParty() != null)
-                    player.getParty().getMembers().stream()
+                    player.getParty().getMembersStream()
                             .filter(mem -> mem.getInventory().getItemByItemId(HALLS_KEY) != null)
                             .forEach(mem ->
                                     removeItem(mem, HALLS_KEY, hallsKey.getCount(), "SepulcherNpcInstance"));
@@ -167,7 +167,7 @@ public final class SepulcherNpcInstance extends NpcInstance {
     }
 
     private boolean hasPartyAKey(Player player) {
-        return player.getParty().getMembers().stream()
+        return player.getParty().getMembersStream()
                 .anyMatch(m -> m.haveItem(HALLS_KEY));
     }
 

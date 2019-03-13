@@ -9,7 +9,6 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
-import l2trunk.gameserver.utils.ItemFunctions;
 
 public enum InstantZoneEntryType {
     SOLO {
@@ -61,7 +60,7 @@ public enum InstantZoneEntryType {
                 return false;
             }
 
-            for (Player member : party.getMembers()) {
+            for (Player member : party.getMembersStream()) {
                 if (!player.isInRange(member, 500)) {
                     party.sendPacket(new SystemMessage2(SystemMsg.C1_IS_IN_A_LOCATION_WHICH_CANNOT_BE_ENTERED_THEREFORE_IT_CANNOT_BE_PROCESSED).addName(member));
                     return false;

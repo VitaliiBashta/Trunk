@@ -6,7 +6,7 @@ import l2trunk.gameserver.stats.Stats;
 import java.util.HashMap;
 import java.util.Map;
 
-public class FuncMonsterBalancer extends Func {
+public final class FuncMonsterBalancer extends Func {
     private static final Map<Stats, FuncMonsterBalancer> MONSTER_BALANCER = new HashMap<>();
 
     private FuncMonsterBalancer(Stats stat) {

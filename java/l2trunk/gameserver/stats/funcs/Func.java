@@ -37,4 +37,13 @@ public abstract class Func implements Comparable<Func> {
         if (f == null) return 1;
         return order - f.order;
     }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() +
+                "(" + value + ")"+
+                ", order=" + order +
+                (owner != null ? ", owner=" + owner : "") +
+                (cond != null ?", cond=" + cond : "");
+    }
 }

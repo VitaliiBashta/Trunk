@@ -89,7 +89,7 @@ public final class _350_EnhanceYourWeapon extends Quest {
             if (party == null) {
                 list = List.of(new PlayerResult(player));
             } else {
-                list = party.getMembers().stream()
+                list = party.getMembersStream()
                         .filter(m -> m.isInRange(npc.getLoc(), Config.ALT_PARTY_DISTRIBUTION_RANGE))
                         .map(PlayerResult::new)
                         .collect(Collectors.toList());

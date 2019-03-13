@@ -74,7 +74,7 @@ public final class ReflectionUtils {
                 party.setReflection(r);
                 r.setParty(party);
 
-                for (Player member : party.getMembers()) {
+                party.getMembersStream().forEach(member -> {
                     if (iz.getRemovedItemId() > 0)
                         ItemFunctions.removeItem(member, iz.getRemovedItemId(), iz.getRemovedItemCount(), "ReflectionUtils");
                     if (iz.getGiveItemId() > 0)
@@ -86,7 +86,7 @@ public final class ReflectionUtils {
                     member.setVar("backCoords", invoker.getLoc().toXYZString());
                     if (iz.getTeleportCoord() != null)
                         member.teleToLocation(iz.getTeleportCoord(), r);
-                }
+                });
                 break;
             case COMMAND_CHANNEL:
                 Party commparty = invoker.getParty();

@@ -18,8 +18,8 @@ import static l2trunk.commons.lang.NumberUtils.toInt;
 
 public enum DoorParser {
     INSTANCE;
-    private Logger LOG = LoggerFactory.getLogger(this.getClass().getName());
     private final Path xml = Config.DATAPACK_ROOT.resolve("data/doors/allDoors.xml");
+    private Logger LOG = LoggerFactory.getLogger(this.getClass().getName());
 
     public void load() {
         ParserUtil.INSTANCE.load(xml).forEach(this::readData);
@@ -28,31 +28,9 @@ public enum DoorParser {
 
     private StatsSet initBaseStats() {
         StatsSet baseDat = new StatsSet();
-        baseDat.set("level", 0);
-        baseDat.set("baseSTR", 0);
-        baseDat.set("baseCON", 0);
-        baseDat.set("baseDEX", 0);
-        baseDat.set("baseINT", 0);
-        baseDat.set("baseWIT", 0);
-        baseDat.set("baseMEN", 0);
-        baseDat.set("baseShldDef", 0);
-        baseDat.set("baseShldRate", 0);
         baseDat.set("baseAccCombat", 38);
         baseDat.set("baseEvasRate", 38);
         baseDat.set("baseCritRate", 38);
-        baseDat.set("baseAtkRange", 0);
-        baseDat.set("baseMpMax", 0);
-        baseDat.set("baseCpMax", 0);
-        baseDat.set("basePAtk", 0);
-        baseDat.set("baseMAtk", 0);
-        baseDat.set("basePAtkSpd", 0);
-        baseDat.set("baseMAtkSpd", 0);
-        baseDat.set("baseWalkSpd", 0);
-        baseDat.set("baseRunSpd", 0);
-        baseDat.set("baseHpReg", 0);
-        baseDat.set("baseCpReg", 0);
-        baseDat.set("baseMpReg", 0);
-
         return baseDat;
     }
 

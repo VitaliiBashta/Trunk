@@ -10,6 +10,7 @@ import l2trunk.gameserver.stats.Stats;
 import l2trunk.gameserver.stats.funcs.Func;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 public final class EffectServitorShare extends Effect {
     public EffectServitorShare(Env paramEnv, EffectTemplate paramEffectTemplate) {
@@ -25,8 +26,8 @@ public final class EffectServitorShare extends Effect {
         super.onExit();
     }
 
-    public List<Func> getStatFuncs() {
-        return List.of((new Func(Stats.POWER_ATTACK, 64, this) {
+    public Stream<Func> getStatFuncs() {
+        return Stream.of((new Func(Stats.POWER_ATTACK, 64, this) {
                     public void calc(Env env) {
                         Player pc = env.character.getPlayer();
                         if (pc != null) {

@@ -33,10 +33,9 @@ public final class TerritoryWardObject implements SpawnableObject, FlagItemAttac
     private final Location location;
     private final int itemId;
     private final NpcTemplate template;
-    private NpcInstance _wardNpcInstance;
-    private ItemInstance _wardItemInstance;
-    private boolean _isOutOfZone;
-    private ScheduledFuture<?> _startTimerTask;
+    private NpcInstance wardNpcInstance;
+    private ItemInstance wardItemInstance;
+    private ScheduledFuture<?> startTimerTask;
     private ScheduledFuture<?> teleportBackTask;
 
     public TerritoryWardObject(int itemId, int npcId, Location location) {
@@ -47,55 +46,53 @@ public final class TerritoryWardObject implements SpawnableObject, FlagItemAttac
 
     @Override
     public void spawnObject(GlobalEvent event) {
-        _wardItemInstance = ItemFunctions.createItem(itemId);
-        _wardItemInstance.setAttachment(this);
+        wardItemInstance = ItemFunctions.createItem(itemId);
+        wardItemInstance.setAttachment(this);
 
-        _wardNpcInstance = new TerritoryWardInstance(IdFactory.getInstance().getNextId(), template, this);
-        _wardNpcInstance.addEvent(event);
-        _wardNpcInstance.setFullHpMp();
-        _wardNpcInstance.spawnMe(location);
-        _startTimerTask = null;
-        _isOutOfZone = false;
+        wardNpcInstance = new TerritoryWardInstance(IdFactory.getInstance().getNextId(), template, this);
+        wardNpcInstance.addEvent(event);
+        wardNpcInstance.setFullHpMp();
+        wardNpcInstance.spawnMe(location);
+        startTimerTask = null;
 
-        if (_wardNpcInstance.getZone(ZoneType.SIEGE) != null) {
-            _wardNpcInstance.getZone(ZoneType.SIEGE).addListener(new OnZoneEnterLeaveListenerImpl());
+        if (wardNpcInstance.getZone(ZoneType.SIEGE) != null) {
+            wardNpcInstance.getZone(ZoneType.SIEGE).addListener(new OnZoneEnterLeaveListenerImpl());
         }
 
         ThreadPoolManager.INSTANCE.schedule(() -> {
-            if (_wardNpcInstance.getZone(ZoneType.SIEGE) != null) {
-                _wardNpcInstance.getZone(ZoneType.SIEGE).addListener(new OnZoneEnterLeaveListenerImpl());
+            if (wardNpcInstance.getZone(ZoneType.SIEGE) != null) {
+                wardNpcInstance.getZone(ZoneType.SIEGE).addListener(new OnZoneEnterLeaveListenerImpl());
             }
         }, 1000L);
     }
 
     private void stopTerrFlagCountDown() {
-        if (_startTimerTask == null)
+        if (startTimerTask == null)
             return;
-        _startTimerTask.cancel(false);
-        _startTimerTask = null;
-        _isOutOfZone = false;
+        startTimerTask.cancel(false);
+        startTimerTask = null;
     }
 
     @Override
     public void despawnObject(GlobalEvent event) {
-        if (_wardItemInstance == null || _wardNpcInstance == null)
+        if (wardItemInstance == null || wardNpcInstance == null)
             return;
 
-        Player owner = GameObjectsStorage.getPlayer(_wardItemInstance.getOwnerId());
-        owner.getInventory().destroyItem(_wardItemInstance, "Territory Ward");
-        owner.sendDisarmMessage(_wardItemInstance);
+        Player owner = GameObjectsStorage.getPlayer(wardItemInstance.getOwnerId());
+        owner.getInventory().destroyItem(wardItemInstance, "Territory Ward");
+        owner.sendDisarmMessage(wardItemInstance);
 
         if (teleportBackTask != null)
             teleportBackTask.cancel(true);
 
-        _wardItemInstance.setAttachment(null);
-        _wardItemInstance.setJdbcState(JdbcEntityState.UPDATED);
-        _wardItemInstance.delete();
-        _wardItemInstance.deleteMe();
-        _wardItemInstance = null;
+        wardItemInstance.setAttachment(null);
+        wardItemInstance.setJdbcState(JdbcEntityState.UPDATED);
+        wardItemInstance.delete();
+        wardItemInstance.deleteMe();
+        wardItemInstance = null;
 
-        _wardNpcInstance.deleteMe();
-        _wardNpcInstance = null;
+        wardNpcInstance.deleteMe();
+        wardNpcInstance = null;
 
         stopTerrFlagCountDown();
     }
@@ -111,21 +108,20 @@ public final class TerritoryWardObject implements SpawnableObject, FlagItemAttac
             player.getInventory().setPaperdollItem(Inventory.PAPERDOLL_LHAND, null);
             player.getInventory().setPaperdollItem(Inventory.PAPERDOLL_RHAND, null);
         }
-        player.getInventory().removeItem(_wardItemInstance, "Territory Ward");
+        player.getInventory().removeItem(wardItemInstance, "Territory Ward");
 
-        _wardItemInstance.setOwnerId(0);
-        _wardItemInstance.setJdbcState(JdbcEntityState.UPDATED);
-        _wardItemInstance.update();
+        wardItemInstance.setOwnerId(0);
+        wardItemInstance.setJdbcState(JdbcEntityState.UPDATED);
+        wardItemInstance.update();
 
-        _wardNpcInstance.setFullHpMp();
-        _wardNpcInstance.spawnMe(location);
+        wardNpcInstance.setFullHpMp();
+        wardNpcInstance.spawnMe(location);
 
 
         DominionSiegeRunnerEvent runnerEvent = EventHolder.getEvent(EventType.MAIN_EVENT, 1);
         runnerEvent.broadcastTo(new ExShowScreenMessage("Territory Ward returned to the castle!"));
 
         stopTerrFlagCountDown();
-        _isOutOfZone = false;
     }
 
     @Override
@@ -136,27 +132,26 @@ public final class TerritoryWardObject implements SpawnableObject, FlagItemAttac
             owner.getInventory().setPaperdollItem(Inventory.PAPERDOLL_LHAND, null);
             owner.getInventory().setPaperdollItem(Inventory.PAPERDOLL_RHAND, null);
         }
-        owner.getInventory().removeItem(_wardItemInstance, "Territory Ward");
-        owner.sendPacket(new SystemMessage2(SystemMsg.YOU_HAVE_DROPPED_S1).addName(_wardItemInstance));
+        owner.getInventory().removeItem(wardItemInstance, "Territory Ward");
+        owner.sendPacket(new SystemMessage2(SystemMsg.YOU_HAVE_DROPPED_S1).addName(wardItemInstance));
 
-        _wardItemInstance.setOwnerId(0);
-        _wardItemInstance.setJdbcState(JdbcEntityState.UPDATED);
-        _wardItemInstance.update();
+        wardItemInstance.setOwnerId(0);
+        wardItemInstance.setJdbcState(JdbcEntityState.UPDATED);
+        wardItemInstance.update();
 
         DominionSiegeRunnerEvent runnerEvent = EventHolder.getEvent(EventType.MAIN_EVENT, 1);
 
-        _wardNpcInstance.setFullHpMp();
+        wardNpcInstance.setFullHpMp();
         if (owner.isInZone(ZoneType.SIEGE)) {
-            _wardNpcInstance.spawnMe(loc);
+            wardNpcInstance.spawnMe(loc);
             teleportBackTask = ThreadPoolManager.INSTANCE.schedule(new ReturnFlagThread(), RETURN_FLAG_DELAY);
         } else {
-            _wardNpcInstance.spawnMe(location);
+            wardNpcInstance.spawnMe(location);
             runnerEvent.broadcastTo(new ExShowScreenMessage("Territory Ward returned to the castle!", 3000, false));
         }
 
         runnerEvent.broadcastTo(new SystemMessage2(SystemMsg.THE_CHARACTER_THAT_ACQUIRED_S1S_WARD_HAS_BEEN_KILLED).addResidenceName(getDominionId()));
         stopTerrFlagCountDown();
-        _isOutOfZone = false;
     }
 
     @Override
@@ -166,8 +161,8 @@ public final class TerritoryWardObject implements SpawnableObject, FlagItemAttac
 
     @Override
     public void pickUp(Player player) {
-        player.getInventory().addItem(_wardItemInstance, "Territory Ward");
-        player.getInventory().equipItem(_wardItemInstance);
+        player.getInventory().addItem(wardItemInstance, "Territory Ward");
+        player.getInventory().equipItem(wardItemInstance);
 
         player.sendPacket(SystemMsg.YOUVE_ACQUIRED_THE_WARD);
 
@@ -179,10 +174,6 @@ public final class TerritoryWardObject implements SpawnableObject, FlagItemAttac
             teleportBackTask.cancel(true);
     }
 
-    public boolean isFlagOut() {
-        return this._isOutOfZone;
-    }
-
     private void checkZoneForTerr(Player player) {
         if (!player.isInZone(ZoneType.SIEGE)) {
             startTerrFlagCountDown(player);
@@ -190,18 +181,17 @@ public final class TerritoryWardObject implements SpawnableObject, FlagItemAttac
     }
 
     private void startTerrFlagCountDown(Player player) {
-        if (_startTimerTask != null) {
-            _startTimerTask.cancel(false);
-            _startTimerTask = null;
+        if (startTimerTask != null) {
+            startTimerTask.cancel(false);
+            startTimerTask = null;
         }
-        _startTimerTask = ThreadPoolManager.INSTANCE.schedule(() -> {
+        startTimerTask = ThreadPoolManager.INSTANCE.schedule(() -> {
             if (!player.isInZone(ZoneType.SIEGE))
                 onLogout(player);
         }, Config.INTERVAL_FLAG_DROP * 1000);
 
         player.sendMessage("You've leaved the battle zone! The flag will dissapear in " + Config.INTERVAL_FLAG_DROP + " seconds!");
 
-        _isOutOfZone = true;
     }
 
 
@@ -232,35 +222,26 @@ public final class TerritoryWardObject implements SpawnableObject, FlagItemAttac
         return true;
     }
 
-    @Override
-    public boolean canBeUnEquiped() {
-        return false;
-    }
-
-    @Override
-    public void setItem(ItemInstance item) {
-
-    }
 
     public Location getWardLocation() {
-        if (_wardItemInstance == null || _wardNpcInstance == null)
+        if (wardItemInstance == null || wardNpcInstance == null)
             return null;
 
-        if (_wardItemInstance.getOwnerId() > 0) {
-            Player player = GameObjectsStorage.getPlayer(_wardItemInstance.getOwnerId());
+        if (wardItemInstance.getOwnerId() > 0) {
+            Player player = GameObjectsStorage.getPlayer(wardItemInstance.getOwnerId());
             if (player != null)
                 return player.getLoc();
         }
 
-        return _wardNpcInstance.getLoc();
+        return wardNpcInstance.getLoc();
     }
 
     public NpcInstance getWardNpcInstance() {
-        return _wardNpcInstance;
+        return wardNpcInstance;
     }
 
     public ItemInstance getWardItemInstance() {
-        return _wardItemInstance;
+        return wardItemInstance;
     }
 
     public int getDominionId() {
@@ -268,7 +249,7 @@ public final class TerritoryWardObject implements SpawnableObject, FlagItemAttac
     }
 
     public DominionSiegeEvent getEvent() {
-        return _wardNpcInstance.getEvent(DominionSiegeEvent.class);
+        return wardNpcInstance.getEvent(DominionSiegeEvent.class);
     }
 
     private class OnZoneEnterLeaveListenerImpl implements OnZoneEnterLeaveListener {
@@ -278,7 +259,7 @@ public final class TerritoryWardObject implements SpawnableObject, FlagItemAttac
 
         @Override
         public void onZoneLeave(Zone zone, Player player) {
-            if (_wardItemInstance != null && _wardItemInstance.getOwnerId() == player.objectId()) {
+            if (wardItemInstance != null && wardItemInstance.getOwnerId() == player.objectId()) {
                 checkZoneForTerr(player);
             }
         }
@@ -287,8 +268,8 @@ public final class TerritoryWardObject implements SpawnableObject, FlagItemAttac
     private class ReturnFlagThread implements Runnable {
         @Override
         public void run() {
-            if (_wardNpcInstance != null) {
-                _wardNpcInstance.teleToLocation(location);
+            if (wardNpcInstance != null) {
+                wardNpcInstance.teleToLocation(location);
                 DominionSiegeRunnerEvent runnerEvent = EventHolder.getEvent(EventType.MAIN_EVENT, 1);
                 runnerEvent.broadcastTo(new ExShowScreenMessage("Territory Ward returned to the castle!", 3000, false));
             }

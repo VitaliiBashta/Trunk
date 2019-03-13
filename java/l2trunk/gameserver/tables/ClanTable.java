@@ -23,10 +23,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.AbstractMap.SimpleEntry;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public enum ClanTable {
@@ -43,7 +40,6 @@ public enum ClanTable {
         restoreClans();
         restoreAllies();
         restoreWars();
-
     }
 
     public List<Clan> getClans() {
@@ -69,29 +65,17 @@ public enum ClanTable {
 
     private Clan getClanByCharId(int charId) {
         if (charId <= 0) {
-            throw new IllegalArgumentException("charID can be less 0");
+            throw new IllegalArgumentException("charID can't be less 0");
         }
-        for (Clan clan : getClans()) {
-            if (clan != null && clan.isAnyMember(charId)) {
-                return clan;
-            }
-        }
-        return null;
+        return getClans().stream()
+                .filter(Objects::nonNull)
+                .filter(clan -> clan.isAnyMember(charId))
+                .findFirst().orElse(null);
     }
 
     public Alliance getAlliance(int allyId) {
         return alliances.get(allyId);
     }
-
-//    public Alliance getAllianceByCharId(int charId) {
-////        charId.nothing();
-//        if (charId <= 0) {
-//            return null;
-//        }
-//
-//        Clan charClan = getClanByCharId(charId);
-//        return charClan == null ? null : charClan.getAlliance();
-//    }
 
     public Map.Entry<Clan, Alliance> getClanAndAllianceByCharId(int charId) {
         Player player = GameObjectsStorage.getPlayer(charId);
@@ -274,12 +258,13 @@ public enum ClanTable {
 
     public void dissolveAlly(Player player) {
         int allyId = player.getAllyId();
-        for (Clan member : player.getAlliance().getMembers()) {
+        if (player.getAlliance() == null) return;
+        player.getAlliance().getMembers().forEach(member -> {
             member.setAllyId(0);
             member.broadcastClanStatus(false, true, false);
             member.broadcastToOnlineMembers(SystemMsg.YOU_HAVE_WITHDRAWN_FROM_THE_ALLIANCE);
             member.setLeavedAlly();
-        }
+        });
         deleteAllyFromDb(allyId);
         alliances.remove(allyId);
         player.sendPacket(SystemMsg.THE_ALLIANCE_HAS_BEEN_DISSOLVED);

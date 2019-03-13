@@ -5,7 +5,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.Location;
 
-public class TullyWorkShopTeleporterInstance extends NpcInstance {
+public final class TullyWorkShopTeleporterInstance extends NpcInstance {
     public TullyWorkShopTeleporterInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
     }
@@ -47,7 +47,7 @@ public class TullyWorkShopTeleporterInstance extends NpcInstance {
     }
 
     private boolean rangeCheck(Player pl) {
-        return pl.getParty().getMembers().stream()
+        return pl.getParty().getMembersStream()
         .allMatch(m -> pl.isInRange(m, 400));
     }
 }

@@ -80,7 +80,7 @@ public final class _511_AwlUnderFoot extends Quest {
             return "gludio_fort_a_campkeeper_q0511_01a.htm";
         if (st.getState() == CREATED)
             return "gludio_fort_a_campkeeper_q0511_01.htm";
-        if (st.haveQuestItem(DungeonLeaderMark) ) {
+        if (st.haveQuestItem(DungeonLeaderMark)) {
             st.giveItems(KnightsEpaulette, st.getQuestItemsCount(DungeonLeaderMark));
             st.takeItems(DungeonLeaderMark);
             st.playSound(SOUND_FINISH);
@@ -110,7 +110,7 @@ public final class _511_AwlUnderFoot extends Quest {
                     case GergTheHunter:
                         Party party = st.player.getParty();
                         if (party != null)
-                            party.getMembers().stream()
+                            party.getMembersStream()
                                     .map(member -> member.getQuestState(this))
                                     .filter(Objects::nonNull)
                                     .filter(QuestState::isStarted)
@@ -184,7 +184,7 @@ public final class _511_AwlUnderFoot extends Quest {
 
             r.setReturnLoc(player.getLoc());
 
-            player.getParty().getMembers()
+            player.getParty().getMembersStream()
                     .forEach(member -> {
                         if (member != player)
                             newQuestState(member, STARTED);
@@ -207,7 +207,7 @@ public final class _511_AwlUnderFoot extends Quest {
     private boolean areMembersSameClan(Player player) {
         if (player.getParty() == null)
             return true;
-        return player.getParty().getMembers().stream()
+        return player.getParty().getMembersStream()
                 .noneMatch(p -> p.getClan() != player.getClan());
     }
 

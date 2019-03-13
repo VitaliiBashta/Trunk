@@ -98,19 +98,6 @@ public class StatsSet {
         return map.containsKey(key);
     }
 
-    public boolean getBool(String key) {
-        Object val = map.get(key);
-
-        if (val instanceof Number)
-            return ((Number) val).intValue() != 0;
-        if (val instanceof String)
-            return Boolean.parseBoolean((String) val);
-        if (val instanceof Boolean)
-            return (Boolean) val;
-
-        return false;
-    }
-
     public boolean getBool(String key, boolean defaultValue) {
         Object val = map.get(key);
 
@@ -305,6 +292,10 @@ public class StatsSet {
     }
 
     public void inc(String name) {
-        set(name, getInteger(name)+1);
+        inc(name, 1);
+    }
+
+    public void inc(String name, int by) {
+        set(name, getInteger(name) + by);
     }
 }

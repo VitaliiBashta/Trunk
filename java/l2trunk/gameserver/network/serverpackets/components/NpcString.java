@@ -777,9 +777,9 @@ public enum NpcString {
     // Text: $s1.. You don't have a Blue Crystal...
     S1___________________(1800028),
     // Text: $s1.. You don't have a Clear Crystal...
-    S1____________________(1800029),
+    YOU_DONT_HAVE_CLEAR_CRYSTAL(1800029),
     // Text: $s1.. If you are too far away from me...I can't let you go...
-    S1_____________________(1800030),
+    FAR_AWAY(1800030),
 
     NO(1800033),
 

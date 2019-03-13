@@ -9,7 +9,6 @@ import l2trunk.gameserver.model.Territory;
 import l2trunk.gameserver.model.entity.DimensionalRift;
 import l2trunk.gameserver.model.entity.Reflection;
 import l2trunk.gameserver.model.instances.NpcInstance;
-import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
 import l2trunk.gameserver.network.serverpackets.TeleportToLocation;
 import l2trunk.gameserver.utils.Location;
@@ -35,7 +34,7 @@ public enum DimensionalRiftManager {
     INSTANCE;
     private final static int DIMENSIONAL_FRAGMENT_ITEM_ID = 7079;
     private final Logger LOG = LoggerFactory.getLogger(DimensionalRiftManager.class);
-    private final Map<Integer, Map<Integer, DimensionalRiftRoom>> _rooms = new ConcurrentHashMap<>();
+    private final Map<Integer, Map<Integer, DimensionalRiftRoom>> rooms = new ConcurrentHashMap<>();
 
     public static void teleToLocation(Player player, Location loc, Reflection ref) {
         if (player.isTeleporting() || player.isDeleted())
@@ -68,11 +67,11 @@ public enum DimensionalRiftManager {
     }
 
     public DimensionalRiftRoom getRoom(int type, int room) {
-        return _rooms.get(type).get(room);
+        return rooms.get(type).get(room);
     }
 
     public Map<Integer, DimensionalRiftRoom> getRooms(int type) {
-        return _rooms.get(type);
+        return rooms.get(type);
     }
 
     private void load() {
@@ -129,10 +128,10 @@ public enum DimensionalRiftManager {
                                     if (territory == null)
                                         LOG.error("DimensionalRiftManager: invalid spawn data for room id " + roomId + "!");
 
-                                    if (!_rooms.containsKey(type))
-                                        _rooms.put(type, new ConcurrentHashMap<>());
+                                    if (!rooms.containsKey(type))
+                                        rooms.put(type, new ConcurrentHashMap<>());
 
-                                    _rooms.get(type).put(roomId, new DimensionalRiftRoom(territory, tele, isBossRoom));
+                                    rooms.get(type).put(roomId, new DimensionalRiftRoom(territory, tele, isBossRoom));
 
                                     for (Node spawn = room.getFirstChild(); spawn != null; spawn = spawn.getNextSibling())
                                         if ("spawn".equalsIgnoreCase(spawn.getNodeName())) {
@@ -141,17 +140,17 @@ public enum DimensionalRiftManager {
                                             delay = Integer.parseInt(attrs.getNamedItem("delay").getNodeValue());
                                             count = Integer.parseInt(attrs.getNamedItem("count").getNodeValue());
 
-                                            if (!_rooms.containsKey(type))
+                                            if (!rooms.containsKey(type))
                                                 LOG.warn("Type " + type + " not found!");
-                                            else if (!_rooms.get(type).containsKey(roomId))
+                                            else if (!rooms.get(type).containsKey(roomId))
                                                 LOG.warn("Room " + roomId + " in Type " + type + " not found!");
 
-                                            if (_rooms.containsKey(type) && _rooms.get(type).containsKey(roomId)) {
+                                            if (rooms.containsKey(type) && rooms.get(type).containsKey(roomId)) {
                                                 spawnDat = new SimpleSpawner(mobId);
                                                 spawnDat.setTerritory(territory)
                                                         .setRespawnDelay(delay)
                                                         .setAmount(count);
-                                                _rooms.get(type).get(roomId).getSpawns().add(spawnDat);
+                                                rooms.get(type).get(roomId).getSpawns().add(spawnDat);
                                                 countGood++;
                                             } else
                                                 countBad++;
@@ -165,11 +164,11 @@ public enum DimensionalRiftManager {
         } catch (IOException e) {
             LOG.error("DimensionalRiftManager: IOException on loading DimensionalRift spawns!", e);
         }
-        int typeSize = _rooms.keySet().size();
+        int typeSize = rooms.keySet().size();
         int roomSize = 0;
 
-        for (int b : _rooms.keySet())
-            roomSize += _rooms.get(b).keySet().size();
+        for (int b : rooms.keySet())
+            roomSize += rooms.get(b).keySet().size();
 
         LOG.info("DimensionalRiftManager: Loaded " + typeSize + " room types with " + roomSize + " rooms.");
         LOG.info("DimensionalRiftManager: Loaded " + countGood + " DimensionalRift spawns, " + countBad + " errors.");
@@ -178,12 +177,12 @@ public enum DimensionalRiftManager {
 
     public boolean checkIfInRiftZone(Location loc, boolean ignorePeaceZone) {
         if (ignorePeaceZone)
-            return _rooms.get(0).get(1).checkIfInZone(loc);
-        return _rooms.get(0).get(1).checkIfInZone(loc) && !_rooms.get(0).get(0).checkIfInZone(loc);
+            return rooms.get(0).get(1).checkIfInZone(loc);
+        return rooms.get(0).get(1).checkIfInZone(loc) && !rooms.get(0).get(0).checkIfInZone(loc);
     }
 
     private boolean checkIfInPeaceZone(Location loc) {
-        return _rooms.get(0).get(0).checkIfInZone(loc);
+        return rooms.get(0).get(0).checkIfInZone(loc);
     }
 
     public void teleportToWaitingRoom(Player player) {
@@ -196,68 +195,56 @@ public enum DimensionalRiftManager {
             return;
         }
 
-        if (!player.isGM()) {
-            if (!player.getParty().isLeader(player)) {
-                showHtmlFile(player, "rift/NotPartyLeader.htm", npc);
-                return;
-            }
+        if (player.isGM())
+            return;
 
-            if (player.getParty().isInDimensionalRift()) {
-                showHtmlFile(player, "rift/Cheater.htm", npc);
-
-                if (!player.isGM())
-                    LOG.warn("Player " + player.getName() + "(" + player.objectId() + ") was cheating in dimension rift area!");
-
-                return;
-            }
-
-            if (player.getParty().size() < Config.RIFT_MIN_PARTY_SIZE) {
-                showHtmlFile(player, "rift/SmallParty.htm", npc);
-                return;
-            }
-
-            for (Player p : player.getParty().getMembers())
-                if (!checkIfInPeaceZone(p.getLoc())) {
-                    showHtmlFile(player, "rift/NotInWaitingRoom.htm", npc);
-                    return;
-                }
-
-            ItemInstance i;
-            for (Player p : player.getParty().getMembers()) {
-                i = p.getInventory().getItemByItemId(DIMENSIONAL_FRAGMENT_ITEM_ID);
-                if (i == null || i.getCount() < getNeededItems(type)) {
-                    showHtmlFile(player, "rift/NoFragments.htm", npc);
-                    return;
-                }
-            }
-
-            for (Player p : player.getParty().getMembers())
-                if (!p.getInventory().destroyItemByItemId(DIMENSIONAL_FRAGMENT_ITEM_ID, getNeededItems(type), "DimensionalRift")) {
-                    showHtmlFile(player, "rift/NoFragments.htm", npc);
-                    return;
-                }
+        if (!player.getParty().isLeader(player)) {
+            showHtmlFile(player, "rift/NotPartyLeader.htm", npc);
+            return;
         }
 
-        new DimensionalRift(player.getParty(), type, Rnd.get(1, _rooms.get(type).size() - 1));
+        if (player.getParty().isInDimensionalRift()) {
+            showHtmlFile(player, "rift/Cheater.htm", npc);
+
+            if (!player.isGM())
+                LOG.warn("Player " + player.getName() + "(" + player.objectId() + ") was cheating in dimension rift area!");
+
+            return;
+        }
+
+        if (player.getParty().size() < Config.RIFT_MIN_PARTY_SIZE) {
+            showHtmlFile(player, "rift/SmallParty.htm", npc);
+            return;
+        }
+
+        if (player.getParty().getMembersStream()
+                .filter(p -> !checkIfInPeaceZone(p.getLoc()))
+                .peek(p -> showHtmlFile(player, "rift/NotInWaitingRoom.htm", npc))
+                .findAny().isPresent())
+            return;
+
+
+//            ItemInstance i;
+        if (player.getParty().getMembersStream()
+                .map(p -> p.getInventory().getItemByItemId(DIMENSIONAL_FRAGMENT_ITEM_ID))
+                .filter(i -> i == null || i.getCount() < getNeededItems(type))
+                .peek(i -> showHtmlFile(player, "rift/NoFragments.htm", npc))
+                .findAny().isPresent())
+            return;
+
+
+        if (player.getParty().getMembersStream()
+                .filter(p -> !p.getInventory().destroyItemByItemId(DIMENSIONAL_FRAGMENT_ITEM_ID, getNeededItems(type), "DimensionalRift"))
+                .peek(p -> showHtmlFile(player, "rift/NoFragments.htm", npc))
+                .findAny().isPresent())
+            return;
+
+
+        new DimensionalRift(player.getParty(), type, Rnd.get(1, rooms.get(type).size() - 1));
     }
 
     private long getNeededItems(int type) {
-        switch (type) {
-            case 1:
-                return Config.RIFT_ENTER_COST_RECRUIT;
-            case 2:
-                return Config.RIFT_ENTER_COST_SOLDIER;
-            case 3:
-                return Config.RIFT_ENTER_COST_OFFICER;
-            case 4:
-                return Config.RIFT_ENTER_COST_CAPTAIN;
-            case 5:
-                return Config.RIFT_ENTER_COST_COMMANDER;
-            case 6:
-                return Config.RIFT_ENTER_COST_HERO;
-            default:
-                return Long.MAX_VALUE;
-        }
+        return 3 * type + 15;
     }
 
     public void showHtmlFile(Player player, String file, NpcInstance npc) {

@@ -106,7 +106,7 @@ public abstract class Creature extends GameObject {
      */
     private final Location movingDestTempPos = Location.of();
     private final List<List<Location>> _targetRecorder = new ArrayList<>();
-    private final List<Calculator> calculators = new ArrayList<>();
+    private final Set<Calculator> calculators = new HashSet<>();
     private final Lock regenLock = new ReentrantLock();
     private final List<Zone> zones = new ArrayList<>();
     /**
@@ -192,7 +192,7 @@ public abstract class Creature extends GameObject {
     /**
      * Список игроков, которым необходимо отсылать информацию об изменении состояния персонажа
      */
-    private List<Player> _statusListeners;
+    private List<Player> statusListeners;
     private Location flyLoc;
     private List<ZoneType> restart_zones = List.of(ZoneType.battle_zone, ZoneType.peace_zone, ZoneType.offshore, ZoneType.dummy);
 
@@ -215,6 +215,7 @@ public abstract class Creature extends GameObject {
 //        return objectId;
     }
 
+    @Deprecated
     public Player getPlayer() {
 //        throw new UnsupportedOperationException("gameObject " + name() + " cannot have getPlayer !");
         return null;
@@ -463,7 +464,7 @@ public abstract class Creature extends GameObject {
         addStatFuncs(newSkill.getStatFuncs());
     }
 
-    public List<Calculator> getCalculators() {
+    public Set<Calculator> getCalculators() {
         return calculators;
     }
 
@@ -483,7 +484,7 @@ public abstract class Creature extends GameObject {
         }
     }
 
-    public final void addStatFuncs(List<Func> funcs) {
+    public final void addStatFuncs(Stream<Func> funcs) {
         funcs.forEach(this::addStatFunc);
     }
 
@@ -497,7 +498,7 @@ public abstract class Creature extends GameObject {
         }
     }
 
-    final void removeStatFuncs(List<Func> funcs) {
+    final void removeStatFuncs(Stream<Func> funcs) {
         funcs.forEach(this::removeStatFunc);
     }
 
@@ -641,20 +642,16 @@ public abstract class Creature extends GameObject {
                 .forEach(p -> p.sendPacket(packets));
     }
 
-    void broadcastToStatusListeners(L2GameServerPacket... packets) {
-        if (!isVisible() || packets.length == 0)
+    void broadcastToStatusListeners(L2GameServerPacket packets) {
+        if (!isVisible() || packets == null)
             return;
 
         statusListenersLock.lock();
         try {
-            if (_statusListeners == null || _statusListeners.isEmpty())
+            if (statusListeners == null || statusListeners.isEmpty())
                 return;
 
-            Player player;
-            for (Player _statusListener : _statusListeners) {
-                player = _statusListener;
-                player.sendPacket(packets);
-            }
+            statusListeners.forEach(p -> p.sendPacket(packets));
         } finally {
             statusListenersLock.unlock();
         }
@@ -666,10 +663,10 @@ public abstract class Creature extends GameObject {
 
         statusListenersLock.lock();
         try {
-            if (_statusListeners == null)
-                _statusListeners = new ArrayList<>();
-            if (!_statusListeners.contains(cha))
-                _statusListeners.add(cha);
+            if (statusListeners == null)
+                statusListeners = new ArrayList<>();
+            if (!statusListeners.contains(cha))
+                statusListeners.add(cha);
         } finally {
             statusListenersLock.unlock();
         }
@@ -678,9 +675,9 @@ public abstract class Creature extends GameObject {
     void removeStatusListener(Creature cha) {
         statusListenersLock.lock();
         try {
-            if (_statusListeners == null)
+            if (statusListeners == null)
                 return;
-            _statusListeners.remove(cha);
+            statusListeners.remove(cha);
         } finally {
             statusListenersLock.unlock();
         }
@@ -689,9 +686,9 @@ public abstract class Creature extends GameObject {
     private void clearStatusListeners() {
         statusListenersLock.lock();
         try {
-            if (_statusListeners == null)
+            if (statusListeners == null)
                 return;
-            _statusListeners.clear();
+            statusListeners.clear();
         } finally {
             statusListenersLock.unlock();
         }
@@ -1684,9 +1681,8 @@ public abstract class Creature extends GameObject {
         return StringUtils.defaultString(name);
     }
 
-    public final Creature setName(String name) {
+    public final void setName(String name) {
         this.name = name;
-        return this;
     }
 
     public int getPAtk(Creature target) {
@@ -3604,10 +3600,6 @@ public abstract class Creature extends GameObject {
         //
     }
 
-//    public int getKarma() {
-//        return 0;
-//    }
-
     public double getLevelMod() {
         return 1;
     }
@@ -3615,10 +3607,6 @@ public abstract class Creature extends GameObject {
     public int getNpcId() {
         return 0;
     }
-
-//    public Summon getPet() {
-//        return null;
-//    }
 
     public int getPvpFlag() {
         return 0;
@@ -3647,9 +3635,6 @@ public abstract class Creature extends GameObject {
     public void sendChanges() {
         getStatsRecorder().sendChanges();
     }
-
-//    public void sendMessage(String message) {
-//    }
 
     public void sendPacket(IStaticPacket mov) {
     }

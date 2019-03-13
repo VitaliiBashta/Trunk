@@ -1,7 +1,6 @@
 package l2trunk.gameserver.model.matching;
 
 import l2trunk.gameserver.model.Player;
-import l2trunk.gameserver.model.entity.Reflection;
 import l2trunk.gameserver.network.serverpackets.ExClosePartyRoom;
 import l2trunk.gameserver.network.serverpackets.ExPartyRoomMember;
 import l2trunk.gameserver.network.serverpackets.L2GameServerPacket;
@@ -75,7 +74,7 @@ public final class PartyMatchingRoom extends MatchingRoom {
 
     @Override
     public int getMemberType(Player member) {
-        return member.equals(_leader) ? ROOM_MASTER : member.getParty() != null && _leader.getParty() == member.getParty() ? PARTY_MEMBER : WAIT_PLAYER;
+        return member.equals(leader) ? ROOM_MASTER : member.getParty() != null && leader.getParty() == member.getParty() ? PARTY_MEMBER : WAIT_PLAYER;
     }
 
 }

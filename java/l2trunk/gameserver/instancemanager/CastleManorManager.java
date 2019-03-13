@@ -34,15 +34,15 @@ public enum CastleManorManager {
     public static final int PERIOD_CURRENT = 0;
     public static final int PERIOD_NEXT = 1;
     private static final String var_name = "ManorApproved";
-    private static final long MAINTENANCE_PERIOD = Config.MANOR_MAINTENANCE_PERIOD / 60000; // 6 mins
+    private static final long MAINTENANCE_PERIOD = 6; // 6 mins
     private static final Logger LOG = LoggerFactory.getLogger(CastleManorManager.class);
     private static final String CASTLE_MANOR_LOAD_PROCURE = "SELECT * FROM castle_manor_procure WHERE castle_id=?";
     private static final String CASTLE_MANOR_LOAD_PRODUCTION = "SELECT * FROM castle_manor_production WHERE castle_id=?";
 
-    private static final int NEXT_PERIOD_APPROVE = Config.MANOR_APPROVE_TIME; // 6:00
-    private static final int NEXT_PERIOD_APPROVE_MIN = Config.MANOR_APPROVE_MIN; //
-    private static final int MANOR_REFRESH = Config.MANOR_REFRESH_TIME; // 20:00
-    private static final int MANOR_REFRESH_MIN = Config.MANOR_REFRESH_MIN; //
+    private static final int NEXT_PERIOD_APPROVE = 6; // 6:00
+    private static final int NEXT_PERIOD_APPROVE_MIN = 0; //
+    private static final int MANOR_REFRESH = 20; // 20:00
+    private static final int MANOR_REFRESH_MIN = 0; //
     private boolean underMaintenance;
     private boolean disabled;
 

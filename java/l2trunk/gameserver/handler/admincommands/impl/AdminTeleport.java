@@ -22,7 +22,9 @@ import l2trunk.gameserver.utils.Util;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static l2trunk.commons.lang.NumberUtils.toInt;
 
@@ -177,7 +179,7 @@ public final class AdminTeleport implements IAdminCommandHandler {
                 break;
             case "admin_recall":
                 if (target != null) {
-                    recall(activeChar, target);
+                    recall(activeChar, List.of(target));
                     return true;
                 }
 
@@ -190,27 +192,26 @@ public final class AdminTeleport implements IAdminCommandHandler {
                 break;
             case "admin_recallparty":
                 if (target != null) {
-                    recall(activeChar, target.isInParty() ? target.getParty().getMembers().toArray(new Player[0]) : new Player[]{target});
-                    return true;
+                    recall(activeChar, target.isInParty() ? target.getParty().getMembers() : List.of(target));
                 } else
                     activeChar.sendMessage("->" + targetName + "<- is incorrect.");
                 break;
             case "admin_recallcc":
                 if (target != null) {
-                    recall(activeChar, target.getPlayerGroup().getMembers().toArray(new Player[0]));
+                    recall(activeChar, target.getPlayerGroup().getMembers());
                     return true;
                 } else
                     activeChar.sendMessage("->" + targetName + "<- is incorrect.");
                 break;
             case "admin_recallinstance":
                 if (target != null && !target.getReflection().isDefault()) {
-                    recall(activeChar, target.getReflection().getPlayers().toArray(Player[]::new));
+                    recall(activeChar, target.getReflection().getPlayers().collect(Collectors.toList()));
                     return true;
                 } else
                     activeChar.sendMessage("->" + targetName + "<- is incorrect, or reflection is default.");
                 break;
             case "admin_recallserver":
-                final Player[] targets = GameObjectsStorage.getAllPlayersStream()
+                final List<Player> targets = GameObjectsStorage.getAllPlayersStream()
                         .filter(plr -> (!plr.isInBuffStore()
                                 || !plr.isInStoreMode()
                                 || plr.isOnline()
@@ -221,8 +222,8 @@ public final class AdminTeleport implements IAdminCommandHandler {
                                 || plr.getReflection() == ReflectionManager.DEFAULT
                                 || plr.getPvpFlag() <= 0
                                 || plr.getKarma() <= 0))
-                        .toArray(Player[]::new);
-                activeChar.sendMessage("Recalling " + targets.length + " players out of " + GameObjectsStorage.getAllPlayersCount() + " players. Ignored: Offline shops, instance, event, olympiad participants and jailed players.");
+                        .collect(Collectors.toList());
+                activeChar.sendMessage("Recalling " + targets.size() + " players out of " + GameObjectsStorage.getAllPlayersCount() + " players. Ignored: Offline shops, instance, event, olympiad participants and jailed players.");
                 recall(activeChar, true, true, targets);
                 break;
             case "admin_setref": {
@@ -353,11 +354,11 @@ public final class AdminTeleport implements IAdminCommandHandler {
         activeChar.sendPacket(adminReply);
     }
 
-    private void recall(Player activeChar, Player... targets) {
+    private void recall(Player activeChar, Collection<Player> targets) {
         recall(activeChar, false, false, targets);
     }
 
-    private void recall(Player activeChar, boolean askToReturn, boolean randomTp, Player... targets) {
+    private void recall(Player activeChar, boolean askToReturn, boolean randomTp, Collection<Player> targets) {
         for (Player target : targets) {
             if (askToReturn) {
                 target.setVar("lastRecallLoc", target.getLoc().toXYZString(), System.currentTimeMillis() + 120000);

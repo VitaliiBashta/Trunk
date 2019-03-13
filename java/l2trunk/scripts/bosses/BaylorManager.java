@@ -134,7 +134,7 @@ public final class BaylorManager extends Functions implements ScriptFile {
             pc.setBlock(true);
         } else {
 
-            pc.getParty().getMembers().stream()
+            pc.getParty().getMembersStream()
                     .filter(mem -> !mem.isDead())
                     .filter(mem -> mem.isInRange(pc, 1500))
                     .forEach(mem -> {

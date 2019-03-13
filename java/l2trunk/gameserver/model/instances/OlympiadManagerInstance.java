@@ -26,7 +26,7 @@ import java.util.StringTokenizer;
 import static l2trunk.commons.lang.NumberUtils.toInt;
 
 public final class OlympiadManagerInstance extends NpcInstance {
-    public OlympiadManagerInstance(int objectId, NpcTemplate template) {
+    OlympiadManagerInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
         if (Config.ENABLE_OLYMPIAD && (template.npcId == 31688 || template.npcId == 39018))
             Olympiad.addOlympiadNpc(this);

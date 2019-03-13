@@ -45,7 +45,7 @@ public enum Hero {
     private static final String GET_HEROES = "SELECT * FROM heroes WHERE played = 1";
     private static final String GET_ALL_HEROES = "SELECT * FROM heroes";
     private static Map<Integer, StatsSet> heroes;
-    private static Map<Integer, StatsSet> _completeHeroes;
+    private static Map<Integer, StatsSet> completeHeroes;
     private static Map<Integer, List<HeroDiary>> _herodiary;
     private static Map<Integer, String> _heroMessage;
 
@@ -75,8 +75,8 @@ public enum Hero {
                 statement.setInt(3, hero.getInteger(PLAYED));
                 statement.setInt(4, 0);
                 statement.execute();
-                if (_completeHeroes != null && !_completeHeroes.containsKey(heroId)) {
-                    _completeHeroes.remove(heroId);
+                if (completeHeroes != null && !completeHeroes.containsKey(heroId)) {
+                    completeHeroes.remove(heroId);
                 }
             }
         } catch (SQLException e) {
@@ -102,7 +102,7 @@ public enum Hero {
 
     private void init() {
         heroes = new ConcurrentHashMap<>();
-        _completeHeroes = new ConcurrentHashMap<>();
+        completeHeroes = new ConcurrentHashMap<>();
         _herodiary = new ConcurrentHashMap<>();
         _heroMessage = new ConcurrentHashMap<>();
 
@@ -133,7 +133,7 @@ public enum Hero {
                 hero.set(PLAYED, rset.getInt(PLAYED));
                 hero.set(ACTIVE, rset.getInt(ACTIVE));
                 HeroSetClanAndAlly(charId, hero);
-                _completeHeroes.put(charId, hero);
+                completeHeroes.put(charId, hero);
             }
         } catch (SQLException e) {
             LOG.warn("Hero System: Couldnt loadFile Heroes", e);
@@ -191,21 +191,20 @@ public enum Hero {
         for (StatsSet hero : newHeroes) {
             int charId = hero.getInteger(Olympiad.CHAR_ID);
 
-            if (_completeHeroes != null && _completeHeroes.containsKey(charId)) {
-                StatsSet oldHero = _completeHeroes.get(charId);
-                int count = oldHero.getInteger(COUNT);
-                oldHero.set(COUNT, count + 1);
-                oldHero.set(PLAYED, 1);
-                oldHero.set(ACTIVE, 0);
+            if (completeHeroes != null && completeHeroes.containsKey(charId)) {
+                StatsSet oldHero = completeHeroes.get(charId);
+                oldHero.inc(COUNT);
+                oldHero.set(PLAYED);
+                oldHero.unset(ACTIVE);
 
                 heroes.put(charId, oldHero);
             } else {
                 StatsSet newHero = new StatsSet();
                 newHero.set(Olympiad.CHAR_NAME, hero.getString(Olympiad.CHAR_NAME));
                 newHero.set(Olympiad.CLASS_ID, hero.getInteger(Olympiad.CLASS_ID));
-                newHero.set(COUNT, 1);
-                newHero.set(PLAYED, 1);
-                newHero.set(ACTIVE, 0);
+                newHero.set(COUNT);
+                newHero.set(PLAYED);
+                newHero.unset(ACTIVE);
 
                 heroes.put(charId, newHero);
             }
@@ -235,9 +234,9 @@ public enum Hero {
                 statement.setInt(3, hero.getInteger(PLAYED));
                 statement.setInt(4, hero.getInteger(ACTIVE));
                 statement.execute();
-                if (_completeHeroes != null && !_completeHeroes.containsKey(heroId)) {
+                if (completeHeroes != null && !completeHeroes.containsKey(heroId)) {
                     HeroSetClanAndAlly(heroId, hero); //HeroSetClanAndAlly(heroId, hero);
-                    _completeHeroes.put(heroId, hero);
+                    completeHeroes.put(heroId, hero);
                 }
             }
         } catch (SQLException e) {
@@ -259,7 +258,7 @@ public enum Hero {
 
     public void activateHero(Player player) {
         StatsSet hero = heroes.get(player.objectId());
-        hero.set(ACTIVE, 1);
+        hero.set(ACTIVE);
         heroes.remove(player.objectId());
         heroes.put(player.objectId(), hero);
 
@@ -439,7 +438,7 @@ public enum Hero {
 
     public void log() {
         LOG.info("Hero System: Loaded " + heroes.size() + " Heroes.");
-        LOG.info("Hero System: Loaded " + _completeHeroes.size() + " all time Heroes.");
+        LOG.info("Hero System: Loaded " + completeHeroes.size() + " all time Heroes.");
 
     }
 }

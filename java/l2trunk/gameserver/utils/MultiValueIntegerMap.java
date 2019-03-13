@@ -43,14 +43,13 @@ public final class MultiValueIntegerMap {
         toRemove.forEach(this::remove);
     }
 
-    public Integer put(Integer key, Integer value) {
+    public void put(Integer key, Integer value) {
         List<Integer> coll = map.get(key);
         if (coll == null) {
             coll = new CopyOnWriteArrayList<>();
             map.put(key, coll);
         }
         coll.add(value);
-        return value;
     }
 
     public boolean containsValue(Integer value) {

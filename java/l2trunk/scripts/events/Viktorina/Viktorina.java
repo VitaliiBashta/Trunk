@@ -48,7 +48,7 @@ public final class Viktorina extends Functions implements ScriptFile, IVoicedCom
     private static String question;
     private static String answer;
     private static Viktorina instance;
-    private final List<String> _commandList = List.of("o", "voff", "von", "vhelp", "vtop", "v", "vo");
+    private final List<String> commandList = List.of("o", "voff", "von", "vhelp", "vtop", "v", "vo");
     private final ArrayList<String> questions = new ArrayList<>();
     private long _timeStopViktorina = 0;
     //Перменные ниже, перенес в конфиг.
@@ -278,43 +278,42 @@ public final class Viktorina extends Functions implements ScriptFile, IVoicedCom
 
           int first = player.getVarInt("viktorinafirst");
 
-        if (ServerVariables.getString("viktorinaq", "0") == "0") {
+        if (ServerVariables.getInt("viktorinaq") == 0) {
             ServerVariables.unset("viktorinaq");
             vq = 0;
         } else
             vq = ServerVariables.getInt("viktorinaq");
 
-        if (ServerVariables.getString("viktorinaa", "0") == "0") {
+        if (ServerVariables.getInt("viktorinaa") == 0) {
             ServerVariables.unset("viktorinaa");
             va = 0;
         } else
-            va = Integer.parseInt(ServerVariables.getString("viktorinaa"));
+            va = ServerVariables.getInt("viktorinaa");
 
         if (player.isVarSet("viktorina"))
             vstatus = "<font color=\"#00FF00\">You are participating in \"Quiz\"</font><br>";
         else
             vstatus = "<font color=\"#FF0000\">You are not in \"Quiz\"</font><br>";
 
-        StringBuilder help = new StringBuilder("<html><body>");
-        help.append("<center>Some help to the Quiz<br></center>");
-        help.append(vstatus);
-        help.append("Start time quiz: " + Config.VIKTORINA_START_TIME_HOUR + ":" + Config.VIKTORINA_START_TIME_MIN + "<br>");
-        help.append("Maximum life quiz " + Config.VIKTORINA_WORK_TIME + " h.<br>");
-        help.append("The time during which it is possible to answer: " + Config.VIKTORINA_TIME_ANSER + " sec.<br>");
-        help.append("Time between questions: " + (Config.VIKTORINA_TIME_ANSER + Config.VIKTORINA_TIME_PAUSE) + " sec.<br>");
-        help.append("Issues have already been set: " + vq + ".<br>");
-        help.append("The correct answer to the : " + va + ".<br>");
-        help.append("You correctly answered : " + schet + ", в " + first + " вы были первым.<br>");
-        help.append("<br>");
-        help.append("<center>Quiz team:<br></center>");
-        help.append("<font color=\"LEVEL\">Answer</font> - enter into any kind of chat.<br>");
-        help.append("<font color=\"LEVEL\">.von</font> - command to enable Vitokrina<br>");
-        help.append("<font color=\"LEVEL\">.voff</font> - command to disable Vitokrina<br>");
-        help.append("<font color=\"LEVEL\">.vtop</font> - command to view the results.<br>");
-        help.append("<font color=\"LEVEL\">.vhelp</font> - command for this page.<br>");
-        help.append("<font color=\"LEVEL\">.v</font> - shows the current issue.<br>");
-        help.append("</body></html>");
-        show(help.toString(), player);
+        String help = "<html><body>" + "<center>Some help to the Quiz<br></center>" +
+                vstatus +
+                "Start time quiz: " + Config.VIKTORINA_START_TIME_HOUR + ":" + Config.VIKTORINA_START_TIME_MIN + "<br>" +
+                "Maximum life quiz " + Config.VIKTORINA_WORK_TIME + " h.<br>" +
+                "The time during which it is possible to answer: " + Config.VIKTORINA_TIME_ANSER + " sec.<br>" +
+                "Time between questions: " + (Config.VIKTORINA_TIME_ANSER + Config.VIKTORINA_TIME_PAUSE) + " sec.<br>" +
+                "Issues have already been set: " + vq + ".<br>" +
+                "The correct answer to the : " + va + ".<br>" +
+                "You correctly answered : " + schet + ", в " + first + " вы были первым.<br>" +
+                "<br>" +
+                "<center>Quiz team:<br></center>" +
+                "<font color=\"LEVEL\">Answer</font> - enter into any kind of chat.<br>" +
+                "<font color=\"LEVEL\">.von</font> - command to enable Vitokrina<br>" +
+                "<font color=\"LEVEL\">.voff</font> - command to disable Vitokrina<br>" +
+                "<font color=\"LEVEL\">.vtop</font> - command to view the results.<br>" +
+                "<font color=\"LEVEL\">.vhelp</font> - command for this page.<br>" +
+                "<font color=\"LEVEL\">.v</font> - shows the current issue.<br>" +
+                "</body></html>";
+        show(help, player);
     }
 
     private void top(Player player) {
@@ -329,9 +328,9 @@ public final class Viktorina extends Functions implements ScriptFile, IVoicedCom
 
             for (final Scores faster : fasters) {
                 top.append("<tr>");
-                top.append("<td><center>" + index + "<center></td>");
-                top.append("<td><center>" + faster.getName() + "<center></td>");
-                top.append("<td><center>" + faster.getScore() + "<center></td>");
+                top.append("<td><center>").append(index).append("<center></td>");
+                top.append("<td><center>").append(faster.getName()).append("<center></td>");
+                top.append("<td><center>").append(faster.getScore()).append("<center></td>");
                 top.append("</tr>");
                 index++;
             }
@@ -353,9 +352,9 @@ public final class Viktorina extends Functions implements ScriptFile, IVoicedCom
 
             for (final Scores top1 : top10) {
                 top.append("<tr>");
-                top.append("<td><center>" + index + "<center></td>");
-                top.append("<td><center>" + top1.getName() + "<center></td>");
-                top.append("<td><center>" + top1.getScore() + "<center></td>");
+                top.append("<td><center>").append(index).append("<center></td>");
+                top.append("<td><center>").append(top1.getName()).append("<center></td>");
+                top.append("<td><center>").append(top1.getScore()).append("<center></td>");
                 top.append("</tr>");
                 index++;
             }
@@ -391,7 +390,7 @@ public final class Viktorina extends Functions implements ScriptFile, IVoicedCom
 
     @Override
     public List<String> getVoicedCommandList() {
-        return _commandList;
+        return commandList;
     }
 
     @Override
@@ -492,14 +491,7 @@ public final class Viktorina extends Functions implements ScriptFile, IVoicedCom
         }
     }
 
-    /**
-     * Выдаем приз на каторую укажет шанс + определяем выдавать приз для первого или для остальных
-     *
-     * @param player
-     * @param first
-     * @return
-     */
-    private boolean giveItemByChance(Player player, boolean first) {
+    private void giveItemByChance(Player player, boolean first) {
         int chancesumm = 0;
         int productId;
         int chance = Rnd.get(0, 100);
@@ -516,10 +508,9 @@ public final class Viktorina extends Functions implements ScriptFile, IVoicedCom
                     player.sendPacket(new SystemMessage(SystemMessage.YOU_HAVE_EARNED_S1).addItemName(productId));
                 if (DEBUG_VIKROINA)
                     _log.info("Player: " + player.getName() + " recived " + productId + ":" + count + " with a chance to: " + items.getChance() + ":" + items.getFirst() + "", "Viktorina");
-                return true;
+                return;
             }
         }
-        return true;
     }
 
     private boolean isStatus() {

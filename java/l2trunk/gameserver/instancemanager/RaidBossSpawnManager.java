@@ -39,11 +39,11 @@ public enum RaidBossSpawnManager {
     INSTANCE;
     private static final Integer KEY_RANK = -1;
     private static final Integer KEY_TOTAL_POINTS = 0;
-    private final static Map<Integer, Integer> _respawns = new HashMap<>();
-    private static final Logger _log = LoggerFactory.getLogger(RaidBossSpawnManager.class);
-    private static final Map<Integer, Spawner> _spawntable = new ConcurrentHashMap<>();
-    private final static Map<Integer, StatsSet> _storedInfo = new ConcurrentHashMap<>();
-    private static Map<Integer, Map<Integer, Integer>> _points;
+    private final static Map<Integer, Integer> RESPAWNS = new HashMap<>();
+    private static final Logger LOG = LoggerFactory.getLogger(RaidBossSpawnManager.class);
+    private static final Map<Integer, Spawner> SPAWNTABLE = new ConcurrentHashMap<>();
+    private final static Map<Integer, StatsSet> STORED_INFO = new ConcurrentHashMap<>();
+    private static Map<Integer, Map<Integer, Integer>> points;
     private final Lock pointsLock = new ReentrantLock();
 
     public void init() {
@@ -95,8 +95,8 @@ public enum RaidBossSpawnManager {
     }
 
     public int getRespawntime(int id) {
-        if (_respawns.containsKey(id))
-            return _respawns.get(id);
+        if (RESPAWNS.containsKey(id))
+            return RESPAWNS.get(id);
 
         return -1;
     }
@@ -112,35 +112,35 @@ public enum RaidBossSpawnManager {
                 info.set("respawn_delay", rset.getInt("respawn_delay"));
                 info.set("date_of_death", rset.getInt("date_of_death"));
                 info.set("last_killer", rset.getString("last_killer"));
-                _storedInfo.put(id, info);
-                _respawns.put(id, rset.getInt("respawn_delay"));
+                STORED_INFO.put(id, info);
+                RESPAWNS.put(id, rset.getInt("respawn_delay"));
             }
         } catch (SQLException e) {
-            _log.warn("RaidBossSpawnManager: Couldnt loadFile raidboss statuses", e);
+            LOG.warn("RaidBossSpawnManager: Couldnt loadFile raidboss statuses", e);
         }
-        _log.info("RaidBossSpawnManager: Loaded " + _storedInfo.size() + " Statuses");
+        LOG.info("RaidBossSpawnManager: Loaded " + STORED_INFO.size() + " Statuses");
     }
 
     public void setRaidBossDied(int id, String killer) {
-        Spawner spawner = _spawntable.get(id);
+        Spawner spawner = SPAWNTABLE.get(id);
         if (spawner == null)
             return;
 
-        StatsSet info = _storedInfo.get(id);
+        StatsSet info = STORED_INFO.get(id);
         if (info == null)
-            _storedInfo.put(id, info = new StatsSet());
+            STORED_INFO.put(id, info = new StatsSet());
 
         NpcInstance raidboss = spawner.getFirstSpawned();
         if (raidboss instanceof ReflectionBossInstance)
             return;
 
-        info.set("current_hp", 0);
-        info.set("current_mp", 0);
+        info.unset("current_hp");
+        info.unset("current_mp");
         info.set("respawn_delay", spawner.getRespawnTime());
         info.set("date_of_death", System.currentTimeMillis() / 1000L);
         info.set("last_killer", killer);
 
-        _respawns.put(id, spawner.getRespawnTime());
+        RESPAWNS.put(id, spawner.getRespawnTime());
 
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement("REPLACE INTO `raidboss_status` (id, current_hp, current_mp, respawn_delay, date_of_death, last_killer) VALUES (?,?,?,?,?,?)")) {
@@ -152,18 +152,18 @@ public enum RaidBossSpawnManager {
             statement.setString(6, info.getString("last_killer"));
             statement.execute();
         } catch (SQLException e) {
-            _log.warn("RaidBossSpawnManager: Couldnt update raidboss_status 1 table", e);
+            LOG.warn("RaidBossSpawnManager: Couldnt update raidboss_status 1 table", e);
         }
     }
 
     private void setRaidBossAlive(int id) {
-        Spawner spawner = _spawntable.get(id);
+        Spawner spawner = SPAWNTABLE.get(id);
         if (spawner == null)
             return;
 
-        StatsSet info = _storedInfo.get(id);
+        StatsSet info = STORED_INFO.get(id);
         if (info == null) {
-            _storedInfo.put(id, info = new StatsSet());
+            STORED_INFO.put(id, info = new StatsSet());
         }
 
         NpcInstance raidboss = spawner.getFirstSpawned();
@@ -179,17 +179,17 @@ public enum RaidBossSpawnManager {
             statement.setLong(5, info.getLong("date_of_death"));
             statement.execute();
         } catch (SQLException e) {
-            _log.warn("RaidBossSpawnManager: Couldnt update raidboss_status 2 table", e);
+            LOG.warn("RaidBossSpawnManager: Couldnt update raidboss_status 2 table", e);
         }
     }
 
     public void addNewSpawn(int npcId, Spawner spawnDat) {
-        if (_spawntable.containsKey(npcId))
+        if (SPAWNTABLE.containsKey(npcId))
             return;
 
-        _spawntable.put(npcId, spawnDat);
+        SPAWNTABLE.put(npcId, spawnDat);
 
-        StatsSet info = _storedInfo.get(npcId);
+        StatsSet info = STORED_INFO.get(npcId);
         if (info != null) {
             spawnDat.setRespawnTime(info.getInteger("respawn_delay"));
         }
@@ -197,20 +197,20 @@ public enum RaidBossSpawnManager {
 
     public void onBossSpawned(RaidBossInstance raidboss) {
         int bossId = raidboss.getNpcId();
-        if (!_spawntable.containsKey(bossId)) {
+        if (!SPAWNTABLE.containsKey(bossId)) {
             return;
         }
 
-        StatsSet info = _storedInfo.get(bossId);
+        StatsSet info = STORED_INFO.get(bossId);
         if (info == null) {
             info = new StatsSet();
 
             info.set("current_hp", raidboss.getMaxHp());
             info.set("current_mp", raidboss.getMaxMp());
-            info.set("respawn_delay", 0);
-            info.set("date_of_death", 0);
+            info.unset("respawn_delay");
+            info.unset("date_of_death");
             info.set("last_killer", "");
-            _storedInfo.put(bossId, info);
+            STORED_INFO.put(bossId, info);
         } else if (info.getInteger("current_hp") <= 1) {
             info.set("current_hp", raidboss.getMaxHp());
             info.set("current_mp", raidboss.getMaxMp());
@@ -223,15 +223,8 @@ public enum RaidBossSpawnManager {
         GmListTable.broadcastMessageToGMs("Spawning RaidBoss " + raidboss.getName());
     }
 
-    public void onBossDespawned(RaidBossInstance raidboss, boolean isDead, String killer) {
-        if (isDead)
-            setRaidBossDied(raidboss.getNpcId(), killer);
-        else
-            setRaidBossAlive(raidboss.getNpcId());
-    }
-
     public Status getRaidBossStatusId(int bossId) {
-        Spawner spawner = _spawntable.get(bossId);
+        Spawner spawner = SPAWNTABLE.get(bossId);
         if (spawner == null)
             return Status.UNDEFINED;
 
@@ -240,22 +233,22 @@ public enum RaidBossSpawnManager {
     }
 
     public boolean isDefined(int bossId) {
-        return _spawntable.containsKey(bossId);
+        return SPAWNTABLE.containsKey(bossId);
     }
 
     // ----------- Points & Ranking -----------
 
     public Map<Integer, Spawner> getSpawnTable() {
-        return _spawntable;
+        return SPAWNTABLE;
     }
 
     public Map<Integer, StatsSet> getAllBosses() {
-        return _storedInfo;
+        return STORED_INFO;
     }
 
     private void restorePointsTable() {
         pointsLock.lock();
-        _points = new ConcurrentHashMap<>();
+        points = new ConcurrentHashMap<>();
 
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement("SELECT owner_id, boss_id, points FROM `raidboss_points` ORDER BY owner_id ASC");
@@ -266,7 +259,7 @@ public enum RaidBossSpawnManager {
                 if (currentOwner != rset.getInt("owner_id")) {
                     currentOwner = rset.getInt("owner_id");
                     score = new HashMap<>();
-                    _points.put(currentOwner, score);
+                    points.put(currentOwner, score);
                 }
 
                 assert score != null;
@@ -276,7 +269,7 @@ public enum RaidBossSpawnManager {
                     score.put(bossId, rset.getInt("points"));
             }
         } catch (SQLException e) {
-            _log.warn("RaidBossSpawnManager: Couldnt loadFile raidboss points", e);
+            LOG.warn("RaidBossSpawnManager: Couldnt loadFile raidboss points", e);
         }
         pointsLock.unlock();
     }
@@ -284,9 +277,9 @@ public enum RaidBossSpawnManager {
     public void updatePointsDb() {
         pointsLock.lock();
         if (!mysql.set("TRUNCATE `raidboss_points`"))
-            _log.warn("RaidBossSpawnManager: Couldnt empty raidboss_points table");
+            LOG.warn("RaidBossSpawnManager: Couldnt empty raidboss_points table");
 
-        if (_points.isEmpty()) {
+        if (points.isEmpty()) {
             pointsLock.unlock();
             return;
         }
@@ -294,7 +287,7 @@ public enum RaidBossSpawnManager {
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement("INSERT INTO `raidboss_points` (owner_id, boss_id, points) VALUES(?,?,?)")) {
             boolean addedBatch = false;
-            for (Map.Entry<Integer, Map<Integer, Integer>> pointEntry : _points.entrySet()) {
+            for (Map.Entry<Integer, Map<Integer, Integer>> pointEntry : points.entrySet()) {
                 Map<Integer, Integer> tmpPoint = pointEntry.getValue();
                 if (tmpPoint == null || tmpPoint.isEmpty())
                     continue;
@@ -315,7 +308,7 @@ public enum RaidBossSpawnManager {
             if (addedBatch)
                 statement.executeUpdate();
         } catch (SQLException e) {
-            _log.warn("RaidBossSpawnManager: Couldnt update raidboss_points table", e);
+            LOG.warn("RaidBossSpawnManager: Couldnt update raidboss_points table", e);
         }
         pointsLock.unlock();
     }
@@ -326,12 +319,12 @@ public enum RaidBossSpawnManager {
 
         pointsLock.lock();
         // ???? ????? ?????? ? ??????? ????????
-        Map<Integer, Integer> pointsTable = _points.get(ownerId);
+        Map<Integer, Integer> pointsTable = RaidBossSpawnManager.points.get(ownerId);
 
         // ?? ?????? ?????????
         if (pointsTable == null) {
             pointsTable = new HashMap<>();
-            _points.put(ownerId, pointsTable);
+            RaidBossSpawnManager.points.put(ownerId, pointsTable);
         }
 
         // ??? ??????? ?????? ????????? ????? ??????
@@ -351,7 +344,7 @@ public enum RaidBossSpawnManager {
 
         pointsLock.lock();
 
-        for (Map.Entry<Integer, Map<Integer, Integer>> point : _points.entrySet()) {
+        for (Map.Entry<Integer, Map<Integer, Integer>> point : points.entrySet()) {
             Map<Integer, Integer> tmpPoint = point.getValue();
 
             tmpPoint.remove(KEY_RANK);
@@ -369,7 +362,7 @@ public enum RaidBossSpawnManager {
 
         int ranking = 1;
         for (Entry<Integer, Integer> entry : tmpRanking.descendingMap().entrySet()) {
-            Map<Integer, Integer> tmpPoint = _points.get(entry.getValue());
+            Map<Integer, Integer> tmpPoint = points.get(entry.getValue());
 
             tmpPoint.put(KEY_RANK, ranking);
             ranking++;
@@ -435,17 +428,17 @@ public enum RaidBossSpawnManager {
                 clan.incReputation(reward, true, "RaidPoints");
             counter++;
         }
-        _points.clear();
+        points.clear();
         updatePointsDb();
         pointsLock.unlock();
     }
 
     public Map<Integer, Map<Integer, Integer>> getPoints() {
-        return _points;
+        return points;
     }
 
     public Map<Integer, Integer> getPointsForOwnerId(int ownerId) {
-        return _points.get(ownerId);
+        return points.get(ownerId);
     }
 
     public enum Status {

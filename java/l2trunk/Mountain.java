@@ -1,14 +1,23 @@
 package l2trunk;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.function.Supplier;
 
 public class Mountain {
 
     public static void main(String[] args) {
-        System.out.println(Integer.MAX_VALUE);
+        JSONObject obj = new JSONObject();
+        obj.put("Novel Name", "Godaan");
+        obj.put("Author", "Munshi Premchand");
+
+        JSONArray novelDetails = new JSONArray();
+        novelDetails.put("Language: Hindi");
+        novelDetails.put("Year of Publication: 1936");
+        novelDetails.put("Publisher: Lokmanya Press");
+
+        obj.put("Novel Details", novelDetails);
+        System.out.print(obj);
     }
 }
+

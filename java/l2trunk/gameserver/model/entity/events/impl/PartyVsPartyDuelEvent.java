@@ -133,7 +133,7 @@ public final class PartyVsPartyDuelEvent extends DuelEvent {
     @Override
     public void askDuel(Player player, Player target) {
         Request request = new Request(Request.L2RequestType.DUEL, player, target).setTimeout(10000L);
-        request.set("duelType", 1);
+        request.set("duelType");
         player.setRequest(request);
         target.setRequest(request);
 

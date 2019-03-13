@@ -46,7 +46,6 @@ public enum SevenSigns {
     public static final int PERIOD_COMPETITION = 1;
     public static final int PERIOD_COMP_RESULTS = 2;
     public static final int PERIOD_SEAL_VALIDATION = 3;
-    public static final int PERIOD_MAJOR_LENGTH = 603900000;
     public static final int ANCIENT_ADENA_ID = 5575;
     public static final int RECORD_SEVEN_SIGNS_ID = 5707;
     public static final int CERTIFICATE_OF_APPROVAL_ID = 6388;
@@ -726,7 +725,7 @@ public enum SevenSigns {
      * <BR>
      * Returns the cabal ID the getPlayer has joined.
      */
-    public int setPlayerInfo(int charObjId, int chosenCabal, int chosenSeal) {
+    public void setPlayerInfo(int charObjId, int chosenCabal, int chosenSeal) {
         StatsSet currPlayer;
         if (hasRegisteredBefore(charObjId)) {
             // If the seal validation period has passed,
@@ -741,16 +740,6 @@ public enum SevenSigns {
             currPlayer.set("char_obj_id", charObjId);
             currPlayer.set("cabal", chosenCabal);
             currPlayer.set("seal", chosenSeal);
-            currPlayer.set("dawn_red_stones", 0);
-            currPlayer.set("dawn_green_stones", 0);
-            currPlayer.set("dawn_blue_stones", 0);
-            currPlayer.set("dawn_ancient_adena_amount", 0);
-            currPlayer.set("dawn_contribution_score", 0);
-            currPlayer.set("dusk_red_stones", 0);
-            currPlayer.set("dusk_green_stones", 0);
-            currPlayer.set("dusk_blue_stones", 0);
-            currPlayer.set("dusk_ancient_adena_amount", 0);
-            currPlayer.set("dusk_contribution_score", 0);
 
             _signsPlayerData.put(charObjId, currPlayer);
 
@@ -786,7 +775,6 @@ public enum SevenSigns {
 
         saveSevenSignsData(charObjId, true);
 
-        return chosenCabal;
     }
 
     /**
@@ -805,10 +793,10 @@ public enum SevenSigns {
         int rewardAmount = 0;
         if (currPlayer.getInteger("cabal") == CABAL_DAWN) {
             rewardAmount = currPlayer.getInteger("dawn_ancient_adena_amount");
-            currPlayer.set("dawn_ancient_adena_amount", 0);
+            currPlayer.unset("dawn_ancient_adena_amount");
         } else {
             rewardAmount = currPlayer.getInteger("dusk_ancient_adena_amount");
-            currPlayer.set("dusk_ancient_adena_amount", 0);
+            currPlayer.unset("dusk_ancient_adena_amount");
         }
 
         if (removeReward) {

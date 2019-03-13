@@ -25,7 +25,7 @@ public final class SummonInstance extends Summon {
     private final int _itemConsumeDelay;
     private final int _maxLifetime;
     private double _expPenalty = 0;
-    private Future<?> _disappearTask;
+    private Future<?> disappearTask;
     private int _consumeCountdown;
     private int _lifetimeCountdown;
 
@@ -37,14 +37,8 @@ public final class SummonInstance extends Summon {
         _itemConsumeCountInTime = consumecount;
         _consumeCountdown = _itemConsumeDelay = consumedelay;
         _summonSkillId = skill.displayId;
-        _disappearTask = ThreadPoolManager.INSTANCE.schedule(new Lifetime(), CYCLE);
+        disappearTask = ThreadPoolManager.INSTANCE.schedule(new Lifetime(), CYCLE);
     }
-
-//    @SuppressWarnings("unchecked")
-//    @Override
-//    public iHardReference<SummonInstance> getRef() {
-//        return (iHardReference<SummonInstance>) super.getRef();
-//    }
 
     @Override
     public final int getLevel() {
@@ -81,9 +75,9 @@ public final class SummonInstance extends Summon {
 
         saveEffects();
 
-        if (_disappearTask != null) {
-            _disappearTask.cancel(false);
-            _disappearTask = null;
+        if (disappearTask != null) {
+            disappearTask.cancel(false);
+            disappearTask = null;
         }
     }
 
@@ -96,9 +90,9 @@ public final class SummonInstance extends Summon {
     }
 
     private synchronized void stopDisappear() {
-        if (_disappearTask != null) {
-            _disappearTask.cancel(false);
-            _disappearTask = null;
+        if (disappearTask != null) {
+            disappearTask.cancel(false);
+            disappearTask = null;
         }
     }
 
@@ -191,7 +185,7 @@ public final class SummonInstance extends Summon {
         @Override
         public void runImpl() {
             if (owner == null) {
-                _disappearTask = null;
+                disappearTask = null;
                 unSummon();
                 return;
             }
@@ -201,7 +195,7 @@ public final class SummonInstance extends Summon {
 
             if (_lifetimeCountdown <= 0) {
                 owner.sendPacket(Msg.SERVITOR_DISAPPEASR_BECAUSE_THE_SUMMONING_TIME_IS_OVER);
-                _disappearTask = null;
+                disappearTask = null;
                 unSummon();
                 return;
             }
@@ -218,7 +212,7 @@ public final class SummonInstance extends Summon {
 
             owner.sendPacket(new SetSummonRemainTime(SummonInstance.this));
 
-            _disappearTask = ThreadPoolManager.INSTANCE.schedule(this, CYCLE);
+            disappearTask = ThreadPoolManager.INSTANCE.schedule(this, CYCLE);
         }
     }
 }

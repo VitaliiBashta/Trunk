@@ -17,48 +17,44 @@ import java.util.List;
 
 public class CTFCombatFlagObject implements SpawnableObject, FlagItemAttachment {
     private static final Logger _log = LoggerFactory.getLogger(CTFCombatFlagObject.class);
-    private ItemInstance _item;
+    private ItemInstance item;
 
     private GlobalEvent _event;
 
     @Override
     public void spawnObject(GlobalEvent event) {
-        if (_item != null) {
+        if (item != null) {
             _log.info("FortressCombatFlagObject: can't spawn twice: " + event);
             return;
         }
-        _item = ItemFunctions.createItem(9819);
-        _item.setAttachment(this);
+        item = ItemFunctions.createItem(9819);
+        item.setAttachment(this);
 
         _event = event;
     }
 
     public ItemInstance getItem() {
-        return _item;
+        return item;
     }
 
-    @Override
-    public void setItem(ItemInstance item) {
-        // ignored
-    }
 
     @Override
     public void despawnObject(GlobalEvent event) {
-        if (_item == null)
+        if (item == null)
             return;
 
-        Player owner = GameObjectsStorage.getPlayer(_item.getOwnerId());
+        Player owner = GameObjectsStorage.getPlayer(item.getOwnerId());
         if (owner != null) {
-            owner.getInventory().destroyItem(_item, "CTF Combat Flag");
-            owner.sendDisarmMessage(_item);
+            owner.getInventory().destroyItem(item, "CTF Combat Flag");
+            owner.sendDisarmMessage(item);
         }
 
-        _item.setAttachment(null);
-        _item.setJdbcState(JdbcEntityState.UPDATED);
-        _item.delete();
+        item.setAttachment(null);
+        item.setJdbcState(JdbcEntityState.UPDATED);
+        item.delete();
 
-        _item.deleteMe();
-        _item = null;
+        item.deleteMe();
+        item = null;
 
         _event = null;
     }
@@ -113,8 +109,4 @@ public class CTFCombatFlagObject implements SpawnableObject, FlagItemAttachment 
         return false;
     }
 
-    @Override
-    public boolean canBeUnEquiped() {
-        return false;
-    }
 }

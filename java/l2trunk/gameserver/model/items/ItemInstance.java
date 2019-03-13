@@ -38,6 +38,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ScheduledFuture;
+import java.util.stream.Stream;
 
 public final class ItemInstance extends GameObject implements JdbcEntity {
     public static final int CHARGED_NONE = 0;
@@ -436,7 +437,7 @@ public final class ItemInstance extends GameObject implements JdbcEntity {
      * functions, if this particular item instance is enhanched
      * for a particular getPlayer.
      */
-    public List<Func> getStatFuncs() {
+    public Stream<Func> getStatFuncs() {
         List<Func> result = new ArrayList<>();
 
         List<Func> funcs = new ArrayList<>();
@@ -458,7 +459,7 @@ public final class ItemInstance extends GameObject implements JdbcEntity {
         if (!funcs.isEmpty())
             result = funcs;
 
-        return result;
+        return result.stream();
     }
 
     public boolean isHeroWeapon() {
@@ -1013,12 +1014,7 @@ public final class ItemInstance extends GameObject implements JdbcEntity {
     }
 
     public void setAttachment(ItemAttachment attachment) {
-        ItemAttachment old = this.attachment;
         this.attachment = attachment;
-        if (this.attachment != null)
-            this.attachment.setItem(this);
-        if (old != null)
-            old.setItem(null);
     }
 
     public int getAgathionEnergy() {
@@ -1083,7 +1079,7 @@ public final class ItemInstance extends GameObject implements JdbcEntity {
         AUCTION
     }
 
-    public class FuncAttack extends Func {
+    private class FuncAttack extends Func {
         private final Element element;
 
         FuncAttack(Element element, int order, Object owner) {

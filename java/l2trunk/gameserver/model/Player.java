@@ -325,7 +325,7 @@ public final class Player extends Playable implements PlayerGroup {
     private DecoyInstance decoy = null;
     private Map<Integer, EffectCubic> cubics = null;
     private int _agathionId = 0;
-    private Request _request;
+    private Request request;
     private ItemInstance _arrowItem;
     /**
      * The fists L2Weapon of the L2Player (used when no weapon is equipped)
@@ -355,7 +355,7 @@ public final class Player extends Playable implements PlayerGroup {
     private boolean _isOlympiadCompStarted = false;
     private OlympiadGame olympiadGame;
     private OlympiadGame olympiadObserveGame;
-    private int _olympiadSide = -1;
+    private int olympiadSide = -1;
     /**
      * ally with ketra or varka related wars
      */
@@ -385,7 +385,7 @@ public final class Player extends Playable implements PlayerGroup {
 
     private List<String> bypasses = null, bypasses_bbs = null;
     private Map<Integer, String> postFriends = new HashMap<>();
-    private boolean _notShowBuffAnim = false;
+    private boolean notShowBuffAnim = false;
     private boolean debug = false;
     private long dropdisabled;
     private long _lastItemAuctionInfoRequest;
@@ -514,8 +514,8 @@ public final class Player extends Playable implements PlayerGroup {
         // Create a new L2Player with an account name
         Player player = new Player(IdFactory.getInstance().getNextId(), template, accountName);
 
-        player.setName(name)
-                .setTitle("");
+        player.setName(name);
+        player.setTitle("");
         player.setHairStyle(hairStyle);
         player.setHairColor(hairColor);
         player.setFace(face);
@@ -612,7 +612,7 @@ public final class Player extends Playable implements PlayerGroup {
                 if (player.isVarSet("namecolor")) {
                     player.setNameColor(Integer.decode("0x" + player.getVar("namecolor")));
                 } else {
-                        player.setNameColor(Config.NORMAL_NAME_COLOUR);
+                    player.setNameColor(Config.NORMAL_NAME_COLOUR);
                 }
 
                 player._fistsWeaponItem = player.findFistsWeaponItem(classId);
@@ -695,7 +695,7 @@ public final class Player extends Playable implements PlayerGroup {
 
                 player._expandWarehouse = player.getVarInt("ExpandWarehouse");
 
-                player._notShowBuffAnim = player.isVarSet(NO_ANIMATION_OF_CAST_VAR);
+                player.notShowBuffAnim = player.isVarSet(NO_ANIMATION_OF_CAST_VAR);
 
 
                 player.setPetControlItem(player.getVarInt("pet"));
@@ -919,10 +919,6 @@ public final class Player extends Playable implements PlayerGroup {
         return (PlayerAI) super.getAI();
     }
 
-    @Override
-    public void doAttack(Creature target) {
-        super.doAttack(target);
-    }
 
     @Override
     public void sendReuseMessage(Skill skill) {
@@ -1040,7 +1036,7 @@ public final class Player extends Playable implements PlayerGroup {
 
         if ((party != null)) {
             if (isFestivalParticipant()) {
-                party.getMembers().forEach(m -> m.sendMessage(getName() + " has been removed from the upcoming festival."));
+                party.getMembersStream().forEach(m -> m.sendMessage(getName() + " has been removed from the upcoming festival."));
             }
             leaveParty();
         }
@@ -2772,9 +2768,7 @@ public final class Player extends Playable implements PlayerGroup {
 
     @Override
     public void sendPacket(IStaticPacket... packets) {
-        if (!isConnected()) {
-            return;
-        }
+        if (!isConnected()) return;
 
         for (IStaticPacket p : packets) {
             if (isPacketIgnored(p)) {
@@ -2787,7 +2781,7 @@ public final class Player extends Playable implements PlayerGroup {
 
     private boolean isPacketIgnored(IStaticPacket p) {
         if (p == null) return true;
-        return _notShowBuffAnim && ((p.getClass() == MagicSkillLaunched.class) || (p.getClass() == SocialAction.class));
+        return notShowBuffAnim && ((p.getClass() == MagicSkillLaunched.class) || (p.getClass() == SocialAction.class));
     }
 
     @Override
@@ -3656,11 +3650,11 @@ public final class Player extends Playable implements PlayerGroup {
     }
 
     public Request getRequest() {
-        return _request;
+        return request;
     }
 
     public void setRequest(Request transaction) {
-        _request = transaction;
+        request = transaction;
     }
 
     public boolean isBusy() {
@@ -3676,10 +3670,10 @@ public final class Player extends Playable implements PlayerGroup {
     }
 
     public boolean isProcessingRequest() {
-        if (_request == null) {
+        if (request == null) {
             return false;
         }
-        return _request.isInProgress();
+        return request.isInProgress();
     }
 
     public boolean isInTrade() {
@@ -4128,7 +4122,7 @@ public final class Player extends Playable implements PlayerGroup {
     public void joinParty(final Party party) {
         if (party != null) {
             party.addPartyMember(this);
-            party.getMembers().stream()
+            party.getMembersStream()
                     .filter(member -> PartyMatchingBBSManager.getInstance().partyMatchingPlayersList.contains(member))
                     .forEach(member -> {
                         PartyMatchingBBSManager.getInstance().partyMatchingPlayersList.remove(member);
@@ -5439,11 +5433,11 @@ public final class Player extends Playable implements PlayerGroup {
     }
 
     public int getOlympiadSide() {
-        return _olympiadSide;
+        return olympiadSide;
     }
 
     public void setOlympiadSide(final int i) {
-        _olympiadSide = i;
+        olympiadSide = i;
     }
 
 
@@ -5634,12 +5628,16 @@ public final class Player extends Playable implements PlayerGroup {
         return hero;
     }
 
+    public void setHero(final boolean hero) {
+        this.hero = hero;
+    }
+
     public void setHero(Player player) {
         StatsSet hero = new StatsSet();
         hero.set(Olympiad.CLASS_ID, player.baseClass);
         hero.set(Olympiad.CHAR_ID, player.objectId());
         hero.set(Olympiad.CHAR_NAME, player.getName());
-        hero.set(Hero.ACTIVE, 1);
+        hero.set(Hero.ACTIVE);
 
         List<StatsSet> heroesToBe = new ArrayList<>();
         heroesToBe.add(hero);
@@ -5652,10 +5650,6 @@ public final class Player extends Playable implements PlayerGroup {
             player.broadcastPacket(new SocialAction(player.objectId(), 16));
         }
         player.broadcastUserInfo(true);
-    }
-
-    public void setHero(final boolean hero) {
-        this.hero = hero;
     }
 
     public int getPing() {
@@ -6784,7 +6778,7 @@ public final class Player extends Playable implements PlayerGroup {
         }
 
         if ((target == null) && (party != null)) {
-            target = party.getMembers().stream()
+            target = party.getMembersStream()
                     .filter(Objects::nonNull)
                     .filter(p -> p.objectId() == id)
                     .findFirst().orElse(null);
@@ -6961,7 +6955,7 @@ public final class Player extends Playable implements PlayerGroup {
 
     @Override
     public double getRateSpoil() {
-        return party == null ? 1. : party.rateSpoil;
+        return party == null ? 1. : party.getRateSpoil();
     }
 
     public boolean isUndying() {
@@ -7405,7 +7399,7 @@ public final class Player extends Playable implements PlayerGroup {
         if ((party != null) && (party == target.getParty())) {
             result |= RelationChanged.RELATION_HAS_PARTY;
 
-            switch (party.getMembers().indexOf(this)) {
+            switch (party.getMembersStream().collect(Collectors.toList()).indexOf(this)) {
                 case 0:
                     result |= RelationChanged.RELATION_PARTYLEADER; // 0x10
                     break;
@@ -8189,11 +8183,11 @@ public final class Player extends Playable implements PlayerGroup {
     }
 
     public boolean isNotShowBuffAnim() {
-        return _notShowBuffAnim;
+        return notShowBuffAnim;
     }
 
     public void setNotShowBuffAnim(boolean value) {
-        _notShowBuffAnim = value;
+        notShowBuffAnim = value;
     }
 
     public List<SchemeBufferInstance.PlayerScheme> getBuffSchemes() {
@@ -8373,12 +8367,12 @@ public final class Player extends Playable implements PlayerGroup {
         return _petControlItem;
     }
 
-    public void setPetControlItem(ItemInstance item) {
-        _petControlItem = item;
-    }
-
     private void setPetControlItem(int itemObjId) {
         setPetControlItem(getInventory().getItemByObjectId(itemObjId));
+    }
+
+    public void setPetControlItem(ItemInstance item) {
+        _petControlItem = item;
     }
 
     public boolean isActive() {
@@ -9025,6 +9019,11 @@ public final class Player extends Playable implements PlayerGroup {
     }
 
 
+    public Stream<Player> getMembersStream() {
+        return Stream.of(this);
+    }
+
+    @Override
     public List<Player> getMembers() {
         return List.of(this);
     }
@@ -9182,7 +9181,7 @@ public final class Player extends Playable implements PlayerGroup {
         Party party = getParty();
         if (party != null) {
             if (isFestivalParticipant()) {
-                party.getMembers().forEach(m -> m.sendMessage(getName() + " has been removed from the upcoming festival."));
+                party.getMembersStream().forEach(m -> m.sendMessage(getName() + " has been removed from the upcoming festival."));
             }
             leaveParty();
         }

@@ -15,7 +15,6 @@ import l2trunk.gameserver.stats.Env;
 import l2trunk.gameserver.stats.Formulas;
 import l2trunk.gameserver.templates.CubicTemplate;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -52,7 +51,8 @@ public final class EffectCubic extends Effect {
                 target = player;
         } else {
             double currentHp = Integer.MAX_VALUE;
-            List<Player> members = player.getParty().getMembers().stream().filter(Objects::nonNull).collect(Collectors.toList());
+            List<Player> members = player.getParty().getMembersStream()
+                    .filter(Objects::nonNull).collect(Collectors.toList());
             for (Player member : members) {
                 if (player.isInRange(member, info.getSkill().castRange) && !member.isCurrentHpFull() && !member.isDead() && member.getCurrentHp() < currentHp) {
                     currentHp = member.getCurrentHp();

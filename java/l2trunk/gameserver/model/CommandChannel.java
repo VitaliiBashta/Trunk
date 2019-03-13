@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 public final class CommandChannel implements PlayerGroup {
@@ -128,7 +128,7 @@ public final class CommandChannel implements PlayerGroup {
 
 
     public void sendMessage(String message) {
-        commandChannelParties.forEach(party -> party.getMembers().forEach(m -> m.sendMessage(message)));
+        commandChannelParties.forEach(party -> party.getMembersStream().forEach(m -> m.sendMessage(message)));
     }
 
     @Override
@@ -149,7 +149,7 @@ public final class CommandChannel implements PlayerGroup {
     public Iterator<Player> iterator() {
         List<Iterator<Player>> iterators = new ArrayList<>(commandChannelParties.size());
         for (Party p : commandChannelParties)
-            iterators.add(p.getMembers().iterator());
+            iterators.add(p.getMembersStream().iterator());
         return new JoinedIterator<>(iterators);
     }
 
@@ -165,10 +165,9 @@ public final class CommandChannel implements PlayerGroup {
     }
 
 
-    public List<Player> getMembers() {
+    public Stream<Player> getMembersStream() {
         return commandChannelParties.stream()
-                .flatMap(players -> players.getMembers().stream())
-                .collect(Collectors.toList());
+                .flatMap(Party::getMembersStream);
     }
 
     @Override

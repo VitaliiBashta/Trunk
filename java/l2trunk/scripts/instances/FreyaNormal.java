@@ -149,7 +149,6 @@ public final class FreyaNormal extends Reflection {
 
     @Override
     protected void onCollapse() {
-        super.onCollapse();
         doCleanup();
     }
 

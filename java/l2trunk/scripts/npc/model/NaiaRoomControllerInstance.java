@@ -60,8 +60,8 @@ public final class NaiaRoomControllerInstance extends NpcInstance {
         if (command.startsWith("challengeroom")) {
             if (!NaiaTowerManager.isLegalGroup(player))
                 if (player.isInParty()) {
-                    for (Player member : player.getParty().getMembers())
-                        member.teleToLocation(kickLoc);
+                    player.getParty().getMembersStream().forEach(member ->
+                            member.teleToLocation(kickLoc));
                     return;
                 } else {
                     player.teleToLocation(kickLoc);

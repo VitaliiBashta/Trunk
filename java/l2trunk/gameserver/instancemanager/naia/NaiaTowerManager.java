@@ -9,15 +9,12 @@ import l2trunk.gameserver.utils.ReflectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public final class NaiaTowerManager {
     private static final Logger _log = LoggerFactory.getLogger(NaiaTowerManager.class);
-    private static final Map<Integer, List<Player>> _groupList = new HashMap<>();
-    private static final Map<Integer, List<Player>> _roomsDone = new HashMap<>();
+    private static final Map<Integer, Collection<Player>> _groupList = new HashMap<>();
+    private static final Map<Integer, Collection<Player>> _roomsDone = new HashMap<>();
     private static final Map<Integer, Long> _groupTimer = new HashMap<>();
     private static HashMap<Integer, Boolean> lockedRooms;
     private static Map<Integer, List<NpcInstance>> roomMobs;
@@ -49,8 +46,8 @@ public final class NaiaTowerManager {
         if (_towerAccessible > System.currentTimeMillis())
             return;
 
-        for (Player member : leader.getParty().getMembers())
-            member.teleToLocation(new Location(-47271, 246098, -9120));
+        leader.getParty().getMembers().forEach(member ->
+            member.teleToLocation( Location.of(-47271, 246098, -9120)));
 
         addGroupToTower(leader);
         _towerAccessible += 20 * 60 * 1000L;

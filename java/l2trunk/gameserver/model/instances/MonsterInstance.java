@@ -32,6 +32,7 @@ import java.util.*;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Collectors;
 
 public class MonsterInstance extends NpcInstance {
     private static final double MIN_DISTANCE_FOR_USE_UD = 200.0;
@@ -213,7 +214,7 @@ public class MonsterInstance extends NpcInstance {
 
         if (hasMinions())
             getMinionList().getAliveMinions().forEach(m ->
-                m.setReflection(reflection));
+                    m.setReflection(reflection));
         return this;
     }
 
@@ -280,23 +281,25 @@ public class MonsterInstance extends NpcInstance {
         Set<Quest> quests = getTemplate().getEventQuests(QuestEventType.MOB_KILLED_WITH_QUEST);
         if (!quests.isEmpty()) {
             List<Player> players = null; // массив с игроками, которые могут быть заинтересованы в квестах
-            if (isRaid() && Config.ALT_NO_LASTHIT){ // Для альта на ластхит берем всех игроков вокруг
+            if (isRaid() && Config.ALT_NO_LASTHIT) { // Для альта на ластхит берем всех игроков вокруг
                 players = new ArrayList<>();
                 for (Playable pl : aggroMap.keySet())
                     if (!pl.isDead() && (isInRangeZ(pl, Config.ALT_PARTY_DISTRIBUTION_RANGE) || killer.isInRangeZ(pl, Config.ALT_PARTY_DISTRIBUTION_RANGE)))
                         if (!players.contains(pl.getPlayer())) // не добавляем дважды если есть пет
                             players.add(pl.getPlayer());
             } else if (killer.getParty() != null) {// если пати то собираем всех кто подходит
-                players = new ArrayList<>(killer.getParty().size());
-                for (Player pl : killer.getParty().getMembers())
-                    if (!pl.isDead() && (isInRangeZ(pl, Config.ALT_PARTY_DISTRIBUTION_RANGE) || killer.isInRangeZ(pl, Config.ALT_PARTY_DISTRIBUTION_RANGE)))
-                        players.add(pl);
+                players = killer.getParty().getMembersStream()
+                        .filter(pl -> !pl.isDead())
+                        .filter(pl -> isInRangeZ(pl, Config.ALT_PARTY_DISTRIBUTION_RANGE)
+                                || killer.isInRangeZ(pl, Config.ALT_PARTY_DISTRIBUTION_RANGE))
+                        .collect(Collectors.toList());
+
             }
 
             for (Quest quest : quests) {
                 Player toReward = killer;
                 if (quest.getParty() != Quest.PARTY_NONE && players != null)
-                    if (isRaid() || quest.getParty() == Quest.PARTY_ALL){ // если цель рейд или квест для всей пати награждаем всех участников
+                    if (isRaid() || quest.getParty() == Quest.PARTY_ALL) { // если цель рейд или квест для всей пати награждаем всех участников
                         for (Player pl : players) {
                             QuestState qs = pl.getQuestState(quest);
                             if (qs != null && !qs.isCompleted())
@@ -374,14 +377,14 @@ public class MonsterInstance extends NpcInstance {
                 List<Player> rewardedMembers = new ArrayList<>();
                 for (Player partyMember : party.getMembers()) {
                     RewardInfo ai = rewards.remove(partyMember);
-                    if (partyMember.isDead() || !isInRangeZ(partyMember, Config.ALT_PARTY_DISTRIBUTION_RANGE))
-                        continue;
-                    if (ai != null)
-                        partyDmg += ai.dmg;
+                    if (!partyMember.isDead() && isInRangeZ(partyMember, Config.ALT_PARTY_DISTRIBUTION_RANGE)) {
+                        if (ai != null)
+                            partyDmg += ai.dmg;
 
-                    rewardedMembers.add(partyMember);
-                    if (partyMember.getLevel() > partylevel)
-                        partylevel = partyMember.getLevel();
+                        rewardedMembers.add(partyMember);
+                        if (partyMember.getLevel() > partylevel)
+                            partylevel = partyMember.getLevel();
+                    }
                 }
                 partyDmg = Math.min(partyDmg, maxHp);
                 if (partyDmg > 0) {

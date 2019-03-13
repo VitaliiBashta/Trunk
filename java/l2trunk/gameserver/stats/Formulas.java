@@ -633,10 +633,7 @@ public final class Formulas {
     }
 
     public static boolean calcSkillSuccess(Creature player, Creature target, Skill skill, int activateRate) {
-        Env env = new Env();
-        env.character = player;
-        env.target = target;
-        env.skill = skill;
+        Env env = new Env(player,target,skill);
         env.value = activateRate;
         return calcSkillSuccess(env, null, player.getChargedSpiritShot());
     }

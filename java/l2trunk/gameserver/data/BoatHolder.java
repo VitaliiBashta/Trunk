@@ -1,18 +1,19 @@
 package l2trunk.gameserver.data;
 
-import l2trunk.commons.data.xml.AbstractHolder;
 import l2trunk.gameserver.idfactory.IdFactory;
 import l2trunk.gameserver.model.entity.boat.AirShip;
 import l2trunk.gameserver.model.entity.boat.Boat;
 import l2trunk.gameserver.model.entity.boat.Vehicle;
 import l2trunk.gameserver.templates.CharTemplate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public final class BoatHolder extends AbstractHolder {
+public final class BoatHolder {
     public static final CharTemplate TEMPLATE = new CharTemplate(CharTemplate.getEmptyStatsSet());
-
+    public static final Logger LOG = LoggerFactory.getLogger(BoatHolder.class);
     private static final BoatHolder _instance = new BoatHolder();
     private final Map<Integer, Boat> boats = new HashMap<>();
 
@@ -67,12 +68,10 @@ public final class BoatHolder extends AbstractHolder {
         boats.remove(boat.objectId());
     }
 
-    @Override
     public int size() {
         return boats.size();
     }
 
-    @Override
     public void clear() {
         boats.clear();
     }

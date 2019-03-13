@@ -15,7 +15,6 @@ import l2trunk.gameserver.model.base.TeamType;
 import l2trunk.gameserver.model.entity.events.GlobalEvent;
 import l2trunk.gameserver.model.entity.events.impl.DuelEvent;
 import l2trunk.gameserver.model.instances.*;
-import l2trunk.gameserver.model.items.Inventory;
 import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.network.serverpackets.Revive;
 import l2trunk.gameserver.network.serverpackets.SystemMessage;
@@ -43,10 +42,6 @@ public abstract class Playable extends Creature {
         isPendingRevive = false;
         nonAggroTime = 0L;
     }
-
-//    public Inventory getInventory(){
-//        return null;
-//    }
 
     public abstract long getWearedMask();
 
@@ -189,7 +184,7 @@ public abstract class Playable extends Creature {
     }
 
     @Override
-    public void doAttack(Creature target) {
+    public final void doAttack(Creature target) {
         Player player = getPlayer();
         if (player == null) {
             return;

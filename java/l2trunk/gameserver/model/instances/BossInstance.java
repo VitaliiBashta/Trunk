@@ -30,7 +30,7 @@ public class BossInstance extends RaidBossInstance {
         if (killer instanceof Playable) {
             Player player = ((Playable)killer).getPlayer();
             if (player.isInParty()) {
-                player.getParty().getMembers().stream()
+                player.getParty().getMembersStream()
                         .filter(Player::isNoble)
                         .forEach(member -> Hero.INSTANCE.addHeroDiary(member.objectId(), HeroDiary.ACTION_RAID_KILLED, getNpcId()));
             } else if (player.isNoble())

@@ -289,7 +289,7 @@ public final class SavingSnowman extends Functions implements ScriptFile, OnDeat
                 if (pKiller != null && simpleCheckDrop(cha, playable) && Rnd.get(1000) < Config.EVENT_SAVING_SNOWMAN_REWARDER_CHANCE) {
                     List<Player> players = new ArrayList<>();
                     if (pKiller.isInParty())
-                        players = pKiller.getParty().getMembers();
+                        players = pKiller.getParty().getMembersStream();
                     else
                         players.add(pKiller);
 

@@ -215,7 +215,6 @@ public abstract class GameObject extends EventOwner {
         Reflection r = getReflection();
         if (!r.isDefault())
             r.removeObject(this);
-
     }
 
     public void onAction(Player player, boolean shift) {

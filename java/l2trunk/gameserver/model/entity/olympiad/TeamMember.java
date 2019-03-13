@@ -26,31 +26,30 @@ import l2trunk.gameserver.utils.Log;
 import java.util.Set;
 
 public final class TeamMember {
-
-    private final int _objId;
-    private final OlympiadGame _game;
-    private final CompType _type;
-    private final int _side;
-    private final String _name;
+    private final int objId;
+    private final OlympiadGame game;
+    private final CompType type;
+    private final int side;
+    private final String name;
     private String clanName = "";
     private ClassId classId;
-    private double _damage;
-    private boolean _isDead;
+    private double damage;
+    private boolean isDead;
     private Player player;
-    private Location _returnLoc = null;
+    private Location returnLoc = null;
 
-    public TeamMember(int obj_id, String name, Player player, OlympiadGame game, int side) {
-        _objId = obj_id;
-        _name = name;
-        _game = game;
-        _type = game.getType();
-        _side = side;
+    TeamMember(int obj_id, String name, Player player, OlympiadGame game, int side) {
+        objId = obj_id;
+        this.name = name;
+        this.game = game;
+        type = game.getType();
+        this.side = side;
 
         this.player = player;
         if (this.player == null)
             return;
 
-        clanName = player.getClan() == null ? StringUtils.EMPTY : player.getClan().getName();
+        clanName = player.getClan() == null ? "" : player.getClan().getName();
         classId = player.getActiveClassId();
 
         player.setOlympiadSide(side);
@@ -58,65 +57,64 @@ public final class TeamMember {
     }
 
     public boolean isDead() {
-        return _isDead;
+        return isDead;
     }
 
     public void doDie() {
-        _isDead = true;
+        isDead = true;
     }
 
     public StatsSet getStat() {
-        return Olympiad.nobles.get(_objId);
+        return Olympiad.nobles.get(objId);
     }
 
-    public void incGameCount() {
+    void incGameCount() {
         StatsSet set = getStat();
-        switch (_type) {
+        switch (type) {
             case TEAM:
-                set.set(Olympiad.GAME_TEAM_COUNT, set.getInteger(Olympiad.GAME_TEAM_COUNT) + 1);
+                set.inc(Olympiad.GAME_TEAM_COUNT);
                 break;
             case CLASSED:
-                set.set(Olympiad.GAME_CLASSES_COUNT, set.getInteger(Olympiad.GAME_CLASSES_COUNT) + 1);
+                set.inc(Olympiad.GAME_CLASSES_COUNT);
                 break;
             case NON_CLASSED:
-                set.set(Olympiad.GAME_NOCLASSES_COUNT, set.getInteger(Olympiad.GAME_NOCLASSES_COUNT) + 1);
+                set.inc(Olympiad.GAME_NOCLASSES_COUNT);
                 break;
         }
     }
 
-    public void takePointsForCrash() {
+    void takePointsForCrash() {
         if (!checkPlayer()) {
             StatsSet stat = getStat();
             int points = stat.getInteger(Olympiad.POINTS);
-            int diff = Math.min(OlympiadGame.MAX_POINTS_LOOSE, points / _type.getLooseMult());
-            stat.set(Olympiad.POINTS, points - diff);
-            Log.add("Olympiad Result: " + _name + " lost " + diff + " points for crash", "olympiad");
+            int diff = Math.min(OlympiadGame.MAX_POINTS_LOOSE, points / type.getLooseMult());
+            stat.inc(Olympiad.POINTS, - diff);
+            Log.add("Olympiad Result: " + name + " lost " + diff + " points for crash", "olympiad");
 
-            // TODO: Снести подробный лог после исправления беспричинного отъёма очков.
             Player player = this.player;
             if (player == null)
-                Log.add("Olympiad info: " + _name + " crashed coz getPlayer == null", "olympiad");
+                Log.add("Olympiad info: " + name + " crashed coz getPlayer == null", "olympiad");
             else {
                 if (player.isLogoutStarted())
-                    Log.add("Olympiad info: " + _name + " crashed coz getPlayer.isLogoutStarted()", "olympiad");
+                    Log.add("Olympiad info: " + name + " crashed coz getPlayer.isLogoutStarted()", "olympiad");
                 if (!player.isOnline())
-                    Log.add("Olympiad info: " + _name + " crashed coz !getPlayer.isOnline()", "olympiad");
+                    Log.add("Olympiad info: " + name + " crashed coz !getPlayer.isOnline()", "olympiad");
                 if (!player.isConnected())
-                    Log.add("Olympiad info: " + _name + " crashed coz !getPlayer.isOnline()", "olympiad");
+                    Log.add("Olympiad info: " + name + " crashed coz !getPlayer.isOnline()", "olympiad");
                 if (player.getOlympiadGame() == null)
-                    Log.add("Olympiad info: " + _name + " crashed coz getPlayer.getOlympiadGame() == null", "olympiad");
+                    Log.add("Olympiad info: " + name + " crashed coz getPlayer.getOlympiadGame() == null", "olympiad");
                 if (player.getOlympiadObserveGame() != null)
-                    Log.add("Olympiad info: " + _name + " crashed coz getPlayer.getOlympiadObserveGame() != null", "olympiad");
+                    Log.add("Olympiad info: " + name + " crashed coz getPlayer.getOlympiadObserveGame() != null", "olympiad");
             }
         }
     }
 
-    public boolean checkPlayer() {
+    boolean checkPlayer() {
         Player player = this.player;
         return player != null && !player.isLogoutStarted() && player.getOlympiadGame() != null && !player.isInObserverMode();
     }
 
-    public void portPlayerToArena() {
+    void portPlayerToArena() {
         Player player = this.player;
         if (!checkPlayer() || player.isTeleporting()) {
             this.player = null;
@@ -130,7 +128,7 @@ public final class TeamMember {
         if (duel != null)
             duel.abortDuel(player);
 
-        _returnLoc = player.stablePoint == null ? player.getReflection().getReturnLoc() == null ? player.getLoc() : player.getReflection().getReturnLoc() : player.stablePoint;
+        returnLoc = player.stablePoint == null ? player.getReflection().getReturnLoc() == null ? player.getLoc() : player.getReflection().getReturnLoc() : player.stablePoint;
 
         if (player.isDead())
             player.setPendingRevive(true);
@@ -144,21 +142,21 @@ public final class TeamMember {
 
         player.leaveParty();
 
-        Reflection ref = _game.getReflection();
+        Reflection ref = game.getReflection();
         InstantZone instantZone = ref.getInstancedZone();
 
-        Location tele = Location.findPointToStay(instantZone.getTeleportCoords().get(_side - 1), 50, 50, ref.getGeoIndex());
+        Location tele = Location.findPointToStay(instantZone.getTeleportCoords().get(side - 1), 50, 50, ref.getGeoIndex());
 
-        player.stablePoint = _returnLoc;
+        player.stablePoint = returnLoc;
         player.teleToLocation(tele, ref);
 
-        if (_type == CompType.TEAM)
-            player.setTeam(_side == 1 ? TeamType.BLUE : TeamType.RED);
+        if (type == CompType.TEAM)
+            player.setTeam(side == 1 ? TeamType.BLUE : TeamType.RED);
 
-        player.sendPacket(new ExOlympiadMode(_side));
+        player.sendPacket(new ExOlympiadMode(side));
     }
 
-    public void portPlayerBack() {
+    void portPlayerBack() {
         Player player = this.player;
         if (player == null)
             return;
@@ -166,12 +164,12 @@ public final class TeamMember {
         player.setOlympiadSide(-1); // эти параметры ставятся в конструкторе и должны очищаться всегда
         player.setOlympiadGame(null);
 
-        if (_returnLoc == null) // игрока не портнуло на стадион
+        if (returnLoc == null) // игрока не портнуло на стадион
             return;
 
         player.setIsInOlympiadMode(false);
         player.setOlympiadCompStarted(false);
-        if (_type == CompType.TEAM)
+        if (type == CompType.TEAM)
             player.setTeam(TeamType.NONE);
 
         removeBuffs(true);
@@ -197,7 +195,7 @@ public final class TeamMember {
         player.sendPacket(new ExOlympiadMatchEnd());
 
         player.stablePoint = null;
-        player.teleToLocation(_returnLoc, ReflectionManager.DEFAULT);
+        player.teleToLocation(returnLoc, ReflectionManager.DEFAULT);
 
     }
 
@@ -268,14 +266,14 @@ public final class TeamMember {
         heal();
     }
 
-    public void startComp() {
+    void startComp() {
         Player player = this.player;
         if (player == null)
             return;
         this.player.setOlympiadCompStarted(true);
     }
 
-    public void stopComp() {
+    void stopComp() {
         Player player = this.player;
         if (player == null)
             return;
@@ -293,7 +291,7 @@ public final class TeamMember {
 
     }
 
-    public void removeBuffs(boolean fromSummon) {
+    void removeBuffs(boolean fromSummon) {
         Player player = this.player;
         if (player == null)
             return;
@@ -330,8 +328,8 @@ public final class TeamMember {
         }
     }
 
-    public void saveNobleData() {
-        OlympiadDatabase.saveNobleData(_objId);
+    void saveNobleData() {
+        OlympiadDatabase.saveNobleData(objId);
     }
 
     public void logout() {
@@ -343,15 +341,15 @@ public final class TeamMember {
     }
 
     public String getName() {
-        return _name;
+        return name;
     }
 
-    public void addDamage(double d) {
-        _damage += d;
+    void addDamage(double d) {
+        damage += d;
     }
 
     public double getDamage() {
-        return _damage;
+        return damage;
     }
 
     public String getClanName() {
@@ -363,6 +361,6 @@ public final class TeamMember {
     }
 
     public int getObjectId() {
-        return _objId;
+        return objId;
     }
 }

@@ -19,6 +19,7 @@ import l2trunk.gameserver.utils.Log;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import static l2trunk.commons.lang.NumberUtils.toInt;
 
@@ -137,25 +138,23 @@ public final class AdminSkill implements IAdminCommandHandler {
 
         Creature target = (Creature) target_obj;
 
-        List<Calculator> calculators = target.getCalculators();
+        Set<Calculator> calculators = target.getCalculators();
 
         StringBuilder log_str = new StringBuilder("--- Debug for " + target.getName() + " ---\r\n");
 
         for (Calculator calculator : calculators) {
-            if (calculator == null)
-                continue;
             Env env = new Env(target, activeChar, null);
             env.value = calculator.getBase();
             log_str.append("Stat: ").append(calculator.stat.getValue()).append("\r\n");
             List<Func> funcs = calculator.getFunctions();
-            for (int i = 0; i < funcs.size(); i++) {
-                String order = Integer.toHexString(funcs.get(i).order).toUpperCase();
+            for (Func func: funcs) {
+                String order = Integer.toHexString(func.order).toUpperCase();
                 if (order.length() == 1)
                     order = "0" + order;
-                log_str.append("\tFunc #").append(i).append("@ [0x").append(order).append("]").append(funcs.get(i).getClass().getSimpleName()).append("\t").append(env.value);
-                if (funcs.get(i).getCondition() == null || funcs.get(i).getCondition().test(env))
-                    funcs.get(i).calc(env);
-                log_str.append(" -> ").append(env.value).append(funcs.get(i).owner != null ? "; owner: " + funcs.get(i).owner.toString() : "; no owner").append("\r\n");
+                log_str.append("\tFunc #").append(func.stat).append("@ [0x").append(order).append("]").append(func.getClass().getSimpleName()).append("\t").append(env.value);
+                if (func.getCondition() == null || func.getCondition().test(env))
+                    func.calc(env);
+                log_str.append(" -> ").append(env.value).append(func.owner != null ? "; owner: " + func.owner.toString() : "; no owner").append("\r\n");
             }
         }
 

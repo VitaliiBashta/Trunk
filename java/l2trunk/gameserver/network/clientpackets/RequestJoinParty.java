@@ -95,11 +95,9 @@ public class RequestJoinParty extends L2GameClientPacket {
             if (Config.PARTY_LEADER_ONLY_CAN_INVITE && !activeChar.getParty().isLeader(activeChar)) {
                 activeChar.sendPacket(SystemMsg.ONLY_THE_LEADER_CAN_GIVE_OUT_INVITATIONS);
                 //TODO Config for this option below
-                if (true) {
-                    IVoicedCommandHandler vch = VoicedCommandHandler.INSTANCE.getVoicedCommandHandler("invite " + target.getName());
-                    if (vch != null)
-                        vch.useVoicedCommand("invite", activeChar, target.getName());
-                }
+                IVoicedCommandHandler vch = VoicedCommandHandler.INSTANCE.getVoicedCommandHandler("invite " + target.getName());
+                if (vch != null)
+                    vch.useVoicedCommand("invite", activeChar, target.getName());
                 return;
             }
 

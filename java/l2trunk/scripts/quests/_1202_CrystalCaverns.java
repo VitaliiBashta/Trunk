@@ -79,7 +79,7 @@ public final class _1202_CrystalCaverns extends Quest {
     private static final int OG4 = 32277;
 
     private static final List<Integer> HEAL_SKILLLIST = List.of(
-            1217, 1218,1011,1015,1401, 5146    );
+            1217, 1218, 1011, 1015, 1401, 5146);
     private static final List<Integer> MOBLIST = List.of(
             KechisCaptain1,
             KechisCaptain2,
@@ -123,15 +123,15 @@ public final class _1202_CrystalCaverns extends Quest {
     public _1202_CrystalCaverns() {
         super(true);
 
-        addStartNpc(ORACLE_GUIDE,ORACLE_GUIDE3);
+        addStartNpc(ORACLE_GUIDE, ORACLE_GUIDE3);
 
-        addFirstTalkId(ORACLE_GUIDE2,OG1,OG2,OG3,OG4);
+        addFirstTalkId(ORACLE_GUIDE2, OG1, OG2, OG3, OG4);
 
-        addKillId(GK1,GK2,TEROD,WEYLIN,DOLPH,DARNEL,KECHI,GUARDIAN,GUARDIAN2,TOURMALINE,KECHICAPTAIN);
+        addKillId(GK1, GK2, TEROD, WEYLIN, DOLPH, DARNEL, KECHI, GUARDIAN, GUARDIAN2, TOURMALINE, KECHICAPTAIN);
 
-        addKillId(TEARS,Garden_Stakato,Garden_Poison_Moth,Garden_Guard,Garden_Guardian_Tree,Garden_Castalia);
+        addKillId(TEARS, Garden_Stakato, Garden_Poison_Moth, Garden_Guard, Garden_Guardian_Tree, Garden_Castalia);
 
-        addSkillUseId(OG1,OG2,OG3,OG4);
+        addSkillUseId(OG1, OG2, OG3, OG4);
 
         addKillId(MOBLIST);
     }
@@ -144,17 +144,17 @@ public final class _1202_CrystalCaverns extends Quest {
         if (HEAL_SKILLLIST.contains(skillId) && npc.getCurrentHp() == npc.getMaxHp()) {
             if (npcId == OG2) {
                 if (!world.OracleTriggeredRoom1) {
-                        world.OracleTriggeredRoom1 = true;
+                    world.OracleTriggeredRoom1 = true;
                     despawnNpcF(world);
                 }
-            } else if (npcId == OG3 ) {
+            } else if (npcId == OG3) {
                 if (!world.OracleTriggeredRoom2) {
-                        world.OracleTriggeredRoom2 = true;
+                    world.OracleTriggeredRoom2 = true;
                     despawnNpcF(world);
                 }
             } else if (npcId == OG4) {
                 if (!world.OracleTriggeredRoom3) {
-                        world.OracleTriggeredRoom3 = true;
+                    world.OracleTriggeredRoom3 = true;
                     despawnNpcF(world);
                 }
             }
@@ -226,7 +226,7 @@ public final class _1202_CrystalCaverns extends Quest {
             Party party = player.getParty();
             Location loc = teleto;
             if (party != null)
-                party.getMembers().forEach(pl -> pl.teleToLocation(loc));
+                party.getMembersStream().forEach(pl -> pl.teleToLocation(loc));
             else
                 player.teleToLocation(loc);
         }
@@ -261,7 +261,7 @@ public final class _1202_CrystalCaverns extends Quest {
             Location loc = Location.of(149361, 172327, -945);
             if (player.getParty() != null) {
                 player.getParty().setReflection(null);
-                player.getParty().getMembers().forEach(pl ->
+                player.getParty().getMembersStream().forEach(pl ->
                         pl.teleToLocation(loc, 0));
             } else
                 player.teleToLocation(loc, 0);
@@ -417,9 +417,9 @@ public final class _1202_CrystalCaverns extends Quest {
             world.instanceId = ref.id;
             world.bosses = 5;
             worlds.put(ref.id, world);
-            for (Player member : player.getParty().getMembers())
-                if (member != player)
-                    newQuestState(member, STARTED);
+            player.getParty().getMembersStream()
+                    .filter(member -> member != player)
+                    .forEach(member -> newQuestState(member, STARTED));
 
             if (type == 1) {
                 runEmeraldAndSteamFirstRoom(world);

@@ -57,19 +57,17 @@ public enum NpcParser {
             set.set("displayId", templateId);
             set.set("name", name);
             set.set("title", title);
-            set.set("baseCpReg", 0);
-            set.set("baseCpMax", 0);
 
             for (Iterator<org.dom4j.Element> firstIterator = npcElement.elementIterator(); firstIterator.hasNext(); ) {
                 org.dom4j.Element firstElement = firstIterator.next();
-                if (firstElement.getName().equalsIgnoreCase("set")) {
+                if ("set".equalsIgnoreCase(firstElement.getName())) {
                     set.set(firstElement.attributeValue("name"), firstElement.attributeValue("value"));
-                } else if (firstElement.getName().equalsIgnoreCase("equip")) {
+                } else if ("equip".equalsIgnoreCase(firstElement.getName())) {
                     for (Iterator<org.dom4j.Element> eIterator = firstElement.elementIterator(); eIterator.hasNext(); ) {
                         org.dom4j.Element eElement = eIterator.next();
                         set.set(eElement.getName(), eElement.attributeValue("item_id"));
                     }
-                } else if (firstElement.getName().equalsIgnoreCase("ai_params")) {
+                } else if ("ai_params".equalsIgnoreCase(firstElement.getName())) {
                     StatsSet ai = new StatsSet();
                     for (Iterator<org.dom4j.Element> eIterator = firstElement.elementIterator(); eIterator.hasNext(); ) {
                         org.dom4j.Element eElement = eIterator.next();
@@ -85,7 +83,7 @@ public enum NpcParser {
                         if ("defence".equalsIgnoreCase(eElement.getName())) {
                             element = Element.getElement(eElement.attributeValue("attribute"));
                             attributeDefence[element.getId()] = toInt(eElement.attributeValue("value"));
-                        } else if (eElement.getName().equalsIgnoreCase("attack")) {
+                        } else if ("attack".equalsIgnoreCase(eElement.getName())) {
                             element = Element.getElement(eElement.attributeValue("attribute"));
                             attributeAttack[element.getId()] = toInt(eElement.attributeValue("value"));
                         }

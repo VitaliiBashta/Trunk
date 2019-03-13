@@ -11,11 +11,12 @@ import l2trunk.gameserver.model.quest.QuestEventType;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public final class QuestSiegeGuardInstance extends SiegeGuardInstance {
     public QuestSiegeGuardInstance(int objectId, NpcTemplate template) {
@@ -36,29 +37,31 @@ public final class QuestSiegeGuardInstance extends SiegeGuardInstance {
 
         Set<Quest> quests = getTemplate().getEventQuests(QuestEventType.MOB_KILLED_WITH_QUEST);
         if (!quests.isEmpty()) {
-            final List<Player> players = new ArrayList<>(); // массив с игроками, которые могут быть заинтересованы в квестах
+            Stream<Player> players = Stream.empty();  // массив с игроками, которые могут быть заинтересованы в квестах
             if (isRaid() && Config.ALT_NO_LASTHIT) {// Для альта на ластхит берем всех игроков вокруг
-                for (Playable pl : aggroMap.keySet())
-                    if (!pl.isDead() && (isInRangeZ(pl, Config.ALT_PARTY_DISTRIBUTION_RANGE) || killer.isInRangeZ(pl, Config.ALT_PARTY_DISTRIBUTION_RANGE)))
-                        players.add(pl.getPlayer());
+                players = aggroMap.keySet().stream()
+                        .filter(pl -> !pl.isDead())
+                        .filter(pl -> isInRangeZ(pl, Config.ALT_PARTY_DISTRIBUTION_RANGE) || killer.isInRangeZ(pl, Config.ALT_PARTY_DISTRIBUTION_RANGE))
+                        .map(Playable::getPlayer);
             } else if (killer.getParty() != null) {// если пати то собираем всех кто подходит
-                for (Player pl : killer.getParty().getMembers())
-                    if (!pl.isDead() && (isInRangeZ(pl, Config.ALT_PARTY_DISTRIBUTION_RANGE) || killer.isInRangeZ(pl, Config.ALT_PARTY_DISTRIBUTION_RANGE)))
-                        players.add(pl);
+                players = killer.getParty().getMembersStream()
+                        .filter(pl -> !pl.isDead())
+                        .filter(pl -> isInRangeZ(pl, Config.ALT_PARTY_DISTRIBUTION_RANGE) || killer.isInRangeZ(pl, Config.ALT_PARTY_DISTRIBUTION_RANGE));
             }
 
             for (Quest quest : quests) {
                 Player toReward = killer;
                 if (quest.getParty() != Quest.PARTY_NONE)
                     if (isRaid() || quest.getParty() == Quest.PARTY_ALL) {// если цель рейд или квест для всей пати награждаем всех участников
-                        for (Player pl : players) {
-                            QuestState qs = pl.getQuestState(quest);
-                            if (qs != null && !qs.isCompleted())
-                                quest.notifyKill(this, qs);
-                        }
+                        players.map(pl -> pl.getQuestState(quest))
+                                .filter(Objects::nonNull)
+                                .filter(qs -> !qs.isCompleted())
+                                .forEach(qs ->
+                                        quest.notifyKill(this, qs));
+
                         toReward = null;
                     } else { // иначе выбираем одного
-                        List<Player> interested = players.stream()
+                        List<Player> interested = players
                                 .filter(pl -> pl.getQuestState(quest) != null)
                                 .filter(pl -> !pl.getQuestState(quest).isCompleted())
                                 .collect(Collectors.toList());// из тех, у кого взят квест

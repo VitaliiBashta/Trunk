@@ -117,16 +117,13 @@ public class OlympiadTeam {
             member.stopComp();
     }
 
-    public void takePointsForCrash() {
-        for (TeamMember member : members.values())
-            member.takePointsForCrash();
+    void takePointsForCrash() {
+        members.values().forEach(TeamMember::takePointsForCrash);
     }
 
-    public boolean checkPlayers() {
-        for (TeamMember member : members.values())
-            if (member.checkPlayer())
-                return true;
-        return false;
+    boolean checkPlayers() {
+        return members.values().stream()
+                .anyMatch(TeamMember::checkPlayer);
     }
 
     private boolean isAllDead() {

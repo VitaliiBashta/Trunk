@@ -93,7 +93,6 @@ public final class CrystalCaverns extends Reflection {
     protected void onCollapse() {
         if (failureTimer != null)
             failureTimer.cancel(false);
-        super.onCollapse();
     }
 
     public void notifyCoralRequest() {

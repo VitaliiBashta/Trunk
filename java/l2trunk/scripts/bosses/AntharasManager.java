@@ -51,7 +51,7 @@ public final class AntharasManager extends Functions implements ScriptFile, OnDe
     private static ScheduledFuture<?> _sleepCheckTask;
     private static ScheduledFuture<?> onAnnihilatedTask;
     // Vars
-    private static EpicBossState _state;
+    private static EpicBossState state;
     private static Zone zone;
     private static long _lastAttackTime = 0;
     private static boolean Dying = false;
@@ -83,9 +83,9 @@ public final class AntharasManager extends Functions implements ScriptFile, OnDe
             return;
 
         Dying = true;
-        _state.setRespawnDate(getRespawnInterval());
-        _state.setState(State.INTERVAL);
-        _state.update();
+        state.setRespawnDate(getRespawnInterval());
+        state.setState(State.INTERVAL);
+        state.update();
 
         _entryLocked = false;
         _teleCube = NpcUtils.spawnSingle(_teleportCubeId,_teleportCubeLocation );
@@ -95,19 +95,19 @@ public final class AntharasManager extends Functions implements ScriptFile, OnDe
     private static void setIntervalEndTask() {
         setUnspawn();
 
-        if (_state.getState().equals(State.ALIVE)) {
-            _state.setState(State.NOTSPAWN);
-            _state.update();
+        if (state.getState().equals(State.ALIVE)) {
+            state.setState(State.NOTSPAWN);
+            state.update();
             return;
         }
 
-        if (!_state.getState().equals(State.INTERVAL)) {
-            _state.setRespawnDate(getRespawnInterval());
-            _state.setState(State.INTERVAL);
-            _state.update();
+        if (!state.getState().equals(State.INTERVAL)) {
+            state.setRespawnDate(getRespawnInterval());
+            state.setState(State.INTERVAL);
+            state.update();
         }
 
-        _intervalEndTask = ThreadPoolManager.INSTANCE.schedule(new IntervalEnd(), _state.getInterval());
+        _intervalEndTask = ThreadPoolManager.INSTANCE.schedule(new IntervalEnd(), state.getInterval());
     }
 
     // clean Antharas's lair.
@@ -153,9 +153,9 @@ public final class AntharasManager extends Functions implements ScriptFile, OnDe
 
     private static void sleep() {
         setUnspawn();
-        if (_state.getState().equals(State.ALIVE)) {
-            _state.setState(State.NOTSPAWN);
-            _state.update();
+        if (state.getState().equals(State.ALIVE)) {
+            state.setState(State.NOTSPAWN);
+            state.update();
         }
     }
 
@@ -186,7 +186,7 @@ public final class AntharasManager extends Functions implements ScriptFile, OnDe
             player.sendMessage("The maximum of 200 players can invade the Antharas Nest");
             return;
         }
-        if (_state.getState() != State.NOTSPAWN) {
+        if (state.getState() != State.NOTSPAWN) {
             player.sendMessage("Antharas is still reborning. You cannot invade the nest now");
             return;
         }
@@ -206,27 +206,27 @@ public final class AntharasManager extends Functions implements ScriptFile, OnDe
     }
 
     public static EpicBossState getState() {
-        return _state;
+        return state;
     }
 
     @Override
     public void onDeath(Creature self, Creature killer) {
-        if (self instanceof Player && _state != null && _state.getState() == State.ALIVE && zone != null && zone.checkIfInZone(self.getX(), self.getY()))
+        if (self instanceof Player && state != null && state.getState() == State.ALIVE && zone != null && zone.checkIfInZone(self.getX(), self.getY()))
             checkAnnihilated();
         else if (self instanceof NpcInstance && self.getNpcId() == ANTHARAS_STRONG)
             ThreadPoolManager.INSTANCE.schedule(new AntharasSpawn(8), 10);
     }
 
     private void init() {
-        _state = new EpicBossState(ANTHARAS_STRONG);
+        state = new EpicBossState(ANTHARAS_STRONG);
         zone = ReflectionUtils.getZone("[antharas_epic]");
 
         CharListenerList.addGlobal(this);
-        _log.info("AntharasManager: State of Antharas is " + _state.getState() + ".");
-        if (!_state.getState().equals(State.NOTSPAWN))
+        _log.info("AntharasManager: State of Antharas is " + state.getState() + ".");
+        if (!state.getState().equals(State.NOTSPAWN))
             setIntervalEndTask();
 
-        _log.info("AntharasManager: Next spawn date of Antharas is " + TimeUtils.toSimpleFormat(_state.getRespawnDate()) + ".");
+        _log.info("AntharasManager: Next spawn date of Antharas is " + TimeUtils.toSimpleFormat(state.getRespawnDate()) + ".");
     }
 
     @Override
@@ -255,9 +255,9 @@ public final class AntharasManager extends Functions implements ScriptFile, OnDe
                 case 1:
                     antharas = (BossInstance) NpcUtils.spawnSingle(ANTHARAS_STRONG,_antharasLocation );
                     antharas.setAggroRange(0);
-                    _state.setRespawnDate(getRespawnInterval());
-                    _state.setState(State.ALIVE);
-                    _state.update();
+                    state.setRespawnDate(getRespawnInterval());
+                    state.setState(State.ALIVE);
+                    state.update();
                     _socialTask = ThreadPoolManager.INSTANCE.schedule(new AntharasSpawn(2), 2000);
                     break;
                 case 2:
@@ -352,7 +352,7 @@ public final class AntharasManager extends Functions implements ScriptFile, OnDe
     private static class CheckLastAttack extends RunnableImpl {
         @Override
         public void runImpl() {
-            if (_state.getState() == State.ALIVE)
+            if (state.getState() == State.ALIVE)
                 if (_lastAttackTime + FWA_LIMITUNTILSLEEP < System.currentTimeMillis())
                     sleep();
                 else
@@ -364,8 +364,8 @@ public final class AntharasManager extends Functions implements ScriptFile, OnDe
     private static class IntervalEnd extends RunnableImpl {
         @Override
         public void runImpl() {
-            _state.setState(State.NOTSPAWN);
-            _state.update();
+            state.setState(State.NOTSPAWN);
+            state.update();
             //Earthquake
             Location loc = new Location(185708, 114298, -8221);
             GameObjectsStorage.getAllPlayersStream().forEach(p -> p.broadcastPacket(new Earthquake(loc, 20, 10)));

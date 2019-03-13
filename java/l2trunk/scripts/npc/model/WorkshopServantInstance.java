@@ -91,11 +91,12 @@ public final class WorkshopServantInstance extends NpcInstance {
                 player.sendPacket(Msg.ONLY_A_PARTY_LEADER_CAN_TRY_TO_ENTER);
                 return;
             }
-            for (Player p : party.getMembers())
-                if (!this.isInRange(p, 500)) {
-                    player.sendPacket(Msg.ITS_TOO_FAR_FROM_THE_NPC_TO_WORK);
-                    return;
-                }
+            if (party.getMembersStream()
+                    .filter(p -> !this.isInRange(p, 500))
+                    .peek(p -> player.sendPacket(Msg.ITS_TOO_FAR_FROM_THE_NPC_TO_WORK))
+                    .findAny().isPresent())
+                return;
+
             if (medals.stream()
                     .filter(medal -> !hasItem(party, medal))
                     .peek(medal -> player.sendMessage("In order to enter the Anomic Foundry your party should be carrying all 5 medals of Tully"))
@@ -126,7 +127,7 @@ public final class WorkshopServantInstance extends NpcInstance {
     }
 
     private boolean hasItem(Party party, int itemId) {
-        return party.getMembers().stream()
+        return party.getMembersStream()
                 .anyMatch(p -> p.getInventory().getItemByItemId(itemId) != null);
     }
 }

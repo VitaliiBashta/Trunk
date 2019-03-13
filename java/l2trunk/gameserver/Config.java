@@ -803,42 +803,13 @@ public final class Config {
     public static int RIFT_MAX_JUMPS;
     public static int RIFT_AUTO_JUMPS_TIME;
     public static int RIFT_AUTO_JUMPS_TIME_RAND;
-    public static int RIFT_ENTER_COST_RECRUIT;
-    public static int RIFT_ENTER_COST_SOLDIER;
-    public static int RIFT_ENTER_COST_OFFICER;
-    public static int RIFT_ENTER_COST_CAPTAIN;
-    public static int RIFT_ENTER_COST_COMMANDER;
-    public static int RIFT_ENTER_COST_HERO;
     public static boolean ALLOW_TALK_WHILE_SITTING;
     public static boolean PARTY_LEADER_ONLY_CAN_INVITE;
-    /**
-     * Ð Ð°Ð·Ñ€ÐµÑˆÐµÐ½Ð¾ Ð»Ð¸ Ð¸Ð·ÑƒÑ‡ÐµÐ½Ð¸Ðµ Ñ�ÐºÐ¸Ð»Ð¾Ð² Ñ‚Ñ€Ð°Ð½Ñ�Ñ„Ð¾Ñ€Ð¼Ð°Ñ†Ð¸Ð¸ Ð¸ Ñ�Ð°Ð± ÐºÐ»Ð°Ñ�Ñ�Ð¾Ð² Ð±ÐµÐ· Ð½Ð°Ð»Ð¸Ñ‡Ð¸Ñ� Ð²Ñ‹Ð¿Ð¾Ð»Ð½ÐµÐ½Ð½Ð¾Ð³Ð¾ ÐºÐ²ÐµÑ�Ñ‚Ð°
-     */
+
     public static boolean ALLOW_LEARN_TRANS_SKILLS_WO_QUEST;
-    /**
-     * Allow Manor system
-     */
+
     public static boolean ALLOW_MANOR;
-    /**
-     * Manor Refresh Starting time
-     */
-    public static int MANOR_REFRESH_TIME;
-    /**
-     * Manor Refresh Min
-     */
-    public static int MANOR_REFRESH_MIN;
-    /**
-     * Manor Next Period Approve Starting time
-     */
-    public static int MANOR_APPROVE_TIME;
-    /**
-     * Manor Next Period Approve Min
-     */
-    public static int MANOR_APPROVE_MIN;
-    /**
-     * Manor Maintenance Time
-     */
-    public static int MANOR_MAINTENANCE_PERIOD;
+
     public static double EVENT_CofferOfShadowsPriceRate;
     public static double EVENT_CofferOfShadowsRewardRate;
     public static double EVENT_APIL_FOOLS_DROP_CHANCE;
@@ -943,11 +914,8 @@ public final class Config {
     public static int BAIUM_RANDOM_SPAWN_HOURS;
     public static int FIXINTERVALOFBAYLORSPAWN_HOUR;
     public static int RANDOMINTERVALOFBAYLORSPAWN;
-    public static int FIXINTERVALOFBELETHSPAWN_HOUR;
-    public static int BELETH_CLONES_RESPAWN_TIME;
     public static int FIXINTERVALOFSAILRENSPAWN_HOUR;
     public static int RANDOMINTERVALOFSAILRENSPAWN;
-    public static int MIN_PLAYERS_TO_SPAWN_BELETH;
     public static int CLAN_LEVEL_6_COST;
     public static int CLAN_LEVEL_7_COST;
     public static int CLAN_LEVEL_8_COST;
@@ -1492,11 +1460,6 @@ public final class Config {
         MANOR_DIFF_SEED_TARGET = spoilSettings.getProperty("MinDiffSeedMob", 5);
         MANOR_DIFF_SEED_TARGET_PENALTY = spoilSettings.getProperty("DiffSeedMobPenalty", 5.);
         ALLOW_MANOR = spoilSettings.getProperty("AllowManor", true);
-        MANOR_REFRESH_TIME = spoilSettings.getProperty("AltManorRefreshTime", 20);
-        MANOR_REFRESH_MIN = spoilSettings.getProperty("AltManorRefreshMin", 0);
-        MANOR_APPROVE_TIME = spoilSettings.getProperty("AltManorApproveTime", 6);
-        MANOR_APPROVE_MIN = spoilSettings.getProperty("AltManorApproveMin", 0);
-        MANOR_MAINTENANCE_PERIOD = spoilSettings.getProperty("AltManorMaintenancePeriod", 360000);
     }
 
     private static void loadInstancesConfig() {
@@ -1522,9 +1485,6 @@ public final class Config {
 
         FIXINTERVALOFBAYLORSPAWN_HOUR = epicBossSettings.getProperty("BaylorDefaultSpawnHours", 24);
         RANDOMINTERVALOFBAYLORSPAWN = epicBossSettings.getProperty("BaylorRandomSpawnHours", 24);
-        FIXINTERVALOFBELETHSPAWN_HOUR = epicBossSettings.getProperty("BelethDefaultSpawnHours", 48);
-        BELETH_CLONES_RESPAWN_TIME = epicBossSettings.getProperty("BelethClonesRespawnTime", 40);
-        MIN_PLAYERS_TO_SPAWN_BELETH = epicBossSettings.getProperty("MinPlayersToSpawnBeleth", 18);
         FIXINTERVALOFSAILRENSPAWN_HOUR = epicBossSettings.getProperty("SailrenDefaultSpawnHours", 24);
         RANDOMINTERVALOFSAILRENSPAWN = epicBossSettings.getProperty("SailrenRandomSpawnHours", 24);
     }
@@ -1679,12 +1639,6 @@ public final class Config {
         RIFT_AUTO_JUMPS_TIME = altSettings.getProperty("AutoJumpsDelay", 8);
         RIFT_AUTO_JUMPS_TIME_RAND = altSettings.getProperty("AutoJumpsDelayRandom", 120000);
 
-        RIFT_ENTER_COST_RECRUIT = altSettings.getProperty("RecruitFC", 18);
-        RIFT_ENTER_COST_SOLDIER = altSettings.getProperty("SoldierFC", 21);
-        RIFT_ENTER_COST_OFFICER = altSettings.getProperty("OfficerFC", 24);
-        RIFT_ENTER_COST_CAPTAIN = altSettings.getProperty("CaptainFC", 27);
-        RIFT_ENTER_COST_COMMANDER = altSettings.getProperty("CommanderFC", 30);
-        RIFT_ENTER_COST_HERO = altSettings.getProperty("HeroFC", 33);
         ALLOW_LEARN_TRANS_SKILLS_WO_QUEST = altSettings.getProperty("AllowLearnTransSkillsWOQuest", false);
         PARTY_LEADER_ONLY_CAN_INVITE = altSettings.getProperty("PartyLeaderOnlyCanInvite", true);
         ALLOW_TALK_WHILE_SITTING = altSettings.getProperty("AllowTalkWhileSitting", true);

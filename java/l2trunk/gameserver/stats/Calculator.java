@@ -35,13 +35,12 @@ public final class Calculator {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Calculator that = (Calculator) o;
-        return stat == that.stat &&
-                functions.equals(that.functions);
+        return stat == that.stat ;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(stat, functions);
+        return Objects.hash(stat);
     }
 
     /**
@@ -99,5 +98,13 @@ public final class Calculator {
 
     public double getLast() {
         return last;
+    }
+
+    @Override
+    public String toString() {
+        return stat +
+               " " + functions.toString()  +
+                " base=" + base +
+                ", last=" + last;
     }
 }

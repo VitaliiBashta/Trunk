@@ -22,6 +22,7 @@ import l2trunk.gameserver.utils.Location;
 
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.stream.Stream;
 
 public final class Party implements PlayerGroup {
     public static final int MAX_SIZE = 9;
@@ -39,7 +40,7 @@ public final class Party implements PlayerGroup {
     double rateSp;
     double rateDrop;
     double rateAdena;
-    double rateSpoil;
+    private double rateSpoil;
     private int partyLvl;
     private int itemDistribution;
     private int _itemOrder = 0;
@@ -68,7 +69,6 @@ public final class Party implements PlayerGroup {
         rateDrop = 1;
         rateSpoil = 1;
 
-        // Ady - Add this party to the static manager
         parties.put(leader.getStoredId(), this);
     }
 
@@ -76,9 +76,9 @@ public final class Party implements PlayerGroup {
         return parties;
     }
 
-
-        public List<Player> getMembers() {
-        return members;
+    @Override
+    public Stream<Player> getMembersStream() {
+        return members.stream();
     }
 
     @Override
@@ -527,7 +527,7 @@ public final class Party implements PlayerGroup {
         return dimentionalRift > 0 && getDimensionalRift() != null;
     }
 
-    public DimensionalRift getDimensionalRift() {
+    DimensionalRift getDimensionalRift() {
         return dimentionalRift == 0 ? null : (DimensionalRift) ReflectionManager.INSTANCE.get(dimentionalRift);
     }
 
@@ -651,6 +651,10 @@ public final class Party implements PlayerGroup {
     @Override
     public Player getLeader() {
         return members.get(0);
+    }
+
+    public double getRateSpoil() {
+        return rateSpoil;
     }
 
     private class UpdatePositionTask extends RunnableImpl {

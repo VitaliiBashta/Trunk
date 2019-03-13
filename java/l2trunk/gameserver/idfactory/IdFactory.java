@@ -8,22 +8,21 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public abstract class IdFactory {
     static final int FIRST_OID = 0x10000000;
-    private static final String[][] EXTRACT_OBJ_ID_TABLES = {
-            {"characters", "obj_id"},
-            {"items", "object_id"},
-            {"clan_data", "clan_id"},
-            {"ally_data", "ally_id"},
-            {"pets", "objId"},
-            {"couples", "id"}};
+    private static final Map<String,String> EXTRACT_OBJ_ID_TABLES = Map.of(
+            "characters", "obj_id",
+            "items", "object_id",
+            "clan_data", "clan_id",
+            "ally_data", "ally_id",
+            "pets", "objId",
+            "couples", "id");
     private static final int LAST_OID = 0x7FFFFFFF;
     static final int FREE_OBJECT_ID_SIZE = LAST_OID - FIRST_OID;
-    //    protected  final IdFactory _instance = new BitSetIDFactory();
-    private static final Logger _log = LoggerFactory.getLogger(IdFactory.class);
+    private static final Logger LOG = LoggerFactory.getLogger(IdFactory.class);
     boolean initialized;
-    private long releasedCount = 0;
 
     IdFactory() {
         resetOnlineStatus();
@@ -31,16 +30,16 @@ public abstract class IdFactory {
     }
 
     public static IdFactory getInstance() {
-        return SingletonHolder._instance;
+        return SingletonHolder.INSTANCE;
     }
 
     private void resetOnlineStatus() {
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement st = con.prepareStatement("UPDATE characters SET online = 0")) {
             st.executeUpdate("UPDATE characters SET online = 0");
-            _log.info("IdFactory: Clear characters online status.");
+            LOG.info("IdFactory: Clear characters online status.");
         } catch (SQLException e) {
-            _log.error("Error while reseting Online Status! ", e);
+            LOG.error("Error while reseting Online Status! ", e);
         }
     }
 
@@ -125,33 +124,35 @@ public abstract class IdFactory {
             st.executeUpdate("UPDATE characters SET clanid = '0', title = '', pledge_type = '0', pledge_rank = '0', lvl_joined_academy = '0', apprentice = '0' WHERE characters.clanid > 0 AND characters.clanid NOT IN (SELECT clan_id FROM clan_data);");
             st.executeUpdate("UPDATE items SET loc = 'WAREHOUSE' WHERE loc = 'MAIL' AND items.object_id NOT IN (SELECT item_id FROM mail_attachments);");
 
-            _log.info("IdFactory: Cleaned " + cleanCount + " elements from database in " + (System.currentTimeMillis() - cleanupStart) / 1000 + "sec.");
+            LOG.info("IdFactory: Cleaned " + cleanCount + " elements from database in " + (System.currentTimeMillis() - cleanupStart) / 1000 + "sec.");
         } catch (SQLException e) {
-            _log.error("", e);
+            LOG.error("", e);
         }
     }
 
     List<Integer> extractUsedObjectIDTable() throws SQLException {
         List<Integer> objectIds = new ArrayList<>();
 
-        ResultSet rs;
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              Statement st = con.createStatement()) {
-            for (String[] table : EXTRACT_OBJ_ID_TABLES) {
-                rs = st.executeQuery("SELECT " + table[1] + " FROM " + table[0]);
-                int size = objectIds.size();
-                while (rs.next())
-                    objectIds.add(rs.getInt(1));
+            EXTRACT_OBJ_ID_TABLES.forEach((k, v) -> {
+                try {
+                    ResultSet rs = st.executeQuery("SELECT " + v + " FROM " + k);
+                    int size = objectIds.size();
+                    while (rs.next())
+                        objectIds.add(rs.getInt(1));
 
-                size = objectIds.size() - size;
-                if (size > 0)
-                    _log.info("IdFactory: Extracted " + size + " used id's from " + table[0]);
-            }
+                    size = objectIds.size() - size;
+                    if (size > 0)
+                        LOG.info("IdFactory: Extracted " + size + " used id's from " + k);
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+            });
         }
-
         Collections.sort(objectIds);
 
-        _log.info("IdFactory: Extracted total " + objectIds.size() + " used id's.");
+        LOG.info("IdFactory: Extracted total " + objectIds.size() + " used id's.");
 
         return objectIds;
     }
@@ -162,22 +163,12 @@ public abstract class IdFactory {
 
     public abstract int getNextId();
 
-    /**
-     * return a used Object ID back to the pool
-     *
-     * @param id
-     */
     public void releaseId(int id) {
-        releasedCount++;
-    }
-
-    public long getReleasedCount() {
-        return releasedCount;
     }
 
     public abstract int size();
 
     private static class SingletonHolder {
-        static final IdFactory _instance = new BitSetIDFactory();
+        static final IdFactory INSTANCE = new BitSetIDFactory();
     }
 }

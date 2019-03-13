@@ -4,13 +4,11 @@ import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Player;
-import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.instances.MonsterInstance;
 import l2trunk.gameserver.network.serverpackets.NpcSay;
 import l2trunk.gameserver.network.serverpackets.components.ChatType;
 import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
-import l2trunk.gameserver.utils.ItemFunctions;
 import l2trunk.scripts.bosses.FourSepulchersSpawn;
 
 import java.util.concurrent.Future;
@@ -207,7 +205,7 @@ public final class SepulcherMonsterInstance extends MonsterInstance {
     }
 
     private boolean hasPartyAKey(Player player) {
-        return player.getParty().getMembers().stream()
+        return player.getParty().getMembersStream()
                 .anyMatch(m -> m.haveItem(HALLS_KEY));
     }
 

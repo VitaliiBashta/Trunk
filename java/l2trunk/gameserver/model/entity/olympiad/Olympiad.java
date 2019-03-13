@@ -45,15 +45,15 @@ public final class Olympiad {
     public static final String GAME_TEAM_COUNT = "game_team_count";
     public static final Stadia[] STADIUMS = new Stadia[Config.OLYMPIAD_STADIAS_COUNT];
     public static final List<Integer> _nonClassBasedRegisters = new CopyOnWriteArrayList<>();
-    public static final MultiValueIntegerMap _classBasedRegisters = new MultiValueIntegerMap();
-    public static final MultiValueIntegerMap _teamBasedRegisters = new MultiValueIntegerMap();
+    public static final MultiValueIntegerMap CLASS_BASED_REGISTERS = new MultiValueIntegerMap();
+    public static final MultiValueIntegerMap TEAM_BASED_REGISTERS = new MultiValueIntegerMap();
     //public static final int DEFAULT_POINTS = 50;
     //private static final int WEEKLY_POINTS = 10;
     private static final int TEAM_PARTY_SIZE = 3;
     private static final Logger _log = LoggerFactory.getLogger(Olympiad.class);
-    private static final List<NpcInstance> _npcs = new ArrayList<>();
+    private static final List<NpcInstance> NPCS = new ArrayList<>();
     public static Map<Integer, StatsSet> nobles;
-    public static Map<Integer, Integer> _noblesRank;
+    public static Map<Integer, Integer> noblesRank;
     public static List<StatsSet> heroesToBe;
     public static long olympiadEnd;
     public static long validationEnd;
@@ -237,7 +237,7 @@ public final class Olympiad {
 
         switch (type) {
             case CLASSED: {
-                _classBasedRegisters.put(classId, noble.objectId());
+                CLASS_BASED_REGISTERS.put(classId, noble.objectId());
                 noble.sendPacket(SystemMsg.YOU_HAVE_BEEN_REGISTERED_FOR_THE_GRAND_OLYMPIAD_WAITING_LIST_FOR_A_CLASS_SPECIFIC_MATCH);
                 break;
             }
@@ -258,12 +258,12 @@ public final class Olympiad {
                     return;
                 }
 
-                if (party.getMembers().stream()
+                if (party.getMembersStream()
                         .anyMatch(member -> !validPlayer(noble, member, type))) {
                     return;
                 }
 
-                _teamBasedRegisters.putAll(noble.objectId(), party.getMembersObjIds());
+                TEAM_BASED_REGISTERS.putAll(noble.objectId(), party.getMembersObjIds());
                 noble.sendPacket(SystemMsg.YOU_ARE_CURRENTLY_REGISTERED_FOR_A_3_VS_3_CLASS_IRRELEVANT_TEAM_MATCH);
                 break;
             }
@@ -286,7 +286,7 @@ public final class Olympiad {
 
         switch (type) {
             case CLASSED:
-                if (_classBasedRegisters.containsValue(validPlayer.objectId())) {
+                if (CLASS_BASED_REGISTERS.containsValue(validPlayer.objectId())) {
                     sendPlayer.sendPacket(new SystemMessage2(SystemMsg.C1_IS_ALREADY_REGISTERED_ON_THE_CLASS_MATCH_WAITING_LIST).addName(validPlayer));
                     return false;
                 }
@@ -307,7 +307,7 @@ public final class Olympiad {
                 }
                 break;
             case TEAM:
-                if (_teamBasedRegisters.containsValue(validPlayer.objectId())) {
+                if (TEAM_BASED_REGISTERS.containsValue(validPlayer.objectId())) {
                     sendPlayer.sendPacket(new SystemMessage2(SystemMsg.C1_IS_ALREADY_REGISTERED_ON_THE_WAITING_LIST_FOR_THE_3_VS_3_CLASS_IRRELEVANT_TEAM_MATCH).addName(validPlayer));
                     return false;
                 }
@@ -332,9 +332,9 @@ public final class Olympiad {
     }
 
     public static synchronized void logoutPlayer(Player player) {
-        _classBasedRegisters.removeValue(player.objectId());
+        CLASS_BASED_REGISTERS.removeValue(player.objectId());
         _nonClassBasedRegisters.remove(player.objectId());
-        _teamBasedRegisters.removeValue(player.objectId());
+        TEAM_BASED_REGISTERS.removeValue(player.objectId());
 
         OlympiadGame game = player.getOlympiadGame();
         if (game != null)
@@ -378,9 +378,9 @@ public final class Olympiad {
                 _log.error("Error on olympiad unRegister Noble", e);
             }
         }
-        _classBasedRegisters.removeValue(noble.objectId());
+        CLASS_BASED_REGISTERS.removeValue(noble.objectId());
         _nonClassBasedRegisters.remove(noble.objectId());
-        _teamBasedRegisters.removeValue(noble.objectId());
+        TEAM_BASED_REGISTERS.removeValue(noble.objectId());
 
         noble.sendPacket(SystemMsg.YOU_HAVE_BEEN_REMOVED_FROM_THE_GRAND_OLYMPIAD_WAITING_LIST);
 
@@ -454,22 +454,21 @@ public final class Olympiad {
         olympiadEnd = TimeUtils.getMilisecondsToNextDay(Config.ALT_OLY_DATE_END, 0, 1);
     }
 
-    public static synchronized void doWeekTasks() {
+    static synchronized void doWeekTasks() {
         if (period == 1)
             return;
-        for (Map.Entry<Integer, StatsSet> entry : nobles.entrySet()) {
-            StatsSet set = entry.getValue();
-            Player player = GameObjectsStorage.getPlayer(entry.getKey());
+        nobles.forEach((playerId, stats) -> {
+            Player player = GameObjectsStorage.getPlayer(playerId);
 
             if (period != 1)
-                set.set(POINTS, set.getInteger(POINTS) + Config.OLYMPIAD_POINTS_WEEKLY);
-            set.set(GAME_CLASSES_COUNT, 0);
-            set.set(GAME_NOCLASSES_COUNT, 0);
-            set.set(GAME_TEAM_COUNT, 0);
+                stats.inc(POINTS, Config.OLYMPIAD_POINTS_WEEKLY);
+            stats.unset(GAME_CLASSES_COUNT);
+            stats.unset(GAME_NOCLASSES_COUNT);
+            stats.unset(GAME_TEAM_COUNT);
 
             if (player != null)
                 player.sendPacket(new SystemMessage2(SystemMsg.C1_HAS_EARNED_S2_POINTS_IN_THE_GRAND_OLYMPIAD_GAMES).addName(player).addInteger(Config.OLYMPIAD_POINTS_WEEKLY));
-        }
+        });
     }
 
     public static int getCurrentCycle() {
@@ -529,9 +528,9 @@ public final class Olympiad {
             return null;
 
         int[] array = new int[3];
-        array[0] = _classBasedRegisters.totalSize();
+        array[0] = CLASS_BASED_REGISTERS.totalSize();
         array[1] = _nonClassBasedRegisters.size();
-        array[2] = _teamBasedRegisters.totalSize();
+        array[2] = TEAM_BASED_REGISTERS.totalSize();
 
         return array;
     }
@@ -547,7 +546,7 @@ public final class Olympiad {
         if (points == 0) // Уже получил бонус
             return 0;
 
-        int rank = _noblesRank.get(objId);
+        int rank = noblesRank.get(objId);
         switch (rank) {
             case 1:
                 points = Config.ALT_OLY_RANK1_POINTS;
@@ -568,18 +567,18 @@ public final class Olympiad {
         if (player.isHero() || Hero.INSTANCE.isInactiveHero(player.objectId()))
             points += Config.ALT_OLY_HERO_POINTS;
 
-        noble.set(POINTS_PAST, 0);
+        noble.unset(POINTS_PAST);
         OlympiadDatabase.saveNobleData(objId);
 
         return points * Config.ALT_OLY_GP_PER_POINT;
     }
 
     public static synchronized boolean isRegistered(Player noble) {
-        if (_classBasedRegisters.containsValue(noble.objectId()))
+        if (CLASS_BASED_REGISTERS.containsValue(noble.objectId()))
             return true;
         if (_nonClassBasedRegisters.contains(noble.objectId()))
             return true;
-        return _teamBasedRegisters.containsValue(noble.objectId());
+        return TEAM_BASED_REGISTERS.containsValue(noble.objectId());
     }
 
     public static synchronized boolean isRegisteredInComp(Player player) {
@@ -639,24 +638,12 @@ public final class Olympiad {
         return ar;
     }
 
-    public static Stadia[] getStadiums() {
-        return STADIUMS;
-    }
-
     public static List<NpcInstance> getNpcs() {
-        return _npcs;
+        return NPCS;
     }
 
     public static void addOlympiadNpc(NpcInstance npc) {
-        _npcs.add(npc);
-    }
-
-    public static void changeNobleName(int objId, String newName) {
-        StatsSet noble = nobles.get(objId);
-        if (noble == null)
-            return;
-        noble.set(CHAR_NAME, newName);
-        OlympiadDatabase.saveNobleData(objId);
+        NPCS.add(npc);
     }
 
     public static String getNobleName(int objId) {
@@ -692,14 +679,6 @@ public final class Olympiad {
             statDat.set(CLASS_ID, noble.getBaseClassId().id);
             statDat.set(CHAR_NAME, noble.getName());
             statDat.set(POINTS, Config.OLYMPIAD_POINTS_DEFAULT);
-            statDat.set(POINTS_PAST, 0);
-            statDat.set(POINTS_PAST_STATIC, 0);
-            statDat.set(COMP_DONE, 0);
-            statDat.set(COMP_WIN, 0);
-            statDat.set(COMP_LOOSE, 0);
-            statDat.set(GAME_CLASSES_COUNT, 0);
-            statDat.set(GAME_NOCLASSES_COUNT, 0);
-            statDat.set(GAME_TEAM_COUNT, 0);
 
             nobles.put(noble.objectId(), statDat);
             OlympiadDatabase.saveNobleData();
@@ -716,7 +695,7 @@ public final class Olympiad {
     }
 
     public static int getCountOpponents() {
-        return _nonClassBasedRegisters.size() + _classBasedRegisters.size() + _teamBasedRegisters.size();
+        return _nonClassBasedRegisters.size() + CLASS_BASED_REGISTERS.size() + TEAM_BASED_REGISTERS.size();
     }
 
     public static class Stadia {

@@ -1,6 +1,7 @@
 package l2trunk.scripts.instances;
 
 import l2trunk.commons.geometry.Polygon;
+import l2trunk.commons.threading.FutureManager;
 import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ThreadPoolManager;
@@ -134,18 +135,11 @@ public final class FreyaHard extends Reflection {
     }
 
     private void doCleanup() {
-        if (firstStageGuardSpawn != null)
-            firstStageGuardSpawn.cancel(false);
-        if (secondStageGuardSpawn != null)
-            secondStageGuardSpawn.cancel(false);
-        if (thirdStageGuardSpawn != null)
-            thirdStageGuardSpawn.cancel(false);
+        FutureManager.cancel(firstStageGuardSpawn, secondStageGuardSpawn, thirdStageGuardSpawn);
     }
 
     @Override
     protected void onCollapse() {
-        super.onCollapse();
-
         doCleanup();
     }
 

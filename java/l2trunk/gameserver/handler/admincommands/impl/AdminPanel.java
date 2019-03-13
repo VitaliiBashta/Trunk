@@ -175,12 +175,8 @@ public final class AdminPanel implements IAdminCommandHandler {
                     return false;
                 }
 
-                if (!p.isLeader(null)) {
-                    activeChar.sendMessage("You must use it on leader only. Leader of this party is " + p.getLeader().getName());
-                    return false;
-                }
 
-                p.getMembers().forEach(ppl -> ppl.sitDown(null));
+                p.getMembersStream().forEach(ppl -> ppl.sitDown(null));
 
                 html = new NpcHtmlMessage(5);
                 html.setFile("admin/panel/controlpanel.htm");
@@ -202,12 +198,7 @@ public final class AdminPanel implements IAdminCommandHandler {
                     return false;
                 }
 
-                if (!p.isLeader(caster)) {
-                    activeChar.sendMessage("You must use it on leader only. Leader of this party is " + p.getLeader().getName());
-                    return false;
-                }
-
-                p.getMembers().forEach(Player::standUp);
+                p.getMembersStream().forEach(Player::standUp);
 
                 html = new NpcHtmlMessage(5);
                 html.setFile("admin/panel/controlpanel.htm");

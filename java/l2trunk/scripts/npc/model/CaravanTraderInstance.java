@@ -272,27 +272,27 @@ public final class CaravanTraderInstance extends NpcInstance {
                 return;
             }
 
-            if (player.getParty().getMembers().stream()
+            if (player.getParty().getMembersStream()
                     .filter(member -> (!isInRange(member, 500) || member.getEffectList().getEffectsBySkillId(FieryDemonBloodSkill) == null))
                     .peek(member -> showDialog(player, getHtmlPath(getNpcId(), 2, player)))
                     .findFirst().isPresent()) {
                 return;
             }
-            player.getParty().getMembers().forEach(m -> m.teleToLocation(new Location(-22204, 277056, -15045)));
+            player.getParty().getMembersStream().forEach(m -> m.teleToLocation(new Location(-22204, 277056, -15045)));
         } else if (command.startsWith("tully_dorian_entrance")) { // Dorian
             if (player.getParty() == null || !player.getParty().isLeader(player)) {
                 showDialog(player, getHtmlPath(getNpcId(), 2, player));
                 return;
             }
 
-            if (player.getParty().getMembers().stream()
+            if (player.getParty().getMembersStream()
                     .filter(member -> !isInRange(member, 500) || !member.isQuestCompleted(_132_MatrasCuriosity.class))
                     .peek(member -> showDialog(player, getHtmlPath(getNpcId(), 1, player)))
                     .findFirst().isPresent())
                 return;
 
 
-            player.getParty().getMembers().forEach(member -> member.teleToLocation(new Location(-13400, 272827, -15304)));
+            player.getParty().getMembersStream().forEach(member -> member.teleToLocation(new Location(-13400, 272827, -15304)));
         } else if (command.startsWith("enter_urban")) // Kanaf - urban area instance
         {
             Reflection r = player.getActiveReflection();

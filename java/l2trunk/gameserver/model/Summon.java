@@ -91,7 +91,10 @@ public abstract class Summon extends Playable {
     }
 
     // this defines the action buttons, 1 for Summon, 2 for Pets
-    public abstract int getSummonType();
+    public int getSummonType(){
+        if (this instanceof PetInstance) return 2;
+        else return 1;
+    };
 
     public abstract int getEffectIdentifier();
 

@@ -27,14 +27,14 @@ public final class DelusionChamber extends DimensionalRift {
         }
 
         killRiftTask = ThreadPoolManager.INSTANCE.schedule(() -> {
-            if (getParty() != null && !getParty().getMembers().isEmpty())
+            if (getParty() != null )
                 for (Player p : getParty().getMembers())
                     if (p.getReflection() == DelusionChamber.this) {
                         String var = p.getVar("backCoords");
-                        if (var == null || var.equals(""))
-                            continue;
-                        p.teleToLocation(Location.of(var), ReflectionManager.DEFAULT);
-                        p.unsetVar("backCoords");
+                        if (var != null && !var.equals("")) {
+                            p.teleToLocation(Location.of(var), ReflectionManager.DEFAULT);
+                            p.unsetVar("backCoords");
+                        }
                     }
             collapse();
         }, 100L);
@@ -52,12 +52,8 @@ public final class DelusionChamber extends DimensionalRift {
         if (!player.isInParty() || player.getParty().getReflection() != this)
             return;
 
-        if (!player.getParty().isLeader(player)) {
-            DimensionalRiftManager.INSTANCE.showHtmlFile(player, "rift/NotPartyLeader.htm", npc);
-            return;
-        }
-
-        createNewKillRiftTimer();
+        if (player.getParty().isLeader(player)) createNewKillRiftTimer();
+        else DimensionalRiftManager.INSTANCE.showHtmlFile(player, "rift/NotPartyLeader.htm", npc);
     }
 
     @Override

@@ -18,7 +18,6 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.BbsUtil;
-import l2trunk.gameserver.utils.Util;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -179,13 +178,13 @@ public final class CommunityPartyMatching extends Functions implements ScriptFil
             if (player.getParty() == null)
                 allPlayers.add(player);
             else {
-                allPlayers.addAll(player.getParty().getMembers());
+                allPlayers = player.getParty().getMembersStream().collect(Collectors.toList());
             }
         } else {
-            allPlayers.addAll(GameObjectsStorage.getAllPlayersStream()
+            allPlayers =GameObjectsStorage.getAllPlayersStream()
                     .filter(p -> canJoinParty(p).isEmpty())
                     .filter(p -> isClassTestPassed(p, classSortType))
-                    .collect(Collectors.toList()));
+                    .collect(Collectors.toList());
         }
 
         allPlayers.sort(new CharComparator(sortType, classSortType, asc));
@@ -292,28 +291,28 @@ public final class CommunityPartyMatching extends Functions implements ScriptFil
     }
 
     private class CharComparator implements Comparator<Player> {
-        final int _type;
-        final int _classType;
-        final int _asc;
+        final int type;
+        final int classType;
+        final int asc;
 
         private CharComparator(int sortType, int classType, int asc) {
-            _type = sortType;
-            _classType = classType;
-            _asc = asc;
+            type = sortType;
+            this.classType = classType;
+            this.asc = asc;
         }
 
         @Override
         public int compare(Player o1, Player o2) {
-            if (_asc == 1) {
+            if (asc == 1) {
                 Player temp = o1;
                 o1 = o2;
                 o2 = temp;
             }
-            if (_type == 0) // Name
+            if (type == 0) // Name
                 return o1.getName().compareTo(o2.getName());
-            if (_type == 1) // lvl
-                return Integer.compare(getMaxLevel(o2, _classType), getMaxLevel(o1, _classType));
-            if (_type == 2) // unlocks
+            if (type == 1) // lvl
+                return Integer.compare(getMaxLevel(o2, classType), getMaxLevel(o1, classType));
+            if (type == 2) // unlocks
                 return Integer.compare(getUnlocksSize(o2), getUnlocksSize(o1));
             return 0;
         }

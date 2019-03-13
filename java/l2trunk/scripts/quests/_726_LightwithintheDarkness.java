@@ -89,13 +89,15 @@ public final class _726_LightwithintheDarkness extends Quest {
 
         if (cond == 1 && npcId == KanadisGuide3 && checkAllDestroyed(player.getReflectionId())) {
             if (player.isInParty())
-                for (Player member : party.getMembers())
-                    if (!member.isDead() && member.getParty().isInReflection()) {
-                        member.sendPacket(new SystemMessage(SystemMessage.THIS_DUNGEON_WILL_EXPIRE_IN_S1_MINUTES).addNumber(1));
-                        member.setVar("q726");
-                        member.setVar("q726done");
-                        st.playSound(SOUND_ITEMGET);
-                    }
+                party.getMembersStream()
+                        .filter(member -> !member.isDead())
+                        .filter(member -> member.getParty().isInReflection())
+                        .forEach(member -> {
+                            member.sendPacket(new SystemMessage(SystemMessage.THIS_DUNGEON_WILL_EXPIRE_IN_S1_MINUTES).addNumber(1));
+                            member.setVar("q726");
+                            member.setVar("q726done");
+                            st.playSound(SOUND_ITEMGET);
+                        });
             player.getReflection().startCollapseTimer(60 * 1000L);
         }
     }

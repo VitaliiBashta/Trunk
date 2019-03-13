@@ -150,23 +150,27 @@ public final class FourSepulchersManager extends Functions implements ScriptFile
             return;
         }
 
-        for (Player mem : player.getParty().getMembers()) {
+        for (Player mem : player.getParty().getMembersStream()) {
             QuestState qs = mem.getQuestState(_620_FourGoblets.class);
-            if (qs == null || !qs.isStarted() && !qs.isCompleted()) {
+            if (qs != null && (qs.isStarted() || qs.isCompleted())) {
+
+                if (mem.haveItem(ENTRANCE_PASS)) {
+
+                    if (mem.isQuestContinuationPossible(true)) {
+
+                        if (mem.isDead() || !mem.isInRange(player, 700))
+                            return;
+                    } else {
+                        return;
+                    }
+                } else {
+                    showHtmlFile(player, npcId + "-SE.htm", npc, mem);
+                    return;
+                }
+            } else {
                 showHtmlFile(player, npcId + "-NS.htm", npc, mem);
                 return;
             }
-
-            if (!mem.haveItem(ENTRANCE_PASS)) {
-                showHtmlFile(player, npcId + "-SE.htm", npc, mem);
-                return;
-            }
-
-            if (!mem.isQuestContinuationPossible(true))
-                return;
-
-            if (mem.isDead() || !mem.isInRange(player, 700))
-                return;
         }
 
         if (!isEntryTime()) {
@@ -181,7 +185,7 @@ public final class FourSepulchersManager extends Functions implements ScriptFile
 
     private static void entry(int npcId, Player player) {
         Location loc = FourSepulchersSpawn._startHallSpawns.get(npcId);
-        for (Player member : player.getParty().getMembers()) {
+        for (Player member : player.getParty().getMembersStream()) {
             member.teleToLocation(Location.findPointToStay(member, loc, 0, 80));
             removeItem(member, ENTRANCE_PASS,  "FourSepulchersManager");
             if (!member.haveItem(ANTIQUE_BROOCH))

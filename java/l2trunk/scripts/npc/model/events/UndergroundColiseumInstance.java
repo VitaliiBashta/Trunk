@@ -14,50 +14,31 @@ import l2trunk.gameserver.templates.npc.NpcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Map;
 import java.util.StringTokenizer;
 
 public final class UndergroundColiseumInstance extends NpcInstance {
     private static final Logger _log = LoggerFactory.getLogger(UndergroundColiseumInstance.class);
+    private static final Map<Integer, Integer> minPlayerLevels = Map.of(
+            32513, 40,
+            32516, 50,
+            32515, 60,
+            32514, 70);
+
 
     public UndergroundColiseumInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
     }
 
     private int getMinLevel() {
-        if (getNpcId() == 32513) {
-            return 40;
-        }
-        if (getNpcId() == 32516) {
-            return 50;
-        }
-        if (getNpcId() == 32515) {
-            return 60;
-        }
-        if (getNpcId() == 32514) {
-            return 70;
-        }
-        if (getNpcId() == 32377) {
-            return 1;
-        }
+        if (minPlayerLevels.containsKey(getNpcId()))
+            return minPlayerLevels.get(getNpcId());
         return 1;
     }
 
     private int getMaxLevel() {
-        if (getNpcId() == 32513) {
-            return 49;
-        }
-        if (getNpcId() == 32516) {
-            return 59;
-        }
-        if (getNpcId() == 32515) {
-            return 69;
-        }
-        if (getNpcId() == 32514) {
-            return 79;
-        }
-        if (getNpcId() == 32377) {
-            return 85;
-        }
+        if (minPlayerLevels.containsKey(getNpcId()))
+            return minPlayerLevels.get(getNpcId()) + 9;
         return Experience.getMaxLevel();
     }
 
@@ -98,16 +79,18 @@ public final class UndergroundColiseumInstance extends NpcInstance {
                     showChatWindow(player, 3);
                     return;
                 }
-                for (Player member : player.getParty().getMembers()) {
-                    if (member.getLevel() > getMaxLevel() || member.getLevel() < getMinLevel()) {
-                        player.sendPacket(new SystemMessage(SystemMessage.C1S_LEVEL_REQUIREMENT_IS_NOT_SUFFICIENT_AND_CANNOT_BE_ENTERED).addName(member));
-                        return;
-                    }
-                    if (member.isCursedWeaponEquipped()) {
-                        player.sendPacket(new SystemMessage(SystemMessage.C1S_QUEST_REQUIREMENT_IS_NOT_SUFFICIENT_AND_CANNOT_BE_ENTERED).addName(member));
-                        return;
-                    }
-                }
+                if (player.getParty().getMembersStream()
+                        .filter(member -> member.getLevel() > getMaxLevel() || member.getLevel() < getMinLevel())
+                        .peek(member -> player.sendPacket(new SystemMessage(SystemMessage.C1S_LEVEL_REQUIREMENT_IS_NOT_SUFFICIENT_AND_CANNOT_BE_ENTERED).addName(member)))
+                        .findAny().isPresent())
+                    return;
+
+
+                if (player.getParty().getMembersStream()
+                        .filter(Player::isCursedWeaponEquipped)
+                        .peek(member -> player.sendPacket(new SystemMessage(SystemMessage.C1S_QUEST_REQUIREMENT_IS_NOT_SUFFICIENT_AND_CANNOT_BE_ENTERED).addName(member)))
+                        .findAny().isPresent())
+                    return;
                 Coliseum.register(player, getMinLevel(), getMaxLevel());
             } else {
                 _log.info("Wrong data or cheater? try to register whithout lvl", "Coliseum");

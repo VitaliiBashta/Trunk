@@ -818,7 +818,4 @@ public final class CommunityAuctionHouse implements ScriptFile, ICommunityBoardH
         }
     }
 
-    @Override
-    public void onWriteCommand(Player player, String bypass, String arg1, String arg2, String arg3, String arg4, String arg5) {
-    }
 }

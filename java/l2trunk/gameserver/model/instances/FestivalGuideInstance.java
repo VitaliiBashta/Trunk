@@ -15,64 +15,55 @@ import l2trunk.gameserver.templates.npc.NpcTemplate;
 
 import java.util.Calendar;
 
-public final class FestivalGuideInstance extends NpcInstance {
-    private int _festivalType;
-    private int _festivalOracle;
+import static l2trunk.commons.lang.NumberUtils.toInt;
 
-    public FestivalGuideInstance(int objectId, NpcTemplate template) {
+public final class FestivalGuideInstance extends NpcInstance {
+    private int festivalType;
+
+    FestivalGuideInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
 
         switch (getNpcId()) {
             case 31127:
             case 31132:
-                _festivalType = SevenSignsFestival.FESTIVAL_LEVEL_MAX_31;
-                _festivalOracle = SevenSigns.CABAL_DAWN;
+                festivalType = SevenSignsFestival.FESTIVAL_LEVEL_MAX_31;
                 break;
             case 31128:
             case 31133:
-                _festivalType = SevenSignsFestival.FESTIVAL_LEVEL_MAX_42;
-                _festivalOracle = SevenSigns.CABAL_DAWN;
+                festivalType = SevenSignsFestival.FESTIVAL_LEVEL_MAX_42;
                 break;
             case 31129:
             case 31134:
-                _festivalType = SevenSignsFestival.FESTIVAL_LEVEL_MAX_53;
-                _festivalOracle = SevenSigns.CABAL_DAWN;
+                festivalType = SevenSignsFestival.FESTIVAL_LEVEL_MAX_53;
                 break;
             case 31130:
             case 31135:
-                _festivalType = SevenSignsFestival.FESTIVAL_LEVEL_MAX_64;
-                _festivalOracle = SevenSigns.CABAL_DAWN;
+                festivalType = SevenSignsFestival.FESTIVAL_LEVEL_MAX_64;
                 break;
             case 31131:
             case 31136:
-                _festivalType = SevenSignsFestival.FESTIVAL_LEVEL_MAX_NONE;
-                _festivalOracle = SevenSigns.CABAL_DAWN;
+                festivalType = SevenSignsFestival.FESTIVAL_LEVEL_MAX_NONE;
                 break;
 
             case 31137:
             case 31142:
-                _festivalType = SevenSignsFestival.FESTIVAL_LEVEL_MAX_31;
-                _festivalOracle = SevenSigns.CABAL_DUSK;
+                festivalType = SevenSignsFestival.FESTIVAL_LEVEL_MAX_31;
                 break;
             case 31138:
             case 31143:
-                _festivalType = SevenSignsFestival.FESTIVAL_LEVEL_MAX_42;
-                _festivalOracle = SevenSigns.CABAL_DUSK;
+                festivalType = SevenSignsFestival.FESTIVAL_LEVEL_MAX_42;
                 break;
             case 31139:
             case 31144:
-                _festivalType = SevenSignsFestival.FESTIVAL_LEVEL_MAX_53;
-                _festivalOracle = SevenSigns.CABAL_DUSK;
+                festivalType = SevenSignsFestival.FESTIVAL_LEVEL_MAX_53;
                 break;
             case 31140:
             case 31145:
-                _festivalType = SevenSignsFestival.FESTIVAL_LEVEL_MAX_64;
-                _festivalOracle = SevenSigns.CABAL_DUSK;
+                festivalType = SevenSignsFestival.FESTIVAL_LEVEL_MAX_64;
                 break;
             case 31141:
             case 31146:
-                _festivalType = SevenSignsFestival.FESTIVAL_LEVEL_MAX_NONE;
-                _festivalOracle = SevenSigns.CABAL_DUSK;
+                festivalType = SevenSignsFestival.FESTIVAL_LEVEL_MAX_NONE;
                 break;
         }
     }
@@ -88,7 +79,7 @@ public final class FestivalGuideInstance extends NpcInstance {
         }
 
         if (command.startsWith("FestivalDesc")) {
-            int val = Integer.parseInt(command.substring(13));
+            int val = toInt(command.substring(13));
             showChatWindow(player, val, null, true);
         } else if (command.startsWith("Festival")) {
             Party playerParty = player.getParty();
@@ -124,23 +115,27 @@ public final class FestivalGuideInstance extends NpcInstance {
                     }
 
                     // Check if all the party members are in the required occupation range.
-                    int maxlevel = SevenSignsFestival.getMaxLevelForFestival(_festivalType);
-                    for (Player p : playerParty.getMembers())
-                        if (p.getLevel() > maxlevel) {
-                            showChatWindow(player, 2, "d", false);
-                            return;
-                        } else if (SevenSigns.INSTANCE.getPlayerCabal(p) == SevenSigns.CABAL_NULL) {
-                            showChatWindow(player, 2, "g", false);
-                            return;
-                        }
+                    int maxlevel = SevenSignsFestival.getMaxLevelForFestival(festivalType);
+                    if (playerParty.getMembersStream()
+                            .filter(p -> p.getLevel() > maxlevel)
+                            .peek(p -> showChatWindow(player, 2, "d", false))
+                            .findAny().isPresent())
+                        return;
+
+                    if (playerParty.getMembersStream()
+                            .filter(p -> SevenSigns.INSTANCE.getPlayerCabal(p) == SevenSigns.CABAL_NULL)
+                            .peek(p -> showChatWindow(player, 2, "g", false))
+                            .findAny().isPresent())
+                        return;
+
 
                     if (player.isFestivalParticipant()) {
                         showChatWindow(player, 2, "f", false);
                         return;
                     }
 
-                    int stoneType = Integer.parseInt(command.substring(11));
-                    long stonesNeeded = (long) Math.floor(SevenSignsFestival.getStoneCount(_festivalType, stoneType) * Config.FESTIVAL_RATE_PRICE);
+                    int stoneType = toInt(command.substring(11));
+                    long stonesNeeded = (long) Math.floor(SevenSignsFestival.getStoneCount(festivalType, stoneType) * Config.FESTIVAL_RATE_PRICE);
 
                     if (!player.getInventory().destroyItemByItemId(stoneType, stonesNeeded, "Festival Guide")) {
                         player.sendMessage(new CustomMessage("l2trunk.gameserver.model.instances.L2FestivalGuideInstance.NotEnoughSSType"));
@@ -148,18 +143,18 @@ public final class FestivalGuideInstance extends NpcInstance {
                     }
 
                     player.sendPacket(SystemMessage2.removeItems(stoneType, stonesNeeded));
-                    SevenSignsFestival.INSTANCE.addAccumulatedBonus(_festivalType, stoneType, stonesNeeded);
+                    SevenSignsFestival.INSTANCE.addAccumulatedBonus(festivalType, stoneType, stonesNeeded);
 
-                    new DarknessFestival(player.getParty(), SevenSigns.INSTANCE.getPlayerCabal(player), _festivalType);
+                    new DarknessFestival(player.getParty(), SevenSigns.INSTANCE.getPlayerCabal(player), festivalType);
 
                     showChatWindow(player, 2, "e", false);
                     break;
                 case 4: // Current High Scores
                     StringBuilder strBuffer = new StringBuilder("<html><body>Festival Guide:<br>These are the top scores of the week, for the ");
 
-                    final StatsSet dawnData = SevenSignsFestival.INSTANCE.getHighestScoreData(SevenSigns.CABAL_DAWN, _festivalType);
-                    final StatsSet duskData = SevenSignsFestival.INSTANCE.getHighestScoreData(SevenSigns.CABAL_DUSK, _festivalType);
-                    final StatsSet overallData = SevenSignsFestival.INSTANCE.getOverallHighestScoreData(_festivalType);
+                    final StatsSet dawnData = SevenSignsFestival.INSTANCE.getHighestScoreData(SevenSigns.CABAL_DAWN, festivalType);
+                    final StatsSet duskData = SevenSignsFestival.INSTANCE.getHighestScoreData(SevenSigns.CABAL_DUSK, festivalType);
+                    final StatsSet overallData = SevenSignsFestival.INSTANCE.getOverallHighestScoreData(festivalType);
 
                     final int dawnScore = dawnData.getInteger("score");
                     final int duskScore = duskData.getInteger("score");
@@ -169,7 +164,7 @@ public final class FestivalGuideInstance extends NpcInstance {
                     if (overallData != null)
                         overallScore = overallData.getInteger("score");
 
-                    strBuffer.append(SevenSignsFestival.getFestivalName(_festivalType)).append(" festival.<br>");
+                    strBuffer.append(SevenSignsFestival.getFestivalName(festivalType)).append(" festival.<br>");
 
                     if (dawnScore > 0)
                         strBuffer.append("Dawn: ").append(calculateDate(dawnData.getString("date"))).append(". Score ").append(dawnScore).append("<br>").append(dawnData.getString("names").replaceAll(",", ", ")).append("<br>");
@@ -189,7 +184,7 @@ public final class FestivalGuideInstance extends NpcInstance {
                     } else
                         strBuffer.append("Consecutive top scores: No record exists. Score 0<br>");
 
-                    strBuffer.append("<a action=\"bypass -h npc_" + objectId() + "_Chat 0\">Go back.</a></body></html>");
+                    strBuffer.append("<a action=\"bypass -h npc_").append(objectId()).append("_Chat 0\">Go back.</a></body></html>");
 
                     NpcHtmlMessage html = new NpcHtmlMessage(player, this);
                     html.setHtml(strBuffer.toString());
@@ -246,13 +241,13 @@ public final class FestivalGuideInstance extends NpcInstance {
         filename += suffix != null ? val + suffix + ".htm" : val + ".htm";
         NpcHtmlMessage html = new NpcHtmlMessage(player, this);
         html.setFile(filename);
-        html.replace("%festivalType%", SevenSignsFestival.getFestivalName(_festivalType));
+        html.replace("%festivalType%", SevenSignsFestival.getFestivalName(festivalType));
         html.replace("%min%", Config.FESTIVAL_MIN_PARTY_SIZE);
         // If the stats or bonus table is required, construct them.
         if (val == 1) {
-            html.replace("%price1%",(long) Math.floor(SevenSignsFestival.getStoneCount(_festivalType, 6362) * Config.FESTIVAL_RATE_PRICE));
-            html.replace("%price2%", (long) Math.floor(SevenSignsFestival.getStoneCount(_festivalType, 6361) * Config.FESTIVAL_RATE_PRICE));
-            html.replace("%price3%", (long) Math.floor(SevenSignsFestival.getStoneCount(_festivalType, 6360) * Config.FESTIVAL_RATE_PRICE));
+            html.replace("%price1%", (long) Math.floor(SevenSignsFestival.getStoneCount(festivalType, 6362) * Config.FESTIVAL_RATE_PRICE));
+            html.replace("%price2%", (long) Math.floor(SevenSignsFestival.getStoneCount(festivalType, 6361) * Config.FESTIVAL_RATE_PRICE));
+            html.replace("%price3%", (long) Math.floor(SevenSignsFestival.getStoneCount(festivalType, 6360) * Config.FESTIVAL_RATE_PRICE));
         }
         if (val == 5)
             html.replace("%statsTable%", getStatsTable());
@@ -318,7 +313,7 @@ public final class FestivalGuideInstance extends NpcInstance {
             else if (dawnScore == duskScore)
                 winningCabal = "None";
 
-            tableHtml.append("<tr><td width=\"100\" align=\"center\">" + festivalName + "</td><td align=\"center\" width=\"35\">" + duskScore + "</td><td align=\"center\" width=\"35\">" + dawnScore + "</td><td align=\"center\" width=\"130\">" + winningCabal + "</td></tr>");
+            tableHtml.append("<tr><td width=\"100\" align=\"center\">").append(festivalName).append("</td><td align=\"center\" width=\"35\">").append(duskScore).append("</td><td align=\"center\" width=\"35\">").append(dawnScore).append("</td><td align=\"center\" width=\"130\">").append(winningCabal).append("</td></tr>");
         }
 
         return tableHtml.toString();

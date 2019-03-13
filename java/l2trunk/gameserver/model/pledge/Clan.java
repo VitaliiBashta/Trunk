@@ -13,8 +13,6 @@ import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.World;
 import l2trunk.gameserver.model.entity.boat.ClanAirShip;
 import l2trunk.gameserver.model.entity.events.impl.DominionSiegeEvent;
-import l2trunk.gameserver.model.entity.residence.Castle;
-import l2trunk.gameserver.model.entity.residence.Fortress;
 import l2trunk.gameserver.model.entity.residence.ResidenceType;
 import l2trunk.gameserver.model.items.ClanWarehouse;
 import l2trunk.gameserver.model.items.ItemInstance;
@@ -50,7 +48,6 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
     // Clan Privileges: clan hall
     public static final int CP_CH_ENTRY_EXIT = 2048; // open a door
     public static final int CP_CH_USE_FUNCTIONS = 4096;
-    public static final int CP_CH_AUCTION = 8192;
     public static final int CP_CH_DISMISS = 16384;
     public static final int CP_CH_SET_FUNCTIONS = 32768;
     // Clan Privileges: castle/fotress
@@ -95,7 +92,7 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
     private int level;
     private int hasCastle;
     private int hasFortress;
-    private int _hasHideout;
+    private int hasHideout;
     private int warDominion;
     private int _crestId;
     private int _crestLargeId;
@@ -246,10 +243,6 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
         updateClanInDB();
     }
 
-    private long getLeavedAllyTime() {
-        return leavedAllyTime;
-    }
-
     private void setLeavedAllyTime(long time) {
         leavedAllyTime = time;
     }
@@ -257,10 +250,6 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
     public void setLeavedAlly() {
         leavedAllyTime = System.currentTimeMillis();
         updateClanInDB();
-    }
-
-    private long dissolvedAllyTime() {
-        return dissolvedAllyTime;
     }
 
     private void setDissolvedAllyTime(long time) {
@@ -410,7 +399,6 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
     /**
      * Sets the fortress, which is owned by the clan. <BR>
      * At the same time possess a fortress and castle can not be
-     *
      */
     public void setHasFortress(int fortress) {
         if (hasCastle == 0)
@@ -418,24 +406,18 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
     }
 
     public int getHasHideout() {
-        return _hasHideout;
+        return hasHideout;
     }
 
     public void setHasHideout(int hasHideout) {
-        _hasHideout = hasHideout;
+        this.hasHideout = hasHideout;
     }
 
     public int getResidenceId(ResidenceType r) {
-        switch (r) {
-            case Castle:
-                return hasCastle;
-            case Fortress:
-                return hasFortress;
-            case ClanHall:
-                return _hasHideout;
-            default:
-                return 0;
-        }
+        if (r == ResidenceType.Castle) return hasCastle;
+        if (r == ResidenceType.Fortress) return hasFortress;
+        if (r == ResidenceType.ClanHall) return hasHideout;
+        return 0;
     }
 
 
@@ -445,8 +427,8 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
     }
 
     public boolean isAnyMember(int id) {
-        return  subUnits.values().stream()
-        .anyMatch(u ->u.isUnitMember(id));
+        return subUnits.values().stream()
+                .anyMatch(u -> u.isUnitMember(id));
     }
 
     public void updateClanInDB() {
@@ -488,7 +470,7 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
                 statement.setInt(2, level);
                 statement.setInt(3, hasCastle);
                 statement.setInt(4, hasFortress);
-                statement.setInt(5, _hasHideout);
+                statement.setInt(5, hasHideout);
                 statement.setInt(6, allyId);
                 statement.setLong(7, expelledMemberTime / 1000);
                 statement.setLong(8, leavedAllyTime / 1000);
@@ -596,13 +578,6 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
         return false;
     }
 
-    public boolean isUnderAttackFrom(int id) {
-        Clan clan = ClanTable.INSTANCE.getClan(id);
-        if (!_underAttackFrom.isEmpty())
-            return _underAttackFrom.contains(clan);
-        return false;
-    }
-
     public void setEnemyClan(Clan clan) {
         _atWarWith.add(clan);
     }
@@ -667,12 +642,7 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
     }
 
     public int getRank() {
-        List<Clan> clans = ClanTable.INSTANCE.getClans();
-        for (int i = 0; i < clans.size(); i++) {
-            if (this == clans.get(i))
-                return i + 1;
-        }
-        return 0;
+        return ClanTable.INSTANCE.getClans().indexOf(this) + 1;
     }
 
     /* ============================ clan skills stuff ============================ */
@@ -711,19 +681,6 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
 
         setReputationScore(reputation + inc);
         Log.add(getName() + "|" + inc + "|" + reputation + "|" + source, "clan_reputation");
-
-        // Synerge - Add the new reputation to the stats
-        // if (inc > 0)
-        // getStats().addClanStats(Ranking.STAT_TOP_CLAN_FAME, inc);
-
-        return inc;
-    }
-
-    public int incReputation(int inc) {
-        if (level < 5)
-            return 0;
-
-        setReputationScore(reputation + inc);
 
         // Synerge - Add the new reputation to the stats
         // if (inc > 0)
@@ -810,8 +767,7 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
     }
 
     public void addSkillsQuietly(Player player) {
-        for (Skill skill : skills.values())
-            addSkill(player, skill);
+        skills.values().forEach(skill -> addSkill(player, skill));
 
         final SubUnit subUnit = getSubUnit(player.getPledgeType());
         if (subUnit != null)
@@ -834,8 +790,7 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
     /* ============================ clan subpledges stuff ============================ */
 
     public void disableSkills(Player player) {
-        for (Skill skill : skills.values())
-            player.addUnActiveSkill(skill);
+        skills.values().forEach(player::addUnActiveSkill);
 
         final SubUnit subUnit = getSubUnit(player.getPledgeType());
         if (subUnit != null)
@@ -1225,7 +1180,7 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
 
     private void restoreRankPrivs() {
         try (Connection con = DatabaseFactory.getInstance().getConnection();
-             PreparedStatement statement = con.prepareStatement("SELECT privilleges,renk FROM clan_privs WHERE clan_id=?")) {
+             PreparedStatement statement = con.prepareStatement("SELECT privilleges,rank FROM clan_privs WHERE clan_id=?")) {
             statement.setInt(1, clanId());
             ResultSet rset = statement.executeQuery();
 

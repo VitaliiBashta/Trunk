@@ -30,9 +30,9 @@ public final class InstantZone {
     private final Map<String, ZoneInfo> zones;
     private final Map<String, SpawnInfo2> spawns;
     private final List<SpawnInfo> _spawnsInfo;
-    private final int _collapseIfEmpty;
+    private final int collapseIfEmpty;
     private final int maxChannels;
-    private final int _removedItemId;
+    private final int removedItemId;
     private final int _removedItemCount;
     private final boolean _removedItemNecessity;
     private final int _giveItemId;
@@ -73,9 +73,9 @@ public final class InstantZone {
         this.zones = zones;
         _spawnsInfo = spawnsInfo;
         this.spawns = spawns;
-        _collapseIfEmpty = collapseIfEmpty;
+        this.collapseIfEmpty = collapseIfEmpty;
         this.maxChannels = maxChannels;
-        _removedItemId = removedItemId;
+        this.removedItemId = removedItemId;
         _removedItemCount = removedItemCount;
         _removedItemNecessity = removedItemNecessity;
         _giveItemId = giveItemId;
@@ -165,11 +165,11 @@ public final class InstantZone {
     }
 
     public int getCollapseIfEmpty() {
-        return _collapseIfEmpty;
+        return collapseIfEmpty;
     }
 
     public int getRemovedItemId() {
-        return _removedItemId;
+        return removedItemId;
     }
 
     public int getRemovedItemCount() {

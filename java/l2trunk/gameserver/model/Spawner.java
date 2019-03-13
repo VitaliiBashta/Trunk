@@ -150,7 +150,7 @@ public abstract class Spawner extends EventOwner implements Cloneable {
         return npcs.size() > 0 ? npcs.get(0) : null;
     }
 
-    public Spawner setRespawnDelay(int respawnDelay, int respawnDelayRandom) {
+    public final Spawner setRespawnDelay(int respawnDelay, int respawnDelayRandom) {
         if (respawnDelay < 0)
             _log.warn("respawn delay is negative");
         this.respawnDelay = respawnDelay;

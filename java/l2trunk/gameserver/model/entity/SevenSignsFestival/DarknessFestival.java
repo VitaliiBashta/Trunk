@@ -49,7 +49,7 @@ public final class DarknessFestival extends Reflection {
 
         party.setReflection(this);
         setReturnLoc(party.getLeader().getLoc());
-        party.getMembers().forEach(p -> {
+        party.getMembersStream().forEach(p -> {
             p.setVar("backCoords", p.getLoc().toXYZString());
             p.getEffectList().stopAllEffects();
             p.teleToLocation(Location.findPointToStay(_startLocation.loc, 20, 100, getGeoIndex()), this);

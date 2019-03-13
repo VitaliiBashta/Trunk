@@ -768,17 +768,15 @@ public final class QuestState {
     }
 
     private List<Player> getPartyMembers(int state, int maxrange, GameObject rangefrom) {
-        List<Player> result = List.of();
         Party party = player.getParty();
         if (party == null) {
             if (checkPartyMember(player, state, maxrange, rangefrom))
-                result = List.of(player);
-            return result;
+                return List.of(player);
+            return List.of();
         }
 
-        result = party.getMembers().stream().filter(m -> checkPartyMember(m, state, maxrange, rangefrom))
+        return party.getMembersStream().filter(m -> checkPartyMember(m, state, maxrange, rangefrom))
                 .collect(Collectors.toList());
-        return result;
     }
 
     public Player getRandomPartyMember(int state, int maxrangefromplayer) {
@@ -930,7 +928,7 @@ public final class QuestState {
                     if (actorPlayer.getParty() == null)
                         players = Stream.of(actorPlayer);
                     else {
-                        players = actorPlayer.getParty().getMembers().stream()
+                        players = actorPlayer.getParty().getMembersStream()
                                 .filter(m -> m.isInRange(actorPlayer, Creature.INTERACTION_DISTANCE));
 
                     }

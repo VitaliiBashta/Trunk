@@ -42,7 +42,12 @@ public enum BaseStats {
             return actor == null ? 1. : MENbonus.get(actor.getMEN());
         }
     },
-    NONE,
+    NONE {
+        @Override
+        public double calcBonus(Creature actor) {
+            return 1;
+        }
+    },
     STR {
         @Override
         public final double calcBonus(Creature actor) {
@@ -134,9 +139,10 @@ public enum BaseStats {
         }
     }
 
-    public double calcBonus(Creature actor) {
-        return 1.;
-    }
+    public abstract double calcBonus(Creature actor);
+//    {
+//        return 1.;
+//    }
 
     public double calcChanceMod(Creature actor) {
         return 2. - Math.sqrt(calcBonus(actor));

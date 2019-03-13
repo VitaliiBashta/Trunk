@@ -33,11 +33,11 @@ public class StatTemplate {
         return funcTemplates;
     }
 
-    public List<Func> getStatFuncs(Object owner) {
-        funcTemplates.forEach(a -> a.getFunc(owner));
+    public Stream<Func> getStatFuncs(Object owner) {
+//        funcTemplates.forEach(a -> a.getFunc(owner));
 
         return funcTemplates.stream()
-                .map(ft -> ft.getFunc(owner))
-                .collect(Collectors.toList());
+                .map(ft -> ft.getFunc(owner));
+//                .collect(Collectors.toList());
     }
 }

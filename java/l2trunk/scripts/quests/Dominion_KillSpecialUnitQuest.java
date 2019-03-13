@@ -42,20 +42,19 @@ public abstract class Dominion_KillSpecialUnitQuest extends Quest {
     public void onKill(Player killed, QuestState st) {
         Player player = st.player;
         if (player == null)
-            return ;
+            return;
 
         DominionSiegeEvent event1 = player.getEvent(DominionSiegeEvent.class);
         if (event1 == null)
-            return ;
+            return;
         DominionSiegeEvent event2 = killed.getEvent(DominionSiegeEvent.class);
         if (event2 == null || event2 == event1)
-            return ;
+            return;
 
         if (!classIds.contains(killed.getClassId()))
-            return ;
-
-        int max_kills = st.getInt("max_kills");
-        if (max_kills == 0) {
+            return;
+        int max_kills;
+        if (st.getInt("max_kills") == 0) {
             st.start();
             st.setCond(1);
 
@@ -65,13 +64,13 @@ public abstract class Dominion_KillSpecialUnitQuest extends Quest {
             if (player.getParty() == null)
                 player.sendPacket(new ExShowScreenMessage(startNpcString(), 2000, String.valueOf(max_kills)));
             else {
-                int max = max_kills;
-                player.getParty().getMembers().forEach(member ->
-                        member.sendPacket(new ExShowScreenMessage(startNpcString(), 2000, String.valueOf(max))));
+                player.getParty().getMembersStream().forEach(member ->
+                        member.sendPacket(new ExShowScreenMessage(startNpcString(), 2000, String.valueOf(max_kills))));
             }
         } else {
+            max_kills = 0;
             int current_kills = st.getInt("current_kills") + 1;
-            if (current_kills >= max_kills) {
+            if (current_kills >= 0) {
                 event1.addReward(player, DominionSiegeEvent.STATIC_BADGES, 10);
 
                 st.complete();
@@ -81,16 +80,16 @@ public abstract class Dominion_KillSpecialUnitQuest extends Quest {
                 if (player.getParty() == null)
                     player.sendPacket(new ExShowScreenMessage(doneNpcString(), 2000));
                 else
-                    for (Player member : player.getParty().getMembers())
-                        member.sendPacket(new ExShowScreenMessage(doneNpcString(), 2000));
+                    player.getParty().getMembersStream().forEach(member ->
+                            member.sendPacket(new ExShowScreenMessage(doneNpcString(), 2000)));
 
             } else {
                 st.inc("current_kills");
                 if (player.getParty() == null)
-                    player.sendPacket(new ExShowScreenMessage(progressNpcString(), 2000, String.valueOf(max_kills), String.valueOf(current_kills)));
+                    player.sendPacket(new ExShowScreenMessage(progressNpcString(), 2000, "" + max_kills, "" + current_kills));
                 else
-                    for (Player member : player.getParty().getMembers())
-                        member.sendPacket(new ExShowScreenMessage(progressNpcString(), 2000, String.valueOf(max_kills), String.valueOf(current_kills)));
+                    player.getParty().getMembersStream().forEach(member ->
+                            member.sendPacket(new ExShowScreenMessage(progressNpcString(), 2000, "" + max_kills, "" + current_kills)));
 
             }
         }

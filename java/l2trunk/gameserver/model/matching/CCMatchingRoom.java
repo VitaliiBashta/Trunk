@@ -3,11 +3,10 @@ package l2trunk.gameserver.model.matching;
 import l2trunk.gameserver.model.CommandChannel;
 import l2trunk.gameserver.model.Party;
 import l2trunk.gameserver.model.Player;
-import l2trunk.gameserver.model.entity.Reflection;
 import l2trunk.gameserver.network.serverpackets.*;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
-public class CCMatchingRoom extends MatchingRoom {
+public final class CCMatchingRoom extends MatchingRoom {
     public CCMatchingRoom(Player leader, int minLevel, int maxLevel, int maxMemberSize, int lootType, String topic) {
         super(leader, minLevel, maxLevel, maxMemberSize, lootType, topic);
 
@@ -74,7 +73,7 @@ public class CCMatchingRoom extends MatchingRoom {
 
     @Override
     public void disband() {
-        Party party = _leader.getParty();
+        Party party = leader.getParty();
         if (party != null) {
             CommandChannel commandChannel = party.getCommandChannel();
             if (commandChannel != null)
@@ -86,9 +85,9 @@ public class CCMatchingRoom extends MatchingRoom {
 
     @Override
     public int getMemberType(Player member) {
-        Party party = _leader.getParty();
+        Party party = leader.getParty();
         CommandChannel commandChannel = party.getCommandChannel();
-        if (member == _leader)
+        if (member == leader)
             return MatchingRoom.UNION_LEADER;
         else if (member.getParty() == null)
             return MatchingRoom.WAIT_NORMAL;

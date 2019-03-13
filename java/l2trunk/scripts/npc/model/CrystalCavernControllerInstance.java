@@ -70,21 +70,21 @@ public final class CrystalCavernControllerInstance extends NpcInstance {
                         return;
                     }
                     if (!p.haveItem(9697)) {
-                        Functions.npcSay(this, NpcString.S1____________________, p.getName());
+                        Functions.npcSay(this, NpcString.YOU_DONT_HAVE_CLEAR_CRYSTAL, p.getName());
                         return;
                     }
                     if (!isInRange(p, 400)) {
-                        Functions.npcSay(this, NpcString.S1_____________________, p.getName());
+                        Functions.npcSay(this, NpcString.FAR_AWAY, p.getName());
                         return;
                     }
                 }
                 ItemFunctions.addItem(player, 10015, 1, "CrystalCavernControllerInstance");
-                for (Player p : player.getParty().getMembers()) {
+                player.getParty().getMembersStream().forEach(p -> {
                     ItemFunctions.removeItem(p, 9695, 1, "CrystalCavernControllerInstance");
                     ItemFunctions.removeItem(p, 9696, 1, "CrystalCavernControllerInstance");
                     ItemFunctions.removeItem(p, 9697, 1, "CrystalCavernControllerInstance");
-                    p.teleToLocation(new Location(153526, 142172, -12736));
-                }
+                    p.teleToLocation(Location.of(153526, 142172, -12736));
+                });
                 BaylorManager.entryToBaylorLair(player);
                 deleteMe();
             }

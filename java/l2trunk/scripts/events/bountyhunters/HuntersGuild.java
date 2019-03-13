@@ -32,7 +32,7 @@ public final class HuntersGuild extends Functions implements ScriptFile, IVoiced
 
     private static boolean checkTarget(NpcTemplate npc) {
 
-        if (!npc.type.equalsIgnoreCase("monster"))
+        if (!"monster".equalsIgnoreCase(npc.type))
             return false;
         if (npc.rewardExp == 0)
             return false;

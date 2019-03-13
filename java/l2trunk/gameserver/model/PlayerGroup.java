@@ -3,8 +3,8 @@ package l2trunk.gameserver.model;
 import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 import l2trunk.gameserver.network.serverpackets.components.IStaticPacket;
 
+import java.util.Collection;
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -14,36 +14,29 @@ public interface PlayerGroup extends Iterable<Player> {
 
     Player getLeader();
 
-    List<Player> getMembers();
+    default Stream<Player> getMembersStream() {
+        return getMembers().stream();
+    }
+
+
+    Collection<Player> getMembers();
 
     boolean containsMember(Player player);
 
     default void sendPacket(IStaticPacket... packets) {
-        stream().forEach(p -> p.sendPacket(packets));
+        getMembersStream().forEach(p -> p.sendPacket(packets));
     }
 
     default void sendPacket(Player exclude, IStaticPacket... packets) {
-        stream().filter(p -> p != exclude).forEach(p -> p.sendPacket(packets));
+        getMembersStream().filter(p -> p != exclude).forEach(p -> p.sendPacket(packets));
     }
-
-//    default void sendMessage(String message) {
-//        stream().forEach(p -> p.sendMessage(message));
-//    }
 
     default void sendMessage(CustomMessage string) {
-        stream().forEach(p -> p.sendMessage(string));
-    }
-
-    default void sendMessage(Predicate<Player> condition, String message) {
-        stream().filter(condition).forEach(p -> p.sendMessage(message));
+        getMembersStream().forEach(p -> p.sendMessage(string));
     }
 
     default void sendChatMessage(int objectId, int messageType, String charName, String text) {
-        stream().forEach(p -> p.sendChatMessage(objectId, messageType, charName, text));
-    }
-
-    private Stream<Player> stream() {
-        return getMembers().stream();
+        getMembersStream().forEach(p -> p.sendChatMessage(objectId, messageType, charName, text));
     }
 
     default boolean isLeader(Player player) {
@@ -54,22 +47,22 @@ public interface PlayerGroup extends Iterable<Player> {
     }
 
     default List<Player> getMembersInRange(GameObject obj, int range) {
-        return stream().filter(member -> member.isInRangeZ(obj, range)).collect(Collectors.toList());
+        return getMembersStream().filter(member -> member.isInRangeZ(obj, range)).collect(Collectors.toList());
     }
 
     default int getMemberCountInRange(GameObject obj, int range) {
-        return (int) stream().filter(member -> member.isInRangeZ(obj, range)).count();
+        return (int) getMembersStream().filter(member -> member.isInRangeZ(obj, range)).count();
     }
 
     default List<Integer> getMembersObjIds() {
-        return getMembers().stream().map(Player::objectId).collect(Collectors.toList());
+        return getMembersStream().map(Player::objectId).collect(Collectors.toList());
     }
 
     default Player getPlayerByName(String name) {
         if (name == null)
             return null;
 
-        return stream().filter(member -> name.equalsIgnoreCase(member.getName())).findAny().orElse(null);
+        return getMembersStream().filter(member -> name.equalsIgnoreCase(member.getName())).findAny().orElse(null);
     }
 
 }

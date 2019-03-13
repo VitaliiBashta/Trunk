@@ -43,11 +43,16 @@ public final class PailakaGatekeeperInstance extends NpcInstance {
     private boolean checkGroup(Player p) {
         if (!p.isInParty())
             return false;
-        for (Player member : p.getParty().getMembers()) {
-            if (member.getClan() == null)
+        for (Player member : p.getParty().getMembersStream()) {
+            if (member.getClan() != null) {
+                if (member.getClan().getResidenceId(ResidenceType.Castle) == 0) {
+                    if (member.getClan().getResidenceId(ResidenceType.Fortress) == 0) {
+                        return false;
+                    }
+                }
+            } else {
                 return false;
-            if (member.getClan().getResidenceId(ResidenceType.Castle) == 0 && member.getClan().getResidenceId(ResidenceType.Fortress) == 0)
-                return false;
+            }
         }
         return true;
     }

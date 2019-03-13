@@ -12,12 +12,7 @@ import l2trunk.gameserver.utils.Location;
 
 import java.util.List;
 
-/**
- * @author VISTALL
- * @date 8:22/06.05.2011
- * 35603
- */
-public class RainbowCoordinatorInstance extends NpcInstance {
+public final class RainbowCoordinatorInstance extends NpcInstance {
     public RainbowCoordinatorInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
     }
@@ -67,12 +62,11 @@ public class RainbowCoordinatorInstance extends NpcInstance {
                 return;
             }
 
-            for (Player member : party.getMembers()) {
-                if (member.getClan() != player.getClan()) {
-                    showChatWindow(player, "residence2/clanhall/game_manager007.htm");
-                    return;
-                }
-            }
+            if (party.getMembersStream()
+                    .filter(member -> member.getClan() != player.getClan())
+                    .peek(member -> showChatWindow(player, "residence2/clanhall/game_manager007.htm"))
+                    .findAny().isPresent())
+                return;
 
             int index = siegeClans.indexOf(siegeClan);
 
@@ -80,10 +74,10 @@ public class RainbowCoordinatorInstance extends NpcInstance {
 
             Location loc = (Location) spawnEx.getSpawns().get(0).getCurrentSpawnRange();
 
-            for (Player member : party.getMembers()) {
+            party.getMembersStream().forEach(member -> {
                 siegeClan.addPlayer(member.objectId());
                 member.teleToLocation(Location.coordsRandomize(loc, 100, 200));
-            }
+            });
         } else
             showChatWindow(player, "residence2/clanhall/game_manager013.htm");
     }

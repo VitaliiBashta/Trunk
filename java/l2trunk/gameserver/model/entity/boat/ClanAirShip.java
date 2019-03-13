@@ -26,7 +26,7 @@ public final class ClanAirShip extends AirShip {
     private static final long MAINTENANCE_DELAY = 60 * 1000L;
     private final GameObject controlKey = new ControlKeyInstance();
     private final Clan clan;
-    private int _currentFuel;
+    private int currentFuel;
     private AirshipDock dock;
     private AirshipDock.AirshipPlatform platform;
     private Player driver = null;
@@ -39,7 +39,7 @@ public final class ClanAirShip extends AirShip {
         BoatHolder.getInstance().addBoat(this);
         this.clan = clan;
         this.clan.setAirship(this);
-        _currentFuel = clan.getAirshipFuel();
+        currentFuel = clan.getAirshipFuel();
     }
 
     @Override
@@ -138,23 +138,23 @@ public final class ClanAirShip extends AirShip {
     }
 
     public int getCurrentFuel() {
-        return _currentFuel;
+        return currentFuel;
     }
 
     public void setCurrentFuel(int fuel) {
-        final int old = _currentFuel;
-        _currentFuel = fuel;
-        if (_currentFuel <= 0) {
-            _currentFuel = 0;
+        final int old = currentFuel;
+        currentFuel = fuel;
+        if (currentFuel <= 0) {
+            currentFuel = 0;
             setMoveSpeed(150);
             setRotationSpeed(1000);
-        } else if (_currentFuel > MAX_FUEL) {
-            _currentFuel = MAX_FUEL;
+        } else if (currentFuel > MAX_FUEL) {
+            currentFuel = MAX_FUEL;
         }
 
-        if (_currentFuel == 0 && old > 0) {
+        if (currentFuel == 0 && old > 0) {
             broadcastPacketToPassengers(SystemMsg.THE_AIRSHIPS_FUEL_EP_HAS_RUN_OUT);
-        } else if (_currentFuel < 40) {
+        } else if (currentFuel < 40) {
             broadcastPacketToPassengers(SystemMsg.THE_AIRSHIPS_FUEL_EP_WILL_SOON_RUN_OUT);
         }
 
@@ -263,7 +263,7 @@ public final class ClanAirShip extends AirShip {
     @Override
     protected void onDelete() {
         clan.setAirship(null);
-        clan.setAirshipFuel(_currentFuel);
+        clan.setAirshipFuel(currentFuel);
         clan.updateClanInDB();
 
         IdFactory.getInstance().releaseId(controlKey.objectId());

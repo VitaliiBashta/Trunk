@@ -2,6 +2,7 @@ package l2trunk.gameserver.model.entity;
 
 import l2trunk.commons.listener.Listener;
 import l2trunk.commons.listener.ListenerList;
+import l2trunk.commons.threading.FutureManager;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.database.mysql;
@@ -30,6 +31,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Reflection {
@@ -53,10 +55,10 @@ public class Reflection {
     private Location resetLoc; // место, к которому кидает при использовании SoE/unstuck, иначе выбрасывает в основной мир
     private Location returnLoc; // если не прописано reset, но прописан return, то телепортит туда, одновременно перемещая в основной мир
     private Location teleportLoc; // точка входа
-    private int _collapseIfEmptyTime;
+    private int collapseIfEmptyTime;
 
     private boolean isCollapseStarted;
-    private Future<?> _collapseTask;
+    private Future<?> collapseTask;
     private Future<?> _collapse1minTask;
     private Future<?> _hiddencollapseTask;
 
@@ -86,7 +88,7 @@ public class Reflection {
         return instance == null ? 0 : instance.getId();
     }
 
-    protected Party getParty() {
+    protected final Party getParty() {
         return party;
     }
 
@@ -99,7 +101,7 @@ public class Reflection {
     }
 
     private void setCollapseIfEmptyTime(int value) {
-        _collapseIfEmptyTime = value;
+        collapseIfEmptyTime = value;
     }
 
     public String getName() {
@@ -179,15 +181,15 @@ public class Reflection {
         }
         lock.lock();
         try {
-            if (_collapseTask != null) {
-                _collapseTask.cancel(false);
-                _collapseTask = null;
+            if (collapseTask != null) {
+                collapseTask.cancel(false);
+                collapseTask = null;
             }
             if (_collapse1minTask != null) {
                 _collapse1minTask.cancel(false);
                 _collapse1minTask = null;
             }
-            _collapseTask = ThreadPoolManager.INSTANCE.schedule(this::collapse, timeInMillis);
+            collapseTask = ThreadPoolManager.INSTANCE.schedule(this::collapse, timeInMillis);
 
             if (timeInMillis >= (60 * 1000L)) {
                 _collapse1minTask = ThreadPoolManager.INSTANCE.schedule(this::minuteBeforeCollapse, timeInMillis - (60 * 1000L));
@@ -200,9 +202,10 @@ public class Reflection {
     private void stopCollapseTimer() {
         lock.lock();
         try {
-            if (_collapseTask != null) {
-                _collapseTask.cancel(false);
-                _collapseTask = null;
+            FutureManager.cancel(collapseTask);
+            if (collapseTask != null) {
+                collapseTask.cancel(false);
+                collapseTask = null;
             }
 
             if (_collapse1minTask != null) {
@@ -261,18 +264,19 @@ public class Reflection {
 
             zones.clear();
 
-            List<Player> teleport = new ArrayList<>();
-            List<GameObject> delete = new ArrayList<>();
+            List<Player> teleport;
+            List<GameObject> delete;
 
             lock.lock();
             try {
-                for (GameObject o : objects) {
-                    if (o instanceof Player) {
-                        teleport.add((Player) o);
-                    } else if (!(o instanceof Playable)) {
-                        delete.add(o);
-                    }
-                }
+                teleport = objects.stream()
+                        .filter(o -> o instanceof Player)
+                        .map(o -> (Player) o)
+                        .collect(Collectors.toList());
+
+                delete = objects.stream()
+                        .filter(o -> !(o instanceof Playable))
+                        .collect(Collectors.toList());
             } finally {
                 lock.unlock();
             }
@@ -325,9 +329,7 @@ public class Reflection {
     }
 
     public void addObject(GameObject o) {
-        if (isCollapseStarted) {
-            return;
-        }
+        if (isCollapseStarted) return;
 
         lock.lock();
         try {
@@ -340,7 +342,7 @@ public class Reflection {
         } finally {
             lock.unlock();
         }
-        if ((_collapseIfEmptyTime > 0) && (_hiddencollapseTask != null)) {
+        if ((collapseIfEmptyTime > 0) && (_hiddencollapseTask != null)) {
             _hiddencollapseTask.cancel(false);
             _hiddencollapseTask = null;
         }
@@ -365,10 +367,10 @@ public class Reflection {
         }
 
         if ((playerCount <= 0) && !isDefault() && (_hiddencollapseTask == null)) {
-            if (_collapseIfEmptyTime <= 0) {
+            if (collapseIfEmptyTime <= 0) {
                 collapse();
             } else {
-                _hiddencollapseTask = ThreadPoolManager.INSTANCE.schedule(this::collapse, _collapseIfEmptyTime * 60 * 1000L);
+                _hiddencollapseTask = ThreadPoolManager.INSTANCE.schedule(this::collapse, collapseIfEmptyTime * 60 * 1000L);
             }
         }
     }

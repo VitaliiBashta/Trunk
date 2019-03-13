@@ -20,11 +20,9 @@ import java.util.TreeMap;
 
 public final class SubUnit {
     private static final Logger LOG = LoggerFactory.getLogger(SubUnit.class);
-
+    public final int type;
     private final Map<Integer, Skill> skills = new TreeMap<>();
     private final Map<Integer, UnitMember> members = new HashMap<>();
-
-    public final int type;
     private final Clan clan;
     private int leaderObjectId;
     private UnitMember leader;
@@ -232,15 +230,14 @@ public final class SubUnit {
         skills.values().forEach(skill -> addSkill(player, skill));
     }
 
-    public void enableSkills(Player player) {
-        for (Skill skill : skills.values())
-            if (skill.minRank <= player.getPledgeClass())
-                player.removeUnActiveSkill(skill);
+    void enableSkills(Player player) {
+        skills.values().stream()
+                .filter(skill -> skill.minRank <= player.getPledgeClass())
+                .forEach(player::removeUnActiveSkill);
     }
 
     void disableSkills(Player player) {
-        for (Skill skill : skills.values())
-            player.addUnActiveSkill(skill);
+        skills.values().forEach(player::addUnActiveSkill);
     }
 
     private void addSkill(Player player, Skill skill) {

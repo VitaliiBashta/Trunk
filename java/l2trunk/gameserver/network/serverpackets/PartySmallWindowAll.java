@@ -4,25 +4,22 @@ import l2trunk.gameserver.model.Party;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Summon;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-
-/**
- * format   ddd+[dSddddddddddddd{ddSddddd}]
- */
-public class PartySmallWindowAll extends L2GameServerPacket {
+public final class PartySmallWindowAll extends L2GameServerPacket {
     private final int leaderId;
     private final int loot;
-    private final List<PartySmallWindowMemberInfo> members = new ArrayList<>();
+    private final List<PartySmallWindowMemberInfo> members;
 
     public PartySmallWindowAll(Party party, Player exclude) {
         leaderId = party.getLeader().objectId();
         loot = party.getLootDistribution();
 
-        for (Player member : party.getMembers())
-            if (member != exclude)
-                members.add(new PartySmallWindowMemberInfo(member));
+        members = party.getMembersStream()
+                .filter(member -> member != exclude)
+                .map(PartySmallWindowMemberInfo::new)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -31,7 +28,7 @@ public class PartySmallWindowAll extends L2GameServerPacket {
         writeD(leaderId); // c3 party leader id
         writeD(loot); //c3 party loot type (0,1,2,....)
         writeD(members.size());
-        for (PartySmallWindowMemberInfo member : members) {
+        members.forEach(member -> {
             writeD(member._id);
             writeS(member._name);
             writeD(member.curCp);
@@ -58,7 +55,7 @@ public class PartySmallWindowAll extends L2GameServerPacket {
                 writeD(member.pet_level);
             } else
                 writeD(0);
-        }
+        });
     }
 
     public static class PartySmallWindowMemberInfo {

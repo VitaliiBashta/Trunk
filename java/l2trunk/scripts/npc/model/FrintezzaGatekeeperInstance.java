@@ -38,7 +38,7 @@ public final class FrintezzaGatekeeperInstance extends NpcInstance {
         }
 
         for (Party party : parties)
-            players.addAll(party.getMembers());
+            players.addAll(party.getMembersStream());
         return players;
     }
 

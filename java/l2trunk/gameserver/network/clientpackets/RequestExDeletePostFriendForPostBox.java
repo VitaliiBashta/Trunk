@@ -8,12 +8,12 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
 import java.util.Map;
 
-public class RequestExDeletePostFriendForPostBox extends L2GameClientPacket {
-    private String _name;
+public final class RequestExDeletePostFriendForPostBox extends L2GameClientPacket {
+    private String name;
 
     @Override
     protected void readImpl() {
-        _name = readS();
+        name = readS();
     }
 
     @Override
@@ -22,13 +22,13 @@ public class RequestExDeletePostFriendForPostBox extends L2GameClientPacket {
         if (player == null)
             return;
 
-        if (StringUtils.isEmpty(_name))
+        if (StringUtils.isEmpty(name))
             return;
 
         int key = 0;
         Map<Integer, String> postFriends = player.getPostFriends();
         for (Map.Entry<Integer, String> entry : postFriends.entrySet()) {
-            if (entry.getValue().equalsIgnoreCase(_name))
+            if (entry.getValue().equalsIgnoreCase(name))
                 key = entry.getKey();
         }
 
@@ -40,6 +40,6 @@ public class RequestExDeletePostFriendForPostBox extends L2GameClientPacket {
         player.getPostFriends().remove(key);
 
         CharacterPostFriendDAO.delete(player, key);
-        player.sendPacket(new SystemMessage2(SystemMsg.S1_WAS_SUCCESSFULLY_DELETED_FROM_YOUR_CONTACT_LIST).addString(_name));
+        player.sendPacket(new SystemMessage2(SystemMsg.S1_WAS_SUCCESSFULLY_DELETED_FROM_YOUR_CONTACT_LIST).addString(name));
     }
 }

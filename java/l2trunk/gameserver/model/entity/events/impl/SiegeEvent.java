@@ -577,8 +577,8 @@ public abstract class SiegeEvent<R extends Residence, S extends SiegeClanObject>
                 if (winner.getParty() == null)
                     winner.addFame(Rnd.get(10, 20), SiegeEvent.this.toString());
                 else {
-                    for (Player member : winner.getParty().getMembers())
-                        member.addFame(Rnd.get(10, 20), SiegeEvent.this.toString());
+                    winner.getParty().getMembersStream().forEach(member ->
+                            member.addFame(Rnd.get(10, 20), SiegeEvent.this.toString()));
                 }
 
                 if (SiegeEvent.this instanceof CastleSiegeEvent)

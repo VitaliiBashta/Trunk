@@ -16,10 +16,10 @@ import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-public enum  ActionRunner {
+public enum ActionRunner {
     INSTANCE;
     private static final Logger LOG = LoggerFactory.getLogger(ActionRunner.class);
-//    private static final ActionRunner INSTANCE = new ActionRunner();
+    //    private static final ActionRunner INSTANCE = new ActionRunner();
     private final Lock _lock = new ReentrantLock();
     private final Map<String, List<ActionWrapper>> futures = new HashMap<>();
 
@@ -53,9 +53,14 @@ public enum  ActionRunner {
     }
 
     private synchronized void addScheduled(String name, final ActionWrapper r, long diff) {
-        List<ActionWrapper> wrapperList = futures.computeIfAbsent(name.toLowerCase(), k -> new ArrayList<>());
+        List<ActionWrapper> actionWrappers = futures.get(name.toLowerCase());
+        if (actionWrappers == null)
+            actionWrappers = new ArrayList<>();
+        actionWrappers.add(r);
         r.schedule(diff);
-        wrapperList.add(r);
+//        List<ActionWrapper> wrapperList = futures.computeIfAbsent(name.toLowerCase(), k -> new ArrayList<>());
+//        r.schedule(diff);
+//        wrapperList.add(r);
     }
 
     synchronized void remove(String name, ActionWrapper f) {

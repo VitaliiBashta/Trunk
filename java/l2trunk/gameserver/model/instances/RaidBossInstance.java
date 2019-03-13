@@ -68,11 +68,11 @@ public class RaidBossInstance extends MonsterInstance {
         if (killer instanceof Playable) {
             Player player = killer.getPlayer();
             if (player.isInParty()) {
-                for (Player member : player.getParty().getMembers()) {
+                player.getParty().getMembersStream().forEach(member -> {
                     member.updateRaidKills();
                     if (member.isNoble())
                         Hero.INSTANCE.addHeroDiary(member.objectId(), HeroDiary.ACTION_RAID_KILLED, getNpcId());
-                }
+                });
                 player.getParty().sendPacket(Msg.CONGRATULATIONS_YOUR_RAID_WAS_SUCCESSFUL);
             } else {
                 if (player.isNoble())
@@ -193,23 +193,23 @@ public class RaidBossInstance extends MonsterInstance {
     }
 
     @Override
-    public boolean isParalyzeImmune() {
+    public final boolean isParalyzeImmune() {
         return true;
     }
 
     @Override
-    public boolean isLethalImmune() {
+    public final boolean isLethalImmune() {
         return true;
     }
 
     @Override
-    public boolean hasRandomWalk() {
+    public final boolean hasRandomWalk() {
         return false;
     }
 
     @Override
-    public boolean canChampion() {
-        return true;
+    public final boolean canChampion() {
+        return false;
     }
 
     @Override

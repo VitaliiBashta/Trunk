@@ -681,7 +681,7 @@ public abstract class SagasSuperclass extends Quest {
         if (isArchonMinions(npcId)) {
             Party party = player.getParty();
             if (party != null) {
-                party.getMembers().stream()
+                party.getMembersStream()
                         .filter(p -> p.getDistance(player) <= Config.ALT_PARTY_DISTRIBUTION_RANGE)
                         .map(SagasSuperclass::findQuest)
                         .filter(Objects::nonNull)

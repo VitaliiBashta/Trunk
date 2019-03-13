@@ -18,6 +18,7 @@ import l2trunk.gameserver.utils.Location;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public final class _421_LittleWingAdventures extends Quest {
     // NPCs
@@ -45,8 +46,8 @@ public final class _421_LittleWingAdventures extends Quest {
         super(false);
         addStartNpc(Cronos);
         addTalkId(Mimyu);
-        addKillId(Fairy_Tree_of_Wind,Fairy_Tree_of_Star,Fairy_Tree_of_Twilight,Fairy_Tree_of_Abyss);
-        addAttackId(Fairy_Tree_of_Wind,Fairy_Tree_of_Star,Fairy_Tree_of_Twilight,Fairy_Tree_of_Abyss);
+        addKillId(Fairy_Tree_of_Wind, Fairy_Tree_of_Star, Fairy_Tree_of_Twilight, Fairy_Tree_of_Abyss);
+        addAttackId(Fairy_Tree_of_Wind, Fairy_Tree_of_Star, Fairy_Tree_of_Twilight, Fairy_Tree_of_Abyss);
         addQuestItem(Fairy_Leaf);
     }
 
@@ -166,7 +167,7 @@ public final class _421_LittleWingAdventures extends Quest {
         }
 
         if (npcId == Mimyu) {
-            if (st.haveAnyQuestItems(Dragon_Bugle_of_Wind,Dragon_Bugle_of_Star,Dragon_Bugle_of_Twilight))
+            if (st.haveAnyQuestItems(Dragon_Bugle_of_Wind, Dragon_Bugle_of_Star, Dragon_Bugle_of_Twilight))
                 return "30747_00b.htm";
             if (dragonflute == null)
                 return "noquest";
@@ -224,12 +225,12 @@ public final class _421_LittleWingAdventures extends Quest {
     @Override
     public void onAttack(NpcInstance npc, QuestState st) {
         if (st.getState() != STARTED || st.getCond() != 2 || !HatchlingSummoned(st, true) || st.getQuestItemsCount(Fairy_Leaf) == 0)
-            return ;
+            return;
 
         String npcID = String.valueOf(npc.getNpcId());
         int attaked_times = st.getInt(npcID);
         if (CheckTree(st, npc.getNpcId()))
-            return ;
+            return;
         if (attaked_times > Min_Fairy_Tree_Attaks) {
             st.set(npcID, 1000000);
             Functions.npcSay(npc, "Give me the leaf!");
@@ -266,10 +267,10 @@ public final class _421_LittleWingAdventures extends Quest {
                 if (st.player.getPet() != null)
                     agressors_pet = st.player.getPet().getName();
                 if (st.player.getParty() != null) {
-                    agressors_party = new ArrayList<>();
-                    for (Player _member : st.player.getParty().getMembers())
-                        if (!_member.equals(st.player))
-                            agressors_party.add(_member.getName());
+                    agressors_party = st.player.getParty().getMembersStream()
+                            .filter(member -> !member.equals(st.player))
+                            .map(Creature::getName)
+                            .collect(Collectors.toList());
                 }
             }
             _spawn.stopRespawn();

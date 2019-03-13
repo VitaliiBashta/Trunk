@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public final class CatapultInstance extends SiegeToggleNpcInstance {
     public CatapultInstance(int objectId, NpcTemplate template) {
@@ -30,7 +31,9 @@ public final class CatapultInstance extends SiegeToggleNpcInstance {
 
         ThreadPoolManager.INSTANCE.execute(new GameObjectTasks.NotifyAITask(this, CtrlEvent.EVT_DEAD, lastAttacker));
 
-        Player killer = lastAttacker.getPlayer();
+        if (!(lastAttacker instanceof Playable))
+            return;
+        Player killer = ((Playable)lastAttacker).getPlayer();
         if (killer == null)
             return;
 
@@ -39,17 +42,18 @@ public final class CatapultInstance extends SiegeToggleNpcInstance {
         Set<Quest> quests = getTemplate().getEventQuests(QuestEventType.MOB_KILLED_WITH_QUEST);
         if (!quests.isEmpty()) {
             List<Player> players = null; // массив с игроками, которые могут быть заинтересованы в квестах
-            if (isRaid() && Config.ALT_NO_LASTHIT){ // Для альта на ластхит берем всех игроков вокруг
+            if (isRaid() && Config.ALT_NO_LASTHIT) { // Для альта на ластхит берем всех игроков вокруг
 
-                players = new ArrayList<>();
-                for (Playable pl : aggroMap.keySet())
-                    if (!pl.isDead() && (isInRangeZ(pl, Config.ALT_PARTY_DISTRIBUTION_RANGE) || killer.isInRangeZ(pl, Config.ALT_PARTY_DISTRIBUTION_RANGE)))
-                        players.add(pl.getPlayer());
-            } else if (killer.getParty() != null)  {// если пати то собираем всех кто подходит
-                players = new ArrayList<>(killer.getParty().size());
-                for (Player pl : killer.getParty().getMembers())
-                    if (!pl.isDead() && (isInRangeZ(pl, Config.ALT_PARTY_DISTRIBUTION_RANGE) || killer.isInRangeZ(pl, Config.ALT_PARTY_DISTRIBUTION_RANGE)))
-                        players.add(pl);
+                players = aggroMap.keySet().stream()
+                        .filter(pl -> !pl.isDead())
+                        .filter(pl -> isInRangeZ(pl, Config.ALT_PARTY_DISTRIBUTION_RANGE) || killer.isInRangeZ(pl, Config.ALT_PARTY_DISTRIBUTION_RANGE))
+                        .map(Playable::getPlayer)
+                        .collect(Collectors.toList());
+            } else if (killer.getParty() != null) {// если пати то собираем всех кто подходит
+                players = killer.getParty().getMembersStream()
+                        .filter(pl -> !pl.isDead())
+                        .filter(pl -> isInRangeZ(pl, Config.ALT_PARTY_DISTRIBUTION_RANGE) || killer.isInRangeZ(pl, Config.ALT_PARTY_DISTRIBUTION_RANGE))
+                        .collect(Collectors.toList());
             }
 
             for (Quest quest : quests) {

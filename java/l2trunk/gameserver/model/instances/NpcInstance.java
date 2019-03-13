@@ -148,8 +148,8 @@ public class NpcInstance extends Creature {
 
         setFlying(getParameter("isFlying", false));
 
-        for (Stats st : Stats.values())
-            addStatFunc(FuncMonsterBalancer.getInstance(st));
+//        for (Stats st : Stats.values())
+//            addStatFunc(FuncMonsterBalancer.getInstance(st));
     }
 
     public static boolean canBypassCheck(Player player, NpcInstance npc) {

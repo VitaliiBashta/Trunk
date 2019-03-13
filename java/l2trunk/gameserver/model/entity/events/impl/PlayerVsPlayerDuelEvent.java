@@ -49,7 +49,7 @@ public final class PlayerVsPlayerDuelEvent extends DuelEvent {
     @Override
     public void askDuel(Player player, Player target) {
         Request request = new Request(Request.L2RequestType.DUEL, player, target).setTimeout(10000L);
-        request.set("duelType", 0);
+        request.unset("duelType");
         player.setRequest(request);
         target.setRequest(request);
 

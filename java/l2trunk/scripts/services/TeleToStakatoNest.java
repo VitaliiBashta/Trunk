@@ -1,11 +1,11 @@
 package l2trunk.scripts.services;
 
 import l2trunk.gameserver.model.Party;
-import l2trunk.gameserver.model.Player;
-import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.scripts.quests._240_ImTheOnlyOneYouCanTrust;
+
+import java.util.Objects;
 
 public final class TeleToStakatoNest extends Functions {
     private final static Location[] teleports = {
@@ -38,8 +38,9 @@ public final class TeleToStakatoNest extends Functions {
         if (party == null)
             player.teleToLocation(loc);
         else
-            for (Player member : party.getMembers())
-                if (member != null && member.isInRange(player, 1000))
-                    member.teleToLocation(loc);
+            party.getMembersStream()
+                    .filter(Objects::nonNull)
+                    .filter(member -> member.isInRange(player, 1000))
+                    .forEach(member -> member.teleToLocation(loc));
     }
 }

@@ -140,12 +140,15 @@ public final class Call extends Skill {
 
         if (party) {
             if (player.getParty() != null)
-                for (Player target : player.getParty().getMembers())
-                    if (!target.equals(player) && canBeSummoned(player, target) == null && !target.isTerritoryFlagEquipped()) {
-                        target.stopMove();
-                        target.teleToLocation(Location.findPointToStay(player, 100, 150), player.getGeoIndex());
-                        getEffects(player, target, activateRate > 0, false);
-                    }
+                player.getParty().getMembersStream().stream()
+                        .filter(target -> !target.equals(player))
+                        .filter(target -> canBeSummoned(player, target) == null)
+                        .filter(target -> !target.isTerritoryFlagEquipped())
+                        .forEach(target -> {
+                            target.stopMove();
+                            target.teleToLocation(Location.findPointToStay(player, 100, 150), player.getGeoIndex());
+                            getEffects(player, target, activateRate > 0, false);
+                        });
 
             if (isSSPossible())
                 player.unChargeShots(isMagic());

@@ -49,11 +49,6 @@ public final class RequestAskJoinPartyRoom extends L2GameClientPacket {
         if (room == null || room.getType() != MatchingRoom.PARTY_MATCHING)
             return;
 
-        if (room.getLeader() != player) {
-            player.sendPacket(SystemMsg.ONLY_A_ROOM_LEADER_MAY_INVITE_OTHERS_TO_A_PARTY_ROOM);
-            return;
-        }
-
         if (room.getPlayers().size() >= room.getMaxMembersSize()) {
             player.sendPacket(SystemMsg.THE_PARTY_ROOM_IS_FULL);
             return;

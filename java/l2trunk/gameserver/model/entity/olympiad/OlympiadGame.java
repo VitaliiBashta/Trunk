@@ -33,8 +33,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ScheduledFuture;
 import java.util.stream.Stream;
 
-public class OlympiadGame {
-    public static final int MAX_POINTS_LOOSE = 10;
+public final class OlympiadGame {
+    static final int MAX_POINTS_LOOSE = 10;
     private static final Logger _log = LoggerFactory.getLogger(OlympiadGame.class);
     private static final List<Integer> STADIUMS_INSTANCE_ID = List.of(147, 148, 149, 150);
     private final int id;
@@ -278,7 +278,7 @@ public class OlympiadGame {
                 member1.incGameCount();
                 StatsSet stat1 = member1.getStat();
                 packet.addPlayer(TeamType.BLUE, member1, -2);
-                stat1.set(Olympiad.POINTS, stat1.getInteger(Olympiad.POINTS) - 2);
+                stat1.inc(Olympiad.POINTS, -2);
             }
         }
         for (TeamMember member2 : teamMembers2) {
@@ -287,7 +287,7 @@ public class OlympiadGame {
                 StatsSet stat2 = member2.getStat();
                 packet.addPlayer(TeamType.RED, member2, -2);
 
-                stat2.set(Olympiad.POINTS, stat2.getInteger(Olympiad.POINTS) - 2);
+                stat2.inc(Olympiad.POINTS, -2);
             }
         }
 
@@ -315,23 +315,19 @@ public class OlympiadGame {
 
     private int transferPoints(StatsSet from, StatsSet to) {
         int fromPoints = from.getInteger(Olympiad.POINTS);
-        int fromLoose = from.getInteger(Olympiad.COMP_LOOSE);
-        int fromPlayed = from.getInteger(Olympiad.COMP_DONE);
 
         int toPoints = to.getInteger(Olympiad.POINTS);
-        int toWin = to.getInteger(Olympiad.COMP_WIN);
-        int toPlayed = to.getInteger(Olympiad.COMP_DONE);
 
         int pointDiff = Math.max(1, (int) Math.ceil((double) Math.min(fromPoints, toPoints) / getType().getLooseMult()));
         pointDiff = pointDiff > OlympiadGame.MAX_POINTS_LOOSE ? OlympiadGame.MAX_POINTS_LOOSE : pointDiff;
 
-        from.set(Olympiad.POINTS, fromPoints - pointDiff);
-        from.set(Olympiad.COMP_LOOSE, fromLoose + 1);
-        from.set(Olympiad.COMP_DONE, fromPlayed + 1);
+        from.inc(Olympiad.POINTS, -pointDiff);
+        from.inc(Olympiad.COMP_LOOSE);
+        from.inc(Olympiad.COMP_DONE);
 
-        to.set(Olympiad.POINTS, toPoints + pointDiff);
-        to.set(Olympiad.COMP_WIN, toWin + 1);
-        to.set(Olympiad.COMP_DONE, toPlayed + 1);
+        to.inc(Olympiad.POINTS, pointDiff);
+        to.inc(Olympiad.COMP_WIN);
+        to.inc(Olympiad.COMP_DONE);
 
         return pointDiff;
     }

@@ -19,8 +19,7 @@ import l2trunk.scripts.bosses.EpicBossState.State;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ScheduledFuture;
 
 public final class SailrenManager extends Functions implements ScriptFile, OnDeathListener {
@@ -30,7 +29,7 @@ public final class SailrenManager extends Functions implements ScriptFile, OnDea
     private static final int Pterosaur = 22199;
     private static final int Tyrannosaurus = 22217;
     private static final int TeleportCubeId = 31759;
-    private static final Location _enter = new Location(27734, -6938, -1982);
+    private static final Location ENTER =  Location.of(27734, -6938, -1982);
     private static final boolean FWS_ENABLESINGLEPLAYER = true;
     private static final int FWS_ACTIVITYTIMEOFMOBS = 120 * 60000;
     private static final int FWS_FIXINTERVALOFSAILRENSPAWN = Config.FIXINTERVALOFSAILRENSPAWN_HOUR * 60 * 60000;
@@ -48,7 +47,7 @@ public final class SailrenManager extends Functions implements ScriptFile, OnDea
     private static ScheduledFuture<?> _socialTask = null;
     private static ScheduledFuture<?> _activityTimeEndTask = null;
     private static ScheduledFuture<?> _onAnnihilatedTask = null;
-    private static EpicBossState _state;
+    private static EpicBossState state;
     private static Zone zone;
     private static boolean isAlreadyEnteredOtherParty = false;
     private static boolean Dying = false;
@@ -67,9 +66,9 @@ public final class SailrenManager extends Functions implements ScriptFile, OnDea
             return;
 
         Dying = true;
-        _state.setRespawnDate(getRespawnInterval());
-        _state.setState(State.INTERVAL);
-        _state.update();
+        state.setRespawnDate(getRespawnInterval());
+        state.setState(State.INTERVAL);
+        state.update();
 
         Log.add("Sailren died", "bosses");
 
@@ -81,23 +80,23 @@ public final class SailrenManager extends Functions implements ScriptFile, OnDea
     private static void setIntervalEndTask() {
         setUnspawn();
 
-        if (_state.getState().equals(State.ALIVE)) {
-            _state.setState(State.NOTSPAWN);
-            _state.update();
+        if (state.getState().equals(State.ALIVE)) {
+            state.setState(State.NOTSPAWN);
+            state.update();
             return;
         }
 
         //init state of Sailren lair.
-        if (!_state.getState().equals(State.INTERVAL)) {
-            _state.setRespawnDate(getRespawnInterval());
-            _state.setState(State.INTERVAL);
-            _state.update();
+        if (!state.getState().equals(State.INTERVAL)) {
+            state.setRespawnDate(getRespawnInterval());
+            state.setState(State.INTERVAL);
+            state.update();
         }
 
         _intervalEndTask = ThreadPoolManager.INSTANCE.schedule(() -> {
-            _state.setState(State.NOTSPAWN);
-            _state.update();
-        }, _state.getInterval());
+            state.setState(State.NOTSPAWN);
+            state.update();
+        }, state.getInterval());
     }
 
     private static void setUnspawn() {
@@ -161,9 +160,9 @@ public final class SailrenManager extends Functions implements ScriptFile, OnDea
 
     private static void sleep() {
         setUnspawn();
-        if (_state.getState().equals(State.ALIVE)) {
-            _state.setState(State.NOTSPAWN);
-            _state.update();
+        if (state.getState().equals(State.ALIVE)) {
+            state.setState(State.NOTSPAWN);
+            state.update();
         }
     }
 
@@ -177,11 +176,11 @@ public final class SailrenManager extends Functions implements ScriptFile, OnDea
             return 4;
         else if (isAlreadyEnteredOtherParty)
             return 2;
-        else if (_state.getState().equals(State.NOTSPAWN))
+        else if (state.getState().equals(State.NOTSPAWN))
             return 0;
-        else if (_state.getState().equals(State.ALIVE) || _state.getState().equals(State.DEAD))
+        else if (state.getState().equals(State.ALIVE) || state.getState().equals(State.DEAD))
             return 1;
-        else if (_state.getState().equals(State.INTERVAL))
+        else if (state.getState().equals(State.INTERVAL))
             return 3;
         else
             return 0;
@@ -189,14 +188,13 @@ public final class SailrenManager extends Functions implements ScriptFile, OnDea
 
     public static void entryToSailrenLair(Player pc) {
         if (pc.getParty() == null)
-            pc.teleToLocation(Location.findPointToStay(_enter, 80, pc.getGeoIndex()));
+            pc.teleToLocation(Location.findPointToStay(ENTER, 80, pc.getGeoIndex()));
         else {
-            List<Player> members = new ArrayList<>();
-            for (Player mem : pc.getParty().getMembers())
-                if (mem != null && !mem.isDead() && mem.isInRange(pc, 1000))
-                    members.add(mem);
-            members.forEach(mem ->
-                    mem.teleToLocation(Location.findPointToStay(_enter, 80, mem.getGeoIndex())));
+            pc.getParty().getMembersStream()
+                    .filter(Objects::nonNull)
+                    .filter(mem -> !mem.isDead())
+                    .filter(mem -> mem.isInRange(pc, 1000))
+                    .forEach(mem -> mem.teleToLocation(Location.findPointToStay(ENTER, 80, mem.getGeoIndex())));
         }
         isAlreadyEnteredOtherParty = true;
     }
@@ -204,19 +202,19 @@ public final class SailrenManager extends Functions implements ScriptFile, OnDea
     private void init() {
         CharListenerList.addGlobal(this);
 
-        _state = new EpicBossState(Sailren);
+        state = new EpicBossState(Sailren);
         zone = ReflectionUtils.getZone("[sailren_epic]");
 
-        _log.info("SailrenManager: State of Sailren is " + _state.getState() + ".");
-        if (!_state.getState().equals(State.NOTSPAWN))
+        _log.info("SailrenManager: State of Sailren is " + state.getState() + ".");
+        if (!state.getState().equals(State.NOTSPAWN))
             setIntervalEndTask();
 
-        _log.info("SailrenManager: Next spawn date of Sailren is " + TimeUtils.toSimpleFormat(_state.getRespawnDate()) + ".");
+        _log.info("SailrenManager: Next spawn date of Sailren is " + TimeUtils.toSimpleFormat(state.getRespawnDate()) + ".");
     }
 
     @Override
     public void onDeath(Creature self, Creature killer) {
-        if (self instanceof Player && _state != null && _state.getState() == State.ALIVE && zone != null && zone.checkIfInZone(self.getX(), self.getY()))
+        if (self instanceof Player && state != null && state.getState() == State.ALIVE && zone != null && zone.checkIfInZone(self.getX(), self.getY()))
             checkAnnihilated();
         else if (self == _velociraptor) {
             if (_monsterSpawnTask != null)
@@ -285,7 +283,7 @@ public final class SailrenManager extends Functions implements ScriptFile, OnDea
 
             switch (npcId) {
                 case Velociraptor:
-                    _velociraptor = NpcUtils.spawnSingle(Velociraptor,new Location(27852, -5536, -1983, 44732) );
+                    _velociraptor = NpcUtils.spawnSingle(Velociraptor, new Location(27852, -5536, -1983, 44732));
                     ((DefaultAI) _velociraptor.getAI()).addTaskMove(_pos, false);
 
                     if (_socialTask != null) {
@@ -300,7 +298,7 @@ public final class SailrenManager extends Functions implements ScriptFile, OnDea
                     _activityTimeEndTask = ThreadPoolManager.INSTANCE.schedule(SailrenManager::sleep, FWS_ACTIVITYTIMEOFMOBS);
                     break;
                 case Pterosaur:
-                    _pterosaur = NpcUtils.spawnSingle(Pterosaur,new Location(27852, -5536, -1983, 44732));
+                    _pterosaur = NpcUtils.spawnSingle(Pterosaur, new Location(27852, -5536, -1983, 44732));
                     ((DefaultAI) _pterosaur.getAI()).addTaskMove(_pos, false);
                     if (_socialTask != null) {
                         _socialTask.cancel(false);
@@ -314,7 +312,7 @@ public final class SailrenManager extends Functions implements ScriptFile, OnDea
                     _activityTimeEndTask = ThreadPoolManager.INSTANCE.schedule(new ActivityTimeEnd(), FWS_ACTIVITYTIMEOFMOBS);
                     break;
                 case Tyrannosaurus:
-                    _tyranno = NpcUtils.spawnSingle(Tyrannosaurus,new Location(27852, -5536, -1983, 44732) );
+                    _tyranno = NpcUtils.spawnSingle(Tyrannosaurus, new Location(27852, -5536, -1983, 44732));
                     ((DefaultAI) _tyranno.getAI()).addTaskMove(_pos, false);
                     if (_socialTask != null) {
                         _socialTask.cancel(false);
@@ -328,11 +326,11 @@ public final class SailrenManager extends Functions implements ScriptFile, OnDea
                     _activityTimeEndTask = ThreadPoolManager.INSTANCE.schedule(new ActivityTimeEnd(), FWS_ACTIVITYTIMEOFMOBS);
                     break;
                 case Sailren:
-                    _sailren = NpcUtils.spawnSingle(Sailren,new Location(27810, -5655, -1983, 44732));
+                    _sailren = NpcUtils.spawnSingle(Sailren, new Location(27810, -5655, -1983, 44732));
 
-                    _state.setRespawnDate(getRespawnInterval() + FWS_ACTIVITYTIMEOFMOBS);
-                    _state.setState(State.ALIVE);
-                    _state.update();
+                    state.setRespawnDate(getRespawnInterval() + FWS_ACTIVITYTIMEOFMOBS);
+                    state.setState(State.ALIVE);
+                    state.update();
 
                     _sailren.setRunning();
                     ((DefaultAI) _sailren.getAI()).addTaskMove(_pos, false);

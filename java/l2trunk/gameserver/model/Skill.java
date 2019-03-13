@@ -1073,7 +1073,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
                             addTargetAndPetToList(targets, player, player);
                             break;
                         }
-                        player.getParty().getMembers().stream()
+                        player.getParty().getMembersStream()
                                 .filter(p -> !p.isDead())
                                 .filter(p -> p.isInRange(player, skillRadius == 0 ? 600 : skillRadius))
                                 .forEach(targets::add);
@@ -1477,7 +1477,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
         return effectTemplates.size() > 0;
     }
 
-    final List<Func> getStatFuncs() {
+    final Stream<Func> getStatFuncs() {
         return getStatFuncs(this);
     }
 

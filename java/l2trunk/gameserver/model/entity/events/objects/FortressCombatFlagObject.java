@@ -21,7 +21,7 @@ import java.util.List;
 public class FortressCombatFlagObject implements SpawnableObject, FlagItemAttachment {
     private static final Logger _log = LoggerFactory.getLogger(FortressCombatFlagObject.class);
     private final Location _location;
-    private ItemInstance _item;
+    private ItemInstance item;
     private GlobalEvent event;
 
     public FortressCombatFlagObject(Location location) {
@@ -30,35 +30,35 @@ public class FortressCombatFlagObject implements SpawnableObject, FlagItemAttach
 
     @Override
     public void spawnObject(GlobalEvent event) {
-        if (_item != null) {
+        if (item != null) {
             _log.info("FortressCombatFlagObject: can't spawn twice: " + event);
             return;
         }
-        _item = ItemFunctions.createItem(9819);
-        _item.setAttachment(this);
-        _item.dropMe(null, _location);
-        _item.setTimeToDeleteAfterDrop(0);
+        item = ItemFunctions.createItem(9819);
+        item.setAttachment(this);
+        item.dropMe(null, _location);
+        item.setTimeToDeleteAfterDrop(0);
 
         this.event = event;
     }
 
     @Override
     public void despawnObject(GlobalEvent event) {
-        if (_item == null)
+        if (item == null)
             return;
 
-        Player owner = GameObjectsStorage.getPlayer(_item.getOwnerId());
+        Player owner = GameObjectsStorage.getPlayer(item.getOwnerId());
         if (owner != null) {
-            owner.getInventory().destroyItem(_item, "Fortress Combat Flag");
-            owner.sendDisarmMessage(_item);
+            owner.getInventory().destroyItem(item, "Fortress Combat Flag");
+            owner.sendDisarmMessage(item);
         }
 
-        _item.setAttachment(null);
-        _item.setJdbcState(JdbcEntityState.UPDATED);
-        _item.delete();
+        item.setAttachment(null);
+        item.setJdbcState(JdbcEntityState.UPDATED);
+        item.delete();
 
-        _item.deleteMe();
-        _item = null;
+        item.deleteMe();
+        item = null;
 
         this.event = null;
     }
@@ -75,16 +75,16 @@ public class FortressCombatFlagObject implements SpawnableObject, FlagItemAttach
 
     @Override
     public void onDeath(Player owner, Creature killer) {
-        owner.getInventory().removeItem(_item, "Fortress Combat Flag");
+        owner.getInventory().removeItem(item, "Fortress Combat Flag");
 
-        _item.setOwnerId(0);
-        _item.setJdbcState(JdbcEntityState.UPDATED);
-        _item.update();
+        item.setOwnerId(0);
+        item.setJdbcState(JdbcEntityState.UPDATED);
+        item.update();
 
-        owner.sendPacket(new SystemMessage2(SystemMsg.YOU_HAVE_DROPPED_S1).addItemName(_item.getItemId()));
+        owner.sendPacket(new SystemMessage2(SystemMsg.YOU_HAVE_DROPPED_S1).addItemName(item.getItemId()));
 
-        _item.dropMe(null, _location);
-        _item.setTimeToDeleteAfterDrop(0);
+        item.dropMe(null, _location);
+        item.setTimeToDeleteAfterDrop(0);
     }
 
     @Override
@@ -100,7 +100,7 @@ public class FortressCombatFlagObject implements SpawnableObject, FlagItemAttach
 
     @Override
     public void pickUp(Player player) {
-        player.getInventory().equipItem(_item);
+        player.getInventory().equipItem(item);
 
         FortressSiegeEvent event = player.getEvent(FortressSiegeEvent.class);
         event.broadcastTo(new SystemMessage2(SystemMsg.C1_HAS_ACQUIRED_THE_FLAG).addName(player), FortressSiegeEvent.ATTACKERS, FortressSiegeEvent.DEFENDERS);
@@ -127,15 +127,6 @@ public class FortressCombatFlagObject implements SpawnableObject, FlagItemAttach
         return true;
     }
 
-    @Override
-    public boolean canBeUnEquiped() {
-        return true;
-    }
-
-    @Override
-    public void setItem(ItemInstance item) {
-        // ignored
-    }
 
     public GlobalEvent getEvent() {
         return event;

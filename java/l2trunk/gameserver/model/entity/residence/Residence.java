@@ -52,7 +52,7 @@ public abstract class Residence implements JdbcEntity {
     private SiegeEvent<?, ?> siegeevent;
     // rewards
     private ScheduledFuture<?> cycleTask;
-    private JdbcEntityState _jdbcEntityState = JdbcEntityState.CREATED;
+    private JdbcEntityState jdbcEntityState = JdbcEntityState.CREATED;
     private int cycle;
     private int rewardCount;
     private int paidCycle;
@@ -291,12 +291,12 @@ public abstract class Residence implements JdbcEntity {
 
     @Override
     public JdbcEntityState getJdbcState() {
-        return _jdbcEntityState;
+        return jdbcEntityState;
     }
 
     @Override
     public void setJdbcState(JdbcEntityState state) {
-        _jdbcEntityState = state;
+        jdbcEntityState = state;
     }
 
     @Override

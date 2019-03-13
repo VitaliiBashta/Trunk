@@ -12,7 +12,6 @@ import java.sql.SQLException;
 
 public enum CastleDAO {
     INSTANCE;
-    private static final String SELECT_SQL_QUERY = "SELECT tax_percent, treasury, reward_count, siege_date, last_siege_date, own_date FROM castle WHERE id=? LIMIT 1";
     private static final String UPDATE_SQL_QUERY = "UPDATE castle SET tax_percent=?, treasury=?, reward_count=?, siege_date=?, last_siege_date=?, own_date=? WHERE id=?";
     private static final Logger _log = LoggerFactory.getLogger(CastleDAO.class);
 

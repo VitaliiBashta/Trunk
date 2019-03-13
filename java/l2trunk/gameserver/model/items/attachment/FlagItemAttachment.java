@@ -17,5 +17,4 @@ public interface FlagItemAttachment extends PickableAttachment {
 
     boolean canBeLost();
 
-    boolean canBeUnEquiped();
 }

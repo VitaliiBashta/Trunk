@@ -41,11 +41,6 @@ public abstract class ExReceiveOlympiad extends L2GameServerPacket {
             }
         }
 
-        public MatchList(List<ArenaInfo> arenaList) {
-            super(0);
-            _arenaList = arenaList;
-        }
-
         @Override
         protected void writeImpl() {
             super.writeImpl();

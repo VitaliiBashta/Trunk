@@ -20,9 +20,9 @@ public class DimensionalRift extends Reflection {
     private static final int MILLISECONDS_IN_MINUTE = 60000;
 
     final int roomType;
-    private List<Integer> _completedRooms = new ArrayList<>();
+    private List<Integer> completedRooms = new ArrayList<>();
     private int jumps_current = 0;
-    private int choosenRoom = -1;
+    private int choosenRoom;
     private boolean _hasJumped = false;
     private boolean isBossRoom = false;
     private Future<?> teleporterTask;
@@ -51,11 +51,11 @@ public class DimensionalRift extends Reflection {
 
         setReturnLoc(party.getLeader().getLoc());
         setTeleportLoc(coords);
-        for (Player p : party.getMembers()) {
+        party.getMembersStream().forEach(p-> {
             p.setVar("backCoords", getReturnLoc().toXYZString());
             DimensionalRiftManager.teleToLocation(p, Location.findPointToStay(coords, 50, 100, getGeoIndex()), this);
             p.setReflection(this);
-        }
+        });
 
         createSpawnTimer(choosenRoom);
         createTeleporterTimer();
@@ -119,7 +119,7 @@ public class DimensionalRift extends Reflection {
         killRiftTask = ThreadPoolManager.INSTANCE.schedule(() -> {
             if (isCollapseStarted())
                 return;
-            getParty().getMembers().forEach(p -> {
+            getParty().getMembersStream().forEach(p -> {
                 if (p != null && p.getReflection() == DimensionalRift.this)
                     DimensionalRiftManager.INSTANCE.teleportToWaitingRoom(p);
                 DimensionalRift.this.collapse();
@@ -172,7 +172,7 @@ public class DimensionalRift extends Reflection {
     }
 
     private void teleportToNextRoom() {
-        _completedRooms.add(choosenRoom);
+        completedRooms.add(choosenRoom);
 
         getSpawns().forEach(Spawner::deleteAll);
 
@@ -187,7 +187,7 @@ public class DimensionalRift extends Reflection {
         else { // выбираем комнату, где еще не были
             List<Integer> notCompletedRooms = new ArrayList<>();
             for (int i = 1; i <= size; i++)
-                if (!_completedRooms.contains(i))
+                if (!completedRooms.contains(i))
                     notCompletedRooms.add(i);
             choosenRoom = Rnd.get(notCompletedRooms);
         }
@@ -195,9 +195,10 @@ public class DimensionalRift extends Reflection {
         checkBossRoom(choosenRoom);
         setTeleportLoc(getRoomCoord(choosenRoom));
 
-        for (Player p : getParty().getMembers())
-            if (p.getReflection() == this)
-                DimensionalRiftManager.teleToLocation(p, Location.findPointToStay(getRoomCoord(choosenRoom), 50, 100, DimensionalRift.this.getGeoIndex()), this);
+        getParty().getMembersStream()
+                .filter(p -> p.getReflection() == this)
+                .forEach(p ->
+                        DimensionalRiftManager.teleToLocation(p, Location.findPointToStay(getRoomCoord(choosenRoom), 50, 100, DimensionalRift.this.getGeoIndex()), this));
 
         createSpawnTimer(choosenRoom);
     }
@@ -225,7 +226,7 @@ public class DimensionalRift extends Reflection {
             task.cancel(false);
         }
 
-        _completedRooms = null;
+        completedRooms = null;
 
         Party party = getParty();
         if (party != null)

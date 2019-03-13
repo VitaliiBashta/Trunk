@@ -8,7 +8,6 @@ import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.Location;
 
-import java.util.List;
 import java.util.StringTokenizer;
 
 import static l2trunk.gameserver.utils.ItemFunctions.removeItem;
@@ -40,13 +39,12 @@ public final class MoonlightTombstoneInstance extends NpcInstance {
                 return;
             }
 
-            List<Player> partyMembers = player.getParty().getMembers();
-            for (Player partyMember : partyMembers)
-                if (!isInRange(partyMember, INTERACTION_DISTANCE * 2)) {
-                    // Члены партии слишком далеко
-                    Functions.show("default/32343-3.htm", player, this);
-                    return;
-                }
+            if (player.getParty().getMembersStream()
+                    .anyMatch(partyMember -> !isInRange(partyMember, INTERACTION_DISTANCE * 2))) {
+                // Члены партии слишком далеко
+                Functions.show("default/32343-3.htm", player, this);
+                return;
+            }
 
             if (_activated) {
                 // Уже активировано
@@ -54,7 +52,7 @@ public final class MoonlightTombstoneInstance extends NpcInstance {
                 return;
             }
 
-            if (player.haveItem( KEY_ID) ) {
+            if (player.haveItem(KEY_ID)) {
                 removeItem(player, KEY_ID, 1, "MoonlightTombstoneInstance");
                 player.getReflection().startCollapseTimer(COLLAPSE_TIME * 60 * 1000L);
                 _activated = true;

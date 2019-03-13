@@ -33,11 +33,11 @@ public final class TeleToParnassus extends Functions implements ScriptFile {
         if (!Config.SERVICES_PARNASSUS_ENABLED)
             return;
 
-        ReflectionManager.PARNASSUS.setCoreLoc(new Location(149384, 171896, -952));
+        ReflectionManager.PARNASSUS.setCoreLoc(Location.of(149384, 171896, -952));
 
         // spawn wh keeper
         SimpleSpawner spawn = new SimpleSpawner(30086);
-        spawn.setLoc(new Location(149960, 174136, -920, 32768))
+        spawn.setLoc(Location.of(149960, 174136, -920, 32768))
                 .setAmount(1)
                 .setRespawnDelay(5)
                 .setReflection(ReflectionManager.PARNASSUS)
@@ -46,7 +46,7 @@ public final class TeleToParnassus extends Functions implements ScriptFile {
 
         // spawn grocery trader (Helvetia)
         spawn = new SimpleSpawner(30839);
-        spawn.setLoc(new Location(149368, 174264, -896, 49152))
+        spawn.setLoc(Location.of(149368, 174264, -896, 49152))
                 .setAmount(1)
                 .setRespawnDelay(5)
                 .setReflection(ReflectionManager.PARNASSUS)
@@ -55,7 +55,7 @@ public final class TeleToParnassus extends Functions implements ScriptFile {
 
         // spawn gk
         spawn = new SimpleSpawner(13129);
-        spawn.setLoc(new Location(149368, 172568, -952, 49152))
+        spawn.setLoc(Location.of(149368, 172568, -952, 49152))
                 .setAmount(1)
                 .setRespawnDelay(5)
                 .setReflection(ReflectionManager.PARNASSUS)
@@ -64,7 +64,7 @@ public final class TeleToParnassus extends Functions implements ScriptFile {
 
         // spawn Orion the Cat
         spawn = new SimpleSpawner(31860);
-        spawn.setLoc(new Location(148904, 173656, -952, 49152))
+        spawn.setLoc(Location.of(148904, 173656, -952, 49152))
                 .setAmount(1)
                 .setRespawnDelay(5)
                 .setReflection(ReflectionManager.PARNASSUS)
@@ -73,7 +73,7 @@ public final class TeleToParnassus extends Functions implements ScriptFile {
 
         // spawn blacksmith (Pushkin)
         spawn = new SimpleSpawner(30300);
-        spawn.setLoc(new Location(148760, 174136, -920, 0))
+        spawn.setLoc(Location.of(148760, 174136, -920, 0))
                 .setAmount(1)
                 .setRespawnDelay(5)
                 .setReflection(ReflectionManager.PARNASSUS)
@@ -82,7 +82,7 @@ public final class TeleToParnassus extends Functions implements ScriptFile {
 
         // spawn Item Broker
         spawn = new SimpleSpawner(32320);
-        spawn.setLoc(new Location(149368, 173064, -952, 16384))
+        spawn.setLoc(Location.of(149368, 173064, -952, 16384))
                 .setAmount(1)
                 .setRespawnDelay(5)
                 .setReflection(ReflectionManager.PARNASSUS)
@@ -146,7 +146,7 @@ public final class TeleToParnassus extends Functions implements ScriptFile {
     private void teleOut() {
         if (npc == null || !npc.isInRange(player, 1000L))
             return;
-        player.teleToLocation(new Location(46776, 185784, -3528), 0);
+        player.teleToLocation(Location.of(46776, 185784, -3528), 0);
         show("I don't know from where you came here, but I can teleport you the another border side.", player, npc);
     }
 

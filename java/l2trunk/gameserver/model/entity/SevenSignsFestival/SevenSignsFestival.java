@@ -1,7 +1,6 @@
 package l2trunk.gameserver.model.entity.SevenSignsFestival;
 
 import l2trunk.commons.collections.StatsSet;
-import l2trunk.commons.lang.StringUtils;
 import l2trunk.gameserver.database.DatabaseFactory;
 import l2trunk.gameserver.model.GameObjectsStorage;
 import l2trunk.gameserver.model.Party;
@@ -11,7 +10,6 @@ import l2trunk.gameserver.model.entity.SevenSigns;
 import l2trunk.gameserver.model.pledge.Clan;
 import l2trunk.gameserver.network.serverpackets.PledgeShowInfoUpdate;
 import l2trunk.gameserver.network.serverpackets.SystemMessage;
-import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.tables.ClanTable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -217,10 +215,10 @@ public enum SevenSignsFestival {
                     int festivalId = festivalDat.getInteger("festivalId");
                     String cabal = SevenSigns.getCabalShortName(festivalDat.getInteger("cabal"));
                     // Try to update an existing record.
-                    statement.setLong(1, Long.valueOf(festivalDat.getString("date")));
+                    statement.setLong(1, festivalDat.getLong("date"));
                     statement.setInt(2, festivalDat.getInteger("score"));
                     statement.setString(3, festivalDat.getString("members"));
-                    statement.setString(4, festivalDat.getString("names", StringUtils.EMPTY));
+                    statement.setString(4, festivalDat.getString("names", ""));
                     statement.setInt(5, festivalCycle);
                     statement.setString(6, cabal);
                     statement.setInt(7, festivalId);
@@ -233,10 +231,10 @@ public enum SevenSignsFestival {
                     statement2.setInt(1, festivalId);
                     statement2.setString(2, cabal);
                     statement2.setInt(3, festivalCycle);
-                    statement2.setLong(4, Long.valueOf(festivalDat.getString("date")));
+                    statement2.setLong(4, festivalDat.getLong("date"));
                     statement2.setInt(5, festivalDat.getInteger("score"));
                     statement2.setString(6, festivalDat.getString("members"));
-                    statement2.setString(7, festivalDat.getString("names", StringUtils.EMPTY));
+                    statement2.setString(7, festivalDat.getString("names", ""));
                     statement2.execute();
                 }
         } catch (NumberFormatException | SQLException e) {
@@ -317,7 +315,7 @@ public enum SevenSignsFestival {
             tempStats.set("festivalId", festivalId);
             tempStats.set("cycle", SevenSigns.INSTANCE.getCurrentCycle());
             tempStats.set("date", "0");
-            tempStats.set("score", 0);
+            tempStats.unset("score");
             tempStats.set("members", "");
             if (i >= FESTIVAL_COUNT)
                 tempStats.set("cabal", SevenSigns.CABAL_DAWN);
@@ -368,7 +366,7 @@ public enum SevenSignsFestival {
         }
         if (currData == null) {
             currData = new StatsSet();
-            currData.set("score", 0);
+            currData.unset("score");
             currData.set("members", "");
             _log.warn("SevenSignsFestival: Data missing for "
                     + SevenSigns.getCabalName(oracle) + ", FestivalID = " + festivalId
@@ -409,7 +407,7 @@ public enum SevenSignsFestival {
      */
     public boolean setFinalScore(Party party, int oracle, int festivalId, long offeringScore) {
         List<Integer> partyMemberIds = party.getMembersObjIds();
-        List<Player> partyMembers = party.getMembers();
+        List<Player> partyMembers = party.getMembersStream();
         long currDawnHighScore = getHighestScore(SevenSigns.CABAL_DAWN, festivalId);
         long currDuskHighScore = getHighestScore(SevenSigns.CABAL_DUSK, festivalId);
         long thisCabalHighScore;
