@@ -15,7 +15,7 @@ public final class ExListPartyMatchingWaitingRoom extends L2GameServerPacket {
     private final int _fullSize;
     private List<PartyMatchingWaitingInfo> _waitingList;
 
-    public ExListPartyMatchingWaitingRoom(Player searcher, int minLevel, int maxLevel, int page, List<Integer> classes) {
+    public ExListPartyMatchingWaitingRoom(int minLevel, int maxLevel, int page, List<Integer> classes) {
         int first = (page - 1) * 64;
         int firstNot = page * 64;
         int i = 0;

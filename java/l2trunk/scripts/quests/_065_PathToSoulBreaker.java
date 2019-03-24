@@ -42,11 +42,9 @@ public final class _065_PathToSoulBreaker extends Quest {
     private NpcInstance Guardian_Angel_Spawn;
 
     public _065_PathToSoulBreaker() {
-        super(false);
-
         addStartNpc(Vitus);
 
-        addTalkId(Vitus,Kekropus,Casca,Holst,Harlan,Lucas,Jacob,Xaber,Liam,Vesa,Zerom,Felton,Meldina,Katenar,Box);
+        addTalkId(Kekropus,Casca,Holst,Harlan,Lucas,Jacob,Xaber,Liam,Vesa,Zerom,Felton,Meldina,Katenar,Box);
         addKillId(Guardian_Angel,Wyrm);
     }
 
@@ -123,7 +121,7 @@ public final class _065_PathToSoulBreaker extends Quest {
             st.setCond(14);
             st.start();
         }
-        if (event.equalsIgnoreCase("32138-05.htm")) {
+        if ("32138-05.htm".equalsIgnoreCase(event)) {
             st.setCond(15);
             st.start();
         }

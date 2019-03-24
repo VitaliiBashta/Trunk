@@ -5,15 +5,13 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
+import java.util.List;
+
 public final class _286_FabulousFeathers extends Quest {
     //NPCs
     private static final int ERINU = 32164;
     //Mobs
-    private static final int Shady_Muertos_Captain = 22251;
-    private static final int Shady_Muertos_Warrior = 22253;
-    private static final int Shady_Muertos_Archer = 22254;
-    private static final int Shady_Muertos_Commander = 22255;
-    private static final int Shady_Muertos_Wizard = 22256;
+    private static final List<Integer> Shady_Muertos = List.of(22251, 22253, 22254, 22255, 22256);
     //Quest items
     private static final int Commanders_Feather = 9746;
     //Chances
@@ -22,7 +20,7 @@ public final class _286_FabulousFeathers extends Quest {
     public _286_FabulousFeathers() {
         super(false);
         addStartNpc(ERINU);
-        addKillId(Shady_Muertos_Captain,Shady_Muertos_Warrior,Shady_Muertos_Archer,Shady_Muertos_Commander,Shady_Muertos_Wizard);
+        addKillId(Shady_Muertos);
         addQuestItem(Commanders_Feather);
     }
 
@@ -47,9 +45,9 @@ public final class _286_FabulousFeathers extends Quest {
         String htmltext = "noquest";
         if (npc.getNpcId() != ERINU)
             return htmltext;
-        int _state = st.getState();
+        int state = st.getState();
 
-        if (_state == CREATED) {
+        if (state == CREATED) {
             if (st.player.getLevel() >= 17) {
                 htmltext = "trader_erinu_q0286_0101.htm";
                 st.setCond(0);
@@ -57,8 +55,8 @@ public final class _286_FabulousFeathers extends Quest {
                 htmltext = "trader_erinu_q0286_0102.htm";
                 st.exitCurrentQuest();
             }
-        } else if (_state == STARTED)
-            htmltext = st.getQuestItemsCount(Commanders_Feather) >= 80 ? "trader_erinu_q0286_0105.htm" : "trader_erinu_q0286_0106.htm";
+        } else if (state == STARTED)
+            htmltext = st.haveQuestItem(Commanders_Feather, 80) ? "trader_erinu_q0286_0105.htm" : "trader_erinu_q0286_0106.htm";
 
         return htmltext;
     }
@@ -68,10 +66,10 @@ public final class _286_FabulousFeathers extends Quest {
         if (qs.getState() != STARTED)
             return;
 
-        long Commanders_Feather_count = qs.getQuestItemsCount(Commanders_Feather);
-        if (Commanders_Feather_count < 80 && Rnd.chance(Commanders_Feather_Chance)) {
+        long questItemsCount = qs.getQuestItemsCount(Commanders_Feather);
+        if (questItemsCount < 80 && Rnd.chance(Commanders_Feather_Chance)) {
             qs.giveItems(Commanders_Feather);
-            if (Commanders_Feather_count == 79) {
+            if (questItemsCount == 79) {
                 qs.setCond(2);
                 qs.playSound(SOUND_MIDDLE);
             } else

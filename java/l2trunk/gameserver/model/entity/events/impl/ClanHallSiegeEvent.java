@@ -21,11 +21,11 @@ public final class ClanHallSiegeEvent extends SiegeEvent<ClanHall, SiegeClanObje
 
     @Override
     public void startEvent() {
-        _oldOwner = getResidence().getOwner();
-        if (_oldOwner != null) {
+        oldOwner = getResidence().getOwner();
+        if (oldOwner != null) {
             getResidence().changeOwner(null);
 
-            addObject(ATTACKERS, new SiegeClanObject(ATTACKERS, _oldOwner, 0));
+            addObject(ATTACKERS, new SiegeClanObject(ATTACKERS, oldOwner, 0));
         }
 
         if (getObjects(ATTACKERS).size() == 0) {
@@ -63,7 +63,7 @@ public final class ClanHallSiegeEvent extends SiegeEvent<ClanHall, SiegeClanObje
 
         super.stopEvent(step);
 
-        _oldOwner = null;
+        oldOwner = null;
     }
 
     @Override

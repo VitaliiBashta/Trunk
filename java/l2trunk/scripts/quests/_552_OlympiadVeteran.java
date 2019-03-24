@@ -16,8 +16,6 @@ public final class _552_OlympiadVeteran extends Quest {
     private static final int CLASS_CERTIFICATE = 17243;
 
     public _552_OlympiadVeteran() {
-        super(false);
-
         addStartNpc(OLYMPIAD_MANAGER);
         addTalkId(OLYMPIAD_MANAGER);
         addQuestItem(TEAM_CERTIFICATE, CLASS_FREE_CERTIFICATE, CLASS_CERTIFICATE);
@@ -41,9 +39,7 @@ public final class _552_OlympiadVeteran extends Quest {
                     return "olympiad_operator_q0552_04.htm";
                 else if (st.haveAllQuestItems(TEAM_CERTIFICATE,CLASS_FREE_CERTIFICATE,CLASS_CERTIFICATE) ) {
                     st.giveItems(OLYMPIAD_CHEST, 3);
-                    st.takeItems(TEAM_CERTIFICATE);
-                    st.takeItems(CLASS_FREE_CERTIFICATE);
-                    st.takeItems(CLASS_CERTIFICATE);
+                    st.takeAllItems(TEAM_CERTIFICATE,CLASS_FREE_CERTIFICATE,CLASS_CERTIFICATE);
                     st.playSound(SOUND_FINISH);
                     st.exitCurrentQuest(this);
                     return "olympiad_operator_q0552_07.htm";
@@ -65,9 +61,7 @@ public final class _552_OlympiadVeteran extends Quest {
             int count = (int)st.getQuestItemsCount(TEAM_CERTIFICATE,CLASS_FREE_CERTIFICATE,CLASS_CERTIFICATE);
             if (count > 0) {
                 st.giveItems(OLYMPIAD_CHEST, count);
-                st.takeItems(TEAM_CERTIFICATE);
-                st.takeItems(CLASS_FREE_CERTIFICATE);
-                st.takeItems(CLASS_CERTIFICATE);
+                st.takeAllItems(TEAM_CERTIFICATE,CLASS_FREE_CERTIFICATE,CLASS_CERTIFICATE);
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest(this);
             }

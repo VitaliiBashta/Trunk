@@ -2,6 +2,7 @@ package l2trunk.gameserver.handler.voicecommands;
 
 import l2trunk.gameserver.model.Player;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface IVoicedCommandHandler {
@@ -16,5 +17,5 @@ public interface IVoicedCommandHandler {
      *
      * @return all known itemIds
      */
-    List<String> getVoicedCommandList();
+    Collection<String> getVoicedCommandList();
 }

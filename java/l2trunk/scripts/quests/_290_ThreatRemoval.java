@@ -24,18 +24,18 @@ public final class _290_ThreatRemoval extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("pinaps_q290_02.htm")) {
+        if ("pinaps_q290_02.htm".equalsIgnoreCase(event)) {
             st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("pinaps_q290_05.htm")) {
+        } else if ("pinaps_q290_05.htm".equalsIgnoreCase(event)) {
             st.takeItems(SelMahumIDTag, 400);
             switch (Rnd.get(1, 6)) {
                 case 1:
-                    st.giveItems(959, 1);
+                    st.giveItems(959);
                     break;
                 case 2:
-                    st.giveItems(960, 1);
+                    st.giveItems(960);
                     break;
                 case 3:
                     st.giveItems(960, 2);
@@ -44,16 +44,16 @@ public final class _290_ThreatRemoval extends Quest {
                     st.giveItems(960, 3);
                     break;
                 case 5:
-                    st.giveItems(9552, 1);
+                    st.giveItems(9552);
                     break;
                 case 6:
                     st.giveItems(9552, 2);
                     break;
             }
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("continue")) {
+        } else if ("continue".equalsIgnoreCase(event)) {
             htmltext = "pinaps_q290_06.htm";
-        } else if (event.equalsIgnoreCase("quit")) {
+        } else if ("quit".equalsIgnoreCase(event)) {
             htmltext = "pinaps_q290_07.htm";
             st.exitCurrentQuest();
         }

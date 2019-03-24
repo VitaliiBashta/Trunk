@@ -35,9 +35,6 @@ public final class _419_GetaPet extends Quest {
     //6 kamael
     private static final int SPIDER_K1 = 22244; // Crimson Spider
 
-    //Quest Item
-    private static final int REQUIRED_SPIDER_LEGS = 50;
-
     private static final int ANIMAL_LOVERS_LIST1 = 3417;
 
     private static final int ANIMAL_SLAYER_LIST1 = 3418;
@@ -55,15 +52,6 @@ public final class _419_GetaPet extends Quest {
 
     private static final int WOLF_COLLAR = 2375;
 
-    //Chance
-    @SuppressWarnings("unused")
-    private static final int DROP_CHANCE_BUGBEAR_BLOOD_ID = 25;
-    @SuppressWarnings("unused")
-    private static final int DROP_CHANCE_FORBIDDEN_LOVE_SCROLL_ID = 3;
-    @SuppressWarnings("unused")
-    private static final int DROP_CHANCE_NECKLACE_OF_GRACE_ID = 4;
-    @SuppressWarnings("unused")
-    private static final int DROP_CHANCE_GOLD_BAR_ID = 10;
 
     //Drop Cond
     //# [COND, NEWCOND, ID, REQUIRED, ITEM, NEED_COUNT, CHANCE, DROP]
@@ -221,8 +209,6 @@ public final class _419_GetaPet extends Quest {
     };
 
     public _419_GetaPet() {
-        super(false);
-
         addStartNpc(PET_MANAGER_MARTIN);
         addTalkId(GK_BELLA, MC_ELLIE, GD_METTY);
 
@@ -263,20 +249,20 @@ public final class _419_GetaPet extends Quest {
         if (question > 0)
             htmltext = "419_q" + question + ".htm";
         else if (answers < 10) {
-            String[] ANS = st.get("quiz").split(" ");
-            int GetQuestion = Rnd.get(ANS.length);
-            String index = ANS[GetQuestion];
+            String[] ans = st.get("quiz").split(" ");
+            int GetQuestion = Rnd.get(ans.length);
+            String index = ans[GetQuestion];
             st.set("question", index);
             String quiz = "";
-            if (GetQuestion + 1 == ANS.length) {
-                for (int i = 0; i < ANS.length - 2; i++)
-                    quiz += ANS[i] + " ";
-                quiz = quiz + ANS[ANS.length - 2];
+            if (GetQuestion + 1 == ans.length) {
+                for (int i = 0; i < ans.length - 2; i++)
+                    quiz += ans[i] + " ";
+                quiz = quiz + ans[ans.length - 2];
             } else {
-                for (int i = 0; i < ANS.length - 1; i++)
+                for (int i = 0; i < ans.length - 1; i++)
                     if (i != GetQuestion)
-                        quiz = quiz + ANS[i] + " ";
-                quiz = quiz + ANS[ANS.length - 1];
+                        quiz = quiz + ans[i] + " ";
+                quiz = quiz + ans[ans.length - 1];
             }
             st.set("quiz", quiz);
             htmltext = "419_q" + index + ".htm";
@@ -292,8 +278,8 @@ public final class _419_GetaPet extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        int StateId = st.getInt("id");
-        if (event.equalsIgnoreCase("details"))
+        int stateId = st.getInt("id");
+        if ("details".equalsIgnoreCase(event))
             htmltext = "419_confirm.htm";
         else if ("agree".equalsIgnoreCase(event)) {
             st.start();
@@ -324,11 +310,11 @@ public final class _419_GetaPet extends Quest {
                     htmltext = "419_slay_5.htm";
             }
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("disagree")) {
+        } else if ("disagree".equalsIgnoreCase(event)) {
             htmltext = "419_cancelled.htm";
             st.exitCurrentQuest();
-        } else if (StateId == 1) {
-            if (event.equalsIgnoreCase("talk"))
+        } else if (stateId == 1) {
+            if ("talk".equalsIgnoreCase(event))
                 htmltext = "419_talk.htm";
             else if (event.equalsIgnoreCase("talk1"))
                 htmltext = "419_bella_2.htm";
@@ -342,7 +328,7 @@ public final class _419_GetaPet extends Quest {
                 st.set("progress", st.getInt("progress") | 4);
                 htmltext = "419_metty_2.htm";
             }
-        } else if (StateId == 2)
+        } else if (stateId == 2)
             if ("tryme".equalsIgnoreCase(event))
                 htmltext = check_questions(st);
             else if ("wrong".equalsIgnoreCase(event)) {
@@ -380,17 +366,15 @@ public final class _419_GetaPet extends Quest {
                     long counts = getCount_proof(st);
                     if (counts == 0)
                         htmltext = "419_no_slay.htm";
-                    else if (counts < REQUIRED_SPIDER_LEGS)
+                    else if (counts < 50)
                         htmltext = "419_pending_slay.htm";
                     else {
                         switch (st.player.getRace()) {
                             case human:
-                                st.takeItems(ANIMAL_SLAYER_LIST1);
-                                st.takeItems(SPIDER_LEG1);
+                                st.takeAllItems(ANIMAL_SLAYER_LIST1,SPIDER_LEG1);
                                 break;
                             case elf:
-                                st.takeItems(ANIMAL_SLAYER_LIST2);
-                                st.takeItems(SPIDER_LEG2);
+                                st.takeAllItems(ANIMAL_SLAYER_LIST2,SPIDER_LEG2);
                                 break;
                             case darkelf:
                                 st.takeItems(ANIMAL_SLAYER_LIST3);

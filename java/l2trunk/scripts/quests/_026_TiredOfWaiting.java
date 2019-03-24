@@ -13,8 +13,6 @@ public final class _026_TiredOfWaiting extends Quest {
     private final static int SEALED_BLOOD_CRYSTAL = 17267;
 
     public _026_TiredOfWaiting() {
-        super(false);
-
         addStartNpc(ISAEL);
         addTalkId(KITZKA);
     }

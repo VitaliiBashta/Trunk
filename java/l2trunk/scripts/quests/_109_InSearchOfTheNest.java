@@ -16,7 +16,6 @@ public final class _109_InSearchOfTheNest extends Quest {
     private static final int GOLDEN_BADGE_SOLDIER = 7247;
 
     public _109_InSearchOfTheNest() {
-        super(false);
         addStartNpc(PIERCE);
         addTalkId(CORPSE,KAHMAN);
 
@@ -27,7 +26,7 @@ public final class _109_InSearchOfTheNest extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
         int cond = st.getCond();
-        if (event.equalsIgnoreCase("Memo") && (cond == 1)) {
+        if ("Memo".equalsIgnoreCase(event) && cond == 1) {
             st.giveItems(MEMO);
             st.setCond(2);
             st.playSound(SOUND_ITEMGET);
@@ -49,7 +48,7 @@ public final class _109_InSearchOfTheNest extends Quest {
         String htmltext = "noquest";
 
         if (id == CREATED) {
-            if (st.player.getLevel() >= 66 && npcId == PIERCE && (st.getQuestItemsCount(GOLDEN_BADGE_RECRUIT) > 0 || st.getQuestItemsCount(GOLDEN_BADGE_SOLDIER) > 0)) {
+            if (st.player.getLevel() >= 66 && npcId == PIERCE && st.haveAnyQuestItems(GOLDEN_BADGE_RECRUIT,GOLDEN_BADGE_SOLDIER)) {
                 st.start();
                 st.playSound(SOUND_ACCEPT);
                 st.setCond(1);
@@ -74,7 +73,7 @@ public final class _109_InSearchOfTheNest extends Quest {
             } else if (npcId == KAHMAN && cond == 3) {
                 htmltext = "merc_kahmun_q0109_0401.htm";
                 st.addExpAndSp(701500, 50000);
-                st.giveItems(ADENA_ID, 161500);
+                st.giveAdena( 161500);
                 st.finish();
                 st.playSound(SOUND_FINISH);
             }

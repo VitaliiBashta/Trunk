@@ -21,7 +21,6 @@ public final class _276_HestuiTotem extends Quest {
     private static final int Kasha_Crystal = 1481;
 
     public _276_HestuiTotem() {
-        super(false);
         addStartNpc(Tanapi);
         addKillId(Kasha_Bear,Kasha_Bear_Totem_Spirit);
         addQuestItem(Kasha_Parasite,Kasha_Crystal);
@@ -42,9 +41,9 @@ public final class _276_HestuiTotem extends Quest {
         String htmltext = "noquest";
         if (npc.getNpcId() != Tanapi)
             return htmltext;
-        int _state = st.getState();
+        int state = st.getState();
 
-        if (_state == CREATED) {
+        if (state == CREATED) {
             if (st.player.getRace() != Race.orc) {
                 htmltext = "seer_tanapi_q0276_00.htm";
                 st.exitCurrentQuest();
@@ -55,16 +54,15 @@ public final class _276_HestuiTotem extends Quest {
                 htmltext = "seer_tanapi_q0276_02.htm";
                 st.setCond(0);
             }
-        } else if (_state == STARTED)
-            if (st.getQuestItemsCount(Kasha_Crystal) > 0) {
+        } else if (state == STARTED)
+            if (st.haveQuestItem(Kasha_Crystal)) {
                 htmltext = "seer_tanapi_q0276_05.htm";
-                st.takeItems(Kasha_Parasite);
-                st.takeItems(Kasha_Crystal);
+                st.takeAllItems(Kasha_Parasite,Kasha_Crystal);
 
                 st.giveItems(Leather_Pants);
                 st.giveItems(Totem_of_Hestui);
                 if (st.getRateQuestsReward() > 1)
-                    st.giveItems(57, Math.round(ItemHolder.getTemplate(Totem_of_Hestui).referencePrice * (st.getRateQuestsReward() - 1) / 2), false);
+                    st.giveAdena( Math.round(ItemHolder.getTemplate(Totem_of_Hestui).referencePrice * (st.getRateQuestsReward() - 1) / 2));
 
                 if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("p1q4")) {
                     st.player.setVar("p1q4");

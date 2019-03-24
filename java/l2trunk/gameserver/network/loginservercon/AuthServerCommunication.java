@@ -23,7 +23,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-public class AuthServerCommunication extends Thread {
+public final class AuthServerCommunication extends Thread {
     private static final Logger _log = LoggerFactory.getLogger(AuthServerCommunication.class);
 
     private static final AuthServerCommunication instance = new AuthServerCommunication();
@@ -84,12 +84,10 @@ public class AuthServerCommunication extends Thread {
             selector.wakeup();
     }
 
-    private boolean disableWriteInterest() throws CancelledKeyException {
+    private void disableWriteInterest() throws CancelledKeyException {
         if (isPengingWrite.compareAndSet(true, false)) {
             key.interestOps(key.interestOps() & ~SelectionKey.OP_WRITE);
-            return true;
         }
-        return false;
     }
 
     private boolean enableWriteInterest() throws CancelledKeyException {

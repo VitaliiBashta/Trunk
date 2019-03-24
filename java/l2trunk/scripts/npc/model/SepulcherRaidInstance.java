@@ -56,7 +56,7 @@ public final class SepulcherRaidInstance extends RaidBossInstance {
         int cupId = NPC_CUPS.get(getNpcId());
 
         if (player.getParty() != null)
-            player.getParty().getMembersStream().stream()
+            player.getParty().getMembersStream()
                     .map(mem -> mem.getQuestState(_620_FourGoblets.class))
                     .filter(Objects::nonNull)
                     .filter(qs -> qs.isStarted() || qs.isCompleted())

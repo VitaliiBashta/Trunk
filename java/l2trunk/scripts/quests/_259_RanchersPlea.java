@@ -12,7 +12,6 @@ public final class _259_RanchersPlea extends Quest {
     private static final int SPSSNG_ID = 2905;
 
     public _259_RanchersPlea() {
-        super(false);
         addStartNpc(30497);
 
         addKillId(20103, 20106, 20108);

@@ -52,14 +52,14 @@ public final class AdminManor implements IAdminCommandHandler {
                     castle.saveSeedData();
                     activeChar.sendMessage("Manor data for " + castle.getName() + " was nulled");
                 } else {
-                    for (Castle castle : ResidenceHolder.getCastles()) {
+                    ResidenceHolder.getCastles().forEach(castle ->  {
                         castle.setCropProcure(new ArrayList<>(), CastleManorManager.PERIOD_CURRENT);
                         castle.setCropProcure(new ArrayList<>(), CastleManorManager.PERIOD_NEXT);
                         castle.setSeedProduction(new ArrayList<>(), CastleManorManager.PERIOD_CURRENT);
                         castle.setSeedProduction(new ArrayList<>(), CastleManorManager.PERIOD_NEXT);
                         castle.saveCropData();
                         castle.saveSeedData();
-                    }
+                    });
                     activeChar.sendMessage("Manor data was nulled");
                 }
                 showMainPage(activeChar);

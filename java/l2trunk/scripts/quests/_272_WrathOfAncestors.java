@@ -39,7 +39,6 @@ public final class _272_WrathOfAncestors extends Quest {
     };
 
     public _272_WrathOfAncestors() {
-        super(false);
         addStartNpc(Livina);
         //mob Drop
         for (int[] aDROPLIST_COND : DROPLIST_COND) addKillId(aDROPLIST_COND[2]);
@@ -48,14 +47,13 @@ public final class _272_WrathOfAncestors extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        String htmltext = event;
-        if (event.equals("1")) {
+        if ("1".equals(event)) {
             st.setCond(1);
             st.start();
             st.playSound(SOUND_ACCEPT);
-            htmltext = "seer_livina_q0272_03.htm";
+            return  "seer_livina_q0272_03.htm";
         }
-        return htmltext;
+        return event;
     }
 
     @Override
@@ -78,8 +76,8 @@ public final class _272_WrathOfAncestors extends Quest {
             } else if (cond == 1)
                 htmltext = "seer_livina_q0272_04.htm";
             else if (cond == 2) {
-                st.takeItems(GraveRobbersHead, -1);
-                st.giveItems(ADENA_ID, 1500);
+                st.takeItems(GraveRobbersHead);
+                st.giveAdena(1500);
                 htmltext = "seer_livina_q0272_05.htm";
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest();
@@ -92,14 +90,12 @@ public final class _272_WrathOfAncestors extends Quest {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         for (int[] aDROPLIST_COND : DROPLIST_COND)
-            if (cond == aDROPLIST_COND[0] && npcId == aDROPLIST_COND[2])
-                if (aDROPLIST_COND[3] == 0 || st.getQuestItemsCount(aDROPLIST_COND[3]) > 0)
-                    if (aDROPLIST_COND[5] == 0)
-                        st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[6]);
-                    else if (st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[7], aDROPLIST_COND[5], aDROPLIST_COND[6]))
-                        if (aDROPLIST_COND[1] != cond && aDROPLIST_COND[1] != 0) {
-                            st.setCond(aDROPLIST_COND[1]);
-                            st.start();
-                        }
+            if (cond == 1 && npcId == aDROPLIST_COND[2]) {
+                if (st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[7], aDROPLIST_COND[5], aDROPLIST_COND[6]))
+                    if (aDROPLIST_COND[1] != cond && aDROPLIST_COND[1] != 0) {
+                        st.setCond(aDROPLIST_COND[1]);
+                        st.start();
+                    }
+            }
     }
 }

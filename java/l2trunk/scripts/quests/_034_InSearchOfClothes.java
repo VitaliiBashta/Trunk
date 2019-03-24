@@ -12,8 +12,6 @@ public final class _034_InSearchOfClothes extends Quest {
     private final int MYSTERIOUS_CLOTH = 7076;
 
     public _034_InSearchOfClothes() {
-        super(false);
-
         addStartNpc(30088);
         addTalkId(30165,30294);
 
@@ -38,17 +36,17 @@ public final class _034_InSearchOfClothes extends Quest {
             st.setCond(4);
         else if (event.equals("30165-3.htm") && cond == 5) {
             if (st.getQuestItemsCount(SPINNERET) == 10) {
-                st.takeItems(SPINNERET, 10);
-                st.giveItems(SPIDERSILK, 1);
+                st.takeItems(SPINNERET);
+                st.giveItems(SPIDERSILK);
                 st.setCond(6);
             } else
                 htmltext = "30165-1r.htm";
         } else if (event.equals("30088-5.htm") && cond == 6)
-            if (st.getQuestItemsCount(SUEDE) >= 3000 && st.getQuestItemsCount(THREAD) >= 5000 && st.getQuestItemsCount(SPIDERSILK) == 1) {
+            if (st.getQuestItemsCount(SUEDE) >= 3000 && st.getQuestItemsCount(THREAD) >= 5000 && st.haveQuestItem(SPIDERSILK)) {
                 st.takeItems(SUEDE, 3000);
                 st.takeItems(THREAD, 5000);
-                st.takeItems(SPIDERSILK, 1);
-                st.giveItems(MYSTERIOUS_CLOTH, 1);
+                st.takeItems(SPIDERSILK);
+                st.giveItems(MYSTERIOUS_CLOTH);
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest();
             } else

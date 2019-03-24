@@ -3144,10 +3144,7 @@
 		<set name="operateType" val="OP_PASSIVE" />
 		<for>
 			<add order="0x40" stat="regMp" val="#Tab-regMp1">
-				<and>
-					<player moving="true" />
 					<player running="false" />
-				</and>
 			</add>
 			<add order="0x40" stat="regMp" val="#Tab-regMp2">
 				<player standing="true" />

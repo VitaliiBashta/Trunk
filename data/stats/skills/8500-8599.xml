@@ -344,30 +344,13 @@
 			<set name="operateType" val="OP_PASSIVE" />     
 			<for>
 				<add order="0x40" stat="attackFire" val="250">
-					<or>
-						<player classId="12" />
-						<player classId="94" />
-						<player classId="51" />
-						<player classId="115" />
-						<player classId="52" />
-						<player classId="116" />
-						<player classId="14" />
-						<player classId="96" />
-					</or>
+
 				</add>
 				<add order="0x40" stat="attackWater" val="250">
-					<or>
-						<player classId="27" />
-						<player classId="103" />
-						<player classId="28" />
-						<player classId="104" />
-					</or>
+
 				</add>
 				<add order="0x40" stat="attackWind" val="250">
-					<or>
-						<player classId="40" />
-						<player classId="110" />
-					</or>
+
 				</add>
 				<add order="0x40" stat="attackUnholy" val="250">
 					<not>

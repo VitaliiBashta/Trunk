@@ -5,12 +5,9 @@ import l2trunk.gameserver.ai.DefaultAI;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.World;
 import l2trunk.gameserver.model.instances.NpcInstance;
-import l2trunk.gameserver.skills.effects.EffectTemplate;
 import l2trunk.gameserver.stats.Stats;
 import l2trunk.gameserver.stats.funcs.FuncTemplate;
 import l2trunk.gameserver.tables.SkillTable;
-
-import java.util.Objects;
 
 public final class ctreeAI extends DefaultAI {
     private static final int ORIGINAL_EFFECT_ID = 2139;
@@ -24,10 +21,10 @@ public final class ctreeAI extends DefaultAI {
 
     private static void changeSkillEffect(Stats stat, double mult) {
         FuncTemplate func = new FuncTemplate(null, "Mul", stat, 0x30, mult);
-        for (EffectTemplate template : SkillTable.INSTANCE.getInfo(ctreeAI.ORIGINAL_EFFECT_ID).getEffectTemplates()) {
+        SkillTable.INSTANCE.getInfo(ctreeAI.ORIGINAL_EFFECT_ID).getEffectTemplates().forEach(template -> {
             template.clearAttachedFuncs();
             template.attachFunc(func);
-        }
+        });
     }
 
     private Skill getRandomTreeEffect() {

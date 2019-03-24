@@ -11,8 +11,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public final class UnitMember {
-    private static final Logger _log = LoggerFactory.getLogger(UnitMember.class);
-    final int objectId;
+    private static final Logger LOG = LoggerFactory.getLogger(UnitMember.class);
+    public final int objectId;
     public Player player;
     private Clan clan;
     private String name;
@@ -114,7 +114,7 @@ public final class UnitMember {
                 statement.setInt(2, objectId);
                 statement.execute();
             } catch (SQLException e) {
-                _log.error("Error while setting Unit Member Title", e);
+                LOG.error("Error while setting Unit Member Title", e);
             }
         }
     }
@@ -142,7 +142,7 @@ public final class UnitMember {
             statement.setInt(2, objectId());
             statement.execute();
         } catch (SQLException e) {
-            _log.error("Error while updating Unit Member Pledge Type", e);
+            LOG.error("Error while updating Unit Member Pledge Type", e);
         }
     }
 
@@ -178,7 +178,7 @@ public final class UnitMember {
             statement.setInt(2, objectId());
             statement.execute();
         } catch (SQLException e) {
-            _log.error("Error while updating Unit Member Power Grade", e);
+            LOG.error("Error while updating Unit Member Power Grade", e);
         }
     }
 
@@ -201,7 +201,7 @@ public final class UnitMember {
             statement.setInt(2, objectId());
             statement.execute();
         } catch (SQLException e) {
-            _log.error("Error while updating Unit Member Apprentice", e);
+            LOG.error("Error while updating Unit Member Apprentice", e);
         }
     }
 

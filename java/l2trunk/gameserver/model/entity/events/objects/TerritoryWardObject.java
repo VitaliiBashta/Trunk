@@ -236,14 +236,6 @@ public final class TerritoryWardObject implements SpawnableObject, FlagItemAttac
         return wardNpcInstance.getLoc();
     }
 
-    public NpcInstance getWardNpcInstance() {
-        return wardNpcInstance;
-    }
-
-    public ItemInstance getWardItemInstance() {
-        return wardItemInstance;
-    }
-
     public int getDominionId() {
         return itemId - 13479;
     }

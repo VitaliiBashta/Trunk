@@ -16,7 +16,6 @@ public final class _250_WatchWhatYouEat extends Quest {
             18868, 15495);
 
     public _250_WatchWhatYouEat() {
-        super(false);
         addStartNpc(SALLY);
         addKillId(MOBS.keySet());
     }
@@ -74,8 +73,9 @@ public final class _250_WatchWhatYouEat extends Quest {
     @Override
     public void onKill(NpcInstance npc, QuestState st) {
         if (st.getState() == STARTED && st.getCond() == 1) {
-            if (MOBS.containsKey(npc.getNpcId())) {
-                st.giveItemIfNotHave(MOBS.get(npc.getNpcId()));
+            int npcId = npc.getNpcId();
+            if (MOBS.containsKey(npcId)) {
+                st.giveItemIfNotHave(MOBS.get(npcId));
             }
             if (st.haveAllQuestItems(MOBS.values())) {
                 st.setCond(2);

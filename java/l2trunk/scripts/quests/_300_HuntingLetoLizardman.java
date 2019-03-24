@@ -5,6 +5,8 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
+import java.util.stream.IntStream;
+
 public final class _300_HuntingLetoLizardman extends Quest {
     //NPCs
     private static final int RATH = 30126;
@@ -16,10 +18,8 @@ public final class _300_HuntingLetoLizardman extends Quest {
     private static final int BRACELET_OF_LIZARDMAN_CHANCE = 70;
 
     public _300_HuntingLetoLizardman() {
-        super(false);
         addStartNpc(RATH);
-        for (int lizardman_id = 20577; lizardman_id <= 20582; lizardman_id++)
-            addKillId(lizardman_id);
+        addKillId(IntStream.rangeClosed(20577, 20582).toArray());
         addQuestItem(BRACELET_OF_LIZARDMAN);
     }
 
@@ -48,17 +48,17 @@ public final class _300_HuntingLetoLizardman extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        int _state = st.getState();
-        if ("rarshints_q0300_0104.htm".equalsIgnoreCase(event) && _state == CREATED) {
+        int state = st.getState();
+        if ("rarshints_q0300_0104.htm".equalsIgnoreCase(event) && state == CREATED) {
             st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
-        } else if ("rarshints_q0300_0201.htm".equalsIgnoreCase(event) && _state == STARTED)
+        } else if ("rarshints_q0300_0201.htm".equalsIgnoreCase(event) && state == STARTED)
             if (st.haveQuestItem(BRACELET_OF_LIZARDMAN, 60)) {
                 st.takeItems(BRACELET_OF_LIZARDMAN);
                 switch (Rnd.get(3)) {
                     case 0:
-                        st.giveAdena( 30000);
+                        st.giveAdena(30000);
                         break;
                     case 1:
                         st.giveItems(ANIMAL_BONE, 50, true);

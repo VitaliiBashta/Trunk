@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-@SuppressWarnings("rawtypes")
 public class MMOConnection<T extends MMOClient> {
     private final SelectorThread<T> _selectorThread;
 
@@ -21,26 +20,26 @@ public class MMOConnection<T extends MMOClient> {
     private final WritableByteChannel _writableByteChannel;
     private final ReadableByteChannel _readableByteChannel;
 
-    private final Queue<SendablePacket<T>> _sendQueue;
+    private final Queue<SendablePacket<T>> sendQueue;
     private final Queue<ReceivablePacket<T>> _recvQueue;
 
     private T _client;
     private ByteBuffer _readBuffer, _primaryWriteBuffer, _secondaryWriteBuffer;
 
-    private boolean _pendingClose;
-    private long _pendingCloseTime;
-    private boolean _closed;
+    private boolean pendingClose;
+    private long pendingCloseTime;
+    private boolean closed;
 
     private long _pendingWriteTime;
     private final AtomicBoolean _isPengingWrite = new AtomicBoolean();
 
-    public MMOConnection(SelectorThread<T> selectorThread, Socket socket, SelectionKey key) {
+    MMOConnection(SelectorThread<T> selectorThread, Socket socket, SelectionKey key) {
         _selectorThread = selectorThread;
         _selectionKey = key;
         this.socket = socket;
         _writableByteChannel = socket.getChannel();
         _readableByteChannel = socket.getChannel();
-        _sendQueue = new ArrayDeque<>();
+        sendQueue = new ArrayDeque<>();
         _recvQueue = new MMOExecutableQueue<>(selectorThread.getExecutor());
     }
 
@@ -52,7 +51,7 @@ public class MMOConnection<T extends MMOClient> {
         _client = client;
     }
 
-    public void recvPacket(ReceivablePacket<T> rp) {
+    void recvPacket(ReceivablePacket<T> rp) {
         if (rp == null)
             return;
 
@@ -70,7 +69,7 @@ public class MMOConnection<T extends MMOClient> {
             if (isClosed())
                 return;
 
-            _sendQueue.add(sp);
+            sendQueue.add(sp);
         }
 
         scheduleWriteInterest();
@@ -87,7 +86,7 @@ public class MMOConnection<T extends MMOClient> {
 
             for (SendablePacket<T> sp : args)
                 if (sp != null)
-                    _sendQueue.add(sp);
+                    sendQueue.add(sp);
         }
 
         scheduleWriteInterest();
@@ -105,7 +104,7 @@ public class MMOConnection<T extends MMOClient> {
 
             for (SendablePacket<T> arg : args)
                 if ((sp = arg) != null)
-                    _sendQueue.add(sp);
+                    sendQueue.add(sp);
         }
 
         scheduleWriteInterest();
@@ -166,7 +165,7 @@ public class MMOConnection<T extends MMOClient> {
     }
 
     Queue<SendablePacket<T>> getSendQueue() {
-        return _sendQueue;
+        return sendQueue;
     }
 
     protected Queue<ReceivablePacket<T>> getRecvQueue() {
@@ -221,19 +220,19 @@ public class MMOConnection<T extends MMOClient> {
     }
 
     public boolean isClosed() {
-        return _pendingClose || _closed;
+        return pendingClose || closed;
     }
 
     public boolean isPengingClose() {
-        return _pendingClose;
+        return pendingClose;
     }
 
     public long getPendingCloseTime() {
-        return _pendingCloseTime;
+        return pendingCloseTime;
     }
 
     void close() throws IOException {
-        _closed = true;
+        closed = true;
         socket.close();
     }
 
@@ -242,10 +241,10 @@ public class MMOConnection<T extends MMOClient> {
             if (isClosed())
                 return;
 
-            _sendQueue.clear();
+            sendQueue.clear();
 
-            _pendingClose = true;
-            _pendingCloseTime = System.currentTimeMillis();
+            pendingClose = true;
+            pendingCloseTime = System.currentTimeMillis();
         }
 
         disableReadInterest();
@@ -257,12 +256,12 @@ public class MMOConnection<T extends MMOClient> {
             if (isClosed())
                 return;
 
-            _sendQueue.clear();
+            sendQueue.clear();
 
             sendPacket(sp);
 
-            _pendingClose = true;
-            _pendingCloseTime = System.currentTimeMillis();
+            pendingClose = true;
+            pendingCloseTime = System.currentTimeMillis();
         }
 
         disableReadInterest();
@@ -273,8 +272,8 @@ public class MMOConnection<T extends MMOClient> {
             if (isClosed())
                 return;
 
-            _pendingClose = true;
-            _pendingCloseTime = System.currentTimeMillis();
+            pendingClose = true;
+            pendingCloseTime = System.currentTimeMillis();
         }
     }
 
@@ -294,7 +293,7 @@ public class MMOConnection<T extends MMOClient> {
     }
 
     void clearQueues() {
-        _sendQueue.clear();
+        sendQueue.clear();
         _recvQueue.clear();
     }
 

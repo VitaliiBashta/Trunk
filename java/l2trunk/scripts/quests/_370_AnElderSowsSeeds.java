@@ -20,8 +20,6 @@ public final class _370_AnElderSowsSeeds extends Quest {
             5917, 5918, 5919, 5920);
 
     public _370_AnElderSowsSeeds() {
-        super(false);
-
         addStartNpc(CASIAN);
 
         addKillId(MOBS);
@@ -42,7 +40,7 @@ public final class _370_AnElderSowsSeeds extends Quest {
             if (mincount > 0) {
                 CHAPTERS.forEach(itemId -> st.takeItems(itemId, mincount));
 
-                st.giveItems(ADENA_ID, 3600 * mincount);
+                st.giveAdena(3600 * mincount);
                 htmltext = "30612-8.htm";
             } else
                 htmltext = "30612-4.htm";

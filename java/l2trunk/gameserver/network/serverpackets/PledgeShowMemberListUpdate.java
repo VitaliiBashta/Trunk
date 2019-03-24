@@ -5,50 +5,50 @@ import l2trunk.gameserver.model.pledge.SubUnit;
 import l2trunk.gameserver.model.pledge.UnitMember;
 
 public final class PledgeShowMemberListUpdate extends L2GameServerPacket {
-    private final String _name;
-    private final int _lvl;
-    private final int _classId;
-    private final int _sex;
-    private final int _isOnline;
-    private final int _objectId;
-    private final int _pledgeType;
-    private int _isApprentice;
+    private final String name;
+    private final int lvl;
+    private final int classId;
+    private final int sex;
+    private final int isOnline;
+    private final int objectId;
+    private final int pledgeType;
+    private int isApprentice;
 
     public PledgeShowMemberListUpdate(final Player player) {
-        _name = player.getName();
-        _lvl = player.getLevel();
-        _classId = player.getClassId().id;
-        _sex = player.isMale() ? 0 :1;
-        _objectId = player.objectId();
-        _isOnline = player.isOnline() ? 1 : 0;
-        _pledgeType = player.getPledgeType();
+        name = player.getName();
+        lvl = player.getLevel();
+        classId = player.getClassId().id;
+        sex = player.isMale() ? 0 :1;
+        objectId = player.objectId();
+        isOnline = player.isOnline() ? 1 : 0;
+        pledgeType = player.getPledgeType();
         SubUnit subUnit = player.getSubUnit();
-        UnitMember member = subUnit == null ? null : subUnit.getUnitMember(_objectId);
+        UnitMember member = subUnit == null ? null : subUnit.getUnitMember(objectId);
         if (member != null)
-            _isApprentice = member.hasSponsor() ? 1 : 0;
+            isApprentice = member.hasSponsor() ? 1 : 0;
     }
 
     public PledgeShowMemberListUpdate(final UnitMember cm) {
-        _name = cm.getName();
-        _lvl = cm.getLevel();
-        _classId = cm.getClassId();
-        _sex = cm.getSex();
-        _objectId = cm.objectId();
-        _isOnline = cm.isOnline() ? 1 : 0;
-        _pledgeType = cm.getPledgeType();
-        _isApprentice = cm.hasSponsor() ? 1 : 0;
+        name = cm.getName();
+        lvl = cm.getLevel();
+        classId = cm.getClassId();
+        sex = cm.getSex();
+        objectId = cm.objectId;
+        isOnline = cm.isOnline() ? 1 : 0;
+        pledgeType = cm.getPledgeType();
+        isApprentice = cm.hasSponsor() ? 1 : 0;
     }
 
     @Override
     protected final void writeImpl() {
         writeC(0x5b);
-        writeS(_name);
-        writeD(_lvl);
-        writeD(_classId);
-        writeD(_sex);
-        writeD(_objectId);
-        writeD(_isOnline); // 1=online 0=offline
-        writeD(_pledgeType);
-        writeD(_isApprentice); // does a clan member have a sponsor
+        writeS(name);
+        writeD(lvl);
+        writeD(classId);
+        writeD(sex);
+        writeD(objectId);
+        writeD(isOnline); // 1=online 0=offline
+        writeD(pledgeType);
+        writeD(isApprentice); // does a clan member have a sponsor
     }
 }

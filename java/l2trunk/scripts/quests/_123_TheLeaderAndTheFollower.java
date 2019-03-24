@@ -26,12 +26,9 @@ public final class _123_TheLeaderAndTheFollower extends Quest {
     private final int PICOT_LEG = 8550;
 
     public _123_TheLeaderAndTheFollower() {
-        super(false);
-
         addStartNpc(NEWYEAR);
 
-        addKillId(BRUIN_LIZARDMEN);
-        addKillId(PICOT_ARANEID);
+        addKillId(BRUIN_LIZARDMEN,PICOT_ARANEID);
 
         addQuestItem(BRUIN_BLOOD, PICOT_LEG);
     }
@@ -103,19 +100,19 @@ public final class _123_TheLeaderAndTheFollower extends Quest {
         else if (cond == 8) {
             st.takeItems(PICOT_LEG, 8);
             int choose = st.getInt("choose");
-            st.giveItems(CLAN_OATH_HELM, 1);
+            st.giveItems(CLAN_OATH_HELM);
             if (choose == 1) {
-                st.giveItems(CLAN_OATH_ARMOR, 1);
-                st.giveItems(CLAN_OATH_GAUNTLETS, 1);
-                st.giveItems(CLAN_OATH_SABATON, 1);
+                st.giveItems(CLAN_OATH_ARMOR);
+                st.giveItems(CLAN_OATH_GAUNTLETS);
+                st.giveItems(CLAN_OATH_SABATON);
             } else if (choose == 2) {
-                st.giveItems(CLAN_OATH_BRIGANDINE, 1);
-                st.giveItems(CLAN_OATH_LEATHER_GLOVES, 1);
-                st.giveItems(CLAN_OATH_BOOTS, 1);
+                st.giveItems(CLAN_OATH_BRIGANDINE);
+                st.giveItems(CLAN_OATH_LEATHER_GLOVES);
+                st.giveItems(CLAN_OATH_BOOTS);
             } else if (choose == 3) {
-                st.giveItems(CLAN_OATH_AKETON, 1);
-                st.giveItems(CLAN_OATH_PADDED_GLOVES, 1);
-                st.giveItems(CLAN_OATH_SANDALS, 1);
+                st.giveItems(CLAN_OATH_AKETON);
+                st.giveItems(CLAN_OATH_PADDED_GLOVES);
+                st.giveItems(CLAN_OATH_SANDALS);
             }
             st.setCond(0);
             st.playSound(SOUND_FINISH);
@@ -129,14 +126,14 @@ public final class _123_TheLeaderAndTheFollower extends Quest {
     public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
-        if (npcId == BRUIN_LIZARDMEN && st.getQuestItemsCount(BRUIN_BLOOD) < 10 && cond == 1 && Rnd.chance(50)) {
-            st.giveItems(BRUIN_BLOOD);
+        if (npcId == BRUIN_LIZARDMEN &&  cond == 1 && Rnd.chance(50)) {
+            st.giveItemIfNotHave(BRUIN_BLOOD,10);
             if (st.getQuestItemsCount(BRUIN_BLOOD) == 10) {
                 st.playSound(SOUND_MIDDLE);
                 st.setCond(2);
             }
-        } else if (npcId == PICOT_ARANEID && st.getQuestItemsCount(PICOT_LEG) < 8 && cond == 7 && Rnd.chance(50)) {
-            st.giveItems(PICOT_LEG, 1);
+        } else if (npcId == PICOT_ARANEID  && cond == 7 && Rnd.chance(50)) {
+            st.giveItemIfNotHave(PICOT_LEG,8);
             if (st.getQuestItemsCount(PICOT_LEG) == 8) {
                 st.playSound(SOUND_MIDDLE);
                 st.setCond(8);

@@ -7,7 +7,7 @@ public final class PlaySound extends L2GameServerPacket {
     public static final L2GameServerPacket B04_S01 = new PlaySound("B04_S01");
     public static final L2GameServerPacket HB01 = new PlaySound(PlaySound.Type.MUSIC, "HB01", 0, 0, 0, 0, 0);
     private final Type type;
-    private final String _soundFile;
+    private final String soundFile;
     private final int hasCenterObject;
     private final int objectId;
     private final int x;
@@ -24,7 +24,7 @@ public final class PlaySound extends L2GameServerPacket {
 
     public PlaySound(Type type, String soundFile, int c, int objectId, int x, int y, int z) {
         this.type = type;
-        _soundFile = soundFile;
+        this.soundFile = soundFile;
         hasCenterObject = c;
         this.objectId = objectId;
         this.x = x;
@@ -37,7 +37,7 @@ public final class PlaySound extends L2GameServerPacket {
         writeC(0x9e);
         //dSdddddd
         writeD(type.ordinal()); //0 for quest and ship, c4 toturial = 2
-        writeS(_soundFile);
+        writeS(soundFile);
         writeD(hasCenterObject); //0 for quest; 1 for ship;
         writeD(objectId); //0 for quest; objectId of ship
         writeD(x); //x

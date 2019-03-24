@@ -3,7 +3,6 @@ package l2trunk.gameserver.network;
 import l2trunk.commons.net.nio.impl.MMOClient;
 import l2trunk.commons.net.nio.impl.MMOConnection;
 import l2trunk.gameserver.SecondaryPasswordAuth;
-import l2trunk.gameserver.dao.CharacterDAO;
 import l2trunk.gameserver.database.DatabaseFactory;
 import l2trunk.gameserver.model.CharSelectInfoPackage;
 import l2trunk.gameserver.model.GameObjectsStorage;
@@ -26,46 +25,29 @@ import java.util.stream.Collectors;
 
 
 public final class GameClient extends MMOClient<MMOConnection<GameClient>> {
-    public static final String NO_IP = "?.?.?.?";
-    private static final Logger _log = LoggerFactory.getLogger(GameClient.class);
-    public static boolean SESSION_OK = MMOClient.SESSION_OK;
-    private static byte[] _keyClientEn = new byte[8];
-    private final GameCrypt _crypt;
-    private List<Integer> _charSlotMapping = new ArrayList<>();
-    private GameClientState _state;
-    private SecondaryPasswordAuth _secondaryAuth;
-    private String _fileId = "";
-    private int _systemVer = -1;
-    private int _serverId;
+    private static final Logger LOG = LoggerFactory.getLogger(GameClient.class);
+    private final GameCrypt crypt;
+    private List<Integer> charSlotMapping = new ArrayList<>();
+    private GameClientState state;
+    private SecondaryPasswordAuth secondaryAuth;
+    private int serverId;
     /**
      * Данные аккаунта
      */
     private String login;
-    private Player _activeChar;
+    private Player activeChar;
     private SessionKey _sessionKey;
-    private String _ip = NO_IP;
-    private int revision = 0;
-    private boolean _gameGuardOk = false;
-    private int _failedPackets = 0;
+    private String ip = "?.?.?.?";
+    private int failedPackets = 0;
     private int _unknownPackets = 0;
-    private int _instanceCount;
-    private boolean _isProtected;
 
     public GameClient(MMOConnection<GameClient> con) {
         super(con);
 
-        _state = GameClientState.CONNECTED;
-        _crypt = new GameCrypt();
+        state = GameClientState.CONNECTED;
+        crypt = new GameCrypt();
         if (con != null)
-            _ip = con.getSocket().getInetAddress().getHostAddress();
-    }
-
-    public static byte[] getKeyClientEn() {
-        return _keyClientEn;
-    }
-
-    public static void setKeyClientEn(byte[] key) {
-        _keyClientEn = key;
+            ip = con.getSocket().getInetAddress().getHostAddress();
     }
 
     @Override
@@ -103,8 +85,8 @@ public final class GameClient extends MMOClient<MMOConnection<GameClient>> {
             return;
         }
 
-        if ((_activeChar != null) && (_activeChar.objectId() == objId)) {
-            _activeChar.setDeleteTimer(0);
+        if ((activeChar != null) && (activeChar.objectId() == objId)) {
+            activeChar.setDeleteTimer(0);
         }
 
         try (Connection con = DatabaseFactory.getInstance().getConnection();
@@ -112,7 +94,7 @@ public final class GameClient extends MMOClient<MMOConnection<GameClient>> {
             statement.setInt(1, objId);
             statement.execute();
         } catch (SQLException e) {
-            _log.error("Error on markRestoredChar ", e);
+            LOG.error("Error on markRestoredChar ", e);
         }
     }
 
@@ -122,8 +104,8 @@ public final class GameClient extends MMOClient<MMOConnection<GameClient>> {
             return;
         }
 
-        if ((_activeChar != null) && (_activeChar.objectId() == objId)) {
-            _activeChar.setDeleteTimer((int) (System.currentTimeMillis() / 1000));
+        if ((activeChar != null) && (activeChar.objectId() == objId)) {
+            activeChar.setDeleteTimer((int) (System.currentTimeMillis() / 1000));
         }
 
         try (Connection con = DatabaseFactory.getInstance().getConnection();
@@ -132,22 +114,8 @@ public final class GameClient extends MMOClient<MMOConnection<GameClient>> {
             statement.setInt(2, objId);
             statement.execute();
         } catch (SQLException e) {
-            _log.error("error on markToDeleteChar:", e);
+            LOG.error("error on markToDeleteChar:", e);
         }
-    }
-
-    public void deleteChar(int charslot) {
-        // have to make sure active character must be nulled
-        if (_activeChar != null) {
-            return;
-        }
-
-        int objid = getObjectIdForSlot(charslot);
-        if (objid == -1) {
-            return;
-        }
-
-        CharacterDAO.deleteCharByObjId(objid);
     }
 
     public Player loadCharFromDisk(int charSlot, int objectId) {
@@ -164,11 +132,11 @@ public final class GameClient extends MMOClient<MMOConnection<GameClient>> {
                 return null;
             } else {
                 oldPlayer.sendPacket(SystemMsg.ANOTHER_PERSON_HAS_LOGGED_IN_WITH_THE_SAME_ACCOUNT);
-                //Kicking real getPlayer that was on the char
+                //Kicking real player that was on the char
                 GameClient oldClient = oldPlayer.getNetConnection();
                 if (oldClient != null) {
                     oldClient.setActiveChar(null);
-                    oldClient.closeNow(false);
+                    oldClient.closeNow();
                 }
                 oldPlayer.setNetConnection(this);
                 character = oldPlayer;
@@ -182,30 +150,26 @@ public final class GameClient extends MMOClient<MMOConnection<GameClient>> {
         if (character != null) {
             setActiveChar(character);
         } else {
-            _log.warn("could not restore obj_id: " + objectId + " in slot:" + charSlot);
+            LOG.warn("could not restore obj_id: " + objectId + " in slot:" + charSlot);
         }
 
         return character;
     }
 
     public int getObjectIdForSlot(int charslot) {
-        if ((charslot < 0) || (charslot >= _charSlotMapping.size())) {
-            _log.warn(getLogin() + " tried to modify Character in slot " + charslot + " but no characters exits at that slot.");
+        if ((charslot < 0) || (charslot >= charSlotMapping.size())) {
+            LOG.warn(getLogin() + " tried to modify Character in slot " + charslot + " but no characters exits at that slot.");
             return -1;
         }
-        return _charSlotMapping.get(charslot);
-    }
-
-    public int getSlotForObjectId(int objectId) {
-        return _charSlotMapping.indexOf(objectId);
+        return charSlotMapping.get(charslot);
     }
 
     public Player getActiveChar() {
-        return _activeChar;
+        return activeChar;
     }
 
     public void setActiveChar(Player player) {
-        _activeChar = player;
+        activeChar = player;
         if (player != null) {
             player.setNetConnection(this);
         }
@@ -231,29 +195,20 @@ public final class GameClient extends MMOClient<MMOConnection<GameClient>> {
     }
 
     public void setCharSelection(List<CharSelectInfoPackage> chars) {
-        _charSlotMapping = chars.stream()
+        charSlotMapping = chars.stream()
                 .map(CharSelectInfoPackage::getObjectId)
                 .collect(Collectors.toList());
     }
 
-    public int getRevision() {
-        return revision;
-    }
-
-    public void setRevision(int revision) {
-        this.revision = revision;
-    }
-
     @Override
-    public boolean encrypt(final ByteBuffer buf, final int size) {
-        _crypt.encrypt(buf.array(), buf.position(), size);
+    public void encrypt(final ByteBuffer buf, final int size) {
+        crypt.encrypt(buf.array(), buf.position(), size);
         buf.position(buf.position() + size);
-        return true;
     }
 
     @Override
     public boolean decrypt(ByteBuffer buf, int size) {
-        return _crypt.decrypt(buf.array(), buf.position(), size);
+        return crypt.decrypt(buf.array(), buf.position(), size);
     }
 
     public void sendPacket(L2GameServerPacket gsp) {
@@ -281,84 +236,50 @@ public final class GameClient extends MMOClient<MMOConnection<GameClient>> {
     }
 
     public String getIpAddr() {
-        return _ip;
+        return ip;
     }
 
     public byte[] enableCrypt() {
         byte[] key = BlowFishKeygen.getRandomKey();
-        _crypt.setKey(key);
+        crypt.setKey(key);
 
-        return key;
-    }
-
-    public byte[] getDecryptedProtocol(byte[] key) {
-        _crypt.setKey(key);
         return key;
     }
 
     public GameClientState getState() {
-        return _state;
+        return state;
     }
 
     public void setState(GameClientState state) {
-        _state = state;
+        this.state = state;
     }
 
     public void onPacketReadFail() {
-        if (_failedPackets++ >= 10) {
-            _log.warn("Too many client packet fails, connection closed : " + this);
-            closeNow(true);
+        if (failedPackets++ >= 10) {
+            LOG.warn("Too many client packet fails, connection closed : " + this);
+            closeNow();
         }
     }
 
     void onUnknownPacket() {
         if (_unknownPackets++ >= 10) {
-            _log.warn("Too many client unknown packets, connection closed : " + this);
-            closeNow(true);
+            LOG.warn("Too many client unknown packets, connection closed : " + this);
+            closeNow();
         }
     }
 
     @Override
     public String toString() {
-        return _state + " IP: " + getIpAddr() + (login == null ? "" : " Account: " + login) + (_activeChar == null ? "" : " Player : " + _activeChar);
+        return state + " IP: " + getIpAddr() + (login == null ? "" : " Account: " + login) + (activeChar == null ? "" : " Player : " + activeChar);
     }
 
     public SecondaryPasswordAuth getSecondaryAuth() {
-        return _secondaryAuth;
+        return secondaryAuth;
     }
 
-    public boolean isGameGuardOk() {
-        return _gameGuardOk;
-    }
-
-    public void setGameGuardOk(boolean gameGuardOk) {
-        _gameGuardOk = gameGuardOk;
-    }
-
-
-    public String getFileId() {
-        return _fileId;
-    }
-
-    public void setFileId(String fileId) {
-        this._fileId = fileId;
-    }
-
-    public int getSystemVer() {
-        return _systemVer;
-    }
-
-
-    public void setSystemVersion(int ver) {
-        _systemVer = ver;
-    }
 
     public int getServerId() {
-        return _serverId;
-    }
-
-    public void setServerId(int serverId) {
-        _serverId = serverId;
+        return serverId;
     }
 
     public enum GameClientState {

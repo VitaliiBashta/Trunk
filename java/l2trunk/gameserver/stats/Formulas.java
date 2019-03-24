@@ -670,7 +670,7 @@ public final class Formulas {
         if (debugCaster && et == null)
             ((Player)caster).sendMessage("Chance Initial: " + env.value);
         else if (debugCaster)
-            caster.getPlayer().sendMessage("Chance Initial: " + env.value + " effect type " + et.getEffectType().name());
+            ((Player)caster).sendMessage("Chance Initial: " + env.value + " effect type " + et.getEffectType().name());
 
         double mAtkMod;
         if (skill.isMagic()) {
@@ -708,7 +708,7 @@ public final class Formulas {
             env.value *= deltaMod;
 
             if (debugCaster)
-                caster.getPlayer().sendMessage("LvlModif: " + deltaMod + " chance " + env.value);
+                ((Player)caster).sendMessage("LvlModif: " + deltaMod + " chance " + env.value);
         }
 
         double resMod = 1.0;

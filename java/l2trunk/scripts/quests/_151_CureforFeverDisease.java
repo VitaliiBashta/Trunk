@@ -12,8 +12,6 @@ public final class _151_CureforFeverDisease extends Quest {
     private static final int ROUND_SHIELD = 102;
 
     public _151_CureforFeverDisease() {
-        super(false);
-
         addStartNpc(30050);
 
         addTalkId(30032);
@@ -49,7 +47,7 @@ public final class _151_CureforFeverDisease extends Quest {
                     htmltext = "30050-01.htm";
                     st.exitCurrentQuest();
                 }
-            } else if (cond == 1 && st.getQuestItemsCount(POISON_SAC) == 0 && st.getQuestItemsCount(FEVER_MEDICINE) == 0)
+            } else if (cond == 1 && !st.haveAnyQuestItems(POISON_SAC,FEVER_MEDICINE))
                 htmltext = "30050-04.htm";
             else if (cond == 1 && st.haveQuestItem(POISON_SAC))
                 htmltext = "30050-05.htm";
@@ -82,9 +80,9 @@ public final class _151_CureforFeverDisease extends Quest {
     @Override
     public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
-        if ((npcId == 20103 || npcId == 20106 || npcId == 20108) && st.getQuestItemsCount(POISON_SAC) == 0 && st.getCond() == 1 && Rnd.chance(50)) {
+        if ((npcId == 20103 || npcId == 20106 || npcId == 20108)  && st.getCond() == 1 && Rnd.chance(50)) {
             st.setCond(2);
-            st.giveItems(POISON_SAC);
+            st.giveItemIfNotHave(POISON_SAC);
             st.playSound(SOUND_MIDDLE);
         }
     }

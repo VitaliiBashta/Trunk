@@ -5,6 +5,9 @@ import l2trunk.gameserver.GameTimeController;
 public final class ClientSetTime extends L2GameServerPacket {
     public static final L2GameServerPacket STATIC = new ClientSetTime();
 
+    private ClientSetTime() {
+    }
+
     @Override
     protected final void writeImpl() {
         writeC(0xf2);

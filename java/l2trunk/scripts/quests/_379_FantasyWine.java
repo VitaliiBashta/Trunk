@@ -20,8 +20,6 @@ public final class _379_FantasyWine extends Quest {
     private final List<Integer> REWARD = List.of(5956, 5957, 5958);
 
     public _379_FantasyWine() {
-        super(false);
-
         addStartNpc(HARLAN);
 
         addKillId(Enku_Orc_Champion, Enku_Orc_Shaman);
@@ -32,7 +30,7 @@ public final class _379_FantasyWine extends Quest {
         String htmltext = event;
         if ("hitsran_q0379_06.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.start();;
+            st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("reward".equalsIgnoreCase(event)) {
             st.takeAllItems(LEAF_OF_EUCALYPTUS, STONE_OF_CHILL);
@@ -99,15 +97,14 @@ public final class _379_FantasyWine extends Quest {
     public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         if (st.getCond() == 1) {
-            if (npcId == Enku_Orc_Champion && !st.haveQuestItem(LEAF_OF_EUCALYPTUS, 80))
-                st.giveItems(LEAF_OF_EUCALYPTUS);
-            else if (npcId == Enku_Orc_Shaman && !st.haveQuestItem(STONE_OF_CHILL, 100))
-                st.giveItems(STONE_OF_CHILL);
+            if (npcId == Enku_Orc_Champion)
+                st.giveItemIfNotHave(LEAF_OF_EUCALYPTUS, 80);
+            else if (npcId == Enku_Orc_Shaman)
+                st.giveItemIfNotHave(STONE_OF_CHILL, 100);
             if (st.haveQuestItem(LEAF_OF_EUCALYPTUS, 80) && st.haveQuestItem(STONE_OF_CHILL, 100)) {
                 st.playSound(SOUND_MIDDLE);
                 st.setCond(2);
-            } else
-                st.playSound(SOUND_ITEMGET);
+            }
         }
     }
 }

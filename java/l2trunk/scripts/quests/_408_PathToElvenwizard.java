@@ -35,8 +35,6 @@ public final class _408_PathToElvenwizard extends Quest {
     private final int LUCKY_POTPOURI_ID = 1274;
 
     public _408_PathToElvenwizard() {
-        super(false);
-
         addStartNpc(ROSELLA);
 
         addTalkId(GREENIS,THALIA,NORTHWIND);

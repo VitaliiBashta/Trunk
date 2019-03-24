@@ -15,7 +15,6 @@ import l2trunk.gameserver.model.entity.events.GlobalEvent;
 import l2trunk.gameserver.model.entity.events.impl.DuelEvent;
 import l2trunk.gameserver.model.instances.PetInstance;
 import l2trunk.gameserver.model.items.ItemInstance;
-import l2trunk.gameserver.model.items.PetInventory;
 import l2trunk.gameserver.network.serverpackets.*;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.scripts.Events;
@@ -48,7 +47,7 @@ public abstract class Summon extends Playable {
         super(objectId, template);
         this.owner = owner;
         template.getSkills().values().stream()
-                .mapToInt(s->s.id)
+                .mapToInt(s -> s.id)
                 .forEach(this::addSkill);
 
         setLoc(Location.findPointToStay(owner, 100));
@@ -91,10 +90,12 @@ public abstract class Summon extends Playable {
     }
 
     // this defines the action buttons, 1 for Summon, 2 for Pets
-    public int getSummonType(){
+    public int getSummonType() {
         if (this instanceof PetInstance) return 2;
         else return 1;
-    };
+    }
+
+    ;
 
     public abstract int getEffectIdentifier();
 
@@ -227,7 +228,7 @@ public abstract class Summon extends Playable {
 
             DuelEvent duelEvent = getEvent(DuelEvent.class);
             if ((owner.getPvpFlag() > 0) || owner.atMutualWarWith(pk)) {
-                pk.setPvpKills(pk.getPvpKills() + 1);
+                pk.incPvpKills();
             } else if (((duelEvent == null) || (duelEvent != pk.getEvent(DuelEvent.class))) && (getKarma() <= 0)) {
                 int pkCountMulti = Math.max(pk.getPkKills() / 2, 1);
                 pk.increaseKarma(Config.KARMA_MIN_KARMA * pkCountMulti);
@@ -531,11 +532,6 @@ public abstract class Summon extends Playable {
         return owner.getTeam();
     }
 
-    @Override
-    public Player getPlayer() {
-        return owner;
-    }
-
     public abstract double getExpPenalty();
 
     @Override
@@ -593,20 +589,15 @@ public abstract class Summon extends Playable {
 
     @Override
     public <E extends GlobalEvent> E getEvent(Class<E> eventClass) {
-        if (owner == null) {
-            return super.getEvent(eventClass);
-        } else {
-            return owner.getEvent(eventClass);
-        }
+        if (owner == null) return super.getEvent(eventClass);
+        return owner.getEvent(eventClass);
     }
 
     @Override
     public Set<GlobalEvent> getEvents() {
-        if (owner == null) {
-            return super.getEvents();
-        } else {
-            return owner.getEvents();
-        }
+        if (owner == null) return super.getEvents();
+        return owner.getEvents();
+
     }
 
     @Override

@@ -12,7 +12,6 @@ import l2trunk.gameserver.model.quest.QuestState;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public final class _230_TestOfSummoner extends Quest {
@@ -72,10 +71,10 @@ public final class _230_TestOfSummoner extends Quest {
     private static final int CRYSTAL_OF_VICTORY6_ID = 3389;
     private static final List<String> VARS = List.of(
             "Almors", "Camoniell", "Belthus", "Basilla", "Celestiel", "Brynthea");
-    private static final List<Integer> npc = List.of(
+    private static final List<Integer> NPCS = List.of(
             30063, 30634, 30635, 30636, 30637, 30638, 30639, 30640);
-    private static final int Lara = npc.get(0);
-    private static final int Galatea = npc.get(1);
+    private static final int Lara = NPCS.get(0);
+    private static final int Galatea = NPCS.get(1);
     private static final int[][] SUMMONERS = {
             {
                     30635,
@@ -318,11 +317,9 @@ public final class _230_TestOfSummoner extends Quest {
 
 
     public _230_TestOfSummoner() {
-        super(false);
-
         addStartNpc(Galatea);
 
-        addTalkId(npc);
+        addTalkId(NPCS);
         addKillId(DROPLIST_LARA.keySet());
         addKillId(DROPLIST_SUMMON.keySet());
         addAttackId(DROPLIST_SUMMON.keySet());
@@ -349,24 +346,23 @@ public final class _230_TestOfSummoner extends Quest {
         else if ("30063-02.htm".equalsIgnoreCase(event)) { // Lara first time to give a list out
             int random = Rnd.get(5) + 1;
             st.giveItems(LISTS[random][0]);
-            st.takeItems(GALATEAS_LETTER_ID, 1);
+            st.takeItems(GALATEAS_LETTER_ID);
             st.set("Lara_Part", random);
             st.set("step", 2);
             st.setCond(2);
-        } else if (event.equalsIgnoreCase("30063-04.htm")) { // Lara later to give a list out
+        } else if ("30063-04.htm".equalsIgnoreCase(event)) { // Lara later to give a list out
             int random = Rnd.get(5) + 1;
             st.giveItems(LISTS[random][0], 1, false);
             st.set("Lara_Part", random);
-        } else if (event.equalsIgnoreCase("30635-02.htm")) { // Almors' Part, this is the same just other items below.. so just one time comments
-            if (st.getQuestItemsCount(BEGINNERS_ARCANA_ID) > 0) { // if( the getPlayer has more then one beginners' arcana he can start a fight against the masters summon
+        } else if ("30635-02.htm".equalsIgnoreCase(event)) { // Almors' Part, this is the same just other items below.. so just one time comments
+            if (st.haveQuestItem(BEGINNERS_ARCANA_ID) ) { // if( the getPlayer has more then one beginners' arcana he can start a fight against the masters summon
                 htmltext = "30635-03.htm";
                 st.set("Almors", 2);
             }
         } // set state ready to fight
         else if ("30635-04.htm".equalsIgnoreCase(event)) {
             st.giveItems(CRYSTAL_OF_PROGRESS1_ID); // give Starting Crystal
-            st.takeItems(CRYSTAL_OF_FOUL1_ID); // just in case he cheated or loses
-            st.takeItems(CRYSTAL_OF_DEFEAT1_ID);
+            st.takeAllItems(CRYSTAL_OF_FOUL1_ID, CRYSTAL_OF_DEFEAT1_ID);
             st.takeItems(BEGINNERS_ARCANA_ID, 1);
         } // this takes one Beginner Arcana and set Beginner_Arcana stat -1
         else if ("30636-02.htm".equalsIgnoreCase(event)) { // Camoniell's Part

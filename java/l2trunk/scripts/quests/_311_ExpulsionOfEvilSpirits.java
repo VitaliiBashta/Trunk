@@ -26,7 +26,6 @@ public final class _311_ExpulsionOfEvilSpirits extends Quest {
             22691, 22692, 22693, 22694, 22695, 22696, 22697, 22698, 22699, 22701, 22702);
 
     public _311_ExpulsionOfEvilSpirits() {
-        super(false);
         addStartNpc(Chairen);
         addKillId(MOBS);
         addQuestItem(RagnaOrcAmulet, SoulCoreContainingEvilSpirit);
@@ -52,7 +51,7 @@ public final class _311_ExpulsionOfEvilSpirits extends Quest {
             } else
                 htmltext = "chairen_q311_06b.htm";
         } else {
-            int id = toInt(event, 0);
+            int id = toInt(event);
 
 
             if (id > 0) {

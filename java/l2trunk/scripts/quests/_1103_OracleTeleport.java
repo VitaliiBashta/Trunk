@@ -36,7 +36,6 @@ public final class _1103_OracleTeleport extends Quest {
     private static final Location DUSK_LOCATION = Location.of(-81261, 86531, -5157);
 
     public _1103_OracleTeleport() {
-        super(false);
 
         addStartNpc(IntStream.rangeClosed(31078, 31091).toArray());
 
@@ -50,9 +49,9 @@ public final class _1103_OracleTeleport extends Quest {
     public String onTalk(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         Player player = st.player;
-        String back = player.getVar("FestivalBackCoords");
-        if (back == null)
-            back = "1";
+        int back = player.getVarInt("FestivalBackCoords");
+        if (back == 0)
+            back = 1;
 
         // Dawn Locations
 
@@ -196,67 +195,67 @@ public final class _1103_OracleTeleport extends Quest {
 
         htmltext = "Completed.htm";
         // back to Gludin Village
-        if (back.equals("1")) {
+        if (back == 1) {
             player.teleToLocation(-80826, 149775, -3043);
             return htmltext;
         }
 
         // back to Gludio Castle Town
-        if (back.equals("2")) {
+        if (back == 2) {
             player.teleToLocation(-12672, 122776, -3116);
             return htmltext;
         }
 
         // back to Dion Castle Town
-        if (back.equals("3")) {
+        if (back == 3) {
             player.teleToLocation(15670, 142983, -2705);
             return htmltext;
         }
 
         // back to Giran Castle Town
-        if (back.equals("4")) {
+        if (back == 4) {
             player.teleToLocation(83400, 147943, -3404);
             return htmltext;
         }
 
         // back to Town of Oren
-        if (back.equals("5")) {
+        if (back == 5) {
             player.teleToLocation(82956, 53162, -1495);
             return htmltext;
         }
 
         // back to Town of Aden
-        if (back.equals("6")) {
+        if (back == 6) {
             player.teleToLocation(146331, 25762, -2018);
             return htmltext;
         }
 
         // back to Heine
-        if (back.equals("7")) {
+        if (back == 7) {
             player.teleToLocation(111409, 219364, -3545);
             return htmltext;
         }
 
         // back to Goddard
-        if (back.equals("8")) {
+        if (back == 8) {
             player.teleToLocation(147928, -55273, -2734);
             return htmltext;
         }
 
         // back to Rune
-        if (back.equals("9")) {
+        if (back == 9) {
             player.teleToLocation(43799, -47727, -798);
             return htmltext;
         }
 
         // back to Schuttgart
-        if (back.equals("10")) {
+        if (back == 10) {
             player.teleToLocation(87386, -143246, -1293);
             return htmltext;
         }
 
         // back to Hunters Village
-        if (back.equals("11")) {
+        if (back == 11) {
             player.teleToLocation(116819, 76994, -2714);
             return htmltext;
         }

@@ -20,8 +20,6 @@ public final class _661_TheHarvestGroundsSafe extends Quest {
     private static final int CLOUDY_GEM = 8284;
 
     public _661_TheHarvestGroundsSafe() {
-        super(false);
-
         addStartNpc(NORMAN);
 
         addKillId(GIANT_POISON_BEE,CLOYDY_BEAST,YOUNG_ARANEID);
@@ -41,10 +39,10 @@ public final class _661_TheHarvestGroundsSafe extends Quest {
             long GEM = st.getQuestItemsCount(CLOUDY_GEM);
 
             if (STING + GEM + TALON >= 10) {
-                st.giveItems(ADENA_ID, STING * 50 + GEM * 60 + TALON * 70 + 2800);
+                st.giveAdena( STING * 50 + GEM * 60 + TALON * 70 + 2800);
                 st.takeAllItems(STING_OF_GIANT_POISON,TALON_OF_YOUNG_ARANEID, CLOUDY_GEM);
             } else {
-                st.giveItems(ADENA_ID, STING * 50 + GEM * 60 + TALON * 70);
+                st.giveAdena( STING * 50 + GEM * 60 + TALON * 70);
                 st.takeAllItems(STING_OF_GIANT_POISON,TALON_OF_YOUNG_ARANEID,CLOUDY_GEM);
             }
             st.playSound(SOUND_MIDDLE);

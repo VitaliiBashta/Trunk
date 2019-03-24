@@ -9,8 +9,6 @@ public final class _155_FindSirWindawood extends Quest {
     private static final int HASTE_POTION = 734;
 
     public _155_FindSirWindawood() {
-        super(false);
-
         addStartNpc(30042);
 
         addTalkId(30311);
@@ -42,9 +40,9 @@ public final class _155_FindSirWindawood extends Quest {
                 }
                 htmltext = "30042-02.htm";
                 st.exitCurrentQuest();
-            } else if (cond == 1 && st.getQuestItemsCount(OFFICIAL_LETTER) == 1)
+            } else if (cond == 1 && st.haveQuestItem(OFFICIAL_LETTER))
                 htmltext = "30042-05.htm";
-        } else if (npcId == 30311 && cond == 1 && st.getQuestItemsCount(OFFICIAL_LETTER) == 1) {
+        } else if (npcId == 30311 && cond == 1 && st.haveQuestItem(OFFICIAL_LETTER)) {
             htmltext = "30311-01.htm";
             st.takeItems(OFFICIAL_LETTER);
             st.giveItems(HASTE_POTION);

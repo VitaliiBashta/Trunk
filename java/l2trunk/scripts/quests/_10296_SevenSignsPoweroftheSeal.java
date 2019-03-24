@@ -22,7 +22,6 @@ public final class _10296_SevenSignsPoweroftheSeal extends Quest {
     private static final Location hiddenLoc = Location.of(120744, -87432, -3392);
 
     public _10296_SevenSignsPoweroftheSeal() {
-        super(false);
         addStartNpc(Eris);
         addTalkId(ElcardiaInzone1, ElcardiaHome, Hardin, Wood, Franz);
         addKillId(EtisEtina);
@@ -59,7 +58,7 @@ public final class _10296_SevenSignsPoweroftheSeal extends Quest {
         } else if ("franz_q10296_3.htm".equalsIgnoreCase(event)) {
             if (player.getLevel() >= 81) {
                 st.addExpAndSp(225000000, 22500000);
-                st.giveItems(17265, 1);
+                st.giveItems(17265);
                 st.complete();
                 st.playSound(SOUND_FINISH);
                 st.finish();

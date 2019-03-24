@@ -10,18 +10,21 @@ import java.util.stream.Stream;
 
 public interface PlayerGroup extends Iterable<Player> {
 
-    int size();
+    default int size(){
+        return getMembers().size();
+    }
 
-    Player getLeader();
+    default Player getLeader(){
+        return getMembers().get(0);
+    };
 
     default Stream<Player> getMembersStream() {
         return getMembers().stream();
     }
 
+    List<Player> getMembers();
 
-    Collection<Player> getMembers();
-
-    boolean containsMember(Player player);
+//    boolean containsMember(Player player);
 
     default void sendPacket(IStaticPacket... packets) {
         getMembersStream().forEach(p -> p.sendPacket(packets));

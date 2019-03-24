@@ -39,10 +39,7 @@ public final class _319_ScentOfDeath extends Quest {
 
 
     public _319_ScentOfDeath() {
-        super(false);
-
         addStartNpc(MINALESS);
-        addTalkId(MINALESS);
         //mob Drop
         for (int[] aDROPLIST_COND : DROPLIST_COND) addKillId(aDROPLIST_COND[2]);
 
@@ -51,7 +48,7 @@ public final class _319_ScentOfDeath extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("mina_q0319_04.htm")) {
+        if ("mina_q0319_04.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.start();
             st.playSound(SOUND_ACCEPT);
@@ -95,15 +92,14 @@ public final class _319_ScentOfDeath extends Quest {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         for (int[] aDROPLIST_COND : DROPLIST_COND)
-            if (cond == aDROPLIST_COND[0] && npcId == aDROPLIST_COND[2])
-                if (aDROPLIST_COND[3] == 0 || st.haveQuestItem(aDROPLIST_COND[3]))
-                    if (aDROPLIST_COND[5] == 0)
-                        st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[6]);
-                    else if (st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[7], aDROPLIST_COND[5], aDROPLIST_COND[6]))
-                        if (aDROPLIST_COND[1] != cond && aDROPLIST_COND[1] != 0) {
-                            st.setCond(aDROPLIST_COND[1]);
-                            st.start();
-                        }
+            if (cond == 1 && npcId == aDROPLIST_COND[2]) {
+                if (aDROPLIST_COND[5] == 0)
+                    st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[6]);
+                else if (st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[7], aDROPLIST_COND[5], aDROPLIST_COND[6])) {
+                    st.setCond(aDROPLIST_COND[1]);
+                    st.start();
+                }
+            }
     }
 
 }

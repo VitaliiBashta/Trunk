@@ -25,7 +25,6 @@ public final class _708_PathToBecomingALordGludio extends Quest {
     private static final int GludioCastle = 1;
 
     public _708_PathToBecomingALordGludio() {
-        super(false);
         addStartNpc(Sayres);
         addTalkId(Pinter, Bathis);
         addQuestItem(HeadlessKnightsArmor);

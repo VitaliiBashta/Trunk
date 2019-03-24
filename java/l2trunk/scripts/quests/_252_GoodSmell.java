@@ -14,7 +14,6 @@ public final class _252_GoodSmell extends Quest {
     private static final int SelMahumCookbookPage = 15501;
 
     public _252_GoodSmell() {
-        super(false);
         addStartNpc(GuardStan);
         addKillId(SelMahums);
         addKillId(SelChef);
@@ -65,7 +64,7 @@ public final class _252_GoodSmell extends Quest {
                 st.rollAndGive(SelMahumDiary, 1, 15);
             if (st.getQuestItemsCount(SelMahumCookbookPage) < 5 && npc.getNpcId() == SelChef)
                 st.rollAndGive(SelMahumCookbookPage, 1, 10);
-            if (st.getQuestItemsCount(SelMahumDiary) >= 10 && st.getQuestItemsCount(SelMahumCookbookPage) >= 5)
+            if (st.haveQuestItem(SelMahumDiary, 10) && st.haveQuestItem(SelMahumCookbookPage, 5))
                 st.setCond(2);
         }
     }

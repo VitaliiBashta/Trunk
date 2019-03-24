@@ -7,11 +7,6 @@ import l2trunk.gameserver.model.quest.QuestState;
 
 import java.util.List;
 
-/**
- * @author pchayka
- * Daily quest
- * ВНИМАНИЕ! Данный квест можно выполнять не только группой, но и командным каналом, все персонажи в командном канале имеют шанс получить квестовые предметы. После убийства боссов будут появляться специальные НПЦ - мертвые тела боссов, для получения квестовых предметов необходимо будет "поговорить" с этим НПЦ.
- */
 public final class _456_DontKnowDontCare extends Quest {
     private static final List<Integer> SeparatedSoul = List.of(32864, 32865, 32866, 32867, 32868, 32869, 32870);
     private static final int DrakeLordsEssence = 17251;

@@ -10,10 +10,7 @@ public final class _320_BonesTellFuture extends Quest {
     private final int BONE_FRAGMENT = 809;
 
     public _320_BonesTellFuture() {
-        super(false);
-
         addStartNpc(30359);
-        addTalkId(30359);
 
         addKillId(20517,20518);
 

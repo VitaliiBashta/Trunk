@@ -19,7 +19,6 @@ public final class _341_HuntingForWildBeasts extends Quest {
     private static final int BEAR_SKIN_CHANCE = 40;
 
     public _341_HuntingForWildBeasts() {
-        super(false);
         addStartNpc(PANO);
         addKillId(Red_Bear,Dion_Grizzly,Brown_Bear,Grizzly_Bear);
         addQuestItem(BEAR_SKIN);
@@ -55,7 +54,7 @@ public final class _341_HuntingForWildBeasts extends Quest {
             if (st.haveQuestItem(BEAR_SKIN, 20)) {
                 htmltext = "pano_q0341_05.htm";
                 st.takeItems(BEAR_SKIN);
-                st.giveItems(ADENA_ID, 3710);
+                st.giveAdena( 3710);
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest();
             } else

@@ -13,7 +13,6 @@ public final class _113_StatusOfTheBeaconTower extends Quest {
     private static final int BOX = 8086;
 
     public _113_StatusOfTheBeaconTower() {
-        super(false);
         addStartNpc(MOIRA);
         addTalkId(TORRANT);
 
@@ -22,15 +21,15 @@ public final class _113_StatusOfTheBeaconTower extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("seer_moirase_q0113_0104.htm")) {
+        if ("seer_moirase_q0113_0104.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
-            st.giveItems(BOX, 1);
+            st.giveItems(BOX);
             st.start();
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("torant_q0113_0201.htm")) {
-            st.giveItems(ADENA_ID, 154800);
+        } else if ("torant_q0113_0201.htm".equalsIgnoreCase(event)) {
+            st.giveAdena( 154800);
             st.addExpAndSp(619300, 44200);
-            st.takeItems(BOX, 1);
+            st.takeItems(BOX);
             st.playSound(SOUND_FINISH);
             st.finish();
         }
@@ -55,7 +54,7 @@ public final class _113_StatusOfTheBeaconTower extends Quest {
                 }
             } else if (cond == 1)
                 htmltext = "seer_moirase_q0113_0105.htm";
-        } else if (npcId == TORRANT && st.getQuestItemsCount(BOX) == 1)
+        } else if (npcId == TORRANT && st.haveQuestItem(BOX))
             htmltext = "torant_q0113_0101.htm";
         return htmltext;
     }

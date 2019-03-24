@@ -39,7 +39,7 @@ public class AuthLogin extends L2GameClientPacket {
         client.setLoginName(_loginName);
 
         if (Shutdown.getInstance().getMode() != Shutdown.NONE && Shutdown.getInstance().getSeconds() <= 15)
-            client.closeNow(false);
+            client.closeNow();
         else {
             if (AuthServerCommunication.getInstance().isShutdown()) {
                 client.close(new LoginFail(LoginFail.SYSTEM_ERROR_LOGIN_LATER));

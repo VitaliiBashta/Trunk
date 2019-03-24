@@ -19,7 +19,6 @@ public final class _275_BlackWingedSpies extends Quest {
     private static final int Varangkas_Parasite_Chance = 10;
 
     public _275_BlackWingedSpies() {
-        super(false);
         addStartNpc(Tantus);
         addKillId(Darkwing_Bat, Varangkas_Tracker);
         addQuestItem(Darkwing_Bat_Fang, Varangkas_Parasite);

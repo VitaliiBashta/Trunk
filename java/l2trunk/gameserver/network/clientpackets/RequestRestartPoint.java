@@ -23,10 +23,8 @@ import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.TeleportUtils;
 
 public final class RequestRestartPoint extends L2GameClientPacket {
-    private RestartType _restartType;
+    private RestartType restartType;
 
-    //FIXME [VISTALL] вынести куда то?
-    // телепорт к флагу, не обрабатывается, по дефалту
     private static Location defaultLoc(RestartType restartType, Player activeChar) {
         Location loc = null;
         Clan clan = activeChar.getClan();
@@ -66,14 +64,14 @@ public final class RequestRestartPoint extends L2GameClientPacket {
 
     @Override
     protected void readImpl() {
-        _restartType = ArrayUtils.valid(RestartType.VALUES, readD());
+        restartType = ArrayUtils.valid(RestartType.VALUES, readD());
     }
 
     @Override
     protected void runImpl() {
         Player player = getClient().getActiveChar();
 
-        if (_restartType == null || player == null)
+        if (restartType == null || player == null)
             return;
 
         if (player.isFakeDeath()) {
@@ -96,7 +94,7 @@ public final class RequestRestartPoint extends L2GameClientPacket {
             return;
         }
 
-        switch (_restartType) {
+        switch (restartType) {
             case AGATHION:
                 if (player.isAgathionResAvailable())
                     player.doRevive(100);
@@ -121,10 +119,10 @@ public final class RequestRestartPoint extends L2GameClientPacket {
 
                 if (ref == ReflectionManager.DEFAULT)
                     for (GlobalEvent e : player.getEvents())
-                        loc = e.getRestartLoc(player, _restartType);
+                        loc = e.getRestartLoc(player, restartType);
 
                 if (loc == null)
-                    loc = defaultLoc(_restartType, player);
+                    loc = defaultLoc(restartType, player);
 
                 if (loc != null) {
                     Pair<Integer, OnAnswerListener> ask = player.getAskListener(false);

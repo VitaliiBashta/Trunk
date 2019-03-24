@@ -19,20 +19,19 @@ public final class _352_HelpRoodRaiseANewPet extends Quest {
     private static final int LIENRIK_EGG2_Chance = 7;
 
     public _352_HelpRoodRaiseANewPet() {
-        super(false);
         addStartNpc(Rood);
-        addKillId(Lienrik,Lienrik_Lad);
-        addQuestItem(LIENRIK_EGG1,LIENRIK_EGG2);
+        addKillId(Lienrik, Lienrik_Lad);
+        addQuestItem(LIENRIK_EGG1, LIENRIK_EGG2);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        int _state = st.getState();
-        if (event.equalsIgnoreCase("31067-04.htm") && _state == CREATED) {
+        int state = st.getState();
+        if ("31067-04.htm".equalsIgnoreCase(event) && state == CREATED) {
             st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("31067-09.htm") && _state == STARTED) {
+        } else if ("31067-09.htm".equalsIgnoreCase(event) && state == STARTED) {
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest();
         }
@@ -44,9 +43,9 @@ public final class _352_HelpRoodRaiseANewPet extends Quest {
         String htmltext = "noquest";
         if (npc.getNpcId() != Rood)
             return htmltext;
-        int _state = st.getState();
+        int state = st.getState();
 
-        if (_state == CREATED) {
+        if (state == CREATED) {
             if (st.player.getLevel() < 39) {
                 htmltext = "31067-00.htm";
                 st.exitCurrentQuest();
@@ -54,13 +53,12 @@ public final class _352_HelpRoodRaiseANewPet extends Quest {
                 htmltext = "31067-01.htm";
                 st.setCond(0);
             }
-        } else if (_state == STARTED) {
+        } else if (state == STARTED) {
             long reward = st.getQuestItemsCount(LIENRIK_EGG1) * 209 + st.getQuestItemsCount(LIENRIK_EGG2) * 2050;
             if (reward > 0) {
                 htmltext = "31067-08.htm";
-                st.takeItems(LIENRIK_EGG1, -1);
-                st.takeItems(LIENRIK_EGG2, -1);
-                st.giveItems(ADENA_ID, reward);
+                st.takeAllItems(LIENRIK_EGG1, LIENRIK_EGG2);
+                st.giveAdena(reward);
                 st.playSound(SOUND_MIDDLE);
             } else
                 htmltext = "31067-05.htm";

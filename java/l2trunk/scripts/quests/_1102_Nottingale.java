@@ -10,7 +10,6 @@ import l2trunk.gameserver.utils.Location;
 public final class _1102_Nottingale extends Quest {
     private final static int Nottingale = 32627;
     public _1102_Nottingale() {
-        super(false);
         addFirstTalkId(Nottingale);
     }
 

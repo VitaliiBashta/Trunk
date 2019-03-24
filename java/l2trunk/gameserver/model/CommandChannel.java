@@ -8,9 +8,11 @@ import l2trunk.gameserver.network.serverpackets.components.IStaticPacket;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 
@@ -171,8 +173,10 @@ public final class CommandChannel implements PlayerGroup {
     }
 
     @Override
-    public boolean containsMember(Player player) {
-        return commandChannelParties.stream().anyMatch(party -> party.containsMember(player));
+    public List<Player> getMembers() {
+        return commandChannelParties.stream()
+                .flatMap(Party::getMembersStream)
+                .collect(Collectors.toList());
     }
 
     public int getLevel() {

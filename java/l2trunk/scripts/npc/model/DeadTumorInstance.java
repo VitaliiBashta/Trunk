@@ -103,7 +103,7 @@ public final class DeadTumorInstance extends NpcInstance {
                     Location loc = Location.coordsRandomize(Rnd.get(deadTumors).getLoc(), 100, 150);
                     getReflection().getPlayers().forEach(p ->
                             p.sendPacket(new ExShowScreenMessage(NpcString.S1S_PARTY_HAS_MOVED_TO_A_DIFFERENT_LOCATION_THROUGH_THE_CRACK_IN_THE_TUMOR, 8000, ExShowScreenMessage.ScreenMessageAlign.MIDDLE_CENTER, false, 1, -1, false, player.getParty().getLeader().getName())));
-                    player.getParty().getMembersStream().stream()
+                    player.getParty().getMembersStream()
                             .filter(p -> p.isInRange(this, 500))
                             .forEach(p -> p.teleToLocation(loc));
                 }
@@ -116,7 +116,7 @@ public final class DeadTumorInstance extends NpcInstance {
                     getReflection().getPlayers().forEach(p ->
                             p.sendPacket(new ExShowScreenMessage(NpcString.S1S_PARTY_HAS_ENTERED_THE_CHAMBER_OF_EKIMUS_THROUGH_THE_CRACK_IN_THE_TUMOR, 8000, ExShowScreenMessage.ScreenMessageAlign.MIDDLE_CENTER, false, 1, -1, false, player.getParty().getLeader().getName())));
                     ((HeartInfinityAttack) getReflection()).notifyEkimusRoomEntrance();
-                    player.getParty().getMembersStream().stream()
+                    player.getParty().getMembersStream()
                             .filter(p -> p.isInRange(this, 400))
                             .forEach(p -> p.teleToLocation(Location.of(-179548, 209584, -15504)));
                 }

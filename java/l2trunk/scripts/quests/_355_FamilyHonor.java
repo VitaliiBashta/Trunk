@@ -61,19 +61,19 @@ public final class _355_FamilyHonor extends Quest {
                 } else if (appraising < 40) {
                     htmltext = "patrin_q0355_05.htm";
                     st.takeItems(WORK_OF_BERONA, 1);
-                    st.giveItems(STATUE_REPLICA, 1);
+                    st.giveItems(STATUE_REPLICA);
                 } else if (appraising < 60) {
                     htmltext = "patrin_q0355_04.htm";
                     st.takeItems(WORK_OF_BERONA, 1);
-                    st.giveItems(STATUE_ORIGINAL, 1);
+                    st.giveItems(STATUE_ORIGINAL);
                 } else if (appraising < 80) {
                     htmltext = "galicbredo_q0355_10.htm";
                     st.takeItems(WORK_OF_BERONA, 1);
-                    st.giveItems(STATUE_FORGERY, 1);
+                    st.giveItems(STATUE_FORGERY);
                 } else if (appraising < 100) {
                     htmltext = "galicbredo_q0355_11.htm";
                     st.takeItems(WORK_OF_BERONA, 1);
-                    st.giveItems(STATUE_PROTOTYPE, 1);
+                    st.giveItems(STATUE_PROTOTYPE);
                 }
                 break;
             case "galicbredo_q0355_09.htm":
@@ -103,13 +103,13 @@ public final class _355_FamilyHonor extends Quest {
                     long reward = count * 232;
                     if (count >= 100)
                         reward = reward + 5000; // custom - need more info
-                    st.takeItems(GALFREDOS_BUST, count);
-                    st.giveItems(ADENA_ID, reward);
+                    st.takeItems(GALFREDOS_BUST);
+                    st.giveAdena(reward);
                     htmltext = "galicbredo_q0355_07a.htm";
                 } else
                     htmltext = "galicbredo_q0355_08.htm";
         } else if (npcId == PATRIN)
-            if (st.getQuestItemsCount(WORK_OF_BERONA) > 0)
+            if (st.haveQuestItem(WORK_OF_BERONA))
                 htmltext = "patrin_q0355_01.htm";
             else
                 htmltext = "<html><head><body>You have nothing to appraise.</body></html>";

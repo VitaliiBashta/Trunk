@@ -35,11 +35,9 @@ public final class _022_TragedyInVonHellmannForest extends Quest {
     private final int JewelOfAdventurerGreen = 7144;
 
     public _022_TragedyInVonHellmannForest() {
-        super(false);
-
         addStartNpc(Tifaren);
 
-        addTalkId(Tifaren, GhostOfPriest, Innocentin, GhostOfAdventurer, Well);
+        addTalkId( GhostOfPriest, Innocentin, GhostOfAdventurer, Well);
 
         addKillId(SoulOfWell);
 
@@ -69,46 +67,46 @@ public final class _022_TragedyInVonHellmannForest extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("31334-03.htm")) {
+        if ("31334-03.htm".equalsIgnoreCase(event)) {
             st.start();
             st.setCond(3);
-            st.takeItems(CrossOfEinhasad, -1);
-        } else if (event.equalsIgnoreCase("31334-06.htm"))
+            st.takeItems(CrossOfEinhasad);
+        } else if ("31334-06.htm".equalsIgnoreCase(event))
             st.setCond(4);
-        else if (event.equalsIgnoreCase("31334-09.htm")) {
+        else if ("31334-09.htm".equalsIgnoreCase(event)) {
             st.setCond(6);
-            st.takeItems(LostSkullOfElf, 1);
+            st.takeItems(LostSkullOfElf);
             despawnGhostOfPriest();
             spawnGhostOfPriest(st);
-        } else if (event.equalsIgnoreCase("31528-07.htm")) {
+        } else if ("31528-07.htm".equalsIgnoreCase(event)) {
             despawnGhostOfPriest();
             st.setCond(7);
-        } else if (event.equalsIgnoreCase("31328-06.htm")) {
+        } else if ("31328-06.htm".equalsIgnoreCase(event)) {
             st.setCond(8);
-            st.giveItems(LetterOfInnocentin, 1);
-        } else if (event.equalsIgnoreCase("31529-09.htm")) {
+            st.giveItems(LetterOfInnocentin);
+        } else if ("31529-09.htm".equalsIgnoreCase(event)) {
             st.setCond(9);
-            st.takeItems(LetterOfInnocentin, 1);
-        } else if (event.equalsIgnoreCase("explore")) {
+            st.takeItems(LetterOfInnocentin);
+        } else if ("explore".equalsIgnoreCase(event)) {
             despawnSoulOfWell();
             spawnSoulOfWell(st);
             st.setCond(10);
-            st.giveItems(JewelOfAdventurerGreen, 1);
+            st.giveItems(JewelOfAdventurerGreen);
             htmltext = "<html><body>Attack Soul of Well but do not kill while stone will not change colour...</body></html>";
-        } else if (event.equalsIgnoreCase("attack_timer")) {
+        } else if ("attack_timer".equalsIgnoreCase(event)) {
             despawnSoulOfWell();
-            st.giveItems(JewelOfAdventurerRed, 1);
-            st.takeItems(JewelOfAdventurerGreen, -1);
+            st.giveItems(JewelOfAdventurerRed);
+            st.takeItems(JewelOfAdventurerGreen);
             st.setCond(11);
             return null;
-        } else if (event.equalsIgnoreCase("31328-08.htm")) {
+        } else if ("31328-08.htm".equalsIgnoreCase(event)) {
             st.startQuestTimer("wait_timer", 600000);
             st.setCond(15);
             st.takeItems(ReportBox, 1);
-        } else if (event.equalsIgnoreCase("wait_timer")) {
+        } else if ("wait_timer".equalsIgnoreCase(event)) {
             st.setCond(16);
             htmltext = "<html><body>Innocentin wants with you to speak...</body></html>";
-        } else if (event.equalsIgnoreCase("31328-16.htm")) {
+        } else if ("31328-16.htm".equalsIgnoreCase(event)) {
             st.startQuestTimer("next_wait_timer", 300000);
             st.setCond(17);
         } else if (event.equalsIgnoreCase("next_wait_timer"))
@@ -156,7 +154,7 @@ public final class _022_TragedyInVonHellmannForest extends Quest {
             else if (cond == 8)
                 htmltext = "31328-06.htm";
             else if (cond == 14) {
-                if (st.getQuestItemsCount(ReportBox) != 0)
+                if (st.haveQuestItem(ReportBox))
                     htmltext = "31328-07.htm";
                 else {
                     st.setCond(13);
@@ -179,27 +177,27 @@ public final class _022_TragedyInVonHellmannForest extends Quest {
             }
         } else if (npcId == GhostOfAdventurer) {
             if (cond == 8) {
-                if (st.getQuestItemsCount(LetterOfInnocentin) != 0)
+                if (st.haveQuestItem(LetterOfInnocentin))
                     htmltext = "31529-00.htm";
                 else
                     htmltext = "You have no Letter of Innocentin! Are they Please returned to High Priest Innocentin...";
             } else if (cond == 9)
                 htmltext = "31529-09.htm";
             else if (cond == 11) {
-                if (st.getQuestItemsCount(JewelOfAdventurerRed) != 0) {
+                if (st.haveQuestItem(JewelOfAdventurerRed)) {
                     htmltext = "31529-10.htm";
-                    st.takeItems(JewelOfAdventurerRed, 1);
+                    st.takeItems(JewelOfAdventurerRed);
                     st.setCond(12);
                 } else {
                     st.setCond(9);
                     htmltext = "31529-09.htm";
                 }
             } else if (cond == 13)
-                if (st.getQuestItemsCount(SealedReportBox) != 0) {
+                if (st.haveQuestItem(SealedReportBox) ) {
                     htmltext = "31529-11.htm";
                     st.setCond(14);
-                    st.takeItems(SealedReportBox, 1);
-                    st.giveItems(ReportBox, 1);
+                    st.takeItems(SealedReportBox);
+                    st.giveItems(ReportBox);
                 } else {
                     st.setCond(12);
                     htmltext = "31529-10.htm";
@@ -212,14 +210,13 @@ public final class _022_TragedyInVonHellmannForest extends Quest {
                 spawnSoulOfWell(st);
                 st.setCond(10);
                 st.startQuestTimer("attack_timer", 120000);
-                st.takeItems(JewelOfAdventurerGreen, -1);
-                st.takeItems(JewelOfAdventurerRed, -1);
-                st.giveItems(JewelOfAdventurerGreen, 1);
+                st.takeAllItems(JewelOfAdventurerGreen,JewelOfAdventurerRed);
+                st.giveItems(JewelOfAdventurerGreen);
                 htmltext = "<html><body>Attack Soul of Well but do not kill while stone will not change colour...</body></html>";
             } else if (cond == 12) {
                 htmltext = "31527-01.htm";
                 st.setCond(13);
-                st.giveItems(SealedReportBox, 1);
+                st.giveItems(SealedReportBox);
             }
         return htmltext;
     }
@@ -237,8 +234,7 @@ public final class _022_TragedyInVonHellmannForest extends Quest {
         if (npcId == SoulOfWell)
             if (cond == 10) {
                 st.setCond(9);
-                st.takeItems(JewelOfAdventurerGreen);
-                st.takeItems(JewelOfAdventurerRed);
+                st.takeAllItems(JewelOfAdventurerGreen,JewelOfAdventurerRed);
                 st.cancelQuestTimer("attack_timer");
             }
     }

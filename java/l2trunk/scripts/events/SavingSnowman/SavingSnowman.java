@@ -30,6 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 
@@ -287,9 +288,9 @@ public final class SavingSnowman extends Functions implements ScriptFile, OnDeat
             if (_active) {
                 Player pKiller = playable.getPlayer();
                 if (pKiller != null && simpleCheckDrop(cha, playable) && Rnd.get(1000) < Config.EVENT_SAVING_SNOWMAN_REWARDER_CHANCE) {
-                    List<Player> players = new ArrayList<>();
+                    Collection<Player> players = new ArrayList<>();
                     if (pKiller.isInParty())
-                        players = pKiller.getParty().getMembersStream();
+                        players = pKiller.getParty().getMembers();
                     else
                         players.add(pKiller);
 

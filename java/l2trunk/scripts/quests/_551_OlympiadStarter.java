@@ -45,9 +45,7 @@ public final class _551_OlympiadStarter extends Quest {
                 if (st.getQuestItemsCount(OLYMPIAD_CERT3) > 0) {
                     st.giveItems(OLYMPIAD_CHEST, 4);
                     st.giveItems(MEDAL_OF_GLORY, 5);
-                    st.takeItems(OLYMPIAD_CERT1);
-                    st.takeItems(OLYMPIAD_CERT2);
-                    st.takeItems(OLYMPIAD_CERT3);
+                    st.takeAllItems(OLYMPIAD_CERT1,OLYMPIAD_CERT2,OLYMPIAD_CERT3);
                     st.playSound(SOUND_FINISH);
                     st.exitCurrentQuest(this);
                     return "olympiad_operator_q0551_07.htm";
@@ -69,25 +67,19 @@ public final class _551_OlympiadStarter extends Quest {
             if (st.getQuestItemsCount(OLYMPIAD_CERT3) > 0) {
                 st.giveItems(OLYMPIAD_CHEST, 4);
                 st.giveItems(MEDAL_OF_GLORY, 5);
-                st.takeItems(OLYMPIAD_CERT1);
-                st.takeItems(OLYMPIAD_CERT2);
-                st.takeItems(OLYMPIAD_CERT3);
+                st.takeAllItems(OLYMPIAD_CERT1,OLYMPIAD_CERT2,OLYMPIAD_CERT3);
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest(this);
             } else if (st.getQuestItemsCount(OLYMPIAD_CERT2) > 0) {
                 st.giveItems(OLYMPIAD_CHEST, 2);
                 st.giveItems(MEDAL_OF_GLORY, 3); // от балды
-                st.takeItems(OLYMPIAD_CERT1);
-                st.takeItems(OLYMPIAD_CERT2);
-                st.takeItems(OLYMPIAD_CERT3);
+                st.takeAllItems(OLYMPIAD_CERT1,OLYMPIAD_CERT2,OLYMPIAD_CERT3);
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest(this);
             } else if (st.getQuestItemsCount(OLYMPIAD_CERT1) > 0) {
                 st.giveItems(OLYMPIAD_CHEST, 1);
                 //st.giveItems(MEDAL_OF_GLORY, 5); ??
-                st.takeItems(OLYMPIAD_CERT1);
-                st.takeItems(OLYMPIAD_CERT2);
-                st.takeItems(OLYMPIAD_CERT3);
+                st.takeAllItems(OLYMPIAD_CERT1,OLYMPIAD_CERT2,OLYMPIAD_CERT3);
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest(this);
             }
@@ -98,8 +90,8 @@ public final class _551_OlympiadStarter extends Quest {
     @Override
     public void onOlympiadEnd(OlympiadGame og, QuestState qs) {
         if (qs.getCond() == 1) {
-            int count = qs.getInt("count") + 1;
-            qs.set("count", count);
+            qs.inc("count");
+            int count = qs.getInt("count");
             if (count == 3) {
                 qs.giveItems(OLYMPIAD_CERT1);
                 qs.playSound(SOUND_ITEMGET);

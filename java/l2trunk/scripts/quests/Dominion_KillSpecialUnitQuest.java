@@ -54,7 +54,7 @@ public abstract class Dominion_KillSpecialUnitQuest extends Quest {
         if (!classIds.contains(killed.getClassId()))
             return;
         int max_kills;
-        if (st.getInt("max_kills") == 0) {
+        if (!st.isSet("max_kills")) {
             st.start();
             st.setCond(1);
 

@@ -16,8 +16,6 @@ public final class _125_InTheNameOfEvilPart1 extends Quest {
     private final int DienBone = 8780;
 
     public _125_InTheNameOfEvilPart1() {
-        super(false);
-
         addStartNpc(Mushika);
         addTalkId(Karakawei,UluKaimu,BaluKaimu,ChutaKaimu);
         addQuestItem(OrClaw, DienBone);
@@ -27,33 +25,33 @@ public final class _125_InTheNameOfEvilPart1 extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("32114-05.htm")) {
+        if ("32114-05.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.start();
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("32114-07.htm")) {
+        } else if ("32114-07.htm".equalsIgnoreCase(event)) {
             st.setCond(2);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("32117-08.htm")) {
+        } else if ("32117-08.htm".equalsIgnoreCase(event)) {
             st.setCond(3);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("32117-13.htm")) {
+        } else if ("32117-13.htm".equalsIgnoreCase(event)) {
             st.setCond(5);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("stat1false"))
+        } else if ("stat1false".equalsIgnoreCase(event))
             htmltext = "32119-2.htm";
-        else if (event.equalsIgnoreCase("stat1true")) {
+        else if ("stat1true".equalsIgnoreCase(event)) {
             st.setCond(6);
             htmltext = "32119-1.htm";
-        } else if (event.equalsIgnoreCase("stat2false"))
+        } else if ("stat2false".equalsIgnoreCase(event))
             htmltext = "32120-2.htm";
-        else if (event.equalsIgnoreCase("stat2true")) {
+        else if ("stat2true".equalsIgnoreCase(event)) {
             st.setCond(7);
             htmltext = "32120-1.htm";
-        } else if (event.equalsIgnoreCase("stat3false"))
+        } else if ("stat3false".equalsIgnoreCase(event))
             htmltext = "32121-2.htm";
-        else if (event.equalsIgnoreCase("stat3true")) {
-            st.giveItems(8781, 1);
+        else if ("stat3true".equalsIgnoreCase(event)) {
+            st.giveItems(8781);
             st.setCond(8);
             htmltext = "32121-1.htm";
         }

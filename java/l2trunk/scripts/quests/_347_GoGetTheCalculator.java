@@ -19,8 +19,6 @@ public final class _347_GoGetTheCalculator extends Quest {
     private final int CALCULATOR_Q = 4285;
 
     public _347_GoGetTheCalculator() {
-        super(false);
-
         addStartNpc(BRUNON);
 
         addTalkId(SILVERA,SPIRON,BALANKI);
@@ -68,7 +66,7 @@ public final class _347_GoGetTheCalculator extends Quest {
                 break;
             case "30526_1":
                 st.giveItems(CALCULATOR);
-                st.takeItems(CALCULATOR_Q, 1);
+                st.takeItems(CALCULATOR_Q);
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest();
                 htmltext = BRUNON + "-05.htm";
@@ -119,12 +117,10 @@ public final class _347_GoGetTheCalculator extends Quest {
     @Override
     public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
-        if (npcId == GEMSTONE_BEAST && st.getCond() == 5 && Rnd.chance(50) && st.getQuestItemsCount(GEMSTONE_BEAST_CRYSTAL) < 10) {
-            st.giveItems(GEMSTONE_BEAST_CRYSTAL);
+        if (npcId == GEMSTONE_BEAST && st.getCond() == 5 && Rnd.chance(50)) {
+            st.giveItemIfNotHave(GEMSTONE_BEAST_CRYSTAL,10);
             if (st.getQuestItemsCount(GEMSTONE_BEAST_CRYSTAL) >= 10)
                 st.playSound(SOUND_MIDDLE);
-            else
-                st.playSound(SOUND_ITEMGET);
         }
     }
 }

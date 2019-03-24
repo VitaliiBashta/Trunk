@@ -37,6 +37,7 @@
     <inspection_tool class="OverwriteTarget" enabled="true" level="ERROR" enabled_by_default="true" />
     <inspection_tool class="PublicStaticMixinMember" enabled="true" level="ERROR" enabled_by_default="true" />
     <inspection_tool class="ReferenceToMixin" enabled="true" level="ERROR" enabled_by_default="true" />
+    <inspection_tool class="ReturnFromFinallyBlock" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="ShadowFieldPrefix" enabled="true" level="ERROR" enabled_by_default="true" />
     <inspection_tool class="ShadowFinalModification" enabled="true" level="ERROR" enabled_by_default="true" />
     <inspection_tool class="ShadowModifiers" enabled="true" level="WARNING" enabled_by_default="true" />

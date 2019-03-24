@@ -11,8 +11,6 @@ public final class _10268_ToTheSeedOfInfinity extends Quest {
     private final static int Introduction = 13811;
 
     public _10268_ToTheSeedOfInfinity() {
-        super(false);
-
         addStartNpc(Keucereus);
         addTalkId(Tepios);
     }
@@ -46,7 +44,7 @@ public final class _10268_ToTheSeedOfInfinity extends Quest {
                     htmltext = "32548-06.htm";
                 else if (npcId == Tepios) {
                     htmltext = "32530-01.htm";
-                    st.giveItems(ADENA_ID, 16671);
+                    st.giveAdena(16671);
                     st.addExpAndSp(100640, 10098);
                     st.finish();
                     st.playSound(SOUND_FINISH);

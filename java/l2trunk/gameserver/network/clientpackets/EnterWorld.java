@@ -117,7 +117,7 @@ public final class EnterWorld extends L2GameClientPacket {
         Player activeChar = client.getActiveChar();
 
         if (activeChar == null || Config.AUTH_SERVER_GM_ONLY && !activeChar.isGM()) {
-            client.closeNow(false);
+            client.closeNow();
             return;
         }
 

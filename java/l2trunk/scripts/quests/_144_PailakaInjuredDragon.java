@@ -14,6 +14,8 @@ import l2trunk.gameserver.utils.ReflectionUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import static l2trunk.commons.lang.NumberUtils.toInt;
+
 public final class _144_PailakaInjuredDragon extends Quest {
     // NPC
     private static final int KETRAOSHAMAN = 32499;
@@ -72,8 +74,6 @@ public final class _144_PailakaInjuredDragon extends Quest {
     private static final int izId = 45;
 
     public _144_PailakaInjuredDragon() {
-        super(false);
-
         addStartNpc(KETRAOSHAMAN);
         addTalkId(KOSUPPORTER, KOIO, KOSUPPORTER2);
         addAttackId(LATANA, VSWARRIOR1, VSWARRIOR2, VSCOMMAO1, VSCOMMAO2, VSGMAG1, VSGMAG2, VSHGAPG1, VSHGAPG2);
@@ -98,7 +98,7 @@ public final class _144_PailakaInjuredDragon extends Quest {
             enterInstance(player);
             return null;
         } else if (event.startsWith("buff")) {
-            int[] skill = BUFFS[Integer.parseInt(event.split("buff")[1])];
+            int[] skill = BUFFS[toInt(event.split("buff")[1])];
             if (st.getInt("spells") < 4) {
                 makeBuff(npc, player, skill[0], skill[1]);
                 st.inc("spells");
@@ -188,8 +188,8 @@ public final class _144_PailakaInjuredDragon extends Quest {
                 htmltext = "32509-03.htm";
         } else if (npcId == KOSUPPORTER2)
             if (cond == 4) {
-                st.giveItems(ScrollOfEscape, 1);
-                st.giveItems(PSHIRT, 1);
+                st.giveItems(ScrollOfEscape);
+                st.giveItems(PSHIRT);
                 st.addExpAndSp(28000000, 2850000);
                 st.setCond(5);
                 st.complete();
@@ -218,21 +218,21 @@ public final class _144_PailakaInjuredDragon extends Quest {
             case VSCOMMAO1:
             case VSCOMMAO2:
                 if (st.getInt("stage") == 2)
-                    st.set("stage", 3);
-                if (st.getQuestItemsCount(SPEAR) > 0 && st.getQuestItemsCount(STAGE1) == 0)
-                    st.giveItems(STAGE1, 1);
+                    st.inc("stage");
+                if (st.haveQuestItem(SPEAR) && st.getQuestItemsCount(STAGE1) == 0)
+                    st.giveItems(STAGE1);
                 break;
             case VSGMAG1:
             case VSGMAG2:
                 if (st.getInt("stage") == 3)
-                    st.set("stage", 4);
-                if (st.getQuestItemsCount(ENCHSPEAR) > 0 && st.getQuestItemsCount(STAGE2) == 0)
-                    st.giveItems(STAGE2, 1);
+                    st.inc("stage");
+                if (st.haveQuestItem(ENCHSPEAR)  && st.getQuestItemsCount(STAGE2) == 0)
+                    st.giveItems(STAGE2);
                 break;
             case VSHGAPG1:
             case VSHGAPG2:
                 if (st.getInt("stage") == 4)
-                    st.set("stage", 5);
+                    st.inc("stage");
                 break;
             case LATANA:
                 st.setCond(4);

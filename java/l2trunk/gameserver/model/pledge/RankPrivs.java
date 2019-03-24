@@ -1,33 +1,33 @@
 package l2trunk.gameserver.model.pledge;
 
-public class RankPrivs {
-    private final int _rank;
-    private int _party;
-    private int _privs;
+public final class RankPrivs {
+    private final int rank;
+    private int party;
+    private int privs;
 
     public RankPrivs(int rank, int party, int privs) {
-        _rank = rank;
-        _party = party;
-        _privs = privs;
+        this.rank = rank;
+        this.party = party;
+        this.privs = privs;
     }
 
     public int getRank() {
-        return _rank;
+        return rank;
     }
 
     public int getParty() {
-        return _party;
+        return party;
     }
 
     public void setParty(int party) {
-        _party = party;
+        this.party = party;
     }
 
     public int getPrivs() {
-        return _privs;
+        return privs;
     }
 
     public void setPrivs(int privs) {
-        _privs = privs;
+        this.privs = privs;
     }
 }

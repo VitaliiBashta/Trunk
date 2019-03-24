@@ -28,7 +28,6 @@ public final class _716_PathToBecomingALordRune extends Quest {
     }
 
     public _716_PathToBecomingALordRune() {
-        super(false);
         addStartNpc(Frederick);
         addTalkId(Agripel, Innocentin);
         addKillId(PAGANS);

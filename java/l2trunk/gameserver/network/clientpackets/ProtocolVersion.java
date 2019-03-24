@@ -21,7 +21,7 @@ public final class ProtocolVersion extends L2GameClientPacket {
 
     protected void runImpl() {
         if (protocol == -2) {
-            client.closeNow(false);
+            client.closeNow();
             return;
         } else if (protocol == -3) {
             _log.info("Status request from IP : " + getClient().getIpAddr());
@@ -33,7 +33,6 @@ public final class ProtocolVersion extends L2GameClientPacket {
             return;
         }
 
-        client.setSystemVersion(Config.LATEST_SYSTEM_VER);
 
         sendPacket(new KeyPacket(client.enableCrypt()));
     }

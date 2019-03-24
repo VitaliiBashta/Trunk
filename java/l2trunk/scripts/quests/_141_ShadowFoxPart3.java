@@ -19,8 +19,6 @@ public final class _141_ShadowFoxPart3 extends Quest {
     private final static int Alligator = 20135;
 
     public _141_ShadowFoxPart3() {
-        super(false);
-
         // Нет стартового NPC, чтобы квест не появлялся в списке раньше времени
         addFirstTalkId(NATOOLS);
         addTalkId(NATOOLS);
@@ -54,7 +52,7 @@ public final class _141_ShadowFoxPart3 extends Quest {
         } else if ("30894-18.htm".equalsIgnoreCase(event)) {
             if (!st.isSet("reward") ) {
                 st.playSound(SOUND_FINISH);
-                st.giveItems(ADENA_ID, 88888);
+                st.giveAdena( 88888);
                 st.addExpAndSp(278005, 17058);
                 st.set("reward");
                 htmltext = "getBonuses.htm";

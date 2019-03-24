@@ -21,10 +21,8 @@ public final class _363_SorrowfulSoundofFlute extends Quest {
     //Item
 
     public _363_SorrowfulSoundofFlute() {
-        super(false);
-
         addStartNpc(NANARIN);
-        addTalkId(NANARIN,POITAN,HOLVAS,BARBADO);
+        addTalkId(POITAN,HOLVAS,BARBADO);
     }
 
     @Override
@@ -34,9 +32,7 @@ public final class _363_SorrowfulSoundofFlute extends Quest {
             st.setCond(1);
             st.start();
             st.playSound(SOUND_ACCEPT);
-            st.takeItems(EVENT_CLOTHES);
-            st.takeItems(NANARINS_FLUTE);
-            st.takeItems(SABRINS_BLACK_BEER);
+            st.takeAllItems(EVENT_CLOTHES,NANARINS_FLUTE,SABRINS_BLACK_BEER);
         } else if ("30956_4.htm".equalsIgnoreCase(event)) {
             st.giveItems(NANARINS_FLUTE);
             st.playSound(SOUND_MIDDLE);

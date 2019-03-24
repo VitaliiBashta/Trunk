@@ -724,11 +724,7 @@
 		<set name="isHandler" val="true" />
 		<set name="altUse" val="true" />
 		<cond msgId="113" addName="1">
-			<or>
-				<player instance_zone="43" />
-				<player instance_zone="44" />
-				<player instance_zone="45" />
-			</or>
+
 		</cond>
 		<for>
 			<effect abnormal="invul2" count="1" name="Invulnerable" stackOrder="-1" stackType="Invulnerable" time="3" val="0" />
@@ -747,11 +743,7 @@
 		<set name="isHandler" val="true" />
 		<set name="altUse" val="true" />
 		<cond msgId="113" addName="1">
-			<or>
-				<player instance_zone="43" />
-				<player instance_zone="44" />
-				<player instance_zone="45" />
-			</or>
+
 		</cond>
 	</skill>
 	<skill id="2579" levels="1" name="Cure Death Clock" >
@@ -935,11 +927,6 @@
 		<set name="operateType" val="OP_ACTIVE" />
 		<set name="altUse" val="true" />
 		<cond msgId="113" addName="1">
-			<or>
-				<player instance_zone="43" />
-				<player instance_zone="44" />
-				<player instance_zone="45" />
-			</or>
 		</cond>
 		<for>
 			<effect count="1" name="Buff" time="180" val="0">

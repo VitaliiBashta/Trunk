@@ -21,8 +21,7 @@ import java.util.List;
 /**
  * Список продаваемого в приватный магазин покупки
  */
-public class RequestPrivateStoreBuySellList extends L2GameClientPacket {
-    private static final Logger _log = LoggerFactory.getLogger(RequestPrivateStoreBuySellList.class);
+public final class RequestPrivateStoreBuySellList extends L2GameClientPacket {
 
     private int _buyerId, _count;
     private int[] _items; // object id
@@ -122,7 +121,7 @@ public class RequestPrivateStoreBuySellList extends L2GameClientPacket {
                 if (item == null || item.getCount() < count || !item.canBeTraded(seller))
                     break loop;
 
-                TradeItem si = null;
+                TradeItem si;
 
                 for (TradeItem bi : buyList)
                     if (bi.getItemId() == item.getItemId())

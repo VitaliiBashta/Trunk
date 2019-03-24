@@ -14,8 +14,6 @@ public final class _191_VainConclusion extends Quest {
     private static final int Metal = 10371;
 
     public _191_VainConclusion() {
-        super(false);
-
         addTalkId(Kusto, Dorothy, Lorain, Shegfield);
         addFirstTalkId(Dorothy);
         addQuestItem(Metal);
@@ -23,19 +21,19 @@ public final class _191_VainConclusion extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("30970-03.htm")) {
+        if ("30970-03.htm".equalsIgnoreCase(event)) {
             st.playSound(SOUND_ACCEPT);
             st.setCond(1);
-            st.giveItems(Metal, 1);
-        } else if (event.equalsIgnoreCase("30673-02.htm")) {
+            st.giveItems(Metal);
+        } else if ("30673-02.htm".equalsIgnoreCase(event)) {
             st.playSound(SOUND_MIDDLE);
             st.setCond(2);
-            st.takeItems(Metal, -1);
-        } else if (event.equalsIgnoreCase("30068-03.htm")) {
+            st.takeItems(Metal);
+        } else if ("30068-03.htm".equalsIgnoreCase(event)) {
             st.setCond(3);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("30512-02.htm")) {
-            st.giveItems(ADENA_ID, 117327);
+        } else if ("30512-02.htm".equalsIgnoreCase(event)) {
+            st.giveAdena( 117327);
             st.addExpAndSp(309467, 20614);
             st.finish();
             st.playSound(SOUND_FINISH);

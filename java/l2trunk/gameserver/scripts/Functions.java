@@ -225,7 +225,7 @@ public class Functions {
     }
 
     protected static boolean simpleCheckDrop(Creature mob, Playable killer) {
-        return mob instanceof MonsterInstance && !mob.isRaid() && killer != null && killer.getPlayer() != null && killer.getLevel() - mob.getLevel() < 9;
+        return mob instanceof MonsterInstance && !mob.isRaid() && killer != null  && killer.getLevel() - mob.getLevel() < 9;
     }
 
     public static void sendDebugMessage(Player player, String message) {

@@ -4,6 +4,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
+import static l2trunk.gameserver.model.base.ClassId.elvenFighter;
 import static l2trunk.gameserver.model.base.ClassId.elvenKnight;
 
 public final class _406_PathToElvenKnight extends Quest {
@@ -91,26 +92,20 @@ public final class _406_PathToElvenKnight extends Quest {
     };
 
     public _406_PathToElvenKnight() {
-        super(false);
-
         addStartNpc(Sorius);
         addTalkId(Kluto);
 
         // mob Drop
         for (int[] aDROPLIST_COND : DROPLIST_COND) addKillId(aDROPLIST_COND[2]);
 
-        addQuestItem(TopazPiece,
-                EmeraldPiece,
-                SoriussLetter,
-                KlutosMemo,
-                KlutoBox);
+        addQuestItem(TopazPiece, EmeraldPiece, SoriussLetter, KlutosMemo, KlutoBox);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
         if ("master_sorius_q0406_05.htm".equalsIgnoreCase(event)) {
-            if (st.player.getClassId().id == 0x12) {
+            if (st.player.getClassId() == elvenFighter) {
                 if (st.haveQuestItem(ElvenKnightBrooch)) {
                     htmltext = "master_sorius_q0406_04.htm";
                     st.exitCurrentQuest();
@@ -166,7 +161,7 @@ public final class _406_PathToElvenKnight extends Quest {
                     if (!st.player.isVarSet("prof1")) {
                         st.player.setVar("prof1");
                         st.addExpAndSp(228064, 16455);
-                        st.giveAdena( 81900);
+                        st.giveAdena(81900);
                     }
                 }
                 st.exitCurrentQuest();
@@ -183,7 +178,7 @@ public final class _406_PathToElvenKnight extends Quest {
                     htmltext = "blacksmith_kluto_q0406_03.htm";
                 }
             } else if (cond == 5) {
-                st.takeAllItems(EmeraldPiece,KlutosMemo);
+                st.takeAllItems(EmeraldPiece, KlutosMemo);
                 st.giveItems(KlutoBox);
                 htmltext = "blacksmith_kluto_q0406_05.htm";
                 st.setCond(6);

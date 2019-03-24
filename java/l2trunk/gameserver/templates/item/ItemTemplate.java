@@ -103,7 +103,6 @@ public abstract class ItemTemplate extends StatTemplate {
     public static final int CRYSTAL_B = 1460;
     public static final int CRYSTAL_A = 1461;
     public static final int CRYSTAL_S = 1462;
-    public static final int ATTRIBUTE_NONE = -2;
     public static final int ATTRIBUTE_FIRE = 0;
     public static final int ATTRIBUTE_WATER = 1;
     public static final int ATTRIBUTE_WIND = 2;
@@ -149,10 +148,10 @@ public abstract class ItemTemplate extends StatTemplate {
     private final int reuseDelay;
     private final int reuseGroup;
     private final int agathionEnergy;
-    private final List<CapsuledItem> _capsuledItems = new ArrayList<>();
+    private final List<CapsuledItem> capsuledItems = new ArrayList<>();
     ItemType type;
     int type1; // needed for item list (inventory)
-    int _type2; // different lists for armor, weapon, etc
+    int type2; // different lists for armor, weapon, etc
     int bodyPart;
     private final List<Skill> skills =new ArrayList<>() ;
     private Map<Integer, AugmentationInfo> augmentationInfos = new HashMap<>();
@@ -226,7 +225,7 @@ public abstract class ItemTemplate extends StatTemplate {
      * @return int
      */
     public final int getType2() {
-        return _type2;
+        return type2;
     }
 
     public final int getBaseAttributeValue(Element element) {
@@ -241,8 +240,8 @@ public abstract class ItemTemplate extends StatTemplate {
     }
 
     public final int getType2ForPackets() {
-        int type2 = _type2;
-        switch (_type2) {
+        int type2 = this.type2;
+        switch (this.type2) {
             case TYPE2_PET_WOLF:
             case TYPE2_PET_HATCHLING:
             case TYPE2_PET_STRIDER:
@@ -337,19 +336,19 @@ public abstract class ItemTemplate extends StatTemplate {
     }
 
     public boolean isForHatchling() {
-        return _type2 == TYPE2_PET_HATCHLING;
+        return type2 == TYPE2_PET_HATCHLING;
     }
 
     public boolean isForStrider() {
-        return _type2 == TYPE2_PET_STRIDER;
+        return type2 == TYPE2_PET_STRIDER;
     }
 
     public boolean isForWolf() {
-        return _type2 == TYPE2_PET_WOLF;
+        return type2 == TYPE2_PET_WOLF;
     }
 
     public boolean isForPetBaby() {
-        return _type2 == TYPE2_PET_BABY;
+        return type2 == TYPE2_PET_BABY;
     }
 
     /**
@@ -358,15 +357,15 @@ public abstract class ItemTemplate extends StatTemplate {
      * @return boolean
      */
     public boolean isForGWolf() {
-        return _type2 == TYPE2_PET_GWOLF;
+        return type2 == TYPE2_PET_GWOLF;
     }
 
     public boolean isPendant() {
-        return _type2 == TYPE2_PENDANT;
+        return type2 == TYPE2_PENDANT;
     }
 
     public boolean isForPet() {
-        return (_type2 == TYPE2_PENDANT) || (_type2 == TYPE2_PET_HATCHLING) || (_type2 == TYPE2_PET_WOLF) || (_type2 == TYPE2_PET_STRIDER) || (_type2 == TYPE2_PET_GWOLF) || (_type2 == TYPE2_PET_BABY);
+        return (type2 == TYPE2_PENDANT) || (type2 == TYPE2_PET_HATCHLING) || (type2 == TYPE2_PET_WOLF) || (type2 == TYPE2_PET_STRIDER) || (type2 == TYPE2_PET_GWOLF) || (type2 == TYPE2_PET_BABY);
     }
 
     /**
@@ -437,18 +436,6 @@ public abstract class ItemTemplate extends StatTemplate {
         return ((itemId >= 10549) && (itemId <= 10599)) || ((itemId >= 12768) && (itemId <= 12778)) || ((itemId >= 14170) && (itemId <= 14227)) || (itemId == 17030) || ((itemId >= 17034) && (itemId <= 17039));
     }
 
-    public boolean isShieldNoEnchant() {
-        return (itemId == 11508) || (itemId == 6377) || (itemId == 11532) || (itemId == 9441) || (itemId == 16304) || (itemId == 15621) || (itemId == 16321) || (itemId == 13471) || (itemId == 15587) || (itemId == 15604);
-    }
-
-    public boolean isNoEnchant() {
-        return (itemId == 10514) || (itemId == 10512) || (itemId == 10513);
-    }
-
-    public boolean isSigelNoEnchant() {
-        return ((itemId >= 12811) && (itemId <= 12813)) || (itemId == 16305) || (itemId == 15588) || (itemId == 15605) || (itemId == 16322) || (itemId == 15622) || (itemId >= 13078) || (itemId == 10119);
-    }
-
     public boolean isCodexBook() {
         return itemId >= 9625 && itemId <= 9627 || itemId == 6622;
     }
@@ -467,10 +454,6 @@ public abstract class ItemTemplate extends StatTemplate {
 
     public boolean isRecipe() {
         return clazz == ItemClass.RECIPIES;
-    }
-
-    public boolean isExtractable() {
-        return this.clazz == ItemClass.EXTRACTABLE;
     }
 
     public boolean isTerritoryAccessory() {
@@ -533,10 +516,6 @@ public abstract class ItemTemplate extends StatTemplate {
         return CursedWeaponsManager.INSTANCE.isCursed(itemId);
     }
 
-    public boolean isMercenaryTicket() {
-        return type == EtcItemType.MERCENARY_TICKET;
-    }
-
     public boolean isTerritoryFlag() {
         return (itemId == 13560) || (itemId == 13561) || (itemId == 13562) || (itemId == 13563) || (itemId == 13564) || (itemId == 13565) || (itemId == 13566) || (itemId == 13567) || (itemId == 13568);
     }
@@ -565,12 +544,6 @@ public abstract class ItemTemplate extends StatTemplate {
         return getType2() == ItemTemplate.TYPE2_QUEST;
     }
 
-    /**
-     * gradeCheck - использовать пока не перепишется система заточки
-     *
-     * @param gradeCheck
-     * @return
-     */
     public boolean canBeEnchanted(boolean gradeCheck) {
         if (gradeCheck && (getCrystalType() == Grade.NONE)) {
             return false;
@@ -700,12 +673,8 @@ public abstract class ItemTemplate extends StatTemplate {
         return this.bodyPart == 256;
     }
 
-    public List<CapsuledItem> getCapsuledItems() {
-        return this._capsuledItems;
-    }
-
     public void addCapsuledItem(CapsuledItem ci) {
-        this._capsuledItems.add(ci);
+        this.capsuledItems.add(ci);
     }
 
     public boolean isMasterwork() {
@@ -721,10 +690,6 @@ public abstract class ItemTemplate extends StatTemplate {
             augmentationInfos = new HashMap<>();
         }
         augmentationInfos.put(augmentationInfo.getMineralId(), augmentationInfo);
-    }
-
-    public Map<Integer, AugmentationInfo> getAugmentationInfos() {
-        return augmentationInfos;
     }
 
     public enum ReuseType {
@@ -800,13 +765,7 @@ public abstract class ItemTemplate extends StatTemplate {
         S80(CRYSTAL_S, 5),
         S84(CRYSTAL_S, 5);
 
-        /**
-         * ID соответствующего грейду кристалла
-         */
         public final int cry;
-        /**
-         * ID грейда, без учета уровня S
-         */
         public final int externalOrdinal;
 
         Grade(int crystal, int ext) {
@@ -817,27 +776,15 @@ public abstract class ItemTemplate extends StatTemplate {
 
     public static class CapsuledItem {
         private final int item_id;
-        private final int min_count;
-        private final int max_count;
         private final double chance;
 
-        public CapsuledItem(int item_id, int min_count, int max_count, double chance) {
+        public CapsuledItem(int item_id, double chance) {
             this.item_id = item_id;
-            this.min_count = min_count;
-            this.max_count = max_count;
             this.chance = chance;
         }
 
         public int getItemId() {
             return this.item_id;
-        }
-
-        public int getMinCount() {
-            return this.min_count;
-        }
-
-        public int getMaxCount() {
-            return this.max_count;
         }
 
         public double getChance() {

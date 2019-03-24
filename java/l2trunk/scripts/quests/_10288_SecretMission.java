@@ -14,10 +14,8 @@ public final class _10288_SecretMission extends Quest {
     private static final int LETTER = 15529;
 
     public _10288_SecretMission() {
-        super(false);
-
         addStartNpc(DOMINIC, AQUILANI);
-        addTalkId(DOMINIC, GREYMORE, AQUILANI);
+        addTalkId(GREYMORE);
         addFirstTalkId(AQUILANI);
     }
 
@@ -34,13 +32,13 @@ public final class _10288_SecretMission extends Quest {
         } else if (npcId == GREYMORE && "32757-03.htm".equalsIgnoreCase(event)) {
             st.unset("cond");
             st.takeItems(LETTER);
-            st.giveItems(57, 106583);
+            st.giveAdena(106583);
             st.addExpAndSp(417788, 46320);
             st.playSound(SOUND_FINISH);
             st.finish();
         } else if (npcId == AQUILANI) {
             if (st.getState() == STARTED) {
-                if (event.equalsIgnoreCase("32780-05.htm")) {
+                if ("32780-05.htm".equalsIgnoreCase(event)) {
                     st.setCond(2);
                     st.playSound(SOUND_MIDDLE);
                 }

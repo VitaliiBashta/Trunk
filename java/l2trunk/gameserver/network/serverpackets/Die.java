@@ -11,19 +11,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class Die extends L2GameServerPacket {
-    private final int _objectId;
-    private final boolean _fake;
-    private final Map<RestartType, Boolean> _types = new HashMap<>(RestartType.VALUES.length);
-    @SuppressWarnings("unused")
-    private boolean _sweepable, isPvPevents;
+    private final int objectId;
+    private final boolean fake;
+    private final Map<RestartType, Boolean> types = new HashMap<>();
+    private boolean sweepable;
 
     public Die(Creature cha) {
-        _objectId = cha.objectId();
-        _fake = !cha.isDead();
+        objectId = cha.objectId();
+        fake = !cha.isDead();
 
         if (cha instanceof MonsterInstance)
-            _sweepable = ((MonsterInstance) cha).isSweepActive();
-        else if (cha instanceof Player && GmEventManager.INSTANCE.canResurrect(cha.getPlayer())) {
+            sweepable = ((MonsterInstance) cha).isSweepActive();
+        else if (cha instanceof Player && GmEventManager.INSTANCE.canResurrect((Player)cha)) {
             Player player = (Player) cha;
             put(RestartType.FIXED, player.getPlayerAccess().ResurectFixed || ((player.getInventory().getCountOf(10649) > 0 || player.getInventory().getCountOf(13300) > 0) && !player.isOnSiegeField()));
             put(RestartType.AGATHION, player.isAgathionResAvailable());
@@ -36,24 +35,23 @@ public final class Die extends L2GameServerPacket {
                 put(RestartType.TO_FORTRESS, clan.getHasFortress() > 0);
             }
 
-            cha.getEvents().forEach(e -> e.checkRestartLocs(player, _types));
+            cha.getEvents().forEach(e -> e.checkRestartLocs(player, types));
 
-            isPvPevents = player.isVarSet("isPvPevents");
         }
     }
 
     @Override
     protected final void writeImpl() {
-        if (_fake)
+        if (fake)
             return;
 
         writeC(0x00);
-        writeD(_objectId);
+        writeD(objectId);
         writeD(get(RestartType.TO_VILLAGE)); // to nearest village
         writeD(get(RestartType.TO_CLANHALL)); // to hide away
         writeD(get(RestartType.TO_CASTLE)); // to castle
         writeD(get(RestartType.TO_FLAG));// to siege HQ
-        writeD(_sweepable ? 0x01 : 0x00); // sweepable  (blue glow)
+        writeD(sweepable ? 0x01 : 0x00); // sweepable  (blue glow)
         writeD(get(RestartType.FIXED));// FIXED
         writeD(get(RestartType.TO_FORTRESS));// fortress
         writeC(0); //show die animation
@@ -62,11 +60,11 @@ public final class Die extends L2GameServerPacket {
     }
 
     private void put(RestartType t, boolean b) {
-        _types.put(t, b);
+        types.put(t, b);
     }
 
     private boolean get(RestartType t) {
-        Boolean b = _types.get(t);
+        Boolean b = types.get(t);
         return b != null && b;
     }
 }

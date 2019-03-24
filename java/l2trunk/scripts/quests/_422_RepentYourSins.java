@@ -196,7 +196,7 @@ public final class _422_RepentYourSins extends Quest {
             if (cond == 10)
                 return "katari_q0422_04.htm";
             st.setCond(10);
-            st.takeItems(SCAVENGER_WERERAT_SKULL, -1);
+            st.takeItems(SCAVENGER_WERERAT_SKULL);
             return "katari_q0422_03.htm";
         }
 

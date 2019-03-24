@@ -38,7 +38,7 @@ public abstract class Residence implements JdbcEntity {
     final int id;
     final Calendar siegeDate = Calendar.getInstance();
     private final String name;
-    private final List<ResidenceFunction> _functions = new ArrayList<>();
+    private final List<ResidenceFunction> functions = new ArrayList<>();
     private final List<Skill> skills = new ArrayList<>();
     private final Calendar lastSiegeDate = Calendar.getInstance();
     private final Calendar ownDate = Calendar.getInstance();
@@ -128,7 +128,7 @@ public abstract class Residence implements JdbcEntity {
     }
 
     public void addFunction(ResidenceFunction function) {
-        _functions.add(function);
+        functions.add(function);
     }
 
     public boolean checkIfInZone(Location loc, Reflection ref) {
@@ -148,10 +148,10 @@ public abstract class Residence implements JdbcEntity {
     void rewardSkills() {
         Clan owner = getOwner();
         if (owner != null) {
-            for (Skill skill : skills) {
+            skills.forEach(skill -> {
                 owner.addSkill(skill, false);
                 owner.broadcastToOnlineMembers(new SystemMessage2(SystemMsg.THE_CLAN_SKILL_S1_HAS_BEEN_ADDED).addSkillName(skill));
-            }
+            });
         }
     }
 
@@ -186,10 +186,9 @@ public abstract class Residence implements JdbcEntity {
     }
 
     public ResidenceFunction getFunction(int type) {
-        for (ResidenceFunction _function : _functions)
-            if (_function.getType() == type)
-                return _function;
-        return null;
+        return functions.stream()
+                .filter(f -> f.getType() == type)
+                .findFirst().orElse(null);
     }
 
     public boolean updateFunctions(int type, int level) {
@@ -238,7 +237,7 @@ public abstract class Residence implements JdbcEntity {
                     return false;
 
                 statement = con.prepareStatement("REPLACE residence_functions SET id=?, type=?, lvl=?");
-                statement.setInt(1, getId());
+                statement.setInt(1, id);
                 statement.setInt(2, type);
                 statement.setInt(3, level);
                 statement.execute();
@@ -339,7 +338,7 @@ public abstract class Residence implements JdbcEntity {
     }
 
     void chanceCycle() {
-        setCycle(getCycle() + 1);
+        setCycle(cycle + 1);
 
         setJdbcState(JdbcEntityState.UPDATED);
     }

@@ -4,6 +4,8 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
+import static l2trunk.gameserver.model.base.ClassId.*;
+
 public final class _228_TestOfMagus extends Quest {
     //NPC
     private static final int Rukal = 30629;
@@ -304,7 +306,9 @@ public final class _228_TestOfMagus extends Quest {
                 htmltext = "completed";
                 st.exitCurrentQuest();
             } else if (cond == 0) {
-                if (st.player.getClassId().id == 0x0b || st.player.getClassId().id == 0x1a || st.player.getClassId().id == 0x27) {
+                if (st.player.getClassId() == wizard
+                        || st.player.getClassId() == elvenWizard
+                        || st.player.getClassId() == darkWizard) {
                     if (st.player.getLevel() >= 39)
                         htmltext = "30629-03.htm";
                     else {
@@ -329,11 +333,8 @@ public final class _228_TestOfMagus extends Quest {
                 st.takeAllItems(ScoreOfElements,ToneOfWater,ToneOfFire,ToneOfWind,ToneOfEarth);
                 st.giveItems(MarkOfMagus);
                 htmltext = "30629-12.htm";
-                if (!st.player.isVarSet("prof2.3")) {
                     st.addExpAndSp(1029122, 70620);
                     st.giveItems(ADENA_ID, 186077);
-                    st.player.setVar("prof2.3");
-                }
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest();
             }

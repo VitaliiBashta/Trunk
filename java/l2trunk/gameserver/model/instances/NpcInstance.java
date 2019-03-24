@@ -48,7 +48,6 @@ import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.scripts.Events;
 import l2trunk.gameserver.stats.Stats;
-import l2trunk.gameserver.stats.funcs.FuncMonsterBalancer;
 import l2trunk.gameserver.tables.ClanTable;
 import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.taskmanager.DecayTaskManager;
@@ -79,8 +78,8 @@ public class NpcInstance extends Creature {
     private final AggroList aggroList;
     private final String _showBoard;
     protected int _spawnAnimation = 2;
-    protected boolean _hasRandomAnimation;
-    protected boolean _hasRandomWalk;
+    protected boolean hasRandomAnimation;
+    protected boolean hasRandomWalk;
     long _lastSocialAction;
     private boolean _hasChatWindow;
     private boolean _unAggred = false;
@@ -116,8 +115,8 @@ public class NpcInstance extends Creature {
         super(objectId, template);
         setParameters(template.getAiParams());
 
-        _hasRandomAnimation = !getParameter(NO_RANDOM_ANIMATION, false) && (Config.MAX_NPC_ANIMATION > 0);
-        _hasRandomWalk = !getParameter(NO_RANDOM_WALK, false);
+        hasRandomAnimation = !getParameter(NO_RANDOM_ANIMATION, false) && (Config.MAX_NPC_ANIMATION > 0);
+        hasRandomWalk = !isSet(NO_RANDOM_WALK);
         setHasChatWindow(!getParameter(NO_CHAT_WINDOW, false));
         setTargetable(getParameter(TARGETABLE, true));
         setShowName(getParameter(SHOW_NAME, true));
@@ -148,8 +147,6 @@ public class NpcInstance extends Creature {
 
         setFlying(getParameter("isFlying", false));
 
-//        for (Stats st : Stats.values())
-//            addStatFunc(FuncMonsterBalancer.getInstance(st));
     }
 
     public static boolean canBypassCheck(Player player, NpcInstance npc) {
@@ -183,9 +180,9 @@ public class NpcInstance extends Creature {
 
         final AcquireSkillList asl = new AcquireSkillList(t, skills.size());
 
-        for (SkillLearn s : skills) {
+        skills.forEach(s -> {
             asl.addSkill(s.id, s.level, s.level, s.cost);
-        }
+        });
 
         if (skills.size() == 0) {
             player.sendPacket(AcquireSkillDone.STATIC);
@@ -355,16 +352,12 @@ public class NpcInstance extends Creature {
             return;
         }
 
-        ItemInstance item;
-
         for (long i = 0; i < itemCount; i++) {
-            item = ItemFunctions.createItem(itemId);
+            ItemInstance item = ItemFunctions.createItem(itemId);
             if (item == null)
                 continue;
 
-            for (GlobalEvent e : getEvents()) {
-                item.addEvent(e);
-            }
+            getEvents().forEach(item::addEvent);
 
             // Set the Item quantity dropped if L2ItemInstance is stackable
             if (item.isStackable()) {
@@ -692,11 +685,11 @@ public class NpcInstance extends Creature {
     }
 
     public boolean hasRandomAnimation() {
-        return _hasRandomAnimation;
+        return hasRandomAnimation;
     }
 
     public boolean hasRandomWalk() {
-        return _hasRandomWalk;
+        return hasRandomWalk;
     }
 
     public Castle getCastle() {
@@ -1595,6 +1588,10 @@ public class NpcInstance extends Creature {
         parameters.set(str, val);
     }
 
+    public boolean isSet(String str){
+        return parameters.isSet(str);
+    }
+
     public int getParameter(String str, int val) {
         return parameters.getInteger(str, val);
     }
@@ -1604,7 +1601,8 @@ public class NpcInstance extends Creature {
     }
 
     public boolean getParameter(String str, boolean val) {
-        return parameters.getBool(str, val);
+        if (val) return true;
+        return parameters.isSet(str);
     }
 
     public String getParameter(String str, String val) {

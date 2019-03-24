@@ -33,7 +33,6 @@ public final class _281_HeadForTheHills extends Quest {
     );
 
     public _281_HeadForTheHills() {
-        super(false);
         addStartNpc(Marcela);
         addKillId(DROPLIST_CHANCES.keySet());
         addQuestItem(HillsOfGoldMonsterClaw);
@@ -42,14 +41,14 @@ public final class _281_HeadForTheHills extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("zerstorer_morsell_q0281_03.htm")) {
+        if ("zerstorer_morsell_q0281_03.htm".equalsIgnoreCase(event)) {
             if (st.getCond() == 0) {
                 st.setCond(1);
                 st.start();
                 st.playSound(SOUND_ACCEPT);
             }
         } else if ("adena".equalsIgnoreCase(event)) {
-            st.giveItems(ADENA_ID, st.getQuestItemsCount(HillsOfGoldMonsterClaw) * 50, false);
+            st.giveAdena(st.getQuestItemsCount(HillsOfGoldMonsterClaw) * 50);
             st.takeItems(HillsOfGoldMonsterClaw);
             tryGiveOneTimeRevard(st);
             htmltext = "zerstorer_morsell_q0281_06.htm";

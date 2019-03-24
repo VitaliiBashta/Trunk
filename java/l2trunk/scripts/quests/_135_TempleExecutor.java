@@ -31,8 +31,6 @@ public final class _135_TempleExecutor extends Quest {
     private final static int Badge_Temple_Executor = 10334;
 
     public _135_TempleExecutor() {
-        super(false);
-
         addStartNpc(Shegfield);
         addTalkId(Alex,Sonin,Pano);
         addKillId(mobs);
@@ -50,7 +48,7 @@ public final class _135_TempleExecutor extends Quest {
         } else if ("shegfield_q0135_13.htm".equalsIgnoreCase(event) && state == STARTED) {
             st.playSound(SOUND_FINISH);
             st.unset("Report");
-            st.giveItems(ADENA_ID, 16924);
+            st.giveAdena( 16924);
             st.addExpAndSp(30000, 2000);
             st.giveItems(Badge_Temple_Executor);
             st.finish();
@@ -123,8 +121,8 @@ public final class _135_TempleExecutor extends Quest {
         if (npcId == Sonin && _state == STARTED) {
             if (st.getQuestItemsCount(Stolen_Cargo) < 10)
                 return "warehouse_keeper_sonin_q0135_04.htm";
-            st.takeItems(Stolen_Cargo, -1);
-            st.giveItems(Sonins_Credentials, 1);
+            st.takeItems(Stolen_Cargo);
+            st.giveItems(Sonins_Credentials);
             st.playSound(SOUND_MIDDLE);
             return "warehouse_keeper_sonin_q0135_03.htm";
         }

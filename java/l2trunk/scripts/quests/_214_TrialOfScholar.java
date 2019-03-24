@@ -1,5 +1,6 @@
 package l2trunk.scripts.quests;
 
+import l2trunk.gameserver.model.base.ClassId;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
@@ -80,8 +81,6 @@ public final class _214_TrialOfScholar extends Quest {
     private static final int Symbol_of_Cronos = 2720;
 
     public _214_TrialOfScholar() {
-        super(false);
-
         addStartNpc(Mirien);
         addTalkId(Sylvain, Lucas, Valkon, Dieter, Jurek, Edroc, Raut, Poitan, Maria, Creta, Cronos, Triff, Casian);
 
@@ -133,7 +132,7 @@ public final class _214_TrialOfScholar extends Quest {
             st.giveItems(Marias_1st_Letter, 1);
             st.setCond(3);
         } else if ("astrologer_creta_q0214_05.htm".equalsIgnoreCase(event) && state == STARTED) {
-            if (st.getQuestItemsCount(Marias_2nd_Letter) == 0)
+            if (!st.haveQuestItem(Marias_2nd_Letter))
                 return null;
             st.takeItems(Marias_2nd_Letter);
             st.playSound(SOUND_MIDDLE);
@@ -160,100 +159,93 @@ public final class _214_TrialOfScholar extends Quest {
             st.playSound(SOUND_MIDDLE);
             st.giveItems(Cretas_Painting3);
             st.setCond(10);
-        } else if (event.equalsIgnoreCase("marya_q0214_14.htm") && state == STARTED) {
+        } else if ("marya_q0214_14.htm".equalsIgnoreCase(event) && state == STARTED) {
             if (st.getQuestItemsCount(Cretas_Painting3) == 0 || st.getQuestItemsCount(Brown_Scroll_Scrap) < 5)
                 return null;
-            st.takeItems(Cretas_Painting3, -1);
-            st.takeItems(Brown_Scroll_Scrap, -1);
+            st.takeAllItems(Cretas_Painting3, Brown_Scroll_Scrap);
             st.playSound(SOUND_MIDDLE);
-            st.giveItems(Crystal_of_Purity1, 1);
+            st.giveItems(Crystal_of_Purity1);
             st.setCond(13);
-        } else if (event.equalsIgnoreCase("valkon_q0214_04.htm") && state == STARTED && st.getQuestItemsCount(Valkons_Request) == 0) {
+        } else if ("valkon_q0214_04.htm".equalsIgnoreCase(event) && state == STARTED && st.getQuestItemsCount(Valkons_Request) == 0) {
             st.playSound(SOUND_MIDDLE);
-            st.giveItems(Valkons_Request, 1);
-        } else if (event.equalsIgnoreCase("jurek_q0214_03.htm") && state == STARTED && st.getQuestItemsCount(Grand_Magisters_Sigil) == 0 && st.getQuestItemsCount(Symbol_of_Jurek) == 0) {
+            st.giveItems(Valkons_Request);
+        } else if ("jurek_q0214_03.htm".equalsIgnoreCase(event) && state == STARTED && st.getQuestItemsCount(Grand_Magisters_Sigil) == 0 && st.getQuestItemsCount(Symbol_of_Jurek) == 0) {
             st.playSound(SOUND_MIDDLE);
-            st.giveItems(Grand_Magisters_Sigil, 1);
-            st.giveItems(Jureks_List, 1);
+            st.giveItems(Grand_Magisters_Sigil);
+            st.giveItems(Jureks_List);
             st.setCond(16);
-        } else if (event.equalsIgnoreCase("magister_mirien_q0214_10.htm") && state == STARTED) {
+        } else if ("magister_mirien_q0214_10.htm".equalsIgnoreCase(event) && state == STARTED) {
             if (st.getQuestItemsCount(Miriens_2nd_Sigil) == 0 || st.getQuestItemsCount(Symbol_of_Jurek) == 0)
                 return null;
-            st.takeItems(Miriens_2nd_Sigil, -1);
-            st.takeItems(Symbol_of_Jurek, -1);
+            st.takeAllItems(Miriens_2nd_Sigil, Symbol_of_Jurek);
             if (st.player.getLevel() < 36) {
-                st.giveItems(Miriens_Instruction, 1);
+                st.giveItems(Miriens_Instruction);
                 return "magister_mirien_q0214_09.htm";
             }
             st.playSound(SOUND_MIDDLE);
-            st.giveItems(Miriens_3rd_Sigil, 1);
+            st.giveItems(Miriens_3rd_Sigil);
             st.setCond(19);
-        } else if (event.equalsIgnoreCase("sage_cronos_q0214_10.htm") && state == STARTED) {
+        } else if ("sage_cronos_q0214_10.htm".equalsIgnoreCase(event) && state == STARTED) {
             st.playSound(SOUND_MIDDLE);
-            st.giveItems(Cronos_Sigil, 1);
-            st.giveItems(Cronos_Letter, 1);
+            st.giveItems(Cronos_Sigil);
+            st.giveItems(Cronos_Letter);
             st.setCond(20);
-        } else if (event.equalsIgnoreCase("dieter_q0214_05.htm") && state == STARTED) {
+        } else if ("dieter_q0214_05.htm".equalsIgnoreCase(event) && state == STARTED) {
             if (st.getQuestItemsCount(Cronos_Letter) == 0)
                 return null;
-            st.takeItems(Cronos_Letter, -1);
+            st.takeItems(Cronos_Letter);
             st.playSound(SOUND_MIDDLE);
-            st.giveItems(Dieters_Key, 1);
+            st.giveItems(Dieters_Key);
             st.setCond(21);
-        } else if (event.equalsIgnoreCase("astrologer_creta_q0214_14.htm") && state == STARTED) {
+        } else if ("astrologer_creta_q0214_14.htm".equalsIgnoreCase(event) && state == STARTED) {
             if (st.getQuestItemsCount(Dieters_Key) == 0)
                 return null;
-            st.takeItems(Dieters_Key, -1);
+            st.takeItems(Dieters_Key);
             st.playSound(SOUND_MIDDLE);
-            st.giveItems(Cretas_2nd_Letter, 1);
+            st.giveItems(Cretas_2nd_Letter);
             st.setCond(22);
-        } else if (event.equalsIgnoreCase("dieter_q0214_09.htm") && state == STARTED) {
-            if (st.getQuestItemsCount(Cretas_2nd_Letter) == 0)
+        } else if ("dieter_q0214_09.htm".equalsIgnoreCase(event) && state == STARTED) {
+            if (!st.haveQuestItem(Cretas_2nd_Letter))
                 return null;
-            st.takeItems(Cretas_2nd_Letter, -1);
+            st.takeItems(Cretas_2nd_Letter);
             st.playSound(SOUND_MIDDLE);
-            st.giveItems(Dieters_Letter, 1);
-            st.giveItems(Dieters_Diary, 1);
+            st.giveItems(Dieters_Letter);
+            st.giveItems(Dieters_Diary);
             st.setCond(23);
-        } else if (event.equalsIgnoreCase("trader_edroc_q0214_02.htm") && state == STARTED) {
+        } else if ("trader_edroc_q0214_02.htm".equalsIgnoreCase(event) && state == STARTED) {
             if (st.getQuestItemsCount(Dieters_Letter) == 0)
                 return null;
-            st.takeItems(Dieters_Letter, -1);
+            st.takeItems(Dieters_Letter);
             st.playSound(SOUND_MIDDLE);
-            st.giveItems(Rauts_Letter_Envelope, 1);
+            st.giveItems(Rauts_Letter_Envelope);
             st.setCond(24);
-        } else if (event.equalsIgnoreCase("warehouse_keeper_raut_q0214_02.htm") && state == STARTED) {
+        } else if ("warehouse_keeper_raut_q0214_02.htm".equalsIgnoreCase(event) && state == STARTED) {
             if (st.getQuestItemsCount(Rauts_Letter_Envelope) == 0)
                 return null;
-            st.takeItems(Rauts_Letter_Envelope, -1);
+            st.takeItems(Rauts_Letter_Envelope);
             st.playSound(SOUND_MIDDLE);
-            st.giveItems(Scripture_Chapter_1, 1);
-            st.giveItems(Strong_Liquor, 1);
+            st.giveItems(Scripture_Chapter_1);
+            st.giveItems(Strong_Liquor);
             st.setCond(25);
-        } else if (event.equalsIgnoreCase("drunkard_treaf_q0214_04.htm") && state == STARTED) {
+        } else if ("drunkard_treaf_q0214_04.htm".equalsIgnoreCase(event) && state == STARTED) {
             if (st.getQuestItemsCount(Strong_Liquor) == 0)
                 return null;
-            st.takeItems(Strong_Liquor, -1);
+            st.takeItems(Strong_Liquor);
             st.playSound(SOUND_MIDDLE);
-            st.giveItems(Triffs_Ring, 1);
+            st.giveItems(Triffs_Ring);
             st.setCond(26);
-        } else if (event.equalsIgnoreCase("sage_kasian_q0214_04.htm") && state == STARTED) {
+        } else if ("sage_kasian_q0214_04.htm".equalsIgnoreCase(event) && state == STARTED) {
             if (st.getQuestItemsCount(Casians_List) == 0) {
                 st.playSound(SOUND_MIDDLE);
-                st.giveItems(Casians_List, 1);
+                st.giveItems(Casians_List);
             }
             st.setCond(28);
-        } else if (event.equalsIgnoreCase("sage_kasian_q0214_07.htm") && state == STARTED) {
-            st.takeItems(Casians_List);
-            st.takeItems(Ghouls_Skin);
-            st.takeItems(Medusas_Blood);
-            st.takeItems(Fettered_Souls_Ichor);
-            st.takeItems(Enchanted_Gargoyles_Nail);
-            st.takeItems(Poitans_Notes);
+        } else if ("sage_kasian_q0214_07.htm".equalsIgnoreCase(event) && state == STARTED) {
+            st.takeAllItems(Casians_List, Ghouls_Skin, Medusas_Blood, Fettered_Souls_Ichor, Enchanted_Gargoyles_Nail, Poitans_Notes);
             st.playSound(SOUND_MIDDLE);
             st.giveItems(Scripture_Chapter_4);
             st.setCond(30);
-        } else if (event.equalsIgnoreCase("sage_cronos_q0214_14.htm") && state == STARTED) {
+        } else if ("sage_cronos_q0214_14.htm".equalsIgnoreCase(event) && state == STARTED) {
             if (st.getQuestItemsCount(Scripture_Chapter_1) == 0)
                 return null;
             if (st.getQuestItemsCount(Scripture_Chapter_2) == 0)
@@ -264,12 +256,8 @@ public final class _214_TrialOfScholar extends Quest {
                 return null;
             if (st.getQuestItemsCount(Cronos_Sigil) == 0)
                 return null;
-            st.takeItems(Scripture_Chapter_1, -1);
-            st.takeItems(Scripture_Chapter_2, -1);
-            st.takeItems(Scripture_Chapter_3, -1);
-            st.takeItems(Scripture_Chapter_4, -1);
-            st.takeItems(Cronos_Sigil, -1);
-            st.takeItems(Triffs_Ring, -1);
+            st.takeAllItems(Scripture_Chapter_1, Scripture_Chapter_2, Scripture_Chapter_3, Scripture_Chapter_4);
+            st.takeAllItems(Cronos_Sigil, Triffs_Ring);
             st.takeItems(Dieters_Diary, 1);
             st.playSound(SOUND_MIDDLE);
             st.giveItems(Symbol_of_Cronos, 1);
@@ -291,8 +279,8 @@ public final class _214_TrialOfScholar extends Quest {
         if (_state == CREATED) {
             if (npcId != Mirien)
                 return "noquest";
-            int class_id = st.player.getClassId().id;
-            if (class_id != 0x0b && class_id != 0x1a && class_id != 0x27) {
+            ClassId class_id = st.player.getClassId();
+            if (class_id != ClassId.wizard && class_id != ClassId.elvenWizard && class_id != ClassId.darkWizard) {
                 st.exitCurrentQuest();
                 return "magister_mirien_q0214_01.htm";
             }
@@ -308,19 +296,18 @@ public final class _214_TrialOfScholar extends Quest {
             return "noquest";
 
         if (npcId == Mirien) {
-            if (st.getQuestItemsCount(Miriens_1st_Sigil) > 0) {
+            if (st.haveQuestItem(Miriens_1st_Sigil)) {
                 if (st.getQuestItemsCount(Symbol_of_Sylvain) == 0)
                     return "magister_mirien_q0214_05.htm";
-                st.takeItems(Miriens_1st_Sigil);
-                st.takeItems(Symbol_of_Sylvain);
+                st.takeAllItems(Miriens_1st_Sigil, Symbol_of_Sylvain);
                 st.playSound(SOUND_MIDDLE);
                 st.giveItems(Miriens_2nd_Sigil);
                 st.setCond(15);
                 return "magister_mirien_q0214_06.htm";
             }
-            if (st.getQuestItemsCount(Miriens_2nd_Sigil) > 0)
-                return st.getQuestItemsCount(Symbol_of_Jurek) > 0 ? "magister_mirien_q0214_08.htm" : "magister_mirien_q0214_07.htm";
-            if (st.getQuestItemsCount(Miriens_Instruction) > 0) {
+            if (st.haveQuestItem(Miriens_2nd_Sigil))
+                return st.haveQuestItem(Symbol_of_Jurek) ? "magister_mirien_q0214_08.htm" : "magister_mirien_q0214_07.htm";
+            if (st.haveQuestItem(Miriens_Instruction)) {
                 if (st.player.getLevel() < 36)
                     return "magister_mirien_q0214_11.htm";
                 st.takeItems(Miriens_Instruction);
@@ -330,14 +317,11 @@ public final class _214_TrialOfScholar extends Quest {
                 return "magister_mirien_q0214_12.htm";
             }
             if (st.haveQuestItem(Miriens_3rd_Sigil)) {
-                if (st.getQuestItemsCount(Symbol_of_Cronos) == 0)
+                if (!st.haveQuestItem(Symbol_of_Cronos))
                     return "magister_mirien_q0214_13.htm";
                 st.takeAllItems(Symbol_of_Cronos, Miriens_3rd_Sigil);
-                if (!st.player.isVarSet("prof2.1")) {
-                    st.addExpAndSp(876963, 56877);
-                    st.giveItems(ADENA_ID, 159814);
-                    st.player.setVar("prof2.1");
-                }
+                st.addExpAndSp(876963, 56877);
+                st.giveAdena(159814);
                 st.giveItems(Mark_of_Scholar);
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest();
@@ -352,8 +336,7 @@ public final class _214_TrialOfScholar extends Quest {
                 if (st.getQuestItemsCount(Crystal_of_Purity1) < 1)
                     return "sylvain_q0214_03.htm";
 
-                st.takeItems(High_Priests_Sigil);
-                st.takeItems(Crystal_of_Purity1);
+                st.takeAllItems(High_Priests_Sigil, Crystal_of_Purity1);
                 st.playSound(SOUND_MIDDLE);
                 st.giveItems(Symbol_of_Sylvain);
                 st.setCond(14);
@@ -452,11 +435,8 @@ public final class _214_TrialOfScholar extends Quest {
                         return "jurek_q0214_04.htm";
 
                     if (Grand_Magisters_Sigil_count > 0) {
-                        st.takeItems(Jureks_List, -1);
-                        st.takeItems(Monster_Eye_Destroyer_Skin);
-                        st.takeItems(Shamans_Necklace);
-                        st.takeItems(Shackles_Scalp);
-                        st.takeItems(Grand_Magisters_Sigil);
+                        st.takeAllItems(Jureks_List, Monster_Eye_Destroyer_Skin, Shamans_Necklace,
+                                Shackles_Scalp, Grand_Magisters_Sigil);
                         st.playSound(SOUND_MIDDLE);
                         st.giveItems(Symbol_of_Jurek);
                         st.setCond(18);
@@ -466,7 +446,7 @@ public final class _214_TrialOfScholar extends Quest {
                 if (Symbol_of_Jurek_count > 0 && Grand_Magisters_Sigil_count == 0)
                     return "jurek_q0214_06.htm";
             }
-            if (st.getQuestItemsCount(Miriens_1st_Sigil) > 0 || st.getQuestItemsCount(Miriens_3rd_Sigil) > 0)
+            if (st.haveAnyQuestItems(Miriens_1st_Sigil, Miriens_3rd_Sigil))
                 return "jurek_q0214_07.htm";
         }
 
@@ -596,11 +576,11 @@ public final class _214_TrialOfScholar extends Quest {
         }
 
         if (npcId == Triff) {
-            if (st.getQuestItemsCount(Dieters_Diary) > 0 && st.getQuestItemsCount(Scripture_Chapter_1) > 0 && st.getQuestItemsCount(Strong_Liquor) > 0)
+            if (st.haveAllQuestItems(Dieters_Diary, Scripture_Chapter_1, Strong_Liquor))
                 return "drunkard_treaf_q0214_01.htm";
-            if (st.getQuestItemsCount(Triffs_Ring) > 0)
+            if (st.haveQuestItem(Triffs_Ring))
                 return "drunkard_treaf_q0214_05.htm";
-            if (st.getQuestItemsCount(Symbol_of_Cronos) > 0)
+            if (st.haveQuestItem(Symbol_of_Cronos))
                 return "drunkard_treaf_q0214_05.htm";
         }
 
@@ -614,7 +594,7 @@ public final class _214_TrialOfScholar extends Quest {
                 st.setCond(27);
                 return "sage_kasian_q0214_01.htm";
             }
-            if (Casians_List_count == 0 && st.haveQuestItem(Scripture_Chapter_1) && st.getQuestItemsCount(Scripture_Chapter_2) > 0 && st.getQuestItemsCount(Scripture_Chapter_3) > 0 && st.getQuestItemsCount(Scripture_Chapter_4) > 0)
+            if (Casians_List_count == 0 && st.haveAllQuestItems(Scripture_Chapter_1, Scripture_Chapter_2, Scripture_Chapter_3, Scripture_Chapter_4))
                 return "sage_kasian_q0214_08.htm";
         }
 
@@ -630,15 +610,15 @@ public final class _214_TrialOfScholar extends Quest {
         if (npcId == Grandis && st.getQuestItemsCount(Miriens_3rd_Sigil) > 0 && st.getQuestItemsCount(Cronos_Sigil) > 0 && st.getQuestItemsCount(Triffs_Ring) > 0)
             st.rollAndGive(Scripture_Chapter_3, 1, 1, 1, 30);
 
-        if (npcId == Leto_Lizardman_Warrior && st.getQuestItemsCount(Miriens_1st_Sigil) > 0 && st.getQuestItemsCount(High_Priests_Sigil) > 0 && st.getQuestItemsCount(Cretas_Painting3) > 0)
+        if (npcId == Leto_Lizardman_Warrior && st.haveAllQuestItems(Miriens_1st_Sigil, High_Priests_Sigil, Cretas_Painting3))
             if (st.rollAndGive(Brown_Scroll_Scrap, 1, 1, 5, 50))
                 st.setCond(12);
 
-        if (npcId == Monster_Eye_Destroyer && st.getQuestItemsCount(Miriens_2nd_Sigil) > 0 && st.getQuestItemsCount(Grand_Magisters_Sigil) > 0 && st.getQuestItemsCount(Jureks_List) > 0)
+        if (npcId == Monster_Eye_Destroyer && st.haveAllQuestItems(Miriens_2nd_Sigil, Grand_Magisters_Sigil, Jureks_List))
             if (st.rollAndGive(Monster_Eye_Destroyer_Skin, 1, 1, 5, 50) && Check_cond17_items(st))
                 st.setCond(17);
 
-        if (npcId == Breka_Orc_Shaman && st.getQuestItemsCount(Miriens_2nd_Sigil) > 0 && st.getQuestItemsCount(Grand_Magisters_Sigil) > 0 && st.getQuestItemsCount(Jureks_List) > 0)
+        if (npcId == Breka_Orc_Shaman && st.haveAllQuestItems(Miriens_2nd_Sigil, Grand_Magisters_Sigil, Jureks_List))
             if (st.rollAndGive(Shamans_Necklace, 1, 1, 5, 50) && Check_cond17_items(st))
                 st.setCond(17);
 

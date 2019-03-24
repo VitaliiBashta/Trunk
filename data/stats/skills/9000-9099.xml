@@ -832,12 +832,7 @@
 		<set name="isOffensive" val="false" />
 		<set name="isReuseDelayPermanent" val="true" />
 		<set name="isHandler" val="true"/>
-		<cond msgId="113" addName="1">
-			<or>
-				<player instance_zone="139" />
-				<player instance_zone="144" />
-			</or>
-		</cond>
+
 		<for>
 			<effect count="1" name="IgnoreSkill" stackOrder="1" stackType="IgnoreSkill" time="10" val="0">
 				<def name="skillId" val="6662;6274;6275" />
@@ -860,10 +855,7 @@
 		<set name="isReuseDelayPermanent" val="true" />
 		<set name="isHandler" val="true"/>
 		<cond msgId="113" addName="1">
-			<or>
-				<player instance_zone="139" />
-				<player instance_zone="144" />
-			</or>
+
 		</cond>
 		<for>
 			<effect count="1" name="IgnoreSkill" stackOrder="1" stackType="IgnoreSkill" time="10" val="0">
@@ -1107,10 +1099,7 @@
 		<set name="skillType" val="HEAL" />
 		<set name="operateType" val="OP_ACTIVE" />
 		<cond msgId="1902">
-			<and>
 				<player minLevel="76" />
-				<player maxLevel="90" />
-			</and>
 		</cond>
 	</skill>
 	<skill id="9075" levels="1" name="Awful Soup" >

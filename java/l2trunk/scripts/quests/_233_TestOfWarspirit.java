@@ -9,6 +9,8 @@ import l2trunk.gameserver.model.quest.QuestState;
 import java.util.ArrayList;
 import java.util.List;
 
+import static l2trunk.gameserver.model.base.ClassId.orcShaman;
+
 
 public final class _233_TestOfWarspirit extends Quest {
     // NPCs
@@ -91,7 +93,6 @@ public final class _233_TestOfWarspirit extends Quest {
             HERMODTS_ARM_BONE);
 
     public _233_TestOfWarspirit() {
-        super(false);
         addStartNpc(Somak);
 
         addTalkId(Vivyan, Sarien, Racoy, Manakia, Orim, Ancestor_Martankus, Pekiron);
@@ -135,7 +136,7 @@ public final class _233_TestOfWarspirit extends Quest {
             st.giveItems(MARK_OF_WARSPIRIT);
             if (!st.player.isVarSet("prof2.3")) {
                 st.addExpAndSp(447444, 30704);
-                st.giveItems(ADENA_ID, 1000000);
+                st.giveAdena( 1000000);
                 st.player.setVar("prof2.3");
             }
             st.playSound(SOUND_FINISH);
@@ -152,16 +153,16 @@ public final class _233_TestOfWarspirit extends Quest {
             st.exitCurrentQuest();
             return "completed";
         }
-        int _state = st.getState();
+        int state = st.getState();
         int npcId = npc.getNpcId();
-        if (_state == CREATED) {
+        if (state == CREATED) {
             if (npcId != Somak)
                 return "noquest";
             if (st.player.getRace() != Race.orc) {
                 st.exitCurrentQuest();
                 return "30510-01.htm";
             }
-            if (st.player.getClassId().id != 0x32) {
+            if (st.player.getClassId() !=orcShaman) {
                 st.exitCurrentQuest();
                 return "30510-02.htm";
             }
@@ -173,7 +174,7 @@ public final class _233_TestOfWarspirit extends Quest {
             return "30510-04.htm";
         }
 
-        if (_state != STARTED || st.getCond() != 1)
+        if (state != STARTED || st.getCond() != 1)
             return "noquest";
 
         if (npcId == Somak) {
@@ -193,10 +194,7 @@ public final class _233_TestOfWarspirit extends Quest {
                 return "30510-10.htm";
             if (!st.haveAnyQuestItems(BRAKIS_REMAINS1, HERMODTS_REMAINS1, KIRUNAS_REMAINS1, TONARS_REMAINS1))
                 return "30510-06.htm";
-            st.takeItems(BRAKIS_REMAINS1);
-            st.takeItems(HERMODTS_REMAINS1);
-            st.takeItems(KIRUNAS_REMAINS1);
-            st.takeItems(TONARS_REMAINS1);
+            st.takeAllItems(BRAKIS_REMAINS1,HERMODTS_REMAINS1,KIRUNAS_REMAINS1,TONARS_REMAINS1);
             st.giveItems(VENDETTA_TOTEM);
             st.playSound(SOUND_MIDDLE);
             return "30510-07.htm";
@@ -315,13 +313,13 @@ public final class _233_TestOfWarspirit extends Quest {
         int npcId = npc.getNpcId();
 
         if (npcId == Porta && qs.getQuestItemsCount(ORIMS_CONTRACT) > 0 && qs.getQuestItemsCount(PORTAS_EYE) < 10) {
-            qs.giveItems(PORTAS_EYE, 1);
+            qs.giveItems(PORTAS_EYE);
             qs.playSound(qs.getQuestItemsCount(PORTAS_EYE) == 10 ? SOUND_MIDDLE : SOUND_ITEMGET);
         } else if (npcId == Excuro && qs.haveQuestItem(ORIMS_CONTRACT) && qs.getQuestItemsCount(EXCUROS_SCALE) < 10) {
-            qs.giveItems(EXCUROS_SCALE, 1);
+            qs.giveItems(EXCUROS_SCALE);
             qs.playSound(qs.getQuestItemsCount(EXCUROS_SCALE) == 10 ? SOUND_MIDDLE : SOUND_ITEMGET);
-        } else if (npcId == Mordeo && qs.haveQuestItem(ORIMS_CONTRACT) && qs.getQuestItemsCount(MORDEOS_TALON) < 10) {
-            qs.giveItems(MORDEOS_TALON, 1);
+        } else if (npcId == Mordeo && qs.haveQuestItem(ORIMS_CONTRACT)) {
+            qs.giveItemIfNotHave(MORDEOS_TALON,10);
             qs.playSound(qs.getQuestItemsCount(MORDEOS_TALON) == 10 ? SOUND_MIDDLE : SOUND_ITEMGET);
         } else if ((npcId == Noble_Ant || npcId == Noble_Ant_Leader) && qs.getQuestItemsCount(RACOYS_TOTEM) > 0) {
             List<Integer> drops = new ArrayList<>();
@@ -356,13 +354,13 @@ public final class _233_TestOfWarspirit extends Quest {
             drops.clear();
         } else if (npcId == Stenoa_Gorgon_Queen && qs.haveQuestItem(MANAKIAS_TOTEM) && !qs.haveQuestItem(HERMODTS_SKULL) && Rnd.chance(30)) {
             qs.giveItems(HERMODTS_SKULL);
-            boolean _allset = true;
+            boolean allset = true;
             for (int drop_id : Medusa_Drops)
                 if (qs.getQuestItemsCount(drop_id) == 0) {
-                    _allset = false;
+                    allset = false;
                     break;
                 }
-            qs.playSound(_allset ? SOUND_MIDDLE : SOUND_ITEMGET);
+            qs.playSound(allset ? SOUND_MIDDLE : SOUND_ITEMGET);
         } else if ((npcId == Tamlin_Orc || npcId == Tamlin_Orc_Archer) && qs.haveQuestItem(VENDETTA_TOTEM) && !qs.haveQuestItem(TAMLIN_ORC_HEAD, 13))
             if (Rnd.chance(npcId == Tamlin_Orc ? 30 : 50)) {
                 qs.giveItems(TAMLIN_ORC_HEAD);

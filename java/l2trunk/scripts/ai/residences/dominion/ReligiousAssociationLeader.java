@@ -36,7 +36,7 @@ public final class ReligiousAssociationLeader extends SiegeGuardFighter {
         MESSAGES.put(89, List.of(NpcString.PROTECT_THE_RELIGIOUS_ASSOCIATION_LEADER_OF_SCHUTTGART, NpcString.THE_RELIGIOUS_ASSOCIATION_LEADER_OF_SCHUTTGART_IS_DEAD));
     }
 
-    private final OnPlayerEnterListener _listener = new OnPlayerEnterListenerImpl();
+    private final OnPlayerEnterListener listener = new OnPlayerEnterListenerImpl();
 
     public ReligiousAssociationLeader(NpcInstance actor) {
         super(actor);
@@ -65,7 +65,7 @@ public final class ReligiousAssociationLeader extends SiegeGuardFighter {
                         questState.setCond(1, false);
                         questState.setStateAndNotSave(Quest.STARTED);
                     });
-            PlayerListenerList.addGlobal(_listener);
+            PlayerListenerList.addGlobal(listener);
         }
     }
 
@@ -113,9 +113,7 @@ public final class ReligiousAssociationLeader extends SiegeGuardFighter {
 
     @Override
     public void onEvtDeSpawn() {
-        super.onEvtDeSpawn();
-
-        PlayerListenerList.removeGlobal(_listener);
+        PlayerListenerList.removeGlobal(listener);
     }
 
     private class OnPlayerEnterListenerImpl implements OnPlayerEnterListener {

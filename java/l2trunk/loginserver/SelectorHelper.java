@@ -28,7 +28,7 @@ public class SelectorHelper implements IMMOExecutor<L2LoginClient>, IClientFacto
 			@Override
 			public void runImpl()
 			{
-				client.closeNow(false);
+				client.closeNow();
 			}
 		}, Config.LOGIN_TIMEOUT);
 		return client;

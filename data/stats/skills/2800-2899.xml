@@ -887,10 +887,7 @@
 		<set name="skillType" val="HEAL" />
 		<set name="operateType" val="OP_ACTIVE" />
 		<cond msgId="1902">
-			<and>
 				<player minLevel="#levelMin" />
-				<player maxLevel="#levelMax" />
-			</and>
 		</cond>
 	</skill>
 	<skill id="2861" levels="6" name="Highest Power No-grade Secret Medicine of Mind" >
@@ -911,10 +908,7 @@
 		<set name="skillType" val="MANAHEAL" />
 		<set name="operateType" val="OP_ACTIVE" />
 		<cond msgId="1902">
-			<and>
 				<player minLevel="#levelMin" />
-				<player maxLevel="#levelMax" />
-			</and>
 		</cond>
 	</skill>
 	<skill id="2862" levels="6" name="Highest Power No-grade Secret Medicine of Will" >
@@ -935,10 +929,7 @@
 		<set name="skillType" val="COMBATPOINTHEAL" />
 		<set name="operateType" val="OP_ACTIVE" />
 		<cond msgId="1902">
-			<and>
 				<player minLevel="#levelMin" />
-				<player maxLevel="#levelMax" />
-			</and>
 		</cond>
 	</skill>
 	<skill id="2863" levels="1" name="Highest Power Healing Potion" >  

@@ -19,7 +19,7 @@ public final class _10292_SevenSignsGirlOfDoubt extends Quest {
     private static final int HARDIN = 30832;
 
     // MOBD
-    private static final List<Integer> MOBS_1 = List.of(22801, 22802, 22803, 22804, 22805, 22806);
+    private static final List<Integer> MOBS = List.of(22801, 22802, 22803, 22804, 22805, 22806);
     private static final int CREATURE_OF_THE_DUSK_1 = 27422;
     private static final int CREATURE_OF_THE_DUSK_2 = 27424;
 
@@ -27,11 +27,9 @@ public final class _10292_SevenSignsGirlOfDoubt extends Quest {
     private static final int ELCARDIAS_MARK = 17226;
 
     public _10292_SevenSignsGirlOfDoubt() {
-        super(false);
-
         addStartNpc(WOOD);
-        addTalkId(WOOD, FRANZ, ELCARDIA, HARDIN);
-        addKillId(MOBS_1);
+        addTalkId( FRANZ, ELCARDIA, HARDIN);
+        addKillId(MOBS);
         addKillId(CREATURE_OF_THE_DUSK_1, CREATURE_OF_THE_DUSK_2);
         addQuestItem(ELCARDIAS_MARK);
     }
@@ -59,8 +57,8 @@ public final class _10292_SevenSignsGirlOfDoubt extends Quest {
             st.playSound(SOUND_MIDDLE);
         } else if ("spawnTestMobs".equalsIgnoreCase(event)) {
             int reflectId = player.getReflectionId();
-            st.set("CreatureOfTheDusk1", 1);
-            st.set("CreatureOfTheDusk2", 1);
+            st.set("CreatureOfTheDusk1");
+            st.set("CreatureOfTheDusk2");
             addSpawnToInstance(CREATURE_OF_THE_DUSK_1, Location.of(89416, -237992, -9632), reflectId);
             addSpawnToInstance(CREATURE_OF_THE_DUSK_2, Location.of(89416, -238136, -9632), reflectId);
             return null;
@@ -137,7 +135,7 @@ public final class _10292_SevenSignsGirlOfDoubt extends Quest {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
 
-        if (cond == 3 && MOBS_1.contains(npcId) && Rnd.chance(70)) {
+        if (cond == 3 && MOBS.contains(npcId) && Rnd.chance(70)) {
             st.giveItems(ELCARDIAS_MARK);
             if (st.getQuestItemsCount(ELCARDIAS_MARK) < 10)
                 st.playSound(SOUND_ITEMGET);

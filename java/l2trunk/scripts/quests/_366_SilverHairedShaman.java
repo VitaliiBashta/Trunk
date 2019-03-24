@@ -15,13 +15,11 @@ public final class _366_SilverHairedShaman extends Quest {
     private static final int SAIRONS_PUPPET = 20988;
     //VARIABLES
     private static final int ADENA_PER_ONE = 500;
-    private static final int START_ADENA = 12070;
 
     //QUEST ITEMS
     private static final int SAIRONS_SILVER_HAIR = 5874;
 
     public _366_SilverHairedShaman() {
-        super(false);
         addStartNpc(DIETER);
 
         addKillId(SAIRON,SAIRONS_DOLL,SAIRONS_PUPPET);
@@ -64,7 +62,7 @@ public final class _366_SilverHairedShaman extends Quest {
             } else if (cond == 1 && !st.haveQuestItem(SAIRONS_SILVER_HAIR) )
                 htmltext = "30111-03.htm";
             else if (cond == 1 && st.haveQuestItem(SAIRONS_SILVER_HAIR)) {
-                st.giveItems(ADENA_ID, (st.getQuestItemsCount(SAIRONS_SILVER_HAIR) * ADENA_PER_ONE + START_ADENA));
+                st.giveAdena(st.getQuestItemsCount(SAIRONS_SILVER_HAIR) * ADENA_PER_ONE + 12070);
                 st.takeItems(SAIRONS_SILVER_HAIR);
                 htmltext = "30111-have.htm";
             }

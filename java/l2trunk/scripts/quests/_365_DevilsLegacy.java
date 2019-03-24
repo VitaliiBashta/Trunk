@@ -23,7 +23,6 @@ public final class _365_DevilsLegacy extends Quest {
     private static final int TREASURE_CHEST = 5873;
 
     public _365_DevilsLegacy() {
-        super(false);
         addStartNpc(RANDOLF);
         addKillId(MOBS);
         addQuestItem(TREASURE_CHEST);
@@ -32,19 +31,19 @@ public final class _365_DevilsLegacy extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("30095-1.htm")) {
+        if ("30095-1.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.start();
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("30095-5.htm")) {
+        } else if ("30095-5.htm".equalsIgnoreCase(event)) {
             long count = st.getQuestItemsCount(TREASURE_CHEST);
             if (count > 0) {
                 long reward = count * REWARD_PER_ONE;
-                st.takeItems(TREASURE_CHEST, -1);
-                st.giveItems(ADENA_ID, reward);
+                st.takeItems(TREASURE_CHEST);
+                st.giveAdena(reward);
             } else
                 htmltext = "You don't have required items";
-        } else if (event.equalsIgnoreCase("30095-6.htm")) {
+        } else if ("30095-6.htm".equalsIgnoreCase(event)) {
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest();
         }
@@ -63,7 +62,7 @@ public final class _365_DevilsLegacy extends Quest {
                 st.exitCurrentQuest();
             }
         } else if (cond == 1)
-            if (st.getQuestItemsCount(TREASURE_CHEST) == 0)
+            if (!st.haveQuestItem(TREASURE_CHEST))
                 htmltext = "30095-2.htm";
             else
                 htmltext = "30095-4.htm";

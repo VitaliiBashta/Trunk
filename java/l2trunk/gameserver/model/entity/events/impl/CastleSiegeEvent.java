@@ -132,7 +132,7 @@ public final class CastleSiegeEvent extends SiegeEvent<Castle, SiegeClanObject> 
 
             broadcastTo(SystemMsg.THE_TEMPORARY_ALLIANCE_OF_THE_CASTLE_ATTACKER_TEAM_HAS_BEEN_DISSOLVED, ATTACKERS, DEFENDERS);
 
-            if (_oldOwner != null) {
+            if (oldOwner != null) {
                 spawnAction(HIRED_GUARDS, false);
                 damageZoneAction(false);
                 removeObjects(HIRED_GUARDS);
@@ -158,9 +158,9 @@ public final class CastleSiegeEvent extends SiegeEvent<Castle, SiegeClanObject> 
 
     @Override
     public void startEvent() {
-        _oldOwner = getResidence().getOwner();
-        if (_oldOwner != null) {
-            addObject(DEFENDERS, new SiegeClanObject(DEFENDERS, _oldOwner, 0));
+        oldOwner = getResidence().getOwner();
+        if (oldOwner != null) {
+            addObject(DEFENDERS, new SiegeClanObject(DEFENDERS, oldOwner, 0));
 
             if (getResidence().getSpawnMerchantTickets().size() > 0) {
                 for (ItemInstance item : getResidence().getSpawnMerchantTickets()) {
@@ -179,7 +179,7 @@ public final class CastleSiegeEvent extends SiegeEvent<Castle, SiegeClanObject> 
 
         List<SiegeClanObject> attackers = getObjects(ATTACKERS);
         if (attackers.isEmpty()) {
-            if (_oldOwner == null) {
+            if (oldOwner == null) {
                 broadcastToWorld(new SystemMessage2(SystemMsg.THE_SIEGE_OF_S1_HAS_BEEN_CANCELED_DUE_TO_LACK_OF_INTEREST).addResidenceName(getResidence()));
             } else {
                 broadcastToWorld(new SystemMessage2(SystemMsg.S1S_SIEGE_WAS_CANCELED_BECAUSE_THERE_WERE_NO_CLANS_THAT_PARTICIPATED).addResidenceName(getResidence()));
@@ -198,7 +198,7 @@ public final class CastleSiegeEvent extends SiegeEvent<Castle, SiegeClanObject> 
 
         super.startEvent();
 
-        if (_oldOwner == null) {
+        if (oldOwner == null) {
             initControlTowers();
         } else {
             damageZoneAction(true);
@@ -226,7 +226,7 @@ public final class CastleSiegeEvent extends SiegeEvent<Castle, SiegeClanObject> 
 
         Clan ownerClan = getResidence().getOwner();
         if (ownerClan != null) {
-            if (_oldOwner == ownerClan) {
+            if (oldOwner == ownerClan) {
                 getResidence().setRewardCount(getResidence().getRewardCount() + 1);
                 ownerClan.broadcastToOnlineMembers(new SystemMessage2(SystemMsg.SINCE_YOUR_CLAN_EMERGED_VICTORIOUS_FROM_THE_SIEGE_S1_POINTS_HAVE_BEEN_ADDED_TO_YOUR_CLANS_REPUTATION_SCORE).addInteger(ownerClan.incReputation(1500, false, toString())));
 
@@ -239,9 +239,9 @@ public final class CastleSiegeEvent extends SiegeEvent<Castle, SiegeClanObject> 
 
                 ownerClan.broadcastToOnlineMembers(new SystemMessage2(SystemMsg.SINCE_YOUR_CLAN_EMERGED_VICTORIOUS_FROM_THE_SIEGE_S1_POINTS_HAVE_BEEN_ADDED_TO_YOUR_CLANS_REPUTATION_SCORE).addInteger(ownerClan.incReputation(3000, false, toString())));
 
-                if (_oldOwner != null) {
-                    _oldOwner.incReputation(-3000, false, toString());
-                    _oldOwner.broadcastToOnlineMembers(new SystemMessage2(SystemMsg.YOUR_CLAN_HAS_FAILED_TO_DEFEND_THE_CASTLE));
+                if (oldOwner != null) {
+                    oldOwner.incReputation(-3000, false, toString());
+                    oldOwner.broadcastToOnlineMembers(new SystemMessage2(SystemMsg.YOUR_CLAN_HAS_FAILED_TO_DEFEND_THE_CASTLE));
                 }
 
                 for (UnitMember member : ownerClan) {
@@ -289,7 +289,7 @@ public final class CastleSiegeEvent extends SiegeEvent<Castle, SiegeClanObject> 
 
         despawnSiegeSummons();
 
-        if (_oldOwner != null) {
+        if (oldOwner != null) {
             spawnAction(HIRED_GUARDS, false);
             removeObjects(HIRED_GUARDS);
         }

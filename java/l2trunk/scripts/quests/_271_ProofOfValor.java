@@ -13,29 +13,10 @@ public final class _271_ProofOfValor extends Quest {
     private static final int KASHA_WOLF_FANG_ID = 1473;
     private static final int NECKLACE_OF_VALOR_ID = 1507;
     private static final int NECKLACE_OF_COURAGE_ID = 1506;
-    //Drop Cond
-    //# [COND, NEWCOND, ID, REQUIRED, ITEM, NEED_COUNT, CHANCE, DROP]
-    private static final int[][] DROPLIST_COND = {
-            {
-                    1,
-                    2,
-                    20475,
-                    0,
-                    KASHA_WOLF_FANG_ID,
-                    50,
-                    25,
-                    2
-            }
-    };
 
     public _271_ProofOfValor() {
-        super(false);
-
         addStartNpc(RUKAIN);
-        addTalkId(RUKAIN);
-
-        //mob Drop
-        for (int[] aDROPLIST_COND : DROPLIST_COND) addKillId(aDROPLIST_COND[2]);
+        addKillId(20475);
 
         addQuestItem(KASHA_WOLF_FANG_ID);
     }
@@ -43,9 +24,9 @@ public final class _271_ProofOfValor extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("praetorian_rukain_q0271_03.htm")) {
+        if ("praetorian_rukain_q0271_03.htm".equalsIgnoreCase(event)) {
             st.playSound(SOUND_ACCEPT);
-            if (st.getQuestItemsCount(NECKLACE_OF_COURAGE_ID) > 0 || st.getQuestItemsCount(NECKLACE_OF_VALOR_ID) > 0)
+            if (st.haveAnyQuestItems(NECKLACE_OF_COURAGE_ID, NECKLACE_OF_VALOR_ID))
                 htmltext = "praetorian_rukain_q0271_07.htm";
             st.setCond(1);
             st.start();
@@ -66,7 +47,7 @@ public final class _271_ProofOfValor extends Quest {
                 } else if (st.player.getLevel() < 4) {
                     htmltext = "praetorian_rukain_q0271_01.htm";
                     st.exitCurrentQuest();
-                } else if (st.haveQuestItem(NECKLACE_OF_COURAGE_ID)  || st.haveQuestItem(NECKLACE_OF_VALOR_ID) ) {
+                } else if (st.haveAnyQuestItems(NECKLACE_OF_COURAGE_ID, NECKLACE_OF_VALOR_ID)) {
                     htmltext = "praetorian_rukain_q0271_06.htm";
                     st.exitCurrentQuest();
                 } else
@@ -94,17 +75,11 @@ public final class _271_ProofOfValor extends Quest {
 
     @Override
     public void onKill(NpcInstance npc, QuestState st) {
-        int npcId = npc.getNpcId();
-        int cond = st.getCond();
-        for (int[] aDROPLIST_COND : DROPLIST_COND)
-            if (cond == aDROPLIST_COND[0] && npcId == aDROPLIST_COND[2])
-                if (aDROPLIST_COND[3] == 0 || st.haveQuestItem(aDROPLIST_COND[3]))
-                    if (aDROPLIST_COND[5] == 0)
-                        st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[6]);
-                    else if (st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[7], aDROPLIST_COND[5], aDROPLIST_COND[6]))
-                        if (aDROPLIST_COND[1] != cond && aDROPLIST_COND[1] != 0) {
-                            st.setCond(aDROPLIST_COND[1]);
-                            st.start();
-                        }
+        if (st.getCond() == 1 && npc.getNpcId() == 20475) {
+            if (st.rollAndGive(KASHA_WOLF_FANG_ID, 2, 2, 50, 25)) {
+                st.setCond(2);
+                st.start();
+            }
+        }
     }
 }

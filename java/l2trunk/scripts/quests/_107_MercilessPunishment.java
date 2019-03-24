@@ -101,7 +101,7 @@ public final class _107_MercilessPunishment extends Quest {
                 st.player.addExpAndSp(34565, 2962);
                 st.giveItems(ADENA_ID, 14666, false);
 
-                if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("p1q3")) {
+                if (st.player.getClassId().occupation() == 0) {
                     st.player.setVar("p1q3"); // flag for helper
                     st.player.sendPacket(new ExShowScreenMessage("Acquisition of race-specific weapon complete.\n           Go find the Newbie Guide."));
                     st.giveItems(1060, 100); // healing potion

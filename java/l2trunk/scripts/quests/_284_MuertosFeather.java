@@ -4,6 +4,8 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
+import java.util.Map;
+
 public final class _284_MuertosFeather extends Quest {
     //NPC
     private static final int Trevor = 32166;
@@ -18,91 +20,33 @@ public final class _284_MuertosFeather extends Quest {
     private static final int MuertosCommander = 22246;
     //Drop Cond
     //# [COND, NEWCOND, ID, REQUIRED, ITEM, NEED_COUNT, CHANCE, DROP]
-    private static final int[][] DROPLIST_COND = {
-            {
-                    1,
-                    0,
-                    MuertosGuard,
-                    0,
-                    MuertosFeather,
-                    0,
-                    44,
-                    1
-            },
-            {
-                    1,
-                    0,
-                    MuertosScout,
-                    0,
-                    MuertosFeather,
-                    0,
-                    48,
-                    1
-            },
-            {
-                    1,
-                    0,
-                    MuertosWarrior,
-                    0,
-                    MuertosFeather,
-                    0,
-                    56,
-                    1
-            },
-            {
-                    1,
-                    0,
-                    MuertosCaptain,
-                    0,
-                    MuertosFeather,
-                    0,
-                    60,
-                    1
-            },
-            {
-                    1,
-                    0,
-                    MuertosLieutenant,
-                    0,
-                    MuertosFeather,
-                    0,
-                    64,
-                    1
-            },
-            {
-                    1,
-                    0,
-                    MuertosCommander,
-                    0,
-                    MuertosFeather,
-                    0,
-                    69,
-                    1
-            }
-    };
+    private static final Map<Integer, Integer> DROPLIST_COND = Map.of(
+            MuertosGuard, 44,
+            MuertosScout, 48,
+            MuertosWarrior, 56,
+            MuertosCaptain, 60,
+            MuertosLieutenant, 64,
+            MuertosCommander, 69);
 
     public _284_MuertosFeather() {
-        super(false);
-
         addStartNpc(Trevor);
 
-        addTalkId(Trevor);
         //mob Drop
-        for (int[] aDROPLIST_COND : DROPLIST_COND) addKillId(aDROPLIST_COND[2]);
+        addKillId(DROPLIST_COND.keySet());
         addQuestItem(MuertosFeather);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("trader_treauvi_q0284_0103.htm")) {
+        if ("trader_treauvi_q0284_0103.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.start();
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("trader_treauvi_q0284_0203.htm")) {
+        } else if ("trader_treauvi_q0284_0203.htm".equalsIgnoreCase(event)) {
             long counts = st.getQuestItemsCount(MuertosFeather) * 45;
-            st.takeItems(MuertosFeather, -1);
-            st.giveItems(ADENA_ID, counts);
-        } else if (event.equalsIgnoreCase("trader_treauvi_q0284_0204.htm"))
+            st.takeItems(MuertosFeather);
+            st.giveAdena(counts);
+        } else if ("trader_treauvi_q0284_0204.htm".equalsIgnoreCase(event))
             st.exitCurrentQuest();
         return event;
     }
@@ -118,7 +62,7 @@ public final class _284_MuertosFeather extends Quest {
                 st.exitCurrentQuest();
             } else if (cond == 0)
                 htmltext = "trader_treauvi_q0284_0101.htm";
-            else if (cond == 1 && st.getQuestItemsCount(MuertosFeather) == 0)
+            else if (cond == 1 && !st.haveQuestItem(MuertosFeather))
                 htmltext = "trader_treauvi_q0284_0103.htm";
             else
                 htmltext = "trader_treauvi_q0284_0105.htm";
@@ -129,15 +73,7 @@ public final class _284_MuertosFeather extends Quest {
     public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
-        for (int[] aDROPLIST_COND : DROPLIST_COND)
-            if (cond == aDROPLIST_COND[0] && npcId == aDROPLIST_COND[2])
-                if (aDROPLIST_COND[3] == 0 || st.getQuestItemsCount(aDROPLIST_COND[3]) > 0)
-                    if (aDROPLIST_COND[5] == 0)
-                        st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[6]);
-                    else if (st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[7], aDROPLIST_COND[5], aDROPLIST_COND[6]))
-                        if (aDROPLIST_COND[1] != cond && aDROPLIST_COND[1] != 0) {
-                            st.setCond(aDROPLIST_COND[1]);
-                            st.start();
-                        }
+        if (cond == 1 && DROPLIST_COND.containsKey(npcId))
+            st.rollAndGive(MuertosFeather, 1, DROPLIST_COND.get(npcId));
     }
 }

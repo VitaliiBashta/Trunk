@@ -31,7 +31,6 @@ public final class _179_IntoTheLargeCavern extends Quest implements OnDeathListe
     private final static int GardenGuard2 = 18348;
     private final static int GardenGuard3 = 18349;
 
-    private final static  Map<Integer,Integer> NPC_DROP_ITEMS = Map.of();
     private final static int Kamael_Guard = 18352;
     private final static int Guardian_of_Records = 18353;
     private final static int Guardian_of_Observation = 18354;
@@ -154,8 +153,6 @@ public final class _179_IntoTheLargeCavern extends Quest implements OnDeathListe
                     st.dropItem(npc, Gate_Key_Massive_Cavern);
                     break;
             }
-        } else {
-            return;
         }
 
     }

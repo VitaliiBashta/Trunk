@@ -51,7 +51,7 @@ public enum RestartPointParser {
 
                         Attribute map = n.attribute("map");
                         String s = map.getValue();
-                        String val[] = s.split("_");
+                        String[] val = s.split("_");
                         int rx = toInt(val[0]);
                         int ry = toInt(val[1]);
 
@@ -126,7 +126,7 @@ public enum RestartPointParser {
                 if (PKrestartPoints.isEmpty())
                     PKrestartPoints = restartPoints;
 
-                RestartPoint rp = new RestartPoint(name, bbs, msgId, restartPoints, PKrestartPoints);
+                RestartPoint rp = new RestartPoint(bbs, msgId, restartPoints, PKrestartPoints);
                 restartPoint.put(name, rp);
             }
         }

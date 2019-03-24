@@ -19,11 +19,9 @@ public final class _615_MagicalPowerofFire1 extends Quest {
 
 
     public _615_MagicalPowerofFire1() {
-        super(false);
-
         addStartNpc(NARAN);
 
-        addTalkId(NARAN,UDAN,BOX_OF_ASEFA);
+        addTalkId(UDAN,BOX_OF_ASEFA);
 
         addAttackId(KETRA_NPC_LIST);
     }

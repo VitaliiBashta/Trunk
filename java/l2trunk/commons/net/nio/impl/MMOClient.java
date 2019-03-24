@@ -2,22 +2,21 @@ package l2trunk.commons.net.nio.impl;
 
 import java.nio.ByteBuffer;
 
-@SuppressWarnings("rawtypes")
 public abstract class MMOClient<T extends MMOConnection> {
     public static final boolean SESSION_OK = false;
-    private T _connection;
+    private T connection;
     private boolean isAuthed;
 
     protected MMOClient(T con) {
-        _connection = con;
+        connection = con;
     }
 
     public T getConnection() {
-        return _connection;
+        return connection;
     }
 
     void setConnection(T con) {
-        _connection = con;
+        connection = con;
     }
 
     public boolean isAuthed() {
@@ -28,23 +27,23 @@ public abstract class MMOClient<T extends MMOConnection> {
         this.isAuthed = isAuthed;
     }
 
-    public void closeNow(boolean error) {
+    public void closeNow() {
         if (isConnected())
-            _connection.closeNow();
+            connection.closeNow();
     }
 
     public void closeLater() {
         if (isConnected())
-            _connection.closeLater();
+            connection.closeLater();
     }
 
     public boolean isConnected() {
-        return _connection != null && !_connection.isClosed();
+        return connection != null && !connection.isClosed();
     }
 
     public abstract boolean decrypt(ByteBuffer buf, int size);
 
-    public abstract boolean encrypt(ByteBuffer buf, int size);
+    public abstract void encrypt(ByteBuffer buf, int size);
 
     protected void onDisconnection() {
     }

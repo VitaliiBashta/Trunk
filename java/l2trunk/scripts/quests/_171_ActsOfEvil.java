@@ -122,8 +122,6 @@ public final class _171_ActsOfEvil extends Quest {
     }
 
     public _171_ActsOfEvil() {
-        super(false);
-
         addStartNpc(Alvah);
         addTalkId(Arodin,Tyra,Rolento,Neti,Burai);
 
@@ -160,7 +158,7 @@ public final class _171_ActsOfEvil extends Quest {
         } else if ("30381-07.htm".equals(event) && cond == 6) {
             st.setCond(7);
             st.start();
-            st.takeItems(WeaponsTradeContract, -1);
+            st.takeItems(WeaponsTradeContract);
             st.playSound(SOUND_MIDDLE);
         } else if ("30437-03.htm".equals(event) && cond == 8) {
             st.giveItems(RolentoCargobox);
@@ -196,18 +194,15 @@ public final class _171_ActsOfEvil extends Quest {
             else if (cond == 4)
                 htmltext = "30381-03.htm";
             else if (cond == 5) {
-                if (st.getQuestItemsCount(RangerReportPart1) > 0 && st.getQuestItemsCount(RangerReportPart2) > 0 && st.getQuestItemsCount(RangerReportPart3) > 0 && st.getQuestItemsCount(RangerReportPart4) > 0) {
+                if (st.haveAllQuestItems(RangerReportPart1,RangerReportPart2,RangerReportPart3,RangerReportPart4)) {
                     htmltext = "30381-05.htm";
-                    st.takeItems(RangerReportPart1, -1);
-                    st.takeItems(RangerReportPart2, -1);
-                    st.takeItems(RangerReportPart3, -1);
-                    st.takeItems(RangerReportPart4, -1);
+                    st.takeAllItems(RangerReportPart1, RangerReportPart2,RangerReportPart3,RangerReportPart4);
                     st.setCond(6);
                     st.start();
                 } else
                     htmltext = "30381-04a.htm";
             } else if (cond == 6) {
-                if (st.getQuestItemsCount(WeaponsTradeContract) > 0 && st.getQuestItemsCount(AttackDirectives) > 0)
+                if (st.haveAllQuestItems(WeaponsTradeContract,AttackDirectives))
                     htmltext = "30381-06.htm";
                 else
                     htmltext = "30381-05a.htm";
@@ -215,7 +210,7 @@ public final class _171_ActsOfEvil extends Quest {
                 htmltext = "30381-07a.htm";
             else if (cond == 11) {
                 htmltext = "30381-08.htm";
-                st.giveItems(ADENA_ID, 95000);
+                st.giveAdena( 95000);
                 st.addExpAndSp(159820, 9182);
                 st.playSound(SOUND_FINISH);
                 st.finish();
@@ -226,8 +221,8 @@ public final class _171_ActsOfEvil extends Quest {
             else if (cond == 2)
                 htmltext = "30207-01a.htm";
             else if (cond == 3) {
-                if (st.getQuestItemsCount(TyrasBill) > 0) {
-                    st.takeItems(TyrasBill, -1);
+                if (st.haveQuestItem(TyrasBill)) {
+                    st.takeItems(TyrasBill);
                     htmltext = "30207-03.htm";
                     st.setCond(4);
                     st.start();
@@ -238,8 +233,8 @@ public final class _171_ActsOfEvil extends Quest {
         } else if (npcId == Tyra) {
             if (cond == 2) {
                 if (st.getQuestItemsCount(BladeMold) >= 20) {
-                    st.takeItems(BladeMold, -1);
-                    st.giveItems(TyrasBill, 1);
+                    st.takeItems(BladeMold);
+                    st.giveItems(TyrasBill);
                     htmltext = "30420-01.htm";
                     st.setCond(3);
                     st.start();
@@ -262,13 +257,13 @@ public final class _171_ActsOfEvil extends Quest {
             else if (cond == 9)
                 htmltext = "30437-03a.htm";
         } else if (npcId == Burai) {
-            if (cond == 9 && st.getQuestItemsCount(CertificateOfTheSilverScaleGuild) > 0 && st.getQuestItemsCount(RolentoCargobox) > 0 && st.getQuestItemsCount(AttackDirectives) > 0)
+            if (cond == 9 && st.haveAllQuestItems(CertificateOfTheSilverScaleGuild,RolentoCargobox,AttackDirectives))
                 htmltext = "30617-01.htm";
             if (cond == 10)
                 if (st.getQuestItemsCount(OlMahumCaptainHead) >= 30) {
                     htmltext = "30617-05.htm";
-                    st.giveItems(ADENA_ID, 8000);
-                    st.takeItems(OlMahumCaptainHead, -1);
+                    st.giveAdena( 8000);
+                    st.takeItems(OlMahumCaptainHead);
                     st.setCond(11);
                     st.start();
                     st.playSound(SOUND_ITEMGET);
@@ -284,14 +279,9 @@ public final class _171_ActsOfEvil extends Quest {
         int cond = st.getCond();
         for (int[] aDROPLIST_COND : DROPLIST_COND)
             if (cond == aDROPLIST_COND[0] && npcId == aDROPLIST_COND[2])
-                if (aDROPLIST_COND[3] == 0 || st.getQuestItemsCount(aDROPLIST_COND[3]) > 0)
-                    if (aDROPLIST_COND[5] == 0)
-                        st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[6]);
-                    else if (st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[7], aDROPLIST_COND[5], aDROPLIST_COND[6]))
-                        if (aDROPLIST_COND[1] != cond && aDROPLIST_COND[1] != 0) {
-                            st.setCond(aDROPLIST_COND[1]);
-                            st.start();
-                        }
+                if (aDROPLIST_COND[3] == 0 || st.getQuestItemsCount(aDROPLIST_COND[3]) > 0) {
+                    st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[7], aDROPLIST_COND[5], aDROPLIST_COND[6]);
+                }
         if (npcId == OlMahumSupportTroop)
             Despawn_OlMahumSupportTroop();
         else if (cond == 2 && Rnd.chance(10)) {

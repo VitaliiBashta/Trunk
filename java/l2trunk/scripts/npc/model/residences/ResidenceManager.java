@@ -140,7 +140,7 @@ public abstract class ResidenceManager extends MerchantInstance {
             if ("deposit".equalsIgnoreCase(val)) {
                 WarehouseFunctions.showDepositWindowClan(player);
             } else if ("withdraw".equalsIgnoreCase(val)) {
-                int value = toInt(st.nextToken(), 0);
+                int value = toInt(st.nextToken());
                 if (value == 99) {
                     NpcHtmlMessage html = new NpcHtmlMessage(player, this);
                     html.setFile("residence/clan.htm");

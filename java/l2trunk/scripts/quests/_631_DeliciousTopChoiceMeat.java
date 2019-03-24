@@ -123,13 +123,8 @@ public final class _631_DeliciousTopChoiceMeat extends Quest {
     };
 
     public _631_DeliciousTopChoiceMeat() {
-        super(false);
-
         addStartNpc(TUNATUN);
-
-        addTalkId(TUNATUN);
         addKillId(MOB_LIST);
-
         addQuestItem(PRIME_MEAT);
     }
 

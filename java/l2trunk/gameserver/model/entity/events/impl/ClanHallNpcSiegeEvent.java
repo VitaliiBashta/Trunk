@@ -15,7 +15,7 @@ public final class ClanHallNpcSiegeEvent extends SiegeEvent<ClanHall, SiegeClanO
 
     @Override
     public void startEvent() {
-        _oldOwner = getResidence().getOwner();
+        oldOwner = getResidence().getOwner();
 
         broadcastInZone(new SystemMessage2(SystemMsg.THE_SIEGE_TO_CONQUER_S1_HAS_BEGUN).addResidenceName(getResidence()));
 
@@ -26,13 +26,13 @@ public final class ClanHallNpcSiegeEvent extends SiegeEvent<ClanHall, SiegeClanO
     public void stopEvent(boolean step) {
         Clan newOwner = getResidence().getOwner();
         if (newOwner != null) {
-            if (_oldOwner != newOwner) {
+            if (oldOwner != newOwner) {
                 newOwner.broadcastToOnlineMembers(PlaySound.SIEGE_VICTORY);
 
                 newOwner.incReputation(1700, false, toString());
 
-                if (_oldOwner != null)
-                    _oldOwner.incReputation(-1700, false, toString());
+                if (oldOwner != null)
+                    oldOwner.incReputation(-1700, false, toString());
             }
 
             broadcastInZone(new SystemMessage2(SystemMsg.S1_CLAN_HAS_DEFEATED_S2).addString(newOwner.getName()).addResidenceName(getResidence()));
@@ -42,7 +42,7 @@ public final class ClanHallNpcSiegeEvent extends SiegeEvent<ClanHall, SiegeClanO
 
         super.stopEvent(step);
 
-        _oldOwner = null;
+        oldOwner = null;
     }
 
     @Override

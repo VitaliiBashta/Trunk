@@ -18,7 +18,7 @@ public enum GameTimeController {
     private static final int MILLIS_IN_TICK = 1000 / TICKS_PER_SECOND;
     private final Logger _log = LoggerFactory.getLogger(GameTimeController.class);
     private final GameTimeListenerList listenerEngine = new GameTimeListenerList();
-    private final Runnable _dayChangeNotify = new CheckSunState();
+    private final Runnable dayChangeNotify = new CheckSunState();
     private long gameStartTime;
 
     public void init() {
@@ -54,8 +54,8 @@ public enum GameTimeController {
         dayStart -= System.currentTimeMillis() - gameStartTime;
         nightStart -= System.currentTimeMillis() - gameStartTime;
 
-        ThreadPoolManager.INSTANCE.scheduleAtFixedRate(_dayChangeNotify, nightStart, 4 * 60 * 60 * 1000L);
-        ThreadPoolManager.INSTANCE.scheduleAtFixedRate(_dayChangeNotify, dayStart, 4 * 60 * 60 * 1000L);
+        ThreadPoolManager.INSTANCE.scheduleAtFixedRate(dayChangeNotify, nightStart, 4 * 60 * 60 * 1000L);
+        ThreadPoolManager.INSTANCE.scheduleAtFixedRate(dayChangeNotify, dayStart, 4 * 60 * 60 * 1000L);
     }
 
     /**
@@ -111,7 +111,7 @@ public enum GameTimeController {
     private class OnStartListenerImpl implements OnStartListener {
         @Override
         public void onStart() {
-            ThreadPoolManager.INSTANCE.execute(_dayChangeNotify);
+            ThreadPoolManager.INSTANCE.execute(dayChangeNotify);
         }
     }
 
@@ -125,7 +125,7 @@ public enum GameTimeController {
 
             GameObjectsStorage.getAllPlayersStream().forEach(player -> {
                 player.checkDayNightMessages();
-                player.sendPacket(new ClientSetTime());
+                player.sendPacket(ClientSetTime.STATIC);
             });
         }
     }

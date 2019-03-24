@@ -24,7 +24,6 @@ public final class _306_CrystalOfFireice extends Quest {
     private static final int Noble_Chance = 50;
 
     public _306_CrystalOfFireice() {
-        super(false);
         addStartNpc(Katerina);
         addKillId(Salamander,Undine,Salamander_Elder,Undine_Elder,Salamander_Noble,Undine_Noble);
         addQuestItem(Flame_Shard,Ice_Shard);
@@ -32,12 +31,12 @@ public final class _306_CrystalOfFireice extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        int _state = st.getState();
-        if ("katrine_q0306_04.htm".equalsIgnoreCase(event) && _state == CREATED) {
+        int state = st.getState();
+        if ("katrine_q0306_04.htm".equalsIgnoreCase(event) && state == CREATED) {
             st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
-        } else if ("katrine_q0306_08.htm".equalsIgnoreCase(event) && _state == STARTED) {
+        } else if ("katrine_q0306_08.htm".equalsIgnoreCase(event) && state == STARTED) {
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest();
         }
@@ -50,9 +49,9 @@ public final class _306_CrystalOfFireice extends Quest {
         String htmltext = "noquest";
         if (npc.getNpcId() != Katerina)
             return htmltext;
-        int _state = st.getState();
+        int state = st.getState();
 
-        if (_state == CREATED) {
+        if (state == CREATED) {
             if (st.player.getLevel() < 17) {
                 htmltext = "katrine_q0306_02.htm";
                 st.exitCurrentQuest();
@@ -60,7 +59,7 @@ public final class _306_CrystalOfFireice extends Quest {
                 htmltext = "katrine_q0306_03.htm";
                 st.setCond(0);
             }
-        } else if (_state == STARTED) {
+        } else if (state == STARTED) {
             long Shrads_count = st.getQuestItemsCount(Flame_Shard) + st.getQuestItemsCount(Ice_Shard);
             long Reward = Shrads_count * 30 + (Shrads_count >= 10 ? 5000 : 0);
             if (Reward > 0) {

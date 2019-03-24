@@ -146,7 +146,7 @@ public final class _175_TheWayOfTheWarrior extends Quest {
             st.giveItems(ADENA_ID, 8799, false);
             st.player.addExpAndSp(20739, 1777);
 
-            if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("p1q3")) {
+            if (st.player.getClassId().occupation() == 0 ) {
                 st.player.setVar("p1q3"); // flag for helper
                 st.player.sendPacket(new ExShowScreenMessage("Now go find the Newbie Guide."));
                 st.giveItems(1060, 100); // healing potion

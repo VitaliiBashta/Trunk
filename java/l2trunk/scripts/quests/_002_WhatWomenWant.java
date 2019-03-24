@@ -49,9 +49,9 @@ public final class _002_WhatWomenWant extends Quest {
             case "2_2":
                 htmltext = "arujien_q0002_09.htm";
                 st.takeItems(ARUJIENS_LETTER3);
-                st.giveItems(ADENA_ID, 2300);
+                st.giveAdena(2300);
                 st.player.addExpAndSp(4254, 335);
-                if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("ng1"))
+                if (st.player.getClassId().occupation() == 0)
                     st.player.sendPacket(new ExShowScreenMessage("  Delivery duty complete.\nGo find the Newbie Guide."));
                 st.playSound(SOUND_FINISH);
                 st.finish();
@@ -86,11 +86,10 @@ public final class _002_WhatWomenWant extends Quest {
             else if (cond == 5 && st.haveQuestItem(GREENIS_LETTER) ) {
                 htmltext = "arujien_q0002_09.htm";
                 st.takeItems(GREENIS_LETTER);
-                int MYSTICS_EARRING = 113;
-                st.giveItems(MYSTICS_EARRING);
-                st.giveItems(ADENA_ID, (int) ((Config.RATE_QUESTS_REWARD - 1) * 620 + 1850 * Config.RATE_QUESTS_REWARD), false); // T2
+                st.giveItems(113);
+                st.giveAdena((int) ((Config.RATE_QUESTS_REWARD - 1) * 620 + 1850 * Config.RATE_QUESTS_REWARD));
                 st.player.addExpAndSp(4254, 335);
-                if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("ng1"))
+                if (st.player.getClassId().occupation() == 0 )
                     st.player.sendPacket(new ExShowScreenMessage("  Delivery duty complete.\nGo find the Newbie Guide."));
                 st.playSound(SOUND_FINISH);
                 st.finish();

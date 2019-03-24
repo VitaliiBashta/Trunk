@@ -40,7 +40,6 @@ public final class _359_ForSleeplessDeadmen extends Quest {
     private static final int DOOMTROOPER = 21009;
 
     public _359_ForSleeplessDeadmen() {
-        super(false);
         addStartNpc(ORVEN);
 
         addKillId(DOOMSERVANT,DOOMGUARD,DOOMARCHER,DOOMTROOPER);
@@ -114,8 +113,8 @@ public final class _359_ForSleeplessDeadmen extends Quest {
         } else if (id == STARTED) {
             if (cond == 3)
                 htmltext = "30857-03.htm";
-            else if (cond == 2 && st.getQuestItemsCount(REMAINS) >= REQUIRED) {
-                st.takeItems(REMAINS, REQUIRED);
+            else if (cond == 2 && st.haveQuestItem(REMAINS, REQUIRED)) {
+                st.takeItems(REMAINS);
                 st.setCond(3);
                 htmltext = "30857-04.htm";
             }

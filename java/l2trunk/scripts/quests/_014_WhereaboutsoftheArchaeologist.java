@@ -8,8 +8,6 @@ public final class _014_WhereaboutsoftheArchaeologist extends Quest {
     private static final int LETTER_TO_ARCHAEOLOGIST = 7253;
 
     public _014_WhereaboutsoftheArchaeologist() {
-        super(false);
-
         addStartNpc(31263);
         addTalkId(31538);
 
@@ -26,7 +24,7 @@ public final class _014_WhereaboutsoftheArchaeologist extends Quest {
         } else if ("explorer_ghost_a_q0014_0201.htm".equalsIgnoreCase(event)) {
             st.takeItems(LETTER_TO_ARCHAEOLOGIST);
             st.addExpAndSp(325881, 32524);
-            st.giveItems(ADENA_ID, 136928);
+            st.giveAdena(136928);
             st.playSound(SOUND_FINISH);
             st.finish();
             return "explorer_ghost_a_q0014_0201.htm";

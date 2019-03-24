@@ -19,10 +19,7 @@ public final class _553_OlympiadUndefeated extends Quest {
     private static final int WINS_CONFIRMATION3 = 17246;
 
     public _553_OlympiadUndefeated() {
-        super(false);
-
         addStartNpc(OLYMPIAD_MANAGER);
-        addTalkId(OLYMPIAD_MANAGER);
         addQuestItem(WINS_CONFIRMATION1, WINS_CONFIRMATION2, WINS_CONFIRMATION3);
     }
 
@@ -46,9 +43,7 @@ public final class _553_OlympiadUndefeated extends Quest {
                 if (st.haveQuestItem(WINS_CONFIRMATION3) ) {
                     st.giveItems(OLYMPIAD_CHEST, 6);
                     st.giveItems(MEDAL_OF_GLORY, 5);
-                    st.takeItems(WINS_CONFIRMATION1);
-                    st.takeItems(WINS_CONFIRMATION2);
-                    st.takeItems(WINS_CONFIRMATION3);
+                    st.takeAllItems(WINS_CONFIRMATION1,WINS_CONFIRMATION2,WINS_CONFIRMATION3);
                     st.playSound(SOUND_FINISH);
                     st.exitCurrentQuest(this);
                     return "olympiad_operator_q0553_07.htm";
@@ -68,27 +63,21 @@ public final class _553_OlympiadUndefeated extends Quest {
             st.playSound(SOUND_ACCEPT);
         }
         if ("olympiad_operator_q0553_07.htm".equalsIgnoreCase(event)) {
-            if (st.getQuestItemsCount(WINS_CONFIRMATION3) > 0) {
+            if (st.haveQuestItem(WINS_CONFIRMATION3)) {
                 st.giveItems(OLYMPIAD_CHEST, 6);
                 st.giveItems(MEDAL_OF_GLORY, 5);
-                st.takeItems(WINS_CONFIRMATION1);
-                st.takeItems(WINS_CONFIRMATION2);
-                st.takeItems(WINS_CONFIRMATION3);
+                st.takeAllItems(WINS_CONFIRMATION1,WINS_CONFIRMATION2,WINS_CONFIRMATION3);
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest(this);
-            } else if (st.getQuestItemsCount(WINS_CONFIRMATION2) > 0) {
+            } else if (st.haveQuestItem(WINS_CONFIRMATION2)) {
                 st.giveItems(OLYMPIAD_CHEST, 3);
                 st.giveItems(MEDAL_OF_GLORY, 3); // от балды
-                st.takeItems(WINS_CONFIRMATION1);
-                st.takeItems(WINS_CONFIRMATION2);
-                st.takeItems(WINS_CONFIRMATION3);
+                st.takeAllItems(WINS_CONFIRMATION1,WINS_CONFIRMATION2,WINS_CONFIRMATION3);
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest(this);
-            } else if (st.getQuestItemsCount(WINS_CONFIRMATION1) > 0) {
+            } else if (st.haveQuestItem(WINS_CONFIRMATION1)) {
                 st.giveItems(OLYMPIAD_CHEST);
-                st.takeItems(WINS_CONFIRMATION1);
-                st.takeItems(WINS_CONFIRMATION2);
-                st.takeItems(WINS_CONFIRMATION3);
+                st.takeAllItems(WINS_CONFIRMATION1,WINS_CONFIRMATION2,WINS_CONFIRMATION3);
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest(this);
             }

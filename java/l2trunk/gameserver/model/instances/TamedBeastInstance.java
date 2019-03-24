@@ -40,12 +40,12 @@ public final class TamedBeastInstance extends FeedableBeastInstance {
 
     private final List<Integer> _skills = new ArrayList<>();
     private Player player = null;
-    private int _foodSkillId, _remainingTime = MAX_DURATION;
-    private Future<?> _durationCheckTask = null;
+    private int foodSkillId, remainingTime = MAX_DURATION;
+    private Future<?> durationCheckTask = null;
 
     public TamedBeastInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
-        _hasRandomWalk = false;
+        hasRandomWalk = false;
     }
 
     @Override
@@ -61,31 +61,31 @@ public final class TamedBeastInstance extends FeedableBeastInstance {
 
     private void onReceiveFood() {
         // Eating food extends the duration by 20secs, to a max of 20minutes
-        _remainingTime = _remainingTime + DURATION_INCREASE_INTERVAL;
-        if (_remainingTime > MAX_DURATION)
-            _remainingTime = MAX_DURATION;
+        remainingTime = remainingTime + DURATION_INCREASE_INTERVAL;
+        if (remainingTime > MAX_DURATION)
+            remainingTime = MAX_DURATION;
     }
 
     private int getRemainingTime() {
-        return _remainingTime;
+        return remainingTime;
     }
 
     private void setRemainingTime(int duration) {
-        _remainingTime = duration;
+        remainingTime = duration;
     }
 
     private int getFoodType() {
-        return _foodSkillId;
+        return foodSkillId;
     }
 
     public void setFoodType(int foodItemId) {
         if (foodItemId > 0) {
-            _foodSkillId = foodItemId;
+            foodSkillId = foodItemId;
 
             // start the duration checks start the buff tasks
-            if (_durationCheckTask != null)
-                _durationCheckTask.cancel(false);
-            _durationCheckTask = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new CheckDuration(this), DURATION_CHECK_INTERVAL, DURATION_CHECK_INTERVAL);
+            if (durationCheckTask != null)
+                durationCheckTask.cancel(false);
+            durationCheckTask = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new CheckDuration(this), DURATION_CHECK_INTERVAL, DURATION_CHECK_INTERVAL);
         }
     }
 
@@ -132,21 +132,17 @@ public final class TamedBeastInstance extends FeedableBeastInstance {
     @Override
     protected void onDeath(Creature killer) {
         super.onDeath(killer);
-        if (_durationCheckTask != null) {
-            _durationCheckTask.cancel(false);
-            _durationCheckTask = null;
+        if (durationCheckTask != null) {
+            durationCheckTask.cancel(false);
+            durationCheckTask = null;
         }
 
         Player owner = player;
         if (owner != null)
             owner.removeTrainedBeast(objectId);
 
-        _foodSkillId = 0;
-        _remainingTime = 0;
-    }
-
-    public Player getPlayer() {
-        return player;
+        foodSkillId = 0;
+        remainingTime = 0;
     }
 
     public void setOwner(Player owner) {
@@ -173,19 +169,19 @@ public final class TamedBeastInstance extends FeedableBeastInstance {
         // stop running tasks
         stopMove();
 
-        if (_durationCheckTask != null) {
-            _durationCheckTask.cancel(false);
-            _durationCheckTask = null;
+        if (durationCheckTask != null) {
+            durationCheckTask.cancel(false);
+            durationCheckTask = null;
         }
 
         // clean up variables
-        Player owner = getPlayer();
+        Player owner = player;
         if (owner != null)
             owner.removeTrainedBeast(objectId());
 
         setTarget(null);
-        _foodSkillId = 0;
-        _remainingTime = 0;
+        foodSkillId = 0;
+        remainingTime = 0;
 
         // remove the spawn
         onDecay();
@@ -218,7 +214,7 @@ public final class TamedBeastInstance extends FeedableBeastInstance {
 
         @Override
         public void runImpl() {
-            Player owner = tamedBeast.getPlayer();
+            Player owner = tamedBeast.player;
 
             if (owner == null || !owner.isOnline()) {
                 tamedBeast.doDespawn();

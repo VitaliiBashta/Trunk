@@ -19,9 +19,7 @@ public final class _688_DefeatTheElrokianRaiders extends Quest {
     private static final int q_necklace_of_storming_party = 8785;
 
     public _688_DefeatTheElrokianRaiders() {
-        super(false);
         addStartNpc(dindin);
-        addTalkId(dindin);
         addKillId(elcroki);
         addQuestItem(q_necklace_of_storming_party);
     }

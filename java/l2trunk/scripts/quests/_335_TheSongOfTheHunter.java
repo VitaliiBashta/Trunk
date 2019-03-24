@@ -235,8 +235,6 @@ public final class _335_TheSongOfTheHunter extends Quest {
     );
 
     public _335_TheSongOfTheHunter() {
-        super(false);
-
         addStartNpc(Grey);
         addTalkId(Cybellin, Tor);
 

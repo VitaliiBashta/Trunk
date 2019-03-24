@@ -47,13 +47,13 @@ public final class _358_IllegitimateChildOfAGoddess extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("30862-5.htm")) {
+        if ("30862-5.htm".equalsIgnoreCase(event)) {
             st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("30862-6.htm"))
+        } else if ("30862-6.htm".equalsIgnoreCase(event))
             st.exitCurrentQuest();
-        else if (event.equalsIgnoreCase("30862-7.htm"))
+        else if ("30862-7.htm".equalsIgnoreCase(event))
             if (st.getQuestItemsCount(SN_SCALE) >= REQUIRED) {
                 st.takeItems(SN_SCALE, REQUIRED);
                 //Opredelenie nagradi
@@ -76,7 +76,7 @@ public final class _358_IllegitimateChildOfAGoddess extends Quest {
                         item = SDarkCryShield60;
                     else
                         item = SNightMareShield60;
-                    st.giveItems(item, 1);
+                    st.giveItems(item);
                 }
                 st.exitCurrentQuest();
                 st.playSound(SOUND_FINISH);

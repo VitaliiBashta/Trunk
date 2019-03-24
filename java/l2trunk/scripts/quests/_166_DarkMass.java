@@ -24,7 +24,7 @@ public final class _166_DarkMass extends Quest {
         String htmltext = event;
         if (event.equals("1")) {
             htmltext = "30130-04.htm";
-            st.giveItems(UNDRES_LETTER_ID, 1);
+            st.giveItems(UNDRES_LETTER_ID);
             st.setCond(1);
             st.start();
             st.playSound(SOUND_ACCEPT);
@@ -55,31 +55,28 @@ public final class _166_DarkMass extends Quest {
                 htmltext = "30130-05.htm";
             else if (cond == 2) {
                 htmltext = "30130-06.htm";
-                st.takeItems(UNDRES_LETTER_ID);
-                st.takeItems(CEREMONIAL_DAGGER_ID);
-                st.takeItems(DREVIANT_WINE_ID);
-                st.takeItems(GARMIELS_SCRIPTURE_ID);
-                st.giveItems(ADENA_ID, 2966);
+                st.takeAllItems(UNDRES_LETTER_ID,CEREMONIAL_DAGGER_ID,DREVIANT_WINE_ID,GARMIELS_SCRIPTURE_ID);
+                st.giveAdena(2966);
                 st.player.addExpAndSp(5672, 446);
-                if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("ng1"))
+                if (st.player.getClassId().occupation() == 0)
                     st.player.sendPacket(new ExShowScreenMessage("  Delivery duty complete.\nGo find the Newbie Guide."));
                 st.playSound(SOUND_FINISH);
                 st.finish();
             }
         } else if (npcId == 30135) {
-            if (cond == 1 && st.getQuestItemsCount(CEREMONIAL_DAGGER_ID) == 0) {
+            if (cond == 1 ) {
                 giveItem(st, CEREMONIAL_DAGGER_ID);
                 htmltext = "30135-01.htm";
             } else
                 htmltext = "30135-02.htm";
         } else if (npcId == 30139) {
-            if (cond == 1 && st.getQuestItemsCount(DREVIANT_WINE_ID) == 0) {
+            if (cond == 1 ) {
                 giveItem(st, DREVIANT_WINE_ID);
                 htmltext = "30139-01.htm";
             } else
                 htmltext = "30139-02.htm";
         } else if (npcId == 30143)
-            if (cond == 1 && st.getQuestItemsCount(GARMIELS_SCRIPTURE_ID) == 0) {
+            if (cond == 1 ) {
                 giveItem(st, GARMIELS_SCRIPTURE_ID);
                 htmltext = "30143-01.htm";
             } else
@@ -88,8 +85,8 @@ public final class _166_DarkMass extends Quest {
     }
 
     private void giveItem(QuestState st, int item) {
-        st.giveItems(item);
-        if (st.getQuestItemsCount(CEREMONIAL_DAGGER_ID) >= 1 && st.getQuestItemsCount(DREVIANT_WINE_ID) >= 1 && st.getQuestItemsCount(GARMIELS_SCRIPTURE_ID) >= 1)
+        st.giveItemIfNotHave(item);
+        if (st.haveAllQuestItems(CEREMONIAL_DAGGER_ID,DREVIANT_WINE_ID,GARMIELS_SCRIPTURE_ID))
             st.setCond(2);
     }
 }

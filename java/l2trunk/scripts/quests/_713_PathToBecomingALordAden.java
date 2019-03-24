@@ -20,7 +20,6 @@ public final class _713_PathToBecomingALordAden extends Quest {
     private int mobs = 0;
 
     public _713_PathToBecomingALordAden() {
-        super(false);
         addStartNpc(Logan);
         addTalkId(Orven);
         addKillId(Orcs);

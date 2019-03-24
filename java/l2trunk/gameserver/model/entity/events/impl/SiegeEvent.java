@@ -56,7 +56,7 @@ public abstract class SiegeEvent<R extends Residence, S extends SiegeClanObject>
     final int hourOfDay;
     private final List<SummonInstance> siegeSummons = new ArrayList<>();
     R residence;
-    Clan _oldOwner;
+    Clan oldOwner;
     OnKillListener killListener = new KillListener();
     OnDeathListener _doorDeathListener = new DoorDeathListener();
     private boolean _isInProgress;
@@ -328,7 +328,7 @@ public abstract class SiegeEvent<R extends Residence, S extends SiegeClanObject>
         if (name.equals(OWNER))
             return getResidence().getOwner() != null;
         if (name.equals(OLD_OWNER))
-            return _oldOwner != null;
+            return oldOwner != null;
 
         return false;
     }

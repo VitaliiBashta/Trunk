@@ -91,11 +91,11 @@ public final class SuspiciousMerchantInstance extends NpcInstance {
             }
 
             // 1 рега возможна всего
-            for (Fortress fort : ResidenceHolder.getFortresses())
-                if (fort.getSiegeEvent().getSiegeClan(FortressSiegeEvent.ATTACKERS, clan) != null) {
-                    showChatWindow(player, "residence2/fortress/fortress_ordery006.htm");
-                    return;
-                }
+            if (ResidenceHolder.getFortresses()
+                    .anyMatch(fort -> fort.getSiegeEvent().getSiegeClan(FortressSiegeEvent.ATTACKERS, clan) != null)) {
+                showChatWindow(player, "residence2/fortress/fortress_ordery006.htm");
+                return;
+            }
 
             if (clan.getLevel() < 4) {
                 showChatWindow(player, "residence2/fortress/fortress_ordery006.htm");

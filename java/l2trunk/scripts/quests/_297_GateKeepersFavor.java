@@ -9,7 +9,6 @@ public final class _297_GateKeepersFavor extends Quest {
     private static final int GATEKEEPER_TOKEN = 1659;
 
     public _297_GateKeepersFavor() {
-        super(false);
         addStartNpc(30540);
         addKillId(20521);
         addQuestItem(STARSTONE);

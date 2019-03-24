@@ -6,6 +6,9 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
+import static l2trunk.gameserver.model.base.ClassId.dwarvenFighter;
+import static l2trunk.gameserver.model.base.ClassId.scavenger;
+
 public final class _417_PathToScavenger extends Quest {
     // ITEMS
     private final int RING_OF_RAVEN = 1642;
@@ -61,14 +64,14 @@ public final class _417_PathToScavenger extends Quest {
         switch (event) {
             case "1":
                 st.unset("id");
-                if (st.player.getLevel() >= 18 && st.player.getClassId().id == 0x35 && !st.haveQuestItem(RING_OF_RAVEN)) {
+                if (st.player.getLevel() >= 18 && st.player.getClassId() == dwarvenFighter && !st.haveQuestItem(RING_OF_RAVEN)) {
                     st.setCond(1);
                     st.start();
                     st.playSound(SOUND_ACCEPT);
                     st.giveItems(PIPIS_LETTER);
                     htmltext = "collector_pipi_q0417_05.htm";
-                } else if (st.player.getClassId().id != 0x35) {
-                    if (st.player.getClassId().id == 0x36)
+                } else if (st.player.getClassId() != dwarvenFighter) {
+                    if (st.player.getClassId() == scavenger)
                         htmltext = "collector_pipi_q0417_02a.htm";
                     else
                         htmltext = "collector_pipi_q0417_08.htm";
@@ -79,7 +82,7 @@ public final class _417_PathToScavenger extends Quest {
                 break;
             case "30519_1":
                 if (st.haveQuestItem(PIPIS_LETTER) ) {
-                    st.takeItems(PIPIS_LETTER, 1);
+                    st.takeItems(PIPIS_LETTER);
                     st.setCond(2);
                     int n = Rnd.get(3);
                     if (n == 0) {
@@ -131,9 +134,7 @@ public final class _417_PathToScavenger extends Quest {
             case "30519_6":
                 if (st.haveAnyQuestItems(ZIMENFS_PAY,CHALIS_PAY,BRONKS_PAY)) {
                     n = Rnd.get(3);
-                    st.takeItems(ZIMENFS_PAY, 1);
-                    st.takeItems(CHALIS_PAY, 1);
-                    st.takeItems(BRONKS_PAY, 1);
+                    st.takeAllItems(ZIMENFS_PAY,CHALIS_PAY,BRONKS_PAY);
                     if (n == 0) {
                         htmltext = "trader_mion_q0417_02.htm";
                         st.giveItems(ZIMENFS_POTION);
@@ -150,7 +151,7 @@ public final class _417_PathToScavenger extends Quest {
             case "30316_1":
                 if (st.haveQuestItem(BEAD_PARCEL) ) {
                     htmltext = "raut_q0417_02.htm";
-                    st.takeItems(BEAD_PARCEL, 1);
+                    st.takeItems(BEAD_PARCEL,1);
                     st.giveItems(ROUTS_TP_SCROLL);
                     st.setCond(10);
                 } else
@@ -253,7 +254,7 @@ public final class _417_PathToScavenger extends Quest {
                 else
                     htmltext = "zimenf_priest_of_earth_q0417_02.htm";
                 st.takeItems(ZIMENFS_POTION, 1);
-                st.giveItems(ZIMENFS_PAY, 1);
+                st.giveItems(ZIMENFS_PAY);
                 if (st.getInt("id") >= 50)
                     st.setCond(3);
                 st.set("id", st.getInt("id") + 10);
@@ -266,7 +267,7 @@ public final class _417_PathToScavenger extends Quest {
                 st.giveItems(BEAR_PIC);
                 st.setCond(5);
                 st.unset("id");
-            } else if (st.getQuestItemsCount(BEAR_PIC) == 1 && st.getQuestItemsCount(HONEY_JAR) < 5)
+            } else if (st.haveQuestItem(BEAR_PIC) && st.getQuestItemsCount(HONEY_JAR) < 5)
                 htmltext = "master_toma_q0417_02.htm";
             else if (st.getQuestItemsCount(BEAR_PIC) == 1 && st.getQuestItemsCount(HONEY_JAR) >= 5) {
                 htmltext = "master_toma_q0417_03.htm";
@@ -276,10 +277,9 @@ public final class _417_PathToScavenger extends Quest {
                 st.setCond(7);
             } else if (st.haveQuestItem(TARANTULA_PIC)  && st.getQuestItemsCount(BEAD) < 20)
                 htmltext = "master_toma_q0417_04.htm";
-            else if (st.getQuestItemsCount(TARANTULA_PIC) == 1 && st.getQuestItemsCount(BEAD) >= 20) {
+            else if (st.haveQuestItem(TARANTULA_PIC)  && st.haveQuestItem(BEAD, 20)) {
                 htmltext = "master_toma_q0417_05.htm";
-                st.takeItems(BEAD, st.getQuestItemsCount(BEAD));
-                st.takeItems(TARANTULA_PIC, 1);
+                st.takeAllItems(BEAD,TARANTULA_PIC);
                 st.giveItems(BEAD_PARCEL);
                 st.setCond(9);
             } else if (st.haveQuestItem(BEAD_PARCEL))

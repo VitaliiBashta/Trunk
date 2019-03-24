@@ -401,7 +401,7 @@ public final class _255_Tutorial extends Quest implements OnPlayerEnterListener 
         else if (event.startsWith("TE")) {
             st.cancelQuestTimer("TE");
             int event_id = 0;
-            if (!event.equalsIgnoreCase("TE"))
+            if (!"TE".equalsIgnoreCase(event))
                 event_id = Integer.valueOf(event.substring(2));
             if (event_id == 0)
                 st.closeTutorial();

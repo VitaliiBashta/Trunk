@@ -69,7 +69,7 @@ public enum MatchingRoomManager {
         RestartArea ra = MapRegionHolder.getInstance().getRegionData(RestartArea.class, player);
         if (ra != null) {
             RestartPoint rp = ra.getRestartPoint().get(player.getRace());
-            return rp.getBbs();
+            return rp.bbs;
         }
 
         return 0;

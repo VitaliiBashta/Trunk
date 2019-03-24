@@ -189,9 +189,7 @@ public final class _999_T1Tutorial extends Quest {
     }
 
     public _999_T1Tutorial() {
-        super(false);
         addStartNpc(30008, 30009, 30017, 30019, 30129, 30131, 30573, 30575, 30370, 30528, 30530, 30400, 30401, 30402, 30403, 30404, 32133, 32134);
-        addTalkId(30008, 30009, 30017, 30019, 30129, 30131, 30573, 30575, 30370, 30528, 30530, 30400, 30401, 30402, 30403, 30404, 32133, 32134);
         addFirstTalkId(30008, 30009, 30017, 30019, 30129, 30131, 30573, 30575, 30370, 30528, 30530, 30400, 30401, 30402, 30403, 30404, 32133, 32134);
 
         addKillId(18342, 20001);
@@ -289,9 +287,9 @@ public final class _999_T1Tutorial extends Quest {
         if (t == null)
             return "";
 
-        if ((level >= 10 || onlyone ) && t.npcTyp == 1)
+        if ((level >= 10 || onlyone) && t.npcTyp == 1)
             htmltext = "30575-05.htm";
-        else if (!onlyone  && level < 10) {
+        else if (!onlyone && level < 10) {
             if (player.getRace().ordinal() == t.raceId)
                 htmltext = t.htmlfiles[0];
             if (t.npcTyp == 1) {

@@ -4,6 +4,9 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
+import static l2trunk.gameserver.model.base.ClassId.artisan;
+import static l2trunk.gameserver.model.base.ClassId.dwarvenFighter;
+
 public final class _418_PathToArtisan extends Quest {
     //NPC
     private static final int Silvera = 30527;
@@ -121,8 +124,8 @@ public final class _418_PathToArtisan extends Quest {
                 htmltext = "blacksmith_silvery_q0418_04.htm";
                 st.exitCurrentQuest();
             } else if (cond == 0) {
-                if (st.player.getClassId().id != 0x35) {
-                    if (st.player.getClassId().id == 0x38)
+                if (st.player.getClassId() != dwarvenFighter) {
+                    if (st.player.getClassId() ==artisan)
                         htmltext = "blacksmith_silvery_q0418_02a.htm";
                     else
                         htmltext = "blacksmith_silvery_q0418_02.htm";

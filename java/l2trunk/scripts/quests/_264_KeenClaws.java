@@ -20,37 +20,11 @@ public final class _264_KeenClaws extends Quest {
     //MOB
     private static final int Goblin = 20003;
     private static final int AshenWolf = 20456;
-    //Drop Cond
-    //# [COND, NEWCOND, ID, REQUIRED, ITEM, NEED_COUNT, CHANCE, DROP]
-    private static final int[][] DROPLIST_COND = {
-            {
-                    1,
-                    2,
-                    Goblin,
-                    0,
-                    WolfClaw,
-                    50,
-                    50,
-                    2
-            },
-            {
-                    1,
-                    2,
-                    AshenWolf,
-                    0,
-                    WolfClaw,
-                    50,
-                    50,
-                    2
-            }
-    };
 
     public _264_KeenClaws() {
-        super(false);
-
         addStartNpc(Payne);
 
-        addKillId(Goblin,AshenWolf);
+        addKillId(Goblin, AshenWolf);
 
         addQuestItem(WolfClaw);
     }
@@ -87,12 +61,12 @@ public final class _264_KeenClaws extends Quest {
                     st.giveItems(WoodenHelmet);
                     st.playSound(SOUND_JACKPOT);
                 } else if (n < 2)
-                    st.giveItems(ADENA_ID, 1000);
+                    st.giveAdena(1000);
                 else if (n < 5)
                     st.giveItems(LeatherSandals);
                 else if (n < 8) {
                     st.giveItems(Stockings);
-                    st.giveItems(ADENA_ID, 50);
+                    st.giveAdena(50);
                 } else if (n < 11)
                     st.giveItems(HealingPotion);
                 else if (n < 14)
@@ -110,15 +84,11 @@ public final class _264_KeenClaws extends Quest {
     public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
-        for (int[] aDROPLIST_COND : DROPLIST_COND)
-            if (cond == aDROPLIST_COND[0] && npcId == aDROPLIST_COND[2])
-                if (aDROPLIST_COND[3] == 0 || st.haveQuestItem(aDROPLIST_COND[3]))
-                    if (aDROPLIST_COND[5] == 0)
-                        st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[6]);
-                    else if (st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[7], aDROPLIST_COND[5], aDROPLIST_COND[6]))
-                        if (aDROPLIST_COND[1] != cond && aDROPLIST_COND[1] != 0) {
-                            st.setCond(aDROPLIST_COND[1]);
-                            st.start();
-                        }
+        if (cond == 1 && (npcId == Goblin || npcId == AshenWolf)) {
+            if (st.rollAndGive(WolfClaw, 2, 2, 50, 50)) {
+                st.setCond(2);
+                st.start();
+            }
+        }
     }
 }

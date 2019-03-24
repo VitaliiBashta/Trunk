@@ -16,7 +16,6 @@ public final class _362_BardsMandolin extends Quest {
     private static final int Musical_Score__Theme_of_Journey = 4410;
 
     public _362_BardsMandolin() {
-        super(false);
         addStartNpc(SWAN);
         addTalkId(NANARIN,GALION,WOODROW);
         addQuestItem(SWANS_FLUTE,SWANS_LETTER);
@@ -40,7 +39,7 @@ public final class _362_BardsMandolin extends Quest {
                 htmltext = "30957_3.htm";
                 st.setCond(4);
                 st.giveItems(SWANS_LETTER);
-            } else if (cond == 4 && st.getQuestItemsCount(SWANS_FLUTE) > 0 && st.getQuestItemsCount(SWANS_LETTER) > 0)
+            } else if (cond == 4 && st.haveAllQuestItems(SWANS_FLUTE,SWANS_LETTER))
                 htmltext = "30957_6.htm";
             else if (cond == 5)
                 htmltext = "30957_4.htm";
@@ -52,10 +51,9 @@ public final class _362_BardsMandolin extends Quest {
             st.setCond(3);
             st.giveItems(SWANS_FLUTE);
             st.playSound(SOUND_ITEMGET);
-        } else if (npcId == NANARIN && cond == 4 && st.getQuestItemsCount(SWANS_FLUTE) > 0 && st.getQuestItemsCount(SWANS_LETTER) > 0) {
+        } else if (npcId == NANARIN && cond == 4 && st.haveAllQuestItems(SWANS_FLUTE,SWANS_LETTER)) {
             htmltext = "30956_1.htm";
-            st.takeItems(SWANS_FLUTE, 1);
-            st.takeItems(SWANS_LETTER, 1);
+            st.takeAllItems(SWANS_FLUTE,SWANS_LETTER);
             st.setCond(5);
         }
         return htmltext;
@@ -63,14 +61,14 @@ public final class _362_BardsMandolin extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        int _state = st.getState();
+        int state = st.getState();
         int cond = st.getCond();
-        if ("30957_2.htm".equalsIgnoreCase(event) && _state == CREATED && cond == 0) {
+        if ("30957_2.htm".equalsIgnoreCase(event) && state == CREATED && cond == 0) {
             st.setCond(1);
             st.start();
             st.playSound(SOUND_ACCEPT);
-        } else if ("30957_5.htm".equalsIgnoreCase(event) && _state == STARTED && cond == 5) {
-            st.giveItems(ADENA_ID, 10000);
+        } else if ("30957_5.htm".equalsIgnoreCase(event) && state == STARTED && cond == 5) {
+            st.giveAdena( 10000);
             st.giveItems(Musical_Score__Theme_of_Journey);
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest();

@@ -12,8 +12,6 @@ public final class _10267_JourneyToGracia extends Quest {
     private final static int Letter = 13810;
 
     public _10267_JourneyToGracia() {
-        super(false);
-
         addStartNpc(Orven);
 
         addTalkId(Keucereus,Papiku);
@@ -32,7 +30,7 @@ public final class _10267_JourneyToGracia extends Quest {
             st.setCond(2);
             st.playSound(SOUND_MIDDLE);
         } else if ("32548-02.htm".equalsIgnoreCase(event)) {
-            st.giveItems(ADENA_ID, 92500);
+            st.giveAdena( 92500);
             st.takeItems(Letter);
             st.addExpAndSp(75480, 7570);
             st.unset("cond");

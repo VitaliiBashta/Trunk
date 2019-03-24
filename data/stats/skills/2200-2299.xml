@@ -696,11 +696,7 @@
 		</for>
 	</skill>
 	<skill id="2255" levels="3" name="Crystal of Water">
-		<!--
-			FIXME: В данном варианте реализации снимает и бафф и дебафф.
-			Description:
-			Eliminates vulnerability to water attacks.
-		-->
+
 		<table name="#magicLevel">20 40 70</table>
 		<set name="magicType" val="SPECIAL" />
 		<set name="icon" val="icon.skill0000" />
@@ -719,11 +715,6 @@
 		</for>
 	</skill>
 	<skill id="2256" levels="3" name="Crystal of Wind">
-		<!--
-			FIXME: В данном варианте реализации снимает и бафф и дебафф.
-			Description:
-			Eliminates vulnerability to wind attacks.
-		-->
 		<table name="#magicLevel">20 40 70</table>
 		<set name="magicType" val="SPECIAL" />
 		<set name="icon" val="icon.skill0000" />
@@ -742,11 +733,7 @@
 		</for>
 	</skill>
 	<skill id="2257" levels="3" name="Crystal of Earth">
-		<!--
-			FIXME: В данном варианте реализации снимает и бафф и дебафф.
-			Description:
-			Eliminates vulnerability to earth attacks.
-		-->
+
 		<table name="#magicLevel">20 40 70</table>
 		<set name="magicType" val="SPECIAL" />
 		<set name="icon" val="icon.skill0000" />
@@ -765,10 +752,7 @@
 		</for>
 	</skill>
 	<skill id="2258" levels="3" name="Crystal of Darkness">
-		<!--
-			FIXME: В данном варианте реализации снимает и бафф и дебафф.
-			Description:
-			Eliminates vulnerability to darkness attacks.
+inates vulnerability to darkness attacks.
 		-->
 		<table name="#magicLevel">20 40 70</table>
 		<set name="magicType" val="SPECIAL" />
@@ -788,11 +772,6 @@
 		</for>
 	</skill>
 	<skill id="2259" levels="3" name="Crystal of Holyness">
-		<!--
-			FIXME: В данном варианте реализации снимает и бафф и дебафф.
-			Description:
-			Eliminates vulnerability to holy attacks.
-		-->
 		<table name="#magicLevel">20 40 70</table>
 		<set name="magicType" val="SPECIAL" />
 		<set name="icon" val="icon.skill0000" />
@@ -1138,10 +1117,7 @@
 		<set name="itemConsumeCount" val="1" />
 		<set name="isHandler" val="true" />
 		<cond msgId="1902">
-			<and>
 				<player minLevel="#levelMin" />
-				<player maxLevel="#levelMax" />
-			</and>
 		</cond>
 	</skill>
 	<skill id="2287" levels="6" name="Elixir of Life (No Grade)">
@@ -1162,10 +1138,7 @@
 		<set name="skillType" val="HEAL" />
 		<set name="operateType" val="OP_ACTIVE" />
 		<cond msgId="1902">
-			<and>
 				<player minLevel="#levelMin" />
-				<player maxLevel="#levelMax" />
-			</and>
 		</cond>
 	</skill>
 	<skill id="2288" levels="6" name="Elixir of Mental Strength (No Grade)">
@@ -1186,10 +1159,7 @@
 		<set name="skillType" val="MANAHEAL" />
 		<set name="operateType" val="OP_ACTIVE" />
 		<cond msgId="1902">
-			<and>
-				<player minLevel="#levelMin" />
 				<player maxLevel="#levelMax" />
-			</and>
 		</cond>
 	</skill>
 	<skill id="2289" levels="6" name="Elixir of CP (No Grade)">
@@ -1210,10 +1180,7 @@
 		<set name="skillType" val="COMBATPOINTHEAL" />
 		<set name="operateType" val="OP_ACTIVE" />
 		<cond msgId="1902">
-			<and>
-				<player minLevel="#levelMin" />
 				<player maxLevel="#levelMax" />
-			</and>
 		</cond>
 	</skill>
 	<skill id="2290" levels="1" name="Coffer of Shadows">

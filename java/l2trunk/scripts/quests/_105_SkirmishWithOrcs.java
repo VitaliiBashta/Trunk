@@ -35,8 +35,6 @@ public final class _105_SkirmishWithOrcs extends Quest {
     private static final int KabooChiefMurtika = 27068;
 
     public _105_SkirmishWithOrcs() {
-        super(false);
-
         addStartNpc(Kendell);
 
         addKillId(KabooChiefUoph,KabooChiefKracha,KabooChiefBatoh,KabooChiefTanukia,KabooChiefTurel,
@@ -62,14 +60,20 @@ public final class _105_SkirmishWithOrcs extends Quest {
             st.playSound(SOUND_ACCEPT);
             if (!st.haveAnyQuestItems(Kendells1stOrder,Kendells2stOrder,Kendells3stOrder,Kendells4stOrder)) {
                 int n = Rnd.get(4);
-                if (n == 0)
-                    st.giveItems(Kendells1stOrder);
-                else if (n == 1)
-                    st.giveItems(Kendells2stOrder);
-                else if (n == 2)
-                    st.giveItems(Kendells3stOrder);
-                else
-                    st.giveItems(Kendells4stOrder);
+                switch (n) {
+                    case 0:
+                        st.giveItems(Kendells1stOrder);
+                        break;
+                    case 1:
+                        st.giveItems(Kendells2stOrder);
+                        break;
+                    case 2:
+                        st.giveItems(Kendells3stOrder);
+                        break;
+                    default:
+                        st.giveItems(Kendells4stOrder);
+                        break;
+                }
             }
         }
         return event;
@@ -93,7 +97,7 @@ public final class _105_SkirmishWithOrcs extends Quest {
         else if (cond == 2 && st.haveQuestItem(KabooChiefs1stTorque) ) {
             htmltext = "sentinel_kendnell_q0105_06.htm";
             st.takeAllItems(Kendells1stOrder,Kendells2stOrder,Kendells3stOrder,Kendells4stOrder);
-            st.takeItems(KabooChiefs1stTorque, 1);
+            st.takeItems(KabooChiefs1stTorque);
             int n = Rnd.get(4);
             if (n == 0)
                 st.giveItems(Kendells5stOrder);
@@ -119,7 +123,7 @@ public final class _105_SkirmishWithOrcs extends Quest {
             st.giveAdena( 17599);
             st.player.addExpAndSp(41478, 3555);
 
-            if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("p1q3")) {
+            if (st.player.getClassId().occupation() == 0 ) {
                 st.player.setVar("p1q3"); // flag for helper
                 st.player.sendPacket(new ExShowScreenMessage("Now go find the Newbie Guide."));
                 st.giveItems(1060, 100); // healing potion

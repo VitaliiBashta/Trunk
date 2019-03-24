@@ -12,7 +12,6 @@ public final class _028_ChestCaughtWithABaitOfIcyAir extends Quest {
     private final int KikisLetter = 7626;
 
     public _028_ChestCaughtWithABaitOfIcyAir() {
-        super(false);
         addStartNpc(OFulle);
         addTalkId(Kiki);
         addQuestItem(KikisLetter);
@@ -30,7 +29,7 @@ public final class _028_ChestCaughtWithABaitOfIcyAir extends Quest {
             case "fisher_ofulle_q0028_0201.htm":
                 if (st.haveQuestItem(BigYellowTreasureChest)) {
                     st.setCond(2);
-                    st.takeItems(BigYellowTreasureChest, 1);
+                    st.takeItems(BigYellowTreasureChest);
                     st.giveItems(KikisLetter);
                     st.playSound(SOUND_MIDDLE);
                 } else

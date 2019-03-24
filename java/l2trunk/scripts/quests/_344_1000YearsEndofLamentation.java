@@ -133,7 +133,7 @@ public final class _344_1000YearsEndofLamentation extends Quest {
                     st.giveItems(4042);
                 if (amt > 0) {
                     st.unset("amount");
-                    st.giveItems(ADENA_ID, amt * 50 + bonus, true);
+                    st.giveAdena( amt * 50 + bonus);
                 }
                 htmltext = "30754-16.htm";
                 st.setCond(1);

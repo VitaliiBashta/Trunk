@@ -188,10 +188,8 @@ public final class _216_TrialoftheGuildsman extends Quest {
     };
 
     public _216_TrialoftheGuildsman() {
-        super(false);
-
         addStartNpc(VALKON);
-        addTalkId(VALKON,NORMAN,ALTRAN,PINTER,DUNING);
+        addTalkId(NORMAN,ALTRAN,PINTER,DUNING);
 
         addKillId(20079,20080,20081);
 
@@ -245,7 +243,7 @@ public final class _216_TrialoftheGuildsman extends Quest {
             st.giveItems(MARK_OF_GUILDSMAN);
             if (!st.player.isVarSet("prof2.1")) {
                 st.addExpAndSp(514739, 33384);
-                st.giveItems(57, 93803);
+                st.giveAdena( 93803);
                 st.player.setVar("prof2.1");
             }
             st.exitCurrentQuest();
@@ -327,7 +325,7 @@ public final class _216_TrialoftheGuildsman extends Quest {
                 htmltext = "warehouse_keeper_norman_q0216_05.htm";
             else if (st.haveAllQuestItems(ALLTRANS_INSTRUCTIONS,NORMANS_INSTRUCTIONS,DUNINGS_INSTRUCTIONS))
                 htmltext = "warehouse_keeper_norman_q0216_06.htm";
-            else if (st.getQuestItemsCount(ALLTRANS_INSTRUCTIONS) > 0 && st.getQuestItemsCount(NORMANS_INSTRUCTIONS) > 0 && st.getQuestItemsCount(DUNINGS_KEY) >= 30)
+            else if (st.haveAllQuestItems(ALLTRANS_INSTRUCTIONS,NORMANS_INSTRUCTIONS)  && st.getQuestItemsCount(DUNINGS_KEY) >= 30)
                 htmltext = "warehouse_keeper_norman_q0216_07.htm";
             else if (st.haveAllQuestItems(ALLTRANS_INSTRUCTIONS,NORMANS_LIST) ) {
                 if (st.getQuestItemsCount(GRAY_BONE_POWDER) >= 70 && st.getQuestItemsCount(GRANITE_WHETSTONE) >= 70 && st.getQuestItemsCount(RED_PIGMENT) >= 70 && st.getQuestItemsCount(BRAIDED_YARN) >= 70) {

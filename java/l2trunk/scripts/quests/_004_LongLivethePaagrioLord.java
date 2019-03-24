@@ -26,12 +26,11 @@ public final class _004_LongLivethePaagrioLord extends Quest {
             30587, DEEP_SEA_ORB);
 
     public _004_LongLivethePaagrioLord() {
-        super(false);
         addStartNpc(30578);
 
         addTalkId(30559, 30560, 30562, 30566, 30578, 30585, 30587);
 
-        addQuestItem(SPIDER_DUST, ANCESTOR_SKULL, BLOODY_AXE, HONEY_KHANDAR, BEAR_FUR_CLOAK, DEEP_SEA_ORB);
+        addQuestItem(NPC_GIFTS.values());
     }
 
     @Override
@@ -66,9 +65,9 @@ public final class _004_LongLivethePaagrioLord extends Quest {
                 htmltext = "30578-06.htm";
                 st.takeItems(NPC_GIFTS.values());
                 st.giveItems(4);
-                st.giveItems(ADENA_ID, (int) ((Config.RATE_QUESTS_REWARD - 1) * 590 + 1850 * Config.RATE_QUESTS_REWARD), false); // T2
+                st.giveAdena((int) ((Config.RATE_QUESTS_REWARD - 1) * 590 + 1850 * Config.RATE_QUESTS_REWARD));
                 st.player.addExpAndSp(4254, 335);
-                if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("ng1"))
+                if (st.player.getClassId().occupation() == 0)
                     st.player.sendPacket(new ExShowScreenMessage("  Delivery duty complete.\nGo find the Newbie Guide."));
                 st.playSound(SOUND_FINISH);
                 st.finish();

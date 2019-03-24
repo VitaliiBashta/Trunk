@@ -14,8 +14,6 @@ public final class _328_SenseForBusiness extends Quest {
     private final int BASILISK_GIZZARD = 1348;
 
     public _328_SenseForBusiness() {
-        super(false);
-
         addStartNpc(SARIEN);
         addKillId(20055,20059,20067,20068,20070,20072);
         addQuestItem(MONSTER_EYE_CARCASS,MONSTER_EYE_LENS,BASILISK_GIZZARD);
@@ -52,10 +50,8 @@ public final class _328_SenseForBusiness extends Quest {
             long lenses = st.getQuestItemsCount(MONSTER_EYE_LENS);
             long gizzard = st.getQuestItemsCount(BASILISK_GIZZARD);
             if (carcass + lenses + gizzard > 0) {
-                st.giveItems(ADENA_ID, 30 * carcass + 2000 * lenses + 75 * gizzard);
-                st.takeItems(MONSTER_EYE_CARCASS, -1);
-                st.takeItems(MONSTER_EYE_LENS, -1);
-                st.takeItems(BASILISK_GIZZARD, -1);
+                st.giveAdena( 30 * carcass + 2000 * lenses + 75 * gizzard);
+                st.takeAllItems(MONSTER_EYE_CARCASS,MONSTER_EYE_LENS, BASILISK_GIZZARD);
                 htmltext = "trader_salient_q0328_05.htm";
             } else
                 htmltext = "trader_salient_q0328_04.htm";

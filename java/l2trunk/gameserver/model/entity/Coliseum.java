@@ -118,7 +118,7 @@ public final class Coliseum {
             party.getLeader().sendMessage("rooms are not free you has been registred try to use teleport function later");
             return;
         }
-        party.getMembersStream().forEach(member -> member.teleToLocation(teleloc));
+        party.getMembers().forEach(member -> member.teleToLocation(teleloc));
         if (!isWaitingRoom2Free) {
             startBattle(getPartyInRoom1(), getPartyInRoom2());
         }
@@ -294,9 +294,8 @@ public final class Coliseum {
                     if (!getPreviusWinners().equals(party1)) {
                         setPreviusWinner(party1);
                         setWinCount(1);
-                        for (Player member : party1.getMembersStream()) {
-                            member.addFame(80, "Coliseum");
-                        }
+                        party1.getMembers().forEach(member -> member.addFame(80, "Coliseum"));
+
                     } else {
                         incWinCount();
                         party1.getMembersStream().forEach(member -> member.addFame(80 + (getWinCount() * 5), "Coliseum"));
@@ -330,11 +329,9 @@ public final class Coliseum {
                         teleloc = zone.getRestartPoints().get(4);
                     } else if (isWaitingRoom2Free() && isWaitingRoom1Free()) {
                         setPreviusWinner(null);
-                        for (Player member : party2.getMembersStream()) {
-                            if (!member.isDead()) {
-                                member.teleToClosestTown();
-                            }
-                        }
+                        party2.getMembersStream()
+                        .filter(member ->!member.isDead())
+                        .forEach(Player::teleToClosestTown);
                     } else if (!isWaitingRoom1Free()) {
                         teleloc = zone.getRestartPoints().get(1);
                         startBattle(getPartyInRoom1(), party2);
@@ -391,9 +388,9 @@ public final class Coliseum {
             setIsInUse(true);
             Party next;
             if (party_waiting_list.size() > 0) {
-                ArrayList<Party> toDel = new ArrayList<>();
+                List<Party> toDel = new ArrayList<>();
                 for (Party party : party_waiting_list) {
-                    if (party.getMembersStream().size() > 6) {
+                    if (party.getMembers().size() > 6) {
                         party.getMembersStream().forEach(m -> m.sendMessage("Free room at coliseum append"));
                     } else {
                         toDel.add(party);
@@ -405,7 +402,7 @@ public final class Coliseum {
                     return;
                 }
                 next = Rnd.get(party_waiting_list);
-                for (Player member : next.getMembersStream()) {
+                for (Player member : next.getMembers()) {
                     if ((member.getLevel() > getMaxLevel()) || (member.getLevel() < getMinLevel())) {
                         next.sendPacket(member, new SystemMessage(2097).addName(member));
                         return;
@@ -429,7 +426,7 @@ public final class Coliseum {
                     next2 = party_waiting_list.get(Rnd.get(party_waiting_list.size() - 1));
                 }
                 next = next2;
-                for (Player member : next.getMembersStream()) {
+                for (Player member : next.getMembers()) {
                     if ((member.getLevel() > getMaxLevel()) || (member.getLevel() < getMinLevel())) {
                         next.sendPacket(member, new SystemMessage(2097).addName(member));
                         return;

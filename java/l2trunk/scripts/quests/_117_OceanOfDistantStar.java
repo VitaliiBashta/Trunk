@@ -20,8 +20,6 @@ public final class _117_OceanOfDistantStar extends Quest {
     private static final int BanditInspector = 22024;
 
     public _117_OceanOfDistantStar() {
-        super(false);
-
         addStartNpc(Abey);
 
         addTalkId(GhostEngineer, Obi, Box, GhostEngineer2);
@@ -33,31 +31,31 @@ public final class _117_OceanOfDistantStar extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("railman_abu_q0117_0104.htm")) {
+        if ("railman_abu_q0117_0104.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.start();
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("ghost_of_railroadman2_q0117_0201.htm"))
+        } else if ("ghost_of_railroadman2_q0117_0201.htm".equalsIgnoreCase(event))
             st.setCond(2);
-        else if (event.equalsIgnoreCase("railman_obi_q0117_0301.htm"))
+        else if ("railman_obi_q0117_0301.htm".equalsIgnoreCase(event))
             st.setCond(3);
-        else if (event.equalsIgnoreCase("railman_abu_q0117_0401.htm"))
+        else if ("railman_abu_q0117_0401.htm".equalsIgnoreCase(event))
             st.setCond(4);
-        else if (event.equalsIgnoreCase("q_box_of_railroad_q0117_0501.htm")) {
+        else if ("q_box_of_railroad_q0117_0501.htm".equalsIgnoreCase(event)) {
             st.setCond(5);
-            st.giveItems(EngravedHammer, 1);
-        } else if (event.equalsIgnoreCase("railman_abu_q0117_0601.htm"))
+            st.giveItems(EngravedHammer);
+        } else if ("railman_abu_q0117_0601.htm".equalsIgnoreCase(event))
             st.setCond(6);
-        else if (event.equalsIgnoreCase("railman_obi_q0117_0701.htm"))
+        else if ("railman_obi_q0117_0701.htm".equalsIgnoreCase(event))
             st.setCond(7);
-        else if (event.equalsIgnoreCase("railman_obi_q0117_0801.htm")) {
-            st.takeItems(BookOfGreyStar, -1);
+        else if ("railman_obi_q0117_0801.htm".equalsIgnoreCase(event)) {
+            st.takeItems(BookOfGreyStar);
             st.setCond(9);
-        } else if (event.equalsIgnoreCase("ghost_of_railroadman2_q0117_0901.htm")) {
-            st.takeItems(EngravedHammer, -1);
+        } else if ("ghost_of_railroadman2_q0117_0901.htm".equalsIgnoreCase(event)) {
+            st.takeItems(EngravedHammer);
             st.setCond(10);
-        } else if (event.equalsIgnoreCase("ghost_of_railroadman_q0117_1002.htm")) {
-            st.giveItems(ADENA_ID, 17647, true);
+        } else if ("ghost_of_railroadman_q0117_1002.htm".equalsIgnoreCase(event)) {
+            st.giveAdena(17647);
             st.addExpAndSp(107387, 7369);
             st.playSound(SOUND_FINISH);
             st.finish();
@@ -70,6 +68,7 @@ public final class _117_OceanOfDistantStar extends Quest {
         String htmltext = "noquest";
         int npcId = npc.getNpcId();
         int id = st.getState();
+        boolean haveHammer = st.haveQuestItem(EngravedHammer);
         int cond = 0;
         if (id != CREATED)
             cond = st.getCond();
@@ -83,23 +82,23 @@ public final class _117_OceanOfDistantStar extends Quest {
                 }
             } else if (cond == 3)
                 htmltext = "railman_abu_q0117_0301.htm";
-            else if (cond == 5 && st.getQuestItemsCount(EngravedHammer) > 0)
+            else if (cond == 5 && haveHammer)
                 htmltext = "railman_abu_q0117_0501.htm";
-            else if (cond == 6 && st.getQuestItemsCount(EngravedHammer) > 0)
+            else if (cond == 6 && haveHammer)
                 htmltext = "railman_abu_q0117_0601.htm";
         } else if (npcId == GhostEngineer) {
             if (cond == 1)
                 htmltext = "ghost_of_railroadman2_q0117_0101.htm";
-            else if (cond == 9 && st.getQuestItemsCount(EngravedHammer) > 0)
+            else if (cond == 9 && haveHammer)
                 htmltext = "ghost_of_railroadman2_q0117_0801.htm";
         } else if (npcId == Obi) {
             if (cond == 2)
                 htmltext = "railman_obi_q0117_0201.htm";
-            else if (cond == 6 && st.getQuestItemsCount(EngravedHammer) > 0)
+            else if (cond == 6 && haveHammer)
                 htmltext = "railman_obi_q0117_0601.htm";
-            else if (cond == 7 && st.getQuestItemsCount(EngravedHammer) > 0)
+            else if (cond == 7 && haveHammer)
                 htmltext = "railman_obi_q0117_0701.htm";
-            else if (cond == 8 && st.getQuestItemsCount(BookOfGreyStar) > 0)
+            else if (cond == 8 && st.haveQuestItem(BookOfGreyStar))
                 htmltext = "railman_obi_q0117_0704.htm";
         } else if (npcId == Box && cond == 4)
             htmltext = "q_box_of_railroad_q0117_0401.htm";
@@ -111,10 +110,7 @@ public final class _117_OceanOfDistantStar extends Quest {
     @Override
     public void onKill(NpcInstance npc, QuestState st) {
         if (st.getCond() == 7 && Rnd.chance(30)) {
-            if (st.getQuestItemsCount(BookOfGreyStar) < 1) {
-                st.giveItems(BookOfGreyStar);
-                st.playSound(SOUND_ITEMGET);
-            }
+            st.giveItemIfNotHave(BookOfGreyStar);
             st.setCond(8);
             st.start();
         }

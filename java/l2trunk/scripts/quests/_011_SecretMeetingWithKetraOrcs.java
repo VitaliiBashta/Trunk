@@ -12,8 +12,6 @@ public final class _011_SecretMeetingWithKetraOrcs extends Quest {
     private final int MUNITIONS_BOX = 7231;
 
     public _011_SecretMeetingWithKetraOrcs() {
-        super(false);
-
         addStartNpc(CADMON);
 
         addTalkId(LEON,WAHKAN);

@@ -9,24 +9,22 @@ public final class _249_PoisonedPlainsOfTheLizardmen extends Quest {
     private static final int JOHNNY = 32744;
 
     public _249_PoisonedPlainsOfTheLizardmen() {
-        super(false);
-
         addStartNpc(MOUEN);
-        addTalkId(MOUEN,JOHNNY);
+        addTalkId(JOHNNY);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
 
         if (npc.getNpcId() == MOUEN) {
-            if (event.equalsIgnoreCase("30196-03.htm")) {
+            if ("30196-03.htm".equalsIgnoreCase(event)) {
                 st.start();
                 st.setCond(1);
                 st.playSound(SOUND_ACCEPT);
             }
-        } else if (npc.getNpcId() == JOHNNY && event.equalsIgnoreCase("32744-03.htm")) {
+        } else if (npc.getNpcId() == JOHNNY && "32744-03.htm".equalsIgnoreCase(event)) {
             st.unset("cond");
-            st.giveItems(57, 83056);
+            st.giveAdena( 83056);
             st.addExpAndSp(477496, 58743);
             st.playSound(SOUND_FINISH);
             st.finish();

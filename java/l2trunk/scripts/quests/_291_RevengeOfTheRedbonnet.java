@@ -20,10 +20,7 @@ public final class _291_RevengeOfTheRedbonnet extends Quest {
     private static final int BlackWolf = 20317;
 
     public _291_RevengeOfTheRedbonnet() {
-        super(false);
-
         addStartNpc(MaryseRedbonnet);
-        addTalkId(MaryseRedbonnet);
 
         addKillId(BlackWolf);
 
@@ -32,7 +29,7 @@ public final class _291_RevengeOfTheRedbonnet extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("marife_redbonnet_q0291_03.htm")) {
+        if ("marife_redbonnet_q0291_03.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.start();
             st.playSound(SOUND_ACCEPT);
@@ -56,7 +53,7 @@ public final class _291_RevengeOfTheRedbonnet extends Quest {
         else if (cond == 2 && st.getQuestItemsCount(BlackWolfPelt) < 40) {
             htmltext = "marife_redbonnet_q0291_04.htm";
             st.setCond(1);
-        } else if (cond == 2 && st.getQuestItemsCount(BlackWolfPelt) >= 40) {
+        } else if (cond == 2 && st.haveQuestItem(BlackWolfPelt, 40)) {
             int random = Rnd.get(100);
             st.takeItems(BlackWolfPelt);
             if (random < 3)

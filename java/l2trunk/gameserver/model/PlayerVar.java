@@ -9,24 +9,24 @@ import java.util.concurrent.ScheduledFuture;
 public final class PlayerVar {
     private final Player owner;
     private final String name;
-    private final long expire_time;
+    private final long expireTime;
     private final String value;
     private final ScheduledFuture<?> task;
 
-    PlayerVar(Player owner, String name, String value, long expire_time) {
+    PlayerVar(Player owner, String name, String value, long expireTime) {
         this.owner = owner;
         this.name = name;
         this.value = value;
-        this.expire_time = expire_time;
+        this.expireTime = expireTime;
 
-        if (expire_time > 0) {
-            task = ThreadPoolManager.INSTANCE.schedule(new PlayerVarExpireTask(this), expire_time - System.currentTimeMillis());
+        if (expireTime > 0) {
+            task = ThreadPoolManager.INSTANCE.schedule(new PlayerVarExpireTask(this), expireTime - System.currentTimeMillis());
         } else
             task = null;
     }
 
     long getTimeToExpire() {
-        return expire_time - System.currentTimeMillis();
+        return expireTime - System.currentTimeMillis();
     }
 
     public String getValue() {

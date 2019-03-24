@@ -74,7 +74,6 @@ public final class _663_SeductiveWhispers extends Quest {
     }
 
     public _663_SeductiveWhispers() {
-        super(false);
         addStartNpc(Wilbert);
         addKillId(mobs);
     }
@@ -185,7 +184,7 @@ public final class _663_SeductiveWhispers extends Quest {
 
         void giveRewards(QuestState qs) {
             for (List<Integer> item_ids : rewards.keySet())
-                qs.giveItems(Rnd.get(item_ids), rewards.get(item_ids), false);
+                qs.giveItems(Rnd.get(item_ids), rewards.get(item_ids));
         }
 
         @Override

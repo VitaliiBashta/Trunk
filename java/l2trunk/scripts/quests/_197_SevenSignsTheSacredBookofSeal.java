@@ -22,10 +22,8 @@ public final class _197_SevenSignsTheSacredBookofSeal extends Quest {
     private static final int MysteriousHandwrittenText = 13829;
 
     public _197_SevenSignsTheSacredBookofSeal() {
-        super(false);
-
         addStartNpc(Wood);
-        addTalkId(Wood, Orven, Leopard, Lawrence, Sofia);
+        addTalkId(Orven, Leopard, Lawrence, Sofia);
         addKillId(ShilensEvilThoughts);
         addQuestItem(PieceofDoubt, MysteriousHandwrittenText);
     }

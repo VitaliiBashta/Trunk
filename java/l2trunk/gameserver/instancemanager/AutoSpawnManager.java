@@ -41,7 +41,7 @@ public enum AutoSpawnManager {
 
         restoreSpawnData();
 
-        _log.info("AutoSpawnHandler: Loaded " + size() + " handlers in total.");
+        _log.info("AutoSpawnHandler: Loaded " + registeredSpawns.size() + " handlers in total.");
     }
 
     public static AutoSpawnManager INSTANCE() {
@@ -49,12 +49,7 @@ public enum AutoSpawnManager {
 
     }
 
-    private int size() {
-        return registeredSpawns.size();
-    }
-
     private void restoreSpawnData() {
-        int numLoaded = 0;
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              // Restore spawn group data, then the location data.
              PreparedStatement statement = con.prepareStatement("SELECT * FROM random_spawn ORDER BY groupId ASC");
@@ -64,9 +59,7 @@ public enum AutoSpawnManager {
                 // Register random spawn group, set various options on the created spawn instance.
                 AutoSpawnInstance spawnInst = registerSpawn(rset.getInt("npcId"), rset.getInt("initialDelay"), rset.getInt("respawnDelay"), rset.getInt("despawnDelay"));
                 spawnInst.setSpawnCount(rset.getInt("count"));
-                spawnInst.setBroadcast(rset.getBoolean("broadcastSpawn"));
                 spawnInst.setRandomSpawn(rset.getBoolean("randomSpawn"));
-                numLoaded++;
 
                 // Restore the spawn locations for this spawn group/instance.
 
@@ -87,7 +80,7 @@ public enum AutoSpawnManager {
      *
      * @return AutoSpawnInstance spawnInst
      */
-    private AutoSpawnInstance registerSpawn0(int npcId, int initialDelay, int respawnDelay, int despawnDelay) {
+    private AutoSpawnInstance registerSpawn(int npcId, int initialDelay, int respawnDelay, int despawnDelay) {
         if (initialDelay < 0)
             initialDelay = DEFAULT_INITIAL_SPAWN;
 
@@ -108,21 +101,6 @@ public enum AutoSpawnManager {
         return newSpawn;
     }
 
-    /**
-     * Registers a spawn with the given parameters with the spawner, and marks it as
-     * active. Returns a AutoSpawnInstance containing info about the spawn.
-     * <B>Warning:</B> Spawn locations must be specified separately using addSpawnLocation().
-     * <p>
-     * npcId
-     * initialDelay (If < 0 = default value)
-     * respawnDelay (If < 0 = default value)
-     * despawnDelay (If < 0 = default value or if = 0, function disabled)
-     *
-     * @return AutoSpawnInstance spawnInst
-     */
-    private AutoSpawnInstance registerSpawn(int npcId, int initialDelay, int respawnDelay, int despawnDelay) {
-        return registerSpawn0(npcId, initialDelay, respawnDelay, despawnDelay);
-    }
 
     /**
      * Sets the active state of the specified spawn.
@@ -262,19 +240,8 @@ public enum AutoSpawnManager {
                 }
 
                 RestartArea ra = MapRegionHolder.getInstance().getRegionData(RestartArea.class, npcInst);
-                String nearestTown = "";
-                if (ra != null) {
-                    RestartPoint rp = ra.getRestartPoint().get(Race.human);
-                    nearestTown = rp.getNameLoc();
-                }
 
-                // Announce to all players that the spawn has taken place, with the nearest town location.
-				/*if (spawnInst.isBroadcasting() && npcInst != null)
-					Announcements.INSTANCE().announceByCustomMessage("l2trunk.gameserver.model.AutoSpawnHandler.spawnNPC", new String[] {
-							npcInst.name(),
-							nearestTown });*/
 
-                // If there is no despawn time, do not create a despawn task.
                 if (spawnInst.despawnDelay > 0) {
                     AutoDespawner rd = new AutoDespawner(objectId);
                     ThreadPoolManager.INSTANCE.schedule(rd, spawnInst.despawnDelay - 1000);
@@ -320,7 +287,6 @@ public enum AutoSpawnManager {
         int lastLocIndex = -1;
         private boolean spawnActive;
         private boolean randomSpawn = false;
-        private boolean _broadcastAnnouncement = false;
 
         AutoSpawnInstance(int npcId, int initDelay, int respawnDelay, int despawnDelay) {
             this.npcId = npcId;
@@ -340,7 +306,6 @@ public enum AutoSpawnManager {
         public int getObjectId() {
             return objectId;
         }
-
 
         void setSpawnCount(int spawnCount) {
             this.spawnCount = spawnCount;
@@ -363,9 +328,6 @@ public enum AutoSpawnManager {
             return npcSpawns;
         }
 
-        public void setBroadcast(boolean broadcastValue) {
-            _broadcastAnnouncement = broadcastValue;
-        }
 
         public boolean isSpawnActive() {
             return spawnActive;
@@ -381,10 +343,6 @@ public enum AutoSpawnManager {
 
         void setRandomSpawn(boolean randValue) {
             randomSpawn = randValue;
-        }
-
-        public boolean isBroadcasting() {
-            return _broadcastAnnouncement;
         }
 
         void addSpawnLocation(Location loc) {

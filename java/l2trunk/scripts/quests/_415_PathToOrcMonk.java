@@ -4,6 +4,9 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
+import static l2trunk.gameserver.model.base.ClassId.orcFighter;
+import static l2trunk.gameserver.model.base.ClassId.orcMonk;
+
 public final class _415_PathToOrcMonk extends Quest {
     //NPC
     private static final int Urutu = 30587;
@@ -119,8 +122,6 @@ public final class _415_PathToOrcMonk extends Quest {
     };
 
     public _415_PathToOrcMonk() {
-        super(false);
-
         addStartNpc(Urutu);
 
         addTalkId(Rosheek,Kasman,Toruku);
@@ -164,12 +165,12 @@ public final class _415_PathToOrcMonk extends Quest {
         String htmltext = "noquest";
         int cond = st.getCond();
         if (npcId == Urutu) {
-            if (st.getQuestItemsCount(KhavatariTotem) != 0) {
+            if (st.haveQuestItem(KhavatariTotem)) {
                 htmltext = "gantaki_zu_urutu_q0415_04.htm";
                 st.exitCurrentQuest();
             } else if (cond == 0) {
-                if (st.player.getClassId().id != 0x2c) {
-                    if (st.player.getClassId().id == 0x2f)
+                if (st.player.getClassId() != orcFighter) {
+                    if (st.player.getClassId() == orcMonk)
                         htmltext = "gantaki_zu_urutu_q0415_02a.htm";
                     else
                         htmltext = "gantaki_zu_urutu_q0415_02.htm";
@@ -290,16 +291,13 @@ public final class _415_PathToOrcMonk extends Quest {
                             st.start();
                         }
         if (cond == 3 && st.getQuestItemsCount(LeatherPouchFull1st) == 0) {
-            st.takeItems(KashaBearClaw);
-            st.takeItems(LeatherPouch1st);
+            st.takeAllItems(KashaBearClaw,LeatherPouch1st);
             st.giveItems(LeatherPouchFull1st);
         } else if (cond == 5 && st.getQuestItemsCount(LeatherPouchFull2st) == 0) {
-            st.takeItems(KashaBladeSpiderTalon);
-            st.takeItems(LeatherPouch2st);
+            st.takeAllItems(KashaBladeSpiderTalon,LeatherPouch2st);
             st.giveItems(LeatherPouchFull2st);
         } else if (cond == 7 && st.getQuestItemsCount(LeatherPouchFull3st) == 0) {
-            st.takeItems(ScarletSalamanderScale);
-            st.takeItems(LeatherPouch3st);
+            st.takeAllItems(ScarletSalamanderScale,LeatherPouch3st);
             st.giveItems(LeatherPouchFull3st);
         } else if (cond == 11 && st.getQuestItemsCount(RatmanFang) >= 3 && st.getQuestItemsCount(LangkLizardmanTooth) >= 3 && st.getQuestItemsCount(FelimLizardmanTooth) >= 3 && st.getQuestItemsCount(VukuOrcTusk) >= 3) {
             st.takeAllItems(VukuOrcTusk,RatmanFang,LangkLizardmanTooth,FelimLizardmanTooth,LeatherPouch4st);

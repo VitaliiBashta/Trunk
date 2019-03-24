@@ -33,11 +33,9 @@ public final class _025_HidingBehindTheTruth extends Quest {
     private NpcInstance COFFIN_SPAWN = null;
 
     public _025_HidingBehindTheTruth() {
-        super(false);
-
         addStartNpc(BENEDICT);
 
-        addTalkId(AGRIPEL,BROKEN_BOOK_SHELF,COFFIN,MAID_OF_LIDIA,MYSTERIOUS_WIZARD,TOMBSTONE);
+        addTalkId(AGRIPEL, BROKEN_BOOK_SHELF, COFFIN, MAID_OF_LIDIA, MYSTERIOUS_WIZARD, TOMBSTONE);
 
         addKillId(TRIOLS_PAWN);
 
@@ -66,16 +64,14 @@ public final class _025_HidingBehindTheTruth extends Quest {
         else if ("31348-08.htm".equalsIgnoreCase(event)) {
             if (st.getCond() == 4) {
                 st.setCond(5);
-                st.takeItems(SUSPICIOUS_TOTEM_DOLL_1);
-                st.takeItems(SUSPICIOUS_TOTEM_DOLL_2);
+                st.takeAllItems(SUSPICIOUS_TOTEM_DOLL_1, SUSPICIOUS_TOTEM_DOLL_2);
                 st.giveItemIfNotHave(GEMSTONE_KEY);
             } else if (st.getCond() == 5)
                 return "31348-08a.htm";
         } else if ("31522-04.htm".equalsIgnoreCase(event)) {
             st.setCond(6);
-                st.giveItemIfNotHave(MAP_FOREST_OF_DEADMAN);
+            st.giveItemIfNotHave(MAP_FOREST_OF_DEADMAN);
         } else if ("31534-07.htm".equalsIgnoreCase(event)) {
-
             st.addSpawn(TRIOLS_PAWN, player.getLoc());
             st.setCond(7);
         } else if ("31534-11.htm".equalsIgnoreCase(event)) {
@@ -91,7 +87,7 @@ public final class _025_HidingBehindTheTruth extends Quest {
             COFFIN_SPAWN = st.addSpawn(COFFIN);
 
             st.startQuestTimer("Coffin_Despawn", 120000);
-        } else if (event.equalsIgnoreCase("Coffin_Despawn")) {
+        } else if ("Coffin_Despawn".equalsIgnoreCase(event)) {
             if (COFFIN_SPAWN != null)
                 COFFIN_SPAWN.deleteMe();
 
@@ -141,7 +137,7 @@ public final class _025_HidingBehindTheTruth extends Quest {
                 if (cond == 0 || cond == 1)
                     return "31349-01.htm";
                 if (cond == 2)
-                    return st.getQuestItemsCount(SUSPICIOUS_TOTEM_DOLL_1) == 0 ? "31349-03a.htm" : "31349-03.htm";
+                    return !st.haveQuestItem(SUSPICIOUS_TOTEM_DOLL_1) ? "31349-03a.htm" : "31349-03.htm";
                 if (cond == 3)
                     return "31349-03.htm";
                 if (cond == 4)
@@ -200,7 +196,7 @@ public final class _025_HidingBehindTheTruth extends Quest {
 
             case MAID_OF_LIDIA:
                 if (cond == 9)
-                    return st.getQuestItemsCount(CONTRACT) > 0 ? "31532-01.htm" : "You have no Contract...";
+                    return st.haveQuestItem(CONTRACT) ? "31532-01.htm" : "You have no Contract...";
                 if (cond == 11 || cond == 12)
                     return "31532-08.htm";
                 if (cond == 13) {
@@ -233,7 +229,7 @@ public final class _025_HidingBehindTheTruth extends Quest {
             case COFFIN:
                 if (cond == 12) {
                     st.setCond(13);
-                    st.giveItems(LIDIAS_DRESS, 1);
+                    st.giveItems(LIDIAS_DRESS);
                     return "31536-01.htm";
                 }
                 if (cond == 13)

@@ -10,15 +10,13 @@ public final class _121_PavelTheGiants extends Quest {
     private static final int YUMI = 32041;
 
     public _121_PavelTheGiants() {
-        super(false);
-
         addStartNpc(NEWYEAR);
-        addTalkId(NEWYEAR, YUMI);
+        addTalkId(YUMI);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equals("collecter_yumi_q0121_0201.htm")) {
+        if ("collecter_yumi_q0121_0201.htm".equals(event)) {
             st.playSound(SOUND_FINISH);
             st.addExpAndSp(346320, 26069);
             st.finish();

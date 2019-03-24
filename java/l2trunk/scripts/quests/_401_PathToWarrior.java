@@ -25,8 +25,6 @@ public final class _401_PathToWarrior extends Quest {
     private final int RUSTED_BRONZE_SWORD3_ID = 1142;
 
     public _401_PathToWarrior() {
-        super(false);
-
         addStartNpc(AURON);
 
         addTalkId(SIMPLON);
@@ -114,8 +112,7 @@ public final class _401_PathToWarrior extends Quest {
             else if (st.getQuestItemsCount(RUSTED_BRONZE_SWORD1_ID) < 10)
                 htmltext = "trader_simplon_q0401_04.htm";
             else if (st.haveQuestItem(RUSTED_BRONZE_SWORD1_ID, 10)) {
-                st.takeItems(WARRIOR_GUILD_MARK_ID);
-                st.takeItems(RUSTED_BRONZE_SWORD1_ID);
+                st.takeAllItems(WARRIOR_GUILD_MARK_ID,RUSTED_BRONZE_SWORD1_ID);
                 st.giveItems(RUSTED_BRONZE_SWORD2_ID);
                 st.giveItems(SIMPLONS_LETTER_ID);
                 st.setCond(4);
@@ -136,7 +133,7 @@ public final class _401_PathToWarrior extends Quest {
                     if (!st.player.isVarSet("prof1")) {
                         st.player.setVar("prof1");
                         st.addExpAndSp(228064, 16455);
-                        st.giveItems(ADENA_ID, 81900);
+                        st.giveAdena( 81900);
                     }
                 }
                 htmltext = "ein_q0401_13.htm";

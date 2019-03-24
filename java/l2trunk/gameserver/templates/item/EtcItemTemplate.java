@@ -11,13 +11,13 @@ public final class EtcItemTemplate extends ItemTemplate {
         type1 = TYPE1_ITEM_QUESTITEM_ADENA;
         switch (getItemType()) {
             case QUEST:
-                _type2 = TYPE2_QUEST;
+                type2 = TYPE2_QUEST;
                 break;
             case MONEY:
-                _type2 = TYPE2_MONEY;
+                type2 = TYPE2_MONEY;
                 break;
             default:
-                _type2 = TYPE2_OTHER;
+                type2 = TYPE2_OTHER;
                 break;
         }
     }

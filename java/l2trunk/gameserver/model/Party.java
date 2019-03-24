@@ -77,11 +77,11 @@ public final class Party implements PlayerGroup {
     }
 
     @Override
-    public Stream<Player> getMembersStream() {
-        return members.stream();
+    public List<Player> getMembers() {
+        return members;
     }
 
-    @Override
+
     public boolean containsMember(Player player) {
         return members.contains(player);
     }
@@ -648,12 +648,8 @@ public final class Party implements PlayerGroup {
         return members.size();
     }
 
-    @Override
-    public Player getLeader() {
-        return members.get(0);
-    }
 
-    public double getRateSpoil() {
+    double getRateSpoil() {
         return rateSpoil;
     }
 

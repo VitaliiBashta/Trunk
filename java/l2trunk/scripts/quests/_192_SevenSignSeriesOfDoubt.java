@@ -20,8 +20,6 @@ public final class _192_SevenSignSeriesOfDoubt extends Quest{
     private static final int CROOP_LETTER = 13815;
 
     public _192_SevenSignSeriesOfDoubt() {
-        super(false);
-
         addStartNpc(CROOP);
         addTalkId(HECTOR, STAN, CORPSE, HOLLINT);
         addQuestItem(CROOP_INTRO, JACOB_NECK, CROOP_LETTER);
@@ -42,21 +40,21 @@ public final class _192_SevenSignSeriesOfDoubt extends Quest{
             return "";
         } else if ("30197-03.htm".equalsIgnoreCase(event)) {
             st.setCond(4);
-            st.takeItems(CROOP_INTRO, 1);
+            st.takeItems(CROOP_INTRO);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("30200-04.htm")) {
+        } else if ("30200-04.htm".equalsIgnoreCase(event)) {
             st.setCond(5);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("32568-02.htm")) {
+        } else if ("32568-02.htm".equalsIgnoreCase(event)) {
             st.setCond(6);
-            st.giveItems(JACOB_NECK, 1);
+            st.giveItems(JACOB_NECK);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("30676-12.htm")) {
+        } else if ("30676-12.htm".equalsIgnoreCase(event)) {
             st.setCond(7);
-            st.takeItems(JACOB_NECK, 1);
+            st.takeItems(JACOB_NECK);
             st.giveItems(CROOP_LETTER);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("30191-03.htm"))
+        } else if ("30191-03.htm".equalsIgnoreCase(event))
             if (player.getLevel() < 79)
                 htmltext = "<html><body>Only characters who are <font color=\"LEVEL\">occupation 79</font> or higher may complete this quest.</body></html>";
             else if (player.getBaseClassId() == player.getActiveClassId()) {

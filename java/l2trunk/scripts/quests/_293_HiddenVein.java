@@ -24,7 +24,6 @@ public final class _293_HiddenVein extends Quest {
     private static final int Chrysolite_Ore_Chance = 45;
 
     public _293_HiddenVein() {
-        super(false);
         addStartNpc(Filaur);
         addTalkId(Chichirin);
         addKillId(Utuku_Orc,Utuku_Orc_Archer,Utuku_Orc_Grunt);
@@ -33,19 +32,19 @@ public final class _293_HiddenVein extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        int _state = st.getState();
-        if (event.equalsIgnoreCase("elder_filaur_q0293_03.htm") && _state == CREATED) {
+        int state = st.getState();
+        if ("elder_filaur_q0293_03.htm".equalsIgnoreCase(event) && state == CREATED) {
             st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("elder_filaur_q0293_06.htm") && _state == STARTED) {
+        } else if ("elder_filaur_q0293_06.htm".equalsIgnoreCase(event) && state == STARTED) {
             st.playSound(SOUND_FINISH);
             st.finish();
-        } else if (event.equalsIgnoreCase("chichirin_q0293_03.htm") && _state == STARTED) {
+        } else if ("chichirin_q0293_03.htm".equalsIgnoreCase(event) && state == STARTED) {
             if (st.getQuestItemsCount(Torn_Map_Fragment) < 4)
                 return "chichirin_q0293_02.htm";
-            st.takeItems(Torn_Map_Fragment, 4);
-            st.giveItems(Hidden_Ore_Map, 1);
+            st.takeItems(Torn_Map_Fragment);
+            st.giveItems(Hidden_Ore_Map);
         }
 
         return event;
@@ -87,7 +86,7 @@ public final class _293_HiddenVein extends Quest {
                 st.takeItems(Hidden_Ore_Map);
             st.giveItems(ADENA_ID, reward);
 
-            if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("p1q2")) {
+            if (st.player.getClassId().occupation() == 0) {
                 st.player.setVar("p1q2");
                 st.player.sendPacket(new ExShowScreenMessage("Acquisition of Soulshot for beginners complete.\n                  Go find the Newbie Guide."));
                 QuestState qs = st.player.getQuestState(_255_Tutorial.class);

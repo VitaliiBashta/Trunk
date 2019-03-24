@@ -53,7 +53,7 @@ public final class _410_PathToPalusKnight extends Quest {
             htmltext = "master_virgil_q0410_06.htm";
             st.giveItems(PALLUS_TALISMAN_ID);
         } else if ("410_1".equals(event)) {
-            if (st.player.getLevel() >= 18 && st.player.getClassId().id == 0x1f && !st.haveQuestItem(GAZE_OF_ABYSS_ID))
+            if (st.player.getLevel() >= 18 && st.player.getClassId() == darkFighter && !st.haveQuestItem(GAZE_OF_ABYSS_ID))
                 htmltext = "master_virgil_q0410_05.htm";
             else if (st.player.getClassId() != darkFighter) {
                 if (st.player.getClassId() == palusKnight)
@@ -77,9 +77,7 @@ public final class _410_PathToPalusKnight extends Quest {
             st.setCond(4);
         } else if ("30422_2".equals(event)) {
             htmltext = "kalinta_q0410_06.htm";
-            st.takeItems(MORTE_TALISMAN_ID);
-            st.takeItems(TRIMDEN_SILK_ID);
-            st.takeItems(PREDATOR_CARAPACE_ID);
+            st.takeAllItems(MORTE_TALISMAN_ID,TRIMDEN_SILK_ID,PREDATOR_CARAPACE_ID);
             st.giveItems(COFFIN_ETERNAL_REST_ID);
             st.setCond(6);
         }

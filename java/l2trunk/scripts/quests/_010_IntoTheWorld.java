@@ -15,8 +15,6 @@ public final class _010_IntoTheWorld extends Quest {
     private static final int GERALD = 30650;
 
     public _010_IntoTheWorld() {
-        super(false);
-
         addStartNpc(BALANKI);
 
         addTalkId(REED, GERALD);

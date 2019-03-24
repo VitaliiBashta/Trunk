@@ -15,7 +15,6 @@ public final class _035_FindGlitteringJewelry extends Quest {
         super(false);
 
         addStartNpc(30091);
-        addTalkId(30091);
         addTalkId(30879);
 
         addKillId(20135);
@@ -44,7 +43,7 @@ public final class _035_FindGlitteringJewelry extends Quest {
                 st.takeItems(ORIHARUKON, 5);
                 st.takeItems(SILVER_NUGGET, 500);
                 st.takeItems(THONS, 150);
-                st.giveItems(JEWEL_BOX, 1);
+                st.giveItems(JEWEL_BOX);
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest();
             } else

@@ -30,8 +30,6 @@ public final class _118_ToLeadAndBeLed extends Quest {
     private static final int CLAN_OATH_SANDALS = 7859;
 
     public _118_ToLeadAndBeLed() {
-        super(false);
-
         addStartNpc(PINTER);
 
         addKillId(MAILLE_LIZARDMAN,KING_OF_THE_ARANEID);
@@ -76,8 +74,8 @@ public final class _118_ToLeadAndBeLed extends Quest {
     public String onTalk(NpcInstance npc, QuestState st) {
         if (npc.getNpcId() != PINTER)
             return "noquest";
-        int _state = st.getState();
-        if (_state == CREATED) {
+        int state = st.getState();
+        if (state == CREATED) {
             if (st.player.getLevel() < 19) {
                 st.exitCurrentQuest();
                 return "30298-00.htm";
@@ -96,50 +94,50 @@ public final class _118_ToLeadAndBeLed extends Quest {
 
         int cond = st.getCond();
 
-        if (cond == 1 && _state == STARTED)
+        if (cond == 1 && state == STARTED)
             return "30298-02a.htm";
 
-        if (cond == 2 && _state == STARTED) {
+        if (cond == 2 && state == STARTED) {
             if (st.getQuestItemsCount(BLOOD_OF_MAILLE_LIZARDMAN) < 10) {
                 st.setCond(1);
                 return "30298-02a.htm";
             }
-            st.takeItems(BLOOD_OF_MAILLE_LIZARDMAN, -1);
+            st.takeItems(BLOOD_OF_MAILLE_LIZARDMAN);
             return "30298-04.htm";
         }
 
-        if (cond == 3 && _state == STARTED)
+        if (cond == 3 && state == STARTED)
             return "30298-05a.htm";
 
-        if (cond == 4 && _state == STARTED)
+        if (cond == 4 && state == STARTED)
             return "30298-05b.htm";
 
-        if (cond == 5 && _state == STARTED)
+        if (cond == 5 && state == STARTED)
             return "30298-05c.htm";
 
-        if (cond == 7 && _state == STARTED)
+        if (cond == 7 && state == STARTED)
             return "30298-08a.htm";
 
-        if (cond == 8 && _state == STARTED) {
+        if (cond == 8 && state == STARTED) {
             if (st.getQuestItemsCount(KING_OF_THE_ARANEID_LEG) < 8) {
                 st.setCond(7);
                 return "30298-08a.htm";
             }
-            st.takeItems(KING_OF_THE_ARANEID_LEG, -1);
-            st.giveItems(CLAN_OATH_HELM, 1);
+            st.takeItems(KING_OF_THE_ARANEID_LEG);
+            st.giveItems(CLAN_OATH_HELM);
             int choose = st.getInt("choose");
             if (choose == 1) {
-                st.giveItems(CLAN_OATH_ARMOR, 1);
-                st.giveItems(CLAN_OATH_GAUNTLETS, 1);
-                st.giveItems(CLAN_OATH_SABATON, 1);
+                st.giveItems(CLAN_OATH_ARMOR);
+                st.giveItems(CLAN_OATH_GAUNTLETS);
+                st.giveItems(CLAN_OATH_SABATON);
             } else if (choose == 2) {
-                st.giveItems(CLAN_OATH_BRIGANDINE, 1);
-                st.giveItems(CLAN_OATH_LEATHER_GLOVES, 1);
-                st.giveItems(CLAN_OATH_BOOTS, 1);
+                st.giveItems(CLAN_OATH_BRIGANDINE);
+                st.giveItems(CLAN_OATH_LEATHER_GLOVES);
+                st.giveItems(CLAN_OATH_BOOTS);
             } else {
-                st.giveItems(CLAN_OATH_AKETON, 1);
-                st.giveItems(CLAN_OATH_PADDED_GLOVES, 1);
-                st.giveItems(CLAN_OATH_SANDALS, 1);
+                st.giveItems(CLAN_OATH_AKETON);
+                st.giveItems(CLAN_OATH_PADDED_GLOVES);
+                st.giveItems(CLAN_OATH_SANDALS);
             }
             st.unset("cond");
             st.playSound(SOUND_FINISH);

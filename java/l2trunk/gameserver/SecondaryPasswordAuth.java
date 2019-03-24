@@ -27,17 +27,17 @@ public final class SecondaryPasswordAuth {
     private static final String INSERT_PASSWORD = "INSERT INTO character_secondary_password VALUES (?, ?, ?)";
     private static final String UPDATE_PASSWORD = "UPDATE character_secondary_password SET value=? WHERE account_name=? AND var=?";
     private static final String INSERT_ATTEMPT = "INSERT INTO character_secondary_password VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE value=?";
-    private final GameClient _activeClient;
-    private String _password;
+    private final GameClient activeClient;
+    private String password;
     private int wrongAttempts;
-    private boolean _authed;
+    private boolean authed;
     // private static final String BAN_ACCOUNT = "UPDATE accounts SET banExpires=? WHERE login=?";
 
     private SecondaryPasswordAuth(GameClient activeClient) {
-        _activeClient = activeClient;
-        _password = null;
+        this.activeClient = activeClient;
+        password = null;
         wrongAttempts = 0;
-        _authed = false;
+        authed = false;
         loadPassword();
     }
 
@@ -46,14 +46,14 @@ public final class SecondaryPasswordAuth {
 
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement(SELECT_PASSWORD)) {
-            statement.setString(1, _activeClient.getLogin());
+            statement.setString(1, activeClient.getLogin());
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
                 var = rs.getString("var");
                 value = rs.getString("value");
 
                 if (var.equals(VAR_PWD))
-                    _password = value;
+                    password = value;
                 else if (var.equals(VAR_WTE))
                     wrongAttempts = Integer.parseInt(value);
             }
@@ -64,13 +64,13 @@ public final class SecondaryPasswordAuth {
 
     public boolean savePassword(String password) {
         if (passwordExist()) {
-            LOG.warn("[SecondaryPasswordAuth]" + _activeClient.getLogin() + " forced savePassword");
-            _activeClient.closeNow(true);
+            LOG.warn("[SecondaryPasswordAuth]" + activeClient.getLogin() + " forced savePassword");
+            activeClient.closeNow();
             return false;
         }
 
         if (!validatePassword(password)) {
-            _activeClient.sendPacket(new Ex2ndPasswordAck(Ex2ndPasswordAck.WRONG_PATTERN));
+            activeClient.sendPacket(new Ex2ndPasswordAck(Ex2ndPasswordAck.WRONG_PATTERN));
             return false;
         }
 
@@ -78,7 +78,7 @@ public final class SecondaryPasswordAuth {
 
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement(INSERT_PASSWORD)) {
-            statement.setString(1, _activeClient.getLogin());
+            statement.setString(1, activeClient.getLogin());
             statement.setString(2, VAR_PWD);
             statement.setString(3, password);
             statement.execute();
@@ -86,14 +86,14 @@ public final class SecondaryPasswordAuth {
             LOG.error("Error while writing password", e);
             return false;
         }
-        _password = password;
+        this.password = password;
         return true;
     }
 
     private void insertWrongAttempt(int attempts) {
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement(INSERT_ATTEMPT)) {
-            statement.setString(1, _activeClient.getLogin());
+            statement.setString(1, activeClient.getLogin());
             statement.setString(2, VAR_WTE);
             statement.setString(3, Integer.toString(attempts));
             statement.setString(4, Integer.toString(attempts));
@@ -105,8 +105,8 @@ public final class SecondaryPasswordAuth {
 
     public boolean changePassword(String oldPassword, String newPassword) {
         if (!passwordExist()) {
-            LOG.warn("[SecondaryPasswordAuth]" + _activeClient.getLogin() + " forced changePassword");
-            _activeClient.closeNow(true);
+            LOG.warn("[SecondaryPasswordAuth]" + activeClient.getLogin() + " forced changePassword");
+            activeClient.closeNow();
             return false;
         }
 
@@ -114,7 +114,7 @@ public final class SecondaryPasswordAuth {
             return false;
 
         if (!validatePassword(newPassword)) {
-            _activeClient.sendPacket(new Ex2ndPasswordAck(Ex2ndPasswordAck.WRONG_PATTERN));
+            activeClient.sendPacket(new Ex2ndPasswordAck(Ex2ndPasswordAck.WRONG_PATTERN));
             return false;
         }
 
@@ -123,31 +123,31 @@ public final class SecondaryPasswordAuth {
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement(UPDATE_PASSWORD)) {
             statement.setString(1, newPassword);
-            statement.setString(2, _activeClient.getLogin());
+            statement.setString(2, activeClient.getLogin());
             statement.setString(3, VAR_PWD);
             statement.execute();
         } catch (SQLException e) {
             LOG.error("Error while reading password", e);
             return false;
         }
-        _password = newPassword;
-        _authed = false;
+        password = newPassword;
+        authed = false;
         return true;
     }
 
     private boolean checkPassword(String password, boolean skipAuth) {
         password = cryptPassword(password);
 
-        if (!password.equals(_password)) {
+        if (!this.password.equals(password)) {
             wrongAttempts++;
-            _activeClient.sendPacket(new Ex2ndPasswordVerify(Ex2ndPasswordVerify.PASSWORD_WRONG, wrongAttempts));
+            activeClient.sendPacket(new Ex2ndPasswordVerify(Ex2ndPasswordVerify.PASSWORD_WRONG, wrongAttempts));
             insertWrongAttempt(wrongAttempts);
 
             return false;
         }
         if (!skipAuth) {
-            _authed = true;
-            _activeClient.sendPacket(new Ex2ndPasswordVerify(Ex2ndPasswordVerify.PASSWORD_OK, wrongAttempts));
+            authed = true;
+            activeClient.sendPacket(new Ex2ndPasswordVerify(Ex2ndPasswordVerify.PASSWORD_OK, wrongAttempts));
         }
         insertWrongAttempt(0);
         return true;
@@ -174,18 +174,18 @@ public final class SecondaryPasswordAuth {
     }
 
     private boolean passwordExist() {
-        return _password != null;
+        return password != null;
     }
 
     public void openDialog() {
         if (passwordExist())
-            _activeClient.sendPacket(new Ex2ndPasswordCheck(Ex2ndPasswordCheck.PASSWORD_PROMPT));
+            activeClient.sendPacket(new Ex2ndPasswordCheck(Ex2ndPasswordCheck.PASSWORD_PROMPT));
         else
-            _activeClient.sendPacket(new Ex2ndPasswordCheck(Ex2ndPasswordCheck.PASSWORD_NEW));
+            activeClient.sendPacket(new Ex2ndPasswordCheck(Ex2ndPasswordCheck.PASSWORD_NEW));
     }
 
     public boolean isAuthed() {
-        return _authed;
+        return authed;
     }
 
     private String cryptPassword(String password) {

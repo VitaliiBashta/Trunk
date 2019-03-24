@@ -24,23 +24,22 @@ public final class CannibalisticStakatoChiefInstance extends RaidBossInstance {
         super.onDeath(killer);
         if (!(killer instanceof Playable))
             return;
-        Creature topdam = getAggroList().getTopDamager();
+        Playable topdam = getAggroList().getTopDamager();
         if (topdam == null)
-            topdam = killer;
+            topdam = (Playable)killer;
         Player pc = topdam.getPlayer();
         if (pc == null)
             return;
         Party party = pc.getParty();
-        int itemId;
         if (party != null) {
-            for (Player partyMember : party.getMembersStream())
+            for (Player partyMember : party.getMembers())
                 if (pc.isInRange(partyMember, Config.ALT_PARTY_DISTRIBUTION_RANGE)) {
-                    itemId = Rnd.get(ITEMS);
+                    int itemId = Rnd.get(ITEMS);
                     partyMember.sendPacket(new SystemMessage(SystemMessage.YOU_HAVE_OBTAINED_S1).addItemName(itemId));
                     partyMember.getInventory().addItem(itemId, 1, "CannibalisticStakatoChiefInstance");
                 }
         } else {
-            itemId = Rnd.get(ITEMS);
+            int itemId = Rnd.get(ITEMS);
             pc.sendPacket(new SystemMessage(SystemMessage.YOU_HAVE_OBTAINED_S1).addItemName(itemId));
             pc.getInventory().addItem(itemId, 1, "CannibalisticStakatoChiefInstance");
         }

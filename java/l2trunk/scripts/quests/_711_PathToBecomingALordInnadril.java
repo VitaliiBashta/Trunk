@@ -21,7 +21,6 @@ public final class _711_PathToBecomingALordInnadril extends Quest {
             20789, 20790, 20791, 20792, 20793, 20804, 20805, 20806, 20807, 20808);
 
     public _711_PathToBecomingALordInnadril() {
-        super(false);
         addStartNpc(Neurath);
         addTalkId(IasonHeine);
         addKillId(mobs);

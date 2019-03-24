@@ -5,6 +5,8 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
+import static l2trunk.gameserver.model.base.ClassId.*;
+
 public final class _222_TestOfDuelist extends Quest {
     //NPC
     private static final int Kaien = 30623;
@@ -253,7 +255,10 @@ public final class _222_TestOfDuelist extends Quest {
                 htmltext = "completed";
                 st.exitCurrentQuest();
             } else if (cond == 0) {
-                if (st.player.getClassId().id == 0x01 || st.player.getClassId().id == 0x2f || st.player.getClassId().id == 0x13 || st.player.getClassId().id == 0x20) {
+                if (st.player.getClassId() == warrior
+                        || st.player.getClassId() == orcMonk
+                        || st.player.getClassId()== elvenKnight
+                        || st.player.getClassId() == palusKnight) {
                     if (st.player.getLevel() >= 39)
                         htmltext = "30623-03.htm";
                     else {
@@ -274,7 +279,7 @@ public final class _222_TestOfDuelist extends Quest {
                 st.giveItems(MarkOfDuelist);
                 if (!st.player.isVarSet("prof2.3")) {
                     st.addExpAndSp(474444, 30704);
-                    st.giveItems(ADENA_ID, 80000);
+                    st.giveAdena(80000);
                     st.player.setVar("prof2.3");
                 }
                 htmltext = "30623-18.htm";

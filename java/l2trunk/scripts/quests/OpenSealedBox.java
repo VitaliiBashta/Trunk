@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 
 public final class OpenSealedBox {
-    public static final List<Integer> counts = List.of(1, 5, 10);
     private static final List<RewardGroup> rewardgroups = List.of(
             new RewardAdena(),
             new RewardRes1(),
@@ -59,7 +58,7 @@ public final class OpenSealedBox {
                 return "You haven't enougth free slots in your inventory.";
             st.takeItems(_620_FourGoblets.Sealed_Box, takecount);
             rewards.keySet().forEach(itemId ->
-                    st.giveItems(itemId, rewards.get(itemId), false)); //не применять рейты тут
+                    st.giveItems(itemId, rewards.get(itemId)));
         }
 
         rewards.clear();
@@ -81,7 +80,7 @@ public final class OpenSealedBox {
     private abstract static class RewardGroup {
         static void putReward(Map<Integer, Long> rewards, int item_id, long count) {
             if (rewards.containsKey(item_id))
-                count += rewards.remove(item_id);
+                count += rewards.get(item_id);
             rewards.put(item_id, count);
         }
 

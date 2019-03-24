@@ -6,20 +6,15 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
 public final class _637_ThroughOnceMore extends Quest {
-    //Drop rate
-    private static final int CHANCE = 40;
 
     //Npc
     private static final int FLAURON = 32010;
-
+    private static final int MARK = 8067;
     //items
     private final int VISITORSMARK = 8064;
     private final int NECROHEART = 8066;
-    private static final int MARK = 8067;
 
     public _637_ThroughOnceMore() {
-        super(false);
-
         addStartNpc(FLAURON);
 
         addKillId(21565, 21566, 21567, 21568);
@@ -29,7 +24,7 @@ public final class _637_ThroughOnceMore extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equals("falsepriest_flauron_q0637_04.htm")) {
+        if ("falsepriest_flauron_q0637_04.htm".equals(event)) {
             st.setCond(1);
             st.start();
             st.takeItems(VISITORSMARK, 1);
@@ -43,7 +38,7 @@ public final class _637_ThroughOnceMore extends Quest {
         String htmltext;
         int cond = st.getCond();
         if (cond == 0) {
-            if (st.player.getLevel() > 72 && st.getQuestItemsCount(VISITORSMARK) > 0 && st.getQuestItemsCount(MARK) == 0)
+            if (st.player.getLevel() > 72 && st.haveQuestItem(VISITORSMARK) && !st.haveQuestItem(MARK))
                 htmltext = "falsepriest_flauron_q0637_02.htm";
             else {
                 htmltext = "falsepriest_flauron_q0637_01.htm";
@@ -51,7 +46,7 @@ public final class _637_ThroughOnceMore extends Quest {
             }
         } else if (cond == 2 && st.getQuestItemsCount(NECROHEART) == 10) {
             htmltext = "falsepriest_flauron_q0637_05.htm";
-            st.takeItems(NECROHEART, 10);
+            st.takeItems(NECROHEART);
             st.giveItems(MARK);
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest();
@@ -63,7 +58,7 @@ public final class _637_ThroughOnceMore extends Quest {
     @Override
     public void onKill(NpcInstance npc, QuestState st) {
         long count = st.getQuestItemsCount(NECROHEART);
-        if (st.getCond() == 1 && Rnd.chance(CHANCE) && count < 10) {
+        if (st.getCond() == 1 && Rnd.chance(40) && count < 10) {
             st.giveItems(NECROHEART);
             if (count == 9) {
                 st.playSound(SOUND_MIDDLE);
@@ -75,6 +70,6 @@ public final class _637_ThroughOnceMore extends Quest {
 
     @Override
     public void onAbort(QuestState st) {
-            st.giveItemIfNotHave(VISITORSMARK);
+        st.giveItemIfNotHave(VISITORSMARK);
     }
 }

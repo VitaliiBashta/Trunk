@@ -24,7 +24,6 @@ public final class _269_InventionAmbition extends Quest {
     private final int ENERGY_ORES = 10866;
 
     public _269_InventionAmbition() {
-        super(false);
         addStartNpc(INVENTOR_MARU);
         addKillId(MOBS);
         addQuestItem(ENERGY_ORES);
@@ -54,7 +53,7 @@ public final class _269_InventionAmbition extends Quest {
             } else
                 htmltext = "inventor_maru_q0269_01.htm";
         else if (count > 0) {
-            st.giveItems(ADENA_ID, count * 50 + 2044 * (count / 20), true);
+            st.giveAdena(count * 50 + 2044 * (count / 20));
             st.takeItems(ENERGY_ORES);
             htmltext = "inventor_maru_q0269_06.htm";
         } else
@@ -64,9 +63,7 @@ public final class _269_InventionAmbition extends Quest {
 
     @Override
     public void onKill(NpcInstance npc, QuestState st) {
-        if (st.getState() != STARTED)
-            return;
-        if (Rnd.chance(60)) {
+        if (st.getState() == STARTED && Rnd.chance(60)) {
             st.giveItems(ENERGY_ORES);
             st.playSound(SOUND_ITEMGET);
         }

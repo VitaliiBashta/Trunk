@@ -213,8 +213,6 @@ public final class _219_TestimonyOfFate extends Quest {
     };
 
     public _219_TestimonyOfFate() {
-        super(false);
-
         addStartNpc(Kaira);
 
         addTalkId(Metheus,Ixia,AldersSpirit,Roa,Norman,Thifiell,Arkenia,BloodyPixy,BlightTreant);
@@ -294,9 +292,7 @@ public final class _219_TestimonyOfFate extends Quest {
         else if ("31850-02.htm".equalsIgnoreCase(event))
             st.giveItems(BlightTreantSeed);
         else if ("30419-05.htm".equalsIgnoreCase(event)) {
-            st.takeItems(ArkeniasNote);
-            st.takeItems(RedFairyDust);
-            st.takeItems(BlightTreantSap);
+            st.takeAllItems(ArkeniasNote,RedFairyDust,BlightTreantSap);
             st.giveItems(ArkeniasLetter);
             st.setCond(18);
             st.start();

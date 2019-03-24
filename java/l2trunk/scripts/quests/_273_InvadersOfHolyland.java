@@ -12,14 +12,9 @@ public final class _273_InvadersOfHolyland extends Quest {
     private final int RED_SOULSTONE = 1476;
 
     public _273_InvadersOfHolyland() {
-        super(false);
-
         addStartNpc(30566);
-        addKillId(20311,
-                20312,
-                20313);
-        addQuestItem(BLACK_SOULSTONE,
-                RED_SOULSTONE);
+        addKillId(20311, 20312, 20313);
+        addQuestItem(BLACK_SOULSTONE, RED_SOULSTONE);
     }
 
     @Override
@@ -60,7 +55,7 @@ public final class _273_InvadersOfHolyland extends Quest {
                 return htmltext;
             }
         } else if (cond > 0)
-            if (st.getQuestItemsCount(BLACK_SOULSTONE) == 0 && st.getQuestItemsCount(RED_SOULSTONE) == 0)
+            if (!st.haveAnyQuestItems(BLACK_SOULSTONE,RED_SOULSTONE))
                 htmltext = "atuba_chief_varkees_q0273_04.htm";
             else {
                 long adena = 0;
@@ -68,13 +63,12 @@ public final class _273_InvadersOfHolyland extends Quest {
                     htmltext = "atuba_chief_varkees_q0273_05.htm";
                     adena += st.getQuestItemsCount(BLACK_SOULSTONE) * 5;
                 }
-                if (st.haveQuestItem(RED_SOULSTONE) ) {
+                if (st.haveQuestItem(RED_SOULSTONE)) {
                     htmltext = "atuba_chief_varkees_q0273_06.htm";
                     adena += st.getQuestItemsCount(RED_SOULSTONE) * 50;
                 }
-                st.takeItems(BLACK_SOULSTONE);
-                st.takeItems(RED_SOULSTONE);
-                st.giveItems(ADENA_ID, adena);
+                st.takeAllItems(BLACK_SOULSTONE,RED_SOULSTONE);
+                st.giveAdena( adena);
 
                 if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("p1q2")) {
                     st.player.setVar("p1q2");

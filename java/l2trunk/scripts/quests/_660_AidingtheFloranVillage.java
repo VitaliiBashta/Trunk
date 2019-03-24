@@ -26,8 +26,6 @@ public final class _660_AidingtheFloranVillage extends Quest {
     private final int DELU_LIZARDMAN_SCALE = 8076;
 
     public _660_AidingtheFloranVillage() {
-        super(false);
-
         addStartNpc(MARIA);
         addTalkId(ALEX);
 
@@ -49,16 +47,11 @@ public final class _660_AidingtheFloranVillage extends Quest {
             st.playSound(SOUND_ACCEPT);
         } else if ("30291-05.htm".equalsIgnoreCase(event)) {
             if (EYES + SCALE + SHARD >= 45) {
-                st.giveItems(ADENA_ID, EYES * 100 + SCALE * 100 + SHARD * 100 + 9000);
-                st.takeItems(WATCHING_EYES);
-                st.takeItems(DELU_LIZARDMAN_SCALE);
-                st.takeItems(ROUGHLY_HEWN_ROCK_GOLEM_SHARD);
+                st.giveAdena(EYES * 100 + SCALE * 100 + SHARD * 100 + 9000);
             } else {
-                st.giveItems(ADENA_ID, EYES * 100 + SCALE * 100 + SHARD * 100);
-                st.takeItems(WATCHING_EYES);
-                st.takeItems(DELU_LIZARDMAN_SCALE);
-                st.takeItems(ROUGHLY_HEWN_ROCK_GOLEM_SHARD);
+                st.giveAdena(EYES * 100 + SCALE * 100 + SHARD * 100);
             }
+            st.takeAllItems(WATCHING_EYES,DELU_LIZARDMAN_SCALE,ROUGHLY_HEWN_ROCK_GOLEM_SHARD);
             st.playSound(SOUND_ITEMGET);
         } else if ("30291-11.htm".equalsIgnoreCase(event)) {
             if (EYES + SCALE + SHARD >= 99) {
@@ -98,12 +91,12 @@ public final class _660_AidingtheFloranVillage extends Quest {
                     st.takeItems(DELU_LIZARDMAN_SCALE);
                 st.takeItems(ROUGHLY_HEWN_ROCK_GOLEM_SHARD, t);
                 if (luck < 9) {
-                    st.giveItems(ADENA_ID, 20000);
+                    st.giveAdena( 20000);
                     st.giveItems(SCROLL_ENCANT_ARMOR);
                 } else if (luck < 12)
                     st.giveItems(SCROLL_ENCHANT_WEAPON);
                 else
-                    st.giveItems(ADENA_ID, 2000);
+                    st.giveAdena( 2000);
                 st.playSound(SOUND_ITEMGET);
             } else
                 htmltext = "30291-14.htm";
@@ -122,10 +115,10 @@ public final class _660_AidingtheFloranVillage extends Quest {
                     st.takeItems(ROUGHLY_HEWN_ROCK_GOLEM_SHARD, t);
                 }
                 if (Rnd.chance(80)) {
-                    st.giveItems(ADENA_ID, 45000);
+                    st.giveAdena( 45000);
                     st.giveItems(SCROLL_ENCHANT_WEAPON);
                 } else
-                    st.giveItems(ADENA_ID, 5000);
+                    st.giveAdena( 5000);
                 st.playSound(SOUND_ITEMGET);
             } else
                 htmltext = "30291-14.htm";

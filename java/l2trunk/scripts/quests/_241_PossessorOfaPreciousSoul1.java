@@ -15,12 +15,10 @@ public final class _241_PossessorOfaPreciousSoul1 extends Quest {
     private static final int VIRGILS_LETTER = 7677;
 
     public _241_PossessorOfaPreciousSoul1() {
-        super(false);
-
         addStartNpc(31739);
-        addTalkId(30753,30754,31042,30692,31742,31744,31336,31743,31740);
+        addTalkId(30753, 30754, 31042, 30692, 31742, 31744, 31336, 31743, 31740);
 
-        addKillId(21154,27113,20244,20245,21511,20669);
+        addKillId(21154, 27113, 20244, 20245, 21511, 20669);
 
         addQuestItem(LEGENG_OF_SEVENTEEN,
                 MALRUK_SUCCUBUS_CLAW,
@@ -47,7 +45,7 @@ public final class _241_PossessorOfaPreciousSoul1 extends Quest {
             st.setCond(6);
         else if ("31042-04.htm".equalsIgnoreCase(event)) {
             st.takeItems(MALRUK_SUCCUBUS_CLAW);
-            st.giveItems(ECHO_CRYSTAL, 1);
+            st.giveItems(ECHO_CRYSTAL);
             st.setCond(8);
         } else if ("31739-06.htm".equalsIgnoreCase(event)) {
             st.takeItems(ECHO_CRYSTAL);
@@ -102,15 +100,15 @@ public final class _241_PossessorOfaPreciousSoul1 extends Quest {
                 }
             else if (cond == 1)
                 htmltext = "31739-02r.htm";
-            else if (cond == 4 && st.haveQuestItem(LEGENG_OF_SEVENTEEN) )
+            else if (cond == 4 && st.haveQuestItem(LEGENG_OF_SEVENTEEN))
                 htmltext = "31739-03.htm";
-            else if (cond < 8 && !st.haveQuestItem(ECHO_CRYSTAL) )
+            else if (cond < 8 && !st.haveQuestItem(ECHO_CRYSTAL))
                 htmltext = "31739-04r.htm";
-            else if (cond == 8 && st.haveQuestItem(ECHO_CRYSTAL) )
+            else if (cond == 8 && st.haveQuestItem(ECHO_CRYSTAL))
                 htmltext = "31739-05.htm";
-            else if (cond < 10 && !st.haveQuestItem(FADED_POETRY_BOOK) )
+            else if (cond < 10 && !st.haveQuestItem(FADED_POETRY_BOOK))
                 htmltext = "31739-06r.htm";
-            else if (cond == 10 && st.haveQuestItem(FADED_POETRY_BOOK) )
+            else if (cond == 10 && st.haveQuestItem(FADED_POETRY_BOOK))
                 htmltext = "31739-07.htm";
             else if (cond == 11)
                 htmltext = "31739-08r.htm";
@@ -122,7 +120,7 @@ public final class _241_PossessorOfaPreciousSoul1 extends Quest {
         } else if (npcId == 30754) {
             if (cond == 2)
                 htmltext = "30754-01.htm";
-            else if (cond == 3 && !st.haveQuestItem(LEGENG_OF_SEVENTEEN) )
+            else if (cond == 3 && !st.haveQuestItem(LEGENG_OF_SEVENTEEN))
                 htmltext = "30754-02r.htm";
         } else if (npcId == 31042) {
             if (cond == 5)
@@ -131,9 +129,9 @@ public final class _241_PossessorOfaPreciousSoul1 extends Quest {
                 htmltext = "31042-02r.htm";
             else if (cond == 7 && st.haveQuestItem(MALRUK_SUCCUBUS_CLAW, 10))
                 htmltext = "31042-03.htm";
-            else if (cond == 8 && st.haveQuestItem(ECHO_CRYSTAL) )
+            else if (cond == 8 && st.haveQuestItem(ECHO_CRYSTAL))
                 htmltext = "31042-04r.htm";
-            else if (cond == 8 && !st.haveQuestItem(ECHO_CRYSTAL) ) {
+            else if (cond == 8 && !st.haveQuestItem(ECHO_CRYSTAL)) {
                 st.giveItems(ECHO_CRYSTAL);
                 htmltext = "31042-04r.htm";
             }
@@ -161,10 +159,10 @@ public final class _241_PossessorOfaPreciousSoul1 extends Quest {
                 htmltext = "31336-02r.htm";
             else if (cond == 15 && st.haveQuestItem(CRIMSON_MOSS, 5))
                 htmltext = "31336-03.htm";
-            else if (cond == 16 && st.haveQuestItem(MEDICINE) )
+            else if (cond == 16 && st.haveQuestItem(MEDICINE))
                 htmltext = "31336-04r.htm";
         } else if (npcId == 31743) {
-            if (cond == 16 && st.haveQuestItem(MEDICINE) )
+            if (cond == 16 && st.haveQuestItem(MEDICINE))
                 htmltext = "31743-01.htm";
         } else if (npcId == 31740) {
             if (cond == 18)
@@ -193,18 +191,15 @@ public final class _241_PossessorOfaPreciousSoul1 extends Quest {
             }
         } else if (cond == 6) {
             if ((npcId == 20244 || npcId == 20245) && Rnd.chance(40)) {
-                if (!st.haveQuestItem(MALRUK_SUCCUBUS_CLAW,10))
-                    st.giveItems(MALRUK_SUCCUBUS_CLAW);
-                if (st.haveQuestItem(MALRUK_SUCCUBUS_CLAW,10)) {
+                st.giveItemIfNotHave(MALRUK_SUCCUBUS_CLAW, 10);
+                if (st.haveQuestItem(MALRUK_SUCCUBUS_CLAW, 10)) {
                     st.playSound(SOUND_MIDDLE);
                     st.setCond(7);
-                } else
-                    st.playSound(SOUND_ITEMGET);
+                }
             }
         } else if (cond == 14)
             if (npcId == 20669 && Rnd.chance(50)) {
-                if (!st.haveQuestItem(CRIMSON_MOSS, 5))
-                    st.giveItems(CRIMSON_MOSS);
+                st.giveItemIfNotHave(CRIMSON_MOSS, 5);
                 if (st.haveQuestItem(CRIMSON_MOSS, 5)) {
                     st.playSound(SOUND_MIDDLE);
                     st.setCond(15);

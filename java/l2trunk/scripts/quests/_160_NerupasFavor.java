@@ -43,8 +43,6 @@ public final class _160_NerupasFavor extends Quest {
     private static final int COND4 = 4;
 
     public _160_NerupasFavor() {
-        super(false);
-
         addStartNpc(NERUPA);
 
         addTalkId(UNOREN, CREAMEES, JULIA);
@@ -58,7 +56,7 @@ public final class _160_NerupasFavor extends Quest {
             st.setCond(COND1);
             st.start();
             st.playSound(SOUND_ACCEPT);
-            st.giveItems(SILVERY_SPIDERSILK, 1);
+            st.giveItems(SILVERY_SPIDERSILK);
         }
         return event;
     }

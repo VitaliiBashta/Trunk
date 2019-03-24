@@ -43,7 +43,6 @@ public final class _421_LittleWingAdventures extends Quest {
     private static final int Min_Fairy_Tree_Attaks = 110;
 
     public _421_LittleWingAdventures() {
-        super(false);
         addStartNpc(Cronos);
         addTalkId(Mimyu);
         addKillId(Fairy_Tree_of_Wind, Fairy_Tree_of_Star, Fairy_Tree_of_Twilight, Fairy_Tree_of_Abyss);
@@ -51,43 +50,41 @@ public final class _421_LittleWingAdventures extends Quest {
         addQuestItem(Fairy_Leaf);
     }
 
-    private static ItemInstance GetDragonflute(QuestState st) {
-        List<ItemInstance> Dragonflutes = new ArrayList<>();
+    private static ItemInstance getDragonflute(QuestState st) {
+        List<ItemInstance> dragonFlutes = new ArrayList<>();
         for (ItemInstance item : st.player.getInventory().getItems())
             if (item != null && (item.getItemId() == Dragonflute_of_Wind || item.getItemId() == Dragonflute_of_Star || item.getItemId() == Dragonflute_of_Twilight))
-                Dragonflutes.add(item);
+                dragonFlutes.add(item);
 
-        if (Dragonflutes.isEmpty())
+        if (dragonFlutes.isEmpty())
             return null;
-        if (Dragonflutes.size() == 1)
-            return Dragonflutes.get(0);
+        if (dragonFlutes.size() == 1)
+            return dragonFlutes.get(0);
         if (st.getState() == CREATED)
             return null;
 
         int dragonflute_id = st.getInt("dragonflute");
 
-        for (ItemInstance item : Dragonflutes)
-            if (item.objectId() == dragonflute_id)
-                return item;
-
-        return null;
+        return dragonFlutes.stream()
+                .filter(item -> item.objectId() == dragonflute_id)
+                .findFirst().orElse(null);
     }
 
     private static boolean HatchlingSummoned(QuestState st, boolean CheckObjID) {
-        Summon _pet = st.player.getPet();
-        if (_pet == null)
+        Summon pet = st.player.getPet();
+        if (pet == null)
             return false;
         if (CheckObjID) {
             int dragonflute_id = st.getInt("dragonflute");
             if (dragonflute_id == 0)
                 return false;
-            if (_pet.getControlItemObjId() != dragonflute_id)
+            if (pet.getControlItemObjId() != dragonflute_id)
                 return false;
         }
-        ItemInstance dragonflute = GetDragonflute(st);
+        ItemInstance dragonflute = getDragonflute(st);
         if (dragonflute == null)
             return false;
-        return PetDataTable.getControlItemId(_pet.getNpcId()) == dragonflute.getItemId();
+        return PetDataTable.getControlItemId(pet.getNpcId()) == dragonflute.getItemId();
     }
 
     private static boolean CheckTree(QuestState st, int Fairy_Tree_id) {
@@ -97,7 +94,7 @@ public final class _421_LittleWingAdventures extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         int _state = st.getState();
-        ItemInstance dragonflute = GetDragonflute(st);
+        ItemInstance dragonflute = getDragonflute(st);
         int dragonflute_id = st.getInt("dragonflute");
         int cond = st.getCond();
 
@@ -120,7 +117,7 @@ public final class _421_LittleWingAdventures extends Quest {
                 return "30747_04.htm".equalsIgnoreCase(event) ? "30747_04a.htm" : "30747_02.htm";
             if ("30747_04.htm".equalsIgnoreCase(event)) {
                 st.setCond(2);
-                st.takeItems(Fairy_Leaf, -1);
+                st.takeItems(Fairy_Leaf);
                 st.giveItems(Fairy_Leaf, 4);
                 st.playSound(SOUND_MIDDLE);
             }
@@ -134,7 +131,7 @@ public final class _421_LittleWingAdventures extends Quest {
         int _state = st.getState();
         int npcId = npc.getNpcId();
         int cond = st.getCond();
-        ItemInstance dragonflute = GetDragonflute(st);
+        ItemInstance dragonflute = getDragonflute(st);
         int dragonflute_id = st.getInt("dragonflute");
 
         if (_state == CREATED) {

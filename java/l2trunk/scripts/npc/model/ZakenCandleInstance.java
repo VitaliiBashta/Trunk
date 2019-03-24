@@ -15,7 +15,7 @@ public final class ZakenCandleInstance extends NpcInstance {
     public ZakenCandleInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
         setRHandId(OHS_Weapon);
-        _hasRandomAnimation = false;
+        hasRandomAnimation = false;
     }
 
     @Override

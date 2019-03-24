@@ -25,8 +25,6 @@ public final class _120_PavelsResearch extends Quest {
     private static final int Necklace = 8292;
 
     public _120_PavelsResearch() {
-        super(false);
-
         addStartNpc(Stones);
 
         addQuestItem(Report, Report2, Enigma, Flower, Heart, Necklace);
@@ -56,9 +54,9 @@ public final class _120_PavelsResearch extends Quest {
             st.playSound("ItemSound.quest_middle");
         } else if ("32041-32.htm".equalsIgnoreCase(event)) {
 
-            st.takeItems(Necklace, 1);
+            st.takeItems(Necklace);
             st.giveItems(EarPhoenix);
-            st.giveItems(ADENA_ID, 783720);
+            st.giveAdena( 783720);
             st.addExpAndSp(3447315, 272615);
             st.finish();
             st.playSound(SOUND_FINISH);
@@ -177,7 +175,7 @@ public final class _120_PavelsResearch extends Quest {
         } else if ("32047-10.htm".equalsIgnoreCase(event)) {
             st.setCond(7);
             st.playSound("ItemSound.quest_middle");
-            st.takeItems(Flower, 1);
+            st.takeItems(Flower);
         } else if ("32047-15.htm".equalsIgnoreCase(event)) {
             st.setCond(9);
             st.playSound("ItemSound.quest_middle");
@@ -187,7 +185,7 @@ public final class _120_PavelsResearch extends Quest {
         } else if ("32047-26.htm".equalsIgnoreCase(event)) {
             st.setCond(24);
             st.playSound("ItemSound.quest_middle");
-            st.takeItems(Heart, 1);
+            st.takeItems(Heart);
         } else if ("32047-32.htm".equalsIgnoreCase(event)) {
             st.setCond(25);
             st.playSound("ItemSound.quest_middle");
@@ -315,7 +313,7 @@ public final class _120_PavelsResearch extends Quest {
             if (cond == 17)
                 htmltext = "32043-01.htm";
             else if (cond == 18) {
-                if (st.getInt("talk") + st.getInt("talk1") == 2)
+                if (st.isSet("talk") && st.isSet("talk1"))
                     htmltext = "32043-29.htm";
                 else
                     htmltext = "32043-06.htm";

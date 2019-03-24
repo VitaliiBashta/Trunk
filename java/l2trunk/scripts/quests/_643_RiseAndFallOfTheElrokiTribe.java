@@ -38,7 +38,7 @@ public final class _643_RiseAndFallOfTheElrokiTribe extends Quest {
         } else if ("shaman_caracawe_q0643_06.htm".equalsIgnoreCase(event)) {
             if (count >= 300) {
                 st.takeItems(BONES_OF_A_PLAINS_DINOSAUR, 300);
-                st.giveItems(Rnd.get(REWARDS), 5, false);
+                st.giveItems(Rnd.get(REWARDS), 5);
             } else
                 htmltext = "shaman_caracawe_q0643_05.htm";
         } else if ("None".equalsIgnoreCase(event))

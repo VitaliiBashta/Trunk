@@ -80,7 +80,6 @@ public final class _292_BrigandsSweep extends Quest {
     };
 
     public _292_BrigandsSweep() {
-        super(false);
         addStartNpc(Spiron);
         addTalkId(Balanki);
         //mob Drop
@@ -121,26 +120,23 @@ public final class _292_BrigandsSweep extends Quest {
                 long reward = st.getQuestItemsCount(GoblinNecklace) * 12 + st.getQuestItemsCount(GoblinPendant) * 36 + st.getQuestItemsCount(GoblinLordPendant) * 33 + st.getQuestItemsCount(SuspiciousContract) * 100;
                 if (reward == 0)
                     return "elder_spiron_q0292_04.htm";
-                if (st.getQuestItemsCount(SuspiciousContract) != 0)
+                if (st.haveQuestItem(SuspiciousContract) )
                     htmltext = "elder_spiron_q0292_10.htm";
                 else if (st.getQuestItemsCount(SuspiciousMemo) == 0)
                     htmltext = "elder_spiron_q0292_05.htm";
-                else if (st.getQuestItemsCount(SuspiciousMemo) == 1)
+                else if (st.haveQuestItem(SuspiciousMemo) )
                     htmltext = "elder_spiron_q0292_08.htm";
                 else
                     htmltext = "elder_spiron_q0292_09.htm";
-                st.takeItems(GoblinNecklace, -1);
-                st.takeItems(GoblinPendant, -1);
-                st.takeItems(GoblinLordPendant, -1);
-                st.takeItems(SuspiciousContract, -1);
-                st.giveItems(ADENA_ID, reward);
+                st.takeAllItems(GoblinNecklace, GoblinPendant, GoblinLordPendant,SuspiciousContract);
+                st.giveAdena( reward);
             }
         } else if (npcId == Balanki && cond == 1)
             if (st.getQuestItemsCount(SuspiciousContract) == 0)
                 htmltext = "balanki_q0292_01.htm";
             else {
-                st.takeItems(SuspiciousContract, -1);
-                st.giveItems(ADENA_ID, 120);
+                st.takeItems(SuspiciousContract);
+                st.giveAdena( 120);
                 htmltext = "balanki_q0292_02.htm";
             }
         return htmltext;

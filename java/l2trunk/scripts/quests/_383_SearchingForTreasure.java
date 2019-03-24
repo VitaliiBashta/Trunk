@@ -19,39 +19,37 @@ public final class _383_SearchingForTreasure extends Quest {
     private static final int ESPEN = 30890;
     private static final int PIRATES_CHEST = 31148;
 
-    private class rewardInfo {
+    private class RewardInfo {
         final int id;
         final int count;
         final int chance;
 
-        rewardInfo(int _id, int _count, int _chance) {
-            id = _id;
-            count = _count;
-            chance = _chance;
+        RewardInfo(int id, int count, int chance) {
+            this.id = id;
+            this.count = count;
+            this.chance = chance;
         }
     }
 
-    private static final List<rewardInfo> rewards = new ArrayList<>();
+    private static final List<RewardInfo> rewards = new ArrayList<>();
 
     public _383_SearchingForTreasure() {
-        super(false);
-
         addStartNpc(ESPEN);
         addTalkId(PIRATES_CHEST);
         addQuestItem(PIRATES_TREASURE_MAP);
 
-        rewards.add(new rewardInfo(952, 1, 8));
-        rewards.add(new rewardInfo(956, 1, 15));
-        rewards.add(new rewardInfo(1337, 1, 130));
-        rewards.add(new rewardInfo(1338, 2, 150));
-        rewards.add(new rewardInfo(2450, 1, 2));
-        rewards.add(new rewardInfo(2451, 1, 2));
-        rewards.add(new rewardInfo(3452, 1, 140));
-        rewards.add(new rewardInfo(3455, 1, 120));
-        rewards.add(new rewardInfo(4408, 1, 220));
-        rewards.add(new rewardInfo(4409, 1, 220));
-        rewards.add(new rewardInfo(4418, 1, 220));
-        rewards.add(new rewardInfo(4419, 1, 220));
+        rewards.add(new RewardInfo(952, 1, 8));
+        rewards.add(new RewardInfo(956, 1, 15));
+        rewards.add(new RewardInfo(1337, 1, 130));
+        rewards.add(new RewardInfo(1338, 2, 150));
+        rewards.add(new RewardInfo(2450, 1, 2));
+        rewards.add(new RewardInfo(2451, 1, 2));
+        rewards.add(new RewardInfo(3452, 1, 140));
+        rewards.add(new RewardInfo(3455, 1, 120));
+        rewards.add(new RewardInfo(4408, 1, 220));
+        rewards.add(new RewardInfo(4409, 1, 220));
+        rewards.add(new RewardInfo(4418, 1, 220));
+        rewards.add(new RewardInfo(4419, 1, 220));
     }
 
     @Override
@@ -86,19 +84,19 @@ public final class _383_SearchingForTreasure extends Quest {
                 st.giveAdena( 500 + Rnd.get(5) * 300);
                 int count = 0;
                 while (count < 1)
-                    for (rewardInfo reward : rewards) {
+                    for (RewardInfo reward : rewards) {
                         int id = reward.id;
                         int qty = reward.count;
                         int chance = reward.chance;
                         if (Rnd.get(1000) < chance && count < 2) {
                             st.giveItems(id, Rnd.get(qty) + 1);
-                            count += 1;
+                            count++;
                         }
                         if (count < 2)
                             for (int i = 4481; i <= 4505; i++)
                                 if (Rnd.get(500) == 1 && count < 2) {
                                     st.giveItems(i);
-                                    count += 1;
+                                    count++;
                                 }
                     }
                 st.playSound("ItemSound.quest_finish");

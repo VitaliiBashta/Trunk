@@ -1,7 +1,6 @@
 package l2trunk.scripts.bosses;
 
 import l2trunk.commons.threading.RunnableImpl;
-import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.idfactory.IdFactory;
 import l2trunk.gameserver.listener.actor.OnDeathListener;
@@ -150,7 +149,7 @@ public final class FourSepulchersManager extends Functions implements ScriptFile
             return;
         }
 
-        for (Player mem : player.getParty().getMembersStream()) {
+        for (Player mem : player.getParty().getMembers()) {
             QuestState qs = mem.getQuestState(_620_FourGoblets.class);
             if (qs != null && (qs.isStarted() || qs.isCompleted())) {
 
@@ -185,9 +184,9 @@ public final class FourSepulchersManager extends Functions implements ScriptFile
 
     private static void entry(int npcId, Player player) {
         Location loc = FourSepulchersSpawn._startHallSpawns.get(npcId);
-        for (Player member : player.getParty().getMembersStream()) {
+        for (Player member : player.getParty().getMembers()) {
             member.teleToLocation(Location.findPointToStay(member, loc, 0, 80));
-            removeItem(member, ENTRANCE_PASS,  "FourSepulchersManager");
+            removeItem(member, ENTRANCE_PASS, "FourSepulchersManager");
             if (!member.haveItem(ANTIQUE_BROOCH))
                 addItem(member, USED_PASS, 1);
             removeItem(member, CHAPEL_KEY, 999999, "FourSepulchersManager");
@@ -196,16 +195,16 @@ public final class FourSepulchersManager extends Functions implements ScriptFile
     }
 
     private static void checkAnnihilated(final Player player) {
+        Location loc = Location.of(169589, -90493, -2914);
         if (getPlayersInside().allMatch(Player::isDead))
             ThreadPoolManager.INSTANCE.schedule(() -> {
                 if (player.getParty() != null)
-                    for (Player mem : player.getParty().getMembers()) {
-                        if (!mem.isDead())
-                            break;
-                        mem.teleToLocation(169589 + Rnd.get(-80, 80), -90493 + Rnd.get(-80, 80), -2914);
-                    }
+                    player.getParty().getMembersStream()
+                            .filter(mem -> !mem.isDead())
+                            .findFirst().ifPresent(mem -> mem.teleToLocation(Location.findPointToStay(loc, 0, 80)));
+
                 else
-                    player.teleToLocation(169589 + Rnd.get(-80, 80), -90493 + Rnd.get(-80, 80), -2914);
+                    player.teleToLocation(Location.findPointToStay(loc, 0, 80));
             }, 5000);
     }
 

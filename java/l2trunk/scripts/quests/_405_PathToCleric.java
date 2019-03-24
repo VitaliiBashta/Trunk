@@ -4,6 +4,9 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
+import static l2trunk.gameserver.model.base.ClassId.cleric;
+import static l2trunk.gameserver.model.base.ClassId.mage;
+
 public final class _405_PathToCleric extends Quest {
     //npc
     private final int GALLINT = 30017;
@@ -29,8 +32,6 @@ public final class _405_PathToCleric extends Quest {
     private final int MARK_OF_FAITH = 1201;
 
     public _405_PathToCleric() {
-        super(false);
-
         addStartNpc(ZIGAUNT);
 
         addTalkId(GALLINT,VIVYAN,SIMPLON,PRAGA,LIONEL);
@@ -58,14 +59,14 @@ public final class _405_PathToCleric extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
         if ("1".equals(event))
-            if (st.player.getLevel() >= 18 && st.player.getClassId().id == 0x0a && st.getQuestItemsCount(MARK_OF_FAITH) < 1) {
+            if (st.player.getLevel() >= 18 && st.player.getClassId() == mage && !st.haveQuestItem(MARK_OF_FAITH)) {
                 st.setCond(1);
                 st.start();
                 st.playSound(SOUND_ACCEPT);
                 st.giveItems(LETTER_OF_ORDER1);
                 htmltext = "gigon_q0405_05.htm";
-            } else if (st.player.getClassId().id != 0x0a) {
-                if (st.player.getClassId().id == 0x0f)
+            } else if (st.player.getClassId() != mage) {
+                if (st.player.getClassId() == cleric)
                     htmltext = "gigon_q0405_02a.htm";
                 else
                     htmltext = "gigon_q0405_02.htm";
@@ -89,14 +90,14 @@ public final class _405_PathToCleric extends Quest {
             if (cond < 1 && st.getQuestItemsCount(MARK_OF_FAITH) < 1)
                 htmltext = "gigon_q0405_01.htm";
             else if (cond == 1 | cond == 2 && st.haveQuestItem(LETTER_OF_ORDER1)) {
-                if (st.getQuestItemsCount(BOOK_OF_VIVI) > 0 && st.getQuestItemsCount(BOOK_OF_SIMLON) > 2 && st.getQuestItemsCount(BOOK_OF_PRAGA) > 0) {
+                if (st.haveQuestItem(BOOK_OF_VIVI)  && st.getQuestItemsCount(BOOK_OF_SIMLON) > 2 && st.haveQuestItem(BOOK_OF_PRAGA)) {
                     htmltext = "gigon_q0405_08.htm";
                     st.takeAllItems(BOOK_OF_PRAGA,BOOK_OF_VIVI,BOOK_OF_SIMLON,LETTER_OF_ORDER1);
                     st.giveItems(LETTER_OF_ORDER2);
                     st.setCond(3);
                 } else
                     htmltext = "gigon_q0405_06.htm";
-            } else if (cond < 6 && st.getQuestItemsCount(LETTER_OF_ORDER2) > 0)
+            } else if (cond < 6 && st.haveQuestItem(LETTER_OF_ORDER2) )
                 htmltext = "gigon_q0405_07.htm";
             else if (cond == 6 && st.haveAllQuestItems(LETTER_OF_ORDER2,LEMONIELLS_COVENANT)) {
                 htmltext = "gigon_q0405_09.htm";
@@ -171,7 +172,7 @@ public final class _405_PathToCleric extends Quest {
     @Override
     public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
-        if (npcId == RUIN_ZOMBIE | npcId == RUIN_ZOMBIE_LEADER)
+        if (npcId == RUIN_ZOMBIE || npcId == RUIN_ZOMBIE_LEADER)
             if (st.getCond() == 1) {
                 st.giveItemIfNotHave(PENDANT_OF_MOTHER);
                 st.playSound(SOUND_MIDDLE);

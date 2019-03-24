@@ -54,7 +54,7 @@ public final class DominionSiegeEvent extends SiegeEvent<Dominion, SiegeClanObje
     //
     private static final int REWARD_MAX = 3;
     private final Map<Integer, int[]> playersRewards = new ConcurrentHashMap<>();
-    private DominionSiegeRunnerEvent _runnerEvent;
+    private DominionSiegeRunnerEvent runnerevent;
     private Quest _forSakeQuest;
 
     public DominionSiegeEvent(StatsSet set) {
@@ -65,7 +65,7 @@ public final class DominionSiegeEvent extends SiegeEvent<Dominion, SiegeClanObje
 
     @Override
     public void initEvent() {
-        _runnerEvent = EventHolder.getEvent(EventType.MAIN_EVENT, 1);
+        runnerevent = EventHolder.getEvent(EventType.MAIN_EVENT, 1);
 
         super.initEvent();
 
@@ -86,7 +86,7 @@ public final class DominionSiegeEvent extends SiegeEvent<Dominion, SiegeClanObje
 
     @Override
     public void startEvent() {
-        List<Dominion> registeredDominions = _runnerEvent.getRegisteredDominions();
+        List<Dominion> registeredDominions = runnerevent.getRegisteredDominions();
         List<DominionSiegeEvent> dominions = new ArrayList<>(9);
         for (Dominion d : registeredDominions)
             if (d.getSiegeDate().getTimeInMillis() != 0 && d != getResidence())
@@ -161,7 +161,7 @@ public final class DominionSiegeEvent extends SiegeEvent<Dominion, SiegeClanObje
 
     @Override
     public void updateParticles(boolean start, String... arg) {
-        boolean battlefieldChat = _runnerEvent.isBattlefieldChatActive();
+        boolean battlefieldChat = runnerevent.isBattlefieldChatActive();
         List<SiegeClanObject> siegeClans = getObjects(DEFENDERS);
         for (SiegeClanObject s : siegeClans) {
             if (battlefieldChat) {
@@ -187,9 +187,9 @@ public final class DominionSiegeEvent extends SiegeEvent<Dominion, SiegeClanObje
     }
 
     public void updatePlayer(Player player, boolean start) {
-        player.setBattlefieldChatId(_runnerEvent.isBattlefieldChatActive() ? getId() : 0);
+        player.setBattlefieldChatId(runnerevent.isBattlefieldChatActive() ? getId() : 0);
 
-        if (_runnerEvent.isBattlefieldChatActive()) {
+        if (runnerevent.isBattlefieldChatActive()) {
             if (start) {
                 player.addEvent(this);
                 // for starting the TW 6
@@ -226,7 +226,7 @@ public final class DominionSiegeEvent extends SiegeEvent<Dominion, SiegeClanObje
             questState.setCond(1, false);
             questState.setStateAndNotSave(Quest.STARTED);
         } else {
-            for (Quest q : _runnerEvent.getBreakQuests()) {
+            for (Quest q : runnerevent.getBreakQuests()) {
                 QuestState questState = player.getQuestState(q);
                 if (questState != null)
                     questState.abortQuest();
@@ -236,9 +236,9 @@ public final class DominionSiegeEvent extends SiegeEvent<Dominion, SiegeClanObje
 
     @Override
     public boolean isParticle(Player player) {
-        if (_runnerEvent == null)
+        if (runnerevent == null)
             return false;
-        if (isInProgress() || _runnerEvent.isBattlefieldChatActive()) {
+        if (isInProgress() || runnerevent.isBattlefieldChatActive()) {
             boolean registered = getObjects(DEFENDER_PLAYERS).contains(player.objectId()) || getSiegeClan(DEFENDERS, player.getClan()) != null;
             if (!registered)
                 return false;
@@ -529,9 +529,11 @@ public final class DominionSiegeEvent extends SiegeEvent<Dominion, SiegeClanObje
     public class KillListener implements OnKillListener {
         @Override
         public void onKill(Creature actor, Creature victim) {
-            Player winner = actor.getPlayer();
+            if (!(actor instanceof Playable))
+                return;
+            Player winner = ((Playable)actor).getPlayer();
 
-            if (winner == null || !(victim instanceof Player) || winner.getLevel() < 40 || winner == victim || victim.getEvent(DominionSiegeEvent.class) == DominionSiegeEvent.this || !actor.isInZone(Zone.ZoneType.SIEGE) || !victim.isInZone(Zone.ZoneType.SIEGE))
+            if (!(victim instanceof Player) || winner.getLevel() < 40 || winner == victim || victim.getEvent(DominionSiegeEvent.class) == DominionSiegeEvent.this || !actor.isInZone(Zone.ZoneType.SIEGE) || !victim.isInZone(Zone.ZoneType.SIEGE))
                 return;
 
             winner.addFame(Rnd.get(10, 20), DominionSiegeEvent.this.toString());
@@ -539,7 +541,7 @@ public final class DominionSiegeEvent extends SiegeEvent<Dominion, SiegeClanObje
             addReward(winner, KILL_REWARD, 1);
 
             if (victim.getLevel() >= 61) {
-                Quest q = _runnerEvent.getClassQuest(((Player) victim).getClassId());
+                Quest q = runnerevent.getClassQuest(((Player) victim).getClassId());
                 if (q == null)
                     return;
 

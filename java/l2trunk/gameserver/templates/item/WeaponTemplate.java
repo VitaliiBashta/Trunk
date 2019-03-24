@@ -26,23 +26,23 @@ public final class WeaponTemplate extends ItemTemplate {
 
         if (getItemType() == WeaponType.NONE) {
             type1 = TYPE1_SHIELD_ARMOR;
-            _type2 = TYPE2_SHIELD_ARMOR;
+            type2 = TYPE2_SHIELD_ARMOR;
         } else {
             type1 = TYPE1_WEAPON_RING_EARRING_NECKLACE;
-            _type2 = TYPE2_WEAPON;
+            type2 = TYPE2_WEAPON;
         }
 
         if (getItemType() == WeaponType.PET) {
             type1 = ItemTemplate.TYPE1_WEAPON_RING_EARRING_NECKLACE;
 
             if (bodyPart == ItemTemplate.SLOT_WOLF)
-                _type2 = ItemTemplate.TYPE2_PET_WOLF;
+                type2 = ItemTemplate.TYPE2_PET_WOLF;
             else if (bodyPart == ItemTemplate.SLOT_GWOLF)
-                _type2 = ItemTemplate.TYPE2_PET_GWOLF;
+                type2 = ItemTemplate.TYPE2_PET_GWOLF;
             else if (bodyPart == ItemTemplate.SLOT_HATCHLING)
-                _type2 = ItemTemplate.TYPE2_PET_HATCHLING;
+                type2 = ItemTemplate.TYPE2_PET_HATCHLING;
             else
-                _type2 = ItemTemplate.TYPE2_PET_STRIDER;
+                type2 = ItemTemplate.TYPE2_PET_STRIDER;
 
             bodyPart = ItemTemplate.SLOT_R_HAND;
         }

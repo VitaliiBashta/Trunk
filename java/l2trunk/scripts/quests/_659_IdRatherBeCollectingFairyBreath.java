@@ -17,10 +17,7 @@ public final class _659_IdRatherBeCollectingFairyBreath extends Quest {
     private final int FAIRY_BREATH = 8286;
 
     public _659_IdRatherBeCollectingFairyBreath() {
-        super(false);
-
         addStartNpc(GALATEA);
-        addTalkId(GALATEA);
         addKillId(MOBS);
     }
 
@@ -39,7 +36,7 @@ public final class _659_IdRatherBeCollectingFairyBreath extends Quest {
                 else
                     reward = count * 50 + 5365;
                 st.takeItems(FAIRY_BREATH);
-                st.giveItems(ADENA_ID, reward);
+                st.giveAdena(reward);
             }
         } else if ("high_summoner_galatea_q0659_0204.htm".equalsIgnoreCase(event))
             st.exitCurrentQuest();

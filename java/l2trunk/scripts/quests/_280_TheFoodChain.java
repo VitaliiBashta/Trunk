@@ -26,7 +26,6 @@ public final class _280_TheFoodChain extends Quest {
     private static final int Black_Wolf_Tooth_Chance = 70;
 
     public _280_TheFoodChain() {
-        super(false);
         addStartNpc(BIXON);
         addKillId(Young_Grey_Keltir,Grey_Keltir,Dominant_Grey_Keltir,Black_Wolf,Dominant_Black_Wolf);
         addQuestItem(Grey_Keltir_Tooth,Black_Wolf_Tooth);
@@ -47,9 +46,8 @@ public final class _280_TheFoodChain extends Quest {
             long Black_Wolf_Tooth_count = st.getQuestItemsCount(Black_Wolf_Tooth);
 
             if ("ADENA".equalsIgnoreCase(event)) {
-                st.takeItems(Grey_Keltir_Tooth);
-                st.takeItems(Black_Wolf_Tooth);
-                st.giveItems(ADENA_ID, (Grey_Keltir_Tooth_count + Black_Wolf_Tooth_count) * 2);
+                st.takeAllItems(Grey_Keltir_Tooth,Black_Wolf_Tooth);
+                st.giveAdena((Grey_Keltir_Tooth_count + Black_Wolf_Tooth_count) * 2);
                 st.playSound(SOUND_MIDDLE);
                 return "jager_bixon_q0280_06.htm";
             } else if (event.equalsIgnoreCase("ITEM")) {
@@ -88,16 +86,16 @@ public final class _280_TheFoodChain extends Quest {
     public String onTalk(NpcInstance npc, QuestState st) {
         if (npc.getNpcId() != BIXON)
             return "noquest";
-        int _state = st.getState();
-        if (_state == CREATED) {
+        int state = st.getState();
+        if (state == CREATED) {
             if (st.player.getLevel() >= 3) {
                 st.setCond(0);
                 return "jager_bixon_q0280_01.htm";
             }
             st.exitCurrentQuest();
             return "jager_bixon_q0280_02.htm";
-        } else if (_state == STARTED)
-            return st.getQuestItemsCount(Grey_Keltir_Tooth) > 0 || st.getQuestItemsCount(Black_Wolf_Tooth) > 0 ? "jager_bixon_q0280_05.htm" : "jager_bixon_q0280_04.htm";
+        } else if (state == STARTED)
+            return st.haveAnyQuestItems(Grey_Keltir_Tooth,Black_Wolf_Tooth)  ? "jager_bixon_q0280_05.htm" : "jager_bixon_q0280_04.htm";
 
         return "noquest";
     }

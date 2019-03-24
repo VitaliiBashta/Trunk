@@ -14,7 +14,6 @@ public final class _274_SkirmishWithTheWerewolves extends Quest {
     private static final int MARAKU_WOLFMEN_TOTEM = 1501;
 
     public _274_SkirmishWithTheWerewolves() {
-        super(false);
         addStartNpc(30569);
 
         addKillId(20363,20364);
@@ -24,7 +23,7 @@ public final class _274_SkirmishWithTheWerewolves extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equals("prefect_brukurse_q0274_03.htm")) {
+        if ("prefect_brukurse_q0274_03.htm".equals(event)) {
             st.setCond(1);
             st.start();
             st.playSound(SOUND_ACCEPT);
@@ -44,7 +43,7 @@ public final class _274_SkirmishWithTheWerewolves extends Quest {
             } else if (st.player.getLevel() < 9) {
                 htmltext = "prefect_brukurse_q0274_01.htm";
                 st.exitCurrentQuest();
-            } else if (st.getQuestItemsCount(NECKLACE_OF_VALOR) > 0 || st.getQuestItemsCount(NECKLACE_OF_COURAGE) > 0) {
+            } else if (st.haveAnyQuestItems(NECKLACE_OF_VALOR,NECKLACE_OF_COURAGE)) {
                 htmltext = "prefect_brukurse_q0274_02.htm";
                 return htmltext;
             } else
@@ -55,11 +54,11 @@ public final class _274_SkirmishWithTheWerewolves extends Quest {
             if (st.getQuestItemsCount(MARAKU_WEREWOLF_HEAD) < 40)
                 htmltext = "prefect_brukurse_q0274_04.htm";
             else {
-                st.takeItems(MARAKU_WEREWOLF_HEAD, -1);
-                st.giveItems(ADENA_ID, 3500, true);
-                if (st.getQuestItemsCount(MARAKU_WOLFMEN_TOTEM) >= 1) {
-                    st.giveItems(ADENA_ID, st.getQuestItemsCount(MARAKU_WOLFMEN_TOTEM) * 600, true);
-                    st.takeItems(MARAKU_WOLFMEN_TOTEM, -1);
+                st.takeItems(MARAKU_WEREWOLF_HEAD);
+                st.giveAdena( 3500);
+                if (st.haveQuestItem(MARAKU_WOLFMEN_TOTEM)) {
+                    st.giveAdena( st.getQuestItemsCount(MARAKU_WOLFMEN_TOTEM) * 600);
+                    st.takeItems(MARAKU_WOLFMEN_TOTEM);
                 }
                 htmltext = "prefect_brukurse_q0274_05.htm";
                 st.exitCurrentQuest();

@@ -227,11 +227,6 @@ public abstract class MatchingRoom implements PlayerGroup {
     }
 
     @Override
-    public int size() {
-        return members.size();
-    }
-
-    @Override
     public Player getLeader() {
         return leader;
     }
@@ -241,15 +236,15 @@ public abstract class MatchingRoom implements PlayerGroup {
         return leader == player;
     }
 
-
-    public Stream<Player> getMembersStream() {
-        return members.stream();
-    }
-
     @Override
-    public boolean containsMember(Player player) {
-        return members.contains(player);
+    public List<Player> getMembers() {
+        return members;
     }
+
+
+//    public boolean containsMember(Player player) {
+//        return members.contains(player);
+//    }
 
     public void setMaxMemberSize(int maxMemberSize) {
         _maxMemberSize = maxMemberSize;

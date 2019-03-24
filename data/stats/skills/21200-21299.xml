@@ -835,11 +835,6 @@
 		<set name="operateType" val="OP_PASSIVE" />
 		<for>
 			<mul order="0x80" stat="expLost" val="0.5">
-				<and>
-					<player minLevel="40" />
-					<player maxLevel="75" />
-					<player maxPK="0" />
-				</and>
 			</mul>
 		</for>
 	</skill>

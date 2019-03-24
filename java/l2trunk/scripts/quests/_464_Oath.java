@@ -20,7 +20,6 @@ public final class _464_Oath extends Quest {
     private static final int BookofSilence2 = 15539;
 
     public _464_Oath() {
-        super(false);
         addTalkId(Sophia, Seresin, Holly, Flauen, Dominic, Chichirin, Tobias, Blacksmith, Agnes);
         addQuestItem(BookofSilence1, BookofSilence2);
     }
@@ -28,7 +27,7 @@ public final class _464_Oath extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("bookowner")) {
+        if ("bookowner".equalsIgnoreCase(event)) {
             switch (Rnd.get(2, 8)) {
                 case 2:
                     st.setCond(2);
@@ -65,7 +64,7 @@ public final class _464_Oath extends Quest {
             }
             st.takeItems(BookofSilence1);
             st.giveItems(BookofSilence2);
-        } else if (event.equalsIgnoreCase("request_reward")) {
+        } else if ("request_reward".equalsIgnoreCase(event)) {
             switch (npc.getNpcId()) {
                 case Seresin:
                     htmltext = "seresin_q464_02.htm";
@@ -92,7 +91,7 @@ public final class _464_Oath extends Quest {
                     htmltext = "agnes_q464_02.htm";
                     break;
             }
-            st.giveItems(ADENA_ID, Rnd.get(45000, 90000));
+            st.giveAdena(Rnd.get(45000, 90000));
             st.addExpAndSp(Rnd.get(15450, 1200000), Rnd.get(15000, 200000));
             st.takeItems(BookofSilence2);
             st.playSound(SOUND_FINISH);

@@ -34,8 +34,6 @@ public final class _620_FourGoblets extends Quest {
             6881, 6883, 6885, 6887, 6891, 6893, 6895, 6897, 6899, 7580);
 
     public _620_FourGoblets() {
-        super(false);
-
         addStartNpc(NAMELESS_SPIRIT, CONQ_SM, EMPER_SM, SAGES_SM, JUDGE_SM, GHOST_CHAMBERLAIN_1, GHOST_CHAMBERLAIN_2);
 
         addTalkId(GHOST_OF_WIGOTH_1, GHOST_OF_WIGOTH_2);

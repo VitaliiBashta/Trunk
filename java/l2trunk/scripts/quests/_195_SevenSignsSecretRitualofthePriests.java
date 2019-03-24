@@ -129,8 +129,6 @@ public final class _195_SevenSignsSecretRitualofthePriests extends Quest {
             {Location.of(-74968, 207704, -7512, 16384), Location.of(-74952, 209320, -7480)},};
 
     public _195_SevenSignsSecretRitualofthePriests() {
-        super(false);
-
         addStartNpc(ClaudiaAthebaldt);
         addTalkId(John, Raymond, LightofDawn, IdentityConfirmDevice, ClaudiaAthebaldt, PasswordEntryDevice, IasonHeine, BookShelf);
         addQuestItem(GuardsoftheDawnIdentityCard, EmperorShunaimansContract);
@@ -200,26 +198,26 @@ public final class _195_SevenSignsSecretRitualofthePriests extends Quest {
             } else
                 return "identityconfirmdevice_q195_2.htm";
         } else if ("false_code".equalsIgnoreCase(event)) htmltext = "passwordentrydevice_q195_2.htm";
-        else if (event.equalsIgnoreCase("correct_code")) {
+        else if ("correct_code".equalsIgnoreCase(event)) {
             if (ref != null) {
                 ref.openDoor(door5);
                 ref.openDoor(door6);
             }
             htmltext = "passwordentrydevice_q195_1.htm";
         } else if ("bookshelf_q195_2.htm".equalsIgnoreCase(event)) {
-            st.giveItems(EmperorShunaimansContract, 1);
+            st.giveItems(EmperorShunaimansContract);
             st.playSound(SOUND_ITEMGET);
         } else if ("bookshelf_q195_3.htm".equalsIgnoreCase(event)) {
             if (ref != null && !ref.isDefault())
                 ref.collapse();
         } else if ("raymond_q195_5.htm".equalsIgnoreCase(event)) {
             player.setTransformation(0);
-            st.takeItems(GuardsoftheDawnIdentityCard, -1);
+            st.takeItems(GuardsoftheDawnIdentityCard);
             st.playSound(SOUND_ITEMGET);
             st.setCond(4);
-        } else if (event.equalsIgnoreCase("iasonheine_q195_2.htm"))
+        } else if ("iasonheine_q195_2.htm".equalsIgnoreCase(event))
             if (player.getBaseClassId() == player.getActiveClassId()) {
-                st.takeItems(EmperorShunaimansContract, -1);
+                st.takeItems(EmperorShunaimansContract);
                 st.addExpAndSp(52518015, 5817677);
                 st.complete();
                 st.finish();
@@ -271,7 +269,7 @@ public final class _195_SevenSignsSecretRitualofthePriests extends Quest {
             if (cond == 3 && player.getTransformation() == 113)
                 htmltext = "bookshelf_q195_1.htm";
         } else if (npcId == IasonHeine)
-            if (cond == 4 && st.getQuestItemsCount(EmperorShunaimansContract) > 0)
+            if (cond == 4 && st.haveQuestItem(EmperorShunaimansContract))
                 htmltext = "iasonheine_q195_1.htm";
         return htmltext;
     }

@@ -20,7 +20,7 @@ public final class _354_ConquestofAlligatorIsland extends Quest {
     private static final int NOS_LAD = 20808;
     private static final int SWAMP_TRIBE = 20991;
     private static final List<Integer> MOBLIST = List.of(
-            CROKIAN_LAD, DAILAON_LAD, CROKIAN_LAD_WARRIOR, FARHITE_LAD, NOS_LAD, SWAMP_TRIBE);    //RANDOM_REWARDS [ITEM_ID, QTY]
+            CROKIAN_LAD, DAILAON_LAD, CROKIAN_LAD_WARRIOR, FARHITE_LAD, NOS_LAD, SWAMP_TRIBE);
     //items
     private final int ALLIGATOR_TOOTH = 5863;
     private final int TORN_MAP_FRAGMENT = 5864;
@@ -38,8 +38,6 @@ public final class _354_ConquestofAlligatorIsland extends Quest {
 
 
     public _354_ConquestofAlligatorIsland() {
-        super(false);
-
         addStartNpc(30895);
 
         addKillId(MOBLIST);
@@ -108,11 +106,9 @@ public final class _354_ConquestofAlligatorIsland extends Quest {
             st.giveItems(ALLIGATOR_TOOTH);
             st.playSound(SOUND_ITEMGET);
         }
-        if (Rnd.chance(CHANCE2) && st.getQuestItemsCount(TORN_MAP_FRAGMENT) < 10) {
-            st.giveItems(TORN_MAP_FRAGMENT);
-            if (st.getQuestItemsCount(TORN_MAP_FRAGMENT) < 10)
-                st.playSound(SOUND_ITEMGET);
-            else
+        if (Rnd.chance(CHANCE2) ) {
+            st.giveItemIfNotHave(TORN_MAP_FRAGMENT, 10);
+            if (st.getQuestItemsCount(TORN_MAP_FRAGMENT) >= 10)
                 st.playSound(SOUND_MIDDLE);
         }
     }

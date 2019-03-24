@@ -51,7 +51,6 @@ public final class _403_PathToRogue extends Quest {
             STOLEN_NECKLACE_ID);
 
     public _403_PathToRogue() {
-        super(false);
 
         addStartNpc(BEZIQUE);
 
@@ -98,7 +97,7 @@ public final class _403_PathToRogue extends Quest {
                 st.playSound(SOUND_ACCEPT);
                 break;
             case "30425_1":
-                st.takeItems(BEZIQUES_LETTER_ID, 1);
+                st.takeItems(BEZIQUES_LETTER_ID);
                 st.giveItemIfNotHave(NETIS_BOW_ID);
                 st.giveItemIfNotHave(NETIS_DAGGER_ID);
                 st.setCond(2);
@@ -114,11 +113,9 @@ public final class _403_PathToRogue extends Quest {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         if (npcId == BEZIQUE) {
-            if (cond == 6 && st.getQuestItemsCount(HORSESHOE_OF_LIGHT_ID) < 1 && st.getQuestItemsCount(STOLEN_JEWELRY_ID) + st.getQuestItemsCount(STOLEN_TOMES_ID) + st.getQuestItemsCount(STOLEN_RING_ID) + st.getQuestItemsCount(STOLEN_NECKLACE_ID) == 4) {
+            if (cond == 6 && !st.haveQuestItem(HORSESHOE_OF_LIGHT_ID) && st.haveAllQuestItems(STOLEN_JEWELRY_ID,STOLEN_TOMES_ID,STOLEN_RING_ID,STOLEN_NECKLACE_ID)) {
                 htmltext = "captain_bezique_q0403_09.htm";
-                st.takeItems(NETIS_BOW_ID, 1);
-                st.takeItems(NETIS_DAGGER_ID, 1);
-                st.takeItems(WANTED_BILL_ID, 1);
+                st.takeAllItems(NETIS_BOW_ID, NETIS_DAGGER_ID, WANTED_BILL_ID, 1);
                 st.takeItems(STOLEN_ITEM);
                 if (st.player.getClassId().occupation() == 0) {
                     st.giveItems(BEZIQUES_RECOMMENDATION_ID);

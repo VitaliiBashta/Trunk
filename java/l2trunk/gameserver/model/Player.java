@@ -341,7 +341,7 @@ public final class Player extends Playable implements PlayerGroup {
     private NpcInstance lastNpc = null;
     private MultiSellListContainer _multisell = null;
     private WorldRegion _observerRegion;
-    private int _handysBlockCheckerEventArena = -1;
+    private int handysBlockCheckerEventArena = -1;
     private boolean hero = false;
     /**
      * True if the L2Player is in a boat
@@ -1734,6 +1734,9 @@ public final class Player extends Playable implements PlayerGroup {
         this.pvpKills = pvpKills;
     }
 
+    public void incPvpKills(){
+        pvpKills++;
+    }
     public ClassId getClassId() {
         return getTemplate().classId;
     }
@@ -1805,8 +1808,6 @@ public final class Player extends Playable implements PlayerGroup {
                     unsetVar("p1q3");
                     unsetVar("p1q4");
                     unsetVar("prof1");
-                    unsetVar("ng1");
-                    unsetVar("ng2");
                     unsetVar("ng3");
                     unsetVar("ng4");
                 } else if (id.occupation() == 2) {
@@ -3237,8 +3238,7 @@ public final class Player extends Playable implements PlayerGroup {
 
     }
 
-    private void doKillInPeace(final Player killer) // Check if the L2Player killed haven't Karma
-    {
+    private void doKillInPeace(final Player killer){ // Check if the L2Player killed haven't Karma
         if (karma <= 0) {
             if (Config.SERVICES_PK_PVP_KILL_ENABLE) {
                 if (Config.SERVICES_PK_PVP_TIE_IF_SAME_IP) {
@@ -3249,7 +3249,7 @@ public final class Player extends Playable implements PlayerGroup {
             }
             doPurePk(killer);
         } else {
-            killer.setPvpKills(killer.getPvpKills() + 1);
+            killer.incPvpKills();
         }
     }
 
@@ -3351,7 +3351,7 @@ public final class Player extends Playable implements PlayerGroup {
                         ItemFunctions.addItem(pk, Config.SERVICES_PVP_KILL_REWARD_ITEM, Config.SERVICES_PVP_KILL_REWARD_COUNT, "PvP");
                     }
                 }
-                pk.setPvpKills(pk.getPvpKills() + 1);
+                pk.incPvpKills();
 
                 // Alexander - Add the pvp kill to the stats
 //				if (killer.isPlayer())
@@ -3798,8 +3798,9 @@ public final class Player extends Playable implements PlayerGroup {
     }
 
     public void checkSkills() {
-        getAllSkills().forEach(sk ->
-                SkillTreeTable.checkSkill(this, sk));
+        Collection<Skill> allSkills = getAllSkills();
+//        allSkills.forEach(sk ->
+//                SkillTreeTable.checkSkill(this, sk));
     }
 
     public void startTimers() {
@@ -4620,7 +4621,7 @@ public final class Player extends Playable implements PlayerGroup {
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              Statement statement = con.createStatement()) {
 
-            try (ResultSet rset = statement.executeQuery("SELECT skill_id,skill_level,end_time,reuse_delay_org FROM character_skills_save WHERE char_obj_id=" + objectId() + " AND class_index=" + getActiveClassId())) {
+            try (ResultSet rset = statement.executeQuery("SELECT skill_id,skill_level,end_time,reuse_delay_org FROM character_skills_save WHERE char_obj_id=" + objectId() + " AND class_index=" + getActiveClassId().id)) {
                 while (rset.next()) {
                     int skillId = rset.getInt("skill_id");
                     int skillLevel = rset.getInt("skill_level");
@@ -4636,7 +4637,7 @@ public final class Player extends Playable implements PlayerGroup {
                 }
             }
 
-            statement.executeUpdate("DELETE FROM character_skills_save WHERE char_obj_id = " + objectId() + " AND class_index=" + getActiveClassId() + " AND `end_time` < " + System.currentTimeMillis());
+            statement.executeUpdate("DELETE FROM character_skills_save WHERE char_obj_id = " + objectId() + " AND class_index=" + getActiveClassId().id + " AND `end_time` < " + System.currentTimeMillis());
         } catch (Exception e) {
             LOG.error("Could not restore active skills data!", e);
         }
@@ -5204,7 +5205,7 @@ public final class Player extends Playable implements PlayerGroup {
         teleToLocation(TeleportUtils.getRestartLocation(this, RestartType.TO_CLANHALL), ReflectionManager.DEFAULT);
     }
 
-    @Override
+
     public void sendMessage(CustomMessage message) {
         sendMessage(message.toString());
     }
@@ -6068,11 +6069,9 @@ public final class Player extends Playable implements PlayerGroup {
                     long expire_time = rs.getLong("expire_time");
                     long curtime = System.currentTimeMillis();
 
-                    if ((expire_time <= curtime) && (expire_time > 0)) {
-                        continue;
-                    }
+                    if ((expire_time > curtime) || (expire_time <= 0))
+                        user_variables.put(name, new PlayerVar(this, name, value, expire_time));
 
-                    user_variables.put(name, new PlayerVar(this, name, value, expire_time));
                 }
             }
         } catch (SQLException e) {
@@ -7492,10 +7491,8 @@ public final class Player extends Playable implements PlayerGroup {
         updatePvPFlag(0);
     }
 
-    public void updatePvPFlag(int value) {
-        if (_handysBlockCheckerEventArena != -1) {
-            return;
-        }
+    void updatePvPFlag(int value) {
+        if (handysBlockCheckerEventArena != -1) return;
         if (pvpFlag == value) {
             return;
         }
@@ -8289,11 +8286,6 @@ public final class Player extends Playable implements PlayerGroup {
         }
     }
 
-    @Override
-    public Player getPlayer() {
-        return this;
-    }
-
     private List<String> getStoredBypasses(boolean bbs) {
         if (bbs) {
             if (bypasses_bbs == null) {
@@ -8507,11 +8499,11 @@ public final class Player extends Playable implements PlayerGroup {
     }
 
     public int getBlockCheckerArena() {
-        return _handysBlockCheckerEventArena;
+        return handysBlockCheckerEventArena;
     }
 
     public void setBlockCheckerArena(byte arena) {
-        _handysBlockCheckerEventArena = arena;
+        handysBlockCheckerEventArena = arena;
     }
 
     @Override
@@ -8991,7 +8983,6 @@ public final class Player extends Playable implements PlayerGroup {
         this.battlefieldChatId = battlefieldChatId;
     }
 
-    @Override
     public Iterator<Player> iterator() {
         return Collections.singleton(this).iterator();
     }
@@ -9008,27 +8999,11 @@ public final class Player extends Playable implements PlayerGroup {
         }
     }
 
-    @Override
-    public int size() {
-        return 1;
-    }
-
-    @Override
-    public Player getLeader() {
-        return this;
-    }
-
-
-    public Stream<Player> getMembersStream() {
-        return Stream.of(this);
-    }
-
-    @Override
     public List<Player> getMembers() {
         return List.of(this);
     }
 
-    @Override
+
     public boolean containsMember(Player player) {
         return this == player;
     }

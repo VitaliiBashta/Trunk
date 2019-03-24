@@ -14,12 +14,9 @@ public final class _031_SecretBuriedInTheSwamp extends Quest {
     private final int KRORINS_JOURNAL = 7252;
 
     public _031_SecretBuriedInTheSwamp() {
-        super(false);
-
         addStartNpc(ABERCROMBIE);
 
-        for (int i = 31661; i <= 31665; i++)
-            addTalkId(i);
+        addTalkId(FORGOTTEN_MONUMENT_1, FORGOTTEN_MONUMENT_2, FORGOTTEN_MONUMENT_3, FORGOTTEN_MONUMENT_4, CORPSE_OF_DWARF);
 
         addQuestItem(KRORINS_JOURNAL);
     }
@@ -34,7 +31,7 @@ public final class _031_SecretBuriedInTheSwamp extends Quest {
         } else if (event.equals("31665-1.htm") && cond == 1) {
             st.setCond(2);
             st.playSound(SOUND_ITEMGET);
-            st.giveItems(KRORINS_JOURNAL, 1);
+            st.giveItems(KRORINS_JOURNAL);
         } else if (event.equals("31555-4.htm") && cond == 2)
             st.setCond(3);
         else if (event.equals("31661-1.htm") && cond == 3)
@@ -47,9 +44,9 @@ public final class _031_SecretBuriedInTheSwamp extends Quest {
             st.setCond(7);
             st.playSound(SOUND_MIDDLE);
         } else if (event.equals("31555-7.htm") && cond == 7) {
-            st.takeItems(KRORINS_JOURNAL, -1);
+            st.takeItems(KRORINS_JOURNAL);
             st.addExpAndSp(490000, 45880);
-            st.giveItems(ADENA_ID, 120000);
+            st.giveAdena(120000);
             st.playSound(SOUND_FINISH);
             st.finish();
         }

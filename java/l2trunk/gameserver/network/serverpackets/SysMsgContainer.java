@@ -1,7 +1,6 @@
 package l2trunk.gameserver.network.serverpackets;
 
 import l2trunk.gameserver.model.*;
-import l2trunk.gameserver.model.base.Element;
 import l2trunk.gameserver.model.entity.residence.Residence;
 import l2trunk.gameserver.model.instances.DoorInstance;
 import l2trunk.gameserver.model.instances.NpcInstance;
@@ -65,8 +64,8 @@ public abstract class SysMsgContainer<T extends SysMsgContainer<T>> extends L2Ga
         return add(new InstanceNameArgument(id));
     }
 
-    public T addSysString(int id) {
-        return add(new SysStringArgument(id));
+    public void addSysString(int id) {
+        add(new SysStringArgument(id));
     }
 
     public T addSkillName(Skill skill) {
@@ -105,14 +104,6 @@ public abstract class SysMsgContainer<T extends SysMsgContainer<T>> extends L2Ga
         return add(new ResidenceArgument(i));
     }
 
-    public T addElementName(int i) {
-        return add(new ElementNameArgument(i));
-    }
-
-    public T addElementName(Element i) {
-        return add(new ElementNameArgument(i.getId()));
-    }
-
     public T addInteger(double i) {
         return add(new IntegerArgument((int) i));
     }
@@ -129,7 +120,6 @@ public abstract class SysMsgContainer<T extends SysMsgContainer<T>> extends L2Ga
         return add(new IntegerArgument(number));
     }
 
-    @SuppressWarnings("unchecked")
     private T add(IArgument arg) {
         arguments.add(arg);
 
@@ -156,7 +146,6 @@ public abstract class SysMsgContainer<T extends SysMsgContainer<T>> extends L2Ga
     // Суппорт классы, собственна реализация (не L2jFree)
     //==================================================================================================
 
-    @SuppressWarnings("rawtypes")
     static abstract class IArgument {
         void write(SysMsgContainer m) {
             m.writeD(getType().ordinal());
@@ -171,15 +160,15 @@ public abstract class SysMsgContainer<T extends SysMsgContainer<T>> extends L2Ga
 
 
     static class IntegerArgument extends IArgument {
-        private final int _data;
+        private final int data;
 
         IntegerArgument(int da) {
-            _data = da;
+            data = da;
         }
 
         @Override
         public void writeData(SysMsgContainer message) {
-            message.writeD(_data);
+            message.writeD(data);
         }
 
         @Override
@@ -210,7 +199,6 @@ public abstract class SysMsgContainer<T extends SysMsgContainer<T>> extends L2Ga
         }
     }
 
-    @SuppressWarnings("rawtypes")
     static class ItemNameWithAugmentationArgument extends IArgument {
         private final int _itemId;
         private final int _augmentationId;
@@ -276,17 +264,16 @@ public abstract class SysMsgContainer<T extends SysMsgContainer<T>> extends L2Ga
         }
     }
 
-    @SuppressWarnings("rawtypes")
     static class LongArgument extends IArgument {
-        private final long _data;
+        private final long data;
 
         LongArgument(long da) {
-            _data = da;
+            data = da;
         }
 
         @Override
         void writeData(SysMsgContainer message) {
-            message.writeQ(_data);
+            message.writeQ(data);
         }
 
         @Override
@@ -358,17 +345,6 @@ public abstract class SysMsgContainer<T extends SysMsgContainer<T>> extends L2Ga
         @Override
         Types getType() {
             return Types.ZONE_NAME;
-        }
-    }
-
-    static class ElementNameArgument extends IntegerArgument {
-        ElementNameArgument(int type) {
-            super(type);
-        }
-
-        @Override
-        Types getType() {
-            return Types.ELEMENT_NAME;
         }
     }
 

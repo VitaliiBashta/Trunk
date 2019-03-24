@@ -5,6 +5,8 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
+import static l2trunk.gameserver.model.base.ClassId.*;
+
 public final class _220_TestimonyOfGlory extends Quest {
     //NPC
     private static final int Vokian = 30514;
@@ -233,14 +235,13 @@ public final class _220_TestimonyOfGlory extends Quest {
     };
 
     public _220_TestimonyOfGlory() {
-        super(false);
         addStartNpc(Vokian);
-        addTalkId(Chianta,Manakia,Kasman,Voltar,Kepra,Burai,Harak,Driko,Tanapi,Kakai);
+        addTalkId(Chianta, Manakia, Kasman, Voltar, Kepra, Burai, Harak, Driko, Tanapi, Kakai);
 
         for (int[] aDROPLIST_COND : DROPLIST_COND) addKillId(aDROPLIST_COND[2]);
 
-        addKillId(PashikasSonOfVoltarQuestMonster,VultusSonOfVoltarQuestMonster,
-                RagnaOrcOverlord,RagnaOrcSeer,RevenantOfTantosChief);
+        addKillId(PashikasSonOfVoltarQuestMonster, VultusSonOfVoltarQuestMonster,
+                RagnaOrcOverlord, RagnaOrcSeer, RevenantOfTantosChief);
 
         addQuestItem(VokiansOrder,
                 VokiansOrder2,
@@ -302,7 +303,7 @@ public final class _220_TestimonyOfGlory extends Quest {
             st.setCond(9);
             st.start();
         } else if ("30642-07.htm".equalsIgnoreCase(event)) {
-            st.takeAllItems(ScepterOfBreka,ScepterOfEnku,ScepterOfVuku,ScepterOfTurek,ScepterOfTunath,ChiantaOrder1st);
+            st.takeAllItems(ScepterOfBreka, ScepterOfEnku, ScepterOfVuku, ScepterOfTurek, ScepterOfTunath, ChiantaOrder1st);
             if (st.player.getLevel() >= 38) {
                 st.giveItems(ChiantasOrder3rd);
                 st.setCond(6);
@@ -312,31 +313,31 @@ public final class _220_TestimonyOfGlory extends Quest {
                 st.giveItems(ChiantasOrder2rd);
             }
         } else if ("BREKA".equalsIgnoreCase(event)) {
-            if (st.haveQuestItem(ScepterOfBreka) )
+            if (st.haveQuestItem(ScepterOfBreka))
                 htmltext = "30515-02.htm";
-            else if (st.haveQuestItem(ManakiaLetter1st) )
+            else if (st.haveQuestItem(ManakiaLetter1st))
                 htmltext = "30515-04.htm";
             else {
                 htmltext = "30515-03.htm";
                 st.giveItems(ManakiaLetter1st);
             }
         } else if ("ENKU".equalsIgnoreCase(event)) {
-            if (st.getQuestItemsCount(ScepterOfEnku) > 0)
+            if (st.haveQuestItem(ScepterOfEnku))
                 htmltext = "30515-05.htm";
-            else if (st.getQuestItemsCount(ManakiaLetter2st) > 0)
+            else if (st.haveQuestItem(ManakiaLetter2st))
                 htmltext = "30515-07.htm";
             else {
                 htmltext = "30515-06.htm";
-                st.giveItems(ManakiaLetter2st, 1);
+                st.giveItems(ManakiaLetter2st);
             }
         } else if ("VUKU".equalsIgnoreCase(event)) {
-            if (st.getQuestItemsCount(ScepterOfVuku) > 0)
+            if (st.haveQuestItem(ScepterOfVuku))
                 htmltext = "30501-02.htm";
             else if (st.getQuestItemsCount(KasmansLetter1rd) > 0)
                 htmltext = "30501-04.htm";
             else {
                 htmltext = "30501-03.htm";
-                st.giveItems(KasmansLetter1rd, 1);
+                st.giveItems(KasmansLetter1rd);
             }
         } else if ("TUREK".equalsIgnoreCase(event)) {
             if (st.haveQuestItem(ScepterOfTurek))
@@ -345,10 +346,10 @@ public final class _220_TestimonyOfGlory extends Quest {
                 htmltext = "30501-07.htm";
             else {
                 htmltext = "30501-06.htm";
-                st.giveItems(KasmansLetter2rd, 1);
+                st.giveItems(KasmansLetter2rd);
             }
         } else if ("TUNATH".equalsIgnoreCase(event)) {
-            if (st.haveQuestItem(ScepterOfTunath) )
+            if (st.haveQuestItem(ScepterOfTunath))
                 htmltext = "30501-08.htm";
             else if (st.haveQuestItem(KasmansLetter3rd))
                 htmltext = "30501-10.htm";
@@ -418,7 +419,7 @@ public final class _220_TestimonyOfGlory extends Quest {
         } else if (event.equalsIgnoreCase("30618-03.htm")) {
             st.takeItems(KasmansLetter3rd);
             st.giveItems(ScepterOfTunath);
-            if (st.haveAllQuestItems(ScepterOfBreka,ScepterOfEnku,ScepterOfVuku,ScepterOfTurek,ScepterOfTunath)) {
+            if (st.haveAllQuestItems(ScepterOfBreka, ScepterOfEnku, ScepterOfVuku, ScepterOfTurek, ScepterOfTunath)) {
                 st.setCond(5);
                 st.start();
             }
@@ -427,7 +428,7 @@ public final class _220_TestimonyOfGlory extends Quest {
             st.giveItems(DrikosContract);
         }
         //Далее идет 3 велосипеда
-        else if (event.equalsIgnoreCase("Wait1") || event.equalsIgnoreCase("PashikasSonOfVoltarQuestMonster") || event.equalsIgnoreCase("VultusSonOfVoltarQuestMonster")) {
+        else if ("Wait1".equalsIgnoreCase(event) || "PashikasSonOfVoltarQuestMonster".equalsIgnoreCase(event) || "VultusSonOfVoltarQuestMonster".equalsIgnoreCase(event)) {
             NpcInstance isQuest = GameObjectsStorage.getByNpcId(PashikasSonOfVoltarQuestMonster);
             if (isQuest != null)
                 isQuest.deleteMe();
@@ -436,7 +437,7 @@ public final class _220_TestimonyOfGlory extends Quest {
                 isQuest.deleteMe();
             st.cancelQuestTimer("Wait1");
             st.cancelQuestTimer("PashikasSonOfVoltarQuestMonster");
-        } else if (event.equalsIgnoreCase("Wait2") || event.equalsIgnoreCase("EnkuOrcOverlordQuestMonster")) {
+        } else if ("Wait2".equalsIgnoreCase(event) || "EnkuOrcOverlordQuestMonster".equalsIgnoreCase(event)) {
             //Велосипед, но нужно удалить всех 4 одинаковых мобов
             NpcInstance isQuest = GameObjectsStorage.getByNpcId(EnkuOrcOverlordQuestMonster);
             if (isQuest != null)
@@ -452,7 +453,7 @@ public final class _220_TestimonyOfGlory extends Quest {
                 isQuest.deleteMe();
             st.cancelQuestTimer("Wait2");
             st.cancelQuestTimer("EnkuOrcOverlordQuestMonster");
-        } else if (event.equalsIgnoreCase("Wait3") || event.equalsIgnoreCase("MakumBugbearThugQuestMonster")) {
+        } else if ("Wait3".equalsIgnoreCase(event) || "MakumBugbearThugQuestMonster".equalsIgnoreCase(event)) {
             //Велосипед, но нужно удалить всех 2 одинаковых мобов
             NpcInstance isQuest = GameObjectsStorage.getByNpcId(MakumBugbearThugQuestMonster);
             if (isQuest != null)
@@ -462,7 +463,7 @@ public final class _220_TestimonyOfGlory extends Quest {
                 isQuest.deleteMe();
             st.cancelQuestTimer("Wait3");
             st.cancelQuestTimer("MakumBugbearThugQuestMonster");
-        } else if (event.equalsIgnoreCase("Wait4") || event.equalsIgnoreCase("RevenantOfTantosChief")) {
+        } else if ("Wait4".equalsIgnoreCase(event) || "RevenantOfTantosChief".equalsIgnoreCase(event)) {
             //Тележка...
             NpcInstance isQuest = GameObjectsStorage.getByNpcId(RevenantOfTantosChief);
             if (isQuest != null)
@@ -479,11 +480,13 @@ public final class _220_TestimonyOfGlory extends Quest {
         String htmltext = "noquest";
         int cond = st.getCond();
         if (npcId == Vokian) {
-            if (st.getQuestItemsCount(MarkOfGlory) != 0) {
+            if (st.haveAnyQuestItems(MarkOfGlory)) {
                 htmltext = "completed";
                 st.exitCurrentQuest();
             } else if (cond == 0) {
-                if (st.player.getClassId().id == 45 || st.player.getClassId().id == 47 || st.player.getClassId().id == 50) {
+                if (st.player.getClassId() == orcRaider
+                        || st.player.getClassId() == orcMonk
+                        || st.player.getClassId() == orcShaman) {
                     if (st.player.getLevel() >= 37)
                         htmltext = "30514-03.htm";
                     else {
@@ -497,10 +500,7 @@ public final class _220_TestimonyOfGlory extends Quest {
             } else if (cond == 1)
                 htmltext = "30514-06.htm";
             else if (cond == 2) {
-                st.takeItems(VokiansOrder);
-                st.takeItems(ManashenShard);
-                st.takeItems(TyrantTalon);
-                st.takeItems(GuardianBasiliskFang);
+                st.takeAllItems(VokiansOrder, ManashenShard, TyrantTalon, GuardianBasiliskFang);
                 st.giveItems(VokiansOrder2);
                 st.giveItems(NecklaceOfAuthority);
                 htmltext = "30514-08.htm";
@@ -530,7 +530,7 @@ public final class _220_TestimonyOfGlory extends Quest {
             } else if (cond == 6)
                 htmltext = "30642-10.htm";
             else if (cond == 7) {
-                st.takeAllItems(NecklaceOfAuthority,ChiantasOrder3rd,TamlinOrcSkull,TimakOrcHead);
+                st.takeAllItems(NecklaceOfAuthority, ChiantasOrder3rd, TamlinOrcSkull, TimakOrcHead);
                 st.giveItems(ScepterBox);
                 htmltext = "30642-11.htm";
                 st.setCond(8);
@@ -547,7 +547,7 @@ public final class _220_TestimonyOfGlory extends Quest {
             if (cond == 4)
                 if (st.getQuestItemsCount(ManakiaLetter1st) > 0)
                     htmltext = "30615-02.htm";
-                else if (st.getQuestItemsCount(GloveOfVoltar) > 0 && (st.getQuestItemsCount(PashikasHead) == 0 || st.getQuestItemsCount(VultusHead) == 0)) {
+                else if (st.haveQuestItem(GloveOfVoltar) && (st.getQuestItemsCount(PashikasHead) == 0 || st.getQuestItemsCount(VultusHead) == 0)) {
                     htmltext = "30615-05.htm";
                     int sound = 0;
                     NpcInstance isQuest = GameObjectsStorage.getByNpcId(PashikasSonOfVoltarQuestMonster);
@@ -569,19 +569,17 @@ public final class _220_TestimonyOfGlory extends Quest {
                         st.startQuestTimer("Wait1", 300000);
                         htmltext = "<html><head><body>Please wait 5 minutes</body></html>";
                     }
-                } else if (st.getQuestItemsCount(PashikasHead) > 0 && st.getQuestItemsCount(VultusHead) > 0) {
-                    st.takeItems(PashikasHead, -1);
-                    st.takeItems(VultusHead, -1);
-                    st.takeItems(GloveOfVoltar, -1);
-                    st.giveItems(ScepterOfBreka, 1);
+                } else if (st.haveAllQuestItems(PashikasHead, VultusHead)) {
+                    st.takeAllItems(PashikasHead, VultusHead, GloveOfVoltar);
+                    st.giveItems(ScepterOfBreka);
                     htmltext = "30615-06.htm";
-                    if (st.getQuestItemsCount(ScepterOfBreka) > 0 && st.getQuestItemsCount(ScepterOfEnku) > 0 && st.getQuestItemsCount(ScepterOfVuku) > 0 && st.getQuestItemsCount(ScepterOfTurek) > 0 && st.getQuestItemsCount(ScepterOfTunath) > 0) {
+                    if (st.haveAllQuestItems(ScepterOfBreka, ScepterOfEnku, ScepterOfVuku, ScepterOfTurek, ScepterOfTunath)) {
                         st.setCond(5);
                         st.start();
                         st.playSound(SOUND_MIDDLE);
                     } else
                         st.playSound(SOUND_ITEMGET);
-                } else if (st.getQuestItemsCount(ScepterOfBreka) > 0)
+                } else if (st.haveQuestItem(ScepterOfBreka))
                     htmltext = "30615-07.htm";
                 else
                     htmltext = "30615-01.htm";
@@ -606,10 +604,9 @@ public final class _220_TestimonyOfGlory extends Quest {
                     }
                 } else if (st.getQuestItemsCount(EnkuOverlordHead) >= 4) {
                     htmltext = "30616-06.htm";
-                    st.takeItems(EnkuOverlordHead, -1);
-                    st.takeItems(GloveOfKepra, -1);
-                    st.giveItems(ScepterOfEnku, 1);
-                    if (st.getQuestItemsCount(ScepterOfBreka) > 0 && st.getQuestItemsCount(ScepterOfEnku) > 0 && st.getQuestItemsCount(ScepterOfVuku) > 0 && st.getQuestItemsCount(ScepterOfTurek) > 0 && st.getQuestItemsCount(ScepterOfTunath) > 0) {
+                    st.takeAllItems(EnkuOverlordHead, GloveOfKepra);
+                    st.giveItems(ScepterOfEnku);
+                    if (st.haveAllQuestItems(ScepterOfBreka, ScepterOfEnku, ScepterOfVuku, ScepterOfTurek, ScepterOfTunath)) {
                         st.setCond(5);
                         st.start();
                         st.playSound(SOUND_MIDDLE);
@@ -638,22 +635,21 @@ public final class _220_TestimonyOfGlory extends Quest {
                     }
                 } else if (st.getQuestItemsCount(MakumBugbearHead) == 2) {
                     htmltext = "30617-06.htm";
-                    st.takeItems(MakumBugbearHead, -1);
-                    st.takeItems(GloveOfBurai, -1);
-                    st.giveItems(ScepterOfTurek, 1);
-                    if (st.getQuestItemsCount(ScepterOfBreka) > 0 && st.getQuestItemsCount(ScepterOfEnku) > 0 && st.getQuestItemsCount(ScepterOfVuku) > 0 && st.getQuestItemsCount(ScepterOfTurek) > 0 && st.getQuestItemsCount(ScepterOfTunath) > 0) {
+                    st.takeAllItems(MakumBugbearHead, GloveOfBurai);
+                    st.giveItems(ScepterOfTurek);
+                    if (st.haveAllQuestItems(ScepterOfBreka, ScepterOfEnku, ScepterOfVuku, ScepterOfTurek, ScepterOfTunath)) {
                         st.setCond(5);
                         st.start();
                         st.playSound(SOUND_MIDDLE);
                     } else
                         st.playSound(SOUND_ITEMGET);
-                } else if (st.getQuestItemsCount(ScepterOfTurek) > 0)
+                } else if (st.haveQuestItem(ScepterOfTurek))
                     htmltext = "30617-07.htm";
                 else
                     htmltext = "30617-01.htm";
         } else if (npcId == Harak) {
             if (cond == 4)
-                if (st.getQuestItemsCount(KasmansLetter3rd) > 0)
+                if (st.haveQuestItem(KasmansLetter3rd))
                     htmltext = "30618-02.htm";
                 else if (st.getQuestItemsCount(ScepterOfTunath) > 0)
                     htmltext = "30618-04.htm";
@@ -666,10 +662,9 @@ public final class _220_TestimonyOfGlory extends Quest {
                 else if (st.getQuestItemsCount(DrikosContract) > 0) {
                     if (st.getQuestItemsCount(StakatoDroneHusk) >= 30) {
                         htmltext = "30619-05.htm";
-                        st.takeItems(StakatoDroneHusk, -1);
-                        st.takeItems(DrikosContract, -1);
-                        st.giveItems(ScepterOfVuku, 1);
-                        if (st.getQuestItemsCount(ScepterOfBreka) > 0 && st.getQuestItemsCount(ScepterOfEnku) > 0 && st.getQuestItemsCount(ScepterOfVuku) > 0 && st.getQuestItemsCount(ScepterOfTurek) > 0 && st.getQuestItemsCount(ScepterOfTunath) > 0) {
+                        st.takeAllItems(StakatoDroneHusk, DrikosContract);
+                        st.giveItems(ScepterOfVuku);
+                        if (st.haveAllQuestItems(ScepterOfBreka, ScepterOfEnku, ScepterOfVuku, ScepterOfTurek, ScepterOfTunath)) {
                             st.setCond(5);
                             st.start();
                             st.playSound(SOUND_MIDDLE);
@@ -677,7 +672,7 @@ public final class _220_TestimonyOfGlory extends Quest {
                             st.playSound(SOUND_ITEMGET);
                     } else
                         htmltext = "30619-04.htm";
-                } else if (st.getQuestItemsCount(ScepterOfVuku) > 0)
+                } else if (st.haveQuestItem(ScepterOfVuku))
                     htmltext = "30619-06.htm";
                 else
                     htmltext = "30619-01.htm";
@@ -698,11 +693,8 @@ public final class _220_TestimonyOfGlory extends Quest {
         if (npcId == Kakai && cond == 11) {
             st.takeItems(RitualBox);
             st.giveItems(MarkOfGlory);
-            if (!st.player.isVarSet("prof2.2")) {
-                st.addExpAndSp(724113, 48324);
-                st.giveItems(ADENA_ID, 131360);
-                st.player.setVar("prof2.2");
-            }
+            st.addExpAndSp(724113, 48324);
+            st.giveAdena(131360);
             htmltext = "30565-02.htm";
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest();

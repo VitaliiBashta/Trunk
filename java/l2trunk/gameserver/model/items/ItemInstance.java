@@ -491,13 +491,6 @@ public final class ItemInstance extends GameObject implements JdbcEntity {
         return template.isDestroyable();
     }
 
-    /**
-     * Return true if item can be dropped
-     *
-     * @param player
-     * @param pk
-     * @return
-     */
     public boolean canBeDropped(Player player, boolean pk) {
         if (player.isGM())
             return true;

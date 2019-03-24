@@ -23,12 +23,11 @@ public final class _382_KailsMagicCoin extends Quest {
         MOBS.put(21019, List.of(5962)); // Fallen Orc Archer
         MOBS.put(21020, List.of(5963)); // Fallen Orc Shaman
         MOBS.put(21022, List.of(5961, 5962, 5963)); // Fallen Orc Captain
-        MOBS.put(21258, List.of( 5961, 5962, 5963 )); // Fallen Orc Shaman - WereTiger
-        MOBS.put(21259, List.of( 5961, 5962, 5963 )); // Fallen Orc Shaman - WereTiger, transformed
+        MOBS.put(21258, List.of(5961, 5962, 5963)); // Fallen Orc Shaman - WereTiger
+        MOBS.put(21259, List.of(5961, 5962, 5963)); // Fallen Orc Shaman - WereTiger, transformed
     }
 
     public _382_KailsMagicCoin() {
-        super(false);
         addStartNpc(VERGARA);
         addKillId(MOBS.keySet());
     }
@@ -37,7 +36,7 @@ public final class _382_KailsMagicCoin extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
         if ("head_blacksmith_vergara_q0382_03.htm".equalsIgnoreCase(event))
-            if (st.player.getLevel() >= 55 && st.getQuestItemsCount(ROYAL_MEMBERSHIP) > 0) {
+            if (st.player.getLevel() >= 55 && st.haveQuestItem(ROYAL_MEMBERSHIP)) {
                 st.setCond(1);
                 st.start();
                 st.playSound(SOUND_ACCEPT);
@@ -56,7 +55,7 @@ public final class _382_KailsMagicCoin extends Quest {
     public String onTalk(NpcInstance npc, QuestState st) {
         String htmltext;
         int cond = st.getCond();
-        if (st.getQuestItemsCount(ROYAL_MEMBERSHIP) == 0 || st.player.getLevel() < 55) {
+        if (!st.haveQuestItem(ROYAL_MEMBERSHIP) || st.player.getLevel() < 55) {
             htmltext = "head_blacksmith_vergara_q0382_01.htm";
             st.exitCurrentQuest();
         } else if (cond == 0)
@@ -68,10 +67,9 @@ public final class _382_KailsMagicCoin extends Quest {
 
     @Override
     public void onKill(NpcInstance npc, QuestState st) {
-        if (st.getState() != STARTED || st.getQuestItemsCount(ROYAL_MEMBERSHIP) == 0)
+        if (st.getState() != STARTED || !st.haveQuestItem(ROYAL_MEMBERSHIP))
             return;
 
-        List<Integer> droplist = MOBS.get(npc.getNpcId());
-        st.rollAndGive(Rnd.get(droplist), 1, 10);
+        st.rollAndGive(Rnd.get(MOBS.get(npc.getNpcId())), 1, 10);
     }
 }

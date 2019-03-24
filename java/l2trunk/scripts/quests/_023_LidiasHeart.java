@@ -20,11 +20,9 @@ public final class _023_LidiasHeart extends Quest {
     private final int SilverSpear = 7150;
 
     public _023_LidiasHeart() {
-        super(false);
-
         addStartNpc(Innocentin);
 
-        addTalkId(BrokenBookshelf,GhostofvonHellmann,Tombstone,Violet,Box);
+        addTalkId(BrokenBookshelf, GhostofvonHellmann, Tombstone, Violet, Box);
     }
 
     @Override
@@ -46,12 +44,12 @@ public final class _023_LidiasHeart extends Quest {
                 break;
             case "31526-05.htm":
                 st.giveItems(LidiaHairPin);
-                if (st.getQuestItemsCount(LidiaDiary) != 0)
+                if (st.haveQuestItem(LidiaDiary))
                     st.setCond(4);
                 break;
             case "31526-11.htm":
                 st.giveItems(LidiaDiary);
-                if (st.getQuestItemsCount(LidiaHairPin) != 0)
+                if (st.haveQuestItem(LidiaHairPin))
                     st.setCond(4);
                 break;
             case "31328-19.htm":
@@ -110,14 +108,14 @@ public final class _023_LidiasHeart extends Quest {
                 htmltext = "31328-19.htm";
         } else if (npcId == BrokenBookshelf) {
             if (cond == 2) {
-                if (st.getQuestItemsCount(SilverKey) != 0)
+                if (st.haveQuestItem(SilverKey))
                     htmltext = "31526-00.htm";
             } else if (cond == 3) {
-                if (st.getQuestItemsCount(LidiaHairPin) == 0 && st.haveQuestItem(LidiaDiary) )
+                if (st.getQuestItemsCount(LidiaHairPin) == 0 && st.haveQuestItem(LidiaDiary))
                     htmltext = "31526-12.htm";
-                else if (st.haveQuestItem(LidiaHairPin)  && st.getQuestItemsCount(LidiaDiary) == 0)
+                else if (st.haveQuestItem(LidiaHairPin) && st.getQuestItemsCount(LidiaDiary) == 0)
                     htmltext = "31526-06.htm";
-                else if (st.getQuestItemsCount(LidiaHairPin) == 0 && st.getQuestItemsCount(LidiaDiary) == 0)
+                else if (!st.haveAnyQuestItems(LidiaHairPin, LidiaDiary))
                     htmltext = "31526-02.htm";
             } else if (cond == 4)
                 htmltext = "31526-13.htm";
@@ -143,10 +141,10 @@ public final class _023_LidiasHeart extends Quest {
             } else if (cond == 9)
                 htmltext = "31386-02.htm";
             else if (cond == 10)
-                if (st.getQuestItemsCount(SilverSpear) != 0) {
+                if (st.haveQuestItem(SilverSpear)) {
                     htmltext = "31386-03.htm";
                     st.takeItems(SilverSpear);
-                    st.giveItems(ADENA_ID, 350000);
+                    st.giveAdena(350000);
                     st.addExpAndSp(456893, 42112);
                     st.playSound(SOUND_FINISH);
                     st.finish();
@@ -154,7 +152,7 @@ public final class _023_LidiasHeart extends Quest {
                     htmltext = "You have no Silver Spear...";
         } else if (npcId == Box)
             if (cond == 9)
-                if (st.getQuestItemsCount(SilverKey) != 0)
+                if (st.haveQuestItem(SilverKey))
                     htmltext = "31530-01.htm";
                 else
                     htmltext = "You have no key...";

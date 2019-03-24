@@ -85,7 +85,7 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
     private final Map<Integer, RankPrivs> privs = new TreeMap<>();
     private final Map<Integer, SubUnit> subUnits = new TreeMap<>();
     private final List<Clan> _atWarWith = new ArrayList<>();
-    private final List<Clan> _underAttackFrom = new ArrayList<>();
+    private final List<Clan> underAttackFrom = new ArrayList<>();
     private final List<Integer> classesNeeded = new ArrayList<>();
     private final List<SinglePetition> petitions = new ArrayList<>();
     private int allyId;
@@ -94,8 +94,8 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
     private int hasFortress;
     private int hasHideout;
     private int warDominion;
-    private int _crestId;
-    private int _crestLargeId;
+    private int crestId;
+    private int crestLargeId;
     private long leavedAllyTime;
     private long dissolvedAllyTime;
     private long expelledMemberTime;
@@ -103,10 +103,10 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
     private boolean airshipLicense;
     private int airshipFuel;
     private ClanWarehouse warehouse;
-    private int _whBonus = -1;
+    private int whBonus = -1;
     private String notice = "";
     private int reputation = 0;
-    private int _siegeKills = 0;
+    private int siegeKills = 0;
     // Recruitment
     private boolean recruting = false;
     private String[] questions = new String[8];
@@ -530,27 +530,27 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
     }
 
     public int getCrestId() {
-        return _crestId;
+        return crestId;
     }
 
     public void setCrestId(int newcrest) {
-        _crestId = newcrest;
+        crestId = newcrest;
     }
 
     public boolean hasCrest() {
-        return _crestId > 0;
+        return crestId > 0;
     }
 
     public int getCrestLargeId() {
-        return _crestLargeId;
+        return crestLargeId;
     }
 
     public void setCrestLargeId(int newcrest) {
-        _crestLargeId = newcrest;
+        crestLargeId = newcrest;
     }
 
     public boolean hasCrestLarge() {
-        return _crestLargeId > 0;
+        return crestLargeId > 0;
     }
 
     public long getAdenaCount() {
@@ -566,7 +566,7 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
     }
 
     public int isAtWarOrUnderAttack() {
-        if (!_atWarWith.isEmpty() || !_underAttackFrom.isEmpty())
+        if (!_atWarWith.isEmpty() || !underAttackFrom.isEmpty())
             return 1;
         return 0;
     }
@@ -588,11 +588,11 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
 
     // clans that are attacking this clan
     public void setAttackerClan(Clan clan) {
-        _underAttackFrom.add(clan);
+        underAttackFrom.add(clan);
     }
 
     public void deleteAttackerClan(Clan clan) {
-        _underAttackFrom.remove(clan);
+        underAttackFrom.remove(clan);
     }
 
     public List<Clan> getEnemyClans() {
@@ -604,7 +604,7 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
     }
 
     public List<Clan> getAttackerClans() {
-        return _underAttackFrom;
+        return underAttackFrom;
     }
 
     public void broadcastClanStatus(boolean updateList, boolean needUserInfo, boolean relation) {
@@ -1266,13 +1266,13 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
     }
 
     public int getWhBonus() {
-        return _whBonus;
+        return whBonus;
     }
 
     public void setWhBonus(int i) {
-        if (_whBonus != -1)
+        if (whBonus != -1)
             mysql.set("UPDATE `clan_data` SET `warehouse`=? WHERE `clan_id`=?", i, clanId());
-        _whBonus = i;
+        whBonus = i;
     }
 
     public void setAirshipLicense(boolean val) {
@@ -1331,15 +1331,15 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
     }
 
     public void incSiegeKills() {
-        _siegeKills++;
+        siegeKills++;
     }
 
     public int getSiegeKills() {
-        return _siegeKills;
+        return siegeKills;
     }
 
     public void setSiegeKills(int i) {
-        _siegeKills = i;
+        siegeKills = i;
     }
 
     @Override

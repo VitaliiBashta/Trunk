@@ -5,6 +5,8 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
+import java.util.stream.IntStream;
+
 public final class _367_ElectrifyingRecharge extends Quest {
     //NPCs
     private static final int LORAIN = 30673;
@@ -19,11 +21,9 @@ public final class _367_ElectrifyingRecharge extends Quest {
     private static final int uplight_chance = 7;
 
     public _367_ElectrifyingRecharge() {
-        super(false);
         addStartNpc(LORAIN);
         addKillId(CATHEROK);
-        for (int Titan_Lamp_id = TITAN_LAMP_FIRST; Titan_Lamp_id <= TITAN_LAMP_LAST; Titan_Lamp_id++)
-            addQuestItem(Titan_Lamp_id);
+        addQuestItem(IntStream.rangeClosed(TITAN_LAMP_FIRST, TITAN_LAMP_LAST).toArray());
         addQuestItem(Broken_Titan_Lamp);
     }
 
@@ -65,9 +65,9 @@ public final class _367_ElectrifyingRecharge extends Quest {
         String htmltext = "noquest";
         if (npc.getNpcId() != LORAIN)
             return htmltext;
-        int _state = st.getState();
+        int state = st.getState();
 
-        if (_state == CREATED) {
+        if (state == CREATED) {
             if (st.player.getLevel() < 37) {
                 htmltext = "30673-02.htm";
                 st.exitCurrentQuest();
@@ -75,13 +75,13 @@ public final class _367_ElectrifyingRecharge extends Quest {
                 htmltext = "30673-01.htm";
                 st.setCond(0);
             }
-        } else if (_state == STARTED)
-            if (st.haveQuestItem(TITAN_LAMP_LAST) ) {
+        } else if (state == STARTED)
+            if (st.haveQuestItem(TITAN_LAMP_LAST)) {
                 htmltext = "30673-06.htm";
                 takeAllLamps(st);
                 st.giveItems(4553 + Rnd.get(12));
                 st.playSound(SOUND_MIDDLE);
-            } else if (st.haveQuestItem(Broken_Titan_Lamp) ) {
+            } else if (st.haveQuestItem(Broken_Titan_Lamp)) {
                 htmltext = "30673-05.htm";
                 takeAllLamps(st);
                 st.giveItems(TITAN_LAMP_FIRST);
@@ -94,9 +94,9 @@ public final class _367_ElectrifyingRecharge extends Quest {
     @Override
     public void onAttack(NpcInstance npc, QuestState qs) {
         if (qs.getState() != STARTED)
-            return ;
+            return;
         if (qs.haveQuestItem(Broken_Titan_Lamp))
-            return ;
+            return;
 
         if (Rnd.chance(uplight_chance))
             for (int Titan_Lamp_id = TITAN_LAMP_FIRST; Titan_Lamp_id < TITAN_LAMP_LAST; Titan_Lamp_id++)
@@ -110,7 +110,7 @@ public final class _367_ElectrifyingRecharge extends Quest {
                     } else
                         qs.playSound(SOUND_ITEMGET);
                     npc.doCast(4072, 4, qs.player, true);
-                    return ;
+                    return;
                 } else if (Rnd.chance(broke_chance))
                     if (takeAllLamps(qs))
                         qs.giveItems(Broken_Titan_Lamp);

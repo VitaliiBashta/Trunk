@@ -31,8 +31,6 @@ public final class _114_ResurrectionOfAnOldManager extends Quest {
     private NpcInstance GUARDIAN_SPAWN = null;
 
     public _114_ResurrectionOfAnOldManager() {
-        super(false);
-
         addStartNpc(YUMI);
 
         addTalkId(WENDY,BOX,STONES,NEWYEAR);
@@ -48,10 +46,10 @@ public final class _114_ResurrectionOfAnOldManager extends Quest {
         String htmltext = event;
         int choice;
 
-        if (event.equalsIgnoreCase("head_blacksmith_newyear_q0114_02.htm")) {
+        if ("head_blacksmith_newyear_q0114_02.htm".equalsIgnoreCase(event)) {
             st.setCond(22);
             st.takeItems(LETTER, 1);
-            st.giveItems(STARSTONE2, 1);
+            st.giveItems(STARSTONE2);
             st.playSound(SOUND_MIDDLE);
         }
         if ("collecter_yumi_q0114_04.htm".equalsIgnoreCase(event)) {
@@ -86,13 +84,13 @@ public final class _114_ResurrectionOfAnOldManager extends Quest {
             st.playSound(SOUND_MIDDLE);
             st.giveItems(DETECTOR);
         } else if ("collecter_yumi_q0114_34.htm".equalsIgnoreCase(event)) {
-            st.takeItems(DETECTOR2, 1);
+            st.takeItems(DETECTOR2);
             st.set("talk");
         } else if ("collecter_yumi_q0114_38.htm".equalsIgnoreCase(event)) {
             choice = st.getInt("choice");
             if (choice > 1)
                 htmltext = "collecter_yumi_q0114_37.htm";
-        } else if (event.equalsIgnoreCase("collecter_yumi_q0114_40.htm")) {
+        } else if ("collecter_yumi_q0114_40.htm".equalsIgnoreCase(event)) {
             st.setCond(21);
             st.giveItems(LETTER);
             st.playSound(SOUND_MIDDLE);
@@ -107,7 +105,7 @@ public final class _114_ResurrectionOfAnOldManager extends Quest {
             st.addExpAndSp(1846611, 144270);
             st.finish();
         } else if ("chaos_secretary_wendy_q0114_01.htm".equalsIgnoreCase(event)) {
-            if (st.getInt("talk") + st.getInt("talk1") == 2)
+            if (st.isSet("talk") && st.isSet("talk1"))
                 htmltext = "chaos_secretary_wendy_q0114_05.htm";
             else if (st.getInt("talk") + st.getInt("talk1") + st.getInt("talk2") == 6)
                 htmltext = "chaos_secretary_wendy_q0114_06a.htm";
@@ -206,7 +204,7 @@ public final class _114_ResurrectionOfAnOldManager extends Quest {
         if (npcId == STONES && cond == 17) {
             st.playSound(SOUND_MIDDLE);
             st.takeItems(DETECTOR, 1);
-            st.giveItems(DETECTOR2, 1);
+            st.giveItems(DETECTOR2);
             st.setCond(18);
             player.sendPacket(new ExShowScreenMessage(NpcString.THE_RADIO_SIGNAL_DETECTOR_IS_RESPONDING_A_SUSPICIOUS_PILE_OF_STONES_CATCHES_YOUR_EYE));
         }

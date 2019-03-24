@@ -21,7 +21,7 @@ import java.util.List;
 
 import static l2trunk.commons.lang.NumberUtils.toInt;
 
-public enum ItemParser /*extends StatParser<ItemHolder>*/ {
+public enum ItemParser  {
     INSTANCE;
     private final Logger LOG = LoggerFactory.getLogger(this.getClass().getName());
     Path xml = Config.DATAPACK_ROOT.resolve("data/items/");
@@ -140,22 +140,20 @@ public enum ItemParser /*extends StatParser<ItemHolder>*/ {
                         }
                         template.setBaseAtributeElements(attributes);
                     } else {
-                        if (subName.equalsIgnoreCase("capsuled_items")) {
+                        if ("capsuled_items".equalsIgnoreCase(subName)) {
                             for (Iterator<Element> nextIterator = subElement.elementIterator(); nextIterator.hasNext(); ) {
                                 Element nextElement = nextIterator.next();
-                                if (nextElement.getName().equalsIgnoreCase("capsuled_item")) {
+                                if ("capsuled_item".equalsIgnoreCase(nextElement.getName())) {
                                     int c_item_id = toInt(nextElement.attributeValue("id"));
-                                    int c_min_count = toInt(nextElement.attributeValue("min_count"));
-                                    int c_max_count = toInt(nextElement.attributeValue("max_count"));
                                     double c_chance = Double.parseDouble(nextElement.attributeValue("chance"));
-                                    template.addCapsuledItem(new ItemTemplate.CapsuledItem(c_item_id, c_min_count, c_max_count, c_chance));
+                                    template.addCapsuledItem(new ItemTemplate.CapsuledItem(c_item_id, c_chance));
                                 }
                             }
-                        } else if (subName.equalsIgnoreCase("enchant_options")) {
+                        } else if ("enchant_options".equalsIgnoreCase(subName)) {
                             for (Iterator<Element> nextIterator = subElement.elementIterator(); nextIterator.hasNext(); ) {
                                 Element nextElement = nextIterator.next();
 
-                                if (nextElement.getName().equalsIgnoreCase("level")) {
+                                if ("level".equalsIgnoreCase(nextElement.getName())) {
                                     int val = toInt(nextElement.attributeValue("val"));
 
                                     List<Integer> options = new ArrayList<>();

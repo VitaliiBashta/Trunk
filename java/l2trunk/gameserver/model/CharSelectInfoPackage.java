@@ -6,19 +6,19 @@ import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.model.items.ItemInstance.ItemLocation;
 
 public final class CharSelectInfoPackage {
-    private final ItemInstance[] _paperdoll;
-    private String _name;
-    private int _objectId = 0;
-    private int _charId = 0x00030b7a;
-    private long _exp = 0;
-    private int _sp = 0;
-    private int _clanId = 0;
-    private int _race = 0;
-    private int _classId = 0;
-    private int _baseClassId = 0;
-    private int _deleteTimer = 0;
-    private long _lastAccess = 0L;
-    private int _face = 0;
+    private final ItemInstance[] paperdoll;
+    private String name;
+    private final int objectId;
+    private int charId = 0x00030b7a;
+    private long exp = 0;
+    private int sp = 0;
+    private int clanId = 0;
+    private int race = 0;
+    private int classId = 0;
+    private int baseClassId = 0;
+    private int deleteTimer = 0;
+    private long lastAccess = 0L;
+    private int face = 0;
     private int _hairStyle = 0;
     private int _hairColor = 0;
     private int _sex = 0;
@@ -33,53 +33,49 @@ public final class CharSelectInfoPackage {
     private int _vitalityPoints = 20000;
 
     public CharSelectInfoPackage(int objectId, String name) {
-        setObjectId(objectId);
-        _name = name;
-        _paperdoll = new ItemInstance[Inventory.PAPERDOLL_MAX];
+        this.objectId = objectId;
+        this.name = name;
+        paperdoll = new ItemInstance[Inventory.PAPERDOLL_MAX];
         ItemsDAO.INSTANCE.getItemsByOwnerIdAndLoc(objectId, ItemLocation.PAPERDOLL)
-        .filter(item -> item.getEquipSlot() < Inventory.PAPERDOLL_MAX)
-        .forEach(item -> //FIXME [G1ta0] временный фикс отображения одетых вещей при входе на персонажа в NO CARRIER
-                _paperdoll[item.getEquipSlot()] = item);
+                .filter(item -> item.getEquipSlot() < Inventory.PAPERDOLL_MAX)
+                .forEach(item ->
+                        paperdoll[item.getEquipSlot()] = item);
     }
 
     public int getObjectId() {
-        return _objectId;
-    }
-
-    private void setObjectId(int objectId) {
-        _objectId = objectId;
+        return objectId;
     }
 
     public int getCharId() {
-        return _charId;
+        return charId;
     }
 
     public void setCharId(int charId) {
-        _charId = charId;
+        this.charId = charId;
     }
 
     public int getClanId() {
-        return _clanId;
+        return clanId;
     }
 
     public void setClanId(int clanId) {
-        _clanId = clanId;
+        this.clanId = clanId;
     }
 
     public int getClassId() {
-        return _classId;
+        return classId;
     }
 
     public void setClassId(int classId) {
-        _classId = classId;
+        this.classId = classId;
     }
 
     public int getBaseClassId() {
-        return _baseClassId;
+        return baseClassId;
     }
 
     public void setBaseClassId(int baseClassId) {
-        _baseClassId = baseClassId;
+        this.baseClassId = baseClassId;
     }
 
     public double getCurrentHp() {
@@ -99,35 +95,35 @@ public final class CharSelectInfoPackage {
     }
 
     public int getDeleteTimer() {
-        return _deleteTimer;
+        return deleteTimer;
     }
 
     public void setDeleteTimer(int deleteTimer) {
-        _deleteTimer = deleteTimer;
+        this.deleteTimer = deleteTimer;
     }
 
     public long getLastAccess() {
-        return _lastAccess;
+        return lastAccess;
     }
 
     public void setLastAccess(long lastAccess) {
-        _lastAccess = lastAccess;
+        this.lastAccess = lastAccess;
     }
 
     public long getExp() {
-        return _exp;
+        return exp;
     }
 
     public void setExp(long exp) {
-        _exp = exp;
+        this.exp = exp;
     }
 
     public int getFace() {
-        return _face;
+        return face;
     }
 
     public void setFace(int face) {
-        _face = face;
+        this.face = face;
     }
 
     public int getHairColor() {
@@ -146,22 +142,15 @@ public final class CharSelectInfoPackage {
         _hairStyle = hairStyle;
     }
 
-    public int getPaperdollObjectId(int slot) {
-        ItemInstance item = _paperdoll[slot];
-        if (item != null)
-            return item.objectId();
-        return 0;
-    }
-
     public int getPaperdollAugmentationId(int slot) {
-        ItemInstance item = _paperdoll[slot];
+        ItemInstance item = paperdoll[slot];
         if (item != null && item.isAugmented())
             return item.getAugmentationId();
         return 0;
     }
 
     public int getPaperdollItemId(int slot) {
-        ItemInstance item = _paperdoll[slot];
+        ItemInstance item = paperdoll[slot];
         if (item != null) {
 			/*
 			int visualItemId = item.getVisualItemId();
@@ -174,7 +163,7 @@ public final class CharSelectInfoPackage {
     }
 
     public int getPaperdollEnchantEffect(int slot) {
-        ItemInstance item = _paperdoll[slot];
+        ItemInstance item = paperdoll[slot];
         if (item != null)
             return item.getEnchantLevel();
         return 0;
@@ -205,19 +194,19 @@ public final class CharSelectInfoPackage {
     }
 
     public String getName() {
-        return _name;
+        return name;
     }
 
     public void setName(String name) {
-        _name = name;
+        this.name = name;
     }
 
     public int getRace() {
-        return _race;
+        return race;
     }
 
     public void setRace(int race) {
-        _race = race;
+        this.race = race;
     }
 
     public int getSex() {
@@ -229,11 +218,11 @@ public final class CharSelectInfoPackage {
     }
 
     public int getSp() {
-        return _sp;
+        return sp;
     }
 
     public void setSp(int sp) {
-        _sp = sp;
+        this.sp = sp;
     }
 
     public int getKarma() {

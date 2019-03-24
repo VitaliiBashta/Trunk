@@ -88,7 +88,6 @@ public final class _225_TestOfTheSearcher extends Quest {
     };
 
     public _225_TestOfTheSearcher() {
-        super(false);
         addStartNpc(Luther);
         addTalkId(Alex,Leirynn,Borys,Tyra,Jax,Tree,Chest);
         //mob Drop
@@ -133,8 +132,7 @@ public final class _225_TestOfTheSearcher extends Quest {
             }
             st.playSound(SOUND_ACCEPT);
         } else if ("30291-07.htm".equalsIgnoreCase(event)) {
-            st.takeItems(LeirynnsReport);
-            st.takeItems(StrangeMap);
+            st.takeAllItems(LeirynnsReport,StrangeMap);
             st.giveItems(LambertsMap);
             st.giveItems(AlexsLetter);
             st.giveItems(AlexsOrder);
@@ -212,7 +210,7 @@ public final class _225_TestOfTheSearcher extends Quest {
                 htmltext = "30690-08.htm";
                 if (!st.player.isVarSet("prof2.3")) {
                     st.addExpAndSp(447444, 30704);
-                    st.giveItems(ADENA_ID, 80093);
+                    st.giveAdena( 80093);
                     st.player.setVar("prof2.3");
                 }
                 st.takeItems(AlexsRecommend);
@@ -284,7 +282,7 @@ public final class _225_TestOfTheSearcher extends Quest {
                 htmltext = "30729-02.htm";
             else if (cond == 12) {
                 st.takeAllItems(WineCatalog,MalrukianWine);
-                st.giveItems(OldOrder, 1);
+                st.giveItems(OldOrder);
                 htmltext = "30729-03.htm";
                 st.setCond(13);
                 st.start();
@@ -298,9 +296,8 @@ public final class _225_TestOfTheSearcher extends Quest {
             else if (cond == 10)
                 htmltext = "30420-02.htm";
             else if (cond == 11) {
-                st.takeItems(TyrasContract, -1);
-                st.takeItems(RedSporeDust, -1);
-                st.giveItems(MalrukianWine, 1);
+                st.takeAllItems(TyrasContract,RedSporeDust);
+                st.giveItems(MalrukianWine);
                 htmltext = "30420-03.htm";
                 st.setCond(12);
                 st.start();
@@ -312,11 +309,8 @@ public final class _225_TestOfTheSearcher extends Quest {
             else if (cond == 14)
                 htmltext = "30730-02.htm";
             else if (cond == 15) {
-                st.takeItems(SoltsMap, -1);
-                st.takeItems(MakelsMap, -1);
-                st.takeItems(LambertsMap, -1);
-                st.takeItems(JaxsDiary, -1);
-                st.giveItems(CombinedMap, 1);
+                st.takeAllItems(SoltsMap, MakelsMap, LambertsMap,JaxsDiary);
+                st.giveItems(CombinedMap);
                 htmltext = "30730-03.htm";
                 st.setCond(16);
                 st.start();

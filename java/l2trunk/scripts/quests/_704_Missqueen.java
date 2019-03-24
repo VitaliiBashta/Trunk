@@ -12,10 +12,7 @@ public final class _704_Missqueen extends Quest {
     private final int m_q = 31760;
 
     public _704_Missqueen() {
-        super(false);
-
         addStartNpc(m_q);
-        addTalkId(m_q);
     }
 
     @Override
@@ -42,10 +39,8 @@ public final class _704_Missqueen extends Quest {
 
     @Override
     public String onTalk(NpcInstance npc, QuestState st) {
-        String htmltext = "noquest";
-        int npcId = npc.getNpcId();
-        if (npcId == m_q)
-            htmltext = "31760-01.htm";
-        return htmltext;
+        if (npc.getNpcId() == m_q)
+            return  "31760-01.htm";
+        return "noquest";
     }
 }

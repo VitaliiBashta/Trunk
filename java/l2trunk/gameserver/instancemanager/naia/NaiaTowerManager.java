@@ -13,14 +13,14 @@ import java.util.*;
 
 public final class NaiaTowerManager {
     private static final Logger _log = LoggerFactory.getLogger(NaiaTowerManager.class);
-    private static final Map<Integer, Collection<Player>> _groupList = new HashMap<>();
-    private static final Map<Integer, Collection<Player>> _roomsDone = new HashMap<>();
-    private static final Map<Integer, Long> _groupTimer = new HashMap<>();
+    private static final Map<Integer, Collection<Player>> GROUP_LIST = new HashMap<>();
+    private static final Map<Integer, Collection<Player>> ROOMS_DONE = new HashMap<>();
+    private static final Map<Integer, Long> GROUP_TIMER = new HashMap<>();
     private static HashMap<Integer, Boolean> lockedRooms;
     private static Map<Integer, List<NpcInstance>> roomMobs;
-    private static List<NpcInstance> _roomMobList;
-    private static long _towerAccessible = 0;
-    private static int _index = 0;
+    private static List<NpcInstance> roomMobList;
+    private static long towerAccessible = 0;
+    private static int index = 0;
 
     public static void init() {
         if (lockedRooms == null) {
@@ -30,8 +30,8 @@ public final class NaiaTowerManager {
 
             roomMobs = new HashMap<>();
             for (int i = 18494; i <= 18505; i++) {
-                _roomMobList = new ArrayList<>();
-                roomMobs.put(i, _roomMobList);
+                roomMobList = new ArrayList<>();
+                roomMobs.put(i, roomMobList);
             }
 
             _log.info("Naia Tower Manager: Loaded 12 rooms");
@@ -43,49 +43,49 @@ public final class NaiaTowerManager {
         if (leader == null)
             return;
 
-        if (_towerAccessible > System.currentTimeMillis())
+        if (towerAccessible > System.currentTimeMillis())
             return;
 
         leader.getParty().getMembers().forEach(member ->
             member.teleToLocation( Location.of(-47271, 246098, -9120)));
 
         addGroupToTower(leader);
-        _towerAccessible += 20 * 60 * 1000L;
+        towerAccessible += 20 * 60 * 1000L;
 
         ReflectionUtils.getDoor(18250001).openMe();
     }
 
     private static void addGroupToTower(Player leader) {
-        _index = _groupList.keySet().size() + 1;
-        _groupList.put(_index, leader.getParty().getMembers());
-        _groupTimer.put(_index, System.currentTimeMillis() + 5 * 60 * 1000L);
+        index = GROUP_LIST.keySet().size() + 1;
+        GROUP_LIST.put(index, leader.getParty().getMembers());
+        GROUP_TIMER.put(index, System.currentTimeMillis() + 5 * 60 * 1000L);
 
         leader.sendMessage("The Tower of Naia countdown has begun. You have only 5 minutes to pass each room.");
     }
 
     public static void updateGroupTimer(Player player) {
-        for (int i : _groupList.keySet())
-            if (_groupList.get(i).contains(player)) {
-                _groupTimer.put(i, System.currentTimeMillis() + 5 * 60 * 1000L);
+        for (int i : GROUP_LIST.keySet())
+            if (GROUP_LIST.get(i).contains(player)) {
+                GROUP_TIMER.put(i, System.currentTimeMillis() + 5 * 60 * 1000L);
                 player.sendMessage("Group timer has been updated");
                 break;
             }
     }
 
     public static void removeGroupTimer(Player player) {
-        for (int i : _groupList.keySet())
-            if (_groupList.get(i).contains(player)) {
-                _groupList.remove(i);
-                _groupTimer.remove(i);
+        for (int i : GROUP_LIST.keySet())
+            if (GROUP_LIST.get(i).contains(player)) {
+                GROUP_LIST.remove(i);
+                GROUP_TIMER.remove(i);
             }
     }
 
     public static boolean isLegalGroup(Player player) {
-        if (_groupList.isEmpty())
+        if (GROUP_LIST.isEmpty())
             return false;
 
-        for (int i : _groupList.keySet())
-            if (_groupList.get(i).contains(player))
+        for (int i : GROUP_LIST.keySet())
+            if (GROUP_LIST.get(i).contains(player))
                 return true;
 
         return false;
@@ -105,17 +105,17 @@ public final class NaiaTowerManager {
 
     public static void addRoomDone(int roomId, Player player) {
         if (player.getParty() != null)
-            _roomsDone.put(roomId, player.getParty().getMembers());
+            ROOMS_DONE.put(roomId, player.getParty().getMembers());
     }
 
     public static boolean isRoomDone(int roomId, Player player) {
-        if (_roomsDone.isEmpty())
+        if (ROOMS_DONE.isEmpty())
             return false;
 
-        if (_roomsDone.get(roomId) == null || _roomsDone.get(roomId).isEmpty())
+        if (ROOMS_DONE.get(roomId) == null || ROOMS_DONE.get(roomId).isEmpty())
             return false;
 
-        return _roomsDone.get(roomId).contains(player);
+        return ROOMS_DONE.get(roomId).contains(player);
 
     }
 
@@ -135,15 +135,15 @@ public final class NaiaTowerManager {
         @Override
         public void runImpl() {
             ThreadPoolManager.INSTANCE.schedule(new GroupTowerTimer(), 30 * 1000L);
-            if (!_groupList.isEmpty() && !_groupTimer.isEmpty())
-                for (int i : _groupTimer.keySet())
-                    if (_groupTimer.get(i) < System.currentTimeMillis()) {
-                        for (Player kicked : _groupList.get(i)) {
-                            kicked.teleToLocation(new Location(17656, 244328, 11595));
+            if (!GROUP_LIST.isEmpty() && !GROUP_TIMER.isEmpty())
+                for (int i : GROUP_TIMER.keySet())
+                    if (GROUP_TIMER.get(i) < System.currentTimeMillis()) {
+                        for (Player kicked : GROUP_LIST.get(i)) {
+                            kicked.teleToLocation( 17656, 244328, 11595);
                             kicked.sendMessage("The time has expired. You cannot stay in Tower of Naia any longer");
                         }
-                        _groupList.remove(i);
-                        _groupTimer.remove(i);
+                        GROUP_LIST.remove(i);
+                        GROUP_TIMER.remove(i);
                     }
         }
     }

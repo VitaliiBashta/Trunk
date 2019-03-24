@@ -16,7 +16,6 @@ public final class _295_DreamsOfTheSkies extends Quest {
         super(false);
 
         addStartNpc(Arin);
-        addTalkId(Arin);
         addKillId(MagicalWeaver);
 
         addQuestItem(FLOATING_STONE);
@@ -24,7 +23,7 @@ public final class _295_DreamsOfTheSkies extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("elder_arin_q0295_03.htm")) {
+        if ("elder_arin_q0295_03.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.start();
             st.playSound(SOUND_ACCEPT);
@@ -53,12 +52,12 @@ public final class _295_DreamsOfTheSkies extends Quest {
             st.addExpAndSp(0, 500);
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest();
-            if (st.getQuestItemsCount(RING_OF_FIREFLY) < 1) {
+            if (!st.haveQuestItem(RING_OF_FIREFLY)) {
                 htmltext = "elder_arin_q0295_05.htm";
-                st.giveItems(RING_OF_FIREFLY, 1);
+                st.giveItems(RING_OF_FIREFLY);
             } else {
                 htmltext = "elder_arin_q0295_06.htm";
-                st.giveItems(ADENA_ID, 2400);
+                st.giveAdena( 2400);
             }
         }
         return htmltext;

@@ -19,12 +19,13 @@ public final class _288_HandleWithCare extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("ankumi_q288_03.htm")) {
+        int cond = st.getCond();
+        if ("ankumi_q288_03.htm".equalsIgnoreCase(event)) {
             st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("request_reward")) {
-            if (st.getCond() == 2 && st.getQuestItemsCount(MiddleGradeLizardScale) >= 1) {
+        } else if ("request_reward".equalsIgnoreCase(event)) {
+            if (cond == 2 && st.haveQuestItem(MiddleGradeLizardScale)) {
                 st.takeItems(MiddleGradeLizardScale);
                 switch (Rnd.get(1, 6)) {
                     case 1:
@@ -48,7 +49,7 @@ public final class _288_HandleWithCare extends Quest {
                 }
                 htmltext = "ankumi_q288_06.htm";
                 st.exitCurrentQuest();
-            } else if (st.getCond() == 3 && st.getQuestItemsCount(HighestGradeLizardScale) >= 1) {
+            } else if (cond == 3 && st.haveQuestItem(HighestGradeLizardScale) ) {
                 st.takeItems(HighestGradeLizardScale);
                 switch (Rnd.get(1, 4)) {
                     case 1:

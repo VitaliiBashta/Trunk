@@ -2,10 +2,7 @@ package l2trunk.gameserver.network.clientpackets;
 
 import l2trunk.gameserver.network.serverpackets.Ex2ndPasswordCheck;
 
-/**
- * Format: (ch)
- */
-public class RequestEx2ndPasswordCheck extends L2GameClientPacket {
+public final class RequestEx2ndPasswordCheck extends L2GameClientPacket {
     @Override
     protected void readImpl() {
 

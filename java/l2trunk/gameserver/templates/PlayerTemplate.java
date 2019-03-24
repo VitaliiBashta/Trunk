@@ -33,7 +33,7 @@ public final class PlayerTemplate extends CharTemplate {
         classId = ClassId.getById(id);
         race = Race.of(set.getInteger("raceId"));
 
-        spawnLoc.set(new Location(set.getInteger("spawnX"), set.getInteger("spawnY"), set.getInteger("spawnZ")));
+        spawnLoc.set(Location.of(set.getInteger("spawnX"), set.getInteger("spawnY"), set.getInteger("spawnZ")));
 
         this.isMale = isMale;
 

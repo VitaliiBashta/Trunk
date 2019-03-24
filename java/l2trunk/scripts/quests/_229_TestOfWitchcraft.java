@@ -8,7 +8,7 @@ import l2trunk.gameserver.model.items.Inventory;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
-import static l2trunk.gameserver.model.base.ClassId.wizard;
+import static l2trunk.gameserver.model.base.ClassId.*;
 
 public final class _229_TestOfWitchcraft extends Quest {
     //NPC
@@ -185,16 +185,13 @@ public final class _229_TestOfWitchcraft extends Quest {
     };
 
     public _229_TestOfWitchcraft() {
-        super(false);
 
-        addStartNpc(Orim);
-
-        addTalkId(Alexandria,Iker,Kaira,Lara,Roderik,Nestle,Leopold,Vasper,Vadin,Evert,Endrigo);
+        addTalkId(Alexandria, Iker, Kaira, Lara, Roderik, Nestle, Leopold, Vasper, Vadin, Evert, Endrigo);
 
         //mob Drop
         for (int[] aDROPLIST_COND : DROPLIST_COND) addKillId(aDROPLIST_COND[2]);
 
-        addKillId(SkeletalMercenary,DrevanulPrinceZeruel);
+        addKillId(SkeletalMercenary, DrevanulPrinceZeruel);
 
         addQuestItem(OrimsDiagram,
                 OrimsInstructions,
@@ -343,7 +340,8 @@ public final class _229_TestOfWitchcraft extends Quest {
                 htmltext = "completed";
                 st.exitCurrentQuest();
             } else if (cond == 0) {
-                if (st.player.getClassId().id == 0x0b || st.player.getClassId().id == 0x04 || st.player.getClassId().id == 0x20)
+                if (st.player.getClassId() == wizard
+                        || st.player.getClassId() == knight || st.player.getClassId() == palusKnight)
                     if (st.player.getLevel() < 39) {
                         htmltext = "30630-02.htm";
                         st.exitCurrentQuest();
@@ -387,11 +385,11 @@ public final class _229_TestOfWitchcraft extends Quest {
                 if (st.haveQuestItem(Aklantoth_1stGem) || st.haveQuestItem(IkersList)) {
                     if (st.haveQuestItem(IkersList) && (st.getQuestItemsCount(DireWyrmFang) < 20 || st.getQuestItemsCount(LetoLizardmanCharm) < 20 || st.getQuestItemsCount(EnchantedGolemHeartstone) < 20))
                         htmltext = "30110-04.htm";
-                    else if (!st.haveQuestItem(Aklantoth_1stGem)  && st.haveQuestItem(IkersList)) {
-                        st.takeAllItems(IkersList,DireWyrmFang,LetoLizardmanCharm,EnchantedGolemHeartstone);
+                    else if (!st.haveQuestItem(Aklantoth_1stGem) && st.haveQuestItem(IkersList)) {
+                        st.takeAllItems(IkersList, DireWyrmFang, LetoLizardmanCharm, EnchantedGolemHeartstone);
                         st.giveItems(Aklantoth_1stGem);
                         htmltext = "30110-05.htm";
-                    } else if (st.haveQuestItem(Aklantoth_1stGem) )
+                    } else if (st.haveQuestItem(Aklantoth_1stGem))
                         htmltext = "30110-06.htm";
                 } else {
                     htmltext = "30110-01.htm";
@@ -410,9 +408,9 @@ public final class _229_TestOfWitchcraft extends Quest {
                 htmltext = "30476-04.htm";
         } else if (npcId == Lara) {
             if (cond == 2) {
-                if (st.getQuestItemsCount(LarasMemo) == 0 && st.getQuestItemsCount(Aklantoth_3stGem) == 0)
+                if (!st.haveAnyQuestItems(LarasMemo,Aklantoth_3stGem))
                     htmltext = "30063-01.htm";
-                else if (st.getQuestItemsCount(LarasMemo) == 1 && st.getQuestItemsCount(Aklantoth_3stGem) == 0)
+                else if (st.haveQuestItem(LarasMemo)  && st.getQuestItemsCount(Aklantoth_3stGem) == 0)
                     htmltext = "30063-03.htm";
                 else if (st.haveQuestItem(Aklantoth_3stGem))
                     htmltext = "30063-04.htm";
@@ -427,7 +425,7 @@ public final class _229_TestOfWitchcraft extends Quest {
                 htmltext = "30314-04.htm";
         else if (npcId == Leopold) {
             if (cond == 2 && st.haveQuestItem(NestlesMemo)) {
-                if (!st.haveAnyQuestItems(Aklantoth_4stGem,Aklantoth_5stGem,Aklantoth_6stGem))
+                if (!st.haveAnyQuestItems(Aklantoth_4stGem, Aklantoth_5stGem, Aklantoth_6stGem))
                     htmltext = "30435-01.htm";
                 else
                     htmltext = "30435-04.htm";
@@ -452,23 +450,22 @@ public final class _229_TestOfWitchcraft extends Quest {
                 htmltext = "30417-06.htm";
         } else if (npcId == Vadin) {
             if (cond == 6) {
-                if (st.haveQuestItem(SirVaspersLetter) ) {
+                if (st.haveQuestItem(SirVaspersLetter)) {
                     htmltext = "30188-01.htm";
                     st.takeItems(SirVaspersLetter);
                     st.giveItems(VadinsCrucifix);
                 } else if (st.haveQuestItem(VadinsCrucifix) && st.getQuestItemsCount(TamlinOrcAmulet) < 20)
                     htmltext = "30188-02.htm";
-                else if (st.getQuestItemsCount(TamlinOrcAmulet) >= 20) {
+                else if (st.haveQuestItem(TamlinOrcAmulet, 20)) {
                     htmltext = "30188-03.htm";
-                    st.takeItems(TamlinOrcAmulet);
-                    st.takeItems(VadinsCrucifix);
+                    st.takeAllItems(TamlinOrcAmulet, VadinsCrucifix);
                     st.giveItems(VadinsSanctions);
                 } else if (st.haveQuestItem(VadinsSanctions))
                     htmltext = "30188-04.htm";
             } else if (cond == 7)
                 htmltext = "30188-05.htm";
         } else if (npcId == Evert) {
-            if (st.getInt("id") == 2 || cond == 8 && st.getQuestItemsCount(Brimstone_2nd) == 0)
+            if (st.getInt("id") == 2 || cond == 8 && !st.haveQuestItem(Brimstone_2nd))
                 htmltext = "30633-01.htm";
             else
                 htmltext = "30633-03.htm";
@@ -486,22 +483,16 @@ public final class _229_TestOfWitchcraft extends Quest {
                 if (aDROPLIST_COND[3] == 0 || st.getQuestItemsCount(aDROPLIST_COND[3]) > 0) {
                     if (npcId == NamelessRevenant)
                         st.takeItems(LarasMemo);
-                    if (aDROPLIST_COND[5] == 0)
-                        st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[6]);
-                    else if (st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[7], aDROPLIST_COND[5], aDROPLIST_COND[6]))
-                        if (aDROPLIST_COND[1] != cond && aDROPLIST_COND[1] != 0) {
-                            st.setCond(aDROPLIST_COND[1]);
-                            st.start();
-                        }
+                    st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[7], aDROPLIST_COND[5], aDROPLIST_COND[6]);
                 }
-        if (cond == 2 && st.getQuestItemsCount(LeopoldsJournal) > 0 && npcId == SkeletalMercenary) {
-            if (st.getQuestItemsCount(Aklantoth_4stGem) == 0 && Rnd.chance(50))
-                st.giveItems(Aklantoth_4stGem);
-            if (st.getQuestItemsCount(Aklantoth_5stGem) == 0 && Rnd.chance(50))
-                st.giveItems(Aklantoth_5stGem);
-            if (st.getQuestItemsCount(Aklantoth_6stGem) == 0 && Rnd.chance(50))
-                st.giveItems(Aklantoth_6stGem);
-            if (st.getQuestItemsCount(Aklantoth_4stGem) != 0 && st.getQuestItemsCount(Aklantoth_5stGem) != 0 && st.getQuestItemsCount(Aklantoth_6stGem) != 0) {
+        if (cond == 2 && st.haveQuestItem(LeopoldsJournal) && npcId == SkeletalMercenary) {
+            if (Rnd.chance(50))
+                st.giveItemIfNotHave(Aklantoth_4stGem);
+            if (Rnd.chance(50))
+                st.giveItemIfNotHave(Aklantoth_5stGem);
+            if (Rnd.chance(50))
+                st.giveItemIfNotHave(Aklantoth_6stGem);
+            if (st.haveAllQuestItems(Aklantoth_4stGem, Aklantoth_5stGem, Aklantoth_6stGem)) {
                 st.takeItems(LeopoldsJournal);
                 st.playSound(SOUND_MIDDLE);
                 st.setCond(3);

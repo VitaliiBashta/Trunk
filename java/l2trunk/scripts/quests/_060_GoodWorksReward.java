@@ -87,7 +87,6 @@ public final class _060_GoodWorksReward extends Quest {
     }
 
     public _060_GoodWorksReward() {
-        super(false);
         addStartNpc(Daeger);
         addTalkId(Helvetia, Black_Marketeer_of_Mammon, Mark);
         addKillId(Pursuer);
@@ -148,7 +147,7 @@ public final class _060_GoodWorksReward extends Quest {
             if (profs.containsKey(st.player.getClassId().id))
                 return Mammon_dialog.sprintf(profs.get(st.player.getClassId().id));
         } else if ("31092-05.htm".equalsIgnoreCase(event) && cond == 10) {
-            st.giveItems(ADENA_ID, 3000000);
+            st.giveAdena( 3000000);
             st.playSound(SOUND_FINISH);
             st.finish();
         } else if (event.startsWith("marks-") && cond == 10) {

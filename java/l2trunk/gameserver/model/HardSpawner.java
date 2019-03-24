@@ -10,13 +10,13 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public final class HardSpawner extends Spawner {
-    private final SpawnTemplate _template;
-    private final List<NpcInstance> _reSpawned = new CopyOnWriteArrayList<>();
+    private final SpawnTemplate template;
+    private final List<NpcInstance> reSpawned = new CopyOnWriteArrayList<>();
     private int _pointIndex;
-    private int _npcIndex;
+    private int npcIndex;
 
     public HardSpawner(SpawnTemplate template) {
-        _template = template;
+        this.template = template;
         spawned = new CopyOnWriteArrayList<>();
     }
 
@@ -32,7 +32,7 @@ public final class HardSpawner extends Spawner {
         NpcInstance npc = npcInfo.getTemplate().getNewInstance();
         npc.setSpawn(this);
 
-        _reSpawned.add(npc);
+        reSpawned.add(npc);
 
         decreaseCount0(npcInfo.getTemplate(), npc, oldNpc.getDeadTime());
     }
@@ -46,9 +46,9 @@ public final class HardSpawner extends Spawner {
 
     @Override
     protected NpcInstance initNpc(NpcInstance mob, boolean spawn, StatsSet set) {
-        _reSpawned.remove(mob);
+        reSpawned.remove(mob);
 
-        SpawnRange range = _template.getSpawnRange(getNextRangeId());
+        SpawnRange range = template.getSpawnRange(getNextRangeId());
         try {
 
             mob.setSpawnRange(range);
@@ -61,13 +61,13 @@ public final class HardSpawner extends Spawner {
 
     @Override
     public int getCurrentNpcId() {
-        SpawnNpcInfo npcInfo = _template.getNpcId(_npcIndex);
+        SpawnNpcInfo npcInfo = template.getNpcId(npcIndex);
         return npcInfo.getTemplate().npcId;
     }
 
     @Override
     public SpawnRange getCurrentSpawnRange() {
-        return _template.getSpawnRange(_pointIndex);
+        return template.getSpawnRange(_pointIndex);
     }
 
     @Override
@@ -79,20 +79,20 @@ public final class HardSpawner extends Spawner {
     public void deleteAll() {
         super.deleteAll();
 
-        for (NpcInstance npc : _reSpawned) {
+        for (NpcInstance npc : reSpawned) {
             npc.setSpawn(null);
             npc.deleteMe();
         }
 
-        _reSpawned.clear();
+        reSpawned.clear();
     }
 
     private synchronized SpawnNpcInfo getNextNpcInfo() {
-        int old = _npcIndex++;
-        if (_npcIndex >= _template.getNpcSize())
-            _npcIndex = 0;
+        int old = npcIndex++;
+        if (npcIndex >= template.getNpcSize())
+            npcIndex = 0;
 
-        SpawnNpcInfo npcInfo = _template.getNpcId(old);
+        SpawnNpcInfo npcInfo = template.getNpcId(old);
         if (npcInfo.getMax() > 0) {
             int count = 0;
             for (NpcInstance npc : spawned)
@@ -107,14 +107,14 @@ public final class HardSpawner extends Spawner {
 
     private synchronized int getNextRangeId() {
         int old = _pointIndex++;
-        if (_pointIndex >= _template.getSpawnRangeSize())
+        if (_pointIndex >= template.getSpawnRangeSize())
             _pointIndex = 0;
         return old;
     }
 
     @Override
     public HardSpawner clone() {
-        HardSpawner spawnDat = new HardSpawner(_template);
+        HardSpawner spawnDat = new HardSpawner(template);
         spawnDat.setAmount(maximumCount);
         spawnDat.setRespawnDelay(respawnDelay, respawnDelayRandom);
         spawnDat.setRespawnTime(0);

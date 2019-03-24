@@ -75,8 +75,6 @@ public final class _330_AdeptOfTaste extends Quest {
     };
 
     public _330_AdeptOfTaste() {
-        super(false);
-
         addStartNpc(Jonas);
         addTalkId(Sonia,Glyvka,Rollant,Jacob,Pano,Mirien);
 
@@ -348,21 +346,21 @@ public final class _330_AdeptOfTaste extends Quest {
         long ingredients_count = st.getQuestItemsCount(ingredients);
         long spec_ingredients_count = st.getQuestItemsCount(spec_ingredients);
         long all_ingredients_count = ingredients_count + spec_ingredients_count;
-        boolean Has_Ingredient_List = st.getQuestItemsCount(Ingredient_List) > 0;
+        boolean Has_Ingredient_List = st.haveQuestItem(Ingredient_List) ;
         if (!(Has_Ingredient_List && all_ingredients_count < 5))
             return;
 
-        if (npcId == Hobgoblin && st.getQuestItemsCount(Panos_Contract) > 0)
+        if (npcId == Hobgoblin && st.haveQuestItem(Panos_Contract) )
             st.rollAndGive(Hobgoblin_Amulet, 1, 1, 30, 100);
         else if (npcId == Mandragora_Sprout && st.haveQuestItem(Sonias_Botany_Book) )
             MandragoraDrop(st, 70, 77);
-        else if (npcId == Mandragora_Sapling && st.getQuestItemsCount(Sonias_Botany_Book) > 0)
+        else if (npcId == Mandragora_Sapling && st.haveQuestItem(Sonias_Botany_Book))
             MandragoraDrop(st, 77, 85);
         else if (npcId == Mandragora_Blossom && st.getQuestItemsCount(Sonias_Botany_Book) > 0)
             MandragoraDrop(st, 87, 96);
         else if (npcId == Mandragora_Sprout2 && st.getQuestItemsCount(Sonias_Botany_Book) > 0)
             MandragoraDrop(st, 70, 77);
-        else if (npcId == Bloody_Bee && st.getQuestItemsCount(Jacobs_Insect_Book) > 0)
+        else if (npcId == Bloody_Bee && st.haveQuestItem(Jacobs_Insect_Book))
             BeeDrop(st, 80, 95);
         else if (npcId == Stinger_Wasp && st.getQuestItemsCount(Jacobs_Insect_Book) > 0)
             BeeDrop(st, 92, 100);

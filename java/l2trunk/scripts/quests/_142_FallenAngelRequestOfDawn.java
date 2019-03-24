@@ -32,8 +32,6 @@ public final class _142_FallenAngelRequestOfDawn extends Quest {
     private final static int FallenAngel = 27338;
 
     public _142_FallenAngelRequestOfDawn() {
-        super(false);
-
         // Нет стартового NPC, чтобы квест не появлялся в списке раньше времени
         addTalkId(NATOOLS, RAYMOND, CASIAN, ROCK);
         addQuestItem(CRYPT, FRAGMENT, BLOOD);
@@ -97,7 +95,7 @@ public final class _142_FallenAngelRequestOfDawn extends Quest {
             else if (cond == 6) {
                 htmltext = "bishop_raimund_q0142_07.htm";
                 st.playSound(SOUND_FINISH);
-                st.giveItems(ADENA_ID, 92676);
+                st.giveAdena( 92676);
                 st.finish();
             }
         } else if (npcId == CASIAN) {

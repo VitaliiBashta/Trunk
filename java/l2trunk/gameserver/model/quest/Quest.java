@@ -75,6 +75,10 @@ public class Quest {
         this(party ? 1 : 0);
     }
 
+    public Quest() {
+        this(false);
+    }
+
     /**
      * 0 - по ластхиту, 1 - случайно по пати, 2 - всей пати.
      */

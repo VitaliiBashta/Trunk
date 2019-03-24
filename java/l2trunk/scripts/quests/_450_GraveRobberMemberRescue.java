@@ -22,15 +22,13 @@ public final class _450_GraveRobberMemberRescue extends Quest {
     private static final int EVIDENCE_OF_MIGRATION = 14876;
 
     public _450_GraveRobberMemberRescue() {
-        super(false);
-
         addStartNpc(KANEMIKA);
         addTalkId(WARRIOR_NPC);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("32650-05.htm")) {
+        if ("32650-05.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.start();
             st.playSound(SOUND_ACCEPT);
@@ -57,7 +55,7 @@ public final class _450_GraveRobberMemberRescue extends Quest {
                 } else
                     htmltext = "32650-01.htm";
             } else if (cond == 1) {
-                if (st.getQuestItemsCount(EVIDENCE_OF_MIGRATION) >= 1)
+                if (st.haveQuestItem(EVIDENCE_OF_MIGRATION))
                     htmltext = "32650-07.htm";
                 else
                     htmltext = "32650-06.htm";

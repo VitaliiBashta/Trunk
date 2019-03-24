@@ -14,7 +14,6 @@ public final class _461_RumbleInTheBase extends Quest{
     private static final int SelChef = 18908;
 
     public _461_RumbleInTheBase() {
-        super(false);
         addStartNpc(Stan);
         addQuestItem(ShoesStringofSelMahum, ShinySalmon);
         addKillId(SelMahums);
@@ -23,7 +22,7 @@ public final class _461_RumbleInTheBase extends Quest{
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("stan_q461_03.htm")) {
+        if ("stan_q461_03.htm".equalsIgnoreCase(event)) {
             st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);

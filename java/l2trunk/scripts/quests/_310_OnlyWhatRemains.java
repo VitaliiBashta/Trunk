@@ -18,16 +18,14 @@ public final class _310_OnlyWhatRemains extends Quest {
     private static final int JEWEL = 14835;
 
     public _310_OnlyWhatRemains() {
-        super(false);
         addStartNpc(KINTAIJIN);
-        addTalkId(KINTAIJIN);
         addKillId(MOBS);
         addQuestItem(DIRTYBEAD);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("32640-3.htm")) {
+        if ("32640-3.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.start();
             st.playSound(SOUND_ACCEPT);
@@ -53,8 +51,8 @@ public final class _310_OnlyWhatRemains extends Quest {
             htmltext = "32640-8.htm";
         else if (cond == 2) {
             st.takeItems(DIRTYBEAD, 500);
-            st.giveItems(ACCELERATOR, 1);
-            st.giveItems(JEWEL, 1);
+            st.giveItems(ACCELERATOR);
+            st.giveItems(JEWEL);
             st.exitCurrentQuest();
             st.playSound(SOUND_FINISH);
             htmltext = "32640-9.htm";

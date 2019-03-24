@@ -12,33 +12,33 @@ public final class _289_DeliciousFoodsAreMine extends Quest {
     private static final int FoulFruit = 15507;
     private static final int FullBarrelofSoup = 15712;
     private static final int EmptySoupBarrel = 15713;
-    private static final List<Integer> SelMahums = List.of(22786, 22787, 22788);
+    private static final List<Integer> SEL_MAHUMS = List.of(22786, 22787, 22788);
     private static final int SelChef = 18908;
 
     public _289_DeliciousFoodsAreMine() {
         super(false);
         addStartNpc(GuardStan);
         addQuestItem(FoulFruit, FullBarrelofSoup, EmptySoupBarrel);
-        addKillId(SelMahums);
+        addKillId(SEL_MAHUMS);
         addKillId(SelChef);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("stan_q289_03.htm")) {
+        if ("stan_q289_03.htm".equalsIgnoreCase(event)) {
             st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
             st.giveItems(FoulFruit, 500);
-        } else if (event.equalsIgnoreCase("stan_q289_05.htm")) {
+        } else if ("stan_q289_05.htm".equalsIgnoreCase(event)) {
             st.giveItems(FoulFruit, 500);
-        } else if (event.equalsIgnoreCase("continue")) {
+        } else if ("continue".equalsIgnoreCase(event)) {
             htmltext = "stan_q289_11.htm";
-        } else if (event.equalsIgnoreCase("quit")) {
+        } else if ("quit".equalsIgnoreCase(event)) {
             htmltext = "stan_q289_12.htm";
             st.exitCurrentQuest();
-        } else if (event.equalsIgnoreCase("icarus")) {
+        } else if ("icarus".equalsIgnoreCase(event)) {
             if (st.getQuestItemsCount(FullBarrelofSoup) < 500)
                 htmltext = "stan_q289_07.htm";
             else {
@@ -63,38 +63,38 @@ public final class _289_DeliciousFoodsAreMine extends Quest {
                 st.playSound(SOUND_MIDDLE);
                 htmltext = "stan_q289_08.htm";
             }
-        } else if (event.equalsIgnoreCase("moirai")) {
+        } else if ("moirai".equalsIgnoreCase(event)) {
             if (st.getQuestItemsCount(FullBarrelofSoup) < 100)
                 htmltext = "stan_q289_09.htm";
             else {
                 st.takeItems(FullBarrelofSoup, 100);
                 switch (Rnd.get(1, 18)) {
                     case 1:
-                        st.giveItems(15775, 1);
+                        st.giveItems(15775);
                         break;
                     case 2:
-                        st.giveItems(15778, 1);
+                        st.giveItems(15778);
                         break;
                     case 3:
-                        st.giveItems(15781, 1);
+                        st.giveItems(15781);
                         break;
                     case 4:
-                        st.giveItems(15784, 1);
+                        st.giveItems(15784);
                         break;
                     case 5:
-                        st.giveItems(15787, 1);
+                        st.giveItems(15787);
                         break;
                     case 6:
-                        st.giveItems(15791, 1);
+                        st.giveItems(15791);
                         break;
                     case 7:
-                        st.giveItems(15812, 1);
+                        st.giveItems(15812);
                         break;
                     case 8:
-                        st.giveItems(15813, 1);
+                        st.giveItems(15813);
                         break;
                     case 9:
-                        st.giveItems(15814, 1);
+                        st.giveItems(15814);
                         break;
                     case 10:
                         st.giveItems(15645, 3);
@@ -161,7 +161,7 @@ public final class _289_DeliciousFoodsAreMine extends Quest {
     public void onKill(NpcInstance npc, QuestState st) {
         int cond = st.getCond();
         if (cond == 1) {
-            if (SelMahums.contains(npc.getNpcId()) || npc.getNpcId() == SelChef)
+            if (SEL_MAHUMS.contains(npc.getNpcId()) || npc.getNpcId() == SelChef)
                 if (Rnd.chance(15))
                     st.rollAndGive(FullBarrelofSoup, 1, 100);
                 else

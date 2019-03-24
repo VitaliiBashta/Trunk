@@ -14,8 +14,6 @@ public final class _007_ATripBegins extends Quest {
     private final int ARIELS_RECOMMENDATION = 7572;
 
     public _007_ATripBegins() {
-        super(false);
-
         addStartNpc(MIRABEL);
 
         addTalkId(ARIEL,ASTERIOS);

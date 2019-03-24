@@ -136,7 +136,7 @@ public enum CastleManorManager {
     }
 
     private void setNextPeriod() {
-        for (Castle c : ResidenceHolder.getCastles()) {
+        ResidenceHolder.getCastles().forEach(c -> {
             if (c.getOwnerId() > 0) {
                 Clan clan = ClanTable.INSTANCE.getClan(c.getOwnerId());
                 if (clan != null) {
@@ -207,31 +207,30 @@ public enum CastleManorManager {
 
             }
 
-        }
+        });
     }
 
     private void approveNextPeriod() {
-        for (Castle c : ResidenceHolder.getCastles()) {
-            // Castle has no owner
-            if (c.getOwnerId() <= 0)
-                continue;
+        ResidenceHolder.getCastles().forEach(c -> {
+            if (c.getOwnerId() > 0) {
+                long manor_cost = c.getManorCost(PERIOD_NEXT);
 
-            long manor_cost = c.getManorCost(PERIOD_NEXT);
-
-            if (c.getTreasury() < manor_cost) {
-                c.setSeedProduction(getNewSeedsList(c.getId()), PERIOD_NEXT);
-                c.setCropProcure(getNewCropsList(c.getId()), PERIOD_NEXT);
-                manor_cost = c.getManorCost(PERIOD_NEXT);
-                if (manor_cost > 0)
-                    Log.add(c.getName() + "|" + -manor_cost + "|ManorManager Error@approveNextPeriod", "treasury");
-                Clan clan = c.getOwner();
-                PlayerMessageStack.getInstance().mailto(clan.getLeaderId(), new SystemMessage2(SystemMsg.YOU_DO_NOT_HAVE_ENOUGH_FUNDS_IN_THE_CLAN_WAREHOUSE_FOR_THE_MANOR_TO_OPERATE));
-            } else {
-                c.addToTreasuryNoTax(-manor_cost, false, false);
-                Log.add(c.getName() + "|" + -manor_cost + "|ManorManager", "treasury");
+                if (c.getTreasury() < manor_cost) {
+                    c.setSeedProduction(getNewSeedsList(c.getId()), PERIOD_NEXT);
+                    c.setCropProcure(getNewCropsList(c.getId()), PERIOD_NEXT);
+                    manor_cost = c.getManorCost(PERIOD_NEXT);
+                    if (manor_cost > 0)
+                        Log.add(c.getName() + "|" + -manor_cost + "|ManorManager Error@approveNextPeriod", "treasury");
+                    Clan clan = c.getOwner();
+                    PlayerMessageStack.getInstance().mailto(clan.getLeaderId(), new SystemMessage2(SystemMsg.YOU_DO_NOT_HAVE_ENOUGH_FUNDS_IN_THE_CLAN_WAREHOUSE_FOR_THE_MANOR_TO_OPERATE));
+                } else {
+                    c.addToTreasuryNoTax(-manor_cost, false, false);
+                    Log.add(c.getName() + "|" + -manor_cost + "|ManorManager", "treasury");
+                }
+                c.setNextPeriodApproved(true);
             }
-            c.setNextPeriodApproved(true);
-        }
+
+        });
     }
 
     private List<SeedProduction> getNewSeedsList(int castleId) {

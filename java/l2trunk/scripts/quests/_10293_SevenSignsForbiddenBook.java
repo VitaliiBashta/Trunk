@@ -23,7 +23,6 @@ public final class _10293_SevenSignsForbiddenBook extends Quest {
     private static final List<Integer> books = List.of(32809, 32810, 32811, 32812, 32813);
 
     public _10293_SevenSignsForbiddenBook() {
-        super(false);
         addStartNpc(Elcardia);
         addTalkId(Sophia, SophiaInzone1, ElcardiaInzone1, SophiaInzone2);
         addTalkId(books);
@@ -33,40 +32,38 @@ public final class _10293_SevenSignsForbiddenBook extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         Player player = st.player;
-        if (event.equalsIgnoreCase("elcardia_q10293_3.htm")) {
+        if ("elcardia_q10293_3.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.start();
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("enter_library")) {
+        } else if ("enter_library".equalsIgnoreCase(event)) {
             enterInstance(player);
             return null;
-        } else if (event.equalsIgnoreCase("sophia2_q10293_4.htm")) {
+        } else if ("sophia2_q10293_4.htm".equalsIgnoreCase(event)) {
             st.setCond(2);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("sophia2_q10293_8.htm")) {
+        } else if ("sophia2_q10293_8.htm".equalsIgnoreCase(event)) {
             st.setCond(4);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("elcardia2_q10293_4.htm")) {
+        } else if ("elcardia2_q10293_4.htm".equalsIgnoreCase(event)) {
             st.setCond(5);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("sophia2_q10293_10.htm")) {
+        } else if ("sophia2_q10293_10.htm".equalsIgnoreCase(event)) {
             st.setCond(6);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("teleport_in")) {
-            Location loc = Location.of(37348, -50383, -1168);
-            st.player.teleToLocation(loc);
+        } else if ("teleport_in".equalsIgnoreCase(event)) {
+            st.player.teleToLocation(37348, -50383, -1168);
             teleportElcardia(player);
             return null;
-        } else if (event.equalsIgnoreCase("teleport_out")) {
-            Location loc = Location.of(37205, -49753, -1128);
-            st.player.teleToLocation(loc);
+        } else if ("teleport_out".equalsIgnoreCase(event)) {
+            st.player.teleToLocation(37205, -49753, -1128);
             teleportElcardia(player);
             return null;
-        } else if (event.equalsIgnoreCase("book_q10293_3a.htm")) {
+        } else if ("book_q10293_3a.htm".equalsIgnoreCase(event)) {
             st.giveItems(SolinasBiography);
             st.setCond(7);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("elcardia_q10293_7.htm")) {
+        } else if ("elcardia_q10293_7.htm".equalsIgnoreCase(event)) {
             st.addExpAndSp(15000000, 1500000);
             st.complete();
             st.finish();

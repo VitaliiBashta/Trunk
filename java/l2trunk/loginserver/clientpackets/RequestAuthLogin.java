@@ -41,7 +41,7 @@ public class RequestAuthLogin extends L2LoginClientPacket {
             passwordCorrect = true;
 
         if (!IpBanManager.getInstance().tryLogin(client.getIpAddress(), passwordCorrect)) {
-            client.closeNow(false);
+            client.closeNow();
             return;
         }
 
@@ -114,7 +114,7 @@ public class RequestAuthLogin extends L2LoginClientPacket {
             rsaCipher.init(Cipher.DECRYPT_MODE, client.getRSAPrivateKey());
             decrypted = rsaCipher.doFinal(_raw, 0x00, 0x80);
         } catch (Exception e) {
-            client.closeNow(true);
+            client.closeNow();
             return;
         }
 

@@ -26,7 +26,6 @@ public final class _622_DeliveryofSpecialLiquor extends Quest {
     private static final int Tateossian_CHANCE = 20;
 
     public _622_DeliveryofSpecialLiquor() {
-        super(false);
         addStartNpc(JEREMY);
         addTalkId(LIETTA,PULIN,NAFF,CROCUS,KUBER,BEOLIN);
         addQuestItem(SpecialDrink,FeeOfSpecialDrink);
@@ -41,42 +40,40 @@ public final class _622_DeliveryofSpecialLiquor extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        int _state = st.getState();
+        int state = st.getState();
         int cond = st.getCond();
-        long SpecialDrink_count = st.getQuestItemsCount(SpecialDrink);
+        long specialDrinkCount = st.getQuestItemsCount(SpecialDrink);
 
-        if (event.equalsIgnoreCase("jeremy_q0622_0104.htm") && _state == CREATED) {
+        if ("jeremy_q0622_0104.htm".equalsIgnoreCase(event) && state == CREATED) {
             st.start();
             st.setCond(1);
-            st.takeItems(SpecialDrink, -1);
-            st.takeItems(FeeOfSpecialDrink, -1);
+            st.takeAllItems(SpecialDrink,FeeOfSpecialDrink);
             st.giveItems(SpecialDrink, 5);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("beolin_q0622_0201.htm") && cond == 1 && SpecialDrink_count > 0)
+        } else if ("beolin_q0622_0201.htm".equalsIgnoreCase(event) && cond == 1 && specialDrinkCount > 0)
             takeDrink(st, 2);
-        else if (event.equalsIgnoreCase("kuber_q0622_0301.htm") && cond == 2 && SpecialDrink_count > 0)
+        else if ("kuber_q0622_0301.htm".equalsIgnoreCase(event) && cond == 2 && specialDrinkCount > 0)
             takeDrink(st, 3);
-        else if (event.equalsIgnoreCase("crocus_q0622_0401.htm") && cond == 3 && SpecialDrink_count > 0)
+        else if ("crocus_q0622_0401.htm".equalsIgnoreCase(event) && cond == 3 && specialDrinkCount > 0)
             takeDrink(st, 4);
-        else if (event.equalsIgnoreCase("naff_q0622_0501.htm") && cond == 4 && SpecialDrink_count > 0)
+        else if ("naff_q0622_0501.htm".equalsIgnoreCase(event) && cond == 4 && specialDrinkCount > 0)
             takeDrink(st, 5);
-        else if (event.equalsIgnoreCase("pulin_q0622_0601.htm") && cond == 5 && SpecialDrink_count > 0)
+        else if ("pulin_q0622_0601.htm".equalsIgnoreCase(event) && cond == 5 && specialDrinkCount > 0)
             takeDrink(st, 6);
-        else if (event.equalsIgnoreCase("jeremy_q0622_0701.htm") && cond == 6 && st.getQuestItemsCount(FeeOfSpecialDrink) >= 5)
+        else if ("jeremy_q0622_0701.htm".equalsIgnoreCase(event) && cond == 6 && st.getQuestItemsCount(FeeOfSpecialDrink) >= 5)
             st.setCond(7);
-        else if (event.equalsIgnoreCase("warehouse_keeper_lietta_q0622_0801.htm") && cond == 7 && st.getQuestItemsCount(FeeOfSpecialDrink) >= 5) {
-            st.takeItems(SpecialDrink, -1);
-            st.takeItems(FeeOfSpecialDrink, -1);
+        else if ("warehouse_keeper_lietta_q0622_0801.htm".equalsIgnoreCase(event) && cond == 7 && st.getQuestItemsCount(FeeOfSpecialDrink) >= 5) {
+            st.takeAllItems(SpecialDrink, FeeOfSpecialDrink);
             if (Rnd.chance(Tateossian_CHANCE)) {
                 if (Rnd.chance(40))
-                    st.giveItems(RecipeSealedTateossianRing, 1);
+                    st.giveItems(RecipeSealedTateossianRing);
                 else if (Rnd.chance(40))
-                    st.giveItems(RecipeSealedTateossianEarring, 1);
+                    st.giveItems(RecipeSealedTateossianEarring);
                 else
-                    st.giveItems(RecipeSealedTateossianNecklace, 1);
+                    st.giveItems(RecipeSealedTateossianNecklace);
             } else {
-                st.giveItems(ADENA_ID, 18800);
-                st.giveItems(HastePotion, 1, true);
+                st.giveAdena(18800);
+                st.giveItems(HastePotion);
             }
 
             st.playSound(SOUND_FINISH);
@@ -102,26 +99,26 @@ public final class _622_DeliveryofSpecialLiquor extends Quest {
         }
 
         int cond = st.getCond();
-        long SpecialDrink_count = st.getQuestItemsCount(SpecialDrink);
-        long FeeOfSpecialDrink_count = st.getQuestItemsCount(FeeOfSpecialDrink);
+        boolean haveSpecialDrink = st.haveQuestItem(SpecialDrink);
+        long feeOfSpecialDrinkCount = st.getQuestItemsCount(FeeOfSpecialDrink);
 
-        if (cond == 1 && npcId == BEOLIN && SpecialDrink_count > 0)
+        if (cond == 1 && npcId == BEOLIN && haveSpecialDrink )
             htmltext = "beolin_q0622_0101.htm";
-        else if (cond == 2 && npcId == KUBER && SpecialDrink_count > 0)
+        else if (cond == 2 && npcId == KUBER && haveSpecialDrink )
             htmltext = "kuber_q0622_0201.htm";
-        else if (cond == 3 && npcId == CROCUS && SpecialDrink_count > 0)
+        else if (cond == 3 && npcId == CROCUS && haveSpecialDrink )
             htmltext = "crocus_q0622_0301.htm";
-        else if (cond == 4 && npcId == NAFF && SpecialDrink_count > 0)
+        else if (cond == 4 && npcId == NAFF && haveSpecialDrink )
             htmltext = "naff_q0622_0401.htm";
-        else if (cond == 5 && npcId == PULIN && SpecialDrink_count > 0)
+        else if (cond == 5 && npcId == PULIN && haveSpecialDrink )
             htmltext = "pulin_q0622_0501.htm";
-        else if (cond == 6 && npcId == JEREMY && FeeOfSpecialDrink_count >= 5)
+        else if (cond == 6 && npcId == JEREMY && feeOfSpecialDrinkCount >= 5)
             htmltext = "jeremy_q0622_0601.htm";
-        else if (cond == 7 && npcId == JEREMY && FeeOfSpecialDrink_count >= 5)
+        else if (cond == 7 && npcId == JEREMY && feeOfSpecialDrinkCount >= 5)
             htmltext = "jeremy_q0622_0703.htm";
-        else if (cond == 7 && npcId == LIETTA && FeeOfSpecialDrink_count >= 5)
+        else if (cond == 7 && npcId == LIETTA && feeOfSpecialDrinkCount >= 5)
             htmltext = "warehouse_keeper_lietta_q0622_0701.htm";
-        else if (cond > 0 && npcId == JEREMY && SpecialDrink_count > 0)
+        else if (cond > 0 && npcId == JEREMY && haveSpecialDrink )
             htmltext = "jeremy_q0622_0104.htm";
         return htmltext;
     }

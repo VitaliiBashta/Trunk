@@ -32,7 +32,6 @@ public final class _327_ReclaimTheLand extends Quest {
     private static final Map<Integer, Integer> EXP = new HashMap<>();
 
     public _327_ReclaimTheLand() {
-        super(false);
         addStartNpc(Piotur);
         addTalkId(Iris, Asha);
 
@@ -87,7 +86,7 @@ public final class _327_ReclaimTheLand extends Quest {
             st.takeItems(BRASS_TRINKET_PIECE, 5);
             if (!Rnd.chance(Exchange_Chance))
                 return "trader_acellopy_q0327_10.htm";
-            st.giveItems(ANCIENT_BRASS_TIARA, 1);
+            st.giveItems(ANCIENT_BRASS_TIARA);
             st.playSound(SOUND_MIDDLE);
             return "trader_acellopy_q0327_05.htm";
         } else if ("trader_acellopy_q0327_06.htm".equalsIgnoreCase(event) && state == STARTED && st.getQuestItemsCount(BRONZE_MIRROR_PIECE) >= 5) {

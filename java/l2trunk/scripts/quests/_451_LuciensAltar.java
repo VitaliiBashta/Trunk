@@ -20,8 +20,6 @@ public final class _451_LuciensAltar extends Quest {
     private static final List<Integer> ALTARS = List.of(ALTAR_1, ALTAR_2, ALTAR_3, ALTAR_4, ALTAR_5);
 
     public _451_LuciensAltar() {
-        super(false);
-
         addStartNpc(DAICHIR);
         addTalkId(ALTARS);
     }

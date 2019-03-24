@@ -28,7 +28,7 @@ public enum OptionDataParser /*extends StatParser<OptionDataHolder>*/ {
     protected void readData(Element rootElement) {
         for (Iterator<Element> itemIterator = rootElement.elementIterator(); itemIterator.hasNext(); ) {
             Element optionDataElement = itemIterator.next();
-            OptionDataTemplate template = new OptionDataTemplate(toInt(optionDataElement.attributeValue("id"),0));
+            OptionDataTemplate template = new OptionDataTemplate(toInt(optionDataElement.attributeValue("id")));
             for (Iterator<Element> subIterator = optionDataElement.elementIterator(); subIterator.hasNext(); ) {
                 Element subElement = subIterator.next();
                 String subName = subElement.getName();

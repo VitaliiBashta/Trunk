@@ -22,7 +22,6 @@ import l2trunk.gameserver.model.entity.residence.Residence;
 import l2trunk.gameserver.model.pledge.Clan;
 import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
-import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.tables.ClanTable;
 import l2trunk.gameserver.utils.HtmlUtils;
 import l2trunk.scripts.npc.model.residences.fortress.siege.BackupPowerUnitInstance;
@@ -265,11 +264,9 @@ public final class AdminResidence implements IAdminCommandHandler {
                 runnerEvent = EventHolder.getEvent(EventType.MAIN_EVENT, 1);
                 runnerEvent.clearActions();
                 ThreadPoolManager.INSTANCE.execute(() -> {
-                    for (Fortress f : ResidenceHolder.getFortresses()) {
-                        if (f.getSiegeEvent().isInProgress())
-                            f.getSiegeEvent().stopEvent();
-                    }
-
+                    ResidenceHolder.getFortresses()
+                            .filter(f -> f.getSiegeEvent().isInProgress())
+                            .forEach(f -> f.getSiegeEvent().stopEvent());
                     runnerEvent.getRegisteredDominions().forEach(d -> {
                         d.getSiegeEvent().clearActions();
                         d.getSiegeEvent().stopEvent();

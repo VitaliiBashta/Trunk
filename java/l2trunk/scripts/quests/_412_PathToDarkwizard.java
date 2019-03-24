@@ -8,6 +8,9 @@ import l2trunk.gameserver.model.quest.QuestState;
 import java.util.List;
 import java.util.Map;
 
+import static l2trunk.gameserver.model.base.ClassId.darkMage;
+import static l2trunk.gameserver.model.base.ClassId.darkWizard;
+
 public final class _412_PathToDarkwizard extends Quest {
     private static final int LUCKY_KEY_ID = 1277;
     private static final int CANDLE_ID = 1278;
@@ -36,8 +39,6 @@ public final class _412_PathToDarkwizard extends Quest {
             20045, List.of(HUB_SCENT_ID, HEART_OF_LUNACY_ID, 3));
 
     public _412_PathToDarkwizard() {
-        super(false);
-
         addStartNpc(VARIKA);
 
         addTalkId(CHARKEREN, ANNIKA, ARKENIA);
@@ -52,14 +53,14 @@ public final class _412_PathToDarkwizard extends Quest {
         String htmltext = event;
         switch (event) {
             case "1":
-                if (st.player.getLevel() >= 18 && st.player.getClassId().id == 0x26 && !st.haveQuestItem(JEWEL_OF_DARKNESS_ID)) {
+                if (st.player.getLevel() >= 18 && st.player.getClassId() == darkMage && !st.haveQuestItem(JEWEL_OF_DARKNESS_ID)) {
                     st.setCond(1);
                     st.start();
                     st.playSound(SOUND_ACCEPT);
                     st.giveItems(SEEDS_OF_DESPAIR_ID);
                     htmltext = "varika_q0412_05.htm";
-                } else if (st.player.getClassId().id != 0x26) {
-                    if (st.player.getClassId().id == 0x27)
+                } else if (st.player.getClassId() != darkMage) {
+                    if (st.player.getClassId() == darkWizard)
                         htmltext = "varika_q0412_02a.htm";
                     else
                         htmltext = "varika_q0412_03.htm";
@@ -114,11 +115,8 @@ public final class _412_PathToDarkwizard extends Quest {
                 htmltext = "varika_q0412_16.htm";
                 if (st.player.getClassId().occupation() == 0) {
                     st.giveItems(JEWEL_OF_DARKNESS_ID);
-                    if (!st.player.isVarSet("prof1")) {
-                        st.player.setVar("prof1");
-                        st.addExpAndSp(228064, 16455);
-                        st.giveAdena(81900);
-                    }
+                    st.addExpAndSp(228064, 16455);
+                    st.giveAdena(81900);
                 }
                 st.exitCurrentQuest();
                 st.playSound(SOUND_FINISH);

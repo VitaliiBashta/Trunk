@@ -27,10 +27,7 @@ public final class _700_CursedLife extends Quest {
     private static final int BONESPRICE = 500;
 
     public _700_CursedLife() {
-        super(false);
-
         addStartNpc(Orbyu);
-        addTalkId(Orbyu);
         addKillId(MutantBird1, MutantBird2, DraHawk1, DraHawk2);
         addQuestItem(SwallowedSkull, SwallowedSternum, SwallowedBones);
     }
@@ -45,13 +42,11 @@ public final class _700_CursedLife extends Quest {
             st.start();
             st.playSound(SOUND_ACCEPT);
         } else if (event.equals("ex_bones") && cond == 1)
-            if (st.haveAnyQuestItems(SwallowedSkull,SwallowedSternum,SwallowedBones)) {
-                long _adenatogive = st.getQuestItemsCount(SwallowedSkull) * SKULLPRICE + st.getQuestItemsCount(SwallowedSternum) * STERNUMPRICE + st.getQuestItemsCount(SwallowedBones) * BONESPRICE;
+            if (st.haveAnyQuestItems(SwallowedSkull, SwallowedSternum, SwallowedBones)) {
+                long adenatogive = st.getQuestItemsCount(SwallowedSkull) * SKULLPRICE + st.getQuestItemsCount(SwallowedSternum) * STERNUMPRICE + st.getQuestItemsCount(SwallowedBones) * BONESPRICE;
 
-                st.giveItems(ADENA_ID, _adenatogive);
-                    st.takeItems(SwallowedSkull);
-                    st.takeItems(SwallowedSternum);
-                    st.takeItems(SwallowedBones);
+                st.giveAdena(adenatogive);
+                st.takeAllItems(SwallowedSkull,SwallowedSternum,SwallowedBones);
                 htmltext = "orbyu_q700_4.htm";
             } else
                 htmltext = "orbyu_q700_3a.htm";
@@ -73,7 +68,7 @@ public final class _700_CursedLife extends Quest {
                     st.exitCurrentQuest();
                 }
             } else if (cond == 1)
-                if (st.haveAnyQuestItems(SwallowedSkull,SwallowedSternum,SwallowedBones) )
+                if (st.haveAnyQuestItems(SwallowedSkull, SwallowedSternum, SwallowedBones))
                     htmltext = "orbyu_q700_3.htm";
                 else
                     htmltext = "orbyu_q700_3a.htm";

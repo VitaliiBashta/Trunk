@@ -50,11 +50,6 @@ public final class SimpleSpawner extends Spawner {
         return loc;
     }
 
-    /**
-     * Set the position(x, y, z, heading) of the spawn point.
-     *
-     * @param loc Location
-     */
     public SimpleSpawner setLoc(Location loc) {
         this.loc = loc;
         return this;

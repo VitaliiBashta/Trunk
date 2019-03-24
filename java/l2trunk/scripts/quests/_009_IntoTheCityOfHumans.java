@@ -16,8 +16,6 @@ public final class _009_IntoTheCityOfHumans extends Quest {
     private static final int MARK_OF_TRAVELER = 7570;
 
     public _009_IntoTheCityOfHumans() {
-        super(false);
-
         addStartNpc(PETUKAI);
 
         addTalkId(TANAPI,TAMIL);
@@ -35,7 +33,6 @@ public final class _009_IntoTheCityOfHumans extends Quest {
         } else if ("gatekeeper_tamil_q0009_0301.htm".equalsIgnoreCase(event)) {
             st.giveItems(SCROLL_OF_ESCAPE_GIRAN);
             st.giveItems(MARK_OF_TRAVELER);
-            st.unset("cond");
             st.playSound(SOUND_FINISH);
             st.finish();
         }

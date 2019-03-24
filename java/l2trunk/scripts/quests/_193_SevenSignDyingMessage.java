@@ -31,8 +31,6 @@ public final class _193_SevenSignDyingMessage extends Quest {
     private static final Map<Integer, Integer> spawns = new HashMap<>();
 
     public _193_SevenSignDyingMessage() {
-        super(false);
-
         addStartNpc(Hollint);
         addTalkId(Cain, Eric, SirGustavAthebaldt);
         addKillId(ShilensEvilThoughts);
@@ -55,7 +53,7 @@ public final class _193_SevenSignDyingMessage extends Quest {
             st.setCond(3);
             st.giveItems(DeadmansHerb);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("30760-02.htm")) {
+        } else if ("30760-02.htm".equalsIgnoreCase(event)) {
             if (player.getBaseClassId() == player.getActiveClassId()) {
                 st.addExpAndSp(25000000, 2500000);
                 st.complete();
@@ -63,21 +61,21 @@ public final class _193_SevenSignDyingMessage extends Quest {
                 st.playSound(SOUND_FINISH);
             } else
                 return "subclass_forbidden.htm";
-        } else if (event.equalsIgnoreCase("close_your_eyes")) {
+        } else if ("close_your_eyes".equalsIgnoreCase(event)) {
             st.setCond(4);
-            st.takeItems(DeadmansHerb, -1);
+            st.takeItems(DeadmansHerb);
             st.playSound(SOUND_MIDDLE);
             player.showQuestMovie(ExStartScenePlayer.SCENE_SSQ_DYING_MASSAGE);
             return "";
-        } else if (event.equalsIgnoreCase("32569-09.htm")) {
+        } else if ("32569-09.htm".equalsIgnoreCase(event)) {
             htmltext = "32569-09.htm";
             Functions.npcSay(npc, st.player.getName() + "! That stranger must be defeated. Here is the ultimate help!");
             NpcInstance mob = st.addSpawn(ShilensEvilThoughts, Location.of(82425, 47232, -3216), 0, 180000);
             spawns.put(player.objectId(), mob.objectId());
             mob.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, player, 100000);
-        } else if (event.equalsIgnoreCase("32569-13.htm")) {
+        } else if ("32569-13.htm".equalsIgnoreCase(event)) {
             st.setCond(6);
-            st.takeItems(SculptureofDoubt, -1);
+            st.takeItems(SculptureofDoubt);
             st.playSound(SOUND_MIDDLE);
         }
         return htmltext;
@@ -135,17 +133,14 @@ public final class _193_SevenSignDyingMessage extends Quest {
     public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
-        Player player = st.player;
-        if (player == null)
-            return;
 
         if (npcId == ShilensEvilThoughts && cond == 4) {
-            Integer obj_id = spawns.get(player.objectId());
+            Integer obj_id = spawns.get(st.player.objectId());
             if (obj_id != null && obj_id == npc.objectId()) {
-                spawns.remove(player.objectId());
+                spawns.remove(st.player.objectId());
                 st.setCond(5);
                 st.playSound(SOUND_ITEMGET);
-                st.giveItems(SculptureofDoubt, 1);
+                st.giveItems(SculptureofDoubt);
             }
         }
     }

@@ -18,10 +18,9 @@ public final class _10284_AcquisionOfDivineSword extends Quest {
     private static final int COLD_RESISTANCE_POTION = 15514;
     private static final int INJ_KEGOR = 18846;
     private static final int MITHRIL_MILLIPEDE = 22766;
-    private int _count = 0;
+    private int count = 0;
 
     public _10284_AcquisionOfDivineSword() {
-        super(false);
         addStartNpc(RAFFORTY);
         addTalkId(JINIA, KRUN, INJ_KEGOR);
         addKillId(MITHRIL_MILLIPEDE);
@@ -110,8 +109,8 @@ public final class _10284_AcquisionOfDivineSword extends Quest {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         if (cond == 5 && npcId == MITHRIL_MILLIPEDE) {
-            if (_count < 3)
-                _count++;
+            if (count < 3)
+                count++;
             else {
                 st.setCond(6);
                 st.player.getReflection().startCollapseTimer(3 * 60 * 1000L);

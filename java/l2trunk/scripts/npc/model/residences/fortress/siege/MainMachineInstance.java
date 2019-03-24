@@ -11,8 +11,8 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
-public class MainMachineInstance extends NpcInstance {
-    private int _powerUnits;
+public final class MainMachineInstance extends NpcInstance {
+    private int powerUnits;
 
     public MainMachineInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
@@ -22,7 +22,7 @@ public class MainMachineInstance extends NpcInstance {
     public void onSpawn() {
         super.onSpawn();
 
-        _powerUnits = 3;
+        powerUnits = 3;
         FortressSiegeEvent siegeEvent = getEvent(FortressSiegeEvent.class);
         if (siegeEvent == null)
             return;
@@ -35,7 +35,7 @@ public class MainMachineInstance extends NpcInstance {
         if (!canBypassCheck(player, this))
             return;
 
-        if (_powerUnits != 0)
+        if (powerUnits != 0)
             return;
 
         Functions.npcShout(this, NpcString.FORTRESS_POWER_DISABLED);
@@ -54,7 +54,7 @@ public class MainMachineInstance extends NpcInstance {
         siegeEvent.checkBarracks();
     }
 
-    public void powerOff(PowerControlUnitInstance powerUnit) {
+    void powerOff(PowerControlUnitInstance powerUnit) {
         FortressSiegeEvent event = getEvent(FortressSiegeEvent.class);
         SpawnExObject exObject = event.getFirstObject(FortressSiegeEvent.IN_POWER_UNITS);
 
@@ -65,7 +65,7 @@ public class MainMachineInstance extends NpcInstance {
                 machineNumber = i;
         }
 
-        NpcString msg = null;
+        NpcString msg;
         switch (machineNumber) {
             case 0:
                 msg = NpcString.MACHINE_NO_1_POWER_OFF;
@@ -80,14 +80,14 @@ public class MainMachineInstance extends NpcInstance {
                 throw new IllegalArgumentException("Wrong spawn at fortress: " + event.getName());
         }
 
-        _powerUnits--;
+        powerUnits--;
         Functions.npcShout(this, msg);
     }
 
     @Override
     public void showChatWindow(Player player, int val) {
         NpcHtmlMessage message = new NpcHtmlMessage(player, this);
-        if (_powerUnits != 0)
+        if (powerUnits != 0)
             message.setFile("residence2/fortress/fortress_mainpower002.htm");
         else
             message.setFile("residence2/fortress/fortress_mainpower001.htm");

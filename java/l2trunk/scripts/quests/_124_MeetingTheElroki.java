@@ -15,8 +15,6 @@ public final class _124_MeetingTheElroki extends Quest {
     private final int Mushika_egg = 8778;
 
     public _124_MeetingTheElroki() {
-        super(false);
-
         addStartNpc(Marquez);
         addTalkId(Mushika,Asamah,Karakawei,Mantarasa);
     }

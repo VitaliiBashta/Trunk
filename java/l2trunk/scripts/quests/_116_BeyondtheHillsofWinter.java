@@ -17,8 +17,6 @@ public final class _116_BeyondtheHillsofWinter extends Quest {
     private static final int SSD = 1463;
 
     public _116_BeyondtheHillsofWinter() {
-        super(false);
-
         addStartNpc(FILAUR);
         addTalkId(OBI);
     }
@@ -30,26 +28,26 @@ public final class _116_BeyondtheHillsofWinter extends Quest {
             st.setCond(1);
             st.start();
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("elder_filaur_q0116_0201.htm")) {
+        } else if ("elder_filaur_q0116_0201.htm".equalsIgnoreCase(event)) {
             if (st.getQuestItemsCount(Bandage) >= 20 && st.getQuestItemsCount(Energy_Stone) >= 5 && st.getQuestItemsCount(Thief_Key) >= 10) {
                 st.takeItems(Bandage, 20);
                 st.takeItems(Energy_Stone, 5);
                 st.takeItems(Thief_Key, 10);
-                st.giveItems(Supplying_Goods_for_Railroad_Worker, 1);
+                st.giveItems(Supplying_Goods_for_Railroad_Worker);
                 st.setCond(2);
                 st.start();
             } else
                 htmltext = "elder_filaur_q0116_0104.htm";
-        } else if (event.equalsIgnoreCase("materials")) {
+        } else if ("materials".equalsIgnoreCase(event)) {
             htmltext = "railman_obi_q0116_0302.htm";
             st.takeItems(Supplying_Goods_for_Railroad_Worker, 1);
             st.giveItems(SSD, 1740);
             st.addExpAndSp(82792, 4981);
             st.finish();
-        } else if (event.equalsIgnoreCase("adena")) {
+        } else if ("adena".equalsIgnoreCase(event)) {
             htmltext = "railman_obi_q0116_0302.htm";
             st.takeItems(Supplying_Goods_for_Railroad_Worker, 1);
-            st.giveItems(ADENA_ID, 17387);
+            st.giveAdena( 17387);
             st.addExpAndSp(82792, 4981);
             st.finish();
         }

@@ -24,7 +24,6 @@ public final class _609_MagicalPowerofWater1 extends Quest {
 
 
     public _609_MagicalPowerofWater1() {
-        super(false);
         addStartNpc(WAHKAN);
         addTalkId(ASEFA,UDANS_MARDUI_BOX);
         addAttackId(VARKA_NPC_LIST);

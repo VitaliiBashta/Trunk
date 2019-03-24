@@ -219,7 +219,6 @@ public final class _223_TestOfChampion extends Quest {
     };
 
     public _223_TestOfChampion() {
-        super(false);
         addStartNpc(Ascalon);
         addTalkId(Groot,Mouen,Mason);
 
@@ -298,7 +297,7 @@ public final class _223_TestOfChampion extends Quest {
 
     @Override
     public String onTalk(NpcInstance npc, QuestState st) {
-        if (st.getQuestItemsCount(MARK_OF_CHAMPION) > 0) {
+        if (st.haveQuestItem(MARK_OF_CHAMPION)) {
             st.exitCurrentQuest();
             return "completed";
         }
@@ -339,7 +338,7 @@ public final class _223_TestOfChampion extends Quest {
                 st.giveItems(MARK_OF_CHAMPION);
                 if (!st.player.isVarSet("prof2.3")) {
                     st.addExpAndSp(RewardExp, RewardSP);
-                    st.giveItems(ADENA_ID, RewardAdena);
+                    st.giveAdena( RewardAdena);
                     st.player.setVar("prof2.3");
                 }
                 st.playSound(SOUND_FINISH);
@@ -369,11 +368,8 @@ public final class _223_TestOfChampion extends Quest {
                 htmltext = "30093-03.htm";
             else if (cond == COND7) {
                 htmltext = "30093-04.htm";
-                st.takeItems(WHITE_ROSE_INSIGNIA, -1);
-                st.takeItems(HARPYS_EGG, -1);
-                st.takeItems(MEDUSA_VENOM, -1);
-                st.takeItems(WINDSUS_BILE, -1);
-                st.giveItems(GROOTS_LETTER, 1);
+                st.takeAllItems(WHITE_ROSE_INSIGNIA,HARPYS_EGG, MEDUSA_VENOM, WINDSUS_BILE);
+                st.giveItems(GROOTS_LETTER);
                 st.setCond(COND8);
             } else if (cond == COND8)
                 htmltext = "30093-05.htm";

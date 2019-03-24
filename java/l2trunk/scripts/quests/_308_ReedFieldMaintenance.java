@@ -25,7 +25,6 @@ public final class _308_ReedFieldMaintenance extends Quest {
             15647, 15650, 15653, 15656, 15659, 15692, 15772, 15773, 15774);
 
     public _308_ReedFieldMaintenance() {
-        super(false);
         addStartNpc(Katensa);
         addQuestItem(MucrokianHide, AwakenMucrokianHide);
         addKillId(MucrokianFanatic, MucrokianAscetic, MucrokianSavior, MucrokianPreacher, ContaminatedMucrokian, ChangedMucrokian);
@@ -34,22 +33,22 @@ public final class _308_ReedFieldMaintenance extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("32646-04.htm")) {
+        if ("32646-04.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.start();
-        } else if (event.equalsIgnoreCase("32646-11.htm"))
+        } else if ("32646-11.htm".equalsIgnoreCase(event))
             st.exitCurrentQuest();
-        else if (event.equalsIgnoreCase("moirairec")) {
+        else if ("moirairec".equalsIgnoreCase(event)) {
             if (st.getQuestItemsCount(MucrokianHide) >= 180) {
                 st.takeItems(MucrokianHide, 180);
                 st.giveItems(Rnd.get(MoiraiRecipes), 1);
                 return null;
             } else
                 htmltext = "32646-16.htm";
-        } else if (event.equalsIgnoreCase("moiraimat")) {
+        } else if ("moiraimat".equalsIgnoreCase(event)) {
             if (st.getQuestItemsCount(MucrokianHide) >= 100) {
                 st.takeItems(MucrokianHide, 100);
-                st.giveItems(Rnd.get(Moiraimaterials), 1);
+                st.giveItems(Rnd.get(Moiraimaterials));
                 return null;
             } else
                 htmltext = "32646-16.htm";

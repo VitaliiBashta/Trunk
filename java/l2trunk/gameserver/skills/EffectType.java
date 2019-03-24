@@ -98,10 +98,10 @@ public enum EffectType {
     AbsorbDamageToSummon(EffectLDManaDamOverTime.class, null, true); // абсорбирует часть дамага к сумону
 
     private final Constructor<? extends Effect> constructor;
-    private final AbnormalEffect _abnormal;
-    private final Stats _resistType;
-    private final Stats _attributeType;
-    private final boolean _isRaidImmune;
+    private final AbnormalEffect abnormal;
+    private final Stats resistType;
+    private final Stats attributeType;
+    private final boolean isRaidImmune;
 
     EffectType(Class<? extends Effect> clazz, AbnormalEffect abnormal, boolean isRaidImmune) {
         this(clazz, abnormal, null, null, isRaidImmune);
@@ -113,26 +113,26 @@ public enum EffectType {
         } catch (NoSuchMethodException e) {
             throw new Error(e);
         }
-        _abnormal = abnormal;
-        _resistType = resistType;
-        _attributeType = attributeType;
-        _isRaidImmune = isRaidImmune;
+        this.abnormal = abnormal;
+        this.resistType = resistType;
+        this.attributeType = attributeType;
+        this.isRaidImmune = isRaidImmune;
     }
 
     public AbnormalEffect getAbnormal() {
-        return _abnormal;
+        return abnormal;
     }
 
     public Stats getResistType() {
-        return _resistType;
+        return resistType;
     }
 
     public Stats getAttributeType() {
-        return _attributeType;
+        return attributeType;
     }
 
     public boolean isRaidImmune() {
-        return _isRaidImmune;
+        return isRaidImmune;
     }
 
     public Effect makeEffect(Env env, EffectTemplate template) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException {

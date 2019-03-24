@@ -758,10 +758,7 @@
 		<set name="skillType" val="COMBATPOINTHEAL" />
 		<set name="operateType" val="OP_ACTIVE" />
 		<cond msgId="1902">
-			<and>
 				<player minLevel="#levelMin" />
-				<player maxLevel="#levelMax" />
-			</and>
 		</cond>
 		<cond msgId="1509">
 			<not>
@@ -785,10 +782,7 @@
 		<set name="skillType" val="HEAL_PERCENT" />
 		<set name="operateType" val="OP_ACTIVE" />
 		<cond msgId="1902">
-			<and>
 				<player minLevel="#levelMin" />
-				<player maxLevel="#levelMax" />
-			</and>
 		</cond>
 		<cond msgId="1509">
 			<not>

@@ -20,17 +20,11 @@ public final class _169_OffspringOfNightmares extends Quest {
     private static final int LesserDarkHorror = 20025;
 
     public _169_OffspringOfNightmares() {
-        super(false);
-
         addStartNpc(Vlasty);
 
-        addTalkId(Vlasty);
+        addKillId(DarkHorror, LesserDarkHorror);
 
-        addKillId(DarkHorror);
-        addKillId(LesserDarkHorror);
-
-        addQuestItem(CrackedSkull,
-                PerfectSkull);
+        addQuestItem(CrackedSkull, PerfectSkull);
     }
 
     @Override

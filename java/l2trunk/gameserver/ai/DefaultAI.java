@@ -64,7 +64,7 @@ public class DefaultAI extends CharacterAI {
     protected long _minFactionNotifyInterval;
     private long AI_TASK_DELAY_CURRENT = AI_TASK_ACTIVE_DELAY;
     private ScheduledFuture<?> runningTask;
-    private long _randomAnimationEnd;
+    private long randomAnimationEnd;
     private long _lastActiveCheck;
     /**
      * Время актуальности состояния атаки
@@ -297,23 +297,13 @@ public class DefaultAI extends CharacterAI {
         }
     }
 
-    /**
-     * Определяет, может ли этот тип АИ видеть персонажей в режиме Silent Move.
-     *
-     * @param target L2Playable цель
-     * @return true если цель видна в режиме Silent Move
-     */
     public boolean canSeeInSilentMove(Playable target) {
-        if (getActor().getParameter("canSeeInSilentMove", false)) {
-            return true;
-        }
+        if (getActor().isSet("canSeeInSilentMove")) return true;
         return !target.isSilentMoving();
     }
 
     public boolean canSeeInHide(Playable target) {
-        if (getActor().getParameter("canSeeInHide", false)) {
-            return true;
-        }
+        if (getActor().isSet("canSeeInHide")) return true;
 
         return !target.isInvisible();
     }
@@ -391,12 +381,10 @@ public class DefaultAI extends CharacterAI {
     public boolean randomAnimation() {
         NpcInstance actor = getActor();
 
-        if (actor.getParameter("noRandomAnimation", false)) {
-            return false;
-        }
+        if (actor.isSet("noRandomAnimation")) return false;
 
         if (actor.hasRandomAnimation() && !actor.isActionsDisabled() && !actor.isMoving && !actor.isInCombat() && Rnd.chance(Config.RND_ANIMATION_RATE)) {
-            _randomAnimationEnd = System.currentTimeMillis() + (long) 3000;
+            randomAnimationEnd = System.currentTimeMillis() + (long) 3000;
             actor.onRandomAnimation();
             return true;
         }
@@ -406,9 +394,7 @@ public class DefaultAI extends CharacterAI {
     public boolean randomWalk() {
         NpcInstance actor = getActor();
 
-        if (actor.getParameter("noRandomWalk", false)) {
-            return false;
-        }
+        if (actor.isSet("noRandomWalk")) return false;
 
         return !actor.isMoving && maybeMoveToHome();
     }
@@ -422,7 +408,7 @@ public class DefaultAI extends CharacterAI {
             return true;
         }
 
-        if (_randomAnimationEnd > System.currentTimeMillis()) {
+        if (randomAnimationEnd > System.currentTimeMillis()) {
             return true;
         }
 
@@ -844,7 +830,7 @@ public class DefaultAI extends CharacterAI {
             return;
         }
 
-        if (_randomAnimationEnd > System.currentTimeMillis()) {
+        if (randomAnimationEnd > System.currentTimeMillis()) {
             return;
         }
 

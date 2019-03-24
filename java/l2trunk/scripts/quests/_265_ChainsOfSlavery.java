@@ -19,11 +19,9 @@ public final class _265_ChainsOfSlavery extends Quest {
     private static final int IMP_SHACKLES = 1368;
 
     public _265_ChainsOfSlavery() {
-        super(false);
         addStartNpc(KRISTIN);
 
-        addKillId(IMP);
-        addKillId(IMP_ELDER);
+        addKillId(IMP,IMP_ELDER);
 
         addQuestItem(IMP_SHACKLES);
     }

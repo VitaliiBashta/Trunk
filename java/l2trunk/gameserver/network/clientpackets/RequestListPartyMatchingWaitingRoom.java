@@ -7,19 +7,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class RequestListPartyMatchingWaitingRoom extends L2GameClientPacket {
-    private int _minLevel, _maxLevel, _page;
-    private List<Integer> _classes = new ArrayList<>();
+    private int minLevel, maxLevel, page;
+    private List<Integer> classes = new ArrayList<>();
 
     @Override
     protected void readImpl() {
-        _page = readD();
-        _minLevel = readD();
-        _maxLevel = readD();
+        page = readD();
+        minLevel = readD();
+        maxLevel = readD();
         int size = readD();
         if (size > Byte.MAX_VALUE || size < 0)
             size = 0;
         for (int i = 0; i < size; i++)
-            _classes.add(readD());
+            classes.add(readD());
     }
 
     @Override
@@ -28,6 +28,6 @@ public final class RequestListPartyMatchingWaitingRoom extends L2GameClientPacke
         if (activeChar == null)
             return;
 
-        activeChar.sendPacket(new ExListPartyMatchingWaitingRoom(activeChar, _minLevel, _maxLevel, _page, _classes));
+        activeChar.sendPacket(new ExListPartyMatchingWaitingRoom(minLevel, maxLevel, page, classes));
     }
 }

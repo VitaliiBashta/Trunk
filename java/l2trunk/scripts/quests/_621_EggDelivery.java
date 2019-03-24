@@ -26,7 +26,6 @@ public final class _621_EggDelivery extends Quest {
     private static final int Tateossian_CHANCE = 20;
 
     public _621_EggDelivery() {
-        super(false);
         addStartNpc(JEREMY);
         addTalkId(VALENTINE,PULIN,NAFF,CROCUS,KUBER,BEOLIN);
         addQuestItem(BoiledEgg,FeeOfBoiledEgg);
@@ -41,11 +40,11 @@ public final class _621_EggDelivery extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        int _state = st.getState();
+        int state = st.getState();
         int cond = st.getCond();
         long BoiledEgg_count = st.getQuestItemsCount(BoiledEgg);
 
-        if ("jeremy_q0621_0104.htm".equalsIgnoreCase(event) && _state == CREATED) {
+        if ("jeremy_q0621_0104.htm".equalsIgnoreCase(event) && state == CREATED) {
             st.takeItems(BoiledEgg);
             st.takeItems(FeeOfBoiledEgg);
             st.start();
@@ -75,8 +74,8 @@ public final class _621_EggDelivery extends Quest {
                 else
                     st.giveItems(RecipeSealedTateossianNecklace);
             } else {
-                st.giveItems(ADENA_ID, 18800);
-                st.giveItems(HastePotion, 1, true);
+                st.giveAdena( 18800);
+                st.giveItems(HastePotion);
             }
 
             st.playSound(SOUND_FINISH);
@@ -101,18 +100,18 @@ public final class _621_EggDelivery extends Quest {
         }
 
         int cond = st.getCond();
-        long BoiledEgg_count = st.getQuestItemsCount(BoiledEgg);
+        boolean haveBoiledEgg = st.haveQuestItem(BoiledEgg);
         long FeeOfBoiledEgg_count = st.getQuestItemsCount(FeeOfBoiledEgg);
 
-        if (cond == 1 && npcId == PULIN && BoiledEgg_count > 0)
+        if (cond == 1 && npcId == PULIN && haveBoiledEgg )
             htmltext = "pulin_q0621_0101.htm";
-        if (cond == 2 && npcId == NAFF && BoiledEgg_count > 0)
+        if (cond == 2 && npcId == NAFF && haveBoiledEgg )
             htmltext = "naff_q0621_0201.htm";
-        if (cond == 3 && npcId == CROCUS && BoiledEgg_count > 0)
+        if (cond == 3 && npcId == CROCUS && haveBoiledEgg )
             htmltext = "crocus_q0621_0301.htm";
-        if (cond == 4 && npcId == KUBER && BoiledEgg_count > 0)
+        if (cond == 4 && npcId == KUBER && haveBoiledEgg )
             htmltext = "kuber_q0621_0401.htm";
-        if (cond == 5 && npcId == BEOLIN && BoiledEgg_count > 0)
+        if (cond == 5 && npcId == BEOLIN && haveBoiledEgg )
             htmltext = "beolin_q0621_0501.htm";
         if (cond == 6 && npcId == JEREMY && FeeOfBoiledEgg_count >= 5)
             htmltext = "jeremy_q0621_0601.htm";
@@ -120,7 +119,7 @@ public final class _621_EggDelivery extends Quest {
             htmltext = "jeremy_q0621_0703.htm";
         if (cond == 7 && npcId == VALENTINE && FeeOfBoiledEgg_count >= 5)
             htmltext = "brewer_valentine_q0621_0701.htm";
-        else if (cond > 0 && npcId == JEREMY && BoiledEgg_count > 0)
+        else if (cond > 0 && npcId == JEREMY && haveBoiledEgg)
             htmltext = "jeremy_q0621_0104.htm";
         return htmltext;
     }

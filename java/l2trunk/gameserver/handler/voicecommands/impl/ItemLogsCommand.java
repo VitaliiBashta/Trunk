@@ -9,7 +9,7 @@ import java.util.List;
 
 import static l2trunk.commons.lang.NumberUtils.toInt;
 
-public class ItemLogsCommand implements IVoicedCommandHandler {
+public final class ItemLogsCommand implements IVoicedCommandHandler {
 
     @Override
     public List<String> getVoicedCommandList() {
@@ -18,7 +18,7 @@ public class ItemLogsCommand implements IVoicedCommandHandler {
 
     @Override
     public boolean useVoicedCommand(String command, Player player, String args) {
-        CCPItemLogs.showPage(player, toInt(args, 0));
+        CCPItemLogs.showPage(player, toInt(args));
         return true;
     }
 }

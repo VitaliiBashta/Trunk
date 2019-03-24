@@ -40,14 +40,14 @@ public final class ResidenceHolder {
     }
 
     public static Fortress getFortress(int id) {
-        return getFortresses().stream()
+        return getFortresses()
                 .filter(c -> c.getId() == id)
                 .findFirst().orElseThrow(() -> new IllegalArgumentException(" no fortress with id " + id));
 
     }
 
     public static Dominion getDominion(int id) {
-                 return getDominions().stream()
+        return getDominions().stream()
                 .filter(c -> c.getId() == id)
                 .findFirst().orElseThrow(() -> new IllegalArgumentException(" no dominion with id " + id));
     }
@@ -74,11 +74,10 @@ public final class ResidenceHolder {
                 .collect(Collectors.toList());
     }
 
-    public static List<Fortress> getFortresses() {
+    public static Stream<Fortress> getFortresses() {
         return RESIDENCES.values().stream()
                 .filter(r -> r instanceof Fortress)
-                .map(r -> (Fortress) r)
-                .collect(Collectors.toList());
+                .map(r -> (Fortress) r);
     }
 
     public static List<Dominion> getDominions() {

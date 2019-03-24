@@ -144,8 +144,6 @@ public final class _402_PathToKnight extends Quest {
     };
 
     public _402_PathToKnight() {
-        super(false);
-
         addStartNpc(SIR_KLAUS_VASPER);
 
         addTalkId(BIOTIN, LEVIAN, GILBERT, RAYMOND, SIR_COLLIN_WINDAWOOD, BATHIS, BEZIQUE, SIR_ARON_TANFORD);
@@ -219,11 +217,9 @@ public final class _402_PathToKnight extends Quest {
                 st.takeItems(MARK_OF_ESQUIRE);
                 if (st.player.getClassId().occupation() == 0) {
                     st.giveItems(SWORD_OF_RITUAL);
-                    if (!st.player.isVarSet("prof1")) {
-                        st.player.setVar("prof1");
-                        st.addExpAndSp(228064, 16455);
-                        st.giveItems(ADENA_ID, 81900);
-                    }
+                    st.addExpAndSp(228064, 16455);
+                    st.giveAdena(81900);
+
                 }
                 st.exitCurrentQuest();
                 st.playSound(SOUND_FINISH);
@@ -305,9 +301,9 @@ public final class _402_PathToKnight extends Quest {
                     htmltext = "captain_bezique_q0402_03.htm";
                 else {
                     htmltext = "captain_bezique_q0402_04.htm";
-                    st.takeItems(POISON_SPIDER_LEG1, -1);
+                    st.takeItems(POISON_SPIDER_LEG1);
                     st.takeItems(GLUDIO_GUARDS_MARK2, 1);
-                    st.giveItems(COIN_OF_LORDS3, 1);
+                    st.giveItems(COIN_OF_LORDS3);
                     st.playSound(SOUND_MIDDLE);
                 }
             } else htmltext = "captain_bezique_q0402_05.htm";
@@ -349,7 +345,7 @@ public final class _402_PathToKnight extends Quest {
                     htmltext = "quilt_q0402_04.htm";
                     st.takeItems(HORRIBLE_SKULL);
                     st.takeItems(EINHASAD_CHURCH_MARK3, 1);
-                    st.giveItems(COIN_OF_LORDS6, 1);
+                    st.giveItems(COIN_OF_LORDS6);
                     st.playSound(SOUND_MIDDLE);
                 }
             } else htmltext = "quilt_q0402_05.htm";

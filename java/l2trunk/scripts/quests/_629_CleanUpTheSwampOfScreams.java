@@ -28,8 +28,6 @@ public final class _629_CleanUpTheSwampOfScreams extends Quest {
             21517, 56);
 
     public _629_CleanUpTheSwampOfScreams() {
-        super(false);
-
         addStartNpc(CAPTAIN);
 
         addKillId(IntStream.rangeClosed(21508, 21518).toArray());

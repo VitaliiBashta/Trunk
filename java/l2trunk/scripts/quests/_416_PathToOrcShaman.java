@@ -9,6 +9,9 @@ import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 import l2trunk.gameserver.scripts.Functions;
 
+import static l2trunk.gameserver.model.base.ClassId.orcMage;
+import static l2trunk.gameserver.model.base.ClassId.orcShaman;
+
 public final class _416_PathToOrcShaman extends Quest {
     //NPC
     private static final int Hestui = 30585;
@@ -92,8 +95,6 @@ public final class _416_PathToOrcShaman extends Quest {
     };
 
     public _416_PathToOrcShaman() {
-        super(false);
-
         addStartNpc(Hestui);
 
         addTalkId(HestuiTotemSpirit, SeerUmos, DudaMaraTotemSpirit, SeerMoira, GandiTotemSpirit, LeopardCarcass);
@@ -116,7 +117,7 @@ public final class _416_PathToOrcShaman extends Quest {
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if ("hestui_totem_spirit_q0416_03.htm".equalsIgnoreCase(event)) {
-            st.takeAllItems(HestuiMask,FieryEgg2nd);
+            st.takeAllItems(HestuiMask, FieryEgg2nd);
             st.giveItems(TotemSpiritClaw);
             st.setCond(4);
         } else if ("tataru_zu_hestui_q0416_11.htm".equalsIgnoreCase(event)) {
@@ -134,11 +135,8 @@ public final class _416_PathToOrcShaman extends Quest {
             st.takeItems(TotemSpiritBlood);
             if (st.player.getClassId().occupation() == 0) {
                 st.giveItems(MaskOfMedium);
-                if (!st.player.isVarSet("prof1")) {
-                    st.player.setVar("prof1");
-                    st.addExpAndSp(228064, 16455);
-                    st.giveAdena( 81900);
-                }
+                st.addExpAndSp(228064, 16455);
+                st.giveAdena(81900);
             }
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest();
@@ -164,8 +162,8 @@ public final class _416_PathToOrcShaman extends Quest {
                 htmltext = "seer_umos_q0416_04.htm";
                 st.exitCurrentQuest();
             } else if (cond == 0) {
-                if (st.player.getClassId().id != 0x31) {
-                    if (st.player.getClassId().id == 0x32)
+                if (st.player.getClassId() != orcMage) {
+                    if (st.player.getClassId() == orcShaman)
                         htmltext = "tataru_zu_hestui_q0416_02a.htm";
                     else
                         htmltext = "tataru_zu_hestui_q0416_02.htm";
@@ -179,7 +177,7 @@ public final class _416_PathToOrcShaman extends Quest {
                 htmltext = "tataru_zu_hestui_q0416_07.htm";
             else if (cond == 2) {
                 htmltext = "tataru_zu_hestui_q0416_08.htm";
-                st.takeAllItems(KashaBearPelt,KashaBladeSpiderHusk,FieryEgg1st,FireCharm);
+                st.takeAllItems(KashaBearPelt, KashaBladeSpiderHusk, FieryEgg1st, FireCharm);
                 st.giveItems(HestuiMask);
                 st.giveItems(FieryEgg2nd);
                 st.setCond(3);
@@ -197,11 +195,6 @@ public final class _416_PathToOrcShaman extends Quest {
             else if (cond == 4)
                 htmltext = "hestui_totem_spirit_q0416_04.htm";
         } else {
-            if (npcId == HestuiTotemSpirit && st.getCond() > 0) {
-                if (st.getQuestItemsCount(GrizzlyBlood) <= 0 && st.getQuestItemsCount(FlameCharm) <= 0 && st.getQuestItemsCount(BloodCauldron) <= 0 && st.getQuestItemsCount(SpiritNet) <= 0 && st.getQuestItemsCount(BoundDurkaSpirit) <= 0 && st.getQuestItemsCount(TotemSpiritBlood) <= 0) {
-                    st.getQuestItemsCount(TatarusLetterOfRecommendation);
-                }
-            }
             if (npcId == SeerUmos) {
                 if (cond == 5) {
                     st.takeItems(TatarusLetterOfRecommendation);
@@ -211,8 +204,7 @@ public final class _416_PathToOrcShaman extends Quest {
                 } else if (cond == 6)
                     htmltext = "seer_umos_q0416_02.htm";
                 else if (cond == 7) {
-                    st.takeItems(GrizzlyBlood);
-                    st.takeItems(FlameCharm);
+                    st.takeAllItems(GrizzlyBlood, FlameCharm);
                     st.giveItems(BloodCauldron);
                     htmltext = "seer_umos_q0416_03.htm";
                     st.setCond(8);
@@ -232,11 +224,8 @@ public final class _416_PathToOrcShaman extends Quest {
                     htmltext = "seer_moirase_q0416_03.htm";
                     if (st.player.getClassId().occupation() == 0) {
                         st.giveItems(MaskOfMedium);
-                        if (!st.player.isVarSet("prof1")) {
-                            st.player.setVar("prof1");
-                            st.addExpAndSp(295862, 18194);
-                            st.giveItems(ADENA_ID, 81900);
-                        }
+                        st.addExpAndSp(295862, 18194);
+                        st.giveAdena(81900);
                     }
                     st.playSound(SOUND_FINISH);
                     st.exitCurrentQuest();
@@ -293,7 +282,7 @@ public final class _416_PathToOrcShaman extends Quest {
                     else if (st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[7], aDROPLIST_COND[5], aDROPLIST_COND[6]))
                         if (aDROPLIST_COND[1] != cond && aDROPLIST_COND[1] != 0)
                             st.setCond(aDROPLIST_COND[1]);
-        if (st.haveAllQuestItems(KashaBearPelt,KashaBladeSpiderHusk,FieryEgg1st))
+        if (st.haveAllQuestItems(KashaBearPelt, KashaBladeSpiderHusk, FieryEgg1st))
             st.setCond(2);
         else if (cond == 9 && (npcId == VenomousSpider || npcId == ArachnidTracker)) {
             if (st.getQuestItemsCount(DurkaParasite) < 8) {
@@ -312,7 +301,7 @@ public final class _416_PathToOrcShaman extends Quest {
             GameObjectsStorage.getAllByNpcId(QuestMonsterDurkaSpirit, false)
                     .forEach(GameObject::deleteMe);
             if (cond == 9) {
-                st.takeAllItems(SpiritNet,DurkaParasite);
+                st.takeAllItems(SpiritNet, DurkaParasite);
                 st.giveItems(BoundDurkaSpirit);
                 st.playSound(SOUND_MIDDLE);
                 st.setCond(10);

@@ -12,28 +12,25 @@ public final class _020_BringUpWithLove extends Quest {
     private static final int JEWEL = 7185;
 
     public _020_BringUpWithLove() {
-        super(false);
-
         addStartNpc(TUNATUN);
-        addTalkId(TUNATUN);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if (npc.getNpcId() == TUNATUN) {
-            if (event.equalsIgnoreCase("31537-12.htm")) {
+            if ("31537-12.htm".equalsIgnoreCase(event)) {
                 st.start();
                 st.setCond(1);
                 st.playSound(SOUND_ACCEPT);
-            } else if (event.equalsIgnoreCase("31537-03.htm")) {
-                if (st.getQuestItemsCount(BEAST_WHIP) > 0)
+            } else if ("31537-03.htm".equalsIgnoreCase(event)) {
+                if (st.haveQuestItem(BEAST_WHIP) )
                     return "31537-03a.htm";
                 else
-                    st.giveItems(BEAST_WHIP, 1);
-            } else if (event.equalsIgnoreCase("31537-15.htm")) {
+                    st.giveItems(BEAST_WHIP);
+            } else if ("31537-15.htm".equalsIgnoreCase(event)) {
                 st.unset("cond");
-                st.takeItems(JEWEL, -1);
-                st.giveItems(CRYSTAL, 1);
+                st.takeItems(JEWEL);
+                st.giveItems(CRYSTAL);
                 st.playSound(SOUND_FINISH);
                 st.finish();
             }

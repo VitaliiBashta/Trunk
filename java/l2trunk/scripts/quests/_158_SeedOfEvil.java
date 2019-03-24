@@ -9,8 +9,6 @@ public final class _158_SeedOfEvil extends Quest {
     private static final int ENCHANT_ARMOR_D = 956;
 
     public _158_SeedOfEvil() {
-        super(false);
-
         addStartNpc(30031);
 
         addKillId(27016);
@@ -60,7 +58,7 @@ public final class _158_SeedOfEvil extends Quest {
         else if (npcId == 30031 && st.getCond() != 0 && haveQuestItem) {
             st.takeItems(CLAY_TABLET_ID);
             st.playSound(SOUND_FINISH);
-            st.giveItems(ADENA_ID, 1495);
+            st.giveAdena( 1495);
             st.addExpAndSp(17818, 927);
             st.giveItems(ENCHANT_ARMOR_D);
             htmltext = "30031-06.htm";

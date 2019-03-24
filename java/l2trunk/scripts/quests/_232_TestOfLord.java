@@ -11,6 +11,8 @@ import l2trunk.gameserver.utils.Location;
 import java.util.HashMap;
 import java.util.Map;
 
+import static l2trunk.gameserver.model.base.ClassId.orcShaman;
+
 public final class _232_TestOfLord extends Quest {
     // NPCs
     private static final int Somak = 30510;
@@ -185,7 +187,7 @@ public final class _232_TestOfLord extends Quest {
                 st.exitCurrentQuest();
                 return "30565-01.htm";
             }
-            if (st.player.getClassId().id != 0x32) {
+            if (st.player.getClassId() != orcShaman) {
                 st.exitCurrentQuest();
                 return "30565-02.htm";
             }
@@ -239,8 +241,7 @@ public final class _232_TestOfLord extends Quest {
                 return "30566-01.htm";
             if (MANAKIAS_AMULET_COUNT == 0)
                 return "30566-03.htm";
-            st.takeItems(VARKEES_CHARM);
-            st.takeItems(MANAKIAS_AMULET);
+            st.takeAllItems(VARKEES_CHARM,MANAKIAS_AMULET);
             st.giveItems(HUGE_ORC_FANG);
             if (cond1Complete(st)) {
                 st.playSound(SOUND_JACKPOT);
@@ -353,9 +354,7 @@ public final class _232_TestOfLord extends Quest {
                     return "30641-01.htm";
                 if (st.getQuestItemsCount(MARSH_SPIDER_FEELER) < 10 || st.getQuestItemsCount(MARSH_SPIDER_FEET) < 10)
                     return "30641-03.htm";
-                st.takeItems(MARSH_SPIDER_FEELER);
-                st.takeItems(MARSH_SPIDER_FEET);
-                st.takeItems(TAKUNA_CHARM);
+                st.takeAllItems(MARSH_SPIDER_FEELER,MARSH_SPIDER_FEET,TAKUNA_CHARM);
                 st.giveItems(HANDIWORK_SPIDER_BROOCH);
                 if (cond1Complete(st)) {
                     st.playSound(SOUND_JACKPOT);
@@ -369,14 +368,13 @@ public final class _232_TestOfLord extends Quest {
         }
 
         if (npcId == Chianta) {
-            long CHIANTA_CHARM_COUNT = st.getQuestItemsCount(CHIANTA_CHARM);
+            boolean chiantaCharm = st.haveQuestItem(CHIANTA_CHARM);
             if (MONSTEREYE_WOODCARVING_COUNT == 0) {
-                if (CHIANTA_CHARM_COUNT == 0)
+                if (!chiantaCharm)
                     return "30642-01.htm";
                 if (st.getQuestItemsCount(CORNEA_OF_EN_MONSTEREYE) < 20)
                     return "30642-03.htm";
-                st.takeItems(CORNEA_OF_EN_MONSTEREYE);
-                st.takeItems(CHIANTA_CHARM);
+                st.takeAllItems(CORNEA_OF_EN_MONSTEREYE,CHIANTA_CHARM);
                 st.giveItems(MONSTEREYE_WOODCARVING);
                 if (cond1Complete(st)) {
                     st.playSound(SOUND_JACKPOT);
@@ -385,7 +383,7 @@ public final class _232_TestOfLord extends Quest {
                     st.playSound(SOUND_MIDDLE);
                 return "30642-04.htm";
             }
-            if (CHIANTA_CHARM_COUNT == 0)
+            if (!chiantaCharm)
                 return "30642-05.htm";
         }
 
@@ -393,11 +391,9 @@ public final class _232_TestOfLord extends Quest {
             if (BEAR_FANG_NECKLACE_COUNT > 0)
                 return "30649-01.htm";
             if (MARTANKUS_CHARM_COUNT > 0) {
-                if (cond == 5 || st.getQuestItemsCount(RAGNA_CHIEF_NOTICE) > 0 && st.getQuestItemsCount(RAGNA_ORC_HEAD) > 0) {
-                    st.takeItems(MARTANKUS_CHARM, -1);
-                    st.takeItems(RAGNA_ORC_HEAD, -1);
-                    st.takeItems(RAGNA_CHIEF_NOTICE, -1);
-                    st.giveItems(IMMORTAL_FLAME, 1);
+                if (cond == 5 || st.haveAllQuestItems(RAGNA_CHIEF_NOTICE,RAGNA_ORC_HEAD)) {
+                    st.takeAllItems(MARTANKUS_CHARM,RAGNA_ORC_HEAD,RAGNA_CHIEF_NOTICE);
+                    st.giveItems(IMMORTAL_FLAME);
                     st.playSound(SOUND_MIDDLE);
                     return "30649-06.htm";
                 }
@@ -407,7 +403,7 @@ public final class _232_TestOfLord extends Quest {
                 return "30649-08.htm";
         }
 
-        if (npcId == First_Orc && st.getQuestItemsCount(IMMORTAL_FLAME) > 0) {
+        if (npcId == First_Orc && st.haveQuestItem(IMMORTAL_FLAME)) {
             st.setCond(7);
             return "30643-01.htm";
         }

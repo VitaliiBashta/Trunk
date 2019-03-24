@@ -23,7 +23,6 @@ public final class _712_PathToBecomingALordOren extends Quest {
     private static final int OrenCastle = 4;
 
     public _712_PathToBecomingALordOren() {
-        super(false);
         addStartNpc(Brasseur, Marty);
         addTalkId(Croop, Marty, Valleria);
         addQuestItem(NebuliteOrb);

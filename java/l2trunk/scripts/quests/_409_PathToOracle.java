@@ -4,6 +4,9 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
+import static l2trunk.gameserver.model.base.ClassId.elvenMage;
+import static l2trunk.gameserver.model.base.ClassId.oracle;
+
 public final class _409_PathToOracle extends Quest {
     //npc
     private final int MANUEL = 30293;
@@ -24,8 +27,6 @@ public final class _409_PathToOracle extends Quest {
     private final int TAMATOS_NECKLACE_ID = 1275;
 
     public _409_PathToOracle() {
-        super(false);
-
         addStartNpc(MANUEL);
 
         addTalkId(ALLANA,PERRIN);
@@ -44,14 +45,14 @@ public final class _409_PathToOracle extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         switch (event) {
             case "1":
-                if (st.player.getClassId().id != 0x19) {
-                    if (st.player.getClassId().id == 0x1d)
+                if (st.player.getClassId() != elvenMage) {
+                    if (st.player.getClassId() == oracle)
                         return  "father_manuell_q0409_02a.htm";
                     else
                         return  "father_manuell_q0409_02.htm";
                 } else if (st.player.getLevel() < 18)
                    return  "father_manuell_q0409_03.htm";
-                else if (st.getQuestItemsCount(LEAF_OF_ORACLE_ID) > 0)
+                else if (st.haveQuestItem(LEAF_OF_ORACLE_ID))
                     return  "father_manuell_q0409_04.htm";
                 else {
                     st.setCond(1);
@@ -90,12 +91,10 @@ public final class _409_PathToOracle extends Quest {
             else if (st.haveQuestItem(CRYSTAL_MEDALLION_ID) )
                 if (st.getQuestItemsCount(MONEY_OF_SWINDLER_ID) < 1 && st.getQuestItemsCount(DAIRY_OF_ALLANA_ID) < 1 && st.getQuestItemsCount(LIZARD_CAPTAIN_ORDER_ID) < 1 && st.getQuestItemsCount(HALF_OF_DAIRY_ID) < 1)
                     htmltext = "father_manuell_q0409_09.htm";
-                else if (st.getQuestItemsCount(MONEY_OF_SWINDLER_ID) > 0 && st.getQuestItemsCount(DAIRY_OF_ALLANA_ID) > 0 && st.getQuestItemsCount(LIZARD_CAPTAIN_ORDER_ID) > 0 && st.getQuestItemsCount(HALF_OF_DAIRY_ID) < 1) {
+                else if (st.haveAllQuestItems(MONEY_OF_SWINDLER_ID,DAIRY_OF_ALLANA_ID,LIZARD_CAPTAIN_ORDER_ID) && !st.haveQuestItem(HALF_OF_DAIRY_ID) ) {
                     htmltext = "father_manuell_q0409_08.htm";
                     st.takeItems(MONEY_OF_SWINDLER_ID, 1);
-                    st.takeItems(DAIRY_OF_ALLANA_ID);
-                    st.takeItems(LIZARD_CAPTAIN_ORDER_ID);
-                    st.takeItems(CRYSTAL_MEDALLION_ID);
+                    st.takeAllItems(DAIRY_OF_ALLANA_ID,LIZARD_CAPTAIN_ORDER_ID,CRYSTAL_MEDALLION_ID);
                     if (st.player.getClassId().occupation() == 0) {
                         st.giveItems(LEAF_OF_ORACLE_ID);
                         if (!st.player.isVarSet("prof1")) {
@@ -152,15 +151,15 @@ public final class _409_PathToOracle extends Quest {
     public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
-        if (npcId == LIZARDMAN_WARRIOR | npcId == LIZARDMAN_SCOUT | npcId == LIZARDMAN) {
-            if (cond == 2 && st.getQuestItemsCount(LIZARD_CAPTAIN_ORDER_ID) < 1) {
-                st.giveItems(LIZARD_CAPTAIN_ORDER_ID);
+        if (npcId == LIZARDMAN_WARRIOR || npcId == LIZARDMAN_SCOUT || npcId == LIZARDMAN) {
+            if (cond == 2 ) {
+                st.giveItemIfNotHave(LIZARD_CAPTAIN_ORDER_ID);
                 st.playSound(SOUND_MIDDLE);
                 st.setCond(3);
             }
         } else if (npcId == TAMIL)
-            if (cond == 4 && st.getQuestItemsCount(TAMATOS_NECKLACE_ID) < 1) {
-                st.giveItems(TAMATOS_NECKLACE_ID);
+            if (cond == 4 ) {
+                st.giveItemIfNotHave(TAMATOS_NECKLACE_ID);
                 st.playSound(SOUND_MIDDLE);
                 st.setCond(5);
             }

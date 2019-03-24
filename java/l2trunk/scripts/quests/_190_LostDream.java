@@ -12,21 +12,19 @@ public final class _190_LostDream extends Quest {
     private static final int Juris = 30113;
 
     public _190_LostDream() {
-        super(false);
-
         addTalkId(Kusto, Nikola, Lorain, Juris);
         addFirstTalkId(Kusto);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("head_blacksmith_kusto_q0190_03.htm")) {
+        if ("head_blacksmith_kusto_q0190_03.htm".equalsIgnoreCase(event)) {
             st.playSound(SOUND_ACCEPT);
             st.setCond(1);
-        } else if (event.equalsIgnoreCase("head_blacksmith_kusto_q0190_06.htm")) {
+        } else if ("head_blacksmith_kusto_q0190_06.htm".equalsIgnoreCase(event)) {
             st.playSound(SOUND_MIDDLE);
             st.setCond(3);
-        } else if (event.equalsIgnoreCase("juria_q0190_03.htm")) {
+        } else if ("juria_q0190_03.htm".equalsIgnoreCase(event)) {
             st.setCond(2);
             st.playSound(SOUND_MIDDLE);
         }
@@ -53,7 +51,7 @@ public final class _190_LostDream extends Quest {
                     htmltext = "head_blacksmith_kusto_q0190_07.htm";
                 else if (cond == 5) {
                     htmltext = "head_blacksmith_kusto_q0190_08.htm";
-                    st.giveItems(ADENA_ID, 109427);
+                    st.giveAdena( 109427);
                     st.addExpAndSp(309467, 20614);
                     st.finish();
                     st.playSound(SOUND_FINISH);

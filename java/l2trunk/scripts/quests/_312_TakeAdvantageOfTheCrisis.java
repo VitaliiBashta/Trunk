@@ -29,19 +29,17 @@ public final class _312_TakeAdvantageOfTheCrisis extends Quest {
             9630, 36);
 
     public _312_TakeAdvantageOfTheCrisis() {
-        super(false);
-
         addStartNpc(FILAUR);
         addKillId(MINE_MOBS);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("30535-06.htm")) {
+        if ("30535-06.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.start();
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("30535-09.htm")) {
+        } else if ("30535-09.htm".equalsIgnoreCase(event)) {
             st.exitCurrentQuest();
             st.playSound(SOUND_FINISH);
         } else {
@@ -52,7 +50,7 @@ public final class _312_TakeAdvantageOfTheCrisis extends Quest {
                     count = rewardcount.get(id);
                 if (count > 0) {
                     if (st.getQuestItemsCount(MINERAL_FRAGMENT) >= count) {
-                        st.giveItems(id, 1);
+                        st.giveItems(id);
                         st.takeItems(MINERAL_FRAGMENT, count);
                         st.playSound(SOUND_MIDDLE);
                         return "30535-16.htm";

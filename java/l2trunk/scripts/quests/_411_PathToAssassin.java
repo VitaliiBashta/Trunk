@@ -26,8 +26,6 @@ public final class _411_PathToAssassin extends Quest {
     private final int IRON_HEART_ID = 1252;
 
     public _411_PathToAssassin() {
-        super(false);
-
         addStartNpc(TRISKEL);
 
         addTalkId(LEIKAN,ARKENIA);

@@ -26,7 +26,6 @@ public final class _710_PathToBecomingALordGiran extends Quest {
     private static final int GiranCastle = 3;
 
     public _710_PathToBecomingALordGiran() {
-        super(false);
         addStartNpc(Saul);
         addTalkId(Gesto, Felton, CargoBox);
         addQuestItem(FreightChest, GestoBox);
@@ -128,8 +127,7 @@ public final class _710_PathToBecomingALordGiran extends Quest {
     @Override
     public void onKill(NpcInstance npc, QuestState st) {
         if (st.getCond() == 7) {
-            if (st.getQuestItemsCount(GestoBox) < 300)
-                st.giveItems(GestoBox);
+            st.giveItemIfNotHave(GestoBox, 300);
             if (st.getQuestItemsCount(GestoBox) >= 300)
                 st.setCond(8);
         }

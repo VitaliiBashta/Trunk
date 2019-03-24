@@ -28,7 +28,7 @@ public final class ClanHallMiniGameEvent extends SiegeEvent<ClanHall, CMGSiegeCl
 
     @Override
     public void startEvent() {
-        _oldOwner = getResidence().getOwner();
+        oldOwner = getResidence().getOwner();
 
         List<CMGSiegeClanObject> siegeClans = getObjects(ATTACKERS);
         if (siegeClans.size() < 2) {
@@ -89,7 +89,7 @@ public final class ClanHallMiniGameEvent extends SiegeEvent<ClanHall, CMGSiegeCl
 
         Clan newOwner = getResidence().getOwner();
         if (newOwner != null) {
-            if (_oldOwner != newOwner) {
+            if (oldOwner != newOwner) {
                 newOwner.broadcastToOnlineMembers(PlaySound.SIEGE_VICTORY);
 
                 newOwner.incReputation(1700, false, toString());
@@ -106,7 +106,7 @@ public final class ClanHallMiniGameEvent extends SiegeEvent<ClanHall, CMGSiegeCl
 
         super.stopEvent(step);
 
-        _oldOwner = null;
+        oldOwner = null;
     }
 
     private void nextStep() {

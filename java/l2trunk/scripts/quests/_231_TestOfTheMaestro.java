@@ -4,6 +4,8 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
+import static l2trunk.gameserver.model.base.ClassId.artisan;
+
 public final class _231_TestOfTheMaestro extends Quest {
     //NPC
     private static final int Lockirin = 30531;
@@ -90,8 +92,6 @@ public final class _231_TestOfTheMaestro extends Quest {
     };
 
     public _231_TestOfTheMaestro() {
-        super(false);
-
         addStartNpc(Lockirin);
         addTalkId(Balanki,Arin,Filaur,Spiron,Croto,Kamur,Dubabah,Toma,Lorain);
 
@@ -121,7 +121,7 @@ public final class _231_TestOfTheMaestro extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("30531-04.htm")) {
+        if ("30531-04.htm".equalsIgnoreCase(event)) {
             if (!st.player.isVarSet("dd3")) {
                 st.giveItems(DD, 23);
                 st.player.setVar("dd3");
@@ -143,10 +143,7 @@ public final class _231_TestOfTheMaestro extends Quest {
             st.start();
             st.player.teleToLocation(140352, -194133, -2028);
         } else if ("30673-04.htm".equalsIgnoreCase(event)) {
-            st.takeItems(BloodOfLeech);
-            st.takeItems(StingerWaspNeedle);
-            st.takeItems(MarshSpidersWeb);
-            st.takeItems(IngredientsOfAntidote);
+            st.takeAllItems(BloodOfLeech,StingerWaspNeedle,MarshSpidersWeb,IngredientsOfAntidote);
             st.giveItems(ReportOfCruma);
             st.setCond(15);
             st.start();
@@ -160,11 +157,11 @@ public final class _231_TestOfTheMaestro extends Quest {
         String htmltext = "noquest";
         int cond = st.getCond();
         if (npcId == Lockirin) {
-            if (st.getQuestItemsCount(MarkOfMaestro) != 0) {
+            if (st.haveQuestItem(MarkOfMaestro)) {
                 htmltext = "completed";
                 st.exitCurrentQuest();
             } else if (cond == 0) {
-                if (st.player.getClassId().id == 0x38) {
+                if (st.player.getClassId() == artisan) {
                     if (st.player.getLevel() >= 39)
                         htmltext = "30531-03.htm";
                     else {
@@ -289,15 +286,13 @@ public final class _231_TestOfTheMaestro extends Quest {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         for (int[] aDROPLIST_COND : DROPLIST_COND)
-            if (cond == aDROPLIST_COND[0] && npcId == aDROPLIST_COND[2])
-                if (aDROPLIST_COND[3] == 0 || st.getQuestItemsCount(aDROPLIST_COND[3]) > 0)
-                    if (aDROPLIST_COND[5] == 0)
-                        st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[6]);
-                    else if (st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[7], aDROPLIST_COND[5], aDROPLIST_COND[6]))
-                        if (aDROPLIST_COND[1] != cond && aDROPLIST_COND[1] != 0) {
-                            st.setCond(aDROPLIST_COND[1]);
-                            st.start();
-                        }
+            if (cond == aDROPLIST_COND[0] && npcId == aDROPLIST_COND[2]) {
+                if (st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[7], aDROPLIST_COND[5], aDROPLIST_COND[6]))
+                    if (aDROPLIST_COND[1] != cond && aDROPLIST_COND[1] != 0) {
+                        st.setCond(aDROPLIST_COND[1]);
+                        st.start();
+                    }
+            }
         if (cond == 13 && st.getQuestItemsCount(BloodOfLeech) >= 10 && st.getQuestItemsCount(StingerWaspNeedle) >= 10 && st.getQuestItemsCount(MarshSpidersWeb) >= 10) {
             st.setCond(14);
             st.start();

@@ -19,8 +19,6 @@ public final class _185_NikolasCooperationConsideration extends Quest {
     private static final int NicolasMap = 10361;
 
     public _185_NikolasCooperationConsideration() {
-        super(false);
-
         // Нет стартового NPC, чтобы квест не появлялся в списке раньше времени
         addTalkId(Lorain, Nikola, Device, Alarm);
         addQuestItem(NicolasMap, BrokenMetal, Metal);
@@ -31,26 +29,26 @@ public final class _185_NikolasCooperationConsideration extends Quest {
         String htmltext = event;
         Player player = st.player;
 
-        if (event.equalsIgnoreCase("30621-01.htm")) {
+        if ("30621-01.htm".equalsIgnoreCase(event)) {
             if (player.getLevel() < 40)
                 htmltext = "30621-00.htm";
-        } else if (event.equalsIgnoreCase("30621-04.htm")) {
+        } else if ("30621-04.htm".equalsIgnoreCase(event)) {
             st.playSound(SOUND_ACCEPT);
             st.setCond(1);
-            st.giveItems(NicolasMap, 1);
-        } else if (event.equalsIgnoreCase("30673-03.htm")) {
+            st.giveItems(NicolasMap);
+        } else if ("30673-03.htm".equalsIgnoreCase(event)) {
             st.playSound(SOUND_MIDDLE);
             st.setCond(2);
-            st.takeItems(NicolasMap, -1);
-        } else if (event.equalsIgnoreCase("30673-05.htm")) {
+            st.takeItems(NicolasMap);
+        } else if ("30673-05.htm".equalsIgnoreCase(event)) {
             st.playSound(SOUND_MIDDLE);
             st.setCond(3);
-        } else if (event.equalsIgnoreCase("30673-09.htm")) {
+        } else if ("30673-09.htm".equalsIgnoreCase(event)) {
             if (st.haveQuestItem(BrokenMetal) )
                 htmltext = "30673-10.htm";
             else if (st.haveQuestItem(Metal) )
                 st.giveItems(Certificate);
-            st.giveItems(ADENA_ID, 72527);
+            st.giveAdena( 72527);
             st.addExpAndSp(203717, 14032);
             st.finish();
             st.playSound(SOUND_FINISH);
@@ -87,15 +85,15 @@ public final class _185_NikolasCooperationConsideration extends Quest {
                 } else
                     htmltext = "32367-06.htm";
         } else if (event.equals("1")) {
-            Functions.npcSay(npc, "The alarm will getPlayer-destruct in 60 seconds. Enter passcode to override.");
+            Functions.npcSay(npc, "The alarm will self-destruct in 60 seconds. Enter passcode to override.");
             st.startQuestTimer("2", 30000, npc);
             return null;
         } else if (event.equals("2")) {
-            Functions.npcSay(npc, "The alarm will getPlayer-destruct in 30 seconds. Enter passcode to override.");
+            Functions.npcSay(npc, "The alarm will self-destruct in 30 seconds. Enter passcode to override.");
             st.startQuestTimer("3", 20000, npc);
             return null;
         } else if (event.equals("3")) {
-            Functions.npcSay(npc, "The alarm will getPlayer-destruct in 10 seconds. Enter passcode to override.");
+            Functions.npcSay(npc, "The alarm will self-destruct in 10 seconds. Enter passcode to override.");
             st.startQuestTimer("4", 10000, npc);
             return null;
         } else if (event.equals("4")) {

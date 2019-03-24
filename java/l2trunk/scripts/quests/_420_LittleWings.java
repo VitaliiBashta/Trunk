@@ -116,8 +116,6 @@ public final class _420_LittleWings extends Quest {
     };
 
     public _420_LittleWings() {
-        super(false);
-
         addStartNpc(Cooper);
 
         addTalkId(Cronos, Mimyu, Byron, Maria);
@@ -224,7 +222,7 @@ public final class _420_LittleWings extends Quest {
             st.set("takedStone", 2);
             st.giveItems(Fairy_Dust);
             st.playSound(SOUND_ITEMGET);
-        } else if ("30747-04.htm".equalsIgnoreCase(event) && state == STARTED && cond == 4 && st.getInt("takedStone") > 0) {
+        } else if ("30747-04.htm".equalsIgnoreCase(event) && state == STARTED && cond == 4 && st.isSet("takedStone")) {
             st.setCond(5);
             st.unset("takedStone");
             st.giveItems(Juice_of_Monkshood);
@@ -234,22 +232,22 @@ public final class _420_LittleWings extends Quest {
             st.takeItems(Juice_of_Monkshood);
             st.giveItems(3822);
             st.playSound(SOUND_ITEMGET);
-        } else if ("30749-02.htm".equalsIgnoreCase(event) && cond == 5 && state == STARTED && st.getQuestItemsCount(Juice_of_Monkshood) > 0) {
+        } else if ("30749-02.htm".equalsIgnoreCase(event) && cond == 5 && state == STARTED && st.haveQuestItem(Juice_of_Monkshood)) {
             st.setCond(6);
             st.takeItems(Juice_of_Monkshood);
             st.giveItems(3824);
             st.playSound(SOUND_ITEMGET);
-        } else if ("30750-02.htm".equalsIgnoreCase(event) && cond == 5 && state == STARTED && st.getQuestItemsCount(Juice_of_Monkshood) > 0) {
+        } else if ("30750-02.htm".equalsIgnoreCase(event) && cond == 5 && state == STARTED && st.haveQuestItem(Juice_of_Monkshood) ) {
             st.setCond(6);
             st.takeItems(Juice_of_Monkshood);
             st.giveItems(3826);
             st.playSound(SOUND_ITEMGET);
-        } else if ("30751-02.htm".equalsIgnoreCase(event) && cond == 5 && state == STARTED && st.getQuestItemsCount(Juice_of_Monkshood) > 0) {
+        } else if ("30751-02.htm".equalsIgnoreCase(event) && cond == 5 && state == STARTED && st.haveQuestItem(Juice_of_Monkshood) ) {
             st.setCond(6);
             st.takeItems(Juice_of_Monkshood);
             st.giveItems(3828);
             st.playSound(SOUND_ITEMGET);
-        } else if ("30752-02.htm".equalsIgnoreCase(event) && cond == 5 && state == STARTED && st.getQuestItemsCount(Juice_of_Monkshood) > 0) {
+        } else if ("30752-02.htm".equalsIgnoreCase(event) && cond == 5 && state == STARTED && st.haveQuestItem(Juice_of_Monkshood)) {
             st.setCond(6);
             st.takeItems(Juice_of_Monkshood);
             st.giveItems(3830);
@@ -257,7 +255,7 @@ public final class _420_LittleWings extends Quest {
         } else if ("30747-09.htm".equalsIgnoreCase(event) && state == STARTED && cond == 7) {
             int egg_id = 0;
             for (int[] wyrm : wyrms)
-                if (st.getQuestItemsCount(wyrm[2]) == 0 && st.getQuestItemsCount(wyrm[3]) >= 1) {
+                if (st.getQuestItemsCount(wyrm[2]) == 0 && st.haveQuestItem(wyrm[3])) {
                     egg_id = wyrm[3];
                     break;
                 }

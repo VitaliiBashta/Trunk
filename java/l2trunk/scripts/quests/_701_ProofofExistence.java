@@ -20,10 +20,7 @@ public final class _701_ProofofExistence extends Quest {
     private static final int FloatingZombie2 = 22609;
 
     public _701_ProofofExistence() {
-        super(false);
-
         addStartNpc(Artius);
-        addTalkId(Artius);
         addKillId(Enira, FloatingSkull1, FloatingSkull2, FloatingZombie1, FloatingZombie2);
         addQuestItem(DeadmansRemains, BansheeQueensEye);
     }
@@ -38,15 +35,15 @@ public final class _701_ProofofExistence extends Quest {
             st.start();
             st.playSound(SOUND_ACCEPT);
         } else if (event.equals("ex_mons") && cond == 1) {
-            if (st.getQuestItemsCount(DeadmansRemains) >= 1) {
-                st.giveItems(ADENA_ID, st.getQuestItemsCount(DeadmansRemains) * 2500); // умножается на рейт квестов
+            if (st.haveQuestItem(DeadmansRemains) ) {
+                st.giveAdena( st.getQuestItemsCount(DeadmansRemains) * 2500); // умножается на рейт квестов
                 st.takeItems(DeadmansRemains);
                 htmltext = "artius_q701_4.htm";
             } else
                 htmltext = "artius_q701_3a.htm";
         } else if (event.equals("ex_boss") && cond == 1)
-            if (st.getQuestItemsCount(BansheeQueensEye) >= 1) {
-                st.giveItems(ADENA_ID, st.getQuestItemsCount(BansheeQueensEye) * 1000000); // умножается на рейт квестов
+            if (st.haveQuestItem(BansheeQueensEye)) {
+                st.giveAdena( st.getQuestItemsCount(BansheeQueensEye) * 1000000); // умножается на рейт квестов
                 st.takeItems(BansheeQueensEye);
                 htmltext = "artius_q701_4.htm";
             } else

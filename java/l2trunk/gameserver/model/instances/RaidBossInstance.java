@@ -66,7 +66,7 @@ public class RaidBossInstance extends MonsterInstance {
         _killer =  "";
 
         if (killer instanceof Playable) {
-            Player player = killer.getPlayer();
+            Player player = ((Playable)killer).getPlayer();
             if (player.isInParty()) {
                 player.getParty().getMembersStream().forEach(member -> {
                     member.updateRaidKills();

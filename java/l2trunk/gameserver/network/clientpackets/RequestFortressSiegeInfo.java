@@ -15,7 +15,7 @@ public final class RequestFortressSiegeInfo extends L2GameClientPacket {
         Player activeChar = getClient().getActiveChar();
         if (activeChar == null)
             return;
-        ResidenceHolder.getFortresses().stream()
+        ResidenceHolder.getFortresses()
                 .filter(fort -> fort.getSiegeEvent().isInProgress())
                 .forEach(fort -> activeChar.sendPacket(new ExShowFortressSiegeInfo(fort)));
     }

@@ -5,6 +5,8 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
+import static l2trunk.gameserver.model.base.ClassId.*;
+
 public final class _215_TrialOfPilgrim extends Quest {
     private static final int MARK_OF_PILGRIM_ID = 2721;
     private static final int BOOK_OF_SAGE_ID = 2722;
@@ -25,13 +27,11 @@ public final class _215_TrialOfPilgrim extends Quest {
     private static final int RewardAdena = 114649;
 
     public _215_TrialOfPilgrim() {
-        super(false);
-
         addStartNpc(30648);
 
-        addTalkId(30648,30117,30362,30550,30571,30612,30648,30649,30650,30651,30652);
+        addTalkId(30117, 30362, 30550, 30571, 30612, 30648, 30649, 30650, 30651, 30652);
 
-        addKillId(27116,27117,27118);
+        addKillId(27116, 27117, 27118);
 
         addQuestItem(BOOK_OF_SAGE_ID,
                 VOUCHER_OF_TRIAL_ID,
@@ -103,6 +103,7 @@ public final class _215_TrialOfPilgrim extends Quest {
 
     @Override
     public String onTalk(NpcInstance npc, QuestState st) {
+        int cond = st.getCond();
         if (st.haveQuestItem(MARK_OF_PILGRIM_ID)) {
             st.exitCurrentQuest();
             return "completed";
@@ -115,8 +116,11 @@ public final class _215_TrialOfPilgrim extends Quest {
             st.setCond(0);
             st.unset("id");
         }
-        if (npcId == 30648 && st.getCond() == 0) {
-            if (st.player.getClassId().id == 0x0f || st.player.getClassId().id == 0x1d || st.player.getClassId().id == 0x2a || st.player.getClassId().id == 0x32) {
+        if (npcId == 30648 && cond == 0) {
+            if (st.player.getClassId() == cleric
+                    || st.player.getClassId() == oracle
+                    || st.player.getClassId() == shillienOracle
+                    || st.player.getClassId() == orcShaman) {
                 if (st.player.getLevel() >= 35)
                     htmltext = "hermit_santiago_q0215_03.htm";
                 else {
@@ -127,9 +131,9 @@ public final class _215_TrialOfPilgrim extends Quest {
                 htmltext = "hermit_santiago_q0215_02.htm";
                 st.exitCurrentQuest();
             }
-        } else if (npcId == 30648 && st.getCond() == 1 && st.haveQuestItem(VOUCHER_OF_TRIAL_ID) )
+        } else if (npcId == 30648 && cond == 1 && st.haveQuestItem(VOUCHER_OF_TRIAL_ID))
             htmltext = "hermit_santiago_q0215_09.htm";
-        else if (npcId == 30648 && st.getCond() == 17 && st.haveQuestItem(BOOK_OF_SAGE_ID)) {
+        else if (npcId == 30648 && cond == 17 && st.haveQuestItem(BOOK_OF_SAGE_ID)) {
             htmltext = "hermit_santiago_q0215_10.htm";
             st.takeItems(BOOK_OF_SAGE_ID);
             st.giveItems(MARK_OF_PILGRIM_ID);
@@ -141,92 +145,85 @@ public final class _215_TrialOfPilgrim extends Quest {
             st.playSound(SOUND_FINISH);
             st.unset("cond");
             st.finish();
-        } else if (npcId == 30571 && st.getCond() == 1 && st.getQuestItemsCount(VOUCHER_OF_TRIAL_ID) > 0) {
+        } else if (npcId == 30571 && cond == 1 && st.haveQuestItem(VOUCHER_OF_TRIAL_ID)) {
             htmltext = "seer_tanapi_q0215_01.htm";
-            st.takeItems(VOUCHER_OF_TRIAL_ID, 1);
+            st.takeItems(VOUCHER_OF_TRIAL_ID);
             st.setCond(2);
-        } else if (npcId == 30571 && st.getCond() == 2)
+        } else if (npcId == 30571 && cond == 2)
             htmltext = "seer_tanapi_q0215_02.htm";
-        else if (npcId == 30571 && st.getCond() == 5 && st.getQuestItemsCount(SPIRIT_OF_FLAME_ID) > 0)
+        else if (npcId == 30571 && cond == 5 && st.haveQuestItem(SPIRIT_OF_FLAME_ID))
             htmltext = "seer_tanapi_q0215_03.htm";
-        else if (npcId == 30649 && st.getCond() == 2) {
+        else if (npcId == 30649 && cond == 2) {
             htmltext = "ancestor_martankus_q0215_01.htm";
             st.setCond(3);
-        } else if (npcId == 30649 && st.getCond() == 3)
+        } else if (npcId == 30649 && cond == 3)
             htmltext = "ancestor_martankus_q0215_02.htm";
-        else if (npcId == 30649 && st.getCond() == 4 && st.getQuestItemsCount(ESSENSE_OF_FLAME_ID) > 0)
+        else if (npcId == 30649 && cond == 4 && st.haveQuestItem(ESSENSE_OF_FLAME_ID))
             htmltext = "ancestor_martankus_q0215_03.htm";
-        else if (npcId == 30550 && st.getCond() == 5 && st.getQuestItemsCount(SPIRIT_OF_FLAME_ID) > 0) {
+        else if (npcId == 30550 && cond == 5 && st.haveQuestItem(SPIRIT_OF_FLAME_ID)) {
             htmltext = "gauri_twinklerock_q0215_01.htm";
             st.giveItems(TAG_OF_RUMOR_ID);
             st.setCond(6);
-        } else if (npcId == 30550 && st.getCond() == 6)
+        } else if (npcId == 30550 && cond == 6)
             htmltext = "gauri_twinklerock_q0215_02.htm";
-        else if (npcId == 30650 && st.getCond() == 6 && st.getQuestItemsCount(TAG_OF_RUMOR_ID) > 0)
+        else if (npcId == 30650 && cond == 6 && st.haveQuestItem(TAG_OF_RUMOR_ID))
             htmltext = "gerald_priest_of_earth_q0215_01.htm";
-        else if (npcId == 30650 && st.getCond() >= 8 && st.getQuestItemsCount(GREY_BADGE_ID) > 0 && st.getQuestItemsCount(BOOK_OF_GERALD_ID) > 0) {
+        else if (npcId == 30650 && cond >= 8 && st.haveAllQuestItems(GREY_BADGE_ID, BOOK_OF_GERALD_ID)) {
             htmltext = "gerald_priest_of_earth_q0215_04.htm";
-            st.giveItems(ADENA_ID, 100000, false);
-            st.takeItems(BOOK_OF_GERALD_ID, 1);
-        } else if (npcId == 30651 && st.getCond() == 6 && st.getQuestItemsCount(TAG_OF_RUMOR_ID) > 0) {
+            st.giveAdena(100000);
+            st.takeItems(BOOK_OF_GERALD_ID);
+        } else if (npcId == 30651 && cond == 6 && st.haveQuestItem(TAG_OF_RUMOR_ID)) {
             htmltext = "wanderer_dorf_q0215_01.htm";
             st.giveItems(GREY_BADGE_ID);
-            st.takeItems(TAG_OF_RUMOR_ID, 1);
+            st.takeItems(TAG_OF_RUMOR_ID);
             st.setCond(8);
-        } else if (npcId == 30651 && st.getCond() == 7 && st.getQuestItemsCount(TAG_OF_RUMOR_ID) > 0) {
+        } else if (npcId == 30651 && cond == 7 && st.haveQuestItem(TAG_OF_RUMOR_ID)) {
             htmltext = "wanderer_dorf_q0215_02.htm";
             st.giveItems(GREY_BADGE_ID);
-            st.takeItems(TAG_OF_RUMOR_ID, 1);
+            st.takeItems(TAG_OF_RUMOR_ID);
             st.setCond(8);
-        } else if (npcId == 30651 && st.getCond() == 8)
+        } else if (npcId == 30651 && cond == 8)
             htmltext = "wanderer_dorf_q0215_03.htm";
-        else if (npcId == 30117 && st.getCond() == 8) {
+        else if (npcId == 30117 && cond == 8) {
             htmltext = "primoz_q0215_01.htm";
             st.setCond(9);
-        } else if (npcId == 30117 && st.getCond() == 9)
+        } else if (npcId == 30117 && cond == 9)
             htmltext = "primoz_q0215_02.htm";
-        else if (npcId == 30036 && st.getCond() == 9) {
+        else if (npcId == 30036 && cond == 9) {
             htmltext = "potter_q0215_01.htm";
             st.giveItems(PICTURE_OF_NAHIR_ID);
             st.setCond(10);
-        } else if (npcId == 30036 && st.getCond() == 10)
+        } else if (npcId == 30036 && cond == 10)
             htmltext = "potter_q0215_02.htm";
-        else if (npcId == 30036 && st.getCond() == 11) {
+        else if (npcId == 30036 && cond == 11) {
             htmltext = "potter_q0215_03.htm";
             st.giveItems(STATUE_OF_EINHASAD_ID);
-            st.takeItems(PICTURE_OF_NAHIR_ID, 1);
-            st.takeItems(HAIR_OF_NAHIR_ID, 1);
+            st.takeAllItems(PICTURE_OF_NAHIR_ID, HAIR_OF_NAHIR_ID);
             st.setCond(12);
-        } else if (npcId == 30036 && st.getCond() == 12 && st.haveQuestItem(STATUE_OF_EINHASAD_ID))
+        } else if (npcId == 30036 && cond == 12 && st.haveQuestItem(STATUE_OF_EINHASAD_ID))
             htmltext = "potter_q0215_04.htm";
-        else if (npcId == 30362 && st.getCond() == 12) {
+        else if (npcId == 30362 && cond == 12) {
             htmltext = "andellria_q0215_01.htm";
             st.setCond(13);
-        } else if (npcId == 30362 && st.getCond() == 13)
+        } else if (npcId == 30362 && cond == 13)
             htmltext = "andellria_q0215_02.htm";
-        else if (npcId == 30362 && st.getCond() == 15 && st.haveQuestItem(BOOK_OF_DARKNESS_ID))
+        else if (npcId == 30362 && cond == 15 && st.haveQuestItem(BOOK_OF_DARKNESS_ID))
             htmltext = "andellria_q0215_03.htm";
-        else if (npcId == 30362 && st.getCond() == 16)
+        else if (npcId == 30362 && cond == 16)
             htmltext = "andellria_q0215_06.htm";
-        else if (npcId == 30362 && st.getCond() == 15 && st.getQuestItemsCount(BOOK_OF_DARKNESS_ID) == 0)
+        else if (npcId == 30362 && cond == 15 && !st.haveQuestItem(BOOK_OF_DARKNESS_ID))
             htmltext = "andellria_q0215_07.htm";
-        else if (npcId == 30652 && st.getCond() == 14 && st.getQuestItemsCount(DEBRIS_OF_WILLOW_ID) > 0)
+        else if (npcId == 30652 && cond == 14 && st.haveQuestItem(DEBRIS_OF_WILLOW_ID))
             htmltext = "uruha_q0215_01.htm";
-        else if (npcId == 30652 && st.getCond() == 15 && st.getQuestItemsCount(BOOK_OF_DARKNESS_ID) > 0)
+        else if (npcId == 30652 && cond == 15 && st.haveQuestItem(BOOK_OF_DARKNESS_ID))
             htmltext = "uruha_q0215_03.htm";
-        else if (npcId == 30612 && st.getCond() == 16) {
+        else if (npcId == 30612 && cond == 16) {
             htmltext = "sage_kasian_q0215_01.htm";
             st.giveItems(BOOK_OF_SAGE_ID);
 
-            if (st.haveQuestItem(BOOK_OF_DARKNESS_ID))
-                st.takeItems(BOOK_OF_DARKNESS_ID, 1);
-            if (st.haveQuestItem(BOOK_OF_GERALD_ID))
-                st.takeItems(BOOK_OF_GERALD_ID, 1);
             st.setCond(17);
-            st.takeItems(GREY_BADGE_ID, 1);
-            st.takeItems(SPIRIT_OF_FLAME_ID, 1);
-            st.takeItems(STATUE_OF_EINHASAD_ID, 1);
-        } else if (npcId == 30612 && st.getCond() == 17)
+            st.takeAllItems(BOOK_OF_DARKNESS_ID,BOOK_OF_GERALD_ID,GREY_BADGE_ID,SPIRIT_OF_FLAME_ID, STATUE_OF_EINHASAD_ID);
+        } else if (npcId == 30612 && cond == 17)
             htmltext = "sage_kasian_q0215_02.htm";
         return htmltext;
     }
@@ -235,22 +232,22 @@ public final class _215_TrialOfPilgrim extends Quest {
     public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         if (npcId == 27116) {
-            if (st.getCond() == 3 && st.getQuestItemsCount(ESSENSE_OF_FLAME_ID) == 0)
+            if (st.getCond() == 3)
                 if (Rnd.chance(30)) {
-                    st.giveItems(ESSENSE_OF_FLAME_ID);
+                    st.giveItemIfNotHave(ESSENSE_OF_FLAME_ID);
                     st.setCond(4);
                     st.playSound(SOUND_MIDDLE);
                 }
         } else if (npcId == 27117) {
-            if (st.getCond() == 10 && st.getQuestItemsCount(HAIR_OF_NAHIR_ID) == 0) {
-                st.giveItems(HAIR_OF_NAHIR_ID);
+            if (st.getCond() == 10) {
+                st.giveItemIfNotHave(HAIR_OF_NAHIR_ID);
                 st.setCond(11);
                 st.playSound(SOUND_MIDDLE);
             }
         } else if (npcId == 27118)
-            if (st.getCond() == 13 && st.getQuestItemsCount(DEBRIS_OF_WILLOW_ID) == 0)
+            if (st.getCond() == 13)
                 if (Rnd.chance(20)) {
-                    st.giveItems(DEBRIS_OF_WILLOW_ID);
+                    st.giveItemIfNotHave(DEBRIS_OF_WILLOW_ID);
                     st.setCond(14);
                     st.playSound(SOUND_MIDDLE);
                 }

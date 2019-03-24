@@ -13,7 +13,6 @@ public final class _278_HomeSecurity extends Quest {
     private static final int SelMahumMane = 15531;
 
     public _278_HomeSecurity() {
-        super(false);
         addStartNpc(Tunatun);
         addKillId(FarmMonsters);
         addQuestItem(SelMahumMane);
@@ -103,7 +102,7 @@ public final class _278_HomeSecurity extends Quest {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         if (cond == 1)
-            if (FarmMonsters.contains(npcId) && st.getQuestItemsCount(SelMahumMane) < 300) {
+            if (FarmMonsters.contains(npcId)) {
                 st.giveItems(SelMahumMane, 1, true);
                 if (st.getQuestItemsCount(SelMahumMane) >= 300)
                     st.setCond(2);

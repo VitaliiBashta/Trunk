@@ -16,8 +16,6 @@ public final class _131_BirdInACage extends Quest {
     private static final int PARMES_LETTER = 9784;
 
     public _131_BirdInACage() {
-        super(false);
-
         addStartNpc(KANIS);
         addTalkId(PARME);
 
@@ -35,18 +33,18 @@ public final class _131_BirdInACage extends Quest {
         } else if (event.equals("priest_kanis_q0131_12.htm") && cond == 1) {
             st.setCond(2);
             st.playSound(SOUND_MIDDLE);
-            st.giveItems(KANIS_ECHO_CRY, 1);
+            st.giveItems(KANIS_ECHO_CRY);
         } else if (event.equals("parme_131y_q0131_04.htm") && cond == 2) {
             st.setCond(3);
-            st.giveItems(PARMES_LETTER, 1);
+            st.giveItems(PARMES_LETTER);
             st.playSound(SOUND_MIDDLE);
             st.player.teleToLocation(143472 + Rnd.get(-100, 100), 191040 + Rnd.get(-100, 100), -3696);
         } else if (event.equals("priest_kanis_q0131_17.htm") && cond == 3) {
             st.playSound(SOUND_MIDDLE);
-            st.takeItems(PARMES_LETTER, -1);
+            st.takeItems(PARMES_LETTER);
         } else if (event.equals("priest_kanis_q0131_19.htm") && cond == 3) {
             st.playSound(SOUND_FINISH);
-            st.takeItems(KANIS_ECHO_CRY, -1);
+            st.takeItems(KANIS_ECHO_CRY);
             st.addExpAndSp(250677, 25019);
             st.finish();
             if (HellboundManager.getHellboundLevel() == 0)
@@ -76,7 +74,7 @@ public final class _131_BirdInACage extends Quest {
             else if (cond == 2)
                 htmltext = "priest_kanis_q0131_13.htm";
             else if (cond == 3)
-                if (st.getQuestItemsCount(PARMES_LETTER) > 0)
+                if (st.haveQuestItem(PARMES_LETTER))
                     htmltext = "priest_kanis_q0131_16.htm";
                 else
                     htmltext = "priest_kanis_q0131_17.htm";

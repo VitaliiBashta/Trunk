@@ -16,7 +16,6 @@ public final class _368_TrespassingIntoTheSacredArea extends Quest {
     private static final int BLADE_STAKATO_FANG_BASECHANCE = 10;
 
     public _368_TrespassingIntoTheSacredArea() {
-        super(false);
         addStartNpc(RESTINA);
         addKillId(IntStream.rangeClosed(20794, 20797).toArray());
     }
@@ -35,11 +34,11 @@ public final class _368_TrespassingIntoTheSacredArea extends Quest {
                 st.setCond(0);
             }
         } else {
-            long _count = st.getQuestItemsCount(BLADE_STAKATO_FANG);
-            if (_count > 0) {
+            long count = st.getQuestItemsCount(BLADE_STAKATO_FANG);
+            if (count > 0) {
                 htmltext = "30926-04.htm";
                 st.takeItems(BLADE_STAKATO_FANG);
-                st.giveAdena( _count * 2250);
+                st.giveAdena( count * 2250);
                 st.playSound(SOUND_MIDDLE);
             } else
                 htmltext = "30926-03.htm";

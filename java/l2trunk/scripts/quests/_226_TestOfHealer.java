@@ -186,8 +186,6 @@ public final class _226_TestOfHealer extends Quest {
     }
 
     public _226_TestOfHealer() {
-        super(false);
-
         addStartNpc(30473);
 
         addTalkId(30327, 30424, 30428, 30473, 30658, 30659, 30660, 30661, 30662, 30663, 30664, 30665, 30674);
@@ -219,7 +217,7 @@ public final class _226_TestOfHealer extends Quest {
             case "30473_2":
                 htmltext = "30473-09.htm";
                 st.takeItems(GOLDEN_STATUE_ID);
-                st.giveItems(ADENA_ID, 233490);
+                st.giveAdena( 233490);
                 st.giveItems(MARK_OF_HEALER_ID);
                 st.addExpAndSp(738283, 50662);
                 st.playSound(SOUND_FINISH);
@@ -244,7 +242,7 @@ public final class _226_TestOfHealer extends Quest {
                 htmltext = "30658-03.htm";
                 break;
             case "30660-03.htm":
-                st.takeItems(PICTURE_OF_WINDY_ID, 1);
+                st.takeItems(PICTURE_OF_WINDY_ID);
                 st.giveItems(WINDYS_PEBBLES_ID);
                 st.setCond(COND8);
                 break;
@@ -365,9 +363,9 @@ public final class _226_TestOfHealer extends Quest {
                 st.setCond(COND23);
             }
         } else if (npcId == Daurin) {
-            if (cond == COND10 && st.getQuestItemsCount(ORDER_OF_SORIUS_ID) > 0)
+            if (cond == COND10 && st.haveQuestItem(ORDER_OF_SORIUS_ID) )
                 htmltext = "30674-01.htm";
-            else if (cond == COND12 && st.getQuestItemsCount(SECRET_LETTER1_ID) > 0) {
+            else if (cond == COND12 && st.haveQuestItem(SECRET_LETTER1_ID) ) {
                 htmltext = "30674-03.htm";
                 st.setCond(COND13);
             }
@@ -418,7 +416,7 @@ public final class _226_TestOfHealer extends Quest {
     @Override
     public void onKill(NpcInstance npc, QuestState st) {
         Integer[] d = DROPLIST.get(npc.getNpcId());
-        if (st.getCond() == d[0] && (d[2] == 0 || st.getQuestItemsCount(d[2]) == 0)) {
+        if (st.getCond() == d[0] && (d[2] == 0 || !st.haveQuestItem(d[2]))) {
             if (d[2] != 0)
                 st.giveItems(d[2]);
             st.setCond(d[1]);

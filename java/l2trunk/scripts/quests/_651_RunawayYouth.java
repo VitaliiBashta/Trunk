@@ -13,8 +13,6 @@ public final class _651_RunawayYouth extends Quest {
     private static final int SOE = 736;
 
     public _651_RunawayYouth() {
-        super(false);
-
         addStartNpc(IVAN);
         addTalkId(BATIDAE);
     }
@@ -23,7 +21,7 @@ public final class _651_RunawayYouth extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
         if ("runaway_boy_ivan_q0651_03.htm".equalsIgnoreCase(event)) {
-            if (st.getQuestItemsCount(SOE) > 0) {
+            if (st.haveQuestItem(SOE)) {
                 st.setCond(1);
                 st.start();
                 st.playSound(SOUND_ACCEPT);
@@ -57,7 +55,7 @@ public final class _651_RunawayYouth extends Quest {
             }
         } else if (npcId == BATIDAE && cond == 1) {
             htmltext = "fisher_batidae_q0651_01.htm";
-            st.giveItems(ADENA_ID, Math.round(2883 * st.getRateQuestsReward()));
+            st.giveAdena(Math.round(2883 * st.getRateQuestsReward()));
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest();
         }

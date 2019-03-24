@@ -1,11 +1,14 @@
 package l2trunk.scripts.quests;
 
 import l2trunk.commons.util.Rnd;
+import l2trunk.gameserver.model.base.ClassId;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
 import java.util.List;
+
+import static l2trunk.gameserver.model.base.ClassId.*;
 
 public final class _343_UndertheShadowoftheIvoryTower extends Quest {
     //mob
@@ -21,24 +24,21 @@ public final class _343_UndertheShadowoftheIvoryTower extends Quest {
     //items
     private final int ORB = 4364;
     //Var
-    private final int[] AllowClass = {
-            0xb,
-            0xc,
-            0xd,
-            0xe,
-            0x1a,
-            0x1b,
-            0x1c,
-            0x27,
-            0x28,
-            0x29
-    };
+    private final List<ClassId> allowClass = List.of(
+            wizard,
+            sorceror,
+            necromancer,
+            warlock,
+            elvenWizard,
+            spellsinger,
+            elementalSummoner,
+            darkWizard,
+            spellhowler,
+            phantomSummoner)    ;
 
     public _343_UndertheShadowoftheIvoryTower() {
-        super(false);
-
         addStartNpc(CEMA);
-        addTalkId(CEMA,ICARUS,MARSHA,TRUMPIN);
+        addTalkId(ICARUS,MARSHA,TRUMPIN);
 
         addKillId(MOBS);
 
@@ -51,29 +51,27 @@ public final class _343_UndertheShadowoftheIvoryTower extends Quest {
         int random1 = Rnd.get(3);
         int random2 = Rnd.get(2);
         long orbs = st.getQuestItemsCount(ORB);
-        if (event.equalsIgnoreCase("30834-03.htm")) {
+        if ("30834-03.htm".equalsIgnoreCase(event)) {
             st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("30834-08.htm")) {
+        } else if ("30834-08.htm".equalsIgnoreCase(event)) {
             if (orbs > 0) {
-                st.giveItems(ADENA_ID, orbs * 120);
-                st.takeItems(ORB, -1);
+                st.giveAdena(orbs * 120);
+                st.takeItems(ORB);
             } else
                 htmltext = "30834-08.htm";
-        } else if (event.equalsIgnoreCase("30834-09.htm")) {
+        } else if ("30834-09.htm".equalsIgnoreCase(event)) {
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest();
         } else if ("30934-02.htm".equalsIgnoreCase(event) || "30934-03.htm".equalsIgnoreCase(event)) {
             if (orbs < 10)
                 htmltext = "noorbs.htm";
-            else if (event.equalsIgnoreCase("30934-03.htm"))
-                if (orbs >= 10) {
-                    st.takeItems(ORB, 10);
-                    st.set("playing");
-                } else
-                    htmltext = "noorbs.htm";
-        } else if (event.equalsIgnoreCase("30934-04.htm")) {
+            else if ("30934-03.htm".equalsIgnoreCase(event)) {
+                st.takeItems(ORB, 10);
+                st.set("playing");
+            }
+        } else if ("30934-04.htm".equalsIgnoreCase(event)) {
             if (st.isSet("playing")) {
                 if (random1 == 0) {
                     htmltext = "30934-05.htm";
@@ -196,8 +194,7 @@ public final class _343_UndertheShadowoftheIvoryTower extends Quest {
         int id = st.getState();
         if (npcId == CEMA) {
             if (id != STARTED) {
-                for (int i : AllowClass)
-                    if (st.player.getClassId().id == i && st.player.getLevel() >= 40)
+                if (allowClass.contains(st.player.getClassId()) && st.player.getLevel() >= 40)
                         htmltext = "30834-01.htm";
                 if (!"30834-01.htm".equals(htmltext)) {
                     htmltext = "30834-07.htm";

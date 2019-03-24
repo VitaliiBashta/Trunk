@@ -27,7 +27,7 @@ import static l2trunk.gameserver.utils.ItemFunctions.removeItem;
 public final class Christmas extends Functions implements ScriptFile, OnDeathListener, OnPlayerEnterListener {
     private static final int EVENT_MANAGER_ID = 31863;
     private static final int CTREE_ID = 13006;
-    private static final Logger _log = LoggerFactory.getLogger(Christmas.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Christmas.class);
 
     private static final Map<Integer, Integer> DROPDATA = Map.of(
             // Item, chance
@@ -50,9 +50,9 @@ public final class Christmas extends Functions implements ScriptFile, OnDeathLis
         if (isActive()) {
             active = true;
             spawnEventManagers();
-            _log.info("Loaded Event: Christmas [state: activated]");
+            LOG.info("Loaded Event: Christmas [state: activated]");
         } else
-            _log.info("Loaded Event: Christmas [state: deactivated]");
+            LOG.info("Loaded Event: Christmas [state: deactivated]");
     }
 
     /**
@@ -111,14 +111,12 @@ public final class Christmas extends Functions implements ScriptFile, OnDeathLis
 
     @Override
     public void onDeath(Creature cha, Creature killer) {
-        if (killer instanceof Playable) {
+        if (killer instanceof Playable && cha instanceof NpcInstance) {
+            NpcInstance npc = (NpcInstance) cha;
             Player player = ((Playable) killer).getPlayer();
-            if (active && simpleCheckDrop(cha, player)) {
-                DROPDATA.forEach((k, v) -> {
-                    if (Rnd.chance(v * player.getRateItems() * Config.RATE_DROP_ITEMS * 0.1))
-                        ((NpcInstance) cha).dropItem(player, k, 1);
-                });
-            }
+            if (active) DROPDATA.entrySet().stream()
+                    .filter(e -> Rnd.chance(e.getValue() * player.getRateItems() * Config.RATE_DROP_ITEMS * 0.1))
+                    .forEach(e -> npc.dropItem(player, e.getKey(), 1));
         }
     }
 
@@ -140,7 +138,6 @@ public final class Christmas extends Functions implements ScriptFile, OnDeathLis
                     addItem(player, 5560, 1); // Christmas Tree
                     return;
                 }
-                player.sendPacket(Msg.YOU_DO_NOT_HAVE_ENOUGH_REQUIRED_ITEMS);
                 break;
             case "1":
                 if (player.haveItem(5560, 10)) {
@@ -148,7 +145,6 @@ public final class Christmas extends Functions implements ScriptFile, OnDeathLis
                     addItem(player, 5561, 1); // Special Christmas Tree
                     return;
                 }
-                player.sendPacket(Msg.YOU_DO_NOT_HAVE_ENOUGH_REQUIRED_ITEMS);
                 break;
             case "2":
                 if (player.haveItem(5560, 10)) {
@@ -156,7 +152,6 @@ public final class Christmas extends Functions implements ScriptFile, OnDeathLis
                     addItem(player, 7836, 1); // Santa's Hat
                     return;
                 }
-                player.sendPacket(Msg.YOU_DO_NOT_HAVE_ENOUGH_REQUIRED_ITEMS);
                 break;
             case "3":
                 if (player.haveItem(5560, 10)) {
@@ -164,7 +159,6 @@ public final class Christmas extends Functions implements ScriptFile, OnDeathLis
                     addItem(player, 8936, 1); // Santa's Antlers
                     return;
                 }
-                player.sendPacket(Msg.YOU_DO_NOT_HAVE_ENOUGH_REQUIRED_ITEMS);
                 break;
             case "4":
                 if (player.haveItem(5560, 20)) {
@@ -172,9 +166,9 @@ public final class Christmas extends Functions implements ScriptFile, OnDeathLis
                     addItem(player, 10606, 1); // Agathion Seal Bracelet - Rudolph
                     return;
                 }
-                player.sendPacket(Msg.YOU_DO_NOT_HAVE_ENOUGH_REQUIRED_ITEMS);
                 break;
         }
+        player.sendPacket(Msg.YOU_DO_NOT_HAVE_ENOUGH_REQUIRED_ITEMS);
     }
 
     @Override

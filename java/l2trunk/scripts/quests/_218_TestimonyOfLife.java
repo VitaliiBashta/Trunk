@@ -46,8 +46,6 @@ public final class _218_TestimonyOfLife extends Quest {
     private static final int RewardAdena = 171144;
 
     public _218_TestimonyOfLife() {
-        super(false);
-
         addStartNpc(30460);
 
         addTalkId(30154,30300,30371,30375,30419,30460,30655);
@@ -114,7 +112,7 @@ public final class _218_TestimonyOfLife extends Quest {
                 break;
             case "30154_6":
                 htmltext = "30154-07.htm";
-                st.takeItems(CARDIENS_LETTER, 1);
+                st.takeItems(CARDIENS_LETTER);
                 st.giveItems(MOONFLOWER_CHARM);
                 st.giveItems(HIERARCHS_LETTER);
                 break;
@@ -123,7 +121,7 @@ public final class _218_TestimonyOfLife extends Quest {
                 break;
             case "30371_2":
                 htmltext = "30371-03.htm";
-                st.takeItems(HIERARCHS_LETTER, 1);
+                st.takeItems(HIERARCHS_LETTER);
                 st.giveItems(GRAIL_DIAGRAM);
                 break;
             case "30371_3":
@@ -151,7 +149,7 @@ public final class _218_TestimonyOfLife extends Quest {
                 break;
             case "30300_5":
                 htmltext = "30300-06.htm";
-                st.takeItems(GRAIL_DIAGRAM, 1);
+                st.takeItems(GRAIL_DIAGRAM);
                 st.giveItems(PUSHKINS_LIST);
                 break;
             case "30300_6":
@@ -159,10 +157,7 @@ public final class _218_TestimonyOfLife extends Quest {
                 break;
             case "30300_7":
                 htmltext = "30300-10.htm";
-                st.takeItems(PURE_MITHRIL_ORE);
-                st.takeItems(ANT_SOLDIER_ACID);
-                st.takeItems(WYRMS_TALON1);
-                st.takeItems(PUSHKINS_LIST, 1);
+                st.takeAllItems(PURE_MITHRIL_ORE,ANT_SOLDIER_ACID,WYRMS_TALON1,PUSHKINS_LIST);
                 st.giveItems(PURE_MITHRIL_CUP);
                 break;
             case "30419_1":
@@ -193,7 +188,7 @@ public final class _218_TestimonyOfLife extends Quest {
 
     @Override
     public String onTalk(NpcInstance npc, QuestState st) {
-        if (st.getQuestItemsCount(MARK_OF_LIFE) > 0) {
+        if (st.haveQuestItem(MARK_OF_LIFE) ) {
             st.exitCurrentQuest();
             return "completed";
         }
@@ -232,7 +227,7 @@ public final class _218_TestimonyOfLife extends Quest {
             st.giveItems(MARK_OF_LIFE);
             if (!st.player.isVarSet("prof2.2")) {
                 st.addExpAndSp(RewardExp, RewardSP);
-                st.giveItems(ADENA_ID, RewardAdena);
+                st.giveAdena(RewardAdena);
                 st.player.setVar("prof2.2");
             }
             st.playSound(SOUND_FINISH);
@@ -242,24 +237,23 @@ public final class _218_TestimonyOfLife extends Quest {
             htmltext = "30154-01.htm";
         else if (npcId == 30154 && cond == 1 && st.haveQuestItem(MOONFLOWER_CHARM)  && st.getQuestItemsCount(WATER_OF_LIFE) == 0)
             htmltext = "30154-08.htm";
-        else if (npcId == 30154 && cond == 1 && st.haveQuestItem(MOONFLOWER_CHARM)  && st.getQuestItemsCount(WATER_OF_LIFE) > 0) {
+        else if (npcId == 30154 && cond == 1 && st.haveAllQuestItems(MOONFLOWER_CHARM,WATER_OF_LIFE)) {
             htmltext = "30154-09.htm";
-            st.takeItems(WATER_OF_LIFE, 1);
-            st.takeItems(MOONFLOWER_CHARM, 1);
+            st.takeAllItems(WATER_OF_LIFE,MOONFLOWER_CHARM);
             st.giveItems(CAMOMILE_CHARM);
         } else if (npcId == 30154 && cond == 1 && st.getQuestItemsCount(CAMOMILE_CHARM) == 1)
             htmltext = "30154-10.htm";
-        else if (npcId == 30371 && cond == 1 && st.getQuestItemsCount(MOONFLOWER_CHARM) > 0 && st.getQuestItemsCount(HIERARCHS_LETTER) > 0)
+        else if (npcId == 30371 && cond == 1 && st.haveAllQuestItems(MOONFLOWER_CHARM,HIERARCHS_LETTER) )
             htmltext = "30371-01.htm";
-        else if (npcId == 30371 && cond == 1 && st.getQuestItemsCount(MOONFLOWER_CHARM) > 0 && st.getQuestItemsCount(GRAIL_DIAGRAM) > 0)
+        else if (npcId == 30371 && cond == 1 && st.haveAllQuestItems(MOONFLOWER_CHARM,GRAIL_DIAGRAM))
             htmltext = "30371-04.htm";
-        else if (npcId == 30371 && cond == 1 && st.getQuestItemsCount(MOONFLOWER_CHARM) > 0 && st.getQuestItemsCount(PUSHKINS_LIST) > 0)
+        else if (npcId == 30371 && cond == 1 && st.haveAllQuestItems(MOONFLOWER_CHARM,PUSHKINS_LIST))
             htmltext = "30371-05.htm";
         else if (npcId == 30371 && cond == 1 && st.haveAllQuestItems(MOONFLOWER_CHARM,PURE_MITHRIL_CUP)) {
             htmltext = "30371-06.htm";
-            st.takeItems(PURE_MITHRIL_CUP, 1);
-            st.giveItems(THALIAS_LETTER1, 1);
-        } else if (npcId == 30371 && cond == 1 && st.getQuestItemsCount(MOONFLOWER_CHARM) > 0 && st.getQuestItemsCount(THALIAS_LETTER1) > 0)
+            st.takeItems(PURE_MITHRIL_CUP);
+            st.giveItems(THALIAS_LETTER1);
+        } else if (npcId == 30371 && cond == 1 && st.haveAllQuestItems(MOONFLOWER_CHARM,THALIAS_LETTER1))
             htmltext = "30371-07.htm";
         else if (npcId == 30371 && cond == 1 && st.getQuestItemsCount(MOONFLOWER_CHARM) > 0 && st.getQuestItemsCount(ARKENIAS_CONTRACT) > 0)
             htmltext = "30371-08.htm";

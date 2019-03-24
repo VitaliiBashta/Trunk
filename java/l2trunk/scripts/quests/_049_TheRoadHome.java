@@ -16,8 +16,6 @@ public final class _049_TheRoadHome extends Quest {
     private static final int SCROLL_OF_ESCAPE_DWARVEN_VILLAGE = 7121;
 
     public _049_TheRoadHome() {
-        super(false);
-
         addStartNpc(30097);
 
         addTalkId(30094,30090,30116);
@@ -38,42 +36,42 @@ public final class _049_TheRoadHome extends Quest {
                 st.setCond(1);
                 st.start();
                 st.playSound(SOUND_ACCEPT);
-                st.giveItems(GALLADUCCIS_ORDER_DOCUMENT_ID_1, 1);
+                st.giveItems(GALLADUCCIS_ORDER_DOCUMENT_ID_1);
                 htmltext = "galladuchi_q0049_0104.htm";
                 break;
             case "2":
                 st.setCond(2);
-                st.takeItems(GALLADUCCIS_ORDER_DOCUMENT_ID_1, 1);
-                st.giveItems(MAGIC_SWORD_HILT_ID, 1);
+                st.takeItems(GALLADUCCIS_ORDER_DOCUMENT_ID_1);
+                st.giveItems(MAGIC_SWORD_HILT_ID);
                 htmltext = "gentler_q0049_0201.htm";
                 break;
             case "3":
                 st.setCond(3);
-                st.takeItems(MAGIC_SWORD_HILT_ID, 1);
-                st.giveItems(GALLADUCCIS_ORDER_DOCUMENT_ID_2, 1);
+                st.takeItems(MAGIC_SWORD_HILT_ID);
+                st.giveItems(GALLADUCCIS_ORDER_DOCUMENT_ID_2);
                 htmltext = "galladuchi_q0049_0301.htm";
                 break;
             case "4":
                 st.setCond(4);
-                st.takeItems(GALLADUCCIS_ORDER_DOCUMENT_ID_2, 1);
-                st.giveItems(GEMSTONE_POWDER_ID, 1);
+                st.takeItems(GALLADUCCIS_ORDER_DOCUMENT_ID_2);
+                st.giveItems(GEMSTONE_POWDER_ID);
                 htmltext = "sandra_q0049_0401.htm";
                 break;
             case "5":
                 st.setCond(5);
-                st.takeItems(GEMSTONE_POWDER_ID, 1);
-                st.giveItems(GALLADUCCIS_ORDER_DOCUMENT_ID_3, 1);
+                st.takeItems(GEMSTONE_POWDER_ID);
+                st.giveItems(GALLADUCCIS_ORDER_DOCUMENT_ID_3);
                 htmltext = "galladuchi_q0049_0501.htm";
                 break;
             case "6":
                 st.setCond(6);
-                st.takeItems(GALLADUCCIS_ORDER_DOCUMENT_ID_3, 1);
-                st.giveItems(PURIFIED_MAGIC_NECKLACE_ID, 1);
+                st.takeItems(GALLADUCCIS_ORDER_DOCUMENT_ID_3);
+                st.giveItems(PURIFIED_MAGIC_NECKLACE_ID);
                 htmltext = "dustin_q0049_0601.htm";
                 break;
             case "7":
-                st.giveItems(SCROLL_OF_ESCAPE_DWARVEN_VILLAGE, 1);
-                st.takeItems(PURIFIED_MAGIC_NECKLACE_ID, 1);
+                st.giveItems(SCROLL_OF_ESCAPE_DWARVEN_VILLAGE);
+                st.takeItems(PURIFIED_MAGIC_NECKLACE_ID);
                 htmltext = "galladuchi_q0049_0701.htm";
                 st.setCond(0);
                 st.playSound(SOUND_FINISH);
@@ -89,7 +87,7 @@ public final class _049_TheRoadHome extends Quest {
         String htmltext = "noquest";
         int id = st.getState();
         if (id == CREATED) {
-            if (st.player.getRace() != Race.dwarf || st.getQuestItemsCount(MARK_OF_TRAVELER_ID) == 0) {
+            if (st.player.getRace() != Race.dwarf || !st.haveQuestItem(MARK_OF_TRAVELER_ID)) {
                 htmltext = "galladuchi_q0049_0102.htm";
                 st.exitCurrentQuest();
             } else if (st.player.getLevel() < 3) {

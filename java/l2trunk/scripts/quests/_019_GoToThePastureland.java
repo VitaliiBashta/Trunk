@@ -11,8 +11,6 @@ public final class _019_GoToThePastureland extends Quest {
     private final int BEAST_MEAT = 7547;
 
     public _019_GoToThePastureland() {
-        super(false);
-
         addStartNpc(VLADIMIR);
 
         addTalkId(TUNATUN);
@@ -31,7 +29,7 @@ public final class _019_GoToThePastureland extends Quest {
         if ("beast_herder_tunatun_q0019_0201.htm".equals(event)) {
             st.takeItems(BEAST_MEAT);
             st.addExpAndSp(136766, 12688);
-            st.giveItems(ADENA_ID, 50000);
+            st.giveAdena( 50000);
             st.playSound(SOUND_FINISH);
             st.finish();
         }
@@ -54,7 +52,7 @@ public final class _019_GoToThePastureland extends Quest {
             else
                 htmltext = "trader_vladimir_q0019_0105.htm";
         } else if (npcId == TUNATUN)
-            if (st.getQuestItemsCount(BEAST_MEAT) >= 1)
+            if (st.haveQuestItem(BEAST_MEAT) )
                 htmltext = "beast_herder_tunatun_q0019_0101.htm";
             else {
                 htmltext = "beast_herder_tunatun_q0019_0202.htm";

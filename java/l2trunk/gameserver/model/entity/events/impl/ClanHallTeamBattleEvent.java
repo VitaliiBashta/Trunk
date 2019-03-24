@@ -31,11 +31,11 @@ public final class ClanHallTeamBattleEvent extends SiegeEvent<ClanHall, CTBSiege
 
     @Override
     public void startEvent() {
-        _oldOwner = getResidence().getOwner();
+        oldOwner = getResidence().getOwner();
 
         List<CTBSiegeClanObject> attackers = getObjects(ATTACKERS);
         if (attackers.isEmpty()) {
-            if (_oldOwner == null)
+            if (oldOwner == null)
                 broadcastInZone2(new SystemMessage2(SystemMsg.THE_SIEGE_OF_S1_HAS_BEEN_CANCELED_DUE_TO_LACK_OF_INTEREST).addResidenceName(getResidence()));
             else
                 broadcastInZone2(new SystemMessage2(SystemMsg.S1S_SIEGE_WAS_CANCELED_BECAUSE_THERE_WERE_NO_CLANS_THAT_PARTICIPATED).addResidenceName(getResidence()));
@@ -44,8 +44,8 @@ public final class ClanHallTeamBattleEvent extends SiegeEvent<ClanHall, CTBSiege
             return;
         }
 
-        if (_oldOwner != null)
-            addObject(DEFENDERS, new SiegeClanObject(DEFENDERS, _oldOwner, 0));
+        if (oldOwner != null)
+            addObject(DEFENDERS, new SiegeClanObject(DEFENDERS, oldOwner, 0));
 
         SiegeClanDAO.INSTANCE.delete(getResidence());
         SiegePlayerDAO.INSTANCE.delete(getResidence());
@@ -114,7 +114,7 @@ public final class ClanHallTeamBattleEvent extends SiegeEvent<ClanHall, CTBSiege
     public void stopEvent(boolean step) {
         Clan newOwner = getResidence().getOwner();
         if (newOwner != null) {
-            if (_oldOwner != newOwner) {
+            if (oldOwner != newOwner) {
                 newOwner.broadcastToOnlineMembers(PlaySound.SIEGE_VICTORY);
 
                 newOwner.incReputation(1700, false, toString());
@@ -132,7 +132,7 @@ public final class ClanHallTeamBattleEvent extends SiegeEvent<ClanHall, CTBSiege
 
         super.stopEvent(step);
 
-        _oldOwner = null;
+        oldOwner = null;
     }
 
     @Override

@@ -13,18 +13,13 @@ public final class _152_ShardsOfGolem extends Quest {
     private final int TOOL_BOX = 1011;
 
     public _152_ShardsOfGolem() {
-        super(false);
-
         addStartNpc(30035);
 
-        addTalkId(30035, 30283);
+        addTalkId(30283);
 
         addKillId(20016, 20101);
 
-        addQuestItem(HARRYS_RECEIPT1,
-                GOLEM_SHARD,
-                TOOL_BOX,
-                HARRYS_RECEIPT2);
+        addQuestItem(HARRYS_RECEIPT1, GOLEM_SHARD, TOOL_BOX, HARRYS_RECEIPT2);
     }
 
     @Override
@@ -62,8 +57,7 @@ public final class _152_ShardsOfGolem extends Quest {
             else if (cond == 2 && st.haveQuestItem(HARRYS_RECEIPT2))
                 htmltext = "30035-05.htm";
             else if (cond == 4 && st.haveQuestItem(TOOL_BOX)) {
-                st.takeItems(TOOL_BOX);
-                st.takeItems(HARRYS_RECEIPT2);
+                st.takeAllItems(TOOL_BOX, HARRYS_RECEIPT2);
                 st.setCond(0);
                 st.playSound(SOUND_FINISH);
                 st.giveItems(WOODEN_BP);
@@ -76,12 +70,10 @@ public final class _152_ShardsOfGolem extends Quest {
                 htmltext = "30283-01.htm";
             else if (cond == 2 && st.haveQuestItem(HARRYS_RECEIPT2) && st.getQuestItemsCount(GOLEM_SHARD) < 5)
                 htmltext = "30283-03.htm";
-            else if (cond == 3 && st.haveQuestItem(HARRYS_RECEIPT2) && st.haveQuestItem(GOLEM_SHARD,5)) {
+            else if (cond == 3 && st.haveQuestItem(HARRYS_RECEIPT2) && st.haveQuestItem(GOLEM_SHARD, 5)) {
                 st.takeItems(GOLEM_SHARD);
-                if (st.getQuestItemsCount(TOOL_BOX) == 0) {
-                    st.giveItems(TOOL_BOX);
-                    st.setCond(4);
-                }
+                st.giveItemIfNotHave(TOOL_BOX);
+                st.setCond(4);
                 htmltext = "30283-04.htm";
             }
         } else if (cond == 4 && st.haveAllQuestItems(HARRYS_RECEIPT2, TOOL_BOX))
@@ -93,7 +85,7 @@ public final class _152_ShardsOfGolem extends Quest {
     public void onKill(NpcInstance npc, QuestState st) {
         if (st.getCond() == 2 && Rnd.chance(30) && st.getQuestItemsCount(GOLEM_SHARD) < 5) {
             st.giveItems(GOLEM_SHARD);
-            if (st.haveQuestItem(GOLEM_SHARD,5)) {
+            if (st.haveQuestItem(GOLEM_SHARD, 5)) {
                 st.setCond(3);
                 st.playSound(SOUND_MIDDLE);
             } else

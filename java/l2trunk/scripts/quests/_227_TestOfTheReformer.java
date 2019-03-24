@@ -5,6 +5,9 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
+import static l2trunk.gameserver.model.base.ClassId.cleric;
+import static l2trunk.gameserver.model.base.ClassId.shillienOracle;
+
 public final class _227_TestOfTheReformer extends Quest {
     //NPC
     private static final int Pupina = 30118;
@@ -105,7 +108,6 @@ public final class _227_TestOfTheReformer extends Quest {
     };
 
     public _227_TestOfTheReformer() {
-        super(false);
         addStartNpc(Pupina);
         addTalkId(Sla,Katari,OlMahumPilgrimNPC,Kakan,Nyakuri,Ramus);
         //mob Drop
@@ -224,7 +226,7 @@ public final class _227_TestOfTheReformer extends Quest {
                 htmltext = "completed";
                 st.exitCurrentQuest();
             } else if (cond == 0) {
-                if (st.player.getClassId().id == 0x0f || st.player.getClassId().id == 0x2a) {
+                if (st.player.getClassId() == cleric || st.player.getClassId() == shillienOracle) {
                     if (st.player.getLevel() >= 39)
                         htmltext = "30118-03.htm";
                     else {
@@ -251,10 +253,7 @@ public final class _227_TestOfTheReformer extends Quest {
                 st.setCond(11);
                 st.start();
             } else if (cond == 20) {
-                st.takeItems(KatarisLetter);
-                st.takeItems(KakansLetter);
-                st.takeItems(NyakurisLetter);
-                st.takeItems(RamussLetter);
+                st.takeAllItems(KatarisLetter,KakansLetter,NyakurisLetter,RamussLetter);
                 st.giveItems(MarkOfReformer);
                 if (!st.player.isVarSet("prof2.3")) {
                     st.addExpAndSp(626422, 42986);
@@ -341,12 +340,7 @@ public final class _227_TestOfTheReformer extends Quest {
                 st.setCond(18);
                 st.start();
             } else if (cond == 19) {
-                st.takeItems(BoneFragment1);
-                st.takeItems(BoneFragment2);
-                st.takeItems(BoneFragment3);
-                st.takeItems(BoneFragment4);
-                st.takeItems(BoneFragment5);
-                st.takeItems(UndeadList);
+                st.takeAllItems(BoneFragment1,BoneFragment2,BoneFragment3,BoneFragment4,BoneFragment5,UndeadList);
                 st.giveItems(RamussLetter);
                 htmltext = "30667-03.htm";
                 st.setCond(20);
@@ -360,11 +354,9 @@ public final class _227_TestOfTheReformer extends Quest {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         for (int[] aDROPLIST_COND : DROPLIST_COND)
-            if (cond == aDROPLIST_COND[0] && npcId == aDROPLIST_COND[2])
+            if (cond == 18 && npcId == aDROPLIST_COND[2])
                 if (aDROPLIST_COND[3] == 0 || st.haveQuestItem(aDROPLIST_COND[3]))
-                    if (aDROPLIST_COND[5] == 0)
-                        st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[6]);
-                    else if (st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[7], aDROPLIST_COND[5], aDROPLIST_COND[6]))
+                    if (st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[7], aDROPLIST_COND[5], aDROPLIST_COND[6]))
                         if (aDROPLIST_COND[1] != cond && aDROPLIST_COND[1] != 0) {
                             st.setCond(aDROPLIST_COND[1]);
                             st.start();

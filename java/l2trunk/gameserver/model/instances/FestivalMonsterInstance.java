@@ -19,7 +19,7 @@ public final class FestivalMonsterInstance extends MonsterInstance {
     public FestivalMonsterInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
 
-        _hasRandomWalk = false;
+        hasRandomWalk = false;
     }
 
     public void setOfferingBonus(int bonusMultiplier) {

@@ -34,7 +34,7 @@ public final class ConditionTargetRace extends Condition {
         if (target != null)
             if (target.getTemplate() != null)
                 if (target instanceof SummonInstance || target instanceof NpcInstance)
-                    if (race == ((NpcTemplate) target.getTemplate()).getRace()) return true;
+                    return race == ((NpcTemplate) target.getTemplate()).getRace();
         return false;
     }
 }

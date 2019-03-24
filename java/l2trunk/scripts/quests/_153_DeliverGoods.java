@@ -5,6 +5,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
 public final class _153_DeliverGoods extends Quest {
+    private static final int RING_OF_KNOWLEDGE = 875;
     private final int DELIVERY_LIST = 1012;
     private final int HEAVY_WOOD_BOX = 1013;
     private final int CLOTH_BUNDLE = 1014;
@@ -12,14 +13,11 @@ public final class _153_DeliverGoods extends Quest {
     private final int JACKSONS_RECEIPT = 1016;
     private final int SILVIAS_RECEIPT = 1017;
     private final int RANTS_RECEIPT = 1018;
-    private static final int RING_OF_KNOWLEDGE = 875;
 
     public _153_DeliverGoods() {
-        super(false);
-
         addStartNpc(30041);
 
-        addTalkId(30002,30003,30054);
+        addTalkId(30002, 30003, 30054);
 
         addQuestItem(HEAVY_WOOD_BOX,
                 CLOTH_BUNDLE,
@@ -37,14 +35,10 @@ public final class _153_DeliverGoods extends Quest {
             st.setCond(1);
             st.start();
             st.playSound(SOUND_ACCEPT);
-            if (st.getQuestItemsCount(DELIVERY_LIST) == 0)
-                st.giveItems(DELIVERY_LIST, 1);
-            if (st.getQuestItemsCount(HEAVY_WOOD_BOX) == 0)
-                st.giveItems(HEAVY_WOOD_BOX, 1);
-            if (st.getQuestItemsCount(CLOTH_BUNDLE) == 0)
-                st.giveItems(CLOTH_BUNDLE, 1);
-            if (st.getQuestItemsCount(CLAY_POT) == 0)
-                st.giveItems(CLAY_POT, 1);
+            st.giveItemIfNotHave(DELIVERY_LIST);
+            st.giveItemIfNotHave(HEAVY_WOOD_BOX);
+            st.giveItemIfNotHave(CLOTH_BUNDLE);
+            st.giveItemIfNotHave(CLAY_POT);
             htmltext = "30041-04.htm";
         }
         return htmltext;
@@ -63,30 +57,27 @@ public final class _153_DeliverGoods extends Quest {
                 }
                 htmltext = "30041-02.htm";
                 st.exitCurrentQuest();
-            } else if (cond == 1 && st.getQuestItemsCount(JACKSONS_RECEIPT) + st.getQuestItemsCount(SILVIAS_RECEIPT) + st.getQuestItemsCount(RANTS_RECEIPT) == 0)
+            } else if (cond == 1 && !st.haveAnyQuestItems(JACKSONS_RECEIPT,SILVIAS_RECEIPT,RANTS_RECEIPT))
                 htmltext = "30041-05.htm";
-            else if (cond == 1 && st.getQuestItemsCount(JACKSONS_RECEIPT) + st.getQuestItemsCount(SILVIAS_RECEIPT) + st.getQuestItemsCount(RANTS_RECEIPT) == 3) {
+            else if (cond == 1 && st.haveAllQuestItems(JACKSONS_RECEIPT,SILVIAS_RECEIPT,RANTS_RECEIPT)) {
                 st.giveItems(RING_OF_KNOWLEDGE, 2);
-                st.takeItems(DELIVERY_LIST);
-                st.takeItems(JACKSONS_RECEIPT);
-                st.takeItems(SILVIAS_RECEIPT);
-                st.takeItems(RANTS_RECEIPT);
+                st.takeAllItems(DELIVERY_LIST,JACKSONS_RECEIPT,SILVIAS_RECEIPT,RANTS_RECEIPT);
                 st.addExpAndSp(600, 0);
                 st.playSound(SOUND_FINISH);
                 htmltext = "30041-06.htm";
                 st.finish();
             }
         } else if (npcId == 30002) {
-            if (cond == 1 && st.getQuestItemsCount(HEAVY_WOOD_BOX) == 1) {
+            if (cond == 1 && st.haveQuestItem(HEAVY_WOOD_BOX) ) {
                 st.takeItems(HEAVY_WOOD_BOX, -1);
                 if (st.getQuestItemsCount(JACKSONS_RECEIPT) == 0)
                     st.giveItems(JACKSONS_RECEIPT);
                 htmltext = "30002-01.htm";
-            } else if (cond == 1 && st.getQuestItemsCount(JACKSONS_RECEIPT) > 0)
+            } else if (cond == 1 && st.haveQuestItem(JACKSONS_RECEIPT) )
                 htmltext = "30002-02.htm";
         } else if (npcId == 30003) {
-            if (cond == 1 && st.getQuestItemsCount(CLOTH_BUNDLE) == 1) {
-                st.takeItems(CLOTH_BUNDLE, -1);
+            if (cond == 1 && st.haveQuestItem(CLOTH_BUNDLE) ) {
+                st.takeItems(CLOTH_BUNDLE);
                 if (st.getQuestItemsCount(SILVIAS_RECEIPT) == 0) {
                     st.giveItems(SILVIAS_RECEIPT);
                     if (st.player.getClassId().isMage())
@@ -95,15 +86,15 @@ public final class _153_DeliverGoods extends Quest {
                         st.giveItems(1835, 6);
                 }
                 htmltext = "30003-01.htm";
-            } else if (cond == 1 && st.getQuestItemsCount(SILVIAS_RECEIPT) > 0)
+            } else if (cond == 1 && st.haveQuestItem(SILVIAS_RECEIPT))
                 htmltext = "30003-02.htm";
         } else if (npcId == 30054)
-            if (cond == 1 && st.getQuestItemsCount(CLAY_POT) == 1) {
-                st.takeItems(CLAY_POT, -1);
+            if (cond == 1 && st.haveQuestItem(CLAY_POT)) {
+                st.takeItems(CLAY_POT);
                 if (st.getQuestItemsCount(RANTS_RECEIPT) == 0)
-                    st.giveItems(RANTS_RECEIPT, 1);
+                    st.giveItems(RANTS_RECEIPT);
                 htmltext = "30054-01.htm";
-            } else if (cond == 1 && st.getQuestItemsCount(RANTS_RECEIPT) > 0)
+            } else if (cond == 1 && st.haveQuestItem(RANTS_RECEIPT) )
                 htmltext = "30054-02.htm";
         return htmltext;
     }

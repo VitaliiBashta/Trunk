@@ -19,8 +19,6 @@ public final class _653_WildMaiden extends Quest {
     private final int GALIBREDO = 30181;
 
     public _653_WildMaiden() {
-        super(false);
-
         addStartNpc(SUKI);
         addTalkId(GALIBREDO);
     }
@@ -45,8 +43,8 @@ public final class _653_WildMaiden extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
         Player player = st.player;
-        if (event.equalsIgnoreCase("spring_girl_sooki_q0653_03.htm")) {
-            if (st.getQuestItemsCount(SOE) > 0) {
+        if ("spring_girl_sooki_q0653_03.htm".equalsIgnoreCase(event)) {
+            if (st.haveQuestItem(SOE) ) {
                 st.setCond(1);
                 st.start();
                 st.playSound(SOUND_ACCEPT);
@@ -82,7 +80,7 @@ public final class _653_WildMaiden extends Quest {
             }
         } else if (npcId == GALIBREDO && st.getCond() == 1) {
             htmltext = "galicbredo_q0653_01.htm";
-            st.giveItems(ADENA_ID, 2883);
+            st.giveAdena( 2883);
             st.playSound(SOUND_FINISH);
             st.finish();
         }

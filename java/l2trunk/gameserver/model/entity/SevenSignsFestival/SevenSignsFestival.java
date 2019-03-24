@@ -2,6 +2,7 @@ package l2trunk.gameserver.model.entity.SevenSignsFestival;
 
 import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.database.DatabaseFactory;
+import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.GameObjectsStorage;
 import l2trunk.gameserver.model.Party;
 import l2trunk.gameserver.model.Player;
@@ -18,10 +19,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 import static l2trunk.commons.lang.NumberUtils.toInt;
 import static l2trunk.gameserver.utils.ItemFunctions.removeItem;
@@ -42,14 +45,14 @@ public enum SevenSignsFestival {
     private static Map<Integer, Long> _dawnFestivalScores = new ConcurrentHashMap<>();
     private static Map<Integer, Long> _duskFestivalScores = new ConcurrentHashMap<>();
     /**
-     * _festivalData is essentially an instance of the seven_signs_festival table and
+     * festivalData is essentially an instance of the seven_signs_festival table and
      * should be treated as such.
      * Data is initially accessed by the related Seven Signs cycle, with _signsCycle representing data for the current round of Festivals.
      * The actual table data is stored as a series of StatsSet constructs. These are accessed by the use of an offset based on the number of festivals, thus:
      * offset = FESTIVAL_COUNT + festivalId
      * (Data for Dawn is always accessed by offset > FESTIVAL_COUNT)
      */
-    private final Map<Integer, Map<Integer, StatsSet>> _festivalData = new ConcurrentHashMap<>();
+    private final Map<Integer, Map<Integer, StatsSet>> festivalData = new ConcurrentHashMap<>();
     private long[] _accumulatedBonuses = new long[FESTIVAL_COUNT]; // The total bonus available (in Ancient Adena)
 
     SevenSignsFestival() {
@@ -136,22 +139,18 @@ public enum SevenSignsFestival {
         return 0;
     }
 
-    private static String implodeString(List<?> strArray) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < strArray.size(); ) {
-            Object o = strArray.get(i);
-            if (o instanceof Player)
-                sb.append(((Player) o).getName());
-            else
-                sb.append(o);
-            if (++i < strArray.size())
-                sb.append(",");
-        }
-        return sb.toString();
-    }
+    private static String implodeString(Collection<?> strArray) {
 
-    public static void setFestivalInitialized(boolean festivalInitialized) {
-        SevenSignsFestival.festivalInitialized = festivalInitialized;
+        String collect = strArray.stream()
+                .filter(p -> p instanceof Player)
+                .map(p -> (Player) p)
+                .map(Creature::getName)
+                .collect(Collectors.joining(","));
+        if (collect.isEmpty())
+            collect = strArray.stream()
+                    .map(p -> (String) p)
+                    .collect(Collectors.joining(","));
+        return collect;
     }
 
     /**
@@ -178,11 +177,11 @@ public enum SevenSignsFestival {
                 festivalDat.set("names", rset.getString("names"));
                 if (cabal == SevenSigns.CABAL_DAWN)
                     festivalId += FESTIVAL_COUNT;
-                Map<Integer, StatsSet> tempData = _festivalData.get(cycle);
+                Map<Integer, StatsSet> tempData = festivalData.get(cycle);
                 if (tempData == null)
                     tempData = new TreeMap<>();
                 tempData.put(festivalId, festivalDat);
-                _festivalData.put(cycle, tempData);
+                festivalData.put(cycle, tempData);
             }
 
             StringBuilder query = new StringBuilder("SELECT festival_cycle, ");
@@ -209,7 +208,7 @@ public enum SevenSignsFestival {
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement("UPDATE seven_signs_festival SET date=?, score=?, members=?, names=? WHERE cycle=? AND cabal=? AND festivalId=?");
              PreparedStatement statement2 = con.prepareStatement("INSERT INTO seven_signs_festival (festivalId, cabal, cycle, date, score, members, names) VALUES (?,?,?,?,?,?,?)")) {
-            for (Map<Integer, StatsSet> currCycleData : _festivalData.values())
+            for (Map<Integer, StatsSet> currCycleData : festivalData.values())
                 for (StatsSet festivalDat : currCycleData.values()) {
                     int festivalCycle = festivalDat.getInteger("cycle");
                     int festivalId = festivalDat.getInteger("festivalId");
@@ -324,7 +323,7 @@ public enum SevenSignsFestival {
             newData.put(i, tempStats);
         }
         // Add the newly created cycle data to the existing festival data, and subsequently save it to the database.
-        _festivalData.put(SevenSigns.INSTANCE.getCurrentCycle(), newData);
+        festivalData.put(SevenSigns.INSTANCE.getCurrentCycle(), newData);
         saveFestivalData(updateSettings);
         // Remove any unused blood offerings from online players.
         GameObjectsStorage.getAllPlayersStream().forEach(p ->
@@ -334,6 +333,10 @@ public enum SevenSignsFestival {
 
     public boolean isFestivalInitialized() {
         return festivalInitialized;
+    }
+
+    public static void setFestivalInitialized(boolean festivalInitialized) {
+        SevenSignsFestival.festivalInitialized = festivalInitialized;
     }
 
     public String getTimeToNextFestivalStr() {
@@ -357,11 +360,11 @@ public enum SevenSignsFestival {
         // Attempt to retrieve existing score data (if found), otherwise create a new blank data set and display a console warning.
         StatsSet currData = null;
         try {
-            currData = _festivalData.get(SevenSigns.INSTANCE.getCurrentCycle()).get(offsetId);
+            currData = festivalData.get(SevenSigns.INSTANCE.getCurrentCycle()).get(offsetId);
         } catch (RuntimeException e) {
             _log.info("SSF: Error while getting scores");
             _log.info("oracle=" + oracle + " festivalId=" + festivalId + " offsetId" + offsetId + " _signsCycle" + SevenSigns.INSTANCE.getCurrentCycle());
-            _log.info("_festivalData=" + _festivalData.toString());
+            _log.info("festivalData=" + festivalData.toString());
             _log.error("Error while getting Seven Signs highest score data", e);
         }
         if (currData == null) {
@@ -385,7 +388,7 @@ public enum SevenSignsFestival {
     public StatsSet getOverallHighestScoreData(int festivalId) {
         StatsSet result = null;
         int highestScore = 0;
-        for (Map<Integer, StatsSet> currCycleData : _festivalData.values())
+        for (Map<Integer, StatsSet> currCycleData : festivalData.values())
             for (StatsSet currFestData : currCycleData.values()) {
                 int currFestID = currFestData.getInteger("festivalId");
                 int festivalScore = currFestData.getInteger("score");
@@ -407,7 +410,7 @@ public enum SevenSignsFestival {
      */
     public boolean setFinalScore(Party party, int oracle, int festivalId, long offeringScore) {
         List<Integer> partyMemberIds = party.getMembersObjIds();
-        List<Player> partyMembers = party.getMembersStream();
+        Collection<Player> partyMembers = party.getMembers();
         long currDawnHighScore = getHighestScore(SevenSigns.CABAL_DAWN, festivalId);
         long currDuskHighScore = getHighestScore(SevenSigns.CABAL_DUSK, festivalId);
         long thisCabalHighScore;

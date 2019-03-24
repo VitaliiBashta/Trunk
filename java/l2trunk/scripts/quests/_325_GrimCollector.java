@@ -22,28 +22,19 @@ public final class _325_GrimCollector extends Quest {
     private final int ANATOMY_DIAGRAM = 1349;
 
     public _325_GrimCollector() {
-        super(false);
-
         addStartNpc(30336);
 
-        addTalkId(30336,30342,30434);
+        addTalkId(30342, 30434);
 
-        addKillId(20026,20029,20035,20042,20045,20457,20458,20051,20514,20515);
+        addKillId(20026, 20029, 20035, 20042, 20045, 20457, 20458, 20051, 20514, 20515);
 
         addQuestItem(items);
         addQuestItem(ANATOMY_DIAGRAM);
     }
 
     private long pieces(QuestState st) {
-        return st.getQuestItemsCount(ZOMBIE_HEAD)
-                + st.getQuestItemsCount(SPINE)
-                + st.getQuestItemsCount(ARM_BONE)
-                + st.getQuestItemsCount(ZOMBIE_HEART)
-                + st.getQuestItemsCount(ZOMBIE_LIVER)
-                + st.getQuestItemsCount(SKULL)
-                + st.getQuestItemsCount(RIB_BONE)
-                + st.getQuestItemsCount(THIGH_BONE)
-                + st.getQuestItemsCount(COMPLETE_SKELETON);
+        return st.getQuestItemsCount(items);
+
     }
 
     @Override
@@ -57,20 +48,20 @@ public final class _325_GrimCollector extends Quest {
             st.giveItems(ANATOMY_DIAGRAM);
         else if ("samed_q0325_06.htm".equalsIgnoreCase(event)) {
             if (pieces(st) > 0) {
-                st.giveItems(ADENA_ID, 30 * st.getQuestItemsCount(ZOMBIE_HEAD) + 20 * st.getQuestItemsCount(ZOMBIE_HEART) + 20 * st.getQuestItemsCount(ZOMBIE_LIVER) + 50 * st.getQuestItemsCount(SKULL) + 15 * st.getQuestItemsCount(RIB_BONE) + 10 * st.getQuestItemsCount(SPINE) + 10 * st.getQuestItemsCount(ARM_BONE) + 10 * st.getQuestItemsCount(THIGH_BONE) + 2000 * st.getQuestItemsCount(COMPLETE_SKELETON));
+                st.giveAdena( 30 * st.getQuestItemsCount(ZOMBIE_HEAD) + 20 * st.getQuestItemsCount(ZOMBIE_HEART) + 20 * st.getQuestItemsCount(ZOMBIE_LIVER) + 50 * st.getQuestItemsCount(SKULL) + 15 * st.getQuestItemsCount(RIB_BONE) + 10 * st.getQuestItemsCount(SPINE) + 10 * st.getQuestItemsCount(ARM_BONE) + 10 * st.getQuestItemsCount(THIGH_BONE) + 2000 * st.getQuestItemsCount(COMPLETE_SKELETON));
                 takeQuestItems(st);
             }
             st.takeItems(ANATOMY_DIAGRAM);
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest();
         } else if ("samed_q0325_07.htm".equalsIgnoreCase(event) && pieces(st) > 0) {
-            st.giveItems(ADENA_ID, 30 * st.getQuestItemsCount(ZOMBIE_HEAD) + 20 * st.getQuestItemsCount(ZOMBIE_HEART) + 20 * st.getQuestItemsCount(ZOMBIE_LIVER) + 50 * st.getQuestItemsCount(SKULL) + 15 * st.getQuestItemsCount(RIB_BONE) + 10 * st.getQuestItemsCount(SPINE) + 10 * st.getQuestItemsCount(ARM_BONE) + 10 * st.getQuestItemsCount(THIGH_BONE) + 2000 * st.getQuestItemsCount(COMPLETE_SKELETON));
+            st.giveAdena( 30 * st.getQuestItemsCount(ZOMBIE_HEAD) + 20 * st.getQuestItemsCount(ZOMBIE_HEART) + 20 * st.getQuestItemsCount(ZOMBIE_LIVER) + 50 * st.getQuestItemsCount(SKULL) + 15 * st.getQuestItemsCount(RIB_BONE) + 10 * st.getQuestItemsCount(SPINE) + 10 * st.getQuestItemsCount(ARM_BONE) + 10 * st.getQuestItemsCount(THIGH_BONE) + 2000 * st.getQuestItemsCount(COMPLETE_SKELETON));
             takeQuestItems(st);
         } else if ("samed_q0325_09.htm".equalsIgnoreCase(event)) {
-            st.giveItems(ADENA_ID, 2000 * st.getQuestItemsCount(COMPLETE_SKELETON));
-            st.takeItems(COMPLETE_SKELETON, -1);
+            st.giveAdena( 2000 * st.getQuestItemsCount(COMPLETE_SKELETON));
+            st.takeItems(COMPLETE_SKELETON);
         } else if ("varsak_q0325_03.htm".equalsIgnoreCase(event))
-            if (st.getQuestItemsCount(SPINE) != 0 && st.getQuestItemsCount(ARM_BONE) != 0 && st.getQuestItemsCount(SKULL) != 0 && st.getQuestItemsCount(RIB_BONE) != 0 && st.getQuestItemsCount(THIGH_BONE) != 0) {
+            if (st.haveAllQuestItems(SPINE,ARM_BONE,SKULL,RIB_BONE,THIGH_BONE)) {
                 st.takeItems(SPINE, 1);
                 st.takeItems(SKULL, 1);
                 st.takeItems(ARM_BONE, 1);
@@ -113,13 +104,13 @@ public final class _325_GrimCollector extends Quest {
         else if (npcId == 30434 && cond > 0) {
             if (st.getQuestItemsCount(ANATOMY_DIAGRAM) == 0)
                 htmltext = "samed_q0325_01.htm";
-            else if (st.haveQuestItem(ANATOMY_DIAGRAM)  && pieces(st) == 0)
+            else if (st.haveQuestItem(ANATOMY_DIAGRAM) && pieces(st) == 0)
                 htmltext = "samed_q0325_04.htm";
-            else if (st.haveQuestItem(ANATOMY_DIAGRAM)  && pieces(st) > 0 && st.getQuestItemsCount(COMPLETE_SKELETON) == 0)
+            else if (st.haveQuestItem(ANATOMY_DIAGRAM) && st.haveAnyQuestItems(items)  && !st.haveQuestItem(COMPLETE_SKELETON))
                 htmltext = "samed_q0325_05.htm";
-            else if (st.haveQuestItem(ANATOMY_DIAGRAM)  && pieces(st) > 0 && st.haveQuestItem(COMPLETE_SKELETON) )
+            else if (st.haveQuestItem(ANATOMY_DIAGRAM) && pieces(st) > 0 && st.haveQuestItem(COMPLETE_SKELETON))
                 htmltext = "samed_q0325_08.htm";
-        } else if (npcId == 30342 && cond > 0 && st.haveQuestItem(ANATOMY_DIAGRAM) )
+        } else if (npcId == 30342 && cond > 0 && st.haveQuestItem(ANATOMY_DIAGRAM))
             htmltext = "varsak_q0325_01.htm";
         return htmltext;
     }
@@ -127,7 +118,7 @@ public final class _325_GrimCollector extends Quest {
     @Override
     public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
-        if (!st.haveQuestItem(ANATOMY_DIAGRAM) )
+        if (!st.haveQuestItem(ANATOMY_DIAGRAM))
             return;
         int n = Rnd.get(100);
         if (npcId == 20026) {

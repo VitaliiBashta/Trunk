@@ -87,11 +87,11 @@ public final class _108_JumbleTumbleDiamondFuss extends Quest {
                     htmltext = "collector_gouph_q0108_07.htm";
                 else if (cond == 12 && st.haveQuestItem(STAR_DIAMOND)) {
                     htmltext = "collector_gouph_q0108_08.htm";
-                    st.takeItems(STAR_DIAMOND, 1);
+                    st.takeItems(STAR_DIAMOND);
 
                     st.giveItems(SILVERSMITH_HAMMER);
                     st.player.addExpAndSp(34565, 2962);
-                    st.giveItems(ADENA_ID, 14666, false);
+                    st.giveAdena( 14666);
 
                     if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("p1q3")) {
                         st.player.setVar("p1q3"); // flag for helper

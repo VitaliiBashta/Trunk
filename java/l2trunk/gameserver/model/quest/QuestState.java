@@ -261,6 +261,9 @@ public final class QuestState {
     public boolean haveAllQuestItems(Collection<Integer> itemIds) {
         return itemIds.stream().allMatch(this::haveQuestItem);
     }
+    public boolean haveAnyQuestItems(Collection<Integer> itemIds) {
+        return itemIds.stream().anyMatch(this::haveQuestItem);
+    }
 
     public boolean haveAllQuestItems(int... itemIds) {
         return IntStream.of(itemIds)
@@ -328,7 +331,7 @@ public final class QuestState {
     }
 
     public void giveAdena(long count) {
-        giveItems(ItemTemplate.ITEM_ID_ADENA, count, true);
+        player.addAdena(count, "");
     }
     public void giveItems(int itemId) {
         giveItems(itemId, 1);

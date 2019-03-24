@@ -19,7 +19,7 @@ public final class Loc implements IUserCommandHandler {
             return false;
 
         RestartArea ra = MapRegionHolder.getInstance().getRegionData(RestartArea.class, activeChar);
-        int msgId = ra != null ? ra.getRestartPoint().get(activeChar.getRace()).getMsgId() : 0;
+        int msgId = ra != null ? ra.getRestartPoint().get(activeChar.getRace()).msgId : 0;
         if (msgId > 0)
             activeChar.sendPacket(new SystemMessage2(SystemMsg.valueOf(msgId)).addInteger(activeChar.getX()).addInteger(activeChar.getY()).addInteger(activeChar.getZ()));
         else

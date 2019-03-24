@@ -14,8 +14,6 @@ public final class _187_NikolasHeart extends Quest {
     private static final int Metal = 10368;
 
     public _187_NikolasHeart() {
-        super(false);
-
         addTalkId(Kusto, Nikola, Lorain);
         addFirstTalkId(Lorain);
         addQuestItem(Certificate, Metal);
@@ -23,16 +21,16 @@ public final class _187_NikolasHeart extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("researcher_lorain_q0187_03.htm")) {
+        if ("researcher_lorain_q0187_03.htm".equalsIgnoreCase(event)) {
             st.playSound(SOUND_ACCEPT);
             st.setCond(1);
-            st.takeItems(Certificate, -1);
-            st.giveItems(Metal, 1);
-        } else if (event.equalsIgnoreCase("maestro_nikola_q0187_03.htm")) {
+            st.takeItems(Certificate);
+            st.giveItems(Metal);
+        } else if ("maestro_nikola_q0187_03.htm".equalsIgnoreCase(event)) {
             st.setCond(2);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("head_blacksmith_kusto_q0187_03.htm")) {
-            st.giveItems(ADENA_ID, 93383);
+        } else if ("head_blacksmith_kusto_q0187_03.htm".equalsIgnoreCase(event)) {
+            st.giveAdena( 93383);
             st.addExpAndSp(285935, 18711);
             st.finish();
             st.playSound(SOUND_FINISH);

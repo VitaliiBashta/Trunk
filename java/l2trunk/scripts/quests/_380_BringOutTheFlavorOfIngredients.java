@@ -58,11 +58,10 @@ public final class _380_BringOutTheFlavorOfIngredients extends Quest {
     };
 
     public _380_BringOutTheFlavorOfIngredients() {
-        super(false);
         addStartNpc(Rollant);
 
         for (int[] aDROPLIST_COND : DROPLIST_COND) {
-            addKillId(aDROPLIST_COND[2]);
+            addKillId(DireWolf, KadifWerewolf,GiantMistLeech );
             addQuestItem(aDROPLIST_COND[4]);
         }
     }
@@ -98,9 +97,7 @@ public final class _380_BringOutTheFlavorOfIngredients extends Quest {
                 htmltext = "rollant_q0380_06.htm";
             else if (cond == 2 && st.getQuestItemsCount(Antidote) >= 2) {
                 st.takeItems(Antidote, 2);
-                st.takeItems(RitronsFruit);
-                st.takeItems(MoonFaceFlower);
-                st.takeItems(LeechFluids);
+                st.takeAllItems(RitronsFruit,MoonFaceFlower,LeechFluids);
                 htmltext = "rollant_q0380_07.htm";
                 st.setCond(3);
                 st.start();
@@ -136,15 +133,9 @@ public final class _380_BringOutTheFlavorOfIngredients extends Quest {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         for (int[] aDROPLIST_COND : DROPLIST_COND)
-            if (cond == aDROPLIST_COND[0] && npcId == aDROPLIST_COND[2])
-                if (aDROPLIST_COND[3] == 0 || st.getQuestItemsCount(aDROPLIST_COND[3]) > 0)
-                    if (aDROPLIST_COND[5] == 0)
-                        st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[6]);
-                    else if (st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[7], aDROPLIST_COND[5], aDROPLIST_COND[6]))
-                        if (aDROPLIST_COND[1] != cond && aDROPLIST_COND[1] != 0) {
-                            st.setCond(aDROPLIST_COND[1]);
-                            st.start();
-                        }
+            if (cond == 1 && npcId == aDROPLIST_COND[2]) {
+                st.rollAndGive(aDROPLIST_COND[4], 1, 1, aDROPLIST_COND[5], aDROPLIST_COND[6]);
+            }
         if (cond == 1 && st.getQuestItemsCount(RitronsFruit) >= 4 && st.getQuestItemsCount(MoonFaceFlower) >= 20 && st.getQuestItemsCount(LeechFluids) >= 10) {
             st.setCond(2);
             st.start();

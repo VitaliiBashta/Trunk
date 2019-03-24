@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.quest.QuestState;
 
 import java.util.stream.IntStream;
 
-public class _627_HeartInSearchOfPower extends Quest {
+public final class _627_HeartInSearchOfPower extends Quest {
     //NPC
     private static final int M_NECROMANCER = 31518;
     private static final int ENFEUX = 31519;

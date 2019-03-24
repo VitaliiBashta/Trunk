@@ -5,7 +5,10 @@ import l2trunk.commons.lang.Pair;
 import l2trunk.gameserver.cache.Msg;
 import l2trunk.gameserver.listener.actor.player.OnAnswerListener;
 import l2trunk.gameserver.listener.actor.player.impl.ReviveAnswerListener;
-import l2trunk.gameserver.model.*;
+import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.Player;
+import l2trunk.gameserver.model.Skill;
+import l2trunk.gameserver.model.Zone;
 import l2trunk.gameserver.model.base.BaseStats;
 import l2trunk.gameserver.model.base.TeamType;
 import l2trunk.gameserver.model.entity.events.GlobalEvent;
@@ -52,12 +55,11 @@ public final class Resurrect extends Skill {
                 return false;
             }
 
-            for (GlobalEvent e : player.getEvents()) {
-                if (!e.canRessurect(player, target, forceUse)) {
-                    player.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addSkillName(this));
-                    return false;
-                }
-            }
+            if (player.getEvents().stream()
+                    .filter(e -> !e.canRessurect(player, target, forceUse))
+                    .peek(e -> player.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addSkillName(this)))
+                    .findFirst().isPresent())
+                return false;
             boolean playerInSiegeZone = player.isInZone(Zone.ZoneType.SIEGE);
             boolean targetInSiegeZone = target.isInZone(Zone.ZoneType.SIEGE);
             boolean playerClan = player.getClan() != null;
@@ -140,7 +142,7 @@ public final class Resurrect extends Skill {
                         break Loop;
 
                 if (target instanceof PetInstance && canPet) {
-                    if (((PetInstance)target).owner == activeChar)
+                    if (((PetInstance) target).owner == activeChar)
                         ((PetInstance) target).doRevive(percent);
                     else
                         target.getPlayer().reviveRequest((Player) activeChar, percent, true);

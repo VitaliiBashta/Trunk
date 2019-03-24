@@ -25,8 +25,6 @@ public final class _138_TempleChampionPart2 extends Quest {
     private final static int FetteredSoul = 20552;
 
     public _138_TempleChampionPart2() {
-        super(false);
-
         // Нет стартового NPC, чтобы квест не появлялся в списке раньше времени
         addFirstTalkId(SYLVAIN);
         addTalkId(SYLVAIN, PUPINA, ANGUS, SLA);

@@ -29,8 +29,6 @@ public final class _038_DragonFangs extends Quest {
     private final int TOOTH_OF_DRAGON = 7175;
 
     public _038_DragonFangs() {
-        super(false);
-
         addStartNpc(LUIS);
 
         addTalkId(IRIS,ROHMER);

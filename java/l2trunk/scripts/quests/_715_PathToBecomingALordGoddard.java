@@ -16,7 +16,6 @@ public final class _715_PathToBecomingALordGoddard extends Quest {
     private static final int GoddardCastle = 7;
 
     public _715_PathToBecomingALordGoddard() {
-        super(false);
         addStartNpc(Alfred);
         addKillId(WaterSpiritAshutar, FireSpiritNastron);
     }

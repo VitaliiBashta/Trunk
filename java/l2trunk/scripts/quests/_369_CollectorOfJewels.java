@@ -24,7 +24,6 @@ public final class _369_CollectorOfJewels extends Quest {
     private final Map<Integer, int[]> DROPLIST = new HashMap<>();
 
     public _369_CollectorOfJewels() {
-        super(false);
         addStartNpc(NELL);
         addKillId(Roxide,Rowin_Undine,Lakin_Undine,Salamander_Rowin,Lakin_Salamander,Death_Fire);
         addQuestItem(FLARE_SHARD,FREEZING_SHARD);
@@ -57,11 +56,11 @@ public final class _369_CollectorOfJewels extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("30376-03.htm") && st.getState() == CREATED) {
+        if ("30376-03.htm".equalsIgnoreCase(event) && st.getState() == CREATED) {
             st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("30376-08.htm") && st.getState() == STARTED) {
+        } else if ("30376-08.htm".equalsIgnoreCase(event) && st.getState() == STARTED) {
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest();
         }
@@ -73,9 +72,9 @@ public final class _369_CollectorOfJewels extends Quest {
         String htmltext = "noquest";
         if (npc.getNpcId() != NELL)
             return htmltext;
-        int _state = st.getState();
+        int state = st.getState();
 
-        if (_state == CREATED) {
+        if (state == CREATED) {
             if (st.player.getLevel() >= 25) {
                 st.setCond(0);
                 return "30376-02.htm";
@@ -84,7 +83,7 @@ public final class _369_CollectorOfJewels extends Quest {
             return "30376-01.htm";
         }
 
-        if (_state != STARTED)
+        if (state != STARTED)
             return htmltext;
         int cond = st.getCond();
         if (cond == 1)
@@ -131,6 +130,5 @@ public final class _369_CollectorOfJewels extends Quest {
         if (qs.getQuestItemsCount(drop[0]) < max_count && qs.rollAndGive(drop[0], 1, 1, max_count, drop[1]) && qs.getQuestItemsCount(FLARE_SHARD) >= max_count && qs.getQuestItemsCount(FREEZING_SHARD) >= max_count)
             qs.setCond(cond == 1 ? 2 : 4);
 
-        return;
     }
 }

@@ -14,7 +14,6 @@ public final class _650_ABrokenDream extends Quest {
     private static final int RemnantsOfOldDwarvesDreams = 8514;
 
     public _650_ABrokenDream() {
-        super(false);
         addStartNpc(RailroadEngineer);
 
         addKillId(ForgottenCrewman,VagabondOfTheRuins);
@@ -28,11 +27,10 @@ public final class _650_ABrokenDream extends Quest {
             st.start();
             st.playSound(SOUND_ACCEPT);
             st.setCond(1);
-        } else if ("650_4".equalsIgnoreCase(event)) {
+        } else if ("650_4".equals(event)) {
             htmltext = "ghost_of_railroadman_q0650_0205.htm";
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest();
-            st.unset("cond");
         }
         return htmltext;
     }

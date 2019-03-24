@@ -12,7 +12,6 @@ import l2trunk.gameserver.model.Skill.SkillTargetType;
 import l2trunk.gameserver.model.Skill.SkillType;
 import l2trunk.gameserver.model.Zone.ZoneType;
 import l2trunk.gameserver.model.base.TeamType;
-import l2trunk.gameserver.model.entity.events.GlobalEvent;
 import l2trunk.gameserver.model.entity.events.impl.DuelEvent;
 import l2trunk.gameserver.model.instances.*;
 import l2trunk.gameserver.model.items.ItemInstance;
@@ -311,7 +310,7 @@ public abstract class Playable extends Creature {
 
         if (!attacker.equals(this) && attacker instanceof Playable) {
             Player player = getPlayer();
-            Player pcAttacker = attacker.getPlayer();
+            Player pcAttacker = ((Playable)attacker).getPlayer();
             if (!pcAttacker.equals(player)) {
                 if (player.isInOlympiadMode() && !player.isOlympiadCompStarted()) {
                     if (sendMessage) {
@@ -322,9 +321,7 @@ public abstract class Playable extends Creature {
             }
 
             if (isInZoneBattle() != attacker.isInZoneBattle()) {
-                if (sendMessage) {
-                    attacker.getPlayer().sendPacket(Msg.INVALID_TARGET);
-                }
+                if (sendMessage) pcAttacker.sendPacket(Msg.INVALID_TARGET);
                 return;
             }
 
@@ -360,15 +357,15 @@ public abstract class Playable extends Creature {
 
     @Override
     public boolean isAttackable(Creature attacker) {
-        return isCtrlAttackable(attacker, true, false);
+        return isCtrlAttackable(attacker, true);
     }
 
     @Override
     public boolean isAutoAttackable(Creature attacker) {
-        return isCtrlAttackable(attacker, false, false);
+        return isCtrlAttackable(attacker, false);
     }
 
-    private boolean isCtrlAttackable(Creature attacker, boolean force, boolean witchCtrl) {
+    private boolean isCtrlAttackable(Creature attacker, boolean force) {
         Player player = getPlayer();
         if ((attacker == null) || (player == null) || attacker.equals(this))
             return false;
@@ -388,15 +385,14 @@ public abstract class Playable extends Creature {
         if (getNonAggroTime() > System.currentTimeMillis())
             return false;
 
-        for (GlobalEvent e : getEvents()) {
-            if (e.checkForAttack(this, attacker, null, force) != null)
-                return false;
-        }
+        if (getEvents().stream()
+                .anyMatch(e -> e.checkForAttack(this, attacker, null, force) != null))
+            return false;
 
-        for (GlobalEvent e : player.getEvents()) {
-            if (e.canAttack(this, attacker, null, force))
-                return true;
-        }
+
+        if (player.getEvents().stream()
+                .anyMatch(e -> e.canAttack(this, attacker, null, force)))
+            return true;
 
         Player pcAttacker = attacker.getPlayer();
         if ((pcAttacker != null) && !pcAttacker.equals(player)) {
@@ -445,8 +441,6 @@ public abstract class Playable extends Creature {
             if (pcAttacker.atMutualWarWith(player))
                 return true;
             if ((player.getKarma() > 0) || (player.getPvpFlag() != 0))
-                return true;
-            if (witchCtrl && (player.getPvpFlag() > 0))
                 return true;
             if (pcAttacker.getLevel() - player.getLevel() > Config.ALT_LEVEL_DIFFERENCE_PROTECTION)
                 return false;
@@ -578,8 +572,7 @@ public abstract class Playable extends Creature {
                 setCurrentMp(getMaxMp());
                 setFullCp();
             } else {
-                setCurrentHp(Math.max(1.0, getMaxHp() * .65), true);
-
+                setCurrentHp( getMaxHp() * .65, true);
             }
 
             broadcastPacket(new Revive(this));

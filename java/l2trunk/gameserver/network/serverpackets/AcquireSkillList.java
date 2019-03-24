@@ -40,7 +40,7 @@ public final class AcquireSkillList extends L2GameServerPacket {
         });
     }
 
-    class AcruireSkill {
+    private class AcruireSkill {
         final int id;
         final int nextLevel;
         final int maxLevel;

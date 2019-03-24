@@ -57,7 +57,7 @@ public final class FortressSiegeEvent extends SiegeEvent<Fortress, SiegeClanObje
     private Future<?> _envoyTask;
     private Future<?> _merchantSpawnTask;
     private Future<?> _commanderSpawnTask;
-    private boolean[] _barrackStatus;
+    private boolean[] barrackStatus;
 
     public FortressSiegeEvent(StatsSet set) {
         super(set);
@@ -79,7 +79,7 @@ public final class FortressSiegeEvent extends SiegeEvent<Fortress, SiegeClanObje
         super.initEvent();
 
         SpawnExObject exObject = getFirstObject(SIEGE_COMMANDERS);
-        _barrackStatus = new boolean[exObject.getSpawns().size()];
+        barrackStatus = new boolean[exObject.getSpawns().size()];
 
         int lvl = getResidence().getFacilityLevel(Fortress.DOOR_UPGRADE);
         List<DoorObject> doorObjects = getObjects(UPGRADEABLE_DOORS);
@@ -105,10 +105,10 @@ public final class FortressSiegeEvent extends SiegeEvent<Fortress, SiegeClanObje
 
         stopCommanderSpawnTask();
 
-        _oldOwner = getResidence().getOwner();
+        oldOwner = getResidence().getOwner();
 
-        if (_oldOwner != null)
-            addObject(DEFENDERS, new SiegeClanObject(DEFENDERS, _oldOwner, 0));
+        if (oldOwner != null)
+            addObject(DEFENDERS, new SiegeClanObject(DEFENDERS, oldOwner, 0));
 
         SiegeClanDAO.INSTANCE.delete(getResidence());
 
@@ -131,7 +131,7 @@ public final class FortressSiegeEvent extends SiegeEvent<Fortress, SiegeClanObje
 
         Clan ownerClan = getResidence().getOwner();
         if (ownerClan != null) {
-            if (_oldOwner != ownerClan) {
+            if (oldOwner != ownerClan) {
                 ownerClan.broadcastToOnlineMembers(PlaySound.SIEGE_VICTORY);
 
                 ownerClan.incReputation(1700, false, toString());
@@ -283,7 +283,7 @@ public final class FortressSiegeEvent extends SiegeEvent<Fortress, SiegeClanObje
     }
 
     public synchronized void barrackAction(int id, boolean val) {
-        _barrackStatus[id] = val;
+        barrackStatus[id] = val;
     }
 
     public synchronized void checkBarracks() {
@@ -296,7 +296,7 @@ public final class FortressSiegeEvent extends SiegeEvent<Fortress, SiegeClanObje
                 allDead = false;
 
         if (allDead) {
-            if (_oldOwner != null) {
+            if (oldOwner != null) {
                 SpawnExObject spawn = getFirstObject(FortressSiegeEvent.MERCENARY);
                 NpcInstance npc = spawn.getFirstSpawned();
                 if (npc == null || npc.isDead())
@@ -315,7 +315,7 @@ public final class FortressSiegeEvent extends SiegeEvent<Fortress, SiegeClanObje
         spawnAction(FortressSiegeEvent.SIEGE_COMMANDERS, false);
         spawnAction(FortressSiegeEvent.COMBAT_FLAGS, true);
 
-        if (_oldOwner != null)
+        if (oldOwner != null)
             spawnAction(FortressSiegeEvent.MERCENARY, false);
 
         spawnAction(FortressSiegeEvent.GUARDS_LIVE_WITH_C_CENTER, false);
@@ -330,18 +330,18 @@ public final class FortressSiegeEvent extends SiegeEvent<Fortress, SiegeClanObje
         if (name.equals(OWNER))
             return getResidence().getOwner() != null;
         if (name.equals(OLD_OWNER))
-            return _oldOwner != null;
-        if (name.equalsIgnoreCase("reinforce_1"))
+            return oldOwner != null;
+        if ("reinforce_1".equalsIgnoreCase(name))
             return getResidence().getFacilityLevel(Fortress.REINFORCE) == 1;
-        if (name.equalsIgnoreCase("reinforce_2"))
+        if ("reinforce_2".equalsIgnoreCase(name))
             return getResidence().getFacilityLevel(Fortress.REINFORCE) == 2;
-        if (name.equalsIgnoreCase("dwarvens"))
+        if ("dwarvens".equalsIgnoreCase(name))
             return getResidence().getFacilityLevel(Fortress.DWARVENS) == 1;
         return false;
     }
 
     public boolean[] getBarrackStatus() {
-        return _barrackStatus;
+        return barrackStatus;
     }
 
     @Override

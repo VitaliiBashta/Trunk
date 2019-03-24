@@ -23,7 +23,10 @@ import org.slf4j.LoggerFactory;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Locale;
+import java.util.StringTokenizer;
 import java.util.stream.Collectors;
 
 import static l2trunk.commons.lang.NumberUtils.toInt;
@@ -75,10 +78,12 @@ public final class AuctioneerInstance extends NpcInstance {
         else if (actualCommand.equalsIgnoreCase("list_all")) {
             int page = toInt(tokenizer.nextToken());
 
-            List<ClanHallAuctionEvent> events = new ArrayList<>();
-            for (ClanHall ch : ResidenceHolder.getClanHalls())
-                if (ch.getSiegeEvent().getClass() == ClanHallAuctionEvent.class && ch.getSiegeEvent().isInProgress())
-                    events.add(ch.getSiegeEvent());
+            List<ClanHallAuctionEvent> events = ResidenceHolder.getClanHalls().stream()
+                    .filter(ch -> ch.getSiegeEvent().getClass() == ClanHallAuctionEvent.class)
+                    .filter(ch -> ch.getSiegeEvent().isInProgress())
+                    .map(ch -> (ClanHallAuctionEvent) ch.getSiegeEvent())
+                    .collect(Collectors.toList());
+
 
             if (events.isEmpty()) {
                 player.sendPacket(SystemMsg.THERE_ARE_NO_CLAN_HALLS_UP_FOR_AUCTION);
@@ -147,10 +152,11 @@ public final class AuctioneerInstance extends NpcInstance {
                         fileName = "residence2/clanhall/auction_clanhall_info_owner.htm";
                 } else {
                     for (ClanHall ch : ResidenceHolder.getClanHalls())
-                        if (ch.getSiegeEvent().getClass() == ClanHallAuctionEvent.class && (siegeClan = ch.getSiegeEvent().getSiegeClan(ClanHallAuctionEvent.ATTACKERS, player.getClan())) != null) {
-                            clanHall = ch;
-                            break;
-                        }
+                        if (ch.getSiegeEvent().getClass() == ClanHallAuctionEvent.class)
+                            if ((siegeClan = ch.getSiegeEvent().getSiegeClan(ClanHallAuctionEvent.ATTACKERS, player.getClan())) != null) {
+                                clanHall = ch;
+                                break;
+                            }
 
                     if (siegeClan == null) {
                         player.sendPacket(SystemMsg.THERE_ARE_NO_OFFERINGS_I_OWN_OR_I_MADE_A_BID_FOR);
@@ -186,7 +192,7 @@ public final class AuctioneerInstance extends NpcInstance {
 
             int remainingTime = (int) ((c.getTimeInMillis() - System.currentTimeMillis()) / 60000L);
 
-            msg.replace("%remaining_hour%", remainingTime/ 60);
+            msg.replace("%remaining_hour%", remainingTime / 60);
             msg.replace("%remaining_minutes%", remainingTime % 60);
 
             if (siegeClan != null)
@@ -270,7 +276,7 @@ public final class AuctioneerInstance extends NpcInstance {
             msg.setFile("residence2/clanhall/auction_bid_start.htm");
             msg.replace("%id%", id);
             msg.replace("%min_bid%", minBid);
-            msg.replace("%clan_adena%",player.getClan().getWarehouse().getCountOf(ItemTemplate.ITEM_ID_ADENA));
+            msg.replace("%clan_adena%", player.getClan().getWarehouse().getCountOf(ItemTemplate.ITEM_ID_ADENA));
 
             player.sendPacket(msg);
         }
@@ -407,7 +413,7 @@ public final class AuctioneerInstance extends NpcInstance {
             NpcHtmlMessage msg = new NpcHtmlMessage(player, this);
             msg.setFile("residence2/clanhall/auction_bid_cancel.htm");
             msg.replace("%id%", id);
-            msg.replace("%bid%",siegeClan.getParam());
+            msg.replace("%bid%", siegeClan.getParam());
             msg.replace("%return%", returnVal);
 
             player.sendPacket(msg);
@@ -462,7 +468,7 @@ public final class AuctioneerInstance extends NpcInstance {
 
             NpcHtmlMessage msg = new NpcHtmlMessage(player, this);
             msg.setFile("residence2/clanhall/auction_clanhall_register_start.htm");
-            msg.replace("%id%",player.getClan().getHasHideout());
+            msg.replace("%id%", player.getClan().getHasHideout());
             msg.replace("%adena%", player.getClan().getWarehouse().getCountOf(ItemTemplate.ITEM_ID_ADENA));
             msg.replace("%deposit%", clanHall.getDeposit());
 

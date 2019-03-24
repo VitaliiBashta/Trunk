@@ -140,7 +140,7 @@ public final class Call extends Skill {
 
         if (party) {
             if (player.getParty() != null)
-                player.getParty().getMembersStream().stream()
+                player.getParty().getMembersStream()
                         .filter(target -> !target.equals(player))
                         .filter(target -> canBeSummoned(player, target) == null)
                         .filter(target -> !target.isTerritoryFlagEquipped())

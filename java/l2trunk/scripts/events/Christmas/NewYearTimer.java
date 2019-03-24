@@ -6,19 +6,14 @@ import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.instancemanager.ServerVariables;
 import l2trunk.gameserver.model.GameObjectsStorage;
 import l2trunk.gameserver.network.serverpackets.MagicSkillUse;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 import java.util.Calendar;
 
-public final class NewYearTimer implements ScriptFile {
+public enum  NewYearTimer {
+    INSTANCE;
     private static final int firework = 3266;
-    private static NewYearTimer instance;
 
-    public NewYearTimer() {
-        if (instance != null)
-            return;
-
-        instance = this;
+    NewYearTimer() {
 
         if (!isActive())
             return;
@@ -48,23 +43,12 @@ public final class NewYearTimer implements ScriptFile {
         ThreadPoolManager.INSTANCE.schedule(new NewYearAnnouncer("5"), getDelay(c));
     }
 
-    public static NewYearTimer getInstance() {
-        if (instance == null)
-            new NewYearTimer();
-        return instance;
-    }
-
     private static boolean isActive() {
         return ServerVariables.getString("Christmas", "off").equalsIgnoreCase("on");
     }
 
     private long getDelay(Calendar c) {
         return c.getTime().getTime() - System.currentTimeMillis();
-    }
-
-    @Override
-    public void onLoad() {
-
     }
 
     private class NewYearAnnouncer extends RunnableImpl {
@@ -82,8 +66,6 @@ public final class NewYearTimer implements ScriptFile {
                 return;
             GameObjectsStorage.getAllPlayersStream().forEach(pl -> pl.broadcastPacket(new MagicSkillUse(pl, firework)));
 
-            instance = null;
-            new NewYearTimer();
         }
     }
 }

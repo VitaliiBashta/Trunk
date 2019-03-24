@@ -195,8 +195,6 @@ public final class _337_AudienceWithLandDragon extends Quest {
     };
 
     public _337_AudienceWithLandDragon() {
-        super(false);
-
         addStartNpc(GABRIELLE);
 
         addTalkId(MOKE,HELTON,CHAKIRIS,KAIENA,GILMORE,THEODRIC,KENDRA,ORVEN);
@@ -309,12 +307,11 @@ public final class _337_AudienceWithLandDragon extends Quest {
                 htmltext = "30753-04.htm";
             else htmltext = "30753-06.htm";
         } else if (npcId == KAIENA && cond == 1 && step < 4) {
-            if (st.getQuestItemsCount(STALKER_HORN_ID) < 1 && st.getQuestItemsCount(DRAKE_TALON_ID) < 1 && step == 1)
+            if (!(st.haveAnyQuestItems(STALKER_HORN_ID,DRAKE_TALON_ID)) && step == 1)
                 htmltext = "30720-01.htm";
             else if (st.haveAllQuestItems(STALKER_HORN_ID,DRAKE_TALON_ID) ) {
                 htmltext = "30720-03.htm";
-                st.takeItems(STALKER_HORN_ID);
-                st.takeItems(DRAKE_TALON_ID);
+                st.takeAllItems(STALKER_HORN_ID,DRAKE_TALON_ID);
                 st.giveItems(MARK_OF_WATCHMAN_ID);
                 st.set("step", 3);
                 st.playSound(SOUND_MIDDLE);
@@ -353,8 +350,7 @@ public final class _337_AudienceWithLandDragon extends Quest {
                 htmltext = "30705-01.htm";
             else if (st.haveAllQuestItems(HAMRUT_LEG_ID,KRANROT_SKIN_ID)) {
                 htmltext = "30705-03.htm";
-                st.takeItems(HAMRUT_LEG_ID);
-                st.takeItems(KRANROT_SKIN_ID);
+                st.takeAllItems(HAMRUT_LEG_ID,KRANROT_SKIN_ID);
                 st.giveItems(MARK_OF_WATCHMAN_ID);
                 st.set("step", 9);
                 st.playSound(SOUND_MIDDLE);
@@ -366,8 +362,7 @@ public final class _337_AudienceWithLandDragon extends Quest {
             if (st.haveAnyQuestItems(MARA_FANG_ID,FIRST_ABYSS_FRAGMENT_ID)  || step != 10) {
                 if (st.haveAllQuestItems(MARA_FANG_ID,FIRST_ABYSS_FRAGMENT_ID)) {
                     htmltext = "30498-03.htm";
-                    st.takeItems(MARA_FANG_ID);
-                    st.takeItems(FIRST_ABYSS_FRAGMENT_ID);
+                    st.takeAllItems(MARA_FANG_ID,FIRST_ABYSS_FRAGMENT_ID);
                     st.giveItems(MARK_OF_WATCHMAN_ID);
                     st.set("step", 12);
                     st.playSound(SOUND_MIDDLE);
@@ -382,8 +377,7 @@ public final class _337_AudienceWithLandDragon extends Quest {
             if (st.haveAnyQuestItems(MUSFEL_FANG_ID,SECOND_ABYSS_FRAGMENT_ID)  || step != 12) {
                 if (st.haveAllQuestItems(MUSFEL_FANG_ID,SECOND_ABYSS_FRAGMENT_ID) ) {
                     htmltext = "30678-03.htm";
-                    st.takeItems(MUSFEL_FANG_ID);
-                    st.takeItems(SECOND_ABYSS_FRAGMENT_ID);
+                    st.takeAllItems(MUSFEL_FANG_ID,SECOND_ABYSS_FRAGMENT_ID);
                     st.giveItems(MARK_OF_WATCHMAN_ID);
                     st.set("step", 14);
                     st.playSound(SOUND_MIDDLE);
@@ -421,13 +415,12 @@ public final class _337_AudienceWithLandDragon extends Quest {
         int step = st.getInt("step");
         for (int[] element : SPAWNLIST)
             //	# [STEP, MOB, SPWN_MOB, SPWN_COUNT]
-            if (npcId == element[1] && step == element[0] && npc.getCurrentHpPercents() < 50 && st.getInt("guard") == 0) {
+            if (npcId == element[1] && step == element[0] && npc.getCurrentHpPercents() < 50 && !st.isSet("guard")) {
                 for (int j = 0; j < element[3]; j++)
                     st.addSpawn(element[2]);
                 st.playSound(SOUND_BEFORE_BATTLE);
                 st.set("guard");
             }
-//        return null;
     }
 
     @Override
@@ -442,7 +435,7 @@ public final class _337_AudienceWithLandDragon extends Quest {
             }
         for (int[] element : SPAWNLIST) {
             //	# [STEP, MOB, SPWN_MOB, SPWN_COUNT]
-            if (step == element[0] && npcId == element[1] && Rnd.chance(50) && st.getInt("guard") == 0) {
+            if (step == element[0] && npcId == element[1] && Rnd.chance(50) && !st.isSet("guard")) {
                 for (int j = 0; j < element[3]; j++)
                     st.addSpawn(element[2]);
                 st.playSound(SOUND_BEFORE_BATTLE);

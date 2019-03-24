@@ -1,10 +1,14 @@
 package l2trunk.scripts.quests;
 
 import l2trunk.commons.util.Rnd;
+import l2trunk.gameserver.model.base.ClassId;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.utils.Location;
+
+import static l2trunk.gameserver.model.base.ClassId.orcFighter;
+import static l2trunk.gameserver.model.base.ClassId.orcRaider;
 
 public final class _414_PathToOrcRaider extends Quest {
     private static final int MARK_OF_RAIDER = 1592;
@@ -26,15 +30,13 @@ public final class _414_PathToOrcRaider extends Quest {
     private final int TIMORA_ORCS_HEAD = 8544;
 
     public _414_PathToOrcRaider() {
-        super(false);
-
         addStartNpc(KARUKIA);
 
-        addTalkId(KASMAN,TAZEER);
+        addTalkId(KASMAN, TAZEER);
 
-        addKillId(GOBLIN_TOMB_RAIDER_LEADER,KURUKA_RATMAN_LEADER,UMBAR_ORC,TIMORA_ORC);
+        addKillId(GOBLIN_TOMB_RAIDER_LEADER, KURUKA_RATMAN_LEADER, UMBAR_ORC, TIMORA_ORC);
 
-        addQuestItem(KURUKA_RATMAN_TOOTH,GOBLIN_DWELLING_MAP,GREEN_BLOOD,HEAD_OF_BETRAYER,BETRAYER_UMBAR_REPORT,TIMORA_ORCS_HEAD);
+        addQuestItem(KURUKA_RATMAN_TOOTH, GOBLIN_DWELLING_MAP, GREEN_BLOOD, HEAD_OF_BETRAYER, BETRAYER_UMBAR_REPORT, TIMORA_ORCS_HEAD);
     }
 
     @Override
@@ -47,16 +49,14 @@ public final class _414_PathToOrcRaider extends Quest {
             st.playSound(SOUND_ACCEPT);
         } else if ("to_Gludin".equalsIgnoreCase(event)) {
             htmltext = "prefect_karukia_q0414_07a.htm";
-            st.takeItems(KURUKA_RATMAN_TOOTH);
-            st.takeItems(GOBLIN_DWELLING_MAP);
+            st.takeAllItems(KURUKA_RATMAN_TOOTH,GOBLIN_DWELLING_MAP);
             st.playSound(SOUND_MIDDLE);
             st.giveItems(BETRAYER_UMBAR_REPORT);
             st.addRadar(Location.of(-74490, 83275, -3374));
             st.setCond(3);
         } else if ("to_Schuttgart".equalsIgnoreCase(event)) {
             htmltext = "prefect_karukia_q0414_07b.htm";
-            st.takeItems(KURUKA_RATMAN_TOOTH);
-            st.takeItems(GOBLIN_DWELLING_MAP);
+            st.takeAllItems(KURUKA_RATMAN_TOOTH,GOBLIN_DWELLING_MAP);
             st.addRadar(Location.of(90000, -143286, -1520));
             st.playSound(SOUND_MIDDLE);
             st.setCond(5);
@@ -73,20 +73,20 @@ public final class _414_PathToOrcRaider extends Quest {
         String htmltext = "noquest";
         int npcId = npc.getNpcId();
         int cond = st.getCond();
-        int playerClassID = st.player.getClassId().id;
+        ClassId playerClassID = st.player.getClassId();
         int playerLvl = st.player.getLevel();
         if (npcId == KARUKIA) {
             if (cond < 1) {
-                if (playerLvl >= 18 && playerClassID == 0x2c && st.getQuestItemsCount(MARK_OF_RAIDER) == 0 && st.getQuestItemsCount(GOBLIN_DWELLING_MAP) == 0)
+                if (playerLvl >= 18 && playerClassID == orcFighter && !st.haveQuestItem(MARK_OF_RAIDER) && !st.haveQuestItem(GOBLIN_DWELLING_MAP))
                     htmltext = "prefect_karukia_q0414_01.htm";
-                else if (playerClassID != 0x2c) {
-                    if (playerClassID == 0x2d)
+                else if (playerClassID != orcFighter) {
+                    if (playerClassID == orcRaider)
                         htmltext = "prefect_karukia_q0414_02a.htm";
                     else
                         htmltext = "prefect_karukia_q0414_03.htm";
                 } else if (playerLvl < 18)
                     htmltext = "prefect_karukia_q0414_02.htm";
-                else if (st.getQuestItemsCount(MARK_OF_RAIDER) > 0)
+                else if (st.haveQuestItem(MARK_OF_RAIDER))
                     htmltext = "prefect_karukia_q0414_04.htm";
                 else
                     htmltext = "prefect_karukia_q0414_02.htm";
@@ -96,23 +96,20 @@ public final class _414_PathToOrcRaider extends Quest {
                 htmltext = "prefect_karukia_q0414_07.htm";
             else if (cond == 3 && st.getQuestItemsCount(BETRAYER_UMBAR_REPORT) > 0 && st.getQuestItemsCount(HEAD_OF_BETRAYER) < 2)
                 htmltext = "prefect_karukia_q0414_08.htm";
-            else if (cond == 4 && st.haveQuestItem(BETRAYER_UMBAR_REPORT)  && st.haveQuestItem(HEAD_OF_BETRAYER, 2))
+            else if (cond == 4 && st.haveQuestItem(BETRAYER_UMBAR_REPORT) && st.haveQuestItem(HEAD_OF_BETRAYER, 2))
                 htmltext = "prefect_karukia_q0414_09.htm";
         } else if (npcId == KASMAN && cond > 0) {
-            if (cond == 3 && st.haveQuestItem(BETRAYER_UMBAR_REPORT)  && st.getQuestItemsCount(HEAD_OF_BETRAYER) < 1)
+            if (cond == 3 && st.haveQuestItem(BETRAYER_UMBAR_REPORT) && st.getQuestItemsCount(HEAD_OF_BETRAYER) < 1)
                 htmltext = "prefect_kasman_q0414_01.htm";
-            else if (cond == 3 && st.haveQuestItem(HEAD_OF_BETRAYER)  && st.getQuestItemsCount(HEAD_OF_BETRAYER) < 2)
+            else if (cond == 3 && st.haveQuestItem(HEAD_OF_BETRAYER) && st.getQuestItemsCount(HEAD_OF_BETRAYER) < 2)
                 htmltext = "prefect_kasman_q0414_02.htm";
-            else if (cond == 4 && st.getQuestItemsCount(HEAD_OF_BETRAYER) > 1) {
+            else if (cond == 4 && st.haveQuestItem(HEAD_OF_BETRAYER)) {
                 htmltext = "prefect_kasman_q0414_03.htm";
                 st.exitCurrentQuest();
                 if (st.player.getClassId().occupation() == 0) {
                     st.giveItems(MARK_OF_RAIDER);
-                    if (!st.player.isVarSet("prof1")) {
-                        st.player.setVar("prof1");
-                        st.addExpAndSp(228064, 16455);
-                        st.giveItems(ADENA_ID, 81900);
-                    }
+                    st.addExpAndSp(228064, 16455);
+                    st.giveAdena(81900);
                 }
                 st.playSound(SOUND_FINISH);
             }
@@ -126,11 +123,8 @@ public final class _414_PathToOrcRaider extends Quest {
                 st.exitCurrentQuest();
                 if (st.player.getClassId().occupation() == 0) {
                     st.giveItems(MARK_OF_RAIDER);
-                    if (!st.player.isVarSet("prof1")) {
-                        st.player.setVar("prof1");
-                        st.addExpAndSp(228064, 16455);
-                        st.giveItems(ADENA_ID, 81900);
-                    }
+                    st.addExpAndSp(228064, 16455);
+                    st.giveAdena(81900);
                 }
                 st.playSound(SOUND_FINISH);
             }
@@ -169,9 +163,9 @@ public final class _414_PathToOrcRaider extends Quest {
                     st.playSound(SOUND_ITEMGET);
             }
         } else if (npcId == UMBAR_ORC && cond == 3) {
-            if (st.getQuestItemsCount(BETRAYER_UMBAR_REPORT) > 0 && st.getQuestItemsCount(HEAD_OF_BETRAYER) < 2) {
+            if (st.haveQuestItem(BETRAYER_UMBAR_REPORT) && st.getQuestItemsCount(HEAD_OF_BETRAYER) < 2) {
                 st.giveItems(HEAD_OF_BETRAYER);
-                if (st.haveQuestItem(HEAD_OF_BETRAYER) ) {
+                if (st.haveQuestItem(HEAD_OF_BETRAYER)) {
                     st.setCond(4);
                     st.addRadar(Location.of(-80450, 153410, -3175));
                     st.playSound(SOUND_MIDDLE);

@@ -493,7 +493,6 @@ public final class Config {
      * Logging Chat Window
      */
     public static boolean LOG_CHAT;
-    public static int LATEST_SYSTEM_VER;
     /**
      * Rate control
      */
@@ -699,7 +698,6 @@ public final class Config {
     public static int SIEGE_WINNER_REPUTATION_REWARD;
     public static boolean ACCEPT_ALTERNATE_ID;
     public static int REQUEST_ID;
-    public static boolean ANNOUNCE_MAMMON_SPAWN;
     public static int NORMAL_NAME_COLOUR;
     public static boolean VIKTORINA_ENABLED;// false;
     public static boolean VIKTORINA_REMOVE_QUESTION;// false;;
@@ -757,7 +755,6 @@ public final class Config {
      * Augmentations
      **/
     public static int AUGMENTATION_NG_SKILL_CHANCE; // Chance to get a skill while using a NoGrade Life Stone
-    public static int AUGMENTATION_NG_GLOW_CHANCE; // Chance to get a Glow effect while using a NoGrade Life Stone(only if you get a skill)
     public static int AUGMENTATION_MID_SKILL_CHANCE; // Chance to get a skill while using a MidGrade Life Stone
     public static int AUGMENTATION_MID_GLOW_CHANCE; // Chance to get a Glow effect while using a MidGrade Life Stone(only if you get a skill)
     public static int AUGMENTATION_HIGH_SKILL_CHANCE; // Chance to get a skill while using a HighGrade Life Stone
@@ -1426,7 +1423,6 @@ public final class Config {
         SENDSTATUS_TRADE_MOD = otherSettings.getProperty("SendStatusTradeMod", 1.);
         SHOW_OFFLINE_MODE_IN_ONLINE = otherSettings.getProperty("ShowOfflineTradeInOnline", false);
 
-        ANNOUNCE_MAMMON_SPAWN = otherSettings.getProperty("AnnounceMammonSpawn", true);
 
         NORMAL_NAME_COLOUR = Integer.decode("0x" + otherSettings.getProperty("NormalNameColour", "FFFFFF"));
 
@@ -1682,7 +1678,6 @@ public final class Config {
         ALT_CH_ALLOW_1H_BUFFS = altSettings.getProperty("AltChAllowHourBuff", false);
 
         AUGMENTATION_NG_SKILL_CHANCE = altSettings.getProperty("AugmentationNGSkillChance", 15);
-        AUGMENTATION_NG_GLOW_CHANCE = altSettings.getProperty("AugmentationNGGlowChance", 0);
         AUGMENTATION_MID_SKILL_CHANCE = altSettings.getProperty("AugmentationMidSkillChance", 30);
         AUGMENTATION_MID_GLOW_CHANCE = altSettings.getProperty("AugmentationMidGlowChance", 40);
         AUGMENTATION_HIGH_SKILL_CHANCE = altSettings.getProperty("AugmentationHighSkillChance", 45);

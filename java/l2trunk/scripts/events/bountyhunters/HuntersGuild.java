@@ -175,7 +175,7 @@ public final class HuntersGuild extends Functions implements ScriptFile, IVoiced
             getTask(activeChar, id);
             return true;
         }
-        if (command.equalsIgnoreCase("declinetask")) {
+        if ("declinetask".equalsIgnoreCase(command)) {
             if (!activeChar.isVarSet("bhMonstersId")) {
                 activeChar.sendMessage(new CustomMessage("scripts.events.bountyhunters.NoTask"));
                 return true;

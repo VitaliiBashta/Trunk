@@ -40,15 +40,7 @@ public final class _10295_SevenSignsSolinasTomb extends Quest {
     private static final List<Integer> SolinaGuardians = List.of(18952, 18953, 18954, 18955);
     private static final List<Integer> TombGuardians = List.of(18956, 18957, 18958, 18959);
 
-    static {
-        Location[] minions1 = {Location.of(55672, -252120, -6760), Location.of(55752, -252120, -6760), Location.of(55656, -252216, -6760), Location.of(55736, -252216, -6760)};
-        Location[] minions2 = {Location.of(55672, -252728, -6760), Location.of(55752, -252840, -6760), Location.of(55768, -252840, -6760), Location.of(55752, -252712, -6760)};
-        Location[] minions3 = {Location.of(56504, -252840, -6760), Location.of(56504, -252728, -6760), Location.of(56392, -252728, -6760), Location.of(56408, -252840, -6760)};
-        Location[] minions4 = {Location.of(56520, -252232, -6760), Location.of(56520, -252104, -6760), Location.of(56424, -252104, -6760), Location.of(56440, -252216, -6760)};
-    }
-
     public _10295_SevenSignsSolinasTomb() {
-        super(false);
         addStartNpc(ErisEvilThoughts);
         addTalkId(ElcardiaInzone1, TeleportControlDevice, PowerfulDeviceStaff, PowerfulDeviceBook, PowerfulDeviceSword, PowerfulDeviceShield);
         addTalkId(AltarofHallowsStaff, AltarofHallowsSword, AltarofHallowsBook, AltarofHallowsShield);
@@ -67,36 +59,36 @@ public final class _10295_SevenSignsSolinasTomb extends Quest {
             st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("teleport_in".equalsIgnoreCase(event)) {
-            player.teleToLocation(Location.of(45512, -249832, -6760));
+            player.teleToLocation(45512, -249832, -6760);
             teleportElcardia(player);
             return null;
         } else if ("teleport_out".equalsIgnoreCase(event)) {
-            player.teleToLocation(Location.of(120664, -86968, -3392));
+            player.teleToLocation(120664, -86968, -3392);
             teleportElcardia(player);
             return null;
         } else if ("use_staff".equalsIgnoreCase(event)) {
-            if (st.getQuestItemsCount(StaffofBlessing) > 0) {
+            if (st.haveQuestItem(StaffofBlessing)) {
                 st.takeItems(StaffofBlessing);
                 removeInvincibility(player, 18953);
                 return null;
             } else
                 htmltext = "powerful_q10295_0.htm";
         } else if ("use_book".equalsIgnoreCase(event)) {
-            if (st.getQuestItemsCount(ScrollofAbstinence) > 0) {
+            if (st.haveQuestItem(ScrollofAbstinence) ) {
                 st.takeItems(ScrollofAbstinence);
                 removeInvincibility(player, 18954);
                 return null;
             } else
                 htmltext = "powerful_q10295_0.htm";
         } else if ("use_sword".equalsIgnoreCase(event)) {
-            if (st.getQuestItemsCount(SwordofHolySpirit) > 0) {
+            if (st.haveQuestItem(SwordofHolySpirit) ) {
                 st.takeItems(SwordofHolySpirit);
                 removeInvincibility(player, 18955);
                 return null;
             } else
                 htmltext = "powerful_q10295_0.htm";
         } else if ("use_shield".equalsIgnoreCase(event)) {
-            if (st.getQuestItemsCount(ShieldofSacrifice) > 0) {
+            if (st.haveQuestItem(ShieldofSacrifice) ) {
                 st.takeItems(ShieldofSacrifice);
                 removeInvincibility(player, 18952);
                 return null;
@@ -112,18 +104,18 @@ public final class _10295_SevenSignsSolinasTomb extends Quest {
                 st.giveItems(ScrollofAbstinence);
             else
                 htmltext = "atlar_q10295_0.htm";
-        } else if (event.equalsIgnoreCase("altarsword_q10295_2.htm")) {
-            if (st.getQuestItemsCount(SwordofHolySpirit) == 0)
+        } else if ("altarsword_q10295_2.htm".equalsIgnoreCase(event)) {
+            if (!st.haveQuestItem(SwordofHolySpirit))
                 st.giveItems(SwordofHolySpirit);
             else
                 htmltext = "atlar_q10295_0.htm";
-        } else if (event.equalsIgnoreCase("altarshield_q10295_2.htm")) {
-            if (st.getQuestItemsCount(ShieldofSacrifice) == 0)
+        } else if ("altarshield_q10295_2.htm".equalsIgnoreCase(event)) {
+            if (!st.haveQuestItem(ShieldofSacrifice))
                 st.giveItems(ShieldofSacrifice);
             else
                 htmltext = "atlar_q10295_0.htm";
         } else if ("teleport_solina".equalsIgnoreCase(event)) {
-            player.teleToLocation(Location.of(56033, -252944, -6760));
+            player.teleToLocation(56033, -252944, -6760);
             teleportElcardia(player);
             return null;
         } else if ("tombsaintess_q10295_2.htm".equalsIgnoreCase(event)) {
@@ -132,7 +124,7 @@ public final class _10295_SevenSignsSolinasTomb extends Quest {
             else
                 htmltext = "tombsaintess_q10295_3.htm";
         } else if ("teleport_realtomb".equalsIgnoreCase(event)) {
-            player.teleToLocation(Location.of(56081, -250391, -6760));
+            player.teleToLocation(56081, -250391, -6760);
             teleportElcardia(player);
             player.showQuestMovie(ExStartScenePlayer.SCENE_SSQ2_ELYSS_NARRATION);
             return null;

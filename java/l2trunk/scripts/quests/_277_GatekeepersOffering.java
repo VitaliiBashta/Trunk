@@ -9,7 +9,6 @@ public final class _277_GatekeepersOffering extends Quest {
     private static final int GATEKEEPER_CHARM_ID = 1658;
 
     public _277_GatekeepersOffering() {
-        super(false);
         addStartNpc(30576);
         addKillId(20333);
         addQuestItem(STARSTONE1_ID);
@@ -18,7 +17,7 @@ public final class _277_GatekeepersOffering extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equals("1"))
+        if ("1".equals(event))
             if (st.player.getLevel() >= 15) {
                 htmltext = "gatekeeper_tamil_q0277_03.htm";
                 st.setCond(1);
@@ -55,7 +54,7 @@ public final class _277_GatekeepersOffering extends Quest {
     @Override
     public void onKill(NpcInstance npc, QuestState st) {
         st.rollAndGive(STARSTONE1_ID, 1, 1, 20, 33);
-        if (st.getQuestItemsCount(STARSTONE1_ID) >= 20)
+        if (st.haveQuestItem(STARSTONE1_ID,20))
             st.setCond(2);
     }
 }

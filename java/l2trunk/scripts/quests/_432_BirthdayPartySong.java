@@ -14,8 +14,6 @@ public final class _432_BirthdayPartySong extends Quest {
     private static final int BIRTHDAY_ECHO_CRYSTAL = 7061;
 
     public _432_BirthdayPartySong() {
-        super(false);
-
         addStartNpc(MELODY_MAESTRO_OCTAVIA);
 
         addKillId(ROUGH_HEWN_ROCK_GOLEMS);
@@ -31,7 +29,7 @@ public final class _432_BirthdayPartySong extends Quest {
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if ("muzyko_q0432_0201.htm".equalsIgnoreCase(event))
-            if (st.getQuestItemsCount(RED_CRYSTALS) == 50) {
+            if (st.haveQuestItem(RED_CRYSTALS, 50)) {
                 st.takeItems(RED_CRYSTALS);
                 st.giveItems(BIRTHDAY_ECHO_CRYSTAL, 25);
                 st.playSound(SOUND_FINISH);

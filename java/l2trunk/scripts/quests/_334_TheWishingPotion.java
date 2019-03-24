@@ -190,8 +190,6 @@ public final class _334_TheWishingPotion extends Quest {
     };
 
     public _334_TheWishingPotion() {
-        super(false);
-
         addStartNpc(ALCHEMIST_MATILD);
         addTalkId(ALCHEMIST_MATILD,TORAI,WISDOM_CHEST,RUPINA);
 

@@ -150,7 +150,7 @@ public final class _662_AGameOfCards extends Quest {
                     txt = "Hmmm...? This is... Five of a kind!!!! What luck! The goddess of victory must be with you! Here is your prize! Well earned, well played!";
                     st.giveItems(ZIGGOS_GEMSTONE, 43);
                     st.giveItems(Enchant_Weapon_S, 3);
-                    st.giveItems(Enchant_Weapon_A, 1);
+                    st.giveItems(Enchant_Weapon_A);
                 } else if (cmatches[0] == 4) {
                     txt = "Hmmm...? This is... Four of a kind! Well done, my young friend! That sort of hand doesn't come up very often, that's for sure. Here's your prize.";
                     st.giveItems(Enchant_Weapon_S, 2);
@@ -165,12 +165,12 @@ public final class _662_AGameOfCards extends Quest {
             } else if (cmatches.length == 2)
                 if (cmatches[0] == 3 || cmatches[1] == 3) {
                     txt = "Hmmm...? This is... A full house? Excellent! you're better than I thought. Here's your prize.";
-                    st.giveItems(Enchant_Weapon_A, 1);
+                    st.giveItems(Enchant_Weapon_A);
                     st.giveItems(Enchant_Weapon_B, 2);
-                    st.giveItems(Enchant_Weapon_D, 1);
+                    st.giveItems(Enchant_Weapon_D);
                 } else {
                     txt = "Hmmm...? This is... Two pairs? You got lucky this time, but I wonder if it'll last. Here's your prize.";
-                    st.giveItems(Enchant_Weapon_C, 1);
+                    st.giveItems(Enchant_Weapon_C);
                 }
 
             for (String card : cards)

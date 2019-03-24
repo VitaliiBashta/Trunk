@@ -24,8 +24,6 @@ public final class _143_FallenAngelRequestOfDusk extends Quest {
     private final static int MESSAGE = 10358;
 
     public _143_FallenAngelRequestOfDusk() {
-        super(false);
-
         // Нет стартового NPC, чтобы квест не появлялся в списке раньше времени
         addTalkId(NATOOLS, TOBIAS, CASIAN, ROCK, ANGEL);
         addQuestItem(SEALED_PATH, PATH, EMPTY_CRYSTAL, MEDICINE, MESSAGE);
@@ -43,7 +41,7 @@ public final class _143_FallenAngelRequestOfDusk extends Quest {
             st.setCond(2);
             st.start();
             st.playSound(SOUND_MIDDLE);
-            st.giveItems(SEALED_PATH, 1);
+            st.giveItems(SEALED_PATH);
         } else if ("master_tobias_q0143_05.htm".equalsIgnoreCase(event)) {
             st.setCond(3);
             st.start();
@@ -105,7 +103,7 @@ public final class _143_FallenAngelRequestOfDusk extends Quest {
             else if (cond == 5) {
                 htmltext = "master_tobias_q0143_07.htm";
                 st.playSound(SOUND_FINISH);
-                st.giveItems(ADENA_ID, 89046);
+                st.giveAdena( 89046);
                 st.finish();
             }
         } else if (npcId == CASIAN) {

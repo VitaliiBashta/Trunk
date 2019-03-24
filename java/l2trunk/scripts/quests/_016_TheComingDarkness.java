@@ -20,7 +20,6 @@ public final class _016_TheComingDarkness extends Quest {
     private final int CRYSTAL_OF_SEAL = 7167;
 
     public _016_TheComingDarkness() {
-        super(false);
         addStartNpc(HIERARCH);
         addTalkId(ALTAR_LIST.keySet());
         addQuestItem(CRYSTAL_OF_SEAL);
@@ -29,14 +28,14 @@ public final class _016_TheComingDarkness extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
 
-        if (event.equalsIgnoreCase("31517-02.htm")) {
+        if ("31517-02.htm".equalsIgnoreCase(event)) {
             st.start();
             st.setCond(1);
             st.giveItems(CRYSTAL_OF_SEAL, 5);
             st.playSound(SOUND_ACCEPT);
         }
         ALTAR_LIST.forEach((k, v) -> {
-            if (event.equalsIgnoreCase(k + "-02.htm")) {
+            if ((k + "-02.htm").equalsIgnoreCase(event)) {
                 st.takeItems(CRYSTAL_OF_SEAL, 1);
                 st.setCond(v + 1);
                 st.playSound(SOUND_MIDDLE);

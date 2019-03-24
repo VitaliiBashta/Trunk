@@ -7,17 +7,14 @@ import l2trunk.gameserver.model.quest.QuestState;
 
 public final class _313_CollectSpores extends Quest {
     //NPC
-    private final int Herbiel = 30150;
+    private static final int Herbiel = 30150;
     //Mobs
-    private final int SporeFungus = 20509;
+    private static final int SporeFungus = 20509;
     //Quest items
-    private final int SporeSac = 1118;
+    private static final int SporeSac = 1118;
 
     public _313_CollectSpores() {
-        super(false);
-
         addStartNpc(Herbiel);
-        addTalkId(Herbiel);
         addKillId(SporeFungus);
         addQuestItem(SporeSac);
     }

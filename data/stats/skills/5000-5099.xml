@@ -752,10 +752,7 @@
 			<zone type="SIEGE" />
 		</cond>
 		<cond msgId="1902">
-			<and>
 				<player minLevel="#levelMin" />
-				<player maxLevel="#levelMax" />
-			</and>
 		</cond>
 		<cond msgId="1509">
 			<not>

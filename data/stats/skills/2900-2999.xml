@@ -14,11 +14,8 @@
         <set name="altUse" val="true" />
         <set name="isHideUseMessage" val="true" />
         <cond msgId="1902">
-            <and>
                 <player minLevel="52" />
-                <player maxLevel="85" />
-            </and>
-        </cond>     
+        </cond>
         <for>
             <effect count="1" name="Buff" stackOrder="1" stackType="signal_c" time="15" val="0"/><!-- HARDCODE -->
         </for>
@@ -37,10 +34,7 @@
         <set name="altUse" val="true" />
         <set name="isHideUseMessage" val="true" />
         <cond msgId="1902">
-            <and>
                 <player minLevel="52" />
-                <player maxLevel="85" />
-            </and>
         </cond>
         <for>
             <effect count="1" name="Invulnerable" abnormal="invul2" stackOrder="-1" stackType="pd_up_special" time="15" val="0" />
@@ -60,11 +54,8 @@
         <set name="altUse" val="true" />
         <set name="isHideUseMessage" val="true" />
         <cond msgId="1902">
-            <and>
                 <player minLevel="52" />
-                <player maxLevel="85" />
-            </and>
-        </cond>         
+        </cond>
         <for>
             <effect count="1" name="Buff" stackOrder="4" stackType="casting_time_down" time="15" val="0">
                 <mul order="0x30" stat="mAtkSpd" val="1.7" />
@@ -85,11 +76,8 @@
         <set name="altUse" val="true" />
         <set name="isHideUseMessage" val="true" />
         <cond msgId="1902">
-            <and>
                 <player minLevel="52" />
-                <player maxLevel="85" />
-            </and>
-        </cond>         
+        </cond>
         <for>
             <effect count="1" name="Buff" stackOrder="4" stackType="speed_up_special" time="15" val="0">
                 <add order="0x40" stat="runSpd" val="250" />

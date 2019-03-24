@@ -16,14 +16,12 @@ public final class _10274_CollectingInTheAir extends Quest {
     private final static int ExtractedCoarseGreenStarStone = 13860;
 
     public _10274_CollectingInTheAir() {
-        super(false);
-
         addStartNpc(Lekon);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("32557-03.htm")) {
+        if ("32557-03.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.giveItems(StarStoneExtractionScroll, 8);
             st.start();
@@ -45,7 +43,7 @@ public final class _10274_CollectingInTheAir extends Quest {
                 htmltext = "32557-00.htm";
         } else if (st.getQuestItemsCount(ExtractedCoarseRedStarStone) + st.getQuestItemsCount(ExtractedCoarseBlueStarStone) + st.getQuestItemsCount(ExtractedCoarseGreenStarStone) >= 8) {
             htmltext = "32557-05.htm";
-            st.takeItems(List.of(ExtractedCoarseRedStarStone, ExtractedCoarseBlueStarStone, ExtractedCoarseGreenStarStone));
+            st.takeAllItems(ExtractedCoarseRedStarStone, ExtractedCoarseBlueStarStone, ExtractedCoarseGreenStarStone);
             st.giveItems(ExpertTextStarStoneExtractionSkillLevel1);
             st.addExpAndSp(25160, 2525);
             st.finish();

@@ -15,7 +15,6 @@ public final class _268_TracesOfEvil extends Quest {
     private final int CONTAMINATED = 10869;
 
     public _268_TracesOfEvil() {
-        super(false);
         addStartNpc(KUNAI);
         addKillId(SPIDER, FANG_SPIDER, BLADE_SPIDER);
         addQuestItem(CONTAMINATED);
@@ -23,7 +22,7 @@ public final class _268_TracesOfEvil extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equals("trader_kunai_q0268_03.htm")) {
+        if ("trader_kunai_q0268_03.htm".equals(event)) {
             st.setCond(1);
             st.start();
             st.playSound(SOUND_ACCEPT);
@@ -42,7 +41,7 @@ public final class _268_TracesOfEvil extends Quest {
                 htmltext = "trader_kunai_q0268_01.htm";
         else if (st.getQuestItemsCount(CONTAMINATED) >= 30) {
             htmltext = "trader_kunai_q0268_06.htm";
-            st.giveItems(ADENA_ID, 2474);
+            st.giveAdena(2474);
             st.addExpAndSp(8738, 409);
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest();
@@ -53,10 +52,8 @@ public final class _268_TracesOfEvil extends Quest {
 
     @Override
     public void onKill(NpcInstance npc, QuestState st) {
-        st.giveItems(CONTAMINATED);
-        if (st.getQuestItemsCount(CONTAMINATED) <= 29)
-            st.playSound(SOUND_ITEMGET);
-        else if (st.getQuestItemsCount(CONTAMINATED) >= 30) {
+        st.giveItemIfNotHave(CONTAMINATED, 30);
+        if (st.haveQuestItem(CONTAMINATED, 30)) {
             st.playSound(SOUND_MIDDLE);
             st.setCond(2);
             st.start();

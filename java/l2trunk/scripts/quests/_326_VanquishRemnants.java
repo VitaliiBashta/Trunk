@@ -22,9 +22,7 @@ public final class _326_VanquishRemnants extends Quest {
     private final List<Integer> BlackCrossBadges = List.of(20066,20438,20076);
 
     public _326_VanquishRemnants() {
-        super(false);
         addStartNpc(Leopold);
-        addTalkId(Leopold);
         //mob Drop
         addKillId(RedCrossBadges);
         addKillId(BlueCrossBadges);
@@ -56,7 +54,7 @@ public final class _326_VanquishRemnants extends Quest {
                 st.exitCurrentQuest();
             } else if (cond == 0)
                 htmltext = "leopold_q0326_02.htm";
-            else if (cond == 1 && st.getQuestItemsCount(RedCrossBadge) == 0 && st.getQuestItemsCount(BlueCrossBadge) == 0 && st.getQuestItemsCount(BlackCrossBadge) == 0)
+            else if (cond == 1 && !st.haveAnyQuestItems(RedCrossBadge,BlueCrossBadge,BlackCrossBadge))
                 htmltext = "leopold_q0326_04.htm";
             else if (cond == 1) {
                 if (st.getQuestItemsCount(RedCrossBadge) + st.getQuestItemsCount(BlueCrossBadge) + st.getQuestItemsCount(BlackCrossBadge) >= 100) {
@@ -67,10 +65,8 @@ public final class _326_VanquishRemnants extends Quest {
                         htmltext = "leopold_q0326_06.htm";
                 } else
                     htmltext = "leopold_q0326_05.htm";
-                st.giveItems(ADENA_ID, st.getQuestItemsCount(RedCrossBadge) * 89 + st.getQuestItemsCount(BlueCrossBadge) * 95 + st.getQuestItemsCount(BlackCrossBadge) * 101, true);
-                st.takeItems(RedCrossBadge);
-                st.takeItems(BlueCrossBadge);
-                st.takeItems(BlackCrossBadge);
+                st.giveAdena(st.getQuestItemsCount(RedCrossBadge) * 89 + st.getQuestItemsCount(BlueCrossBadge) * 95 + st.getQuestItemsCount(BlackCrossBadge) * 101);
+                st.takeAllItems(RedCrossBadge,BlueCrossBadge,BlackCrossBadge);
             }
         return htmltext;
     }

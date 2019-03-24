@@ -45,7 +45,7 @@ public final class _198_SevenSignsEmbryo extends Quest {
             st.playSound(SOUND_ACCEPT);
         } else if ("wood_q198_3.htm".equalsIgnoreCase(event)) {
             enterInstance(player);
-            if (st.getInt("embryo") != 0)
+            if (st.isSet("embryo"))
                 st.unset("embryo");
         } else if ("franz_q198_3.htm".equalsIgnoreCase(event)) {
             NpcInstance embryo = player.getReflection().addSpawnWithoutRespawn(ShilensEvilThoughtsCapt, setcloc);

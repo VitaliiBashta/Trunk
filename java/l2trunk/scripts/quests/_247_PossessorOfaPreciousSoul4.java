@@ -14,8 +14,6 @@ public final class _247_PossessorOfaPreciousSoul4 extends Quest {
     private static final int NOBLESS_TIARA = 7694;
 
     public _247_PossessorOfaPreciousSoul4() {
-        super(false);
-
         addStartNpc(CARADINE);
 
         addTalkId(LADY_OF_LAKE);
@@ -34,7 +32,7 @@ public final class _247_PossessorOfaPreciousSoul4 extends Quest {
                 return htmltext;
             else if (event.equals("caradine_q0247_05.htm")) {
                 st.setCond(2);
-                st.takeItems(CARADINE_LETTER_LAST, 1);
+                st.takeItems(CARADINE_LETTER_LAST);
                 st.player.teleToLocation(143230, 44030, -3030);
                 return htmltext;
             }
@@ -53,7 +51,7 @@ public final class _247_PossessorOfaPreciousSoul4 extends Quest {
                     return htmltext;
                 case "lady_of_the_lake_q0247_05.htm":
                     if (st.player.getLevel() >= 75) {
-                        st.giveItems(NOBLESS_TIARA, 1);
+                        st.giveItems(NOBLESS_TIARA);
                         st.addExpAndSp(93836, 0);
                         st.playSound(SOUND_FINISH);
                         st.unset("cond");
@@ -82,8 +80,7 @@ public final class _247_PossessorOfaPreciousSoul4 extends Quest {
         int id = st.getState();
         int cond = st.getCond();
         if (npcId == CARADINE) {
-            QuestState previous = st.player.getQuestState(_246_PossessorOfaPreciousSoul3.class);
-            if (id == CREATED && previous != null && previous.getState() == COMPLETED) {
+            if (id == CREATED && st.player.isQuestCompleted(_246_PossessorOfaPreciousSoul3.class) ) {
                 if (st.player.getLevel() < 75) {
                     htmltext = "caradine_q0247_02.htm";
                     st.exitCurrentQuest();

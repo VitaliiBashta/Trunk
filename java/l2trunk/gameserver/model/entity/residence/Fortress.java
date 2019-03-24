@@ -38,8 +38,8 @@ public final class Fortress extends Residence {
     private static final Logger _log = LoggerFactory.getLogger(Fortress.class);
     private static final long REMOVE_CYCLE = 7 * 24; // 7 Fort days may belong owneru
     private static final long REWARD_CYCLE = 6; // every 6 hours
-    private final List<Castle> _relatedCastles = new ArrayList<>(5);
-    private final int[] _facilities = new int[FACILITY_MAX];
+    private final List<Castle> relatedCastles = new ArrayList<>(5);
+    private final int[] facilities = new int[FACILITY_MAX];
     // envoy
     private int state;
     private int castleId;
@@ -111,9 +111,8 @@ public final class Fortress extends Residence {
     private void updateOwnerInDB(Clan clan) {
         owner = clan;
 
-        PreparedStatement statement = null;
         try (Connection con = DatabaseFactory.getInstance().getConnection()) {
-            statement = con.prepareStatement("UPDATE clan_data SET hasFortress=0 WHERE hasFortress=? LIMIT 1");
+            PreparedStatement statement = con.prepareStatement("UPDATE clan_data SET hasFortress=0 WHERE hasFortress=? LIMIT 1");
             statement.setInt(1, getId());
             statement.execute();
 
@@ -188,36 +187,24 @@ public final class Fortress extends Residence {
         supplyCount = c;
     }
 
-    public long getSupplySpawn() {
-        return supplySpawn;
-    }
-
-    public void setSupplySpawn(long c) {
-        supplySpawn = c;
-    }
-
     public int getFacilityLevel(int type) {
-        return _facilities[type];
+        return facilities[type];
     }
 
     public void setFacilityLevel(int type, int val) {
-        _facilities[type] = val;
+        facilities[type] = val;
     }
 
     private void clearFacility() {
-        for (int i = 0; i < _facilities.length; i++)
-            _facilities[i] = 0;
+        for (int i = 0; i < facilities.length; i++)
+            facilities[i] = 0;
     }
 
-    public int[] getFacilities() {
-        return _facilities;
-    }
-
-    public void addRelatedCastle(Castle castle) {
-        _relatedCastles.add(castle);
+    void addRelatedCastle(Castle castle) {
+        relatedCastles.add(castle);
     }
 
     public List<Castle> getRelatedCastles() {
-        return _relatedCastles;
+        return relatedCastles;
     }
 }

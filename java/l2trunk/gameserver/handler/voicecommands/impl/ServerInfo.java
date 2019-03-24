@@ -6,18 +6,17 @@ import l2trunk.gameserver.scripts.Functions;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 public final class ServerInfo extends Functions implements IVoicedCommandHandler {
-    private static final List<String> _commandList = List.of("ver", "rev");
+    private static final List<String> COMMAND_LIST = List.of("ver", "rev");
 
     private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
 
     @Override
     public List<String> getVoicedCommandList() {
-        return _commandList;
+        return COMMAND_LIST;
     }
 
     @Override

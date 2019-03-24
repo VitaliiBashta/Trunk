@@ -30,15 +30,10 @@ public final class _063_PathToWarder extends Quest {
     private final int TaksCapturedSoul = 9771;
 
     public _063_PathToWarder() {
-        super(false);
-
         addStartNpc(Sione);
-        addTalkId(Sione,Gobie,Bathis,Tobias);
-        addKillId(Patrol,Novice,Tak,Maille,Maille_scout,Maille_guard);
-        addQuestItem(OlMahumOrganizationChart,
-                OlMahumOrders,
-                TaksCapturedSoul,
-                EmptySoulCrystal);
+        addTalkId(Gobie, Bathis, Tobias);
+        addKillId(Patrol, Novice, Tak, Maille, Maille_scout, Maille_guard);
+        addQuestItem(OlMahumOrganizationChart, OlMahumOrders, TaksCapturedSoul, EmptySoulCrystal);
     }
 
     @Override
@@ -54,22 +49,22 @@ public final class _063_PathToWarder extends Quest {
                 break;
             case "captain_bathia_q0063_04.htm":
                 st.takeItems(LettertotheHumans, 1);
-                st.giveItems(HumansReply, 1);
+                st.giveItems(HumansReply);
                 st.setCond(6);
                 break;
             case "master_gobie_q0063_08.htm":
-                st.takeItems(HumansReply, 1);
+                st.takeItems(HumansReply);
                 st.giveItems(LettertotheDarkElves, 1);
                 st.setCond(7);
                 break;
             case "master_tobias_q0063_05.htm":
                 st.takeItems(LettertotheDarkElves, 1);
-                st.giveItems(DarkElvesReply, 1);
+                st.giveItems(DarkElvesReply);
                 st.setCond(8);
                 break;
             case "master_gobie_q0063_11.htm":
                 st.takeItems(DarkElvesReply, 1);
-                st.giveItems(ReporttoSione, 1);
+                st.giveItems(ReporttoSione);
                 st.setCond(9);
                 break;
             case "master_gobie_q0063_16.htm":
@@ -105,8 +100,7 @@ public final class _063_PathToWarder extends Quest {
                     else {
                         htmltext = "master_sione_q0063_10.htm";
                         st.setCond(4);
-                        st.takeItems(OlMahumOrders);
-                        st.takeItems(OlMahumOrganizationChart);
+                        st.takeAllItems(OlMahumOrders,OlMahumOrganizationChart);
                         st.giveItems(GobiesOrders);
                     }
                 if (cond == 9) {
@@ -121,7 +115,7 @@ public final class _063_PathToWarder extends Quest {
                     htmltext = "master_gobie_q0063_01.htm";
                 else {
                     htmltext = "master_gobie_q0063_03.htm";
-                    st.takeItems(GobiesOrders, 1);
+                    st.takeItems(GobiesOrders);
                     st.giveItems(LettertotheHumans);
                     st.setCond(5);
                 }
@@ -135,13 +129,13 @@ public final class _063_PathToWarder extends Quest {
                 htmltext = "master_gobie_q0063_17.htm";
             if (cond == 12)
                 if (st.haveQuestItem(TaksCapturedSoul)) {
-                    st.takeItems(TaksCapturedSoul, 1);
+                    st.takeItems(TaksCapturedSoul);
                     if (st.player.getClassId().occupation() == 0) {
                         st.giveItems(SteelrazorEvaluation);
                         if (!st.player.isVarSet("prof1")) {
                             st.player.setVar("prof1");
                             st.addExpAndSp(160267, 11023);
-                            st.giveItems(ADENA_ID, 81900);
+                            st.giveAdena( 81900);
                         }
                     }
                     st.playSound(SOUND_FINISH);

@@ -19,8 +19,6 @@ public final class _618_IntoTheFlame extends Quest {
     private static final int CHANCE_FOR_QUEST_ITEMS = 50;
 
     public _618_IntoTheFlame() {
-        super(false);
-
         addStartNpc(KLEIN);
         addTalkId(HILDA);
         addKillId(21274, 21275, 21276, 21278,21282, 21283, 21284, 21286,21290, 21291, 21292, 21294);
@@ -36,7 +34,7 @@ public final class _618_IntoTheFlame extends Quest {
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         } else if ("watcher_valakas_klein_q0618_0401.htm".equalsIgnoreCase(event))
-            if (st.getQuestItemsCount(VACUALITE) > 0 && cond == 4) {
+            if (st.haveQuestItem(VACUALITE)  && cond == 4) {
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest();
                 st.giveItems(FLOATING_STONE);

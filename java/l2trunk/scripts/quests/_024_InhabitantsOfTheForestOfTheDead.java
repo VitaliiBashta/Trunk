@@ -29,8 +29,6 @@ public final class _024_InhabitantsOfTheForestOfTheDead extends Quest {
             21557, 21558, 21560, 21561, 21562, 21563, 21564, 21565, 21566, 21567);
 
     public _024_InhabitantsOfTheForestOfTheDead() {
-        super(false);
-
         addStartNpc(DORIAN);
 
         addTalkId(TOMBSTONE, MAID_OF_LIDIA, MYSTERIOUS_WIZARD);
@@ -56,14 +54,14 @@ public final class _024_InhabitantsOfTheForestOfTheDead extends Quest {
                 htmltext = "31389-04.htm"; // Если букет еще в руках
             else if (cond == 2 && qs.getQuestItemsCount(FLOWER_BOUQUET) == 0)
                 htmltext = "31389-05.htm";
-            else if (cond == 3 && qs.getQuestItemsCount(SILVER_CROSS_OF_EINHASAD) == 1)
+            else if (cond == 3 && qs.haveQuestItem(SILVER_CROSS_OF_EINHASAD))
                 htmltext = "31389-14.htm";
             else if (cond == 4 && qs.haveQuestItem(BROKEN_SILVER_CROSS_OF_EINHASAD)) {
                 htmltext = "31389-15.htm";
-                qs.takeItems(BROKEN_SILVER_CROSS_OF_EINHASAD, -1);
+                qs.takeItems(BROKEN_SILVER_CROSS_OF_EINHASAD);
             } else if (cond == 7 && qs.getQuestItemsCount(LIDIA_HAIR_PIN) == 0) {
                 htmltext = "31389-21.htm";
-                qs.giveItems(LIDIA_HAIR_PIN, 1);
+                qs.giveItems(LIDIA_HAIR_PIN);
                 qs.setCond(8);
             }
         } else if (npcId == TOMBSTONE) {
@@ -86,7 +84,7 @@ public final class _024_InhabitantsOfTheForestOfTheDead extends Quest {
         } else if (npcId == MYSTERIOUS_WIZARD) {
             if (cond == 10 && qs.haveQuestItem(SUSPICIOUS_TOTEM_DOLL))
                 htmltext = "31522-01.htm";
-            else if (cond == 11 && !qs.isRunningQuestTimer("To talk with Mystik") && qs.getQuestItemsCount(SUSPICIOUS_TOTEM_DOLL1) == 0)
+            else if (cond == 11 && !qs.isRunningQuestTimer("To talk with Mystik") && !qs.haveQuestItem(SUSPICIOUS_TOTEM_DOLL1))
                 htmltext = "31522-09.htm";
             else if (cond == 11 && qs.haveQuestItem(SUSPICIOUS_TOTEM_DOLL1))
                 htmltext = "31522-22.htm";
@@ -134,7 +132,10 @@ public final class _024_InhabitantsOfTheForestOfTheDead extends Quest {
         } else if ("31522-21.htm".equalsIgnoreCase(event)) {
             st.giveItems(SUSPICIOUS_TOTEM_DOLL1);
             st.startQuestTimer("html", 5);
-            return "Congratulations! You are completed this quest!" + " \n The Quest \"Hiding Behind the Truth\"" + " become available.\n Show Suspicious Totem Doll to " + " Priest Benedict.";
+            return "Congratulations! You are completed this quest!"
+                    + " \n The Quest \"Hiding Behind the Truth\""
+                    + " become available.\n Show Suspicious Totem Doll to "
+                    + " Priest Benedict.";
         } else if ("html".equalsIgnoreCase(event)) {
             st.playSound(SOUND_FINISH);
             st.addExpAndSp(242105, 22529);

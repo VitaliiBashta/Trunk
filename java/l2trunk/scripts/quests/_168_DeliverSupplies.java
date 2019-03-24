@@ -13,7 +13,6 @@ public final class _168_DeliverSupplies extends Quest {
     private final int OLD_BRONZE_SWORD_ID = 1157;
 
     public _168_DeliverSupplies() {
-        super(false);
         addStartNpc(30349);
         addTalkId(30355,30357,30360);
         addQuestItem(SENTRY_BLADE1_ID,

@@ -18,8 +18,6 @@ public final class _001_LettersOfLove extends Quest {
     private final static int NECKLACE = 906;
 
     public _001_LettersOfLove() {
-        super(false);
-
         addStartNpc(DARIN);
         addTalkId(ROXXY, BAULRO);
         addQuestItem(DARINGS_LETTER, ROXXY_KERCHIEF, DARINGS_RECEIPT, BAULS_POTION);
@@ -66,9 +64,9 @@ public final class _001_LettersOfLove extends Quest {
                     htmltext = "daring_q0001_10.htm";
                     st.takeItems(BAULS_POTION);
                     st.giveItems(NECKLACE);
-                    if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("ng1"))
+                    if (st.player.getClassId().occupation() == 0)
                         st.player.sendPacket(new ExShowScreenMessage("  Delivery duty complete.\nGo find the Newbie Guide."));
-                    st.giveItems(ADENA_ID, (int) ((Config.RATE_QUESTS_REWARD - 1) * 1200 + 2466 * Config.RATE_QUESTS_REWARD), false); // T2
+                    st.giveAdena( (int) ((Config.RATE_QUESTS_REWARD - 1) * 1200 + 2466 * Config.RATE_QUESTS_REWARD)); // T2
                     st.player.addExpAndSp(5672, 446);
                     st.playSound(SOUND_FINISH);
                     st.finish();

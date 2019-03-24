@@ -74,7 +74,7 @@ public final class EffectTemplate extends StatTemplate {
         } catch (IllegalAccessException | IllegalArgumentException | InstantiationException | InvocationTargetException e) {
             LOG.error("Error while getting Effect ", e);
         }
-        return null;
+        throw new IllegalArgumentException("can't create effectfrom skill:" + env.skill);
     }
 
     public void attachCond(Condition c) {

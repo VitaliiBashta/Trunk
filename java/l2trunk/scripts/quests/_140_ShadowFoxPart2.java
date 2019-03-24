@@ -24,9 +24,6 @@ public final class _140_ShadowFoxPart2 extends Quest {
     private final static int Farhite = 20792;
 
     public _140_ShadowFoxPart2() {
-        super(false);
-
-        // Нет стартового NPC, чтобы квест не появлялся в списке раньше времени
         addFirstTalkId(KLUCK);
         addTalkId(KLUCK, XENOVIA);
         addQuestItem(CRYSTAL, OXYDE, CRYPT);
@@ -63,18 +60,17 @@ public final class _140_ShadowFoxPart2 extends Quest {
             st.setCond(3);
             st.start();
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("30912-09.htm")) {
+        } else if ("30912-09.htm".equalsIgnoreCase(event)) {
             st.takeItems(CRYSTAL, 5);
             if (Rnd.chance(60)) {
-                st.giveItems(OXYDE, 1);
+                st.giveItems(OXYDE);
                 if (st.getQuestItemsCount(OXYDE) >= 3) {
                     htmltext = "30912-09b.htm";
                     st.setCond(4);
                     st.start();
                     st.playSound(SOUND_MIDDLE);
-                    st.takeItems(CRYSTAL, -1);
-                    st.takeItems(OXYDE, -1);
-                    st.giveItems(CRYPT, 1);
+                    st.takeAllItems(CRYSTAL, OXYDE);
+                    st.giveItems(CRYPT);
                 }
             } else
                 htmltext = "30912-09a.htm";

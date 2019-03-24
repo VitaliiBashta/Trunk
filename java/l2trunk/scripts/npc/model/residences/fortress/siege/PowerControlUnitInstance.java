@@ -24,10 +24,10 @@ public final class PowerControlUnitInstance extends NpcInstance {
     private static final int COND_FAIL = 3;
     private static final int COND_TIMEOUT = 4;
 
-    private final List<Integer> _generated = new ArrayList<>();
-    private int _index;
-    private int _tryCount;
-    private long _invalidatePeriod;
+    private final List<Integer> generated = new ArrayList<>();
+    private int index;
+    private int tryCount;
+    private long invalidatePeriod;
 
     public PowerControlUnitInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
@@ -43,15 +43,15 @@ public final class PowerControlUnitInstance extends NpcInstance {
         int val = Integer.parseInt(token.nextToken());
 
         if (player.getClassId() == ClassId.warsmith || player.getClassId() == ClassId.maestro) {
-            if (_tryCount == 0)
-                _tryCount++;
+            if (tryCount == 0)
+                tryCount++;
             else
-                _index++;
+                index++;
         } else {
-            if (_generated.get(_index) == val)
-                _index++;
+            if (generated.get(index) == val)
+                index++;
             else
-                _tryCount++;
+                tryCount++;
         }
 
         showChatWindow(player, 0);
@@ -69,7 +69,7 @@ public final class PowerControlUnitInstance extends NpcInstance {
     public void showChatWindow(Player player, int val) {
         NpcHtmlMessage message = new NpcHtmlMessage(player, this);
 
-        if (_invalidatePeriod > 0 && _invalidatePeriod < System.currentTimeMillis())
+        if (invalidatePeriod > 0 && invalidatePeriod < System.currentTimeMillis())
             generate();
 
         int cond = getCond();
@@ -93,12 +93,12 @@ public final class PowerControlUnitInstance extends NpcInstance {
                 break;
             case COND_FAIL:
                 message.setFile("residence2/fortress/fortress_inner_controller003.htm");
-                _invalidatePeriod = System.currentTimeMillis() + 30000L;
+                invalidatePeriod = System.currentTimeMillis() + 30000L;
                 break;
             case COND_ENTERED:
                 message.setFile("residence2/fortress/fortress_inner_controller004.htm");
-                message.replaceNpcString("%password%", _index == 0 ? NpcString.PASSWORD_HAS_NOT_BEEN_ENTERED : _index == 1 ? NpcString.FIRST_PASSWORD_HAS_BEEN_ENTERED : NpcString.SECOND_PASSWORD_HAS_BEEN_ENTERED);
-                message.replaceNpcString("%try_count%", NpcString.ATTEMPT_S1__3_IS_IN_PROGRESS, _tryCount);
+                message.replaceNpcString("%password%", index == 0 ? NpcString.PASSWORD_HAS_NOT_BEEN_ENTERED : index == 1 ? NpcString.FIRST_PASSWORD_HAS_BEEN_ENTERED : NpcString.SECOND_PASSWORD_HAS_BEEN_ENTERED);
+                message.replaceNpcString("%try_count%", NpcString.ATTEMPT_S1__3_IS_IN_PROGRESS, tryCount);
                 break;
             case COND_NO_ENTERED:
                 message.setFile("residence2/fortress/fortress_inner_controller001.htm");
@@ -108,36 +108,36 @@ public final class PowerControlUnitInstance extends NpcInstance {
     }
 
     private void generate() {
-        _invalidatePeriod = 0;
-        _tryCount = 0;
-        _index = 0;
+        invalidatePeriod = 0;
+        tryCount = 0;
+        index = 0;
 
-        for (int i = 0; i < _generated.size(); i++)
-            _generated.set(i, -1);
+        for (int i = 0; i < generated.size(); i++)
+            generated.set(i, -1);
 
         int j = 0;
         while (j != LIMIT) {
             int val = Rnd.get(0, 9);
-            if (_generated.contains(val))
+            if (generated.contains(val))
                 continue;
-            _generated.set(j++, val);
+            generated.set(j++, val);
         }
     }
 
     private int getCond() {
-        if (_invalidatePeriod > System.currentTimeMillis())
+        if (invalidatePeriod > System.currentTimeMillis())
             return COND_TIMEOUT;
-        else if (_tryCount >= LIMIT)  // максимум лимит
+        else if (tryCount >= LIMIT)  // максимум лимит
             return COND_FAIL;
-        else if (_index == 0 && _tryCount == 0)  // ищо ничего никто не клацал
+        else if (index == 0 && tryCount == 0)  // ищо ничего никто не клацал
             return COND_NO_ENTERED;
-        else if (_index == LIMIT)   // все верно
+        else if (index == LIMIT)   // все верно
             return COND_ALL_OK;
         else // не все удал
             return COND_ENTERED;
     }
 
     public List<Integer> getGenerated() {
-        return _generated;
+        return generated;
     }
 }

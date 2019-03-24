@@ -15,10 +15,7 @@ public final class _294_CovertBusiness extends Quest {
     private static final int Keef = 30534;
 
     public _294_CovertBusiness() {
-        super(false);
-
         addStartNpc(Keef);
-        addTalkId(Keef);
 
         addKillId(BarbedBat,BladeBat);
 
@@ -54,7 +51,7 @@ public final class _294_CovertBusiness extends Quest {
         } else if (st.getQuestItemsCount(BatFang) < 100)
             htmltext = "elder_keef_q0294_04.htm";
         else {
-            if (st.getQuestItemsCount(RingOfRaccoon) < 1) {
+            if (!st.haveQuestItem(RingOfRaccoon)) {
                 st.giveItems(RingOfRaccoon);
                 htmltext = "elder_keef_q0294_05.htm";
             } else {

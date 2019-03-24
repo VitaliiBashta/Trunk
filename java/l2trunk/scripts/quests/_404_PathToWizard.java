@@ -35,7 +35,6 @@ public final class _404_PathToWizard extends Quest {
     private final int BEAD_OF_SEASON_ID = 1292;
 
     public _404_PathToWizard() {
-        super(false);
 
         addStartNpc(PARINA);
 
@@ -104,7 +103,7 @@ public final class _404_PathToWizard extends Quest {
                     if (!st.player.isVarSet("prof1")) {
                         st.player.setVar("prof1");
                         st.addExpAndSp(295862, 18274);
-                        st.giveItems(ADENA_ID, 81900);
+                        st.giveAdena(81900);
                     }
                 }
                 st.playSound(SOUND_FINISH);

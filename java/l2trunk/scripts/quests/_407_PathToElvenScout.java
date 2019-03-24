@@ -5,6 +5,9 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
+import static l2trunk.gameserver.model.base.ClassId.elvenFighter;
+import static l2trunk.gameserver.model.base.ClassId.elvenScout;
+
 public final class _407_PathToElvenScout extends Quest {
 
     private static final int REORIA_LETTER2_ID = 1207;
@@ -29,23 +32,23 @@ public final class _407_PathToElvenScout extends Quest {
 
         addStartNpc(REISA);
 
-        addTalkId(MORETTI,PIPPEN);
+        addTalkId(MORETTI, PIPPEN);
 
-        addKillId(OL_MAHUM_SENTRY,OL_MAHUM_PATROL);
+        addKillId(OL_MAHUM_SENTRY, OL_MAHUM_PATROL);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
         if (event.equals("1")) {
-            if (st.player.getClassId().id == 0x12) {
+            if (st.player.getClassId() == elvenFighter) {
                 if (st.player.getLevel() >= 18) {
-                    if (st.getQuestItemsCount(REORIA_RECOMMENDATION_ID) > 0) {
+                    if (st.haveQuestItem(REORIA_RECOMMENDATION_ID)) {
                         htmltext = "master_reoria_q0407_04.htm";
                         st.exitCurrentQuest();
                     } else {
                         htmltext = "master_reoria_q0407_05.htm";
-                        st.giveItems(REORIA_LETTER2_ID, 1);
+                        st.giveItems(REORIA_LETTER2_ID);
                         st.setCond(1);
                         st.start();
                         st.playSound(SOUND_ACCEPT);
@@ -54,7 +57,7 @@ public final class _407_PathToElvenScout extends Quest {
                     htmltext = "master_reoria_q0407_03.htm";
                     st.exitCurrentQuest();
                 }
-            } else if (st.player.getClassId().id == 0x16) {
+            } else if (st.player.getClassId() == elvenScout) {
                 htmltext = "master_reoria_q0407_02a.htm";
                 st.exitCurrentQuest();
             } else {
@@ -62,7 +65,7 @@ public final class _407_PathToElvenScout extends Quest {
                 st.exitCurrentQuest();
             }
         } else if ("30337_1".equals(event)) {
-            st.takeItems(REORIA_LETTER2_ID, 1);
+            st.takeItems(REORIA_LETTER2_ID);
             st.setCond(2);
             htmltext = "guard_moretti_q0407_03.htm";
         }
@@ -86,14 +89,11 @@ public final class _407_PathToElvenScout extends Quest {
                 htmltext = "master_reoria_q0407_08.htm";
             else if (cond == 8 && st.haveQuestItem(HONORARY_GUARD_ID)) {
                 htmltext = "master_reoria_q0407_07.htm";
-                st.takeItems(HONORARY_GUARD_ID, 1);
+                st.takeItems(HONORARY_GUARD_ID);
                 if (st.player.getClassId().occupation() == 0) {
                     st.giveItems(REORIA_RECOMMENDATION_ID);
-                    if (!st.player.isVarSet("prof1")) {
-                        st.player.setVar("prof1");
-                        st.addExpAndSp(228064, 16455);
-                        st.giveAdena(81900);
-                    }
+                    st.addExpAndSp(228064, 16455);
+                    st.giveAdena(81900);
                 }
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest();
@@ -106,10 +106,7 @@ public final class _407_PathToElvenScout extends Quest {
             else if (cond == 3) {
                 if (st.haveAllQuestItems(PRIGUNS_TEAR_LETTER1_ID, PRIGUNS_TEAR_LETTER2_ID, PRIGUNS_TEAR_LETTER3_ID, PRIGUNS_TEAR_LETTER4_ID)) {
                     htmltext = "guard_moretti_q0407_06.htm";
-                    st.takeItems(PRIGUNS_TEAR_LETTER1_ID, 1);
-                    st.takeItems(PRIGUNS_TEAR_LETTER2_ID, 1);
-                    st.takeItems(PRIGUNS_TEAR_LETTER3_ID, 1);
-                    st.takeItems(PRIGUNS_TEAR_LETTER4_ID, 1);
+                    st.takeAllItems(PRIGUNS_TEAR_LETTER1_ID,PRIGUNS_TEAR_LETTER2_ID,PRIGUNS_TEAR_LETTER3_ID,PRIGUNS_TEAR_LETTER4_ID);
                     st.giveItems(MORETTIS_HERB_ID);
                     st.giveItems(MORETTIS_LETTER_ID);
                     st.setCond(4);
@@ -117,7 +114,7 @@ public final class _407_PathToElvenScout extends Quest {
                     htmltext = "guard_moretti_q0407_05.htm";
             } else if (cond == 7 && st.haveQuestItem(PRIGUNS_LETTER_ID)) {
                 htmltext = "guard_moretti_q0407_07.htm";
-                st.takeItems(PRIGUNS_LETTER_ID, 1);
+                st.takeItems(PRIGUNS_LETTER_ID);
                 st.giveItems(HONORARY_GUARD_ID);
                 st.setCond(8);
             } else if (cond > 8)
@@ -130,9 +127,7 @@ public final class _407_PathToElvenScout extends Quest {
                 htmltext = "prigun_q0407_01.htm";
             else if (cond == 6 && st.haveAllQuestItems(RUSTED_KEY_ID, MORETTIS_HERB_ID, MORETTIS_LETTER_ID)) {
                 htmltext = "prigun_q0407_02.htm";
-                st.takeItems(RUSTED_KEY_ID, 1);
-                st.takeItems(MORETTIS_HERB_ID, 1);
-                st.takeItems(MORETTIS_LETTER_ID, 1);
+                st.takeAllItems(RUSTED_KEY_ID,MORETTIS_HERB_ID, MORETTIS_LETTER_ID);
                 st.giveItems(PRIGUNS_LETTER_ID);
                 st.setCond(7);
             } else if (cond == 7)
@@ -146,7 +141,7 @@ public final class _407_PathToElvenScout extends Quest {
         int cond = st.getCond();
         if (npcId == OL_MAHUM_PATROL && cond == 2) {
             if (st.getQuestItemsCount(PRIGUNS_TEAR_LETTER1_ID) == 0) {
-                st.giveItems(PRIGUNS_TEAR_LETTER1_ID);
+                st.giveItemIfNotHave(PRIGUNS_TEAR_LETTER1_ID);
                 st.playSound(SOUND_ITEMGET);
                 return;
             }

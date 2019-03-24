@@ -22,9 +22,8 @@ public final class _037_PleaseMakeMeFormalWear extends Quest {
     private static final int q_box_of_cookies = 7159;
 
     public _037_PleaseMakeMeFormalWear() {
-        super(false);
         addStartNpc(trader_alexis);
-        addTalkId(trader_alexis, leikar, jeremy, mist);
+        addTalkId(leikar, jeremy, mist);
     }
 
     @Override
@@ -45,16 +44,14 @@ public final class _037_PleaseMakeMeFormalWear extends Quest {
                 break;
             case "reply_1_1":
                 st.setCond(6);
-                st.takeItems(q_box_of_cookies, 1);
+                st.takeItems(q_box_of_cookies);
                 st.playSound(SOUND_MIDDLE);
                 htmltext = "leikar_q0037_0601.htm";
                 break;
             case "reply_1_1_1":
                 if (st.haveAllQuestItems(q_mysterious_cloth,q_box_of_jewel,q_workbox)) {
                     st.setCond(7);
-                    st.takeItems(q_mysterious_cloth, 1);
-                    st.takeItems(q_box_of_jewel, 1);
-                    st.takeItems(q_workbox, 1);
+                    st.takeAllItems(q_mysterious_cloth,q_box_of_jewel,q_workbox);
                     st.playSound(SOUND_MIDDLE);
                     htmltext = "leikar_q0037_0701.htm";
                 } else
@@ -62,10 +59,8 @@ public final class _037_PleaseMakeMeFormalWear extends Quest {
                 break;
             case "reply_3":
                 if (st.haveAllQuestItems(q_box_of_dress_shoes,q_seal_of_stock)) {
-                    st.takeItems(q_box_of_dress_shoes, 1);
-                    st.takeItems(q_seal_of_stock, 1);
+                    st.takeAllItems(q_box_of_dress_shoes,q_seal_of_stock);
                     st.giveItems(ItemTemplate.ITEM_ID_FORMAL_WEAR);
-                    st.unset("cond");
                     htmltext = "leikar_q0037_0801.htm";
                     st.playSound(SOUND_FINISH);
                     st.finish();
@@ -87,7 +82,7 @@ public final class _037_PleaseMakeMeFormalWear extends Quest {
             case "reply_1c":
                 if (st.haveQuestItem(q_luxury_wine)) {
                     st.setCond(4);
-                    st.takeItems(q_luxury_wine, 1);
+                    st.takeItems(q_luxury_wine);
                     st.playSound(SOUND_MIDDLE);
                     htmltext = "mist_q0037_0401.htm";
                 } else

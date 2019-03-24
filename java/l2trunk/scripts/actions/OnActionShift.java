@@ -11,7 +11,6 @@ import l2trunk.gameserver.model.GameObjectsStorage;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.base.Element;
-import l2trunk.gameserver.model.entity.events.GlobalEvent;
 import l2trunk.gameserver.model.instances.DoorInstance;
 import l2trunk.gameserver.model.instances.MonsterInstance;
 import l2trunk.gameserver.model.instances.NpcInstance;
@@ -76,8 +75,8 @@ public final class OnActionShift extends Functions {
                     dialog = dialog.replaceFirst("%direction%", PositionUtils.getDirectionTo(targetNpc, player).toString().toLowerCase());
 
                     StringBuilder b = new StringBuilder();
-                    for (GlobalEvent e : targetNpc.getEvents())
-                        b.append(e.toString()).append(";");
+                    targetNpc.getEvents().forEach(e ->
+                            b.append(e.toString()).append(";"));
                     dialog = dialog.replaceFirst("%event%", b.toString());
                 } else
                     dialog = HtmCache.INSTANCE.getNotNull("scripts/actions/getPlayer.L2NpcInstance.onActionShift.htm", player);
@@ -367,8 +366,7 @@ public final class OnActionShift extends Functions {
         dialog = dialog.replaceFirst("%type%", door.getDoorType().name());
         dialog = dialog.replaceFirst("%upgradeHP%", String.valueOf(door.getUpgradeHp()));
         StringBuilder b = new StringBuilder();
-        for (GlobalEvent e : door.getEvents())
-            b.append(e.toString()).append(";");
+        door.getEvents().forEach(e ->                b.append(e.toString()).append(";"));
         dialog = dialog.replaceFirst("%event%", b.toString());
 
         show(dialog, player);

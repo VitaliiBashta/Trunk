@@ -19,8 +19,6 @@ public final class _463_IMustBeaGenius extends Quest {
             22801, 22802, 22804, 22805, 22807, 22808, 22809, 22810, 22811, 22812);
 
     public _463_IMustBeaGenius() {
-        super(false);
-
         addStartNpc(GUTENHAGEN);
         addQuestItem(CORPSE_LOG, COLLECTION);
         addKillId(MOBS);
@@ -35,19 +33,19 @@ public final class _463_IMustBeaGenius extends Quest {
                 st.start();
                 st.setCond(1);
                 // Generate random daily number for getPlayer
-                int _number = Rnd.get(500, 600);
-                st.set("number", _number);
+                int number = Rnd.get(500, 600);
+                st.set("number", number);
                 // Set drop for mobs
                 for (int _mob : MOBS) {
-                    int _rand = Rnd.get(-2, 4);
-                    if (_rand == 0)
-                        _rand = 5;
-                    st.set(String.valueOf(_mob), _rand);
+                    int rand = Rnd.get(-2, 4);
+                    if (rand == 0)
+                        rand = 5;
+                    st.set(String.valueOf(_mob), rand);
                 }
                 // One with higher chance
                 st.set(String.valueOf(Rnd.get(MOBS)), Rnd.get(1, 100));
                 htmltext = HtmCache.INSTANCE.getNotNull("quests/_463_IMustBeaGenius/" + event, st.player);
-                htmltext = htmltext.replace("%num%", String.valueOf(_number));
+                htmltext = htmltext.replace("%num%", String.valueOf(number));
             } else if (event.equalsIgnoreCase("collecter_gutenhagen_q0463_07.htm")) {
                 htmltext = HtmCache.INSTANCE.getNotNull("quests/_463_IMustBeaGenius/" + event, st.player);
                 htmltext = htmltext.replace("%num%", String.valueOf(st.getInt("number")));

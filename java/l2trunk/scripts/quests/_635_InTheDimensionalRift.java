@@ -31,8 +31,6 @@ public final class _635_InTheDimensionalRift extends Quest {
             Location.of(113865, 84543, -6541));    //Catacomb of the Forbidden Path
 
     public _635_InTheDimensionalRift() {
-        super(false);
-
         addStartNpc(IntStream.rangeClosed(31494, 31508).toArray()); // Dimensional Gate Keeper
         addStartNpc(IntStream.rangeClosed(31095, 31110).toArray()); // Gatekeeper Ziggurat
         addStartNpc(IntStream.rangeClosed(31114, 31126).toArray()); // Gatekeeper Ziggurat
@@ -43,10 +41,9 @@ public final class _635_InTheDimensionalRift extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        int id = st.getInt("id");
         String loc = st.get("loc");
         if (event.equals("5.htm"))
-            if (id > 0 || loc != null) {
+            if (st.isSet("id")  || loc != null) {
                 if (isZiggurat(st.player.getLastNpc().getNpcId()) && !takeAdena(st)) {
                     htmltext = "Sorry...";
                     st.exitCurrentQuest();

@@ -774,7 +774,7 @@ public final class _373_SupplierOfReagents extends Quest {
                         st.unset("mixing");
                         st.unset("temp");
                         st.giveItems(MIXING_STONE1);
-                        if (st.getInt("ingredient") > 0 || st.getInt("catalyst") > 0)
+                        if (st.isSet("ingredient")  || st.isSet("catalyst"))
                             htmltext = "31149-2c.htm";
                         else
                             htmltext = "31149-2a.htm";

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class ExShowOwnthingPos extends L2GameServerPacket {
-    private final List<WardInfo> _wardList = new ArrayList<>(9);
+    private final List<WardInfo> wards = new ArrayList<>(9);
 
     public ExShowOwnthingPos() {
         for (Dominion dominion : ResidenceHolder.getDominions()) {
@@ -19,7 +19,7 @@ public final class ExShowOwnthingPos extends L2GameServerPacket {
                 TerritoryWardObject wardObject = dominion.getSiegeEvent().getFirstObject("ward_" + dominionId);
                 Location loc = wardObject.getWardLocation();
                 if (loc != null)
-                    _wardList.add(new WardInfo(dominionId, loc.x, loc.y, loc.z));
+                    wards.add(new WardInfo(dominionId, loc));
             }
         }
     }
@@ -27,26 +27,22 @@ public final class ExShowOwnthingPos extends L2GameServerPacket {
     @Override
     protected void writeImpl() {
         writeEx(0x93);
-        writeD(_wardList.size());
-        for (WardInfo wardInfo : _wardList) {
+        writeD(wards.size());
+        wards.forEach(wardInfo ->  {
             writeD(wardInfo.dominionId);
-            writeD(wardInfo._x);
-            writeD(wardInfo._y);
-            writeD(wardInfo._z);
-        }
+            writeD(wardInfo.loc.x);
+            writeD(wardInfo.loc.y);
+            writeD(wardInfo.loc.z);
+        });
     }
 
     private static class WardInfo {
         private final int dominionId;
-        private final int _x;
-        private final int _y;
-        private final int _z;
+        private final Location loc;
 
-        WardInfo(int territoryId, int x, int y, int z) {
+        WardInfo(int territoryId, Location loc) {
             dominionId = territoryId;
-            _x = x;
-            _y = y;
-            _z = z;
+            this.loc = loc;
         }
     }
 }

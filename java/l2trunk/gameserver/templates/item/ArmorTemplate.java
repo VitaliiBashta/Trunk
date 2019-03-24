@@ -21,40 +21,40 @@ public final class ArmorTemplate extends ItemTemplate {
 
         if (bodyPart == SLOT_NECK || (bodyPart & SLOT_L_EAR) != 0 || (bodyPart & SLOT_L_FINGER) != 0) {
             type1 = TYPE1_WEAPON_RING_EARRING_NECKLACE;
-            _type2 = TYPE2_ACCESSORY;
+            type2 = TYPE2_ACCESSORY;
         } else if (bodyPart == SLOT_HAIR || bodyPart == SLOT_DHAIR || bodyPart == SLOT_HAIRALL) {
             type1 = TYPE1_OTHER;
-            _type2 = ItemTemplate.TYPE2_OTHER;
+            type2 = ItemTemplate.TYPE2_OTHER;
         } else {
             type1 = TYPE1_SHIELD_ARMOR;
-            _type2 = TYPE2_SHIELD_ARMOR;
+            type2 = TYPE2_SHIELD_ARMOR;
         }
 
         if (getItemType() == ArmorType.PET) {
             type1 = TYPE1_SHIELD_ARMOR;
             switch (bodyPart) {
                 case SLOT_WOLF:
-                    _type2 = TYPE2_PET_WOLF;
+                    type2 = TYPE2_PET_WOLF;
                     bodyPart = SLOT_CHEST;
                     break;
                 case SLOT_GWOLF:
-                    _type2 = TYPE2_PET_GWOLF;
+                    type2 = TYPE2_PET_GWOLF;
                     bodyPart = SLOT_CHEST;
                     break;
                 case SLOT_HATCHLING:
-                    _type2 = TYPE2_PET_HATCHLING;
+                    type2 = TYPE2_PET_HATCHLING;
                     bodyPart = SLOT_CHEST;
                     break;
                 case SLOT_PENDANT:
-                    _type2 = TYPE2_PENDANT;
+                    type2 = TYPE2_PENDANT;
                     bodyPart = SLOT_NECK;
                     break;
                 case SLOT_BABYPET:
-                    _type2 = TYPE2_PET_BABY;
+                    type2 = TYPE2_PET_BABY;
                     bodyPart = SLOT_CHEST;
                     break;
                 default:
-                    _type2 = TYPE2_PET_STRIDER;
+                    type2 = TYPE2_PET_STRIDER;
                     bodyPart = SLOT_CHEST;
                     break;
             }

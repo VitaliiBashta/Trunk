@@ -8,11 +8,9 @@ public final class _018_MeetingwiththeGoldenRam extends Quest {
     private static final int SUPPLY_BOX = 7245;
 
     public _018_MeetingwiththeGoldenRam() {
-        super(false);
-
         addStartNpc(31314);
 
-        addTalkId(31315,31555);
+        addTalkId(31315, 31555);
 
         addQuestItem(SUPPLY_BOX);
     }
@@ -27,13 +25,13 @@ public final class _018_MeetingwiththeGoldenRam extends Quest {
                 break;
             case "freighter_daisy_q0018_0201.htm":
                 st.setCond(2);
-                st.giveItems(SUPPLY_BOX, 1);
+                st.giveItems(SUPPLY_BOX);
                 st.playSound(SOUND_ACCEPT);
                 break;
             case "supplier_abercrombie_q0018_0301.htm":
-                st.takeItems(SUPPLY_BOX, -1);
+                st.takeItems(SUPPLY_BOX);
                 st.addExpAndSp(126668, 11731);
-                st.giveItems(ADENA_ID, 40000);
+                st.giveAdena(40000);
                 st.playSound(SOUND_FINISH);
                 st.finish();
                 break;
@@ -62,7 +60,7 @@ public final class _018_MeetingwiththeGoldenRam extends Quest {
             else if (cond == 2)
                 htmltext = "freighter_daisy_q0018_0202.htm";
         } else if (npcId == 31555)
-            if (cond == 2 && st.getQuestItemsCount(SUPPLY_BOX) == 1)
+            if (cond == 2 && st.haveQuestItem(SUPPLY_BOX))
                 htmltext = "supplier_abercrombie_q0018_0201.htm";
         return htmltext;
     }

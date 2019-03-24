@@ -58,7 +58,7 @@ public final class RainbowYetiInstance extends NpcInstance {
 
     public RainbowYetiInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
-        _hasRandomWalk = false;
+        hasRandomWalk = false;
     }
 
     @Override

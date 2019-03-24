@@ -13,8 +13,6 @@ public final class _636_TruthBeyond extends Quest {
     private final int FLAURON = 32010;
 
     public _636_TruthBeyond() {
-        super(false);
-
         addStartNpc(ELIYAH);
         addTalkId(FLAURON);
     }
@@ -27,7 +25,7 @@ public final class _636_TruthBeyond extends Quest {
             st.playSound(SOUND_ACCEPT);
         } else if ("falsepriest_flauron_q0636_02.htm".equals(event)) {
             st.playSound(SOUND_FINISH);
-            st.giveItems(VISITORSMARK, 1);
+            st.giveItems(VISITORSMARK);
             st.exitCurrentQuest();
         }
         return event;
@@ -39,7 +37,7 @@ public final class _636_TruthBeyond extends Quest {
         String htmltext = "noquest";
         int cond = st.getCond();
         if (npcId == ELIYAH && cond == 0) {
-            if (st.getQuestItemsCount(VISITORSMARK) == 0 && st.getQuestItemsCount(MARK) == 0) {
+            if (!st.haveAnyQuestItems(VISITORSMARK,MARK)) {
                 if (st.player.getLevel() > 72)
                     htmltext = "priest_eliyah_q0636_01.htm";
                 else {

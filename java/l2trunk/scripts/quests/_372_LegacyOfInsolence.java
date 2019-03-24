@@ -50,9 +50,9 @@ public final class _372_LegacyOfInsolence extends Quest {
         super(true);
         addStartNpc(WALDERAL);
 
-        addTalkId(HOLLY,DESMOND,PATRIN,CLAUDIA);
+        addTalkId(HOLLY, DESMOND, PATRIN, CLAUDIA);
 
-        addKillId(CORRUPT_SAGE,ERIN_EDIUNCE,HALLATE_INSP,PLATINUM_OVL,PLATINUM_PRE,MESSENGER_A1,MESSENGER_A2);
+        addKillId(CORRUPT_SAGE, ERIN_EDIUNCE, HALLATE_INSP, PLATINUM_OVL, PLATINUM_PRE, MESSENGER_A1, MESSENGER_A2);
 
         DROPLIST.put(CORRUPT_SAGE, new int[]{
                 Ancient_Red_Papyrus,
@@ -84,10 +84,6 @@ public final class _372_LegacyOfInsolence extends Quest {
         });
     }
 
-    private static void giveRecipe(QuestState st, int recipe_id) {
-        st.giveItems(recipe_id, 1);
-    }
-
     private static boolean check_and_reward(QuestState st, List<Integer> items_range, List<Integer> reward) {
         for (int item_id = items_range.get(0); item_id <= items_range.get(1); item_id++)
             if (st.getQuestItemsCount(item_id) < 1)
@@ -98,18 +94,18 @@ public final class _372_LegacyOfInsolence extends Quest {
 
         if (Rnd.chance(Three_Recipes_Reward_Chance)) {
             for (int reward_item_id : reward)
-                giveRecipe(st, reward_item_id);
+                st.giveItems(reward_item_id);
             st.playSound(SOUND_JACKPOT);
         } else if (Rnd.chance(Two_Recipes_Reward_Chance)) {
             int ignore_reward_id = Rnd.get(reward);
             for (int reward_item_id : reward)
                 if (reward_item_id != ignore_reward_id)
-                    giveRecipe(st, reward_item_id);
+                    st.giveItems(reward_item_id);
             st.playSound(SOUND_JACKPOT);
         } else if (Rnd.chance(Adena4k_Reward_Chance))
-            st.giveAdena( 4000);
+            st.giveAdena(4000);
         else
-            giveRecipe(st, Rnd.get(reward));
+            st.giveItems(Rnd.get(reward));
 
         return true;
     }
@@ -153,10 +149,10 @@ public final class _372_LegacyOfInsolence extends Quest {
     @Override
     public String onTalk(NpcInstance npc, QuestState st) {
         String htmltext = "noquest";
-        int _state = st.getState();
+        int state = st.getState();
         int npcId = npc.getNpcId();
 
-        if (_state == CREATED) {
+        if (state == CREATED) {
             if (npcId != WALDERAL)
                 return htmltext;
             if (st.player.getLevel() >= 59)
@@ -165,7 +161,7 @@ public final class _372_LegacyOfInsolence extends Quest {
                 htmltext = "30844-5.htm";
                 st.exitCurrentQuest();
             }
-        } else if (_state == STARTED)
+        } else if (state == STARTED)
             htmltext = npcId + "-1.htm";
 
         return htmltext;

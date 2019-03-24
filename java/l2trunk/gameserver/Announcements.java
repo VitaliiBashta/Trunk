@@ -52,7 +52,7 @@ public enum Announcements {
                 .forEach(p -> {
                     int tx = MapUtils.regionX(p);
                     int ty = MapUtils.regionY(p);
-                    if (tx >= rx - offset && tx <= rx + offset && ty >= ry - offset && ty <= ry + offset || activeChar.isInRangeZ(p, Config.CHAT_RANGE))
+                    if (activeChar.isInRangeZ(p, Config.CHAT_RANGE) || tx >= rx - offset && tx <= rx + offset && ty >= ry - offset && ty <= ry + offset)
                         p.sendPacket(cs);
                 });
 

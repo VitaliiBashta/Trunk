@@ -15,8 +15,6 @@ public final class _027_ChestCaughtWithABaitOfWind extends Quest {
     private static final int BlackPearlRing = 880;
 
     public _027_ChestCaughtWithABaitOfWind() {
-        super(false);
-
         addStartNpc(Lanosco);
         addTalkId(Shaling);
         addQuestItem(StrangeGolemBlueprint);
@@ -32,18 +30,18 @@ public final class _027_ChestCaughtWithABaitOfWind extends Quest {
                 st.playSound(SOUND_ACCEPT);
                 break;
             case "fisher_lanosco_q0027_0201.htm":
-                if (st.getQuestItemsCount(BigBlueTreasureChest) > 0) {
-                    st.takeItems(BigBlueTreasureChest, 1);
-                    st.giveItems(StrangeGolemBlueprint, 1);
+                if (st.haveQuestItem(BigBlueTreasureChest)) {
+                    st.takeItems(BigBlueTreasureChest);
+                    st.giveItems(StrangeGolemBlueprint);
                     st.setCond(2);
                     st.playSound(SOUND_MIDDLE);
                 } else
                     htmltext = "fisher_lanosco_q0027_0202.htm";
                 break;
             case "blueprint_seller_shaling_q0027_0301.htm":
-                if (st.getQuestItemsCount(StrangeGolemBlueprint) == 1) {
-                    st.takeItems(StrangeGolemBlueprint, -1);
-                    st.giveItems(BlackPearlRing, 1);
+                if (st.haveQuestItem(StrangeGolemBlueprint) ) {
+                    st.takeItems(StrangeGolemBlueprint);
+                    st.giveItems(BlackPearlRing);
                     st.playSound(SOUND_FINISH);
                     st.finish();
                 } else {

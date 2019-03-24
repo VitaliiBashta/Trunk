@@ -21,20 +21,19 @@ public final class _316_DestroyPlaguebringers extends Quest {
     private static final int Varool_Foulclaws_Fang_Chance = 30;
 
     public _316_DestroyPlaguebringers() {
-        super(false);
         addStartNpc(Ellenia);
-        addKillId(Sukar_Wererat,Sukar_Wererat_Leader,Varool_Foulclaw);
-        addQuestItem(Wererats_Fang,Varool_Foulclaws_Fang);
+        addKillId(Sukar_Wererat, Sukar_Wererat_Leader, Varool_Foulclaw);
+        addQuestItem(Wererats_Fang, Varool_Foulclaws_Fang);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        int _state = st.getState();
-        if ("elliasin_q0316_04.htm".equalsIgnoreCase(event) && _state == CREATED && st.player.getRace() == Race.elf && st.player.getLevel() >= 18) {
+        int state = st.getState();
+        if ("elliasin_q0316_04.htm".equalsIgnoreCase(event) && state == CREATED && st.player.getRace() == Race.elf && st.player.getLevel() >= 18) {
             st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
-        } else if ("elliasin_q0316_08.htm".equalsIgnoreCase(event) && _state == STARTED) {
+        } else if ("elliasin_q0316_08.htm".equalsIgnoreCase(event) && state == STARTED) {
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest();
         }
@@ -46,9 +45,9 @@ public final class _316_DestroyPlaguebringers extends Quest {
         String htmltext = "noquest";
         if (npc.getNpcId() != Ellenia)
             return htmltext;
-        int _state = st.getState();
+        int state = st.getState();
 
-        if (_state == CREATED) {
+        if (state == CREATED) {
             if (st.player.getRace() != Race.elf) {
                 htmltext = "elliasin_q0316_00.htm";
                 st.exitCurrentQuest();
@@ -59,13 +58,13 @@ public final class _316_DestroyPlaguebringers extends Quest {
                 htmltext = "elliasin_q0316_03.htm";
                 st.setCond(0);
             }
-        } else if (_state == STARTED) {
-            long Reward = st.getQuestItemsCount(Wererats_Fang) * 60 + st.getQuestItemsCount(Varool_Foulclaws_Fang) * 10000L;
-            if (Reward > 0) {
+        } else if (state == STARTED) {
+            long adena = st.getQuestItemsCount(Wererats_Fang) * 60 + st.getQuestItemsCount(Varool_Foulclaws_Fang) * 10000L;
+            if (adena > 0) {
                 htmltext = "elliasin_q0316_07.htm";
                 st.takeItems(Wererats_Fang);
                 st.takeItems(Varool_Foulclaws_Fang);
-                st.giveItems(ADENA_ID, Reward);
+                st.giveAdena(adena);
                 st.playSound(SOUND_MIDDLE);
             } else
                 htmltext = "elliasin_q0316_05.htm";
@@ -79,9 +78,8 @@ public final class _316_DestroyPlaguebringers extends Quest {
         if (qs.getState() != STARTED)
             return;
 
-        if (npc.getNpcId() == Varool_Foulclaw  && Rnd.chance(Varool_Foulclaws_Fang_Chance)) {
+        if (npc.getNpcId() == Varool_Foulclaw && Rnd.chance(Varool_Foulclaws_Fang_Chance)) {
             qs.giveItemIfNotHave(Varool_Foulclaws_Fang);
-            qs.playSound(SOUND_ITEMGET);
         } else if (Rnd.chance(Wererats_Fang_Chance)) {
             qs.giveItems(Wererats_Fang);
             qs.playSound(SOUND_ITEMGET);

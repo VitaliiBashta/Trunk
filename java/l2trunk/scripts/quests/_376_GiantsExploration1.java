@@ -123,12 +123,12 @@ public final class _376_GiantsExploration1 extends Quest {
                         st.takeItems(j, count);
                     for (int l = 0; l < count; l++) {
                         int item = EXCHANGE[i + 1][Rnd.get(EXCHANGE[i + 1].length)];
-                        st.giveItems(item, 1);
+                        st.giveItems(item);
                     }
                 }
             }
         } else if ("myst".equalsIgnoreCase(event))
-            if (st.getQuestItemsCount(MST_BK) > 0) {
+            if (st.haveQuestItem(MST_BK)) {
                 if (cond == 1) {
                     st.start();
                     st.setCond(2);

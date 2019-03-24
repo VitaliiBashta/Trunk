@@ -13,8 +13,6 @@ public final class _188_SealRemoval extends Quest {
     private static final int BrokenMetal = 10369;
 
     public _188_SealRemoval() {
-        super(false);
-
         addTalkId(Dorothy, Nikola, Lorain);
         addFirstTalkId(Lorain);
         addQuestItem(BrokenMetal);
@@ -22,15 +20,15 @@ public final class _188_SealRemoval extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("researcher_lorain_q0188_03.htm")) {
+        if ("researcher_lorain_q0188_03.htm".equalsIgnoreCase(event)) {
             st.playSound(SOUND_ACCEPT);
             st.setCond(1);
-            st.giveItems(BrokenMetal, 1);
-        } else if (event.equalsIgnoreCase("maestro_nikola_q0188_03.htm")) {
+            st.giveItems(BrokenMetal);
+        } else if ("maestro_nikola_q0188_03.htm".equalsIgnoreCase(event)) {
             st.setCond(2);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("dorothy_the_locksmith_q0188_03.htm")) {
-            st.giveItems(ADENA_ID, 98583);
+        } else if ("dorothy_the_locksmith_q0188_03.htm".equalsIgnoreCase(event)) {
+            st.giveAdena(98583);
             st.addExpAndSp(285935, 18711);
             st.finish();
             st.playSound(SOUND_FINISH);

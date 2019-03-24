@@ -14,8 +14,6 @@ public final class _189_ContractCompletion extends Quest {
     private static final int Metal = 10370;
 
     public _189_ContractCompletion() {
-        super(false);
-
         addTalkId(Kusto, Luka, Lorain, Shegfield);
         addFirstTalkId(Luka);
         addQuestItem(Metal);

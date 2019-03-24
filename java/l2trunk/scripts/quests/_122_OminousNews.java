@@ -9,7 +9,6 @@ public final class _122_OminousNews extends Quest {
     private final int KARUDA = 32017;
 
     public _122_OminousNews() {
-        super(false);
         addStartNpc(MOIRA);
         addTalkId(KARUDA);
     }
@@ -19,14 +18,14 @@ public final class _122_OminousNews extends Quest {
         String htmltext;
         int cond = st.getCond();
         htmltext = event;
-        if (htmltext.equalsIgnoreCase("seer_moirase_q0122_0104.htm") && cond == 0) {
+        if ("seer_moirase_q0122_0104.htm".equalsIgnoreCase(htmltext) && cond == 0) {
             st.setCond(1);
             st.start();
             st.playSound(SOUND_ACCEPT);
-        } else if (htmltext.equalsIgnoreCase("karuda_q0122_0201.htm"))
+        } else if ("karuda_q0122_0201.htm".equalsIgnoreCase(htmltext))
             if (cond == 1) {
-                st.giveItems(ADENA_ID, 8923);
-                st.addExpAndSp(45151, 2310); // награда соответствует Т2
+                st.giveAdena( 8923);
+                st.addExpAndSp(45151, 2310);
                 st.playSound(SOUND_FINISH);
                 st.finish();
             } else

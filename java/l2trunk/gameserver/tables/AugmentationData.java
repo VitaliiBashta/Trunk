@@ -401,7 +401,6 @@ public final class AugmentationData {
         switch (lifeStoneGrade) {
             case 0:
                 generateSkill = Rnd.chance(Config.AUGMENTATION_NG_SKILL_CHANCE);
-                generateGlow = Rnd.chance(Config.AUGMENTATION_NG_GLOW_CHANCE);
                 break;
             case 1:
                 generateSkill = Rnd.chance(Config.AUGMENTATION_MID_SKILL_CHANCE);

@@ -78,10 +78,7 @@
 		<set name="operateType" val="OP_ACTIVE" />
 		<set name="isHandler" val="true" />
 		<cond msgId="1902">
-			<and>
 				<player minLevel="76" />
-				<player maxLevel="85" />
-			</and>
 		</cond>
 	</skill>
 	<skill id="2307" levels="1" name="Remove Petrification Scroll">
@@ -93,10 +90,6 @@
 		<set name="operateType" val="OP_PASSIVE" />
 	</skill>
 	<skill id="2308" levels="36" name="Event Item">
-		<!--
-			Description:
-			Lvl 1-36 Name - Event Item
-		-->
 		<set name="magicType" val="SPECIAL" />
 		<set name="icon" val="icon.skill0000" />
 		<set name="magicLevel" val="1" />

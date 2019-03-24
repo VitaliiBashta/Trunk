@@ -24,7 +24,6 @@ public final class _360_PlunderTheirSupplies extends Quest {
     private static final int DOCUMENT_DROP = 5;
 
     public _360_PlunderTheirSupplies() {
-        super(false);
         addStartNpc(COLEMAN);
 
         addKillId(TAIK_SEEKER,TAIK_LEADER);
@@ -60,7 +59,7 @@ public final class _360_PlunderTheirSupplies extends Quest {
             long reward = 6000 + supplies * 100 + docs * 6000;
             st.takeItems(SUPPLY_ITEM);
             st.takeItems(RECIPE_OF_SUPPLY);
-            st.giveItems(ADENA_ID, reward);
+            st.giveAdena(reward);
             htmltext = "guard_coleman_q0360_08.htm";
         } else
             htmltext = "guard_coleman_q0360_05.htm";

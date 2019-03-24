@@ -21,7 +21,6 @@ public final class _115_TheOtherSideOfTruth extends Quest {
     private static final int Report_Piece = 8082;
 
     public _115_TheOtherSideOfTruth() {
-        super(false);
         addStartNpc(Rafforty);
         addTalkId(Misa,Kierre,Ice_Sculpture1,Ice_Sculpture2,Ice_Sculpture3,Ice_Sculpture4);
         addQuestItem(Misas_Letter,Raffortys_Letter,Piece_of_Tablet,Report_Piece);
@@ -43,7 +42,7 @@ public final class _115_TheOtherSideOfTruth extends Quest {
             st.exitCurrentQuest();
         } else if ("32020-05.htm".equalsIgnoreCase(event)) {
             st.setCond(3);
-            st.takeItems(Misas_Letter, 1);
+            st.takeItems(Misas_Letter);
             st.playSound(SOUND_MIDDLE);
         } else if ("32020-08.htm".equalsIgnoreCase(event) || "32020-07a.htm".equalsIgnoreCase(event)) {
             st.setCond(4);
@@ -53,7 +52,7 @@ public final class _115_TheOtherSideOfTruth extends Quest {
             st.playSound(SOUND_MIDDLE);
         } else if ("32018-04.htm".equalsIgnoreCase(event)) {
             st.setCond(7);
-            st.takeItems(Raffortys_Letter, 1);
+            st.takeItems(Raffortys_Letter);
             st.playSound(SOUND_MIDDLE);
         } else if ("Sculpture-04a.htm".equalsIgnoreCase(event)) {
             st.setCond(8);
@@ -76,7 +75,7 @@ public final class _115_TheOtherSideOfTruth extends Quest {
             st.playSound(SOUND_MIDDLE);
         } else if ("32020-18.htm".equalsIgnoreCase(event)) {
             if (st.haveQuestItem(Piece_of_Tablet)) {
-                st.giveItems(ADENA_ID, 60044);
+                st.giveAdena( 60044);
                 st.playSound(SOUND_FINISH);
                 st.finish();
             } else {
@@ -140,7 +139,7 @@ public final class _115_TheOtherSideOfTruth extends Quest {
             else if (cond == 11)
                 return "32020-20.htm";
             else if (cond == 12) {
-                st.giveItems(ADENA_ID, 115673);
+                st.giveAdena( 115673);
                 st.addExpAndSp(493595, 40442);
                 st.playSound(SOUND_FINISH);
                 st.finish();

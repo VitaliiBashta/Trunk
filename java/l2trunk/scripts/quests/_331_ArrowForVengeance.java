@@ -16,7 +16,6 @@ public final class _331_ArrowForVengeance extends Quest {
             20176, WYRMS_TOOTH);
 
     public _331_ArrowForVengeance() {
-        super(false);
         addStartNpc(30125);
 
         addKillId(npcRewards.keySet());
@@ -26,11 +25,11 @@ public final class _331_ArrowForVengeance extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("beltkem_q0331_03.htm")) {
+        if ("beltkem_q0331_03.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.start();
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("beltkem_q0331_06.htm")) {
+        } else if ("beltkem_q0331_06.htm".equalsIgnoreCase(event)) {
             st.exitCurrentQuest();
             st.playSound(SOUND_FINISH);
         }
@@ -49,11 +48,9 @@ public final class _331_ArrowForVengeance extends Quest {
             htmltext = "beltkem_q0331_01.htm";
             st.exitCurrentQuest();
         } else if (cond == 1)
-            if (st.getQuestItemsCount(HARPY_FEATHER) + st.getQuestItemsCount(MEDUSA_VENOM) + st.getQuestItemsCount(WYRMS_TOOTH) > 0) {
+            if (st.haveAnyQuestItems(HARPY_FEATHER,MEDUSA_VENOM,WYRMS_TOOTH)) {
                 st.giveItems(ADENA_ID, 80 * st.getQuestItemsCount(HARPY_FEATHER) + 90 * st.getQuestItemsCount(MEDUSA_VENOM) + 100 * st.getQuestItemsCount(WYRMS_TOOTH), false);
-                st.takeItems(HARPY_FEATHER);
-                st.takeItems(MEDUSA_VENOM);
-                st.takeItems(WYRMS_TOOTH);
+                st.takeAllItems(HARPY_FEATHER,MEDUSA_VENOM,WYRMS_TOOTH);
                 htmltext = "beltkem_q0331_05.htm";
             } else
                 htmltext = "beltkem_q0331_04.htm";

@@ -62,8 +62,6 @@ public final class _128_PailakaSongofIceandFire extends Quest {
     private static final int izId = 43;
 
     public _128_PailakaSongofIceandFire() {
-        super(false);
-
         addStartNpc(ADLER);
         addTalkId(ADLER2, SINAI);
         addFirstTalkId(TINSPECTOR);
@@ -111,8 +109,7 @@ public final class _128_PailakaSongofIceandFire extends Quest {
             st.takeItems(TempleBookofSecrets5);
             st.giveItems(TempleBookofSecrets6);
             if (st.haveQuestItem(EssenceofFire)) {
-                st.takeItems(EnhancedSpritesSword);
-                st.takeItems(EssenceofFire);
+                st.takeAllItems(EnhancedSpritesSword,EssenceofFire);
                 st.giveItems(SwordofIceandFire);
             } else {
                 htmltext = "32507-04.htm";

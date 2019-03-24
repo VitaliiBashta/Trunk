@@ -11,8 +11,6 @@ public final class _036_MakeASewingKit extends Quest {
     private final int SEWING_KIT = 7078;
 
     public _036_MakeASewingKit() {
-        super(false);
-
         addStartNpc(30847);
 
         addKillId(20566);
@@ -35,7 +33,7 @@ public final class _036_MakeASewingKit extends Quest {
             if (st.getQuestItemsCount(ORIHARUKON) >= 10 && st.getQuestItemsCount(ARTISANS_FRAME) >= 10) {
                 st.takeItems(ORIHARUKON, 10);
                 st.takeItems(ARTISANS_FRAME, 10);
-                st.giveItems(SEWING_KIT, 1);
+                st.giveItems(SEWING_KIT);
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest();
             } else

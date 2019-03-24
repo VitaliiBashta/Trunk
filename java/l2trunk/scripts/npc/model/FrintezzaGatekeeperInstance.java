@@ -37,8 +37,7 @@ public final class FrintezzaGatekeeperInstance extends NpcInstance {
             parties.add(player.getParty());
         }
 
-        for (Party party : parties)
-            players.addAll(party.getMembersStream());
+        parties.forEach(party -> players.addAll(party.getMembers()));
         return players;
     }
 
@@ -55,7 +54,7 @@ public final class FrintezzaGatekeeperInstance extends NpcInstance {
         return true;
     }
 
-    private static void deleteRequiredItems(Iterable<Player> players) {
+    private static void deleteRequiredItems(Collection<Player> players) {
         players.forEach(player ->
                 ItemFunctions.removeItem(player, QUEST_ITEM_ID, 1, "FrintezzaGatekeeper"));
     }

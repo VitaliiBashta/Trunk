@@ -1622,11 +1622,11 @@
 	    <set name="skillType" val="BUFF" />
 	    <set name="operateType" val="OP_ACTIVE" />
 	    <cond msgId="2292">
-	      <or>
-	        <player agathion="1539" />
-	        <player agathion="1543" />
-	        <player agathion="1547" />
-	      </or>
+	      <!--<or>-->
+	        <!--<player agathion="1539" />-->
+	        <!--<player agathion="1543" />-->
+	        <!--<player agathion="1547" />-->
+	      <!--</or>-->
 	    </cond>
 	    <cond msgId="1509">
 	      <not>
@@ -1652,11 +1652,11 @@
 	    <set name="skillType" val="BUFF" />
 	    <set name="operateType" val="OP_ACTIVE" />
 	    <cond msgId="2292">
-	      <or>
-	        <player agathion="1540" />
-	        <player agathion="1544" />
-	        <player agathion="1548" />
-	      </or>
+	      <!--<or>-->
+	        <!--<player agathion="1540" />-->
+	        <!--<player agathion="1544" />-->
+	        <!--<player agathion="1548" />-->
+	      <!--</or>-->
 	    </cond>
 	    <cond msgId="1509">
 	      <not>
@@ -1682,11 +1682,11 @@
 	    <set name="skillType" val="BUFF" />
 	    <set name="operateType" val="OP_ACTIVE" />
 	    <cond msgId="2292">
-	      <or>
-	        <player agathion="1542" />
-	        <player agathion="1546" />
-	        <player agathion="1550" />
-	      </or>
+	      <!--<or>-->
+	        <!--<player agathion="1542" />-->
+	        <!--<player agathion="1546" />-->
+	        <!--<player agathion="1550" />-->
+	      <!--</or>-->
 	    </cond>
 	    <cond msgId="1509">
 	      <not>
@@ -1712,10 +1712,10 @@
 	    <set name="skillType" val="BUFF" />
 	    <set name="operateType" val="OP_ACTIVE" />
 	    <cond msgId="2292">
-	      <or>
-	        <player agathion="1549" />
-	        <player agathion="1545" />
-	      </or>
+	      <!--<or>-->
+	        <!--<player agathion="1549" />-->
+	        <!--<player agathion="1545" />-->
+	      <!--</or>-->
 	    </cond>
 	    <cond msgId="1509">
 	      <not>
@@ -1739,16 +1739,8 @@
 	    <for>
 	      <effect count="0x7fffffff" name="VitalityDamOverTime" time="10" val="2">
 	        <add order="0x40" stat="defenceHoly" val="10">
-	          <or>
-	            <player agathion="1539" />
-	            <player agathion="1540" />
-	          </or>
 	        </add>
 	        <add order="0x40" stat="attackHoly" val="10">
-	          <or>
-	            <player agathion="1539" />
-	            <player agathion="1540" />
-	          </or>
 	        </add>
 	      </effect>
 	    </for>
@@ -1763,16 +1755,8 @@
 	    <for>
 	      <effect count="0x7fffffff" name="VitalityDamOverTime" time="10" val="2">
 	        <add order="0x40" stat="defenceWater" val="10">
-	          <or>
-	            <player agathion="1542" />
-	            <player agathion="1541" />
-	          </or>
 	        </add>
 	        <add order="0x40" stat="attackWater" val="10">
-	          <or>
-	            <player agathion="1542" />
-	            <player agathion="1541" />
-	          </or>
 	        </add>
 	      </effect>
 	    </for>
@@ -1787,16 +1771,8 @@
 	    <for>
 	      <effect count="0x7fffffff" name="VitalityDamOverTime" time="10" val="2">
 	        <add order="0x40" stat="defenceFire" val="10">
-	          <or>
-	            <player agathion="1548" />
-	            <player agathion="1547" />
-	          </or>
 	        </add>
 	        <add order="0x40" stat="attackFire" val="10">
-	          <or>
-	            <player agathion="1548" />
-	            <player agathion="1547" />
-	          </or>
 	        </add>
 	      </effect>
 	    </for>
@@ -1811,16 +1787,8 @@
 	    <for>
 	      <effect count="0x7fffffff" name="VitalityDamOverTime" time="10" val="2">
 	        <add order="0x40" stat="defenceWind" val="10">
-	          <or>
-	            <player agathion="1550" />
-	            <player agathion="1549" />
-	          </or>
 	        </add>
 	        <add order="0x40" stat="attackWind" val="10">
-	          <or>
-	            <player agathion="1550" />
-	            <player agathion="1549" />
-	          </or>
 	        </add>
 	      </effect>
 	    </for>
@@ -1835,16 +1803,8 @@
 	    <for>
 	      <effect count="0x7fffffff" name="VitalityDamOverTime" time="10" val="2">
 	        <add order="0x40" stat="defenceEarth" val="10">
-	          <or>
-	            <player agathion="1546" />
-	            <player agathion="1545" />
-	          </or>
 	        </add>
 	        <add order="0x40" stat="attackEarth" val="10">
-	          <or>
-	            <player agathion="1546" />
-	            <player agathion="1545" />
-	          </or>
 	        </add>
 	      </effect>
 	    </for>
@@ -1859,16 +1819,10 @@
 	    <for>
 	      <effect count="0x7fffffff" name="VitalityDamOverTime" time="10" val="2">
 	        <add order="0x40" stat="defenceUnholy" val="10">
-	          <or>
-	            <player agathion="1543" />
-	            <player agathion="1544" />
-	          </or>
+
 	        </add>
 	        <add order="0x40" stat="attackUnholy" val="10">
-	          <or>
-	            <player agathion="1543" />
-	            <player agathion="1544" />
-	          </or>
+
 	        </add>
 	      </effect>
 	    </for>
@@ -1883,10 +1837,7 @@
 	    <for>
 	      <effect count="0x7fffffff" name="VitalityDamOverTime" time="10" val="2">
 	        <add order="0x40" stat="rootResist" val="40">
-	          <or>
-	            <player agathion="1539" />
-	            <player agathion="1540" />
-	          </or>
+
 	        </add>
 	      </effect>
 	    </for>
@@ -1901,10 +1852,6 @@
 	    <for>
 	      <effect count="0x7fffffff" name="VitalityDamOverTime" time="10" val="2">
 	        <add order="0x40" stat="paralyzeResist" val="40">
-	          <or>
-	            <player agathion="1542" />
-	            <player agathion="1541" />
-	          </or>
 	        </add>
 	      </effect>
 	    </for>
@@ -1919,10 +1866,7 @@
 	    <for>
 	      <effect count="0x7fffffff" name="VitalityDamOverTime" time="10" val="2">
 	        <add order="0x40" stat="sleepResist" val="40">
-	          <or>
-	            <player agathion="1543" />
-	            <player agathion="1544" />
-	          </or>
+
 	        </add>
 	      </effect>
 	    </for>
@@ -1937,10 +1881,7 @@
 	    <for>
 	      <effect count="0x7fffffff" name="VitalityDamOverTime" time="10" val="2">
 	        <add order="0x40" stat="mentalResist" val="40">
-	          <or>
-	            <player agathion="1546" />
-	            <player agathion="1545" />
-	          </or>
+
 	        </add>
 	      </effect>
 	    </for>
@@ -1955,10 +1896,6 @@
 	    <for>
 	      <effect count="0x7fffffff" name="VitalityDamOverTime" time="10" val="2">
 	        <add order="0x40" stat="bleedResist" val="40">
-	          <or>
-	            <player agathion="1548" />
-	            <player agathion="1547" />
-	          </or>
 	        </add>
 	      </effect>
 	    </for>
@@ -1973,10 +1910,6 @@
 	    <for>
 	      <effect count="0x7fffffff" name="VitalityDamOverTime" time="10" val="2">
 	        <add order="0x40" stat="stunResist" val="40">
-	          <or>
-	            <player agathion="1550" />
-	            <player agathion="1549" />
-	          </or>
 	        </add>
 	      </effect>
 	    </for>
@@ -1989,14 +1922,6 @@
 	    <for>
 	      <effect count="0x7fffffff" name="VitalityDamOverTime" time="10" val="2">
 	        <mul order="0x30" stat="regHp" val="1.2">
-	          <or>
-	            <player agathion="1539" />
-	            <player agathion="1541" />
-	            <player agathion="1543" />
-	            <player agathion="1545" />
-	            <player agathion="1547" />
-	            <player agathion="1549" />
-	          </or>
 	        </mul>
 	      </effect>
 	    </for>
@@ -2011,14 +1936,6 @@
 	    <for>
 	      <effect count="0x7fffffff" name="VitalityDamOverTime" time="10" val="2">
 	        <mul order="0x30" stat="regMp" val="1.2">
-	          <or>
-	            <player agathion="1542" />
-	            <player agathion="1540" />
-	            <player agathion="1544" />
-	            <player agathion="1546" />
-	            <player agathion="1548" />
-	            <player agathion="1550" />
-	          </or>
 	        </mul>
 	      </effect>
 	    </for>
@@ -2035,20 +1952,6 @@
 	    <set name="skillType" val="BUFF" />
 	    <set name="operateType" val="OP_ACTIVE" />
 	    <cond msgId="2292">
-	      <or>
-	        <player agathion="1539" />
-	        <player agathion="1540" />
-	        <player agathion="1541" />
-	        <player agathion="1542" />
-	        <player agathion="1543" />
-	        <player agathion="1544" />
-	        <player agathion="1545" />
-	        <player agathion="1546" />
-	        <player agathion="1547" />
-	        <player agathion="1548" />
-	        <player agathion="1549" />
-	        <player agathion="1550" />
-	      </or>
 	    </cond>
 	    <cond msgId="1509">
 	      <not>

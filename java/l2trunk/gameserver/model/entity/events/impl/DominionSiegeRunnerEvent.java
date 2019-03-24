@@ -27,19 +27,19 @@ public final class DominionSiegeRunnerEvent extends GlobalEvent {
     private final List<Quest> breakQuests = new ArrayList<>();
     private final List<Dominion> registeredDominions = new ArrayList<>(9);
     private boolean _battlefieldChatActive;
-    private Future<?> _battlefieldChatFuture;
-    private Calendar _startTime = Calendar.getInstance();
+    private Future<?> battlefieldChatFuture;
+    private Calendar startTime = Calendar.getInstance();
     private boolean _isInProgress;
     private boolean _isRegistrationOver;
 
     public DominionSiegeRunnerEvent(StatsSet set) {
         super(set);
-        _startTime.setTimeInMillis(0);
+        startTime.setTimeInMillis(0);
     }
 
     @Override
     public void startEvent() {
-        if (_startTime.getTimeInMillis() == 0) {
+        if (startTime.getTimeInMillis() == 0) {
             clearActions();
             return;
         }
@@ -47,9 +47,9 @@ public final class DominionSiegeRunnerEvent extends GlobalEvent {
         super.startEvent();
         setInProgress(true);
 
-        if (_battlefieldChatFuture != null) {
-            _battlefieldChatFuture.cancel(false);
-            _battlefieldChatFuture = null;
+        if (battlefieldChatFuture != null) {
+            battlefieldChatFuture.cancel(false);
+            battlefieldChatFuture = null;
         }
 
         for (Dominion d : registeredDominions) {
@@ -60,10 +60,10 @@ public final class DominionSiegeRunnerEvent extends GlobalEvent {
                         DominionSiegeEvent siegeEvent2 = d2.getSiegeEvent();
                         List<Integer> defenderPlayers2 = siegeEvent2.getObjects(DominionSiegeEvent.DEFENDER_PLAYERS);
 
-                        defenderPlayers2.remove(member.objectId());
+                        defenderPlayers2.remove(member.objectId);
 
                         if (d != d2)
-                            siegeEvent2.clearReward(member.objectId());
+                            siegeEvent2.clearReward(member.objectId);
                     }
                 }
             }
@@ -79,10 +79,10 @@ public final class DominionSiegeRunnerEvent extends GlobalEvent {
             }
         }
 
-        for (Dominion d : registeredDominions) {
+        registeredDominions.forEach(d -> {
             d.getSiegeEvent().clearActions();
             d.getSiegeEvent().registerActions();
-        }
+        });
 
         broadcastToWorld(SystemMsg.TERRITORY_WAR_HAS_BEGUN);
     }
@@ -94,11 +94,11 @@ public final class DominionSiegeRunnerEvent extends GlobalEvent {
         reCalcNextTime(false);
 
         for (Dominion d : registeredDominions)
-            d.getSiegeDate().setTimeInMillis(_startTime.getTimeInMillis());
+            d.getSiegeDate().setTimeInMillis(startTime.getTimeInMillis());
 
         broadcastToWorld(SystemMsg.TERRITORY_WAR_HAS_ENDED);
 
-        _battlefieldChatFuture = ThreadPoolManager.INSTANCE.schedule(_battlefieldChatTask, 600000L);
+        battlefieldChatFuture = ThreadPoolManager.INSTANCE.schedule(_battlefieldChatTask, 600000L);
 
         SiegeEvent.showResults();
 
@@ -121,12 +121,12 @@ public final class DominionSiegeRunnerEvent extends GlobalEvent {
                 broadcastToWorld(SystemMsg.THE_TERRITORY_WAR_BEGINS_IN_1_MINUTE);
                 break;
             case 3600:
-                broadcastToWorld(new SystemMessage2(SystemMsg.THE_TERRITORY_WAR_WILL_END_IN_S1HOURS).addInteger(val / 3600));
+                broadcastToWorld(new SystemMessage2(SystemMsg.THE_TERRITORY_WAR_WILL_END_IN_S1HOURS).addInteger(val / 3600.));
                 break;
             case 600:
             case 300:
             case 60:
-                broadcastToWorld(new SystemMessage2(SystemMsg.THE_TERRITORY_WAR_WILL_END_IN_S1MINUTES).addInteger(val / 60));
+                broadcastToWorld(new SystemMessage2(SystemMsg.THE_TERRITORY_WAR_WILL_END_IN_S1MINUTES).addInteger(val / 60.));
                 break;
             case 10:
             case 5:
@@ -140,7 +140,7 @@ public final class DominionSiegeRunnerEvent extends GlobalEvent {
     }
 
     public Calendar getSiegeDate() {
-        return _startTime;
+        return startTime;
     }
 
     @Override
@@ -148,12 +148,12 @@ public final class DominionSiegeRunnerEvent extends GlobalEvent {
         clearActions();
 
         if (onInit) {
-            if (_startTime.getTimeInMillis() > 0)
+            if (startTime.getTimeInMillis() > 0)
                 registerActions();
         } else {
-            if (_startTime.getTimeInMillis() > 0) {
-                while (System.currentTimeMillis() > _startTime.getTimeInMillis())
-                    _startTime.add(Calendar.WEEK_OF_MONTH, 1);
+            if (startTime.getTimeInMillis() > 0) {
+                while (System.currentTimeMillis() > startTime.getTimeInMillis())
+                    startTime.add(Calendar.WEEK_OF_MONTH, 1);
 
                 registerActions();
             }
@@ -162,7 +162,7 @@ public final class DominionSiegeRunnerEvent extends GlobalEvent {
 
     @Override
     protected long startTimeMillis() {
-        return _startTime.getTimeInMillis();
+        return startTime.getTimeInMillis();
     }
 
     @Override
@@ -254,21 +254,21 @@ public final class DominionSiegeRunnerEvent extends GlobalEvent {
             if (castle.getOwnDate().getTimeInMillis() == 0)
                 return;
 
-            _startTime = (Calendar) Config.CASTLE_VALIDATION_DATE.clone();
-            _startTime.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
-            _startTime.set(Calendar.HOUR_OF_DAY, 20);
-            _startTime.set(Calendar.MINUTE, 0);
-            _startTime.set(Calendar.SECOND, 0);
-            _startTime.set(Calendar.MILLISECOND, 0);
+            startTime = (Calendar) Config.CASTLE_VALIDATION_DATE.clone();
+            startTime.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
+            startTime.set(Calendar.HOUR_OF_DAY, 20);
+            startTime.set(Calendar.MINUTE, 0);
+            startTime.set(Calendar.SECOND, 0);
+            startTime.set(Calendar.MILLISECOND, 0);
 
-            while (_startTime.getTimeInMillis() < System.currentTimeMillis())
-                _startTime.add(Calendar.WEEK_OF_YEAR, 1);
+            while (startTime.getTimeInMillis() < System.currentTimeMillis())
+                startTime.add(Calendar.WEEK_OF_YEAR, 1);
 
-            d.getSiegeDate().setTimeInMillis(_startTime.getTimeInMillis() + 100);
+            d.getSiegeDate().setTimeInMillis(startTime.getTimeInMillis() + 100);
 
             reCalcNextTime(false);
         } else {
-            d.getSiegeDate().setTimeInMillis(_startTime.getTimeInMillis() + 100);
+            d.getSiegeDate().setTimeInMillis(startTime.getTimeInMillis() + 100);
         }
 
         d.getSiegeEvent().spawnAction(DominionSiegeEvent.TERRITORY_NPC, true);
@@ -277,7 +277,7 @@ public final class DominionSiegeRunnerEvent extends GlobalEvent {
         registeredDominions.add(d);
     }
 
-    public synchronized void unRegisterDominion(Dominion d) {
+    synchronized void unRegisterDominion(Dominion d) {
         if (!registeredDominions.contains(d))
             return;
 
@@ -289,7 +289,7 @@ public final class DominionSiegeRunnerEvent extends GlobalEvent {
         if (registeredDominions.isEmpty()) {
             clearActions();
 
-            _startTime.setTimeInMillis(0);
+            startTime.setTimeInMillis(0);
 
             reCalcNextTime(false);
         }
@@ -318,7 +318,7 @@ public final class DominionSiegeRunnerEvent extends GlobalEvent {
                 siegeEvent.removeObjects(DominionSiegeEvent.DEFENDER_PLAYERS);
             });
 
-            _battlefieldChatFuture = null;
+            battlefieldChatFuture = null;
         }
     }
 }
