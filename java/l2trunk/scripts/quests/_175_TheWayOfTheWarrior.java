@@ -122,8 +122,6 @@ public final class _175_TheWayOfTheWarrior extends Quest {
     };
 
     public _175_TheWayOfTheWarrior() {
-        super(false);
-
         addStartNpc(Kekropus);
 
         addTalkId(Perwan);
@@ -143,7 +141,7 @@ public final class _175_TheWayOfTheWarrior extends Quest {
             st.takeItems(MuertosClaw);
 
             st.giveItems(WarriorsSword);
-            st.giveItems(ADENA_ID, 8799, false);
+            st.giveAdena( 8799);
             st.player.addExpAndSp(20739, 1777);
 
             if (st.player.getClassId().occupation() == 0 ) {
@@ -196,7 +194,7 @@ public final class _175_TheWayOfTheWarrior extends Quest {
                 st.start();
                 htmltext = "32133-01.htm";
             } else if (cond == 3) {
-                st.takeItems(WolfTail, -1);
+                st.takeItems(WolfTail);
                 st.setCond(4);
                 st.start();
                 htmltext = "32133-02.htm";

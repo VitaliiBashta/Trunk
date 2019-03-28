@@ -14,13 +14,11 @@ public final class _039_RedEyedInvaders extends Quest {
     private final List<Integer> REW = List.of(6521, 6529, 6535);
 
     public _039_RedEyedInvaders() {
-        super(false);
-
         addStartNpc(30334);
 
         addTalkId(30332);
 
-        addKillId(20919,20920,20921,20925);
+        addKillId(20919, 20920, 20921, 20925);
 
         addQuestItem(BBN, IP, RBN, GML);
     }
@@ -39,20 +37,18 @@ public final class _039_RedEyedInvaders extends Quest {
                 st.playSound(SOUND_ACCEPT);
                 break;
             case "captain_bathia_q0039_0301.htm":
-                if (st.getQuestItemsCount(BBN) == 100 && st.getQuestItemsCount(RBN) == 100) {
+                if (st.haveQuestItem(BBN, 100) && st.haveQuestItem(RBN, 100)) {
                     st.setCond(4);
-                    st.takeItems(BBN, -1);
-                    st.takeItems(RBN, -1);
+                    st.takeAllItems(BBN, RBN);
                     st.playSound(SOUND_ACCEPT);
                 } else
                     htmltext = "captain_bathia_q0039_0203.htm";
                 break;
             case "captain_bathia_q0039_0401.htm":
                 if (st.getQuestItemsCount(IP) == 30 && st.getQuestItemsCount(GML) == 30) {
-                    st.takeItems(IP, -1);
-                    st.takeItems(GML, -1);
+                    st.takeAllItems(IP, GML);
                     st.giveItems(REW.get(0), 60);
-                    st.giveItems(REW.get(1), 1);
+                    st.giveItems(REW.get(1));
                     st.giveItems(REW.get(2), 500);
                     st.addExpAndSp(62366, 2783);
                     st.setCond(0);

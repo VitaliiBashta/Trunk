@@ -13,7 +13,6 @@ public final class _029_ChestCaughtWithABaitOfEarth extends Quest {
     private static final int PlatedLeatherGloves = 2455;
 
     public _029_ChestCaughtWithABaitOfEarth() {
-        super(false);
         addStartNpc(Willie);
         addTalkId(Anabel);
         addQuestItem(SmallGlassBox);

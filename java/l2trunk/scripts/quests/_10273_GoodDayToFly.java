@@ -15,8 +15,6 @@ public final class _10273_GoodDayToFly extends Quest {
     private final static int Mark = 13856;
 
     public _10273_GoodDayToFly() {
-        super(false);
-
         addStartNpc(Lekon);
 
         addQuestItem(Mark);

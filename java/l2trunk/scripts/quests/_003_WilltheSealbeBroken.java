@@ -17,7 +17,6 @@ public final class _003_WilltheSealbeBroken extends Quest {
     private final int SuccubusBlood = 1083;
 
     public _003_WilltheSealbeBroken() {
-        super(false);
         addStartNpc(StartNpc);
         addKillId(MONSTERS);
         addQuestItem(OnyxBeastEye, TaintStone, SuccubusBlood);

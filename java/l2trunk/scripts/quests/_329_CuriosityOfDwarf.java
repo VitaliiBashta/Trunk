@@ -10,8 +10,6 @@ public final class _329_CuriosityOfDwarf extends Quest {
     private final int BROKEN_HEARTSTONE = 1365;
 
     public _329_CuriosityOfDwarf() {
-        super(false);
-
         addStartNpc(30437);
         addKillId(20083,20085);
 
@@ -50,7 +48,7 @@ public final class _329_CuriosityOfDwarf extends Quest {
             heart = st.getQuestItemsCount(GOLEM_HEARTSTONE);
             broken = st.getQuestItemsCount(BROKEN_HEARTSTONE);
             if (broken + heart > 0) {
-                st.giveItems(ADENA_ID, 50 * broken + 1000 * heart);
+                st.giveAdena(50 * broken + 1000 * heart);
                 st.takeAllItems(BROKEN_HEARTSTONE,GOLEM_HEARTSTONE);
                 htmltext = "trader_rolento_q0329_05.htm";
             } else

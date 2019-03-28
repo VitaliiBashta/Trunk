@@ -40,10 +40,8 @@ public final class _196_SevenSignsSealoftheEmperor extends Quest {
     private static final int izId = 112;
 
     public _196_SevenSignsSealoftheEmperor() {
-        super(false);
-
         addStartNpc(IasonHeine);
-        addTalkId(IasonHeine, MerchantofMammon, PromiseofMammon, Shunaiman, Leon, DisciplesGatekeeper, CourtMagician, Wood);
+        addTalkId( MerchantofMammon, PromiseofMammon, Shunaiman, Leon, DisciplesGatekeeper, CourtMagician, Wood);
         addQuestItem(ElmoredenHolyWater, CourtMagiciansMagicStaff, SealOfBinding, SacredSwordofEinhasad);
     }
 
@@ -62,32 +60,32 @@ public final class _196_SevenSignsSealoftheEmperor extends Quest {
                 MerchantofMammonSpawn = st.addSpawn(MerchantofMammon, Location.of(109763, 219944, -3512, 16384), 0, 120 * 1000);
                 Functions.npcSay(MerchantofMammonSpawn, "Who dares summon the Merchant of Mammon?!");
             }
-        } else if (event.equalsIgnoreCase("merchantofmammon_q196_2.htm")) {
+        } else if ("merchantofmammon_q196_2.htm".equalsIgnoreCase(event)) {
             if (MerchantofMammonSpawn != null) {
                 MerchantofMammonSpawn.deleteMe();
                 MerchantofMammonSpawn = null;
             }
             st.setCond(2);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("teleport_instance")) {
+        } else if ("teleport_instance".equalsIgnoreCase(event)) {
             if ((st.getCond() == 3 || st.getCond() == 4))
                 enterInstance(player);
             else
                 player.sendMessage("You can only access the Necropolis of Dawn while carrying Seal of the Emperor quest.");
             return null;
-        } else if (event.equalsIgnoreCase("collapse_instance")) {
+        } else if ("collapse_instance".equalsIgnoreCase(event)) {
             ref.collapse();
             htmltext = "leon_q196_1.htm";
-        } else if (event.equalsIgnoreCase("shunaiman_q196_2.htm")) {
+        } else if ("shunaiman_q196_2.htm".equalsIgnoreCase(event)) {
             st.setCond(4);
             st.playSound(SOUND_MIDDLE);
             player.sendPacket(new SystemMessage(SystemMessage.BY_USING_THE_SKILL_OF_EINHASAD_S_HOLY_SWORD_DEFEAT_THE_EVIL_LILIMS));
             player.sendPacket(new SystemMessage(SystemMessage.BY_USING_THE_HOLY_WATER_OF_EINHASAD_OPEN_THE_DOOR_POSSESSED_BY_THE_CURSE_OF_FLAMES));
-            st.giveItems(SacredSwordofEinhasad, 1);
-            st.giveItems(ElmoredenHolyWater, 1);
-        } else if (event.equalsIgnoreCase("courtmagician_q196_2.htm")) {
+            st.giveItems(SacredSwordofEinhasad);
+            st.giveItems(ElmoredenHolyWater);
+        } else if ("courtmagician_q196_2.htm".equalsIgnoreCase(event)) {
             st.playSound(SOUND_ITEMGET);
-            st.giveItems(CourtMagiciansMagicStaff, 1);
+            st.giveItems(CourtMagiciansMagicStaff);
             player.sendPacket(new SystemMessage(SystemMessage.BY_USING_THE_COURT_MAGICIAN_S_MAGIC_STAFF_OPEN_THE_DOOR_ON_WHICH_THE_MAGICIAN_S_BARRIER_IS));
         } else if (event.equalsIgnoreCase("free_anakim")) {
             player.showQuestMovie(ExStartScenePlayer.SCENE_SSQ_SEALING_EMPEROR_1ST);
@@ -95,16 +93,13 @@ public final class _196_SevenSignsSealoftheEmperor extends Quest {
             ref.openDoor(door11);
             ThreadPoolManager.INSTANCE.schedule(new SpawnLilithRoom(ref), 17000);
             return null;
-        } else if (event.equalsIgnoreCase("shunaiman_q196_4.htm")) {
+        } else if ("shunaiman_q196_4.htm".equalsIgnoreCase(event)) {
             st.setCond(5);
             st.playSound(SOUND_MIDDLE);
-            st.takeItems(SealOfBinding, -1);
-            st.takeItems(ElmoredenHolyWater, -1);
-            st.takeItems(CourtMagiciansMagicStaff, -1);
-            st.takeItems(SacredSwordofEinhasad, -1);
-        } else if (event.equalsIgnoreCase("leon_q196_2.htm"))
+            st.takeAllItems(SealOfBinding,ElmoredenHolyWater, CourtMagiciansMagicStaff, SacredSwordofEinhasad);
+        } else if ("leon_q196_2.htm".equalsIgnoreCase(event))
             player.getReflection().collapse();
-        else if (event.equalsIgnoreCase("iasonheine_q196_6.htm")) {
+        else if ("iasonheine_q196_6.htm".equalsIgnoreCase(event)) {
             st.setCond(6);
             st.playSound(SOUND_MIDDLE);
         } else if ("wood_q196_2.htm".equalsIgnoreCase(event))

@@ -14,8 +14,6 @@ public final class _008_AnAdventureBegins extends Quest {
     private final int ROSELYNS_NOTE = 7573;
 
     public _008_AnAdventureBegins() {
-        super(false);
-
         addStartNpc(JASMINE);
 
         addTalkId(ROSELYN,HARNE);
@@ -52,6 +50,7 @@ public final class _008_AnAdventureBegins extends Quest {
         String htmltext = "noquest";
         int npcId = npc.getNpcId();
         int cond = st.getCond();
+        boolean haveNote = st.haveQuestItem(ROSELYNS_NOTE);
         if (npcId == JASMINE) {
             if (cond == 0 && st.player.getRace() == Race.darkelf)
                 if (st.player.getLevel() >= 3)
@@ -65,14 +64,14 @@ public final class _008_AnAdventureBegins extends Quest {
             else if (cond == 3)
                 htmltext = "jasmine_q0008_0301.htm";
         } else if (npcId == ROSELYN) {
-            if (st.getQuestItemsCount(ROSELYNS_NOTE) == 0)
+            if (!haveNote)
                 htmltext = "sentry_roseline_q0008_0101.htm";
             else
                 htmltext = "sentry_roseline_q0008_0202.htm";
         } else if (npcId == HARNE)
-            if (cond == 2 && st.getQuestItemsCount(ROSELYNS_NOTE) > 0)
+            if (cond == 2 && haveNote)
                 htmltext = "harne_q0008_0201.htm";
-            else if (cond == 2 && st.getQuestItemsCount(ROSELYNS_NOTE) == 0)
+            else if (cond == 2)
                 htmltext = "harne_q0008_0302.htm";
             else if (cond == 3)
                 htmltext = "harne_q0008_0303.htm";

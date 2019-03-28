@@ -23,8 +23,6 @@ public final class _10275_ContainingTheAttributePower extends Quest {
     private final static int SoulPieceAir = 13862;
 
     public _10275_ContainingTheAttributePower() {
-        super(false);
-
         addStartNpc(Holly,Weber);
 
         addTalkId(Yin,Yang);
@@ -40,33 +38,33 @@ public final class _10275_ContainingTheAttributePower extends Quest {
 
         Player player = st.player;
 
-        if (event.equalsIgnoreCase("30839-02.htm") || event.equalsIgnoreCase("31307-02.htm")) {
+        if ("30839-02.htm".equalsIgnoreCase(event) || "31307-02.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.start();
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("30839-05.htm")) {
+        } else if ("30839-05.htm".equalsIgnoreCase(event)) {
             st.setCond(2);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("31307-05.htm")) {
+        } else if ("31307-05.htm".equalsIgnoreCase(event)) {
             st.setCond(7);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("32325-03.htm")) {
+        } else if ("32325-03.htm".equalsIgnoreCase(event)) {
             st.setCond(3);
             st.giveItems(YinSword, 1, Element.FIRE, 10);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("32326-03.htm")) {
+        } else if ("32326-03.htm".equalsIgnoreCase(event)) {
             st.setCond(8);
             st.giveItems(YangSword, 1, Element.EARTH, 10);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("32325-06.htm")) {
-            if (st.getQuestItemsCount(YinSword) > 0) {
-                st.takeItems(YinSword, 1);
+        } else if ("32325-06.htm".equalsIgnoreCase(event)) {
+            if (st.haveQuestItem(YinSword) ) {
+                st.takeItems(YinSword);
                 htmltext = "32325-07.htm";
             }
             st.giveItems(YinSword, 1, Element.FIRE, 10);
-        } else if (event.equalsIgnoreCase("32326-06.htm")) {
-            if (st.getQuestItemsCount(YangSword) > 0) {
-                st.takeItems(YangSword, 1);
+        } else if ("32326-06.htm".equalsIgnoreCase(event)) {
+            if (st.haveQuestItem(YangSword) ) {
+                st.takeItems(YangSword);
                 htmltext = "32326-07.htm";
             }
             st.giveItems(YangSword, 1, Element.EARTH, 10);
@@ -158,8 +156,7 @@ public final class _10275_ContainingTheAttributePower extends Quest {
                 htmltext = "32325-04.htm";
             else if (cond == 4) {
                 htmltext = "32325-08.htm";
-                st.takeItems(YinSword, 1);
-                st.takeItems(SoulPieceWater, -1);
+                st.takeAllItems(YinSword,SoulPieceWater);
             } else if (cond == 6)
                 htmltext = "32325-10.htm";
         } else if (npcId == Yang)
@@ -169,8 +166,7 @@ public final class _10275_ContainingTheAttributePower extends Quest {
                 htmltext = "32326-04.htm";
             else if (cond == 9) {
                 htmltext = "32326-08.htm";
-                st.takeItems(YangSword, 1);
-                st.takeItems(SoulPieceAir, -1);
+                st.takeAllItems(YangSword,SoulPieceAir);
             } else if (cond == 11)
                 htmltext = "32326-10.htm";
 

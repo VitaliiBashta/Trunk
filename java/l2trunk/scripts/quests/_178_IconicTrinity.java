@@ -16,8 +16,6 @@ public final class _178_IconicTrinity extends Quest {
     private static final int EnchantD = 956;
 
     public _178_IconicTrinity() {
-        super(false);
-
         addStartNpc(Kekropus);
         addTalkId(IconOfThePast,IconOfThePresent,IconOfTheFuture);
     }
@@ -29,9 +27,9 @@ public final class _178_IconicTrinity extends Quest {
             st.setCond(1);
             st.start();
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("32255-03.htm") || event.equalsIgnoreCase("32256-03.htm") || event.equalsIgnoreCase("32257-03.htm"))
+        } else if ("32255-03.htm".equalsIgnoreCase(event) || "32256-03.htm".equalsIgnoreCase(event) || "32257-03.htm".equalsIgnoreCase(event))
             st.set("id", "");
-        else if (event.equalsIgnoreCase("32255-09.htm")) {
+        else if ("32255-09.htm".equalsIgnoreCase(event)) {
             st.set("id", "");
             st.setCond(2);
             st.start();
@@ -47,7 +45,7 @@ public final class _178_IconicTrinity extends Quest {
             int cond = st.getCond();
             int len = 0;
             if (!event.equals("0")) {
-                if (st.get("id") == null)
+                if (!st.isSet("id"))
                     st.set("id", "");
                 String id = st.get("id");
                 st.set("id", id + event);
@@ -84,12 +82,14 @@ public final class _178_IconicTrinity extends Quest {
                     htmltext = htmltext.replace("Password :  ", "****").replace("#N", "fifth");
             }
         } else if ("32138-04.htm".equalsIgnoreCase(event)) {
-            st.giveItems(EnchantD, 1, true);
+            st.giveItems(EnchantD);
             st.addExpAndSp(20123, 976);
             st.playSound(SOUND_FINISH);
             st.finish();
         }
-        if (event.equalsIgnoreCase("32255-07.htm") || event.equalsIgnoreCase("32255-09.htm") || event.equalsIgnoreCase("32256-07.htm") || event.equalsIgnoreCase("32256-08.htm") || event.equalsIgnoreCase("32256-09.htm") || event.equalsIgnoreCase("32257-06.htm")) {
+        if ("32255-07.htm".equalsIgnoreCase(event) || "32255-09.htm".equalsIgnoreCase(event)
+                || "32256-07.htm".equalsIgnoreCase(event) || "32256-08.htm".equalsIgnoreCase(event)
+                || "32256-09.htm".equalsIgnoreCase(event) || "32257-06.htm".equalsIgnoreCase(event)) {
             htmltext = HtmCache.INSTANCE.getNotNull("quests/_178_IconicTrinity/" + event, st.player);
             htmltext = htmltext.replace("%player_name%", st.player.getName());
         }

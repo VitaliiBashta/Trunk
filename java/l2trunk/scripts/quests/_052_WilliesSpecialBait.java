@@ -15,8 +15,6 @@ public final class _052_WilliesSpecialBait extends Quest {
     private final static Integer FishSkill = 1315;
 
     public _052_WilliesSpecialBait() {
-        super(false);
-
         addStartNpc(Willie);
 
         addKillId(TarlkBasilisks);
@@ -73,13 +71,12 @@ public final class _052_WilliesSpecialBait extends Quest {
     @Override
     public void onKill(NpcInstance npc, QuestState st) {
         if (TarlkBasilisks.contains(npc.getNpcId()) && st.getCond() == 1)
-            if (st.getQuestItemsCount(EyeOfTarlkBasilisk) < 100 && Rnd.chance(30)) {
-                st.giveItems(EyeOfTarlkBasilisk);
+            if (Rnd.chance(30)) {
+                st.giveItemIfNotHave(EyeOfTarlkBasilisk, 100);
                 if (st.getQuestItemsCount(EyeOfTarlkBasilisk) == 100) {
                     st.playSound(SOUND_MIDDLE);
                     st.setCond(2);
-                } else
-                    st.playSound(SOUND_ITEMGET);
+                }
             }
     }
 }

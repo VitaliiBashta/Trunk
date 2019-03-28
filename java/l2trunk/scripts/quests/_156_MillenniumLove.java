@@ -11,8 +11,6 @@ public final class _156_MillenniumLove extends Quest {
     private final int THEONS_DIARY = 1023;
 
     public _156_MillenniumLove() {
-        super(false);
-
         addStartNpc(30368);
         addTalkId(30369);
         addQuestItem(LILITHS_LETTER, THEONS_DIARY);

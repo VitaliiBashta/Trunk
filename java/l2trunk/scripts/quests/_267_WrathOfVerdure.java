@@ -19,7 +19,6 @@ public final class _267_WrathOfVerdure extends Quest {
     private static final int Goblin_Club_Chance = 50;
 
     public _267_WrathOfVerdure() {
-        super(false);
         addStartNpc(Treant_Bremec);
         addKillId(Goblin_Raider);
         addQuestItem(Goblin_Club);
@@ -27,12 +26,12 @@ public final class _267_WrathOfVerdure extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        int _state = st.getState();
-        if ("bri_mec_tran_q0267_03.htm".equalsIgnoreCase(event) && _state == CREATED && st.player.getRace() == Race.elf && st.player.getLevel() >= 4) {
+        int state = st.getState();
+        if ("bri_mec_tran_q0267_03.htm".equalsIgnoreCase(event) && state == CREATED && st.player.getRace() == Race.elf && st.player.getLevel() >= 4) {
             st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
-        } else if ("bri_mec_tran_q0267_06.htm".equalsIgnoreCase(event) && _state == STARTED) {
+        } else if ("bri_mec_tran_q0267_06.htm".equalsIgnoreCase(event) && state == STARTED) {
             st.playSound(SOUND_FINISH);
             st.finish();
         }
@@ -44,8 +43,8 @@ public final class _267_WrathOfVerdure extends Quest {
         String htmltext = "noquest";
         if (npc.getNpcId() != Treant_Bremec)
             return htmltext;
-        int _state = st.getState();
-        if (_state == CREATED) {
+        int state = st.getState();
+        if (state == CREATED) {
             if (st.player.getRace() != Race.elf) {
                 htmltext = "bri_mec_tran_q0267_00.htm";
                 st.exitCurrentQuest();
@@ -56,7 +55,7 @@ public final class _267_WrathOfVerdure extends Quest {
                 htmltext = "bri_mec_tran_q0267_02.htm";
                 st.setCond(0);
             }
-        } else if (_state == STARTED) {
+        } else if (state == STARTED) {
             long Goblin_Club_Count = st.getQuestItemsCount(Goblin_Club);
             if (Goblin_Club_Count > 0) {
                 htmltext = "bri_mec_tran_q0267_05.htm";

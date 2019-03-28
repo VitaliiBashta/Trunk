@@ -533,7 +533,7 @@ public final class _503_PursuitClanAmbition extends Quest {
                             htmltext = "30765-02.htm";
                             st.setCond(11);
                             st.takeItems(Imp_Keys, 6);
-                            st.giveItems(Scepter_Judgement, 1);
+                            st.giveItems(Scepter_Judgement);
                         } else
                             htmltext = "<html><head><body>(You and your Clan didn't kill the Imperial Gravekeeper by your own, do it try again.)</body></html>";
                     else

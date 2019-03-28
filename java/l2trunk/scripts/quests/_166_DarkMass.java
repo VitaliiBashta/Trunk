@@ -13,7 +13,6 @@ public final class _166_DarkMass extends Quest {
     private final int GARMIELS_SCRIPTURE_ID = 1091;
 
     public _166_DarkMass() {
-        super(false);
         addStartNpc(30130);
         addTalkId(30135, 30139, 30143);
         addQuestItem(CEREMONIAL_DAGGER_ID, DREVIANT_WINE_ID, GARMIELS_SCRIPTURE_ID, UNDRES_LETTER_ID);

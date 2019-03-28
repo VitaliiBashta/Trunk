@@ -19,8 +19,6 @@ public final class _103_SpiritOfCraftsman extends Quest {
     private static final int BLOODSABER_ID = 975;
 
     public _103_SpiritOfCraftsman() {
-        super(false);
-
         addStartNpc(30307);
 
         addTalkId(30132,30144);
@@ -32,8 +30,8 @@ public final class _103_SpiritOfCraftsman extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("blacksmith_karoyd_q0103_05.htm")) {
-            st.giveItems(KAROYDS_LETTER_ID, 1);
+        if ("blacksmith_karoyd_q0103_05.htm".equalsIgnoreCase(event)) {
+            st.giveItems(KAROYDS_LETTER_ID);
             st.setCond(1);
             st.start();
             st.playSound(SOUND_ACCEPT);
@@ -46,9 +44,10 @@ public final class _103_SpiritOfCraftsman extends Quest {
         int npcId = npc.getNpcId();
         String htmltext = "noquest";
         int id = st.getState();
+        int cond = st.getCond();
         if (id == CREATED)
             st.setCond(0);
-        if (npcId == 30307 && st.getCond() == 0) {
+        if (npcId == 30307 && cond == 0) {
             if (st.player.getRace() != Race.darkelf)
                 htmltext = "blacksmith_karoyd_q0103_00.htm";
             else if (st.player.getLevel() >= 10) {
@@ -58,53 +57,53 @@ public final class _103_SpiritOfCraftsman extends Quest {
                 htmltext = "blacksmith_karoyd_q0103_02.htm";
                 st.exitCurrentQuest();
             }
-        } else if (npcId == 30307 && st.getCond() == 0)
+        } else if (npcId == 30307 && cond == 0)
             htmltext = "completed";
         else if (id == STARTED)
-            if (npcId == 30307 && st.getCond() >= 1 && (st.haveQuestItem(KAROYDS_LETTER_ID)  || st.getQuestItemsCount(CECKTINONS_VOUCHER1_ID) >= 1 || st.getQuestItemsCount(CECKTINONS_VOUCHER2_ID) >= 1))
+            if (npcId == 30307 && cond >= 1 && (st.haveAnyQuestItems(KAROYDS_LETTER_ID,CECKTINONS_VOUCHER1_ID,CECKTINONS_VOUCHER2_ID)))
                 htmltext = "blacksmith_karoyd_q0103_06.htm";
-            else if (npcId == 30132 && st.getCond() == 1 && st.haveQuestItem(KAROYDS_LETTER_ID)) {
+            else if (npcId == 30132 && cond == 1 && st.haveQuestItem(KAROYDS_LETTER_ID)) {
                 htmltext = "cecon_q0103_01.htm";
                 st.setCond(2);
                 st.takeItems(KAROYDS_LETTER_ID, 1);
                 st.giveItems(CECKTINONS_VOUCHER1_ID);
-            } else if (npcId == 30132 && st.getCond() >= 2 && (st.haveQuestItem(CECKTINONS_VOUCHER1_ID)  || st.getQuestItemsCount(CECKTINONS_VOUCHER2_ID) >= 1))
+            } else if (npcId == 30132 && cond >= 2 && (st.haveAnyQuestItems(CECKTINONS_VOUCHER1_ID,CECKTINONS_VOUCHER2_ID) ))
                 htmltext = "cecon_q0103_02.htm";
-            else if (npcId == 30144 && st.getCond() == 2 && st.haveQuestItem(CECKTINONS_VOUCHER1_ID) ) {
+            else if (npcId == 30144 && cond == 2 && st.haveQuestItem(CECKTINONS_VOUCHER1_ID) ) {
                 htmltext = "harne_q0103_01.htm";
                 st.setCond(3);
                 st.takeItems(CECKTINONS_VOUCHER1_ID, 1);
                 st.giveItems(CECKTINONS_VOUCHER2_ID);
-            } else if (npcId == 30144 && st.getCond() == 3 && st.haveQuestItem(CECKTINONS_VOUCHER2_ID)  && st.getQuestItemsCount(BONE_FRAGMENT1_ID) < 10)
+            } else if (npcId == 30144 && cond == 3 && st.haveQuestItem(CECKTINONS_VOUCHER2_ID)  && st.getQuestItemsCount(BONE_FRAGMENT1_ID) < 10)
                 htmltext = "harne_q0103_02.htm";
-            else if (npcId == 30144 && st.getCond() == 4 && st.getQuestItemsCount(CECKTINONS_VOUCHER2_ID) == 1 && st.getQuestItemsCount(BONE_FRAGMENT1_ID) >= 10) {
+            else if (npcId == 30144 && cond == 4 && st.haveQuestItem(CECKTINONS_VOUCHER2_ID)  && st.getQuestItemsCount(BONE_FRAGMENT1_ID) >= 10) {
                 htmltext = "harne_q0103_03.htm";
                 st.setCond(5);
-                st.takeItems(CECKTINONS_VOUCHER2_ID, 1);
-                st.takeItems(BONE_FRAGMENT1_ID, 10);
+                st.takeItems(CECKTINONS_VOUCHER2_ID);
+                st.takeItems(BONE_FRAGMENT1_ID);
                 st.giveItems(SOUL_CATCHER_ID);
-            } else if (npcId == 30144 && st.getCond() == 5 && st.haveQuestItem(SOUL_CATCHER_ID) )
+            } else if (npcId == 30144 && cond == 5 && st.haveQuestItem(SOUL_CATCHER_ID) )
                 htmltext = "harne_q0103_04.htm";
-            else if (npcId == 30132 && st.getCond() == 5 && st.haveQuestItem(SOUL_CATCHER_ID) ) {
+            else if (npcId == 30132 && cond == 5 && st.haveQuestItem(SOUL_CATCHER_ID) ) {
                 htmltext = "cecon_q0103_03.htm";
                 st.setCond(6);
                 st.takeItems(SOUL_CATCHER_ID, 1);
                 st.giveItems(PRESERVE_OIL_ID);
-            } else if (npcId == 30132 && st.getCond() == 6 && st.haveQuestItem(PRESERVE_OIL_ID)  && st.getQuestItemsCount(ZOMBIE_HEAD_ID) == 0 && st.getQuestItemsCount(STEELBENDERS_HEAD_ID) == 0)
+            } else if (npcId == 30132 && cond == 6 && st.haveQuestItem(PRESERVE_OIL_ID)  && st.getQuestItemsCount(ZOMBIE_HEAD_ID) == 0 && st.getQuestItemsCount(STEELBENDERS_HEAD_ID) == 0)
                 htmltext = "cecon_q0103_04.htm";
-            else if (npcId == 30132 && st.getCond() == 7 && st.haveQuestItem(ZOMBIE_HEAD_ID) ) {
+            else if (npcId == 30132 && cond == 7 && st.haveQuestItem(ZOMBIE_HEAD_ID) ) {
                 htmltext = "cecon_q0103_05.htm";
                 st.setCond(8);
                 st.takeItems(ZOMBIE_HEAD_ID, 1);
                 st.giveItems(STEELBENDERS_HEAD_ID);
-            } else if (npcId == 30132 && st.getCond() == 8 && st.haveQuestItem(STEELBENDERS_HEAD_ID) )
+            } else if (npcId == 30132 && cond == 8 && st.haveQuestItem(STEELBENDERS_HEAD_ID) )
                 htmltext = "cecon_q0103_06.htm";
-            else if (npcId == 30307 && st.getCond() == 8 && st.haveQuestItem(STEELBENDERS_HEAD_ID) ) {
+            else if (npcId == 30307 && cond == 8 && st.haveQuestItem(STEELBENDERS_HEAD_ID) ) {
                 htmltext = "blacksmith_karoyd_q0103_07.htm";
                 st.takeItems(STEELBENDERS_HEAD_ID, 1);
 
                 st.giveItems(BLOODSABER_ID);
-                st.giveItems(ADENA_ID, 19799, false);
+                st.giveAdena(19799);
                 st.player.addExpAndSp(46663, 3999);
 
                 if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("p1q3")) {

@@ -15,7 +15,6 @@ import static l2trunk.scripts.quests._10285_MeetingSirra.SIRRA;
 public final class _10286_ReunionWithSirra extends Quest {
 
     public _10286_ReunionWithSirra() {
-        super(false);
         addStartNpc(RAFFORTY);
         addTalkId(JINIA, JINIA_2, SIRRA);
     }

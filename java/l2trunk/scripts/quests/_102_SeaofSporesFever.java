@@ -21,19 +21,19 @@ public final class _102_SeaofSporesFever extends Quest {
     private final int ALBERRYUS_LIST = 746;
 
     public _102_SeaofSporesFever() {
-        super(false);
-
         addStartNpc(30284);
 
-        addTalkId(30156,30217,30219,30221,30284,30285);
+        addTalkId(30156, 30217, 30219, 30221, 30284, 30285);
 
-        addKillId(20013,20019);
+        addKillId(20013, 20019);
 
-        addQuestItem(ALBERRYUS_LETTER, EVERGREEN_AMULET, DRYAD_TEARS, COBS_MEDICINE1, COBS_MEDICINE2, COBS_MEDICINE3, COBS_MEDICINE4, COBS_MEDICINE5, ALBERRYUS_LIST);
+        addQuestItem(ALBERRYUS_LETTER, EVERGREEN_AMULET, DRYAD_TEARS,
+                COBS_MEDICINE1, COBS_MEDICINE2, COBS_MEDICINE3,
+                COBS_MEDICINE4, COBS_MEDICINE5, ALBERRYUS_LIST);
     }
 
     private void check(QuestState st) {
-        if (st.getQuestItemsCount(COBS_MEDICINE2) == 0 && st.getQuestItemsCount(COBS_MEDICINE3) == 0 && st.getQuestItemsCount(COBS_MEDICINE4) == 0 && st.getQuestItemsCount(COBS_MEDICINE5) == 0)
+        if (!st.haveAnyQuestItems(COBS_MEDICINE2, COBS_MEDICINE3, COBS_MEDICINE4, COBS_MEDICINE5))
             st.setCond(6);
     }
 
@@ -107,8 +107,8 @@ public final class _102_SeaofSporesFever extends Quest {
                 st.finish();
             }
         } else if (npcId == 30156) {
-            if (cond == 1 && st.getQuestItemsCount(ALBERRYUS_LETTER) == 1) {
-                st.takeItems(ALBERRYUS_LETTER, 1);
+            if (cond == 1 && st.haveQuestItem(ALBERRYUS_LETTER)) {
+                st.takeItems(ALBERRYUS_LETTER);
                 st.giveItems(EVERGREEN_AMULET);
                 st.setCond(2);
                 htmltext = "cob_q0102_03.htm";
@@ -117,8 +117,7 @@ public final class _102_SeaofSporesFever extends Quest {
             else if (cond > 3 && st.getQuestItemsCount(ALBERRYUS_LIST) > 0)
                 htmltext = "cob_q0102_07.htm";
             else if (cond == 3 && st.getQuestItemsCount(EVERGREEN_AMULET) > 0 && st.getQuestItemsCount(DRYAD_TEARS) >= 10) {
-                st.takeItems(EVERGREEN_AMULET, 1);
-                st.takeItems(DRYAD_TEARS);
+                st.takeAllItems(EVERGREEN_AMULET, DRYAD_TEARS);
                 st.giveItems(COBS_MEDICINE1);
                 st.giveItems(COBS_MEDICINE2);
                 st.giveItems(COBS_MEDICINE3);
@@ -152,13 +151,12 @@ public final class _102_SeaofSporesFever extends Quest {
     public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         if ((npcId == 20013 || npcId == 20019) && Rnd.chance(33))
-            if (st.getQuestItemsCount(EVERGREEN_AMULET) > 0 && st.getQuestItemsCount(DRYAD_TEARS) < 10) {
-                st.giveItems(DRYAD_TEARS);
+            if (st.haveQuestItem(EVERGREEN_AMULET)) {
+                st.giveItemIfNotHave(DRYAD_TEARS, 10);
                 if (st.getQuestItemsCount(DRYAD_TEARS) == 10) {
                     st.setCond(3);
                     st.playSound(SOUND_MIDDLE);
-                } else
-                    st.playSound(SOUND_ITEMGET);
+                }
             }
     }
 }

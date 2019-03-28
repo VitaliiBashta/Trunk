@@ -12,8 +12,6 @@ public final class _012_SecretMeetingWithVarkaSilenos extends Quest {
     private final int MUNITIONS_BOX = 7232;
 
     public _012_SecretMeetingWithVarkaSilenos() {
-        super(false);
-
         addStartNpc(CADMON);
 
         addTalkId(HELMUT,NARAN_ASHANUK);
@@ -23,16 +21,16 @@ public final class _012_SecretMeetingWithVarkaSilenos extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("guard_cadmon_q0012_0104.htm")) {
+        if ("guard_cadmon_q0012_0104.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.start();
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("trader_helmut_q0012_0201.htm")) {
-            st.giveItems(MUNITIONS_BOX, 1);
+        } else if ("trader_helmut_q0012_0201.htm".equalsIgnoreCase(event)) {
+            st.giveItems(MUNITIONS_BOX);
             st.setCond(2);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("herald_naran_q0012_0301.htm")) {
-            st.takeItems(MUNITIONS_BOX, 1);
+        } else if ("herald_naran_q0012_0301.htm".equalsIgnoreCase(event)) {
+            st.takeItems(MUNITIONS_BOX);
             st.addExpAndSp(233125, 18142);
             st.playSound(SOUND_FINISH);
             st.finish();
@@ -61,7 +59,7 @@ public final class _012_SecretMeetingWithVarkaSilenos extends Quest {
             else if (cond == 2)
                 htmltext = "trader_helmut_q0012_0202.htm";
         } else if (npcId == NARAN_ASHANUK)
-            if (cond == 2 && st.getQuestItemsCount(MUNITIONS_BOX) > 0)
+            if (cond == 2 && st.haveQuestItem(MUNITIONS_BOX))
                 htmltext = "herald_naran_q0012_0201.htm";
         return htmltext;
     }

@@ -15,7 +15,6 @@ public final class _240_ImTheOnlyOneYouCanTrust extends Quest {
     private static final int STAKATOFANGS = 14879;
 
     public _240_ImTheOnlyOneYouCanTrust() {
-        super(false);
         addStartNpc(KINTAIJIN);
         addKillId(SpikedStakato, CannibalisticStakatoFollower, CannibalisticStakatoLeader1, CannibalisticStakatoLeader2);
         addQuestItem(STAKATOFANGS);
@@ -59,12 +58,11 @@ public final class _240_ImTheOnlyOneYouCanTrust extends Quest {
     @Override
     public void onKill(NpcInstance npc, QuestState st) {
         if (st.getCond() == 1) {
-            st.giveItems(STAKATOFANGS);
-            if (st.getQuestItemsCount(STAKATOFANGS) >= 25) {
+            st.giveItemIfNotHave(STAKATOFANGS, 25);
+            if (st.haveQuestItem(STAKATOFANGS, 25)) {
                 st.setCond(2);
                 st.playSound(SOUND_MIDDLE);
-            } else
-                st.playSound(SOUND_ITEMGET);
+            }
         }
     }
 }

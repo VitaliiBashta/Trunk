@@ -26,10 +26,8 @@ public final class _032_AnObviousLie extends Quest {
     private final int SUEDE = 1866;
 
     public _032_AnObviousLie() {
-        super(false);
-
         addStartNpc(MAXIMILIAN);
-        addTalkId(MAXIMILIAN,GENTLER,MIKI_THE_CAT);
+        addTalkId(GENTLER,MIKI_THE_CAT);
 
         addKillId(ALLIGATOR);
 
@@ -44,21 +42,21 @@ public final class _032_AnObviousLie extends Quest {
             st.start();
             st.playSound(SOUND_ACCEPT);
         } else if ("30094-1.htm".equals(event)) {
-            st.giveItems(MAP, 1);
+            st.giveItems(MAP);
             st.setCond(2);
         } else if ("31706-1.htm".equals(event)) {
-            st.takeItems(MAP, 1);
+            st.takeItems(MAP);
             st.setCond(3);
         } else if ("30094-4.htm".equals(event)) {
-            if (st.getQuestItemsCount(MEDICINAL_HERB) > 19) {
-                st.takeItems(MEDICINAL_HERB, 20);
+            if (st.haveQuestItem(MEDICINAL_HERB, 20)) {
+                st.takeItems(MEDICINAL_HERB);
                 st.setCond(5);
             } else {
                 htmltext = "You don't have enough materials";
                 st.setCond(3);
             }
         } else if ("30094-7.htm".equals(event)) {
-            if (st.getQuestItemsCount(SPIRIT_ORES) >= 500) {
+            if (st.haveQuestItem(SPIRIT_ORES, 500)) {
                 st.takeItems(SPIRIT_ORES, 500);
                 st.setCond(6);
             } else

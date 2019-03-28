@@ -283,8 +283,6 @@ public final class _333_BlackLionHunt extends Quest {
     };
 
     public _333_BlackLionHunt() {
-        super(false);
-
         addStartNpc(Sophya);
 
         addTalkId(Redfoot,Rupio,Undrias,Lockirin,Morgan);
@@ -296,7 +294,7 @@ public final class _333_BlackLionHunt extends Quest {
     }
 
     private void giveRewards(QuestState st, int item, long count) {
-        st.giveItems(ADENA_ID, 35 * count);
+        st.giveAdena(35 * count);
         st.takeItems(item, count);
         if (count >= 20)
             st.giveItems(LIONS_CLAW, count / 20 * (long) st.getRateQuestsReward());
@@ -480,7 +478,7 @@ public final class _333_BlackLionHunt extends Quest {
             String pieces = "rupio-01.htm";
             String brockes = "rupio-02.htm";
             String complete = "rupio-03.htm";
-            if (event.equalsIgnoreCase("r_give_tablet")) {
+            if ("r_give_tablet".equalsIgnoreCase(event)) {
                 items = tablet_list;
                 item = COMPLETE_TABLET;
                 pieces = "rupio-04.htm";
@@ -535,31 +533,31 @@ public final class _333_BlackLionHunt extends Quest {
                     return "morgan-02.htm";
             }
             return "morgan-03.htm";
-        } else if (event.equalsIgnoreCase("start_parts"))
+        } else if ("start_parts".equalsIgnoreCase(event))
             return "30735-08.htm";
-        else if (event.equalsIgnoreCase("m_reward"))
+        else if ("m_reward".equalsIgnoreCase(event))
             return "morgan-05.htm";
-        else if (event.equalsIgnoreCase("u_info"))
+        else if ("u_info".equalsIgnoreCase(event))
             return "undiras-03.htm";
-        else if (event.equalsIgnoreCase("l_info"))
+        else if ("l_info".equalsIgnoreCase(event))
             return "lockirin-03.htm";
-        else if (event.equalsIgnoreCase("p_redfoot"))
+        else if ("p_redfoot".equalsIgnoreCase(event))
             return "30735-09.htm";
-        else if (event.equalsIgnoreCase("p_trader_info"))
+        else if ("p_trader_info".equalsIgnoreCase(event))
             return "30735-10.htm";
-        else if (event.equalsIgnoreCase("start_chose_parts"))
+        else if ("start_chose_parts".equalsIgnoreCase(event))
             return "30735-11.htm";
-        else if (event.equalsIgnoreCase("p1_explanation"))
+        else if ("p1_explanation".equalsIgnoreCase(event))
             return "30735-12.htm";
-        else if (event.equalsIgnoreCase("p2_explanation"))
+        else if ("p2_explanation".equalsIgnoreCase(event)) {
             return "30735-13.htm";
-        else if (event.equalsIgnoreCase("p3_explanation"))
+        } else if ("p3_explanation".equalsIgnoreCase(event))
             return "30735-14.htm";
-        else if (event.equalsIgnoreCase("p4_explanation"))
+        else if ("p4_explanation".equalsIgnoreCase(event))
             return "30735-15.htm";
-        else if (event.equalsIgnoreCase("f_more_help"))
+        else if ("f_more_help".equalsIgnoreCase(event))
             return "red_foor-16.htm";
-        else if (event.equalsIgnoreCase("r_exit"))
+        else if ("r_exit".equalsIgnoreCase(event))
             return "30735-16.htm";
         return event;
     }
@@ -610,7 +608,7 @@ public final class _333_BlackLionHunt extends Quest {
                 } else
                     return "30735-24.htm";
             } else if (npcId == Redfoot) {
-                if (st.getQuestItemsCount(CARGO_BOX1) > 0)
+                if (st.haveQuestItem(CARGO_BOX1) )
                     return "red_foor_text_20.htm";
                 return "red_foor_text_21.htm";
             } else if (npcId == Rupio) {
@@ -702,7 +700,7 @@ public final class _333_BlackLionHunt extends Quest {
                 st.addSpawn(27152);
             // Cargo Box
             if (Rnd.chance(15))
-                st.giveItems(CARGO_BOX1, 1);
+                st.giveItems(CARGO_BOX1);
         }
     }
 }

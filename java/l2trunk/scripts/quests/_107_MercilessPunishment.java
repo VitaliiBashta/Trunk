@@ -16,8 +16,6 @@ public final class _107_MercilessPunishment extends Quest {
     private static final int BUTCHER = 1510;
 
     public _107_MercilessPunishment() {
-        super(false);
-
         addStartNpc(30568);
 
         addTalkId(30580);
@@ -29,12 +27,12 @@ public final class _107_MercilessPunishment extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("urutu_chief_hatos_q0107_03.htm")) {
+        if ("urutu_chief_hatos_q0107_03.htm".equalsIgnoreCase(event)) {
             st.giveItems(HATOSS_ORDER1);
             st.setCond(1);
             st.start();
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("urutu_chief_hatos_q0107_06.htm")) {
+        } else if ("urutu_chief_hatos_q0107_06.htm".equalsIgnoreCase(event)) {
             st.takeItems(HATOSS_ORDER2, 1);
             st.takeItems(LETTER_TO_DARKELF, 1);
             st.takeItems(LETTER_TO_HUMAN, 1);
@@ -42,13 +40,12 @@ public final class _107_MercilessPunishment extends Quest {
             st.takeItems(HATOSS_ORDER1, 1);
             st.takeItems(HATOSS_ORDER2, 1);
             st.takeItems(HATOSS_ORDER3, 1);
-            st.giveItems(ADENA_ID, 200);
+            st.giveAdena(200);
             st.unset("cond");
             st.playSound(SOUND_GIVEUP);
         } else if ("urutu_chief_hatos_q0107_07.htm".equalsIgnoreCase(event)) {
             st.takeItems(HATOSS_ORDER1, 1);
-            if (st.getQuestItemsCount(HATOSS_ORDER2) == 0)
-                st.giveItems(HATOSS_ORDER2);
+            st.giveItemIfNotHave(HATOSS_ORDER2);
         } else if ("urutu_chief_hatos_q0107_09.htm".equalsIgnoreCase(event)) {
             st.takeItems(HATOSS_ORDER2, 1);
             if (st.getQuestItemsCount(HATOSS_ORDER3) == 0)
@@ -88,18 +85,15 @@ public final class _107_MercilessPunishment extends Quest {
             else if (cond == 5 && st.haveQuestItem(HATOSS_ORDER2) && st.getQuestItemsCount(LETTER_TO_DARKELF) >= 1) {
                 htmltext = "urutu_chief_hatos_q0107_08.htm";
                 st.setCond(6);
-            } else if (cond == 6 && st.haveQuestItem(HATOSS_ORDER3)  && st.getQuestItemsCount(LETTER_TO_ELF) == 0)
+            } else if (cond == 6 && st.haveQuestItem(HATOSS_ORDER3) && st.getQuestItemsCount(LETTER_TO_ELF) == 0)
                 htmltext = "urutu_chief_hatos_q0107_08.htm";
-            else if (cond == 7 && st.haveQuestItem(HATOSS_ORDER3)  && st.getQuestItemsCount(LETTER_TO_ELF) + st.getQuestItemsCount(LETTER_TO_HUMAN) + st.getQuestItemsCount(LETTER_TO_DARKELF) == 3) {
+            else if (cond == 7 && st.haveAllQuestItems(HATOSS_ORDER3, LETTER_TO_ELF, LETTER_TO_HUMAN, LETTER_TO_DARKELF)) {
                 htmltext = "urutu_chief_hatos_q0107_10.htm";
-                st.takeItems(LETTER_TO_DARKELF);
-                st.takeItems(LETTER_TO_HUMAN);
-                st.takeItems(LETTER_TO_ELF);
-                st.takeItems(HATOSS_ORDER3);
+                st.takeAllItems(LETTER_TO_DARKELF, LETTER_TO_HUMAN, LETTER_TO_ELF, HATOSS_ORDER3);
 
                 st.giveItems(BUTCHER);
                 st.player.addExpAndSp(34565, 2962);
-                st.giveItems(ADENA_ID, 14666, false);
+                st.giveAdena(14666);
 
                 if (st.player.getClassId().occupation() == 0) {
                     st.player.setVar("p1q3"); // flag for helper
@@ -114,7 +108,7 @@ public final class _107_MercilessPunishment extends Quest {
                 st.finish();
                 st.playSound(SOUND_FINISH);
             }
-        } else if (npcId == 30580 && cond >= 1 && (st.getQuestItemsCount(HATOSS_ORDER1) > 0 || st.getQuestItemsCount(HATOSS_ORDER2) > 0 || st.getQuestItemsCount(HATOSS_ORDER3) > 0)) {
+        } else if (npcId == 30580 && cond >= 1 && (st.haveAnyQuestItems(HATOSS_ORDER1, HATOSS_ORDER2, HATOSS_ORDER3))) {
             if (cond == 1)
                 st.setCond(2);
             htmltext = "centurion_parugon_q0107_01.htm";
@@ -127,18 +121,15 @@ public final class _107_MercilessPunishment extends Quest {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         if (npcId == 27041)
-            if (cond == 2 && st.getQuestItemsCount(HATOSS_ORDER1) > 0 && st.getQuestItemsCount(LETTER_TO_HUMAN) == 0) {
-                st.giveItems(LETTER_TO_HUMAN);
+            if (cond == 2 && st.haveQuestItem(HATOSS_ORDER1)) {
+                st.giveItemIfNotHave(LETTER_TO_HUMAN);
                 st.setCond(3);
-                st.playSound(SOUND_ITEMGET);
-            } else if (cond == 4 && st.getQuestItemsCount(HATOSS_ORDER2) > 0 && st.getQuestItemsCount(LETTER_TO_DARKELF) == 0) {
-                st.giveItems(LETTER_TO_DARKELF);
+            } else if (cond == 4 && st.haveQuestItem(HATOSS_ORDER2)) {
+                st.giveItemIfNotHave(LETTER_TO_DARKELF);
                 st.setCond(5);
-                st.playSound(SOUND_ITEMGET);
-            } else if (cond == 6 && st.getQuestItemsCount(HATOSS_ORDER3) > 0 && st.getQuestItemsCount(LETTER_TO_ELF) == 0) {
-                st.giveItems(LETTER_TO_ELF);
+            } else if (cond == 6 && st.haveQuestItem(HATOSS_ORDER3)) {
+                st.giveItemIfNotHave(LETTER_TO_ELF);
                 st.setCond(7);
-                st.playSound(SOUND_ITEMGET);
             }
     }
 }

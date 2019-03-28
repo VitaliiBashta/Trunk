@@ -24,14 +24,13 @@ public final class _10285_MeetingSirra extends Quest {
      static final int SIRRA = 32762;
 
     public _10285_MeetingSirra() {
-        super(false);
         addStartNpc(RAFFORTY);
         addTalkId(JINIA, JINIA_2, KEGOR, SIRRA);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("rafforty_q10285_03.htm")) {
+        if ("rafforty_q10285_03.htm".equalsIgnoreCase(event)) {
             st.start();
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
@@ -92,7 +91,7 @@ public final class _10285_MeetingSirra extends Quest {
                 htmltext = "rafforty_q10285_03.htm";
             else if (cond == 10) {
                 htmltext = "rafforty_q10285_04.htm";
-                st.giveItems(ADENA_ID, 283425);
+                st.giveAdena( 283425);
                 st.addExpAndSp(939075, 83855);
                 st.complete();
                 st.playSound(SOUND_FINISH);
@@ -136,44 +135,44 @@ public final class _10285_MeetingSirra extends Quest {
     }
 
     private class FreyaSpawn extends RunnableImpl {
-        private final Player _player;
-        private final Reflection _r;
+        private final Player player;
+        private final Reflection reflection;
 
         FreyaSpawn(Reflection r, Player player) {
-            _r = r;
-            _player = player;
+            reflection = r;
+            this.player = player;
         }
 
         @Override
         public void runImpl() {
-            if (_r != null) {
-                NpcInstance freya = _r.addSpawnWithoutRespawn(18847, Location.of(114720, -117085, -11088, 15956));
-                ThreadPoolManager.INSTANCE.schedule(new FreyaMovie(_player, _r, freya), 2 * 60 * 1000L);
+            if (reflection != null) {
+                NpcInstance freya = reflection.addSpawnWithoutRespawn(18847, Location.of(114720, -117085, -11088, 15956));
+                ThreadPoolManager.INSTANCE.schedule(new FreyaMovie(player, reflection, freya), 2 * 60 * 1000L);
             }
         }
     }
 
     private class FreyaMovie extends RunnableImpl {
-        final Player _player;
-        final Reflection _r;
-        final NpcInstance _npc;
+        final Player player;
+        final Reflection reflection;
+        final NpcInstance npc;
 
         FreyaMovie(Player player, Reflection r, NpcInstance npc) {
-            _player = player;
-            _r = r;
-            _npc = npc;
+            this.player = player;
+            reflection = r;
+            this.npc = npc;
         }
 
         @Override
         public void runImpl() {
-            _r.getSpawns().forEach(Spawner::deleteAll);
+            reflection.getSpawns().forEach(Spawner::deleteAll);
 
-            if (_npc != null && !_npc.isDead())
-                _npc.deleteMe();
-            _player.showQuestMovie(ExStartScenePlayer.SCENE_BOSS_FREYA_FORCED_DEFEAT);
+            if (npc != null && !npc.isDead())
+                npc.deleteMe();
+            player.showQuestMovie(ExStartScenePlayer.SCENE_BOSS_FREYA_FORCED_DEFEAT);
             ThreadPoolManager.INSTANCE.schedule(() -> {
-                _player.getQuestState(_10285_MeetingSirra.class).setCond(10);
-                _r.collapse();
+                player.getQuestState(_10285_MeetingSirra.class).setCond(10);
+                reflection.collapse();
             }, 23000L);
         }
     }

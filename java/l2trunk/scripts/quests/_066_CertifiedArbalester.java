@@ -194,8 +194,6 @@ public final class _066_CertifiedArbalester extends Quest {
     };
 
     public _066_CertifiedArbalester() {
-        super(false);
-
         addStartNpc(Rindy);
 
         addTalkId(Clayton,Poitan,Holvas,Meldina,Selsia,Gaius,Gauen,Kaiena);
@@ -229,7 +227,7 @@ public final class _066_CertifiedArbalester extends Quest {
             st.start();
         } else if ("30464-09.htm".equalsIgnoreCase(event)) {
             st.unset("id");
-            st.takeItems(EnmityCrystalCore, 1);
+            st.takeItems(EnmityCrystalCore);
             st.setCond(5);
             st.start();
         } else if ("30458-07.htm".equalsIgnoreCase(event)) {

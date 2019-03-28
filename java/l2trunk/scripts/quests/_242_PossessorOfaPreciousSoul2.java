@@ -15,8 +15,6 @@ public final class _242_PossessorOfaPreciousSoul2 extends Quest {
     private NpcInstance PureWhiteUnicornSpawn = null;
 
     public _242_PossessorOfaPreciousSoul2() {
-        super(false);
-
         addStartNpc(31742);
 
         addTalkId(31743, 31751, 31752, 30759, 30738, 31744, 31748, 31746, PureWhiteUnicorn);
@@ -132,7 +130,7 @@ public final class _242_PossessorOfaPreciousSoul2 extends Quest {
                 htmltext = "30759-1.htm";
             else if (cond == 7)
                 htmltext = "30759-2r.htm";
-            else if (cond == 8 && st.getQuestItemsCount(SORCERY_INGREDIENT) == 1)
+            else if (cond == 8 && st.haveQuestItem(SORCERY_INGREDIENT))
                 htmltext = "30759-3.htm";
         } else if (npcId == 30738) {
             if (cond == 7)
@@ -148,8 +146,6 @@ public final class _242_PossessorOfaPreciousSoul2 extends Quest {
                         htmltext = "31748-1.htm";
                     } else if (st.isSet("talk"))
                         htmltext = "31748-1.htm";
-                    else
-                        htmltext = "noquest";
                 } else
                     htmltext = "31748-0.htm";
         } else if (npcId == 31746) {
@@ -160,8 +156,7 @@ public final class _242_PossessorOfaPreciousSoul2 extends Quest {
                 npc.doDie(npc);
                 if (PureWhiteUnicornSpawn == null || !st.player.knowsObject(PureWhiteUnicornSpawn) || !PureWhiteUnicornSpawn.isVisible())
                     PureWhiteUnicornSpawn = st.addSpawn(PureWhiteUnicorn, npc.getLoc(), 0, 120000);
-            } else
-                htmltext = "noquest";
+            }
         } else if (npcId == PureWhiteUnicorn)
             if (st.getCond() == 10) {
                 htmltext = "31747-1.htm";
@@ -176,12 +171,10 @@ public final class _242_PossessorOfaPreciousSoul2 extends Quest {
         if (!st.player.isSubClassActive())
             return;
 
-        if (st.getCond() == 9 && !st.haveQuestItem(ORB_OF_BINDING, 4))
-            st.giveItems(ORB_OF_BINDING);
+        if (st.getCond() == 9)
+            st.giveItemIfNotHave(ORB_OF_BINDING, 4);
         if (st.haveQuestItem(ORB_OF_BINDING, 4)) {
             st.playSound(SOUND_MIDDLE);
-        } else {
-            st.playSound(SOUND_ITEMGET);
         }
     }
 }

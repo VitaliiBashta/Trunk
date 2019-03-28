@@ -8,8 +8,6 @@ public final class _013_ParcelDelivery extends Quest {
     private static final int PACKAGE = 7263;
 
     public _013_ParcelDelivery() {
-        super(false);
-
         addStartNpc(31274);
 
         addTalkId(31539);
@@ -26,7 +24,7 @@ public final class _013_ParcelDelivery extends Quest {
             st.playSound(SOUND_ACCEPT);
         } else if ("warsmith_vulcan_q0013_0201.htm".equalsIgnoreCase(event)) {
             st.takeItems(PACKAGE);
-            st.giveItems(ADENA_ID, 157834, true);
+            st.giveAdena( 157834);
             st.addExpAndSp(589092, 58794);
             st.playSound(SOUND_FINISH);
             st.finish();

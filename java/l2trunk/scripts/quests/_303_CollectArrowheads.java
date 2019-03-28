@@ -8,11 +8,7 @@ public final class _303_CollectArrowheads extends Quest {
     private final int ORCISH_ARROWHEAD = 963;
 
     public _303_CollectArrowheads() {
-        super(false);
-
         addStartNpc(30029);
-
-        addTalkId(30029);
 
         addKillId(20361);
 
@@ -45,7 +41,7 @@ public final class _303_CollectArrowheads extends Quest {
             htmltext = "minx_q0303_05.htm";
         else {
             st.takeItems(ORCISH_ARROWHEAD);
-            st.giveItems(ADENA_ID, 1000);
+            st.giveAdena(1000);
             st.addExpAndSp(2000, 0);
             htmltext = "minx_q0303_06.htm";
             st.playSound(SOUND_FINISH);
@@ -56,13 +52,10 @@ public final class _303_CollectArrowheads extends Quest {
 
     @Override
     public void onKill(NpcInstance npc, QuestState st) {
-        if (st.getQuestItemsCount(ORCISH_ARROWHEAD) < 10) {
-            st.giveItems(ORCISH_ARROWHEAD);
-            if (st.haveQuestItem(ORCISH_ARROWHEAD, 10)) {
-                st.setCond(2);
-                st.playSound(SOUND_MIDDLE);
-            } else
-                st.playSound(SOUND_ITEMGET);
+        st.giveItemIfNotHave(ORCISH_ARROWHEAD, 10);
+        if (st.haveQuestItem(ORCISH_ARROWHEAD, 10)) {
+            st.setCond(2);
+            st.playSound(SOUND_MIDDLE);
         }
     }
 }

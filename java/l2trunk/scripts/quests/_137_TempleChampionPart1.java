@@ -22,8 +22,6 @@ public final class _137_TempleChampionPart1 extends Quest {
     private final static int DeadSeeker = 20202;
 
     public _137_TempleChampionPart1() {
-        super(false);
-
         addStartNpc(SYLVAIN);
         addKillId(GraniteGolem, HangmanTree, AmberBasilisk, Strain, Ghoul, DeadSeeker);
         addQuestItem(FRAGMENT);
@@ -33,8 +31,7 @@ public final class _137_TempleChampionPart1 extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
 
         if ("sylvain_q0137_04.htm".equalsIgnoreCase(event)) {
-            st.takeItems(BadgeTempleExecutor);
-            st.takeItems(BadgeTempleMissionary);
+            st.takeAllItems(BadgeTempleExecutor, BadgeTempleMissionary);
             st.setCond(1);
             st.start();
             st.unset("talk");
@@ -48,7 +45,7 @@ public final class _137_TempleChampionPart1 extends Quest {
             st.setCond(2);
             st.playSound(SOUND_MIDDLE);
         } else if ("sylvain_q0137_24.htm".equalsIgnoreCase(event)) {
-            st.giveItems(ADENA_ID, 69146);
+            st.giveAdena(69146);
             st.playSound(SOUND_FINISH);
             st.addExpAndSp(219975, 13047);
             st.finish();
@@ -63,7 +60,7 @@ public final class _137_TempleChampionPart1 extends Quest {
         int cond = st.getCond();
         if (npcId == SYLVAIN)
             if (cond == 0) {
-                if (st.player.getLevel() >= 35 && st.haveAllQuestItems(BadgeTempleExecutor,BadgeTempleMissionary))
+                if (st.player.getLevel() >= 35 && st.haveAllQuestItems(BadgeTempleExecutor, BadgeTempleMissionary))
                     htmltext = "sylvain_q0137_01.htm";
                 else {
                     htmltext = "sylvain_q0137_03.htm";
@@ -90,13 +87,10 @@ public final class _137_TempleChampionPart1 extends Quest {
     @Override
     public void onKill(NpcInstance npc, QuestState st) {
         if (st.getCond() == 2)
-            if (!st.haveQuestItem(FRAGMENT, 30)) {
-                st.giveItems(FRAGMENT);
-                if (st.haveQuestItem(FRAGMENT, 30)) {
-                    st.setCond(3);
-                    st.playSound(SOUND_MIDDLE);
-                } else
-                    st.playSound(SOUND_ITEMGET);
-            }
+            st.giveItemIfNotHave(FRAGMENT, 30);
+        if (st.haveQuestItem(FRAGMENT, 30)) {
+            st.setCond(3);
+            st.playSound(SOUND_MIDDLE);
+        }
     }
 }

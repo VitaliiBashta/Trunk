@@ -16,7 +16,6 @@ public final class _238_SuccessFailureOfBusiness extends Quest {
     private static final int GuardianSpiritFragment = 14868;
 
     public _238_SuccessFailureOfBusiness() {
-        super(false);
         addStartNpc(Helvetica);
         addKillId(BrazierOfPurity, EvilSpirit, GuardianSpirit);
         addQuestItem(BrokenPieveOfMagicForce, GuardianSpiritFragment);
@@ -61,9 +60,8 @@ public final class _238_SuccessFailureOfBusiness extends Quest {
             else if (cond == 3)
                 htmltext = "32641-07.htm";
             else if (cond == 4) {
-                st.takeItems(VicinityOfTheFieldOfSilenceResearchCenter);
-                st.takeItems(GuardianSpiritFragment);
-                st.giveItems(ADENA_ID, 283346);
+                st.takeAllItems(VicinityOfTheFieldOfSilenceResearchCenter,GuardianSpiritFragment);
+                st.giveAdena(283346);
                 st.addExpAndSp(1319736, 103553);
                 st.complete();
                 st.finish();
@@ -76,11 +74,12 @@ public final class _238_SuccessFailureOfBusiness extends Quest {
     @Override
     public void onKill(NpcInstance npc, QuestState st) {
         int cond = st.getCond();
-        if (cond == 1 && npc.getNpcId() == BrazierOfPurity) {
+        int npcId = npc.getNpcId();
+        if (cond == 1 && npcId == BrazierOfPurity) {
             st.giveItems(BrokenPieveOfMagicForce);
             if (st.getQuestItemsCount(BrokenPieveOfMagicForce) >= 10)
                 st.setCond(2);
-        } else if (cond == 3 && (npc.getNpcId() == EvilSpirit || npc.getNpcId() == GuardianSpirit)) {
+        } else if (cond == 3 && (npcId == EvilSpirit || npcId == GuardianSpirit)) {
             st.giveItems(GuardianSpiritFragment);
             if (st.haveQuestItem(GuardianSpiritFragment, 20))
                 st.setCond(4);

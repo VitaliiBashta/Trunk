@@ -15,8 +15,6 @@ public final class _258_BringWolfPelts extends Quest {
     private static final int Tunic = 426;
 
     public _258_BringWolfPelts() {
-        super(false);
-
         addStartNpc(30001);
         addKillId(20120,20442);
 
@@ -25,7 +23,7 @@ public final class _258_BringWolfPelts extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.intern().equalsIgnoreCase("lector_q0258_03.htm")) {
+        if ("lector_q0258_03.htm".equalsIgnoreCase(event.intern())) {
             st.setCond(1);
             st.start();
             st.playSound(SOUND_ACCEPT);
@@ -50,16 +48,16 @@ public final class _258_BringWolfPelts extends Quest {
             st.takeItems(WOLF_PELT, 40);
             int n = Rnd.get(16);
             if (n == 0) {
-                st.giveItems(Cotton_Shirt, 1);
+                st.giveItems(Cotton_Shirt);
                 st.playSound(SOUND_JACKPOT);
             } else if (n < 6)
-                st.giveItems(Leather_Pants, 1);
+                st.giveItems(Leather_Pants);
             else if (n < 9)
-                st.giveItems(Leather_Shirt, 1);
+                st.giveItems(Leather_Shirt);
             else if (n < 13)
-                st.giveItems(Short_Leather_Gloves, 1);
+                st.giveItems(Short_Leather_Gloves);
             else
-                st.giveItems(Tunic, 1);
+                st.giveItems(Tunic);
             htmltext = "lector_q0258_06.htm";
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest();

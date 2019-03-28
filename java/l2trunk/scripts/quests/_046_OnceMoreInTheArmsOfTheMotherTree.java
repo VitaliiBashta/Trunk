@@ -16,10 +16,7 @@ public final class _046_OnceMoreInTheArmsOfTheMotherTree extends Quest {
     private static final int SCROLL_OF_ESCAPE_ELVEN_VILLAGE = 7118;
 
     public _046_OnceMoreInTheArmsOfTheMotherTree() {
-        super(false);
-
         addStartNpc(30097);
-
 
         addTalkId(30094,30090,30116);
 
@@ -88,6 +85,7 @@ public final class _046_OnceMoreInTheArmsOfTheMotherTree extends Quest {
     public String onTalk(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         String htmltext = "noquest";
+        int cond = st.getCond();
         int id = st.getState();
         if (id == CREATED) {
             if (st.player.getRace() != Race.elf || !st.haveQuestItem(MARK_OF_TRAVELER_ID)) {
@@ -98,29 +96,29 @@ public final class _046_OnceMoreInTheArmsOfTheMotherTree extends Quest {
                 st.exitCurrentQuest();
             } else
                 htmltext = "galladuchi_q0046_0101.htm";
-        } else if (npcId == 30097 && st.getCond() == 1)
+        } else if (npcId == 30097 && cond == 1)
             htmltext = "galladuchi_q0046_0105.htm";
-        else if (npcId == 30097 && st.getCond() == 2)
+        else if (npcId == 30097 && cond == 2)
             htmltext = "galladuchi_q0046_0201.htm";
-        else if (npcId == 30097 && st.getCond() == 3)
+        else if (npcId == 30097 && cond == 3)
             htmltext = "galladuchi_q0046_0303.htm";
-        else if (npcId == 30097 && st.getCond() == 4)
+        else if (npcId == 30097 && cond == 4)
             htmltext = "galladuchi_q0046_0401.htm";
-        else if (npcId == 30097 && st.getCond() == 5)
+        else if (npcId == 30097 && cond == 5)
             htmltext = "galladuchi_q0046_0503.htm";
-        else if (npcId == 30097 && st.getCond() == 6)
+        else if (npcId == 30097 && cond == 6)
             htmltext = "galladuchi_q0046_0601.htm";
-        else if (npcId == 30094 && st.getCond() == 1)
+        else if (npcId == 30094 && cond == 1)
             htmltext = "gentler_q0046_0101.htm";
-        else if (npcId == 30094 && st.getCond() == 2)
+        else if (npcId == 30094 && cond == 2)
             htmltext = "gentler_q0046_0203.htm";
-        else if (npcId == 30090 && st.getCond() == 3)
+        else if (npcId == 30090 && cond == 3)
             htmltext = "sandra_q0046_0301.htm";
-        else if (npcId == 30090 && st.getCond() == 4)
+        else if (npcId == 30090 && cond == 4)
             htmltext = "sandra_q0046_0403.htm";
-        else if (npcId == 30116 && st.getCond() == 5)
+        else if (npcId == 30116 && cond == 5)
             htmltext = "dustin_q0046_0501.htm";
-        else if (npcId == 30116 && st.getCond() == 6)
+        else if (npcId == 30116 && cond == 6)
             htmltext = "dustin_q0046_0603.htm";
         return htmltext;
     }

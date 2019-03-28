@@ -20,7 +20,6 @@ public final class _10287_StoryOfThoseLeft extends Quest {
             10549, 10550, 10551, 10552, 10553, 14219);
 
     public _10287_StoryOfThoseLeft() {
-        super(false);
         addStartNpc(RAFFORTY);
         addTalkId(JINIA, JINIA_2, KEGOR);
     }

@@ -31,8 +31,6 @@ public final class _021_HiddenTruth extends Quest {
     private NpcInstance GhostofvonHellmann;
 
     public _021_HiddenTruth() {
-        super(false);
-
         addStartNpc(MysteriousWizard);
 
         addTalkId(Tombstone,GhostofvonHellmannId,GhostofvonHellmannsPageId,BrokenBookshelf,

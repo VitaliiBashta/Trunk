@@ -26,7 +26,6 @@ public final class _309_ForAGoodCause extends Quest {
             15647, 15650, 15653, 15656, 15659, 15692, 15772, 15773, 15774);
 
     public _309_ForAGoodCause() {
-        super(false);
         addStartNpc(Atra);
         addQuestItem(MucrokianHide, FallenMucrokianHide);
         addKillId(MucrokianFanatic, MucrokianAscetic, MucrokianSavior, MucrokianPreacher, ContaminatedMucrokian, ChangedMucrokian);

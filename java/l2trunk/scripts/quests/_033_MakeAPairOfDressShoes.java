@@ -10,8 +10,6 @@ public final class _033_MakeAPairOfDressShoes extends Quest {
     private final int DRESS_SHOES_BOX = 7113;
 
     public _033_MakeAPairOfDressShoes() {
-        super(false);
-
         addStartNpc(30838);
         addTalkId(30164,31520);
     }
@@ -48,7 +46,7 @@ public final class _033_MakeAPairOfDressShoes extends Quest {
                     htmltext = "30164-havent.htm";
                 break;
             case "30838-7.htm":
-                st.giveItems(DRESS_SHOES_BOX, 1);
+                st.giveItems(DRESS_SHOES_BOX);
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest();
                 break;

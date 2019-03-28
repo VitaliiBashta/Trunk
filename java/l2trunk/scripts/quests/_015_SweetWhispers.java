@@ -6,8 +6,6 @@ import l2trunk.gameserver.model.quest.QuestState;
 
 public final class _015_SweetWhispers extends Quest {
     public _015_SweetWhispers() {
-        super(false);
-
         addStartNpc(31302);
 
         addTalkId(31517,31518);

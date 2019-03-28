@@ -10,11 +10,8 @@ public final class _257_GuardIsBusy extends Quest {
     private final int ORC_AMULET = 752;
     private final int ORC_NECKLACE = 1085;
     private final int WEREWOLF_FANG = 1086;
-    private final int ADENA = 57;
 
     public _257_GuardIsBusy() {
-        super(false);
-
         addStartNpc(30039);
         addKillId(20130, 20131, 20132, 20342, 20343, 20006, 20093, 20096, 20098);
         addQuestItem(ORC_AMULET, ORC_NECKLACE, WEREWOLF_FANG, GLUDIO_LORDS_MARK);
@@ -51,10 +48,10 @@ public final class _257_GuardIsBusy extends Quest {
             }
             htmltext = "gilbert_q0257_01.htm";
             st.exitCurrentQuest();
-        } else if (cond == 1 && st.getQuestItemsCount(ORC_AMULET) < 1 && st.getQuestItemsCount(ORC_NECKLACE) < 1 && st.getQuestItemsCount(WEREWOLF_FANG) < 1)
+        } else if (cond == 1 && !st.haveAnyQuestItems(ORC_AMULET, ORC_NECKLACE, WEREWOLF_FANG))
             htmltext = "gilbert_q0257_04.htm";
-        else if (cond == 1 && (st.haveAnyQuestItems(ORC_AMULET,ORC_NECKLACE,WEREWOLF_FANG) )) {
-            st.giveItems(ADENA, 12 * st.getQuestItemsCount(ORC_AMULET) + 20 * st.getQuestItemsCount(ORC_NECKLACE) + 25 * st.getQuestItemsCount(WEREWOLF_FANG), false);
+        else if (cond == 1 && (st.haveAnyQuestItems(ORC_AMULET, ORC_NECKLACE, WEREWOLF_FANG))) {
+            st.giveAdena(12 * st.getQuestItemsCount(ORC_AMULET) + 20 * st.getQuestItemsCount(ORC_NECKLACE) + 25 * st.getQuestItemsCount(WEREWOLF_FANG));
 
             if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("p1q2")) {
                 st.player.setVar("p1q2");
@@ -73,9 +70,7 @@ public final class _257_GuardIsBusy extends Quest {
                 }
             }
 
-            st.takeItems(ORC_AMULET);
-            st.takeItems(ORC_NECKLACE);
-            st.takeItems(WEREWOLF_FANG);
+            st.takeAllItems(ORC_AMULET, ORC_NECKLACE, WEREWOLF_FANG);
             htmltext = "gilbert_q0257_07.htm";
         }
         return htmltext;
@@ -84,7 +79,7 @@ public final class _257_GuardIsBusy extends Quest {
     @Override
     public void onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
-        if (st.haveQuestItem(GLUDIO_LORDS_MARK)  && st.getCond() > 0)
+        if (st.haveQuestItem(GLUDIO_LORDS_MARK) && st.getCond() > 0)
             if (npcId == 20130 || npcId == 20131 || npcId == 20006)
                 st.rollAndGive(ORC_AMULET, 1, 50);
             else if (npcId == 20093 || npcId == 20096 || npcId == 20098)

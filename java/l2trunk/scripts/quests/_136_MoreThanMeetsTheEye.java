@@ -75,8 +75,6 @@ public final class _136_MoreThanMeetsTheEye extends Quest {
     };
 
     public _136_MoreThanMeetsTheEye() {
-        super(false);
-
         addStartNpc(HARDIN);
         addTalkId(ERRICKIN,CLAYTON);
 
@@ -151,7 +149,7 @@ public final class _136_MoreThanMeetsTheEye extends Quest {
                 st.setCond(3);
                 htmltext = "magister_errickin_q0136_03.htm";
             } else if (cond == 4 && !st.isSet("id")) {
-                st.takeItems(Ectoplasm, -1);
+                st.takeItems(Ectoplasm);
                 htmltext = "magister_errickin_q0136_05.htm";
                 st.set("id");
             } else if (cond == 4 && st.isSet("id")) {
@@ -187,38 +185,37 @@ public final class _136_MoreThanMeetsTheEye extends Quest {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         for (int[] aDROPLIST_COND : DROPLIST_COND)
-            if (cond == aDROPLIST_COND[0] && npcId == aDROPLIST_COND[2])
-                if (aDROPLIST_COND[3] == 0 || st.getQuestItemsCount(aDROPLIST_COND[3]) > 0) {
-                    long count = st.getQuestItemsCount(aDROPLIST_COND[4]);
-                    if (aDROPLIST_COND[5] > count && Rnd.chance(aDROPLIST_COND[6])) {
-                        long random = 0;
-                        if (aDROPLIST_COND[7] > 1) {
-                            random = Rnd.get(aDROPLIST_COND[7]) + 1;
-                            if (count + random > aDROPLIST_COND[5])
-                                random = aDROPLIST_COND[5] - count;
-                        } else
-                            random = 1;
-                        //Аддон
-                        if (cond == 3) {
-                            if (random == 1) {
-                                if (Rnd.chance(15))
-                                    random = 2;
-                            } else if (Rnd.chance(15))
-                                random = 3;
-                            if (count + random > aDROPLIST_COND[5])
-                                random = aDROPLIST_COND[5] - count;
-                        }
-                        //Конец Аддона
-                        st.giveItems(aDROPLIST_COND[4], random);
-                        if (count + random == aDROPLIST_COND[5]) {
-                            st.playSound(SOUND_MIDDLE);
-                            if (aDROPLIST_COND[1] != 0) {
-                                st.setCond(aDROPLIST_COND[1]);
-                                st.start();
-                            }
-                        } else
-                            st.playSound(SOUND_ITEMGET);
+            if (cond == aDROPLIST_COND[0] && npcId == aDROPLIST_COND[2]) {
+                long count = st.getQuestItemsCount(aDROPLIST_COND[4]);
+                if (aDROPLIST_COND[5] > count && Rnd.chance(aDROPLIST_COND[6])) {
+                    long random;
+                    if (aDROPLIST_COND[7] > 1) {
+                        random = Rnd.get(aDROPLIST_COND[7]) + 1;
+                        if (count + random > aDROPLIST_COND[5])
+                            random = aDROPLIST_COND[5] - count;
+                    } else
+                        random = 1;
+                    //Аддон
+                    if (cond == 3) {
+                        if (random == 1) {
+                            if (Rnd.chance(15))
+                                random = 2;
+                        } else if (Rnd.chance(15))
+                            random = 3;
+                        if (count + random > aDROPLIST_COND[5])
+                            random = aDROPLIST_COND[5] - count;
                     }
+                    //Конец Аддона
+                    st.giveItems(aDROPLIST_COND[4], random);
+                    if (count + random == aDROPLIST_COND[5]) {
+                        st.playSound(SOUND_MIDDLE);
+                        if (aDROPLIST_COND[1] != 0) {
+                            st.setCond(aDROPLIST_COND[1]);
+                            st.start();
+                        }
+                    } else
+                        st.playSound(SOUND_ITEMGET);
                 }
+            }
     }
 }

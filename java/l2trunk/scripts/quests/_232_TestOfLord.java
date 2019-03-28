@@ -76,7 +76,6 @@ public final class _232_TestOfLord extends Quest {
     private static final Map<Integer, Drop> DROPLIST = new HashMap<>();
 
     public _232_TestOfLord() {
-        super(false);
         addStartNpc(Kakai);
 
         addTalkId(Somak, Manakia, Jakal, Sumari, Varkees, Tantus, Hatos, Takuna, Chianta, First_Orc, Ancestor_Martankus);
@@ -128,19 +127,15 @@ public final class _232_TestOfLord extends Quest {
                 st.giveItems(MARK_OF_LORD);
                 if (!st.player.isVarSet("prof2.3")) {
                     st.addExpAndSp(434000, 60000);
-                    st.giveItems(ADENA_ID, 100000);
+                    st.giveAdena( 100000);
                     st.player.setVar("prof2.3");
                 }
                 st.playSound(SOUND_FINISH);
                 st.unset("cond");
                 st.exitCurrentQuest();
             } else if ("30565-08.htm".equalsIgnoreCase(event)) {
-                st.takeItems(SWORD_INTO_SKULL);
-                st.takeItems(AXE_OF_CEREMONY);
-                st.takeItems(MONSTEREYE_WOODCARVING);
-                st.takeItems(HANDIWORK_SPIDER_BROOCH);
-                st.takeItems(ORDEAL_NECKLACE);
-                st.takeItems(HUGE_ORC_FANG);
+                st.takeAllItems(SWORD_INTO_SKULL,AXE_OF_CEREMONY,MONSTEREYE_WOODCARVING,
+                        HANDIWORK_SPIDER_BROOCH,ORDEAL_NECKLACE,HUGE_ORC_FANG);
                 st.giveItems(BEAR_FANG_NECKLACE);
                 st.playSound(SOUND_MIDDLE);
                 st.setCond(3);
@@ -203,13 +198,13 @@ public final class _232_TestOfLord extends Quest {
             return "noquest";
 
         boolean HAVE_ORDEAL_NECKLACE = st.haveQuestItem(ORDEAL_NECKLACE);
-        long HUGE_ORC_FANG_COUNT = st.getQuestItemsCount(HUGE_ORC_FANG);
+        boolean haveHugeOrcFang = st.haveQuestItem(HUGE_ORC_FANG);
         long SWORD_INTO_SKULL_COUNT = st.getQuestItemsCount(SWORD_INTO_SKULL);
         long AXE_OF_CEREMONY_COUNT = st.getQuestItemsCount(AXE_OF_CEREMONY);
         long MONSTEREYE_WOODCARVING_COUNT = st.getQuestItemsCount(MONSTEREYE_WOODCARVING);
         long HANDIWORK_SPIDER_BROOCH_COUNT = st.getQuestItemsCount(HANDIWORK_SPIDER_BROOCH);
         long BEAR_FANG_NECKLACE_COUNT = st.getQuestItemsCount(BEAR_FANG_NECKLACE);
-        long MARTANKUS_CHARM_COUNT = st.getQuestItemsCount(MARTANKUS_CHARM);
+        boolean haveCharm = st.haveQuestItem(MARTANKUS_CHARM);
         long IMMORTAL_FLAME_COUNT = st.getQuestItemsCount(IMMORTAL_FLAME);
         long VARKEES_CHARM_COUNT = st.getQuestItemsCount(VARKEES_CHARM);
         long MANAKIAS_AMULET_COUNT = st.getQuestItemsCount(MANAKIAS_AMULET);
@@ -228,14 +223,14 @@ public final class _232_TestOfLord extends Quest {
                 return cond1Complete(st) ? "30565-07.htm" : "30565-06.htm";
             if (BEAR_FANG_NECKLACE_COUNT > 0)
                 return "30565-09.htm";
-            if (MARTANKUS_CHARM_COUNT > 0)
+            if (haveCharm )
                 return "30565-10.htm";
             if (IMMORTAL_FLAME_COUNT > 0)
                 return "30565-11.htm";
         }
 
         if (npcId == Varkees && HAVE_ORDEAL_NECKLACE) {
-            if (HUGE_ORC_FANG_COUNT > 0)
+            if (haveHugeOrcFang)
                 return "30566-05.htm";
             if (VARKEES_CHARM_COUNT == 0)
                 return "30566-01.htm";
@@ -252,7 +247,7 @@ public final class _232_TestOfLord extends Quest {
         }
 
         if (npcId == Manakia && HAVE_ORDEAL_NECKLACE)
-            if (VARKEES_CHARM_COUNT > 0 && HUGE_ORC_FANG_COUNT == 0) {
+            if (VARKEES_CHARM_COUNT > 0 && !haveHugeOrcFang) {
                 if (MANAKIAS_AMULET_COUNT == 0) {
                     if (MANAKIAS_ORDERS_COUNT == 0) {
                         st.giveItems(MANAKIAS_ORDERS);
@@ -260,14 +255,13 @@ public final class _232_TestOfLord extends Quest {
                     }
                     if (BREKA_ORC_FANG_COUNT < 20)
                         return "30515-02.htm";
-                    st.takeItems(MANAKIAS_ORDERS);
-                    st.takeItems(BREKA_ORC_FANG);
+                    st.takeAllItems(MANAKIAS_ORDERS,BREKA_ORC_FANG);
                     st.giveItems(MANAKIAS_AMULET);
                     st.playSound(SOUND_MIDDLE);
                     return "30515-03.htm";
                 } else if (MANAKIAS_ORDERS_COUNT == 0)
                     return "30515-04.htm";
-            } else if (VARKEES_CHARM_COUNT == 0 && HUGE_ORC_FANG_COUNT > 0 && MANAKIAS_AMULET_COUNT == 0 && MANAKIAS_ORDERS_COUNT == 0)
+            } else if (VARKEES_CHARM_COUNT == 0 && haveHugeOrcFang  && MANAKIAS_AMULET_COUNT == 0 && MANAKIAS_ORDERS_COUNT == 0)
                 return "30515-05.htm";
 
         if (npcId == Tantus) {
@@ -276,8 +270,7 @@ public final class _232_TestOfLord extends Quest {
                     return "30567-01.htm";
                 if (NERUGA_AXE_BLADE_COUNT == 0 || st.getQuestItemsCount(BONE_ARROW) < 1000)
                     return "30567-03.htm";
-                st.takeItems(TANTUS_CHARM);
-                st.takeItems(NERUGA_AXE_BLADE);
+                st.takeAllItems(TANTUS_CHARM,NERUGA_AXE_BLADE);
                 st.takeItems(BONE_ARROW, 1000);
                 st.giveItems(AXE_OF_CEREMONY);
                 if (cond1Complete(st)) {
@@ -307,9 +300,7 @@ public final class _232_TestOfLord extends Quest {
                     return "30568-01.htm";
                 if (URUTU_BLADE_COUNT == 0 || TIMAK_ORC_SKULL_COUNT < 10)
                     return "30568-03.htm";
-                st.takeItems(HATOS_CHARM);
-                st.takeItems(URUTU_BLADE);
-                st.takeItems(TIMAK_ORC_SKULL);
+                st.takeAllItems(HATOS_CHARM,URUTU_BLADE,TIMAK_ORC_SKULL);
                 st.giveItems(SWORD_INTO_SKULL);
                 if (cond1Complete(st)) {
                     st.playSound(SOUND_JACKPOT);
@@ -390,7 +381,7 @@ public final class _232_TestOfLord extends Quest {
         if (npcId == Ancestor_Martankus) {
             if (BEAR_FANG_NECKLACE_COUNT > 0)
                 return "30649-01.htm";
-            if (MARTANKUS_CHARM_COUNT > 0) {
+            if (haveCharm) {
                 if (cond == 5 || st.haveAllQuestItems(RAGNA_CHIEF_NOTICE,RAGNA_ORC_HEAD)) {
                     st.takeAllItems(MARTANKUS_CHARM,RAGNA_ORC_HEAD,RAGNA_CHIEF_NOTICE);
                     st.giveItems(IMMORTAL_FLAME);

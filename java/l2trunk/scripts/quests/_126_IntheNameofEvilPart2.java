@@ -18,8 +18,6 @@ public final class _126_IntheNameofEvilPart2 extends Quest {
     private static final int EWA = 729;
 
     public _126_IntheNameofEvilPart2() {
-        super(false);
-
         addStartNpc(Asamah);
         addTalkId(Mushika,UluKaimu,BaluKaimu,ChutaKaimu,WarriorGrave,ShilenStoneStatue);
         addQuestItem(BONEPOWDER, EPITAPH);
@@ -102,7 +100,7 @@ public final class _126_IntheNameofEvilPart2 extends Quest {
             st.playSound(SOUND_MIDDLE);
         } else if ("mushika_q126_4.htm".equalsIgnoreCase(event)) {
             st.giveItems(EWA);
-            st.giveItems(ADENA_ID, 460483);
+            st.giveAdena( 460483);
             st.addExpAndSp(1015973, 102802);
             st.playSound(SOUND_FINISH);
             st.complete();

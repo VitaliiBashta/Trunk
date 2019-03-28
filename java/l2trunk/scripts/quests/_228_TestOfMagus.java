@@ -214,11 +214,9 @@ public final class _228_TestOfMagus extends Quest {
     };
 
     public _228_TestOfMagus() {
-        super(false);
-
         addStartNpc(Rukal);
 
-        addTalkId(Parina,Casian,Sylph,Snake,Undine,Salamander);
+        addTalkId(Parina, Casian, Sylph, Snake, Undine, Salamander);
 
         for (int[] aDROPLIST_COND : DROPLIST_COND) addKillId(aDROPLIST_COND[2]);
 
@@ -302,7 +300,7 @@ public final class _228_TestOfMagus extends Quest {
         String htmltext = "noquest";
         int cond = st.getCond();
         if (npcId == Rukal) {
-            if (st.haveQuestItem(MarkOfMagus) ) {
+            if (st.haveQuestItem(MarkOfMagus)) {
                 htmltext = "completed";
                 st.exitCurrentQuest();
             } else if (cond == 0) {
@@ -330,11 +328,11 @@ public final class _228_TestOfMagus extends Quest {
             else if (cond == 5)
                 htmltext = "30629-11.htm";
             else if (cond == 6) {
-                st.takeAllItems(ScoreOfElements,ToneOfWater,ToneOfFire,ToneOfWind,ToneOfEarth);
+                st.takeAllItems(ScoreOfElements, ToneOfWater, ToneOfFire, ToneOfWind, ToneOfEarth);
                 st.giveItems(MarkOfMagus);
                 htmltext = "30629-12.htm";
-                    st.addExpAndSp(1029122, 70620);
-                    st.giveItems(ADENA_ID, 186077);
+                st.addExpAndSp(1029122, 70620);
+                st.giveItems(ADENA_ID, 186077);
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest();
             }
@@ -365,7 +363,7 @@ public final class _228_TestOfMagus extends Quest {
                 } else if (st.getQuestItemsCount(FlameCrystal) < 5)
                     htmltext = "30411-02.htm";
                 else {
-                    st.takeAllItems(SalamanderCharm,FlameCrystal);
+                    st.takeAllItems(SalamanderCharm, FlameCrystal);
                     st.giveItems(ToneOfFire);
                     htmltext = "30411-03.htm";
                     checkBooks(st);
@@ -380,7 +378,7 @@ public final class _228_TestOfMagus extends Quest {
                 else if (st.getQuestItemsCount(HarpysFeather) < 20 || st.getQuestItemsCount(WyrmsWingbone) < 10 || st.getQuestItemsCount(WindsusMane) < 10)
                     htmltext = "30412-03.htm";
                 else {
-                    st.takeAllItems(SylphCharm,HarpysFeather,WyrmsWingbone,WindsusMane);
+                    st.takeAllItems(SylphCharm, HarpysFeather, WyrmsWingbone, WindsusMane);
                     st.giveItems(ToneOfWind);
                     htmltext = "30412-04.htm";
                     checkBooks(st);
@@ -395,7 +393,7 @@ public final class _228_TestOfMagus extends Quest {
                 else if (st.getQuestItemsCount(EnchantedMonsterEyeShell) < 10 || st.getQuestItemsCount(EnchantedStoneGolemPowder) < 10 || st.getQuestItemsCount(EnchantedIronGolemScrap) < 10)
                     htmltext = "30409-04.htm";
                 else {
-                    st.takeAllItems(SerpentCharm,EnchantedMonstereye,EnchantedStoneGolemPowder,EnchantedIronGolemScrap);
+                    st.takeAllItems(SerpentCharm, EnchantedMonstereye, EnchantedStoneGolemPowder, EnchantedIronGolemScrap);
                     st.giveItems(ToneOfEarth);
                     htmltext = "30409-05.htm";
                     checkBooks(st);
@@ -434,10 +432,6 @@ public final class _228_TestOfMagus extends Quest {
                     if (aDROPLIST_COND[5] == 0)
                         st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[6]);
                     else if (st.rollAndGive(aDROPLIST_COND[4], aDROPLIST_COND[7], aDROPLIST_COND[7], aDROPLIST_COND[5], aDROPLIST_COND[6]))
-                        if (aDROPLIST_COND[1] != cond && aDROPLIST_COND[1] != 0) {
-                            st.setCond(aDROPLIST_COND[1]);
-                            st.start();
-                        }
         if (cond == 3 && st.getQuestItemsCount(GoldenSeed1st) != 0 && st.getQuestItemsCount(GoldenSeed2st) != 0 && st.getQuestItemsCount(GoldenSeed3st) != 0) {
             st.setCond(4);
             st.start();

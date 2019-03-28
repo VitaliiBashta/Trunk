@@ -14,8 +14,6 @@ public final class _10271_TheEnvelopingDarkness extends Quest {
     private static final int InspectorMedibalsDocument = 13852;
 
     public _10271_TheEnvelopingDarkness() {
-        super(false);
-
         addStartNpc(Orbyu);
         addTalkId(El,MedibalsCorpse);
         addQuestItem(InspectorMedibalsDocument);
@@ -25,23 +23,23 @@ public final class _10271_TheEnvelopingDarkness extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         int cond = st.getCond();
 
-        if (event.equalsIgnoreCase("orbyu_q10271_3.htm") && cond == 0) {
+        if ("orbyu_q10271_3.htm".equalsIgnoreCase(event) && cond == 0) {
             st.setCond(1);
             st.start();
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("el_q10271_2.htm")) {
+        } else if ("el_q10271_2.htm".equalsIgnoreCase(event)) {
             st.setCond(2);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("medibalscorpse_q10271_2.htm")) {
+        } else if ("medibalscorpse_q10271_2.htm".equalsIgnoreCase(event)) {
             st.setCond(3);
             st.playSound(SOUND_MIDDLE);
-            st.giveItems(InspectorMedibalsDocument, 1);
-        } else if (event.equalsIgnoreCase("el_q10271_4.htm")) {
+            st.giveItems(InspectorMedibalsDocument);
+        } else if ("el_q10271_4.htm".equalsIgnoreCase(event)) {
             st.setCond(4);
             st.playSound(SOUND_MIDDLE);
             st.takeItems(InspectorMedibalsDocument);
         } else if ("orbyu_q10271_5.htm".equalsIgnoreCase(event)) {
-            st.giveItems(ADENA_ID, 62516);
+            st.giveAdena( 62516);
             st.addExpAndSp(377403, 37867);
             st.complete();
             st.finish();

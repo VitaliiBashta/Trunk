@@ -18,8 +18,6 @@ public final class _044_HelpTheSon extends Quest {
     private static final int MAILLE_LIZARDMAN = 20919;
 
     public _044_HelpTheSon() {
-        super(false);
-
         addStartNpc(LUNDY);
 
         addTalkId(DRIKUS);
@@ -52,7 +50,7 @@ public final class _044_HelpTheSon extends Quest {
             st.setCond(5);
         } else if ("7".equals(event)) {
             htmltext = "pet_manager_lundy_q0044_0501.htm";
-            st.giveItems(PET_TICKET, 1);
+            st.giveItems(PET_TICKET);
             st.finish();
         }
         return htmltext;

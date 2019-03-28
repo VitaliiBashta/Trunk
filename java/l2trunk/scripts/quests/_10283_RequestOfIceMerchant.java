@@ -13,10 +13,8 @@ public final class _10283_RequestOfIceMerchant extends Quest {
     static final int JINIA = 32760;
 
     public _10283_RequestOfIceMerchant() {
-        super(false);
-
         addStartNpc(RAFFORTY);
-        addTalkId(KIER,JINIA);
+        addTalkId(KIER, JINIA);
         addFirstTalkId(JINIA);
     }
 
@@ -27,19 +25,19 @@ public final class _10283_RequestOfIceMerchant extends Quest {
 
         int npcId = npc.getNpcId();
         if (npcId == RAFFORTY) {
-            if (event.equalsIgnoreCase("32020-03.htm")) {
+            if ("32020-03.htm".equalsIgnoreCase(event)) {
                 st.start();
                 st.setCond(1);
                 st.playSound(SOUND_ACCEPT);
-            } else if (event.equalsIgnoreCase("32020-07.htm")) {
+            } else if ("32020-07.htm".equalsIgnoreCase(event)) {
                 st.setCond(2);
                 st.playSound(SOUND_MIDDLE);
             }
-        } else if (npcId == KIER && event.equalsIgnoreCase("spawn")) {
+        } else if (npcId == KIER && "spawn".equalsIgnoreCase(event)) {
             addSpawn(JINIA, Location.of(104322, -107669, -3680, 44954), 0, 60000);
             return null;
-        } else if (npcId == JINIA && event.equalsIgnoreCase("32760-04.htm")) {
-            st.giveItems(57, 190000);
+        } else if (npcId == JINIA && "32760-04.htm".equalsIgnoreCase(event)) {
+            st.giveAdena(190000);
             st.addExpAndSp(627000, 50300);
             st.playSound(SOUND_FINISH);
             st.finish();

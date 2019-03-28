@@ -24,8 +24,6 @@ public final class _186_ContractExecution extends Quest {
     private static final int TimakOrc = 20583;
 
     public _186_ContractExecution() {
-        super(false);
-
         addTalkId(Luka, Nikola, Lorain);
         addFirstTalkId(Lorain);
         addKillId(LetoLizardman, LetoLizardmanArcher, LetoLizardmanSoldier, LetoLizardmanWarrior, LetoLizardmanShaman, LetoLizardmanOverlord, TimakOrc);
@@ -34,16 +32,16 @@ public final class _186_ContractExecution extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("researcher_lorain_q0186_03.htm")) {
+        if ("researcher_lorain_q0186_03.htm".equalsIgnoreCase(event)) {
             st.playSound(SOUND_ACCEPT);
             st.setCond(1);
-            st.takeItems(Certificate, -1);
-            st.giveItems(MetalReport, 1);
-        } else if (event.equalsIgnoreCase("maestro_nikola_q0186_03.htm")) {
+            st.takeItems(Certificate);
+            st.giveItems(MetalReport);
+        } else if ("maestro_nikola_q0186_03.htm".equalsIgnoreCase(event)) {
             st.setCond(2);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("blueprint_seller_luka_q0186_06.htm")) {
-            st.giveItems(ADENA_ID, 105083);
+        } else if ("blueprint_seller_luka_q0186_06.htm".equalsIgnoreCase(event)) {
+            st.giveAdena( 105083);
             st.addExpAndSp(285935, 18711);
             st.finish();
             st.playSound(SOUND_FINISH);
@@ -71,7 +69,7 @@ public final class _186_ContractExecution extends Quest {
                 else if (cond == 2)
                     htmltext = "maestro_nikola_q0186_04.htm";
             } else if (npcId == Luka)
-                if (st.getQuestItemsCount(Accessory) <= 0)
+                if (!st.haveQuestItem(Accessory))
                     htmltext = "blueprint_seller_luka_q0186_01.htm";
                 else
                     htmltext = "blueprint_seller_luka_q0186_02.htm";
@@ -80,9 +78,9 @@ public final class _186_ContractExecution extends Quest {
 
     @Override
     public void onKill(NpcInstance npc, QuestState st) {
-        if (st.getState() == STARTED && st.getQuestItemsCount(Accessory) <= 0 && st.getCond() == 2 && Rnd.get(5) == 0) {
+        if (st.getState() == STARTED     && st.getCond() == 2 && Rnd.get(5) == 0) {
+            st.giveItemIfNotHave(Accessory);
             st.playSound(SOUND_MIDDLE);
-            st.giveItems(Accessory, 1);
         }
     }
 

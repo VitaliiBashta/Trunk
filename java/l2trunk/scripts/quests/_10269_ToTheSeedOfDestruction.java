@@ -11,8 +11,6 @@ public final class _10269_ToTheSeedOfDestruction extends Quest {
     private final static int Introduction = 13812;
 
     public _10269_ToTheSeedOfDestruction() {
-        super(false);
-
         addStartNpc(Keucereus);
 
         addTalkId(Allenos);
@@ -20,11 +18,11 @@ public final class _10269_ToTheSeedOfDestruction extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("32548-05.htm")) {
+        if ("32548-05.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.start();
             st.playSound(SOUND_ACCEPT);
-            st.giveItems(Introduction, 1);
+            st.giveItems(Introduction);
         }
         return event;
     }
@@ -48,7 +46,7 @@ public final class _10269_ToTheSeedOfDestruction extends Quest {
             htmltext = "32548-06.htm";
         else if (id == STARTED && npcId == Allenos) {
             htmltext = "32526-01.htm";
-            st.giveItems(ADENA_ID, 29174);
+            st.giveAdena(29174);
             st.addExpAndSp(176121, 17671);
             st.finish();
             st.playSound(SOUND_FINISH);

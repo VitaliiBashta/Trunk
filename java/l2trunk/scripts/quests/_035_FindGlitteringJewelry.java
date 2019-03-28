@@ -12,8 +12,6 @@ public final class _035_FindGlitteringJewelry extends Quest {
     private final int JEWEL_BOX = 7077;
 
     public _035_FindGlitteringJewelry() {
-        super(false);
-
         addStartNpc(30091);
         addTalkId(30879);
 
@@ -34,7 +32,7 @@ public final class _035_FindGlitteringJewelry extends Quest {
             st.setCond(2);
         else if (event.equals("30091-3.htm") && cond == 3) {
             if (st.getQuestItemsCount(ROUGH_JEWEL) == 10) {
-                st.takeItems(ROUGH_JEWEL, -1);
+                st.takeItems(ROUGH_JEWEL);
                 st.setCond(4);
             } else
                 htmltext = "30091-hvnore.htm";

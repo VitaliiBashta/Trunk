@@ -24,7 +24,6 @@ public final class _061_LawEnforcement extends Quest {
     private static final int Eindburgh = 32469;
 
     public _061_LawEnforcement() {
-        super(false);
         addStartNpc(Liane);
         addTalkId(Kekropus, Eindburgh);
     }
@@ -54,7 +53,7 @@ public final class _061_LawEnforcement extends Quest {
                 break;
             case "subelder_aientburg_q0061_08.htm":
             case "subelder_aientburg_q0061_09.htm":
-                st.giveItems(ADENA_ID, 26000);
+                st.giveAdena( 26000);
                 st.player.setClassId(ClassId.judicator, false, true);
                 st.player.broadcastCharInfo();
                 st.player.broadcastPacket(new MagicSkillUse(st.player, 4339, 1, 6000));

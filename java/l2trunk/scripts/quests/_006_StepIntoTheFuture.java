@@ -17,7 +17,6 @@ public final class _006_StepIntoTheFuture extends Quest {
     private static final int MarkOfTraveler = 7570;
 
     public _006_StepIntoTheFuture() {
-        super(false);
         addStartNpc(Roxxy);
 
         addTalkId(Baulro,Windawood);

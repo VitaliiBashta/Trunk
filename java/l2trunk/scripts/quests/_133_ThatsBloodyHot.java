@@ -4,13 +4,6 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
-/**
- * User: Keiichi
- * Date: 06.10.2008
- * Time: 11:31:36
- * Info: Один из 2х квестов для прохода на остров Hellbound.
- * Info: Пройдя его ведьма Galate открывает ТП до Beleth's stronghold on Hellbound Island
- */
 public final class _133_ThatsBloodyHot extends Quest {
     // NPC's
     private static final int KANIS = 32264;
@@ -19,8 +12,6 @@ public final class _133_ThatsBloodyHot extends Quest {
     private static final int CRYSTAL_SAMPLE = 9785;
 
     public _133_ThatsBloodyHot() {
-        super(false);
-
         addStartNpc(KANIS);
         addTalkId(GALATE);
     }
@@ -42,8 +33,8 @@ public final class _133_ThatsBloodyHot extends Quest {
 
         if (event.equals("Galate_q0133_06.htm") && cond == 2) {
             st.playSound(SOUND_FINISH);
-            st.takeItems(CRYSTAL_SAMPLE, -1);
-            st.giveItems(ADENA_ID, 254247);
+            st.takeItems(CRYSTAL_SAMPLE);
+            st.giveAdena(254247);
             st.addExpAndSp(331457, 32524);
             st.finish();
         }

@@ -14,9 +14,7 @@ public final class _170_DangerousSeduction extends Quest {
     private static final int Merkenis = 27022;
 
     public _170_DangerousSeduction() {
-        super(false);
         addStartNpc(Vellior);
-        addTalkId(Vellior);
         addKillId(Merkenis);
         addQuestItem(NightmareCrystal);
     }
@@ -50,7 +48,7 @@ public final class _170_DangerousSeduction extends Quest {
                 htmltext = "30305-05.htm";
             else if (cond == 2) {
                 st.takeItems(NightmareCrystal);
-                st.giveItems(ADENA_ID, 102680, true);
+                st.giveAdena(102680);
                 st.addExpAndSp(38607, 4018);
                 htmltext = "30305-06.htm";
                 st.playSound(SOUND_FINISH);
@@ -64,8 +62,7 @@ public final class _170_DangerousSeduction extends Quest {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         if (cond == 1 && npcId == Merkenis) {
-            if (st.getQuestItemsCount(NightmareCrystal) == 0)
-                st.giveItems(NightmareCrystal);
+            st.giveItemIfNotHave(NightmareCrystal);
             st.playSound(SOUND_MIDDLE);
             st.setCond(2);
             st.start();

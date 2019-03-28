@@ -13,14 +13,9 @@ public final class _053_LinnaeusSpecialBait extends Quest {
     private final int HeartOfCrimsonDrake = 7624;
 
     public _053_LinnaeusSpecialBait() {
-        super(false);
-
         addStartNpc(Linnaeu);
 
-        addTalkId(Linnaeu);
-
         addKillId(CrimsonDrake);
-
         addQuestItem(HeartOfCrimsonDrake);
     }
 
@@ -36,7 +31,7 @@ public final class _053_LinnaeusSpecialBait extends Quest {
                 htmltext = "fisher_linneaus_q0053_0202.htm";
             else {
                 st.unset("cond");
-                st.takeItems(HeartOfCrimsonDrake, -1);
+                st.takeItems(HeartOfCrimsonDrake);
                 st.giveItems(FlameFishingLure, 4);
                 st.playSound(SOUND_FINISH);
                 st.finish();

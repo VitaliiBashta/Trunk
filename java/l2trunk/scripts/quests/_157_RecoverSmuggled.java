@@ -10,11 +10,7 @@ public final class _157_RecoverSmuggled extends Quest {
     private static final int BUCKLER = 20;
 
     public _157_RecoverSmuggled() {
-        super(false);
-
         addStartNpc(30005);
-
-        addTalkId(30005);
 
         addKillId(20121);
 
@@ -42,28 +38,24 @@ public final class _157_RecoverSmuggled extends Quest {
         int npcId = npc.getNpcId();
         String htmltext = "noquest";
         int id = st.getState();
+        int cond = st.getCond();
         if (id == CREATED) {
             st.setCond(0);
             st.unset("id");
         }
-        if (npcId == 30005 && st.getCond() == 0) {
-            if (st.getCond() < 15) {
-                if (st.player.getLevel() >= 5)
-                    htmltext = "30005-03.htm";
-                else {
-                    htmltext = "30005-02.htm";
-                    st.exitCurrentQuest();
-                }
-            } else {
+        if (npcId == 30005 && cond == 0) {
+            if (st.player.getLevel() >= 5)
+                htmltext = "30005-03.htm";
+            else {
                 htmltext = "30005-02.htm";
                 st.exitCurrentQuest();
             }
-        } else if (npcId == 30005 && st.getCond() != 0 && st.getQuestItemsCount(ADAMANTITE_ORE_ID) < 20)
+        } else if (npcId == 30005 && st.getQuestItemsCount(ADAMANTITE_ORE_ID) < 20)
             htmltext = "30005-06.htm";
-        else if (npcId == 30005 && st.getCond() != 0 && st.haveQuestItem(ADAMANTITE_ORE_ID, 20)) {
-            st.takeItems(ADAMANTITE_ORE_ID, st.getQuestItemsCount(ADAMANTITE_ORE_ID));
+        else if (npcId == 30005 && st.haveQuestItem(ADAMANTITE_ORE_ID, 20)) {
+            st.takeItems(ADAMANTITE_ORE_ID);
             st.playSound(SOUND_FINISH);
-            st.giveItems(BUCKLER, 1);
+            st.giveItems(BUCKLER);
             htmltext = "30005-07.htm";
             st.finish();
         }

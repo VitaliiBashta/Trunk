@@ -11,8 +11,6 @@ public final class _10282_ToTheSeedOfAnnihilation extends Quest {
     private final static int SOA_ORDERS = 15512;
 
     public _10282_ToTheSeedOfAnnihilation() {
-        super(false);
-
         addStartNpc(KBALDIR);
         addTalkId(KLEMIS);
     }
@@ -36,14 +34,14 @@ public final class _10282_ToTheSeedOfAnnihilation extends Quest {
     @Override
     public String onTalk(NpcInstance npc, QuestState st) {
         String htmltext = "noquest";
-        int id = st.getState();
+        int state = st.getState();
         int npcId = npc.getNpcId();
-        if (id == COMPLETED) {
+        if (state == COMPLETED) {
             if (npcId == KBALDIR)
                 htmltext = "32733-09.htm";
             else if (npcId == KLEMIS)
                 htmltext = "32734-03.htm";
-        } else if (id == CREATED) {
+        } else if (state == CREATED) {
             if (st.player.getLevel() >= 84)
                 htmltext = "32733-01.htm";
             else

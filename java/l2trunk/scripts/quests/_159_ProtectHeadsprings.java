@@ -12,15 +12,11 @@ public final class _159_ProtectHeadsprings extends Quest {
     private final int HYACINTH_CHARM2_ID = 1072;
 
     public _159_ProtectHeadsprings() {
-        super(false);
-
         addStartNpc(30154);
 
         addKillId(27017);
 
-        addQuestItem(PLAGUE_DUST_ID,
-                HYACINTH_CHARM1_ID,
-                HYACINTH_CHARM2_ID);
+        addQuestItem(PLAGUE_DUST_ID, HYACINTH_CHARM1_ID, HYACINTH_CHARM2_ID);
     }
 
     @Override
@@ -30,8 +26,8 @@ public final class _159_ProtectHeadsprings extends Quest {
             st.setCond(1);
             st.start();
             st.playSound(SOUND_ACCEPT);
-            if (st.getQuestItemsCount(HYACINTH_CHARM1_ID) == 0) {
-                st.giveItems(HYACINTH_CHARM1_ID, 1);
+            if (!st.haveQuestItem(HYACINTH_CHARM1_ID) ) {
+                st.giveItems(HYACINTH_CHARM1_ID);
                 htmltext = "30154-04.htm";
             }
         }
@@ -56,17 +52,15 @@ public final class _159_ProtectHeadsprings extends Quest {
         } else if (cond == 1)
             htmltext = "30154-05.htm";
         else if (cond == 2) {
-            st.takeItems(PLAGUE_DUST_ID);
-            st.takeItems(HYACINTH_CHARM1_ID);
+            st.takeAllItems(PLAGUE_DUST_ID,HYACINTH_CHARM1_ID);
             st.giveItems(HYACINTH_CHARM2_ID);
             st.setCond(3);
             htmltext = "30154-06.htm";
         } else if (cond == 3)
             htmltext = "30154-07.htm";
         else if (cond == 4) {
-            st.takeItems(PLAGUE_DUST_ID, -1);
-            st.takeItems(HYACINTH_CHARM2_ID, -1);
-            st.giveItems(ADENA_ID, 18250);
+            st.takeAllItems(PLAGUE_DUST_ID, HYACINTH_CHARM2_ID);
+            st.giveAdena( 18250);
             st.playSound(SOUND_FINISH);
             htmltext = "30154-08.htm";
             st.finish();

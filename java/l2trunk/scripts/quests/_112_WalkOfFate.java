@@ -12,8 +12,6 @@ public final class _112_WalkOfFate extends Quest {
     private static final int EnchantD = 956;
 
     public _112_WalkOfFate() {
-        super(false);
-
         addStartNpc(Livina);
         addTalkId(Karuda);
     }
@@ -22,7 +20,7 @@ public final class _112_WalkOfFate extends Quest {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if ("karuda_q0112_0201.htm".equalsIgnoreCase(event)) {
             st.addExpAndSp(112876, 5774);
-            st.giveItems(ADENA_ID, (long) (22308 + 6000 * (st.getRateQuestsReward() - 1)), true);
+            st.giveAdena( (long) (22308 + 6000 * (st.getRateQuestsReward() - 1)));
             st.giveItems(EnchantD);
             st.playSound(SOUND_FINISH);
             st.finish();

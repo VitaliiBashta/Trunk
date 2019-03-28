@@ -20,7 +20,6 @@ public final class _002_WhatWomenWant extends Quest {
     private final int GREENIS_LETTER = 693;
 
     public _002_WhatWomenWant() {
-        super(false);
         addStartNpc(ARUJIEN);
 
         addTalkId(MIRABEL,HERBIEL,GREENIS);

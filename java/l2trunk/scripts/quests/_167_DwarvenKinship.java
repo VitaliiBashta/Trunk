@@ -14,8 +14,6 @@ public final class _167_DwarvenKinship extends Quest {
     private static final int NormansLetter = 1106;
 
     public _167_DwarvenKinship() {
-        super(false);
-
         addStartNpc(Carlon);
 
         addTalkId(Haprock,Norman);
@@ -25,25 +23,25 @@ public final class _167_DwarvenKinship extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("30350-04.htm")) {
+        if ("30350-04.htm".equalsIgnoreCase(event)) {
             st.giveItems(CarlonsLetter);
             st.playSound(SOUND_ACCEPT);
             st.setCond(1);
             st.start();
-        } else if (event.equalsIgnoreCase("30255-03.htm")) {
+        } else if ("30255-03.htm".equalsIgnoreCase(event)) {
             st.takeItems(CarlonsLetter);
-            st.giveItems(ADENA_ID, 2000);
-            st.giveItems(NormansLetter, 1);
+            st.giveAdena( 2000);
+            st.giveItems(NormansLetter);
             st.setCond(2);
             st.start();
-        } else if (event.equalsIgnoreCase("30255-04.htm")) {
+        } else if ("30255-04.htm".equalsIgnoreCase(event)) {
             st.takeItems(CarlonsLetter);
-            st.giveItems(ADENA_ID, 2000);
+            st.giveAdena(2000);
             st.playSound(SOUND_GIVEUP);
             st.finish();
-        } else if (event.equalsIgnoreCase("30210-02.htm")) {
+        } else if ("30210-02.htm".equalsIgnoreCase(event)) {
             st.takeItems(NormansLetter);
-            st.giveItems(ADENA_ID, 20000);
+            st.giveAdena( 20000);
             st.playSound(SOUND_FINISH);
             st.finish();
         }

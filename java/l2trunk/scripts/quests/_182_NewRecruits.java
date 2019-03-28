@@ -17,8 +17,6 @@ public final class _182_NewRecruits extends Quest {
     private static final Location TELEPORT_POSITION = Location.of(-119544, 87176, -12619);
 
     public _182_NewRecruits() {
-        super(false);
-
         addStartNpc(Kekropus);
         addTalkId(Mother_Nornil);
     }

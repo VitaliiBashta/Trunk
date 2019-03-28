@@ -20,12 +20,10 @@ public final class _062_PathOfTheDragoon extends Quest {
     private static final int GwainsRecommendation = 9753;
 
     public _062_PathOfTheDragoon() {
-        super(false);
-
         addStartNpc(Gwain);
-        addTalkId(Gwain,Shubain);
-        addKillId(FelimLizardmanWarrior,VenomousSpider,TumranBugbear);
-        addQuestItem(FelimHead,VenomousSpiderLeg,ShubainsRecommendation,TumranBugbearHeart);
+        addTalkId(Shubain);
+        addKillId(FelimLizardmanWarrior, VenomousSpider, TumranBugbear);
+        addQuestItem(FelimHead, VenomousSpiderLeg, ShubainsRecommendation, TumranBugbearHeart);
     }
 
     @Override
@@ -66,7 +64,7 @@ public final class _062_PathOfTheDragoon extends Quest {
                     if (!st.player.isVarSet("prof1")) {
                         st.player.setVar("prof1");
                         st.addExpAndSp(160267, 11023);
-                        st.giveAdena( 81900);
+                        st.giveAdena(81900);
                     }
                 }
                 st.playSound(SOUND_FINISH);
@@ -113,10 +111,9 @@ public final class _062_PathOfTheDragoon extends Quest {
                     st.playSound(SOUND_ITEMGET);
             }
         }
-        if (id == TumranBugbear && cond == 5)
-            if (st.getQuestItemsCount(TumranBugbearHeart) == 0) {
-                st.giveItems(TumranBugbearHeart);
-                st.playSound(SOUND_MIDDLE);
-            }
+        if (id == TumranBugbear && cond == 5) {
+            st.giveItemIfNotHave(TumranBugbearHeart);
+            st.playSound(SOUND_MIDDLE);
+        }
     }
 }

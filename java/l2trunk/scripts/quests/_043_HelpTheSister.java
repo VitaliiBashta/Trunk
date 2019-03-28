@@ -19,13 +19,11 @@ public final class _043_HelpTheSister extends Quest {
     private static final int MAX_COUNT = 30;
 
     public _043_HelpTheSister() {
-        super(false);
-
         addStartNpc(COOPER);
 
         addTalkId(GALLADUCCI);
 
-        addKillId(SPECTER,SORROW_MAIDEN);
+        addKillId(SPECTER, SORROW_MAIDEN);
     }
 
     @Override
@@ -36,18 +34,18 @@ public final class _043_HelpTheSister extends Quest {
             st.setCond(1);
             st.start();
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equals("3") && st.getQuestItemsCount(CRAFTED_DAGGER) > 0) {
+        } else if (event.equals("3") && st.haveQuestItem(CRAFTED_DAGGER)) {
             htmltext = "pet_manager_cooper_q0043_0201.htm";
             st.takeItems(CRAFTED_DAGGER, 1);
             st.setCond(2);
-        } else if (event.equals("4") && st.getQuestItemsCount(MAP_PIECE) >= MAX_COUNT) {
+        } else if (event.equals("4") && st.haveQuestItem(MAP_PIECE, MAX_COUNT)) {
             htmltext = "pet_manager_cooper_q0043_0301.htm";
-            st.takeItems(MAP_PIECE, MAX_COUNT);
-            st.giveItems(MAP, 1);
+            st.takeItems(MAP_PIECE);
+            st.giveItems(MAP);
             st.setCond(4);
-        } else if (event.equals("5") && st.getQuestItemsCount(MAP) > 0) {
+        } else if (event.equals("5") && st.haveQuestItem(MAP)) {
             htmltext = "galladuchi_q0043_0401.htm";
-            st.takeItems(MAP, 1);
+            st.takeItems(MAP);
             st.setCond(5);
         } else if (event.equals("7")) {
             htmltext = "pet_manager_cooper_q0043_0501.htm";
@@ -96,18 +94,11 @@ public final class _043_HelpTheSister extends Quest {
 
     @Override
     public void onKill(NpcInstance npc, QuestState st) {
-        int cond = st.getCond();
-        if (cond == 2) {
-            long pieces = st.getQuestItemsCount(MAP_PIECE);
-            if (pieces < MAX_COUNT) {
-                st.giveItems(MAP_PIECE);
-                if (pieces < MAX_COUNT - 1)
-                    st.playSound(SOUND_ITEMGET);
-                else {
-                    st.playSound(SOUND_MIDDLE);
-                    st.setCond(3);
-                }
-            }
+        if (st.getCond() == 2) {
+            st.giveItemIfNotHave(MAP_PIECE, MAX_COUNT);
+            if (st.haveQuestItem(MAP_PIECE, MAX_COUNT))
+                st.playSound(SOUND_MIDDLE);
+            st.setCond(3);
         }
     }
 }

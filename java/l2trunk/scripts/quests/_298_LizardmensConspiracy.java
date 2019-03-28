@@ -31,8 +31,6 @@ public final class _298_LizardmensConspiracy extends Quest {
             KING_OF_THE_ARANEID, SHINING_RED_GEM);
 
     public _298_LizardmensConspiracy() {
-        super(false);
-
         addStartNpc(PRAGA);
 
         addTalkId(ROHMER);
@@ -49,13 +47,12 @@ public final class _298_LizardmensConspiracy extends Quest {
             st.setCond(1);
             st.giveItems(REPORT);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("magister_rohmer_q0298_0201.htm")) {
+        } else if ("magister_rohmer_q0298_0201.htm".equalsIgnoreCase(event)) {
             st.takeItems(REPORT);
             st.setCond(2);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("magister_rohmer_q0298_0301.htm") && st.getQuestItemsCount(SHINING_GEM) + st.getQuestItemsCount(SHINING_RED_GEM) > 99) {
-            st.takeItems(SHINING_GEM);
-            st.takeItems(SHINING_RED_GEM);
+        } else if ("magister_rohmer_q0298_0301.htm".equalsIgnoreCase(event) && st.getQuestItemsCount(SHINING_GEM) + st.getQuestItemsCount(SHINING_RED_GEM) > 99) {
+            st.takeAllItems(SHINING_GEM,SHINING_RED_GEM);
             st.addExpAndSp(0, 42000);
             st.exitCurrentQuest();
             st.playSound(SOUND_FINISH);

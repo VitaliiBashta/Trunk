@@ -25,7 +25,6 @@ public final class _040_ASpecialOrder extends Quest {
     private static final int WondrousCubic = 10632;
 
     public _040_ASpecialOrder() {
-        super(false);
         addStartNpc(Helvetia);
 
         addQuestItem(FishChest,SeedJar);
@@ -66,7 +65,7 @@ public final class _040_ASpecialOrder extends Quest {
                 if (st.player.getLevel() >= 40)
                     htmltext = "Helvetia-1.htm";
                 else {
-                    htmltext = "Helvetia-occupation.htm";
+                    htmltext = "Helvetia-level.htm";
                     st.exitCurrentQuest();
                 }
             else if (cond == 2 || cond == 3 || cond == 5 || cond == 6)

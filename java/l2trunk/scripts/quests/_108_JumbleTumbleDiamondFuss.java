@@ -24,8 +24,6 @@ public final class _108_JumbleTumbleDiamondFuss extends Quest {
     private final int STAR_DIAMOND = 1571;
 
     public _108_JumbleTumbleDiamondFuss() {
-        super(false);
-
         addStartNpc(30523);
 
         addTalkId(30516, 30521, 30522, 30526, 30529, 30555);
@@ -91,7 +89,7 @@ public final class _108_JumbleTumbleDiamondFuss extends Quest {
 
                     st.giveItems(SILVERSMITH_HAMMER);
                     st.player.addExpAndSp(34565, 2962);
-                    st.giveAdena( 14666);
+                    st.giveAdena(14666);
 
                     if (st.player.getClassId().occupation() == 0 && !st.player.isVarSet("p1q3")) {
                         st.player.setVar("p1q3"); // flag for helper
@@ -126,7 +124,7 @@ public final class _108_JumbleTumbleDiamondFuss extends Quest {
                 htmltext = "carrier_torocco_q0108_05.htm";
         } else if (npcId == 30529) {
             if (cond == 3 && st.haveQuestItem(ELVEN_WINE)) {
-                st.takeItems(ELVEN_WINE, 1);
+                st.takeItems(ELVEN_WINE);
                 st.giveItems(BRONPS_DICE);
                 htmltext = "miner_maron_q0108_01.htm";
                 st.setCond(4);
@@ -141,17 +139,15 @@ public final class _108_JumbleTumbleDiamondFuss extends Quest {
                 htmltext = "blacksmith_bronp_q0108_03.htm";
             else if (cond == 6 && st.getQuestItemsCount(BRONPS_CONTRACT) > 0 && st.getQuestItemsCount(AQUAMARINE) == 10 && st.getQuestItemsCount(CHRYSOBERYL) == 10) {
                 htmltext = "blacksmith_bronp_q0108_04.htm";
-                st.takeItems(BRONPS_CONTRACT, -1);
-                st.takeItems(AQUAMARINE, -1);
-                st.takeItems(CHRYSOBERYL, -1);
-                st.giveItems(GEM_BOX1, 1);
+                st.takeAllItems(BRONPS_CONTRACT, AQUAMARINE, CHRYSOBERYL);
+                st.giveItems(GEM_BOX1);
                 st.setCond(7);
             } else if (cond == 7 && st.getQuestItemsCount(GEM_BOX1) > 0)
                 htmltext = "blacksmith_bronp_q0108_05.htm";
             else if (cond == 8 && st.getQuestItemsCount(COAL_PIECE) > 0) {
                 htmltext = "blacksmith_bronp_q0108_06.htm";
                 st.takeItems(COAL_PIECE, 1);
-                st.giveItems(BRONPS_LETTER, 1);
+                st.giveItems(BRONPS_LETTER);
                 st.setCond(9);
             } else if (cond == 9 && st.getQuestItemsCount(BRONPS_LETTER) > 0)
                 htmltext = "blacksmith_bronp_q0108_07.htm";
@@ -161,21 +157,21 @@ public final class _108_JumbleTumbleDiamondFuss extends Quest {
             if (cond == 9 && st.getQuestItemsCount(BRONPS_LETTER) > 0) {
                 htmltext = "warehouse_murphrin_q0108_01.htm";
                 st.takeItems(BRONPS_LETTER, 1);
-                st.giveItems(BERRY_TART, 1);
+                st.giveItems(BERRY_TART);
                 st.setCond(10);
             } else if (cond == 10 && st.getQuestItemsCount(BERRY_TART) > 0)
                 htmltext = "warehouse_murphrin_q0108_02.htm";
             else
                 htmltext = "warehouse_murphrin_q0108_03.htm";
         } else if (npcId == 30522)
-            if (cond == 10 && st.getQuestItemsCount(BERRY_TART) > 0) {
+            if (cond == 10 && st.haveQuestItem(BERRY_TART)) {
                 htmltext = "warehouse_airy_q0108_01.htm";
-                st.takeItems(BERRY_TART, 1);
-                st.giveItems(BAT_DIAGRAM, 1);
+                st.takeItems(BERRY_TART);
+                st.giveItems(BAT_DIAGRAM);
                 st.setCond(11);
-            } else if (cond == 11 && st.getQuestItemsCount(BAT_DIAGRAM) > 0)
+            } else if (cond == 11 && st.haveQuestItem(BAT_DIAGRAM))
                 htmltext = "warehouse_airy_q0108_02.htm";
-            else if (cond == 12 && st.getQuestItemsCount(STAR_DIAMOND) > 0)
+            else if (cond == 12 && st.haveQuestItem(STAR_DIAMOND))
                 htmltext = "warehouse_airy_q0108_03.htm";
             else
                 htmltext = "warehouse_airy_q0108_04.htm";
@@ -187,9 +183,9 @@ public final class _108_JumbleTumbleDiamondFuss extends Quest {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         if (npcId == 20323 || npcId == 20324) {
-            if (cond == 5 && st.getQuestItemsCount(BRONPS_CONTRACT) > 0) {
+            if (cond == 5 && st.haveQuestItem(BRONPS_CONTRACT)) {
                 if (st.getQuestItemsCount(AQUAMARINE) < 10 && Rnd.chance(80)) {
-                    st.giveItems(AQUAMARINE, 1);
+                    st.giveItems(AQUAMARINE);
                     if (st.getQuestItemsCount(AQUAMARINE) < 10)
                         st.playSound(SOUND_ITEMGET);
                     else {
@@ -199,7 +195,7 @@ public final class _108_JumbleTumbleDiamondFuss extends Quest {
                     }
                 }
                 if (st.getQuestItemsCount(CHRYSOBERYL) < 10 && Rnd.chance(80)) {
-                    st.giveItems(CHRYSOBERYL, 1);
+                    st.giveItems(CHRYSOBERYL);
                     if (st.getQuestItemsCount(CHRYSOBERYL) < 10)
                         st.playSound(SOUND_ITEMGET);
                     else {
@@ -210,7 +206,7 @@ public final class _108_JumbleTumbleDiamondFuss extends Quest {
                 }
             }
         } else if (npcId == 20480)
-            if (cond == 11 && st.getQuestItemsCount(BAT_DIAGRAM) > 0 && st.getQuestItemsCount(STAR_DIAMOND) == 0)
+            if (cond == 11 && st.haveQuestItem(BAT_DIAGRAM) && st.getQuestItemsCount(STAR_DIAMOND) == 0)
                 if (Rnd.chance(50)) {
                     st.takeItems(BAT_DIAGRAM, 1);
                     st.giveItems(STAR_DIAMOND);

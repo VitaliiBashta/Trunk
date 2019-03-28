@@ -27,7 +27,6 @@ public final class _134_TempleMissionary extends Quest {
     private final static int Cruma_Marshlands_Traitor_spawnchance = 45;
 
     public _134_TempleMissionary() {
-        super(false);
         addStartNpc(Glyvka);
         addTalkId(Rouke);
         addKillId(mobs);
@@ -37,25 +36,25 @@ public final class _134_TempleMissionary extends Quest {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        int _state = st.getState();
-        if ("glyvka_q0134_03.htm".equalsIgnoreCase(event) && _state == CREATED) {
+        int state = st.getState();
+        if ("glyvka_q0134_03.htm".equalsIgnoreCase(event) && state == CREATED) {
             st.setCond(1);
             st.start();
             st.playSound(SOUND_ACCEPT);
-        } else if ("glyvka_q0134_06.htm".equalsIgnoreCase(event) && _state == STARTED) {
+        } else if ("glyvka_q0134_06.htm".equalsIgnoreCase(event) && state == STARTED) {
             st.setCond(2);
             st.playSound(SOUND_MIDDLE);
-        } else if ("glyvka_q0134_11.htm".equalsIgnoreCase(event) && _state == STARTED && st.getCond() == 5) {
+        } else if ("glyvka_q0134_11.htm".equalsIgnoreCase(event) && state == STARTED && st.getCond() == 5) {
             st.playSound(SOUND_FINISH);
             st.unset("Report");
-            st.giveItems(ADENA_ID, 15100);
+            st.giveAdena( 15100);
             st.giveItems(Badge_Temple_Missionary);
             st.addExpAndSp(30000, 2000);
             st.finish();
-        } else if ("scroll_seller_rouke_q0134_03.htm".equalsIgnoreCase(event) && _state == STARTED) {
+        } else if ("scroll_seller_rouke_q0134_03.htm".equalsIgnoreCase(event) && state == STARTED) {
             st.setCond(3);
             st.playSound(SOUND_MIDDLE);
-        } else if ("scroll_seller_rouke_q0134_09.htm".equalsIgnoreCase(event) && _state == STARTED && st.isSet("Report")) {
+        } else if ("scroll_seller_rouke_q0134_09.htm".equalsIgnoreCase(event) && state == STARTED && st.isSet("Report")) {
             st.setCond(5);
             st.playSound(SOUND_MIDDLE);
             st.giveItems(Roukes_Report);
@@ -66,12 +65,12 @@ public final class _134_TempleMissionary extends Quest {
 
     @Override
     public String onTalk(NpcInstance npc, QuestState st) {
-        int _state = st.getState();
-        if (_state == COMPLETED)
+        int state = st.getState();
+        if (state == COMPLETED)
             return "completed";
 
         int npcId = npc.getNpcId();
-        if (_state == CREATED) {
+        if (state == CREATED) {
             if (npcId != Glyvka)
                 return "noquest";
             if (st.player.getLevel() < 35) {
@@ -84,7 +83,7 @@ public final class _134_TempleMissionary extends Quest {
 
         int cond = st.getCond();
 
-        if (npcId == Glyvka && _state == STARTED) {
+        if (npcId == Glyvka && state == STARTED) {
             if (cond == 1)
                 return "glyvka_q0134_03.htm";
             if (cond == 5) {
@@ -100,7 +99,7 @@ public final class _134_TempleMissionary extends Quest {
             return "glyvka_q0134_07.htm";
         }
 
-        if (npcId == Rouke && _state == STARTED) {
+        if (npcId == Rouke && state == STARTED) {
             if (cond == 2)
                 return "scroll_seller_rouke_q0134_02.htm";
             if (cond == 5)
